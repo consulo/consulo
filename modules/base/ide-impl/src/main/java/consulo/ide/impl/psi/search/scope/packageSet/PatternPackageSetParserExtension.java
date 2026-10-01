@@ -21,6 +21,7 @@ import consulo.content.scope.ParsingException;
 import consulo.ide.impl.psi.search.scope.packageSet.lexer.ScopeTokenTypes;
 import consulo.language.editor.scope.localize.AnalysisScopeLocalize;
 import consulo.language.lexer.Lexer;
+import consulo.localize.LocalizeValue;
 
 import java.util.Objects;
 
@@ -95,7 +96,7 @@ public class PatternPackageSetParserExtension implements PackageSetParserExtensi
             }
             else if (lexer.getTokenType() == ScopeTokenTypes.IDENTIFIER) {
                 if (wasIdentifier)
-                    error(AnalysisScopeLocalize.errorPackagesetTokenExpectations(getTokenText(lexer)).get(), lexer);
+                    error(AnalysisScopeLocalize.errorPackagesetTokenExpectations(getTokenText(lexer)), lexer);
                 wasIdentifier = true;
                 pattern.append(getTokenText(lexer));
             }
@@ -106,7 +107,7 @@ public class PatternPackageSetParserExtension implements PackageSetParserExtensi
         }
 
         if (pattern.length() == 0) {
-            error(AnalysisScopeLocalize.errorPackagesetPatternExpectations().get(), lexer);
+            error(AnalysisScopeLocalize.errorPackagesetPatternExpectations(), lexer);
         }
 
         return pattern.toString();
@@ -118,8 +119,7 @@ public class PatternPackageSetParserExtension implements PackageSetParserExtensi
         return lexer.getBufferSequence().subSequence(start, end).toString();
     }
 
-    private static void error(String message, Lexer lexer) throws ParsingException {
-        throw new ParsingException(
-            AnalysisScopeLocalize.errorPackagesetPositionParsingError(message, (lexer.getTokenStart() + 1)).get());
+    private static void error(LocalizeValue message, Lexer lexer) throws ParsingException {
+        throw new ParsingException(AnalysisScopeLocalize.errorPackagesetPositionParsingError(message, (lexer.getTokenStart() + 1)));
     }
 }

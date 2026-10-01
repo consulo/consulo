@@ -36,7 +36,7 @@ public class ColumnDuration extends BaseColumn implements Comparator<SMTestProxy
 
     @Override
     public String valueOf(SMTestProxy testProxy) {
-        return TestsPresentationUtil.getDurationPresentation(testProxy);
+        return TestsPresentationUtil.getDurationPresentation(testProxy).getNullIfEmpty();
     }
 
     @Override

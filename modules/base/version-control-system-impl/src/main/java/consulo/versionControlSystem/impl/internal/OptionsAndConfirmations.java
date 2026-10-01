@@ -31,101 +31,100 @@ import java.util.Map;
 import java.util.function.Function;
 
 public class OptionsAndConfirmations {
-  private final Map<String, VcsShowOptionsSettingImpl> myOptions;
-  private final Map<String, VcsShowConfirmationOptionImpl> myConfirmations;
+    private final Map<String, VcsShowOptionsSettingImpl> myOptions;
+    private final Map<String, VcsShowConfirmationOptionImpl> myConfirmations;
 
-  public OptionsAndConfirmations() {
-    myOptions = new LinkedHashMap<String, VcsShowOptionsSettingImpl>();
-    myConfirmations = new LinkedHashMap<String, VcsShowConfirmationOptionImpl>();
-  }
-
-  public void init(Function<String, VcsShowConfirmationOption.Value> initOptions) {
-    createSettingFor(VcsConfiguration.StandardOption.ADD);
-    createSettingFor(VcsConfiguration.StandardOption.REMOVE);
-    createSettingFor(VcsConfiguration.StandardOption.CHECKOUT);
-    createSettingFor(VcsConfiguration.StandardOption.UPDATE);
-    createSettingFor(VcsConfiguration.StandardOption.STATUS);
-    createSettingFor(VcsConfiguration.StandardOption.EDIT);
-
-    myConfirmations.put(
-      VcsConfiguration.StandardConfirmation.ADD.getId(),
-      new VcsShowConfirmationOptionImpl(
-        VcsConfiguration.StandardConfirmation.ADD.getId(),
-        VcsLocalize.labelTextWhenFilesCreatedWithIdea(Application.get().getName()).get(),
-        VcsLocalize.radioAfterCreationDoNotAdd().get(),
-        VcsLocalize.radioAfterCreationShowOptions().get(),
-        VcsLocalize.radioAfterCreationAddSilently().get()
-      )
-    );
-
-    myConfirmations.put(
-      VcsConfiguration.StandardConfirmation.REMOVE.getId(),
-      new VcsShowConfirmationOptionImpl(
-        VcsConfiguration.StandardConfirmation.REMOVE.getId(),
-        VcsLocalize.labelTextWhenFilesAreDeletedWithIdea(Application.get().getName()).get(),
-        VcsLocalize.radioAfterDeletionDoNotRemove().get(),
-        VcsLocalize.radioAfterDeletionShowOptions().get(),
-        VcsLocalize.radioAfterDeletionRemoveSilently().get()
-      )
-    );
-
-    restoreReadConfirm(VcsConfiguration.StandardConfirmation.ADD, initOptions);
-    restoreReadConfirm(VcsConfiguration.StandardConfirmation.REMOVE, initOptions);
-  }
-
-  private void restoreReadConfirm(VcsConfiguration.StandardConfirmation confirm,
-                                  Function<String, VcsShowConfirmationOption.Value> initOptions) {
-    VcsShowConfirmationOption.Value initValue = initOptions.apply(confirm.getId());
-    if (initValue != null) {
-      getConfirmation(confirm).setValue(initValue);
+    public OptionsAndConfirmations() {
+        myOptions = new LinkedHashMap<>();
+        myConfirmations = new LinkedHashMap<>();
     }
-  }
 
-  
-  public VcsShowConfirmationOptionImpl getConfirmation(VcsConfiguration.StandardConfirmation option) {
-    return myConfirmations.get(option.getId());
-  }
+    public void init(Function<String, VcsShowConfirmationOption.Value> initOptions) {
+        createSettingFor(VcsConfiguration.StandardOption.ADD);
+        createSettingFor(VcsConfiguration.StandardOption.REMOVE);
+        createSettingFor(VcsConfiguration.StandardOption.CHECKOUT);
+        createSettingFor(VcsConfiguration.StandardOption.UPDATE);
+        createSettingFor(VcsConfiguration.StandardOption.STATUS);
+        createSettingFor(VcsConfiguration.StandardOption.EDIT);
 
-  private void createSettingFor(VcsConfiguration.StandardOption option) {
-    if (!myOptions.containsKey(option.getId())) {
-      myOptions.put(option.getId(), new VcsShowOptionsSettingImpl(option));
+        myConfirmations.put(
+            VcsConfiguration.StandardConfirmation.ADD.getId(),
+            new VcsShowConfirmationOptionImpl(
+                VcsConfiguration.StandardConfirmation.ADD.getId(),
+                VcsLocalize.labelTextWhenFilesCreatedWithIdea(Application.get().getName()),
+                VcsLocalize.radioAfterCreationDoNotAdd(),
+                VcsLocalize.radioAfterCreationShowOptions(),
+                VcsLocalize.radioAfterCreationAddSilently()
+            )
+        );
+
+        myConfirmations.put(
+            VcsConfiguration.StandardConfirmation.REMOVE.getId(),
+            new VcsShowConfirmationOptionImpl(
+                VcsConfiguration.StandardConfirmation.REMOVE.getId(),
+                VcsLocalize.labelTextWhenFilesAreDeletedWithIdea(Application.get().getName()),
+                VcsLocalize.radioAfterDeletionDoNotRemove(),
+                VcsLocalize.radioAfterDeletionShowOptions(),
+                VcsLocalize.radioAfterDeletionRemoveSilently()
+            )
+        );
+
+        restoreReadConfirm(VcsConfiguration.StandardConfirmation.ADD, initOptions);
+        restoreReadConfirm(VcsConfiguration.StandardConfirmation.REMOVE, initOptions);
     }
-  }
 
-  
-  public VcsShowSettingOption getOptions(VcsConfiguration.StandardOption option) {
-    return myOptions.get(option.getId());
-  }
-
-  public List<VcsShowOptionsSettingImpl> getAllOptions() {
-    return new ArrayList<>(myOptions.values());
-  }
-
-  public List<VcsShowConfirmationOptionImpl> getAllConfirmations() {
-    return new ArrayList<>(myConfirmations.values());
-  }
-
-  
-  public VcsShowSettingOption getOrCreateCustomOption(String vcsActionName, AbstractVcs vcs) {
-    VcsShowOptionsSettingImpl option = getOrCreateOption(vcsActionName);
-    option.addApplicableVcs(vcs);
-    return option;
-  }
-
-  private VcsShowOptionsSettingImpl getOrCreateOption(String actionName) {
-    if (!myOptions.containsKey(actionName)) {
-      myOptions.put(actionName, new VcsShowOptionsSettingImpl(actionName));
+    private void restoreReadConfirm(
+        VcsConfiguration.StandardConfirmation confirm,
+        Function<String, VcsShowConfirmationOption.Value> initOptions
+    ) {
+        VcsShowConfirmationOption.Value initValue = initOptions.apply(confirm.getId());
+        if (initValue != null) {
+            getConfirmation(confirm).setValue(initValue);
+        }
     }
-    return myOptions.get(actionName);
-  }
 
-  // open for serialization purposes
-  Map<String, VcsShowOptionsSettingImpl> getOptions() {
-    return myOptions;
-  }
+    public VcsShowConfirmationOptionImpl getConfirmation(VcsConfiguration.StandardConfirmation option) {
+        return myConfirmations.get(option.getId());
+    }
 
-  // open for serialization purposes
-  Map<String, VcsShowConfirmationOptionImpl> getConfirmations() {
-    return myConfirmations;
-  }
+    private void createSettingFor(VcsConfiguration.StandardOption option) {
+        if (!myOptions.containsKey(option.getId())) {
+            myOptions.put(option.getId(), new VcsShowOptionsSettingImpl(option));
+        }
+    }
+
+    public VcsShowSettingOption getOptions(VcsConfiguration.StandardOption option) {
+        return myOptions.get(option.getId());
+    }
+
+    public List<VcsShowOptionsSettingImpl> getAllOptions() {
+        return new ArrayList<>(myOptions.values());
+    }
+
+    public List<VcsShowConfirmationOptionImpl> getAllConfirmations() {
+        return new ArrayList<>(myConfirmations.values());
+    }
+
+    public VcsShowSettingOption getOrCreateCustomOption(String vcsActionName, AbstractVcs vcs) {
+        VcsShowOptionsSettingImpl option = getOrCreateOption(vcsActionName);
+        option.addApplicableVcs(vcs);
+        return option;
+    }
+
+    private VcsShowOptionsSettingImpl getOrCreateOption(String actionName) {
+        if (!myOptions.containsKey(actionName)) {
+            myOptions.put(actionName, new VcsShowOptionsSettingImpl(actionName));
+        }
+        return myOptions.get(actionName);
+    }
+
+    // open for serialization purposes
+    Map<String, VcsShowOptionsSettingImpl> getOptions() {
+        return myOptions;
+    }
+
+    // open for serialization purposes
+    Map<String, VcsShowConfirmationOptionImpl> getConfirmations() {
+        return myConfirmations;
+    }
 }

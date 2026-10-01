@@ -54,7 +54,7 @@ public class PackagesNotificationPanel {
             if (packageName != null) {
                 message = IdeLocalize.package0InstalledSuccessfully(packageName);
             }
-            showSuccess(message.get());
+            showSuccess(message);
         }
         else {
             LocalizeValue title = IdeLocalize.failedToInstallPackagesDialogTitle();
@@ -62,7 +62,7 @@ public class PackagesNotificationPanel {
                 title = IdeLocalize.failedToInstallPackageDialogTitle(packageName);
             }
             LocalizeValue text = IdeLocalize.installPackageFailure(packageName);
-            showError(text.get(), title.get(), errorDescription);
+            showError(text, title, errorDescription);
         }
     }
 
@@ -78,8 +78,8 @@ public class PackagesNotificationPanel {
         return myHtmlViewer;
     }
 
-    public void showSuccess(String text) {
-        showContent(text, MessageType.INFO.getPopupBackground());
+    public void showSuccess(LocalizeValue text) {
+        showContent(text.get(), MessageType.INFO.getPopupBackground());
     }
 
     private void showContent(String text, Color background) {
@@ -91,9 +91,9 @@ public class PackagesNotificationPanel {
         myErrorDescription = null;
     }
 
-    public void showError(String text, @Nullable String detailsTitle, PackageManagementService.ErrorDescription errorDescription) {
-        showContent(text, MessageType.ERROR.getPopupBackground());
-        myErrorTitle = detailsTitle;
+    public void showError(LocalizeValue text, LocalizeValue detailsTitle, PackageManagementService.ErrorDescription errorDescription) {
+        showContent(text.get(), MessageType.ERROR.getPopupBackground());
+        myErrorTitle = detailsTitle.getNullIfEmpty();
         myErrorDescription = errorDescription;
     }
 

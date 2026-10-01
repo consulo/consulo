@@ -85,6 +85,12 @@ public abstract class AbstractVcsHelper {
      */
     public abstract List<VcsException> runTransactionRunnable(AbstractVcs vcs, TransactionRunnable runnable, Object vcsParameters);
 
+    public void showError(VcsException e, LocalizeValue tabDisplayName) {
+        showErrors(Arrays.asList(e), tabDisplayName);
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
     public void showError(VcsException e, String tabDisplayName) {
         showErrors(Arrays.asList(e), tabDisplayName);
     }

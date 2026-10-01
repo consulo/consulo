@@ -20,6 +20,7 @@ import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.codeEditor.EditorEx;
 import consulo.colorScheme.TextAttributes;
+import consulo.localize.LocalizeValue;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
 
@@ -29,15 +30,13 @@ import java.util.List;
 
 public class TextDiffTypeFactory {
   private static final TextDiffTypeFactory ourInstance = new TextDiffTypeFactory();
-  private final List<TextDiffType> myTypes = new ArrayList<TextDiffType>();
+  private final List<TextDiffType> myTypes = new ArrayList<>();
 
   private TextDiffTypeFactory() {
   }
 
-  
-  public synchronized TextDiffType createTextDiffType(TextAttributesKey key,
-                                                      String name) {
-    TextDiffType type = new TextDiffTypeImpl(key, name);
+  public synchronized TextDiffType createTextDiffType(TextAttributesKey key, LocalizeValue name) {
+    TextDiffType type = new TextDiffTypeImpl(key, name.get());
     myTypes.add(type);
     return type;
   }
@@ -51,7 +50,6 @@ public class TextDiffTypeFactory {
   }
 
   public static class TextDiffTypeImpl implements TextDiffType {
-    
     private final TextAttributesKey myKey;
     
     private final String myName;
@@ -62,13 +60,11 @@ public class TextDiffTypeFactory {
       myName = name;
     }
 
-    
     @Override
     public String getName() {
       return myName;
     }
 
-    
     public TextAttributes getAttributes(@Nullable Editor editor) {
       if (editor == null) {
         return EditorColorsManager.getInstance().getGlobalScheme().getAttributes(myKey);
@@ -78,13 +74,11 @@ public class TextDiffTypeFactory {
       }
     }
 
-    
     @Override
     public ColorValue getColor(@Nullable Editor editor) {
       return getAttributes(editor).getBackgroundColor();
     }
 
-    
     @Override
     public ColorValue getIgnoredColor(@Nullable Editor editor) {
       TextAttributes attributes = getAttributes(editor);
@@ -113,7 +107,6 @@ public class TextDiffTypeFactory {
       return myName;
     }
 
-    
     public TextAttributesKey getKey() {
       return myKey;
     }
@@ -121,7 +114,6 @@ public class TextDiffTypeFactory {
 
   private static final double MIDDLE_COLOR_FACTOR = 0.6;
 
-  
   public static ColorValue getMiddleColor(ColorValue fg, ColorValue bg) {
     RGBColor f = fg.toRGB();
     RGBColor b = bg.toRGB();

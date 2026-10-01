@@ -1,11 +1,9 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-
 package consulo.ui.ex.awt;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.localize.UILocalize;
 import consulo.util.collection.Lists;
 import consulo.util.lang.ObjectUtil;
@@ -18,17 +16,12 @@ import java.util.List;
 
 public abstract class StatusText {
     public static final SimpleTextAttributes DEFAULT_ATTRIBUTES = SimpleTextAttributes.GRAYED_ATTRIBUTES;
-    public static final LocalizeValue DEFAULT_EMPTY_LOC_TEXT = UILocalize.messageNothingtoshow();
-    @Deprecated
-    @DeprecationInfo("Use #DEFAULT_EMPTY_LOC_TEXT")
-    public static final String DEFAULT_EMPTY_TEXT = UIBundle.message("message.nothingToShow");
-
-    public static final LocalizeValue DEFAULT_EMPTY_TEXT_VALUE = UILocalize.messageNothingtoshow();
+    public static final LocalizeValue DEFAULT_EMPTY_TEXT = UILocalize.messageNothingtoshow();
 
     private static final int Y_GAP = 2;
 
     public static LocalizeValue getDefaultEmptyText() {
-        return DEFAULT_EMPTY_TEXT_VALUE;
+        return DEFAULT_EMPTY_TEXT;
     }
 
     private @Nullable Component myOwner;
@@ -94,7 +87,7 @@ public abstract class StatusText {
 
         myComponent.setOpaque(false);
         myComponent.setFont(UIUtil.getLabelFont());
-        setText(DEFAULT_EMPTY_LOC_TEXT, DEFAULT_ATTRIBUTES);
+        setText(DEFAULT_EMPTY_TEXT, DEFAULT_ATTRIBUTES);
         myIsDefaultText = true;
 
         mySecondaryComponent.setOpaque(false);

@@ -36,10 +36,10 @@ import consulo.diff.util.ThreeSide;
 import consulo.disposer.Disposable;
 import consulo.document.event.DocumentEvent;
 import consulo.ide.impl.diff.DiffDrawUtil;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
@@ -377,14 +377,16 @@ public abstract class ThreesideTextDiffViewerEx extends ThreesideTextDiffViewer 
 
     protected class MyStatusPanel extends StatusPanel {
         @Override
-        protected @Nullable String getMessage() {
+        protected LocalizeValue getMessage() {
             if (myChangesCount < 0 || myConflictsCount < 0) {
-                return null;
+                return LocalizeValue.empty();
             }
             if (myChangesCount == 0 && myConflictsCount == 0) {
-                return DiffLocalize.mergeDialogAllConflictsResolvedMessageText().get();
+                return DiffLocalize.mergeDialogAllConflictsResolvedMessageText();
             }
-            return makeCounterWord(myChangesCount, "change") + ". " + makeCounterWord(myConflictsCount, "conflict");
+            return LocalizeValue.localizeTODO(
+                makeCounterWord(myChangesCount, "change") + ". " + makeCounterWord(myConflictsCount, "conflict")
+            );
         }
 
         private String makeCounterWord(int number, String word) {

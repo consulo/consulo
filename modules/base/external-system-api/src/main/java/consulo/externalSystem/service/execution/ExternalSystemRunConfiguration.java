@@ -171,7 +171,7 @@ public class ExternalSystemRunConfiguration extends LocatableConfigurationBase {
         tasks.add(new ExternalTaskPojo(taskName, mySettings.getExternalProjectPath(), null));
       }
       if (tasks.isEmpty()) {
-        throw new ExecutionException(ExternalSystemLocalize.runErrorUndefinedTask().get());
+        throw new ExecutionException(ExternalSystemLocalize.runErrorUndefinedTask());
       }
       String debuggerSetup = null;
       if (myDebugPort > 0) {

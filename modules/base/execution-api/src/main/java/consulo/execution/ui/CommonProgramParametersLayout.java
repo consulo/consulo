@@ -15,7 +15,6 @@
  */
 package consulo.execution.ui;
 
-import consulo.application.AllIcons;
 import consulo.execution.CommonProgramRunConfigurationParameters;
 import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.ui.awt.CommonProgramParametersPanel;
@@ -42,10 +41,10 @@ import consulo.util.io.PathUtil;
 import org.jspecify.annotations.Nullable;
 
 /**
- * @author VISTALL
- * @since 25/12/2021
- * <p>
  * Unified implementation of {@link CommonProgramParametersPanel}
+ *
+ * @author VISTALL
+ * @since 2021-12-25
  */
 public class CommonProgramParametersLayout<P extends CommonProgramRunConfigurationParameters> implements PseudoComponent {
     private FileChooserTextBoxBuilder.Controller myWorkDirectoryBox;
@@ -57,7 +56,6 @@ public class CommonProgramParametersLayout<P extends CommonProgramRunConfigurati
 
     private Component myLayout;
 
-    
     protected final DialogService myDialogService;
 
     public CommonProgramParametersLayout(DialogService dialogService) {
@@ -70,8 +68,13 @@ public class CommonProgramParametersLayout<P extends CommonProgramRunConfigurati
 
         addBefore(builder);
 
-        myProgramParametersComponent = TextBoxWithExpandAction.create(AllIcons.Actions.ShowViewer, "", ParametersListUtil.DEFAULT_LINE_PARSER, ParametersListUtil.DEFAULT_LINE_JOINER);
-        builder.addLabeled(ExecutionLocalize.runConfigurationProgramParameters().get(), myProgramParametersComponent);
+        myProgramParametersComponent = TextBoxWithExpandAction.create(
+            PlatformIconGroup.actionsShow(),
+            "",
+            ParametersListUtil.DEFAULT_LINE_PARSER,
+            ParametersListUtil.DEFAULT_LINE_JOINER
+        );
+        builder.addLabeled(ExecutionLocalize.runConfigurationProgramParameters(), myProgramParametersComponent);
 
         FileChooserTextBoxBuilder workDirBuilder = FileChooserTextBoxBuilder.create(getProject());
         workDirBuilder.fileChooserDescriptor(FileChooserDescriptorFactory.createSingleFolderDescriptor());
@@ -109,9 +112,8 @@ public class CommonProgramParametersLayout<P extends CommonProgramRunConfigurati
         // nothing
     }
 
-    @RequiredUIAccess
     @Override
-    
+    @RequiredUIAccess
     public Component getComponent() {
         return myLayout;
     }

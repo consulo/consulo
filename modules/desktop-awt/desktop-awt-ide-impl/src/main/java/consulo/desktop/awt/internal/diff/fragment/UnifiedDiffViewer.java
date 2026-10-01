@@ -58,6 +58,7 @@ import consulo.document.ReadonlyFragmentModificationHandler;
 import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
 import consulo.document.util.TextRange;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.navigation.Navigatable;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -1235,15 +1236,15 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
 
     private class MyStatusPanel extends StatusPanel {
         @Override
-        protected @Nullable String getMessage() {
+        protected LocalizeValue getMessage() {
             if (myChangedBlockData == null) {
-                return null;
+                return LocalizeValue.empty();
             }
             int changesCount = myChangedBlockData.getDiffChanges().size();
             if (changesCount == 0 && !myChangedBlockData.isContentsEqual()) {
-                return DiffLocalize.diffAllDifferencesIgnoredText().get();
+                return DiffLocalize.diffAllDifferencesIgnoredText();
             }
-            return DiffLocalize.diffCountDifferencesStatusText(changesCount).get();
+            return DiffLocalize.diffCountDifferencesStatusText(changesCount);
         }
     }
 

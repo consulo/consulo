@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ide.fileTemplates.impl;
 
 import consulo.fileTemplate.FileTemplate;
 import consulo.fileTemplate.FileTemplateDescriptor;
 import consulo.fileTemplate.FileTemplateGroupDescriptor;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import consulo.fileTemplate.impl.internal.FileTemplateBase;
 import consulo.ui.ex.awt.tree.Tree;
@@ -43,7 +43,7 @@ abstract class FileTemplateTabAsTree extends FileTemplateTab {
     private final FileTemplateNode myRoot;
     private final MyTreeModel myTreeModel;
 
-    protected FileTemplateTabAsTree(String title) {
+    protected FileTemplateTabAsTree(LocalizeValue title) {
         super(title);
         myRoot = initModel();
         myTreeModel = new MyTreeModel(myRoot);
@@ -124,10 +124,9 @@ abstract class FileTemplateTabAsTree extends FileTemplateTab {
                 FileTemplateNode node = (FileTemplateNode) value;
                 setText((String) node.getUserObject());
                 setIcon(node.getIcon());
-                setFont(getFont().deriveFont(AllFileTemplatesConfigurable.isInternalTemplate(
-                    node.getTemplateName(),
-                    getTitle()
-                ) ? Font.BOLD : Font.PLAIN));
+                setFont(getFont().deriveFont(
+                    AllFileTemplatesConfigurable.isInternalTemplate(node.getTemplateName(), getTitle().get()) ? Font.BOLD : Font.PLAIN
+                ));
 
                 FileTemplate template = getTemplate(node);
                 if (template != null && !template.isDefault()) {

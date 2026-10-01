@@ -192,9 +192,7 @@ public class PackageSetFactoryImpl extends PackageSetFactory {
         }
 
         private void error(LocalizeValue message) throws ParsingException {
-            throw new ParsingException(
-                AnalysisScopeLocalize.errorPackagesetPositionParsingError(message, (myLexer.getTokenStart() + 1)).get()
-            );
+            throw new ParsingException(AnalysisScopeLocalize.errorPackagesetPositionParsingError(message, (myLexer.getTokenStart() + 1)));
         }
     }
 }

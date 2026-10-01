@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.refactoring.classMember;
 
 import consulo.language.psi.NavigatablePsiElement;
@@ -22,39 +21,41 @@ import consulo.language.psi.PsiElement;
 /**
  * @author Dennis.Ushakov
  */
-public abstract class AbstractUsesDependencyMemberInfoModel<T extends NavigatablePsiElement, C extends PsiElement, M extends MemberInfoBase<T>> extends DependencyMemberInfoModel<T, M> {
-  protected final C myClass;
+public abstract class AbstractUsesDependencyMemberInfoModel<
+    T extends NavigatablePsiElement,
+    C extends PsiElement,
+    M extends MemberInfoBase<T>
+> extends DependencyMemberInfoModel<T, M> {
+    protected final C myClass;
 
-  public AbstractUsesDependencyMemberInfoModel(C aClass, C superClass, boolean recursive) {
-    super(new UsesMemberDependencyGraph<T, C, M>(aClass, superClass, recursive), MemberInfoModel.ERROR);
-    myClass = aClass;
-    setTooltipProvider(new MemberInfoTooltipManager.TooltipProvider<T, M>() {
-      @Override
-      public String getTooltip(M memberInfo) {
-        return ((UsesMemberDependencyGraph<T, C, M>) myMemberDependencyGraph).getElementTooltip(memberInfo.getMember());
-      }
-    });
-  }
+    public AbstractUsesDependencyMemberInfoModel(C aClass, C superClass, boolean recursive) {
+        super(new UsesMemberDependencyGraph<>(aClass, superClass, recursive), MemberInfoModel.ERROR);
+        myClass = aClass;
+        setTooltipProvider(
+            memberInfo -> ((UsesMemberDependencyGraph<T, C, M>) myMemberDependencyGraph)
+                .getElementTooltip(memberInfo.getMember()).getNullIfEmpty()
+        );
+    }
 
-  @Override
-  public int checkForProblems(M memberInfo) {
-    int problem = super.checkForProblems(memberInfo);
-    return doCheck(memberInfo, problem);
-  }
+    @Override
+    public int checkForProblems(M memberInfo) {
+        int problem = super.checkForProblems(memberInfo);
+        return doCheck(memberInfo, problem);
+    }
 
-  protected abstract int doCheck(M memberInfo, int problem);
+    protected abstract int doCheck(M memberInfo, int problem);
 
-  public void setSuperClass(C superClass) {
-    setMemberDependencyGraph(new UsesMemberDependencyGraph<T, C, M>(myClass, superClass, false));
-  }
+    public void setSuperClass(C superClass) {
+        setMemberDependencyGraph(new UsesMemberDependencyGraph<>(myClass, superClass, false));
+    }
 
-  @Override
-  public boolean isCheckedWhenDisabled(M member) {
-    return false;
-  }
+    @Override
+    public boolean isCheckedWhenDisabled(M member) {
+        return false;
+    }
 
-  @Override
-  public Boolean isFixedAbstract(M member) {
-    return null;
-  }
+    @Override
+    public Boolean isFixedAbstract(M member) {
+        return null;
+    }
 }

@@ -665,17 +665,17 @@ public class Switcher extends LegacyDumbAwareAction {
                     return toolWindow.getDisplayName().get();
                 }
                 if (value == RECENT_LOCATIONS) {
-                    return getRecentLocationsLabel(showEdited());
+                    return getRecentLocationsLabel(showEdited()).get();
                 }
 
                 throw new IllegalStateException();
             };
         }
 
-        static String getRecentLocationsLabel(Supplier<Boolean> showEdited) {
+        static LocalizeValue getRecentLocationsLabel(Supplier<Boolean> showEdited) {
             return showEdited.get()
-                ? IdeLocalize.recentLocationsChangedLocations().get()
-                : IdeLocalize.recentLocationsPopupTitle().get();
+                ? IdeLocalize.recentLocationsChangedLocations()
+                : IdeLocalize.recentLocationsPopupTitle();
         }
 
         @RequiredUIAccess
@@ -906,10 +906,7 @@ public class Switcher extends LegacyDumbAwareAction {
 
         @RequiredUIAccess
         private static @Nullable String getSmartShortcut(ToolWindow window, Map<String, ToolWindow> keymap) {
-            String title = window.getDisplayName().getValue();
-            if (StringUtil.isEmpty(title)) {
-                return null;
-            }
+            String title = window.getDisplayName().get();
             for (int i = 0; i < title.length(); i++) {
                 char c = title.charAt(i);
                 if (Character.isUpperCase(c)) {
@@ -1329,7 +1326,7 @@ public class Switcher extends LegacyDumbAwareAction {
             @RequiredUIAccess
             protected String getElementText(Object element) {
                 if (element instanceof ToolWindow toolWindow) {
-                    return toolWindow.getDisplayName().getValue();
+                    return toolWindow.getDisplayName().get();
                 }
                 else if (element instanceof FileInfo fileInfo) {
                     return fileInfo.getNameForRendering();
@@ -1373,11 +1370,11 @@ public class Switcher extends LegacyDumbAwareAction {
                 ((NameFilteringListModel) myComponent.toolWindows.getModel()).refilter();
                 if (myComponent.files.getModel().getSize() + myComponent.toolWindows.getModel().getSize() == 0) {
                     myComponent.toolWindows.getEmptyText().setText(LocalizeValue.empty());
-                    myComponent.files.getEmptyText().setText("Press 'Enter' to search in Project");
+                    myComponent.files.getEmptyText().setText(LocalizeValue.localizeTODO("Press 'Enter' to search in Project"));
                 }
                 else {
-                    myComponent.files.getEmptyText().setText(StatusText.DEFAULT_EMPTY_LOC_TEXT);
-                    myComponent.toolWindows.getEmptyText().setText(StatusText.DEFAULT_EMPTY_LOC_TEXT);
+                    myComponent.files.getEmptyText().setText(StatusText.DEFAULT_EMPTY_TEXT);
+                    myComponent.toolWindows.getEmptyText().setText(StatusText.DEFAULT_EMPTY_TEXT);
                 }
                 refreshSelection();
             }

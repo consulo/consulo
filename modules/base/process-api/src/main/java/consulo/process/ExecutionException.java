@@ -15,23 +15,29 @@
  */
 package consulo.process;
 
+import consulo.localize.LocalizeValue;
+
 import java.io.IOException;
 
 public class ExecutionException extends Exception {
-  public ExecutionException(String s) {
-    super(s);
-  }
+    public ExecutionException(LocalizeValue message) {
+        super(message.get());
+    }
 
-  public ExecutionException(Throwable cause) {
-    super(cause == null ? null : cause.getMessage(), cause);
-  }
+    public ExecutionException(String s) {
+        super(s);
+    }
 
-  public ExecutionException(String s, Throwable cause) {
-    super(s, cause);
-  }
+    public ExecutionException(Throwable cause) {
+        super(cause == null ? null : cause.getMessage(), cause);
+    }
 
-  public IOException toIOException() {
-    Throwable cause = getCause();
-    return cause instanceof IOException ? (IOException)cause : new IOException(this);
-  }
+    public ExecutionException(String s, Throwable cause) {
+        super(s, cause);
+    }
+
+    public IOException toIOException() {
+        Throwable cause = getCause();
+        return cause instanceof IOException ? (IOException) cause : new IOException(this);
+    }
 }
