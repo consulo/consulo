@@ -23,6 +23,7 @@ import consulo.ui.ex.awt.hint.HintHint;
 import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseEvent;
 
 /**
  * @author VISTALL
@@ -51,4 +52,6 @@ public interface IdeTooltipManager {
   String getUlImg(boolean awtTooltip);
 
   JEditorPane initEditorPane(String text, HintHint hintHint, @Nullable JLayeredPane layeredPane);
+
+  boolean hideCurrent(@Nullable MouseEvent me);
 }

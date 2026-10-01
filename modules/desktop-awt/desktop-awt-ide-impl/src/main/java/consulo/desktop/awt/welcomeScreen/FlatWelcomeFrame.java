@@ -22,7 +22,7 @@ import consulo.desktop.awt.ui.util.AppIconUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.application.FrameTitleUtil;
-import consulo.ide.impl.idea.openapi.wm.impl.IdeGlassPaneImpl;
+import consulo.desktop.awt.ui.impl.glassPane.IdeGlassPaneImpl;
 import consulo.ide.impl.idea.util.ui.accessibility.AccessibleContextAccessor;
 import consulo.project.Project;
 import consulo.project.ProjectManager;

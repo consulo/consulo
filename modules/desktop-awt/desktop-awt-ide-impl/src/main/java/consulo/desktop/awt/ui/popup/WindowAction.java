@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide.actions;
+package consulo.desktop.awt.ui.popup;
 
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.Editor;

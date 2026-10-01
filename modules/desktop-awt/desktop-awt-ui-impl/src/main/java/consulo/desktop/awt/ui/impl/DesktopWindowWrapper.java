@@ -15,9 +15,9 @@
  */
 package consulo.desktop.awt.ui.impl;
 
-import consulo.ui.ex.awt.internal.IdeGlassPaneFactory;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.desktop.awt.ui.impl.facade.FromSwingWindowWrapper;
+import consulo.desktop.awt.ui.impl.glassPane.IdeGlassPaneImpl;
 import consulo.ui.Component;
 import consulo.ui.Size2D;
 import consulo.ui.Window;
@@ -52,7 +52,7 @@ public class DesktopWindowWrapper extends WindowOverAWTWindow {
     super(new MyJDialog((Frame)TargetAWT.to(options.getOwner()), title));
 
     MyJDialog dialog = (MyJDialog)toAWTWindow();
-    dialog.setGlassPane(IdeGlassPaneFactory.getInstance().create(dialog.getRootPane(), false));
+    dialog.setGlassPane(new IdeGlassPaneImpl(dialog.getRootPane()));
     dialog.myWindow = this;
   }
 

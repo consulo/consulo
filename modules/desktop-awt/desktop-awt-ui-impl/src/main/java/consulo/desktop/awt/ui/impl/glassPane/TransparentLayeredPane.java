@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.ui.impl;
+package consulo.desktop.awt.ui.impl.glassPane;
 
 import consulo.ui.ex.awt.JBLayeredPane;
 

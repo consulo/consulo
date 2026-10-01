@@ -20,7 +20,7 @@ import consulo.application.ui.event.UISettingsListener;
 import consulo.desktop.awt.ui.impl.window.JDialogAsUIWindow;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.openapi.wm.impl.IdeGlassPaneImpl;
+import consulo.desktop.awt.ui.impl.glassPane.IdeGlassPaneImpl;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.project.ui.internal.WindowInfoImpl;

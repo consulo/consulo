@@ -28,6 +28,7 @@ import consulo.dataContext.DataManager;
 import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.desktop.awt.ui.ProhibitAWTEvents;
 import consulo.desktop.awt.ui.impl.event.DesktopAWTInputDetails;
+import consulo.desktop.awt.ui.impl.glassPane.IdeGlassPaneImpl;
 import consulo.desktop.awt.ui.keymap.keyGesture.KeyboardGestureProcessor;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -37,7 +38,6 @@ import consulo.ui.ex.impl.internal.action.ActionRunnerAsync;
 import consulo.ide.impl.idea.openapi.keymap.impl.ActionProcessor;
 import consulo.ide.impl.idea.openapi.keymap.impl.KeyState;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.ShortcutTextField;
-import consulo.ui.ex.internal.IdeGlassPaneEx;
 import consulo.ide.impl.idea.ui.ComponentWithMnemonics;
 import consulo.ui.ex.impl.internal.keymap.KeyStrokeAdapter;
 import consulo.desktop.awt.ui.popup.list.ListPopupImpl;
@@ -270,8 +270,8 @@ public final class IdeKeyEventDispatcher implements Disposable {
             RootPaneContainer rootPaneContainer = (RootPaneContainer)awtWindow;
 
             Component glassPane = rootPaneContainer.getGlassPane();
-            if (glassPane instanceof IdeGlassPaneEx ideGlassPaneEx) {
-                return ideGlassPaneEx.isInModalContext();
+            if (glassPane instanceof IdeGlassPaneImpl ideGlassPane) {
+                return ideGlassPane.isInModalContext();
             }
         }
 

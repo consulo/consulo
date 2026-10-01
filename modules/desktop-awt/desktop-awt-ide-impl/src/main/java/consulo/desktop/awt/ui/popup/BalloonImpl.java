@@ -15,8 +15,6 @@ import consulo.desktop.awt.ui.popup.form.*;
 import consulo.desktop.awt.wm.impl.WeakFocusStackManager;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.ide.IdeTooltip;
-import consulo.ide.impl.idea.ide.ui.PopupLocationTracker;
-import consulo.ide.impl.idea.ide.ui.ScreenAreaConsumer;
 import consulo.ide.impl.idea.ui.ComponentWithMnemonics;
 import consulo.language.editor.hint.HintManager;
 import consulo.localize.LocalizeValue;

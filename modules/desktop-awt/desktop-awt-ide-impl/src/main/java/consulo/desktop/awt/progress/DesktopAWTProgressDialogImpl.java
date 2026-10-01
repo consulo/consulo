@@ -10,7 +10,7 @@ import consulo.component.ComponentManager;
 import consulo.desktop.awt.ui.GlassPaneDialogWrapperPeer;
 import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.ui.PopupBorder;
+import consulo.desktop.awt.ui.popup.PopupBorder;
 import consulo.ui.ex.awt.LabeledTitlePanel;
 import consulo.ide.impl.idea.ui.WindowMoveListener;
 import consulo.localize.LocalizeValue;

@@ -43,7 +43,7 @@ import consulo.execution.debug.internal.breakpoint.BreakpointEditorUtil;
 import consulo.ide.impl.idea.codeInsight.hint.TooltipController;
 import consulo.ui.ex.impl.internal.action.ActionImplUtil;
 import consulo.ui.ex.impl.internal.action.ActionRunnerAsync;
-import consulo.ide.impl.idea.openapi.wm.impl.IdeGlassPaneImpl;
+import consulo.desktop.awt.ui.impl.glassPane.IdeGlassPaneImpl;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.impl.internal.hint.TooltipGroup;
 import consulo.language.editor.impl.internal.hint.TooltipRenderer;

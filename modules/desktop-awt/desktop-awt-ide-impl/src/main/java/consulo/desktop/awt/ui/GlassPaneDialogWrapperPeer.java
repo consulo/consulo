@@ -23,7 +23,8 @@ import consulo.dataContext.DataSink;
 import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.openapi.ui.impl.TransparentLayeredPane;
+import consulo.desktop.awt.ui.impl.glassPane.IdeGlassPaneImpl;
+import consulo.desktop.awt.ui.impl.glassPane.TransparentLayeredPane;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.project.Project;
@@ -40,7 +41,6 @@ import consulo.ui.ex.awt.internal.DialogWrapperPeer;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awt.util.UISettingsUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ui.ex.internal.IdeGlassPaneEx;
 import consulo.ui.ex.popup.StackingPopupDispatcher;
 import consulo.util.concurrent.ActionCallback;
 import org.jspecify.annotations.Nullable;
@@ -144,8 +144,8 @@ public class GlassPaneDialogWrapperPeer extends DialogWrapperPeer {
                 throw new IllegalStateException("Cannot find glass pane for " + owner.getClass().getName());
             }
 
-            assert glassPane instanceof IdeGlassPaneEx : "GlassPane should be instance of IdeGlassPane!";
-            myDialog = new MyDialog((IdeGlassPaneEx) glassPane, myWrapper, myProject);
+            assert glassPane instanceof IdeGlassPaneImpl : "GlassPane should be instance of IdeGlassPaneImpl!";
+            myDialog = new MyDialog((IdeGlassPaneImpl) glassPane, myWrapper, myProject);
         }
         else {
             throw new GlasspanePeerUnavailableException();
@@ -375,7 +375,7 @@ public class GlassPaneDialogWrapperPeer extends DialogWrapperPeer {
 
     private static class MyDialog extends JPanel implements Disposable, DialogWrapperDialog, UiDataProvider {
         private final WeakReference<DialogWrapper> myDialogWrapper;
-        private final IdeGlassPaneEx myPane;
+        private final IdeGlassPaneImpl myPane;
         private JComponent myContentPane;
         private MyRootPane myRootPane;
         private int shadowWidth;
@@ -386,7 +386,7 @@ public class GlassPaneDialogWrapperPeer extends DialogWrapperPeer {
         private Component myPreviouslyFocusedComponent;
         private Dimension myCachedSize = null;
 
-        private MyDialog(IdeGlassPaneEx pane, DialogWrapper wrapper, Project project) {
+        private MyDialog(IdeGlassPaneImpl pane, DialogWrapper wrapper, Project project) {
             setLayout(new BorderLayout());
             setOpaque(false);
 

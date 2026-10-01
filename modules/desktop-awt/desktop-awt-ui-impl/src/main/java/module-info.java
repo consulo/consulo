@@ -73,6 +73,7 @@ open module consulo.desktop.awt.ui.impl {
     exports consulo.desktop.awt.ui.impl.components;
     exports consulo.desktop.awt.ui.impl.components.fields;
     exports consulo.desktop.awt.ui.impl.event;
+    exports consulo.desktop.awt.ui.impl.glassPane;
     exports consulo.desktop.awt.ui.impl.htmlView;
     exports consulo.desktop.awt.ui.impl.image;
     exports consulo.desktop.awt.ui.impl.image.canvas;

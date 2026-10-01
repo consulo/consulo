@@ -27,7 +27,7 @@ import consulo.ui.ex.impl.internal.action.ActionRunnerAsync;
 import consulo.ide.impl.idea.openapi.keymap.impl.ActionProcessor;
 import consulo.ui.ex.impl.internal.keymap.KeymapManagerImpl;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.MouseShortcutPanel;
-import consulo.ide.impl.idea.openapi.wm.impl.IdeGlassPaneImpl;
+import consulo.desktop.awt.ui.impl.glassPane.IdeGlassPaneImpl;
 import consulo.ide.impl.idea.util.ReflectionUtil;
 import consulo.platform.Platform;
 import consulo.project.ui.wm.IdeFrame;

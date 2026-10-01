@@ -15,13 +15,10 @@
  */
 package consulo.ui.ex.awt.util;
 
-import consulo.ui.ex.Colored;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.util.lang.StringUtil;
 
 import org.jspecify.annotations.Nullable;
 import java.awt.*;
-import java.lang.annotation.Annotation;
 
 /**
  * @author max

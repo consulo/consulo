@@ -13,17 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.wm.impl;
+package consulo.desktop.awt.ui.impl.glassPane;
 
-import consulo.annotation.DeprecationInfo;
 import consulo.application.ApplicationManager;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.component.util.Weighted;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.ide.IdeTooltipManagerImpl;
-import consulo.ide.impl.idea.openapi.ui.impl.TransparentLayeredPane;
-import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.logging.Logger;
 import consulo.ui.ex.IdeGlassPane;
 import consulo.ui.ex.Painter;
@@ -32,8 +28,9 @@ import consulo.ui.ex.awt.EmptyClipboardOwner;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.dnd.DnDAware;
 import consulo.ui.ex.awt.event.MouseEventAdapter;
+import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
+import consulo.ui.ex.awt.internal.IdeTooltipManager;
 import consulo.ui.ex.awt.util.IdeGlassPaneUtil;
-import consulo.ui.ex.internal.IdeGlassPaneEx;
 import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.util.collection.FactoryMap;
@@ -50,7 +47,7 @@ import java.util.List;
 import java.util.*;
 import java.util.function.Predicate;
 
-public class IdeGlassPaneImpl extends JPanel implements IdeGlassPaneEx, Predicate<AWTEvent> {
+public class IdeGlassPaneImpl extends JPanel implements IdeGlassPane, Predicate<AWTEvent> {
 
   private static final Logger LOG = Logger.getInstance(IdeGlassPaneImpl.class);
   private static final String PREPROCESSED_CURSOR_KEY = "SuperCursor";
@@ -79,15 +76,6 @@ public class IdeGlassPaneImpl extends JPanel implements IdeGlassPaneEx, Predicat
   private MouseEvent myPrevPressEvent;
 
   public IdeGlassPaneImpl(JRootPane rootPane) {
-    myRootPane = rootPane;
-    setOpaque(false);
-    setVisible(false);
-    setLayout(null);
-  }
-
-  @Deprecated
-  @DeprecationInfo("installPainters parameter not used. use constructor without it")
-  public IdeGlassPaneImpl(JRootPane rootPane, boolean installPainters) {
     myRootPane = rootPane;
     setOpaque(false);
     setVisible(false);
@@ -128,7 +116,7 @@ public class IdeGlassPaneImpl extends JPanel implements IdeGlassPaneEx, Predicat
 
     if (e.getID() == MouseEvent.MOUSE_DRAGGED) {
       if (ApplicationManager.getApplication() != null) {
-        IdeTooltipManagerImpl.getInstanceImpl().hideCurrent((MouseEvent)e);
+        IdeTooltipManager.getInstance().hideCurrent((MouseEvent)e);
       }
     }
 
@@ -566,7 +554,6 @@ public class IdeGlassPaneImpl extends JPanel implements IdeGlassPaneEx, Predicat
     SwingUtilities.invokeLater(() -> deactivateIfNeeded());
   }
 
-  @Override
   public boolean isInModalContext() {
     Component[] components = getComponents();
     for (Component component : components) {

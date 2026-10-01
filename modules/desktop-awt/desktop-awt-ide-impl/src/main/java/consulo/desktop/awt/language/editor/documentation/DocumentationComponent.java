@@ -24,7 +24,7 @@ import consulo.desktop.awt.ui.impl.action.toolbar.AdvancedActionToolbarImpl;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.ide.actions.ExternalJavaDocAction;
-import consulo.ide.impl.idea.ide.actions.WindowAction;
+import consulo.desktop.awt.ui.popup.WindowAction;
 import consulo.ide.impl.idea.ui.WidthBasedLayout;
 import consulo.desktop.awt.ui.popup.AbstractPopup;
 import consulo.ide.impl.idea.ui.popup.PopupPositionManager;

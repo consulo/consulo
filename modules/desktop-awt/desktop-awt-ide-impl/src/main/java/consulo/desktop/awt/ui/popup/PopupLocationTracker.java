@@ -1,5 +1,5 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.ide.ui;
+package consulo.desktop.awt.ui.popup;
 
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -18,7 +18,6 @@ import java.util.LinkedHashSet;
  * <p>
  * Example of overlapping: completion in editor together with Javadoc on mouse over (or with inspection hint)
  */
-//@ApiStatus.Experimental
 public class PopupLocationTracker {
 
   private static final Collection<ScreenAreaConsumer> ourAreaConsumers = new LinkedHashSet<>();

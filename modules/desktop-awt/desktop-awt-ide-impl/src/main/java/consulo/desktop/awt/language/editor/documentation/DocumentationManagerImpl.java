@@ -20,7 +20,7 @@ import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.codeInsight.documentation.DockablePopupManager;
 import consulo.ide.impl.idea.codeInsight.documentation.QuickDocUtil;
 import consulo.ide.impl.idea.codeInsight.hint.ParameterInfoController;
-import consulo.ide.impl.idea.ide.actions.WindowAction;
+import consulo.desktop.awt.ui.popup.WindowAction;
 import consulo.ide.impl.idea.ide.util.gotoByName.ChooseByNameBase;
 import consulo.ide.impl.idea.openapi.roots.libraries.LibraryUtil;
 import consulo.desktop.awt.ui.popup.AbstractPopup;

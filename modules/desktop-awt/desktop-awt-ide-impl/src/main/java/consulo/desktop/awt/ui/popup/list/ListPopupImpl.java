@@ -10,7 +10,7 @@ import consulo.dataContext.UiDataProvider;
 import consulo.desktop.awt.ui.impl.event.DesktopAWTInputDetails;
 import consulo.ui.ex.impl.internal.action.ActionImplUtil;
 import consulo.ide.impl.idea.ui.ListActions;
-import consulo.ide.impl.idea.ui.UiInterceptors;
+import consulo.desktop.awt.ui.popup.UiInterceptors;
 import consulo.ide.impl.idea.ui.popup.ClosableByLeftArrow;
 import consulo.desktop.awt.ui.popup.NextStepHandler;
 import consulo.desktop.awt.ui.popup.WizardPopup;

@@ -30,7 +30,7 @@ import consulo.fileEditor.FileEditorWindow;
 import consulo.fileEditor.FileEditorWithProviderComposite;
 import consulo.fileEditor.impl.internal.*;
 import consulo.fileEditor.impl.internal.text.FileDropHandler;
-import consulo.ide.impl.idea.openapi.wm.impl.IdePanePanel;
+import consulo.desktop.awt.wm.impl.IdePanePanel;
 import consulo.desktop.awt.ui.impl.tabs.JBTabsImpl;
 import consulo.logging.Logger;
 import consulo.project.Project;

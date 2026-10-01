@@ -22,7 +22,7 @@ import consulo.desktop.awt.ui.impl.window.JDialogAsUIWindow;
 import consulo.desktop.awt.ui.impl.window.JFrameAsUIWindow;
 import consulo.desktop.awt.ui.util.AppIconUtil;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.openapi.wm.impl.IdeGlassPaneImpl;
+import consulo.desktop.awt.ui.impl.glassPane.IdeGlassPaneImpl;
 import consulo.desktop.awt.ui.mac.screenmenu.Menu;
 import consulo.platform.Platform;
 import consulo.project.Project;
@@ -75,7 +75,7 @@ public class FrameWrapperPeerFactoryImpl implements FrameWrapperPeerFactory {
         }
       });
 
-      setGlassPane(new IdeGlassPaneImpl(getRootPane(), true));
+      setGlassPane(new IdeGlassPaneImpl(getRootPane()));
 
       // with the native screen menu the app-global menu is used; secondary frames must not add an in-window Swing bar
       boolean setMenuOnFrame = Platform.current().os().isMac() && !Menu.isJbScreenMenuEnabled();
