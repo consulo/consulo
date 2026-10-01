@@ -22,6 +22,8 @@ import consulo.ui.graph.GraphEdgeRender;
 import consulo.ui.graph.GraphModel;
 import consulo.ui.graph.GraphNodeRender;
 
+import java.util.List;
+
 /**
  * @author VISTALL
  * @since 2026-09-30
@@ -66,6 +68,11 @@ public class DesktopAWTGraphImpl<E> extends SwingComponentDelegate<DesktopAWTGra
         if (isInitialized()) {
             toAWTComponent().rebuild();
         }
+    }
+
+    @Override
+    public List<E> getSelectedValues() {
+        return isInitialized() ? toAWTComponent().getSelectedValues() : List.of();
     }
 
     @RequiredUIAccess

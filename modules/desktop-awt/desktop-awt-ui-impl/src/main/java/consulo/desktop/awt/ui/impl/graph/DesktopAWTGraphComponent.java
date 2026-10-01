@@ -18,16 +18,22 @@ package consulo.desktop.awt.ui.impl.graph;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.swing.view.mxInteractiveCanvas;
 import com.mxgraph.util.mxConstants;
+import com.mxgraph.view.mxCellState;
 import com.mxgraph.view.mxGraph;
+import consulo.desktop.awt.ui.impl.event.DesktopAWTInputDetails;
 import consulo.desktop.awt.ui.impl.facade.FromSwingComponentWrapper;
+import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.Rectangle2D;
 import consulo.ui.RenderItem;
 import consulo.ui.Size2D;
+import consulo.ui.event.ContextMenuEvent;
+import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.graph.GraphArrow;
 import consulo.ui.graph.GraphEdgeRender;
+import consulo.ui.graph.GraphGroup;
 import consulo.ui.graph.GraphLineStyle;
 import consulo.ui.graph.GraphModel;
 import consulo.ui.graph.GraphNodeRender;
@@ -38,7 +44,12 @@ import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -53,13 +64,15 @@ public class DesktopAWTGraphComponent<E> extends mxGraphComponent implements Fro
     private final Supplier<GraphEdgeRender<E>> myEdgeRender;
 
     private final Map<Object, DesktopAWTGraphNodeView> myNodeViews = new HashMap<>();
+    private final Map<Object, LocalizeValue> myNodeTooltips = new HashMap<>();
+    private final Map<Object, GraphGroup> myGroups = new HashMap<>();
     private @Nullable CellRendererPane myRendererPane;
 
     public DesktopAWTGraphComponent(DesktopAWTGraphImpl<E> graph,
                                     GraphModel<E> model,
                                     Supplier<GraphNodeRender<E>> nodeRender,
                                     Supplier<GraphEdgeRender<E>> edgeRender) {
-        super(createGraph());
+        super(new DesktopAWTMxGraph());
         myGraph = graph;
         myModel = model;
         myNodeRender = nodeRender;
@@ -67,30 +80,112 @@ public class DesktopAWTGraphComponent<E> extends mxGraphComponent implements Fro
 
         setGridVisible(false);
         setConnectable(false);
-        setToolTips(false);
+        setToolTips(true);
         setBorder(JBUI.Borders.empty());
         getViewport().setBackground(UIUtil.getPanelBackground());
+
+        ((DesktopAWTMxGraph) getGraph()).setVertexTooltip(value -> {
+            LocalizeValue tooltip = myNodeTooltips.get(value);
+            return tooltip == null || tooltip.get().isEmpty() ? null : tooltip.get();
+        });
+
+        getGraphControl().addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                fireContextMenu(e);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                fireContextMenu(e);
+            }
+        });
     }
 
-    private static mxGraph createGraph() {
-        mxGraph graph = new mxGraph() {
+    private void fireContextMenu(MouseEvent e) {
+        if (!e.isPopupTrigger()) {
+            return;
+        }
+
+        mxGraph graph = getGraph();
+        Object cell = getCellAt(e.getX(), e.getY(), false);
+        if (cell != null && graph.getModel().isVertex(cell)) {
+            if (!graph.isCellSelected(cell)) {
+                graph.setSelectionCell(cell);
+            }
+        }
+        else {
+            graph.clearSelection();
+        }
+
+        myGraph.getListenerDispatcher(ContextMenuEvent.class)
+            .onEvent(new ContextMenuEvent(myGraph, DesktopAWTInputDetails.convert(getGraphControl(), e)));
+    }
+
+    @Override
+    protected mxGraphControl createGraphControl() {
+        return new mxGraphControl() {
             @Override
-            public String convertValueToString(Object cell) {
-                return getModel().getValue(cell) instanceof GraphEdgeStyle style ? style.getLabel().get() : "";
+            protected void drawFromRootCell() {
+                paintGroups(canvas.getGraphics());
+                super.drawFromRootCell();
             }
         };
-        graph.setCellsResizable(false);
-        graph.setCellsEditable(false);
-        graph.setCellsDeletable(false);
-        graph.setCellsCloneable(false);
-        graph.setCellsDisconnectable(false);
-        graph.setCellsBendable(false);
-        graph.setConnectableEdges(false);
-        graph.setAllowDanglingEdges(false);
-        graph.setEdgeLabelsMovable(false);
-        graph.setDropEnabled(false);
-        graph.setSplitEnabled(false);
-        return graph;
+    }
+
+    private void paintGroups(@Nullable Graphics2D g) {
+        if (g == null || myGroups == null || myGroups.isEmpty()) {
+            return;
+        }
+
+        mxGraph graph = getGraph();
+        Map<GraphGroup, Rectangle> frames = new LinkedHashMap<>();
+        for (Object cell : graph.getChildVertices(graph.getDefaultParent())) {
+            GraphGroup group = myGroups.get(graph.getModel().getValue(cell));
+            mxCellState state = graph.getView().getState(cell);
+            if (group != null && state != null) {
+                Rectangle bounds = state.getRectangle();
+                frames.merge(group, bounds, Rectangle::union);
+            }
+        }
+
+        Graphics2D graphics = (Graphics2D) g.create();
+        try {
+            graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            int padding = JBUI.scale(12);
+            int arc = JBUI.scale(10);
+            FontMetrics metrics = graphics.getFontMetrics(UIUtil.getLabelFont());
+            for (Map.Entry<GraphGroup, Rectangle> entry : frames.entrySet()) {
+                Rectangle frame = new Rectangle(entry.getValue());
+                frame.grow(padding, padding);
+                frame.y -= metrics.getHeight();
+                frame.height += metrics.getHeight();
+
+                graphics.setColor(JBColor.border());
+                graphics.setStroke(new BasicStroke(1f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10f, new float[]{4f, 3f}, 0f));
+                graphics.drawRoundRect(frame.x, frame.y, frame.width, frame.height, arc, arc);
+
+                graphics.setColor(UIUtil.getInactiveTextColor());
+                graphics.setFont(UIUtil.getLabelFont());
+                graphics.drawString(entry.getKey().getName().get(), frame.x + padding, frame.y + metrics.getAscent() + JBUI.scale(4));
+            }
+        }
+        finally {
+            graphics.dispose();
+        }
+    }
+
+    List<E> getSelectedValues() {
+        mxGraph graph = getGraph();
+        List<E> values = new ArrayList<>();
+        for (Object cell : graph.getSelectionCells()) {
+            if (graph.getModel().isVertex(cell)) {
+                @SuppressWarnings("unchecked")
+                E value = (E) graph.getModel().getValue(cell);
+                values.add(value);
+            }
+        }
+        return values;
     }
 
     @Override
@@ -118,6 +213,8 @@ public class DesktopAWTGraphComponent<E> extends mxGraphComponent implements Fro
 
     void rebuild() {
         myNodeViews.clear();
+        myNodeTooltips.clear();
+        myGroups.clear();
 
         mxGraph graph = getGraph();
         Object parent = graph.getDefaultParent();
@@ -134,6 +231,12 @@ public class DesktopAWTGraphComponent<E> extends mxGraphComponent implements Fro
                     new GraphNodeContent<>(() -> new DesktopAWTGraphRowPresentation(DesktopAWTGraphNodeView.createRowComponent()));
                 nodeRender.render(content, RenderItem.of(node, false));
                 myNodeViews.put(node, new DesktopAWTGraphNodeView(content));
+                myNodeTooltips.put(node, content.getTooltip());
+
+                GraphGroup group = myModel.getGroup(node);
+                if (group != null) {
+                    myGroups.put(node, group);
+                }
             }
 
             Map<E, Rectangle2D> bounds = LayeredGraphLayout.layout(myModel, this::measure, JBUI.scale(40), JBUI.scale(60));

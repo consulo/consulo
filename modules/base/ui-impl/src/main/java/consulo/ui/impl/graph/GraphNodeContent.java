@@ -15,6 +15,7 @@
  */
 package consulo.ui.impl.graph;
 
+import consulo.localize.LocalizeValue;
 import consulo.ui.TextItemPresentation;
 import consulo.ui.graph.GraphNodePresentation;
 import org.jspecify.annotations.Nullable;
@@ -32,6 +33,7 @@ public final class GraphNodeContent<P extends TextItemPresentation> implements G
     private final P myHeader;
     private final List<List<P>> mySections = new ArrayList<>();
     private @Nullable List<P> myCurrentSection;
+    private LocalizeValue myTooltip = LocalizeValue.empty();
 
     public GraphNodeContent(Supplier<P> factory) {
         myFactory = factory;
@@ -41,6 +43,12 @@ public final class GraphNodeContent<P extends TextItemPresentation> implements G
     @Override
     public P header() {
         return myHeader;
+    }
+
+    @Override
+    public GraphNodePresentation withTooltip(LocalizeValue tooltip) {
+        myTooltip = tooltip;
+        return this;
     }
 
     @Override
@@ -67,5 +75,9 @@ public final class GraphNodeContent<P extends TextItemPresentation> implements G
 
     public List<List<P>> getSections() {
         return mySections;
+    }
+
+    public LocalizeValue getTooltip() {
+        return myTooltip;
     }
 }

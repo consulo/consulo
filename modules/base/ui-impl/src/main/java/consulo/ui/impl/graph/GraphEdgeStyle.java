@@ -32,6 +32,7 @@ public final class GraphEdgeStyle implements GraphEdgePresentation {
     private GraphArrow mySourceArrow = GraphArrow.NONE;
     private GraphArrow myTargetArrow = GraphArrow.FILLED;
     private LocalizeValue myLabel = LocalizeValue.empty();
+    private LocalizeValue myTooltip = LocalizeValue.empty();
     private @Nullable ColorValue myColor;
 
     public static <E> GraphEdgeStyle of(GraphEdgeRender<E> render, E source, E target) {
@@ -65,6 +66,12 @@ public final class GraphEdgeStyle implements GraphEdgePresentation {
     }
 
     @Override
+    public GraphEdgePresentation withTooltip(LocalizeValue tooltip) {
+        myTooltip = tooltip;
+        return this;
+    }
+
+    @Override
     public GraphEdgePresentation withColor(@Nullable ColorValue color) {
         myColor = color;
         return this;
@@ -84,6 +91,10 @@ public final class GraphEdgeStyle implements GraphEdgePresentation {
 
     public LocalizeValue getLabel() {
         return myLabel;
+    }
+
+    public LocalizeValue getTooltip() {
+        return myTooltip;
     }
 
     public @Nullable ColorValue getColor() {

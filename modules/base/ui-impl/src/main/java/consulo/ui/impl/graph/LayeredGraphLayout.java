@@ -17,6 +17,7 @@ package consulo.ui.impl.graph;
 
 import consulo.ui.Rectangle2D;
 import consulo.ui.Size2D;
+import consulo.ui.graph.GraphGroup;
 import consulo.ui.graph.GraphModel;
 
 import java.util.ArrayList;
@@ -90,6 +91,10 @@ public final class LayeredGraphLayout {
         }
 
         orderLayers(layers, predecessors, acyclic);
+
+        for (List<E> layer : layers) {
+            clusterGroups(layer, model);
+        }
         return layers;
     }
 
@@ -218,6 +223,18 @@ public final class LayeredGraphLayout {
         for (int i = 0; i < layer.size(); i++) {
             position.put(layer.get(i), i);
         }
+    }
+
+    private static <E> void clusterGroups(List<E> layer, GraphModel<E> model) {
+        Map<GraphGroup, Integer> firstIndex = new HashMap<>();
+        Map<E, Integer> keys = new HashMap<>();
+        for (int i = 0; i < layer.size(); i++) {
+            E node = layer.get(i);
+            GraphGroup group = model.getGroup(node);
+            int index = i;
+            keys.put(node, group == null ? index : firstIndex.computeIfAbsent(group, it -> index));
+        }
+        layer.sort(Comparator.comparingInt(keys::get));
     }
 
     private static <E> void updatePositions(List<List<E>> layers, Map<E, Integer> position) {
