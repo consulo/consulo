@@ -15,7 +15,6 @@
  */
 package consulo.diagram.impl.internal.editor;
 
-import consulo.application.ReadAction;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.diagram.DiagramDataModel;
 import consulo.diagram.DiagramNode;
@@ -23,6 +22,7 @@ import consulo.diagram.DiagramProvider;
 import consulo.diagram.impl.internal.virtualFileSystem.DiagramTarget;
 import consulo.diagram.impl.internal.virtualFileSystem.DiagramVirtualFile;
 import consulo.disposer.Disposer;
+import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -83,13 +83,13 @@ public final class DiagramEditorController<T> {
     @RequiredUIAccess
     public void refresh() {
         DiagramDataModel<T> model = myModel;
-        update(() -> ReadAction.compute(() -> DiagramGraphSnapshot.of(myProvider, model)));
+        update(() -> DumbService.getInstance(myProject).runReadActionInSmartMode(() -> DiagramGraphSnapshot.of(myProvider, model)));
     }
 
     @RequiredUIAccess
     public void rebuild() {
         UIAccess uiAccess = UIAccess.current();
-        CompletableFuture.supplyAsync(() -> ReadAction.compute(() -> {
+        CompletableFuture.supplyAsync(() -> DumbService.getInstance(myProject).runReadActionInSmartMode(() -> {
                 DiagramTarget<T> target = myFile.resolve(myProject);
                 return target == null ? null : myProvider.createDataModel(myProject, target.element(), myFile);
             }), AppExecutorUtil.getAppExecutorService())

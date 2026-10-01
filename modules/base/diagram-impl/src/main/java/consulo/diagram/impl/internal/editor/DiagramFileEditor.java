@@ -15,7 +15,6 @@
  */
 package consulo.diagram.impl.internal.editor;
 
-import consulo.application.ReadAction;
 import consulo.dataContext.UiDataProvider;
 import consulo.diagram.DiagramDataKeys;
 import consulo.diagram.DiagramDataModel;
@@ -28,6 +27,7 @@ import consulo.diagram.impl.internal.virtualFileSystem.DiagramVirtualFile;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.FileEditor;
 import consulo.localize.LocalizeValue;
+import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.Component;
 import consulo.ui.Label;
@@ -38,7 +38,6 @@ import consulo.ui.event.ContextMenuEvent;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionPopupMenu;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.graph.Graph;
 import consulo.ui.layout.DockLayout;
@@ -92,7 +91,7 @@ public class DiagramFileEditor extends UserDataHolderBase implements FileEditor 
     }
 
     private @Nullable DiagramSession<?> buildSession() {
-        return ReadAction.compute(() -> {
+        return DumbService.getInstance(myProject).runReadActionInSmartMode(() -> {
             DiagramTarget<Object> target = myVirtualFile.resolve(myProject);
             if (target == null) {
                 return null;
@@ -177,8 +176,9 @@ public class DiagramFileEditor extends UserDataHolderBase implements FileEditor 
             }
         }
 
-        AnAction diagramGroup = actionManager.getAction(DiagramPopupGroup.ID);
-        group.add(diagramGroup);
+        if (actionManager.getAction(DiagramPopupGroup.ID) instanceof ActionGroup diagramGroup) {
+            group.addAll(diagramGroup);
+        }
 
         ActionPopupMenu menu = actionManager.createActionPopupMenu(POPUP_PLACE, group);
         menu.setTargetComponent(graph);

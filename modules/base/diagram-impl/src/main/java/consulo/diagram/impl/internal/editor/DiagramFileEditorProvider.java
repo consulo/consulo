@@ -16,6 +16,7 @@
 package consulo.diagram.impl.internal.editor;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.application.dumb.DumbAware;
 import consulo.diagram.impl.internal.virtualFileSystem.DiagramVirtualFile;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorProvider;
@@ -28,7 +29,7 @@ import consulo.virtualFileSystem.VirtualFile;
  * @since 2025-09-02
  */
 @ExtensionImpl
-public class DiagramFileEditorProvider implements FileEditorProvider {
+public class DiagramFileEditorProvider implements FileEditorProvider, DumbAware {
     @Override
     public boolean accept(Project project, VirtualFile file) {
         return file instanceof DiagramVirtualFile;
