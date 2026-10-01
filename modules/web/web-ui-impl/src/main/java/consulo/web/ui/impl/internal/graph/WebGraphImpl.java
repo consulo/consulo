@@ -20,6 +20,7 @@ import consulo.ui.RenderItem;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.graph.Graph;
 import consulo.ui.graph.GraphEdgeRender;
+import consulo.ui.graph.GraphGroup;
 import consulo.ui.graph.GraphModel;
 import consulo.ui.graph.GraphNodeRender;
 import consulo.ui.impl.graph.GraphEdgeStyle;
@@ -34,6 +35,7 @@ import tools.jackson.databind.node.ObjectNode;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -45,6 +47,7 @@ public class WebGraphImpl<E> extends VaadinComponentDelegate<WebGraphVaadin> imp
     private static final String DRAW_EDGES_SCRIPT = """
         const host = this;
         host.$graphEdges = JSON.parse($0);
+        host.$graphGroups = JSON.parse($1);
         const ns = 'http://www.w3.org/2000/svg';
         if (!host.$graphId) {
             host.$graphId = 'consulo-graph-' + Math.random().toString(36).slice(2);
@@ -133,6 +136,46 @@ public class WebGraphImpl<E> extends VaadinComponentDelegate<WebGraphVaadin> imp
                 return {left, top, right: left + r.width, bottom: top + r.height, x: left + r.width / 2, y: top + r.height / 2};
             };
 
+            for (const group of host.$graphGroups) {
+                let frame = null;
+                for (const member of group.members) {
+                    const node = nodes[member];
+                    if (!node) {
+                        continue;
+                    }
+                    const b = box(node);
+                    frame = frame === null ? {...b} : {
+                        left: Math.min(frame.left, b.left),
+                        top: Math.min(frame.top, b.top),
+                        right: Math.max(frame.right, b.right),
+                        bottom: Math.max(frame.bottom, b.bottom)
+                    };
+                }
+                if (frame === null) {
+                    continue;
+                }
+                const padding = 12;
+                const title = 16;
+                const rect = document.createElementNS(ns, 'rect');
+                rect.setAttribute('x', frame.left - padding);
+                rect.setAttribute('y', frame.top - padding - title);
+                rect.setAttribute('width', frame.right - frame.left + padding * 2);
+                rect.setAttribute('height', frame.bottom - frame.top + padding * 2 + title);
+                rect.setAttribute('rx', '10');
+                rect.style.fill = 'none';
+                rect.style.stroke = 'var(--consulo-component-border-color, lightgray)';
+                rect.style.strokeDasharray = '4 3';
+                svg.append(rect);
+
+                const text = document.createElementNS(ns, 'text');
+                text.setAttribute('x', frame.left);
+                text.setAttribute('y', frame.top - padding - title + 14);
+                text.style.fill = defaultColor;
+                text.style.fontSize = '12px';
+                text.textContent = group.name;
+                svg.append(text);
+            }
+
             for (const edge of host.$graphEdges) {
                 const source = nodes[edge.from];
                 const target = nodes[edge.to];
@@ -172,6 +215,13 @@ public class WebGraphImpl<E> extends VaadinComponentDelegate<WebGraphVaadin> imp
                 else if (edge.line === 'DOTTED') {
                     line.style.strokeDasharray = '1 3';
                 }
+                if (edge.tooltip) {
+                    const hint = document.createElementNS(ns, 'title');
+                    hint.textContent = edge.tooltip;
+                    line.append(hint);
+                    line.style.pointerEvents = 'stroke';
+                    line.style.strokeWidth = '1';
+                }
                 const end = marker(defs, markers, edge.targetArrow, color);
                 if (end) {
                     line.setAttribute('marker-end', end);
@@ -210,6 +260,8 @@ public class WebGraphImpl<E> extends VaadinComponentDelegate<WebGraphVaadin> imp
 
     private final Div myCanvas = new Div();
     private final List<Div> myLayers = new ArrayList<>();
+    private final Map<E, Div> myNodeDivs = new HashMap<>();
+    private final List<E> mySelection = new ArrayList<>();
 
     public WebGraphImpl(GraphModel<E> model) {
         myModel = model;
@@ -232,7 +284,41 @@ public class WebGraphImpl<E> extends VaadinComponentDelegate<WebGraphVaadin> imp
             .set("box-sizing", "border-box");
         component.add(myCanvas);
 
+        myCanvas.getElement().addEventListener("click", event -> setSelection(List.of()))
+            .setFilter("!event.target.closest('[data-graph-node]')");
+        myCanvas.getElement().addEventListener("contextmenu", event -> setSelection(List.of()))
+            .setFilter("!event.target.closest('[data-graph-node]')");
+
         rebuild();
+    }
+
+    @Override
+    public List<E> getSelectedValues() {
+        return List.copyOf(mySelection);
+    }
+
+    private void setSelection(List<E> selection) {
+        mySelection.clear();
+        mySelection.addAll(selection);
+
+        for (Map.Entry<E, Div> entry : myNodeDivs.entrySet()) {
+            entry.getValue().getStyle().set("outline", mySelection.contains(entry.getKey())
+                ? "2px solid var(--vaadin-focus-ring-color, #3b82f6)"
+                : "none");
+        }
+    }
+
+    private void onNodeClick(E node, boolean toggle) {
+        List<E> selection = new ArrayList<>(mySelection);
+        if (toggle) {
+            if (!selection.remove(node)) {
+                selection.add(node);
+            }
+        }
+        else {
+            selection = List.of(node);
+        }
+        setSelection(selection);
     }
 
     @Override
@@ -265,6 +351,8 @@ public class WebGraphImpl<E> extends VaadinComponentDelegate<WebGraphVaadin> imp
             myCanvas.remove(layer);
         }
         myLayers.clear();
+        myNodeDivs.clear();
+        mySelection.clear();
 
         List<List<E>> layers = LayeredGraphLayout.layers(myModel);
 
@@ -304,6 +392,7 @@ public class WebGraphImpl<E> extends VaadinComponentDelegate<WebGraphVaadin> imp
                 edge.put("sourceArrow", style.getSourceArrow().name());
                 edge.put("targetArrow", style.getTargetArrow().name());
                 edge.put("label", style.getLabel().get());
+                edge.put("tooltip", style.getTooltip().get());
                 String color = WebColors.toCssColor(style.getColor());
                 if (color != null) {
                     edge.put("color", color);
@@ -311,7 +400,21 @@ public class WebGraphImpl<E> extends VaadinComponentDelegate<WebGraphVaadin> imp
             }
         }
 
-        myCanvas.getElement().executeJs(DRAW_EDGES_SCRIPT, edges.toString());
+        Map<GraphGroup, ArrayNode> groupMembers = new LinkedHashMap<>();
+        for (Map.Entry<E, Integer> entry : ids.entrySet()) {
+            GraphGroup group = myModel.getGroup(entry.getKey());
+            if (group != null) {
+                groupMembers.computeIfAbsent(group, it -> JsonNodeFactory.instance.arrayNode()).add(entry.getValue());
+            }
+        }
+        ArrayNode groups = JsonNodeFactory.instance.arrayNode();
+        for (Map.Entry<GraphGroup, ArrayNode> entry : groupMembers.entrySet()) {
+            ObjectNode group = groups.addObject();
+            group.put("name", entry.getKey().getName().get());
+            group.set("members", entry.getValue());
+        }
+
+        myCanvas.getElement().executeJs(DRAW_EDGES_SCRIPT, edges.toString(), groups.toString());
     }
 
     private Div createNode(E value, int id) {
@@ -325,6 +428,20 @@ public class WebGraphImpl<E> extends VaadinComponentDelegate<WebGraphVaadin> imp
 
         Div node = new Div(header);
         node.getElement().setAttribute("data-graph-node", String.valueOf(id));
+
+        String tooltip = content.getTooltip().get();
+        if (!tooltip.isEmpty()) {
+            node.getElement().setAttribute("title", tooltip);
+        }
+
+        node.getElement().addEventListener("click", event -> onNodeClick(value, event.getEventData().path("event.ctrlKey").asBoolean(false)))
+            .addEventData("event.ctrlKey");
+        node.getElement().addEventListener("contextmenu", event -> {
+            if (!mySelection.contains(value)) {
+                setSelection(List.of(value));
+            }
+        });
+        myNodeDivs.put(value, node);
         node.getStyle()
             .set("border", "1px solid var(--consulo-component-border-color, lightgray)")
             .set("border-radius", "8px")
