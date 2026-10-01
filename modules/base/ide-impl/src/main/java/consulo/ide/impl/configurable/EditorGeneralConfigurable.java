@@ -384,15 +384,15 @@ public class EditorGeneralConfigurable extends SimpleConfigurableByProperties im
         ComboBox.Builder<String> stripSpacesConfig = ComboBox.builder();
         stripSpacesConfig.add(
             EditorSettingsExternalizable.STRIP_TRAILING_SPACES_CHANGED,
-            ApplicationLocalize.comboboxStripModifiedLines().get()
+            ApplicationLocalize.comboboxStripModifiedLines()
         );
         stripSpacesConfig.add(
             EditorSettingsExternalizable.STRIP_TRAILING_SPACES_WHOLE,
-            ApplicationLocalize.comboboxStripAll().get()
+            ApplicationLocalize.comboboxStripAll()
         );
         stripSpacesConfig.add(
             EditorSettingsExternalizable.STRIP_TRAILING_SPACES_NONE,
-            ApplicationLocalize.comboboxStripNone().get()
+            ApplicationLocalize.comboboxStripNone()
         );
 
         ComboBox<String> stripTrailingSpacesOnSave = stripSpacesConfig.build();

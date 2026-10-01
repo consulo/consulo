@@ -255,7 +255,7 @@ public class ActionPopupStep implements ListPopupStepEx<ActionPopupItem>, Mnemon
 
     @Override
     public String getTextFor(ActionPopupItem value) {
-        return value.getText().getValue();
+        return value.getText().get();
     }
 
     @Override

@@ -9,7 +9,6 @@ import consulo.execution.service.ServiceViewDescriptor;
 import consulo.execution.service.ServiceViewDnDDescriptor;
 import consulo.execution.service.ServiceViewManager;
 import consulo.language.editor.PlatformDataKeys;
-import consulo.localize.LocalizeValue;
 import consulo.navigation.ItemPresentation;
 import consulo.project.Project;
 import consulo.ui.ex.awt.RelativeRectangle;
@@ -24,7 +23,6 @@ import consulo.ui.ex.toolWindow.ToolWindowInternalDecorator;
 import consulo.ui.ex.tree.PresentableNodeDescriptor;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.util.collection.ContainerUtil;
-import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
 import org.jspecify.annotations.Nullable;
 
@@ -230,8 +228,7 @@ final class ServiceViewDragHelper {
         c.append(getDisplayName(presentation));
       }
       else {
-        LocalizeValue text = ExecutionLocalize.serviceViewItems(size);
-        c.append(text.get());
+        c.append(ExecutionLocalize.serviceViewItems(size));
       }
 
       Dimension preferredSize = c.getPreferredSize();

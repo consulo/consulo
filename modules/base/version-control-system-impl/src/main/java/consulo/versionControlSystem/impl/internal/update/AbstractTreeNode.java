@@ -19,6 +19,7 @@ import consulo.content.scope.NamedScopesHolder;
 import consulo.content.scope.PackageSetBase;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.image.Image;
 import consulo.util.lang.Pair;
@@ -112,14 +113,14 @@ public abstract class AbstractTreeNode extends DefaultMutableTreeNode {
         result.append(getName());
         if (showStatistics()) {
             result.append(" (");
-            result.append(getStatistics(getItemsCount()));
+            result.append(getStatistics(getItemsCount()).get());
             result.append(")");
         }
         return result.toString();
     }
 
-    private static String getStatistics(int itemsCount) {
-        return VcsLocalize.updateTreeNodeSizeStatistics(itemsCount).get();
+    private static LocalizeValue getStatistics(int itemsCount) {
+        return VcsLocalize.updateTreeNodeSizeStatistics(itemsCount);
     }
 
     protected abstract String getName();

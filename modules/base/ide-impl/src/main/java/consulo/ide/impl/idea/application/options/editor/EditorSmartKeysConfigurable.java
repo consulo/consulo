@@ -86,13 +86,13 @@ public class EditorSmartKeysConfigurable extends SimpleConfigurable<EditorSmartK
 
       ComboBox.Builder<Integer> reformatOnPasteBuilder = ComboBox.builder();
       reformatOnPasteBuilder
-        .add(CodeInsightSettings.NO_REFORMAT, ApplicationLocalize.comboboxPasteReformatNone().get());
+        .add(CodeInsightSettings.NO_REFORMAT, ApplicationLocalize.comboboxPasteReformatNone());
       reformatOnPasteBuilder
-        .add(CodeInsightSettings.INDENT_BLOCK, ApplicationLocalize.comboboxPasteReformatIndentBlock().get());
+        .add(CodeInsightSettings.INDENT_BLOCK, ApplicationLocalize.comboboxPasteReformatIndentBlock());
       reformatOnPasteBuilder
-        .add(CodeInsightSettings.INDENT_EACH_LINE, ApplicationLocalize.comboboxPasteReformatIndentEachLine().get());
+        .add(CodeInsightSettings.INDENT_EACH_LINE, ApplicationLocalize.comboboxPasteReformatIndentEachLine());
       reformatOnPasteBuilder
-        .add(CodeInsightSettings.REFORMAT_BLOCK, ApplicationLocalize.comboboxPasteReformatReformatBlock().get());
+        .add(CodeInsightSettings.REFORMAT_BLOCK, ApplicationLocalize.comboboxPasteReformatReformatBlock());
 
       myWholeLayout.add(LabeledComponents.left(
         ApplicationLocalize.comboboxPasteReformat().get(),
@@ -111,9 +111,9 @@ public class EditorSmartKeysConfigurable extends SimpleConfigurable<EditorSmartK
       myWholeLayout.add(LabeledLayout.create(LocalizeValue.localizeTODO("Backspace"), backspaceLayout));
 
       ComboBox.Builder<SmartBackspaceMode> smartIndentBuilder = ComboBox.builder();
-      smartIndentBuilder.add(SmartBackspaceMode.OFF, ApplicationLocalize.comboboxSmartBackspaceOff().get());
-      smartIndentBuilder.add(SmartBackspaceMode.INDENT, ApplicationLocalize.comboboxSmartBackspaceSimple().get());
-      smartIndentBuilder.add(SmartBackspaceMode.AUTOINDENT, ApplicationLocalize.comboboxSmartBackspaceSmart().get());
+      smartIndentBuilder.add(SmartBackspaceMode.OFF, ApplicationLocalize.comboboxSmartBackspaceOff());
+      smartIndentBuilder.add(SmartBackspaceMode.INDENT, ApplicationLocalize.comboboxSmartBackspaceSimple());
+      smartIndentBuilder.add(SmartBackspaceMode.AUTOINDENT, ApplicationLocalize.comboboxSmartBackspaceSmart());
       backspaceLayout.add(LabeledComponents.left(ApplicationLocalize.comboboxSmartBackspace().get(), myCbIndentingBackspace = smartIndentBuilder.build()));
     }
 

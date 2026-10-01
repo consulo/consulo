@@ -53,7 +53,6 @@ public interface LocalizeHelper {
     class DisabledLocalizeHelper implements LocalizeHelper {
         static final DisabledLocalizeHelper INSTANCE = new DisabledLocalizeHelper();
 
-        
         @Override
         public LocalizeValue getValue(String key) {
             return LocalizeValue.of(key);
@@ -67,7 +66,6 @@ public interface LocalizeHelper {
             myLocalize = localize;
         }
 
-        
         @Override
         public LocalizeValue getValue(String key) {
             return LocalizeKey.of(myLocalize, key).getValue();
@@ -85,7 +83,6 @@ public interface LocalizeHelper {
             myPluginClassLoader = pluginClassLoader;
         }
 
-        
         @Override
         public String getText(String key) {
             if (myResourceBundle == null) {
@@ -95,7 +92,6 @@ public interface LocalizeHelper {
             return CommonBundle.message(myResourceBundle, key);
         }
 
-        
         @Override
         public LocalizeValue getValue(String key) {
             return LocalizeValue.of(getText(key));
@@ -110,13 +106,11 @@ public interface LocalizeHelper {
         }
     }
 
-    
     @Deprecated
     @DeprecationInfo("Use #getValue()")
     default String getText(String key) {
-        return getValue(key).getValue();
+        return getValue(key).get();
     }
 
-    
     LocalizeValue getValue(String key);
 }

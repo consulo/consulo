@@ -92,7 +92,7 @@ abstract class RevertCommittedStuffAbstractAction extends LegacyDumbAwareAction 
         final List<FilePatch> patches = new ArrayList<>();
         ProgressManager.getInstance().run(new Task.Backgroundable(
             project,
-            VcsLocalize.revertChangesTitle().get(),
+            VcsLocalize.revertChangesTitle(),
             true,
             BackgroundFromStartOption.getInstance()
         ) {

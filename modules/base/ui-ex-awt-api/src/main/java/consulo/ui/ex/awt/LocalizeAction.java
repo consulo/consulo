@@ -53,16 +53,15 @@ public abstract class LocalizeAction extends AbstractAction {
             }
             else {
                 putValue(NAME, mnemonicInfo.getText());
-                putValue(MNEMONIC_KEY, (int) mnemonicInfo.getMnemonic());
+                putValue(MNEMONIC_KEY, mnemonicInfo.getMnemonic());
                 putValue(DISPLAYED_MNEMONIC_INDEX_KEY, mnemonicInfo.getMnemonicIndex());
             }
         }
         else {
-            putValue(NAME, myTextValue.getValue());
+            putValue(NAME, myTextValue.get());
         }
     }
 
-    
     public LocalizeValue getTextValue() {
         return myTextValue;
     }
