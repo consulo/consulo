@@ -414,6 +414,7 @@ public class WebGraphImpl<E> extends VaadinComponentDelegate<WebGraphVaadin> imp
             group.set("members", entry.getValue());
         }
 
+        myCanvas.getStyle().set("padding", groupMembers.isEmpty() ? "20px" : "52px 36px 36px 36px");
         myCanvas.getElement().executeJs(DRAW_EDGES_SCRIPT, edges.toString(), groups.toString());
     }
 
