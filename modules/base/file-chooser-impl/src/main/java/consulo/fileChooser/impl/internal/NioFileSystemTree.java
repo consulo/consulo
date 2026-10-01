@@ -99,9 +99,14 @@ class NioFileSystemTree implements Disposable {
     }
 
     @Nullable
-    Path getSelectedFile() {
+    NioFileNode getSelectedValue() {
         TreeNode<NioFileNode> node = myTree.getSelectedNode();
-        NioFileNode value = node == null ? null : node.getValue();
+        return node == null ? null : node.getValue();
+    }
+
+    @Nullable
+    Path getSelectedFile() {
+        NioFileNode value = getSelectedValue();
         return value == null ? null : value.getPath();
     }
 

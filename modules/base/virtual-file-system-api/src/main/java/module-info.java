@@ -29,7 +29,9 @@ module consulo.virtual.file.system.api {
     exports consulo.virtualFileSystem.util;
     exports consulo.virtualFileSystem.localize;
 
-    exports consulo.virtualFileSystem.internal.core.local to consulo.test.impl;
+    exports consulo.virtualFileSystem.internal.core.local to
+        consulo.file.chooser.impl,
+        consulo.test.impl;
     exports consulo.virtualFileSystem.internal.matcher to
         consulo.extension.preview.recorder.impl,
         consulo.ide.impl,

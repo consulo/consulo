@@ -1,6 +1,7 @@
 // Copyright 2000-2026 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.fileChooser.impl.internal;
 
+import consulo.fileChooser.FileChooserDescriptor;
 import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
@@ -105,6 +106,25 @@ final class NioFileChooserUtil {
         catch (Exception e) {
             return List.of();
         }
+    }
+
+    static boolean isVirtualFileRequired(FileChooserDescriptor descriptor) {
+        return descriptor.getFileFilter() != null
+            || isOverridden(descriptor, "isFileVisible", VirtualFile.class, boolean.class)
+            || isOverridden(descriptor, "isFileSelectable", VirtualFile.class);
+    }
+
+    private static boolean isOverridden(FileChooserDescriptor descriptor, String name, Class<?>... parameterTypes) {
+        try {
+            return descriptor.getClass().getMethod(name, parameterTypes).getDeclaringClass() != FileChooserDescriptor.class;
+        }
+        catch (NoSuchMethodException e) {
+            return false;
+        }
+    }
+
+    static boolean isIgnored(String name) {
+        return FileTypeRegistry.getInstance().isFileIgnored(name);
     }
 
     static boolean isArchiveFile(Path path) {

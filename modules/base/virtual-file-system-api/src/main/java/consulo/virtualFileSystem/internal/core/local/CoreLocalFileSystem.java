@@ -23,6 +23,9 @@ import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 /**
  * @author yole
@@ -34,12 +37,16 @@ public class CoreLocalFileSystem extends BaseVirtualFileSystem {
   }
 
   public @Nullable VirtualFile findFileByIoFile(File ioFile) {
-    return ioFile.exists() ? new CoreLocalVirtualFile(this, ioFile) : null;
+    return findFileByNioFile(ioFile.toPath());
+  }
+
+  public @Nullable VirtualFile findFileByNioFile(Path file) {
+    return Files.exists(file) ? new CoreLocalVirtualFile(this, file) : null;
   }
 
   @Override
   public @Nullable VirtualFile findFileByPath(String path) {
-    return findFileByIoFile(new File(path));
+    return findFileByNioFile(FileSystems.getDefault().getPath(path));
   }
 
   @Override
@@ -90,5 +97,10 @@ public class CoreLocalFileSystem extends BaseVirtualFileSystem {
   @Override
   public boolean isReadOnly() {
     return true;
+  }
+
+  @Override
+  public @Nullable Path getNioPath(VirtualFile file) {
+    return file.getFileSystem() == this && file instanceof CoreLocalVirtualFile coreFile ? coreFile.getFile() : null;
   }
 }

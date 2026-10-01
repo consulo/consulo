@@ -104,30 +104,20 @@ class FileView {
     }
 
     boolean isOkEnabled() {
-        List<Path> selected = getSelectedFiles();
-        if (selected.isEmpty()) {
+        NioFileNode selected = myFileTree.getSelectedValue();
+        Path file = selected == null ? null : selected.getPath();
+        if (selected == null || file == null || file.getParent() == null) {
             return false;
         }
-        for (Path file : selected) {
-            if (file.getParent() == null) {
-                return false;
-            }
-            if (Files.isDirectory(file)) {
-                if (!myChooseFolders) {
-                    return false;
-                }
-                if (myHasExtensionFilter) {
-                    return false;
-                }
-            }
-            else if (!myChooseFiles) {
-                return false;
-            }
-            if (!myDescriptor.isPathSelectable(file)) {
-                return false;
-            }
+        boolean directory = Files.isDirectory(file);
+        if (directory && myHasExtensionFilter) {
+            return false;
         }
-        return true;
+        Boolean selectable = selected.getSelectable();
+        if (selectable == null) {
+            selectable = directory ? myChooseFolders : myChooseFiles;
+        }
+        return selectable && myDescriptor.isPathSelectable(file);
     }
 
     boolean canDeleteSelectedFile() {

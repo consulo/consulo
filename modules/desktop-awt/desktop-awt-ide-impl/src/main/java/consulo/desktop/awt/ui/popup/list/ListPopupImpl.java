@@ -67,7 +67,6 @@ import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.event.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -738,7 +737,7 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
         PopupStep nextStep;
         try {
             if (listStep instanceof MultiSelectionListPopupStep<?>) {
-                nextStep = ((MultiSelectionListPopupStep<Object>) listStep).onChosen(Arrays.asList(selection), handleFinalChoices);
+                nextStep = ((MultiSelectionListPopupStep<Object>) listStep).onChosen(selection, handleFinalChoices);
             }
             else if (e != null && listStep instanceof ListPopupStepEx<?>) {
                 nextStep = ((ListPopupStepEx<Object>) listStep).onChosen(selectedValue, handleFinalChoices, e);

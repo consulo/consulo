@@ -1,6 +1,7 @@
 // Copyright 2000-2026 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.fileChooser.impl.internal;
 
+import consulo.application.ReadAction;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
@@ -15,6 +16,8 @@ import consulo.ui.image.ImageEffects;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.internal.core.local.CoreLocalFileSystem;
+import consulo.virtualFileSystem.internal.core.local.CoreLocalVirtualFile;
 import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
@@ -46,6 +49,8 @@ public class NioFileTreeModel implements TreeModel<NioFileNode> {
 
     private final FileChooserDescriptor myDescriptor;
     private final boolean mySortDirectories;
+    private final boolean myVirtualFileRequired;
+    private final CoreLocalFileSystem myFileSystem = new CoreLocalFileSystem();
     private final @Nullable List<Path> myDescriptorRoots;
 
     private volatile List<UniversalFileChooserContributor.Root> myContributorRoots = List.of();
@@ -57,6 +62,7 @@ public class NioFileTreeModel implements TreeModel<NioFileNode> {
     public NioFileTreeModel(FileChooserDescriptor descriptor, boolean sortDirectories) {
         myDescriptor = descriptor;
         mySortDirectories = sortDirectories;
+        myVirtualFileRequired = NioFileChooserUtil.isVirtualFileRequired(descriptor);
         myDescriptorRoots = getRoots(descriptor);
     }
 
@@ -93,6 +99,7 @@ public class NioFileTreeModel implements TreeModel<NioFileNode> {
             for (Path root : myDescriptorRoots) {
                 NioFileNode node = new NioFileNode(root);
                 updateContent(node, null, null);
+                updateSelectable(node, createVirtualFile(root));
                 createNode(nodeFactory, node, isLeaf(root));
             }
             return;
@@ -103,6 +110,7 @@ public class NioFileTreeModel implements TreeModel<NioFileNode> {
             if (path != null) {
                 NioFileNode node = new NioFileNode(path);
                 updateContent(node, null, null);
+                updateSelectable(node, createVirtualFile(path));
                 applyPresentation(node, root.presentation());
                 createNode(nodeFactory, node, isLeaf(path));
             }
@@ -121,7 +129,8 @@ public class NioFileTreeModel implements TreeModel<NioFileNode> {
             return;
         }
 
-        List<ChildEntry> children = getChildrenWithAttributes(parentPath);
+        PreloadedDirectory directory = myVirtualFileRequired ? new PreloadedDirectory(myFileSystem, parentPath) : null;
+        List<ChildEntry> children = getChildrenWithAttributes(parentPath, directory);
         if (children == null) {
             return;
         }
@@ -137,6 +146,7 @@ public class NioFileTreeModel implements TreeModel<NioFileNode> {
         for (ChildEntry entry : visible) {
             NioFileNode node = new NioFileNode(entry.path());
             updateContent(node, entry.attrs(), entry.isDirectory());
+            updateSelectable(node, entry.file());
             createNode(nodeFactory, node, !entry.isDirectory());
         }
     }
@@ -170,39 +180,47 @@ public class NioFileTreeModel implements TreeModel<NioFileNode> {
     }
 
     private boolean isVisible(ChildEntry entry) {
-        if (!myDescriptor.isShowHiddenFiles()) {
-            if (NioFileChooserUtil.isHidden(entry.path(), entry.attrs())) {
-                return false;
-            }
-        }
-        if (!myDescriptor.isChooseFiles() && !entry.isDirectory()
-            && !(myDescriptor.isChooseJarContents() && NioFileChooserUtil.isArchiveFile(entry.path()))) {
+        boolean showHiddenFiles = myDescriptor.isShowHiddenFiles();
+        if (!showHiddenFiles && NioFileChooserUtil.isHidden(entry.path(), entry.attrs())) {
             return false;
         }
-        if (!entry.isDirectory()) {
-            Pair<LocalizeValue, List<String>> extFilter = myDescriptor.getExtensionFilter();
-            if (extFilter != null) {
-                Path fileName = entry.path().getFileName();
-                if (fileName == null) {
-                    return false;
-                }
-                String name = fileName.toString();
-                boolean matched = false;
-                for (String extension : extFilter.getSecond()) {
-                    if (StringUtil.endsWithIgnoreCase(name, "." + extension)) {
-                        matched = true;
-                        break;
-                    }
-                }
-                if (!matched) {
-                    return false;
-                }
-            }
+        if (!entry.isDirectory() && !matchesExtensionFilter(entry.name())) {
+            return false;
         }
-        return true;
+        VirtualFile file = entry.file();
+        if (file != null) {
+            return ReadAction.compute(() -> myDescriptor.isFileVisible(file, showHiddenFiles));
+        }
+        if (myDescriptor.isHideIgnored() && NioFileChooserUtil.isIgnored(entry.name())) {
+            return false;
+        }
+        return entry.isDirectory()
+            || myDescriptor.isChooseFiles()
+            || myDescriptor.isChooseJarContents() && NioFileChooserUtil.isArchiveFile(entry.path());
     }
 
-    private @Nullable List<ChildEntry> getChildrenWithAttributes(Path path) {
+    private boolean matchesExtensionFilter(String name) {
+        Pair<LocalizeValue, List<String>> extFilter = myDescriptor.getExtensionFilter();
+        if (extFilter == null) {
+            return true;
+        }
+        for (String extension : extFilter.getSecond()) {
+            if (StringUtil.endsWithIgnoreCase(name, "." + extension)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private @Nullable VirtualFile createVirtualFile(Path path) {
+        return myVirtualFileRequired ? new CoreLocalVirtualFile(myFileSystem, path) : null;
+    }
+
+    private void updateSelectable(NioFileNode node, @Nullable VirtualFile file) {
+        node.updateSelectable(file == null ? null : ReadAction.compute(() -> myDescriptor.isFileSelectable(file)));
+    }
+
+    private @Nullable List<ChildEntry> getChildrenWithAttributes(Path path, @Nullable PreloadedDirectory directory) {
         if (!isValid(path)) {
             return null;
         }
@@ -214,7 +232,8 @@ public class NioFileTreeModel implements TreeModel<NioFileNode> {
             for (Path childPath : stream) {
                 try {
                     BasicFileAttributes attrs = Files.readAttributes(childPath, BasicFileAttributes.class);
-                    result.add(new ChildEntry(childPath, attrs, isDirectory(childPath, attrs)));
+                    VirtualFile file = directory == null ? null : new LazyDirectoryOrFile(myFileSystem, directory, childPath, attrs);
+                    result.add(new ChildEntry(childPath, attrs, isDirectory(childPath, attrs), file));
                 }
                 catch (IOException | RuntimeException e) {
                     // skip unreadable entries
@@ -331,7 +350,11 @@ public class NioFileTreeModel implements TreeModel<NioFileNode> {
         return list.isEmpty() && descriptor.isShowFileSystemRoots() ? null : list;
     }
 
-    private record ChildEntry(Path path, BasicFileAttributes attrs, boolean isDirectory) {
+    private record ChildEntry(Path path, BasicFileAttributes attrs, boolean isDirectory, @Nullable VirtualFile file) {
+        String name() {
+            Path fileName = path.getFileName();
+            return fileName != null ? fileName.toString() : path.toString();
+        }
     }
 
     private static class VirtualRootNode extends NioFileNode {

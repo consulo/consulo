@@ -23,6 +23,7 @@ public class NioFileNode {
     private final AtomicBoolean mySpecialRef = new AtomicBoolean();
     private final AtomicBoolean mySymlinkRef = new AtomicBoolean();
     private final AtomicBoolean myWritableRef = new AtomicBoolean();
+    private final AtomicReference<@Nullable Boolean> mySelectableRef = new AtomicReference<>();
 
     NioFileNode(@Nullable Path path) {
         myPath = path;
@@ -94,6 +95,14 @@ public class NioFileNode {
 
     boolean updateWritable(boolean writable) {
         return writable != myWritableRef.getAndSet(writable);
+    }
+
+    public @Nullable Boolean getSelectable() {
+        return mySelectableRef.get();
+    }
+
+    boolean updateSelectable(@Nullable Boolean selectable) {
+        return !Objects.equals(selectable, mySelectableRef.getAndSet(selectable));
     }
 
     @Override

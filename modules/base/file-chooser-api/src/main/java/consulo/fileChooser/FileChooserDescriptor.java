@@ -285,6 +285,10 @@ public class FileChooserDescriptor extends UserDataHolderBase implements Cloneab
     return this;
   }
 
+  public @Nullable Predicate<VirtualFile> getFileFilter() {
+    return myFileFilter;
+  }
+
   /**
    * @see #withExtensionFilter(LocalizeValue, String...)
    */
