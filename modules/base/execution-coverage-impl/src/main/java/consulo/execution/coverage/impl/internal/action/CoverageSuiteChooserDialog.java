@@ -246,7 +246,7 @@ public class CoverageSuiteChooserDialog extends DialogWrapper {
         ) {
             if (value instanceof CheckedTreeNode checkedTreeNode) {
                 if (checkedTreeNode.getUserObject() instanceof CoverageSuite suite) {
-                    getTextRenderer().append(LocalizeValue.of(suite.getPresentableName()), SimpleTextAttributes.REGULAR_ATTRIBUTES);
+                    getTextRenderer().append(LocalizeValue.of(suite.getPresentableName()));
                     String date = " (" + DateFormatUtil.formatPrettyDateTime(suite.getLastCoverageTimeStamp()) + ")";
                     getTextRenderer().append(LocalizeValue.of(date), SimpleTextAttributes.GRAY_ATTRIBUTES);
                 }

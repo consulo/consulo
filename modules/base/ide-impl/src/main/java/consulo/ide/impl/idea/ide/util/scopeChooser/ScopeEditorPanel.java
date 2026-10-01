@@ -666,7 +666,7 @@ public class ScopeEditorPanel {
                 if (!(selected && hasFocus) && node.hasMarked() && !DependencyUISettings.getInstance().UI_FILTER_LEGALS) {
                     setForeground(node.hasUnmarked() ? PARTIAL_INCLUDED : WHOLE_INCLUDED);
                 }
-                append(node.toString(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
+                append(node.toString());
                 String locationString = node.getComment();
                 if (!StringUtil.isEmpty(locationString)) {
                     append(" (" + locationString + ")", SimpleTextAttributes.GRAY_ATTRIBUTES);

@@ -26,7 +26,6 @@ import consulo.execution.debug.impl.internal.ui.tree.UnifiedXDebuggerTree;
 import consulo.execution.debug.ui.XDebuggerUIConstants;
 import consulo.execution.debug.ui.XValuePresentationUtil;
 import consulo.localize.LocalizeValue;
-import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.image.Image;
 import org.jspecify.annotations.Nullable;
 
@@ -62,7 +61,7 @@ public class UnifiedXValueNodeImpl extends UnifiedXValueContainerNode<XValue>
             UnifiedColoredTextContainer text = new UnifiedColoredTextContainer();
             if (myName.isNotEmpty()) {
                 text.append(myName, XDebuggerUIConstants.VALUE_NAME_ATTRIBUTES);
-                text.append(XDebuggerUIConstants.EQ_TEXT, SimpleTextAttributes.REGULAR_ATTRIBUTES);
+                text.append(XDebuggerUIConstants.EQ_TEXT);
             }
             text.append(XDebuggerUIConstants.COLLECTING_DATA_MESSAGE, XDebuggerUIConstants.COLLECTING_DATA_HIGHLIGHT_ATTRIBUTES);
             setText(text);

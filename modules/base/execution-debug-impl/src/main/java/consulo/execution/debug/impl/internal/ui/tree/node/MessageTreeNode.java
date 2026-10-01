@@ -216,8 +216,8 @@ public class MessageTreeNode extends XDebuggerTreeNode {
     @Override
     public void appendToComponent(ColoredTextContainer component) {
       for (Object object : objects) {
-        if (object instanceof String) {
-          component.append((String)object, SimpleTextAttributes.REGULAR_ATTRIBUTES);
+        if (object instanceof String string) {
+          component.append(string);
         }
         else {
           XDebuggerTreeNodeHyperlink hyperlink = (XDebuggerTreeNodeHyperlink)object;

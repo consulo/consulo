@@ -82,7 +82,7 @@ public class TemplateDataLanguageConfigurable extends PerFileConfigurableBase<La
 
     @Override
     protected void renderValue(@Nullable Object target, Language language, ColoredTextContainer renderer) {
-        renderer.append(language.getDisplayName(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
+        renderer.append(language.getDisplayName());
         renderer.setIcon(ObjectUtil.notNull(language.getAssociatedFileType(), UnknownFileType.INSTANCE).getIcon());
     }
 

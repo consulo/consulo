@@ -47,7 +47,7 @@ public class ExtensionTreeCellRenderer extends CheckboxTree.CheckboxTreeCellRend
       boolean enabled = extensionCheckedTreeNode.isEnabled();
       textRenderer.setIcon(enabled ? providerEP.getIcon() : ImageEffects.transparent(providerEP.getIcon()));
       if (enabled) {
-        textRenderer.append(providerEP.getName(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
+        textRenderer.append(providerEP.getName());
       }
       else {
         textRenderer.append(providerEP.getName(), SimpleTextAttributes.GRAY_ATTRIBUTES);

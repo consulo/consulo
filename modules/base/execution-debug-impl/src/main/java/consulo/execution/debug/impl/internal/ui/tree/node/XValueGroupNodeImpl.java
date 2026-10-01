@@ -31,7 +31,7 @@ public class XValueGroupNodeImpl extends XValueContainerNode<XValueGroup> implem
     super(tree, parent, group);
     setLeaf(false);
     setIcon(group.getIcon());
-    myText.append(group.getName(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
+    myText.append(group.getName());
     String comment = group.getComment();
     if (comment != null) {
       XValuePresentationUtil.appendSeparator(myText, group.getSeparator());

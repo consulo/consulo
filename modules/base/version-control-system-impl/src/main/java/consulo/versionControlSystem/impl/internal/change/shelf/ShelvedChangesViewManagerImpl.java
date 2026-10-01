@@ -449,7 +449,7 @@ public class ShelvedChangesViewManagerImpl implements ShelvedChangesViewManager 
             }
             append(fileName, new SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN, TargetAWT.to(fileStatus.getColor())));
             if (movedMessage != null) {
-                append(movedMessage, SimpleTextAttributes.REGULAR_ATTRIBUTES);
+                append(movedMessage);
             }
             append(" (" + directory + ")", SimpleTextAttributes.GRAYED_ATTRIBUTES);
             setIcon(FileTypeManager.getInstance().getFileTypeByFileName(fileName).getIcon());

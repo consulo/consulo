@@ -584,7 +584,7 @@ public class ModulesDependenciesPanel extends JPanel implements ModuleRootListen
                 append(module.getName(), SimpleTextAttributes.ERROR_ATTRIBUTES);
             }
             else {
-                append(module.getName(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
+                append(module.getName());
             }
         }
     }

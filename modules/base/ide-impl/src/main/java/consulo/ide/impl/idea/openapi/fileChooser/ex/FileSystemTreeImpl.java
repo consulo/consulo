@@ -12,7 +12,6 @@ import consulo.ide.impl.idea.openapi.fileChooser.tree.*;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.awt.PopupHandler;
@@ -51,7 +50,6 @@ public class FileSystemTreeImpl implements FileSystemTree {
     private final ArrayList<Runnable> myOkActions = new ArrayList<>(2);
     private final FileChooserDescriptor myDescriptor;
 
-    
     private final AsyncTreeModel myAsyncTreeModel;
 
     private final List<Listener> myListeners = Lists.newLockFreeCopyOnWriteList();
@@ -122,7 +120,7 @@ public class FileSystemTreeImpl implements FileSystemTree {
                     if (userObject instanceof FileNodeDescriptor fileNodeDescriptor) {
                         String comment = fileNodeDescriptor.getComment();
                         if (comment != null) {
-                            append(comment, SimpleTextAttributes.REGULAR_ATTRIBUTES);
+                            append(comment);
                         }
                     }
                 }
@@ -292,12 +290,7 @@ public class FileSystemTreeImpl implements FileSystemTree {
     }
 
     @RequiredUIAccess
-    public Exception createNewFile(
-        VirtualFile parentDirectory,
-        String newFileName,
-        FileType fileType,
-        String initialContent
-    ) {
+    public Exception createNewFile(VirtualFile parentDirectory, String newFileName, FileType fileType, String initialContent) {
         return CommandProcessor.getInstance().<Exception>newCommand()
             .project(myProject)
             .name(UILocalize.fileChooserCreateNewFileCommandName())
@@ -350,7 +343,6 @@ public class FileSystemTreeImpl implements FileSystemTree {
     }
 
     @Override
-    
     public VirtualFile[] getSelectedFiles() {
         TreePath[] paths = myTree.getSelectionPaths();
         if (paths == null) {

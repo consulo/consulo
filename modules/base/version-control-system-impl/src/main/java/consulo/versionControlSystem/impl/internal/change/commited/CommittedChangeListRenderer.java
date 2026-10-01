@@ -166,7 +166,7 @@ public class CommittedChangeListRenderer extends ColoredTreeCellRenderer {
       description = truncateDescription(description, fontMetrics, remainingWidth);
       myRenderer.appendTextWithLinks(description);
       if (!StringUtil.isEmpty(description)) {
-        append(" ", SimpleTextAttributes.REGULAR_ATTRIBUTES);
+        append(" ");
         append(moreMarker, SimpleTextAttributes.LINK_ATTRIBUTES, new CommittedChangesTreeBrowser.MoreLauncher(myProject, changeList));
       } else if (remainingWidth > 0) {
         append(moreMarker, SimpleTextAttributes.LINK_ATTRIBUTES, new CommittedChangesTreeBrowser.MoreLauncher(myProject, changeList));
@@ -176,7 +176,7 @@ public class CommittedChangeListRenderer extends ColoredTreeCellRenderer {
     }
 
     append(changeList.getCommitterName(), SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES);
-    append(date, SimpleTextAttributes.REGULAR_ATTRIBUTES);
+    append(date);
   }
 
   private static String trimLastWord(String description) {

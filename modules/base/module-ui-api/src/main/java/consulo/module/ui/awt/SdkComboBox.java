@@ -122,8 +122,7 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
                 }
                 else if (value == null || value instanceof NullSdkComboBoxItem) {
                     setIcon(ObjectUtil.notNull(nullIcon, Image.empty(Image.DEFAULT_ICON_SIZE)));
-                    LocalizeValue name = nullItemName.orIfEmpty(ProjectLocalize.sdkComboBoxItem());
-                    append(name, SimpleTextAttributes.REGULAR_ATTRIBUTES);
+                    append(nullItemName.orIfEmpty(ProjectLocalize.sdkComboBoxItem()));
                 }
                 else {
                     Sdk sdk = value.getSdk();

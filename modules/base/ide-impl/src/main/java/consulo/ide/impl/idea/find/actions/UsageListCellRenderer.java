@@ -51,7 +51,7 @@ public class UsageListCellRenderer extends ColoredListCellRenderer {
     setIcon(presentation.getIcon());
     VirtualFile virtualFile = getVirtualFile(usage);
     if (virtualFile != null) {
-      append(virtualFile.getName() + ": ", SimpleTextAttributes.REGULAR_ATTRIBUTES);
+      append(virtualFile.getName() + ": ");
       setIcon(virtualFile.getFileType().getIcon());
       PsiFile psiFile = PsiManager.getInstance(myProject).findFile(virtualFile);
       if (psiFile != null) {

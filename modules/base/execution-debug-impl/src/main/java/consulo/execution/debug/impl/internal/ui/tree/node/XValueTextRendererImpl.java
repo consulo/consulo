@@ -70,6 +70,6 @@ public class XValueTextRendererImpl extends XValueTextRendererBase {
 
     @Override
     public void renderSpecialSymbol(String symbol) {
-        myText.append(symbol, SimpleTextAttributes.REGULAR_ATTRIBUTES);
+        myText.append(symbol);
     }
 }

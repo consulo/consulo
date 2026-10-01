@@ -65,7 +65,7 @@ public class LanguagePanel extends AbstractInjectionPanel<BaseInjection> {
                     FileType fileType = language.getAssociatedFileType();
                     if (fileType != null) {
                         setIcon(fileType.getIcon());
-                        append(" ", SimpleTextAttributes.REGULAR_ATTRIBUTES);
+                        append(" ");
                         append("(" + fileType.getDisplayName() + ")", SimpleTextAttributes.GRAYED_ATTRIBUTES);
                     }
                 }
