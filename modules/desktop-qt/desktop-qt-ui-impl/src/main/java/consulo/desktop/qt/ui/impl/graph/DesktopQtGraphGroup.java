@@ -15,13 +15,11 @@
  */
 package consulo.desktop.qt.ui.impl.graph;
 
-import consulo.desktop.qt.ui.impl.DesktopQtTextItemPresentation;
-import consulo.ui.impl.graph.GraphNodeContent;
-import io.qt.core.QRect;
+import java.util.List;
 
 /**
  * @author VISTALL
- * @since 2026-09-30
+ * @since 2026-10-01
  */
-record DesktopQtGraphNode(Object value, QRect bounds, GraphNodeContent<DesktopQtTextItemPresentation> content) {
+record DesktopQtGraphGroup(String name, List<Integer> members) {
 }

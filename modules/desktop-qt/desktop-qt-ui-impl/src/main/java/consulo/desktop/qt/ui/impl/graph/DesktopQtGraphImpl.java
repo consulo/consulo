@@ -15,13 +15,16 @@
  */
 package consulo.desktop.qt.ui.impl.graph;
 
+import consulo.desktop.qt.ui.impl.DesktopQtInputDetails;
 import consulo.desktop.qt.ui.impl.DesktopQtTextItemPresentation;
 import consulo.desktop.qt.ui.impl.QtComponentDelegate;
 import consulo.ui.Rectangle2D;
 import consulo.ui.RenderItem;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.ContextMenuEvent;
 import consulo.ui.graph.Graph;
 import consulo.ui.graph.GraphEdgeRender;
+import consulo.ui.graph.GraphGroup;
 import consulo.ui.graph.GraphModel;
 import consulo.ui.graph.GraphNodeRender;
 import consulo.ui.impl.graph.GraphEdgeStyle;
@@ -34,6 +37,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -61,7 +65,7 @@ public class DesktopQtGraphImpl<E> extends QtComponentDelegate<QScrollArea> impl
         QScrollArea area = new QScrollArea(parent);
         area.setWidgetResizable(true);
 
-        DesktopQtGraphCanvas canvas = new DesktopQtGraphCanvas(area, this::rebuild);
+        DesktopQtGraphCanvas canvas = new DesktopQtGraphCanvas(area, this::rebuild, this::fireContextMenu);
         area.setWidget(canvas);
         myCanvas = canvas;
         return area;
@@ -84,6 +88,24 @@ public class DesktopQtGraphImpl<E> extends QtComponentDelegate<QScrollArea> impl
     public void setEdgeRender(GraphEdgeRender<E> render) {
         myEdgeRender = render;
         rebuild();
+    }
+
+    private void fireContextMenu() {
+        QScrollArea component = myComponent;
+        if (component == null || component.isDisposed()) {
+            return;
+        }
+        getListenerDispatcher(ContextMenuEvent.class).onEvent(new ContextMenuEvent(this, DesktopQtInputDetails.mouseAtCursor(component)));
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<E> getSelectedValues() {
+        DesktopQtGraphCanvas canvas = myCanvas;
+        if (canvas == null || canvas.isDisposed()) {
+            return List.of();
+        }
+        return (List<E>) canvas.getSelectedValues();
     }
 
     @RequiredUIAccess
@@ -115,7 +137,7 @@ public class DesktopQtGraphImpl<E> extends QtComponentDelegate<QScrollArea> impl
             Rectangle2D rectangle = entry.getValue();
 
             indexes.put(entry.getKey(), nodes.size());
-            nodes.add(new DesktopQtGraphNode(new QRect(rectangle.minX(), rectangle.minY(), rectangle.width(), rectangle.height()),
+            nodes.add(new DesktopQtGraphNode(entry.getKey(), new QRect(rectangle.minX(), rectangle.minY(), rectangle.width(), rectangle.height()),
                 contents.get(entry.getKey())));
 
             width = Math.max(width, rectangle.maxX());
@@ -132,6 +154,18 @@ public class DesktopQtGraphImpl<E> extends QtComponentDelegate<QScrollArea> impl
             }
         }
 
-        canvas.setGraph(nodes, edges, width, height);
+        Map<GraphGroup, List<Integer>> members = new LinkedHashMap<>();
+        for (Map.Entry<E, Integer> entry : indexes.entrySet()) {
+            GraphGroup group = myModel.getGroup(entry.getKey());
+            if (group != null) {
+                members.computeIfAbsent(group, it -> new ArrayList<>()).add(entry.getValue());
+            }
+        }
+        List<DesktopQtGraphGroup> groups = new ArrayList<>();
+        for (Map.Entry<GraphGroup, List<Integer>> entry : members.entrySet()) {
+            groups.add(new DesktopQtGraphGroup(entry.getKey().getName().get(), entry.getValue()));
+        }
+
+        canvas.setGraph(nodes, edges, groups, width, height);
     }
 }
