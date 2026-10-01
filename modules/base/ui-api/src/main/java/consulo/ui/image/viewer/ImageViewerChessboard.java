@@ -13,25 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.ui.impl.internal.image;
+package consulo.ui.image.viewer;
 
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
+import consulo.ui.color.ColorValue;
 
 /**
+ * Chessboard drawn behind an image, so its transparent parts show as such.
+ *
+ * @param cellSize   side of one cell in pixels of the screen - it does not grow with the zoom
+ * @param lightColor colour of the cells between the dark ones
+ * @param darkColor  colour of the cell in the top left corner and every other one
  * @author VISTALL
- * @since 2026-08-01
+ * @since 2026-10-01
  */
-public record WebRenderedImage(byte[] data, boolean svg, String contentType) {
-    public WebRenderedImage(byte[] data, boolean svg) {
-        this(data, svg, svg ? "image/svg+xml" : "image/png");
-    }
-
-    public static WebRenderedImage svg(String text) {
-        return new WebRenderedImage(text.getBytes(StandardCharsets.UTF_8), true);
-    }
-
-    public String toDataURI() {
-        return "data:" + contentType() + ";base64," + Base64.getEncoder().encodeToString(data);
-    }
+public record ImageViewerChessboard(int cellSize, ColorValue lightColor, ColorValue darkColor) {
 }

@@ -13,25 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.ui.impl.internal.image;
+package consulo.ui.image.viewer;
 
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
+import consulo.ui.color.ColorValue;
 
 /**
+ * Lines between the pixels of an image: a faint one between every two pixels, a stronger one every {@code lineSpan}
+ * pixels. Drawn only once the image is zoomed far enough for the pixels to be told apart.
+ *
+ * @param lineSpan  pixels between two strong lines
+ * @param minZoom   zoom from which on the grid is drawn
+ * @param lineColor colour of the lines - drawn translucent over the image
  * @author VISTALL
- * @since 2026-08-01
+ * @since 2026-10-01
  */
-public record WebRenderedImage(byte[] data, boolean svg, String contentType) {
-    public WebRenderedImage(byte[] data, boolean svg) {
-        this(data, svg, svg ? "image/svg+xml" : "image/png");
-    }
-
-    public static WebRenderedImage svg(String text) {
-        return new WebRenderedImage(text.getBytes(StandardCharsets.UTF_8), true);
-    }
-
-    public String toDataURI() {
-        return "data:" + contentType() + ";base64," + Base64.getEncoder().encodeToString(data);
-    }
+public record ImageViewerGrid(int lineSpan, int minZoom, ColorValue lineColor) {
 }

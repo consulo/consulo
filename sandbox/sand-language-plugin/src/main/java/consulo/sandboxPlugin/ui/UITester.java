@@ -98,6 +98,7 @@ public class UITester {
             tabbedLayout.addTab("Inputs", inputs());
             tabbedLayout.addTab("DelayedAction", delayedAction());
             tabbedLayout.addTab("Animated Images", animatedImages(uiDisposable));
+            tabbedLayout.addTab("Image Viewer", ImageViewerTester.create());
 
             return tabbedLayout;
         }

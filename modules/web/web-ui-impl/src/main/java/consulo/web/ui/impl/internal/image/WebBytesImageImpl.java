@@ -15,11 +15,12 @@
  */
 package consulo.web.ui.impl.internal.image;
 
-import ar.com.hjg.pngj.PngReader;
 import com.github.weisj.jsvg.SVGDocument;
 import com.github.weisj.jsvg.geometry.size.FloatSize;
 import com.github.weisj.jsvg.parser.SVGLoader;
+import consulo.ui.ex.awt.internal.image.ImageIODecoder;
 import consulo.ui.image.Image;
+import org.jspecify.annotations.Nullable;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -37,39 +38,49 @@ import java.io.IOException;
 public class WebBytesImageImpl implements Image {
     private final byte[] myBytes;
     private final boolean mySvg;
-
+    private final String myContentType;
     private final int myWidth;
     private final int myHeight;
 
-    public WebBytesImageImpl(ImageType type, byte[] bytes) throws IOException {
+    private WebBytesImageImpl(byte[] bytes, boolean svg, String contentType, int width, int height) {
         myBytes = bytes;
-        mySvg = type == ImageType.SVG;
+        mySvg = svg;
+        myContentType = contentType;
+        myWidth = width;
+        myHeight = height;
+    }
 
-        try {
-            if (mySvg) {
-                SVGDocument document = new SVGLoader().load(new ByteArrayInputStream(bytes));
-                if (document == null) {
-                    throw new IOException("Not an svg image");
-                }
-                FloatSize size = document.size();
-                myWidth = (int) size.getWidth();
-                myHeight = (int) size.getHeight();
+    /**
+     * A format the browser shows by itself is sent as it is - which one it is, is read from the bytes rather than
+     * taken from the type. Any other format is decoded here and sent as png, the browser never sees it.
+     */
+    public static WebBytesImageImpl create(ImageType type, byte[] bytes) throws IOException {
+        if (type.vector()) {
+            SVGDocument document = loadSvg(bytes);
+            if (document == null) {
+                throw new IOException("Not an svg image");
             }
-            else {
-                try (ByteArrayInputStream stream = new ByteArrayInputStream(bytes)) {
-                    PngReader reader = new PngReader(stream);
-                    try {
-                        myWidth = reader.imgInfo.cols;
-                        myHeight = reader.imgInfo.rows;
-                    }
-                    finally {
-                        reader.close();
-                    }
-                }
-            }
+
+            FloatSize size = document.size();
+            return new WebBytesImageImpl(bytes, true, ImageType.SVG.mimeType(), (int) size.getWidth(), (int) size.getHeight());
         }
-        catch (IOException e) {
-            throw e;
+
+        WebImageHeader header = WebImageHeader.read(bytes);
+        if (header != null) {
+            return new WebBytesImageImpl(bytes, false, header.contentType(), header.width(), header.height());
+        }
+
+        byte[] png = ImageIODecoder.toPng(bytes);
+        WebImageHeader pngHeader = png == null ? null : WebImageHeader.read(png);
+        if (png == null || pngHeader == null) {
+            throw new IOException("Unable to read " + type.id() + " image of " + bytes.length + " bytes");
+        }
+        return new WebBytesImageImpl(png, false, pngHeader.contentType(), pngHeader.width(), pngHeader.height());
+    }
+
+    private static @Nullable SVGDocument loadSvg(byte[] bytes) throws IOException {
+        try {
+            return new SVGLoader().load(new ByteArrayInputStream(bytes));
         }
         catch (Exception e) {
             throw new IOException(e);
@@ -77,7 +88,7 @@ public class WebBytesImageImpl implements Image {
     }
 
     public WebRenderedImage toRendered() {
-        return new WebRenderedImage(myBytes, mySvg);
+        return new WebRenderedImage(myBytes, mySvg, myContentType);
     }
 
     @Override

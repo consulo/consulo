@@ -23,6 +23,8 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Locale;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -35,9 +37,59 @@ public interface Image {
 
     int DEFAULT_ICON_SIZE = 16;
 
-    enum ImageType {
-        PNG,
-        SVG
+    /**
+     * Format of the bytes an image is made of. It is a hint only: a frontend which finds the bytes to be of another
+     * format reads them as what they are, and a frontend which cannot show a format by itself decodes it on the jvm
+     * side - so whatever is readable at all shows on every frontend.
+     *
+     * @param id       name of the format as image readers know it - {@code png}, {@code jpeg}, {@code psd}
+     * @param mimeType media type of the bytes
+     * @param vector   the bytes are a svg document, drawn anew at every size instead of having its pixels scaled
+     */
+    record ImageType(String id, String mimeType, boolean vector) {
+        public static final ImageType PNG = new ImageType("png", "image/png", false);
+        public static final ImageType SVG = new ImageType("svg", "image/svg+xml", true);
+        public static final ImageType JPEG = new ImageType("jpeg", "image/jpeg", false);
+        public static final ImageType GIF = new ImageType("gif", "image/gif", false);
+        public static final ImageType BMP = new ImageType("bmp", "image/bmp", false);
+        public static final ImageType ICO = new ImageType("ico", "image/x-icon", false);
+        public static final ImageType WEBP = new ImageType("webp", "image/webp", false);
+        public static final ImageType TIFF = new ImageType("tiff", "image/tiff", false);
+
+        private static final Map<String, ImageType> BY_EXTENSION = Map.ofEntries(
+            Map.entry("png", PNG),
+            Map.entry("svg", SVG),
+            Map.entry("jpg", JPEG),
+            Map.entry("jpeg", JPEG),
+            Map.entry("jpe", JPEG),
+            Map.entry("gif", GIF),
+            Map.entry("bmp", BMP),
+            Map.entry("ico", ICO),
+            Map.entry("webp", WEBP),
+            Map.entry("tif", TIFF),
+            Map.entry("tiff", TIFF)
+        );
+
+        /**
+         * The type of a file extension - {@code jpg} gives {@link #JPEG}. An extension no frontend knows by itself, like
+         * {@code psd}, gives a type of that name, which is decoded on the jvm side wherever it is shown.
+         */
+        public static ImageType fromExtension(String extension) {
+            String id = extension.toLowerCase(Locale.ROOT);
+            ImageType known = BY_EXTENSION.get(id);
+            return known != null ? known : new ImageType(id, "image/" + id, false);
+        }
+
+        /**
+         * The type of a file name or a path by its extension, {@link #PNG} when there is none.
+         */
+        public static ImageType fromFileName(String fileName) {
+            int dot = fileName.lastIndexOf('.');
+            if (dot < 0 || dot < fileName.lastIndexOf('/') || dot == fileName.length() - 1) {
+                return PNG;
+            }
+            return fromExtension(fileName.substring(dot + 1));
+        }
     }
 
     @Deprecated
@@ -63,10 +115,17 @@ public interface Image {
         return fromBytes(imageType, bytes);
     }
 
+    /**
+     * @param imageType what the bytes are expected to be - see {@link ImageType} for how loosely it is taken
+     * @throws IOException when the bytes are not an image anything can read
+     */
     static Image fromBytes(ImageType imageType, byte[] bytes) throws IOException {
         return fromStream(imageType, new ByteArrayInputStream(bytes));
     }
 
+    /**
+     * @see #fromBytes(ImageType, byte[])
+     */
     static Image fromStream(ImageType imageType, InputStream stream) throws IOException {
         return UIInternal.get()._Image_fromStream(imageType, stream);
     }

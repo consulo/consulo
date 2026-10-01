@@ -64,6 +64,13 @@ module consulo.ui.ex.awt.api {
 
     exports consulo.ui.ex.awt.internal.laf;
 
+    exports consulo.ui.ex.awt.internal.image to
+        consulo.desktop.awt.ui.impl,
+        consulo.desktop.qt.ui.impl,
+        consulo.web.ui.impl;
+
     opens consulo.ui.ex.awt.tree to consulo.util.xml.serializer;
     opens consulo.ui.ex.awt.internal.laf to com.sun.jna;
+
+    uses javax.imageio.spi.ImageReaderSpi;
 }

@@ -25,6 +25,9 @@ import consulo.application.impl.internal.LaterInvocator;
 import consulo.application.impl.internal.ModalityStateImpl;
 import consulo.desktop.awt.ui.impl.alert.DesktopAlertFactory;
 import consulo.desktop.awt.ui.impl.graph.DesktopAWTGraphImpl;
+import consulo.desktop.awt.ui.impl.image.viewer.DesktopAWTImageViewerImpl;
+import consulo.ui.ex.awt.internal.image.ImageIODecoder;
+import consulo.ui.image.viewer.ImageViewer;
 import consulo.desktop.awt.ui.impl.htmlView.DesktopAWTHtmlViewImpl;
 import consulo.desktop.awt.ui.impl.image.*;
 import consulo.desktop.awt.ui.impl.image.reference.DesktopAWTImageKey;
@@ -70,7 +73,6 @@ import consulo.ui.model.MutableFlatDataModel;
 import consulo.ui.style.StyleManager;
 import org.jspecify.annotations.Nullable;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -98,54 +100,49 @@ public class DesktopUIInternalImpl extends UIInternal implements UIInternalEx {
 
     @Override
     public Image _Image_fromUrl(URL url) throws IOException {
-        if (url.toString().endsWith(".svg")) {
-            SVGLoader loader = new SVGLoader();
-            SVGDocument document = loader.load(url);
-            FloatSize size = document.size();
-            return new DesktopAWTSimpleImageImpl(
-                new DesktopAWTSVGImageReference("url", url.toString(), document, null),
-                (int) size.getWidth(),
-                (int) size.getHeight()
-            );
+        Image.ImageType imageType = Image.ImageType.fromFileName(url.getPath());
+        if (imageType.vector()) {
+            return fromSvg(new SVGLoader().load(url), "url", url.toString());
         }
-        else {
-            BufferedImage image;
-            try (InputStream stream = url.openStream()) {
-                image = ImageIO.read(stream);
-            }
 
-            int width = image.getWidth(null);
-            int height = image.getHeight(null);
-            return new DesktopAWTSimpleImageImpl(
-                new DesktopAWTPNGImageReference(new DesktopAWTPNGImageReference.ImageBytes(null, image), null),
-                width,
-                height
-            );
+        try (InputStream stream = url.openStream()) {
+            return fromRaster(imageType, stream.readAllBytes());
         }
     }
 
     @Override
     public Image _Image_fromStream(Image.ImageType imageType, InputStream stream) throws IOException {
-        switch (imageType) {
-            case SVG:
-                SVGLoader loader = new SVGLoader();
-                SVGDocument document = loader.load(stream);
-                FloatSize size = document.size();
-                return new DesktopAWTSimpleImageImpl(
-                    new DesktopAWTSVGImageReference("bytes", "[]", document, null),
-                    (int) size.getWidth(),
-                    (int) size.getHeight()
-                );
-            default:
-                BufferedImage image = ImageIO.read(stream);
-                int width = image.getWidth(null);
-                int height = image.getHeight(null);
-                return new DesktopAWTSimpleImageImpl(
-                    new DesktopAWTPNGImageReference(new DesktopAWTPNGImageReference.ImageBytes(null, image), null),
-                    width,
-                    height
-                );
+        if (imageType.vector()) {
+            return fromSvg(new SVGLoader().load(stream), "bytes", "[]");
         }
+        return fromRaster(imageType, stream.readAllBytes());
+    }
+
+    private static Image fromSvg(@Nullable SVGDocument document, String groupId, String imageId) throws IOException {
+        if (document == null) {
+            throw new IOException("Not a svg document: " + imageId);
+        }
+
+        FloatSize size = document.size();
+        return new DesktopAWTSimpleImageImpl(
+            new DesktopAWTSVGImageReference(groupId, imageId, document, null),
+            (int) size.getWidth(),
+            (int) size.getHeight()
+        );
+    }
+
+    private static Image fromRaster(Image.ImageType imageType, byte[] bytes) throws IOException {
+        // the type is a hint only - the readers look at the bytes, and those of plugins are asked as well
+        BufferedImage image = ImageIODecoder.read(bytes);
+        if (image == null) {
+            throw new IOException("Unable to read " + imageType.id() + " image of " + bytes.length + " bytes");
+        }
+
+        return new DesktopAWTSimpleImageImpl(
+            new DesktopAWTPNGImageReference(new DesktopAWTPNGImageReference.ImageBytes(null, image), null),
+            image.getWidth(),
+            image.getHeight()
+        );
     }
 
     @Override
@@ -563,6 +560,11 @@ public class DesktopUIInternalImpl extends UIInternal implements UIInternalEx {
     @Override
     public <E> Graph<E> _Components_graph(GraphModel<E> model) {
         return new DesktopAWTGraphImpl<>(model);
+    }
+
+    @Override
+    public ImageViewer _Components_imageViewer() {
+        return new DesktopAWTImageViewerImpl();
     }
 
     @Override

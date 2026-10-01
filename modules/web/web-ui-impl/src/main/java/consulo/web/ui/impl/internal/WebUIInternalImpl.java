@@ -53,6 +53,8 @@ import consulo.ui.model.MutableFlatDataModel;
 import consulo.ui.style.StyleManager;
 import consulo.util.lang.StringUtil;
 import consulo.web.ui.impl.internal.graph.WebGraphImpl;
+import consulo.web.ui.impl.internal.image.viewer.WebImageViewerImpl;
+import consulo.ui.image.viewer.ImageViewer;
 import consulo.web.ui.impl.internal.base.ToVaadinComponentWrapper;
 import consulo.web.ui.impl.internal.base.VaadinComponentDelegate;
 import consulo.web.ui.impl.internal.base.WebShowNotifier;
@@ -165,6 +167,11 @@ public class WebUIInternalImpl extends UIInternal implements UIInternalEx {
     @Override
     public <E> Graph<E> _Components_graph(GraphModel<E> model) {
         return new WebGraphImpl<>(model);
+    }
+
+    @Override
+    public ImageViewer _Components_imageViewer() {
+        return new WebImageViewerImpl();
     }
 
     @Override
@@ -302,7 +309,7 @@ public class WebUIInternalImpl extends UIInternal implements UIInternalEx {
      */
     @Override
     public Image _Image_fromStream(Image.ImageType imageType, InputStream stream) throws IOException {
-        return new WebBytesImageImpl(imageType, stream.readAllBytes());
+        return WebBytesImageImpl.create(imageType, stream.readAllBytes());
     }
 
     @Override

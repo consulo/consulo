@@ -13,25 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.ui.impl.internal.image;
+package consulo.ui.image.viewer;
 
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
+import consulo.ui.event.ComponentEvent;
 
 /**
+ * The zoom of an {@link ImageViewer} changed.
+ *
  * @author VISTALL
- * @since 2026-08-01
+ * @since 2026-10-01
  */
-public record WebRenderedImage(byte[] data, boolean svg, String contentType) {
-    public WebRenderedImage(byte[] data, boolean svg) {
-        this(data, svg, svg ? "image/svg+xml" : "image/png");
+public final class ImageViewerZoomEvent extends ComponentEvent<ImageViewer> {
+    private final double myZoomFactor;
+
+    public ImageViewerZoomEvent(ImageViewer viewer, double zoomFactor) {
+        super(viewer);
+        myZoomFactor = zoomFactor;
     }
 
-    public static WebRenderedImage svg(String text) {
-        return new WebRenderedImage(text.getBytes(StandardCharsets.UTF_8), true);
-    }
-
-    public String toDataURI() {
-        return "data:" + contentType() + ";base64," + Base64.getEncoder().encodeToString(data);
+    public double getZoomFactor() {
+        return myZoomFactor;
     }
 }

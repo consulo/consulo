@@ -21,6 +21,8 @@ import consulo.ui.event.ModalityStateListener;
 import consulo.ui.RadioGroup;
 import consulo.application.impl.internal.ModalityStateImpl;
 import consulo.desktop.qt.ui.impl.graph.DesktopQtGraphImpl;
+import consulo.desktop.qt.ui.impl.image.viewer.DesktopQtImageViewerImpl;
+import consulo.ui.image.viewer.ImageViewer;
 import consulo.desktop.qt.ui.impl.base.DesktopQtShowNotifier;
 import consulo.desktop.qt.ui.impl.font.DesktopQtFontManagerImpl;
 import consulo.desktop.qt.ui.impl.htmlView.DesktopQtHtmlViewImpl;
@@ -212,6 +214,11 @@ public class DesktopQtUIInternalImpl extends UIInternal implements UIInternalEx 
     }
 
     @Override
+    public ImageViewer _Components_imageViewer() {
+        return new DesktopQtImageViewerImpl();
+    }
+
+    @Override
     public HtmlView _Components_htmlView() {
         return new DesktopQtHtmlViewImpl();
     }
@@ -331,7 +338,7 @@ public class DesktopQtUIInternalImpl extends UIInternal implements UIInternalEx 
      */
     @Override
     public Image _Image_fromStream(Image.ImageType imageType, InputStream stream) throws IOException {
-        return new DesktopQtBytesImageImpl(imageType, stream.readAllBytes());
+        return DesktopQtBytesImageImpl.create(imageType, stream.readAllBytes());
     }
 
     @Override

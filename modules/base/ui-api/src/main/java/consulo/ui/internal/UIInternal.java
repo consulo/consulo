@@ -27,6 +27,7 @@ import consulo.ui.graph.Graph;
 import consulo.ui.graph.GraphModel;
 import consulo.ui.image.*;
 import consulo.ui.image.canvas.Canvas2D;
+import consulo.ui.image.viewer.ImageViewer;
 import consulo.ui.layout.*;
 import consulo.ui.model.FlatDataModel;
 import consulo.ui.model.MutableFlatDataModel;
@@ -159,12 +160,12 @@ public abstract class UIInternal {
         throw new UnsupportedOperationException();
     }
 
+    public ImageViewer _Components_imageViewer() {
+        throw new UnsupportedOperationException();
+    }
+
     public Image _Image_fromUrl(URL url) throws IOException {
-        Image.ImageType imageType = Image.ImageType.PNG;
-        String urlString = url.toString();
-        if (urlString.endsWith(".svg")) {
-            imageType = Image.ImageType.SVG;
-        }
+        Image.ImageType imageType = Image.ImageType.fromFileName(url.getPath());
 
         try (InputStream stream = url.openStream()) {
             return _Image_fromStream(imageType, stream);
