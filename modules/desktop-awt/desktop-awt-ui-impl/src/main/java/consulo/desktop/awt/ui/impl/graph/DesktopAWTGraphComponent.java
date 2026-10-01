@@ -222,6 +222,7 @@ public class DesktopAWTGraphComponent<E> extends mxGraphComponent implements Fro
         GraphNodeRender<E> nodeRender = myNodeRender.get();
         GraphEdgeRender<E> edgeRender = myEdgeRender.get();
 
+        graph.clearSelection();
         graph.getModel().beginUpdate();
         try {
             graph.removeCells(graph.getChildCells(parent, true, true));
@@ -242,14 +243,21 @@ public class DesktopAWTGraphComponent<E> extends mxGraphComponent implements Fro
             Map<E, Rectangle2D> bounds = LayeredGraphLayout.layout(myModel, this::measure, JBUI.scale(40), JBUI.scale(60));
 
             int margin = JBUI.scale(20);
+            int insetX = margin;
+            int insetY = margin;
+            if (!myGroups.isEmpty()) {
+                int groupPadding = JBUI.scale(12);
+                insetX += groupPadding;
+                insetY += groupPadding + getFontMetrics(UIUtil.getLabelFont()).getHeight();
+            }
             Map<E, Object> vertices = new HashMap<>();
             for (Map.Entry<E, Rectangle2D> entry : bounds.entrySet()) {
                 Rectangle2D rectangle = entry.getValue();
                 Object vertex = graph.insertVertex(parent,
                     null,
                     entry.getKey(),
-                    rectangle.minX() + margin,
-                    rectangle.minY() + margin,
+                    rectangle.minX() + insetX,
+                    rectangle.minY() + insetY,
                     rectangle.width(),
                     rectangle.height());
                 vertices.put(entry.getKey(), vertex);
@@ -268,6 +276,8 @@ public class DesktopAWTGraphComponent<E> extends mxGraphComponent implements Fro
         finally {
             graph.getModel().endUpdate();
         }
+
+        refresh();
     }
 
     private static String toMxStyle(GraphEdgeStyle style) {
