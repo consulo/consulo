@@ -89,7 +89,10 @@ public class CommonProgramParametersLayout<P extends CommonProgramRunConfigurati
         builder.addLabeled(ExecutionLocalize.runConfigurationWorkingDirectoryLabel(), myWorkDirectoryBox.getComponent());
 
         myEnvVariablesComponent = new EnvironmentVariablesTextFieldWithBrowseButton();
-        builder.addLabeled(ExecutionLocalize.environmentVariablesComponentTitle(), myEnvVariablesComponent.getComponent());
+        builder.addLabeled(
+            LocalizeValue.join(ExecutionLocalize.environmentVariablesComponentTitle(), LocalizeValue.colon()),
+            myEnvVariablesComponent.getComponent()
+        );
 
         addAfter(builder);
 

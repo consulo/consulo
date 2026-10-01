@@ -33,8 +33,12 @@ import consulo.project.Project;
 import consulo.project.ui.wm.dock.DockManager;
 import consulo.ui.Component;
 import consulo.ui.UIAccess;
+import consulo.ui.UIAction;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.WrappedLayout;
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.CoroutineScope;
+import consulo.util.concurrent.coroutine.step.CompletableFutureStep;
 import org.jdom.Element;
 
 import java.util.concurrent.CompletableFuture;
@@ -130,12 +134,18 @@ public class UnifiedFileEditorsSplitters extends FileEditorsSplittersBase<Unifie
                                                                       UnifiedFileEditorWindow context,
                                                                       Element parent,
                                                                       UIAccess uiAccess) {
-      return uiAccess.giveAsync(() -> {
-        if (myCurrentWindow == null) {
-          createCurrentWindow();
-        }
-        return myCurrentWindow;
-      }).thenApplyAsync(window -> processFilesImpl(fileElements, uiAccess, window));
+      CoroutineScope scope = CoroutineScope.of(myProject.coroutineContext());
+      scope.putCopyableUserData(UIAccess.KEY, uiAccess);
+
+      return Coroutine.first(UIAction.<Object, UnifiedFileEditorWindow>apply(ignored -> {
+          if (myCurrentWindow == null) {
+            createCurrentWindow();
+          }
+          return myCurrentWindow;
+        }))
+        .then(CompletableFutureStep.await(window -> reopenFiles(fileElements, uiAccess, window)))
+        .runAsync(scope, null)
+        .toFuture();
     }
 
     /**
@@ -152,9 +162,10 @@ public class UnifiedFileEditorsSplitters extends FileEditorsSplittersBase<Unifie
         .thenCompose(window -> process(secondChild, window, uiAccess));
     }
 
-    private UnifiedFileEditorWindow processFilesImpl(java.util.List<Element> fileElements,
-                                                     UIAccess uiAccess,
-                                                     UnifiedFileEditorWindow window) {
+    private CompletableFuture<UnifiedFileEditorWindow> reopenFiles(java.util.List<Element> fileElements,
+                                                                   UIAccess uiAccess,
+                                                                   UnifiedFileEditorWindow window) {
+      CompletableFuture<?> reopened = CompletableFuture.completedFuture(null);
       VirtualFile focusedFile = null;
 
       for (int i = 0; i < fileElements.size(); i++) {
@@ -173,7 +184,9 @@ public class UnifiedFileEditorsSplitters extends FileEditorsSplittersBase<Unifie
             .withIndex(i)
             .withReopeningEditorsOnStartup();
 
-          myManager.openFileImpl4(uiAccess, window, virtualFile, entry, openOptions);
+          reopened = reopened
+            .thenCompose(ignored -> myManager.reopenFileAsync(uiAccess, window, virtualFile, entry, openOptions))
+            .exceptionally(ignored -> null);
 
           if (Boolean.valueOf(file.getAttributeValue(CURRENT_IN_TAB))) {
             focusedFile = virtualFile;
@@ -189,19 +202,18 @@ public class UnifiedFileEditorsSplitters extends FileEditorsSplittersBase<Unifie
         }
       }
 
-      if (focusedFile != null) {
-        myManager.addSelectionRecord(focusedFile, window);
+      VirtualFile finalFocusedFile = focusedFile;
+      return reopened.thenCompose(ignored -> uiAccess.giveAsync(() -> {
+        if (finalFocusedFile != null) {
+          myManager.addSelectionRecord(finalFocusedFile, window);
 
-        VirtualFile finalFocusedFile = focusedFile;
-        uiAccess.execute(() -> {
           FileEditorWithProviderComposite editor = window.findFileComposite(finalFocusedFile);
           if (editor != null) {
             window.setEditor(editor, true, true);
           }
-        });
-      }
-
-      return window;
+        }
+        return window;
+      }));
     }
   }
 

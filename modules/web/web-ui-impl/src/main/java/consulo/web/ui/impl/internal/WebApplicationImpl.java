@@ -16,6 +16,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.BooleanSupplier;
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
@@ -110,6 +111,11 @@ public class WebApplicationImpl extends UnifiedApplication {
   @Override
   public void invokeLater(Runnable runnable, consulo.ui.ModalityState state, BooleanSupplier expired) {
     getLastUIAccess().give(runnable);
+  }
+
+  @Override
+  protected <T> T wrapWithWriteIntent(Supplier<T> action) {
+    return action.get();
   }
 
   

@@ -141,6 +141,11 @@ vaadin-list-box.web-list-box[placeholder]:not(:has(vaadin-item))::after
   color: var(--vaadin-text-color-secondary, #6b7280);
 }
 
+vaadin-list-box.web-list-box:not(:has(vaadin-item)):not(vaadin-popover *)
+{
+  min-height: calc(8 * var(--consulo-list-row-height, 24px));
+}
+
 .web-list-box-inline-row
 {
   display: flex;
