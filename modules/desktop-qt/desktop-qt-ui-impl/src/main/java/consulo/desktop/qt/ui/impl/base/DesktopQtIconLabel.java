@@ -42,7 +42,7 @@ public class DesktopQtIconLabel extends QFrame {
         myImageWidget.setVisible(false);
         layout.addWidget(myImageWidget);
 
-        myTextLabel = new QLabel(this);
+        myTextLabel = new DesktopQtWrappingLabel(this);
         layout.addWidget(myTextLabel, 1);
     }
 

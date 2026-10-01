@@ -113,11 +113,7 @@ public class DesktopTextBoxImpl extends DocumentSwingValidator<String, DesktopTe
 
     @Override
     public @Nullable Component getSuffixComponent() {
-        Object object = toAWTComponent().getClientProperty("JTextField.trailingComponent");
-        if (object instanceof JComponent jComponent) {
-            return TargetAWT.from(jComponent);
-        }
-        return null;
+        return TargetAWT.from(AWTHasSuffixComponent.getSuffixComponent(toAWTComponent()));
     }
 
     @Override

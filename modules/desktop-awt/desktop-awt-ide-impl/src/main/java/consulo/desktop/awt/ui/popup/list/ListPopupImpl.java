@@ -1,5 +1,5 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.ui.popup.list;
+package consulo.desktop.awt.ui.popup.list;
 
 import consulo.application.AccessToken;
 import consulo.application.ApplicationManager;
@@ -7,15 +7,16 @@ import consulo.application.util.ClientId;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataSink;
 import consulo.dataContext.UiDataProvider;
+import consulo.desktop.awt.ui.impl.event.DesktopAWTInputDetails;
 import consulo.ui.ex.impl.internal.action.ActionImplUtil;
 import consulo.ide.impl.idea.ui.ListActions;
 import consulo.ide.impl.idea.ui.UiInterceptors;
 import consulo.ide.impl.idea.ui.popup.ClosableByLeftArrow;
-import consulo.ide.impl.idea.ui.popup.NextStepHandler;
-import consulo.ide.impl.idea.ui.popup.WizardPopup;
+import consulo.desktop.awt.ui.popup.NextStepHandler;
+import consulo.desktop.awt.ui.popup.WizardPopup;
 import consulo.ui.ex.impl.internal.popup.action.ActionPopupItem;
 import consulo.ui.ex.impl.internal.popup.action.ActionPopupStep;
-import consulo.ide.impl.idea.ui.popup.actionPopup.PopupInlineActionsSupportKt;
+import consulo.desktop.awt.ui.popup.actionPopup.PopupInlineActionsSupportKt;
 import consulo.ide.ui.popup.HintUpdateSupply;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.language.statistician.StatisticsInfo;
@@ -29,11 +30,13 @@ import consulo.ui.TextItemPresentation;
 import consulo.ui.TextItemRender;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
+import consulo.ui.event.details.KeyboardInputDetails;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.KeepPopupOnPerform;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.accessibility.ScreenReader;
+import consulo.ui.ex.awt.speedSearch.SpeedSearch;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchUtil;
 import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
@@ -49,6 +52,7 @@ import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.ex.popup.ListPopupStep;
 import consulo.ui.ex.popup.MultiSelectionListPopupStep;
 import consulo.ui.ex.popup.PopupStep;
+import consulo.ui.ex.popup.event.ListPopupKeyListener;
 import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
@@ -62,6 +66,7 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.event.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -92,6 +97,8 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
     private boolean myExecuteExpandedItemOnClick;
 
     private int myMinimumWidth = -1;
+
+    private final List<ListPopupKeyListener> myKeyListeners = new ArrayList<>();
 
     /**
      * @deprecated use {@link #ListPopupImpl(Project, ListPopupStep)} + {@link #setMaxRowCount(int)}
@@ -129,6 +136,49 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
         super(project, aParent, aStep, forceHeavyPopup);
         setParentValue(parentValue);
         replacePasteAction();
+
+        if (aParent instanceof ListPopupImpl parentPopup) {
+            myKeyListeners.addAll(parentPopup.myKeyListeners);
+        }
+    }
+
+    @Override
+    public void addKeyListener(ListPopupKeyListener listener) {
+        myKeyListeners.add(listener);
+    }
+
+    @Override
+    public @Nullable Object getSelectedValue() {
+        return myList == null ? null : myList.getSelectedValue();
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void setSelectedValue(Object value) {
+        onChildSelectedFor(value);
+    }
+
+    @Override
+    public @Nullable String getSpeedSearchText() {
+        SpeedSearch speedSearch = getSpeedSearch();
+        return speedSearch != null && speedSearch.isHoldingFilter() ? speedSearch.getFilter() : null;
+    }
+
+    @Override
+    @RequiredUIAccess
+    protected boolean processKeyListeners(KeyEvent event) {
+        if (myKeyListeners.isEmpty()) {
+            return false;
+        }
+
+        KeyboardInputDetails details = (KeyboardInputDetails) DesktopAWTInputDetails.convert(getContent(), event);
+        boolean pressed = event.getID() == KeyEvent.KEY_PRESSED;
+        for (ListPopupKeyListener listener : new ArrayList<>(myKeyListeners)) {
+            if (pressed ? listener.keyPressed(this, details) : listener.keyReleased(this, details)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void setMaxRowCount(int maxRowCount) {

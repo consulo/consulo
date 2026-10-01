@@ -1,13 +1,13 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.ui.popup;
+package consulo.desktop.awt.ui.popup;
 
 import consulo.application.util.registry.Registry;
 import consulo.dataContext.DataManager;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.ui.popup.async.AsyncPopupImpl;
-import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
-import consulo.ide.impl.idea.ui.popup.tree.TreePopupImpl;
-import consulo.ide.impl.idea.ui.popup.util.MnemonicsSearch;
+import consulo.desktop.awt.ui.popup.async.AsyncPopupImpl;
+import consulo.desktop.awt.ui.popup.list.ListPopupImpl;
+import consulo.desktop.awt.ui.popup.tree.TreePopupImpl;
+import consulo.desktop.awt.ui.popup.util.MnemonicsSearch;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -386,6 +386,11 @@ public abstract class WizardPopup extends AbstractPopup implements ActionListene
             return true;
         }
 
+        if ((event.getID() == KeyEvent.KEY_PRESSED || event.getID() == KeyEvent.KEY_RELEASED) && processKeyListeners(event)) {
+            event.consume();
+            return true;
+        }
+
         if (event.getID() == KeyEvent.KEY_PRESSED) {
             KeyStroke stroke = KeyStroke.getKeyStroke(event.getKeyCode(), event.getModifiers(), false);
             if (proceedKeyEvent(event, stroke)) {
@@ -417,6 +422,10 @@ public abstract class WizardPopup extends AbstractPopup implements ActionListene
                 return true;
             }
         }
+        return false;
+    }
+
+    protected boolean processKeyListeners(KeyEvent event) {
         return false;
     }
 

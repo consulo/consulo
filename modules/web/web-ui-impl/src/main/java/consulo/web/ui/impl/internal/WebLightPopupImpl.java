@@ -21,10 +21,12 @@ import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.popover.Popover;
 import com.vaadin.flow.component.popover.PopoverPosition;
+import com.vaadin.flow.dom.Element;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.ui.Component;
 import consulo.ui.LightPopup;
+import consulo.ui.Popup;
 import consulo.ui.PopupOptions;
 import consulo.ui.PopupPosition;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -54,7 +56,6 @@ public class WebLightPopupImpl extends VaadinComponentDelegate<WebLightPopupImpl
 
     private static final String RESIZABLE_CLASS = "consulo-resizable-popup";
     private static final String MIN_WIDTH_PROPERTY = "--consulo-popup-min-width";
-    private static final String CONTENT_ATTRIBUTE = "consulo-popup-content";
 
     @StyleSheet("/popup/webLightPopup.css")
     public class Vaadin extends Popover implements FromVaadinComponentWrapper {
@@ -74,7 +75,7 @@ public class WebLightPopupImpl extends VaadinComponentDelegate<WebLightPopupImpl
 
     private @Nullable Component myContent;
 
-    private @Nullable WebLightPopupImpl myOwner;
+    private @Nullable Popup myOwner;
 
     /**
      * Every popup currently open, innermost first, kept on the ui because a browser session has one of its own.
@@ -115,21 +116,7 @@ public class WebLightPopupImpl extends VaadinComponentDelegate<WebLightPopupImpl
         popover.setHoverDelay(0);
 
         if (options.isRequestFocus()) {
-            popover.getElement().executeJs(
-                """
-                this.addEventListener('focus', event => {
-                    if (event.target !== this) {
-                        return;
-                    }
-
-                    const content = this.querySelector(':scope > [' + $0 + ']');
-                    if (content && typeof content.focus === 'function') {
-                        content.focus();
-                    }
-                });
-                """,
-                CONTENT_ATTRIBUTE
-            );
+            WebPopupFocus.forwardToContent(popover.getElement(), ":scope > [" + WebPopupFocus.CONTENT_ATTRIBUTE + "]");
         }
 
         // a popover has no grip of its own, so the browser's is used. the box it draws is in the shadow root of the
@@ -172,7 +159,7 @@ public class WebLightPopupImpl extends VaadinComponentDelegate<WebLightPopupImpl
         Vaadin popover = getVaadinComponent();
 
         com.vaadin.flow.component.Component contentComponent = TargetVaadin.to(content);
-        contentComponent.getElement().setAttribute(CONTENT_ATTRIBUTE, true);
+        WebPopupFocus.markContent(contentComponent.getElement());
 
         popover.removeAll();
         popover.add(myTitle);
@@ -186,9 +173,10 @@ public class WebLightPopupImpl extends VaadinComponentDelegate<WebLightPopupImpl
     public void showBy(Component target) {
         checkNotDisposed();
 
-        if (target instanceof WebLightPopupImpl owner && owner.myContent != null) {
+        Element ownerContent = contentElementOf(target);
+        if (target instanceof Popup owner && ownerContent != null) {
             myOwner = owner;
-            showBesideSelection(owner.myContent);
+            showBesideSelection(ownerContent);
             return;
         }
 
@@ -353,15 +341,29 @@ public class WebLightPopupImpl extends VaadinComponentDelegate<WebLightPopupImpl
         }, error -> LOG.error("Failed to position popup: " + error));
     }
 
+    private static @Nullable Element contentElementOf(Component popup) {
+        if (popup instanceof WebLightPopupImpl light) {
+            return light.contentElement();
+        }
+        if (popup instanceof WebHeavyPopupImpl heavy) {
+            return heavy.contentElement();
+        }
+        return null;
+    }
+
+    @Nullable Element contentElement() {
+        return myContent == null ? null : TargetVaadin.to(myContent).getElement();
+    }
+
     @RequiredUIAccess
-    private void showBesideSelection(Component ownerContent) {
+    private void showBesideSelection(Element ownerContent) {
         Div anchor = anchor();
 
         Vaadin popover = getVaadinComponent();
 
         attachToUI();
 
-        TargetVaadin.to(ownerContent).getElement().executeJs(
+        ownerContent.executeJs(
             """
             const row = this.querySelector('[selected]') || this;
             const rect = row.getBoundingClientRect();
@@ -445,9 +447,10 @@ public class WebLightPopupImpl extends VaadinComponentDelegate<WebLightPopupImpl
 
         getVaadinComponent().getElement().removeFromParent();
 
-        WebLightPopupImpl owner = myOwner;
-        if (owner != null && owner.myContent != null && !owner.myDisposed && myOptions.isRequestFocus()) {
-            TargetVaadin.to(owner.myContent).getElement().executeJs("if (typeof this.focus === 'function') { this.focus(); }");
+        Popup owner = myOwner;
+        Element ownerContent = owner == null ? null : contentElementOf(owner);
+        if (owner != null && ownerContent != null && owner.isVisible() && myOptions.isRequestFocus()) {
+            ownerContent.executeJs("if (typeof this.focus === 'function') { this.focus(); }");
         }
 
         getListenerDispatcher(PopupCloseEvent.class).onEvent(new PopupCloseEvent(this));

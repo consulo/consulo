@@ -4,8 +4,8 @@ package consulo.desktop.awt.os.mac.internal.touchBar;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.LaterInvocator;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
 import consulo.ui.ModalityState;
+import consulo.ui.ex.awt.popup.AWTListPopup;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.ListPopupStep;
 import consulo.ui.ex.popup.MnemonicNavigationFilter;
@@ -24,7 +24,7 @@ final class CtxPopup {
     private static final boolean DISABLED = Boolean.getBoolean("touchbar.popups.disable");
 
     static @Nullable Disposable showPopupItems(JBPopup popup, JComponent popupComponent) {
-        if (DISABLED || !(popup instanceof ListPopupImpl listPopup)) {
+        if (DISABLED || !(popup instanceof AWTListPopup listPopup)) {
             return null;
         }
 
@@ -37,7 +37,7 @@ final class CtxPopup {
     }
 
     // creates releaseOnClose touchbar
-    private static TBPanel createScrubberBarFromPopup(ListPopupImpl listPopup) {
+    private static TBPanel createScrubberBarFromPopup(AWTListPopup listPopup) {
         TBPanel result = new TBPanel("popup_scrubber_bar_" + listPopup.hashCode(), new TBPanel.CrossEscInfo(true, false), false);
 
         ModalityState ms = LaterInvocator.getCurrentModalityState();

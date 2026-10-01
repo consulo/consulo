@@ -24,7 +24,6 @@ import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.fileChooser.FileChooserFactory;
 import consulo.fileChooser.PathChooserDialog;
 import consulo.ui.ex.impl.internal.action.ActionImplUtil;
-import consulo.ide.impl.idea.ui.popup.actionPopup.ActionGroupPopup;
 import consulo.ui.ex.impl.internal.popup.action.ActionPopupItem;
 import consulo.ui.ex.impl.internal.popup.action.ActionPopupStep;
 import consulo.ide.localize.IdeLocalize;
@@ -37,7 +36,10 @@ import consulo.ui.ex.awt.ErrorLabel;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.popup.AWTListPopup;
+import consulo.ui.ex.awt.popup.AWTPopupFactory;
 import consulo.ui.ex.awt.popup.PopupListElementRenderer;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListSeparator;
 import consulo.ui.image.Image;
 import consulo.util.collection.ArrayUtil;
@@ -145,48 +147,43 @@ public abstract class RunAnythingChooseContextAction extends ActionGroup impleme
         }
     }
 
-    class ChooseContextPopup extends ActionGroupPopup {
-        ChooseContextPopup(ActionPopupStep step, DataContext dataContext) {
-            super(null, step, null, dataContext, ActionPlaces.POPUP, -1, true, (o, aBoolean) -> true);
+    private static class ChooseContextRenderer extends PopupListElementRenderer<ActionPopupItem> {
+        private JLabel myInfoLabel;
+
+        private ChooseContextRenderer(AWTListPopup popup) {
+            super(popup);
         }
 
         @Override
-        protected ListCellRenderer getListElementRenderer() {
-            return new PopupListElementRenderer<ActionPopupItem>(this) {
-                private JLabel myInfoLabel;
+        protected JComponent createItemComponent() {
+            myTextLabel = new ErrorLabel();
+            myInfoLabel = new JLabel();
+            myTextLabel.setBorder(JBUI.Borders.empty(10));
 
-                @Override
-                protected JComponent createItemComponent() {
-                    myTextLabel = new ErrorLabel();
-                    myInfoLabel = new JLabel();
-                    myTextLabel.setBorder(JBUI.Borders.empty(10));
+            JPanel textPanel = new JPanel(new BorderLayout());
+            textPanel.add(myTextLabel, BorderLayout.WEST);
+            textPanel.add(myInfoLabel, BorderLayout.CENTER);
+            return layoutComponent(textPanel);
+        }
 
-                    JPanel textPanel = new JPanel(new BorderLayout());
-                    textPanel.add(myTextLabel, BorderLayout.WEST);
-                    textPanel.add(myInfoLabel, BorderLayout.CENTER);
-                    return layoutComponent(textPanel);
-                }
+        @Override
+        protected void customizeComponent(
+            JList<? extends ActionPopupItem> list,
+            ActionPopupItem actionItem,
+            boolean isSelected
+        ) {
+            AnActionEvent event = ActionImplUtil.createEmptyEvent();
+            ActionImplUtil.performDumbAwareUpdate(actionItem.getAction(), event);
 
-                @Override
-                protected void customizeComponent(
-                    JList<? extends ActionPopupItem> list,
-                    ActionPopupItem actionItem,
-                    boolean isSelected
-                ) {
-                    AnActionEvent event = ActionImplUtil.createEmptyEvent();
-                    ActionImplUtil.performDumbAwareUpdate(actionItem.getAction(), event);
+            LocalizeValue description = event.getPresentation().getDescription();
+            if (description.isNotEmpty()) {
+                myInfoLabel.setText(description.get());
+            }
 
-                    LocalizeValue description = event.getPresentation().getDescription();
-                    if (description.isNotEmpty()) {
-                        myInfoLabel.setText(description.get());
-                    }
-
-                    myTextLabel.setText(event.getPresentation().getText());
-                    myInfoLabel.setForeground(
-                        isSelected ? UIUtil.getListSelectionForeground(true) : UIUtil.getInactiveTextColor()
-                    );
-                }
-            };
+            myTextLabel.setText(event.getPresentation().getText());
+            myInfoLabel.setForeground(
+                isSelected ? UIUtil.getListSelectionForeground(true) : UIUtil.getInactiveTextColor()
+            );
         }
     }
 
@@ -297,7 +294,12 @@ public abstract class RunAnythingChooseContextAction extends ActionGroup impleme
             ActionPlaces.POPUP,
             new BasePresentationFactory()
         ).thenAccept(actionItems -> SwingUtilities.invokeLater(() -> {
-            ChooseContextPopup popup = new ChooseContextPopup(new ChooseContextPopupStep(actionItems, dataContext), dataContext);
+            AWTListPopup popup = ((AWTPopupFactory) JBPopupFactory.getInstance()).createActionGroupPopup(
+                new ChooseContextPopupStep(actionItems, dataContext),
+                dataContext,
+                ActionPlaces.POPUP,
+                ChooseContextRenderer::new
+            );
             popup.setSize(new Dimension(300, 300));
             popup.setRequestFocus(false);
             popup.showUnderneathOf(component);

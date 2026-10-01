@@ -17,8 +17,8 @@
 package consulo.desktop.awt.versionSystemControl.ui;
 
 import consulo.ide.impl.idea.ui.WindowMoveListener;
-import consulo.ide.impl.idea.ui.popup.NextStepHandler;
-import consulo.ide.impl.idea.ui.popup.WizardPopup;
+import consulo.desktop.awt.ui.popup.NextStepHandler;
+import consulo.desktop.awt.ui.popup.WizardPopup;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.ProjectWindowStateService;

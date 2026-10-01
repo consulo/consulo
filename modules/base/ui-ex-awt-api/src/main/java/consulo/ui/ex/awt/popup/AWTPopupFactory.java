@@ -16,6 +16,7 @@
 package consulo.ui.ex.awt.popup;
 
 import consulo.annotation.DeprecationInfo;
+import consulo.dataContext.DataContext;
 import consulo.project.Project;
 import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.ListPopupStep;
@@ -40,11 +41,10 @@ public interface AWTPopupFactory {
                                  ListPopupStep step,
                                  Function<AWTListPopup, ListCellRenderer> rendererFactory);
 
-    AWTListPopup createListPopup(Project project,
-                                 ListPopupStep step,
-                                 @Nullable AWTListPopup parentPopup,
-                                 Function<AWTListPopup, ListCellRenderer> rendererFactory,
-                                 AWTPopupSubFactory factory);
+    AWTListPopup createActionGroupPopup(ListPopupStep step,
+                                        DataContext dataContext,
+                                        @Nullable String actionPlace,
+                                        Function<AWTListPopup, ListCellRenderer> rendererFactory);
 
     int getPointerLength(Balloon.Position position, boolean dialogMode);
 

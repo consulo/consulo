@@ -13,6 +13,7 @@ import consulo.language.editor.completion.lookup.event.LookupEvent;
 import consulo.language.editor.completion.lookup.event.LookupListener;
 import consulo.ui.Size2D;
 import consulo.ui.ex.RelativePoint;
+import consulo.ui.ex.awt.popup.AWTPopup;
 import consulo.ui.ex.awt.util.PopupUtil;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.popup.JBPopup;
@@ -268,8 +269,8 @@ public class PopupPositionManager {
 
     public static @Nullable Size2D getPopupSize(JBPopup popup) {
       Size2D size = null;
-      if (popup instanceof AbstractPopup) {
-        String dimensionKey = ((AbstractPopup)popup).getDimensionServiceKey();
+      if (popup instanceof AWTPopup awtPopup) {
+        String dimensionKey = awtPopup.getDimensionServiceKey();
         if (dimensionKey != null) {
           size = DimensionService.getInstance().getSize(dimensionKey);
         }

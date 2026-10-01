@@ -31,7 +31,6 @@ import consulo.ide.impl.idea.ide.structureView.newStructureView.TreeModelWrapper
 import consulo.ide.impl.idea.ide.util.treeView.smartTree.SmartTreeStructure;
 import consulo.ide.impl.idea.ide.util.treeView.smartTree.TreeElementWrapper;
 import consulo.ide.impl.idea.ide.util.treeView.smartTree.TreeStructureUtil;
-import consulo.ide.impl.idea.ui.popup.AbstractPopup;
 import consulo.ide.impl.idea.ui.popup.PopupUpdateProcessor;
 import consulo.ide.impl.idea.ui.treeStructure.filtered.FilteringTreeStructure;
 import consulo.ide.localize.IdeLocalize;
@@ -62,6 +61,7 @@ import consulo.ui.ex.TreeExpander;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.dnd.DnDAwareTree;
+import consulo.ui.ex.awt.popup.AWTPopup;
 import consulo.ui.ex.awt.speedSearch.ElementFilter;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchComparator;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchObjectWithWeight;
@@ -312,7 +312,7 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
         myTree.getEmptyText().setText("Loading...");
         myPopup.showCenteredInCurrentWindow(myProject);
 
-        ((AbstractPopup) myPopup).setShowHints(true);
+        ((AWTPopup) myPopup).setShowHints(true);
 
         ProjectIdeFocusManager.getInstance(myProject).requestFocus(myTree, true);
 

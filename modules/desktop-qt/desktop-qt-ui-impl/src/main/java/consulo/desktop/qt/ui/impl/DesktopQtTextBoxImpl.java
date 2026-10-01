@@ -23,15 +23,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ValueComponentEvent;
 import consulo.ui.event.details.ProgrammaticInputDetails;
 import consulo.util.lang.StringUtil;
-import io.qt.core.QEvent;
-import io.qt.core.QMargins;
-import io.qt.core.QObject;
-import io.qt.core.QSize;
-import io.qt.core.Qt;
-import io.qt.gui.QCursor;
 import io.qt.widgets.QLineEdit;
-import io.qt.widgets.QStyle;
-import io.qt.widgets.QToolButton;
 import io.qt.widgets.QWidget;
 import org.jspecify.annotations.Nullable;
 
@@ -54,7 +46,7 @@ public class DesktopQtTextBoxImpl extends QtComponentDelegate<QLineEdit> impleme
 
     private int myVisibleLength = -1;
 
-    private @Nullable Component mySuffixComponent;
+    private final DesktopQtLineEditSuffix mySuffix = new DesktopQtLineEditSuffix(this);
 
     private final List<Validator<String>> myValidators = new ArrayList<>();
 
@@ -64,18 +56,7 @@ public class DesktopQtTextBoxImpl extends QtComponentDelegate<QLineEdit> impleme
 
     @Override
     protected QLineEdit createQt(QWidget parent) {
-        return new QLineEdit(parent) {
-            @Override
-            public boolean event(QEvent event) {
-                boolean result = super.event(event);
-
-                QEvent.Type type = event.type();
-                if (type == QEvent.Type.Resize || type == QEvent.Type.LayoutRequest || type == QEvent.Type.StyleChange) {
-                    layoutSuffix(this);
-                }
-                return result;
-            }
-        };
+        return mySuffix.createLineEdit(parent);
     }
 
     @Override
@@ -87,7 +68,7 @@ public class DesktopQtTextBoxImpl extends QtComponentDelegate<QLineEdit> impleme
 
         applyPlaceholder();
         applyVisibleLength();
-        attachSuffix(component);
+        mySuffix.attach(component);
 
         component.textChanged.connect(text -> {
             myText = StringUtil.notNullize(text);
@@ -219,67 +200,11 @@ public class DesktopQtTextBoxImpl extends QtComponentDelegate<QLineEdit> impleme
 
     @Override
     public void setSuffixComponent(@Nullable Component suffixComponent) {
-        Component oldSuffix = mySuffixComponent;
-        if (oldSuffix == suffixComponent) {
-            return;
-        }
-
-        if (oldSuffix instanceof QtComponentDelegate<?> oldDelegate) {
-            oldDelegate.setParent(null);
-        }
-
-        mySuffixComponent = suffixComponent;
-
-        QLineEdit component = myComponent;
-        if (component != null && !component.isDisposed()) {
-            attachSuffix(component);
-        }
+        mySuffix.set(suffixComponent, myComponent);
     }
 
     @Override
     public @Nullable Component getSuffixComponent() {
-        return mySuffixComponent;
-    }
-
-    private void attachSuffix(QLineEdit lineEdit) {
-        if (mySuffixComponent instanceof QtComponentDelegate<?> suffix) {
-            suffix.setParent(this);
-            suffix.bind(lineEdit, null);
-
-            QWidget widget = suffix.toQtComponent();
-            if (widget != null) {
-                widget.setCursor(new QCursor(Qt.CursorShape.ArrowCursor));
-                widget.show();
-            }
-        }
-
-        layoutSuffix(lineEdit);
-    }
-
-    private void layoutSuffix(QLineEdit lineEdit) {
-        QWidget suffix = mySuffixComponent instanceof QtComponentDelegate<?> delegate ? delegate.toQtComponent() : null;
-
-        int suffixWidth = 0;
-        if (suffix != null && !suffix.isDisposed() && suffix.parentWidget() == lineEdit) {
-            int frameWidth = lineEdit.style().pixelMetric(QStyle.PixelMetric.PM_DefaultFrameWidth, null, lineEdit);
-
-            int right = lineEdit.width() - frameWidth;
-            for (QObject child : lineEdit.children()) {
-                if (child != suffix && child instanceof QToolButton sideButton && sideButton.isVisible() && sideButton.x() > lineEdit.width() / 2) {
-                    right = Math.min(right, sideButton.x());
-                }
-            }
-
-            QSize hint = suffix.sizeHint();
-            int height = Math.max(0, Math.min(hint.height(), lineEdit.height() - frameWidth * 2));
-            suffixWidth = hint.width();
-
-            suffix.setGeometry(right - suffixWidth, (lineEdit.height() - height) / 2, suffixWidth, height);
-        }
-
-        QMargins margins = lineEdit.textMargins();
-        if (margins.right() != suffixWidth) {
-            lineEdit.setTextMargins(margins.left(), margins.top(), suffixWidth, margins.bottom());
-        }
+        return mySuffix.get();
     }
 }

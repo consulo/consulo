@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.ui.popup;
+package consulo.desktop.awt.ui.popup;
 
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.UIUtil;

@@ -16,10 +16,10 @@
 package consulo.desktop.awt.ui.popup;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.dataContext.DataContext;
+import consulo.desktop.awt.ui.popup.actionPopup.ActionGroupPopup;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.idea.ui.popup.PopupFactoryImpl;
-import consulo.ide.impl.idea.ui.popup.WizardPopup;
-import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
+import consulo.desktop.awt.ui.popup.list.ListPopupImpl;
 import consulo.ide.impl.ui.impl.PopupChooserBuilder;
 import consulo.project.Project;
 import consulo.ui.ex.awt.CollectionListModel;
@@ -27,7 +27,6 @@ import consulo.ui.ex.awt.JBList;
 import consulo.ui.ex.awt.popup.AWTListPopup;
 import consulo.ui.ex.awt.popup.AWTPopupChooserBuilder;
 import consulo.ui.ex.awt.popup.AWTPopupFactory;
-import consulo.ui.ex.awt.popup.AWTPopupSubFactory;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.*;
@@ -108,7 +107,7 @@ public class DesktopAWTPopupFactoryImpl extends PopupFactoryImpl implements AWTP
         ListPopupStep step,
         Function<AWTListPopup, ListCellRenderer> rendererFactory
     ) {
-        return new ListPopupImpl(step) {
+        return new ListPopupImpl(project, step) {
             @Override
             protected ListCellRenderer getListElementRenderer() {
                 return rendererFactory.apply(this);
@@ -117,24 +116,16 @@ public class DesktopAWTPopupFactoryImpl extends PopupFactoryImpl implements AWTP
     }
 
     @Override
-    public AWTListPopup createListPopup(
-        Project project,
+    public AWTListPopup createActionGroupPopup(
         ListPopupStep step,
-        @Nullable AWTListPopup parentPopup,
-        Function<AWTListPopup, ListCellRenderer> rendererFactory,
-        AWTPopupSubFactory factory
+        DataContext dataContext,
+        @Nullable String actionPlace,
+        Function<AWTListPopup, ListCellRenderer> rendererFactory
     ) {
-        return new ListPopupImpl(project, (WizardPopup) parentPopup, step, null) {
+        return new ActionGroupPopup(null, step, null, dataContext, actionPlace, -1, true, (o, aBoolean) -> true) {
             @Override
             protected ListCellRenderer getListElementRenderer() {
                 return rendererFactory.apply(this);
-            }
-
-            @Override
-            protected WizardPopup createPopup(WizardPopup parent, PopupStep step, Object parentValue) {
-                ListPopupImpl popup = (ListPopupImpl) factory.create((AWTListPopup) parent, step);
-                popup.setParentValue(parentValue);
-                return popup;
             }
         };
     }

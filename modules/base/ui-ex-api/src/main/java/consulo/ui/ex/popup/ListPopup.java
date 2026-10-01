@@ -19,6 +19,7 @@ package consulo.ui.ex.popup;
 import consulo.annotation.DeprecationInfo;
 import consulo.ui.TextItemRender;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.popup.event.ListPopupKeyListener;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.event.ListSelectionListener;
@@ -78,6 +79,26 @@ public interface ListPopup extends JBPopup {
 
     @RequiredUIAccess
     default void setMinimumWidth(int width) {
+    }
+
+    /**
+     * Hands every key pressed or released while the popup has the keyboard to {@code listener} - on whichever level
+     * of the popup has it, and before the popup acts on the key. A listener answering true takes the key.
+     */
+    @RequiredUIAccess
+    default void addKeyListener(ListPopupKeyListener listener) {
+    }
+
+    default @Nullable Object getSelectedValue() {
+        return null;
+    }
+
+    @RequiredUIAccess
+    default void setSelectedValue(Object value) {
+    }
+
+    default @Nullable String getSpeedSearchText() {
+        return null;
     }
 
     default boolean isShowSubmenuOnHover() {

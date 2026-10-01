@@ -26,7 +26,7 @@ import consulo.ide.impl.idea.codeInsight.documentation.QuickDocUtil;
 import consulo.ide.impl.idea.codeInsight.hint.LineTooltipRenderer;
 import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.ide.impl.idea.ui.WidthBasedLayout;
-import consulo.ide.impl.idea.ui.popup.AbstractPopup;
+import consulo.desktop.awt.ui.popup.AbstractPopup;
 import consulo.ide.impl.idea.ui.popup.PopupPositionManager;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.completion.lookup.LookupManager;

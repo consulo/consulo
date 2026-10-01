@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2024 consulo.io
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +16,31 @@
 package consulo.ui.ex.awt.popup;
 
 import consulo.annotation.DeprecationInfo;
-import consulo.ui.ex.popup.PopupStep;
+import consulo.ui.ex.popup.JBPopup;
+import org.jspecify.annotations.Nullable;
+
+import javax.swing.*;
+import javax.swing.border.Border;
+import java.awt.*;
 
 /**
  * @author VISTALL
- * @since 2024-12-06
+ * @since 2026-10-01
  */
 @Deprecated
 @DeprecationInfo("Do not depend to Swing classes")
-public interface AWTPopupSubFactory {
-    AWTListPopup create(AWTListPopup parent, PopupStep step);
+public interface AWTPopup extends JBPopup {
+    JComponent getComponent();
+
+    void focusPreferredComponent();
+
+    void setShowHints(boolean show);
+
+    @Nullable String getDimensionServiceKey();
+
+    Border getPopupBorder();
+
+    Dimension getHeaderPreferredSize();
+
+    Dimension getFooterPreferredSize();
 }

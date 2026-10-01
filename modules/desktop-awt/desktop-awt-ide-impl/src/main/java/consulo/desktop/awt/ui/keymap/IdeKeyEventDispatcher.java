@@ -40,7 +40,7 @@ import consulo.ide.impl.idea.openapi.keymap.impl.ui.ShortcutTextField;
 import consulo.ui.ex.internal.IdeGlassPaneEx;
 import consulo.ide.impl.idea.ui.ComponentWithMnemonics;
 import consulo.ui.ex.impl.internal.keymap.KeyStrokeAdapter;
-import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
+import consulo.desktop.awt.ui.popup.list.ListPopupImpl;
 import consulo.platform.Platform;
 import consulo.project.DumbService;
 import consulo.project.Project;

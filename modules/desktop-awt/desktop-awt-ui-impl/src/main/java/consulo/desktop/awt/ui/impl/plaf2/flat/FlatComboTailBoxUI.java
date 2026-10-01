@@ -32,16 +32,17 @@ public class FlatComboTailBoxUI extends FlatComboBoxUI {
     private final JPanel myTailPanel = new JPanel(new BorderLayout());
 
     private PropertyChangeListener myListener = evt -> {
+        myTailPanel.removeAll();
+
         Object newValue = evt.getNewValue();
         if (newValue instanceof JComponent tail) {
             InplaceComponent.prepareLeadingOrTrailingComponent(tail);
 
-            myTailPanel.add(tail);
-            comboBox.repaint();
+            myTailPanel.add(tail, BorderLayout.CENTER);
         }
-        else {
-            myTailPanel.removeAll();
-        }
+
+        comboBox.revalidate();
+        comboBox.repaint();
     };
 
     public static FlatComboTailBoxUI createUI(JComponent c) {
@@ -96,15 +97,25 @@ public class FlatComboTailBoxUI extends FlatComboBoxUI {
     @Override
     protected Rectangle rectangleForCurrentValue() {
         Rectangle rectangle = super.rectangleForCurrentValue();
-        if (myTailPanel.getComponentCount() > 0) {
-            rectangle.width -= myTailPanel.getWidth();
+        int tailWidth = tailWidth();
+        if (tailWidth > 0) {
+            rectangle.width -= tailWidth;
 
             if (!comboBox.getComponentOrientation().isLeftToRight()) {
-                rectangle.x += arrowButton.getWidth() + myTailPanel.getWidth();
+                rectangle.x += arrowButton.getWidth() + tailWidth;
             }
         }
 
         return rectangle;
+    }
+
+    private int tailWidth() {
+        if (myTailPanel.getComponentCount() == 0 || arrowButton == null) {
+            return 0;
+        }
+
+        int availableWidth = comboBox.getWidth() - arrowButton.getPreferredSize().width;
+        return Math.max(0, Math.min(myTailPanel.getPreferredSize().width, availableWidth));
     }
 
     @Override
@@ -137,11 +148,12 @@ public class FlatComboTailBoxUI extends FlatComboBoxUI {
 
                 Dimension pps = myTailPanel.getPreferredSize();
                 int availableWidth = cb.getWidth() - aps.width;
+                int tailWidth = tailWidth();
                 if (comboBox.getComponentOrientation().isLeftToRight()) {
                     myTailPanel.setBounds(
                         Math.max(availableWidth - pps.width, 0),
                         (cb.getHeight() - pps.height) / 2,
-                        Math.min(pps.width, availableWidth),
+                        tailWidth,
                         pps.height
                     );
                 }
@@ -149,7 +161,7 @@ public class FlatComboTailBoxUI extends FlatComboBoxUI {
                     myTailPanel.setBounds(
                         arrowButton.getWidth(),
                         (cb.getHeight() - pps.height) / 2,
-                        Math.min(pps.width, availableWidth),
+                        tailWidth,
                         pps.height
                     );
                 }

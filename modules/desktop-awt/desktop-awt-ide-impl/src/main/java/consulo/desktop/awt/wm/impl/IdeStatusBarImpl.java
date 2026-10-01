@@ -29,7 +29,7 @@ import consulo.ide.impl.idea.openapi.ui.MessageType;
 import consulo.ide.impl.idea.openapi.wm.impl.status.MemoryUsagePanel;
 import consulo.ide.impl.idea.openapi.wm.impl.status.widget.StatusBarWidgetWrapper;
 import consulo.ide.impl.idea.openapi.wm.impl.status.widget.StatusBarWidgetsActionGroup;
-import consulo.ide.impl.idea.ui.popup.NotificationPopup;
+import consulo.desktop.awt.ui.popup.NotificationPopup;
 import consulo.ide.impl.project.ui.impl.StatusWidgetBorders;
 import consulo.platform.Platform;
 import consulo.project.Project;

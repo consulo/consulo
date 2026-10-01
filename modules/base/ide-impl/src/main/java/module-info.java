@@ -453,10 +453,7 @@ open module consulo.ide.impl {
     exports consulo.ide.impl.idea.ui.navigation;
     exports consulo.ide.impl.idea.ui.paint;
     exports consulo.ide.impl.idea.ui.popup;
-    exports consulo.ide.impl.idea.ui.popup.async;
     exports consulo.ide.impl.idea.ui.popup.list;
-    exports consulo.ide.impl.idea.ui.popup.mock;
-    exports consulo.ide.impl.idea.ui.popup.tree;
     exports consulo.ide.impl.idea.ui.popup.util;
     exports consulo.ide.impl.idea.ui.roots;
     exports consulo.ide.impl.idea.ui.stripe;
@@ -544,10 +541,6 @@ open module consulo.ide.impl {
         consulo.desktop.awt.ide.impl,
         consulo.desktop.awt.ui.impl;
     exports consulo.ide.impl.internal to
-        consulo.desktop.awt.editor.impl,
-        consulo.desktop.awt.ide.impl,
-        consulo.desktop.awt.ui.impl;
-    exports consulo.ide.impl.idea.ui.popup.actionPopup to
         consulo.desktop.awt.editor.impl,
         consulo.desktop.awt.ide.impl,
         consulo.desktop.awt.ui.impl;

@@ -15,6 +15,8 @@
  */
 package consulo.ui.ex.awt.internal;
 
+import org.jspecify.annotations.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -51,6 +53,19 @@ public interface AWTHasSuffixComponent {
         if (target instanceof AWTHasSuffixComponent hasSuffixComponent) {
             hasSuffixComponent.setSuffixComponent((JComponent) suffix);
         }
+    }
+
+    static @Nullable JComponent getSuffixComponent(JComponent target) {
+        Object suffix = null;
+        if (target instanceof JTextField) {
+            suffix = target.getClientProperty("JTextField.trailingComponent");
+        }
+
+        if (target instanceof JComboBox) {
+            suffix = target.getClientProperty("JComboBox.trailingComponent");
+        }
+
+        return suffix instanceof JComponent component ? component : null;
     }
 
     void setSuffixComponent(JComponent component);

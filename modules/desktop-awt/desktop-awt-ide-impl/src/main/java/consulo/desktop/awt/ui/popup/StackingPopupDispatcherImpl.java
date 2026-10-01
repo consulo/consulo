@@ -19,7 +19,6 @@ package consulo.desktop.awt.ui.popup;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
 import consulo.desktop.awt.ui.IdeEventQueue;
-import consulo.ide.impl.idea.ui.popup.AbstractPopup;
 import consulo.platform.Platform;
 import consulo.platform.os.UnixOperationSystem;
 import consulo.ui.ex.awt.UIUtil;

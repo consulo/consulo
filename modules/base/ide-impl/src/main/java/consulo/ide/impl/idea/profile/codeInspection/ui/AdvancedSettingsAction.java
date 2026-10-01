@@ -22,12 +22,12 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.project.Project;
+import consulo.ui.ex.awt.popup.AWTListPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.PopupStep;
 import consulo.ui.ex.popup.BaseListPopupStep;
 import consulo.ide.impl.idea.profile.codeInspection.ui.inspectionsTree.InspectionConfigTreeNode;
 import consulo.ui.ex.RelativePoint;
-import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
 import consulo.ui.ex.awt.EmptyIcon;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -67,7 +67,7 @@ public abstract class AdvancedSettingsAction extends LegacyDumbAwareAction {
     @Override
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
-        ListPopupImpl actionGroupPopup = (ListPopupImpl) JBPopupFactory.getInstance().createListPopup(
+        AWTListPopup actionGroupPopup = (AWTListPopup) JBPopupFactory.getInstance().createListPopup(
             new BaseListPopupStep<MyAction>(
                 null,
                 ContainerUtil.list(new MyDisableNewInspectionsAction(), new MyResetAction())

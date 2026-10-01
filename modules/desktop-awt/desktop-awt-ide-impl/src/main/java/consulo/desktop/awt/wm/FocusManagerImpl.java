@@ -13,7 +13,7 @@ import consulo.component.ComponentManager;
 import consulo.dataContext.DataContext;
 import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.idea.ui.popup.AbstractPopup;
+import consulo.desktop.awt.ui.popup.AbstractPopup;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;

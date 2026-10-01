@@ -59,7 +59,23 @@ public class DesktopQtInputDetails {
         Map.entry(Qt.Key.Key_Delete.value(), KeyCode.of(0x7F, "VK_DELETE")),
         Map.entry(Qt.Key.Key_Insert.value(), KeyCode.of(0x9B, "VK_INSERT")),
         Map.entry(Qt.Key.Key_PageUp.value(), KeyCode.of(0x21, "VK_PAGE_UP")),
-        Map.entry(Qt.Key.Key_PageDown.value(), KeyCode.of(0x22, "VK_PAGE_DOWN"))
+        Map.entry(Qt.Key.Key_PageDown.value(), KeyCode.of(0x22, "VK_PAGE_DOWN")),
+        Map.entry(Qt.Key.Key_Shift.value(), KeyCode.SHIFT),
+        Map.entry(Qt.Key.Key_Control.value(), KeyCode.CTRL),
+        Map.entry(Qt.Key.Key_Alt.value(), KeyCode.ALT),
+        Map.entry(Qt.Key.Key_Meta.value(), KeyCode.META),
+        Map.entry(Qt.Key.Key_F1.value(), KeyCode.of(0x70, "VK_F1")),
+        Map.entry(Qt.Key.Key_F2.value(), KeyCode.of(0x71, "VK_F2")),
+        Map.entry(Qt.Key.Key_F3.value(), KeyCode.of(0x72, "VK_F3")),
+        Map.entry(Qt.Key.Key_F4.value(), KeyCode.of(0x73, "VK_F4")),
+        Map.entry(Qt.Key.Key_F5.value(), KeyCode.of(0x74, "VK_F5")),
+        Map.entry(Qt.Key.Key_F6.value(), KeyCode.of(0x75, "VK_F6")),
+        Map.entry(Qt.Key.Key_F7.value(), KeyCode.of(0x76, "VK_F7")),
+        Map.entry(Qt.Key.Key_F8.value(), KeyCode.of(0x77, "VK_F8")),
+        Map.entry(Qt.Key.Key_F9.value(), KeyCode.of(0x78, "VK_F9")),
+        Map.entry(Qt.Key.Key_F10.value(), KeyCode.of(0x79, "VK_F10")),
+        Map.entry(Qt.Key.Key_F11.value(), KeyCode.of(0x7A, "VK_F11")),
+        Map.entry(Qt.Key.Key_F12.value(), KeyCode.of(0x7B, "VK_F12"))
     );
 
     /**

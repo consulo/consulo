@@ -52,6 +52,7 @@ import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.ex.popup.ListPopupStep;
 import consulo.ui.ex.popup.PopupStep;
+import consulo.ui.ex.popup.event.ListPopupKeyListener;
 import consulo.ui.util.TextWithMnemonic;
 import org.jspecify.annotations.Nullable;
 
@@ -98,6 +99,7 @@ public class UnifiedListPopupImpl extends UnifiedPopupImpl implements ListPopup 
     private final CompletableFuture<? extends ListPopupStep> myRootStep;
 
     private final List<Consumer<Object>> mySelectionListeners = new ArrayList<>();
+    private final List<ListPopupKeyListener> myKeyListeners = new ArrayList<>();
 
     /**
      * Innermost step first, so the top of the stack is the one the user is looking at.
@@ -234,7 +236,11 @@ public class UnifiedListPopupImpl extends UnifiedPopupImpl implements ListPopup 
             handleSelect(level, true);
         });
 
-        list.addKeyPressedListener(event -> onKeyPressed(level, event.getInputDetails().getKeyCode()));
+        list.addKeyPressedListener(event -> onKeyPressed(level, event.getInputDetails()));
+
+        if (!myKeyListeners.isEmpty()) {
+            list.addKeyReleasedListener(event -> onKeyReleased(level, event.getInputDetails()));
+        }
 
         return list;
     }
@@ -307,11 +313,18 @@ public class UnifiedListPopupImpl extends UnifiedPopupImpl implements ListPopup 
     }
 
     @RequiredUIAccess
-    private void onKeyPressed(Level level, KeyCode keyCode) {
+    private void onKeyPressed(Level level, KeyboardInputDetails details) {
         if (isDisposed() || !myLevels.contains(level)) {
             return;
         }
 
+        for (ListPopupKeyListener listener : new ArrayList<>(myKeyListeners)) {
+            if (listener.keyPressed(this, details)) {
+                return;
+            }
+        }
+
+        KeyCode keyCode = details.getKeyCode();
         Object value = level.myList.getValue();
 
         if (KeyCode.RIGHT.equals(keyCode)) {
@@ -328,6 +341,19 @@ public class UnifiedListPopupImpl extends UnifiedPopupImpl implements ListPopup 
 
             if (myLevels.size() > 1 && myLevels.peek() == level) {
                 level.myPopup.close();
+            }
+        }
+    }
+
+    @RequiredUIAccess
+    private void onKeyReleased(Level level, KeyboardInputDetails details) {
+        if (isDisposed() || !myLevels.contains(level)) {
+            return;
+        }
+
+        for (ListPopupKeyListener listener : new ArrayList<>(myKeyListeners)) {
+            if (listener.keyReleased(this, details)) {
+                return;
             }
         }
     }
@@ -696,6 +722,32 @@ public class UnifiedListPopupImpl extends UnifiedPopupImpl implements ListPopup 
     }
 
     @Override
+    public void addKeyListener(ListPopupKeyListener listener) {
+        myKeyListeners.add(listener);
+    }
+
+    @Override
+    public @Nullable Object getSelectedValue() {
+        Level top = myLevels.peek();
+        return top == null ? null : top.myList.getValue();
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void setSelectedValue(Object value) {
+        Level top = myLevels.peek();
+        if (top != null && top.myStep.isSelectable(value)) {
+            top.myList.setValue(value);
+        }
+    }
+
+    @Override
+    public @Nullable String getSpeedSearchText() {
+        Level top = myLevels.peek();
+        return top == null ? null : top.myList.getSpeedSearchText();
+    }
+
+    @Override
     public boolean isVisible() {
         Level top = myLevels.peek();
         return top != null && top.myPopup.isVisible();
@@ -709,9 +761,9 @@ public class UnifiedListPopupImpl extends UnifiedPopupImpl implements ListPopup 
 
     @Override
     public void setCaption(String title) {
-        Level top = myLevels.peek();
-        if (top != null) {
-            top.myPopup.setTitle(title);
+        Level root = myLevels.peekLast();
+        if (root != null) {
+            root.myPopup.setTitle(title);
         }
     }
 

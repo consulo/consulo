@@ -30,3 +30,58 @@
 .consulo-flat-input[focus-ring]::part(input-field) {
     outline: none !important;
 }
+
+.consulo-history-suffix {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--vaadin-gap-xs, 6px);
+}
+
+.consulo-history-toggle {
+    color: var(--vaadin-input-field-button-text-color, var(--vaadin-text-color-secondary));
+    cursor: var(--vaadin-clickable-cursor, default);
+    -webkit-user-select: none;
+    user-select: none;
+    padding: max(0px, (24px - var(--vaadin-icon-size, 1lh)) / 2);
+    margin: min(0px, (24px - var(--vaadin-icon-size, 1lh)) / -2);
+    transition: color 0.1s;
+    --vaadin-icon-visual-size: 90%;
+}
+
+.consulo-history-toggle::before {
+    content: '';
+    display: block;
+    width: var(--vaadin-icon-size, 1lh);
+    height: var(--vaadin-icon-size, 1lh);
+    background: currentColor;
+    mask: var(--_vaadin-icon-chevron-down, url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>')) 50% / var(--vaadin-icon-visual-size, 100%) no-repeat;
+}
+
+.consulo-history-toggle:hover {
+    color: var(--vaadin-text-color);
+}
+
+vaadin-text-field[disabled] .consulo-history-toggle {
+    color: var(--vaadin-text-color-disabled);
+    cursor: var(--vaadin-disabled-cursor, default);
+}
+
+vaadin-text-field[readonly] .consulo-history-toggle {
+    display: none;
+}
+
+vaadin-popover.consulo-history-popup::part(overlay) {
+    min-width: var(--consulo-history-min-width, auto);
+}
+
+vaadin-popover.consulo-history-popup::part(content) {
+    padding: var(--vaadin-item-overlay-padding, 4px);
+}
+
+vaadin-list-box.consulo-history-list {
+    max-height: min(20em, 50vh);
+}
+
+vaadin-list-box.consulo-history-list vaadin-item {
+    white-space: nowrap;
+}

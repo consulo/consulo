@@ -23,7 +23,7 @@ import consulo.ide.impl.idea.codeInsight.hint.ParameterInfoController;
 import consulo.ide.impl.idea.ide.actions.WindowAction;
 import consulo.ide.impl.idea.ide.util.gotoByName.ChooseByNameBase;
 import consulo.ide.impl.idea.openapi.roots.libraries.LibraryUtil;
-import consulo.ide.impl.idea.ui.popup.AbstractPopup;
+import consulo.desktop.awt.ui.popup.AbstractPopup;
 import consulo.ide.impl.idea.ui.popup.PopupUpdateProcessor;
 import consulo.ide.impl.idea.ui.tabs.FileColorManagerImpl;
 import consulo.ide.setting.module.OrderEntryTypeEditor;

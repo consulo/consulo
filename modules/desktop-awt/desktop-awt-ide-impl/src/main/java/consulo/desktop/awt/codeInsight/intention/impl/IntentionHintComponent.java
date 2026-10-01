@@ -20,7 +20,7 @@ import consulo.ide.impl.idea.codeInsight.hint.PriorityQuestionAction;
 import consulo.ide.impl.idea.codeInsight.hint.ScrollAwareHint;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.ide.impl.idea.ui.LightweightHintImpl;
-import consulo.ide.impl.idea.ui.popup.WizardPopup;
+import consulo.desktop.awt.ui.popup.WizardPopup;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.hint.QuestionAction;

@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ui.popup.util;
+package consulo.desktop.awt.ui.popup.util;
 
 import consulo.ui.ex.popup.MnemonicNavigationFilter;
 import consulo.util.lang.StringUtil;
-import consulo.ide.impl.idea.ui.popup.WizardPopup;
+import consulo.desktop.awt.ui.popup.WizardPopup;
 
 import java.awt.event.KeyEvent;
 import java.util.HashMap;

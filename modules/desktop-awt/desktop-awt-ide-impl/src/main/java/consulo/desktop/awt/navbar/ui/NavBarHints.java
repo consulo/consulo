@@ -21,7 +21,7 @@ import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.ide.impl.idea.ui.LightweightHintImpl;
-import consulo.ide.impl.idea.ui.popup.AbstractPopup;
+import consulo.desktop.awt.ui.popup.AbstractPopup;
 import consulo.language.editor.hint.HintManager;
 import consulo.project.Project;
 import consulo.project.ui.wm.WindowManager;

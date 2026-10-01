@@ -18,13 +18,13 @@ package consulo.ide.impl.presentationAssistant;
 
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.ui.popup.ComponentPopupBuilderImpl;
 import consulo.project.Project;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.util.Alarm;
+import consulo.ui.ex.popup.ComponentPopupBuilder;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.event.JBPopupAdapter;
@@ -102,7 +102,7 @@ class ActionInfoPanel extends NonOpaquePanel implements Disposable {
     JBEmptyBorder emptyBorder = JBUI.Borders.empty(5, 10);
     setBorder(emptyBorder);
 
-    ComponentPopupBuilderImpl builder = (ComponentPopupBuilderImpl)JBPopupFactory.getInstance().createComponentPopupBuilder(this, this);
+    ComponentPopupBuilder builder = JBPopupFactory.getInstance().createComponentPopupBuilder(this, this);
     builder.setAlpha(1.0f);
     builder.setFocusable(false);
     builder.setBelongsToGlobalPopupStack(false);

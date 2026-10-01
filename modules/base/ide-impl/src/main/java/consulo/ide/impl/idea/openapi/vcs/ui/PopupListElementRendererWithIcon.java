@@ -5,7 +5,6 @@ import consulo.ui.ex.awt.ErrorLabel;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.OpaquePanel;
 import consulo.ide.impl.idea.ui.popup.list.IconListPopupRenderer;
-import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
 import consulo.ui.ex.awt.popup.AWTListPopup;
 import consulo.ui.ex.awt.popup.PopupListElementRenderer;
 import consulo.ui.ex.awt.JBUI;
@@ -17,7 +16,7 @@ import java.awt.*;
 public class PopupListElementRendererWithIcon extends PopupListElementRenderer<Object> implements IconListPopupRenderer {
   protected IconComponent myIconLabel;
 
-  public PopupListElementRendererWithIcon(ListPopupImpl aPopup) {
+  public PopupListElementRendererWithIcon(AWTListPopup aPopup) {
     super(aPopup);
   }
 

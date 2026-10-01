@@ -30,6 +30,9 @@ import consulo.web.ui.impl.internal.base.VaadinComponentDelegate;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+
 /**
  * @author VISTALL
  * @since 2019-02-18
@@ -45,8 +48,12 @@ public class WebTextBoxImpl extends VaadinComponentDelegate<WebTextBoxImpl.Vaadi
         }
     }
 
+    private final List<Validator<String>> myValidators = new CopyOnWriteArrayList<>();
+
     private @Nullable Component mySuffixComponent;
     private @Nullable Component myPrefixComponent;
+
+    private boolean myFireListeners = true;
 
     @RequiredUIAccess
     @SuppressWarnings("unchecked")
@@ -59,16 +66,22 @@ public class WebTextBoxImpl extends VaadinComponentDelegate<WebTextBoxImpl.Vaadi
         // stroke which acts on that name - enter in a popup - arrives before it
         field.setValueChangeMode(ValueChangeMode.EAGER);
 
-        field.addValueChangeListener(
-            event -> getListenerDispatcher(ValueComponentEvent.class).onEvent(new ValueComponentEvent(this, event.getValue()))
-        );
+        field.addValueChangeListener(event -> {
+            if (myFireListeners) {
+                getListenerDispatcher(ValueComponentEvent.class).onEvent(new ValueComponentEvent(this, event.getValue()));
+            }
+        });
     }
 
     @Override
     public void setSuffixComponent(@Nullable Component suffixComponent) {
         mySuffixComponent = suffixComponent;
 
-        toVaadinComponent().setSuffixComponent(toVaadinOrNull(suffixComponent));
+        updateSuffixSlot();
+    }
+
+    protected void updateSuffixSlot() {
+        toVaadinComponent().setSuffixComponent(toVaadinOrNull(mySuffixComponent));
     }
 
     @Override
@@ -88,7 +101,7 @@ public class WebTextBoxImpl extends VaadinComponentDelegate<WebTextBoxImpl.Vaadi
         return myPrefixComponent;
     }
 
-    private static com.vaadin.flow.component.@Nullable Component toVaadinOrNull(@Nullable Component component) {
+    protected static com.vaadin.flow.component.@Nullable Component toVaadinOrNull(@Nullable Component component) {
         if (component == null) {
             return null;
         }
@@ -111,31 +124,55 @@ public class WebTextBoxImpl extends VaadinComponentDelegate<WebTextBoxImpl.Vaadi
     @Override
     @RequiredUIAccess
     public void setValue(@Nullable String value, boolean fireListeners) {
-        getVaadinComponent().setValue(StringUtil.notNullize(value));
+        boolean previous = myFireListeners;
+        myFireListeners = fireListeners;
+        try {
+            getVaadinComponent().setValue(StringUtil.notNullize(value));
+        }
+        finally {
+            myFireListeners = previous;
+        }
     }
 
     @Override
+    @RequiredUIAccess
     public void selectAll() {
+        getVaadinComponent().getElement().executeJs("if (this.inputElement) { this.inputElement.select(); }");
     }
 
     @Override
+    @RequiredUIAccess
     public void setEditable(boolean editable) {
+        getVaadinComponent().setReadOnly(!editable);
     }
 
     @Override
     public boolean isEditable() {
-        return true;
+        return !getVaadinComponent().isReadOnly();
     }
 
     @Override
     public Disposable addValidator(Validator<String> validator) {
-        return () -> {
-        };
+        myValidators.add(validator);
+        return () -> myValidators.remove(validator);
     }
 
     @Override
     @RequiredUIAccess
     public boolean validate() {
+        Vaadin field = getVaadinComponent();
+        String value = getValue();
+        for (Validator<String> validator : myValidators) {
+            ValidationInfo info = validator.validateValue(value);
+            if (info != null) {
+                field.setErrorMessage(info.getMessage());
+                field.setInvalid(true);
+                return false;
+            }
+        }
+
+        field.setInvalid(false);
+        field.setErrorMessage(null);
         return true;
     }
 

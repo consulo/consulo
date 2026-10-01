@@ -1,5 +1,5 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.ui.popup.actionPopup;
+package consulo.desktop.awt.ui.popup.actionPopup;
 
 import consulo.ui.ex.impl.internal.popup.action.ActionPopupItem;
 import consulo.ui.ex.impl.internal.popup.action.ActionPopupStep;
@@ -9,9 +9,9 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.ui.ex.impl.internal.action.ActionImplUtil;
 import consulo.ui.ex.impl.internal.action.ActionUpdater;
-import consulo.ide.impl.idea.ui.popup.PopupFactoryImpl;
-import consulo.ide.impl.idea.ui.popup.WizardPopup;
-import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
+import consulo.desktop.awt.ui.popup.PopupFactoryImpl;
+import consulo.desktop.awt.ui.popup.WizardPopup;
+import consulo.desktop.awt.ui.popup.list.ListPopupImpl;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.UIAccess;

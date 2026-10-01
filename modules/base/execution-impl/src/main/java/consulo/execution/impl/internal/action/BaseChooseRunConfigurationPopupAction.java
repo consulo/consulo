@@ -16,14 +16,20 @@
 
 package consulo.execution.impl.internal.action;
 
+import consulo.application.concurrent.coroutine.ReadLock;
+import consulo.dataContext.DataManager;
 import consulo.execution.executor.Executor;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.UIAction;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.popup.ListPopupStep;
 import consulo.ui.image.Image;
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.CoroutineScope;
 import org.jspecify.annotations.Nullable;
 
 public abstract class BaseChooseRunConfigurationPopupAction extends LegacyAnAction {
@@ -47,7 +53,23 @@ public abstract class BaseChooseRunConfigurationPopupAction extends LegacyAnActi
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
-        new ChooseRunConfigurationPopup(project, getAdKey(), getDefaultExecutor(), getAlternativeExecutor()).show();
+        ChooseRunConfigurationPopup popup = new ChooseRunConfigurationPopup(
+            project,
+            getAdKey(),
+            getDefaultExecutor(),
+            getAlternativeExecutor(),
+            DataManager.getInstance().createAsyncDataContext(e.getDataContext())
+        );
+
+        CoroutineScope.launchAsync(
+            project.coroutineContext(),
+            () -> Coroutine
+                .first(ReadLock.<Void, ListPopupStep<?>>apply(ignored -> popup.buildStep()))
+                .then(UIAction.<ListPopupStep<?>, Void>apply(step -> {
+                    popup.show(step);
+                    return null;
+                }))
+        );
     }
 
     protected abstract Executor getDefaultExecutor();

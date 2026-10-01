@@ -57,6 +57,7 @@ import jakarta.inject.Singleton;
 import org.jdom.Element;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 
 @Singleton
@@ -85,8 +86,8 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
     private @Nullable String myLoadedSelectedConfigurationUniqueName = null;
     private @Nullable String mySelectedConfigurationId = null;
 
-    private final Map<String, Image> myIdToIcon = new HashMap<>();
-    private final Map<String, Long> myIconCheckTimes = new HashMap<>();
+    private final Map<String, Image> myIdToIcon = new ConcurrentHashMap<>();
+    private final Map<String, Long> myIconCheckTimes = new ConcurrentHashMap<>();
     private final Map<String, Long> myIconCalcTime = Collections.synchronizedMap(new HashMap<String, Long>());
 
     private final RunManagerConfig myConfig;

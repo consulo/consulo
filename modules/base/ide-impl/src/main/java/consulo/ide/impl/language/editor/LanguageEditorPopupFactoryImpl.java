@@ -16,7 +16,6 @@
 package consulo.ide.impl.language.editor;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
 import consulo.language.editor.ui.DefaultPsiElementCellRenderer;
 import consulo.language.editor.ui.internal.LanguageEditorPopupFactory;
 import consulo.language.navigation.GotoRelatedItem;
@@ -27,6 +26,7 @@ import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.SeparatorWithText;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.popup.AWTListPopup;
 import consulo.ui.ex.awt.popup.PopupListElementRenderer;
 import consulo.ui.ex.popup.*;
 import consulo.ui.image.Image;
@@ -144,7 +144,7 @@ public class LanguageEditorPopupFactoryImpl implements LanguageEditorPopupFactor
                 return component;
             }
         };
-        final ListPopupImpl popup = new ListPopupImpl(new BaseListPopupStep<Object>(title, Arrays.asList(elements)) {
+        final AWTListPopup popup = (AWTListPopup) JBPopupFactory.getInstance().createListPopup(new BaseListPopupStep<Object>(title, Arrays.asList(elements)) {
             @Override
             public boolean isSpeedSearchEnabled() {
                 return true;
@@ -168,8 +168,7 @@ public class LanguageEditorPopupFactoryImpl implements LanguageEditorPopupFactor
                 processor.accept(selectedValue);
                 return super.onChosen(selectedValue, finalChoice);
             }
-        }) {
-        };
+        });
         popup.getList().setCellRenderer(new PopupListElementRenderer(popup) {
             Map<Object, String> separators = new HashMap<>();
 
@@ -238,7 +237,7 @@ public class LanguageEditorPopupFactoryImpl implements LanguageEditorPopupFactor
 
     private static Action createNumberAction(
         final int mnemonic,
-        final ListPopupImpl listPopup,
+        final AWTListPopup listPopup,
         final Map<PsiElement, GotoRelatedItem> itemsMap,
         final Consumer<Object> processor
     ) {

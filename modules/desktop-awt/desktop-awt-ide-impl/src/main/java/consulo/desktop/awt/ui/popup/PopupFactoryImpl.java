@@ -1,5 +1,5 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.ui.popup;
+package consulo.desktop.awt.ui.popup;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
@@ -14,14 +14,13 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.ide.IdeTooltipManagerImpl;
 import consulo.ide.impl.idea.openapi.ui.MessageType;
-import consulo.ide.impl.idea.ui.popup.actionPopup.ActionGroupPopup;
+import consulo.desktop.awt.ui.popup.actionPopup.ActionGroupPopup;
 import consulo.ui.Point2D;
 import consulo.ui.PopupOwner;
 import consulo.ui.ex.impl.internal.popup.action.ActionPopupItem;
 import consulo.ui.ex.impl.internal.popup.action.ActionPopupStep;
-import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
-import consulo.ide.impl.idea.ui.popup.mock.MockConfirmation;
-import consulo.ide.impl.idea.ui.popup.tree.TreePopupImpl;
+import consulo.desktop.awt.ui.popup.list.ListPopupImpl;
+import consulo.desktop.awt.ui.popup.tree.TreePopupImpl;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.project.ui.wm.WindowManager;
@@ -110,8 +109,7 @@ public abstract class PopupFactoryImpl extends JBPopupFactory {
         };
         step.setDefaultOptionIndex(defaultOptionIndex);
 
-        Application app = ApplicationManager.getApplication();
-        return app == null || !app.isUnitTestMode() ? new ListPopupImpl(step) : new MockConfirmation(step, yesText);
+        return new ListPopupImpl(step);
     }
 
     public static Supplier<DataContext> getComponentContextSupplier(Component component) {

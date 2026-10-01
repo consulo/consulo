@@ -27,7 +27,6 @@ import consulo.find.FindSettings;
 import consulo.find.localize.FindLocalize;
 import consulo.find.ui.ScopeChooserCombo;
 import consulo.ide.impl.idea.ide.actions.GotoActionBase;
-import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.SmartPointerManager;
 import consulo.language.psi.SmartPsiElementPointer;
@@ -41,8 +40,10 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.StatusText;
 import consulo.ui.ex.awt.action.ComboBoxAction;
 import consulo.ui.ex.awt.action.ComboBoxButton;
+import consulo.ui.ex.awt.popup.AWTListPopup;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.BaseListPopupStep;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.PopupStep;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Comparing;
@@ -415,7 +416,7 @@ public class TextSearchContributor implements WeightedSearchEverywhereContributo
             step.setDefaultOptionIndex(
                 ContainerUtil.indexOf(items, o -> Comparing.equal(o.getDisplayName(), selection.getDisplayName()))
             );
-            ListPopupImpl popup = new ListPopupImpl(myProject, step);
+            AWTListPopup popup = (AWTListPopup) JBPopupFactory.getInstance().createListPopup(myProject, step);
             popup.setMaxRowCount(10);
             return popup;
         }

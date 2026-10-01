@@ -71,7 +71,10 @@ public class WebHeavyPopupImpl extends VaadinComponentDelegate<WebHeavyPopupImpl
         // a curtain - a visual one, which dismisses without blocking the ide the way a real modal would
         dialog.setModality(options.isCancelOnClickOutside() ? ModalityMode.VISUAL : ModalityMode.MODELESS);
 
-        if (!options.isRequestFocus()) {
+        if (options.isRequestFocus()) {
+            WebPopupFocus.forwardToContent(dialog.getElement(), "[" + WebPopupFocus.CONTENT_ATTRIBUTE + "]");
+        }
+        else {
             // an overlay pulls the focus into itself and hands it back when it closes, which is right for a popup the
             // user works in and wrong for one which only reports on what they are doing somewhere else - the lookup
             // is driven from the editor, and the caret has to stay there while it is up
@@ -134,7 +137,12 @@ public class WebHeavyPopupImpl extends VaadinComponentDelegate<WebHeavyPopupImpl
         }
 
         myContent = TargetVaadin.to(content);
+        WebPopupFocus.markContent(myContent.getElement());
         dialog.add(myContent);
+    }
+
+    com.vaadin.flow.dom.@Nullable Element contentElement() {
+        return myContent == null ? null : myContent.getElement();
     }
 
     @Override

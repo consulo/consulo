@@ -26,7 +26,7 @@ import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.ide.actions.ExternalJavaDocAction;
 import consulo.ide.impl.idea.ide.actions.WindowAction;
 import consulo.ide.impl.idea.ui.WidthBasedLayout;
-import consulo.ide.impl.idea.ui.popup.AbstractPopup;
+import consulo.desktop.awt.ui.popup.AbstractPopup;
 import consulo.ide.impl.idea.ui.popup.PopupPositionManager;
 import consulo.language.editor.completion.lookup.LookupEx;
 import consulo.language.editor.completion.lookup.LookupManager;

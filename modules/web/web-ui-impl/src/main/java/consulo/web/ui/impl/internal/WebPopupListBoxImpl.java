@@ -61,6 +61,25 @@ class WebPopupListBoxImpl<E> extends WebListBoxImpl<E> implements InlineButtonsL
                 getListenerDispatcher(ClickEvent.class).onEvent(new ClickEvent(this, details));
             }
         }).setFilter("event.key === 'Enter'");
+
+        model.addListener(event -> toVaadinComponent().getElement().executeJs(
+            """
+            const list = this;
+            setTimeout(() => {
+                if (document.activeElement && document.activeElement !== document.body) {
+                    return;
+                }
+
+                const item = list.selected != null ? list.children[list.selected] : null;
+                if (item && typeof item.focus === 'function') {
+                    item.focus({ preventScroll: true });
+                }
+                else {
+                    list.focus();
+                }
+            });
+            """
+        ));
     }
 
     @Override

@@ -34,7 +34,6 @@ import consulo.ide.impl.idea.codeInsight.hint.ImplementationViewComponentImpl;
 import consulo.ide.impl.idea.codeInsight.navigation.ImplementationSearcher;
 import consulo.ui.ex.action.PopupAction;
 import consulo.ide.impl.idea.openapi.progress.impl.BackgroundableProcessIndicator;
-import consulo.ide.impl.idea.ui.popup.AbstractPopup;
 import consulo.ide.impl.idea.ui.popup.PopupPositionManager;
 import consulo.ide.impl.idea.ui.popup.PopupUpdateProcessor;
 import consulo.language.editor.TargetElementUtil;
@@ -55,6 +54,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.action.IdeActions;
+import consulo.ui.ex.awt.popup.AWTPopup;
 import consulo.ui.ex.popup.GenericListComponentUpdater;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
@@ -300,13 +300,13 @@ public class ShowImplementationsAction extends LegacyAnAction implements PopupAc
         SimpleReference<UsageView> usageView = new SimpleReference<>();
         LocalizeValue title = CodeInsightLocalize.implementationViewTitle(text);
         JBPopup popup = SoftReference.dereference(myPopupRef);
-        if (popup != null && popup.isVisible() && popup instanceof AbstractPopup abstractPopup) {
-            ImplementationViewComponentImpl component = (ImplementationViewComponentImpl) abstractPopup.getComponent();
+        if (popup != null && popup.isVisible() && popup instanceof AWTPopup awtPopup) {
+            ImplementationViewComponentImpl component = (ImplementationViewComponentImpl) awtPopup.getComponent();
             popup.setCaption(title.get());
             component.update(impls, index);
-            updateInBackground(editor, element, component, title, abstractPopup, usageView);
+            updateInBackground(editor, element, component, title, awtPopup, usageView);
             if (invokedByShortcut) {
-                abstractPopup.focusPreferredComponent();
+                awtPopup.focusPreferredComponent();
             }
             return;
         }
@@ -348,7 +348,7 @@ public class ShowImplementationsAction extends LegacyAnAction implements PopupAc
                 })
                 .createPopup();
 
-            updateInBackground(editor, element, component, title, (AbstractPopup)popup, usageView);
+            updateInBackground(editor, element, component, title, popup, usageView);
 
             PopupPositionManager.positionPopupInBestPosition(popup, editor, DataManager.getInstance().getDataContext());
             component.setHint(popup, title);
@@ -362,7 +362,7 @@ public class ShowImplementationsAction extends LegacyAnAction implements PopupAc
         @Nullable PsiElement element,
         ImplementationViewComponentImpl component,
         LocalizeValue title,
-        AbstractPopup popup,
+        JBPopup popup,
         SimpleReference<UsageView> usageView
     ) {
         ImplementationsUpdaterTask updaterTask = SoftReference.dereference(myTaskRef);

@@ -20,7 +20,6 @@ import consulo.annotation.component.ActionImpl;
 import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
-import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
 import consulo.language.editor.ui.DefaultPsiElementCellRenderer;
 import consulo.language.navigation.GotoRelatedItem;
 import consulo.language.navigation.GotoRelatedProvider;
@@ -35,9 +34,11 @@ import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.SeparatorWithText;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.popup.AWTListPopup;
 import consulo.ui.ex.awt.popup.PopupListElementRenderer;
 import consulo.ui.ex.popup.BaseListPopupStep;
 import consulo.ui.ex.popup.JBPopup;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.PopupStep;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
@@ -206,7 +207,7 @@ public class GotoRelatedFileAction extends LegacyAnAction {
                 return component;
             }
         };
-        ListPopupImpl popup = new ListPopupImpl(new BaseListPopupStep<Object>(title, Arrays.asList(elements)) {
+        AWTListPopup popup = (AWTListPopup) JBPopupFactory.getInstance().createListPopup(new BaseListPopupStep<Object>(title, Arrays.asList(elements)) {
             @Override
             public boolean isSpeedSearchEnabled() {
                 return true;
@@ -226,8 +227,7 @@ public class GotoRelatedFileAction extends LegacyAnAction {
                 processor.test(selectedValue);
                 return super.onChosen(selectedValue, finalChoice);
             }
-        }) {
-        };
+        });
         popup.getList().setCellRenderer(new PopupListElementRenderer<PsiElement>(popup) {
             Map<Object, String> separators = new HashMap<>();
 
@@ -344,7 +344,7 @@ public class GotoRelatedFileAction extends LegacyAnAction {
 
     private static Action createNumberAction(
         int mnemonic,
-        ListPopupImpl listPopup,
+        AWTListPopup listPopup,
         Map<PsiElement, GotoRelatedItem> itemsMap,
         Predicate<Object> processor
     ) {

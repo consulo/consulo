@@ -1,11 +1,11 @@
 // Copyright 2000-2017 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.ui.popup.async;
+package consulo.desktop.awt.ui.popup.async;
 
 import consulo.application.ApplicationManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.ui.popup.NextStepHandler;
-import consulo.ide.impl.idea.ui.popup.WizardPopup;
+import consulo.desktop.awt.ui.popup.NextStepHandler;
+import consulo.desktop.awt.ui.popup.WizardPopup;
 import consulo.project.Project;
 import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.UIUtil;

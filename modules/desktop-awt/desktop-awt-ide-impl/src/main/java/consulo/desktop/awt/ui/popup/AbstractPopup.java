@@ -1,5 +1,5 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.ui.popup;
+package consulo.desktop.awt.ui.popup;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.application.Application;
@@ -20,6 +20,7 @@ import consulo.dataContext.DataSink;
 import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.ui.ex.awt.popup.AWTPopup;
 import consulo.ui.ex.awt.internal.HelpTooltipImpl;
 import consulo.ide.impl.idea.ide.actions.WindowAction;
 import consulo.ide.impl.idea.ide.ui.PopupLocationTracker;
@@ -102,7 +103,7 @@ import static java.awt.event.MouseEvent.*;
 import static java.awt.event.WindowEvent.WINDOW_ACTIVATED;
 import static java.awt.event.WindowEvent.WINDOW_GAINED_FOCUS;
 
-public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
+public class AbstractPopup implements AWTPopup, ScreenAreaConsumer {
     // Popup size stored with DimensionService is null first time
     // In this case you can put Dimension in content client properties to adjust size
     // Zero or negative values (with/height or both) would be ignored (actual values would be obtained from preferred size)
@@ -419,6 +420,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
         return new MyContentPanel(border);
     }
 
+    @Override
     public void setShowHints(boolean show) {
         if (getContentWindow(myComponent) instanceof RootPaneContainer rootPaneContainer) {
             JRootPane rootPane = rootPaneContainer.getRootPane();
@@ -428,6 +430,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
         }
     }
 
+    @Override
     public String getDimensionServiceKey() {
         return myDimensionServiceKey;
     }
@@ -436,7 +439,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
         myDimensionServiceKey = dimensionServiceKey;
     }
 
-   
+    @Override
     public Border getPopupBorder() {
         return myPopupBorder;
     }
@@ -1297,6 +1300,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
         return uiWindow.getUserData(IdeFrame.KEY) != null;
     }
 
+    @Override
     public void focusPreferredComponent() {
         _requestFocus();
     }
@@ -1645,6 +1649,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
         }
     }
 
+    @Override
     public JComponent getComponent() {
         return myComponent;
     }
@@ -2239,12 +2244,12 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
         return false;
     }
 
-   
+    @Override
     public Dimension getHeaderPreferredSize() {
         return myHeaderPanel.getPreferredSize();
     }
 
-   
+    @Override
     public Dimension getFooterPreferredSize() {
         return myAdComponent == null ? new Dimension(0, 0) : myAdComponent.getPreferredSize();
     }

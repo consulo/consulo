@@ -183,6 +183,7 @@ public class WebInputDetails {
             case "Control" -> KeyCode.CTRL;
             case "Alt" -> KeyCode.ALT;
             case "Meta" -> KeyCode.META;
+            case "Delete" -> KeyCode.of(0x7F, "VK_DELETE");
             default -> KeyCode.of(data.path(KEY_CODE).asInt(0));
         };
     }

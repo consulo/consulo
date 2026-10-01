@@ -15,7 +15,6 @@ import consulo.ide.impl.idea.ide.actions.SearchEverywherePsiRenderer;
 import consulo.ide.impl.idea.ide.util.gotoByName.*;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
 import consulo.language.editor.QualifiedNameProviderUtil;
 import consulo.language.editor.ui.PopupNavigationUtil;
 import consulo.language.psi.PsiElement;
@@ -40,9 +39,11 @@ import consulo.ui.ex.awt.action.ComboBoxAction;
 import consulo.ui.ex.awt.action.ComboBoxButton;
 import consulo.ui.ex.awt.action.ComboBoxButtonImpl;
 import consulo.ui.ex.awt.action.CustomComponentAction;
+import consulo.ui.ex.awt.popup.AWTListPopup;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.BaseListPopupStep;
 import consulo.ui.ex.popup.JBPopup;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.PopupStep;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
@@ -560,7 +561,7 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
             };
             ScopeDescriptor selection = getSelectedScope();
             step.setDefaultOptionIndex(ContainerUtil.indexOf(items, o -> Comparing.equal(o.getDisplayName(), selection.getDisplayName())));
-            ListPopupImpl popup = new ListPopupImpl(context.getData(Project.KEY), step);
+            AWTListPopup popup = (AWTListPopup) JBPopupFactory.getInstance().createListPopup(context.getData(Project.KEY), step);
             popup.setMaxRowCount(10);
             //noinspection unchecked
             popup.getList().setCellRenderer(renderer);

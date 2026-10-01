@@ -41,4 +41,6 @@ public interface AWTListPopup extends ListPopupInternal {
     JComponent getComponent();
 
     Object[] getSelectedValues();
+
+    void setMaxRowCount(int maxRowCount);
 }

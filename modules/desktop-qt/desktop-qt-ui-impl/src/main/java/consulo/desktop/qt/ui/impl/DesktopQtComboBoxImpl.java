@@ -130,11 +130,12 @@ public class DesktopQtComboBoxImpl<E> extends QtComponentDelegate<QComboBox> imp
                 }
             }
 
-            mySelectedIndex = mySelectedIndex >= 0 && mySelectedIndex < component.count()
-                ? mySelectedIndex
-                : component.count() - 1;
+            int count = component.count();
+            if (count > 0 && mySelectedIndex >= count) {
+                mySelectedIndex = count - 1;
+            }
 
-            component.setCurrentIndex(mySelectedIndex);
+            component.setCurrentIndex(mySelectedIndex >= 0 && mySelectedIndex < count ? mySelectedIndex : -1);
             component.updateGeometry();
         }
         finally {

@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.desktop.awt.editor.impl.internal;
+package consulo.desktop.awt.ui.popup;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.ui.popup.AbstractPopup;
-import consulo.ide.impl.idea.ui.popup.PopupFactoryImpl;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorPopupHelper;
 import consulo.ui.ex.RelativePoint;

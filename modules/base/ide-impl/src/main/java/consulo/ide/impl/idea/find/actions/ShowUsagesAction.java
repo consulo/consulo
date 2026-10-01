@@ -48,7 +48,6 @@ import consulo.ide.impl.idea.find.impl.FindManagerImpl;
 import consulo.ide.impl.idea.ide.util.gotoByName.ModelDiff;
 import consulo.ui.ex.action.PopupAction;
 import consulo.ide.impl.idea.openapi.ui.MessageType;
-import consulo.ide.impl.idea.ui.popup.AbstractPopup;
 import consulo.ide.impl.idea.usages.impl.GroupNode;
 import consulo.ide.impl.idea.usages.impl.UsageNode;
 import consulo.ide.impl.idea.usages.impl.UsageViewImpl;
@@ -77,6 +76,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.popup.AWTPopup;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchBase;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchComparator;
 import consulo.ui.ex.awt.table.JBTable;
@@ -1183,7 +1183,7 @@ public class ShowUsagesAction extends LegacyAnAction implements PopupAction {
 
         int width = calcMaxWidth(table);
         width = (int) Math.max(d.getWidth(), width);
-        Dimension headerSize = ((AbstractPopup) popup).getHeaderPreferredSize();
+        Dimension headerSize = ((AWTPopup) popup).getHeaderPreferredSize();
         width = Math.max((int) headerSize.getWidth(), width);
         width = Math.max(myWidth, width);
 
@@ -1205,11 +1205,11 @@ public class ShowUsagesAction extends LegacyAnAction implements PopupAction {
         //table.setMaximumSize(dimension);
         //table.setPreferredScrollableViewportSize(dimension);
 
-        Dimension footerSize = ((AbstractPopup) popup).getFooterPreferredSize();
+        Dimension footerSize = ((AWTPopup) popup).getFooterPreferredSize();
 
         int footer = footerSize.height;
         int footerBorder = footer == 0 ? 0 : 1;
-        Insets insets = ((AbstractPopup) popup).getPopupBorder().getBorderInsets(content);
+        Insets insets = ((AWTPopup) popup).getPopupBorder().getBorderInsets(content);
         rectangle.height += headerSize.height + footer + footerBorder + insets.top + insets.bottom;
         ScreenUtil.fitToScreen(rectangle);
         Dimension newDim = rectangle.getSize();

@@ -49,7 +49,7 @@ import java.util.function.Predicate;
  * <p>Components using a separate (OS-recognized) window. Can have location and size not limited by the parent window.</p>
  * <ul>
  * <li>
- * <p>{@link JBPopup} interface (implemented in {@link consulo.ide.impl.idea.ui.popup.AbstractPopup AbstractPopup})</p>
+ * <p>{@link JBPopup} interface</p>
  * <p>Platform's lowest-level heavyweight popup component. Supports title and footer (ad) bar, resizing using mouse, fitting size to
  * screen bounds, notification about showing/hiding/resizing/moving, hiding on condition (mouse exit, mouse click, key press,
  * window deactivation), speed search, saving and restoring previously used location and size, custom keyboard actions for the

@@ -1,7 +1,7 @@
 // Copyright 2000-2022 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
-package consulo.ide.impl.idea.ui.popup.actionPopup;
+package consulo.desktop.awt.ui.popup.actionPopup;
 
-import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
+import consulo.desktop.awt.ui.popup.list.ListPopupImpl;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.KeepPopupOnPerform;

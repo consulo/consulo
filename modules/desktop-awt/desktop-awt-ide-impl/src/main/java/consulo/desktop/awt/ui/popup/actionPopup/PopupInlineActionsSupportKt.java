@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ui.popup.actionPopup;
+package consulo.desktop.awt.ui.popup.actionPopup;
 
-import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
+import consulo.desktop.awt.ui.popup.list.ListPopupImpl;
 import consulo.ui.ex.action.KeepPopupOnPerform;
 import consulo.ui.ex.awt.internal.PopupInlineActionsSupport;
 import consulo.ui.ex.awtUnsafe.TargetAWT;

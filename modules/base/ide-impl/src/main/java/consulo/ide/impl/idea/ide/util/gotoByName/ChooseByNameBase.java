@@ -28,7 +28,6 @@ import consulo.disposer.Disposer;
 import consulo.ide.impl.find.PsiElement2UsageTargetAdapter;
 import consulo.ide.impl.idea.ide.actions.CopyReferenceAction;
 import consulo.ide.impl.idea.ide.actions.GotoFileAction;
-import consulo.ide.impl.idea.ui.popup.AbstractPopup;
 import consulo.ide.impl.idea.ui.popup.PopupPositionManager;
 import consulo.ide.impl.idea.ui.popup.PopupUpdateProcessor;
 import consulo.ide.impl.idea.usages.UsageLimitUtil;
@@ -848,7 +847,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
         ComponentPopupBuilder builder = JBPopupFactory.getInstance().createComponentPopupBuilder(myTextFieldPanel, myTextField)
             .setLocateWithinScreenBounds(false)
             .setKeyEventHandler(event -> {
-                if (myTextPopup == null || !AbstractPopup.isCloseRequest(event) || !myTextPopup.isCancelKeyEnabled()) {
+                if (myTextPopup == null || !UIUtil.isCloseRequest(event) || !myTextPopup.isCancelKeyEnabled()) {
                     return false;
                 }
 
