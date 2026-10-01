@@ -16,11 +16,9 @@
 package consulo.diagram.impl.internal.action;
 
 import consulo.application.concurrent.coroutine.ReadLock;
-import consulo.application.eap.EarlyAccessProgramManager;
 import consulo.application.progress.ProgressBuilderFactory;
 import consulo.dataContext.DataContext;
 import consulo.diagram.DiagramProvider;
-import consulo.diagram.impl.internal.DiagramSupportEapDescriptor;
 import consulo.diagram.impl.internal.virtualFileSystem.DiagramVirtualFile;
 import consulo.diagram.impl.internal.virtualFileSystem.DiagramVirtualFileSystem;
 import consulo.fileEditor.FileEditorManager;
@@ -30,9 +28,12 @@ import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.LegacyAnAction;
+import consulo.ui.ex.action.AnActionWithAsyncUpdate;
 import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
+import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.virtualFileSystem.VirtualFile;
 
 import java.util.concurrent.CompletableFuture;
@@ -41,7 +42,7 @@ import java.util.concurrent.CompletableFuture;
  * @author VISTALL
  * @since 2013-10-15
  */
-public class ShowDiagramAction extends LegacyAnAction {
+public class ShowDiagramAction extends AnAction implements AnActionWithAsyncUpdate {
     private final ProgressBuilderFactory myProgressBuilderFactory;
 
     public ShowDiagramAction(ProgressBuilderFactory progressBuilderFactory) {
@@ -91,13 +92,9 @@ public class ShowDiagramAction extends LegacyAnAction {
     }
 
     @Override
-    public void update(AnActionEvent e) {
-        Presentation presentation = e.getPresentation();
-        if (!EarlyAccessProgramManager.is(DiagramSupportEapDescriptor.class)) {
-            presentation.setEnabledAndVisible(false);
-            return;
-        }
-
-        presentation.setEnabledAndVisible(DiagramProvider.findProvider(e.getDataContext()) != null);
+    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
+        return ActionSafeReadLock.run(e, presentation -> {
+            presentation.setEnabledAndVisible(DiagramProvider.findProvider(e.getDataContext()) != null);
+        }).toCoroutine();
     }
 }
