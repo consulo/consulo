@@ -149,7 +149,7 @@ public class CommittedChangeListRenderer extends ColoredTreeCellRenderer {
     }
 
     if (description.isEmpty() && !truncated) {
-      append(VcsLocalize.committedChangesEmptyComment().get(), SimpleTextAttributes.GRAYED_ATTRIBUTES);
+      append(VcsLocalize.committedChangesEmptyComment(), SimpleTextAttributes.GRAYED_ATTRIBUTES);
       appendFixedTextFragmentWidth(descMaxWidth);
     }
     else if (descMaxWidth < 0) {
@@ -167,9 +167,9 @@ public class CommittedChangeListRenderer extends ColoredTreeCellRenderer {
       myRenderer.appendTextWithLinks(description);
       if (!StringUtil.isEmpty(description)) {
         append(" ", SimpleTextAttributes.REGULAR_ATTRIBUTES);
-        append(moreMarker.get(), SimpleTextAttributes.LINK_ATTRIBUTES, new CommittedChangesTreeBrowser.MoreLauncher(myProject, changeList));
+        append(moreMarker, SimpleTextAttributes.LINK_ATTRIBUTES, new CommittedChangesTreeBrowser.MoreLauncher(myProject, changeList));
       } else if (remainingWidth > 0) {
-        append(moreMarker.get(), SimpleTextAttributes.LINK_ATTRIBUTES, new CommittedChangesTreeBrowser.MoreLauncher(myProject, changeList));
+        append(moreMarker, SimpleTextAttributes.LINK_ATTRIBUTES, new CommittedChangesTreeBrowser.MoreLauncher(myProject, changeList));
       }
       // align value is for the latest added piece
       appendFixedTextFragmentWidth(descMaxWidth);

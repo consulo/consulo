@@ -296,7 +296,7 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
 
                 @Override
                 public void append(LocalizeValue text, TextAttribute textAttribute) {
-                    presentation.addText(text.getValue(), DesktopAWTTargetAWTImpl.from(textAttribute));
+                    presentation.addText(text, DesktopAWTTargetAWTImpl.from(textAttribute));
                 }
             });
         }

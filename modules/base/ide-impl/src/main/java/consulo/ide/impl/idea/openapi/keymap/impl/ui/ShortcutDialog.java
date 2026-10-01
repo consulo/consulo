@@ -174,7 +174,10 @@ abstract class ShortcutDialog<T extends Shortcut> extends DialogWrapper {
             }
             else {
                 component.append(path.substring(index + 3), SimpleTextAttributes.REGULAR_ATTRIBUTES);
-                component.append(" " + KeyMapLocalize.shortcutInGroupText(path.substring(0, index)).get(), SimpleTextAttributes.GRAYED_ATTRIBUTES);
+                component.append(
+                    LocalizeValue.join(LocalizeValue.space(), KeyMapLocalize.shortcutInGroupText(path.substring(0, index))),
+                    SimpleTextAttributes.GRAYED_ATTRIBUTES
+                );
             }
         }
     }

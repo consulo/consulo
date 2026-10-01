@@ -138,8 +138,8 @@ public class ExportHTMLAction extends AnAction implements DumbAware {
             if (!ProgressManager.getInstance().runProcessWithProgressSynchronously(
                 exportRunnable,
                 exportToHTML
-                    ? InspectionLocalize.inspectionGeneratingHtmlProgressTitle().get()
-                    : InspectionLocalize.inspectionGeneratingXmlProgressTitle().get(),
+                    ? InspectionLocalize.inspectionGeneratingHtmlProgressTitle()
+                    : InspectionLocalize.inspectionGeneratingXmlProgressTitle(),
                 true,
                 myView.getProject()
             )) {

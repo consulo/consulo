@@ -98,7 +98,7 @@ public class ShowAllAffectedGenericAction extends LegacyAnAction {
         );
         final CommittedChangeList[] list = new CommittedChangeList[1];
         final VcsException[] exc = new VcsException[1];
-        Task.Backgroundable task = new Task.Backgroundable(project, title.get(), true, BackgroundFromStartOption.getInstance()) {
+        Task.Backgroundable task = new Task.Backgroundable(project, title, true, BackgroundFromStartOption.getInstance()) {
             @Override
             public void run(ProgressIndicator indicator) {
                 try {

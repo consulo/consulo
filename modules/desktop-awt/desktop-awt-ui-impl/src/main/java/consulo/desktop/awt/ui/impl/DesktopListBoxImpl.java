@@ -347,7 +347,7 @@ class DesktopListBoxImpl<E> extends SwingComponentDelegate<JBList<E>> implements
 
     @Override
     public void setPlaceholder(LocalizeValue text) {
-        toAWTComponent().getEmptyText().setText(text.get());
+        toAWTComponent().getEmptyText().setText(text);
     }
 
     @Override

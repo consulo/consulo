@@ -194,7 +194,7 @@ public final class ComboBoxButtonImpl extends JComboBox<Object> implements Combo
     }
 
     private void updateTooltipText(LocalizeValue description) {
-        String tooltip = KeymapUtil.createTooltipText(description.getValue(), myComboBoxAction);
+        String tooltip = KeymapUtil.createTooltipText(description.get(), myComboBoxAction);
         setToolTipText(!tooltip.isEmpty() ? tooltip : null);
     }
 
@@ -203,7 +203,6 @@ public final class ComboBoxButtonImpl extends JComboBox<Object> implements Combo
         return uiClassID;
     }
 
-    
     @Override
     public ComboBoxAction getComboBoxAction() {
         return myComboBoxAction;

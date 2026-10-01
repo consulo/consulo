@@ -164,12 +164,12 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
         return false;
     }
 
-    private static String getAllFilesAreUpToDateMessage(FilePath[] roots) {
+    private static LocalizeValue getAllFilesAreUpToDateMessage(FilePath[] roots) {
         if (roots.length == 1 && !roots[0].isDirectory()) {
-            return VcsLocalize.messageTextFileIsUpToDate().get();
+            return VcsLocalize.messageTextFileIsUpToDate();
         }
         else {
-            return VcsLocalize.messageTextAllFilesAreUpToDate().get();
+            return VcsLocalize.messageTextAllFilesAreUpToDate();
         }
     }
 
@@ -578,7 +578,7 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
                         }
                         else {
                             notificationService.newInfo(STANDARD_NOTIFICATION)
-                                .content(LocalizeValue.localizeTODO(getAllFilesAreUpToDateMessage(myRoots)))
+                                .content(getAllFilesAreUpToDateMessage(myRoots))
                                 .notify(myProject);
                         }
                     }

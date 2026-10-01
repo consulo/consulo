@@ -93,7 +93,7 @@ public class AddRunConfigurationTypeAction extends LegacyDumbAwareAction {
                 protected void customizeCellRenderer(JList list, Object value, int index, boolean selected, boolean hasFocus) {
                     if (value instanceof ConfigurationType configurationType) {
                         setIcon(configurationType.getIcon());
-                        append(configurationType.getDisplayName().get());
+                        append(configurationType.getDisplayName());
                     }
                     else {
                         append(String.valueOf(value));

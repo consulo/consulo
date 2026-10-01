@@ -76,7 +76,7 @@ public class ColumnFilteringStrategy implements ChangeListFilteringStrategy {
                     append(value.toString(), SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES);
                 }
                 else if (value.toString().length() == 0) {
-                    append(VcsLocalize.committedChangesFilterNone().get(), SimpleTextAttributes.GRAYED_ATTRIBUTES);
+                    append(VcsLocalize.committedChangesFilterNone(), SimpleTextAttributes.GRAYED_ATTRIBUTES);
                 }
                 else {
                     append(value.toString(), SimpleTextAttributes.REGULAR_ATTRIBUTES);

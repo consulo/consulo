@@ -210,7 +210,7 @@ public class NotificationsConfigurablePanel extends JPanel implements Disposable
                     DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
                     Object userObject = node.getUserObject();
                     if (userObject instanceof SettingsWrapper wrapper) {
-                        append(wrapper.myDisplayName.get());
+                        append(wrapper.myDisplayName);
                     }
                 }
             });

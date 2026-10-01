@@ -88,7 +88,7 @@ class UsageViewTreeCellRenderer extends ColoredTreeCellRenderer {
       if (userObject instanceof UsageTarget usageTarget) {
         if (!usageTarget.isValid()) {
           if (!getCharSequence(false).toString().contains(UsageViewBundle.message("node.invalid"))) {
-            append(UsageViewBundle.message("node.invalid"), ourInvalidAttributes);
+            append(UsageLocalize.nodeInvalid(), ourInvalidAttributes);
           }
           return;
         }
@@ -98,8 +98,7 @@ class UsageViewTreeCellRenderer extends ColoredTreeCellRenderer {
         if (showAsReadOnly) {
           append(LocalizeValue.join(UsageLocalize.nodeReadonly(), LocalizeValue.space()), ourReadOnlyAttributes);
         }
-        String text = presentation.getPresentableText();
-        append(text == null ? "" : text, SimpleTextAttributes.REGULAR_ATTRIBUTES);
+        append(StringUtil.notNullize(presentation.getPresentableText()));
         setIcon(presentation.getIcon());
       }
       else if (treeNode instanceof GroupNode node) {
@@ -133,15 +132,15 @@ class UsageViewTreeCellRenderer extends ColoredTreeCellRenderer {
           }
         }
       }
-      else if (userObject instanceof String) {
-        append((String)userObject, SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES);
+      else if (userObject instanceof String stringUserObject) {
+        append(stringUserObject, SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES);
       }
       else {
-        append(userObject == null ? "" : userObject.toString(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
+        append(userObject == null ? "" : userObject.toString());
       }
     }
     else {
-      append(value.toString(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
+      append(value.toString());
     }
     SpeedSearchUtil.applySpeedSearchHighlighting(tree, this, true, mySelected);
   }
@@ -172,8 +171,7 @@ class UsageViewTreeCellRenderer extends ColoredTreeCellRenderer {
           if (showAsReadOnly) {
             result.append(UsageLocalize.nodeReadonly()).append(" ");
           }
-          String text = presentation.getPresentableText();
-          result.append(text == null ? "" : text);
+          result.append(StringUtil.notNullize(presentation.getPresentableText()));
         }
         else {
           result.append(UsageLocalize.nodeInvalid());

@@ -175,8 +175,7 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
      * @param isMainText main text of not
      */
     public void append(LocalizeValue fragment, SimpleTextAttributes attributes, boolean isMainText) {
-        _append(fragment.get(), attributes, isMainText);
-        revalidateAndRepaint();
+        append(fragment.get(), attributes, isMainText);
     }
 
     /**

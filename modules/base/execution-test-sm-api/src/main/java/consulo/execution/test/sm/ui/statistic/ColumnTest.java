@@ -79,7 +79,7 @@ public class ColumnTest extends BaseColumn implements Comparator<SMTestProxy> {
             if (myProxy.isSuite() && isFirstLine(row)) {
                 if (myProxy.getParent() == null) {
                     append(
-                        SMTestLocalize.smTestRunnerUiTabsStatisticsColumnsTestTotalTitle().get(),
+                        SMTestLocalize.smTestRunnerUiTabsStatisticsColumnsTestTotalTitle(),
                         SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES
                     );
                 }
