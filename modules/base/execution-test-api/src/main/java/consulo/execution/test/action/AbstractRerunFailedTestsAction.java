@@ -191,7 +191,7 @@ public class AbstractRerunFailedTestsAction extends LegacyAnAction {
                     boolean selected,
                     boolean hasFocus
                 ) {
-                    append(value.getStartActionText().map(Presentation.NO_MNEMONIC).get());
+                    append(value.getStartActionText().map(Presentation.NO_MNEMONIC));
                     setIcon(value.getIcon());
                 }
             });

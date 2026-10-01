@@ -125,7 +125,7 @@ public class AnnotateLocalFileAction {
 
     VcsAnnotateUtil.getBackgroundableLock(project, file).lock();
 
-    Task.Backgroundable annotateTask = new Task.Backgroundable(project, VcsLocalize.retrievingAnnotations().get(), true) {
+    Task.Backgroundable annotateTask = new Task.Backgroundable(project, VcsLocalize.retrievingAnnotations(), true) {
       @Override
       public void run(ProgressIndicator indicator) {
         try {

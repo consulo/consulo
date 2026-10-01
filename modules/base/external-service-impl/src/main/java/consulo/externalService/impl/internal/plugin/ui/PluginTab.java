@@ -279,7 +279,7 @@ public abstract class PluginTab implements Disposable {
                 return true;
             }
             for (LocalizeValue tag : getLocalizedTags(descriptor)) {
-                if (isAccepted(search, filter, tag.getValue())) {
+                if (isAccepted(search, filter, tag.get())) {
                     return true;
                 }
             }

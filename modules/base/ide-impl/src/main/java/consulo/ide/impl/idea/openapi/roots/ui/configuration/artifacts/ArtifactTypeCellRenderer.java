@@ -33,6 +33,6 @@ public class ArtifactTypeCellRenderer extends ColoredListCellRenderer<ArtifactTy
         boolean hasFocus
     ) {
         setIcon(value.getIcon());
-        append(value.getPresentableName().get());
+        append(value.getPresentableName());
     }
 }

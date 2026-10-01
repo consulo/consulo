@@ -244,7 +244,7 @@ public class VariableInplaceRenamer extends InplaceRefactoring {
 
                         if (!ProgressManager.getInstance().runProcessWithProgressSynchronously(
                             runnable,
-                            RefactoringLocalize.searchingForVariables().get(),
+                            RefactoringLocalize.searchingForVariables(),
                             true,
                             myProject
                         )) {

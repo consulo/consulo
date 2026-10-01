@@ -166,7 +166,7 @@ public interface ToolWindow extends BusyObject, UserDataHolder {
     @Deprecated
     @RequiredUIAccess
     default String getStripeTitle() {
-        return getDisplayName().getValue();
+        return getDisplayName().get();
     }
 
     /**

@@ -85,10 +85,10 @@ public class UnscrambleDialog extends DialogWrapper {
 
         List<StacktraceAnalyzer> analyzers = Application.get().getExtensionList(StacktraceAnalyzer.class);
         myAnalyzerBox = new ComboBox<>(new CollectionComboBoxModel<>(analyzers));
-        myAnalyzerBox.setRenderer(new ColoredListCellRenderer<StacktraceAnalyzer>() {
+        myAnalyzerBox.setRenderer(new ColoredListCellRenderer<>() {
             @Override
             protected void customizeCellRenderer(JList list, StacktraceAnalyzer value, int index, boolean selected, boolean hasFocus) {
-                append(value == null ? "" : value.getName().get());
+                append(value == null ? LocalizeValue.empty() : value.getName());
             }
         });
 
@@ -254,7 +254,6 @@ public class UnscrambleDialog extends DialogWrapper {
     }
 
     @Override
-    
     protected Action[] createActions() {
         return new Action[]{createNormalizeTextAction(), getOKAction(), getCancelAction(), getHelpAction()};
     }
@@ -283,15 +282,14 @@ public class UnscrambleDialog extends DialogWrapper {
         for (UnscrambleSupport unscrambleSupport : unscrambleComponents) {
             myUnscrambleChooser.addItem(unscrambleSupport);
         }
-        myUnscrambleChooser.setRenderer(new ColoredListCellRenderer<UnscrambleSupport>() {
+        myUnscrambleChooser.setRenderer(new ColoredListCellRenderer<>() {
             @Override
             protected void customizeCellRenderer(JList<? extends UnscrambleSupport> list, UnscrambleSupport value, int index, boolean selected, boolean hasFocus) {
-                append(value == null ? IdeLocalize.unscrambleNoUnscramblerItem().get() : value.getName().get());
+                append(value == null ? IdeLocalize.unscrambleNoUnscramblerItem() : value.getName());
             }
         });
     }
 
-    
     private List<UnscrambleSupport> getRegisteredUnscramblers() {
         StacktraceAnalyzer analyzer = getAnalyzer();
         List<UnscrambleSupport> unscrambleSupports = new ArrayList<>();
