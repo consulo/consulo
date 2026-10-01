@@ -440,6 +440,7 @@ public final class ScanningTestSupport {
 
     public static final class BlockingIterator implements IndexableFilesIterator {
         private final IndexableSetOrigin myOrigin = new TestOrigin();
+        private final AtomicInteger myIterations = new AtomicInteger();
         private final CountDownLatch myStarted = new CountDownLatch(1);
         private final CountDownLatch myRelease = new CountDownLatch(1);
 
@@ -465,6 +466,7 @@ public final class ScanningTestSupport {
 
         @Override
         public boolean iterateFiles(Project project, ContentIterator fileIterator, VirtualFileFilter fileFilter) {
+            myIterations.incrementAndGet();
             myStarted.countDown();
             while (true) {
                 ProgressManager.checkCanceled();
@@ -486,6 +488,10 @@ public final class ScanningTestSupport {
 
         public boolean isStarted() {
             return myStarted.getCount() == 0;
+        }
+
+        public int getIterations() {
+            return myIterations.get();
         }
 
         public void release() {
