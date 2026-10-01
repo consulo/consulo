@@ -18,16 +18,18 @@ package consulo.versionControlSystem.impl.internal.change.ui.awt;
 import consulo.project.Project;
 
 public class ChangesBrowserUnversionedFilesNode extends ChangesBrowserSpecificFilesNode {
+    public ChangesBrowserUnversionedFilesNode(Project project, int unversionedSize, int unversionedDirsSize, boolean manyUnversioned) {
+        super(
+            ChangesBrowserNode.UNVERSIONED_FILES_TAG,
+            unversionedSize,
+            unversionedDirsSize,
+            manyUnversioned,
+            () -> new UnversionedViewDialog(project).show()
+        );
+    }
 
-  public ChangesBrowserUnversionedFilesNode(Project project,
-                                            int unversionedSize,
-                                            int unversionedDirsSize,
-                                            boolean manyUnversioned) {
-    super(ChangesBrowserNode.UNVERSIONED_FILES_TAG, unversionedSize, unversionedDirsSize, manyUnversioned, () -> new UnversionedViewDialog(project).show());
-  }
-
-  @Override
-  public int getSortWeight() {
-    return 8;
-  }
+    @Override
+    public int getSortWeight() {
+        return UNVERSIONED_SORT_WEIGHT;
+    }
 }

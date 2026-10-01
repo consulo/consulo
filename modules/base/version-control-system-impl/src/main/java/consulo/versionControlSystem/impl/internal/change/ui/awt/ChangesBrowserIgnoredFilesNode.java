@@ -13,28 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.versionControlSystem.impl.internal.change.ui.awt;
 
 public class ChangesBrowserIgnoredFilesNode extends ChangesBrowserSpecificFilesNode {
+    private final boolean myUpdatingMode;
 
-  private final boolean myUpdatingMode;
-
-  protected ChangesBrowserIgnoredFilesNode(int filesSize, int dirsSize, boolean many, boolean updatingMode) {
-    super(IGNORED_FILES_TAG, filesSize, dirsSize, many, null);
-    myUpdatingMode = updatingMode;
-  }
-
-  @Override
-  public void render(ChangesBrowserNodeRenderer renderer, boolean selected, boolean expanded, boolean hasFocus) {
-    super.render(renderer, selected, expanded, hasFocus);
-    if (myUpdatingMode) {
-      appendUpdatingState(renderer);
+    protected ChangesBrowserIgnoredFilesNode(int filesSize, int dirsSize, boolean many, boolean updatingMode) {
+        super(IGNORED_FILES_TAG, filesSize, dirsSize, many, null);
+        myUpdatingMode = updatingMode;
     }
-  }
 
-  @Override
-  public int getSortWeight() {
-    return 10;
-  }
+    @Override
+    public void render(ChangesBrowserNodeRenderer renderer, boolean selected, boolean expanded, boolean hasFocus) {
+        super.render(renderer, selected, expanded, hasFocus);
+        if (myUpdatingMode) {
+            appendUpdatingState(renderer);
+        }
+    }
+
+    @Override
+    public int getSortWeight() {
+        return IGNORED_SORT_WEIGHT;
+    }
 }

@@ -29,50 +29,51 @@ import java.awt.*;
 import java.util.function.BooleanSupplier;
 
 public class ChangesBrowserNodeRenderer extends ColoredTreeCellRenderer {
+    private final BooleanSupplier myShowFlatten;
 
-  
-  private final BooleanSupplier myShowFlatten;
-  
-  private final Project myProject;
-  
-  private final IssueLinkRenderer myIssueLinkRenderer;
-  private final boolean myHighlightProblems;
+    private final Project myProject;
 
-  public ChangesBrowserNodeRenderer(Project project, BooleanSupplier showFlattenGetter, boolean highlightProblems) {
-    myShowFlatten = showFlattenGetter;
-    myProject = project;
-    myHighlightProblems = highlightProblems;
-    myIssueLinkRenderer = new IssueLinkRenderer(project, this);
-  }
+    private final IssueLinkRenderer myIssueLinkRenderer;
+    private final boolean myHighlightProblems;
 
-  public boolean isShowFlatten() {
-    return myShowFlatten.getAsBoolean();
-  }
-
-  public void customizeCellRenderer(JTree tree,
-                                    Object value,
-                                    boolean selected,
-                                    boolean expanded,
-                                    boolean leaf,
-                                    int row,
-                                    boolean hasFocus) {
-    ChangesBrowserNode node = (ChangesBrowserNode)value;
-    node.render(this, selected, expanded, hasFocus);
-    SpeedSearchUtil.applySpeedSearchHighlighting(tree, this, true, selected);
-  }
-
-  protected void appendFileName(@Nullable VirtualFile vFile, String fileName, Color color) {
-    ChangesFileNameDecorator decorator = !myProject.isDefault() ? ChangesFileNameDecorator.getInstance(myProject) : null;
-
-    if (decorator != null) {
-      decorator.appendFileName(this, vFile, fileName, color, myHighlightProblems);
+    public ChangesBrowserNodeRenderer(Project project, BooleanSupplier showFlattenGetter, boolean highlightProblems) {
+        myShowFlatten = showFlattenGetter;
+        myProject = project;
+        myHighlightProblems = highlightProblems;
+        myIssueLinkRenderer = new IssueLinkRenderer(project, this);
     }
-    else {
-      append(fileName, new SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN, color));
-    }
-  }
 
-  public void appendTextWithIssueLinks(String text, SimpleTextAttributes baseStyle) {
-    myIssueLinkRenderer.appendTextWithLinks(text, baseStyle);
-  }
+    public boolean isShowFlatten() {
+        return myShowFlatten.getAsBoolean();
+    }
+
+    @Override
+    public void customizeCellRenderer(
+        JTree tree,
+        Object value,
+        boolean selected,
+        boolean expanded,
+        boolean leaf,
+        int row,
+        boolean hasFocus
+    ) {
+        ChangesBrowserNode<?> node = (ChangesBrowserNode<?>) value;
+        node.render(this, selected, expanded, hasFocus);
+        SpeedSearchUtil.applySpeedSearchHighlighting(tree, this, true, selected);
+    }
+
+    protected void appendFileName(@Nullable VirtualFile vFile, String fileName, Color color) {
+        ChangesFileNameDecorator decorator = !myProject.isDefault() ? ChangesFileNameDecorator.getInstance(myProject) : null;
+
+        if (decorator != null) {
+            decorator.appendFileName(this, vFile, fileName, color, myHighlightProblems);
+        }
+        else {
+            append(fileName, new SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN, color));
+        }
+    }
+
+    public void appendTextWithIssueLinks(String text, SimpleTextAttributes baseStyle) {
+        myIssueLinkRenderer.appendTextWithLinks(text, baseStyle);
+    }
 }

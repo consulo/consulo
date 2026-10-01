@@ -16,23 +16,22 @@
 package consulo.versionControlSystem.impl.internal.change.ui.awt;
 
 import consulo.project.Project;
-import consulo.ui.ex.SimpleTextAttributes;
 import consulo.versionControlSystem.change.LogicalLock;
 import consulo.versionControlSystem.internal.ChangesBrowserLogicallyLockedFile;
 import consulo.virtualFileSystem.VirtualFile;
 
 public class ChangesBrowserLogicallyLockedFileImpl extends ChangesBrowserFileNode implements ChangesBrowserLogicallyLockedFile {
-  private final LogicalLock myLogicalLock;
+    private final LogicalLock myLogicalLock;
 
-  public ChangesBrowserLogicallyLockedFileImpl(Project project, VirtualFile userObject, LogicalLock logicalLock) {
-    super(project, userObject);
-    myLogicalLock = logicalLock;
-  }
+    public ChangesBrowserLogicallyLockedFileImpl(Project project, VirtualFile userObject, LogicalLock logicalLock) {
+        super(project, userObject);
+        myLogicalLock = logicalLock;
+    }
 
-  @Override
-  public void render(ChangesBrowserNodeRenderer renderer, boolean selected, boolean expanded, boolean hasFocus) {
-    super.render(renderer, selected, expanded, hasFocus);
-    renderer.append(" locked by ", SimpleTextAttributes.REGULAR_ATTRIBUTES);
-    renderer.append(myLogicalLock.getOwner(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
-  }
+    @Override
+    public void render(ChangesBrowserNodeRenderer renderer, boolean selected, boolean expanded, boolean hasFocus) {
+        super.render(renderer, selected, expanded, hasFocus);
+        renderer.append(" locked by ");
+        renderer.append(myLogicalLock.getOwner());
+    }
 }

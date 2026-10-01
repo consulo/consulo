@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.versionControlSystem.impl.internal.change.ui.awt;
 
 import consulo.project.Project;
@@ -41,18 +40,13 @@ public class ChangesBrowserChangeListNode extends ChangesBrowserNode<ChangeList>
     public ChangesBrowserChangeListNode(Project project, ChangeList userObject, ChangeListRemoteState changeListRemoteState) {
         super(userObject);
         myChangeListRemoteState = changeListRemoteState;
-        myClManager = (ChangeListManagerEx)ChangeListManager.getInstance(project);
+        myClManager = (ChangeListManagerEx) ChangeListManager.getInstance(project);
         myDecorators = ChangeListDecorator.EP_NAME.getExtensionList(project);
     }
 
     @Override
-    public void render(
-        ChangesBrowserNodeRenderer renderer,
-        boolean selected,
-        boolean expanded,
-        boolean hasFocus
-    ) {
-        if (userObject instanceof LocalChangeList list) {
+    public void render(ChangesBrowserNodeRenderer renderer, boolean selected, boolean expanded, boolean hasFocus) {
+        if (getUserObject() instanceof LocalChangeList list) {
             renderer.appendTextWithIssueLinks(
                 list.getName(),
                 list.isDefault() ? SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES : SimpleTextAttributes.REGULAR_ATTRIBUTES
@@ -104,10 +98,9 @@ public class ChangesBrowserChangeListNode extends ChangesBrowserNode<ChangeList>
 
     @Override
     public void acceptDrop(ChangeListOwner dragOwner, ChangeListDragBean dragBean) {
-        if (!(userObject instanceof LocalChangeList)) {
+        if (!(userObject instanceof LocalChangeList dropList)) {
             return;
         }
-        LocalChangeList dropList = (LocalChangeList)getUserObject();
         dragOwner.moveChangesTo(dropList, dragBean.getChanges());
 
         List<VirtualFile> toUpdate = new ArrayList<>();
@@ -127,7 +120,9 @@ public class ChangesBrowserChangeListNode extends ChangesBrowserNode<ChangeList>
 
     @Override
     public int getSortWeight() {
-        return userObject instanceof LocalChangeList list && list.isDefault() ? 1 : 2;
+        return getUserObject() instanceof LocalChangeList list && list.isDefault()
+            ? DEFAULT_CHANGE_LIST_SORT_WEIGHT
+            : CHANGE_LIST_SORT_WEIGHT;
     }
 
     @Override

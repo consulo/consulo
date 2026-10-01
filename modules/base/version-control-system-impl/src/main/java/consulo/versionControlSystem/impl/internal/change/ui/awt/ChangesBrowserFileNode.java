@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.versionControlSystem.impl.internal.change.ui.awt;
 
-import consulo.application.AllIcons;
 import consulo.application.util.UserHomeFileUtil;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.util.lang.StringUtil;
 import consulo.project.Project;
 import consulo.ui.ex.SimpleTextAttributes;
@@ -33,69 +32,75 @@ import static consulo.ui.ex.awt.FontUtil.spaceAndThinSpace;
  * @author yole
  */
 public class ChangesBrowserFileNode extends ChangesBrowserNode<VirtualFile> implements Comparable<ChangesBrowserFileNode> {
-  private final Project myProject;
-  private final String myName;
+    private final Project myProject;
+    private final String myName;
 
-  public ChangesBrowserFileNode(Project project, VirtualFile userObject) {
-    super(userObject);
-    myName = StringUtil.toLowerCase(userObject.getName());
-    myProject = project;
-  }
-
-  @Override
-  protected boolean isFile() {
-    return !getUserObject().isDirectory();
-  }
-
-  @Override
-  protected boolean isDirectory() {
-    return getUserObject().isDirectory() &&
-           (isLeaf() || FileStatusManager.getInstance(myProject).getStatus(getUserObject()) != FileStatus.NOT_CHANGED);
-  }
-
-  @Override
-  public void render(ChangesBrowserNodeRenderer renderer, boolean selected, boolean expanded, boolean hasFocus) {
-    VirtualFile file = getUserObject();
-    renderer.appendFileName(file, file.getName(), TargetAWT.to(ChangeListManager.getInstance(myProject).getStatus(file).getColor()));
-    if (renderer.isShowFlatten() && file.isValid()) {
-      VirtualFile parentFile = file.getParent();
-      assert parentFile != null;
-      renderer.append(spaceAndThinSpace() + UserHomeFileUtil.getLocationRelativeToUserHome(parentFile.getPresentableUrl()), SimpleTextAttributes.GRAYED_ATTRIBUTES);
+    public ChangesBrowserFileNode(Project project, VirtualFile userObject) {
+        super(userObject);
+        myName = StringUtil.toLowerCase(userObject.getName());
+        myProject = project;
     }
-    else if (getFileCount() != 1 || getDirectoryCount() != 0) {
-      appendCount(renderer);
+
+    @Override
+    protected boolean isFile() {
+        return !getUserObject().isDirectory();
     }
-    if (file.isDirectory()) {
-      renderer.setIcon(AllIcons.Nodes.TreeClosed);
+
+    @Override
+    protected boolean isDirectory() {
+        return getUserObject().isDirectory() &&
+            (isLeaf() || FileStatusManager.getInstance(myProject).getStatus(getUserObject()) != FileStatus.NOT_CHANGED);
     }
-    else {
-      renderer.setIcon(file.getFileType().getIcon());
+
+    @Override
+    public void render(ChangesBrowserNodeRenderer renderer, boolean selected, boolean expanded, boolean hasFocus) {
+        VirtualFile file = getUserObject();
+        renderer.appendFileName(file, file.getName(), TargetAWT.to(ChangeListManager.getInstance(myProject).getStatus(file).getColor()));
+        if (renderer.isShowFlatten() && file.isValid()) {
+            VirtualFile parentFile = file.getParent();
+            if (parentFile != null) {
+                renderer.append(
+                    spaceAndThinSpace() + UserHomeFileUtil.getLocationRelativeToUserHome(parentFile.getPresentableUrl()),
+                    SimpleTextAttributes.GRAYED_ATTRIBUTES
+                );
+            }
+        }
+        else if (getFileCount() != 1 || getDirectoryCount() != 0) {
+            appendCount(renderer);
+        }
+        if (file.isDirectory()) {
+            renderer.setIcon(PlatformIconGroup.nodesTreeclosed());
+        }
+        else {
+            renderer.setIcon(file.getFileType().getIcon());
+        }
     }
-  }
 
-  @Override
-  public String getTextPresentation() {
-    return getUserObject().getName();
-  }
-
-  @Override
-  public String toString() {
-    return getUserObject().getPresentableUrl();
-  }
-
-  public int getSortWeight() {
-    return VIRTUAL_FILE_SORT_WEIGHT;
-  }
-
-  @Override
-  public int compareTo(ChangesBrowserFileNode o) {
-    return myName.compareTo(o.myName);
-  }
-
-  public int compareUserObjects(Object o2) {
-    if (o2 instanceof VirtualFile) {
-      return getUserObject().getName().compareToIgnoreCase(((VirtualFile)o2).getName());
+    @Override
+    public String getTextPresentation() {
+        return getUserObject().getName();
     }
-    return 0;
-  }
+
+    @Override
+    public String toString() {
+        return getUserObject().getPresentableUrl();
+    }
+
+    @Override
+    public int getSortWeight() {
+        return VIRTUAL_FILE_SORT_WEIGHT;
+    }
+
+    @Override
+    public int compareTo(ChangesBrowserFileNode o) {
+        return myName.compareTo(o.myName);
+    }
+
+    @Override
+    public int compareUserObjects(Object o2) {
+        if (o2 instanceof VirtualFile virtualFile) {
+            return getUserObject().getName().compareToIgnoreCase(virtualFile.getName());
+        }
+        return 0;
+    }
 }

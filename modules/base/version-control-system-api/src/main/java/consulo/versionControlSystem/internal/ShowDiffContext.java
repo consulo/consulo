@@ -24,66 +24,77 @@ import org.jspecify.annotations.Nullable;
 import java.util.*;
 
 public class ShowDiffContext {
-  
-  private final DiffDialogHints myDialogHints;
+    private final DiffDialogHints myDialogHints;
 
-  private @Nullable List<AnAction> myActions;
-  private @Nullable Map<Key, Object> myChainContext;
-  private @Nullable Map<Change, Map<Key, Object>> myRequestContext;
+    private @Nullable List<AnAction> myActions;
+    private @Nullable Map<Key, Object> myChainContext;
+    private @Nullable Map<Change, Map<Key, Object>> myRequestContext;
 
-  public ShowDiffContext() {
-    this(DiffDialogHints.DEFAULT);
-  }
-
-  public ShowDiffContext(DiffDialogHints dialogHints) {
-    myDialogHints = dialogHints;
-  }
-
-  
-  public DiffDialogHints getDialogHints() {
-    return myDialogHints;
-  }
-
-  
-  public List<AnAction> getActions() {
-    if (myActions == null) return Collections.emptyList();
-    return myActions;
-  }
-
-  
-  public Map<Key, Object> getChainContext() {
-    if (myChainContext == null) return Collections.emptyMap();
-    return myChainContext;
-  }
-
-  
-  public Map<Key, Object> getChangeContext(Change change) {
-    if (myRequestContext == null) return Collections.emptyMap();
-    Map<Key, Object> map = myRequestContext.get(change);
-    if (map == null) return Collections.emptyMap();
-    return map;
-  }
-
-  public void addActions(List<AnAction> action) {
-    if (myActions == null) myActions = new ArrayList<>();
-    myActions.addAll(action);
-  }
-
-  public void addAction(AnAction action) {
-    if (myActions == null) myActions = new ArrayList<>();
-    myActions.add(action);
-  }
-
-  public <T> void putChainContext(Key<T> key, T value) {
-    if (myChainContext == null) {
-      myChainContext = new HashMap<>();
+    public ShowDiffContext() {
+        this(DiffDialogHints.DEFAULT);
     }
-    myChainContext.put(key, value);
-  }
 
-  public <T> void putChangeContext(Change change, Key<T> key, T value) {
-    if (myRequestContext == null) myRequestContext = new HashMap<>();
-    if (!myRequestContext.containsKey(change)) myRequestContext.put(change, new HashMap<>());
-    myRequestContext.get(change).put(key, value);
-  }
+    public ShowDiffContext(DiffDialogHints dialogHints) {
+        myDialogHints = dialogHints;
+    }
+
+    public DiffDialogHints getDialogHints() {
+        return myDialogHints;
+    }
+
+    public List<AnAction> getActions() {
+        if (myActions == null) {
+            return Collections.emptyList();
+        }
+        return myActions;
+    }
+
+    public Map<Key, Object> getChainContext() {
+        if (myChainContext == null) {
+            return Collections.emptyMap();
+        }
+        return myChainContext;
+    }
+
+    public Map<Key, Object> getChangeContext(Change change) {
+        if (myRequestContext == null) {
+            return Collections.emptyMap();
+        }
+        Map<Key, Object> map = myRequestContext.get(change);
+        if (map == null) {
+            return Collections.emptyMap();
+        }
+        return map;
+    }
+
+    public void addActions(List<AnAction> action) {
+        if (myActions == null) {
+            myActions = new ArrayList<>();
+        }
+        myActions.addAll(action);
+    }
+
+    public void addAction(AnAction action) {
+        if (myActions == null) {
+            myActions = new ArrayList<>();
+        }
+        myActions.add(action);
+    }
+
+    public <T> void putChainContext(Key<T> key, T value) {
+        if (myChainContext == null) {
+            myChainContext = new HashMap<>();
+        }
+        myChainContext.put(key, value);
+    }
+
+    public <T> void putChangeContext(Change change, Key<T> key, T value) {
+        if (myRequestContext == null) {
+            myRequestContext = new HashMap<>();
+        }
+        if (!myRequestContext.containsKey(change)) {
+            myRequestContext.put(change, new HashMap<>());
+        }
+        myRequestContext.get(change).put(key, value);
+    }
 }

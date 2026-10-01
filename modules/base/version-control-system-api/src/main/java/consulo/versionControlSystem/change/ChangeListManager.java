@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.versionControlSystem.change;
 
 import consulo.annotation.DeprecationInfo;
@@ -40,183 +39,171 @@ import java.util.function.Consumer;
  */
 @ServiceAPI(value = ComponentScope.PROJECT, lazy = false)
 public abstract class ChangeListManager {
-  
-  public static ChangeListManager getInstance(Project project) {
-    return project.getInstance(ChangeListManager.class);
-  }
+    public static ChangeListManager getInstance(Project project) {
+        return project.getInstance(ChangeListManager.class);
+    }
 
-  public abstract void scheduleUpdate();
+    public abstract void scheduleUpdate();
 
-  public abstract void scheduleUpdate(boolean updateUnversionedFiles);
+    public abstract void scheduleUpdate(boolean updateUnversionedFiles);
 
-  public abstract void invokeAfterUpdate(Runnable afterUpdate,
-                                         InvokeAfterUpdateMode mode,
-                                         String title,
-                                         ModalityState state);
+    public abstract void invokeAfterUpdate(Runnable afterUpdate, InvokeAfterUpdateMode mode, String title, ModalityState state);
 
-  public abstract void invokeAfterUpdate(Runnable afterUpdate,
-                                         InvokeAfterUpdateMode mode,
-                                         String title,
-                                         Consumer<VcsDirtyScopeManager> dirtyScopeManager,
-                                         ModalityState state);
+    public abstract void invokeAfterUpdate(
+        Runnable afterUpdate,
+        InvokeAfterUpdateMode mode,
+        String title,
+        Consumer<VcsDirtyScopeManager> dirtyScopeManager,
+        ModalityState state
+    );
 
-  
-  public abstract LocalChangeList addChangeList(String name, @Nullable String comment, @Nullable Object data);
+    public abstract LocalChangeList addChangeList(String name, @Nullable String comment, @Nullable Object data);
 
-  public abstract LocalChangeList addChangeList(String name, @Nullable String comment);
+    public abstract LocalChangeList addChangeList(String name, @Nullable String comment);
 
-  public abstract void setDefaultChangeList(LocalChangeList list);
+    public abstract void setDefaultChangeList(LocalChangeList list);
 
-  public abstract void removeChangeList(String name);
+    public abstract void removeChangeList(String name);
 
-  public abstract void removeChangeList(LocalChangeList list);
+    public abstract void removeChangeList(LocalChangeList list);
 
-  public abstract void moveChangesTo(LocalChangeList list, Change... changes);
+    public abstract void moveChangesTo(LocalChangeList list, Change... changes);
 
-  // added - since ChangeListManager wouldn't pass internal lists, only copies
-  public abstract boolean setReadOnly(String name, boolean value);
+    // added - since ChangeListManager wouldn't pass internal lists, only copies
+    public abstract boolean setReadOnly(String name, boolean value);
 
-  public abstract boolean editName(String fromName, String toName);
+    public abstract boolean editName(String fromName, String toName);
 
-  public abstract @Nullable String editComment(String fromName, String newComment);
+    public abstract @Nullable String editComment(String fromName, String newComment);
 
-  @TestOnly
-  public abstract boolean ensureUpToDate(boolean canBeCanceled);
+    @TestOnly
+    public abstract boolean ensureUpToDate(boolean canBeCanceled);
 
-  public abstract int getChangeListsNumber();
+    public abstract int getChangeListsNumber();
 
-  public abstract List<LocalChangeList> getChangeListsCopy();
+    public abstract List<LocalChangeList> getChangeListsCopy();
 
-  
-  public abstract List<LocalChangeList> getChangeLists();
+    public abstract List<LocalChangeList> getChangeLists();
 
-  
-  public abstract List<LocalChangeList> getChangeLists(Change change);
+    public abstract List<LocalChangeList> getChangeLists(Change change);
 
-  
-  public abstract List<LocalChangeList> getChangeLists(VirtualFile file);
+    public abstract List<LocalChangeList> getChangeLists(VirtualFile file);
 
-  public abstract List<File> getAffectedPaths();
+    public abstract List<File> getAffectedPaths();
 
-  
-  public abstract List<VirtualFile> getAffectedFiles();
+    public abstract List<VirtualFile> getAffectedFiles();
 
-  public abstract boolean isFileAffected(VirtualFile file);
+    public abstract boolean isFileAffected(VirtualFile file);
 
-  /**
-   * @return all changes in all changelists.
-   */
-  public abstract Collection<Change> getAllChanges();
+    /**
+     * @return all changes in all changelists.
+     */
+    public abstract Collection<Change> getAllChanges();
 
-  public abstract @Nullable LocalChangeList findChangeList(String name);
+    public abstract @Nullable LocalChangeList findChangeList(String name);
 
-  public abstract @Nullable LocalChangeList getChangeList(String id);
+    public abstract @Nullable LocalChangeList getChangeList(String id);
 
-  /**
-   * Returns currently active changelist
-   *
-   * @return active changelist
-   */
-  public abstract LocalChangeList getDefaultChangeList();
+    /**
+     * Returns currently active changelist
+     *
+     * @return active changelist
+     */
+    public abstract LocalChangeList getDefaultChangeList();
 
-  public abstract boolean isDefaultChangeList(ChangeList list);
+    public abstract boolean isDefaultChangeList(ChangeList list);
 
-  public abstract @Nullable LocalChangeList getChangeList(Change change);
+    public abstract @Nullable LocalChangeList getChangeList(Change change);
 
-  public abstract @Nullable String getChangeListNameIfOnlyOne(Change[] changes);
+    public abstract @Nullable String getChangeListNameIfOnlyOne(Change[] changes);
 
-  
-  public abstract Runnable prepareForChangeDeletion(Collection<Change> changes);
+    public abstract Runnable prepareForChangeDeletion(Collection<Change> changes);
 
-  public abstract @Nullable Change getChange(VirtualFile file);
+    public abstract @Nullable Change getChange(VirtualFile file);
 
-  public abstract @Nullable LocalChangeList getChangeList(VirtualFile file);
+    public abstract @Nullable LocalChangeList getChangeList(VirtualFile file);
 
-  public abstract @Nullable Change getChange(FilePath file);
+    public abstract @Nullable Change getChange(FilePath file);
 
-  public abstract boolean isUnversioned(VirtualFile file);
+    public abstract boolean isUnversioned(VirtualFile file);
 
-  
-  public abstract FileStatus getStatus(VirtualFile file);
+    public abstract FileStatus getStatus(VirtualFile file);
 
-  
-  public abstract Collection<Change> getChangesIn(VirtualFile dir);
+    public abstract Collection<Change> getChangesIn(VirtualFile dir);
 
-  
-  public abstract Collection<Change> getChangesIn(FilePath path);
+    public abstract Collection<Change> getChangesIn(FilePath path);
 
-  public abstract @Nullable AbstractVcs getVcsFor(Change change);
+    public abstract @Nullable AbstractVcs getVcsFor(Change change);
 
 //  public abstract void removeChangeList(final LocalChangeList list);
 
 //  public abstract void moveChangesTo(final LocalChangeList list, final Change[] changes);
 
-  @Deprecated
-  @DeprecationInfo("Use MessageBus")
-  public abstract void addChangeListListener(ChangeListListener listener);
+    @Deprecated
+    @DeprecationInfo("Use MessageBus")
+    public abstract void addChangeListListener(ChangeListListener listener);
 
-  @Deprecated
-  @DeprecationInfo("Use MessageBus")
-  public abstract void removeChangeListListener(ChangeListListener listener);
+    @Deprecated
+    @DeprecationInfo("Use MessageBus")
+    public abstract void removeChangeListListener(ChangeListListener listener);
 
-  public abstract void registerCommitExecutor(CommitExecutor executor);
+    public abstract void registerCommitExecutor(CommitExecutor executor);
 
-  public abstract void commitChanges(LocalChangeList changeList, List<Change> changes);
+    public abstract void commitChanges(LocalChangeList changeList, List<Change> changes);
 
-  public abstract void commitChangesSynchronously(LocalChangeList changeList, List<Change> changes);
+    public abstract void commitChangesSynchronously(LocalChangeList changeList, List<Change> changes);
 
-  /**
-   * @return if commit successful
-   */
-  public abstract boolean commitChangesSynchronouslyWithResult(LocalChangeList changeList, List<Change> changes);
+    /**
+     * @return if commit successful
+     */
+    public abstract boolean commitChangesSynchronouslyWithResult(LocalChangeList changeList, List<Change> changes);
 
-  public abstract List<CommitExecutor> getRegisteredExecutors();
+    public abstract List<CommitExecutor> getRegisteredExecutors();
 
-  @Deprecated
-  @DeprecationInfo("Not implemented - use IgnoredFileProvider")
-  public abstract void addFilesToIgnore(IgnoredFileBean... ignoredFiles);
+    @Deprecated
+    @DeprecationInfo("Not implemented - use IgnoredFileProvider")
+    public abstract void addFilesToIgnore(IgnoredFileBean... ignoredFiles);
 
-  @Deprecated
-  @DeprecationInfo("Not implemented - use IgnoredFileProvider")
-  public abstract void addDirectoryToIgnoreImplicitly(String path);
+    @Deprecated
+    @DeprecationInfo("Not implemented - use IgnoredFileProvider")
+    public abstract void addDirectoryToIgnoreImplicitly(String path);
 
-  @Deprecated
-  @DeprecationInfo("Not implemented - use IgnoredFileProvider")
-  public abstract void setFilesToIgnore(IgnoredFileBean... ignoredFiles);
+    @Deprecated
+    @DeprecationInfo("Not implemented - use IgnoredFileProvider")
+    public abstract void setFilesToIgnore(IgnoredFileBean... ignoredFiles);
 
-  @Deprecated
-  @DeprecationInfo("Not implemented - use IgnoredFileProvider")
-  public abstract IgnoredFileBean[] getFilesToIgnore();
+    @Deprecated
+    @DeprecationInfo("Not implemented - use IgnoredFileProvider")
+    public abstract IgnoredFileBean[] getFilesToIgnore();
 
-  public boolean isIgnoredFile(VirtualFile file) {
-    return isIgnoredFile(VcsUtil.getFilePath(file));
-  }
+    public boolean isIgnoredFile(VirtualFile file) {
+        return isIgnoredFile(VcsUtil.getFilePath(file));
+    }
 
-  public abstract boolean isIgnoredFile(FilePath file);
+    public abstract boolean isIgnoredFile(FilePath file);
 
-  public abstract boolean isContainedInLocallyDeleted(FilePath filePath);
+    public abstract boolean isContainedInLocallyDeleted(FilePath filePath);
 
-  public abstract @Nullable String getSwitchedBranch(VirtualFile file);
+    public abstract @Nullable String getSwitchedBranch(VirtualFile file);
 
-  public abstract String getDefaultListName();
+    public abstract String getDefaultListName();
 
-  @Deprecated
-  public abstract void letGo();
+    @Deprecated
+    public abstract void letGo();
 
-  public abstract String isFreezed();
+    public abstract String isFreezed();
 
-  public abstract boolean isFreezedWithNotification(@Nullable String modalTitle);
+    public abstract boolean isFreezedWithNotification(@Nullable String modalTitle);
 
-  public abstract List<VirtualFile> getModifiedWithoutEditing();
+    public abstract List<VirtualFile> getModifiedWithoutEditing();
 
-  
-  public abstract ThreeState haveChangesUnder(VirtualFile vf);
+    public abstract ThreeState haveChangesUnder(VirtualFile vf);
 
-  public boolean areChangeListsEnabled() {
-    return true;
-  }
+    public boolean areChangeListsEnabled() {
+        return true;
+    }
 
-  public boolean isInUpdate() {
-    return false;
-  }
+    public boolean isInUpdate() {
+        return false;
+    }
 }

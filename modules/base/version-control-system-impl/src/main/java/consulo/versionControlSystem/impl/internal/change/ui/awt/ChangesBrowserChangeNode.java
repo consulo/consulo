@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.versionControlSystem.impl.internal.change.ui.awt;
 
-import consulo.application.AllIcons;
 import consulo.application.util.UserHomeFileUtil;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.tree.TreeLinkMouseListener;
@@ -34,109 +33,108 @@ import org.jspecify.annotations.Nullable;
 import static consulo.ui.ex.awt.FontUtil.spaceAndThinSpace;
 
 public class ChangesBrowserChangeNode extends ChangesBrowserNode<Change> implements TreeLinkMouseListener.HaveTooltip {
+    private final Project myProject;
+    private final @Nullable ChangeNodeDecorator myDecorator;
 
-  
-  private final Project myProject;
-  private final @Nullable ChangeNodeDecorator myDecorator;
-
-  protected ChangesBrowserChangeNode(Project project, Change userObject, @Nullable ChangeNodeDecorator decorator) {
-    super(userObject);
-    myProject = project;
-    myDecorator = decorator;
-  }
-
-  @Override
-  protected boolean isFile() {
-    return !isDirectory();
-  }
-
-  @Override
-  protected boolean isDirectory() {
-    return ChangesUtil.getFilePath(getUserObject()).isDirectory();
-  }
-
-  @Override
-  public void render(ChangesBrowserNodeRenderer renderer, boolean selected, boolean expanded, boolean hasFocus) {
-    Change change = getUserObject();
-    FilePath filePath = ChangesUtil.getFilePath(change);
-    VirtualFile file = filePath.getVirtualFile();
-
-    if (myDecorator != null) {
-      myDecorator.preDecorate(change, renderer, renderer.isShowFlatten());
+    protected ChangesBrowserChangeNode(Project project, Change userObject, @Nullable ChangeNodeDecorator decorator) {
+        super(userObject);
+        myProject = project;
+        myDecorator = decorator;
     }
 
-    renderer.appendFileName(file, filePath.getName(), TargetAWT.to(change.getFileStatus().getColor()));
-
-    String originText = change.getOriginText(myProject);
-    if (originText != null) {
-      renderer.append(spaceAndThinSpace() + originText, SimpleTextAttributes.REGULAR_ATTRIBUTES);
+    @Override
+    protected boolean isFile() {
+        return !isDirectory();
     }
 
-    if (renderer.isShowFlatten()) {
-      FilePath parentPath = filePath.getParentPath();
-      if (parentPath != null) {
-        renderer.append(spaceAndThinSpace() + UserHomeFileUtil.getLocationRelativeToUserHome(parentPath.getPath()),
-                        SimpleTextAttributes.GRAYED_ATTRIBUTES);
-      }
-      appendSwitched(renderer, file);
-    }
-    else if (getFileCount() != 1 || getDirectoryCount() != 0) {
-      appendSwitched(renderer, file);
-      appendCount(renderer);
-    }
-    else {
-      appendSwitched(renderer, file);
+    @Override
+    protected boolean isDirectory() {
+        return ChangesUtil.getFilePath(getUserObject()).isDirectory();
     }
 
-    renderer.setIcon(getIcon(change, filePath));
+    @Override
+    public void render(ChangesBrowserNodeRenderer renderer, boolean selected, boolean expanded, boolean hasFocus) {
+        Change change = getUserObject();
+        FilePath filePath = ChangesUtil.getFilePath(change);
+        VirtualFile file = filePath.getVirtualFile();
 
-    if (myDecorator != null) {
-      myDecorator.decorate(change, renderer, renderer.isShowFlatten());
+        if (myDecorator != null) {
+            myDecorator.preDecorate(change, renderer, renderer.isShowFlatten());
+        }
+
+        renderer.appendFileName(file, filePath.getName(), TargetAWT.to(change.getFileStatus().getColor()));
+
+        String originText = change.getOriginText(myProject);
+        if (originText != null) {
+            renderer.append(spaceAndThinSpace() + originText);
+        }
+
+        if (renderer.isShowFlatten()) {
+            FilePath parentPath = filePath.getParentPath();
+            if (parentPath != null) {
+                renderer.append(
+                    spaceAndThinSpace() + UserHomeFileUtil.getLocationRelativeToUserHome(parentPath.getPath()),
+                    SimpleTextAttributes.GRAYED_ATTRIBUTES
+                );
+            }
+            appendSwitched(renderer, file);
+        }
+        else {
+            appendSwitched(renderer, file);
+            if (getFileCount() != 1 || getDirectoryCount() != 0) {
+                appendCount(renderer);
+            }
+        }
+
+        renderer.setIcon(getIcon(change, filePath));
+
+        if (myDecorator != null) {
+            myDecorator.decorate(change, renderer, renderer.isShowFlatten());
+        }
     }
-  }
 
-  private @Nullable Image getIcon(Change change, FilePath filePath) {
-    Image result = change.getAdditionalIcon();
+    private @Nullable Image getIcon(Change change, FilePath filePath) {
+        Image result = change.getAdditionalIcon();
 
-    if (result == null) {
-      result = filePath.isDirectory() || !isLeaf() ? AllIcons.Nodes.TreeClosed : filePath.getFileType().getIcon();
+        if (result == null) {
+            result = filePath.isDirectory() || !isLeaf() ? PlatformIconGroup.nodesTreeclosed() : filePath.getFileType().getIcon();
+        }
+
+        return result;
     }
 
-    return result;
-  }
-
-  private void appendSwitched(ChangesBrowserNodeRenderer renderer, @Nullable VirtualFile file) {
-    if (file != null && !myProject.isDefault()) {
-      String branch = ChangeListManager.getInstance(myProject).getSwitchedBranch(file);
-      if (branch != null) {
-        renderer.append(spaceAndThinSpace() + "[switched to " + branch + "]", SimpleTextAttributes.REGULAR_ATTRIBUTES);
-      }
+    private void appendSwitched(ChangesBrowserNodeRenderer renderer, @Nullable VirtualFile file) {
+        if (file != null && !myProject.isDefault()) {
+            String branch = ChangeListManager.getInstance(myProject).getSwitchedBranch(file);
+            if (branch != null) {
+                renderer.append(spaceAndThinSpace() + "[switched to " + branch + "]");
+            }
+        }
     }
-  }
 
-  @Override
-  public String getTooltip() {
-    return getUserObject().getDescription();
-  }
+    @Override
+    public @Nullable String getTooltip() {
+        return getUserObject().getDescription();
+    }
 
-  @Override
-  public String getTextPresentation() {
-    return ChangesUtil.getFilePath(getUserObject()).getName();
-  }
+    @Override
+    public String getTextPresentation() {
+        return ChangesUtil.getFilePath(getUserObject()).getName();
+    }
 
-  @Override
-  public String toString() {
-    return FileUtil.toSystemDependentName(ChangesUtil.getFilePath(getUserObject()).getPath());
-  }
+    @Override
+    public String toString() {
+        return FileUtil.toSystemDependentName(ChangesUtil.getFilePath(getUserObject()).getPath());
+    }
 
-  @Override
-  public int getSortWeight() {
-    return CHANGE_SORT_WEIGHT;
-  }
+    @Override
+    public int getSortWeight() {
+        return CHANGE_SORT_WEIGHT;
+    }
 
-  @Override
-  public int compareUserObjects(Object o2) {
-    return o2 instanceof Change change
-      ? ChangesUtil.getFilePath(getUserObject()).getName().compareToIgnoreCase(ChangesUtil.getFilePath(change).getName()) : 0;
-  }
+    @Override
+    public int compareUserObjects(Object o2) {
+        return o2 instanceof Change change
+            ? ChangesUtil.getFilePath(getUserObject()).getName().compareToIgnoreCase(ChangesUtil.getFilePath(change).getName()) : 0;
+    }
 }
