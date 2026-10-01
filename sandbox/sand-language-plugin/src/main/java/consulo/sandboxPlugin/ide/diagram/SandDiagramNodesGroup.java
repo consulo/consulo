@@ -13,21 +13,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.diagram.impl.internal.editor;
+package consulo.sandboxPlugin.ide.diagram;
 
-import consulo.ui.color.ColorValue;
-import consulo.ui.graph.GraphArrow;
-import consulo.ui.graph.GraphLineStyle;
+import consulo.diagram.DiagramNodesGroup;
 import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
- * @since 2026-09-30
+ * @since 2026-10-01
  */
-public record DiagramGraphEdgeStyle(GraphLineStyle lineStyle,
-                                    GraphArrow sourceArrow,
-                                    GraphArrow targetArrow,
-                                    String label,
-                                    String tooltip,
-                                    @Nullable ColorValue color) {
+public class SandDiagramNodesGroup extends DiagramNodesGroup {
+    private final String myName;
+    private boolean myClosed;
+
+    public SandDiagramNodesGroup(String name) {
+        myName = name;
+    }
+
+    @Override
+    public String getGroupName() {
+        return myName;
+    }
+
+    @Override
+    public @Nullable DiagramNodesGroup getParent() {
+        return null;
+    }
+
+    @Override
+    public boolean isClosed() {
+        return myClosed;
+    }
+
+    @Override
+    public void setClosed(boolean closed) {
+        myClosed = closed;
+    }
 }

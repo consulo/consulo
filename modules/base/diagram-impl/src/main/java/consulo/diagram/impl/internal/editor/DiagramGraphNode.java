@@ -15,6 +15,7 @@
  */
 package consulo.diagram.impl.internal.editor;
 
+import consulo.diagram.DiagramNode;
 import consulo.ui.image.Image;
 import org.jspecify.annotations.Nullable;
 
@@ -25,14 +26,37 @@ import java.util.List;
  * @since 2026-09-30
  */
 public final class DiagramGraphNode {
+    private final DiagramNode<?> myDiagramNode;
     private final String myName;
     private final @Nullable Image myIcon;
     private final List<List<DiagramGraphRow>> mySections;
+    private final String myTooltip;
+    private final @Nullable DiagramGraphGroup myGroup;
 
-    public DiagramGraphNode(String name, @Nullable Image icon, List<List<DiagramGraphRow>> sections) {
+    public DiagramGraphNode(DiagramNode<?> diagramNode,
+                            String name,
+                            @Nullable Image icon,
+                            List<List<DiagramGraphRow>> sections,
+                            String tooltip,
+                            @Nullable DiagramGraphGroup group) {
+        myDiagramNode = diagramNode;
         myName = name;
         myIcon = icon;
         mySections = sections;
+        myTooltip = tooltip;
+        myGroup = group;
+    }
+
+    public DiagramNode<?> getDiagramNode() {
+        return myDiagramNode;
+    }
+
+    public String getTooltip() {
+        return myTooltip;
+    }
+
+    public @Nullable DiagramGraphGroup getGroup() {
+        return myGroup;
     }
 
     public String getName() {

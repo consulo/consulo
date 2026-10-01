@@ -19,6 +19,7 @@ import consulo.application.AllIcons;
 import consulo.diagram.DiagramDataModel;
 import consulo.diagram.DiagramEdge;
 import consulo.diagram.DiagramNode;
+import consulo.diagram.DiagramNodesGroup;
 import consulo.diagram.DiagramProvider;
 import consulo.diagram.DiagramRelationshipInfo;
 import consulo.diagram.DiagramRelationships;
@@ -27,7 +28,9 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author VISTALL
@@ -35,11 +38,16 @@ import java.util.List;
  */
 public class SandDiagramDataModel extends DiagramDataModel<String> {
     private final DiagramProvider<String> myProvider;
+    private final SandDiagramDeleteProvider myDeleteProvider;
     private final List<DiagramNode<String>> myNodes = new ArrayList<>();
     private final List<DiagramEdge<String>> myEdges = new ArrayList<>();
+    private final SandDiagramNodesGroup myInterfaces = new SandDiagramNodesGroup("Interfaces");
+    private final SandDiagramNodesGroup myClasses = new SandDiagramNodesGroup("Classes");
+    private final Map<DiagramNode<String>, DiagramNodesGroup> myGroups = new HashMap<>();
 
-    public SandDiagramDataModel(DiagramProvider<String> provider) {
+    public SandDiagramDataModel(DiagramProvider<String> provider, SandDiagramDeleteProvider deleteProvider) {
         myProvider = provider;
+        myDeleteProvider = deleteProvider;
 
         DiagramNode<String> object = node("Object", AllIcons.Nodes.Class);
         DiagramNode<String> collection = node("Collection", AllIcons.Nodes.Interface);
@@ -47,6 +55,9 @@ public class SandDiagramDataModel extends DiagramDataModel<String> {
         DiagramNode<String> set = node("Set", AllIcons.Nodes.Interface);
         DiagramNode<String> arrayList = node("ArrayList", AllIcons.Nodes.Class);
         DiagramNode<String> hashSet = node("HashSet", AllIcons.Nodes.Class);
+
+        group(myInterfaces, collection, list, set);
+        group(myClasses, arrayList, hashSet);
 
         edge(collection, object, DiagramRelationships.DEPENDENCY);
         edge(list, collection, DiagramRelationships.INTERFACE_GENERALIZATION);
@@ -58,12 +69,28 @@ public class SandDiagramDataModel extends DiagramDataModel<String> {
 
     private DiagramNode<String> node(String name, Image icon) {
         DiagramNode<String> node = new SandDiagramNode(myProvider, name, icon);
-        myNodes.add(node);
+        if (!myDeleteProvider.isDeleted(name)) {
+            myNodes.add(node);
+        }
         return node;
     }
 
+    @SafeVarargs
+    private void group(DiagramNodesGroup group, DiagramNode<String>... nodes) {
+        for (DiagramNode<String> node : nodes) {
+            myGroups.put(node, group);
+        }
+    }
+
     private void edge(DiagramNode<String> source, DiagramNode<String> target, DiagramRelationshipInfo relationship) {
-        myEdges.add(new SandDiagramEdge(source, target, relationship));
+        if (myNodes.contains(source) && myNodes.contains(target)) {
+            myEdges.add(new SandDiagramEdge(source, target, relationship));
+        }
+    }
+
+    @Override
+    public @Nullable DiagramNodesGroup getGroup(DiagramNode<String> node) {
+        return myGroups.get(node);
     }
 
     @Override
@@ -99,7 +126,9 @@ public class SandDiagramDataModel extends DiagramDataModel<String> {
 
     @Override
     public @Nullable DiagramEdge<String> createEdge(DiagramNode<String> from, DiagramNode<String> to) {
-        return null;
+        DiagramEdge<String> edge = new SandDiagramEdge(from, to, DiagramRelationships.DEPENDENCY);
+        myEdges.add(edge);
+        return edge;
     }
 
     @Override

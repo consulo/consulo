@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2026 consulo.io
+ * Copyright 2000-2006 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,22 +12,21 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
  */
-package consulo.diagram.impl.internal.editor;
+package consulo.diagram;
 
-import consulo.ui.color.ColorValue;
-import consulo.ui.graph.GraphArrow;
-import consulo.ui.graph.GraphLineStyle;
 import org.jspecify.annotations.Nullable;
 
 /**
- * @author VISTALL
- * @since 2026-09-30
+ * @author Sergey.Vasiliev
  */
-public record DiagramGraphEdgeStyle(GraphLineStyle lineStyle,
-                                    GraphArrow sourceArrow,
-                                    GraphArrow targetArrow,
-                                    String label,
-                                    String tooltip,
-                                    @Nullable ColorValue color) {
+public abstract class DiagramNodesGroup {
+    public abstract String getGroupName();
+
+    public abstract @Nullable DiagramNodesGroup getParent();
+
+    public abstract boolean isClosed();
+
+    public abstract void setClosed(boolean closed);
 }

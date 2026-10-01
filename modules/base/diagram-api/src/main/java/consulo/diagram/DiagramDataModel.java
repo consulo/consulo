@@ -50,6 +50,10 @@ public abstract class DiagramDataModel<T> extends UserDataHolderBase implements 
 
     public abstract boolean hasElement(T element);
 
+    public @Nullable DiagramNodesGroup getGroup(DiagramNode<T> node) {
+        return null;
+    }
+
     public void collapseNode(DiagramNode<T> node) {
     }
 

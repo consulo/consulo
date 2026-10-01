@@ -15,19 +15,12 @@
  */
 package consulo.diagram.impl.internal.editor;
 
-import consulo.ui.color.ColorValue;
-import consulo.ui.graph.GraphArrow;
-import consulo.ui.graph.GraphLineStyle;
-import org.jspecify.annotations.Nullable;
+import consulo.diagram.DiagramDataModel;
+import consulo.diagram.DiagramProvider;
 
 /**
  * @author VISTALL
- * @since 2026-09-30
+ * @since 2026-10-01
  */
-public record DiagramGraphEdgeStyle(GraphLineStyle lineStyle,
-                                    GraphArrow sourceArrow,
-                                    GraphArrow targetArrow,
-                                    String label,
-                                    String tooltip,
-                                    @Nullable ColorValue color) {
+public record DiagramSession<T>(DiagramProvider<T> provider, DiagramDataModel<T> model, DiagramGraphSnapshot snapshot) {
 }

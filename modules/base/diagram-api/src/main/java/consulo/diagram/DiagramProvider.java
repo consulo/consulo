@@ -58,6 +58,14 @@ public abstract class DiagramProvider<T> {
         return null;
     }
 
+    public @Nullable DiagramEdgeCreationPolicy<T> getEdgeCreationPolicy() {
+        return null;
+    }
+
+    public @Nullable DiagramDeleteProvider<T> getDeleteProvider() {
+        return null;
+    }
+
     public static @Nullable DiagramProvider<?> findProvider(DataContext context) {
         return Application.get().getExtensionPoint(DiagramProvider.class).findFirstSafe(provider -> isApplicable(provider, context));
     }

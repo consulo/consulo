@@ -13,21 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.diagram.impl.internal.editor;
+package consulo.sandboxPlugin.ide.diagram;
 
-import consulo.ui.color.ColorValue;
-import consulo.ui.graph.GraphArrow;
-import consulo.ui.graph.GraphLineStyle;
+import consulo.diagram.DiagramEdge;
+import consulo.diagram.DiagramExtras;
 import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
- * @since 2026-09-30
+ * @since 2026-10-01
  */
-public record DiagramGraphEdgeStyle(GraphLineStyle lineStyle,
-                                    GraphArrow sourceArrow,
-                                    GraphArrow targetArrow,
-                                    String label,
-                                    String tooltip,
-                                    @Nullable ColorValue color) {
+public class SandDiagramExtras extends DiagramExtras<String> {
+    @Override
+    public @Nullable String getEdgeTooltip(DiagramEdge<String> edge) {
+        return edge.getSource().getIdentifyingElement() + " → " + edge.getTarget().getIdentifyingElement() + " (" + edge.getRelationship() + ")";
+    }
 }

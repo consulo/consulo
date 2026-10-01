@@ -53,4 +53,8 @@ public interface DiagramElementManager<T> extends DiagramProviderHolder<T> {
 
     @Nullable
     String getElementDescription(T element);
+
+    default @Nullable String getNodeTooltip(T element) {
+        return null;
+    }
 }

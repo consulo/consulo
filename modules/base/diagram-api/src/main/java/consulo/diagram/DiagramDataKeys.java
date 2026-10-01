@@ -13,21 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.diagram.impl.internal.editor;
+package consulo.diagram;
 
-import consulo.ui.color.ColorValue;
-import consulo.ui.graph.GraphArrow;
-import consulo.ui.graph.GraphLineStyle;
-import org.jspecify.annotations.Nullable;
+import consulo.util.dataholder.Key;
+
+import java.util.List;
 
 /**
  * @author VISTALL
- * @since 2026-09-30
+ * @since 2026-10-01
  */
-public record DiagramGraphEdgeStyle(GraphLineStyle lineStyle,
-                                    GraphArrow sourceArrow,
-                                    GraphArrow targetArrow,
-                                    String label,
-                                    String tooltip,
-                                    @Nullable ColorValue color) {
+public final class DiagramDataKeys {
+    public static final Key<DiagramProvider<?>> PROVIDER = Key.create("DIAGRAM_PROVIDER");
+    public static final Key<DiagramDataModel<?>> DATA_MODEL = Key.create("DIAGRAM_DATA_MODEL");
+    public static final Key<List<DiagramNode<?>>> SELECTED_NODES = Key.create("DIAGRAM_SELECTED_NODES");
+
+    private DiagramDataKeys() {
+    }
 }

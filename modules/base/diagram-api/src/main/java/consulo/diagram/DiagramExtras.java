@@ -15,6 +15,7 @@
  */
 package consulo.diagram;
 
+import consulo.ui.ex.action.ActionGroup;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -27,6 +28,22 @@ public abstract class DiagramExtras<T> {
     }
 
     public @Nullable DiagramDnDProvider<T> getDnDProvider() {
+        return null;
+    }
+
+    public @Nullable String getEdgeTooltip(DiagramEdge<T> edge) {
+        return null;
+    }
+
+    public @Nullable ActionGroup getNodeActionGroup(DiagramNode<T> node) {
+        return null;
+    }
+
+    public @Nullable ActionGroup getEdgeActionGroup(DiagramEdge<T> edge) {
+        return null;
+    }
+
+    public @Nullable ActionGroup getPaperActionGroup() {
         return null;
     }
 }

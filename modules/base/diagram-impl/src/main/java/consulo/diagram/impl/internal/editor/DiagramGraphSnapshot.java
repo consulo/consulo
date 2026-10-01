@@ -21,8 +21,10 @@ import consulo.diagram.DiagramCategory;
 import consulo.diagram.DiagramDataModel;
 import consulo.diagram.DiagramEdge;
 import consulo.diagram.DiagramElementManager;
+import consulo.diagram.DiagramExtras;
 import consulo.diagram.DiagramNode;
 import consulo.diagram.DiagramNodeContentManager;
+import consulo.diagram.DiagramNodesGroup;
 import consulo.diagram.DiagramProvider;
 import consulo.diagram.DiagramRelationshipInfo;
 import consulo.diagram.DiagramUtil;
@@ -34,6 +36,7 @@ import consulo.ui.TextAttribute;
 import consulo.ui.ex.SimpleColoredText;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.graph.GraphArrow;
+import consulo.ui.graph.GraphGroup;
 import consulo.ui.graph.GraphLineStyle;
 import consulo.ui.graph.GraphModel;
 import org.jspecify.annotations.Nullable;
@@ -61,9 +64,19 @@ public final class DiagramGraphSnapshot implements GraphModel<DiagramGraphNode> 
 
     @RequiredReadAction
     public static <T> DiagramGraphSnapshot of(DiagramProvider<T> provider, DiagramDataModel<T> model) {
+        Map<DiagramNodesGroup, DiagramGraphGroup> groups = new HashMap<>();
         Map<DiagramNode<T>, DiagramGraphNode> nodes = new LinkedHashMap<>();
         for (DiagramNode<T> node : model.getNodes()) {
-            nodes.put(node, new DiagramGraphNode(model.getNodeName(node), node.getIcon(), buildSections(provider, node.getIdentifyingElement())));
+            T element = node.getIdentifyingElement();
+            String tooltip = provider.getElementManager().getNodeTooltip(element);
+            DiagramNodesGroup nodesGroup = model.getGroup(node);
+            DiagramGraphGroup group = nodesGroup == null ? null : groups.computeIfAbsent(nodesGroup, DiagramGraphGroup::new);
+            nodes.put(node, new DiagramGraphNode(node,
+                model.getNodeName(node),
+                node.getIcon(),
+                buildSections(provider, element),
+                tooltip == null ? "" : tooltip,
+                group));
         }
 
         Map<DiagramGraphNode, Map<DiagramGraphNode, DiagramGraphEdgeStyle>> arrows = new HashMap<>();
@@ -143,10 +156,14 @@ public final class DiagramGraphSnapshot implements GraphModel<DiagramGraphNode> 
             label = model.getEdgeName(edge);
         }
 
+        DiagramExtras<T> extras = provider.getExtras();
+        String tooltip = extras == null ? null : extras.getEdgeTooltip(edge);
+
         return new DiagramGraphEdgeStyle(toLineStyle(relationship.getLineType()),
             toArrow(relationship.getStartArrow()),
             toArrow(relationship.getEndArrow()),
             label,
+            tooltip == null ? "" : tooltip,
             provider.getColorManager().getEdgeColor(edge));
     }
 
@@ -183,6 +200,11 @@ public final class DiagramGraphSnapshot implements GraphModel<DiagramGraphNode> 
     public Collection<DiagramGraphNode> getArrows(DiagramGraphNode node) {
         Map<DiagramGraphNode, DiagramGraphEdgeStyle> targets = myArrows.get(node);
         return targets == null ? List.of() : targets.keySet();
+    }
+
+    @Override
+    public @Nullable GraphGroup getGroup(DiagramGraphNode node) {
+        return node.getGroup();
     }
 
     public @Nullable DiagramGraphEdgeStyle getEdgeStyle(DiagramGraphNode source, DiagramGraphNode target) {

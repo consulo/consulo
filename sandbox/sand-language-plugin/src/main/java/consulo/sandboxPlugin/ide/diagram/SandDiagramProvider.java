@@ -21,7 +21,11 @@ import consulo.diagram.AbstractDiagramNodeContentManager;
 import consulo.diagram.AbstractDiagramVisibilityManager;
 import consulo.diagram.DiagramCategory;
 import consulo.diagram.DiagramDataModel;
+import consulo.diagram.DiagramDeleteProvider;
+import consulo.diagram.DiagramEdgeCreationPolicy;
 import consulo.diagram.DiagramElementManager;
+import consulo.diagram.DiagramExtras;
+import consulo.diagram.DiagramNode;
 import consulo.diagram.DiagramNodeContentManager;
 import consulo.diagram.DiagramProvider;
 import consulo.diagram.DiagramRelationshipInfo;
@@ -43,6 +47,20 @@ import java.util.Comparator;
 public class SandDiagramProvider extends DiagramProvider<String> {
     private final SandDiagramElementManager myElementManager = new SandDiagramElementManager();
     private final SandDiagramVfsResolver myVfsResolver = new SandDiagramVfsResolver();
+    private final SandDiagramDeleteProvider myDeleteProvider = new SandDiagramDeleteProvider();
+    private final SandDiagramExtras myExtras = new SandDiagramExtras();
+
+    private final DiagramEdgeCreationPolicy<String> myEdgeCreationPolicy = new DiagramEdgeCreationPolicy<>() {
+        @Override
+        public boolean acceptSource(DiagramNode<String> source) {
+            return true;
+        }
+
+        @Override
+        public boolean acceptTarget(DiagramNode<String> target) {
+            return true;
+        }
+    };
 
     private final DiagramVisibilityManager myVisibilityManager = new AbstractDiagramVisibilityManager() {
         @Override
@@ -123,7 +141,22 @@ public class SandDiagramProvider extends DiagramProvider<String> {
 
     @Override
     public DiagramDataModel<String> createDataModel(Project project, @Nullable String element, @Nullable VirtualFile file) {
-        return new SandDiagramDataModel(this);
+        return new SandDiagramDataModel(this, myDeleteProvider);
+    }
+
+    @Override
+    public DiagramExtras<String> getExtras() {
+        return myExtras;
+    }
+
+    @Override
+    public DiagramEdgeCreationPolicy<String> getEdgeCreationPolicy() {
+        return myEdgeCreationPolicy;
+    }
+
+    @Override
+    public DiagramDeleteProvider<String> getDeleteProvider() {
+        return myDeleteProvider;
     }
 
     @Override

@@ -85,4 +85,9 @@ public class SandDiagramElementManager extends AbstractDiagramElementManager<Str
     public @Nullable String getElementDescription(String element) {
         return null;
     }
+
+    @Override
+    public @Nullable String getNodeTooltip(String element) {
+        return "Sand class " + element + " (" + SandDiagramMember.of(element).size() + " members)";
+    }
 }
