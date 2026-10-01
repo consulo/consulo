@@ -76,6 +76,8 @@ class DesktopQtGraphCanvas extends QWidget {
     private List<DesktopQtGraphGroup> myGroups = List.of();
     private final List<Integer> mySelection = new ArrayList<>();
     private int myContentWidth;
+    private int myInsetX;
+    private int myInsetY;
 
     DesktopQtGraphCanvas(@Nullable QWidget parent, Runnable relayout, Runnable contextMenu) {
         super(parent);
@@ -94,7 +96,10 @@ class DesktopQtGraphCanvas extends QWidget {
         myContentWidth = contentWidth;
         mySelection.clear();
 
-        setMinimumSize(contentWidth + MARGIN * 2, contentHeight + MARGIN * 2);
+        myInsetX = groups.isEmpty() ? 0 : GROUP_PADDING;
+        myInsetY = groups.isEmpty() ? 0 : GROUP_PADDING + fontMetrics().height();
+
+        setMinimumSize(contentWidth + (MARGIN + myInsetX) * 2, contentHeight + (MARGIN + myInsetY) * 2);
         update();
     }
 
@@ -140,11 +145,15 @@ class DesktopQtGraphCanvas extends QWidget {
     }
 
     private int offsetX() {
-        return Math.max(MARGIN, (width() - myContentWidth) / 2);
+        return Math.max(MARGIN + myInsetX, (width() - myContentWidth) / 2);
+    }
+
+    private int offsetY() {
+        return MARGIN + myInsetY;
     }
 
     private QPoint toContent(QPoint point) {
-        return new QPoint(point.x() - offsetX(), point.y() - MARGIN);
+        return new QPoint(point.x() - offsetX(), point.y() - offsetY());
     }
 
     private int nodeAt(QPoint point) {
@@ -263,7 +272,7 @@ class DesktopQtGraphCanvas extends QWidget {
             painter.setRenderHint(QPainter.RenderHint.TextAntialiasing, true);
             painter.setRenderHint(QPainter.RenderHint.SmoothPixmapTransform, true);
 
-            painter.translate(offsetX(), MARGIN);
+            painter.translate(offsetX(), offsetY());
 
             QPalette palette = palette();
             QColor defaultEdgeColor = palette.color(QPalette.ColorRole.PlaceholderText);
