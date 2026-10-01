@@ -219,7 +219,7 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
 
   @Override
   public void loadProjectFromTemplate(ProjectImpl defaultProject) {
-    CoroutineScope scope = CoroutineScope.of(defaultProject.coroutineContext());
+    CoroutineScope scope = CoroutineScope.of(myProject.coroutineContext());
     defaultProject.getStateStore().createSaveCoroutine(new ArrayList<>()).runBlocking(scope, null);
 
     Element element = ((DefaultProjectStoreImpl)defaultProject.getStateStore()).getStateCopy();

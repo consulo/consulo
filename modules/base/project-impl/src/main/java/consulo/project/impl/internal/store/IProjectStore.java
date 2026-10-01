@@ -20,6 +20,7 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.component.store.internal.IComponentStore;
 import consulo.component.store.internal.TrackingPathMacroSubstitutor;
 import consulo.project.impl.internal.ProjectImpl;
+import consulo.util.concurrent.coroutine.CoroutineScope;
 import consulo.virtualFileSystem.VirtualFile;
 
 import org.jspecify.annotations.Nullable;
