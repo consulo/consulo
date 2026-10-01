@@ -79,7 +79,7 @@ public class WebTextAreaImpl extends VaadinComponentDelegate<WebTextAreaImpl.Vaa
 
     @Override
     public void setPlaceholder(LocalizeValue text) {
-        getVaadinComponent().setPlaceholder(text.isEmpty() ? null : text.get());
+        getVaadinComponent().setPlaceholder(text.getNullIfEmpty());
     }
 
     @Override

@@ -499,7 +499,7 @@ public interface HtmlChunk extends Localized {
      * @return HtmlChunk that represents a HTML text node.
      */
     static HtmlChunk text(LocalizeValue text) {
-        return text == LocalizeValue.empty() ? empty() : new LocalizedRaw(text.map(HtmlChunk::textToRaw));
+        return text.isEmpty() ? empty() : new LocalizedRaw(text.map(HtmlChunk::textToRaw));
     }
 
     /**
@@ -529,7 +529,7 @@ public interface HtmlChunk extends Localized {
      * @return the HtmlChunk that represents the supplied content.
      */
     static HtmlChunk raw(LocalizeValue rawHtml) {
-        return rawHtml == LocalizeValue.empty() ? empty() : new LocalizedRaw(rawHtml);
+        return rawHtml.isEmpty() ? empty() : new LocalizedRaw(rawHtml);
     }
 
     /**

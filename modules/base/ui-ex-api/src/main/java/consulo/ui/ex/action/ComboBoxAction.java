@@ -66,7 +66,7 @@ public abstract class ComboBoxAction extends AnAction implements AnActionWithSyn
     @RequiredUIAccess
     public JBPopup createPopup(DataContext context, @Nullable Runnable onDispose) {
         return JBPopupFactory.getInstance().createActionGroupPopup(
-            myPopupTitle.isEmpty() ? null : myPopupTitle.get(),
+            myPopupTitle.getNullIfEmpty(),
             createPopupActionGroup(context),
             context,
             JBPopupFactory.ActionSelectionAid.SPEEDSEARCH,
