@@ -42,12 +42,12 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static consulo.it.index.ScanningTestSupport.TIMEOUT_SECONDS;
 import static consulo.it.index.ScanningTestSupport.addContentRoot;
 import static consulo.it.index.ScanningTestSupport.allowOnlyTestScans;
 import static consulo.it.index.ScanningTestSupport.awaitIdle;
+import static consulo.it.index.ScanningTestSupport.awaitScanningFinished;
 import static consulo.it.index.ScanningTestSupport.createSandFiles;
 import static consulo.it.index.ScanningTestSupport.findClasses;
 import static consulo.it.index.ScanningTestSupport.findFile;
@@ -98,16 +98,11 @@ public class UnindexedFilesScannerExecutorTest {
     @Test
     public void fullScanCancelsRunningScanAndCompletesExactlyOnce(Project project) throws Exception {
         awaitIdle(project);
-        UnindexedFilesScannerExecutorImpl executor = UnindexedFilesScannerExecutorImpl.getInstance(project);
 
         Disposable disposable = Disposable.newDisposable();
         try {
             TestScans scans = allowOnlyTestScans(project, disposable);
             awaitIdle(project);
-
-            AtomicInteger startedOrStopped = new AtomicInteger();
-            Runnable unsubscribe = executor.startedOrStoppedEvent().addListener(value -> startedOrStopped.incrementAndGet());
-            Disposer.register(disposable, unsubscribe::run);
 
             BlockingIterator blocker = new BlockingIterator();
             Future<?> running = scans.queue(partialScan(project, "running", blocker));
@@ -121,12 +116,9 @@ public class UnindexedFilesScannerExecutorTest {
                 .hasCauseInstanceOf(ProcessCanceledException.class);
             full.get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
             awaitIdle(project);
+            awaitScanningFinished(project);
 
-            waitFor(
-                "exactly two task executions: the cancelled scan and the full scan, each reporting start and stop",
-                () -> startedOrStopped.get() == 4,
-                () -> "start and stop events: " + startedOrStopped.get()
-            );
+            assertThat(blocker.getIterations()).as("the cancelled scan must not be restarted").isEqualTo(1);
         }
         finally {
             Disposer.dispose(disposable);
@@ -142,10 +134,6 @@ public class UnindexedFilesScannerExecutorTest {
         try {
             TestScans scans = allowOnlyTestScans(project, disposable);
             awaitIdle(project);
-
-            AtomicInteger startedOrStopped = new AtomicInteger();
-            Runnable unsubscribe = executor.startedOrStoppedEvent().addListener(value -> startedOrStopped.incrementAndGet());
-            Disposer.register(disposable, unsubscribe::run);
 
             BlockingIterator blocker = new BlockingIterator();
             Future<?> running = scans.queue(partialScan(project, "running", blocker));
@@ -163,14 +151,11 @@ public class UnindexedFilesScannerExecutorTest {
             running.get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
             firstFuture.get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
             awaitIdle(project);
+            awaitScanningFinished(project);
 
+            assertThat(blocker.getIterations()).as("the blocked scan must run exactly once").isEqualTo(1);
             assertThat(first.getIterations()).isEqualTo(1);
             assertThat(second.getIterations()).isEqualTo(1);
-            waitFor(
-                "exactly two task executions: the blocked scan and the merged scan, each reporting start and stop",
-                () -> startedOrStopped.get() == 4,
-                () -> "start and stop events: " + startedOrStopped.get()
-            );
         }
         finally {
             Disposer.dispose(disposable);
