@@ -192,6 +192,11 @@ public class WebUIInternalImpl extends UIInternal implements UIInternalEx {
     }
 
     @Override
+    public <E> MultiSelectComboBox<E> _Components_multiSelectComboBox(FlatDataModel<E> model) {
+        return new WebMultiSelectComboBoxImpl<>(model);
+    }
+
+    @Override
     public <E> ComboBoxWithCustomPopup<E> _Components_comboBoxWithCustomPopup(FlatDataModel<E> model) {
         return new WebComboBoxWithCustomPopupImpl<>(model);
     }

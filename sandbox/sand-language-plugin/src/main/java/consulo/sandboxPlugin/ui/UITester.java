@@ -325,6 +325,16 @@ public class UITester {
             datePicker.addValueListener(event -> MessageBoxes.okInfo(LocalizeValue.of("datePicker " + event.getValue())).showAsync());
             layout.add(HorizontalLayout.create().add(Label.create(LocalizeValue.of("DatePicker"))).add(datePicker));
 
+            MultiSelectComboBox<String> multiSelectComboBox = MultiSelectComboBox.create("Java", "Kotlin", "Scala", "Groovy", "Clojure");
+            multiSelectComboBox.setPlaceholder(LocalizeValue.of("Pick languages"));
+            multiSelectComboBox.setValue(List.of("Java", "Scala"));
+            Label multiSelectValue = Label.create(LocalizeValue.of(multiSelectComboBox.getValue().toString()));
+            multiSelectComboBox.addValueListener(event -> multiSelectValue.setText(LocalizeValue.of(event.getValue().toString())));
+            layout.add(HorizontalLayout.create()
+                .add(Label.create(LocalizeValue.of("MultiSelectComboBox")))
+                .add(multiSelectComboBox)
+                .add(multiSelectValue));
+
             layout.add(HtmlLabel.create(LocalizeValue.of("<b>Html</b> <i>Label</i>")));
 
             TextBoxWithExtensions textBoxWithExtensions = TextBoxWithExtensions.create("with extensions");

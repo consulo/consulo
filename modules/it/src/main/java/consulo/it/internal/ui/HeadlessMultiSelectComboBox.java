@@ -15,19 +15,20 @@
  */
 package consulo.it.internal.ui;
 
-import consulo.ui.MultiSelectListBox;
+import consulo.localize.LocalizeValue;
+import consulo.ui.MultiSelectComboBox;
 import consulo.ui.model.FlatDataModel;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
 /**
- * Dummy-but-creatable headless {@link MultiSelectListBox}: the value is the given items that are in the model, in model order.
+ * Dummy-but-creatable headless {@link MultiSelectComboBox}: the value is the given items that are in the model, in model order.
  *
  * @author VISTALL
  */
-public class HeadlessMultiSelectListBox<E> extends HeadlessListBoxBase<E, List<E>> implements MultiSelectListBox<E> {
-    public HeadlessMultiSelectListBox(FlatDataModel<E> model) {
+public class HeadlessMultiSelectComboBox<E> extends HeadlessComboBoxBase<E, List<E>> implements MultiSelectComboBox<E> {
+    public HeadlessMultiSelectComboBox(FlatDataModel<E> model) {
         super(model, List.of());
     }
 
@@ -40,5 +41,9 @@ public class HeadlessMultiSelectListBox<E> extends HeadlessListBoxBase<E, List<E
     @Override
     public void setValue(@Nullable List<E> value, boolean fireListeners) {
         super.setValue(HeadlessModelOrder.retain(getDataModel(), value), fireListeners);
+    }
+
+    @Override
+    public void setPlaceholder(LocalizeValue text) {
     }
 }

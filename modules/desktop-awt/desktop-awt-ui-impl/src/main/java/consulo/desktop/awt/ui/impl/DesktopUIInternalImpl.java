@@ -374,6 +374,11 @@ public class DesktopUIInternalImpl extends UIInternal implements UIInternalEx {
     }
 
     @Override
+    public <E> MultiSelectComboBox<E> _Components_multiSelectComboBox(FlatDataModel<E> model) {
+        return new DesktopMultiSelectComboBoxImpl<>(model);
+    }
+
+    @Override
     public TextBox _Components_textBox(String text) {
         return new DesktopTextBoxImpl(text);
     }

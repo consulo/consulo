@@ -128,6 +128,11 @@ public class HeadlessUIInternal extends UIInternal implements UIInternalEx {
     }
 
     @Override
+    public <E> MultiSelectComboBox<E> _Components_multiSelectComboBox(FlatDataModel<E> model) {
+        return new HeadlessMultiSelectComboBox<>(model);
+    }
+
+    @Override
     public TextBox _Components_textBox(String text) {
         return new HeadlessTextBox(text);
     }

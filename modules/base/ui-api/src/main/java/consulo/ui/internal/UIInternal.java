@@ -104,6 +104,10 @@ public abstract class UIInternal {
 
     public abstract <E> ComboBox<E> _Components_comboBox(FlatDataModel<E> model);
 
+    public <E> MultiSelectComboBox<E> _Components_multiSelectComboBox(FlatDataModel<E> model) {
+        throw new UnsupportedOperationException();
+    }
+
     public abstract TextBox _Components_textBox(String text);
 
     public TextBoxWithHistory _Components_textBoxWithHistory(String text) {
@@ -122,9 +126,13 @@ public abstract class UIInternal {
         throw new UnsupportedOperationException();
     }
 
-    public abstract <E> ListBox<E> _Components_listBox(FlatDataModel<E> model);
+    public <E> ListBox<E> _Components_listBox(FlatDataModel<E> model) {
+        throw new UnsupportedOperationException();
+    }
 
-    public abstract <E> MultiSelectListBox<E> _Components_multiSelectListBox(FlatDataModel<E> model);
+    public <E> MultiSelectListBox<E> _Components_multiSelectListBox(FlatDataModel<E> model) {
+        throw new UnsupportedOperationException();
+    }
 
     public RadioButton _Components_radioButton(LocalizeValue text, boolean selected) {
         throw new UnsupportedOperationException();

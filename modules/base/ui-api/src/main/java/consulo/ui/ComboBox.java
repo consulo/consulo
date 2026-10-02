@@ -20,7 +20,6 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.internal.UIInternal;
 import consulo.ui.model.FlatDataModel;
-import org.jspecify.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -33,7 +32,7 @@ import java.util.function.Predicate;
  * @author VISTALL
  * @since 2016-06-09
  */
-public interface ComboBox<E> extends ValueComponent<E>, HasSpeedSearch<E>, HasItemSize<E>, HasComponentStyle<ComboBoxStyle> {
+public interface ComboBox<E> extends ValueComponent<E>, ComboBoxBase<E> {
     @SafeVarargs
     static <E> ComboBox<E> create(E... elements) {
         return UIInternal.get()._Components_comboBox(FlatDataModel.of(Arrays.asList(elements)));
@@ -119,8 +118,6 @@ public interface ComboBox<E> extends ValueComponent<E>, HasSpeedSearch<E>, HasIt
         return new Builder<>();
     }
 
-    FlatDataModel<E> getDataModel();
-
     @RequiredUIAccess
     default void selectFirst() {
         FlatDataModel<E> model = getDataModel();
@@ -128,14 +125,6 @@ public interface ComboBox<E> extends ValueComponent<E>, HasSpeedSearch<E>, HasIt
         if (model.getSize() > 0) {
             setValue(model.get(0));
         }
-    }
-
-    void setRender(TextItemRender<E> render);
-
-    void setRender(ComponentItemRender<E> render);
-
-    default void setTextRenderer(Function<@Nullable E, LocalizeValue> localizeValueFunction) {
-        setRender((presentation, item) -> presentation.append(localizeValueFunction.apply(item.getValue())));
     }
 
     @RequiredUIAccess

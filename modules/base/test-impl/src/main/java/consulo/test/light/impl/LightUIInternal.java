@@ -112,6 +112,11 @@ public class LightUIInternal extends UIInternal implements UIInternalEx {
   }
 
   @Override
+  public <E> MultiSelectComboBox<E> _Components_multiSelectComboBox(FlatDataModel<E> model) {
+    return null;
+  }
+
+  @Override
   public TextBox _Components_textBox(String text) {
     return null;
   }

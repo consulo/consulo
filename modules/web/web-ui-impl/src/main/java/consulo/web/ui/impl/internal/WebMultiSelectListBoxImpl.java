@@ -91,6 +91,16 @@ public class WebMultiSelectListBoxImpl<E> extends WebPooledListBoxBase<E> implem
     }
 
     @Override
+    @RequiredUIAccess
+    protected void onRowContextPressed(E item, int index) {
+        Set<E> selection = new LinkedHashSet<>();
+        selection.add(item);
+        myAnchor = item;
+
+        changeSelection(selection, true);
+    }
+
+    @Override
     public List<E> getValue() {
         if (mySelection.isEmpty()) {
             return List.of();

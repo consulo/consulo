@@ -15,30 +15,36 @@
  */
 package consulo.it.internal.ui;
 
-import consulo.ui.MultiSelectListBox;
 import consulo.ui.model.FlatDataModel;
 import org.jspecify.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
- * Dummy-but-creatable headless {@link MultiSelectListBox}: the value is the given items that are in the model, in model order.
+ * The value of a headless multi-select component: the given items that are in the model, in model order.
  *
  * @author VISTALL
  */
-public class HeadlessMultiSelectListBox<E> extends HeadlessListBoxBase<E, List<E>> implements MultiSelectListBox<E> {
-    public HeadlessMultiSelectListBox(FlatDataModel<E> model) {
-        super(model, List.of());
+public final class HeadlessModelOrder {
+    private HeadlessModelOrder() {
     }
 
-    @Override
-    public List<E> getValue() {
-        List<E> value = super.getValue();
-        return value == null ? List.of() : value;
-    }
+    public static <E> List<E> retain(FlatDataModel<E> model, @Nullable List<E> value) {
+        if (value == null || value.isEmpty()) {
+            return List.of();
+        }
 
-    @Override
-    public void setValue(@Nullable List<E> value, boolean fireListeners) {
-        super.setValue(HeadlessModelOrder.retain(getDataModel(), value), fireListeners);
+        Set<E> wanted = new HashSet<>(value);
+        List<E> selected = new ArrayList<>();
+        for (int i = 0; i < model.getSize(); i++) {
+            E item = model.get(i);
+            if (wanted.contains(item)) {
+                selected.add(item);
+            }
+        }
+        return selected;
     }
 }

@@ -17,18 +17,15 @@ package consulo.web.ui.impl.internal;
 
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.select.Select;
-import com.vaadin.flow.data.renderer.ComponentRenderer;
 import consulo.application.impl.internal.performance.ActivityTracker;
 import consulo.ui.ComboBoxStyle;
 import consulo.ui.Component;
 import consulo.ui.ComponentItemRender;
-import consulo.ui.RenderItem;
 import consulo.ui.TextItemRender;
 import consulo.ui.event.ClickEvent;
 import consulo.ui.ex.ComboBoxWithCustomPopup;
 import consulo.ui.model.FlatDataModel;
 import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
-import consulo.web.ui.impl.internal.base.ToVaadinComponentWrapper;
 import consulo.web.ui.impl.internal.base.WebInputDetails;
 import consulo.web.ui.impl.internal.vaadin.WebSingleListComponentBase;
 import org.jspecify.annotations.Nullable;
@@ -110,42 +107,19 @@ public class WebComboBoxWithCustomPopupImpl<V> extends WebSingleListComponentBas
 
     @Override
     public void addStyle(ComboBoxStyle style) {
-        switch (style) {
-            case TRANSPARENT_BACKGROUND:
-                toVaadinComponent().getStyle().set("--vaadin-input-field-background", "transparent");
-                break;
-            case INPLACE:
-                toVaadinComponent().getStyle()
-                    .set("--vaadin-input-field-border-width", "0")
-                    .set("--vaadin-input-field-border-radius", "0")
-                    .set("--vaadin-focus-ring-width", "0");
-                break;
-        }
+        WebComboBoxStyleUtil.apply(toVaadinComponent(), style);
     }
 
     @Override
     public void setRender(TextItemRender<V> render) {
         myTextRender = render;
 
-        toVaadinComponent().setRenderer(new ComponentRenderer<>(item -> {
-            WebItemPresentationImpl presentation = new WebItemPresentationImpl();
-            render.render(presentation, RenderItem.of((V) item, isSelected((V) item)));
-
-            com.vaadin.flow.component.Component component = presentation.toComponent();
-            applyItemHeight(component, (V) item);
-            return component;
-        }));
+        toVaadinComponent().setRenderer(createRenderer(render, this::isSelected));
     }
 
     @Override
     public void setRender(ComponentItemRender<V> render) {
-        toVaadinComponent().setRenderer(new ComponentRenderer<>(item -> {
-            Component rendered = render.render(RenderItem.of((V) item, isSelected((V) item)));
-
-            com.vaadin.flow.component.Component component = ((ToVaadinComponentWrapper) rendered).toVaadinComponent();
-            applyItemHeight(component, (V) item);
-            return component;
-        }));
+        toVaadinComponent().setRenderer(createRenderer(render, this::isSelected));
     }
 
     private boolean isSelected(@Nullable V item) {
