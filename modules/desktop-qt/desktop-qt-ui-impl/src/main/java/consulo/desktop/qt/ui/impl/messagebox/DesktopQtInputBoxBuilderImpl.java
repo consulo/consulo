@@ -91,8 +91,8 @@ public class DesktopQtInputBoxBuilderImpl<V, C extends ValueComponent<V>> extend
             }
         }
 
-        dialog.setOkButtonText((myConfirmText.isNotEmpty() ? myConfirmText : CommonLocalize.buttonOk()).get());
-        dialog.setCancelButtonText((myCancelText.isNotEmpty() ? myCancelText : CommonLocalize.buttonCancel()).get());
+        dialog.setOkButtonText(myConfirmText.orIfEmpty(CommonLocalize.buttonOk()).get());
+        dialog.setCancelButtonText(myCancelText.orIfEmpty(CommonLocalize.buttonCancel()).get());
 
         CompletableFuture<V> result = new CompletableFuture<>();
 

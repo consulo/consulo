@@ -45,8 +45,7 @@ class PopupInlineActionsSupportImpl implements PopupInlineActionsSupport {
 
     @Override
     public String getToolTipText(Object element, int index) {
-        LocalizeValue toolTip = myInlineActions.getToolTip(element, index);
-        return toolTip.isEmpty() ? null : toolTip.get();
+        return myInlineActions.getToolTip(element, index).getNullIfEmpty();
     }
 
     @Override

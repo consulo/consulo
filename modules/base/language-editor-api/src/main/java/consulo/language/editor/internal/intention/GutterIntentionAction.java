@@ -60,7 +60,6 @@ public class GutterIntentionAction implements Comparable<IntentionAction>, Icona
         return myAction instanceof PriorityAction priorityAction ? priorityAction.getPriority() : Priority.NORMAL;
     }
 
-    
     static AnActionEvent createActionEvent(DataContext dataContext) {
         return AnActionEvent.createFromDataContext(ActionPlaces.INTENTION_MENU, null, dataContext);
     }
@@ -70,8 +69,7 @@ public class GutterIntentionAction implements Comparable<IntentionAction>, Icona
             AnActionEvent event = createActionEvent(dataContext);
             ActionUpdateInvoker.updateSync(myAction, event);
             if (event.getPresentation().isEnabled() && event.getPresentation().isVisible()) {
-                LocalizeValue text = event.getPresentation().getTextValue();
-                myTextValue = text.isNotEmpty() ? text : myAction.getTemplatePresentation().getTextValue();
+                myTextValue = event.getPresentation().getTextValue().orIfEmpty(() -> myAction.getTemplatePresentation().getTextValue());
             }
             else {
                 myTextValue = LocalizeValue.empty();
@@ -81,7 +79,6 @@ public class GutterIntentionAction implements Comparable<IntentionAction>, Icona
     }
 
     @Override
-    
     public LocalizeValue getText() {
         return myTextValue;
     }

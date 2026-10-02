@@ -109,7 +109,7 @@ public class RemoteFilePanel implements PropertyChangeListener {
         }
         else {
             LocalizeValue errorMessage = remoteFileInfo.getErrorMessage();
-            if (errorMessage != LocalizeValue.empty()) {
+            if (errorMessage.isNotEmpty()) {
                 myDownloadingListener.errorOccurred(errorMessage);
             }
         }

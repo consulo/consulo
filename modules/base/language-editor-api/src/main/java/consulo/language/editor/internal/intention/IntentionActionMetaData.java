@@ -81,7 +81,6 @@ public final class IntentionActionMetaData {
     myDescriptionDirectoryName = null;
   }
 
-  
   public TextDescriptor[] getExampleUsagesBefore() {
     if (myExampleUsagesBefore == null) {
       try {
@@ -94,7 +93,6 @@ public final class IntentionActionMetaData {
     return myExampleUsagesBefore;
   }
 
-  
   public TextDescriptor[] getExampleUsagesAfter() {
     if (myExampleUsagesAfter == null) {
       try {
@@ -107,7 +105,6 @@ public final class IntentionActionMetaData {
     return myExampleUsagesAfter;
   }
 
-  
   public TextDescriptor getDescription() {
     if (myDescription == null) {
       try {
@@ -127,7 +124,6 @@ public final class IntentionActionMetaData {
     return myDescription;
   }
 
-  
   private TextDescriptor[] retrieveURLs(@Nullable URL descriptionDirectory, String prefix, String suffix) throws MalformedURLException {
     if (descriptionDirectory == null) {
       return new TextDescriptor[0];
@@ -225,21 +221,14 @@ public final class IntentionActionMetaData {
     return myDirURL;
   }
 
-  
   public PluginId getPluginId() {
     return PluginManager.getPluginId(myAction.getClass());
   }
 
-  
   public LocalizeValue getActionText() {
-    LocalizeValue text = myAction.getText();
-    if (text.isEmpty()) {
-      return LocalizeValue.of(myAction.getClass().getName());
-    }
-    return text;
+    return myAction.getText().orIfEmpty(() -> LocalizeValue.of(myAction.getClass().getName()));
   }
 
-  
   public IntentionAction getAction() {
     return myAction;
   }

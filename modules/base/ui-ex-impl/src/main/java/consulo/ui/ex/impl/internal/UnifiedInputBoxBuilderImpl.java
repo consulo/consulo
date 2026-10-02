@@ -76,7 +76,7 @@ public class UnifiedInputBoxBuilderImpl<V, C extends ValueComponent<V>> extends 
         AtomicBoolean confirmed = new AtomicBoolean();
 
         Button confirmButton = Button.create(
-            myConfirmText.isNotEmpty() ? myConfirmText : CommonLocalize.buttonOk(),
+            myConfirmText.orIfEmpty(CommonLocalize.buttonOk()),
             event -> {
                 confirmed.set(true);
                 window.close();
@@ -85,7 +85,7 @@ public class UnifiedInputBoxBuilderImpl<V, C extends ValueComponent<V>> extends 
         confirmButton.addStyle(ButtonStyle.PRIMARY);
 
         Button cancelButton = Button.create(
-            myCancelText.isNotEmpty() ? myCancelText : CommonLocalize.buttonCancel(),
+            myCancelText.orIfEmpty(CommonLocalize.buttonCancel()),
             event -> window.close()
         );
 
