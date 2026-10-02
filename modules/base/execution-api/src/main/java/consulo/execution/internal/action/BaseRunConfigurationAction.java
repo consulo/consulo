@@ -136,11 +136,10 @@ public abstract class BaseRunConfigurationAction extends AsyncActionGroup implem
             if (producers.size() > 1) {
                 Editor editor = dataContext.getData(Editor.KEY);
                 Collections.sort(producers, ConfigurationFromContext.NAME_COMPARATOR);
-                ListPopup popup = JBPopupFactory.getInstance()
-                    .createListPopup(project, new BaseListPopupStep<ConfigurationFromContext>(ExecutionLocalize.configurationActionChooserTitle()
-                        .get(), producers) {
+                ListPopup popup = JBPopupFactory.getInstance().createListPopup(
+                    project,
+                    new BaseListPopupStep<ConfigurationFromContext>(ExecutionLocalize.configurationActionChooserTitle().get(), producers) {
                         @Override
-                        
                         public String getTextFor(ConfigurationFromContext producer) {
                             return producer.getConfigurationType().getDisplayName().get();
                         }
@@ -155,7 +154,8 @@ public abstract class BaseRunConfigurationAction extends AsyncActionGroup implem
                             perform(producer, context);
                             return FINAL_CHOICE;
                         }
-                    });
+                    }
+                );
                 InputEvent event = e.getInputEvent();
                 if (event instanceof MouseEvent) {
                     popup.show(new RelativePoint((MouseEvent) event));

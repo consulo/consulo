@@ -826,7 +826,7 @@ class ApplyPatchViewer implements UiDataProvider, Disposable {
 
     private class MyStatusPanel extends StatusPanel {
         @Override
-        protected @Nullable String getMessage() {
+        protected LocalizeValue getMessage() {
             int totalUnresolved = 0;
             int alreadyApplied = 0;
             int notApplied = 0;
@@ -849,17 +849,17 @@ class ApplyPatchViewer implements UiDataProvider, Disposable {
             }
 
             if (totalUnresolved == 0) {
-                return DiffLocalize.applySomehowStatusMessageAllApplied().get();
+                return DiffLocalize.applySomehowStatusMessageAllApplied();
             }
             if (totalUnresolved == notApplied) {
-                return DiffLocalize.applySomehowStatusMessageCantApply(notApplied).get();
+                return DiffLocalize.applySomehowStatusMessageCantApply(notApplied);
             }
             else {
-                String message = DiffLocalize.applySomehowStatusMessageCantApplySome(notApplied, totalUnresolved).get();
+                LocalizeValue message = DiffLocalize.applySomehowStatusMessageCantApplySome(notApplied, totalUnresolved);
                 if (alreadyApplied == 0) {
                     return message;
                 }
-                return message + ". " + DiffLocalize.applySomehowStatusMessageAlreadyApplied(alreadyApplied).get();
+                return LocalizeValue.join(". ", message, DiffLocalize.applySomehowStatusMessageAlreadyApplied(alreadyApplied));
             }
         }
     }

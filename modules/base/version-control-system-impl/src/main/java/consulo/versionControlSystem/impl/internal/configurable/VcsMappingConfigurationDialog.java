@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.versionControlSystem.impl.internal.configurable;
 
 import consulo.application.progress.ProgressIndicator;
@@ -22,6 +21,7 @@ import consulo.configurable.ConfigurationException;
 import consulo.configurable.UnnamedConfigurable;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.*;
@@ -66,7 +66,7 @@ public class VcsMappingConfigurationDialog extends DialogWrapper {
         return new DefaultComboBoxModel(result);
     }
 
-    public VcsMappingConfigurationDialog(Project project, String title) {
+    public VcsMappingConfigurationDialog(Project project, LocalizeValue title) {
         super(project, false);
         myProject = project;
         myVcsManager = ProjectLevelVcsManager.getInstance(myProject);
@@ -94,6 +94,7 @@ public class VcsMappingConfigurationDialog extends DialogWrapper {
         return myPanel;
     }
 
+    @RequiredUIAccess
     public void setMapping(VcsDirectoryMapping mapping) {
         myMappingCopy = new VcsDirectoryMapping(mapping.getDirectory(), mapping.getVcs(), mapping.getRootSettings());
         myProjectRadioButton.setSelected(myMappingCopy.isDefaultMapping());
@@ -112,7 +113,6 @@ public class VcsMappingConfigurationDialog extends DialogWrapper {
         initProjectMessage();
     }
 
-    
     public VcsDirectoryMapping getMapping() {
         VcsDescriptor wrapper = (VcsDescriptor) myVCSComboBox.getSelectedItem();
         String vcs = wrapper == null || wrapper.isNone() ? "" : wrapper.getId();
@@ -172,9 +172,13 @@ public class VcsMappingConfigurationDialog extends DialogWrapper {
     }
 
     private class MyBrowseFolderListener extends ComponentWithBrowseButton.BrowseFolderActionListener<JTextField> {
-
-        public MyBrowseFolderListener(String title, String description, TextFieldWithBrowseButton textField, Project project,
-                                      FileChooserDescriptor fileChooserDescriptor) {
+        public MyBrowseFolderListener(
+            String title,
+            String description,
+            TextFieldWithBrowseButton textField,
+            Project project,
+            FileChooserDescriptor fileChooserDescriptor
+        ) {
             super(title, description, textField, project, fileChooserDescriptor, TextComponentAccessor.TEXT_FIELD_WHOLE_TEXT);
         }
 

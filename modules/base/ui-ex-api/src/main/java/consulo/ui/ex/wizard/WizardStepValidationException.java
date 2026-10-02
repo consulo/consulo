@@ -15,6 +15,8 @@
  */
 package consulo.ui.ex.wizard;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 
 import org.jspecify.annotations.Nullable;
@@ -24,30 +26,48 @@ import org.jspecify.annotations.Nullable;
  * @since 2019-08-20
  */
 public class WizardStepValidationException extends Exception {
-  private final Object myComponent;
-  private final String myMessage;
+    private final Object myComponent;
+    private final LocalizeValue myMessage;
 
-  public WizardStepValidationException(String message) {
-    myComponent = null;
-    myMessage = message;
-  }
+    public WizardStepValidationException(LocalizeValue message) {
+        myComponent = null;
+        myMessage = message;
+    }
 
-  public WizardStepValidationException(Component component, String message) {
-    myComponent = component;
-    myMessage = message;
-  }
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    public WizardStepValidationException(String message) {
+        this(LocalizeValue.of(message));
+    }
 
-  public WizardStepValidationException(java.awt.Component component, String message) {
-    myComponent = component;
-    myMessage = message;
-  }
+    public WizardStepValidationException(Component component, LocalizeValue message) {
+        myComponent = component;
+        myMessage = message;
+    }
 
-  public @Nullable Object getComponent() {
-    return myComponent;
-  }
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    public WizardStepValidationException(Component component, String message) {
+        this(component, LocalizeValue.of(message));
+    }
 
-  @Override
-  public String getMessage() {
-    return myMessage;
-  }
+    public WizardStepValidationException(java.awt.Component component, LocalizeValue message) {
+        myComponent = component;
+        myMessage = message;
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    public WizardStepValidationException(java.awt.Component component, String message) {
+        this(component, LocalizeValue.of(message));
+    }
+
+    public @Nullable Object getComponent() {
+        return myComponent;
+    }
+
+    @Override
+    public String getMessage() {
+        return myMessage.get();
+    }
 }

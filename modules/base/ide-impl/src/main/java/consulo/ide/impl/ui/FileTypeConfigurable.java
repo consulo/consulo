@@ -470,11 +470,7 @@ public class FileTypeConfigurable implements SearchableConfigurable, Configurabl
 
     private void updateFileTypeList() {
         FileType[] types = myTempFileTypes.toArray(new FileType[myTempFileTypes.size()]);
-        Arrays.sort(types, (o1, o2) -> {
-            FileType fileType1 = o1;
-            FileType fileType2 = o2;
-            return fileType1.getDescription().get().compareToIgnoreCase(fileType2.getDescription().get());
-        });
+        Arrays.sort(types, (ft1, ft2) -> ft1.getDescription().compareTo(ft2.getDescription()));
         myRecognizedFileType.setFileTypes(types);
     }
 

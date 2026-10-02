@@ -149,7 +149,6 @@ public class NewColorAndFontPanel extends JPanel {
         return myOptionsPanel.showOption(option);
     }
 
-    
     public Set<String> processListOptions() {
         if (myOptionList == null) {
             return myOptionsPanel.processListOptions();
@@ -186,7 +185,7 @@ public class NewColorAndFontPanel extends JPanel {
     }
 
     public boolean contains(EditorSchemeAttributeDescriptor descriptor) {
-        return descriptor.getGroup().getValue().equals(myCategory.get());
+        return descriptor.getGroup().equals(myCategory);
     }
 
     public JComponent getPanel() {

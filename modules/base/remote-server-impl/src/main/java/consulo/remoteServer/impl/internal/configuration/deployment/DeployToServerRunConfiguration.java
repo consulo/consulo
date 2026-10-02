@@ -103,16 +103,16 @@ public class DeployToServerRunConfiguration<S extends ServerConfiguration, D ext
     public @Nullable RunProfileState getState(Executor executor, ExecutionEnvironment env) throws ExecutionException {
         String serverName = getServerName();
         if (serverName == null) {
-            throw new ExecutionException(RemoteServerLocalize.deploytoserverrunconfigurationErrorServerRequired().get());
+            throw new ExecutionException(RemoteServerLocalize.deploytoserverrunconfigurationErrorServerRequired());
         }
 
         RemoteServer<S> server = findServer();
         if (server == null) {
-            throw new ExecutionException(RemoteServerLocalize.deploytoserverrunconfigurationErrorServerNotFound(serverName).get());
+            throw new ExecutionException(RemoteServerLocalize.deploytoserverrunconfigurationErrorServerNotFound(serverName));
         }
 
         if (myDeploymentSource == null) {
-            throw new ExecutionException(RemoteServerLocalize.deploytoserverrunconfigurationErrorDeploymentNotSelected().get());
+            throw new ExecutionException(RemoteServerLocalize.deploytoserverrunconfigurationErrorDeploymentNotSelected());
         }
 
         ExtensionPoint<DeployToServerStateProvider> point = Application.get().getExtensionPoint(DeployToServerStateProvider.class);

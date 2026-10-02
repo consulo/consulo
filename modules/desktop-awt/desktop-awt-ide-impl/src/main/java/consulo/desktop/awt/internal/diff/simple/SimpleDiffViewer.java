@@ -47,6 +47,7 @@ import consulo.disposer.Disposable;
 import consulo.document.Document;
 import consulo.document.event.DocumentEvent;
 import consulo.ide.impl.diff.DiffDrawUtil;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -58,7 +59,6 @@ import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
-import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
@@ -867,15 +867,15 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
 
     private class MyStatusPanel extends StatusPanel {
         @Override
-        protected @Nullable String getMessage() {
+        protected LocalizeValue getMessage() {
             if (getHighlightPolicy() == HighlightPolicy.DO_NOT_HIGHLIGHT) {
-                return DiffLocalize.diffHighlightingDisabledText().get();
+                return DiffLocalize.diffHighlightingDisabledText();
             }
             int changesCount = myDiffChanges.size() + myInvalidDiffChanges.size();
             if (changesCount == 0 && !myIsContentsEqual) {
-                return DiffLocalize.diffAllDifferencesIgnoredText().get();
+                return DiffLocalize.diffAllDifferencesIgnoredText();
             }
-            return DiffLocalize.diffCountDifferencesStatusText(changesCount).get();
+            return DiffLocalize.diffCountDifferencesStatusText(changesCount);
         }
     }
 

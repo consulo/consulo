@@ -26,6 +26,7 @@ import consulo.module.content.layer.ContentEntry;
 import consulo.module.content.layer.ModulesProvider;
 import consulo.project.Project;
 import consulo.project.localize.ProjectLocalize;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 
 import java.util.ArrayList;
@@ -35,70 +36,70 @@ import java.util.List;
  * @author nik
  */
 public abstract class ModuleOutputElementTypeBase extends PackagingElementType<ModuleOutputPackagingElementImpl> {
-  protected final ContentFolderTypeProvider myContentFolderTypeProvider;
+    protected final ContentFolderTypeProvider myContentFolderTypeProvider;
 
-  public ModuleOutputElementTypeBase(String id, ContentFolderTypeProvider contentFolderType) {
-    super(id, contentFolderType.getName());
-    myContentFolderTypeProvider = contentFolderType;
-  }
-
-  
-  @Override
-  public Image getIcon() {
-    return myContentFolderTypeProvider.getIcon();
-  }
-
-  public boolean isSuitableModule(ModulesProvider modulesProvider, Module module) {
-    for (ContentEntry entry : modulesProvider.getRootModel(module).getContentEntries()) {
-      if (entry.getFolders(LanguageContentFolderScopes.of(myContentFolderTypeProvider)).length != 0) {
-        return true;
-      }
+    public ModuleOutputElementTypeBase(String id, ContentFolderTypeProvider contentFolderType) {
+        super(id, contentFolderType.getName());
+        myContentFolderTypeProvider = contentFolderType;
     }
-    return false;
-  }
 
-  @Override
-  public boolean isAvailableForAdd(ArtifactEditorContext context, Artifact artifact) {
-    return !getSuitableModules(context).isEmpty();
-  }
-
-  @Override
-  
-  public List<? extends PackagingElement<?>> chooseAndCreate(ArtifactEditorContext context,
-                                                             Artifact artifact,
-                                                             CompositePackagingElement<?> parent) {
-    List<Module> suitableModules = getSuitableModules(context);
-    List<Module> selected = context.chooseModules(suitableModules, ProjectLocalize.dialogTitlePackagingChooseModule().get());
-
-    List<PackagingElement<?>> elements = new ArrayList<>();
-    for (Module module : selected) {
-      elements.add(createElement(context.getProject(), ModuleUtilCore.createPointer(module)));
+    @Override
+    public Image getIcon() {
+        return myContentFolderTypeProvider.getIcon();
     }
-    return elements;
-  }
 
-  public ContentFolderTypeProvider getContentFolderType() {
-    return myContentFolderTypeProvider;
-  }
-
-  public ModuleOutputPackagingElementImpl createElement(Project project, NamedPointer<Module> pointer) {
-    return new ModuleOutputPackagingElementImpl(this, project, pointer, myContentFolderTypeProvider);
-  }
-
-  
-  @Override
-  public ModuleOutputPackagingElementImpl createEmpty(Project project) {
-    return new ModuleOutputPackagingElementImpl(this, project, myContentFolderTypeProvider);
-  }
-
-  private List<Module> getSuitableModules(ArtifactEditorContext context) {
-    ModulesProvider modulesProvider = context.getModulesProvider();
-    ArrayList<Module> modules = new ArrayList<>();
-    for (Module module : modulesProvider.getModules()) {
-      if (isSuitableModule(modulesProvider, module)) {
-        modules.add(module);
-      }
+    public boolean isSuitableModule(ModulesProvider modulesProvider, Module module) {
+        for (ContentEntry entry : modulesProvider.getRootModel(module).getContentEntries()) {
+            if (entry.getFolders(LanguageContentFolderScopes.of(myContentFolderTypeProvider)).length != 0) {
+                return true;
+            }
+        }
+        return false;
     }
-    return modules;
-  }
+
+    @Override
+    public boolean isAvailableForAdd(ArtifactEditorContext context, Artifact artifact) {
+        return !getSuitableModules(context).isEmpty();
+    }
+
+    @Override
+    @RequiredUIAccess
+    public List<? extends PackagingElement<?>> chooseAndCreate(
+        ArtifactEditorContext context,
+        Artifact artifact,
+        CompositePackagingElement<?> parent
+    ) {
+        List<Module> suitableModules = getSuitableModules(context);
+        List<Module> selected = context.chooseModules(suitableModules, ProjectLocalize.dialogTitlePackagingChooseModule());
+
+        List<PackagingElement<?>> elements = new ArrayList<>();
+        for (Module module : selected) {
+            elements.add(createElement(context.getProject(), ModuleUtilCore.createPointer(module)));
+        }
+        return elements;
+    }
+
+    public ContentFolderTypeProvider getContentFolderType() {
+        return myContentFolderTypeProvider;
+    }
+
+    public ModuleOutputPackagingElementImpl createElement(Project project, NamedPointer<Module> pointer) {
+        return new ModuleOutputPackagingElementImpl(this, project, pointer, myContentFolderTypeProvider);
+    }
+
+    @Override
+    public ModuleOutputPackagingElementImpl createEmpty(Project project) {
+        return new ModuleOutputPackagingElementImpl(this, project, myContentFolderTypeProvider);
+    }
+
+    private List<Module> getSuitableModules(ArtifactEditorContext context) {
+        ModulesProvider modulesProvider = context.getModulesProvider();
+        ArrayList<Module> modules = new ArrayList<>();
+        for (Module module : modulesProvider.getModules()) {
+            if (isSuitableModule(modulesProvider, module)) {
+                modules.add(module);
+            }
+        }
+        return modules;
+    }
 }

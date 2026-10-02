@@ -25,6 +25,7 @@ import consulo.language.editor.todo.TodoAttributesUtil;
 import consulo.language.editor.todo.impl.internal.localize.LanguageTodoLocalize;
 import consulo.language.psi.search.TodoAttributes;
 import consulo.language.psi.search.TodoPattern;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogWrapper;
@@ -70,18 +71,24 @@ class PatternDialog extends DialogWrapper {
 
         TextAttributes attributes = TodoAttributesUtil.getTextAttributes(myPattern.getAttributes());
 
-        myColorAndFontDescription =
-            new TextAttributesDescription(null, null, attributes, null, EditorColorsManager.getInstance().getGlobalScheme(), null, null) {
-                @Override
-                public void apply(EditorColorsScheme scheme) {
+        myColorAndFontDescription = new TextAttributesDescription(
+            LocalizeValue.empty(),
+            LocalizeValue.empty(),
+            attributes,
+            null,
+            EditorColorsManager.getInstance().getGlobalScheme(),
+            null,
+            null
+        ) {
+            @Override
+            public void apply(EditorColorsScheme scheme) {
+            }
 
-                }
-
-                @Override
-                public boolean isErrorStripeEnabled() {
-                    return true;
-                }
-            };
+            @Override
+            public boolean isErrorStripeEnabled() {
+                return true;
+            }
+        };
 
         myColorAndFontDescriptionPanel.reset(myColorAndFontDescription);
 

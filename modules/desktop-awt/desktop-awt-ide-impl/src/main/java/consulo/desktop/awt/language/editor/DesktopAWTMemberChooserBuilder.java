@@ -30,32 +30,38 @@ import java.util.function.Consumer;
 
 /**
  * @author VISTALL
- * @since 20-Aug-22
+ * @since 2022-08-20
  */
 public class DesktopAWTMemberChooserBuilder<T extends ClassMember> extends MemberChooserBuilderBase<T> {
-  public DesktopAWTMemberChooserBuilder(T[] elements) {
-    super(elements);
-  }
+    public DesktopAWTMemberChooserBuilder(T[] elements) {
+        super(elements);
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void showAsync(Project project, Consumer<UserDataHolder> consumer) {
-    MemberChooserImpl<T> dialog = new MemberChooserImpl<T>(myElements, myAllowEmptySelection, myAllowMultipleSelection, myOptions, project);
-    dialog.setTitle(myTitle.get());
-    dialog.showAsync().whenComplete((value, error) -> {
-        if (error != null) {
-            return;
-        }
+    @Override
+    @RequiredUIAccess
+    public void showAsync(Project project, Consumer<UserDataHolder> consumer) {
+        MemberChooserImpl<T> dialog = new MemberChooserImpl<>(
+            myElements,
+            myAllowEmptySelection,
+            myAllowMultipleSelection,
+            myOptions,
+            project
+        );
+        dialog.setTitle(myTitle);
+        dialog.showAsync().whenComplete((value, error) -> {
+            if (error != null) {
+                return;
+            }
 
-      List<T> selectedElements = dialog.getSelectedElements();
+            List<T> selectedElements = dialog.getSelectedElements();
 
-      UnprotectedUserDataHolder result = new UnprotectedUserDataHolder();
-      result.putUserData(ClassMember.KEY_OF_LIST, (List<ClassMember>)selectedElements);
-      for (Map.Entry<Key<Boolean>, CheckBox> entry : dialog.getOptionComponents().entrySet()) {
-        result.putUserData(entry.getKey(), entry.getValue().getValue());
-      }
+            UnprotectedUserDataHolder result = new UnprotectedUserDataHolder();
+            result.putUserData(ClassMember.KEY_OF_LIST, (List<ClassMember>) selectedElements);
+            for (Map.Entry<Key<Boolean>, CheckBox> entry : dialog.getOptionComponents().entrySet()) {
+                result.putUserData(entry.getKey(), entry.getValue().getValue());
+            }
 
-      consumer.accept(result);
-    });
-  }
+            consumer.accept(result);
+        });
+    }
 }

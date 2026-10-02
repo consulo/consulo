@@ -202,7 +202,7 @@ public abstract class DiffActionExecutor {
 
                 if (!exceptionRef.isNull()) {
                     AbstractVcsHelper.getInstance((Project) myProject)
-                        .showError(exceptionRef.get(), VcsLocalize.messageTitleDiff().get());
+                        .showError(exceptionRef.get(), VcsLocalize.messageTitleDiff());
                     return;
                 }
                 if (!requestRef.isNull()) {

@@ -143,7 +143,7 @@ public class TestsPresentationUtil {
         else {
             text = SMTestLocalize.smTestRunnerUiTestsTreePresentationLabelsTestResults();
         }
-        renderer.append(text, SimpleTextAttributes.REGULAR_ATTRIBUTES);
+        renderer.append(text);
         String comment = testProxy.getComment();
         if (comment != null) {
             renderer.append(" (" + comment + ")", SimpleTextAttributes.GRAY_ATTRIBUTES);
@@ -158,10 +158,7 @@ public class TestsPresentationUtil {
             }
             else {
                 renderer.setIcon(getIcon(testProxy, renderer.getConsoleProperties()).icon());
-                renderer.append(
-                    SMTestLocalize.smTestRunnerUiTestsTreePresentationLabelsInstantiatingTests(),
-                    SimpleTextAttributes.REGULAR_ATTRIBUTES
-                );
+                renderer.append(SMTestLocalize.smTestRunnerUiTestsTreePresentationLabelsInstantiatingTests());
             }
         }
         else if (magnitude == TestStateInfo.Magnitude.NOT_RUN_INDEX) {
@@ -173,17 +170,11 @@ public class TestsPresentationUtil {
         }
         else if (magnitude == TestStateInfo.Magnitude.TERMINATED_INDEX) {
             renderer.setIcon(PoolOfTestIcons.TERMINATED_ICON);
-            renderer.append(
-                SMTestLocalize.smTestRunnerUiTestsTreePresentationLabelsWasTerminated(),
-                SimpleTextAttributes.REGULAR_ATTRIBUTES
-            );
+            renderer.append(SMTestLocalize.smTestRunnerUiTestsTreePresentationLabelsWasTerminated());
         }
         else if (magnitude == TestStateInfo.Magnitude.PASSED_INDEX) {
             renderer.setIcon(PoolOfTestIcons.PASSED_ICON);
-            renderer.append(
-                SMTestLocalize.smTestRunnerUiTestsTreePresentationLabelsAllTestsPassed(),
-                SimpleTextAttributes.REGULAR_ATTRIBUTES
-            );
+            renderer.append(SMTestLocalize.smTestRunnerUiTestsTreePresentationLabelsAllTestsPassed());
         }
         else {
             if (!testProxy.getChildren().isEmpty()) {
@@ -205,10 +196,9 @@ public class TestsPresentationUtil {
 
     public static void formatTestProxy(SMTestProxy testProxy, TestTreeRenderer renderer) {
         renderer.setIcon(getIcon(testProxy, renderer.getConsoleProperties()).icon());
-        renderer.append(testProxy.getPresentableName(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
+        renderer.append(testProxy.getPresentableName());
     }
 
-    
     public static String getPresentableName(SMTestProxy testProxy) {
         SMTestProxy parent = testProxy.getParent();
         String name = testProxy.getName();
@@ -251,7 +241,6 @@ public class TestsPresentationUtil {
         return presentationCandidate;
     }
 
-    
     public static String getPresentableNameTrimmedOnly(SMTestProxy testProxy) {
         String name = testProxy.getName();
         if (name != null) {
@@ -263,7 +252,6 @@ public class TestsPresentationUtil {
         return name;
     }
 
-    
     private static IconInfo getIcon(SMTestProxy testProxy, TestConsoleProperties consoleProperties) {
         TestStateInfo.Magnitude magnitude = testProxy.getMagnitudeInfo();
 
@@ -273,78 +261,78 @@ public class TestsPresentationUtil {
         return switch (magnitude) {
             case ERROR_INDEX -> IconInfo.wrap(
                 SMPoolOfTestIcons.ERROR_ICON,
-                SMTestLocalize.smTestRunnerUiTestsTreePresentationAccessibleStatusError().get()
+                SMTestLocalize.smTestRunnerUiTestsTreePresentationAccessibleStatusError()
             );
             case FAILED_INDEX -> hasErrors ? IconInfo.wrap(
                 SMPoolOfTestIcons.FAILED_E_ICON,
-                SMTestLocalize.smTestRunnerUiTestsTreePresentationAccessibleStatusFailedWithErrors().get()
+                SMTestLocalize.smTestRunnerUiTestsTreePresentationAccessibleStatusFailedWithErrors()
             )
                 : IconInfo.wrap(
                 SMPoolOfTestIcons.FAILED_ICON,
-                SMTestLocalize.smTestRunnerUiTestsTreePresentationAccessibleStatusFailed().get()
+                SMTestLocalize.smTestRunnerUiTestsTreePresentationAccessibleStatusFailed()
             );
             case IGNORED_INDEX -> hasErrors ? IconInfo.wrap(
                 SMPoolOfTestIcons.IGNORED_E_ICON,
-                SMTestLocalize.smTestRunnerUiTestsTreePresentationAccessibleStatusIgnoredWithErrors().get()
+                SMTestLocalize.smTestRunnerUiTestsTreePresentationAccessibleStatusIgnoredWithErrors()
             )
                 : (hasPassedTests ? IconInfo.wrap(
                 SMPoolOfTestIcons.PASSED_IGNORED,
-                SMTestLocalize.smTestRunnerUiTestsTreePresentationAccessibleStatusPassedWithIgnored().get()
+                SMTestLocalize.smTestRunnerUiTestsTreePresentationAccessibleStatusPassedWithIgnored()
             )
                 : IconInfo.wrap(
                 SMPoolOfTestIcons.IGNORED_ICON,
-                SMTestLocalize.smTestRunnerUiTestsTreePresentationAccessibleStatusIgnored().get()
+                SMTestLocalize.smTestRunnerUiTestsTreePresentationAccessibleStatusIgnored()
             ));
             case NOT_RUN_INDEX -> IconInfo.wrap(
                 SMPoolOfTestIcons.NOT_RAN,
-                SMTestLocalize.smTestRunnerUiTestsTreePresentationAccessibleStatusNotRan().get()
+                SMTestLocalize.smTestRunnerUiTestsTreePresentationAccessibleStatusNotRan()
             );
             case COMPLETE_INDEX, PASSED_INDEX -> hasErrors ? IconInfo.wrap(
                 SMPoolOfTestIcons.PASSED_E_ICON,
-                SMTestLocalize.smTestRunnerUiTestsTreePresentationAccessibleStatusPassedWithErrors().get()
+                SMTestLocalize.smTestRunnerUiTestsTreePresentationAccessibleStatusPassedWithErrors()
             )
                 : IconInfo.wrap(
                 SMPoolOfTestIcons.PASSED_ICON,
-                SMTestLocalize.smTestRunnerUiTestsTreePresentationAccessibleStatusPassed().get()
+                SMTestLocalize.smTestRunnerUiTestsTreePresentationAccessibleStatusPassed()
             );
             case RUNNING_INDEX -> {
                 if (consoleProperties.isPaused()) {
                     yield hasErrors
                         ? IconInfo.wrap(
                         SMPoolOfTestIcons.PAUSED_E_ICON,
-                        SMTestLocalize.smTestRunnerUiTestsTreePresentationAccessibleStatusPausedWithErrors().get()
+                        SMTestLocalize.smTestRunnerUiTestsTreePresentationAccessibleStatusPausedWithErrors()
                     )
                         : IconInfo.wrap(
                         PlatformIconGroup.runconfigurationsTestpaused(),
-                        SMTestLocalize.smTestRunnerUiTestsTreePresentationAccessibleStatusPaused().get()
+                        SMTestLocalize.smTestRunnerUiTestsTreePresentationAccessibleStatusPaused()
                     );
                 }
                 else {
                     yield hasErrors ? IconInfo.wrap(
                         SMPoolOfTestIcons.RUNNING_E_ICON,
-                        SMTestLocalize.smTestRunnerUiTestsTreePresentationAccessibleStatusRunningWithErrors().get()
+                        SMTestLocalize.smTestRunnerUiTestsTreePresentationAccessibleStatusRunningWithErrors()
                     )
                         : IconInfo.wrap(
                         SMPoolOfTestIcons.RUNNING_ICON,
-                        SMTestLocalize.smTestRunnerUiTestsTreePresentationAccessibleStatusRunning().get()
+                        SMTestLocalize.smTestRunnerUiTestsTreePresentationAccessibleStatusRunning()
                     );
                 }
             }
             case SKIPPED_INDEX -> hasErrors ? IconInfo.wrap(
                 SMPoolOfTestIcons.SKIPPED_E_ICON,
-                SMTestLocalize.smTestRunnerUiTestsTreePresentationAccessibleStatusSkippedWithErrors().get()
+                SMTestLocalize.smTestRunnerUiTestsTreePresentationAccessibleStatusSkippedWithErrors()
             )
                 : IconInfo.wrap(
                 SMPoolOfTestIcons.SKIPPED_ICON,
-                SMTestLocalize.smTestRunnerUiTestsTreePresentationAccessibleStatusSkipped().get()
+                SMTestLocalize.smTestRunnerUiTestsTreePresentationAccessibleStatusSkipped()
             );
             case TERMINATED_INDEX -> hasErrors ? IconInfo.wrap(
                 SMPoolOfTestIcons.TERMINATED_E_ICON,
-                SMTestLocalize.smTestRunnerUiTestsTreePresentationAccessibleStatusTerminatedWithErrors().get()
+                SMTestLocalize.smTestRunnerUiTestsTreePresentationAccessibleStatusTerminatedWithErrors()
             )
                 : IconInfo.wrap(
                 SMPoolOfTestIcons.TERMINATED_ICON,
-                SMTestLocalize.smTestRunnerUiTestsTreePresentationAccessibleStatusTerminated().get()
+                SMTestLocalize.smTestRunnerUiTestsTreePresentationAccessibleStatusTerminated()
             );
         };
     }
@@ -440,47 +428,47 @@ public class TestsPresentationUtil {
      * @param proxy Test or Suite
      * @return Duration presentation for given proxy
      */
-    public static @Nullable String getDurationPresentation(SMTestProxy proxy) {
+    public static LocalizeValue getDurationPresentation(SMTestProxy proxy) {
         return switch (proxy.getMagnitudeInfo()) {
             case COMPLETE_INDEX, PASSED_INDEX, FAILED_INDEX, ERROR_INDEX, IGNORED_INDEX, SKIPPED_INDEX ->
                 getDurationTimePresentation(proxy);
 
-            case NOT_RUN_INDEX -> SMTestLocalize.smTestRunnerUiTabsStatisticsColumnsDurationNotRun().get();
+            case NOT_RUN_INDEX -> SMTestLocalize.smTestRunnerUiTabsStatisticsColumnsDurationNotRun();
 
             case RUNNING_INDEX -> getDurationWithPrefixPresentation(
                 proxy,
-                SMTestLocalize.smTestRunnerUiTabsStatisticsColumnsDurationPrefixRunning().get()
+                SMTestLocalize.smTestRunnerUiTabsStatisticsColumnsDurationPrefixRunning()
             );
 
             case TERMINATED_INDEX -> getDurationWithPrefixPresentation(
                 proxy,
-                SMTestLocalize.smTestRunnerUiTabsStatisticsColumnsDurationPrefixTerminated().get()
+                SMTestLocalize.smTestRunnerUiTabsStatisticsColumnsDurationPrefixTerminated()
             );
 
-            default -> SMTestLocalize.smTestRunnerUiTabsStatisticsColumnsDurationUnknown().get();
+            default -> SMTestLocalize.smTestRunnerUiTabsStatisticsColumnsDurationUnknown();
         };
     }
 
-    private static String getDurationWithPrefixPresentation(SMTestProxy proxy, String prefix) {
+    private static LocalizeValue getDurationWithPrefixPresentation(SMTestProxy proxy, LocalizeValue prefix) {
         // If duration is known
         if (proxy.getDuration() != null) {
-            return prefix + COLON + getDurationTimePresentation(proxy);
+            return LocalizeValue.join(prefix, LocalizeValue.of(COLON), getDurationTimePresentation(proxy));
         }
 
-        return '<' + prefix + '>';
+        return LocalizeValue.join(LocalizeValue.of('<'), prefix, LocalizeValue.of('>'));
     }
 
-    private static String getDurationTimePresentation(SMTestProxy proxy) {
+    private static LocalizeValue getDurationTimePresentation(SMTestProxy proxy) {
         Long duration = proxy.getDuration();
 
         if (duration == null) {
             // if suite without children
             return proxy.isSuite() && proxy.isLeaf()
-                ? SMTestLocalize.smTestRunnerUiTabsStatisticsColumnsDurationNoTests().get()
-                : SMTestLocalize.smTestRunnerUiTabsStatisticsColumnsDurationUnknown().get();
+                ? SMTestLocalize.smTestRunnerUiTabsStatisticsColumnsDurationNoTests()
+                : SMTestLocalize.smTestRunnerUiTabsStatisticsColumnsDurationUnknown();
         }
         else {
-            return StringUtil.formatDuration(duration);
+            return LocalizeValue.of(StringUtil.formatDuration(duration));
         }
     }
 
@@ -513,18 +501,18 @@ public class TestsPresentationUtil {
         );
     }
 
-    private static record IconInfo(Image icon, String statusText) {
+    private static record IconInfo(Image icon, LocalizeValue statusText) {
         @Deprecated
         private Image getIcon() {
             return icon();
         }
 
         @Deprecated
-        private String getStatusText() {
+        private LocalizeValue getStatusText() {
             return statusText();
         }
 
-        static IconInfo wrap(Image icon, String statusText) {
+        static IconInfo wrap(Image icon, LocalizeValue statusText) {
             return new IconInfo(icon, statusText);
         }
     }

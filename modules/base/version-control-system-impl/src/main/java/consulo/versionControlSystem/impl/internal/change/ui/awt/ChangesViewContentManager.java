@@ -107,7 +107,7 @@ public class ChangesViewContentManager implements ChangesViewContentI, Disposabl
         List<ChangesViewContentFactory> contentEPs = myProject.getExtensionList(ChangesViewContentFactory.class);
         for (ChangesViewContentFactory factory : contentEPs) {
             if (factory.isAvailable()) {
-                Content content = myContentFactory.createContent(new ContentStub(factory), factory.getTabName().getValue(), false);
+                Content content = myContentFactory.createContent(new ContentStub(factory), factory.getTabName().get(), false);
                 content.setCloseable(false);
                 content.putUserData(ourEpKey, factory);
                 contentList.add(content);
@@ -117,7 +117,7 @@ public class ChangesViewContentManager implements ChangesViewContentI, Disposabl
     }
 
     private void addExtensionTab(ChangesViewContentFactory factory) {
-        Content content = myContentFactory.createContent(new ContentStub(factory), factory.getTabName().getValue(), false);
+        Content content = myContentFactory.createContent(new ContentStub(factory), factory.getTabName().get(), false);
         content.setCloseable(false);
         content.putUserData(ourEpKey, factory);
         addIntoCorrectPlace(content);

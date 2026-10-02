@@ -403,7 +403,7 @@ public class VcsDirectoryConfigurationPanel {
     @RequiredUIAccess
     private void addMapping() {
         VcsMappingConfigurationDialog dialog =
-            new VcsMappingConfigurationDialog(myProject, VcsLocalize.directoryMappingAddTitle().get());
+            new VcsMappingConfigurationDialog(myProject, VcsLocalize.directoryMappingAddTitle());
         // due to wonderful UI designer bug
         dialog.initProjectMessage();
         if (dialog.showAndGet()) {
@@ -458,7 +458,7 @@ public class VcsDirectoryConfigurationPanel {
     @RequiredUIAccess
     private void editMapping(MapInfo info) {
         VcsMappingConfigurationDialog dialog =
-            new VcsMappingConfigurationDialog(myProject, VcsLocalize.directoryMappingRemoveTitle().get());
+            new VcsMappingConfigurationDialog(myProject, VcsLocalize.directoryMappingRemoveTitle());
         dialog.setMapping(info.mapping);
         if (!dialog.showAndGet()) {
             return;

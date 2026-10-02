@@ -15,41 +15,43 @@
  */
 package consulo.versionControlSystem.internal;
 
+import consulo.localize.LocalizeValue;
 import consulo.versionControlSystem.VcsShowConfirmationOption;
 
 public class VcsShowConfirmationOptionImpl extends VcsAbstractSetting implements VcsShowConfirmationOption {
-  private Value myValue = Value.SHOW_CONFIRMATION;
+    private Value myValue = Value.SHOW_CONFIRMATION;
 
-  private final String myCaption;
+    private final LocalizeValue myCaption;
+    private final LocalizeValue myDoNothingCaption;
+    private final LocalizeValue myShowConfirmationCaption;
+    private final LocalizeValue myDoActionSilentlyCaption;
 
-  private final String myDoNothingCaption;
-  private final String myShowConfirmationCaption;
-  private final String myDoActionSilentlyCaption;
+    public VcsShowConfirmationOptionImpl(
+        String displayName,
+        LocalizeValue caption,
+        LocalizeValue doNothingCaption,
+        LocalizeValue showConfirmationCaption,
+        LocalizeValue doActionSilentlyCaption
+    ) {
+        super(displayName);
+        myCaption = caption;
+        myDoNothingCaption = doNothingCaption;
+        myShowConfirmationCaption = showConfirmationCaption;
+        myDoActionSilentlyCaption = doActionSilentlyCaption;
+    }
 
-  public VcsShowConfirmationOptionImpl(String displayName,
-                                       String caption,
-                                       String doNothingCaption,
-                                       String showConfirmationCaption,
-                                       String doActionSilentlyCaption) {
-    super(displayName);
-    myCaption = caption;
-    myDoNothingCaption = doNothingCaption;
-    myShowConfirmationCaption = showConfirmationCaption;
-    myDoActionSilentlyCaption = doActionSilentlyCaption;
-  }
+    @Override
+    public Value getValue() {
+        return myValue;
+    }
 
-  @Override
-  public Value getValue() {
-    return myValue;
-  }
+    @Override
+    public void setValue(Value value) {
+        myValue = value;
+    }
 
-  @Override
-  public void setValue(Value value) {
-    myValue = value;
-  }
-
-  @Override
-  public boolean isPersistent() {
-    return true;
-  }
+    @Override
+    public boolean isPersistent() {
+        return true;
+    }
 }

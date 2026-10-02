@@ -234,6 +234,7 @@ public abstract class AbstractFindUsagesDialog extends DialogWrapper {
         return box;
     }
 
+    @RequiredUIAccess
     protected JPanel createAllOptionsPanel() {
         JPanel allOptionsPanel = new JPanel();
 
@@ -290,6 +291,7 @@ public abstract class AbstractFindUsagesDialog extends DialogWrapper {
         }
     }
 
+    @RequiredUIAccess
     protected @Nullable JPanel createUsagesOptionsPanel() {
         JPanel optionsPanel = new JPanel();
         optionsPanel.setBorder(IdeBorderFactory.createTitledBorder(FindLocalize.findOptionsGroup().get(), true));

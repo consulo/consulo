@@ -91,18 +91,15 @@ public class CreateAction extends BaseRunConfigurationAction {
         }
 
         protected void updateText(Presentation presentation, String actionText) {
-            presentation.setText(generateName(actionText), false);
+            presentation.setText(generateName(actionText).map(Presentation.NO_MNEMONIC));
         }
 
-        private String generateName(String actionText) {
-            switch (myType) {
-                case CREATE:
-                    return ExecutionLocalize.createRunConfigurationForItemActionName(actionText).get();
-                case SELECT:
-                    return ExecutionLocalize.selectRunConfigurationForItemActionName(actionText).get();
-                default:
-                    return ExecutionLocalize.saveRunConfigurationForItemActionName(actionText).get();
-            }
+        private LocalizeValue generateName(String actionText) {
+            return switch (myType) {
+                case CREATE -> ExecutionLocalize.createRunConfigurationForItemActionName(actionText);
+                case SAVE -> ExecutionLocalize.saveRunConfigurationForItemActionName(actionText);
+                case SELECT -> ExecutionLocalize.selectRunConfigurationForItemActionName(actionText);
+            };
         }
 
         public abstract void perform(ConfigurationContext context);
@@ -160,9 +157,8 @@ public class CreateAction extends BaseRunConfigurationAction {
         protected void updateText(Presentation presentation, String actionText) {
             presentation.setText(
                 actionText.length() > 0
-                    ? ExecutionLocalize.createRunConfigurationForItemActionName(actionText).get() + "..."
-                    : ExecutionLocalize.createRunConfigurationActionName().get(),
-                false
+                    ? LocalizeValue.join(ExecutionLocalize.createRunConfigurationForItemActionName(actionText), LocalizeValue.of("..."))
+                    : ExecutionLocalize.createRunConfigurationActionName()
             );
         }
 

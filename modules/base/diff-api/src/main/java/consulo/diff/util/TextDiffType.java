@@ -23,26 +23,22 @@ import consulo.ui.color.ColorValue;
 import org.jspecify.annotations.Nullable;
 
 public interface TextDiffType {
-  
   TextDiffType INSERTED = TextDiffTypeFactory.getInstance()
-    .createTextDiffType(DiffColors.DIFF_INSERTED, DiffLocalize.diffTypeInsertedName().get());
+    .createTextDiffType(DiffColors.DIFF_INSERTED, DiffLocalize.diffTypeInsertedName());
   
   TextDiffType DELETED = TextDiffTypeFactory.getInstance()
-    .createTextDiffType(DiffColors.DIFF_DELETED, DiffLocalize.diffTypeDeletedName().get());
+    .createTextDiffType(DiffColors.DIFF_DELETED, DiffLocalize.diffTypeDeletedName());
   
   TextDiffType MODIFIED = TextDiffTypeFactory.getInstance()
-    .createTextDiffType(DiffColors.DIFF_MODIFIED, DiffLocalize.diffTypeChangedName().get());
+    .createTextDiffType(DiffColors.DIFF_MODIFIED, DiffLocalize.diffTypeChangedName());
   
   TextDiffType CONFLICT = TextDiffTypeFactory.getInstance()
-    .createTextDiffType(DiffColors.DIFF_CONFLICT, DiffLocalize.diffTypeConflictName().get());
+    .createTextDiffType(DiffColors.DIFF_CONFLICT, DiffLocalize.diffTypeConflictName());
 
-  
   String getName();
 
-  
   ColorValue getColor(@Nullable Editor editor);
 
-  
   ColorValue getIgnoredColor(@Nullable Editor editor);
 
   @Nullable ColorValue getMarkerColor(@Nullable Editor editor);

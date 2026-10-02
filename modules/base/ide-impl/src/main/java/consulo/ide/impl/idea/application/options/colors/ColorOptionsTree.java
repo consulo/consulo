@@ -49,8 +49,7 @@ public class ColorOptionsTree extends Tree {
   }
 
   private boolean isMyDescriptor(EditorSchemeAttributeDescriptor descriptor) {
-    String groupAsString = descriptor.getGroup().getValue();
-    return myCategoryName.get().equals(groupAsString);
+    return myCategoryName.equals(descriptor.getGroup());
   }
 
   public void fillOptions(ColorAndFontOptions options) {

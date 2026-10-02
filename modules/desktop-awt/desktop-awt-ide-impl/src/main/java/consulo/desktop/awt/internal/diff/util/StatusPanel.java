@@ -16,55 +16,56 @@
 package consulo.desktop.awt.internal.diff.util;
 
 import consulo.diff.localize.DiffLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.awt.AnimatedIconComponent;
 import consulo.ui.ex.awt.AsyncProcessIcon;
 import consulo.ui.ex.awt.IdeBorderFactory;
-import consulo.util.lang.StringUtil;
-import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class StatusPanel extends JPanel {
-  private final JLabel myTextLabel;
-  private final AnimatedIconComponent myBusySpinner;
+    private final JLabel myTextLabel;
+    private final AnimatedIconComponent myBusySpinner;
 
-  public StatusPanel() {
-    super(new BorderLayout());
-    myTextLabel = new JLabel("");
-    myTextLabel.setVisible(false);
-    myBusySpinner = new AsyncProcessIcon("StatusPanelSpinner");
-    myBusySpinner.setVisible(false);
+    public StatusPanel() {
+        super(new BorderLayout());
+        myTextLabel = new JLabel("");
+        myTextLabel.setVisible(false);
+        myBusySpinner = new AsyncProcessIcon("StatusPanelSpinner");
+        myBusySpinner.setVisible(false);
 
-    add(myTextLabel, BorderLayout.CENTER);
-    add(myBusySpinner, BorderLayout.WEST);
-    setBorder(IdeBorderFactory.createEmptyBorder(0, 4, 0, 4));
-  }
-
-  public void update() {
-    String message = getMessage();
-    myTextLabel.setVisible(message != null);
-    myTextLabel.setText(StringUtil.notNullize(message));
-  }
-
-  public void setBusy(boolean busy) {
-    if (busy) {
-      myBusySpinner.setVisible(true);
-      myBusySpinner.resume();
+        add(myTextLabel, BorderLayout.CENTER);
+        add(myBusySpinner, BorderLayout.WEST);
+        setBorder(IdeBorderFactory.createEmptyBorder(0, 4, 0, 4));
     }
-    else {
-      myBusySpinner.setVisible(false);
-      myBusySpinner.suspend();
+
+    public void update() {
+        LocalizeValue message = getMessage();
+        myTextLabel.setVisible(message.isNotEmpty());
+        myTextLabel.setText(message.get());
     }
-  }
 
-  protected @Nullable String getMessage() {
-    int count = getChangesCount();
-    if (count == -1) return null;
-    return DiffLocalize.diffCountDifferencesStatusText(count).get();
-  }
+    public void setBusy(boolean busy) {
+        if (busy) {
+            myBusySpinner.setVisible(true);
+            myBusySpinner.resume();
+        }
+        else {
+            myBusySpinner.setVisible(false);
+            myBusySpinner.suspend();
+        }
+    }
 
-  protected int getChangesCount() {
-    return -1;
-  }
+    protected LocalizeValue getMessage() {
+        int count = getChangesCount();
+        if (count == -1) {
+            return LocalizeValue.empty();
+        }
+        return DiffLocalize.diffCountDifferencesStatusText(count);
+    }
+
+    protected int getChangesCount() {
+        return -1;
+    }
 }
