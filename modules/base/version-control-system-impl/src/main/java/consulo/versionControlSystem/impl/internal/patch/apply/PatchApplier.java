@@ -426,7 +426,7 @@ public class PatchApplier<BinaryType extends FilePatch> {
     protected @Nullable ApplyPatchStatus executeWritable() {
         ReadonlyStatusHandler.OperationStatus readOnlyFilesStatus = getReadOnlyFilesStatus(myVerifier.getWritableFiles());
         if (readOnlyFilesStatus.hasReadonlyFiles()) {
-            showError(myProject, readOnlyFilesStatus.getReadonlyFilesMessage().get(), true);
+            showError(myProject, readOnlyFilesStatus.getReadonlyFilesMessage(), true);
             return ApplyPatchStatus.ABORT;
         }
         myFailedPatches.addAll(myVerifier.filterBadFileTypePatches());
@@ -598,10 +598,10 @@ public class PatchApplier<BinaryType extends FilePatch> {
     @RequiredUIAccess
     protected static void showApplyStatus(Project project, ApplyPatchStatus status) {
         if (status == ApplyPatchStatus.ALREADY_APPLIED) {
-            showError(project, VcsLocalize.patchApplyAlreadyApplied().get(), false);
+            showError(project, VcsLocalize.patchApplyAlreadyApplied(), false);
         }
         else if (status == ApplyPatchStatus.PARTIAL) {
-            showError(project, VcsLocalize.patchApplyPartiallyApplied().get(), false);
+            showError(project, VcsLocalize.patchApplyPartiallyApplied(), false);
         }
         else if (ApplyPatchStatus.SUCCESS.equals(status)) {
             NotificationService.getInstance()
@@ -619,6 +619,11 @@ public class PatchApplier<BinaryType extends FilePatch> {
     private ReadonlyStatusHandler.OperationStatus getReadOnlyFilesStatus(List<VirtualFile> filesToMakeWritable) {
         VirtualFile[] fileArray = VirtualFileUtil.toVirtualFileArray(filesToMakeWritable);
         return ReadonlyStatusHandler.getInstance(myProject).ensureFilesWritable(fileArray);
+    }
+
+    @RequiredUIAccess
+    public static void showError(Project project, LocalizeValue message, boolean error) {
+        showError(project, message.get(), error);
     }
 
     @RequiredUIAccess

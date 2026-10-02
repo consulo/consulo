@@ -19,6 +19,7 @@ import consulo.diff.comparison.DiffTooBigException;
 import consulo.diff.localize.DiffLocalize;
 import consulo.diff.util.TextDiffType;
 import consulo.ide.impl.idea.ui.EditorNotificationPanel;
+import consulo.localize.LocalizeValue;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.awt.HyperlinkLabel;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
@@ -27,72 +28,62 @@ import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 
 public class DiffNotifications {
-  
-  public static JPanel createInsertedContent() {
-    return createNotification("Content added", TextDiffType.INSERTED.getColor(null));
-  }
-
-  
-  public static JPanel createRemovedContent() {
-    return createNotification("Content removed", TextDiffType.DELETED.getColor(null));
-  }
-
-  
-  public static JPanel createEqualContents() {
-    return createEqualContents(true, true);
-  }
-
-  
-  public static JPanel createEqualContents(boolean equalCharsets, boolean equalSeparators) {
-    if (!equalCharsets && !equalSeparators) {
-      return createNotification(DiffLocalize.diffContentsHaveDifferencesOnlyInCharsetAndLineSeparatorsMessageText().get());
+    public static JPanel createInsertedContent() {
+        return createNotification(LocalizeValue.localizeTODO("Content added"), TextDiffType.INSERTED.getColor(null));
     }
-    if (!equalSeparators) {
-      return createNotification(DiffLocalize.diffContentsHaveDifferencesOnlyInLineSeparatorsMessageText().get());
+
+    public static JPanel createRemovedContent() {
+        return createNotification(LocalizeValue.localizeTODO("Content removed"), TextDiffType.DELETED.getColor(null));
     }
-    if (!equalCharsets) {
-      return createNotification(DiffLocalize.diffContentsHaveDifferencesOnlyInCharsetMessageText().get());
+
+    public static JPanel createEqualContents() {
+        return createEqualContents(true, true);
     }
-    return createNotification(DiffLocalize.diffContentsAreIdenticalMessageText().get());
-  }
 
-  
-  public static JPanel createError() {
-    return createNotification("Can not calculate diff");
-  }
-
-  
-  public static JPanel createOperationCanceled() {
-    return createNotification("Can not calculate diff. Operation canceled.");
-  }
-
-  
-  public static JPanel createDiffTooBig() {
-    return createNotification("Can not calculate diff. " + DiffTooBigException.MESSAGE);
-  }
-
-  //
-  // Impl
-  //
-
-  
-  public static JPanel createNotification(String text) {
-    return createNotification(text, null);
-  }
-
-  
-  public static JPanel createNotification(String text, @Nullable ColorValue background) {
-    return createNotification(text, background, true);
-  }
-
-  
-  public static JPanel createNotification(String text, @Nullable ColorValue background, boolean showHideAction) {
-    EditorNotificationPanel panel = new EditorNotificationPanel(TargetAWT.to(background));
-    panel.text(text);
-    if (showHideAction) {
-      HyperlinkLabel link = panel.createActionLabel("Hide", () -> panel.setVisible(false));
-      link.setToolTipText("Hide this notification");
+    public static JPanel createEqualContents(boolean equalCharsets, boolean equalSeparators) {
+        if (!equalCharsets && !equalSeparators) {
+            return createNotification(DiffLocalize.diffContentsHaveDifferencesOnlyInCharsetAndLineSeparatorsMessageText());
+        }
+        if (!equalSeparators) {
+            return createNotification(DiffLocalize.diffContentsHaveDifferencesOnlyInLineSeparatorsMessageText());
+        }
+        if (!equalCharsets) {
+            return createNotification(DiffLocalize.diffContentsHaveDifferencesOnlyInCharsetMessageText());
+        }
+        return createNotification(DiffLocalize.diffContentsAreIdenticalMessageText());
     }
-    return panel;
-  }
+
+    public static JPanel createError() {
+        return createNotification(LocalizeValue.localizeTODO("Can not calculate diff"));
+    }
+
+    public static JPanel createOperationCanceled() {
+        return createNotification(LocalizeValue.localizeTODO("Can not calculate diff. Operation canceled."));
+    }
+
+    public static JPanel createDiffTooBig() {
+        return createNotification(LocalizeValue.localizeTODO("Can not calculate diff. " + DiffTooBigException.MESSAGE));
+    }
+
+    //
+    // Impl
+    //
+
+    public static JPanel createNotification(LocalizeValue text) {
+        return createNotification(text, null);
+    }
+
+    public static JPanel createNotification(LocalizeValue text, @Nullable ColorValue background) {
+        return createNotification(text, background, true);
+    }
+
+    public static JPanel createNotification(LocalizeValue text, @Nullable ColorValue background, boolean showHideAction) {
+        EditorNotificationPanel panel = new EditorNotificationPanel(TargetAWT.to(background));
+        panel.text(text.get());
+        if (showHideAction) {
+            HyperlinkLabel link = panel.createActionLabel("Hide", () -> panel.setVisible(false));
+            link.setToolTipText("Hide this notification");
+        }
+        return panel;
+    }
 }

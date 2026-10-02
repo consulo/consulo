@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.refactoring.classMember;
 
 import consulo.language.psi.NavigatablePsiElement;
@@ -22,25 +21,24 @@ import consulo.language.psi.PsiElement;
 /**
  * @author dsl
  */
-public class UsedByDependencyMemberInfoModel<T extends NavigatablePsiElement, C extends PsiElement, M extends MemberInfoBase<T>> extends DependencyMemberInfoModel<T, M> {
+public class UsedByDependencyMemberInfoModel<T extends NavigatablePsiElement, C extends PsiElement, M extends MemberInfoBase<T>>
+    extends DependencyMemberInfoModel<T, M> {
 
-  public UsedByDependencyMemberInfoModel(C aClass) {
-    super(new UsedByMemberDependencyGraph<T, C, M>(aClass), ERROR);
-    setTooltipProvider(new MemberInfoTooltipManager.TooltipProvider<T, M>() {
-      @Override
-      public String getTooltip(M memberInfo) {
-        return ((UsedByMemberDependencyGraph<T, C, M>) myMemberDependencyGraph).getElementTooltip(memberInfo.getMember());
-      }
-    });
-  }
+    public UsedByDependencyMemberInfoModel(C aClass) {
+        super(new UsedByMemberDependencyGraph<>(aClass), ERROR);
+        setTooltipProvider(
+            memberInfo -> ((UsedByMemberDependencyGraph<T, C, M>) myMemberDependencyGraph)
+                .getElementTooltip(memberInfo.getMember()).getNullIfEmpty()
+        );
+    }
 
-  @Override
-  public boolean isCheckedWhenDisabled(M member) {
-    return false;
-  }
+    @Override
+    public boolean isCheckedWhenDisabled(M member) {
+        return false;
+    }
 
-  @Override
-  public Boolean isFixedAbstract(M member) {
-    return null;
-  }
+    @Override
+    public Boolean isFixedAbstract(M member) {
+        return null;
+    }
 }

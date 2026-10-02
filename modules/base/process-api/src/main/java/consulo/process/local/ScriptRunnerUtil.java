@@ -88,7 +88,7 @@ public final class ScriptRunnerUtil {
         });
         processHandler.startNotify();
         if (!processHandler.waitFor(timeout)) {
-            throw new ExecutionException(ProcessLocalize.scriptExecutionTimeout(String.valueOf(timeout / 1000)).get());
+            throw new ExecutionException(ProcessLocalize.scriptExecutionTimeout(String.valueOf(timeout / 1000)));
         }
         return outputBuilder.toString();
     }
@@ -156,7 +156,7 @@ public final class ScriptRunnerUtil {
 
         if (!processHandler.waitFor(timeout)) {
             LOG.warn("Process did not complete in " + timeout / 1000 + "s");
-            throw new ExecutionException(ProcessLocalize.scriptExecutionTimeout(String.valueOf(timeout / 1000)).get());
+            throw new ExecutionException(ProcessLocalize.scriptExecutionTimeout(String.valueOf(timeout / 1000)));
         }
         LOG.debug("script output: " + output.myFilteredOutput);
         return output;

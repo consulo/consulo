@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.SimpleTextAttributes;
@@ -55,7 +56,7 @@ class SwitcherToolWindowsListRenderer extends ColoredListCellRenderer<Object> {
             hide = false;
             setIcon(getIcon(tw));
 
-            nameToMatch = tw.getDisplayName().getValue();
+            nameToMatch = tw.getDisplayName().get();
             String shortcut = myShortcuts.get(tw);
             String name;
             if (myPinned || shortcut == null) {
@@ -69,8 +70,8 @@ class SwitcherToolWindowsListRenderer extends ColoredListCellRenderer<Object> {
             append(name);
         }
         else if (value == RECENT_LOCATIONS) {
-            String label = Switcher.SwitcherPanel.getRecentLocationsLabel(myShowEdited);
-            nameToMatch = label;
+            LocalizeValue label = Switcher.SwitcherPanel.getRecentLocationsLabel(myShowEdited);
+            nameToMatch = label.get();
 
             ShortcutSet shortcuts = getActiveKeymapShortcuts(RecentLocationsAction.RECENT_LOCATIONS_ACTION_ID);
             append(label);

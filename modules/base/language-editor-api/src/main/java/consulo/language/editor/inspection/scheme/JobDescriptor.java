@@ -13,58 +13,59 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.inspection.scheme;
+
+import consulo.localize.LocalizeValue;
 
 /**
  * @author max
  */
 public class JobDescriptor {
-  private final String myDisplayName;
-  private int myTotalAmount;
-  private int myDoneAmount;
-  public static final JobDescriptor[] EMPTY_ARRAY = new JobDescriptor[0];
+    private final LocalizeValue myDisplayName;
+    private int myTotalAmount;
+    private int myDoneAmount;
+    public static final JobDescriptor[] EMPTY_ARRAY = new JobDescriptor[0];
 
-  public JobDescriptor(String displayName) {
-    myDisplayName = displayName;
-  }
-
-  public String getDisplayName() {
-    return myDisplayName;
-  }
-
-  public int getTotalAmount() {
-    return myTotalAmount;
-  }
-
-  public void setTotalAmount(int totalAmount) {
-    myTotalAmount = totalAmount;
-    myDoneAmount = 0;
-  }
-
-  public int getDoneAmount() {
-    return myDoneAmount;
-  }
-
-  public void setDoneAmount(int doneAmount) {
-    if (doneAmount > getTotalAmount()) {
-      int i = 0;
-    }
-    if (doneAmount < getDoneAmount()) {
-      int i = 0;
-    }
-    myDoneAmount = doneAmount;
-  }
-
-  public float getProgress() {
-    float localProgress;
-    if (getTotalAmount() == 0) {
-      localProgress = 0;
-    }
-    else {
-      localProgress = 1.0f * getDoneAmount() / getTotalAmount();
+    public JobDescriptor(LocalizeValue displayName) {
+        myDisplayName = displayName;
     }
 
-    return localProgress;
-  }
+    public LocalizeValue getDisplayName() {
+        return myDisplayName;
+    }
+
+    public int getTotalAmount() {
+        return myTotalAmount;
+    }
+
+    public void setTotalAmount(int totalAmount) {
+        myTotalAmount = totalAmount;
+        myDoneAmount = 0;
+    }
+
+    public int getDoneAmount() {
+        return myDoneAmount;
+    }
+
+    public void setDoneAmount(int doneAmount) {
+        if (doneAmount > getTotalAmount()) {
+            int i = 0;
+        }
+        if (doneAmount < getDoneAmount()) {
+            int i = 0;
+        }
+        myDoneAmount = doneAmount;
+    }
+
+    public float getProgress() {
+        float localProgress;
+        if (getTotalAmount() == 0) {
+            localProgress = 0;
+        }
+        else {
+            localProgress = 1.0f * getDoneAmount() / getTotalAmount();
+        }
+
+        return localProgress;
+    }
 }

@@ -476,7 +476,7 @@ public class GlobalInspectionContextBase extends UserDataHolderBase implements G
         float totalProgress = getTotalProgress();
 
         myProgressIndicator.setFraction(totalProgress);
-        myProgressIndicator.setText(LocalizeValue.localizeTODO(job.getDisplayName() + " " + message));
+        myProgressIndicator.setText(LocalizeValue.join(job.getDisplayName(), LocalizeValue.space(), LocalizeValue.of(message)));
     }
 
     private float getTotalProgress() {

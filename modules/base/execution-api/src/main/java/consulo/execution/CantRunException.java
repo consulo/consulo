@@ -17,66 +17,66 @@ package consulo.execution;
 
 import consulo.content.bundle.Sdk;
 import consulo.execution.localize.ExecutionLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.module.Module;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.ModuleExtensionHelper;
 import consulo.process.ExecutionException;
 
 public class CantRunException extends ExecutionException {
-  public CantRunException(String message) {
-    super(message);
-  }
-
-  public CantRunException(String s, Throwable cause) {
-    super(s, cause);
-  }
-
-  public static CantRunException noModuleConfigured(String moduleName) {
-    if (moduleName.trim().length() == 0) {
-      return new CantRunException(ExecutionLocalize.noModuleDefinedErrorMessage().get());
+    public CantRunException(LocalizeValue message) {
+        super(message.get());
     }
-    return new CantRunException(ExecutionLocalize.moduleDoesNotExistErrorMessage(moduleName).get());
-  }
 
-  @Deprecated
-  public static CantRunException noJdkForModule(Module module) {
-    return new CantRunException(ExecutionLocalize.noJdkForModuleErrorMessage(module.getName()).get());
-  }
-
-  public static CantRunException noModuleExtension(Module module, Class<? extends ModuleExtension> extensionName) {
-
-    return new CantRunException(ExecutionLocalize.noSdkForModuleExtensionErrorMessage(extensionName.getName(), module.getName()).get());
-  }
-
-  public static CantRunException noSdkForModuleExtension(ModuleExtension e) {
-    String moduleExtensionName = ModuleExtensionHelper.getInstance(e.getProject()).getModuleExtensionName(e);
-    return new CantRunException(ExecutionLocalize.noSdkForModuleExtensionErrorMessage(moduleExtensionName, e.getModule().getName()).get());
-  }
-
-  public static CantRunException jdkMisconfigured(Sdk jdk, Module module) {
-    return new CantRunException(ExecutionLocalize.jdkIsBadConfiguredErrorMessage(jdk.getName()).get());
-  }
-
-  public static CantRunException classNotFound(String className, Module module) {
-    return new CantRunException(ExecutionLocalize.classNotFoundInModuleErrorMessage(className, module.getName()).get());
-  }
-
-  public static CantRunException packageNotFound(String packageName) {
-    return new CantRunException(ExecutionLocalize.packageNotFoundErrorMessage(packageName).get());
-  }
-
-  public static CantRunException noJdkConfigured(String jdkName) {
-    if (jdkName != null) {
-      return new CantRunException(ExecutionLocalize.jdkNotConfiguredErrorMessage(jdkName).get());
+    public CantRunException(String s, Throwable cause) {
+        super(s, cause);
     }
-    return new CantRunException(ExecutionLocalize.projectHasNoJdkErrorMessage().get());
-  }
 
-  public static CantRunException badModuleDependencies() {
-    return new CantRunException(ExecutionLocalize.someModulesHasCircularDependencyErrorMessage().get());
-  }
+    public static CantRunException noModuleConfigured(String moduleName) {
+        if (moduleName.trim().length() == 0) {
+            return new CantRunException(ExecutionLocalize.noModuleDefinedErrorMessage());
+        }
+        return new CantRunException(ExecutionLocalize.moduleDoesNotExistErrorMessage(moduleName));
+    }
 
-  public static CantRunException noJdkConfigured() {
-    return new CantRunException(ExecutionLocalize.projectHasNoJdkConfiguredErrorMessage().get());
-  }
+    @Deprecated
+    public static CantRunException noJdkForModule(Module module) {
+        return new CantRunException(ExecutionLocalize.noJdkForModuleErrorMessage(module.getName()));
+    }
+
+    public static CantRunException noModuleExtension(Module module, Class<? extends ModuleExtension> extensionName) {
+        return new CantRunException(ExecutionLocalize.noSdkForModuleExtensionErrorMessage(extensionName.getName(), module.getName()));
+    }
+
+    public static CantRunException noSdkForModuleExtension(ModuleExtension e) {
+        String moduleExtensionName = ModuleExtensionHelper.getInstance(e.getProject()).getModuleExtensionName(e);
+        return new CantRunException(ExecutionLocalize.noSdkForModuleExtensionErrorMessage(moduleExtensionName, e.getModule().getName()));
+    }
+
+    public static CantRunException jdkMisconfigured(Sdk jdk, Module module) {
+        return new CantRunException(ExecutionLocalize.jdkIsBadConfiguredErrorMessage(jdk.getName()));
+    }
+
+    public static CantRunException classNotFound(String className, Module module) {
+        return new CantRunException(ExecutionLocalize.classNotFoundInModuleErrorMessage(className, module.getName()));
+    }
+
+    public static CantRunException packageNotFound(String packageName) {
+        return new CantRunException(ExecutionLocalize.packageNotFoundErrorMessage(packageName));
+    }
+
+    public static CantRunException noJdkConfigured(String jdkName) {
+        if (jdkName != null) {
+            return new CantRunException(ExecutionLocalize.jdkNotConfiguredErrorMessage(jdkName));
+        }
+        return new CantRunException(ExecutionLocalize.projectHasNoJdkErrorMessage());
+    }
+
+    public static CantRunException badModuleDependencies() {
+        return new CantRunException(ExecutionLocalize.someModulesHasCircularDependencyErrorMessage());
+    }
+
+    public static CantRunException noJdkConfigured() {
+        return new CantRunException(ExecutionLocalize.projectHasNoJdkConfiguredErrorMessage());
+    }
 }

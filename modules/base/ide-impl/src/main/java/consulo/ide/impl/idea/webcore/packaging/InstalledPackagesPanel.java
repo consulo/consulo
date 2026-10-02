@@ -262,12 +262,12 @@ public class InstalledPackagesPanel extends JPanel {
                                     myCurrentlyInstalling.remove(packageName);
                                     myPackagesTable.setPaintBusy(!myCurrentlyInstalling.isEmpty());
                                     if (errorDescription == null) {
-                                        myNotificationArea.showSuccess(IdeLocalize.packageSuccessfullyUpgraded(packageName).get());
+                                        myNotificationArea.showSuccess(IdeLocalize.packageSuccessfullyUpgraded(packageName));
                                     }
                                     else {
                                         myNotificationArea.showError(
-                                            IdeLocalize.upgradePackagesFailed().get(),
-                                            IdeLocalize.upgradePackagesFailedDialogTitle().get(),
+                                            IdeLocalize.upgradePackagesFailed(),
+                                            IdeLocalize.upgradePackagesFailedDialogTitle(),
                                             errorDescription
                                         );
                                     }
@@ -391,14 +391,14 @@ public class InstalledPackagesPanel extends JPanel {
                             if (errorDescription == null) {
                                 myNotificationArea.showSuccess(
                                     packageName != null
-                                        ? IdeLocalize.packageSuccessfullyUninstalled(packageName).get()
-                                        : IdeLocalize.packagesSuccessfullyUninstalled().get()
+                                        ? IdeLocalize.packageSuccessfullyUninstalled(packageName)
+                                        : IdeLocalize.packagesSuccessfullyUninstalled()
                                 );
                             }
                             else {
                                 myNotificationArea.showError(
-                                    IdeLocalize.uninstallPackagesFailed().get(),
-                                    IdeLocalize.uninstallPackagesFailedDialogTitle().get(),
+                                    IdeLocalize.uninstallPackagesFailed(),
+                                    IdeLocalize.uninstallPackagesFailedDialogTitle(),
                                     errorDescription
                                 );
                             }
@@ -441,7 +441,7 @@ public class InstalledPackagesPanel extends JPanel {
 
     private void onUpdateFinished() {
         myPackagesTable.setPaintBusy(!myCurrentlyInstalling.isEmpty());
-        myPackagesTable.getEmptyText().setText(StatusText.DEFAULT_EMPTY_TEXT_VALUE);
+        myPackagesTable.getEmptyText().setText(StatusText.DEFAULT_EMPTY_TEXT);
         updateUninstallUpgrade();
         // Action button presentations won't be updated if no events occur (e.g. mouse isn't moving, keys aren't being pressed).
         // In that case emulating activity will help:

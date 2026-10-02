@@ -111,7 +111,6 @@ public class KeymapUtil {
         return new MouseShortcut(button, modifiers, clickCount);
     }
 
-    
     public static String createTooltipText(String tooltipText, String actionId) {
         String text = getFirstKeyboardShortcutText(actionId);
         return text.isEmpty() ? tooltipText : tooltipText + " (" + text + ")";
@@ -129,7 +128,6 @@ public class KeymapUtil {
         return ArrayUtil.getFirstElement(keymapManager.getActiveKeymap().getShortcuts(actionId));
     }
 
-    
     public static String createTooltipText(@Nullable String name, AnAction action) {
         String toolTipText = name == null ? "" : name;
         while (StringUtil.endsWithChar(toolTipText, '.')) {
@@ -157,21 +155,18 @@ public class KeymapUtil {
         return buffer.toString();
     }
 
-    
     public static String getFirstKeyboardShortcutText(String actionId) {
         Shortcut[] shortcuts = KeymapManager.getInstance().getActiveKeymap().getShortcuts(actionId);
         KeyboardShortcut shortcut = ContainerUtil.findInstance(shortcuts, KeyboardShortcut.class);
         return shortcut == null ? "" : getShortcutText(shortcut);
     }
 
-    
     public static String getFirstKeyboardShortcutText(AnAction action) {
         Shortcut[] shortcuts = action.getShortcutSet().getShortcuts();
         KeyboardShortcut shortcut = ContainerUtil.findInstance(shortcuts, KeyboardShortcut.class);
         return shortcut == null ? "" : getShortcutText(shortcut);
     }
 
-    
     public static String getPreferredShortcutText(Shortcut[] shortcuts) {
         KeyboardShortcut shortcut = ContainerUtil.findInstance(shortcuts, KeyboardShortcut.class);
         return shortcut != null ? getShortcutText(shortcut) : shortcuts.length > 0 ? getShortcutText(shortcuts[0]) : "";
@@ -209,7 +204,6 @@ public class KeymapUtil {
         };
     }
 
-    
     public static LocalizeValue getMouseShortcutText(MouseShortcut mouseShortcut) {
         return getMouseShortcutText(mouseShortcut.getButton(), mouseShortcut.getModifiers(), mouseShortcut.getClickCount());
     }
@@ -251,7 +245,6 @@ public class KeymapUtil {
         return modifiers;
     }
 
-    
     public static ShortcutSet getActiveKeymapShortcuts(@Nullable String actionId) {
         Application application = ApplicationManager.getApplication();
         KeymapManager keymapManager = application == null ? null : application.getInstance(KeymapManager.class);
@@ -379,11 +372,7 @@ public class KeymapUtil {
         });
     }
 
-    public static CompletableFuture<KeymapGroup> createGroupAsync(
-        ActionGroup actionGroup,
-        boolean ignore,
-        Predicate<AnAction> filtered
-    ) {
+    public static CompletableFuture<KeymapGroup> createGroupAsync(ActionGroup actionGroup, boolean ignore, Predicate<AnAction> filtered) {
         return createGroupAsync(actionGroup, getName(actionGroup), null, null, ignore, filtered);
     }
 
@@ -418,8 +407,7 @@ public class KeymapUtil {
             LOG.assertTrue(action != null, groupName + " contains null actions");
 
             if (action instanceof ActionGroup childActionGroup) {
-                KeymapGroup subGroup =
-                    createGroup(childActionGroup, getName(action), null, null, ignore, filtered, normalizeSeparators);
+                KeymapGroup subGroup = createGroup(childActionGroup, getName(action), null, null, ignore, filtered, normalizeSeparators);
                 if (subGroup.getSize() > 0) {
                     if (!ignore && !childActionGroup.isPopup()) {
                         group.addAll(subGroup);

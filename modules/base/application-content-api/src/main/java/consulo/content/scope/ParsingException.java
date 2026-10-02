@@ -15,8 +15,10 @@
  */
 package consulo.content.scope;
 
+import consulo.localize.LocalizeValue;
+
 public class ParsingException extends Exception {
-    public ParsingException(String message) {
-        super(message);
+    public ParsingException(LocalizeValue message) {
+        super(message.get());
     }
 }

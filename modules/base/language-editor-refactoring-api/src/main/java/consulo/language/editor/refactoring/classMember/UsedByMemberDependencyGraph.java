@@ -20,98 +20,102 @@ import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.psi.NavigatablePsiElement;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiNamedElement;
+import consulo.localize.LocalizeValue;
 import consulo.util.lang.StringUtil;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class UsedByMemberDependencyGraph<T extends NavigatablePsiElement, C extends PsiElement, M extends MemberInfoBase<T>> implements MemberDependencyGraph<T, M> {
-  protected HashSet<T> mySelectedNormal;
-  protected HashSet<T> mySelectedAbstract;
-  protected HashSet<T> myMembers;
-  protected HashSet<T> myDependencies = null;
-  protected HashMap<T, HashSet<T>> myDependenciesToDependent = null;
-  private final MemberDependenciesStorage<T, C> myMemberDependenciesStorage;
+    protected Set<T> mySelectedNormal;
+    protected Set<T> mySelectedAbstract;
+    protected Set<T> myMembers;
+    protected Set<T> myDependencies = null;
+    protected Map<T, Set<T>> myDependenciesToDependent = null;
+    private final MemberDependenciesStorage<T, C> myMemberDependenciesStorage;
 
-  public UsedByMemberDependencyGraph(C aClass) {
-    myMemberDependenciesStorage = new MemberDependenciesStorage<>(aClass, null);
-    mySelectedNormal = new HashSet<>();
-    mySelectedAbstract = new HashSet<>();
-    myMembers = new HashSet<>();
-  }
-
-  @Override
-  public void memberChanged(M memberInfo) {
-    ClassMembersRefactoringSupport support = ClassMembersRefactoringSupport.forLanguage(memberInfo.getMember().getLanguage());
-    if (support != null && support.isProperMember(memberInfo)) {
-      myDependencies = null;
-      myDependenciesToDependent = null;
-      T member = memberInfo.getMember();
-      myMembers.add(member);
-      if (!memberInfo.isChecked()) {
-        mySelectedNormal.remove(member);
-        mySelectedAbstract.remove(member);
-      }
-      else {
-        if (memberInfo.isToAbstract()) {
-          mySelectedNormal.remove(member);
-          mySelectedAbstract.add(member);
-        }
-        else {
-          mySelectedNormal.add(member);
-          mySelectedAbstract.remove(member);
-        }
-      }
+    public UsedByMemberDependencyGraph(C aClass) {
+        myMemberDependenciesStorage = new MemberDependenciesStorage<>(aClass, null);
+        mySelectedNormal = new HashSet<>();
+        mySelectedAbstract = new HashSet<>();
+        myMembers = new HashSet<>();
     }
-  }
 
-  @Override
-  public Set<? extends T> getDependent() {
-    if (myDependencies == null) {
-      myDependencies = new HashSet<>();
-      myDependenciesToDependent = new HashMap<>();
-      for (T member : myMembers) {
-        Set<T> dependent = myMemberDependenciesStorage.getMemberDependencies(member);
-        if (dependent != null) {
-          for (T aDependent : dependent) {
-            if (mySelectedNormal.contains(aDependent) && !mySelectedAbstract.contains(aDependent)) {
-              myDependencies.add(member);
-              HashSet<T> deps = myDependenciesToDependent.get(member);
-              if (deps == null) {
-                deps = new HashSet<>();
-                myDependenciesToDependent.put(member, deps);
-              }
-              deps.add(aDependent);
+    @Override
+    public void memberChanged(M memberInfo) {
+        ClassMembersRefactoringSupport support = ClassMembersRefactoringSupport.forLanguage(memberInfo.getMember().getLanguage());
+        if (support != null && support.isProperMember(memberInfo)) {
+            myDependencies = null;
+            myDependenciesToDependent = null;
+            T member = memberInfo.getMember();
+            myMembers.add(member);
+            if (!memberInfo.isChecked()) {
+                mySelectedNormal.remove(member);
+                mySelectedAbstract.remove(member);
             }
-          }
+            else {
+                if (memberInfo.isToAbstract()) {
+                    mySelectedNormal.remove(member);
+                    mySelectedAbstract.add(member);
+                }
+                else {
+                    mySelectedNormal.add(member);
+                    mySelectedAbstract.remove(member);
+                }
+            }
         }
-      }
     }
 
-    return myDependencies;
-  }
+    @Override
+    public Set<? extends T> getDependent() {
+        if (myDependencies == null) {
+            myDependencies = new HashSet<>();
+            myDependenciesToDependent = new HashMap<>();
+            for (T member : myMembers) {
+                Set<T> dependent = myMemberDependenciesStorage.getMemberDependencies(member);
+                if (dependent != null) {
+                    for (T aDependent : dependent) {
+                        if (mySelectedNormal.contains(aDependent) && !mySelectedAbstract.contains(aDependent)) {
+                            myDependencies.add(member);
+                            Set<T> deps = myDependenciesToDependent.get(member);
+                            if (deps == null) {
+                                deps = new HashSet<>();
+                                myDependenciesToDependent.put(member, deps);
+                            }
+                            deps.add(aDependent);
+                        }
+                    }
+                }
+            }
+        }
 
-  @Override
-  public Set<? extends T> getDependenciesOf(T member) {
-    Set<? extends T> dependent = getDependent();
-    if (!dependent.contains(member)) return null;
-    return myDependenciesToDependent.get(member);
-  }
-
-  public String getElementTooltip(T element) {
-    Set<? extends T> dependencies = getDependenciesOf(element);
-    if (dependencies == null || dependencies.size() == 0) return null;
-
-    ArrayList<String> strings = new ArrayList<>();
-    for (T dep : dependencies) {
-      if (dep instanceof PsiNamedElement) {
-        strings.add(dep.getName());
-      }
+        return myDependencies;
     }
 
-    if (strings.isEmpty()) return null;
-    return RefactoringLocalize.uses0(StringUtil.join(strings, ", ")).get();
-  }
+    @Override
+    public Set<? extends T> getDependenciesOf(T member) {
+        Set<? extends T> dependent = getDependent();
+        if (!dependent.contains(member)) {
+            return null;
+        }
+        return myDependenciesToDependent.get(member);
+    }
+
+    public LocalizeValue getElementTooltip(T element) {
+        Set<? extends T> dependencies = getDependenciesOf(element);
+        if (dependencies == null || dependencies.size() == 0) {
+            return LocalizeValue.empty();
+        }
+
+        List<String> strings = new ArrayList<>();
+        for (T dep : dependencies) {
+            if (dep instanceof PsiNamedElement) {
+                strings.add(dep.getName());
+            }
+        }
+
+        if (strings.isEmpty()) {
+            return LocalizeValue.empty();
+        }
+        return RefactoringLocalize.uses0(StringUtil.join(strings, ", "));
+    }
 }

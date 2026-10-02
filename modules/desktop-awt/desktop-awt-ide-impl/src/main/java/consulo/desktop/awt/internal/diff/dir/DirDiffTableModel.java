@@ -227,7 +227,7 @@ public class DirDiffTableModel extends AbstractTableModel implements DirDiffMode
     @Override
     public void reloadModel(boolean userForcedRefresh) {
         myUpdating.set(true);
-        myTable.getEmptyText().setText(StatusText.DEFAULT_EMPTY_LOC_TEXT);
+        myTable.getEmptyText().setText(StatusText.DEFAULT_EMPTY_TEXT);
         JBLoadingPanel loadingPanel = getLoadingPanel();
         loadingPanel.startLoading();
 
@@ -251,7 +251,7 @@ public class DirDiffTableModel extends AbstractTableModel implements DirDiffMode
                 }
                 catch (IOException e) {
                     LOG.warn(e);
-                    reportException(VcsLocalize.refreshFailedMessage(StringUtil.decapitalize(e.getLocalizedMessage())).get());
+                    reportException(VcsLocalize.refreshFailedMessage(StringUtil.decapitalize(e.getLocalizedMessage())));
                 }
                 finally {
                     if (myTree != null) {
@@ -278,7 +278,7 @@ public class DirDiffTableModel extends AbstractTableModel implements DirDiffMode
         }
         catch (IOException e) {
             LOG.warn(e);
-            reportException(VcsLocalize.refreshFailedMessage(StringUtil.decapitalize(e.getLocalizedMessage())).get());
+            reportException(VcsLocalize.refreshFailedMessage(StringUtil.decapitalize(e.getLocalizedMessage())));
         }
         finally {
             myTree.setSource(mySrc);
@@ -294,16 +294,20 @@ public class DirDiffTableModel extends AbstractTableModel implements DirDiffMode
         }
     }
 
+    private void reportException(LocalizeValue htmlContent) {
+        reportException(htmlContent.get());
+    }
+
     private void reportException(String htmlContent) {
         Runnable balloonShower = () -> {
             Balloon balloon = JBPopupFactory.getInstance()
-                .createHtmlTextBalloonBuilder(htmlContent, NotificationType.WARNING, null).
-                setShowCallout(false)
+                .createHtmlTextBalloonBuilder(htmlContent, NotificationType.WARNING, null)
+                .setShowCallout(false)
                 .setHideOnClickOutside(true)
                 .setHideOnAction(true)
                 .setHideOnFrameResize(true)
-                .setHideOnKeyOutside(true).
-                createBalloon();
+                .setHideOnKeyOutside(true)
+                .createBalloon();
             Rectangle rect = myPanel.getPanel().getBounds();
             Point p = new Point(rect.x + rect.width - 100, rect.y + 50);
             RelativePoint point = new RelativePoint(myPanel.getPanel(), p);

@@ -46,7 +46,7 @@ public class TestStatusLine extends JPanel {
                                                               new Insets(2, 8, 0, 8), 0, 0));
     setStatusColor(ProgressBarColors.GREEN);
     add(myState, BorderLayout.CENTER);
-    myState.append(ExecutionLocalize.junitRuningInfoStartingLabel().get());
+    myState.append(ExecutionLocalize.junitRuningInfoStartingLabel());
   }
 
   public void formatTestMessage(int testsTotal,

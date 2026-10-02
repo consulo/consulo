@@ -110,7 +110,7 @@ public abstract class AnnotateRevisionActionBase extends LegacyAnAction {
         Semaphore semaphore = new Semaphore(0);
         AtomicBoolean shouldOpenEditorInSync = new AtomicBoolean(true);
 
-        ProgressManager.getInstance().run(new Task.Backgroundable(vcs.getProject(), VcsLocalize.retrievingAnnotations().get(), true) {
+        ProgressManager.getInstance().run(new Task.Backgroundable(vcs.getProject(), VcsLocalize.retrievingAnnotations(), true) {
             @Override
             public void run(ProgressIndicator indicator) {
                 try {
@@ -140,7 +140,7 @@ public abstract class AnnotateRevisionActionBase extends LegacyAnAction {
             public void onSuccess() {
                 if (!exceptionRef.isNull()) {
                     AbstractVcsHelper.getInstance((Project) myProject)
-                        .showError(exceptionRef.get(), VcsLocalize.operationNameAnnotate().get());
+                        .showError(exceptionRef.get(), VcsLocalize.operationNameAnnotate());
                 }
                 if (fileAnnotationRef.isNull()) {
                     return;

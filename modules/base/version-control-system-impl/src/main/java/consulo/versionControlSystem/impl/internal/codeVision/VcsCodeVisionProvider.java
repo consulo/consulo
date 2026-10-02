@@ -169,7 +169,7 @@ public class VcsCodeVisionProvider implements DaemonBoundCodeVisionProvider {
             TextRange trimmedRange = clamp(elementContext.computeEffectiveRange(element), docLength);
 
             VcsCodeAuthorInfo codeAuthorInfo = getCodeAuthorInfo(trimmedRange, document, lineNumberProvider, authorAspect);
-            String text = codeAuthorInfoText(codeAuthorInfo);
+            String text = codeAuthorInfoText(codeAuthorInfo).get();
             // Show author icon when the main author is known (port of JB: AllIcons.Vcs.Author)
             javax.swing.Icon icon = codeAuthorInfo.mainAuthor() != null ? TargetAWT.to(PlatformIconGroup.actionsLoginavatar()) : null;
 
@@ -306,21 +306,21 @@ public class VcsCodeVisionProvider implements DaemonBoundCodeVisionProvider {
         return new VcsCodeAuthorInfo(mainAuthor, otherAuthorsCount, isModified);
     }
 
-    private static String codeAuthorInfoText(VcsCodeAuthorInfo info) {
+    private static LocalizeValue codeAuthorInfoText(VcsCodeAuthorInfo info) {
         if (info.mainAuthor() == null) {
-            return VcsLocalize.codeVisionLabelNewCode().getValue();
+            return VcsLocalize.codeVisionLabelNewCode();
         }
         boolean isMultiAuthor = info.otherAuthorsCount() > 0;
         if (isMultiAuthor && info.isModified()) {
-            return VcsLocalize.codeVisionLabelMultiAuthorModified(info.mainAuthor(), info.otherAuthorsCount()).getValue();
+            return VcsLocalize.codeVisionLabelMultiAuthorModified(info.mainAuthor(), info.otherAuthorsCount());
         }
         if (isMultiAuthor) {
-            return VcsLocalize.codeVisionLabelMultiAuthorNotModified(info.mainAuthor(), info.otherAuthorsCount()).getValue();
+            return VcsLocalize.codeVisionLabelMultiAuthorNotModified(info.mainAuthor(), info.otherAuthorsCount());
         }
         if (info.isModified()) {
-            return VcsLocalize.codeVisionLabelSingleAuthorModified(info.mainAuthor()).getValue();
+            return VcsLocalize.codeVisionLabelSingleAuthorModified(info.mainAuthor());
         }
-        return info.mainAuthor();
+        return LocalizeValue.ofNullable(info.mainAuthor());
     }
 
     private record VcsCodeAuthorInfo(@Nullable String mainAuthor, int otherAuthorsCount, boolean isModified) {

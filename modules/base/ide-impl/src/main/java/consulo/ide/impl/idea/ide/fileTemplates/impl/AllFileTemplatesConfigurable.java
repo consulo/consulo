@@ -141,7 +141,6 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
         fireListChanged();
     }
 
-    
     @Override
     public LocalizeValue getDisplayName() {
         return IdeLocalize.titleFileTemplates();
@@ -162,21 +161,21 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
     @RequiredUIAccess
     @Override
     public JComponent createComponent(Disposable parentUIDisposable) {
-        myTemplatesList = new FileTemplateTabAsList(IdeLocalize.tabFiletemplatesTemplates().get()) {
+        myTemplatesList = new FileTemplateTabAsList(IdeLocalize.tabFiletemplatesTemplates()) {
             @Override
             @RequiredUIAccess
             public void onTemplateSelected() {
                 onListSelectionChanged();
             }
         };
-        myIncludesList = new FileTemplateTabAsList(IdeLocalize.tabFiletemplatesIncludes().get()) {
+        myIncludesList = new FileTemplateTabAsList(IdeLocalize.tabFiletemplatesIncludes()) {
             @Override
             @RequiredUIAccess
             public void onTemplateSelected() {
                 onListSelectionChanged();
             }
         };
-        myCodeTemplatesList = new FileTemplateTabAsList(IdeLocalize.tabFiletemplatesCode().get()) {
+        myCodeTemplatesList = new FileTemplateTabAsList(IdeLocalize.tabFiletemplatesCode()) {
             @Override
             @RequiredUIAccess
             public void onTemplateSelected() {
@@ -189,7 +188,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
 
         List<FileTemplateGroupDescriptorFactory> factories = FileTemplateGroupDescriptorFactory.EP_NAME.getExtensionList();
         if (!factories.isEmpty()) {
-            myOtherTemplatesList = new FileTemplateTabAsTree(IdeLocalize.tabFiletemplatesJ2ee().get()) {
+            myOtherTemplatesList = new FileTemplateTabAsTree(IdeLocalize.tabFiletemplatesJ2ee()) {
                 @Override
                 @RequiredUIAccess
                 public void onTemplateSelected() {
@@ -222,10 +221,10 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
         myLeftPanel = new JPanel(new CardLayout());
         myLeftPanel.setBorder(JBUI.Borders.empty(10, 10, 10, 0));
         for (FileTemplateTab tab : myTabs) {
-            myLeftPanel.add(ScrollPaneFactory.createScrollPane(tab.getComponent()), tab.getTitle());
+            myLeftPanel.add(ScrollPaneFactory.createScrollPane(tab.getComponent()), tab.getTitle().get());
             JPanel fakePanel = new JPanel();
             fakePanel.setPreferredSize(new Dimension(0, 0));
-            myTabbedPane.addTab(tab.getTitle(), fakePanel);
+            myTabbedPane.addTab(tab.getTitle().get(), fakePanel);
         }
 
         myTabbedPane.addChangeListener(e -> onTabChanged());
@@ -243,7 +242,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
             public void update(AnActionEvent e) {
                 FileTemplate selectedItem = myCurrentTab.getSelectedTemplate();
                 e.getPresentation()
-                    .setEnabled(selectedItem != null && !isInternalTemplate(selectedItem.getName(), myCurrentTab.getTitle()));
+                    .setEnabled(selectedItem != null && !isInternalTemplate(selectedItem.getName(), myCurrentTab.getTitle().get()));
             }
         };
         AnAction addAction = new LegacyAnAction(IdeLocalize.actionCreateTemplate(), LocalizeValue.empty(), PlatformIconGroup.generalAdd()) {
@@ -370,7 +369,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
         if (0 <= selectedIndex && selectedIndex < myTabs.length) {
             myCurrentTab = myTabs[selectedIndex];
         }
-        ((CardLayout)myLeftPanel.getLayout()).show(myLeftPanel, myCurrentTab.getTitle());
+        ((CardLayout)myLeftPanel.getLayout()).show(myLeftPanel, myCurrentTab.getTitle().get());
         onListSelectionChanged();
     }
 
@@ -424,7 +423,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
         }
         if (myEditor.getTemplate() != template) {
             myEditor.setTemplate(template, defDesc);
-            boolean isInternal = template != null && isInternalTemplate(template.getName(), myCurrentTab.getTitle());
+            boolean isInternal = template != null && isInternalTemplate(template.getName(), myCurrentTab.getTitle().get());
             myEditor.setShowInternalMessage(isInternal ? " " : null);
             myEditor.setShowAdjustCheckBox(myTemplatesList == myCurrentTab);
         }
@@ -573,7 +572,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
     private boolean selectTab(String tabName) {
         int idx = 0;
         for (FileTemplateTab tab : myTabs) {
-            if (Comparing.strEqual(tab.getTitle(), tabName)) {
+            if (Comparing.strEqual(tab.getTitle().get(), tabName)) {
                 myCurrentTab = tab;
                 myTabbedPane.setSelectedIndex(idx);
                 return true;
@@ -597,7 +596,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
     public void disposeUIResources() {
         if (myCurrentTab != null) {
             ApplicationPropertiesComponent propertiesComponent = ApplicationPropertiesComponent.getInstance();
-            propertiesComponent.setValue(CURRENT_TAB, myCurrentTab.getTitle(), IdeLocalize.tabFiletemplatesTemplates().get());
+            propertiesComponent.setValue(CURRENT_TAB, myCurrentTab.getTitle().get(), IdeLocalize.tabFiletemplatesTemplates().get());
             FileTemplate template = myCurrentTab.getSelectedTemplate();
             if (template != null) {
                 propertiesComponent.setValue(SELECTED_TEMPLATE, template.getName());

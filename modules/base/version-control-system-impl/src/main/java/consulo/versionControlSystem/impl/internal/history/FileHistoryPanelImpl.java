@@ -62,7 +62,6 @@ import consulo.ui.ex.content.ContentManager;
 import consulo.ui.image.Image;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.ContainerUtil;
-import consulo.util.dataholder.Key;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.Clock;
 import consulo.util.lang.Comparing;
@@ -207,7 +206,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
         TableLinkMouseListener listener = new TableLinkMouseListener();
         listener.installOn(myDualView.getFlatView());
         listener.installOn(myDualView.getTreeView());
-        setEmptyText(CommonLocalize.treeNodeLoading().get());
+        setEmptyText(CommonLocalize.treeNodeLoading());
 
         setupDualView(addToGroup(true, new DefaultActionGroup()));
         if (isStaticEmbedded) {
@@ -374,18 +373,18 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
     private void adjustEmptyText() {
         VirtualFile virtualFile = myFilePath.getVirtualFile();
         if ((virtualFile == null || !virtualFile.isValid()) && !myFilePath.getIOFile().exists()) {
-            setEmptyText("File " + myFilePath.getName() + " not found");
+            setEmptyText(LocalizeValue.localizeTODO("File " + myFilePath.getName() + " not found"));
         }
         else if (myInRefresh) {
-            setEmptyText(CommonLocalize.treeNodeLoading().get());
+            setEmptyText(CommonLocalize.treeNodeLoading());
         }
         else {
             setEmptyText(StatusText.DEFAULT_EMPTY_TEXT);
         }
     }
 
-    private void setEmptyText(String emptyText) {
-        myDualView.setEmptyText(emptyText);
+    private void setEmptyText(LocalizeValue emptyText) {
+        myDualView.setEmptyText(emptyText.get());
     }
 
     @Override
@@ -1140,10 +1139,10 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
         public void onSuccess() {
             AbstractVcsHelper helper = AbstractVcsHelper.getInstance((Project) myProject);
             if (myException != null) {
-                helper.showError(myException, VcsLocalize.createPatchErrorTitle(myException.getMessage()).get());
+                helper.showError(myException, VcsLocalize.createPatchErrorTitle(myException.getMessage()));
             }
             else if (myList == null) {
-                helper.showError(null, "Can not load changelist contents");
+                helper.showError(null, LocalizeValue.localizeTODO("Can not load changelist contents"));
             }
             else {
                 CreatePatchFromChangesAction.createPatch((Project) myProject, myList.getComment(), new ArrayList<>(myList.getChanges()));

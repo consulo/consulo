@@ -116,8 +116,6 @@ public class FilePackageSetParserExtension implements PackageSetParserExtension 
   }
 
   private static void error(Lexer lexer, LocalizeValue message) throws ParsingException {
-    throw new ParsingException(
-      AnalysisScopeLocalize.errorPackagesetPositionParsingError(message, (lexer.getTokenStart() + 1)).get()
-    );
+    throw new ParsingException(AnalysisScopeLocalize.errorPackagesetPositionParsingError(message, (lexer.getTokenStart() + 1)));
   }
 }

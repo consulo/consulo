@@ -163,7 +163,7 @@ public abstract class AbstractExternalModuleImportProvider implements ModuleImpo
 
                 Runnable resolveDependenciesTask = () -> {
                     LocalizeValue progressText = ExternalSystemLocalize.progressResolveLibraries(myExternalSystemId.getDisplayName());
-                    ProgressManager.getInstance().run(new Task.Backgroundable(project, progressText.get(), false) {
+                    ProgressManager.getInstance().run(new Task.Backgroundable(project, progressText, false) {
                         @Override
                         public void run(ProgressIndicator indicator) {
                             if (project.isDisposed()) {
@@ -204,12 +204,12 @@ public abstract class AbstractExternalModuleImportProvider implements ModuleImpo
      * answered with a future, and a project which cannot be resolved fails it with the reason to show.
      */
     public CompletableFuture<?> ensureProjectIsDefined(ExternalModuleImportContext context) {
-        String externalSystemName = myExternalSystemId.getReadableName().get();
+        LocalizeValue externalSystemName = myExternalSystemId.getReadableName();
 
         File projectFile = getProjectFile(context);
         if (projectFile == null) {
             return CompletableFuture.failedFuture(
-                new WizardStepValidationException(ExternalSystemLocalize.errorProjectUndefined().get())
+                new WizardStepValidationException(ExternalSystemLocalize.errorProjectUndefined())
             );
         }
         projectFile = getExternalProjectConfigToUse(projectFile);
@@ -223,7 +223,7 @@ public abstract class AbstractExternalModuleImportProvider implements ModuleImpo
 
                 if (externalProject == null) {
                     result.completeExceptionally(
-                        new WizardStepValidationException(ExternalSystemLocalize.errorCannotParseProject(externalSystemName).get())
+                        new WizardStepValidationException(ExternalSystemLocalize.errorCannotParseProject(externalSystemName))
                     );
                     return;
                 }
@@ -238,7 +238,7 @@ public abstract class AbstractExternalModuleImportProvider implements ModuleImpo
                     LOG.warn(errorDetails);
                 }
                 result.completeExceptionally(
-                    new WizardStepValidationException(ExternalSystemLocalize.errorResolveWithReason(errorMessage).get())
+                    new WizardStepValidationException(ExternalSystemLocalize.errorResolveWithReason(errorMessage))
                 );
             }
         };
@@ -259,7 +259,7 @@ public abstract class AbstractExternalModuleImportProvider implements ModuleImpo
             }
             catch (IllegalArgumentException e) {
                 result.completeExceptionally(
-                    new WizardStepValidationException(ExternalSystemLocalize.errorCannotParseProject(externalSystemName).get())
+                    new WizardStepValidationException(ExternalSystemLocalize.errorCannotParseProject(externalSystemName))
                 );
             }
         });

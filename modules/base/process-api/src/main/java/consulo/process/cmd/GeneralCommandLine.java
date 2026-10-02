@@ -342,11 +342,11 @@ public class GeneralCommandLine implements UserDataHolder {
     }
     if (!Files.exists(myWorkingDirectory)) {
       throw new ExecutionException(
-          ProcessLocalize.runConfigurationErrorWorkingDirectoryDoesNotExist(myWorkingDirectory.toAbsolutePath()).get()
+          ProcessLocalize.runConfigurationErrorWorkingDirectoryDoesNotExist(myWorkingDirectory.toAbsolutePath())
       );
     }
     if (!Files.isDirectory(myWorkingDirectory)) {
-      throw new ExecutionException(ProcessLocalize.runConfigurationErrorWorkingDirectoryNotDirectory().get());
+      throw new ExecutionException(ProcessLocalize.runConfigurationErrorWorkingDirectoryNotDirectory());
     }
   }
 
@@ -504,7 +504,7 @@ public class GeneralCommandLine implements UserDataHolder {
       checkWorkingDirectory();
 
       if (myExecutable == null) {
-        throw new ExecutionException(ProcessLocalize.runConfigurationErrorExecutableNotSpecified().get());
+        throw new ExecutionException(ProcessLocalize.runConfigurationErrorExecutableNotSpecified());
       }
 
       commands = CommandLineUtil.toCommandLine(myExecutable.toString(), myProgramParams.getList());
