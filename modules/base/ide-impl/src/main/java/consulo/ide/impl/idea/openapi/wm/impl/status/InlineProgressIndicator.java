@@ -158,7 +158,7 @@ public class InlineProgressIndicator extends ProgressIndicatorBase implements Di
         myText.setText(text);
         myText2.setText(getText2());
 
-        if (myCompact && text == LocalizeValue.empty()) {
+        if (myCompact && text.isEmpty()) {
             myText.setText(LocalizeValue.of(myInfo.getTitle()));
         }
 

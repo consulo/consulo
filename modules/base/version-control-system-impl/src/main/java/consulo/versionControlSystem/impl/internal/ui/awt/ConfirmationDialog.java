@@ -183,17 +183,15 @@ public class ConfirmationDialog extends OptionsMessageDialog {
     
     @Override
     protected LocalizeValue getDoNotShowMessage() {
-        return myDoNotShowAgainMessage.isEmpty() ? super.getDoNotShowMessage() : myDoNotShowAgainMessage;
+        return myDoNotShowAgainMessage.orIfEmpty(() -> super.getDoNotShowMessage());
     }
 
-    
     @Override
     //TODO: rename to getOkActionName() after deprecation removal
     public LocalizeValue getOkActionValue() {
         return myOkActionName;
     }
 
-    
     @Override
     //TODO: rename to getCancelActionName() after deprecation removal
     public LocalizeValue getCancelActionValue() {

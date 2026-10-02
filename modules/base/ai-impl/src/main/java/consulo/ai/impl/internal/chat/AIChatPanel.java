@@ -174,7 +174,7 @@ public class AIChatPanel {
 
     @RequiredUIAccess
     private Label append(LocalizeValue speaker, String text) {
-        if (speaker != LocalizeValue.empty()) {
+        if (speaker.isNotEmpty()) {
             myConversation.add(Label.create(speaker));
         }
 

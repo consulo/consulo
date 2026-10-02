@@ -222,7 +222,8 @@ public class RemoteFileInfoImpl implements RemoteFileInfo {
     @Override
     public String toString() {
         LocalizeValue errorMessage = getErrorMessage();
-        return "state=" + getState() + ", local file=" + myLocalFile + (errorMessage != LocalizeValue.empty() ? ", error=" + errorMessage : "") + (isCancelled() ? ", cancelled" : "");
+        return "state=" + getState() + ", local file=" + myLocalFile +
+            (errorMessage.isNotEmpty() ? ", error=" + errorMessage : "") + (isCancelled() ? ", cancelled" : "");
     }
 
     @Override

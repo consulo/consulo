@@ -155,7 +155,7 @@ public abstract class LanguageCodeStyleSettingsProvider implements CodeStyleSett
     public static LocalizeValue getLanguageName(Language lang) {
         LanguageCodeStyleSettingsProvider provider = forLanguage(lang);
         LocalizeValue providerLangName = provider != null ? provider.getLanguageName() : LocalizeValue.empty();
-        return providerLangName.isNotEmpty() ? providerLangName : lang.getDisplayName();
+        return providerLangName.orIfEmpty(lang::getDisplayName);
     }
 
     public static @Nullable PsiFile createFileFromText(Language language, Project project, String text) {

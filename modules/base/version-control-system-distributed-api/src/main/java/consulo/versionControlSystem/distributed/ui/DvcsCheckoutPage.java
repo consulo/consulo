@@ -235,7 +235,7 @@ public abstract class DvcsCheckoutPage implements CheckoutPage {
             errorLabel.setText(error);
         }
 
-        context.setCheckoutEnabled(error == LocalizeValue.empty() && isFilled());
+        context.setCheckoutEnabled(error.isEmpty() && isFilled());
     }
 
     @RequiredUIAccess
@@ -257,7 +257,7 @@ public abstract class DvcsCheckoutPage implements CheckoutPage {
         }
         else {
             LocalizeValue urlError = findUrlError(url);
-            if (urlError != LocalizeValue.empty()) {
+            if (urlError.isNotEmpty()) {
                 return urlError;
             }
         }

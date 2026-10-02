@@ -10,6 +10,7 @@ import consulo.project.Project;
 import consulo.ui.MessageBoxes;
 import consulo.ui.Component;
 import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.tree.ApplicationTreeExecutorFactory;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.LoadingLayout;
@@ -21,6 +22,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
 
 class FileView {
@@ -44,6 +46,7 @@ class FileView {
 
     private @Nullable Path myFileToSelect;
 
+    @RequiredUIAccess
     FileView(
         UniversalFileChooserContributor contributor,
         FileChooserDescriptor descriptor,
@@ -136,6 +139,7 @@ class FileView {
         return myFileTree.getNewFileParent();
     }
 
+    @RequiredUIAccess
     void deleteSelectedFile() {
         Path selected = myFileTree.getSelectedFile();
         if (selected == null) {
@@ -184,11 +188,10 @@ class FileView {
         }
     }
 
+    @RequiredUIAccess
     void loadRoots() {
         LocalizeValue customLoadingText = myContributor.getCustomLoadingText();
-        myContent.setLoadingText(customLoadingText == LocalizeValue.empty()
-            ? FileChooserLocalize.universalFileChooserLabelLoading()
-            : customLoadingText);
+        myContent.setLoadingText(customLoadingText.orIfEmpty(FileChooserLocalize.universalFileChooserLabelLoading()));
 
         UIAccess uiAccess = UIAccess.current();
         myContent.startLoading(
@@ -228,7 +231,7 @@ class FileView {
         myFileTree.select(file);
     }
 
-    private java.util.concurrent.CompletableFuture<List<UniversalFileChooserContributor.Root>> rootsFuture() {
+    private CompletableFuture<List<UniversalFileChooserContributor.Root>> rootsFuture() {
         if (myEnvironmentRestricted && !myProject.isDefault()) {
             String basePath = myProject.getBasePath();
             if (basePath != null) {
@@ -244,11 +247,13 @@ class FileView {
         }
     }
 
+    @RequiredUIAccess
     private void onSelectionChanged(List<Path> selection) {
         updatePathField(selection);
         myOkEnabledUpdater.run();
     }
 
+    @RequiredUIAccess
     private void updatePathField(List<Path> selection) {
         if (selection.isEmpty()) {
             return;

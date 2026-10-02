@@ -23,7 +23,6 @@ import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.internal.ConfigurableUIMigrationUtil;
 import consulo.ide.impl.base.BaseShowSettingsUtil;
-import consulo.localize.LocalizeKey;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.localize.CommonLocalize;
@@ -106,7 +105,7 @@ public class SingleConfigurableEditor extends DialogWrapper {
         super(parent, true);
         myDimensionKey = dimensionServiceKey;
         myShowApplyButton = showApplyButton;
-        setTitle(title.isEmpty() ? createTitleString(configurable) : title);
+        setTitle(title.orIfEmpty(() -> createTitleString(configurable)));
 
         myParentComponent = parent;
         myConfigurable = configurable;
