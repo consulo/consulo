@@ -66,6 +66,14 @@ public class WebHorizontalTwoComponentSplitLayoutImpl extends VaadinComponentDel
 
     @Override
     @RequiredUIAccess
+    public void setPosition(SplitLayoutPosition position) {
+        toVaadinComponent().setOrientation(position == SplitLayoutPosition.VERTICAL
+            ? SplitLayout.Orientation.VERTICAL
+            : SplitLayout.Orientation.HORIZONTAL);
+    }
+
+    @Override
+    @RequiredUIAccess
     public void setFirstComponent(@Nullable Component component) {
         com.vaadin.flow.component.Component vComponent = TargetVaadin.to(component);
         if (vComponent == null) {

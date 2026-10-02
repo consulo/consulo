@@ -35,7 +35,7 @@ import java.util.List;
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class CompletionConfidence implements LanguageExtension {
   private static final ExtensionPointCacheKey<CompletionConfidence, ByLanguageValue<List<CompletionConfidence>>> KEY =
-          ExtensionPointCacheKey.create("CompletionConfidence", LanguageOneToMany.build(false));
+          ExtensionPointCacheKey.create("CompletionConfidence", LanguageOneToMany.build(true));
 
   
   public static List<CompletionConfidence> forLanguage(Language language) {

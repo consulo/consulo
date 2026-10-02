@@ -15,6 +15,7 @@
  */
 package consulo.ui;
 
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
 
 import java.util.function.BiConsumer;
@@ -39,4 +40,12 @@ public interface Tab {
     void update();
 
     void select();
+
+    @RequiredUIAccess
+    default void setEnabled(boolean enabled) {
+    }
+
+    default boolean isEnabled() {
+        return true;
+    }
 }

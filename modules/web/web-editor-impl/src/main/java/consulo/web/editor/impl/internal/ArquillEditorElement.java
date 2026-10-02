@@ -279,7 +279,7 @@ public class ArquillEditorElement extends Component implements HasSize {
     }
 
     /**
-     * Fired when a run of an inlay is clicked with ctrl/cmd held. The id is the {@code click} the run carried in
+     * Fired when a run of an inlay is clicked. The id is the {@code click} the run carried in
      * the array last passed to {@link #setInlays(String)} - an inlay stands in no document offset, so the
      * {@code arquill-ctrl-click} channel, which reports one, cannot answer for it.
      */
@@ -287,16 +287,27 @@ public class ArquillEditorElement extends Component implements HasSize {
     public static class ArquillInlayClickEvent extends ComponentEvent<ArquillEditorElement> {
         private final int myId;
         private final boolean myControlDown;
+        private final InputDetails myDetails;
 
         public ArquillInlayClickEvent(
             ArquillEditorElement source,
             boolean fromClient,
             @EventData("event.detail.id") int id,
-            @EventData("event.detail.controlDown") boolean controlDown
+            @EventData("event.detail.controlDown") boolean controlDown,
+            @EventData("event.detail.x") int x,
+            @EventData("event.detail.y") int y,
+            @EventData("event.detail.screenX") int screenX,
+            @EventData("event.detail.screenY") int screenY,
+            @EventData("event.detail.button") int button,
+            @EventData("event.detail.alt") boolean alt,
+            @EventData("event.detail.ctrl") boolean ctrl,
+            @EventData("event.detail.shift") boolean shift,
+            @EventData("event.detail.meta") boolean meta
         ) {
             super(source, fromClient);
             myId = id;
             myControlDown = controlDown;
+            myDetails = WebInputDetails.mouse(x, y, screenX, screenY, button, alt, ctrl, shift, meta);
         }
 
         public int getId() {
@@ -305,6 +316,10 @@ public class ArquillEditorElement extends Component implements HasSize {
 
         public boolean isControlDown() {
             return myControlDown;
+        }
+
+        public InputDetails getDetails() {
+            return myDetails;
         }
     }
 

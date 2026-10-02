@@ -35,6 +35,7 @@ public abstract class Animator implements Disposable {
   private final boolean myRepeatable;
 
   private ScheduledFuture<?> myTicker;
+  private volatile int myTickerGeneration;
 
   private int myCurrentFrame;
   private long myStartTime;
@@ -109,6 +110,7 @@ public abstract class Animator implements Disposable {
   }
 
   private void stopTicker() {
+    myTickerGeneration++;
     if (myTicker != null) {
       myTicker.cancel(false);
       myTicker = null;
@@ -148,10 +150,13 @@ public abstract class Animator implements Disposable {
     }
     else if (myTicker == null) {
       UIAccessScheduler scheduler = UIAccess.current().getScheduler();
+      int generation = myTickerGeneration;
       myTicker = scheduler.scheduleWithFixedDelay(new Runnable() {
         @Override
         public void run() {
-          onTick();
+          if (generation == myTickerGeneration) {
+            onTick();
+          }
         }
 
         @Override

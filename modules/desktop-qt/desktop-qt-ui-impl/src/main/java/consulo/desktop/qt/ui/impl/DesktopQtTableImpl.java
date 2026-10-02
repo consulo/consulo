@@ -22,7 +22,6 @@ import consulo.ui.Length;
 import consulo.ui.ComponentItemRender;
 import consulo.ui.HorizontalAlignment;
 import consulo.ui.RenderItem;
-import consulo.ui.SelectionMode;
 import consulo.ui.Table;
 import consulo.ui.TableColumn;
 import consulo.ui.TableItemEditor;
@@ -58,7 +57,7 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableWidget> 
 
     private final List<DesktopQtTableColumnImpl<Item, ?>> myColumns = new ArrayList<>();
 
-    private SelectionMode mySelectionMode = SelectionMode.SINGLE;
+    private boolean myAllowMultipleSelect;
     private boolean myShowHeader = true;
 
     private @Nullable Function<Item, String> mySpeedSearchConverter;
@@ -85,7 +84,9 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableWidget> 
 
     @Override
     protected QTableWidget createQt(QWidget parent) {
-        return new QTableWidget(parent);
+        QTableWidget table = new QTableWidget(parent);
+        table.setItemDelegate(new DesktopQtTextItemDelegate(table));
+        return table;
     }
 
     @Override
@@ -274,6 +275,13 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableWidget> 
             }
         }
 
+        DesktopQtTextItemDelegate.bind(cell, presentation);
+
+        ColorValue cellBackground = presentation.getBackgroundColor();
+        if (cellBackground != null) {
+            cell.setBackground(DesktopQtTextItemDelegate.toBrush(cellBackground));
+        }
+
         component.setItem(row, index, cell);
     }
 
@@ -352,8 +360,8 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableWidget> 
     }
 
     @Override
-    public void setSelectionMode(SelectionMode mode) {
-        mySelectionMode = mode;
+    public void setAllowMultipleSelect(boolean allow) {
+        myAllowMultipleSelect = allow;
 
         updateSelectionMode();
     }
@@ -364,11 +372,9 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableWidget> 
             return;
         }
 
-        component.setSelectionMode(switch (mySelectionMode) {
-            case NONE -> QAbstractItemView.SelectionMode.NoSelection;
-            case SINGLE -> QAbstractItemView.SelectionMode.SingleSelection;
-            case MULTIPLE -> QAbstractItemView.SelectionMode.ExtendedSelection;
-        });
+        component.setSelectionMode(
+            myAllowMultipleSelect ? QAbstractItemView.SelectionMode.ExtendedSelection : QAbstractItemView.SelectionMode.SingleSelection
+        );
     }
 
     @Override

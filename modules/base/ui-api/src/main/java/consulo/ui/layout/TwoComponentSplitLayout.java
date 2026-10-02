@@ -45,6 +45,9 @@ public interface TwoComponentSplitLayout extends Layout<LayoutConstraint> {
      */
     void setProportion(int percent);
 
+    @RequiredUIAccess
+    void setPosition(SplitLayoutPosition position);
+
     default Disposable addSplitProportionChangedListener(ComponentEventListener<TwoComponentSplitLayout, SplitProportionChangedEvent> listener) {
         return addListener(SplitProportionChangedEvent.class, listener);
     }

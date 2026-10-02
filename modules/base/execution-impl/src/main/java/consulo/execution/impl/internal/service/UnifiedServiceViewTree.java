@@ -28,9 +28,9 @@ import consulo.ui.TreeNode;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
-import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.tree.PresentableNodeDescriptor;
 import consulo.ui.ex.tree.PresentationData;
+import consulo.ui.ex.util.TextAttributeUtil;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
@@ -175,7 +175,10 @@ final class UnifiedServiceViewTree {
             List<PresentableNodeDescriptor.ColoredFragment> fragments = data.getColoredText();
             if (fragments.isEmpty()) {
                 String text = data.getPresentableText();
-                presentation.append(LocalizeValue.ofNullable(StringUtil.isEmpty(text) ? item.toString() : text), toTextAttribute(null, forced));
+                presentation.append(
+                    LocalizeValue.ofNullable(StringUtil.isEmpty(text) ? item.toString() : text),
+                    TextAttributeUtil.toTextAttribute(null, forced)
+                );
 
                 String location = data.getLocationString();
                 if (!StringUtil.isEmpty(location)) {
@@ -185,25 +188,8 @@ final class UnifiedServiceViewTree {
             }
 
             for (PresentableNodeDescriptor.ColoredFragment fragment : fragments) {
-                presentation.append(fragment.getText(), toTextAttribute(fragment.getAttributes(), forced));
+                presentation.append(fragment.getText(), TextAttributeUtil.toTextAttribute(fragment.getAttributes(), forced));
             }
-        }
-
-        private static TextAttribute toTextAttribute(@Nullable SimpleTextAttributes attributes, @Nullable ColorValue forced) {
-            int style = 0;
-            ColorValue foreground = null;
-            ColorValue background = null;
-            if (attributes != null) {
-                if ((attributes.getStyle() & SimpleTextAttributes.STYLE_BOLD) != 0) {
-                    style |= TextAttribute.STYLE_BOLD;
-                }
-                if ((attributes.getStyle() & SimpleTextAttributes.STYLE_ITALIC) != 0) {
-                    style |= TextAttribute.STYLE_ITALIC;
-                }
-                foreground = attributes.foreground();
-                background = attributes.background();
-            }
-            return new TextAttribute(style, foreground == null ? forced : foreground, background);
         }
     }
 }

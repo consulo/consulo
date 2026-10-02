@@ -23,7 +23,6 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.Length;
 import consulo.web.ui.impl.internal.vaadin.WebLength;
 import consulo.ui.Component;
-import consulo.ui.SelectionMode;
 import consulo.ui.Table;
 import consulo.ui.TableColumn;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -62,6 +61,7 @@ public class WebTableImpl<Item> extends VaadinComponentDelegate<WebTableImpl<Ite
 
     private @Nullable Function<Item, Length> myItemHeightGetter;
     private @Nullable Function<Item, String> mySpeedSearchConverter;
+    private boolean myAllowMultipleSelect;
 
     public WebTableImpl(FlatDataModel<Item> model) {
         myModel = model;
@@ -73,6 +73,15 @@ public class WebTableImpl<Item> extends VaadinComponentDelegate<WebTableImpl<Ite
 
         model.addListener(event -> grid.setItems(new ListDataProvider<>(ContainerUtil.collect(model.iterator()))));
 
+        installSelectionListener();
+
+        grid.addItemDoubleClickListener(event ->
+            getListenerDispatcher(TableDoubleClickEvent.class)
+                .onEvent(new TableDoubleClickEvent(this, event.getItem(), WebInputDetails.details(event))));
+    }
+
+    private void installSelectionListener() {
+        Vaadin grid = toVaadinComponent();
         grid.addSelectionListener(event -> {
             List<Item> selected = new ArrayList<>(event.getAllSelectedItems());
 
@@ -82,10 +91,6 @@ public class WebTableImpl<Item> extends VaadinComponentDelegate<WebTableImpl<Ite
 
             getListenerDispatcher(TableSelectEvent.class).onEvent(new TableSelectEvent(this, selected));
         });
-
-        grid.addItemDoubleClickListener(event ->
-            getListenerDispatcher(TableDoubleClickEvent.class)
-                .onEvent(new TableDoubleClickEvent(this, event.getItem(), WebInputDetails.details(event))));
     }
 
     @Override
@@ -137,12 +142,16 @@ public class WebTableImpl<Item> extends VaadinComponentDelegate<WebTableImpl<Ite
     }
 
     @Override
-    public void setSelectionMode(SelectionMode mode) {
-        toVaadinComponent().setSelectionMode(switch (mode) {
-            case NONE -> Grid.SelectionMode.NONE;
-            case SINGLE -> Grid.SelectionMode.SINGLE;
-            case MULTIPLE -> Grid.SelectionMode.MULTI;
-        });
+    public void setAllowMultipleSelect(boolean allow) {
+        if (myAllowMultipleSelect == allow) {
+            return;
+        }
+
+        myAllowMultipleSelect = allow;
+
+        toVaadinComponent().setSelectionMode(allow ? Grid.SelectionMode.MULTI : Grid.SelectionMode.SINGLE);
+
+        installSelectionListener();
     }
 
     @Override

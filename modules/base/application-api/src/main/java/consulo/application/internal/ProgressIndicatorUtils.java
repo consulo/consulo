@@ -96,6 +96,53 @@ public class ProgressIndicatorUtils {
         return runInReadActionWithWriteActionPriority(action, null);
     }
 
+    /**
+     * Repeatedly tries to run given task in read action without blocking write actions (for this to work effectively the action should invoke
+     * {@link ProgressManager#checkCanceled()} or {@link ProgressIndicator#checkCanceled()} often enough).
+     *
+     * @param action              task to run
+     * @param timeout             timeout in milliseconds
+     * @param pauseBetweenRetries pause between retries in milliseconds
+     * @param progressIndicator   optional progress indicator, which can be used to cancel the action externally
+     * @return {@code true} if the action succeeded to run without interruptions, {@code false} otherwise
+     */
+    public static boolean runInReadActionWithWriteActionPriorityWithRetries(
+        Runnable action,
+        long timeout,
+        long pauseBetweenRetries,
+        @Nullable ProgressIndicator progressIndicator
+    ) {
+        boolean result;
+        long deadline = System.currentTimeMillis() + timeout;
+        while (!(result = runInReadActionWithWriteActionPriority(
+            action,
+            progressIndicator == null ? null : new SensitiveProgressWrapper(progressIndicator)
+        )) && (progressIndicator == null || !progressIndicator.isCanceled())
+            && System.currentTimeMillis() < deadline) {
+            try {
+                TimeUnit.MILLISECONDS.sleep(pauseBetweenRetries);
+            }
+            catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                return false;
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Same as {@link #runInReadActionWithWriteActionPriorityWithRetries(Runnable, long, long, ProgressIndicator)} using current thread's
+     * progress indicator ({@link ProgressManager#getProgressIndicator()}).
+     */
+    public static boolean runInReadActionWithWriteActionPriorityWithRetries(Runnable action, long timeout, long pauseBetweenRetries) {
+        return runInReadActionWithWriteActionPriorityWithRetries(
+            action,
+            timeout,
+            pauseBetweenRetries,
+            ProgressIndicatorProvider.getGlobalProgressIndicator()
+        );
+    }
+
     public static boolean runWithWriteActionPriority(Runnable action, ProgressIndicator progressIndicator) {
         ApplicationEx application = (ApplicationEx) Application.get();
         if (application.isDispatchThread()) {

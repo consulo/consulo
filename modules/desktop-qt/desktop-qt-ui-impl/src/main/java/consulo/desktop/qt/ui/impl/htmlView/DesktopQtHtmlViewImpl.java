@@ -16,15 +16,19 @@
 package consulo.desktop.qt.ui.impl.htmlView;
 
 import consulo.desktop.qt.ui.impl.DesktopQtCurrentInput;
+import consulo.desktop.qt.ui.impl.DesktopQtInputDetails;
 import consulo.desktop.qt.ui.impl.QtComponentDelegate;
 import consulo.desktop.qt.ui.impl.image.DesktopQtImage;
 import consulo.logging.Logger;
 import consulo.ui.HtmlView;
 import consulo.ui.UIAccess;
+import consulo.ui.event.HtmlViewDoubleClickEvent;
 import consulo.ui.event.HyperlinkEvent;
 import consulo.ui.image.Image;
 import consulo.util.io.StreamUtil;
 import io.qt.core.QUrl;
+import io.qt.core.Qt;
+import io.qt.gui.QMouseEvent;
 import io.qt.gui.QPixmap;
 import io.qt.gui.QTextDocument;
 import io.qt.widgets.QFrame;
@@ -69,6 +73,17 @@ public class DesktopQtHtmlViewImpl extends QtComponentDelegate<QTextBrowser> imp
             }
 
             return super.loadResource(type, name);
+        }
+
+        @Override
+        protected void mouseDoubleClickEvent(QMouseEvent event) {
+            super.mouseDoubleClickEvent(event);
+
+            if (event.button() == Qt.MouseButton.LeftButton) {
+                getListenerDispatcher(HtmlViewDoubleClickEvent.class).onEvent(
+                    new HtmlViewDoubleClickEvent(DesktopQtHtmlViewImpl.this, DesktopQtInputDetails.mouse(this, event))
+                );
+            }
         }
     }
 

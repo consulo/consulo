@@ -21,6 +21,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorPopupHelper;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
+import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.PopupAction;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.Language;
@@ -138,6 +139,6 @@ public class GotoCustomRegionAction extends LegacyDumbAwareAction implements Pop
             .setHideOnKeyOutside(true)
             .createBalloon();
         Disposer.register(project, balloon);
-        balloon.show(EditorPopupHelper.getInstance().guessBestPopupLocation(editor), Balloon.Position.below);
+        balloon.show(RelativePoint.from(EditorPopupHelper.getInstance().guessBestPopupLocation(editor)), Balloon.Position.below);
     }
 }

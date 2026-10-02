@@ -2,6 +2,8 @@ package consulo.util.io;
 
 import org.jspecify.annotations.Nullable;
 
+import java.util.Map;
+
 // We don't use Java URI due to problem — http://cns-etuat-2.localnet.englishtown.com/school/e12/#school/45383/201/221/382?c=countrycode=cc|culturecode=en-us|partnercode=mkge
 // it is illegal URI (fragment before query), but we must support such URI
 // Semicolon as parameters separator is supported (WEB-6671)
@@ -27,4 +29,13 @@ public interface Url {
   Url trimParameters();
 
   int hashCodeCaseInsensitive();
+
+  /**
+   * Creates a new url with added parameters.
+   */
+  Url addParameters(Map<String, String> parameters);
+
+  default Url removeParameter(String name) {
+    return this;
+  }
 }

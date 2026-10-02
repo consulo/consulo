@@ -925,7 +925,7 @@ public abstract class InplaceRefactoring {
                             topLevelEditor.offsetToVisualPosition(myCaretRangeMarker.getStartOffset())
                         );
                     }
-                    RelativePoint target = editorPopupHelper.guessBestPopupLocation(topLevelEditor);
+                    RelativePoint target = RelativePoint.from(editorPopupHelper.guessBestPopupLocation(topLevelEditor));
                     Point screenPoint = target.getScreenPoint();
                     int y = screenPoint.y;
                     if (target.getPoint().getY() > topLevelEditor.getLineHeight() + myBalloon.getPreferredSize().getHeight()) {

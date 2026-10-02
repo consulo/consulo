@@ -691,7 +691,7 @@ public class AbstractPopup implements AWTPopup, ScreenAreaConsumer {
 
    
     private RelativePoint guessBestPopupLocation(Editor editor) {
-        RelativePoint preferredLocation = EditorPopupHelper.getInstance().guessBestPopupLocation(editor);
+        RelativePoint preferredLocation = RelativePoint.from(EditorPopupHelper.getInstance().guessBestPopupLocation(editor));
         Dimension targetSize = getSizeForPositioning();
         Point preferredPoint = preferredLocation.getScreenPoint();
         Point result = getLocationAboveEditorLineIfPopupIsClippedAtTheBottom(preferredPoint, targetSize, editor);

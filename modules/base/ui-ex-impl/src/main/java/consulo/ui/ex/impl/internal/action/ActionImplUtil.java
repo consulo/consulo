@@ -29,6 +29,8 @@ import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.internal.DumbInternalUtil;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.details.InputDetails;
+import consulo.ui.event.details.MouseInputDetails;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.internal.ActionManagerEx;
@@ -331,6 +333,23 @@ public class ActionImplUtil {
                 || (event instanceof MouseEvent me && UIUtil.isControlKeyDown(me));
             default -> false;
         };
+    }
+
+    public static boolean isKeepPopupOpen(KeepPopupOnPerform mode, @Nullable InputDetails details) {
+        return switch (mode) {
+            case NEVER -> false;
+            case ALWAYS -> true;
+            case IF_REQUESTED -> isControlKeyDown(details);
+            case IF_PREFERRED -> UISettings.getInstance().getKeepPopupsForToggles() || isControlKeyDown(details);
+            default -> false;
+        };
+    }
+
+    private static boolean isControlKeyDown(@Nullable InputDetails details) {
+        if (!(details instanceof MouseInputDetails mouse)) {
+            return false;
+        }
+        return Platform.current().os().isMac() ? mouse.withMeta() : mouse.withCtrl();
     }
 
     public static List<AnAction> getActions(JComponent component) {

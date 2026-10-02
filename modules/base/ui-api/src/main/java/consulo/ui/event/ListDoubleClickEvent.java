@@ -15,7 +15,7 @@
  */
 package consulo.ui.event;
 
-import consulo.ui.ListBox;
+import consulo.ui.ListBoxBase;
 import consulo.ui.event.details.InputDetails;
 import consulo.ui.event.details.ProgrammaticInputDetails;
 import org.jspecify.annotations.Nullable;
@@ -24,14 +24,14 @@ import org.jspecify.annotations.Nullable;
  * @author VISTALL
  * @since 2026-08-08
  */
-public final class ListDoubleClickEvent<Item> extends ComponentEvent<ListBox<Item>> {
+public final class ListDoubleClickEvent<Item> extends ComponentEvent<ListBoxBase<Item>> {
     private final @Nullable Item myValue;
 
-    public ListDoubleClickEvent(ListBox<Item> component, @Nullable Item value) {
+    public ListDoubleClickEvent(ListBoxBase<Item> component, @Nullable Item value) {
         this(component, value, ProgrammaticInputDetails.INSTANCE);
     }
 
-    public ListDoubleClickEvent(ListBox<Item> component, @Nullable Item value, InputDetails inputDetails) {
+    public ListDoubleClickEvent(ListBoxBase<Item> component, @Nullable Item value, InputDetails inputDetails) {
         super(component, inputDetails);
         myValue = value;
     }

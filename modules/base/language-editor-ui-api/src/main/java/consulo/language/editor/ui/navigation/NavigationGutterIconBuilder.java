@@ -22,6 +22,7 @@ import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.language.editor.Pass;
 import consulo.language.editor.annotation.Annotation;
 import consulo.language.editor.annotation.AnnotationHolder;
+import consulo.language.editor.gutter.GutterIconNavigationHandler;
 import consulo.language.editor.gutter.LineMarkerInfo;
 import consulo.language.editor.gutter.RelatedItemLineMarkerInfo;
 import consulo.language.navigation.GotoRelatedItem;
@@ -53,20 +54,20 @@ public class NavigationGutterIconBuilder<T> {
 
     protected static final Function DEFAULT_NAMER = dom -> TypePresentationService.getInstance().getTypeNameOrStub(dom);
 
-    private final Image myIcon;
+    protected final Image myIcon;
     private final Function<T, Collection<? extends PsiElement>> myConverter;
 
     protected Supplier<Collection<? extends T>> myTargets;
     protected boolean myLazy;
     
-    private LocalizeValue myTooltipText = LocalizeValue.empty();
+    protected LocalizeValue myTooltipText = LocalizeValue.empty();
     
-    private LocalizeValue myPopupTitle = LocalizeValue.empty();
+    protected LocalizeValue myPopupTitle = LocalizeValue.empty();
     
-    private LocalizeValue myEmptyText = LocalizeValue.empty();
+    protected LocalizeValue myEmptyText = LocalizeValue.empty();
     
     private LocalizeValue myTooltipTitle = LocalizeValue.empty();
-    private GutterIconRenderer.Alignment myAlignment = GutterIconRenderer.Alignment.CENTER;
+    protected GutterIconRenderer.Alignment myAlignment = GutterIconRenderer.Alignment.CENTER;
     private @Nullable TargetPresentationProvider<PsiElement> myPresentationProvider;
     private Function<T, String> myNamer = createDefaultNamer();
     private final Function<T, Collection<? extends GotoRelatedItem>> myGotoRelatedItemProvider;
@@ -203,7 +204,7 @@ public class NavigationGutterIconBuilder<T> {
     }
 
     protected Annotation doInstall(Annotation annotation, Project project) {
-        MyNavigationGutterIconRenderer renderer = createGutterIconRenderer(project);
+        NavigationGutterIconRenderer renderer = createGutterIconRenderer(project, null);
         annotation.setGutterIconRenderer(renderer);
         annotation.setNeedsUpdateOnTyping(false);
         return annotation;
@@ -211,7 +212,16 @@ public class NavigationGutterIconBuilder<T> {
 
     @RequiredReadAction
     public RelatedItemLineMarkerInfo<PsiElement> createLineMarkerInfo(PsiElement element) {
-        MyNavigationGutterIconRenderer renderer = createGutterIconRenderer(element.getProject());
+        NavigationGutterIconRenderer renderer = createGutterIconRenderer(element.getProject(), null);
+        return createLineMarkerInfo(element, renderer.isNavigateAction() ? renderer : null);
+    }
+
+    @RequiredReadAction
+    public RelatedItemLineMarkerInfo<PsiElement> createLineMarkerInfo(
+        PsiElement element,
+        @Nullable GutterIconNavigationHandler<PsiElement> navigationHandler
+    ) {
+        NavigationGutterIconRenderer renderer = createGutterIconRenderer(element.getProject(), navigationHandler);
         LocalizeValue tooltip = renderer.getTooltipValue();
         Supplier<Collection<? extends GotoRelatedItem>> gotoTargets = LazyValue.notNull(() -> {
             if (myGotoRelatedItemProvider != null) {
@@ -225,7 +235,7 @@ public class NavigationGutterIconBuilder<T> {
             renderer.getIcon(),
             Pass.LINE_MARKERS,
             tooltip.isEmpty() ? null : i -> tooltip.get(),
-            renderer.isNavigateAction() ? renderer : null,
+            navigationHandler,
             renderer.getAlignment(),
             gotoTargets
         );
@@ -235,7 +245,10 @@ public class NavigationGutterIconBuilder<T> {
         assert myTargets != null : "Must have called .setTargets() before calling create()";
     }
 
-    private MyNavigationGutterIconRenderer createGutterIconRenderer(Project project) {
+    public NavigationGutterIconRenderer createGutterIconRenderer(
+        Project project,
+        @Nullable GutterIconNavigationHandler<PsiElement> navigationHandler
+    ) {
         checkBuilt();
         SmartPointerManager manager = SmartPointerManager.getInstance(project);
 
@@ -274,7 +287,25 @@ public class NavigationGutterIconBuilder<T> {
             myTooltipText = LocalizeValue.of(sb.toString());
         }
 
-        return new MyNavigationGutterIconRenderer(this, myAlignment, myIcon, myTooltipText, pointers, myPresentationProvider, empty);
+        return createGutterIconRenderer(pointers, myPresentationProvider, empty, navigationHandler);
+    }
+
+    protected NavigationGutterIconRenderer createGutterIconRenderer(
+        Supplier<List<SmartPsiElementPointer>> pointers,
+        @Nullable TargetPresentationProvider<PsiElement> presentationProvider,
+        boolean empty,
+        @Nullable GutterIconNavigationHandler<PsiElement> navigationHandler
+    ) {
+        return new MyNavigationGutterIconRenderer(
+            this,
+            myAlignment,
+            myIcon,
+            myTooltipText,
+            pointers,
+            presentationProvider,
+            empty,
+            navigationHandler
+        );
     }
 
     private boolean isEmpty() {
@@ -307,9 +338,10 @@ public class NavigationGutterIconBuilder<T> {
             LocalizeValue tooltipText,
             Supplier<List<SmartPsiElementPointer>> pointers,
             @Nullable TargetPresentationProvider<PsiElement> presentationProvider,
-            boolean empty
+            boolean empty,
+            @Nullable GutterIconNavigationHandler<PsiElement> navigationHandler
         ) {
-            super(builder.myPopupTitle, builder.myEmptyText, presentationProvider, pointers);
+            super(builder.myPopupTitle, builder.myEmptyText, presentationProvider, pointers, navigationHandler);
             myAlignment = alignment;
             myIcon = icon;
             myTooltipText = tooltipText;

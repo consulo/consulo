@@ -152,6 +152,8 @@
                 <include>consulo:consulo-module-ui-api</include>
                 <include>consulo:consulo-web-browser-api</include>
                 <include>consulo:consulo-web-browser-impl</include>
+                <include>consulo:consulo-endpoint-api</include>
+                <include>consulo:consulo-endpoint-impl</include>
                 <include>consulo:consulo-version-control-system-api</include>
                 <include>consulo:consulo-version-control-system-impl</include>
                 <include>consulo:consulo-version-control-system-distributed-api</include>

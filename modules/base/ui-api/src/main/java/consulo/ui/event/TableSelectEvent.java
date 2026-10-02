@@ -23,7 +23,7 @@ import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 /**
- * Carries a list rather than one value, since {@code SelectionMode.MULTIPLE} exists.
+ * Carries a list rather than one value, since a table may allow several items to be selected at once.
  *
  * @author VISTALL
  * @since 2026-08-02

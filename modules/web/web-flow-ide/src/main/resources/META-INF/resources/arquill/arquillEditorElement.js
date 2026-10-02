@@ -358,7 +358,7 @@
 
             fireHover(modifier && !overInlayAction ? offset : -1);
 
-            const html = tooltipAt(offset);
+            const html = inlayTooltipAt(domEvent) || tooltipAt(offset);
             if (html) {
                 showTooltip(html, domEvent.clientX, domEvent.clientY);
             }
@@ -394,6 +394,34 @@
             return span && element.contains(span) ? Number(span.getAttribute('data-arquill-inlay-click')) : -1;
         };
 
+        const inlayPlainActionAt = domEvent => {
+            const span = domEvent.target instanceof Element
+                ? domEvent.target.closest('[data-arquill-inlay-plain]')
+                : null;
+
+            return span && element.contains(span) ? Number(span.getAttribute('data-arquill-inlay-click')) : -1;
+        };
+
+        const inlayTooltipAt = domEvent => {
+            const span = domEvent.target instanceof Element
+                ? domEvent.target.closest('[data-arquill-inlay-tooltip]')
+                : null;
+
+            return span && element.contains(span) ? span.getAttribute('data-arquill-inlay-tooltip') : null;
+        };
+
+        const fireInlayClick = (id, domEvent) => {
+            const root = element.closest('[data-arquill-editor-root]') || element;
+            const rootRect = root.getBoundingClientRect();
+            element.dispatchEvent(new CustomEvent('arquill-inlay-click', {
+                detail: Object.assign(gutterClickDetail(id, domEvent), {
+                    x: Math.round(domEvent.clientX - rootRect.left),
+                    y: Math.round(domEvent.clientY - rootRect.top),
+                    controlDown: domEvent.ctrlKey || domEvent.metaKey
+                })
+            }));
+        };
+
         element.addEventListener('mousedown', domEvent => {
             // a plain click on a placeholder opens the region, the way the awt editor does - taken before the
             // caret is placed, since the offsets of a projection all map outside the view
@@ -405,6 +433,16 @@
 
                     element.classList.remove('arquill-fold-hover');
                     placeholder.expand();
+                    return;
+                }
+
+                const plainInlayClick = inlayPlainActionAt(domEvent);
+                if (plainInlayClick >= 0) {
+                    domEvent.preventDefault();
+                    domEvent.stopPropagation();
+
+                    hideTooltip();
+                    fireInlayClick(plainInlayClick, domEvent);
                     return;
                 }
             }
@@ -420,9 +458,7 @@
             if (inlayClick >= 0) {
                 domEvent.preventDefault();
                 fireHover(-1);
-                element.dispatchEvent(new CustomEvent('arquill-inlay-click', {
-                    detail: { id: inlayClick, controlDown: domEvent.ctrlKey || domEvent.metaKey }
-                }));
+                fireInlayClick(inlayClick, domEvent);
                 return;
             }
 
@@ -1840,11 +1876,25 @@
                     if (text && segment.style) {
                         // a run which reaches an action is marked on the span itself - the click is answered by
                         // what it stands for and not by where it is, which is nowhere the document knows about
-                        const style = segment.click === undefined
+                        const attributes = {};
+                        if (segment.click !== undefined) {
+                            attributes['data-arquill-inlay-click'] = String(segment.click);
+                        }
+                        if (segment.plain) {
+                            attributes['data-arquill-inlay-plain'] = 'true';
+                        }
+                        if (segment.image) {
+                            attributes['data-arquill-inlay-image'] = segment.image;
+                        }
+                        if (segment.tooltip) {
+                            attributes['data-arquill-inlay-tooltip'] = segment.tooltip;
+                        }
+
+                        const style = Object.keys(attributes).length === 0
                             ? segment.style
                             : Object.assign({}, segment.style, {
-                                styleClass: (segment.style.styleClass || '') + ' arquill-inlay-action',
-                                attributes: { 'data-arquill-inlay-click': String(segment.click) }
+                                styleClass: (segment.style.styleClass || '') + (segment.click === undefined ? '' : ' arquill-inlay-action'),
+                                attributes: attributes
                             });
 
                         styles.push({ start: start, end: start + text.length, style: style, inlay: true });
@@ -1856,6 +1906,30 @@
 
             return styles;
         };
+
+        const decorateInlayImages = () => {
+            for (const span of element.querySelectorAll('[data-arquill-inlay-image]')) {
+                const html = span.getAttribute('data-arquill-inlay-image');
+                if (span.$arquillInlayImage === html) {
+                    continue;
+                }
+
+                span.$arquillInlayImage = html;
+
+                while (span.childNodes.length > 1) {
+                    span.removeChild(span.lastChild);
+                }
+
+                const holder = document.createElement('span');
+                holder.className = 'arquill-inlay-image-holder';
+                holder.setAttribute('contenteditable', 'false');
+                holder.innerHTML = html;
+                span.appendChild(holder);
+            }
+        };
+
+        const inlayImageObserver = new MutationObserver(decorateInlayImages);
+        inlayImageObserver.observe(element.querySelector('.textviewContent') || element, { childList: true, subtree: true });
 
         // orion will put the caret inside a projection, and an offset in there maps to no document offset at all -
         // the platform would keep the caret it had and quietly disagree with what is on screen. neither an inlay
@@ -2617,6 +2691,8 @@
                 tooltip.remove();
 
                 document.removeEventListener('keyup', onKeyUp);
+
+                inlayImageObserver.disconnect();
 
                 clearTimeout(floatingToolbarTimer);
 

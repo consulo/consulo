@@ -45,6 +45,7 @@ class WebTabImpl implements Tab {
     private @Nullable WebActionContextMenu myPopupMenu;
     private @Nullable String myPopupGroupId;
     private @Nullable String myPopupPlace;
+    private boolean myEnabled = true;
 
     public WebTabImpl(WebTabbedLayoutImpl tabbedLayout) {
         myTabbedLayout = tabbedLayout;
@@ -94,6 +95,23 @@ class WebTabImpl implements Tab {
 
     public BiConsumer<Tab, TextItemPresentation> getRenderer() {
         return myRenderer;
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void setEnabled(boolean enabled) {
+        if (myEnabled == enabled) {
+            return;
+        }
+
+        myEnabled = enabled;
+
+        myTabbedLayout.applyEnabled(this);
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return myEnabled;
     }
 
     @Override

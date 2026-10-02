@@ -22,6 +22,7 @@ import consulo.ui.Component;
 import consulo.ui.Tab;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.TabSelectEvent;
+import consulo.ui.internal.TabSelectionUtil;
 import consulo.ui.ex.awt.JBTabbedPane;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.layout.TabbedLayout;
@@ -90,6 +91,8 @@ public class DesktopTabbedLayoutImpl extends SwingComponentDelegate<JTabbedPane>
 
         desktopTab.update();
 
+        applyEnabled(desktopTab);
+
         return tab;
     }
 
@@ -116,6 +119,26 @@ public class DesktopTabbedLayoutImpl extends SwingComponentDelegate<JTabbedPane>
 
     int indexOf(DesktopTabImpl tab) {
         return myTabs.indexOf(tab);
+    }
+
+    void applyEnabled(DesktopTabImpl tab) {
+        tab.updateEnabledLook();
+
+        int index = myTabs.indexOf(tab);
+        if (index == -1) {
+            return;
+        }
+
+        JTabbedPane pane = toAWTComponent();
+        boolean enabled = tab.isEnabled();
+        if (!enabled && pane.getSelectedIndex() == index) {
+            int target = TabSelectionUtil.findSelectionOnDisable(index, myTabs.size(), i -> myTabs.get(i).isEnabled());
+            if (target != -1) {
+                pane.setSelectedIndex(target);
+            }
+        }
+
+        pane.setEnabledAt(index, enabled);
     }
 
     @Override

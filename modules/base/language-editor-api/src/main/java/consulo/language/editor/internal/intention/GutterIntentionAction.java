@@ -38,7 +38,7 @@ public class GutterIntentionAction implements Comparable<IntentionAction>, Icona
     @Override
     @RequiredUIAccess
     public void invoke(Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
-        RelativePoint relativePoint = EditorPopupHelper.getInstance().guessBestPopupLocation(editor);
+        RelativePoint relativePoint = RelativePoint.from(EditorPopupHelper.getInstance().guessBestPopupLocation(editor));
         myAction.actionPerformed(new AnActionEvent(
             relativePoint.toMouseEvent(),
             editor.getDataContext(),

@@ -17,23 +17,32 @@ package consulo.desktop.qt.editor.impl.internal;
 
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.EditorSettings;
+import consulo.codeEditor.Inlay;
 import consulo.codeEditor.SelectionModel;
 import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.event.EditorMouseEvent;
 import consulo.codeEditor.event.EditorMouseEventArea;
 import consulo.desktop.qt.ui.impl.DesktopQtInputDetails;
+import consulo.desktop.qt.ui.impl.DesktopQtKeymapWidget;
+import consulo.desktop.qt.ui.impl.QtComponentDelegate;
 import consulo.document.Document;
 import consulo.document.DocCommandGroupId;
+import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
 import consulo.project.Project;
+import consulo.ui.Component;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.details.KeyCode;
 import consulo.undoRedo.CommandProcessor;
 import io.qt.core.QCoreApplication;
+import io.qt.core.QEvent;
+import io.qt.core.QPoint;
 import io.qt.core.QRect;
 import io.qt.core.QSize;
 import io.qt.core.QTimer;
 import io.qt.core.Qt;
 import io.qt.gui.QCursor;
+import io.qt.gui.QHelpEvent;
 import io.qt.gui.QKeyEvent;
 import io.qt.gui.QMouseEvent;
 import io.qt.gui.QPaintEvent;
@@ -42,6 +51,7 @@ import io.qt.gui.QResizeEvent;
 import io.qt.widgets.QAbstractScrollArea;
 import io.qt.widgets.QApplication;
 import io.qt.widgets.QSizePolicy;
+import io.qt.widgets.QToolTip;
 import io.qt.widgets.QWidget;
 
 import java.awt.Point;
@@ -57,7 +67,7 @@ import java.awt.Point;
  * @author VISTALL
  * @since 2026-08-16
  */
-public class DesktopQtEditorWidget extends QAbstractScrollArea {
+public class DesktopQtEditorWidget extends QAbstractScrollArea implements DesktopQtKeymapWidget {
     private static int ourKeyPressDepth;
 
     private final DesktopQtEditorImpl myEditor;
@@ -238,9 +248,7 @@ public class DesktopQtEditorWidget extends QAbstractScrollArea {
         // a hint answers the click itself when it says it does, and the caret must not move to a place it has no
         // offset for - it stands between two characters rather than on one
         DesktopQtEditorCoordinateMapper.InlayHit hit = myEditor.inlayAt(documentPoint(event));
-        if (hit != null
-            && event.button() == Qt.MouseButton.LeftButton
-            && myEditor.getInlays().click(hit.inlay(), hit.xInInlay(), isNavigationModifier(event.modifiers()))) {
+        if (hit != null && event.button() == Qt.MouseButton.LeftButton && clickInlay(event, hit)) {
             event.accept();
             return;
         }
@@ -325,8 +333,61 @@ public class DesktopQtEditorWidget extends QAbstractScrollArea {
         );
     }
 
+    @RequiredUIAccess
+    private boolean clickInlay(QMouseEvent event, DesktopQtEditorCoordinateMapper.InlayHit hit) {
+        EditorMouseEvent inlayEvent = inlayEvent(event, hit.inlay().inlay());
+        return myEditor.getInlays().click(hit.inlay(), hit.xInInlay(), inlayEvent, isNavigationModifier(event.modifiers()));
+    }
+
+    private EditorMouseEvent inlayEvent(QMouseEvent event, Inlay<?> inlay) {
+        int offset = inlay.getOffset();
+        LogicalPosition logicalPosition = myEditor.offsetToLogicalPosition(offset);
+
+        return new EditorMouseEvent(
+            myEditor,
+            DesktopQtInputDetails.mouse(uiComponentWidget(), event),
+            false,
+            EditorMouseEventArea.EDITING_AREA,
+            offset,
+            logicalPosition,
+            myEditor.logicalToVisualPosition(logicalPosition),
+            false,
+            null,
+            inlay,
+            null
+        );
+    }
+
+    private QWidget uiComponentWidget() {
+        Component component = myEditor.getUIComponent();
+        QWidget widget = component instanceof QtComponentDelegate<?> delegate ? delegate.toQtComponent() : null;
+        return widget != null && !widget.isDisposed() ? widget : viewport();
+    }
+
     private void updateLinkUnderPointer(QMouseEvent event) {
+        DesktopQtEditorCoordinateMapper.InlayHit hit = myEditor.inlayAt(documentPoint(event));
+        myEditor.getInlays().updateCursor(
+            hit == null ? null : hit.inlay(),
+            hit == null ? 0 : hit.xInInlay(),
+            isNavigationModifier(event.modifiers())
+        );
+
         myEditor.fireMouseMoved(editingAreaEvent(event));
+    }
+
+    @Override
+    protected boolean viewportEvent(QEvent event) {
+        if (event.type() == QEvent.Type.ToolTip && event instanceof QHelpEvent help) {
+            DesktopQtEditorCoordinateMapper.InlayHit hit = myEditor.inlayAt(documentPoint(help.pos()));
+            LocalizeValue tooltip = hit == null ? LocalizeValue.empty() : myEditor.getInlays().tooltipAt(hit.inlay(), hit.xInInlay());
+            if (tooltip.isNotEmpty()) {
+                QToolTip.showText(help.globalPos(), tooltip.get(), viewport());
+                return true;
+            }
+
+            QToolTip.hideText();
+        }
+        return super.viewportEvent(event);
     }
 
     /**
@@ -415,7 +476,11 @@ public class DesktopQtEditorWidget extends QAbstractScrollArea {
     }
 
     private Point documentPoint(QMouseEvent event) {
-        return new Point(event.pos().x() + horizontalScrollBar().value(), event.pos().y() + verticalScrollBar().value());
+        return documentPoint(event.pos());
+    }
+
+    private Point documentPoint(QPoint point) {
+        return new Point(point.x() + horizontalScrollBar().value(), point.y() + verticalScrollBar().value());
     }
 
     private int offsetAt(QMouseEvent event) {
@@ -448,6 +513,22 @@ public class DesktopQtEditorWidget extends QAbstractScrollArea {
         finally {
             ourKeyPressDepth--;
         }
+    }
+
+    @Override
+    protected void keyReleaseEvent(QKeyEvent event) {
+        int key = event.key();
+        if (key == Qt.Key.Key_Control.value() || key == Qt.Key.Key_Meta.value()) {
+            QPoint point = viewport().mapFromGlobal(QCursor.pos());
+            DesktopQtEditorCoordinateMapper.InlayHit hit = viewport().rect().contains(point) ? myEditor.inlayAt(documentPoint(point)) : null;
+            myEditor.getInlays().updateCursor(
+                hit == null ? null : hit.inlay(),
+                hit == null ? 0 : hit.xInInlay(),
+                isNavigationModifier(event.modifiers())
+            );
+        }
+
+        super.keyReleaseEvent(event);
     }
 
     @Override

@@ -303,7 +303,7 @@ class PsiTargetNavigatorImpl<T extends PsiElement> implements PsiTargetNavigator
             point = RelativePoint.fromScreen(myEvent);
         }
         else if (myEditor != null) {
-            point = EditorPopupHelper.getInstance().guessBestPopupLocation(myEditor);
+            point = RelativePoint.from(EditorPopupHelper.getInstance().guessBestPopupLocation(myEditor));
         }
         else {
             return;

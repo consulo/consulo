@@ -1,0 +1,113 @@
+// Copyright 2000-2025 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
+package consulo.document.util;
+
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
+import static java.util.Collections.emptySet;
+
+public final class PlaceholderTextRanges {
+    private PlaceholderTextRanges() {
+    }
+
+    /**
+     * @see #getPlaceholderRanges(String, String, String, boolean, boolean)
+     */
+    public static Set<TextRange> getPlaceholderRanges(String s, String prefix, String suffix) {
+        return getPlaceholderRanges(s, prefix, suffix, false);
+    }
+
+    /**
+     * @see #getPlaceholderRanges(String, String, String, boolean, boolean)
+     */
+    public static Set<TextRange> getPlaceholderRanges(String s, String prefix, String suffix, boolean useFullTextRange) {
+        return getPlaceholderRanges(s, prefix, suffix, useFullTextRange, false);
+    }
+
+    /**
+     * Searches for placeholder text ranges with the given prefix and suffix.
+     *
+     * @param s                  String to parse.
+     * @param prefix             Prefix.
+     * @param suffix             Suffix.
+     * @param useFullTextRange   Use full text range (incl. prefix/suffix).
+     * @param filterNestedRanges Remove nested ranges from result.
+     * @return Matching ranges.
+     */
+    public static Set<TextRange> getPlaceholderRanges(
+        String s,
+        String prefix,
+        String suffix,
+        boolean useFullTextRange,
+        boolean filterNestedRanges
+    ) {
+        if (!s.contains(prefix)) {
+            return emptySet();
+        }
+
+        Set<TextRange> ranges = new LinkedHashSet<>(2);
+        Deque<Integer> prefixes = new ArrayDeque<>();
+
+        int searchFrom = 0;
+        while (searchFrom < s.length()) {
+            int nextSuffix = s.indexOf(suffix, searchFrom);
+            if (nextSuffix < 0) {
+                break;
+            }
+            int nextPrefix = s.indexOf(prefix, searchFrom);
+
+            if (prefixes.isEmpty()) {
+                if (nextPrefix < 0) {
+                    break;
+                }
+                prefixes.push(nextPrefix);
+                searchFrom = nextPrefix + 1;
+            }
+            else if (nextPrefix < 0
+                || nextSuffix <= nextPrefix
+                || nextPrefix + prefix.length() > nextSuffix) {
+                int prefixPairPos = prefixes.pop();
+
+                int startOffset = prefixPairPos + (useFullTextRange ? 0 : prefix.length());
+                int endOffset = useFullTextRange ? nextSuffix + suffix.length() : nextSuffix;
+
+                ranges.add(TextRange.create(startOffset, endOffset));
+
+                while (!prefixes.isEmpty() && prefixes.peek() + prefix.length() > prefixPairPos) {
+                    prefixes.pop();
+                }
+
+                searchFrom = nextSuffix + suffix.length();
+            }
+            else {
+                prefixes.push(nextPrefix);
+                searchFrom = nextPrefix + 1;
+            }
+        }
+
+        return filterNestedRanges ? filterNested(ranges) : ranges;
+    }
+
+    private static Set<TextRange> filterNested(Set<? extends TextRange> allRanges) {
+        Set<TextRange> filtered = new LinkedHashSet<>(allRanges.size());
+        for (TextRange outer : allRanges) {
+            boolean contains = anyRangeContains(allRanges, outer);
+            if (!contains) {
+                filtered.add(outer);
+            }
+        }
+
+        return filtered;
+    }
+
+    private static boolean anyRangeContains(Set<? extends TextRange> allRanges, TextRange inner) {
+        for (TextRange outer : allRanges) {
+            if (!inner.equals(outer) && outer.contains(inner)) {
+                return true;
+            }
+        }
+        return false;
+    }
+}

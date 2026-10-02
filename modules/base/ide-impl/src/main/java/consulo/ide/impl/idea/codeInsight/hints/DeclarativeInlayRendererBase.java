@@ -1,18 +1,17 @@
 // Copyright 2000-2024 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.ide.impl.idea.codeInsight.hints;
 
+import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorCustomElementRenderer;
 import consulo.codeEditor.Inlay;
 import consulo.codeEditor.InlayContent;
 import consulo.codeEditor.InlayContentSegment;
 import consulo.codeEditor.event.EditorMouseEvent;
-import consulo.codeEditor.event.EditorMouseEventArea;
 import consulo.colorScheme.TextAttributes;
 import consulo.language.editor.inlay.DeclarativeInlayPosition;
-import consulo.ui.Point2D;
+import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.event.details.InputDetails;
 import consulo.ui.ex.awt.hint.LightweightHint;
 import org.jspecify.annotations.Nullable;
 
@@ -95,22 +94,30 @@ public abstract class DeclarativeInlayRendererBase<M> implements EditorCustomEle
     }
 
     @Override
+    public boolean hasPlainClickAction(Inlay<?> inlay, int segmentIndex) {
+        InlayPresentationEntry entry = findEntry(segmentIndex);
+        if (entry == null || !entry.hasClickAction()) {
+            return false;
+        }
+
+        return Application.get().getInstance(DeclarativeInlayActionService.class)
+            .isPlainClickEnabled(entry.getClickArea().getActionData());
+    }
+
+    @Override
+    public LocalizeValue getTooltip(Inlay<?> inlay, int segmentIndex) {
+        InlayPresentationList list = findList(segmentIndex);
+        return list == null ? LocalizeValue.empty() : LocalizeValue.ofNullable(list.getModel().getTooltip());
+    }
+
+    @Override
     @RequiredUIAccess
-    public void handleClick(Inlay<?> inlay, int segmentIndex, boolean controlDown) {
+    public void handleClick(Inlay<?> inlay, int segmentIndex, EditorMouseEvent event, boolean controlDown) {
         InlayPresentationList list = findList(segmentIndex);
         InlayPresentationEntry entry = findEntry(segmentIndex);
         if (list == null || entry == null) {
             return;
         }
-
-        // a frontend which never painted the hint has no pointer position to give, and the handlers only take the
-        // editor out of the event anyway - this is the constructor which builds its own stand-in mouse event
-        EditorMouseEvent event = new EditorMouseEvent(
-            inlay.getEditor(),
-            new InputDetails(new Point2D(), new Point2D()),
-            false,
-            EditorMouseEventArea.EDITING_AREA
-        );
 
         entry.handleClick(event, list, controlDown);
     }

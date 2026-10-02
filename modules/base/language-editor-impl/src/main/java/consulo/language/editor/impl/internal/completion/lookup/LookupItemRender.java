@@ -25,6 +25,7 @@ import consulo.ui.AdvancedLabel;
 import consulo.ui.Component;
 import consulo.ui.ComponentItemRender;
 import consulo.ui.RenderItem;
+import consulo.ui.Space;
 import consulo.ui.TextAttribute;
 import consulo.ui.TextItemPresentation;
 import consulo.ui.color.ColorValue;
@@ -134,8 +135,10 @@ public class LookupItemRender {
         private final AdvancedLabel myType = AdvancedLabel.create();
 
         Row() {
-            myLayout.add(myName);
-            myLayout.add(myTail);
+            HorizontalLayout nameAndTail = HorizontalLayout.create(Space.NONE);
+            nameAndTail.add(myName);
+            nameAndTail.add(myTail);
+            myLayout.add(nameAndTail);
             myLayout.add(myType);
         }
 

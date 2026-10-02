@@ -16,16 +16,20 @@
 package consulo.desktop.qt.editor.impl.internal;
 
 import consulo.codeEditor.DefaultLanguageHighlighterColors;
+import consulo.codeEditor.EditorCustomElementRenderer;
 import consulo.codeEditor.Inlay;
 import consulo.codeEditor.InlayContent;
 import consulo.codeEditor.InlayContentSegment;
+import consulo.codeEditor.event.EditorMouseEvent;
 import consulo.codeEditor.impl.EditorSettingsExternalizable;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.TextAttributes;
 import consulo.desktop.qt.ui.impl.TargetQt;
 import consulo.desktop.qt.ui.impl.image.DesktopQtImage;
+import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
+import consulo.ui.cursor.StandardCursors;
 import consulo.ui.image.Image;
 import io.qt.core.QPointF;
 import io.qt.core.QRect;
@@ -86,6 +90,8 @@ public class DesktopQtEditorInlays {
     private @Nullable QFont myHintFont;
     private @Nullable QFontMetricsF myHintMetrics;
     private @Nullable String myHintFontKey;
+
+    private boolean myHandCursor;
 
     public DesktopQtEditorInlays(DesktopQtEditorImpl editor) {
         myEditor = editor;
@@ -198,7 +204,17 @@ public class DesktopQtEditorInlays {
     }
 
     private double imageWidth(@Nullable Image image) {
-        return image == null ? 0 : Math.min(image.getWidth(), myEditor.getFontMetrics().getAscent());
+        return image == null ? 0 : image.getWidth() * imageScale(image);
+    }
+
+    private double imageHeight(Image image) {
+        return image.getHeight() * imageScale(image);
+    }
+
+    private double imageScale(Image image) {
+        int height = image.getHeight();
+        double limit = Math.max(1, myEditor.getLineHeight() - 2 * VERTICAL_INSET);
+        return height > limit ? limit / height : 1;
     }
 
     /**
@@ -237,11 +253,12 @@ public class DesktopQtEditorInlays {
 
             Image image = segment.image();
             if (image instanceof DesktopQtImage) {
-                int size = (int) Math.round(imageWidth(image));
+                int width = (int) Math.round(imageWidth(image));
+                int height = (int) Math.round(imageHeight(image));
 
-                DesktopQtImage.paint(painter, new QRect((int) Math.round(cursor), y + (lineHeight - size) / 2, size, size), image);
+                DesktopQtImage.paint(painter, new QRect((int) Math.round(cursor), y + (lineHeight - height) / 2, width, height), image);
 
-                cursor += size;
+                cursor += width;
             }
 
             String text = segment.text();
@@ -301,7 +318,7 @@ public class DesktopQtEditorInlays {
      * one - the rest are text, and a click on them belongs to the editor.
      */
     @RequiredUIAccess
-    public boolean click(Rendered rendered, double xInInlay, boolean controlDown) {
+    public boolean click(Rendered rendered, double xInInlay, EditorMouseEvent event, boolean controlDown) {
         int segment = segmentAt(rendered, xInInlay);
         if (segment < 0) {
             return false;
@@ -313,9 +330,41 @@ public class DesktopQtEditorInlays {
             return false;
         }
 
-        inlay.getRenderer().handleClick(inlay, segment, controlDown);
+        inlay.getRenderer().handleClick(inlay, segment, event, controlDown);
 
         return true;
+    }
+
+    @RequiredUIAccess
+    public void updateCursor(@Nullable Rendered rendered, double xInInlay, boolean controlDown) {
+        boolean handCursor = rendered != null && isClickable(rendered, xInInlay, controlDown);
+        if (handCursor == myHandCursor) {
+            return;
+        }
+
+        myHandCursor = handCursor;
+        myEditor.setCustomCursor(DesktopQtEditorInlays.class, handCursor ? StandardCursors.HAND : null);
+    }
+
+    private boolean isClickable(Rendered rendered, double xInInlay, boolean controlDown) {
+        int segment = segmentAt(rendered, xInInlay);
+        if (segment < 0) {
+            return false;
+        }
+
+        Inlay<?> inlay = rendered.inlay();
+        EditorCustomElementRenderer renderer = inlay.getRenderer();
+        return renderer.hasClickAction(inlay, segment) && (controlDown || renderer.hasPlainClickAction(inlay, segment));
+    }
+
+    public LocalizeValue tooltipAt(Rendered rendered, double xInInlay) {
+        int segment = segmentAt(rendered, xInInlay);
+        if (segment < 0) {
+            return LocalizeValue.empty();
+        }
+
+        Inlay<?> inlay = rendered.inlay();
+        return inlay.getRenderer().getTooltip(inlay, segment);
     }
 
     private @Nullable TextAttributes attributesOf(EditorColorsScheme scheme, InlayContentSegment segment) {

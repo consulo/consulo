@@ -22,7 +22,6 @@ import consulo.project.Project;
 import consulo.ui.ComboBox;
 import consulo.ui.Component;
 import consulo.ui.HtmlLabel;
-import consulo.ui.SelectionMode;
 import consulo.ui.Table;
 import consulo.ui.TableItemEditor;
 import consulo.ui.TextAttribute;
@@ -153,7 +152,7 @@ public class VcsDirectoryConfigurationPanel {
     @RequiredUIAccess
     public Component createComponent(Disposable uiDisposable) {
         Table<MapInfo> table = Table.create(myModel);
-        table.setSelectionMode(SelectionMode.MULTIPLE);
+        table.setAllowMultipleSelect(true);
         table.setRowBackgroundGetter(VcsDirectoryConfigurationPanel::rowBackground);
         table.setEnabled(!myIsDisabled);
 

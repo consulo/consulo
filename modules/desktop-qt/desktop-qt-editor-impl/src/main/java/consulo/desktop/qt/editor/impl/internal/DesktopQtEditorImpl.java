@@ -124,6 +124,23 @@ public class DesktopQtEditorImpl extends CodeEditorBase implements RealEditor, C
                 repaintRange(event.getNewRange());
             }
         });
+        getInlayModel().addListener(new InlayModel.SimpleAdapter() {
+            @Override
+            public void onUpdated(Inlay<?> inlay, int changeFlags) {
+                int offset = inlay.getOffset();
+                repaint(offset, offset, true);
+            }
+
+            @Override
+            public void onBatchModeFinish(Editor editor) {
+                DesktopQtEditorWidget widget = getSurface();
+                if (widget != null) {
+                    widget.updateSideAreas();
+                    widget.updateScrollRanges();
+                    widget.viewport().update();
+                }
+            }
+        }, getDisposable());
     }
 
     /**

@@ -24,6 +24,7 @@ import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.popup.JBPopup;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jspecify.annotations.Nullable;
 
@@ -34,6 +35,13 @@ import org.jspecify.annotations.Nullable;
 @ServiceImpl(profiles = ComponentProfiles.UNIFIED)
 @Singleton
 public class UnifiedDocumentationManagerImpl implements DocumentationManager {
+    private final Project myProject;
+
+    @Inject
+    public UnifiedDocumentationManagerImpl(Project project) {
+        myProject = project;
+    }
+
     @Override
     public void showJavaDocInfo(PsiElement element, PsiElement original, boolean requestFocus, Runnable closeCallback, String documentation, boolean useStoredPopupSize) {
 
@@ -90,8 +98,8 @@ public class UnifiedDocumentationManagerImpl implements DocumentationManager {
     }
 
     @Override
-    public Project getProject(PsiElement element) {
-        return null;
+    public Project getProject(@Nullable PsiElement element) {
+        return myProject;
     }
 
     @Override
@@ -105,8 +113,8 @@ public class UnifiedDocumentationManagerImpl implements DocumentationManager {
     }
 
     @Override
-    public String generateDocumentation(PsiElement element, PsiElement originalElement, boolean onHover) {
-        return null;
+    public String generateDocumentation(PsiElement element, @Nullable PsiElement originalElement, boolean onHover) {
+        return new ElementDocumentationCollector(myProject, element, originalElement, null, onHover).getDocumentation();
     }
 
     @Override

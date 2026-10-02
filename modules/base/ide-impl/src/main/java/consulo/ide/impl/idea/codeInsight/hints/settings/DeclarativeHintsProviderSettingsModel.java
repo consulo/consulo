@@ -8,19 +8,21 @@ import consulo.document.Document;
 import consulo.ide.impl.idea.codeInsight.hints.DeclarativeInlayHintsPass;
 import consulo.ide.impl.idea.codeInsight.hints.InlayProviderPassInfo;
 import consulo.language.Language;
-import consulo.language.editor.impl.internal.inlay.setting.DeclarativeInlayHintsSettings;
 import consulo.language.editor.impl.internal.inlay.setting.ImmediateConfigurable;
 import consulo.language.editor.impl.internal.inlay.setting.InlayDumpUtil;
 import consulo.language.editor.impl.internal.inlay.setting.InlayProviderSettingsModel;
 import consulo.language.editor.inlay.DeclarativeInlayHintsProvider;
+import consulo.language.editor.inlay.DeclarativeInlayHintsSettings;
 import consulo.language.editor.inlay.InlayGroup;
 import consulo.language.editor.inlay.DeclarativeInlayHintsCustomSettingsProvider;
 import consulo.language.editor.inlay.DeclarativeInlayOptionInfo;
+import consulo.language.editor.inlay.InlayProviderInfo;
 import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.fileType.FileType;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.List;
@@ -30,6 +32,7 @@ import java.util.stream.Collectors;
 public class DeclarativeHintsProviderSettingsModel extends InlayProviderSettingsModel {
     private static final Key<PreviewEntries> PREVIEW_ENTRIES = Key.create("declarative.inlays.preview.entries");
 
+    private final InlayProviderInfo providerInfo;
     private final DeclarativeInlayHintsProvider providerDescription;
     private final Project project;
     private final DeclarativeInlayHintsSettings settings = DeclarativeInlayHintsSettings.getInstance();
@@ -41,13 +44,14 @@ public class DeclarativeHintsProviderSettingsModel extends InlayProviderSettings
 
     @SuppressWarnings("unchecked")
     public DeclarativeHintsProviderSettingsModel(
-        DeclarativeInlayHintsProvider providerDescription,
+        InlayProviderInfo providerInfo,
         boolean isEnabled,
         Language language,
         Project project
     ) {
-        super(isEnabled, providerDescription.getId(), language);
-        this.providerDescription = providerDescription;
+        super(isEnabled, providerInfo.providerId(), language);
+        this.providerInfo = providerInfo;
+        this.providerDescription = providerInfo.provider();
         this.project = project;
         this.customSettingsProvider = (DeclarativeInlayHintsCustomSettingsProvider<Object>)
             DeclarativeInlayHintsCustomSettingsProvider.getCustomSettingsProvider(getId(), language);
@@ -69,10 +73,10 @@ public class DeclarativeHintsProviderSettingsModel extends InlayProviderSettings
     }
 
     private List<MutableOption> loadOptionsFromSettings() {
-        return providerDescription.getOptions().stream()
+        return providerInfo.options().stream()
             .map(opt -> {
                 boolean byDefault = opt.isEnabledByDefault();
-                Boolean saved = settings.isOptionEnabled(opt.id(), providerDescription.getId());
+                Boolean saved = settings.isOptionEnabled(opt.id(), providerInfo.providerId());
                 boolean enabled = saved != null ? saved : byDefault;
                 return new MutableOption(opt, enabled);
             })
@@ -91,7 +95,7 @@ public class DeclarativeHintsProviderSettingsModel extends InlayProviderSettings
 
     @Override
     public LocalizeValue getName() {
-        return providerDescription.getName();
+        return providerInfo.providerName();
     }
 
     @Override
@@ -105,8 +109,11 @@ public class DeclarativeHintsProviderSettingsModel extends InlayProviderSettings
     }
 
     @Override
-    public String getPreviewText() {
+    public @Nullable String getPreviewText() {
         String preview = providerDescription.getPreviewFileText().get();
+        if (preview.isEmpty()) {
+            return null;
+        }
         return InlayDumpUtil.removeInlays(preview);
     }
 
@@ -125,7 +132,7 @@ public class DeclarativeHintsProviderSettingsModel extends InlayProviderSettings
     @Override
     @RequiredReadAction
     public Runnable collectData(Editor editor, PsiFile file) {
-        String providerId = providerDescription.getId();
+        String providerId = providerInfo.providerId();
         Map<String, Boolean> enabledOptions = options.stream()
             .collect(Collectors.toMap(opt -> opt.description.id(), opt -> true));
         PreviewEntries previewEntries = file.getUserData(PREVIEW_ENTRIES);
@@ -145,12 +152,15 @@ public class DeclarativeHintsProviderSettingsModel extends InlayProviderSettings
     }
 
     @Override
-    public String getCasePreview(ImmediateConfigurable.Case optionCase) {
+    public @Nullable String getCasePreview(ImmediateConfigurable.@Nullable Case optionCase) {
         if (optionCase == null) {
             return getPreviewText();
         }
-        LocalizeValue preview = providerDescription.getPreviewFileText();
-        return InlayDumpUtil.removeInlays(preview.get());
+        String preview = providerDescription.getPreviewFileText().get();
+        if (preview.isEmpty()) {
+            return null;
+        }
+        return InlayDumpUtil.removeInlays(preview);
     }
 
     @Override
@@ -160,7 +170,7 @@ public class DeclarativeHintsProviderSettingsModel extends InlayProviderSettings
 
     @Override
     public String getCaseDescription(ImmediateConfigurable.Case optionCase) {
-        return providerDescription.getOptions().stream()
+        return providerInfo.options().stream()
             .filter(o -> o.id().equals(optionCase.id()))
             .findFirst()
             .map(o -> o.description().getNullIfEmpty())
@@ -179,8 +189,8 @@ public class DeclarativeHintsProviderSettingsModel extends InlayProviderSettings
     }
 
     private boolean isProviderEnabledInSettings() {
-        Boolean enabled = settings.isProviderEnabled(providerDescription.getId());
-        return enabled != null ? enabled : providerDescription.isEnabledByDefault();
+        Boolean enabled = settings.isProviderEnabled(providerInfo.providerId());
+        return enabled != null ? enabled : providerInfo.isEnabledByDefault();
     }
 
     @Override
@@ -207,7 +217,7 @@ public class DeclarativeHintsProviderSettingsModel extends InlayProviderSettings
             Boolean saved = settings.isOptionEnabled(option.description.id(), getId());
             option.isEnabled = saved != null ? saved : option.description.isEnabledByDefault();
         }
-        settings.setProviderEnabled(providerDescription.getId(), isProviderEnabledInSettings());
+        settings.setProviderEnabled(providerInfo.providerId(), isProviderEnabledInSettings());
         customSettingsProvider.persistSettings(project, savedSettings, getLanguage());
     }
 

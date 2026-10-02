@@ -1,0 +1,310 @@
+client.generator.boilerplate.checkbox:
+    text: Show Boilerplate Code
+client.generator.combobox.label:
+    text: 'Frameworks:'
+client.generator.inlay.action.eap.description:
+    text: Enable open in client generator action
+client.generator.inlay.action.eap.name:
+    text: Client generator URL inlay action
+client.generator.inlay.action.name:
+    text: Generate client example
+client.generator.inlay.action.popup.title:
+    text: Clients
+client.generator.language.label:
+    text: 'Language:'
+client.generator.open.in.scratch.error:
+    text: Something went wrong
+client.generator.open.in.scratch.error.title:
+    text: Client Example
+client.generator.progress.title.open.in.scratch:
+    text: Open in scratch…
+client.generator.unavailable:
+    text: Client generator is not available for selected endpoints
+client.generator.version.label:
+    text: 'Version:'
+command.export.client.example:
+    text: Export Example to Scratch File
+command.export.openapi.draft:
+    text: Export OpenAPI Draft
+endpoint.type.api.definition:
+    text: API Definition
+endpoint.type.graph.ql:
+    text: GraphQL
+endpoint.type.http.client:
+    text: HTTP Client
+endpoint.type.http.mock.server:
+    text: HTTP Mock Server
+endpoint.type.http.server:
+    text: HTTP Server
+endpoint.type.websocket.client:
+    text: WebSocket Client
+endpoint.type.websocket.server:
+    text: WebSocket Server
+endpoint.type.xml.web.service:
+    text: XML Web Service
+endpoints.details.documentation.title:
+    text: Documentation
+endpoints.details.examples.title:
+    text: Examples
+endpoints.details.toggle.description:
+    text: Show or hide the endpoint details panel
+endpoints.details.toggle.text:
+    text: Show Details
+endpoints.filter.selection.count:
+    text: '{0}: {1} selected'
+endpoints.filter.selection.single:
+    text: '{0}: {1}'
+endpoints.tool.window.title:
+    text: Endpoints
+endpoints.view.compact.list.items:
+    text: Compact List Items
+endpoints.view.empty.indexing:
+    text: Endpoints will be shown after indexing
+endpoints.view.empty.no.endpoints:
+    text: No endpoints found
+endpoints.view.empty.no.frameworks:
+    text: No supported frameworks found in the project
+endpoints.view.empty.no.matches:
+    text: No endpoints match the selected filters
+endpoints.view.group.by.module.full:
+    text: Group Endpoints by Module
+endpoints.view.group.by.module.short:
+    text: Group by Module
+endpoints.view.options:
+    text: Options
+endpoints.view.reset.filters:
+    text: Reset filters
+endpoints.view.search.placeholder:
+    text: 'Search endpoints, filter with type:, framework: and {0}: tags'
+endpoints.view.show.from.libraries:
+    text: Show From Libraries
+endpoints.view.show.from.tests:
+    text: Show From Tests
+frameworks.filters.framework:
+    text: Framework
+frameworks.filters.framework.title:
+    text: Select Frameworks
+frameworks.filters.module:
+    text: Module
+frameworks.filters.module.external:
+    text: External
+frameworks.filters.module.title:
+    text: Select Modules
+frameworks.filters.type:
+    text: Type
+frameworks.filters.type.title:
+    text: Select Types
+http.code.description.101:
+    text: Switching Protocols
+http.code.description.102:
+    text: Processing
+http.code.description.200:
+    text: OK
+http.code.description.201:
+    text: Created
+http.code.description.202:
+    text: Accepted
+http.code.description.203:
+    text: Non-Authoritative Information
+http.code.description.204:
+    text: No Content
+http.code.description.205:
+    text: Reset Content
+http.code.description.206:
+    text: Partial Content
+http.code.description.207:
+    text: Multi-Status
+http.code.description.300:
+    text: Multiple Choices
+http.code.description.301:
+    text: Moved Permanently
+http.code.description.302:
+    text: Found
+http.code.description.303:
+    text: See Other
+http.code.description.304:
+    text: Not Modified
+http.code.description.305:
+    text: Use Proxy
+http.code.description.307:
+    text: Temporary Redirect
+http.code.description.308:
+    text: Permanent Redirect
+http.code.description.400:
+    text: Bad Request
+http.code.description.401:
+    text: Unauthorized
+http.code.description.402:
+    text: Payment Required
+http.code.description.403:
+    text: Forbidden
+http.code.description.404:
+    text: Not Found
+http.code.description.405:
+    text: Method Not Allowed
+http.code.description.406:
+    text: Not Acceptable
+http.code.description.407:
+    text: Proxy Authentication Required
+http.code.description.408:
+    text: Request Timeout
+http.code.description.409:
+    text: Conflict
+http.code.description.410:
+    text: Gone
+http.code.description.411:
+    text: Length Required
+http.code.description.412:
+    text: Precondition Failed
+http.code.description.413:
+    text: Request Entity Too Large
+http.code.description.414:
+    text: Request-URI Too Long
+http.code.description.415:
+    text: Unsupported Media Type
+http.code.description.416:
+    text: Requested Range Not Satisfiable
+http.code.description.417:
+    text: Expectation Failed
+http.code.description.421:
+    text: Misdirected Request
+http.code.description.422:
+    text: Unprocessable Entity
+http.code.description.423:
+    text: Locked
+http.code.description.424:
+    text: Failed Dependency
+http.code.description.425:
+    text: Unordered Collection
+http.code.description.426:
+    text: Upgrade Required
+http.code.description.428:
+    text: Precondition Required
+http.code.description.429:
+    text: Too Many Requests
+http.code.description.431:
+    text: Request Header Fields Too Large
+http.code.description.500:
+    text: Internal Server Error
+http.code.description.501:
+    text: Not Implemented
+http.code.description.502:
+    text: Bad Gateway
+http.code.description.503:
+    text: Service Unavailable
+http.code.description.504:
+    text: Gateway Timeout
+http.code.description.505:
+    text: HTTP Version Not Supported
+http.code.description.506:
+    text: Variant Also Negotiates
+http.code.description.507:
+    text: Insufficient Storage
+http.code.description.510:
+    text: Not Extended
+http.code.description.511:
+    text: Network Authentication Required
+http.header.element:
+    text: HTTP Header
+http.header.element.error:
+    text: Incorrect HTTP Header name
+http.method.element:
+    text: HTTP Method
+http.method.element.error:
+    text: Incorrect HTTP Method name
+inject.http.header.reference:
+    text: HTTP Header Reference
+inject.http.method.reference:
+    text: HTTP Method Reference
+inject.http.url.reference:
+    text: HTTP URL Reference
+inject.http.ws.reference:
+    text: WebSocket URL Reference
+inject.mime.type.reference:
+    text: MIME Type Reference
+inlay.microservices.url.path.inlay.hints.description:
+    text: URL mappings in code. The icon provides quick access to URL testing and navigation options.
+inspection.incorrect.http.header.add.custom:
+    text: Add custom HTTP header
+inspection.incorrect.http.header.add.custom.description:
+    text: Adds the HTTP header as allowed custom header name to the inspection settings.
+inspection.incorrect.http.header.display.name:
+    text: Unknown HTTP header
+inspection.incorrect.http.header.panel.checkbox.text:
+    text: Use custom HTTP headers
+inspection.incorrect.http.header.unknown.header:
+    text: Unknown HTTP header
+inspection.incorrect.mime.type.display.name:
+    text: Incorrect MIME Type declaration
+inspection.jvm.languages.group.name:
+    text: JVM languages
+microservices.inlay.actions.title:
+    text: Actions for URL
+microservices.inlay.find.usages.url.path:
+    text: Go to declaration or usages
+microservices.inlay.hide.inlays.intention.name:
+    text: Hide URL path inlays for current language
+microservices.inlay.no.actions.message:
+    text: No available actions for URL
+microservices.inlay.one.action.tooltip:
+    text: 'Run Action for URL: {0}'
+microservices.inlay.provider.name:
+    text: URL path inlay
+microservices.inlay.settings.inlays.intention.hint.link:
+    text: in settings
+microservices.inlay.settings.inlays.intention.hint.message:
+    text: 'You can {0,choice,0#disable|1#enable} URL path inlay via intention or '
+microservices.inlay.show.inlays.enable.intention.name:
+    text: Show URL path inlays for current language
+microservices.inlay.tooltip:
+    text: Show available actions for URL
+microservices.intention.category:
+    text: Microservices
+microservices.open.in.browser.action.name:
+    text: Open in Browser
+microservices.open.in.web.browser.intention.family.name:
+    text: Open in web browser
+microservices.open.in.web.browser.intention.text:
+    text: Open in web browser
+microservices.port.binding.notification.text:
+    text: 'Application port {0,number,#} is bound to local port\s'
+microservices.resolving.reference:
+    text: Resolving reference…
+microservices.url.path.authority:
+    text: Web Authority
+microservices.url.path.segment:
+    text: URL Path Segment
+microservices.url.path.variable.type.name:
+    text: Path Variable
+microservices.url.query.parameter:
+    text: Query Parameter
+mime.type.element:
+    text: MIME Type
+mime.type.element.error:
+    text: Incorrect MIME Type declaration
+openapi.specifications.scratch.root:
+    text: OpenAPI Specifications
+path.variable.inspection.cannot.resolve:
+    text: Cannot resolve path variable ''{0}'' in request mapping
+path.variable.inspection.cannot.resolve.rename:
+    text: Replace ''{0}'' with declared path variable
+path.variable.inspection.cannot.resolve.rename.popup:
+    text: Select Replacement for ''{0}''
+path.variable.inspection.quick.fix.add.to.mapping:
+    text: Add ''{0}'' to the mapping
+path.variable.inspection.quick.fix.create.param:
+    text: Create path variable parameter
+path.variable.inspection.quick.fix.create.param.name:
+    text: Create path variable parameter ''{0}''
+path.variable.reference.unconsumed.path.variable:
+    text: Path variable ''{0}'' is not consumed
+progress.export.openapi.draft:
+    text: Exporting OpenAPI Draft
+services.diagram.action.description:
+    text: Show the diagram of interactions between services
+services.diagram.action.text:
+    text: Services Diagram
+services.diagram.category.client:
+    text: Client
+services.diagram.category.server:
+    text: Server

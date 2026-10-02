@@ -103,6 +103,10 @@ public class GeneralColorsPage implements ColorSettingsPage, ConfigurableWeight 
             ConfigurableLocalize.optionsGeneralColorDescriptorReferenceHyperlink(),
             EditorColors.REFERENCE_HYPERLINK_COLOR
         ),
+        new AttributesDescriptor(
+            ConfigurableLocalize.optionsGeneralColorDescriptorHyperlinkInactive(),
+            CodeInsightColors.INACTIVE_HYPERLINK_ATTRIBUTES
+        ),
 
         new AttributesDescriptor(
             ConfigurableLocalize.optionsJavaAttributeDescriptorMatchedBrace(),
@@ -299,6 +303,7 @@ public class GeneralColorsPage implements ColorSettingsPage, ConfigurableWeight 
         descriptors.put("todo", CodeInsightColors.TODO_DEFAULT_ATTRIBUTES);
         descriptors.put("hyperlink", CodeInsightColors.HYPERLINK_ATTRIBUTES);
         descriptors.put("hyperlink_f", CodeInsightColors.FOLLOWED_HYPERLINK_ATTRIBUTES);
+        descriptors.put("inactive_hyperlink", CodeInsightColors.INACTIVE_HYPERLINK_ATTRIBUTES);
 
         descriptors.put("wrong_ref", CodeInsightColors.WRONG_REFERENCES_ATTRIBUTES);
         descriptors.put("deprecated", CodeInsightColors.DEPRECATED_ATTRIBUTES);

@@ -4,9 +4,9 @@ package consulo.language.editor.inlay;
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
+import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.event.EditorMouseEvent;
-import consulo.component.extension.ExtensionPointName;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
 
@@ -19,10 +19,8 @@ import org.jspecify.annotations.Nullable;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface InlayActionHandler {
-    ExtensionPointName<InlayActionHandler> EP = ExtensionPointName.create(InlayActionHandler.class);
-
     static @Nullable InlayActionHandler getActionHandler(String handlerId) {
-        return EP.findFirstSafe(b -> handlerId.equals(b.getHandlerId()));
+        return Application.get().getExtensionPoint(InlayActionHandler.class).findFirstSafe(b -> handlerId.equals(b.getHandlerId()));
     }
 
     
@@ -44,5 +42,9 @@ public interface InlayActionHandler {
     @RequiredUIAccess
     default void handleClick(EditorMouseEvent e, InlayActionPayload payload) {
         handleClick(e.getEditor(), payload);
+    }
+
+    default boolean isPlainClickEnabled() {
+        return false;
     }
 }

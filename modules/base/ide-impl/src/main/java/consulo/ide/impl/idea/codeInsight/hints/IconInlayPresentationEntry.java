@@ -51,8 +51,9 @@ public class IconInlayPresentationEntry extends InlayPresentationEntry {
         Project project = editor.getProject();
         if (clickArea != null && project != null) {
             InlayActionData actionData = clickArea.getActionData();
-            if (controlDown) {
-                Application.get().getInstance(DeclarativeInlayActionService.class).invokeActionHandler(actionData, e);
+            DeclarativeInlayActionService actionService = Application.get().getInstance(DeclarativeInlayActionService.class);
+            if (controlDown || actionService.isPlainClickEnabled(actionData)) {
+                actionService.invokeActionHandler(actionData, e);
             }
         }
 
@@ -89,6 +90,6 @@ public class IconInlayPresentationEntry extends InlayPresentationEntry {
 
     @Override
     public int computeHeight(InlayTextMetrics metrics) {
-        return myImage.getWidth();
+        return myImage.getHeight();
     }
 }

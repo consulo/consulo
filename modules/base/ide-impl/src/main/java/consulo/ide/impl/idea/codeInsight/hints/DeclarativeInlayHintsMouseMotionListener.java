@@ -2,6 +2,7 @@
 package consulo.ide.impl.idea.codeInsight.hints;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.application.Application;
 import consulo.application.util.SystemInfo;
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.Inlay;
@@ -41,6 +42,8 @@ public class DeclarativeInlayHintsMouseMotionListener implements EditorMouseMoti
             ? null
             : getMouseAreaUnderCursor(inlay, renderer, e.getMouseEvent());
         boolean ctrlDownNow = isControlDown(e.getMouseEvent());
+        boolean plainClickNow = mouseArea != null && isPlainClickEnabled(mouseArea);
+        boolean hoveredNow = ctrlDownNow || plainClickNow;
 
         if (inlay != (inlayUnderCursor == null ? null : inlayUnderCursor.get())) {
             if (hint != null) hint.hide();
@@ -71,10 +74,10 @@ public class DeclarativeInlayHintsMouseMotionListener implements EditorMouseMoti
             List<InlayPresentationEntry> newEntries =
                 mouseArea == null ? Collections.emptyList() : mouseArea.getEntries();
             for (InlayPresentationEntry entry : newEntries) {
-                entry.setHoveredWithCtrl(ctrlDownNow);
+                entry.setHoveredWithCtrl(hoveredNow);
             }
 
-            if (ctrlDownNow && !newEntries.isEmpty()) {
+            if (hoveredNow && !newEntries.isEmpty()) {
                 if (e.getEditor() instanceof EditorEx) {
                     ((EditorEx) e.getEditor())
                         .setCustomCursor(DeclarativeInlayHintsMouseMotionListener.class, StandardCursors.HAND);
@@ -96,6 +99,9 @@ public class DeclarativeInlayHintsMouseMotionListener implements EditorMouseMoti
 
             this.areaUnderCursor = mouseArea;
             this.ctrlDown = ctrlDownNow;
+        }
+        else if (plainClickNow && e.getEditor() instanceof EditorEx editorEx) {
+            editorEx.setCustomCursor(DeclarativeInlayHintsMouseMotionListener.class, StandardCursors.HAND);
         }
 
         if (inlay != (inlayUnderCursor == null ? null : inlayUnderCursor.get())) {
@@ -123,6 +129,10 @@ public class DeclarativeInlayHintsMouseMotionListener implements EditorMouseMoti
 
     private boolean isControlDown(InputEvent e) {
         return (SystemInfo.isMac && e.isMetaDown()) || e.isControlDown();
+    }
+
+    private static boolean isPlainClickEnabled(InlayMouseArea mouseArea) {
+        return Application.get().getInstance(DeclarativeInlayActionService.class).isPlainClickEnabled(mouseArea.getActionData());
     }
 
     private DeclarativeInlayRendererBase<?> getRenderer(Inlay<?> inlay) {
@@ -163,7 +173,7 @@ public class DeclarativeInlayHintsMouseMotionListener implements EditorMouseMoti
 
         @Override
         public void keyReleased(KeyEvent e) {
-            if (e != null && !isControlDown(e)) {
+            if (e != null && !isControlDown(e) && (areaUnderCursor == null || !isPlainClickEnabled(areaUnderCursor))) {
                 editor.setCustomCursor(DeclarativeInlayHintsMouseMotionListener.class, null);
 
                 if (areaUnderCursor != null) {

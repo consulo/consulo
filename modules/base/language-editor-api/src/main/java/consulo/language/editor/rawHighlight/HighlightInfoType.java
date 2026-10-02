@@ -80,6 +80,8 @@ public interface HighlightInfoType {
     HighlightInfoType ELEMENT_UNDER_CARET_WRITE =
         new HighlightInfoTypeImpl(ELEMENT_UNDER_CARET_SEVERITY, EditorColors.WRITE_IDENTIFIER_UNDER_CARET_ATTRIBUTES);
 
+    HighlightSeverity HIGHLIGHTED_REFERENCE_SEVERITY = new HighlightSeverity("HIGHLIGHTED_REFERENCE", SYMBOL_TYPE_SEVERITY.myVal - 1);
+
     /**
      * @see RangeHighlighter#VISIBLE_IF_FOLDED
      */

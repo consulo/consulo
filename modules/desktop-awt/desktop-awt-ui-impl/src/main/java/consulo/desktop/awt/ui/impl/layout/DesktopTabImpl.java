@@ -20,6 +20,7 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.Component;
 import consulo.ui.Tab;
 import consulo.ui.TextItemPresentation;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.SimpleColoredComponent;
@@ -46,6 +47,8 @@ public class DesktopTabImpl implements Tab {
     private @Nullable BiConsumer<Tab, Component> myCloseHandler;
 
     private Component myComponent;
+
+    private boolean myEnabled = true;
 
     public DesktopTabImpl(DesktopTabbedLayoutImpl tabbedLayout) {
         myTabbedLayout = tabbedLayout;
@@ -99,6 +102,29 @@ public class DesktopTabImpl implements Tab {
     public void setCloseHandler(@Nullable BiConsumer<Tab, Component> closeHandler) {
         myCloseHandler = closeHandler;
         myCloseButton.setVisible(closeHandler != null);
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void setEnabled(boolean enabled) {
+        if (myEnabled == enabled) {
+            return;
+        }
+
+        myEnabled = enabled;
+
+        myTabbedLayout.applyEnabled(this);
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return myEnabled;
+    }
+
+    void updateEnabledLook() {
+        myLabel.setEnabled(myEnabled);
+        myCloseButton.setEnabled(myEnabled);
+        myTabComponent.repaint();
     }
 
     @Override

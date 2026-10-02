@@ -10,17 +10,13 @@ import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.TextAttributes;
 import consulo.document.Document;
-import consulo.language.Language;
 import consulo.language.editor.documentation.DocumentationManager;
 import consulo.language.editor.documentation.DocumentationManagerProtocol;
-import consulo.language.editor.documentation.DocumentationProvider;
-import consulo.language.editor.documentation.LanguageDocumentationProvider;
 import consulo.language.editor.internal.DocumentationManagerHelper;
 import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.language.psi.PsiManager;
 import consulo.project.Project;
 import consulo.localize.LocalizeValue;
 import consulo.navigation.Navigatable;
@@ -370,7 +366,7 @@ public class DocRenderer implements CustomFoldRegionRenderer {
             refText = refText.substring(0, separatorPos);
         }
 
-        PsiElement target = resolveLink(context, refText);
+        PsiElement target = DocumentationManagerHelper.resolvePsiElementLink(context, refText);
         if (target == null) {
             return;
         }
@@ -404,25 +400,6 @@ public class DocRenderer implements CustomFoldRegionRenderer {
             }
         }
         return false;
-    }
-
-    private static @Nullable PsiElement resolveLink(PsiElement context, String refText) {
-        PsiManager manager = context.getManager();
-        PsiElement target =
-            DocumentationManagerHelper.getProviderFromElement(context).getDocumentationElementForLink(manager, refText, context);
-        if (target != null) {
-            return target;
-        }
-        for (Language language : Language.getRegisteredLanguages()) {
-            DocumentationProvider provider = LanguageDocumentationProvider.forLanguageComposite(language);
-            if (provider != null) {
-                target = provider.getDocumentationElementForLink(manager, refText, context);
-                if (target != null) {
-                    return target;
-                }
-            }
-        }
-        return null;
     }
 
     private static Color getTextColor(EditorColorsScheme scheme) {

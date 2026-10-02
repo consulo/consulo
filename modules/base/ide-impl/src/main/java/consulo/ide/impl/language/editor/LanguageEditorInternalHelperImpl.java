@@ -17,6 +17,7 @@ package consulo.ide.impl.language.editor;
 
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
 import consulo.codeEditor.DocumentMarkupModel;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorPopupHelper;
@@ -28,6 +29,7 @@ import consulo.configurable.Configurable;
 import consulo.configurable.UnnamedConfigurable;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
+import consulo.find.FindManager;
 import consulo.ide.impl.idea.codeInsight.editorActions.EnterHandler;
 import consulo.ide.impl.idea.codeInsight.highlighting.HighlightUsagesHandler;
 import consulo.ide.impl.idea.find.actions.ShowUsagesAction;
@@ -198,6 +200,9 @@ public class LanguageEditorInternalHelperImpl implements LanguageEditorInternalH
             LocalizeValue name = action.getTemplatePresentation().getTextValue();
             DumbService.getInstance(project)
                 .showDumbModeNotification(LocalizeValue.localizeTODO("Usage search is not available until indices are ready"));
+        }
+        else if (!Application.get().isSwingApplication()) {
+            FindManager.getInstance(project).findUsages(element);
         }
         else {
             RelativePoint2D popupPosition = point != null ? point : EditorPopupHelper.getInstance().guessBestPopupLocation(editor);

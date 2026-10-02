@@ -41,6 +41,8 @@ public abstract class SemService {
 
   public abstract <T extends SemElement> List<T> getSemElements(SemKey<T> key, PsiElement psi);
 
+  public abstract <T extends SemElement> List<T> getSemElementsNoCache(SemKey<T> key, PsiElement psi);
+
   public abstract @Nullable <T extends SemElement> List<T> getCachedSemElements(SemKey<T> key, PsiElement psi);
 
   public abstract <T extends SemElement> void setCachedSemElement(SemKey<T> key, PsiElement psi, @Nullable T semElement);

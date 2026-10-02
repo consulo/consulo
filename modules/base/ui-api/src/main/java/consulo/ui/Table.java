@@ -49,7 +49,10 @@ public interface Table<Item> extends Component, HasSpeedSearch<Item>, HasItemSiz
 
     List<TableColumn<Item, ?>> getColumns();
 
-    void setSelectionMode(SelectionMode mode);
+    /**
+     * Whether several items can be selected at once. Off by default, where selecting an item replaces the selection.
+     */
+    void setAllowMultipleSelect(boolean allow);
 
     @Nullable
     Item getSelectedItem();

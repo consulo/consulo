@@ -22,6 +22,10 @@ import consulo.ui.style.StandardColors;
 
 import org.jspecify.annotations.Nullable;
 
+import java.util.Collections;
+import java.util.EnumSet;
+import java.util.Set;
+
 /**
  * @author VISTALL
  * @since 2018-05-14
@@ -47,15 +51,39 @@ public final class TextAttribute {
     private final int myStyle;
     private final @Nullable ColorValue myBackgroundColor;
     private final @Nullable ColorValue myForegroundColor;
+    private final Set<TextEffect> myEffects;
 
     public TextAttribute(int style, @Nullable ColorValue foregroundColor) {
         this(style, foregroundColor, null);
     }
 
     public TextAttribute(int style, @Nullable ColorValue foregroundColor, @Nullable ColorValue backgroundColor) {
+        this(style, foregroundColor, backgroundColor, Set.of());
+    }
+
+    private TextAttribute(int style, @Nullable ColorValue foregroundColor, @Nullable ColorValue backgroundColor, Set<TextEffect> effects) {
         myStyle = style;
         myForegroundColor = foregroundColor;
         myBackgroundColor = backgroundColor;
+        myEffects = effects;
+    }
+
+    public TextAttribute withEffect(TextEffect effect) {
+        if (myEffects.contains(effect)) {
+            return this;
+        }
+
+        Set<TextEffect> effects = EnumSet.of(effect);
+        effects.addAll(myEffects);
+        return new TextAttribute(myStyle, myForegroundColor, myBackgroundColor, Collections.unmodifiableSet(effects));
+    }
+
+    public Set<TextEffect> getEffects() {
+        return myEffects;
+    }
+
+    public boolean hasEffect(TextEffect effect) {
+        return myEffects.contains(effect);
     }
 
     public int getStyle() {

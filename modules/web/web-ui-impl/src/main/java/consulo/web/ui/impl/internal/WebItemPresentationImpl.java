@@ -18,10 +18,11 @@ package consulo.web.ui.impl.internal;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.dom.Style;
-import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.util.TextAttributeUtil;
 import consulo.web.ui.impl.internal.vaadin.AuraUtility;
 import consulo.localize.LocalizeValue;
 import consulo.ui.TextAttribute;
+import consulo.ui.TextEffect;
 import consulo.ui.color.ColorValue;
 import consulo.ui.font.Font;
 import consulo.ui.TextItemPresentation;
@@ -31,6 +32,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author VISTALL
@@ -107,6 +109,21 @@ public class WebItemPresentationImpl implements TextItemPresentation {
      * whatever the run before it asked for. A completion row rebound from an item with a tail onto one without kept
      * showing the old tail for exactly this reason.
      */
+    static void applyRun(Span span, String text, @Nullable TextAttribute textAttribute) {
+        applyAttribute(span, textAttribute);
+
+        Set<TextEffect> effects = textAttribute == null ? Set.of() : TextAttributeUtil.getEffects(textAttribute);
+        if (text.isEmpty() || !effects.contains(TextEffect.STRIKEOUT) || !effects.contains(TextEffect.WAVED)) {
+            span.setText(text);
+            return;
+        }
+
+        span.setText("");
+        Span strikeout = new Span(text);
+        strikeout.getStyle().set("text-decoration", "line-through");
+        span.add(strikeout);
+    }
+
     static void applyAttribute(Span span, @Nullable TextAttribute textAttribute) {
         Style style = span.getStyle();
 
@@ -130,7 +147,7 @@ public class WebItemPresentationImpl implements TextItemPresentation {
             style.set("background-color", WebColors.toCssColor(background));
         }
 
-        int fontStyle = textAttribute.getStyle();
+        int fontStyle = TextAttributeUtil.getFontStyle(textAttribute);
         if ((fontStyle & Font.BOLD) != 0) {
             style.set("font-weight", "bold");
         }
@@ -138,12 +155,26 @@ public class WebItemPresentationImpl implements TextItemPresentation {
             style.set("font-style", "italic");
         }
 
-        // one css property covers both, so a fragment carrying the two has to ask for them together
-        boolean strikeout = (fontStyle & SimpleTextAttributes.STYLE_STRIKEOUT) != 0;
-        boolean underline = (fontStyle & SimpleTextAttributes.STYLE_UNDERLINE) != 0;
-        if (strikeout || underline) {
-            style.set("text-decoration", strikeout && underline ? "line-through underline" : strikeout ? "line-through" : "underline");
+        String decoration = toTextDecoration(TextAttributeUtil.getEffects(textAttribute));
+        if (decoration != null) {
+            style.set("text-decoration", decoration);
         }
+    }
+
+    private static @Nullable String toTextDecoration(Set<TextEffect> effects) {
+        if (effects.contains(TextEffect.WAVED)) {
+            return "underline wavy";
+        }
+
+        boolean strikeout = effects.contains(TextEffect.STRIKEOUT);
+        boolean underline = effects.contains(TextEffect.UNDERLINE);
+        if (strikeout && underline) {
+            return "line-through underline";
+        }
+        if (strikeout) {
+            return "line-through";
+        }
+        return underline ? "underline" : null;
     }
 
 
@@ -169,8 +200,8 @@ public class WebItemPresentationImpl implements TextItemPresentation {
         }
 
         for (Fragment fragment : myFragmentModels) {
-            Span text = new Span(fragment.text());
-            applyAttribute(text, fragment.attribute());
+            Span text = new Span();
+            applyRun(text, fragment.text(), fragment.attribute());
             span.add(text);
         }
 

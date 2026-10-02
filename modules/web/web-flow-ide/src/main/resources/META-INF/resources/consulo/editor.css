@@ -90,6 +90,19 @@
   text-decoration: underline;
 }
 
+.arquill-editor .arquill-inlay-action[data-arquill-inlay-plain]:hover
+{
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.arquill-inlay-image-holder
+{
+  display: inline-block;
+  vertical-align: middle;
+  line-height: 0;
+}
+
 .arquill-inlay-start
 {
   margin-left: 2px;

@@ -81,6 +81,8 @@ module consulo.language.editor.api {
         consulo.desktop.qt.editor.impl,
         consulo.desktop.qt.ide.impl,
         consulo.desktop.qt.ui.impl,
+        consulo.endpoint.api,
+        consulo.endpoint.impl,
         consulo.execution.debug.impl,
         consulo.file.editor.impl,
         consulo.ide.api,

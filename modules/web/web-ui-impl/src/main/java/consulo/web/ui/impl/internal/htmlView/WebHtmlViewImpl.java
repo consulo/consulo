@@ -22,6 +22,7 @@ import consulo.util.lang.StringUtil;
 import consulo.ui.Component;
 import consulo.ui.HtmlView;
 import consulo.ui.UIAccess;
+import consulo.ui.event.HtmlViewDoubleClickEvent;
 import consulo.web.ui.impl.internal.WebColors;
 import consulo.ui.style.StyleManager;
 import consulo.ui.style.Style;
@@ -29,6 +30,7 @@ import consulo.ui.style.ComponentColors;
 import consulo.ui.image.Image;
 import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
 import consulo.web.ui.impl.internal.base.VaadinComponentDelegate;
+import consulo.web.ui.impl.internal.base.WebInputDetails;
 import consulo.web.ui.impl.internal.image.WebImageElement;
 import consulo.web.ui.impl.internal.image.WebImageSpec;
 import consulo.web.ui.impl.internal.image.WebImageUrl;
@@ -112,6 +114,12 @@ public class WebHtmlViewImpl extends VaadinComponentDelegate<WebHtmlViewImpl.Vaa
         getVaadinComponent().setSizeFull();
         // the document scrolls inside this element rather than growing it
         getVaadinComponent().getStyle().set("overflow", "auto");
+
+        WebInputDetails.addClickListener(
+            getVaadinComponent().getElement(),
+            "dblclick",
+            details -> getListenerDispatcher(HtmlViewDoubleClickEvent.class).onEvent(new HtmlViewDoubleClickEvent(this, details))
+        );
     }
 
     @Override

@@ -164,12 +164,14 @@ public class PsiModificationTrackerImpl implements PsiModificationTracker {
     }
 
     
+    @Override
     public ModificationTracker forLanguage(Language language) {
         SimpleModificationTracker languageTracker = myLanguageTrackers.get(language);
         return () -> languageTracker.getModificationCount() + myAllLanguagesTracker.getModificationCount();
     }
 
     
+    @Override
     public ModificationTracker forLanguages(Predicate<? super Language> condition) {
         return () -> {
             long result = myAllLanguagesTracker.getModificationCount();

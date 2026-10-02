@@ -14,6 +14,8 @@ import consulo.language.editor.inlay.DeclarativeInlayHintsProvider;
 import consulo.language.editor.inlay.DeclarativeInlayPayload;
 import consulo.language.editor.inlay.InlayActionData;
 import consulo.language.editor.inlay.InlayActionHandler;
+import consulo.language.editor.inlay.DeclarativeInlayHintsProviderFactoryUtil;
+import consulo.language.editor.inlay.InlayProviderInfo;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
@@ -45,7 +47,7 @@ public class DeclarativeInlayActionService {
         }
 
         String providerId = hintData.getProviderId();
-        var providerInfo = InlayHintsProviderFactory.findProviderInfo(psiFile.getLanguage(), providerId);
+        InlayProviderInfo providerInfo = DeclarativeInlayHintsProviderFactoryUtil.getProviderInfo(psiFile.getLanguage(), providerId);
         if (providerInfo == null) {
             return;
         }
@@ -87,6 +89,11 @@ public class DeclarativeInlayActionService {
             logActionHandlerInvoked(handlerId, handler.getClass());
             handler.handleClick(e, actionData.getPayload());
         }
+    }
+
+    public boolean isPlainClickEnabled(InlayActionData actionData) {
+        InlayActionHandler handler = InlayActionHandler.getActionHandler(actionData.getHandlerId());
+        return handler != null && handler.isPlainClickEnabled();
     }
 
     public void logActionHandlerInvoked(String handlerId, Class<? extends InlayActionHandler> handlerClass) {

@@ -63,6 +63,7 @@ public interface DefaultLanguageHighlighterColors {
     TextAttributesKey DOC_COMMENT_TAG_VALUE = TextAttributesKey.of("DEFAULT_DOC_COMMENT_TAG_VALUE");
     TextAttributesKey VALID_STRING_ESCAPE = TextAttributesKey.of("DEFAULT_VALID_STRING_ESCAPE");
     TextAttributesKey INVALID_STRING_ESCAPE = TextAttributesKey.of("DEFAULT_INVALID_STRING_ESCAPE");
+    TextAttributesKey HIGHLIGHTED_REFERENCE = TextAttributesKey.of("DEFAULT_HIGHLIGHTED_REFERENCE", STRING);
 
     TextAttributesKey PREDEFINED_SYMBOL = TextAttributesKey.of("DEFAULT_PREDEFINED_SYMBOL", IDENTIFIER);
 

@@ -35,6 +35,7 @@ import consulo.language.editor.highlight.ReadWriteAccessDetector;
 import consulo.language.editor.highlight.TextEditorHighlightingPass;
 import consulo.language.editor.highlight.UpdateHighlightersUtil;
 import consulo.language.editor.highlight.usage.HighlightUsagesHandlerBase;
+import consulo.language.editor.highlight.usage.HighlightUsagesUtil;
 import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
 import consulo.language.editor.inject.InjectedEditorManager;
 import consulo.language.editor.rawHighlight.HighlightInfo;
@@ -200,7 +201,7 @@ public class IdentifierHighlighterPass extends TextEditorHighlightingPass {
         }
 
         if (withDeclarations) {
-            TextRange declRange = HighlightUsagesHandler.getNameIdentifierRange(psiElement.getContainingFile(), target);
+            TextRange declRange = HighlightUsagesUtil.getNameIdentifierRange(psiElement.getContainingFile(), target);
             if (declRange != null) {
                 if (detector != null && detector.isDeclarationWriteAccess(target)) {
                     writeRanges.add(declRange);

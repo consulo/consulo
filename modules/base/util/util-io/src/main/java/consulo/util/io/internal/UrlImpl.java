@@ -15,12 +15,14 @@
  */
 package consulo.util.io.internal;
 
+import consulo.util.collection.ContainerUtil;
 import consulo.util.io.URLUtil;
 import consulo.util.io.Url;
 import consulo.util.io.Urls;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
+import java.util.Map;
 import java.util.Objects;
 
 public final class UrlImpl implements Url {
@@ -48,6 +50,24 @@ public final class UrlImpl implements Url {
     this.authority = StringUtil.nullize(authority);
     this.path = StringUtil.isEmpty(path) ? "/" : path;
     this.parameters = StringUtil.nullize(parameters);
+  }
+
+  @Override
+  public Url addParameters(Map<String, String> parameters) {
+    if (parameters.isEmpty()) {
+      return this;
+    }
+
+    StringBuilder builder = new StringBuilder();
+    if (this.parameters == null) {
+      builder.append('?');
+    }
+    else {
+      builder.append(this.parameters);
+      builder.append('&');
+    }
+    Urls.encodeParameters(parameters, builder);
+    return new UrlImpl(scheme, authority, path, builder.toString());
   }
 
   @Override
@@ -194,5 +214,31 @@ public final class UrlImpl implements Url {
   @Override
   public int hashCodeCaseInsensitive() {
     return computeHashCode(false);
+  }
+
+  @Override
+  public Url removeParameter(String name) {
+    StringBuilder result = new StringBuilder();
+    String parameters = this.parameters;
+    if (parameters == null) {
+      return this;
+    }
+
+    if (parameters.startsWith("?")) {
+      parameters = StringUtil.trimStart(parameters, "?");
+      result.append("?");
+    }
+    boolean added = false;
+    for (String s : parameters.split("&")) {
+      String currentName = ContainerUtil.getFirstItem(StringUtil.split(s, "="));
+      if (!StringUtil.equals(currentName, name)) {
+        if (added) {
+          result.append("&");
+        }
+        result.append(s);
+        added = true;
+      }
+    }
+    return new UrlImpl(scheme, authority, path, result.toString());
   }
 }

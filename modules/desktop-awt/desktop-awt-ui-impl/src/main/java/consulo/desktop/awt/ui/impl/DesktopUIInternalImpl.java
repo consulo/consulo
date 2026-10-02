@@ -405,6 +405,11 @@ public class DesktopUIInternalImpl extends UIInternal implements UIInternalEx {
     }
 
     @Override
+    public <E> MultiSelectListBox<E> _Components_multiSelectListBox(FlatDataModel<E> model) {
+        return new DesktopMultiSelectListBoxImpl<>(model);
+    }
+
+    @Override
     public RadioButton _Components_radioButton(LocalizeValue text, boolean selected) {
         return new DesktopRadioButtonImpl(text, selected);
     }

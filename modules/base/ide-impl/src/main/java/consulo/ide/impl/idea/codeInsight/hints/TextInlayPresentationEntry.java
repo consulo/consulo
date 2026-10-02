@@ -35,8 +35,9 @@ public class TextInlayPresentationEntry extends InlayPresentationEntry {
         Project project = editor.getProject();
         if (clickArea != null && project != null) {
             InlayActionData actionData = clickArea.getActionData();
-            if (controlDown) {
-                Application.get().getService(DeclarativeInlayActionService.class).invokeActionHandler(actionData, e);
+            DeclarativeInlayActionService actionService = Application.get().getService(DeclarativeInlayActionService.class);
+            if (controlDown || actionService.isPlainClickEnabled(actionData)) {
+                actionService.invokeActionHandler(actionData, e);
             }
         }
         if (parentIndexToSwitch != (byte) -1) {

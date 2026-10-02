@@ -22,6 +22,7 @@ import consulo.ui.Component;
 import consulo.ui.Tab;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.TabSelectEvent;
+import consulo.ui.internal.TabSelectionUtil;
 import consulo.ui.layout.TabbedLayout;
 import consulo.ui.layout.TabbedLayoutStyle;
 import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
@@ -29,7 +30,9 @@ import consulo.web.ui.impl.internal.base.TargetVaadin;
 import consulo.web.ui.impl.internal.base.VaadinComponentDelegate;
 import org.jspecify.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -129,12 +132,32 @@ public class WebTabbedLayoutImpl extends VaadinComponentDelegate<WebTabbedLayout
         toVaadinComponent().add(vaadinTab, vaadinContent);
         myTabs.put(vaadinTab, webTab);
 
+        applyEnabled(webTab);
+
         webTab.setContent(component);
 
         if (first) {
             webTab.select();
         }
         return tab;
+    }
+
+    void applyEnabled(WebTabImpl webTab) {
+        com.vaadin.flow.component.tabs.Tab vaadinTab = webTab.getVaadinTab();
+        if (vaadinTab == null || !myTabs.containsKey(vaadinTab)) {
+            return;
+        }
+
+        boolean enabled = webTab.isEnabled();
+        if (!enabled && toVaadinComponent().getSelectedTab() == vaadinTab) {
+            List<WebTabImpl> tabs = new ArrayList<>(myTabs.values());
+            int target = TabSelectionUtil.findSelectionOnDisable(tabs.indexOf(webTab), tabs.size(), i -> tabs.get(i).isEnabled());
+            if (target != -1) {
+                tabs.get(target).select();
+            }
+        }
+
+        vaadinTab.setEnabled(enabled);
     }
 
     @Override

@@ -15,10 +15,12 @@
  */
 package consulo.language.pom;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * @author peter
  */
-public interface PomRenameableTarget<T> extends PomNamedTarget {
+public interface PomRenameableTarget<T extends @Nullable Object> extends PomNamedTarget {
 
   boolean isWritable();
 

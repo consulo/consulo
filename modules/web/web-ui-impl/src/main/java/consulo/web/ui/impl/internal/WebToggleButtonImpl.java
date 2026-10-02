@@ -65,6 +65,7 @@ public class WebToggleButtonImpl extends VaadinComponentDelegate<WebToggleButton
         Vaadin component = toVaadinComponent();
 
         WebInputDetails.addClickListener(component.getElement(), this::invoke);
+        myClickInstalled = true;
 
         myTextValue = text;
         component.setText(WebButtonImpl.plainText(text));

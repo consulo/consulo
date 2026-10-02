@@ -23,6 +23,14 @@ vaadin-list-box.web-list-box vaadin-item[selected]
   background: var(--consulo-list-row-selection, #d4e2ff);
 }
 
+vaadin-list-box.web-list-box vaadin-item[selected] .web-icon > span,
+vaadin-virtual-list.web-list-box [selected] .web-icon > span,
+consulo-virtual-list.web-list-box [selected] .web-icon > span
+{
+  background-color: transparent !important;
+  color: inherit !important;
+}
+
 /* a vaadin item wraps what it holds in a content part whose automatic minimum size is its content, so a row with a
    long path in it pushes that part - and with it the row - past the width of the item, and whatever the row docks to
    its right ends up outside the list. the part is told it may shrink, which is what makes a width of the row resolve
@@ -110,6 +118,31 @@ consulo-virtual-list.web-list-box [selected]
 {
   border-radius: var(--consulo-list-row-selection-radius, 4px);
   background: var(--consulo-list-row-selection, #d4e2ff);
+}
+
+consulo-virtual-list.web-list-box > [separator]
+{
+  visibility: hidden;
+}
+
+consulo-virtual-list.web-list-box > [separator]::before
+{
+  content: '';
+  visibility: visible;
+  position: absolute;
+  left: var(--consulo-list-row-padding-x, 0.5rem);
+  right: var(--consulo-list-row-padding-x, 0.5rem);
+  top: 50%;
+  border-top: 1px solid var(--consulo-component-border-color);
+}
+
+consulo-virtual-list.web-list-box[placeholder][empty]::before
+{
+  content: attr(placeholder);
+  display: block;
+  padding: 8px;
+  text-align: center;
+  color: var(--vaadin-text-color-secondary, #6b7280);
 }
 
 /* a separator is the gap between two groups of items, so it carries the row rather than sitting inside it.

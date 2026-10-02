@@ -12,6 +12,7 @@ import consulo.language.psi.PsiFileFactory;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.virtualFileSystem.fileType.FileType;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.List;
@@ -81,9 +82,9 @@ public abstract class InlayProviderSettingsModel {
 
     public abstract String getDescription();
 
-    public abstract String getPreviewText();
+    public abstract @Nullable String getPreviewText();
 
-    public abstract String getCasePreview(ImmediateConfigurable.Case caze);
+    public abstract @Nullable String getCasePreview(ImmediateConfigurable.@Nullable Case caze);
 
     public abstract Language getCasePreviewLanguage(ImmediateConfigurable.Case caze);
 

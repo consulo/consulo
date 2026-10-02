@@ -18,14 +18,13 @@ package consulo.ui.ex.tree;
 import consulo.dataContext.DataManager;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
-import consulo.ui.TextAttribute;
 import consulo.ui.TextItemPresentation;
 import consulo.ui.Tree;
 import consulo.ui.TreeModel;
 import consulo.ui.TreeNode;
 import consulo.ui.color.ColorValue;
 import consulo.ui.event.details.InputDetails;
-import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.util.TextAttributeUtil;
 import consulo.ui.image.Image;
 import org.jspecify.annotations.Nullable;
 
@@ -137,35 +136,12 @@ public class SimpleTreeModel<N extends SimpleNode> implements TreeModel<N> {
 
         List<PresentableNodeDescriptor.ColoredFragment> fragments = presentation.getColoredText();
         if (fragments.isEmpty()) {
-            itemPresentation.append(LocalizeValue.ofNullable(descriptor.toString()), toTextAttribute(null, forced));
+            itemPresentation.append(LocalizeValue.ofNullable(descriptor.toString()), TextAttributeUtil.toTextAttribute(null, forced));
             return;
         }
 
         for (PresentableNodeDescriptor.ColoredFragment fragment : fragments) {
-            itemPresentation.append(fragment.getText(), toTextAttribute(fragment.getAttributes(), forced));
+            itemPresentation.append(fragment.getText(), TextAttributeUtil.toTextAttribute(fragment.getAttributes(), forced));
         }
-    }
-
-    static TextAttribute toTextAttribute(@Nullable SimpleTextAttributes attributes, @Nullable ColorValue forced) {
-        int style = 0;
-        ColorValue foreground = null;
-        ColorValue background = null;
-
-        if (attributes != null) {
-            if ((attributes.getStyle() & SimpleTextAttributes.STYLE_BOLD) != 0) {
-                style |= TextAttribute.STYLE_BOLD;
-            }
-            if ((attributes.getStyle() & SimpleTextAttributes.STYLE_ITALIC) != 0) {
-                style |= TextAttribute.STYLE_ITALIC;
-            }
-            foreground = attributes.foreground();
-            background = attributes.background();
-        }
-
-        if (foreground == null) {
-            foreground = forced;
-        }
-
-        return new TextAttribute(style, foreground, background);
     }
 }

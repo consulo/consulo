@@ -21,6 +21,7 @@ import consulo.ui.TextItemPresentation;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.util.TextAttributeUtil;
 import consulo.ui.font.Font;
 import consulo.ui.image.Image;
 import org.jspecify.annotations.Nullable;
@@ -37,13 +38,7 @@ public class ColoredTextItemPresentation implements TextItemPresentation {
     }
 
     public static SimpleTextAttributes toSimpleTextAttributes(TextAttribute textAttribute) {
-        int style = textAttribute.getStyle();
-
-        return new SimpleTextAttributes(
-            style,
-            TargetAWT.to(textAttribute.getForegroundColor()),
-            TargetAWT.to(textAttribute.getBackgroundColor())
-        );
+        return TextAttributeUtil.toSimpleTextAttributes(textAttribute);
     }
 
     @Override

@@ -6,6 +6,8 @@ import consulo.util.lang.StringUtil;
 
 import org.jspecify.annotations.Nullable;
 
+import java.util.Map;
+
 public final class LocalFileUrl implements Url {
   private final String path;
 
@@ -14,6 +16,11 @@ public final class LocalFileUrl implements Url {
    */
   public LocalFileUrl(String path) {
     this.path = path;
+  }
+
+  @Override
+  public Url addParameters(Map<String, String> parameters) {
+    throw new UnsupportedOperationException("File URL doesn't support parameters");
   }
 
   @Override

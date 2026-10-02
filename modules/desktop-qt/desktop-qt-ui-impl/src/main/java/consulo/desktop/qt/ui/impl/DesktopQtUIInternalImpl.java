@@ -293,6 +293,11 @@ public class DesktopQtUIInternalImpl extends UIInternal implements UIInternalEx 
     }
 
     @Override
+    public <E> MultiSelectListBox<E> _Components_multiSelectListBox(FlatDataModel<E> model) {
+        return new DesktopQtMultiSelectListBoxImpl<>(model);
+    }
+
+    @Override
     public RadioButton _Components_radioButton(LocalizeValue text, boolean selected) {
         return new DesktopQtRadioButtonImpl(text, selected);
     }

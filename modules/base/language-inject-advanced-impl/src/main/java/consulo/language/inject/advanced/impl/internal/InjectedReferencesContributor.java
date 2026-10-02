@@ -105,6 +105,15 @@ public class InjectedReferencesContributor extends PsiReferenceContributor {
         element.putUserData(INJECTED_REFERENCES, injected.get() ? array : null);
         return array;
       }
+
+      @Override
+      public boolean acceptsHints(PsiElement element, PsiReferenceService.Hints hints) {
+        if (hints == PsiReferenceService.Hints.HIGHLIGHTED_REFERENCES) {
+          return false;
+        }
+
+        return super.acceptsHints(element, hints);
+      }
     });
   }
 

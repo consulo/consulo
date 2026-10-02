@@ -15,10 +15,18 @@
  */
 package consulo.document.util;
 
+import consulo.util.lang.StringUtil;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Spliterator;
+import java.util.Spliterators;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 /**
  * Miscellaneous utility methods to manipulate lists of text ranges.
@@ -145,5 +153,46 @@ public class TextRangeUtil {
       }
     }
     return result;
+  }
+
+  public static Stream<TextRange> splitLineRanges(CharSequence newText0) {
+    return splitToTextRanges(newText0, "\n", true);
+  }
+
+  public static Stream<TextRange> splitToTextRanges(CharSequence charSequence, String delimiter) {
+    return splitToTextRanges(charSequence, delimiter, false);
+  }
+
+  public static Stream<TextRange> splitToTextRanges(CharSequence charSequence, String delimiter, boolean includeDelimiter) {
+    Iterator<TextRange> iterator = new Iterator<>() {
+      private int myLastMatch = 0;
+      private int myLastSplit = 0;
+      private boolean myFinished = false;
+
+      @Override
+      public boolean hasNext() {
+        return !myFinished;
+      }
+
+      @Override
+      public TextRange next() {
+        if (myFinished) {
+          throw new NoSuchElementException();
+        }
+        int start = StringUtil.indexOf(charSequence, delimiter, myLastMatch);
+        if (start == -1) {
+          myFinished = true;
+          return new TextRange(myLastSplit, charSequence.length());
+        }
+        myLastMatch = start + delimiter.length();
+        TextRange range = new TextRange(myLastSplit, includeDelimiter ? myLastMatch : start);
+        myLastSplit = myLastMatch;
+        if (myLastMatch == charSequence.length()) {
+          myFinished = true;
+        }
+        return range;
+      }
+    };
+    return StreamSupport.stream(Spliterators.spliteratorUnknownSize(iterator, Spliterator.ORDERED | Spliterator.NONNULL), false);
   }
 }

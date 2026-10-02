@@ -62,6 +62,16 @@ public interface PsiReference {
   TextRange getRangeInElement();
 
   /**
+   * @return range in the {@link PsiElement#getContainingFile containing file} of the {@link #getElement element}
+   * which is considered a reference
+   * @see #getRangeInElement
+   */
+  @RequiredReadAction
+  default TextRange getAbsoluteRange() {
+    return getRangeInElement().shiftRight(getElement().getTextRange().getStartOffset());
+  }
+
+  /**
    * Returns the element which is the target of the reference.
    *
    * @return the target element, or null if it was not possible to resolve the reference to a valid target.

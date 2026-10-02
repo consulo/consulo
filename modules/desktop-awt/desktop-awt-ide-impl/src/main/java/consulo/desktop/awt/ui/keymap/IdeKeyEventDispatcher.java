@@ -57,7 +57,6 @@ import consulo.ui.ex.impl.internal.action.ActionRunnerAsync;
 import consulo.ui.ex.impl.internal.keymap.KeyStrokeAdapter;
 import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ui.ex.internal.AnActionWithUIUpdate;
-import consulo.ui.ex.internal.IdeGlassPaneEx;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.ex.keymap.util.KeymapUtil;

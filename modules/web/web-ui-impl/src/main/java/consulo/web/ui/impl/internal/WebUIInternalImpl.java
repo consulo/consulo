@@ -247,6 +247,11 @@ public class WebUIInternalImpl extends UIInternal implements UIInternalEx {
     }
 
     @Override
+    public <E> MultiSelectListBox<E> _Components_multiSelectListBox(FlatDataModel<E> model) {
+        return new WebMultiSelectListBoxImpl<>(model);
+    }
+
+    @Override
     @RequiredUIAccess
     public RadioButton _Components_radioButton(LocalizeValue text, boolean selected) {
         return new WebRadioButtonImpl(selected, text);

@@ -127,7 +127,9 @@ final class CachedValueStabilityChecker {
         }
 
         for (Field field : ourFieldCache.get(o1.getClass())) {
-            field.setAccessible(true);
+            if (!field.trySetAccessible()) {
+                continue;
+            }
             Object v1 = field.get(o1);
             Object v2 = field.get(o2);
 

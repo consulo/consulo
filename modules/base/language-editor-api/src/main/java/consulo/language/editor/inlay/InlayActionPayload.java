@@ -18,6 +18,8 @@ package consulo.language.editor.inlay;
 import consulo.language.psi.SmartPsiElementPointer;
 import org.jspecify.annotations.Nullable;
 
+import java.util.Objects;
+
 /**
  * @author VISTALL
  * @since 2025-05-27
@@ -25,24 +27,34 @@ import org.jspecify.annotations.Nullable;
 public sealed interface InlayActionPayload {
     public final class PsiPointerInlayActionPayload implements InlayActionPayload {
         private final SmartPsiElementPointer<?> pointer;
+        private final @Nullable String tag;
 
         public PsiPointerInlayActionPayload(SmartPsiElementPointer<?> pointer) {
+            this(pointer, null);
+        }
+
+        public PsiPointerInlayActionPayload(SmartPsiElementPointer<?> pointer, @Nullable String tag) {
             this.pointer = pointer;
+            this.tag = tag;
         }
 
         public SmartPsiElementPointer<?> getPointer() {
             return pointer;
         }
 
+        public @Nullable String getTag() {
+            return tag;
+        }
+
         @Override
         public boolean equals(@Nullable Object other) {
             return this == other
-                || other instanceof PsiPointerInlayActionPayload that && pointer.equals(that.pointer);
+                || other instanceof PsiPointerInlayActionPayload that && pointer.equals(that.pointer) && Objects.equals(tag, that.tag);
         }
 
         @Override
         public int hashCode() {
-            return pointer.hashCode();
+            return 31 * pointer.hashCode() + Objects.hashCode(tag);
         }
     }
 

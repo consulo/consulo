@@ -6,6 +6,7 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.internal.ProgressIndicatorBase;
+import consulo.application.internal.ProgressIndicatorUtils;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.codeEditor.*;
@@ -22,7 +23,6 @@ import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.disposer.Disposable;
 import consulo.language.editor.impl.internal.daemon.DaemonCodeAnalyzerImpl;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.tooltips.TooltipActionProvider;
-import consulo.ide.impl.idea.codeInsight.documentation.QuickDocUtil;
 import consulo.ide.impl.idea.codeInsight.hint.LineTooltipRenderer;
 import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.ide.impl.idea.ui.WidthBasedLayout;
@@ -498,7 +498,7 @@ public final class EditorMouseHoverPopupManagerImpl implements EditorMouseHoverP
                     }
 
                     DocumentationManager documentationManager = DocumentationManager.getInstance(project);
-                    QuickDocUtil.runInReadActionWithWriteActionPriorityWithRetries(() -> {
+                    ProgressIndicatorUtils.runInReadActionWithWriteActionPriorityWithRetries(() -> {
                         if (element.isValid()) {
                             targetElementRef.set(documentationManager.findTargetElement(
                                 editor,

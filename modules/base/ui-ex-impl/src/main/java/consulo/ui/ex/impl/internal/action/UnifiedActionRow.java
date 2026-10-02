@@ -305,9 +305,7 @@ public class UnifiedActionRow {
         }
         myActions = List.copyOf(actions);
 
-        StringBuilder builder = new StringBuilder();
-        UnifiedActionMenuExpander.appendSignature(nodes, builder);
-        String signature = builder.toString();
+        String signature = rowSignature(nodes);
 
         if (signature.equals(mySignature)) {
             // a toggle button flips itself on click, but the state belongs to the action - if performing it left
@@ -356,6 +354,19 @@ public class UnifiedActionRow {
 
         myNodes = nodes;
         mySignature = signature;
+    }
+
+    private static String rowSignature(List<UnifiedActionMenuExpander.MenuNode> nodes) {
+        StringBuilder builder = new StringBuilder();
+        for (UnifiedActionMenuExpander.MenuNode node : nodes) {
+            if (node.action() instanceof ComboBoxAction comboBoxAction) {
+                builder.append("|combo@").append(Integer.toHexString(System.identityHashCode(comboBoxAction)));
+            }
+            else {
+                UnifiedActionMenuExpander.appendSignature(List.of(node), builder);
+            }
+        }
+        return builder.toString();
     }
 
     @RequiredUIAccess

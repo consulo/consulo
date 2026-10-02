@@ -27,6 +27,7 @@ import org.jspecify.annotations.Nullable;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Collection;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -70,6 +71,31 @@ public final class Urls {
 
   public static Url newUrl(@Nullable String scheme, @Nullable String authority, @Nullable String path, @Nullable String parameters) {
     return new UrlImpl(scheme, authority, path, parameters);
+  }
+
+  public static Url newUrl(String scheme, String authority, String path, Map<String, ? extends @Nullable String> parameters) {
+    if (!parameters.isEmpty()) {
+      StringBuilder result = new StringBuilder().append('?');
+      encodeParameters(parameters, result);
+      return new UrlImpl(scheme, authority, path, result.toString());
+    }
+    else {
+      return new UrlImpl(scheme, authority, path);
+    }
+  }
+
+  public static void encodeParameters(Map<String, ? extends @Nullable String> parameters, StringBuilder result) {
+    int initialSize = result.length();
+    for (Map.Entry<String, ? extends @Nullable String> entry : parameters.entrySet()) {
+      if (result.length() != initialSize) {
+        result.append('&');
+      }
+      result.append(URLUtil.encodeURIComponent(entry.getKey()));
+      String value = entry.getValue();
+      if (value != null && !value.isEmpty()) {
+        result.append('=').append(URLUtil.encodeURIComponent(value));
+      }
+    }
   }
 
   /**

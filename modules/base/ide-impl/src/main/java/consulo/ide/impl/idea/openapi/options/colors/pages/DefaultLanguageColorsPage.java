@@ -88,6 +88,7 @@ public class DefaultLanguageColorsPage implements ColorSettingsPage, Configurabl
         TAG_HIGHLIGHTING_MAP.put("tag", DefaultLanguageHighlighterColors.MARKUP_TAG);
         TAG_HIGHLIGHTING_MAP.put("attribute", DefaultLanguageHighlighterColors.MARKUP_ATTRIBUTE);
         TAG_HIGHLIGHTING_MAP.put("entity", DefaultLanguageHighlighterColors.MARKUP_ENTITY);
+        TAG_HIGHLIGHTING_MAP.put("highlighted_reference", DefaultLanguageHighlighterColors.HIGHLIGHTED_REFERENCE);
     }
 
     private final static AttributesDescriptor[] ATTRIBUTES_DESCRIPTORS = {
@@ -255,6 +256,11 @@ public class DefaultLanguageColorsPage implements ColorSettingsPage, Configurabl
         new AttributesDescriptor(
             ConfigurableLocalize.optionsLanguageDefaultsTemplateLanguage(),
             DefaultLanguageHighlighterColors.TEMPLATE_LANGUAGE_COLOR
+        ),
+
+        new AttributesDescriptor(
+            ConfigurableLocalize.optionsLanguageDefaultsHighlightedReference(),
+            DefaultLanguageHighlighterColors.HIGHLIGHTED_REFERENCE
         )
     };
 
@@ -305,6 +311,9 @@ public class DefaultLanguageColorsPage implements ColorSettingsPage, Configurabl
                 "    instance <inst_field>field</inst_field>\n" +
                 "    static <static_method>method</static_method>\n" +
                 "    static <static_field>field</static_field>\n" +
+                "\n" +
+                "<func_call>function</func_call>(<string>\"</string><highlighted_reference>/highlighted/reference/{param}</highlighted_reference>" +
+                "<string>\"</string>)\n" +
                 "\n" +
                 "<tag><keyword>@TAG</keyword> <attribute>attribute</attribute>=<string>Value</string></tag>\n" +
                 "    Entity: <entity>&amp;</entity>\n" +

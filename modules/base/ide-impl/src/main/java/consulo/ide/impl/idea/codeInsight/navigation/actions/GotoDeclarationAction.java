@@ -45,6 +45,7 @@ import consulo.fileEditor.FileEditorManager;
 import consulo.language.editor.navigation.GotoDeclarationHandler;
 import consulo.language.editor.navigation.NavigationContexts;
 
+import consulo.ui.RelativePoint2D;
 import java.util.List;
 import java.util.Map;
 import consulo.language.psi.stub.ModuleAwareIndexOptions;
@@ -73,6 +74,7 @@ import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
 import consulo.ui.UIAction;
 import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.ui.ex.popup.JBPopup;
+import consulo.undoRedo.CommandProcessor;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
 import org.jspecify.annotations.Nullable;
@@ -82,6 +84,7 @@ import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 import java.text.MessageFormat;
 import java.util.*;
+import java.util.function.Supplier;
 
 @ActionImpl(id = "GotoDeclaration")
 public class GotoDeclarationAction extends BaseCodeInsightAction implements CodeInsightActionHandler, DumbAware {
@@ -126,7 +129,7 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
                     PsiElement element = findElementToShowUsagesOf(editor, editor.getCaretModel().getOffset());
                     if (element != null) {
                         ShowUsagesAction showUsages = (ShowUsagesAction)ActionManager.getInstance().getAction(ShowUsagesAction.ID);
-                        RelativePoint popupPosition = EditorPopupHelper.getInstance().guessBestPopupLocation(editor);
+                        RelativePoint2D popupPosition = EditorPopupHelper.getInstance().guessBestPopupLocation(editor);
                         showUsages.startFindUsages(element, popupPosition, editor, ShowUsagesAction.getUsagesPageSize());
                         return;
                     }
@@ -148,6 +151,52 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
         finally {
             DumbService.getInstance(project).setAlternativeResolveEnabled(false);
         }
+    }
+
+    @RequiredUIAccess
+    public static void navigateToDeclaration(Project project, Editor editor, int offset) {
+        PsiDocumentManager.getInstance(project).commitAllDocuments();
+
+        DumbService dumbService = DumbService.getInstance(project);
+
+        Navigatable navigatable = Application.get().runReadAction((Supplier<Navigatable>) () -> {
+            dumbService.setAlternativeResolveEnabled(true);
+            try {
+                return findDeclarationNavigatable(project, editor, offset);
+            }
+            catch (IndexNotReadyException e) {
+                return null;
+            }
+            finally {
+                dumbService.setAlternativeResolveEnabled(false);
+            }
+        });
+
+        if (navigatable == null || !navigatable.canNavigate()) {
+            return;
+        }
+
+        CommandProcessor.getInstance().newCommand()
+            .project(project)
+            .run(() -> navigatable.navigate(true));
+    }
+
+    @RequiredReadAction
+    private static @Nullable Navigatable findDeclarationNavigatable(Project project, Editor editor, int offset) {
+        PsiElement[] elements = findAllTargetElementsInfo(project, editor, offset).getFirst();
+        if (elements.length == 0 && !TargetElementUtil.inVirtualSpace(editor, offset)) {
+            elements = PsiUtilCore.toPsiElementArray(suggestCandidates(TargetElementUtil.findReference(editor, offset)));
+        }
+        if (elements.length == 0) {
+            return null;
+        }
+
+        PsiElement element = elements[0];
+        PsiElement declaration = TargetElementUtil.getGotoDeclarationTarget(element, element.getNavigationElement());
+        if (declaration == null) {
+            declaration = element;
+        }
+        return declaration instanceof Navigatable target ? target : EditSourceUtil.getDescriptor(declaration);
     }
 
     private static @Nullable PsiElementListCellRenderer<PsiElement> calcElementRender(

@@ -39,7 +39,6 @@ import consulo.ui.TextAttribute;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.model.FlatDataModel;
@@ -192,7 +191,7 @@ public class UnifiedXFramesView extends XDebugView {
                 VirtualFile file = getFile(frame);
                 if (file == null) {
                     if (myNoFileDecoration == null) {
-                        ColorValue background = TargetAWT.from(colorManager.getScopeColor(NonProjectFilesScope.NAME));
+                        ColorValue background = colorManager.getScopeColorValue(NonProjectFilesScope.NAME);
                         myNoFileDecoration = new FileDecoration(PlatformIconGroup.actionsHelp(), background);
                     }
                 }

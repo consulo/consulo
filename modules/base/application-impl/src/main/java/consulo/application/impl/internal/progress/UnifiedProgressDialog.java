@@ -90,7 +90,6 @@ public class UnifiedProgressDialog implements ProgressDialog {
 
     @Override
     public void startBlocking(CompletableFuture<?> stopCondition, Predicate<AWTEvent> isCancellationEvent) {
-        System.out.println("startBlocking");
     }
 
     @Override
@@ -113,7 +112,6 @@ public class UnifiedProgressDialog implements ProgressDialog {
 
     @Override
     public void background() {
-        System.out.println("background");
     }
 
     @Override

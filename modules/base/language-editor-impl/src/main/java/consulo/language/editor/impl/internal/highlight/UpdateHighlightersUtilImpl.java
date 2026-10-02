@@ -406,7 +406,7 @@ public class UpdateHighlightersUtilImpl {
         else if (severityRegistrar.compare(severity, HighlightSeverity.ERROR) >= 0) {
             layer = HighlighterLayer.ERROR;
         }
-        else if (severity == HighlightInfoType.INJECTED_FRAGMENT_SEVERITY) {
+        else if (severity == HighlightInfoType.INJECTED_FRAGMENT_SEVERITY || severity == HighlightInfoType.HIGHLIGHTED_REFERENCE_SEVERITY) {
             layer = HighlighterLayer.CARET_ROW - 1;
         }
         else if (severity == HighlightInfoType.ELEMENT_UNDER_CARET_SEVERITY) {

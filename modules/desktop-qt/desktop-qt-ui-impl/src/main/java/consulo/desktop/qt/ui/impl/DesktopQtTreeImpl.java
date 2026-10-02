@@ -114,6 +114,7 @@ public class DesktopQtTreeImpl<E> extends QtComponentDelegate<QTreeWidget> imple
         tree.setColumnCount(1);
         tree.setHeaderHidden(true);
         tree.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection);
+        tree.setItemDelegate(new DesktopQtTextItemDelegate(tree));
 
         // a view opens and closes the row of a double click by itself, and here that is the answer of the model -
         // leaving it to both means the two undo each other and the row never moves
@@ -348,6 +349,9 @@ public class DesktopQtTreeImpl<E> extends QtComponentDelegate<QTreeWidget> imple
     private void render(TreeNodeImpl<E> node, QTreeWidgetItem item) {
         if (node.getPresentation() instanceof DesktopQtTextItemPresentation presentation) {
             item.setText(0, presentation.toString());
+
+            DesktopQtTextItemDelegate.bind(item, 0, presentation);
+            item.setBackground(0, DesktopQtTextItemDelegate.toBrush(presentation.getBackgroundColor()));
 
             item.setIcon(0, DesktopQtImage.toQIcon(presentation.getImage()));
         }

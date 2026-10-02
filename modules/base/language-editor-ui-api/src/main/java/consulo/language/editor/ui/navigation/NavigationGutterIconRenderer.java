@@ -44,6 +44,7 @@ public abstract class NavigationGutterIconRenderer extends GutterIconRenderer im
     private final LocalizeValue myEmptyText;
     private final @Nullable TargetPresentationProvider<PsiElement> myPresentationProvider;
     private final Supplier<List<SmartPsiElementPointer>> myPointers;
+    private final @Nullable GutterIconNavigationHandler<? super PsiElement> myNavigationHandler;
 
     protected NavigationGutterIconRenderer(
         LocalizeValue popupTitle,
@@ -51,10 +52,21 @@ public abstract class NavigationGutterIconRenderer extends GutterIconRenderer im
         @Nullable TargetPresentationProvider<PsiElement> presentationProvider,
         Supplier<List<SmartPsiElementPointer>> pointers
     ) {
+        this(popupTitle, emptyText, presentationProvider, pointers, null);
+    }
+
+    protected NavigationGutterIconRenderer(
+        LocalizeValue popupTitle,
+        LocalizeValue emptyText,
+        @Nullable TargetPresentationProvider<PsiElement> presentationProvider,
+        Supplier<List<SmartPsiElementPointer>> pointers,
+        @Nullable GutterIconNavigationHandler<? super PsiElement> navigationHandler
+    ) {
         myPopupTitle = popupTitle;
         myEmptyText = emptyText;
         myPresentationProvider = presentationProvider;
         myPointers = pointers;
+        myNavigationHandler = navigationHandler;
     }
 
     @Override
@@ -125,6 +137,14 @@ public abstract class NavigationGutterIconRenderer extends GutterIconRenderer im
 
         if (myPresentationProvider != null) {
             navigator = navigator.presentationProvider(myPresentationProvider);
+        }
+
+        GutterIconNavigationHandler<? super PsiElement> navigationHandler = myNavigationHandler;
+        if (navigationHandler != null) {
+            navigator = navigator.processor(element -> {
+                navigationHandler.navigate(event, element);
+                return true;
+            });
         }
 
         navigator

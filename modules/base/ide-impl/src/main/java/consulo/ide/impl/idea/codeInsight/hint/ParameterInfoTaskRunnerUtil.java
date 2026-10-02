@@ -10,11 +10,11 @@ import consulo.codeEditor.RealEditor;
 import consulo.codeEditor.event.VisibleAreaListener;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.ui.RelativePoint2D;
 import consulo.ui.ex.awt.JBLoadingPanel;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.UIAccess;
-import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.AsyncProcessIcon;
 import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.LoadingDecorator;
@@ -113,7 +113,7 @@ class ParameterInfoTaskRunnerUtil {
       Disposer.register(disposable, popup);
       ScheduledFuture<?> showPopupFuture = uiAccess.getScheduler().schedule(() -> {
         if (!popup.isDisposed() && !popup.isVisible() && !editor.isDisposed()) {
-          RelativePoint popupPosition = EditorPopupHelper.getInstance().guessBestPopupLocation(editor);
+          RelativePoint2D popupPosition = EditorPopupHelper.getInstance().guessBestPopupLocation(editor);
           loadingPanel.startLoading();
           popup.show(popupPosition);
         }

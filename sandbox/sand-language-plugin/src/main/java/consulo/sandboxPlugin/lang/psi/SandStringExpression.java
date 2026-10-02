@@ -17,16 +17,26 @@ package consulo.sandboxPlugin.lang.psi;
 
 import consulo.language.ast.ASTNode;
 import consulo.language.impl.psi.ASTWrapperPsiElement;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.language.psi.ContributedReferenceHost;
 import consulo.language.psi.LiteralTextEscaper;
 import consulo.language.psi.PsiLanguageInjectionHost;
+import consulo.language.psi.PsiReference;
+import consulo.language.psi.ReferenceProvidersRegistry;
 
 /**
  * @author VISTALL
  * @since 16-Jul-22
  */
-public class SandStringExpression extends ASTWrapperPsiElement implements PsiLanguageInjectionHost {
+public class SandStringExpression extends ASTWrapperPsiElement implements PsiLanguageInjectionHost, ContributedReferenceHost {
   public SandStringExpression(ASTNode node) {
     super(node);
+  }
+
+  @Override
+  @RequiredReadAction
+  public PsiReference[] getReferences() {
+    return ReferenceProvidersRegistry.getReferencesFromProviders(this);
   }
 
   @Override

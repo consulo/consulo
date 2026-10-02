@@ -122,6 +122,8 @@ options.general.color.descriptor.gutter.background:
     text: Editor//Gutter background
 options.general.color.descriptor.hyperlink.followed:
     text: Hyperlinks//Followed
+options.general.color.descriptor.hyperlink.inactive:
+    text: Hyperlinks//Inactive
 options.general.color.descriptor.hyperlink.new:
     text: Hyperlinks//Unfollowed
 options.general.color.descriptor.indent.guide:
@@ -418,6 +420,8 @@ options.language.defaults.function.declaration:
     text: Identifiers//Function declaration
 options.language.defaults.global.variable:
     text: Identifiers//Global variable
+options.language.defaults.highlighted.reference:
+    text: String//Highlighted reference
 options.language.defaults.identifier:
     text: Identifiers//Default
 options.language.defaults.instance.field:

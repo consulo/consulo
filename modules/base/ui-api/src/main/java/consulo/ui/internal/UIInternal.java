@@ -124,6 +124,8 @@ public abstract class UIInternal {
 
     public abstract <E> ListBox<E> _Components_listBox(FlatDataModel<E> model);
 
+    public abstract <E> MultiSelectListBox<E> _Components_multiSelectListBox(FlatDataModel<E> model);
+
     public RadioButton _Components_radioButton(LocalizeValue text, boolean selected) {
         throw new UnsupportedOperationException();
     }

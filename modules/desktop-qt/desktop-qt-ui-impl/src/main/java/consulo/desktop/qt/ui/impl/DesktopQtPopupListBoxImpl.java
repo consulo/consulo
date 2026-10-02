@@ -39,7 +39,6 @@ import io.qt.widgets.QListWidget;
 import io.qt.widgets.QListWidgetItem;
 import io.qt.widgets.QStyle;
 import io.qt.widgets.QStyleOptionViewItem;
-import io.qt.widgets.QStyledItemDelegate;
 import io.qt.widgets.QToolTip;
 import io.qt.widgets.QWidget;
 import org.jspecify.annotations.Nullable;
@@ -68,7 +67,7 @@ class DesktopQtPopupListBoxImpl<E> extends DesktopQtListBoxImpl<E> implements In
     private record ButtonHit(int row, int index) {
     }
 
-    private class InlineButtonsDelegate extends QStyledItemDelegate {
+    private class InlineButtonsDelegate extends DesktopQtTextItemDelegate {
         private boolean myEliding;
 
         InlineButtonsDelegate(QObject parent) {
@@ -121,6 +120,18 @@ class DesktopQtPopupListBoxImpl<E> extends DesktopQtListBoxImpl<E> implements In
             }
 
             return new QSize(size.width() + stripWidth(count), Math.max(size.height(), ourButtonSize));
+        }
+
+        @Override
+        protected int reservedTrailingWidth(QStyleOptionViewItem option, QModelIndex index) {
+            List<InlineButton> buttons = buttonsAt(index.row());
+            if (!isStripVisible(option, buttons)) {
+                return 0;
+            }
+
+            QRect rowRect = option.rect();
+            int separatorX = buttonRect(rowRect, buttons.size(), 0).left() - ourSeparatorInset;
+            return Math.max(0, rowRect.right() - separatorX + ourContentGap);
         }
 
         private void paintButtons(QPainter painter, QStyleOptionViewItem option, QModelIndex index) {
@@ -260,10 +271,13 @@ class DesktopQtPopupListBoxImpl<E> extends DesktopQtListBoxImpl<E> implements In
     protected void initialize(QListWidget component) {
         super.initialize(component);
 
-        component.setItemDelegate(new InlineButtonsDelegate(component));
-
         QWidget viewport = component.viewport();
         viewport.installEventFilter(new InlineButtonsFilter(viewport));
+    }
+
+    @Override
+    protected DesktopQtTextItemDelegate createItemDelegate(QListWidget component) {
+        return new InlineButtonsDelegate(component);
     }
 
     @Override

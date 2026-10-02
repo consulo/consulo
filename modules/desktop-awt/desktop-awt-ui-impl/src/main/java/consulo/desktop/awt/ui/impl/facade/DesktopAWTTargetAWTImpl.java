@@ -35,8 +35,8 @@ import consulo.ui.cursor.StandardCursors;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.MorphColor;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.awtUnsafe.internal.TargetAWTFacade;
+import consulo.ui.ex.util.TextAttributeUtil;
 import consulo.ui.image.Image;
 import consulo.util.lang.BitUtil;
 import org.jspecify.annotations.Nullable;
@@ -347,10 +347,6 @@ public class DesktopAWTTargetAWTImpl implements TargetAWTFacade {
     }
 
     public static SimpleTextAttributes from(TextAttribute textAttribute) {
-        int mask = textAttribute.getStyle();
-
-        ColorValue backgroundColor = textAttribute.getBackgroundColor();
-        ColorValue foregroundColor = textAttribute.getForegroundColor();
-        return new SimpleTextAttributes(mask, TargetAWT.to(foregroundColor), TargetAWT.to(backgroundColor));
+        return TextAttributeUtil.toSimpleTextAttributes(textAttribute);
     }
 }

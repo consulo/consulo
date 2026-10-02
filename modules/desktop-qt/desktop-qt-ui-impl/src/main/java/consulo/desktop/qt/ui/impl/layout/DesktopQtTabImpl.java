@@ -28,6 +28,7 @@ import consulo.ui.Tab;
 import consulo.ui.TextItemPresentation;
 import consulo.ui.image.Image;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.internal.TabSelectionUtil;
 import io.qt.core.Qt;
 import io.qt.widgets.QTabBar;
 import io.qt.widgets.QTabWidget;
@@ -58,6 +59,8 @@ public class DesktopQtTabImpl implements Tab, DesktopQtAnimationHost, DesktopQtI
     private @Nullable String myPopupPlace;
 
     private @Nullable BiConsumer<Tab, Component> myCloseHandler;
+
+    private boolean myEnabled = true;
 
     @Override
     public void setCloseHandler(@Nullable BiConsumer<Tab, Component> closeHandler) {
@@ -137,6 +140,42 @@ public class DesktopQtTabImpl implements Tab, DesktopQtAnimationHost, DesktopQtI
         return dataManager.createAsyncDataContext(
             myComponent == null ? dataManager.getDataContext() : dataManager.getDataContext(myComponent)
         );
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void setEnabled(boolean enabled) {
+        if (myEnabled == enabled) {
+            return;
+        }
+
+        myEnabled = enabled;
+
+        QTabWidget tabWidget = myTabWidget;
+        if (tabWidget != null && !tabWidget.isDisposed()) {
+            applyEnabled(tabWidget);
+        }
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return myEnabled;
+    }
+
+    private void applyEnabled(QTabWidget tabWidget) {
+        int index = getIndex();
+        if (index == -1) {
+            return;
+        }
+
+        if (!myEnabled && tabWidget.currentIndex() == index) {
+            int target = TabSelectionUtil.findSelectionOnDisable(index, tabWidget.count(), tabWidget::isTabEnabled);
+            if (target != -1) {
+                tabWidget.setCurrentIndex(target);
+            }
+        }
+
+        tabWidget.setTabEnabled(index, myEnabled);
     }
 
     @Override
@@ -248,6 +287,8 @@ public class DesktopQtTabImpl implements Tab, DesktopQtAnimationHost, DesktopQtI
         tabWidget.addTab(content, "");
 
         applyClosable(tabWidget);
+
+        applyEnabled(tabWidget);
 
         update();
     }

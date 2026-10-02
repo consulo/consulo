@@ -18,7 +18,7 @@ package consulo.codeEditor;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
-import consulo.ui.ex.RelativePoint;
+import consulo.ui.RelativePoint2D;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.util.dataholder.Key;
 
@@ -46,7 +46,7 @@ public interface EditorPopupHelper {
    * @param editor the editor over which the popup is shown.
    * @return location as close as possible to the action origin.
    */
-  RelativePoint guessBestPopupLocation(Editor editor);
+  RelativePoint2D guessBestPopupLocation(Editor editor);
 
   /**
    * @param editor the editor over which the popup is shown.

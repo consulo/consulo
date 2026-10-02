@@ -18,7 +18,6 @@ package consulo.web.editor.impl.internal;
 import com.vaadin.flow.component.UI;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
-import consulo.application.dumb.IndexNotReadyException;
 import consulo.codeEditor.*;
 import consulo.codeEditor.action.EditorActionManager;
 import consulo.codeEditor.event.*;
@@ -39,19 +38,12 @@ import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
 import consulo.ide.impl.idea.codeInsight.navigation.actions.GotoDeclarationAction;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
-import consulo.language.editor.TargetElementUtil;
 import consulo.language.editor.highlight.EditorHighlighterFactory;
 import consulo.language.editor.impl.internal.markup.*;
-import consulo.language.editor.navigation.GotoDeclarationHandler;
 import consulo.language.editor.rawHighlight.HighlightInfo;
-import consulo.language.psi.PsiDocumentManager;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.util.EditSourceUtil;
 import consulo.logging.Logger;
-import consulo.navigation.Navigatable;
 import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.*;
 import consulo.ui.Component;
@@ -70,7 +62,6 @@ import consulo.ui.ex.impl.internal.action.UnifiedActionMenuExpander;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.dataholder.Key;
-import consulo.util.lang.Pair;
 import consulo.util.lang.xml.XmlStringUtil;
 import consulo.versionControlSystem.internal.LineStatusTrackerI;
 import consulo.versionControlSystem.internal.LineStatusTrackerListener;
@@ -85,6 +76,7 @@ import consulo.web.ui.impl.internal.WebLightPopupImpl;
 import consulo.web.ui.impl.internal.action.WebActionContextMenu;
 import consulo.web.ui.impl.internal.base.ComponentHolder;
 import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
+import consulo.web.ui.impl.internal.base.TargetVaadin;
 import consulo.web.ui.impl.internal.base.VaadinComponentDelegate;
 import consulo.web.ui.impl.internal.base.WebAwtBridgeComponent;
 import consulo.web.ui.impl.internal.image.WebImageElement;
@@ -98,7 +90,6 @@ import java.util.*;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Supplier;
 
 /**
  * @author VISTALL
@@ -148,6 +139,8 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
     }
 
     private static final Key<Integer> ANNOTATION_ID = Key.create("annotation.id");
+
+    private static final String INLAY_IMAGE_PLACEHOLDER = "\u200b";
 
     private final EditorComponent myEditorComponent;
 
@@ -349,7 +342,7 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
 
         vaadin.addAttachListener(event -> installFloatingToolbar());
 
-        vaadin.addInlayClickListener(event -> performInlayClick(event.getId(), event.isControlDown()));
+        vaadin.addInlayClickListener(event -> performInlayClick(event.getId(), event.isControlDown(), event.getDetails()));
 
         vaadin.addGutterClickListener(event -> performGutterClick(event.getId(), event.getDetails()));
 
@@ -661,47 +654,7 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
         // a jump lands on a caret and selects nothing
         moveCaretFromClient(offset, offset, offset);
 
-        PsiDocumentManager.getInstance(myProject).commitAllDocuments();
-
-        DumbService dumbService = DumbService.getInstance(myProject);
-
-        Navigatable navigatable = Application.get().runReadAction((Supplier<Navigatable>) () -> {
-            dumbService.setAlternativeResolveEnabled(true);
-            try {
-                Pair<PsiElement[], GotoDeclarationHandler> found = GotoDeclarationAction.findAllTargetElementsInfo(myProject, this, offset);
-
-                PsiElement[] elements = found.getFirst();
-                // there is no web popup to disambiguate between several targets yet, the first one is taken
-                if (elements == null || elements.length == 0) {
-                    return null;
-                }
-
-                // the raw target is not the declaration - the awt action resolves it through the same call
-                PsiElement element = elements[0];
-                PsiElement declaration = TargetElementUtil.getGotoDeclarationTarget(element, element.getNavigationElement());
-                if (declaration == null) {
-                    declaration = element;
-                }
-
-                // a plain PsiElement is not navigable by itself, the descriptor is what opens the file
-                return declaration instanceof Navigatable target ? target : EditSourceUtil.getDescriptor(declaration);
-            }
-            catch (IndexNotReadyException e) {
-                return null;
-            }
-            finally {
-                dumbService.setAlternativeResolveEnabled(false);
-            }
-        });
-
-        if (navigatable == null || !navigatable.canNavigate()) {
-            return;
-        }
-
-        // inside a command so that back navigation is recorded
-        CommandProcessor.getInstance().newCommand()
-            .project(myProject)
-            .run(() -> navigatable.navigate(true));
+        GotoDeclarationAction.navigateToDeclaration(myProject, this, offset);
     }
 
     /**
@@ -709,19 +662,38 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
      * its class, a collapsed presentation opening - so the click is handed straight back to it.
      */
     @RequiredUIAccess
-    private void performInlayClick(int id, boolean controlDown) {
+    private void performInlayClick(int id, boolean controlDown, InputDetails details) {
         if (id < 0 || id >= myInlayClickTargets.size()) {
             return;
         }
 
         InlayClickTarget target = myInlayClickTargets.get(id);
-        if (!target.inlay().isValid()) {
+        Inlay<?> inlay = target.inlay();
+        if (!inlay.isValid()) {
             return;
         }
 
         fireCtrlHover(-1);
 
-        target.inlay().getRenderer().handleClick(target.inlay(), target.contentIndex(), controlDown);
+        int offset = inlay.getOffset();
+        LogicalPosition logicalPosition = offsetToLogicalPosition(offset);
+
+        EditorMouseEvent event = new EditorMouseEvent(
+            this,
+            fakeEvent,
+            details,
+            false,
+            EditorMouseEventArea.EDITING_AREA,
+            offset,
+            logicalPosition,
+            logicalToVisualPosition(logicalPosition),
+            false,
+            null,
+            inlay,
+            null
+        );
+
+        inlay.getRenderer().handleClick(inlay, target.contentIndex(), event, controlDown);
     }
 
     /**
@@ -1214,84 +1186,50 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
 
             boolean first = true;
             for (InlaySegment segment : entry.getValue().flatten()) {
-                // a run which is only an image projects no text, and an empty span would swallow the click of its neighbour
-                if (segment.text().isEmpty() && !segment.lineBreak()) {
+                String imageHtml = toIconHtml(segment.image());
+                boolean hasText = !segment.text().isEmpty();
+
+                if (imageHtml == null && !hasText && !segment.lineBreak()) {
                     continue;
                 }
 
-                if (!first) {
-                    inlays.append(',');
+                InlayRunAction action = inlayRunAction(segment);
+
+                if (imageHtml != null) {
+                    boolean onlyImage = !hasText;
+
+                    appendInlayRun(
+                        inlays,
+                        first,
+                        segment,
+                        INLAY_IMAGE_PLACEHOLDER,
+                        onlyImage && segment.lineBreak(),
+                        segment.first(),
+                        onlyImage && segment.last(),
+                        imageHtml,
+                        action,
+                        useEditorFontInInlays
+                    );
+                    first = false;
+
+                    if (onlyImage) {
+                        continue;
+                    }
                 }
+
+                appendInlayRun(
+                    inlays,
+                    first,
+                    segment,
+                    segment.text(),
+                    segment.lineBreak(),
+                    segment.first() && imageHtml == null,
+                    segment.last(),
+                    null,
+                    action,
+                    useEditorFontInInlays
+                );
                 first = false;
-
-                inlays.append("{\"text\":\"").append(escapeJson(segment.text())).append('"');
-
-                // the break is a flag rather than a character - escapeJson turns a control character into a space, and a
-                // raw one would abort the parse on the client
-                if (segment.lineBreak()) {
-                    inlays.append(",\"br\":true");
-                }
-
-                // the indent of a block hint carries no look of its own - it stands in for the code below it and has to
-                // measure like it
-                if (!segment.styled()) {
-                    inlays.append('}');
-                    continue;
-                }
-
-                String style = toCssStyle(segment.attributesKey() == null ? null : getColorsScheme().getAttributes(segment.attributesKey()));
-
-                // the awt editor measures a smaller hint against the editor font less one point, so the same one point
-                // is what travels - the browser is already laying the editor font out at the size the scheme asked for
-                String fontSize = segment.smallerFont()
-                    ? "\"fontSize\":\"" + Math.max(1, getColorsScheme().getEditorFontSize() - 1) + "px\""
-                    : null;
-
-                // the box - padding, rounding, the margin holding it off the code - belongs to the stylesheet rather
-                // than travelling as numbers. the scheme decides the colours, the frontend decides the shape, the same
-                // split a gutter band is drawn under
-                StringBuilder styleClass = new StringBuilder("arquill-inlay");
-                if (segment.boxed()) {
-                    if (segment.first()) {
-                        styleClass.append(" arquill-inlay-start");
-                    }
-                    if (segment.last()) {
-                        styleClass.append(" arquill-inlay-end");
-                    }
-                }
-
-                // a hint is set in the ui font rather than the editor one unless the setting says otherwise - which is
-                // what makes it read as a note about the code instead of as code. the awt editor takes the family from
-                // the label font, and the browser has a ui font of its own to take instead
-                if (!useEditorFontInInlays) {
-                    styleClass.append(" arquill-inlay-ui-font");
-                }
-
-                // a run which reaches an action is answered for by its place in the list, and the browser hands that place
-                // back rather than a position - it never laid the hint out in offsets the platform knows
-                if (segment.inlay() != null && segment.inlay().getRenderer().hasClickAction(segment.inlay(), segment.contentIndex())) {
-                    inlays.append(",\"click\":").append(myInlayClickTargets.size());
-
-                    myInlayClickTargets.add(new InlayClickTarget(segment.inlay(), segment.contentIndex()));
-                }
-
-                inlays.append(",\"style\":{\"styleClass\":\"").append(styleClass).append('"');
-
-                if (style != null || fontSize != null) {
-                    inlays.append(",\"style\":{");
-                    if (style != null) {
-                        inlays.append(style, 1, style.length() - 1);
-                    }
-                    if (fontSize != null) {
-                        if (style != null) {
-                            inlays.append(',');
-                        }
-                        inlays.append(fontSize);
-                    }
-                    inlays.append('}');
-                }
-
-                inlays.append("}}");
             }
 
             inlays.append("]}");
@@ -1300,6 +1238,124 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
         inlays.append(']');
 
         myEditorComponent.toVaadinComponent().setInlays(inlays.toString());
+    }
+
+    private InlayRunAction inlayRunAction(InlaySegment segment) {
+        Inlay<?> inlay = segment.inlay();
+        if (!segment.styled() || inlay == null) {
+            return InlayRunAction.NONE;
+        }
+
+        EditorCustomElementRenderer renderer = inlay.getRenderer();
+        int contentIndex = segment.contentIndex();
+
+        // a run which reaches an action is answered for by its place in the list, and the browser hands that place
+        // back rather than a position - it never laid the hint out in offsets the platform knows
+        int click = -1;
+        boolean plain = false;
+        if (renderer.hasClickAction(inlay, contentIndex)) {
+            click = myInlayClickTargets.size();
+            myInlayClickTargets.add(new InlayClickTarget(inlay, contentIndex));
+
+            plain = renderer.hasPlainClickAction(inlay, contentIndex);
+        }
+
+        return new InlayRunAction(click, plain, toHtmlContent(renderer.getTooltip(inlay, contentIndex).get()));
+    }
+
+    private void appendInlayRun(
+        StringBuilder inlays,
+        boolean first,
+        InlaySegment segment,
+        String text,
+        boolean lineBreak,
+        boolean opens,
+        boolean closes,
+        @Nullable String imageHtml,
+        InlayRunAction action,
+        boolean useEditorFontInInlays
+    ) {
+        if (!first) {
+            inlays.append(',');
+        }
+
+        inlays.append("{\"text\":\"").append(escapeJson(text)).append('"');
+
+        // the break is a flag rather than a character - escapeJson turns a control character into a space, and a
+        // raw one would abort the parse on the client
+        if (lineBreak) {
+            inlays.append(",\"br\":true");
+        }
+
+        // the indent of a block hint carries no look of its own - it stands in for the code below it and has to
+        // measure like it
+        if (!segment.styled()) {
+            inlays.append('}');
+            return;
+        }
+
+        String style = toCssStyle(segment.attributesKey() == null ? null : getColorsScheme().getAttributes(segment.attributesKey()));
+
+        // the awt editor measures a smaller hint against the editor font less one point, so the same one point
+        // is what travels - the browser is already laying the editor font out at the size the scheme asked for
+        String fontSize = segment.smallerFont()
+            ? "\"fontSize\":\"" + Math.max(1, getColorsScheme().getEditorFontSize() - 1) + "px\""
+            : null;
+
+        // the box - padding, rounding, the margin holding it off the code - belongs to the stylesheet rather
+        // than travelling as numbers. the scheme decides the colours, the frontend decides the shape, the same
+        // split a gutter band is drawn under
+        StringBuilder styleClass = new StringBuilder("arquill-inlay");
+        if (segment.boxed()) {
+            if (opens) {
+                styleClass.append(" arquill-inlay-start");
+            }
+            if (closes) {
+                styleClass.append(" arquill-inlay-end");
+            }
+        }
+
+        // a hint is set in the ui font rather than the editor one unless the setting says otherwise - which is
+        // what makes it read as a note about the code instead of as code. the awt editor takes the family from
+        // the label font, and the browser has a ui font of its own to take instead
+        if (!useEditorFontInInlays) {
+            styleClass.append(" arquill-inlay-ui-font");
+        }
+
+        if (imageHtml != null) {
+            inlays.append(",\"image\":\"").append(escapeJson(imageHtml)).append('"');
+        }
+
+        if (action.click() >= 0) {
+            inlays.append(",\"click\":").append(action.click());
+
+            if (action.plain()) {
+                inlays.append(",\"plain\":true");
+            }
+        }
+
+        String tooltip = action.tooltip();
+        if (tooltip != null) {
+            inlays.append(",\"tooltip\":\"").append(escapeJson(tooltip)).append('"');
+        }
+
+        inlays.append(",\"style\":{\"styleClass\":\"").append(styleClass).append('"');
+
+        if (style != null || fontSize != null) {
+            inlays.append(",\"style\":{");
+            if (style != null) {
+                inlays.append(style, 1, style.length() - 1);
+            }
+            if (fontSize != null) {
+                if (style != null) {
+                    inlays.append(',');
+                }
+                inlays.append(fontSize);
+            }
+            inlays.append('}');
+        }
+
+        inlays.append("}}");
     }
 
     /**
@@ -1342,10 +1398,8 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
             return null;
         }
 
-        // the runs are kept as they came - a run which is only an image cannot be projected, but dropping it here
-        // would shift every index after it, and the index is what a click is answered by
         for (InlayContentSegment segment : content.segments()) {
-            if (!segment.text().isEmpty()) {
+            if (!segment.text().isEmpty() || segment.image() != null) {
                 return content;
             }
         }
@@ -1373,9 +1427,14 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
         boolean last,
         boolean styled,
         boolean boxed,
+        consulo.ui.image.@Nullable Image image,
         @Nullable Inlay<?> inlay,
         int contentIndex
     ) {
+    }
+
+    private record InlayRunAction(int click, boolean plain, @Nullable String tooltip) {
+        private static final InlayRunAction NONE = new InlayRunAction(-1, false, null);
     }
 
     /**
@@ -1397,13 +1456,13 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
             boolean small = content.smallerFont();
 
             if (breakBefore) {
-                myBlock.add(new InlaySegment("", null, true, small, false, false, false, false, null, -1));
+                myBlock.add(new InlaySegment("", null, true, small, false, false, false, false, null, null, -1));
             }
 
             // the indent stands outside the hint - it is the code the hint lines up with, so it stays plain and is
             // measured in the editor font like the line below it
             if (!indent.isEmpty()) {
-                myBlock.add(new InlaySegment(indent, null, false, false, false, false, false, false, null, -1));
+                myBlock.add(new InlaySegment(indent, null, false, false, false, false, false, false, null, null, -1));
             }
 
             List<InlayContentSegment> segments = content.segments();
@@ -1419,6 +1478,7 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
                     last,
                     true,
                     false,
+                    segment.image(),
                     inlay,
                     i
                 ));
@@ -1438,6 +1498,7 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
                     i == segments.size() - 1,
                     true,
                     true,
+                    segment.image(),
                     inlay,
                     i
                 ));
@@ -2658,6 +2719,7 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
 
         rootLayout = DockLayout.create(Space.NONE);
         rootLayout.center(myEditorComponent);
+        TargetVaadin.to(rootLayout).getElement().setAttribute("data-arquill-editor-root", "");
         myRootLayout = rootLayout;
         return rootLayout;
     }

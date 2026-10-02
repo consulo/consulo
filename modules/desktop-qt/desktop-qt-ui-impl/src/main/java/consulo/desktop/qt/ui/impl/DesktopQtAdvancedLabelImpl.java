@@ -20,8 +20,10 @@ import consulo.desktop.qt.ui.impl.image.DesktopQtIconOwner;
 import consulo.localize.LocalizeValue;
 import consulo.ui.AdvancedLabel;
 import consulo.ui.TextAttribute;
+import consulo.ui.TextEffect;
 import consulo.ui.TextItemPresentation;
 import consulo.ui.color.ColorValue;
+import consulo.ui.ex.util.TextAttributeUtil;
 import consulo.ui.font.Font;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
@@ -34,6 +36,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 
 /**
@@ -145,11 +148,26 @@ public class DesktopQtAdvancedLabelImpl extends QtComponentDelegate<DesktopQtAdv
             appendColor(style, "color", attribute.getForegroundColor());
             appendColor(style, "background-color", attribute.getBackgroundColor());
 
-            if ((attribute.getStyle() & Font.BOLD) != 0) {
+            int fontStyle = TextAttributeUtil.getFontStyle(attribute);
+            if ((fontStyle & Font.BOLD) != 0) {
                 style.append("font-weight:bold;");
             }
-            if ((attribute.getStyle() & Font.ITALIC) != 0) {
+            if ((fontStyle & Font.ITALIC) != 0) {
                 style.append("font-style:italic;");
+            }
+
+            Set<TextEffect> effects = TextAttributeUtil.getEffects(attribute);
+            boolean strikeout = effects.contains(TextEffect.STRIKEOUT);
+            boolean underline = effects.contains(TextEffect.UNDERLINE) || effects.contains(TextEffect.WAVED);
+            if (strikeout || underline) {
+                style.append("text-decoration:");
+                if (strikeout) {
+                    style.append("line-through");
+                }
+                if (underline) {
+                    style.append(strikeout ? " underline" : "underline");
+                }
+                style.append(';');
             }
         }
 

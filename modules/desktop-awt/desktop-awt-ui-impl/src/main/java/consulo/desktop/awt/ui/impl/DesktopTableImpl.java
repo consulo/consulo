@@ -21,7 +21,6 @@ import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Length;
 import consulo.ui.Component;
-import consulo.ui.SelectionMode;
 import consulo.ui.Table;
 import consulo.ui.TableColumn;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -61,7 +60,7 @@ class DesktopTableImpl<Item> extends SwingComponentDelegate<TableView<Item>> imp
     private final FlatDataModel<Item> myModel;
     private final List<DesktopTableColumnImpl<Item, ?>> myColumns = new ArrayList<>();
 
-    private SelectionMode mySelectionMode = SelectionMode.SINGLE;
+    private boolean myAllowMultipleSelect;
     private boolean myShowHeader = true;
     private @Nullable Function<Item, String> mySpeedSearchConverter;
     private @Nullable Function<Item, Length> myItemHeightGetter;
@@ -78,7 +77,7 @@ class DesktopTableImpl<Item> extends SwingComponentDelegate<TableView<Item>> imp
         MyTableView tableView = new MyTableView(tableModel);
 
         applyColumns(tableView);
-        applySelectionMode(tableView);
+        applyMultipleSelect(tableView);
         applyHeader(tableView);
         applySpeedSearch(tableView);
         applyItemHeight(tableView);
@@ -118,18 +117,10 @@ class DesktopTableImpl<Item> extends SwingComponentDelegate<TableView<Item>> imp
         tableView.updateColumnSizes();
     }
 
-    private void applySelectionMode(TableView<Item> tableView) {
-        switch (mySelectionMode) {
-            case NONE -> tableView.setRowSelectionAllowed(false);
-            case SINGLE -> {
-                tableView.setRowSelectionAllowed(true);
-                tableView.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-            }
-            case MULTIPLE -> {
-                tableView.setRowSelectionAllowed(true);
-                tableView.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-            }
-        }
+    private void applyMultipleSelect(TableView<Item> tableView) {
+        tableView.setSelectionMode(
+            myAllowMultipleSelect ? ListSelectionModel.MULTIPLE_INTERVAL_SELECTION : ListSelectionModel.SINGLE_SELECTION
+        );
     }
 
     private void applyHeader(TableView<Item> tableView) {
@@ -183,10 +174,10 @@ class DesktopTableImpl<Item> extends SwingComponentDelegate<TableView<Item>> imp
     }
 
     @Override
-    public void setSelectionMode(SelectionMode mode) {
-        mySelectionMode = mode;
+    public void setAllowMultipleSelect(boolean allow) {
+        myAllowMultipleSelect = allow;
         if (isInitialized()) {
-            applySelectionMode(toAWTComponent());
+            applyMultipleSelect(toAWTComponent());
         }
     }
 

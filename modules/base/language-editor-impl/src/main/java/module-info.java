@@ -24,6 +24,7 @@ module consulo.language.editor.impl {
     requires consulo.navigation.api;
     requires consulo.project.content.api;
     requires consulo.project.ui.api;
+    requires consulo.version.control.system.api;
 
     exports consulo.language.editor.impl.action;
     exports consulo.language.editor.impl.codeVision;
@@ -34,6 +35,7 @@ module consulo.language.editor.impl {
 
     exports consulo.language.editor.impl.internal.action to consulo.ide.impl;
     exports consulo.language.editor.impl.internal to consulo.ide.impl;
+    exports consulo.language.editor.impl.internal.documentation to consulo.desktop.awt.ide.impl;
     exports consulo.language.editor.impl.internal.daemon to
         consulo.desktop.awt.ide.impl,
         consulo.ide.impl,

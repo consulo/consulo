@@ -228,6 +228,18 @@ doc.render.loading.text:
     text: Loading…
 doc.render.not.available.text:
     text: <i>Not available</i>
+documentation.file.creation.datetime.label:
+    text: 'Created:'
+documentation.file.modification.datetime.label:
+    text: 'Modified:'
+documentation.file.scope.label:
+    text: 'Scope:'
+documentation.file.size.label:
+    text: 'Size:'
+documentation.file.type.label:
+    text: 'Type:'
+documentation.file.vcs.status.label:
+    text: 'VCS Status:'
 documentation.message.documentation.is.not.available:
     text: Documentation is not available until indexes are built.
 enable.intention.action:
@@ -777,6 +789,8 @@ not.action.OptimizeImports.text:
     text: Optimi_ze Imports...
 notification.text.unused.imports.not.found:
     text: Unused imports not found
+open.url.in.browser.tooltip:
+    text: Open in browser
 override.implement.broken.file.template.message:
     text: Please Correct "Overridden/Implemented Method Body" Template
 override.implement.broken.file.template.title:

@@ -17,6 +17,7 @@ package consulo.it.internal.ui;
 
 import consulo.ui.Component;
 import consulo.ui.layout.LayoutConstraint;
+import consulo.ui.layout.SplitLayoutPosition;
 import consulo.ui.layout.TwoComponentSplitLayout;
 
 /**
@@ -27,6 +28,10 @@ import consulo.ui.layout.TwoComponentSplitLayout;
 public class HeadlessTwoComponentSplitLayout extends HeadlessLayoutBase<LayoutConstraint> implements TwoComponentSplitLayout {
     @Override
     public void setProportion(int percent) {
+    }
+
+    @Override
+    public void setPosition(SplitLayoutPosition position) {
     }
 
     @Override

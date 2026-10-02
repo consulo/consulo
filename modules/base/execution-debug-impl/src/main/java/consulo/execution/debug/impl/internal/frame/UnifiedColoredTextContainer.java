@@ -16,10 +16,10 @@
 package consulo.execution.debug.impl.internal.frame;
 
 import consulo.localize.LocalizeValue;
-import consulo.ui.TextAttribute;
 import consulo.ui.TextItemPresentation;
 import consulo.ui.ex.SimpleColoredText;
 import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.util.TextAttributeUtil;
 import consulo.ui.image.Image;
 import org.jspecify.annotations.Nullable;
 
@@ -48,22 +48,7 @@ public final class UnifiedColoredTextContainer extends SimpleColoredText {
         List<String> texts = getTexts();
         List<SimpleTextAttributes> attributes = getAttributes();
         for (int i = 0; i < texts.size(); i++) {
-            presentation.append(LocalizeValue.of(texts.get(i)), toTextAttribute(attributes.get(i)));
+            presentation.append(LocalizeValue.of(texts.get(i)), TextAttributeUtil.toTextAttribute(attributes.get(i)));
         }
-    }
-
-    public static TextAttribute toTextAttribute(@Nullable SimpleTextAttributes attributes) {
-        if (attributes == null) {
-            return TextAttribute.REGULAR;
-        }
-
-        int style = 0;
-        if ((attributes.getStyle() & SimpleTextAttributes.STYLE_BOLD) != 0) {
-            style |= TextAttribute.STYLE_BOLD;
-        }
-        if ((attributes.getStyle() & SimpleTextAttributes.STYLE_ITALIC) != 0) {
-            style |= TextAttribute.STYLE_ITALIC;
-        }
-        return new TextAttribute(style, attributes.foreground(), attributes.background());
     }
 }

@@ -15,10 +15,13 @@
  */
 package consulo.language.editor.internal;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.application.Application;
 import consulo.language.Language;
 import consulo.language.editor.documentation.CompositeDocumentationProvider;
 import consulo.language.editor.documentation.DocumentationProvider;
 import consulo.language.editor.documentation.LanguageDocumentationProvider;
+import consulo.language.editor.documentation.UnrestrictedDocumentationProvider;
 import consulo.language.psi.*;
 import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
@@ -98,6 +101,30 @@ public class DocumentationManagerHelper {
       }
     }
     return CompositeDocumentationProvider.wrapProviders(result);
+  }
+
+  @RequiredReadAction
+  public static @Nullable PsiElement resolvePsiElementLink(PsiElement context, String refText) {
+    PsiManager manager = context.getManager();
+    PsiElement target = getProviderFromElement(context).getDocumentationElementForLink(manager, refText, context);
+    if (target != null) {
+      return target;
+    }
+    target = Application.get().getExtensionPoint(UnrestrictedDocumentationProvider.class)
+      .computeSafeIfAny(provider -> provider.getDocumentationElementForLink(manager, refText, context));
+    if (target != null) {
+      return target;
+    }
+    for (Language language : Language.getRegisteredLanguages()) {
+      DocumentationProvider provider = LanguageDocumentationProvider.forLanguageComposite(language);
+      if (provider != null) {
+        target = provider.getDocumentationElementForLink(manager, refText, context);
+        if (target != null) {
+          return target;
+        }
+      }
+    }
+    return null;
   }
 
   public static @Nullable PsiElement getOriginalElement(PsiElement element) {

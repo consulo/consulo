@@ -32,32 +32,36 @@ public final class LanguageOneToMany<E extends LanguageExtension> implements Fun
 
     private final boolean myWithAnyLanguage;
 
-    private final Map<Language, List<T>> myRawExtension = new HashMap<>();
+    private final List<T> myRawExtensions = new ArrayList<>();
     private final Function<List<T>, List<T>> mySorter;
 
     public ByLanguageValueImpl(ExtensionWalker<T> walker, boolean withAnyLanguage) {
       myWithAnyLanguage = withAnyLanguage;
       mySorter = walker.sorter();
-      walker.walk(extension -> myRawExtension.computeIfAbsent(extension.getLanguage(), i -> new ArrayList<>()).add(extension));
+      walker.walk(myRawExtensions::add);
     }
 
     @Override
     public List<T> get(Language l) {
       return myExtensions.computeIfAbsent(l, language -> {
-        Set<T> allExtensions = new HashSet<>();
-        // add any
+        Set<Language> languages = new HashSet<>();
         if (myWithAnyLanguage) {
-          allExtensions.addAll(myRawExtension.getOrDefault(Language.ANY, List.of()));
+          languages.add(Language.ANY);
         }
-
-        allExtensions.addAll(myRawExtension.getOrDefault(language, List.of()));
 
         Language base = language;
-        while ((base = base.getBaseLanguage()) != null) {
-          allExtensions.addAll(myRawExtension.getOrDefault(base, List.of()));
+        while (base != null) {
+          languages.add(base);
+          base = base.getBaseLanguage();
         }
 
-        return mySorter.apply(new ArrayList<>(allExtensions));
+        List<T> extensions = new ArrayList<>();
+        for (T extension : myRawExtensions) {
+          if (languages.contains(extension.getLanguage())) {
+            extensions.add(extension);
+          }
+        }
+        return mySorter.apply(extensions);
       });
     }
   }

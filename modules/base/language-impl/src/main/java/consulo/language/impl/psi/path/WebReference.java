@@ -18,7 +18,10 @@ package consulo.language.impl.psi.path;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.document.util.TextRange;
 import consulo.language.impl.psi.FakePsiElement;
+import consulo.language.psi.ContributedReferenceHost;
+import consulo.language.psi.HintedReferenceHost;
 import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiExternalReferenceHost;
 import consulo.language.psi.PsiReferenceBase;
 import consulo.language.psi.SyntheticElement;
 import consulo.platform.Platform;
@@ -31,6 +34,7 @@ import org.jspecify.annotations.Nullable;
  */
 public class WebReference extends PsiReferenceBase<PsiElement> {
     private final @Nullable String myUrl;
+    private boolean myHighlight = true;
 
     public WebReference(PsiElement element) {
         this(element, (String) null);
@@ -48,6 +52,18 @@ public class WebReference extends PsiReferenceBase<PsiElement> {
     public WebReference(PsiElement element, TextRange textRange, @Nullable String url) {
         super(element, textRange, true);
         myUrl = url;
+    }
+
+    public boolean getHighlight() {
+        return myHighlight;
+    }
+
+    public void setHighlight(boolean highlight) {
+        myHighlight = highlight;
+    }
+
+    public boolean isHttpRequestTarget() {
+        return true;
     }
 
     @Override
@@ -96,5 +112,15 @@ public class WebReference extends PsiReferenceBase<PsiElement> {
             TextRange elementRange = myElement.getTextRange();
             return rangeInElement.shiftRight(elementRange.getStartOffset());
         }
+    }
+
+    /**
+     * Optimization method to greatly reduce frequency of potentially expensive {@link PsiElement#getReferences()} calls
+     * @return true if the element is able to contain WebReference
+     */
+    public static boolean isWebReferenceWorthy(PsiElement element) {
+        return element instanceof HintedReferenceHost
+            || element instanceof ContributedReferenceHost
+            || element instanceof PsiExternalReferenceHost;
     }
 }

@@ -5,8 +5,11 @@ import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.component.util.ModificationTracker;
+import consulo.language.Language;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
+
+import java.util.function.Predicate;
 
 /**
  * An interface used to support tracking of common PSI modifications. It has three main usage patterns:
@@ -55,4 +58,14 @@ public interface PsiModificationTracker extends ModificationTracker {
 
     
     ModificationTracker getModificationTracker();
+
+    /**
+     * @return modification tracker incremented on changes in files with the passed language.
+     */
+    ModificationTracker forLanguage(Language language);
+
+    /**
+     * @return modification tracker incremented on changes in files with language that matches the passed condition.
+     */
+    ModificationTracker forLanguages(Predicate<? super Language> condition);
 }

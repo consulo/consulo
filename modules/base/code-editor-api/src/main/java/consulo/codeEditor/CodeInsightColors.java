@@ -44,6 +44,7 @@ public interface CodeInsightColors {
     TextAttributesKey BLINKING_HIGHLIGHTS_ATTRIBUTES = TextAttributesKey.of("BLINKING_HIGHLIGHTS_ATTRIBUTES");
     TextAttributesKey HYPERLINK_ATTRIBUTES = TextAttributesKey.of("HYPERLINK_ATTRIBUTES");
     TextAttributesKey FOLLOWED_HYPERLINK_ATTRIBUTES = TextAttributesKey.of("FOLLOWED_HYPERLINK_ATTRIBUTES");
+    TextAttributesKey INACTIVE_HYPERLINK_ATTRIBUTES = TextAttributesKey.of("INACTIVE_HYPERLINK_ATTRIBUTES");
 
     TextAttributesKey TODO_DEFAULT_ATTRIBUTES = TextAttributesKey.of("TODO_DEFAULT_ATTRIBUTES");
     TextAttributesKey BOOKMARKS_ATTRIBUTES = TextAttributesKey.of("BOOKMARKS_ATTRIBUTES");

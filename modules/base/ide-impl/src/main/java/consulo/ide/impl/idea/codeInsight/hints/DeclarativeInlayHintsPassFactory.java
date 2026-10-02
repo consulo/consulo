@@ -10,9 +10,11 @@ import consulo.codeEditor.EditorKind;
 import consulo.language.editor.Pass;
 import consulo.language.editor.highlight.HighlightingLevelManager;
 import consulo.language.editor.highlight.TextEditorHighlightingPassFactory;
-import consulo.language.editor.impl.internal.inlay.setting.DeclarativeInlayHintsSettings;
 import consulo.language.editor.inlay.DeclarativeInlayHintsProvider;
+import consulo.language.editor.inlay.DeclarativeInlayHintsSettings;
 import consulo.language.editor.inlay.DeclarativeInlayOptionInfo;
+import consulo.language.editor.inlay.DeclarativeInlayHintsProviderFactoryUtil;
+import consulo.language.editor.inlay.InlayProviderInfo;
 import consulo.language.editor.internal.DaemonCodeAnalyzerInternal;
 import consulo.language.editor.internal.InlayHintsSettings;
 import consulo.language.psi.PsiFile;
@@ -46,7 +48,7 @@ public class DeclarativeInlayHintsPassFactory implements TextEditorHighlightingP
     }
 
     public static List<InlayProviderInfo> getSuitableToFileProviders(PsiFile file) {
-        List<InlayProviderInfo> infos = InlayHintsProviderFactory.findProvidersForLanguage(file.getLanguage());
+        List<InlayProviderInfo> infos = DeclarativeInlayHintsProviderFactoryUtil.getProvidersForLanguage(file.getLanguage());
         if (!DumbService.isDumb(file.getProject())) {
             return infos;
         }

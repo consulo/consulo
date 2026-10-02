@@ -45,6 +45,15 @@ public abstract class RootType {
     return ROOT_EP.getExtensionList();
   }
 
+  public static RootType findById(String id) {
+    for (RootType type : getAllRootTypes()) {
+      if (id.equals(type.getId())) {
+        return type;
+      }
+    }
+    throw new AssertionError(id);
+  }
+
   public static @Nullable RootType forFile(@Nullable VirtualFile file) {
     return ScratchFileService.getInstance().getRootType(file);
   }

@@ -207,6 +207,12 @@
                 <option name="BACKGROUND" value="ffcccc"/>
             </value>
         </option>
+        <option name="DEFAULT_HIGHLIGHTED_REFERENCE">
+            <value>
+                <option name="EFFECT_COLOR" value="808080"/>
+                <option name="EFFECT_TYPE" value="1"/>
+            </value>
+        </option>
         <option name="DEFAULT_VALID_STRING_ESCAPE">
             <value>
                 <option name="FOREGROUND" value="000080"/>
@@ -306,6 +312,12 @@
                 <option name="EFFECT_COLOR" value="0000ff"/>
                 <option name="EFFECT_TYPE" value="1"/>
                 <option name="FONT_TYPE" value="2"/>
+            </value>
+        </option>
+        <option name="INACTIVE_HYPERLINK_ATTRIBUTES">
+            <value>
+                <option name="EFFECT_COLOR" value="808080"/>
+                <option name="EFFECT_TYPE" value="1"/>
             </value>
         </option>
         <option name="INFORMATION_ATTRIBUTES">

@@ -15,8 +15,11 @@
  */
 package consulo.codeEditor;
 
+import consulo.codeEditor.event.EditorMouseEvent;
 import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.colorScheme.TextAttributes;
+import consulo.localize.LocalizeValue;
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
@@ -104,6 +107,14 @@ public interface EditorCustomElementRenderer {
         return false;
     }
 
+    default boolean hasPlainClickAction(Inlay<?> inlay, int segmentIndex) {
+        return false;
+    }
+
+    default LocalizeValue getTooltip(Inlay<?> inlay, int segmentIndex) {
+        return LocalizeValue.empty();
+    }
+
     /**
      * Handles a click on the run of {@link #getContent} at this index.
      * <p>
@@ -111,7 +122,8 @@ public interface EditorCustomElementRenderer {
      * out in pixels has no coordinate to hand back. An action belongs to the renderer which knows its own parts, so
      * nothing of it has to travel inside the content.
      */
-    default void handleClick(Inlay<?> inlay, int segmentIndex, boolean controlDown) {
+    @RequiredUIAccess
+    default void handleClick(Inlay<?> inlay, int segmentIndex, EditorMouseEvent event, boolean controlDown) {
     }
 
     /**

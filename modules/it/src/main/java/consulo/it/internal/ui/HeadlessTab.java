@@ -28,6 +28,8 @@ import java.util.function.BiConsumer;
  * @author VISTALL
  */
 public class HeadlessTab implements Tab {
+    private boolean myEnabled = true;
+
     @Override
     public void setRenderer(BiConsumer<Tab, TextItemPresentation> renderer) {
     }
@@ -42,5 +44,15 @@ public class HeadlessTab implements Tab {
 
     @Override
     public void select() {
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        myEnabled = enabled;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return myEnabled;
     }
 }

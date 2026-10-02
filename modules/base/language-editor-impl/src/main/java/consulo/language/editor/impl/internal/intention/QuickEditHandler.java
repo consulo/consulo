@@ -250,7 +250,7 @@ public class QuickEditHandler extends DocumentAdapter implements Disposable {
                 }.registerCustomShortcutSet(CommonShortcuts.ESCAPE, component);
                 Disposer.register(myNewFile.getProject(), balloon);
                 Balloon.Position position = QuickEditAction.getBalloonPosition(myEditor);
-                RelativePoint point = EditorPopupHelper.getInstance().guessBestPopupLocation(myEditor);
+                RelativePoint point = RelativePoint.from(EditorPopupHelper.getInstance().guessBestPopupLocation(myEditor));
                 if (position == Balloon.Position.above) {
                     Point p = point.getPoint();
                     point = new RelativePoint(point.getComponent(), new Point(p.x, p.y - myEditor.getLineHeight()));

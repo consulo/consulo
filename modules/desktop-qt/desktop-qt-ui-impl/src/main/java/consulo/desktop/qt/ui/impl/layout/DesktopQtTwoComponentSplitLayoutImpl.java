@@ -60,7 +60,7 @@ public class DesktopQtTwoComponentSplitLayoutImpl extends DesktopQtLayoutCompone
         }
     }
 
-    private final SplitLayoutPosition myPosition;
+    private SplitLayoutPosition myPosition;
 
     private final QtComponentDelegate<?>[] myAttached = new QtComponentDelegate<?>[ourSlots.length];
 
@@ -158,6 +158,21 @@ public class DesktopQtTwoComponentSplitLayoutImpl extends DesktopQtLayoutCompone
         myUserMoved = false;
 
         applyProportion();
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void setPosition(SplitLayoutPosition position) {
+        if (myPosition == position) {
+            return;
+        }
+
+        myPosition = position;
+
+        if (myComponent instanceof QSplitter splitter) {
+            splitter.setOrientation(position == SplitLayoutPosition.VERTICAL ? Qt.Orientation.Vertical : Qt.Orientation.Horizontal);
+            applyProportion();
+        }
     }
 
     @RequiredUIAccess

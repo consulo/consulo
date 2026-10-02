@@ -233,7 +233,7 @@ public class UnifiedListPopupImpl extends UnifiedPopupImpl implements ListPopup 
                 setActiveButton(level, -1);
             }
 
-            handleSelect(level, true);
+            handleSelect(level, true, event.getInputDetails());
         });
 
         list.addKeyPressedListener(event -> onKeyPressed(level, event.getInputDetails()));
@@ -293,7 +293,7 @@ public class UnifiedListPopupImpl extends UnifiedPopupImpl implements ListPopup 
                 icon == null ? Image.empty(Image.DEFAULT_ICON_SIZE) : icon,
                 level.myInlineActions.getToolTip(value, i),
                 button.alwaysVisible(),
-                details -> performButton(level, value, index)
+                details -> performButton(level, value, index, details)
             ));
         }
         return inlineButtons;
@@ -388,6 +388,11 @@ public class UnifiedListPopupImpl extends UnifiedPopupImpl implements ListPopup 
 
     @RequiredUIAccess
     private void handleSelect(Level level, boolean handleFinalChoices) {
+        handleSelect(level, handleFinalChoices, null);
+    }
+
+    @RequiredUIAccess
+    private void handleSelect(Level level, boolean handleFinalChoices, @Nullable InputDetails details) {
         Object value = level.myList.getValue();
         if (isDisposed() || value == null || !level.myStep.isSelectable(value)) {
             return;
@@ -398,22 +403,27 @@ public class UnifiedListPopupImpl extends UnifiedPopupImpl implements ListPopup 
         }
 
         if (level.myActiveButton >= 0) {
-            performButton(level, value, level.myActiveButton);
+            performButton(level, value, level.myActiveButton, details);
             return;
         }
 
-        choose(level, level.myStep, value, handleFinalChoices);
+        choose(level, level.myStep, value, handleFinalChoices, details);
     }
 
     @RequiredUIAccess
     private void performButton(Level level, Object value, int index) {
+        performButton(level, value, index, null);
+    }
+
+    @RequiredUIAccess
+    private void performButton(Level level, Object value, int index, @Nullable InputDetails details) {
         if (isDisposed() || !myLevels.contains(level)) {
             return;
         }
 
         PopupInlineActions inlineActions = level.myInlineActions;
         if (inlineActions.isMoreButton(value, index)) {
-            choose(level, level.myStep, value, false);
+            choose(level, level.myStep, value, false, details);
             return;
         }
 
@@ -423,7 +433,7 @@ public class UnifiedListPopupImpl extends UnifiedPopupImpl implements ListPopup 
             return;
         }
 
-        if (!ActionImplUtil.isKeepPopupOpen(inlineActions.getKeepPopupOnPerform(value, index), null)) {
+        if (!ActionImplUtil.isKeepPopupOpen(inlineActions.getKeepPopupOnPerform(value, index), details)) {
             markOk();
             unwindTo(null);
 
@@ -433,6 +443,11 @@ public class UnifiedListPopupImpl extends UnifiedPopupImpl implements ListPopup 
 
         step.performActionItem(item, null);
 
+        updateStepItems(level, step);
+    }
+
+    @RequiredUIAccess
+    private void updateStepItems(Level level, ActionPopupStep step) {
         step.updateStepItems().whenComplete((ignored, throwable) -> {
             if (throwable == null && !isDisposed() && myLevels.contains(level)) {
                 level.myList.setRender(renderFor(level.myStep));
@@ -454,6 +469,17 @@ public class UnifiedListPopupImpl extends UnifiedPopupImpl implements ListPopup 
 
     @RequiredUIAccess
     private void choose(@Nullable Level level, ListPopupStep<Object> step, Object value, boolean finalChoice) {
+        choose(level, step, value, finalChoice, null);
+    }
+
+    @RequiredUIAccess
+    private void choose(
+        @Nullable Level level,
+        ListPopupStep<Object> step,
+        Object value,
+        boolean finalChoice,
+        @Nullable InputDetails details
+    ) {
         PopupStep<?> next;
         try {
             next = step.onChosen(value, finalChoice);
@@ -488,6 +514,21 @@ public class UnifiedListPopupImpl extends UnifiedPopupImpl implements ListPopup 
                     pushLevel(resolvedListStep);
                 }
             }, uiAccess);
+            return;
+        }
+
+        ListPopupStep<?> listStep = step;
+        if (next == PopupStep.FINAL_CHOICE
+            && level != null
+            && myLevels.contains(level)
+            && value instanceof ActionPopupItem item
+            && listStep instanceof ActionPopupStep actionStep
+            && ActionImplUtil.isKeepPopupOpen(item.getKeepPopupOnPerform(), details)
+            && actionStep.isSelectable(item)) {
+            if (!ActionImplUtil.isKeepPopupOpen(item.getKeepPopupOnPerform(), (InputDetails) null)) {
+                actionStep.performActionItem(item, null);
+            }
+            updateStepItems(level, actionStep);
             return;
         }
 

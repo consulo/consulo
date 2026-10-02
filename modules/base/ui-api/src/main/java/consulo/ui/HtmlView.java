@@ -17,6 +17,7 @@ package consulo.ui;
 
 import consulo.disposer.Disposable;
 import consulo.ui.event.ComponentEventListener;
+import consulo.ui.event.HtmlViewDoubleClickEvent;
 import consulo.ui.event.HyperlinkEvent;
 import consulo.ui.image.Image;
 import consulo.ui.internal.UIInternal;
@@ -71,5 +72,9 @@ public interface HtmlView extends Component {
 
     default Disposable addHyperlinkListener(ComponentEventListener<Component, HyperlinkEvent> hyperlinkListener) {
         return addListener(HyperlinkEvent.class, hyperlinkListener);
+    }
+
+    default Disposable addDoubleClickListener(ComponentEventListener<HtmlView, HtmlViewDoubleClickEvent> listener) {
+        return addListener(HtmlViewDoubleClickEvent.class, listener);
     }
 }

@@ -27,19 +27,16 @@ import consulo.document.util.TextRange;
 import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.ide.impl.find.PsiElement2UsageTargetAdapter;
 import consulo.ide.impl.idea.find.EditorSearchSession;
-import consulo.language.editor.IdentifierUtil;
 import consulo.language.editor.TargetElementUtil;
 import consulo.language.editor.highlight.HighlightManager;
 import consulo.language.editor.highlight.HighlightUsagesDescriptionLocation;
 import consulo.language.editor.highlight.ReadWriteAccessDetector;
 import consulo.language.editor.highlight.usage.HighlightUsagesHandlerBase;
 import consulo.language.editor.highlight.usage.HighlightUsagesHandlerFactory;
+import consulo.language.editor.highlight.usage.HighlightUsagesUtil;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.inject.EditorWindow;
-import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.inject.InjectedLanguageManager;
-import consulo.language.pom.PomTargetPsiElement;
-import consulo.language.pom.PsiDeclaredTarget;
 import consulo.language.psi.*;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
@@ -324,30 +321,7 @@ public class HighlightUsagesHandler extends HighlightHandlerBase {
 
     @RequiredReadAction
     public static @Nullable TextRange getNameIdentifierRange(PsiFile file, PsiElement element) {
-        InjectedLanguageManager injectedManager = InjectedLanguageManager.getInstance(element.getProject());
-        if (element instanceof PomTargetPsiElement pomTargetPsiElement
-            && pomTargetPsiElement.getTarget() instanceof PsiDeclaredTarget declaredTarget) {
-            TextRange range = declaredTarget.getNameIdentifierRange();
-            if (range != null) {
-                if (range.getStartOffset() < 0 || range.getLength() <= 0) {
-                    return null;
-                }
-                PsiElement navElement = declaredTarget.getNavigationElement();
-                if (PsiUtilBase.isUnderPsiRoot(file, navElement)) {
-                    return injectedManager.injectedToHost(navElement, range.shiftRight(navElement.getTextRange().getStartOffset()));
-                }
-            }
-        }
-
-        if (!PsiUtilBase.isUnderPsiRoot(file, element)) {
-            return null;
-        }
-
-        PsiElement identifier = IdentifierUtil.getNameIdentifier(element);
-        if (identifier != null && PsiUtilBase.isUnderPsiRoot(file, identifier)) {
-            return injectedManager.injectedToHost(identifier, identifier.getTextRange());
-        }
-        return null;
+        return HighlightUsagesUtil.getNameIdentifierRange(file, element);
     }
 
     @RequiredUIAccess

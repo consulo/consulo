@@ -76,16 +76,14 @@ public class WebAdvancedLabelImpl extends VaadinComponentDelegate<WebAdvancedLab
             WebItemPresentationImpl.Fragment fragment = fragments.get(i);
 
             Span run = runAt(i);
-            run.setText(fragment.text());
-            WebItemPresentationImpl.applyAttribute(run, fragment.attribute());
+            WebItemPresentationImpl.applyRun(run, fragment.text(), fragment.attribute());
         }
 
         // the runs the presentation did not use. emptied and not removed, so nothing detaches - a row bound from an
         // item with a tail onto one without says nothing there instead of still saying the old tail
         for (int i = fragments.size(); i < myRuns.size(); i++) {
             Span run = myRuns.get(i);
-            run.setText("");
-            WebItemPresentationImpl.applyAttribute(run, null);
+            WebItemPresentationImpl.applyRun(run, "", null);
         }
 
         return this;

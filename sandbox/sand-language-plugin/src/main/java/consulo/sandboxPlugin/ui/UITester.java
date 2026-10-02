@@ -432,7 +432,7 @@ public class UITester {
                     }
                 });
 
-            table.setSelectionMode(SelectionMode.MULTIPLE);
+            table.setAllowMultipleSelect(true);
             table.setSpeedSearchConverter(key -> key);
             table.addSelectListener(event -> MessageBoxes.okInfo(LocalizeValue.of("Selected: " + event.getValues().size())).showAsync());
 

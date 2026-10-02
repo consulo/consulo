@@ -27,6 +27,16 @@ import consulo.language.util.IncorrectOperationException;
 @ExtensionImpl
 public class SandStringExpressionElementManipulator extends AbstractElementManipulator<SandStringExpression> {
   @Override
+  public TextRange getRangeInElement(SandStringExpression element) {
+    String text = element.getText();
+    int length = text.length();
+    if (length < 2 || text.charAt(0) != '"') {
+      return new TextRange(0, length);
+    }
+    return new TextRange(1, text.charAt(length - 1) == '"' ? length - 1 : length);
+  }
+
+  @Override
   public SandStringExpression handleContentChange(SandStringExpression element, TextRange range, String newContent) throws IncorrectOperationException {
     return element;
   }

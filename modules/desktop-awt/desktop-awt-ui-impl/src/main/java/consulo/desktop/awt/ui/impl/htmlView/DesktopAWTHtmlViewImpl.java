@@ -18,8 +18,10 @@ package consulo.desktop.awt.ui.impl.htmlView;
 import consulo.application.Application;
 import consulo.desktop.awt.ui.impl.facade.FromSwingComponentWrapper;
 import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
+import consulo.desktop.awt.ui.impl.event.DesktopAWTInputDetails;
 import consulo.ui.Component;
 import consulo.ui.HtmlView;
+import consulo.ui.event.HtmlViewDoubleClickEvent;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.ImageUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
@@ -47,6 +49,8 @@ import org.xml.sax.SAXException;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.Reader;
@@ -74,7 +78,18 @@ public class DesktopAWTHtmlViewImpl extends SwingComponentDelegate<DesktopAWTHtm
 
         @Override
         protected HtmlBlockPanel createHtmlBlockPanel(UserAgentContext uContext, HtmlRendererContext rContext) {
-            return new ScrollPreservingHtmlBlockPanel(JBColor.WHITE, true, uContext, rContext, this);
+            HtmlBlockPanel blockPanel = new ScrollPreservingHtmlBlockPanel(JBColor.WHITE, true, uContext, rContext, this);
+            blockPanel.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    if (e.getClickCount() == 2 && SwingUtilities.isLeftMouseButton(e)) {
+                        getListenerDispatcher(HtmlViewDoubleClickEvent.class).onEvent(
+                            new HtmlViewDoubleClickEvent(DesktopAWTHtmlViewImpl.this, DesktopAWTInputDetails.convert(MyHtmlPanel.this, e))
+                        );
+                    }
+                }
+            });
+            return blockPanel;
         }
 
         @Override

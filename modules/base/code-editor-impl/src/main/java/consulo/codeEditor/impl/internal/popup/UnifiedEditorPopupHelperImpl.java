@@ -21,9 +21,10 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorPopupHelper;
 import consulo.codeEditor.internal.CaretPixelLocationProvider;
 import consulo.codeEditor.internal.CaretPixelLocationProvider.CaretPixelLocation;
+import consulo.ui.Point2D;
+import consulo.ui.RelativePoint2D;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.internal.AnchoredPopup;
-import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.popup.JBPopup;
 import jakarta.inject.Singleton;
 import org.jspecify.annotations.Nullable;
@@ -36,8 +37,12 @@ import org.jspecify.annotations.Nullable;
 @ServiceImpl(profiles = ComponentProfiles.UNIFIED)
 public class UnifiedEditorPopupHelperImpl implements EditorPopupHelper {
     @Override
-    public RelativePoint guessBestPopupLocation(Editor editor) {
-        throw new UnsupportedOperationException();
+    public RelativePoint2D guessBestPopupLocation(Editor editor) {
+        CaretPixelLocation location = caretLocation(editor);
+        if (location == null) {
+            return RelativePoint2D.of(editor.getContentUIComponent(), new Point2D(0, 0));
+        }
+        return RelativePoint2D.of(editor.getContentUIComponent(), new Point2D(location.x(), location.y() + location.height()));
     }
 
     @Override

@@ -57,6 +57,10 @@ public interface FileColorManager {
 
     @Nullable Color getScopeColor(String scopeName);
 
+    default @Nullable ColorValue getScopeColorValue(String scopeName) {
+        return TargetAWT.from(getScopeColor(scopeName));
+    }
+
     boolean isShared(String scopeName);
 
     boolean isColored(String scopeName, boolean shared);

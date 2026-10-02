@@ -30,15 +30,15 @@ import javax.swing.event.ListSelectionListener;
  * @author VISTALL
  * @since 2017-09-12
  */
-class DesktopValueListenerAsListSelectionListener<E> implements ListSelectionListener {
-    private DesktopListBoxImpl<E> myBox;
+class DesktopValueListenerAsListSelectionListener<E, V> implements ListSelectionListener {
+    private DesktopListBoxBaseImpl<E, V> myBox;
     private JBList<E> myDesktopListBox;
-    private ComponentEventListener<ValueComponent<E>, ValueComponentEvent<E>> myValueListener;
+    private ComponentEventListener<ValueComponent<V>, ValueComponentEvent<V>> myValueListener;
 
     public DesktopValueListenerAsListSelectionListener(
-        DesktopListBoxImpl<E> box,
+        DesktopListBoxBaseImpl<E, V> box,
         JBList<E> desktopListBox,
-        ComponentEventListener<ValueComponent<E>, ValueComponentEvent<E>> valueListener
+        ComponentEventListener<ValueComponent<V>, ValueComponentEvent<V>> valueListener
     ) {
         myBox = box;
         myDesktopListBox = desktopListBox;
@@ -62,9 +62,13 @@ class DesktopValueListenerAsListSelectionListener<E> implements ListSelectionLis
     @Override
     @RequiredUIAccess
     public void valueChanged(ListSelectionEvent e) {
+        if (!myBox.isValueEvent(e)) {
+            return;
+        }
+
         myValueListener.onEvent(new ValueComponentEvent<>(
             myBox,
-            myDesktopListBox.getSelectedValue(),
+            myBox.getValue(),
             DesktopAWTInputDetails.currentEvent(myDesktopListBox)
         ));
     }

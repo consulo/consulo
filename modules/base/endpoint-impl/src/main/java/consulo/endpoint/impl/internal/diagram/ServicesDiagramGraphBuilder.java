@@ -12,6 +12,7 @@ import consulo.endpoint.EndpointProvider;
 import consulo.endpoint.EndpointType;
 import consulo.endpoint.EndpointUrlTargetProvider;
 import consulo.endpoint.FrameworkPresentation;
+import consulo.endpoint.presentation.EndpointMethodPresentation;
 import consulo.endpoint.url.Authority;
 import consulo.endpoint.url.UrlResolveRequest;
 import consulo.endpoint.url.UrlResolverManager;
@@ -144,6 +145,12 @@ final class ServicesDiagramGraphBuilder {
 
                 ItemPresentation presentation = provider.getEndpointPresentation(group, endpoint);
                 String text = presentation.getPresentableText();
+                if (text != null && presentation instanceof EndpointMethodPresentation methodPresentation) {
+                    String method = methodPresentation.getEndpointMethodPresentation();
+                    if (method != null && !method.isEmpty()) {
+                        text = method + " " + text;
+                    }
+                }
                 if (text != null) {
                     @Nullable Image icon = endpointType.getIcon();
                     members.add(new ServicesDiagramMember(text, framework.getTitle(), client, icon != null ? icon : framework.getIcon()));
