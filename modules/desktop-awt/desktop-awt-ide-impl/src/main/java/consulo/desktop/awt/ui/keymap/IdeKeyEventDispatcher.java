@@ -20,9 +20,8 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.util.registry.Registry;
-import consulo.component.ProcessCanceledException;
-import consulo.logging.Logger;
 import consulo.awt.hacking.AWTKeyStrokeHacking;
+import consulo.component.ProcessCanceledException;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.desktop.awt.ui.IdeEventQueue;
@@ -30,17 +29,14 @@ import consulo.desktop.awt.ui.ProhibitAWTEvents;
 import consulo.desktop.awt.ui.impl.event.DesktopAWTInputDetails;
 import consulo.desktop.awt.ui.impl.glassPane.IdeGlassPaneImpl;
 import consulo.desktop.awt.ui.keymap.keyGesture.KeyboardGestureProcessor;
+import consulo.desktop.awt.ui.popup.list.ListPopupImpl;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ui.ex.action.ActionPromoter;
-import consulo.ui.ex.impl.internal.action.ActionImplUtil;
-import consulo.ui.ex.impl.internal.action.ActionRunnerAsync;
 import consulo.ide.impl.idea.openapi.keymap.impl.ActionProcessor;
 import consulo.ide.impl.idea.openapi.keymap.impl.KeyState;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.ShortcutTextField;
 import consulo.ide.impl.idea.ui.ComponentWithMnemonics;
-import consulo.ui.ex.impl.internal.keymap.KeyStrokeAdapter;
-import consulo.desktop.awt.ui.popup.list.ListPopupImpl;
+import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.project.DumbService;
 import consulo.project.Project;
@@ -56,17 +52,19 @@ import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
 import consulo.ui.ex.awt.util.MacUIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.impl.internal.action.ActionImplUtil;
+import consulo.ui.ex.impl.internal.action.ActionRunnerAsync;
+import consulo.ui.ex.impl.internal.keymap.KeyStrokeAdapter;
 import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ui.ex.internal.AnActionWithUIUpdate;
+import consulo.ui.ex.internal.IdeGlassPaneEx;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.ex.keymap.util.KeymapUtil;
-import consulo.util.concurrent.coroutine.CoroutineException;
-
-import java.util.concurrent.CompletionException;
 import consulo.ui.ex.popup.*;
 import consulo.ui.ex.toolWindow.ToolWindowFloatingDecorator;
 import consulo.util.collection.ContainerUtil;
+import consulo.util.concurrent.coroutine.CoroutineException;
 import consulo.util.lang.Pair;
 import org.jspecify.annotations.Nullable;
 
@@ -79,9 +77,10 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.im.InputContext;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
@@ -1150,7 +1149,7 @@ public final class IdeKeyEventDispatcher implements Disposable {
                     appendTextPadding(30);
                     String text = pair.getFirst().getTemplatePresentation().getText();
                     if (text != null) {
-                        append(text, SimpleTextAttributes.REGULAR_ATTRIBUTES);
+                        append(text);
                     }
                 }
             }

@@ -90,7 +90,7 @@ public class ColumnTest extends BaseColumn implements Comparator<SMTestProxy> {
                 return;
             }
             //Black, regular for other suites and tests
-            append(title, SimpleTextAttributes.REGULAR_ATTRIBUTES);
+            append(title);
         }
 
         public static boolean isFirstLine(int row) {

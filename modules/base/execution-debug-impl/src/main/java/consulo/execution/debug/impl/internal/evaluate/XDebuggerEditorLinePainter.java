@@ -40,7 +40,6 @@ import consulo.project.Project;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
 import consulo.ui.ex.SimpleColoredText;
-import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.util.ColorValueUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
@@ -48,8 +47,8 @@ import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 
 /**
  * @author Konstantin Bulenkov
@@ -119,8 +118,8 @@ public class XDebuggerEditorLinePainter extends EditorLinePainter {
           }
           if (StringUtil.isEmpty(text.toString())) {
             String type = value.getValuePresentation().getType();
-            if (!StringUtil.isEmpty(type)) {
-              text.append(type, SimpleTextAttributes.REGULAR_ATTRIBUTES);
+            if (StringUtil.isNotEmpty(type)) {
+              text.append(type);
             }
           }
         }

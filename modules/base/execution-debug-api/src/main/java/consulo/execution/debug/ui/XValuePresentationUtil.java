@@ -88,7 +88,7 @@ public class XValuePresentationUtil {
 
     public static void appendSeparator(ColoredTextContainer text, String separator) {
         if (!separator.isEmpty()) {
-            text.append(separator, SimpleTextAttributes.REGULAR_ATTRIBUTES);
+            text.append(separator);
         }
     }
 

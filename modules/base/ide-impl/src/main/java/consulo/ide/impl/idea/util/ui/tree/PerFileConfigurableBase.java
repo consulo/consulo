@@ -787,7 +787,7 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
                 String presentablePath = FileUtil.toSystemDependentName(relativePath + "/");
                 renderer.append(presentablePath, SimpleTextAttributes.GRAY_ATTRIBUTES);
             }
-            renderer.append(file.getName(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
+            renderer.append(file.getName());
         }
         else if (target == null) {
             renderer.append(LanguageLocalize.perfileconfigurablebaseLabelProject(), SimpleTextAttributes.GRAY_ATTRIBUTES);

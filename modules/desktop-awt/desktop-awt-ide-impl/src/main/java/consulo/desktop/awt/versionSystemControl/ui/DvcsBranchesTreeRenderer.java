@@ -154,7 +154,7 @@ public class DvcsBranchesTreeRenderer implements TreeCellRenderer {
             renderer.append(text, SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES);
         }
         else {
-            renderer.append(text, SimpleTextAttributes.REGULAR_ATTRIBUTES);
+            renderer.append(text);
         }
     }
 

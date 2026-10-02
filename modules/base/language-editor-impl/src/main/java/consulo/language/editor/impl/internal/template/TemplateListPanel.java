@@ -540,7 +540,7 @@ public class TemplateListPanel extends JPanel implements Disposable {
                     Object o = node.getUserObject();
 
                     if (o instanceof TemplateImpl template) {
-                        getTextRenderer().append(template.getKey(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
+                        getTextRenderer().append(template.getKey());
                         String description = template.getDescription();
                         if (StringUtil.isNotEmpty(description)) {
                             getTextRenderer().append(" (" + description + ")", SimpleTextAttributes.GRAY_ATTRIBUTES);

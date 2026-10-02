@@ -77,7 +77,7 @@ public class MultipleBuildsView extends BaseMultipleBuildsView implements BuildP
             SimpleColoredComponent mainComponent = new SimpleColoredComponent();
             mainComponent.setIcon(obj.getIcon());
             mainComponent.append(obj.getTitle() + ": ", SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES);
-            mainComponent.append(obj.message, SimpleTextAttributes.REGULAR_ATTRIBUTES);
+            mainComponent.append(obj.message);
             panel.add(mainComponent, BorderLayout.NORTH);
             if (obj.statusMessage != null) {
                 SimpleColoredComponent statusComponent = new SimpleColoredComponent();
@@ -86,7 +86,7 @@ public class MultipleBuildsView extends BaseMultipleBuildsView implements BuildP
                     obj.statusMessage.get(),
                     ProcessOutputTypes.STDOUT,
                     (text, attributes) -> {
-                        statusComponent.append(text, SimpleTextAttributes.REGULAR_ATTRIBUTES); //NON-NLS
+                        statusComponent.append(text); //NON-NLS
                     }
                 );
                 panel.add(statusComponent, BorderLayout.SOUTH);

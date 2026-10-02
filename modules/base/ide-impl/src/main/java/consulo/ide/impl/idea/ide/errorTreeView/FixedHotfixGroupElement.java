@@ -15,7 +15,8 @@
  */
 package consulo.ide.impl.idea.ide.errorTreeView;
 
-import consulo.application.AllIcons;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.util.collection.ArrayUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.ui.CustomizeColoredTreeCellRenderer;
 import consulo.ui.ex.awt.SimpleColoredComponent;
@@ -24,30 +25,32 @@ import consulo.ui.ex.SimpleTextAttributes;
 import javax.swing.*;
 
 public class FixedHotfixGroupElement extends GroupingElement {
-  private final CustomizeColoredTreeCellRenderer myCustomizeColoredTreeCellRenderer;
+    private final CustomizeColoredTreeCellRenderer myCustomizeColoredTreeCellRenderer;
 
-  public FixedHotfixGroupElement(String name, Object data, VirtualFile file) {
-    super(name, data, file);
-    myCustomizeColoredTreeCellRenderer = new CustomizeColoredTreeCellRenderer() {
-      public void customizeCellRenderer(SimpleColoredComponent renderer,
-                                        JTree tree,
-                                        Object value,
-                                        boolean selected,
-                                        boolean expanded,
-                                        boolean leaf,
-                                        int row,
-                                        boolean hasFocus) {
-        renderer.setIcon(AllIcons.General.Information);
-        renderer.append("Fixed: ", SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES);
-        String[] text = getText();
-        String checkedText = ((text != null) && (text.length > 0)) ? text[0] : "";
-        renderer.append(checkedText, SimpleTextAttributes.REGULAR_ATTRIBUTES);
-      }
-    };
-  }
+    public FixedHotfixGroupElement(String name, Object data, VirtualFile file) {
+        super(name, data, file);
+        myCustomizeColoredTreeCellRenderer = new CustomizeColoredTreeCellRenderer() {
+            public void customizeCellRenderer(
+                SimpleColoredComponent renderer,
+                JTree tree,
+                Object value,
+                boolean selected,
+                boolean expanded,
+                boolean leaf,
+                int row,
+                boolean hasFocus
+            ) {
+                renderer.setIcon(PlatformIconGroup.generalInformation());
+                renderer.append("Fixed: ", SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES);
+                String[] text = getText();
+                String checkedText = !ArrayUtil.isEmpty(text) ? text[0] : "";
+                renderer.append(checkedText);
+            }
+        };
+    }
 
-  @Override
-  public CustomizeColoredTreeCellRenderer getLeftSelfRenderer() {
-    return myCustomizeColoredTreeCellRenderer;
-  }
+    @Override
+    public CustomizeColoredTreeCellRenderer getLeftSelfRenderer() {
+        return myCustomizeColoredTreeCellRenderer;
+    }
 }

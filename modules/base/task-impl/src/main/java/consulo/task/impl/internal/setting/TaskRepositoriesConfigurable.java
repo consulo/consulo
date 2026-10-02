@@ -15,7 +15,6 @@ import consulo.task.impl.internal.RecentTaskRepositories;
 import consulo.task.impl.internal.TaskManagerImpl;
 import consulo.task.ui.TaskRepositoryEditor;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.AnSeparator;
@@ -23,15 +22,13 @@ import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.util.collection.ContainerUtil;
-import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.awt.*;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -50,8 +47,8 @@ public class TaskRepositoriesConfigurable implements Configurable.NoScroll, Proj
     private Splitter mySplitter;
     private JPanel myEmptyPanel;
 
-    private final List<TaskRepository> myRepositories = new ArrayList<TaskRepository>();
-    private final List<TaskRepositoryEditor> myEditors = new ArrayList<TaskRepositoryEditor>();
+    private final List<TaskRepository> myRepositories = new ArrayList<>();
+    private final List<TaskRepositoryEditor> myEditors = new ArrayList<>();
     private final Project myProject;
 
     private final Consumer<TaskRepository> myChangeListener;
@@ -74,12 +71,13 @@ public class TaskRepositoriesConfigurable implements Configurable.NoScroll, Proj
 
         List<TaskRepositoryType> groups = TaskRepositoryType.getRepositoryTypes();
 
-        final List<AnAction> createActions = new ArrayList<AnAction>();
+        List<AnAction> createActions = new ArrayList<>();
         for (final TaskRepositoryType repositoryType : groups) {
             for (final TaskRepositorySubtype subtype : (List<TaskRepositorySubtype>) repositoryType.getAvailableSubtypes()) {
                 String description = "New " + subtype.getPresentableName() + " server";
                 createActions.add(new AnAction(subtype.getPresentableName().get(), description, subtype.getIcon()) {
                     @Override
+                    @RequiredUIAccess
                     public void actionPerformed(AnActionEvent e) {
                         TaskRepository repository = repositoryType.createRepository(subtype);
                         addRepository(repository);
@@ -102,6 +100,7 @@ public class TaskRepositoriesConfigurable implements Configurable.NoScroll, Proj
                 for (final TaskRepository repository : repositories) {
                     group.add(new AnAction(repository.getUrl(), repository.getUrl(), repository.getIcon()) {
                         @Override
+                        @RequiredUIAccess
                         public void actionPerformed(AnActionEvent e) {
                             addRepository(repository);
                         }
@@ -120,40 +119,34 @@ public class TaskRepositoriesConfigurable implements Configurable.NoScroll, Proj
                 .showUnderneathOf(Objects.requireNonNull(e.getData(UIExAWTDataKey.CONTEXT_COMPONENT)));
         });
 
-        toolbarDecorator.setRemoveAction(new AnActionButtonRunnable() {
-            @Override
-            public void run(AnActionButton anActionButton) {
-                TaskRepository repository = getSelectedRepository();
-                if (repository != null) {
+        toolbarDecorator.setRemoveAction(anActionButton -> {
+            TaskRepository repository = getSelectedRepository();
+            if (repository != null) {
 
-                    CollectionListModel model = (CollectionListModel) myRepositoriesList.getModel();
-                    model.remove(repository);
-                    myRepositories.remove(repository);
+                CollectionListModel model = (CollectionListModel) myRepositoriesList.getModel();
+                model.remove(repository);
+                myRepositories.remove(repository);
 
-                    if (model.getSize() > 0) {
-                        myRepositoriesList.setSelectedValue(model.getElementAt(0), true);
-                    }
-                    else {
-                        myRepositoryEditor.removeAll();
-                        myRepositoryEditor.repaint();
-                    }
+                if (model.getSize() > 0) {
+                    myRepositoriesList.setSelectedValue(model.getElementAt(0), true);
+                }
+                else {
+                    myRepositoryEditor.removeAll();
+                    myRepositoryEditor.repaint();
                 }
             }
         });
 
         myServersPanel.add(toolbarDecorator.createPanel(), BorderLayout.CENTER);
 
-        myRepositoriesList.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                TaskRepository repository = getSelectedRepository();
-                if (repository != null) {
-                    String name = myRepoNames.get(repository);
-                    assert name != null;
-                    ((CardLayout) myRepositoryEditor.getLayout()).show(myRepositoryEditor, name);
-                    mySplitter.doLayout();
-                    mySplitter.repaint();
-                }
+        myRepositoriesList.getSelectionModel().addListSelectionListener(e -> {
+            TaskRepository repository = getSelectedRepository();
+            if (repository != null) {
+                String name = myRepoNames.get(repository);
+                assert name != null;
+                ((CardLayout) myRepositoryEditor.getLayout()).show(myRepositoryEditor, name);
+                mySplitter.doLayout();
+                mySplitter.repaint();
             }
         });
 
@@ -162,7 +155,7 @@ public class TaskRepositoriesConfigurable implements Configurable.NoScroll, Proj
             protected void customizeCellRenderer(JList list, Object value, int index, boolean selected, boolean hasFocus) {
                 TaskRepository repository = (TaskRepository) value;
                 setIcon(repository.getIcon());
-                append(repository.getPresentableName(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
+                append(repository.getPresentableName());
             }
         });
 
@@ -198,7 +191,6 @@ public class TaskRepositoriesConfigurable implements Configurable.NoScroll, Proj
         return LocalizeValue.localizeTODO("Servers");
     }
 
-    
     @Override
     public String getId() {
         return "tasks.servers";
@@ -230,7 +222,7 @@ public class TaskRepositoriesConfigurable implements Configurable.NoScroll, Proj
     @Override
     @RequiredUIAccess
     public void apply() throws ConfigurationException {
-        List<TaskRepository> newRepositories = ContainerUtil.map(myRepositories, taskRepository -> taskRepository.clone());
+        List<TaskRepository> newRepositories = ContainerUtil.map(myRepositories, TaskRepository::clone);
         myManager.setRepositories(newRepositories);
         myManager.updateIssues(null);
         RecentTaskRepositories.getInstance().addRepositories(myRepositories);

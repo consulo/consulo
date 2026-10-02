@@ -353,7 +353,7 @@ public abstract class TempContentChooser<Data> extends DialogWrapper {
             int charWidth = metrics.charWidth('m');
             int maxLength = list.getParent().getParent().getWidth() * 3 / charWidth / 2;
             text = StringUtil.first(text, maxLength, true); // do not paint long strings
-            append(text, SimpleTextAttributes.REGULAR_ATTRIBUTES);
+            append(text);
         }
     }
 

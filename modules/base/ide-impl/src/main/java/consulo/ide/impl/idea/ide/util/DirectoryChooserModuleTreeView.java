@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ide.util;
 
-import consulo.application.AllIcons;
 import consulo.ide.impl.idea.ide.projectView.impl.ModuleGroupUtil;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.util.lang.Comparing;
 import consulo.language.psi.PsiDirectory;
 import consulo.logging.Logger;
@@ -229,12 +228,12 @@ public class DirectoryChooserModuleTreeView implements DirectoryChooserView {
         setIcon(wrapper.getIcon());
       }
       else if (value instanceof Module module) {
-        append(module.getName(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
-        setIcon(AllIcons.Nodes.Module);
+        append(module.getName());
+        setIcon(PlatformIconGroup.nodesModule());
       }
       else if (value instanceof ModuleGroup) {
-        append(value.toString(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
-        setIcon(AllIcons.Nodes.Module);
+        append(value.toString());
+        setIcon(PlatformIconGroup.nodesModule());
       }
     }
   }

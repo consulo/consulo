@@ -604,7 +604,7 @@ public class ClassesTable extends JBTable implements UiDataProvider, Disposable 
                 }
             }
             else {
-                append(String.format("%s", presentation), SimpleTextAttributes.REGULAR_ATTRIBUTES);
+                append(String.format("%s", presentation));
             }
         }
     }
@@ -652,7 +652,7 @@ public class ClassesTable extends JBTable implements UiDataProvider, Disposable 
                     append(text, diff == 0 ? SimpleTextAttributes.REGULAR_ATTRIBUTES : myClickableCellAttributes);
                 }
                 else {
-                    append(text, SimpleTextAttributes.REGULAR_ATTRIBUTES);
+                    append(text);
                     if (newInstancesCount != 0) {
                         //noinspection HardCodedStringLiteral
                         append(String.format(" (%d)", newInstancesCount), myClickableCellAttributes);
@@ -660,7 +660,7 @@ public class ClassesTable extends JBTable implements UiDataProvider, Disposable 
                 }
             }
             else {
-                append(text, SimpleTextAttributes.REGULAR_ATTRIBUTES);
+                append(text);
             }
         }
     }

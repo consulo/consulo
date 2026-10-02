@@ -170,10 +170,10 @@ abstract class ShortcutDialog<T extends Shortcut> extends DialogWrapper {
         else {
             int index = path.lastIndexOf(" | ");
             if (index < 0) {
-                component.append(path, SimpleTextAttributes.REGULAR_ATTRIBUTES);
+                component.append(path);
             }
             else {
-                component.append(path.substring(index + 3), SimpleTextAttributes.REGULAR_ATTRIBUTES);
+                component.append(path.substring(index + 3));
                 component.append(
                     LocalizeValue.join(LocalizeValue.space(), KeyMapLocalize.shortcutInGroupText(path.substring(0, index))),
                     SimpleTextAttributes.GRAYED_ATTRIBUTES

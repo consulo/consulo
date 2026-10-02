@@ -24,7 +24,6 @@ import consulo.language.psi.PsiLanguageInjectionHost;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.SimpleColoredText;
-import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.DialogBuilder;
@@ -33,8 +32,8 @@ import consulo.ui.ex.awt.Messages;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
-import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -80,7 +79,7 @@ public abstract class AbstractLanguageInjectionSupport extends LanguageInjection
 
     @Override
     public void setupPresentation(BaseInjection injection, SimpleColoredText presentation, boolean isSelected) {
-        presentation.append(injection.getDisplayName(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
+        presentation.append(injection.getDisplayName());
     }
 
     @Override
@@ -101,6 +100,7 @@ public abstract class AbstractLanguageInjectionSupport extends LanguageInjection
     public static AnAction createDefaultEditAction(final Project project, final Supplier<BaseInjection> producer) {
         return new AnAction() {
             @Override
+            @RequiredUIAccess
             public void actionPerformed(AnActionEvent e) {
                 BaseInjection originalInjection = producer.get();
                 BaseInjection newInjection = showDefaultInjectionUI(project, originalInjection.copy());
@@ -119,6 +119,7 @@ public abstract class AbstractLanguageInjectionSupport extends LanguageInjection
         Image icon = FileTypeManager.getInstance().getFileTypeByExtension(support.getId()).getIcon();
         return new AnAction("Generic " + StringUtil.capitalize(support.getId()), null, icon) {
             @Override
+            @RequiredUIAccess
             public void actionPerformed(AnActionEvent e) {
                 BaseInjection injection = new BaseInjection(support.getId());
                 injection.setDisplayName("New " + StringUtil.capitalize(support.getId()) + " Injection");

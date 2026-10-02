@@ -63,8 +63,8 @@ public abstract class XStackFrame extends XValueContainer {
   public void customizePresentation(ColoredTextContainer component) {
     XSourcePosition position = getSourcePosition();
     if (position != null) {
-      component.append(position.getFile().getName(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
-      component.append(":" + (position.getLine() + 1), SimpleTextAttributes.REGULAR_ATTRIBUTES);
+      component.append(position.getFile().getName());
+      component.append(":" + (position.getLine() + 1));
       component.setIcon(ExecutionDebugIconGroup.nodeFrame());
     }
     else {

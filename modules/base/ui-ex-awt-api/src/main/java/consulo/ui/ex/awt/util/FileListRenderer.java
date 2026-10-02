@@ -31,7 +31,7 @@ public class FileListRenderer extends ColoredListCellRenderer {
         setBackground(null);
         VirtualFile vf = (VirtualFile) value;
         setIcon(VirtualFilePresentation.getIcon(vf));
-        append(vf.getName(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
+        append(vf.getName());
         VirtualFile parent = vf.getParent();
         if (parent != null) {
             append(" (" + FileUtil.toSystemDependentName(parent.getPath()) + ")", SimpleTextAttributes.GRAY_ATTRIBUTES);

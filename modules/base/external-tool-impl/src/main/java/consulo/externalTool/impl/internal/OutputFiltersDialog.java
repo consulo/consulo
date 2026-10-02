@@ -16,11 +16,10 @@
 package consulo.externalTool.impl.internal;
 
 import consulo.application.HelpManager;
+import consulo.application.ui.wm.IdeFocusManager;
 import consulo.externalTool.impl.internal.localize.ExternalToolLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.*;
-import consulo.application.ui.wm.IdeFocusManager;
-import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.util.ListUtil;
 
 import javax.swing.*;
@@ -30,8 +29,8 @@ import java.awt.*;
  * @author Yura Cangea
  */
 public class OutputFiltersDialog extends DialogWrapper {
-  private final DefaultListModel myFiltersModel = new DefaultListModel();
-  private final JList myFiltersList = new JBList(myFiltersModel);
+  private final DefaultListModel<FilterInfo> myFiltersModel = new DefaultListModel<>();
+  private final JList<FilterInfo> myFiltersList = new JBList<>(myFiltersModel);
   private boolean myModified = false;
   private FilterInfo[] myFilters;
 
@@ -45,7 +44,6 @@ public class OutputFiltersDialog extends DialogWrapper {
   }
 
   @Override
-  
   protected Action[] createActions() {
     return new Action[]{getOKAction(), getCancelAction(), getHelpAction()};
   }
@@ -58,11 +56,10 @@ public class OutputFiltersDialog extends DialogWrapper {
 
   private void initGui() {
     myFiltersList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-    myFiltersList.setCellRenderer(new ColoredListCellRenderer() {
+    myFiltersList.setCellRenderer(new ColoredListCellRenderer<>() {
       @Override
-      protected void customizeCellRenderer(JList list, Object value, int index, boolean selected, boolean hasFocus) {
-        FilterInfo info = (FilterInfo)value;
-        append(info.getName(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
+      protected void customizeCellRenderer(JList list, FilterInfo info, int index, boolean selected, boolean hasFocus) {
+        append(info.getName());
       }
     });
     ScrollingUtil.ensureSelectionExists(myFiltersList);
@@ -73,14 +70,14 @@ public class OutputFiltersDialog extends DialogWrapper {
 
     int number = 1;
     for (int i = 0; i < myFiltersModel.getSize(); i++) {
-      FilterInfo wrapper = (FilterInfo)myFiltersModel.getElementAt(i);
+      FilterInfo wrapper = myFiltersModel.getElementAt(i);
       String name = wrapper.getName();
       if (name.startsWith(prefix)) {
         try {
-          int n = Integer.valueOf(name.substring(prefix.length()).trim()).intValue();
+          int n = Integer.valueOf(name.substring(prefix.length()).trim());
           number = Math.max(number, n + 1);
         }
-        catch (NumberFormatException e) {
+        catch (NumberFormatException ignored) {
         }
       }
     }
@@ -93,7 +90,7 @@ public class OutputFiltersDialog extends DialogWrapper {
     if (myModified) {
       myFilters = new FilterInfo[myFiltersModel.getSize()];
       for (int i = 0; i < myFiltersModel.getSize(); i++) {
-        myFilters[i] = (FilterInfo)myFiltersModel.get(i);
+        myFilters[i] = myFiltersModel.get(i);
       }
     }
     super.doOKAction();
@@ -124,7 +121,7 @@ public class OutputFiltersDialog extends DialogWrapper {
         @Override
         public void run(AnActionButton button) {
           int index = myFiltersList.getSelectedIndex();
-          FilterInfo filterInfo = (FilterInfo)myFiltersModel.getElementAt(index);
+          FilterInfo filterInfo = myFiltersModel.getElementAt(index);
           boolean wasEdited = FilterDialog.editFilter(filterInfo, myFiltersList, ExternalToolLocalize.toolsFiltersEditTitle().get());
           if (wasEdited) {
             setModified(true);

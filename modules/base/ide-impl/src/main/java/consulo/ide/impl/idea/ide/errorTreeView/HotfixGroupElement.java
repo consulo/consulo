@@ -16,18 +16,18 @@
 package consulo.ide.impl.idea.ide.errorTreeView;
 
 import consulo.ide.impl.idea.ui.CustomizeColoredTreeCellRenderer;
-import consulo.application.AllIcons;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.errorTreeView.HotfixGate;
 import consulo.ui.ex.errorTreeView.MutableErrorTreeView;
+import consulo.util.collection.ArrayUtil;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.swing.*;
 import java.util.function.Consumer;
 
 public class HotfixGroupElement extends GroupingElement {
-
   private final Consumer<HotfixGate> myHotfix;
   private final String myFixDescription;
   private final MutableErrorTreeView myView;
@@ -43,11 +43,11 @@ public class HotfixGroupElement extends GroupingElement {
     myLeftTreeCellRenderer = new CustomizeColoredTreeCellRenderer() {
       @Override
       public void customizeCellRenderer(SimpleColoredComponent renderer, JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
-        renderer.setIcon(AllIcons.General.Error);
+        renderer.setIcon(PlatformIconGroup.generalError());
 
         String[] text = getText();
-        String errorText = ((text != null) && (text.length > 0)) ? text[0] : "";
-        renderer.append("Error: " + errorText, SimpleTextAttributes.REGULAR_ATTRIBUTES);
+        String errorText = !ArrayUtil.isEmpty(text) ? text[0] : "";
+        renderer.append("Error: " + errorText);
       }
     };
     myRightTreeCellRenderer = new MyRightRenderer();

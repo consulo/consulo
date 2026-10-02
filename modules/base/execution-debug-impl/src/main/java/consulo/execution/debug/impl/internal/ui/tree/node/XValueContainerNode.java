@@ -230,7 +230,7 @@ public abstract class XValueContainerNode<ValueContainer extends XValueContainer
     MessageTreeNode node = new MessageTreeNode(myTree, this, true);
     node.setIcon(icon);
     if (!StringUtil.isEmpty(text)) {
-      node.getText().append(text, SimpleTextAttributes.REGULAR_ATTRIBUTES);
+      node.getText().append(text);
     }
     myTemporaryEditorNode = node;
     myCachedAllChildren = null;

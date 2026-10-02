@@ -15,13 +15,11 @@
  */
 package consulo.versionControlSystem.distributed.impl.internal.push;
 
-import consulo.versionControlSystem.distributed.push.PushTargetPanel;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
-import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.tree.TreeUtil;
+import consulo.versionControlSystem.distributed.push.PushTargetPanel;
 
 public class SingleRepositoryNode extends RepositoryNode {
-    
     private final RepositoryWithBranchPanel myRepositoryPanel;
 
     public SingleRepositoryNode(RepositoryWithBranchPanel repositoryPanel, CheckBoxModel model) {
@@ -45,8 +43,8 @@ public class SingleRepositoryNode extends RepositoryNode {
     @Override
     public void render(ColoredTreeCellRenderer renderer) {
         renderer.append(" ");
-        renderer.append(myRepositoryPanel.getSourceName(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
-        renderer.append(myRepositoryPanel.getArrow(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
+        renderer.append(myRepositoryPanel.getSourceName());
+        renderer.append(myRepositoryPanel.getArrow());
         PushTargetPanel pushTargetPanel = myRepositoryPanel.getTargetPanel();
         pushTargetPanel.render(renderer, renderer.getTree().isPathSelected(TreeUtil.getPathFromRoot(this)), true, null);
     }

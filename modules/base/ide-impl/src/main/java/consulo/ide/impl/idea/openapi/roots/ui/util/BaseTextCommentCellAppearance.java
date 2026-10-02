@@ -22,28 +22,28 @@ import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
 
 public abstract class BaseTextCommentCellAppearance implements CellAppearanceEx {
-  protected abstract Image getIcon();
+    protected abstract Image getIcon();
 
-  protected abstract String getSecondaryText();
+    protected abstract String getSecondaryText();
 
-  protected abstract String getPrimaryText();
+    protected abstract String getPrimaryText();
 
-  @Override
-  public void customize(ColoredTextContainer component) {
-    component.setIcon(getIcon());
-    component.append(getPrimaryText(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
-    String secondaryText = getSecondaryText();
-    if (!StringUtil.isEmptyOrSpaces(secondaryText)) {
-      component.append(" (" + secondaryText + ")", SimpleTextAttributes.GRAY_ATTRIBUTES);
+    @Override
+    public void customize(ColoredTextContainer component) {
+        component.setIcon(getIcon());
+        component.append(getPrimaryText());
+        String secondaryText = getSecondaryText();
+        if (!StringUtil.isEmptyOrSpaces(secondaryText)) {
+            component.append(" (" + secondaryText + ")", SimpleTextAttributes.GRAY_ATTRIBUTES);
+        }
     }
-  }
 
-  
-  public String getText() {
-    String secondaryText = getSecondaryText();
-    if (secondaryText != null && secondaryText.length() > 0) {
-      return getPrimaryText() + " (" + secondaryText + ")";
+    @Override
+    public String getText() {
+        String secondaryText = getSecondaryText();
+        if (secondaryText != null && secondaryText.length() > 0) {
+            return getPrimaryText() + " (" + secondaryText + ")";
+        }
+        return getPrimaryText();
     }
-    return getPrimaryText();
-  }
 }

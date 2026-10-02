@@ -73,7 +73,7 @@ public class XValueNodeImpl extends XValueContainerNode<XValue>
     if (!isComputed()) {
       if (myName != null) {
         myText.append(myName, XDebuggerUIConstants.VALUE_NAME_ATTRIBUTES);
-        myText.append(XDebuggerUIConstants.EQ_TEXT, SimpleTextAttributes.REGULAR_ATTRIBUTES);
+        myText.append(XDebuggerUIConstants.EQ_TEXT);
       }
       myText.append(
         XDebuggerUIConstants.COLLECTING_DATA_MESSAGE,
