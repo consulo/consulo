@@ -276,6 +276,13 @@ class DesktopQtPopupListBoxImpl<E> extends DesktopQtListBoxImpl<E> implements In
     }
 
     @Override
+    protected void rowsChanged() {
+        myButtons.clear();
+        myHovered = null;
+        myPressed = null;
+    }
+
+    @Override
     @RequiredUIAccess
     public void setInlineButtons(Function<E, List<InlineButton>> buttons) {
         myInlineButtons = buttons;

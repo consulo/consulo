@@ -895,6 +895,10 @@ public class FindUtil {
             };
             editor.getCaretModel().addCaretListener(listener);
         }
+        if (Application.get().isUnifiedApplication()) {
+            return;
+        }
+
         JComponent component = HintUtil.createInformationLabel(message.map(s -> JDOMUtil.escapeText(s, false, false)));
         LightweightHint hint = Application.get().getInstance(LightweightHintFactory.class).create(component);
         HintManagerImpl.getInstanceImpl().showEditorHint(

@@ -21,6 +21,7 @@ import consulo.find.localize.FindLocalize;
 import consulo.ide.impl.idea.find.EditorSearchSession;
 import consulo.fileEditor.impl.internal.search.SearchSession;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.fileEditor.impl.internal.search.Embeddable;
 
 public class TogglePreserveCaseAction extends EditorSearchToggleAction implements Embeddable {
     public TogglePreserveCaseAction() {

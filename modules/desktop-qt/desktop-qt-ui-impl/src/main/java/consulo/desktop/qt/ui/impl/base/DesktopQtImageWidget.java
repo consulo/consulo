@@ -42,9 +42,12 @@ public class DesktopQtImageWidget extends QWidget {
     }
 
     public void setImage(@Nullable Image image) {
+        boolean sameImage = myImage == image;
         myImage = image;
 
-        updateGeometry();
+        if (!sameImage) {
+            updateGeometry();
+        }
         update();
     }
 

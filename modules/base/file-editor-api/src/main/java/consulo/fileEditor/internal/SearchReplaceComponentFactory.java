@@ -19,10 +19,10 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.dataContext.UiDataProvider;
 import consulo.project.Project;
+import consulo.ui.Component;
 import consulo.ui.ex.action.DefaultActionGroup;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
 import java.util.function.BooleanSupplier;
 
 /**
@@ -32,7 +32,7 @@ import java.util.function.BooleanSupplier;
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface SearchReplaceComponentFactory {
     SearchReplaceComponent create(@Nullable Project project,
-                                  JComponent targetComponent,
+                                  Component targetComponent,
                                   DefaultActionGroup searchToolbar1Actions,
                                   BooleanSupplier searchToolbar1ModifiedFlagGetter,
                                   DefaultActionGroup searchToolbar2Actions,

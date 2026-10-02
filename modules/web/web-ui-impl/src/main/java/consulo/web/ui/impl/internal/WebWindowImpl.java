@@ -19,6 +19,7 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.dialog.DialogVariant;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import consulo.disposer.Disposer;
 import consulo.ui.Component;
@@ -55,6 +56,7 @@ public class WebWindowImpl extends VaadinComponentDelegate<WebWindowImpl.Vaadin>
     }
 
     private boolean myDisposed;
+    private final boolean myUndecorated;
     private final WebRootPaneImpl myRootPanel = new WebRootPaneImpl();
 
     public WebWindowImpl(boolean modal, WindowOptions options) {
@@ -65,7 +67,12 @@ public class WebWindowImpl extends VaadinComponentDelegate<WebWindowImpl.Vaadin>
         vaadinComponent.setCloseOnEsc(false);
         vaadinComponent.setCloseOnOutsideClick(false);
         vaadinComponent.setDraggable(true);
-        if (options.isClosable()) {
+
+        myUndecorated = options.isUndecorated();
+        if (myUndecorated) {
+            vaadinComponent.addThemeVariants(DialogVariant.NO_PADDING);
+        }
+        else if (options.isClosable()) {
             addCloseDialogButton();
         }
 
@@ -146,6 +153,10 @@ public class WebWindowImpl extends VaadinComponentDelegate<WebWindowImpl.Vaadin>
     @Override
     @RequiredUIAccess
     public void setTitle(String title) {
+        if (myUndecorated) {
+            return;
+        }
+
         getVaadinComponent().setHeaderTitle(StringUtil.notNullize(title));
     }
 

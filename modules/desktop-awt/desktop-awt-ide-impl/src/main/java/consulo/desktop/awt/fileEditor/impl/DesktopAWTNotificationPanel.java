@@ -51,6 +51,8 @@ public class DesktopAWTNotificationPanel extends EditorNotificationPanel impleme
 
     private EditorColorKey myBackgroundKey = EditorColors.NOTIFICATION_INFORMATION_BACKGROUND;
 
+    private @Nullable Component myUIComponent;
+
     public DesktopAWTNotificationPanel(EditorColorsManager editorColorsManager) {
         myEditorColorsManager = editorColorsManager;
     }
@@ -152,6 +154,16 @@ public class DesktopAWTNotificationPanel extends EditorNotificationPanel impleme
     @Override
     public JComponent getComponent() {
         return this;
+    }
+
+    @Override
+    public Component getUIComponent() {
+        Component uiComponent = myUIComponent;
+        if (uiComponent == null) {
+            uiComponent = TargetAWT.wrap(this);
+            myUIComponent = uiComponent;
+        }
+        return uiComponent;
     }
 
     @Override

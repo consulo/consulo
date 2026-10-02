@@ -71,7 +71,7 @@ public class QuickFixAction extends LegacyAnAction {
         super(text, text, icon);
         myToolWrapper = toolWrapper;
         if (keyStroke != null) {
-            registerCustomShortcutSet(new CustomShortcutSet(keyStroke), null);
+            setShortcutSet(new CustomShortcutSet(keyStroke));
         }
     }
 

@@ -196,7 +196,7 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
         toolbarDecorator.addExtraAction(myAddExcludedRootActionButton);
         toolbarDecorator.addExtraAction(new LegacyAnAction("Remove", null, PlatformIconGroup.generalRemove()) {
             {
-                registerCustomShortcutSet(CommonShortcuts.getDelete(), null);
+                setShortcutSet(CommonShortcuts.getDelete());
             }
 
             @Override

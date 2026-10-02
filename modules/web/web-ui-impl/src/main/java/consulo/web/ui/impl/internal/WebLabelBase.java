@@ -25,6 +25,7 @@ import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
 import consulo.web.ui.impl.internal.base.VaadinComponentDelegate;
 import consulo.web.ui.impl.internal.vaadin.VaadinLabelComponentBase;
+import consulo.ui.Length;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -78,5 +79,23 @@ public abstract class WebLabelBase<V extends VaadinLabelComponentBase> extends V
     @Override
     public @Nullable Component getTarget() {
         return myLabeledComponent;
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setWidth(Length width) {
+        throw new UnsupportedOperationException();
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setHeight(Length height) {
+        throw new UnsupportedOperationException();
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setMinHeight(Length height) {
+        throw new UnsupportedOperationException();
     }
 }

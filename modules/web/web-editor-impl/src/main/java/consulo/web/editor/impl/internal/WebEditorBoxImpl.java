@@ -88,7 +88,7 @@ class WebEditorBoxImpl extends VaadinComponentDelegate<WebEditorBoxImpl.Vaadin> 
 
         EditorEx editor = mySupport.createEditor();
 
-        com.vaadin.flow.component.Component editorComponent = ((ToVaadinComponentWrapper) editor.getUIComponent()).toVaadinComponent();
+        com.vaadin.flow.component.Component editorComponent = ((ToVaadinComponentWrapper) editor.getContentUIComponent()).toVaadinComponent();
         if (editorComponent instanceof ArquillEditorElement arquillEditor) {
             arquillEditor.setOneLine(mySupport.isOneLine());
         }

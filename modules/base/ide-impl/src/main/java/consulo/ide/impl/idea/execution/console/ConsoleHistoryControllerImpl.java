@@ -645,10 +645,10 @@ public class ConsoleHistoryControllerImpl implements ConsoleHistoryController {
 
     private static void addShortcuts(AnAction action, ShortcutSet newShortcuts) {
         if (action.getShortcutSet().getShortcuts().length == 0) {
-            action.registerCustomShortcutSet(newShortcuts, null);
+            action.setShortcutSet(newShortcuts);
         }
         else {
-            action.registerCustomShortcutSet(new CompositeShortcutSet(action.getShortcutSet(), newShortcuts), null);
+            action.setShortcutSet(new CompositeShortcutSet(action.getShortcutSet(), newShortcuts));
         }
     }
 

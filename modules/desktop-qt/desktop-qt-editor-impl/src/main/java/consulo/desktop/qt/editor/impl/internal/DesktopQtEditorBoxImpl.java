@@ -77,7 +77,7 @@ class DesktopQtEditorBoxImpl extends QtComponentDelegate<DesktopQtEditorBoxFrame
     private void attachEditor(DesktopQtEditorBoxFrame frame) {
         EditorEx editor = mySupport.createEditor();
 
-        QtComponentDelegate<?> editorComponent = (QtComponentDelegate<?>) editor.getUIComponent();
+        QtComponentDelegate<?> editorComponent = (QtComponentDelegate<?>) editor.getContentUIComponent();
         editorComponent.setParent(this);
         editorComponent.bind(frame, null);
 
@@ -119,7 +119,7 @@ class DesktopQtEditorBoxImpl extends QtComponentDelegate<DesktopQtEditorBoxFrame
     }
 
     private void editorReleasing(EditorEx editor) {
-        if (editor.getUIComponent() instanceof QtComponentDelegate<?> editorComponent) {
+        if (editor.getContentUIComponent() instanceof QtComponentDelegate<?> editorComponent) {
             editorComponent.disposeQt();
         }
     }

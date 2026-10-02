@@ -25,13 +25,12 @@ import consulo.find.localize.FindLocalize;
 import consulo.ide.impl.idea.find.FindUtil;
 import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.project.Project;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.lang.StringUtil;
-
-import javax.swing.*;
 
 @SuppressWarnings("WeakerAccess")
 public class FindUIHelper implements Disposable {
@@ -58,7 +57,7 @@ public class FindUIHelper implements Disposable {
             FindUIFactory uiFactory = myProject.getApplication().getInstance(FindUIFactory.class);
 
             FindUI panel = uiFactory.create(this);
-            JComponent component = panel.getComponent();
+            Component component = panel.getUIComponent();
             myUI = panel;
 
             registerAction("ReplaceInPath", true, component, myUI);
@@ -71,7 +70,8 @@ public class FindUIHelper implements Disposable {
         return myUI;
     }
 
-    private void registerAction(String actionName, boolean replace, JComponent component, FindUI ui) {
+    @RequiredUIAccess
+    private void registerAction(String actionName, boolean replace, Component component, FindUI ui) {
         AnAction action = ActionManager.getInstance().getAction(actionName);
         new AnAction() {
             @Override

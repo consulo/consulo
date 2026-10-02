@@ -86,6 +86,7 @@ public class DesktopQtUIAccess extends BaseUIAccess implements UIAccess {
                 DesktopQtFontRegistry.registerFonts(bundledFonts);
 
                 DesktopQtCurrentInput.install();
+                DesktopQtCustomShortcutFilter.install();
 
                 countDownLatch.countDown();
 

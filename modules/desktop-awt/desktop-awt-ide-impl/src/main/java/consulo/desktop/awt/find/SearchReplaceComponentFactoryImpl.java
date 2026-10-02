@@ -15,16 +15,17 @@
  */
 package consulo.desktop.awt.find;
 
+import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
 import consulo.dataContext.UiDataProvider;
 import consulo.fileEditor.internal.SearchReplaceComponent;
 import consulo.fileEditor.internal.SearchReplaceComponentFactory;
 import consulo.project.Project;
 import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.ui.Component;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
-import javax.swing.*;
 import java.util.function.BooleanSupplier;
 
 /**
@@ -32,11 +33,11 @@ import java.util.function.BooleanSupplier;
  * @since 28/06/2023
  */
 @Singleton
-@ServiceImpl
+@ServiceImpl(profiles = ComponentProfiles.AWT)
 public class SearchReplaceComponentFactoryImpl implements SearchReplaceComponentFactory {
   @Override
   public SearchReplaceComponent create(@Nullable Project project,
-                                       JComponent targetComponent,
+                                       Component targetComponent,
                                        DefaultActionGroup searchToolbar1Actions,
                                        BooleanSupplier searchToolbar1ModifiedFlagGetter,
                                        DefaultActionGroup searchToolbar2Actions,

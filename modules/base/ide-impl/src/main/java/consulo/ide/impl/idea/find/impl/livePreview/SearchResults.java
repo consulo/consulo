@@ -21,7 +21,6 @@ import consulo.ide.impl.idea.find.FindUtil;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.util.collection.Lists;
 import consulo.util.collection.Stack;
 import consulo.util.concurrent.ActionCallback;
@@ -32,7 +31,6 @@ import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -226,9 +224,10 @@ public class SearchResults implements DocumentListener, CaretListener {
         Editor editor = getEditor();
 
         updatePreviousFindModel(findModel);
+        UIAccess uiAccess = getProject().getUIAccess();
         CompletableFuture<int[]> startsRef = new CompletableFuture<>();
         CompletableFuture<int[]> endsRef = new CompletableFuture<>();
-        getSelection(editor, startsRef, endsRef);
+        getSelection(editor, uiAccess, startsRef, endsRef);
 
         List<FindResult> results = new ArrayList<>();
         ReadAction.run(() -> {
@@ -256,7 +255,7 @@ public class SearchResults implements DocumentListener, CaretListener {
 
             long documentTimeStamp = editor.getDocument().getModificationStamp();
 
-            UIUtil.invokeLaterIfNeeded(() -> {
+            uiAccess.giveIfNeed(() -> {
                 if (editor.getDocument().getModificationStamp() == documentTimeStamp) {
                     searchCompleted(results, editor, findModel, toChangeSelection, next, stamp);
                     result.setDone();
@@ -280,22 +279,18 @@ public class SearchResults implements DocumentListener, CaretListener {
         }
     }
 
-    private static void getSelection(Editor editor, CompletableFuture<int[]> starts, CompletableFuture<int[]> ends) {
+    private static void getSelection(Editor editor, UIAccess uiAccess, CompletableFuture<int[]> starts, CompletableFuture<int[]> ends) {
         if (UIAccess.isUIThread()) {
             SelectionModel selection = editor.getSelectionModel();
             starts.complete(selection.getBlockSelectionStarts());
             ends.complete(selection.getBlockSelectionEnds());
         }
         else {
-            try {
-                SwingUtilities.invokeAndWait(() -> {
-                    SelectionModel selection = editor.getSelectionModel();
-                    starts.complete(selection.getBlockSelectionStarts());
-                    ends.complete(selection.getBlockSelectionEnds());
-                });
-            }
-            catch (InterruptedException | InvocationTargetException ignore) {
-            }
+            uiAccess.giveAndWait(() -> {
+                SelectionModel selection = editor.getSelectionModel();
+                starts.complete(selection.getBlockSelectionStarts());
+                ends.complete(selection.getBlockSelectionEnds());
+            });
         }
     }
 

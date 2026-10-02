@@ -68,6 +68,11 @@ public class WebDockLayoutImpl extends WebLayoutImpl<WebDockLayoutImpl.Vaadin, S
         return replace(component, constraintEx);
     }
 
+    @Override
+    public void remove(Component component) {
+        toVaadinComponent().removeComponent(TargetVaadin.to(component));
+    }
+
     private DockLayout replace(Component child, BorderLayoutEx.Constraint constraint) {
         toVaadinComponent().setComponent(null, constraint);
 

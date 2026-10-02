@@ -8,6 +8,7 @@ import consulo.codeEditor.event.EditorFactoryEvent;
 import consulo.codeEditor.event.EditorFactoryListener;
 import consulo.logging.Logger;
 import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
@@ -59,7 +60,7 @@ final class CtxEditors {
         }
 
         // register editor
-        @Nullable Component newCmp = editor.getHeaderComponent();
+        @Nullable Component newCmp = TargetAWT.to(editor.getHeaderComponent());
         @Nullable WeakReference<Component> oldCmpRef = ourEditors.put(editor, new WeakReference<>(newCmp));
         @Nullable Component oldCmp = oldCmpRef != null ? oldCmpRef.get() : null;
         if (oldCmp != null) {

@@ -375,11 +375,14 @@ public abstract class VaadinComponentDelegate<T extends com.vaadin.flow.componen
     }
 
     public void setFocusable(boolean focusable) {
-
+        if (myVaadinComponent instanceof com.vaadin.flow.component.Focusable<?> focusableComponent) {
+            focusableComponent.setTabIndex(focusable ? 0 : -1);
+        }
     }
 
     public boolean isFocusable() {
-        return true;
+        return !(myVaadinComponent instanceof com.vaadin.flow.component.Focusable<?> focusableComponent)
+            || focusableComponent.getTabIndex() >= 0;
     }
 
     public void bordersChanged() {

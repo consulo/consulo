@@ -90,6 +90,12 @@ public class WebTextBoxImpl extends VaadinComponentDelegate<WebTextBoxImpl.Vaadi
     }
 
     @Override
+    @RequiredUIAccess
+    public void setVisibleLength(int columns) {
+        toVaadinComponent().getStyle().set("width", columns + "ch");
+    }
+
+    @Override
     public void setPrefixComponent(@Nullable Component prefixComponent) {
         myPrefixComponent = prefixComponent;
 

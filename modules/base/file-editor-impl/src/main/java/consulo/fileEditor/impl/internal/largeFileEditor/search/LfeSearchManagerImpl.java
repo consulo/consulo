@@ -107,9 +107,9 @@ public final class LfeSearchManagerImpl implements LfeSearchManager, CloseSearch
 
     @Override
     public void onSearchActionHandlerExecuted() {
-        largeFileEditor.getEditor().setHeaderComponent(mySearchReplaceComponent.getComponent());
+        largeFileEditor.getEditor().setHeaderComponent(mySearchReplaceComponent.getUIComponent());
         mySearchReplaceComponent.requestFocusInTheSearchFieldAndSelectContent(largeFileEditor.getProject());
-        mySearchReplaceComponent.getSearchTextComponent().selectAll();
+        mySearchReplaceComponent.selectSearchAll();
     }
 
     @Override
@@ -121,7 +121,7 @@ public final class LfeSearchManagerImpl implements LfeSearchManager, CloseSearch
     @RequiredUIAccess
     public void launchNewRangeSearch(long fromPageNumber, long toPageNumber, boolean forwardDirection) {
         SearchTaskOptions options = new SearchTaskOptions()
-            .setStringToFind(mySearchReplaceComponent.getSearchTextComponent().getText())
+            .setStringToFind(mySearchReplaceComponent.getSearchText())
             .setSearchDirectionForward(forwardDirection)
             .setSearchBounds(fromPageNumber, SearchTaskOptions.NO_LIMIT,
                 toPageNumber, SearchTaskOptions.NO_LIMIT
@@ -250,7 +250,7 @@ public final class LfeSearchManagerImpl implements LfeSearchManager, CloseSearch
     private SearchTaskOptions generateOptionsForNormalCloseSearch(boolean directionForward) {
         SearchTaskOptions options = new SearchTaskOptions()
             .setSearchDirectionForward(directionForward)
-            .setStringToFind(mySearchReplaceComponent.getSearchTextComponent().getText())
+            .setStringToFind(mySearchReplaceComponent.getSearchText())
             .setCaseSensitive(myToggleCaseSensitiveAction.isSelected())
             .setWholeWords(myToggleWholeWordsAction.isSelected())
             .setRegularExpression(myToggleRegularExpression.isSelected())
@@ -330,7 +330,7 @@ public final class LfeSearchManagerImpl implements LfeSearchManager, CloseSearch
                 if (options.loopedPhase) {
                     setNewStatusText(FileEditorLocalize.largeFileEditorMessageSearchIsCompletedAndNoMoreMatches());
                     mySearchReplaceComponent.setNotFoundBackground();
-                    if (!(largeFileEditor.getEditor().getHeaderComponent() instanceof SearchReplaceComponent)) {
+                    if (largeFileEditor.getEditor().getHeaderComponent() != mySearchReplaceComponent.getUIComponent()) {
                         LocalizeValue message = FileEditorLocalize.largeFileEditorMessageSomeStringNotFound(options.stringToFind);
                         showSimpleHintInEditor(message, largeFileEditor.getEditor());
                     }
@@ -413,7 +413,7 @@ public final class LfeSearchManagerImpl implements LfeSearchManager, CloseSearch
                 .getInstance(largeFileEditor.getProject())
                 .requestFocus(largeFileEditor.getEditor().getContentComponent(), false);
             largeFileEditor.getEditorModel().setHighlightingCloseSearchResultsEnabled(false);
-            if (largeFileEditor.getEditor().getHeaderComponent() instanceof SearchReplaceComponent) {
+            if (largeFileEditor.getEditor().getHeaderComponent() == mySearchReplaceComponent.getUIComponent()) {
                 largeFileEditor.getEditor().setHeaderComponent(null);
             }
         }
@@ -456,7 +456,7 @@ public final class LfeSearchManagerImpl implements LfeSearchManager, CloseSearch
         mySearchReplaceComponent.setRegularBackground();
         largeFileEditor.getEditorModel().setHighlightingCloseSearchResultsEnabled(false);
 
-        String stringToFind = mySearchReplaceComponent.getSearchTextComponent().getText();
+        String stringToFind = mySearchReplaceComponent.getSearchText();
         boolean isMultiline = stringToFind.contains("\n");
         mySearchReplaceComponent.update(stringToFind, "", false, isMultiline);
     }
@@ -479,8 +479,8 @@ public final class LfeSearchManagerImpl implements LfeSearchManager, CloseSearch
     @RequiredUIAccess
     public List<SearchResult> getSearchResultsInPage(Page page) {
         SearchTaskOptions options = new SearchTaskOptions()
-            .setStringToFind(mySearchReplaceComponent.getSearchTextComponent().getText())
-            .setStringToFind(mySearchReplaceComponent.getSearchTextComponent().getText())
+            .setStringToFind(mySearchReplaceComponent.getSearchText())
+            .setStringToFind(mySearchReplaceComponent.getSearchText())
             .setCaseSensitive(myToggleCaseSensitiveAction.isSelected())
             .setWholeWords(myToggleWholeWordsAction.isSelected())
             .setRegularExpression(myToggleRegularExpression.isSelected())
@@ -528,7 +528,7 @@ public final class LfeSearchManagerImpl implements LfeSearchManager, CloseSearch
             return false;
         }
 
-        String stringToFind = mySearchReplaceComponent.getSearchTextComponent().getText();
+        String stringToFind = mySearchReplaceComponent.getSearchText();
 
         // "pageSize / 10", because it's strictly shorter then even full page consisted of only 4-byte symbols and much longer then simple stringsToFind
         return stringToFind.length() > largeFileEditor.getPageSize() / 10 ||
@@ -571,7 +571,7 @@ public final class LfeSearchManagerImpl implements LfeSearchManager, CloseSearch
         mySearchReplaceComponent = SearchReplaceComponent
             .buildFor(
                 largeFileEditor.getProject(),
-                largeFileEditor.getEditor().getContentComponent()
+                largeFileEditor.getEditor().getContentUIComponent()
             )
             .addPrimarySearchActions(
                 myPrevOccurrenceAction,

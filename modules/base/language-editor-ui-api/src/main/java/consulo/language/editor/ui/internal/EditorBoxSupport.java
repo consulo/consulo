@@ -190,7 +190,7 @@ public final class EditorBoxSupport {
             customization.accept(editor);
         }
 
-        editor.getUIComponent().putUserData(UiDataProvider.KEY, sink -> sink.set(Editor.KEY, editor));
+        editor.getContentUIComponent().putUserData(UiDataProvider.KEY, sink -> sink.set(Editor.KEY, editor));
 
         Disposable editorDisposable = Disposable.newDisposable("EditorBox");
         Project project = myProject;

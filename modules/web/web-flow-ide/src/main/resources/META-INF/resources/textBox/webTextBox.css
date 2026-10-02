@@ -10,6 +10,10 @@
     min-height: 0 !important;
 }
 
+vaadin-text-area.consulo-flat-input::part(input-field) {
+    padding-block: var(--vaadin-padding-block-container) !important;
+}
+
 /* the theme gives the field a height of its own, which the line of text no longer decides. a fixed height in a
    row which stretches its items is laid at the top of it, so the line is placed in the middle by hand */
 .consulo-flat-input > input {

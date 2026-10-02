@@ -150,7 +150,7 @@ public class DiffDividerDrawUtil {
       public int transform(int line) {
         int yOffset = editor.logicalPositionToXY(new LogicalPosition(line, 0)).y;
 
-        JComponent header = editor.getHeaderComponent();
+        java.awt.Component header = TargetAWT.to(editor.getHeaderComponent());
         int headerOffset = header == null ? 0 : header.getHeight();
 
         return yOffset - editor.getScrollingModel().getVerticalScrollOffset() + headerOffset;

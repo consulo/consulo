@@ -145,6 +145,12 @@ public class DesktopTextAreaImpl extends SwingComponentDelegate<DesktopTextAreaI
 
     @Override
     @RequiredUIAccess
+    public void replaceSelection(String text) {
+        textArea().replaceSelection(text);
+    }
+
+    @Override
+    @RequiredUIAccess
     public void setFont(@Nullable Font font) {
         textArea().setFont(font instanceof DesktopFontImpl desktopFont ? desktopFont.getFont() : UIManager.getFont("TextArea.font"));
     }

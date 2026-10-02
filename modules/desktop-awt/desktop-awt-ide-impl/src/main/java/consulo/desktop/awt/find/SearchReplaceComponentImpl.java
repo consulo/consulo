@@ -24,6 +24,11 @@ import consulo.ui.ex.action.touchBar.TouchBarController;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
+import consulo.ui.ex.awt.update.UiNotifyConnector;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.update.Activatable;
+import consulo.ui.color.ColorValue;
+import consulo.ui.style.ComponentColors;
 import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
@@ -42,6 +47,10 @@ import java.util.function.Supplier;
 
 import static java.awt.event.InputEvent.CTRL_DOWN_MASK;
 import static java.awt.event.InputEvent.META_DOWN_MASK;
+import consulo.fileEditor.impl.internal.search.SearchCloseAction;
+import consulo.fileEditor.impl.internal.search.ContextFilterActionGroup;
+import consulo.fileEditor.impl.internal.search.EditorHeaderSetSearchContextAction;
+import consulo.fileEditor.impl.internal.search.Embeddable;
 
 public class SearchReplaceComponentImpl extends EditorHeaderComponent implements SearchReplaceComponent {
     private final EventDispatcher<Listener> myEventDispatcher = EventDispatcher.create(Listener.class);
@@ -64,7 +73,9 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
     private final JPanel myReplaceToolbarWrapper;
 
     private final @Nullable Project myProject;
-    private final JComponent myTargetComponent;
+    private final consulo.ui.Component myTargetComponent;
+
+    private consulo.ui.@Nullable Component myUIComponent;
 
     private final Runnable myCloseAction;
     private final Runnable myReplaceAction;
@@ -73,7 +84,7 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
 
     private boolean myMultilineMode;
     private String myStatusText = "";
-    private Color myStatusColor = UIUtil.getLabelForeground();
+    private @Nullable ColorValue myStatusColor;
 
     private final List<AnAction> mySearchSuffixActions = new ArrayList<>();
     private final List<AnAction> myReplaceSuffixActions = new ArrayList<>();
@@ -81,7 +92,7 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
     @RequiredUIAccess
     SearchReplaceComponentImpl(
         @Nullable Project project,
-        JComponent targetComponent,
+        consulo.ui.Component targetComponent,
         DefaultActionGroup searchToolbar1Actions,
         BooleanSupplier searchToolbar1ModifiedFlagGetter,
         DefaultActionGroup searchToolbar2Actions,
@@ -209,6 +220,18 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
         }.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, InputEvent.SHIFT_DOWN_MASK)), this);
 
         TouchBarController.getInstance().setActions(this, ActionGroup.of(new PrevOccurrenceAction(), new NextOccurrenceAction()));
+
+        new UiNotifyConnector(this, new Activatable() {
+            @Override
+            public void showNotify() {
+                myEventDispatcher.getMulticaster().componentShown();
+            }
+
+            @Override
+            public void hideNotify() {
+                myEventDispatcher.getMulticaster().componentHidden();
+            }
+        });
     }
 
     @Override
@@ -218,8 +241,13 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
     }
 
     @Override
-    public JComponent getComponent() {
-        return this;
+    public consulo.ui.Component getUIComponent() {
+        consulo.ui.Component uiComponent = myUIComponent;
+        if (uiComponent == null) {
+            uiComponent = TargetAWT.wrap(this);
+            myUIComponent = uiComponent;
+        }
+        return uiComponent;
     }
 
     @Override
@@ -252,7 +280,7 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
     }
 
     @Override
-    public Color getStatusColor() {
+    public @Nullable ColorValue getStatusColor() {
         return myStatusColor;
     }
 
@@ -271,13 +299,13 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
     @Override
     public void setRegularBackground() {
         mySearchTextComponent.setBackground(UIUtil.getTextFieldBackground());
-        myStatusColor = UIUtil.getLabelForeground();
+        myStatusColor = null;
     }
 
     @Override
     public void setNotFoundBackground() {
         mySearchTextComponent.setBackground(LightColors.RED);
-        myStatusColor = UIUtil.getErrorForeground();
+        myStatusColor = ComponentColors.ERROR_FOREGROUND;
     }
 
     @Override
@@ -336,7 +364,6 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
         }
     }
 
-    @Override
     public JTextComponent getSearchTextComponent() {
         return mySearchTextComponent;
     }

@@ -61,7 +61,7 @@ public class DesktopQtTextBoxWithHistoryImpl extends QtComponentDelegate<QComboB
 
     private LocalizeValue myPlaceholder = LocalizeValue.empty();
 
-    private final DesktopQtLineEditSuffix mySuffix = new DesktopQtLineEditSuffix(this);
+    private final DesktopQtSideComponents mySides = new DesktopQtSideComponents(this);
 
     private final List<Validator<String>> myValidators = new ArrayList<>();
 
@@ -126,7 +126,7 @@ public class DesktopQtTextBoxWithHistoryImpl extends QtComponentDelegate<QComboB
             }
         };
 
-        comboBox.setLineEdit(mySuffix.createLineEdit(comboBox));
+        comboBox.setLineEdit(mySides.createLineEdit(comboBox));
         comboBox.setCompleter(null);
         comboBox.setInsertPolicy(QComboBox.InsertPolicy.NoInsert);
         comboBox.setPlaceholderText(NO_AUTO_SELECT_PLACEHOLDER);
@@ -145,7 +145,7 @@ public class DesktopQtTextBoxWithHistoryImpl extends QtComponentDelegate<QComboB
             lineEdit.setReadOnly(!myEditable);
             lineEdit.setPlaceholderText(myPlaceholder.get());
 
-            mySuffix.attach(lineEdit);
+            mySides.attach(lineEdit);
         }
 
         component.editTextChanged.connect(text -> {
@@ -327,11 +327,22 @@ public class DesktopQtTextBoxWithHistoryImpl extends QtComponentDelegate<QComboB
     @RequiredUIAccess
     @Override
     public void setSuffixComponent(@Nullable Component suffixComponent) {
-        mySuffix.set(suffixComponent, lineEdit());
+        mySides.setSuffix(suffixComponent, lineEdit());
     }
 
     @Override
     public @Nullable Component getSuffixComponent() {
-        return mySuffix.get();
+        return mySides.getSuffix();
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setPrefixComponent(@Nullable Component prefixComponent) {
+        mySides.setPrefix(prefixComponent, lineEdit());
+    }
+
+    @Override
+    public @Nullable Component getPrefixComponent() {
+        return mySides.getPrefix();
     }
 }

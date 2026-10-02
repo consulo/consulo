@@ -50,7 +50,7 @@ public class DeleteFromFavoritesAction extends LegacyDumbAwareAction {
             PlatformIconGroup.generalRemove()
         );
 
-        registerCustomShortcutSet(CommonActionsPanel.getCommonShortcut(CommonActionsPanel.Buttons.REMOVE), null);
+        setShortcutSet(CommonActionsPanel.getCommonShortcut(CommonActionsPanel.Buttons.REMOVE));
     }
 
     @Override

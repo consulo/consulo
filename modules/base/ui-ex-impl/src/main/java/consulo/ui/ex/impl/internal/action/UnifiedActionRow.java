@@ -42,6 +42,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.ComboBoxWithCustomPopup;
 import consulo.ui.ex.action.ComboBoxAction;
+import consulo.ui.ex.action.CustomUIComponentAction;
 import consulo.ui.ex.action.event.AnActionListener;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.PresentationFactory;
@@ -341,6 +342,13 @@ public class UnifiedActionRow {
                 continue;
             }
 
+            AnAction nodeAction = node.action();
+            if (nodeAction instanceof CustomUIComponentAction customComponentAction) {
+                add(getOrCreateCustomComponent(nodeAction, customComponentAction));
+                myButtons.add(null);
+                continue;
+            }
+
             Button button = node.children() == null ? createActionButton(node) : createActionMenu(node);
             add(button);
             myButtons.add(button);
@@ -402,6 +410,22 @@ public class UnifiedActionRow {
         else {
             ((VerticalLayout) myLayout).add(component);
         }
+    }
+
+    @RequiredUIAccess
+    private Component getOrCreateCustomComponent(AnAction action, CustomUIComponentAction customComponentAction) {
+        Presentation presentation = myPresentationFactory.getPresentation(action);
+
+        Component component = presentation.getClientProperty(CustomUIComponentAction.COMPONENT_KEY);
+        if (component == null) {
+            component = customComponentAction.createCustomComponent(presentation, myPlace);
+
+            presentation.putClientProperty(CustomUIComponentAction.COMPONENT_KEY, component);
+            presentation.putClientProperty(CustomUIComponentAction.ACTION_KEY, action);
+
+            myUpdatePending = true;
+        }
+        return component;
     }
 
     @RequiredUIAccess
@@ -602,9 +626,11 @@ public class UnifiedActionRow {
 
         if (myStyle == ActionToolbar.Style.INPLACE) {
             button.addStyle(ButtonStyle.INPLACE);
+            button.setFocusable(false);
         }
         else if (myStyle != ActionToolbar.Style.BUTTON) {
             button.addStyle(ButtonStyle.TOOLBAR);
+            button.setFocusable(false);
         }
 
         return button;

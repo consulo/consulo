@@ -144,7 +144,7 @@ public class WebIntentionHintComponent implements Disposable {
 
         myEditor.getScrollingModel().addVisibleAreaListener(this::editorScrolled, this);
 
-        hint.showAt(myEditor.getUIComponent(), myHintX, myHintY, location.height());
+        hint.showAt(myEditor.getContentUIComponent(), myHintX, myHintY, location.height());
     }
 
     @RequiredUIAccess
@@ -172,7 +172,7 @@ public class WebIntentionHintComponent implements Disposable {
             return;
         }
 
-        hint.showAt(myEditor.getUIComponent(), myHintX, myHintY, location.height());
+        hint.showAt(myEditor.getContentUIComponent(), myHintX, myHintY, location.height());
     }
 
     @RequiredUIAccess
@@ -194,7 +194,7 @@ public class WebIntentionHintComponent implements Disposable {
             // the whole line the bulb is on is what the list hangs under, so it does not cover the bulb it was
             // opened from
             anchoredPopup.showAtPoint(
-                myEditor.getUIComponent(),
+                myEditor.getContentUIComponent(),
                 myHintX,
                 hintLocation.y() + hintLocation.height(),
                 hintLocation.height()

@@ -79,7 +79,7 @@ public class UnifiedLineStatusMarkerPopup extends LineStatusMarkerPopupBase {
 
         ActionToolbar toolbar =
             ActionManager.getInstance().createActionToolbar(ActionPlaces.FILEHISTORY_VIEW_TOOLBAR, group, true);
-        toolbar.setTargetUIComponent(myEditor.getUIComponent());
+        toolbar.setTargetUIComponent(myEditor.getContentUIComponent());
 
         Component preview = createPreview(wordDiff, disposable);
 
@@ -114,7 +114,7 @@ public class UnifiedLineStatusMarkerPopup extends LineStatusMarkerPopupBase {
         int x = details != null ? details.getX() : caretLocation != null ? caretLocation.textX() : 0;
         int y = details != null ? details.getY() : caretLocation != null ? caretLocation.y() : 0;
 
-        popup.showAt(myEditor.getUIComponent(), x, y, anchorHeight);
+        popup.showAt(myEditor.getContentUIComponent(), x, y, anchorHeight);
     }
 
     @RequiredUIAccess

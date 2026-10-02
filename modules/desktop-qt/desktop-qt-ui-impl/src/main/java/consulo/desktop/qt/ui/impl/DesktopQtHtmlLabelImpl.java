@@ -17,6 +17,7 @@ package consulo.desktop.qt.ui.impl;
 
 import consulo.desktop.qt.ui.impl.base.DesktopQtIconLabel;
 import consulo.localize.LocalizeValue;
+import consulo.ui.HorizontalAlignment;
 import consulo.ui.HtmlLabel;
 import io.qt.core.Qt;
 
@@ -26,7 +27,7 @@ import io.qt.core.Qt;
  */
 public class DesktopQtHtmlLabelImpl extends DesktopQtLabelImpl implements HtmlLabel {
     public DesktopQtHtmlLabelImpl(LocalizeValue html) {
-        super(html);
+        super(html, HorizontalAlignment.LEFT);
     }
 
     @Override

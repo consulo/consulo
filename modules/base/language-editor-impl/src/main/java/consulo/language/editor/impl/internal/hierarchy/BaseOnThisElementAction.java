@@ -104,7 +104,7 @@ public final class BaseOnThisElementAction extends AnAction implements AnActionW
 
             ShortcutSet shortcutSet = findShortcutSet(browser.getKind().getShortcutActionId());
             if (shortcutSet != null) {
-                registerCustomShortcutSet(shortcutSet, null);
+                setShortcutSet(shortcutSet);
             }
 
             PsiElement selectedElement = browser.getSelectedElement();

@@ -16,6 +16,7 @@
 package consulo.desktop.qt.ui.impl.base;
 
 import consulo.ui.image.Image;
+import io.qt.core.QEvent;
 import io.qt.core.Qt;
 import io.qt.widgets.QFrame;
 import io.qt.widgets.QHBoxLayout;
@@ -77,6 +78,10 @@ public class DesktopQtIconLabel extends QFrame {
         myTextLabel.setBuddy(buddy);
     }
 
+    public void setTextAlignment(Qt.AlignmentFlag horizontalAlignment) {
+        myTextLabel.setAlignment(horizontalAlignment, Qt.AlignmentFlag.AlignVCenter);
+    }
+
     public void setTextFormat(Qt.TextFormat format) {
         myTextLabel.setTextFormat(format);
     }
@@ -88,6 +93,15 @@ public class DesktopQtIconLabel extends QFrame {
 
     public void setTextInteractionFlags(Qt.TextInteractionFlag... flags) {
         myTextLabel.setTextInteractionFlags(flags);
+    }
+
+    @Override
+    protected void changeEvent(QEvent event) {
+        super.changeEvent(event);
+
+        if (event.type() == QEvent.Type.PaletteChange) {
+            myTextLabel.setPalette(palette());
+        }
     }
 
     private void updateTextVisibility() {

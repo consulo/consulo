@@ -224,7 +224,7 @@ public class ClassesTable extends JBTable implements UiDataProvider, Disposable 
         };
 
         KeyboardShortcut shortcut = new KeyboardShortcut(KeyStroke.getKeyStroke('l', InputEvent.SHIFT_DOWN_MASK), null);
-        action.registerCustomShortcutSet(new CustomShortcutSet(shortcut), null);
+        action.setShortcutSet(new CustomShortcutSet(shortcut));
 
         MyMouseAdapter listener = new MyMouseAdapter() {
             @Override

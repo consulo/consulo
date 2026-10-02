@@ -4,6 +4,8 @@ button.exclude:
     text: Exclude
 button.include:
     text: Include
+button.replace:
+    text: Re&place
 cannot.search.for.usages.title:
     text: Cannot Search for Usages
 empty.text.searching:

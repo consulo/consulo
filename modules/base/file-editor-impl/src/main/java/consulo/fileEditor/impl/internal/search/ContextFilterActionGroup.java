@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.desktop.awt.find;
+package consulo.fileEditor.impl.internal.search;
 
 import consulo.application.dumb.DumbAware;
 import consulo.find.FindSearchContext;
 import consulo.find.localize.FindLocalize;
-import consulo.fileEditor.impl.internal.search.SearchSession;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.*;
 import consulo.ui.image.Image;

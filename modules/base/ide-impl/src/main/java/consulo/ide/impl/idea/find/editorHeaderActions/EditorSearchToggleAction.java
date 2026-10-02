@@ -23,6 +23,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.ui.image.Image;
 import org.jspecify.annotations.Nullable;
+import consulo.fileEditor.impl.internal.search.Embeddable;
 
 /**
  * @author VISTALL

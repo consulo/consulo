@@ -4,6 +4,7 @@ import consulo.ide.impl.idea.find.EditorSearchSession;
 import consulo.fileEditor.impl.internal.search.SearchSession;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.fileEditor.impl.internal.search.EditorHeaderToggleAction;
 
 public class ToggleSelectionOnlyAction extends EditorHeaderToggleAction {
   public ToggleSelectionOnlyAction() {

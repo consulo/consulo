@@ -28,6 +28,7 @@ import consulo.fileEditor.FileEditorManager;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.util.dataholder.UserDataHolderBase;
+import consulo.ui.Component;
 
 import org.jspecify.annotations.Nullable;
 import javax.swing.*;
@@ -283,7 +284,7 @@ class LazyEditor extends UserDataHolderBase implements Editor {
   }
 
   @Override
-  public void setHeaderComponent(@Nullable JComponent header) {
+  public void setHeaderComponent(@Nullable Component header) {
     getEditor().setHeaderComponent(header);
   }
 
@@ -293,7 +294,7 @@ class LazyEditor extends UserDataHolderBase implements Editor {
   }
 
   @Override
-  public @Nullable JComponent getHeaderComponent() {
+  public @Nullable Component getHeaderComponent() {
     return getEditor().getHeaderComponent();
   }
 

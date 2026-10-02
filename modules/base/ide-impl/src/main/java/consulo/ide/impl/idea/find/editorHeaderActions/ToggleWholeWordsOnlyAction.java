@@ -5,6 +5,7 @@ import consulo.find.localize.FindLocalize;
 import consulo.fileEditor.impl.internal.search.SearchSession;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.fileEditor.impl.internal.search.Embeddable;
 
 public class ToggleWholeWordsOnlyAction extends EditorSearchToggleAction implements Embeddable {
     public ToggleWholeWordsOnlyAction() {

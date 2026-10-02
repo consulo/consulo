@@ -162,6 +162,17 @@ public class BorderLayoutEx extends VerticalLayout {
     setComponent(component, constraint);
   }
 
+  public void removeComponent(Component component) {
+    Constraint constraint = ComponentUtil.getData(component, Constraint.class);
+    if (constraint == null || component.getParent().isEmpty()) {
+      return;
+    }
+
+    ComponentUtil.setData(component, Constraint.class, null);
+
+    setComponent(null, constraint);
+  }
+
   public void setComponent(@Nullable Component component, Constraint constraint) {
     switch (constraint) {
       case NORTH:

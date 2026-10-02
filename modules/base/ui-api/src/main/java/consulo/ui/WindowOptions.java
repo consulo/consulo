@@ -26,6 +26,7 @@ public final class WindowOptions extends ComponentOptions {
         private boolean myClosable = true;
         private boolean myResizable = true;
         private boolean myModal = true;
+        private boolean myUndecorated;
         private @Nullable Window myOwner = null;
 
         private Builder() {
@@ -51,8 +52,13 @@ public final class WindowOptions extends ComponentOptions {
             return this;
         }
 
+        public Builder undecorated() {
+            myUndecorated = true;
+            return this;
+        }
+
         public WindowOptions build() {
-            return new WindowOptions(myOwner, myClosable, myResizable, myModal);
+            return new WindowOptions(myOwner, myClosable, myResizable, myModal, myUndecorated);
         }
     }
 
@@ -64,14 +70,16 @@ public final class WindowOptions extends ComponentOptions {
     private final boolean myClosable;
     private final boolean myResizable;
     private final boolean myModal;
+    private final boolean myUndecorated;
 
-    private WindowOptions(@Nullable Window owner, boolean closable, boolean resizable, boolean modal) {
+    private WindowOptions(@Nullable Window owner, boolean closable, boolean resizable, boolean modal, boolean undecorated) {
         super(true);
 
         myOwner = owner;
         myClosable = closable;
         myResizable = resizable;
         myModal = modal;
+        myUndecorated = undecorated;
     }
 
     public @Nullable Window getOwner() {
@@ -88,5 +96,9 @@ public final class WindowOptions extends ComponentOptions {
 
     public boolean isModal() {
         return myModal;
+    }
+
+    public boolean isUndecorated() {
+        return myUndecorated;
     }
 }

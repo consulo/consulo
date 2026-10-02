@@ -164,7 +164,7 @@ public class DesktopQtIntentionHintComponent implements Disposable {
         // not cover what it was opened from
         if (hintLocation != null && popup instanceof AnchoredPopup anchoredPopup) {
             anchoredPopup.showAtPoint(
-                myEditor.getUIComponent(),
+                myEditor.getContentUIComponent(),
                 myHintX,
                 hintLocation.y(),
                 hintLocation.height()

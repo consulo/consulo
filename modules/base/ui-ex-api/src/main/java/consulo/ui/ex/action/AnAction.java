@@ -23,7 +23,9 @@ import consulo.application.dumb.PossiblyDumbAware;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.internal.UIInternalEx;
 import consulo.ui.image.Image;
 import consulo.util.collection.ArrayFactory;
 import consulo.util.dataholder.Key;
@@ -226,6 +228,31 @@ public abstract class AnAction implements PossiblyDumbAware {
         if (actionList != null) {
             actionList.remove(this);
         }
+    }
+
+    @RequiredUIAccess
+    public final void registerCustomShortcutSet(ShortcutSet shortcutSet, Component component) {
+        registerCustomShortcutSet(shortcutSet, component, null);
+    }
+
+    @RequiredUIAccess
+    public final void registerCustomShortcutSet(ShortcutSet shortcutSet, Component component, @Nullable Disposable parentDisposable) {
+        setShortcutSet(shortcutSet);
+        registerCustomShortcutSet(component, parentDisposable);
+    }
+
+    @RequiredUIAccess
+    public final void registerCustomShortcutSet(Component component, @Nullable Disposable parentDisposable) {
+        UIInternalEx.get()._AnAction_registerCustomShortcutSet(this, component);
+
+        if (parentDisposable != null) {
+            Disposer.register(parentDisposable, () -> unregisterCustomShortcutSet(component));
+        }
+    }
+
+    @RequiredUIAccess
+    public final void unregisterCustomShortcutSet(Component component) {
+        UIInternalEx.get()._AnAction_unregisterCustomShortcutSet(this, component);
     }
 
     /**

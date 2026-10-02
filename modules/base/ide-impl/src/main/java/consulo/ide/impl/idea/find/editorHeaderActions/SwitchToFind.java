@@ -8,15 +8,16 @@ import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.internal.ActionUpdateInvoker;
+import consulo.ui.Component;
 
-import javax.swing.*;
 
 /**
  * @author zajac
  * @since 2011-03-05
  */
 public class SwitchToFind extends LegacyDumbAwareAction {
-  public SwitchToFind(JComponent shortcutHolder) {
+  @RequiredUIAccess
+  public SwitchToFind(Component shortcutHolder) {
     AnAction findAction = ActionManager.getInstance().getAction(IdeActions.ACTION_FIND);
     if (findAction != null) {
       registerCustomShortcutSet(findAction.getShortcutSet(), shortcutHolder);

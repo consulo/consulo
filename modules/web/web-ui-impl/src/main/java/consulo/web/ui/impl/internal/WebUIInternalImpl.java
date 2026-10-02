@@ -43,6 +43,7 @@ import consulo.ui.image.canvas.Canvas2D;
 import consulo.ui.impl.DummyTaskBarImpl;
 import consulo.ui.impl.model.FlatDataModelImpl;
 import consulo.ui.ex.ComboBoxWithCustomPopup;
+import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.internal.UIInternalEx;
 import consulo.ui.internal.UIInternal;
 import consulo.ui.layout.*;
@@ -57,6 +58,7 @@ import consulo.web.ui.impl.internal.image.viewer.WebImageViewerImpl;
 import consulo.ui.image.viewer.ImageViewer;
 import consulo.web.ui.impl.internal.base.ToVaadinComponentWrapper;
 import consulo.web.ui.impl.internal.base.VaadinComponentDelegate;
+import consulo.web.ui.impl.internal.base.WebComponentShortcuts;
 import consulo.web.ui.impl.internal.base.WebShowNotifier;
 import consulo.web.ui.impl.internal.htmlView.WebHtmlViewImpl;
 import consulo.web.ui.impl.internal.image.*;
@@ -652,5 +654,21 @@ public class WebUIInternalImpl extends UIInternal implements UIInternalEx {
      */
     @Override
     public void addModalityStateListener(ModalityStateListener listener, Disposable parentDisposable) {
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void _AnAction_registerCustomShortcutSet(AnAction action, Component component) {
+        UIInternalEx.super._AnAction_registerCustomShortcutSet(action, component);
+
+        WebComponentShortcuts.update(component);
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void _AnAction_unregisterCustomShortcutSet(AnAction action, Component component) {
+        UIInternalEx.super._AnAction_unregisterCustomShortcutSet(action, component);
+
+        WebComponentShortcuts.update(component);
     }
 }

@@ -2,7 +2,7 @@
  * The browser half of consulo.web.internal.ui.editor.ArquillEditorElement, built over the
  * window.arquillEditor.createEditor(options) the compiled arquill bundle exposes.
  *
- * install(element, contents, readonly, rulers) hangs $arquillApi onto the host element - the only thing the server ever
+ * install(element, contents, readonly, rulers, noFocus) hangs $arquillApi onto the host element - the only thing the server ever
  * reaches for - and dispatches the custom events the @DomEvent classes bind to by name.
  */
 (function () {
@@ -35,7 +35,7 @@
 
     const FLOATING_TOOLBAR_RETENTION_MS = 1500;
 
-    const install = (element, contents, readonly, rulers) => {
+    const install = (element, contents, readonly, rulers, noFocus) => {
         if (element.$arquillEditor) {
             return;
         }
@@ -48,6 +48,7 @@
             contents: contents,
             readonly: readonly,
             noComputeSize: true,
+            noFocus: noFocus === true,
             showLinesRuler: shown('lines'),
             showFoldingRuler: shown('folding'),
             showAnnotationRuler: shown('annotations')
@@ -539,7 +540,9 @@
                     return toBaseOffset(viewOffset);
                 }
 
-                return isEnd ? range.annotation._projection.end : range.annotation._projection.start;
+                return isEnd && viewOffset > range.start
+                    ? range.annotation._projection.end
+                    : range.annotation._projection.start;
             };
 
             const start = toSelectionBaseOffset(viewStart, false);
@@ -573,7 +576,7 @@
             element.$arquillSelectionEnd = end;
             // the event just carried the rect of this offset, so the echo the server answers with has
             // nothing left to report
-            element.$arquillLastRectOffset = offset;
+            element.$arquillLastRectOffset = start === end ? offset : -1;
             element.dispatchEvent(new CustomEvent('arquill-caret', {
                 detail: Object.assign(caretDetail(offset, viewCaret), { selectionStart: start, selectionEnd: end })
             }));
@@ -615,11 +618,32 @@
             return toViewOffset(offset);
         };
 
+        const toViewOffsetBefore = offset => {
+            if (offset < 0) {
+                return -1;
+            }
+
+            let delta = 0;
+            for (const projection of viewModel.getProjections()) {
+                if (projection.start >= offset) {
+                    break;
+                }
+
+                if (projection.end > offset) {
+                    return -1;
+                }
+
+                delta += projection._model.getCharCount() - (projection.end - projection.start);
+            }
+
+            return offset + delta;
+        };
+
         // where an edge of the platform's selection is drawn. the platform takes a collapsed region in whole -
         // an edge which fell inside one is moved to the edge of the region - and none of the offsets the region
         // covers has a view offset, so the edge is drawn against the placeholder standing for it
         const toSelectionViewOffset = (baseOffset, isEnd) => {
-            const view = toViewOffset(baseOffset);
+            const view = isEnd ? toViewOffsetBefore(baseOffset) : toViewOffset(baseOffset);
             if (view >= 0) {
                 return view;
             }
@@ -641,7 +665,7 @@
                     continue;
                 }
 
-                mapped.push({ start: start, end: end, style: range.style });
+                mapped.push({ start: start, end: end, style: range.style, sel: range.sel });
             }
 
             const projected = (foldPlaceholderStyles ? foldPlaceholderStyles() : [])
@@ -656,16 +680,16 @@
                 mapped.sort((left, right) => left.start - right.start);
             }
 
-            element.$arquillEditor.setStyleRanges(withSelectionForeground(mapped));
+            element.$arquillEditor.setStyleRanges(withSelection(mapped));
         };
 
         // orion draws the selection as plates behind the text and leaves the glyphs the colour the styler gave them,
         // so a dark keyword over a dark selection stays dark. the platform has a selection foreground for exactly
         // this, and the only way to reach a glyph is the range that already colours it - the selection is laid over
         // the ranges as one more of them rather than being drawn
-        const withSelectionForeground = ranges => {
+        const withSelection = ranges => {
             const color = element.$arquillSelectionForeground;
-            const selection = color ? textView.getSelection() : null;
+            const selection = textView.getSelection();
 
             const start = selection ? Math.min(selection.start, selection.end) : 0;
             const end = selection ? Math.max(selection.start, selection.end) : 0;
@@ -674,13 +698,19 @@
                 return ranges;
             }
 
-            const recolour = range => ({
-                start: range.start,
-                end: range.end,
-                style: Object.assign({}, range.style, {
-                    style: Object.assign({}, range.style && range.style.style, { color: color })
-                })
-            });
+            const underSelection = range => {
+                const keep = range.sel || {};
+                const style = Object.assign({}, range.style && range.style.style, {
+                    backgroundColor: keep.backgroundColor || 'transparent'
+                });
+
+                const foreground = keep.color || color;
+                if (foreground) {
+                    style.color = foreground;
+                }
+
+                return { start: range.start, end: range.end, style: Object.assign({}, range.style, { style: style }) };
+            };
 
             const out = [];
             // the ranges the styler gives are not allowed to overlap, so a range crossing an edge of the selection
@@ -693,16 +723,22 @@
                     continue;
                 }
 
-                if (range.start > plain) {
+                if (range.start > plain && color) {
                     out.push({ start: plain, end: range.start, style: { style: { color: color } } });
+                }
+
+                if (range.inlay) {
+                    out.push(range);
+                    plain = Math.max(plain, Math.min(range.end, end));
+                    continue;
                 }
 
                 if (range.start < start) {
                     out.push({ start: range.start, end: start, style: range.style });
                 }
 
-                const inner = { start: Math.max(range.start, start), end: Math.min(range.end, end), style: range.style };
-                out.push(recolour(inner));
+                const inner = { start: Math.max(range.start, start), end: Math.min(range.end, end), style: range.style, sel: range.sel };
+                out.push(underSelection(inner));
 
                 if (range.end > end) {
                     out.push({ start: end, end: range.end, style: range.style });
@@ -712,7 +748,7 @@
             }
 
             // what the styler left plain is still selected, and white on white is what it reads as otherwise
-            if (plain < end) {
+            if (plain < end && color) {
                 out.push({ start: plain, end: end, style: { style: { color: color } } });
             }
 
@@ -1811,7 +1847,7 @@
                                 attributes: { 'data-arquill-inlay-click': String(segment.click) }
                             });
 
-                        styles.push({ start: start, end: start + text.length, style: style });
+                        styles.push({ start: start, end: start + text.length, style: style, inlay: true });
                     }
 
                     start += text.length + (segment.br ? 1 : 0);
@@ -2386,7 +2422,13 @@
                     return;
                 }
 
-                element.$arquillEditor.setCaretOffset(end, true);
+                const viewBefore = toViewOffset(end) < 0 ? toViewOffsetBefore(end) : -1;
+                if (viewBefore >= 0) {
+                    textView.setCaretOffset(viewBefore, true);
+                }
+                else {
+                    element.$arquillEditor.setCaretOffset(end, true);
+                }
                 element.$arquillLastRectOffset = end;
 
                 // the offset is the server's own and does not have to come back, but where it landed on screen
@@ -2396,7 +2438,7 @@
                 // rect only: the offset is the server's own and moving the platform caret to where it
                 // already is counts as a caret move, which is what a lookup goes away on
                 element.dispatchEvent(new CustomEvent('arquill-caret', {
-                    detail: Object.assign(caretDetail(end, toViewOffset(end)), {
+                    detail: Object.assign(caretDetail(end, textView.getCaretOffset()), {
                         rectOnly: true,
                         selectionStart: end,
                         selectionEnd: end

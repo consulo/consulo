@@ -22,6 +22,7 @@ import consulo.ui.ComponentItemRender;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ListBox;
 import consulo.ui.RenderItem;
+import consulo.ui.ReusableComponentItemRender;
 import consulo.ui.TextItemRender;
 import consulo.ui.TransferHandler;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -31,11 +32,16 @@ import consulo.ui.event.ValueComponentEvent;
 import consulo.ui.event.details.InputDetails;
 import consulo.ui.image.Image;
 import consulo.ui.model.FlatDataModel;
+import consulo.ui.model.FlatDataModelEvent;
 import io.qt.core.QMargins;
+import io.qt.core.QModelIndex;
+import io.qt.core.QPoint;
+import io.qt.core.QRect;
 import io.qt.core.QSize;
 import io.qt.core.Qt;
 import io.qt.gui.QKeyEvent;
 import io.qt.gui.QMouseEvent;
+import io.qt.gui.QResizeEvent;
 import io.qt.widgets.QAbstractItemView;
 import io.qt.widgets.QFrame;
 import io.qt.gui.QPaintEvent;
@@ -46,7 +52,14 @@ import io.qt.widgets.QListWidgetItem;
 import io.qt.widgets.QWidget;
 import org.jspecify.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.ArrayDeque;
+import java.util.Collections;
+import java.util.Deque;
+import java.util.IdentityHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -64,6 +77,21 @@ public class DesktopQtListBoxImpl<E> extends QtComponentDelegate<QListWidget> im
     private static final int ourMaxWidth = 800;
 
     private static final int ourSeparatorHeight = 7;
+
+    private static final int ourMaxMeasuredRows = 100;
+
+    private static final class PooledRow {
+        private final consulo.ui.Component myRendered;
+        private final QWidget myWidget;
+        private @Nullable Object myElement;
+        private boolean mySelected;
+        private boolean myDirty = true;
+
+        private PooledRow(consulo.ui.Component rendered, QWidget widget) {
+            myRendered = rendered;
+            myWidget = widget;
+        }
+    }
 
     /**
      * A {@link QListWidget} answers a constant hint of its own - it is built to be given a size rather than to ask
@@ -99,7 +127,7 @@ public class DesktopQtListBoxImpl<E> extends QtComponentDelegate<QListWidget> im
                 return super.sizeHint();
             }
 
-            int width = sizeHintForColumn(0);
+            int width = isPooled() ? pooledWidthHint(this) : sizeHintForColumn(0);
             int height = 0;
 
             int visible = Math.min(rows, ourMaxVisibleRows);
@@ -133,6 +161,27 @@ public class DesktopQtListBoxImpl<E> extends QtComponentDelegate<QListWidget> im
             finally {
                 myClickEvent = null;
             }
+        }
+
+        @Override
+        public void doItemsLayout() {
+            super.doItemsLayout();
+
+            layoutPool();
+        }
+
+        @Override
+        protected void scrollContentsBy(int dx, int dy) {
+            super.scrollContentsBy(dx, dy);
+
+            layoutPool();
+        }
+
+        @Override
+        protected void resizeEvent(QResizeEvent event) {
+            super.resizeEvent(event);
+
+            layoutPool();
         }
 
         @Override
@@ -170,6 +219,22 @@ public class DesktopQtListBoxImpl<E> extends QtComponentDelegate<QListWidget> im
 
     private @Nullable QMouseEvent myClickEvent;
 
+    private final List<PooledRow> myPool = new ArrayList<>();
+
+    private @Nullable PooledRow myMeasureRow;
+
+    private boolean myPoolUnsupported;
+
+    private boolean myItemsPooled;
+
+    private boolean myLayingOutPool;
+
+    private int myPooledRowHeight = -1;
+
+    private int myPooledWidthHint = -1;
+
+    private Qt.@Nullable ItemFlags myDefaultItemFlags;
+
     public DesktopQtListBoxImpl(FlatDataModel<E> model) {
         myModel = model;
     }
@@ -199,7 +264,12 @@ public class DesktopQtListBoxImpl<E> extends QtComponentDelegate<QListWidget> im
             }
         });
 
-        myModel.addListener(event -> rebuildIfBound());
+        destroyPool();
+        myItemsPooled = false;
+
+        component.currentRowChanged.connect(row -> layoutPool());
+
+        myModel.addListener(this::onModelChanged);
 
         rebuild(component);
     }
@@ -215,14 +285,438 @@ public class DesktopQtListBoxImpl<E> extends QtComponentDelegate<QListWidget> im
     }
 
     protected void rebuild(QListWidget component) {
+        myPooledWidthHint = -1;
+
         myRebuilding = true;
         try {
-            rebuildItems(component);
+            if (isPooled()) {
+                syncPooledItems(component);
+
+                if (mySelectedIndex < 0 || mySelectedIndex >= component.count()) {
+                    component.clearSelection();
+                    component.setCurrentRow(-1);
+                }
+            }
+
+            if (!isPooled()) {
+                destroyPool();
+
+                rebuildItems(component);
+            }
 
             applySelectedIndex(component);
+
+            if (myItemsPooled) {
+                QListWidgetItem current = component.currentItem();
+                if (current != null) {
+                    component.scrollToItem(current);
+                }
+                else {
+                    component.scrollToTop();
+                }
+            }
+
+            for (PooledRow row : myPool) {
+                row.myDirty = true;
+            }
         }
         finally {
             myRebuilding = false;
+        }
+
+        layoutPool();
+    }
+
+    protected void rowsChanged() {
+    }
+
+    private void onModelChanged(FlatDataModelEvent event) {
+        QListWidget component = myComponent;
+        if (component == null) {
+            return;
+        }
+
+        if (!isPooled() || !myItemsPooled || event.getType() == FlatDataModelEvent.Type.RESET) {
+            rebuild(component);
+            return;
+        }
+
+        int from = event.getFromIndex();
+        int to = event.getToIndex();
+        int span = to - from + 1;
+        int count = component.count();
+        int size = myModel.getSize();
+
+        boolean consistent = from >= 0 && span > 0 && switch (event.getType()) {
+            case ADDED -> count + span == size && from <= count;
+            case REMOVED -> count - span == size && to < count;
+            case UPDATED -> count == size && to < count;
+            case RESET -> false;
+        };
+
+        if (!consistent) {
+            rebuild(component);
+            return;
+        }
+
+        myPooledWidthHint = -1;
+
+        rowsChanged();
+
+        myRebuilding = true;
+        try {
+            switch (event.getType()) {
+                case ADDED -> {
+                    for (int i = from; i <= to; i++) {
+                        QListWidgetItem item = new QListWidgetItem();
+                        component.insertItem(i, item);
+                        configurePooledItem(component, item, myModel.get(i));
+                    }
+                }
+                case REMOVED -> {
+                    for (int i = to; i >= from; i--) {
+                        component.takeItem(i);
+                    }
+                }
+                case UPDATED -> {
+                    Set<Object> updated = Collections.newSetFromMap(new IdentityHashMap<>());
+                    for (int i = from; i <= to; i++) {
+                        E element = myModel.get(i);
+                        updated.add(element);
+                        configurePooledItem(component, component.item(i), element);
+                    }
+
+                    for (PooledRow row : myPool) {
+                        if (row.myElement != null && updated.contains(row.myElement)) {
+                            row.myDirty = true;
+                        }
+                    }
+                }
+                default -> {
+                }
+            }
+
+            int current = component.currentRow();
+            if (current >= 0) {
+                mySelectedIndex = current;
+            }
+            else {
+                applySelectedIndex(component);
+            }
+        }
+        finally {
+            myRebuilding = false;
+        }
+
+        layoutPool();
+    }
+
+    private boolean isPooled() {
+        return myComponentRender instanceof ReusableComponentItemRender<E, ?> && !myPoolUnsupported;
+    }
+
+    private void syncPooledItems(QListWidget component) {
+        if (!myItemsPooled) {
+            component.clear();
+            myItemsPooled = true;
+        }
+
+        int size = myModel.getSize();
+        while (component.count() > size) {
+            component.takeItem(component.count() - 1);
+        }
+
+        for (int i = 0; i < size; i++) {
+            QListWidgetItem item = component.item(i);
+            if (item == null) {
+                item = new QListWidgetItem();
+                component.addItem(item);
+            }
+
+            configurePooledItem(component, item, myModel.get(i));
+        }
+    }
+
+    private void configurePooledItem(QListWidget component, QListWidgetItem item, E element) {
+        boolean separator = mySeparatorPredicate.test(element);
+        boolean hasSeparatorLine = component.itemWidget(item) != null;
+
+        if (separator) {
+            setItemFlags(item, new Qt.ItemFlags(0));
+            setItemHeight(item, ourSeparatorHeight);
+
+            if (!hasSeparatorLine) {
+                component.setItemWidget(item, createSeparatorLine(component));
+            }
+            return;
+        }
+
+        if (hasSeparatorLine) {
+            component.removeItemWidget(item);
+        }
+
+        setItemFlags(item, defaultItemFlags());
+        setItemHeight(item, pooledRowHeight(component, element));
+    }
+
+    private Qt.ItemFlags defaultItemFlags() {
+        Qt.ItemFlags flags = myDefaultItemFlags;
+        if (flags == null) {
+            flags = new QListWidgetItem().flags();
+            myDefaultItemFlags = flags;
+        }
+        return flags;
+    }
+
+    private static void setItemFlags(QListWidgetItem item, Qt.ItemFlags flags) {
+        if (item.flags().value() != flags.value()) {
+            item.setFlags(flags);
+        }
+    }
+
+    private static void setItemHeight(QListWidgetItem item, int height) {
+        QSize hint = item.sizeHint();
+        if (hint.width() != 0 || hint.height() != height) {
+            item.setSizeHint(new QSize(0, height));
+        }
+    }
+
+    private int pooledRowHeight(QListWidget component, E element) {
+        Function<E, Length> heightGetter = myItemHeightGetter;
+        if (heightGetter != null) {
+            return DesktopQtLength.toPixels(component, heightGetter.apply(element));
+        }
+
+        if (myPooledRowHeight > 0) {
+            return myPooledRowHeight;
+        }
+
+        int height = 0;
+        PooledRow measure = measureRow(component);
+        if (measure != null) {
+            bindPooledRow(measure, element, false);
+            measure.myWidget.ensurePolished();
+            height = measure.myWidget.sizeHint().height();
+        }
+
+        if (height <= 0) {
+            return component.fontMetrics().height() + 4;
+        }
+
+        myPooledRowHeight = height;
+        return height;
+    }
+
+    private int pooledWidthHint(QListWidget component) {
+        if (myPooledWidthHint >= 0) {
+            return myPooledWidthHint;
+        }
+
+        int width = 0;
+        PooledRow measure = measureRow(component);
+        if (measure != null) {
+            int limit = Math.min(myModel.getSize(), ourMaxMeasuredRows);
+            for (int i = 0; i < limit; i++) {
+                E element = myModel.get(i);
+                if (mySeparatorPredicate.test(element)) {
+                    continue;
+                }
+
+                bindPooledRow(measure, element, false);
+                measure.myWidget.ensurePolished();
+                width = Math.max(width, measure.myWidget.sizeHint().width());
+            }
+        }
+
+        myPooledWidthHint = width;
+        return width;
+    }
+
+    private @Nullable PooledRow measureRow(QListWidget component) {
+        PooledRow measure = myMeasureRow;
+        if (measure == null) {
+            measure = createPooledRow(component);
+            myMeasureRow = measure;
+        }
+        return measure;
+    }
+
+    @SuppressWarnings("unchecked")
+    private @Nullable PooledRow createPooledRow(QListWidget component) {
+        if (!(myComponentRender instanceof ReusableComponentItemRender<E, ?> render)) {
+            return null;
+        }
+
+        consulo.ui.Component rendered = render.createComponent();
+        if (!(rendered instanceof QtComponentDelegate<?> delegate)) {
+            myPoolUnsupported = true;
+            return null;
+        }
+
+        delegate.setParent(this);
+        delegate.bind(component.viewport(), null);
+
+        QWidget widget = delegate.toQtComponent();
+        if (widget == null) {
+            myPoolUnsupported = true;
+            return null;
+        }
+
+        widget.setAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents, true);
+        widget.hide();
+
+        return new PooledRow(rendered, widget);
+    }
+
+    @SuppressWarnings("unchecked")
+    private void bindPooledRow(PooledRow row, E element, boolean selected) {
+        if (myComponentRender instanceof ReusableComponentItemRender<E, ?> render) {
+            ((ReusableComponentItemRender<E, consulo.ui.Component>) render).bind(row.myRendered, RenderItem.of(element, selected));
+        }
+    }
+
+    private void destroyPool() {
+        for (PooledRow row : myPool) {
+            disposePooledRow(row);
+        }
+        myPool.clear();
+
+        PooledRow measure = myMeasureRow;
+        if (measure != null) {
+            disposePooledRow(measure);
+            myMeasureRow = null;
+        }
+
+        myPooledRowHeight = -1;
+        myPooledWidthHint = -1;
+    }
+
+    private void disposePooledRow(PooledRow row) {
+        if (row.myRendered instanceof QtComponentDelegate<?> delegate) {
+            delegate.setParent(null);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void layoutPool() {
+        QListWidget component = myComponent;
+        if (component == null || component.isDisposed() || !myItemsPooled || !isPooled() || myLayingOutPool || myRebuilding) {
+            return;
+        }
+
+        int count = component.count();
+        if (count != myModel.getSize()) {
+            return;
+        }
+
+        myPool.removeIf(pooled -> pooled.myWidget.isDisposed());
+
+        myLayingOutPool = true;
+        try {
+            QWidget viewport = component.viewport();
+            int viewportWidth = viewport.width();
+            int viewportHeight = viewport.height();
+            int currentRow = component.currentRow();
+
+            int first = 0;
+            QModelIndex top = component.indexAt(new QPoint(0, 0));
+            if (top != null && top.isValid()) {
+                first = top.row();
+            }
+
+            List<Integer> rows = new ArrayList<>();
+            List<QRect> rects = new ArrayList<>();
+            for (int row = first; row < count; row++) {
+                QRect rect = component.visualItemRect(component.item(row));
+                if (rect.top() >= viewportHeight) {
+                    break;
+                }
+
+                if (rect.bottom() < 0 || mySeparatorPredicate.test(myModel.get(row))) {
+                    continue;
+                }
+
+                rows.add(row);
+                rects.add(rect);
+            }
+
+            Map<Object, PooledRow> byElement = new IdentityHashMap<>();
+            for (PooledRow pooled : myPool) {
+                if (pooled.myElement != null) {
+                    byElement.put(pooled.myElement, pooled);
+                }
+            }
+
+            PooledRow[] chosen = new PooledRow[rows.size()];
+            Set<PooledRow> used = Collections.newSetFromMap(new IdentityHashMap<>());
+            for (int i = 0; i < rows.size(); i++) {
+                PooledRow pooled = byElement.get(myModel.get(rows.get(i)));
+                if (pooled != null && used.add(pooled)) {
+                    chosen[i] = pooled;
+                }
+            }
+
+            Deque<PooledRow> free = new ArrayDeque<>();
+            for (PooledRow pooled : myPool) {
+                if (!used.contains(pooled)) {
+                    free.add(pooled);
+                }
+            }
+
+            for (int i = 0; i < rows.size(); i++) {
+                if (chosen[i] != null) {
+                    continue;
+                }
+
+                PooledRow pooled = free.poll();
+                if (pooled == null) {
+                    pooled = createPooledRow(component);
+                    if (pooled == null) {
+                        break;
+                    }
+                    myPool.add(pooled);
+                }
+
+                pooled.myDirty = true;
+                chosen[i] = pooled;
+            }
+
+            for (int i = 0; i < rows.size(); i++) {
+                PooledRow pooled = chosen[i];
+                if (pooled == null) {
+                    continue;
+                }
+
+                int row = rows.get(i);
+                E element = myModel.get(row);
+                boolean selected = row == currentRow;
+                if (pooled.myDirty || pooled.myElement != element || pooled.mySelected != selected) {
+                    bindPooledRow(pooled, element, selected);
+                    pooled.myElement = element;
+                    pooled.mySelected = selected;
+                    pooled.myDirty = false;
+                }
+
+                QRect rect = rects.get(i);
+                pooled.myWidget.setGeometry(rect.x(), rect.y(), Math.max(viewportWidth - rect.x(), rect.width()), rect.height());
+                if (pooled.myWidget.isHidden()) {
+                    pooled.myWidget.show();
+                }
+            }
+
+            for (PooledRow pooled : free) {
+                pooled.myElement = null;
+                if (!pooled.myWidget.isHidden()) {
+                    pooled.myWidget.hide();
+                }
+            }
+        }
+        finally {
+            myLayingOutPool = false;
+        }
+
+        if (myPoolUnsupported) {
+            rebuild(component);
         }
     }
 
@@ -256,6 +750,7 @@ public class DesktopQtListBoxImpl<E> extends QtComponentDelegate<QListWidget> im
 
     private void rebuildItems(QListWidget component) {
         component.clear();
+        myItemsPooled = false;
 
         for (int i = 0; i < myModel.getSize(); i++) {
             E element = myModel.get(i);
@@ -283,11 +778,14 @@ public class DesktopQtListBoxImpl<E> extends QtComponentDelegate<QListWidget> im
         component.addItem(item);
 
         // the row widget only exists once the row does, so it cannot be handed to the item before it is added
+        component.setItemWidget(item, createSeparatorLine(component));
+    }
+
+    private static QFrame createSeparatorLine(QListWidget component) {
         QFrame line = new QFrame(component);
         line.setFrameShape(QFrame.Shape.HLine);
         line.setFrameShadow(QFrame.Shadow.Sunken);
-
-        component.setItemWidget(item, line);
+        return line;
     }
 
     /**
@@ -434,6 +932,9 @@ public class DesktopQtListBoxImpl<E> extends QtComponentDelegate<QListWidget> im
 
     @Override
     public void setRender(ComponentItemRender<E> render) {
+        destroyPool();
+        myPoolUnsupported = false;
+
         myComponentRender = render;
 
         rebuildIfBound();
@@ -493,6 +994,8 @@ public class DesktopQtListBoxImpl<E> extends QtComponentDelegate<QListWidget> im
         finally {
             myRebuilding = false;
         }
+
+        layoutPool();
     }
 
     @Override
@@ -508,6 +1011,7 @@ public class DesktopQtListBoxImpl<E> extends QtComponentDelegate<QListWidget> im
     @Override
     public void setItemHeightGetter(@Nullable Function<E, Length> getter) {
         myItemHeightGetter = getter;
+        myPooledRowHeight = -1;
 
         rebuildIfBound();
     }

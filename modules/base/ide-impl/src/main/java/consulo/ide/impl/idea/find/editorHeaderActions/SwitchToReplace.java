@@ -12,15 +12,16 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.action.LegacyAnAction;
+import consulo.ui.Component;
 
-import javax.swing.*;
 
 /**
  * @author zajac
  * @since 2011-03-05
  */
 public class SwitchToReplace extends LegacyAnAction {
-    public SwitchToReplace(JComponent shortcutHolder) {
+    @RequiredUIAccess
+    public SwitchToReplace(Component shortcutHolder) {
         AnAction replaceAction = ActionManager.getInstance().getAction(IdeActions.ACTION_REPLACE);
         if (replaceAction != null) {
             registerCustomShortcutSet(replaceAction.getShortcutSet(), shortcutHolder);

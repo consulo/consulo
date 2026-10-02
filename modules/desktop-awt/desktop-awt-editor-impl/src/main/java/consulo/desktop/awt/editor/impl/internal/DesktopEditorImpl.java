@@ -150,7 +150,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
     private static final Logger LOG = Logger.getInstance(DesktopEditorImpl.class);
     private static final Key DND_COMMAND_KEY = Key.create("DndCommand");
 
-    private static final Key<JComponent> PERMANENT_HEADER = Key.create("PERMANENT_HEADER");
+    private static final Key<consulo.ui.Component> PERMANENT_HEADER = Key.create("PERMANENT_HEADER");
 
     private static final boolean HONOR_CAMEL_HUMPS_ON_TRIPLE_CLICK =
         Boolean.parseBoolean(System.getProperty("idea.honor.camel.humps.on.triple.click"));
@@ -263,6 +263,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
     private boolean myDragStarted;
 
     private final JPanel myHeaderPanel;
+    private consulo.ui.@Nullable Component myHeaderUIComponent;
 
     private @Nullable MouseEvent myInitialMouseEvent;
     private boolean myIgnoreMouseEventsConsecutiveToInitial;
@@ -415,8 +416,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
             myPanel,
             UIUtil.NOT_IN_HIERARCHY_COMPONENTS,
             (Iterable<JComponent>) () -> {
-                JComponent component = getPermanentHeaderComponent();
-                if (component != null && component.getParent() == null) {
+                if (TargetAWT.to(getPermanentHeaderComponent()) instanceof JComponent component && component.getParent() == null) {
                     return Collections.singleton(component).iterator();
                 }
                 return Collections.emptyIterator();
@@ -1643,11 +1643,15 @@ public final class DesktopEditorImpl extends CodeEditorBase
     }
 
     @Override
-    public void setHeaderComponent(JComponent header) {
+    public void setHeaderComponent(consulo.ui.@Nullable Component header) {
         myHeaderPanel.removeAll();
-        header = header == null ? getPermanentHeaderComponent() : header;
-        if (header != null) {
-            myHeaderPanel.add(header);
+
+        consulo.ui.Component shownHeader = header == null ? getPermanentHeaderComponent() : header;
+        myHeaderUIComponent = shownHeader;
+
+        Component awtHeader = TargetAWT.to(shownHeader);
+        if (awtHeader != null) {
+            myHeaderPanel.add(awtHeader);
         }
 
         myHeaderPanel.revalidate();
@@ -1655,31 +1659,28 @@ public final class DesktopEditorImpl extends CodeEditorBase
 
         TouchBarControllerInternal touchBarController = (TouchBarControllerInternal) TouchBarController.getInstance();
 
-        touchBarController.onUpdateEditorHeader(this, header);
+        touchBarController.onUpdateEditorHeader(this, awtHeader instanceof JComponent jComponent ? jComponent : null);
     }
 
     @Override
     public boolean hasHeaderComponent() {
-        JComponent header = getHeaderComponent();
+        consulo.ui.Component header = getHeaderComponent();
         return header != null && header != getPermanentHeaderComponent();
     }
 
     @Override
-    public @Nullable JComponent getPermanentHeaderComponent() {
+    public consulo.ui.@Nullable Component getPermanentHeaderComponent() {
         return getUserData(PERMANENT_HEADER);
     }
 
     @Override
-    public void setPermanentHeaderComponent(@Nullable JComponent component) {
+    public void setPermanentHeaderComponent(consulo.ui.@Nullable Component component) {
         putUserData(PERMANENT_HEADER, component);
     }
 
     @Override
-    public @Nullable JComponent getHeaderComponent() {
-        if (myHeaderPanel.getComponentCount() > 0) {
-            return (JComponent) myHeaderPanel.getComponent(0);
-        }
-        return null;
+    public consulo.ui.@Nullable Component getHeaderComponent() {
+        return myHeaderPanel.getComponentCount() > 0 ? myHeaderUIComponent : null;
     }
 
     @Override
@@ -4339,7 +4340,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
             super.validateTree();
             height -= getHeight();
 
-            if (height != 0 && !(myOldHeight == 0 && getComponentCount() > 0 && getPermanentHeaderComponent() == getComponent(0))) {
+            if (height != 0 && !(myOldHeight == 0 && getComponentCount() > 0 && TargetAWT.to(getPermanentHeaderComponent()) == getComponent(0))) {
                 myVerticalScrollBar.setValue(myVerticalScrollBar.getValue() - height);
             }
             myOldHeight = getHeight();

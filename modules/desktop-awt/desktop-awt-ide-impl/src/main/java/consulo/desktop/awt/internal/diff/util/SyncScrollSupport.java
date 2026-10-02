@@ -26,6 +26,7 @@ import consulo.diff.util.Side;
 import consulo.diff.util.ThreeSide;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ArrayUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
@@ -460,7 +461,7 @@ public class SyncScrollSupport {
     }
 
     private static int getHeaderOffset(Editor editor) {
-        JComponent header = editor.getHeaderComponent();
+        java.awt.Component header = TargetAWT.to(editor.getHeaderComponent());
         return header == null ? 0 : header.getHeight();
     }
 

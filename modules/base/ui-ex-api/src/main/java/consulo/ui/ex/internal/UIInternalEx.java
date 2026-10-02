@@ -15,10 +15,15 @@
  */
 package consulo.ui.ex.internal;
 
+import consulo.ui.Component;
 import consulo.ui.ListBox;
 import consulo.ui.ex.ComboBoxWithCustomPopup;
+import consulo.ui.ex.action.AnAction;
 import consulo.ui.internal.UIInternal;
 import consulo.ui.model.FlatDataModel;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author VISTALL
@@ -35,5 +40,24 @@ public interface UIInternalEx {
 
     default <E> ListBox<E> _Components_popupListBox(FlatDataModel<E> model) {
         return ListBox.create(model);
+    }
+
+    default void _AnAction_registerCustomShortcutSet(AnAction action, Component component) {
+        List<AnAction> actions = component.getUserData(AnAction.ACTIONS_KEY);
+        if (actions == null) {
+            actions = new ArrayList<>();
+            component.putUserData(AnAction.ACTIONS_KEY, actions);
+        }
+
+        if (!actions.contains(action)) {
+            actions.add(action);
+        }
+    }
+
+    default void _AnAction_unregisterCustomShortcutSet(AnAction action, Component component) {
+        List<AnAction> actions = component.getUserData(AnAction.ACTIONS_KEY);
+        if (actions != null) {
+            actions.remove(action);
+        }
     }
 }

@@ -207,7 +207,7 @@ public class ScopeChooserCombo extends ComboboxWithBrowseButton implements Dispo
                     return false;
                 }
             }
-            return false;
+            return true;
         });
     }
 

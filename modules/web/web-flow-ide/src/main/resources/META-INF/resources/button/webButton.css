@@ -8,6 +8,7 @@ vaadin-button.consulo-toolbar-button[theme~='tertiary'] {
     padding: 0 4px;
     border-width: 0;
     border-radius: 7px;
+    --vaadin-button-text-color: var(--vaadin-text-color);
 }
 
 /* vaadin marks a button which carries an icon and no label as an icon button - that is the one the awt toolbar
@@ -35,16 +36,17 @@ vaadin-button:is(.consulo-toolbar-button, .consulo-inplace-button)[disabled] > :
     line-height: 1;
 }
 
-.consulo-inplace-button {
+vaadin-button.consulo-inplace-button[theme~='tertiary-inline'] {
+    padding: 3px;
+    margin: -3px 0;
     border-radius: 3px;
+    box-shadow: none;
 }
 
 .consulo-inplace-button:hover {
     background: color-mix(in srgb, currentColor 12%, transparent);
-    box-shadow: 0 0 0 3px color-mix(in srgb, currentColor 12%, transparent);
 }
 
 .consulo-inplace-button:active {
     background: color-mix(in srgb, currentColor 22%, transparent);
-    box-shadow: 0 0 0 3px color-mix(in srgb, currentColor 22%, transparent);
 }

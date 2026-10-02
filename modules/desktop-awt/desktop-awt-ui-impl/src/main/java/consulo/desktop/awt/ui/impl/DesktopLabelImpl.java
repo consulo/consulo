@@ -35,6 +35,7 @@ import consulo.ui.util.TextWithMnemonic;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
+import java.awt.Dimension;
 
 /**
  * @author VISTALL
@@ -47,6 +48,8 @@ class DesktopLabelImpl extends SwingComponentDelegate<DesktopLabelImpl.MyJLabel>
         private HorizontalAlignment myHorizontalAlignment2 = HorizontalAlignment.LEFT;
 
         private ColorValue myForegroundColor;
+
+        private @Nullable Length myMinWidth;
 
         MyJLabel(LocalizeValue text, LabelOptions options) {
             super("");
@@ -75,6 +78,31 @@ class DesktopLabelImpl extends SwingComponentDelegate<DesktopLabelImpl.MyJLabel>
             myForegroundColor = foregroundColor;
 
             updateForegroundColor();
+        }
+
+        public void setMinWidth(Length minWidth) {
+            myMinWidth = minWidth;
+
+            revalidate();
+            repaint();
+        }
+
+        @Override
+        public Dimension getPreferredSize() {
+            return withMinWidth(super.getPreferredSize());
+        }
+
+        @Override
+        public Dimension getMinimumSize() {
+            return withMinWidth(super.getMinimumSize());
+        }
+
+        private Dimension withMinWidth(Dimension size) {
+            Length minWidth = myMinWidth;
+            if (minWidth != null) {
+                size.width = Math.max(size.width, DesktopLength.toPixels(this, minWidth));
+            }
+            return size;
         }
 
         private void setHorizontalAlignment2(HorizontalAlignment horizontalAlignment) {
@@ -196,6 +224,30 @@ class DesktopLabelImpl extends SwingComponentDelegate<DesktopLabelImpl.MyJLabel>
     @Override
     public void setForegroundColor(ColorValue colorValue) {
         toAWTComponent().setForegroundColor(colorValue);
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setMinWidth(Length width) {
+        toAWTComponent().setMinWidth(width);
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setWidth(Length width) {
+        throw new UnsupportedOperationException();
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setHeight(Length height) {
+        throw new UnsupportedOperationException();
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setMinHeight(Length height) {
+        throw new UnsupportedOperationException();
     }
 
     @Override

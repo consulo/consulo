@@ -467,19 +467,19 @@ public interface Editor extends UserDataHolder {
      *
      * @param header a component to setup as header for this text editor or <code>null</code> to remove one.
      */
-    default void setHeaderComponent(@Nullable JComponent header) {
+    default void setHeaderComponent(@Nullable Component header) {
         throw new UnsupportedOperationException("Unsupported platform");
     }
 
     /**
-     * @return <code>true</code> if this editor has active header component set up by {@link #setHeaderComponent(JComponent)}
+     * @return <code>true</code> if this editor has active header component set up by {@link #setHeaderComponent(Component)}
      */
     boolean hasHeaderComponent();
 
     /**
-     * @return a component set by {@link #setHeaderComponent(JComponent)} or <code>null</code> if no header currently installed.
+     * @return a component set by {@link #setHeaderComponent(Component)} or <code>null</code> if no header currently installed.
      */
-    default @Nullable JComponent getHeaderComponent() {
+    default @Nullable Component getHeaderComponent() {
         throw new UnsupportedOperationException("Unsupported platform");
     }
 

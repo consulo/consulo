@@ -185,6 +185,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
     private UsageViewPresentation myUsageViewPresentation;
     private final ComponentValidator myComponentValidator;
     private ActionToolbar myFindInFilesTopMenu;
+    private consulo.ui.@Nullable Component myUIComponent;
 
     @RequiredUIAccess
     FindPopupPanel(FindUIHelper helper) {
@@ -455,8 +456,12 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
     }
 
     @Override
-    public JComponent getComponent() {
-        return this;
+    public consulo.ui.Component getUIComponent() {
+        consulo.ui.Component uiComponent = myUIComponent;
+        if (uiComponent == null) {
+            uiComponent = myUIComponent = TargetAWT.wrap(this);
+        }
+        return uiComponent;
     }
 
     

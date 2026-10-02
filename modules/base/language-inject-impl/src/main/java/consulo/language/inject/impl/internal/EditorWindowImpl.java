@@ -234,7 +234,7 @@ class EditorWindowImpl extends UserDataHolderBase implements EditorWindow, Edito
   }
 
   @Override
-  public void setHeaderComponent(@Nullable JComponent header) {
+  public void setHeaderComponent(@Nullable Component header) {
   }
 
   @Override
@@ -243,7 +243,7 @@ class EditorWindowImpl extends UserDataHolderBase implements EditorWindow, Edito
   }
 
   @Override
-  public @Nullable JComponent getHeaderComponent() {
+  public @Nullable Component getHeaderComponent() {
     return null;
   }
 
@@ -329,12 +329,12 @@ class EditorWindowImpl extends UserDataHolderBase implements EditorWindow, Edito
   }
 
   @Override
-  public JComponent getPermanentHeaderComponent() {
+  public @Nullable Component getPermanentHeaderComponent() {
     return myDelegate.getPermanentHeaderComponent();
   }
 
   @Override
-  public void setPermanentHeaderComponent(JComponent component) {
+  public void setPermanentHeaderComponent(@Nullable Component component) {
     myDelegate.setPermanentHeaderComponent(component);
   }
 

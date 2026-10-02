@@ -17,12 +17,11 @@ package consulo.fileEditor.internal;
 
 import consulo.dataContext.UiDataProvider;
 import consulo.project.Project;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.color.ColorValue;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
-import javax.swing.text.JTextComponent;
-import java.awt.*;
 import java.util.EventListener;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
@@ -44,19 +43,25 @@ public interface SearchReplaceComponent extends UiDataProvider {
         @RequiredUIAccess
         default void multilineStateChanged() {
         }
+
+        @RequiredUIAccess
+        default void componentShown() {
+        }
+
+        @RequiredUIAccess
+        default void componentHidden() {
+        }
     }
 
-    public static SearchReplaceComponentBuilder buildFor(@Nullable Project project, JComponent component) {
-        return new SearchReplaceComponentBuilder(project, component);
+    public static SearchReplaceComponentBuilder buildFor(@Nullable Project project, Component targetComponent) {
+        return new SearchReplaceComponentBuilder(project, targetComponent);
     }
 
     void setRegularBackground();
 
     void setNotFoundBackground();
 
-    JComponent getComponent();
-
-    JTextComponent getSearchTextComponent();
+    Component getUIComponent();
 
     void setStatusText(String status);
 
@@ -86,7 +91,8 @@ public interface SearchReplaceComponent extends UiDataProvider {
 
     String getStatusText();
 
-    Color getStatusColor();
+    @Nullable
+    ColorValue getStatusColor();
 
     void addTextToRecent(String text, boolean search);
 

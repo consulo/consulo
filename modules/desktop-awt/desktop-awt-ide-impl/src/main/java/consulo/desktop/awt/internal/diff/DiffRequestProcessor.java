@@ -62,6 +62,7 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.dataholder.UserDataHolderBase;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
@@ -777,7 +778,7 @@ public abstract class DiffRequestProcessor implements Disposable {
         else {
             int x = SwingUtilities.convertPoint(myContentPanel, point, editor.getComponent()).x;
 
-            JComponent header = editor.getHeaderComponent();
+            java.awt.Component header = TargetAWT.to(editor.getHeaderComponent());
             int shift = editor.getScrollingModel().getVerticalScrollOffset() - (header != null ? header.getHeight() : 0);
 
             LogicalPosition position;

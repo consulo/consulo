@@ -1,26 +1,31 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.fileEditor.impl.internal.search;
 
+import consulo.localize.LocalizeValue;
+import consulo.ui.Component;
+import consulo.ui.HorizontalAlignment;
+import consulo.ui.Label;
+import consulo.ui.LabelOptions;
+import consulo.ui.Length;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.CustomUIComponentAction;
 import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.Presentation;
-import consulo.ui.ex.awt.JBUIScale;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awt.action.CustomComponentAction;
 
-import javax.swing.*;
-import java.awt.*;
+public class StatusTextAction extends LegacyDumbAwareAction implements CustomUIComponentAction {
+  private static final Length MIN_WIDTH = Length.ofFont(4.5f);
 
-public class StatusTextAction extends LegacyDumbAwareAction implements CustomComponentAction {
   @Override
+  @RequiredUIAccess
   public void update(AnActionEvent e) {
     SearchSession search = e.getData(SearchSession.KEY);
-    JLabel label = (JLabel)e.getPresentation().getClientProperty(COMPONENT_KEY);
-    if (label == null) return;
-    label.setText(search == null ? "" : search.getComponent().getStatusText());
-    label.setForeground(search == null ? UIUtil.getLabelForeground() : search.getComponent().getStatusColor());
+    if (!(e.getPresentation().getClientProperty(COMPONENT_KEY) instanceof Label label)) {
+      return;
+    }
+
+    label.setText(search == null ? LocalizeValue.empty() : LocalizeValue.of(search.getComponent().getStatusText()));
+    label.setForegroundColor(search == null ? null : search.getComponent().getStatusColor());
   }
 
   @Override
@@ -28,17 +33,11 @@ public class StatusTextAction extends LegacyDumbAwareAction implements CustomCom
   public void actionPerformed(AnActionEvent e) {
   }
 
-  
   @Override
-  public JComponent createCustomComponent(Presentation presentation, String place) {
-    JLabel label = new JLabel();
-    //noinspection HardCodedStringLiteral
-    label.setText("9888 results");
-    Dimension size = label.getPreferredSize();
-    size.height = Math.max(size.height, JBUIScale.scale(ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE.height()));
-    label.setPreferredSize(size);
-    label.setText(null);
-    label.setHorizontalAlignment(SwingConstants.CENTER);
+  @RequiredUIAccess
+  public Component createCustomComponent(Presentation presentation, String place) {
+    Label label = Label.create(LocalizeValue.empty(), LabelOptions.builder().horizontalAlignment(HorizontalAlignment.CENTER).build());
+    label.setMinWidth(MIN_WIDTH);
     return label;
   }
 }

@@ -16,9 +16,8 @@
 package consulo.ide.impl.idea.find.impl;
 
 import consulo.disposer.Disposable;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
-
-import javax.swing.*;
 
 public interface FindUI {
   @RequiredUIAccess
@@ -33,7 +32,7 @@ public interface FindUI {
   
   Disposable getDisposable();
 
-  JComponent getComponent();
+  Component getUIComponent();
 
   void saveSettings();
 }

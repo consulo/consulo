@@ -34,6 +34,7 @@ import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.ex.internal.KeymapManagerEx;
 import consulo.web.ui.impl.internal.WebLightPopupImpl;
 import consulo.web.ui.impl.internal.action.WebActionMenuExpander;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.KeyStroke;
 import java.awt.event.InputEvent;
@@ -290,7 +291,7 @@ public final class WebShortcutDispatcher {
      * The same shape the browser builds from a key event - the modifiers in a fixed order and the key by the code
      * {@code KeyboardEvent.keyCode} of the browser answers with.
      */
-    private static String toCombo(KeyStroke keyStroke) {
+    static @Nullable String toCombo(KeyStroke keyStroke) {
         int keyCode = keyStroke.getKeyCode();
         if (keyCode == 0) {
             return null;

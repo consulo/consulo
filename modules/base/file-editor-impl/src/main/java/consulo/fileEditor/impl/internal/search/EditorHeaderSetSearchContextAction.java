@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.find.editorHeaderActions;
+package consulo.fileEditor.impl.internal.search;
 
 import consulo.find.FindSearchContext;
-import consulo.fileEditor.impl.internal.search.SearchSession;
 
 public class EditorHeaderSetSearchContextAction extends EditorHeaderToggleAction {
     private final FindSearchContext myContext;

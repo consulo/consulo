@@ -23,6 +23,8 @@ import consulo.ui.Size2D;
 import consulo.ui.Window;
 import consulo.ui.WindowOptions;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.JBColor;
+import consulo.ui.ex.awt.JBUI;
 import consulo.desktop.awt.ui.impl.window.WindowOverAWTWindow;
 
 import org.jspecify.annotations.Nullable;
@@ -54,6 +56,11 @@ public class DesktopWindowWrapper extends WindowOverAWTWindow {
     MyJDialog dialog = (MyJDialog)toAWTWindow();
     dialog.setGlassPane(new IdeGlassPaneImpl(dialog.getRootPane()));
     dialog.myWindow = this;
+
+    if (options.isUndecorated()) {
+      dialog.setUndecorated(true);
+      dialog.getRootPane().setBorder(JBUI.Borders.customLine(JBColor.border(), 1));
+    }
   }
 
   @RequiredUIAccess

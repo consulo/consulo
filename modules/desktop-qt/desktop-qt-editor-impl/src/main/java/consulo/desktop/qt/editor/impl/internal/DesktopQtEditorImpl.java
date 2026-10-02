@@ -36,6 +36,8 @@ import consulo.document.util.TextRange;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.Component;
+import consulo.ui.layout.DockLayout;
+import consulo.ui.Space;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.event.details.KeyCode;
@@ -72,7 +74,9 @@ public class DesktopQtEditorImpl extends CodeEditorBase implements RealEditor, C
 
     private final List<Consumer<KeyCode>> myKeyNotConsumedListeners = Lists.newLockFreeCopyOnWriteList();
 
-    private @Nullable JComponent myHeaderComponent;
+    private @Nullable Component myHeaderComponent;
+
+    private @Nullable DockLayout myRootLayout;
 
     private @Nullable DesktopQtEditorFloatingToolbar myEditorFloatingToolbar;
 
@@ -350,7 +354,19 @@ public class DesktopQtEditorImpl extends CodeEditorBase implements RealEditor, C
 
     @Override
     public Component getUIComponent() {
-        return myComponent;
+        DockLayout rootLayout = myRootLayout;
+        if (rootLayout != null) {
+            return rootLayout;
+        }
+
+        if (myComponent.getParent() != null) {
+            return myComponent;
+        }
+
+        rootLayout = DockLayout.create(Space.NONE);
+        rootLayout.center(myComponent);
+        myRootLayout = rootLayout;
+        return rootLayout;
     }
 
     @Override
@@ -415,7 +431,7 @@ public class DesktopQtEditorImpl extends CodeEditorBase implements RealEditor, C
 
     @Override
     protected DataContext getComponentContext() {
-        return DataManager.getInstance().getDataContext(getUIComponent());
+        return DataManager.getInstance().getDataContext(getContentUIComponent());
     }
 
     @Override
@@ -736,7 +752,7 @@ public class DesktopQtEditorImpl extends CodeEditorBase implements RealEditor, C
 
     @Override
     public boolean hasHeaderComponent() {
-        return false;
+        return myHeaderComponent != null;
     }
 
     @Override
@@ -792,12 +808,33 @@ public class DesktopQtEditorImpl extends CodeEditorBase implements RealEditor, C
     }
 
     @Override
-    public void setHeaderComponent(@Nullable JComponent header) {
+    @RequiredUIAccess
+    public void setHeaderComponent(@Nullable Component header) {
+        Component oldHeader = myHeaderComponent;
+        if (oldHeader == header) {
+            return;
+        }
+
         myHeaderComponent = header;
+
+        getUIComponent();
+
+        DockLayout rootLayout = myRootLayout;
+        if (rootLayout == null) {
+            return;
+        }
+
+        if (oldHeader != null) {
+            rootLayout.remove(oldHeader);
+        }
+
+        if (header != null) {
+            rootLayout.top(header);
+        }
     }
 
     @Override
-    public @Nullable JComponent getHeaderComponent() {
+    public @Nullable Component getHeaderComponent() {
         return myHeaderComponent;
     }
 }

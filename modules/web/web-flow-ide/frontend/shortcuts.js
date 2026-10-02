@@ -100,6 +100,46 @@
         return parts.join('+');
     };
 
+    const menuOpen = () => document.querySelector(
+        'vaadin-context-menu[opened], vaadin-menu-bar-submenu[opened], vaadin-context-menu-overlay[opened],'
+        + ' vaadin-menu-bar-overlay[opened], vaadin-select-overlay[opened], vaadin-combo-box-overlay[opened],'
+        + ' vaadin-popover[opened]:not([consulo-keymap-passthrough])');
+
+    const componentShortcutOwner = (event, combo) => {
+        const path = event.composedPath ? event.composedPath() : [event.target];
+        for (const node of path) {
+            const combos = node && node.getAttribute ? node.getAttribute('consulo-component-shortcuts') : null;
+            if (combos && combos.split('\n').includes(combo)) {
+                return node;
+            }
+        }
+        return null;
+    };
+
+    const dispatchComponentShortcut = event => {
+        if (event.$consuloComponentShortcut !== undefined) {
+            return event.$consuloComponentShortcut;
+        }
+        event.$consuloComponentShortcut = false;
+
+        if (MODIFIERS[event.code] || menuOpen()) {
+            return false;
+        }
+
+        const combo = comboOf(event);
+        const owner = componentShortcutOwner(event, combo);
+        if (!owner) {
+            return false;
+        }
+
+        event.$consuloComponentShortcut = true;
+        event.preventDefault();
+        event.stopPropagation();
+
+        owner.dispatchEvent(new CustomEvent('consulo-component-shortcut', {detail: {combo: combo}}));
+        return true;
+    };
+
     const setShortcuts = (element, combos) => {
         element.$consuloShortcutSet = new Set(combos ? combos.split('\n') : []);
     };
@@ -144,6 +184,10 @@
         };
 
         const onKey = (event, pressed) => {
+            if (pressed && dispatchComponentShortcut(event)) {
+                return;
+            }
+
             // a terminal talks to a process which owns the keyboard - enter, tab and the control keys are input
             // for that process, so the keymap of the ide must not take them first
             const target = event.target;
@@ -167,10 +211,7 @@
             // listener, so a key taken here never reaches them. asked by presence rather than by the target of
             // the key: a popup raised by a right click does not always hold the focus, and the escape which
             // should close it then targets whatever does
-            if (document.querySelector(
-                'vaadin-context-menu[opened], vaadin-menu-bar-submenu[opened], vaadin-context-menu-overlay[opened],'
-                + ' vaadin-menu-bar-overlay[opened], vaadin-select-overlay[opened], vaadin-combo-box-overlay[opened],'
-                + ' vaadin-popover[opened]:not([consulo-keymap-passthrough])')) {
+            if (menuOpen()) {
                 return;
             }
 

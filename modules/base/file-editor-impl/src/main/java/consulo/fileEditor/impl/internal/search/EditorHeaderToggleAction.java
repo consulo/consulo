@@ -1,9 +1,8 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.find.editorHeaderActions;
+package consulo.fileEditor.impl.internal.search;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.application.dumb.DumbAware;
-import consulo.fileEditor.impl.internal.search.SearchSession;
 import consulo.localize.LocalizeValue;
 import consulo.ui.CheckBox;
 import consulo.ui.annotation.RequiredUIAccess;

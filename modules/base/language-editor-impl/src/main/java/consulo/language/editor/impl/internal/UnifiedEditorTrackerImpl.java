@@ -63,7 +63,7 @@ public class UnifiedEditorTrackerImpl extends EditorTracker {
     PsiFile psiFile = PsiDocumentManager.getInstance(myProject).getPsiFile(editor.getDocument());
     if (psiFile == null) return;
 
-    Component uiComponent = editor.getUIComponent();
+    Component uiComponent = editor.getContentUIComponent();
     uiComponent.addAttachListener(e -> {
       registerEditor(editor);
 
@@ -125,7 +125,7 @@ public class UnifiedEditorTrackerImpl extends EditorTracker {
   }
 
   private Window windowByEditor(Editor editor) {
-    Window window = TraverseUtil.getWindowAncestor(editor.getUIComponent());
+    Window window = TraverseUtil.getWindowAncestor(editor.getContentUIComponent());
     if (window != null) {
       IdeFrame ideFrame = window.getUserData(IdeFrame.KEY);
       if (IdeFrameUtil.isRootFrame(ideFrame)) {

@@ -18,16 +18,16 @@ package consulo.fileEditor.internal;
 import consulo.application.Application;
 import consulo.dataContext.UiDataProvider;
 import consulo.project.Project;
+import consulo.ui.Component;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.DefaultActionGroup;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
 import java.util.function.BooleanSupplier;
 
 public class SearchReplaceComponentBuilder {
     private final @Nullable Project myProject;
-    private final JComponent myTargetComponent;
+    private final Component myTargetComponent;
 
     private @Nullable UiDataProvider myDataProvider = null;
 
@@ -43,7 +43,7 @@ public class SearchReplaceComponentBuilder {
     private final DefaultActionGroup myExtraReplaceActions = DefaultActionGroup.createFlatGroup(() -> "replace bar 1");
     private final DefaultActionGroup myReplaceFieldActions = DefaultActionGroup.createFlatGroup(() -> "replace field actions");
 
-    public SearchReplaceComponentBuilder(@Nullable Project project, JComponent component) {
+    public SearchReplaceComponentBuilder(@Nullable Project project, Component component) {
         myProject = project;
         myTargetComponent = component;
     }

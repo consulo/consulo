@@ -19,10 +19,13 @@ import consulo.desktop.qt.ui.impl.base.DesktopQtIconLabel;
 import consulo.desktop.qt.ui.impl.image.DesktopQtIconOwner;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
+import consulo.ui.HorizontalAlignment;
 import consulo.ui.Label;
 import consulo.ui.LabelStyle;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
+import consulo.ui.Length;
+import io.qt.core.Qt;
 import io.qt.widgets.QWidget;
 import org.jspecify.annotations.Nullable;
 
@@ -40,8 +43,11 @@ public class DesktopQtLabelImpl extends QtComponentDelegate<DesktopQtIconLabel> 
 
     private final Set<LabelStyle> myStyles = EnumSet.noneOf(LabelStyle.class);
 
-    public DesktopQtLabelImpl(LocalizeValue text) {
+    private final HorizontalAlignment myHorizontalAlignment;
+
+    public DesktopQtLabelImpl(LocalizeValue text, HorizontalAlignment horizontalAlignment) {
         myText = text;
+        myHorizontalAlignment = horizontalAlignment;
     }
 
     @Override
@@ -52,6 +58,11 @@ public class DesktopQtLabelImpl extends QtComponentDelegate<DesktopQtIconLabel> 
     @Override
     protected void initialize(DesktopQtIconLabel component) {
         component.setText(currentText());
+        component.setTextAlignment(switch (myHorizontalAlignment) {
+            case LEFT -> Qt.AlignmentFlag.AlignLeft;
+            case CENTER -> Qt.AlignmentFlag.AlignHCenter;
+            case RIGHT -> Qt.AlignmentFlag.AlignRight;
+        });
 
         updateImage();
 
@@ -150,5 +161,23 @@ public class DesktopQtLabelImpl extends QtComponentDelegate<DesktopQtIconLabel> 
         switch (style) {
             case TRANSPARENT_BACKGROUND -> myComponent.setAutoFillBackground(false);
         }
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setWidth(Length width) {
+        throw new UnsupportedOperationException();
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setHeight(Length height) {
+        throw new UnsupportedOperationException();
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setMinHeight(Length height) {
+        throw new UnsupportedOperationException();
     }
 }

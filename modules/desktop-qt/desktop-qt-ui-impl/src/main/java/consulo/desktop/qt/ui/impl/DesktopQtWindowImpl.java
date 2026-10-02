@@ -167,6 +167,10 @@ public class DesktopQtWindowImpl extends QtComponentDelegate<QMainWindow> implem
         myComponent.setCentralWidget(myCentralWidget);
 
         TargetQt.register(myComponent, this);
+
+        if (options.isUndecorated()) {
+            installTitleBar(DesktopQtTitleBarPlacement.NONE);
+        }
     }
 
     /**

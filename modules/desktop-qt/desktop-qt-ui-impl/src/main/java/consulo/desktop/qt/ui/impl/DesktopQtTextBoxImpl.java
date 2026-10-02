@@ -24,6 +24,7 @@ import consulo.ui.event.ValueComponentEvent;
 import consulo.ui.event.details.ProgrammaticInputDetails;
 import consulo.util.lang.StringUtil;
 import io.qt.widgets.QLineEdit;
+import io.qt.widgets.QStyle;
 import io.qt.widgets.QWidget;
 import org.jspecify.annotations.Nullable;
 
@@ -46,7 +47,9 @@ public class DesktopQtTextBoxImpl extends QtComponentDelegate<QLineEdit> impleme
 
     private int myVisibleLength = -1;
 
-    private final DesktopQtLineEditSuffix mySuffix = new DesktopQtLineEditSuffix(this);
+    private final DesktopQtSideComponents mySides = new DesktopQtSideComponents(this);
+
+    private int myNativeFrameWidth;
 
     private final List<Validator<String>> myValidators = new ArrayList<>();
 
@@ -56,7 +59,14 @@ public class DesktopQtTextBoxImpl extends QtComponentDelegate<QLineEdit> impleme
 
     @Override
     protected QLineEdit createQt(QWidget parent) {
-        return mySuffix.createLineEdit(parent);
+        QLineEdit lineEdit = mySides.createLineEdit(parent);
+        myNativeFrameWidth = lineEdit.style().pixelMetric(QStyle.PixelMetric.PM_DefaultFrameWidth, null, lineEdit);
+        return lineEdit;
+    }
+
+    @Override
+    protected int getNativeFrameWidth() {
+        return myNativeFrameWidth;
     }
 
     @Override
@@ -68,7 +78,7 @@ public class DesktopQtTextBoxImpl extends QtComponentDelegate<QLineEdit> impleme
 
         applyPlaceholder();
         applyVisibleLength();
-        mySuffix.attach(component);
+        mySides.attach(component);
 
         component.textChanged.connect(text -> {
             myText = StringUtil.notNullize(text);
@@ -200,11 +210,21 @@ public class DesktopQtTextBoxImpl extends QtComponentDelegate<QLineEdit> impleme
 
     @Override
     public void setSuffixComponent(@Nullable Component suffixComponent) {
-        mySuffix.set(suffixComponent, myComponent);
+        mySides.setSuffix(suffixComponent, myComponent);
     }
 
     @Override
     public @Nullable Component getSuffixComponent() {
-        return mySuffix.get();
+        return mySides.getSuffix();
+    }
+
+    @Override
+    public void setPrefixComponent(@Nullable Component prefixComponent) {
+        mySides.setPrefix(prefixComponent, myComponent);
+    }
+
+    @Override
+    public @Nullable Component getPrefixComponent() {
+        return mySides.getPrefix();
     }
 }

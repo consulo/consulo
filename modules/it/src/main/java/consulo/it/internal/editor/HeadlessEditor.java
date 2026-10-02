@@ -234,12 +234,12 @@ public class HeadlessEditor extends CodeEditorBase {
     }
 
     @Override
-    public @Nullable JComponent getHeaderComponent() {
+    public @Nullable Component getHeaderComponent() {
         return null;
     }
 
     @Override
-    public void setHeaderComponent(@Nullable JComponent header) {
+    public void setHeaderComponent(@Nullable Component header) {
     }
 
     @Override

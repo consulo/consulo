@@ -24,7 +24,7 @@ public final class LargeFileFindAllAction extends AnAction implements DumbAware 
 
     @Override
     public void actionPerformed(AnActionEvent e) {
-        if (StringUtil.isEmpty(searchManager.getSearchReplaceComponent().getSearchTextComponent().getText())) {
+        if (StringUtil.isEmpty(searchManager.getSearchReplaceComponent().getSearchText())) {
             return;
         }
 

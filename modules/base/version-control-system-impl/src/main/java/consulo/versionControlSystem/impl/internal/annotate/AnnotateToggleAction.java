@@ -28,12 +28,12 @@ import consulo.fileEditor.internal.EditorNotificationBuilderEx;
 import consulo.fileEditor.internal.EditorNotificationBuilderFactory;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.Component;
 import consulo.ui.NotificationType;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
-import consulo.ui.ex.awt.ClientProperty;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.concurrent.coroutine.Coroutine;
@@ -70,6 +70,7 @@ import java.util.Map;
 @ActionImpl(id = "Annotate")
 public class AnnotateToggleAction extends AsyncToggleAction implements DumbAware {
     private static final Key<Runnable> ERROR_NOTIFICATION = Key.create("AnnotateToggleAction.EditorNotify");
+    private static final Key<Component> ERROR_NOTIFICATION_COMPONENT = Key.create("AnnotateToggleAction.EditorNotifyComponent");
 
     @Override
     public Coroutine<?, ?> updateAsync(AnActionEvent e) {
@@ -95,7 +96,7 @@ public class AnnotateToggleAction extends AsyncToggleAction implements DumbAware
     public void setSelected(AnActionEvent e, boolean selected) {
         Editor editor = e.getData(Editor.KEY);
         if (editor != null) {
-            Runnable runnable = ClientProperty.get(editor.getHeaderComponent(), ERROR_NOTIFICATION);
+            Runnable runnable = getErrorNotificationAction(editor);
             if (runnable != null) {
                 runnable.run();
                 return;
@@ -148,15 +149,8 @@ public class AnnotateToggleAction extends AsyncToggleAction implements DumbAware
             if (Math.abs(expectedLines - actualLines) > 1) { // 1 - for different conventions about files ending with line separator
                 EditorNotificationBuilderFactory factory = project.getApplication().getInstance(EditorNotificationBuilderFactory.class);
 
-                Runnable closeRunnable = () -> {
-                    JComponent headerComponent = editor.getHeaderComponent();
-                    if (headerComponent == null) {
-                        return;
-                    }
-
-                    Runnable showAction = ClientProperty.get(headerComponent, ERROR_NOTIFICATION);
-                    if (showAction != null) {
-                        headerComponent.setVisible(false);
+                @RequiredUIAccess Runnable closeRunnable = () -> {
+                    if (getErrorNotificationAction(editor) != null) {
                         editor.setHeaderComponent(null);
                     }
                 };
@@ -174,8 +168,9 @@ public class AnnotateToggleAction extends AsyncToggleAction implements DumbAware
 
                 builder.withAction(LocalizeValue.localizeTODO("Hide"), LocalizeValue.localizeTODO("Hide this notification"), event -> closeRunnable.run());
 
-                JComponent component = builder.getComponent();
-                ClientProperty.put(component, ERROR_NOTIFICATION, showAnnotation);
+                Component component = builder.getUIComponent();
+                editor.putUserData(ERROR_NOTIFICATION_COMPONENT, component);
+                editor.putUserData(ERROR_NOTIFICATION, showAnnotation);
                 editor.setHeaderComponent(component);
                 return;
             }
@@ -346,5 +341,13 @@ public class AnnotateToggleAction extends AsyncToggleAction implements DumbAware
 
     private static @Nullable AnnotateToggleActionProvider getProvider(AnActionEvent e) {
         return Application.get().getExtensionPoint(AnnotateToggleActionProvider.class).findFirstSafe(p -> p.isEnabled(e));
+    }
+
+    private static @Nullable Runnable getErrorNotificationAction(Editor editor) {
+        Component header = editor.getHeaderComponent();
+        if (header == null || header != editor.getUserData(ERROR_NOTIFICATION_COMPONENT)) {
+            return null;
+        }
+        return editor.getUserData(ERROR_NOTIFICATION);
     }
 }

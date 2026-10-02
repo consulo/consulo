@@ -4,7 +4,6 @@ package consulo.ide.impl.idea.find;
 
 import consulo.application.HelpManager;
 import consulo.application.localize.ApplicationLocalize;
-import consulo.application.ui.UISettings;
 import consulo.codeEditor.*;
 import consulo.codeEditor.event.EditorFactoryEvent;
 import consulo.codeEditor.event.EditorFactoryListener;
@@ -15,7 +14,6 @@ import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
-import consulo.dataContext.DataManager;
 import consulo.document.RangeMarker;
 import consulo.execution.ui.console.ConsoleViewUtil;
 import consulo.fileEditor.internal.SearchReplaceComponent;
@@ -27,30 +25,23 @@ import consulo.ide.impl.idea.find.editorHeaderActions.*;
 import consulo.ide.impl.idea.find.impl.HelpID;
 import consulo.ide.impl.idea.find.impl.livePreview.LivePreviewController;
 import consulo.ide.impl.idea.find.impl.livePreview.SearchResults;
-import consulo.ui.ex.awt.action.DefaultCustomComponentAction;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
+import consulo.ui.Button;
+import consulo.ui.ButtonStyle;
+import consulo.ui.Component;
+import consulo.ui.Hyperlink;
+import consulo.ui.MessageBoxes;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
-import consulo.ui.ex.awt.JBUIScale;
-import consulo.ui.ex.awt.LinkLabel;
-import consulo.ui.ex.awt.Messages;
-import consulo.ui.ex.awt.action.CustomComponentAction;
-import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.ui.ex.keymap.util.KeymapUtil;
-import consulo.ui.ex.update.Activatable;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.dataholder.Key;
-import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.concurrent.CompletableFuture;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -62,6 +53,8 @@ public class EditorSearchSession implements SearchSession, UiDataProvider, Selec
     private static final String FIND_TYPE = "FindInFile";
     public static final Key<EditorSearchSession> SESSION_KEY = Key.create("EditorSearchSession");
 
+    private static final Key<EditorSearchSession> EDITOR_SESSION_KEY = Key.create("EditorSearchSession.editor");
+
     private final Editor myEditor;
     private final LivePreviewController myLivePreviewController;
     private final SearchResults mySearchResults;
@@ -72,24 +65,17 @@ public class EditorSearchSession implements SearchSession, UiDataProvider, Selec
     private String myStartSelectedText;
     private boolean mySelectionUpdatedFromSearchResults;
 
-    private final LinkLabel<Object> myClickToHighlightLabel = new LinkLabel<>(
-        FindLocalize.linkClickToHighlight().get(),
-        null,
-        (__, ___) -> {
-            setMatchesLimit(Integer.MAX_VALUE);
-            updateResults(true);
-        }
-    );
+    private boolean myClickToHighlightVisible;
+
     private final Disposable myDisposable = Disposable.newDisposable(EditorSearchSession.class.getName());
 
     public EditorSearchSession(Editor editor, Project project) {
         this(editor, project, createDefaultFindModel(project, editor));
     }
 
+    @RequiredUIAccess
     public EditorSearchSession(final Editor editor, Project project, FindModel findModel) {
         assert !editor.isDisposed();
-
-        myClickToHighlightLabel.setVisible(false);
 
         myFindModel = findModel;
 
@@ -100,12 +86,12 @@ public class EditorSearchSession implements SearchSession, UiDataProvider, Selec
         myLivePreviewController = new LivePreviewController(mySearchResults, this, myDisposable);
 
         myComponent =
-            SearchReplaceComponent.buildFor(project, myEditor.getContentComponent()).addPrimarySearchActions(createPrimarySearchActions()).addSecondarySearchActions(createSecondarySearchActions())
+            SearchReplaceComponent.buildFor(project, myEditor.getContentUIComponent()).addPrimarySearchActions(createPrimarySearchActions()).addSecondarySearchActions(createSecondarySearchActions())
                 .addPrimarySearchActions(new ToggleSelectionOnlyAction())
                 .addExtraSearchActions(new ToggleMatchCase(),
                     new ToggleWholeWordsOnlyAction(),
                     new ToggleRegex(),
-                    new DefaultCustomComponentAction(() -> myClickToHighlightLabel))
+                    new ClickToHighlightAction())
                 .addSearchFieldActions(new RestorePreviousSettingsAction())
                 .addPrimaryReplaceActions(new ReplaceAction(),
                     new ReplaceAllAction(),
@@ -116,21 +102,9 @@ public class EditorSearchSession implements SearchSession, UiDataProvider, Selec
                 .withSecondarySearchActionsIsModifiedGetter(() -> myFindModel.getSearchContext() != FindSearchContext.ANY).build();
 
         myComponent.addListener(this);
-        new UiNotifyConnector(myComponent.getComponent(), new Activatable() {
-            @Override
-            public void showNotify() {
-                initLivePreview();
-            }
 
-            @Override
-            public void hideNotify() {
-                myLivePreviewController.off();
-                mySearchResults.removeListener(EditorSearchSession.this);
-            }
-        });
-
-        new SwitchToFind(getComponent().getComponent());
-        new SwitchToReplace(getComponent().getComponent());
+        new SwitchToFind(getComponent().getUIComponent());
+        new SwitchToReplace(getComponent().getUIComponent());
 
         myFindModel.addObserver(new FindModel.FindModelObserver() {
             boolean myReentrantLock = false;
@@ -221,29 +195,36 @@ public class EditorSearchSession implements SearchSession, UiDataProvider, Selec
     }
 
     public static @Nullable EditorSearchSession get(@Nullable Editor editor) {
-        JComponent headerComponent = editor != null ? editor.getHeaderComponent() : null;
-        SearchReplaceComponent searchReplaceComponent = ObjectUtil.tryCast(headerComponent, SearchReplaceComponent.class);
-        return searchReplaceComponent != null ? DataManager.getInstance().getDataContext(searchReplaceComponent.getComponent()).getData(SESSION_KEY) : null;
+        if (editor == null) {
+            return null;
+        }
+
+        EditorSearchSession session = editor.getUserData(EDITOR_SESSION_KEY);
+        if (session == null) {
+            return null;
+        }
+
+        Component headerComponent = editor.getHeaderComponent();
+        return headerComponent != null && headerComponent == session.getComponent().getUIComponent() ? session : null;
     }
 
     @RequiredUIAccess
     public static CompletableFuture<EditorSearchSession> start(Editor editor, @Nullable Project project) {
-        EditorSearchSession session = new EditorSearchSession(editor, project);
-
-        UIAccess uiAccess = UIAccess.current();
-        return session.prepareAsync().handleAsync((o, throwable) -> {
-            editor.setHeaderComponent(session.getComponent().getComponent());
-            return session;
-        }, uiAccess);
+        return show(new EditorSearchSession(editor, project));
     }
 
     @RequiredUIAccess
     public static CompletableFuture<EditorSearchSession> start(Editor editor, FindModel findModel, @Nullable Project project) {
-        EditorSearchSession session = new EditorSearchSession(editor, project, findModel);
+        return show(new EditorSearchSession(editor, project, findModel));
+    }
 
+    @RequiredUIAccess
+    private static CompletableFuture<EditorSearchSession> show(EditorSearchSession session) {
         UIAccess uiAccess = UIAccess.current();
         return session.prepareAsync().handleAsync((o, throwable) -> {
-            editor.setHeaderComponent(session.getComponent().getComponent());
+            Editor editor = session.getEditor();
+            editor.putUserData(EDITOR_SESSION_KEY, session);
+            editor.setHeaderComponent(session.getComponent().getUIComponent());
             return session;
         }, uiAccess);
     }
@@ -309,7 +290,7 @@ public class EditorSearchSession implements SearchSession, UiDataProvider, Selec
                 }
             }
             myComponent.setStatusText(status.get());
-            myClickToHighlightLabel.setVisible(tooManyMatches);
+            myClickToHighlightVisible = tooManyMatches;
         }
         myComponent.updateActions();
     }
@@ -345,6 +326,17 @@ public class EditorSearchSession implements SearchSession, UiDataProvider, Selec
     @Override
     public void multilineStateChanged() {
         myFindModel.setMultiline(myComponent.isMultiline());
+    }
+
+    @Override
+    public void componentShown() {
+        initLivePreview();
+    }
+
+    @Override
+    public void componentHidden() {
+        myLivePreviewController.off();
+        mySearchResults.removeListener(this);
     }
 
     @Override
@@ -416,11 +408,9 @@ public class EditorSearchSession implements SearchSession, UiDataProvider, Selec
                 myLivePreviewController.performReplace();
             }
             catch (FindManager.MalformedReplacementStringException e) {
-                Messages.showErrorDialog(
-                    myComponent.getComponent(),
-                    e.getMessage(),
-                    FindLocalize.findReplaceInvalidReplacementStringTitle().get()
-                );
+                MessageBoxes.okError(LocalizeValue.ofNullable(e.getMessage()))
+                    .title(FindLocalize.findReplaceInvalidReplacementStringTitle())
+                    .showAsync();
             }
         }
     }
@@ -450,11 +440,16 @@ public class EditorSearchSession implements SearchSession, UiDataProvider, Selec
     }
 
     @Override
+    @RequiredUIAccess
     public void close() {
-        ProjectIdeFocusManager.getInstance(getProject()).requestFocus(myEditor.getContentComponent(), false);
+        ProjectIdeFocusManager.getInstance(getProject()).requestFocus(myEditor.getContentUIComponent(), false);
 
         myLivePreviewController.dispose();
         myEditor.setHeaderComponent(null);
+
+        if (myEditor.getUserData(EDITOR_SESSION_KEY) == this) {
+            myEditor.putUserData(EDITOR_SESSION_KEY, null);
+        }
     }
 
     private void initLivePreview() {
@@ -484,7 +479,7 @@ public class EditorSearchSession implements SearchSession, UiDataProvider, Selec
                 }
                 catch (PatternSyntaxException e) {
                     myComponent.setNotFoundBackground();
-                    myClickToHighlightLabel.setVisible(false);
+                    myClickToHighlightVisible = false;
                     mySearchResults.clear();
                     myComponent.setStatusText(INCORRECT_REGEX_MESSAGE);
                     return;
@@ -530,7 +525,7 @@ public class EditorSearchSession implements SearchSession, UiDataProvider, Selec
     private void updateUIWithEmptyResults() {
         myComponent.setRegularBackground();
         myComponent.setStatusText(ApplicationLocalize.editorsearchMatches(0).get());
-        myClickToHighlightLabel.setVisible(false);
+        myClickToHighlightVisible = false;
     }
 
     public String getTextInField() {
@@ -563,36 +558,52 @@ public class EditorSearchSession implements SearchSession, UiDataProvider, Selec
         return myComponent.prepareAsync();
     }
 
-    private abstract static class ButtonAction extends LegacyDumbAwareAction implements CustomComponentAction, ActionListener {
-        private final String myTitle;
-        private final char myMnemonic;
-
-        ButtonAction(String title, char mnemonic) {
-            myTitle = title;
-            myMnemonic = mnemonic;
+    private class ClickToHighlightAction extends LegacyDumbAwareAction implements CustomUIComponentAction {
+        @Override
+        @RequiredUIAccess
+        public Component createCustomComponent(Presentation presentation, String place) {
+            Hyperlink hyperlink = Hyperlink.create(FindLocalize.linkClickToHighlight(), e -> {
+                setMatchesLimit(Integer.MAX_VALUE);
+                updateResults(true);
+            });
+            hyperlink.setVisible(false);
+            return hyperlink;
         }
 
         @Override
-        public JComponent createCustomComponent(Presentation presentation, String place) {
-            JButton button = new JButton(myTitle) {
-                @Override
-                public Dimension getPreferredSize() {
-                    return new Dimension(super.getPreferredSize().width, JBUIScale.scale(24));
-                }
-            };
-            button.setFocusable(false);
-            if (!UISettings.getInstance().getDisableMnemonicsInControls()) {
-                button.setMnemonic(myMnemonic);
+        @RequiredUIAccess
+        public void update(AnActionEvent e) {
+            if (e.getPresentation().getClientProperty(COMPONENT_KEY) instanceof Hyperlink hyperlink) {
+                hyperlink.setVisible(myClickToHighlightVisible);
             }
-            button.addActionListener(this);
+        }
+
+        @Override
+        @RequiredUIAccess
+        public void actionPerformed(AnActionEvent e) {
+        }
+    }
+
+    private abstract static class ButtonAction extends LegacyDumbAwareAction implements CustomUIComponentAction {
+        private final LocalizeValue myTitle;
+
+        ButtonAction(LocalizeValue title) {
+            myTitle = title;
+        }
+
+        @Override
+        @RequiredUIAccess
+        public Component createCustomComponent(Presentation presentation, String place) {
+            Button button = Button.create(myTitle, e -> onClick());
+            button.addStyle(ButtonStyle.TOOLBAR);
+            button.setFocusable(false);
             return button;
         }
 
         @RequiredUIAccess
         @Override
         public final void update(AnActionEvent e) {
-            JButton button = (JButton) e.getPresentation().getClientProperty(COMPONENT_KEY);
-            if (button != null) {
+            if (e.getPresentation().getClientProperty(COMPONENT_KEY) instanceof Button button) {
                 update(button);
             }
         }
@@ -603,23 +614,21 @@ public class EditorSearchSession implements SearchSession, UiDataProvider, Selec
             onClick();
         }
 
-        @Override
-        public final void actionPerformed(ActionEvent e) {
-            onClick();
-        }
+        @RequiredUIAccess
+        protected abstract void update(Button button);
 
-        protected abstract void update(JButton button);
-
+        @RequiredUIAccess
         protected abstract void onClick();
     }
 
     private class ReplaceAction extends ButtonAction {
         ReplaceAction() {
-            super("Replace", 'p');
+            super(FindLocalize.buttonReplace());
         }
 
         @Override
-        protected void update(JButton button) {
+        @RequiredUIAccess
+        protected void update(Button button) {
             button.setEnabled(mySearchResults.hasMatches());
         }
 
@@ -632,11 +641,12 @@ public class EditorSearchSession implements SearchSession, UiDataProvider, Selec
 
     private class ReplaceAllAction extends ButtonAction {
         ReplaceAllAction() {
-            super("Replace all", 'a');
+            super(FindLocalize.findReplaceAllAction());
         }
 
         @Override
-        protected void update(JButton button) {
+        @RequiredUIAccess
+        protected void update(Button button) {
             button.setEnabled(mySearchResults.hasMatches());
         }
 
@@ -649,21 +659,23 @@ public class EditorSearchSession implements SearchSession, UiDataProvider, Selec
 
     private class ExcludeAction extends ButtonAction {
         ExcludeAction() {
-            super("", 'l');
+            super(FindLocalize.buttonExclude());
         }
 
         @Override
-        protected void update(JButton button) {
+        @RequiredUIAccess
+        protected void update(Button button) {
             FindResult cursor = mySearchResults.getCursor();
             button.setEnabled(cursor != null);
             button.setText(
                 cursor != null && mySearchResults.isExcluded(cursor)
-                    ? FindLocalize.buttonInclude().get()
-                    : FindLocalize.buttonExclude().get()
+                    ? FindLocalize.buttonInclude()
+                    : FindLocalize.buttonExclude()
             );
         }
 
         @Override
+        @RequiredUIAccess
         protected void onClick() {
             myLivePreviewController.exclude();
             moveCursor(SearchResults.Direction.DOWN);

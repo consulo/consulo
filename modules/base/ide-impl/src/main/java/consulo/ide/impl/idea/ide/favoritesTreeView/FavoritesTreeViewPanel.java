@@ -191,7 +191,7 @@ public class FavoritesTreeViewPanel extends JPanel implements UiDataProvider, Do
         };
 
         AnAction editActionButton = new EditFavoritesAction();
-        editActionButton.registerCustomShortcutSet(CommonShortcuts.CTRL_ENTER, null);
+        editActionButton.setShortcutSet(CommonShortcuts.CTRL_ENTER);
 
         AnAction action = ActionManager.getInstance().getAction(IdeActions.ACTION_NEW_ELEMENT);
         action.registerCustomShortcutSet(action.getShortcutSet(), myTree);
@@ -466,7 +466,7 @@ public class FavoritesTreeViewPanel extends JPanel implements UiDataProvider, Do
         AnAction addBookmarksList = actionManager.getAction(IdeActions.ADD_NEW_FAVORITES_LIST);
 
         AnAction editActionButton = new EditFavoritesAction();
-        editActionButton.registerCustomShortcutSet(CommonShortcuts.CTRL_ENTER, null);
+        editActionButton.setShortcutSet(CommonShortcuts.CTRL_ENTER);
 
         AnAction deleteActionButton = new DeleteFromFavoritesAction();
 

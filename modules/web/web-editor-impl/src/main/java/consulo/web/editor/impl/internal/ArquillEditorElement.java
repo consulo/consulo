@@ -594,6 +594,8 @@ public class ArquillEditorElement extends Component implements HasSize {
 
     private Supplier<Rulers> myRulers = () -> new Rulers(true, true, true);
 
+    private boolean myNoFocus;
+
     /**
      * What each decoration channel last sent, keyed by the api call. The platform rebuilds every channel on
      * every pass - a typed character runs the pass from its own document listener and again when the daemon
@@ -642,6 +644,10 @@ public class ArquillEditorElement extends Component implements HasSize {
                 get: (target, name) => (...args) => pending.push([name, args])
             });
             """);
+    }
+
+    public void setNoFocus(boolean noFocus) {
+        myNoFocus = noFocus;
     }
 
     public void setRulers(Supplier<Rulers> rulers) {
@@ -1092,8 +1098,8 @@ public class ArquillEditorElement extends Component implements HasSize {
                 lines: $2,
                 folding: $3,
                 annotations: $4
-            }));
-            """, myText, myReadOnly, rulers.lines(), rulers.folding(), rulers.annotations());
+            }, $5));
+            """, myText, myReadOnly, rulers.lines(), rulers.folding(), rulers.annotations(), myNoFocus);
     }
 
     @Override

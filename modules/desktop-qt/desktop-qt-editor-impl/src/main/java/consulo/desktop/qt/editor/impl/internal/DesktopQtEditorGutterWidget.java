@@ -202,7 +202,7 @@ public class DesktopQtEditorGutterWidget extends QWidget {
         DataManager dataManager = DataManager.getInstance();
 
         SimpleDataContext.Builder builder = SimpleDataContext.builder()
-            .setParent(dataManager.getDataContext(myEditor.getUIComponent()))
+            .setParent(dataManager.getDataContext(myEditor.getContentUIComponent()))
             .add(Editor.KEY, myEditor);
 
         int logicalLine = myEditor.getVisualLines().visualToLogicalLine(visualLineAt(position.y()));
@@ -475,7 +475,7 @@ public class DesktopQtEditorGutterWidget extends QWidget {
     private void performClickAction(AnAction action, QMouseEvent event) {
         DataContext context = myEditor.getDataContext();
 
-        Component editorComponent = myEditor.getUIComponent();
+        Component editorComponent = myEditor.getContentUIComponent();
         QWidget editorWidget = editorComponent instanceof QtComponentDelegate<?> delegate ? delegate.toQtComponent() : null;
 
         AnActionEvent actionEvent = AnActionEvent.createFromAnAction(

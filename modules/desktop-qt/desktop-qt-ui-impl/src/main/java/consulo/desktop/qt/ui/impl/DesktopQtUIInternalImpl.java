@@ -200,7 +200,7 @@ public class DesktopQtUIInternalImpl extends UIInternal implements UIInternalEx 
 
     @Override
     public Label _Components_label(LocalizeValue text, LabelOptions options) {
-        return new DesktopQtLabelImpl(text);
+        return new DesktopQtLabelImpl(text, options.getHorizontalAlignment());
     }
 
     @Override

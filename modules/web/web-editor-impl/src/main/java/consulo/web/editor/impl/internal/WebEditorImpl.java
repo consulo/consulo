@@ -34,6 +34,7 @@ import consulo.dataContext.DataManager;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
+import consulo.document.RangeMarker;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
 import consulo.ide.impl.idea.codeInsight.navigation.actions.GotoDeclarationAction;
@@ -54,6 +55,7 @@ import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.*;
 import consulo.ui.Component;
+import consulo.ui.layout.DockLayout;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.cursor.Cursor;
@@ -66,6 +68,7 @@ import consulo.ui.ex.action.*;
 import consulo.ui.ex.impl.internal.action.ActionRunnerAsync;
 import consulo.ui.ex.impl.internal.action.UnifiedActionMenuExpander;
 import consulo.undoRedo.CommandProcessor;
+import consulo.util.collection.ArrayUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
 import consulo.util.lang.xml.XmlStringUtil;
@@ -147,6 +150,10 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
     private static final Key<Integer> ANNOTATION_ID = Key.create("annotation.id");
 
     private final EditorComponent myEditorComponent;
+
+    private @Nullable DockLayout myRootLayout;
+
+    private @Nullable Component myHeaderComponent;
 
     private final WebEditorView myView;
 
@@ -277,6 +284,7 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
         vaadin.setText(myDocument.getText());
         vaadin.setEmpty(myDocument.getTextLength() == 0);
         vaadin.setReadOnly(isViewer() || !myDocument.isWritable());
+        vaadin.setNoFocus(kind == EditorKind.PREVIEW);
         vaadin.setRulers(() -> new ArquillEditorElement.Rulers(
             getSettings().isLineNumbersShown(),
             getSettings().isFoldingOutlineShown(),
@@ -744,7 +752,7 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
             null,
             ActionPlaces.EDITOR_GUTTER,
             context,
-            new ComponentEvent<>(getUIComponent(), details)
+            new ComponentEvent<>(getContentUIComponent(), details)
         );
 
         UIAccess uiAccess = UIAccess.current();
@@ -1464,25 +1472,39 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
         // iteration state merges the lexer attributes with the markup model by layer, which is how the daemon
         // results - identifier highlighting, inspections - reach the view
         IterationState state = new IterationState(this, 0, textLength, null, false, false, false, false);
+
+        int[] overSelection = collectRangesOverSelection(textLength);
+        int overSelectionIndex = 0;
+
         while (!state.atEnd()) {
             int start = state.getStartOffset();
             int end = state.getEndOffset();
 
             String style = toCssStyle(state.getMergedAttributes());
 
-            if (style != null) {
-                while (!tokenIterator.atEnd() && tokenIterator.getEnd() <= start) {
-                    tokenIterator.advance();
-                }
+            while (overSelectionIndex < overSelection.length && overSelection[overSelectionIndex + 1] <= start) {
+                overSelectionIndex += 2;
+            }
 
+            String selectionOverride = overSelectionIndex < overSelection.length && overSelection[overSelectionIndex] < end
+                ? toSelectionOverride(start, end)
+                : null;
+
+            if (style != null || selectionOverride != null) {
                 // the run answers to the keys only when the markup added nothing over the token - what the merged
                 // attributes render as is what the token renders as then. the attributes themselves cannot be
                 // compared, their equals is the identity of an interned flyweight the merge does not go through
                 String styleClass = null;
-                if (!tokenIterator.atEnd() && tokenIterator.getStart() <= start && end <= tokenIterator.getEnd()) {
-                    TextAttributes tokenAttributes = tokenIterator.getTextAttributes();
-                    if (tokenAttributes != null && style.equals(toCssStyle(tokenAttributes))) {
-                        styleClass = toSchemeClasses(tokenIterator.getTextAttributesKeys(), schemeKeys);
+                if (style != null) {
+                    while (!tokenIterator.atEnd() && tokenIterator.getEnd() <= start) {
+                        tokenIterator.advance();
+                    }
+
+                    if (!tokenIterator.atEnd() && tokenIterator.getStart() <= start && end <= tokenIterator.getEnd()) {
+                        TextAttributes tokenAttributes = tokenIterator.getTextAttributes();
+                        if (tokenAttributes != null && style.equals(toCssStyle(tokenAttributes))) {
+                            styleClass = toSchemeClasses(tokenIterator.getTextAttributesKeys(), schemeKeys);
+                        }
                     }
                 }
 
@@ -1492,11 +1514,16 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
 
                 ranges.append("{\"start\":").append(start).append(",\"end\":").append(end);
                 if (styleClass != null) {
-                    ranges.append(",\"style\":{\"styleClass\":\"").append(styleClass).append("\"}}");
+                    ranges.append(",\"style\":{\"styleClass\":\"").append(styleClass).append("\"}");
                 }
                 else {
-                    ranges.append(",\"style\":{\"style\":").append(style).append("}}");
+                    ranges.append(",\"style\":{\"style\":").append(style == null ? "{}" : style).append('}');
                 }
+
+                if (selectionOverride != null) {
+                    ranges.append(",\"sel\":").append(selectionOverride);
+                }
+                ranges.append('}');
             }
 
             state.advance();
@@ -2241,6 +2268,76 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
             .replace("\t", " ");
     }
 
+    private int[] collectRangesOverSelection(int textLength) {
+        List<int[]> ranges = new ArrayList<>();
+        collectRangesOverSelection(getMarkupModel(), textLength, ranges);
+        collectRangesOverSelection(getFilteredDocumentMarkupModel(), textLength, ranges);
+        for (RangeMarker block : myDocument.getGuardedBlocks()) {
+            if (block.isValid()) {
+                ranges.add(new int[]{block.getStartOffset(), Math.min(block.getEndOffset(), textLength)});
+            }
+        }
+
+        if (ranges.isEmpty()) {
+            return ArrayUtil.EMPTY_INT_ARRAY;
+        }
+
+        ranges.sort(Comparator.comparingInt(range -> range[0]));
+
+        int[] merged = new int[ranges.size() * 2];
+        int size = 0;
+        for (int[] range : ranges) {
+            if (range[0] >= range[1]) {
+                continue;
+            }
+            if (size > 0 && range[0] <= merged[size - 1]) {
+                merged[size - 1] = Math.max(merged[size - 1], range[1]);
+            }
+            else {
+                merged[size++] = range[0];
+                merged[size++] = range[1];
+            }
+        }
+        return Arrays.copyOf(merged, size);
+    }
+
+    private void collectRangesOverSelection(MarkupModel markupModel, int textLength, List<int[]> ranges) {
+        for (RangeHighlighter highlighter : markupModel.getAllHighlighters()) {
+            if (highlighter.getLayer() < HighlighterLayer.SELECTION || !highlighter.isValid()) {
+                continue;
+            }
+
+            int start = Math.min(highlighter.getStartOffset(), textLength);
+            int end = Math.min(highlighter.getEndOffset(), textLength);
+            if (highlighter.getTargetArea() == HighlighterTargetArea.LINES_IN_RANGE && textLength > 0) {
+                start = myDocument.getLineStartOffset(myDocument.getLineNumber(start));
+                end = Math.min(myDocument.getLineEndOffset(myDocument.getLineNumber(end)) + 1, textLength);
+            }
+            ranges.add(new int[]{start, end});
+        }
+    }
+
+    private @Nullable String toSelectionOverride(int start, int end) {
+        IterationState selected = new IterationState(this, start, end, CaretData.ofSelection(start, end), false, false, false, false);
+        if (selected.atEnd()) {
+            return null;
+        }
+
+        TextAttributes merged = selected.getMergedAttributes();
+        TextAttributes selection = getSelectionModel().getTextAttributes();
+        ColorValue selectionBackground = selection == null ? null : selection.getBackgroundColor();
+        ColorValue selectionForeground = selection == null ? null : selection.getForegroundColor();
+
+        ColorValue background = Objects.equals(merged.getBackgroundColor(), selectionBackground) ? null : merged.getBackgroundColor();
+        ColorValue foreground = selectionForeground == null || Objects.equals(merged.getForegroundColor(), selectionForeground)
+            ? null
+            : merged.getForegroundColor();
+        if (background == null && foreground == null) {
+            return null;
+        }
+        return toCssStyle(new StringBuilder(), foreground, background, Font.PLAIN, null);
+    }
+
     private @Nullable String toCssStyle(@Nullable TextAttributes attributes) {
         if (attributes == null) {
             return null;
@@ -2549,8 +2646,20 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
 
 
     @Override
-    public consulo.ui.Component getUIComponent() {
-        return myEditorComponent;
+    public Component getUIComponent() {
+        DockLayout rootLayout = myRootLayout;
+        if (rootLayout != null) {
+            return rootLayout;
+        }
+
+        if (myEditorComponent.getParent() != null) {
+            return myEditorComponent;
+        }
+
+        rootLayout = DockLayout.create(Space.NONE);
+        rootLayout.center(myEditorComponent);
+        myRootLayout = rootLayout;
+        return rootLayout;
     }
 
     @Override
@@ -2614,7 +2723,7 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
     @Override
     protected DataContext getComponentContext() {
         return SimpleDataContext.builder()
-            .setParent(DataManager.getInstance().getDataContext(getUIComponent()))
+            .setParent(DataManager.getInstance().getDataContext(getContentUIComponent()))
             .add(Editor.KEY, this)
             .build();
     }
@@ -2715,6 +2824,9 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
         // the delegate keeps the global scheme it was created against, a scheme switch reaches the editor only
         // through this
         updateGlobalScheme();
+
+        myCaretModel.reinitSettings();
+        mySelectionModel.reinitSettings();
 
         // the lexer highlighter caches the attributes of every token type against the scheme it was handed
         EditorHighlighter highlighter = getHighlighter();
@@ -2901,12 +3013,38 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
 
     @Override
     public boolean hasHeaderComponent() {
-        return false;
+        return myHeaderComponent != null;
     }
 
     @Override
-    public @Nullable JComponent getHeaderComponent() {
-        return null;
+    public @Nullable Component getHeaderComponent() {
+        return myHeaderComponent;
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void setHeaderComponent(@Nullable Component header) {
+        Component oldHeader = myHeaderComponent;
+        if (oldHeader == header) {
+            return;
+        }
+
+        myHeaderComponent = header;
+
+        getUIComponent();
+
+        DockLayout rootLayout = myRootLayout;
+        if (rootLayout == null) {
+            return;
+        }
+
+        if (oldHeader != null) {
+            rootLayout.remove(oldHeader);
+        }
+
+        if (header != null) {
+            rootLayout.top(header);
+        }
     }
 
     @Override

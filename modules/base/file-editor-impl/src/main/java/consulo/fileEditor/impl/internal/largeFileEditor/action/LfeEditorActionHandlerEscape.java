@@ -6,7 +6,6 @@ import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.fileEditor.LargeFileEditor;
-import consulo.fileEditor.internal.SearchReplaceComponent;
 import consulo.ui.ex.action.IdeActions;
 import org.jspecify.annotations.Nullable;
 
@@ -17,7 +16,7 @@ public final class LfeEditorActionHandlerEscape extends LfeBaseEditorActionHandl
                                   Editor editor,
                                   @Nullable Caret caret,
                                   DataContext dataContext) {
-        if (largeFileEditor.getEditor().getHeaderComponent() instanceof SearchReplaceComponent) {
+        if (largeFileEditor.getEditor().getHeaderComponent() == largeFileEditor.getSearchManager().getSearchReplaceComponent().getUIComponent()) {
             largeFileEditor.getSearchManager().onEscapePressed();
         }
         else if (getOriginalHandler().isEnabled(editor, caret, dataContext)) {

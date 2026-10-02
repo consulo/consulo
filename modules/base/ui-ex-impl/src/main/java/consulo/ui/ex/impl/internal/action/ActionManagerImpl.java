@@ -1157,7 +1157,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
             if (pluginId != null && !(action instanceof ActionGroup)) {
                 myPlugin2Id.putValue(pluginId, actionId);
             }
-            action.registerCustomShortcutSet(new ProxyShortcutSet(actionId), null);
+            action.setShortcutSet(new ProxyShortcutSet(actionId));
         }
     }
 

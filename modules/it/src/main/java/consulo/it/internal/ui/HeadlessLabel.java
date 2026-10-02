@@ -20,6 +20,8 @@ import consulo.ui.Component;
 import consulo.ui.Label;
 import consulo.ui.LabelStyle;
 import consulo.ui.image.Image;
+import consulo.ui.Length;
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -86,5 +88,27 @@ public class HeadlessLabel extends HeadlessComponentBase implements Label {
 
     @Override
     public void addStyle(LabelStyle style) {
+    }
+
+    @Override
+    public void setMinWidth(Length width) {
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setWidth(Length width) {
+        throw new UnsupportedOperationException();
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setHeight(Length height) {
+        throw new UnsupportedOperationException();
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setMinHeight(Length height) {
+        throw new UnsupportedOperationException();
     }
 }

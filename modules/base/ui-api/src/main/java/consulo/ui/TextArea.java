@@ -25,7 +25,7 @@ import org.jspecify.annotations.Nullable;
  * @author VISTALL
  * @since 2026-09-30
  */
-public interface TextArea extends ValueComponent<String>, HasFocus, HasPlaceholder {
+public interface TextArea extends ValueComponent<String>, HasFocus, HasPlaceholder, HasPrefixComponent, HasSuffixComponent {
     @RequiredUIAccess
     static TextArea create() {
         return create(null);
@@ -57,5 +57,32 @@ public interface TextArea extends ValueComponent<String>, HasFocus, HasPlacehold
     void selectAll();
 
     @RequiredUIAccess
+    default void replaceSelection(String text) {
+        String value = getValue();
+        setValue(value == null ? text : value + text);
+    }
+
+    @RequiredUIAccess
     void setFont(@Nullable Font font);
+
+    @RequiredUIAccess
+    default void setVisibleLength(int columns) {
+    }
+
+    @RequiredUIAccess
+    default void setMinRows(int rows) {
+    }
+
+    @RequiredUIAccess
+    default void setMaxRows(int rows) {
+    }
+
+    @Override
+    default void setSuffixComponent(@Nullable Component suffixComponent) {
+    }
+
+    @Override
+    default @Nullable Component getSuffixComponent() {
+        return null;
+    }
 }

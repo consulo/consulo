@@ -286,10 +286,10 @@ public class UnifiedLookupUI extends LookupBase {
             : null;
 
         if (location == null) {
-            popup.showAt(myEditor.getUIComponent(), 0, 0, 0);
+            popup.showAt(myEditor.getContentUIComponent(), 0, 0, 0);
         }
         else {
-            popup.showAt(myEditor.getUIComponent(), location.x(), location.y(), location.height());
+            popup.showAt(myEditor.getContentUIComponent(), location.x(), location.y(), location.height());
         }
     }
 

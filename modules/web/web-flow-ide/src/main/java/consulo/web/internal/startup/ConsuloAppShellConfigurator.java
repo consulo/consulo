@@ -134,6 +134,11 @@ public class ConsuloAppShellConfigurator implements AppShellConfigurator {
       Inline.Wrapping.JAVASCRIPT
     );
 
+    settings.addInlineWithContents(
+      "document.documentElement.setAttribute('spellcheck', 'false');",
+      Inline.Wrapping.JAVASCRIPT
+    );
+
     // built from the same list the font manager reports, a stylesheet of the theme would have to be kept in
     // step with it by hand
     settings.addInlineWithContents(WebFontRegistry.buildFontFaceCss(), Inline.Wrapping.STYLESHEET);

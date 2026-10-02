@@ -1485,7 +1485,7 @@ public class DocumentationComponent extends JPanel implements Disposable, UiData
     private class ExternalDocAction extends AnAction implements AnActionWithSyncUpdate, HintManager.ActionToIgnore {
         private ExternalDocAction() {
             super(CodeInsightLocalize.javadocActionViewExternal(), LocalizeValue.empty(), PlatformIconGroup.actionsPreviousoccurence());
-            registerCustomShortcutSet(ActionManager.getInstance().getAction(IdeActions.ACTION_EXTERNAL_JAVADOC).getShortcutSet(), null);
+            setShortcutSet(ActionManager.getInstance().getAction(IdeActions.ACTION_EXTERNAL_JAVADOC).getShortcutSet());
         }
 
         @Override

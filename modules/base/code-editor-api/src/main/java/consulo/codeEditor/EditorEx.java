@@ -24,6 +24,7 @@ import consulo.disposer.Disposable;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.project.Project;
+import consulo.ui.Component;
 import consulo.ui.color.ColorValue;
 import consulo.ui.cursor.Cursor;
 import consulo.ui.ex.CopyProvider;
@@ -77,7 +78,7 @@ public interface EditorEx extends Editor {
 
     void setHighlighter(EditorHighlighter highlighter);
 
-    default JComponent getPermanentHeaderComponent() {
+    default @Nullable Component getPermanentHeaderComponent() {
         throw new UnsupportedOperationException("Unsupported platform");
     }
 
@@ -86,7 +87,7 @@ public interface EditorEx extends Editor {
      */
     void setViewer(boolean isViewer);
 
-    default void setPermanentHeaderComponent(JComponent component) {
+    default void setPermanentHeaderComponent(@Nullable Component component) {
         throw new UnsupportedOperationException("Unsupported platform");
     }
 

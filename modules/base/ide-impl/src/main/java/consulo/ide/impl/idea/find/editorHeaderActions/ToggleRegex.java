@@ -20,6 +20,7 @@ import consulo.find.FindSettings;
 import consulo.find.localize.FindLocalize;
 import consulo.fileEditor.impl.internal.search.SearchSession;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.fileEditor.impl.internal.search.Embeddable;
 
 public class ToggleRegex extends EditorSearchToggleAction implements Embeddable {
     public ToggleRegex() {

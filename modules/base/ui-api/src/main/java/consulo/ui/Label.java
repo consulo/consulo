@@ -28,7 +28,7 @@ import org.jspecify.annotations.Nullable;
  * @author VISTALL
  * @since 2016-06-11
  */
-public interface Label extends Component, HasMnemonic, HasComponentStyle<LabelStyle>, HasFocus {
+public interface Label extends Component, HasMnemonic, HasComponentStyle<LabelStyle>, HasFocus, HasSize {
     static Label create() {
         return create(LocalizeValue.empty());
     }

@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.find;
 
+import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.find.impl.FindUI;
 import consulo.ide.impl.idea.find.impl.FindUIFactory;
@@ -26,7 +27,7 @@ import jakarta.inject.Singleton;
  * @since 27/06/2023
  */
 @Singleton
-@ServiceImpl
+@ServiceImpl(profiles = ComponentProfiles.AWT)
 public class FindUIFactoryImpl implements FindUIFactory {
   @Override
   public FindUI create(FindUIHelper helper) {

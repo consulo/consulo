@@ -38,7 +38,7 @@ public final class FindForwardBackwardAction extends AnAction implements DumbAwa
     @RequiredUIAccess
     @Override
     public void actionPerformed(AnActionEvent e) {
-        if (StringUtil.isEmpty(searchManager.getSearchReplaceComponent().getSearchTextComponent().getText())) {
+        if (StringUtil.isEmpty(searchManager.getSearchReplaceComponent().getSearchText())) {
             return;
         }
         searchManager.launchNewRangeSearch(

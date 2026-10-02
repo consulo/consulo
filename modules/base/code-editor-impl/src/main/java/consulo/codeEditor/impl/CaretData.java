@@ -36,6 +36,10 @@ public final class CaretData {
         return NULL_CARET;
     }
 
+    public static CaretData ofSelection(int start, int end) {
+        return new CaretData(-1, -1, new int[]{start}, new int[]{end});
+    }
+
     public static CaretData copyOf(CaretData original, boolean omitCaretRowData) {
         if (original == null || !omitCaretRowData) {
             return original;

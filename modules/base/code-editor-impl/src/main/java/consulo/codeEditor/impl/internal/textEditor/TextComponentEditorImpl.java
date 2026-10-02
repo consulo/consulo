@@ -31,6 +31,7 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.font.Font;
 import consulo.util.dataholder.UserDataHolderBase;
+import consulo.ui.Component;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
@@ -315,7 +316,7 @@ public class TextComponentEditorImpl extends UserDataHolderBase implements TextC
     }
 
     @Override
-    public void setHeaderComponent(@Nullable JComponent header) {
+    public void setHeaderComponent(@Nullable Component header) {
         throw new UnsupportedOperationException("Not implemented");
     }
 
@@ -325,7 +326,7 @@ public class TextComponentEditorImpl extends UserDataHolderBase implements TextC
     }
 
     @Override
-    public @Nullable JComponent getHeaderComponent() {
+    public @Nullable Component getHeaderComponent() {
         return null;
     }
 

@@ -56,10 +56,10 @@ public class UnifiedEditorPopupHelperImpl implements EditorPopupHelper {
         CaretPixelLocation location = caretLocation(editor);
 
         if (location == null) {
-            anchoredPopup.showAtPoint(editor.getUIComponent(), 0, 0, 0);
+            anchoredPopup.showAtPoint(editor.getContentUIComponent(), 0, 0, 0);
         }
         else {
-            anchoredPopup.showAtPoint(editor.getUIComponent(), location.x(), location.y(), location.height());
+            anchoredPopup.showAtPoint(editor.getContentUIComponent(), location.x(), location.y(), location.height());
         }
     }
 

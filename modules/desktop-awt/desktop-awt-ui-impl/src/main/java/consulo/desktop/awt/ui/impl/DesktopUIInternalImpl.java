@@ -56,6 +56,7 @@ import consulo.ui.event.ComponentEvent;
 import consulo.ui.event.ModalityStateListener;
 import consulo.ui.event.details.InputDetails;
 import consulo.ui.event.details.ProgrammaticInputDetails;
+import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.awt.JBUIScale;
 import consulo.ui.ex.awt.internal.EDT;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
@@ -622,5 +623,19 @@ public class DesktopUIInternalImpl extends UIInternal implements UIInternalEx {
     @Override
     public InputBoxBuilder<String, PasswordBox> _InputBox_password() {
         return new DesktopInputBoxBuilderImpl<>(PasswordBox::create);
+    }
+
+    @Override
+    public void _AnAction_registerCustomShortcutSet(AnAction action, Component component) {
+        if (TargetAWT.to(component) instanceof JComponent jComponent) {
+            action.registerCustomShortcutSet(jComponent, null);
+        }
+    }
+
+    @Override
+    public void _AnAction_unregisterCustomShortcutSet(AnAction action, Component component) {
+        if (TargetAWT.to(component) instanceof JComponent jComponent) {
+            action.unregisterCustomShortcutSet(jComponent);
+        }
     }
 }

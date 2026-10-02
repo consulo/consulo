@@ -15,6 +15,7 @@
  */
 package consulo.web.ui.impl.internal;
 
+import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.dom.Style;
@@ -33,6 +34,7 @@ import org.jspecify.annotations.Nullable;
  * @since 2026-09-30
  */
 public class WebTextAreaImpl extends VaadinComponentDelegate<WebTextAreaImpl.Vaadin> implements consulo.ui.TextArea {
+    @StyleSheet("/textBox/webTextBox.css")
     public class Vaadin extends TextArea implements FromVaadinComponentWrapper {
         @Override
         public @Nullable Component toUIComponent() {
@@ -42,12 +44,15 @@ public class WebTextAreaImpl extends VaadinComponentDelegate<WebTextAreaImpl.Vaa
 
     private boolean myFireListeners = true;
 
+    private @Nullable Component myPrefixComponent;
+    private @Nullable Component mySuffixComponent;
+
     @RequiredUIAccess
     @SuppressWarnings("unchecked")
     public WebTextAreaImpl(String text) {
         Vaadin area = getVaadinComponent();
         area.setValue(StringUtil.notNullize(text));
-        area.setValueChangeMode(ValueChangeMode.LAZY);
+        area.setValueChangeMode(ValueChangeMode.EAGER);
         area.addValueChangeListener(event -> {
             if (myFireListeners) {
                 getListenerDispatcher(ValueComponentEvent.class).onEvent(new ValueComponentEvent(this, event.getValue()));
@@ -101,6 +106,16 @@ public class WebTextAreaImpl extends VaadinComponentDelegate<WebTextAreaImpl.Vaa
 
     @Override
     @RequiredUIAccess
+    public void replaceSelection(String text) {
+        getVaadinComponent().getElement().executeJs(
+            "const t = this.inputElement; if (t) { t.setRangeText($0, t.selectionStart, t.selectionEnd, 'end'); "
+                + "t.dispatchEvent(new Event('input', { bubbles: true })); }",
+            text
+        );
+    }
+
+    @Override
+    @RequiredUIAccess
     public void setFont(@Nullable Font font) {
         Style style = getVaadinComponent().getStyle();
         if (font == null) {
@@ -113,5 +128,47 @@ public class WebTextAreaImpl extends VaadinComponentDelegate<WebTextAreaImpl.Vaa
         style.set("font-family", "\"" + font.getFamily() + "\"");
         style.set("--vaadin-input-field-value-font-size", font.getFontSize() + "px");
         style.set("--vaadin-input-field-value-line-height", "normal");
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void setVisibleLength(int columns) {
+        getVaadinComponent().getStyle().set("width", columns + "ch");
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void setMinRows(int rows) {
+        getVaadinComponent().setMinRows(rows);
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void setMaxRows(int rows) {
+        getVaadinComponent().setMaxRows(rows);
+    }
+
+    @Override
+    public void setPrefixComponent(@Nullable Component prefixComponent) {
+        myPrefixComponent = prefixComponent;
+
+        getVaadinComponent().setPrefixComponent(WebTextBoxImpl.toVaadinOrNull(prefixComponent));
+    }
+
+    @Override
+    public @Nullable Component getPrefixComponent() {
+        return myPrefixComponent;
+    }
+
+    @Override
+    public void setSuffixComponent(@Nullable Component suffixComponent) {
+        mySuffixComponent = suffixComponent;
+
+        getVaadinComponent().setSuffixComponent(WebTextBoxImpl.toVaadinOrNull(suffixComponent));
+    }
+
+    @Override
+    public @Nullable Component getSuffixComponent() {
+        return mySuffixComponent;
     }
 }

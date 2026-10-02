@@ -105,10 +105,13 @@ public abstract class QtComponentDelegate<T extends QWidget> implements Componen
 
     private boolean myEnabled = true;
     private boolean myVisible = true;
+    private @Nullable Boolean myFocusable;
 
     private LocalizeValue myToolTipText = LocalizeValue.empty();
     private @Nullable ColorValue myForegroundColor;
     private @Nullable ColorValue myBackgroundColor;
+    private @Nullable QPalette myNaturalPalette;
+    private boolean myNaturalAutoFillBackground;
     private @Nullable Cursor myCursor;
 
     /** the desktop frontend draws into a single ui, so every component of it answers the same access */
@@ -129,6 +132,7 @@ public abstract class QtComponentDelegate<T extends QWidget> implements Componen
             myComponent = null;
             myOwnStyleSheet = "";
             myBorderStyleSheet = "";
+            myNaturalPalette = null;
         }
 
         myComponent = createQt(parent);
@@ -156,6 +160,13 @@ public abstract class QtComponentDelegate<T extends QWidget> implements Componen
         applySize();
 
         initialize(myComponent);
+
+        applyColors();
+
+        Boolean focusable = myFocusable;
+        if (focusable != null) {
+            myComponent.setFocusPolicy(focusable ? Qt.FocusPolicy.StrongFocus : Qt.FocusPolicy.NoFocus);
+        }
 
         if (this instanceof DesktopQtIconOwner iconOwner) {
             DesktopQtIconRefresher.register(iconOwner);
@@ -232,6 +243,7 @@ public abstract class QtComponentDelegate<T extends QWidget> implements Componen
 
             myOwnStyleSheet = "";
             myBorderStyleSheet = "";
+            myNaturalPalette = null;
         }
     }
 
@@ -332,6 +344,16 @@ public abstract class QtComponentDelegate<T extends QWidget> implements Componen
         // own is not enough to make it do so
         if (!rules.isEmpty()) {
             rules.insert(0, "border: none; ");
+
+            int nativeFrameWidth = getNativeFrameWidth();
+            if (nativeFrameWidth > 0) {
+                rules.append("padding: ").append(nativeFrameWidth).append("px; ");
+            }
+
+            ColorValue background = myBackgroundColor;
+            if (background != null) {
+                rules.append("background-color: ").append(toCssColor(background)).append("; ");
+            }
         }
 
         String rule = rules.isEmpty() ? "" : "#" + borderObjectName() + " { " + rules + "}";
@@ -352,6 +374,10 @@ public abstract class QtComponentDelegate<T extends QWidget> implements Componen
         if (!margins.equals(myComponent.contentsMargins())) {
             myComponent.setContentsMargins(margins);
         }
+    }
+
+    protected int getNativeFrameWidth() {
+        return 0;
     }
 
     private String borderObjectName() {
@@ -709,7 +735,27 @@ public abstract class QtComponentDelegate<T extends QWidget> implements Componen
             return;
         }
 
-        QPalette palette = new QPalette(myComponent.palette());
+        if (myForegroundColor == null && myBackgroundColor == null) {
+            QPalette naturalPalette = myNaturalPalette;
+            if (naturalPalette != null) {
+                myNaturalPalette = null;
+
+                myComponent.setAutoFillBackground(myNaturalAutoFillBackground);
+                myComponent.setPalette(naturalPalette);
+            }
+
+            if (!myDataObject.getBorders().isEmpty()) {
+                applyBorders();
+            }
+            return;
+        }
+
+        if (myNaturalPalette == null) {
+            myNaturalPalette = new QPalette(myComponent.palette());
+            myNaturalAutoFillBackground = myComponent.autoFillBackground();
+        }
+
+        QPalette palette = new QPalette(myNaturalPalette);
 
         if (myForegroundColor != null) {
             palette.setColor(QPalette.ColorRole.WindowText, TargetQt.to(myForegroundColor));
@@ -724,8 +770,15 @@ public abstract class QtComponentDelegate<T extends QWidget> implements Componen
             // a widget only paints its Window role when it is told to fill its own background
             myComponent.setAutoFillBackground(true);
         }
+        else {
+            myComponent.setAutoFillBackground(myNaturalAutoFillBackground);
+        }
 
         myComponent.setPalette(palette);
+
+        if (!myDataObject.getBorders().isEmpty()) {
+            applyBorders();
+        }
     }
 
     @Override
@@ -781,12 +834,17 @@ public abstract class QtComponentDelegate<T extends QWidget> implements Componen
     }
 
     public void setFocusable(boolean focusable) {
+        myFocusable = focusable;
+
         if (myComponent != null) {
-            myComponent.setFocusPolicy(focusable ? io.qt.core.Qt.FocusPolicy.StrongFocus : io.qt.core.Qt.FocusPolicy.NoFocus);
+            myComponent.setFocusPolicy(focusable ? Qt.FocusPolicy.StrongFocus : Qt.FocusPolicy.NoFocus);
         }
     }
 
     public boolean isFocusable() {
-        return myComponent == null || myComponent.focusPolicy() != io.qt.core.Qt.FocusPolicy.NoFocus;
+        if (myComponent == null) {
+            return myFocusable == null || myFocusable;
+        }
+        return myComponent.focusPolicy() != Qt.FocusPolicy.NoFocus;
     }
 }
