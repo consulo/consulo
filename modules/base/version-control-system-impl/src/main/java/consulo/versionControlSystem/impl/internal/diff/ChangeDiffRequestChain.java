@@ -7,6 +7,7 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.diff.ChangeDiffRequestProducer;
+import consulo.versionControlSystem.internal.ShowDiffContext;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
@@ -14,10 +15,12 @@ import java.util.function.Consumer;
 
 public class ChangeDiffRequestChain extends UserDataHolderBase implements DiffRequestChain, GoToChangePopupBuilder.Chain {
     private final List<ChangeDiffRequestProducer> myRequests;
+    private final ShowDiffContext myContext;
     private int myIndex;
 
-    public ChangeDiffRequestChain(List<ChangeDiffRequestProducer> requests) {
+    public ChangeDiffRequestChain(List<ChangeDiffRequestProducer> requests, ShowDiffContext context) {
         myRequests = requests;
+        myContext = context;
     }
 
     @Override
@@ -32,8 +35,11 @@ public class ChangeDiffRequestChain extends UserDataHolderBase implements DiffRe
 
     @Override
     public void setIndex(int index) {
-        assert 0 <= index && index < myRequests.size();
+        if (index < 0 || myRequests.size() <= index) {
+            throw new IndexOutOfBoundsException(index);
+        }
         myIndex = index;
+        myContext.selectCurrentChange(myRequests.get(index).getChange());
     }
 
     @Override

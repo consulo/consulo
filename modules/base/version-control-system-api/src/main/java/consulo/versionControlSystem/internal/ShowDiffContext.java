@@ -15,6 +15,7 @@
  */
 package consulo.versionControlSystem.internal;
 
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.util.dataholder.Key;
 import consulo.diff.DiffDialogHints;
@@ -22,12 +23,14 @@ import consulo.versionControlSystem.change.Change;
 import org.jspecify.annotations.Nullable;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 public class ShowDiffContext {
     private final DiffDialogHints myDialogHints;
+    private final Set<Consumer<Change>> myCurrentChangeListeners = new LinkedHashSet<>();
 
     private @Nullable List<AnAction> myActions;
-    private @Nullable Map<Key, Object> myChainContext;
+    private @Nullable Map<Key<Object>, Object> myChainContext;
     private @Nullable Map<Change, Map<Key, Object>> myRequestContext;
 
     public ShowDiffContext() {
@@ -36,6 +39,17 @@ public class ShowDiffContext {
 
     public ShowDiffContext(DiffDialogHints dialogHints) {
         myDialogHints = dialogHints;
+    }
+
+    public void addCurrentChangeListener(@RequiredUIAccess Consumer<Change> listener) {
+        myCurrentChangeListeners.add(listener);
+    }
+
+    @RequiredUIAccess
+    public void selectCurrentChange(Change currentChange) {
+        for (Consumer<Change> listener : myCurrentChangeListeners) {
+            listener.accept(currentChange);
+        }
     }
 
     public DiffDialogHints getDialogHints() {
@@ -49,7 +63,7 @@ public class ShowDiffContext {
         return myActions;
     }
 
-    public Map<Key, Object> getChainContext() {
+    public Map<Key<Object>, Object> getChainContext() {
         if (myChainContext == null) {
             return Collections.emptyMap();
         }
@@ -81,11 +95,12 @@ public class ShowDiffContext {
         myActions.add(action);
     }
 
+    @SuppressWarnings("unchecked")
     public <T> void putChainContext(Key<T> key, T value) {
         if (myChainContext == null) {
             myChainContext = new HashMap<>();
         }
-        myChainContext.put(key, value);
+        myChainContext.put((Key) key, value);
     }
 
     public <T> void putChangeContext(Change change, Key<T> key, T value) {
