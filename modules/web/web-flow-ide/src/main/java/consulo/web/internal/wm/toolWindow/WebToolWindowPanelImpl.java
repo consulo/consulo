@@ -40,6 +40,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -164,9 +165,9 @@ public class WebToolWindowPanelImpl extends VaadinComponentDelegate<WebToolWindo
         public final void run() {
             ToolWindowAnchor anchor = myInfo.getAnchor();
 
-            (myInfo.isSplit() ? myAnchor2Secondary : myAnchor2Primary).put(anchor, myDecorator);
+            getAnchorDecorators(myInfo).put(anchor, myDecorator);
 
-            updateAnchorComponent(anchor, WindowInfoImpl.normalizeWeight(myInfo.getWeight()));
+            updateAnchorComponent(anchor);
         }
     }
 
@@ -184,9 +185,9 @@ public class WebToolWindowPanelImpl extends VaadinComponentDelegate<WebToolWindo
         public final void run() {
             ToolWindowAnchor anchor = myInfo.getAnchor();
 
-            (myInfo.isSplit() ? myAnchor2Secondary : myAnchor2Primary).remove(anchor);
+            getAnchorDecorators(myInfo).remove(anchor);
 
-            updateAnchorComponent(anchor, WindowInfoImpl.normalizeWeight(myInfo.getWeight()));
+            updateAnchorComponent(anchor);
         }
     }
 
@@ -218,6 +219,7 @@ public class WebToolWindowPanelImpl extends VaadinComponentDelegate<WebToolWindo
 
     private final Map<ToolWindowAnchor, ToolWindowInternalDecorator> myAnchor2Primary = new HashMap<>();
     private final Map<ToolWindowAnchor, ToolWindowInternalDecorator> myAnchor2Secondary = new HashMap<>();
+    private final Map<ToolWindowAnchor, ToolWindowInternalDecorator> myAnchor2Sliding = new HashMap<>();
 
     private final UnifiedToolWindowSplitters mySplitters;
 
@@ -302,12 +304,19 @@ public class WebToolWindowPanelImpl extends VaadinComponentDelegate<WebToolWindo
      * anchor holds a primary and a split window at once, like the awt panel does.
      */
     @RequiredUIAccess
-    private void updateAnchorComponent(ToolWindowAnchor anchor, float weight) {
+    private void updateAnchorComponent(ToolWindowAnchor anchor) {
         WebToolWindowInternalDecorator primary = (WebToolWindowInternalDecorator) myAnchor2Primary.get(anchor);
         WebToolWindowInternalDecorator secondary = (WebToolWindowInternalDecorator) myAnchor2Secondary.get(anchor);
+        WebToolWindowInternalDecorator sliding = (WebToolWindowInternalDecorator) myAnchor2Sliding.get(anchor);
+
+        WebToolWindowInternalDecorator placed = sliding != null ? sliding : primary != null ? primary : secondary;
+        float weight = placed == null ? 0 : WindowInfoImpl.normalizeWeight(myDecorator2Info.get(placed).getWeight());
 
         consulo.ui.Component component;
-        if (primary != null && secondary != null) {
+        if (sliding != null) {
+            component = sliding.getComponent();
+        }
+        else if (primary != null && secondary != null) {
             ToolWindowBase toolWindow = (ToolWindowBase) primary.getToolWindow();
             TwoComponentSplitLayout splitter = TwoComponentSplitLayout.create(
                 ToolWindowAnchorUtil.isSplitVertically(toolWindow.getToolWindowManager().getProject(), anchor)
@@ -350,6 +359,13 @@ public class WebToolWindowPanelImpl extends VaadinComponentDelegate<WebToolWindo
         mySplitters.setComponent(anchor, component);
     }
 
+    private Map<ToolWindowAnchor, ToolWindowInternalDecorator> getAnchorDecorators(WindowInfo info) {
+        if (info.isSliding()) {
+            return myAnchor2Sliding;
+        }
+        return info.isSplit() ? myAnchor2Secondary : myAnchor2Primary;
+    }
+
     @RequiredUIAccess
     private void setDocumentComponent(Component component) {
         mySplitters.setDocumentComponent(component);
@@ -370,7 +386,14 @@ public class WebToolWindowPanelImpl extends VaadinComponentDelegate<WebToolWindo
     @Override
     @RequiredUIAccess
     public void removeButton(String id) {
-        // todo
+        WebToolWindowStripeButtonImpl button = myId2Button.remove(id);
+        if (button == null) {
+            return;
+        }
+
+        for (WebToolWindowStripeImpl stripe : List.of(myTopStripe, myLeftStripe, myBottomStripe, myRightStripe)) {
+            stripe.removeButton(button);
+        }
     }
 
     @Override
@@ -382,11 +405,8 @@ public class WebToolWindowPanelImpl extends VaadinComponentDelegate<WebToolWindo
         myDecorator2Info.remove(decorator);
         myId2Decorator.remove(id);
 
-        if (info.isDocked()) {
+        if (info.isDocked() || info.isSliding()) {
             new RemoveDockedComponentCmd(info, dirtyMode).run();
-        }
-        else if (info.isSliding()) {
-            //return new RemoveSlidingComponentCmd(decorator, info, dirtyMode, finishCallBack);
         }
         else {
             throw new IllegalArgumentException("Unknown window type");
@@ -410,11 +430,8 @@ public class WebToolWindowPanelImpl extends VaadinComponentDelegate<WebToolWindo
         myDecorator2Info.put(decorator, copiedInfo);
         myId2Decorator.put(id, decorator);
 
-        if (info.isDocked()) {
+        if (info.isDocked() || info.isSliding()) {
             new AddDockedComponentCmd(decorator, copiedInfo, dirtyMode).run();
-        }
-        else if (info.isSliding()) {
-            //return new AddSlidingComponentCmd((DesktopInternalDecorator)decorator, info, dirtyMode, finishCallBack);
         }
         else {
             throw new IllegalArgumentException("Unknown window type: " + info.getType());

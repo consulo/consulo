@@ -70,4 +70,14 @@ public class WebToolWindowStripeImpl extends VaadinComponentDelegate<WebToolWind
       vaadinComponent.add(TargetVaadin.to(stripeButton.getComponent()));
     }
   }
+
+  public void removeButton(ToolWindowStripeButton button) {
+    Vaadin vaadinComponent = getVaadinComponent();
+
+    if (!vaadinComponent.myButtons.remove(button)) {
+      return;
+    }
+
+    vaadinComponent.remove(TargetVaadin.to(button.getComponent()));
+  }
 }

@@ -96,6 +96,19 @@ public class DesktopQtToolWindowStripeImpl implements PseudoComponent {
     }
 
     @RequiredUIAccess
+    public void removeButton(ToolWindowStripeButton button) {
+        if (!myButtons.remove(button)) {
+            return;
+        }
+
+        Component component = button.getComponent();
+        myPrimaryLayout.remove(component);
+        mySplitLayout.remove(component);
+
+        updateBorder();
+    }
+
+    @RequiredUIAccess
     private void updateBorder() {
         boolean bordered = !myButtons.isEmpty();
         if (bordered == myBordered) {

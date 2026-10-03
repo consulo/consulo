@@ -21,13 +21,17 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.LayoutConstraint;
 import consulo.ui.layout.SplitLayoutPosition;
 import consulo.ui.layout.ThreeComponentSplitLayout;
+import io.qt.core.QSize;
 import io.qt.core.Qt;
+import io.qt.gui.QResizeEvent;
 import io.qt.widgets.QLayout;
 import io.qt.widgets.QSplitter;
 import io.qt.widgets.QWidget;
 import org.jspecify.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author VISTALL
@@ -39,6 +43,19 @@ public class DesktopQtThreeComponentSplitLayoutImpl extends DesktopQtLayoutCompo
 
     private static final int ourCenterSlot = 1;
 
+    private class QtSplitter extends QSplitter {
+        QtSplitter(Qt.Orientation orientation) {
+            super(orientation);
+        }
+
+        @Override
+        protected void resizeEvent(QResizeEvent event) {
+            super.resizeEvent(event);
+
+            applyWeights(event.size().width(), event.size().height());
+        }
+    }
+
     private final SplitLayoutPosition myPosition;
 
     /**
@@ -48,13 +65,17 @@ public class DesktopQtThreeComponentSplitLayoutImpl extends DesktopQtLayoutCompo
      */
     private final QtComponentDelegate<?>[] myAttached = new QtComponentDelegate<?>[ourSlots.length];
 
+    private final double[] myWeights = new double[ourSlots.length];
+
+    private final boolean[] myPendingWeights = new boolean[ourSlots.length];
+
     public DesktopQtThreeComponentSplitLayoutImpl(SplitLayoutPosition position) {
         myPosition = position;
     }
 
     @Override
     protected QWidget createQt(QWidget parent) {
-        QSplitter splitter = new QSplitter(
+        QSplitter splitter = new QtSplitter(
             myPosition == SplitLayoutPosition.VERTICAL ? Qt.Orientation.Vertical : Qt.Orientation.Horizontal
         );
         splitter.setHandleWidth(1);
@@ -75,9 +96,25 @@ public class DesktopQtThreeComponentSplitLayoutImpl extends DesktopQtLayoutCompo
 
         myAttached[slot] = child;
 
-        splitter.insertWidget(indexOfSlot(slot), child.toQtComponent());
+        QWidget widget = child.toQtComponent();
+        if (myPosition == SplitLayoutPosition.VERTICAL) {
+            widget.setMinimumHeight(1);
+        }
+        else {
+            widget.setMinimumWidth(1);
+        }
+
+        splitter.insertWidget(indexOfSlot(slot), widget);
 
         applyStretch();
+
+        if (slot != ourCenterSlot && myWeights[slot] > 0) {
+            myPendingWeights[slot] = true;
+
+            if (splitter.isVisible()) {
+                applyWeights(splitter.width(), splitter.height());
+            }
+        }
     }
 
     @Override
@@ -125,6 +162,61 @@ public class DesktopQtThreeComponentSplitLayoutImpl extends DesktopQtLayoutCompo
         }
     }
 
+    private void applyWeights(int width, int height) {
+        if (!(myComponent instanceof QSplitter splitter)) {
+            return;
+        }
+
+        List<Integer> sizes = new ArrayList<>(splitter.sizes());
+        if (sizes.size() != splitter.count()) {
+            return;
+        }
+
+        boolean vertical = myPosition == SplitLayoutPosition.VERTICAL;
+        int total = (vertical ? height : width) - splitter.handleWidth() * Math.max(0, splitter.count() - 1);
+        if (total <= 0) {
+            return;
+        }
+
+        boolean changed = false;
+        int sides = 0;
+        for (int slot = 0; slot < myAttached.length; slot++) {
+            if (slot == ourCenterSlot || myAttached[slot] == null) {
+                continue;
+            }
+
+            int index = indexOfSlot(slot);
+            if (myPendingWeights[slot]) {
+                myPendingWeights[slot] = false;
+                sizes.set(index, (int) (total * myWeights[slot]));
+                changed = true;
+            }
+            else if (sizes.get(index) <= 0) {
+                QSize hint = splitter.widget(index).sizeHint();
+                sizes.set(index, vertical ? hint.height() : hint.width());
+            }
+            sides += sizes.get(index);
+        }
+
+        if (!changed) {
+            return;
+        }
+
+        if (myAttached[ourCenterSlot] != null) {
+            sizes.set(indexOfSlot(ourCenterSlot), Math.max(1, total - sides));
+        }
+
+        splitter.setSizes(sizes);
+    }
+
+    public void setFirstWeight(double weight) {
+        myWeights[0] = weight;
+    }
+
+    public void setSecondWeight(double weight) {
+        myWeights[2] = weight;
+    }
+
     @RequiredUIAccess
     private void setSlotComponent(int slot, @Nullable Component component) {
         // the pane which sat here is disposed by addImpl, which takes it out of the splitter as well - the slot
@@ -147,6 +239,7 @@ public class DesktopQtThreeComponentSplitLayoutImpl extends DesktopQtLayoutCompo
         super.disposeQt();
 
         Arrays.fill(myAttached, null);
+        Arrays.fill(myPendingWeights, false);
     }
 
     @Override

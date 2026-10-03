@@ -15,6 +15,7 @@
  */
 package consulo.desktop.qt.wm.impl.toolWindow;
 
+import consulo.desktop.qt.ui.impl.layout.DesktopQtThreeComponentSplitLayoutImpl;
 import consulo.ide.impl.wm.impl.ToolWindowAnchorUtil;
 import consulo.ide.impl.wm.impl.UnifiedToolWindowSplitters;
 import consulo.logging.Logger;
@@ -38,6 +39,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -100,9 +102,9 @@ public class DesktopQtToolWindowPanelImpl implements ToolWindowPanel, PseudoComp
         public void run() {
             ToolWindowAnchor anchor = myInfo.getAnchor();
 
-            (myInfo.isSplit() ? myAnchor2Secondary : myAnchor2Primary).put(anchor, myDecorator);
+            getAnchorDecorators(myInfo).put(anchor, myDecorator);
 
-            updateAnchorComponent(anchor, WindowInfoImpl.normalizeWeight(myInfo.getWeight()));
+            updateAnchorComponent(anchor);
         }
     }
 
@@ -120,9 +122,9 @@ public class DesktopQtToolWindowPanelImpl implements ToolWindowPanel, PseudoComp
         public void run() {
             ToolWindowAnchor anchor = myInfo.getAnchor();
 
-            (myInfo.isSplit() ? myAnchor2Secondary : myAnchor2Primary).remove(anchor);
+            getAnchorDecorators(myInfo).remove(anchor);
 
-            updateAnchorComponent(anchor, WindowInfoImpl.normalizeWeight(myInfo.getWeight()));
+            updateAnchorComponent(anchor);
         }
     }
 
@@ -152,6 +154,7 @@ public class DesktopQtToolWindowPanelImpl implements ToolWindowPanel, PseudoComp
 
     private final Map<ToolWindowAnchor, ToolWindowInternalDecorator> myAnchor2Primary = new HashMap<>();
     private final Map<ToolWindowAnchor, ToolWindowInternalDecorator> myAnchor2Secondary = new HashMap<>();
+    private final Map<ToolWindowAnchor, ToolWindowInternalDecorator> myAnchor2Sliding = new HashMap<>();
 
     private final DockLayout myRoot = DockLayout.create(Space.NONE);
 
@@ -195,12 +198,19 @@ public class DesktopQtToolWindowPanelImpl implements ToolWindowPanel, PseudoComp
      * anchor holds a primary and a split window at once, like the awt panel does.
      */
     @RequiredUIAccess
-    private void updateAnchorComponent(ToolWindowAnchor anchor, float weight) {
+    private void updateAnchorComponent(ToolWindowAnchor anchor) {
         DesktopQtToolWindowInternalDecorator primary = (DesktopQtToolWindowInternalDecorator) myAnchor2Primary.get(anchor);
         DesktopQtToolWindowInternalDecorator secondary = (DesktopQtToolWindowInternalDecorator) myAnchor2Secondary.get(anchor);
+        DesktopQtToolWindowInternalDecorator sliding = (DesktopQtToolWindowInternalDecorator) myAnchor2Sliding.get(anchor);
+
+        DesktopQtToolWindowInternalDecorator placed = sliding != null ? sliding : primary != null ? primary : secondary;
+        float weight = placed == null ? 0 : WindowInfoImpl.normalizeWeight(myDecorator2Info.get(placed).getWeight());
 
         Component component;
-        if (primary != null && secondary != null) {
+        if (sliding != null) {
+            component = sliding.getComponent();
+        }
+        else if (primary != null && secondary != null) {
             ToolWindowBase toolWindow = (ToolWindowBase) primary.getToolWindow();
             TwoComponentSplitLayout splitter = TwoComponentSplitLayout.create(
                 ToolWindowAnchorUtil.isSplitVertically(toolWindow.getToolWindowManager().getProject(), anchor)
@@ -223,7 +233,31 @@ public class DesktopQtToolWindowPanelImpl implements ToolWindowPanel, PseudoComp
             component = null;
         }
 
+        setComponent(component, anchor, weight);
+    }
+
+    @RequiredUIAccess
+    private void setComponent(@Nullable Component component, ToolWindowAnchor anchor, float weight) {
+        ThreeComponentSplitLayout layout = anchor.isHorizontal()
+            ? mySplitters.getVerticalSplitter()
+            : mySplitters.getHorizontalSplitter();
+        if (component != null && layout instanceof DesktopQtThreeComponentSplitLayoutImpl splitter) {
+            if (ToolWindowAnchor.TOP == anchor || ToolWindowAnchor.LEFT == anchor) {
+                splitter.setFirstWeight(weight);
+            }
+            else {
+                splitter.setSecondWeight(weight);
+            }
+        }
+
         mySplitters.setComponent(anchor, component);
+    }
+
+    private Map<ToolWindowAnchor, ToolWindowInternalDecorator> getAnchorDecorators(WindowInfo info) {
+        if (info.isSliding()) {
+            return myAnchor2Sliding;
+        }
+        return info.isSplit() ? myAnchor2Secondary : myAnchor2Primary;
     }
 
     @RequiredUIAccess
@@ -246,7 +280,14 @@ public class DesktopQtToolWindowPanelImpl implements ToolWindowPanel, PseudoComp
     @Override
     @RequiredUIAccess
     public void removeButton(String id) {
-        // todo
+        DesktopQtToolWindowStripeButtonImpl button = myId2Button.remove(id);
+        if (button == null) {
+            return;
+        }
+
+        for (DesktopQtToolWindowStripeImpl stripe : List.of(myTopStripe, myLeftStripe, myBottomStripe, myRightStripe)) {
+            stripe.removeButton(button);
+        }
     }
 
     @Override
@@ -258,11 +299,8 @@ public class DesktopQtToolWindowPanelImpl implements ToolWindowPanel, PseudoComp
         myDecorator2Info.remove(decorator);
         myId2Decorator.remove(id);
 
-        if (info.isDocked()) {
+        if (info.isDocked() || info.isSliding()) {
             new RemoveDockedComponentCmd(info, dirtyMode).run();
-        }
-        else if (info.isSliding()) {
-            // todo
         }
         else {
             throw new IllegalArgumentException("Unknown window type");
@@ -286,11 +324,8 @@ public class DesktopQtToolWindowPanelImpl implements ToolWindowPanel, PseudoComp
         myDecorator2Info.put(decorator, copiedInfo);
         myId2Decorator.put(id, decorator);
 
-        if (info.isDocked()) {
+        if (info.isDocked() || info.isSliding()) {
             new AddDockedComponentCmd(decorator, copiedInfo, dirtyMode).run();
-        }
-        else if (info.isSliding()) {
-            // todo
         }
         else {
             throw new IllegalArgumentException("Unknown window type: " + info.getType());
