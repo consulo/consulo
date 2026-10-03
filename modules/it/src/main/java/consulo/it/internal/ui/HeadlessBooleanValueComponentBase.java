@@ -15,27 +15,25 @@
  */
 package consulo.it.internal.ui;
 
+
 import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
+ * @since 2026-10-03
  */
-final class HeadlessImages {
-    private HeadlessImages() {
+public abstract class HeadlessBooleanValueComponentBase extends HeadlessValueComponentBase<Boolean> {
+    protected HeadlessBooleanValueComponentBase(boolean value) {
+        super(value);
     }
 
-    static @Nullable Object unwrap(@Nullable Object image) {
-        Object current = image;
-        while (true) {
-            if (current instanceof HeadlessLazyImage lazy) {
-                current = lazy.resolve();
-            }
-            else if (current instanceof HeadlessStatedImage<?> stated) {
-                current = stated.resolve();
-            }
-            else {
-                return current;
-            }
-        }
+    @Override
+    protected Boolean normalize(@Nullable Boolean value) {
+        return Boolean.TRUE.equals(value);
+    }
+
+    @Override
+    public Boolean getValue() {
+        return Boolean.TRUE.equals(super.getValue());
     }
 }

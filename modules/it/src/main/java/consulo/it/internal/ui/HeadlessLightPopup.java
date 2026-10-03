@@ -15,27 +15,22 @@
  */
 package consulo.it.internal.ui;
 
-import org.jspecify.annotations.Nullable;
+import consulo.ui.Component;
+import consulo.ui.LightPopup;
+import consulo.ui.PopupOptions;
+import consulo.ui.annotation.RequiredUIAccess;
 
 /**
  * @author VISTALL
  */
-final class HeadlessImages {
-    private HeadlessImages() {
+public class HeadlessLightPopup extends HeadlessPopupBase implements LightPopup {
+    public HeadlessLightPopup(PopupOptions options) {
+        super(options);
     }
 
-    static @Nullable Object unwrap(@Nullable Object image) {
-        Object current = image;
-        while (true) {
-            if (current instanceof HeadlessLazyImage lazy) {
-                current = lazy.resolve();
-            }
-            else if (current instanceof HeadlessStatedImage<?> stated) {
-                current = stated.resolve();
-            }
-            else {
-                return current;
-            }
-        }
+    @Override
+    @RequiredUIAccess
+    public void showBy(Component target) {
+        show(target);
     }
 }

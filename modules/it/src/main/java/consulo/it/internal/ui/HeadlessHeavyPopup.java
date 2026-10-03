@@ -15,27 +15,23 @@
  */
 package consulo.it.internal.ui;
 
+import consulo.ui.HeavyPopup;
+import consulo.ui.PopupOptions;
+import consulo.ui.Window;
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
  */
-final class HeadlessImages {
-    private HeadlessImages() {
+public class HeadlessHeavyPopup extends HeadlessPopupBase implements HeavyPopup {
+    public HeadlessHeavyPopup(PopupOptions options) {
+        super(options);
     }
 
-    static @Nullable Object unwrap(@Nullable Object image) {
-        Object current = image;
-        while (true) {
-            if (current instanceof HeadlessLazyImage lazy) {
-                current = lazy.resolve();
-            }
-            else if (current instanceof HeadlessStatedImage<?> stated) {
-                current = stated.resolve();
-            }
-            else {
-                return current;
-            }
-        }
+    @Override
+    @RequiredUIAccess
+    public void showInCenterOf(@Nullable Window window) {
+        show(window);
     }
 }

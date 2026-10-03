@@ -17,44 +17,49 @@ package consulo.it.internal.ui;
 
 import consulo.ui.Component;
 import consulo.ui.StaticPosition;
-import consulo.ui.layout.DockLayout;
-import consulo.ui.layout.Layout;
+import consulo.ui.layout.TableLayout;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Dummy-but-creatable headless {@link DockLayout}.
- *
  * @author VISTALL
  */
-public class HeadlessDockLayout extends HeadlessLayoutBase<StaticPosition> implements DockLayout {
-    private final Map<StaticPosition, Component> myPositions = new ConcurrentHashMap<>();
+public class HeadlessTableLayout extends HeadlessLayoutBase<TableLayout.TableCell> implements TableLayout {
+    private final StaticPosition myFillOption;
+    private final Map<Component, TableCell> myCells = new ConcurrentHashMap<>();
+
+    public HeadlessTableLayout(StaticPosition fillOption) {
+        myFillOption = fillOption;
+    }
+
+    public StaticPosition getFillOption() {
+        return myFillOption;
+    }
+
+    public @Nullable TableCell getCell(Component component) {
+        return myCells.get(component);
+    }
 
     @Override
-    public Layout<StaticPosition> add(Component component, StaticPosition constraint) {
-        Component previous = myPositions.put(constraint, component);
-        if (previous == component) {
-            return this;
+    public TableLayout add(Component component, TableCell constraint) {
+        if (myCells.put(component, constraint) != null) {
+            super.remove(component);
         }
-        if (previous != null) {
-            super.remove(previous);
-        }
-        myPositions.entrySet().removeIf(entry -> entry.getKey() != constraint && entry.getValue() == component);
-        super.remove(component);
         addChild(component);
         return this;
     }
 
     @Override
     public void remove(Component component) {
-        myPositions.values().remove(component);
+        myCells.remove(component);
         super.remove(component);
     }
 
     @Override
     public void removeAll() {
-        myPositions.clear();
+        myCells.clear();
         super.removeAll();
     }
 }

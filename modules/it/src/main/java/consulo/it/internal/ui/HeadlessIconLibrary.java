@@ -15,27 +15,38 @@
  */
 package consulo.it.internal.ui;
 
-import org.jspecify.annotations.Nullable;
+import consulo.localize.LocalizeValue;
+import consulo.ui.image.IconLibrary;
 
 /**
  * @author VISTALL
  */
-final class HeadlessImages {
-    private HeadlessImages() {
+public final class HeadlessIconLibrary implements IconLibrary {
+    private final String myId;
+    private final boolean myDark;
+
+    public HeadlessIconLibrary(String id, boolean dark) {
+        myId = id;
+        myDark = dark;
     }
 
-    static @Nullable Object unwrap(@Nullable Object image) {
-        Object current = image;
-        while (true) {
-            if (current instanceof HeadlessLazyImage lazy) {
-                current = lazy.resolve();
-            }
-            else if (current instanceof HeadlessStatedImage<?> stated) {
-                current = stated.resolve();
-            }
-            else {
-                return current;
-            }
-        }
+    @Override
+    public String getId() {
+        return myId;
+    }
+
+    @Override
+    public LocalizeValue getName() {
+        return LocalizeValue.of(myId);
+    }
+
+    @Override
+    public boolean isDark() {
+        return myDark;
+    }
+
+    @Override
+    public String toString() {
+        return myId;
     }
 }

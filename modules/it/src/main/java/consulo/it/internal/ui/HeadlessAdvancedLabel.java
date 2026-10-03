@@ -15,26 +15,29 @@
  */
 package consulo.it.internal.ui;
 
-import consulo.ui.ListBox;
+
+import consulo.ui.AdvancedLabel;
+import consulo.ui.TextItemPresentation;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.model.FlatDataModel;
+
+import java.util.function.Consumer;
 
 /**
- * Dummy-but-creatable headless {@link ListBox}.
- *
  * @author VISTALL
+ * @since 2026-10-03
  */
-public class HeadlessListBox<E> extends HeadlessListBoxBase<E, E> implements ListBox<E> {
-    public HeadlessListBox(FlatDataModel<E> model) {
-        super(model);
-    }
+public class HeadlessAdvancedLabel extends HeadlessComponentBase implements AdvancedLabel {
+    private HeadlessTextItemPresentation myPresentation = new HeadlessTextItemPresentation();
 
     @Override
-    @RequiredUIAccess
-    public void setValueByIndex(int index) {
-        FlatDataModel<E> model = getDataModel();
-        if (index >= 0 && index < model.getSize()) {
-            setValue(model.get(index));
-        }
+    public AdvancedLabel updatePresentation(@RequiredUIAccess Consumer<TextItemPresentation> consumer) {
+        HeadlessTextItemPresentation presentation = new HeadlessTextItemPresentation();
+        consumer.accept(presentation);
+        myPresentation = presentation;
+        return this;
+    }
+
+    public HeadlessTextItemPresentation getPresentation() {
+        return myPresentation;
     }
 }

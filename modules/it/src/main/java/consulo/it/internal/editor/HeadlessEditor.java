@@ -47,6 +47,7 @@ import consulo.ui.layout.VerticalLayout;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.JComponent;
+import javax.swing.JPanel;
 import javax.swing.border.Border;
 import java.awt.Dimension;
 import java.awt.Insets;
@@ -76,6 +77,10 @@ public class HeadlessEditor extends CodeEditorBase {
     private @Nullable HeadlessEditorGutter myGutter;
 
     private @Nullable Component myUIComponent;
+
+    private @Nullable JComponent myComponent;
+
+    private @Nullable JComponent myContentComponent;
 
     private @Nullable LogicalPositionCache myLogicalPositionCache;
 
@@ -244,12 +249,22 @@ public class HeadlessEditor extends CodeEditorBase {
 
     @Override
     public JComponent getComponent() {
-        throw new UnsupportedOperationException("headless: the editor has no component");
+        JComponent component = myComponent;
+        if (component == null) {
+            component = new JPanel();
+            myComponent = component;
+        }
+        return component;
     }
 
     @Override
     public JComponent getContentComponent() {
-        throw new UnsupportedOperationException("headless: the editor has no content component");
+        JComponent component = myContentComponent;
+        if (component == null) {
+            component = new JPanel();
+            myContentComponent = component;
+        }
+        return component;
     }
 
     @Override

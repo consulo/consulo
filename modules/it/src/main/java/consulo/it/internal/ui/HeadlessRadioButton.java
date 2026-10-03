@@ -15,20 +15,22 @@
  */
 package consulo.it.internal.ui;
 
+
 import consulo.localize.LocalizeValue;
-import consulo.ui.CheckBox;
-import consulo.ui.CheckBoxStyle;
+import consulo.ui.RadioButton;
+import consulo.ui.annotation.RequiredUIAccess;
 
 /**
- * Dummy-but-creatable headless {@link CheckBox}.
- *
  * @author VISTALL
+ * @since 2026-10-03
  */
-public class HeadlessCheckBox extends HeadlessBooleanValueComponentBase implements CheckBox {
-    private LocalizeValue myLabelText = LocalizeValue.empty();
+public class HeadlessRadioButton extends HeadlessBooleanValueComponentBase implements RadioButton {
+    private LocalizeValue myLabelText;
+    private boolean myFocusable = true;
 
-    public HeadlessCheckBox() {
-        super(false);
+    public HeadlessRadioButton(LocalizeValue text, boolean selected) {
+        super(selected);
+        myLabelText = text;
     }
 
     @Override
@@ -37,8 +39,9 @@ public class HeadlessCheckBox extends HeadlessBooleanValueComponentBase implemen
     }
 
     @Override
-    public void setLabelText(LocalizeValue labelText) {
-        myLabelText = labelText;
+    @RequiredUIAccess
+    public void setLabelText(LocalizeValue text) {
+        myLabelText = text;
     }
 
     @Override
@@ -52,14 +55,11 @@ public class HeadlessCheckBox extends HeadlessBooleanValueComponentBase implemen
 
     @Override
     public void setFocusable(boolean focusable) {
+        myFocusable = focusable;
     }
 
     @Override
     public boolean isFocusable() {
-        return false;
-    }
-
-    @Override
-    public void addStyle(CheckBoxStyle style) {
+        return myFocusable;
     }
 }

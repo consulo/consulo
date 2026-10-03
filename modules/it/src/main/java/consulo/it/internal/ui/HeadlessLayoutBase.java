@@ -40,6 +40,15 @@ public abstract class HeadlessLayoutBase<C extends LayoutConstraint> extends Hea
      */
     protected void addChild(Component component) {
         myChildren.add(component);
+        if (component instanceof HeadlessComponentBase child) {
+            child.setParentComponent(this);
+        }
+    }
+
+    private void detachChild(Component component) {
+        if (component instanceof HeadlessComponentBase child && child.getParent() == this) {
+            child.setParentComponent(null);
+        }
     }
 
     @Override
@@ -50,12 +59,16 @@ public abstract class HeadlessLayoutBase<C extends LayoutConstraint> extends Hea
 
     @Override
     public void remove(Component component) {
-        myChildren.remove(component);
+        if (myChildren.remove(component)) {
+            detachChild(component);
+        }
     }
 
     @Override
     public void removeAll() {
+        List<Component> children = List.copyOf(myChildren);
         myChildren.clear();
+        children.forEach(this::detachChild);
     }
 
     @Override

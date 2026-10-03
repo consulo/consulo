@@ -15,20 +15,46 @@
  */
 package consulo.it.internal.ui;
 
+
 import consulo.localize.LocalizeValue;
-import consulo.ui.CheckBox;
 import consulo.ui.CheckBoxStyle;
+import consulo.ui.TriStateCheckBox;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.lang.ThreeState;
+import org.jspecify.annotations.Nullable;
 
 /**
- * Dummy-but-creatable headless {@link CheckBox}.
- *
  * @author VISTALL
+ * @since 2026-10-03
  */
-public class HeadlessCheckBox extends HeadlessBooleanValueComponentBase implements CheckBox {
+public class HeadlessTriStateCheckBox extends HeadlessValueComponentBase<ThreeState> implements TriStateCheckBox {
     private LocalizeValue myLabelText = LocalizeValue.empty();
+    private boolean myUnsureEnabled = true;
+    private boolean myFocusable = true;
 
-    public HeadlessCheckBox() {
-        super(false);
+    public HeadlessTriStateCheckBox() {
+        super(ThreeState.UNSURE);
+    }
+
+    @Override
+    protected ThreeState normalize(@Nullable ThreeState value) {
+        return value == null ? ThreeState.UNSURE : value;
+    }
+
+    @Override
+    public ThreeState getValue() {
+        return normalize(super.getValue());
+    }
+
+    @Override
+    public boolean isUnsureEnabled() {
+        return myUnsureEnabled;
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void setUnsureEnabled(boolean unsureEnabled) {
+        myUnsureEnabled = unsureEnabled;
     }
 
     @Override
@@ -37,8 +63,13 @@ public class HeadlessCheckBox extends HeadlessBooleanValueComponentBase implemen
     }
 
     @Override
+    @RequiredUIAccess
     public void setLabelText(LocalizeValue labelText) {
         myLabelText = labelText;
+    }
+
+    @Override
+    public void addStyle(CheckBoxStyle style) {
     }
 
     @Override
@@ -52,14 +83,11 @@ public class HeadlessCheckBox extends HeadlessBooleanValueComponentBase implemen
 
     @Override
     public void setFocusable(boolean focusable) {
+        myFocusable = focusable;
     }
 
     @Override
     public boolean isFocusable() {
-        return false;
-    }
-
-    @Override
-    public void addStyle(CheckBoxStyle style) {
+        return myFocusable;
     }
 }

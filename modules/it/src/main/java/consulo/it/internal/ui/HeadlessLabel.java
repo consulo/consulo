@@ -97,18 +97,15 @@ public class HeadlessLabel extends HeadlessComponentBase implements Label {
     @RequiredUIAccess
     @Override
     public void setWidth(Length width) {
-        throw new UnsupportedOperationException();
     }
 
     @RequiredUIAccess
     @Override
     public void setHeight(Length height) {
-        throw new UnsupportedOperationException();
     }
 
     @RequiredUIAccess
     @Override
     public void setMinHeight(Length height) {
-        throw new UnsupportedOperationException();
     }
 }

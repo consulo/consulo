@@ -18,15 +18,23 @@ package consulo.it.internal;
 import consulo.ui.internal.BaseRadioGroup;
 import consulo.ui.RadioGroup;
 import consulo.application.impl.internal.ModalityStateImpl;
+import consulo.disposer.Disposable;
 import consulo.it.internal.ui.*;
 import consulo.localize.LocalizeValue;
 import consulo.ui.*;
 import consulo.ui.color.ColorValue;
+import consulo.ui.event.ModalityStateListener;
+import consulo.ui.ex.ComboBoxWithCustomPopup;
 import consulo.ui.font.FontManager;
+import consulo.ui.graph.Graph;
+import consulo.ui.graph.GraphModel;
 import consulo.ui.image.EmptyImage;
+import consulo.ui.image.IconLibraryManager;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageKey;
+import consulo.ui.image.ImageState;
 import consulo.ui.image.canvas.Canvas2D;
+import consulo.ui.image.viewer.ImageViewer;
 import consulo.ui.ex.internal.UIInternalEx;
 import consulo.ui.internal.UIInternal;
 import consulo.ui.layout.*;
@@ -36,6 +44,8 @@ import consulo.ui.model.MutableFlatDataModel;
 import consulo.ui.style.StyleManager;
 import org.jspecify.annotations.Nullable;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
@@ -52,9 +62,28 @@ import consulo.ui.impl.ScriptedInputBoxBuilder;
  * @author VISTALL
  */
 public class HeadlessUIInternal extends UIInternal implements UIInternalEx {
+    private final HeadlessIconLibraryManager myIconLibraryManager = new HeadlessIconLibraryManager();
+    private final HeadlessFocusManager myFocusManager = new HeadlessFocusManager();
+    private final HeadlessTaskBar myTaskBar = new HeadlessTaskBar();
+
     @Override
     public CheckBox _Components_checkBox() {
         return new HeadlessCheckBox();
+    }
+
+    @Override
+    public TriStateCheckBox _Components_triStateCheckBox() {
+        return new HeadlessTriStateCheckBox();
+    }
+
+    @Override
+    public ToggleSwitch _Components_toggleSwitch(boolean selected) {
+        return new HeadlessToggleSwitch(selected);
+    }
+
+    @Override
+    public RadioButton _Components_radioButton(LocalizeValue text, boolean selected) {
+        return new HeadlessRadioButton(text, selected);
     }
 
     @Override
@@ -65,6 +94,11 @@ public class HeadlessUIInternal extends UIInternal implements UIInternalEx {
     @Override
     public DockLayout _Layouts_dock(Space gapInPixels) {
         return new HeadlessDockLayout();
+    }
+
+    @Override
+    public TableLayout _Layouts_table(StaticPosition fillOption) {
+        return new HeadlessTableLayout(fillOption);
     }
 
     @Override
@@ -113,8 +147,38 @@ public class HeadlessUIInternal extends UIInternal implements UIInternalEx {
     }
 
     @Override
+    public <L extends Layout> LoadingLayout<L> _Layouts_LoadingLayout(L innerLayout, Disposable parent) {
+        return new HeadlessLoadingLayout<>(innerLayout, parent);
+    }
+
+    @Override
+    public ToggleButton _Components_toggleButton(LocalizeValue text) {
+        return new HeadlessToggleButton(text);
+    }
+
+    @Override
+    public Hyperlink _Components_hyperlink(LocalizeValue text) {
+        return new HeadlessHyperlink(text);
+    }
+
+    @Override
+    public Separator _Separator_create(SeparatorStyle style) {
+        return new HeadlessSeparator(style);
+    }
+
+    @Override
+    public HtmlView _Components_htmlView() {
+        return new HeadlessHtmlView();
+    }
+
+    @Override
     public Label _Components_label(LocalizeValue text, LabelOptions options) {
         return new HeadlessLabel(text);
+    }
+
+    @Override
+    public AdvancedLabel _Components_advancedLabel() {
+        return new HeadlessAdvancedLabel();
     }
 
     @Override
@@ -133,8 +197,28 @@ public class HeadlessUIInternal extends UIInternal implements UIInternalEx {
     }
 
     @Override
+    public <E> ComboBoxWithCustomPopup<E> _Components_comboBoxWithCustomPopup(FlatDataModel<E> model) {
+        return new HeadlessComboBoxWithCustomPopup<>(model);
+    }
+
+    @Override
     public TextBox _Components_textBox(String text) {
         return new HeadlessTextBox(text);
+    }
+
+    @Override
+    public TextBoxWithHistory _Components_textBoxWithHistory(String text) {
+        return new HeadlessTextBoxWithHistory(text);
+    }
+
+    @Override
+    public TextArea _Components_textArea(String text) {
+        return new HeadlessTextArea(text);
+    }
+
+    @Override
+    public PasswordBox _Components_passwordBox(@Nullable String passwordText) {
+        return new HeadlessPasswordBox(passwordText);
     }
 
     @Override
@@ -148,6 +232,16 @@ public class HeadlessUIInternal extends UIInternal implements UIInternalEx {
     }
 
     @Override
+    public IntSlider _Components_intSlider(int min, int max, int value) {
+        return new HeadlessIntSlider(min, max, value);
+    }
+
+    @Override
+    public DatePicker _Components_datePicker(@Nullable String datePattern) {
+        return new HeadlessDatePicker(datePattern);
+    }
+
+    @Override
     public <E> ListBox<E> _Components_listBox(FlatDataModel<E> model) {
         return new HeadlessListBox<>(model);
     }
@@ -158,8 +252,23 @@ public class HeadlessUIInternal extends UIInternal implements UIInternalEx {
     }
 
     @Override
+    public <E> ListBox<E> _Components_popupListBox(FlatDataModel<E> model) {
+        return new HeadlessPopupListBox<>(model);
+    }
+
+    @Override
+    public <T> Table<T> _Table_create(FlatDataModel<T> model) {
+        return new HeadlessTable<>(model);
+    }
+
+    @Override
     public <E> Tree<E> _Components_tree(@Nullable E rootValue, TreeModel<E> model, TreeExecutor executor) {
         return new HeadlessTree<>(rootValue, model, executor);
+    }
+
+    @Override
+    public <E> Graph<E> _Components_graph(GraphModel<E> model) {
+        return new HeadlessGraph<>(model);
     }
 
     @Override
@@ -168,8 +277,18 @@ public class HeadlessUIInternal extends UIInternal implements UIInternalEx {
     }
 
     @Override
+    public ImageViewer _Components_imageViewer() {
+        return new HeadlessImageViewer();
+    }
+
+    @Override
     public ColorBox _Components_colorBox(@Nullable ColorValue colorValue) {
         return new HeadlessColorBox(colorValue);
+    }
+
+    @Override
+    public ColorPickerBuilder _ColorPicker_create() {
+        return new HeadlessColorPickerBuilder();
     }
 
     @Override
@@ -180,6 +299,17 @@ public class HeadlessUIInternal extends UIInternal implements UIInternalEx {
     @Override
     public Image _Image_lazy(Supplier<Image> imageSupplier) {
         return new HeadlessLazyImage(imageSupplier);
+    }
+
+    @Override
+    public Image _Image_fromStream(Image.ImageType imageType, InputStream stream) throws IOException {
+        stream.readAllBytes();
+        return new HeadlessImage();
+    }
+
+    @Override
+    public <S> Image _Image_stated(ImageState<S> state, Function<S, Image> funcCall) {
+        return new HeadlessStatedImage<>(state, funcCall);
     }
 
     @Override
@@ -233,6 +363,21 @@ public class HeadlessUIInternal extends UIInternal implements UIInternalEx {
     }
 
     @Override
+    public MenuItem _MenuItem_create(LocalizeValue text) {
+        return new HeadlessMenuItem(text);
+    }
+
+    @Override
+    public Menu _Menu_create(LocalizeValue text) {
+        return new HeadlessMenu(text);
+    }
+
+    @Override
+    public PopupMenu _PopupMenu_create(Component target) {
+        return new HeadlessPopupMenu(target);
+    }
+
+    @Override
     public MenuSeparator _MenuSeparator_create() {
         return new HeadlessMenuSeparator();
     }
@@ -244,6 +389,16 @@ public class HeadlessUIInternal extends UIInternal implements UIInternalEx {
     }
 
     @Override
+    public LightPopup _LightPopup_create(PopupOptions options) {
+        return new HeadlessLightPopup(options);
+    }
+
+    @Override
+    public HeavyPopup _HeavyPopup_create(PopupOptions options) {
+        return new HeadlessHeavyPopup(options);
+    }
+
+    @Override
     public StyleManager _StyleManager_get() {
         return new HeadlessStyleManager();
     }
@@ -251,6 +406,21 @@ public class HeadlessUIInternal extends UIInternal implements UIInternalEx {
     @Override
     public FontManager _FontManager_get() {
         return new HeadlessFontManager();
+    }
+
+    @Override
+    public IconLibraryManager _IconLibraryManager_get() {
+        return myIconLibraryManager;
+    }
+
+    @Override
+    public TaskBar _TaskBar_get() {
+        return myTaskBar;
+    }
+
+    @Override
+    public FocusManager _FocusManager_get() {
+        return myFocusManager;
     }
 
     @Override
@@ -301,6 +471,10 @@ public class HeadlessUIInternal extends UIInternal implements UIInternalEx {
     @Override
     public ModalityState _ModalityState_nonModal() {
         return ModalityStateImpl.NON_MODAL;
+    }
+
+    @Override
+    public void addModalityStateListener(ModalityStateListener listener, Disposable parentDisposable) {
     }
 
     @Override

@@ -16,6 +16,7 @@
 package consulo.it.internal.ui;
 
 import consulo.ui.ComboBox;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.model.FlatDataModel;
 
 /**
@@ -29,6 +30,11 @@ public class HeadlessComboBox<E> extends HeadlessComboBoxBase<E, E> implements C
     }
 
     @Override
+    @RequiredUIAccess
     public void setValueByIndex(int index) {
+        FlatDataModel<E> model = getDataModel();
+        if (index >= 0 && index < model.getSize()) {
+            setValue(model.get(index));
+        }
     }
 }

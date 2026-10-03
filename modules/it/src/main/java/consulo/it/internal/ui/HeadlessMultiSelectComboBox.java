@@ -21,6 +21,7 @@ import consulo.ui.model.FlatDataModel;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * Dummy-but-creatable headless {@link MultiSelectComboBox}: the value is the given items that are in the model, in model order.
@@ -45,5 +46,9 @@ public class HeadlessMultiSelectComboBox<E> extends HeadlessComboBoxBase<E, List
 
     @Override
     public void setPlaceholder(LocalizeValue text) {
+    }
+
+    @Override
+    public void setSummaryRenderer(Function<List<E>, LocalizeValue> renderer) {
     }
 }

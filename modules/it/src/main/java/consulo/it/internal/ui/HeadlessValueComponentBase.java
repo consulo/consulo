@@ -16,7 +16,11 @@
 package consulo.it.internal.ui;
 
 import consulo.ui.ValueComponent;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.ValueComponentEvent;
 import org.jspecify.annotations.Nullable;
+
+import java.util.Objects;
 
 /**
  * Base for dummy-but-creatable headless {@link ValueComponent}s: holds a single value field.
@@ -33,13 +37,26 @@ public abstract class HeadlessValueComponentBase<V> extends HeadlessComponentBas
         myValue = value;
     }
 
+    protected @Nullable V normalize(@Nullable V value) {
+        return value;
+    }
+
     @Override
     public @Nullable V getValue() {
         return myValue;
     }
 
     @Override
+    @RequiredUIAccess
+    @SuppressWarnings("unchecked")
     public void setValue(@Nullable V value, boolean fireListeners) {
-        myValue = value;
+        V newValue = normalize(value);
+        if (Objects.equals(myValue, newValue)) {
+            return;
+        }
+        myValue = newValue;
+        if (fireListeners) {
+            getListenerDispatcher(ValueComponentEvent.class).onEvent(new ValueComponentEvent<>(this, newValue));
+        }
     }
 }

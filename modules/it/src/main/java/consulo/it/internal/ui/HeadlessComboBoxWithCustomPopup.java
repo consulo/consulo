@@ -15,27 +15,14 @@
  */
 package consulo.it.internal.ui;
 
-import org.jspecify.annotations.Nullable;
+import consulo.ui.ex.ComboBoxWithCustomPopup;
+import consulo.ui.model.FlatDataModel;
 
 /**
  * @author VISTALL
  */
-final class HeadlessImages {
-    private HeadlessImages() {
-    }
-
-    static @Nullable Object unwrap(@Nullable Object image) {
-        Object current = image;
-        while (true) {
-            if (current instanceof HeadlessLazyImage lazy) {
-                current = lazy.resolve();
-            }
-            else if (current instanceof HeadlessStatedImage<?> stated) {
-                current = stated.resolve();
-            }
-            else {
-                return current;
-            }
-        }
+public class HeadlessComboBoxWithCustomPopup<E> extends HeadlessComboBox<E> implements ComboBoxWithCustomPopup<E> {
+    public HeadlessComboBoxWithCustomPopup(FlatDataModel<E> model) {
+        super(model);
     }
 }

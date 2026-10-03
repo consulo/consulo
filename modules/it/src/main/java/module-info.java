@@ -34,6 +34,7 @@ module consulo.it {
     requires consulo.language.index.impl;
     requires consulo.language.editor.api;
     requires consulo.language.editor.impl;
+    requires consulo.language.editor.ui.api;
     requires consulo.platform.api;
     requires consulo.platform.impl;
     requires consulo.localization.api;

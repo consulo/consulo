@@ -20,6 +20,7 @@ import consulo.it.internal.HeadlessUIAccess;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.HasSize;
+import consulo.ui.Length;
 import consulo.ui.Size2D;
 import consulo.ui.BorderBuilder;
 import consulo.ui.PaddingBuilder;
@@ -27,6 +28,7 @@ import consulo.ui.UIAccess;
 import consulo.ui.impl.BorderBuilderImpl;
 import consulo.ui.impl.PaddingBuilderImpl;
 import consulo.ui.color.ColorValue;
+import consulo.ui.cursor.Cursor;
 import consulo.ui.event.ComponentEvent;
 import consulo.ui.event.ComponentEventListener;
 import consulo.ui.font.Font;
@@ -51,6 +53,9 @@ public abstract class HeadlessComponentBase implements Component, HasSize {
     private boolean myVisible = true;
     private boolean myEnabled = true;
     private @Nullable Component myParent;
+    private @Nullable ColorValue myForegroundColor;
+    private @Nullable ColorValue myBackgroundColor;
+    private @Nullable Cursor myCursor;
 
     protected void setParentComponent(@Nullable Component parent) {
         myParent = parent;
@@ -125,6 +130,52 @@ public abstract class HeadlessComponentBase implements Component, HasSize {
     }
 
     public void setAccessibleDescription(consulo.localize.LocalizeValue description) {
+    }
+
+    @Override
+    public void setWidth(Length width) {
+    }
+
+    @Override
+    public void setHeight(Length height) {
+    }
+
+    @Override
+    public void setMinWidth(Length width) {
+    }
+
+    @Override
+    public void setMinHeight(Length height) {
+    }
+
+    @Override
+    public @Nullable ColorValue getForegroundColor() {
+        return myForegroundColor;
+    }
+
+    @Override
+    public void setForegroundColor(@Nullable ColorValue foreground) {
+        myForegroundColor = foreground;
+    }
+
+    @Override
+    public @Nullable ColorValue getBackgroundColor() {
+        return myBackgroundColor;
+    }
+
+    @Override
+    public void setBackgroundColor(@Nullable ColorValue background) {
+        myBackgroundColor = background;
+    }
+
+    @Override
+    public @Nullable Cursor getCursor() {
+        return myCursor;
+    }
+
+    @Override
+    public void setCursor(@Nullable Cursor cursor) {
+        myCursor = cursor;
     }
 
     @Override

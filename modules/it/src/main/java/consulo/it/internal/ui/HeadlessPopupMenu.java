@@ -16,50 +16,46 @@
 package consulo.it.internal.ui;
 
 import consulo.localize.LocalizeValue;
-import consulo.ui.CheckBox;
-import consulo.ui.CheckBoxStyle;
+import consulo.ui.Component;
+import consulo.ui.PopupMenu;
 
 /**
- * Dummy-but-creatable headless {@link CheckBox}.
- *
  * @author VISTALL
  */
-public class HeadlessCheckBox extends HeadlessBooleanValueComponentBase implements CheckBox {
-    private LocalizeValue myLabelText = LocalizeValue.empty();
+public class HeadlessPopupMenu extends HeadlessMenu implements PopupMenu {
+    private final Component myTarget;
+    private boolean myShowing;
+    private boolean myOpenOnClick;
 
-    public HeadlessCheckBox() {
-        super(false);
+    public HeadlessPopupMenu(Component target) {
+        super(LocalizeValue.empty());
+        myTarget = target;
+    }
+
+    public Component getTarget() {
+        return myTarget;
+    }
+
+    public boolean isShowing() {
+        return myShowing;
+    }
+
+    public boolean isOpenOnClick() {
+        return myOpenOnClick;
     }
 
     @Override
-    public LocalizeValue getLabelText() {
-        return myLabelText;
+    public void show(int relativeX, int relativeY) {
+        myShowing = true;
     }
 
     @Override
-    public void setLabelText(LocalizeValue labelText) {
-        myLabelText = labelText;
+    public void hide() {
+        myShowing = false;
     }
 
     @Override
-    public boolean hasFocus() {
-        return false;
-    }
-
-    @Override
-    public void focus() {
-    }
-
-    @Override
-    public void setFocusable(boolean focusable) {
-    }
-
-    @Override
-    public boolean isFocusable() {
-        return false;
-    }
-
-    @Override
-    public void addStyle(CheckBoxStyle style) {
+    public void setOpenOnClick(boolean openOnClick) {
+        myOpenOnClick = openOnClick;
     }
 }

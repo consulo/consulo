@@ -60,7 +60,7 @@ public class HeadlessTargetAWTFacade implements TargetAWTFacade {
 
     @Override
     public Dimension to(Size2D size) {
-        throw new UnsupportedOperationException();
+        return new Dimension(size.width(), size.height());
     }
 
     @Override
@@ -75,7 +75,10 @@ public class HeadlessTargetAWTFacade implements TargetAWTFacade {
 
     @Override
     public Rectangle to(@Nullable Rectangle2D rectangle2D) {
-        throw new UnsupportedOperationException();
+        if (rectangle2D == null) {
+            return null;
+        }
+        return new Rectangle(rectangle2D.minX(), rectangle2D.minY(), rectangle2D.width(), rectangle2D.height());
     }
 
     @Override
@@ -104,7 +107,10 @@ public class HeadlessTargetAWTFacade implements TargetAWTFacade {
 
     @Override
     public Rectangle2D from(@Nullable Rectangle rectangle) {
-        throw new UnsupportedOperationException();
+        if (rectangle == null) {
+            return null;
+        }
+        return new Rectangle2D(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
     }
 
     @Override
@@ -148,7 +154,7 @@ public class HeadlessTargetAWTFacade implements TargetAWTFacade {
 
     @Override
     public Font to(consulo.ui.font.Font font) {
-        throw new UnsupportedOperationException();
+        return new Font(font.getName(), font.getFontStyle(), font.getFontSize());
     }
 
     @Override

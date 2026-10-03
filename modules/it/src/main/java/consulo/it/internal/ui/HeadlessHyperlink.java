@@ -16,50 +16,43 @@
 package consulo.it.internal.ui;
 
 import consulo.localize.LocalizeValue;
-import consulo.ui.CheckBox;
-import consulo.ui.CheckBoxStyle;
+import consulo.ui.Hyperlink;
+import consulo.ui.event.HyperlinkEvent;
+import consulo.ui.image.Image;
+import org.jspecify.annotations.Nullable;
 
 /**
- * Dummy-but-creatable headless {@link CheckBox}.
- *
  * @author VISTALL
  */
-public class HeadlessCheckBox extends HeadlessBooleanValueComponentBase implements CheckBox {
-    private LocalizeValue myLabelText = LocalizeValue.empty();
+public class HeadlessHyperlink extends HeadlessComponentBase implements Hyperlink {
+    private LocalizeValue myText;
+    private @Nullable Image myIcon;
 
-    public HeadlessCheckBox() {
-        super(false);
+    public HeadlessHyperlink(LocalizeValue text) {
+        myText = text;
+    }
+
+    public void click() {
+        getListenerDispatcher(HyperlinkEvent.class).onEvent(new HyperlinkEvent(this, ""));
     }
 
     @Override
-    public LocalizeValue getLabelText() {
-        return myLabelText;
+    public LocalizeValue getText() {
+        return myText;
     }
 
     @Override
-    public void setLabelText(LocalizeValue labelText) {
-        myLabelText = labelText;
+    public void setText(LocalizeValue text) {
+        myText = text;
     }
 
     @Override
-    public boolean hasFocus() {
-        return false;
+    public void setIcon(@Nullable Image icon) {
+        myIcon = icon;
     }
 
     @Override
-    public void focus() {
-    }
-
-    @Override
-    public void setFocusable(boolean focusable) {
-    }
-
-    @Override
-    public boolean isFocusable() {
-        return false;
-    }
-
-    @Override
-    public void addStyle(CheckBoxStyle style) {
+    public @Nullable Image getIcon() {
+        return myIcon;
     }
 }

@@ -15,27 +15,30 @@
  */
 package consulo.it.internal.ui;
 
-import org.jspecify.annotations.Nullable;
+import consulo.localize.LocalizeValue;
+import consulo.ui.Menu;
+import consulo.ui.MenuItem;
+
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * @author VISTALL
  */
-final class HeadlessImages {
-    private HeadlessImages() {
+public class HeadlessMenu extends HeadlessMenuItem implements Menu {
+    private final List<MenuItem> myItems = new CopyOnWriteArrayList<>();
+
+    public HeadlessMenu(LocalizeValue text) {
+        super(text);
     }
 
-    static @Nullable Object unwrap(@Nullable Object image) {
-        Object current = image;
-        while (true) {
-            if (current instanceof HeadlessLazyImage lazy) {
-                current = lazy.resolve();
-            }
-            else if (current instanceof HeadlessStatedImage<?> stated) {
-                current = stated.resolve();
-            }
-            else {
-                return current;
-            }
-        }
+    @Override
+    public Menu add(MenuItem menuItem) {
+        myItems.add(menuItem);
+        return this;
+    }
+
+    public List<MenuItem> getItems() {
+        return List.copyOf(myItems);
     }
 }

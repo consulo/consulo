@@ -17,6 +17,7 @@ package consulo.it.internal;
 
 import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
+import consulo.language.editor.impl.inspection.GlobalInspectionContextBase;
 import consulo.language.editor.impl.internal.inspection.InspectionManagerBase;
 import consulo.language.editor.inspection.GlobalInspectionContext;
 import consulo.project.Project;
@@ -24,9 +25,6 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 /**
- * Local inspections only: {@link InspectionManagerBase} already carries {@code runLocalToolLocaly} and the
- * problem-descriptor factories, so a headless run needs nothing beyond refusing the batch context.
- *
  * @author VISTALL
  */
 @Singleton
@@ -39,6 +37,6 @@ public class HeadlessInspectionManager extends InspectionManagerBase {
 
     @Override
     public GlobalInspectionContext createNewGlobalContext(boolean reuse) {
-        throw new UnsupportedOperationException("headless: global inspection context is not implemented");
+        return new GlobalInspectionContextBase(getProject());
     }
 }

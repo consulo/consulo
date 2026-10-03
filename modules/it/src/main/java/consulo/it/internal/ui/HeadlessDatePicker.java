@@ -15,27 +15,25 @@
  */
 package consulo.it.internal.ui;
 
+
+import consulo.ui.DatePicker;
 import org.jspecify.annotations.Nullable;
+
+import java.util.Date;
 
 /**
  * @author VISTALL
+ * @since 2026-10-03
  */
-final class HeadlessImages {
-    private HeadlessImages() {
+public class HeadlessDatePicker extends HeadlessValueComponentBase<Date> implements DatePicker {
+    private final @Nullable String myDatePattern;
+
+    public HeadlessDatePicker(@Nullable String datePattern) {
+        super(null);
+        myDatePattern = datePattern;
     }
 
-    static @Nullable Object unwrap(@Nullable Object image) {
-        Object current = image;
-        while (true) {
-            if (current instanceof HeadlessLazyImage lazy) {
-                current = lazy.resolve();
-            }
-            else if (current instanceof HeadlessStatedImage<?> stated) {
-                current = stated.resolve();
-            }
-            else {
-                return current;
-            }
-        }
+    public @Nullable String getDatePattern() {
+        return myDatePattern;
     }
 }

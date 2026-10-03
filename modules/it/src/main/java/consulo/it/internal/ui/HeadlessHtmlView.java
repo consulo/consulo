@@ -15,27 +15,28 @@
  */
 package consulo.it.internal.ui;
 
+import consulo.ui.HtmlView;
 import org.jspecify.annotations.Nullable;
+
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author VISTALL
  */
-final class HeadlessImages {
-    private HeadlessImages() {
+public class HeadlessHtmlView extends HeadlessComponentBase implements HtmlView {
+    private @Nullable RenderData myRenderData;
+
+    public @Nullable RenderData getRenderData() {
+        return myRenderData;
     }
 
-    static @Nullable Object unwrap(@Nullable Object image) {
-        Object current = image;
-        while (true) {
-            if (current instanceof HeadlessLazyImage lazy) {
-                current = lazy.resolve();
-            }
-            else if (current instanceof HeadlessStatedImage<?> stated) {
-                current = stated.resolve();
-            }
-            else {
-                return current;
-            }
-        }
+    @Override
+    public CompletableFuture<?> render(RenderData renderData) {
+        myRenderData = renderData;
+        return CompletableFuture.completedFuture(null);
+    }
+
+    @Override
+    public void scrollToMarkdownSrcOffset(int offset) {
     }
 }
