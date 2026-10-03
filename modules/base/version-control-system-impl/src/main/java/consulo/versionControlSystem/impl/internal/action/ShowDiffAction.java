@@ -22,9 +22,7 @@ import consulo.diff.chain.DiffRequestChain;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.LegacyDumbAwareAction;
+import consulo.ui.ex.action.*;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Lists;
 import consulo.util.dataholder.Key;
@@ -45,7 +43,7 @@ import java.util.Map;
 import java.util.function.Predicate;
 
 @ActionImpl(id = "ChangesView.Diff")
-public class ShowDiffAction extends LegacyDumbAwareAction {
+public class ShowDiffAction extends DumbAwareAction implements AnActionWithSyncUpdate {
     public ShowDiffAction() {
         super(
             VcsLocalize.actionChangesViewDiffText(),
@@ -164,7 +162,6 @@ public class ShowDiffAction extends LegacyDumbAwareAction {
         return needsConversion;
     }
 
-    
     private static Change[] loadFakeRevisions(Project project, Change[] changes) {
         List<Change> matchingChanges = new ArrayList<>();
         for (Change change : changes) {
@@ -210,12 +207,7 @@ public class ShowDiffAction extends LegacyDumbAwareAction {
     }
 
     @RequiredUIAccess
-    public static void showDiffForChange(
-        @Nullable Project project,
-        Iterable<Change> changes,
-        int index,
-        ShowDiffContext context
-    ) {
+    public static void showDiffForChange(@Nullable Project project, Iterable<Change> changes, int index, ShowDiffContext context) {
         int i = 0;
         int newIndex = 0;
         List<ChangeDiffRequestProducer> presentables = new ArrayList<>();
@@ -247,10 +239,10 @@ public class ShowDiffAction extends LegacyDumbAwareAction {
             index = 0;
         }
 
-        DiffRequestChain chain = new ChangeDiffRequestChain(presentables);
+        DiffRequestChain chain = new ChangeDiffRequestChain(presentables, context);
         chain.setIndex(index);
 
-        for (Map.Entry<Key, Object> entry : context.getChainContext().entrySet()) {
+        for (Map.Entry<Key<Object>, Object> entry : context.getChainContext().entrySet()) {
             chain.putUserData(entry.getKey(), entry.getValue());
         }
         chain.putUserData(DiffUserDataKeys.CONTEXT_ACTIONS, context.getActions());
