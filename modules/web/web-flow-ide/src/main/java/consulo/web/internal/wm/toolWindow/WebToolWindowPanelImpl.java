@@ -30,6 +30,7 @@ import consulo.project.ui.impl.internal.wm.ToolWindowBase;
 import consulo.ui.layout.SplitLayoutPosition;
 import consulo.ui.layout.ThreeComponentSplitLayout;
 import consulo.ui.layout.TwoComponentSplitLayout;
+import consulo.web.ui.impl.internal.WebThreeComponentSplitLayoutImpl;
 import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
 import consulo.web.ui.impl.internal.base.TargetVaadin;
 import consulo.web.ui.impl.internal.base.VaadinComponentDelegate;
@@ -334,6 +335,18 @@ public class WebToolWindowPanelImpl extends VaadinComponentDelegate<WebToolWindo
 
     @RequiredUIAccess
     private void setComponent(consulo.ui.@Nullable Component component, ToolWindowAnchor anchor, float weight) {
+        ThreeComponentSplitLayout layout = anchor.isHorizontal()
+            ? mySplitters.getVerticalSplitter()
+            : mySplitters.getHorizontalSplitter();
+        if (component != null && layout instanceof WebThreeComponentSplitLayoutImpl splitter) {
+            if (ToolWindowAnchor.TOP == anchor || ToolWindowAnchor.LEFT == anchor) {
+                splitter.setFirstWeight(weight);
+            }
+            else {
+                splitter.setSecondWeight(weight);
+            }
+        }
+
         mySplitters.setComponent(anchor, component);
     }
 

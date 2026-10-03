@@ -454,6 +454,8 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
             // after this is an edit against offsets, so the whole text goes first or none of them land
             vaadin.setText(myDocument.getText());
 
+            pushSelectionNow();
+
             update();
 
             // the browser is a fresh one and holds none of what the last one was sent, so the annotations have to be

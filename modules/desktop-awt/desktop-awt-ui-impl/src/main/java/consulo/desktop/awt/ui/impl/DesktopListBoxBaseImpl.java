@@ -70,6 +70,10 @@ abstract class DesktopListBoxBaseImpl<E, V> extends SwingComponentDelegate<JBLis
                 setHoverIndex(-1);
             }
 
+            if (isContextSelectionTrigger(e)) {
+                selectRowUnderPointer(e.getPoint());
+            }
+
             if (e.isPopupTrigger()) {
                 ClickTarget menuTarget = findTarget(e.getPoint(), ContextMenuEvent.class);
                 if (menuTarget != null) {
@@ -111,6 +115,19 @@ abstract class DesktopListBoxBaseImpl<E, V> extends SwingComponentDelegate<JBLis
         @Override
         public Component toUIComponent() {
             return DesktopListBoxBaseImpl.this;
+        }
+
+        private boolean isContextSelectionTrigger(MouseEvent e) {
+            return e.isPopupTrigger() || e.getID() == MouseEvent.MOUSE_PRESSED && SwingUtilities.isRightMouseButton(e);
+        }
+
+        private void selectRowUnderPointer(Point point) {
+            int index = rowAt(point);
+            if (index < 0 || isSelectedIndex(index) || isSeparatorItem(getModel().getElementAt(index))) {
+                return;
+            }
+
+            setSelectedIndex(index);
         }
 
         private void onMouseMoved(MouseEvent e) {

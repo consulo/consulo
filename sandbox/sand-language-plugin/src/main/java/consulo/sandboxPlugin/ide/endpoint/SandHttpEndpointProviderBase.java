@@ -53,6 +53,9 @@ public abstract class SandHttpEndpointProviderBase implements EndpointUrlTargetP
     @RequiredReadAction
     public Iterable<SandClass> getEndpointGroups(EndpointFilter filter) {
         if (filter instanceof ModuleEndpointFilter moduleFilter) {
+            if (!SandEndpointSearch.hasSandExtension(moduleFilter.getModule())) {
+                return List.of();
+            }
             GlobalSearchScope scope = moduleFilter.isFromLibraries()
                 ? moduleFilter.getTransitiveSearchScope()
                 : moduleFilter.getContentSearchScope();

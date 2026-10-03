@@ -18,17 +18,18 @@ package consulo.desktop.qt.ui.impl;
 import io.qt.core.QEvent;
 import io.qt.core.QModelIndex;
 import io.qt.core.QObject;
+import io.qt.core.QPoint;
+import io.qt.core.QRect;
 import io.qt.core.QSize;
 import io.qt.core.Qt;
 import io.qt.gui.QIcon;
 import io.qt.gui.QKeyEvent;
 import io.qt.gui.QMouseEvent;
-import io.qt.gui.QPalette;
+import io.qt.gui.QResizeEvent;
+import io.qt.gui.QScreen;
 import io.qt.gui.QWheelEvent;
 import io.qt.widgets.QAbstractItemView;
-import io.qt.widgets.QStyle;
 import io.qt.widgets.QStyleOptionComboBox;
-import io.qt.widgets.QStyledItemDelegate;
 import io.qt.widgets.QWidget;
 import org.jspecify.annotations.Nullable;
 
@@ -58,6 +59,10 @@ public class DesktopQtMultiSelectComboBox extends DesktopQtComboBox {
         Qt.Key.Key_Select.value()
     );
 
+    private static final String ELLIPSIS = "\u2026";
+
+    private final QAbstractItemView myView;
+    private final QWidget myViewport;
     private final QObject myPopupFilter;
     private @Nullable IntConsumer myToggleHandler;
     private String mySelectionText = "";
@@ -67,7 +72,8 @@ public class DesktopQtMultiSelectComboBox extends DesktopQtComboBox {
     public DesktopQtMultiSelectComboBox(QWidget parent) {
         super(parent);
 
-        setItemDelegate(new QStyledItemDelegate(this));
+        myView = view();
+        myViewport = myView.viewport();
 
         myPopupFilter = new QObject(this) {
             @Override
@@ -76,9 +82,20 @@ public class DesktopQtMultiSelectComboBox extends DesktopQtComboBox {
             }
         };
 
-        QAbstractItemView view = view();
-        view.installEventFilter(myPopupFilter);
-        view.viewport().installEventFilter(myPopupFilter);
+        myView.installEventFilter(myPopupFilter);
+        myViewport.installEventFilter(myPopupFilter);
+    }
+
+    public void uninstallPopupFilter() {
+        myToggleHandler = null;
+
+        if (!myViewport.isDisposed()) {
+            myViewport.removeEventFilter(myPopupFilter);
+        }
+
+        if (!myView.isDisposed()) {
+            myView.removeEventFilter(myPopupFilter);
+        }
     }
 
     public void setToggleHandler(@Nullable IntConsumer toggleHandler) {
@@ -93,6 +110,7 @@ public class DesktopQtMultiSelectComboBox extends DesktopQtComboBox {
     public void setSelectionText(String selectionText) {
         if (!mySelectionText.equals(selectionText)) {
             mySelectionText = selectionText;
+            updateGeometry();
             update();
         }
     }
@@ -108,44 +126,96 @@ public class DesktopQtMultiSelectComboBox extends DesktopQtComboBox {
     @Override
     public QSize sizeHint() {
         QSize hint = super.sizeHint();
-        if (myPlaceholder.isEmpty()) {
+
+        String text = mySelectionText.isEmpty() ? myPlaceholder : mySelectionText;
+        if (text.isEmpty()) {
             return hint;
         }
 
-        QStyleOptionComboBox option = new QStyleOptionComboBox();
-        initStyleOption(option);
+        return new QSize(adaptiveLabelWidth(text), hint.height());
+    }
 
-        int textWidth = fontMetrics().horizontalAdvance(myPlaceholder);
-        QSize needed = style().sizeFromContents(QStyle.ContentsType.CT_ComboBox, option, new QSize(textWidth, hint.height()), this);
-        return new QSize(Math.max(hint.width(), needed.width()), hint.height());
+    @Override
+    public QSize minimumSizeHint() {
+        QSize minimum = super.minimumSizeHint();
+        return new QSize(Math.min(minimum.width(), sizeHint().width()), minimum.height());
+    }
+
+    @Override
+    protected int minimumContentWidth() {
+        return fontMetrics().horizontalAdvance(ELLIPSIS);
     }
 
     @Override
     protected void decorateStyleOption(QStyleOptionComboBox option) {
         option.setCurrentIcon(new QIcon());
+        option.setCurrentText(mySelectionText);
+    }
 
-        if (!mySelectionText.isEmpty() || myPlaceholder.isEmpty()) {
-            option.setCurrentText(mySelectionText);
-            return;
-        }
-
-        QPalette palette = option.palette();
-        palette.setBrush(QPalette.ColorRole.ButtonText, palette.placeholderText());
-        option.setPalette(palette);
-        option.setCurrentText(myPlaceholder);
+    @Override
+    protected String labelPlaceholder() {
+        return mySelectionText.isEmpty() ? myPlaceholder : "";
     }
 
     @Override
     public void showPopup() {
-        QAbstractItemView view = view();
+        QAbstractItemView view = myView;
+        if (view.isDisposed()) {
+            return;
+        }
 
+        view.setMinimumWidth(popupContentWidth(view));
+
+        super.showPopup();
+    }
+
+    @Override
+    protected void resizeEvent(QResizeEvent event) {
+        super.resizeEvent(event);
+
+        fitVisiblePopupWidth();
+    }
+
+    private int popupContentWidth(QAbstractItemView view) {
         int width = view.sizeHintForColumn(0) + 2 * view.frameWidth();
         if (count() > maxVisibleItems()) {
             width += view.verticalScrollBar().sizeHint().width();
         }
-        view.setMinimumWidth(width);
+        return width;
+    }
 
-        super.showPopup();
+    private void fitVisiblePopupWidth() {
+        QAbstractItemView view = myView;
+        if (view.isDisposed() || !view.isVisible()) {
+            return;
+        }
+
+        QWidget container = view.window();
+        if (container == null || container == window() || !container.isVisible()) {
+            return;
+        }
+
+        int popupWidth = Math.max(width(), Math.max(view.minimumWidth(), container.minimumWidth()));
+        if (popupWidth == container.width()) {
+            return;
+        }
+
+        QPoint origin = mapToGlobal(new QPoint(0, 0));
+        int x = layoutDirection() == Qt.LayoutDirection.RightToLeft ? origin.x() + width() - popupWidth : origin.x();
+        QRect geometry = new QRect(x, container.y(), popupWidth, container.height());
+
+        QScreen screen = container.screen();
+        if (screen != null) {
+            QRect available = screen.availableGeometry();
+            if (geometry.right() > available.right()) {
+                geometry.moveRight(available.right());
+            }
+            if (geometry.left() < available.left()) {
+                geometry.moveLeft(available.left());
+            }
+        }
+
+        container.setGeometry(geometry);
     }
 
     @Override
@@ -165,13 +235,17 @@ public class DesktopQtMultiSelectComboBox extends DesktopQtComboBox {
     }
 
     private boolean filterPopupEvent(QObject watched, QEvent event) {
-        QAbstractItemView view = view();
-        if (view == null || view.isDisposed()) {
+        QEvent.Type type = event.type();
+        if (!isPopupInput(type)) {
             return false;
         }
 
-        QEvent.Type type = event.type();
-        if (watched == view.viewport() && event instanceof QMouseEvent mouseEvent) {
+        QAbstractItemView view = myView;
+        if (view.isDisposed() || myViewport.isDisposed()) {
+            return false;
+        }
+
+        if (watched == myViewport && event instanceof QMouseEvent mouseEvent) {
             if (type == QEvent.Type.MouseButtonPress) {
                 myPressedRow = rowAt(view, mouseEvent);
                 return false;
@@ -204,6 +278,13 @@ public class DesktopQtMultiSelectComboBox extends DesktopQtComboBox {
         }
 
         return false;
+    }
+
+    private static boolean isPopupInput(QEvent.Type type) {
+        return type == QEvent.Type.MouseButtonPress
+            || type == QEvent.Type.MouseButtonRelease
+            || type == QEvent.Type.MouseButtonDblClick
+            || type == QEvent.Type.KeyPress;
     }
 
     private void toggle(int row) {

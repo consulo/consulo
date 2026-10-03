@@ -260,12 +260,37 @@ public class DesktopQtTabbedLayoutImpl extends QtComponentDelegate<QTabWidget> i
     }
 
     private void init(DesktopQtTabImpl tab) {
-        QTabWidget tabWidget = toQtComponent();
+        tab.setTabbedLayout(this);
 
-        if (tabWidget != null) {
+        QTabWidget tabWidget = myComponent;
+
+        if (tabWidget != null && !tabWidget.isDisposed()) {
             tab.initialize(tabWidget, this);
 
             tabWidget.setCurrentIndex(tab.getIndex());
+        }
+        else {
+            mySelectedTab = tab;
+        }
+    }
+
+    @RequiredUIAccess
+    void selectUnrealized(DesktopQtTabImpl tab) {
+        if (!myTabs.contains(tab) || mySelectedTab == tab) {
+            return;
+        }
+
+        mySelectedTab = tab;
+
+        getListenerDispatcher(TabSelectEvent.class).onEvent(new TabSelectEvent(this, tab));
+    }
+
+    private void forgetTab(DesktopQtTabImpl tab) {
+        tab.detach();
+        tab.setTabbedLayout(null);
+
+        if (mySelectedTab == tab) {
+            mySelectedTab = null;
         }
     }
 
@@ -304,7 +329,7 @@ public class DesktopQtTabbedLayoutImpl extends QtComponentDelegate<QTabWidget> i
     @RequiredUIAccess
     public void removeTab(Tab tab) {
         if (tab instanceof DesktopQtTabImpl qtTab && myTabs.remove(qtTab)) {
-            qtTab.detach();
+            forgetTab(qtTab);
         }
     }
 
@@ -312,7 +337,7 @@ public class DesktopQtTabbedLayoutImpl extends QtComponentDelegate<QTabWidget> i
     @RequiredUIAccess
     public void removeAll() {
         for (DesktopQtTabImpl tab : new ArrayList<>(myTabs)) {
-            tab.detach();
+            forgetTab(tab);
         }
 
         myTabs.clear();

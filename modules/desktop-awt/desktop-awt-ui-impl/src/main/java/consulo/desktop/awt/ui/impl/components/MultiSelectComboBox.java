@@ -1,32 +1,47 @@
 // Copyright 2000-2025 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.desktop.awt.ui.impl.components;
 
+import com.formdev.flatlaf.FlatClientProperties;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.ComboBox;
+import consulo.ui.ex.awt.JBCurrentTheme;
 import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.image.Image;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.AbstractListModel;
+import javax.swing.BorderFactory;
 import javax.swing.Box;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
 import javax.swing.MutableComboBoxModel;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.border.Border;
 import javax.swing.plaf.basic.BasicComboBoxEditor;
-import javax.swing.plaf.basic.BasicComboBoxUI;
+import javax.swing.plaf.basic.ComboPopup;
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
+import java.awt.FontMetrics;
+import java.awt.Graphics2D;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.Serializable;
@@ -49,14 +64,27 @@ import java.util.function.Function;
  * @author Anton Kozub
  */
 public class MultiSelectComboBox<T> extends JComponent {
+    private static final int MAX_WIDTH = 250;
+    private static final String ELLIPSIS = "\u2026";
+    private static final String CELL_BORDER_KEY = "MultiSelectComboBox.cellBorder";
+
     private boolean myActionEventIsFiring = false;
     private List<T> myItems;
     private final Set<T> mySelectedItems = new LinkedHashSet<>();
-    private final ComboBox<T> myComboBox;
+    private final CheckComboBox myComboBox;
     private final JPanel mySelectedPanel;
+    private final JPanel myChipsPanel;
+    private final TextRenderer myTextRenderer = new TextRenderer();
+    private final JComboBox<String> myTextSizer = new JComboBox<>();
+    private final JComboBox<String> myMinimumSizer = new JComboBox<>();
     private final MultiComboBoxModel<T> myComboBoxModel;
     private final @Nullable Function<T, String> myItemToTextConverter;
     private @Nullable String myPlaceholder;
+    private @Nullable Function<List<T>, String> mySummary;
+    private boolean myKeepPopupOpen;
+    private boolean myRequestFocusOnClick = true;
+    private String myClosedText = "";
+    private boolean myClosedTextIsPlaceholder;
 
     /**
      * @param items               The list of available items.
@@ -70,21 +98,27 @@ public class MultiSelectComboBox<T> extends JComponent {
 
         setLayout(new BorderLayout());
 
-        mySelectedPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 2));
-        mySelectedPanel.setOpaque(false);
+        myChipsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        myChipsPanel.setOpaque(false);
 
-        myComboBox = new ComboBox<>(myComboBoxModel);
-        myComboBox.setEditable(true);
+        mySelectedPanel = new JPanel(new GridBagLayout());
+        mySelectedPanel.setOpaque(false);
+        mySelectedPanel.add(
+            myChipsPanel,
+            new GridBagConstraints(0, 0, 1, 1, 1, 1, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0)
+        );
+
+        myTextSizer.setRenderer(myTextRenderer);
+        myMinimumSizer.setRenderer(myTextRenderer);
+        myMinimumSizer.putClientProperty(FlatClientProperties.MINIMUM_WIDTH, 0);
+
+        myComboBox = new CheckComboBox(myComboBoxModel);
         myComboBox.setEditor(new BasicComboBoxEditor() {
             @Override
             public Component getEditorComponent() {
                 return mySelectedPanel;
             }
         });
-
-        if (myComboBox.getUI() instanceof BasicComboBoxUI ui) {
-            ui.addEditor();
-        }
 
         myComboBox.setRenderer((list, item, index, isSelected, cellHasFocus) -> new JLabel(getItemText(item)));
 
@@ -131,10 +165,11 @@ public class MultiSelectComboBox<T> extends JComponent {
     }
 
     public boolean isRequestFocusOnClick() {
-        return myComboBox.isRequestFocusEnabled();
+        return myRequestFocusOnClick;
     }
 
     public void setRequestFocusOnClick(boolean value) {
+        myRequestFocusOnClick = value;
         myComboBox.setRequestFocusEnabled(value);
     }
 
@@ -148,6 +183,11 @@ public class MultiSelectComboBox<T> extends JComponent {
 
     public void setPlaceholder(@Nullable String placeholder) {
         myPlaceholder = placeholder;
+        updateSelectedDisplay();
+    }
+
+    public void setSummary(@Nullable Function<List<T>, String> summary) {
+        mySummary = summary;
         updateSelectedDisplay();
     }
 
@@ -178,20 +218,18 @@ public class MultiSelectComboBox<T> extends JComponent {
         Set<T> wanted = selectedItems == null ? Set.of() : new LinkedHashSet<>(selectedItems);
 
         Set<T> existingSelectedItems = new LinkedHashSet<>();
-        List<T> unselectedItems = new ArrayList<>();
         for (T item : myItems) {
             if (wanted.contains(item)) {
                 existingSelectedItems.add(item);
-            }
-            else {
-                unselectedItems.add(item);
             }
         }
 
         mySelectedItems.clear();
         mySelectedItems.addAll(existingSelectedItems);
 
-        myComboBoxModel.setObjects(unselectedItems);
+        if (!myComboBoxModel.hasObjects(myItems)) {
+            myComboBoxModel.setObjects(myItems);
+        }
         updateSelectedDisplay();
     }
 
@@ -204,6 +242,18 @@ public class MultiSelectComboBox<T> extends JComponent {
         super.setEnabled(enabled);
         myComboBox.setEnabled(enabled);
         updateSelectedDisplay();
+    }
+
+    @Override
+    public Dimension getMinimumSize() {
+        if (isMinimumSizeSet()) {
+            return super.getMinimumSize();
+        }
+
+        Dimension size = getPreferredSize();
+        Insets insets = getInsets();
+        size.width = Math.min(size.width, myComboBox.textWidth(myMinimumSizer, ELLIPSIS) + insets.left + insets.right);
+        return size;
     }
 
     public void addActionListener(ActionListener listener) {
@@ -260,83 +310,152 @@ public class MultiSelectComboBox<T> extends JComponent {
         }
 
         T selectedItem = (T) selected;
-        if (!mySelectedItems.contains(selectedItem) && myComboBoxModel.contains(selectedItem)) {
-            selectItem(selectedItem);
+        if (myComboBoxModel.contains(selectedItem) && !isNavigationEvent(EventQueue.getCurrentEvent())) {
+            if (myComboBox.isPopupVisible()) {
+                myKeepPopupOpen = true;
+                SwingUtilities.invokeLater(() -> myKeepPopupOpen = false);
+            }
+
+            if (mySelectedItems.contains(selectedItem)) {
+                deselectItem(selectedItem);
+            }
+            else {
+                selectItem(selectedItem);
+            }
         }
 
+        int index = myItems.indexOf(selectedItem);
         myComboBox.setSelectedItem(null);
+        restorePopupSelection(index);
+    }
+
+    private void restorePopupSelection(int index) {
+        if (index < 0 || !myComboBox.isPopupVisible()) {
+            return;
+        }
+
+        ComboPopup popup = myComboBox.getPopup();
+        JList<?> list = popup == null ? null : popup.getList();
+        if (list != null && index < list.getModel().getSize()) {
+            list.setSelectedIndex(index);
+        }
+    }
+
+    private static boolean isNavigationEvent(@Nullable AWTEvent event) {
+        if (!(event instanceof KeyEvent keyEvent)) {
+            return false;
+        }
+
+        int keyCode = keyEvent.getKeyCode();
+        return keyCode != KeyEvent.VK_ENTER && keyCode != KeyEvent.VK_SPACE;
     }
 
     private void selectItem(T item) {
-        mySelectedItems.add(item);
-        myComboBoxModel.removeElement(item);
+        Set<T> selection = new LinkedHashSet<>(mySelectedItems);
+        selection.add(item);
+        applyOrderedSelection(selection);
         updateSelectedDisplay();
         fireActionEvent();
     }
 
     private void deselectItem(T item) {
         mySelectedItems.remove(item);
-        myComboBoxModel.insertElementAt(item, unselectedIndexOf(item));
         updateSelectedDisplay();
         fireActionEvent();
     }
 
-    private int unselectedIndexOf(T item) {
-        int index = 0;
-        for (T candidate : myItems) {
-            if (Objects.equals(candidate, item)) {
-                break;
-            }
-            if (!mySelectedItems.contains(candidate)) {
-                index++;
+    private void applyOrderedSelection(Set<T> selection) {
+        mySelectedItems.clear();
+        for (T item : myItems) {
+            if (selection.contains(item)) {
+                mySelectedItems.add(item);
             }
         }
-        return Math.min(index, myComboBoxModel.getSize());
+    }
+
+    private void repaintPopupList() {
+        ComboPopup popup = myComboBox.getPopup();
+        JList<?> list = popup == null ? null : popup.getList();
+        if (list != null) {
+            list.repaint();
+        }
     }
 
     public void updateSelectedDisplay() {
-        mySelectedPanel.removeAll();
+        repaintPopupList();
 
-        int index = 0;
-        for (T item : mySelectedItems) {
-            if (index > 0) {
-                mySelectedPanel.add(Box.createRigidArea(new Dimension(5, 0)));
-            }
+        Function<List<T>, String> summary = mySummary;
+        boolean textMode = mySelectedItems.isEmpty() || summary != null;
+        if (mySelectedItems.isEmpty()) {
+            myClosedText = Objects.toString(myPlaceholder, "");
+            myClosedTextIsPlaceholder = true;
+        }
+        else if (summary != null) {
+            myClosedText = summary.apply(new ArrayList<>(mySelectedItems));
+            myClosedTextIsPlaceholder = false;
+        }
+        else {
+            myClosedText = "";
+            myClosedTextIsPlaceholder = false;
+        }
 
-            JPanel itemPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 2, 0));
-            itemPanel.setOpaque(true);
-            itemPanel.setBorder(JBUI.Borders.emptyTop(2));
-            itemPanel.setEnabled(myComboBox.isEnabled());
+        if (myComboBox.isEditable() == textMode) {
+            myComboBox.setEditable(!textMode);
+            myComboBox.setRequestFocusEnabled(myRequestFocusOnClick);
+        }
 
-            Component textLabel = createItemComponent(item);
-            textLabel.setEnabled(myComboBox.isEnabled());
-            itemPanel.add(textLabel);
+        rebuildChips(textMode);
 
-            JLabel closeLabel = new JLabel();
-            closeLabel.setIcon(TargetAWT.to(PlatformIconGroup.actionsClose()));
-            closeLabel.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mouseClicked(MouseEvent e) {
-                    if (!myComboBox.isEnabled()) {
-                        return;
-                    }
-                    deselectItem(item);
+        myComboBox.revalidate();
+        myComboBox.repaint();
+    }
+
+    private void rebuildChips(boolean textMode) {
+        myChipsPanel.removeAll();
+
+        if (!textMode) {
+            int index = 0;
+            for (T item : mySelectedItems) {
+                if (index > 0) {
+                    myChipsPanel.add(Box.createRigidArea(new Dimension(JBUI.scale(5), 0)));
                 }
-            });
-            itemPanel.add(closeLabel);
 
-            mySelectedPanel.add(itemPanel);
-            index++;
+                JPanel itemPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, JBUI.scale(2), 0));
+                itemPanel.setOpaque(false);
+                itemPanel.setEnabled(myComboBox.isEnabled());
+
+                Component textLabel = createItemComponent(item);
+                textLabel.setEnabled(myComboBox.isEnabled());
+                itemPanel.add(textLabel);
+
+                JLabel closeLabel = new JLabel();
+                closeLabel.setIcon(TargetAWT.to(PlatformIconGroup.actionsClose()));
+                closeLabel.addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+                        if (!myComboBox.isEnabled()) {
+                            return;
+                        }
+                        deselectItem(item);
+                    }
+                });
+                itemPanel.add(closeLabel);
+
+                myChipsPanel.add(itemPanel);
+                index++;
+            }
         }
 
-        if (mySelectedItems.isEmpty() && myPlaceholder != null && !myPlaceholder.isEmpty()) {
-            JLabel placeholderLabel = new JLabel(myPlaceholder);
-            placeholderLabel.setForeground(UIUtil.getInactiveTextColor());
-            mySelectedPanel.add(placeholderLabel);
-        }
-
+        mySelectedPanel.setBorder(BorderFactory.createEmptyBorder(0, chipsLeftInset(), 0, 0));
         mySelectedPanel.revalidate();
         mySelectedPanel.repaint();
+    }
+
+    private static int chipsLeftInset() {
+        Insets padding = UIManager.getInsets("ComboBox.padding");
+        int paddingLeft = padding == null ? 0 : JBUI.scale(padding.left);
+        Insets cellInsets = JBCurrentTheme.listCellBorderFull().getBorderInsets(null);
+        return Math.max(paddingLeft, cellInsets.left);
     }
 
     protected Component createItemComponent(T item) {
@@ -422,6 +541,177 @@ public class MultiSelectComboBox<T> extends JComponent {
 
         boolean contains(T element) {
             return myObjects.contains(element);
+        }
+
+        boolean hasObjects(List<T> objects) {
+            return myObjects.equals(objects);
+        }
+    }
+
+    private final class CheckComboBox extends ComboBox<T> {
+        CheckComboBox(MultiComboBoxModel<T> model) {
+            super(model);
+        }
+
+        @Override
+        public void setRenderer(@Nullable ListCellRenderer<? super T> renderer) {
+            super.setRenderer(renderer == null ? null : new CheckRenderer(renderer));
+        }
+
+        @Override
+        public void setPopupVisible(boolean visible) {
+            if (!visible && myKeepPopupOpen) {
+                myKeepPopupOpen = false;
+                return;
+            }
+            super.setPopupVisible(visible);
+        }
+
+        @Override
+        public void updateUI() {
+            super.updateUI();
+            SwingUtilities.updateComponentTreeUI(myTextRenderer);
+            myTextSizer.updateUI();
+            myMinimumSizer.updateUI();
+        }
+
+        @Override
+        public Dimension getPreferredSize() {
+            Dimension size = super.getPreferredSize();
+            if (!isEditable()) {
+                size.width = textWidth(myTextSizer, myClosedText);
+            }
+            size.width = Math.min(size.width, JBUI.scale(MAX_WIDTH));
+            return size;
+        }
+
+        private int textWidth(JComboBox<String> sizer, String text) {
+            sizer.setFont(getFont());
+            sizer.setPrototypeDisplayValue(text);
+
+            Insets sizerInsets = sizer.getInsets();
+            Insets insets = getInsets();
+            return sizer.getPreferredSize().width - sizerInsets.left - sizerInsets.right + insets.left + insets.right;
+        }
+    }
+
+    private final class CheckRenderer implements ListCellRenderer<T> {
+        private final ListCellRenderer<? super T> myDelegate;
+        private final JPanel myPanel = new JPanel(new BorderLayout());
+        private final JLabel myCheck = new JLabel();
+
+        CheckRenderer(ListCellRenderer<? super T> delegate) {
+            myDelegate = delegate;
+            myCheck.setBorder(JBUI.Borders.emptyRight(4));
+            myCheck.setOpaque(false);
+        }
+
+        @Override
+        public Component getListCellRendererComponent(
+            JList<? extends T> list,
+            @Nullable T value,
+            int index,
+            boolean isSelected,
+            boolean cellHasFocus
+        ) {
+            if (index < 0 && value == null) {
+                return myTextRenderer.getListCellRendererComponent(list, myClosedText, index, false, false);
+            }
+
+            Component component = myDelegate.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+
+            myPanel.setBorder(takeCellBorder(component));
+
+            Image checked = PlatformIconGroup.actionsChecked();
+            Image mark = value != null && mySelectedItems.contains(value) ? checked : Image.empty(checked.getWidth(), checked.getHeight());
+            myCheck.setIcon(TargetAWT.to(mark));
+
+            myPanel.removeAll();
+            myPanel.add(myCheck, BorderLayout.WEST);
+            myPanel.add(component, BorderLayout.CENTER);
+            myPanel.setBackground(isSelected ? list.getSelectionBackground() : list.getBackground());
+            myPanel.setOpaque(index >= 0);
+            return myPanel;
+        }
+
+        private static @Nullable Border takeCellBorder(Component component) {
+            if (!(component instanceof JComponent jComponent)) {
+                return null;
+            }
+
+            Border border = jComponent.getBorder();
+            if (border == null) {
+                return (Border) jComponent.getClientProperty(CELL_BORDER_KEY);
+            }
+
+            jComponent.putClientProperty(CELL_BORDER_KEY, border);
+            jComponent.setBorder(null);
+            return border;
+        }
+    }
+
+    private final class TextRenderer extends ColoredListCellRenderer<Object> {
+        private String myText = "";
+        private SimpleTextAttributes myTextAttributes = SimpleTextAttributes.REGULAR_ATTRIBUTES;
+
+        @Override
+        public Component getListCellRendererComponent(JList<?> list, @Nullable Object value, int index, boolean selected, boolean hasFocus) {
+            setEnabled(myComboBox.isEnabled());
+            return super.getListCellRendererComponent(list, value, index, selected, hasFocus);
+        }
+
+        @Override
+        protected void customizeCellRenderer(JList<?> list, @Nullable Object value, int index, boolean selected, boolean hasFocus) {
+            setBorder(JBCurrentTheme.listCellBorderFull());
+
+            myText = Objects.toString(value, "");
+            myTextAttributes = myClosedTextIsPlaceholder ? SimpleTextAttributes.GRAYED_ATTRIBUTES : SimpleTextAttributes.REGULAR_ATTRIBUTES;
+            append(myText, myTextAttributes);
+        }
+
+        @Override
+        public Dimension getPreferredSize() {
+            Dimension size = super.getPreferredSize();
+            size.width -= getIpad().right + getInsets().left;
+            return size;
+        }
+
+        @Override
+        protected void doPaint(Graphics2D g) {
+            fitText();
+            super.doPaint(g);
+        }
+
+        private void fitText() {
+            if (myText.isEmpty()) {
+                return;
+            }
+
+            FontMetrics metrics = getFontMetrics(getFont());
+            int available = getWidth() - getIpad().left - getInsets().right;
+            if (metrics.stringWidth(myText) <= available) {
+                return;
+            }
+
+            String fitted = ellipsize(myText, metrics, available);
+            change(() -> {
+                clear();
+                append(fitted, myTextAttributes);
+            }, false);
+        }
+
+        private static String ellipsize(String text, FontMetrics metrics, int available) {
+            for (int end = text.length() - 1; end > 0; end--) {
+                if (Character.isLowSurrogate(text.charAt(end))) {
+                    continue;
+                }
+
+                String candidate = text.substring(0, end).stripTrailing() + ELLIPSIS;
+                if (metrics.stringWidth(candidate) <= available) {
+                    return candidate;
+                }
+            }
+            return ELLIPSIS;
         }
     }
 }

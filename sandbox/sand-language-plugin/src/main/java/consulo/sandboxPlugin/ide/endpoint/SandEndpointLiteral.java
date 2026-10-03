@@ -18,7 +18,6 @@ package consulo.sandboxPlugin.ide.endpoint;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.document.util.TextRange;
 import consulo.endpoint.url.UrlConstants;
-import consulo.language.psi.ElementManipulators;
 import consulo.sandboxPlugin.lang.psi.SandStringExpression;
 import org.jspecify.annotations.Nullable;
 
@@ -71,12 +70,29 @@ public final class SandEndpointLiteral {
 
     @RequiredReadAction
     public static String getValue(SandStringExpression expression) {
-        return ElementManipulators.getValueText(expression);
+        return getValueRange(expression).substring(expression.getText());
     }
 
     @RequiredReadAction
     public static TextRange getValueRange(SandStringExpression expression) {
-        return ElementManipulators.getValueTextRange(expression);
+        return getContentRange(expression.getText());
+    }
+
+    public static TextRange getContentRange(String text) {
+        int length = text.length();
+        if (length < 2 || text.charAt(0) != '"') {
+            return new TextRange(0, length);
+        }
+        return new TextRange(1, text.charAt(length - 1) == '"' ? length - 1 : length);
+    }
+
+    public static TextRange getReferenceValueRange(String text) {
+        TextRange contentRange = getContentRange(text);
+        SandEndpointLiteral literal = parse(contentRange.substring(text));
+        if (literal == null || !literal.isClient()) {
+            return contentRange;
+        }
+        return TextRange.from(contentRange.getStartOffset() + literal.getUrlOffset(), literal.getUrl().length());
     }
 
     public static boolean isUrlLike(String text) {

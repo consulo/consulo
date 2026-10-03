@@ -30,7 +30,7 @@ import javax.swing.*;
  */
 public class DesktopHorizontalLayoutImpl extends DesktopLayoutBase<JPanel, StaticPosition> implements HorizontalLayout {
     public DesktopHorizontalLayoutImpl(Space gap) {
-        initDefaultPanel(new consulo.ui.ex.awt.HorizontalLayout(DesktopSpace.toPixels(gap)));
+        initDefaultPanel(new consulo.ui.ex.awt.HorizontalLayout(DesktopSpace.toPixels(gap), true));
     }
 
     @Override

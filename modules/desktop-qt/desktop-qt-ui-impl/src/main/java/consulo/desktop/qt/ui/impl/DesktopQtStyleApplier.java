@@ -154,6 +154,7 @@ public final class DesktopQtStyleApplier {
     private static String buildTabStyleSheet(Style style) {
         String background = css(style, ComponentColors.TABBED_LAYOUT_BACKGROUND);
         String foreground = css(style, ComponentColors.TABBED_LAYOUT_FOREGROUND);
+        String disabledForeground = css(style, ComponentColors.DISABLED_TEXT);
         String hover = css(style, ComponentColors.TABBED_LAYOUT_HOVER);
         String selected = css(style, ComponentColors.TABBED_LAYOUT_SELECTED_BACKGROUND);
         String inactiveSelected = css(style, ComponentColors.TABBED_LAYOUT_INACTIVE_SELECTED_BACKGROUND);
@@ -181,6 +182,8 @@ public final class DesktopQtStyleApplier {
             QTabBar::tab:hover { background: %s; }
             QTabBar::tab:selected { background: %s; border-color: %s; }
             QTabBar::tab:selected:!active { background: %s; border-color: %s; }
+            QTabBar::tab:disabled { color: %s; }
+            QTabBar::tab:disabled:hover { background: transparent; }
             """.formatted(
             layout,
             background,
@@ -195,7 +198,8 @@ public final class DesktopQtStyleApplier {
             selected,
             selectedBorder,
             inactiveSelected,
-            inactiveSelectedBorder
+            inactiveSelectedBorder,
+            disabledForeground
         );
     }
 

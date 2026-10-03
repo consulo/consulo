@@ -111,6 +111,12 @@ public abstract class WebPooledListBoxBase<E> extends VaadinComponentDelegate<We
             // every time the window moves
             myVaadin.getElement().addEventListener("mousedown", event -> {
             }).preventDefault();
+            myVaadin.getElement().addEventListener("mousedown", event -> {
+                E item = myItem;
+                if (item != null && !isSeparatorItem(item) && !isSelected(item)) {
+                    onRowContextPressed(item, myIndex);
+                }
+            }).setFilter("event.button === 2");
             WebInputDetails.addClickListener(myVaadin.getElement(), details -> {
                 E item = myItem;
                 if (item != null && !isSeparatorItem(item)) {
@@ -176,6 +182,9 @@ public abstract class WebPooledListBoxBase<E> extends VaadinComponentDelegate<We
 
     @RequiredUIAccess
     protected abstract void onRowClicked(E item, int index, InputDetails details);
+
+    @RequiredUIAccess
+    protected abstract void onRowContextPressed(E item, int index);
 
     protected boolean isSeparatorItem(E item) {
         return mySeparatorPredicate.test(item);

@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Function;
 
 /**
  * @author VISTALL
@@ -39,6 +40,7 @@ public class DesktopQtMultiSelectComboBoxImpl<E> extends DesktopQtComboBoxBaseIm
     private final Set<E> mySelection = new HashSet<>();
     private List<E> myLastValue = List.of();
     private LocalizeValue myPlaceholder = LocalizeValue.empty();
+    private @Nullable Function<List<E>, LocalizeValue> mySummaryRenderer;
 
     public DesktopQtMultiSelectComboBoxImpl(FlatDataModel<E> model) {
         super(model);
@@ -55,6 +57,16 @@ public class DesktopQtMultiSelectComboBoxImpl<E> extends DesktopQtComboBoxBaseIm
         component.setPlaceholder(myPlaceholder.get());
 
         rebuild(component);
+    }
+
+    @Override
+    public void disposeQt() {
+        DesktopQtMultiSelectComboBox component = myComponent;
+        if (component != null && !component.isDisposed()) {
+            component.uninstallPopupFilter();
+        }
+
+        super.disposeQt();
     }
 
     @Override
@@ -107,6 +119,12 @@ public class DesktopQtMultiSelectComboBoxImpl<E> extends DesktopQtComboBoxBaseIm
     }
 
     private String selectionText(DesktopQtMultiSelectComboBox component) {
+        Function<List<E>, LocalizeValue> summaryRenderer = mySummaryRenderer;
+        if (summaryRenderer != null) {
+            List<E> value = getValue();
+            return value.isEmpty() ? "" : summaryRenderer.apply(value).get();
+        }
+
         StringBuilder builder = new StringBuilder();
 
         int count = Math.min(component.count(), myModel.getSize());
@@ -144,6 +162,16 @@ public class DesktopQtMultiSelectComboBoxImpl<E> extends DesktopQtComboBoxBaseIm
         DesktopQtMultiSelectComboBox component = myComponent;
         if (component != null && !component.isDisposed()) {
             component.setPlaceholder(text.get());
+        }
+    }
+
+    @Override
+    public void setSummaryRenderer(Function<List<E>, LocalizeValue> renderer) {
+        mySummaryRenderer = renderer;
+
+        DesktopQtMultiSelectComboBox component = myComponent;
+        if (component != null && !component.isDisposed()) {
+            component.setSelectionText(selectionText(component));
         }
     }
 

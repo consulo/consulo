@@ -17,12 +17,12 @@ package consulo.ui.ex.impl.internal.action;
 
 import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
-import consulo.ui.ex.impl.internal.action.UnifiedActionPopupMenuImpl;
-import consulo.ui.ex.action.*;
-import consulo.ui.ex.internal.ActionManagerEx;
-import org.jspecify.annotations.Nullable;
-import jakarta.inject.Inject;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.ActionPopupMenu;
+import consulo.ui.ex.action.ActionPopupMenuFactory;
+import consulo.ui.ex.action.PresentationFactory;
 import jakarta.inject.Singleton;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -31,27 +31,20 @@ import jakarta.inject.Singleton;
 @ServiceImpl(profiles = ComponentProfiles.UNIFIED)
 @Singleton
 public class UnifiedActionPopupMenuFactory implements ActionPopupMenuFactory {
-    private final ActionManagerEx myActionManager;
-
-    @Inject
-    public UnifiedActionPopupMenuFactory(ActionManager actionManager) {
-        myActionManager = (ActionManagerEx) actionManager;
-    }
-
     @Override
     public ActionPopupMenu createActionPopupMenu(String place, ActionGroup group) {
-        return new UnifiedActionPopupMenuImpl(place, group, myActionManager, null);
+        return new UnifiedActionPopupMenuImpl(place, group, null);
     }
 
     @Override
     public ActionPopupMenu createActionPopupMenu(String place,
                                                  ActionGroup group,
                                                  @Nullable PresentationFactory presentationFactory) {
-        return new UnifiedActionPopupMenuImpl(place, group, myActionManager, presentationFactory);
+        return new UnifiedActionPopupMenuImpl(place, group, presentationFactory);
     }
 
     @Override
     public ActionPopupMenu createActionPopupMenuForceHide(String place, ActionGroup group) {
-        return new UnifiedActionPopupMenuImpl(place, group, myActionManager, new MenuItemPresentationFactory(true));
+        return new UnifiedActionPopupMenuImpl(place, group, new MenuItemPresentationFactory(true));
     }
 }

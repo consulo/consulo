@@ -716,12 +716,12 @@ public class UnifiedFindPopupPanel implements FindUI {
         return index > 0 ? myResultsModel.get(index - 1) : null;
     }
 
-    private static @Nullable ColorValue getSearchMatchBackground() {
+    public static @Nullable ColorValue getSearchMatchBackground() {
         TextAttributes attributes = EditorColorsManager.getInstance().getGlobalScheme().getAttributes(EditorColors.SEARCH_RESULT_ATTRIBUTES);
         return attributes == null ? null : attributes.getBackgroundColor();
     }
 
-    private static TextAttribute toTextAttribute(TextChunk textChunk, @Nullable ColorValue searchMatchBackground) {
+    public static TextAttribute toTextAttribute(TextChunk textChunk, @Nullable ColorValue searchMatchBackground) {
         TextAttributes attributes = textChunk.getAttributes();
         int fontType = attributes.getFontType();
         boolean highlighted = textChunk.getType() != null || (fontType & Font.BOLD) != 0;

@@ -33,6 +33,8 @@ import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import org.jspecify.annotations.Nullable;
 
+import javax.swing.KeyStroke;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CancellationException;
@@ -233,9 +235,28 @@ public final class UnifiedActionMenuExpander {
             presentation.getDisabledIcon(),
             presentation.isEnabled(),
             checked,
-            LocalizeValue.of(KeymapUtil.getFirstKeyboardShortcutText(action)),
+            shortcutText(action),
             null
         );
+    }
+
+    private static LocalizeValue shortcutText(AnAction action) {
+        String id = ActionManager.getInstance().getId(action);
+        Shortcut[] shortcuts = id != null ? KeymapUtil.getActiveKeymapShortcuts(id).getShortcuts() : action.getShortcutSet().getShortcuts();
+
+        for (Shortcut shortcut : shortcuts) {
+            if (shortcut instanceof KeyboardShortcut keyboardShortcut) {
+                if (isEnterKeyStroke(keyboardShortcut.getFirstKeyStroke())) {
+                    return LocalizeValue.empty();
+                }
+                return LocalizeValue.of(KeymapUtil.getShortcutText(keyboardShortcut));
+            }
+        }
+        return LocalizeValue.empty();
+    }
+
+    private static boolean isEnterKeyStroke(KeyStroke keyStroke) {
+        return keyStroke.getKeyCode() == KeyEvent.VK_ENTER && keyStroke.getModifiers() == 0;
     }
 
     @RequiredUIAccess

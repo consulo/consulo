@@ -227,11 +227,15 @@ public class DesktopQtMenuItemImpl implements MenuItem, DesktopQtIconOwner {
     @Override
     public void setShortcutText(LocalizeValue shortcutText) {
         myShortcutText = shortcutText;
+
+        applyState();
     }
 
     @Override
     public void setChecked(@Nullable Boolean checked) {
         myChecked = checked;
+
+        applyState();
     }
 
     @Override

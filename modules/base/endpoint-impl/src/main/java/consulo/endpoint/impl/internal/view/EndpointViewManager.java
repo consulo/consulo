@@ -15,6 +15,8 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jspecify.annotations.Nullable;
 
+import java.util.Set;
+
 @Singleton
 @ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
@@ -128,25 +130,41 @@ public final class EndpointViewManager implements PersistentStateComponent<Endpo
         return !myState.hiddenModules.contains(moduleName);
     }
 
-    @RequiredUIAccess
-    public void setModuleVisible(String moduleName, boolean visible) {
-        if (visible) {
-            myState.hiddenModules.remove(moduleName);
-        }
-        else {
-            myState.hiddenModules.add(moduleName);
-        }
-        fireOptionsChanged(true);
-    }
-
     public boolean isExternalVisible() {
         return myState.showExternal;
     }
 
+    public boolean isModuleChoiceVisible(String id) {
+        return EndpointModuleSnapshot.EXTERNAL_KEY.equals(id) ? isExternalVisible() : isModuleVisible(id);
+    }
+
     @RequiredUIAccess
-    public void setExternalVisible(boolean visible) {
-        myState.showExternal = visible;
-        fireOptionsChanged(true);
+    public void setModuleFilter(Set<String> shown, Set<String> hidden) {
+        boolean showExternal = myState.showExternal;
+        if (hidden.contains(EndpointModuleSnapshot.EXTERNAL_KEY)) {
+            showExternal = false;
+        }
+        else if (shown.contains(EndpointModuleSnapshot.EXTERNAL_KEY)) {
+            showExternal = true;
+        }
+
+        boolean changed = showExternal != myState.showExternal;
+        myState.showExternal = showExternal;
+
+        for (String id : shown) {
+            if (!EndpointModuleSnapshot.EXTERNAL_KEY.equals(id)) {
+                changed |= myState.hiddenModules.remove(id);
+            }
+        }
+        for (String id : hidden) {
+            if (!EndpointModuleSnapshot.EXTERNAL_KEY.equals(id)) {
+                changed |= myState.hiddenModules.add(id);
+            }
+        }
+
+        if (changed) {
+            fireOptionsChanged(true);
+        }
     }
 
     public boolean isTypeVisible(String typeTag) {
@@ -154,14 +172,10 @@ public final class EndpointViewManager implements PersistentStateComponent<Endpo
     }
 
     @RequiredUIAccess
-    public void setTypeVisible(String typeTag, boolean visible) {
-        if (visible) {
-            myState.hiddenTypes.remove(typeTag);
+    public void setTypeFilter(Set<String> shown, Set<String> hidden) {
+        if (updateHidden(myState.hiddenTypes, shown, hidden)) {
+            fireOptionsChanged(false);
         }
-        else {
-            myState.hiddenTypes.add(typeTag);
-        }
-        fireOptionsChanged(false);
     }
 
     public boolean isFrameworkVisible(String frameworkTag) {
@@ -169,14 +183,16 @@ public final class EndpointViewManager implements PersistentStateComponent<Endpo
     }
 
     @RequiredUIAccess
-    public void setFrameworkVisible(String frameworkTag, boolean visible) {
-        if (visible) {
-            myState.hiddenFrameworks.remove(frameworkTag);
+    public void setFrameworkFilter(Set<String> shown, Set<String> hidden) {
+        if (updateHidden(myState.hiddenFrameworks, shown, hidden)) {
+            fireOptionsChanged(false);
         }
-        else {
-            myState.hiddenFrameworks.add(frameworkTag);
-        }
-        fireOptionsChanged(false);
+    }
+
+    private static boolean updateHidden(Set<String> state, Set<String> shown, Set<String> hidden) {
+        boolean changed = state.removeAll(shown);
+        changed |= state.addAll(hidden);
+        return changed;
     }
 
     @RequiredUIAccess

@@ -430,19 +430,29 @@ public class FindUsagesManager {
         Task.Backgroundable task = new Task.Backgroundable(handler.getProject(), LocalizeValue.localizeTODO("Finding Usages")) {
             @Override
             public void run(ProgressIndicator indicator) {
-                ThrowableComputable<UsageSearcher, RuntimeException> action = () -> {
-                    PsiElement2UsageTargetAdapter[] primaryTargets = PsiElement2UsageTargetAdapter.convert(primaryElements);
-                    PsiElement2UsageTargetAdapter[] secondaryTargets = PsiElement2UsageTargetAdapter.convert(secondaryElements);
-                    return createUsageSearcher(primaryTargets, secondaryTargets, handler, findUsagesOptions, null);
-                };
-                UsageSearcher usageSearcher = ReadAction.compute(action);
-                usageSearcher.generate(processor);
+                processUsages(handler, primaryElements, secondaryElements, processor, findUsagesOptions);
             }
         };
 
         ((ProgressManagerImpl)ProgressManager.getInstance()).runProcessWithProgressAsynchronously(task, indicator, onComplete);
 
         return indicator;
+    }
+
+    public static void processUsages(
+        FindUsagesHandler handler,
+        PsiElement[] primaryElements,
+        PsiElement[] secondaryElements,
+        Predicate<Usage> processor,
+        FindUsagesOptions findUsagesOptions
+    ) {
+        ThrowableComputable<UsageSearcher, RuntimeException> action = () -> {
+            PsiElement2UsageTargetAdapter[] primaryTargets = PsiElement2UsageTargetAdapter.convert(primaryElements);
+            PsiElement2UsageTargetAdapter[] secondaryTargets = PsiElement2UsageTargetAdapter.convert(secondaryElements);
+            return createUsageSearcher(primaryTargets, secondaryTargets, handler, findUsagesOptions, null);
+        };
+        UsageSearcher usageSearcher = ReadAction.compute(action);
+        usageSearcher.generate(processor);
     }
 
     

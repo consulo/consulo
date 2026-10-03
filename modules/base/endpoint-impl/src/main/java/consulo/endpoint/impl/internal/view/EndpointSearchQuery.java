@@ -101,7 +101,9 @@ public final class EndpointSearchQuery {
     }
 
     public boolean matches(EndpointRowData<?, ?> data) {
-        if (!myTypes.isEmpty() && !myTypes.contains(data.getTypeTag().toLowerCase(Locale.ROOT))) {
+        if (!myTypes.isEmpty()
+            && !myTypes.contains(data.getTypeTag().toLowerCase(Locale.ROOT))
+            && !myTypes.contains(data.getTypeText().get().toLowerCase(Locale.ROOT))) {
             return false;
         }
 

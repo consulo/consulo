@@ -35,6 +35,7 @@ import consulo.module.content.layer.event.ModuleRootListener;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.project.event.DumbModeListener;
 import consulo.project.ui.impl.internal.wm.action.ActivateToolWindowAction;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.internal.ToolWindowLayout;
@@ -310,9 +311,16 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     }
 
     public void connectModuleExtensionListener() {
-        myProject.getMessageBus().connect().subscribe(ModuleRootListener.class, new ModuleRootListener() {
+        MessageBusConnection connection = myProject.getMessageBus().connect();
+        connection.subscribe(ModuleRootListener.class, new ModuleRootListener() {
             @Override
             public void rootsChanged(ModuleRootEvent event) {
+                myProject.getUIAccess().give(() -> revalidateToolWindows());
+            }
+        });
+        connection.subscribe(DumbModeListener.class, new DumbModeListener() {
+            @Override
+            public void exitDumbMode() {
                 myProject.getUIAccess().give(() -> revalidateToolWindows());
             }
         });

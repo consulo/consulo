@@ -15,6 +15,8 @@
  */
 package consulo.ui.ex.awt;
 
+import consulo.ui.ex.internal.ShrinkToFit;
+
 import javax.swing.SwingConstants;
 import java.awt.Component;
 import java.awt.Container;
@@ -22,6 +24,10 @@ import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.LayoutManager2;
 import java.util.ArrayList;
+import java.util.IdentityHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 
 /**
  * This class is intended to lay out added components horizontally.
@@ -43,6 +49,7 @@ public final class HorizontalLayout implements LayoutManager2 {
   private final ArrayList<Component> myCenter = new ArrayList<>();
   private final int myAlignment;
   private final int myGap;
+  private final boolean myShrinkToFit;
 
   /**
    * Creates a layout with the specified gap.
@@ -52,8 +59,13 @@ public final class HorizontalLayout implements LayoutManager2 {
    * @param gap horizontal gap between components
    */
   public HorizontalLayout(int gap) {
+    this(gap, false);
+  }
+
+  public HorizontalLayout(int gap, boolean shrinkToFit) {
     myGap = gap;
     myAlignment = -1;
+    myShrinkToFit = shrinkToFit;
   }
 
   /**
@@ -78,6 +90,7 @@ public final class HorizontalLayout implements LayoutManager2 {
       default:
         throw new IllegalArgumentException("unsupported alignment: " + alignment);
     }
+    myShrinkToFit = false;
   }
 
   @Override
@@ -147,17 +160,20 @@ public final class HorizontalLayout implements LayoutManager2 {
   @Override
   public void layoutContainer(Container container) {
     synchronized (container.getTreeLock()) {
-      Dimension left = getPreferredSize(myLeft);
-      Dimension right = getPreferredSize(myRight);
-      Dimension center = getPreferredSize(myCenter);
-
       Insets insets = container.getInsets();
       int width = container.getWidth() - insets.left - insets.right;
       int height = container.getHeight() - insets.top - insets.bottom;
 
+      Map<Component, Integer> widths = shrinkWidths(container, width);
+      Function<Component, Dimension> sizer = component -> fittedSize(component, widths);
+
+      Dimension left = getSize(myLeft, sizer);
+      Dimension right = getSize(myRight, sizer);
+      Dimension center = getSize(myCenter, sizer);
+
       int leftX = 0;
       if (left != null) {
-        leftX = myGap + layout(myLeft, 0, height, insets);
+        leftX = myGap + layout(myLeft, 0, height, insets, sizer);
       }
       int rightX = width;
       if (right != null) {
@@ -177,21 +193,69 @@ public final class HorizontalLayout implements LayoutManager2 {
         if (centerX < leftX) {
           centerX = leftX;
         }
-        centerX = myGap + layout(myCenter, centerX, height, insets);
+        centerX = myGap + layout(myCenter, centerX, height, insets, sizer);
         if (rightX < centerX) {
           rightX = centerX;
         }
       }
       if (right != null) {
-        layout(myRight, rightX, height, insets);
+        layout(myRight, rightX, height, insets, sizer);
       }
     }
   }
 
-  private int layout(ArrayList<Component> list, int x, int height, Insets insets) {
+  private Map<Component, Integer> shrinkWidths(Container container, int width) {
+    if (!myShrinkToFit) {
+      return Map.of();
+    }
+
+    Insets insets = container.getInsets();
+    int deficit = getPreferredSize(container, false).width - insets.left - insets.right - width;
+    if (deficit <= 0) {
+      return Map.of();
+    }
+
+    List<Component> shrinkable = new ArrayList<>();
+    for (List<Component> list : List.of(myLeft, myCenter, myRight)) {
+      for (Component component : list) {
+        if (component.isVisible() && component.getMinimumSize().width < component.getPreferredSize().width) {
+          shrinkable.add(component);
+        }
+      }
+    }
+
+    if (shrinkable.isEmpty()) {
+      return Map.of();
+    }
+
+    int[] preferred = new int[shrinkable.size()];
+    int[] minimum = new int[shrinkable.size()];
+    for (int i = 0; i < shrinkable.size(); i++) {
+      preferred[i] = shrinkable.get(i).getPreferredSize().width;
+      minimum[i] = shrinkable.get(i).getMinimumSize().width;
+    }
+
+    int[] fitted = ShrinkToFit.widths(preferred, minimum, deficit);
+    Map<Component, Integer> widths = new IdentityHashMap<>();
+    for (int i = 0; i < shrinkable.size(); i++) {
+      widths.put(shrinkable.get(i), fitted[i]);
+    }
+    return widths;
+  }
+
+  private static Dimension fittedSize(Component component, Map<Component, Integer> widths) {
+    Dimension size = component.getPreferredSize();
+    Integer width = widths.get(component);
+    if (width != null) {
+      size.width = width;
+    }
+    return size;
+  }
+
+  private int layout(ArrayList<Component> list, int x, int height, Insets insets, Function<Component, Dimension> sizer) {
     for (Component component : list) {
       if (component.isVisible()) {
-        Dimension size = component.getPreferredSize();
+        Dimension size = sizer.apply(component);
         int y = 0;
         if (myAlignment == -1) {
           size.height = height;
@@ -223,21 +287,25 @@ public final class HorizontalLayout implements LayoutManager2 {
     return result;
   }
 
-  private Dimension getPreferredSize(ArrayList<Component> list) {
+  private Dimension getSize(ArrayList<Component> list, Function<Component, Dimension> sizer) {
     Dimension result = null;
     for (Component component : list) {
       if (component.isVisible()) {
-        result = join(result, myGap, component.getPreferredSize());
+        result = join(result, myGap, sizer.apply(component));
       }
     }
     return result;
   }
 
   private Dimension getPreferredSize(Container container, boolean aligned) {
+    return getSize(container, aligned, Component::getPreferredSize);
+  }
+
+  private Dimension getSize(Container container, boolean aligned, Function<Component, Dimension> sizer) {
     synchronized (container.getTreeLock()) {
-      Dimension left = getPreferredSize(myLeft);
-      Dimension right = getPreferredSize(myRight);
-      Dimension center = getPreferredSize(myCenter);
+      Dimension left = getSize(myLeft, sizer);
+      Dimension right = getSize(myRight, sizer);
+      Dimension center = getSize(myCenter, sizer);
       Dimension result = join(join(join(null, myGap + myGap, left), myGap + myGap, center), myGap + myGap, right);
       if (result == null) {
         result = new Dimension();

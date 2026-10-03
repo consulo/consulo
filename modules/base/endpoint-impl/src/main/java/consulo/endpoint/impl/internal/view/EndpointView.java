@@ -14,6 +14,7 @@ import consulo.disposer.Disposer;
 import consulo.endpoint.EndpointChangeTracker;
 import consulo.endpoint.EndpointDataKeys;
 import consulo.endpoint.EndpointListItem;
+import consulo.endpoint.EndpointProjectModel;
 import consulo.endpoint.EndpointProvider;
 import consulo.endpoint.EndpointViewListener;
 import consulo.endpoint.EndpointViewOpener;
@@ -30,6 +31,7 @@ import consulo.logging.Logger;
 import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.module.content.layer.event.ModuleRootListener;
 import consulo.navigation.Navigatable;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.event.DumbModeListener;
@@ -51,6 +53,7 @@ import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.action.ActionToolbarFactory;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.layout.DockLayout;
+import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.layout.LoadingLayout;
 import consulo.ui.layout.ScrollableLayout;
 import consulo.ui.layout.SplitLayoutPosition;
@@ -99,6 +102,10 @@ public final class EndpointView implements Disposable, UiDataProvider {
     private final DockLayout myListContent;
     private final LoadingLayout<DockLayout> myLoadingLayout;
     private final ActionToolbar myToolbar;
+    private final EndpointFilterChoice myExternalChoice;
+    private final EndpointFilterComboBox myModuleFilter;
+    private final EndpointFilterComboBox myTypeFilter;
+    private final EndpointFilterComboBox myFrameworkFilter;
     private final EndpointDetailsPane myDetailsPane;
 
     private final Component myNoFrameworksPanel;
@@ -160,9 +167,44 @@ public final class EndpointView implements Disposable, UiDataProvider {
         myToolbar = ActionToolbarFactory.getInstance()
             .createActionToolbar(EndpointViewOpener.ENDPOINTS_FILTER_TOOLBAR_PLACE, toolbarGroup, ActionToolbar.Style.HORIZONTAL);
 
-        DockLayout header = DockLayout.create(Space.NONE);
-        header.top(myToolbar.getUIComponent());
-        header.center(mySearchBox);
+        myExternalChoice = new EndpointFilterChoice(
+            EndpointModuleSnapshot.EXTERNAL_KEY,
+            EndpointLocalize.frameworksFiltersModuleExternal(),
+            PlatformIconGroup.generalWeb()
+        );
+        EndpointProjectModel projectModel = myManager.getProjectModel();
+        myModuleFilter = new EndpointFilterComboBox(
+            projectModel.getModuleDisplayName(),
+            projectModel.getSelectModulesTitle(),
+            myManager::isModuleChoiceVisible,
+            myManager::setModuleFilter
+        );
+        myTypeFilter = new EndpointFilterComboBox(
+            EndpointLocalize.frameworksFiltersType(),
+            EndpointLocalize.frameworksFiltersTypeTitle(),
+            myManager::isTypeVisible,
+            myManager::setTypeFilter
+        );
+        myFrameworkFilter = new EndpointFilterComboBox(
+            EndpointLocalize.frameworksFiltersFramework(),
+            EndpointLocalize.frameworksFiltersFrameworkTitle(),
+            myManager::isFrameworkVisible,
+            myManager::setFrameworkFilter
+        );
+
+        HorizontalLayout filters = HorizontalLayout.create(Space.SMALL);
+        filters.add(myModuleFilter.getComponent());
+        filters.add(myTypeFilter.getComponent());
+        filters.add(myFrameworkFilter.getComponent());
+
+        DockLayout searchRow = DockLayout.create(Space.SMALL);
+        searchRow.center(mySearchBox);
+        searchRow.right(myToolbar.getUIComponent());
+
+        DockLayout header = DockLayout.create(Space.X_SMALL);
+        header.top(filters);
+        header.center(searchRow);
+        header.paddingBuilder().horizontalSet(Space.SMALL).verticalSet(Space.X_SMALL).apply();
 
         DockLayout listSide = DockLayout.create(Space.NONE);
         listSide.center(myLoadingLayout);
@@ -174,7 +216,7 @@ public final class EndpointView implements Disposable, UiDataProvider {
             myDetailsPane.selectTab(selectedTabId);
         }
 
-        myVertical = isToolWindowVertical();
+        myVertical = isToolWindowVertical(toolWindow);
         mySplit = TwoComponentSplitLayout.create(myVertical ? SplitLayoutPosition.VERTICAL : SplitLayoutPosition.HORIZONTAL);
         mySplit.setProportion(myManager.getSplitProportion());
         mySplit.addSplitProportionChangedListener(event -> myManager.setSplitProportion(event.getProportion()));
@@ -224,14 +266,23 @@ public final class EndpointView implements Disposable, UiDataProvider {
         connection.subscribe(ToolWindowManagerListener.class, new ToolWindowManagerListener() {
             @Override
             public void toolWindowShown(ToolWindow toolWindow) {
-                if (EndpointViewOpener.ENDPOINTS_TOOLWINDOW_ID.equals(toolWindow.getId())) {
+                if (!myDisposed && EndpointViewOpener.ENDPOINTS_TOOLWINDOW_ID.equals(toolWindow.getId())) {
                     refreshIfDirty();
                 }
             }
 
             @Override
             public void stateChanged(ToolWindowManager toolWindowManager) {
-                updateOrientation();
+                if (myDisposed) {
+                    return;
+                }
+
+                ToolWindow window = toolWindowManager.getToolWindow(EndpointViewOpener.ENDPOINTS_TOOLWINDOW_ID);
+                if (window == null || window.isDisposed()) {
+                    return;
+                }
+
+                updateOrientation(window);
                 refreshIfDirty();
             }
         });
@@ -240,13 +291,13 @@ public final class EndpointView implements Disposable, UiDataProvider {
         Disposer.register(this, StyleManager.get().addChangeListener((oldStyle, newStyle) -> colorsChanged()));
     }
 
-    private boolean isToolWindowVertical() {
-        return !myToolWindow.getAnchor().isHorizontal();
+    private static boolean isToolWindowVertical(ToolWindow toolWindow) {
+        return !toolWindow.getAnchor().isHorizontal();
     }
 
     @RequiredUIAccess
-    private void updateOrientation() {
-        boolean vertical = isToolWindowVertical();
+    private void updateOrientation(ToolWindow toolWindow) {
+        boolean vertical = isToolWindowVertical(toolWindow);
         if (vertical == myVertical) {
             return;
         }
@@ -264,10 +315,6 @@ public final class EndpointView implements Disposable, UiDataProvider {
 
     public EndpointDetailsPane getDetailsPane() {
         return myDetailsPane;
-    }
-
-    public EndpointSnapshot getSnapshot() {
-        return mySnapshot;
     }
 
     public boolean isTrackingChanges() {
@@ -298,6 +345,7 @@ public final class EndpointView implements Disposable, UiDataProvider {
             return;
         }
 
+        updateFilters();
         if (reload) {
             reload();
         }
@@ -476,6 +524,8 @@ public final class EndpointView implements Disposable, UiDataProvider {
         mySnapshot = snapshot;
         myLoadedQuery = query;
 
+        updateFilters();
+
         if (myLoading) {
             myLoading = false;
             myLoadingLayout.stopLoading(inner -> {
@@ -644,6 +694,15 @@ public final class EndpointView implements Disposable, UiDataProvider {
         return !query.getHiddenTypes().contains(data.getTypeTag())
             && !query.getHiddenFrameworks().contains(data.getFrameworkTag())
             && search.matches(data);
+    }
+
+    @RequiredUIAccess
+    private void updateFilters() {
+        List<EndpointFilterChoice> modules = new ArrayList<>(mySnapshot.getModules());
+        modules.add(myExternalChoice);
+        myModuleFilter.update(modules);
+        myTypeFilter.update(mySnapshot.getTypes());
+        myFrameworkFilter.update(mySnapshot.getFrameworks());
     }
 
     @RequiredUIAccess

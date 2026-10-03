@@ -35,6 +35,7 @@ import javax.swing.JComboBox;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Function;
 
 /**
  * @author VISTALL
@@ -69,6 +70,7 @@ class DesktopMultiSelectComboBoxImpl<E> extends DesktopComboBoxBaseImpl<E, Deskt
 
     private List<E> myLastValue = List.of();
     private LocalizeValue myPlaceholder = LocalizeValue.empty();
+    private @Nullable Function<List<E>, LocalizeValue> mySummaryRenderer;
 
     DesktopMultiSelectComboBoxImpl(FlatDataModel<E> model) {
         super(model);
@@ -81,6 +83,7 @@ class DesktopMultiSelectComboBoxImpl<E> extends DesktopComboBoxBaseImpl<E, Deskt
         MyMultiSelectComboBox component = new MyMultiSelectComboBox(items());
         initComboBox(component.getComboBox());
         component.setPlaceholder(myPlaceholder.getNullIfEmpty());
+        component.setSummary(toSummary(mySummaryRenderer));
         component.addActionListener(event -> fireIfChanged(DesktopAWTInputDetails.currentEvent(component)));
         return component;
     }
@@ -120,6 +123,18 @@ class DesktopMultiSelectComboBoxImpl<E> extends DesktopComboBoxBaseImpl<E, Deskt
         if (isInitialized()) {
             toAWTComponent().setPlaceholder(text.getNullIfEmpty());
         }
+    }
+
+    @Override
+    public void setSummaryRenderer(Function<List<E>, LocalizeValue> renderer) {
+        mySummaryRenderer = renderer;
+        if (isInitialized()) {
+            toAWTComponent().setSummary(toSummary(renderer));
+        }
+    }
+
+    private static <E> @Nullable Function<List<E>, String> toSummary(@Nullable Function<List<E>, LocalizeValue> renderer) {
+        return renderer == null ? null : items -> renderer.apply(items).get();
     }
 
     @Override

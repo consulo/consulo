@@ -36,7 +36,11 @@ public class UsageViewLongNameLocation extends ElementDescriptionLocation {
             if (element instanceof PsiDirectory directory) {
                 return PsiPackageHelper.getInstance(element.getProject()).getQualifiedName(directory, true);
             }
-            return "";
+            if (element instanceof PsiQualifiedNamedElement qualifiedNamedElement) {
+                return qualifiedNamedElement.getQualifiedName();
+            }
+            return UsageViewShortNameLocation.INSTANCE.getDefaultProvider()
+                .getElementDescription(element, UsageViewShortNameLocation.INSTANCE);
         }
         return null;
     };

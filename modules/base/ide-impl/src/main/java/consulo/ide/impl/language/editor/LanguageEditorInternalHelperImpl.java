@@ -29,10 +29,10 @@ import consulo.configurable.Configurable;
 import consulo.configurable.UnnamedConfigurable;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
-import consulo.find.FindManager;
 import consulo.ide.impl.idea.codeInsight.editorActions.EnterHandler;
 import consulo.ide.impl.idea.codeInsight.highlighting.HighlightUsagesHandler;
 import consulo.ide.impl.idea.find.actions.ShowUsagesAction;
+import consulo.ide.impl.idea.find.actions.UnifiedShowUsagesPopup;
 import consulo.ide.impl.idea.profile.codeInspection.ui.ErrorsConfigurable;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.language.Language;
@@ -202,7 +202,7 @@ public class LanguageEditorInternalHelperImpl implements LanguageEditorInternalH
                 .showDumbModeNotification(LocalizeValue.localizeTODO("Usage search is not available until indices are ready"));
         }
         else if (!Application.get().isSwingApplication()) {
-            FindManager.getInstance(project).findUsages(element);
+            UnifiedShowUsagesPopup.show(editor, project, element, point);
         }
         else {
             RelativePoint2D popupPosition = point != null ? point : EditorPopupHelper.getInstance().guessBestPopupLocation(editor);

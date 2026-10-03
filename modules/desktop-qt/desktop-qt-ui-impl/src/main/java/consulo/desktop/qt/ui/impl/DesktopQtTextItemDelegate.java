@@ -77,6 +77,24 @@ public class DesktopQtTextItemDelegate extends QStyledItemDelegate {
     }
 
     @Override
+    protected void initStyleOption(QStyleOptionViewItem option, QModelIndex index) {
+        super.initStyleOption(option, index);
+
+        DesktopQtTextItemPresentation presentation = presentationOf(index);
+        Image image = presentation == null ? null : presentation.getImage();
+        if (image == null || !option.features().testFlag(QStyleOptionViewItem.ViewItemFeature.HasDecoration)) {
+            return;
+        }
+
+        QSize decorationSize = option.decorationSize();
+        int width = image.getWidth();
+        int height = image.getHeight();
+        if (width > decorationSize.width() || height > decorationSize.height()) {
+            option.setDecorationSize(new QSize(Math.max(width, decorationSize.width()), Math.max(height, decorationSize.height())));
+        }
+    }
+
+    @Override
     public void paint(@Nullable QPainter painter, QStyleOptionViewItem option, QModelIndex index) {
         DesktopQtTextItemPresentation presentation = presentationOf(index);
         if (painter == null || presentation == null || !isStyled(presentation)) {

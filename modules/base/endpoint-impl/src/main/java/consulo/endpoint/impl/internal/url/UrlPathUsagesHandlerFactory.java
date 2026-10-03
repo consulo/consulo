@@ -18,6 +18,11 @@ public final class UrlPathUsagesHandlerFactory extends FindUsagesHandlerFactory 
     public FindUsagesHandler createFindUsagesHandler(PsiElement element, boolean forHighlightUsages) {
         return new FindUsagesHandler(element) {
             @Override
+            public boolean supportConsuloUI() {
+                return true;
+            }
+
+            @Override
             public PsiElement[] getPrimaryElements() {
                 return new PsiElement[]{getPsiElement()};
             }

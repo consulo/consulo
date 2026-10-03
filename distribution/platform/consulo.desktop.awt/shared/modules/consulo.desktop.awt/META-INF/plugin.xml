@@ -141,6 +141,15 @@
             <add-to-group group-id="Diff.KeymapGroup" anchor="last"/>
         </group>
 
+        <action id="IncrementWindowWidth" class="consulo.desktop.awt.ui.popup.WindowAction$IncrementWidth"
+                use-shortcut-of="ResizeToolWindowRight"/>
+        <action id="DecrementWindowWidth" class="consulo.desktop.awt.ui.popup.WindowAction$DecrementWidth"
+                use-shortcut-of="ResizeToolWindowLeft"/>
+        <action id="IncrementWindowHeight" class="consulo.desktop.awt.ui.popup.WindowAction$IncrementHeight"
+                use-shortcut-of="ResizeToolWindowDown"/>
+        <action id="DecrementWindowHeight" class="consulo.desktop.awt.ui.popup.WindowAction$DecrementHeight"
+                use-shortcut-of="ResizeToolWindowUp"/>
+
         <action id="UiDebugger" class="consulo.desktop.awt.uiOld.debugger.ShowUiDebuggerAction">
             <add-to-group group-id="MaintenanceGroup"/>
         </action>

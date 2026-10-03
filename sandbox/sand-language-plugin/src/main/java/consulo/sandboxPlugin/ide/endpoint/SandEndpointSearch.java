@@ -27,6 +27,8 @@ import consulo.language.psi.PsiModificationTracker;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.search.FileTypeIndex;
 import consulo.language.psi.util.PsiTreeUtil;
+import consulo.module.Module;
+import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
 import consulo.module.extension.ModuleExtensionHelper;
 import consulo.project.DumbService;
@@ -62,8 +64,13 @@ public final class SandEndpointSearch {
         }
 
         PsiManager psiManager = PsiManager.getInstance(project);
+        ProjectFileIndex fileIndex = ProjectFileIndex.getInstance(project);
         List<SandClass> result = new ArrayList<>();
         for (VirtualFile file : FileTypeIndex.getFiles(SandFileType.INSTANCE, scope)) {
+            Module module = fileIndex.getModuleForFile(file);
+            if (module != null && !hasSandExtension(module)) {
+                continue;
+            }
             PsiFile psiFile = psiManager.findFile(file);
             if (psiFile == null) {
                 continue;
@@ -75,6 +82,10 @@ public final class SandEndpointSearch {
             }
         }
         return result;
+    }
+
+    public static boolean hasSandExtension(Module module) {
+        return module.getExtension(SandModuleExtension.class) != null;
     }
 
     @RequiredReadAction

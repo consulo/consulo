@@ -134,7 +134,11 @@ public final class SandInfoSidePanel implements EndpointSidePanel {
                 break;
             }
         }
-        builder.append(info.getPath().getPresentation());
+        String path = info.getPath().getPresentation();
+        if (!path.startsWith("/")) {
+            builder.append('/');
+        }
+        builder.append(path);
         return builder.toString();
     }
 }

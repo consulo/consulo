@@ -45,6 +45,12 @@ public class WebPooledListBoxImpl<E> extends WebPooledListBoxBase<E> implements 
     }
 
     @Override
+    @RequiredUIAccess
+    protected void onRowContextPressed(E item, int index) {
+        setValue(item);
+    }
+
+    @Override
     public @Nullable E getValue() {
         return myValue;
     }

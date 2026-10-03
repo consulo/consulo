@@ -509,7 +509,6 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
     }
 
     @Override
-    
     public ActionPopupMenu createActionPopupMenu(
         String place,
         ActionGroup group,
@@ -518,16 +517,11 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
         return myPopupMenuFactory.get().createActionPopupMenu(place, group, presentationFactory);
     }
 
-    
     @Override
     public ActionPopupMenu createActionPopupMenu(String place, ActionGroup group) {
-        if (Application.get().isUnifiedApplication()) {
-            return new UnifiedActionPopupMenuImpl(place, group, this, null);
-        }
         return myPopupMenuFactory.get().createActionPopupMenu(place, group);
     }
 
-    
     @Override
     public ActionToolbar createActionToolbar(String place, ActionGroup group, boolean horizontal) {
         return myToolbarFactory.get()

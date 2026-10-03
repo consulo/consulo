@@ -55,13 +55,7 @@ public final class EndpointLoader {
     @RequiredReadAction
     public EndpointSnapshot load(EndpointQuery query) {
         long generation = myGeneration.get();
-        List<EndpointProvider<?, ?>> providers = new ArrayList<>();
-        for (EndpointProvider<?, ?> provider : EndpointProvider.getAllProviders(myProject)) {
-            ProgressManager.checkCanceled();
-            if (isAvailable(provider)) {
-                providers.add(provider);
-            }
-        }
+        List<EndpointProvider<?, ?>> providers = EndpointProvider.getAvailableProviders(myProject);
 
         if (providers.isEmpty()) {
             myCache.clear();
@@ -160,19 +154,6 @@ public final class EndpointLoader {
             List.copyOf(types.values()),
             List.copyOf(frameworks.values())
         );
-    }
-
-    private static boolean isAvailable(EndpointProvider<?, ?> provider) {
-        try {
-            return provider.getStatus() != EndpointProvider.Status.UNAVAILABLE;
-        }
-        catch (ProcessCanceledException e) {
-            throw e;
-        }
-        catch (Exception e) {
-            LOG.error(e);
-            return false;
-        }
     }
 
     @RequiredReadAction

@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.sandboxPlugin.ide.endpoint;
+package consulo.endpoint.impl.internal.client.generator;
 
 import consulo.endpoint.client.generator.AvailableClientSettings;
 import consulo.endpoint.client.generator.ClientGeneratorSetting;
 
-public final class SandCurlClientSettings implements AvailableClientSettings {
+public final class CurlClientSettings implements AvailableClientSettings {
     private final ClientGeneratorSetting mySetting = new ClientGeneratorSetting();
 
     @Override

@@ -35,6 +35,43 @@
 
     const FLOATING_TOOLBAR_RETENTION_MS = 1500;
 
+    const decorateInlayImage = span => {
+        const html = span.getAttribute ? span.getAttribute('data-arquill-inlay-image') : null;
+        if (html === null || span.$arquillInlayImage === html) {
+            return;
+        }
+
+        span.$arquillInlayImage = html;
+
+        while (span.childNodes.length > 1) {
+            span.removeChild(span.lastChild);
+        }
+
+        const holder = span.ownerDocument.createElement('span');
+        holder.className = 'arquill-inlay-image-holder';
+        holder.setAttribute('contenteditable', 'false');
+        holder.innerHTML = html;
+        span.appendChild(holder);
+    };
+
+    const decorateInlayImagesOnCreate = textView => {
+        const line = textView._getLine(0);
+        const linePrototype = Object.getPrototypeOf(line);
+        line.destroy();
+
+        if (linePrototype.$arquillInlayImages || typeof linePrototype._createSpan !== 'function') {
+            return;
+        }
+        linePrototype.$arquillInlayImages = true;
+
+        const createSpan = linePrototype._createSpan;
+        linePrototype._createSpan = function (...args) {
+            const span = createSpan.apply(this, args);
+            decorateInlayImage(span);
+            return span;
+        };
+    };
+
     const install = (element, contents, readonly, rulers, noFocus) => {
         if (element.$arquillEditor) {
             return;
@@ -59,6 +96,8 @@
         }
 
         const textView = element.$arquillEditor.getTextView();
+
+        decorateInlayImagesOnCreate(textView);
 
         const onWheel = domEvent => {
             if (element.classList.contains('arquill-editor-one-line')) {
@@ -160,6 +199,19 @@
             return detail;
         };
 
+        const caretRectKey = detail =>
+            detail.caretX + ',' + detail.caretY + ',' + detail.caretHeight + ',' + detail.textX + ',' + detail.textY;
+
+        const fireCaret = detail => {
+            element.$arquillCaretRect = caretRectKey(detail);
+            element.dispatchEvent(new CustomEvent('arquill-caret', { detail: detail }));
+        };
+
+        const isHostLaidOut = () => {
+            const box = element.getBoundingClientRect();
+            return box.width > 0 || box.height > 0;
+        };
+
         /*
          * The caret of the platform, drawn rather than left to the browser - it has a width, a colour and a blink
          * period, and a contenteditable caret answers to none of them.
@@ -175,22 +227,34 @@
         caretElement.className = 'arquill-caret arquill-caret-blinking arquill-caret-hidden';
         element.appendChild(caretElement);
 
+        let placedCaret = null;
+
+        const hideCaret = () => {
+            caretElement.classList.add('arquill-caret-hidden');
+            placedCaret = null;
+        };
+
         const placeCaret = () => {
             if (!caretVisible) {
-                caretElement.classList.add('arquill-caret-hidden');
+                hideCaret();
                 return;
             }
 
             const selection = textView.getSelection();
             if (!selection || selection.start !== selection.end) {
                 // a caret is where there is nothing selected, and a selection draws itself
-                caretElement.classList.add('arquill-caret-hidden');
+                hideCaret();
+                return;
+            }
+
+            if (!isHostLaidOut()) {
+                hideCaret();
                 return;
             }
 
             const detail = caretDetail(toBaseOffset(selection.start), selection.start);
             if (detail.caretHeight <= 0) {
-                caretElement.classList.add('arquill-caret-hidden');
+                hideCaret();
                 return;
             }
 
@@ -198,16 +262,45 @@
             // glyphs do rather than where the row does. deriving the one from the other left the two a couple of
             // pixels apart, which is the leading the row carries and the background does not
             const height = textBoxHeight > 0 ? Math.min(detail.caretHeight, textBoxHeight) : detail.caretHeight;
+            const left = detail.caretX + 'px';
+            const top = (detail.textY > 0 ? detail.textY : detail.caretY) + 'px';
+            const placed = left + ',' + top + ',' + height;
 
-            caretElement.style.left = detail.caretX + 'px';
-            caretElement.style.top = (detail.textY > 0 ? detail.textY : detail.caretY) + 'px';
+            caretElement.style.left = left;
+            caretElement.style.top = top;
             caretElement.style.height = height + 'px';
             caretElement.classList.remove('arquill-caret-hidden');
+
+            if (placed === placedCaret) {
+                return;
+            }
+            placedCaret = placed;
 
             // restarting the animation puts the caret back on solid, so it does not vanish while it is moved
             caretElement.style.animation = 'none';
             void caretElement.offsetWidth;
             caretElement.style.animation = '';
+        };
+
+        const relayoutCaret = () => {
+            placeCaret();
+
+            if (!isHostLaidOut()) {
+                return;
+            }
+
+            const viewCaret = textView.getCaretOffset();
+            const offset = toBaseOffset(viewCaret);
+            if (offset < 0) {
+                return;
+            }
+
+            const detail = Object.assign(caretDetail(offset, viewCaret), { rectOnly: true });
+            if (detail.caretHeight <= 0 || caretRectKey(detail) === element.$arquillCaretRect) {
+                return;
+            }
+
+            fireCaret(detail);
         };
 
         /*
@@ -218,7 +311,9 @@
          * A span in the same font rather than orion's own metrics: what it caches is private, and a run of glyphs
          * divided by its length is exact for the monospace face an editor is drawn with.
          */
-        const reportMetrics = () => {
+        let metricsPending = false;
+
+        const measureTextBox = () => {
             try {
                 const content = element.querySelector('.textviewContent') || element;
                 const style = window.getComputedStyle(content);
@@ -233,26 +328,37 @@
 
                 content.appendChild(ruler);
                 const rulerBox = ruler.getBoundingClientRect();
-                const charWidth = rulerBox.width / 10;
-                textBoxHeight = Math.round(rulerBox.height);
                 ruler.remove();
+
+                const charWidth = rulerBox.width / 10;
+                const height = Math.round(rulerBox.height);
+                if (charWidth <= 0 || height <= 0) {
+                    metricsPending = true;
+                    return 0;
+                }
+
+                metricsPending = false;
+                textBoxHeight = height;
 
                 // the row is the box of the face plus the leading the scheme asks for, so the glyphs sit in the
                 // middle of it the way an inline box always does
-                if (textBoxHeight > 0) {
-                    element.style.setProperty('--arquill-editor-line-height',
-                        Math.round(textBoxHeight * (lineSpacing > 0 ? lineSpacing : 1)) + 'px');
-                }
+                element.style.setProperty('--arquill-editor-line-height',
+                    Math.round(textBoxHeight * (lineSpacing > 0 ? lineSpacing : 1)) + 'px');
 
-                const lineHeight = textView.getLineHeight();
-                if (charWidth > 0 && lineHeight > 0) {
-                    element.dispatchEvent(new CustomEvent('arquill-metrics', {
-                        detail: { charWidth: Math.max(1, Math.round(charWidth)), lineHeight: Math.round(lineHeight) }
-                    }));
-                }
+                return charWidth;
             }
             catch (e) {
                 // the platform keeps whatever it had - a wrong cell is better than an editor which cannot move
+                return 0;
+            }
+        };
+
+        const reportMetrics = charWidth => {
+            const lineHeight = textView.getLineHeight();
+            if (charWidth > 0 && lineHeight > 0) {
+                element.dispatchEvent(new CustomEvent('arquill-metrics', {
+                    detail: { charWidth: Math.max(1, Math.round(charWidth)), lineHeight: Math.round(lineHeight) }
+                }));
             }
         };
 
@@ -483,7 +589,7 @@
             const offset = offsetAt(domEvent);
             if (offset >= 0 && offset !== element.$arquillCaretOffset) {
                 element.$arquillCaretOffset = offset;
-                element.dispatchEvent(new CustomEvent('arquill-caret', { detail: caretDetail(offset, toViewOffset(offset)) }));
+                fireCaret(caretDetail(offset, toViewOffset(offset)));
             }
         }, { capture: true });
 
@@ -613,9 +719,7 @@
             // the event just carried the rect of this offset, so the echo the server answers with has
             // nothing left to report
             element.$arquillLastRectOffset = start === end ? offset : -1;
-            element.dispatchEvent(new CustomEvent('arquill-caret', {
-                detail: Object.assign(caretDetail(offset, viewCaret), { selectionStart: start, selectionEnd: end })
-            }));
+            fireCaret(Object.assign(caretDetail(offset, viewCaret), { selectionStart: start, selectionEnd: end }));
             placeCaret();
         });
 
@@ -1907,30 +2011,6 @@
             return styles;
         };
 
-        const decorateInlayImages = () => {
-            for (const span of element.querySelectorAll('[data-arquill-inlay-image]')) {
-                const html = span.getAttribute('data-arquill-inlay-image');
-                if (span.$arquillInlayImage === html) {
-                    continue;
-                }
-
-                span.$arquillInlayImage = html;
-
-                while (span.childNodes.length > 1) {
-                    span.removeChild(span.lastChild);
-                }
-
-                const holder = document.createElement('span');
-                holder.className = 'arquill-inlay-image-holder';
-                holder.setAttribute('contenteditable', 'false');
-                holder.innerHTML = html;
-                span.appendChild(holder);
-            }
-        };
-
-        const inlayImageObserver = new MutationObserver(decorateInlayImages);
-        inlayImageObserver.observe(element.querySelector('.textviewContent') || element, { childList: true, subtree: true });
-
         // orion will put the caret inside a projection, and an offset in there maps to no document offset at all -
         // the platform would keep the caret it had and quietly disagree with what is on screen. neither an inlay
         // nor a fold placeholder is somewhere the user can stand, so the caret steps over it instead
@@ -2072,6 +2152,7 @@
         const onProjectionChanged = () => {
             pushStyleRanges();
             scheduleOverlayRender();
+            relayoutCaret();
 
             // the stripe is built after this, and the first fold pass already runs through here
             if (redrawErrorStripe) {
@@ -2133,6 +2214,59 @@
             onViewChanged();
             fireViewport();
         });
+
+        // orion measures its metrics while the view is created and lays every line out against what
+        // it cached - update(true) is the only way back into _calculateMetrics, and the overlays are
+        // placed at pixels the view reported, all of which just moved
+        const remeasure = () => {
+            // the row is published first: orion caches what it measures, and updating before the height
+            // is set leaves every line laid out against the previous one
+            const charWidth = measureTextBox();
+            textView.update(true);
+            reportMetrics(charWidth);
+            onProjectionChanged();
+            placeCaret();
+        };
+
+        let caretRevealPending = false;
+
+        const restoreSelection = () => {
+            const caret = element.$arquillCaretOffset;
+            if (typeof caret !== 'number' || caret <= 0) {
+                return;
+            }
+
+            const length = baseModel.getCharCount();
+            const selectionStart = typeof element.$arquillSelectionStart === 'number' ? element.$arquillSelectionStart : caret;
+            const selectionEnd = typeof element.$arquillSelectionEnd === 'number' ? element.$arquillSelectionEnd : caret;
+            const anchor = caret === selectionStart ? selectionEnd : caret === selectionEnd ? selectionStart : caret;
+
+            element.$arquillLastRectOffset = -1;
+            element.$arquillApi.setSelection(Math.min(anchor, length), Math.min(caret, length));
+        };
+
+        const hostResizeObserver = new ResizeObserver(() => {
+            if (!isHostLaidOut()) {
+                placeCaret();
+                return;
+            }
+
+            textView.resize();
+            if (metricsPending) {
+                remeasure();
+            }
+            else {
+                textView.update();
+                relayoutCaret();
+            }
+
+            if (caretRevealPending) {
+                caretRevealPending = false;
+                textView.showSelection();
+                relayoutCaret();
+            }
+        });
+        hostResizeObserver.observe(element);
 
         renderFoldRegions();
 
@@ -2399,6 +2533,8 @@
                     finally {
                         element.$arquillSuppressChange = false;
                     }
+
+                    restoreSelection();
                 }
             },
 
@@ -2485,6 +2621,7 @@
                     // a collapsed push landing on the same offset afterwards has a range to clear, so it must not be
                     // taken for a repeat of one already applied
                     element.$arquillLastRectOffset = -1;
+                    caretRevealPending = !isHostLaidOut() || metricsPending;
                     placeCaret();
                     return;
                 }
@@ -2504,6 +2641,7 @@
                     element.$arquillEditor.setCaretOffset(end, true);
                 }
                 element.$arquillLastRectOffset = end;
+                caretRevealPending = !isHostLaidOut() || metricsPending;
 
                 // the offset is the server's own and does not have to come back, but where it landed on screen
                 // is only measurable here. suppressing the whole event left the server holding the rect from
@@ -2511,12 +2649,10 @@
                 // pressing return and asking for completion put the list beside the old line
                 // rect only: the offset is the server's own and moving the platform caret to where it
                 // already is counts as a caret move, which is what a lookup goes away on
-                element.dispatchEvent(new CustomEvent('arquill-caret', {
-                    detail: Object.assign(caretDetail(end, textView.getCaretOffset()), {
-                        rectOnly: true,
-                        selectionStart: end,
-                        selectionEnd: end
-                    })
+                fireCaret(Object.assign(caretDetail(end, textView.getCaretOffset()), {
+                    rectOnly: true,
+                    selectionStart: end,
+                    selectionEnd: end
                 }));
                 placeCaret();
             },
@@ -2540,18 +2676,6 @@
                 if (lineSpacingValue > 0) {
                     lineSpacing = lineSpacingValue;
                 }
-
-                // orion measures its metrics while the view is created and lays every line out against what
-                // it cached - update(true) is the only way back into _calculateMetrics, and the overlays are
-                // placed at pixels the view reported, all of which just moved
-                const remeasure = () => {
-                    // the row is published first: orion caches what it measures, and updating before the height
-                    // is set leaves every line laid out against the previous one
-                    reportMetrics();
-                    textView.update(true);
-                    onProjectionChanged();
-                    placeCaret();
-                };
 
                 remeasure();
 
@@ -2692,7 +2816,7 @@
 
                 document.removeEventListener('keyup', onKeyUp);
 
-                inlayImageObserver.disconnect();
+                hostResizeObserver.disconnect();
 
                 clearTimeout(floatingToolbarTimer);
 
@@ -2700,6 +2824,8 @@
                     element.$arquillEditor.uninstall();
                     element.$arquillEditor = null;
                 }
+
+                window.arquillEditorStub(element);
             }
         };
 

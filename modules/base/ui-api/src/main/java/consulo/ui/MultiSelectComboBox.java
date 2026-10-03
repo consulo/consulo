@@ -15,12 +15,14 @@
  */
 package consulo.ui;
 
+import consulo.localize.LocalizeValue;
 import consulo.ui.internal.UIInternal;
 import consulo.ui.model.FlatDataModel;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * A drop-down where several items can be picked - each pick adds an item to the value or takes it away, and the
@@ -48,4 +50,12 @@ public interface MultiSelectComboBox<E> extends ValueComponent<List<E>>, ComboBo
 
     @Override
     List<E> getValue();
+
+    /**
+     * Has the closed drop-down sum the picked items up in one line instead of showing each of them - a filter which
+     * starts with everything picked reads as its name rather than as a list of all it holds. The function gets the
+     * picked items, in the order of the model, and is asked only while something is picked: while nothing is, the
+     * placeholder is shown.
+     */
+    void setSummaryRenderer(Function<List<E>, LocalizeValue> renderer);
 }

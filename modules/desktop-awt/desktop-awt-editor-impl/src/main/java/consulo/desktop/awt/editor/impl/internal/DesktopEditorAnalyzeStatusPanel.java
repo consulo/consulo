@@ -166,6 +166,7 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
                 }
             };
             updateUI();
+            updateFromPresentation();
         }
 
         @Override
@@ -173,6 +174,15 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
             super.addNotify();
             presentation.addPropertyChangeListener(presentationPropertyListener);
             addMouseListener(mouseListener);
+            updateFromPresentation();
+        }
+
+        private void updateFromPresentation() {
+            List<StatusItem> status = presentation.getClientProperty(EXPANDED_STATUS);
+            translucent = Boolean.TRUE.equals(presentation.getClientProperty(TRANSLUCENT_STATE));
+            updateContents(status == null ? List.of() : status);
+            revalidate();
+            repaint();
         }
 
         @Override
@@ -838,6 +848,13 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
                 }
                 return size;
             }
+
+            @Override
+            public void paint(Graphics g) {
+                if (hasVisibleContent(toolbarComponent)) {
+                    super.paint(g);
+                }
+            }
         };
         statusPanel.setVisible(!myEditor.isOneLineMode());
         statusPanel.setLayout(new BoxLayout(statusPanel, BoxLayout.X_AXIS));
@@ -846,6 +863,18 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
         statusToolbar.setTargetComponent(myEditor.getContentComponent());
 
         myEditor.setStatusComponent(statusPanel);
+    }
+
+    private static boolean hasVisibleContent(JComponent toolbarComponent) {
+        if (!toolbarComponent.isVisible()) {
+            return false;
+        }
+        for (Component child : toolbarComponent.getComponents()) {
+            if (child.isVisible()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void setErrorPanel(@Nullable DesktopEditorErrorPanel errorPanel) {

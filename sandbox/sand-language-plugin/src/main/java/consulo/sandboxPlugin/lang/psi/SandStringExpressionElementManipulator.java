@@ -19,6 +19,7 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.document.util.TextRange;
 import consulo.language.psi.AbstractElementManipulator;
 import consulo.language.util.IncorrectOperationException;
+import consulo.sandboxPlugin.ide.endpoint.SandEndpointLiteral;
 
 /**
  * @author VISTALL
@@ -28,12 +29,7 @@ import consulo.language.util.IncorrectOperationException;
 public class SandStringExpressionElementManipulator extends AbstractElementManipulator<SandStringExpression> {
   @Override
   public TextRange getRangeInElement(SandStringExpression element) {
-    String text = element.getText();
-    int length = text.length();
-    if (length < 2 || text.charAt(0) != '"') {
-      return new TextRange(0, length);
-    }
-    return new TextRange(1, text.charAt(length - 1) == '"' ? length - 1 : length);
+    return SandEndpointLiteral.getReferenceValueRange(element.getText());
   }
 
   @Override

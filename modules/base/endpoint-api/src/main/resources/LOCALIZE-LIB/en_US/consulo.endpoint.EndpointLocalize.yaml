@@ -2,6 +2,8 @@ client.generator.boilerplate.checkbox:
     text: Show Boilerplate Code
 client.generator.combobox.label:
     text: 'Frameworks:'
+client.generator.curl.title:
+    text: cURL
 client.generator.inlay.action.eap.description:
     text: Enable open in client generator action
 client.generator.inlay.action.eap.name:

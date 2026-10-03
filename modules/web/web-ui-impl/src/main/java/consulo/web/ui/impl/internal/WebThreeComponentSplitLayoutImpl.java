@@ -33,8 +33,7 @@ import org.jspecify.annotations.Nullable;
  */
 public class WebThreeComponentSplitLayoutImpl extends VaadinComponentDelegate<WebThreeComponentSplitLayoutImpl.Vaadin>
     implements ThreeComponentSplitLayout {
-    private static final double FIRST_PROPORTION = 25;
-    private static final double CENTER_PROPORTION = 75;
+    private static final double DEFAULT_WEIGHT = 0.25;
 
     private static final String NO_DIVIDER_CLASS = "web-split-layout-no-divider";
 
@@ -45,6 +44,9 @@ public class WebThreeComponentSplitLayoutImpl extends VaadinComponentDelegate<We
         private com.vaadin.flow.component.Component myFirstComponent;
         private com.vaadin.flow.component.Component myCenterComponent;
         private com.vaadin.flow.component.Component mySecondComponent;
+
+        private double myFirstWeight = DEFAULT_WEIGHT;
+        private double mySecondWeight = DEFAULT_WEIGHT;
 
         public Vaadin() {
             myFirstLayout = new SplitLayout(SplitLayout.Orientation.HORIZONTAL);
@@ -97,11 +99,27 @@ public class WebThreeComponentSplitLayoutImpl extends VaadinComponentDelegate<We
             updateSplitterPositions();
         }
 
+        public void setFirstWeight(double weight) {
+            myFirstWeight = weight;
+
+            updateSplitterPositions();
+        }
+
+        public void setSecondWeight(double weight) {
+            mySecondWeight = weight;
+
+            updateSplitterPositions();
+        }
+
         // a missing side must not reserve space, otherwise the center keeps only a fraction of the frame,
         // and like the awt splitter it must not show a divider for a side that is not there
         private void updateSplitterPositions() {
-            myFirstLayout.setSplitterPosition(myFirstComponent == null ? 0 : FIRST_PROPORTION);
-            mySecondLayout.setSplitterPosition(mySecondComponent == null ? 100 : CENTER_PROPORTION);
+            double firstWeight = myFirstComponent == null ? 0 : myFirstWeight;
+            double rest = 1 - firstWeight;
+            double centerProportion = mySecondComponent == null || rest <= 0 ? 1 : Math.max(0, rest - mySecondWeight) / rest;
+
+            myFirstLayout.setSplitterPosition(firstWeight * 100);
+            mySecondLayout.setSplitterPosition(centerProportion * 100);
 
             myFirstLayout.setClassName(NO_DIVIDER_CLASS, myFirstComponent == null);
             mySecondLayout.setClassName(NO_DIVIDER_CLASS, mySecondComponent == null);
@@ -131,6 +149,16 @@ public class WebThreeComponentSplitLayoutImpl extends VaadinComponentDelegate<We
     @Override
     public Vaadin createVaadinComponent() {
         return new Vaadin();
+    }
+
+    @RequiredUIAccess
+    public void setFirstWeight(double weight) {
+        toVaadinComponent().setFirstWeight(weight);
+    }
+
+    @RequiredUIAccess
+    public void setSecondWeight(double weight) {
+        toVaadinComponent().setSecondWeight(weight);
     }
 
     @Override

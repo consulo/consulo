@@ -28,6 +28,7 @@ module consulo.ui.ex.impl {
 
     exports consulo.ui.ex.impl.internal.clipboard to
         consulo.desktop.ide.impl,
+        consulo.it,
         consulo.web.editor.impl,
         consulo.web.ide,
         consulo.web.ui.impl;

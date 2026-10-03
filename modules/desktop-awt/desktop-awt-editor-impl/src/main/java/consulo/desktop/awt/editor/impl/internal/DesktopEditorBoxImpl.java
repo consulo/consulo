@@ -48,6 +48,7 @@ class DesktopEditorBoxImpl extends SwingComponentDelegate<DesktopEditorBoxImpl.M
         @Override
         protected EditorEx createEditor() {
             EditorEx editor = super.createEditor();
+            editor.setHorizontalScrollbarVisible(!myOptions.oneLine());
             editor.setVerticalScrollbarVisible(!myOptions.oneLine());
 
             for (Consumer<EditorEx> customization : myOptions.customizations()) {

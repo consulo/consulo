@@ -351,15 +351,6 @@
                     icon="consulo.platform.base.PlatformIconGroup@vcs.history"/>
         </group>
 
-        <action id="IncrementWindowWidth" class="consulo.ide.impl.idea.ide.actions.WindowAction$IncrementWidth"
-                use-shortcut-of="ResizeToolWindowRight"/>
-        <action id="DecrementWindowWidth" class="consulo.ide.impl.idea.ide.actions.WindowAction$DecrementWidth"
-                use-shortcut-of="ResizeToolWindowLeft"/>
-        <action id="IncrementWindowHeight" class="consulo.ide.impl.idea.ide.actions.WindowAction$IncrementHeight"
-                use-shortcut-of="ResizeToolWindowDown"/>
-        <action id="DecrementWindowHeight" class="consulo.ide.impl.idea.ide.actions.WindowAction$DecrementHeight"
-                use-shortcut-of="ResizeToolWindowUp"/>
-
         <group id="AlienCommitChangesDialog.AdditionalActions"/>
 
         <group id="VcsHistoryActionsGroup"/>

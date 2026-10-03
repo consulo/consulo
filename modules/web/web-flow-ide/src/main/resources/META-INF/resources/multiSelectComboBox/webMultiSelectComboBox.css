@@ -1,0 +1,103 @@
+vaadin-multi-select-combo-box.consulo-multi-select-combo-box
+{
+  --vaadin-field-default-width: auto;
+  min-width: min(100%, 4em);
+  max-width: min(100%, 16em);
+}
+
+vaadin-multi-select-combo-box.consulo-multi-select-combo-box::part(input-field)
+{
+  max-width: 16em;
+}
+
+vaadin-horizontal-layout > vaadin-multi-select-combo-box.consulo-multi-select-combo-box
+{
+  flex: 1 1 0;
+  max-width: max-content;
+}
+
+vaadin-multi-select-combo-box.consulo-multi-select-summary
+{
+  --vaadin-multi-select-combo-box-chips-gap: 0;
+}
+
+vaadin-multi-select-combo-box.consulo-multi-select-summary::part(input-field)
+{
+  position: relative;
+}
+
+vaadin-multi-select-combo-box.consulo-multi-select-summary > [slot="chip"],
+vaadin-multi-select-combo-box.consulo-multi-select-summary > [slot="overflow"]
+{
+  display: none !important;
+}
+
+vaadin-multi-select-combo-box.consulo-multi-select-summary::part(chips)
+{
+  display: block;
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 1lh;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-weight: var(--aura-font-weight-medium);
+}
+
+vaadin-multi-select-combo-box.consulo-multi-select-summary::part(chips)::before
+{
+  content: var(--consulo-multi-select-summary, "\200b");
+  vertical-align: middle;
+}
+
+vaadin-multi-select-combo-box.consulo-multi-select-combo-box:not(.consulo-multi-select-summary)::part(toggle-button)::before
+{
+  display: inline-block;
+  vertical-align: middle;
+}
+
+vaadin-multi-select-combo-box.consulo-multi-select-combo-box vaadin-multi-select-combo-box-item
+{
+  white-space: nowrap;
+}
+
+vaadin-multi-select-combo-box.consulo-multi-select-combo-box vaadin-multi-select-combo-box-item::part(content)
+{
+  min-width: 0;
+}
+
+vaadin-multi-select-combo-box.consulo-multi-select-combo-box vaadin-multi-select-combo-box-item > *
+{
+  text-overflow: ellipsis;
+}
+
+vaadin-multi-select-combo-box.consulo-multi-select-summary.consulo-multi-select-placeholder::part(chips)
+{
+  color: var(--vaadin-input-field-placeholder-color, var(--vaadin-text-color-secondary));
+}
+
+vaadin-multi-select-combo-box.consulo-multi-select-summary > input
+{
+  flex: 0 0 0;
+  width: 0;
+  min-width: 0;
+}
+
+vaadin-multi-select-combo-box.consulo-multi-select-summary > input::placeholder
+{
+  color: transparent;
+}
+
+vaadin-multi-select-combo-box.consulo-multi-select-summary:has(> input:not(:placeholder-shown))::part(chips)
+{
+  visibility: hidden;
+}
+
+vaadin-multi-select-combo-box.consulo-multi-select-summary > input:not(:placeholder-shown)
+{
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: var(--vaadin-padding-inline-container);
+  inset-inline-end: calc(var(--vaadin-padding-inline-container) + var(--vaadin-icon-size, 1lh) + var(--vaadin-input-field-gap, var(--vaadin-gap-s)));
+  width: auto;
+}

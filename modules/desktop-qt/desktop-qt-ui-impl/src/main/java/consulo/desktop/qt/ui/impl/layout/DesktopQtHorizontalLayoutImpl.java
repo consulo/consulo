@@ -37,7 +37,7 @@ public class DesktopQtHorizontalLayoutImpl extends DesktopQtBoxLayoutComponent<S
 
     @Override
     protected QBoxLayout createBoxLayout() {
-        QHBoxLayout layout = new QHBoxLayout();
+        QHBoxLayout layout = new DesktopQtShrinkToFitHBoxLayout();
         layout.setSpacing(DesktopQtSpace.toPixels(myGap));
         return layout;
     }

@@ -48,6 +48,8 @@ public class DesktopQtTabImpl implements Tab, DesktopQtAnimationHost, DesktopQtI
 
     private @Nullable QtComponentDelegate<?> myComponent;
 
+    private @Nullable DesktopQtTabbedLayoutImpl myTabbedLayout;
+
     private @Nullable QTabWidget myTabWidget;
 
     private @Nullable QWidget myContent;
@@ -179,11 +181,22 @@ public class DesktopQtTabImpl implements Tab, DesktopQtAnimationHost, DesktopQtI
     }
 
     @Override
+    @RequiredUIAccess
     public void select() {
         int index = getIndex();
         if (myTabWidget != null && index != -1) {
             myTabWidget.setCurrentIndex(index);
+            return;
         }
+
+        DesktopQtTabbedLayoutImpl tabbedLayout = myTabbedLayout;
+        if (tabbedLayout != null) {
+            tabbedLayout.selectUnrealized(this);
+        }
+    }
+
+    public void setTabbedLayout(@Nullable DesktopQtTabbedLayoutImpl tabbedLayout) {
+        myTabbedLayout = tabbedLayout;
     }
 
     @Override

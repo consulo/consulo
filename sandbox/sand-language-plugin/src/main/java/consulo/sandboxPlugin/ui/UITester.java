@@ -335,6 +335,14 @@ public class UITester {
                 .add(multiSelectComboBox)
                 .add(multiSelectValue));
 
+            MultiSelectComboBox<String> summaryComboBox = MultiSelectComboBox.create("Java", "Kotlin", "Scala", "Groovy", "Clojure");
+            summaryComboBox.setPlaceholder(LocalizeValue.of("Languages"));
+            summaryComboBox.setSummaryRenderer(items -> LocalizeValue.of("Languages: " + String.join(", ", items)));
+            summaryComboBox.setValue(List.of("Java", "Kotlin", "Scala", "Groovy", "Clojure"));
+            layout.add(HorizontalLayout.create()
+                .add(Label.create(LocalizeValue.of("MultiSelectComboBox (summary)")))
+                .add(summaryComboBox));
+
             layout.add(HtmlLabel.create(LocalizeValue.of("<b>Html</b> <i>Label</i>")));
 
             TextBoxWithExtensions textBoxWithExtensions = TextBoxWithExtensions.create("with extensions");

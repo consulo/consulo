@@ -33,6 +33,11 @@ public final class RenameableSemElementFindUsagesHandlerFactory extends FindUsag
     public FindUsagesHandler createFindUsagesHandler(PsiElement element, boolean forHighlightUsages) {
         return new FindUsagesHandler(element) {
             @Override
+            public boolean supportConsuloUI() {
+                return true;
+            }
+
+            @Override
             public boolean processElementUsages(PsiElement element, Predicate<UsageInfo> processor, FindUsagesOptions options) {
                 return Application.get().runReadAction((Supplier<Boolean>) () -> {
                     for (PsiElement companion : SemElementRenamePsiElementProcessorUtil.getCompanions(element)) {

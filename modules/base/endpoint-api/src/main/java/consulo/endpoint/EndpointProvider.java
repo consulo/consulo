@@ -107,7 +107,7 @@ public interface EndpointProvider<G, E> {
                 }
             });
             return CachedValueProvider.Result.create(
-                available,
+                List.copyOf(available),
                 PsiModificationTracker.MODIFICATION_COUNT,
                 DumbService.getInstance(project).getModificationTracker(),
                 ProjectRootManager.getInstance(project)

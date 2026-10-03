@@ -34,6 +34,7 @@ import consulo.web.ui.impl.internal.base.WebInputDetails;
 import consulo.web.editor.impl.internal.gutter.GutterBand;
 import org.jspecify.annotations.Nullable;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -603,6 +604,16 @@ public class ArquillEditorElement extends Component implements HasSize {
     public record Rulers(boolean lines, boolean folding, boolean annotations) {
     }
 
+    private static final String API_STUB = """
+        const stub = window.arquillEditorStub = window.arquillEditorStub || (element => {
+            const pending = element.$arquillPending = [];
+            return element.$arquillApi = new Proxy({}, {
+                get: (target, name) => (...args) => pending.push([name, args])
+            });
+        });
+        const api = this.$arquillApi || stub(this);
+        """;
+
     private String myText;
 
     private boolean myReadOnly;
@@ -644,21 +655,8 @@ public class ArquillEditorElement extends Component implements HasSize {
         addListener(ArquillTextChangeEvent.class, event -> applyToCache(event.getStart(), event.getStart() + event.getRemovedCharCount(), event.getText()));
     }
 
-    /**
-     * The server pushes into the editor while the scripts are still loading, so the api it calls has to exist
-     * before any of them. The stub collects those calls and install replays them once it takes over.
-     * <p>
-     * It belongs to attaching rather than to the constructor: a browser reload builds a new ui and a new dom
-     * for the very same server side editor, and the constructor does not run a second time - the stub of the
-     * old document is gone and everything pushed while the bundle loads would be thrown away.
-     */
-    private void installApiStub() {
-        getElement().executeJs("""
-            const pending = this.$arquillPending = [];
-            this.$arquillApi = new Proxy({}, {
-                get: (target, name) => (...args) => pending.push([name, args])
-            });
-            """);
+    private void callApi(String call, Object... args) {
+        getElement().executeJs(API_STUB + "api." + call + ";", args);
     }
 
     public void setNoFocus(boolean noFocus) {
@@ -678,7 +676,7 @@ public class ArquillEditorElement extends Component implements HasSize {
     }
 
     public void focusText() {
-        getElement().executeJs("this.$arquillApi.focus();");
+        callApi("focus()");
     }
 
     public void setOneLine(boolean oneLine) {
@@ -701,7 +699,7 @@ public class ArquillEditorElement extends Component implements HasSize {
     public void setText(String text) {
         myText = text;
 
-        getElement().executeJs("this.$arquillApi.setText($0);", text);
+        callApi("setText($0)", text);
     }
 
     /**
@@ -710,7 +708,7 @@ public class ArquillEditorElement extends Component implements HasSize {
     public void replaceText(int start, int end, String text) {
         applyToCache(start, end, text);
 
-        getElement().executeJs("this.$arquillApi.replaceText($0, $1, $2);", start, end, text);
+        callApi("replaceText($0, $1, $2)", start, end, text);
     }
 
     private void applyToCache(int start, int end, String text) {
@@ -726,7 +724,7 @@ public class ArquillEditorElement extends Component implements HasSize {
     public void setReadOnly(boolean readOnly) {
         myReadOnly = readOnly;
 
-        getElement().executeJs("this.$arquillApi.setReadOnly($0);", readOnly);
+        callApi("setReadOnly($0)", readOnly);
     }
 
     /**
@@ -744,7 +742,7 @@ public class ArquillEditorElement extends Component implements HasSize {
      * @param blinkPeriod milliseconds, or {@code 0} for a caret which does not blink
      */
     public void setCaretStyle(int width, int blinkPeriod) {
-        getElement().executeJs("this.$arquillApi.setCaretStyle($0, $1);", width, blinkPeriod);
+        callApi("setCaretStyle($0, $1)", width, blinkPeriod);
     }
 
     /**
@@ -752,11 +750,11 @@ public class ArquillEditorElement extends Component implements HasSize {
      * none, while a read only editor which can still be navigated keeps it.
      */
     public void setCaretVisible(boolean visible) {
-        getElement().executeJs("this.$arquillApi.setCaretVisible($0);", visible);
+        callApi("setCaretVisible($0)", visible);
     }
 
     public void setFont(String fontName, int fontSize, double lineSpacing) {
-        getElement().executeJs("this.$arquillApi.setFont($0, $1, $2);", fontName, fontSize, lineSpacing);
+        callApi("setFont($0, $1, $2)", fontName, fontSize, lineSpacing);
     }
 
     /**
@@ -770,8 +768,8 @@ public class ArquillEditorElement extends Component implements HasSize {
         @Nullable String selectionForeground,
         @Nullable String caretRowBackground
     ) {
-        getElement().executeJs(
-            "this.$arquillApi.setColors($0, $1, $2, $3, $4);",
+        callApi(
+            "setColors($0, $1, $2, $3, $4)",
             background,
             foreground,
             selectionBackground,
@@ -812,7 +810,7 @@ public class ArquillEditorElement extends Component implements HasSize {
         if (isUnchanged("schemeStyles", css)) {
             return;
         }
-        getElement().executeJs("this.$arquillApi.setSchemeStyles($0);", css);
+        callApi("setSchemeStyles($0)", css);
     }
 
     public Registration addTextChangeListener(ComponentEventListener<ArquillTextChangeEvent> listener) {
@@ -831,7 +829,7 @@ public class ArquillEditorElement extends Component implements HasSize {
      * after a selection collapses the range that was just drawn. Whoever moved either of them says what both are.
      */
     public void setSelection(int start, int end) {
-        getElement().executeJs("this.$arquillApi.setSelection($0, $1);", start, end);
+        callApi("setSelection($0, $1)", start, end);
     }
 
     public Registration addTypedListener(ComponentEventListener<ArquillTypedEvent> listener) {
@@ -924,7 +922,7 @@ public class ArquillEditorElement extends Component implements HasSize {
      * offset under the pointer resolves to anything, so the client cannot decide this on its own.
      */
     public void setLinkHovered(boolean hovered) {
-        getElement().executeJs("this.$arquillApi.setLinkHovered($0);", hovered);
+        callApi("setLinkHovered($0)", hovered);
     }
 
     /**
@@ -934,28 +932,28 @@ public class ArquillEditorElement extends Component implements HasSize {
         if (isUnchanged("gutterHoverMark", markJson)) {
             return;
         }
-        getElement().executeJs("this.$arquillApi.setGutterHoverMark($0);", markJson);
+        callApi("setGutterHoverMark($0)", markJson);
     }
 
     public void setGutterMarks(String marksJson) {
         if (isUnchanged("gutterMarks", marksJson)) {
             return;
         }
-        getElement().executeJs("this.$arquillApi.setGutterMarks($0);", marksJson);
+        callApi("setGutterMarks($0)", marksJson);
     }
 
     public void setTextAnnotations(String annotationsJson) {
         if (isUnchanged("textAnnotations", annotationsJson)) {
             return;
         }
-        getElement().executeJs("this.$arquillApi.setTextAnnotations($0);", annotationsJson);
+        callApi("setTextAnnotations($0)", annotationsJson);
     }
 
     public void setAnnotationTooltip(String tooltipJson) {
         if (isUnchanged("annotationTooltip", tooltipJson)) {
             return;
         }
-        getElement().executeJs("this.$arquillApi.setAnnotationTooltip($0);", tooltipJson);
+        callApi("setAnnotationTooltip($0)", tooltipJson);
     }
 
     /**
@@ -966,7 +964,7 @@ public class ArquillEditorElement extends Component implements HasSize {
         if (isUnchanged("analyzeStatus", statusJson)) {
             return;
         }
-        getElement().executeJs("this.$arquillApi.setAnalyzeStatus($0);", statusJson);
+        callApi("setAnalyzeStatus($0)", statusJson);
     }
 
     /**
@@ -977,7 +975,7 @@ public class ArquillEditorElement extends Component implements HasSize {
         if (isUnchanged("tooltipRanges", rangesJson)) {
             return;
         }
-        getElement().executeJs("this.$arquillApi.setTooltipRanges($0);", rangesJson);
+        callApi("setTooltipRanges($0)", rangesJson);
     }
 
     /**
@@ -987,7 +985,7 @@ public class ArquillEditorElement extends Component implements HasSize {
         if (isUnchanged("styleRanges", rangesJson)) {
             return;
         }
-        getElement().executeJs("this.$arquillApi.setStyleRanges($0);", rangesJson);
+        callApi("setStyleRanges($0)", rangesJson);
     }
 
     /**
@@ -998,7 +996,7 @@ public class ArquillEditorElement extends Component implements HasSize {
         if (isUnchanged("foldRegions", regionsJson)) {
             return;
         }
-        getElement().executeJs("this.$arquillApi.setFoldRegions($0);", regionsJson);
+        callApi("setFoldRegions($0)", regionsJson);
     }
 
     /**
@@ -1025,8 +1023,8 @@ public class ArquillEditorElement extends Component implements HasSize {
         if (isUnchanged("foldingAnchors", anchors)) {
             return;
         }
-        getElement().executeJs(
-            "this.$arquillApi.setFoldingAnchors($0, $1, $2);",
+        callApi(
+            "setFoldingAnchors($0, $1, $2)",
             expandedHtml,
             collapsedHtml,
             expandedBottomHtml
@@ -1045,7 +1043,7 @@ public class ArquillEditorElement extends Component implements HasSize {
         if (isUnchanged("inlays", inlaysJson)) {
             return;
         }
-        getElement().executeJs("this.$arquillApi.setInlays($0);", inlaysJson);
+        callApi("setInlays($0)", inlaysJson);
     }
 
     /**
@@ -1058,7 +1056,7 @@ public class ArquillEditorElement extends Component implements HasSize {
         if (isUnchanged("errorStripeMarks", marksJson)) {
             return;
         }
-        getElement().executeJs("this.$arquillApi.setErrorStripeMarks($0);", marksJson);
+        callApi("setErrorStripeMarks($0)", marksJson);
     }
 
     /**
@@ -1071,7 +1069,7 @@ public class ArquillEditorElement extends Component implements HasSize {
             return;
         }
         getElement().setPropertyList("gutterBands", bands);
-        getElement().executeJs("this.$arquillApi.setGutterBands(this.gutterBands);");
+        callApi("setGutterBands(this.gutterBands)");
     }
 
     @Override
@@ -1081,10 +1079,7 @@ public class ArquillEditorElement extends Component implements HasSize {
         // a fresh dom holds none of the decoration channels, whatever this instance sent to the previous one
         myLastPushed.clear();
 
-        // ahead of the loader below, so that a push arriving while the scripts are on their way is collected
-        installApiStub();
-
-        getElement().executeJs("this.$arquillApi.setFloatingToolbarLayer($0);", myFloatingToolbarLayer.getElement());
+        callApi("setFloatingToolbarLayer($0)", myFloatingToolbarLayer.getElement());
 
         Rulers rulers = myRulers.get();
 
@@ -1119,7 +1114,7 @@ public class ArquillEditorElement extends Component implements HasSize {
 
     @Override
     protected void onDetach(DetachEvent detachEvent) {
-        getElement().executeJs("this.$arquillApi.destroy();");
+        callApi("destroy()");
 
         super.onDetach(detachEvent);
     }

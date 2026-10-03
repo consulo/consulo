@@ -54,6 +54,6 @@ public final class ShowServicesDiagramAction extends AnAction implements AnActio
     @Override
     public void update(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
-        e.getPresentation().setEnabledAndVisible(project != null && EndpointProvider.hasAnyProviders(project));
+        e.getPresentation().setEnabledAndVisible(project != null && !EndpointProvider.getAvailableProviders(project).isEmpty());
     }
 }

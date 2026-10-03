@@ -15,6 +15,8 @@
  */
 package consulo.web.ui.impl.internal;
 
+import com.vaadin.flow.component.AttachEvent;
+import com.vaadin.flow.component.dependency.StyleSheet;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ComboBoxStyle;
 import consulo.ui.Component;
@@ -44,20 +46,93 @@ import java.util.function.Function;
  */
 public class WebMultiSelectComboBoxImpl<E> extends WebListComponentBase<E, WebMultiSelectComboBoxImpl<E>.Vaadin>
     implements MultiSelectComboBox<E> {
+    @StyleSheet("/multiSelectComboBox/webMultiSelectComboBox.css")
     public class Vaadin extends com.vaadin.flow.component.combobox.MultiSelectComboBox<E> implements FromVaadinComponentWrapper {
         @Override
         public @Nullable Component toUIComponent() {
             return WebMultiSelectComboBoxImpl.this;
         }
+
+        @Override
+        protected void onAttach(AttachEvent attachEvent) {
+            super.onAttach(attachEvent);
+
+            getElement().executeJs(INSTALL_OVERLAY_WIDTH);
+        }
     }
+
+    private static final String INSTALL_OVERLAY_WIDTH = """
+        const host = this;
+        if (host.__consuloOverlayWidth) {
+            return;
+        }
+        host.__consuloOverlayWidth = true;
+
+        const property = '--vaadin-multi-select-combo-box-overlay-width';
+        let fitted = 0;
+
+        const fit = () => {
+            const overlay = host.$ && host.$.overlay;
+            const content = overlay && overlay.$ && overlay.$.overlay;
+            const field = host._inputField;
+            if (!host.opened || !content || !field) {
+                return;
+            }
+
+            let widest = 0;
+            let chrome = 0;
+            for (const item of host.querySelectorAll('vaadin-multi-select-combo-box-item')) {
+                if (item.hidden) {
+                    continue;
+                }
+                chrome = content.offsetWidth - item.offsetWidth;
+                const width = item.style.width;
+                item.style.width = 'max-content';
+                widest = Math.max(widest, item.getBoundingClientRect().width);
+                item.style.width = width;
+            }
+
+            const wanted = Math.ceil(Math.max(field.offsetWidth, widest + chrome, fitted));
+            if (wanted !== fitted) {
+                fitted = wanted;
+                host.style.setProperty(property, wanted + 'px');
+                overlay._updatePosition();
+            }
+        };
+        const schedule = () => requestAnimationFrame(fit);
+        const observer = new MutationObserver(schedule);
+
+        host.addEventListener('opened-changed', event => {
+            observer.disconnect();
+            if (!event.detail.value) {
+                return;
+            }
+
+            fitted = 0;
+            host.style.removeProperty(property);
+            if (host._scroller) {
+                observer.observe(host._scroller, {childList: true, subtree: true, characterData: true});
+            }
+            schedule();
+        });
+        """;
+
+    private static final String COMBO_BOX_CLASS = "consulo-multi-select-combo-box";
+    private static final String SUMMARY_CLASS = "consulo-multi-select-summary";
+    private static final String PLACEHOLDER_CLASS = "consulo-multi-select-placeholder";
+    private static final String SUMMARY_PROPERTY = "--consulo-multi-select-summary";
 
     private boolean mySuppressEvents;
     private @Nullable List<E> myLastValue;
+    private @Nullable Function<List<E>, LocalizeValue> mySummaryRenderer;
+    private LocalizeValue myPlaceholder = LocalizeValue.empty();
 
     public WebMultiSelectComboBoxImpl(FlatDataModel<E> model) {
         super(model);
 
         toVaadinComponent().addValueChangeListener(event -> {
+            updateSummary();
+
             if (!mySuppressEvents) {
                 fireIfChanged();
             }
@@ -69,6 +144,7 @@ public class WebMultiSelectComboBoxImpl<E> extends WebListComponentBase<E, WebMu
     @Override
     public Vaadin createVaadinComponent() {
         Vaadin component = new Vaadin();
+        component.addClassName(COMBO_BOX_CLASS);
         component.setAutoExpand(com.vaadin.flow.component.combobox.MultiSelectComboBox.AutoExpandMode.HORIZONTAL);
         return component;
     }
@@ -98,6 +174,8 @@ public class WebMultiSelectComboBoxImpl<E> extends WebListComponentBase<E, WebMu
         if (!retained.equals(component.getValue())) {
             applySelection(retained);
         }
+
+        updateSummary();
 
         fireIfChanged();
     }
@@ -130,7 +208,53 @@ public class WebMultiSelectComboBoxImpl<E> extends WebListComponentBase<E, WebMu
 
     @Override
     public void setPlaceholder(LocalizeValue text) {
+        myPlaceholder = text;
+
         toVaadinComponent().setPlaceholder(text.getNullIfEmpty());
+        updateSummary();
+    }
+
+    @Override
+    public void setSummaryRenderer(Function<List<E>, LocalizeValue> renderer) {
+        mySummaryRenderer = renderer;
+
+        toVaadinComponent().addClassName(SUMMARY_CLASS);
+        updateSummary();
+    }
+
+    private void updateSummary() {
+        Function<List<E>, LocalizeValue> renderer = mySummaryRenderer;
+        if (renderer == null) {
+            return;
+        }
+
+        Vaadin component = toVaadinComponent();
+        List<E> value = getValue();
+        boolean placeholder = value.isEmpty();
+        String text = placeholder ? myPlaceholder.get() : renderer.apply(value).get();
+
+        component.setClassName(PLACEHOLDER_CLASS, placeholder);
+        if (text.isEmpty()) {
+            component.getStyle().remove(SUMMARY_PROPERTY);
+        }
+        else {
+            component.getStyle().set(SUMMARY_PROPERTY, toCssString(text));
+        }
+    }
+
+    private static String toCssString(String text) {
+        StringBuilder builder = new StringBuilder(text.length() + 2);
+        builder.append('"');
+        for (int i = 0; i < text.length(); i++) {
+            char c = text.charAt(i);
+            switch (c) {
+                case '"', '\\' -> builder.append('\\').append(c);
+                case '\n', '\r' -> builder.append("\\A ");
+                default -> builder.append(c);
+            }
+        }
+        builder.append('"');
+        return builder.toString();
     }
 
     @Override

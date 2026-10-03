@@ -59,7 +59,7 @@ public final class EndpointToolWindowFactory implements ToolWindowFactory, DumbA
 
     @Override
     public boolean validate(Project project) {
-        return EndpointProvider.hasAnyProviders(project);
+        return !EndpointProvider.getAvailableProviders(project).isEmpty();
     }
 
     @Override
