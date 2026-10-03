@@ -50,6 +50,7 @@ module consulo.ui.ex.api {
     exports consulo.ui.ex.wizard;
     exports consulo.ui.ex.errorTreeView;
     exports consulo.ui.ex.localize;
+    exports consulo.ui.ex.tester;
 
     exports consulo.ui.ex.internal.actionholder;
     exports consulo.ui.ex.internal to

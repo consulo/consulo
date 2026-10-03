@@ -13,7 +13,6 @@ module consulo.execution.debug.api {
 
     exports consulo.execution.debug;
     exports consulo.execution.debug.attach;
-    exports consulo.execution.debug.attach.osHandler;
     exports consulo.execution.debug.event;
     exports consulo.execution.debug.breakpoint;
     exports consulo.execution.debug.breakpoint.ui;

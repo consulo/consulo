@@ -6,6 +6,9 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.execution.action.Location;
 import consulo.execution.action.PsiLocation;
+import consulo.execution.impl.internal.action.ExecutorGroupActionGroup;
+import consulo.execution.impl.internal.action.RunContextAction;
+import consulo.execution.lineMarker.ExecutorAction;
 import consulo.language.editor.inspection.PriorityAction;
 import consulo.language.psi.PsiElement;
 import consulo.logging.Logger;
@@ -16,11 +19,16 @@ import consulo.ui.ex.action.ActionWithDelegate;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.AnActionWithSyncUpdate;
+import consulo.ui.ex.action.AsyncActionGroup;
 import consulo.ui.image.Image;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.util.lang.Pair;
 import org.jspecify.annotations.Nullable;
+
+import java.util.List;
 
 /**
  * @author Dmitry Avdeev
@@ -44,21 +52,35 @@ public class LineMarkerActionWrapper extends ActionGroup implements PriorityActi
         }
     }
 
-    
     @Override
     public AnAction[] getChildren(@Nullable AnActionEvent e) {
-        // This is quickfix for IDEA-208231
-        // See consulo.execution.impl.internal.language.GutterIntentionMenuContributor.addActions(AnAction, List<? super IntentionActionDescriptor>, GutterIconRenderer, AtomicInteger, DataContext)`
-        //if (myOrigin instanceof ExecutorAction executorAction
-        //    && executorAction.getOrigin() instanceof ExecutorRegistryImpl.ExecutorGroupActionGroup actionGroup) {
-        //    AnAction[] children = actionGroup.getChildren(null);
-        //    LOG.assertTrue(ContainerUtil.all(Arrays.asList(children), o -> o instanceof RunContextAction));
-        //    return ContainerUtil.map(children, o -> new LineMarkerActionWrapper(myElement, o)).toArray(AnAction.EMPTY_ARRAY);
-        //}
-        //if (myOrigin instanceof ActionGroup actionGroup) {
-        //    return actionGroup.getChildren(e == null ? null : wrapEvent(e));
-        //}
-        return AnAction.EMPTY_ARRAY;
+        if (myOrigin instanceof ExecutorAction o && o.getOrigin() instanceof ExecutorGroupActionGroup oo) {
+            int order = o.getOrder();
+            return ContainerUtil.map2Array(
+                oo.getChildren(),
+                EMPTY_ARRAY,
+                action -> new LineMarkerActionWrapper(
+                    myElement,
+                    ExecutorAction.wrap(action, ((RunContextAction) action).getExecutor(), order)
+                )
+            );
+        }
+        if (myOrigin instanceof ActionGroup o && !(o instanceof AsyncActionGroup)) {
+            return o.getChildren(e == null ? null : wrapEvent(e));
+        }
+        return EMPTY_ARRAY;
+    }
+
+    @Override
+    public Coroutine<?, List<AnAction>> getChildrenAsync(@Nullable AnActionEvent e) {
+        if (myOrigin instanceof ActionGroup o && !isExecutorGroupOrigin()) {
+            return o.getChildrenAsync(e == null ? null : wrapEvent(e));
+        }
+        return super.getChildrenAsync(e);
+    }
+
+    private boolean isExecutorGroupOrigin() {
+        return myOrigin instanceof ExecutorAction o && o.getOrigin() instanceof ExecutorGroupActionGroup;
     }
 
     @Override

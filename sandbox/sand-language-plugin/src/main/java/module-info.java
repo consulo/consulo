@@ -15,6 +15,7 @@ module consulo.sand.language.plugin {
     requires consulo.compiler.api;
     requires consulo.compiler.artifact.api;
     requires consulo.execution.coverage.api;
+    requires consulo.execution.profiler.api;
     requires consulo.external.system.api;
     requires consulo.file.template.api;
     requires consulo.ide.api;
@@ -34,5 +35,6 @@ module consulo.sand.language.plugin {
 
     opens consulo.enviroment.remoteAgent to consulo.util.xml.serializer;
     opens consulo.sandboxPlugin.colorScheme to consulo.ide.impl;
+    opens consulo.sandboxPlugin.ide.profiler to consulo.util.xml.serializer;
     opens consulo.sandboxPlugin.lang.inspection to consulo.util.xml.serializer;
 }

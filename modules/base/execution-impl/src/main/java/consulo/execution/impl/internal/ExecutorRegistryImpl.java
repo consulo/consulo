@@ -21,8 +21,10 @@ import consulo.component.messagebus.MessageBusConnection;
 import consulo.disposer.Disposable;
 import consulo.execution.event.ExecutionListener;
 import consulo.execution.executor.Executor;
+import consulo.execution.executor.ExecutorGroup;
 import consulo.execution.executor.ExecutorRegistry;
 import consulo.execution.impl.internal.action.ExecutorAction;
+import consulo.execution.impl.internal.action.ExecutorGroupActionGroup;
 import consulo.execution.impl.internal.action.RunContextAction;
 import consulo.execution.impl.internal.action.RunCurrentFileService;
 import consulo.execution.runner.ExecutionEnvironment;
@@ -46,7 +48,7 @@ public class ExecutorRegistryImpl extends ExecutorRegistry implements Disposable
     public static final String RUNNERS_GROUP = IdeActions.GROUP_RUNNER_ACTIONS;
     public static final String RUN_CONTEXT_GROUP = "RunContextGroupInner";
 
-    private List<Executor> myExecutors = new ArrayList<>();
+    private final List<Executor> myExecutors = new ArrayList<>();
     private ActionManager myActionManager;
     private final Application myApplication;
     private final RunCurrentFileService myRunCurrentFileService;
@@ -115,17 +117,43 @@ public class ExecutorRegistryImpl extends ExecutorRegistry implements Disposable
         myId2Executor.put(executor.getId(), executor);
         myContextActionIdSet.add(executor.getContextActionId());
 
-        registerAction(executor.getId(), new ExecutorAction(this, executor, myRunCurrentFileService), RUNNERS_GROUP, myId2Action);
-        registerAction(executor.getContextActionId(), new RunContextAction(executor), RUN_CONTEXT_GROUP, myContextActionId2Action);
+        AnAction toolbarAction;
+        AnAction runContextAction;
+        if (executor instanceof ExecutorGroup<?> executorGroup) {
+            ExecutorGroupActionGroup actionGroup = new ExecutorGroupActionGroup(executorGroup, this::createExecutorAction);
+            registerAction(executor.getId() + "_delegate", actionGroup, myId2Action);
+
+            ExecutorGroupActionGroup toolbarActionGroup = new ExecutorGroupActionGroup(executorGroup, this::createExecutorAction);
+            toolbarActionGroup.setPopup(true);
+            toolbarActionGroup.getTemplatePresentation().setDescription(executor.getDescription());
+            toolbarAction = toolbarActionGroup;
+            runContextAction = new ExecutorGroupActionGroup(executorGroup, RunContextAction::new);
+        }
+        else {
+            toolbarAction = createExecutorAction(executor);
+            runContextAction = new RunContextAction(executor);
+        }
+
+        registerAction(executor.getId(), toolbarAction, RUNNERS_GROUP, myId2Action);
+        registerAction(executor.getContextActionId(), runContextAction, RUN_CONTEXT_GROUP, myContextActionId2Action);
     }
 
-    private void registerAction(String actionId, AnAction anAction, String groupId, Map<String, AnAction> map) {
+    private AnAction createExecutorAction(Executor executor) {
+        return new ExecutorAction(this, executor, myRunCurrentFileService);
+    }
+
+    private AnAction registerAction(String actionId, AnAction anAction, Map<String, AnAction> map) {
         AnAction action = myActionManager.getAction(actionId);
         if (action == null) {
             myActionManager.registerAction(actionId, anAction);
             map.put(actionId, anAction);
             action = anAction;
         }
+        return action;
+    }
+
+    private void registerAction(String actionId, AnAction anAction, String groupId, Map<String, AnAction> map) {
+        AnAction action = registerAction(actionId, anAction, map);
 
         DefaultActionGroup group = (DefaultActionGroup) myActionManager.getAction(groupId);
         if (group == null) {
@@ -141,6 +169,9 @@ public class ExecutorRegistryImpl extends ExecutorRegistry implements Disposable
         myContextActionIdSet.remove(executor.getContextActionId());
 
         unregisterAction(executor.getId(), RUNNERS_GROUP, myId2Action);
+        if (executor instanceof ExecutorGroup<?>) {
+            unregisterAction(executor.getId() + "_delegate", RUNNERS_GROUP, myId2Action);
+        }
         unregisterAction(executor.getContextActionId(), RUN_CONTEXT_GROUP, myContextActionId2Action);
     }
 
@@ -164,7 +195,21 @@ public class ExecutorRegistryImpl extends ExecutorRegistry implements Disposable
 
     @Override
     public Executor getExecutorById(String executorId) {
-        return myId2Executor.get(executorId);
+        Executor executor = myId2Executor.get(executorId);
+        if (executor != null) {
+            return executor;
+        }
+
+        for (Executor registered : getRegisteredExecutors()) {
+            if (registered instanceof ExecutorGroup<?> executorGroup && executorId.startsWith(executorGroup.getId())) {
+                for (Executor child : executorGroup.childExecutors()) {
+                    if (executorId.equals(child.getId())) {
+                        return child;
+                    }
+                }
+            }
+        }
+        return null;
     }
 
     
@@ -189,7 +234,6 @@ public class ExecutorRegistryImpl extends ExecutorRegistry implements Disposable
                 deinitExecutor(executor);
             }
         }
-        myExecutors = null;
         myActionManager = null;
     }
 }

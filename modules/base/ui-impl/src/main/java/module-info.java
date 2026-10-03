@@ -26,6 +26,8 @@ module consulo.ui.impl {
     requires consulo.util.io;
     requires consulo.util.xml.serializer;
 
+    requires it.unimi.dsi.fastutil;
+
     opens consulo.ui.impl.style to consulo.util.xml.serializer;
 
     exports consulo.ui.impl to
@@ -98,6 +100,42 @@ module consulo.ui.impl {
         consulo.web.ide,
         consulo.web.ui.impl;
 
+    exports consulo.ui.impl.chart to
+        consulo.desktop.awt.ui.impl,
+        consulo.desktop.qt.ui.impl,
+        consulo.it,
+        consulo.web.ui.impl;
+
+    exports consulo.ui.impl.chart.model to
+        consulo.desktop.awt.ui.impl,
+        consulo.desktop.qt.ui.impl,
+        consulo.it,
+        consulo.web.ui.impl;
+
+    exports consulo.ui.impl.chart.model.axis to
+        consulo.desktop.awt.ui.impl,
+        consulo.desktop.qt.ui.impl,
+        consulo.it,
+        consulo.web.ui.impl;
+
+    exports consulo.ui.impl.chart.model.formatter to
+        consulo.desktop.awt.ui.impl,
+        consulo.desktop.qt.ui.impl,
+        consulo.it,
+        consulo.web.ui.impl;
+
+    exports consulo.ui.impl.chart.model.legend to
+        consulo.desktop.awt.ui.impl,
+        consulo.desktop.qt.ui.impl,
+        consulo.it,
+        consulo.web.ui.impl;
+
+    exports consulo.ui.impl.chart.model.updater to
+        consulo.desktop.awt.ui.impl,
+        consulo.desktop.qt.ui.impl,
+        consulo.it,
+        consulo.web.ui.impl;
+
     exports consulo.ui.impl.graph to
         consulo.desktop.awt.ui.impl,
         consulo.desktop.qt.ui.impl,
@@ -110,6 +148,11 @@ module consulo.ui.impl {
         consulo.web.ui.impl;
 
     exports consulo.ui.impl.tree to
+        consulo.desktop.qt.ui.impl,
+        consulo.it,
+        consulo.web.ui.impl;
+
+    exports consulo.ui.impl.table to
         consulo.desktop.qt.ui.impl,
         consulo.it,
         consulo.web.ui.impl;

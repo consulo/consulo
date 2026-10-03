@@ -15,6 +15,17 @@
  */
 package consulo.desktop.qt.ui.impl;
 
+import consulo.desktop.qt.ui.impl.chart.DesktopQtFlameGraphImpl;
+import consulo.desktop.qt.ui.impl.chart.DesktopQtStateChartImpl;
+import consulo.desktop.qt.ui.impl.chart.DesktopQtStopwatchTimer;
+import consulo.desktop.qt.ui.impl.chart.DesktopQtTimeSeriesChartImpl;
+import consulo.ui.chart.ChartUnit;
+import consulo.ui.chart.FlameGraph;
+import consulo.ui.chart.FlameGraphModel;
+import consulo.ui.chart.StateChart;
+import consulo.ui.chart.TimeAxis;
+import consulo.ui.chart.TimeSeriesChart;
+import consulo.ui.impl.chart.TimeAxisImpl;
 import consulo.ui.graph.Graph;
 import consulo.ui.graph.GraphModel;
 import consulo.ui.event.ModalityStateListener;
@@ -60,6 +71,7 @@ import org.jspecify.annotations.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
@@ -211,6 +223,26 @@ public class DesktopQtUIInternalImpl extends UIInternal implements UIInternalEx 
     @Override
     public <E> Graph<E> _Components_graph(GraphModel<E> model) {
         return new DesktopQtGraphImpl<>(model);
+    }
+
+    @Override
+    public TimeAxis _Chart_timeAxis(Instant dataStart) {
+        return new TimeAxisImpl(new DesktopQtStopwatchTimer(), dataStart);
+    }
+
+    @Override
+    public TimeSeriesChart _Components_timeSeriesChart(TimeAxis axis, ChartUnit unit) {
+        return new DesktopQtTimeSeriesChartImpl(axis, unit);
+    }
+
+    @Override
+    public <S> StateChart<S> _Components_stateChart(TimeAxis axis) {
+        return new DesktopQtStateChartImpl<>(axis);
+    }
+
+    @Override
+    public <E> FlameGraph<E> _Components_flameGraph(FlameGraphModel<E> model) {
+        return new DesktopQtFlameGraphImpl<>(model);
     }
 
     @Override
@@ -542,6 +574,11 @@ public class DesktopQtUIInternalImpl extends UIInternal implements UIInternalEx 
     @Override
     public <E> Tree<E> _Components_tree(E rootValue, TreeModel<E> model, TreeExecutor executor) {
         return new DesktopQtTreeImpl<>(rootValue, model, executor);
+    }
+
+    @Override
+    public <E> TreeTable<E> _Components_treeTable(@Nullable E rootValue, TreeModel<E> model, TreeExecutor executor) {
+        return new DesktopQtTreeTableImpl<>(rootValue, model, executor);
     }
 
     @Override

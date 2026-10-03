@@ -52,6 +52,7 @@ open module consulo.desktop.awt.ui.impl {
     requires consulo.ui.ex.awt.api;
     requires consulo.ui.ex.impl;
     requires consulo.ui.impl;
+    requires it.unimi.dsi.fastutil;
 
     requires consulo.application.impl;
 

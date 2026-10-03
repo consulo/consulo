@@ -38,12 +38,17 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
@@ -63,6 +68,11 @@ public final class TreeController<E> implements Disposable {
     private volatile @Nullable TreeNodeImpl<E> mySelected;
     private volatile boolean myDisposed;
 
+    private volatile @Nullable Function<E, List<@Nullable Object>> myColumnValueFactory;
+    private final AtomicInteger myColumnVersion = new AtomicInteger();
+    private final AtomicLong myUpdateStamp = new AtomicLong();
+    private volatile @Nullable Comparator<TreeNodeImpl<E>> mySortComparator;
+
     private final Map<TreeNodeImpl<E>, CompletableFuture<List<TreeNodeImpl<E>>>> myDeferred = new LinkedHashMap<>();
     private final List<Runnable> myQueued = new ArrayList<>();
 
@@ -80,6 +90,28 @@ public final class TreeController<E> implements Disposable {
 
     public TreeNodeImpl<E> getRoot() {
         return myRoot;
+    }
+
+    public void setColumnValueFactory(@Nullable Function<E, List<@Nullable Object>> factory) {
+        myColumnValueFactory = factory;
+        myColumnVersion.incrementAndGet();
+    }
+
+    public @Nullable Comparator<TreeNodeImpl<E>> getSortComparator() {
+        return mySortComparator;
+    }
+
+    public CompletableFuture<?> setSortComparator(@Nullable Comparator<TreeNodeImpl<E>> comparator) {
+        mySortComparator = comparator;
+        return track(onUI(() -> resort(myRoot)));
+    }
+
+    public CompletableFuture<?> refreshColumnValues() {
+        myColumnVersion.incrementAndGet();
+
+        CompletableFuture<Object> done = new CompletableFuture<>();
+        runOnUI(() -> recomputeColumnValues(this::collectLoaded).whenComplete((ignored, error) -> done.complete(null)));
+        return track(done);
     }
 
     public @Nullable TreeNodeImpl<E> getSelected() {
@@ -241,8 +273,13 @@ public final class TreeController<E> implements Disposable {
             children.sort(comparator);
         }
 
+        long stamp = myUpdateStamp.incrementAndGet();
+        int columnVersion = myColumnVersion.get();
+        Function<E, List<@Nullable Object>> columnValueFactory = myColumnValueFactory;
+        int ordinal = 0;
         for (TreeNodeImpl<E> child : children) {
-            child.computePresentation(myWidget.createPresentation());
+            child.myOrdinal = ordinal++;
+            child.apply(child.compute(stamp, myWidget.createPresentation(), columnValueFactory, columnVersion));
             child.myPrebuild = !child.myLeaf && myModel.isNeedBuildChildrenBeforeOpen(child);
         }
         return children;
@@ -315,7 +352,7 @@ public final class TreeController<E> implements Disposable {
             return;
         }
 
-        List<TreeNodeImpl<E>> applied = List.copyOf(node.myLoaded ? merge(node.myChildren, built) : built);
+        List<TreeNodeImpl<E>> applied = sortLevel(node.myLoaded ? merge(node.myChildren, built) : built);
         boolean collapse = applied.isEmpty() && node.myExpanded;
         synchronized (node) {
             node.myChildren = applied;
@@ -334,6 +371,8 @@ public final class TreeController<E> implements Disposable {
             myWidget.update(node);
         }
 
+        recomputeStaleColumnValues(applied);
+
         List<CompletableFuture<?>> cascade = new ArrayList<>();
         for (TreeNodeImpl<E> child : applied) {
             if (child.myExpanded && needsLoad(child)) {
@@ -350,6 +389,158 @@ public final class TreeController<E> implements Disposable {
         }
         else {
             CompletableFuture.allOf(cascade.toArray(CompletableFuture[]::new)).whenComplete((ignored, e) -> result.complete(applied));
+        }
+    }
+
+    private List<TreeNodeImpl<E>> sortLevel(List<TreeNodeImpl<E>> level) {
+        List<TreeNodeImpl<E>> sorted = new ArrayList<>(level);
+        try {
+            sorted.sort(levelOrder());
+        }
+        catch (RuntimeException e) {
+            LOG.error(e);
+            return List.copyOf(level);
+        }
+        return List.copyOf(sorted);
+    }
+
+    private Comparator<TreeNodeImpl<E>> levelOrder() {
+        Comparator<TreeNodeImpl<E>> modelOrder = Comparator.comparingInt(node -> node.myOrdinal);
+        Comparator<TreeNodeImpl<E>> comparator = mySortComparator;
+        return comparator == null ? modelOrder : comparator.thenComparing(modelOrder);
+    }
+
+    @RequiredUIAccess
+    private void resort(TreeNodeImpl<E> node) {
+        if (myDisposed || node.myRemoved || !node.myLoaded) {
+            return;
+        }
+
+        resortLevel(node);
+        for (TreeNodeImpl<E> child : node.myChildren) {
+            resort(child);
+        }
+    }
+
+    @RequiredUIAccess
+    private void resortLevel(TreeNodeImpl<E> node) {
+        if (myDisposed || node.myRemoved || !node.myLoaded) {
+            return;
+        }
+
+        List<TreeNodeImpl<E>> children = node.myChildren;
+        List<TreeNodeImpl<E>> sorted = sortLevel(children);
+        if (sameOrder(children, sorted)) {
+            return;
+        }
+
+        synchronized (node) {
+            node.myChildren = sorted;
+        }
+        myWidget.setChildren(node, sorted);
+    }
+
+    private static <T> boolean sameOrder(List<TreeNodeImpl<T>> left, List<TreeNodeImpl<T>> right) {
+        if (left.size() != right.size()) {
+            return false;
+        }
+
+        for (int i = 0; i < left.size(); i++) {
+            if (left.get(i) != right.get(i)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @RequiredUIAccess
+    private void recomputeStaleColumnValues(List<TreeNodeImpl<E>> nodes) {
+        int version = myColumnVersion.get();
+        List<TreeNodeImpl<E>> stale = new ArrayList<>();
+        for (TreeNodeImpl<E> node : nodes) {
+            if (node.myColumnVersion != version) {
+                stale.add(node);
+            }
+        }
+
+        if (!stale.isEmpty()) {
+            track(recomputeColumnValues(() -> stale));
+        }
+    }
+
+    private CompletableFuture<?> recomputeColumnValues(Supplier<List<TreeNodeImpl<E>>> nodes) {
+        return computeAndApply(() -> {
+            long stamp = myUpdateStamp.incrementAndGet();
+            int version = myColumnVersion.get();
+            Function<E, List<@Nullable Object>> factory = myColumnValueFactory;
+            List<TreeNodeUpdate<E>> updates = new ArrayList<>();
+            for (TreeNodeImpl<E> node : nodes.get()) {
+                if (!node.myRemoved) {
+                    updates.add(node.compute(stamp, null, factory, version));
+                }
+            }
+            return updates;
+        });
+    }
+
+    private CompletableFuture<?> computeAndApply(Supplier<List<TreeNodeUpdate<E>>> computation) {
+        if (myDisposed) {
+            return CompletableFuture.completedFuture(null);
+        }
+
+        CompletableFuture<Object> done = new CompletableFuture<>();
+        myExecutor.execute(myTree, computation).whenComplete((updates, error) -> runOnUI(() -> {
+            try {
+                if (error != null || updates == null) {
+                    TreeNodeSupport.logBuildError(LOG, error);
+                }
+                else if (!myDisposed) {
+                    applyUpdates(updates);
+                }
+            }
+            finally {
+                done.complete(null);
+            }
+        }));
+        return done;
+    }
+
+    @RequiredUIAccess
+    private void applyUpdates(List<TreeNodeUpdate<E>> updates) {
+        Set<TreeNodeImpl<E>> levels = new LinkedHashSet<>();
+        for (TreeNodeUpdate<E> update : updates) {
+            TreeNodeImpl<E> node = update.node();
+            if (!node.apply(update)) {
+                continue;
+            }
+
+            myWidget.update(node);
+
+            TreeNodeImpl<E> parent = node.getParent();
+            if (parent != null) {
+                levels.add(parent);
+            }
+        }
+
+        if (mySortComparator != null) {
+            for (TreeNodeImpl<E> level : levels) {
+                resortLevel(level);
+            }
+        }
+    }
+
+    private List<TreeNodeImpl<E>> collectLoaded() {
+        List<TreeNodeImpl<E>> nodes = new ArrayList<>();
+        collectLoaded(myRoot, nodes);
+        return nodes;
+    }
+
+    private void collectLoaded(TreeNodeImpl<E> node, List<TreeNodeImpl<E>> nodes) {
+        for (TreeNodeImpl<E> child : node.myChildren) {
+            if (!child.myRemoved) {
+                nodes.add(child);
+                collectLoaded(child, nodes);
+            }
         }
     }
 
@@ -592,22 +783,15 @@ public final class TreeController<E> implements Disposable {
     }
 
     private CompletableFuture<?> refreshPresentation(TreeNodeImpl<E> node) {
-        CompletableFuture<Object> done = new CompletableFuture<>();
-
-        myExecutor.execute(myTree, () -> {
-            node.computePresentation(myWidget.createPresentation());
-            return null;
-        }).whenComplete((ignored, error) -> runOnUI(() -> {
-            if (error != null) {
-                TreeNodeSupport.logBuildError(LOG, error);
+        return computeAndApply(() -> {
+            if (node.myRemoved) {
+                return List.of();
             }
-            else if (!myDisposed && !node.myRemoved) {
-                myWidget.update(node);
-            }
-            done.complete(null);
-        }));
 
-        return done;
+            long stamp = myUpdateStamp.incrementAndGet();
+            int columnVersion = myColumnVersion.get();
+            return List.of(node.compute(stamp, myWidget.createPresentation(), myColumnValueFactory, columnVersion));
+        });
     }
 
     public List<List<TreeNode<E>>> getExpandedPaths() {

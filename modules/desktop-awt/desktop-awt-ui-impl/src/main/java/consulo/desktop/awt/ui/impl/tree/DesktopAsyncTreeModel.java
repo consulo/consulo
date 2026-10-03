@@ -34,7 +34,8 @@ import static java.util.Collections.singletonList;
 /**
  * @author Sergey.Malenkov
  */
-public final class DesktopAsyncTreeModel extends AbstractTreeModel implements Identifiable, Searchable, Navigatable, TreeVisitor.Acceptor {
+public final class DesktopAsyncTreeModel extends AbstractTreeModel
+  implements Identifiable, Searchable, Navigatable, TreeVisitor.Acceptor, Disposable.Parent {
   private static final Logger LOG = Logger.getInstance(DesktopAsyncTreeModel.class);
   private final Processor processor;
   private final Tree tree = new Tree();
@@ -111,6 +112,11 @@ public final class DesktopAsyncTreeModel extends AbstractTreeModel implements Id
     this.model = model;
     this.model.addTreeModelListener(listener);
     this.showLoadingNode = showLoadingNode;
+  }
+
+  @Override
+  public void beforeTreeDispose() {
+    model.removeTreeModelListener(listener);
   }
 
   @Override
@@ -249,6 +255,7 @@ public final class DesktopAsyncTreeModel extends AbstractTreeModel implements Id
    * @return a promise that will be resolved when visiting is finished
    */
   public Promise<TreePath> accept(TreeVisitor visitor, boolean allowLoading) {
+    if (disposed) return rejectedPromise();
     AbstractTreeWalker<Node> walker = new AbstractTreeWalker<Node>(visitor, node -> node.object) {
       @Override
       protected Collection<Node> getChildren(Node node) {

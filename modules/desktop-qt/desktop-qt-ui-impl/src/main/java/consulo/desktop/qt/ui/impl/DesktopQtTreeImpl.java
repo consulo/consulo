@@ -48,6 +48,7 @@ import io.qt.widgets.QTreeWidgetItem;
 import io.qt.widgets.QWidget;
 import org.jspecify.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -67,7 +68,7 @@ public class DesktopQtTreeImpl<E> extends QtComponentDelegate<QTreeWidget> imple
 
     private final Disposable myDestroyHook = Disposable.newDisposable("Tree");
 
-    private final TreeController<E> myController;
+    protected final TreeController<E> myController;
 
     private final Map<QTreeWidgetItem, TreeNodeImpl<E>> myNodes = new HashMap<>();
     private final Map<TreeNodeImpl<E>, QTreeWidgetItem> myItems = new HashMap<>();
@@ -219,45 +220,94 @@ public class DesktopQtTreeImpl<E> extends QtComponentDelegate<QTreeWidget> imple
             }
 
             sync(() -> {
-                Set<QTreeWidgetItem> wanted = new HashSet<>();
-                for (TreeNodeImpl<E> child : children) {
-                    QTreeWidgetItem item = liveItem(child);
-                    if (item != null) {
-                        wanted.add(item);
+                List<QTreeWidgetItem> reordered = reorder(node, parent, children);
+                if (reordered != null) {
+                    for (int index = 0; index < children.size(); index++) {
+                        render(children.get(index), reordered.get(index));
                     }
                 }
-
-                QTreeWidgetItem loading = myLoadingItems.get(node);
-                for (int i = parent.childCount() - 1; i >= 0; i--) {
-                    QTreeWidgetItem item = parent.child(i);
-                    if (item != loading && !wanted.contains(item)) {
-                        parent.takeChild(i);
-                        forget(item);
-                        item.dispose();
-                    }
-                }
-
-                for (int index = 0; index < children.size(); index++) {
-                    TreeNodeImpl<E> child = children.get(index);
-                    QTreeWidgetItem item = liveItem(child);
-                    int current = item == null ? -1 : parent.indexOfChild(item);
-                    if (item == null || current < 0) {
-                        item = new QTreeWidgetItem();
-                        myItems.put(child, item);
-                        myNodes.put(item, child);
-                        parent.insertChild(index, item);
-                    }
-                    else if (current != index) {
-                        parent.takeChild(current);
-                        parent.insertChild(index, item);
-                        restoreExpanded(child, item);
-                    }
-
-                    render(child, item);
+                else {
+                    reconcile(node, parent, children);
                 }
 
                 restoreSelection();
             });
+        }
+
+        private void reconcile(TreeNodeImpl<E> node, QTreeWidgetItem parent, List<TreeNodeImpl<E>> children) {
+            Set<QTreeWidgetItem> wanted = new HashSet<>();
+            for (TreeNodeImpl<E> child : children) {
+                QTreeWidgetItem item = liveItem(child);
+                if (item != null) {
+                    wanted.add(item);
+                }
+            }
+
+            QTreeWidgetItem loading = myLoadingItems.get(node);
+            for (int i = parent.childCount() - 1; i >= 0; i--) {
+                QTreeWidgetItem item = parent.child(i);
+                if (item != loading && !wanted.contains(item)) {
+                    parent.takeChild(i);
+                    forget(item);
+                    item.dispose();
+                }
+            }
+
+            for (int index = 0; index < children.size(); index++) {
+                TreeNodeImpl<E> child = children.get(index);
+                QTreeWidgetItem item = liveItem(child);
+                int current = item == null ? -1 : parent.indexOfChild(item);
+                if (item == null || current < 0) {
+                    item = new QTreeWidgetItem();
+                    myItems.put(child, item);
+                    myNodes.put(item, child);
+                    parent.insertChild(index, item);
+                }
+                else if (current != index) {
+                    parent.takeChild(current);
+                    parent.insertChild(index, item);
+                    restoreExpanded(child, item);
+                }
+
+                render(child, item);
+            }
+        }
+
+        private @Nullable List<QTreeWidgetItem> reorder(TreeNodeImpl<E> node, QTreeWidgetItem parent, List<TreeNodeImpl<E>> children) {
+            int count = parent.childCount();
+            if (count < 2 || count != children.size() || myLoadingItems.containsKey(node)) {
+                return null;
+            }
+
+            List<QTreeWidgetItem> current = new ArrayList<>(count);
+            for (int i = 0; i < count; i++) {
+                current.add(parent.child(i));
+            }
+
+            Set<QTreeWidgetItem> present = new HashSet<>(current);
+            List<QTreeWidgetItem> ordered = new ArrayList<>(count);
+            boolean moved = false;
+            for (TreeNodeImpl<E> child : children) {
+                QTreeWidgetItem item = liveItem(child);
+                if (item == null || !present.remove(item)) {
+                    return null;
+                }
+
+                if (item != current.get(ordered.size())) {
+                    moved = true;
+                }
+                ordered.add(item);
+            }
+
+            if (moved) {
+                parent.takeChildren();
+                parent.addChildren(ordered);
+
+                for (int index = 0; index < children.size(); index++) {
+                    restoreExpanded(children.get(index), ordered.get(index));
+                }
+            }
+            return ordered;
         }
 
         @Override
@@ -346,7 +396,7 @@ public class DesktopQtTreeImpl<E> extends QtComponentDelegate<QTreeWidget> imple
         }
     }
 
-    private void render(TreeNodeImpl<E> node, QTreeWidgetItem item) {
+    protected void render(TreeNodeImpl<E> node, QTreeWidgetItem item) {
         if (node.getPresentation() instanceof DesktopQtTextItemPresentation presentation) {
             item.setText(0, presentation.toString());
 
@@ -369,7 +419,11 @@ public class DesktopQtTreeImpl<E> extends QtComponentDelegate<QTreeWidget> imple
         }
     }
 
-    private void sync(Runnable action) {
+    protected final boolean isSyncing() {
+        return mySyncing;
+    }
+
+    protected final void sync(Runnable action) {
         boolean syncing = mySyncing;
         mySyncing = true;
         try {
@@ -469,6 +523,10 @@ public class DesktopQtTreeImpl<E> extends QtComponentDelegate<QTreeWidget> imple
 
     @Override
     public void refreshIcons() {
+        renderAll();
+    }
+
+    protected void renderAll() {
         for (Map.Entry<TreeNodeImpl<E>, QTreeWidgetItem> entry : List.copyOf(myItems.entrySet())) {
             QTreeWidgetItem item = entry.getValue();
             if (!item.isDisposed()) {
@@ -489,7 +547,8 @@ public class DesktopQtTreeImpl<E> extends QtComponentDelegate<QTreeWidget> imple
         }
 
         // the width is -1 until something sets one, and a negative width makes the whole hint invalid
-        item.setSizeHint(0, new QSize(Math.max(0, item.sizeHint(0).width()), DesktopQtLength.toPixels(toQtComponent(), getter.apply(node))));
+        int height = DesktopQtLength.toPixels(toQtComponent(), getter.apply(node));
+        item.setSizeHint(0, new QSize(Math.max(0, item.sizeHint(0).width()), height));
     }
 
     @Override

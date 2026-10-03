@@ -22,6 +22,12 @@ import consulo.disposer.Disposable;
 import consulo.it.internal.ui.*;
 import consulo.localize.LocalizeValue;
 import consulo.ui.*;
+import consulo.ui.chart.ChartUnit;
+import consulo.ui.chart.FlameGraph;
+import consulo.ui.chart.FlameGraphModel;
+import consulo.ui.chart.StateChart;
+import consulo.ui.chart.TimeAxis;
+import consulo.ui.chart.TimeSeriesChart;
 import consulo.ui.color.ColorValue;
 import consulo.ui.event.ModalityStateListener;
 import consulo.ui.ex.ComboBoxWithCustomPopup;
@@ -38,6 +44,8 @@ import consulo.ui.image.viewer.ImageViewer;
 import consulo.ui.ex.internal.UIInternalEx;
 import consulo.ui.internal.UIInternal;
 import consulo.ui.layout.*;
+import consulo.ui.impl.chart.TimeAxisImpl;
+import consulo.ui.impl.chart.model.FakeTimer;
 import consulo.ui.impl.model.FlatDataModelImpl;
 import consulo.ui.model.FlatDataModel;
 import consulo.ui.model.MutableFlatDataModel;
@@ -46,6 +54,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
@@ -267,8 +276,33 @@ public class HeadlessUIInternal extends UIInternal implements UIInternalEx {
     }
 
     @Override
+    public <E> TreeTable<E> _Components_treeTable(@Nullable E rootValue, TreeModel<E> model, TreeExecutor executor) {
+        return new HeadlessTreeTable<>(rootValue, model, executor);
+    }
+
+    @Override
     public <E> Graph<E> _Components_graph(GraphModel<E> model) {
         return new HeadlessGraph<>(model);
+    }
+
+    @Override
+    public TimeAxis _Chart_timeAxis(Instant dataStart) {
+        return new TimeAxisImpl(new FakeTimer(), Runnable::run, dataStart);
+    }
+
+    @Override
+    public TimeSeriesChart _Components_timeSeriesChart(TimeAxis axis, ChartUnit unit) {
+        return new HeadlessTimeSeriesChart(axis, unit);
+    }
+
+    @Override
+    public <S> StateChart<S> _Components_stateChart(TimeAxis axis) {
+        return new HeadlessStateChart<>(axis);
+    }
+
+    @Override
+    public <E> FlameGraph<E> _Components_flameGraph(FlameGraphModel<E> model) {
+        return new HeadlessFlameGraph<>(model);
     }
 
     @Override

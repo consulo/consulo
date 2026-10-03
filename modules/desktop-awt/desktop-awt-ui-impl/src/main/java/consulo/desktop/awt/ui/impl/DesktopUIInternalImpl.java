@@ -21,6 +21,17 @@ import com.github.weisj.jsvg.parser.SVGLoader;
 import consulo.ui.RadioGroup;
 import consulo.ui.graph.Graph;
 import consulo.ui.graph.GraphModel;
+import consulo.desktop.awt.ui.impl.adtui.FpsTimer;
+import consulo.desktop.awt.ui.impl.chart.DesktopAWTFlameGraphImpl;
+import consulo.desktop.awt.ui.impl.chart.DesktopAWTStateChartImpl;
+import consulo.desktop.awt.ui.impl.chart.DesktopAWTTimeSeriesChartImpl;
+import consulo.ui.chart.ChartUnit;
+import consulo.ui.chart.FlameGraph;
+import consulo.ui.chart.FlameGraphModel;
+import consulo.ui.chart.StateChart;
+import consulo.ui.chart.TimeAxis;
+import consulo.ui.chart.TimeSeriesChart;
+import consulo.ui.impl.chart.TimeAxisImpl;
 import consulo.application.impl.internal.LaterInvocator;
 import consulo.application.impl.internal.ModalityStateImpl;
 import consulo.desktop.awt.ui.impl.alert.DesktopAlertFactory;
@@ -80,6 +91,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
@@ -147,8 +159,13 @@ public class DesktopUIInternalImpl extends UIInternal implements UIInternalEx {
     }
 
     @Override
-    public <E> Tree<E> _Components_tree(E rootValue, TreeModel<E> model, TreeExecutor executor) {
+    public <E> Tree<E> _Components_tree(@Nullable E rootValue, TreeModel<E> model, TreeExecutor executor) {
         return new DesktopTreeImpl<>(rootValue, model, executor);
+    }
+
+    @Override
+    public <E> TreeTable<E> _Components_treeTable(@Nullable E rootValue, TreeModel<E> model, TreeExecutor executor) {
+        return new DesktopTreeTableImpl<>(rootValue, model, executor);
     }
 
     @Override
@@ -571,6 +588,26 @@ public class DesktopUIInternalImpl extends UIInternal implements UIInternalEx {
     @Override
     public <E> Graph<E> _Components_graph(GraphModel<E> model) {
         return new DesktopAWTGraphImpl<>(model);
+    }
+
+    @Override
+    public TimeAxis _Chart_timeAxis(Instant dataStart) {
+        return new TimeAxisImpl(new FpsTimer(), dataStart);
+    }
+
+    @Override
+    public TimeSeriesChart _Components_timeSeriesChart(TimeAxis axis, ChartUnit unit) {
+        return new DesktopAWTTimeSeriesChartImpl(axis, unit);
+    }
+
+    @Override
+    public <S> StateChart<S> _Components_stateChart(TimeAxis axis) {
+        return new DesktopAWTStateChartImpl<>(axis);
+    }
+
+    @Override
+    public <E> FlameGraph<E> _Components_flameGraph(FlameGraphModel<E> model) {
+        return new DesktopAWTFlameGraphImpl<>(model);
     }
 
     @Override

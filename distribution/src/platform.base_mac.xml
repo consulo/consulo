@@ -88,6 +88,8 @@
                 <include>consulo:consulo-execution-debug-impl</include>
                 <include>consulo:consulo-execution-coverage-api</include>
                 <include>consulo:consulo-execution-coverage-impl</include>
+                <include>consulo:consulo-execution-profiler-api</include>
+                <include>consulo:consulo-execution-profiler-impl</include>
                 <include>consulo:consulo-execution-test-api</include>
                 <include>consulo:consulo-execution-test-impl</include>
                 <include>consulo:consulo-execution-test-sm-api</include>
