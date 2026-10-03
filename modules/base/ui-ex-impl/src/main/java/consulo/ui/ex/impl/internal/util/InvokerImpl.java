@@ -98,9 +98,17 @@ public abstract class InvokerImpl implements Disposable, Invoker {
     @Override
     public final <T> CompletableFuture<T> execute(Tree<?> tree, Supplier<T> task) {
         CompletableFuture<T> future = new CompletableFuture<>();
-        CancellablePromise<T> promise = computeLater(task);
+        Task<T> invokerTask = new Task<>(task);
+        CancellablePromise<T> promise = promise(invokerTask, 0);
         promise.onSuccess(future::complete);
-        promise.onError(future::completeExceptionally);
+        promise.onError(error -> {
+            if (invokerTask.isFailed()) {
+                future.completeExceptionally(error);
+            }
+            else {
+                future.cancel(false);
+            }
+        });
         return future;
     }
 
@@ -240,7 +248,7 @@ public abstract class InvokerImpl implements Disposable, Invoker {
                 LOG.error(throwable);
             }
             finally {
-                task.promise.setError(throwable);
+                task.setFailed(throwable);
             }
         }
         finally {
@@ -302,9 +310,19 @@ public abstract class InvokerImpl implements Disposable, Invoker {
         final AsyncPromise<T> promise = new AsyncPromise<>();
         private final Supplier<? extends T> supplier;
         private volatile T result;
+        private volatile boolean myFailed;
 
         Task(Supplier<? extends T> supplier) {
             this.supplier = supplier;
+        }
+
+        void setFailed(Throwable throwable) {
+            myFailed = true;
+            promise.setError(throwable);
+        }
+
+        boolean isFailed() {
+            return myFailed;
         }
 
         boolean canRestart(boolean disposed, int attempt) {

@@ -15,33 +15,30 @@
  */
 package consulo.it;
 
-import consulo.it.internal.HeadlessUIAccess;
 import consulo.it.internal.ui.HeadlessTextItemPresentation;
 import consulo.it.internal.ui.HeadlessTree;
+import consulo.it.internal.ui.HeadlessTreeTable;
+import consulo.localize.LocalizeValue;
 import consulo.ui.Point2D;
 import consulo.ui.Tree;
 import consulo.ui.TreeExecutor;
 import consulo.ui.TreeModel;
 import consulo.ui.TreeNode;
+import consulo.ui.TreeTable;
 import consulo.ui.event.details.InputDetails;
 import consulo.ui.impl.tree.TreeController;
 import consulo.ui.impl.tree.TreeNodeImpl;
 import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Assertions;
 
+import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 /**
  * @author VISTALL
  * @since 2026-09-25
  */
 public final class TreeTester<E> {
-    private static final long TIMEOUT_SECONDS = 30;
-
     private final HeadlessTree<E> myTree;
     private final TreeController<E> myController;
 
@@ -61,13 +58,21 @@ public final class TreeTester<E> {
         return of(Tree.create(rootValue, model, executor));
     }
 
+    public static <E> TreeTester<E> createTable(@Nullable E rootValue, TreeModel<E> model, TreeExecutor executor) {
+        return of(TreeTable.create(rootValue, model, executor));
+    }
+
     public Tree<E> getTree() {
         return myTree;
     }
 
+    public TreeTable<E> getTreeTable() {
+        return table();
+    }
+
     public TreeTester<E> bind() {
         myTree.setAttached(true);
-        onUI(myController::bind);
+        HeadlessUIThread.run(myController::bind);
         return this;
     }
 
@@ -81,17 +86,17 @@ public final class TreeTester<E> {
     }
 
     public TreeTester<E> settle() {
-        long deadline = deadline();
+        long deadline = HeadlessUIThread.deadline();
         do {
-            await(myController.whenIdle(), deadline);
-            await(HeadlessUIAccess.INSTANCE.giveAsync(() -> null), deadline);
+            HeadlessUIThread.await(myController.whenIdle(), deadline);
+            HeadlessUIThread.flush(deadline);
         }
         while (!myController.isIdle());
         return this;
     }
 
     public TreeTester<E> flush() {
-        await(HeadlessUIAccess.INSTANCE.giveAsync(() -> null), deadline());
+        HeadlessUIThread.flush();
         return this;
     }
 
@@ -122,35 +127,67 @@ public final class TreeTester<E> {
     @SafeVarargs
     public final TreeTester<E> userExpand(E... path) {
         TreeNodeImpl<E> node = (TreeNodeImpl<E>) node(path);
-        onUI(() -> myController.onExpanded(node, userInput()));
+        HeadlessUIThread.run(() -> myController.onExpanded(node, userInput()));
         return this;
     }
 
     @SafeVarargs
     public final TreeTester<E> userCollapse(E... path) {
         TreeNodeImpl<E> node = (TreeNodeImpl<E>) node(path);
-        onUI(() -> myController.onCollapsed(node, userInput()));
+        HeadlessUIThread.run(() -> myController.onCollapsed(node, userInput()));
         return this;
     }
 
     @SafeVarargs
     public final TreeTester<E> userSelect(E... path) {
         TreeNodeImpl<E> node = (TreeNodeImpl<E>) node(path);
-        onUI(() -> myController.onSelected(node, userInput()));
+        HeadlessUIThread.run(() -> myController.onSelected(node, userInput()));
         return this;
     }
 
     @SafeVarargs
     public final TreeTester<E> userDoubleClick(E... path) {
         TreeNodeImpl<E> node = (TreeNodeImpl<E>) node(path);
-        onUI(() -> myController.onDoubleClick(node, userInput()));
+        HeadlessUIThread.run(() -> myController.onDoubleClick(node, userInput()));
         return this;
     }
 
+    public TreeTester<E> userClickHeader(int columnIndex) {
+        HeadlessTreeTable<E> table = table();
+        HeadlessUIThread.run(() -> table.clickHeader(columnIndex));
+        return this;
+    }
+
+    public TreeTester<E> sortBy(int columnIndex, boolean ascending) {
+        HeadlessTreeTable<E> table = table();
+        HeadlessUIThread.run(() -> table.sortBy(columnIndex, ascending));
+        return this;
+    }
+
+    public TreeTester<E> clearSort() {
+        HeadlessTreeTable<E> table = table();
+        HeadlessUIThread.run(table::clearSort);
+        return this;
+    }
+
+    public int getSortColumn() {
+        return table().getTreeTableColumns().getSortColumn();
+    }
+
+    public boolean isSortAscending() {
+        return table().getTreeTableColumns().isSortAscending();
+    }
+
+    public List<String> headers() {
+        return table().getHeaders().stream().map(LocalizeValue::get).toList();
+    }
+
     public String dump() {
-        StringBuilder builder = new StringBuilder();
-        dump(builder, myController.getRoot(), 0, myController.getSelected());
-        return builder.toString();
+        return HeadlessUIThread.compute(() -> {
+            StringBuilder builder = new StringBuilder();
+            dump(builder, myController.getRoot(), 0, myController.getSelected());
+            return builder.toString();
+        });
     }
 
     private void dump(StringBuilder builder, TreeNodeImpl<E> node, int depth, @Nullable TreeNodeImpl<E> selected) {
@@ -168,12 +205,33 @@ public final class TreeTester<E> {
             if (isSelected) {
                 builder.append(']');
             }
+            if (myTree instanceof HeadlessTreeTable<E> table) {
+                appendCells(builder, table, child, isSelected);
+            }
             builder.append('\n');
 
             if (child.isExpanded()) {
                 dump(builder, child, depth + 1, selected);
             }
         }
+    }
+
+    private static <T> void appendCells(StringBuilder builder, HeadlessTreeTable<T> table, TreeNodeImpl<T> node, boolean selected) {
+        int columns = table.getTreeTableColumns().size();
+        for (int i = 0; i < columns; i++) {
+            String cell = table.renderCell(node, i, selected);
+            builder.append(" |");
+            if (!cell.isEmpty()) {
+                builder.append(' ').append(cell);
+            }
+        }
+    }
+
+    private HeadlessTreeTable<E> table() {
+        if (!(myTree instanceof HeadlessTreeTable<E> table)) {
+            throw new IllegalStateException("Not a tree table: " + myTree);
+        }
+        return table;
     }
 
     public void assertStructure(String expected) {
@@ -190,38 +248,5 @@ public final class TreeTester<E> {
 
     private static InputDetails userInput() {
         return new InputDetails(new Point2D(0, 0), new Point2D(0, 0));
-    }
-
-    private static void onUI(Runnable action) {
-        if (HeadlessUIAccess.INSTANCE.isUIThread()) {
-            action.run();
-            return;
-        }
-
-        await(HeadlessUIAccess.INSTANCE.giveAsync(action), deadline());
-    }
-
-    private static long deadline() {
-        return System.nanoTime() + TimeUnit.SECONDS.toNanos(TIMEOUT_SECONDS);
-    }
-
-    private static void await(CompletableFuture<?> future, long deadline) {
-        if (HeadlessUIAccess.INSTANCE.isUIThread() && !future.isDone()) {
-            throw new IllegalStateException("The UI thread cannot wait for the tree - it is what the tree waits for");
-        }
-
-        try {
-            future.get(Math.max(0, deadline - System.nanoTime()), TimeUnit.NANOSECONDS);
-        }
-        catch (TimeoutException e) {
-            throw new AssertionError("The tree did not settle in " + TIMEOUT_SECONDS + " seconds", e);
-        }
-        catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            throw new AssertionError(e);
-        }
-        catch (ExecutionException e) {
-            throw new AssertionError(e.getCause());
-        }
     }
 }

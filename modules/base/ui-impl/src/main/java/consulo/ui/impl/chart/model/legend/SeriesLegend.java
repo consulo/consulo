@@ -1,0 +1,141 @@
+/*
+ * Copyright (C) 2016 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package consulo.ui.impl.chart.model.legend;
+
+import consulo.ui.impl.chart.model.Interpolatable;
+import consulo.ui.impl.chart.model.Range;
+import consulo.ui.impl.chart.model.RangedContinuousSeries;
+import consulo.ui.impl.chart.model.SeriesData;
+import consulo.ui.impl.chart.model.formatter.BaseAxisFormatter;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.function.Predicate;
+
+import org.jspecify.annotations.Nullable;
+
+/**
+ * Render data used for displaying LineChart data. In particular, it will show the most recent data in the RangedContinuousSeries
+ * based on the max value of the input range.
+ */
+public final class SeriesLegend implements Legend {
+    public final static String UNAVAILABLE_MESSAGE = "N/A";
+
+    private final Range myRange;
+    private final RangedContinuousSeries mySeries;
+    private final BaseAxisFormatter myFormatter;
+    private final String myName;
+    private final Interpolatable<Long, Double> myInterpolator;
+    private final Predicate<Range> myDisplayFilter;
+    private boolean myCachingLastValue;
+    private String myLastValue = UNAVAILABLE_MESSAGE;
+
+    public SeriesLegend(RangedContinuousSeries series, BaseAxisFormatter formatter, Range range) {
+        this(series, formatter, range, Interpolatable.SegmentInterpolator);
+    }
+
+    public SeriesLegend(RangedContinuousSeries series,
+                                            BaseAxisFormatter formatter,
+                                            Range range,
+                                            Interpolatable<Long, Double> interpolator) {
+        this(series, formatter, range, series.getName(), interpolator);
+    }
+
+    public SeriesLegend(RangedContinuousSeries series,
+                                            BaseAxisFormatter formatter,
+                                            Range range,
+                                            String name,
+                                            Interpolatable<Long, Double> interpolator) {
+        this(series, formatter, range, name, interpolator, val -> true);
+    }
+
+    /**
+     * @param series            the series containing the data source.
+     * @param formatter         the formatter to use for rendering the series data
+     * @param range             the range to query data from
+     * @param name              the title/name of the legend
+     * @param interpolator      the interpolate to use for calculating values between data points
+     * @param displayFilter     determines whether the legend should be display at a particular range
+     */
+    public SeriesLegend(RangedContinuousSeries series,
+                                            BaseAxisFormatter formatter,
+                                            Range range,
+                                            String name,
+                                            Interpolatable<Long, Double> interpolator,
+                                            Predicate<Range> displayFilter) {
+        myRange = range;
+        mySeries = series;
+        myFormatter = formatter;
+        myName = name;
+        myInterpolator = interpolator;
+        myDisplayFilter = displayFilter;
+    }
+
+    @Nullable
+    @Override
+    public String getValue() {
+        double time = myRange.getMax();
+        Range range = new Range(time, time);
+        if (!myDisplayFilter.test(range)) {
+            return UNAVAILABLE_MESSAGE;
+        }
+
+        List<SeriesData<Long>> data = mySeries.getSeriesForRange(range);
+        if (data.isEmpty()) {
+            // SeriesLegend should always show up, even when data is absent.
+            return myLastValue;
+        }
+        String value = myFormatter.getFormattedString(mySeries.getYRange().getLength(), getInterpolatedValueAt(time, data), true);
+        if (myCachingLastValue) {
+            myLastValue = value;
+        }
+        return value;
+    }
+
+    boolean isCachingLastValue() {
+        return myCachingLastValue;
+    }
+
+    public void setCachingLastValue(boolean cachingLastValue) {
+        myCachingLastValue = cachingLastValue;
+    }
+
+    private double getInterpolatedValueAt(double time, List<SeriesData<Long>> data) {
+        SeriesData<Long> key = new SeriesData<>((long)time, 0L);
+        int index = Collections.binarySearch(data, key, (left, right) -> {
+            long diff = left.x - right.x;
+            return (diff == 0) ? 0 : (diff < 0) ? -1 : 1;
+        });
+        if (index >= 0) {
+            return data.get(index).value;
+        }
+        // This returns the data to the right given no exact match.
+        index = -(index + 1);
+        if (index == 0) {
+            return data.get(index).value;
+        }
+        if (index >= data.size()) {
+            return data.get(data.size() - 1).value;
+        }
+        return myInterpolator.interpolate(data.get(index - 1), data.get(index), time);
+    }
+
+    @Override
+    public String getName() {
+        return myName;
+    }
+}

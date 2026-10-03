@@ -25,7 +25,6 @@ import consulo.execution.action.ConfigurationContext;
 import consulo.execution.action.ConfigurationFromContext;
 import consulo.execution.configuration.ConfigurationType;
 import consulo.execution.executor.Executor;
-import consulo.execution.executor.ExecutorRegistry;
 import consulo.execution.impl.internal.configuration.RunManagerImpl;
 import consulo.execution.impl.internal.configuration.RunnerAndConfigurationSettingsImpl;
 import consulo.execution.impl.internal.configuration.UnknownConfigurationType;
@@ -739,7 +738,9 @@ public class ChooseRunConfigurationPopup implements ExecutorProvider {
             }
 
             boolean isFirst = true;
-            for (Executor executor : ExecutorRegistry.getInstance().getRegisteredExecutors()) {
+            List<Executor> allExecutors = new ArrayList<>();
+            RunConfigurationsComboBoxAction.forAllExecutors(allExecutors::add);
+            for (Executor executor : allExecutors) {
                 ProgramRunner runner = RunnerRegistry.getInstance().getRunner(executor.getId(), settings.getConfiguration());
                 if (runner != null) {
                     result.add(new ActionWrapper(executor.getActionName().get(), executor.getIcon(), isFirst) {

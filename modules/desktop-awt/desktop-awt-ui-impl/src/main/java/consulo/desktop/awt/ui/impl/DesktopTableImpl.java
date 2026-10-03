@@ -158,7 +158,7 @@ class DesktopTableImpl<Item> extends SwingComponentDelegate<TableView<Item>> imp
 
     @Override
     public <Value> TableColumn<Item, Value> addColumn(LocalizeValue header, Function<Item, Value> valueProvider) {
-        DesktopTableColumnImpl<Item, Value> column = new DesktopTableColumnImpl<>(this, header, valueProvider);
+        DesktopTableColumnImpl<Item, Value> column = new DesktopTableColumnImpl<>(this::getRowBackground, header, valueProvider);
         myColumns.add(column);
 
         if (isInitialized()) {

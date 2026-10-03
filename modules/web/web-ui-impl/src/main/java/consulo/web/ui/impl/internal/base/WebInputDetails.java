@@ -27,6 +27,7 @@ import consulo.ui.event.details.MouseInputDetails;
 import tools.jackson.databind.JsonNode;
 
 import java.util.EnumSet;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 /**
@@ -71,7 +72,13 @@ public class WebInputDetails {
     }
 
     public static DomListenerRegistration addClickListener(Element element, String eventType, Consumer<InputDetails> consumer) {
-        DomListenerRegistration registration = element.addEventListener(eventType, event -> consumer.accept(convert(event)));
+        return addClickEventListener(element, eventType, (event, details) -> consumer.accept(details));
+    }
+
+    public static DomListenerRegistration addClickEventListener(Element element,
+                                                                String eventType,
+                                                                BiConsumer<DomEvent, InputDetails> consumer) {
+        DomListenerRegistration registration = element.addEventListener(eventType, event -> consumer.accept(event, convert(event)));
 
         registration.addEventData(TYPE);
         registration.addEventData(CLIENT_X);

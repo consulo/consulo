@@ -18,6 +18,7 @@ package consulo.web.ui.impl.internal.base;
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.shared.Tooltip;
 import com.vaadin.flow.dom.ClassList;
+import com.vaadin.flow.dom.DomListenerRegistration;
 import com.vaadin.flow.dom.Style;
 import consulo.application.util.matcher.NameUtilCore;
 import consulo.dataContext.UiDataProvider;
@@ -246,11 +247,20 @@ public abstract class VaadinComponentDelegate<T extends com.vaadin.flow.componen
         if (eventClass == ContextMenuEvent.class && !myContextMenuInstalled) {
             myContextMenuInstalled = true;
 
-            WebInputDetails.addClickListener(
+            String condition = contextMenuCondition();
+            DomListenerRegistration registration = WebInputDetails.addClickEventListener(
                 toVaadinComponent().getElement(),
                 "contextmenu",
-                details -> getListenerDispatcher(ContextMenuEvent.class).onEvent(new ContextMenuEvent(this, details))
+                (event, details) -> {
+                    if (condition == null || event.getEventData().path(condition).asBoolean(false)) {
+                        getListenerDispatcher(ContextMenuEvent.class).onEvent(new ContextMenuEvent(this, details));
+                    }
+                }
             ).stopPropagation().preventDefault();
+
+            if (condition != null) {
+                registration.addEventData(condition);
+            }
         }
 
         if (eventClass == KeyPressedEvent.class && !myKeyPressedInstalled) {
@@ -278,6 +288,10 @@ public abstract class VaadinComponentDelegate<T extends com.vaadin.flow.componen
         }
 
         return dataObject().addListener(eventClass, listener);
+    }
+
+    protected @Nullable String contextMenuCondition() {
+        return null;
     }
 
     /**

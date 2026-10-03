@@ -17,8 +17,8 @@ package consulo.execution.debug.impl.internal.action;
 
 import consulo.project.Project;
 import consulo.util.dataholder.UserDataHolder;
-import consulo.execution.debug.attach.XAttachHost;
-import consulo.execution.debug.attach.XAttachPresentationGroup;
+import consulo.execution.attach.XAttachHost;
+import consulo.execution.attach.XAttachPresentationGroup;
 import consulo.ui.image.Image;
 
 /**
@@ -37,18 +37,6 @@ public class LocalAttachHostPresentationGroup implements XAttachPresentationGrou
   @Override
   public String getGroupName() {
     return "";
-  }
-
-  
-  @Override
-  public Image getProcessIcon(Project project, XAttachHost info, UserDataHolder dataHolder) {
-    throw new UnsupportedOperationException();
-  }
-
-  
-  @Override
-  public String getProcessDisplayText(Project project, XAttachHost info, UserDataHolder dataHolder) {
-    throw new UnsupportedOperationException();
   }
 
   

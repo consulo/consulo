@@ -18,6 +18,11 @@ vaadin-grid.web-tree::part(cell)
   background-color: transparent;
 }
 
+vaadin-grid.web-tree::part(header-row)
+{
+  background-color: var(--vaadin-background-color);
+}
+
 /* a tree is navigated, not read - dragging over it must not start marking the labels as text. the global
    user-select of the app does not reach the cells, the grid re-enables selection on them itself */
 vaadin-grid.web-tree,
@@ -49,7 +54,7 @@ vaadin-grid.web-tree::part(body-cell)
    selection band on every side - the padding moves onto the toggle and the toggle takes the row's height
    instead, so the text sits where it did and the fill reaches the edges the selection does. the level indent
    is a spacer inside the toggle's shadow root and is not touched by this */
-vaadin-grid.web-tree vaadin-grid-cell-content
+vaadin-grid.web-tree vaadin-grid-cell-content:has(vaadin-grid-tree-toggle, .web-tree-cell)
 {
   padding: 0;
   align-self: stretch;
@@ -75,7 +80,8 @@ vaadin-grid.web-tree::part(selected-row-cell)
 
 /* the file colour is the fill and the selection is a layer over it - a background-image sits above the
    background-color of the same element, so the two compose the way the awt tree paints them */
-vaadin-grid.web-tree vaadin-grid-tree-toggle
+vaadin-grid.web-tree vaadin-grid-tree-toggle,
+vaadin-grid.web-tree .web-tree-cell
 {
   box-sizing: border-box;
   width: 100%;
@@ -84,6 +90,13 @@ vaadin-grid.web-tree vaadin-grid-tree-toggle
   padding: 0 7px;
   background-color: var(--consulo-tree-row-background, transparent);
   background-image: linear-gradient(var(--consulo-tree-row-selection), var(--consulo-tree-row-selection));
+}
+
+vaadin-grid.web-tree .web-tree-cell
+{
+  display: flex;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 vaadin-grid.web-tree vaadin-grid-tree-toggle::part(toggle)

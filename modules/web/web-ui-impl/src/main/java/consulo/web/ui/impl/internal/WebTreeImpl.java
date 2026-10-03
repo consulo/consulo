@@ -21,6 +21,7 @@ import com.vaadin.flow.component.HasComponents;
 import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.dependency.StyleSheet;
+import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.grid.dnd.GridDropLocation;
 import com.vaadin.flow.component.grid.dnd.GridDropMode;
@@ -29,6 +30,7 @@ import com.vaadin.flow.data.provider.hierarchy.TreeData;
 import com.vaadin.flow.data.provider.hierarchy.TreeDataProvider;
 import com.vaadin.flow.data.selection.SelectionModel;
 import com.vaadin.flow.dom.Style;
+import com.vaadin.flow.function.SerializableComparator;
 import com.vaadin.flow.server.VaadinSession;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -73,7 +75,12 @@ import java.util.function.Function;
  * @author VISTALL
  * @since 2019-02-18
  */
-public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadin> implements Tree<NODE>, PopupOwner {
+public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl<NODE>.Vaadin> implements Tree<NODE>, PopupOwner {
+    private static final String TREE_CLASS = "web-tree";
+
+    private static final String OUTSIDE_HEADER =
+        "!event.composedPath().some(node => node.localName === 'thead' || node.localName === 'tfoot')";
+
     private @Nullable TransferHandler<TreeNode<NODE>> myTransferHandler;
     private @Nullable Function<TreeNode<NODE>, Length> myItemHeightGetter;
     private @Nullable Function<TreeNode<NODE>, String> mySpeedSearchConverter;
@@ -96,6 +103,8 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
     public class Vaadin extends TreeGrid<WebTreeRow<NODE>> implements FromVaadinComponentWrapper {
         private final Map<TreeNodeImpl<NODE>, WebTreeRow<NODE>> myRows = new HashMap<>();
         private TreeData<WebTreeRow<NODE>> myData = new TreeData<>();
+
+        private final Grid.Column<WebTreeRow<NODE>> myTreeColumn;
 
         private List<TreeNode<NODE>> myDraggedItems = List.of();
         private DataTransfer myDragTransfer = DataTransfer.EMPTY;
@@ -146,7 +155,7 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
 
             ((SelectionModel.Single) getSelectionModel()).setDeselectAllowed(false);
 
-            addComponentColumn(row -> {
+            myTreeColumn = addComponentColumn(row -> {
                 // nothing is asked of the model here - the presentation was computed on the executor while the
                 // level was built, and this only turns it into the components of the row
                 TreeNodeImpl<NODE> node = row.getNode();
@@ -185,7 +194,7 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
 
                 // the background of an item means the whole row, the way the awt tree paints a file colour.
                 // the value is only handed to the stylesheet - webTree.css decides what the row draws with it
-                ColorValue background = item.getBackgroundColor();
+                ColorValue background = rowBackground(node);
                 if (background != null) {
                     toggle.getElement().getStyle().set("--consulo-tree-row-background", WebColors.toCssColor(background));
                 }
@@ -267,12 +276,21 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
 
         private static String rowMetric(String expression) {
             return "(() => {"
-                + "const tr = event.composedPath().find(node => node.localName === 'tr');"
+                + "const tr = event.composedPath().find(node => node.localName === 'tr' && typeof node.index === 'number');"
                 + "if (!tr) { return -1; }"
                 + "const row = tr.getBoundingClientRect();"
                 + "const grid = element.getBoundingClientRect();"
                 + "return " + expression + ";"
                 + "})()";
+        }
+
+        Grid.Column<WebTreeRow<NODE>> getTreeColumn() {
+            return myTreeColumn;
+        }
+
+        @Override
+        protected @Nullable SerializableComparator<WebTreeRow<NODE>> createSortingComparator() {
+            return null;
         }
 
         @Override
@@ -405,6 +423,8 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
             else {
                 getDataProvider().refreshItem(parent, true);
             }
+
+            childrenApplied(node);
         }
 
         private boolean syncPlaceholder(WebTreeRow<NODE> row) {
@@ -469,6 +489,12 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
             WebTreeRow<NODE> row = liveRow(node);
             if (row != null) {
                 select(row);
+            }
+        }
+
+        void refreshRow(@Nullable WebTreeRow<NODE> row) {
+            if (row != null && myData.contains(row)) {
+                getDataProvider().refreshItem(row);
             }
         }
 
@@ -547,6 +573,7 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
         Disposer.register(myDestroyHook, myController);
 
         Vaadin vaadin = toVaadinComponent();
+        vaadin.addClassName(TREE_CLASS);
         vaadin.resetData();
 
         vaadin.asSingleSelect().addValueChangeListener(event -> {
@@ -562,7 +589,26 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
             if (selectedNode != null) {
                 myController.onDoubleClick(selectedNode, inputDetails);
             }
-        });
+        }).setFilter(OUTSIDE_HEADER);
+    }
+
+    @Override
+    protected String contextMenuCondition() {
+        return OUTSIDE_HEADER;
+    }
+
+    TreeController<NODE> getController() {
+        return myController;
+    }
+
+    void childrenApplied(TreeNodeImpl<NODE> node) {
+    }
+
+    @Nullable ColorValue rowBackground(@Nullable TreeNodeImpl<NODE> node) {
+        if (node != null && node.getPresentation() instanceof WebItemPresentationImpl presentation) {
+            return presentation.getBackgroundColor();
+        }
+        return null;
     }
 
     @Override

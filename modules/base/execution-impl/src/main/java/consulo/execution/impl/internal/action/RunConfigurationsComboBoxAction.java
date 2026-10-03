@@ -24,6 +24,7 @@ import consulo.dataContext.DataManager;
 import consulo.execution.*;
 import consulo.execution.configuration.ConfigurationType;
 import consulo.execution.executor.Executor;
+import consulo.execution.executor.ExecutorGroup;
 import consulo.execution.impl.internal.ExecutionManagerImpl;
 import consulo.execution.impl.internal.action.runPopup.*;
 import consulo.execution.internal.RunCurrentFileExecutor;
@@ -47,6 +48,7 @@ import jakarta.inject.Inject;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Consumer;
 
 @ActionImpl(id = "RunConfiguration")
 public class RunConfigurationsComboBoxAction extends ComboBoxAction implements DumbAware {
@@ -173,6 +175,19 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
         }
         catch (IndexNotReadyException ignored) {
         }
+    }
+
+    public static void forAllExecutors(Consumer<? super Executor> executorProcessor) {
+        Application.get().getExtensionPoint(Executor.class).forEachExtensionSafe(executor -> {
+            if (executor instanceof ExecutorGroup<?> executorGroup) {
+                for (Executor childExecutor : executorGroup.childExecutors()) {
+                    executorProcessor.accept(childExecutor);
+                }
+            }
+            else {
+                executorProcessor.accept(executor);
+            }
+        });
     }
 
     @Override

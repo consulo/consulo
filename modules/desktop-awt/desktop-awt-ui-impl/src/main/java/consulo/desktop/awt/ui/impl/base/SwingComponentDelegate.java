@@ -59,6 +59,7 @@ import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -85,14 +86,20 @@ public abstract class SwingComponentDelegate<T extends java.awt.Component> imple
     protected abstract T createComponent();
 
     protected void init(T component) {
-        component.addKeyListener(new AWTKeyAdapterAsKeyPressedListener(this, getListenerDispatcher(KeyPressedEvent.class)));
-        component.addKeyListener(new AWTKeyAdapterAsKeyReleasedListener(this, getListenerDispatcher(KeyReleasedEvent.class)));
+        for (java.awt.Component input : getInputComponents(component)) {
+            input.addKeyListener(new AWTKeyAdapterAsKeyPressedListener(this, getListenerDispatcher(KeyPressedEvent.class)));
+            input.addKeyListener(new AWTKeyAdapterAsKeyReleasedListener(this, getListenerDispatcher(KeyReleasedEvent.class)));
 
-        if (this instanceof HasFocus) {
-            component.addFocusListener(new AWTFocusAdapterAsFocusListener((HasFocus) this, getListenerDispatcher(FocusEvent.class)));
+            if (this instanceof HasFocus) {
+                input.addFocusListener(new AWTFocusAdapterAsFocusListener((HasFocus) this, getListenerDispatcher(FocusEvent.class)));
 
-            component.addFocusListener(new AWTFocusAdapterAsBlurListener((HasFocus) this, getListenerDispatcher(BlurEvent.class)));
+                input.addFocusListener(new AWTFocusAdapterAsBlurListener((HasFocus) this, getListenerDispatcher(BlurEvent.class)));
+            }
         }
+    }
+
+    protected List<java.awt.Component> getInputComponents(T component) {
+        return List.of(component);
     }
 
     protected static void updateTextForButton(AbstractButton button, LocalizeValue textValue) {
@@ -121,15 +128,17 @@ public abstract class SwingComponentDelegate<T extends java.awt.Component> imple
         if (!myClickBridgeInstalled) {
             myClickBridgeInstalled = true;
 
-            new ClickListener() {
-                @Override
-                @RequiredUIAccess
-                public boolean onClick(MouseEvent event, int clickCount) {
-                    getListenerDispatcher(ClickEvent.class)
-                        .onEvent(new ClickEvent(SwingComponentDelegate.this, DesktopAWTInputDetails.convert(event.getComponent(), event)));
-                    return true;
-                }
-            }.installOn(toAWTComponent());
+            for (java.awt.Component input : getInputComponents(toAWTComponent())) {
+                new ClickListener() {
+                    @Override
+                    @RequiredUIAccess
+                    public boolean onClick(MouseEvent event, int clickCount) {
+                        getListenerDispatcher(ClickEvent.class)
+                            .onEvent(new ClickEvent(SwingComponentDelegate.this, DesktopAWTInputDetails.convert(toAWTComponent(), event)));
+                        return true;
+                    }
+                }.installOn(input);
+            }
         }
 
         return dataObject().addListener(ClickEvent.class, clickListener);
@@ -306,7 +315,7 @@ public abstract class SwingComponentDelegate<T extends java.awt.Component> imple
 
         myContextMenuInstalled = true;
 
-        toAWTComponent().addMouseListener(new MouseAdapter() {
+        MouseAdapter contextMenuDispatch = new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
                 fireIfPopupTrigger(e);
@@ -325,10 +334,14 @@ public abstract class SwingComponentDelegate<T extends java.awt.Component> imple
                 e.consume();
 
                 getListenerDispatcher(ContextMenuEvent.class).onEvent(
-                    new ContextMenuEvent(SwingComponentDelegate.this, DesktopAWTInputDetails.convert(e.getComponent(), e))
+                    new ContextMenuEvent(SwingComponentDelegate.this, DesktopAWTInputDetails.convert(toAWTComponent(), e))
                 );
             }
-        });
+        };
+
+        for (java.awt.Component input : getInputComponents(toAWTComponent())) {
+            input.addMouseListener(contextMenuDispatch);
+        }
     }
 
     @Override

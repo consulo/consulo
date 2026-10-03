@@ -16,7 +16,11 @@
 package consulo.sandboxPlugin.ide.debugger.attach;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.execution.debug.attach.*;
+import consulo.execution.attach.LocalAttachHost;
+import consulo.execution.attach.XAttachHost;
+import consulo.execution.debug.attach.XAttachDebugger;
+import consulo.execution.debug.attach.XAttachDebuggerProvider;
+import consulo.execution.debug.attach.XLocalAttachDebugger;
 import consulo.platform.ProcessInfo;
 import consulo.process.ExecutionException;
 import consulo.project.Project;

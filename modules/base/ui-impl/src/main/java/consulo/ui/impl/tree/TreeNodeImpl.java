@@ -22,6 +22,7 @@ import org.jspecify.annotations.Nullable;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 /**
@@ -35,6 +36,11 @@ public final class TreeNodeImpl<E> implements TreeNode<E> {
     volatile @Nullable E myValue;
     volatile @Nullable BiConsumer<E, TextItemPresentation> myRenderer;
     volatile @Nullable TextItemPresentation myPresentation;
+    volatile long myPresentationStamp;
+    volatile List<@Nullable Object> myColumnValues = List.of();
+    volatile int myColumnVersion;
+    volatile long myColumnStamp;
+    volatile int myOrdinal;
 
     volatile boolean myLeaf;
     volatile boolean myExpanded;
@@ -79,6 +85,19 @@ public final class TreeNodeImpl<E> implements TreeNode<E> {
         return resolve().myPresentation;
     }
 
+    public List<@Nullable Object> getColumnValues() {
+        return resolve().myColumnValues;
+    }
+
+    public @Nullable Object getColumnValue(int index) {
+        List<@Nullable Object> values = resolve().myColumnValues;
+        return index >= 0 && index < values.size() ? values.get(index) : null;
+    }
+
+    public int getOrdinal() {
+        return resolve().myOrdinal;
+    }
+
     TreeNodeImpl<E> resolve() {
         TreeNodeImpl<E> node = this;
         TreeNodeImpl<E> replacement;
@@ -92,23 +111,64 @@ public final class TreeNodeImpl<E> implements TreeNode<E> {
         return myController == controller;
     }
 
-    void computePresentation(TextItemPresentation presentation) {
-        BiConsumer<E, TextItemPresentation> renderer = myRenderer;
+    TreeNodeUpdate<E> compute(long stamp,
+                              @Nullable TextItemPresentation presentation,
+                              @Nullable Function<E, List<@Nullable Object>> columnValueFactory,
+                              int columnVersion) {
         E value = myValue;
-        if (renderer == null) {
-            presentation.append(String.valueOf(value));
-        }
-        else {
-            renderer.accept(value, presentation);
+        if (presentation != null) {
+            BiConsumer<E, TextItemPresentation> renderer = myRenderer;
+            if (renderer == null) {
+                presentation.append(String.valueOf(value));
+            }
+            else {
+                renderer.accept(value, presentation);
+            }
         }
 
-        myPresentation = presentation;
+        List<@Nullable Object> columnValues = columnValueFactory == null || value == null ? List.of() : columnValueFactory.apply(value);
+        return new TreeNodeUpdate<>(this, value, stamp, presentation, columnValues, columnVersion);
+    }
+
+    boolean apply(TreeNodeUpdate<E> update) {
+        if (myRemoved || myValue != update.value()) {
+            return false;
+        }
+
+        boolean applied = false;
+        TextItemPresentation presentation = update.presentation();
+        if (presentation != null && update.stamp() > myPresentationStamp) {
+            myPresentation = presentation;
+            myPresentationStamp = update.stamp();
+            applied = true;
+        }
+
+        if (update.stamp() > myColumnStamp) {
+            myColumnValues = update.columnValues();
+            myColumnVersion = update.columnVersion();
+            myColumnStamp = update.stamp();
+            applied = true;
+        }
+        return applied;
     }
 
     void takeOver(TreeNodeImpl<E> fresh) {
+        boolean sameValue = myValue == fresh.myValue;
         myValue = fresh.myValue;
         myRenderer = fresh.myRenderer;
-        myPresentation = fresh.myPresentation;
+
+        if (!sameValue || fresh.myPresentationStamp > myPresentationStamp) {
+            myPresentation = fresh.myPresentation;
+            myPresentationStamp = fresh.myPresentationStamp;
+        }
+
+        if (!sameValue || fresh.myColumnStamp > myColumnStamp) {
+            myColumnValues = fresh.myColumnValues;
+            myColumnVersion = fresh.myColumnVersion;
+            myColumnStamp = fresh.myColumnStamp;
+        }
+
+        myOrdinal = fresh.myOrdinal;
         myPrebuild = fresh.myPrebuild;
 
         fresh.myReplacement = this;

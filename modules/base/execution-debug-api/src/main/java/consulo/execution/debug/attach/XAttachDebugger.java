@@ -15,6 +15,7 @@
  */
 package consulo.execution.debug.attach;
 
+import consulo.execution.attach.XAttachHost;
 import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.platform.ProcessInfo;
 import consulo.process.ExecutionException;

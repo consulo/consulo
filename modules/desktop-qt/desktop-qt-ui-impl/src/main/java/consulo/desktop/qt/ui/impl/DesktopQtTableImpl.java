@@ -20,7 +20,6 @@ import consulo.desktop.qt.ui.impl.image.DesktopQtImage;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Length;
 import consulo.ui.ComponentItemRender;
-import consulo.ui.HorizontalAlignment;
 import consulo.ui.RenderItem;
 import consulo.ui.Table;
 import consulo.ui.TableColumn;
@@ -30,12 +29,13 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.event.TableDoubleClickEvent;
 import consulo.ui.event.TableSelectEvent;
+import consulo.ui.impl.table.TableColumnImpl;
+import consulo.ui.impl.table.TableColumnOwner;
 import consulo.ui.model.FlatDataModel;
 import io.qt.core.QSize;
 import io.qt.gui.QBrush;
 import io.qt.core.Qt;
 import io.qt.widgets.QAbstractItemView;
-import io.qt.widgets.QHeaderView;
 import io.qt.widgets.QTableWidget;
 import io.qt.widgets.QTableWidgetItem;
 import io.qt.widgets.QWidget;
@@ -51,11 +51,12 @@ import java.util.function.Function;
  * @since 2026-08-23
  */
 @SuppressWarnings({"unchecked", "rawtypes"})
-public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableWidget> implements Table<Item>, DesktopQtIconOwner {
+public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableWidget>
+    implements Table<Item>, DesktopQtIconOwner, TableColumnOwner {
     private final FlatDataModel<Item> myModel;
     private @Nullable Function<Item, ColorValue> myRowBackgroundGetter;
 
-    private final List<DesktopQtTableColumnImpl<Item, ?>> myColumns = new ArrayList<>();
+    private final List<TableColumnImpl<Item, ?>> myColumns = new ArrayList<>();
 
     private boolean myAllowMultipleSelect;
     private boolean myShowHeader = true;
@@ -100,6 +101,8 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableWidget> 
         component.itemSelectionChanged.connect(() -> getListenerDispatcher(TableSelectEvent.class)
             .onEvent(new TableSelectEvent(this, getSelectedItems(), DesktopQtCurrentInput.current(component))));
 
+        component.horizontalHeader().sectionClicked.connect(this::sortByColumn);
+
         component.doubleClicked.connect(index -> {
             Item item = itemAtRow(index.row());
             if (item != null) {
@@ -139,7 +142,7 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableWidget> 
 
     @Override
     public <Value> TableColumn<Item, Value> addColumn(LocalizeValue header, Function<Item, Value> valueProvider) {
-        DesktopQtTableColumnImpl<Item, Value> column = new DesktopQtTableColumnImpl<>(this, myColumns.size(), header, valueProvider);
+        TableColumnImpl<Item, Value> column = new TableColumnImpl<>(this, myColumns.size(), header, valueProvider);
         myColumns.add(column);
 
         updateHeaders();
@@ -153,7 +156,27 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableWidget> 
         return List.copyOf(myColumns);
     }
 
-    void updateHeaders() {
+    @Override
+    public void headerChanged() {
+        updateHeaders();
+    }
+
+    @Override
+    public void renderChanged() {
+        updateRows();
+    }
+
+    @Override
+    public void layoutChanged() {
+        updateColumnLayout();
+    }
+
+    @Override
+    public void sortChanged() {
+        updateSortable();
+    }
+
+    private void updateHeaders() {
         QTableWidget component = myComponent;
         if (component == null) {
             return;
@@ -162,57 +185,41 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableWidget> 
         component.setColumnCount(myColumns.size());
 
         List<String> labels = new ArrayList<>();
-        for (DesktopQtTableColumnImpl<Item, ?> column : myColumns) {
+        for (TableColumnImpl<Item, ?> column : myColumns) {
             labels.add(column.getHeader().get());
         }
         component.setHorizontalHeaderLabels(labels);
         component.horizontalHeader().setVisible(myShowHeader);
     }
 
-    void updateColumnLayout() {
+    private void updateColumnLayout() {
         QTableWidget component = myComponent;
         if (component == null) {
             return;
         }
 
-        QHeaderView header = component.horizontalHeader();
-        header.setTextElideMode(Qt.TextElideMode.ElideRight);
-
-        for (DesktopQtTableColumnImpl<Item, ?> column : myColumns) {
-            int index = column.getIndex();
-
-            if (column.getWidth() > 0) {
-                component.setColumnWidth(index, Math.max(column.getWidth(), header.sectionSizeHint(index)));
-
-                header.setSectionResizeMode(
-                    index,
-                    column.isResizable() ? QHeaderView.ResizeMode.Interactive : QHeaderView.ResizeMode.Fixed
-                );
-            }
-            else {
-                header.setSectionResizeMode(index, QHeaderView.ResizeMode.Stretch);
-            }
-        }
+        DesktopQtColumnSupport.applyLayout(component.horizontalHeader(), myColumns);
     }
 
-    void updateSortable() {
+    private void updateSortable() {
         QTableWidget component = myComponent;
         if (component == null) {
             return;
         }
 
-        boolean sortable = myColumns.stream().anyMatch(column -> column.getComparator() != null);
         component.setSortingEnabled(false);
 
-        if (sortable) {
-            QHeaderView header = component.horizontalHeader();
-            header.setSectionsClickable(true);
-            header.sectionClicked.connect(this::sortByColumn);
+        if (myColumns.stream().anyMatch(TableColumnImpl::isSortable)) {
+            component.horizontalHeader().setSectionsClickable(true);
         }
     }
 
     private void sortByColumn(int index) {
-        DesktopQtTableColumnImpl<Item, ?> column = myColumns.get(index);
+        if (index < 0 || index >= myColumns.size()) {
+            return;
+        }
+
+        TableColumnImpl<Item, ?> column = myColumns.get(index);
 
         Comparator comparator = column.getComparator();
         if (comparator == null) {
@@ -225,7 +232,7 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableWidget> 
         updateRows();
     }
 
-    void updateRows() {
+    private void updateRows() {
         QTableWidget component = myComponent;
         if (component == null) {
             return;
@@ -240,13 +247,13 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableWidget> 
                 component.setRowHeight(row, DesktopQtLength.toPixels(component, myItemHeightGetter.apply(item)));
             }
 
-            for (DesktopQtTableColumnImpl<Item, ?> column : myColumns) {
+            for (TableColumnImpl<Item, ?> column : myColumns) {
                 updateCell(component, row, item, column);
             }
         }
     }
 
-    private <Value> void updateCell(QTableWidget component, int row, Item item, DesktopQtTableColumnImpl<Item, Value> column) {
+    private <Value> void updateCell(QTableWidget component, int row, Item item, TableColumnImpl<Item, Value> column) {
         int index = column.getIndex();
         Value value = column.getValueProvider().apply(item);
 
@@ -264,7 +271,7 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableWidget> 
         QTableWidgetItem cell = new QTableWidgetItem(presentation.toString());
         cell.setIcon(DesktopQtImage.toQIcon(presentation.getImage()));
         cell.setFlags(Qt.ItemFlag.ItemIsEnabled, Qt.ItemFlag.ItemIsSelectable);
-        cell.setTextAlignment(toAlignment(column.getAlignment()));
+        cell.setTextAlignment(DesktopQtColumnSupport.toAlignment(column.getAlignment()));
 
         // the band belongs to the row, so it goes under every column; a selected row keeps the selection fill
         Function<Item, ColorValue> rowBackgroundGetter = myRowBackgroundGetter;
@@ -285,7 +292,7 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableWidget> 
         component.setItem(row, index, cell);
     }
 
-    private <Value> DesktopQtTextItemPresentation renderCell(int row, Item item, DesktopQtTableColumnImpl<Item, Value> column, Value value) {
+    private <Value> DesktopQtTextItemPresentation renderCell(int row, Item item, TableColumnImpl<Item, Value> column, Value value) {
         DesktopQtTextItemPresentation presentation = new DesktopQtTextItemPresentation();
         column.getRender().render(presentation, RenderItem.of(value, isSelected(row)), item);
         return presentation;
@@ -300,13 +307,13 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableWidget> 
         }
 
         for (int row = 0; row < myRows.size() && row < component.rowCount(); row++) {
-            for (DesktopQtTableColumnImpl<Item, ?> column : myColumns) {
+            for (TableColumnImpl<Item, ?> column : myColumns) {
                 refreshIcon(component, row, myRows.get(row), column);
             }
         }
     }
 
-    private <Value> void refreshIcon(QTableWidget component, int row, Item item, DesktopQtTableColumnImpl<Item, Value> column) {
+    private <Value> void refreshIcon(QTableWidget component, int row, Item item, TableColumnImpl<Item, Value> column) {
         QTableWidgetItem cell = component.item(row, column.getIndex());
         if (cell == null || component.cellWidget(row, column.getIndex()) != null) {
             return;
@@ -324,7 +331,7 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableWidget> 
      */
     private <Value> @Nullable QWidget createCellWidget(int row,
                                                        Item item,
-                                                       DesktopQtTableColumnImpl<Item, Value> column,
+                                                       TableColumnImpl<Item, Value> column,
                                                        Value value) {
         TableItemEditor<Item, Value> editor = column.getEditor();
         if (editor != null && editor.isEditable(item)) {
@@ -344,14 +351,6 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableWidget> 
 
     private static @Nullable QWidget toQtWidget(consulo.ui.@Nullable Component component) {
         return component instanceof QtComponentDelegate<?> delegate ? delegate.toQtComponent() : null;
-    }
-
-    private static Qt.Alignment toAlignment(HorizontalAlignment alignment) {
-        return switch (alignment) {
-            case LEFT -> new Qt.Alignment(Qt.AlignmentFlag.AlignLeft, Qt.AlignmentFlag.AlignVCenter);
-            case CENTER -> new Qt.Alignment(Qt.AlignmentFlag.AlignHCenter, Qt.AlignmentFlag.AlignVCenter);
-            case RIGHT -> new Qt.Alignment(Qt.AlignmentFlag.AlignRight, Qt.AlignmentFlag.AlignVCenter);
-        };
     }
 
     private boolean isSelected(int row) {

@@ -31,6 +31,7 @@ import consulo.execution.configuration.ui.SettingsEditor;
 import consulo.execution.configuration.ui.SettingsEditorGroup;
 import consulo.execution.configuration.ui.SettingsEditorWrapper;
 import consulo.execution.executor.Executor;
+import consulo.execution.executor.ExecutorGroup;
 import consulo.execution.executor.ExecutorRegistry;
 import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.runner.ProgramRunner;
@@ -116,7 +117,7 @@ class ConfigurationSettingsEditor extends CompositeSettingsEditor<RunnerAndConfi
         ProgramRunner[] runners = RunnerRegistry.getInstance().getRegisteredRunners();
         for (Executor executor : ExecutorRegistry.getInstance().getRegisteredExecutors()) {
             for (ProgramRunner runner : runners) {
-                if (runner.canRun(executor.getId(), myConfiguration)) {
+                if (canRun(runner, executor, myConfiguration)) {
                     Component perRunnerSettings = createCompositePerRunnerSettings(executor, runner);
                     if (perRunnerSettings != null) {
                         runnersComponent.addExecutorComponent(executor, perRunnerSettings);
@@ -148,6 +149,17 @@ class ConfigurationSettingsEditor extends CompositeSettingsEditor<RunnerAndConfi
             );
         }
         return compound;
+    }
+
+    private static boolean canRun(ProgramRunner runner, Executor executor, RunConfiguration configuration) {
+        if (executor instanceof ExecutorGroup<?> executorGroup) {
+            for (Executor childExecutor : executorGroup.childExecutors()) {
+                if (runner.canRun(childExecutor.getId(), configuration)) {
+                    return true;
+                }
+            }
+        }
+        return runner.canRun(executor.getId(), configuration);
     }
 
     @RequiredUIAccess

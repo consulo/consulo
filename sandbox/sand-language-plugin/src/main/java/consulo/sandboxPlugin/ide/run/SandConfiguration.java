@@ -20,13 +20,14 @@ import consulo.configurable.ConfigurationException;
 import consulo.execution.CommonProgramRunConfigurationParameters;
 import consulo.execution.RuntimeConfigurationException;
 import consulo.execution.configuration.ConfigurationFactory;
+import consulo.execution.configuration.LocatableConfigurationBase;
 import consulo.execution.configuration.RunConfiguration;
-import consulo.execution.configuration.RunConfigurationBase;
 import consulo.execution.configuration.RunProfileState;
 import consulo.execution.configuration.log.ui.LogConfigurationPanel;
 import consulo.execution.configuration.ui.SettingsEditor;
 import consulo.execution.configuration.ui.SettingsEditorGroup;
 import consulo.execution.executor.Executor;
+import consulo.execution.executor.ExecutorGroup;
 import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.ui.CommonProgramParametersLayout;
@@ -41,6 +42,8 @@ import consulo.language.editor.ui.awt.ValuesCompletionProvider;
 import consulo.localize.LocalizeValue;
 import consulo.process.ExecutionException;
 import consulo.project.Project;
+import consulo.sandboxPlugin.ide.profiler.SandProfilerConfigurationState;
+import consulo.sandboxPlugin.ide.profiler.SandProfilerRunState;
 import consulo.sandboxPlugin.lang.SandLanguage;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -60,7 +63,7 @@ import java.util.Map;
  * @author VISTALL
  * @since 04.06.14
  */
-public class SandConfiguration extends RunConfigurationBase implements CommonProgramRunConfigurationParameters {
+public class SandConfiguration extends LocatableConfigurationBase implements CommonProgramRunConfigurationParameters {
     private @Nullable String myProgramParameters;
     private @Nullable String myWorkingDirectory;
     private @Nullable String myEntryPoint;
@@ -88,6 +91,17 @@ public class SandConfiguration extends RunConfigurationBase implements CommonPro
 
     @Override
     public @Nullable RunProfileState getState(Executor executor, ExecutionEnvironment env) throws ExecutionException {
+        if (ExecutorGroup.getGroupIfProxy(executor) instanceof SandExecutorGroup executorGroup) {
+            SandExecutorSettings settings = executorGroup.getRegisteredSettings(executor.getId());
+            if (settings != null) {
+                return new SandProfileState(env, settings);
+            }
+        }
+
+        SandProfilerConfigurationState profilerConfiguration = SandProfilerRunState.findConfiguration(executor);
+        if (profilerConfiguration != null) {
+            return new SandProfilerRunState(env, profilerConfiguration);
+        }
         return null;
     }
 

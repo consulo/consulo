@@ -23,6 +23,8 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.event.TableDoubleClickEvent;
 import consulo.ui.event.TableSelectEvent;
+import consulo.ui.impl.table.TableColumnImpl;
+import consulo.ui.impl.table.TableColumnOwner;
 import consulo.ui.model.FlatDataModel;
 import org.jspecify.annotations.Nullable;
 
@@ -35,9 +37,9 @@ import java.util.function.Function;
  * @author VISTALL
  */
 @SuppressWarnings({"unchecked", "rawtypes"})
-public class HeadlessTable<Item> extends HeadlessComponentBase implements Table<Item> {
+public class HeadlessTable<Item> extends HeadlessComponentBase implements Table<Item>, TableColumnOwner {
     private final FlatDataModel<Item> myModel;
-    private final List<TableColumn<Item, ?>> myColumns = new ArrayList<>();
+    private final List<TableColumnImpl<Item, ?>> myColumns = new ArrayList<>();
     private final List<Item> mySelected = new ArrayList<>();
 
     private boolean myAllowMultipleSelect;
@@ -60,7 +62,7 @@ public class HeadlessTable<Item> extends HeadlessComponentBase implements Table<
 
     @Override
     public <Value> TableColumn<Item, Value> addColumn(LocalizeValue header, Function<Item, Value> valueProvider) {
-        HeadlessTableColumn<Item, Value> column = new HeadlessTableColumn<>(header, valueProvider);
+        TableColumnImpl<Item, Value> column = new TableColumnImpl<>(this, myColumns.size(), header, valueProvider);
         myColumns.add(column);
         return column;
     }
@@ -68,6 +70,26 @@ public class HeadlessTable<Item> extends HeadlessComponentBase implements Table<
     @Override
     public List<TableColumn<Item, ?>> getColumns() {
         return Collections.unmodifiableList(new ArrayList<>(myColumns));
+    }
+
+    public List<TableColumnImpl<Item, ?>> getColumnImpls() {
+        return List.copyOf(myColumns);
+    }
+
+    @Override
+    public void headerChanged() {
+    }
+
+    @Override
+    public void renderChanged() {
+    }
+
+    @Override
+    public void layoutChanged() {
+    }
+
+    @Override
+    public void sortChanged() {
     }
 
     @Override

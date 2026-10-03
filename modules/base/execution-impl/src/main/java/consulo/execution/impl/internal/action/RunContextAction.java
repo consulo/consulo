@@ -77,6 +77,10 @@ public class RunContextAction extends BaseRunConfigurationAction {
     presentation.setVisible(b.second);
   }
 
+  public Executor getExecutor() {
+    return myExecutor;
+  }
+
   private Pair<Boolean, Boolean> isEnabledAndVisible(ConfigurationContext context) {
     RunnerAndConfigurationSettings configuration = context.findExisting();
     if (configuration == null) {

@@ -15,12 +15,16 @@
  */
 package consulo.web.ui.impl.internal;
 
-import com.vaadin.flow.component.grid.ColumnTextAlign;
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.data.renderer.ComponentRenderer;
 import consulo.localize.LocalizeValue;
-import consulo.ui.*;
-import consulo.web.ui.impl.internal.base.ToVaadinComponentWrapper;
+import consulo.ui.ComponentItemRender;
+import consulo.ui.HorizontalAlignment;
+import consulo.ui.TableColumn;
+import consulo.ui.TableItemEditor;
+import consulo.ui.TableItemRender;
+import consulo.ui.TextItemRender;
+import consulo.ui.color.ColorValue;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Comparator;
@@ -30,65 +34,63 @@ import java.util.function.Function;
  * @author VISTALL
  * @since 2026-08-02
  */
-public class WebTableColumnImpl<Item, Value> implements TableColumn<Item, Value> {
+public class WebTableColumnImpl<Item, Value> extends WebGridColumnBase<Item, Item, Value> implements TableColumn<Item, Value> {
     private final WebTableImpl<Item> myTable;
     private final Function<Item, Value> myValueProvider;
-    private final Grid.Column<Item> myColumn;
 
     private TableItemRender<Item, Value> myRender = TableItemRender.of(TextItemRender.defaultRender());
     private @Nullable ComponentItemRender<Value> myComponentRender;
     private @Nullable TableItemEditor<Item, Value> myEditor;
 
     public WebTableColumnImpl(WebTableImpl<Item> table, Function<Item, Value> valueProvider) {
+        super(table.toVaadinComponent());
         myTable = table;
         myValueProvider = valueProvider;
-
-        myColumn = table.toVaadinComponent().addColumn(new ComponentRenderer<>(this::renderCell));
     }
 
-    private com.vaadin.flow.component.Component renderCell(Item item) {
-        Value value = myValueProvider.apply(item);
-
-        com.vaadin.flow.component.Component component = renderCellContent(item, value);
-
-        myTable.applyItemHeight(component, item);
-        return component;
+    @Override
+    protected Item itemOf(Item row) {
+        return row;
     }
 
-    /**
-     * A cell lives in the document and is interactive as soon as it is drawn, so an editable column renders its editor
-     * straight into the cell rather than a read only view - there is no edit mode to open, and a value listener is the
-     * only point at which the change can be committed.
-     */
-    private com.vaadin.flow.component.Component renderCellContent(Item item, Value value) {
-        TableItemEditor<Item, Value> editor = myEditor;
-        if (editor != null && editor.isEditable(item)) {
-            ValueComponent<Value> component = editor.createComponent(item);
-            component.setValue(value, false);
-            component.addValueListener(event -> editor.commit(item, event.getValue()));
-            return ((ToVaadinComponentWrapper) component).toVaadinComponent();
-        }
+    @Override
+    protected Value valueOf(Item row, Item item) {
+        return myValueProvider.apply(item);
+    }
 
-        RenderItem<Value> renderItem = RenderItem.of(value, myTable.isSelected(item));
+    @Override
+    protected boolean isSelected(Item row) {
+        return myTable.isSelected(row);
+    }
 
-        if (myComponentRender != null) {
-            return ((ToVaadinComponentWrapper) myComponentRender.render(renderItem)).toVaadinComponent();
-        }
+    @Override
+    protected TableItemRender<Item, Value> getRender() {
+        return myRender;
+    }
 
-        WebItemPresentationImpl presentation = new WebItemPresentationImpl();
+    @Override
+    protected @Nullable ComponentItemRender<Value> getComponentRender() {
+        return myComponentRender;
+    }
 
-        // the band belongs to the row, so it goes under every column; a selected row keeps the selection fill
-        if (!renderItem.isSelected()) {
-            presentation.withBackgroundColor(myTable.getRowBackground(item));
-        }
+    @Override
+    protected @Nullable TableItemEditor<Item, Value> getEditor() {
+        return myEditor;
+    }
 
-        myRender.render(presentation, renderItem, item);
-        return presentation.toComponent();
+    @Override
+    protected @Nullable ColorValue rowBackground(Item row, Item item) {
+        return myTable.getRowBackground(item);
+    }
+
+    @Override
+    protected void decorateCell(Component cell, Item row, @Nullable Item item) {
+        myTable.applyItemHeight(cell, item);
     }
 
     @Override
     public TableColumn<Item, Value> setHeader(LocalizeValue header) {
-        myColumn.setHeader(header.get());
+        applyHeader(header);
         return this;
     }
 
@@ -114,35 +116,32 @@ public class WebTableColumnImpl<Item, Value> implements TableColumn<Item, Value>
 
     @Override
     public TableColumn<Item, Value> setWidth(int pixels) {
-        myColumn.setWidth(pixels + "px").setFlexGrow(0);
+        applyWidth(pixels);
         return this;
     }
 
     @Override
     public TableColumn<Item, Value> setResizable(boolean resizable) {
-        myColumn.setResizable(resizable);
+        applyResizable(resizable);
         return this;
     }
 
     @Override
     public TableColumn<Item, Value> setHorizontalAlignment(HorizontalAlignment alignment) {
-        myColumn.setTextAlign(switch (alignment) {
-            case LEFT -> ColumnTextAlign.START;
-            case CENTER -> ColumnTextAlign.CENTER;
-            case RIGHT -> ColumnTextAlign.END;
-        });
+        applyAlignment(alignment);
         return this;
     }
 
     @Override
     public TableColumn<Item, Value> setSortable(@Nullable Comparator<Value> comparator) {
+        Grid.Column<Item> column = getGridColumn();
         if (comparator == null) {
-            myColumn.setSortable(false);
+            column.setSortable(false);
             return this;
         }
 
-        myColumn.setSortable(true);
-        myColumn.setComparator((a, b) ->
+        column.setSortable(true);
+        column.setComparator((a, b) ->
             Comparator.nullsFirst(comparator).compare(myValueProvider.apply(a), myValueProvider.apply(b)));
         return this;
     }

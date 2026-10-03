@@ -23,6 +23,12 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.event.ModalityStateListener;
 import consulo.ui.font.FontManager;
+import consulo.ui.chart.ChartUnit;
+import consulo.ui.chart.FlameGraph;
+import consulo.ui.chart.FlameGraphModel;
+import consulo.ui.chart.StateChart;
+import consulo.ui.chart.TimeAxis;
+import consulo.ui.chart.TimeSeriesChart;
 import consulo.ui.graph.Graph;
 import consulo.ui.graph.GraphModel;
 import consulo.ui.image.*;
@@ -37,6 +43,7 @@ import org.jspecify.annotations.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 import java.util.ServiceLoader;
@@ -166,7 +173,27 @@ public abstract class UIInternal {
         throw new UnsupportedOperationException();
     }
 
+    public <E> TreeTable<E> _Components_treeTable(@Nullable E rootValue, TreeModel<E> model, TreeExecutor executor) {
+        throw new UnsupportedOperationException();
+    }
+
     public <E> Graph<E> _Components_graph(GraphModel<E> model) {
+        throw new UnsupportedOperationException();
+    }
+
+    public TimeAxis _Chart_timeAxis(Instant dataStart) {
+        throw new UnsupportedOperationException();
+    }
+
+    public TimeSeriesChart _Components_timeSeriesChart(TimeAxis axis, ChartUnit unit) {
+        throw new UnsupportedOperationException();
+    }
+
+    public <S> StateChart<S> _Components_stateChart(TimeAxis axis) {
+        throw new UnsupportedOperationException();
+    }
+
+    public <E> FlameGraph<E> _Components_flameGraph(FlameGraphModel<E> model) {
         throw new UnsupportedOperationException();
     }
 

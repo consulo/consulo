@@ -40,7 +40,7 @@ import java.util.function.Function;
  * @since 2020-09-15
  */
 public class DesktopTableColumnImpl<Item, Value> extends ColumnInfo<Item, Value> implements TableColumn<Item, Value> {
-    private final DesktopTableImpl<Item> myTable;
+    private final Function<Item, @Nullable ColorValue> myRowBackground;
     private final Function<Item, Value> myValueProvider;
 
     private TableItemRender<Item, Value> myRender = TableItemRender.of(TextItemRender.defaultRender());
@@ -58,10 +58,25 @@ public class DesktopTableColumnImpl<Item, Value> extends ColumnInfo<Item, Value>
     private boolean myResizable = true;
     private HorizontalAlignment myAlignment = HorizontalAlignment.LEFT;
 
-    public DesktopTableColumnImpl(DesktopTableImpl<Item> table, LocalizeValue header, Function<Item, Value> valueProvider) {
+    private @Nullable Runnable myChangeListener;
+
+    public DesktopTableColumnImpl(Function<Item, @Nullable ColorValue> rowBackground,
+                                  LocalizeValue header,
+                                  Function<Item, Value> valueProvider) {
         super(header);
-        myTable = table;
+        myRowBackground = rowBackground;
         myValueProvider = valueProvider;
+    }
+
+    void setChangeListener(@Nullable Runnable listener) {
+        myChangeListener = listener;
+    }
+
+    private void fireChanged() {
+        Runnable listener = myChangeListener;
+        if (listener != null) {
+            listener.run();
+        }
     }
 
     @Override
@@ -72,6 +87,7 @@ public class DesktopTableColumnImpl<Item, Value> extends ColumnInfo<Item, Value>
     @Override
     public TableColumn<Item, Value> setHeader(LocalizeValue header) {
         setName(header);
+        fireChanged();
         return this;
     }
 
@@ -79,6 +95,7 @@ public class DesktopTableColumnImpl<Item, Value> extends ColumnInfo<Item, Value>
     public TableColumn<Item, Value> setRender(TextItemRender<Value> render) {
         myRender = TableItemRender.of(render);
         myComponentRenderer = null;
+        fireChanged();
         return this;
     }
 
@@ -86,42 +103,49 @@ public class DesktopTableColumnImpl<Item, Value> extends ColumnInfo<Item, Value>
     public TableColumn<Item, Value> setRender(TableItemRender<Item, Value> render) {
         myRender = render;
         myComponentRenderer = null;
+        fireChanged();
         return this;
     }
 
     @Override
     public TableColumn<Item, Value> setRender(ComponentItemRender<Value> render) {
         myComponentRenderer = new DesktopComponentItemTableCellRenderer<>(render);
+        fireChanged();
         return this;
     }
 
     @Override
     public TableColumn<Item, Value> setWidth(int pixels) {
         myWidth = pixels;
+        fireChanged();
         return this;
     }
 
     @Override
     public TableColumn<Item, Value> setResizable(boolean resizable) {
         myResizable = resizable;
+        fireChanged();
         return this;
     }
 
     @Override
     public TableColumn<Item, Value> setHorizontalAlignment(HorizontalAlignment alignment) {
         myAlignment = alignment;
+        fireChanged();
         return this;
     }
 
     @Override
     public TableColumn<Item, Value> setSortable(@Nullable Comparator<Value> comparator) {
         myComparator = comparator;
+        fireChanged();
         return this;
     }
 
     @Override
     public TableColumn<Item, Value> setEditor(@Nullable TableItemEditor<Item, Value> editor) {
         myEditor = editor;
+        fireChanged();
         return this;
     }
 
@@ -132,6 +156,11 @@ public class DesktopTableColumnImpl<Item, Value> extends ColumnInfo<Item, Value>
     @Override
     public int getWidth(JTable table) {
         return myWidth;
+    }
+
+    @Nullable
+    Comparator<Value> getValueComparator() {
+        return myComparator;
     }
 
     @Override
@@ -157,13 +186,13 @@ public class DesktopTableColumnImpl<Item, Value> extends ColumnInfo<Item, Value>
                 // the band belongs to the row, so it is painted under every column - a selected row keeps the
                 // selection fill, which is the one the user is actually looking for
                 if (!selected) {
-                    ColorValue rowBackground = myTable.getRowBackground(item);
+                    ColorValue rowBackground = myRowBackground.apply(item);
                     if (rowBackground != null) {
                         setBackground(TargetAWT.to(rowBackground));
                     }
                 }
 
-                myRender.render(new DesktopTextItemPresentationImpl(this), RenderItem.of(valueOf(item), selected), item);
+                myRender.render(new DesktopTextItemPresentationImpl(this), RenderItem.of(typedValue(value), selected), item);
             }
         };
     }
@@ -186,7 +215,7 @@ public class DesktopTableColumnImpl<Item, Value> extends ColumnInfo<Item, Value>
             @Override
             public java.awt.Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
                 myValueComponent = editor.createComponent(item);
-                myValueComponent.setValue(valueOf(item), false);
+                myValueComponent.setValue(typedValue(value), false);
 
                 java.awt.Component awtComponent = TargetAWT.to(myValueComponent);
 
@@ -220,6 +249,11 @@ public class DesktopTableColumnImpl<Item, Value> extends ColumnInfo<Item, Value>
         if (myEditor != null) {
             myEditor.commit(item, value);
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <V> @Nullable V typedValue(@Nullable Object value) {
+        return (V) value;
     }
 
     private static int toSwingAlignment(HorizontalAlignment alignment) {

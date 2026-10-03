@@ -35,11 +35,6 @@ If you want run Consulo from repository
 |Desktop Application (AWT/Swing)    |  `mvn consulo:run-desktop-awt-fork -am -pl :consulo-sandbox-desktop-awt` |
 |Web (port 8080)          | `mvn consulo:run-web-fork -am -pl :consulo-sandbox-web` |
 
-## Sandbox Projects
-
- * Profiler API [link](https://github.com/consulo/profiler-sandbox)
- * Diagram support [link](https://github.com/consulo/consulo/tree/master/modules/base/graph-api)
-
 ## Links
 
 * [Contributing Guide](https://github.com/consulo/consulo/blob/master/CONTRIBUTING.md)

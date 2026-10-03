@@ -28,6 +28,8 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.project.ui.wm.IdeFrame;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.Presentation;
@@ -47,6 +49,7 @@ import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 
 public final class ActionMenu extends JMenu {
     private static final Logger LOG = Logger.getInstance(ActionMenu.class);
@@ -238,7 +241,8 @@ public final class ActionMenu extends JMenu {
             if (myFillIndicator != null) {
                 myFillIndicator.cancel();
             }
-            myFillIndicator = new EmptyProgressIndicator();
+            ProgressIndicator indicator = new EmptyProgressIndicator();
+            myFillIndicator = indicator;
 
             removeAll();
 
@@ -253,26 +257,65 @@ public final class ActionMenu extends JMenu {
             // Start async fill — Utils.fillMenu adds items via thenAcceptAsync on EDT
             DataContext context = getDataContext();
             boolean mayContextBeInvalid = myContext == null;
+            UIAccess uiAccess = UIAccess.current();
             Utils.fillMenu(myGroup.getAction(), this, isMnemonicEnabled(), myPresentationFactory,
-                    context, myPlace, mayContextBeInvalid, false, myEnableIcons, myFillIndicator)
-                .whenComplete((result, error) -> {
-                    // Remove loading indicator — real items were already added by Utils.fillMenu
-                    remove(loadingItem);
-
-                    if (error != null && !Utils.isProcessCanceled(error)) {
-                        LOG.error("Failed to fill menu", error);
-                    }
-
-                    // Resize the visible popup to fit the new items
-                    JPopupMenu popup = getPopupMenu();
-                    if (popup.isVisible()) {
-                        popup.pack();
-                        popup.repaint();
-                    }
-                });
+                    context, myPlace, mayContextBeInvalid, false, myEnableIcons, indicator)
+                .whenComplete((result, error) -> uiAccess.giveIfNeed(() -> onFillFinished(indicator, loadingItem, error)));
             return;
         }
         super.setPopupMenuVisible(visible);
+    }
+
+    @RequiredUIAccess
+    private void onFillFinished(ProgressIndicator indicator, JMenuItem loadingItem, @Nullable Throwable error) {
+        remove(loadingItem);
+
+        if (error != null && !Utils.isProcessCanceled(error)) {
+            LOG.error("Failed to fill menu", error);
+        }
+
+        JPopupMenu popup = getPopupMenu();
+        if (!popup.isVisible()) {
+            return;
+        }
+
+        popup.pack();
+        popup.repaint();
+
+        if (error == null && myFillIndicator == indicator) {
+            selectItemUnderPointer(popup);
+        }
+    }
+
+    private static void selectItemUnderPointer(JPopupMenu popup) {
+        if (!isNothingSelectedIn(popup)) {
+            return;
+        }
+
+        PointerInfo pointerInfo = MouseInfo.getPointerInfo();
+        if (pointerInfo == null) {
+            return;
+        }
+
+        Point point = pointerInfo.getLocation();
+        SwingUtilities.convertPointFromScreen(point, popup);
+
+        if (!(popup.getComponentAt(point) instanceof JMenuItem item)) {
+            return;
+        }
+
+        Point itemPoint = SwingUtilities.convertPoint(popup, point, item);
+        long when = System.currentTimeMillis();
+        item.dispatchEvent(new MouseEvent(item, MouseEvent.MOUSE_ENTERED, when, 0, itemPoint.x, itemPoint.y, 0, false));
+    }
+
+    private static boolean isNothingSelectedIn(JPopupMenu popup) {
+        MenuElement[] path = MenuSelectionManager.defaultManager().getSelectedPath();
+        int last = path.length - 1;
+        if (last >= 0 && path[last] == popup) {
+            return true;
+        }
+        return last >= 1 && path[last - 1] == popup && path[last].getComponent().getParent() != popup;
     }
 
     private DataContext getDataContext() {

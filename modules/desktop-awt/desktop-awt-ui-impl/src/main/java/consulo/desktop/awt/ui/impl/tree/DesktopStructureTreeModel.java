@@ -2,6 +2,7 @@
 package consulo.desktop.awt.ui.impl.tree;
 
 import consulo.application.progress.ProgressManager;
+import consulo.component.ProcessCanceledException;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
@@ -12,6 +13,7 @@ import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.TreeExecutor;
 import consulo.util.concurrent.AsyncPromise;
 import consulo.util.concurrent.Promise;
+import consulo.util.concurrent.Promises;
 
 import org.jspecify.annotations.Nullable;
 import javax.swing.*;
@@ -67,16 +69,17 @@ public class DesktopStructureTreeModel<Structure extends AbstractTreeStructure> 
   /**
    * @param comparator a comparator to sort tree nodes or {@code null} to disable sorting
    */
-  public final void setComparator(@Nullable Comparator<? super NodeDescriptor> comparator) {
-    if (disposed) return;
+  public final Promise<?> setComparator(@Nullable Comparator<? super NodeDescriptor> comparator) {
+    if (disposed) return Promises.resolvedPromise();
     if (comparator != null) {
       this.comparator = wrapToNodeComparator(comparator);
-      invalidate();
+      return invalidate();
     }
     else if (this.comparator != null) {
       this.comparator = null;
-      invalidate();
+      return invalidate();
     }
+    return Promises.resolvedPromise();
   }
 
   @Override
@@ -101,6 +104,10 @@ public class DesktopStructureTreeModel<Structure extends AbstractTreeStructure> 
    */
   private <Result> Promise<Result> onValidThread(Function<? super Structure, ? extends Result> function) {
     AsyncPromise<Result> promise = new AsyncPromise<>();
+    if (disposed) {
+      promise.cancel();
+      return promise;
+    }
     executor.execute(tree, () -> {
       if (!disposed) {
         Result result = function.apply(structure);
@@ -371,10 +378,13 @@ public class DesktopStructureTreeModel<Structure extends AbstractTreeStructure> 
     }
     Comparator<? super Node> comparator = this.comparator;
     if (comparator != null) {
+      List<Node> sorted = new ArrayList<>(list);
       try {
-        list.sort(comparator); // an exception may be thrown while sorting children
+        sorted.sort(comparator); // an exception may be thrown while sorting children
+        list = sorted;
       }
-      catch (IllegalArgumentException exception) {
+      catch (RuntimeException exception) {
+        if (exception instanceof ProcessCanceledException) throw exception;
         StringBuilder sb = new StringBuilder("unexpected sorting failed in ");
         sb.append(this);
         for (Node next : list) sb.append('\n').append(next);

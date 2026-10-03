@@ -3,8 +3,8 @@ package consulo.execution.debug.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.application.Application;
+import consulo.execution.attach.XAttachHostProvider;
 import consulo.execution.debug.attach.XAttachDebuggerProvider;
-import consulo.execution.debug.attach.XAttachHostProvider;
 import consulo.execution.debug.icon.ExecutionDebugIconGroup;
 import consulo.execution.debug.localize.XDebuggerLocalize;
 import jakarta.inject.Inject;
