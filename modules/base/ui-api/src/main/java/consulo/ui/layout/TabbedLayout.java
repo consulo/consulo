@@ -21,6 +21,7 @@ import consulo.ui.HasComponentStyle;
 import consulo.ui.HasPrefixComponent;
 import consulo.ui.HasSuffixComponent;
 import consulo.ui.PseudoComponent;
+import consulo.ui.StaticPosition;
 import consulo.ui.Tab;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ComponentEventListener;
@@ -32,9 +33,38 @@ import consulo.ui.internal.UIInternal;
  * @since 2016-06-14
  */
 public interface TabbedLayout extends Layout<LayoutConstraint>, HasPrefixComponent, HasSuffixComponent, HasComponentStyle<TabbedLayoutStyle> {
+    /**
+     * Creates a tab layout with the tabs above the content.
+     *
+     * @return new tab layout
+     */
     static TabbedLayout create() {
-        return UIInternal.get()._Layouts_tabbed();
+        return create(StaticPosition.TOP);
     }
+
+    /**
+     * Creates a tab layout with the tabs placed at the given side of the content. The position is fixed for the lifetime
+     * of the layout.
+     * <p>
+     * {@link StaticPosition#TOP} and {@link StaticPosition#BOTTOM} place the tabs in a horizontal row above or below the
+     * content, {@link StaticPosition#LEFT} and {@link StaticPosition#RIGHT} place them in a vertical column at that side
+     * of the content.
+     *
+     * @param tabPosition the side of the content the tabs are placed at
+     * @return new tab layout
+     * @throws IllegalArgumentException if {@code tabPosition} is {@link StaticPosition#CENTER}, which is not a side
+     */
+    static TabbedLayout create(StaticPosition tabPosition) {
+        if (tabPosition == StaticPosition.CENTER) {
+            throw new IllegalArgumentException("CENTER is not a valid tab position");
+        }
+        return UIInternal.get()._Layouts_tabbed(tabPosition);
+    }
+
+    /**
+     * @return the side of the content the tabs are placed at, as given at creation
+     */
+    StaticPosition getTabPosition();
 
     /**
      * Create tab without adding to view

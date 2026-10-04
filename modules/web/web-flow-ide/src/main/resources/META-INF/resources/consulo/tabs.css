@@ -125,3 +125,44 @@ vaadin-tab:has(> .web-tab-close)
   opacity: 1;
   background-color: var(--consulo-button-hover-background, gainsboro);
 }
+
+/* the position of the strip is given when the layout is created and carried as a theme name on the sheet. the host
+   lays its two parts - tabs-container and content - out in a flex line, so a strip below the content or at its right
+   moves after the content by its flex order */
+.web-tabbed-layout:is([theme~="consulo-tabs-bottom"], [theme~="consulo-tabs-right"])::part(tabs-container)
+{
+  order: 1;
+}
+
+/* a strip at a side: the host turns from a column into a row */
+.web-tabbed-layout:is([theme~="consulo-tabs-left"], [theme~="consulo-tabs-right"])
+{
+  flex-direction: row;
+}
+
+/* and the strip into a column of its own - the prefix above the tabs, the suffix below them. it takes the height of
+   the sheet instead of the fixed height of a row, and its padding moves to the sides */
+.web-tabbed-layout:is([theme~="consulo-tabs-left"], [theme~="consulo-tabs-right"])::part(tabs-container)
+{
+  flex-direction: column;
+  align-items: stretch;
+
+  height: auto;
+  padding: 0 var(--web-tab-strip-padding);
+}
+
+/* the tabs of a strip at a side are a flex item of that column, which keeps its content height as its minimum and
+   only gives way to max-height: 100% - the height of the whole strip. a prefix or suffix next to them would push the
+   column past the sheet, which clips the suffix and the end of the list. without the minimum the tabs take what is
+   left and scroll */
+.web-tabbed-layout:is([theme~="consulo-tabs-left"], [theme~="consulo-tabs-right"]) > vaadin-tabs
+{
+  min-height: 0;
+}
+
+/* the tabs of a strip at a side are stacked, so they are spaced along the column rather than across it. only the tabs
+   of the strip itself - a tab layout inside a page has tabs of its own */
+.web-tabbed-layout:is([theme~="consulo-tabs-left"], [theme~="consulo-tabs-right"]) > vaadin-tabs > vaadin-tab
+{
+  margin: 2px 0;
+}

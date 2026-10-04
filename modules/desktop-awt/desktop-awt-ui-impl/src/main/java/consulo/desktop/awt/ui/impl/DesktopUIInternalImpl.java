@@ -73,6 +73,11 @@ import consulo.ui.ex.awt.internal.EDT;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.font.FontManager;
+import consulo.ui.grid.DataGrid;
+import consulo.ui.grid.DataGridAppearance;
+import consulo.ui.grid.GridColumn;
+import consulo.ui.grid.GridDataHookUp;
+import consulo.ui.grid.GridRow;
 import consulo.ui.image.Image;
 import consulo.ui.image.*;
 import consulo.ui.image.canvas.Canvas2D;
@@ -94,6 +99,7 @@ import java.net.URL;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -356,8 +362,8 @@ public class DesktopUIInternalImpl extends UIInternal implements UIInternalEx {
     }
 
     @Override
-    public TabbedLayout _Layouts_tabbed() {
-        return new DesktopTabbedLayoutImpl();
+    public TabbedLayout _Layouts_tabbed(StaticPosition tabPosition) {
+        return new DesktopTabbedLayoutImpl(tabPosition);
     }
 
     @Override
@@ -561,6 +567,12 @@ public class DesktopUIInternalImpl extends UIInternal implements UIInternalEx {
     @Override
     public <T> Table<T> _Table_create(FlatDataModel<T> model) {
         return new DesktopTableImpl<>(model);
+    }
+
+    @Override
+    @RequiredUIAccess
+    public DataGrid _DataGrid_create(GridDataHookUp<GridRow, GridColumn> hookUp, BiConsumer<DataGrid, DataGridAppearance> configurator) {
+        return new DesktopDataGridImpl(hookUp, configurator);
     }
 
     @Override

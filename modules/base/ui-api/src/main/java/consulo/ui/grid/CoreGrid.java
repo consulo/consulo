@@ -1,0 +1,83 @@
+// Copyright 2000-2026 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
+
+/*
+ * Copyright 2013-2026 consulo.io
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package consulo.ui.grid;
+
+import consulo.disposer.Disposable;
+import consulo.util.dataholder.UserDataHolder;
+import org.jspecify.annotations.Nullable;
+
+/**
+ * The model side of a grid: it has no project, coroutine scope or widgets - those come with the grid component itself.
+ */
+public interface CoreGrid<Row, Column> extends UserDataHolder, Disposable {
+    GridModel<Row, Column> getDataModel(DataAccessType reason);
+
+    GridDataHookUp<Row, Column> getDataHookup();
+
+    SelectionModel<Row, Column> getSelectionModel();
+
+    GridDataSupport getDataSupport();
+
+    RawIndexConverter getRawIndexConverter();
+
+    String getFilterText();
+
+    void setFilterText(String filter, int caretPosition);
+
+    boolean isReady();
+
+    CoreResultView getResultView();
+
+    ModelIndexSet<Column> getVisibleColumns();
+
+    ModelIndexSet<Row> getVisibleRows();
+
+    int getVisibleRowsCount();
+
+    boolean isViewModified();
+
+    void resetView();
+
+    void showCell(int absoluteRowIdx, ModelIndex<Column> column);
+
+    boolean isColumnEnabled(ModelIndex<Column> column);
+
+    void setColumnEnabled(ModelIndex<Column> column, boolean state);
+
+    void setRowEnabled(ModelIndex<Row> rowIdx, boolean state);
+
+    String getDisplayName();
+
+    boolean isEditable();
+
+    boolean isCellEditingAllowed();
+
+    void setCells(ModelIndexSet<Row> rows, ModelIndexSet<Column> columns, @Nullable Object value);
+
+    boolean isEditing();
+
+    boolean stopEditing();
+
+    void cancelEditing();
+
+    void editSelectedCell();
+
+    void editSelectedCellWithValue(@Nullable Object value);
+
+    String getUnambiguousColumnName(ModelIndex<Column> column);
+}

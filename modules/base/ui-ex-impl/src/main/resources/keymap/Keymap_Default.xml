@@ -1146,6 +1146,16 @@
     <keyboard-shortcut first-keystroke="control alt E"/>
   </action>
 
+  <action id="Console.TableResult.AddColumn">
+    <keyboard-shortcut first-keystroke="alt shift INSERT"/>
+  </action>
+  <action id="Console.TableResult.DeleteColumns">
+    <keyboard-shortcut first-keystroke="alt shift DELETE"/>
+  </action>
+  <action id="Console.TableResult.CloneColumn">
+    <keyboard-shortcut first-keystroke="control alt shift D"/>
+  </action>
+
   <action id="Refactorings.QuickListPopupAction">
     <keyboard-shortcut first-keystroke="control alt shift T"/>
   </action>

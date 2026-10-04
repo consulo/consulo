@@ -54,7 +54,8 @@ public final class WebColors {
         // an alpha of its own is kept - a highlight of the editor is translucent over the text it covers
         int alpha = color.getAlpha();
         if (alpha != 255) {
-            return String.format("rgba(%d,%d,%d,%.3f)", color.getRed(), color.getGreen(), color.getBlue(), alpha / 255f);
+            // css wants a dot as the decimal separator, whatever the locale of the server
+            return String.format(Locale.ROOT, "rgba(%d,%d,%d,%.3f)", color.getRed(), color.getGreen(), color.getBlue(), alpha / 255f);
         }
 
         return String.format("#%02x%02x%02x", color.getRed(), color.getGreen(), color.getBlue());

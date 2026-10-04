@@ -84,7 +84,8 @@ public class UITester {
 
         @Override
         public @Nullable WidthAndHeight getInitialSize() {
-            return WidthAndHeight.ofFont(25, 25);
+            // wide enough for the data grid tab
+            return WidthAndHeight.ofFont(70, 40);
         }
     }
 

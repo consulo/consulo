@@ -28,12 +28,18 @@ import consulo.ui.chart.FlameGraphModel;
 import consulo.ui.chart.StateChart;
 import consulo.ui.chart.TimeAxis;
 import consulo.ui.chart.TimeSeriesChart;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.event.ModalityStateListener;
 import consulo.ui.ex.ComboBoxWithCustomPopup;
 import consulo.ui.font.FontManager;
 import consulo.ui.graph.Graph;
 import consulo.ui.graph.GraphModel;
+import consulo.ui.grid.DataGrid;
+import consulo.ui.grid.DataGridAppearance;
+import consulo.ui.grid.GridColumn;
+import consulo.ui.grid.GridDataHookUp;
+import consulo.ui.grid.GridRow;
 import consulo.ui.image.EmptyImage;
 import consulo.ui.image.IconLibraryManager;
 import consulo.ui.image.Image;
@@ -57,6 +63,7 @@ import java.io.InputStream;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -136,8 +143,8 @@ public class HeadlessUIInternal extends UIInternal implements UIInternalEx {
     }
 
     @Override
-    public TabbedLayout _Layouts_tabbed() {
-        return new HeadlessTabbedLayout();
+    public TabbedLayout _Layouts_tabbed(StaticPosition tabPosition) {
+        return new HeadlessTabbedLayout(tabPosition);
     }
 
     @Override
@@ -268,6 +275,12 @@ public class HeadlessUIInternal extends UIInternal implements UIInternalEx {
     @Override
     public <T> Table<T> _Table_create(FlatDataModel<T> model) {
         return new HeadlessTable<>(model);
+    }
+
+    @Override
+    @RequiredUIAccess
+    public DataGrid _DataGrid_create(GridDataHookUp<GridRow, GridColumn> hookUp, BiConsumer<DataGrid, DataGridAppearance> configurator) {
+        return new HeadlessDataGrid(hookUp, configurator);
     }
 
     @Override

@@ -18,7 +18,9 @@ package consulo.web.ui.impl.internal;
 import com.vaadin.flow.component.HasSize;
 import com.vaadin.flow.component.tabs.TabSheet;
 import com.vaadin.flow.component.tabs.TabSheetVariant;
+import com.vaadin.flow.component.tabs.Tabs;
 import consulo.ui.Component;
+import consulo.ui.StaticPosition;
 import consulo.ui.Tab;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.TabSelectEvent;
@@ -54,10 +56,19 @@ public class WebTabbedLayoutImpl extends VaadinComponentDelegate<WebTabbedLayout
 
     private final Map<com.vaadin.flow.component.tabs.Tab, WebTabImpl> myTabs = new LinkedHashMap<>();
 
+    private final StaticPosition myTabPosition;
+
     private @Nullable Component myPrefixComponent;
     private @Nullable Component mySuffixComponent;
 
-    public WebTabbedLayoutImpl() {
+    /**
+     * @throws IllegalArgumentException if {@code tabPosition} is {@link StaticPosition#CENTER}, which is not a side
+     */
+    public WebTabbedLayoutImpl(StaticPosition tabPosition) {
+        myTabPosition = tabPosition;
+
+        applyTabPosition(tabPosition);
+
         toVaadinComponent().addSelectedChangeListener(event -> {
             com.vaadin.flow.component.tabs.Tab selectedTab = event.getSelectedTab();
             if (selectedTab == null) {
@@ -70,6 +81,48 @@ public class WebTabbedLayoutImpl extends VaadinComponentDelegate<WebTabbedLayout
                 getListenerDispatcher(TabSelectEvent.class).onEvent(new TabSelectEvent(this, tab));
             }
         });
+    }
+
+    /**
+     * The sheet lays its strip out above the content and has no setting for another side. Its host is a flex column of
+     * two shadow parts - tabs-container and content - so tabs.css moves the strip by a theme name: below the content by
+     * the flex order of the strip, at a side by turning the host into a row. A strip at a side also turns the tabs
+     * component vertical so the tabs stack in a column.
+     */
+    private void applyTabPosition(StaticPosition tabPosition) {
+        Vaadin sheet = toVaadinComponent();
+        switch (tabPosition) {
+            case TOP -> {
+            }
+            case BOTTOM -> sheet.getElement().getThemeList().add("consulo-tabs-bottom");
+            case LEFT -> {
+                sheet.getElement().getThemeList().add("consulo-tabs-left");
+                getTabs(sheet).setOrientation(Tabs.Orientation.VERTICAL);
+            }
+            case RIGHT -> {
+                sheet.getElement().getThemeList().add("consulo-tabs-right");
+                getTabs(sheet).setOrientation(Tabs.Orientation.VERTICAL);
+            }
+            case CENTER -> throw new IllegalArgumentException("CENTER is not a valid tab position");
+        }
+    }
+
+    /**
+     * The sheet keeps its {@link Tabs} private, but creates it in its own constructor and puts it into its "tabs" slot as
+     * a child element - before any tab, panel, prefix or suffix is added it is the only child component of the sheet. A
+     * sheet without it cannot show the strip at a side, which fails loudly rather than leaving the strip above the content.
+     */
+    private static Tabs getTabs(Vaadin sheet) {
+        return sheet.getChildren()
+            .filter(Tabs.class::isInstance)
+            .map(Tabs.class::cast)
+            .findFirst()
+            .orElseThrow(() -> new IllegalStateException("The tab sheet has no tabs component to turn vertical"));
+    }
+
+    @Override
+    public StaticPosition getTabPosition() {
+        return myTabPosition;
     }
 
     private void restoreSelection(com.vaadin.flow.component.tabs.@Nullable Tab previousTab) {

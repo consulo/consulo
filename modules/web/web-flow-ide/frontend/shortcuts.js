@@ -116,6 +116,22 @@
         return null;
     };
 
+    /*
+     * A component which handles some keys itself - the data grid walks its cells with the arrows and copies with
+     * ctrl c - names those combinations in consulo-own-keys. They are left to it, neither taken here nor sent to
+     * the keymap, while every other key of the ide keeps working with the component focused.
+     */
+    const ownsKey = (event, combo) => {
+        const path = event.composedPath ? event.composedPath() : [event.target];
+        for (const node of path) {
+            const combos = node && node.getAttribute ? node.getAttribute('consulo-own-keys') : null;
+            if (combos && combos.split('\n').includes(combo)) {
+                return true;
+            }
+        }
+        return false;
+    };
+
     const dispatchComponentShortcut = event => {
         if (event.$consuloComponentShortcut !== undefined) {
             return event.$consuloComponentShortcut;
@@ -192,6 +208,12 @@
             // for that process, so the keymap of the ide must not take them first
             const target = event.target;
             if (target && target.closest && target.closest('[consulo-keyboard-capture]')) {
+                return;
+            }
+
+            // a key the focused component owns - see ownsKey. a modifier is never owned, the double click of the
+            // platform must keep seeing them
+            if (!MODIFIERS[event.code] && ownsKey(event, comboOf(event))) {
                 return;
             }
 
@@ -277,6 +299,12 @@
         document.addEventListener('paste', event => {
             const combo = comboForKind(element, 'paste');
             if (!combo || !event.clipboardData) {
+                return;
+            }
+
+            // a component which pastes by itself names the stroke in consulo-own-keys - the field of a data grid
+            // cell editor, which takes the text the way any field does
+            if (ownsKey(event, combo)) {
                 return;
             }
 

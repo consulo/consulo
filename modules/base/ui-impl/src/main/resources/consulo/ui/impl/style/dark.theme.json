@@ -75,6 +75,26 @@
       "success": {
         "borderColor": "#647255"
       }
+    },
+    "DataGrid": {
+      "Cell": {
+        "modifiedBackground": "#385570",
+        "insertedBackground": "#294436",
+        "deletedBackground": "#484a4a",
+        "errorBackground": "#704745"
+      },
+      "Column": {
+        "foreground1": "#ffa000",
+        "foreground2": "#d32f2f",
+        "foreground3": "#ce93d8",
+        "foreground4": "#00897b",
+        "foreground5": "#bcaaa4",
+        "foreground6": "#8bc34a",
+        "foreground7": "#80d8ff",
+        "foreground8": "#e6ee9c",
+        "foreground9": "#cfd8dc",
+        "foreground10": "#b388ff"
+      }
     }
   }
 }

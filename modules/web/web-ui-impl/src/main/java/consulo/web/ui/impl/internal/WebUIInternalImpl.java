@@ -45,6 +45,11 @@ import consulo.web.ui.impl.internal.chart.WebStopwatchTimer;
 import consulo.web.ui.impl.internal.chart.WebTimeSeriesChartImpl;
 import consulo.ui.graph.Graph;
 import consulo.ui.graph.GraphModel;
+import consulo.ui.grid.DataGrid;
+import consulo.ui.grid.DataGridAppearance;
+import consulo.ui.grid.GridColumn;
+import consulo.ui.grid.GridDataHookUp;
+import consulo.ui.grid.GridRow;
 import consulo.ui.image.EmptyImage;
 import consulo.ui.image.IconLibraryManager;
 import consulo.ui.image.Image;
@@ -83,6 +88,7 @@ import java.net.URL;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -145,8 +151,8 @@ public class WebUIInternalImpl extends UIInternal implements UIInternalEx {
     }
 
     @Override
-    public TabbedLayout _Layouts_tabbed() {
-        return new WebTabbedLayoutImpl();
+    public TabbedLayout _Layouts_tabbed(StaticPosition tabPosition) {
+        return new WebTabbedLayoutImpl(tabPosition);
     }
 
     @Override
@@ -618,6 +624,12 @@ public class WebUIInternalImpl extends UIInternal implements UIInternalEx {
     @Override
     public <T> Table<T> _Table_create(FlatDataModel<T> model) {
         return new WebTableImpl<>(model);
+    }
+
+    @Override
+    @RequiredUIAccess
+    public DataGrid _DataGrid_create(GridDataHookUp<GridRow, GridColumn> hookUp, BiConsumer<DataGrid, DataGridAppearance> configurator) {
+        return new WebDataGridImpl(hookUp, configurator);
     }
 
     @Override

@@ -111,7 +111,7 @@ public class Comparing {
     return obj == null ? 0 : obj.hashCode();
   }
 
-  public static int hashcode(Object obj1, Object obj2) {
+  public static int hashcode(@Nullable Object obj1, @Nullable Object obj2) {
     return hashcode(obj1) ^ hashcode(obj2);
   }
 

@@ -179,6 +179,12 @@ public final class DesktopQtStyleApplier {
                 border: 1px solid transparent;
                 border-radius: %dpx;
             }
+
+            /* the box of a tab is not turned with a bar along a side - padding and margin across the bar and along
+               it are swapped here, the leading padding moving to where the rotated text starts: the bottom of a
+               west tab, the top of an east one. the close button sits at the other end */
+            QTabBar::tab:left { padding: 0px %dpx %dpx %dpx; margin: %dpx %dpx; }
+            QTabBar::tab:right { padding: %dpx %dpx 0px %dpx; margin: %dpx %dpx; }
             QTabBar::tab:hover { background: %s; }
             QTabBar::tab:selected { background: %s; border-color: %s; }
             QTabBar::tab:selected:!active { background: %s; border-color: %s; }
@@ -194,6 +200,16 @@ public final class DesktopQtStyleApplier {
             ourTabVerticalMargin,
             ourTabGap,
             ourButtonArc,
+            ourTabVerticalPadding,
+            ourTabHorizontalPadding,
+            ourTabVerticalPadding,
+            ourTabGap,
+            ourTabVerticalMargin,
+            ourTabHorizontalPadding,
+            ourTabVerticalPadding,
+            ourTabVerticalPadding,
+            ourTabGap,
+            ourTabVerticalMargin,
             hover,
             selected,
             selectedBorder,

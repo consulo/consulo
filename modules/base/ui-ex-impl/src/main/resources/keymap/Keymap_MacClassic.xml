@@ -254,6 +254,10 @@
     <keyboard-shortcut first-keystroke="shift meta 8"/>
     <keyboard-shortcut first-keystroke="meta shift MULTIPLY"/>
   </action>
+  <action id="Console.TableResult.AddColumn">
+    <keyboard-shortcut first-keystroke="shift meta 8"/>
+    <keyboard-shortcut first-keystroke="meta shift MULTIPLY"/>
+  </action>
   <action id="EditorLineEndWithSelection">
     <keyboard-shortcut first-keystroke="shift END"/>
     <keyboard-shortcut first-keystroke="meta shift RIGHT"/>

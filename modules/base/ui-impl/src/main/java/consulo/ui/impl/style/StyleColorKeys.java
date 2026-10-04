@@ -73,6 +73,22 @@ public final class StyleColorKeys {
         ourKeys.put(ComponentColors.TABBED_LAYOUT_UNDERLINE, "TabbedPane.underlineColor");
         ourKeys.put(ComponentColors.TABBED_LAYOUT_SELECTED_BACKGROUND, "TabbedPane.selectedBackground");
         ourKeys.put(ComponentColors.TABBED_LAYOUT_INACTIVE_SELECTED_BACKGROUND, "TabbedPane.inactiveSelectedBackground");
+
+        ourKeys.put(ComponentColors.GRID_CELL_MODIFIED_BACKGROUND, "DataGrid.Cell.modifiedBackground");
+        ourKeys.put(ComponentColors.GRID_CELL_INSERTED_BACKGROUND, "DataGrid.Cell.insertedBackground");
+        ourKeys.put(ComponentColors.GRID_CELL_DELETED_BACKGROUND, "DataGrid.Cell.deletedBackground");
+        ourKeys.put(ComponentColors.GRID_CELL_ERROR_BACKGROUND, "DataGrid.Cell.errorBackground");
+
+        ourKeys.put(ComponentColors.GRID_COLUMN_FOREGROUND_1, "DataGrid.Column.foreground1");
+        ourKeys.put(ComponentColors.GRID_COLUMN_FOREGROUND_2, "DataGrid.Column.foreground2");
+        ourKeys.put(ComponentColors.GRID_COLUMN_FOREGROUND_3, "DataGrid.Column.foreground3");
+        ourKeys.put(ComponentColors.GRID_COLUMN_FOREGROUND_4, "DataGrid.Column.foreground4");
+        ourKeys.put(ComponentColors.GRID_COLUMN_FOREGROUND_5, "DataGrid.Column.foreground5");
+        ourKeys.put(ComponentColors.GRID_COLUMN_FOREGROUND_6, "DataGrid.Column.foreground6");
+        ourKeys.put(ComponentColors.GRID_COLUMN_FOREGROUND_7, "DataGrid.Column.foreground7");
+        ourKeys.put(ComponentColors.GRID_COLUMN_FOREGROUND_8, "DataGrid.Column.foreground8");
+        ourKeys.put(ComponentColors.GRID_COLUMN_FOREGROUND_9, "DataGrid.Column.foreground9");
+        ourKeys.put(ComponentColors.GRID_COLUMN_FOREGROUND_10, "DataGrid.Column.foreground10");
     }
 
     public static @Nullable String getKey(StyleColorValue colorValue) {

@@ -29,11 +29,21 @@ import io.qt.widgets.QWidget;
  */
 final class DesktopQtTabWidget extends QTabWidget {
     private static final class TabBar extends QTabBar {
+        /**
+         * The room an icon takes is counted along the bar - the width of a tab in a bar above or below the content, the
+         * height of a tab in a bar along a side, where the tabs are stacked top to bottom.
+         */
         @Override
         protected QSize tabSizeHint(int index) {
             QSize size = super.tabSizeHint(index);
             if (!tabIcon(index).isNull()) {
-                size.setWidth(size.width() - redundantIconRoom(index));
+                int room = redundantIconRoom(index);
+                if (isVertical()) {
+                    size.setHeight(size.height() - room);
+                }
+                else {
+                    size.setWidth(size.width() - room);
+                }
             }
             return size;
         }
@@ -48,7 +58,17 @@ final class DesktopQtTabWidget extends QTabWidget {
 
             QSize withoutIcon = style().sizeFromContents(QStyle.ContentsType.CT_TabBarTab, option, new QSize(0, 0), this);
 
+            if (isVertical()) {
+                return Math.max(0, withIcon.height() - withoutIcon.height());
+            }
             return Math.max(0, withIcon.width() - withoutIcon.width());
+        }
+
+        private boolean isVertical() {
+            return switch (shape()) {
+                case RoundedWest, RoundedEast, TriangularWest, TriangularEast -> true;
+                default -> false;
+            };
         }
     }
 

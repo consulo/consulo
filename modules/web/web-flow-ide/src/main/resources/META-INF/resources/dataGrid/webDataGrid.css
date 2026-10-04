@@ -1,0 +1,311 @@
+/* served straight from META-INF/resources, matching webTable.css - the theme goes through the vite
+   bundle, which skips rebuilding on css only changes.
+   RevoGrid has no shadow DOM and Stencil prepends its own <style> elements to <head>, so these rules win at equal
+   specificity; the ones that must not depend on order carry an extra attribute/class. Every colour is an Aura / Vaadin
+   variable or a variable of the style css (html[consulo-style]), so light, Dark Grey (semi_dark) and Dark follow
+   html[theme] / color-scheme / consulo-style without JS. */
+
+/* the start of the bar is padded by the bar itself (a padding of the unified layout) */
+.web-data-grid-toolbar {
+    padding-block: 2px;
+    padding-inline-end: 4px;
+}
+
+/* the wrapper: takes the height left under the paging bar; the grid fills it absolutely. The grid gives the wrapper no
+   width of its own, so it is stretched across the vertical layout, which aligns its children to the start */
+consulo-data-grid {
+    display: block;
+    position: relative;
+    align-self: stretch;
+    flex: 1 1 auto;
+    min-width: 0;
+    min-height: 0;
+    outline: none;
+
+    /* the font of the cells, the headers and the editor: the editor font of the colour scheme, which the element sets
+       from the server. Until it arrives, the defaults of an editor */
+    --_consulo-grid-font-family: "Consolas", "Menlo", "Monaco", "Vera Mono", monospace;
+    --_consulo-grid-font-size: 12px;
+    /* the pitch of a row and the height of the header: a vaadin-grid row, or the line of the font with some room when the
+       font is larger (the element measures it, see measure()) */
+    --_consulo-grid-row-height: max(calc(var(--aura-line-height-m) + 2 * var(--vaadin-padding-block-container)),
+                                    calc(1.2 * var(--_consulo-grid-font-size) + 4px));
+    /* the pitch of the text lines of a row which shows several (the element measures it, and sets the px it measured as
+       --_consulo-grid-line-px, with --_consulo-grid-line-top, where the first line starts) */
+    --_consulo-grid-line-height: calc(1.2 * var(--_consulo-grid-font-size) + 2px);
+}
+
+consulo-data-grid > revo-grid.consulo-revo-grid {
+    position: absolute;
+    inset: 0;
+    min-height: 0;                       /* RevoGrid: 300px */
+}
+
+/* RevoGrid forces color-scheme: light for an unknown theme name; Aura's light-dark() must see the page scheme.
+   (0,2,1) beats revo-grid[data-rg-theme-scheme=light] (0,1,1) regardless of order */
+revo-grid.consulo-revo-grid[data-rg-theme-scheme] {
+    color-scheme: inherit;
+}
+
+revo-grid.consulo-revo-grid {
+    --revo-grid-background: var(--aura-surface-color-solid);
+    --revo-grid-header-bg: var(--aura-surface-color-solid);
+    --revo-grid-row-headers-bg: var(--aura-surface-color-solid);
+
+    --revo-grid-text: var(--vaadin-text-color);
+    --revo-grid-foreground: var(--vaadin-text-color);
+    --revo-grid-header-color: var(--vaadin-text-color);
+    --revo-grid-row-headers-color: var(--vaadin-text-color-secondary);
+
+    --revo-grid-cell-border: var(--vaadin-border-color);
+    --revo-grid-cell-vertical-border: var(--vaadin-border-color);
+    --revo-grid-header-border: var(--vaadin-border-color);
+    --revo-grid-border: var(--vaadin-border-color);
+    --revo-grid-divider: var(--vaadin-border-color);
+    --revo-grid-shadow: var(--aura-shadow-color);
+
+    --revo-grid-primary: var(--aura-accent-color);
+    --revo-grid-primary-transparent: color-mix(in srgb, var(--aura-accent-color) 90%, transparent);
+
+    /* selection is a cell rectangle: the rectangle is tinted, not the whole rows it touches */
+    --revo-grid-selection-border: var(--vaadin-focus-ring-color);
+    --revo-grid-selection-bg: var(--vaadin-grid-row-selected-background-color);
+    /* .focused-rgRow (RowHighlightPlugin) is not reliable: after a programmatic setCellsFocus it stays on the old rows
+       while the range moves - so it paints nothing */
+    --revo-grid-focused-bg: transparent;
+    --revo-grid-header-focused-bg: var(--vaadin-background-container);
+    --revo-grid-temporary-range-border: var(--vaadin-focus-ring-color);
+    --revo-grid-temporary-selection-border: var(--vaadin-border-color);
+    --revo-grid-range-handle-bg: var(--vaadin-border-color);
+    --revo-grid-autofill-handle-bg: var(--vaadin-focus-ring-color);
+    --revo-grid-autofill-handle-border: var(--aura-surface-color-solid);
+
+    --revo-grid-header-hover-bg: var(--vaadin-background-container);
+    --revo-grid-row-hover: var(--vaadin-background-container);
+    --revo-grid-header-resize-hover: var(--vaadin-focus-ring-color);
+    --revo-grid-cell-disabled-bg: transparent;
+
+    --revo-grid-font-family: var(--_consulo-grid-font-family);
+    --revo-grid-font-size: var(--_consulo-grid-font-size);
+    --revo-grid-header-font-size: var(--_consulo-grid-font-size);
+    --revo-grid-header-font-weight: var(--aura-font-weight-medium);
+    --revo-grid-header-text-transform: none;
+    --revo-grid-header-text-align: left;
+    --revo-grid-cell-text-align: left;
+    --revo-grid-header-padding: 0 var(--vaadin-padding-inline-container);
+    --revo-grid-cell-padding: 0 var(--vaadin-padding-inline-container);
+    --revo-grid-header-height: var(--_consulo-grid-row-height);
+}
+
+/* DataGridAppearance switches, toggled on the wrapper by the element */
+consulo-data-grid.no-horizontal-lines revo-grid.consulo-revo-grid { --revo-grid-cell-border: transparent; }
+consulo-data-grid.transparent-column-header revo-grid.consulo-revo-grid { --revo-grid-header-bg: transparent; }
+consulo-data-grid.transparent-row-header revo-grid.consulo-revo-grid { --revo-grid-row-headers-bg: transparent; }
+
+/* the custom-theme layout leaves header cells without column lines */
+revo-grid.consulo-revo-grid revogr-header .rgHeaderCell {
+    box-shadow: -1px 0 0 0 var(--revo-grid-cell-vertical-border) inset;
+}
+
+/* a press on a header selects the column */
+revo-grid.consulo-revo-grid revogr-header .rgHeaderCell:hover {
+    background-color: var(--revo-grid-header-hover-bg);
+}
+
+/* the title, and the sort marker at the end of the header: a press on the marker sorts. Unsorted, the marker shows only
+   while the pointer is over the header */
+revo-grid.consulo-revo-grid revogr-header .rgHeaderCell .header-content:has(> .consulo-header-title) {
+    display: flex;
+    gap: 4px;
+}
+
+revo-grid.consulo-revo-grid revogr-header .consulo-header-title {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+revo-grid.consulo-revo-grid revogr-header .consulo-sort-marker {
+    flex: none;
+    cursor: pointer;
+    color: var(--vaadin-text-color-secondary);
+}
+
+revo-grid.consulo-revo-grid revogr-header .consulo-sort-marker:not(.consulo-sorted) {
+    visibility: hidden;
+}
+
+revo-grid.consulo-revo-grid revogr-header .rgHeaderCell:hover .consulo-sort-marker:not(.consulo-sorted) {
+    visibility: visible;
+}
+
+revo-grid.consulo-revo-grid revogr-header .consulo-sort-marker:hover {
+    color: var(--vaadin-text-color);
+}
+
+/* row numbers: RevoGrid sets 10px; they are drawn in the font of the cells, dimmed. Their end border is the column line
+   RevoGrid's custom-theme rule gives every cell (the header corner gets it from the header cell rule above) - a line on
+   this host as well would stack on it, twice as dark as the other column lines */
+revo-grid.consulo-revo-grid revogr-row-headers.rowHeaders {
+    font-size: inherit;
+}
+
+/* row layers: hover over selection over stripe, as background images so the row fill stays the surface colour */
+revo-grid.consulo-revo-grid revogr-data .rgRow {
+    background-image: var(--_consulo-row-hover, none), var(--_consulo-row-selected, none), var(--_consulo-row-odd, none);
+}
+
+revo-grid.consulo-revo-grid revogr-data .rgRow.consulo-odd {
+    --_consulo-row-odd: linear-gradient(color-mix(in srgb, var(--vaadin-text-color) 4%, transparent),
+                                        color-mix(in srgb, var(--vaadin-text-color) 4%, transparent));
+}
+
+/* rows of a selection a rectangle cannot show (ctrl-toggled, or set through the API) */
+revo-grid.consulo-revo-grid revogr-data .rgRow.consulo-selected {
+    --_consulo-row-selected: linear-gradient(var(--vaadin-grid-row-selected-background-color),
+                                             var(--vaadin-grid-row-selected-background-color));
+}
+
+@media (any-hover: hover) {
+    consulo-data-grid:not(.no-row-hover) revo-grid.consulo-revo-grid revogr-data .rgRow:hover {
+        --_consulo-row-hover: linear-gradient(var(--revo-grid-row-hover), var(--revo-grid-row-hover));
+    }
+}
+
+/* focused cell: Aura focus ring (RevoGrid draws 1px) */
+revo-grid.consulo-revo-grid revogr-focus.focused-cell {
+    box-shadow: inset 0 0 0 var(--vaadin-focus-ring-width) var(--vaadin-focus-ring-color);
+}
+
+/* the focus ring only while the grid owns the keyboard; otherwise the rectangle stays, the ring goes */
+consulo-data-grid:not(:focus-within) revo-grid.consulo-revo-grid revogr-focus.focused-cell {
+    box-shadow: none;
+}
+
+/* the text of a cell as the controller renders it: spaces kept, the lines of a row of several lines each on its own line,
+   whatever does not fit cut */
+revo-grid.consulo-revo-grid revogr-data .rgCell {
+    white-space: pre;
+    overflow: hidden;
+}
+
+/* rows of several text lines (DataGridAppearance.setRowLines): the lines at the pitch the element measured, the first one
+   where the text of a single-line row sits. RevoGrid gives a row the line height of its pitch */
+consulo-data-grid.multi-line-rows revo-grid.consulo-revo-grid revogr-data .rgRow {
+    line-height: var(--_consulo-grid-line-px);
+}
+
+consulo-data-grid.multi-line-rows revo-grid.consulo-revo-grid revogr-data .rgCell {
+    padding-top: var(--_consulo-grid-line-top) !important; /* the row numbers carry an important padding of RevoGrid */
+}
+
+/* cell styles from the controller's TextAttribute (flags of the row payload) */
+revo-grid.consulo-revo-grid revogr-data .rgCell.consulo-cell-null {
+    font-style: italic;
+    color: var(--consulo-label-disabled-foreground);
+}
+
+revo-grid.consulo-revo-grid revogr-data .rgCell.consulo-cell-grayed {
+    color: var(--consulo-label-disabled-foreground);
+}
+
+revo-grid.consulo-revo-grid revogr-data .rgCell.consulo-cell-error {
+    color: rgb(255, 0, 0); /* StandardColors.RED, which TextAttribute.ERROR uses */
+}
+
+/* cells of a selection a rectangle cannot show, when it holds some of the columns (control-toggled columns) */
+revo-grid.consulo-revo-grid revogr-data .rgCell.consulo-cell-marked {
+    --_consulo-cell-marked: linear-gradient(var(--vaadin-grid-row-selected-background-color),
+                                            var(--vaadin-grid-row-selected-background-color));
+    background-image: var(--_consulo-cell-marked);
+}
+
+/* the colours of the controller's colour model (a pending change, the colour of a column) for a cell or a row number. The
+   element sets the css colour the server sent as the variable of the cell: var(--consulo-...) for a colour of the style -
+   one the style css defines for every style, so it follows the style - or a literal colour for any other one. The cell
+   paints every layer of its row itself, over the surface colour, which covers the layers of the row: a translucent colour
+   then lies once over the stripe, and the tints of the row (hover, a selection of whole rows) and of a marked cell once over
+   the colour. The selected rectangle RevoGrid draws over the cells anyway */
+revo-grid.consulo-revo-grid revogr-data .rgCell.consulo-cell-background {
+    background-color: var(--revo-grid-background);
+    background-image: var(--_consulo-row-hover, none), var(--_consulo-row-selected, none), var(--_consulo-cell-marked, none),
+                      linear-gradient(var(--_consulo-cell-background), var(--_consulo-cell-background)),
+                      var(--_consulo-row-odd, none);
+}
+
+revo-grid.consulo-revo-grid revogr-data .rgCell.consulo-cell-foreground {
+    color: var(--_consulo-cell-foreground);
+}
+
+/* cell editing. The controller is the only writer: RevoGrid's autofill handle would copy display texts into cells */
+revo-grid.consulo-revo-grid .autofill-handle {
+    display: none !important;
+}
+
+/* the editor box RevoGrid places over the cell - or over the rows below it, for a multi-line field and a list */
+revo-grid.consulo-revo-grid revogr-edit {
+    background-color: var(--aura-surface-color-solid);
+    box-shadow: var(--aura-shadow-s);
+}
+
+/* waiting for the server's editor: the cell stays visible under the empty box */
+revo-grid.consulo-revo-grid revogr-edit:has(> .consulo-cell-editor:empty) {
+    background-color: transparent;
+    box-shadow: none;
+}
+
+revo-grid.consulo-revo-grid revogr-edit > .consulo-cell-editor {
+    width: 100%;
+    height: 100%;
+}
+
+/* the field: no frame, the font of the cell (the editor font), the focus ring of the grid */
+revo-grid.consulo-revo-grid revogr-edit > .consulo-cell-editor > input,
+revo-grid.consulo-revo-grid revogr-edit > .consulo-cell-editor > textarea,
+revo-grid.consulo-revo-grid revogr-edit > .consulo-cell-editor > select {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    padding: var(--revo-grid-cell-padding);
+    font: inherit;
+    color: var(--vaadin-text-color);
+    background-color: var(--aura-surface-color-solid);
+    outline: var(--vaadin-focus-ring-width) solid var(--vaadin-focus-ring-color);
+    outline-offset: calc(-1 * var(--vaadin-focus-ring-width));
+}
+
+revo-grid.consulo-revo-grid revogr-edit > .consulo-cell-editor > textarea {
+    resize: none;
+    padding-block: var(--vaadin-padding-block-container);
+    line-height: max(var(--aura-line-height-m), 1.2em);
+}
+
+revo-grid.consulo-revo-grid revogr-edit > .consulo-cell-editor > select {
+    padding: 0;
+    overflow-y: auto;
+}
+
+revo-grid.consulo-revo-grid revogr-edit > .consulo-cell-editor > select > option {
+    padding: 2px var(--vaadin-padding-inline-container);
+}
+
+/* the placeholder is the null value, drawn as a null cell is */
+revo-grid.consulo-revo-grid revogr-edit > .consulo-cell-editor > ::placeholder {
+    font-style: italic;
+    color: var(--consulo-label-disabled-foreground);
+    opacity: 1;
+}
+
+revo-grid.consulo-revo-grid revogr-edit > .consulo-cell-editor > :read-only:not(select) {
+    color: var(--vaadin-text-color-secondary);
+}
+
+/* a commit the server refused (FormatBasedGridCellEditor.setError: a red outline, the message as the tooltip) */
+revo-grid.consulo-revo-grid revogr-edit > .consulo-cell-editor > .consulo-cell-editor-error {
+    outline-color: var(--aura-red, rgb(255, 0, 0));
+}

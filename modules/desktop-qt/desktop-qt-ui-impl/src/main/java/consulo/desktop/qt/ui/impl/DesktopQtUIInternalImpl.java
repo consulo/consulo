@@ -45,6 +45,11 @@ import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.font.FontManager;
+import consulo.ui.grid.DataGrid;
+import consulo.ui.grid.DataGridAppearance;
+import consulo.ui.grid.GridColumn;
+import consulo.ui.grid.GridDataHookUp;
+import consulo.ui.grid.GridRow;
 import consulo.ui.image.EmptyImage;
 import consulo.ui.image.IconLibraryManager;
 import consulo.ui.image.Image;
@@ -74,6 +79,7 @@ import java.net.URL;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -146,6 +152,12 @@ public class DesktopQtUIInternalImpl extends UIInternal implements UIInternalEx 
     }
 
     @Override
+    @RequiredUIAccess
+    public DataGrid _DataGrid_create(GridDataHookUp<GridRow, GridColumn> hookUp, BiConsumer<DataGrid, DataGridAppearance> configurator) {
+        return new DesktopQtDataGridImpl(hookUp, configurator);
+    }
+
+    @Override
     public DockLayout _Layouts_dock(Space gapInPixels) {
         return new DesktopQtDockLayoutImpl(gapInPixels);
     }
@@ -181,8 +193,8 @@ public class DesktopQtUIInternalImpl extends UIInternal implements UIInternalEx 
     }
 
     @Override
-    public TabbedLayout _Layouts_tabbed() {
-        return new DesktopQtTabbedLayoutImpl();
+    public TabbedLayout _Layouts_tabbed(StaticPosition tabPosition) {
+        return new DesktopQtTabbedLayoutImpl(tabPosition);
     }
 
     @Override

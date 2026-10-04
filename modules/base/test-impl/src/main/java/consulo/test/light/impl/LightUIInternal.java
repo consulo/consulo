@@ -82,7 +82,7 @@ public class LightUIInternal extends UIInternal implements UIInternalEx {
   }
 
   @Override
-  public TabbedLayout _Layouts_tabbed() {
+  public TabbedLayout _Layouts_tabbed(StaticPosition tabPosition) {
     return null;
   }
 

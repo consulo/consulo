@@ -20,15 +20,22 @@ import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorProvider;
 import consulo.fileEditor.FileEditorWithProvider;
 import consulo.fileEditor.FileEditorWithProviderComposite;
+import consulo.fileEditor.event.FileEditorManagerEvent;
+import consulo.fileEditor.event.FileEditorManagerListener;
 import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.ui.Component;
 import consulo.ui.Space;
+import consulo.ui.StaticPosition;
+import consulo.ui.Tab;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.ComponentContainer;
 import consulo.ui.layout.DockLayout;
+import consulo.ui.layout.TabbedLayout;
+import consulo.ui.layout.TabbedLayoutStyle;
 import consulo.ui.layout.VerticalLayout;
 import consulo.util.collection.ArrayUtil;
 import consulo.virtualFileSystem.VirtualFile;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.List;
@@ -45,6 +52,13 @@ public class UnifiedFileEditorWithProviderComposite implements FileEditorWithPro
 
   private final Component[] myComponents;
   private final VerticalLayout[] myTopLayouts;
+  /**
+   * The editors of a file with several of them are shown as tabs below them, one tab per editor; null for a single editor.
+   */
+  private final @Nullable TabbedLayout myTabbedLayout;
+  private final Tab[] myTabs;
+  private final Component myRootComponent;
+  private int mySelectedIndex;
 
   public UnifiedFileEditorWithProviderComposite(VirtualFile file, FileEditor[] editors, FileEditorProvider[] providers, FileEditorManagerEx fileEditorManager) {
     myFile = file;
@@ -74,6 +88,47 @@ public class UnifiedFileEditorWithProviderComposite implements FileEditorWithPro
       myTopLayouts[i] = VerticalLayout.create(Space.NONE);
       myComponents[i] = DockLayout.create(Space.NONE).top(myTopLayouts[i]).center(component);
     }
+
+    if (editors.length > 1) {
+      TabbedLayout tabbedLayout = TabbedLayout.create(StaticPosition.BOTTOM);
+      tabbedLayout.addStyle(TabbedLayoutStyle.NO_PADDING);
+      myTabs = new Tab[editors.length];
+      for (int i = 0; i < editors.length; i++) {
+        myTabs[i] = tabbedLayout.addTab(editors[i].getName(), myComponents[i]);
+      }
+      myTabs[0].select();
+      tabbedLayout.addSelectListener(event -> onTabSelected(ArrayUtil.indexOf(myTabs, event.getTab())));
+      myTabbedLayout = tabbedLayout;
+      myRootComponent = tabbedLayout;
+    }
+    else {
+      myTabbedLayout = null;
+      myTabs = new Tab[0];
+      myRootComponent = myComponents[0];
+    }
+  }
+
+  /**
+   * Another editor of the file was chosen: the editors are told, and so is everybody listening to the selection of editors.
+   */
+  @RequiredUIAccess
+  private void onTabSelected(int index) {
+    if (index < 0 || index == mySelectedIndex) {
+      return;
+    }
+
+    FileEditor oldEditor = myEditors[mySelectedIndex];
+    FileEditor newEditor = myEditors[index];
+    FileEditorProvider oldProvider = myProviders[mySelectedIndex];
+    FileEditorProvider newProvider = myProviders[index];
+    mySelectedIndex = index;
+
+    oldEditor.deselectNotify();
+    newEditor.selectNotify();
+
+    FileEditorManagerEvent event =
+      new FileEditorManagerEvent(myFileEditorManager, myFile, oldEditor, oldProvider, myFile, newEditor, newProvider);
+    myFileEditorManager.getProject().getMessageBus().syncPublisher(FileEditorManagerListener.class).selectionChanged(event);
   }
 
   
@@ -94,7 +149,7 @@ public class UnifiedFileEditorWithProviderComposite implements FileEditorWithPro
 
   @Override
   public FileEditorWithProvider getSelectedEditorWithProvider() {
-    return new FileEditorWithProvider(myEditors[0], myProviders[0]);
+    return new FileEditorWithProvider(myEditors[mySelectedIndex], myProviders[mySelectedIndex]);
   }
 
   @Override
@@ -111,12 +166,17 @@ public class UnifiedFileEditorWithProviderComposite implements FileEditorWithPro
   
   @Override
   public FileEditor getSelectedEditor() {
-    return myEditors[0];
+    return myEditors[mySelectedIndex];
   }
 
   @Override
+  @RequiredUIAccess
   public void setSelectedEditor(int index) {
-
+    if (myTabbedLayout == null || index < 0 || index >= myTabs.length) {
+      return;
+    }
+    // the tab layout reports the selection back through its listener
+    myTabs[index].select();
   }
 
   @Override
@@ -156,6 +216,6 @@ public class UnifiedFileEditorWithProviderComposite implements FileEditorWithPro
 
   @Override
   public Component getUIComponent() {
-    return myComponents[0];
+    return myRootComponent;
   }
 }

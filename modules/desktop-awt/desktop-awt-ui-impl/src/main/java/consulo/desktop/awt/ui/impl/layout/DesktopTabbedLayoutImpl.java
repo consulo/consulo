@@ -19,6 +19,7 @@ import consulo.desktop.awt.ui.impl.event.DesktopAWTInputDetails;
 import consulo.desktop.awt.ui.impl.facade.FromSwingComponentWrapper;
 import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 import consulo.ui.Component;
+import consulo.ui.StaticPosition;
 import consulo.ui.Tab;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.TabSelectEvent;
@@ -39,6 +40,10 @@ import java.util.List;
  */
 public class DesktopTabbedLayoutImpl extends SwingComponentDelegate<JTabbedPane> implements TabbedLayout {
     class MyTabbedPane extends JBTabbedPane implements FromSwingComponentWrapper {
+        MyTabbedPane(int tabPlacement) {
+            super(tabPlacement);
+        }
+
         @Override
         public Component toUIComponent() {
             return DesktopTabbedLayoutImpl.this;
@@ -47,12 +52,26 @@ public class DesktopTabbedLayoutImpl extends SwingComponentDelegate<JTabbedPane>
 
     private final List<DesktopTabImpl> myTabs = new ArrayList<>();
 
+    private final StaticPosition myTabPosition;
+    private final int myTabPlacement;
+
     private @Nullable Component myPrefixComponent;
     private @Nullable Component mySuffixComponent;
 
+    /**
+     * @throws IllegalArgumentException if {@code tabPosition} is {@link StaticPosition#CENTER}, which is not a side
+     */
+    public DesktopTabbedLayoutImpl(StaticPosition tabPosition) {
+        myTabPosition = tabPosition;
+        myTabPlacement = toTabPlacement(tabPosition);
+    }
+
+    /**
+     * The placement is fixed for the lifetime of the layout, so the pane gets it when it is created.
+     */
     @Override
     protected JTabbedPane createComponent() {
-        JTabbedPane pane = new MyTabbedPane();
+        JTabbedPane pane = new MyTabbedPane(myTabPlacement);
         pane.addChangeListener(event -> {
             int index = pane.getSelectedIndex();
             if (index >= 0 && index < myTabs.size()) {
@@ -61,6 +80,21 @@ public class DesktopTabbedLayoutImpl extends SwingComponentDelegate<JTabbedPane>
             }
         });
         return pane;
+    }
+
+    private static int toTabPlacement(StaticPosition tabPosition) {
+        return switch (tabPosition) {
+            case TOP -> SwingConstants.TOP;
+            case BOTTOM -> SwingConstants.BOTTOM;
+            case LEFT -> SwingConstants.LEFT;
+            case RIGHT -> SwingConstants.RIGHT;
+            case CENTER -> throw new IllegalArgumentException("CENTER is not a valid tab position");
+        };
+    }
+
+    @Override
+    public StaticPosition getTabPosition() {
+        return myTabPosition;
     }
 
     @Override

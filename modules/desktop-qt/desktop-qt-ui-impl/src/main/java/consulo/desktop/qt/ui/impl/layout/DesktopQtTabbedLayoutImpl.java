@@ -17,6 +17,7 @@ package consulo.desktop.qt.ui.impl.layout;
 
 import consulo.desktop.qt.ui.impl.QtComponentDelegate;
 import consulo.ui.Component;
+import consulo.ui.StaticPosition;
 import consulo.ui.Tab;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.TabSelectEvent;
@@ -53,6 +54,8 @@ import java.util.function.Consumer;
 public class DesktopQtTabbedLayoutImpl extends QtComponentDelegate<QTabWidget> implements TabbedLayout {
     private final List<DesktopQtTabImpl> myTabs = new ArrayList<>();
 
+    private final StaticPosition myTabPosition;
+
     private @Nullable Component myPrefixComponent;
     private @Nullable Component mySuffixComponent;
 
@@ -61,6 +64,16 @@ public class DesktopQtTabbedLayoutImpl extends QtComponentDelegate<QTabWidget> i
     private @Nullable DesktopQtTabImpl mySelectedTab;
 
     private boolean myRestoringTabs;
+
+    /**
+     * @throws IllegalArgumentException if {@code tabPosition} is {@link StaticPosition#CENTER}, which is not a side
+     */
+    public DesktopQtTabbedLayoutImpl(StaticPosition tabPosition) {
+        if (tabPosition == StaticPosition.CENTER) {
+            throw new IllegalArgumentException("CENTER is not a valid tab position");
+        }
+        myTabPosition = tabPosition;
+    }
 
     @RequiredUIAccess
     public static int tabRowHeight() {
@@ -88,7 +101,7 @@ public class DesktopQtTabbedLayoutImpl extends QtComponentDelegate<QTabWidget> i
     public void setPrefixComponent(@Nullable Component prefixComponent) {
         myPrefixComponent = prefixComponent;
 
-        applyCornerComponent(prefixComponent, Qt.Corner.TopLeftCorner);
+        applyCornerComponent(prefixComponent, prefixCorner());
     }
 
     @Override
@@ -101,7 +114,7 @@ public class DesktopQtTabbedLayoutImpl extends QtComponentDelegate<QTabWidget> i
     public void setSuffixComponent(@Nullable Component suffixComponent) {
         mySuffixComponent = suffixComponent;
 
-        applyCornerComponent(suffixComponent, Qt.Corner.TopRightCorner);
+        applyCornerComponent(suffixComponent, suffixCorner());
     }
 
     @Override
@@ -110,12 +123,54 @@ public class DesktopQtTabbedLayoutImpl extends QtComponentDelegate<QTabWidget> i
     }
 
     @Override
+    public StaticPosition getTabPosition() {
+        return myTabPosition;
+    }
+
+    @Override
     protected QTabWidget createQt(QWidget parent) {
         QTabWidget tabWidget = new DesktopQtTabWidget(parent);
         tabWidget.setDocumentMode(true);
         tabWidget.tabBar().setDrawBase(false);
-        tabWidget.setTabPosition(QTabWidget.TabPosition.North);
+        tabWidget.setTabPosition(toQtTabPosition(myTabPosition));
         return tabWidget;
+    }
+
+    private static QTabWidget.TabPosition toQtTabPosition(StaticPosition tabPosition) {
+        return switch (tabPosition) {
+            case TOP -> QTabWidget.TabPosition.North;
+            case BOTTOM -> QTabWidget.TabPosition.South;
+            case LEFT -> QTabWidget.TabPosition.West;
+            case RIGHT -> QTabWidget.TabPosition.East;
+            // the constructor rejects it already
+            case CENTER -> throw new IllegalArgumentException("CENTER is not a valid tab position");
+        };
+    }
+
+    /**
+     * Qt has corner widgets only for a tab bar above or below the content. Next to a West or East bar its style lays the
+     * corner widgets out to an empty rectangle, so they are not shown, and still shortens the bar by their size, which
+     * leaves a gap before and after the tabs. A layout with its tabs at a side therefore does not install the prefix and
+     * suffix at all - this frontend does not show them there.
+     */
+    private boolean hasCornerWidgets() {
+        return myTabPosition == StaticPosition.TOP || myTabPosition == StaticPosition.BOTTOM;
+    }
+
+    /**
+     * The corner beside the start of the tab bar. {@link QTabWidget#setCornerWidget} tells only the left corner from the
+     * right one and the style puts it next to the bar either way, the bottom corners just name where a widget of a bar
+     * below the content ends up.
+     */
+    private Qt.Corner prefixCorner() {
+        return myTabPosition == StaticPosition.BOTTOM ? Qt.Corner.BottomLeftCorner : Qt.Corner.TopLeftCorner;
+    }
+
+    /**
+     * @see #prefixCorner()
+     */
+    private Qt.Corner suffixCorner() {
+        return myTabPosition == StaticPosition.BOTTOM ? Qt.Corner.BottomRightCorner : Qt.Corner.TopRightCorner;
     }
 
     @Override
@@ -138,8 +193,8 @@ public class DesktopQtTabbedLayoutImpl extends QtComponentDelegate<QTabWidget> i
 
         component.currentChanged.connect(this::onCurrentChanged);
 
-        applyCornerComponent(myPrefixComponent, Qt.Corner.TopLeftCorner);
-        applyCornerComponent(mySuffixComponent, Qt.Corner.TopRightCorner);
+        applyCornerComponent(myPrefixComponent, prefixCorner());
+        applyCornerComponent(mySuffixComponent, suffixCorner());
 
         applyPagePadding();
 
@@ -172,11 +227,12 @@ public class DesktopQtTabbedLayoutImpl extends QtComponentDelegate<QTabWidget> i
 
     /**
      * What a tab bar shows beside its tabs - the toolbar of the editor window sits at the trailing end of the row
-     * rather than in the content, so the widget is given to the corner qt keeps for it.
+     * rather than in the content, so the widget is given to the corner qt keeps for it. A bar along a side has no such
+     * corner, see {@link #hasCornerWidgets()}.
      */
     @RequiredUIAccess
     private void applyCornerComponent(@Nullable Component component, Qt.Corner corner) {
-        if (myComponent == null || myComponent.isDisposed()) {
+        if (myComponent == null || myComponent.isDisposed() || !hasCornerWidgets()) {
             return;
         }
 

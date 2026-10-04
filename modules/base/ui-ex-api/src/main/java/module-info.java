@@ -49,6 +49,12 @@ module consulo.ui.ex.api {
     exports consulo.ui.ex.dialog.action;
     exports consulo.ui.ex.wizard;
     exports consulo.ui.ex.errorTreeView;
+    exports consulo.ui.ex.grid;
+    exports consulo.ui.ex.grid.action;
+    exports consulo.ui.ex.grid.csv;
+    exports consulo.ui.ex.grid.editor;
+
+    opens consulo.ui.ex.grid.csv to consulo.util.xml.serializer;
     exports consulo.ui.ex.localize;
     exports consulo.ui.ex.tester;
 

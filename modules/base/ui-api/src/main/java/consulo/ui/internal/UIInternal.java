@@ -31,6 +31,11 @@ import consulo.ui.chart.TimeAxis;
 import consulo.ui.chart.TimeSeriesChart;
 import consulo.ui.graph.Graph;
 import consulo.ui.graph.GraphModel;
+import consulo.ui.grid.DataGrid;
+import consulo.ui.grid.DataGridAppearance;
+import consulo.ui.grid.GridColumn;
+import consulo.ui.grid.GridDataHookUp;
+import consulo.ui.grid.GridRow;
 import consulo.ui.image.*;
 import consulo.ui.image.canvas.Canvas2D;
 import consulo.ui.image.viewer.ImageViewer;
@@ -51,6 +56,7 @@ import consulo.ui.event.ComponentEvent;
 import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.concurrent.coroutine.CoroutineContext;
 import consulo.util.concurrent.coroutine.CoroutineScope;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -91,7 +97,9 @@ public abstract class UIInternal {
 
     public abstract ThreeComponentSplitLayout _ThreeComponentSplitLayout_create(SplitLayoutPosition position);
 
-    public abstract TabbedLayout _Layouts_tabbed();
+    public TabbedLayout _Layouts_tabbed(StaticPosition tabPosition) {
+        throw new UnsupportedOperationException();
+    }
 
     public abstract LabeledLayout _Layouts_labeled(LocalizeValue label);
 
@@ -360,6 +368,10 @@ public abstract class UIInternal {
     }
 
     public <T> Table<T> _Table_create(FlatDataModel<T> model) {
+        throw new UnsupportedOperationException();
+    }
+
+    public DataGrid _DataGrid_create(GridDataHookUp<GridRow, GridColumn> hookUp, BiConsumer<DataGrid, DataGridAppearance> configurator) {
         throw new UnsupportedOperationException();
     }
 

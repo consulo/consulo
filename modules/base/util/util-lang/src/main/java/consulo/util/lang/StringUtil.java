@@ -1482,6 +1482,21 @@ public final class StringUtil {
         return join(strings, 0, strings.length, separator);
     }
 
+    public static String join(int[] values, String separator) {
+        if (values.length == 0) {
+            return "";
+        }
+
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < values.length; i++) {
+            if (i > 0) {
+                result.append(separator);
+            }
+            result.append(values[i]);
+        }
+        return result.toString();
+    }
+
     public static StringBuilder join(String[] strings, String separator, StringBuilder result) {
         return join(strings, 0, strings.length, separator, result);
     }

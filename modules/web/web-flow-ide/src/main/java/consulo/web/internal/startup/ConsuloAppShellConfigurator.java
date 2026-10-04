@@ -62,6 +62,7 @@ import com.vaadin.flow.theme.aura.Aura;
 import consulo.web.ui.impl.internal.WebFontRegistry;
 import consulo.web.ui.impl.internal.WebStyleCssRegistry;
 import consulo.web.ui.impl.internal.vaadin.carousel.Carousel;
+import consulo.web.ui.impl.internal.vaadin.datagrid.RevoDataGridVaadin;
 import consulo.web.ui.impl.internal.vaadin.echart.WebEChartVaadin;
 import consulo.web.ui.impl.internal.vaadin.carousel.Slide;
 import org.vaadin.addons.tatu.ColorPicker;
@@ -91,6 +92,7 @@ import org.vaadin.stefan.table.Table;
 @Uses(Dialog.class)
 @Uses(Carousel.class)
 @Uses(WebEChartVaadin.class)
+@Uses(RevoDataGridVaadin.class)
 @Uses(Slide.class)
 @Uses(ColorPicker.class)
 @Uses(ConsuloPtyTerm.class)

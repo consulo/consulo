@@ -3,6 +3,8 @@
   "license": "APACHE 2",
   "dependencies": {
     "@polymer/iron-a11y-keys-behavior": "3.0.1",
+    "@revolist/revogrid": "4.28.2",
+    "@stencil/core": "4.43.5",
     "@vaadin/aura": "25.2.6",
     "@vaadin/common-frontend": "0.0.23",
     "@vaadin/react-components": "25.2.6",
@@ -69,6 +71,7 @@
     "@vaadin/password-field": "25.2.6",
     "@vaadin/date-time-picker": "25.2.6",
     "@vaadin/progress-bar": "25.2.6",
+    "@revolist/revogrid": "$@revolist/revogrid",
     "@vaadin/multi-select-combo-box": "25.2.6",
     "@vaadin/time-picker": "25.2.6",
     "react-router": "$react-router",
@@ -116,6 +119,7 @@
     "@vaadin/component-base": "25.2.6",
     "@vaadin/input-container": "25.2.6",
     "@vaadin/notification": "25.2.6",
+    "@stencil/core": "$@stencil/core",
     "@vaadin/scroller": "25.2.6",
     "@vaadin/vaadin-lumo-styles": "$@vaadin/vaadin-lumo-styles",
     "@vaadin/email-field": "25.2.6",
@@ -125,6 +129,8 @@
   "vaadin": {
     "dependencies": {
       "@polymer/iron-a11y-keys-behavior": "3.0.1",
+      "@revolist/revogrid": "4.28.2",
+      "@stencil/core": "4.43.5",
       "@vaadin/aura": "25.2.6",
       "@vaadin/common-frontend": "0.0.23",
       "@vaadin/react-components": "25.2.6",
@@ -163,6 +169,6 @@
       "vite": "8.0.16",
       "vite-plugin-checker": "0.14.4"
     },
-    "hash": "621d347929ad574bc57d27baf541b242e7948e6b30193ede2e4d25c1bf3a78c1"
+    "hash": "25c0756c5fc4327654156484d4bcb5ba4c5bfef289c55c88627d2f85b91d177a"
   }
 }

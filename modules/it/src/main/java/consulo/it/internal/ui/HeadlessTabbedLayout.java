@@ -16,6 +16,7 @@
 package consulo.it.internal.ui;
 
 import consulo.ui.Component;
+import consulo.ui.StaticPosition;
 import consulo.ui.Tab;
 import consulo.ui.layout.LayoutConstraint;
 import consulo.ui.layout.TabbedLayout;
@@ -28,8 +29,25 @@ import org.jspecify.annotations.Nullable;
  * @author VISTALL
  */
 public class HeadlessTabbedLayout extends HeadlessLayoutBase<LayoutConstraint> implements TabbedLayout {
+    private final StaticPosition myTabPosition;
+
     private @Nullable Component myPrefixComponent;
     private @Nullable Component mySuffixComponent;
+
+    /**
+     * @throws IllegalArgumentException if {@code tabPosition} is {@link StaticPosition#CENTER}, which is not a side
+     */
+    public HeadlessTabbedLayout(StaticPosition tabPosition) {
+        if (tabPosition == StaticPosition.CENTER) {
+            throw new IllegalArgumentException("CENTER is not a valid tab position");
+        }
+        myTabPosition = tabPosition;
+    }
+
+    @Override
+    public StaticPosition getTabPosition() {
+        return myTabPosition;
+    }
 
     @Override
     public Tab createTab() {

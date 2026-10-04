@@ -85,6 +85,8 @@ module consulo.web.ui.impl {
         consulo.web.ide, consulo.web.editor.impl;
     exports consulo.web.ui.impl.internal.vaadin.echart to
         consulo.web.ide;
+    exports consulo.web.ui.impl.internal.vaadin.datagrid to
+        consulo.web.ide;
 
     provides consulo.ui.internal.UIInternal with consulo.web.ui.impl.internal.WebUIInternalImpl;
     provides consulo.ui.ex.awtUnsafe.internal.TargetAWTFacade with consulo.web.ui.impl.internal.TargetAWTFacadeStub;
