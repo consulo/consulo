@@ -17,12 +17,14 @@ package consulo.it.codeInsight;
 
 import consulo.it.CodeInsightTestFixture;
 import consulo.it.HeadlessProjectExtension;
+import consulo.sandboxPlugin.ide.run.SandRunLineMarkerContributor;
 import consulo.sandboxPlugin.lang.SandLineMarkerProvider;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 /**
- * Gutter markers from {@link SandLineMarkerProvider}, collected by the line marker pass and checked against the markup.
+ * Gutter markers from {@link SandLineMarkerProvider} and {@link SandRunLineMarkerContributor}, collected by the line
+ * marker pass and checked against the markup.
  *
  * @author VISTALL
  */
@@ -31,8 +33,8 @@ public class SandLineMarkerTest {
     @Test
     public void everyClassNameGetsAGutterMarker(CodeInsightTestFixture fixture) throws Exception {
         fixture.configureByText("some.sand", """
-            class <lineMarker descr="Sand class Item">Item</lineMarker> { "body" }
-            class <lineMarker descr="Sand class User">User</lineMarker> : Item {}
+            class <lineMarker descr="Run sand class Item"><lineMarker descr="Sand class Item">Item</lineMarker></lineMarker> { "body" }
+            class <lineMarker descr="Run sand class User"><lineMarker descr="Sand class User">User</lineMarker></lineMarker> : Item {}
             """);
 
         fixture.checkLineMarkers();

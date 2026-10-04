@@ -76,6 +76,16 @@ public final class ManualTreeExecutor implements TreeExecutor {
         return count;
     }
 
+    public int runPending() {
+        int pending = myTasks.size();
+        for (int i = 0; i < pending; i++) {
+            if (!runNext()) {
+                return i;
+            }
+        }
+        return pending;
+    }
+
     private static boolean step(@Nullable Consumer<Boolean> task, boolean run) {
         if (task == null) {
             return false;

@@ -204,7 +204,7 @@ public class TreeTableRaceTest {
         };
         tester.bind().flush();
 
-        myExecutor.runAll();
+        assertThat(myExecutor.runPending()).isPositive();
         tester.flush();
 
         assertThat(myComputeHook).isNull();
