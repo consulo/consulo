@@ -275,7 +275,7 @@ public abstract class InternalChangesBrowserBase<T> extends JPanel implements Ui
     @RequiredUIAccess
     protected void showDiffForChanges(Change[] changesArray, int indexInSelection) {
         ShowDiffContext context = new ShowDiffContext(isInFrame() ? DiffDialogHints.FRAME : DiffDialogHints.MODAL);
-
+        context.addCurrentChangeListener(this::selectDiffChange);
         context.addActions(createDiffActions());
         if (myDiffBottomComponent != null) {
             context.putChainContext(DiffUserDataKeysEx.BOTTOM_PANEL, myDiffBottomComponent);
@@ -284,6 +284,14 @@ public abstract class InternalChangesBrowserBase<T> extends JPanel implements Ui
         updateDiffContext(context);
 
         ShowDiffAction.showDiffForChange(myProject, Arrays.asList(changesArray), indexInSelection, context);
+    }
+
+    @RequiredUIAccess
+    private void selectDiffChange(Change change) {
+        T typed = ObjectUtil.tryCast(change, myClass);
+        if (typed != null && myViewer.getChanges().contains(typed)) {
+            select(List.of(typed));
+        }
     }
 
     protected void updateDiffContext(ShowDiffContext context) {
