@@ -39,6 +39,7 @@ import consulo.project.internal.*;
 import consulo.project.localize.ProjectLocalize;
 import consulo.project.ui.notification.NotificationsManager;
 import consulo.proxy.EventDispatcher;
+import consulo.ui.MessageBoxes;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
@@ -155,44 +156,22 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
     }
 
     @Override
-    @RequiredUIAccess
-    public @Nullable Project newProject(String projectName, String dirPath, boolean useDefaultProjectSettings) {
+    public @Nullable Project newProject(String projectName, String dirPath, boolean useDefaultProjectSettings, UIAccess uiAccess) {
         dirPath = toCanonicalName(dirPath);
 
         ProjectImpl project = createProject(projectName, dirPath, false);
         try {
-            initProject(project, useDefaultProjectSettings ? (ProjectImpl) getDefaultProject() : null);
+            initProject(project, useDefaultProjectSettings ? (ProjectImpl) getDefaultProject() : null, uiAccess);
             return project;
         }
         catch (Throwable t) {
             LOG.info(t);
-            Messages.showErrorDialog(message(t), ProjectLocalize.projectLoadDefaultError().get());
+            uiAccess.give(() -> MessageBoxes.okError(t).title(ProjectLocalize.projectLoadDefaultError()).showAsync());
             return null;
         }
     }
 
-    
-    private static String message(Throwable e) {
-        String message = e.getMessage();
-        if (message != null) {
-            return message;
-        }
-        message = e.getLocalizedMessage();
-        //noinspection ConstantConditions
-        if (message != null) {
-            return message;
-        }
-        message = e.toString();
-        Throwable cause = e.getCause();
-        if (cause != null) {
-            String causeMessage = message(cause);
-            return message + " (cause: " + causeMessage + ")";
-        }
-
-        return message;
-    }
-
-    private void initProject(ProjectImpl project, @Nullable ProjectImpl template) throws IOException {
+    private void initProject(ProjectImpl project, @Nullable ProjectImpl template, UIAccess uiAccess) throws IOException {
         ProgressIndicator indicator = myProgressManager.getProgressIndicator();
         if (indicator != null && !project.isDefault()) {
             indicator.setText(ProjectLocalize.loadingComponentsFor(project.getName()));
@@ -202,7 +181,7 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
         boolean succeed = false;
         try {
             if (template != null) {
-                project.getStateStore().loadProjectFromTemplate(template);
+                project.getStateStore().loadProjectFromTemplate(template, uiAccess);
             }
             else {
                 project.getStateStore().load();

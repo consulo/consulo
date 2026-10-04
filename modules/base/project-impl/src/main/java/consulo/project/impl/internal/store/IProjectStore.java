@@ -20,6 +20,7 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.component.store.internal.IComponentStore;
 import consulo.component.store.internal.TrackingPathMacroSubstitutor;
 import consulo.project.impl.internal.ProjectImpl;
+import consulo.ui.UIAccess;
 import consulo.util.concurrent.coroutine.CoroutineScope;
 import consulo.virtualFileSystem.VirtualFile;
 
@@ -47,7 +48,7 @@ public interface IProjectStore extends IComponentStore {
 
   @Nullable VirtualFile getWorkspaceFile();
 
-  void loadProjectFromTemplate(ProjectImpl project);
+  void loadProjectFromTemplate(ProjectImpl project, UIAccess uiAccess);
 
   
   String getProjectFilePath();

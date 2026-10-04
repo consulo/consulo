@@ -33,6 +33,7 @@ import consulo.component.store.internal.StateStorageManager;
 import consulo.component.store.internal.TrackingPathMacroSubstitutor;
 import consulo.project.Project;
 import consulo.application.concurrent.coroutine.WriteLock;
+import consulo.ui.UIAccess;
 import consulo.util.concurrent.coroutine.CoroutineContext;
 import consulo.util.concurrent.coroutine.CoroutineStep;
 
@@ -218,9 +219,11 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
   }
 
   @Override
-  public void loadProjectFromTemplate(ProjectImpl defaultProject) {
-    CoroutineScope scope = CoroutineScope.of(myProject.coroutineContext());
-    defaultProject.getStateStore().createSaveCoroutine(new ArrayList<>()).runBlocking(scope, null);
+  public void loadProjectFromTemplate(ProjectImpl defaultProject, UIAccess uiAccess) {
+    CoroutineContext coroutineContext = myProject.getApplication().coroutineContext().copy();
+    coroutineContext.putCopyableUserData(UIAccess.KEY, uiAccess);
+
+    defaultProject.getStateStore().createSaveCoroutine(new ArrayList<>()).runBlocking(CoroutineScope.of(coroutineContext), null);
 
     Element element = ((DefaultProjectStoreImpl)defaultProject.getStateStore()).getStateCopy();
     if (element != null) {

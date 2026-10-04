@@ -104,7 +104,7 @@ public class NewOrImportModuleUtil {
           throw new RuntimeException(e);
         }
 
-        Project newProject = ProjectManager.getInstance().createProject(projectName, projectFilePath);
+        Project newProject = ProjectManager.getInstance().createProject(projectName, projectFilePath, uiAccess);
 
         if (newProject == null) {
           throw new IllegalStateException("Project not initialized");
