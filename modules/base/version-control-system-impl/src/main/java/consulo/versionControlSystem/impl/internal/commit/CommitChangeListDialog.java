@@ -80,56 +80,39 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
     private static final float DETAILS_SPLITTER_PROPORTION_OPTION_DEFAULT = 0.6f;
     private static final boolean DETAILS_SHOW_OPTION_DEFAULT = false;
 
-    
     private final CommitContext myCommitContext;
-    
     private final CommitMessageImpl myCommitMessageArea;
     private Splitter mySplitter;
     private final @Nullable JPanel myAdditionalOptionsPanel;
-
-    
     private final InternalChangesBrowserBase<?> myBrowser;
 
     private CommitLegendPanel myLegend;
-    
     private final CacheChangeProcessorBridge myDiffDetails;
 
-    
     private final List<RefreshableOnComponent> myAdditionalComponents = new ArrayList<>();
-    
     private final List<CheckinHandler> myHandlers = new ArrayList<>();
-    
     private final LocalizeValue myActionName;
-    
     private final Project myProject;
-    
     private final VcsConfiguration myVcsConfiguration;
     private final List<CommitExecutor> myExecutors;
-    
     private final Alarm myOKButtonUpdateAlarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD);
     private String myLastKnownComment = "";
     private final boolean myAllOfDefaultChangeListChangesIncluded;
     private final CommitExecutorAction[] myExecutorActions;
     private final boolean myShowVcsCommit;
-    
     private final Map<AbstractVcs, JPanel> myPerVcsOptionsPanels = new HashMap<>();
 
     private final @Nullable AbstractVcs myVcs;
     private final boolean myIsAlien;
     private boolean myDisposed = false;
     private boolean myUpdateDisabled = false;
-    
     private final JLabel myWarningLabel;
 
-    
     private final Map<String, CheckinChangeListSpecificComponent> myCheckinChangeListSpecificComponents;
-
-    
     private final Map<String, String> myListComments;
     private String myLastSelectedListName;
     private ChangeInfoCalculator myChangesInfoCalculator;
 
-    
     private final PseudoMap<Object, Object> myAdditionalData;
     private String myHelpId;
 
@@ -164,7 +147,6 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
         }
     }
 
-    
     private final MyUpdateButtonsRunnable myUpdateButtonsRunnable = new MyUpdateButtonsRunnable(this);
 
     @RequiredUIAccess
@@ -249,7 +231,6 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
 
     // Used in plugins
     @SuppressWarnings("unused")
-    
     public List<RefreshableOnComponent> getAdditionalComponents() {
         return Collections.unmodifiableList(myAdditionalComponents);
     }
@@ -642,7 +623,6 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
             doOKAction();
         }
 
-        
         @Override
         public Action[] getOptions() {
             return myOptions;
@@ -665,10 +645,13 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
         @RequiredUIAccess
         Runnable callCommit = () -> {
             try {
-                CheckinHandler.ReturnResult result = runBeforeCommitHandlers(() -> {
-                    CommitChangeListDialog.super.doOKAction();
-                    doCommit(myResultHandler);
-                }, null);
+                CheckinHandler.ReturnResult result = runBeforeCommitHandlers(
+                    () -> {
+                        CommitChangeListDialog.super.doOKAction();
+                        doCommit(myResultHandler);
+                    },
+                    null
+                );
 
                 if (result == CheckinHandler.ReturnResult.COMMIT) {
                     defaultListCleaner.clean();
@@ -696,14 +679,12 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
         );
     }
 
-    
     @Override
     protected LocalizeAction getOKAction() {
         return new CommitAction();
     }
 
     @Override
-    
     protected Action[] createActions() {
         List<Action> actions = new ArrayList<>();
 
@@ -895,7 +876,6 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
         ApplicationPropertiesComponent.getInstance().setValue(DETAILS_SHOW_OPTION, myDetailsSplitter.isOn(), DETAILS_SHOW_OPTION_DEFAULT);
     }
 
-    
     @Override
     public LocalizeValue getCommitActionName() {
         LocalizeValue name = LocalizeValue.empty();
@@ -1197,12 +1177,10 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
         );
     }
 
-    
     public Set<AbstractVcs> getAffectedVcses() {
         return myShowVcsCommit ? myBrowser.getAffectedVcses() : Collections.emptySet();
     }
 
-    
     @Override
     public Collection<VirtualFile> getRoots() {
         ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance(myProject);

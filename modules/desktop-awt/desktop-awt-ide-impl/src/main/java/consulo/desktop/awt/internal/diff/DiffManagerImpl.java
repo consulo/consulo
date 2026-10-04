@@ -116,7 +116,6 @@ public class DiffManagerImpl extends DiffManagerEx {
         return DialogWrapper.findInstance(ProjectIdeFocusManager.getInstance(project).getFocusOwner()) != null;
     }
 
-    
     @Override
     public DiffRequestPanel createRequestPanel(@Nullable Project project, Disposable parent, @Nullable Window window) {
         DiffRequestPanelImpl panel = new DiffRequestPanelImpl(project, window);
@@ -124,7 +123,6 @@ public class DiffManagerImpl extends DiffManagerEx {
         return panel;
     }
 
-    
     @Override
     public List<DiffTool> getDiffTools() {
         return myApplication.getExtensionList(DiffTool.class);

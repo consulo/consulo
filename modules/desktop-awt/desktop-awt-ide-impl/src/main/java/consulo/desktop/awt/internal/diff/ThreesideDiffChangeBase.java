@@ -32,120 +32,137 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class ThreesideDiffChangeBase {
-  
-  private final MergeConflictType myType;
+    private final MergeConflictType myType;
 
-  
-  protected final List<RangeHighlighter> myHighlighters = new ArrayList<>();
-  
-  protected final List<RangeHighlighter> myInnerHighlighters = new ArrayList<>();
+    protected final List<RangeHighlighter> myHighlighters = new ArrayList<>();
 
-  public ThreesideDiffChangeBase(MergeConflictType type) {
-    myType = type;
-  }
+    protected final List<RangeHighlighter> myInnerHighlighters = new ArrayList<>();
 
-  @RequiredUIAccess
-  protected void installHighlighters() {
-    assert myHighlighters.isEmpty();
-
-    createHighlighter(ThreeSide.BASE);
-    if (isChange(Side.LEFT)) createHighlighter(ThreeSide.LEFT);
-    if (isChange(Side.RIGHT)) createHighlighter(ThreeSide.RIGHT);
-  }
-
-  @RequiredUIAccess
-  protected void installInnerHighlighters() {
-    assert myInnerHighlighters.isEmpty();
-
-    createInnerHighlighter(ThreeSide.BASE);
-    if (isChange(Side.LEFT)) createInnerHighlighter(ThreeSide.LEFT);
-    if (isChange(Side.RIGHT)) createInnerHighlighter(ThreeSide.RIGHT);
-  }
-
-  @RequiredUIAccess
-  protected void destroyHighlighters() {
-    for (RangeHighlighter highlighter : myHighlighters) {
-      highlighter.dispose();
+    public ThreesideDiffChangeBase(MergeConflictType type) {
+        myType = type;
     }
-    myHighlighters.clear();
-  }
 
-  @RequiredUIAccess
-  protected void destroyInnerHighlighters() {
-    for (RangeHighlighter highlighter : myInnerHighlighters) {
-      highlighter.dispose();
+    @RequiredUIAccess
+    protected void installHighlighters() {
+        assert myHighlighters.isEmpty();
+
+        createHighlighter(ThreeSide.BASE);
+        if (isChange(Side.LEFT)) {
+            createHighlighter(ThreeSide.LEFT);
+        }
+        if (isChange(Side.RIGHT)) {
+            createHighlighter(ThreeSide.RIGHT);
+        }
     }
-    myInnerHighlighters.clear();
-  }
 
-  //
-  // Getters
-  //
+    @RequiredUIAccess
+    protected void installInnerHighlighters() {
+        assert myInnerHighlighters.isEmpty();
 
-  public abstract int getStartLine(ThreeSide side);
-
-  public abstract int getEndLine(ThreeSide side);
-
-  public abstract boolean isResolved(ThreeSide side);
-
-  
-  protected abstract Editor getEditor(ThreeSide side);
-
-  protected abstract @Nullable MergeInnerDifferences getInnerFragments();
-
-  
-  public TextDiffType getDiffType() {
-    return myType.getDiffType();
-  }
-
-  
-  public MergeConflictType getType() {
-    return myType;
-  }
-
-  public boolean isConflict() {
-    return getDiffType() == TextDiffType.CONFLICT;
-  }
-
-  public boolean isChange(Side side) {
-    return myType.isChange(side);
-  }
-
-  public boolean isChange(ThreeSide side) {
-    return myType.isChange(side);
-  }
-
-  //
-  // Highlighters
-  //
-
-  protected void createHighlighter(ThreeSide side) {
-    Editor editor = getEditor(side);
-
-    TextDiffType type = getDiffType();
-    int startLine = getStartLine(side);
-    int endLine = getEndLine(side);
-
-    boolean resolved = isResolved(side);
-    boolean ignored = !resolved && getInnerFragments() != null;
-    boolean shouldHideWithoutLineNumbers = side == ThreeSide.BASE && !isChange(Side.LEFT) && isChange(Side.RIGHT);
-    myHighlighters.addAll(DiffDrawUtil.createHighlighter(editor, startLine, endLine, type, ignored, resolved, shouldHideWithoutLineNumbers));
-  }
-
-  protected void createInnerHighlighter(ThreeSide side) {
-    if (isResolved(side)) return;
-    MergeInnerDifferences innerFragments = getInnerFragments();
-    if (innerFragments == null) return;
-
-    List<TextRange> ranges = innerFragments.get(side);
-    if (ranges == null) return;
-
-    Editor editor = getEditor(side);
-    int start = DiffImplUtil.getLinesRange(editor.getDocument(), getStartLine(side), getEndLine(side)).getStartOffset();
-    for (TextRange fragment : ranges) {
-      int innerStart = start + fragment.getStartOffset();
-      int innerEnd = start + fragment.getEndOffset();
-      myInnerHighlighters.addAll(DiffDrawUtil.createInlineHighlighter(editor, innerStart, innerEnd, getDiffType()));
+        createInnerHighlighter(ThreeSide.BASE);
+        if (isChange(Side.LEFT)) {
+            createInnerHighlighter(ThreeSide.LEFT);
+        }
+        if (isChange(Side.RIGHT)) {
+            createInnerHighlighter(ThreeSide.RIGHT);
+        }
     }
-  }
+
+    @RequiredUIAccess
+    protected void destroyHighlighters() {
+        for (RangeHighlighter highlighter : myHighlighters) {
+            highlighter.dispose();
+        }
+        myHighlighters.clear();
+    }
+
+    @RequiredUIAccess
+    protected void destroyInnerHighlighters() {
+        for (RangeHighlighter highlighter : myInnerHighlighters) {
+            highlighter.dispose();
+        }
+        myInnerHighlighters.clear();
+    }
+
+    //
+    // Getters
+    //
+
+    public abstract int getStartLine(ThreeSide side);
+
+    public abstract int getEndLine(ThreeSide side);
+
+    public abstract boolean isResolved(ThreeSide side);
+
+    protected abstract Editor getEditor(ThreeSide side);
+
+    protected abstract @Nullable MergeInnerDifferences getInnerFragments();
+
+    public TextDiffType getDiffType() {
+        return myType.getDiffType();
+    }
+
+    public MergeConflictType getType() {
+        return myType;
+    }
+
+    public boolean isConflict() {
+        return getDiffType() == TextDiffType.CONFLICT;
+    }
+
+    public boolean isChange(Side side) {
+        return myType.isChange(side);
+    }
+
+    public boolean isChange(ThreeSide side) {
+        return myType.isChange(side);
+    }
+
+    //
+    // Highlighters
+    //
+
+    protected void createHighlighter(ThreeSide side) {
+        Editor editor = getEditor(side);
+
+        TextDiffType type = getDiffType();
+        int startLine = getStartLine(side);
+        int endLine = getEndLine(side);
+
+        boolean resolved = isResolved(side);
+        boolean ignored = !resolved && getInnerFragments() != null;
+        boolean shouldHideWithoutLineNumbers = side == ThreeSide.BASE && !isChange(Side.LEFT) && isChange(Side.RIGHT);
+        myHighlighters.addAll(DiffDrawUtil.createHighlighter(
+            editor,
+            startLine,
+            endLine,
+            type,
+            ignored,
+            resolved,
+            shouldHideWithoutLineNumbers
+        ));
+    }
+
+    protected void createInnerHighlighter(ThreeSide side) {
+        if (isResolved(side)) {
+            return;
+        }
+        MergeInnerDifferences innerFragments = getInnerFragments();
+        if (innerFragments == null) {
+            return;
+        }
+
+        List<TextRange> ranges = innerFragments.get(side);
+        if (ranges == null) {
+            return;
+        }
+
+        Editor editor = getEditor(side);
+        int start = DiffImplUtil.getLinesRange(editor.getDocument(), getStartLine(side), getEndLine(side)).getStartOffset();
+        for (TextRange fragment : ranges) {
+            int innerStart = start + fragment.getStartOffset();
+            int innerEnd = start + fragment.getEndOffset();
+            myInnerHighlighters.addAll(DiffDrawUtil.createInlineHighlighter(editor, innerStart, innerEnd, getDiffType()));
+        }
+    }
 }

@@ -42,9 +42,8 @@ import java.util.List;
 public class ErrorDiffTool implements FrameDiffTool {
     public static final ErrorDiffTool INSTANCE = new ErrorDiffTool();
 
-    @RequiredUIAccess
-    
     @Override
+    @RequiredUIAccess
     public DiffViewer createComponent(DiffContext context, DiffRequest request) {
         return new MyViewer(context, request);
     }
@@ -54,19 +53,14 @@ public class ErrorDiffTool implements FrameDiffTool {
         return true;
     }
 
-    
     @Override
     public String getName() {
         return DiffLocalize.errorViewer().get();
     }
 
     private static class MyViewer implements DiffViewer {
-        
         private final DiffContext myContext;
-        
         private final DiffRequest myRequest;
-
-        
         private final JPanel myPanel;
 
         public MyViewer(DiffContext context, DiffRequest request) {
@@ -76,7 +70,6 @@ public class ErrorDiffTool implements FrameDiffTool {
             myPanel = JBUI.Panels.simplePanel(createComponent(request));
         }
 
-        
         private JComponent createComponent(DiffRequest request) {
             if (request instanceof MessageDiffRequest messageDiffRequest) {
                 // TODO: explain some of ErrorDiffRequest exceptions ?
@@ -101,7 +94,6 @@ public class ErrorDiffTool implements FrameDiffTool {
             return AWTDiffUtil.createMessagePanel(DiffLocalize.errorMessageCannotShowDiff().get());
         }
 
-        
         @Override
         public JComponent getComponent() {
             return myPanel;
@@ -112,9 +104,8 @@ public class ErrorDiffTool implements FrameDiffTool {
             return null;
         }
 
-        @RequiredUIAccess
-        
         @Override
+        @RequiredUIAccess
         public ToolbarComponents init() {
             if (myRequest instanceof UnknownFileTypeDiffRequest unknownFileTypeDiffRequest) {
                 String fileName = unknownFileTypeDiffRequest.getFileName();
@@ -130,8 +121,8 @@ public class ErrorDiffTool implements FrameDiffTool {
             return new ToolbarComponents();
         }
 
-        @RequiredUIAccess
         @Override
+        @RequiredUIAccess
         public void dispose() {
         }
     }

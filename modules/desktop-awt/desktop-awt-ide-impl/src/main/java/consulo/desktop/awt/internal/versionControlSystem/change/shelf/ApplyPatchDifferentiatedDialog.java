@@ -320,7 +320,6 @@ public class ApplyPatchDifferentiatedDialog extends DialogWrapper {
         };
     }
 
-
     @Override
     protected Action[] createActions() {
         if (myExecutors.isEmpty()) {
@@ -366,7 +365,6 @@ public class ApplyPatchDifferentiatedDialog extends DialogWrapper {
             myReader == null ? null : myReader.getAdditionalInfo(ApplyPatchDefaultExecutor.pathsFromGroups(patchGroups))
         );
     }
-
 
     private List<FilePatch> getOriginalRemaining() {
         Collection<AbstractFilePatchInProgress> notIncluded = ContainerUtil.subtract(myPatches, getIncluded());
@@ -476,7 +474,6 @@ public class ApplyPatchDifferentiatedDialog extends DialogWrapper {
     }
 
     private static class FilePresentationModel {
-
         private final String myPath;
         private @Nullable VirtualFile myVf;
 
@@ -623,7 +620,6 @@ public class ApplyPatchDifferentiatedDialog extends DialogWrapper {
             return enabled;
         }
 
-
         private List<AbstractFilePatchInProgress.PatchChange> getOnlyValidChanges(
             Collection<AbstractFilePatchInProgress.PatchChange> changes
         ) {
@@ -646,7 +642,7 @@ public class ApplyPatchDifferentiatedDialog extends DialogWrapper {
         }
     }
 
-    private class MapDirectory extends LegacyAnAction {
+    private class MapDirectory extends AnAction implements AnActionWithSyncUpdate {
         private final NewBaseSelector myNewBaseSelector;
 
         private MapDirectory() {
@@ -658,11 +654,11 @@ public class ApplyPatchDifferentiatedDialog extends DialogWrapper {
         @RequiredUIAccess
         public void actionPerformed(AnActionEvent e) {
             List<AbstractFilePatchInProgress.PatchChange> selectedChanges = myChangesTreeList.getSelectedChanges();
-            if ((selectedChanges.size() >= 1) && (sameBase(selectedChanges))) {
+            if (selectedChanges.size() >= 1 && sameBase(selectedChanges)) {
                 AbstractFilePatchInProgress.PatchChange patchChange = selectedChanges.get(0);
                 AbstractFilePatchInProgress patch = patchChange.getPatchInProgress();
                 List<VirtualFile> autoBases = patch.getAutoBasesCopy();
-                if (autoBases.isEmpty() || (autoBases.size() == 1 && autoBases.get(0).equals(patch.getBase()))) {
+                if (autoBases.isEmpty() || autoBases.size() == 1 && autoBases.get(0).equals(patch.getBase())) {
                     myNewBaseSelector.run();
                 }
                 else {
@@ -861,7 +857,6 @@ public class ApplyPatchDifferentiatedDialog extends DialogWrapper {
             return null;
         }
 
-
         @Override
         public String getTextFor(VirtualFile value) {
             return value == null ? "Select base for a path" : value.getPath();
@@ -1009,15 +1004,13 @@ public class ApplyPatchDifferentiatedDialog extends DialogWrapper {
                         component.append("  ");
                         component.append("New base detected", SimpleTextAttributes.GRAYED_ITALIC_ATTRIBUTES);
                         component.setToolTipText(
-                            String.format(
-                                "was: %s (base dir: %s)",
-                                patchInProgress.getOriginalBeforePath(),
-                                myProject.getBasePath()
-                            ) + "<br/>" + String.format(
-                                "now: %s (base dir: %s)",
-                                patchInProgress.getPatch().getBeforeName(),
-                                patchInProgress.getBase().getPath()
-                            )
+                            String.format("was: %s (base dir: %s)", patchInProgress.getOriginalBeforePath(), myProject.getBasePath()) +
+                                "<br/>" +
+                                String.format(
+                                    "now: %s (base dir: %s)",
+                                    patchInProgress.getPatch().getBeforeName(),
+                                    patchInProgress.getBase().getPath()
+                                )
                         );
                     }
                 }
@@ -1070,7 +1063,7 @@ public class ApplyPatchDifferentiatedDialog extends DialogWrapper {
         }
     }
 
-    private class StripDown extends LegacyAnAction {
+    private class StripDown extends AnAction implements AnActionWithSyncUpdate {
         private StripDown() {
             super(
                 LocalizeValue.localizeTODO("Restore Directory"),
@@ -1111,7 +1104,7 @@ public class ApplyPatchDifferentiatedDialog extends DialogWrapper {
         }
     }
 
-    private class StripUp extends LegacyAnAction {
+    private class StripUp extends AnAction implements AnActionWithSyncUpdate {
         private StripUp() {
             super(
                 LocalizeValue.localizeTODO("Strip Directory"),
@@ -1172,7 +1165,7 @@ public class ApplyPatchDifferentiatedDialog extends DialogWrapper {
         }
     }
 
-    private class MyShowDiff extends LegacyAnAction {
+    private class MyShowDiff extends AnAction implements AnActionWithSyncUpdate {
         private final MyChangeComparator myMyChangeComparator;
 
         private MyShowDiff() {
@@ -1231,7 +1224,6 @@ public class ApplyPatchDifferentiatedDialog extends DialogWrapper {
         }
     }
 
-
     private static DiffRequestProducer createBaseNotFoundErrorRequest(final AbstractFilePatchInProgress patchInProgress) {
         final String beforePath = patchInProgress.getPatch().getBeforeName();
         final String afterPath = patchInProgress.getPatch().getAfterName();
@@ -1264,7 +1256,6 @@ public class ApplyPatchDifferentiatedDialog extends DialogWrapper {
             myIndex = index >= 0 ? index : 0;
         }
 
-
         @Override
         public List<? extends DiffRequestProducer> getRequests() {
             return myRequests;
@@ -1280,7 +1271,6 @@ public class ApplyPatchDifferentiatedDialog extends DialogWrapper {
             assert index >= 0 && index < myRequests.size();
             myIndex = index;
         }
-
 
         @Override
         public AnAction createGoToChangeAction(Consumer<Integer> onSelected) {

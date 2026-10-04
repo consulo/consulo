@@ -19,9 +19,9 @@ import consulo.diff.DiffContext;
 import consulo.diff.content.DiffContent;
 
 public abstract class EditorHolderFactory<T extends EditorHolder> {
-  public abstract boolean canShowContent(DiffContent content, DiffContext context);
+    public abstract boolean canShowContent(DiffContent content, DiffContext context);
 
-  public abstract boolean wantShowContent(DiffContent content, DiffContext context);
+    public abstract boolean wantShowContent(DiffContent content, DiffContext context);
 
-  public abstract T create(DiffContent content, DiffContext context);
+    public abstract T create(DiffContent content, DiffContext context);
 }
