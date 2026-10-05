@@ -90,18 +90,19 @@ public class DesktopShowSettingsUtilImpl extends BaseProjectStructureShowSetting
 
         CompletableFuture<Void> result = new CompletableFuture<>();
 
+        UIAccess uiAccess = UIAccess.current();
+
         DesktopSettingsDialog currentDialog = myCurrentSettingsDialog;
         if (currentDialog != null) {
             OptionsEditor editor = myCurrentSettingsDialog.getEditor();
 
-            editor.doSelect(strategy, () -> {
+            editor.doSelect(uiAccess, strategy, () -> {
                 onShow.accept(currentDialog);
             });
 
             return myShowDialogResult;
         }
 
-        UIAccess uiAccess = UIAccess.current();
         uiAccess.give(() -> {
             DesktopSettingsDialog dialog;
             if (ModalityPerProjectEAPDescriptor.is()) {

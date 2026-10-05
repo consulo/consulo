@@ -690,14 +690,15 @@ public class OptionsEditor implements UiDataProvider, Disposable, AWTEventListen
 
             myTreeDecoratorPanel.startLoading();
 
-            project.getApplication().executeOnPooledThread(this::run);
+            UIAccess uiAccess = UIAccess.current();
+            project.getApplication().executeOnPooledThread(() -> run(uiAccess));
         });
     }
 
-    public void doSelect(ConfigurablePreselectStrategy preselectStrategy, Runnable afterTreeLoad) {
+    public void doSelect(UIAccess uiAccess, ConfigurablePreselectStrategy preselectStrategy, Runnable afterTreeLoad) {
         Configurable preselectedConfigurable = preselectStrategy.get(myBuildConfigurables);
 
-        myProject.getUIAccess().give(() -> {
+        uiAccess.give(() -> {
             myTreeDecoratorPanel.invalidate();
             myTreeDecoratorPanel.stopLoading();
 
@@ -719,13 +720,13 @@ public class OptionsEditor implements UiDataProvider, Disposable, AWTEventListen
         });
     }
 
-    private void run() {
+    private void run(UIAccess uiAccess) {
         try {
             myBuildConfigurables = myConfigurablesBuilder.apply(myProject);
 
             myConfigurablesLoaded = true;
 
-            doSelect(myConfigurablePreselectStrategy, myAfterTreeLoad);
+            doSelect(uiAccess, myConfigurablePreselectStrategy, myAfterTreeLoad);
         }
         catch (Exception e) {
             if (e instanceof ControlFlowException) {
