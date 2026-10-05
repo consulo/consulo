@@ -42,6 +42,7 @@ import consulo.diff.util.LineRange;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
+import consulo.language.editor.hint.HintColorUtil;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.ui.awt.HintUtil;
 import consulo.logging.Logger;
@@ -518,7 +519,7 @@ public abstract class DiffRequestProcessor implements Disposable {
     // Actions
     //
 
-    private class ShowInExternalToolAction extends LegacyDumbAwareAction {
+    private class ShowInExternalToolAction extends DumbAwareAction implements AnActionWithSyncUpdate {
         public ShowInExternalToolAction() {
             EmptyAction.setupAction(this, "Diff.ShowInExternalTool", null);
         }
@@ -605,7 +606,7 @@ public abstract class DiffRequestProcessor implements Disposable {
         }
     }
 
-    private class ShowActionGroupPopupAction extends LegacyDumbAwareAction {
+    private class ShowActionGroupPopupAction extends DumbAwareAction implements AnActionWithSyncUpdate {
         public ShowActionGroupPopupAction() {
             EmptyAction.setupAction(this, "Diff.ShowSettingsPopup", null);
         }
@@ -669,9 +670,6 @@ public abstract class DiffRequestProcessor implements Disposable {
                 e.getPresentation().setEnabledAndVisible(true);
                 return;
             }
-
-            Component data = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
-            consulo.ui.Component data1 = e.getData(consulo.ui.Component.KEY);
 
             PrevNextDifferenceIterable iterable = e.getData(DiffDataKeys.PREV_NEXT_DIFFERENCE_ITERABLE);
             if (iterable != null && iterable.canGoNext()) {
@@ -810,7 +808,7 @@ public abstract class DiffRequestProcessor implements Disposable {
             .setPreferredPosition(above ? Balloon.Position.above : Balloon.Position.below)
             .setAwtTooltip(true)
             .setFont(UIUtil.getLabelFont().deriveFont(Font.BOLD))
-            .setTextBg(HintUtil.INFORMATION_COLOR)
+            .setTextBg(TargetAWT.to(HintColorUtil.getInformationColor()))
             .setShowImmediately(true);
     }
 

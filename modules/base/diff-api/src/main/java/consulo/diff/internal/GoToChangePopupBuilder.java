@@ -34,22 +34,18 @@ import java.util.function.Consumer;
 
 public class GoToChangePopupBuilder {
     public interface Chain extends DiffRequestChain {
-        
         AnAction createGoToChangeAction(Consumer<Integer> onSelected);
     }
 
-    
     public static AnAction create(DiffRequestChain chain, Consumer<Integer> onSelected) {
-        if (chain instanceof Chain) {
-            return ((Chain) chain).createGoToChangeAction(onSelected);
+        if (chain instanceof Chain c) {
+            return c.createGoToChangeAction(onSelected);
         }
         return new SimpleGoToChangePopupAction(chain, onSelected);
     }
 
     public static abstract class BaseGoToChangePopupAction<Chain extends DiffRequestChain> extends GoToChangePopupAction {
-        
         protected final Chain myChain;
-        
         protected final Consumer<Integer> myOnSelected;
 
         public BaseGoToChangePopupAction(Chain chain, Consumer<Integer> onSelected) {
@@ -68,25 +64,22 @@ public class GoToChangePopupBuilder {
             JBPopup popup = createPopup(e);
 
             InputEvent event = e.getInputEvent();
-            if (event instanceof MouseEvent) {
-                popup.show(new RelativePoint((MouseEvent) event));
+            if (event instanceof MouseEvent me) {
+                popup.show(new RelativePoint(me));
             }
             else {
                 popup.showInBestPositionFor(e.getDataContext());
             }
         }
 
-        
         protected abstract JBPopup createPopup(AnActionEvent e);
     }
 
     private static class SimpleGoToChangePopupAction extends BaseGoToChangePopupAction {
-
         public SimpleGoToChangePopupAction(DiffRequestChain chain, Consumer<Integer> onSelected) {
             super(chain, onSelected);
         }
 
-        
         @Override
         protected JBPopup createPopup(AnActionEvent e) {
             Project project = e.getData(Project.KEY);
@@ -102,7 +95,6 @@ public class GoToChangePopupBuilder {
                 myProject = project;
             }
 
-            
             @Override
             public String getTextFor(DiffRequestProducer value) {
                 return value.getName();

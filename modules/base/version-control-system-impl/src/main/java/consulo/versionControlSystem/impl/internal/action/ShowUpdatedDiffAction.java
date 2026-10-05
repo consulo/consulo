@@ -36,10 +36,7 @@ import consulo.localHistory.Label;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.LegacyDumbAwareAction;
-import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.action.*;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.util.io.FileUtil;
@@ -57,7 +54,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 @ActionImpl(id = "Diff.UpdatedFiles", shortcutFrom = @ActionRef(id = "CompareDirs"))
-public class ShowUpdatedDiffAction extends LegacyDumbAwareAction {
+public class ShowUpdatedDiffAction extends DumbAwareAction implements AnActionWithSyncUpdate {
     public ShowUpdatedDiffAction() {
         super(
             VcsLocalize.actionDiffUpdatedFilesText(),
@@ -99,13 +96,9 @@ public class ShowUpdatedDiffAction extends LegacyDumbAwareAction {
 
     private static class MyDiffRequestChain extends UserDataHolderBase implements DiffRequestChain, GoToChangePopupBuilder.Chain {
         private final @Nullable Project myProject;
-        
         private final Label myBefore;
-        
         private final Label myAfter;
-        
         private final List<MyDiffRequestProducer> myRequests = new ArrayList<>();
-
         private int myIndex;
 
         public MyDiffRequestChain(
@@ -131,7 +124,6 @@ public class ShowUpdatedDiffAction extends LegacyDumbAwareAction {
             }
         }
 
-        
         @Override
         public List<MyDiffRequestProducer> getRequests() {
             return myRequests;
@@ -151,13 +143,11 @@ public class ShowUpdatedDiffAction extends LegacyDumbAwareAction {
         @Override
         public AnAction createGoToChangeAction(Consumer<Integer> onSelected) {
             return new ChangeGoToChangePopupAction.Fake<>(this, myIndex, onSelected) {
-                
                 @Override
                 protected FilePath getFilePath(int index) {
                     return myRequests.get(index).getFilePath();
                 }
 
-                
                 @Override
                 protected FileStatus getFileStatus(int index) {
                     return myRequests.get(index).getFileStatus();
@@ -166,9 +156,7 @@ public class ShowUpdatedDiffAction extends LegacyDumbAwareAction {
         }
 
         private class MyDiffRequestProducer implements DiffRequestProducer {
-            
             private final FileStatus myFileStatus;
-            
             private final FilePath myFilePath;
 
             public MyDiffRequestProducer(FilePath filePath, FileStatus fileStatus) {
@@ -176,23 +164,19 @@ public class ShowUpdatedDiffAction extends LegacyDumbAwareAction {
                 myFileStatus = fileStatus;
             }
 
-            
             @Override
             public String getName() {
                 return getFilePath().getPath();
             }
 
-            
             public FilePath getFilePath() {
                 return myFilePath;
             }
 
-            
             public FileStatus getFileStatus() {
                 return myFileStatus;
             }
 
-            
             @Override
             public DiffRequest process(UserDataHolder context, ProgressIndicator indicator)
                 throws DiffRequestProducerException, ProcessCanceledException {

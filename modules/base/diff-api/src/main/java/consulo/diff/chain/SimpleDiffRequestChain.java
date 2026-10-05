@@ -24,81 +24,79 @@ import consulo.util.dataholder.UserDataHolderBase;
 import consulo.util.lang.StringUtil;
 
 import org.jspecify.annotations.Nullable;
+
 import java.util.Collections;
 import java.util.List;
 
 public class SimpleDiffRequestChain extends UserDataHolderBase implements DiffRequestChain {
-  public static SimpleDiffRequestChain fromProducer(DiffRequestProducer producer) {
-    return fromProducers(Collections.singletonList(producer));
-  }
-
-  public static SimpleDiffRequestChain fromProducers(List<? extends DiffRequestProducer> producers) {
-    return fromProducers(producers, -1);
-  }
-
-  public static SimpleDiffRequestChain fromProducers(List<? extends DiffRequestProducer> producers, int selectedIndex) {
-    SimpleDiffRequestChain chain = new SimpleDiffRequestChain(producers, null);
-    if (selectedIndex > 0) chain.setIndex(selectedIndex);
-    return chain;
-  }
-
-  
-  private final List<? extends DiffRequestProducer> myRequests;
-  private int myIndex = 0;
-
-  public SimpleDiffRequestChain(DiffRequest request) {
-    this(Collections.singletonList(request));
-  }
-
-  public SimpleDiffRequestChain(List<? extends DiffRequest> requests) {
-    myRequests = ContainerUtil.map(requests, request -> new DiffRequestProducerWrapper(request));
-  }
-
-  private SimpleDiffRequestChain(List<? extends DiffRequestProducer> requests, @Nullable Object constructorFlag) {
-    assert constructorFlag == null;
-    myRequests = requests;
-  }
-
-  @Override
-  
-  public List<? extends DiffRequestProducer> getRequests() {
-    return myRequests;
-  }
-
-  @Override
-  public int getIndex() {
-    return myIndex;
-  }
-
-  @Override
-  public void setIndex(int index) {
-    assert index >= 0 && index < myRequests.size();
-    myIndex = index;
-  }
-
-  public static class DiffRequestProducerWrapper implements DiffRequestProducer {
-    
-    private final DiffRequest myRequest;
-
-    public DiffRequestProducerWrapper(DiffRequest request) {
-      myRequest = request;
+    public static SimpleDiffRequestChain fromProducer(DiffRequestProducer producer) {
+        return fromProducers(Collections.singletonList(producer));
     }
 
-    
-    public DiffRequest getRequest() {
-      return myRequest;
+    public static SimpleDiffRequestChain fromProducers(List<? extends DiffRequestProducer> producers) {
+        return fromProducers(producers, -1);
     }
 
-    
+    public static SimpleDiffRequestChain fromProducers(List<? extends DiffRequestProducer> producers, int selectedIndex) {
+        SimpleDiffRequestChain chain = new SimpleDiffRequestChain(producers, null);
+        if (selectedIndex > 0) {
+            chain.setIndex(selectedIndex);
+        }
+        return chain;
+    }
+
+    private final List<? extends DiffRequestProducer> myRequests;
+    private int myIndex = 0;
+
+    public SimpleDiffRequestChain(DiffRequest request) {
+        this(Collections.singletonList(request));
+    }
+
+    public SimpleDiffRequestChain(List<? extends DiffRequest> requests) {
+        myRequests = ContainerUtil.map(requests, DiffRequestProducerWrapper::new);
+    }
+
+    private SimpleDiffRequestChain(List<? extends DiffRequestProducer> requests, @Nullable Object constructorFlag) {
+        assert constructorFlag == null;
+        myRequests = requests;
+    }
+
     @Override
-    public String getName() {
-      return StringUtil.notNullize(myRequest.getTitle(), "Change");
+    public List<? extends DiffRequestProducer> getRequests() {
+        return myRequests;
     }
 
-    
     @Override
-    public DiffRequest process(UserDataHolder context, ProgressIndicator indicator) throws DiffRequestProducerException, ProcessCanceledException {
-      return myRequest;
+    public int getIndex() {
+        return myIndex;
     }
-  }
+
+    @Override
+    public void setIndex(int index) {
+        assert index >= 0 && index < myRequests.size();
+        myIndex = index;
+    }
+
+    public static class DiffRequestProducerWrapper implements DiffRequestProducer {
+        private final DiffRequest myRequest;
+
+        public DiffRequestProducerWrapper(DiffRequest request) {
+            myRequest = request;
+        }
+
+        public DiffRequest getRequest() {
+            return myRequest;
+        }
+
+        @Override
+        public String getName() {
+            return StringUtil.notNullize(myRequest.getTitle(), "Change");
+        }
+
+        @Override
+        public DiffRequest process(UserDataHolder context, ProgressIndicator indicator)
+            throws DiffRequestProducerException, ProcessCanceledException {
+            return myRequest;
+        }
+    }
 }

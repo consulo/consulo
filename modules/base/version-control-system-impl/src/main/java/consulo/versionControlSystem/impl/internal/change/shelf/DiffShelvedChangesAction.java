@@ -28,13 +28,12 @@ import consulo.diff.chain.DiffRequestProducerException;
 import consulo.diff.internal.GoToChangePopupBuilder;
 import consulo.diff.request.DiffRequest;
 import consulo.diff.request.UnknownFileTypeDiffRequest;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.LegacyDumbAwareAction;
+import consulo.ui.ex.action.*;
 import consulo.util.collection.Lists;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.dataholder.UserDataHolderBase;
@@ -69,7 +68,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 @ActionImpl(id = "ShelvedChanges.Diff", shortcutFrom = @ActionRef(id = "Diff.ShowDiff"))
-public class DiffShelvedChangesAction extends LegacyDumbAwareAction {
+public class DiffShelvedChangesAction extends DumbAwareAction implements AnActionWithSyncUpdate {
     public DiffShelvedChangesAction() {
         super(
             ActionLocalize.actionShelvedchangesDiffText(),
@@ -168,10 +167,12 @@ public class DiffShelvedChangesAction extends LegacyDumbAwareAction {
     ) {
         String base = project.getBaseDir().getPath();
         for (ShelvedBinaryFile shelvedBinaryFile : files) {
-            File file = new File(base, shelvedBinaryFile.getAfterPath() == null ? shelvedBinaryFile.getBeforePath() : shelvedBinaryFile.getAfterPath());
+            File file = new File(
+                base,
+                shelvedBinaryFile.getAfterPath() == null ? shelvedBinaryFile.getBeforePath() : shelvedBinaryFile.getAfterPath()
+            );
             FilePath filePath = VcsUtil.getFilePath(file);
             diffRequestProducers.add(new MyDiffRequestProducer((ShelvedBinaryFileImpl) shelvedBinaryFile, filePath) {
-                
                 @Override
                 public DiffRequest process(UserDataHolder context, ProgressIndicator indicator)
                     throws DiffRequestProducerException, ProcessCanceledException {
@@ -206,7 +207,6 @@ public class DiffShelvedChangesAction extends LegacyDumbAwareAction {
             }
             catch (IOException e) {
                 diffRequestProducers.add(new MyDiffRequestProducer(shelvedChange, filePath) {
-                    
                     @Override
                     public DiffRequest process(UserDataHolder context, ProgressIndicator indicator)
                         throws DiffRequestProducerException, ProcessCanceledException {
@@ -217,7 +217,6 @@ public class DiffShelvedChangesAction extends LegacyDumbAwareAction {
             }
 
             diffRequestProducers.add(new MyDiffRequestProducer(shelvedChange, filePath) {
-                
                 @Override
                 @RequiredUIAccess
                 public DiffRequest process(UserDataHolder context, ProgressIndicator indicator)
@@ -275,7 +274,6 @@ public class DiffShelvedChangesAction extends LegacyDumbAwareAction {
             myFilePatchesMap = new HashMap<>();
         }
 
-        
         public TextFilePatch getPatch(ShelvedChangeImpl shelvedChange, CommitContext commitContext) throws VcsException {
             List<TextFilePatch> textFilePatches = myFilePatchesMap.get(shelvedChange.getPatchPath());
             if (textFilePatches == null) {
@@ -292,12 +290,11 @@ public class DiffShelvedChangesAction extends LegacyDumbAwareAction {
                     return textFilePatch;
                 }
             }
-            throw new VcsException("Can not find patch for " + shelvedChange.getBeforePath() + " in patch file.");
+            throw new VcsException(LocalizeValue.localizeTODO("Can not find patch for " + shelvedChange.getBeforePath() + " in patch file."));
         }
     }
 
     private static class MyDiffRequestChain extends UserDataHolderBase implements DiffRequestChain, GoToChangePopupBuilder.Chain {
-        
         private final List<MyDiffRequestProducer> myProducers;
         private int myIndex = 0;
 
@@ -306,7 +303,6 @@ public class DiffShelvedChangesAction extends LegacyDumbAwareAction {
             myIndex = index;
         }
 
-        
         @Override
         public List<? extends DiffRequestProducer> getRequests() {
             return myProducers;
@@ -323,17 +319,14 @@ public class DiffShelvedChangesAction extends LegacyDumbAwareAction {
             myIndex = index;
         }
 
-        
         @Override
         public AnAction createGoToChangeAction(Consumer<Integer> onSelected) {
             return new ChangeGoToChangePopupAction.Fake<>(this, myIndex, onSelected) {
-                
                 @Override
                 protected FilePath getFilePath(int index) {
                     return myProducers.get(index).getFilePath();
                 }
 
-                
                 @Override
                 protected FileStatus getFileStatus(int index) {
                     return myProducers.get(index).getFileStatus();
@@ -345,7 +338,7 @@ public class DiffShelvedChangesAction extends LegacyDumbAwareAction {
     private static abstract class MyDiffRequestProducer implements DiffRequestProducer {
         private final @Nullable ShelvedChangeImpl myTextChange;
         private final @Nullable ShelvedBinaryFile myBinaryChange;
-        
+
         private final FilePath myFilePath;
 
         public MyDiffRequestProducer(ShelvedChangeImpl textChange, FilePath filePath) {
@@ -368,13 +361,11 @@ public class DiffShelvedChangesAction extends LegacyDumbAwareAction {
             return myBinaryChange;
         }
 
-        
         @Override
         public String getName() {
             return FileUtil.toSystemDependentName(getFilePath().getPath());
         }
 
-        
         protected FileStatus getFileStatus() {
             if (myTextChange != null) {
                 return myTextChange.getFileStatus();
@@ -385,7 +376,6 @@ public class DiffShelvedChangesAction extends LegacyDumbAwareAction {
             }
         }
 
-        
         public FilePath getFilePath() {
             return myFilePath;
         }

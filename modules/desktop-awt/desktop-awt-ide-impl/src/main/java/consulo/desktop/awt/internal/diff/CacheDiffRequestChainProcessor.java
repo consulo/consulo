@@ -27,6 +27,7 @@ import consulo.diff.internal.DiffUserDataKeysEx.ScrollToPolicy;
 import consulo.diff.request.*;
 import consulo.diff.internal.GoToChangePopupBuilder;
 import consulo.application.impl.internal.progress.ProgressWindow;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
@@ -43,13 +44,10 @@ import java.util.List;
 public class CacheDiffRequestChainProcessor extends DiffRequestProcessor {
     private static final Logger LOG = Logger.getInstance(CacheDiffRequestChainProcessor.class);
 
-    
     private final DiffRequestChain myRequestChain;
 
-    
     private final SoftHardCacheMap<DiffRequestProducer, DiffRequest> myRequestCache = new SoftHardCacheMap<>(5, 5);
 
-    
     private final DiffTaskQueue myQueue = new DiffTaskQueue();
 
     public CacheDiffRequestChainProcessor(@Nullable Project project, DiffRequestChain requestChain) {
@@ -118,7 +116,6 @@ public class CacheDiffRequestChainProcessor extends DiffRequestProcessor {
         return myRequestCache.get(producer);
     }
 
-    
     private DiffRequest loadRequest(DiffRequestProducer producer, ProgressIndicator indicator) {
         try {
             return producer.process(getContext(), indicator);
@@ -149,7 +146,6 @@ public class CacheDiffRequestChainProcessor extends DiffRequestProcessor {
         myRequestCache.clear();
     }
 
-    
     @Override
     protected List<AnAction> getNavigationActions() {
         return ContainerUtil.list(
@@ -165,7 +161,6 @@ public class CacheDiffRequestChainProcessor extends DiffRequestProcessor {
     // Getters
     //
 
-    
     public DiffRequestChain getRequestChain() {
         return myRequestChain;
     }
@@ -179,21 +174,20 @@ public class CacheDiffRequestChainProcessor extends DiffRequestProcessor {
         return myRequestChain.getIndex() < myRequestChain.getRequests().size() - 1;
     }
 
-    @RequiredUIAccess
     @Override
     protected boolean hasPrevChange() {
         return myRequestChain.getIndex() > 0;
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     protected void goToNextChange(boolean fromDifferences) {
         myRequestChain.setIndex(myRequestChain.getIndex() + 1);
         updateRequest(false, fromDifferences ? ScrollToPolicy.FIRST_CHANGE : null);
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     protected void goToPrevChange(boolean fromDifferences) {
         myRequestChain.setIndex(myRequestChain.getIndex() - 1);
         updateRequest(false, fromDifferences ? ScrollToPolicy.LAST_CHANGE : null);
@@ -204,14 +198,16 @@ public class CacheDiffRequestChainProcessor extends DiffRequestProcessor {
         return myRequestChain.getRequests().size() > 1;
     }
 
-    
     private AnAction createGoToChangeAction() {
-        return GoToChangePopupBuilder.create(myRequestChain, index -> {
-            if (index >= 0 && index != myRequestChain.getIndex()) {
-                myRequestChain.setIndex(index);
-                updateRequest();
+        return GoToChangePopupBuilder.create(
+            myRequestChain,
+            index -> {
+                if (index >= 0 && index != myRequestChain.getIndex()) {
+                    myRequestChain.setIndex(index);
+                    updateRequest();
+                }
             }
-        });
+        );
     }
 
     //
@@ -219,11 +215,10 @@ public class CacheDiffRequestChainProcessor extends DiffRequestProcessor {
     //
 
     protected class ReloadRequestAction extends DumbAwareAction {
-        
         private final DiffRequestProducer myProducer;
 
         public ReloadRequestAction(DiffRequestProducer producer) {
-            super("Reload", null, PlatformIconGroup.actionsRefresh());
+            super(LocalizeValue.localizeTODO("Reload"), LocalizeValue.empty(), PlatformIconGroup.actionsRefresh());
             myProducer = producer;
         }
 
