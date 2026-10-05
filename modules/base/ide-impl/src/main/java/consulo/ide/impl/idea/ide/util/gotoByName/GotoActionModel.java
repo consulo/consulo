@@ -200,7 +200,7 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
         }
 
         private int getRank(String text) {
-            if (StringUtil.equalsIgnoreCase(StringUtil.trimEndEllipsis(text), pattern)) {
+            if (StringUtil.equalsIgnoreCase(StringUtil.removeEllipsis(text), pattern)) {
                 return 3;
             }
             if (StringUtil.startsWithIgnoreCase(text, pattern)) {
@@ -653,23 +653,23 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
             if (compared != 0) {
                 return compared;
             }
-            Presentation myPresentation = myAction.getTemplatePresentation();
-            Presentation oPresentation = o.getAction().getTemplatePresentation();
-            String myText = StringUtil.notNullize(myPresentation.getText());
-            String oText = StringUtil.notNullize(oPresentation.getText());
-            int byText = StringUtil.compare(StringUtil.trimEndEllipsis(myText), StringUtil.trimEndEllipsis(oText), true);
+            Presentation thisPresentation = myAction.getTemplatePresentation();
+            Presentation thatPresentation = o.getAction().getTemplatePresentation();
+            LocalizeValue thisText = thisPresentation.getTextValue().map(Presentation.NO_MNEMONIC);
+            LocalizeValue thatText = thatPresentation.getTextValue().map(Presentation.NO_MNEMONIC);
+            int byTextWoEllipsis = thisText.removeEllipsis().compareTo(thatText.removeEllipsis());
+            if (byTextWoEllipsis != 0) {
+                return byTextWoEllipsis;
+            }
+            int byText = thisText.compareTo(thatText);
             if (byText != 0) {
                 return byText;
-            }
-            int byTextLength = StringUtil.notNullize(myText).length() - StringUtil.notNullize(oText).length();
-            if (byTextLength != 0) {
-                return byTextLength;
             }
             int byGroup = Comparing.compare(myGroupMapping, o.myGroupMapping);
             if (byGroup != 0) {
                 return byGroup;
             }
-            int byDesc = myPresentation.getDescription().compareTo(oPresentation.getDescription());
+            int byDesc = thisPresentation.getDescription().compareTo(thatPresentation.getDescription());
             if (byDesc != 0) {
                 return byDesc;
             }

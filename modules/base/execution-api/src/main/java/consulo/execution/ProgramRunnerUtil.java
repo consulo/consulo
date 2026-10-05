@@ -167,12 +167,6 @@ public class ProgramRunnerUtil {
         if (name == null) {
             return "";
         }
-        int symbols = Math.max(10, 20 - toBeAdded);
-        if (name.length() < symbols) {
-            return name;
-        }
-        else {
-            return name.substring(0, symbols) + "...";
-        }
+        return StringUtil.truncateWithEllipsis(name, Math.max(10, 20 - toBeAdded));
     }
 }

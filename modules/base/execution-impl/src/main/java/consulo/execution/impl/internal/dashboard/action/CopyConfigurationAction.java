@@ -44,7 +44,7 @@ public final class CopyConfigurationAction extends LegacyAnAction {
         boolean popupPlace = ActionPlaces.isPopupPlace(e.getPlace());
         presentation.setVisible(enabled || !popupPlace);
         if (popupPlace) {
-            presentation.setText(getTemplatePresentation().getText() + "...");
+            presentation.setText(getTemplatePresentation().getTextValue().appendEllipsis());
         }
     }
 

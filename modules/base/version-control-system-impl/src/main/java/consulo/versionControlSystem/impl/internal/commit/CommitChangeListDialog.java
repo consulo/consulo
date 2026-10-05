@@ -1331,7 +1331,7 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
     }
 
     public static String trimEllipsis(String title) {
-        return StringUtil.trimEndEllipsis(title);
+        return StringUtil.removeEllipsis(title);
     }
 
     private void ensureDataIsActual(Runnable runnable) {

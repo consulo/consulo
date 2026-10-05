@@ -999,12 +999,12 @@ public class StringUtilTest {
     }
 
     @Test
-    void testCutEndWithEllipsis() {
-        assertThat(StringUtil.cutEndWithEllipsis("foo", 4)).isEqualTo("foo");
-        assertThat(StringUtil.cutEndWithEllipsis("foo", 3)).isEqualTo("foo");
-        assertThat(StringUtil.cutEndWithEllipsis("foo", 2)).isEqualTo("f…");
-        assertThat(StringUtil.cutEndWithEllipsis("foo", 1)).isEqualTo("…");
-        assertThatThrownBy(() -> StringUtil.cutEndWithEllipsis("foo", 0))
+    void testTruncateWithEllipsis() {
+        assertThat(StringUtil.truncateWithEllipsis("foo", 4)).isEqualTo("foo");
+        assertThat(StringUtil.truncateWithEllipsis("foo", 3)).isEqualTo("foo");
+        assertThat(StringUtil.truncateWithEllipsis("foo", 2)).isEqualTo("f…");
+        assertThat(StringUtil.truncateWithEllipsis("foo", 1)).isEqualTo("…");
+        assertThatThrownBy(() -> StringUtil.truncateWithEllipsis("foo", 0))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("Expecting maxLength (0) to be at least 1");
     }
@@ -1421,10 +1421,10 @@ public class StringUtilTest {
     }
 
     @Test
-    void testTrimEndEllipsis() {
-        assertThat(StringUtil.trimEndEllipsis("foo")).isEqualTo("foo");
-        assertThat(StringUtil.trimEndEllipsis("foo…")).isEqualTo("foo");
-        assertThat(StringUtil.trimEndEllipsis("foo...")).isEqualTo("foo");
+    void testRemoveEllipsis() {
+        assertThat(StringUtil.removeEllipsis("foo")).isEqualTo("foo");
+        assertThat(StringUtil.removeEllipsis("foo…")).isEqualTo("foo");
+        assertThat(StringUtil.removeEllipsis("foo...")).isEqualTo("foo");
     }
 
     @Test

@@ -150,10 +150,7 @@ public class BookmarkManagerImpl implements BookmarkManagerInternal, PersistentS
             Document document = editor.getDocument();
             autoDescription = document.getCharsSequence().subSequence(document.getLineStartOffset(lineIndex), document.getLineEndOffset(lineIndex)).toString().trim();
         }
-        if (autoDescription.length() > MAX_AUTO_DESCRIPTION_SIZE) {
-            return autoDescription.substring(0, MAX_AUTO_DESCRIPTION_SIZE) + "...";
-        }
-        return autoDescription;
+        return StringUtil.truncateWithEllipsis(autoDescription, MAX_AUTO_DESCRIPTION_SIZE);
     }
 
     @Override
@@ -172,7 +169,6 @@ public class BookmarkManagerImpl implements BookmarkManagerInternal, PersistentS
     }
 
     @Override
-    
     public List<Bookmark> getValidBookmarks() {
         List<Bookmark> answer = new ArrayList<>();
         for (BookmarkImpl bookmark : myBookmarks) {
@@ -269,7 +265,6 @@ public class BookmarkManagerImpl implements BookmarkManagerInternal, PersistentS
         }
     }
 
-    
     private List<BookmarkImpl> readExternal(Element element) {
         List<BookmarkImpl> bookmarks = new ArrayList<>();
 
@@ -347,7 +342,6 @@ public class BookmarkManagerImpl implements BookmarkManagerInternal, PersistentS
      * @return bookmark list after moving
      */
     @Override
-    
     public List<? extends Bookmark> moveBookmarkUp(Bookmark bookmark) {
         int index = myBookmarks.indexOf(bookmark);
         if (index > 0) {
@@ -366,7 +360,6 @@ public class BookmarkManagerImpl implements BookmarkManagerInternal, PersistentS
      * @return bookmark list after moving
      */
     @Override
-    
     public List<? extends Bookmark> moveBookmarkDown(Bookmark bookmark) {
         int index = myBookmarks.indexOf(bookmark);
         if (index < myBookmarks.size() - 1) {
@@ -411,7 +404,6 @@ public class BookmarkManagerImpl implements BookmarkManagerInternal, PersistentS
         return null;
     }
 
-    
     private Bookmark[] getBookmarksForDocument(Document document) {
         ArrayList<Bookmark> answer = new ArrayList<>();
         for (Bookmark bookmark : getValidBookmarks()) {
@@ -442,6 +434,7 @@ public class BookmarkManagerImpl implements BookmarkManagerInternal, PersistentS
         myBus.syncPublisher(BookmarksListener.class).bookmarkChanged(bookmark);
     }
 
+    @Override
     public void colorsChanged() {
         for (BookmarkImpl bookmark : myBookmarks) {
             bookmark.updateHighlighter();

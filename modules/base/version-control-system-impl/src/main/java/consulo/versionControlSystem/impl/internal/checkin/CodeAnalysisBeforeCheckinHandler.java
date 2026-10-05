@@ -81,14 +81,13 @@ public class CodeAnalysisBeforeCheckinHandler extends CheckinHandler {
         int errorCount = collectErrors(codeSmells);
         int warningCount = codeSmells.size() - errorCount;
         LocalizeValue commitButtonText = executor != null ? executor.getActionText() : myCheckinPanel.getCommitActionName();
-        commitButtonText = commitButtonText.map(StringUtil::trimEndEllipsis);
 
         int answer = Messages.showYesNoCancelDialog(
             myProject,
             VcsLocalize.beforeCommitFilesContainCodeSmellsEditThemConfirmText(errorCount, warningCount).get(),
             VcsLocalize.codeSmellsErrorMessagesTabName().get(),
             VcsLocalize.codeSmellsReviewButton().get(),
-            commitButtonText.get(),
+            commitButtonText.removeEllipsis().get(),
             CommonLocalize.buttonCancel().get(),
             UIUtil.getWarningIcon()
         );
