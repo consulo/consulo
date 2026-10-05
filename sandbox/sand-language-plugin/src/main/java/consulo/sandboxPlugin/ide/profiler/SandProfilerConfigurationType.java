@@ -21,6 +21,7 @@ import consulo.configurable.UnnamedConfigurable;
 import consulo.execution.profiler.configuration.ProfilerAttacher;
 import consulo.execution.profiler.configuration.ProfilerConfigurationTypeBase;
 import consulo.execution.profiler.configuration.ProfilerStarter;
+import consulo.execution.profiler.icon.ExecutionProfilerIconGroup;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
@@ -56,7 +57,7 @@ public class SandProfilerConfigurationType extends ProfilerConfigurationTypeBase
 
     @Override
     public Image getIcon() {
-        return PlatformIconGroup.actionsProfilecpu();
+        return ExecutionProfilerIconGroup.profilecpu();
     }
 
     @Override

@@ -23,6 +23,7 @@ import consulo.execution.profiler.configuration.ProfilerConfigurationState;
 import consulo.execution.profiler.configuration.ProfilerConfigurationTypeBase;
 import consulo.execution.profiler.configuration.ProfilerRunConfigurationManager;
 import consulo.execution.profiler.configuration.ProfilerStarter;
+import consulo.execution.profiler.icon.ExecutionProfilerIconGroup;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
@@ -84,7 +85,7 @@ public class DefaultProfilerExecutorGroupImpl extends DefaultProfilerExecutorGro
 
     @Override
     public Image getIcon() {
-        return PlatformIconGroup.actionsProfile();
+        return ExecutionProfilerIconGroup.profile();
     }
 
     @Override

@@ -24,6 +24,7 @@ import consulo.execution.profiler.ProfilerState;
 import consulo.execution.profiler.Profiling;
 import consulo.execution.profiler.ProfilingFailed;
 import consulo.execution.profiler.configuration.ProfilerFeature;
+import consulo.execution.profiler.icon.ExecutionProfilerIconGroup;
 import consulo.execution.profiler.impl.internal.editor.ProfilerSessionVirtualFile;
 import consulo.execution.profiler.impl.internal.toolwindow.ProfilerConfigurationPresentation;
 import consulo.execution.profiler.impl.internal.view.ProfilerUIUtil;
@@ -82,7 +83,7 @@ public final class ProfilerSession implements Disposable {
         myTargetName = ProfilerConfigurationPresentation.getTargetName(process);
         myConfigurationName = ProfilerConfigurationPresentation.getName(process.getProfilerConfiguration());
         Image icon = ProfilerConfigurationPresentation.getIcon(process.getProfilerConfiguration());
-        myIcon = icon == null ? PlatformIconGroup.actionsProfile() : icon;
+        myIcon = icon == null ? ExecutionProfilerIconGroup.profile() : icon;
         myLiveProcess = process instanceof LiveProfilerProcess live ? live : null;
         myFeatures = getFeatures(myLiveProcess);
 
@@ -256,7 +257,7 @@ public final class ProfilerSession implements Disposable {
                 setStatus(LocalizeValue.localizeTODO("CPU recording finished"), false);
                 addCapture(
                     LocalizeValue.localizeTODO("CPU Recording " + myCpuRecordingCount),
-                    PlatformIconGroup.actionsProfilecpu(),
+                    ExecutionProfilerIconGroup.profilecpu(),
                     data,
                     true
                 );
@@ -280,7 +281,7 @@ public final class ProfilerSession implements Disposable {
                 setStatus(LocalizeValue.localizeTODO("Heap dump captured"), false);
                 addCapture(
                     LocalizeValue.localizeTODO("Heap Dump " + myHeapDumpCount),
-                    PlatformIconGroup.actionsProfilememory(),
+                    ExecutionProfilerIconGroup.profilememory(),
                     data,
                     true
                 );
@@ -360,7 +361,7 @@ public final class ProfilerSession implements Disposable {
             case Profiling profiling -> setStatus(LocalizeValue.localizeTODO("Profiling..."), false);
             case DataReady dataReady -> {
                 setStatus(initial ? LocalizeValue.empty() : LocalizeValue.localizeTODO("Profiling finished"), false);
-                addCapture(LocalizeValue.localizeTODO("Result"), PlatformIconGroup.actionsProfile(), dataReady.getData(), false);
+                addCapture(LocalizeValue.localizeTODO("Result"), ExecutionProfilerIconGroup.profile(), dataReady.getData(), false);
             }
             case ProfilingFailed failed -> {
                 myFailure = failed.getMessage();

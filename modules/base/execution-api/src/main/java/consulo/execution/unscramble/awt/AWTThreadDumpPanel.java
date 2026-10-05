@@ -115,7 +115,7 @@ public class AWTThreadDumpPanel extends JPanel implements ThreadDumpPanel {
             if ("idle".equals(threadState.getThreadStateDetail())) {
                 return PlatformIconGroup.runconfigurationsTestpassed();
             }
-            return PlatformIconGroup.actionsProfilecpu();
+            return PlatformIconGroup.uidesignerPanel();
         }
         return PlatformIconGroup.actionsResume();
     }

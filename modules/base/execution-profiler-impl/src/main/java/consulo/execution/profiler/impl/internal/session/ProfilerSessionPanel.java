@@ -18,6 +18,7 @@ package consulo.execution.profiler.impl.internal.session;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.execution.profiler.configuration.ProfilerFeature;
+import consulo.execution.profiler.icon.ExecutionProfilerIconGroup;
 import consulo.execution.profiler.impl.internal.view.ProfilerCaptureViewFactory;
 import consulo.execution.profiler.impl.internal.view.ProfilerUIUtil;
 import consulo.localize.LocalizeValue;
@@ -73,7 +74,7 @@ public final class ProfilerSessionPanel implements Disposable {
 
     private final class StartCpuRecordingAction extends PanelAction {
         private StartCpuRecordingAction() {
-            super(LocalizeValue.localizeTODO("Start CPU Recording"), PlatformIconGroup.actionsProfilecpu());
+            super(LocalizeValue.localizeTODO("Start CPU Recording"), ExecutionProfilerIconGroup.profilecpu());
         }
 
         @Override
@@ -90,7 +91,7 @@ public final class ProfilerSessionPanel implements Disposable {
 
     private final class StopCpuRecordingAction extends PanelAction {
         private StopCpuRecordingAction() {
-            super(LocalizeValue.localizeTODO("Stop CPU Recording"), PlatformIconGroup.actionsProfilered());
+            super(LocalizeValue.localizeTODO("Stop CPU Recording"), ExecutionProfilerIconGroup.profilered());
         }
 
         @Override
@@ -107,7 +108,7 @@ public final class ProfilerSessionPanel implements Disposable {
 
     private final class DumpHeapAction extends PanelAction {
         private DumpHeapAction() {
-            super(LocalizeValue.localizeTODO("Capture Heap Dump"), PlatformIconGroup.actionsProfilememory());
+            super(LocalizeValue.localizeTODO("Capture Heap Dump"), ExecutionProfilerIconGroup.profilememory());
         }
 
         @Override

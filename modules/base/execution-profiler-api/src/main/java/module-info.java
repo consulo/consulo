@@ -15,6 +15,7 @@ module consulo.execution.profiler.api {
     exports consulo.execution.profiler.model;
     exports consulo.execution.profiler.ui;
     exports consulo.execution.profiler.view;
+    exports consulo.execution.profiler.icon;
 
     opens consulo.execution.profiler.configuration to consulo.util.xml.serializer;
 }

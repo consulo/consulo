@@ -15,6 +15,7 @@
  */
 package consulo.execution.profiler.impl.internal.editor;
 
+import consulo.execution.profiler.icon.ExecutionProfilerIconGroup;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
@@ -28,13 +29,13 @@ public final class ProfilerFileType implements FileType {
     public static final ProfilerFileType SESSION = new ProfilerFileType(
         "PROFILER_SESSION",
         LocalizeValue.localizeTODO("Profiling session"),
-        PlatformIconGroup.actionsProfile()
+        ExecutionProfilerIconGroup.profile()
     );
 
     public static final ProfilerFileType CAPTURE = new ProfilerFileType(
         "PROFILER_CAPTURE",
         LocalizeValue.localizeTODO("Profiler capture"),
-        PlatformIconGroup.actionsProfilecpu()
+        ExecutionProfilerIconGroup.profilecpu()
     );
 
     private final String myId;

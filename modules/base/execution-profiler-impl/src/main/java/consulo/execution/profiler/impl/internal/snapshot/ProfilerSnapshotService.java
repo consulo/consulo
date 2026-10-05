@@ -26,6 +26,7 @@ import consulo.execution.profiler.Failure;
 import consulo.execution.profiler.ProfilerDumpFileParsingResult;
 import consulo.execution.profiler.ProfilerDumpParserProvider;
 import consulo.execution.profiler.Success;
+import consulo.execution.profiler.icon.ExecutionProfilerIconGroup;
 import consulo.execution.profiler.impl.internal.session.ProfilerCapture;
 import consulo.execution.profiler.impl.internal.session.ProfilerSessionManager;
 import consulo.fileChooser.FileChooser;
@@ -167,7 +168,7 @@ public class ProfilerSnapshotService {
                         ProfilerCapture capture = new ProfilerCapture(
                             null,
                             LocalizeValue.of(name),
-                            PlatformIconGroup.actionsProfilecpu(),
+                            ExecutionProfilerIconGroup.profilecpu(),
                             success.getData(),
                             true
                         );

@@ -19,6 +19,7 @@ import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionParentRef;
 import consulo.annotation.component.ActionRef;
 import consulo.annotation.component.ActionRefAnchor;
+import consulo.execution.profiler.icon.ExecutionProfilerIconGroup;
 import consulo.execution.profiler.impl.internal.snapshot.ProfilerSnapshotService;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -48,7 +49,7 @@ public class OpenProfilerSnapshotAction extends DumbAwareAction implements AnAct
         super(
             LocalizeValue.localizeTODO("Open Profiler Snapshot..."),
             LocalizeValue.localizeTODO("Open a profiler snapshot in an editor tab"),
-            PlatformIconGroup.actionsProfilecpu()
+            ExecutionProfilerIconGroup.profilecpu()
         );
     }
 

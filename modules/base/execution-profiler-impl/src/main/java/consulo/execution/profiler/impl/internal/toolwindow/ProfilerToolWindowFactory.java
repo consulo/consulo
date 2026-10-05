@@ -17,7 +17,9 @@ package consulo.execution.profiler.impl.internal.toolwindow;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.dumb.DumbAware;
+import consulo.execution.icon.ExecutionIconGroup;
 import consulo.execution.profiler.ProfilerToolWindowManager;
+import consulo.execution.profiler.icon.ExecutionProfilerIconGroup;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -59,7 +61,7 @@ public final class ProfilerToolWindowFactory implements ToolWindowFactory, DumbA
 
     @Override
     public Image getIcon() {
-        return PlatformIconGroup.actionsProfile();
+        return ExecutionProfilerIconGroup.toolwindowprofiler();
     }
 
     @Override

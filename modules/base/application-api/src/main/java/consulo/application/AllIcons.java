@@ -87,8 +87,6 @@ public class AllIcons {
         public static final Image Preview = PlatformIconGroup.actionsPreview(); // 16x16
         public static final Image PreviewDetails = PlatformIconGroup.actionsPreviewdetails(); // 16x16
         public static final Image PreviousOccurence = PlatformIconGroup.actionsPreviousoccurence(); // 14x14
-        public static final Image ProfileCPU = PlatformIconGroup.actionsProfilecpu(); // 16x16
-        public static final Image ProfileMemory = PlatformIconGroup.actionsProfilememory(); // 16x16
         public static final Image QuickfixBulb = PlatformIconGroup.actionsQuickfixbulb(); // 16x16
         public static final Image QuickfixOffBulb = PlatformIconGroup.actionsQuickfixoffbulb(); // 16x16
         public static final Image QuickList = PlatformIconGroup.actionsQuicklist(); // 16x16

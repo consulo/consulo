@@ -23,6 +23,7 @@ import consulo.application.progress.Task;
 import consulo.execution.profiler.CallTreeBuilder;
 import consulo.execution.profiler.BaseCallStackElement;
 import consulo.execution.profiler.CollapsedProfilerDumpWriter;
+import consulo.execution.profiler.icon.ExecutionProfilerIconGroup;
 import consulo.execution.profiler.model.ThreadInfo;
 import consulo.fileEditor.FileEditorManager;
 import consulo.localize.LocalizeValue;
@@ -67,7 +68,7 @@ public class SandGenerateProfileSnapshotAction extends DumbAwareAction implement
         super(
             LocalizeValue.localizeTODO("Generate Sample Profile Snapshot"),
             LocalizeValue.localizeTODO("Write a synthetic collapsed-stacks profiler snapshot into the project directory"),
-            PlatformIconGroup.actionsProfilecpu()
+            ExecutionProfilerIconGroup.profilecpu()
         );
         myNotificationService = notificationService;
     }

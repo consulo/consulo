@@ -17,6 +17,7 @@ package consulo.sandboxPlugin.ide.run;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.execution.executor.DefaultExecutorGroup;
+import consulo.execution.profiler.icon.ExecutionProfilerIconGroup;
 import consulo.localize.LocalizeValue;
 import consulo.module.extension.ModuleExtensionHelper;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -38,13 +39,13 @@ public class SandExecutorGroup extends DefaultExecutorGroup<SandExecutorSettings
             LocalizeValue.localizeTODO("Fast"),
             LocalizeValue.localizeTODO("Profile (Fast)"),
             LocalizeValue.localizeTODO("Profile with Fast Sampling"),
-            PlatformIconGroup.actionsProfilecpu()
+            ExecutionProfilerIconGroup.profilecpu()
         ));
         registerSettings(new SandExecutorSettings(
             LocalizeValue.localizeTODO("Detailed"),
             LocalizeValue.localizeTODO("Profile (Detailed)"),
             LocalizeValue.localizeTODO("Profile with Detailed Tracing"),
-            PlatformIconGroup.actionsProfilememory()
+            ExecutionProfilerIconGroup.profilememory()
         ));
     }
 
@@ -70,7 +71,7 @@ public class SandExecutorGroup extends DefaultExecutorGroup<SandExecutorSettings
 
     @Override
     public Image getIcon() {
-        return PlatformIconGroup.actionsProfile();
+        return ExecutionProfilerIconGroup.profile();
     }
 
     @Override
