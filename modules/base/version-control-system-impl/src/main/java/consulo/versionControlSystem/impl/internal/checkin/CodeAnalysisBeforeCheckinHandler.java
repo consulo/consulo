@@ -27,6 +27,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.CodeSmellDetector;
 import consulo.versionControlSystem.CodeSmellInfo;
 import consulo.versionControlSystem.VcsConfiguration;
@@ -79,17 +80,15 @@ public class CodeAnalysisBeforeCheckinHandler extends CheckinHandler {
     private ReturnResult processFoundCodeSmells(List<CodeSmellInfo> codeSmells, @Nullable CommitExecutor executor) {
         int errorCount = collectErrors(codeSmells);
         int warningCount = codeSmells.size() - errorCount;
-        String commitButtonText = executor != null ? executor.getActionText().get() : myCheckinPanel.getCommitActionName().get();
-        if (commitButtonText.endsWith("...")) {
-            commitButtonText = commitButtonText.substring(0, commitButtonText.length() - 3);
-        }
+        LocalizeValue commitButtonText = executor != null ? executor.getActionText() : myCheckinPanel.getCommitActionName();
+        commitButtonText = commitButtonText.map(text -> StringUtil.trimEnd(text, "..."));
 
         int answer = Messages.showYesNoCancelDialog(
             myProject,
             VcsLocalize.beforeCommitFilesContainCodeSmellsEditThemConfirmText(errorCount, warningCount).get(),
             VcsLocalize.codeSmellsErrorMessagesTabName().get(),
             VcsLocalize.codeSmellsReviewButton().get(),
-            commitButtonText,
+            commitButtonText.get(),
             CommonLocalize.buttonCancel().get(),
             UIUtil.getWarningIcon()
         );

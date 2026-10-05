@@ -45,7 +45,6 @@ public interface CheckinEnvironment extends VcsProviderMarker {
 
     @Nullable String getHelpId();
 
-    
     LocalizeValue getCheckinOperationName();
 
     @Nullable List<VcsException> commit(List<Change> changes, String preparedComment);
