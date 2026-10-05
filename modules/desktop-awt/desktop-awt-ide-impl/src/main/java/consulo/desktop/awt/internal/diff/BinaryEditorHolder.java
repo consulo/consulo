@@ -30,6 +30,7 @@ import consulo.fileEditor.TextEditor;
 import consulo.fileEditor.text.TextEditorProvider;
 import consulo.diff.DiffContext;
 import consulo.diff.internal.DiffImplUtil;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.fileType.UIBasedFileType;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
@@ -37,113 +38,119 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.virtualFileSystem.VirtualFile;
 
 import org.jspecify.annotations.Nullable;
+
 import javax.swing.*;
 import java.awt.event.FocusListener;
 
 public class BinaryEditorHolder extends EditorHolder {
-  
-  protected final FileEditor myEditor;
-  
-  protected final FileEditorProvider myEditorProvider;
+    protected final FileEditor myEditor;
+    protected final FileEditorProvider myEditorProvider;
 
-  public BinaryEditorHolder(FileEditor editor, FileEditorProvider editorProvider) {
-    myEditor = editor;
-    myEditorProvider = editorProvider;
-  }
+    public BinaryEditorHolder(FileEditor editor, FileEditorProvider editorProvider) {
+        myEditor = editor;
+        myEditorProvider = editorProvider;
+    }
 
-  
-  public FileEditor getEditor() {
-    return myEditor;
-  }
-
-  @Override
-  public void dispose() {
-    myEditorProvider.disposeEditor(myEditor);
-  }
-
-  
-  @Override
-  public JComponent getComponent() {
-    return myEditor.getComponent();
-  }
-
-  @Override
-  public void installFocusListener(FocusListener listener) {
-    myEditor.getComponent().addFocusListener(listener);
-  }
-
-  @Override
-  public @Nullable JComponent getPreferredFocusedComponent() {
-    return myEditor.getPreferredFocusedComponent();
-  }
-
-  //
-  // Build
-  //
-
-  public static class BinaryEditorHolderFactory extends EditorHolderFactory<BinaryEditorHolder> {
-    public static BinaryEditorHolderFactory INSTANCE = new BinaryEditorHolderFactory();
-
-    @Override
-    
-    public BinaryEditorHolder create(DiffContent content, DiffContext context) {
-      Project project = context.getProject();
-      if (content instanceof FileContent) {
-        if (project == null) project = ProjectManager.getInstance().getDefaultProject();
-        VirtualFile file = ((FileContent)content).getFile();
-
-        FileEditorProvider[] providers = FileEditorProviderManager.getInstance().getProviders(project, file);
-        if (providers.length == 0) throw new IllegalStateException("Can't find FileEditorProvider: " + file.getFileType());
-
-        FileEditorProvider provider = providers[0];
-        FileEditor editor = provider.createEditor(project, file);
-
-        UIUtil.removeScrollBorder(editor.getComponent());
-
-        return new BinaryEditorHolder(editor, provider);
-      }
-      if (content instanceof DocumentContent) {
-        Document document = ((DocumentContent)content).getDocument();
-        final Editor editor = DiffImplUtil.createEditor(document, project, true);
-
-        TextEditorProvider provider = TextEditorProvider.getInstance();
-        TextEditor fileEditor = provider.getTextEditor(editor);
-
-        Disposer.register(fileEditor, new Disposable() {
-          @Override
-          public void dispose() {
-            EditorFactory.getInstance().releaseEditor(editor);
-          }
-        });
-
-        return new BinaryEditorHolder(fileEditor, provider);
-      }
-
-      throw new IllegalArgumentException(content.getClass() + " - " + content.toString());
+    public FileEditor getEditor() {
+        return myEditor;
     }
 
     @Override
-    public boolean canShowContent(DiffContent content, DiffContext context) {
-      if (content instanceof DocumentContent) return true;
-      if (content instanceof FileContent) {
-        Project project = context.getProject();
-        if (project == null) project = ProjectManager.getInstance().getDefaultProject();
-        VirtualFile file = ((FileContent)content).getFile();
-
-        return FileEditorProviderManager.getInstance().getProviders(project, file).length != 0;
-      }
-      return false;
+    public void dispose() {
+        myEditorProvider.disposeEditor(myEditor);
     }
 
     @Override
-    public boolean wantShowContent(DiffContent content, DiffContext context) {
-      if (content instanceof FileContent) {
-        if (content.getContentType() == null) return false;
-        if (content.getContentType().isBinary()) return true;
-        if (content.getContentType() instanceof UIBasedFileType) return true;
-        return false;
-      }
-      return false;
+    public JComponent getComponent() {
+        return myEditor.getComponent();
     }
-  }
+
+    @Override
+    public void installFocusListener(FocusListener listener) {
+        myEditor.getComponent().addFocusListener(listener);
+    }
+
+    @Override
+    public @Nullable JComponent getPreferredFocusedComponent() {
+        return myEditor.getPreferredFocusedComponent();
+    }
+
+    //
+    // Build
+    //
+
+    public static class BinaryEditorHolderFactory extends EditorHolderFactory<BinaryEditorHolder> {
+        public static BinaryEditorHolderFactory INSTANCE = new BinaryEditorHolderFactory();
+
+        @Override
+        @RequiredUIAccess
+        public BinaryEditorHolder create(DiffContent content, DiffContext context) {
+            Project project = context.getProject();
+            if (content instanceof FileContent fileContent) {
+                if (project == null) {
+                    project = ProjectManager.getInstance().getDefaultProject();
+                }
+                VirtualFile file = fileContent.getFile();
+
+                FileEditorProvider[] providers = FileEditorProviderManager.getInstance().getProviders(project, file);
+                if (providers.length == 0) {
+                    throw new IllegalStateException("Can't find FileEditorProvider: " + file.getFileType());
+                }
+
+                FileEditorProvider provider = providers[0];
+                FileEditor editor = provider.createEditor(project, file);
+
+                UIUtil.removeScrollBorder(editor.getComponent());
+
+                return new BinaryEditorHolder(editor, provider);
+            }
+            if (content instanceof DocumentContent documentContent) {
+                Document document = documentContent.getDocument();
+                Editor editor = DiffImplUtil.createEditor(document, project, true);
+
+                TextEditorProvider provider = TextEditorProvider.getInstance();
+                TextEditor fileEditor = provider.getTextEditor(editor);
+
+                Disposer.register(fileEditor, () -> EditorFactory.getInstance().releaseEditor(editor));
+
+                return new BinaryEditorHolder(fileEditor, provider);
+            }
+
+            throw new IllegalArgumentException(content.getClass() + " - " + content.toString());
+        }
+
+        @Override
+        public boolean canShowContent(DiffContent content, DiffContext context) {
+            if (content instanceof DocumentContent) {
+                return true;
+            }
+            if (content instanceof FileContent fileContent) {
+                Project project = context.getProject();
+                if (project == null) {
+                    project = ProjectManager.getInstance().getDefaultProject();
+                }
+                VirtualFile file = fileContent.getFile();
+
+                return FileEditorProviderManager.getInstance().getProviders(project, file).length != 0;
+            }
+            return false;
+        }
+
+        @Override
+        public boolean wantShowContent(DiffContent content, DiffContext context) {
+            if (content instanceof FileContent) {
+                if (content.getContentType() == null) {
+                    return false;
+                }
+                if (content.getContentType().isBinary()) {
+                    return true;
+                }
+                if (content.getContentType() instanceof UIBasedFileType) {
+                    return true;
+                }
+                return false;
+            }
+            return false;
+        }
+    }
 }

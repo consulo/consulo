@@ -22,33 +22,31 @@ import consulo.project.Project;
 import org.jspecify.annotations.Nullable;
 
 public class DiffWindow extends DiffWindowBase {
-  
-  private final DiffRequestChain myRequestChain;
+    private final DiffRequestChain myRequestChain;
 
-  public DiffWindow(@Nullable Project project, DiffRequestChain requestChain, DiffDialogHints hints) {
-    super(project, hints);
-    myRequestChain = requestChain;
-  }
-
-  
-  @Override
-  protected DiffRequestProcessor createProcessor() {
-    return new MyCacheDiffRequestChainProcessor(myProject, myRequestChain);
-  }
-
-  private class MyCacheDiffRequestChainProcessor extends CacheDiffRequestChainProcessor {
-    public MyCacheDiffRequestChainProcessor(@Nullable Project project, DiffRequestChain requestChain) {
-      super(project, requestChain);
+    public DiffWindow(@Nullable Project project, DiffRequestChain requestChain, DiffDialogHints hints) {
+        super(project, hints);
+        myRequestChain = requestChain;
     }
 
     @Override
-    protected void setWindowTitle(String title) {
-      getWrapper().setTitle(title);
+    protected DiffRequestProcessor createProcessor() {
+        return new MyCacheDiffRequestChainProcessor(myProject, myRequestChain);
     }
 
-    @Override
-    protected void onAfterNavigate() {
-      AWTDiffUtil.closeWindow(getWrapper().getWindow(), true, true);
+    private class MyCacheDiffRequestChainProcessor extends CacheDiffRequestChainProcessor {
+        public MyCacheDiffRequestChainProcessor(@Nullable Project project, DiffRequestChain requestChain) {
+            super(project, requestChain);
+        }
+
+        @Override
+        protected void setWindowTitle(String title) {
+            getWrapper().setTitle(title);
+        }
+
+        @Override
+        protected void onAfterNavigate() {
+            AWTDiffUtil.closeWindow(getWrapper().getWindow(), true, true);
+        }
     }
-  }
 }

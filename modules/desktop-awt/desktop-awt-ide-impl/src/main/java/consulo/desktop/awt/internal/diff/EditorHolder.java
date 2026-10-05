@@ -19,14 +19,14 @@ import consulo.disposer.Disposable;
 
 import javax.swing.*;
 import java.awt.event.FocusListener;
+
 import org.jspecify.annotations.Nullable;
 
 public abstract class EditorHolder implements Disposable {
-  
-  public abstract JComponent getComponent();
+    public abstract JComponent getComponent();
 
-  public abstract @Nullable JComponent getPreferredFocusedComponent();
+    public abstract @Nullable JComponent getPreferredFocusedComponent();
 
-  public void installFocusListener(FocusListener listener) {
-  }
+    public void installFocusListener(FocusListener listener) {
+    }
 }

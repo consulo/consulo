@@ -26,12 +26,11 @@ import consulo.ui.annotation.RequiredUIAccess;
 
 @ExtensionImpl
 public class AnnotateDiffExtension extends DiffExtension {
-  @RequiredUIAccess
-  @Override
-  public void onViewerCreated(FrameDiffTool.DiffViewer diffViewer, DiffContext context, DiffRequest request) {
-    if (diffViewer instanceof DiffViewerBase) {
-      DiffViewerBase viewer = (DiffViewerBase)diffViewer;
-      viewer.addListener(new AnnotateDiffViewerAction.MyDiffViewerListener(viewer));
+    @Override
+    @RequiredUIAccess
+    public void onViewerCreated(FrameDiffTool.DiffViewer diffViewer, DiffContext context, DiffRequest request) {
+        if (diffViewer instanceof DiffViewerBase viewer) {
+            viewer.addListener(new AnnotateDiffViewerAction.MyDiffViewerListener(viewer));
+        }
     }
-  }
 }

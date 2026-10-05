@@ -15,7 +15,6 @@
  */
 package consulo.desktop.awt.internal.diff;
 
-import consulo.application.AllIcons;
 import consulo.application.progress.ProgressIndicator;
 import consulo.component.ProcessCanceledException;
 import consulo.diff.DiffUserDataKeys;
@@ -25,7 +24,9 @@ import consulo.diff.impl.internal.util.SoftHardCacheMap;
 import consulo.diff.internal.DiffUserDataKeysEx.ScrollToPolicy;
 import consulo.diff.request.*;
 import consulo.application.impl.internal.progress.ProgressWindow;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -38,130 +39,131 @@ import org.jspecify.annotations.Nullable;
 import java.util.Collections;
 
 public abstract class CacheDiffRequestProcessor<T> extends DiffRequestProcessor {
-  private static final Logger LOG = Logger.getInstance(CacheDiffRequestProcessor.class);
+    private static final Logger LOG = Logger.getInstance(CacheDiffRequestProcessor.class);
 
-  
-  private final SoftHardCacheMap<T, DiffRequest> myRequestCache = new SoftHardCacheMap<>(5, 5);
+    private final SoftHardCacheMap<T, DiffRequest> myRequestCache = new SoftHardCacheMap<>(5, 5);
 
-  
-  private final DiffTaskQueue myQueue = new DiffTaskQueue();
+    private final DiffTaskQueue myQueue = new DiffTaskQueue();
 
-  public CacheDiffRequestProcessor(@Nullable Project project) {
-    super(project);
-  }
-
-  public CacheDiffRequestProcessor(@Nullable Project project, String place) {
-    super(project, place);
-  }
-
-  public CacheDiffRequestProcessor(@Nullable Project project, UserDataHolder context) {
-    super(project, context);
-  }
-
-  //
-  // Abstract
-  //
-
-  protected abstract @Nullable String getRequestName(T provider);
-
-  protected abstract T getCurrentRequestProvider();
-
-  
-  protected abstract DiffRequest loadRequest(T provider, ProgressIndicator indicator)
-          throws ProcessCanceledException, DiffRequestProducerException;
-
-  //
-  // Update
-  //
-
-  @Override
-  protected void reloadRequest() {
-    updateRequest(true, false, null);
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void updateRequest(boolean force, @Nullable ScrollToPolicy scrollToChangePolicy) {
-    updateRequest(force, true, scrollToChangePolicy);
-  }
-
-  @RequiredUIAccess
-  public void updateRequest(boolean force, boolean useCache, @Nullable ScrollToPolicy scrollToChangePolicy) {
-    UIAccess.assertIsUIThread();
-    if (isDisposed()) return;
-
-    T requestProvider = getCurrentRequestProvider();
-    if (requestProvider == null) {
-      applyRequest(NoDiffRequest.INSTANCE, force, scrollToChangePolicy);
-      return;
+    public CacheDiffRequestProcessor(@Nullable Project project) {
+        super(project);
     }
 
-    DiffRequest cachedRequest = useCache ? loadRequestFast(requestProvider) : null;
-    if (cachedRequest != null) {
-      applyRequest(cachedRequest, force, scrollToChangePolicy);
-      return;
+    public CacheDiffRequestProcessor(@Nullable Project project, String place) {
+        super(project, place);
     }
 
-    myQueue.executeAndTryWait(indicator -> {
-      DiffRequest request = doLoadRequest(requestProvider, indicator);
-      return () -> {
-        myRequestCache.put(requestProvider, request);
-        applyRequest(request, force, scrollToChangePolicy);
-      };
-    }, () -> {
-      applyRequest(new LoadingDiffRequest(getRequestName(requestProvider)), force, scrollToChangePolicy);
-    }, ProgressWindow.DEFAULT_PROGRESS_DIALOG_POSTPONE_TIME_MILLIS);
-  }
-
-  protected @Nullable DiffRequest loadRequestFast(T provider) {
-    return myRequestCache.get(provider);
-  }
-
-  
-  private DiffRequest doLoadRequest(T provider, ProgressIndicator indicator) {
-    String name = getRequestName(provider);
-    try {
-      return loadRequest(provider, indicator);
+    public CacheDiffRequestProcessor(@Nullable Project project, UserDataHolder context) {
+        super(project, context);
     }
-    catch (ProcessCanceledException e) {
-      OperationCanceledDiffRequest request = new OperationCanceledDiffRequest(name);
-      request.putUserData(DiffUserDataKeys.CONTEXT_ACTIONS, Collections.<AnAction>singletonList(new ReloadRequestAction(provider)));
-      return request;
-    }
-    catch (DiffRequestProducerException e) {
-      return new ErrorDiffRequest(name, e);
-    }
-    catch (Exception e) {
-      LOG.warn(e);
-      return new ErrorDiffRequest(name, e);
-    }
-  }
 
-  @Override
-  @RequiredUIAccess
-  protected void onDispose() {
-    super.onDispose();
-    myQueue.abort();
-    myRequestCache.clear();
-  }
+    //
+    // Abstract
+    //
 
-  //
-  // Actions
-  //
+    protected abstract @Nullable String getRequestName(T provider);
 
-  protected class ReloadRequestAction extends DumbAwareAction {
-    
-    private final T myProducer;
+    protected abstract T getCurrentRequestProvider();
 
-    public ReloadRequestAction(T provider) {
-      super("Reload", null, AllIcons.Actions.Refresh);
-      myProducer = provider;
+    protected abstract DiffRequest loadRequest(T provider, ProgressIndicator indicator)
+        throws ProcessCanceledException, DiffRequestProducerException;
+
+    //
+    // Update
+    //
+
+    @Override
+    @RequiredUIAccess
+    protected void reloadRequest() {
+        updateRequest(true, false, null);
     }
 
     @Override
-    public void actionPerformed(AnActionEvent e) {
-      myRequestCache.remove(myProducer);
-      updateRequest(true);
+    @RequiredUIAccess
+    public void updateRequest(boolean force, @Nullable ScrollToPolicy scrollToChangePolicy) {
+        updateRequest(force, true, scrollToChangePolicy);
     }
-  }
+
+    @RequiredUIAccess
+    public void updateRequest(boolean force, boolean useCache, @Nullable ScrollToPolicy scrollToChangePolicy) {
+        UIAccess.assertIsUIThread();
+        if (isDisposed()) {
+            return;
+        }
+
+        T requestProvider = getCurrentRequestProvider();
+        if (requestProvider == null) {
+            applyRequest(NoDiffRequest.INSTANCE, force, scrollToChangePolicy);
+            return;
+        }
+
+        DiffRequest cachedRequest = useCache ? loadRequestFast(requestProvider) : null;
+        if (cachedRequest != null) {
+            applyRequest(cachedRequest, force, scrollToChangePolicy);
+            return;
+        }
+
+        myQueue.executeAndTryWait(
+            indicator -> {
+                DiffRequest request = doLoadRequest(requestProvider, indicator);
+                return () -> {
+                    myRequestCache.put(requestProvider, request);
+                    applyRequest(request, force, scrollToChangePolicy);
+                };
+            },
+            () -> applyRequest(new LoadingDiffRequest(getRequestName(requestProvider)), force, scrollToChangePolicy),
+            ProgressWindow.DEFAULT_PROGRESS_DIALOG_POSTPONE_TIME_MILLIS
+        );
+    }
+
+    protected @Nullable DiffRequest loadRequestFast(T provider) {
+        return myRequestCache.get(provider);
+    }
+
+    private DiffRequest doLoadRequest(T provider, ProgressIndicator indicator) {
+        String name = getRequestName(provider);
+        try {
+            return loadRequest(provider, indicator);
+        }
+        catch (ProcessCanceledException e) {
+            OperationCanceledDiffRequest request = new OperationCanceledDiffRequest(name);
+            request.putUserData(DiffUserDataKeys.CONTEXT_ACTIONS, Collections.<AnAction>singletonList(new ReloadRequestAction(provider)));
+            return request;
+        }
+        catch (DiffRequestProducerException e) {
+            return new ErrorDiffRequest(name, e);
+        }
+        catch (Exception e) {
+            LOG.warn(e);
+            return new ErrorDiffRequest(name, e);
+        }
+    }
+
+    @Override
+    @RequiredUIAccess
+    protected void onDispose() {
+        super.onDispose();
+        myQueue.abort();
+        myRequestCache.clear();
+    }
+
+    //
+    // Actions
+    //
+
+    protected class ReloadRequestAction extends DumbAwareAction {
+        private final T myProducer;
+
+        public ReloadRequestAction(T provider) {
+            super(LocalizeValue.localizeTODO("Reload"), LocalizeValue.empty(), PlatformIconGroup.actionsRefresh());
+            myProducer = provider;
+        }
+
+        @Override
+        @RequiredUIAccess
+        public void actionPerformed(AnActionEvent e) {
+            myRequestCache.remove(myProducer);
+            updateRequest(true);
+        }
+    }
 }

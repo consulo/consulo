@@ -20,10 +20,9 @@ import consulo.util.dataholder.UserDataHolder;
 import java.util.List;
 
 public interface DiffRequestChain extends UserDataHolder {
-  
-  List<? extends DiffRequestProducer> getRequests();
+    List<? extends DiffRequestProducer> getRequests();
 
-  int getIndex();
+    int getIndex();
 
-  void setIndex(int index);
+    void setIndex(int index);
 }

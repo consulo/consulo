@@ -29,14 +29,12 @@ import javax.swing.*;
 import java.awt.event.FocusListener;
 
 public class TextEditorHolder extends EditorHolder {
-    
     protected final EditorEx myEditor;
 
     public TextEditorHolder(EditorEx editor) {
         myEditor = editor;
     }
 
-    
     public EditorEx getEditor() {
         return myEditor;
     }
@@ -46,7 +44,6 @@ public class TextEditorHolder extends EditorHolder {
         EditorFactory.getInstance().releaseEditor(myEditor);
     }
 
-    
     @Override
     public JComponent getComponent() {
         return myEditor.getComponent();
@@ -66,7 +63,6 @@ public class TextEditorHolder extends EditorHolder {
     // Build
     //
 
-    
     public static TextEditorHolder create(@Nullable Project project, DocumentContent content) {
         EditorEx editor = DiffImplUtil.createEditor(content.getDocument(), project, false, true);
         DiffLanguageUtil.configureEditor(editor, content, project);

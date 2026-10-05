@@ -20,6 +20,7 @@ import consulo.desktop.awt.ui.impl.image.DesktopAWTScalableImage;
 import consulo.diff.DiffDialogHints;
 import consulo.diff.DiffUserDataKeys;
 import consulo.disposer.Disposer;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.WindowWrapperBuilder;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
@@ -61,18 +62,17 @@ public abstract class DiffWindowBase {
             .setProject(myProject)
             .setParent(myHints.getParent())
             .setDimensionServiceKey(dialogGroupKey)
-            .setOnShowCallback(new Runnable() {
-                @Override
-                public void run() {
-                    myProcessor.updateRequest();
-                    myProcessor.requestFocus(); // TODO: not needed for modal dialogs. Make a flag in WindowWrapperBuilder ?
-                }
+            .setOnShowCallback(() -> {
+                myProcessor.updateRequest();
+                myProcessor.requestFocus(); // TODO: not needed for modal dialogs. Make a flag in WindowWrapperBuilder ?
             })
             .build();
         myWrapper.setImage(new DesktopAWTScalableImage(PlatformIconGroup.actionsDiff()));
         Disposer.register(myWrapper, myProcessor);
 
         new DumbAwareAction() {
+            @Override
+            @RequiredUIAccess
             public void actionPerformed(AnActionEvent e) {
                 myWrapper.close();
             }

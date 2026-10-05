@@ -23,9 +23,5 @@ import consulo.ui.annotation.RequiredUIAccess;
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class DiffExtension {
     @RequiredUIAccess
-    public abstract void onViewerCreated(
-        FrameDiffTool.DiffViewer viewer,
-        DiffContext context,
-        DiffRequest request
-    );
+    public abstract void onViewerCreated(FrameDiffTool.DiffViewer viewer, DiffContext context, DiffRequest request);
 }

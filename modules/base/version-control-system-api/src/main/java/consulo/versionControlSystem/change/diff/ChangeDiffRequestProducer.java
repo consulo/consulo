@@ -74,7 +74,6 @@ public class ChangeDiffRequestProducer implements DiffRequestProducer {
         myChangeContext = changeContext;
     }
 
-    
     public Change getChange() {
         return myChange;
     }
@@ -83,7 +82,6 @@ public class ChangeDiffRequestProducer implements DiffRequestProducer {
         return myProject;
     }
 
-    
     @Override
     public String getName() {
         return ChangesUtil.getFilePath(myChange).getPath();
@@ -122,11 +120,7 @@ public class ChangeDiffRequestProducer implements DiffRequestProducer {
         return create(project, change, Collections.<Key, Object>emptyMap());
     }
 
-    public static @Nullable ChangeDiffRequestProducer create(
-        @Nullable Project project,
-        Change change,
-        Map<Key, Object> changeContext
-    ) {
+    public static @Nullable ChangeDiffRequestProducer create(@Nullable Project project, Change change, Map<Key, Object> changeContext) {
         if (!canCreate(project, change)) {
             return null;
         }
@@ -158,12 +152,9 @@ public class ChangeDiffRequestProducer implements DiffRequestProducer {
         return aRev == null || !aRev.getFile().isDirectory();
     }
 
-    
     @Override
-    public DiffRequest process(
-        UserDataHolder context,
-        ProgressIndicator indicator
-    ) throws DiffRequestProducerException, ProcessCanceledException {
+    public DiffRequest process(UserDataHolder context, ProgressIndicator indicator)
+        throws DiffRequestProducerException, ProcessCanceledException {
         try {
             return loadCurrentContents(context, indicator);
         }
@@ -176,11 +167,7 @@ public class ChangeDiffRequestProducer implements DiffRequestProducer {
         }
     }
 
-    
-    protected DiffRequest loadCurrentContents(
-        UserDataHolder context,
-        ProgressIndicator indicator
-    ) throws DiffRequestProducerException {
+    protected DiffRequest loadCurrentContents(UserDataHolder context, ProgressIndicator indicator) throws DiffRequestProducerException {
         DiffRequestProducerException wrapperException = null;
         DiffRequestProducerException requestException = null;
 
@@ -237,7 +224,6 @@ public class ChangeDiffRequestProducer implements DiffRequestProducer {
         return request;
     }
 
-    
     private DiffRequest createRequest(
         @Nullable Project project,
         Change change,
@@ -357,7 +343,6 @@ public class ChangeDiffRequestProducer implements DiffRequestProducer {
         }
     }
 
-    
     public static String getRequestTitle(Change change) {
         ContentRevision bRev = change.getBeforeRevision();
         ContentRevision aRev = change.getAfterRevision();
@@ -381,7 +366,6 @@ public class ChangeDiffRequestProducer implements DiffRequestProducer {
         }
     }
 
-    
     public static String getRevisionTitle(@Nullable ContentRevision revision, String defaultValue) {
         if (revision == null) {
             return defaultValue;
@@ -393,7 +377,6 @@ public class ChangeDiffRequestProducer implements DiffRequestProducer {
         return title;
     }
 
-    
     public static DiffContent createContent(
         @Nullable Project project,
         @Nullable ContentRevision revision,

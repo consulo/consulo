@@ -27,93 +27,101 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import org.jspecify.annotations.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 
 public class DiffRequestPanelImpl implements DiffRequestPanel {
- 
-  private final JPanel myPanel;
- 
-  private final MyDiffRequestProcessor myProcessor;
+    private final JPanel myPanel;
 
-  public DiffRequestPanelImpl(@Nullable Project project, @Nullable Window window) {
-    myProcessor = new MyDiffRequestProcessor(project, window);
-    myProcessor.putContextUserData(DiffUserDataKeys.DO_NOT_CHANGE_WINDOW_TITLE, true);
+    private final MyDiffRequestProcessor myProcessor;
 
-    myPanel = new JPanel(new BorderLayout()) {
-      @Override
-      public void addNotify() {
-        super.addNotify();
-        myProcessor.updateRequest();
-      }
-    };
-    myPanel.add(myProcessor.getComponent());
-  }
+    public DiffRequestPanelImpl(@Nullable Project project, @Nullable Window window) {
+        myProcessor = new MyDiffRequestProcessor(project, window);
+        myProcessor.putContextUserData(DiffUserDataKeys.DO_NOT_CHANGE_WINDOW_TITLE, true);
 
-  @Override
-  public void setRequest(@Nullable DiffRequest request) {
-    setRequest(request, null);
-  }
-
-  @Override
-  public void setRequest(@Nullable DiffRequest request, @Nullable Object identity) {
-    myProcessor.setRequest(request, identity);
-  }
-
-  @RequiredUIAccess
-  @Override
-  public <T> void putContextHints(Key<T> key, @Nullable T value) {
-    myProcessor.putContextUserData(key, value);
-  }
-
- 
-  @Override
-  public JComponent getComponent() {
-    return myPanel;
-  }
-
-  @Override
-  public @Nullable JComponent getPreferredFocusedComponent() {
-    return myProcessor.getPreferredFocusedComponent();
-  }
-
-  @Override
-  public void dispose() {
-    Disposer.dispose(myProcessor);
-  }
-
-  private static class MyDiffRequestProcessor extends DiffRequestProcessor {
-    private final @Nullable Window myWindow;
-
-   
-    private DiffRequest myRequest = NoDiffRequest.INSTANCE;
-    private @Nullable Object myRequestIdentity = null;
-
-    public MyDiffRequestProcessor(@Nullable Project project, @Nullable Window window) {
-      super(project);
-      myWindow = window;
-    }
-
-    public synchronized void setRequest(@Nullable DiffRequest request, @Nullable Object identity) {
-      if (myRequestIdentity != null && identity != null && myRequestIdentity.equals(identity)) return;
-
-      myRequest = request != null ? request : NoDiffRequest.INSTANCE;
-      myRequestIdentity = identity;
-
-      UIUtil.invokeLaterIfNeeded(() -> updateRequest());
+        myPanel = new JPanel(new BorderLayout()) {
+            @Override
+            @RequiredUIAccess
+            public void addNotify() {
+                super.addNotify();
+                myProcessor.updateRequest();
+            }
+        };
+        myPanel.add(myProcessor.getComponent());
     }
 
     @Override
+    public void setRequest(@Nullable DiffRequest request) {
+        setRequest(request, null);
+    }
+
+    @Override
+    public void setRequest(@Nullable DiffRequest request, @Nullable Object identity) {
+        myProcessor.setRequest(request, identity);
+    }
+
     @RequiredUIAccess
-    public synchronized void updateRequest(boolean force, DiffUserDataKeysEx.@Nullable ScrollToPolicy scrollToChangePolicy) {
-      applyRequest(myRequest, force, scrollToChangePolicy);
+    @Override
+    public <T> void putContextHints(Key<T> key, @Nullable T value) {
+        myProcessor.putContextUserData(key, value);
+    }
+
+
+    @Override
+    public JComponent getComponent() {
+        return myPanel;
     }
 
     @Override
-    protected void setWindowTitle(String title) {
-      if (myWindow == null) return;
-      if (myWindow instanceof JDialog) ((JDialog)myWindow).setTitle(title);
-      if (myWindow instanceof JFrame) ((JFrame)myWindow).setTitle(title);
+    public @Nullable JComponent getPreferredFocusedComponent() {
+        return myProcessor.getPreferredFocusedComponent();
     }
-  }
+
+    @Override
+    public void dispose() {
+        Disposer.dispose(myProcessor);
+    }
+
+    private static class MyDiffRequestProcessor extends DiffRequestProcessor {
+        private final @Nullable Window myWindow;
+
+        private DiffRequest myRequest = NoDiffRequest.INSTANCE;
+        private @Nullable Object myRequestIdentity = null;
+
+        public MyDiffRequestProcessor(@Nullable Project project, @Nullable Window window) {
+            super(project);
+            myWindow = window;
+        }
+
+        public synchronized void setRequest(@Nullable DiffRequest request, @Nullable Object identity) {
+            if (myRequestIdentity != null && identity != null && myRequestIdentity.equals(identity)) {
+                return;
+            }
+
+            myRequest = request != null ? request : NoDiffRequest.INSTANCE;
+            myRequestIdentity = identity;
+
+            UIUtil.invokeLaterIfNeeded(() -> updateRequest());
+        }
+
+        @Override
+        @RequiredUIAccess
+        public synchronized void updateRequest(boolean force, DiffUserDataKeysEx.@Nullable ScrollToPolicy scrollToChangePolicy) {
+            applyRequest(myRequest, force, scrollToChangePolicy);
+        }
+
+        @Override
+        protected void setWindowTitle(String title) {
+            if (myWindow == null) {
+                return;
+            }
+            if (myWindow instanceof JDialog jDialog) {
+                jDialog.setTitle(title);
+            }
+            if (myWindow instanceof JFrame jFrame) {
+                jFrame.setTitle(title);
+            }
+        }
+    }
 }
