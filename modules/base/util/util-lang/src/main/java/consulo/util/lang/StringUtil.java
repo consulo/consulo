@@ -958,6 +958,8 @@ public final class StringUtil {
         return unifyLineSeparators(text, "\n", null, false);
     }
 
+    @Deprecated
+    @DeprecationInfo("Use LocalizeValue#truncateWithEllipsis")
     public static String truncateWithEllipsis(String text, int maxLength) {
         if (maxLength < 1) {
             throw new IllegalArgumentException("Expecting maxLength (" + maxLength + ") to be at least 1");
@@ -1410,6 +1412,8 @@ public final class StringUtil {
         return s;
     }
 
+    @Deprecated
+    @DeprecationInfo("Use LocalizeValue#removeEllipsis")
     public static String removeEllipsis(String s) {
         if (endsWithChar(s, '…')) {
             return s.substring(0, s.length() - 1);

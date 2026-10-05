@@ -44,7 +44,6 @@ import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.layout.HorizontalLayout;
-import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.versionControlSystem.VcsConfiguration;
 import consulo.versionControlSystem.change.Change;

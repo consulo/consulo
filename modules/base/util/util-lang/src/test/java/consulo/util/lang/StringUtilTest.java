@@ -998,6 +998,7 @@ public class StringUtilTest {
         assertThat(StringUtil.sanitizeJavaIdentifier("0foo0/")).isEqualTo("_0foo0");
     }
 
+    @SuppressWarnings("deprecation")
     @Test
     void testTruncateWithEllipsis() {
         assertThat(StringUtil.truncateWithEllipsis("foo", 4)).isEqualTo("foo");
@@ -1420,6 +1421,7 @@ public class StringUtilTest {
         assertThat(qux).hasToString("qux");
     }
 
+    @SuppressWarnings("deprecation")
     @Test
     void testRemoveEllipsis() {
         assertThat(StringUtil.removeEllipsis("foo")).isEqualTo("foo");
