@@ -335,6 +335,9 @@ public class ComponentStoreTest {
                     Class<?> topic = (Class<?>)Objects.requireNonNull(args)[0];
                     return Proxy.newProxyInstance(topic.getClassLoader(), new Class<?>[]{topic}, (p, m, a) -> null);
                 }
+                if ("isDisposed".equals(method.getName())) {
+                    return Boolean.FALSE;
+                }
                 return null;
             });
         }

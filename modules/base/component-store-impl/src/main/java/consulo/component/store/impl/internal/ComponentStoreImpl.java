@@ -49,7 +49,7 @@ import org.jdom.Element;
 
 import java.io.File;
 import java.util.*;
-import java.util.function.Function;
+import java.util.function.BiFunction;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -283,7 +283,7 @@ public abstract class ComponentStoreImpl implements IComponentStore {
    * The step applying reloaded state to a synchronous component. Scope stores override this to take the write
    * lock; the default runs unguarded, which is what stores without an {@code Application} need.
    */
-  protected CoroutineStep<Object, Object> applyStateStep(Function<Object, Object> function) {
+  protected CoroutineStep<Object, Object> applyStateStep(BiFunction<Object, Continuation<?>, Object> function) {
     return CodeExecution.apply(function);
   }
 
@@ -558,16 +558,30 @@ public abstract class ComponentStoreImpl implements IComponentStore {
   private Continuation<?> runReinit(Set<String> componentNames, Collection<? extends StateStorage> changedStorages) {
     MessageBus messageBus = getMessageBus();
 
-    Coroutine<Object, Object> chain = Coroutine.first(applyStateStep(input -> {
+    Coroutine<Object, Object> chain = Coroutine.first(applyStateStep((input, continuation) -> {
+      if (messageBus.isDisposed()) {
+        continuation.cancel();
+        return null;
+      }
       messageBus.syncPublisher(BatchUpdateListener.class).onBatchUpdateStarted();
       return null;
     }));
 
     for (String componentName : componentNames) {
-      chain = chain.then(CallSubroutine.call(() -> reinitComponent(componentName, changedStorages)));
+      chain = chain.then(CallSubroutine.call(continuation -> {
+        if (messageBus.isDisposed()) {
+          continuation.cancel();
+          return Coroutine.empty();
+        }
+        return reinitComponent(componentName, changedStorages);
+      }));
     }
 
-    chain = chain.then(applyStateStep(input -> {
+    chain = chain.then(applyStateStep((input, continuation) -> {
+      if (messageBus.isDisposed()) {
+        continuation.cancel();
+        return null;
+      }
       messageBus.syncPublisher(BatchUpdateListener.class).onBatchUpdateFinished();
       return null;
     }));
@@ -588,7 +602,7 @@ public abstract class ComponentStoreImpl implements IComponentStore {
     if (!componentInfo.isAsync()) {
       // reading touches storages, applying mutates the model - so only the second half needs the write lock
       return Coroutine.<Object, Object>first(CodeExecution.apply(input -> readState(componentInfo, storages, changedStoragesEmpty)))
-        .then(applyStateStep(state -> {
+        .then(applyStateStep((state, continuation) -> {
           if (state != null) {
             applyState(componentInfo, state);
           }

@@ -29,10 +29,11 @@ import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
 import consulo.ui.UIAccess;
 import consulo.application.concurrent.coroutine.WriteLock;
+import consulo.util.concurrent.coroutine.Continuation;
 import consulo.util.concurrent.coroutine.CoroutineContext;
 import consulo.util.concurrent.coroutine.CoroutineStep;
 
-import java.util.function.Function;
+import java.util.function.BiFunction;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
@@ -138,7 +139,7 @@ public class ApplicationStoreImpl extends ComponentStoreImpl implements IApplica
   }
 
   @Override
-  protected CoroutineStep<Object, Object> applyStateStep(Function<Object, Object> function) {
+  protected CoroutineStep<Object, Object> applyStateStep(BiFunction<Object, Continuation<?>, Object> function) {
     return WriteLock.apply(function);
   }
 

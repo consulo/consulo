@@ -30,6 +30,7 @@ import consulo.project.StoreReloadManager;
 import consulo.ui.UIAccess;
 
 import consulo.util.collection.Sets;
+import consulo.util.lang.ThreeState;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.event.VirtualFileEvent;
@@ -121,7 +122,7 @@ public class StoreReloadManagerImpl implements StoreReloadManager, Disposable {
         LOG.warn("RELOAD-DEBUG reloadChangedStorages enter pending=" + myChangedProjectFiles.size()
             + ", blockCount=" + myReloadBlockCount.get() + ", inProgress=" + myReloadInProgress.get() + debugState());
 
-        if (myProject.isDisposed() || myChangedProjectFiles.isEmpty()) {
+        if (isProjectGone() || myChangedProjectFiles.isEmpty()) {
             return;
         }
 
@@ -150,6 +151,11 @@ public class StoreReloadManagerImpl implements StoreReloadManager, Disposable {
             return;
         }
 
+        if (isProjectGone()) {
+            finishReload(causes);
+            return;
+        }
+
         LOG.warn("RELOAD-DEBUG reinit start components=" + changedComponentNames + debugState());
 
         try {
@@ -162,6 +168,10 @@ public class StoreReloadManagerImpl implements StoreReloadManager, Disposable {
             LOG.error(e);
             finishReload(causes);
         }
+    }
+
+    private boolean isProjectGone() {
+        return myProject.getDisposeState().get() != ThreeState.NO;
     }
 
     /**

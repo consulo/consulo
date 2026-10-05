@@ -34,10 +34,11 @@ import consulo.component.store.internal.TrackingPathMacroSubstitutor;
 import consulo.project.Project;
 import consulo.application.concurrent.coroutine.WriteLock;
 import consulo.ui.UIAccess;
+import consulo.util.concurrent.coroutine.Continuation;
 import consulo.util.concurrent.coroutine.CoroutineContext;
 import consulo.util.concurrent.coroutine.CoroutineStep;
 
-import java.util.function.Function;
+import java.util.function.BiFunction;
 import consulo.util.concurrent.coroutine.CoroutineScope;
 import consulo.project.impl.internal.ProjectImpl;
 import consulo.project.impl.internal.ProjectStorageUtil;
@@ -94,7 +95,7 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
   }
 
   @Override
-  protected CoroutineStep<Object, Object> applyStateStep(Function<Object, Object> function) {
+  protected CoroutineStep<Object, Object> applyStateStep(BiFunction<Object, Continuation<?>, Object> function) {
     return WriteLock.apply(function);
   }
 
