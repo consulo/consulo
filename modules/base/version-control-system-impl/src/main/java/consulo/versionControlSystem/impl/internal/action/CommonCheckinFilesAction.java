@@ -36,20 +36,22 @@ import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusManager;
 import org.jspecify.annotations.Nullable;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @ActionImpl(id = "CheckinFiles")
 public class CommonCheckinFilesAction extends AbstractCommonCheckinAction {
+    /**
+     * Upper bound for counting selected roots when building the action name. update() runs often on EDT,
+     * so we avoid walking huge selections. The exact number only matters for locales with several plural forms.
+     */
+    private static final int MAX_COUNTED_ROOTS = 50;
+
     public CommonCheckinFilesAction() {
         super(VcsLocalize.actionCheckInFilesText(), LocalizeValue.empty(), null);
     }
 
-    
     @Override
     protected LocalizeValue getActionName(VcsContext dataContext) {
         LocalizeValue actionName = Optional.ofNullable(dataContext.getProject())
@@ -62,17 +64,25 @@ public class CommonCheckinFilesAction extends AbstractCommonCheckinAction {
     }
 
     private LocalizeValue modifyCheckinActionName(VcsContext dataContext, LocalizeValue checkinActionName) {
-        List<FilePath> roots = getRootsStream(dataContext).limit(2).collect(Collectors.toList());
-        if (!roots.isEmpty()) {
-            return roots.get(0).isDirectory()
-                ? VcsLocalize.actionCheckInDirectories0Text(checkinActionName, roots.size())
-                : VcsLocalize.actionCheckInFiles0Text(checkinActionName, roots.size());
+        Map<Boolean, Long> isDirectoryCount = getRootsStream(dataContext)
+            .distinct()
+            .limit(MAX_COUNTED_ROOTS)
+            .collect(Collectors.groupingBy(FilePath::isDirectory, Collectors.counting()));
+
+        long nFiles = isDirectoryCount.getOrDefault(false, 0L);
+        long nDirectories = isDirectoryCount.getOrDefault(true, 0L);
+        if (nFiles == 0 && nDirectories > 0) {
+            return VcsLocalize.actionCheckInDirectories0Text(checkinActionName, nDirectories);
+        }
+
+        long nTotal = nFiles + nDirectories;
+        if (nTotal > 0) {
+            return VcsLocalize.actionCheckInFiles0Text(checkinActionName, nTotal);
         }
 
         return checkinActionName;
     }
 
-    
     @Override
     protected LocalizeValue getMnemonicsFreeActionName(VcsContext context) {
         return modifyCheckinActionName(context, VcsLocalize.vcsCommandNameCheckinNoMnemonics());
@@ -113,13 +123,11 @@ public class CommonCheckinFilesAction extends AbstractCommonCheckinAction {
         return status != FileStatus.UNKNOWN && status != FileStatus.IGNORED;
     }
 
-    
     @Override
     protected FilePath[] getRoots(VcsContext context) {
         return context.getSelectedFilePaths();
     }
 
-    
     protected Stream<FilePath> getRootsStream(VcsContext context) {
         return context.getSelectedFilePathsStream();
     }
