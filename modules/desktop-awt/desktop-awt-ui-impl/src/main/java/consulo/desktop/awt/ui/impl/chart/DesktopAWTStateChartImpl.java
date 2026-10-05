@@ -90,6 +90,7 @@ public class DesktopAWTStateChartImpl<S> extends SwingComponentDelegate<JPanel> 
 
         JBScrollPane scrollPane = new JBScrollPane(rowsPanel);
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(JBUI.scale(ROW_HEIGHT));
 
         int scrollBarWidth = AdtUiUtils.unscale(scrollPane.getVerticalScrollBar().getPreferredSize().width);
         JPanel axisPanel = new JPanel(new TabularLayout(NAME_COLUMN + ",*," + scrollBarWidth + "px"));

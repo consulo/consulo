@@ -37,10 +37,12 @@ import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionWithDelegate;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.AnActionWithSyncUpdate;
+import consulo.ui.ex.action.AnActionWithAsyncUpdate;
 import consulo.ui.ex.action.AsyncActionGroup;
+import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
 import consulo.ui.ex.internal.ActionUpdateInvoker;
 import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.step.CodeExecution;
 import consulo.util.dataholder.Key;
 import org.jspecify.annotations.Nullable;
 
@@ -51,7 +53,7 @@ import java.util.List;
 /**
  * @author Dmitry Avdeev
  */
-public class ExecutorAction extends ActionGroup implements ActionWithDelegate<AnAction>, AnActionWithSyncUpdate {
+public class ExecutorAction extends ActionGroup implements ActionWithDelegate<AnAction>, AnActionWithAsyncUpdate {
     private static final Key<List<ConfigurationFromContext>> CONFIGURATION_CACHE = Key.create("ConfigurationFromContext");
 
     public static AnAction[] getActions() {
@@ -120,15 +122,19 @@ public class ExecutorAction extends ActionGroup implements ActionWithDelegate<An
     }
 
     @Override
-    public void update(AnActionEvent e) {
+    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
         if (isGroupOrigin()) {
-            ActionUpdateInvoker.updateSync(myOrigin, e);
-            return;
+            return Coroutine.first(CodeExecution.<Object, Object>apply(input -> {
+                ActionUpdateInvoker.updateSync(myOrigin, e);
+                return input;
+            }));
         }
 
-        LocalizeValue activeText = getActionText(e.getDataContext(), myExecutor);
-        e.getPresentation().setVisible(activeText.isNotEmpty());
-        e.getPresentation().setText(activeText);
+        return ActionSafeReadLock.run(e, presentation -> {
+            LocalizeValue activeText = getActionText(e.getDataContext(), myExecutor);
+            presentation.setVisible(activeText.isNotEmpty());
+            presentation.setText(activeText);
+        }).toCoroutine();
     }
 
     @Override

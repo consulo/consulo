@@ -52,12 +52,7 @@ public final class ExecutionActionValue implements LocalizeValueWithMnemonic {
     
     @Override
     public TextWithMnemonic mnemonic() {
-        TextWithMnemonic text = TextWithMnemonic.parse(myOriginal.getValue());
-        if (!text.hasMnemonic()) {
-            return text;
-        }
-
-        return text.replaceFirst(myParamValue, myConfigurationName);
+        return TextWithMnemonic.parse(myOriginal.getValue()).replaceFirst(myParamValue, myConfigurationName);
     }
 
     @Override
