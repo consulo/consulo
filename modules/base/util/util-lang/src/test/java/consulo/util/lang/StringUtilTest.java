@@ -1422,8 +1422,9 @@ public class StringUtilTest {
 
     @Test
     void testTrimEndEllipsis() {
-        assertThat(StringUtil.trimEndEllipsis("foo...")).isEqualTo("foo");
+        assertThat(StringUtil.trimEndEllipsis("foo")).isEqualTo("foo");
         assertThat(StringUtil.trimEndEllipsis("foo…")).isEqualTo("foo");
+        assertThat(StringUtil.trimEndEllipsis("foo...")).isEqualTo("foo");
     }
 
     @Test

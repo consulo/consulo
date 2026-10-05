@@ -1411,7 +1411,10 @@ public final class StringUtil {
     }
 
     public static String trimEndEllipsis(String s) {
-        return trimEnd(trimEnd(s, "..."), '…');
+        if (endsWithChar(s, '…')) {
+            return s.substring(0, s.length() - 1);
+        }
+        return trimEnd(s, "...");
     }
 
     public static boolean endsWithIgnoreCase(CharSequence text, CharSequence suffix) {
