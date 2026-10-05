@@ -2,17 +2,14 @@
 package consulo.util.lang;
 
 import consulo.util.lang.internal.NaturalComparator;
-import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.StringTokenizer;
-import java.util.function.Function;
 import java.util.regex.Pattern;
 
-import static consulo.util.lang.StringUtil.notNullize;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -1002,6 +999,17 @@ public class StringUtilTest {
     }
 
     @Test
+    void testCutEndWithEllipsis() {
+        assertThat(StringUtil.cutEndWithEllipsis("foo", 4)).isEqualTo("foo");
+        assertThat(StringUtil.cutEndWithEllipsis("foo", 3)).isEqualTo("foo");
+        assertThat(StringUtil.cutEndWithEllipsis("foo", 2)).isEqualTo("f…");
+        assertThat(StringUtil.cutEndWithEllipsis("foo", 1)).isEqualTo("…");
+        assertThatThrownBy(() -> StringUtil.cutEndWithEllipsis("foo", 0))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("Expecting maxLength (0) to be at least 1");
+    }
+
+    @Test
     void testShortenPathWithEllipsis() {
         assertThatThrownBy(() -> StringUtil.shortenPathWithEllipsis("foo/bar/baz/qux", 10))
             .isInstanceOf(IllegalArgumentException.class)
@@ -1410,6 +1418,12 @@ public class StringUtilTest {
         StringBuilder qux = new StringBuilder("qux");
         assertThat(StringUtil.trimEnd(qux, "bar")).isFalse();
         assertThat(qux).hasToString("qux");
+    }
+
+    @Test
+    void testTrimEndEllipsis() {
+        assertThat(StringUtil.trimEndEllipsis("foo...")).isEqualTo("foo");
+        assertThat(StringUtil.trimEndEllipsis("foo…")).isEqualTo("foo");
     }
 
     @Test

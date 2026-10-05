@@ -1331,19 +1331,14 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
     }
 
     public static String trimEllipsis(String title) {
-        if (title.endsWith("...")) {
-            return title.substring(0, title.length() - 3);
-        }
-        else {
-            return title;
-        }
+        return StringUtil.trimEndEllipsis(title);
     }
 
     private void ensureDataIsActual(Runnable runnable) {
         ChangeListManager.getInstance(myProject).invokeAfterUpdate(
             runnable,
             InvokeAfterUpdateMode.SYNCHRONOUS_CANCELLABLE,
-            "Refreshing changelists...",
+            "Refreshing changelists…",
             Application.get().getCurrentModalityState()
         );
     }

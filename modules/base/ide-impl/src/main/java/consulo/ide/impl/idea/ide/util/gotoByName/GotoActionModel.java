@@ -200,7 +200,7 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
         }
 
         private int getRank(String text) {
-            if (StringUtil.equalsIgnoreCase(StringUtil.trimEnd(text, "..."), pattern)) {
+            if (StringUtil.equalsIgnoreCase(StringUtil.trimEndEllipsis(text), pattern)) {
                 return 3;
             }
             if (StringUtil.startsWithIgnoreCase(text, pattern)) {
@@ -657,7 +657,7 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
             Presentation oPresentation = o.getAction().getTemplatePresentation();
             String myText = StringUtil.notNullize(myPresentation.getText());
             String oText = StringUtil.notNullize(oPresentation.getText());
-            int byText = StringUtil.compare(StringUtil.trimEnd(myText, "..."), StringUtil.trimEnd(oText, "..."), true);
+            int byText = StringUtil.compare(StringUtil.trimEndEllipsis(myText), StringUtil.trimEndEllipsis(oText), true);
             if (byText != 0) {
                 return byText;
             }

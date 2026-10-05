@@ -60,8 +60,8 @@ public class CodeAnalysisBeforeCheckinHandler extends CheckinHandler {
         myCheckinPanel = panel;
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public @Nullable RefreshableOnComponent getBeforeCheckinConfigurationPanel() {
         return new CheckBoxRefreshableOnComponent(
             VcsLocalize.beforeCheckinStandardOptionsCheckSmells(),
@@ -81,7 +81,7 @@ public class CodeAnalysisBeforeCheckinHandler extends CheckinHandler {
         int errorCount = collectErrors(codeSmells);
         int warningCount = codeSmells.size() - errorCount;
         LocalizeValue commitButtonText = executor != null ? executor.getActionText() : myCheckinPanel.getCommitActionName();
-        commitButtonText = commitButtonText.map(text -> StringUtil.trimEnd(text, "..."));
+        commitButtonText = commitButtonText.map(StringUtil::trimEndEllipsis);
 
         int answer = Messages.showYesNoCancelDialog(
             myProject,
