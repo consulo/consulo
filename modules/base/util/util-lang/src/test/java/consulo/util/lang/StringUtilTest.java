@@ -2,17 +2,14 @@
 package consulo.util.lang;
 
 import consulo.util.lang.internal.NaturalComparator;
-import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.StringTokenizer;
-import java.util.function.Function;
 import java.util.regex.Pattern;
 
-import static consulo.util.lang.StringUtil.notNullize;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -1001,6 +998,18 @@ public class StringUtilTest {
         assertThat(StringUtil.sanitizeJavaIdentifier("0foo0/")).isEqualTo("_0foo0");
     }
 
+    @SuppressWarnings("deprecation")
+    @Test
+    void testTruncateWithEllipsis() {
+        assertThat(StringUtil.truncateWithEllipsis("foo", 4)).isEqualTo("foo");
+        assertThat(StringUtil.truncateWithEllipsis("foo", 3)).isEqualTo("foo");
+        assertThat(StringUtil.truncateWithEllipsis("foo", 2)).isEqualTo("f…");
+        assertThat(StringUtil.truncateWithEllipsis("foo", 1)).isEqualTo("…");
+        assertThatThrownBy(() -> StringUtil.truncateWithEllipsis("foo", 0))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("Expecting maxLength (0) to be at least 1");
+    }
+
     @Test
     void testShortenPathWithEllipsis() {
         assertThatThrownBy(() -> StringUtil.shortenPathWithEllipsis("foo/bar/baz/qux", 10))
@@ -1410,6 +1419,14 @@ public class StringUtilTest {
         StringBuilder qux = new StringBuilder("qux");
         assertThat(StringUtil.trimEnd(qux, "bar")).isFalse();
         assertThat(qux).hasToString("qux");
+    }
+
+    @SuppressWarnings("deprecation")
+    @Test
+    void testRemoveEllipsis() {
+        assertThat(StringUtil.removeEllipsis("foo")).isEqualTo("foo");
+        assertThat(StringUtil.removeEllipsis("foo…")).isEqualTo("foo");
+        assertThat(StringUtil.removeEllipsis("foo...")).isEqualTo("foo");
     }
 
     @Test

@@ -32,6 +32,7 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
+import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.internal.laf.MultiLineLabelUI;
 import consulo.ui.ex.awt.util.Alarm;
@@ -469,8 +470,8 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
             }
         }
 
-        String actionName = getCommitActionName().get();
-        String borderTitleName = actionName.replace("_", "").replace("&", "");
+        LocalizeValue actionName = getCommitActionName();
+        String borderTitleName = actionName.map(Presentation.NO_MNEMONIC).get();
         if (beforeVisible) {
             beforeBox.add(Box.createVerticalGlue());
             JPanel beforePanel = new JPanel(new BorderLayout());
@@ -500,7 +501,7 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
             myAdditionalOptionsPanel = null;
         }
 
-        myOkActionText = actionName.replace(BundleBase.MNEMONIC, '&');
+        myOkActionText = actionName.get().replace(BundleBase.MNEMONIC, '&');
 
         setTitle(
             myShowVcsCommit
@@ -881,12 +882,14 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
         LocalizeValue name = LocalizeValue.empty();
         for (AbstractVcs vcs : getAffectedVcses()) {
             CheckinEnvironment checkinEnvironment = vcs.getCheckinEnvironment();
-            if (name.isEmpty() && checkinEnvironment != null) {
-                name = checkinEnvironment.getCheckinOperationName();
+            if (checkinEnvironment == null) {
+                continue;
             }
-            else {
-                name = VcsLocalize.commitDialogDefaultCommitOperationName();
+            if (!name.isEmpty()) {
+                // several VCSes are affected: use generic name
+                return VcsLocalize.commitDialogDefaultCommitOperationName();
             }
+            name = checkinEnvironment.getCheckinOperationName();
         }
         return name.orIfEmpty(VcsLocalize.commitDialogDefaultCommitOperationName());
     }
@@ -1328,19 +1331,14 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
     }
 
     public static String trimEllipsis(String title) {
-        if (title.endsWith("...")) {
-            return title.substring(0, title.length() - 3);
-        }
-        else {
-            return title;
-        }
+        return StringUtil.removeEllipsis(title);
     }
 
     private void ensureDataIsActual(Runnable runnable) {
         ChangeListManager.getInstance(myProject).invokeAfterUpdate(
             runnable,
             InvokeAfterUpdateMode.SYNCHRONOUS_CANCELLABLE,
-            "Refreshing changelists...",
+            "Refreshing changelists…",
             Application.get().getCurrentModalityState()
         );
     }

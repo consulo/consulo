@@ -44,7 +44,6 @@ import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.layout.HorizontalLayout;
-import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.versionControlSystem.VcsConfiguration;
 import consulo.versionControlSystem.change.Change;
@@ -206,7 +205,7 @@ public class TodoCheckinHandler extends CheckinHandler {
     @RequiredUIAccess
     private ReturnResult showResults(TodoCheckinHandlerWorker worker, CommitExecutor executor) {
         LocalizeValue commitButtonText = executor != null ? executor.getActionText() : myCheckinProjectPanel.getCommitActionName();
-        commitButtonText = commitButtonText.map(text -> StringUtil.trimEnd(text, "..."));
+        commitButtonText = commitButtonText.removeEllipsis();
 
         LocalizeValue text = createMessage(worker);
         boolean thereAreTodoFound = worker.getAddedOrEditedTodos().size() + worker.getInChangedTodos().size() > 0;

@@ -197,10 +197,7 @@ public class AWTThreadDumpPanel extends JPanel implements ThreadDumpPanel {
             if (detail == null) {
                 detail = threadState.getState();
             }
-            if (detail.length() > 30) {
-                detail = detail.substring(0, 30) + "...";
-            }
-            append(detail, attrs);
+            append(LocalizeValue.of(detail).truncateWithEllipsis(30), attrs);
             append(")", attrs);
             if (threadState.getExtraState() != null) {
                 append(" [" + threadState.getExtraState() + "]", attrs);

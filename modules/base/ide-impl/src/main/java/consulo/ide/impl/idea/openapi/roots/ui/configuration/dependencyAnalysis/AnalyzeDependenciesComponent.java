@@ -46,6 +46,7 @@ import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.io.PathUtil;
 import consulo.util.lang.Pair;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 
@@ -459,10 +460,7 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
          * @return the string cut so it would fit the banner (the suffix is dropped)
          */
         protected String prefixForBanner(String p) {
-            if (p.length() > CUTOFF_LENGTH) {
-                p = p.substring(0, CUTOFF_LENGTH) + "...";
-            }
-            return p;
+            return StringUtil.truncateWithEllipsis(p, CUTOFF_LENGTH);
         }
     }
 

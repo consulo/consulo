@@ -24,7 +24,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.image.Image;
 import consulo.util.collection.ArrayUtil;
-import consulo.util.lang.ObjectUtil;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.action.AbstractVcsAction;
@@ -37,6 +36,7 @@ import consulo.versionControlSystem.util.VcsUtil;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 public abstract class AbstractCommonCheckinAction extends AbstractVcsAction {
@@ -54,7 +54,7 @@ public abstract class AbstractCommonCheckinAction extends AbstractVcsAction {
     @RequiredUIAccess
     public void actionPerformed(VcsContext context) {
         LOG.debug("actionPerformed. ");
-        Project project = ObjectUtil.notNull(context.getProject());
+        Project project = Objects.requireNonNull(context.getProject());
 
         if (ChangeListManager.getInstance(project).isFreezedWithNotification("Can not " + getMnemonicsFreeActionName(context) + " now")) {
             LOG.debug("ChangeListManager is freezed. returning.");
@@ -91,13 +91,11 @@ public abstract class AbstractCommonCheckinAction extends AbstractVcsAction {
         }
     }
 
-    
     @RequiredUIAccess
     protected FilePath[] prepareRootsForCommit(FilePath[] roots, Project project) {
         return DescindingFilesFilter.filterDescindingFiles(roots, project);
     }
 
-    
     protected LocalizeValue getMnemonicsFreeActionName(VcsContext context) {
         return getActionName(context);
     }
@@ -123,10 +121,8 @@ public abstract class AbstractCommonCheckinAction extends AbstractVcsAction {
         return result;
     }
 
-    
     protected abstract LocalizeValue getActionName(VcsContext dataContext);
 
-    
     protected abstract FilePath[] getRoots(VcsContext dataContext);
 
     protected abstract boolean approximatelyHasRoots(VcsContext dataContext);
@@ -142,13 +138,12 @@ public abstract class AbstractCommonCheckinAction extends AbstractVcsAction {
             presentation.setEnabled(false);
         }
         else {
-            presentation.setText(getActionName(vcsContext).map(string -> string + "..."));
+            presentation.setText(getActionName(vcsContext).appendEllipsis());
             presentation.setEnabled(!ProjectLevelVcsManager.getInstance(project).isBackgroundVcsOperationRunning());
             presentation.setVisible(true);
         }
     }
 
-    
     protected static FilePath[] getAllContentRoots(VcsContext context) {
         return Stream.of(ProjectLevelVcsManager.getInstance(context.getProject()).getAllVersionedRoots())
             .map(VcsUtil::getFilePath)
