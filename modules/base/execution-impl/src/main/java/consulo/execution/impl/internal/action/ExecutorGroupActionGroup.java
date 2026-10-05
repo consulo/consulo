@@ -70,4 +70,9 @@ public class ExecutorGroupActionGroup extends ActionGroup implements DumbAware, 
             presentation.setEnabledAndVisible(myExecutorGroup.isApplicable(project));
         }).toCoroutine();
     }
+
+    @Override
+    public boolean showBelowArrow() {
+        return false;
+    }
 }
