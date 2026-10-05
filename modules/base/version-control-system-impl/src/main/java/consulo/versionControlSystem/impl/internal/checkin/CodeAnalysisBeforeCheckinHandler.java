@@ -27,7 +27,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.CodeSmellDetector;
 import consulo.versionControlSystem.CodeSmellInfo;
 import consulo.versionControlSystem.VcsConfiguration;
