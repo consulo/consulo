@@ -20,13 +20,11 @@ import consulo.application.Application;
 import consulo.application.ui.UISettings;
 import consulo.desktop.awt.ui.impl.window.JFrameAsUIWindow;
 import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationService;
 import consulo.project.ui.notification.Notifications;
 import consulo.project.ui.notification.NotificationsManager;
-import consulo.util.lang.reflect.ReflectionUtil;
-import consulo.ui.ex.awt.ColorIcon;
-import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.AntialiasingType;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
@@ -42,12 +40,14 @@ import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
+import consulo.ui.style.ComponentColors;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.ExceptionUtil;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
-import org.jspecify.annotations.Nullable;
+import consulo.util.lang.reflect.ReflectionUtil;
 import net.miginfocom.swing.MigLayout;
+import org.jspecify.annotations.Nullable;
 
 import javax.accessibility.Accessible;
 import javax.accessibility.AccessibleContext;
@@ -70,8 +70,8 @@ import java.awt.event.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 import java.util.function.Function;
 
 import static java.util.Locale.ENGLISH;
@@ -770,8 +770,9 @@ public class UiInspectorAction extends UiMouseAction {
                     changed = inspectorTableModel.myProperties.get(row).changed;
                 }
 
-                Color fg =
-                    isSelected ? table.getSelectionForeground() : changed ? JBCurrentTheme.Link.linkColor() : table.getForeground();
+                Color fg = isSelected ? table.getSelectionForeground()
+                    : changed ? TargetAWT.to(ComponentColors.LINK_FOREGROUND)
+                    : table.getForeground();
                 JBFont font = JBUI.Fonts.label();
                 setFont(changed ? font.asBold() : font);
                 setForeground(fg);

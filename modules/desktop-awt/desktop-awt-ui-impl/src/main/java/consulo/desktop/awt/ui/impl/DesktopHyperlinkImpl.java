@@ -15,9 +15,9 @@
  */
 package consulo.desktop.awt.ui.impl;
 
+import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 import consulo.desktop.awt.ui.impl.event.DesktopAWTInputDetails;
 import consulo.desktop.awt.ui.impl.facade.FromSwingComponentWrapper;
-import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.Hyperlink;
@@ -26,9 +26,8 @@ import consulo.ui.event.HyperlinkEvent;
 import consulo.ui.ex.awt.LocalizeAction;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
-import consulo.ui.style.ComponentColors;
-import org.jspecify.annotations.Nullable;
 import org.jdesktop.swingx.JXHyperlink;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.event.ActionEvent;
 
@@ -49,9 +48,6 @@ public class DesktopHyperlinkImpl extends SwingComponentDelegate<DesktopHyperlin
 
             setFocusPainted(false);
             setIcon(TargetAWT.to(icon));
-
-            setClickedColor(TargetAWT.to(ComponentColors.LINK_FOREGROUND));
-            setUnclickedColor(TargetAWT.to(ComponentColors.LINK_FOREGROUND));
         }
 
         @Override

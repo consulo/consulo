@@ -300,7 +300,7 @@ public class WhatsNewVirtualFileEditor extends ConfigurationFileEditor {
                     HtmlChunk.hr()
                         .attr("size", 1)
                         .attr("noshade", "")
-                        .attr("color", "#" + ColorValueUtil.toHex(StandardColors.LIGHT_GRAY))
+                        .attr("color", '#' + ColorValueUtil.toHex(StandardColors.LIGHT_GRAY))
                 );
 
                 body = body.child(HtmlChunk.br());

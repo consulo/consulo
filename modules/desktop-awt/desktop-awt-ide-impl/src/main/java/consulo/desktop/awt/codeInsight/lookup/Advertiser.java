@@ -7,6 +7,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
+import consulo.ui.style.ComponentColors;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Lists;
 import org.jspecify.annotations.Nullable;
@@ -32,7 +33,7 @@ public class Advertiser implements LookupAdvertiser {
   public Advertiser() {
     myNextLabel = new JLabel("Next Tip");
     myNextLabel.setFont(adFont());
-    myNextLabel.setForeground(JBCurrentTheme.Link.linkColor());
+    myNextLabel.setForeground(TargetAWT.to(ComponentColors.LINK_FOREGROUND));
     new ClickListener() {
       @Override
       public boolean onClick(MouseEvent e, int clickCount) {

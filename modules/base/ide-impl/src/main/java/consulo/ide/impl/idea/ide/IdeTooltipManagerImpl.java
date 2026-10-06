@@ -10,6 +10,7 @@ import consulo.colorScheme.EditorColorKey;
 import consulo.dataContext.DataContext;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.language.editor.hint.HintColorUtil;
 import consulo.language.editor.ui.awt.HintUtil;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.Html;
@@ -31,13 +32,14 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.BalloonBuilder;
 import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.ui.style.ComponentColors;
 import consulo.ui.style.StyleManager;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
-import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -172,7 +174,7 @@ public final class IdeTooltipManagerImpl implements Disposable, AWTEventListener
 
         if (myQueuedTooltip != null) {
             // The case when a tooltip is going to appear on the Component but the MOUSE_ENTERED event comes to the Component before it,
-            // we dont want to hide the tooltip in that case (IDEA-194208)
+            // we don't want to hide the tooltip in that case (IDEA-194208)
             Point tooltipPoint = myQueuedTooltip.getPoint();
             if (tooltipPoint != null) {
                 Component realQueuedComponent = SwingUtilities.getDeepestComponentAt(myQueuedTooltip.getComponent(), tooltipPoint.x, tooltipPoint.y);
@@ -268,7 +270,7 @@ public final class IdeTooltipManagerImpl implements Disposable, AWTEventListener
                         return false;
                     }
 
-                    JLayeredPane layeredPane = ComponentUtil.getParentOfType((Class<? extends JLayeredPane>) JLayeredPane.class, (Component) c);
+                    JLayeredPane layeredPane = ComponentUtil.getParentOfType(JLayeredPane.class, c);
 
                     JEditorPane pane = initPane(text, new HintHint(me).setAwtTooltip(true), layeredPane);
                     Wrapper wrapper = new Wrapper(pane);
@@ -467,43 +469,51 @@ public final class IdeTooltipManagerImpl implements Disposable, AWTEventListener
         }, tooltip.getDismissDelay());
     }
 
+    @Override
     @SuppressWarnings({"UnusedParameters"})
     public Color getTextForeground(boolean awtTooltip) {
         return UIUtil.getToolTipForeground();
     }
 
+    @Override
     @SuppressWarnings({"UnusedParameters"})
     public Color getLinkForeground(boolean awtTooltip) {
-        return JBCurrentTheme.Link.linkColor();
+        return TargetAWT.to(ComponentColors.LINK_FOREGROUND);
     }
 
+    @Override
     @SuppressWarnings({"UnusedParameters"})
     public Color getTextBackground(boolean awtTooltip) {
         ColorValue color = EditorColorsUtil.getGlobalOrDefaultColor(TOOLTIP_COLOR_KEY);
         return color != null ? TargetAWT.to(color) : UIUtil.getToolTipBackground();
     }
 
+    @Override
     @SuppressWarnings({"UnusedParameters"})
     public String getUlImg(boolean awtTooltip) {
         return StyleManager.get().getCurrentStyle().isDark() ? "/general/mdot-white.png" : "/general/mdot.png";
     }
 
+    @Override
     @SuppressWarnings({"UnusedParameters"})
     @Deprecated(forRemoval = true)
     public Color getBorderColor(boolean awtTooltip) {
         return JBColor.border();
     }
 
+    @Override
     @SuppressWarnings({"UnusedParameters"})
     public boolean isOwnBorderAllowed(boolean awtTooltip) {
         return !awtTooltip;
     }
 
+    @Override
     @SuppressWarnings({"UnusedParameters"})
     public boolean isOpaqueAllowed(boolean awtTooltip) {
         return !awtTooltip;
     }
 
+    @Override
     @SuppressWarnings({"UnusedParameters"})
     public Font getTextFont(boolean awtTooltip) {
         return UIManager.getFont("ToolTip.font");
@@ -748,7 +758,7 @@ public final class IdeTooltipManagerImpl implements Disposable, AWTEventListener
 
     public static void setColors(JComponent pane) {
         pane.setForeground(JBColor.foreground());
-        pane.setBackground(TargetAWT.to(HintUtil.getInformationColor()));
+        pane.setBackground(TargetAWT.to(HintColorUtil.getInformationColor()));
         pane.setOpaque(true);
     }
 

@@ -46,6 +46,7 @@ import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.popup.BaseListPopupStep;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.PopupStep;
+import consulo.ui.style.ComponentColors;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.MultiMap;
 import consulo.util.dataholder.UserDataHolder;
@@ -86,8 +87,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
@@ -995,7 +996,7 @@ public class ApplyPatchDifferentiatedDialog extends DialogWrapper {
                     component.append("  ");
                     component.append(
                         "Select missing base",
-                        new SimpleTextAttributes(STYLE_PLAIN, JBCurrentTheme.Link.linkColor()),
+                        SimpleTextAttributes.of(STYLE_PLAIN, ComponentColors.LINK_FOREGROUND),
                         (Runnable) myChangesTreeList::handleInvalidChangesAndToggle
                     );
                 }

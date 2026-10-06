@@ -6,6 +6,7 @@ import consulo.ui.ex.awt.accessibility.ScreenReader;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
+import consulo.ui.style.ComponentColors;
 import org.jspecify.annotations.Nullable;
 
 import javax.accessibility.AccessibleAction;
@@ -265,7 +266,7 @@ public class LinkLabel<T> extends JLabel {
     }
 
     protected Color getNormal() {
-        return JBCurrentTheme.Link.linkColor();
+        return TargetAWT.to(ComponentColors.LINK_FOREGROUND);
     }
 
     protected Color getHover() {

@@ -108,7 +108,7 @@ public class WebStateChartImpl<S> extends VaadinComponentDelegate<WebEChartVaadi
             StatePresentation presentation = myPresentations.get(state);
             ObjectNode stateNode = states.addObject();
             stateNode.put("label", presentation.label().get());
-            stateNode.put("color", ColorValueUtil.toHtmlColor(presentation.color()));
+            stateNode.put("color", ColorValueUtil.toCssColor(presentation.color()));
         }
 
         ArrayNode intervals = root.putArray("intervals");

@@ -3,8 +3,6 @@ package consulo.ui.ex.awt;
 
 import consulo.ui.ex.popup.ComponentPopupBuilder;
 import consulo.ui.ex.RelativePoint;
-import consulo.ui.ex.awt.JBCurrentTheme;
-import consulo.ui.ex.awt.*;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.application.util.registry.Registry;
@@ -15,6 +13,8 @@ import consulo.ui.ex.awt.util.Alarm;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 
+import consulo.ui.style.ComponentColors;
+import consulo.ui.util.ColorValueUtil;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
@@ -250,10 +250,7 @@ public class ComponentValidator {
     }
 
     
-    public static ComponentPopupBuilder createPopupBuilder(
-        ValidationInfo info,
-        @Nullable Consumer<? super JEditorPane> configurator
-    ) {
+    public static ComponentPopupBuilder createPopupBuilder(ValidationInfo info, @Nullable Consumer<? super JEditorPane> configurator) {
         JEditorPane tipComponent = new JEditorPane();
         View v = BasicHTML.createHTMLView(tipComponent, String.format("<html>%s</html>", info.message));
         String text = v.getPreferredSpan(View.X_AXIS) > MAX_WIDTH.get()
@@ -269,18 +266,18 @@ public class ComponentValidator {
         tipComponent.setEditorKit(JBHtmlEditorKit.create());
 
         EditorKit kit = tipComponent.getEditorKit();
-        if (kit instanceof HTMLEditorKit) {
-            StyleSheet css = ((HTMLEditorKit)kit).getStyleSheet();
+        if (kit instanceof HTMLEditorKit editorKit) {
+            StyleSheet css = editorKit.getStyleSheet();
 
-            css.addRule("a, a:link {color:#" + ColorUtil.toHex(JBCurrentTheme.Link.linkColor()) + ";}");
+            css.addRule("a, a:link {color:" + ColorValueUtil.toCssColor(ComponentColors.LINK_FOREGROUND) + ";}");
             css.addRule("a:visited {color:#" + ColorUtil.toHex(JBCurrentTheme.Link.linkVisitedColor()) + ";}");
             css.addRule("a:hover {color:#" + ColorUtil.toHex(JBCurrentTheme.Link.linkHoverColor()) + ";}");
             css.addRule("a:active {color:#" + ColorUtil.toHex(JBCurrentTheme.Link.linkPressedColor()) + ";}");
             css.addRule("body {background-color:#" + ColorUtil.toHex(info.warning ? warningBackgroundColor() : errorBackgroundColor()) + ";}");
         }
 
-        if (tipComponent.getCaret() instanceof DefaultCaret) {
-            ((DefaultCaret)tipComponent.getCaret()).setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
+        if (tipComponent.getCaret() instanceof DefaultCaret defaultCaret) {
+            defaultCaret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
         }
 
         tipComponent.setCaretPosition(0);
@@ -294,10 +291,10 @@ public class ComponentValidator {
             configurator.accept(tipComponent);
         }
 
-        return JBPopupFactory.getInstance().createComponentPopupBuilder(tipComponent, null).
-            setBorderColor(info.warning ? warningBorderColor() : errorBorderColor()).
-            setCancelOnClickOutside(false).
-            setShowShadow(true);
+        return JBPopupFactory.getInstance().createComponentPopupBuilder(tipComponent, null)
+            .setBorderColor(info.warning ? warningBorderColor() : errorBorderColor())
+            .setCancelOnClickOutside(false)
+            .setShowShadow(true);
     }
 
     private static String trimMessage(String message, JComponent c) {

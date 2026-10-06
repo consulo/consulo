@@ -1,7 +1,9 @@
 package consulo.ui.util;
 
+import com.uber.nullaway.annotations.Contract;
 import consulo.annotation.UsedInPlugin;
 import consulo.ui.color.ColorValue;
+import consulo.ui.color.HSLColor;
 import consulo.ui.color.RGBColor;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
@@ -31,6 +33,7 @@ public class ColorValueUtil {
         return color;
     }
 
+    @Contract("null -> null")
     public static @Nullable RGBColor fromHexOrNull(@Nullable String str) {
         if (str == null) {
             return null;
@@ -48,13 +51,13 @@ public class ColorValueUtil {
 
     private static int fromHexDigit(String str, int pos) {
         char ch = str.charAt(pos);
-        if (ch >= '0' && ch <= '9') {
+        if ('0' <= ch && ch <= '9') {
             return ch - '0';
         }
-        if (ch >= 'A' && ch <= 'F') {
+        if ('A' <= ch && ch <= 'F') {
             return ch - 'A' + 10;
         }
-        if (ch >= 'a' && ch <= 'f') {
+        if ('a' <= ch && ch <= 'f') {
             return ch - 'a' + 10;
         }
         throw new IllegalArgumentException("unsupported char at " + pos + ":" + str);
@@ -68,17 +71,85 @@ public class ColorValueUtil {
         return 16 * fromHexDigit(str, pos) + fromHexDigit(str, pos + 1);
     }
 
-    public static String toHtmlColor(ColorValue c) {
-        return "#" + toHex(c);
+    @Contract("null -> null; !null -> !null")
+    public static @Nullable String toCssColor(@Nullable ColorValue c) {
+        if (c == null) {
+            return null;
+        }
+
+        StringBuilder result = new StringBuilder();
+
+        if (c instanceof HSLColor hsl) {
+            int alpha = hsl.getAlpha();
+
+            result.append(alpha == 255 ? "hsl(" : "hsla(");
+            result.append(Math.round(hsl.getHue())).append("deg");
+            appendPercent(hsl.getSaturation(), result.append(", "));
+            appendPercent(hsl.getLightness(), result.append(", "));
+            if (alpha != 255) {
+                appendPercent(alpha / 255f, result.append(", "));
+            }
+            return result.append(')').toString();
+        }
+
+        RGBColor rgb = c.toRGB();
+
+        int alpha = rgb.getAlpha();
+        if (alpha != 255) {
+            result.append("rgba(")
+                .append(rgb.getRed()).append(", ")
+                .append(rgb.getGreen()).append(", ")
+                .append(rgb.getBlue()).append(", ");
+
+            appendPercent(alpha / 255f, result);
+
+            return result.append(')').toString();
+        }
+
+        return appendHex(rgb, true, result.append('#')).toString();
+    }
+
+    private static StringBuilder appendPercent(float value, StringBuilder sb) {
+        int scaled = Math.round(value * 1000);
+        int whole = scaled / 10;
+        int frac = scaled % 10;
+        sb.append(whole);
+        if (frac != 0) {
+            sb.append('.').append(frac);
+        }
+        return sb.append('%');
     }
 
     public static String toHex(ColorValue c) {
-        RGBColor rgb = c.toRGB();
+        return appendHex(c.toRGB(), false, new StringBuilder(6)).toString();
+    }
 
-        String R = Integer.toHexString(rgb.getRed());
-        String G = Integer.toHexString(rgb.getGreen());
-        String B = Integer.toHexString(rgb.getBlue());
-        return (R.length() < 2 ? "0" : "") + R + (G.length() < 2 ? "0" : "") + G + (B.length() < 2 ? "0" : "") + B;
+    private static StringBuilder appendHex(RGBColor rgb, boolean canCollapseTo3, StringBuilder sb) {
+        int r = rgb.getRed();
+        int g = rgb.getGreen();
+        int b = rgb.getBlue();
+
+        char r1 = toHexDigit((r >> 4) & 0xF);
+        char r0 = toHexDigit(r & 0xF);
+        char g1 = toHexDigit((g >> 4) & 0xF);
+        char g0 = toHexDigit(g & 0xF);
+        char b1 = toHexDigit((b >> 4) & 0xF);
+        char b0 = toHexDigit(b & 0xF);
+
+        if (canCollapseTo3 && r0 == r1 && g0 == g1 && b0 == b1) {
+            sb.ensureCapacity(sb.length() + 3);
+            return sb.append(r0).append(g0).append(b0);
+        }
+
+        sb.ensureCapacity(sb.length() + 6);
+        return sb.append(r1).append(r0).append(g1).append(g0).append(b1).append(b0);
+    }
+
+    @SuppressWarnings("SpellCheckingInspection")
+    private static final char[] HEX_DIGITS = "0123456789ABCDEF".toCharArray();
+
+    private static char toHexDigit(int value) {
+        return HEX_DIGITS[value & 0xF];
     }
 
     /**
@@ -90,8 +161,7 @@ public class ColorValueUtil {
      */
     public static boolean isDark(ColorValue c) {
         RGBColor color = c.toRGB();
-        // based on perceptional luminosity, see
-        return (1 - (0.299 * color.getRed() + 0.587 * color.getGreen() + 0.114 * color.getBlue()) / 255) >= 0.5;
+        return 0.299f * color.getRed() + 0.587f * color.getGreen() + 0.114f * color.getBlue() < 127.5f;
     }
 
     private static final double FACTOR = 0.7;
