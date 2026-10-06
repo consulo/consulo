@@ -86,8 +86,7 @@ public class CommonCheckinProjectAction extends AbstractCommonCheckinAction {
             return;
         }
 
-        LocalizeValue actionName = getActionName(vcsContext).map(text -> text + "...");
-        presentation.setText(actionName);
+        presentation.setText(getActionName(vcsContext).appendEllipsis());
 
         presentation.setEnabled(!plVcsManager.isBackgroundVcsOperationRunning());
         presentation.setVisible(true);

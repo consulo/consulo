@@ -95,6 +95,5 @@ public interface CheckinProjectPanel extends Refreshable, CommitMessage {
     @Override
     String getCommitMessage();
 
-    
     LocalizeValue getCommitActionName();
 }

@@ -70,7 +70,7 @@ public class StopAction extends LegacyDumbAwareAction {
             int stopCount = stoppableDescriptors.size();
             enable = stopCount >= 1;
             if (stopCount > 1) {
-                presentation.setText(getTemplatePresentation().getText() + "...");
+                presentation.setText(getTemplatePresentation().getTextValue().appendEllipsis());
                 icon = ImageEffects.withText(icon, String.valueOf(stopCount));
             }
             else if (stopCount == 1) {

@@ -15,7 +15,6 @@
  */
 package consulo.desktop.awt.internal.notification;
 
-import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
@@ -226,7 +225,6 @@ public class EventLog {
         return new LogEntry(logDoc.getText(), status, list, titleLength);
     }
 
-    
     private static String addIndents(String text, String indent) {
         return StringUtil.replace(text, "\n", "\n" + indent);
     }
@@ -246,11 +244,10 @@ public class EventLog {
         return false;
     }
 
-    
     private static String truncateLongString(AtomicBoolean showMore, String title) {
         if (title.length() > 1000) {
             showMore.set(true);
-            return title.substring(0, 1000) + "...";
+            return StringUtil.truncateWithEllipsis(title, 1000);
         }
         return title;
     }
@@ -452,16 +449,13 @@ public class EventLog {
         text = StringUtil.replace(text, "&nbsp;", " ");
         text = StringUtil.replace(text, "&raquo;", ">>");
         text = StringUtil.replace(text, "&laquo;", "<<");
-        text = StringUtil.replace(text, "&hellip;", "...");
+        text = StringUtil.replace(text, "&hellip;", "…");
         document.insertString(document.getTextLength(), StringUtil.unescapeXml(text));
     }
 
     public static class LogEntry {
-        
         public final String message;
-        
         public final String status;
-        
         public final List<Pair<TextRange, HyperlinkInfo>> links;
         public final int titleLength;
 

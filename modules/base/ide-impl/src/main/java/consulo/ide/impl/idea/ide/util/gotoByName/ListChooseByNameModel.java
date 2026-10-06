@@ -1,5 +1,6 @@
 package consulo.ide.impl.idea.ide.util.gotoByName;
 
+import consulo.localization.LocalizedValue;
 import consulo.project.Project;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.Comparing;
@@ -20,19 +21,13 @@ import java.util.regex.Pattern;
  */
 public class ListChooseByNameModel<T extends ChooseByNameItem> extends SimpleChooseByNameModel {
     private static final int MAX_DESC_LENGTH = 80;
-    private static final String ELLIPSIS_SUFFIX = "...";
 
     private Pattern myCompiledPattern;
     private String myPattern;
     private final List<T> myItems;
     private final String myNotInMessage;
 
-    public ListChooseByNameModel(
-        Project project,
-        String prompt,
-        String notInMessage,
-        List<T> items
-    ) {
+    public ListChooseByNameModel(Project project, String prompt, String notInMessage, List<T> items) {
         super(project, prompt, null);
 
         myItems = items;
@@ -74,12 +69,7 @@ public class ListChooseByNameModel<T extends ChooseByNameItem> extends SimpleCho
     public ListCellRenderer getListCellRenderer() {
         return new DefaultListCellRenderer() {
             @Override
-            public Component getListCellRendererComponent(
-                JList list,
-                Object value,
-                int index, boolean isSelected, boolean cellHasFocus
-            ) {
-
+            public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                 JPanel panel = new JPanel(new BorderLayout());
                 panel.setOpaque(true);
                 panel.setBorder(new EmptyBorder(0, 0, 0, 5));
@@ -87,9 +77,7 @@ public class ListChooseByNameModel<T extends ChooseByNameItem> extends SimpleCho
                 Color bg = isSelected ? UIUtil.getListSelectionBackground() : UIUtil.getListBackground();
                 panel.setBackground(bg);
 
-                if (value instanceof ChooseByNameItem) {
-                    ChooseByNameItem item = (ChooseByNameItem) value;
-
+                if (value instanceof ChooseByNameItem item) {
                     Color fg = isSelected ? UIUtil.getListSelectionForeground() : UIUtil.getListForeground();
 
                     JLabel actionLabel = new JLabel(item.getName(), null, LEFT);
@@ -103,14 +91,8 @@ public class ListChooseByNameModel<T extends ChooseByNameItem> extends SimpleCho
                     String description = item.getDescription();
                     if (description != null) {
                         // truncate long descriptions
-                        String normalizedDesc;
-                        if (description.length() > MAX_DESC_LENGTH) {
-                            normalizedDesc = description.substring(0, MAX_DESC_LENGTH) + ELLIPSIS_SUFFIX;
-                        }
-                        else {
-                            normalizedDesc = description;
-                        }
-                        JLabel descriptionLabel = new JLabel(normalizedDesc);
+                        JLabel descriptionLabel =
+                            new JLabel(LocalizedValue.localizeTODO(description).truncateWithEllipsis(MAX_DESC_LENGTH).get());
                         descriptionLabel.setBackground(bg);
                         descriptionLabel.setForeground(fg);
                         descriptionLabel.setBorder(new EmptyBorder(0, 15, 0, 0));

@@ -153,6 +153,18 @@ public interface LocalizedValue extends Supplier<String>, Comparable<LocalizedVa
         return map(DefaultMapFunctions.CAPITALIZE);
     }
 
+    default LocalizedValue appendEllipsis() {
+        return map(DefaultMapFunctions.APPEND_ELLIPSIS);
+    }
+
+    default LocalizedValue truncateWithEllipsis(int maxLength) {
+        return map(new DefaultMapFunctions.EllipsisTruncator(maxLength));
+    }
+
+    default LocalizedValue removeEllipsis() {
+        return map(DefaultMapFunctions.REMOVE_ELLIPSIS);
+    }
+
     @Override
     default int compareTo(LocalizedValue that) {
         return comparator().compare(this, that);

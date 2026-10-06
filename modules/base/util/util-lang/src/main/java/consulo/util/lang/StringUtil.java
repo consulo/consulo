@@ -958,6 +958,18 @@ public final class StringUtil {
         return unifyLineSeparators(text, "\n", null, false);
     }
 
+    @Deprecated
+    @DeprecationInfo("Use LocalizeValue#truncateWithEllipsis")
+    public static String truncateWithEllipsis(String text, int maxLength) {
+        if (maxLength < 1) {
+            throw new IllegalArgumentException("Expecting maxLength (" + maxLength + ") to be at least 1");
+        }
+        if (text.length() <= maxLength) {
+            return text;
+        }
+        return text.substring(0, maxLength - 1) + "…";
+    }
+
     public static String shortenTextWithEllipsis(String text, int maxLength, int suffixLength, String symbol) {
         int textLength = text.length();
         if (textLength > maxLength) {
@@ -978,7 +990,7 @@ public final class StringUtil {
     }
 
     public static String shortenTextWithEllipsis(String text, int maxLength, int suffixLength, boolean useEllipsisSymbol) {
-        String symbol = useEllipsisSymbol ? "\u2026" : "...";
+        String symbol = useEllipsisSymbol ? "…" : "...";
         return shortenTextWithEllipsis(text, maxLength, suffixLength, symbol);
     }
 
@@ -1398,6 +1410,15 @@ public final class StringUtil {
             return s.substring(0, s.length() - suffix.length());
         }
         return s;
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use LocalizeValue#removeEllipsis")
+    public static String removeEllipsis(String s) {
+        if (endsWithChar(s, '…')) {
+            return s.substring(0, s.length() - 1);
+        }
+        return trimEnd(s, "...");
     }
 
     public static boolean endsWithIgnoreCase(CharSequence text, CharSequence suffix) {

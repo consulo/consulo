@@ -59,8 +59,8 @@ public class CodeAnalysisBeforeCheckinHandler extends CheckinHandler {
         myCheckinPanel = panel;
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public @Nullable RefreshableOnComponent getBeforeCheckinConfigurationPanel() {
         return new CheckBoxRefreshableOnComponent(
             VcsLocalize.beforeCheckinStandardOptionsCheckSmells(),
@@ -79,17 +79,14 @@ public class CodeAnalysisBeforeCheckinHandler extends CheckinHandler {
     private ReturnResult processFoundCodeSmells(List<CodeSmellInfo> codeSmells, @Nullable CommitExecutor executor) {
         int errorCount = collectErrors(codeSmells);
         int warningCount = codeSmells.size() - errorCount;
-        String commitButtonText = executor != null ? executor.getActionText().get() : myCheckinPanel.getCommitActionName().get();
-        if (commitButtonText.endsWith("...")) {
-            commitButtonText = commitButtonText.substring(0, commitButtonText.length() - 3);
-        }
+        LocalizeValue commitButtonText = executor != null ? executor.getActionText() : myCheckinPanel.getCommitActionName();
 
         int answer = Messages.showYesNoCancelDialog(
             myProject,
             VcsLocalize.beforeCommitFilesContainCodeSmellsEditThemConfirmText(errorCount, warningCount).get(),
             VcsLocalize.codeSmellsErrorMessagesTabName().get(),
             VcsLocalize.codeSmellsReviewButton().get(),
-            commitButtonText,
+            commitButtonText.removeEllipsis().get(),
             CommonLocalize.buttonCancel().get(),
             UIUtil.getWarningIcon()
         );

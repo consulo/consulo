@@ -84,7 +84,7 @@ public class RollbackAction extends LegacyDumbAwareAction {
             || currentChangelistNotEmpty(project);
         e.getPresentation().setEnabled(isEnabled);
         String operationName = RollbackUtil.getRollbackOperationName(project);
-        e.getPresentation().setText(operationName + "...");
+        e.getPresentation().setText(LocalizeValue.localizeTODO(operationName).appendEllipsis());
         if (isEnabled) {
             e.getPresentation().setDescription(UIUtil.removeMnemonic(operationName) + " selected changes");
         }
@@ -218,7 +218,7 @@ public class RollbackAction extends LegacyDumbAwareAction {
                         if (indicator != null) {
                             indicator.setText(
                                 vcs.getDisplayName() + ": performing " +
-                                    UIUtil.removeMnemonic(rollbackEnvironment.getRollbackOperationName()).toLowerCase() + "..."
+                                    UIUtil.removeMnemonic(rollbackEnvironment.getRollbackOperationName()).toLowerCase() + "…"
                             );
                             indicator.setIndeterminate(false);
                         }

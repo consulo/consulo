@@ -157,7 +157,7 @@ public class CreateAction extends BaseRunConfigurationAction {
         protected void updateText(Presentation presentation, String actionText) {
             presentation.setText(
                 actionText.length() > 0
-                    ? LocalizeValue.join(ExecutionLocalize.createRunConfigurationForItemActionName(actionText), LocalizeValue.of("..."))
+                    ? ExecutionLocalize.createRunConfigurationForItemActionName(actionText).appendEllipsis()
                     : ExecutionLocalize.createRunConfigurationActionName()
             );
         }

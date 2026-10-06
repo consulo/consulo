@@ -56,7 +56,7 @@ public class GotoClassAction extends SearchEverywhereBaseAction implements DumbA
     public GotoClassAction() {
         //we need to change the template presentation to show the proper text for the action in Settings | Keymap
         super(
-            LocalizeValue.localizeTODO(GotoClassPresentationUpdater.getActionTitle() + "..."),
+            LocalizeValue.localizeTODO(GotoClassPresentationUpdater.getActionTitle()).appendEllipsis(),
             IdeLocalize.goToClassActionDescription(StringUtil.join(
                 GotoClassPresentationUpdater.getElementKinds(),
                 "/"

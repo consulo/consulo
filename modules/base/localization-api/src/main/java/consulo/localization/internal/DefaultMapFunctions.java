@@ -16,6 +16,7 @@
 package consulo.localization.internal;
 
 import consulo.localization.LocalizationManager;
+import consulo.util.lang.StringUtil;
 
 import java.util.function.BiFunction;
 
@@ -42,4 +43,25 @@ public class DefaultMapFunctions {
         }
         return Character.toUpperCase(s.charAt(0)) + s.substring(1);
     };
+
+    // TODO: implement locale-specific ellipsis rules
+
+    public static final BiFunction<LocalizationManager, String, String> APPEND_ELLIPSIS =
+        (localizeManager, s) -> s + "…";
+
+    public static final BiFunction<LocalizationManager, String, String> REMOVE_ELLIPSIS =
+        (localizeManager, s) -> StringUtil.removeEllipsis(s);
+
+    public record EllipsisTruncator(int maxLength) implements BiFunction<LocalizationManager, String, String> {
+        public EllipsisTruncator {
+            if (maxLength < 3) {
+                throw new IllegalArgumentException("Expecting maxLength (" + maxLength + ") to be at least 3");
+            }
+        }
+
+        @Override
+        public String apply(LocalizationManager localizeManager, String text) {
+            return text.length() <= maxLength ? text : text.substring(0, maxLength - 1) + "…";
+        }
+    }
 }

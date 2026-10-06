@@ -269,7 +269,7 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
 
             String actionName = getCompleteActionName(vcsContext);
             if (myActionInfo.showOptions(project) || OptionsDialog.shiftIsPressed(vcsContext.getModifiers())) {
-                actionName += "...";
+                actionName += "…";
             }
 
             presentation.setText(actionName);
