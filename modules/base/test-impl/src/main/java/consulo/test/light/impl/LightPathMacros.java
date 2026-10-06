@@ -24,6 +24,7 @@ import jakarta.inject.Singleton;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -55,17 +56,17 @@ public class LightPathMacros implements PathMacros {
 
   @Override
   public Set<String> getUserMacroNames() {
-    return null;
+    return Set.of();
   }
 
   @Override
   public Set<String> getSystemMacroNames() {
-    return null;
+    return Set.of();
   }
 
   @Override
   public Collection<String> getIgnoredMacroNames() {
-    return null;
+    return List.of();
   }
 
   @Override
