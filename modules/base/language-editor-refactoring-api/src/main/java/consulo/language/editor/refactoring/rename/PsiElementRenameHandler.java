@@ -243,6 +243,6 @@ public class PsiElementRenameHandler implements RenameHandler {
     
     @Override
     public LocalizeValue getActionTitleValue() {
-        return LocalizeValue.localizeTODO("Rename Element...");
+        return LocalizeValue.localizeTODO("Rename Element…");
     }
 }

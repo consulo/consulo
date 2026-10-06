@@ -46,7 +46,7 @@ import java.util.List;
 @ActionImpl(id = "ShelvedChanges.ImportPatches")
 public class ImportIntoShelfAction extends LegacyDumbAwareAction {
     public ImportIntoShelfAction() {
-        super(LocalizeValue.localizeTODO("Import patches..."), LocalizeValue.localizeTODO("Copies patch file to shelf"));
+        super(LocalizeValue.localizeTODO("Import patches…"), LocalizeValue.localizeTODO("Copies patch file to shelf"));
     }
 
     @Override
@@ -71,7 +71,7 @@ public class ImportIntoShelfAction extends LegacyDumbAwareAction {
             List<VirtualFile> patchTypeFiles = new ArrayList<>();
             boolean filesFound = pm.runProcessWithProgressSynchronously(
                 (Runnable) () -> patchTypeFiles.addAll(shelveChangesManager.gatherPatchFiles(Arrays.asList(files))),
-                LocalizeValue.localizeTODO("Looking for patch files..."),
+                LocalizeValue.localizeTODO("Looking for patch files…"),
                 true,
                 project
             );

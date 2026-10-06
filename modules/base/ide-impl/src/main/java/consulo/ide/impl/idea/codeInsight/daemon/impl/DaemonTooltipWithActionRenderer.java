@@ -328,7 +328,7 @@ public class DaemonTooltipWithActionRenderer extends DaemonTooltipRenderer {
         };
 
         buttons.add(
-            createActionLabel(LocalizeValue.localizeTODO("More actions..."), showAllFixes, hintHint.getTextBackground()),
+            createActionLabel(LocalizeValue.localizeTODO("More actions…"), showAllFixes, hintHint.getTextBackground()),
             gridBag.next().insets(topInset, 12, bottomInset, 4)
         );
         buttons.add(

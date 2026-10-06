@@ -39,7 +39,7 @@ public class OpenFilesActivity implements PostStartupActivity, DumbAware {
 
     ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
     if (indicator != null) {
-      indicator.setText("Reopening files...");
+      indicator.setText("Reopening files…");
     }
 
     FileEditorManagerImpl manager = (FileEditorManagerImpl)fileEditorManager;

@@ -1702,7 +1702,7 @@ public class DocumentationComponent extends JPanel implements Disposable, UiData
         private final boolean myOnToolbar;
 
         MyShowSettingsAction(boolean onToolbar) {
-            super(LocalizeValue.localizeTODO("Adjust font size..."));
+            super(LocalizeValue.localizeTODO("Adjust font size…"));
             myOnToolbar = onToolbar;
         }
 

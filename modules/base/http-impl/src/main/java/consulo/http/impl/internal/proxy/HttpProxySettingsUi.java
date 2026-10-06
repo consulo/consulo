@@ -163,7 +163,7 @@ class HttpProxySettingsUi implements Supplier<Layout> {
             UIAccess uiAccess = UIAccess.current();
             AtomicReference<IOException> exceptionReference = new AtomicReference<>();
             myCheckButton.setEnabled(false);
-            myCheckButton.setText(LocalizeValue.localizeTODO("Check connection (in progress...)"));
+            myCheckButton.setText(LocalizeValue.localizeTODO("Check connection (in progress…)"));
             myConnectionCheckInProgress = true;
             Application.get().executeOnPooledThread(() -> {
                 try {

@@ -309,7 +309,7 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
 
         Disposer.register(myPopup, this);
 
-        myTree.getEmptyText().setText("Loading...");
+        myTree.getEmptyText().setText("Loading…");
         myPopup.showCenteredInCurrentWindow(myProject);
 
         ((AWTPopup) myPopup).setShowHints(true);

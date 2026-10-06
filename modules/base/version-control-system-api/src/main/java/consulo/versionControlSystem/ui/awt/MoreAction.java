@@ -56,7 +56,7 @@ public abstract class MoreAction  extends LegacyAnAction implements CustomCompon
       }
     });
     myPanel.add(myLoadMoreBtn);
-    myLabel = new JLabel("Loading...");
+    myLabel = new JLabel("Loading…");
     myLabel.setForeground(UIUtil.getInactiveTextColor());
     myLabel.setBorder(BorderFactory.createEmptyBorder(1, 3, 1, 1));
     myPanel.add(myLabel);

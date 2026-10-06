@@ -141,7 +141,7 @@ public class ManageButton extends ComboBoxAction implements DumbAware {
 
   private class ExportAction extends LegacyDumbAwareAction {
     public ExportAction() {
-      super(LocalizeValue.localizeTODO("Export..."));
+      super(LocalizeValue.localizeTODO("Export…"));
     }
 
     @Override
@@ -153,7 +153,7 @@ public class ManageButton extends ComboBoxAction implements DumbAware {
 
   private class ImportAction extends LegacyDumbAwareAction {
     public ImportAction() {
-      super(LocalizeValue.localizeTODO("Import..."));
+      super(LocalizeValue.localizeTODO("Import…"));
     }
 
     @Override

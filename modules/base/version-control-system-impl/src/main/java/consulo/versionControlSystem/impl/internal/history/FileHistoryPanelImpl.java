@@ -1286,7 +1286,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
             }
             if (refresh != null) {
                 ProgressManager.getInstance()
-                    .runProcessWithProgressSynchronously(refresh, "Refreshing Files...", false, myVcs.getProject());
+                    .runProcessWithProgressSynchronously(refresh, "Refreshing Files…", false, myVcs.getProject());
             }
         }
 

@@ -242,9 +242,10 @@ public class UnifiedNewProjectPanel implements NewProjectWizardData, WelcomeSlid
             nodeSelected(node == null ? null : node.getValue());
         });
 
-        myMoreViaPlugins = Hyperlink.create(LocalizeValue.localizeTODO("More via plugins..."), event -> {
-            PluginAdvertiserHelper.getInstance().showDialogForExtension(ExtensionPreview.of(NewModuleBuilder.class, "*"));
-        });
+        myMoreViaPlugins = Hyperlink.create(
+            LocalizeValue.localizeTODO("More via plugins…"),
+            event -> PluginAdvertiserHelper.getInstance().showDialogForExtension(ExtensionPreview.of(NewModuleBuilder.class, "*"))
+        );
 
         WrappedLayout southPanel = WrappedLayout.create(myMoreViaPlugins);
         southPanel.paddingBuilder().allSet(Space.LARGE).apply();

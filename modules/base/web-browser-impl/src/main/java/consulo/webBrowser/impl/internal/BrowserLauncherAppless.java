@@ -261,7 +261,7 @@ public class BrowserLauncherAppless extends BrowserLauncher {
                     }
                 }
 
-                Application.get().invokeLater(() -> new Task.Backgroundable(null, "Extracting files...", true) {
+                Application.get().invokeLater(() -> new Task.Backgroundable(null, "Extracting files…", true) {
                     @Override
                     public void run(ProgressIndicator indicator) {
                         int size = zipFile.size();

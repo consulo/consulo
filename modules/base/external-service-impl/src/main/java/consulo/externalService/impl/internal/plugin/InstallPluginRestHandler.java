@@ -79,7 +79,7 @@ public class InstallPluginRestHandler extends JsonGetRequestHandler {
 
         Task.Backgroundable.queue(
             project,
-            LocalizeValue.localizeTODO("Loading Plugins..."),
+            LocalizeValue.localizeTODO("Loading Plugins…"),
             progressIndicator -> {
                 UpdateChannel channel = UpdateSettings.getInstance().getChannel();
                 EarlyAccessProgramManager earlyAccessProgramManager = EarlyAccessProgramManager.getInstance();

@@ -162,7 +162,7 @@ public class FileColorsConfigurablePanel extends JPanel implements Disposable {
         infoPanel.add(new JBLabel("Scopes are processed from top to bottom with Local colors first.",
             MessageType.INFO.getDefaultIcon(), SwingConstants.LEFT
         ));
-        JButton editScopes = new JButton("Manage Scopes...");
+        JButton editScopes = new JButton("Manage Scopes…");
         editScopes.addActionListener(e -> {
             DataContext dataContext = DataManager.getInstance().getDataContext(infoPanel);
 

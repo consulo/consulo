@@ -118,7 +118,7 @@ public class DefaultProfilerExecutorGroupImpl extends DefaultProfilerExecutorGro
 
     @Override
     public LocalizeValue getRunToolbarChooserText() {
-        return LocalizeValue.localizeTODO("Profile with...");
+        return LocalizeValue.localizeTODO("Profile with…");
     }
 
     @Override

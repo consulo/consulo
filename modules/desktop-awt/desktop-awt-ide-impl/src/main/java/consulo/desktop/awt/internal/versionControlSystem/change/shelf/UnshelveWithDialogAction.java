@@ -42,7 +42,7 @@ import java.util.Collections;
 @ActionImpl(id = "ShelveChanges.UnshelveWithDialog")
 public class UnshelveWithDialogAction extends LegacyAnAction {
   public UnshelveWithDialogAction() {
-    super(LocalizeValue.localizeTODO("Unshelve..."), LocalizeValue.localizeTODO("Correct paths where to apply patches and unshelve"));
+    super(LocalizeValue.localizeTODO("Unshelve…"), LocalizeValue.localizeTODO("Correct paths where to apply patches and unshelve"));
   }
 
   @Override

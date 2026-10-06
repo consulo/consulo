@@ -27,7 +27,7 @@ import consulo.project.Project;
  */
 public class CustomizeUIAction extends AnAction {
     public CustomizeUIAction() {
-        super("Customize Menus and Toolbars...");
+        super("Customize Menus and Toolbars…");
     }
 
     @Override

@@ -102,7 +102,7 @@ public abstract class WeighingActionGroup extends ActionGroup implements AnActio
 
         ActionGroup other = new ExcludingActionGroup(getDelegate(), heaviest);
         other.setPopup(true);
-        other.getTemplatePresentation().setText(LocalizeValue.localizeTODO("Other..."));
+        other.getTemplatePresentation().setText(LocalizeValue.localizeTODO("Other…"));
         return List.of(chosen.build(), AnSeparator.getInstance(), other);
     }
 

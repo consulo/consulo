@@ -505,7 +505,7 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
         TestConnectionTask task = new TestConnectionTask("Test connection") {
             @Override
             public void run(ProgressIndicator indicator) {
-                indicator.setText("Connecting to " + repository.getUrl() + "...");
+                indicator.setText("Connecting to " + repository.getUrl() + "…");
                 indicator.setFraction(0);
                 indicator.setIndeterminate(true);
                 try {

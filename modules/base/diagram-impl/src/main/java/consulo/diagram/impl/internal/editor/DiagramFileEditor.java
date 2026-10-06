@@ -74,7 +74,7 @@ public class DiagramFileEditor extends UserDataHolderBase implements FileEditor 
             LoadingLayout<DockLayout> loadingLayout = LoadingLayout.create(DockLayout.create(), this);
             myLoadingLayout = loadingLayout;
 
-            loadingLayout.setLoadingText(LocalizeValue.localizeTODO("Building Diagram..."));
+            loadingLayout.setLoadingText(LocalizeValue.localizeTODO("Building Diagram…"));
             loadingLayout.startLoading(this::buildSession, (layout, session) -> {
                 if (session == null) {
                     layout.center(Label.create(LocalizeValue.localizeTODO("Error. Invalid Diagram")));

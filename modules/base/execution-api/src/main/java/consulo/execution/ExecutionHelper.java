@@ -406,7 +406,7 @@ public class ExecutionHelper {
         final ExecutionMode mode,
         String presentableCmdline
     ) {
-        final String title = mode.getTitle() != null ? mode.getTitle() : "Please wait...";
+        final String title = mode.getTitle() != null ? mode.getTitle() : "Please wait…";
         assert title != null;
 
         final Runnable process;
@@ -495,7 +495,7 @@ public class ExecutionHelper {
             public void run() {
                 myProgressIndicator = ProgressManager.getInstance().getProgressIndicator();
                 if (myProgressIndicator != null && myProgressIndicator.getText().isEmpty()) {
-                    myProgressIndicator.setText("Please wait...");
+                    myProgressIndicator.setText("Please wait…");
                 }
 
                 LOG.assertTrue(

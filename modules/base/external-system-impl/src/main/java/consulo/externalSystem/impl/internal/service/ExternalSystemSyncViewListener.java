@@ -120,7 +120,7 @@ public class ExternalSystemSyncViewListener extends ExternalSystemTaskNotificati
         descriptor.setActivateToolWindowWhenFailed(true);
 
         BuildEventFactory factory = Application.get().getInstance(BuildEventFactory.class);
-        myEventDispatcher.onEvent(id, factory.createStartBuildEvent(descriptor, LocalizeValue.localizeTODO("Syncing...")));
+        myEventDispatcher.onEvent(id, factory.createStartBuildEvent(descriptor, LocalizeValue.localizeTODO("Syncing…")));
     }
 
     @Override

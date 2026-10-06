@@ -82,7 +82,7 @@ public final class CallTreeDataView implements Disposable {
 
         DockLayout content = DockLayout.create(Space.NONE);
         LoadingLayout<DockLayout> loading = LoadingLayout.create(content, this);
-        loading.setLoadingText(LocalizeValue.localizeTODO("Building the call tree..."));
+        loading.setLoadingText(LocalizeValue.localizeTODO("Building the call tree…"));
 
         myRoot = DockLayout.create(Space.NONE);
         myRoot.center(loading);

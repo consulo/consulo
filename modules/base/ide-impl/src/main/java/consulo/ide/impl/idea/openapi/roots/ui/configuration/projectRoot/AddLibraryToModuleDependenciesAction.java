@@ -35,7 +35,7 @@ public class AddLibraryToModuleDependenciesAction extends LegacyDumbAwareAction 
     private final BaseLibrariesConfigurable myConfigurable;
 
     public AddLibraryToModuleDependenciesAction(Project project, BaseLibrariesConfigurable configurable) {
-        super("Add to Modules...", "Add the library to the dependencies list of chosen modules", null);
+        super("Add to Modules…", "Add the library to the dependencies list of chosen modules", null);
         myProject = project;
         myConfigurable = configurable;
     }

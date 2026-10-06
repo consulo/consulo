@@ -363,7 +363,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
             // we need invokeLater() here because viewer is partially-initialized (ex: there are no toolbar or status panel)
             // user can see this state while we're showing progress indicator, so we want let init() to finish.
             Application.get().invokeLater(
-                () -> ProgressManager.getInstance().run(new Task.Modal(getProject(), "Computing Differences...", true) {
+                () -> ProgressManager.getInstance().run(new Task.Modal(getProject(), "Computing Differences…", true) {
                     private Runnable myCallback;
 
                     @Override

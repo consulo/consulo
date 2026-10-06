@@ -105,7 +105,7 @@ public class ChangelistConflictDialog extends DialogWrapper {
 
     @Override
     protected Action[] createLeftSideActions() {
-        return new Action[]{new AbstractAction("&Configure...") {
+        return new Action[]{new AbstractAction("&Configure…") {
             @Override
             @RequiredUIAccess
             public void actionPerformed(ActionEvent e) {

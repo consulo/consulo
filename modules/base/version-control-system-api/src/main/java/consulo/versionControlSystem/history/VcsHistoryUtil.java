@@ -199,7 +199,7 @@ public class VcsHistoryUtil {
         final VcsFileRevision older,
         final VcsFileRevision newer
     ) {
-        new Task.Backgroundable(project, "Comparing Revisions...") {
+        new Task.Backgroundable(project, "Comparing Revisions…") {
             @Override
             public void run(ProgressIndicator indicator) {
                 try {

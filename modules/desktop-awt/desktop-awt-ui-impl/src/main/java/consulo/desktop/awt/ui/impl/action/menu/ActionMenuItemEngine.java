@@ -198,7 +198,7 @@ public class ActionMenuItemEngine {
             init();
         }
         else {
-            button.setText("loading...");
+            button.setText("loading…");
         }
     }
 

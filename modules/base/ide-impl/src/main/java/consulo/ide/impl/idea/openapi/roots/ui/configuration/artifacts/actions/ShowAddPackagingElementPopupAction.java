@@ -34,7 +34,7 @@ public class ShowAddPackagingElementPopupAction extends DumbAwareAction {
   private final ArtifactEditorEx myArtifactEditor;
 
   public ShowAddPackagingElementPopupAction(ArtifactEditorEx artifactEditor) {
-    super("Add...");
+    super("Add…");
     myArtifactEditor = artifactEditor;
   }
 

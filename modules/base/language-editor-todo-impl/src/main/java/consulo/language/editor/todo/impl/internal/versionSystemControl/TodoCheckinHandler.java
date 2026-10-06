@@ -178,7 +178,7 @@ public class TodoCheckinHandler extends CheckinHandler {
 
         SimpleReference<Boolean> completed = SimpleReference.create(Boolean.FALSE);
         ProgressManager.getInstance().run(
-                new Task.Modal(myProject, LocalizeValue.localizeTODO("Looking for New and Edited TODO Items..."), true) {
+                new Task.Modal(myProject, LocalizeValue.localizeTODO("Looking for New and Edited TODO Items…"), true) {
                     @Override
                     public void run(ProgressIndicator indicator) {
                         indicator.setIndeterminate(true);

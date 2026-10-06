@@ -90,14 +90,10 @@ public class VcsLogDataImpl implements VcsLogData {
     
     private final VcsLogIndex myIndex;
 
-    public VcsLogDataImpl(
-        Project project,
-        Map<VirtualFile, VcsLogProvider> logProviders,
-        FatalErrorHandler fatalErrorsConsumer
-    ) {
+    public VcsLogDataImpl(Project project, Map<VirtualFile, VcsLogProvider> logProviders, FatalErrorHandler fatalErrorsConsumer) {
         myProject = project;
         myLogProviders = logProviders;
-        myDataLoaderQueue = new BackgroundTaskQueue(project.getApplication(), project, "Loading history...");
+        myDataLoaderQueue = new BackgroundTaskQueue(project.getApplication(), project, "Loading history…");
         myUserRegistry = (VcsUserRegistryImpl) project.getInstance(VcsUserRegistry.class);
         myFatalErrorsConsumer = fatalErrorsConsumer;
 
@@ -267,7 +263,7 @@ public class VcsLogDataImpl implements VcsLogData {
     }
 
     private void runInBackground(ThrowableConsumer<ProgressIndicator, VcsException> task) {
-        Task.Backgroundable backgroundable = new Task.Backgroundable(myProject, "Loading History...", false) {
+        Task.Backgroundable backgroundable = new Task.Backgroundable(myProject, "Loading History…", false) {
             @Override
             public void run(ProgressIndicator indicator) {
                 indicator.setIndeterminate(true);

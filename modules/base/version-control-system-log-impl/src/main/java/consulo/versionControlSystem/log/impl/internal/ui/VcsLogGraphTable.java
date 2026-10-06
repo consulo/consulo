@@ -852,7 +852,7 @@ public class VcsLogGraphTable extends TableWithProgress implements UiDataProvide
     @Override
     public void progressStarted() {
       myText = getEmptyText().getText();
-      getEmptyText().setText("Loading History...");
+      getEmptyText().setText("Loading History…");
     }
 
     @Override

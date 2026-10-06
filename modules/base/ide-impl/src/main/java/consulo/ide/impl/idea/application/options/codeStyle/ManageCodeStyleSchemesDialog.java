@@ -366,7 +366,7 @@ public class ManageCodeStyleSchemesDialog extends DialogWrapper {
                 false
             )
         );
-        mySaveAsButton = Button.create(LocalizeValue.localizeTODO("&Save As..."));
+        mySaveAsButton = Button.create(LocalizeValue.localizeTODO("&Save As…"));
         panel1.add(
             TargetAWT.to(mySaveAsButton),
             new GridConstraints(
@@ -423,7 +423,7 @@ public class ManageCodeStyleSchemesDialog extends DialogWrapper {
                 false
             )
         );
-        myExportButton = Button.create(LocalizeValue.localizeTODO("Export..."));
+        myExportButton = Button.create(LocalizeValue.localizeTODO("Export…"));
         panel1.add(
             TargetAWT.to(myExportButton),
             new GridConstraints(
@@ -442,7 +442,7 @@ public class ManageCodeStyleSchemesDialog extends DialogWrapper {
                 false
             )
         );
-        myImportButton = Button.create(LocalizeValue.localizeTODO("Import..."));
+        myImportButton = Button.create(LocalizeValue.localizeTODO("Import…"));
         panel1.add(
             TargetAWT.to(myImportButton),
             new GridConstraints(

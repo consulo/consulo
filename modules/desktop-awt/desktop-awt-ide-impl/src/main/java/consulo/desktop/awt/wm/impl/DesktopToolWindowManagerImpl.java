@@ -528,7 +528,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
 
     @Override
     protected JLabel createInitializingLabel() {
-        JLabel label = new JLabel("Initializing...", SwingConstants.CENTER);
+        JLabel label = new JLabel("Initializing…", SwingConstants.CENTER);
         label.setOpaque(true);
         Color treeBg = UIManager.getColor("Tree.background");
         label.setBackground(ColorUtil.toAlpha(treeBg, 180));

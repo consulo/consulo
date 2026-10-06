@@ -200,7 +200,7 @@ public class VcsLogRefresherImpl implements VcsLogRefresher {
         private final LogInfo myLoadedInfo = new LogInfo(myStorage);
 
         MyRefreshTask(DataPack currentDataPack) {
-            super(VcsLogRefresherImpl.this.myProject, "Refreshing History...", false);
+            super(VcsLogRefresherImpl.this.myProject, "Refreshing History…", false);
             myCurrentDataPack = currentDataPack;
         }
 

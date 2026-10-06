@@ -59,7 +59,7 @@ public class ChangesBrowserLockedFoldersNode extends ChangesBrowserNode implemen
         appendCount(renderer, SimpleTextAttributes.GRAY_ITALIC_ATTRIBUTES);
         renderer.append("   ");
         CleanupStarter starter = new CleanupStarter(myProject, this);
-        renderer.append("do cleanup...", new SimpleTextAttributes(SimpleTextAttributes.STYLE_UNDERLINE, Color.red), starter);
+        renderer.append("do cleanup…", new SimpleTextAttributes(SimpleTextAttributes.STYLE_UNDERLINE, Color.red), starter);
     }
 
     private static class CleanupStarter implements Runnable {

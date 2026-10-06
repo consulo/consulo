@@ -67,7 +67,7 @@ public class GotoTestOrCodeHandler extends GotoTargetHandler {
           
           @Override
           public String getText() {
-            return "Create New Test...";
+            return "Create New Test…";
           }
 
           @Override

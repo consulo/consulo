@@ -47,7 +47,7 @@ public class OpenProfilerSnapshotAction extends DumbAwareAction implements AnAct
 
     public OpenProfilerSnapshotAction() {
         super(
-            LocalizeValue.localizeTODO("Open Profiler Snapshot..."),
+            LocalizeValue.localizeTODO("Open Profiler Snapshot…"),
             LocalizeValue.localizeTODO("Open a profiler snapshot in an editor tab"),
             ExecutionProfilerIconGroup.profilecpu()
         );

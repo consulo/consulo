@@ -51,7 +51,7 @@ public class InstalledPluginsTab extends PluginTab {
         StatusText emptyText = myPluginList.getEmptyText();
         emptyText.setText("Nothing to show.");
         emptyText.appendText(" Click ");
-        emptyText.appendText("View available plugins...", SimpleTextAttributes.LINK_ATTRIBUTES, new BrowseRepoListener());
+        emptyText.appendText("View available plugins…", SimpleTextAttributes.LINK_ATTRIBUTES, new BrowseRepoListener());
         emptyText.appendText(" to view available plugins.");
 
         reload();

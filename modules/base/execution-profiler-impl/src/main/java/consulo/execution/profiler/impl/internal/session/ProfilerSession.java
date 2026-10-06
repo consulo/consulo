@@ -230,12 +230,12 @@ public final class ProfilerSession implements Disposable {
         }
 
         runCommand(
-            LocalizeValue.localizeTODO("Starting CPU recording..."),
+            LocalizeValue.localizeTODO("Starting CPU recording…"),
             "Can't start CPU recording",
             liveProcess::startCpuRecording,
             ignored -> {
                 myRecording = true;
-                setStatus(LocalizeValue.localizeTODO("Recording CPU..."), false);
+                setStatus(LocalizeValue.localizeTODO("Recording CPU…"), false);
             }
         );
     }
@@ -248,7 +248,7 @@ public final class ProfilerSession implements Disposable {
         }
 
         runCommand(
-            LocalizeValue.localizeTODO("Stopping CPU recording..."),
+            LocalizeValue.localizeTODO("Stopping CPU recording…"),
             "Can't stop CPU recording",
             liveProcess::stopCpuRecording,
             data -> {
@@ -273,7 +273,7 @@ public final class ProfilerSession implements Disposable {
         }
 
         runCommand(
-            LocalizeValue.localizeTODO("Capturing heap dump..."),
+            LocalizeValue.localizeTODO("Capturing heap dump…"),
             "Can't capture a heap dump",
             liveProcess::dumpHeap,
             data -> {
@@ -297,7 +297,7 @@ public final class ProfilerSession implements Disposable {
         }
 
         runCommand(
-            LocalizeValue.localizeTODO("Capturing thread dump..."),
+            LocalizeValue.localizeTODO("Capturing thread dump…"),
             "Can't capture a thread dump",
             liveProcess::dumpThreads,
             data -> {
@@ -358,7 +358,7 @@ public final class ProfilerSession implements Disposable {
         }
 
         switch (state) {
-            case Profiling profiling -> setStatus(LocalizeValue.localizeTODO("Profiling..."), false);
+            case Profiling profiling -> setStatus(LocalizeValue.localizeTODO("Profiling…"), false);
             case DataReady dataReady -> {
                 setStatus(initial ? LocalizeValue.empty() : LocalizeValue.localizeTODO("Profiling finished"), false);
                 addCapture(LocalizeValue.localizeTODO("Result"), ExecutionProfilerIconGroup.profile(), dataReady.getData(), false);
