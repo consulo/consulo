@@ -52,7 +52,7 @@ public abstract class IndentStatusBarUIContributor implements CodeStyleStatusBar
         HtmlBuilder builder = new HtmlBuilder();
         builder.append(CodeStyleLocalize.indentStatusBarIndentTooltip()).append(HtmlChunk.nbsp()).append(indentInfo);
         if (hint.isNotEmpty()) {
-            builder.nbsp(2).append(HtmlChunk.span("color:" + ColorValueUtil.toHtmlColor(StandardColors.GRAY)).addText(hint));
+            builder.nbsp(2).append(HtmlChunk.span("color:" + ColorValueUtil.toCssColor(StandardColors.GRAY)).addText(hint));
         }
         return LocalizeValue.of(builder.wrapWithHtmlBody());
     }

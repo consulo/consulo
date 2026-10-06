@@ -19,6 +19,7 @@ import consulo.logging.Logger;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.HSLColor;
 import consulo.ui.color.RGBColor;
+import consulo.ui.util.ColorValueUtil;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Locale;
@@ -45,20 +46,7 @@ public final class WebColors {
     }
 
     public static @Nullable String toCssColor(@Nullable ColorValue colorValue) {
-        if (colorValue == null) {
-            return null;
-        }
-
-        RGBColor color = colorValue.toRGB();
-
-        // an alpha of its own is kept - a highlight of the editor is translucent over the text it covers
-        int alpha = color.getAlpha();
-        if (alpha != 255) {
-            // css wants a dot as the decimal separator, whatever the locale of the server
-            return String.format(Locale.ROOT, "rgba(%d,%d,%d,%.3f)", color.getRed(), color.getGreen(), color.getBlue(), alpha / 255f);
-        }
-
-        return String.format("#%02x%02x%02x", color.getRed(), color.getGreen(), color.getBlue());
+        return ColorValueUtil.toCssColor(colorValue);
     }
 
     public static @Nullable ColorValue fromCssColor(@Nullable String cssColor) {

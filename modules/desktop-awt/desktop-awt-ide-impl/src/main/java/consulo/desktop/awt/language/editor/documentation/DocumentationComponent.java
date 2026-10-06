@@ -21,12 +21,12 @@ import consulo.dataContext.DataManager;
 import consulo.dataContext.DataSink;
 import consulo.dataContext.UiDataProvider;
 import consulo.desktop.awt.ui.impl.action.toolbar.AdvancedActionToolbarImpl;
+import consulo.desktop.awt.ui.popup.AbstractPopup;
+import consulo.desktop.awt.ui.popup.WindowAction;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.ide.actions.ExternalJavaDocAction;
-import consulo.desktop.awt.ui.popup.WindowAction;
 import consulo.ide.impl.idea.ui.WidthBasedLayout;
-import consulo.desktop.awt.ui.popup.AbstractPopup;
 import consulo.ide.impl.idea.ui.popup.PopupPositionManager;
 import consulo.language.editor.completion.lookup.LookupEx;
 import consulo.language.editor.completion.lookup.LookupManager;
@@ -71,6 +71,8 @@ import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.image.ImageKey;
+import consulo.ui.style.ComponentColors;
+import consulo.ui.util.ColorValueUtil;
 import consulo.ui.util.LightDarkColorValue;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.io.Url;
@@ -557,10 +559,13 @@ public class DocumentationComponent extends JPanel implements Disposable, UiData
         editorKit.getStyleSheet().addRule(".pre {font-family:\"" + editorFontName + "\"}");
         editorKit.getStyleSheet().addRule("html { padding-bottom: " + htmlBottomPadding + "px; }");
         editorKit.getStyleSheet().addRule("h1, h2, h3, h4, h5, h6 { margin-top: 0; padding-top: 1px; }");
-        editorKit.getStyleSheet().addRule("a { color: #" + ColorUtil.toHex(getLinkColor()) + "; text-decoration: none;}");
-        editorKit.getStyleSheet()
-            .addRule(".definition { padding: " + definitionTopPadding + "px 17px 1px " + leftPadding + "px; border-bottom: thin solid #" + ColorUtil.toHex(
-                borderColor) + "; }");
+        editorKit.getStyleSheet().addRule(
+            "a { color: " + ColorValueUtil.toCssColor(ComponentColors.LINK_FOREGROUND) + "; text-decoration: none;}"
+        );
+        editorKit.getStyleSheet().addRule(
+            ".definition { padding: " + definitionTopPadding + "px 17px 1px " + leftPadding + "px; " +
+                "border-bottom: thin solid " + ColorUtil.toHtmlColor(borderColor) + "; }"
+        );
         editorKit.getStyleSheet().addRule(".definition-only { padding: " + definitionTopPadding + "px 17px 0 " + leftPadding + "px; }");
         editorKit.getStyleSheet().addRule(".definition-only pre { margin-bottom: 0 }");
         editorKit.getStyleSheet().addRule(".content { padding: 5px 16px 0 " + leftPadding + "px; max-width: 100% }");
@@ -581,10 +586,6 @@ public class DocumentationComponent extends JPanel implements Disposable, UiData
         editorKit.getStyleSheet().addRule("td { margin: 4px 0 0 0; padding: 0 0 0 0; }");
         editorKit.getStyleSheet().addRule("th { text-align: left; }");
         editorKit.getStyleSheet().addRule(".section { color: " + ColorUtil.toHtmlColor(SECTION_COLOR) + "; padding-right: 4px}");
-    }
-
-    private static Color getLinkColor() {
-        return JBCurrentTheme.Link.linkColor();
     }
 
     @Override

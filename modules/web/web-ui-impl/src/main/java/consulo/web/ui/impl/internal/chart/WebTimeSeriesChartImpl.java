@@ -129,7 +129,7 @@ public class WebTimeSeriesChartImpl extends VaadinComponentDelegate<WebEChartVaa
             ObjectNode seriesNode = seriesArray.addObject();
             seriesNode.put("name", series.getName().get());
             seriesNode.put("kind", series.getKind().name());
-            seriesNode.put("color", ColorValueUtil.toHtmlColor(series.getColor()));
+            seriesNode.put("color", ColorValueUtil.toCssColor(series.getColor()));
             seriesNode.put("last", myModel.formatLatest(series));
 
             ArrayNode points = seriesNode.putArray("data");

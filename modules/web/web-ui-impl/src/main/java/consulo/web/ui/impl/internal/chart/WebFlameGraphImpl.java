@@ -125,7 +125,7 @@ public class WebFlameGraphImpl<E> extends VaadinComponentDelegate<WebEChartVaadi
         item.add(start);
         item.add(end);
         item.add(name);
-        item.add(ColorValueUtil.toHtmlColor(modelColor != null ? modelColor : ChartPalette.flame(name)));
+        item.add(ColorValueUtil.toCssColor(modelColor != null ? modelColor : ChartPalette.flame(name)));
         item.add(myHighlight != null && !myHighlight.test(value));
         item.add(value.equals(mySelected));
         item.add(tooltip(node));

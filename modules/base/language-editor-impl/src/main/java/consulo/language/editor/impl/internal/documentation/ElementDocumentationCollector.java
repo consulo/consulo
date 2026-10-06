@@ -178,7 +178,7 @@ public class ElementDocumentationCollector extends DocumentationCollector {
     private static String getVcsStatus(Project project, VirtualFile file) {
         FileStatus status = ChangeListManager.getInstance(project).getStatus(file);
         return status != FileStatus.NOT_CHANGED
-            ? "<p><span class='grayed'>" + CodeInsightLocalize.documentationFileVcsStatusLabel().get() + "</span> <span color='" +
+            ? "<p><span class='grayed'>" + CodeInsightLocalize.documentationFileVcsStatusLabel().get() + "</span> <span color='#" +
             ColorValueUtil.toHex(status.getColor()) + "'>" +
             status.getText() + "</span>"
             : "";

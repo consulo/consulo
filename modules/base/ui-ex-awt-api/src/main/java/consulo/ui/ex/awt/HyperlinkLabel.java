@@ -23,6 +23,7 @@ import consulo.platform.Platform;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.style.ComponentColors;
 import consulo.util.collection.Lists;
 
 import org.jspecify.annotations.Nullable;
@@ -225,7 +226,7 @@ public class HyperlinkLabel extends HighlightableComponent {
       LOG.error(e);
     }
     highlightedText.applyToComponent(this);
-    ((JComponent)getParent()).revalidate();
+    getParent().revalidate();
     adjustSize();
   }
 
@@ -243,12 +244,10 @@ public class HyperlinkLabel extends HighlightableComponent {
 
     @Override
     public ColorValue getForegroundColor() {
-      return TargetAWT.from(
-          !isEnabled() ? UIManager.getColor("Label.disabledForeground")
-              : myMousePressed ? JBCurrentTheme.Link.linkPressedColor()
-              : myMouseHover ? JBCurrentTheme.Link.linkHoverColor()
-              : JBCurrentTheme.Link.linkColor()
-      );
+      return !isEnabled() ? ComponentColors.DISABLED_TEXT
+          : myMousePressed ? TargetAWT.from(JBCurrentTheme.Link.linkPressedColor())
+          : myMouseHover ? TargetAWT.from(JBCurrentTheme.Link.linkHoverColor())
+          : ComponentColors.LINK_FOREGROUND;
     }
 
     @Override

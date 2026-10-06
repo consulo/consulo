@@ -63,6 +63,7 @@ import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.ui.image.Image;
+import consulo.ui.style.ComponentColors;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
@@ -610,9 +611,10 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
             else {
                 List<LanguageHighlightLevel> levels = controller.getHighlightLevels();
 
+                Color linkColor = TargetAWT.to(ComponentColors.LINK_FOREGROUND);
                 if (levels.size() == 1) {
                     JLabel highlightLabel = new JLabel(EditorBundle.message("iw.highlight.label") + " ");
-                    highlightLabel.setForeground(JBCurrentTheme.Link.linkColor());
+                    highlightLabel.setForeground(linkColor);
 
                     panel.add(highlightLabel, gc.next().anchor(GridBagConstraints.LINE_START));
                     panel.add(createDropDownLink(levels.get(0), controller), gc.next());
@@ -620,7 +622,7 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
                 else if (levels.size() > 1) {
                     for (LanguageHighlightLevel level : levels) {
                         JLabel highlightLabel = new JLabel(level.getLangID() + ": ");
-                        highlightLabel.setForeground(JBCurrentTheme.Link.linkColor());
+                        highlightLabel.setForeground(linkColor);
 
                         panel.add(highlightLabel, gc.next().anchor(GridBagConstraints.LINE_START).gridx > 0 ? gc.insetLeft(8) : gc);
                         panel.add(createDropDownLink(level, controller), gc.next());

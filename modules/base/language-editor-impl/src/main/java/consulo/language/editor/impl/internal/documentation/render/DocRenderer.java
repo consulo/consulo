@@ -417,7 +417,7 @@ public class DocRenderer implements CustomFoldRegionRenderer {
         styleSheet.addRule("body {overflow-wrap: anywhere; padding-top: " + scale(2) + "px; color: #"
             + ColorUtil.toHex(textColor) + "}");
         styleSheet.addRule("pre {white-space: pre-wrap}");
-        styleSheet.addRule("a {color: #" + ColorUtil.toHex(linkColor) + "; text-decoration: none}");
+        styleSheet.addRule("a {color: " + ColorUtil.toHtmlColor(linkColor) + "; text-decoration: none}");
         styleSheet.addRule(".sections {border-spacing: 0}");
         styleSheet.addRule(".section {padding-right: " + scale(5) + "; white-space: nowrap}");
         styleSheet.addRule(inlineCodeRule(colorsScheme, textColor));
