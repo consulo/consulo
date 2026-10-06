@@ -26,6 +26,7 @@ import consulo.ui.event.HyperlinkEvent;
 import consulo.ui.ex.awt.LocalizeAction;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
+import consulo.ui.style.ComponentColors;
 import org.jspecify.annotations.Nullable;
 import org.jdesktop.swingx.JXHyperlink;
 
@@ -33,7 +34,7 @@ import java.awt.event.ActionEvent;
 
 /**
  * @author VISTALL
- * @since 16/07/2021
+ * @since 2021-07-16
  */
 public class DesktopHyperlinkImpl extends SwingComponentDelegate<DesktopHyperlinkImpl.MyLinkLabel> implements Hyperlink {
     public class MyLinkLabel extends JXHyperlink implements FromSwingComponentWrapper {
@@ -48,9 +49,11 @@ public class DesktopHyperlinkImpl extends SwingComponentDelegate<DesktopHyperlin
 
             setFocusPainted(false);
             setIcon(TargetAWT.to(icon));
+
+            setClickedColor(TargetAWT.to(ComponentColors.LINK_FOREGROUND));
+            setUnclickedColor(TargetAWT.to(ComponentColors.LINK_FOREGROUND));
         }
 
-        
         @Override
         public Component toUIComponent() {
             return DesktopHyperlinkImpl.this;
@@ -68,7 +71,6 @@ public class DesktopHyperlinkImpl extends SwingComponentDelegate<DesktopHyperlin
         return new MyLinkLabel(myText.get(), null);
     }
 
-    
     @Override
     public LocalizeValue getText() {
         return myText;

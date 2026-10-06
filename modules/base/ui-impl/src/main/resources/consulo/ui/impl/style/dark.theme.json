@@ -65,7 +65,7 @@
       "borderColor": "borderColor",
       "disabledBorderColor": "#ffffff0c",
       "focusColor": "#1aa6ff80",
-      "linkColor": "#007aff",
+      "linkColor": "#70aeff",
       "error": {
         "borderColor": "#725555"
       },
