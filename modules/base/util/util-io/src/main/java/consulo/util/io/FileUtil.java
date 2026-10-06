@@ -1292,8 +1292,8 @@ public class FileUtil {
         }
 
         if (dots > 0) {
-            if (!processDots(result, dots, start, Objects.requireNonNull(resolver))) {
-                return resolver.resolveSymlinksAndCanonicalize(path, separatorChar, removeLastSlash);
+            if (!processDots(result, dots, start, resolver)) {
+                return Objects.requireNonNull(resolver).resolveSymlinksAndCanonicalize(path, separatorChar, removeLastSlash);
             }
         }
 
