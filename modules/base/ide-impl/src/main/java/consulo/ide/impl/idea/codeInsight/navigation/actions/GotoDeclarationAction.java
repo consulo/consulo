@@ -125,7 +125,7 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
             FeatureUsageTracker.getInstance().triggerFeatureUsed("navigation.goto.declaration");
 
             if (elements.length != 1) {
-                if (elements.length == 0) {
+                if (elements.length == 0 && suggestCandidates(TargetElementUtil.findReference(editor, offset)).isEmpty()) {
                     PsiElement element = findElementToShowUsagesOf(editor, editor.getCaretModel().getOffset());
                     if (element != null) {
                         ShowUsagesAction showUsages = (ShowUsagesAction)ActionManager.getInstance().getAction(ShowUsagesAction.ID);

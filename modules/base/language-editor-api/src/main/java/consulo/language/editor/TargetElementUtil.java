@@ -240,7 +240,7 @@ public class TargetElementUtil {
             return referenceOrReferencedElement;
         }
 
-        return null;
+        return ref.resolve();
     }
 
     private static @Nullable PsiElement getTargetElementFromLookup(Project project) {
