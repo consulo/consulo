@@ -19,11 +19,13 @@ import consulo.application.AllIcons;
 import consulo.application.ApplicationPropertiesComponent;
 import consulo.application.dumb.DumbAware;
 import consulo.application.ui.wm.IdeFocusManager;
+import consulo.codeEditor.Editor;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.*;
 import consulo.fileEditor.highlight.BackgroundEditorHighlighter;
 import consulo.fileEditor.structureView.StructureViewBuilder;
 import consulo.localize.LocalizeValue;
+import consulo.navigation.Navigatable;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
@@ -79,24 +81,12 @@ public class UnifiedTextEditorWithPreview extends UserDataHolderBase implements 
         }
     }
 
-    private static class MyFileEditorState implements FileEditorState {
-        private final @Nullable Layout mySplitLayout;
-        private final @Nullable FileEditorState myFirstState;
-        private final @Nullable FileEditorState mySecondState;
-
-        private MyFileEditorState(@Nullable Layout splitLayout,
-                                  @Nullable FileEditorState firstState,
-                                  @Nullable FileEditorState secondState) {
-            mySplitLayout = splitLayout;
-            myFirstState = firstState;
-            mySecondState = secondState;
-        }
-
+    private static record MyFileEditorState(FileEditorState first, FileEditorState second) implements FileEditorState {
         @Override
         public boolean canBeMergedWith(FileEditorState otherState, FileEditorStateLevel level) {
             return otherState instanceof MyFileEditorState fileEditorState
-                && (myFirstState == null || myFirstState.canBeMergedWith(fileEditorState.myFirstState, level))
-                && (mySecondState == null || mySecondState.canBeMergedWith(fileEditorState.mySecondState, level));
+                && (first() == null || first().canBeMergedWith(fileEditorState.first(), level))
+                && (second() == null || second().canBeMergedWith(fileEditorState.second(), level));
         }
     }
 
@@ -236,20 +226,21 @@ public class UnifiedTextEditorWithPreview extends UserDataHolderBase implements 
 
     @Override
     public FileEditorState getState(FileEditorStateLevel level) {
-        return new MyFileEditorState(myLayout, myEditor.getState(level), myPreview.getState(level));
+        return new MyFileEditorState(myEditor.getState(level), myPreview.getState(level));
     }
 
     @Override
     public void setState(FileEditorState state) {
         if (state instanceof MyFileEditorState compositeState) {
-            if (compositeState.myFirstState != null) {
-                myEditor.setState(compositeState.myFirstState);
+            if (compositeState.first() != null) {
+                myEditor.setState(compositeState.first());
             }
-            if (compositeState.mySecondState != null) {
-                myPreview.setState(compositeState.mySecondState);
+            
+            if (compositeState.second() != null) {
+                myPreview.setState(compositeState.second());
             }
-            if (compositeState.mySplitLayout != null) {
-                myLayout = compositeState.mySplitLayout;
+
+            if (myLayout != null) {
                 invalidateLayout();
             }
         }

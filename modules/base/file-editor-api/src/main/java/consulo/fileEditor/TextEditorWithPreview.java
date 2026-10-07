@@ -15,16 +15,32 @@
  */
 package consulo.fileEditor;
 
+import consulo.codeEditor.Editor;
+import consulo.navigation.Navigatable;
+
 /**
  * @author VISTALL
  * @since 2024-09-13
  */
-public interface TextEditorWithPreview extends FileEditor {
-    
+public interface TextEditorWithPreview extends TextEditor {
     TextEditor getTextEditor();
 
-    
     FileEditor getPreviewEditor();
 
     void switchToPreview();
+
+    @Override
+    default Editor getEditor() {
+        return getTextEditor().getEditor();
+    }
+
+    @Override
+    default boolean canNavigateTo(Navigatable navigatable) {
+        return getTextEditor().canNavigateTo(navigatable);
+    }
+
+    @Override
+    default void navigateTo(Navigatable navigatable) {
+        getTextEditor().navigateTo(navigatable);
+    }
 }
