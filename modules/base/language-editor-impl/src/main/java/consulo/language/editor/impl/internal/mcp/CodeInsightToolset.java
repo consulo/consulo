@@ -31,6 +31,7 @@ import consulo.mcpServer.McpToolCallContext;
 import consulo.mcpServer.McpToolRegistrar;
 import consulo.mcpServer.McpToolset;
 import consulo.project.Project;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Singleton;
 
@@ -123,7 +124,7 @@ public class CodeInsightToolset implements McpToolset {
         String text = target.getText();
         if (text != null) {
             builder.append("declaration:\n")
-                .append(text.length() > MAX_DECLARATION_LENGTH ? text.substring(0, MAX_DECLARATION_LENGTH) + "..." : text);
+                .append(StringUtil.truncateWithEllipsis(text, MAX_DECLARATION_LENGTH));
         }
         return builder.toString();
     }

@@ -56,7 +56,7 @@ public class CompareFilesAction extends BaseShowDiffAction {
 
         String text = "Compare Files";
         if (files != null && files.length == 1) {
-            text = "Compare With...";
+            text = "Compare With…";
         }
         else if (files != null && files.length == 2) {
             Type type1 = getType(files[0]);
@@ -66,17 +66,11 @@ public class CompareFilesAction extends BaseShowDiffAction {
                 text = "Compare";
             }
             else {
-                switch (type1) {
-                    case FILE:
-                        text = "Compare Files";
-                        break;
-                    case DIRECTORY:
-                        text = "Compare Directories";
-                        break;
-                    case ARCHIVE:
-                        text = "Compare Archives";
-                        break;
-                }
+                text = switch (type1) {
+                    case FILE -> "Compare Files";
+                    case DIRECTORY -> "Compare Directories";
+                    case ARCHIVE -> "Compare Archives";
+                };
             }
         }
         e.getPresentation().setText(text);

@@ -187,13 +187,11 @@ public class CompositeFilter implements Filter, FilterMixin, DumbAware {
     int count = filters.size();
 
     for (int i = 0; i < count; i++) {
-      Filter filter = filters.get(i);
-
-      if (filter instanceof FilterMixin && ((FilterMixin)filter).shouldRunHeavy()) {
-        updateMessage.add(((FilterMixin)filter).getUpdateMessage());
+      if (filters.get(i) instanceof FilterMixin filterMixin && filterMixin.shouldRunHeavy()) {
+        updateMessage.add(filterMixin.getUpdateMessage());
       }
     }
-    return updateMessage.size() == 1 ? updateMessage.get(0) : "Updating...";
+    return updateMessage.size() == 1 ? updateMessage.get(0) : "Updating…";
   }
 
   public boolean isEmpty() {

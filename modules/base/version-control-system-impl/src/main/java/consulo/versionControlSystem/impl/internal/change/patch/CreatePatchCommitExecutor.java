@@ -69,10 +69,9 @@ public class CreatePatchCommitExecutor extends LocalCommitExecutor {
         myProject = project;
     }
 
-    
     @Override
     public LocalizeValue getActionText() {
-        return LocalizeValue.localizeTODO("Create Patch...");
+        return LocalizeValue.localizeTODO("Create Patch…");
     }
 
     @Override
@@ -81,7 +80,6 @@ public class CreatePatchCommitExecutor extends LocalCommitExecutor {
     }
 
     @Override
-    
     public CommitSession createCommitSession() {
         return new CreatePatchCommitSession(myProject);
     }
@@ -241,8 +239,8 @@ public class CreatePatchCommitExecutor extends LocalCommitExecutor {
         public void executionCanceled() {
         }
 
-        @RequiredUIAccess
         @Override
+        @RequiredUIAccess
         public @Nullable ValidationInfo validateFields() {
             return myPanel.validateFields();
         }

@@ -18,11 +18,11 @@ package consulo.diff.request;
 import org.jspecify.annotations.Nullable;
 
 public class LoadingDiffRequest extends MessageDiffRequest {
-  public LoadingDiffRequest(@Nullable String title) {
-    super(title, "Loading...");
-  }
+    public LoadingDiffRequest(@Nullable String title) {
+        super(title, "Loading…");
+    }
 
-  public LoadingDiffRequest() {
-    super("Loading...");
-  }
+    public LoadingDiffRequest() {
+        super("Loading…");
+    }
 }

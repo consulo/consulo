@@ -624,7 +624,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
             text.append(". ");
         }
         else if (message.isSubmitting()) {
-            text.append(" Submitting...");
+            text.append(" Submitting…");
         }
         else if (!message.isRead()) {
             text.append(" ").append(ExternalServiceLocalize.errorListMessageUnread());

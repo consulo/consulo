@@ -21,14 +21,15 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.LegacyDumbAwareAction;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
+import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.Presentation;
 
 @ActionImpl(id = "ShelvedChanges.CleanMarkedToDelete")
-public class CleanUnshelvedAction extends LegacyDumbAwareAction {
+public class CleanUnshelvedAction extends DumbAwareAction implements AnActionWithSyncUpdate {
     public CleanUnshelvedAction() {
         super(
-            LocalizeValue.localizeTODO("Clean Already Unshelved..."),
+            LocalizeValue.localizeTODO("Clean Already Unshelved…"),
             LocalizeValue.localizeTODO("Delete unshelved changelists"),
             PlatformIconGroup.actionsGc()
         );

@@ -203,9 +203,9 @@ public class DirDiffTableModel extends AbstractTableModel implements DirDiffMode
             right = text + EMPTY_STRING.substring(0, LEN - text.length());
         }
         else {
-            right = "..." + text.substring(text.length() - LEN + 2);
+            right = "…" + text.substring(text.length() - LEN + 1);
         }
-        return "Loading... " + right;
+        return "Loading… " + right;
     }
 
     void fireUpdateStarted() {

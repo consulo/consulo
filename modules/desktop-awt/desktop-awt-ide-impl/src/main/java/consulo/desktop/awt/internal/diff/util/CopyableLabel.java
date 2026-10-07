@@ -15,8 +15,8 @@
  */
 package consulo.desktop.awt.internal.diff.util;
 
-import consulo.util.lang.StringUtil;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.util.lang.StringUtil;
 
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
@@ -25,64 +25,64 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 
 public class CopyableLabel extends JTextArea {
-  
-  private JLabel ELLIPSIS_LABEL = new JLabel("...");
+    private final JLabel myEllipsisLabel = new JLabel("…");
 
-  
-  public static JComponent create(String text) {
-    if (text.isEmpty()) text = " ";
-    text = text.replace('\r', ' ').replace('\n', ' ');
+    public static JComponent create(String text) {
+        if (text.isEmpty()) {
+            text = " ";
+        }
+        text = text.replace('\r', ' ').replace('\n', ' ');
 
-    return new CopyableLabel(text);
-  }
-
-  private CopyableLabel(String text) {
-    addFocusListener(new FocusAdapter() {
-      @Override
-      public void focusLost(FocusEvent e) {
-        int caretPosition = getCaretPosition();
-        setSelectionStart(caretPosition);
-        setSelectionEnd(caretPosition);
-      }
-    });
-    setWrapStyleWord(false);
-    setFont(UIUtil.getLabelFont());
-    setEditable(false);
-    setForeground(UIUtil.getLabelForeground());
-    setBackground(UIUtil.TRANSPARENT_COLOR);
-    setBorder(null);
-    setOpaque(false);
-    setText(StringUtil.stripHtml(text, false));
-    setCaretPosition(0);
-  }
-
-  @Override
-  public void paint(Graphics g) {
-    Dimension size = getSize();
-    boolean paintEllipsis = getPreferredSize().width > size.width;
-
-    if (!paintEllipsis) {
-      super.paint(g);
+        return new CopyableLabel(text);
     }
-    else {
-      Dimension ellipsisSize = ELLIPSIS_LABEL.getPreferredSize();
-      int endOffset = size.width - ellipsisSize.width;
-      try {
-        // do not paint half of the letter
-        endOffset = modelToView(viewToModel(new Point(endOffset, 0)) - 1).x;
-      }
-      catch (BadLocationException ignore) {
-      }
-      Shape oldClip = g.getClip();
-      g.clipRect(0, 0, endOffset, size.height);
 
-      super.paint(g);
-      g.setClip(oldClip);
-
-      g.translate(endOffset, 0);
-      ELLIPSIS_LABEL.setSize(ellipsisSize);
-      ELLIPSIS_LABEL.paint(g);
-      g.translate(-endOffset, 0);
+    private CopyableLabel(String text) {
+        addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusLost(FocusEvent e) {
+                int caretPosition = getCaretPosition();
+                setSelectionStart(caretPosition);
+                setSelectionEnd(caretPosition);
+            }
+        });
+        setWrapStyleWord(false);
+        setFont(UIUtil.getLabelFont());
+        setEditable(false);
+        setForeground(UIUtil.getLabelForeground());
+        setBackground(UIUtil.TRANSPARENT_COLOR);
+        setBorder(null);
+        setOpaque(false);
+        setText(StringUtil.stripHtml(text, false));
+        setCaretPosition(0);
     }
-  }
+
+    @Override
+    public void paint(Graphics g) {
+        Dimension size = getSize();
+        boolean paintEllipsis = getPreferredSize().width > size.width;
+
+        if (!paintEllipsis) {
+            super.paint(g);
+        }
+        else {
+            Dimension ellipsisSize = myEllipsisLabel.getPreferredSize();
+            int endOffset = size.width - ellipsisSize.width;
+            try {
+                // do not paint half of the letter
+                endOffset = modelToView(viewToModel(new Point(endOffset, 0)) - 1).x;
+            }
+            catch (BadLocationException ignore) {
+            }
+            Shape oldClip = g.getClip();
+            g.clipRect(0, 0, endOffset, size.height);
+
+            super.paint(g);
+            g.setClip(oldClip);
+
+            g.translate(endOffset, 0);
+            myEllipsisLabel.setSize(ellipsisSize);
+            myEllipsisLabel.paint(g);
+            g.translate(-endOffset, 0);
+        }
+    }
 }

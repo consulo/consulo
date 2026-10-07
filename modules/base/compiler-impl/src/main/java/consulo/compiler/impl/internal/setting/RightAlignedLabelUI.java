@@ -197,7 +197,7 @@ public class RightAlignedLabelUI extends BasicLabelUI {
       }
 
       if (textR.width > availTextWidth) {
-        String clipString = "...";
+        String clipString = "…";
         int totalWidth = SwingUtilities.computeStringWidth(fm, clipString);
         int nChars;
         rettext = "";

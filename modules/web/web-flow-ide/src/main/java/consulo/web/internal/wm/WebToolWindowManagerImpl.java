@@ -46,7 +46,6 @@ import consulo.ui.ex.toolWindow.InternalDecoratorListener;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowInternalDecorator;
 import consulo.ui.ex.toolWindow.ToolWindowStripeButton;
-import consulo.ui.util.ShowNotifier;
 import consulo.web.ui.impl.internal.base.TargetVaadin;
 import consulo.ui.layout.DockLayout;
 import consulo.web.ui.impl.internal.WebRootPaneImpl;
@@ -135,10 +134,9 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
     }
 
     @Override
-    
     @RequiredUIAccess
     protected Component createInitializingLabel() {
-        Label label = Label.create("Initializing...");
+        Label label = Label.create("Initializing…");
         DockLayout dock = DockLayout.create();
         dock.center(label);
         return label;
@@ -153,7 +151,6 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
         };
     }
 
-    
     @Override
     protected ToolWindowStripeButton createStripeButton(ToolWindowInternalDecorator internalDecorator) {
         return new WebToolWindowStripeButtonImpl(
@@ -162,7 +159,6 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
         );
     }
 
-    
     @Override
     @RequiredUIAccess
     protected ToolWindowEx createToolWindow(
@@ -175,7 +171,6 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
         return new UnifiedToolWindowImpl(this, id, displayName, canCloseContent, component, shouldBeAvailable);
     }
 
-    
     @Override
     @RequiredUIAccess
     protected ToolWindowInternalDecorator createInternalDecorator(
@@ -252,7 +247,6 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
 
     @Override
     public void doContentRename(DataContext dataContext, ToolWindow toolWindow, @Nullable Content content, LocalizeValue labelText, BiConsumer<Content, String> consumer) {
-
     }
 
     /**

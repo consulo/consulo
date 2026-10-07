@@ -166,7 +166,7 @@ public class GraphTableController {
         }
         else {
             balloonText = "Jump to <b>\"" +
-                StringUtil.shortenTextWithEllipsis(details.getSubject(), 50, 0, "...") +
+                StringUtil.truncateWithEllipsis(details.getSubject(), 50) +
                 "\"</b> by " +
                 VcsUserUtil.getShortPresentation(details.getAuthor()) +
                 CommitPanel.formatDateTime(details.getAuthorTime());
