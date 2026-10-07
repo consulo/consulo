@@ -279,7 +279,7 @@ public class LibraryProjectStructureElement extends ProjectStructureElement {
         private final Project myProject;
 
         private AddLibraryToDependenciesFix(Project project) {
-            super("Add to Dependencies...");
+            super("Add to Dependencies…");
             myProject = project;
         }
 

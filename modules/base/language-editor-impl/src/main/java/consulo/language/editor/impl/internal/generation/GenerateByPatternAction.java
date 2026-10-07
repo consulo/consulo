@@ -37,7 +37,7 @@ public class GenerateByPatternAction extends LegacyAnAction {
 
     @Inject
     public GenerateByPatternAction(Application application) {
-        super(LocalizeValue.localizeTODO("Generate by Pattern..."));
+        super(LocalizeValue.localizeTODO("Generate by Pattern…"));
         myApplication = application;
     }
 

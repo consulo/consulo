@@ -49,7 +49,7 @@ public class CodeStyleMainPanel extends JPanel implements TabbedLanguageCodeStyl
     private final CodeStyleSettingsPanelFactory myFactory;
     private final CodeStyleSchemesPanel mySchemesPanel;
     private boolean myIsDisposed = false;
-    private final Action mySetFromAction = new AbstractAction("Set from...") {
+    private final Action mySetFromAction = new AbstractAction("Set from…") {
         @Override
         @RequiredUIAccess
         public void actionPerformed(ActionEvent event) {

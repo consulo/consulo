@@ -73,7 +73,7 @@ public class ShowDiagramAction extends AnAction implements AnActionWithAsyncUpda
             return;
         }
 
-        CompletableFuture<String> future = myProgressBuilderFactory.newProgressBuilder(project, LocalizeValue.localizeTODO("Preparing Diagram..."))
+        CompletableFuture<String> future = myProgressBuilderFactory.newProgressBuilder(project, LocalizeValue.localizeTODO("Preparing Diagram…"))
             .cancelable()
             .execute(UIAccess.current(), () -> ReadLock.apply(o -> DiagramVirtualFile.buildPath(provider, element)).toCoroutine());
 

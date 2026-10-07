@@ -123,7 +123,7 @@ public class UnifiedCheckoutPanel implements WelcomeSlide {
         listBox.addValueListener(event -> providerSelected(event.getValue()));
 
         Hyperlink moreViaPlugins = Hyperlink.create(
-            LocalizeValue.localizeTODO("More via plugins..."),
+            LocalizeValue.localizeTODO("More via plugins…"),
             event -> PluginAdvertiserHelper.getInstance().showDialogForExtension(ExtensionPreview.of(CheckoutProvider.class, "*"))
         );
 

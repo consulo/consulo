@@ -45,7 +45,7 @@ public class VariableInplaceRenameHandler implements RenameHandler {
     
     @Override
     public LocalizeValue getActionTitleValue() {
-        return LocalizeValue.localizeTODO("Rename Variable...");
+        return LocalizeValue.localizeTODO("Rename Variable…");
     }
 
     @Override

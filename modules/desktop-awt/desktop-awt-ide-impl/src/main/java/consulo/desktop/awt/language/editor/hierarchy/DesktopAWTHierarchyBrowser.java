@@ -980,7 +980,7 @@ public class DesktopAWTHierarchyBrowser extends DesktopAWTHierarchyBrowserBase i
 
         private final class ConfigureScopesAction extends AnAction {
             private ConfigureScopesAction() {
-                super(LocalizeValue.localizeTODO("Configure..."));
+                super(LocalizeValue.localizeTODO("Configure…"));
             }
 
             @Override

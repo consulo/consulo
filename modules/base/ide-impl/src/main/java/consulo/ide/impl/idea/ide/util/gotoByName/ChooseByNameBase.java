@@ -1646,7 +1646,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
                         Application.get().runReadAction(() -> {
                             myCalcUsagesThread.addElementsByPattern(text, collected, indicator, everywhere);
 
-                            indicator.setText("Prepare...");
+                            indicator.setText("Prepare…");
                             fillUsages(collected, usages, targets);
                         });
                     }

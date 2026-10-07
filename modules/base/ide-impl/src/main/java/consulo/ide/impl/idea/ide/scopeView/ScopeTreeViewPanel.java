@@ -357,7 +357,7 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
             new FileTreeModelBuilder(myProject, file -> packageSet != null && packageSet.contains(file, myProject, holder), settings);
         myTree.setPaintBusy(true);
         myBuilder.setTree(myTree);
-        myTree.getEmptyText().setText("Loading...");
+        myTree.getEmptyText().setText("Loading…");
         myActionCallback = new AsyncResult<>();
         myTree.putClientProperty(TreeState.CALLBACK, new WeakReference<ActionCallback>(myActionCallback));
         myTree.setModel(myBuilder.build(

@@ -521,7 +521,7 @@ public abstract class BaseRefactoringProcessor implements Runnable {
 
             ProgressManager.getInstance().runProcessWithProgressSynchronously(
                 prepareHelpersRunnable,
-                LocalizeValue.localizeTODO("Prepare ..."),
+                LocalizeValue.localizeTODO("Prepare …"),
                 false,
                 myProject
             );

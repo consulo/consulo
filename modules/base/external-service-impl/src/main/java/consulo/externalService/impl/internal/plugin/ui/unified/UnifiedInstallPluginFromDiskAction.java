@@ -49,7 +49,7 @@ public class UnifiedInstallPluginFromDiskAction extends DumbAwareAction {
     private final UnifiedPluginsPanel myPanel;
 
     public UnifiedInstallPluginFromDiskAction(UnifiedPluginsPanel panel) {
-        super("Install plugin from disk...", null, PlatformIconGroup.nodesPlugin());
+        super("Install plugin from disk…", null, PlatformIconGroup.nodesPlugin());
         myPanel = panel;
     }
 

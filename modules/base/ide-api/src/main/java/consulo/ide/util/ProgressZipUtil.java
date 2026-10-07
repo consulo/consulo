@@ -33,7 +33,7 @@ public class ProgressZipUtil {
 
     public static void unzipWithProgressSynchronously(@Nullable Project project, String progressTitle, final File zipArchive, final File extractToDir)
         throws ZipUnpackException {
-        Outcome<Boolean> outcome = DownloadUtil.provideDataWithProgressSynchronously(project, progressTitle, "Unpacking ...", new Callable<Boolean>() {
+        Outcome<Boolean> outcome = DownloadUtil.provideDataWithProgressSynchronously(project, progressTitle, "Unpacking …", new Callable<Boolean>() {
             @Override
             public Boolean call() throws IOException {
                 ProgressIndicator progress = ProgressManager.getInstance().getProgressIndicator();
@@ -59,7 +59,7 @@ public class ProgressZipUtil {
                              @Nullable Function<String, String> pathConverter,
                              @Nullable ContentProcessor contentProcessor) throws IOException {
         if (progress != null) {
-            progress.setText("Extracting...");
+            progress.setText("Extracting…");
         }
         try {
             ZipEntry entry;
@@ -95,7 +95,7 @@ public class ProgressZipUtil {
             return;
         }
         if (progress != null) {
-            progress.setText("Extracting " + relativeExtractPath + " ...");
+            progress.setText("Extracting " + relativeExtractPath + " …");
         }
         FileOutputStream fileOutputStream = null;
         try {

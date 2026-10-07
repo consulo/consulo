@@ -31,28 +31,21 @@ import java.util.Collections;
 import java.util.List;
 
 abstract class MultipleValueFilterPopupComponent<Filter extends VcsLogFilter> extends FilterPopupComponent<Filter> {
-
   private static final int MAX_FILTER_VALUE_LENGTH = 30;
 
-  
   protected final MainVcsLogUiProperties myUiProperties;
 
-  MultipleValueFilterPopupComponent(String filterName,
-                                    MainVcsLogUiProperties uiProperties,
-                                    FilterModel<Filter> filterModel) {
+  MultipleValueFilterPopupComponent(String filterName, MainVcsLogUiProperties uiProperties, FilterModel<Filter> filterModel) {
     super(filterName, filterModel);
     myUiProperties = uiProperties;
   }
 
-  
   protected abstract List<List<String>> getRecentValuesFromSettings();
 
   protected abstract void rememberValuesInSettings(Collection<String> values);
 
-  
   protected abstract List<String> getAllValues();
 
-  
   protected ActionGroup createRecentItemsActionGroup() {
     DefaultActionGroup group = new DefaultActionGroup();
     List<List<String>> recentlyFiltered = getRecentValuesFromSettings();
@@ -68,7 +61,6 @@ abstract class MultipleValueFilterPopupComponent<Filter extends VcsLogFilter> ex
     return group;
   }
 
-  
   static String displayableText(Collection<String> values) {
     if (values.size() == 1) {
       return values.iterator().next();
@@ -81,7 +73,6 @@ abstract class MultipleValueFilterPopupComponent<Filter extends VcsLogFilter> ex
     return StringUtil.join(values, ", ");
   }
 
-  
   protected AnAction createSelectMultipleValuesAction() {
     return new SelectMultipleValuesAction();
   }
@@ -94,8 +85,6 @@ abstract class MultipleValueFilterPopupComponent<Filter extends VcsLogFilter> ex
   }
 
   protected class PredefinedValueAction extends DumbAwareAction {
-
-    
     protected final List<String> myValues;
 
     public PredefinedValueAction(String value) {
@@ -116,12 +105,10 @@ abstract class MultipleValueFilterPopupComponent<Filter extends VcsLogFilter> ex
   }
 
   private class SelectMultipleValuesAction extends DumbAwareAction {
-
-    
     private final Collection<String> myVariants;
 
     SelectMultipleValuesAction() {
-      super("Select...");
+      super("Select…");
       myVariants = getAllValues();
     }
 
@@ -137,9 +124,8 @@ abstract class MultipleValueFilterPopupComponent<Filter extends VcsLogFilter> ex
       List<String> values = filter == null
                             ? Collections.emptyList()
                             : myFilterModel.getFilterValues(filter);
-      final MultilinePopupBuilder popupBuilder = new MultilinePopupBuilder(project, myVariants,
-                                                                           getPopupText(values),
-                                                                           supportsNegativeValues());
+      final MultilinePopupBuilder popupBuilder =
+          new MultilinePopupBuilder(project, myVariants, getPopupText(values), supportsNegativeValues());
       JBPopup popup = popupBuilder.createPopup();
       popup.addListener(new JBPopupAdapter() {
         @Override
@@ -159,7 +145,6 @@ abstract class MultipleValueFilterPopupComponent<Filter extends VcsLogFilter> ex
       popup.showUnderneathOf(MultipleValueFilterPopupComponent.this);
     }
 
-    
     private String getPopupText(@Nullable Collection<String> selectedValues) {
       return selectedValues == null || selectedValues.isEmpty() ? "" : StringUtil.join(selectedValues, "\n");
     }

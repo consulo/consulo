@@ -75,7 +75,7 @@ public class PlaybackRunner {
       @Override
       public void applicationDeactivated(IdeFrame ideFrame) {
         if (myStopOnAppDeactivation) {
-          myCallback.message(null, "App lost focus, stopping...", StatusCallback.Type.message);
+          myCallback.message(null, "App lost focus, stopping…", StatusCallback.Type.message);
           stop();
         }
       }

@@ -55,7 +55,7 @@ public class ObsoletePluginSystemHealthMonitor implements SystemHealthMonitor {
         }
         builder.append(" obsolete. You can uninstall without consequences.");
 
-        reporter.warning(builder.toString(), "Uninstall...", () -> {
+        reporter.warning(builder.toString(), "Uninstall…", () -> {
             List<PluginId> pluginIds = new ArrayList<>();
             for (PluginDescriptor plugin : plugins) {
                 if (UninstallPluginAction.uninstallPlugin(plugin, null)) {

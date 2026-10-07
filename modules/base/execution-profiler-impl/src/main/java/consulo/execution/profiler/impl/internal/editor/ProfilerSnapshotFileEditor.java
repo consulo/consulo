@@ -79,7 +79,7 @@ public final class ProfilerSnapshotFileEditor extends ProfilerFileEditorBase {
         Disposer.register(this, indicator::cancel);
 
         LoadingLayout<DockLayout> loading = LoadingLayout.create(DockLayout.create(Space.NONE), this);
-        loading.setLoadingText(LocalizeValue.localizeTODO("Reading the profiler snapshot..."));
+        loading.setLoadingText(LocalizeValue.localizeTODO("Reading the profiler snapshot…"));
         root.center(loading);
 
         String fileName = myFile.getName();

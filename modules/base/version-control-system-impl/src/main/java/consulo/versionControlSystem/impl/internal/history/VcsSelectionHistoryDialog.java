@@ -289,7 +289,7 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements UiDataPro
                 myStatusLabel.setText("<html>Loading revision <tt>" + revision.getRevisionNumber() + "</tt></html>");
             }
             else {
-                myStatusLabel.setText("Loading...");
+                myStatusLabel.setText("Loading…");
             }
 
             myStatusSpinner.resume();

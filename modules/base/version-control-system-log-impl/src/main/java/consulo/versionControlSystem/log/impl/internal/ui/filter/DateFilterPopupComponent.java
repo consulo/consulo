@@ -94,7 +94,7 @@ class DateFilterPopupComponent extends FilterPopupComponent<VcsLogDateFilter> {
 
     private class SelectAction extends DumbAwareAction {
         SelectAction() {
-            super("Select...");
+            super("Select…");
         }
 
         @RequiredUIAccess

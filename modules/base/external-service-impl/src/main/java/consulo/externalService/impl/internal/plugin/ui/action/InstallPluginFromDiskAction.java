@@ -41,7 +41,7 @@ public class InstallPluginFromDiskAction extends DumbAwareAction {
     private final PluginsPanel myPluginsPanel;
 
     public InstallPluginFromDiskAction(PluginsPanel pluginsPanel) {
-        super("Install plugin from disk...", null, PlatformIconGroup.nodesPlugin());
+        super("Install plugin from disk…", null, PlatformIconGroup.nodesPlugin());
         myPluginsPanel = pluginsPanel;
     }
 

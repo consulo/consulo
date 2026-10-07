@@ -70,7 +70,7 @@ public class CodeStyleSchemesPanel {
         myLayout.add(mySchemeComboBox);
         myLayout.paddingBuilder().verticalSet(Space.MEDIUM).horizontalSet(Space.LARGE).apply();
 
-        Button manageButton = Button.create(LocalizeValue.localizeTODO("&Manage..."));
+        Button manageButton = Button.create(LocalizeValue.localizeTODO("&Manage…"));
         manageButton.addClickListener(event -> showManageSchemesDialog());
 
         myLayout.add(manageButton);

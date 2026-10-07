@@ -117,7 +117,7 @@ public class ExternalStorageManager {
                     return;
                 }
 
-                Task.Backgroundable.queue(null, LocalizeValue.localizeTODO("Checking external storage..."), this::checkForModifications);
+                Task.Backgroundable.queue(null, LocalizeValue.localizeTODO("Checking external storage…"), this::checkForModifications);
             },
             time,
             time,
@@ -129,7 +129,7 @@ public class ExternalStorageManager {
         try {
             boolean wantRestart = myPluginManager.updatePlugins(indicator);
 
-            indicator.setText(LocalizeValue.localizeTODO("Checking external storage for modifications..."));
+            indicator.setText(LocalizeValue.localizeTODO("Checking external storage for modifications…"));
 
             InfoAllBeanResponse response = WebServiceApiSender.doGet(WebServiceApi.STORAGE_API, "infoAll", InfoAllBeanResponse.class);
 
@@ -206,7 +206,7 @@ public class ExternalStorageManager {
     }
 
     private void runRefresher(Set<String> fetchNewFileSpecs, Set<String> reloadComponentNames, ProgressIndicator indicator) {
-        indicator.setText(LocalizeValue.localizeTODO("Refreshing from external storage..."));
+        indicator.setText(LocalizeValue.localizeTODO("Refreshing from external storage…"));
 
         try (AccessToken unused = myApplication.startSaveBlock()) {
             // fist of all we need download changed or new files
@@ -264,7 +264,7 @@ public class ExternalStorageManager {
         ThreeState state = configuration.getState(ExternalService.STORAGE);
         switch (state) {
             case YES ->
-                Task.Backgroundable.queue(null, LocalizeValue.localizeTODO("Initialing external storage..."), this::initialize);
+                Task.Backgroundable.queue(null, LocalizeValue.localizeTODO("Initialing external storage…"), this::initialize);
             case NO -> {
                 myCheckingFuture.cancel(false);
                 myStorage.setInitialized(false);

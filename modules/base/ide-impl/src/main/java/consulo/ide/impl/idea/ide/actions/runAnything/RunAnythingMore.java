@@ -9,7 +9,7 @@ import java.awt.*;
 
 class RunAnythingMore extends JPanel {
     static final RunAnythingMore instance = new RunAnythingMore();
-    final JLabel label = new JLabel(" load more ...");
+    final JLabel label = new JLabel(" load more …");
 
     private RunAnythingMore() {
         super(new BorderLayout());

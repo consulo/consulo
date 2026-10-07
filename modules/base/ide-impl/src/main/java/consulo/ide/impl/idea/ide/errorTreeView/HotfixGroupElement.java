@@ -64,7 +64,7 @@ public class HotfixGroupElement extends GroupingElement {
     public void customizeCellRenderer(SimpleColoredComponent renderer, JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
       renderer.append(" ");
       if (myInProgress) {
-        renderer.append("fixing...", SimpleTextAttributes.REGULAR_ITALIC_ATTRIBUTES);
+        renderer.append("fixing…", SimpleTextAttributes.REGULAR_ITALIC_ATTRIBUTES);
       }
       else {
         renderer.append("Fix: " + myFixDescription, SimpleTextAttributes.LINK_BOLD_ATTRIBUTES, myRunner);

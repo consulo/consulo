@@ -66,7 +66,7 @@ public class AnimatedImagesUITesterTab implements UITesterTab {
             ImageBox.create(ImageEffects.resize(Image.busy(), 32, 16))
         ));
 
-        Label busyLabel = Label.create(LocalizeValue.localizeTODO("Indexing..."));
+        Label busyLabel = Label.create(LocalizeValue.localizeTODO("Indexing…"));
         busyLabel.setImage(Image.busy());
         rows.add(LabeledBuilder.sided(LocalizeValue.localizeTODO("Label, busy() with text"), busyLabel));
 

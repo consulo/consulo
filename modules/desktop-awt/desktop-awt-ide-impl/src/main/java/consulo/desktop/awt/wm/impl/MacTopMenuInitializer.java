@@ -73,7 +73,7 @@ public class MacTopMenuInitializer {
         Foundation.invoke(
             checkForUpdates,
             Foundation.createSelector("initWithTitle:action:keyEquivalent:"),
-            Foundation.nsString("Check for Updates..."),
+            Foundation.nsString("Check for Updates…"),
             Foundation.createSelector("checkForUpdates"),
             Foundation.nsString("")
         );

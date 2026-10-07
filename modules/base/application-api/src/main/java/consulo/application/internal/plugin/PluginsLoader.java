@@ -185,7 +185,7 @@ public class PluginsLoader {
             }
             else {
                 PluginId id = circularDependency.from(), parentId = circularDependency.to();
-                cyclePresentation = id + "->" + parentId + "->...->" + id;
+                cyclePresentation = id + "→" + parentId + "→…→" + id;
             }
             problemsWithPlugins.add(
                 new CompositeMessage().append(ApplicationLocalize.errorPluginsShouldNotHaveCyclicDependencies(cyclePresentation))

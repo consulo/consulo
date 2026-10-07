@@ -620,7 +620,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
 
                 Application.get().invokeLater(() -> {
                     // this line must be called on EDT to avoid context switch at clear().append("text") Don't touch. Ask [kb]
-                    myResultsList.getEmptyText().setText("Searching...");
+                    myResultsList.getEmptyText().setText("Searching…");
 
                     if (getSearchingModel(myResultsList) != null) {
                         myAlarm.cancelAllRequests();

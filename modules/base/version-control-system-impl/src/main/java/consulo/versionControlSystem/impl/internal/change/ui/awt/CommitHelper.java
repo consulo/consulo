@@ -190,7 +190,7 @@ public class CommitHelper {
         endSemaphore.down();
 
         ChangeListManagerImpl.getInstanceImpl(myProject).executeOnUpdaterThread(() -> {
-            indicator.setText("Performing VCS commit...");
+            indicator.setText("Performing VCS commit…");
             try {
                 ProgressManager.getInstance().runProcess(
                     () -> {
@@ -205,7 +205,7 @@ public class CommitHelper {
             }
         });
 
-        indicator.setText("Waiting for VCS background tasks to finish...");
+        indicator.setText("Waiting for VCS background tasks to finish…");
         while (!endSemaphore.waitFor(20)) {
             indicator.checkCanceled();
         }

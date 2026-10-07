@@ -84,7 +84,7 @@ public abstract class ScopesChooser extends ComboBoxAction implements DumbAware 
         fillActionGroup(group, customScopes, myDefaultDescriptors, myInspectionProfile, myExcludedScopeNames);
 
         group.addSeparator();
-        group.add(new DumbAwareAction("Edit Scopes Order...") {
+        group.add(new DumbAwareAction("Edit Scopes Order…") {
             @Override
             @RequiredUIAccess
             public void actionPerformed(AnActionEvent e) {

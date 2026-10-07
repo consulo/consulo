@@ -157,7 +157,7 @@ public final class ProfilerHomePanel implements Disposable {
         myProcessArea.center(ScrollableLayout.create(myProcessTable));
 
         Button openSnapshotButton = Button.create(
-            LocalizeValue.localizeTODO("Open Snapshot..."),
+            LocalizeValue.localizeTODO("Open Snapshot…"),
             event -> mySnapshotService.chooseAndOpen()
         );
         openSnapshotButton.setIcon(PlatformIconGroup.actionsMenu_open());
@@ -315,7 +315,7 @@ public final class ProfilerHomePanel implements Disposable {
     public void reload() {
         int stamp = myLoadStamp.incrementAndGet();
         myRefreshButton.setEnabled(false);
-        myProcessStatus.setText(LocalizeValue.localizeTODO("Looking for processes a profiler can attach to..."));
+        myProcessStatus.setText(LocalizeValue.localizeTODO("Looking for processes a profiler can attach to…"));
 
         List<ProfilerConfigurationState> configurations = List.copyOf(myConfigurationsManager.getConfigurations());
 
@@ -375,7 +375,7 @@ public final class ProfilerHomePanel implements Disposable {
     private void attach(ProfilerAttachRow row, ProfilerAttachOption option) {
         int pid = row.process().getPid();
         LocalizeValue configurationName = option.name();
-        myProcessStatus.setText(LocalizeValue.localizeTODO("Attaching '" + configurationName.get() + "' to process " + pid + "..."));
+        myProcessStatus.setText(LocalizeValue.localizeTODO("Attaching '" + configurationName.get() + "' to process " + pid + "…"));
 
         CompletableFuture<ProfilerProcess<?>> future;
         try {

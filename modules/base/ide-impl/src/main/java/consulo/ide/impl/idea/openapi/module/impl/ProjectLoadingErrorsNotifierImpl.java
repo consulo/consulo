@@ -100,7 +100,7 @@ public class ProjectLoadingErrorsNotifierImpl extends ProjectLoadingErrorsNotifi
             myNotificationService.newError(ProjectNotificationGroups.Project)
                 .title(LocalizeValue.localizeTODO("Error Loading Project"))
                 .content(LocalizeValue.localizeTODO(
-                    ProjectLocalize.errorMessageConfigurationCannotLoad() + " " + invalidElements + " <a href=\"\">Details...</a>"
+                    ProjectLocalize.errorMessageConfigurationCannotLoad() + " " + invalidElements + " <a href=\"\">Details…</a>"
                 ))
                 .hyperlinkListener((notification, event) -> {
                     List<ConfigurationErrorDescription> validDescriptions = ContainerUtil.findAll(descriptions, ConfigurationErrorDescription::isValid);

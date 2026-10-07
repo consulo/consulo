@@ -137,7 +137,7 @@ public abstract class DvcsCompareWithBranchAction<T extends Repository> extends 
         final String head,
         final String compare
     ) {
-        new Task.Backgroundable(project, LocalizeValue.localizeTODO("Collecting Changes..."), true) {
+        new Task.Backgroundable(project, LocalizeValue.localizeTODO("Collecting Changes…"), true) {
             private Collection<Change> changes;
 
             @Override

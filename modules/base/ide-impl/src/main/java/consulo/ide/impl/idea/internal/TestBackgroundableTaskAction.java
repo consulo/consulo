@@ -49,7 +49,7 @@ public class TestBackgroundableTaskAction extends DumbAwareAction {
 
         UIAccess uiAccess = UIAccess.current();
 
-        CompletableFuture<String> future = myProgressBuilderFactory.newProgressBuilder(project, LocalizeValue.of("Background Action..."))
+        CompletableFuture<String> future = myProgressBuilderFactory.newProgressBuilder(project, LocalizeValue.of("Background Action…"))
             .cancelable()
             .execute(uiAccess, () -> Coroutine.first(Delay.sleep(60_000)).then(CodeExecution.supply(() -> "Success Result")));
 

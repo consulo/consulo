@@ -93,7 +93,7 @@ class ActionMacroWidget implements CustomStatusBarWidget, Consumer<MouseEvent> {
         myText = new JLabel(RECORDED + "..." + TYPING_SAMPLE, SwingConstants.LEFT);
         Dimension preferredSize = myText.getPreferredSize();
         myText.setPreferredSize(preferredSize);
-        myText.setText("Macro recording started...");
+        myText.setText("Macro recording started…");
         myLastTyping = "";
         top.add(myText, BorderLayout.CENTER);
         myBalloonComponent.add(top, BorderLayout.CENTER);

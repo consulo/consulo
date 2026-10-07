@@ -85,7 +85,7 @@ public class CommittedChangesBrowser extends JPanel {
         commitPanel.add(separator, BorderLayout.NORTH);
 
         myLeftPanel = new JPanel(new GridBagLayout());
-        final JLabel loadingLabel = new JLabel("Loading...");
+        final JLabel loadingLabel = new JLabel("Loading…");
 
         myLoadingLabelPanel = new JPanel(new BorderLayout()) {
             @Override

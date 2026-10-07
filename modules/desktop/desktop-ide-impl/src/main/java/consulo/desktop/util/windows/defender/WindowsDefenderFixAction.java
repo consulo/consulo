@@ -40,7 +40,7 @@ public class WindowsDefenderFixAction extends NotificationAction {
     private final Collection<Path> myPaths;
 
     public WindowsDefenderFixAction(Application application, Collection<Path> paths) {
-        super(LocalizeValue.localizeTODO("Fix..."));
+        super(LocalizeValue.localizeTODO("Fix…"));
         myApplication = application;
         myPaths = paths;
     }

@@ -270,7 +270,7 @@ public class ActionPopupStep implements ListPopupStepEx<ActionPopupItem>, Mnemon
 
     @Override
     public void setEmptyText(StatusText emptyText) {
-        emptyText.setText("Loading...");
+        emptyText.setText("Loading…");
     }
 
     @Override

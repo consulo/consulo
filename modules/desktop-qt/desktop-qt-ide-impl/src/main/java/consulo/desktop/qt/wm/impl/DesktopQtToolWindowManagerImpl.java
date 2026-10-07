@@ -129,7 +129,7 @@ public class DesktopQtToolWindowManagerImpl extends ToolWindowManagerBase {
     @Override
     @RequiredUIAccess
     protected Component createInitializingLabel() {
-        return Label.create("Initializing...");
+        return Label.create("Initializing…");
     }
 
     @Override

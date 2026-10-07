@@ -53,7 +53,7 @@ public class TestModalTaskAction extends DumbAwareAction {
 
         SimpleReference<Boolean> started = SimpleReference.create(false);
 
-        CompletableFuture<String> future = myProgressBuilderFactory.newProgressBuilder(project, LocalizeValue.of("Modal Action..."))
+        CompletableFuture<String> future = myProgressBuilderFactory.newProgressBuilder(project, LocalizeValue.of("Modal Action…"))
             .cancelable()
             .modal()
             .execute(

@@ -51,7 +51,7 @@ public class ShowExternalLogAction extends LegacyDumbAwareAction {
     private static final String EXTERNAL = "EXTERNAL";
 
     public ShowExternalLogAction() {
-        super(LocalizeValue.localizeTODO("Show Repository Log..."));
+        super(LocalizeValue.localizeTODO("Show Repository Log…"));
     }
 
     @Override

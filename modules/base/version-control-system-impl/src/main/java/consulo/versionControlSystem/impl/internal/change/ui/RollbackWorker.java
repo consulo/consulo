@@ -169,7 +169,7 @@ public class RollbackWorker {
 
                         if (myIndicator != null) {
                             myIndicator.setText(LocalizeValue.localizeTODO(
-                                vcs.getDisplayName() + ": performing " + StringUtil.toLowerCase(myOperationName) + "..."
+                                vcs.getDisplayName() + ": performing " + StringUtil.toLowerCase(myOperationName) + "…"
                             ));
                             myIndicator.setIndeterminate(false);
                             myIndicator.checkCanceled();
@@ -252,7 +252,7 @@ public class RollbackWorker {
 
         private void deleteAddedFilesLocally(List<Change> changes) {
             if (myIndicator != null) {
-                myIndicator.setText("Deleting added files locally...");
+                myIndicator.setText("Deleting added files locally…");
                 myIndicator.setFraction(0);
             }
             int changesSize = changes.size();

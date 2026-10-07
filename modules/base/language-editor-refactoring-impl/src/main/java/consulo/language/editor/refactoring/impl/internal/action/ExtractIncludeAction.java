@@ -64,7 +64,7 @@ public class ExtractIncludeAction extends BasePlatformRefactoringAction {
             e.getPresentation().setText(titledHandler.getActionTitleValue());
         }
         else {
-            e.getPresentation().setText(LocalizeValue.localizeTODO("Include File..."));
+            e.getPresentation().setText(LocalizeValue.localizeTODO("Include File…"));
         }
     }
 

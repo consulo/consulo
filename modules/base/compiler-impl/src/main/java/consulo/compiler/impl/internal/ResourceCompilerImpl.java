@@ -147,7 +147,7 @@ public class ResourceCompilerImpl implements ResourceCompiler {
             if (context.getProgressIndicator().isCanceled()) {
                 break;
             }
-            context.getProgressIndicator().setText2(LocalizeValue.localizeTODO("Copying " + command.getFromPath() + "..."));
+            context.getProgressIndicator().setText2(LocalizeValue.localizeTODO("Copying " + command.getFromPath() + "…"));
             try {
                 OutputItem outputItem = command.copy(filesToRefresh);
                 addToMap(processed, command.getOutputPath(), outputItem);

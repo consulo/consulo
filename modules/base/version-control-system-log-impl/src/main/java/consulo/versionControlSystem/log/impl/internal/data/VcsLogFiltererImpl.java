@@ -77,9 +77,8 @@ public class VcsLogFiltererImpl implements VcsLogFilterer {
       @Override
       protected void startNewBackgroundTask() {
         UIUtil.invokeLaterIfNeeded(() -> {
-          MyTask task = new MyTask(project, "Applying filters...");
-          ProgressManager.getInstance().runProcessWithProgressAsynchronously(task,
-                                                                             myLogData.getProgress().createProgressIndicator());
+          MyTask task = new MyTask(project, "Applying filters…");
+          ProgressManager.getInstance().runProcessWithProgressAsynchronously(task, myLogData.getProgress().createProgressIndicator());
         });
       }
     };

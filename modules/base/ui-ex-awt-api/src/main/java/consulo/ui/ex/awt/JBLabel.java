@@ -229,7 +229,7 @@ public class JBLabel extends JLabel implements AnchorableComponent {
   public JBLabel setCopyable(boolean copyable) {
     if (copyable ^ myEditorPane != null) {
       if (myEditorPane == null) {
-        final JLabel ellipsisLabel = new JBLabel("...");
+        final JLabel ellipsisLabel = new JBLabel("…");
         myIconLabel = new JLabel(getIcon());
         myEditorPane = new JEditorPane() {
           @Override

@@ -336,7 +336,7 @@ public class DefaultSdksModel implements SdkModel, SettingsSdksModel {
     private void setupSdk(Sdk newSdk, Consumer<Sdk> callback) {
         UIAccess uiAccess = UIAccess.current();
 
-        new Task.Modal(null, "Setuping SDK...", false) {
+        new Task.Modal(null, "Setting up SDK…", false) {
             @Override
             public void run(ProgressIndicator indicator) {
                 SdkType sdkType = (SdkType) newSdk.getSdkType();

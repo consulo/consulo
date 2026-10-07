@@ -247,7 +247,7 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
          * The constructor
          */
         NavigateAction() {
-            super("Navigate to ...", "Navigate to place where path element is defined", null);
+            super("Navigate to …", "Navigate to place where path element is defined", null);
         }
 
         /**

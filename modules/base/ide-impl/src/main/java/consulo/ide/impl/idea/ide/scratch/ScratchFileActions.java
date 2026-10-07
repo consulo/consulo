@@ -189,11 +189,10 @@ public class ScratchFileActions {
             }
             Set<Language> languages = files.filter(isScratch).map(fileLanguage(project)).filter(notNull()).addAllTo(new LinkedHashSet<>());
             LocalizeValue langName = languages.size() == 1 ? languages.iterator().next().getDisplayName() : LocalizeValue.localizeTODO(languages.size() + " different");
-            e.getPresentation().setText(String.format("Change %s (%s)...", getLanguageTerm(), langName));
+            e.getPresentation().setText(String.format("Change %s (%s)…", getLanguageTerm(), langName));
             e.getPresentation().setEnabledAndVisible(true);
         }
 
-        
         protected String getLanguageTerm() {
             return "Language";
         }
@@ -209,12 +208,10 @@ public class ScratchFileActions {
             actionPerformedImpl(e, project, "Change " + getLanguageTerm(), files);
         }
 
-        
         protected Predicate<VirtualFile> fileFilter(Project project) {
             return file -> !file.isDirectory() && ScratchRootType.getInstance().containsFile(file);
         }
 
-        
         protected Function<VirtualFile, Language> fileLanguage(Project project) {
             return new Function<>() {
                 ScratchFileService fileService = ScratchFileService.getInstance();

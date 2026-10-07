@@ -58,7 +58,7 @@ public class LoginAction extends LegacyDumbAwareAction implements RightAlignedTo
 
     String email = configuration.getEmail();
     if (email == null) {
-      presentation.setText("Not authorized...");
+      presentation.setText("Not authorized…");
       presentation.setIcon(PlatformIconGroup.actionsLoginavatar());
     }
     else {

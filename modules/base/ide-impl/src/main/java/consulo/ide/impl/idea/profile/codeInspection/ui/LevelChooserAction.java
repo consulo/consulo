@@ -63,7 +63,7 @@ public abstract class LevelChooserAction extends ComboBoxAction implements DumbA
             group.add(action);
         }
         group.addSeparator();
-        group.add(new DumbAwareAction("Edit severities...") {
+        group.add(new DumbAwareAction("Edit severities…") {
             @Override
             @RequiredUIAccess
             public void actionPerformed(AnActionEvent e) {
