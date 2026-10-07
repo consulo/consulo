@@ -165,7 +165,7 @@ public class StatisticsSendManager implements Disposable {
             .title(LocalizeValue.localizeTODO("Help improve " + fullProductName + " by sending anonymous usage statistics to " + companyName))
             .content(LocalizeValue.localizeTODO(
                 "<html>Please click <a href='allow'>I agree</a> if you want to help make " + fullProductName +
-                    " better or <a href='decline'>I don't agree</a> otherwise. <a href='settings'>more...</a></html>"
+                    " better or <a href='decline'>I don't agree</a> otherwise. <a href='settings'>more…</a></html>"
             ))
             .optionalHyperlinkListener(listener)
             .create();

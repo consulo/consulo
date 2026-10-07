@@ -179,7 +179,7 @@ public class CompileAction extends CompileActionBase implements AnActionWithAsyn
 
     private static String trimName(String name) {
         int length = name.length();
-        return length > 23 ? '…' + name.substring(length - 20, length) : name;
+        return length > 21 ? '…' + name.substring(length - 20) : name;
     }
 
     private static boolean isCompilableResourceFile(Project project, VirtualFile file) {

@@ -587,7 +587,7 @@ public final class WebServerPageConnectionService {
 
             @Override
             public String toString() {
-                return "page (url=..." + myUrl.substring(Math.max(0, myUrl.length() - 10)) + ", " + myClients.size() + " client(s)}";
+                return "page (url=…" + myUrl.substring(Math.max(0, myUrl.length() - 10)) + ", " + myClients.size() + " client(s)}";
             }
         }
     }

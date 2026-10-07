@@ -1,9 +1,10 @@
 // Copyright 2000-2022 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.ide.impl.idea.codeInsight.hints;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.language.editor.inlay.*;
 import consulo.ui.image.Image;
+import consulo.util.lang.StringUtil;
 
 import java.util.function.Consumer;
 
@@ -20,7 +21,7 @@ public class PresentationTreeBuilderImpl implements DeclarativeCollapsiblePresen
      * Creates the root builder. Position may be null in unit tests only.
      */
     public static PresentationTreeBuilderImpl createRoot(DeclarativeInlayPosition position) {
-        if (position == null && !ApplicationManager.getApplication().isUnitTestMode()) {
+        if (position == null && !Application.get().isUnitTestMode()) {
             throw new IllegalArgumentException("Position must not be null in production");
         }
         DeclarativeInlayPosition pos = position != null
@@ -96,16 +97,10 @@ public class PresentationTreeBuilderImpl implements DeclarativeCollapsiblePresen
 
     @Override
     public void text(String text, InlayActionData actionData) {
-        if (text == null || text.isEmpty()) {
+        if (StringUtil.isEmpty(text)) {
             throw new IllegalArgumentException("Text entry may not be empty. Please fix the provider implementation.");
         }
-        String segmentText;
-        if (context.isTruncateTextNodes() && text.length() > MAX_SEGMENT_TEXT_LENGTH) {
-            segmentText = text.substring(0, MAX_SEGMENT_TEXT_LENGTH) + "…";
-        }
-        else {
-            segmentText = text;
-        }
+        String segmentText = context.isTruncateTextNodes() ? StringUtil.truncateWithEllipsis(text, MAX_SEGMENT_TEXT_LENGTH) : text;
         context.incrementTextElementCount();
         Object payload = (actionData != null)
             ? new ActionWithContent(actionData, segmentText)

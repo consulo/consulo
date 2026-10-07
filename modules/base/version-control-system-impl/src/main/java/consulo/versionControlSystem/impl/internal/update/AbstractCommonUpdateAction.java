@@ -267,9 +267,9 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
                 return;
             }
 
-            String actionName = getCompleteActionName(vcsContext);
+            LocalizeValue actionName = LocalizeValue.localizeTODO(getCompleteActionName(vcsContext));
             if (myActionInfo.showOptions(project) || OptionsDialog.shiftIsPressed(vcsContext.getModifiers())) {
-                actionName += "…";
+                actionName = actionName.appendEllipsis();
             }
 
             presentation.setText(actionName);

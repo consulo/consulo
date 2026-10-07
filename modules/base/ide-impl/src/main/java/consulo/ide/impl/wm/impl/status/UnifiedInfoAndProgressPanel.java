@@ -37,7 +37,7 @@ import java.util.Map;
  * The progress half of the status bar, built only from unified ui so every frontend gets the same one.
  *
  * @author VISTALL
- * @since 16/08/2021
+ * @since 2021-08-16
  */
 public class UnifiedInfoAndProgressPanel implements Disposable {
     private final DockLayout myLayout;
@@ -198,7 +198,7 @@ public class UnifiedInfoAndProgressPanel implements Disposable {
         }
 
         int others = myOriginals.size() - 1;
-        String trimmed = latestText.length() > 55 ? latestText.substring(0, 50) + "…" : latestText;
+        String trimmed = StringUtil.truncateWithEllipsis(latestText, 50);
         return LocalizeValue.localizeTODO(trimmed + " (" + others + " more" + pluralizeProcess(others) + ")");
     }
 

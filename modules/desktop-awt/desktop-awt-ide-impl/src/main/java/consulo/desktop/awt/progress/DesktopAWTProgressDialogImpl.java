@@ -1,17 +1,15 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.desktop.awt.progress;
 
-import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.IdeaModalityState;
-import consulo.application.internal.ProgressDialog;
 import consulo.application.impl.internal.progress.ProgressWindow;
+import consulo.application.internal.ProgressDialog;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.component.ComponentManager;
 import consulo.desktop.awt.ui.GlassPaneDialogWrapperPeer;
 import consulo.desktop.awt.ui.IdeEventQueue;
-import consulo.disposer.Disposer;
+import consulo.desktop.awt.ui.impl.AWTUIAccessImpl;
 import consulo.desktop.awt.ui.popup.PopupBorder;
-import consulo.ui.ex.awt.LabeledTitlePanel;
+import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.ui.WindowMoveListener;
 import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
@@ -19,18 +17,15 @@ import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.wm.WindowManager;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.awt.JBLabel;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.internal.DialogWrapperDialog;
 import consulo.ui.ex.awt.internal.DialogWrapperPeer;
 import consulo.ui.ex.awt.internal.DialogWrapperPeerFactory;
 import consulo.ui.ex.awt.util.Alarm;
-import consulo.ui.ModalityState;
-import consulo.desktop.awt.ui.impl.AWTUIAccessImpl;
-import consulo.ui.UIAccess;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
@@ -74,20 +69,20 @@ public class DesktopAWTProgressDialogImpl implements ProgressDialog {
     };
 
     private static String fitTextToLabel(@Nullable String fullText, JLabel label) {
-        if (fullText == null || fullText.isEmpty()) {
+        if (StringUtil.isEmpty(fullText)) {
             return " ";
         }
         while (label.getFontMetrics(label.getFont()).stringWidth(fullText) > label.getWidth()) {
-            int sep = fullText.indexOf(File.separatorChar, 4);
+            int sep = fullText.indexOf(File.separatorChar, 2);
             if (sep < 0) {
                 return fullText;
             }
-            fullText = "..." + fullText.substring(sep);
+            fullText = "…" + fullText.substring(sep);
         }
         return fullText;
     }
 
-    private final Runnable myUpdateRequest = () -> update();
+    private final Runnable myUpdateRequest = this::update;
     JPanel myPanel;
 
     private JLabel myTextLabel;
@@ -299,6 +294,7 @@ public class DesktopAWTProgressDialogImpl implements ProgressDialog {
     }
 
     @Override
+    @RequiredUIAccess
     public void show() {
         myWasShown = true;
         if (myParentWindow == null) {
@@ -437,6 +433,7 @@ public class DesktopAWTProgressDialogImpl implements ProgressDialog {
         }
 
         @Override
+        @RequiredUIAccess
         protected @Nullable JComponent createSouthPanel() {
             return null;
         }

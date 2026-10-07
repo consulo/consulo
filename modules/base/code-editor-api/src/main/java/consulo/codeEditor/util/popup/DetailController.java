@@ -18,6 +18,7 @@ package consulo.codeEditor.util.popup;
 import consulo.ui.UIAccess;
 import consulo.ui.UIAccessScheduler;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
@@ -51,15 +52,15 @@ public class DetailController {
 
     private String getTitle2Text(@Nullable String fullText) {
         int labelWidth = getLabel().getWidth();
-        if (fullText == null || fullText.length() == 0) {
+        if (StringUtil.isEmpty(fullText)) {
             return " ";
         }
         while (getLabel().getFontMetrics(getLabel().getFont()).stringWidth(fullText) > labelWidth) {
-            int sep = fullText.indexOf(File.separatorChar, 4);
+            int sep = fullText.indexOf(File.separatorChar, 2);
             if (sep < 0) {
                 return fullText;
             }
-            fullText = "..." + fullText.substring(sep);
+            fullText = "…" + fullText.substring(sep);
         }
 
         return fullText;

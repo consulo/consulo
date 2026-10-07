@@ -20,6 +20,7 @@ import consulo.project.Project;
 import consulo.util.collection.MultiMap;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.Ref;
 
 import java.util.*;
@@ -127,7 +128,7 @@ class UpdateFoldRegionsOperation implements Runnable {
         LOG.error(String.format("Invalid folding descriptor detected (%s). It ends beyond the document range (%d)", descriptor, myEditor.getDocument().getTextLength()));
         continue;
       }
-      FoldRegion region = foldingModel.createFoldRegion(range.getStartOffset(), range.getEndOffset(), placeholder == null ? "..." : placeholder, group, descriptor.isNonExpandable());
+      FoldRegion region = foldingModel.createFoldRegion(range.getStartOffset(), range.getEndOffset(), StringUtil.notNullize(placeholder, "..."), group, descriptor.isNonExpandable());
       if (region == null) continue;
 
       if (descriptor.isNonExpandable()) region.putUserData(CodeEditorFoldingModelBase.SELECT_REGION_ON_CARET_NEARBY, Boolean.TRUE);

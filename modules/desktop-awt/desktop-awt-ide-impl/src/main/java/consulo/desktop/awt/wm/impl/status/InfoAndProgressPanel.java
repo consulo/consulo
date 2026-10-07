@@ -347,7 +347,7 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
             return myOriginals.size() + pluralizeProcess(myOriginals.size()) + " running…";
         }
         int others = myOriginals.size() - 1;
-        String trimmed = latestText.length() > 55 ? latestText.substring(0, 50) + "…" : latestText;
+        String trimmed = StringUtil.truncateWithEllipsis(latestText, 50);
         return trimmed + " (" + others + " more" + pluralizeProcess(others) + ")";
     }
 
