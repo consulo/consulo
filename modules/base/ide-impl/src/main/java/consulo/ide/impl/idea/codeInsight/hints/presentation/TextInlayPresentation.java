@@ -5,7 +5,7 @@ import consulo.colorScheme.EffectType;
 import consulo.colorScheme.TextAttributes;
 import consulo.ide.impl.idea.codeInsight.hints.InlayTextMetrics;
 import consulo.ide.impl.idea.codeInsight.hints.InlayTextMetricsStorage;
-import consulo.ide.impl.idea.ui.paint.EffectPainter;
+import consulo.ui.ex.awt.paint.EffectPainter;
 import consulo.language.editor.inlay.BasePresentation;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;

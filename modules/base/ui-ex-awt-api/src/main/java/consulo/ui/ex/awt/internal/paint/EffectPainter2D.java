@@ -1,15 +1,14 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.ui.paint;
+package consulo.ui.ex.awt.internal.paint;
 
 import consulo.ui.ex.awt.ImageUtil;
 import consulo.ui.ex.awt.internal.JreHiDpiUtil;
+import consulo.application.util.registry.Registry;
 import consulo.ui.ex.awt.paint.LinePainter2D;
 import consulo.ui.ex.awt.paint.PaintUtil;
-import consulo.application.util.registry.Registry;
 import consulo.ui.ex.awt.paint.PaintUtil.RoundingMode;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.ide.impl.idea.util.ui.WavePainter2D;
 import consulo.colorScheme.EffectType;
 import consulo.ui.ex.awt.paint.RectanglePainter2D;
 import consulo.ui.ex.awt.paint.RegionPainter2D;
@@ -364,13 +363,11 @@ public enum EffectPainter2D implements RegionPainter2D<Font> {
             }
         }
 
-        
         BufferedImage getImage(Graphics2D g, Color color, double height) {
             ConcurrentHashMap<Integer, BufferedImage> cache = JreHiDpiUtil.isJreHiDPI(g) ? myHiDPICache : myNormalCache;
             return cache.computeIfAbsent(Objects.hash(color.getRGB(), JBUI.sysScale(g), height), k -> createImage(g, color, height));
         }
 
-        
         BufferedImage createImage(Graphics2D g, Paint paint, double height) {
             double period = getPeriod(height);
             int width = (int) period << (paint instanceof Color ? 8 : 1);

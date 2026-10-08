@@ -25,7 +25,7 @@ import consulo.desktop.awt.editor.impl.internal.SoftWrapModelImpl;
 import consulo.document.Document;
 import consulo.document.util.DocumentUtil;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.ui.paint.EffectPainter;
+import consulo.ui.ex.awt.paint.EffectPainter;
 import consulo.application.internal.SlowOperations;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
