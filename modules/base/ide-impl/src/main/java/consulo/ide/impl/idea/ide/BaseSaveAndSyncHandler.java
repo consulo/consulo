@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.ide;
 
 import consulo.application.Application;
 import consulo.application.SaveAndSyncHandler;
-import consulo.application.impl.internal.LaterInvocator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.disposer.Disposable;
@@ -28,11 +27,9 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.ui.ModalityState;
-import consulo.virtualFileSystem.ManagingFS;
-import consulo.virtualFileSystem.RefreshQueue;
-import consulo.virtualFileSystem.RefreshSession;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFileWithId;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.virtualFileSystem.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,6 +60,8 @@ public abstract class BaseSaveAndSyncHandler implements SaveAndSyncHandler, Disp
     private volatile long myRefreshSessionId;
     private Future<?> myRefreshDelayAlarm = CompletableFuture.completedFuture(null);
 
+    private UIAccess myStableUIAccess;
+
     protected BaseSaveAndSyncHandler(
         Application application,
         GeneralSettings generalSettings,
@@ -73,6 +72,7 @@ public abstract class BaseSaveAndSyncHandler implements SaveAndSyncHandler, Disp
         mySettings = generalSettings;
         myProgressManager = progressManager;
         myFileDocumentManager = fileDocumentManager;
+        myStableUIAccess = UIAccess.supportsMultipleUI() ? null : UIAccess.listAll().getFirst();
     }
 
     @Override
@@ -86,42 +86,60 @@ public abstract class BaseSaveAndSyncHandler implements SaveAndSyncHandler, Disp
         }
     }
 
+    @RequiredUIAccess
     public void onFrameDeactivated() {
+        UIAccess uiAccess = UIAccess.current();
+
         LOG.debug("save(): enter");
-        if (canSyncOrSave()) {
-            saveProjectsAndDocuments();
+        if (canSyncOrSave(uiAccess)) {
+            saveProjectsAndDocuments(uiAccess);
         }
         LOG.debug("save(): exit");
     }
 
+    @RequiredUIAccess
     protected void saveAllDocumentsIfInactive() {
-        if (mySettings.isAutoSaveIfInactive() && canSyncOrSave()) {
+        if (mySettings.isAutoSaveIfInactive() && canSyncOrSave(UIAccess.current())) {
             ((FileDocumentManagerEx) myFileDocumentManager).saveAllDocuments(false);
         }
     }
 
-    protected boolean canSyncOrSave() {
-        return !LaterInvocator.isInModalContext() && !myProgressManager.hasModalProgressIndicator();
+    @RequiredUIAccess
+    protected boolean canSyncOrSave(UIAccess uiAccess) {
+        return !uiAccess.isInModalContext() && !myProgressManager.hasModalProgressIndicator();
     }
 
     @Override
-    public void saveProjectsAndDocuments() {
+    public void saveProjectsAndDocuments(UIAccess uiAccess) {
         if (!myApplication.isDisposed() && mySettings.isSaveOnFrameDeactivation() && myBlockSaveOnFrameDeactivationCount.get() == 0) {
-            myApplication.saveAllWithProgress(myApplication.getLastUIAccess());
+            myApplication.saveAllWithProgress(uiAccess);
         }
     }
 
     @Override
     public void scheduleRefresh() {
         myRefreshDelayAlarm.cancel(false);
-        myRefreshDelayAlarm = AppExecutorUtil.getAppScheduledExecutorService()
-            .schedule(this::doScheduledRefresh, 300, TimeUnit.MILLISECONDS);
+        if (myStableUIAccess == null) {
+            myRefreshDelayAlarm = AppExecutorUtil.getAppScheduledExecutorService()
+                .schedule(this::doScheduledRefreshBackground, 300, TimeUnit.MILLISECONDS);
+        }
+        else {
+            myRefreshDelayAlarm = myStableUIAccess.getScheduler().schedule(this::doScheduledRefreshFromUI, 300, TimeUnit.MILLISECONDS);
+        }
+
     }
 
-    private void doScheduledRefresh() {
-        if (canSyncOrSave()) {
+    @RequiredUIAccess
+    private void doScheduledRefreshFromUI() {
+        if (canSyncOrSave(UIAccess.current())) {
             refreshOpenFiles();
         }
+        maybeRefresh(myApplication.getNoneModalityState());
+    }
+
+    private void doScheduledRefreshBackground() {
+        refreshOpenFiles();
+
         maybeRefresh(myApplication.getNoneModalityState());
     }
 

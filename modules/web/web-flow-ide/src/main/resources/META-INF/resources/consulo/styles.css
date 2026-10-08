@@ -396,6 +396,34 @@ vaadin-button[theme~="pressed"]
   max-width: 240px;
 }
 
+.web-placeholder-layout
+{
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+
+.web-placeholder-layout-slot
+{
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+}
+
+.web-placeholder-layout-slot[hidden]
+{
+  display: none;
+}
+
+.web-placeholder-layout-slot > *
+{
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
 table.web-table-layout > tr:has(> td > *):not(:has(> td > :not([hidden])))
 {
   display: none;

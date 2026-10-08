@@ -274,6 +274,7 @@ public final class LaterInvocator {
     }
   }
 
+  @RequiredUIAccess
   public static boolean isInModalContextForProject(Project project) {
     assertIsDispatchThread();
 
@@ -284,6 +285,7 @@ public final class LaterInvocator {
     return modalEntitiesForProject == null || modalEntitiesForProject.isEmpty();
   }
 
+  @RequiredUIAccess
   public static boolean isInModalContext() {
     return isInModalContextForProject(null);
   }

@@ -151,7 +151,7 @@ public class WebApplicationImpl extends UnifiedApplication {
    * Every ui still attached. A tab which went away is dropped while answering, since a browser is not obliged to
    * say goodbye.
    */
-  public Collection<UIAccess> getUIAccesses() {
+  public List<UIAccess> getUIAccesses() {
     synchronized (myUIAccesses) {
       myUIAccesses.removeIf(access -> !access.isValid());
       return List.copyOf(myUIAccesses);

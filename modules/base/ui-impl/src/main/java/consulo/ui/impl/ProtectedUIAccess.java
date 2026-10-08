@@ -19,6 +19,7 @@ import consulo.application.Application;
 import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.clipboard.Clipboard;
 import consulo.util.dataholder.Key;
 import org.jspecify.annotations.Nullable;
@@ -112,6 +113,7 @@ final class ProtectedUIAccess extends BaseUIAccess {
         myOriginal.execute(protect(command));
     }
 
+    @RequiredUIAccess
     @Override
     public boolean isInModalContext() {
         return myOriginal.isInModalContext();

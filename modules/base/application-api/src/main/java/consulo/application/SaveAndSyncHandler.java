@@ -17,6 +17,7 @@ package consulo.application;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
+import consulo.ui.UIAccess;
 
 /**
  * @author Kirill Likhodedov
@@ -27,7 +28,7 @@ public interface SaveAndSyncHandler {
     return Application.get().getInstance(SaveAndSyncHandler.class);
   }
 
-  void saveProjectsAndDocuments();
+  void saveProjectsAndDocuments(UIAccess uiAccess);
 
   void scheduleRefresh();
 

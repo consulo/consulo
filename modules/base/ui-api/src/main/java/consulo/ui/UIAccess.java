@@ -26,6 +26,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -81,7 +82,7 @@ public interface UIAccess extends Executor, UserDataHolder {
      * Every ui the application is showing at the moment. A frontend which draws into a single window answers with
      * the one access it has, the browser frontend with one per tab.
      */
-    static Collection<UIAccess> listAll() {
+    static List<UIAccess> listAll() {
         return UIInternal.get()._UIAccess_all();
     }
 
@@ -172,6 +173,7 @@ public interface UIAccess extends Executor, UserDataHolder {
         return false;
     }
 
+    @RequiredUIAccess
     default boolean isInModalContext() {
         return false;
     }

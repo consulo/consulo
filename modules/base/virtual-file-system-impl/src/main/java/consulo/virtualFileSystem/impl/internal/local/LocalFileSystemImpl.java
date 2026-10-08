@@ -19,16 +19,20 @@ import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
 import consulo.application.concurrent.ApplicationConcurrency;
+import consulo.application.progress.ProgressManager;
 import consulo.disposer.Disposable;
 import consulo.util.collection.Maps;
 import consulo.util.io.FileUtil;
 import consulo.util.io.URLUtil;
+import consulo.util.lang.Couple;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.internal.VfsImplUtil;
 import consulo.virtualFileSystem.internal.PersistentFS;
+import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import org.jetbrains.annotations.TestOnly;
@@ -224,24 +228,32 @@ public final class LocalFileSystemImpl extends LocalFileSystemBase implements Re
 
     private void storeRefreshStatusToFiles() {
         if (myWatcher.isOperational()) {
-            FileWatcher.DirtyPaths dirtyPaths = myWatcher.getDirtyPaths();
-            boolean changed = markPathsDirty(dirtyPaths.dirtyPaths)
-                | markFlatDirsDirty(dirtyPaths.dirtyDirectories)
-                | markRecursiveDirsDirty(dirtyPaths.dirtyPathsRecursive);
-
-            if (changed) {
-                onFilesChange();
-            }
+            markDirtyPaths(myWatcher.getDirtyPaths());
         }
     }
 
-    private void onFilesChange() {
-        // refresh(true);
+    private void markDirtyPaths(FileWatcher.@NonNull DirtyPaths dirtyPaths) {
+        //TODO RC: this method is sometimes called without RA => it makes some VFS intermediate states visible -- e.g.
+        //         the state there file is already marked as removed, but is not yet removed from it's parent.children
+        //         list => causes FileDeletedException during path resolution.
+        //         We should either:
+        //         a) wrap _all_ the calls in RA -- carries an additional overhead
+        //         b) or deal with intermediate states without failing: e.g., FileNavigator.retryUpToN() is an attempt
+        //            in that direction, and it works, at least partially: most (but not all) of the reports in Diogen
+        //            now are from _successful_ retries, i.e. the issue was hidden from the client. But .retryUpToN()
+        //            is still not 100% a solution.
+        //         I'm yet undecided which approach is the optimal choice...
+
+        markPathsDirty(dirtyPaths.dirtyPaths);
+        markFlatDirsDirty(dirtyPaths.dirtyDirectories);
+        markRecursiveDirsDirty(dirtyPaths.dirtyPathsRecursive);
     }
 
     private boolean markPathsDirty(Iterable<String> dirtyPaths) {
         boolean dirty = false;
         for (String dirtyPath : dirtyPaths) {
+            ProgressManager.checkCanceled();
+            
             VirtualFile file = findFileByPathIfCached(dirtyPath);
             if (file instanceof NewVirtualFile newVirtualFile) {
                 newVirtualFile.markDirty();
@@ -254,7 +266,9 @@ public final class LocalFileSystemImpl extends LocalFileSystemBase implements Re
     private boolean markFlatDirsDirty(Iterable<String> dirtyPaths) {
         boolean dirty = false;
         for (String dirtyPath : dirtyPaths) {
-            Pair<NewVirtualFile, NewVirtualFile> pair = VfsImplUtil.findCachedFileByPath(this, dirtyPath);
+            ProgressManager.checkCanceled();
+
+            Couple<NewVirtualFile> pair = VfsImplUtil.findCachedFileByPath(this, dirtyPath);
             if (pair.first != null) {
                 pair.first.markDirty();
                 dirty = true;
@@ -276,7 +290,9 @@ public final class LocalFileSystemImpl extends LocalFileSystemBase implements Re
         boolean dirty = false;
 
         for (String dirtyPath : dirtyPaths) {
-            Pair<NewVirtualFile, NewVirtualFile> pair = VfsImplUtil.findCachedFileByPath(this, dirtyPath);
+            ProgressManager.checkCanceled();
+            
+            Couple<NewVirtualFile> pair = VfsImplUtil.findCachedFileByPath(this, dirtyPath);
             if (pair.first != null) {
                 pair.first.markDirtyRecursively();
                 dirty = true;
