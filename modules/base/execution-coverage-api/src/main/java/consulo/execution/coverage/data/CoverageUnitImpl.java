@@ -79,7 +79,7 @@ public class CoverageUnitImpl implements CoverageUnit {
         }
         LineStatus status = LineStatus.NOT_COVERED;
         for (CoverageLine line : myLines) {
-            if (line != null && signature.equals(line.getMethodSignature()) && line.getStatus() != LineStatus.NOT_COVERED) {
+            if (CoverageLine.isSomewhatCovered(line) && signature.equals(line.getMethodSignature())) {
                 status = LineStatus.PARTIALLY_COVERED;
                 break;
             }

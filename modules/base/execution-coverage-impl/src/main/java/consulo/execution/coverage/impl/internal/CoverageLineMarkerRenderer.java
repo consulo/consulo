@@ -13,21 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.execution.coverage.impl.internal;
 
-import consulo.execution.coverage.data.LineStatus;
-import consulo.execution.coverage.data.CoverageLine;
-import consulo.application.Application;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.*;
 import consulo.codeEditor.markup.*;
 import consulo.colorScheme.TextAttributes;
 import consulo.colorScheme.TextAttributesKey;
-import consulo.configurable.Configurable;
-import consulo.configurable.SearchableConfigurable;
 import consulo.document.Document;
+import consulo.execution.coverage.CoveragePresentation;
 import consulo.execution.coverage.CoverageSuitesBundle;
 import consulo.execution.coverage.action.HideCoverageInfoAction;
+import consulo.execution.coverage.data.CoverageLine;
+import consulo.execution.coverage.data.LineStatus;
 import consulo.execution.coverage.impl.internal.action.ShowCoveringTestsAction;
 import consulo.execution.coverage.internal.ExecutionCoverageInternal;
 import consulo.execution.coverage.localize.ExecutionCoverageLocalize;
@@ -37,13 +35,12 @@ import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.execution.coverage.CoveragePresentation;
 import consulo.ui.color.ColorValue;
-import consulo.ui.image.Image;
+import consulo.ui.event.details.InputDetails;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.ColoredSideBorder;
-import consulo.ui.ex.awt.hint.HintHint;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.image.Image;
 import it.unimi.dsi.fastutil.ints.Int2IntFunction;
 import org.jspecify.annotations.Nullable;
 
@@ -52,11 +49,8 @@ import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.*;
 import java.util.List;
-import java.util.Set;
-import java.util.SortedMap;
 
 /**
  * @author ven
@@ -143,24 +137,12 @@ public class CoverageLineMarkerRenderer implements ActiveGutterRenderer, LineMar
     }
 
     private static TextAttributesKey getAttributesKey(CoverageLine lineData) {
-        if (lineData != null) {
-            switch (lineData.getStatus()) {
-                case LineStatus.COVERED:
-                    return CodeInsightColors.LINE_FULL_COVERAGE;
-                case LineStatus.PARTIALLY_COVERED:
-                    return CodeInsightColors.LINE_PARTIAL_COVERAGE;
-            }
-        }
-
-        return CodeInsightColors.LINE_NONE_COVERAGE;
+        return CoverageLine.getStatus(lineData).getAttributesKey();
     }
 
     @Override
-    public boolean canDoAction(MouseEvent e) {
-        Component component = e.getComponent();
-        return component instanceof EditorGutterComponentEx gutter
-            && e.getX() > gutter.getLineMarkerAreaOffset()
-            && e.getX() < gutter.getIconAreaOffset();
+    public boolean canDoAction(LineMarkerPresentation presentation, InputDetails details) {
+        return presentation instanceof CoveragePresentation;
     }
 
     @Override
@@ -170,13 +152,22 @@ public class CoverageLineMarkerRenderer implements ActiveGutterRenderer, LineMar
 
     @Override
     @RequiredUIAccess
-    public void doAction(Editor editor, MouseEvent e) {
-        e.consume();
-        JComponent comp = (JComponent) e.getComponent();
-        JRootPane rootPane = comp.getRootPane();
+    public void doAction(Editor editor, LineMarkerPresentation presentation, InputDetails details) {
+        int y = details.getPosition().y();
+        JComponent gutter = ((EditorGutterComponentEx) editor.getGutter()).getComponent();
+        JRootPane rootPane = gutter.getRootPane();
+        if (rootPane == null) {
+            return;
+        }
         JLayeredPane layeredPane = rootPane.getLayeredPane();
-        Point point = SwingUtilities.convertPoint(comp, THICKNESS, e.getY(), layeredPane);
-        showHint(editor, point, editor.xyToLogicalPosition(e.getPoint()).line);
+        Point point = SwingUtilities.convertPoint(gutter, THICKNESS, y, layeredPane);
+        showHint(editor, point, editor.xyToLogicalPosition(new Point(0, y)).line);
+    }
+
+    @Override
+    public void doAction(Editor editor, MouseEvent e) {
+        // ActiveGutterRenderer is still implemented, so this abstract method must stay. It is now
+        // unreachable because canDoAction(MouseEvent) falls back to the default false.
     }
 
     @RequiredUIAccess
@@ -187,13 +178,14 @@ public class CoverageLineMarkerRenderer implements ActiveGutterRenderer, LineMar
         CoverageLine lineData = getLineData(lineNumber);
         Editor uEditor = null;
         String reportText = null;
-        if (lineData != null && lineData.getStatus() != LineStatus.NOT_COVERED && !mySubCoverageActive) {
+        if (CoverageLine.isSomewhatCovered(lineData) && !mySubCoverageActive) {
             reportText = getReport(editor, lineNumber);
         }
 
         ExecutionCoverageInternal.getInstance().showCoverageHit(panel, editor, point, lineData, reportText);
     }
 
+    @RequiredReadAction
     private String getReport(Editor editor, int lineNumber) {
         CoverageLine lineData = getLineData(lineNumber);
 
@@ -253,7 +245,7 @@ public class CoverageLineMarkerRenderer implements ActiveGutterRenderer, LineMar
         toolbarComponent.setBorder(new ColoredSideBorder(
             awtForeground,
             awtForeground,
-            lineData == null || lineData.getStatus() == LineStatus.NOT_COVERED || mySubCoverageActive ? awtForeground : null,
+            CoverageLine.isNotCovered(lineData) || mySubCoverageActive ? awtForeground : null,
             awtForeground,
             1
         ));
@@ -285,7 +277,6 @@ public class CoverageLineMarkerRenderer implements ActiveGutterRenderer, LineMar
         return editor.getColorsScheme().getAttributes(myKey).getErrorStripeColor();
     }
 
-    
     @Override
     public Position getPosition() {
         return Position.LEFT;
@@ -371,7 +362,7 @@ public class CoverageLineMarkerRenderer implements ActiveGutterRenderer, LineMar
             ArrayList<Integer> list = new ArrayList<>(myLines.keySet());
             Collections.sort(list);
             CoverageLine data = getLineData(myLineNumber);
-            LineStatus currentStatus = data != null ? data.getStatus() : LineStatus.NOT_COVERED;
+            LineStatus currentStatus = CoverageLine.getStatus(data);
             int idx = list.indexOf(myNewToOldConverter != null ? myNewToOldConverter.apply(myLineNumber) : myLineNumber);
             while (hasNext(idx, list)) {
                 int index = next(idx);
@@ -393,20 +384,12 @@ public class CoverageLineMarkerRenderer implements ActiveGutterRenderer, LineMar
             return null;
         }
 
-        
         protected LocalizeValue getNextChange() {
             Integer entry = getLineEntry();
             if (entry != null) {
                 CoverageLine lineData = getLineData(entry);
                 if (lineData != null) {
-                    switch (lineData.getStatus()) {
-                        case LineStatus.NOT_COVERED:
-                            return ExecutionCoverageLocalize.coverageNextChangeUncovered();
-                        case LineStatus.PARTIALLY_COVERED:
-                            return ExecutionCoverageLocalize.coverageNextChangePartialCovered();
-                        case LineStatus.COVERED:
-                            return ExecutionCoverageLocalize.coverageNextChangeFullyCovered();
-                    }
+                    return lineData.getStatus().getDisplayName();
                 }
             }
             return LocalizeValue.empty();

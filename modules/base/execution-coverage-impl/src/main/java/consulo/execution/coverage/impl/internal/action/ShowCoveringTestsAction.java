@@ -1,7 +1,5 @@
 package consulo.execution.coverage.impl.internal.action;
 
-import consulo.execution.coverage.data.LineStatus;
-import consulo.execution.coverage.data.CoverageLine;
 import consulo.application.Application;
 import consulo.application.progress.ProgressManager;
 import consulo.codeEditor.Editor;
@@ -9,6 +7,7 @@ import consulo.dataContext.DataContext;
 import consulo.execution.coverage.CoverageDataManager;
 import consulo.execution.coverage.CoverageSuite;
 import consulo.execution.coverage.CoverageSuitesBundle;
+import consulo.execution.coverage.data.CoverageLine;
 import consulo.execution.coverage.localize.ExecutionCoverageLocalize;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.psi.PsiElement;
@@ -168,7 +167,7 @@ public class ShowCoveringTestsAction extends LegacyAnAction {
     public void update(AnActionEvent e) {
         Presentation presentation = e.getPresentation();
         presentation.setEnabled(false);
-        if (myLineData != null && myLineData.getStatus() != LineStatus.NOT_COVERED) {
+        if (CoverageLine.isSomewhatCovered(myLineData)) {
             Project project = e.getData(Project.KEY);
             if (project != null) {
                 File[] files = getTraceFiles(project);

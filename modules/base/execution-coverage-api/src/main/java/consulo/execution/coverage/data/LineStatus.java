@@ -15,8 +15,29 @@
  */
 package consulo.execution.coverage.data;
 
+import consulo.codeEditor.CodeInsightColors;
+import consulo.colorScheme.TextAttributesKey;
+import consulo.execution.coverage.localize.ExecutionCoverageLocalize;
+import consulo.localize.LocalizeValue;
+
 public enum LineStatus {
-    NOT_COVERED,
-    PARTIALLY_COVERED,
-    COVERED
+    NOT_COVERED(ExecutionCoverageLocalize.coverageNextChangeUncovered(), CodeInsightColors.LINE_NONE_COVERAGE),
+    PARTIALLY_COVERED(ExecutionCoverageLocalize.coverageNextChangePartialCovered(), CodeInsightColors.LINE_PARTIAL_COVERAGE),
+    COVERED(ExecutionCoverageLocalize.coverageNextChangeFullyCovered(), CodeInsightColors.LINE_FULL_COVERAGE);
+
+    private final LocalizeValue myDisplayName;
+    private final TextAttributesKey myAttributesKey;
+
+    LineStatus(LocalizeValue displayName, TextAttributesKey attributesKey) {
+        myDisplayName = displayName;
+        myAttributesKey = attributesKey;
+    }
+
+    public LocalizeValue getDisplayName() {
+        return myDisplayName;
+    }
+
+    public TextAttributesKey getAttributesKey() {
+        return myAttributesKey;
+    }
 }

@@ -50,7 +50,6 @@ public interface ActiveGutterRenderer extends LineMarkerRenderer, SimpleAccessib
      * @return the tooltip text, or null if no tooltip is required.
      */
     //TODO: rename into getToolTip() after deprecation deletion
-    
     default LocalizeValue getTooltipValue() {
         return LocalizeValue.ofNullable(getTooltipText());
     }
@@ -87,13 +86,11 @@ public interface ActiveGutterRenderer extends LineMarkerRenderer, SimpleAccessib
         return false;
     }
 
-    
     @Override
     default LocalizeValue getAccessibleNameValue() {
         return LocalizeValue.localizeTODO("marker: unknown");
     }
 
-    
     @Override
     default LocalizeValue getAccessibleTooltipValue() {
         return getTooltipValue();
