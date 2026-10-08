@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide;
+package consulo.ui.ex.awt.internal;
 
 import consulo.application.util.registry.Registry;
 import consulo.component.util.ComparableObject;
@@ -131,20 +131,28 @@ public class IdeTooltip extends ComparableObject.Impl {
         return this;
     }
 
-    protected boolean canAutohideOn(TooltipEvent event) {
+    /**
+     * To be called by the {@link IdeTooltipManager} implementation only.
+     */
+    public boolean canAutohideOn(TooltipEvent event) {
         return true;
     }
 
-    protected void onHidden() {
-
+    /**
+     * To be called by the {@link IdeTooltipManager} implementation only.
+     */
+    public void onHidden() {
     }
 
-    protected boolean beforeShow() {
+    /**
+     * To be called by the {@link IdeTooltipManager} implementation only.
+     */
+    public boolean beforeShow() {
         return true;
     }
 
     public void hide() {
-        IdeTooltipManagerImpl.getInstanceImpl().hide(this);
+        IdeTooltipManager.getInstance().hide(this);
     }
 
     public boolean canBeDismissedOnTimeout() {
@@ -160,11 +168,9 @@ public class IdeTooltip extends ComparableObject.Impl {
     }
 
     public int getDismissDelay() {
-        if (myComponent instanceof JComponent) {
-            Object value = ((JComponent) myComponent).getClientProperty(TOOLTIP_DISMISS_DELAY_KEY);
-            if (value instanceof Integer) {
-                return ((Integer) value).intValue();
-            }
+        if (myComponent instanceof JComponent jComponent
+            && jComponent.getClientProperty(TOOLTIP_DISMISS_DELAY_KEY) instanceof Integer tooltipDismissDelay) {
+            return tooltipDismissDelay;
         }
         return Registry.intValue("ide.tooltip.dismissDelay");
     }
@@ -174,7 +180,10 @@ public class IdeTooltip extends ComparableObject.Impl {
         return this;
     }
 
-    void setTipComponent(JComponent tipComponent) {
+    /**
+     * To be called by the {@link IdeTooltipManager} implementation only.
+     */
+    public void setTipComponent(JComponent tipComponent) {
         myTipComponent = tipComponent;
     }
 
