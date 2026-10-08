@@ -17,6 +17,7 @@ package consulo.webBrowser.impl.internal;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ArrayUtil;
 import consulo.webBrowser.BrowserLauncher;
 import consulo.webBrowser.UrlOpener;
@@ -34,6 +35,7 @@ public final class DefaultUrlOpener implements UrlOpener {
         myBrowserLauncher = browserLauncher;
     }
 
+    @RequiredUIAccess
     @Override
     public boolean openUrl(WebBrowser browser, String url, @Nullable Project project) {
         return myBrowserLauncher.get().browseUsingPath(url, null, browser, project, ArrayUtil.EMPTY_STRING_ARRAY);

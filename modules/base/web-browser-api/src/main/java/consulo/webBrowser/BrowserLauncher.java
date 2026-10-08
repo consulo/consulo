@@ -20,6 +20,7 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.project.Project;
 
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
 
 import java.io.File;
@@ -42,6 +43,7 @@ public abstract class BrowserLauncher {
 
     public abstract void browse(String url, @Nullable WebBrowser browser, @Nullable Project project);
 
+    @RequiredUIAccess
     public abstract boolean browseUsingPath(
         @Nullable String url,
         @Nullable String browserPath,

@@ -15,7 +15,6 @@
  */
 package consulo.execution.debug.impl.internal.ui;
 
-import consulo.logging.Logger;
 import consulo.application.ApplicationManager;
 import consulo.execution.ExecutionManager;
 import consulo.execution.configuration.RunConfigurationBase;
@@ -34,6 +33,7 @@ import consulo.execution.ui.console.ObservableConsoleView;
 import consulo.execution.ui.layout.LayoutAttractionPolicy;
 import consulo.execution.ui.layout.LayoutViewOptions;
 import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.CustomActionsSchema;
@@ -52,79 +52,79 @@ import java.util.concurrent.CompletableFuture;
 public abstract class DebuggerSessionTabBase extends RunTab {
     private static final Logger LOG = Logger.getInstance(DebuggerSessionTabBase.class);
 
-  protected ExecutionConsole myConsole;
+    protected ExecutionConsole myConsole;
 
-  public DebuggerSessionTabBase(Project project, String runnerId, String sessionName, GlobalSearchScope searchScope) {
-    super(project, searchScope, runnerId, XDebuggerLocalize.xdebuggerDefaultContentTitle().get(), sessionName);
+    public DebuggerSessionTabBase(Project project, String runnerId, String sessionName, GlobalSearchScope searchScope) {
+        super(project, searchScope, runnerId, XDebuggerLocalize.xdebuggerDefaultContentTitle().get(), sessionName);
 
-    myUi.getDefaults().initTabDefaults(0, XDebuggerLocalize.xdebuggerThreadsVarsTabTitle().get(), ExecutionDebugIconGroup.actionStartdebugger())
+        myUi.getDefaults().initTabDefaults(0, XDebuggerLocalize.xdebuggerThreadsVarsTabTitle().get(), ExecutionDebugIconGroup.actionStartdebugger())
             .initFocusContent(DebuggerContentInfo.FRAME_CONTENT, XDebuggerUIConstants.LAYOUT_VIEW_BREAKPOINT_CONDITION)
             .initFocusContent(DebuggerContentInfo.CONSOLE_CONTENT, LayoutViewOptions.STARTUP, new LayoutAttractionPolicy.FocusOnce(false));
-  }
-
-  public static CompletableFuture<@Nullable ActionGroup> getCustomizedActionGroupAsync(String id) {
-    return CustomActionsSchema.getCorrectedGroupAsync(id);
-  }
-
-  /**
-   * Fills a toolbar group from the customization schema, which resolves asynchronously. The target group is
-   * returned right away and filled once the schema answers, so the toolbar picks the actions up on its next update.
-   */
-  public static DefaultActionGroup customizedActionGroup(String id) {
-    DefaultActionGroup group = new DefaultActionGroup();
-    addCustomizedActions(group, id);
-    return group;
-  }
-
-  public static void addCustomizedActions(DefaultActionGroup target, String id) {
-    getCustomizedActionGroupAsync(id).whenComplete((group, throwable) -> {
-      if (throwable != null) {
-        LOG.error("Failed to resolve a debugger toolbar group", throwable);
-        return;
-      }
-      if (group != null) {
-        target.addAll(group);
-      }
-    });
-  }
-
-  protected void attachNotificationTo(Content content) {
-    if (myConsole instanceof ObservableConsoleView) {
-      ObservableConsoleView observable = (ObservableConsoleView)myConsole;
-      observable.addChangeListener(new ObservableConsoleView.ChangeListener() {
-          @Override
-          public void contentAdded(Collection<ConsoleViewContentType> types) {
-              if (types.contains(ConsoleViewContentType.ERROR_OUTPUT) || types.contains(ConsoleViewContentType.NORMAL_OUTPUT)) {
-                  content.fireAlert();
-              }
-          }
-      }, content);
-
-      RunProfile profile = getRunProfile();
-
-      if (profile instanceof RunConfigurationBase && !ApplicationManager.getApplication().isUnitTestMode()) {
-        observable.addChangeListener(
-                new RunContentBuilder.ConsoleToFrontListener((RunConfigurationBase)profile, myProject, DefaultDebugExecutor.getDebugExecutorInstance(),
-                                                             myRunContentDescriptor, myUi), content);
-      }
     }
-  }
 
-  protected @Nullable RunProfile getRunProfile() {
-    return myEnvironment != null ? myEnvironment.getRunProfile() : null;
-  }
+    public static CompletableFuture<@Nullable ActionGroup> getCustomizedActionGroupAsync(String id) {
+        return CustomActionsSchema.getCorrectedGroupAsync(id);
+    }
 
-  public void select() {
-    if (ApplicationManager.getApplication().isUnitTestMode()) return;
+    /**
+     * Fills a toolbar group from the customization schema, which resolves asynchronously. The target group is
+     * returned right away and filled once the schema answers, so the toolbar picks the actions up on its next update.
+     */
+    public static DefaultActionGroup customizedActionGroup(String id) {
+        DefaultActionGroup group = new DefaultActionGroup();
+        addCustomizedActions(group, id);
+        return group;
+    }
 
-    UIUtil.invokeLaterIfNeeded(() -> {
-      if (myRunContentDescriptor != null) {
-        RunContentManager manager = ExecutionManager.getInstance(myProject).getContentManager();
-        ToolWindow toolWindow = manager.getToolWindowByDescriptor(myRunContentDescriptor);
-        Content content = myRunContentDescriptor.getAttachedContent();
-        if (toolWindow == null || content == null) return;
-        manager.selectRunContent(myRunContentDescriptor);
-      }
-    });
-  }
+    public static void addCustomizedActions(DefaultActionGroup target, String id) {
+        getCustomizedActionGroupAsync(id).whenComplete((group, throwable) -> {
+            if (throwable != null) {
+                LOG.error("Failed to resolve a debugger toolbar group", throwable);
+                return;
+            }
+            if (group != null) {
+                target.addAll(group);
+            }
+        });
+    }
+
+    protected void attachNotificationTo(Content content) {
+        if (myConsole instanceof ObservableConsoleView) {
+            ObservableConsoleView observable = (ObservableConsoleView) myConsole;
+            observable.addChangeListener(new ObservableConsoleView.ChangeListener() {
+                @Override
+                public void contentAdded(Collection<ConsoleViewContentType> types) {
+                    if (types.contains(ConsoleViewContentType.ERROR_OUTPUT) || types.contains(ConsoleViewContentType.NORMAL_OUTPUT)) {
+                        content.fireAlert();
+                    }
+                }
+            }, content);
+
+            RunProfile profile = getRunProfile();
+
+            if (profile instanceof RunConfigurationBase && !ApplicationManager.getApplication().isUnitTestMode()) {
+                observable.addChangeListener(
+                    new RunContentBuilder.ConsoleToFrontListener((RunConfigurationBase) profile, myProject, DefaultDebugExecutor.getDebugExecutorInstance(),
+                        myRunContentDescriptor, myUi), content);
+            }
+        }
+    }
+
+    protected @Nullable RunProfile getRunProfile() {
+        return myEnvironment != null ? myEnvironment.getRunProfile() : null;
+    }
+
+    public void select() {
+        myProject.getUIAccess().execute(() -> {
+            if (myRunContentDescriptor != null) {
+                RunContentManager manager = ExecutionManager.getInstance(myProject).getContentManager();
+                ToolWindow toolWindow = manager.getToolWindowByDescriptor(myRunContentDescriptor);
+                Content content = myRunContentDescriptor.getAttachedContent();
+                if (toolWindow == null || content == null) {
+                    return;
+                }
+                manager.selectRunContent(myRunContentDescriptor);
+            }
+        });
+    }
 }

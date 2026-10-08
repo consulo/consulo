@@ -30,6 +30,7 @@ import consulo.webBrowser.DefaultBrowserPolicy;
 import consulo.webBrowser.WebBrowser;
 import consulo.webBrowser.WebBrowserManager;
 import consulo.webBrowser.localize.WebBrowserLocalize;
+import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
@@ -53,24 +54,33 @@ public final class BrowserLauncherImpl extends BrowserLauncherAppless {
     }
 
     @Override
-    protected void doShowError(@Nullable String error, @Nullable WebBrowser browser, @Nullable Project project, String title, @Nullable Runnable launchTask) {
-        AppUIUtil.invokeOnEdt(() -> {
+    protected void doShowError(@NonNull UIAccess uiAccess,
+                               @Nullable String error,
+                               @Nullable WebBrowser browser,
+                               @Nullable Project project,
+                               String title, @Nullable
+                               Runnable launchTask) {
+        UIAccess targetUIAccess = project == null ? uiAccess : project.getUIAccess();
+
+        targetUIAccess.execute(() -> {
             if (Messages.showYesNoDialog(project, StringUtil.notNullize(error, "Unknown error"),
                 title == null ? WebBrowserLocalize.browserError().get() : title, Messages.OK_BUTTON,
                 WebBrowserLocalize.browserFix().get(), null) == Messages.NO) {
-                UIAccess uiAccess = UIAccess.current();
 
-                Application.get().getInstance(ShowConfigurableService.class).show(project, BrowserSettings.class).whenCompleteAsync((o, throwable) -> {
+                ShowConfigurableService service = Application.get().getInstance(ShowConfigurableService.class);
+
+                service.show(project, BrowserSettings.class).whenCompleteAsync((o, throwable) -> {
                     if (launchTask != null) {
                         launchTask.run();
                     }
-                }, uiAccess);
+                }, targetUIAccess);
             }
-        }, project == null ? null : project.getDisposed());
+        });
     }
 
     @Override
-    protected void checkCreatedProcess(final @Nullable WebBrowser browser,
+    protected void checkCreatedProcess(@NonNull UIAccess uiAccess,
+                                       final @Nullable WebBrowser browser,
                                        final @Nullable Project project,
                                        GeneralCommandLine commandLine,
                                        final Process process,
@@ -81,7 +91,7 @@ public final class BrowserLauncherImpl extends BrowserLauncherAppless {
                 public void run() {
                     try {
                         if (process.waitFor() == 1) {
-                            doShowError(ExecUtil.readFirstLine(process.getErrorStream(), null), browser, project, null, launchTask);
+                            doShowError(uiAccess, ExecUtil.readFirstLine(process.getErrorStream(), null), browser, project, null, launchTask);
                         }
                     }
                     catch (InterruptedException ignored) {

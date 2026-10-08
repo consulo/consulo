@@ -30,6 +30,7 @@ import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.local.ExecUtil;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
@@ -48,6 +49,7 @@ import consulo.virtualFileSystem.StandardFileSystems;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.webBrowser.*;
 import consulo.webBrowser.localize.WebBrowserLocalize;
+import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
@@ -58,8 +60,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.nio.file.Files;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -135,7 +137,7 @@ public class BrowserLauncherAppless extends BrowserLauncher {
 
             List<String> command = getDefaultBrowserCommand();
             if (command != null) {
-                doLaunch(uri.toString(), command, null, null, ArrayUtil.EMPTY_STRING_ARRAY, null);
+                doLaunch(UIAccess.current(), uri.toString(), command, null, null, ArrayUtil.EMPTY_STRING_ARRAY, null);
                 return;
             }
         }
@@ -163,7 +165,7 @@ public class BrowserLauncherAppless extends BrowserLauncher {
             File file = new File(url);
             if (!browse && isDesktopActionSupported(Desktop.Action.OPEN)) {
                 if (!file.exists()) {
-                    doShowError(WebBrowserLocalize.errorFileDoesNotExist(file.getPath()).get(), null, null, null, null);
+                    doShowError(UIAccess.current(), WebBrowserLocalize.errorFileDoesNotExist(file.getPath()).get(), null, null, null, null);
                     return;
                 }
 
@@ -181,7 +183,7 @@ public class BrowserLauncherAppless extends BrowserLauncher {
         }
 
         if (uri == null) {
-            doShowError(WebBrowserLocalize.errorMalformedUrl(url).get(), null, null, null, null);
+            doShowError(UIAccess.current(), WebBrowserLocalize.errorMalformedUrl(url).get(), null, null, null, null);
         }
         else {
             browse(uri);
@@ -343,7 +345,7 @@ public class BrowserLauncherAppless extends BrowserLauncher {
         }
 
         @Override
-        
+
         protected Action[] createActions() {
             setOKButtonText(CommonLocalize.buttonYes());
             return new Action[]{getOKAction(), getCancelAction()};
@@ -402,16 +404,17 @@ public class BrowserLauncherAppless extends BrowserLauncher {
         @Nullable Project project,
         String[] additionalParameters
     ) {
-        Runnable launchTask = null;
+        @RequiredUIAccess Runnable launchTask = null;
         if (browserPath == null && browser != null) {
             browserPath = PathUtil.toSystemDependentName(browser.getPath());
             launchTask = () -> browseUsingPath(url, null, browser, project, additionalParameters);
         }
-        return doLaunch(url, browserPath, browser, project, additionalParameters, launchTask);
+        return doLaunch(UIAccess.current(), url, browserPath, browser, project, additionalParameters, launchTask);
     }
 
     @RequiredUIAccess
     private boolean doLaunch(
+        @NonNull UIAccess uiAccess,
         @Nullable String url,
         @Nullable String browserPath,
         @Nullable WebBrowser browser,
@@ -419,7 +422,8 @@ public class BrowserLauncherAppless extends BrowserLauncher {
         String[] additionalParameters,
         @Nullable Runnable launchTask
     ) {
-        return checkPath(browserPath, browser, project, launchTask) && doLaunch(
+        return checkPath(uiAccess, browserPath, browser, project, launchTask) && doLaunch(
+            uiAccess,
             url,
             BrowserUtil.getOpenBrowserCommand(browserPath, false),
             browser,
@@ -431,6 +435,7 @@ public class BrowserLauncherAppless extends BrowserLauncher {
 
     @Contract("null, _, _, _ -> false")
     public boolean checkPath(
+        @NonNull UIAccess uiAccess,
         @Nullable String browserPath,
         @Nullable WebBrowser browser,
         @Nullable Project project,
@@ -443,12 +448,13 @@ public class BrowserLauncherAppless extends BrowserLauncher {
         String message = browser != null
             ? browser.getBrowserNotFoundMessage()
             : WebBrowserLocalize.errorPleaseSpecifyPathToWebBrowser(CommonBundle.settingsActionPath()).get();
-        doShowError(message, browser, project, WebBrowserLocalize.titleBrowserNotFound().get(), launchTask);
+        doShowError(uiAccess, message, browser, project, WebBrowserLocalize.titleBrowserNotFound().get(), launchTask);
         return false;
     }
 
     @RequiredUIAccess
     private boolean doLaunch(
+        @NonNull UIAccess uiAccess,
         @Nullable String url,
         List<String> command,
         @Nullable WebBrowser browser,
@@ -478,16 +484,17 @@ public class BrowserLauncherAppless extends BrowserLauncher {
         addArgs(commandLine, browser == null ? null : browser.getSpecificSettings(), additionalParameters);
         try {
             Process process = commandLine.createProcess();
-            checkCreatedProcess(browser, project, commandLine, process, launchTask);
+            checkCreatedProcess(uiAccess, browser, project, commandLine, process, launchTask);
             return true;
         }
         catch (ExecutionException e) {
-            doShowError(e.getMessage(), browser, project, null, null);
+            doShowError(uiAccess, e.getMessage(), browser, project, null, null);
             return false;
         }
     }
 
     protected void checkCreatedProcess(
+        @NonNull UIAccess uiAccess,
         @Nullable WebBrowser browser,
         @Nullable Project project,
         GeneralCommandLine commandLine,
@@ -497,6 +504,7 @@ public class BrowserLauncherAppless extends BrowserLauncher {
     }
 
     protected void doShowError(
+        @NonNull UIAccess uiAccess,
         @Nullable String error,
         @Nullable WebBrowser browser,
         @Nullable Project project,

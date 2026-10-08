@@ -48,7 +48,6 @@ import consulo.process.event.ProcessEvent;
 import consulo.process.event.ProcessListener;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import consulo.project.ui.util.AppUIUtil;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogWrapper;
@@ -58,10 +57,10 @@ import consulo.util.collection.Lists;
 import consulo.util.collection.SmartList;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
-import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -95,7 +94,7 @@ public class ExecutionManagerImpl implements ExecutionManager, Disposable {
     private final Set<InProgressEntry> myInProgress = ConcurrentHashMap.newKeySet();
 
     @SuppressWarnings("MethodOverridesStaticMethodOfSuperclass")
-    
+
     public static ExecutionManagerImpl getInstance(Project project) {
         return (ExecutionManagerImpl) project.getInstance(ExecutionManager.class);
     }
@@ -129,13 +128,13 @@ public class ExecutionManagerImpl implements ExecutionManager, Disposable {
         myRunningConfigurations.clear();
     }
 
-    
+
     @Override
     public RunContentManager getContentManager() {
         return myContentManager.get();
     }
 
-    
+
     @Override
     public ProcessHandler[] getRunningProcesses() {
         List<ProcessHandler> handlers = null;
@@ -298,10 +297,11 @@ public class ExecutionManagerImpl implements ExecutionManager, Disposable {
             };
 
             try {
-                starter.executeAsync(state, environment).whenComplete((descriptor, throwable) -> AppUIUtil.invokeOnEdt(() -> {
+                starter.executeAsync(state, environment).whenComplete((descriptor, throwable) -> project.getUIAccess().execute(() -> {
                     if (throwable != null) {
                         errorHandler.accept(throwable);
-                    } else if (descriptor != null) {
+                    }
+                    else if (descriptor != null) {
                         RunInfo info = new RunInfo(descriptor, environment.getRunnerAndConfigurationSettings(), environment.getRunner(), executor);
                         myRunningConfigurations.add(info);
                         Disposer.register(descriptor, () -> myRunningConfigurations.remove(info));
@@ -353,14 +353,14 @@ public class ExecutionManagerImpl implements ExecutionManager, Disposable {
                     else {
                         processNotStarted(entry, executor, environment);
                     }
-                }, project::isDisposed));
+                }));
             }
             catch (Throwable e) {
                 errorHandler.accept(e);
             }
         };
 
-        compileAndRun(UIAccess.current(), startRunnable, environment, () -> {
+        compileAndRun(project.getUIAccess(), startRunnable, environment, () -> {
             if (!project.isDisposed()) {
                 processNotStarted(entry, executor, environment);
             }
@@ -401,7 +401,7 @@ public class ExecutionManagerImpl implements ExecutionManager, Disposable {
         restartRunProfile(executionEnvironment);
     }
 
-    
+
     private static ExecutionEnvironmentBuilder createEnvironmentBuilder(
         Project project,
         Executor executor,
@@ -574,7 +574,7 @@ public class ExecutionManagerImpl implements ExecutionManager, Disposable {
                 return false;
             }
 
-            
+
             @Override
             public LocalizeValue getDoNotShowMessage() {
                 return CommonLocalize.dialogOptionsDoNotShow();
@@ -609,12 +609,12 @@ public class ExecutionManagerImpl implements ExecutionManager, Disposable {
         ) == Messages.OK;
     }
 
-    
+
     private List<RunContentDescriptor> getRunningDescriptorsOfTheSameConfigType(RunnerAndConfigurationSettings configurationAndSettings) {
         return getRunningDescriptors(runningConfigurationAndSettings -> configurationAndSettings == runningConfigurationAndSettings);
     }
 
-    
+
     private List<RunContentDescriptor> getIncompatibleRunningDescriptors(RunnerAndConfigurationSettings configurationAndSettings) {
         RunConfiguration configurationToCheckCompatibility = configurationAndSettings.getConfiguration();
         return getRunningDescriptors(runningConfigurationAndSettings -> {
@@ -628,7 +628,7 @@ public class ExecutionManagerImpl implements ExecutionManager, Disposable {
     }
 
     @Override
-    
+
     public List<RunContentDescriptor> getRunningDescriptors(Predicate<? super RunnerAndConfigurationSettings> condition) {
         List<RunContentDescriptor> result = new SmartList<>();
         for (RunInfo runInfo : myRunningConfigurations) {
@@ -643,7 +643,7 @@ public class ExecutionManagerImpl implements ExecutionManager, Disposable {
     }
 
     @Override
-    
+
     public List<RunContentDescriptor> getDescriptors(Predicate<? super RunnerAndConfigurationSettings> condition) {
         List<RunContentDescriptor> result = new SmartList<>();
         for (RunInfo runInfo : myRunningConfigurations) {
@@ -654,7 +654,7 @@ public class ExecutionManagerImpl implements ExecutionManager, Disposable {
         return result;
     }
 
-    
+
     public Set<Executor> getExecutors(RunContentDescriptor descriptor) {
         Set<Executor> result = new HashSet<>();
         for (RunInfo runInfo : myRunningConfigurations) {
@@ -665,7 +665,7 @@ public class ExecutionManagerImpl implements ExecutionManager, Disposable {
         return result;
     }
 
-    
+
     public Set<RunnerAndConfigurationSettings> getConfigurations(RunContentDescriptor descriptor) {
         Set<RunnerAndConfigurationSettings> result = new HashSet<>();
         for (RunInfo trinity : myRunningConfigurations) {
@@ -682,19 +682,19 @@ public class ExecutionManagerImpl implements ExecutionManager, Disposable {
     }
 
     private static class ProcessExecutionListener implements ProcessListener {
-        
+
         private final Project myProject;
-        
+
         private final String myExecutorId;
-        
+
         private final ExecutionEnvironment myEnvironment;
-        
+
         private final ProcessHandler myProcessHandler;
-        
+
         private final RunContentDescriptor myDescriptor;
-        
+
         private final AtomicBoolean myWillTerminateNotified = new AtomicBoolean();
-        
+
         private final AtomicBoolean myTerminateNotified = new AtomicBoolean();
 
         public ProcessExecutionListener(Project project,

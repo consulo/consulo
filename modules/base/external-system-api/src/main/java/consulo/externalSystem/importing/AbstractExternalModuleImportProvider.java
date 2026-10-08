@@ -185,7 +185,7 @@ public abstract class AbstractExternalModuleImportProvider implements ModuleImpo
                         }
                     });
                 };
-                UIUtil.invokeLaterIfNeeded(resolveDependenciesTask);
+                project.getUIAccess().execute(resolveDependenciesTask);
             }
         });
             return input;

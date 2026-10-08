@@ -602,7 +602,7 @@ public class XDebugSessionImpl implements XDebugSession {
         myTopFramePosition = null;
         myActiveNonLineBreakpoint = null;
         updateExecutionPosition();
-        UIUtil.invokeLaterIfNeeded(() -> {
+        myProject.getUIAccess().giveIfNeed(() -> {
             if (mySessionTab != null) {
                 mySessionTab.getUi().clearAttractionBy(XDebuggerUIConstants.LAYOUT_VIEW_BREAKPOINT_CONDITION);
             }

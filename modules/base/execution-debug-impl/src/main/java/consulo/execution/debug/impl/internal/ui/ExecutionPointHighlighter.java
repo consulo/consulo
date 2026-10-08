@@ -1,7 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.execution.debug.impl.internal.ui;
 
-import consulo.application.ApplicationManager;
 import consulo.codeEditor.DocumentMarkupModel;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
@@ -30,14 +29,12 @@ import consulo.navigation.Navigatable;
 import consulo.navigation.OpenFileDescriptor;
 import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.project.Project;
-import consulo.project.ui.util.AppUIUtil;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -85,7 +82,7 @@ public class ExecutionPointHighlighter {
         });
     }
 
-    
+
     private OpenFileDescriptor findOpenFileDescriptor(Project project, XSourcePosition position) {
         Navigatable navigatable = position.createNavigatable(project);
         if (navigatable instanceof OpenFileDescriptor openFileDescriptor) {
@@ -97,7 +94,7 @@ public class ExecutionPointHighlighter {
     }
 
     public void hide() {
-        AppUIUtil.invokeOnEdt(() -> {
+        myProject.getUIAccess().execute(() -> {
             updateRequested.set(false);
 
             removeHighlighter();
@@ -126,16 +123,16 @@ public class ExecutionPointHighlighter {
 
     public void update(boolean navigate) {
         if (updateRequested.compareAndSet(false, true)) {
-            ApplicationManager.getApplication().invokeLater(() -> {
+            myProject.getUIAccess().execute(() -> {
                 if (updateRequested.compareAndSet(true, false)) {
                     doShow(navigate);
                 }
-            }, myProject.getDisposed());
+            });
         }
     }
 
     public void updateGutterIcon(@Nullable GutterIconRenderer renderer) {
-        AppUIUtil.invokeOnEdt(() -> {
+        myProject.getUIAccess().execute(() -> {
             if (myRangeHighlighter != null && myGutterIconRenderer != null) {
                 myRangeHighlighter.setGutterIconRenderer(renderer);
             }
@@ -145,9 +142,6 @@ public class ExecutionPointHighlighter {
     @RequiredUIAccess
     private void doShow(boolean navigate) {
         UIAccess.assertIsUIThread();
-        if (ApplicationManager.getApplication().isUnitTestMode()) {
-            return;
-        }
 
         removeHighlighter();
 
@@ -161,8 +155,8 @@ public class ExecutionPointHighlighter {
         if (fileDescriptor != null) {
             if (!navigate) {
                 FileEditor editor = FileEditorManager.getInstance((Project) fileDescriptor.getProject()).getSelectedEditor(fileDescriptor.getFile());
-                if (editor instanceof TextEditor) {
-                    myEditor = ((TextEditor) editor).getEditor();
+                if (editor instanceof TextEditor textEditor) {
+                    myEditor = textEditor.getEditor();
                 }
             }
             if (myEditor == null) {
@@ -233,12 +227,12 @@ public class ExecutionPointHighlighter {
 
     private static void disableMouseHoverPopups(Editor editor, boolean disable) {
         Project project = editor.getProject();
-        if (ApplicationManager.getApplication().isUnitTestMode() || project == null) {
+        if (project == null) {
             return;
         }
 
         // need to always invoke later to maintain order of enabling/disabling
-        SwingUtilities.invokeLater(() -> {
+        project.getUIAccess().execute(() -> {
             if (disable) {
                 EditorMouseHoverPopupControl.disablePopups(project);
             }

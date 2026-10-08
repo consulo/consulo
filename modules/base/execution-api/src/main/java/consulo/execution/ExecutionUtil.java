@@ -113,7 +113,7 @@ public class ExecutionUtil {
 
         HyperlinkListener finalListener = listener;
         String finalDescription = description;
-        UIUtil.invokeLaterIfNeeded(() -> {
+        project.getUIAccess().execute(() -> {
             if (project.isDisposed()) {
                 return;
             }
