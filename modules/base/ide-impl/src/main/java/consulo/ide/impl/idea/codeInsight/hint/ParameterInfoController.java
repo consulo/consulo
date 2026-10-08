@@ -22,7 +22,7 @@ import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.codeInsight.hints.ParameterHintsPresentationManager;
-import consulo.ide.impl.idea.ide.IdeTooltip;
+import consulo.ui.ex.awt.internal.IdeTooltip;
 import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.IElementType;
@@ -781,7 +781,6 @@ public class ParameterInfoController extends UserDataHolderBase implements Dispo
         }
 
         @Override
-
         public Editor getEditor() {
             return myEditor;
         }

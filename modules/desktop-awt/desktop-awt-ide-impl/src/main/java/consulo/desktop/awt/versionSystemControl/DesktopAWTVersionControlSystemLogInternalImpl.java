@@ -16,7 +16,7 @@
 package consulo.desktop.awt.versionSystemControl;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.ide.IdeTooltip;
+import consulo.ui.ex.awt.internal.IdeTooltip;
 import consulo.ide.impl.idea.ide.IdeTooltipManagerImpl;
 import consulo.ui.ex.awt.Wrapper;
 import consulo.ui.ex.awt.hint.HintHint;

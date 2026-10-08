@@ -23,6 +23,7 @@ import consulo.document.util.TextRange;
 import consulo.language.Language;
 import consulo.language.editor.internal.LanguageEditorInternalHelper;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.inject.Singleton;
 
 import java.util.List;
@@ -38,12 +39,15 @@ import java.util.List;
 @Singleton
 public class HeadlessLanguageEditorInternalHelper implements LanguageEditorInternalHelper {
     @Override
-    public void doWrapLongLinesIfNecessary(Editor editor,
-                                           Project project,
-                                           Language language,
-                                           Document document,
-                                           int startOffset,
-                                           int endOffset,
-                                           List<? extends TextRange> enabledRanges) {
+    @RequiredUIAccess
+    public void doWrapLongLinesIfNecessary(
+        Editor editor,
+        Project project,
+        Language language,
+        Document document,
+        int startOffset,
+        int endOffset,
+        List<? extends TextRange> enabledRanges
+    ) {
     }
 }

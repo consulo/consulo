@@ -21,37 +21,40 @@ import consulo.application.Application;
 import consulo.ui.ex.awt.hint.HintHint;
 
 import org.jspecify.annotations.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 
 /**
  * @author VISTALL
- * @since 30-Apr-22
+ * @since 2022-04-30
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface IdeTooltipManager {
-  static IdeTooltipManager getInstance() {
-    return Application.get().getInstance(IdeTooltipManager.class);
-  }
+    static IdeTooltipManager getInstance() {
+        return Application.get().getInstance(IdeTooltipManager.class);
+    }
 
-  Color getLinkForeground(boolean awtTooltip);
+    Color getLinkForeground(boolean awtTooltip);
 
-  boolean isOwnBorderAllowed(boolean awtTooltip);
+    boolean isOwnBorderAllowed(boolean awtTooltip);
 
-  Color getBorderColor(boolean awtTooltip);
+    Color getBorderColor(boolean awtTooltip);
 
-  Color getTextBackground(boolean awtTooltip);
+    Color getTextBackground(boolean awtTooltip);
 
-  Color getTextForeground(boolean awtTooltip);
+    Color getTextForeground(boolean awtTooltip);
 
-  boolean isOpaqueAllowed(boolean awtTooltip);
+    boolean isOpaqueAllowed(boolean awtTooltip);
 
-  Font getTextFont(boolean awtTooltip);                                                                
+    Font getTextFont(boolean awtTooltip);
 
-  String getUlImg(boolean awtTooltip);
+    String getUlImg(boolean awtTooltip);
 
-  JEditorPane initEditorPane(String text, HintHint hintHint, @Nullable JLayeredPane layeredPane);
+    JEditorPane initEditorPane(String text, HintHint hintHint, @Nullable JLayeredPane layeredPane);
 
-  boolean hideCurrent(@Nullable MouseEvent me);
+    boolean hideCurrent(@Nullable MouseEvent me);
+
+    void hide(@Nullable IdeTooltip tooltip);
 }

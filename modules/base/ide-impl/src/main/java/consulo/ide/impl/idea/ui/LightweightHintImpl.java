@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.ui;
 
 import consulo.ide.impl.idea.codeInsight.hint.TooltipController;
-import consulo.ide.impl.idea.ide.IdeTooltip;
+import consulo.ui.ex.awt.internal.IdeTooltip;
 import consulo.ide.impl.idea.ide.IdeTooltipManagerImpl;
 import consulo.logging.Logger;
 import consulo.ui.ex.RelativePoint;
@@ -157,7 +157,7 @@ public class LightweightHintImpl extends UserDataHolderBase implements Lightweig
                     myComponent
                 ) {
                     @Override
-                    protected boolean canAutohideOn(TooltipEvent event) {
+                    public boolean canAutohideOn(TooltipEvent event) {
                         if (!LightweightHintImpl.this.canAutoHideOn(event)) {
                             return false;
                         }
@@ -173,7 +173,7 @@ public class LightweightHintImpl extends UserDataHolderBase implements Lightweig
                     }
 
                     @Override
-                    protected void onHidden() {
+                    public void onHidden() {
                         fireHintHidden();
                         TooltipController.getInstance().resetCurrent();
                     }

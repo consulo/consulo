@@ -76,8 +76,8 @@ public class WhatsNewVirtualFileEditor extends ConfigurationFileEditor {
      * and a fresh one per call would leave the tab holding a layout nobody is filling any more - the view is
      * moved into whichever layout the fetch that finishes last was started for.
      */
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public Component getUIComponent() {
         if (myComponent != null) {
             return myComponent;
@@ -234,9 +234,7 @@ public class WhatsNewVirtualFileEditor extends ConfigurationFileEditor {
                 if (!historyVersion.equals(pluginVersion)) {
                     versionHistorySpan.append("#");
                     versionHistorySpan.append(historyVersion);
-                    versionHistorySpan.append(" ");
-                    versionHistorySpan.append('\u2192');
-                    versionHistorySpan.append(" ");
+                    versionHistorySpan.append(" → ");
                 }
 
                 versionHistorySpan.append("#");

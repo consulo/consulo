@@ -12,7 +12,7 @@ import consulo.ide.impl.codeInsight.codeVision.ui.model.RangeCodeVisionModel;
 import consulo.ide.impl.codeInsight.codeVision.ui.renderers.painters.CodeVisionListPainter;
 import consulo.ide.impl.codeInsight.codeVision.ui.renderers.painters.CodeVisionPainters;
 import consulo.ide.impl.codeInsight.codeVision.ui.renderers.painters.CodeVisionTheme;
-import consulo.ide.impl.idea.ide.IdeTooltip;
+import consulo.ui.ex.awt.internal.IdeTooltip;
 import consulo.ide.impl.idea.ide.IdeTooltipManagerImpl;
 import consulo.language.editor.codeVision.ClickableTextCodeVisionEntry;
 import consulo.language.editor.codeVision.CodeVisionEntry;
