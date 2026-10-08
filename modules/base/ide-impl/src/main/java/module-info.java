@@ -451,7 +451,6 @@ open module consulo.ide.impl {
     exports consulo.ide.impl.idea.ui.content.tabs;
     exports consulo.ide.impl.idea.ui.mac;
     exports consulo.ide.impl.idea.ui.navigation;
-    exports consulo.ide.impl.idea.ui.paint;
     exports consulo.ide.impl.idea.ui.popup;
     exports consulo.ide.impl.idea.ui.popup.list;
     exports consulo.ide.impl.idea.ui.popup.util;

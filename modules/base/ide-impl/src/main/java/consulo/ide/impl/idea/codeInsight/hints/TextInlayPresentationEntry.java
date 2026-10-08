@@ -7,7 +7,7 @@ import consulo.codeEditor.InlayContentSegment;
 import consulo.codeEditor.event.EditorMouseEvent;
 import consulo.colorScheme.TextAttributes;
 import consulo.colorScheme.TextAttributesKey;
-import consulo.ide.impl.idea.ui.paint.EffectPainter;
+import consulo.ui.ex.awt.paint.EffectPainter;
 import consulo.language.editor.inlay.InlayActionData;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
