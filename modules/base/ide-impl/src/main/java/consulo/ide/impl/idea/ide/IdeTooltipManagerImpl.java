@@ -24,6 +24,7 @@ import consulo.ui.ex.awt.event.MouseEventAdapter;
 import consulo.ui.ex.awt.hint.HintHint;
 import consulo.ui.ex.awt.hint.TooltipEvent;
 import consulo.ui.ex.awt.internal.GuiUtils;
+import consulo.ui.ex.awt.internal.IdeTooltip;
 import consulo.ui.ex.awt.internal.IdeTooltipManager;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awt.util.ComponentUtil;
@@ -35,7 +36,6 @@ import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.style.ComponentColors;
 import consulo.ui.style.StyleManager;
 import consulo.util.dataholder.Key;
-import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -48,6 +48,7 @@ import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.event.AWTEventListener;
 import java.awt.event.MouseEvent;
+import java.util.Objects;
 
 @Singleton
 @ServiceImpl
@@ -122,7 +123,10 @@ public final class IdeTooltipManagerImpl implements Disposable, AWTEventListener
             }
             else if (me.getID() == MouseEvent.MOUSE_EXITED) {
                 //We hide tooltip (but not hint!) when it's shown over myComponent and mouse exits this component
-                if (myProcessingComponent == myCurrentComponent && myCurrentTooltip != null && !myCurrentTooltip.isHint() && myCurrentTipUi != null) {
+                if (myProcessingComponent == myCurrentComponent
+                    && myCurrentTooltip != null
+                    && !myCurrentTooltip.isHint()
+                    && myCurrentTipUi != null) {
                     myCurrentTipUi.setAnimationEnabled(false);
                     hideCurrent(null, null, null, null, false);
                 }
@@ -135,16 +139,16 @@ public final class IdeTooltipManagerImpl implements Disposable, AWTEventListener
                     if (myCurrentTipUi != null && myCurrentTipUi.wasFadedIn()) {
                         maybeShowFor(myProcessingComponent, me);
                     }
-                    else {
-                        if (!myCurrentTipIsCentered) {
-                            myX = me.getX();
-                            myY = me.getY();
-                            if (myProcessingComponent instanceof JComponent && !isTooltipDefined((JComponent) myProcessingComponent, me) && (myQueuedTooltip == null || !myQueuedTooltip.isHint())) {
-                                hideCurrent(me, null, null);//There is no tooltip or hint here, let's proceed it as MOUSE_EXITED
-                            }
-                            else {
-                                maybeShowFor(myProcessingComponent, me);
-                            }
+                    else if (!myCurrentTipIsCentered) {
+                        myX = me.getX();
+                        myY = me.getY();
+                        if (myProcessingComponent instanceof JComponent comp
+                            && !isTooltipDefined(comp, me)
+                            && (myQueuedTooltip == null || !myQueuedTooltip.isHint())) {
+                            hideCurrent(me, null, null);//There is no tooltip or hint here, let's proceed it as MOUSE_EXITED
+                        }
+                        else {
+                            maybeShowFor(myProcessingComponent, me);
                         }
                     }
                 }
@@ -153,7 +157,8 @@ public final class IdeTooltipManagerImpl implements Disposable, AWTEventListener
                 }
             }
             else if (me.getID() == MouseEvent.MOUSE_PRESSED) {
-                boolean clickOnTooltip = myCurrentTipUi != null && myCurrentTipUi == JBPopupFactory.getInstance().getParentBalloonFor(myProcessingComponent);
+                boolean clickOnTooltip = myCurrentTipUi != null
+                    && myCurrentTipUi == JBPopupFactory.getInstance().getParentBalloonFor(myProcessingComponent);
                 if (myProcessingComponent == myCurrentComponent || (clickOnTooltip && !myCurrentTipUi.isClickProcessor())) {
                     hideCurrent(me, null, null, null, !clickOnTooltip);
                 }
@@ -177,7 +182,8 @@ public final class IdeTooltipManagerImpl implements Disposable, AWTEventListener
             // we don't want to hide the tooltip in that case (IDEA-194208)
             Point tooltipPoint = myQueuedTooltip.getPoint();
             if (tooltipPoint != null) {
-                Component realQueuedComponent = SwingUtilities.getDeepestComponentAt(myQueuedTooltip.getComponent(), tooltipPoint.x, tooltipPoint.y);
+                Component realQueuedComponent =
+                    SwingUtilities.getDeepestComponentAt(myQueuedTooltip.getComponent(), tooltipPoint.x, tooltipPoint.y);
                 return eventComponent != realQueuedComponent;
             }
         }
@@ -190,11 +196,10 @@ public final class IdeTooltipManagerImpl implements Disposable, AWTEventListener
     }
 
     private void showForComponent(Component c, MouseEvent me, boolean now) {
-        if (!(c instanceof JComponent)) {
+        if (!(c instanceof JComponent comp)) {
             return;
         }
 
-        JComponent comp = (JComponent) c;
         Window wnd = SwingUtilities.getWindowAncestor(comp);
         if (wnd == null) {
             return;
@@ -217,16 +222,16 @@ public final class IdeTooltipManagerImpl implements Disposable, AWTEventListener
 
         // Balloon may appear exactly above useful content, such behavior is rather annoying.
         Rectangle rowBounds = null;
-        if (c instanceof JTree) {
-            TreePath path = ((JTree) c).getClosestPathForLocation(me.getX(), me.getY());
+        if (c instanceof JTree tree) {
+            TreePath path = tree.getClosestPathForLocation(me.getX(), me.getY());
             if (path != null) {
-                rowBounds = ((JTree) c).getPathBounds(path);
+                rowBounds = tree.getPathBounds(path);
             }
         }
-        else if (c instanceof JList) {
-            int row = ((JList) c).locationToIndex(me.getPoint());
+        else if (c instanceof JList list) {
+            int row = list.locationToIndex(me.getPoint());
             if (row > -1) {
-                rowBounds = ((JList) c).getCellBounds(row, row);
+                rowBounds = list.getCellBounds(row, row);
             }
         }
         if (rowBounds != null && rowBounds.y + 4 < me.getY()) {
@@ -240,7 +245,15 @@ public final class IdeTooltipManagerImpl implements Disposable, AWTEventListener
         return !StringUtil.isEmpty(comp.getToolTipText(me)) || getCustomTooltip(comp) != null;
     }
 
-    private void showTooltipForEvent(final JComponent c, final MouseEvent me, boolean toCenter, int shift, int posChangeX, int posChangeY, boolean now) {
+    private void showTooltipForEvent(
+        final JComponent c,
+        final MouseEvent me,
+        boolean toCenter,
+        int shift,
+        int posChangeX,
+        int posChangeY,
+        boolean now
+    ) {
         IdeTooltip tooltip = getCustomTooltip(c);
         if (tooltip == null) {
             if (myHelpTooltipManager != null) {
@@ -253,7 +266,7 @@ public final class IdeTooltipManagerImpl implements Disposable, AWTEventListener
             String aText = String.valueOf(c.getToolTipText(me));
             tooltip = new IdeTooltip(c, me.getPoint(), null, /*new Object()*/c, aText) {
                 @Override
-                protected boolean beforeShow() {
+                public boolean beforeShow() {
                     myCurrentEvent = me;
 
                     if (!c.isShowing()) {
@@ -265,7 +278,7 @@ public final class IdeTooltipManagerImpl implements Disposable, AWTEventListener
                         return false;
                     }
 
-                    Rectangle visibleRect = c.getParent() instanceof JViewport ? ((JViewport) c.getParent()).getViewRect() : c.getVisibleRect();
+                    Rectangle visibleRect = c.getParent() instanceof JViewport wp ? wp.getViewRect() : c.getVisibleRect();
                     if (!visibleRect.contains(getPoint())) {
                         return false;
                     }
@@ -277,7 +290,10 @@ public final class IdeTooltipManagerImpl implements Disposable, AWTEventListener
                     setTipComponent(wrapper);
                     return true;
                 }
-            }.setToCenter(toCenter).setCalloutShift(shift).setPositionChangeShift(posChangeX, posChangeY).setLayer(Balloon.Layer.top);
+            }.setToCenter(toCenter)
+                .setCalloutShift(shift)
+                .setPositionChangeShift(posChangeX, posChangeY)
+                .setLayer(Balloon.Layer.top);
         }
         else if (myCurrentTooltip == tooltip) {
             return;//Don't re-show the same custom tooltip on every mouse movement
@@ -295,7 +311,8 @@ public final class IdeTooltipManagerImpl implements Disposable, AWTEventListener
     //@ApiStatus.Experimental
     @Contract("null -> false")
     public boolean isProcessing(@Nullable Component tooltipOwner) {
-        return tooltipOwner != null && (tooltipOwner == myCurrentComponent || tooltipOwner == myQueuedComponent || tooltipOwner == myProcessingComponent);
+        return tooltipOwner != null
+            && (tooltipOwner == myCurrentComponent || tooltipOwner == myQueuedComponent || tooltipOwner == myProcessingComponent);
     }
 
     /**
@@ -319,8 +336,19 @@ public final class IdeTooltipManagerImpl implements Disposable, AWTEventListener
             else {
                 Point topLeftComponent = myCurrentComponent.getLocationOnScreen();
                 Point screenLocation = MouseInfo.getPointerInfo().getLocation();
-                reposition = new MouseEvent(myCurrentEvent.getComponent(), myCurrentEvent.getID(), myCurrentEvent.getWhen(), myCurrentEvent.getModifiers(), screenLocation.x - topLeftComponent.x,
-                    screenLocation.y - topLeftComponent.y, screenLocation.x, screenLocation.y, myCurrentEvent.getClickCount(), myCurrentEvent.isPopupTrigger(), myCurrentEvent.getButton());
+                reposition = new MouseEvent(
+                    myCurrentEvent.getComponent(),
+                    myCurrentEvent.getID(),
+                    myCurrentEvent.getWhen(),
+                    myCurrentEvent.getModifiers(),
+                    screenLocation.x - topLeftComponent.x,
+                    screenLocation.y - topLeftComponent.y,
+                    screenLocation.x,
+                    screenLocation.y,
+                    myCurrentEvent.getClickCount(),
+                    myCurrentEvent.isPopupTrigger(),
+                    myCurrentEvent.getButton()
+                );
             }
             showForComponent(myCurrentComponent, reposition, true);
         }
@@ -462,11 +490,14 @@ public final class IdeTooltipManagerImpl implements Disposable, AWTEventListener
         Disposer.register(myLastDisposable, () -> myLastDisposable = null);
 
         myCurrentTipUi.show(new RelativePoint(tooltip.getComponent(), effectivePoint), tooltip.getPreferredPosition());
-        myAlarm.addRequest(() -> {
-            if (myCurrentTooltip == tooltip && tooltip.canBeDismissedOnTimeout()) {
-                hideCurrent(null, null, null);
-            }
-        }, tooltip.getDismissDelay());
+        myAlarm.addRequest(
+            () -> {
+                if (myCurrentTooltip == tooltip && tooltip.canBeDismissedOnTimeout()) {
+                    hideCurrent(null, null, null);
+                }
+            },
+            tooltip.getDismissDelay()
+        );
     }
 
     @Override
@@ -536,11 +567,22 @@ public final class IdeTooltipManagerImpl implements Disposable, AWTEventListener
         return hideCurrent(me, null, action, event, myCurrentTipUi != null && myCurrentTipUi.isAnimationEnabled());
     }
 
-    private boolean hideCurrent(@Nullable MouseEvent me, @Nullable IdeTooltip tooltipToShow, @Nullable AnAction action, @Nullable AnActionEvent event) {
+    private boolean hideCurrent(
+        @Nullable MouseEvent me,
+        @Nullable IdeTooltip tooltipToShow,
+        @Nullable AnAction action,
+        @Nullable AnActionEvent event
+    ) {
         return hideCurrent(me, tooltipToShow, action, event, myCurrentTipUi != null && myCurrentTipUi.isAnimationEnabled());
     }
 
-    private boolean hideCurrent(@Nullable MouseEvent me, @Nullable IdeTooltip tooltipToShow, @Nullable AnAction action, @Nullable AnActionEvent event, boolean animationEnabled) {
+    private boolean hideCurrent(
+        @Nullable MouseEvent me,
+        @Nullable IdeTooltip tooltipToShow,
+        @Nullable AnAction action,
+        @Nullable AnActionEvent event,
+        boolean animationEnabled
+    ) {
         if (myHelpTooltipManager != null && myHideHelpTooltip) {
             hideCurrentNow(false);
             return true;
@@ -562,13 +604,15 @@ public final class IdeTooltipManagerImpl implements Disposable, AWTEventListener
 
         if (myCurrentTipUi != null) {
             RelativePoint target = me != null ? new RelativePoint(me) : null;
-            boolean isInsideOrMovingForward = target != null && (((IdeTooltip.Ui) myCurrentTipUi).isInside(target) || myCurrentTipUi.isMovingForward(target));
+            boolean isInsideOrMovingForward = target != null
+                && (((IdeTooltip.Ui) myCurrentTipUi).isInside(target) || myCurrentTipUi.isMovingForward(target));
             boolean canAutoHide = myCurrentTooltip.canAutohideOn(new TooltipEvent(me, isInsideOrMovingForward, action, event));
-            boolean implicitMouseMove = me != null && (me.getID() == MouseEvent.MOUSE_MOVED || me.getID() == MouseEvent.MOUSE_EXITED || me.getID() == MouseEvent.MOUSE_ENTERED);
-            if (!canAutoHide ||
-                (isInsideOrMovingForward && implicitMouseMove) ||
-                (myCurrentTooltip.isExplicitClose() && implicitMouseMove) ||
-                (tooltipToShow != null && !tooltipToShow.isHint() && Comparing.equal(myCurrentTooltip, tooltipToShow))) {
+            boolean implicitMouseMove = me != null
+                && (me.getID() == MouseEvent.MOUSE_MOVED || me.getID() == MouseEvent.MOUSE_EXITED || me.getID() == MouseEvent.MOUSE_ENTERED);
+            if (!canAutoHide
+                || (isInsideOrMovingForward && implicitMouseMove)
+                || (myCurrentTooltip.isExplicitClose() && implicitMouseMove)
+                || (tooltipToShow != null && !tooltipToShow.isHint() && Objects.equals(myCurrentTooltip, tooltipToShow))) {
                 if (myHideRunnable != null) {
                     myHideRunnable = null;
                 }
@@ -649,6 +693,7 @@ public final class IdeTooltipManagerImpl implements Disposable, AWTEventListener
         return (IdeTooltipManagerImpl) IdeTooltipManager.getInstance();
     }
 
+    @Override
     public void hide(@Nullable IdeTooltip tooltip) {
         if (myCurrentTooltip == tooltip || tooltip == null || tooltip == myQueuedTooltip) {
             hideCurrent(null, null, null);
@@ -672,7 +717,12 @@ public final class IdeTooltipManagerImpl implements Disposable, AWTEventListener
         return initPane(html, hintHint, layeredPane, true);
     }
 
-    public static JEditorPane initPane(Html html, final HintHint hintHint, final @Nullable JLayeredPane layeredPane, boolean limitWidthToScreen) {
+    public static JEditorPane initPane(
+        Html html,
+        final HintHint hintHint,
+        final @Nullable JLayeredPane layeredPane,
+        boolean limitWidthToScreen
+    ) {
         String text = HintUtil.prepareHintText(html, hintHint);
 
         final boolean[] prefSizeWasComputed = {false};
@@ -767,6 +817,6 @@ public final class IdeTooltipManagerImpl implements Disposable, AWTEventListener
     }
 
     public boolean isQueuedToShow(IdeTooltip tooltip) {
-        return Comparing.equal(myQueuedTooltip, tooltip);
+        return Objects.equals(myQueuedTooltip, tooltip);
     }
 }

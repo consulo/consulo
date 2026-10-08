@@ -14,7 +14,7 @@ import consulo.desktop.awt.ui.ImmutableInsets;
 import consulo.desktop.awt.ui.popup.form.*;
 import consulo.desktop.awt.wm.impl.WeakFocusStackManager;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.ide.IdeTooltip;
+import consulo.ui.ex.awt.internal.IdeTooltip;
 import consulo.ide.impl.idea.ui.ComponentWithMnemonics;
 import consulo.language.editor.hint.HintManager;
 import consulo.localize.LocalizeValue;
@@ -859,7 +859,6 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
         }
     }
 
-   
     @Override
     public Rectangle getConsumedScreenBounds() {
         Rectangle bounds = myComp.getBounds();
@@ -874,7 +873,6 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
         return UIUtil.getWindow(myLayeredPane);
     }
 
-   
     private EmptyBorder getPointlessBorder() {
         return new EmptyBorder(myBorderInsets);
     }
@@ -926,7 +924,6 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
     }
 
     public interface ShadowBorderProvider {
-       
         Insets getInsets();
 
         void paintShadow(JComponent component, Graphics g);
@@ -1292,7 +1289,6 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
 
         protected abstract Rectangle2D getAllowedPointRange(Rectangle2D bounds, BalloonPointerSize pointerSize, int arc);
 
-       
         Set<BalloonPosition> getOtherPositions() {
             Set<BalloonPosition> all = new LinkedHashSet<>();
             all.add(BELOW);
@@ -1305,7 +1301,6 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
             return all;
         }
 
-       
         public abstract Point2D getShiftedPoint(Point2D targetPoint, int shift);
 
        
@@ -1336,7 +1331,6 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
     }
 
     private static class Below extends BalloonPosition {
-       
         @Override
         Position getPosition() {
             return Position.below;
@@ -1347,7 +1341,6 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
             return true;
         }
 
-       
         @Override
         public Point2D getShiftedPoint(Point2D targetPoint, int shift) {
             return targetPoint.translate(0, shift);
@@ -1416,7 +1409,6 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
     }
 
     private static class Above extends BalloonPosition {
-       
         @Override
         Position getPosition() {
             return Position.above;
@@ -1427,7 +1419,6 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
             return true;
         }
 
-       
         @Override
         public Point2D getShiftedPoint(Point2D targetPoint, int shift) {
             return targetPoint.translate(0, -shift);
@@ -1495,19 +1486,16 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
     }
 
     private static class AtRight extends BalloonPosition {
-       
         @Override
         Position getPosition() {
             return Position.atRight;
         }
 
-       
         @Override
         public Point2D getShiftedPoint(Point2D targetPoint, int shift) {
             return targetPoint.translate(shift, 0);
         }
 
-       
         @Override
         public Point2D getShiftedPoint(Point2D targetPoint, ImmutableInsets shift) {
             return getShiftedPoint(targetPoint, -shift.left());
@@ -1566,13 +1554,11 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
     }
 
     private static class AtLeft extends BalloonPosition {
-       
         @Override
         Position getPosition() {
             return Position.atLeft;
         }
 
-       
         @Override
         public Point2D getShiftedPoint(Point2D targetPoint, int shift) {
             return targetPoint.translate(-shift, 0);
@@ -1705,7 +1691,6 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
             });
         }
 
-       
         Rectangle getContentBounds() {
             Rectangle bounds = getBounds();
             JBInsets.removeFrom(bounds, getInsets());

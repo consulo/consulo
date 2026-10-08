@@ -4,7 +4,7 @@ package consulo.desktop.awt.wm.impl.content;
 import consulo.application.ui.UISettings;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
-import consulo.ide.impl.idea.ide.IdeTooltip;
+import consulo.ui.ex.awt.internal.IdeTooltip;
 import consulo.ide.impl.idea.ide.IdeTooltipManagerImpl;
 import consulo.ui.ex.impl.internal.action.ActionImplUtil;
 import consulo.ui.ex.impl.internal.action.ActionRunnerAsync;
@@ -46,7 +46,6 @@ class ContentTabLabel extends BaseLabel {
             super(regularIcon, hoveredImage);
         }
 
-        
         @Override
         public Rectangle getRectangle() {
             return new Rectangle(getX(), 0, getIconWidth(), getHeight());
@@ -62,7 +61,6 @@ class ContentTabLabel extends BaseLabel {
             return canBeClosed();
         }
 
-        
         @Override
         public Runnable getAction() {
             return () -> {
@@ -81,7 +79,6 @@ class ContentTabLabel extends BaseLabel {
             return UISettings.getShadowInstance().getCloseTabButtonOnTheRight() || !UISettings.getShadowInstance().getShowCloseButton();
         }
 
-        
         @Override
         public String getTooltip() {
             if (getContent().isPinned()) {
@@ -367,7 +364,6 @@ class ContentTabLabel extends BaseLabel {
         return myUi.myWindow.getContentManager();
     }
 
-    
     @Override
     public Content getContent() {
         return myContent;
