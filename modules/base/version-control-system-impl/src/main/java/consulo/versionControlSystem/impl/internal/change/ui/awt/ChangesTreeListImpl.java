@@ -135,12 +135,7 @@ public abstract class ChangesTreeListImpl<T> extends Tree implements UiDataProvi
             public void keyPressed(KeyEvent e) {
                 if (KeyEvent.VK_ENTER == e.getKeyCode() && e.getModifiers() == 0) {
                     if (getSelectionCount() <= 1) {
-                        Object lastPathComponent = getLastSelectedPathComponent();
-                        if (!(lastPathComponent instanceof DefaultMutableTreeNode)) {
-                            return;
-                        }
-                        DefaultMutableTreeNode node = (DefaultMutableTreeNode) lastPathComponent;
-                        if (!node.isLeaf()) {
+                        if (!(getLastSelectedPathComponent() instanceof DefaultMutableTreeNode node) || !node.isLeaf()) {
                             return;
                         }
                     }
@@ -288,27 +283,25 @@ public abstract class ChangesTreeListImpl<T> extends Tree implements UiDataProvi
 
             int selectedTreeRow = -1;
 
-            if (myShowCheckboxes) {
-                if (myIncludedChanges.size() > 0) {
-                    ChangesBrowserNode root = (ChangesBrowserNode) model.getRoot();
-                    Enumeration enumeration = root.depthFirstEnumeration();
+            if (myShowCheckboxes && !myIncludedChanges.isEmpty()) {
+                ChangesBrowserNode root = (ChangesBrowserNode) model.getRoot();
+                Enumeration enumeration = root.depthFirstEnumeration();
 
-                    while (enumeration.hasMoreElements()) {
-                        ChangesBrowserNode node = (ChangesBrowserNode) enumeration.nextElement();
-                        @SuppressWarnings("unchecked") CheckboxTree.NodeState state1 = getNodeStatus(node);
-                        if (node != root && state1 == CheckboxTree.NodeState.CLEAR) {
-                            collapsePath(new TreePath(node.getPath()));
-                        }
+                while (enumeration.hasMoreElements()) {
+                    ChangesBrowserNode node = (ChangesBrowserNode) enumeration.nextElement();
+                    @SuppressWarnings("unchecked") CheckboxTree.NodeState state1 = getNodeStatus(node);
+                    if (node != root && state1 == CheckboxTree.NodeState.CLEAR) {
+                        collapsePath(new TreePath(node.getPath()));
                     }
+                }
 
-                    enumeration = root.depthFirstEnumeration();
-                    while (enumeration.hasMoreElements()) {
-                        ChangesBrowserNode node = (ChangesBrowserNode) enumeration.nextElement();
-                        @SuppressWarnings("unchecked") CheckboxTree.NodeState state1 = getNodeStatus(node);
-                        if (state1 == CheckboxTree.NodeState.FULL && node.isLeaf()) {
-                            selectedTreeRow = getRowForPath(new TreePath(node.getPath()));
-                            break;
-                        }
+                enumeration = root.depthFirstEnumeration();
+                while (enumeration.hasMoreElements()) {
+                    ChangesBrowserNode node = (ChangesBrowserNode) enumeration.nextElement();
+                    @SuppressWarnings("unchecked") CheckboxTree.NodeState state1 = getNodeStatus(node);
+                    if (state1 == CheckboxTree.NodeState.FULL && node.isLeaf()) {
+                        selectedTreeRow = getRowForPath(new TreePath(node.getPath()));
+                        break;
                     }
                 }
             }
@@ -668,9 +661,10 @@ public abstract class ChangesTreeListImpl<T> extends Tree implements UiDataProvi
     public void select(List<T> changes) {
         List<TreePath> treeSelection = new ArrayList<>(changes.size());
         TreeUtil.traverse(getRoot(), node -> {
-            @SuppressWarnings("unchecked") T change = (T) ((DefaultMutableTreeNode) node).getUserObject();
+            DefaultMutableTreeNode defaultMutableTreeNode = (DefaultMutableTreeNode) node;
+            @SuppressWarnings("unchecked") T change = (T) defaultMutableTreeNode.getUserObject();
             if (changes.contains(change)) {
-                treeSelection.add(new TreePath(((DefaultMutableTreeNode) node).getPath()));
+                treeSelection.add(new TreePath(defaultMutableTreeNode.getPath()));
             }
             return true;
         });

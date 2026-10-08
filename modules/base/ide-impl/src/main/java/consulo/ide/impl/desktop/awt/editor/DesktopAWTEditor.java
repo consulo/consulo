@@ -22,10 +22,9 @@ import java.awt.*;
 
 /**
  * @author VISTALL
- * @since 15/01/2023
+ * @since 2023-01-15
  */
 // TODO move it to desktop-awt-ide-impl
 public interface DesktopAWTEditor extends RealEditor {
-  
-  FontMetrics getFontMetrics(@AWTConstants.FontStyle int fontType);
+    FontMetrics getFontMetrics(@AWTConstants.FontStyle int fontStyle);
 }
