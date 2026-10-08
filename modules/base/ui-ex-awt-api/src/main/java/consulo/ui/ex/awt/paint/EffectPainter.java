@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ui.paint;
+package consulo.ui.ex.awt.paint;
 
 import consulo.ui.ex.awt.RegionPainter;
 import consulo.colorScheme.EffectType;
+import consulo.ui.ex.awt.internal.paint.EffectPainter2D;
 
 import java.awt.*;
 

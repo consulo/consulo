@@ -4,16 +4,13 @@ package consulo.ide.impl.codeInsight.codeVision.ui.renderers.painters;
 import consulo.codeEditor.Editor;
 import consulo.colorScheme.TextAttributes;
 import consulo.ide.impl.codeInsight.codeVision.ui.model.RangeCodeVisionModel;
-import consulo.ide.impl.idea.ui.paint.EffectPainter2D;
 import consulo.language.editor.codeVision.CodeVisionEntry;
 import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.paint.EffectPainter;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import org.jspecify.annotations.Nullable;
 
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
+import java.awt.*;
 import java.util.function.Function;
 
 public class CodeVisionVisionTextPainter<T> implements ICodeVisionEntryBasePainter<T> {
@@ -63,13 +60,13 @@ public class CodeVisionVisionTextPainter<T> implements ICodeVisionEntryBasePaint
         if (hovered) {
             Dimension size = size(editor, state, value);
             y += JBUI.scale(1);
-            EffectPainter2D.LINE_UNDERSCORE.paint(g2d, x, y, size.width, 5.0, g2d.getFont());
+            EffectPainter.LINE_UNDERSCORE.paint(g2d, x, y, size.width, 5, g2d.getFont());
         }
     }
 
     @Override
     public Dimension size(Editor editor, RangeCodeVisionModel.InlayState state, T value) {
-        java.awt.FontMetrics fontMetrics =
+        FontMetrics fontMetrics =
             editor.getComponent().getFontMetrics(CodeVisionThemeInfoProvider.getInstance().font(editor));
         return new Dimension(
             fontMetrics.stringWidth(printer.apply(value)) + theme.left + theme.right,
