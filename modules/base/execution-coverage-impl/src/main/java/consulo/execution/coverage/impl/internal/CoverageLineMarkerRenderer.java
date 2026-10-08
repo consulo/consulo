@@ -173,9 +173,6 @@ public class CoverageLineMarkerRenderer implements ActiveGutterRenderer, LineMar
 
     @RequiredUIAccess
     private void showHint(Editor editor, Point point, int lineNumber) {
-        CoverageLine lineData = getLineData(lineNumber);
-        String reportText = CoverageLine.isSomewhatCovered(lineData) && !mySubCoverageActive ? getReport(editor, lineNumber) : null;
-
         ActionToolbar toolbar = createActionsToolbar(editor, lineNumber);
         long modificationStamp = editor.getDocument().getModificationStamp();
         toolbar.updateActionsAsync().whenCompleteAsync(
@@ -186,6 +183,9 @@ public class CoverageLineMarkerRenderer implements ActiveGutterRenderer, LineMar
                 }
                 JPanel panel = new JPanel(new BorderLayout());
                 panel.add(toolbar.getComponent(), BorderLayout.NORTH);
+
+                CoverageLine lineData = getLineData(lineNumber);
+                String reportText = CoverageLine.isSomewhatCovered(lineData) && !mySubCoverageActive ? getReport(editor, lineNumber) : null;
                 ExecutionCoverageInternal.getInstance().showCoverageHit(panel, editor, point, lineData, reportText);
             },
             UIAccess.current()
