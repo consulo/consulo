@@ -72,6 +72,11 @@ public class LightUIInternal extends UIInternal implements UIInternalEx {
   }
 
   @Override
+  public PlaceholderLayout _Layouts_placeholder() {
+    return null;
+  }
+
+  @Override
   public TwoComponentSplitLayout _TwoComponentSplitLayout_create(SplitLayoutPosition position) {
     return null;
   }

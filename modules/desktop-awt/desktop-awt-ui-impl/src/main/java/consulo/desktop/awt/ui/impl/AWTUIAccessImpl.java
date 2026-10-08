@@ -59,6 +59,7 @@ public class AWTUIAccessImpl extends BaseUIAccess implements UIAccess {
         LaterInvocator.invokeLaterWithCallback(runnable, modalityState, Application.get().getDisposed(), null);
     }
 
+    @RequiredUIAccess
     @Override
     public boolean isInModalContext() {
         return LaterInvocator.isInModalContext();

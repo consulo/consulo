@@ -133,6 +133,11 @@ public class HeadlessUIInternal extends UIInternal implements UIInternalEx {
     }
 
     @Override
+    public PlaceholderLayout _Layouts_placeholder() {
+        return new HeadlessPlaceholderLayout();
+    }
+
+    @Override
     public TwoComponentSplitLayout _TwoComponentSplitLayout_create(SplitLayoutPosition position) {
         return new HeadlessTwoComponentSplitLayout();
     }

@@ -93,6 +93,8 @@ public abstract class UIInternal {
 
     public abstract SwipeLayout _Layouts_swipe();
 
+    public abstract PlaceholderLayout _Layouts_placeholder();
+
     public abstract TwoComponentSplitLayout _TwoComponentSplitLayout_create(SplitLayoutPosition position);
 
     public abstract ThreeComponentSplitLayout _ThreeComponentSplitLayout_create(SplitLayoutPosition position);
@@ -328,7 +330,7 @@ public abstract class UIInternal {
      * Backs {@link UIAccess#listAll()}. A frontend with a single window answers with the one access it has, one
      * which shows several answers with the access of each of them, and one without a ui answers with nothing.
      */
-    public Collection<UIAccess> _UIAccess_all() {
+    public List<UIAccess> _UIAccess_all() {
         return List.of();
     }
 

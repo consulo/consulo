@@ -141,6 +141,11 @@ public class WebUIInternalImpl extends UIInternal implements UIInternalEx {
     }
 
     @Override
+    public PlaceholderLayout _Layouts_placeholder() {
+        return new WebPlaceholderLayoutImpl();
+    }
+
+    @Override
     public TwoComponentSplitLayout _TwoComponentSplitLayout_create(SplitLayoutPosition position) {
         return new WebHorizontalTwoComponentSplitLayoutImpl(position);
     }
@@ -564,7 +569,7 @@ public class WebUIInternalImpl extends UIInternal implements UIInternalEx {
     }
 
     @Override
-    public Collection<UIAccess> _UIAccess_all() {
+    public List<UIAccess> _UIAccess_all() {
         Application application = ApplicationManager.getApplication();
         return application instanceof WebApplicationImpl webApplication ? webApplication.getUIAccesses() : List.of();
     }

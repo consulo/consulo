@@ -352,6 +352,11 @@ public class DesktopUIInternalImpl extends UIInternal implements UIInternalEx {
     }
 
     @Override
+    public PlaceholderLayout _Layouts_placeholder() {
+        return new DesktopPlaceholderLayoutImpl();
+    }
+
+    @Override
     public TwoComponentSplitLayout _TwoComponentSplitLayout_create(SplitLayoutPosition position) {
         return new DesktopTwoComponentSplitLayoutImpl(position);
     }
@@ -506,7 +511,7 @@ public class DesktopUIInternalImpl extends UIInternal implements UIInternalEx {
     }
 
     @Override
-    public Collection<UIAccess> _UIAccess_all() {
+    public List<UIAccess> _UIAccess_all() {
         return List.of(AWTUIAccessImpl.ourInstance);
     }
 
