@@ -188,14 +188,14 @@ class LookupUi {
             return;
         }
 
-        if (myLookup.myResizePending || itemsChanged) {
+        if (myLookup.isResizePending() || itemsChanged) {
             myMaximumHeight = Integer.MAX_VALUE;
         }
         Rectangle rectangle = calculatePosition();
         myMaximumHeight = rectangle.height;
 
-        if (myLookup.myResizePending || itemsChanged) {
-            myLookup.myResizePending = false;
+        if (myLookup.isResizePending() || itemsChanged) {
+            myLookup.setResizePending(false);
             myLookup.pack();
         }
         HintManagerImpl.getInstanceImpl().updateLocation(myLookup.getHint(), editor, rectangle.getLocation());

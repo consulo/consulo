@@ -1248,11 +1248,11 @@ public abstract class LookupBase implements LookupEx, Disposable, LookupElementL
         myResizePending = true;
     }
 
-    protected boolean isResizePending() {
+    public boolean isResizePending() {
         return myResizePending;
     }
 
-    protected void setResizePending(boolean resizePending) {
+    public void setResizePending(boolean resizePending) {
         myResizePending = resizePending;
     }
 

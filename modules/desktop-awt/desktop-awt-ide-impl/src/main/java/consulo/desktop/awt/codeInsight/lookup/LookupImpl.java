@@ -97,7 +97,6 @@ public class LookupImpl extends LookupBase {
     private final FontPreferences myFontPreferences;
 
     private final Advertiser myAdComponent;
-    boolean myResizePending;
     private @Nullable LookupUi myUi;
 
     @RequiredUIAccess
