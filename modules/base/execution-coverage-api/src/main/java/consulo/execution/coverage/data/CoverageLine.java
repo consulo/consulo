@@ -37,4 +37,16 @@ public interface CoverageLine {
     String getUniqueTestName();
 
     List<BranchCoverage> getBranches();
+
+    static LineStatus getStatus(@Nullable CoverageLine coverageLine) {
+        return coverageLine == null ? LineStatus.NOT_COVERED : coverageLine.getStatus();
+    }
+
+    static boolean isSomewhatCovered(@Nullable CoverageLine coverageLine) {
+        return coverageLine != null && coverageLine.getStatus() != LineStatus.NOT_COVERED;
+    }
+
+    static boolean isNotCovered(@Nullable CoverageLine coverageLine) {
+        return !isSomewhatCovered(coverageLine);
+    }
 }

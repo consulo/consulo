@@ -87,7 +87,7 @@ coverage.is.not.importable.option.install:
 coverage.next.change.fully.covered:
     text: Fully Covered
 coverage.next.change.partial.covered:
-    text: Partial Covered
+    text: Partially Covered
 coverage.next.change.uncovered:
     text: Uncovered
 coverage.next.mark:
