@@ -2,6 +2,7 @@
 package consulo.application.impl.internal.concurent;
 
 import consulo.util.collection.ContainerUtil;
+import consulo.util.lang.ControlFlowException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -158,6 +159,14 @@ public class SchedulingWrapper implements ScheduledExecutorService {
       boolean canceled = super.cancel(mayInterruptIfRunning);
       delayQueue.remove(this);
       return canceled;
+    }
+
+    @Override
+    protected void setException(Throwable t) {
+      super.setException(t);
+      if (!(t instanceof ControlFlowException)) {
+        LOG.warn(t.getMessage(), t);
+      }
     }
 
     @Override
