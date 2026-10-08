@@ -23,12 +23,14 @@ import java.awt.*;
 
 /**
  * @author VISTALL
- * @since 29-Apr-22
+ * @since 2022-04-29
  */
 public class AWTLanguageEditorUtil {
-  public static Font getEditorFont() {
-    EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
-    int size = UISettings.getInstance().getPresentationMode() ? UISettings.getInstance().getPresentationModeFontSize() - 4 : scheme.getEditorFontSize();
-    return new Font(scheme.getEditorFontName(), Font.PLAIN, size);
-  }
+    public static Font getEditorFont() {
+        EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
+        int size = UISettings.getInstance().getPresentationMode()
+            ? UISettings.getInstance().getPresentationModeFontSize() - 4
+            : scheme.getEditorFontSize();
+        return new Font(scheme.getEditorFontName(), Font.PLAIN, size);
+    }
 }

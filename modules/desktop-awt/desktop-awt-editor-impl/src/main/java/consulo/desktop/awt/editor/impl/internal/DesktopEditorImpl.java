@@ -1758,34 +1758,28 @@ public final class DesktopEditorImpl extends CodeEditorBase
         return myView.getLineHeight();
     }
 
+    @Override
     public int getDescent() {
         return myView.getDescent();
     }
 
+    @Override
     public int getCharHeight() {
         return myView.getCharHeight();
     }
 
     @Override
-    public FontMetrics getFontMetrics(@AWTConstants.FontStyle int fontType) {
-        EditorFontType ft;
-        if (fontType == Font.PLAIN) {
-            ft = EditorFontType.PLAIN;
-        }
-        else if (fontType == Font.BOLD) {
-            ft = EditorFontType.BOLD;
-        }
-        else if (fontType == Font.ITALIC) {
-            ft = EditorFontType.ITALIC;
-        }
-        else if (fontType == (Font.BOLD | Font.ITALIC)) {
-            ft = EditorFontType.BOLD_ITALIC;
-        }
-        else {
-            LOG.error("Unknown font type: " + fontType);
-            ft = EditorFontType.PLAIN;
-        }
-
+    public FontMetrics getFontMetrics(@AWTConstants.FontStyle int fontStyle) {
+        EditorFontType ft = switch (fontStyle) {
+            case Font.PLAIN -> EditorFontType.PLAIN;
+            case Font.BOLD -> EditorFontType.BOLD;
+            case Font.ITALIC -> EditorFontType.ITALIC;
+            case Font.BOLD | Font.ITALIC -> EditorFontType.BOLD_ITALIC;
+            default -> {
+                LOG.error("Unknown font style: " + fontStyle);
+                yield EditorFontType.PLAIN;
+            }
+        };
         return myEditorComponent.getFontMetrics(TargetAWT.to(myScheme.getFont(ft)));
     }
 
