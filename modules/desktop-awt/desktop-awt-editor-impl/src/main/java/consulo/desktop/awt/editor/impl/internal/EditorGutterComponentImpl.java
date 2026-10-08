@@ -1,10 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.desktop.awt.editor.impl.internal;
 
-import consulo.codeEditor.util.AWTEditorUtil;
-import consulo.fileEditor.util.FileEditorUtil;
-import consulo.logging.Logger;
-import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import com.jetbrains.FontExtensions;
 import com.jetbrains.JBR;
 import consulo.application.Application;
@@ -24,30 +20,30 @@ import consulo.codeEditor.internal.CodeEditorAssertion;
 import consulo.codeEditor.internal.FoldingUtil;
 import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.codeEditor.markup.*;
+import consulo.codeEditor.util.AWTEditorUtil;
 import consulo.colorScheme.EditorFontType;
 import consulo.colorScheme.TextAttributes;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataSink;
 import consulo.dataContext.UiDataProvider;
 import consulo.desktop.awt.editor.impl.internal.gutter.AwtLineMarkerPresentationPainter;
-import consulo.desktop.awt.ui.impl.event.DesktopAWTInputDetails;
-import consulo.ui.event.details.InputDetails;
 import consulo.desktop.awt.ui.impl.ExperimentalUI;
 import consulo.desktop.awt.ui.impl.animation.AlphaAnimationContext;
+import consulo.desktop.awt.ui.impl.event.DesktopAWTInputDetails;
+import consulo.desktop.awt.ui.impl.glassPane.IdeGlassPaneImpl;
 import consulo.desktop.awt.ui.impl.image.DesktopAWTScalableImage;
 import consulo.document.Document;
 import consulo.document.MarkupIterator;
 import consulo.document.internal.DocumentEx;
 import consulo.document.util.Segment;
 import consulo.execution.debug.internal.breakpoint.BreakpointEditorUtil;
+import consulo.fileEditor.util.FileEditorUtil;
 import consulo.ide.impl.idea.codeInsight.hint.TooltipController;
-import consulo.ui.ex.impl.internal.action.ActionImplUtil;
-import consulo.ui.ex.impl.internal.action.ActionRunnerAsync;
-import consulo.desktop.awt.ui.impl.glassPane.IdeGlassPaneImpl;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.impl.internal.hint.TooltipGroup;
 import consulo.language.editor.impl.internal.hint.TooltipRenderer;
 import consulo.localize.LocalizeValue;
+import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.DumbService;
 import consulo.project.Project;
@@ -55,6 +51,7 @@ import consulo.project.event.DumbModeListener;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
+import consulo.ui.event.details.InputDetails;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.*;
@@ -67,6 +64,7 @@ import consulo.ui.ex.awt.dnd.DnDNativeTarget;
 import consulo.ui.ex.awt.dnd.DnDSupport;
 import consulo.ui.ex.awt.event.HoverStateListener;
 import consulo.ui.ex.awt.hint.HintHint;
+import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.ui.ex.awt.paint.LinePainter2D;
 import consulo.ui.ex.awt.paint.LinePainter2D.StrokeType;
 import consulo.ui.ex.awt.paint.PaintUtil;
@@ -76,6 +74,8 @@ import consulo.ui.ex.awt.util.GraphicsUtil;
 import consulo.ui.ex.awt.util.JBSwingUtilities;
 import consulo.ui.ex.awt.util.UISettingsUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.impl.internal.action.ActionImplUtil;
+import consulo.ui.ex.impl.internal.action.ActionRunnerAsync;
 import consulo.ui.ex.popup.Balloon;
 import consulo.ui.image.ImageEffects;
 import consulo.ui.style.StandardColors;
@@ -85,7 +85,6 @@ import consulo.util.collection.SmartList;
 import consulo.util.collection.primitive.ints.IntMaps;
 import consulo.util.collection.primitive.ints.IntObjPredicate;
 import consulo.util.collection.primitive.ints.IntObjectMap;
-import consulo.util.lang.Comparing;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.lazy.LazyValue;
@@ -103,8 +102,8 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.*;
 import java.awt.geom.AffineTransform;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
@@ -469,7 +468,7 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
         int startX
     ) {
         ColorValue bgColor = myEditor.getBackgroundColor(attributes);
-        if (Comparing.equal(bgColor, defaultBackgroundColor)) {
+        if (Objects.equals(bgColor, defaultBackgroundColor)) {
             return;
         }
 
@@ -484,7 +483,7 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
             g.fillRect(startX, startY, getWidth() - startX, endY - startY);
 
             ColorValue fgColor = attributes.getForegroundColor();
-            if (!Comparing.equal(fgColor, defaultForegroundColor)) {
+            if (!Objects.equals(fgColor, defaultForegroundColor)) {
                 for (int line = startVisualLine; line <= endVisualLine; line++) {
                     myTextFgColors.put(line, fgColor);
                 }
@@ -493,15 +492,14 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
     }
 
     private void processClose(MouseEvent e) {
-
         // See IDEA-59553 for rationale on why this feature is disabled
         //if (isLineNumbersShown()) {
-        //  if (e.getX() >= getLineNumberAreaOffset() && getLineNumberAreaOffset() + getLineNumberAreaWidth() >= e.getX()) {
-        //    queue.blockNextEvents(e);
-        //    myEditor.getSettings().setLineNumbersShown(false);
-        //    e.consume();
-        //    return;
-        //  }
+        //    if (e.getX() >= getLineNumberAreaOffset() && getLineNumberAreaOffset() + getLineNumberAreaWidth() >= e.getX()) {
+        //        queue.blockNextEvents(e);
+        //        myEditor.getSettings().setLineNumbersShown(false);
+        //        e.consume();
+        //        return;
+        //    }
         //}
 
         if (getGutterRenderer(e) != null) {
@@ -1960,7 +1958,7 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
             else {
                 int line = getLineNumAtPoint(e.getPoint());
                 toolTip = provider.getToolTipValue(line, myEditor);
-                if (!Comparing.equal(toolTip, myLastGutterToolTip)) {
+                if (!Objects.equals(toolTip, myLastGutterToolTip)) {
                     TooltipController.getInstance().cancelTooltip(GUTTER_TOOLTIP_GROUP, e, true);
                     myLastGutterToolTip = toolTip;
                 }
@@ -2089,6 +2087,7 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
         return point.get();
     }
 
+    @RequiredUIAccess
     void validateMousePointer(MouseEvent e) {
         if (IdeGlassPaneImpl.hasPreProcessedCursor(this)) {
             return;
@@ -2108,7 +2107,7 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
         }
         else {
             ActiveGutterRenderer lineRenderer = getActiveRendererByMouseEvent(e);
-            if (lineRenderer != null) {
+            if (lineRenderer != null || findPresentationAt(e, DesktopAWTInputDetails.convert(this, e)) != null) {
                 cursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
             }
             else {
@@ -2309,6 +2308,7 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
     record PresentationHit(LineMarkerPresentationProvider provider, LineMarkerPresentation presentation) {
     }
 
+    @RequiredUIAccess
     private @Nullable PresentationHit findPresentationAt(MouseEvent e, InputDetails details) {
         if (findFoldingAnchorAt(e.getX(), e.getY()) != null) {
             return null;
@@ -2319,9 +2319,11 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
 
         Rectangle clip = myEditor.getScrollingModel().getVisibleArea();
         int firstVisibleOffset = myEditor.logicalPositionToOffset(
-            myEditor.xyToLogicalPosition(new Point(0, clip.y - myEditor.getLineHeight())));
+            myEditor.xyToLogicalPosition(new Point(0, clip.y - myEditor.getLineHeight()))
+        );
         int lastVisibleOffset = myEditor.logicalPositionToOffset(
-            myEditor.xyToLogicalPosition(new Point(0, clip.y + clip.height + myEditor.getLineHeight())));
+            myEditor.xyToLogicalPosition(new Point(0, clip.y + clip.height + myEditor.getLineHeight()))
+        );
         int firstVisibleLine = visualToLogicalLine(myEditor.yToVisualLine(clip.y));
         int lastVisibleLine = visualToLogicalLine(myEditor.yToVisualLine(clip.y + clip.height));
 
@@ -2396,11 +2398,10 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
                 endY += myEditor.getLineHeight();
             }
 
-            if (startY < e.getY() &&
-                e.getY() <= endY &&
-                renderer instanceof ActiveGutterRenderer &&
-                ((ActiveGutterRenderer) renderer).canDoAction(myEditor, e)) {
-                gutterRenderer[0] = (ActiveGutterRenderer) renderer;
+            if (startY < e.getY() && e.getY() <= endY
+                && renderer instanceof ActiveGutterRenderer activeGutterRenderer
+                && activeGutterRenderer.canDoAction(myEditor, e)) {
+                gutterRenderer[0] = activeGutterRenderer;
                 layer[0] = highlighter.getLayer();
             }
         });
