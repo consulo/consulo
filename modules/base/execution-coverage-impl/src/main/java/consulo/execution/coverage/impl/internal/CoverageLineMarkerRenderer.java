@@ -34,6 +34,7 @@ import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.event.details.InputDetails;
@@ -172,17 +173,23 @@ public class CoverageLineMarkerRenderer implements ActiveGutterRenderer, LineMar
 
     @RequiredUIAccess
     private void showHint(Editor editor, Point point, int lineNumber) {
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.add(createActionsToolbar(editor, lineNumber), BorderLayout.NORTH);
+        ActionToolbar toolbar = createActionsToolbar(editor, lineNumber);
+        long modificationStamp = editor.getDocument().getModificationStamp();
+        toolbar.updateActionsAsync().whenCompleteAsync(
+            (actions, throwable) -> {
+                if (editor.isDisposed() || !editor.getComponent().isShowing()
+                    || editor.getDocument().getModificationStamp() != modificationStamp) {
+                    return;
+                }
+                JPanel panel = new JPanel(new BorderLayout());
+                panel.add(toolbar.getComponent(), BorderLayout.NORTH);
 
-        CoverageLine lineData = getLineData(lineNumber);
-        Editor uEditor = null;
-        String reportText = null;
-        if (CoverageLine.isSomewhatCovered(lineData) && !mySubCoverageActive) {
-            reportText = getReport(editor, lineNumber);
-        }
-
-        ExecutionCoverageInternal.getInstance().showCoverageHit(panel, editor, point, lineData, reportText);
+                CoverageLine lineData = getLineData(lineNumber);
+                String reportText = CoverageLine.isSomewhatCovered(lineData) && !mySubCoverageActive ? getReport(editor, lineNumber) : null;
+                ExecutionCoverageInternal.getInstance().showCoverageHit(panel, editor, point, lineData, reportText);
+            },
+            UIAccess.current()
+        );
     }
 
     @RequiredReadAction
@@ -204,7 +211,7 @@ public class CoverageLineMarkerRenderer implements ActiveGutterRenderer, LineMar
     }
 
     @RequiredUIAccess
-    protected JComponent createActionsToolbar(Editor editor, int lineNumber) {
+    protected ActionToolbar createActionsToolbar(Editor editor, int lineNumber) {
         JComponent editorComponent = editor.getComponent();
 
         ActionGroup.Builder group = ActionGroup.newImmutableBuilder();
@@ -249,8 +256,7 @@ public class CoverageLineMarkerRenderer implements ActiveGutterRenderer, LineMar
             awtForeground,
             1
         ));
-        toolbar.updateActionsAsync();
-        return toolbarComponent;
+        return toolbar;
     }
 
     public void moveToLine(int lineNumber, Editor editor) {
@@ -359,7 +365,7 @@ public class CoverageLineMarkerRenderer implements ActiveGutterRenderer, LineMar
         protected abstract int next(int idx);
 
         private @Nullable Integer getLineEntry() {
-            ArrayList<Integer> list = new ArrayList<>(myLines.keySet());
+            List<Integer> list = new ArrayList<>(myLines.keySet());
             Collections.sort(list);
             CoverageLine data = getLineData(myLineNumber);
             LineStatus currentStatus = CoverageLine.getStatus(data);
