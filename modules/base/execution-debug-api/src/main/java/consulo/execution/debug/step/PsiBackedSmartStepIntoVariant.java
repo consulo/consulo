@@ -22,30 +22,30 @@ import consulo.navigation.NavigationItem;
 import consulo.ui.image.Image;
 
 /**
-* @author Maxim.Mossienko
-*/
+ * @author Maxim.Mossienko
+ */
 public class PsiBackedSmartStepIntoVariant<T extends PsiNamedElement & NavigationItem> extends XSmartStepIntoVariant {
-  private final T myElement;
-  private final ItemPresentation myPresentation;
+    private final T myElement;
+    private final ItemPresentation myPresentation;
 
-  public PsiBackedSmartStepIntoVariant(T element) {
-    myElement = element;
-    myPresentation = element.getPresentation();
-    assert myPresentation != null: "Invalid presentation:" + myElement;
-  }
+    public PsiBackedSmartStepIntoVariant(T element) {
+        myElement = element;
+        myPresentation = element.getPresentation();
+        assert myPresentation != null : "Invalid presentation:" + myElement;
+    }
 
-  @Override
-  public String getText() {
-    String location = myPresentation.getLocationString();
-    return myPresentation.getPresentableText() + (location != null ? " " + location: "");
-  }
+    @Override
+    public String getText() {
+        String location = myPresentation.getLocationString();
+        return myPresentation.getPresentableText().get() + (location != null ? " " + location : "");
+    }
 
-  @Override
-  public Image getIcon() {
-    return myPresentation.getIcon();
-  }
+    @Override
+    public Image getIcon() {
+        return myPresentation.getIcon();
+    }
 
-  public T getElement() {
-    return myElement;
-  }
+    public T getElement() {
+        return myElement;
+    }
 }

@@ -107,7 +107,6 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
         myScopeDescriptor = getInitialSelectedScope();
     }
 
-    
     @Override
     public String getSearchProviderId() {
         return getClass().getSimpleName();
@@ -127,7 +126,6 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
         );
     }
 
-    
     protected List<AnAction> doGetActions(
         LocalizeValue everywhereText,
         @Nullable PersistentSearchEverywhereContributorFilter<?> filter,
@@ -146,7 +144,6 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
                 onChanged.run();
             }
 
-            
             @Override
             ScopeDescriptor getSelectedScope() {
                 return myScopeDescriptor;
@@ -173,7 +170,6 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
         return result;
     }
 
-    
     private ScopeDescriptor getInitialSelectedScope() {
         String selectedScope = myProject == null ? null : getSelectedScopes(myProject).get(getClass().getSimpleName());
         if (StringUtil.isNotEmpty(selectedScope)) {
@@ -200,7 +196,6 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
         );
     }
 
-    
     private static Map<String, String> getSelectedScopes(Project project) {
         Map<String, String> map = SE_SELECTED_SCOPES.get(project);
         if (map == null) {
@@ -296,10 +291,8 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
         return predicate.test(new FoundItemDescriptor<>(element, degree));
     }
 
-    
     protected abstract FilteringGotoByModel<?> createModel(Project project);
 
-    
     @Override
     public String filterControlSymbols(String pattern) {
         if (StringUtil.containsAnyChar(pattern, ":,;@[( #") || pattern.contains(" line ") || pattern.contains("?l=")) {
@@ -376,7 +369,6 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
         return DumbService.isDumbAware(createModel(myProject));
     }
 
-    
     @Override
     @SuppressWarnings("unchecked")
     public ListCellRenderer<Object> getElementsRenderer() {
@@ -441,10 +433,14 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
         @Override
         @RequiredReadAction
         public String getElementText(PsiElement element) {
-            if (element instanceof NavigationItem navigationItem) {
-                return Optional.ofNullable(navigationItem.getPresentation())
-                    .map(ItemPresentation::getPresentableText)
-                    .orElse(super.getElementText(element));
+            if (element instanceof NavigationItem navItem) {
+                ItemPresentation presentation = navItem.getPresentation();
+                if (presentation != null) {
+                    LocalizeValue presentableText = presentation.getPresentableText();
+                    if (presentableText.isNotEmpty()) {
+                        return presentableText.get();
+                    }
+                }
             }
             return super.getElementText(element);
         }
@@ -456,10 +452,8 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
 
         abstract void onScopeSelected(ScopeDescriptor o);
 
-        
         abstract ScopeDescriptor getSelectedScope();
 
-        
         @Override
         protected ComboBoxButton createComboBoxButton(Presentation presentation) {
             ComboBoxButtonImpl button = (ComboBoxButtonImpl)super.createComboBoxButton(presentation);
@@ -568,7 +562,6 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
             return popup;
         }
 
-        
         @Override
         protected ActionGroup createPopupActionGroup(JComponent button) {
             throw new UnsupportedOperationException();

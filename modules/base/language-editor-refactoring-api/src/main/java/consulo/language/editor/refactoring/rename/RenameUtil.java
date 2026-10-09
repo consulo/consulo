@@ -103,21 +103,21 @@ public class RenameUtil {
         PsiElement searchForInComments = processor.getElementToSearchInStringsAndComments(element);
 
         if (searchInStringsAndComments && searchForInComments != null) {
-            String stringToSearch =
+            LocalizeValue stringToSearch =
                 ElementDescriptionUtil.getElementDescription(searchForInComments, NonCodeSearchDescriptionLocation.STRINGS_AND_COMMENTS);
-            if (stringToSearch.length() > 0) {
+            if (stringToSearch.isNotEmpty()) {
                 String stringToReplace = getStringToReplace(element, newName, false, processor);
                 UsageInfoFactory factory = new NonCodeUsageInfoFactory(searchForInComments, stringToReplace);
-                TextOccurrencesUtil.addUsagesInStringsAndComments(searchForInComments, stringToSearch, result, factory);
+                TextOccurrencesUtil.addUsagesInStringsAndComments(searchForInComments, stringToSearch.get(), result, factory);
             }
         }
 
         if (searchForTextOccurrences && searchForInComments != null) {
-            String stringToSearch =
+            LocalizeValue stringToSearch =
                 ElementDescriptionUtil.getElementDescription(searchForInComments, NonCodeSearchDescriptionLocation.NON_JAVA);
-            if (stringToSearch.length() > 0) {
+            if (stringToSearch.isNotEmpty()) {
                 String stringToReplace = getStringToReplace(element, newName, true, processor);
-                addTextOccurrence(searchForInComments, result, projectScope, stringToSearch, stringToReplace);
+                addTextOccurrence(searchForInComments, result, projectScope, stringToSearch.get(), stringToReplace);
             }
 
             Pair<String, String> additionalStringToSearch = processor.getTextOccurrenceSearchStrings(searchForInComments, newName);

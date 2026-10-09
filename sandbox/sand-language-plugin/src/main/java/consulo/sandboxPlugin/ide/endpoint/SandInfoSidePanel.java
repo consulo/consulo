@@ -109,9 +109,9 @@ public final class SandInfoSidePanel implements EndpointSidePanel {
     private static <G, E> void collectUrls(EndpointElementItem<G, E> item, List<String> result) {
         Iterable<UrlTargetInfo> infos = item.getUrlTargetInfos();
         if (infos == null) {
-            String text = item.getProvider().getEndpointPresentation(item.getGroup(), item.getEndpoint()).getPresentableText();
-            if (text != null) {
-                result.add(text);
+            LocalizeValue text = item.getProvider().getEndpointPresentation(item.getGroup(), item.getEndpoint()).getPresentableText();
+            if (text.isNotEmpty()) {
+                result.add(text.get());
             }
             return;
         }

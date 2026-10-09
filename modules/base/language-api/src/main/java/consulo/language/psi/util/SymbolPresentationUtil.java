@@ -27,58 +27,64 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 
 import org.jspecify.annotations.Nullable;
+
 import java.io.File;
 
 public class SymbolPresentationUtil {
-  private SymbolPresentationUtil() {
-  }
-
-  @RequiredReadAction
-  public static @Nullable String getSymbolPresentableText(PsiElement element) {
-    if (element instanceof NavigationItem) {
-      ItemPresentation presentation = ((NavigationItem)element).getPresentation();
-      if (presentation != null) {
-        return presentation.getPresentableText();
-      }
+    private SymbolPresentationUtil() {
     }
 
-    if (element instanceof PsiNamedElement) return ((PsiNamedElement)element).getName();
-    return element.getText();
-  }
-
-  @RequiredReadAction
-  public static @Nullable String getSymbolContainerText(PsiElement element) {
-    if (element instanceof NavigationItem) {
-      ItemPresentation presentation = ((NavigationItem)element).getPresentation();
-      if (presentation != null){
-        return presentation.getLocationString();
-      } else {
-        PsiFile file = element.getContainingFile();
-        if (file != null) {
-          VirtualFile virtualFile = file.getVirtualFile();
-          if (virtualFile != null) return virtualFile.getPath();
+    @RequiredReadAction
+    public static @Nullable String getSymbolPresentableText(PsiElement element) {
+        if (element instanceof NavigationItem) {
+            ItemPresentation presentation = ((NavigationItem)element).getPresentation();
+            if (presentation != null) {
+                return presentation.getPresentableText().getNullIfEmpty();
+            }
         }
-      }
+
+        if (element instanceof PsiNamedElement) {
+            return ((PsiNamedElement)element).getName();
+        }
+        return element.getText();
     }
 
-    return null;
-  }
+    @RequiredReadAction
+    public static @Nullable String getSymbolContainerText(PsiElement element) {
+        if (element instanceof NavigationItem) {
+            ItemPresentation presentation = ((NavigationItem)element).getPresentation();
+            if (presentation != null) {
+                return presentation.getLocationString();
+            }
+            else {
+                PsiFile file = element.getContainingFile();
+                if (file != null) {
+                    VirtualFile virtualFile = file.getVirtualFile();
+                    if (virtualFile != null) {
+                        return virtualFile.getPath();
+                    }
+                }
+            }
+        }
 
-  @RequiredReadAction
-  public static String getFilePathPresentation(PsiFile psiFile) {
-    ProjectFileIndex index = ProjectRootManager.getInstance(psiFile.getProject()).getFileIndex();
-    VirtualFile file = psiFile.getOriginalFile().getVirtualFile();
-    VirtualFile rootForFile = file != null ? index.getContentRootForFile(file) : null;
-
-    if (rootForFile != null) {
-      @SuppressWarnings("NullAway")
-      // Static validation doesn't understand that rootForFile is not null iff file is not null, so disabling NullAway here
-      String relativePath = VirtualFileUtil.getRelativePath(file, rootForFile, File.separatorChar);
-      if (relativePath != null) {
-        return relativePath;
-      }
+        return null;
     }
 
-    return psiFile.getName();
-  }
+    @RequiredReadAction
+    public static String getFilePathPresentation(PsiFile psiFile) {
+        ProjectFileIndex index = ProjectRootManager.getInstance(psiFile.getProject()).getFileIndex();
+        VirtualFile file = psiFile.getOriginalFile().getVirtualFile();
+        VirtualFile rootForFile = file != null ? index.getContentRootForFile(file) : null;
+
+        if (rootForFile != null) {
+            @SuppressWarnings("NullAway")
+            // Static validation doesn't understand that rootForFile is not null iff file is not null, so disabling NullAway here
+            String relativePath = VirtualFileUtil.getRelativePath(file, rootForFile, File.separatorChar);
+            if (relativePath != null) {
+                return relativePath;
+            }
+        }
+
+        return psiFile.getName();
+    }
 }

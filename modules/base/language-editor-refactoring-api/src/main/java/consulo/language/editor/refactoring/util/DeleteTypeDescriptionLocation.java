@@ -13,59 +13,59 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.refactoring.util;
 
 import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.findUsage.FindUsagesProvider;
 import consulo.language.psi.*;
+import consulo.localize.LocalizeValue;
 
 /**
  * @author yole
  */
 public class DeleteTypeDescriptionLocation extends ElementDescriptionLocation {
-  private final boolean myPlural;
+    private final boolean myPlural;
 
-  private DeleteTypeDescriptionLocation(boolean plural) {
-    myPlural = plural;
-  }
-
-  public static final DeleteTypeDescriptionLocation SINGULAR = new DeleteTypeDescriptionLocation(false);
-  public static final DeleteTypeDescriptionLocation PLURAL = new DeleteTypeDescriptionLocation(true);
-
-  private static final ElementDescriptionProvider ourDefaultProvider = new DefaultProvider();
-
-  @Override
-  public ElementDescriptionProvider getDefaultProvider() {
-    return ourDefaultProvider;
-  }
-
-  public boolean isPlural() {
-    return myPlural;
-  }
-
-  public static class DefaultProvider implements ElementDescriptionProvider {
-    @Override
-    public String getElementDescription(PsiElement element, ElementDescriptionLocation location) {
-      if (location instanceof DeleteTypeDescriptionLocation deleteTypeDescriptionLocation) {
-        boolean plural = deleteTypeDescriptionLocation.isPlural();
-        int count = plural ? 2 : 1;
-        if (element instanceof PsiFileSystemItem psiFileSystemItem && PsiUtilBase.isSymLink(psiFileSystemItem)) {
-          return RefactoringLocalize.promptDeleteSymlink(count).get();
-        }
-        if (element instanceof PsiFile) {
-          return RefactoringLocalize.promptDeleteFile(count).get();
-        }
-        if (element instanceof PsiDirectory) {
-          return RefactoringLocalize.promptDeleteDirectory(count).get();
-        }
-        if (!plural) {
-          return FindUsagesProvider.forLanguage(element.getLanguage()).getType(element);
-        }
-        return "elements";
-      }
-      return null;
+    private DeleteTypeDescriptionLocation(boolean plural) {
+        myPlural = plural;
     }
-  }
+
+    public static final DeleteTypeDescriptionLocation SINGULAR = new DeleteTypeDescriptionLocation(false);
+    public static final DeleteTypeDescriptionLocation PLURAL = new DeleteTypeDescriptionLocation(true);
+
+    private static final ElementDescriptionProvider ourDefaultProvider = new DefaultProvider();
+
+    @Override
+    public ElementDescriptionProvider getDefaultProvider() {
+        return ourDefaultProvider;
+    }
+
+    public boolean isPlural() {
+        return myPlural;
+    }
+
+    public static class DefaultProvider implements ElementDescriptionProvider {
+        @Override
+        public LocalizeValue getElementDescription(PsiElement element, ElementDescriptionLocation location) {
+            if (location instanceof DeleteTypeDescriptionLocation deleteTypeDescriptionLocation) {
+                boolean plural = deleteTypeDescriptionLocation.isPlural();
+                int count = plural ? 2 : 1;
+                if (element instanceof PsiFileSystemItem psiFileSystemItem && PsiUtilBase.isSymLink(psiFileSystemItem)) {
+                    return RefactoringLocalize.promptDeleteSymlink(count);
+                }
+                if (element instanceof PsiFile) {
+                    return RefactoringLocalize.promptDeleteFile(count);
+                }
+                if (element instanceof PsiDirectory) {
+                    return RefactoringLocalize.promptDeleteDirectory(count);
+                }
+                if (!plural) {
+                    return LocalizeValue.localizeTODO(FindUsagesProvider.forLanguage(element.getLanguage()).getType(element));
+                }
+                return LocalizeValue.localizeTODO("elements");
+            }
+            return LocalizeValue.empty();
+        }
+    }
 }

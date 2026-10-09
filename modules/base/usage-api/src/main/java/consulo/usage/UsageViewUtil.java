@@ -24,6 +24,7 @@ import consulo.language.psi.ElementDescriptionUtil;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiReference;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.navigation.NavigationItem;
 import consulo.navigation.OpenFileDescriptorFactory;
@@ -66,22 +67,22 @@ public class UsageViewUtil {
         return configurableUsageTarget;
     }
 
-    public static String createNodeText(PsiElement element) {
+    public static LocalizeValue createNodeText(PsiElement element) {
         return ElementDescriptionUtil.getElementDescription(element, UsageViewNodeTextLocation.INSTANCE);
     }
 
     public static String getShortName(PsiElement psiElement) {
         LOG.assertTrue(psiElement.isValid(), psiElement);
-        return ElementDescriptionUtil.getElementDescription(psiElement, UsageViewShortNameLocation.INSTANCE);
+        return ElementDescriptionUtil.getElementDescription(psiElement, UsageViewShortNameLocation.INSTANCE).get();
     }
 
     public static String getLongName(PsiElement psiElement) {
         LOG.assertTrue(psiElement.isValid(), psiElement);
-        return ElementDescriptionUtil.getElementDescription(psiElement, UsageViewLongNameLocation.INSTANCE);
+        return ElementDescriptionUtil.getElementDescription(psiElement, UsageViewLongNameLocation.INSTANCE).get();
     }
 
     public static String getType(PsiElement psiElement) {
-        return ElementDescriptionUtil.getElementDescription(psiElement, UsageViewTypeLocation.INSTANCE);
+        return ElementDescriptionUtil.getElementDescription(psiElement, UsageViewTypeLocation.INSTANCE).get();
     }
 
     public static boolean hasNonCodeUsages(UsageInfo[] usages) {

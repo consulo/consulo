@@ -16,6 +16,7 @@
 package consulo.navigation;
 
 import consulo.annotation.DeprecationInfo;
+import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 
 import org.jspecify.annotations.Nullable;
@@ -27,36 +28,36 @@ import org.jspecify.annotations.Nullable;
  * @see consulo.ide.impl.idea.ide.projectView.PresentationData
  */
 public interface ItemPresentation {
-  /**
-   * Returns the name of the object to be presented in most renderers across the program.
-   *
-   * @return the object name.
-   */
-  @Nullable String getPresentableText();
+    /**
+     * Returns the name of the object to be presented in most renderers across the program.
+     *
+     * @return the object name.
+     */
+    LocalizeValue getPresentableText();
 
-  /**
-   * Returns the location of the object (for example, the package of a class). The location
-   * string is used by some renderers and usually displayed as grayed text next to the item name.
-   *
-   * @return the location description, or null if none is applicable.
-   */
-  @Nullable String getLocationString();
+    /**
+     * Returns the location of the object (for example, the package of a class). The location
+     * string is used by some renderers and usually displayed as grayed text next to the item name.
+     *
+     * @return the location description, or null if none is applicable.
+     */
+    @Nullable String getLocationString();
 
-  /**
-   * Returns the icon representing the object.
-   */
-  default @Nullable Image getIcon() {
-    return getIcon(false);
-  }
+    /**
+     * Returns the icon representing the object.
+     */
+    default @Nullable Image getIcon() {
+        return getIcon(false);
+    }
 
-  /**
-   * Returns the icon representing the object.
-   *
-   * @param unused Used to mean if open/close icons for tree renderer. No longer in use. The parameter is only there for API compatibility reason.
-   */
-  @Deprecated
-  @DeprecationInfo("Use #getIcon()")
-  default @Nullable Image getIcon(boolean unused) {
-    return getIcon();
-  }
+    /**
+     * Returns the icon representing the object.
+     *
+     * @param unused Used to mean if open/close icons for tree renderer. No longer in use. The parameter is only there for API compatibility reason.
+     */
+    @Deprecated
+    @DeprecationInfo("Use #getIcon()")
+    default @Nullable Image getIcon(boolean unused) {
+        return getIcon();
+    }
 }

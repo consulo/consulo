@@ -23,32 +23,38 @@ import consulo.language.pom.PomNamedTarget;
 import consulo.language.pom.PomTarget;
 import consulo.language.psi.ElementDescriptionLocation;
 import consulo.language.psi.PsiElement;
+import consulo.localize.LocalizeValue;
 import consulo.usage.UsageViewNodeTextLocation;
 import consulo.usage.UsageViewTypeLocation;
-import consulo.util.lang.StringUtil;
 
 /**
  * @author peter
  */
 @ExtensionImpl(id = "pomDefault", order = "last")
 public class UsagePomTargetDescriptionProvider extends PomDescriptionProvider {
-  @Override
-  public String getElementDescription(PomTarget element, ElementDescriptionLocation location) {
-    if (element instanceof PsiElement) return null;
+    @Override
+    public LocalizeValue getElementDescription(PomTarget element, ElementDescriptionLocation location) {
+        if (element instanceof PsiElement) {
+            return LocalizeValue.empty();
+        }
 
-    if (location == UsageViewTypeLocation.INSTANCE) {
-      return getTypeName(element);
+        if (location == UsageViewTypeLocation.INSTANCE) {
+            return getTypeName(element);
+        }
+        if (location == UsageViewNodeTextLocation.INSTANCE) {
+            return LocalizeValue.join(
+                getTypeName(element),
+                LocalizeValue.space(),
+                element instanceof PomNamedTarget pomNamedTarget ? LocalizeValue.of(pomNamedTarget.getName()) : LocalizeValue.of("''")
+            );
+        }
+        if (location instanceof HighlightUsagesDescriptionLocation) {
+            return getTypeName(element);
+        }
+        return LocalizeValue.empty();
     }
-    if (location == UsageViewNodeTextLocation.INSTANCE) {
-      return getTypeName(element) + " " + StringUtil.notNullize(element instanceof PomNamedTarget ? ((PomNamedTarget)element).getName() : null, "''");
-    }
-    if (location instanceof HighlightUsagesDescriptionLocation) {
-      return getTypeName(element);
-    }
-    return null;
-  }
 
-  private static String getTypeName(PomTarget element) {
-    return TypePresentationService.getInstance().getTypeNameOrStub(element);
-  }
+    private static LocalizeValue getTypeName(PomTarget element) {
+        return LocalizeValue.of(TypePresentationService.getInstance().getTypeNameOrStub(element));
+    }
 }

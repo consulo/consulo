@@ -19,19 +19,19 @@ import consulo.language.psi.ElementDescriptionLocation;
 import consulo.language.psi.ElementDescriptionProvider;
 import consulo.language.psi.PsiElement;
 
-import org.jspecify.annotations.Nullable;
+import consulo.localize.LocalizeValue;
 
 /**
  * @author peter
  */
-public abstract class PomDescriptionProvider implements ElementDescriptionProvider{
-  @Override
-  public @Nullable String getElementDescription(PsiElement element, ElementDescriptionLocation location) {
-    if (element instanceof PomTargetPsiElement) {
-      return getElementDescription(((PomTargetPsiElement)element).getTarget(), location);
+public abstract class PomDescriptionProvider implements ElementDescriptionProvider {
+    @Override
+    public LocalizeValue getElementDescription(PsiElement element, ElementDescriptionLocation location) {
+        if (element instanceof PomTargetPsiElement pomTargetPsiElement) {
+            return getElementDescription(pomTargetPsiElement.getTarget(), location);
+        }
+        return LocalizeValue.empty();
     }
-    return null;
-  }
 
-  public abstract @Nullable String getElementDescription(PomTarget element, ElementDescriptionLocation location);
+    public abstract LocalizeValue getElementDescription(PomTarget element, ElementDescriptionLocation location);
 }

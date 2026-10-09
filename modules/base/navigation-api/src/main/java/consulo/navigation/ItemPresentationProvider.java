@@ -22,6 +22,7 @@ import consulo.component.extension.ByClassGrouper;
 import consulo.component.extension.ExtensionPointCacheKey;
 
 import org.jspecify.annotations.Nullable;
+
 import java.util.function.Function;
 
 /**
@@ -29,23 +30,23 @@ import java.util.function.Function;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ItemPresentationProvider<T extends NavigationItem> {
-  ExtensionPointCacheKey<ItemPresentationProvider, Function<Class, ItemPresentationProvider>> KEY =
-          ExtensionPointCacheKey.create("ItemPresentationProvider", ByClassGrouper.build(ItemPresentationProvider::getItemClass));
+    ExtensionPointCacheKey<ItemPresentationProvider, Function<Class, ItemPresentationProvider>> KEY =
+        ExtensionPointCacheKey.create("ItemPresentationProvider", ByClassGrouper.build(ItemPresentationProvider::getItemClass));
 
-  @SuppressWarnings("unchecked")
-  public static <T extends NavigationItem> @Nullable ItemPresentationProvider<T> getItemPresentationProvider(T element) {
-    Function<Class, ItemPresentationProvider> call = Application.get().getExtensionPoint(ItemPresentationProvider.class).getOrBuildCache(KEY);
-    return call.apply(element.getClass());
-  }
+    @SuppressWarnings("unchecked")
+    public static <T extends NavigationItem> @Nullable ItemPresentationProvider<T> getItemPresentationProvider(T element) {
+        Function<Class, ItemPresentationProvider> call = Application.get()
+            .getExtensionPoint(ItemPresentationProvider.class)
+            .getOrBuildCache(KEY);
+        return call.apply(element.getClass());
+    }
 
-  public static @Nullable ItemPresentation getItemPresentation(NavigationItem element) {
-    ItemPresentationProvider<NavigationItem> provider = getItemPresentationProvider(element);
-    return provider != null ? provider.getPresentation(element) : null;
-  }
+    public static @Nullable ItemPresentation getItemPresentation(NavigationItem element) {
+        ItemPresentationProvider<NavigationItem> provider = getItemPresentationProvider(element);
+        return provider != null ? provider.getPresentation(element) : null;
+    }
 
-  
-  Class<T> getItemClass();
+    Class<T> getItemClass();
 
-  
-  ItemPresentation getPresentation(T item);
+    ItemPresentation getPresentation(T item);
 }

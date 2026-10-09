@@ -19,7 +19,6 @@ package consulo.versionControlSystem.distributed.ui.branch.popup;
 import consulo.annotation.UsedInPlugin;
 import consulo.application.util.matcher.MinusculeMatcher;
 import consulo.application.util.matcher.NameUtil;
-import consulo.dataContext.DataContext;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -213,7 +212,7 @@ public abstract class DvcsBranchesTreePopupStepBase implements PopupStep<Object>
             return action.getTemplatePresentation().getText();
         }
         if (node instanceof DvcsBranchesTreeModel.PresentableNode presentableNode) {
-            return presentableNode.getPresentableText();
+            return presentableNode.getPresentableText().getNullIfEmpty();
         }
         return null;
     }

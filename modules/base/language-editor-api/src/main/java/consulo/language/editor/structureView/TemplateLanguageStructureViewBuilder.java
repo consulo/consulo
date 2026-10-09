@@ -14,6 +14,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.language.template.TemplateLanguageFileViewProvider;
 import consulo.language.util.LanguageUtil;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.image.Image;
 import consulo.util.collection.JBIterable;
@@ -77,7 +78,7 @@ public abstract class TemplateLanguageStructureViewBuilder extends TreeBasedStru
       StructureViewBuilder builder = getBuilder(ObjectUtil.notNull(psiFile), language);
       if (builder == null) continue;
       StructureView structureView = builder.createStructureView(fileEditor, project);
-      String title = language.getDisplayName().get();
+      LocalizeValue title = language.getDisplayName();
       Image icon = ObjectUtil.notNull(LanguageUtil.getLanguageFileType(language), UnknownFileType.INSTANCE).getIcon();
       viewDescriptors.add(new StructureViewComposite.StructureViewDescriptor(title, structureView, icon));
     }

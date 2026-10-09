@@ -21,11 +21,7 @@ import consulo.execution.service.ServiceViewItemState;
 import consulo.execution.service.ServiceViewOptions;
 import consulo.localize.LocalizeValue;
 import consulo.navigation.ItemPresentation;
-import consulo.ui.TextAttribute;
-import consulo.ui.TextItemPresentation;
-import consulo.ui.Tree;
-import consulo.ui.TreeNode;
-import consulo.ui.UIAccess;
+import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.tree.PresentableNodeDescriptor;
@@ -167,16 +163,16 @@ final class UnifiedServiceViewTree {
             presentation.withIcon(itemPresentation.getIcon());
 
             if (!(itemPresentation instanceof PresentationData data)) {
-                presentation.append(LocalizeValue.ofNullable(itemPresentation.getPresentableText()));
+                presentation.append(itemPresentation.getPresentableText());
                 return;
             }
 
             ColorValue forced = data.getForcedTextForeground();
             List<PresentableNodeDescriptor.ColoredFragment> fragments = data.getColoredText();
             if (fragments.isEmpty()) {
-                String text = data.getPresentableText();
+                LocalizeValue text = data.getPresentableText();
                 presentation.append(
-                    LocalizeValue.ofNullable(StringUtil.isEmpty(text) ? item.toString() : text),
+                    text.orIfEmpty(() -> LocalizeValue.of(item.toString())),
                     TextAttributeUtil.toTextAttribute(null, forced)
                 );
 
