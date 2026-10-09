@@ -15,6 +15,7 @@
  */
 package consulo.project.ui.view;
 
+import consulo.annotation.UsedInPlugin;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.language.psi.PsiElement;
@@ -124,5 +125,9 @@ public interface ProjectView {
 
     default boolean isFoldersAlwaysOnTop() {
         return false;
+    }
+
+    @UsedInPlugin
+    default void queueUpdateAll() {
     }
 }

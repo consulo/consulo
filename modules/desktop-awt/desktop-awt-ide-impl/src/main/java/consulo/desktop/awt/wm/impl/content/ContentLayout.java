@@ -19,6 +19,7 @@ import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.ex.awt.RelativeRectangle;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.event.ContentManagerEvent;
+import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.awt.JBUI;
 
 import javax.swing.*;
@@ -98,8 +99,7 @@ abstract class ContentLayout {
   public abstract String getNextContentActionName();
 
   protected boolean shouldShowId() {
-    JComponent component = myUi.myWindow.getComponent();
-    return component != null && !"true".equals(component.getClientProperty(DesktopToolWindowContentUi.HIDE_ID_LABEL));
+    return !Boolean.TRUE.equals(myUi.myWindow.getUserData(ToolWindow.HIDE_ID_LABEL));
   }
 
   boolean isIdVisible() {

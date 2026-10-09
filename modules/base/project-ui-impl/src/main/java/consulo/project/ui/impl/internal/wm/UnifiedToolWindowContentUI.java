@@ -54,7 +54,6 @@ import java.util.Objects;
 public class UnifiedToolWindowContentUI implements ToolWindowContentUI, PropertyChangeListener, UiDataProvider {
     public static final String POPUP_PLACE = ToolWindowContentUI.POPUP_PLACE;
     // when client property is put in toolwindow component, hides toolwindow label
-    public static final String HIDE_ID_LABEL = ToolWindowContentUI.HIDE_ID_LABEL;
 
     ContentManager myManager;
 

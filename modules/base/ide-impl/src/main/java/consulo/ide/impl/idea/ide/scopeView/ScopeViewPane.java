@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.ide.scopeView;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.content.scope.NamedScope;
 import consulo.content.scope.NamedScopesHolder;
@@ -60,7 +61,7 @@ import java.util.concurrent.atomic.AtomicLong;
 /**
  * @author cdr
  */
-@ExtensionImpl
+@ExtensionImpl(profiles = ComponentProfiles.AWT)
 public class ScopeViewPane extends AbstractProjectViewPane {
     private static final Logger LOG = Logger.getInstance(ScopeViewPane.class);
     private SequencedMap<String, NamedScopeFilter> myFilters;

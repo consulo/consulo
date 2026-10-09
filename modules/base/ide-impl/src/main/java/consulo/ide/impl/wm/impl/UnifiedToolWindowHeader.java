@@ -35,7 +35,9 @@ import consulo.ui.ex.impl.internal.action.MenuItemPresentationFactory;
 import consulo.ui.ex.impl.internal.action.UnifiedActionRow;
 import consulo.ui.ex.localize.UILocalize;
 import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.ui.ex.toolWindow.ToolWindowContentUiType;
 import consulo.ui.ex.toolWindow.ToolWindowInternalDecorator;
+import consulo.ui.ex.toolWindow.WindowInfo;
 import consulo.ui.ex.toolWindow.action.ToolWindowActions;
 import consulo.ui.style.ComponentColors;
 import consulo.ui.layout.DockLayout;
@@ -67,11 +69,14 @@ public class UnifiedToolWindowHeader implements Disposable {
     private final DockLayout myLayout = DockLayout.create(Space.NONE);
     private final HorizontalLayout myWestLayout = HorizontalLayout.create(Space.SMALL);
     private final HorizontalLayout myTabsLayout = HorizontalLayout.create(Space.X_SMALL);
+    private final Label myTitleLabel;
 
     private final DefaultActionGroup myTitleActions = new DefaultActionGroup();
     private final DefaultActionGroup myTabActions = new DefaultActionGroup();
 
     private final PresentationFactory myPresentationFactory = new MenuItemPresentationFactory();
+
+    private @Nullable ToolWindowContentUiType myRenderedContentUiType;
 
     private final PropertyChangeListener myContentPropertyListener = event -> {
         String propertyName = event.getPropertyName();
@@ -108,7 +113,8 @@ public class UnifiedToolWindowHeader implements Disposable {
 
         myLayout.setSize(new Size2D(-1, HEIGHT));
 
-        myWestLayout.add(Label.create(toolWindow.getDisplayName()));
+        myTitleLabel = Label.create(toolWindow.getDisplayName());
+        myWestLayout.add(myTitleLabel);
         myWestLayout.add(myTabsLayout);
         myWestLayout.add(myTabActionRow.getComponent());
 
@@ -188,6 +194,10 @@ public class UnifiedToolWindowHeader implements Disposable {
     private void rebuildTabs() {
         myTabsLayout.removeAll();
 
+        myRenderedContentUiType = getContentUiType();
+
+        myTitleLabel.setVisible(!Boolean.TRUE.equals(myToolWindow.getUserData(ToolWindow.HIDE_ID_LABEL)));
+
         ContentManager contentManager = myToolWindow.getContentManagerIfCreated();
         if (contentManager == null || !hasTabsToShow(contentManager)) {
             return;
@@ -195,9 +205,55 @@ public class UnifiedToolWindowHeader implements Disposable {
 
         Content selected = contentManager.getSelectedContent();
 
+        if (myRenderedContentUiType == ToolWindowContentUiType.COMBO) {
+            if (selected != null) {
+                myTabsLayout.add(createCombo(contentManager, selected));
+            }
+            return;
+        }
+
         for (Content content : contentManager.getContents()) {
             myTabsLayout.add(createTab(contentManager, content, content == selected));
         }
+    }
+
+    @RequiredUIAccess
+    public void updateContentUiType() {
+        if (myRenderedContentUiType != getContentUiType()) {
+            rebuildTabs();
+        }
+    }
+
+    private @Nullable ToolWindowContentUiType getContentUiType() {
+        WindowInfo windowInfo = myDecorator.getWindowInfo();
+        return windowInfo == null ? null : windowInfo.getContentUiType();
+    }
+
+    @RequiredUIAccess
+    private Component createCombo(ContentManager contentManager, Content selected) {
+        ComboBox<Content> comboBox = ComboBox.create(contentManager.getContents());
+        comboBox.setRender((presentation, item) -> {
+            Content content = item.getValue();
+            if (content == null) {
+                return;
+            }
+            if (Boolean.TRUE.equals(content.getUserData(ToolWindow.SHOW_CONTENT_ICON))) {
+                presentation.withIcon(content.getIcon());
+            }
+            presentation.append(content.getTabName());
+        });
+        comboBox.setValue(selected);
+        comboBox.addStyle(ComboBoxStyle.INPLACE);
+        comboBox.addStyle(ComboBoxStyle.TRANSPARENT_BACKGROUND);
+        comboBox.addValueListener(event -> {
+            Content content = event.getValue();
+            if (content != null && content != contentManager.getSelectedContent()) {
+                contentManager.setSelectedContent(content, true);
+
+                myToolWindow.fireActivated();
+            }
+        });
+        return comboBox;
     }
 
     /**

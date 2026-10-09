@@ -35,7 +35,8 @@ final class WebComboBoxStyleUtil {
                 component.getStyle()
                     .set("--vaadin-input-field-border-width", "0")
                     .set("--vaadin-input-field-border-radius", "0")
-                    .set("--vaadin-focus-ring-width", "0");
+                    .set("--vaadin-focus-ring-width", "0")
+                    .set("--aura-shadow-xs", "none");
                 break;
         }
     }

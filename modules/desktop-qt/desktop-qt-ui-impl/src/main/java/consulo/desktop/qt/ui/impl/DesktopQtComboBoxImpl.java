@@ -56,6 +56,8 @@ public class DesktopQtComboBoxImpl<E> extends DesktopQtComboBoxBaseImpl<E, QComb
             }
         });
 
+        applyStyles(component);
+
         rebuild(component);
     }
 

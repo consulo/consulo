@@ -31,6 +31,8 @@ import io.qt.widgets.QComboBox;
 import io.qt.widgets.QWidget;
 import org.jspecify.annotations.Nullable;
 
+import java.util.EnumSet;
+import java.util.Set;
 import java.util.function.Function;
 
 /**
@@ -42,6 +44,8 @@ public abstract class DesktopQtComboBoxBaseImpl<E, W extends QComboBox> extends 
     protected final FlatDataModel<E> myModel;
 
     private TextItemRender<E> myRenderer = TextItemRender.defaultRender();
+
+    private final Set<ComboBoxStyle> myStyles = EnumSet.noneOf(ComboBoxStyle.class);
 
     protected boolean myRebuilding;
 
@@ -126,6 +130,25 @@ public abstract class DesktopQtComboBoxBaseImpl<E, W extends QComboBox> extends 
 
     @Override
     public void addStyle(ComboBoxStyle style) {
+        myStyles.add(style);
+
+        W component = myComponent;
+        if (component != null && !component.isDisposed()) {
+            applyStyle(component, style);
+        }
+    }
+
+    protected final void applyStyles(W component) {
+        for (ComboBoxStyle style : myStyles) {
+            applyStyle(component, style);
+        }
+    }
+
+    private static void applyStyle(QComboBox component, ComboBoxStyle style) {
+        switch (style) {
+            case INPLACE -> component.setFrame(false);
+            case TRANSPARENT_BACKGROUND -> component.setAutoFillBackground(false);
+        }
     }
 
     @Override

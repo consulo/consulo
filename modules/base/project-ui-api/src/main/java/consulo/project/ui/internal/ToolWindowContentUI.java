@@ -23,6 +23,4 @@ import consulo.ui.ex.content.ContentUI;
  */
 public interface ToolWindowContentUI extends ContentUI {
     public static final String POPUP_PLACE = "ToolwindowPopup";
-    // when client property is put in toolwindow component, hides toolwindow label
-    public static final String HIDE_ID_LABEL = "HideIdLabel";
 }

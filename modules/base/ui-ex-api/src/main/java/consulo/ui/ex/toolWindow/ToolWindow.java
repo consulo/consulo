@@ -32,6 +32,7 @@ import org.jspecify.annotations.Nullable;
 public interface ToolWindow extends BusyObject, UserDataHolder {
     Key<ToolWindow> KEY = Key.create(ToolWindow.class);
     Key<Boolean> SHOW_CONTENT_ICON = Key.create("ContentIcon");
+    Key<Boolean> HIDE_ID_LABEL = Key.create("HideIdLabel");
 
     String getId();
 

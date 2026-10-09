@@ -56,6 +56,8 @@ public class DesktopQtMultiSelectComboBoxImpl<E> extends DesktopQtComboBoxBaseIm
         component.setToggleHandler(row -> toggle(component, row));
         component.setPlaceholder(myPlaceholder.get());
 
+        applyStyles(component);
+
         rebuild(component);
     }
 

@@ -104,6 +104,8 @@ public class UnifiedToolWindowInternalDecorator implements ToolWindowInternalDec
 
         myInfo = (WindowInfoImpl) windowInfo;
 
+        myHeader.updateContentUiType();
+
         myHeader.updateActionsAsync();
     }
 
