@@ -213,11 +213,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
 
         StatCollector xmlAnalyze = new StatCollector();
         PluginManager.forEachEnabledPlugin(plugin -> {
-            xmlAnalyze.markWith(plugin.getPluginId().toString(), () -> {
-                LocalizeHelper localizeHelper = LocalizeHelper.build(plugin);
-
-                registerPluginActions(plugin, localizeHelper);
-            });
+            xmlAnalyze.markWith(plugin.getPluginId().toString(), () -> registerPluginActions(plugin));
         });
 
         xmlAnalyze.dump("ActionManager:xml.analyze", LOG::info);
@@ -366,22 +362,21 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
     }
 
     
-    private static LocalizeValue computeDescription(LocalizeHelper localizeHelper, String id, String elementType, String descriptionValue) {
+    private static LocalizeValue computeDescription(String id, String elementType, String descriptionValue) {
         if (!StringUtil.isEmpty(descriptionValue)) {
             return LocalizeValue.of(descriptionValue);
         }
 
         String key = elementType + "." + id + ".description";
-        return localizeHelper.getValue(key);
+        return LocalizeValue.of(key);
     }
 
-    
-    private static LocalizeValue computeActionText(LocalizeHelper localizeHelper, String id, String elementType, String textValue) {
+    private static LocalizeValue computeActionText(String id, String elementType, String textValue) {
         if (!StringUtil.isEmptyOrSpaces(textValue)) {
             return LocalizeValue.of(textValue);
         }
         String key = elementType + "." + id + "." + TEXT_ATTR_NAME;
-        return localizeHelper.getValue(key);
+        return LocalizeValue.of(key);
     }
 
     private static boolean checkRelativeToAction(
@@ -528,14 +523,12 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
             .createActionToolbar(place, group, horizontal ? ActionToolbar.Style.HORIZONTAL : ActionToolbar.Style.VERTICAL);
     }
 
-    public void registerPluginActions(PluginDescriptor plugin, LocalizeHelper localizeHelper) {
+    public void registerPluginActions(PluginDescriptor plugin) {
         List<SimpleXmlElement> elementList = plugin.getActionsDescriptionElements();
         if (elementList != null) {
-            //long startTime = StartUpMeasurer.getCurrentTime();
             for (SimpleXmlElement e : elementList) {
-                processActionsChildElement(plugin, e, localizeHelper);
+                processActionsChildElement(plugin, e);
             }
-            //StartUpMeasurer.addPluginCost(plugin.getPluginId().getIdString(), "Actions", StartUpMeasurer.getCurrentTime() - startTime);
         }
     }
 
@@ -629,8 +622,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
      */
     private @Nullable AnAction processActionElement(
         SimpleXmlElement element,
-        PluginDescriptor plugin,
-        LocalizeHelper localizeHelper
+        PluginDescriptor plugin
     ) {
         PluginId pluginId = plugin.getPluginId();
 
@@ -654,8 +646,8 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
 
         XmlActionStub stub = new XmlActionStub(className, id, plugin, iconPath, () -> {
             Presentation presentation = new Presentation();
-            presentation.setText(computeActionText(localizeHelper, id, ACTION_ELEMENT_NAME, textValue));
-            presentation.setDescription(computeDescription(localizeHelper, id, ACTION_ELEMENT_NAME, descriptionValue));
+            presentation.setText(computeActionText(id, ACTION_ELEMENT_NAME, textValue));
+            presentation.setDescription(computeDescription(id, ACTION_ELEMENT_NAME, descriptionValue));
             return presentation;
         });
 
@@ -719,8 +711,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
 
     private AnAction processGroupElement(
         SimpleXmlElement element,
-        PluginDescriptor plugin,
-        LocalizeHelper localizeHelper
+        PluginDescriptor plugin
     ) {
         PluginId pluginId = plugin.getPluginId();
         ClassLoader pluginClassLoader = plugin.getPluginClassLoader();
@@ -791,14 +782,14 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
             Presentation presentation = group.getTemplatePresentation();
 
             // text
-            LocalizeValue textValue = computeActionText(localizeHelper, id, GROUP_ELEMENT_NAME, element.getAttributeValue(TEXT_ATTR_NAME));
+            LocalizeValue textValue = computeActionText(id, GROUP_ELEMENT_NAME, element.getAttributeValue(TEXT_ATTR_NAME));
             // don't override value which was set in API with empty value from xml descriptor
             if (textValue.isNotEmpty() || presentation.getText() == null) {
                 presentation.setText(textValue);
             }
 
             // description
-            LocalizeValue description = computeDescription(localizeHelper, id, GROUP_ELEMENT_NAME, element.getAttributeValue(DESCRIPTION));
+            LocalizeValue description = computeDescription(id, GROUP_ELEMENT_NAME, element.getAttributeValue(DESCRIPTION));
             // don't override value which was set in API with empty value from xml descriptor
             if (description.isNotEmpty() || presentation.getDescription().isEmpty()) {
                 presentation.setDescription(description);
@@ -838,7 +829,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
             for (SimpleXmlElement child : element.getChildren()) {
                 String name = child.getName();
                 if (ACTION_ELEMENT_NAME.equals(name)) {
-                    AnAction action = processActionElement(child, plugin, localizeHelper);
+                    AnAction action = processActionElement(child, plugin);
                     if (action != null) {
                         assertActionIsGroupOrStub(action);
                         addToGroupInner(group, action, Constraints.LAST, isSecondary(child));
@@ -848,7 +839,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
                     processSeparatorNode((DefaultActionGroup) group, child, pluginId);
                 }
                 else if (GROUP_ELEMENT_NAME.equals(name)) {
-                    AnAction action = processGroupElement(child, plugin, localizeHelper);
+                    AnAction action = processGroupElement(child, plugin);
                     if (action != null) {
                         addToGroupInner(group, action, Constraints.LAST, false);
                     }
@@ -1070,18 +1061,17 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
 
     private void processActionsChildElement(
         PluginDescriptor plugin,
-        SimpleXmlElement child,
-        LocalizeHelper localizeHelper
+        SimpleXmlElement child
     ) {
         String name = child.getName();
         if (ACTION_ELEMENT_NAME.equals(name)) {
-            AnAction action = processActionElement(child, plugin, localizeHelper);
+            AnAction action = processActionElement(child, plugin);
             if (action != null) {
                 assertActionIsGroupOrStub(action);
             }
         }
         else if (GROUP_ELEMENT_NAME.equals(name)) {
-            processGroupElement(child, plugin, localizeHelper);
+            processGroupElement(child, plugin);
         }
         else if (SEPARATOR_ELEMENT_NAME.equals(name)) {
             processSeparatorNode(null, child, plugin.getPluginId());

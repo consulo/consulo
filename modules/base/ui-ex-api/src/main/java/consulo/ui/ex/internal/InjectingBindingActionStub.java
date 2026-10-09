@@ -43,18 +43,6 @@ public class InjectingBindingActionStub extends AnAction implements InjectingBin
   }
 
   @Override
-  protected Presentation createTemplatePresentation() {
-    Presentation presentation = super.createTemplatePresentation();
-
-    PluginDescriptor plugin = PluginManager.getPlugin(myInjectingBinding.getClass());
-    LocalizeHelper helper = LocalizeHelper.build(plugin);
-
-    presentation.setText(helper.getValue("action." + myActionImpl.id() + ".text"));
-    presentation.setDescription(helper.getValue("action." + myActionImpl.id() + ".description"));
-    return presentation;
-  }
-
-  @Override
   public ActionImpl getActionImpl() {
     return myActionImpl;
   }

@@ -41,20 +41,6 @@ public class InjectingBindingActionGroupStub extends DefaultActionGroup implemen
     myInjectingBinding = binding;
   }
 
-  
-  @Override
-  protected Presentation createTemplatePresentation() {
-    Presentation presentation = super.createTemplatePresentation();
-
-    PluginDescriptor plugin = PluginManager.getPlugin(myInjectingBinding.getClass());
-    LocalizeHelper helper = LocalizeHelper.build(plugin);
-
-    presentation.setText(helper.getValue("group." + myActionImpl.id() + ".text"));
-    presentation.setDescription(helper.getValue("group." + myActionImpl.id() + ".description"));
-    return presentation;
-  }
-
-  
   @Override
   public ActionImpl getActionImpl() {
     return myActionImpl;

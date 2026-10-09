@@ -246,34 +246,7 @@ public class ExportSettingsAction extends AnAction implements DumbAware {
 
     
     private static String getComponentPresentableName(State state, Class<?> aClass) {
-        String defaultName = state.name();
-        String resourceBundleName;
-
-        PluginDescriptor pluginDescriptor = null;
-        ClassLoader classLoader = aClass.getClassLoader();
-
-        if (classLoader instanceof PluginClassLoader pluginClassLoader) {
-            pluginDescriptor = PluginManager.getPlugin(pluginClassLoader.getPluginId());
-        }
-
-        if (pluginDescriptor != null && !PluginManagerCore.CORE_PLUGIN.equals(pluginDescriptor.getPluginId())) {
-            resourceBundleName = pluginDescriptor.getResourceBundleBaseName();
-        }
-        else {
-            resourceBundleName = OptionsBundle.PATH_TO_BUNDLE;
-        }
-
-        if (resourceBundleName == null) {
-            return defaultName;
-        }
-
-        if (classLoader != null) {
-            ResourceBundle bundle = AbstractBundle.getResourceBundle(resourceBundleName, classLoader);
-            if (bundle != null) {
-                return CommonBundle.messageOrDefault(bundle, "exportable." + defaultName + ".presentable.name", defaultName);
-            }
-        }
-        return defaultName;
+        return state.name();
     }
 
     public static final class ExportableItem {

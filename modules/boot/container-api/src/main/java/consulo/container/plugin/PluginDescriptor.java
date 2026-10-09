@@ -62,9 +62,13 @@ public interface PluginDescriptor {
 
     @Nullable String getPlatformVersion();
 
-    @Nullable String getResourceBundleBaseName();
+    @Nullable
+    @Deprecated
+    String getResourceBundleBaseName();
 
-    @Nullable String getLocalization();
+    @Deprecated
+    @Nullable
+    String getLocalization();
 
     Set<String> getTags();
 
