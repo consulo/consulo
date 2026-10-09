@@ -33,13 +33,10 @@ public class HideCoverageInfoAction extends LegacyAnAction {
 
     @Override
     public void update(AnActionEvent e) {
-        Presentation presentation = e.getPresentation();
-        presentation.setEnabled(false);
-        presentation.setVisible(e.isFromActionToolbar());
         Project project = e.getData(Project.KEY);
-        if (project != null) {
-            CoverageSuitesBundle suitesBundle = CoverageDataManager.getInstance(project).getCurrentSuitesBundle();
-            presentation.setEnabledAndVisible(suitesBundle != null);
-        }
+        CoverageSuitesBundle suitesBundle = project != null ? CoverageDataManager.getInstance(project).getCurrentSuitesBundle() : null;
+        Presentation presentation = e.getPresentation();
+        presentation.setEnabled(suitesBundle != null);
+        presentation.setVisible(e.isFromActionToolbar() && suitesBundle != null);
     }
 }
