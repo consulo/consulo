@@ -28,6 +28,7 @@ public final class WindowOptions extends ComponentOptions {
         private boolean myModal = true;
         private boolean myUndecorated;
         private @Nullable Window myOwner = null;
+        private @Nullable String myApplicationIdSuffix;
 
         private Builder() {
         }
@@ -57,8 +58,13 @@ public final class WindowOptions extends ComponentOptions {
             return this;
         }
 
+        public Builder applicationIdSuffix(String applicationIdSuffix) {
+            myApplicationIdSuffix = applicationIdSuffix;
+            return this;
+        }
+
         public WindowOptions build() {
-            return new WindowOptions(myOwner, myClosable, myResizable, myModal, myUndecorated);
+            return new WindowOptions(myOwner, myClosable, myResizable, myModal, myUndecorated, myApplicationIdSuffix);
         }
     }
 
@@ -71,8 +77,16 @@ public final class WindowOptions extends ComponentOptions {
     private final boolean myResizable;
     private final boolean myModal;
     private final boolean myUndecorated;
+    private final @Nullable String myApplicationIdSuffix;
 
-    private WindowOptions(@Nullable Window owner, boolean closable, boolean resizable, boolean modal, boolean undecorated) {
+    private WindowOptions(
+        @Nullable Window owner,
+        boolean closable,
+        boolean resizable,
+        boolean modal,
+        boolean undecorated,
+        @Nullable String applicationIdSuffix
+    ) {
         super(true);
 
         myOwner = owner;
@@ -80,6 +94,7 @@ public final class WindowOptions extends ComponentOptions {
         myResizable = resizable;
         myModal = modal;
         myUndecorated = undecorated;
+        myApplicationIdSuffix = applicationIdSuffix;
     }
 
     public @Nullable Window getOwner() {
@@ -100,5 +115,9 @@ public final class WindowOptions extends ComponentOptions {
 
     public boolean isUndecorated() {
         return myUndecorated;
+    }
+
+    public @Nullable String getApplicationIdSuffix() {
+        return myApplicationIdSuffix;
     }
 }

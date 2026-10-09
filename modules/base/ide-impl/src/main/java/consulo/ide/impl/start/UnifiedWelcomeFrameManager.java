@@ -110,12 +110,14 @@ public class UnifiedWelcomeFrameManager extends WelcomeFrameManager {
     @RequiredUIAccess
     @Override
     public IdeFrame createFrame() {
-        WindowOptions.Builder builder = WindowOptions.builder();
+        WindowOptions.Builder builder = WindowOptions.builder()
+            .disableResize()
+            .applicationIdSuffix(WelcomeFrameManager.APPLICATION_ID_SUFFIX);
 
         String welcomeTitle;
-        // disable close and resize, and remove title, we not allow it in web mode
+        // disable close, and remove title, we not allow it in web mode
         if (Platform.current().isInBrowser()) {
-            builder.disableClose().disableResize();
+            builder.disableClose();
             welcomeTitle = "";
         }
         else {

@@ -16,6 +16,8 @@
 package consulo.desktop.awt.welcomeScreen;
 
 import consulo.application.Application;
+import consulo.application.impl.internal.start.ApplicationStarter;
+import consulo.awt.hacking.X11Hacking;
 import consulo.application.ui.ApplicationWindowStateService;
 import consulo.desktop.awt.ui.impl.window.JFrameAsUIWindow;
 import consulo.desktop.awt.ui.util.AppIconUtil;
@@ -24,6 +26,8 @@ import consulo.disposer.Disposer;
 import consulo.ide.impl.application.FrameTitleUtil;
 import consulo.desktop.awt.ui.impl.glassPane.IdeGlassPaneImpl;
 import consulo.ide.impl.idea.util.ui.accessibility.AccessibleContextAccessor;
+import consulo.platform.Platform;
+import consulo.platform.os.UnixOperationSystem;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.ui.wm.BalloonLayout;
@@ -126,16 +130,48 @@ public class FlatWelcomeFrame extends JFrameAsUIWindow implements Disposable, Ac
     }
 
     @Override
+    public void addNotify() {
+        super.addNotify();
+
+        X11Hacking.updateWindowClass(this, getApplicationId());
+    }
+
+    @Override
     public void setVisible(boolean value) {
         if (myDisposed) {
             throw new IllegalArgumentException("Already disposed");
         }
 
-        super.setVisible(value);
+        if (value && !isVisible() && Platform.current().os() instanceof UnixOperationSystem os && os.isWayland()) {
+            showWithApplicationId();
+        }
+        else {
+            super.setVisible(value);
+        }
 
         if (!value) {
             Disposer.dispose(this);
         }
+    }
+
+    private void showWithApplicationId() {
+        String applicationId = System.getProperty("awt.app.id");
+        System.setProperty("awt.app.id", getApplicationId());
+        try {
+            super.setVisible(true);
+        }
+        finally {
+            if (applicationId == null) {
+                System.clearProperty("awt.app.id");
+            }
+            else {
+                System.setProperty("awt.app.id", applicationId);
+            }
+        }
+    }
+
+    private static String getApplicationId() {
+        return ApplicationStarter.getFrameClass() + "-" + WelcomeFrameManager.APPLICATION_ID_SUFFIX;
     }
 
     @Override

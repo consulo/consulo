@@ -355,6 +355,20 @@ public final class X11Hacking {
     }
   }
 
+  public static void updateWindowClass(Window window, String windowClass) {
+    ComponentPeer peer = AWTAccessor.getComponentAccessor().getPeer(window);
+    if (peer == null || !peer.getClass().getName().startsWith("sun.awt.X11.")) {
+      return;
+    }
+
+    try {
+      method(peer.getClass(), "setWMClass", String[].class).invoke(peer, (Object)new String[]{windowClass, windowClass});
+    }
+    catch (Exception e) {
+      LOG.warn("Failed to set the window class of " + window, e);
+    }
+  }
+
   // reflection utilities
 
   private static Method method(Class<?> aClass, String name, Class<?>... parameterTypes) throws Exception {

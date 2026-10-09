@@ -19,7 +19,6 @@ import consulo.desktop.qt.ui.impl.titleless.DesktopQtTitleBarPlacement;
 import consulo.desktop.qt.ui.impl.titleless.DesktopQtWindowFrame;
 import consulo.disposer.Disposer;
 import consulo.project.ui.impl.internal.wm.UnifiedWelcomeIdeFrame;
-import consulo.logging.Logger;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.ui.Component;
 import consulo.ui.MenuBar;
@@ -39,7 +38,6 @@ import io.qt.core.Qt;
 import io.qt.gui.QCloseEvent;
 import io.qt.gui.QGuiApplication;
 import io.qt.gui.QPaintEvent;
-import io.qt.gui.QResizeEvent;
 import io.qt.gui.QScreen;
 import io.qt.widgets.QApplication;
 import io.qt.widgets.QMainWindow;
@@ -47,8 +45,6 @@ import io.qt.widgets.QMenuBar;
 import io.qt.widgets.QVBoxLayout;
 import io.qt.widgets.QWidget;
 import org.jspecify.annotations.Nullable;
-
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author VISTALL
@@ -67,13 +63,6 @@ public class DesktopQtWindowImpl extends QtComponentDelegate<QMainWindow> implem
             closed();
         }
 
-        @Override
-        protected void resizeEvent(QResizeEvent event) {
-            super.resizeEvent(event);
-
-            resized(event.oldSize(), event.size());
-        }
-
         /**
          * A window which draws its own decoration is translucent around its content, and what fills that margin -
          * the border and the shadow - is painted here, under everything the window holds.
@@ -90,8 +79,6 @@ public class DesktopQtWindowImpl extends QtComponentDelegate<QMainWindow> implem
         }
     }
 
-    private static final Logger LOG = Logger.getInstance(DesktopQtWindowImpl.class);
-
     /**
      * What the awt frontend hands a frame which carries no size of its own, so a window of the qt frontend
      * comes up the same way.
@@ -101,36 +88,17 @@ public class DesktopQtWindowImpl extends QtComponentDelegate<QMainWindow> implem
     private static final int ourScreenMarginX = 20;
     private static final int ourScreenMarginY = 40;
 
-    /**
-     * How many times in a row the stored size is pushed back at a display server which keeps answering with
-     * another one. A server which simply refuses the size - a tiled frame is one - would otherwise be argued with
-     * for as long as the ide runs.
-     */
-    private static final int ourMaxSizeCorrections = 5;
-
-    /**
-     * The longest a drag leaves between two sizes. A compositor resizing a frame interactively reports it every
-     * few dozen milliseconds; one handing over a stored geometry reports it once.
-     */
-    private static final long ourDragGapNanos = TimeUnit.MILLISECONDS.toNanos(250);
-
     private QtComponentDelegate<?> myContent;
 
     private final QWidget myCentralWidget;
 
     private @Nullable Size2D mySize;
 
-    /**
-     * The size consulo believes the window has, and the one it puts back when something else changes it.
-     */
-    private @Nullable QSize myOwnedSize;
-
     private boolean myBoundsApplied;
-    private boolean myCorrectionScheduled;
-    private int myCorrections;
 
-    private long myLastResizeNanos;
-    private boolean myResizeStreaming;
+    private final boolean myResizable;
+
+    private final @Nullable String myApplicationIdSuffix;
 
     private boolean myDisposed;
     private boolean myMainFrame;
@@ -148,6 +116,9 @@ public class DesktopQtWindowImpl extends QtComponentDelegate<QMainWindow> implem
         if (owner instanceof DesktopQtWindowImpl qtWindow) {
             parent = qtWindow.toQtComponent();
         }
+
+        myResizable = options.isResizable();
+        myApplicationIdSuffix = options.getApplicationIdSuffix();
 
         myComponent = new QtWindow(parent);
         myComponent.setWindowTitle(title);
@@ -235,8 +206,17 @@ public class DesktopQtWindowImpl extends QtComponentDelegate<QMainWindow> implem
             return;
         }
 
-        myOwnedSize = new QSize(size.width(), size.height());
         myComponent.resize(size.width(), size.height());
+
+        applyFixedSize();
+    }
+
+    private void applyFixedSize() {
+        if (myResizable) {
+            return;
+        }
+
+        myComponent.setFixedSize(myComponent.size());
     }
 
     /**
@@ -250,7 +230,6 @@ public class DesktopQtWindowImpl extends QtComponentDelegate<QMainWindow> implem
         }
 
         mySize = bounds.size();
-        myOwnedSize = new QSize(bounds.width(), bounds.height());
         myBoundsApplied = true;
 
         if (!isAlive()) {
@@ -258,6 +237,8 @@ public class DesktopQtWindowImpl extends QtComponentDelegate<QMainWindow> implem
         }
 
         myComponent.setGeometry(bounds.minX(), bounds.minY(), bounds.width(), bounds.height());
+
+        applyFixedSize();
     }
 
     /**
@@ -298,118 +279,6 @@ public class DesktopQtWindowImpl extends QtComponentDelegate<QMainWindow> implem
 
     private boolean isStateManagedByUser() {
         return isMaximized() || isFullScreen();
-    }
-
-    /**
-     * Reports every resize of the frame and puts back the size consulo owns when the resize came from nowhere.
-     * <p/>
-     * A compositor may keep a geometry per application and hand it to whatever window of that application it sees
-     * next - the plasma "remember window positions" script does, on a repeating timer - so a frame which consulo
-     * sized and a frame which the compositor sized are two different things, and only the second is worth undoing.
-     * The size is put back rather than the whole geometry because a wayland top level is not told where it is: the
-     * position qt reports is the origin of the screen the frame sits on, not the frame.
-     * <p/>
-     * The report itself is off unless the {@code #consulo.desktop.qt.ui.impl.DesktopQtWindowImpl} category is
-     * turned on in the debug log settings.
-     */
-    private void resized(QSize oldSize, QSize newSize) {
-        long previousResizeNanos = myLastResizeNanos;
-        myLastResizeNanos = System.nanoTime();
-
-        myResizeStreaming = previousResizeNanos != 0 && myLastResizeNanos - previousResizeNanos < ourDragGapNanos;
-
-        QSize ownedSize = myOwnedSize;
-
-        boolean unsolicited = myMainFrame
-            && ownedSize != null
-            && !ownedSize.equals(newSize)
-            && !isStateManagedByUser()
-            && isAlive()
-            && myComponent.isVisible();
-
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("frame resized " + describe(oldSize) + " -> " + describe(newSize)
-                + ", owned=" + (ownedSize == null ? "none" : describe(ownedSize))
-                + ", origin=" + (unsolicited ? (isPointerDown() ? "user" : "external") : "consulo")
-                + ", maximized=" + myComponent.isMaximized()
-                + ", fullScreen=" + myComponent.isFullScreen()
-                + ", title=" + myComponent.windowTitle());
-        }
-
-        if (!unsolicited) {
-            myCorrections = 0;
-            return;
-        }
-
-        // the user dragging an edge of the frame is a new size to keep, not one to argue with. wayland gives the
-        // drag to the compositor and only tells the frame its new size, so no button is held anywhere and
-        // isPointerDown answers on x11 alone - a drag there was undone edge by edge. What a drag looks like on
-        // either is a stream of sizes tens of milliseconds apart, while a stored geometry arrives on its own
-        if (isPointerDown() || myResizeStreaming) {
-            myOwnedSize = newSize;
-            myCorrections = 0;
-            return;
-        }
-
-        if (myCorrections >= ourMaxSizeCorrections) {
-            LOG.warn("frame size " + describe(ownedSize) + " refused by the display server, keeping " + describe(newSize));
-
-            myOwnedSize = newSize;
-            myCorrections = 0;
-            return;
-        }
-
-        myCorrections++;
-
-        scheduleSizeCorrection();
-    }
-
-    /**
-     * The correction is queued rather than applied here - the widget is inside its own resize event, and resizing
-     * it again from there runs the layout under the pass which is already running.
-     * <p/>
-     * It waits out a drag gap first, so the opening move of a resize the frontend could not recognise as one is
-     * not undone before the moves that identify it have arrived. Whatever the frame ended up at by then is kept.
-     */
-    private void scheduleSizeCorrection() {
-        if (myCorrectionScheduled) {
-            return;
-        }
-
-        myCorrectionScheduled = true;
-
-        QTimer.singleShot((int) TimeUnit.NANOSECONDS.toMillis(ourDragGapNanos), () -> {
-            myCorrectionScheduled = false;
-
-            QSize ownedSize = myOwnedSize;
-            if (myDisposed || !isAlive() || ownedSize == null || isStateManagedByUser() || ownedSize.equals(myComponent.size())) {
-                return;
-            }
-
-            // more sizes arrived while this waited, so the frame is being dragged after all
-            if (isPointerDown() || isResizeStreaming()) {
-                myOwnedSize = myComponent.size();
-                myCorrections = 0;
-                return;
-            }
-
-            myComponent.resize(ownedSize);
-        });
-    }
-
-    /**
-     * Whether sizes are arriving faster than anything but a drag produces them.
-     */
-    private boolean isResizeStreaming() {
-        return myResizeStreaming || System.nanoTime() - myLastResizeNanos < ourDragGapNanos;
-    }
-
-    private static boolean isPointerDown() {
-        return QGuiApplication.mouseButtons().value() != 0;
-    }
-
-    private static String describe(QSize size) {
-        return size.width() + "x" + size.height();
     }
 
     @RequiredUIAccess
@@ -454,19 +323,33 @@ public class DesktopQtWindowImpl extends QtComponentDelegate<QMainWindow> implem
         if (!myComponent.isVisible()) {
             applyDialogRole();
             applyDefaultSize();
+            applyFixedSize();
 
             if (!myBoundsApplied) {
                 centerOnScreen();
             }
-
-            // whatever the window comes up with is what consulo owns from here on, so a geometry pushed at it
-            // afterwards is recognisable as one it never asked for
-            myOwnedSize = myComponent.size();
         }
 
-        myComponent.show();
+        showNative();
         myComponent.raise();
         myComponent.activateWindow();
+    }
+
+    private void showNative() {
+        String applicationIdSuffix = myApplicationIdSuffix;
+        if (applicationIdSuffix == null || myComponent.isVisible()) {
+            myComponent.show();
+            return;
+        }
+
+        String applicationId = QGuiApplication.desktopFileName();
+        QGuiApplication.setDesktopFileName(applicationId + "-" + applicationIdSuffix);
+        try {
+            myComponent.show();
+        }
+        finally {
+            QGuiApplication.setDesktopFileName(applicationId);
+        }
     }
 
     /**

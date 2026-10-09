@@ -45,6 +45,8 @@ public abstract class WelcomeFrameManager {
 
   public static final String DIMENSION_KEY = "WELCOME_SCREEN";
 
+  public static final String APPLICATION_ID_SUFFIX = "welcome";
+
   
   public static Size2D getDefaultWindowSize() {
     return new Size2D(800, 460);

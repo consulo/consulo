@@ -353,6 +353,10 @@ public class DesktopQtWindowFrame extends QObject {
             // a frame the compositor tiled changes its size and not its state, so the margin is answered here too
             applyFrameMargin();
 
+            if (type == QEvent.Type.Show) {
+                updateWindowState();
+            }
+
             myWindow.update();
             return false;
         }
@@ -410,7 +414,7 @@ public class DesktopQtWindowFrame extends QObject {
         Qt.Edges edges = new Qt.Edges();
 
         int margin = currentFrameMargin();
-        if (margin == 0) {
+        if (margin == 0 || myWindow.minimumSize().equals(myWindow.maximumSize())) {
             return edges;
         }
 
@@ -478,6 +482,8 @@ public class DesktopQtWindowFrame extends QObject {
 
         if (myOverlayControls != null) {
             myOverlayControls.updateWindowState();
+
+            placeOverlayControls();
         }
     }
 

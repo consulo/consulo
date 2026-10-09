@@ -69,8 +69,11 @@ public class DesktopQtWindowControls extends QWidget {
      * again, and every button is drawn dimmed while the window does not hold the focus.
      */
     public void updateWindowState() {
+        QWidget window = window();
+
+        myMaximizeButton.setVisible(!window.minimumSize().equals(window.maximumSize()));
         myMaximizeButton.setKind(
-            window().isMaximized() ? DesktopQtWindowButton.Kind.RESTORE : DesktopQtWindowButton.Kind.MAXIMIZE
+            window.isMaximized() ? DesktopQtWindowButton.Kind.RESTORE : DesktopQtWindowButton.Kind.MAXIMIZE
         );
 
         for (DesktopQtWindowButton button : myButtons) {
