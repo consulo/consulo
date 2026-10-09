@@ -17,19 +17,14 @@ package consulo.ide.impl.idea.ide.actions;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ActionImpl;
-import consulo.application.Application;
-import consulo.application.ReadAction;
-import consulo.application.impl.internal.IdeaModalityState;
-import consulo.application.util.function.ThrowableComputable;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorKeys;
 import consulo.dataContext.DataContext;
-import consulo.dataContext.DataManager;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.TargetElementUtil;
 import consulo.language.editor.documentation.DocumentationProvider;
-import consulo.language.editor.documentation.ExternalDocumentationHandler;
 import consulo.language.editor.documentation.ExternalDocumentationProvider;
+import consulo.language.editor.impl.internal.documentation.ExternalDocumentationOpener;
 import consulo.language.editor.internal.DocumentationManagerHelper;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -40,20 +35,10 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
 import consulo.ui.ex.awt.Messages;
-import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.popup.BaseListPopupStep;
-import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.ui.ex.popup.PopupStep;
-import consulo.util.collection.ArrayUtil;
-import consulo.util.collection.ContainerUtil;
 import consulo.util.concurrent.coroutine.Coroutine;
-import consulo.util.lang.StringUtil;
-import consulo.webBrowser.BrowserUtil;
 import org.jspecify.annotations.Nullable;
 
-import java.awt.*;
-import java.util.Collections;
 import java.util.List;
 
 @ActionImpl(id = "ExternalJavaDoc")
@@ -91,67 +76,18 @@ public class ExternalJavaDocAction extends DumbAwareAction implements AnActionWi
         showExternalJavadoc(element, originalElement, null, e.getDataContext());
     }
 
+    @RequiredUIAccess
     public static void showExternalJavadoc(
         PsiElement element,
-        PsiElement originalElement,
-        String docUrl,
+        @Nullable PsiElement originalElement,
+        @Nullable String docUrl,
         DataContext dataContext
     ) {
-        DocumentationProvider provider = DocumentationManagerHelper.getProviderFromElement(element);
-        if (provider instanceof ExternalDocumentationHandler externalDocumentationHandler
-            && externalDocumentationHandler.handleExternal(element, originalElement)) {
-            return;
-        }
         Project project = dataContext.getData(Project.KEY);
-        Component contextComponent = dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
-        Application application = Application.get();
-        application.executeOnPooledThread(() -> {
-            List<String> urls;
-            if (StringUtil.isEmptyOrSpaces(docUrl)) {
-                ThrowableComputable<List<String>, RuntimeException> action = () -> provider.getUrlFor(element, originalElement);
-                urls = ReadAction.compute(action);
-            }
-            else {
-                urls = Collections.singletonList(docUrl);
-            }
-            if (provider instanceof ExternalDocumentationProvider externalDocumentationProvider && urls != null && urls.size() > 1) {
-                for (String url : urls) {
-                    List<String> thisUrlList = Collections.singletonList(url);
-                    String doc = externalDocumentationProvider.fetchExternalDocumentation(project, element, thisUrlList);
-                    if (doc != null) {
-                        urls = thisUrlList;
-                        break;
-                    }
-                }
-            }
-            List<String> finalUrls = urls;
-            application.invokeLater(
-                () -> {
-                    if (ContainerUtil.isEmpty(finalUrls)) {
-                        if (element != null && provider instanceof ExternalDocumentationProvider externalDocumentationProvider
-                            && externalDocumentationProvider.canPromptToConfigureDocumentation(element)) {
-                            externalDocumentationProvider.promptToConfigureDocumentation(element);
-                        }
-                    }
-                    else if (finalUrls.size() == 1) {
-                        BrowserUtil.browse(finalUrls.get(0));
-                    }
-                    else {
-                        JBPopupFactory.getInstance().createListPopup(
-                            new BaseListPopupStep<String>("Choose external documentation root", ArrayUtil.toStringArray(finalUrls)) {
-                                @Override
-                                public PopupStep onChosen(String selectedValue, boolean finalChoice) {
-                                    BrowserUtil.browse(selectedValue);
-                                    return FINAL_CHOICE;
-                                }
-                            }
-                        ).showInBestPositionFor(DataManager.getInstance().getDataContext(contextComponent));
-                    }
-                },
-                IdeaModalityState.nonModal()
-            );
-        });
-
+        if (project == null) {
+            project = element.getProject();
+        }
+        ExternalDocumentationOpener.open(project, element, originalElement, docUrl, dataContext);
     }
 
     @RequiredReadAction

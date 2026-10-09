@@ -17,21 +17,30 @@ package consulo.desktop.qt.ui.impl.htmlView;
 
 import consulo.desktop.qt.ui.impl.DesktopQtCurrentInput;
 import consulo.desktop.qt.ui.impl.DesktopQtInputDetails;
+import consulo.desktop.qt.ui.impl.DesktopQtStyleApplier;
 import consulo.desktop.qt.ui.impl.QtComponentDelegate;
 import consulo.desktop.qt.ui.impl.image.DesktopQtImage;
 import consulo.logging.Logger;
 import consulo.ui.HtmlView;
 import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.HtmlViewDoubleClickEvent;
 import consulo.ui.event.HyperlinkEvent;
 import consulo.ui.image.Image;
+import consulo.ui.style.ComponentColors;
+import consulo.ui.impl.HtmlDocuments;
 import consulo.util.io.StreamUtil;
+import io.qt.core.QSize;
 import io.qt.core.QUrl;
 import io.qt.core.Qt;
+import io.qt.gui.QColor;
+import io.qt.gui.QDesktopServices;
 import io.qt.gui.QMouseEvent;
+import io.qt.gui.QPalette;
 import io.qt.gui.QPixmap;
 import io.qt.gui.QTextDocument;
 import io.qt.widgets.QFrame;
+import io.qt.widgets.QStyle;
 import io.qt.widgets.QTextBrowser;
 import io.qt.widgets.QWidget;
 import org.jspecify.annotations.Nullable;
@@ -76,6 +85,43 @@ public class DesktopQtHtmlViewImpl extends QtComponentDelegate<QTextBrowser> imp
         }
 
         @Override
+        protected void mouseReleaseEvent(QMouseEvent event) {
+            myClickedAnchor = anchorAt(event.position().toPoint());
+            try {
+                super.mouseReleaseEvent(event);
+            }
+            finally {
+                myClickedAnchor = null;
+            }
+        }
+
+        @Override
+        public QSize sizeHint() {
+            if (!mySizeToContent) {
+                return super.sizeHint();
+            }
+
+            QTextDocument layout = document().clone();
+            try {
+                layout.setTextWidth(CONTENT_WIDTH);
+                double width = Math.min(CONTENT_WIDTH, Math.ceil(layout.idealWidth() + layout.documentMargin() * 2));
+                layout.setTextWidth(width);
+
+                int frame = frameWidth() * 2;
+                int height = (int) Math.ceil(layout.size().height()) + frame;
+                int scrollBar = 0;
+                if (height > CONTENT_HEIGHT) {
+                    height = CONTENT_HEIGHT;
+                    scrollBar = style().pixelMetric(QStyle.PixelMetric.PM_ScrollBarExtent);
+                }
+                return new QSize((int) width + frame + scrollBar, height);
+            }
+            finally {
+                layout.dispose();
+            }
+        }
+
+        @Override
         protected void mouseDoubleClickEvent(QMouseEvent event) {
             super.mouseDoubleClickEvent(event);
 
@@ -87,9 +133,16 @@ public class DesktopQtHtmlViewImpl extends QtComponentDelegate<QTextBrowser> imp
         }
     }
 
+    private static final int CONTENT_WIDTH = 500;
+    private static final int CONTENT_HEIGHT = 500;
+
     private volatile @Nullable Function<String, Image> myImageResolver;
 
     private @Nullable String myPendingHtml;
+
+    private @Nullable String myClickedAnchor;
+
+    private boolean mySizeToContent;
 
     @Override
     protected QTextBrowser createQt(QWidget parent) {
@@ -109,16 +162,76 @@ public class DesktopQtHtmlViewImpl extends QtComponentDelegate<QTextBrowser> imp
         component.setOpenLinks(false);
         component.setOpenExternalLinks(false);
 
-        component.anchorClicked.connect(url ->
-            getListenerDispatcher(HyperlinkEvent.class)
-                .onEvent(new HyperlinkEvent(this, url.toString(), DesktopQtCurrentInput.current(component)))
-        );
+        component.anchorClicked.connect(url -> onLink(component, url));
+
+        QPalette palette = component.palette();
+        QColor separator = DesktopQtStyleApplier.themeColor(ComponentColors.SEPARATOR, palette.color(QPalette.ColorRole.Mid));
+        palette.setColor(QPalette.ColorGroup.Active, QPalette.ColorRole.WindowText, separator);
+        palette.setColor(QPalette.ColorGroup.Inactive, QPalette.ColorRole.WindowText, separator);
+        component.setPalette(palette);
 
         String pending = myPendingHtml;
         if (pending != null) {
             myPendingHtml = null;
 
-            component.setHtml(pending);
+            setHtml(component, pending);
+        }
+    }
+
+    private void onLink(QTextBrowser component, QUrl url) {
+        String href = linkHref(component, url);
+
+        if (myDataObject.hasListeners(HyperlinkEvent.class)) {
+            getListenerDispatcher(HyperlinkEvent.class).onEvent(new HyperlinkEvent(this, href, DesktopQtCurrentInput.current(component)));
+            return;
+        }
+
+        if (href.startsWith("#")) {
+            component.scrollToAnchor(href.substring(1));
+        }
+        else if (!url.isRelative()) {
+            QDesktopServices.openUrl(url);
+        }
+    }
+
+    private String linkHref(QTextBrowser component, QUrl url) {
+        String clicked = myClickedAnchor;
+        if (clicked != null && !clicked.isEmpty()) {
+            return clicked;
+        }
+
+        String focused = component.textCursor().charFormat().anchorHref();
+        if (focused != null && !focused.isEmpty()) {
+            return focused;
+        }
+        return url.toString();
+    }
+
+    private void setHtml(QTextBrowser component, String html) {
+        component.setHtml(html);
+
+        if (mySizeToContent) {
+            component.updateGeometry();
+        }
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void scrollToFragment(String fragment) {
+        QTextBrowser component = myComponent;
+        if (component != null && !fragment.isEmpty()) {
+            component.scrollToAnchor(fragment);
+        }
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void setSizeToContent(boolean sizeToContent) {
+        mySizeToContent = sizeToContent;
+
+        QTextBrowser component = myComponent;
+        if (component != null) {
+            component.updateGeometry();
         }
     }
 
@@ -163,13 +276,14 @@ public class DesktopQtHtmlViewImpl extends QtComponentDelegate<QTextBrowser> imp
         }
 
         if (UIAccess.isUIThread()) {
-            component.setHtml(document);
+            setHtml(component, document);
             return CompletableFuture.completedFuture(null);
         }
 
         return getUIAccess().giveAsync(() -> {
-            if (myComponent != null) {
-                myComponent.setHtml(document);
+            QTextBrowser current = myComponent;
+            if (current != null) {
+                setHtml(current, document);
             }
             return null;
         });
@@ -200,15 +314,7 @@ public class DesktopQtHtmlViewImpl extends QtComponentDelegate<QTextBrowser> imp
             head.append("<style>\n").append(inlineCss).append("\n</style>\n");
         }
 
-        if (head.isEmpty()) {
-            return renderData.html();
-        }
-
-        String html = renderData.html();
-
-        // a document which never opened a head has nowhere to put the sheet - the engine reads a leading style
-        // block just as well, so it is prepended instead
-        return html.contains("<head>") ? html.replace("<head>", "<head>" + head) : head + html;
+        return HtmlDocuments.withHead(renderData.html(), head.toString());
     }
 
     /**

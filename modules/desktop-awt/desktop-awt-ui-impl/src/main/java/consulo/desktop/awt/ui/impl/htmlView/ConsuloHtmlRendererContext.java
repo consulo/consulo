@@ -1,5 +1,6 @@
 package consulo.desktop.awt.ui.impl.htmlView;
 
+import consulo.ui.image.Image;
 import consulo.webBrowser.BrowserUtil;
 import org.cobraparser.html.AbstractHtmlRendererContext;
 import org.cobraparser.html.FormInput;
@@ -11,9 +12,9 @@ import org.w3c.dom.html.HTMLElement;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
 import java.net.URL;
 import java.util.Optional;
+import java.util.function.BiPredicate;
 import java.util.function.Function;
 
 class ConsuloHtmlRendererContext extends AbstractHtmlRendererContext {
@@ -21,9 +22,30 @@ class ConsuloHtmlRendererContext extends AbstractHtmlRendererContext {
 
     private final UserAgentContext myUserAgentContext;
 
-    public ConsuloHtmlRendererContext(HtmlPanel panel, Function<String, BufferedImage> imageResolver) {
+    private final BiPredicate<String, MouseEvent> myLinkHandler;
+
+    public ConsuloHtmlRendererContext(
+        HtmlPanel panel,
+        Function<String, Image> imageResolver,
+        BiPredicate<String, MouseEvent> linkHandler
+    ) {
         myHtmlPanel = panel;
         myUserAgentContext = new ConsuloUserAgentContext(imageResolver);
+        myLinkHandler = linkHandler;
+    }
+
+    @Override
+    public boolean onMouseClick(HTMLElement element, MouseEvent event) {
+        if (!"A".equalsIgnoreCase(element.getTagName())) {
+            return true;
+        }
+
+        String href = element.getAttribute("href");
+        if (href == null || href.isEmpty()) {
+            return true;
+        }
+
+        return !myLinkHandler.test(href, event);
     }
 
     @Override

@@ -16,6 +16,7 @@
 package consulo.ui;
 
 import consulo.disposer.Disposable;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ComponentEventListener;
 import consulo.ui.event.HtmlViewDoubleClickEvent;
 import consulo.ui.event.HyperlinkEvent;
@@ -70,6 +71,30 @@ public interface HtmlView extends Component {
      */
     void scrollToMarkdownSrcOffset(int offset);
 
+    /**
+     * Scrolls the rendered document to the element whose {@code id}, or the anchor whose {@code name}, is
+     * {@code fragment}. A document without such an element keeps its position.
+     */
+    @RequiredUIAccess
+    default void scrollToFragment(String fragment) {
+    }
+
+    /**
+     * Makes the preferred size of the view follow the rendered document rather than fill what it is given: as wide
+     * as the document up to a reading width the style chooses, and as tall as the document is at that width up to a
+     * limit of its own, past which the view scrolls. For a container sized by its content - a popup above all.
+     * <p>
+     * A container which sizes itself only once has to be told when the document changed.
+     */
+    @RequiredUIAccess
+    default void setSizeToContent(boolean sizeToContent) {
+    }
+
+    /**
+     * Reports a click on a link with the {@code href} exactly as the document wrote it, which may be something no
+     * browser could open. While nobody listens, the view opens an absolute url outside and scrolls to a
+     * {@code #fragment} link itself.
+     */
     default Disposable addHyperlinkListener(ComponentEventListener<Component, HyperlinkEvent> hyperlinkListener) {
         return addListener(HyperlinkEvent.class, hyperlinkListener);
     }

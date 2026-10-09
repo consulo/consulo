@@ -100,4 +100,5 @@ open module consulo.desktop.awt.ui.impl {
     provides consulo.ui.internal.UIInternal with consulo.desktop.awt.ui.impl.DesktopUIInternalImpl;
     provides consulo.ui.ex.awtUnsafe.internal.TargetAWTFacade with consulo.desktop.awt.ui.impl.facade.DesktopAWTTargetAWTImpl;
     provides com.formdev.flatlaf.FlatDefaultsAddon with consulo.desktop.awt.ui.impl.plaf2.flat.ConsuloFlatDefaultsAddon;
+    provides org.cobraparser.ua.ImageService with consulo.desktop.awt.ui.impl.htmlView.DesktopAWTHtmlImageService;
 }

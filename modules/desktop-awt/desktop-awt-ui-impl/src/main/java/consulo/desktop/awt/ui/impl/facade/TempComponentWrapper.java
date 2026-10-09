@@ -28,9 +28,12 @@ import consulo.ui.impl.PaddingBuilderImpl;
 import consulo.ui.color.ColorValue;
 import consulo.ui.event.ComponentEvent;
 import consulo.ui.event.ComponentEventListener;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.font.Font;
 import consulo.util.dataholder.Key;
 import org.jspecify.annotations.Nullable;
+
+import javax.swing.JComponent;
 
 
 /**
@@ -100,6 +103,19 @@ class TempComponentWrapper implements Component, ToSwingComponentWrapper, HasFoc
     @Override
     public <T> void putUserData(Key<T> key, @Nullable T value) {
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public @Nullable ColorValue getBackgroundColor() {
+        return myComponent.isBackgroundSet() ? TargetAWT.from(myComponent.getBackground()) : null;
+    }
+
+    @Override
+    public void setBackgroundColor(@Nullable ColorValue background) {
+        myComponent.setBackground(background == null ? null : TargetAWT.to(background));
+        if (background != null && myComponent instanceof JComponent jComponent) {
+            jComponent.setOpaque(true);
+        }
     }
 
     @Override

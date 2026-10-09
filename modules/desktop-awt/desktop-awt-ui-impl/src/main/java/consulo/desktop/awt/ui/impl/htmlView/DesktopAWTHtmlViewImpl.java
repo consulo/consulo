@@ -21,11 +21,13 @@ import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 import consulo.desktop.awt.ui.impl.event.DesktopAWTInputDetails;
 import consulo.ui.Component;
 import consulo.ui.HtmlView;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.HtmlViewDoubleClickEvent;
+import consulo.ui.event.HyperlinkEvent;
 import consulo.ui.ex.JBColor;
-import consulo.ui.ex.awt.ImageUtil;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.awt.JBUI;
 import consulo.ui.image.Image;
+import consulo.ui.impl.HtmlDocuments;
 import consulo.util.io.CharsetToolkit;
 import consulo.util.io.StreamUtil;
 import consulo.util.lang.Pair;
@@ -44,6 +46,7 @@ import org.cobraparser.html.parser.InputSourceImpl;
 import org.cobraparser.html.renderer.RBlock;
 import org.cobraparser.html.renderer.RBlockViewport;
 import org.cobraparser.ua.UserAgentContext;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
@@ -51,7 +54,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
@@ -66,14 +68,18 @@ import java.util.function.Function;
  */
 public class DesktopAWTHtmlViewImpl extends SwingComponentDelegate<DesktopAWTHtmlViewImpl.MyHtmlPanel> implements HtmlView {
     private static final int FOCUS_ELEMENT_DY = 100;
+    private static final int CONTENT_WIDTH = 500;
+    private static final int CONTENT_HEIGHT = 500;
 
     private volatile @Nullable Function<String, Image> myImageResolver;
+
+    private boolean mySizeToContent;
 
     public class MyHtmlPanel extends HtmlPanel implements FromSwingComponentWrapper {
         private final ConsuloHtmlRendererContext myContext;
 
         public MyHtmlPanel() {
-            myContext = new ConsuloHtmlRendererContext(this, DesktopAWTHtmlViewImpl.this::resolveImage);
+            myContext = new ConsuloHtmlRendererContext(this, DesktopAWTHtmlViewImpl.this::resolveImage, DesktopAWTHtmlViewImpl.this::onLink);
         }
 
         @Override
@@ -90,6 +96,25 @@ public class DesktopAWTHtmlViewImpl extends SwingComponentDelegate<DesktopAWTHtm
                 }
             });
             return blockPanel;
+        }
+
+        @Override
+        public Dimension getPreferredSize() {
+            Dimension size = super.getPreferredSize();
+            if (!mySizeToContent || isPreferredSizeSet()) {
+                return size;
+            }
+
+            int maxHeight = JBUI.scale(CONTENT_HEIGHT);
+            if (size.height <= maxHeight) {
+                return size;
+            }
+            return new Dimension(size.width + scrollBarWidth(), maxHeight);
+        }
+
+        private int scrollBarWidth() {
+            HtmlBlockPanel blockPanel = htmlBlockPanel;
+            return blockPanel != null && blockPanel.getRootRenderable() instanceof RBlock block ? block.getVScrollBarWidth() : 0;
         }
 
         @Override
@@ -124,7 +149,7 @@ public class DesktopAWTHtmlViewImpl extends SwingComponentDelegate<DesktopAWTHtm
             }
         }
 
-        String htmlToRender = html.replace("<head>", "<head>" + getCssLines(inlineCss));
+        String htmlToRender = HtmlDocuments.withHead(html, getCssLines(inlineCss));
 
         Application.get().executeOnPooledThread(() -> {
             try {
@@ -139,7 +164,12 @@ public class DesktopAWTHtmlViewImpl extends SwingComponentDelegate<DesktopAWTHtm
 
                     panel.setDocument(document, context);
 
-                    future.complete(null);
+                    SwingUtilities.invokeLater(() -> {
+                        if (mySizeToContent) {
+                            panel.revalidate();
+                        }
+                        future.complete(null);
+                    });
                 }
             }
             catch (IOException | SAXException ioe) {
@@ -156,33 +186,63 @@ public class DesktopAWTHtmlViewImpl extends SwingComponentDelegate<DesktopAWTHtm
         myImageResolver = imageResolver;
     }
 
-    /**
-     * An icon of the platform is painted into a raster rather than encoded and read back - the renderer wants a
-     * picture, and a trip through a file format on the way there would only cost the scaling of the icon.
-     */
-    private @Nullable BufferedImage resolveImage(String id) {
+    @Override
+    @RequiredUIAccess
+    public void setSizeToContent(boolean sizeToContent) {
+        mySizeToContent = sizeToContent;
+
+        MyHtmlPanel panel = toAWTComponent();
+        panel.setPreferredWidth(sizeToContent ? JBUI.scale(CONTENT_WIDTH) : -1);
+        panel.revalidate();
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void scrollToFragment(String fragment) {
+        MyHtmlPanel panel = toAWTComponent();
+        NodeImpl root = panel.getRootNode();
+        if (root == null || fragment.isEmpty()) {
+            return;
+        }
+
+        SimpleReference<Node> target = new SimpleReference<>();
+        root.visit(node -> {
+            if (target.get() == null && node instanceof Element element && isFragmentTarget(element, fragment)) {
+                target.set(node);
+            }
+        });
+
+        Node node = target.get();
+        if (node != null) {
+            panel.scrollTo(node);
+        }
+    }
+
+    private static boolean isFragmentTarget(Element element, String fragment) {
+        if (fragment.equals(element.getAttribute("id"))) {
+            return true;
+        }
+        return "A".equalsIgnoreCase(element.getTagName()) && fragment.equals(element.getAttribute("name"));
+    }
+
+    private boolean onLink(String href, MouseEvent event) {
+        if (hasListeners(HyperlinkEvent.class)) {
+            getListenerDispatcher(HyperlinkEvent.class).onEvent(
+                new HyperlinkEvent(this, href, DesktopAWTInputDetails.convert(toAWTComponent(), event))
+            );
+            return true;
+        }
+
+        if (href.startsWith("#")) {
+            scrollToFragment(href.substring(1));
+            return true;
+        }
+        return false;
+    }
+
+    private @Nullable Image resolveImage(String id) {
         Function<String, Image> resolver = myImageResolver;
-        Image image = resolver == null ? null : resolver.apply(id);
-        if (image == null) {
-            return null;
-        }
-
-        Icon icon = TargetAWT.to(image);
-        BufferedImage raster = ImageUtil.createImage(
-            Math.max(1, icon.getIconWidth()),
-            Math.max(1, icon.getIconHeight()),
-            BufferedImage.TYPE_INT_ARGB
-        );
-
-        Graphics2D graphics = raster.createGraphics();
-        try {
-            icon.paintIcon(null, graphics, 0, 0);
-        }
-        finally {
-            graphics.dispose();
-        }
-
-        return raster;
+        return resolver == null ? null : resolver.apply(id);
     }
 
     @Override

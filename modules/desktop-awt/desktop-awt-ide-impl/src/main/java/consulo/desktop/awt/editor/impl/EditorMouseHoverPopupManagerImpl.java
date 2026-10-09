@@ -4,6 +4,7 @@ package consulo.desktop.awt.editor.impl;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
+import consulo.application.ReadAction;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.internal.ProgressIndicatorBase;
 import consulo.application.internal.ProgressIndicatorUtils;
@@ -15,13 +16,18 @@ import consulo.codeEditor.impl.EditorSettingsExternalizable;
 import consulo.codeEditor.internal.EditorMouseHoverPopupControl;
 import consulo.codeEditor.util.AWTEditorUtil;
 import consulo.codeEditor.util.EditorUtil;
+import consulo.colorScheme.EditorColorsManager;
 import consulo.component.ProcessCanceledException;
 import consulo.desktop.awt.editor.impl.internal.MouseMovementTracker;
-import consulo.desktop.awt.language.editor.documentation.DocumentationComponent;
-import consulo.desktop.awt.language.editor.documentation.DocumentationManagerImpl;
 import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.language.editor.impl.internal.daemon.DaemonCodeAnalyzerImpl;
+import consulo.language.editor.impl.internal.documentation.DocumentationOpenInToolWindowAction;
+import consulo.language.editor.impl.internal.documentation.DocumentationPage;
+import consulo.language.editor.impl.internal.documentation.DocumentationPageBuilder;
+import consulo.language.editor.impl.internal.documentation.DocumentationSettings;
+import consulo.language.editor.impl.internal.documentation.DocumentationViewImpl;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.tooltips.TooltipActionProvider;
 import consulo.ide.impl.idea.codeInsight.hint.LineTooltipRenderer;
 import consulo.ide.impl.idea.ui.LightweightHintImpl;
@@ -46,8 +52,6 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiWhiteSpace;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.project.ui.wm.ToolWindowId;
-import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.JBUI;
@@ -57,11 +61,11 @@ import consulo.ui.ex.awt.hint.HintHint;
 import consulo.ui.ex.awt.hint.LightweightHint;
 import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.ui.ex.awt.util.Alarm;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
-import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.util.lang.ref.SoftReference;
@@ -488,6 +492,7 @@ public final class EditorMouseHoverPopupManagerImpl implements EditorMouseHoverP
             }
 
             String quickDocMessage = null;
+            DocumentationPage quickDocPage = null;
             SimpleReference<PsiElement> targetElementRef = new SimpleReference<>();
             if (elementForQuickDoc != null) {
                 PsiElement element = getElementForQuickDoc();
@@ -511,6 +516,17 @@ public final class EditorMouseHoverPopupManagerImpl implements EditorMouseHoverP
                     if (!targetElementRef.isNull()) {
                         quickDocMessage = documentationManager.generateDocumentation(targetElementRef.get(), element, true);
                     }
+                    if (quickDocMessage != null) {
+                        String documentation = quickDocMessage;
+                        PsiElement target = targetElementRef.get();
+                        quickDocPage = ReadAction.compute(() -> target.isValid() ? DocumentationPageBuilder.build(
+                            target,
+                            documentation,
+                            null,
+                            null,
+                            DocumentationManagerHelper.getProviderFromElement(target, element)
+                        ) : null);
+                    }
                 }
                 catch (IndexNotReadyException | ProcessCanceledException ignored) {
                 }
@@ -518,7 +534,10 @@ public final class EditorMouseHoverPopupManagerImpl implements EditorMouseHoverP
                     LOG.warn(e);
                 }
             }
-            return info == null && quickDocMessage == null ? null : new Info(info, quickDocMessage, targetElementRef.get());
+            if (quickDocPage == null) {
+                quickDocMessage = null;
+            }
+            return info == null && quickDocMessage == null ? null : new Info(info, quickDocMessage, quickDocPage, targetElementRef.get());
         }
 
         private enum Relation {
@@ -532,22 +551,28 @@ public final class EditorMouseHoverPopupManagerImpl implements EditorMouseHoverP
         private final HighlightInfo highlightInfo;
 
         private final String quickDocMessage;
+        private final @Nullable DocumentationPage quickDocPage;
         private final WeakReference<PsiElement> quickDocElement;
 
-        private Info(HighlightInfo highlightInfo, String quickDocMessage, PsiElement quickDocElement) {
+        private Info(
+            HighlightInfo highlightInfo,
+            String quickDocMessage,
+            @Nullable DocumentationPage quickDocPage,
+            PsiElement quickDocElement
+        ) {
             assert highlightInfo != null || quickDocMessage != null;
             this.highlightInfo = highlightInfo;
             this.quickDocMessage = quickDocMessage;
+            this.quickDocPage = quickDocPage;
             this.quickDocElement = new WeakReference<>(quickDocElement);
         }
 
         @RequiredUIAccess
         private JComponent createComponent(Editor editor, PopupBridge popupBridge, boolean requestFocus) {
-            boolean quickDocShownInPopup =
-                quickDocMessage != null && ToolWindowManager.getInstance(Objects.requireNonNull(editor.getProject()))
-                    .getToolWindow(ToolWindowId.DOCUMENTATION) == null;
+            boolean quickDocShownInPopup = quickDocMessage != null
+                && !DocumentationManager.getInstance(Objects.requireNonNull(editor.getProject())).hasActiveDockedDocWindow();
             JComponent c1 = createHighlightInfoComponent(editor, !quickDocShownInPopup, popupBridge, requestFocus);
-            DocumentationComponent c2 = createQuickDocComponent(editor, c1 != null, popupBridge);
+            JComponent c2 = createQuickDocComponent(editor, c1 != null, popupBridge);
             assert quickDocShownInPopup == (c2 != null);
             if (c1 == null && c2 == null) {
                 return null;
@@ -665,15 +690,15 @@ public final class EditorMouseHoverPopupManagerImpl implements EditorMouseHoverP
         }
 
         @RequiredUIAccess
-        private @Nullable DocumentationComponent createQuickDocComponent(Editor editor, boolean deEmphasize, PopupBridge popupBridge) {
-            if (quickDocMessage == null) {
+        private @Nullable JComponent createQuickDocComponent(Editor editor, boolean deEmphasize, PopupBridge popupBridge) {
+            DocumentationPage page = quickDocPage;
+            if (quickDocMessage == null || page == null) {
                 return null;
             }
             PsiElement element = quickDocElement.get();
             Project project = Objects.requireNonNull(editor.getProject());
             DocumentationManager documentationManager = DocumentationManager.getInstance(project);
-            ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.DOCUMENTATION);
-            if (toolWindow != null) {
+            if (documentationManager.hasActiveDockedDocWindow()) {
                 if (element != null) {
                     documentationManager.showJavaDocInfo(
                         editor,
@@ -688,47 +713,44 @@ public final class EditorMouseHoverPopupManagerImpl implements EditorMouseHoverP
                 }
                 return null;
             }
-            class MyDocComponent extends DocumentationComponent {
-                @RequiredUIAccess
-                private MyDocComponent() {
-                    super((DocumentationManagerImpl) documentationManager, false);
-                }
 
-                @Override
-                @RequiredUIAccess
-                protected void showHint() {
+            DocumentationViewImpl view = new DocumentationViewImpl(
+                project,
+                project.getApplication().getInstance(DocumentationSettings.class),
+                EditorColorsManager.getInstance(),
+                browser -> List.of(new DocumentationOpenInToolWindowAction(browser, () -> {
                     AbstractPopup popup = popupBridge.getPopup();
                     if (popup != null) {
-                        validatePopupSize(popup);
+                        popup.cancel();
                     }
+                }))
+            );
+            view.setSizeToContent(true);
+
+            Disposer.register(view, view.addRenderListener(() -> {
+                AbstractPopup popup = popupBridge.getPopup();
+                if (popup != null) {
+                    validatePopupSize(popup);
                 }
-            }
-            DocumentationComponent component = new MyDocComponent();
-            if (deEmphasize) {
-                component.setBorder(IdeBorderFactory.createBorder(UIUtil.getTooltipSeparatorColor(), SideBorder.TOP));
-            }
-            component.setData(element, quickDocMessage, null, null, null);
-            component.setToolwindowCallback(() -> {
-                PsiElement docElement = component.getElement();
-                documentationManager.createToolWindow(docElement, DocumentationManagerHelper.getOriginalElement(docElement));
-                ToolWindow createdToolWindow = ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.DOCUMENTATION);
-                if (createdToolWindow != null) {
-                    createdToolWindow.setAutoHide(false);
-                }
+            }));
+            Disposer.register(view, view.addNavigateListener(() -> {
                 AbstractPopup popup = popupBridge.getPopup();
                 if (popup != null) {
                     popup.cancel();
                 }
-            });
-            popupBridge.performWhenAvailable(component::setHint);
-            EditorUtil.disposeWithEditor(editor, component);
+            }));
+
+            view.getBrowser().showPage(page);
+
+            JComponent component = (JComponent) TargetAWT.to(view.getComponent());
+            if (deEmphasize) {
+                component.setBorder(IdeBorderFactory.createBorder(UIUtil.getTooltipSeparatorColor(), SideBorder.TOP));
+            }
+
+            popupBridge.performOnCancel(() -> Disposer.dispose(view));
+            EditorUtil.disposeWithEditor(editor, view);
             return component;
         }
-    }
-
-    public @Nullable DocumentationComponent getDocumentationComponent() {
-        AbstractPopup hint = getCurrentHint();
-        return hint == null ? null : UIUtil.findComponentOfType(hint.getComponent(), DocumentationComponent.class);
     }
 
     private static class PopupBridge {
@@ -794,9 +816,9 @@ public final class EditorMouseHoverPopupManagerImpl implements EditorMouseHoverP
 
     private static class CombinedPopupLayout implements LayoutManager {
         private final JComponent highlightInfoComponent;
-        private final DocumentationComponent quickDocComponent;
+        private final JComponent quickDocComponent;
 
-        private CombinedPopupLayout(JComponent highlightInfoComponent, DocumentationComponent quickDocComponent) {
+        private CombinedPopupLayout(JComponent highlightInfoComponent, JComponent quickDocComponent) {
             this.highlightInfoComponent = highlightInfoComponent;
             this.quickDocComponent = quickDocComponent;
         }

@@ -16,13 +16,18 @@
 package consulo.web.ui.impl.internal.htmlView;
 
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.dom.DomEvent;
 import consulo.logging.Logger;
 import consulo.util.io.StreamUtil;
 import consulo.util.lang.StringUtil;
 import consulo.ui.Component;
 import consulo.ui.HtmlView;
 import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.HtmlViewDoubleClickEvent;
+import consulo.ui.event.HyperlinkEvent;
+import consulo.ui.event.details.InputDetails;
+import consulo.ui.impl.HtmlDocuments;
 import consulo.web.ui.impl.internal.WebColors;
 import consulo.ui.style.StyleManager;
 import consulo.ui.style.Style;
@@ -59,8 +64,38 @@ public class WebHtmlViewImpl extends VaadinComponentDelegate<WebHtmlViewImpl.Vaa
 
     private static final String RENDER_SCRIPT = """
         const root = this.shadowRoot || this.attachShadow({mode: 'open'});
+        if (!root.consuloLinks) {
+            root.consuloLinks = true;
+            root.addEventListener('click', event => {
+                const link = event.composedPath().find(node => node.tagName === 'A' && node.hasAttribute('href'));
+                if (!link) {
+                    return;
+                }
+                event.preventDefault();
+                const linkEvent = new MouseEvent('consulo-link', event);
+                linkEvent.consuloHref = link.getAttribute('href');
+                this.dispatchEvent(linkEvent);
+            });
+        }
         root.innerHTML = $0;
         """;
+
+    private static final String LINK_EVENT = "consulo-link";
+    private static final String LINK_HREF = "event.consuloHref";
+
+    private static final String SCROLL_TO_FRAGMENT_SCRIPT = """
+        const root = this.shadowRoot;
+        if (root) {
+            const fragment = $0;
+            const target = root.getElementById(fragment) || root.querySelector('a[name="' + CSS.escape(fragment) + '"]');
+            if (target) {
+                target.scrollIntoView({block: 'start'});
+            }
+        }
+        """;
+
+    private static final String CONTENT_MAX_WIDTH = "min(500px, 90vw)";
+    private static final String CONTENT_MAX_HEIGHT = "min(500px, 70vh)";
 
     /**
      * An {@code img} of the document which names an image of the platform. The whole tag is taken over rather
@@ -120,6 +155,56 @@ public class WebHtmlViewImpl extends VaadinComponentDelegate<WebHtmlViewImpl.Vaa
             "dblclick",
             details -> getListenerDispatcher(HtmlViewDoubleClickEvent.class).onEvent(new HtmlViewDoubleClickEvent(this, details))
         );
+
+        WebInputDetails.addClickEventListener(getVaadinComponent().getElement(), LINK_EVENT, this::onLink).addEventData(LINK_HREF);
+    }
+
+    @RequiredUIAccess
+    private void onLink(DomEvent event, InputDetails details) {
+        String href = event.getEventData().path(LINK_HREF).asString("");
+        if (href.isEmpty()) {
+            return;
+        }
+
+        if (dataObject().hasListeners(HyperlinkEvent.class)) {
+            getListenerDispatcher(HyperlinkEvent.class).onEvent(new HyperlinkEvent(this, href, details));
+            return;
+        }
+
+        if (href.startsWith("#")) {
+            scrollToFragment(href.substring(1));
+        }
+        else if (href.contains("://")) {
+            getVaadinComponent().getUI().ifPresent(ui -> ui.getPage().open(href, "_blank"));
+        }
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void scrollToFragment(String fragment) {
+        if (!fragment.isEmpty()) {
+            getVaadinComponent().getElement().executeJs(SCROLL_TO_FRAGMENT_SCRIPT, fragment);
+        }
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void setSizeToContent(boolean sizeToContent) {
+        Vaadin component = getVaadinComponent();
+        if (sizeToContent) {
+            component.setSizeUndefined();
+            component.getStyle().set("display", "block");
+            component.getStyle().set("width", "max-content");
+            component.getStyle().set("max-width", CONTENT_MAX_WIDTH);
+            component.getStyle().set("max-height", CONTENT_MAX_HEIGHT);
+        }
+        else {
+            component.getStyle().remove("display");
+            component.getStyle().remove("width");
+            component.getStyle().remove("max-width");
+            component.getStyle().remove("max-height");
+            component.setSizeFull();
+        }
     }
 
     @Override
@@ -246,6 +331,9 @@ public class WebHtmlViewImpl extends VaadinComponentDelegate<WebHtmlViewImpl.Vaa
             .append("::-webkit-scrollbar-corner { background-color: transparent; }\n")
             .append("::-webkit-scrollbar-thumb { background-color: var(--scrollbar-thumb); border-radius: 5px; }\n")
             .append("::-webkit-scrollbar-thumb:hover { background-color: var(--scrollbar-hover-thumb); }\n")
+            .append("hr { border: none; border-top: 1px solid ")
+            .append(WebColors.toCssColor(style.getColorValue(ComponentColors.SEPARATOR)))
+            .append("; height: 0; }\n")
             .append("</style>\n");
     }
 
@@ -291,6 +379,6 @@ public class WebHtmlViewImpl extends VaadinComponentDelegate<WebHtmlViewImpl.Vaa
             head.append("<style>\n").append(toShadowCss(inlineCss)).append("\n</style>\n");
         }
 
-        return renderData.html().replace("<head>", "<head>" + head);
+        return HtmlDocuments.withHead(renderData.html(), head.toString());
     }
 }

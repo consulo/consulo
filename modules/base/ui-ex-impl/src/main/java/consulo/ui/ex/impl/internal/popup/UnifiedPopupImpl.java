@@ -344,17 +344,15 @@ public abstract class UnifiedPopupImpl implements JBPopup, AnchoredPopup {
 
     @Override
     public void setLocation(Point screenPoint) {
-        throw new UnsupportedOperationException();
     }
 
     @Override
     public void setSize(Dimension size) {
-        throw new UnsupportedOperationException();
     }
 
     @Override
     public Dimension getSize() {
-        throw new UnsupportedOperationException();
+        return new Dimension();
     }
 
     @Override
@@ -364,12 +362,10 @@ public abstract class UnifiedPopupImpl implements JBPopup, AnchoredPopup {
 
     @Override
     public void setMinimumSize(@Nullable Dimension size) {
-        throw new UnsupportedOperationException();
     }
 
     @Override
     public void moveToFitScreen() {
-        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -378,8 +374,15 @@ public abstract class UnifiedPopupImpl implements JBPopup, AnchoredPopup {
     }
 
     @Override
+    @RequiredUIAccess
     public void pack(boolean width, boolean height) {
-        throw new UnsupportedOperationException();
+        if (width || height) {
+            packSurface();
+        }
+    }
+
+    @RequiredUIAccess
+    protected void packSurface() {
     }
 
     @Override

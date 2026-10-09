@@ -15,10 +15,8 @@
  */
 package consulo.desktop.awt.ui.impl.htmlView;
 
-import com.github.weisj.jsvg.SVGDocument;
-import com.github.weisj.jsvg.attributes.ViewBox;
-import com.github.weisj.jsvg.geometry.size.FloatSize;
-import com.github.weisj.jsvg.parser.SVGLoader;
+import consulo.ui.HtmlView;
+import consulo.ui.image.Image;
 import org.cobraparser.ua.ImageResponse;
 import org.cobraparser.ua.NetworkRequest;
 import org.cobraparser.ua.NetworkRequestListener;
@@ -26,12 +24,6 @@ import org.cobraparser.ua.UserAgentContext;
 import org.jspecify.annotations.Nullable;
 import org.w3c.dom.Document;
 
-import consulo.ui.HtmlView;
-
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -57,7 +49,7 @@ public class ConsuloNetworkRequest implements NetworkRequest {
 
     private final List<NetworkRequestListener> listeners = new CopyOnWriteArrayList<>();
 
-    private final @Nullable Function<String, BufferedImage> imageResolver;
+    private final @Nullable Function<String, Image> imageResolver;
 
     private volatile int readyState = STATE_UNINITIALIZED;
     private volatile int status = 0;
@@ -65,14 +57,14 @@ public class ConsuloNetworkRequest implements NetworkRequest {
     private volatile URL requestUrl;
     private volatile String classpathResource;
     private volatile String imageId;
-    private volatile Image resolvedImage;
+    private volatile @Nullable Image resolvedImage;
     private volatile boolean async;
 
     public ConsuloNetworkRequest() {
         this(null);
     }
 
-    public ConsuloNetworkRequest(@Nullable Function<String, BufferedImage> imageResolver) {
+    public ConsuloNetworkRequest(@Nullable Function<String, Image> imageResolver) {
         this.imageResolver = imageResolver;
     }
 
@@ -96,55 +88,26 @@ public class ConsuloNetworkRequest implements NetworkRequest {
     public ImageResponse getResponseImage() {
         Image resolved = resolvedImage;
         if (resolved != null) {
-            return new ImageResponse(ImageResponse.State.loaded, resolved);
+            return new ImageResponse(ImageResponse.State.loaded, new DesktopAWTHtmlImage(resolved));
         }
 
         byte[] b = responseBytes;
         if (b == null) {
             return new ImageResponse(ImageResponse.State.error, null);
         }
-        if (isSvgContent(b)) {
-            return renderSvg(b);
-        }
         try {
-            Image img = ImageIO.read(new ByteArrayInputStream(b));
-            if (img == null) {
-                return new ImageResponse(ImageResponse.State.error, null);
-            }
-            return new ImageResponse(ImageResponse.State.loaded, img);
+            Image image = Image.fromBytes(isSvgContent(b) ? Image.ImageType.SVG : Image.ImageType.PNG, b);
+            return new ImageResponse(ImageResponse.State.loaded, new DesktopAWTHtmlImage(image));
         }
-        catch (IOException e) {
+        catch (IOException | RuntimeException e) {
             return new ImageResponse(ImageResponse.State.error, null);
         }
     }
 
     private static boolean isSvgContent(byte[] bytes) {
         int checkLen = Math.min(bytes.length, 512);
-        String head = new String(bytes, 0, checkLen, java.nio.charset.StandardCharsets.UTF_8);
+        String head = new String(bytes, 0, checkLen, StandardCharsets.UTF_8);
         return head.contains("<svg");
-    }
-
-    private static ImageResponse renderSvg(byte[] bytes) {
-        try {
-            SVGDocument doc = new SVGLoader().load(new ByteArrayInputStream(bytes));
-            if (doc == null) {
-                return new ImageResponse(ImageResponse.State.error, null);
-            }
-            FloatSize size = doc.size();
-            int w = Math.max(1, (int) Math.ceil(size.width));
-            int h = Math.max(1, (int) Math.ceil(size.height));
-            BufferedImage img = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-            var g = img.createGraphics();
-            g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-            javax.swing.JComponent component = null;
-            doc.render(component, g, new ViewBox(0, 0, w, h));
-            g.dispose();
-            return new ImageResponse(ImageResponse.State.loaded, img);
-        }
-        catch (Exception e) {
-            return new ImageResponse(ImageResponse.State.error, null);
-        }
     }
 
     @Override
@@ -287,7 +250,7 @@ public class ConsuloNetworkRequest implements NetworkRequest {
     }
 
     private void resolveImage(String id) {
-        Function<String, BufferedImage> resolver = imageResolver;
+        Function<String, Image> resolver = imageResolver;
         resolvedImage = resolver == null ? null : resolver.apply(id);
         status = resolvedImage == null ? 404 : 200;
     }

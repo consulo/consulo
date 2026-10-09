@@ -615,10 +615,20 @@ intention.underscores.in.literals.family:
     text: Underscores in numeric literals
 intentions.category.ejb:
     text: EJB
+javadoc.action.auto.update:
+    text: Auto-Update from Source
 javadoc.action.back:
     text: Back
+javadoc.action.edit.source:
+    text: Edit Source
+javadoc.action.font.size:
+    text: Font Size
 javadoc.action.forward:
     text: Forward
+javadoc.action.open.in.tool.window:
+    text: Open in Tool Window
+javadoc.action.show.in.popup:
+    text: Show in Popup
 javadoc.action.view.external:
     text: View External Documentation
 javadoc.candiates:
@@ -639,8 +649,18 @@ javadoc.documentation.not.found.title:
     text: No Documentation
 javadoc.error.resolving.url:
     text: Couldn''t resolve URL <i>{0}</i> <p>Configuring paths to API docs in <a href="open://Project Settings">project settings</a> might help
+javadoc.external.documentation:
+    text: External documentation
+javadoc.external.documentation.for:
+    text: External documentation for `{0}`
+javadoc.external.documentation.on.host:
+    text: Documentation on {0}
+javadoc.external.element.on.host:
+    text: '`{0}` on {1}'
 javadoc.external.fetch.error.message:
     text: 'Cannot fetch remote documentation: internal error'
+javadoc.external.root.choose.title:
+    text: Choose External Documentation Root
 javadoc.fetching.progress:
     text: Fetching Documentation...
 javadoc.info.title:

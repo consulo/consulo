@@ -1,6 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.codeInsight.documentation;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.application.AllIcons;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
@@ -34,6 +35,8 @@ import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
+@Deprecated
+@DeprecationInfo("Documentation no longer uses it - see DocumentationManager. Kept until the bytecode viewer of consulo-java is ported")
 public abstract class DockablePopupManager<T extends JComponent & Disposable> {
     protected ToolWindow myToolWindow;
     private Runnable myAutoUpdateRequest;

@@ -1,17 +1,17 @@
 package consulo.desktop.awt.ui.impl.htmlView;
 
 import consulo.application.Application;
+import consulo.ui.image.Image;
 import org.cobraparser.ua.NetworkRequest;
 import org.cobraparser.ua.UserAgentContext;
 
-import java.awt.image.BufferedImage;
 import java.net.URL;
 import java.util.function.Function;
 
 class ConsuloUserAgentContext implements UserAgentContext {
-    private final Function<String, BufferedImage> myImageResolver;
+    private final Function<String, Image> myImageResolver;
 
-    ConsuloUserAgentContext(Function<String, BufferedImage> imageResolver) {
+    ConsuloUserAgentContext(Function<String, Image> imageResolver) {
         myImageResolver = imageResolver;
     }
 

@@ -60,4 +60,11 @@ public class SandClass extends StubBasedPsiElementBase<SandClassStub> implements
         return findChildByType(SandTokens.IDENTIFIER);
     }
 
+    @Override
+    @RequiredReadAction
+    public int getTextOffset() {
+        PsiElement nameIdentifier = getNameIdentifier();
+        return nameIdentifier != null ? nameIdentifier.getTextOffset() : super.getTextOffset();
+    }
+
 }

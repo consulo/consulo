@@ -125,6 +125,15 @@ public class UnifiedComponentPopupImpl extends UnifiedPopupImpl {
     }
 
     @Override
+    @RequiredUIAccess
+    protected void packSurface() {
+        Popup popup = myPopup;
+        if (popup != null && popup.isVisible()) {
+            popup.pack();
+        }
+    }
+
+    @Override
     public boolean canClose() {
         Supplier<Boolean> cancelCallback = myCancelCallback;
         return cancelCallback == null || Boolean.TRUE.equals(cancelCallback.get());

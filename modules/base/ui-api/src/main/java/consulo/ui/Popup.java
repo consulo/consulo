@@ -45,6 +45,14 @@ public sealed interface Popup extends Component, Disposable permits LightPopup, 
     }
 
     /**
+     * Fits the popup to its content again, for content whose preferred size changed while the popup was up. A popup
+     * which follows its content by itself does nothing.
+     */
+    @RequiredUIAccess
+    default void pack() {
+    }
+
+    /**
      * Opens the popup at a point inside {@code target} rather than against the component as a whole. Only the
      * frontend can measure where the target ended up, so a popup raised over a row or a caret is placed by it.
      *

@@ -94,6 +94,8 @@ public abstract class DesktopQtPopupImpl extends QtComponentDelegate<QWidget> im
             path.addRoundedRect(new QRectF(0, 0, width(), height()), ourCornerRadius, ourCornerRadius);
 
             setMask(new QRegion(path.toFillPolygon().toPolygon()));
+
+            placeSizeGrip();
         }
 
         @Override
@@ -157,6 +159,8 @@ public abstract class DesktopQtPopupImpl extends QtComponentDelegate<QWidget> im
 
     private final DismissWatcher myDismissWatcher = new DismissWatcher();
 
+    private @Nullable QSizeGrip mySizeGrip;
+
     private @Nullable QLabel myTitleLabel;
     private @Nullable QtComponentDelegate<?> myContent;
 
@@ -198,7 +202,10 @@ public abstract class DesktopQtPopupImpl extends QtComponentDelegate<QWidget> im
         myComponent.setLayout(myLayout);
 
         if (options.isResizable()) {
-            myLayout.addWidget(new QSizeGrip(myComponent), 0, Qt.AlignmentFlag.AlignRight, Qt.AlignmentFlag.AlignBottom);
+            QSizeGrip sizeGrip = new QSizeGrip(myComponent);
+            sizeGrip.resize(sizeGrip.sizeHint());
+            mySizeGrip = sizeGrip;
+            placeSizeGrip();
         }
 
         TargetQt.register(myComponent, this);
@@ -277,6 +284,18 @@ public abstract class DesktopQtPopupImpl extends QtComponentDelegate<QWidget> im
 
         // nothing lays a window out from above, so a popup is only ever the size it was told to take
         myComponent.adjustSize();
+
+        placeSizeGrip();
+    }
+
+    private void placeSizeGrip() {
+        QSizeGrip sizeGrip = mySizeGrip;
+        if (sizeGrip == null) {
+            return;
+        }
+
+        sizeGrip.move(myComponent.width() - sizeGrip.width() - 1, myComponent.height() - sizeGrip.height() - 1);
+        sizeGrip.raise();
     }
 
     /**
@@ -469,6 +488,19 @@ public abstract class DesktopQtPopupImpl extends QtComponentDelegate<QWidget> im
     protected void checkNotDisposed() {
         if (myDisposed) {
             throw new IllegalArgumentException("Popup already disposed");
+        }
+    }
+
+    @RequiredUIAccess
+    public void pack() {
+        if (myDisposed) {
+            return;
+        }
+
+        myComponent.adjustSize();
+
+        if (myComponent.isVisible()) {
+            myComponent.move(clampToScreen(myComponent.pos()));
         }
     }
 
