@@ -6,10 +6,12 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.execution.configuration.RunConfigurationBase;
+import consulo.execution.coverage.localize.ExecutionCoverageLocalize;
 import consulo.execution.coverage.view.CoverageViewExtension;
 import consulo.execution.test.AbstractTestProxy;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
+import consulo.localize.LocalizeValue;
 import consulo.module.Module;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
@@ -172,11 +174,7 @@ public abstract class CoverageEngine {
      * @param module
      * @return files
      */
-    public Set<File> getCorrespondingOutputFiles(
-        PsiFile srcFile,
-        @Nullable Module module,
-        CoverageSuitesBundle suite
-    ) {
+    public Set<File> getCorrespondingOutputFiles(PsiFile srcFile, @Nullable Module module, CoverageSuitesBundle suite) {
         VirtualFile virtualFile = srcFile.getVirtualFile();
         return virtualFile == null ? Collections.<File>emptySet() : Collections.singleton(VirtualFileUtil.virtualToIoFile(virtualFile));
     }
@@ -187,11 +185,7 @@ public abstract class CoverageEngine {
      * @param module
      * @param chooseSuiteAction @return True if should stop and wait compilation (e.g. for Java). False if we can ignore output (e.g. for Ruby)
      */
-    public abstract boolean recompileProjectAndRerunAction(
-        Module module,
-        CoverageSuitesBundle suite,
-        Runnable chooseSuiteAction
-    );
+    public abstract boolean recompileProjectAndRerunAction(Module module, CoverageSuitesBundle suite, Runnable chooseSuiteAction);
 
     /**
      * Qualified name same as in coverage raw project data
@@ -210,7 +204,6 @@ public abstract class CoverageEngine {
         return null;
     }
 
-    
     public abstract Set<String> getQualifiedNames(PsiFile sourceFile);
 
     /**
@@ -256,7 +249,7 @@ public abstract class CoverageEngine {
     /**
      * Content of brief report which will be shown by click on coverage icon
      */
-    public String generateBriefReport(
+    public LocalizeValue generateBriefReport(
         Editor editor,
         PsiFile psiFile,
         int lineNumber,
@@ -265,7 +258,7 @@ public abstract class CoverageEngine {
         @Nullable CoverageLine lineData
     ) {
         int hits = lineData == null ? 0 : lineData.getHits();
-        return "Hits: " + hits;
+        return ExecutionCoverageLocalize.hitsTitle(hits);
     }
 
     public abstract List<PsiElement> findTestsByNames(String[] testNames, Project project);
@@ -275,19 +268,11 @@ public abstract class CoverageEngine {
     /**
      * @return true to enable 'Generate Coverage Report...' action
      */
-    public boolean isReportGenerationAvailable(
-        Project project,
-        DataContext dataContext,
-        CoverageSuitesBundle currentSuite
-    ) {
+    public boolean isReportGenerationAvailable(Project project, DataContext dataContext, CoverageSuitesBundle currentSuite) {
         return false;
     }
 
-    public void generateReport(
-        Project project,
-        DataContext dataContext,
-        CoverageSuitesBundle currentSuite
-    ) {
+    public void generateReport(Project project, DataContext dataContext, CoverageSuitesBundle currentSuite) {
     }
 
     public abstract String getPresentableText();

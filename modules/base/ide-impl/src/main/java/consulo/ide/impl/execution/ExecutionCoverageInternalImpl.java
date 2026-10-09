@@ -56,7 +56,7 @@ import java.util.function.Function;
  */
 @ServiceImpl
 @Singleton
-public class ExecutionCoverageInternalmpl implements ExecutionCoverageInternal {
+public class ExecutionCoverageInternalImpl implements ExecutionCoverageInternal {
     @Override
     @RequiredUIAccess
     public CompletableFuture<?> showExportDialog(Project project, String presentableName) {
@@ -73,11 +73,11 @@ public class ExecutionCoverageInternalmpl implements ExecutionCoverageInternal {
 
     @Override
     @RequiredUIAccess
-    public void showCoverageHit(JPanel panel, Editor editor, Point point, CoverageLine lineData, String reportText) {
+    public void showCoverageHit(JPanel panel, Editor editor, Point point, CoverageLine lineData, LocalizeValue reportText) {
         final Editor uEditor;
-        if (reportText != null) {
+        if (reportText.isNotEmpty()) {
             EditorFactory factory = EditorFactory.getInstance();
-            Document doc = factory.createDocument(reportText);
+            Document doc = factory.createDocument(reportText.get());
             doc.setReadOnly(true);
             uEditor = factory.createEditor(doc, editor.getProject());
             panel.add(
@@ -102,8 +102,10 @@ public class ExecutionCoverageInternalmpl implements ExecutionCoverageInternal {
             hint,
             editor,
             point,
-            HintManagerImpl.HIDE_BY_ANY_KEY | HintManagerImpl.HIDE_BY_TEXT_CHANGE
-                | HintManagerImpl.HIDE_BY_OTHER_HINT | HintManagerImpl.HIDE_BY_SCROLLING,
+            HintManagerImpl.HIDE_BY_ANY_KEY
+                | HintManagerImpl.HIDE_BY_TEXT_CHANGE
+                | HintManagerImpl.HIDE_BY_OTHER_HINT
+                | HintManagerImpl.HIDE_BY_SCROLLING,
             -1,
             false,
             new HintHint(editor.getContentComponent(), point)
