@@ -16,14 +16,8 @@
 package consulo.desktop.qt.ui.impl;
 
 import consulo.disposer.Disposable;
-import consulo.localize.LocalizeValue;
-import consulo.ui.Component;
-import consulo.ui.MenuBar;
-import consulo.ui.MenuItem;
-import consulo.ui.UIAccess;
+import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.BorderBuilder;
-import consulo.ui.PaddingBuilder;
 import consulo.ui.impl.BorderBuilderImpl;
 import consulo.ui.impl.PaddingBuilderImpl;
 import consulo.ui.color.ColorValue;
@@ -54,7 +48,6 @@ public class DesktopQtMenuBar implements MenuBar {
     private boolean myEnabled = true;
     private boolean myVisible = true;
 
-    private LocalizeValue myToolTipText = LocalizeValue.empty();
     private @Nullable ColorValue myForegroundColor;
     private @Nullable ColorValue myBackgroundColor;
     private @Nullable Cursor myCursor;
@@ -180,17 +173,10 @@ public class DesktopQtMenuBar implements MenuBar {
     }
 
     @Override
-    public void setToolTipText(LocalizeValue value) {
-        myToolTipText = value;
-
+    public void setToolTip(@Nullable ToolTip toolTip) {
         if (myMenuBar != null) {
-            myMenuBar.setToolTip(value.get());
+            myMenuBar.setToolTip(QtToolTipMarkup.toText(toolTip));
         }
-    }
-
-    @Override
-    public LocalizeValue getToolTipText() {
-        return myToolTipText;
     }
 
     @Override

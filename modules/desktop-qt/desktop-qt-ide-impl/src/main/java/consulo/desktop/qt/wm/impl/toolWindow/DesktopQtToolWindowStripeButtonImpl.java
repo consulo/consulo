@@ -20,8 +20,10 @@ import consulo.desktop.qt.ui.impl.QtComponentDelegate;
 import consulo.desktop.qt.ui.impl.image.DesktopQtIconOwner;
 import consulo.desktop.qt.ui.impl.image.DesktopQtImage;
 import consulo.project.ui.impl.internal.wm.ToolWindowBase;
+import consulo.project.ui.impl.internal.wm.action.ActivateToolWindowAction;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.ui.ex.toolWindow.ToolWindowSettings;
 import consulo.ui.ex.toolWindow.ToolWindowStripeButton;
@@ -80,6 +82,8 @@ public class DesktopQtToolWindowStripeButtonImpl extends QtComponentDelegate<QWi
         DesktopQtToolWindowPanelImpl toolWindowPanel
     ) {
         myDecorator = decorator;
+
+        KeymapManager.getInstance().addKeymapManagerListener(keymap -> updatePresentation(), this);
     }
 
     @Override
@@ -145,6 +149,8 @@ public class DesktopQtToolWindowStripeButtonImpl extends QtComponentDelegate<QWi
 
         myText = window.getDisplayName().get();
         myIcon = window.getIcon();
+
+        setToolTip(ActivateToolWindowAction.createToolTip(window));
 
         if (isAlive()) {
             myComponent.updateGeometry();

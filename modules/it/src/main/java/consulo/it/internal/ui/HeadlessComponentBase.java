@@ -18,13 +18,7 @@ package consulo.it.internal.ui;
 import consulo.disposer.Disposable;
 import consulo.it.internal.HeadlessUIAccess;
 import consulo.localize.LocalizeValue;
-import consulo.ui.Component;
-import consulo.ui.HasSize;
-import consulo.ui.Length;
-import consulo.ui.Size2D;
-import consulo.ui.BorderBuilder;
-import consulo.ui.PaddingBuilder;
-import consulo.ui.UIAccess;
+import consulo.ui.*;
 import consulo.ui.impl.BorderBuilderImpl;
 import consulo.ui.impl.PaddingBuilderImpl;
 import consulo.ui.color.ColorValue;
@@ -179,11 +173,6 @@ public abstract class HeadlessComponentBase implements Component, HasSize {
     }
 
     @Override
-    public void setToolTipText(LocalizeValue value) {
-    }
-
-    @Override
-    public LocalizeValue getToolTipText() {
-        return LocalizeValue.empty();
+    public void setToolTip(ToolTip toolTip) {
     }
 }

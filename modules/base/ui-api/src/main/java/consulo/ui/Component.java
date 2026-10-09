@@ -129,12 +129,17 @@ public interface Component extends UserDataHolder {
         return this;
     }
 
-    default void setToolTipText(LocalizeValue value) {
-        throw new AbstractMethodError("not supported");
+    default void setToolTip(@Nullable ToolTip toolTip) {
+        throw new UnsupportedOperationException();
     }
 
-    default LocalizeValue getToolTipText() {
-        return LocalizeValue.empty();
+    default Component withToolTip(@Nullable ToolTip toolTip) {
+        setToolTip(toolTip);
+        return this;
+    }
+
+    default void setToolTipText(LocalizeValue value) {
+        setToolTip(ToolTip.create().setTitle(value));
     }
 
     default Component withToolTipText(LocalizeValue value) {

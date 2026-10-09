@@ -23,11 +23,13 @@ import consulo.application.util.registry.Registry;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.internal.DumbInternalUtil;
+import consulo.ui.ToolTip;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.details.InputDetails;
 import consulo.ui.event.details.MouseInputDetails;
@@ -35,6 +37,8 @@ import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ui.ex.internal.ActionUpdateInvoker;
+import consulo.ui.ex.internal.CustomShortcutBuilder;
+import consulo.ui.ex.internal.CustomToolTipBuilder;
 import consulo.ui.util.TextWithMnemonic;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
@@ -52,6 +56,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 public class ActionImplUtil {
     private static final Logger LOG = Logger.getInstance(ActionImplUtil.class);
@@ -350,6 +355,42 @@ public class ActionImplUtil {
             return false;
         }
         return Platform.current().os().isMac() ? mouse.withMeta() : mouse.withCtrl();
+    }
+
+    public static @Nullable ToolTip createToolTip(Presentation presentation, Supplier<LocalizeValue> defaultShortcut) {
+        LocalizeValue textValue = presentation.getTextValue();
+        LocalizeValue descriptionValue = presentation.getDescription();
+        if (textValue.isEmpty() && descriptionValue.isEmpty()) {
+            return null;
+        }
+
+        ToolTip toolTip = ToolTip.create();
+
+        CustomToolTipBuilder customToolTipBuilder = presentation.getClientProperty(CustomToolTipBuilder.KEY);
+        if (customToolTipBuilder != null) {
+            customToolTipBuilder.build(toolTip, presentation);
+            return toolTip;
+        }
+
+        toolTip.setTitle(textValue.map(Presentation.NO_MNEMONIC));
+        toolTip.setShortcut(getShortcutText(presentation, defaultShortcut));
+
+        if (descriptionValue.isNotEmpty()) {
+            toolTip.setDescription(descriptionValue.map(Presentation.NO_MNEMONIC));
+        }
+        return toolTip;
+    }
+
+    public static LocalizeValue getShortcutText(Presentation presentation, Supplier<LocalizeValue> defaultShortcut) {
+        CustomShortcutBuilder shortcutBuilder = presentation.getClientProperty(CustomShortcutBuilder.KEY);
+        if (shortcutBuilder != null) {
+            LocalizeValue shortcutText = shortcutBuilder.build();
+            if (shortcutText.isNotEmpty()) {
+                return shortcutText;
+            }
+        }
+
+        return defaultShortcut.get();
     }
 
     public static List<AnAction> getActions(JComponent component) {

@@ -19,11 +19,14 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.localize.ProjectUILocalize;
 import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.ToolTip;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.UIAction;
+import consulo.ui.ex.action.util.ShortcutUtil;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
+import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.util.concurrent.coroutine.Coroutine;
 
@@ -67,6 +70,16 @@ public class ActivateToolWindowAction extends DumbAwareAction implements AnActio
         if (action instanceof ActivateToolWindowAction activateToolWindowAction) {
             activateToolWindowAction.updatePresentation(action.getTemplatePresentation(), toolWindow);
         }
+    }
+
+    public static ToolTip createToolTip(ToolWindow toolWindow) {
+        ToolTip toolTip = ToolTip.create().setTitle(toolWindow.getDisplayName());
+
+        KeyboardShortcut shortcut = ActionManager.getInstance().getKeyboardShortcut(getActionIdForToolWindow(toolWindow.getId()));
+        if (shortcut != null) {
+            toolTip.setShortcut(KeymapUtil.getShortcutTextValue(shortcut, ShortcutUtil.isUseUnicodeShortcuts()));
+        }
+        return toolTip;
     }
 
     @Override

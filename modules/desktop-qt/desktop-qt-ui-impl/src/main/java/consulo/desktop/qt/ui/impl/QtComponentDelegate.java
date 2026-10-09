@@ -21,14 +21,7 @@ import consulo.desktop.qt.ui.impl.image.DesktopQtIconRefresher;
 import consulo.desktop.qt.ui.impl.image.DesktopQtLiveIconEngine;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
-import consulo.ui.BorderBuilder;
-import consulo.ui.Component;
-import consulo.ui.HasFocus;
-import consulo.ui.HasSize;
-import consulo.ui.Length;
-import consulo.ui.PaddingBuilder;
-import consulo.ui.Space;
-import consulo.ui.UIAccess;
+import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
@@ -47,6 +40,7 @@ import consulo.ui.impl.PaddingBuilderImpl;
 import consulo.ui.impl.UIDataObject;
 import consulo.ui.image.Image;
 import consulo.ui.internal.BorderPosition;
+import consulo.ui.internal.ToolTipImpl;
 import consulo.util.dataholder.Key;
 import io.qt.core.QEvent;
 import io.qt.core.QMargins;
@@ -107,7 +101,8 @@ public abstract class QtComponentDelegate<T extends QWidget> implements Componen
     private boolean myVisible = true;
     private @Nullable Boolean myFocusable;
 
-    private LocalizeValue myToolTipText = LocalizeValue.empty();
+    private @Nullable ToolTip myToolTip;
+    private boolean myToolTipRefreshInstalled;
     private @Nullable ColorValue myForegroundColor;
     private @Nullable ColorValue myBackgroundColor;
     private @Nullable QPalette myNaturalPalette;
@@ -158,6 +153,11 @@ public abstract class QtComponentDelegate<T extends QWidget> implements Componen
         }
 
         applySize();
+
+        String toolTipText = QtToolTipMarkup.toText(myToolTip);
+        if (toolTipText != null) {
+            myComponent.setToolTip(toolTipText);
+        }
 
         initialize(myComponent);
 
@@ -693,17 +693,37 @@ public abstract class QtComponentDelegate<T extends QWidget> implements Componen
     }
 
     @Override
-    public void setToolTipText(LocalizeValue value) {
-        myToolTipText = value;
+    public void setToolTip(@Nullable ToolTip toolTip) {
+        myToolTip = toolTip;
 
         if (myComponent != null) {
-            myComponent.setToolTip(value.get());
+            myComponent.setToolTip(QtToolTipMarkup.toText(toolTip));
         }
+
+        installToolTipRefresh();
     }
 
-    @Override
-    public LocalizeValue getToolTipText() {
-        return myToolTipText;
+    private void installToolTipRefresh() {
+        if (myToolTipRefreshInstalled) {
+            return;
+        }
+
+        myToolTipRefreshInstalled = true;
+
+        whenBound(widget -> widget.installEventFilter(new QObject(widget) {
+            @Override
+            public boolean eventFilter(QObject watched, QEvent event) {
+                if (event.type() == QEvent.Type.ApplicationPaletteChange && myToolTip != null) {
+                    widget.setToolTip(QtToolTipMarkup.toText(myToolTip));
+                }
+                return false;
+            }
+        }));
+    }
+
+    protected LocalizeValue getToolTipTitle() {
+        ToolTipImpl impl = (ToolTipImpl) myToolTip;
+        return impl == null ? LocalizeValue.empty() : impl.getTitle();
     }
 
     @Override

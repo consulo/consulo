@@ -21,7 +21,6 @@ import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ui.ex.awt.popup.AWTPopup;
-import consulo.ui.ex.awt.internal.HelpTooltipImpl;
 import consulo.desktop.awt.ui.impl.glassPane.IdeGlassPaneImpl;
 import consulo.ide.impl.idea.ui.WindowMoveListener;
 import consulo.ide.impl.idea.ui.WindowResizeListener;
@@ -522,7 +521,6 @@ public class AbstractPopup implements AWTPopup, ScreenAreaConsumer {
     @Override
     @RequiredUIAccess
     public void showInCenterOf(Component aComponent) {
-        HelpTooltipImpl.setMasterPopup(aComponent, this);
         Point popupPoint = getCenterOf(aComponent, getPreferredContentSize());
         show(aComponent, popupPoint.x, popupPoint.y, false);
     }
@@ -553,7 +551,6 @@ public class AbstractPopup implements AWTPopup, ScreenAreaConsumer {
         if (UiInterceptors.tryIntercept(this)) {
             return;
         }
-        HelpTooltipImpl.setMasterPopup(aPoint.getOriginalComponent(), this);
         Point screenPoint = aPoint.getScreenPoint();
         show(aPoint.getComponent(), screenPoint.x, screenPoint.y, false);
     }

@@ -58,7 +58,7 @@ import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.event.DocumentAdapter;
-import consulo.ui.ex.awt.internal.HelpTooltipImpl;
+import consulo.ui.ex.awt.internal.SwingToolTip;
 import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awt.util.ColorUtil;
@@ -385,7 +385,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
         caption2Tools.add(hBox, BorderLayout.EAST);
 
         LocalizeValue checkBoxText = myModel.getCheckBoxName();
-        Color color = HelpTooltipImpl.SHORTCUT_COLOR;
+        Color color = SwingToolTip.SHORTCUT_COLOR;
         if (checkBoxText.isEmpty()) {
             myCheckBox.setLabelText(LocalizeValue.empty());
         }

@@ -20,7 +20,7 @@ import consulo.disposer.Disposable;
 import consulo.ui.ex.toolWindow.ButtonDisplay;
 import consulo.ui.ex.toolWindow.ToolWindowSettings;
 import consulo.externalService.statistic.FeatureUsageTracker;
-import consulo.ui.ex.awt.internal.HelpTooltipImpl;
+import consulo.ui.ex.awt.internal.SwingToolTip;
 import consulo.project.ui.impl.internal.wm.action.ActivateToolWindowAction;
 import consulo.ui.ex.awt.AnchoredButton;
 import consulo.desktop.awt.ui.impl.util.MouseDragHelper;
@@ -110,13 +110,7 @@ public final class DesktopStripeButton extends AnchoredButton implements ActionL
     private void updateHelpTooltip() {
         DesktopToolWindowImpl toolWindow = myDecorator.getToolWindow();
 
-        HelpTooltipImpl.dispose(this);
-
-        HelpTooltipImpl tooltip = new HelpTooltipImpl();
-        tooltip.setTitle(toolWindow.getDisplayName());
-        String activateActionId = ActivateToolWindowAction.getActionIdForToolWindow(toolWindow.getId());
-        tooltip.setShortcut(ActionManager.getInstance().getKeyboardShortcut(activateActionId));
-        tooltip.installOn(this);
+        SwingToolTip.install(this, ActivateToolWindowAction.createToolTip(toolWindow));
     }
 
     @Override

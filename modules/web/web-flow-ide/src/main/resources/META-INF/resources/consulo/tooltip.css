@@ -1,0 +1,11 @@
+.consulo-tooltip {
+    display: flex;
+    flex-direction: column;
+    gap: var(--vaadin-space-xs);
+    white-space: normal;
+}
+
+.consulo-tooltip-shortcut,
+.consulo-tooltip-info {
+    color: var(--vaadin-text-color-secondary);
+}

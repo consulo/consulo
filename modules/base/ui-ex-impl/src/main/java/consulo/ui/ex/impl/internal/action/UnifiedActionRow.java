@@ -52,6 +52,7 @@ import consulo.ui.model.MutableFlatDataModel;
 import kava.beans.PropertyChangeListener;
 import consulo.ui.ex.internal.ActionTicker;
 import consulo.ui.ex.internal.TimerListener;
+import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.layout.Layout;
 import consulo.ui.layout.VerticalLayout;
@@ -616,6 +617,7 @@ public class UnifiedActionRow {
 
         // an icon action is shown by its icon, its text is what the user gets on hover
         Boolean checked = node.checked();
+        AnAction action = node.action();
 
         Button button;
         if (checked == null) {
@@ -625,14 +627,21 @@ public class UnifiedActionRow {
             ToggleButton toggleButton = ToggleButton.create(text, checked);
             button = toggleButton;
 
-            AnAction action = node.action();
             if (action != null) {
                 myToggleButtons.put(action, toggleButton);
             }
         }
 
         button.setIcon(UnifiedActionMenuExpander.toDisplayIcon(node.icon(), node.disabledIcon(), node.enabled()));
-        button.setToolTipText(node.text());
+        if (action != null) {
+            button.setToolTip(ActionImplUtil.createToolTip(
+                myPresentationFactory.getPresentation(action),
+                () -> LocalizeValue.of(KeymapUtil.getFirstKeyboardShortcutText(action))
+            ));
+        }
+        else {
+            button.setToolTipText(node.text());
+        }
         button.setEnabled(node.enabled());
 
         if (myStyle == ActionToolbar.Style.INPLACE) {

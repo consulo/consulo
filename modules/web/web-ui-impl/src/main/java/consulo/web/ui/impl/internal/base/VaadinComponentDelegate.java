@@ -15,8 +15,10 @@
  */
 package consulo.web.ui.impl.internal.base;
 
-import com.vaadin.flow.component.*;
-import com.vaadin.flow.component.shared.Tooltip;
+import com.vaadin.flow.component.ComponentUtil;
+import com.vaadin.flow.component.Focusable;
+import com.vaadin.flow.component.HasSize;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.dom.ClassList;
 import com.vaadin.flow.dom.DomListenerRegistration;
 import com.vaadin.flow.dom.Style;
@@ -24,39 +26,22 @@ import consulo.application.util.matcher.NameUtilCore;
 import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
-import consulo.ui.BorderBuilder;
-import consulo.ui.Component;
-import consulo.ui.Length;
-import consulo.ui.PaddingBuilder;
-import consulo.ui.Space;
-import consulo.web.ui.impl.internal.vaadin.WebLength;
-import consulo.web.ui.impl.internal.vaadin.WebSpace;
+import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.cursor.Cursor;
-import consulo.ui.event.AttachEvent;
-import consulo.ui.event.ClickEvent;
-import consulo.ui.event.ContextMenuEvent;
-import consulo.ui.event.ComponentEvent;
-import consulo.ui.event.ComponentEventListener;
-import consulo.ui.event.DetachEvent;
-import consulo.ui.event.KeyPressedEvent;
-import consulo.ui.event.KeyReleasedEvent;
-import consulo.ui.font.Font;
-import consulo.ui.font.FontManager;
+import consulo.ui.event.*;
 import consulo.ui.impl.BorderBuilderImpl;
 import consulo.ui.impl.PaddingBuilderImpl;
 import consulo.ui.impl.UIDataObject;
 import consulo.ui.internal.BorderPosition;
 import consulo.util.dataholder.Key;
-import com.vaadin.flow.component.ComponentUtil;
-import com.vaadin.flow.component.UI;
-import consulo.ui.UIAccess;
 import consulo.web.ui.impl.internal.WebColors;
-import consulo.web.ui.impl.internal.WebFontImpl;
 import consulo.web.ui.impl.internal.WebUIAccessImpl;
 import consulo.web.ui.impl.internal.vaadin.AuraUtility;
 import consulo.web.ui.impl.internal.vaadin.InitiableComponent;
+import consulo.web.ui.impl.internal.vaadin.WebLength;
+import consulo.web.ui.impl.internal.vaadin.WebSpace;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Locale;
@@ -68,7 +53,7 @@ import java.util.Optional;
  * @since 2019-02-17
  */
 public abstract class VaadinComponentDelegate<T extends com.vaadin.flow.component.Component & FromVaadinComponentWrapper>
-    implements Component, consulo.ui.HasSize, DataObjectHolder, ToVaadinComponentWrapper {
+    implements consulo.ui.Component, consulo.ui.HasSize, DataObjectHolder, ToVaadinComponentWrapper {
     private T myVaadinComponent;
 
     private Cursor myCursor;
@@ -141,8 +126,8 @@ public abstract class VaadinComponentDelegate<T extends com.vaadin.flow.componen
     public abstract T createVaadinComponent();
 
     @Override
-    public void setToolTipText(LocalizeValue value) {
-        Tooltip.forComponent(toVaadinComponent()).setText(value.get());
+    public void setToolTip(@Nullable ToolTip toolTip) {
+        WebToolTipMarkup.apply(toVaadinComponent(), toolTip);
     }
 
     protected T getVaadinComponent() {
@@ -164,7 +149,7 @@ public abstract class VaadinComponentDelegate<T extends com.vaadin.flow.componen
     }
 
     @Override
-    public @Nullable Component getParent() {
+    public consulo.ui.@Nullable Component getParent() {
         Optional<com.vaadin.flow.component.Component> parent = myVaadinComponent.getParent();
         while (parent.isPresent()) {
             com.vaadin.flow.component.Component component = parent.get();

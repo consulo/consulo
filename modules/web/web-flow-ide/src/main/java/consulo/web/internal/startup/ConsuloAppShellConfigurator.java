@@ -82,6 +82,7 @@ import org.vaadin.stefan.table.Table;
 @StyleSheet("/consulo/tabs.css")
 @StyleSheet("/consulo/statusbar.css")
 @StyleSheet("/consulo/toolwindow.css")
+@StyleSheet("/consulo/tooltip.css")
 // a progress bar lives only while its task runs, so its styles cannot be carried by the component itself
 @StyleSheet("/progress/webProgressBar.css")
 @JsModule("./webImage.js")

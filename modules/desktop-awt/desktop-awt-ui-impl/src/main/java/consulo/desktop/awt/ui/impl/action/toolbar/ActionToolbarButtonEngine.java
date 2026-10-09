@@ -18,7 +18,7 @@ package consulo.desktop.awt.ui.impl.action.toolbar;
 import consulo.dataContext.DataContext;
 import consulo.desktop.awt.ui.impl.action.DesktopActionPopupMenuImpl;
 import consulo.desktop.awt.ui.impl.event.DesktopAWTInputDetails;
-import consulo.ui.ex.awt.internal.HelpTooltipImpl;
+import consulo.ui.ex.awt.internal.SwingToolTip;
 import consulo.ui.ex.impl.internal.action.ActionImplUtil;
 import consulo.ui.ex.impl.internal.action.ActionRunnerAsync;
 import consulo.ui.ex.impl.internal.action.MenuItemPresentationFactory;
@@ -32,8 +32,6 @@ import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.ui.ex.awt.action.CustomComponentAction;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.internal.ActionManagerEx;
-import consulo.ui.ex.internal.CustomShortcutBuilder;
-import consulo.ui.ex.internal.CustomTooltipBuilder;
 import consulo.ui.ex.internal.LocalizeValueWithMnemonic;
 import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.ui.image.Image;
@@ -97,39 +95,10 @@ public class ActionToolbarButtonEngine {
     }
 
     public void updateToolTipText() {
-        LocalizeValue textValue = myPresentation.getTextValue();
-        LocalizeValue descriptionValue = myPresentation.getDescription();
-        HelpTooltipImpl.dispose(myButton);
-
-        if (textValue.isNotEmpty() || descriptionValue.isNotEmpty()) {
-            HelpTooltipImpl ht = new HelpTooltipImpl();
-
-            CustomTooltipBuilder customTooltipBuilder = myPresentation.getClientProperty(CustomTooltipBuilder.KEY);
-            if (customTooltipBuilder != null) {
-                customTooltipBuilder.build(ht, myPresentation);
-            }
-            else {
-                ht.setTitle(textValue.map(Presentation.NO_MNEMONIC));
-                ht.setShortcut(getShortcutText());
-
-                if (descriptionValue.isNotEmpty()) {
-                    ht.setDescription(descriptionValue.map(Presentation.NO_MNEMONIC));
-                }
-            }
-            ht.installOn(myButton);
-        }
-    }
-
-    protected @Nullable String getShortcutText() {
-        CustomShortcutBuilder shortcutBuilder = myPresentation.getClientProperty(CustomShortcutBuilder.KEY);
-        if (shortcutBuilder != null) {
-            LocalizeValue shortcutText = shortcutBuilder.build();
-            if (shortcutText.isNotEmpty()) {
-                return shortcutText.get();
-            }
-        }
-
-        return KeymapUtil.getFirstKeyboardShortcutText(myIdeAction);
+        SwingToolTip.install(myButton, ActionImplUtil.createToolTip(
+            myPresentation,
+            () -> LocalizeValue.localizeTODO(KeymapUtil.getFirstKeyboardShortcutText(myIdeAction))
+        ));
     }
 
     public void updateIcon() {

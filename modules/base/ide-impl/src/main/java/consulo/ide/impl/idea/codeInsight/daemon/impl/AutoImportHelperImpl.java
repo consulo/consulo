@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.codeInsight.actions.OptimizeImportsProcessor;
-import consulo.ui.ex.awt.internal.HelpTooltipImpl;
+import consulo.ui.ex.awt.internal.SwingToolTip;
 import consulo.language.editor.AutoImportHelper;
 import consulo.language.editor.impl.internal.daemon.DaemonListeners;
 import consulo.language.editor.localize.DaemonLocalize;
@@ -80,7 +80,7 @@ public class AutoImportHelperImpl implements AutoImportHelper {
         String firstKeyboardShortcutText =
             KeymapUtil.getFirstKeyboardShortcutText(ActionManager.getInstance().getAction(IdeActions.ACTION_SHOW_INTENTION_ACTIONS));
 
-        String htmlColor = ColorUtil.toHtmlColor(HelpTooltipImpl.SHORTCUT_COLOR);
+        String htmlColor = ColorUtil.toHtmlColor(SwingToolTip.SHORTCUT_COLOR);
 
         return DaemonLocalize.importPopupHintText(kind, name, firstKeyboardShortcutText, actioName, htmlColor);
     }

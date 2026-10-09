@@ -73,12 +73,10 @@ public class ShortcutUtil {
         return getKeystrokeTextValue(accelerator, useUnicodeCharactersForShortcuts).get();
     }
 
-    
     public static LocalizeValue getKeystrokeTextValue(@Nullable KeyStroke accelerator) {
         return getKeystrokeTextValue(accelerator, isUseUnicodeShortcuts());
     }
 
-    
     public static LocalizeValue getKeystrokeTextValue(@Nullable KeyStroke accelerator, boolean useUnicodeCharactersForShortcuts) {
         if (accelerator == null) {
             return LocalizeValue.empty();

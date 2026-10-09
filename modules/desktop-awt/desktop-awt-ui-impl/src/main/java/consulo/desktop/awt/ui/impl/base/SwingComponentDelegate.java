@@ -26,20 +26,14 @@ import consulo.desktop.awt.ui.impl.util.AWTKeyAdapterAsKeyPressedListener;
 import consulo.desktop.awt.ui.impl.util.AWTKeyAdapterAsKeyReleasedListener;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
-import consulo.ui.BorderBuilder;
-import consulo.ui.Component;
-import consulo.ui.HasFocus;
-import consulo.ui.HasSize;
-import consulo.ui.Length;
-import consulo.ui.PaddingBuilder;
-import consulo.ui.Space;
-import consulo.ui.UIAccess;
+import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.cursor.Cursor;
 import consulo.ui.event.*;
 import consulo.ui.ex.awt.ClickListener;
 import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.internal.SwingToolTip;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.font.Font;
 import consulo.ui.impl.BorderBuilderImpl;
@@ -177,15 +171,8 @@ public abstract class SwingComponentDelegate<T extends java.awt.Component> imple
     }
 
     @Override
-    public LocalizeValue getToolTipText() {
-        JComponent component = (JComponent) toAWTComponent();
-        return LocalizeValue.ofNullable(component.getToolTipText());
-    }
-
-    @Override
-    public void setToolTipText(LocalizeValue value) {
-        JComponent component = (JComponent) toAWTComponent();
-        component.setToolTipText(StringUtil.nullize(value.get()));
+    public void setToolTip(@Nullable ToolTip toolTip) {
+        SwingToolTip.install((JComponent) toAWTComponent(), toolTip);
     }
 
     @Override

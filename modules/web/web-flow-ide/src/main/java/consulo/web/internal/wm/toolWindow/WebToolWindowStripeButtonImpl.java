@@ -19,9 +19,11 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Span;
 import consulo.application.ui.UISettings;
 import consulo.project.ui.impl.internal.wm.ToolWindowBase;
+import consulo.project.ui.impl.internal.wm.action.ActivateToolWindowAction;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.ex.toolWindow.ToolWindowSettings;
 import consulo.ui.ex.toolWindow.ToolWindowStripeButton;
 import consulo.ui.ex.toolWindow.WindowInfo;
@@ -93,6 +95,8 @@ public class WebToolWindowStripeButtonImpl extends VaadinComponentDelegate<WebTo
         myDecorator.fireActivated();
       }
     });
+
+    KeymapManager.getInstance().addKeymapManagerListener(keymap -> updatePresentation(), this);
   }
 
   
@@ -123,6 +127,8 @@ public class WebToolWindowStripeButtonImpl extends VaadinComponentDelegate<WebTo
     setEnabled(toShow && !window.isPlaceholderMode());
 
     toVaadinComponent().update(window.getDisplayName(), getWindowInfo().isSplit(), window.getIcon());
+
+    setToolTip(ActivateToolWindowAction.createToolTip(window));
   }
 
   public boolean isSelected() {

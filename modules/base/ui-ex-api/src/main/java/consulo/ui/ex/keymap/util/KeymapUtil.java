@@ -24,7 +24,10 @@ import consulo.ui.UIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.util.MacKeymapUtil;
 import consulo.ui.ex.internal.ActionStubBase;
-import consulo.ui.ex.keymap.*;
+import consulo.ui.ex.keymap.Keymap;
+import consulo.ui.ex.keymap.KeymapGroup;
+import consulo.ui.ex.keymap.KeymapGroupFactory;
+import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.ex.keymap.localize.KeyMapLocalize;
 import consulo.ui.image.Image;
 import consulo.util.collection.ArrayUtil;
@@ -42,7 +45,7 @@ import java.util.StringTokenizer;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
 
-import static consulo.ui.ex.action.util.ShortcutUtil.getKeystrokeText;
+import static consulo.ui.ex.action.util.ShortcutUtil.getKeystrokeTextValue;
 import static consulo.ui.ex.action.util.ShortcutUtil.isUseUnicodeShortcuts;
 
 /**
@@ -140,19 +143,22 @@ public class KeymapUtil {
         return toolTipText;
     }
 
+    @Deprecated
     public static String getShortcutsText(Shortcut[] shortcuts) {
+        return getShortcutsTextValue(shortcuts).get();
+    }
+
+    public static LocalizeValue getShortcutsTextValue(Shortcut[] shortcuts) {
         if (shortcuts.length == 0) {
-            return "";
+            return LocalizeValue.empty();
         }
-        StringBuilder buffer = new StringBuilder();
+
+        LocalizeValue[] localizeValues = new LocalizeValue[shortcuts.length];
         for (int i = 0; i < shortcuts.length; i++) {
             Shortcut shortcut = shortcuts[i];
-            if (i > 0) {
-                buffer.append(' ');
-            }
-            buffer.append(getShortcutText(shortcut));
+            localizeValues[i] = getShortcutTextValue(shortcut, isUseUnicodeShortcuts());
         }
-        return buffer.toString();
+        return LocalizeValue.join(" ", localizeValues);
     }
 
     public static String getFirstKeyboardShortcutText(String actionId) {
@@ -176,30 +182,45 @@ public class KeymapUtil {
         return getShortcutText(shortcut, isUseUnicodeShortcuts());
     }
 
+    @Deprecated
     public static String getShortcutText(Shortcut shortcut, boolean useUnicodeCharactersForShortcuts) {
+        return getShortcutTextValue(shortcut, useUnicodeCharactersForShortcuts).get();
+    }
+
+    public static LocalizeValue getShortcutTextValue(Shortcut shortcut, boolean useUnicodeCharactersForShortcuts) {
         return switch (shortcut) {
             case KeyboardShortcut keyboardShortcut -> {
-                String s = "";
-                String acceleratorText = getKeystrokeText(keyboardShortcut.getFirstKeyStroke(), useUnicodeCharactersForShortcuts);
+                LocalizeValue s = LocalizeValue.empty();
+                LocalizeValue acceleratorText = getKeystrokeTextValue(keyboardShortcut.getFirstKeyStroke(), useUnicodeCharactersForShortcuts);
                 if (!acceleratorText.isEmpty()) {
                     s = acceleratorText;
                 }
 
-                acceleratorText = getKeystrokeText(keyboardShortcut.getSecondKeyStroke(), useUnicodeCharactersForShortcuts);
+                acceleratorText = getKeystrokeTextValue(keyboardShortcut.getSecondKeyStroke(), useUnicodeCharactersForShortcuts);
                 if (!acceleratorText.isEmpty()) {
-                    s += ", " + acceleratorText;
+                    s = LocalizeValue.join(", ", s, acceleratorText);
                 }
 
                 yield s;
             }
 
             case MouseShortcut mouseShortcut ->
-                getMouseShortcutText(mouseShortcut.getButton(), mouseShortcut.getModifiers(), mouseShortcut.getClickCount()).get();
+                getMouseShortcutText(mouseShortcut.getButton(), mouseShortcut.getModifiers(), mouseShortcut.getClickCount());
 
-            case KeyboardModifierGestureShortcut gestureShortcut ->
-                (gestureShortcut.getType() == KeyboardGestureAction.ModifierType.dblClick ? "Press, release and hold " : "Hold ") +
-                    getKeystrokeText(gestureShortcut.getStroke(), useUnicodeCharactersForShortcuts);
-
+            case KeyboardModifierGestureShortcut gestureShortcut -> {
+                if (gestureShortcut.getType() == KeyboardGestureAction.ModifierType.dblClick) {
+                    yield LocalizeValue.join(
+                        LocalizeValue.localizeTODO("Press, release and hold "),
+                        getKeystrokeTextValue(gestureShortcut.getStroke(), useUnicodeCharactersForShortcuts)
+                    );
+                }
+                else {
+                    yield LocalizeValue.join(
+                        LocalizeValue.localizeTODO("Hold "),
+                        getKeystrokeTextValue(gestureShortcut.getStroke(), useUnicodeCharactersForShortcuts)
+                    );
+                }
+            }
             default -> throw new IllegalArgumentException("unknown shortcut class: " + shortcut.getClass().getCanonicalName());
         };
     }

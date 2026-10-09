@@ -53,6 +53,7 @@ module consulo.ui.api {
         consulo.it,
         consulo.test.impl,
         consulo.ui.ex.api,
+        consulo.ui.ex.awt.api,
         consulo.ui.impl,
         consulo.web.editor.impl,
         consulo.project.api,

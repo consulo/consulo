@@ -17,33 +17,32 @@ package consulo.ide.impl.idea.ide.actions;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.externalService.statistic.FeatureUsageTracker;
+import consulo.ide.impl.idea.ide.actions.searcheverywhere.SearchEverywhereManagerImpl;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
-import consulo.searchEverywhere.SearchEverywhereManager;
-import consulo.ide.impl.idea.ide.actions.searcheverywhere.SearchEverywhereManagerImpl;
-import consulo.ui.event.details.ModifiedInputDetails.Modifier;
-import consulo.ui.ex.keymap.internal.ModifierKeyDoubleClickHandler;
-import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
-import consulo.platform.Platform;
 import consulo.project.Project;
+import consulo.searchEverywhere.SearchEverywhereManager;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.LegacyDumbAwareAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.IdeActions;
-import consulo.ui.ex.action.Shortcut;
-import consulo.ui.ex.action.util.MacKeymapUtil;
-import consulo.ui.ex.internal.CustomTooltipBuilder;
+import consulo.ui.event.details.ModifiedInputDetails.Modifier;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.action.util.ShortcutLocalizeHolder;
+import consulo.ui.ex.action.util.ShortcutUtil;
+import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
+import consulo.ui.ex.internal.CustomToolTipBuilder;
 import consulo.ui.ex.keymap.KeymapManager;
+import consulo.ui.ex.keymap.internal.ModifierKeyDoubleClickHandler;
 import consulo.ui.ex.keymap.util.KeymapUtil;
 import jakarta.inject.Inject;
+
+import java.awt.event.KeyEvent;
 
 
 /**
  * @author Konstantin Bulenkov
  */
 @ActionImpl(id = IdeActions.ACTION_SEARCH_EVERYWHERE)
-public class SearchEverywhereAction extends LegacyDumbAwareAction {
+public class SearchEverywhereAction extends DumbAwareAction implements AnActionWithSyncUpdate {
     @Inject
     public SearchEverywhereAction(ModifierKeyDoubleClickHandler modifierKeyDoubleClickHandler) {
         super(ActionLocalize.actionSearcheverywhereText(), LocalizeValue.empty(), PlatformIconGroup.actionsFind());
@@ -55,11 +54,11 @@ public class SearchEverywhereAction extends LegacyDumbAwareAction {
     @Override
     public void update(AnActionEvent e) {
         e.getPresentation().putClientProperty(
-            CustomTooltipBuilder.KEY,
+            CustomToolTipBuilder.KEY,
             (tooltip, presentation) -> {
-                String shortcutText = getShortcut();
+                LocalizeValue shortcutText = getShortcut();
 
-                tooltip.setTitle(presentation.getText())
+                tooltip.setTitle(presentation.getTextValue())
                     .setShortcut(shortcutText)
                     .setDescription(LocalizeValue.localizeTODO(
                         "Searches for:<br/> - Classes<br/> - Files<br/> - Tool Windows<br/> - Actions<br/> - Settings"
@@ -68,14 +67,15 @@ public class SearchEverywhereAction extends LegacyDumbAwareAction {
         );
     }
 
-    private static String getShortcut() {
-        String shortcutText;
+    private static LocalizeValue getShortcut() {
+        LocalizeValue shortcutText;
         Shortcut[] shortcuts = KeymapManager.getInstance().getActiveKeymap().getShortcuts(IdeActions.ACTION_SEARCH_EVERYWHERE);
         if (shortcuts.length == 0) {
-            shortcutText = "Double " + (Platform.current().os().isMac() ? MacKeymapUtil.SHIFT : "Shift");
+            LocalizeValue keyText = ShortcutLocalizeHolder.getKeyText(KeyEvent.VK_SHIFT, ShortcutUtil.isUseUnicodeShortcuts());
+            shortcutText = LocalizeValue.join(LocalizeValue.localizeTODO("Double "), keyText);
         }
         else {
-            shortcutText = KeymapUtil.getShortcutsText(shortcuts);
+            shortcutText = KeymapUtil.getShortcutsTextValue(shortcuts);
         }
         return shortcutText;
     }

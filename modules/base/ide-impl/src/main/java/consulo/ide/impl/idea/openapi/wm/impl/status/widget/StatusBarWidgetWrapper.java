@@ -1,7 +1,8 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.wm.impl.status.widget;
 
-import consulo.ui.ex.awt.internal.HelpTooltipImpl;
+import consulo.ui.ToolTip;
+import consulo.ui.ex.awt.internal.SwingToolTip;
 import consulo.ide.impl.idea.openapi.wm.impl.status.TextPanel;
 import consulo.ide.impl.idea.ui.popup.PopupState;
 import consulo.ide.impl.project.ui.impl.StatusWidgetBorders;
@@ -39,18 +40,7 @@ public interface StatusBarWidgetWrapper {
     void beforeUpdate();
 
     static void setWidgetTooltip(JComponent widgetComponent, LocalizeValue toolTipText, @Nullable String shortcutText) {
-        HelpTooltipImpl.dispose(widgetComponent);
-
-        if (toolTipText.isNotEmpty()) {
-            HelpTooltipImpl helpTooltip = new HelpTooltipImpl();
-            helpTooltip.setTitle(toolTipText);
-
-            if (shortcutText != null) {
-                helpTooltip.setShortcut(shortcutText);
-            }
-
-            helpTooltip.installOn(widgetComponent);
-        }
+        SwingToolTip.install(widgetComponent, ToolTip.create().setTitle(toolTipText).setShortcut(LocalizeValue.ofNullable(shortcutText)));
     }
 
     final class MultipleTextValues extends TextPanel.WithIconAndArrows implements StatusBarWidgetWrapper {

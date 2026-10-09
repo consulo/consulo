@@ -20,12 +20,8 @@ import consulo.desktop.qt.ui.impl.image.DesktopQtIconRefresher;
 import consulo.desktop.qt.ui.impl.image.DesktopQtLiveIconEngine;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
-import consulo.ui.Component;
-import consulo.ui.MenuItem;
-import consulo.ui.UIAccess;
+import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.BorderBuilder;
-import consulo.ui.PaddingBuilder;
 import consulo.ui.impl.BorderBuilderImpl;
 import consulo.ui.impl.PaddingBuilderImpl;
 import consulo.ui.color.ColorValue;
@@ -56,7 +52,7 @@ public class DesktopQtMenuItemImpl implements MenuItem, DesktopQtIconOwner {
     private LocalizeValue myText;
     private @Nullable Image myIcon;
     private LocalizeValue myShortcutText = LocalizeValue.empty();
-    private LocalizeValue myToolTipText = LocalizeValue.empty();
+    private @Nullable ToolTip myToolTip;
     private @Nullable ColorValue myForegroundColor;
     private @Nullable ColorValue myBackgroundColor;
     private @Nullable Cursor myCursor;
@@ -129,19 +125,14 @@ public class DesktopQtMenuItemImpl implements MenuItem, DesktopQtIconOwner {
             action.setChecked(myChecked);
         }
 
-        action.setToolTip(myToolTipText.get());
+        action.setToolTip(QtToolTipMarkup.toText(myToolTip));
     }
 
     @Override
-    public void setToolTipText(LocalizeValue value) {
-        myToolTipText = value;
+    public void setToolTip(@Nullable ToolTip toolTip) {
+        myToolTip = toolTip;
 
         applyState();
-    }
-
-    @Override
-    public LocalizeValue getToolTipText() {
-        return myToolTipText;
     }
 
     /**
