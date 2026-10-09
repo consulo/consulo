@@ -23,30 +23,23 @@ import java.util.function.Supplier;
  * @author max
  */
 public interface ComponentPopupBuilder {
-    
     default ComponentPopupBuilder setTitle(LocalizeValue title) {
-        setTitle(title.get());
+        setTitle(title.getNullIfEmpty());
         return this;
     }
 
     @Deprecated
     @DeprecationInfo("Use variant with LocalizeValue")
-    
-    ComponentPopupBuilder setTitle(String title);
+    ComponentPopupBuilder setTitle(@Nullable String title);
 
-    
     ComponentPopupBuilder setResizable(boolean forceResizable);
 
-    
     ComponentPopupBuilder setMovable(boolean forceMovable);
 
-    
     ComponentPopupBuilder setRequestFocus(boolean requestFocus);
 
-    
     ComponentPopupBuilder setFocusable(boolean focusable);
 
-    
     ComponentPopupBuilder setRequestFocusCondition(
         ComponentManager project,
         Predicate<? super ComponentManager> condition
@@ -57,62 +50,44 @@ public interface ComponentPopupBuilder {
      */
     ComponentPopupBuilder setDimensionServiceKey(@Nullable ComponentManager project, String key, boolean useForXYLocation);
 
-    
     ComponentPopupBuilder setCancelCallback(Supplier<Boolean> shouldProceed);
 
-    
     ComponentPopupBuilder setCancelOnClickOutside(boolean cancel);
 
-    
     ComponentPopupBuilder addListener(JBPopupListener listener);
 
-    
     ComponentPopupBuilder setCancelOnMouseOutCallback(MouseChecker shouldCancel);
 
-    
     JBPopup createPopup();
 
-    
     ComponentPopupBuilder setCancelButton(Image icon, LocalizeValue tooltipText);
 
-    
     ComponentPopupBuilder setCancelOnOtherWindowOpen(boolean cancelOnWindow);
 
-    
     ComponentPopupBuilder setCancelKeyEnabled(boolean enabled);
 
-    
     ComponentPopupBuilder setLocateByContent(boolean byContent);
 
-    
     ComponentPopupBuilder setLocateWithinScreenBounds(boolean within);
 
-    
     ComponentPopupBuilder setMinSize(Dimension minSize);
 
     /**
      * Use this method to customize shape of popup window (e.g. to use bounded corners).
      */
     @SuppressWarnings("UnusedDeclaration")//used in 'Presentation Assistant' plugin
-    
     ComponentPopupBuilder setMaskProvider(MaskProvider maskProvider);
 
-    
     ComponentPopupBuilder setAlpha(float alpha);
 
-    
     ComponentPopupBuilder setBelongsToGlobalPopupStack(boolean isInStack);
 
-    
     ComponentPopupBuilder setProject(ComponentManager project);
 
-    
     ComponentPopupBuilder addUserData(Object object);
 
-    
     ComponentPopupBuilder setModalContext(boolean modal);
 
-    
     ComponentPopupBuilder setFocusOwners(Component[] focusOwners);
 
     /**
@@ -120,19 +95,14 @@ public interface ComponentPopupBuilder {
      */
     ComponentPopupBuilder setAdText(@Nullable String text);
 
-    
     ComponentPopupBuilder setAdText(@Nullable String text, int textAlignment);
 
-    
     ComponentPopupBuilder setShowShadow(boolean show);
 
-    
     ComponentPopupBuilder setCouldPin(@Nullable Predicate<? super JBPopup> callback);
 
-    
     ComponentPopupBuilder setKeyboardActions(List<? extends Pair<ActionListener, KeyStroke>> keyboardActions);
 
-    
     ComponentPopupBuilder setMayBeParent(boolean mayBeParent);
 
     ComponentPopupBuilder setCancelOnWindowDeactivation(boolean cancelOnWindowDeactivation);
@@ -142,13 +112,10 @@ public interface ComponentPopupBuilder {
      */
     ComponentPopupBuilder setKeyEventHandler(Predicate<? super KeyEvent> handler);
 
-    
     ComponentPopupBuilder setShowBorder(boolean show);
 
-    
     ComponentPopupBuilder setNormalWindowLevel(boolean b);
 
-    
     default ComponentPopupBuilder setBorderColor(Color color) {
         return this;
     }
@@ -158,9 +125,7 @@ public interface ComponentPopupBuilder {
      */
     ComponentPopupBuilder setOkHandler(@Nullable Runnable okHandler);
 
-    
     ComponentPopupBuilder setHeaderLeftActions(List<? extends AnAction> actions);
 
-    
     ComponentPopupBuilder setHeaderRightActions(List<? extends AnAction> actions);
 }

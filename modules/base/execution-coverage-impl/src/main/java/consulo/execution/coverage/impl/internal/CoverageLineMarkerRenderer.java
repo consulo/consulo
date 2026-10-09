@@ -185,7 +185,9 @@ public class CoverageLineMarkerRenderer implements ActiveGutterRenderer, LineMar
                 panel.add(toolbar.getComponent(), BorderLayout.NORTH);
 
                 CoverageLine lineData = getLineData(lineNumber);
-                String reportText = CoverageLine.isSomewhatCovered(lineData) && !mySubCoverageActive ? getReport(editor, lineNumber) : null;
+                LocalizeValue reportText = CoverageLine.isSomewhatCovered(lineData) && !mySubCoverageActive
+                    ? getReport(editor, lineNumber)
+                    : LocalizeValue.empty();
                 ExecutionCoverageInternal.getInstance().showCoverageHit(panel, editor, point, lineData, reportText);
             },
             UIAccess.current()
@@ -193,7 +195,7 @@ public class CoverageLineMarkerRenderer implements ActiveGutterRenderer, LineMar
     }
 
     @RequiredReadAction
-    private String getReport(Editor editor, int lineNumber) {
+    private LocalizeValue getReport(Editor editor, int lineNumber) {
         CoverageLine lineData = getLineData(lineNumber);
 
         Document document = editor.getDocument();

@@ -1,7 +1,9 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ui;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.ide.impl.idea.codeInsight.hint.TooltipController;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.awt.internal.IdeTooltip;
 import consulo.ide.impl.idea.ide.IdeTooltipManagerImpl;
 import consulo.logging.Logger;
@@ -18,6 +20,7 @@ import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderBase;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -46,7 +49,7 @@ public class LightweightHintImpl extends UserDataHolderBase implements Lightweig
     private boolean mySelectingHint;
 
     private boolean myForceShowAsPopup = false;
-    private String myTitle = null;
+    private LocalizeValue myTitle = LocalizeValue.empty();
     private boolean myCancelOnClickOutside = true;
     private boolean myCancelOnOtherWindowOpen = true;
     private boolean myResizable;
@@ -83,8 +86,14 @@ public class LightweightHintImpl extends UserDataHolderBase implements Lightweig
         myFocusRequestor = c;
     }
 
-    public void setTitle(String title) {
+    public void setTitle(LocalizeValue title) {
         myTitle = title;
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    public void setTitle(@Nullable String title) {
+        setTitle(LocalizeValue.ofNullable(title));
     }
 
     public boolean isSelectingHint() {
@@ -234,7 +243,7 @@ public class LightweightHintImpl extends UserDataHolderBase implements Lightweig
                 .setRequestFocus(myFocusRequestor != null || hintHint.isRequestFocus())
                 .setFocusable(myFocusRequestor != null || hintHint.isRequestFocus())
                 .setResizable(myResizable)
-                .setMovable(myTitle != null)
+                .setMovable(myTitle.isNotEmpty())
                 .setTitle(myTitle)
                 .setModalContext(false)
                 .setShowShadow(isRealPopup() && !isForceHideShadow())
