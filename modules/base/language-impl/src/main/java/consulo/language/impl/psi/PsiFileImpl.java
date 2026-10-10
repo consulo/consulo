@@ -38,6 +38,7 @@ import consulo.language.psi.stub.*;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.util.IncorrectOperationException;
 import consulo.language.version.LanguageVersion;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.navigation.ItemPresentation;
@@ -978,8 +979,8 @@ public abstract class PsiFileImpl extends UserDataHolderBase
         return new ItemPresentation() {
             @Override
             @RequiredReadAction
-            public String getPresentableText() {
-                return getName();
+            public LocalizeValue getPresentableText() {
+                return LocalizeValue.localizeTODO(getName());
             }
 
             @Override

@@ -119,7 +119,7 @@ public class ImplementationViewComponentImpl extends JPanel implements Implement
             if (element instanceof NavigationItem navigationItem) {
                 ItemPresentation presentation = navigationItem.getPresentation();
                 if (presentation != null) {
-                    return presentation.getPresentableText();
+                    return presentation.getPresentableText().getNullIfEmpty();
                 }
             }
 

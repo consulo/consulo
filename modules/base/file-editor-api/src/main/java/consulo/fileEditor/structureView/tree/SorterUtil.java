@@ -15,23 +15,21 @@
  */
 package consulo.fileEditor.structureView.tree;
 
+import consulo.localize.LocalizeValue;
+
 /**
  * @author Konstantin Bulenkov
  */
 public class SorterUtil {
-  private SorterUtil() {
-  }
-
-  public static String getStringPresentation(Object object) {
-    String result = null;
-    if (object instanceof SortableTreeElement) {
-      result = ((SortableTreeElement) object).getAlphaSortKey();
-    } else if (object instanceof TreeElement){
-      result =  ((TreeElement)object).getPresentation().getPresentableText();
-    } else if (object instanceof Group){
-      result = ((Group)object).getPresentation().getPresentableText();
+    private SorterUtil() {
     }
 
-    return result != null ? result : "";
-  }
+    public static LocalizeValue getStringPresentation(Object object) {
+        return switch (object) {
+            case SortableTreeElement sortableTreeElement -> LocalizeValue.of(sortableTreeElement.getAlphaSortKey());
+            case TreeElement treeElement -> treeElement.getPresentation().getPresentableText();
+            case Group group -> group.getPresentation().getPresentableText();
+            default -> LocalizeValue.empty();
+        };
+    }
 }

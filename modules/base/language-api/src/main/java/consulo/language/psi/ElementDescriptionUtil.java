@@ -15,6 +15,8 @@
  */
 package consulo.language.psi;
 
+import consulo.localize.LocalizeValue;
+
 /**
  * @author yole
  */
@@ -22,23 +24,22 @@ public class ElementDescriptionUtil {
     private ElementDescriptionUtil() {
     }
 
-    
-    public static String getElementDescription(PsiElement element, ElementDescriptionLocation location) {
+    public static LocalizeValue getElementDescription(PsiElement element, ElementDescriptionLocation location) {
         for (ElementDescriptionProvider provider : ElementDescriptionProvider.EP_NAME.getExtensionList()) {
-            String result = provider.getElementDescription(element, location);
-            if (result != null) {
+            LocalizeValue result = provider.getElementDescription(element, location);
+            if (result.isNotEmpty()) {
                 return result;
             }
         }
 
         ElementDescriptionProvider defaultProvider = location.getDefaultProvider();
         if (defaultProvider != null) {
-            String result = defaultProvider.getElementDescription(element, location);
-            if (result != null) {
+            LocalizeValue result = defaultProvider.getElementDescription(element, location);
+            if (result.isNotEmpty()) {
                 return result;
             }
         }
 
-        return element.toString();
+        return LocalizeValue.of(element.toString());
     }
 }

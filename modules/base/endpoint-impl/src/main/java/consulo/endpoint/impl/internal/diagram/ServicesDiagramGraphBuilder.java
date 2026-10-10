@@ -144,7 +144,7 @@ final class ServicesDiagramGraphBuilder {
                 }
 
                 ItemPresentation presentation = provider.getEndpointPresentation(group, endpoint);
-                String text = presentation.getPresentableText();
+                String text = presentation.getPresentableText().getNullIfEmpty();
                 if (text != null && presentation instanceof EndpointMethodPresentation methodPresentation) {
                     String method = methodPresentation.getEndpointMethodPresentation();
                     if (method != null && !method.isEmpty()) {

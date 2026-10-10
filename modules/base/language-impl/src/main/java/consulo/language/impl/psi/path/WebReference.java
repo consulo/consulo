@@ -24,6 +24,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiExternalReferenceHost;
 import consulo.language.psi.PsiReferenceBase;
 import consulo.language.psi.SyntheticElement;
+import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
 
 import consulo.ui.annotation.RequiredUIAccess;
@@ -95,8 +96,8 @@ public class WebReference extends PsiReferenceBase<PsiElement> {
         }
 
         @Override
-        public String getPresentableText() {
-            return getUrl();
+        public LocalizeValue getPresentableText() {
+            return LocalizeValue.of(getUrl());
         }
 
         @Override

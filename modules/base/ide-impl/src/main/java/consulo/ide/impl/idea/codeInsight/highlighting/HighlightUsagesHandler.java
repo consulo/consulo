@@ -440,7 +440,7 @@ public class HighlightUsagesHandler extends HighlightHandlerBase {
         return new TextRange(start, end);
     }
 
-    private static String getElementName(PsiElement element) {
+    private static LocalizeValue getElementName(PsiElement element) {
         return ElementDescriptionUtil.getElementDescription(element, HighlightUsagesDescriptionLocation.INSTANCE);
     }
 

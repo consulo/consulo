@@ -506,14 +506,14 @@ public class FindInProjectUtil {
         }
 
         @Override
-        public String getPresentableText() {
+        public LocalizeValue getPresentableText() {
             UsageViewPresentation presentation = setupViewPresentation(false, myFindModel);
-            return presentation.getToolwindowTitle();
+            return LocalizeValue.localizeTODO(presentation.getToolwindowTitle());
         }
 
         @Override
         public String getLongDescriptiveName() {
-            return getPresentableText();
+            return getPresentableText().getNullIfEmpty();
         }
 
         @Override

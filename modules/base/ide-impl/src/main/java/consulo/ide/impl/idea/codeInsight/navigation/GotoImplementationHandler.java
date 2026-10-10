@@ -99,16 +99,18 @@ public class GotoImplementationHandler extends GotoTargetHandler {
     @Override
     protected LocalizeValue getChooserTitle(PsiElement sourceElement, String name, int length, boolean finished) {
         ItemPresentation presentation = ((NavigationItem)sourceElement).getPresentation();
-        String fullName;
+        LocalizeValue fullName;
         if (presentation == null) {
-            fullName = name;
+            fullName = LocalizeValue.localizeTODO(name);
         }
         else {
             PsiElement container = getContainer(sourceElement);
             ItemPresentation containerPresentation =
                 container == null || container instanceof PsiFile ? null : ((NavigationItem)container).getPresentation();
-            String containerText = containerPresentation == null ? null : containerPresentation.getPresentableText();
-            fullName = (containerText == null ? "" : containerText + ".") + presentation.getPresentableText();
+            fullName = presentation.getPresentableText();
+            if (containerPresentation != null && containerPresentation.getPresentableText().isNotEmpty()) {
+                fullName = LocalizeValue.join(".", containerPresentation.getPresentableText(), fullName);
+            }
         }
         return CodeInsightLocalize.gotoImplementationChoosertitle(fullName, length, finished ? "" : " so far");
     }

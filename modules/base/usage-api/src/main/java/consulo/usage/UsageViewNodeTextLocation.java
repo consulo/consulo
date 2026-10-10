@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.usage;
 
 import consulo.language.Language;
@@ -24,6 +23,7 @@ import consulo.language.psi.ElementDescriptionProvider;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.meta.PsiMetaOwner;
 import consulo.language.psi.meta.PsiPresentableMetaData;
+import consulo.localize.LocalizeValue;
 
 /**
  * @author peter
@@ -41,19 +41,19 @@ public class UsageViewNodeTextLocation extends ElementDescriptionLocation {
 
     private static final ElementDescriptionProvider DEFAULT_PROVIDER = (element, location) -> {
         if (!(location instanceof UsageViewNodeTextLocation)) {
-            return null;
+            return LocalizeValue.empty();
         }
 
         if (element instanceof PsiMetaOwner metaOwner && metaOwner.getMetaData() instanceof PsiPresentableMetaData presentableMetaData) {
-            return presentableMetaData.getTypeName() + " " + DescriptiveNameUtil.getMetaDataName(presentableMetaData);
+            return LocalizeValue.localizeTODO(presentableMetaData.getTypeName() + " " + DescriptiveNameUtil.getMetaDataName(presentableMetaData));
         }
 
         if (element instanceof PsiFile file) {
-            return file.getName();
+            return LocalizeValue.of(file.getName());
         }
 
         Language language = element.getLanguage();
         FindUsagesProvider provider = FindUsagesProvider.forLanguage(language);
-        return provider.getNodeText(element, true);
+        return LocalizeValue.localizeTODO(provider.getNodeText(element, true));
     };
 }

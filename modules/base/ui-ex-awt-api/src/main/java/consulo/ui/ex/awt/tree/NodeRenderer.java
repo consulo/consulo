@@ -61,7 +61,7 @@ public class NodeRenderer extends ColoredTreeCellRenderer {
       List<PresentableNodeDescriptor.ColoredFragment> coloredText = presentation.getColoredText();
       ColorValue forcedForeground = presentation.getForcedTextForeground();
       if (coloredText.isEmpty()) {
-        String text = presentation.getPresentableText();
+        String text = presentation.getPresentableText().getNullIfEmpty();
         if (StringUtil.isEmpty(text)) {
           String valueSting = value.toString();
           text = valueSting;

@@ -16,6 +16,7 @@
 package consulo.usage;
 
 import consulo.language.psi.*;
+import consulo.localize.LocalizeValue;
 
 /**
  * @author yole
@@ -34,14 +35,14 @@ public class UsageViewLongNameLocation extends ElementDescriptionLocation {
     private static final ElementDescriptionProvider DEFAULT_PROVIDER = (element, location) -> {
         if (location instanceof UsageViewLongNameLocation) {
             if (element instanceof PsiDirectory directory) {
-                return PsiPackageHelper.getInstance(element.getProject()).getQualifiedName(directory, true);
+                return LocalizeValue.of(PsiPackageHelper.getInstance(element.getProject()).getQualifiedName(directory, true));
             }
             if (element instanceof PsiQualifiedNamedElement qualifiedNamedElement) {
-                return qualifiedNamedElement.getQualifiedName();
+                return LocalizeValue.ofNullable(qualifiedNamedElement.getQualifiedName());
             }
             return UsageViewShortNameLocation.INSTANCE.getDefaultProvider()
                 .getElementDescription(element, UsageViewShortNameLocation.INSTANCE);
         }
-        return null;
+        return LocalizeValue.empty();
     };
 }

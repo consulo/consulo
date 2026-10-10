@@ -108,9 +108,9 @@ public class GotoClassAction extends SearchEverywhereBaseAction implements DumbA
                         return valueNavigatable;
                     }
 
-                    String presentableText = structureViewTreeElement.getPresentation().getPresentableText();
-                    if (presentableText != null) {
-                        int degree = matcher.matchingDegree(presentableText);
+                    LocalizeValue presentableText = structureViewTreeElement.getPresentation().getPresentableText();
+                    if (presentableText.isNotEmpty()) {
+                        int degree = matcher.matchingDegree(presentableText.get());
                         if (degree > max) {
                             max = degree;
                             target = structureViewTreeElement.getValue();

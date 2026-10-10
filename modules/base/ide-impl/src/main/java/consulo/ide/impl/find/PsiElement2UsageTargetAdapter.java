@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.find;
 
 import consulo.annotation.access.RequiredReadAction;
@@ -36,6 +35,7 @@ import consulo.language.psi.meta.PsiMetaOwner;
 import consulo.language.psi.meta.PsiPresentableMetaData;
 import consulo.language.psi.scope.LocalSearchScope;
 import consulo.language.psi.search.ReferencesSearch;
+import consulo.localize.LocalizeValue;
 import consulo.navigation.ItemPresentation;
 import consulo.navigation.Navigatable;
 import consulo.navigation.NavigationItem;
@@ -61,7 +61,7 @@ public class PsiElement2UsageTargetAdapter implements PsiElementUsageTarget, UiD
     
     protected final FindUsagesOptions myOptions;
 
-    private String myPresentableText;
+    private LocalizeValue myPresentableText = LocalizeValue.empty();
     private Image myIcon;
 
     public PsiElement2UsageTargetAdapter(PsiElement element, FindUsagesOptions options) {
@@ -87,7 +87,6 @@ public class PsiElement2UsageTargetAdapter implements PsiElementUsageTarget, UiD
     }
 
     @Override
-    
     public ItemPresentation getPresentation() {
         return this;
     }
@@ -123,7 +122,7 @@ public class PsiElement2UsageTargetAdapter implements PsiElementUsageTarget, UiD
 
     @Override
     public String toString() {
-        return getPresentableText();
+        return getPresentableText().get();
     }
 
     @Override
@@ -212,7 +211,6 @@ public class PsiElement2UsageTargetAdapter implements PsiElementUsageTarget, UiD
         return targets;
     }
 
-    
     @RequiredReadAction
     public static PsiElement[] convertToPsiElements(PsiElement2UsageTargetAdapter[] adapters) {
         PsiElement[] targets = new PsiElement[adapters.length];
@@ -237,7 +235,6 @@ public class PsiElement2UsageTargetAdapter implements PsiElementUsageTarget, UiD
         return UsageViewUtil.getShowUsagesWithSettingsShortcut();
     }
 
-    
     @Override
     @RequiredReadAction
     public String getLongDescriptiveName() {
@@ -274,7 +271,9 @@ public class PsiElement2UsageTargetAdapter implements PsiElementUsageTarget, UiD
         if (element != null && element.isValid()) {
             ItemPresentation presentation = ((NavigationItem)element).getPresentation();
             myIcon = presentation == null ? null : presentation.getIcon();
-            myPresentableText = presentation == null ? UsageViewUtil.createNodeText(element) : presentation.getPresentableText();
+            myPresentableText = presentation == null
+                ? UsageViewUtil.createNodeText(element)
+                : presentation.getPresentableText();
             if (myIcon == null) {
                 if (element instanceof PsiMetaOwner metaOwner) {
                     if (metaOwner.getMetaData() instanceof PsiPresentableMetaData presentableMetaData) {
@@ -294,7 +293,7 @@ public class PsiElement2UsageTargetAdapter implements PsiElementUsageTarget, UiD
     }
 
     @Override
-    public String getPresentableText() {
+    public LocalizeValue getPresentableText() {
         return myPresentableText;
     }
 
@@ -308,7 +307,6 @@ public class PsiElement2UsageTargetAdapter implements PsiElementUsageTarget, UiD
         return myIcon;
     }
 
-    
     public FindUsagesOptions getOptions() {
         return myOptions;
     }

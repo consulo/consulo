@@ -19,6 +19,7 @@ import consulo.application.AllIcons;
 import consulo.fileEditor.structureView.StructureViewTreeElement;
 import consulo.fileEditor.structureView.tree.TreeElement;
 import consulo.language.editor.folding.CustomFoldingProvider;
+import consulo.localize.LocalizeValue;
 import consulo.navigation.ItemPresentation;
 import consulo.document.util.TextRange;
 import consulo.navigation.Navigatable;
@@ -77,8 +78,8 @@ public class CustomRegionTreeElement implements StructureViewTreeElement {
   public ItemPresentation getPresentation() {
     return new ItemPresentation() {
       @Override
-      public @Nullable String getPresentableText() {
-        return myProvider.getPlaceholderText(myStartElement.getText());
+      public LocalizeValue getPresentableText() {
+        return LocalizeValue.localizeTODO(myProvider.getPlaceholderText(myStartElement.getText()));
       }
 
       @Override

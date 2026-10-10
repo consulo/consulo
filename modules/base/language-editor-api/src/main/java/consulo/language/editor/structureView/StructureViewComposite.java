@@ -15,6 +15,7 @@
  */
 package consulo.language.editor.structureView;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.FileEditor;
@@ -22,6 +23,7 @@ import consulo.fileEditor.structureView.StructureView;
 import consulo.fileEditor.structureView.StructureViewModel;
 import consulo.fileEditor.structureView.StructureViewTreeElement;
 import consulo.fileEditor.structureView.tree.TreeElement;
+import consulo.localize.LocalizeValue;
 import consulo.navigation.ItemPresentation;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
@@ -38,23 +40,35 @@ public class StructureViewComposite implements StructureView {
     private final StructureViewDescriptor[] myStructureViews;
 
     public static class StructureViewDescriptor {
-        public final String title;
+        public final LocalizeValue title;
         public final StructureViewModel structureModel;
         public final StructureView structureView;
         public final Image icon;
 
-        public StructureViewDescriptor(String title, StructureView structureView, Image icon) {
+        public StructureViewDescriptor(LocalizeValue title, StructureView structureView, Image icon) {
             this.title = title;
             this.structureModel = structureView.getTreeModel();
             this.structureView = structureView;
             this.icon = icon;
         }
 
-        public StructureViewDescriptor(String title, StructureViewModel structureModel, Image icon) {
+        @Deprecated
+        @DeprecationInfo("Use variant with LocalizeValue")
+        public StructureViewDescriptor(String title, StructureView structureView, Image icon) {
+            this(LocalizeValue.ofNullable(title), structureView, icon);
+        }
+
+        public StructureViewDescriptor(LocalizeValue title, StructureViewModel structureModel, Image icon) {
             this.title = title;
             this.structureModel = structureModel;
             this.structureView = null;
             this.icon = icon;
+        }
+
+        @Deprecated
+        @DeprecationInfo("Use variant with LocalizeValue")
+        public StructureViewDescriptor(String title, StructureViewModel structureModel, Image icon) {
+            this(LocalizeValue.ofNullable(title), structureModel, icon);
         }
     }
 
@@ -118,13 +132,11 @@ public class StructureViewComposite implements StructureView {
         }
     }
 
-
     public StructureViewDescriptor[] getStructureViews() {
         return myStructureViews;
     }
 
     @Override
-
     public StructureViewModel getTreeModel() {
         StructureView view = getSelectedStructureView();
         if (view != null) {
@@ -156,8 +168,8 @@ public class StructureViewComposite implements StructureView {
             }
 
             @Override
-            public @Nullable String getPresentableText() {
-                return null;
+            public LocalizeValue getPresentableText() {
+                return LocalizeValue.empty();
             }
 
             @Override
