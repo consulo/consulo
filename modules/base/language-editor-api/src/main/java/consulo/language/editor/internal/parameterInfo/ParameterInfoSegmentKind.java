@@ -13,21 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.language.editor.impl.internal.parameterInfo;
-
-import java.util.List;
+package consulo.language.editor.internal.parameterInfo;
 
 /**
- * @param highlighted     the overload the caret is in, drawn on its own background
- * @param separatorAfter  whether a line separates it from the next overload
  * @author VISTALL
  * @since 2026-10-10
  */
-public record ParameterInfoSignature(
-    List<ParameterInfoSegment> segments,
-    boolean disabled,
-    boolean deprecated,
-    boolean highlighted,
-    boolean separatorAfter
-) {
+public enum ParameterInfoSegmentKind {
+    TEXT,
+    PARAMETER,
+    SEPARATOR
 }

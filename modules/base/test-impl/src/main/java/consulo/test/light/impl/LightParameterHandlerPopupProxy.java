@@ -13,31 +13,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.language.editor.impl.internal.parameterInfo;
+package consulo.test.light.impl;
 
 import consulo.language.editor.completion.lookup.Lookup;
+import consulo.language.editor.internal.parameterInfo.ParameterHandlerPopupProxy;
+import consulo.language.editor.internal.parameterInfo.ParameterInfoAnchor;
+import consulo.language.editor.internal.parameterInfo.ParameterInfoModel;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
 
 /**
- * The popup a parameter info controller shows its model in. Each frontend draws and places it its own way; the
- * controller only says what to show and when.
- *
  * @author VISTALL
- * @since 2026-10-10
  */
-public interface ParameterHandlerPopupProxy {
-    boolean isVisible();
+public class LightParameterHandlerPopupProxy implements ParameterHandlerPopupProxy {
+    @Override
+    public boolean isVisible() {
+        return false;
+    }
 
+    @Override
     @RequiredUIAccess
-    void show(ParameterInfoModel model, @Nullable ParameterInfoAnchor anchor, boolean requestFocus, boolean hideByTextChange);
+    public void show(ParameterInfoModel model, @Nullable ParameterInfoAnchor anchor, boolean requestFocus, boolean hideByTextChange) {
+    }
 
+    @Override
     @RequiredUIAccess
-    void update(ParameterInfoModel model, @Nullable ParameterInfoAnchor anchor);
+    public void update(ParameterInfoModel model, @Nullable ParameterInfoAnchor anchor) {
+    }
 
+    @Override
     @RequiredUIAccess
-    void adjustForLookup(Lookup lookup);
+    public void adjustForLookup(Lookup lookup) {
+    }
 
+    @Override
     @RequiredUIAccess
-    void hide();
+    public void hide() {
+    }
 }

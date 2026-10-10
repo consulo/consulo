@@ -96,6 +96,12 @@ module consulo.language.editor.api {
         consulo.web.ide,
         consulo.web.ui.impl;
 
+    exports consulo.language.editor.internal.parameterInfo to
+        consulo.desktop.awt.ide.impl,
+        consulo.ide.impl,
+        consulo.language.editor.impl,
+        consulo.test.impl;
+
     exports consulo.language.editor.internal.action to
         consulo.desktop.awt.ide.impl,
         consulo.ide.impl,

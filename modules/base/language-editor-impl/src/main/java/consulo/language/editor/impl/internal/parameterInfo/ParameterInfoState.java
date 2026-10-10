@@ -23,6 +23,8 @@ import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import consulo.language.editor.internal.parameterInfo.ParameterInfoModel;
+import consulo.language.editor.internal.parameterInfo.ParameterInfoSignature;
 
 /**
  * @author VISTALL

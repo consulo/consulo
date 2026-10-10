@@ -22,6 +22,9 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.ToIntFunction;
+import consulo.language.editor.internal.parameterInfo.ParameterInfoSegment;
+import consulo.language.editor.internal.parameterInfo.ParameterInfoSegmentKind;
+import consulo.language.editor.internal.parameterInfo.ParameterInfoSignature;
 
 /**
  * @author VISTALL

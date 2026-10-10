@@ -36,6 +36,9 @@ import consulo.ui.PopupOptions;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import jakarta.inject.Singleton;
+import consulo.language.editor.internal.parameterInfo.ParameterHandlerPopupProxy;
+import consulo.language.editor.internal.parameterInfo.ParameterHandlerPopupProxyFactory;
+import consulo.language.editor.internal.parameterInfo.ParameterInfoModel;
 
 /**
  * @author VISTALL

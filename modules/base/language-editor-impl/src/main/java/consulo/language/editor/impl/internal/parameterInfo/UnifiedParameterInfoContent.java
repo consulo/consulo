@@ -30,6 +30,8 @@ import consulo.ui.layout.VerticalLayout;
 import consulo.ui.style.ComponentColors;
 
 import java.util.List;
+import consulo.language.editor.internal.parameterInfo.ParameterInfoModel;
+import consulo.language.editor.internal.parameterInfo.ParameterInfoSignature;
 
 /**
  * @author VISTALL

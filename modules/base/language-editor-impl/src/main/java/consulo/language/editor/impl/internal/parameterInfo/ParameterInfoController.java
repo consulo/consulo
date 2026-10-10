@@ -65,6 +65,10 @@ import java.util.concurrent.locks.LockSupport;
 import java.util.function.Consumer;
 
 import static consulo.language.editor.impl.internal.parameterInfo.ParameterInfoTaskRunnerUtil.runTask;
+import consulo.language.editor.internal.parameterInfo.ParameterHandlerPopupProxy;
+import consulo.language.editor.internal.parameterInfo.ParameterHandlerPopupProxyFactory;
+import consulo.language.editor.internal.parameterInfo.ParameterInfoAnchor;
+import consulo.language.editor.internal.parameterInfo.ParameterInfoModel;
 
 public class ParameterInfoController extends UserDataHolderBase implements Disposable {
     private static final Logger LOG = Logger.getInstance(ParameterInfoController.class);

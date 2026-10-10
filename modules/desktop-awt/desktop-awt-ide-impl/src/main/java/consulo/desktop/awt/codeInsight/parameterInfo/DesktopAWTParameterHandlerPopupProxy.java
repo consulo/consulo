@@ -17,9 +17,9 @@ package consulo.desktop.awt.codeInsight.parameterInfo;
 
 import consulo.application.Application;
 import consulo.codeEditor.Editor;
-import consulo.language.editor.impl.internal.parameterInfo.ParameterHandlerPopupProxy;
-import consulo.language.editor.impl.internal.parameterInfo.ParameterInfoAnchor;
-import consulo.language.editor.impl.internal.parameterInfo.ParameterInfoModel;
+import consulo.language.editor.internal.parameterInfo.ParameterHandlerPopupProxy;
+import consulo.language.editor.internal.parameterInfo.ParameterInfoAnchor;
+import consulo.language.editor.internal.parameterInfo.ParameterInfoModel;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.language.editor.completion.lookup.Lookup;

@@ -23,6 +23,8 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
+import consulo.language.editor.internal.parameterInfo.ParameterInfoSegment;
+import consulo.language.editor.internal.parameterInfo.ParameterInfoSegmentKind;
 
 /**
  * @author VISTALL

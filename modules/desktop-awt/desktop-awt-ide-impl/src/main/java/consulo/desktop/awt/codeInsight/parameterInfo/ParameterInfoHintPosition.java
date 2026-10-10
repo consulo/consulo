@@ -20,7 +20,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.VisualPosition;
 import consulo.codeEditor.util.EditorUtil;
 import consulo.document.util.TextRange;
-import consulo.language.editor.impl.internal.parameterInfo.ParameterInfoAnchor;
+import consulo.language.editor.internal.parameterInfo.ParameterInfoAnchor;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.language.editor.hint.HintManager;

@@ -13,14 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.language.editor.impl.internal.parameterInfo;
+package consulo.language.editor.internal.parameterInfo;
+
+import consulo.language.editor.parameterInfo.SignatureStyle;
+
+import java.util.Set;
 
 /**
+ * @param text for a {@link ParameterInfoSegmentKind#SEPARATOR} the token only, empty for a separator without one
  * @author VISTALL
  * @since 2026-10-10
  */
-public enum ParameterInfoSegmentKind {
-    TEXT,
-    PARAMETER,
-    SEPARATOR
+public record ParameterInfoSegment(ParameterInfoSegmentKind kind, String text, Set<SignatureStyle> styles) {
 }

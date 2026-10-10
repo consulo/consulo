@@ -29,6 +29,8 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 import static consulo.language.editor.impl.internal.parameterInfo.ParameterInfoTaskRunnerUtil.runTask;
+import consulo.language.editor.internal.parameterInfo.ParameterHandlerPopupProxyFactory;
+import consulo.language.editor.internal.parameterInfo.ParameterInfoModel;
 
 public class ShowParameterInfoHandler implements CodeInsightActionHandler {
   private static final ParameterInfoHandler[] EMPTY_HANDLERS = new ParameterInfoHandler[0];

@@ -20,6 +20,9 @@ import consulo.language.editor.completion.lookup.Lookup;
 import consulo.ui.LightPopup;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
+import consulo.language.editor.internal.parameterInfo.ParameterHandlerPopupProxy;
+import consulo.language.editor.internal.parameterInfo.ParameterInfoAnchor;
+import consulo.language.editor.internal.parameterInfo.ParameterInfoModel;
 
 /**
  * @author VISTALL
