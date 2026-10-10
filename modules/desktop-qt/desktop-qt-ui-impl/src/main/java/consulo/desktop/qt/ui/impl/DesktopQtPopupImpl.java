@@ -89,6 +89,8 @@ public abstract class DesktopQtPopupImpl extends QtComponentDelegate<QWidget> im
     private static final int ourArrowHeight = 8;
     private static final int ourArrowInset = 20;
 
+    private static final String ourSkipShadowProperty = "_KDE_NET_WM_SKIP_SHADOW";
+
     private class QtPopup extends QFrame {
         private boolean myArrowShown;
         private boolean myArrowAtTop;
@@ -274,7 +276,11 @@ public abstract class DesktopQtPopupImpl extends QtComponentDelegate<QWidget> im
         // a frameless window carries no chrome of its own, and without a border of some kind the content bleeds
         // into whatever the popup floats over. the rule draws it rather than the frame shape, since only a style
         // sheet can round the corners
-        if (!options.hasArrow()) {
+        if (options.hasArrow()) {
+            popup.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground, isMaskOnlyForInput());
+            popup.setProperty(ourSkipShadowProperty, true);
+        }
+        else {
             setOwnStyleSheet(DesktopQtStyleApplier.popupFrameStyleSheet(ourObjectName, ourCornerRadius));
         }
 
@@ -345,7 +351,10 @@ public abstract class DesktopQtPopupImpl extends QtComponentDelegate<QWidget> im
     public void setBackgroundColor(@Nullable ColorValue background) {
         super.setBackgroundColor(background);
 
-        if (!myOptions.hasArrow()) {
+        if (myOptions.hasArrow()) {
+            myComponent.setAutoFillBackground(false);
+        }
+        else {
             setOwnStyleSheet(DesktopQtStyleApplier.popupFrameStyleSheet(ourObjectName, ourCornerRadius, background));
         }
 
@@ -452,6 +461,10 @@ public abstract class DesktopQtPopupImpl extends QtComponentDelegate<QWidget> im
         }
 
         showAtGlobal(placed);
+    }
+
+    private static boolean isMaskOnlyForInput() {
+        return QGuiApplication.platformName().startsWith("wayland");
     }
 
     private static boolean fitsAbove(QWidget widget, QPoint position) {
