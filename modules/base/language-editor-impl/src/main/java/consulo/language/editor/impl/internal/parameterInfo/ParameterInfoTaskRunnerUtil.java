@@ -1,32 +1,18 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.codeInsight.hint;
+package consulo.language.editor.impl.internal.parameterInfo;
 
 import consulo.application.Application;
 import consulo.application.NonBlockingReadAction;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorPopupHelper;
 import consulo.codeEditor.RealEditor;
 import consulo.codeEditor.event.VisibleAreaListener;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
-import consulo.ui.RelativePoint2D;
-import consulo.ui.ex.awt.JBLoadingPanel;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.UIAccess;
-import consulo.ui.ex.awt.AsyncProcessIcon;
-import consulo.ui.ex.awt.JBLabel;
-import consulo.ui.ex.awt.LoadingDecorator;
-import consulo.ui.ex.awt.NonOpaquePanel;
-import consulo.ui.ex.popup.ComponentPopupBuilder;
-import consulo.ui.ex.popup.JBPopup;
-import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.ui.image.Image;
 import consulo.util.concurrent.CancellablePromise;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
 import java.awt.*;
 import java.util.Objects;
 import java.util.concurrent.ScheduledFuture;
@@ -86,51 +72,29 @@ class ParameterInfoTaskRunnerUtil {
       stopActionRef.set(originalStopAction);
     }
     else {
-      final Disposable disposable = Disposable.newDisposable();
-      Disposer.register(project, disposable);
-
-      JBLoadingPanel loadingPanel = new JBLoadingPanel(null, panel -> new LoadingDecorator(panel, disposable, 0, false, new AsyncProcessIcon("ShowParameterInfo")) {
-        @Override
-        protected NonOpaquePanel customizeLoadingLayer(JPanel parent, JLabel text, AsyncProcessIcon icon) {
-          parent.setLayout(new FlowLayout(FlowLayout.LEFT));
-          NonOpaquePanel result = new NonOpaquePanel();
-          result.add(icon);
-          parent.add(result);
-          return result;
-        }
-      });
-      loadingPanel.add(new JBLabel(Image.empty(Image.DEFAULT_ICON_SIZE)));
-      loadingPanel.add(new JBLabel(progressTitle));
-
-      ComponentPopupBuilder builder = JBPopupFactory.getInstance().createComponentPopupBuilder(loadingPanel, null).setProject(project).setCancelCallback(() -> {
-        Consumer<Boolean> stopAction = stopActionRef.get();
-        if (stopAction != null) {
-          stopAction.accept(true);
-        }
-        return true;
-      });
-      JBPopup popup = builder.createPopup();
-      Disposer.register(disposable, popup);
+      AtomicReference<Runnable> hideRef = new AtomicReference<>();
       ScheduledFuture<?> showPopupFuture = uiAccess.getScheduler().schedule(() -> {
-        if (!popup.isDisposed() && !popup.isVisible() && !editor.isDisposed()) {
-          RelativePoint2D popupPosition = EditorPopupHelper.getInstance().guessBestPopupLocation(editor);
-          loadingPanel.startLoading();
-          popup.show(popupPosition);
+        if (!editor.isDisposed() && stopActionRef.get() != null) {
+          hideRef.set(project.getApplication().getInstance(ParameterHandlerPopupProxyFactory.class).showLoading(editor, progressTitle, () -> {
+            Consumer<Boolean> stopAction = stopActionRef.get();
+            if (stopAction != null) {
+              stopAction.accept(true);
+            }
+          }));
         }
       }, project.getApplication().getDefaultModalityState(), DEFAULT_PROGRESS_POPUP_DELAY_MS, TimeUnit.MILLISECONDS);
 
       stopActionRef.set((cancel) -> {
         try {
-          loadingPanel.stopLoading();
           originalStopAction.accept(cancel);
         }
         finally {
           showPopupFuture.cancel(false);
           uiAccess.giveIfNeed(() -> {
-            if (popup.isVisible()) {
-              popup.setUiVisible(false);
+            Runnable hide = hideRef.getAndSet(null);
+            if (hide != null) {
+              hide.run();
             }
-            Disposer.dispose(disposable);
           });
         }
       });

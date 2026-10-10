@@ -220,6 +220,8 @@ public class DesktopQtEditorWidget extends QAbstractScrollArea implements Deskto
 
         updateSideAreas();
         updateScrollRanges();
+
+        fireVisibleAreaChanged();
     }
 
     @Override
@@ -229,6 +231,14 @@ public class DesktopQtEditorWidget extends QAbstractScrollArea implements Deskto
         // the strip scrolls with the text vertically and stays put horizontally
         if (dy != 0) {
             myGutter.update();
+        }
+
+        fireVisibleAreaChanged();
+    }
+
+    private void fireVisibleAreaChanged() {
+        if (myEditor.getScrollingModel() instanceof DesktopQtCodeEditorScrollingModelImpl scrollingModel) {
+            scrollingModel.fireVisibleAreaChanged();
         }
     }
 

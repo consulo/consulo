@@ -21,6 +21,7 @@ import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.popover.Popover;
 import com.vaadin.flow.component.popover.PopoverPosition;
+import com.vaadin.flow.component.popover.PopoverVariant;
 import com.vaadin.flow.dom.Element;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
@@ -28,8 +29,8 @@ import consulo.ui.Component;
 import consulo.ui.LightPopup;
 import consulo.ui.Popup;
 import consulo.ui.PopupOptions;
-import consulo.ui.PopupPosition;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.color.ColorValue;
 import consulo.ui.event.PopupCloseEvent;
 import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
 import consulo.web.ui.impl.internal.base.TargetVaadin;
@@ -56,6 +57,8 @@ public class WebLightPopupImpl extends VaadinComponentDelegate<WebLightPopupImpl
 
     private static final String RESIZABLE_CLASS = "consulo-resizable-popup";
     private static final String MIN_WIDTH_PROPERTY = "--consulo-popup-min-width";
+    private static final String ARROW_ANCHOR_CLASS = "consulo-popup-arrow-anchor";
+    private static final String BACKGROUND_PROPERTY = "--vaadin-popover-background";
 
     @StyleSheet("/popup/webLightPopup.css")
     public class Vaadin extends Popover implements FromVaadinComponentWrapper {
@@ -93,6 +96,8 @@ public class WebLightPopupImpl extends VaadinComponentDelegate<WebLightPopupImpl
 
     private final PopupOptions myOptions;
 
+    private @Nullable ColorValue myBackgroundColor;
+
     private boolean myDisposed;
 
     public WebLightPopupImpl(PopupOptions options) {
@@ -103,7 +108,11 @@ public class WebLightPopupImpl extends VaadinComponentDelegate<WebLightPopupImpl
 
         Vaadin popover = getVaadinComponent();
 
-        popover.setPosition(options.getPosition() == PopupPosition.END ? PopoverPosition.END_TOP : PopoverPosition.BOTTOM_START);
+        popover.setPosition(switch (options.getPosition()) {
+            case END -> PopoverPosition.END_TOP;
+            case TOP -> PopoverPosition.TOP_START;
+            case BOTTOM -> PopoverPosition.BOTTOM_START;
+        });
         popover.setOpenOnClick(false);
         popover.setCloseOnEsc(options.isCancelOnEscape());
         popover.setCloseOnOutsideClick(options.isCancelOnClickOutside());
@@ -147,6 +156,19 @@ public class WebLightPopupImpl extends VaadinComponentDelegate<WebLightPopupImpl
     }
 
     @Override
+    public @Nullable ColorValue getBackgroundColor() {
+        return myBackgroundColor;
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void setBackgroundColor(@Nullable ColorValue background) {
+        myBackgroundColor = background;
+
+        getVaadinComponent().getElement().getStyle().set(BACKGROUND_PROPERTY, WebColors.toCssColor(background));
+    }
+
+    @Override
     @RequiredUIAccess
     public void setMinimumWidth(int width) {
         // the overlay lives in the shadow root, so it is reached through a property the part it exposes reads
@@ -181,6 +203,8 @@ public class WebLightPopupImpl extends VaadinComponentDelegate<WebLightPopupImpl
         }
 
         Vaadin popover = getVaadinComponent();
+
+        showArrow(false);
 
         attachToUI();
 
@@ -303,6 +327,8 @@ public class WebLightPopupImpl extends VaadinComponentDelegate<WebLightPopupImpl
 
         anchor.getStyle().set("height", Math.max(anchorHeight, 1) + "px");
 
+        showArrow(myOptions.hasArrow());
+
         // a popup which is already up is only moved. re-targeting an open popover tears the overlay down and builds
         // it again, which is every row of the list back over the wire for one typed character
         Vaadin popover = getVaadinComponent();
@@ -359,6 +385,8 @@ public class WebLightPopupImpl extends VaadinComponentDelegate<WebLightPopupImpl
     private void showBesideSelection(Element ownerContent) {
         Div anchor = anchor();
 
+        showArrow(false);
+
         Vaadin popover = getVaadinComponent();
 
         attachToUI();
@@ -382,6 +410,22 @@ public class WebLightPopupImpl extends VaadinComponentDelegate<WebLightPopupImpl
             popover.setOpened(true);
             registerOpen();
         }, error -> LOG.error("Failed to position popup: " + error));
+    }
+
+    @RequiredUIAccess
+    private void showArrow(boolean arrow) {
+        Vaadin popover = getVaadinComponent();
+        if (arrow) {
+            popover.addThemeVariants(PopoverVariant.ARROW);
+        }
+        else {
+            popover.removeThemeVariants(PopoverVariant.ARROW);
+        }
+
+        Div anchor = myAnchor;
+        if (anchor != null) {
+            anchor.setClassName(ARROW_ANCHOR_CLASS, arrow);
+        }
     }
 
     @RequiredUIAccess

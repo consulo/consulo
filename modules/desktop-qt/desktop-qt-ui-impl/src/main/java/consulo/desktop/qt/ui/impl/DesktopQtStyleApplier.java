@@ -15,6 +15,7 @@
  */
 package consulo.desktop.qt.ui.impl;
 
+import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
 import consulo.ui.style.ComponentColors;
 import consulo.ui.style.Style;
@@ -261,9 +262,15 @@ public final class DesktopQtStyleApplier {
      * widgets inside it.
      */
     public static String popupFrameStyleSheet(String objectName, int cornerRadius) {
+        return popupFrameStyleSheet(objectName, cornerRadius, null);
+    }
+
+    public static String popupFrameStyleSheet(String objectName, int cornerRadius, @Nullable ColorValue backgroundColor) {
         Style style = ourStyle;
         String border = style == null ? "palette(mid)" : css(style, ComponentColors.BORDER);
-        String background = style == null ? "palette(window)" : css(style, ComponentColors.LAYOUT);
+        String background = backgroundColor != null
+            ? css(backgroundColor.toRGB())
+            : style == null ? "palette(window)" : css(style, ComponentColors.LAYOUT);
 
         return "#%s { border: 1px solid %s; border-radius: %dpx; background: %s; }".formatted(
             objectName,
@@ -336,7 +343,10 @@ public final class DesktopQtStyleApplier {
     }
 
     private static String css(Style style, StyleColorValue colorValue) {
-        RGBColor rgb = style.getColorValue(colorValue).toRGB();
+        return css(style.getColorValue(colorValue).toRGB());
+    }
+
+    private static String css(RGBColor rgb) {
         return "rgba(%d, %d, %d, %d%%)".formatted(rgb.getRed(), rgb.getGreen(), rgb.getBlue(), rgb.getAlpha() * 100 / 255);
     }
 }

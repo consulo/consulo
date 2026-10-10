@@ -17,6 +17,8 @@ package consulo.desktop.qt.editor.impl.internal;
 
 import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.ScrollType;
+import consulo.codeEditor.event.VisibleAreaEvent;
+import consulo.codeEditor.event.VisibleAreaListener;
 import consulo.codeEditor.impl.CodeEditorScrollingModelBase;
 import io.qt.widgets.QScrollBar;
 import org.jspecify.annotations.Nullable;
@@ -47,6 +49,8 @@ public class DesktopQtCodeEditorScrollingModelImpl extends CodeEditorScrollingMo
 
     private final DesktopQtEditorImpl myQtEditor;
 
+    private Rectangle myLastVisibleArea = new Rectangle(0, 0);
+
     public DesktopQtCodeEditorScrollingModelImpl(DesktopQtEditorImpl editor) {
         super(editor);
         myQtEditor = editor;
@@ -54,6 +58,21 @@ public class DesktopQtCodeEditorScrollingModelImpl extends CodeEditorScrollingMo
 
     private @Nullable DesktopQtEditorWidget getSurface() {
         return myQtEditor.getSurface();
+    }
+
+    public void fireVisibleAreaChanged() {
+        Rectangle oldArea = myLastVisibleArea;
+        Rectangle newArea = getVisibleArea();
+        if (oldArea.equals(newArea)) {
+            return;
+        }
+
+        myLastVisibleArea = newArea;
+
+        VisibleAreaEvent event = new VisibleAreaEvent(myEditor, oldArea, newArea);
+        for (VisibleAreaListener listener : myVisibleAreaListeners) {
+            listener.visibleAreaChanged(event);
+        }
     }
 
     @Override

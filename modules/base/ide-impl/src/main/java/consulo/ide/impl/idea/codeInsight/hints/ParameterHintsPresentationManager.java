@@ -11,6 +11,7 @@ import consulo.colorScheme.TextAttributes;
 import consulo.colorScheme.TextAttributesEffectsBuilder;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.language.editor.impl.internal.inlay.param.ParameterHintRenderer;
 import consulo.language.editor.inlay.HintWidthAdjustment;
 import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
@@ -162,7 +163,7 @@ public final class ParameterHintsPresentationManager implements Disposable {
         return editor.getUserData(ANIMATION_STEP) != null;
     }
 
-    private static final class MyRenderer extends HintRenderer {
+    private static final class MyRenderer extends HintRenderer implements ParameterHintRenderer {
         private int startWidth;
         private int steps;
         private int step;

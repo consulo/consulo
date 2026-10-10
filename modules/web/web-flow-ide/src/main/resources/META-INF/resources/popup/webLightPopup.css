@@ -81,3 +81,8 @@ vaadin-popover.consulo-transparent-popup.consulo-hovered-popup::part(overlay)
   border: 1px solid var(--vaadin-contrast-10pct, rgba(0, 0, 0, 0.1));
   border-radius: var(--consulo-popup-radius, 4px);
 }
+
+.consulo-popup-arrow-anchor
+{
+  translate: calc(-1 * var(--vaadin-popover-arrow-inset, calc(var(--vaadin-popover-arrow-size, 8px) * 2))) 0;
+}

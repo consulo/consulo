@@ -15,6 +15,7 @@
  */
 package consulo.codeEditor.internal;
 
+import consulo.disposer.Disposable;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -46,4 +47,11 @@ public interface CaretPixelLocationProvider {
      */
     @Nullable
     CaretPixelLocation getCaretPixelLocation();
+
+    /**
+     * Called whenever the location {@link #getCaretPixelLocation()} answers with changes without the caret having
+     * moved - an editor whose location arrives later than the caret move it belongs to reports it here.
+     */
+    default void addCaretPixelLocationListener(Runnable listener, Disposable parentDisposable) {
+    }
 }

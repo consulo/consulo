@@ -16,14 +16,31 @@
 
 package consulo.language.editor.parameterInfo;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.language.psi.PsiElement;
 
 import java.awt.*;
 
 public interface ParameterInfoUIContext {
-  String setupUIComponentPresentation(String text, int highlightStartOffset, int highlightEndOffset, boolean isDisabled, boolean strikeout, boolean isDisabledBeforeHighlight, Color background);
+  SignatureBuilder signature();
 
-  void setupRawUIComponentPresentation(String htmlText);
+  @Deprecated
+  @DeprecationInfo("Use #signature()")
+  default String setupUIComponentPresentation(String text,
+                                              int highlightStartOffset,
+                                              int highlightEndOffset,
+                                              boolean isDisabled,
+                                              boolean strikeout,
+                                              boolean isDisabledBeforeHighlight,
+                                              Color background) {
+    return LegacySignaturePresentation.apply(signature(),
+                                             text,
+                                             highlightStartOffset,
+                                             highlightEndOffset,
+                                             isDisabled,
+                                             strikeout,
+                                             isDisabledBeforeHighlight);
+  }
 
   boolean isUIComponentEnabled();
 
@@ -37,5 +54,9 @@ public interface ParameterInfoUIContext {
 
   boolean isSingleParameterInfo();
 
-  Color getDefaultParameterColor();
+  @Deprecated
+  @DeprecationInfo("Use #signature()")
+  default Color getDefaultParameterColor() {
+    return new Color(0, true);
+  }
 }

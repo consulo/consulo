@@ -21,7 +21,7 @@ import consulo.application.dumb.DumbAware;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.actions.ShowErrorDescriptionAction;
 import consulo.ide.impl.idea.codeInsight.hint.actions.ShowContainerInfoAction;
 import consulo.ide.impl.idea.codeInsight.hint.actions.ShowExpressionTypeAction;
-import consulo.ide.impl.idea.codeInsight.hint.actions.ShowParameterInfoAction;
+import consulo.language.editor.impl.internal.parameterInfo.ShowParameterInfoAction;
 import consulo.ide.impl.idea.ide.actions.ExternalJavaDocAction;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.DefaultActionGroup;

@@ -20,8 +20,11 @@ import consulo.disposer.Disposer;
 import consulo.ui.Component;
 import consulo.ui.Popup;
 import consulo.ui.PopupOptions;
+import consulo.ui.PopupPosition;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.color.ColorValue;
 import consulo.ui.event.PopupCloseEvent;
+import consulo.ui.style.ComponentColors;
 import io.qt.core.QEvent;
 import io.qt.core.QMetaObject;
 import io.qt.core.QObject;
@@ -31,10 +34,16 @@ import io.qt.core.QRectF;
 import io.qt.core.QSize;
 import io.qt.core.QTimer;
 import io.qt.core.Qt;
+import io.qt.gui.QBrush;
 import io.qt.gui.QCloseEvent;
+import io.qt.gui.QColor;
 import io.qt.gui.QGuiApplication;
 import io.qt.gui.QKeyEvent;
+import io.qt.gui.QPaintEvent;
+import io.qt.gui.QPainter;
 import io.qt.gui.QPainterPath;
+import io.qt.gui.QPalette;
+import io.qt.gui.QPen;
 import io.qt.gui.QRegion;
 import io.qt.gui.QResizeEvent;
 import io.qt.gui.QScreen;
@@ -76,7 +85,15 @@ public abstract class DesktopQtPopupImpl extends QtComponentDelegate<QWidget> im
     /** {@code Popup.borderCornerRadius} of the awt look and feel */
     static final int ourCornerRadius = 4;
 
+    private static final int ourArrowWidth = 16;
+    private static final int ourArrowHeight = 8;
+    private static final int ourArrowInset = 20;
+
     private class QtPopup extends QFrame {
+        private boolean myArrowShown;
+        private boolean myArrowAtTop;
+        private int myArrowX;
+
         QtPopup() {
             super(null, Qt.WindowType.ToolTip, Qt.WindowType.FramelessWindowHint, Qt.WindowType.WindowStaysOnTopHint);
         }
@@ -90,12 +107,86 @@ public abstract class DesktopQtPopupImpl extends QtComponentDelegate<QWidget> im
         protected void resizeEvent(QResizeEvent event) {
             super.resizeEvent(event);
 
-            QPainterPath path = new QPainterPath();
-            path.addRoundedRect(new QRectF(0, 0, width(), height()), ourCornerRadius, ourCornerRadius);
-
-            setMask(new QRegion(path.toFillPolygon().toPolygon()));
+            updateShape();
 
             placeSizeGrip();
+        }
+
+        @Override
+        protected void paintEvent(QPaintEvent event) {
+            if (!myOptions.hasArrow()) {
+                super.paintEvent(event);
+                return;
+            }
+
+            QPalette palette = palette();
+            ColorValue backgroundColor = DesktopQtPopupImpl.this.getBackgroundColor();
+            QColor background = backgroundColor != null
+                ? TargetQt.to(backgroundColor)
+                : DesktopQtStyleApplier.themeColor(ComponentColors.LAYOUT, palette.color(QPalette.ColorRole.Window));
+            QColor border = DesktopQtStyleApplier.themeColor(ComponentColors.BORDER, palette.color(QPalette.ColorRole.Mid));
+
+            QPainter painter = new QPainter(this);
+            try {
+                painter.setRenderHint(QPainter.RenderHint.Antialiasing, true);
+
+                QPainterPath path = outline(0.5);
+                painter.fillPath(path, new QBrush(background));
+                painter.setPen(new QPen(border));
+                painter.drawPath(path);
+            }
+            finally {
+                painter.end();
+            }
+        }
+
+        void setArrow(boolean shown, boolean atTop) {
+            myArrowShown = shown;
+            myArrowAtTop = atTop;
+
+            int top = shown && atTop ? ourArrowHeight : 0;
+            int bottom = shown && !atTop ? ourArrowHeight : 0;
+            myLayout.setContentsMargins(1, 1 + top, 1, 1 + bottom);
+        }
+
+        void pointArrowAt(int x) {
+            myArrowX = x;
+
+            updateShape();
+            update();
+        }
+
+        private void updateShape() {
+            setMask(new QRegion(outline(0).toFillPolygon().toPolygon()));
+        }
+
+        private QPainterPath outline(double inset) {
+            int top = myArrowShown && myArrowAtTop ? ourArrowHeight : 0;
+            int bottom = myArrowShown && !myArrowAtTop ? ourArrowHeight : 0;
+
+            QPainterPath body = new QPainterPath();
+            body.addRoundedRect(
+                new QRectF(inset, top + inset, width() - 2 * inset, height() - top - bottom - 2 * inset),
+                ourCornerRadius,
+                ourCornerRadius
+            );
+
+            if (!myArrowShown) {
+                return body;
+            }
+
+            double halfWidth = ourArrowWidth / 2.0;
+            double x = Math.max(ourCornerRadius + halfWidth, Math.min(width() - ourCornerRadius - halfWidth, myArrowX));
+            double baseY = myArrowAtTop ? top + inset + 1 : height() - bottom - inset - 1;
+            double tipY = myArrowAtTop ? inset : height() - inset;
+
+            QPainterPath arrow = new QPainterPath();
+            arrow.moveTo(x - halfWidth, baseY);
+            arrow.lineTo(x, tipY);
+            arrow.lineTo(x + halfWidth, baseY);
+            arrow.closeSubpath();
+
+            return body.united(arrow);
         }
 
         @Override
@@ -155,6 +246,8 @@ public abstract class DesktopQtPopupImpl extends QtComponentDelegate<QWidget> im
 
     protected final PopupOptions myOptions;
 
+    private final QtPopup myPopup;
+
     private final QVBoxLayout myLayout;
 
     private final DismissWatcher myDismissWatcher = new DismissWatcher();
@@ -176,11 +269,14 @@ public abstract class DesktopQtPopupImpl extends QtComponentDelegate<QWidget> im
         popup.setObjectName(ourObjectName);
 
         myComponent = popup;
+        myPopup = popup;
 
         // a frameless window carries no chrome of its own, and without a border of some kind the content bleeds
         // into whatever the popup floats over. the rule draws it rather than the frame shape, since only a style
         // sheet can round the corners
-        setOwnStyleSheet(DesktopQtStyleApplier.popupFrameStyleSheet(ourObjectName, ourCornerRadius));
+        if (!options.hasArrow()) {
+            setOwnStyleSheet(DesktopQtStyleApplier.popupFrameStyleSheet(ourObjectName, ourCornerRadius));
+        }
 
         // an ungrabbed xdg_popup is never the active window on wayland - measured on kwin, a shown popup answers
         // isActiveWindow() false - and qt then paints every selection of it out of the Inactive group, so a list
@@ -244,6 +340,18 @@ public abstract class DesktopQtPopupImpl extends QtComponentDelegate<QWidget> im
         label.setText(title);
     }
 
+    @Override
+    @RequiredUIAccess
+    public void setBackgroundColor(@Nullable ColorValue background) {
+        super.setBackgroundColor(background);
+
+        if (!myOptions.hasArrow()) {
+            setOwnStyleSheet(DesktopQtStyleApplier.popupFrameStyleSheet(ourObjectName, ourCornerRadius, background));
+        }
+
+        myComponent.update();
+    }
+
     @RequiredUIAccess
     public void setMinimumWidth(int width) {
         myComponent.setMinimumWidth(Math.max(width, 0));
@@ -280,6 +388,10 @@ public abstract class DesktopQtPopupImpl extends QtComponentDelegate<QWidget> im
 
         myLayout.insertWidget(myTitleLabel == null ? 0 : 1, contentWidget);
 
+        if (contentWidget != null && myComponent.isVisible()) {
+            contentWidget.show();
+        }
+
         myContent = delegate;
 
         // nothing lays a window out from above, so a popup is only ever the size it was told to take
@@ -311,7 +423,39 @@ public abstract class DesktopQtPopupImpl extends QtComponentDelegate<QWidget> im
 
         setOwner(widget);
 
-        showAtGlobal(widget.mapToGlobal(new QPoint(x, y + anchorHeight)));
+        QPoint point = widget.mapToGlobal(new QPoint(x, y));
+        boolean arrow = myOptions.hasArrow();
+        int left = arrow ? point.x() - ourArrowInset : point.x();
+
+        if (myOptions.getPosition() == PopupPosition.TOP) {
+            myPopup.setArrow(arrow, false);
+            myComponent.adjustSize();
+
+            QPoint above = new QPoint(left, point.y() - myComponent.height());
+            if (fitsAbove(widget, above)) {
+                showPointingAt(above, point.x());
+                return;
+            }
+        }
+
+        myPopup.setArrow(arrow, true);
+        showPointingAt(new QPoint(left, point.y() + anchorHeight), point.x());
+    }
+
+    @RequiredUIAccess
+    private void showPointingAt(QPoint position, int pointX) {
+        myComponent.adjustSize();
+
+        QPoint placed = clampToScreen(position);
+        if (myOptions.hasArrow()) {
+            myPopup.pointArrowAt(pointX - placed.x());
+        }
+
+        showAtGlobal(placed);
+    }
+
+    private static boolean fitsAbove(QWidget widget, QPoint position) {
+        return position.y() >= widget.window().mapToGlobal(new QPoint(0, 0)).y();
     }
 
     /**

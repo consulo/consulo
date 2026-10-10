@@ -63,6 +63,7 @@ public class UnifiedLookupUI extends LookupBase {
     private final UnifiedLookupAdvertiser myAdvertiser = new UnifiedLookupAdvertiser();
 
     private @Nullable LightPopup myPopup;
+    private @Nullable LookupElement myLastCurrentItem;
 
     @RequiredUIAccess
     public UnifiedLookupUI(Project project, Editor editor, LookupArranger arranger) {
@@ -80,6 +81,7 @@ public class UnifiedLookupUI extends LookupBase {
         myList.addValueListener(event -> {
             if (!isUpdating()) {
                 markSelectionTouched();
+                fireIfCurrentItemChanged();
             }
         });
 
@@ -145,6 +147,7 @@ public class UnifiedLookupUI extends LookupBase {
     protected void setSelectedIndexUi(int index) {
         if (index >= 0 && index < myModel.getSize()) {
             myList.setValueByIndex(index);
+            fireIfCurrentItemChanged();
         }
     }
 
@@ -157,6 +160,24 @@ public class UnifiedLookupUI extends LookupBase {
     @RequiredUIAccess
     protected void setSelectedValueUi(LookupElement item) {
         myList.setValue(item);
+        fireIfCurrentItemChanged();
+    }
+
+    private void fireIfCurrentItemChanged() {
+        if (isUpdating()) {
+            return;
+        }
+
+        LookupElement item = getCurrentItem();
+        if (item != myLastCurrentItem) {
+            fireCurrentItemChanged(myLastCurrentItem, item);
+        }
+    }
+
+    @Override
+    protected void fireCurrentItemChanged(@Nullable LookupElement oldItem, @Nullable LookupElement currentItem) {
+        myLastCurrentItem = currentItem;
+        super.fireCurrentItemChanged(oldItem, currentItem);
     }
 
     /**

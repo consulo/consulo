@@ -89,6 +89,15 @@ public final class StyleColorKeys {
         ourKeys.put(ComponentColors.GRID_COLUMN_FOREGROUND_8, "DataGrid.Column.foreground8");
         ourKeys.put(ComponentColors.GRID_COLUMN_FOREGROUND_9, "DataGrid.Column.foreground9");
         ourKeys.put(ComponentColors.GRID_COLUMN_FOREGROUND_10, "DataGrid.Column.foreground10");
+
+        ourKeys.put(ComponentColors.PARAMETER_INFO_BACKGROUND, "ParameterInfo.background");
+        ourKeys.put(ComponentColors.PARAMETER_INFO_BORDER, "ParameterInfo.borderColor");
+        ourKeys.put(ComponentColors.PARAMETER_INFO_LINE_SEPARATOR, "ParameterInfo.lineSeparatorColor");
+        ourKeys.put(ComponentColors.PARAMETER_INFO_CURRENT_OVERLOAD_BACKGROUND, "ParameterInfo.currentOverloadBackground");
+        ourKeys.put(ComponentColors.PARAMETER_INFO_FOREGROUND, "ParameterInfo.foreground");
+        ourKeys.put(ComponentColors.PARAMETER_INFO_CURRENT_PARAMETER_FOREGROUND, "ParameterInfo.currentParameterForeground");
+        ourKeys.put(ComponentColors.PARAMETER_INFO_DISABLED_FOREGROUND, "ParameterInfo.disabledForeground");
+        ourKeys.put(ComponentColors.PARAMETER_INFO_INFO_FOREGROUND, "ParameterInfo.infoForeground");
     }
 
     public static @Nullable String getKey(StyleColorValue colorValue) {

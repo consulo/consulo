@@ -102,5 +102,19 @@ public enum ComponentColors implements StyleColorValue {
     GRID_COLUMN_FOREGROUND_7,
     GRID_COLUMN_FOREGROUND_8,
     GRID_COLUMN_FOREGROUND_9,
-    GRID_COLUMN_FOREGROUND_10
+    GRID_COLUMN_FOREGROUND_10,
+
+    /**
+     * The colors of the parameter hint of a call: its panel, its border, the line between two signatures, the
+     * signature the call matches best, the text, the parameter at the caret, a parameter which no longer fits, and
+     * the note under the signatures.
+     */
+    PARAMETER_INFO_BACKGROUND,
+    PARAMETER_INFO_BORDER,
+    PARAMETER_INFO_LINE_SEPARATOR,
+    PARAMETER_INFO_CURRENT_OVERLOAD_BACKGROUND,
+    PARAMETER_INFO_FOREGROUND,
+    PARAMETER_INFO_CURRENT_PARAMETER_FOREGROUND,
+    PARAMETER_INFO_DISABLED_FOREGROUND,
+    PARAMETER_INFO_INFO_FOREGROUND
 }

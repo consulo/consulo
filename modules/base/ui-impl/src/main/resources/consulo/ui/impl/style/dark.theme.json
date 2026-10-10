@@ -76,6 +76,16 @@
         "borderColor": "#647255"
       }
     },
+    "ParameterInfo": {
+      "background": "#4b4d4d",
+      "borderColor": "#5c5e61",
+      "lineSeparatorColor": "#5c5e61",
+      "currentOverloadBackground": "#5c5e61",
+      "foreground": "#bbbbbb",
+      "currentParameterForeground": "#e8e8e8",
+      "disabledForeground": "#777777",
+      "infoForeground": "#878787"
+    },
     "DataGrid": {
       "Cell": {
         "modifiedBackground": "#385570",

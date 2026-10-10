@@ -37,6 +37,7 @@ module consulo.language.editor.impl {
     exports consulo.language.editor.impl.internal.action to consulo.ide.impl;
     exports consulo.language.editor.impl.internal to consulo.ide.impl;
     exports consulo.language.editor.impl.internal.documentation to consulo.desktop.awt.ide.impl, consulo.ide.impl;
+    exports consulo.language.editor.impl.internal.parameterInfo to consulo.desktop.awt.ide.impl, consulo.ide.impl;
     exports consulo.language.editor.impl.internal.daemon to
         consulo.desktop.awt.ide.impl,
         consulo.ide.impl,

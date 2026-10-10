@@ -1,12 +1,12 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.codeInsight.hint;
+package consulo.language.editor.impl.internal.parameterInfo;
 
 import consulo.language.editor.parameterInfo.CreateParameterInfoContext;
 import consulo.language.editor.parameterInfo.ParameterInfoHandler;
 import consulo.application.ApplicationManager;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
-import consulo.ide.impl.idea.openapi.editor.EditorActivityManager;
+import consulo.language.editor.impl.internal.EditorActivityManager;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.language.psi.PsiDocumentManager;

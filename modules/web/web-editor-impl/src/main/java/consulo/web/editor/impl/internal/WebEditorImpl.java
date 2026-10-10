@@ -30,6 +30,7 @@ import consulo.codeEditor.util.EditorUtil;
 import consulo.colorScheme.*;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
+import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
@@ -88,6 +89,7 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -171,6 +173,7 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
      * popup above all - is placed by this, because only the browser can measure where a character ended up.
      */
     private volatile @Nullable CaretPixelLocation myCaretLocation;
+    private final List<Runnable> myCaretLocationListeners = new CopyOnWriteArrayList<>();
 
     /**
      * The character cell the browser measured, which every mapping between a position and a point is built on. The
@@ -325,6 +328,10 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
         vaadin.addCaretListener(event -> {
             myCaretLocation =
                 new CaretPixelLocation(event.getCaretX(), event.getCaretY(), event.getCaretHeight(), event.getTextX());
+
+            for (Runnable listener : myCaretLocationListeners) {
+                listener.run();
+            }
 
             // where the caret is on screen always matters - a popup anchors to it - but only a move the user made is a
             // move. echoing back one the platform just made would look like the user left, and a lookup closes on that
@@ -593,6 +600,12 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
     @Override
     public @Nullable CaretPixelLocation getCaretPixelLocation() {
         return myCaretLocation;
+    }
+
+    @Override
+    public void addCaretPixelLocationListener(Runnable listener, Disposable parentDisposable) {
+        myCaretLocationListeners.add(listener);
+        Disposer.register(parentDisposable, () -> myCaretLocationListeners.remove(listener));
     }
 
     private boolean isEchoOfClientEdit(DocumentEvent event) {

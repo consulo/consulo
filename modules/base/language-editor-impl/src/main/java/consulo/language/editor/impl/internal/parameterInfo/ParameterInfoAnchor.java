@@ -13,26 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui;
+package consulo.language.editor.impl.internal.parameterInfo;
+
+import consulo.document.util.TextRange;
 
 /**
- * Where a {@link LightPopup} sits relative to what it was opened against.
- *
  * @author VISTALL
- * @since 2026-08-02
+ * @since 2026-10-10
  */
-public enum PopupPosition {
-    /**
-     * Under the target, which is where a popup opened off a button or a menu belongs.
-     */
-    BOTTOM,
-    /**
-     * Beside the target with their tops aligned - a submenu next to the popup which owns it.
-     */
-    END,
-    /**
-     * Over the target, turned below it when there is no room above - a hint which must not cover what is under the
-     * point it describes.
-     */
-    TOP
+public record ParameterInfoAnchor(TextRange range, boolean multiline) {
 }

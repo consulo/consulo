@@ -25,6 +25,7 @@ public final class PopupOptions extends ComponentOptions {
         private boolean myCancelOnEscape = true;
         private boolean myRequestFocus = true;
         private boolean myResizable = false;
+        private boolean myArrow = false;
         private PopupPosition myPosition = PopupPosition.BOTTOM;
 
         private Builder() {
@@ -58,8 +59,17 @@ public final class PopupOptions extends ComponentOptions {
             return this;
         }
 
+        /**
+         * Draws a pointer from the popup to the point it was shown at, for a popup which describes that exact point.
+         * A popup shown against a whole component has nothing to point at and is drawn without one.
+         */
+        public Builder arrow() {
+            myArrow = true;
+            return this;
+        }
+
         public PopupOptions build() {
-            return new PopupOptions(myCancelOnClickOutside, myCancelOnEscape, myRequestFocus, myResizable, myPosition);
+            return new PopupOptions(myCancelOnClickOutside, myCancelOnEscape, myRequestFocus, myResizable, myArrow, myPosition);
         }
     }
 
@@ -71,6 +81,7 @@ public final class PopupOptions extends ComponentOptions {
     private final boolean myCancelOnEscape;
     private final boolean myRequestFocus;
     private final boolean myResizable;
+    private final boolean myArrow;
     private final PopupPosition myPosition;
 
     private PopupOptions(
@@ -78,6 +89,7 @@ public final class PopupOptions extends ComponentOptions {
         boolean cancelOnEscape,
         boolean requestFocus,
         boolean resizable,
+        boolean arrow,
         PopupPosition position
     ) {
         super(true);
@@ -86,6 +98,7 @@ public final class PopupOptions extends ComponentOptions {
         myCancelOnEscape = cancelOnEscape;
         myRequestFocus = requestFocus;
         myResizable = resizable;
+        myArrow = arrow;
         myPosition = position;
     }
 
@@ -107,5 +120,9 @@ public final class PopupOptions extends ComponentOptions {
 
     public boolean isResizable() {
         return myResizable;
+    }
+
+    public boolean hasArrow() {
+        return myArrow;
     }
 }

@@ -1,37 +1,34 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
-package consulo.ide.impl.idea.codeInsight.hint;
+package consulo.language.editor.impl.internal.parameterInfo;
 
 import consulo.application.Application;
 import consulo.application.ReadAction;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.codeEditor.Editor;
-import consulo.ide.impl.idea.openapi.editor.EditorActivityManager;
-import consulo.ide.impl.idea.ui.LightweightHintImpl;
+import consulo.language.editor.impl.internal.EditorActivityManager;
 import consulo.language.Language;
 import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.completion.lookup.Lookup;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupManager;
-import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.editor.parameterInfo.ParameterInfoHandler;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;
+import consulo.localize.LocalizeValue;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.ObjectUtil;
-import consulo.util.lang.Pair;
 import org.jspecify.annotations.Nullable;
 
-import java.awt.*;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.function.Consumer;
 
-import static consulo.ide.impl.idea.codeInsight.hint.ParameterInfoTaskRunnerUtil.runTask;
+import static consulo.language.editor.impl.internal.parameterInfo.ParameterInfoTaskRunnerUtil.runTask;
 
 public class ShowParameterInfoHandler implements CodeInsightActionHandler {
   private static final ParameterInfoHandler[] EMPTY_HANDLERS = new ParameterInfoHandler[0];
@@ -157,25 +154,16 @@ public class ShowParameterInfoHandler implements CodeInsightActionHandler {
     }, progressTitle, editor);
   }
 
+  @RequiredUIAccess
   private static void showLookupEditorHint(Object[] descriptors, Editor editor, ParameterInfoHandler handler, boolean requestFocus) {
-    ParameterInfoComponent component = new ParameterInfoComponent(descriptors, editor, handler, requestFocus, false);
-    component.update(false);
+    ParameterInfoModel model = ReadAction.compute(() -> new ParameterInfoState(descriptors).buildModel(handler, false, LocalizeValue.empty()));
+    if (model.isEmpty()) {
+      return;
+    }
 
-    LightweightHintImpl hint = new LightweightHintImpl(component);
-    hint.setSelectingHint(true);
-    HintManagerImpl hintManager = HintManagerImpl.getInstanceImpl();
-    Pair<Point, Short> pos = ParameterInfoController.chooseBestHintPosition(editor, null, hint, HintManager.DEFAULT, true);
     Application.get().invokeLater(() -> {
       if (!EditorActivityManager.getInstance().isVisible(editor)) return;
-      hintManager.showEditorHint(
-        hint,
-        editor,
-        pos.getFirst(),
-        HintManager.HIDE_BY_ANY_KEY | HintManager.HIDE_BY_LOOKUP_ITEM_CHANGE | HintManager.UPDATE_BY_SCROLLING,
-        0,
-        false,
-        pos.getSecond()
-      );
+      Application.get().getInstance(ParameterHandlerPopupProxyFactory.class).showLookupHint(editor, model, requestFocus);
     });
   }
 

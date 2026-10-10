@@ -22,6 +22,7 @@ import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.action.ExtensionEditorActionHandler;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.hint.HintManager;
+import consulo.language.editor.impl.internal.parameterInfo.ParameterInfoController;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.IdeActions;
 
@@ -37,13 +38,18 @@ public class EscapeHandler extends EditorActionHandler implements ExtensionEdito
     if (HintManagerImpl.getInstanceImpl().hideHints(HintManager.HIDE_BY_ESCAPE | HintManager.HIDE_BY_ANY_KEY, true, false)) {
       return;
     }
+    if (ParameterInfoController.hideOnEscape(editor)) {
+      return;
+    }
     myOriginalHandler.execute(editor, caret, dataContext);
   }
 
   @Override
   public boolean isEnabledForCaret(Editor editor, Caret caret, DataContext dataContext) {
     HintManagerImpl hintManager = HintManagerImpl.getInstanceImpl();
-    return hintManager.isEscapeHandlerEnabled() || myOriginalHandler.isEnabled(editor, caret, dataContext);
+    return hintManager.isEscapeHandlerEnabled()
+      || ParameterInfoController.existsWithVisibleHintForEditor(editor, true)
+      || myOriginalHandler.isEnabled(editor, caret, dataContext);
   }
 
   @Override

@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.hint.actions;
+package consulo.language.editor.impl.internal.parameterInfo;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.ide.impl.idea.codeInsight.hint.PrevNextParameterHandler;
 import consulo.codeEditor.action.EditorAction;
 import consulo.language.editor.internal.action.LanguageEditorActions;
 import consulo.platform.base.localize.ActionLocalize;
@@ -24,10 +23,10 @@ import consulo.platform.base.localize.ActionLocalize;
 /**
  * @author ven
  */
-@ActionImpl(id = LanguageEditorActions.PREVIOUS_PARAMETER)
-public class PrevParameterAction extends EditorAction {
-    public PrevParameterAction() {
-        super(ActionLocalize.actionPrevparameterText(), new PrevNextParameterHandler(false));
+@ActionImpl(id = LanguageEditorActions.NEXT_PARAMETER)
+public class NextParameterAction extends EditorAction {
+    public NextParameterAction() {
+        super(ActionLocalize.actionNextparameterText(), new PrevNextParameterHandler(true));
         setInjectedContext(true);
     }
 }
