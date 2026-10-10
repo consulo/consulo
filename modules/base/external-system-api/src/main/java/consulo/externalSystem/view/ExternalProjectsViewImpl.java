@@ -19,6 +19,7 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataSink;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.execution.action.Location;
 import consulo.execution.event.RunManagerListener;
 import consulo.execution.event.RunManagerListenerEvent;
 import consulo.externalSystem.ui.ExternalSystemUiAware;
@@ -37,10 +38,13 @@ import consulo.ui.layout.ScrollableLayout;
 import consulo.externalSystem.model.DataNode;
 import consulo.externalSystem.model.ExternalSystemDataKeys;
 import consulo.externalSystem.model.ProjectSystemId;
+import consulo.externalSystem.model.execution.ExternalTaskExecutionInfo;
+import consulo.externalSystem.model.task.TaskData;
 import consulo.externalSystem.service.project.ProjectData;
 import consulo.externalSystem.service.project.manage.ExternalProjectsManager;
 import consulo.externalSystem.service.project.manage.ExternalSystemShortcutsManager;
 import consulo.externalSystem.service.project.manage.ExternalSystemTaskActivator;
+import consulo.externalSystem.task.ExternalSystemTaskLocation;
 import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
@@ -130,6 +134,7 @@ public class ExternalProjectsViewImpl implements ExternalProjectsView, UiDataPro
         sink.set(ExternalSystemDataKeys.SELECTED_NODES, selection);
         sink.set(ExternalSystemDataKeys.SELECTED_PROJECT_NODE,
             ContainerUtil.getOnlyItem(ContainerUtil.filterIsInstance(selection, ProjectNode.class)));
+        sink.lazy(Location.DATA_KEY, () -> extractLocation(selection));
     }
 
     @RequiredUIAccess
@@ -483,5 +488,43 @@ public class ExternalProjectsViewImpl implements ExternalProjectsView, UiDataPro
     @SuppressWarnings("unchecked")
     private <T extends ExternalSystemNode<?>> List<T> getSelectedNodes(Class<T> aClass) {
         return myStructure != null && myTree != null ? myStructure.getSelectedNodes(myTree, aClass) : Collections.emptyList();
+    }
+
+    @SuppressWarnings("rawtypes")
+    private @Nullable ExternalSystemTaskLocation extractLocation(List<ExternalSystemNode> selectedNodes) {
+        if (selectedNodes.isEmpty()) {
+            return null;
+        }
+
+        List<TaskData> tasks = new SmartList<>();
+
+        ExternalTaskExecutionInfo taskExecutionInfo = new ExternalTaskExecutionInfo();
+
+        String projectPath = null;
+
+        for (ExternalSystemNode<?> node : selectedNodes) {
+            Object data = node.getData();
+            if (data instanceof TaskData taskData) {
+                if (projectPath == null) {
+                    projectPath = taskData.getLinkedExternalProjectPath();
+                }
+                else if (!taskData.getLinkedExternalProjectPath().equals(projectPath)) {
+                    return null;
+                }
+
+                taskExecutionInfo.getSettings().getTaskNames().add(taskData.getName());
+                taskExecutionInfo.getSettings().getTaskDescriptions().add(taskData.getDescription());
+                tasks.add(taskData);
+            }
+        }
+
+        if (tasks.isEmpty()) {
+            return null;
+        }
+
+        taskExecutionInfo.getSettings().setExternalSystemIdString(myExternalSystemId.toString());
+        taskExecutionInfo.getSettings().setExternalProjectPath(projectPath);
+
+        return ExternalSystemTaskLocation.create(myProject, myExternalSystemId, projectPath, taskExecutionInfo);
     }
 }

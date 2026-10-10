@@ -14,6 +14,10 @@ action.detach.external.project.description:
     text: Detach selected external project
 action.detach.external.project.text:
     text: Detach External Project
+action.edit.run.configuration.description:
+    text: Edit the selected run configuration
+action.edit.run.configuration.text:
+    text: Edit Run Configuration...
 action.open.external.config.0.description:
     text: Allows to open project file of the linked {0} project at the editor
 action.open.external.config.0.text:
@@ -38,6 +42,14 @@ action.refresh.external.project.description:
     text: Force refresh selected linked external project
 action.refresh.external.project.text:
     text: Refresh External Project
+action.remove.run.configuration.description:
+    text: Remove the selected run configuration
+action.remove.run.configuration.text:
+    text: Remove Run Configuration
+confirmation:
+    text: Confirmation
+delete.0:
+    text: Delete {0}?
 error.cannot.parse.project:
     text: Can not parse {0} project
 error.project.already.registered:
