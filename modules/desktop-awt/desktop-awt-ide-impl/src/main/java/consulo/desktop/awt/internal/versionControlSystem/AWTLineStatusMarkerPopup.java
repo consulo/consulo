@@ -91,9 +91,10 @@ public class AWTLineStatusMarkerPopup extends LineStatusMarkerPopupBase {
         ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.FILEHISTORY_VIEW_TOOLBAR, group, true);
         toolbar.setTargetComponent(myEditor.getComponent());
 
-        toolbar.updateActionsAsync().whenCompleteAsync((actions, throwable) -> {
-            show(toolbar, mousePosition, disposable, editorComponent);
-        }, UIAccess.current());
+        toolbar.updateActionsAsync().whenCompleteAsync(
+            (actions, throwable) -> show(toolbar, mousePosition, disposable, editorComponent),
+            UIAccess.current()
+        );
     }
 
     /**
@@ -105,7 +106,7 @@ public class AWTLineStatusMarkerPopup extends LineStatusMarkerPopupBase {
             return null;
         }
 
-        JComponent gutterComponent = ((EditorEx)myEditor).getGutterComponentEx().getComponent();
+        JComponent gutterComponent = ((EditorEx) myEditor).getGutterComponentEx().getComponent();
         JRootPane rootPane = gutterComponent.getRootPane();
         if (rootPane == null) {
             return null;
@@ -122,7 +123,7 @@ public class AWTLineStatusMarkerPopup extends LineStatusMarkerPopupBase {
         HintListener closeListener = event -> Disposer.dispose(disposable);
         hint.addHintListener(closeListener);
 
-        HintManagerEx hintManagerEx = (HintManagerEx)HintManager.getInstance();
+        HintManagerEx hintManagerEx = (HintManagerEx) HintManager.getInstance();
 
         int line = myEditor.getCaretModel().getLogicalPosition().line;
         Point point = hintManagerEx.getHintPosition(hint, myEditor, new LogicalPosition(line, 0), HintManager.UNDER);
@@ -149,7 +150,7 @@ public class AWTLineStatusMarkerPopup extends LineStatusMarkerPopupBase {
             return null;
         }
 
-        EditorEx uEditor = (EditorEx)EditorFactory.getInstance().createViewer(myTracker.getVcsDocument(), myTracker.getProject());
+        EditorEx uEditor = (EditorEx) EditorFactory.getInstance().createViewer(myTracker.getVcsDocument(), myTracker.getProject());
         uEditor.setColorsScheme(myEditor.getColorsScheme());
 
         DiffLanguageUtil.setEditorCodeStyle(myTracker.getProject(), uEditor, fileType);
@@ -197,7 +198,7 @@ public class AWTLineStatusMarkerPopup extends LineStatusMarkerPopupBase {
             myEditorComponent = editorComponent;
             boolean isEditorVisible = myEditorComponent != null;
 
-            Color background = TargetAWT.to(((EditorEx)editor).getBackgroundColor());
+            Color background = TargetAWT.to(((EditorEx) editor).getBackgroundColor());
             Color borderColor = JBColor.border();
 
             JComponent toolbarComponent = toolbar.getComponent();

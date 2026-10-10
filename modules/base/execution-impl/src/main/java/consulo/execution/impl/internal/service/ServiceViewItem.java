@@ -8,6 +8,7 @@ import consulo.execution.service.ServiceViewItemState;
 import consulo.execution.service.ServiceViewOptions;
 import consulo.navigation.ItemPresentation;
 import consulo.project.ui.util.AppUIUtil;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.ex.tree.PresentationData;
@@ -50,6 +51,7 @@ public abstract class ServiceViewItem implements ColoredItem {
         return myParent == null ? myContributor : myParent.getRootContributor();
     }
 
+    @RequiredUIAccess
     ServiceViewDescriptor getViewDescriptor() {
         if (!myPresentationUpdated) {
             myPresentationUpdated = true;
@@ -81,9 +83,9 @@ public abstract class ServiceViewItem implements ColoredItem {
     }
 
     @Override
+    @RequiredUIAccess
     public @Nullable ColorValue getColor() {
-        ServiceViewDescriptor descriptor = getViewDescriptor();
-        return descriptor instanceof ColoredItem ? ((ColoredItem) descriptor).getColor() : null;
+        return getViewDescriptor() instanceof ColoredItem coloredItem ? coloredItem.getColor() : null;
     }
 
     void markRemoved() {
@@ -94,6 +96,7 @@ public abstract class ServiceViewItem implements ColoredItem {
         return myRemoved || myParent != null && myParent.isRemoved();
     }
 
+    @RequiredUIAccess
     ItemPresentation getItemPresentation(@Nullable ServiceViewOptions viewOptions, ServiceViewItemState state) {
         if (isRemoved()) {
             return myPresentation;
