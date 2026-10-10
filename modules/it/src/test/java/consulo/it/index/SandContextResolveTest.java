@@ -170,7 +170,8 @@ public class SandContextResolveTest {
                 }
                 VirtualFile physical = ModuleAwareIndexOptions.physicalFileOfVariantCopy(resolved);
                 String text = new String(someFile.contentsToByteArray(), someFile.getCharset());
-                return someFile.equals(physical) && resolved.getTextOffset() == text.indexOf("class Item");
+                int nameOffset = text.indexOf("class Item") + "class ".length();
+                return someFile.equals(physical) && resolved.getTextOffset() == nameOffset;
             }
             catch (IndexNotReadyException | java.io.IOException e) {
                 return false;
