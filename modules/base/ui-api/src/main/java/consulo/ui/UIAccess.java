@@ -15,6 +15,7 @@
  */
 package consulo.ui;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.clipboard.Clipboard;
@@ -127,6 +128,8 @@ public interface UIAccess extends Executor, UserDataHolder {
 
     <T> CompletableFuture<T> giveAsync(@RequiredUIAccess Supplier<T> supplier);
 
+    @Deprecated
+    @DeprecationInfo("Waiting UI result is not allowed. Migrate to async logic")
     default void giveAndWait(@RequiredUIAccess Runnable runnable) {
         try {
             giveAsync(runnable).get();
@@ -137,6 +140,8 @@ public interface UIAccess extends Executor, UserDataHolder {
     }
 
     @SuppressWarnings("unchecked")
+    @Deprecated
+    @DeprecationInfo("Waiting UI result is not allowed. Migrate to async logic")
     default <T> T giveAndWaitIfNeed(@RequiredUIAccess Supplier<T> supplier) {
         Object[] value = new Object[1];
         giveAndWaitIfNeed((Runnable) () -> value[0] = supplier.get());
@@ -152,6 +157,8 @@ public interface UIAccess extends Executor, UserDataHolder {
         }
     }
 
+    @Deprecated
+    @DeprecationInfo("Waiting UI result is not allowed. Migrate to async logic")
     default void giveAndWaitIfNeed(@RequiredUIAccess Runnable runnable) {
         if (isUIThread()) {
             runnable.run();
