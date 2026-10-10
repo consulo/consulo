@@ -114,24 +114,18 @@ public class ExecutionCoverageInternalImpl implements ExecutionCoverageInternal 
 
     @Override
     @RequiredUIAccess
-    public void showColorsSettings(
-        Project project,
-        CoverageLine lineData,
-        Function<CoverageLine, TextAttributesKey> attributesKeyFunc
-    ) {
+    public void showColorsSettings(Project project, CoverageLine lineData, Function<CoverageLine, TextAttributesKey> attributesKeyFunc) {
         ColorAndFontOptions colorAndFontOptions = new ColorAndFontOptions() {
             @Override
             protected List<ColorAndFontPanelFactory> createPanelFactories() {
                 final GeneralColorsPage colorsPage = new GeneralColorsPage(project.getApplication());
                 ColorAndFontPanelFactory panelFactory = new ColorAndFontPanelFactory() {
-
                     @Override
                     @RequiredUIAccess
                     public NewColorAndFontPanel createPanel(ColorAndFontOptions options) {
                         SimpleEditorPreview preview = new SimpleEditorPreview(options, colorsPage);
                         return NewColorAndFontPanel.create(preview, colorsPage.getDisplayName(), options, null, colorsPage);
                     }
-
 
                     @Override
                     public LocalizeValue getPanelDisplayName() {
@@ -144,22 +138,20 @@ public class ExecutionCoverageInternalImpl implements ExecutionCoverageInternal 
                 return Collections.singletonList(panelFactory);
             }
         };
-        Configurable[] configurables = colorAndFontOptions.buildConfigurables();
-        try {
-            SearchableConfigurable general = colorAndFontOptions.findSubConfigurable(GeneralColorsPage.class);
-            if (general != null) {
-                ShowSettingsUtil.getInstance().editConfigurable(
-                    project,
-                    general,
-                    general.enableSearch(attributesKeyFunc.apply(lineData).getExternalName())
-                );
-            }
-        }
-        finally {
-            for (Configurable configurable : configurables) {
+        SearchableConfigurable general = colorAndFontOptions.findSubConfigurable(GeneralColorsPage.class);
+        @RequiredUIAccess
+        Runnable dispose = () -> {
+            for (Configurable configurable : colorAndFontOptions.buildConfigurables()) {
                 configurable.disposeUIResources();
             }
             colorAndFontOptions.disposeUIResources();
+        };
+        if (general == null) {
+            dispose.run();
+            return;
         }
+        ShowSettingsUtil.getInstance()
+            .editConfigurable(project, general, general.enableSearch(attributesKeyFunc.apply(lineData).getExternalName()))
+            .whenComplete((result, error) -> dispose.run());
     }
 }
