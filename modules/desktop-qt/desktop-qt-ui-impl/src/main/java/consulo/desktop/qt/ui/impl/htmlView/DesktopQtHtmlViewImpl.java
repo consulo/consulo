@@ -138,7 +138,7 @@ public class DesktopQtHtmlViewImpl extends QtComponentDelegate<QTextBrowser> imp
 
     private volatile @Nullable Function<String, Image> myImageResolver;
 
-    private @Nullable String myPendingHtml;
+    private volatile @Nullable String myHtml;
 
     private @Nullable String myClickedAnchor;
 
@@ -170,11 +170,9 @@ public class DesktopQtHtmlViewImpl extends QtComponentDelegate<QTextBrowser> imp
         palette.setColor(QPalette.ColorGroup.Inactive, QPalette.ColorRole.WindowText, separator);
         component.setPalette(palette);
 
-        String pending = myPendingHtml;
-        if (pending != null) {
-            myPendingHtml = null;
-
-            setHtml(component, pending);
+        String html = myHtml;
+        if (html != null) {
+            setHtml(component, html);
         }
     }
 
@@ -267,11 +265,10 @@ public class DesktopQtHtmlViewImpl extends QtComponentDelegate<QTextBrowser> imp
     public CompletableFuture<?> render(RenderData renderData) {
         String document = buildDocument(renderData);
 
+        myHtml = document;
+
         QTextBrowser component = myComponent;
         if (component == null) {
-            // the widget of a component only exists once it is bound, and a caller renders into the view it just
-            // built rather than waiting for it to be shown
-            myPendingHtml = document;
             return CompletableFuture.completedFuture(null);
         }
 
