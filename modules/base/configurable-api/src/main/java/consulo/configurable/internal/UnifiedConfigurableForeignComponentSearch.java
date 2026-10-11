@@ -17,14 +17,7 @@ package consulo.configurable.internal;
 
 import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
-import consulo.localize.LocalizeValue;
-import consulo.ui.Component;
-import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.inject.Singleton;
-
-import java.util.List;
-import java.util.function.BiConsumer;
-import java.util.function.Predicate;
 
 /**
  * @author VISTALL
@@ -32,16 +25,5 @@ import java.util.function.Predicate;
  */
 @Singleton
 @ServiceImpl(profiles = ComponentProfiles.UNIFIED)
-public class UnifiedConfigurableForeignComponentSearch implements ConfigurableForeignComponentSearch {
-    @Override
-    @RequiredUIAccess
-    public boolean findHits(Component component, Predicate<LocalizeValue> matcher, ConfigurableSearchHits hits) {
-        return false;
-    }
-
-    @Override
-    @RequiredUIAccess
-    public boolean collectTexts(Component component, List<LocalizeValue> tabPath, BiConsumer<LocalizeValue, List<LocalizeValue>> consumer) {
-        return false;
-    }
+public class UnifiedConfigurableForeignComponentSearch extends StubConfigurableForeignComponentSearch {
 }

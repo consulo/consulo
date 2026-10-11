@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.ui.impl.action;
 
+import com.formdev.flatlaf.FlatClientProperties;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.localize.LocalizeValue;
@@ -23,7 +24,6 @@ import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.NonOpaquePanel;
-import consulo.ui.ex.awt.accessibility.ScreenReader;
 import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.ui.ex.popup.JBPopup;
 import kava.beans.PropertyChangeEvent;
@@ -40,9 +40,7 @@ import java.awt.*;
  * @author VISTALL
  * @since 2026-09-22
  */
-public final class ComboBoxActionButton extends JComboBox<Object> {
-    private static final String uiClassID = "ComboBoxActionButtonUI";
-
+public final class ComboBoxActionButton extends CustomPopupComboBox<Object> {
     private static final int POPUP_REOPEN_THRESHOLD_MS = 200;
 
     public static JComponent createCustomComponent(ComboBoxAction action, Presentation presentation) {
@@ -78,7 +76,8 @@ public final class ComboBoxActionButton extends JComboBox<Object> {
             }
         });
 
-        setFocusable(ScreenReader.isActive());
+        putClientProperty(FlatClientProperties.STYLE, "background: #0000; buttonBackground: #0000; buttonArrowColor: $Component.borderColor");
+        setOpaque(false);
 
         revalidateValue();
         updateSize();
@@ -97,6 +96,7 @@ public final class ComboBoxActionButton extends JComboBox<Object> {
         }
     }
 
+    @Override
     public void hidePopupImpl() {
         if (myCurrentPopupCanceler != null) {
             myCurrentPopupCanceler.run();
@@ -104,6 +104,7 @@ public final class ComboBoxActionButton extends JComboBox<Object> {
         }
     }
 
+    @Override
     public void showPopupImpl() {
         if (myCurrentPopupCanceler != null) {
             hidePopupImpl();
@@ -129,12 +130,14 @@ public final class ComboBoxActionButton extends JComboBox<Object> {
         myCurrentPopupCanceler = popup::cancel;
     }
 
-    public @Nullable Runnable getCurrentPopupCanceler() {
-        return myCurrentPopupCanceler;
+    @Override
+    public boolean isCustomPopupVisible() {
+        return myCurrentPopupCanceler != null;
     }
 
-    public @Nullable Runnable getOnClickListener() {
-        return myOnClickListener;
+    @Override
+    public boolean isArrowVisible() {
+        return myOnClickListener == null;
     }
 
     private void updateSize() {
@@ -194,11 +197,6 @@ public final class ComboBoxActionButton extends JComboBox<Object> {
     private void updateTooltipText(LocalizeValue description) {
         String tooltip = KeymapUtil.createTooltipText(description.get(), myAction);
         setToolTipText(!tooltip.isEmpty() ? tooltip : null);
-    }
-
-    @Override
-    public String getUIClassID() {
-        return uiClassID;
     }
 
     private void setLikeButton(@Nullable Runnable onClick) {

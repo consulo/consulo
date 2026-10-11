@@ -15,28 +15,17 @@
  */
 package consulo.desktop.awt.ui.impl;
 
-import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ui.ex.awt.internal.AWTHasSuffixComponent;
 import consulo.desktop.awt.ui.impl.facade.FromSwingComponentWrapper;
-import consulo.disposer.Disposable;
-import consulo.ui.ComboBox;
 import consulo.ui.Component;
-import consulo.ui.ValueComponent;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.event.ComponentEventListener;
-import consulo.ui.event.ValueComponentEvent;
 import consulo.ui.model.FlatDataModel;
-import org.jspecify.annotations.Nullable;
 
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
 import java.awt.Dimension;
 
 /**
  * @author VISTALL
  * @since 12-Jun-16
  */
-public class DesktopComboBoxImpl<E> extends DesktopComboBoxBaseImpl<E, DesktopComboBoxImpl<E>.MyComboBox> implements ComboBox<E> {
+public class DesktopComboBoxImpl<E> extends DesktopSingleComboBoxBaseImpl<E, DesktopComboBoxImpl<E>.MyComboBox> {
     class MyComboBox extends consulo.ui.ex.awt.ComboBox<E> implements FromSwingComponentWrapper {
         @Override
         public Component toUIComponent() {
@@ -45,70 +34,19 @@ public class DesktopComboBoxImpl<E> extends DesktopComboBoxBaseImpl<E, DesktopCo
 
         @Override
         public Dimension getPreferredSize() {
-            Dimension size = super.getPreferredSize();
-            JComponent suffix = AWTHasSuffixComponent.getSuffixComponent(this);
-            if (suffix == null || !suffix.isVisible()) {
-                return size;
-            }
-            return new Dimension(size.width + suffix.getPreferredSize().width, size.height);
+            return withSuffixWidth(this, super.getPreferredSize());
         }
     }
-
-    private @Nullable Component mySuffixComponent;
 
     public DesktopComboBoxImpl(FlatDataModel<E> model) {
         super(model);
     }
 
     @Override
-    public void setSuffixComponent(@Nullable Component suffixComponent) {
-        mySuffixComponent = suffixComponent;
-        AWTHasSuffixComponent.setSuffixComponent(toAWTComponent(), suffixComponent == null ? null : TargetAWT.to(suffixComponent));
-    }
-
-    @Override
-    public @Nullable Component getSuffixComponent() {
-        return mySuffixComponent;
-    }
-
-    @Override
     protected MyComboBox createComponent() {
-        MyComboBox component = newComboBox();
+        MyComboBox component = new MyComboBox();
         component.setModel(new DesktopFlatDataModelWrapper<>(myModel));
         initComboBox(component);
         return component;
-    }
-
-    protected MyComboBox newComboBox() {
-        return new MyComboBox();
-    }
-
-    @Override
-    protected JComboBox<E> getComboBox(MyComboBox component) {
-        return component;
-    }
-
-    @Override
-    public void setValueByIndex(int index) {
-        toAWTComponent().setSelectedIndex(index);
-    }
-
-    @RequiredUIAccess
-    @Override
-    public void setValue(E value, boolean fireListeners) {
-        toAWTComponent().setSelectedItem(value);
-    }
-
-    @Override
-    public Disposable addValueListener(ComponentEventListener<ValueComponent<E>, ValueComponentEvent<E>> valueListener) {
-        DesktopValueListenerAsItemListenerImpl<E> listener = new DesktopValueListenerAsItemListenerImpl<>(this, valueListener, true);
-        toAWTComponent().addItemListener(listener);
-        return () -> toAWTComponent().removeItemListener(listener);
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public @Nullable E getValue() {
-        return (E) toAWTComponent().getSelectedItem();
     }
 }

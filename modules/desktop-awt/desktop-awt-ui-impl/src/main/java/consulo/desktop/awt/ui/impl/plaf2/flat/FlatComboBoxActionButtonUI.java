@@ -15,12 +15,11 @@
  */
 package consulo.desktop.awt.ui.impl.plaf2.flat;
 
-import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.ui.FlatComboBoxUI;
 import com.formdev.flatlaf.ui.FlatUIUtils;
 import com.formdev.flatlaf.util.UIScale;
-import consulo.desktop.awt.ui.impl.action.ComboBoxActionButton;
 import consulo.desktop.awt.ui.impl.action.ComboBoxActionButtonUI;
+import consulo.desktop.awt.ui.impl.action.CustomPopupComboBox;
 
 import javax.accessibility.Accessible;
 import javax.swing.*;
@@ -38,9 +37,9 @@ import java.awt.geom.Rectangle2D;
 public class FlatComboBoxActionButtonUI extends FlatComboBoxUI implements ComboBoxActionButtonUI {
     public static class IdeComboBoxPopup implements ComboPopup {
         private final JList<?> myDummyList = new JList<>();
-        private final ComboBoxActionButton myButton;
+        private final CustomPopupComboBox<?> myButton;
 
-        IdeComboBoxPopup(ComboBoxActionButton button) {
+        IdeComboBoxPopup(CustomPopupComboBox<?> button) {
             myButton = button;
             // some ui register listeners to JList of popup
             // just return dummy instance
@@ -60,7 +59,7 @@ public class FlatComboBoxActionButtonUI extends FlatComboBoxUI implements ComboB
 
         @Override
         public boolean isVisible() {
-            return myButton.getCurrentPopupCanceler() != null;
+            return myButton.isCustomPopupVisible();
         }
 
         @Override
@@ -73,7 +72,9 @@ public class FlatComboBoxActionButtonUI extends FlatComboBoxUI implements ComboB
             return new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                    show();
+                    if (myButton.isEnabled()) {
+                        show();
+                    }
                 }
             };
         }
@@ -99,7 +100,7 @@ public class FlatComboBoxActionButtonUI extends FlatComboBoxUI implements ComboB
 
     @Override
     public void setPopupVisible(JComboBox c, boolean v) {
-        ComboBoxActionButton boxButton = (ComboBoxActionButton) c;
+        CustomPopupComboBox<?> boxButton = (CustomPopupComboBox<?>) c;
         if (v) {
             boxButton.showPopupImpl();
         }
@@ -110,14 +111,12 @@ public class FlatComboBoxActionButtonUI extends FlatComboBoxUI implements ComboB
 
     @Override
     protected ComboPopup createPopup() {
-        return new IdeComboBoxPopup((ComboBoxActionButton) comboBox);
+        return new IdeComboBoxPopup((CustomPopupComboBox<?>) comboBox);
     }
 
     @Override
     public boolean isPopupVisible(JComboBox c) {
-        ComboBoxActionButton boxButton = (ComboBoxActionButton) c;
-
-        return boxButton.getCurrentPopupCanceler() != null;
+        return ((CustomPopupComboBox<?>) c).isCustomPopupVisible();
     }
 
     @Override
@@ -131,12 +130,6 @@ public class FlatComboBoxActionButtonUI extends FlatComboBoxUI implements ComboB
     public void installUI(JComponent c) {
         super.installUI(c);
 
-        ComboBoxActionButton boxButton = (ComboBoxActionButton) c;
-
-        updateArrowState(boxButton.getOnClickListener() == null);
-
-        c.putClientProperty(FlatClientProperties.STYLE, "background: #0000; buttonBackground: #0000; buttonArrowColor: $Component.borderColor");
-
-        c.setOpaque(false);
+        updateArrowState(((CustomPopupComboBox<?>) c).isArrowVisible());
     }
 }

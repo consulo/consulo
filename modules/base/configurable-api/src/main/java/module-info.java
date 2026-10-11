@@ -44,5 +44,6 @@ module consulo.configurable.api {
         consulo.version.control.system.distributed.api,
         consulo.language.editor.todo.impl,
         consulo.http.impl,
-        consulo.version.control.system.impl;
+        consulo.version.control.system.impl,
+        consulo.test.impl;
 }

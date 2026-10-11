@@ -45,7 +45,7 @@ import consulo.ui.TriStateCheckBox;
 import consulo.ui.UIAccess;
 import consulo.ui.ValueComponent;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.event.ComponentEvent;
+import consulo.ui.ex.ComboBoxWithCustomPopup;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
@@ -230,14 +230,21 @@ public class InspectionToolDetailsPanel {
         });
         severityBox.setSuffixComponent(editButton);
 
-        Button scopeButton = Button.create(InspectionLocalize.inspectionSettingsScopeAll());
-        scopeButton.setIcon(PlatformIconGroup.generalArrowdown());
-        scopeButton.addClickListener(event -> showAddScopePopup(event, Set.of()));
+        LocalizeValue allScopes = InspectionLocalize.inspectionSettingsScopeAll();
+        ComboBoxWithCustomPopup<LocalizeValue> scopeBox = ComboBoxWithCustomPopup.create(FlatDataModel.of(List.of(allScopes)));
+        scopeBox.setRender((presentation, item) -> {
+            LocalizeValue value = item.getValue();
+            if (value != null) {
+                presentation.append(value);
+            }
+        });
+        scopeBox.setValue(allScopes, false);
+        scopeBox.addPopupHandler(onClosed -> createAddScopePopup(scopeBox, Set.of(), onClosed));
 
         HorizontalLayout row = HorizontalLayout.create(Space.SMALL);
         row.add(Label.create(InspectionLocalize.inspectionSettingsSeverityLabel()));
         row.add(severityBox);
-        row.add(scopeButton);
+        row.add(scopeBox);
         return row;
     }
 
@@ -346,7 +353,7 @@ public class InspectionToolDetailsPanel {
                 @RequiredUIAccess
                 @Override
                 protected void doAdd(AnActionEvent e) {
-                    createAddScopePopup(table, Set.copyOf(myScopeIds)).showUnderneathOf(e);
+                    createAddScopePopup(table, Set.copyOf(myScopeIds), null).showUnderneathOf(e);
                 }
             })
             .addOrReplaceAction(new RemoveAction<>() {
@@ -601,12 +608,7 @@ public class InspectionToolDetailsPanel {
     }
 
     @RequiredUIAccess
-    private void showAddScopePopup(ComponentEvent<? extends Component> event, Set<String> excluded) {
-        createAddScopePopup(event.getComponent(), excluded).showBy(event);
-    }
-
-    @RequiredUIAccess
-    private ListPopup createAddScopePopup(Component owner, Set<String> excluded) {
+    private ListPopup createAddScopePopup(Component owner, Set<String> excluded, @Nullable Runnable onClosed) {
         ActionGroup.Builder group = ActionGroup.newImmutableBuilder();
         addScopeActions(group, InspectionScopes.getPredefinedScopes(myProject), excluded);
         group.addSeparator();
@@ -617,7 +619,9 @@ public class InspectionToolDetailsPanel {
             group.build(),
             DataManager.getInstance().getDataContext(owner),
             JBPopupFactory.ActionSelectionAid.SPEEDSEARCH,
-            false
+            false,
+            onClosed,
+            -1
         );
     }
 

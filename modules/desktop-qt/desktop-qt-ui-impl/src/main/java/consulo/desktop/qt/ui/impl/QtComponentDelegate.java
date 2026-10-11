@@ -689,6 +689,10 @@ public abstract class QtComponentDelegate<T extends QWidget> implements Componen
                 if (event.type() == QEvent.Type.MouseButtonRelease
                     && event instanceof QMouseEvent mouseEvent
                     && mouseEvent.button() == io.qt.core.Qt.MouseButton.LeftButton) {
+                    if (!widget.isEnabled()) {
+                        return true;
+                    }
+
                     fireComponentEvent(ClickEvent.class, new ClickEvent(
                         QtComponentDelegate.this,
                         DesktopQtInputDetails.mouse(widget, mouseEvent)

@@ -15,8 +15,15 @@
  */
 package consulo.it.internal.ui;
 
+import consulo.ui.Point2D;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.ClickEvent;
+import consulo.ui.event.details.ModifiedInputDetails;
+import consulo.ui.event.details.MouseInputDetails;
 import consulo.ui.ex.ComboBoxWithCustomPopup;
 import consulo.ui.model.FlatDataModel;
+
+import java.util.EnumSet;
 
 /**
  * @author VISTALL
@@ -24,5 +31,14 @@ import consulo.ui.model.FlatDataModel;
 public class HeadlessComboBoxWithCustomPopup<E> extends HeadlessComboBox<E> implements ComboBoxWithCustomPopup<E> {
     public HeadlessComboBoxWithCustomPopup(FlatDataModel<E> model) {
         super(model);
+    }
+
+    @RequiredUIAccess
+    public void click() {
+        MouseInputDetails details = new MouseInputDetails(new Point2D(),
+            new Point2D(),
+            EnumSet.noneOf(ModifiedInputDetails.Modifier.class),
+            MouseInputDetails.MouseButton.LEFT);
+        getListenerDispatcher(ClickEvent.class).onEvent(new ClickEvent(this, details));
     }
 }

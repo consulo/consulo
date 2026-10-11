@@ -15,9 +15,16 @@
  */
 package consulo.ui.ex;
 
+import consulo.disposer.Disposable;
 import consulo.ui.ComboBox;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.internal.ComboBoxCustomPopupHandler;
 import consulo.ui.ex.internal.UIInternalEx;
+import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.model.FlatDataModel;
+import org.jspecify.annotations.Nullable;
+
+import java.util.function.Function;
 
 /**
  * A combo box which never opens the list of its items. A press is reported as a click, so whoever placed the control
@@ -29,5 +36,10 @@ import consulo.ui.model.FlatDataModel;
 public interface ComboBoxWithCustomPopup<E> extends ComboBox<E> {
     static <E> ComboBoxWithCustomPopup<E> create(FlatDataModel<E> model) {
         return UIInternalEx.get()._Components_comboBoxWithCustomPopup(model);
+    }
+
+    @RequiredUIAccess
+    default Disposable addPopupHandler(Function<Runnable, @Nullable JBPopup> popupBuilder) {
+        return addClickListener(new ComboBoxCustomPopupHandler(this, popupBuilder));
     }
 }
