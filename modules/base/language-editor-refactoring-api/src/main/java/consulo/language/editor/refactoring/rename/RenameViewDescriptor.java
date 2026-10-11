@@ -19,6 +19,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.usage.UsageViewBundle;
 import consulo.usage.UsageViewDescriptor;
@@ -34,7 +35,7 @@ import java.util.Set;
 public class RenameViewDescriptor implements UsageViewDescriptor {
     private static final Logger LOG = Logger.getInstance(RenameViewDescriptor.class);
     private final String myProcessedElementsHeader;
-    private final String myCodeReferencesText;
+    private final LocalizeValue myCodeReferencesText;
     private final PsiElement[] myElements;
 
     @RequiredReadAction
@@ -65,7 +66,7 @@ public class RenameViewDescriptor implements UsageViewDescriptor {
 
         myProcessedElementsHeader = StringUtil.join(ArrayUtil.toStringArray(processedElementsHeaders), ", ");
         myCodeReferencesText =
-            RefactoringLocalize.referencesInCodeTo0(StringUtil.join(ArrayUtil.toStringArray(codeReferences), ", ")).get();
+            RefactoringLocalize.referencesInCodeTo0(StringUtil.join(ArrayUtil.toStringArray(codeReferences), ", "));
     }
 
     @Override
@@ -81,7 +82,7 @@ public class RenameViewDescriptor implements UsageViewDescriptor {
 
     @Override
     public String getCodeReferencesText(int usagesCount, int filesCount) {
-        return myCodeReferencesText + UsageViewBundle.getReferencesString(usagesCount, filesCount);
+        return myCodeReferencesText.get() + UsageViewBundle.getReferencesString(usagesCount, filesCount);
     }
 
     @Override

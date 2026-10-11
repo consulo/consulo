@@ -25,6 +25,7 @@ import consulo.fileEditor.structureView.tree.NodeProvider;
 import consulo.fileEditor.structureView.tree.ProvidingTreeModel;
 import consulo.fileEditor.structureView.tree.TreeElement;
 import consulo.language.psi.PsiFile;
+import consulo.localize.LocalizeValue;
 import consulo.navigation.ItemPresentation;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
@@ -187,7 +188,7 @@ public class StructureViewCompositeModel extends StructureViewModelBase implemen
             public ItemPresentation getPresentation() {
                 return new ItemPresentation() {
                     @Override
-                    public @Nullable String getPresentableText() {
+                    public LocalizeValue getPresentableText() {
                         return view.title;
                     }
 

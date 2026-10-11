@@ -19,6 +19,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiPackage;
 import consulo.language.util.ModuleUtilCore;
+import consulo.localize.LocalizeValue;
 import consulo.module.Module;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
@@ -73,7 +74,6 @@ public class PackageElementNode extends ProjectViewNode<PackageElement> {
 
     @RequiredReadAction
     @Override
-    
     public Collection<AbstractTreeNode> getChildren() {
         PackageElement value = getValue();
         if (value == null) {
@@ -142,7 +142,7 @@ public class PackageElementNode extends ProjectViewNode<PackageElement> {
     public String getTestPresentation() {
         PresentationData presentation = new PresentationData();
         update(presentation);
-        return "PsiJavaPackage: " + presentation.getPresentableText();
+        return "PsiJavaPackage: " + presentation.getPresentableText().get();
     }
 
     @Override
@@ -150,7 +150,6 @@ public class PackageElementNode extends ProjectViewNode<PackageElement> {
         return getValue() != null && CopyPasteManager.getInstance().isCutElement(getValue().getPackage());
     }
 
-    
     public VirtualFile[] getVirtualFiles() {
         PackageElement value = getValue();
         if (value == null) {

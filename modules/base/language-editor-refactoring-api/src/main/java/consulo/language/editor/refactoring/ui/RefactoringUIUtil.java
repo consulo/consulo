@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.refactoring.ui;
 
 import consulo.application.Application;
@@ -23,6 +22,7 @@ import consulo.language.findUsage.DescriptiveNameUtil;
 import consulo.language.psi.ElementDescriptionUtil;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
@@ -32,36 +32,39 @@ import consulo.usage.UsageViewUtil;
  * @author yole
  */
 public class RefactoringUIUtil {
-  private RefactoringUIUtil() {
-  }
-
-  public static String getDescription(PsiElement element, boolean includeParent) {
-    return ElementDescriptionUtil.getElementDescription(element, includeParent
-                                                                 ? RefactoringDescriptionLocation.WITH_PARENT
-                                                                 : RefactoringDescriptionLocation.WITHOUT_PARENT);
-  }
-
-  public static void processIncorrectOperation(Project project, IncorrectOperationException e) {
-    String message = e.getMessage();
-    int index = message != null ? message.indexOf("java.io.IOException") : -1;
-    if (index > 0) {
-      message = message.substring(index + "java.io.IOException".length());
+    private RefactoringUIUtil() {
     }
 
-    String s = message;
-    Application.get()
-      .invokeLater(() -> Messages.showMessageDialog(project, s, RefactoringLocalize.errorTitle().get(), UIUtil.getErrorIcon()));
-  }
-
-  public static String calculatePsiElementDescriptionList(PsiElement[] elements) {
-    StringBuilder buffer = new StringBuilder();
-    for (int i = 0; i < elements.length; i++) {
-      if (i > 0) buffer.append(", ");
-      buffer.append(UsageViewUtil.getType(elements[i]));
-      buffer.append(" ");
-      buffer.append(DescriptiveNameUtil.getDescriptiveName(elements[i]));
+    public static LocalizeValue getDescription(PsiElement element, boolean includeParent) {
+        return ElementDescriptionUtil.getElementDescription(
+            element,
+            includeParent ? RefactoringDescriptionLocation.WITH_PARENT : RefactoringDescriptionLocation.WITHOUT_PARENT
+        );
     }
 
-    return buffer.toString();
-  }
+    public static void processIncorrectOperation(Project project, IncorrectOperationException e) {
+        String message = e.getMessage();
+        int index = message != null ? message.indexOf("java.io.IOException") : -1;
+        if (index > 0) {
+            message = message.substring(index + "java.io.IOException".length());
+        }
+
+        String s = message;
+        Application.get()
+            .invokeLater(() -> Messages.showMessageDialog(project, s, RefactoringLocalize.errorTitle().get(), UIUtil.getErrorIcon()));
+    }
+
+    public static String calculatePsiElementDescriptionList(PsiElement[] elements) {
+        StringBuilder buffer = new StringBuilder();
+        for (int i = 0; i < elements.length; i++) {
+            if (i > 0) {
+                buffer.append(", ");
+            }
+            buffer.append(UsageViewUtil.getType(elements[i]));
+            buffer.append(" ");
+            buffer.append(DescriptiveNameUtil.getDescriptiveName(elements[i]));
+        }
+
+        return buffer.toString();
+    }
 }

@@ -13,6 +13,7 @@ import consulo.language.editor.wolfAnalyzer.WolfTheProblemSolver;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiElementNavigationItem;
 import consulo.language.psi.PsiUtilCore;
+import consulo.localize.LocalizeValue;
 import consulo.navigation.ItemPresentation;
 import consulo.navigation.NavigationItem;
 import consulo.project.Project;
@@ -99,9 +100,7 @@ public class NavigationItemListCellRenderer extends OpaquePanel implements ListC
                 assert presentation != null
                     : "PSI elements displayed in choose by name lists must return a non-null value from getPresentation(): " +
                     "element " + item.toString() + ", class " + item.getClass().getName();
-                String name = presentation.getPresentableText();
-                assert name != null : "PSI elements displayed in choose by name lists must return a non-null value " +
-                    "from getPresentation().getPresentableName: element " + item.toString() + ", class " + item.getClass().getName();
+                LocalizeValue name = presentation.getPresentableText();
                 ColorValue color = TargetAWT.from(list.getForeground());
                 boolean isProblemFile = item instanceof PsiElement element
                     && WolfTheProblemSolver.getInstance(element.getProject()).isProblemFile(PsiUtilCore.getVirtualFile(element));
@@ -133,7 +132,7 @@ public class NavigationItemListCellRenderer extends OpaquePanel implements ListC
                 }
                 textAttributes.setForegroundColor(color);
                 SimpleTextAttributes nameAttributes = TextAttributesUtil.fromTextAttributes(textAttributes);
-                SpeedSearchUtil.appendColoredFragmentForMatcher(name, this, nameAttributes, myMatcher, bgColor, selected);
+                SpeedSearchUtil.appendColoredFragmentForMatcher(name.get(), this, nameAttributes, myMatcher, bgColor, selected);
                 setIcon(presentation.getIcon());
 
                 if (myRenderLocation) {

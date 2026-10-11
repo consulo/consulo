@@ -37,19 +37,19 @@ public class DeleteUtil {
     @Deprecated
     public static String generateWarningMessage(String messageTemplate, PsiElement[] elements) {
         if (elements.length == 1) {
-            String name = ElementDescriptionUtil.getElementDescription(elements[0], DeleteNameDescriptionLocation.INSTANCE);
-            String type = ElementDescriptionUtil.getElementDescription(elements[0], DeleteTypeDescriptionLocation.SINGULAR);
-            return MessageFormat.format(messageTemplate, type + " \"" + name + "\"");
+            LocalizeValue name = ElementDescriptionUtil.getElementDescription(elements[0], DeleteNameDescriptionLocation.INSTANCE);
+            LocalizeValue type = ElementDescriptionUtil.getElementDescription(elements[0], DeleteTypeDescriptionLocation.SINGULAR);
+            return MessageFormat.format(messageTemplate, type.get() + " \"" + name.get() + "\"");
         }
 
-        Map<String, Integer> countMap = new HashMap<>();
+        Map<LocalizeValue, Integer> countMap = new HashMap<>();
 
-        Map<String, String> pluralToSingular = new HashMap<>();
+        Map<LocalizeValue, LocalizeValue> pluralToSingular = new HashMap<>();
         int directoryCount = 0;
-        String containerType = null;
+        LocalizeValue containerType = LocalizeValue.empty();
 
         for (PsiElement elementToDelete : elements) {
-            String type = ElementDescriptionUtil.getElementDescription(elementToDelete, DeleteTypeDescriptionLocation.PLURAL);
+            LocalizeValue type = ElementDescriptionUtil.getElementDescription(elementToDelete, DeleteTypeDescriptionLocation.PLURAL);
             pluralToSingular.put(
                 type,
                 ElementDescriptionUtil.getElementDescription(elementToDelete, DeleteTypeDescriptionLocation.SINGULAR)
@@ -63,7 +63,7 @@ public class DeleteUtil {
         }
 
         StringBuilder buffer = new StringBuilder();
-        for (Map.Entry<String, Integer> entry : countMap.entrySet()) {
+        for (Map.Entry<LocalizeValue, Integer> entry : countMap.entrySet()) {
             if (buffer.length() > 0) {
                 if (buffer.length() > 0) {
                     buffer.append(" ").append(RefactoringLocalize.promptDeleteAnd().get()).append(" ");
@@ -73,10 +73,10 @@ public class DeleteUtil {
 
             buffer.append(count).append(" ");
             if (count == 1) {
-                buffer.append(pluralToSingular.get(entry.getKey()));
+                buffer.append(pluralToSingular.get(entry.getKey()).get());
             }
             else {
-                buffer.append(entry.getKey());
+                buffer.append(entry.getKey().get());
             }
 
             if (entry.getKey().equals(containerType)) {
@@ -89,19 +89,19 @@ public class DeleteUtil {
     
     public static LocalizeValue generateWarningMessage(Function<Object, LocalizeValue> messageTemplate, PsiElement[] elements) {
         if (elements.length == 1) {
-            String name = ElementDescriptionUtil.getElementDescription(elements[0], DeleteNameDescriptionLocation.INSTANCE);
-            String type = ElementDescriptionUtil.getElementDescription(elements[0], DeleteTypeDescriptionLocation.SINGULAR);
-            return messageTemplate.apply(type + " \"" + name + "\"");
+            LocalizeValue name = ElementDescriptionUtil.getElementDescription(elements[0], DeleteNameDescriptionLocation.INSTANCE);
+            LocalizeValue type = ElementDescriptionUtil.getElementDescription(elements[0], DeleteTypeDescriptionLocation.SINGULAR);
+            return messageTemplate.apply(type.get() + " \"" + name.get() + "\"");
         }
 
-        Map<String, Integer> countMap = new HashMap<>();
+        Map<LocalizeValue, Integer> countMap = new HashMap<>();
 
-        Map<String, String> pluralToSingular = new HashMap<>();
+        Map<LocalizeValue, LocalizeValue> pluralToSingular = new HashMap<>();
         int directoryCount = 0;
-        String containerType = null;
+        LocalizeValue containerType = LocalizeValue.empty();
 
         for (PsiElement elementToDelete : elements) {
-            String type = ElementDescriptionUtil.getElementDescription(elementToDelete, DeleteTypeDescriptionLocation.PLURAL);
+            LocalizeValue type = ElementDescriptionUtil.getElementDescription(elementToDelete, DeleteTypeDescriptionLocation.PLURAL);
             pluralToSingular.put(
                 type,
                 ElementDescriptionUtil.getElementDescription(elementToDelete, DeleteTypeDescriptionLocation.SINGULAR)
@@ -115,7 +115,7 @@ public class DeleteUtil {
         }
 
         StringBuilder builder = new StringBuilder();
-        for (Map.Entry<String, Integer> entry : countMap.entrySet()) {
+        for (Map.Entry<LocalizeValue, Integer> entry : countMap.entrySet()) {
             if (builder.length() > 0) {
                 if (builder.length() > 0) {
                     builder.append(" ").append(RefactoringLocalize.promptDeleteAnd().get()).append(" ");
@@ -125,10 +125,10 @@ public class DeleteUtil {
 
             builder.append(count).append(" ");
             if (count == 1) {
-                builder.append(pluralToSingular.get(entry.getKey()));
+                builder.append(pluralToSingular.get(entry.getKey()).get());
             }
             else {
-                builder.append(entry.getKey());
+                builder.append(entry.getKey().get());
             }
 
             if (entry.getKey().equals(containerType)) {

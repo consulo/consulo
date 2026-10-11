@@ -25,6 +25,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiManager;
 import consulo.language.psi.PsiNamedElement;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.navigation.ItemPresentation;
 import consulo.ui.image.Image;
 
@@ -128,8 +129,8 @@ public abstract class FakePsiElement extends PsiElementBase implements PsiNamedE
     }
 
     @Override
-    public String getPresentableText() {
-        return getName();
+    public LocalizeValue getPresentableText() {
+        return LocalizeValue.ofNullable(getName());
     }
 
     @Override

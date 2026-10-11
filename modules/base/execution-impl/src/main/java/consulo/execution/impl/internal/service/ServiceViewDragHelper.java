@@ -111,8 +111,8 @@ final class ServiceViewDragHelper {
     StringBuilder result = new StringBuilder();
     if (presentation instanceof PresentationData) {
       List<PresentableNodeDescriptor.ColoredFragment> fragments = ((PresentationData)presentation).getColoredText();
-      if (fragments.isEmpty() && presentation.getPresentableText() != null) {
-        result.append(presentation.getPresentableText());
+      if (fragments.isEmpty() && presentation.getPresentableText().isNotEmpty()) {
+        result.append(presentation.getPresentableText().get());
       }
       else {
         for (PresentableNodeDescriptor.ColoredFragment fragment : fragments) {
@@ -120,8 +120,8 @@ final class ServiceViewDragHelper {
         }
       }
     }
-    else if (presentation.getPresentableText() != null) {
-      result.append(presentation.getPresentableText());
+    else if (presentation.getPresentableText().isNotEmpty()) {
+      result.append(presentation.getPresentableText().get());
     }
     return result.toString();
   }

@@ -10,7 +10,6 @@ import consulo.application.ui.event.UISettingsListener;
 import consulo.application.util.matcher.MinusculeMatcher;
 import consulo.application.util.matcher.NameUtil;
 import consulo.dataContext.DataManager;
-import consulo.dataContext.DataSink;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.util.TextRange;
@@ -88,8 +87,8 @@ import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.xml.XmlStringUtil;
-import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.TreeModel;
@@ -98,8 +97,8 @@ import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.*;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
 
@@ -184,7 +183,6 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
                 return getRootElement() == element;
             }
 
-            
             @Override
             protected TreeElementWrapper createTree() {
                 return StructureViewComponent.createWrapper(myProject, myModel.getRoot(), myModel);
@@ -238,16 +236,16 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
                     pairs,
                     pair -> {
                         PsiElement psi = pair.second;
-                        String defaultPresentation = pair.first.getPresentation().getPresentableText();
+                        LocalizeValue defaultPresentation = pair.first.getPresentation().getPresentableText();
                         if (psi == null) {
-                            return defaultPresentation;
+                            return defaultPresentation.getNullIfEmpty();
                         }
                         for (PsiElement p = psi.getParent(); p != null; p = p.getParent()) {
                             if (psiSelection.contains(p)) {
                                 return null;
                             }
                         }
-                        return ObjectUtil.chooseNotNull(psi.getText(), defaultPresentation);
+                        return ObjectUtil.chooseNotNull(psi.getText(), defaultPresentation.get());
                     },
                     "\n"
                 );
@@ -921,7 +919,7 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
         // NB!: this point is achievable if the following method returns null
         // see consulo.ide.impl.idea.ide.util.treeView.NodeDescriptor.toString
         if (value instanceof TreeElement treeElement) {
-            return ReadAction.compute(() -> treeElement.getPresentation().getPresentableText());
+            return ReadAction.compute(() -> treeElement.getPresentation().getPresentableText()).getNullIfEmpty();
         }
 
         return null;
@@ -929,7 +927,6 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
 
     @Override
     public void setActionActive(String name, boolean state) {
-
     }
 
     @Override

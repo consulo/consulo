@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.refactoring.util;
 
 import consulo.language.psi.*;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.language.psi.PsiPackageHelper;
 import consulo.language.psi.meta.PsiMetaData;
@@ -26,37 +26,38 @@ import consulo.language.psi.meta.PsiMetaOwner;
  * @author yole
  */
 public class DefaultNonCodeSearchElementDescriptionProvider implements ElementDescriptionProvider {
-  private static final Logger LOG = Logger.getInstance(DefaultNonCodeSearchElementDescriptionProvider.class);
+    private static final Logger LOG = Logger.getInstance(DefaultNonCodeSearchElementDescriptionProvider.class);
 
-  public static final DefaultNonCodeSearchElementDescriptionProvider INSTANCE = new DefaultNonCodeSearchElementDescriptionProvider();
+    public static final DefaultNonCodeSearchElementDescriptionProvider INSTANCE = new DefaultNonCodeSearchElementDescriptionProvider();
 
-  @Override
-  public String getElementDescription(PsiElement element, ElementDescriptionLocation location) {
-    if (!(location instanceof NonCodeSearchDescriptionLocation)) return null;
-    NonCodeSearchDescriptionLocation ncdLocation = (NonCodeSearchDescriptionLocation)location;
+    @Override
+    public LocalizeValue getElementDescription(PsiElement element, ElementDescriptionLocation location) {
+        if (!(location instanceof NonCodeSearchDescriptionLocation)) {
+            return LocalizeValue.empty();
+        }
+        NonCodeSearchDescriptionLocation ncdLocation = (NonCodeSearchDescriptionLocation) location;
 
-    if (element instanceof PsiDirectory) {
-      if (ncdLocation.isNonJava()) {
-        String qName = PsiPackageHelper.getInstance(element.getProject()).getQualifiedName((PsiDirectory)element, false);
-        if (qName.length() > 0) return qName;
-        return null;
-      }
-      return ((PsiDirectory) element).getName();
-    }
+        if (element instanceof PsiDirectory) {
+            if (ncdLocation.isNonJava()) {
+                String qName = PsiPackageHelper.getInstance(element.getProject()).getQualifiedName((PsiDirectory) element, false);
+                return LocalizeValue.of(qName);
+            }
+            return LocalizeValue.localizeTODO(((PsiDirectory) element).getName());
+        }
 
-    if (element instanceof PsiMetaOwner) {
-      PsiMetaOwner psiMetaOwner = (PsiMetaOwner)element;
-      PsiMetaData metaData = psiMetaOwner.getMetaData();
-      if (metaData != null) {
-        return metaData.getName();
-      }
+        if (element instanceof PsiMetaOwner) {
+            PsiMetaOwner psiMetaOwner = (PsiMetaOwner)element;
+            PsiMetaData metaData = psiMetaOwner.getMetaData();
+            if (metaData != null) {
+                return LocalizeValue.localizeTODO(metaData.getName());
+            }
+        }
+        if (element instanceof PsiNamedElement namedElem) {
+            return LocalizeValue.ofNullable(namedElem.getName());
+        }
+        else {
+            // LOG.error("Unknown element type: " + element);
+            return LocalizeValue.empty();
+        }
     }
-    if (element instanceof PsiNamedElement) {
-      return ((PsiNamedElement)element).getName();
-    }
-    else {
-     // LOG.error("Unknown element type: " + element);
-      return null;
-    }
-  }
 }

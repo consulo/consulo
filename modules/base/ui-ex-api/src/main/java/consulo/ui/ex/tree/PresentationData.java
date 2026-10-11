@@ -15,6 +15,7 @@
  */
 package consulo.ui.ex.tree;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.component.util.ComparableObject;
 import consulo.component.util.ComparableObjectCheck;
@@ -42,7 +43,7 @@ public class PresentationData implements ColoredItemPresentation, ComparableObje
     private Image myIcon;
 
     private String myLocationString;
-    private String myPresentableText;
+    private LocalizeValue myPresentableText = LocalizeValue.empty();
 
     private String myTooltip;
     private TextAttributesKey myAttributesKey;
@@ -78,7 +79,7 @@ public class PresentationData implements ColoredItemPresentation, ComparableObje
     ) {
         myIcon = icon;
         myLocationString = locationString;
-        myPresentableText = presentableText.get();
+        myPresentableText = presentableText;
         myAttributesKey = attributesKey;
     }
 
@@ -93,11 +94,10 @@ public class PresentationData implements ColoredItemPresentation, ComparableObje
      *                        in a non-tree view.
      * @param attributesKey   the attributes for rendering the item text.
      */
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
     public PresentationData(String presentableText, String locationString, Image icon, @Nullable TextAttributesKey attributesKey) {
-        myIcon = icon;
-        myLocationString = locationString;
-        myPresentableText = presentableText;
-        myAttributesKey = attributesKey;
+        this(LocalizeValue.ofNullable(presentableText), locationString, icon, attributesKey);
     }
 
     /**
@@ -133,7 +133,7 @@ public class PresentationData implements ColoredItemPresentation, ComparableObje
     }
 
     @Override
-    public String getPresentableText() {
+    public LocalizeValue getPresentableText() {
         return myPresentableText;
     }
 
@@ -167,7 +167,7 @@ public class PresentationData implements ColoredItemPresentation, ComparableObje
      * @param presentableText the name of the object.
      */
     public void setPresentableText(LocalizeValue presentableText) {
-        myPresentableText = presentableText.get();
+        myPresentableText = presentableText;
     }
 
     /**
@@ -175,8 +175,10 @@ public class PresentationData implements ColoredItemPresentation, ComparableObje
      *
      * @param presentableText the name of the object.
      */
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
     public void setPresentableText(String presentableText) {
-        myPresentableText = presentableText;
+        setPresentableText(LocalizeValue.ofNullable(presentableText));
     }
 
     /**
@@ -268,7 +270,7 @@ public class PresentationData implements ColoredItemPresentation, ComparableObje
         myFont = null;
         myForcedTextForeground = null;
         myLocationString = null;
-        myPresentableText = null;
+        myPresentableText = LocalizeValue.empty();
         myTooltip = null;
         myChanged = false;
         mySeparatorAbove = false;
@@ -277,7 +279,6 @@ public class PresentationData implements ColoredItemPresentation, ComparableObje
     }
 
     @Override
-    
     public Object[] getEqualityObjects() {
         return new Object[]{myBackground, myIcon, myColoredText, myAttributesKey, myFont, myForcedTextForeground, myPresentableText, myLocationString, mySeparatorAbove, myLocationPrefix, myLocationSuffix};
     }
@@ -330,7 +331,7 @@ public class PresentationData implements ColoredItemPresentation, ComparableObje
         myFont = getValue(myFont, from.myFont);
         myForcedTextForeground = getValue(myForcedTextForeground, from.myForcedTextForeground);
         myLocationString = getValue(myLocationString, from.myLocationString);
-        myPresentableText = getValue(myPresentableText, from.myPresentableText);
+        myPresentableText = myPresentableText.orIfEmpty(from.myPresentableText);
         myTooltip = getValue(myTooltip, from.myTooltip);
         mySeparatorAbove = mySeparatorAbove || from.mySeparatorAbove;
         myLocationPrefix = getValue(myLocationPrefix, from.myLocationPrefix);

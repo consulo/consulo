@@ -16,6 +16,7 @@
 package consulo.ui.ex;
 
 import consulo.colorScheme.TextAttributesKey;
+import consulo.localize.LocalizeValue;
 import consulo.navigation.ItemPresentation;
 import consulo.ui.image.Image;
 
@@ -25,58 +26,59 @@ import org.jspecify.annotations.Nullable;
  * @author yole
  */
 public class DelegatingItemPresentation implements ColoredItemPresentation {
-  private final ItemPresentation myBase;
-  private String myPresentableText;
-  private String myLocationString;
-  private Image myIcon;
-  private boolean myCustomLocationString;
-  
-  public DelegatingItemPresentation(ItemPresentation base) {
-    myBase = base;
-  }
+    private final ItemPresentation myBase;
+    private LocalizeValue myPresentableText = LocalizeValue.empty();
+    private String myLocationString;
+    private Image myIcon;
+    private boolean myCustomLocationString;
 
-  public DelegatingItemPresentation withPresentableText(String presentableText) {
-    myPresentableText = presentableText;
-    return this;
-  }
-
-  public DelegatingItemPresentation withLocationString(@Nullable String locationString) {
-    myCustomLocationString = true;
-    myLocationString = locationString;
-    return this;
-  }
-
-  public DelegatingItemPresentation withIcon(Image icon) {
-    myIcon = icon;
-    return this;
-  }
-
-  @Override
-  public String getPresentableText() {
-    if (myPresentableText != null) {
-      return myPresentableText;
+    public DelegatingItemPresentation(ItemPresentation base) {
+        myBase = base;
     }
-    return myBase.getPresentableText();
-  }
 
-  @Override
-  public String getLocationString() {
-    if (myCustomLocationString) {
-      return myLocationString;
+    public DelegatingItemPresentation withPresentableText(LocalizeValue presentableText) {
+        myPresentableText = presentableText;
+        return this;
     }
-    return myBase.getLocationString();
-  }
 
-  @Override
-  public Image getIcon() {
-    if (myIcon != null) {
-      return myIcon;
+    public DelegatingItemPresentation withPresentableText(String presentableText) {
+        return withPresentableText(LocalizeValue.ofNullable(presentableText));
     }
-    return myBase.getIcon();
-  }
 
-  @Override
-  public TextAttributesKey getTextAttributesKey() {
-    return myBase instanceof ColoredItemPresentation ? ((ColoredItemPresentation) myBase).getTextAttributesKey() : null;
-  }
+    public DelegatingItemPresentation withLocationString(@Nullable String locationString) {
+        myCustomLocationString = true;
+        myLocationString = locationString;
+        return this;
+    }
+
+    public DelegatingItemPresentation withIcon(Image icon) {
+        myIcon = icon;
+        return this;
+    }
+
+    @Override
+    public LocalizeValue getPresentableText() {
+        return myPresentableText.orIfEmpty(myBase::getPresentableText);
+    }
+
+    @Override
+    public String getLocationString() {
+        if (myCustomLocationString) {
+            return myLocationString;
+        }
+        return myBase.getLocationString();
+    }
+
+    @Override
+    public Image getIcon() {
+        if (myIcon != null) {
+            return myIcon;
+        }
+        return myBase.getIcon();
+    }
+
+    @Override
+    public TextAttributesKey getTextAttributesKey() {
+        return myBase instanceof ColoredItemPresentation coloredItemPresentation ? coloredItemPresentation.getTextAttributesKey() : null;
+    }
 }

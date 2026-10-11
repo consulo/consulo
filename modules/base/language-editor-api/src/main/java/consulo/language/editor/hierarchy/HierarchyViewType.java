@@ -15,6 +15,7 @@
  */
 package consulo.language.editor.hierarchy;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 import org.jspecify.annotations.Nullable;
@@ -34,14 +35,14 @@ public final class HierarchyViewType {
     private final LocalizeValue myPresentableName;
     private final LocalizeValue myDescription;
     private final @Nullable Image myIcon;
-    private final Function<String, LocalizeValue> myContentTitle;
+    private final Function<Object, LocalizeValue> myContentTitle;
 
     private HierarchyViewType(
         String id,
         LocalizeValue presentableName,
         LocalizeValue description,
         @Nullable Image icon,
-        Function<String, LocalizeValue> contentTitle
+        Function<Object, LocalizeValue> contentTitle
     ) {
         myId = id;
         myPresentableName = presentableName;
@@ -73,6 +74,15 @@ public final class HierarchyViewType {
     /**
      * Title of the tab this view is shown in, for the named element the hierarchy was opened on.
      */
+    public LocalizeValue contentTitle(LocalizeValue elementName) {
+        return myContentTitle.apply(elementName);
+    }
+
+    /**
+     * Title of the tab this view is shown in, for the named element the hierarchy was opened on.
+     */
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
     public LocalizeValue contentTitle(String elementName) {
         return myContentTitle.apply(elementName);
     }
@@ -98,7 +108,8 @@ public final class HierarchyViewType {
         private LocalizeValue myPresentableName = LocalizeValue.empty();
         private LocalizeValue myDescription = LocalizeValue.empty();
         private @Nullable Image myIcon;
-        private Function<String, LocalizeValue> myContentTitle = LocalizeValue::of;
+        private Function<Object, LocalizeValue> myContentTitle =
+            text -> text instanceof LocalizeValue lv ? lv : LocalizeValue.of(text.toString());
 
         private Builder(String id) {
             myId = id;
@@ -119,7 +130,7 @@ public final class HierarchyViewType {
             return this;
         }
 
-        public Builder contentTitle(Function<String, LocalizeValue> contentTitle) {
+        public Builder contentTitle(Function<Object, LocalizeValue> contentTitle) {
             myContentTitle = contentTitle;
             return this;
         }

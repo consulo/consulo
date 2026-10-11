@@ -25,6 +25,7 @@ import consulo.language.editor.PlatformDataKeys;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiUtilCore;
 import consulo.language.psi.util.PsiNavigateUtil;
+import consulo.localize.LocalizeValue;
 import consulo.navigation.ItemPresentation;
 import consulo.navigation.Navigatable;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -44,7 +45,6 @@ import consulo.util.collection.primitive.objects.ObjectIntMap;
 import consulo.util.collection.primitive.objects.ObjectMaps;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
-import consulo.util.lang.StringUtil;
 import consulo.util.lang.lazy.LazyValue;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.VirtualFile;
@@ -70,16 +70,14 @@ public final class RunDashboardServiceViewContributor
         myApplication = application;
     }
 
-    
     @Override
     public ServiceViewDescriptor getViewDescriptor(Project project) {
         return new RunDashboardContributorViewDescriptor(project);
     }
 
-    
     @Override
     public List<RunConfigurationContributor> getServices(Project project) {
-        RunDashboardManagerImpl runDashboardManager = (RunDashboardManagerImpl)RunDashboardManager.getInstance(project);
+        RunDashboardManagerImpl runDashboardManager = (RunDashboardManagerImpl) RunDashboardManager.getInstance(project);
         return ContainerUtil.map(
             runDashboardManager.getRunConfigurations(),
             value -> new RunConfigurationContributor(new RunConfigurationNode(
@@ -93,13 +91,11 @@ public final class RunDashboardServiceViewContributor
         );
     }
 
-    
     @Override
     public ServiceViewDescriptor getServiceDescriptor(Project project, RunConfigurationContributor contributor) {
         return contributor.getViewDescriptor(project);
     }
 
-    
     @Override
     public List<GroupingNode> getGroups(RunConfigurationContributor contributor) {
         List<GroupingNode> result = new ArrayList<>();
@@ -122,7 +118,6 @@ public final class RunDashboardServiceViewContributor
         return result;
     }
 
-    
     @Override
     public ServiceViewDescriptor getGroupDescriptor(GroupingNode node) {
         RunDashboardGroup group = node.getGroup();
@@ -232,7 +227,7 @@ public final class RunDashboardServiceViewContributor
 
         @Override
         public JComponent getContentComponent() {
-            RunDashboardManagerImpl manager = ((RunDashboardManagerImpl)RunDashboardManager.getInstance(myNode.getProject()));
+            RunDashboardManagerImpl manager = ((RunDashboardManagerImpl) RunDashboardManager.getInstance(myNode.getProject()));
             RunDashboardComponentWrapper wrapper = manager.getContentWrapper();
             Content content = myNode.getContent();
             if (content == null) {
@@ -257,7 +252,7 @@ public final class RunDashboardServiceViewContributor
          */
         @Override
         public consulo.ui.@Nullable Component getContentUIComponent() {
-            RunDashboardManagerImpl manager = ((RunDashboardManagerImpl)RunDashboardManager.getInstance(myNode.getProject()));
+            RunDashboardManagerImpl manager = ((RunDashboardManagerImpl) RunDashboardManager.getInstance(myNode.getProject()));
             Content content = myNode.getContent();
             if (content == null) {
                 return manager.getEmptyUIContent();
@@ -273,7 +268,6 @@ public final class RunDashboardServiceViewContributor
             return handler == null ? null : handler.hashCode();
         }
 
-        
         @Override
         public ItemPresentation getContentPresentation() {
             Content content = myNode.getContent();
@@ -296,7 +290,6 @@ public final class RunDashboardServiceViewContributor
             return RunDashboardServiceViewContributor.getPopupActions();
         }
 
-        
         @Override
         public ItemPresentation getPresentation() {
             return myNode.getPresentation();
@@ -309,7 +302,7 @@ public final class RunDashboardServiceViewContributor
                 return;
             }
 
-            ((RunDashboardManagerImpl)RunDashboardManager.getInstance(myNode.getProject())).setSelectedContent(content);
+            ((RunDashboardManagerImpl) RunDashboardManager.getInstance(myNode.getProject())).setSelectedContent(content);
         }
 
         @Override
@@ -319,7 +312,7 @@ public final class RunDashboardServiceViewContributor
                 return;
             }
 
-            ((RunDashboardManagerImpl)RunDashboardManager.getInstance(myNode.getProject())).removeFromSelection(content);
+            ((RunDashboardManagerImpl) RunDashboardManager.getInstance(myNode.getProject())).removeFromSelection(content);
         }
 
         @Override
@@ -348,9 +341,7 @@ public final class RunDashboardServiceViewContributor
                 public boolean canNavigateToSource() {
                     return canNavigate();
                 }
-
             };
-
         }
 
         @Override
@@ -447,7 +438,7 @@ public final class RunDashboardServiceViewContributor
         @Override
         public boolean isVisible() {
             RunDashboardStatusFilter statusFilter =
-                ((RunDashboardManagerImpl)RunDashboardManager.getInstance(myNode.getProject())).getStatusFilter();
+                ((RunDashboardManagerImpl) RunDashboardManager.getInstance(myNode.getProject())).getStatusFilter();
             return statusFilter.isVisible(myNode);
         }
     }
@@ -480,7 +471,6 @@ public final class RunDashboardServiceViewContributor
             return RunDashboardServiceViewContributor.getPopupActions();
         }
 
-        
         @Override
         public ItemPresentation getPresentation() {
             return myPresentationData;
@@ -488,13 +478,13 @@ public final class RunDashboardServiceViewContributor
 
         @Override
         public int getWeight() {
-            Object value = ((RunDashboardGroupImpl<?>)myGroup).getValue();
+            Object value = ((RunDashboardGroupImpl<?>) myGroup).getValue();
             return value instanceof WeighedItem weighedItem ? weighedItem.getWeight() : 0;
         }
 
         @Override
         public @Nullable Runnable getRemover() {
-            ConfigurationType type = ObjectUtil.tryCast(((RunDashboardGroupImpl<?>)myGroup).getValue(), ConfigurationType.class);
+            ConfigurationType type = ObjectUtil.tryCast(((RunDashboardGroupImpl<?>) myGroup).getValue(), ConfigurationType.class);
             if (type != null) {
                 return () -> {
                     RunDashboardManager runDashboardManager = RunDashboardManager.getInstance(myNode.getProject());
@@ -508,16 +498,16 @@ public final class RunDashboardServiceViewContributor
 
         @Override
         public @Nullable JComponent getContentComponent() {
-            return ((RunDashboardManagerImpl)RunDashboardManager.getInstance(myNode.getProject())).getEmptyContent();
+            return ((RunDashboardManagerImpl) RunDashboardManager.getInstance(myNode.getProject())).getEmptyContent();
         }
 
         @Override
         public consulo.ui.@Nullable Component getContentUIComponent() {
-            return ((RunDashboardManagerImpl)RunDashboardManager.getInstance(myNode.getProject())).getEmptyUIContent();
+            return ((RunDashboardManagerImpl) RunDashboardManager.getInstance(myNode.getProject())).getEmptyUIContent();
         }
 
         private static String getId(GroupingNode node) {
-            AbstractTreeNode<?> parent = (AbstractTreeNode<?>)node.getParent();
+            AbstractTreeNode<?> parent = (AbstractTreeNode<?>) node.getParent();
             if (parent instanceof GroupingNode groupingNode) {
                 return getId(groupingNode) + "/" + getId(node.getGroup());
             }
@@ -526,7 +516,7 @@ public final class RunDashboardServiceViewContributor
 
         private static String getId(RunDashboardGroup group) {
             if (group instanceof RunDashboardGroupImpl) {
-                Object value = ((RunDashboardGroupImpl<?>)group).getValue();
+                Object value = ((RunDashboardGroupImpl<?>) group).getValue();
                 if (value instanceof ConfigurationType configType) {
                     return configType.getId();
                 }
@@ -535,7 +525,8 @@ public final class RunDashboardServiceViewContributor
         }
     }
 
-    private static final class RunDashboardFolderGroupViewDescriptor extends RunDashboardGroupViewDescriptor implements ServiceViewDnDDescriptor {
+    private static final class RunDashboardFolderGroupViewDescriptor extends RunDashboardGroupViewDescriptor
+        implements ServiceViewDnDDescriptor {
         RunDashboardFolderGroupViewDescriptor(GroupingNode node) {
             super(node);
         }
@@ -544,7 +535,7 @@ public final class RunDashboardServiceViewContributor
         public @Nullable Runnable getRemover() {
             return () -> {
                 String groupName = myGroup.getName();
-                Project project = ((FolderDashboardGroupingRule.FolderDashboardGroup)myGroup).getProject();
+                Project project = ((FolderDashboardGroupingRule.FolderDashboardGroup) myGroup).getProject();
                 List<RunDashboardManager.RunDashboardService> services = RunDashboardManager.getInstance(project).getRunConfigurations();
 
                 RunManagerImpl runManager = RunManagerImpl.getInstanceImpl(project);
@@ -566,12 +557,12 @@ public final class RunDashboardServiceViewContributor
         @Override
         public boolean canDrop(DnDEvent event, ServiceViewDnDDescriptor.Position position) {
             return position == Position.INTO
-                && getRunConfigurationNode(event, ((FolderDashboardGroupingRule.FolderDashboardGroup)myGroup).getProject()) != null;
+                && getRunConfigurationNode(event, ((FolderDashboardGroupingRule.FolderDashboardGroup) myGroup).getProject()) != null;
         }
 
         @Override
         public void drop(DnDEvent event, ServiceViewDnDDescriptor.Position position) {
-            Project project = ((FolderDashboardGroupingRule.FolderDashboardGroup)myGroup).getProject();
+            Project project = ((FolderDashboardGroupingRule.FolderDashboardGroup) myGroup).getProject();
             RunDashboardRunConfigurationNode node = getRunConfigurationNode(event, project);
             if (node == null) {
                 return;
@@ -595,25 +586,22 @@ public final class RunDashboardServiceViewContributor
             myNode = node;
         }
 
-        
         @Override
         public RunConfigurationNode asService() {
             return myNode;
         }
 
-        
         @Override
         public ServiceViewDescriptor getViewDescriptor(Project project) {
             return new RunConfigurationServiceViewDescriptor(myNode);
         }
 
-        
+
         @Override
         public List<AbstractTreeNode<?>> getServices(Project project) {
             return new ArrayList<>(myNode.getChildren());
         }
 
-        
         @Override
         public ServiceViewDescriptor getServiceDescriptor(Project project, AbstractTreeNode service) {
             return new ServiceViewDescriptor() {
@@ -627,7 +615,6 @@ public final class RunDashboardServiceViewContributor
                     return RunDashboardServiceViewContributor.getPopupActions();
                 }
 
-                
                 @Override
                 public ItemPresentation getPresentation() {
                     return service.getPresentation();
@@ -636,9 +623,9 @@ public final class RunDashboardServiceViewContributor
                 @Override
                 public @Nullable String getId() {
                     ItemPresentation presentation = getPresentation();
-                    String text = presentation.getPresentableText();
-                    if (!StringUtil.isEmpty(text)) {
-                        return text;
+                    LocalizeValue text = presentation.getPresentableText();
+                    if (text.isNotEmpty()) {
+                        return text.get();
                     }
                     if (presentation instanceof PresentationData presentationData) {
                         List<PresentableNodeDescriptor.ColoredFragment> fragments = presentationData.getColoredText();
@@ -660,12 +647,12 @@ public final class RunDashboardServiceViewContributor
 
                 @Override
                 public @Nullable JComponent getContentComponent() {
-                    return ((RunDashboardManagerImpl)RunDashboardManager.getInstance(myNode.getProject())).getEmptyContent();
+                    return ((RunDashboardManagerImpl) RunDashboardManager.getInstance(myNode.getProject())).getEmptyContent();
                 }
 
                 @Override
                 public consulo.ui.@Nullable Component getContentUIComponent() {
-                    return ((RunDashboardManagerImpl)RunDashboardManager.getInstance(myNode.getProject())).getEmptyUIContent();
+                    return ((RunDashboardManagerImpl) RunDashboardManager.getInstance(myNode.getProject())).getEmptyUIContent();
                 }
             };
         }
@@ -692,12 +679,12 @@ public final class RunDashboardServiceViewContributor
 
         @Override
         public @Nullable JComponent getContentComponent() {
-            return ((RunDashboardManagerImpl)RunDashboardManager.getInstance(myProject)).getEmptyContent();
+            return ((RunDashboardManagerImpl) RunDashboardManager.getInstance(myProject)).getEmptyContent();
         }
 
         @Override
         public consulo.ui.@Nullable Component getContentUIComponent() {
-            return ((RunDashboardManagerImpl)RunDashboardManager.getInstance(myProject)).getEmptyUIContent();
+            return ((RunDashboardManagerImpl) RunDashboardManager.getInstance(myProject)).getEmptyUIContent();
         }
 
         @Override

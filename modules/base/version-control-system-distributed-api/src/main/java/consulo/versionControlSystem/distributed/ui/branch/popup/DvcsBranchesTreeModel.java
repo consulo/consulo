@@ -17,6 +17,7 @@
 package consulo.versionControlSystem.distributed.ui.branch.popup;
 
 import consulo.application.util.matcher.MinusculeMatcher;
+import consulo.localize.LocalizeValue;
 import consulo.navigation.ItemPresentation;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;
@@ -26,13 +27,10 @@ import consulo.ui.image.Image;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.tree.TreePath;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * @author VISTALL
@@ -260,15 +258,15 @@ public abstract class DvcsBranchesTreeModel extends AbstractTreeModel {
 
     public record RepositoryNode(DvcsRepositoryModel repository, boolean isLeaf) implements PresentableNode {
         @Override
-        public String getPresentableText() {
-            return repository.getShortName();
+        public LocalizeValue getPresentableText() {
+            return LocalizeValue.of(repository.getShortName());
         }
     }
 
     public record RefUnderRepository(DvcsRepositoryModel repository, DvcsRef ref) implements PresentableNode {
         @Override
-        public String getPresentableText() {
-            return ref.getName();
+        public LocalizeValue getPresentableText() {
+            return LocalizeValue.of(ref.getName());
         }
     }
 

@@ -475,15 +475,15 @@ public class SafeDeleteProcessor extends BaseRefactoringProcessor {
             return new SafeDeleteReferenceSimpleDeleteUsageInfo(usage, element, startOffset, endOffset, true, false);
         };
         if (searchInCommentsAndStrings) {
-            String stringToSearch =
+            LocalizeValue stringToSearch =
                 ElementDescriptionUtil.getElementDescription(element, NonCodeSearchDescriptionLocation.STRINGS_AND_COMMENTS);
-            TextOccurrencesUtil.addUsagesInStringsAndComments(element, stringToSearch, usages, nonCodeUsageFactory);
+            TextOccurrencesUtil.addUsagesInStringsAndComments(element, stringToSearch.get(), usages, nonCodeUsageFactory);
         }
         if (searchNonJava) {
-            String stringToSearch = ElementDescriptionUtil.getElementDescription(element, NonCodeSearchDescriptionLocation.NON_JAVA);
+            LocalizeValue stringToSearch = ElementDescriptionUtil.getElementDescription(element, NonCodeSearchDescriptionLocation.NON_JAVA);
             TextOccurrencesUtil.addTextOccurences(
                 element,
-                stringToSearch,
+                stringToSearch.get(),
                 GlobalSearchScope.projectScope(element.getProject()),
                 usages,
                 nonCodeUsageFactory

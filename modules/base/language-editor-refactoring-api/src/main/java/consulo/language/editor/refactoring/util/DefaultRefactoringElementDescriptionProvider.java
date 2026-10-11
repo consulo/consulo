@@ -13,25 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.refactoring.util;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.findUsage.DescriptiveNameUtil;
 import consulo.language.psi.ElementDescriptionProvider;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.ElementDescriptionLocation;
+import consulo.localize.LocalizeValue;
 import consulo.usage.UsageViewUtil;
 
 /**
  * @author yole
  */
 public class DefaultRefactoringElementDescriptionProvider implements ElementDescriptionProvider {
-  public static final DefaultRefactoringElementDescriptionProvider INSTANCE = new DefaultRefactoringElementDescriptionProvider();
+    public static final DefaultRefactoringElementDescriptionProvider INSTANCE = new DefaultRefactoringElementDescriptionProvider();
 
-  @Override
-  public String getElementDescription(PsiElement element, ElementDescriptionLocation location) {
-    String typeString = UsageViewUtil.getType(element);
-    String name = DescriptiveNameUtil.getDescriptiveName(element);
-    return typeString + " " + CommonRefactoringUtil.htmlEmphasize(name);
-  }
+    @Override
+    @RequiredReadAction
+    public LocalizeValue getElementDescription(PsiElement element, ElementDescriptionLocation location) {
+        String typeString = UsageViewUtil.getType(element);
+        String name = DescriptiveNameUtil.getDescriptiveName(element);
+        return LocalizeValue.localizeTODO(typeString + " " + CommonRefactoringUtil.htmlEmphasize(name));
+    }
 }

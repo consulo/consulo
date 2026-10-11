@@ -42,6 +42,7 @@ import consulo.language.editor.ui.internal.EditorDocTooltipService;
 import consulo.language.psi.*;
 import consulo.language.psi.search.DefinitionsScopedSearch;
 import consulo.language.psi.util.EditSourceUtil;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.navigation.ItemPresentation;
 import consulo.navigation.Navigatable;
@@ -275,7 +276,7 @@ public final class CtrlMouseHandler {
         if (element instanceof NavigationItem) {
             ItemPresentation presentation = ((NavigationItem) element).getPresentation();
             if (presentation != null) {
-                return presentation.getPresentableText();
+                return presentation.getPresentableText().getNullIfEmpty();
             }
         }
 
@@ -283,17 +284,17 @@ public final class CtrlMouseHandler {
     }
 
     private static @Nullable String getQuickNavigateInfo(PsiElement element) {
-        String name = ElementDescriptionUtil.getElementDescription(element, UsageViewShortNameLocation.INSTANCE);
-        if (StringUtil.isEmpty(name)) {
+        LocalizeValue name = ElementDescriptionUtil.getElementDescription(element, UsageViewShortNameLocation.INSTANCE);
+        if (name.isEmpty()) {
             return null;
         }
-        String typeName = ElementDescriptionUtil.getElementDescription(element, UsageViewTypeLocation.INSTANCE);
+        LocalizeValue typeName = ElementDescriptionUtil.getElementDescription(element, UsageViewTypeLocation.INSTANCE);
         PsiFile file = element.getContainingFile();
         StringBuilder sb = new StringBuilder();
-        if (StringUtil.isNotEmpty(typeName)) {
-            sb.append(typeName).append(" ");
+        if (typeName.isNotEmpty()) {
+            sb.append(typeName.get()).append(" ");
         }
-        sb.append("\"").append(name).append("\"");
+        sb.append("\"").append(name.get()).append("\"");
         if (file != null && file.isPhysical()) {
             sb.append(" [").append(file.getName()).append("]");
         }
@@ -362,7 +363,6 @@ public final class CtrlMouseHandler {
     }
 
     private static class InfoSingle extends Info {
-
         private final PsiElement myTargetElement;
 
         InfoSingle(PsiElement elementAtPointer, PsiElement targetElement) {

@@ -22,6 +22,7 @@ import consulo.language.psi.ElementDescriptionProvider;
 import consulo.language.psi.PsiNamedElement;
 import consulo.language.psi.meta.PsiMetaData;
 import consulo.language.psi.meta.PsiMetaOwner;
+import consulo.localize.LocalizeValue;
 
 /**
  * @author yole
@@ -39,16 +40,16 @@ public class UsageViewShortNameLocation extends ElementDescriptionLocation {
 
     private static final ElementDescriptionProvider DEFAULT_PROVIDER = (element, location) -> {
         if (!(location instanceof UsageViewShortNameLocation)) {
-            return null;
+            return LocalizeValue.empty();
         }
 
         if (element instanceof PsiMetaOwner metaOwner) {
             PsiMetaData metaData = metaOwner.getMetaData();
             if (metaData != null) {
-                return DescriptiveNameUtil.getMetaDataName(metaData);
+                return LocalizeValue.localizeTODO(DescriptiveNameUtil.getMetaDataName(metaData));
             }
         }
 
-        return element instanceof PsiNamedElement namedElement ? namedElement.getName() : "";
+        return element instanceof PsiNamedElement namedElem ? LocalizeValue.ofNullable(namedElem.getName()) : LocalizeValue.empty();
     };
 }

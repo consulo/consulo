@@ -23,44 +23,43 @@ import consulo.util.lang.ObjectUtil;
  * @author max
  */
 class UsageTargetNode extends Node {
-  UsageTargetNode(UsageTarget target) {
-    setUserObject(target);
-  }
+    UsageTargetNode(UsageTarget target) {
+        setUserObject(target);
+    }
 
-  @Override
-  public String tree2string(int indent, String lineSeparator) {
-    return getTarget().getName();
-  }
+    @Override
+    public String tree2string(int indent, String lineSeparator) {
+        return getTarget().getName();
+    }
 
-  @Override
-  protected boolean isDataValid() {
-    return getTarget().isValid();
-  }
+    @Override
+    protected boolean isDataValid() {
+        return getTarget().isValid();
+    }
 
-  @Override
-  protected boolean isDataReadOnly() {
-    return getTarget().isReadOnly();
-  }
+    @Override
+    protected boolean isDataReadOnly() {
+        return getTarget().isReadOnly();
+    }
 
-  @Override
-  protected boolean isDataExcluded() {
-    return false;
-  }
+    @Override
+    protected boolean isDataExcluded() {
+        return false;
+    }
 
-  
-  @Override
-  protected String getText(UsageView view) {
-    return ObjectUtil.notNull(getTarget().getPresentation().getPresentableText(), "");
-  }
 
-  
-  public UsageTarget getTarget() {
-    return (UsageTarget)getUserObject();
-  }
+    @Override
+    protected String getText(UsageView view) {
+        return getTarget().getPresentation().getPresentableText().get();
+    }
 
-  @Override
-  protected void updateNotify() {
-    super.updateNotify();
-    getTarget().update();
-  }
+    public UsageTarget getTarget() {
+        return (UsageTarget) getUserObject();
+    }
+
+    @Override
+    protected void updateNotify() {
+        super.updateNotify();
+        getTarget().update();
+    }
 }

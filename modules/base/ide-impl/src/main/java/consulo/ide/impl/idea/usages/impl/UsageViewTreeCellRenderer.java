@@ -98,7 +98,7 @@ class UsageViewTreeCellRenderer extends ColoredTreeCellRenderer {
         if (showAsReadOnly) {
           append(LocalizeValue.join(UsageLocalize.nodeReadonly(), LocalizeValue.space()), ourReadOnlyAttributes);
         }
-        append(StringUtil.notNullize(presentation.getPresentableText()));
+        append(presentation.getPresentableText().get());
         setIcon(presentation.getIcon());
       }
       else if (treeNode instanceof GroupNode node) {
@@ -171,7 +171,7 @@ class UsageViewTreeCellRenderer extends ColoredTreeCellRenderer {
           if (showAsReadOnly) {
             result.append(UsageLocalize.nodeReadonly()).append(" ");
           }
-          result.append(StringUtil.notNullize(presentation.getPresentableText()));
+          result.append(presentation.getPresentableText());
         }
         else {
           result.append(UsageLocalize.nodeInvalid());

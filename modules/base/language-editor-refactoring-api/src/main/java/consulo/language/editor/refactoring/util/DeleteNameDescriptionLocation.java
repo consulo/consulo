@@ -13,38 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.refactoring.util;
 
 import consulo.language.psi.ElementDescriptionLocation;
 import consulo.language.psi.ElementDescriptionProvider;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiNamedElement;
+import consulo.localize.LocalizeValue;
 
 /**
  * @author yole
  */
 public class DeleteNameDescriptionLocation extends ElementDescriptionLocation {
-  private DeleteNameDescriptionLocation() {
-  }
-
-  public static DeleteNameDescriptionLocation INSTANCE = new DeleteNameDescriptionLocation();
-  private static final ElementDescriptionProvider ourDefaultProvider = new DefaultProvider();
-
-  @Override
-  public ElementDescriptionProvider getDefaultProvider() {
-    return ourDefaultProvider;
-  }
-
-  public static class DefaultProvider implements ElementDescriptionProvider {
-    @Override
-    public String getElementDescription(PsiElement element, ElementDescriptionLocation location) {
-      if (location instanceof DeleteNameDescriptionLocation) {
-        if (element instanceof PsiNamedElement) {
-          return ((PsiNamedElement)element).getName();
-        }
-      }
-      return null;
+    private DeleteNameDescriptionLocation() {
     }
-  }
+
+    public static DeleteNameDescriptionLocation INSTANCE = new DeleteNameDescriptionLocation();
+    private static final ElementDescriptionProvider ourDefaultProvider = new DefaultProvider();
+
+    @Override
+    public ElementDescriptionProvider getDefaultProvider() {
+        return ourDefaultProvider;
+    }
+
+    public static class DefaultProvider implements ElementDescriptionProvider {
+        @Override
+        public LocalizeValue getElementDescription(PsiElement element, ElementDescriptionLocation location) {
+            if (location instanceof DeleteNameDescriptionLocation && element instanceof PsiNamedElement namedElem) {
+                return LocalizeValue.ofNullable(namedElem.getName());
+            }
+            return LocalizeValue.empty();
+        }
+    }
 }

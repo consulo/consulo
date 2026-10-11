@@ -89,7 +89,7 @@ public final class EndpointRowData<G, E> {
         EditorColorsScheme scheme,
         @Nullable ColorValue defaultBackground
     ) {
-        String url = notNullize(presentation.getPresentableText());
+        String url = presentation.getPresentableText().get();
         String location = notNullize(presentation.getLocationString());
 
         String methodText = "";

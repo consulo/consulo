@@ -16,6 +16,7 @@
 package consulo.fileEditor.structureView.tree;
 
 import consulo.fileEditor.localize.FileEditorLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 
 import java.util.Comparator;
@@ -46,9 +47,9 @@ public interface Sorter extends TreeAction {
         @Override
         public Comparator getComparator() {
             return (o1, o2) -> {
-                String s1 = SorterUtil.getStringPresentation(o1);
-                String s2 = SorterUtil.getStringPresentation(o2);
-                return s1.compareToIgnoreCase(s2);
+                LocalizeValue s1 = SorterUtil.getStringPresentation(o1);
+                LocalizeValue s2 = SorterUtil.getStringPresentation(o2);
+                return s1.compareTo(s2);
             };
         }
 

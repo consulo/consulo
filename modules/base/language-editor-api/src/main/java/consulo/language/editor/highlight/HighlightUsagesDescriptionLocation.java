@@ -13,34 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.highlight;
 
 import consulo.language.psi.ElementDescriptionLocation;
 import consulo.language.psi.ElementDescriptionProvider;
-import consulo.language.psi.PsiElement;
 import consulo.language.psi.meta.PsiPresentableMetaData;
+import consulo.localize.LocalizeValue;
 
 /**
  * @author yole
  */
 public class HighlightUsagesDescriptionLocation extends ElementDescriptionLocation {
-  private HighlightUsagesDescriptionLocation() {
-  }
+    private HighlightUsagesDescriptionLocation() {
+    }
 
-  @Override
-  public ElementDescriptionProvider getDefaultProvider() {
-    return new ElementDescriptionProvider() {
-      @Override
-      public String getElementDescription(PsiElement element, ElementDescriptionLocation location) {
-        if (element instanceof PsiPresentableMetaData) {
-          return ((PsiPresentableMetaData)element).getTypeName();
-        }
-        return null;
-      }
-    };
-  }
+    @Override
+    public ElementDescriptionProvider getDefaultProvider() {
+        return (element, location) -> {
+            if (element instanceof PsiPresentableMetaData presentableMetaData) {
+                return LocalizeValue.localizeTODO(presentableMetaData.getTypeName());
+            }
+            return LocalizeValue.empty();
+        };
+    }
 
-  public static HighlightUsagesDescriptionLocation INSTANCE = new HighlightUsagesDescriptionLocation();
-
+    public static HighlightUsagesDescriptionLocation INSTANCE = new HighlightUsagesDescriptionLocation();
 }

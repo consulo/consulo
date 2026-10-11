@@ -27,6 +27,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.meta.PsiMetaData;
 import consulo.language.psi.meta.PsiMetaOwner;
 import consulo.language.psi.meta.PsiPresentableMetaData;
+import consulo.localize.LocalizeValue;
 import consulo.util.lang.StringUtil;
 
 /**
@@ -45,30 +46,30 @@ public class UsageViewTypeLocation extends ElementDescriptionLocation {
 
     private static final ElementDescriptionProvider DEFAULT_PROVIDER = (psiElement, location) -> {
         if (!(location instanceof UsageViewTypeLocation)) {
-            return null;
+            return LocalizeValue.empty();
         }
 
         if (psiElement instanceof PsiMetaOwner metaOwner) {
             PsiMetaData metaData = metaOwner.getMetaData();
             if (metaData instanceof PsiPresentableMetaData presentableMetaData) {
-                return presentableMetaData.getTypeName();
+                return LocalizeValue.localizeTODO(presentableMetaData.getTypeName());
             }
         }
 
         if (psiElement instanceof PsiFile) {
-            return LanguageLocalize.termsFile().get();
+            return LanguageLocalize.termsFile();
         }
         if (psiElement instanceof PsiDirectory) {
-            return LanguageLocalize.termsDirectory().get();
+            return LanguageLocalize.termsDirectory();
         }
 
         Language lang = psiElement.getLanguage();
         FindUsagesProvider provider = FindUsagesProvider.forLanguage(lang);
         String type = provider.getType(psiElement);
         if (StringUtil.isNotEmpty(type)) {
-            return type;
+            return LocalizeValue.localizeTODO(type);
         }
 
-        return TypePresentationService.getInstance().getTypeNameOrStub(psiElement);
+        return LocalizeValue.localizeTODO(TypePresentationService.getInstance().getTypeNameOrStub(psiElement));
     };
 }

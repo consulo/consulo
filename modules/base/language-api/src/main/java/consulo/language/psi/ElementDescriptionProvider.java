@@ -15,11 +15,11 @@
  */
 package consulo.language.psi;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
-
-import org.jspecify.annotations.Nullable;
+import consulo.localize.LocalizeValue;
 
 /**
  * Provides location-dependent element description.
@@ -30,5 +30,6 @@ import org.jspecify.annotations.Nullable;
 public interface ElementDescriptionProvider {
     ExtensionPointName<ElementDescriptionProvider> EP_NAME = ExtensionPointName.create(ElementDescriptionProvider.class);
 
-    @Nullable String getElementDescription(PsiElement element, ElementDescriptionLocation location);
+    @RequiredReadAction
+    LocalizeValue getElementDescription(PsiElement element, ElementDescriptionLocation location);
 }

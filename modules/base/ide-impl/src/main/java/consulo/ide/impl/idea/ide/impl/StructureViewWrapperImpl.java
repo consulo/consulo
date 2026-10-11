@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ide.impl;
 
+import consulo.localize.LocalizeValue;
 import consulo.ui.ModalityState;
 import consulo.application.util.registry.Registry;
 import consulo.dataContext.DataContext;
@@ -279,7 +279,7 @@ public class StructureViewWrapperImpl implements StructureViewWrapper, Disposabl
       }
     }
 
-    String[] names = {""};
+    LocalizeValue[] names = {LocalizeValue.empty()};
     if (file != null && file.isValid()) {
       if (file.isDirectory()) {
         if (ProjectRootsUtil.isModuleContentRoot(file, myProject)) {
@@ -314,7 +314,7 @@ public class StructureViewWrapperImpl implements StructureViewWrapper, Disposabl
               StructureViewComposite composite = (StructureViewComposite)myStructureView;
               StructureViewComposite.StructureViewDescriptor[] views = composite.getStructureViews();
               myPanels = new JPanel[views.length];
-              names = new String[views.length];
+              names = new LocalizeValue[views.length];
               for (int i = 0; i < myPanels.length; i++) {
                 myPanels[i] = createContentPanel(views[i].structureView.getComponent());
                 names[i] = views[i].title;
@@ -339,7 +339,7 @@ public class StructureViewWrapperImpl implements StructureViewWrapper, Disposabl
     }
 
     for (int i = 0; i < myPanels.length; i++) {
-      Content content = ContentFactory.getInstance().createContent(myPanels[i], names[i], false);
+      Content content = ContentFactory.getInstance().createContent(myPanels[i], names[i].get(), false);
       contentManager.addContent(content);
       if (i == 0 && myStructureView != null) {
         Disposer.register(content, myStructureView);
@@ -351,7 +351,6 @@ public class StructureViewWrapperImpl implements StructureViewWrapper, Disposabl
       myPendingSelection = null;
       selection.run();
     }
-
   }
 
   private void updateHeaderActions(StructureView structureView) {

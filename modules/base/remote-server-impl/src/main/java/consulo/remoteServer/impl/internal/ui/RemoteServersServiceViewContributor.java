@@ -150,7 +150,7 @@ public abstract class RemoteServersServiceViewContributor
             if (myNode instanceof DeploymentNode) {
                 ((DeploymentNode) myNode).getDeploymentName();
             }
-            return getPresentation().getPresentableText();
+            return getPresentation().getPresentableText().getNullIfEmpty();
         }
 
         @Override
@@ -262,6 +262,9 @@ public abstract class RemoteServersServiceViewContributor
         }
 
         public static final ActionGroups SHARED_ACTION_GROUPS = new ActionGroups(
-            "RemoteServersViewToolbar", "RemoteServersViewToolbar.Top", "RemoteServersViewPopup");
+            "RemoteServersViewToolbar",
+            "RemoteServersViewToolbar.Top",
+            "RemoteServersViewPopup"
+        );
     }
 }
