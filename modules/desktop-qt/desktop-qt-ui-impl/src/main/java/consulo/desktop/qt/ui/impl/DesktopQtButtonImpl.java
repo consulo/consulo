@@ -18,16 +18,23 @@ package consulo.desktop.qt.ui.impl;
 import consulo.desktop.qt.ui.impl.image.DesktopQtIconOwner;
 import consulo.desktop.qt.ui.impl.image.DesktopQtImage;
 import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.Button;
 import consulo.ui.ButtonStyle;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ClickEvent;
 import consulo.ui.event.details.InputDetails;
 import consulo.ui.image.Image;
+import consulo.ui.internal.SearchHighlightUtil;
+import consulo.ui.style.ComponentColors;
+import consulo.ui.color.RGBColor;
 import io.qt.core.QSize;
 import io.qt.core.Qt;
 import io.qt.gui.QIcon;
+import io.qt.gui.QPaintEvent;
+import io.qt.widgets.QLineEdit;
 import io.qt.widgets.QPushButton;
+import io.qt.widgets.QStyleOptionButton;
 import io.qt.widgets.QWidget;
 import org.jspecify.annotations.Nullable;
 
@@ -40,6 +47,63 @@ import java.util.Set;
  * @since 2026-08-16
  */
 public class DesktopQtButtonImpl extends QtComponentDelegate<QPushButton> implements Button, DesktopQtIconOwner {
+    private class HighlightPushButton extends QPushButton {
+        private boolean myFieldHeight;
+
+        private @Nullable QLineEdit myMetricsLineEdit;
+
+        private HighlightPushButton(QWidget parent) {
+            super(parent);
+        }
+
+        private void setFieldHeight(boolean fieldHeight) {
+            if (fieldHeight && myMetricsLineEdit == null) {
+                myMetricsLineEdit = new QLineEdit(this);
+                myMetricsLineEdit.setVisible(false);
+            }
+
+            if (myFieldHeight != fieldHeight) {
+                myFieldHeight = fieldHeight;
+
+                updateGeometry();
+            }
+        }
+
+        private QSize withFieldHeight(QSize size) {
+            QLineEdit metricsLineEdit = myMetricsLineEdit;
+            if (!myFieldHeight || metricsLineEdit == null) {
+                return size;
+            }
+
+            return new QSize(size.width(), Math.max(size.height(), metricsLineEdit.sizeHint().height()));
+        }
+
+        @Override
+        protected void paintEvent(QPaintEvent event) {
+            String query = mySearchHighlight;
+            String text = QtMnemonic.plain(myText);
+            if (query == null || !SearchHighlightUtil.matches(text, query)) {
+                super.paintEvent(event);
+                return;
+            }
+
+            QStyleOptionButton option = new QStyleOptionButton();
+            initStyleOption(option);
+
+            DesktopQtSearchHighlight.paintPushButton(this, option, text, query);
+        }
+
+        @Override
+        public QSize sizeHint() {
+            return withFieldHeight(super.sizeHint());
+        }
+
+        @Override
+        public QSize minimumSizeHint() {
+            return withFieldHeight(super.minimumSizeHint());
+        }
+    }
+
     /**
      * A qt push button reserves four pixels of width of its own for an icon, on top of whatever padding is asked
      * for - so a padding written the same on both axes draws an icon only button four pixels wider than it is
@@ -78,7 +142,15 @@ public class DesktopQtButtonImpl extends QtComponentDelegate<QPushButton> implem
         QPushButton:checked { background: rgba(128, 128, 128, 90); }
         """;
 
+    private static final String HELP_STYLE_SHEET = """
+        QPushButton { border: 1px solid %s; border-radius: 11px; background: transparent; padding: 0px; min-width: 20px; max-width: 20px; min-height: 20px; max-height: 20px; }
+        QPushButton:hover { background: rgba(128, 128, 128, 40); }
+        QPushButton:pressed { background: rgba(128, 128, 128, 80); }
+        """;
+
     private LocalizeValue myText = LocalizeValue.empty();
+
+    private @Nullable String mySearchHighlight;
     private @Nullable Image myIcon;
 
     private boolean myFlat;
@@ -91,7 +163,7 @@ public class DesktopQtButtonImpl extends QtComponentDelegate<QPushButton> implem
 
     @Override
     protected QPushButton createQt(QWidget parent) {
-        return new QPushButton(parent);
+        return new HighlightPushButton(parent);
     }
 
     @Override
@@ -178,6 +250,14 @@ public class DesktopQtButtonImpl extends QtComponentDelegate<QPushButton> implem
     public void addStyle(ButtonStyle style) {
         myStyles.add(style);
 
+        if (style == ButtonStyle.HELP) {
+            if (myIcon == null) {
+                myIcon = PlatformIconGroup.actionsHelp();
+
+                updateIcon();
+            }
+        }
+
         applyStyle(style);
     }
 
@@ -197,6 +277,12 @@ public class DesktopQtButtonImpl extends QtComponentDelegate<QPushButton> implem
 
                 applyFlat();
             }
+            case HELP -> {
+                myComponent.setAutoDefault(false);
+                myComponent.setFocusPolicy(Qt.FocusPolicy.TabFocus);
+
+                updateStyleSheet();
+            }
         }
     }
 
@@ -210,14 +296,47 @@ public class DesktopQtButtonImpl extends QtComponentDelegate<QPushButton> implem
         updateStyleSheet();
     }
 
+    private static String helpBorderColor() {
+        RGBColor rgb = ComponentColors.BORDER.toRGB();
+        return "rgba(%d, %d, %d, %d)".formatted(rgb.getRed(), rgb.getGreen(), rgb.getBlue(), rgb.getAlpha());
+    }
+
     private void updateStyleSheet() {
         boolean iconOnly = myIcon != null && myText.isEmpty();
+        boolean fieldHeight = false;
 
-        if (myFlat) {
+        if (myStyles.contains(ButtonStyle.HELP) && iconOnly) {
+            setOwnStyleSheet(HELP_STYLE_SHEET.formatted(helpBorderColor()));
+        }
+        else if (myFlat) {
             setOwnStyleSheet(FLAT_STYLE_SHEET.formatted(iconOnly ? ICON_PADDING : TEXT_PADDING));
         }
-        else {
-            setOwnStyleSheet(iconOnly ? DEFAULT_ICON_STYLE_SHEET : DEFAULT_STYLE_SHEET);
+        else if (iconOnly) {
+            setOwnStyleSheet(DEFAULT_ICON_STYLE_SHEET);
         }
+        else {
+            setOwnStyleSheet(DEFAULT_STYLE_SHEET);
+
+            fieldHeight = true;
+        }
+
+        if (myComponent instanceof HighlightPushButton button) {
+            button.setFieldHeight(fieldHeight);
+        }
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setSearchHighlight(@Nullable String query) {
+        mySearchHighlight = SearchHighlightUtil.normalizeQuery(query);
+
+        if (myComponent != null) {
+            myComponent.update();
+        }
+    }
+
+    @Override
+    public @Nullable String getSearchHighlight() {
+        return mySearchHighlight;
     }
 }

@@ -17,52 +17,57 @@ package consulo.compiler.artifact.element;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
-import consulo.fileChooser.IdeaFileChooser;
-import consulo.fileChooser.FileChooserDescriptor;
-import consulo.fileChooser.FileChooserDescriptorFactory;
-import consulo.localize.LocalizeValue;
-import consulo.project.Project;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
+import consulo.compiler.localize.CompilerLocalize;
+import consulo.fileChooser.FileChooser;
+import consulo.fileChooser.FileChooserDescriptorFactory;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
+import consulo.virtualFileSystem.VirtualFile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
-* @author nik
-*/
+ * @author nik
+ */
 @ExtensionImpl
 public class DirectoryCopyElementType extends PackagingElementType<DirectoryCopyPackagingElement> {
-  public static DirectoryCopyElementType getInstance() {
-    return getInstance(DirectoryCopyElementType.class);
-  }
-
-  public DirectoryCopyElementType() {
-    super("dir-copy", LocalizeValue.localizeTODO("Directory Content"));
-  }
-
-  
-  @Override
-  public Image getIcon() {
-    return AllIcons.Nodes.CopyOfFolder;
-  }
-
-  
-  public List<? extends DirectoryCopyPackagingElement> chooseAndCreate(ArtifactEditorContext context, Artifact artifact,
-                                                                       CompositePackagingElement<?> parent) {
-    FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createMultipleFoldersDescriptor();
-    VirtualFile[] files = IdeaFileChooser.chooseFiles(descriptor, context.getProject(), null);
-    List<DirectoryCopyPackagingElement> list = new ArrayList<DirectoryCopyPackagingElement>();
-    for (VirtualFile file : files) {
-      list.add(new DirectoryCopyPackagingElement(file.getPath()));
+    public static DirectoryCopyElementType getInstance() {
+        return getInstance(DirectoryCopyElementType.class);
     }
-    return list;
-  }
 
-  
-  public DirectoryCopyPackagingElement createEmpty(Project project) {
-    return new DirectoryCopyPackagingElement();
-  }
+    public DirectoryCopyElementType() {
+        super("dir-copy", CompilerLocalize.elementTypeNameDirectoryContent());
+    }
+
+    @Override
+    public Image getIcon() {
+        return AllIcons.Nodes.CopyOfFolder;
+    }
+
+    @Override
+    @RequiredUIAccess
+    public CompletableFuture<List<? extends PackagingElement<?>>> chooseAndCreate(
+        ArtifactEditorContext context,
+        Artifact artifact,
+        CompositePackagingElement<?> parent
+    ) {
+        return FileChooser.chooseFiles(FileChooserDescriptorFactory.createMultipleFoldersDescriptor(), context.getProject(), null)
+            .thenApply(files -> {
+                List<DirectoryCopyPackagingElement> list = new ArrayList<>();
+                for (VirtualFile file : files) {
+                    list.add(new DirectoryCopyPackagingElement(file.getPath()));
+                }
+                return list;
+            });
+    }
+
+    @Override
+    public DirectoryCopyPackagingElement createEmpty(Project project) {
+        return new DirectoryCopyPackagingElement();
+    }
 }

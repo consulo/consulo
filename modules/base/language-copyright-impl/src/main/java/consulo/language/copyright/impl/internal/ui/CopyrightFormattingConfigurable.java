@@ -18,17 +18,18 @@ package consulo.language.copyright.impl.internal.ui;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.SearchableConfigurable;
+import consulo.disposer.Disposable;
 import consulo.language.copyright.UpdateCopyrightsProvider;
 import consulo.language.copyright.config.CopyrightFileConfigManager;
 import consulo.language.copyright.ui.TemplateCommentPanel;
 import consulo.language.file.FileTypeManager;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -59,9 +60,9 @@ public class CopyrightFormattingConfigurable extends SearchableConfigurable.Pare
 
     @RequiredUIAccess
     @Override
-    public JComponent createComponent() {
+    public Component createUIComponent(Disposable parentDisposable) {
         getOrCreateMainPanel();
-        return myPanel.createComponent();
+        return myPanel.createUIComponent(parentDisposable);
     }
 
     private TemplateCommentPanel getOrCreateMainPanel() {

@@ -21,35 +21,45 @@ import consulo.dataContext.DataManager;
 import consulo.desktop.awt.ui.impl.action.toolbar.ActionButtonToolbarImpl;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
-import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.Component;
+import consulo.ui.Size2D;
 import consulo.ui.WidthAndHeight;
 import consulo.desktop.awt.ui.impl.DesktopLength;
 import consulo.ui.Window;
 import consulo.ui.WindowOwner;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.TitlelessDecorator;
+import consulo.ui.ex.TitlelessDecoratorService;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.awt.AWTTitlelessDecorator;
 import consulo.ui.ex.awt.BorderLayoutPanel;
 import consulo.ui.ex.awt.CustomLineBorder;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.WholeWestDialogWrapper;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.dialog.Dialog;
 import consulo.ui.ex.dialog.DialogDescriptor;
 import consulo.ui.ex.dialog.DialogService;
 import consulo.ui.ex.dialog.DialogValue;
 import consulo.ui.ex.dialog.action.DialogCancelAction;
+import consulo.ui.ex.dialog.action.DialogEscapeAction;
+import consulo.ui.ex.impl.internal.DialogHelpButton;
 import consulo.ui.ex.keymap.KeymapManager;
+import consulo.util.lang.Couple;
+import consulo.ui.ex.dialog.WholeLeftDialogDescriptor;
 import jakarta.inject.Singleton;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -117,7 +127,7 @@ public class DesktopAwtDialogService implements DialogService {
         private final DialogDescriptor myDescriptor;
         private final Dialog myDialog;
 
-        private String myHelpId;
+        private @Nullable TitlelessDecorator myTitlelessDecorator;
 
         protected DialogWrapperImpl(DialogDescriptor descriptor, Dialog dialog) {
             super(true);
@@ -144,7 +154,6 @@ public class DesktopAwtDialogService implements DialogService {
         }
 
         private void initImpl() {
-            myHelpId = myDescriptor.getHelpId();
 
             setTitle(myDescriptor.getTitle());
 
@@ -155,6 +164,39 @@ public class DesktopAwtDialogService implements DialogService {
                 LOG.error("Cannot build dialog: " + myDescriptor.getClass().getName(), e);
                 throw e;
             }
+        }
+
+        @Override
+        protected void init() {
+            super.init();
+
+            if (myTitlelessDecorator instanceof AWTTitlelessDecorator awtTitlelessDecorator) {
+                awtTitlelessDecorator.install(getWindow());
+            }
+        }
+
+        @Override
+        @RequiredUIAccess
+        protected void initRootPanel(JPanel rootPanel) {
+            if (!(myDescriptor instanceof WholeLeftDialogDescriptor wholeLeft)) {
+                super.initRootPanel(rootPanel);
+                return;
+            }
+
+            Component left = wholeLeft.createLeftComponent(getDisposable());
+
+            myTitlelessDecorator = TitlelessDecoratorService.getInstance().of(getRootPane());
+
+            Dimension initialSize = getInitialSize();
+
+            initWholeWestRootPanel(
+                rootPanel,
+                () -> Couple.of((JComponent) TargetAWT.to(left), createCenterPanel()),
+                wholeLeft.getLeftSplitterKey(),
+                WholeWestDialogWrapper.DEFAULT_SPLITTER_PROPORTION,
+                initialSize == null ? null : new Size2D(initialSize.width, initialSize.height),
+                myTitlelessDecorator
+            );
         }
 
         @Override
@@ -175,9 +217,23 @@ public class DesktopAwtDialogService implements DialogService {
 
         @Override
         @RequiredUIAccess
-        public void doCancelAction() {
-            DialogCancelAction action = new DialogCancelAction();
+        public void doCancelAction(AWTEvent source) {
+            if (source instanceof KeyEvent || source instanceof ActionEvent) {
+                cancel(new DialogEscapeAction());
+            }
+            else {
+                cancel(new DialogCancelAction());
+            }
+        }
 
+        @Override
+        @RequiredUIAccess
+        public void doCancelAction() {
+            cancel(new DialogCancelAction());
+        }
+
+        @RequiredUIAccess
+        private void cancel(DialogCancelAction action) {
             if (myDescriptor.canHandle(action, null, TargetAWT.from(getWindow()))) {
                 myDescriptor.onHandleValue(action, null);
 
@@ -207,16 +263,8 @@ public class DesktopAwtDialogService implements DialogService {
 
             ActionGroup group = ActionGroup.newImmutableBuilder().addAll(actions).build();
 
-            if (myHelpId != null) {
-                Insets insets = Platform.current().os().isMac() ? JBUI.emptyInsets() : JBUI.insetsTop(8);
-
-                JButton helpButton = new JButton(getHelpAction());
-                helpButton.putClientProperty("JButton.buttonType", "help");
-                helpButton.setText("");
-                helpButton.setMargin(insets);
-                helpButton.setToolTipText(ActionLocalize.actionHelptopicsDescription().get());
-
-                panel.add(helpButton, BorderLayout.WEST);
+            if (myDescriptor.hasHelp()) {
+                panel.add(TargetAWT.to(DialogHelpButton.create(myDescriptor)), BorderLayout.WEST);
             }
 
             ActionToolbar toolbar = new ActionButtonToolbarImpl("DialogRightButtons",
@@ -257,7 +305,7 @@ public class DesktopAwtDialogService implements DialogService {
 
         @Override
         public @Nullable String getHelpId() {
-            return myHelpId;
+            return myDescriptor.getHelpId();
         }
 
         @Override
@@ -287,9 +335,11 @@ public class DesktopAwtDialogService implements DialogService {
     
     @Override
     public Dialog build(WindowOwner windowOwner, DialogDescriptor descriptor) {
-        if (!(windowOwner instanceof Project project)) {
-            throw new IllegalArgumentException("Project instance expected");
+        if (windowOwner instanceof Project project) {
+            return new DialogImpl(project, descriptor);
         }
-        return new DialogImpl(project, descriptor);
+
+        java.awt.Window window = TargetAWT.to(windowOwner.getWindow());
+        return window == null ? new DialogImpl(descriptor) : new DialogImpl(window, descriptor);
     }
 }

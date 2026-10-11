@@ -32,39 +32,67 @@ import org.jspecify.annotations.Nullable;
  * @since 12-Jun-16
  */
 public class DesktopTextItemPresentationImpl implements TextItemPresentation {
-  private final SimpleColoredComponent mySimpleColoredComponent;
+    private final SimpleColoredComponent mySimpleColoredComponent;
 
-  public DesktopTextItemPresentationImpl(SimpleColoredComponent simpleColoredComponent) {
-    mySimpleColoredComponent = simpleColoredComponent;
-  }
+    private LocalizeValue mySuffixText = LocalizeValue.empty();
+    private @Nullable Image mySuffixIcon;
 
-  @Override
-  public void clearText() {
-    Image icon = mySimpleColoredComponent.getIcon();
-    mySimpleColoredComponent.clear();
-    mySimpleColoredComponent.setIcon(icon);
-  }
-  
-  @Override
-  public TextItemPresentation withFont(Font font) {
-    mySimpleColoredComponent.setFont(TargetAWT.to(font));
-    return this;
-  }
+    public DesktopTextItemPresentationImpl(SimpleColoredComponent simpleColoredComponent) {
+        mySimpleColoredComponent = simpleColoredComponent;
+    }
 
-  @Override
-  public TextItemPresentation withIcon(@Nullable Image icon) {
-    mySimpleColoredComponent.setIcon(icon);
-    return this;
-  }
+    @Override
+    public void clearText() {
+        Image icon = mySimpleColoredComponent.getIcon();
+        mySimpleColoredComponent.clear();
+        mySimpleColoredComponent.setIcon(icon);
+    }
 
-  @Override
-  public TextItemPresentation withBackgroundColor(@Nullable ColorValue color) {
-    mySimpleColoredComponent.setBackground(TargetAWT.to(color));
-    return this;
-  }
+    @Override
+    public TextItemPresentation withFont(Font font) {
+        mySimpleColoredComponent.setFont(TargetAWT.to(font));
+        return this;
+    }
 
-  @Override
-  public void append(LocalizeValue text, TextAttribute textAttribute) {
-    mySimpleColoredComponent.append(text, DesktopAWTTargetAWTImpl.from(textAttribute));
-  }
+    @Override
+    public TextItemPresentation withIcon(@Nullable Image icon) {
+        mySimpleColoredComponent.setIcon(icon);
+        return this;
+    }
+
+    @Override
+    public TextItemPresentation withBackgroundColor(@Nullable ColorValue color) {
+        mySimpleColoredComponent.setBackground(TargetAWT.to(color));
+        return this;
+    }
+
+    @Override
+    public TextItemPresentation withSuffix(LocalizeValue text, @Nullable Image icon) {
+        mySuffixText = text;
+        mySuffixIcon = icon;
+        return this;
+    }
+
+    @Override
+    public TextItemPresentation withTooltip(LocalizeValue tooltip) {
+        mySimpleColoredComponent.setToolTipText(tooltip.getNullIfEmpty());
+        return this;
+    }
+
+    @Override
+    public void append(LocalizeValue text, TextAttribute textAttribute) {
+        mySimpleColoredComponent.append(text, DesktopAWTTargetAWTImpl.from(textAttribute));
+    }
+
+    public LocalizeValue getSuffixText() {
+        return mySuffixText;
+    }
+
+    public @Nullable Image getSuffixIcon() {
+        return mySuffixIcon;
+    }
+
+    public boolean hasSuffix() {
+        return mySuffixText.isNotEmpty() || mySuffixIcon != null;
+    }
 }

@@ -26,8 +26,10 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.layout.SplitLayoutPosition;
 import consulo.ui.layout.TwoComponentSplitLayout;
 import consulo.ui.layout.event.SplitProportionChangedEvent;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
+import java.util.function.Consumer;
 
 /**
  * @author VISTALL
@@ -35,6 +37,9 @@ import javax.swing.*;
  */
 public class DesktopTwoComponentSplitLayoutImpl extends SwingComponentDelegate<Splitter> implements TwoComponentSplitLayout {
     private SplitLayoutPosition myPosition;
+
+    private @Nullable Component myFirstComponent;
+    private @Nullable Component mySecondComponent;
 
     class MySplitter extends OnePixelSplitter implements FromSwingComponentWrapper {
         MySplitter(boolean vertical) {
@@ -77,12 +82,19 @@ public class DesktopTwoComponentSplitLayoutImpl extends SwingComponentDelegate<S
     @Override
     @RequiredUIAccess
     public void setFirstComponent(Component component) {
+        myFirstComponent = component;
         toAWTComponent().setFirstComponent((JComponent) TargetAWT.to(component));
     }
 
     @Override
     @RequiredUIAccess
     public void setSecondComponent(Component component) {
+        mySecondComponent = component;
         toAWTComponent().setSecondComponent((JComponent) TargetAWT.to(component));
+    }
+
+    @Override
+    public void forEachChild(@RequiredUIAccess Consumer<Component> consumer) {
+        DesktopLayoutChildren.acceptAll(consumer, myFirstComponent, mySecondComponent);
     }
 }

@@ -17,6 +17,7 @@ package consulo.ui.ex.impl.internal.toolbar;
 
 import consulo.dataContext.UiDataProvider;
 import consulo.ui.Component;
+import consulo.ui.Tree;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.internal.ToolbarDecoratorBuilderInternal;
@@ -255,6 +256,9 @@ public final class ToolbarDecoratorBuilderImpl<E> implements ToolbarDecoratorBui
         if (myExecutor != null) {
             layout.putUserData(UiDataProvider.KEY, sink -> sink.set(ToolbarExecutor.KEY, myExecutor));
             myExecutor.addSelectionListener(toolbar::updateActionsAsync);
+        }
+        else if (myComponent instanceof Tree<?> tree) {
+            tree.addSelectListener(event -> toolbar.updateActionsAsync());
         }
 
         Component toolbarComponent = toolbar.getUIComponent();

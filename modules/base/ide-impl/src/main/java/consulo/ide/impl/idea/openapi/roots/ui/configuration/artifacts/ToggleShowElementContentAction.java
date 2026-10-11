@@ -15,33 +15,36 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts;
 
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.ToggleAction;
 import consulo.application.dumb.DumbAware;
 import consulo.compiler.artifact.element.ComplexPackagingElementType;
+import consulo.localize.LocalizeValue;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.ToggleAction;
 
 /**
  * @author nik
  */
 public class ToggleShowElementContentAction extends ToggleAction implements DumbAware {
-  private final ComplexPackagingElementType<?> myType;
-  private final ArtifactEditorImpl myEditor;
+    private final ComplexPackagingElementType<?> myType;
+    private final ArtifactEditorImpl myEditor;
 
-  public ToggleShowElementContentAction(ComplexPackagingElementType<?> type, ArtifactEditorImpl editor) {
-    super(type.getShowContentActionText());
-    myType = type;
-    myEditor = editor;
-  }
+    public ToggleShowElementContentAction(ComplexPackagingElementType<?> type, ArtifactEditorImpl editor) {
+        super(type.getShowContentActionText(), LocalizeValue.empty(), null);
+        myType = type;
+        myEditor = editor;
+    }
 
-  @Override
-  public boolean isSelected(AnActionEvent e) {
-    return myEditor.getSubstitutionParameters().isShowContentForType(myType);
-  }
+    @Override
+    public boolean isSelected(AnActionEvent e) {
+        return myEditor.getSubstitutionParameters().isShowContentForType(myType);
+    }
 
-  @Override
-  public void setSelected(AnActionEvent e, boolean state) {
-    myEditor.getSubstitutionParameters().setShowContent(myType, state);
-    myEditor.updateShowContentCheckbox();
-    myEditor.getLayoutTreeComponent().rebuildTree();
-  }
+    @Override
+    @RequiredUIAccess
+    public void setSelected(AnActionEvent e, boolean state) {
+        myEditor.getSubstitutionParameters().setShowContent(myType, state);
+        myEditor.onShowContentSettingsChanged();
+        myEditor.getLayoutTreeComponent().rebuildTree();
+    }
 }

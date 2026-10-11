@@ -148,6 +148,7 @@ module consulo.ui.impl {
         consulo.web.ui.impl;
 
     exports consulo.ui.impl.tree to
+        consulo.desktop.awt.ui.impl,
         consulo.desktop.qt.ui.impl,
         consulo.it,
         consulo.web.ui.impl;

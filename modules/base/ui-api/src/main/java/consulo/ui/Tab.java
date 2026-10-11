@@ -15,6 +15,7 @@
  */
 package consulo.ui;
 
+import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
 
@@ -26,6 +27,16 @@ import java.util.function.BiConsumer;
  */
 public interface Tab {
     void setRenderer(BiConsumer<Tab, TextItemPresentation> renderer);
+
+    /**
+     * The caption the renderer gives this tab, as a value rather than as drawn: the runs it appends, in order, joined
+     * into one. A caption of a single run is that run itself, so a localized caption keeps its key. Icons, suffixes
+     * and tooltips are not part of it.
+     * <p>
+     * The renderer is run against a presentation which only records what it is told, so asking draws nothing, and a
+     * tab whose layout was never shown answers the same as one on screen.
+     */
+    LocalizeValue getTitle();
 
     void setCloseHandler(@Nullable BiConsumer<Tab, Component> closeHandler);
 

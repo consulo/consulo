@@ -31,6 +31,7 @@ import consulo.ui.image.Image;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author nik
@@ -64,19 +65,19 @@ public abstract class ModuleOutputElementTypeBase extends PackagingElementType<M
 
     @Override
     @RequiredUIAccess
-    public List<? extends PackagingElement<?>> chooseAndCreate(
+    public CompletableFuture<List<? extends PackagingElement<?>>> chooseAndCreate(
         ArtifactEditorContext context,
         Artifact artifact,
         CompositePackagingElement<?> parent
     ) {
         List<Module> suitableModules = getSuitableModules(context);
-        List<Module> selected = context.chooseModules(suitableModules, ProjectLocalize.dialogTitlePackagingChooseModule());
-
-        List<PackagingElement<?>> elements = new ArrayList<>();
-        for (Module module : selected) {
-            elements.add(createElement(context.getProject(), ModuleUtilCore.createPointer(module)));
-        }
-        return elements;
+        return context.chooseModules(suitableModules, ProjectLocalize.dialogTitlePackagingChooseModule()).thenApply(selected -> {
+            List<PackagingElement<?>> elements = new ArrayList<>();
+            for (Module module : selected) {
+                elements.add(createElement(context.getProject(), ModuleUtilCore.createPointer(module)));
+            }
+            return elements;
+        });
     }
 
     public ContentFolderTypeProvider getContentFolderType() {

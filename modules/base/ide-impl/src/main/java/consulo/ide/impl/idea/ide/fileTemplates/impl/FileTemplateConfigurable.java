@@ -23,6 +23,7 @@ import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
+import consulo.disposer.Disposable;
 import consulo.document.Document;
 import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
@@ -46,8 +47,10 @@ import consulo.language.psi.PsiFileFactory;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.collection.Lists;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.Comparing;
@@ -160,7 +163,7 @@ public class FileTemplateConfigurable implements Configurable, Configurable.NoSc
 
     @Override
     @RequiredUIAccess
-    public JComponent createComponent() {
+    public Component createUIComponent(Disposable parentDisposable) {
         myMainPanel = new JPanel(new GridBagLayout());
         myNameField = new JTextField();
         myExtensionField = new JTextField();
@@ -224,7 +227,7 @@ public class FileTemplateConfigurable implements Configurable, Configurable.NoSc
             }
         });
         myMainPanel.setPreferredSize(JBUI.size(400, 300));
-        return myMainPanel;
+        return TargetAWT.wrap(myMainPanel);
     }
 
     public void setProportion(float proportion) {

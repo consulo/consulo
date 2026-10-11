@@ -86,8 +86,4 @@ public interface Configurable extends UnnamedConfigurable {
      */
     interface NoMargin {
     }
-
-    @Deprecated
-    interface HoldPreferredFocusedComponent extends UnnamedConfigurable {
-    }
 }

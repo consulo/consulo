@@ -24,6 +24,7 @@ import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.awt.ComboBox;
 import consulo.ui.ex.awt.EnumComboBoxModel;
 import consulo.ui.ex.awt.HyperlinkLabel;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.dataholder.Key;
 import consulo.util.io.CharsetToolkit;
 import consulo.util.lang.Comparing;
@@ -197,8 +198,8 @@ public class FileEncodingConfigurable extends PerFileConfigurableBase<Charset> i
 
     @Override
     @RequiredUIAccess
-    public JComponent createComponent(Disposable uiDisposable) {
-        myTablePanel.add(super.createComponent(uiDisposable), BorderLayout.CENTER);
+    public consulo.ui.Component createUIComponent(Disposable uiDisposable) {
+        myTablePanel.add(TargetAWT.to(super.createUIComponent(uiDisposable)), BorderLayout.CENTER);
         JPanel p = createActionPanel(null, new Value<>() {
             @Override
             public void commit() {
@@ -215,7 +216,7 @@ public class FileEncodingConfigurable extends PerFileConfigurableBase<Charset> i
             }
         });
         myPropertiesFilesEncodingCombo.add(p, BorderLayout.CENTER);
-        return myPanel;
+        return TargetAWT.wrap(myPanel);
     }
 
     @Override

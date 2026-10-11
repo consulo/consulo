@@ -17,12 +17,15 @@ package consulo.ui.ex.awt;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.application.*;
+import consulo.application.ui.ApplicationWindowStateService;
 import consulo.application.ui.UISettings;
+import consulo.application.ui.WindowStateService;
 import consulo.application.ui.wm.ApplicationIdeFocusManager;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.application.util.registry.Registry;
 import consulo.awt.hacking.JComponentHacking;
 import consulo.component.ComponentManager;
+import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;
@@ -30,15 +33,19 @@ import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.platform.base.localize.CommonLocalize;
+import consulo.project.Project;
+import consulo.project.ui.ProjectWindowStateService;
 import consulo.ui.MessageBoxes;
 import consulo.ui.Button;
 import consulo.ui.CheckBox;
+import consulo.ui.Size2D;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.IdeGlassPane;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.PositionTracker;
 import consulo.ui.ex.RelativePoint;
+import consulo.ui.ex.TitlelessDecorator;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.touchBar.TouchBarController;
 import consulo.ui.ex.action.util.ActionUtil;
@@ -55,6 +62,7 @@ import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.util.collection.ArrayUtil;
+import consulo.util.lang.Couple;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import consulo.util.lang.TimeoutUtil;
@@ -1371,6 +1379,66 @@ public abstract class DialogWrapper {
         }
 
         myErrorTextAlarm.setActivationComponent(root);
+    }
+
+    @RequiredUIAccess
+    protected final void initWholeWestRootPanel(
+        JPanel rootPanel,
+        Supplier<Couple<JComponent>> components,
+        @Nullable String splitterKey,
+        float splitterDefaultValue,
+        @Nullable Size2D defaultSize,
+        @Nullable TitlelessDecorator titlelessDecorator
+    ) {
+        JBSplitter splitter = new OnePixelSplitter();
+        splitter.setProportion(splitterDefaultValue);
+        splitter.setSplitterProportionKey(splitterKey);
+
+        rootPanel.add(splitter, BorderLayout.CENTER);
+
+        Couple<JComponent> splitterComponents = components.get();
+
+        JComponent first = splitterComponents.getFirst();
+        assert first != null;
+        splitter.setFirstComponent(first);
+        if (titlelessDecorator instanceof AWTTitlelessDecorator awtTitlelessDecorator) {
+            awtTitlelessDecorator.makeLeftComponentLower(first);
+        }
+
+        JPanel rightComponent = new JPanel(new BorderLayout());
+        rightComponent.setBorder(createContentPaneBorder());
+        splitter.setSecondComponent(rightComponent);
+
+        JComponent second = splitterComponents.getSecond();
+        assert second != null;
+        if (titlelessDecorator instanceof AWTTitlelessDecorator awtTitlelessDecorator) {
+            rightComponent.add(awtTitlelessDecorator.modifyRightComponent(rootPanel, second), BorderLayout.CENTER);
+        }
+        else {
+            rightComponent.add(second, BorderLayout.CENTER);
+        }
+        myErrorPane = second;
+
+        JPanel southSection = new JPanel(new BorderLayout());
+        rightComponent.add(southSection, BorderLayout.SOUTH);
+
+        southSection.add(myErrorText, BorderLayout.CENTER);
+        JComponent south = createSouthPanel();
+        if (south != null) {
+            southSection.add(south, BorderLayout.SOUTH);
+        }
+
+        String dimensionKey = getDimensionKey();
+        if (dimensionKey != null && defaultSize != null) {
+            Project projectGuess = DataManager.getInstance().getDataContext(rightComponent).getData(Project.KEY);
+            WindowStateService stateService = projectGuess == null
+                ? ApplicationWindowStateService.getInstance()
+                : ProjectWindowStateService.getInstance(projectGuess);
+            Size2D size = stateService.getSize(dimensionKey);
+            if (size == null) {
+                stateService.putSize(dimensionKey, defaultSize);
+            }
+        }
     }
 
     protected int getErrorTextAlignment() {

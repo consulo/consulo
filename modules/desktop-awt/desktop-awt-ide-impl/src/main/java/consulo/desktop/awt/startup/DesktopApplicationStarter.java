@@ -345,7 +345,7 @@ public class DesktopApplicationStarter extends ApplicationStarter {
                                 ShowSettingsUtil.getInstance().showSettingsDialog(
                                     ideFrame == null ? null : ideFrame.getProject(),
                                     PluginsConfigurable.CONFIGURABLE_ID,
-                                    null
+                                    ""
                                 );
                             }
                         }

@@ -18,10 +18,13 @@ package consulo.execution.debug.impl.internal.setting;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.SearchableConfigurable;
+import consulo.disposer.Disposable;
 import consulo.execution.debug.setting.DebuggerSettingsCategory;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.VerticalFlowLayout;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
@@ -92,7 +95,7 @@ abstract class SubCompositeConfigurable implements SearchableConfigurable.Parent
 
   @RequiredUIAccess
   @Override
-  public final @Nullable JComponent createComponent() {
+  public final @Nullable Component createUIComponent(Disposable parentDisposable) {
     if (rootComponent == null) {
       if (root == null) {
         root = createRootUi();
@@ -104,7 +107,7 @@ abstract class SubCompositeConfigurable implements SearchableConfigurable.Parent
           rootComponent = root == null ? null : root.getComponent();
         }
         else if (root == null && children.length == 1) {
-          rootComponent = children[0].createComponent();
+          rootComponent = toSwing(children[0].createUIComponent(parentDisposable));
         }
         else {
           JPanel panel = new JPanel(new VerticalFlowLayout(0, 0));
@@ -114,7 +117,7 @@ abstract class SubCompositeConfigurable implements SearchableConfigurable.Parent
             panel.add(c);
           }
           for (Configurable configurable : children) {
-            JComponent component = configurable.createComponent();
+            JComponent component = toSwing(configurable.createUIComponent(parentDisposable));
             if (component != null) {
               if (children[0] != configurable || !true) {
                 component.setBorder(IdeBorderFactory.createTitledBorder(configurable.getDisplayName().get(), false));
@@ -129,7 +132,11 @@ abstract class SubCompositeConfigurable implements SearchableConfigurable.Parent
         rootComponent = root == null ? null : root.getComponent();
       }
     }
-    return rootComponent;
+    return rootComponent == null ? null : TargetAWT.wrap(rootComponent);
+  }
+
+  private static @Nullable JComponent toSwing(@Nullable Component component) {
+    return component == null ? null : (JComponent) TargetAWT.to(component);
   }
 
   @RequiredUIAccess

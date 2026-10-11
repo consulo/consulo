@@ -17,6 +17,7 @@ package consulo.web.ui.impl.internal;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.dom.Element;
+import com.vaadin.flow.dom.Style;
 import consulo.ui.TableItemEditor;
 import consulo.ui.ValueComponent;
 import consulo.web.ui.impl.internal.base.ToVaadinComponentWrapper;
@@ -54,6 +55,11 @@ final class WebGridCellEditor<Item, Value> {
         myVaadinComponent = ((ToVaadinComponentWrapper) myComponent).toVaadinComponent();
 
         Element element = myVaadinComponent.getElement();
+        Style style = element.getStyle();
+        style.set("width", "100%");
+        style.set("min-width", "0");
+        style.set("--vaadin-input-field-padding", "var(--vaadin-padding-xs)");
+        style.set("--vaadin-input-field-gap", "var(--vaadin-gap-xs)");
         element.addEventListener("change", event -> finishEdit());
         element.addEventListener("focusout", event -> finishEdit()).setFilter(FOCUS_LEAVES);
     }

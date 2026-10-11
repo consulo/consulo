@@ -21,64 +21,67 @@ import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import consulo.compiler.localize.CompilerLocalize;
 import consulo.content.library.Library;
+import consulo.content.library.LibraryTable;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.content.library.ProjectLibraryTable;
 import consulo.project.localize.ProjectLocalize;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
-import consulo.util.collection.ContainerUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
-* @author nik
-*/
+ * @author nik
+ */
 @ExtensionImpl
 public class LibraryElementType extends ComplexPackagingElementType<LibraryPackagingElement> {
-  public static LibraryElementType getInstance() {
-    return getInstance(LibraryElementType.class);
-  }
-
-  public LibraryElementType() {
-    super("library", CompilerLocalize.elementTypeNameLibraryFiles());
-  }
-
-  
-  @Override
-  public Image getIcon() {
-    return AllIcons.Nodes.PpLib;
-  }
-
-  @Override
-  public boolean isAvailableForAdd(ArtifactEditorContext context, Artifact artifact) {
-    return !getAllLibraries(context).isEmpty();
-  }
-
-  @Override
-  
-  public List<? extends LibraryPackagingElement> chooseAndCreate(ArtifactEditorContext context, Artifact artifact,
-                                                                 CompositePackagingElement<?> parent) {
-    List<Library> selected = context.chooseLibraries(ProjectLocalize.dialogTitlePackagingChooseLibrary().get());
-    List<LibraryPackagingElement> elements = new ArrayList<>();
-    for (Library library : selected) {
-      elements.add(new LibraryPackagingElement(library.getTable().getTableLevel(), library.getName(), null));
+    public static LibraryElementType getInstance() {
+        return getInstance(LibraryElementType.class);
     }
-    return elements;
-  }
 
-  private static List<Library> getAllLibraries(ArtifactEditorContext context) {
-    List<Library> libraries = new ArrayList<>();
-    ContainerUtil.addAll(libraries, ProjectLibraryTable.getInstance(context.getProject()).getLibraries());
-    return libraries;
-  }
+    public LibraryElementType() {
+        super("library", CompilerLocalize.elementTypeNameLibraryFiles());
+    }
 
-  
-  public LibraryPackagingElement createEmpty(Project project) {
-    return new LibraryPackagingElement();
-  }
+    @Override
+    public Image getIcon() {
+        return AllIcons.Nodes.PpLib;
+    }
 
-  @Override
-  public String getShowContentActionText() {
-    return "Show Library Files";
-  }
+    @Override
+    public boolean isAvailableForAdd(ArtifactEditorContext context, Artifact artifact) {
+        return ProjectLibraryTable.getInstance(context.getProject()).getLibraries().length > 0;
+    }
+
+    @Override
+    @RequiredUIAccess
+    public CompletableFuture<List<? extends PackagingElement<?>>> chooseAndCreate(
+        ArtifactEditorContext context,
+        Artifact artifact,
+        CompositePackagingElement<?> parent
+    ) {
+        return context.chooseLibraries(ProjectLocalize.dialogTitlePackagingChooseLibrary()).thenApply(selected -> {
+            List<LibraryPackagingElement> elements = new ArrayList<>();
+            for (Library library : selected) {
+                LibraryTable table = library.getTable();
+                if (table != null) {
+                    elements.add(new LibraryPackagingElement(table.getTableLevel(), library.getName(), null));
+                }
+            }
+            return elements;
+        });
+    }
+
+    @Override
+    public LibraryPackagingElement createEmpty(Project project) {
+        return new LibraryPackagingElement();
+    }
+
+    @Override
+    public LocalizeValue getShowContentActionText() {
+        return CompilerLocalize.elementTypeLibraryShowContentActionText();
+    }
 }

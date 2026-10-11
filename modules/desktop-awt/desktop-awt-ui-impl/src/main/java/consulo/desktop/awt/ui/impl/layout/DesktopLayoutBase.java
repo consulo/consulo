@@ -19,7 +19,6 @@ import consulo.desktop.awt.ui.impl.facade.FromSwingComponentWrapper;
 import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.layout.Layout;
 import consulo.ui.layout.LayoutConstraint;
 import consulo.ui.layout.LayoutStyle;
@@ -55,11 +54,7 @@ abstract class DesktopLayoutBase<T extends JPanel, C extends LayoutConstraint> e
         T component = toAWTComponent();
 
         for (int i = 0; i < component.getComponentCount(); i++) {
-            java.awt.Component child = component.getComponent(i);
-
-            if (child instanceof FromSwingComponentWrapper fromSwingComponentWrapper) {
-                consumer.accept(fromSwingComponentWrapper.toUIComponent());
-            }
+            DesktopLayoutChildren.accept(component.getComponent(i), consumer);
         }
     }
 
@@ -87,7 +82,7 @@ abstract class DesktopLayoutBase<T extends JPanel, C extends LayoutConstraint> e
 
     protected void addImpl(Component component, Object constraints) {
         T panel = toAWTComponent();
-        panel.add(TargetAWT.to(component), constraints);
+        panel.add(DesktopLayoutChildren.toAWT(component), constraints);
         panel.validate();
         panel.repaint();
     }

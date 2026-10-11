@@ -15,40 +15,35 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts;
 
-import consulo.module.ModifiableModuleModel;
-import consulo.module.Module;
-import consulo.module.content.layer.ModifiableRootModel;
 import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ModifiableArtifactModel;
 import consulo.compiler.artifact.element.CompositePackagingElement;
 import consulo.compiler.artifact.element.PackagingElementResolvingContext;
 import consulo.compiler.artifact.ui.ArtifactEditor;
+import consulo.module.ModifiableModuleModel;
+import consulo.module.Module;
+import consulo.module.content.layer.ModifiableRootModel;
 import org.jspecify.annotations.Nullable;
 
 /**
  * @author nik
  */
 public interface ArtifactsStructureConfigurableContext extends PackagingElementResolvingContext {
-  
-  ModifiableArtifactModel getOrCreateModifiableArtifactModel();
+    ModifiableArtifactModel getOrCreateModifiableArtifactModel();
 
-  CompositePackagingElement<?> getRootElement(Artifact artifact);
+    CompositePackagingElement<?> getRootElement(Artifact artifact);
 
-  void editLayout(Artifact artifact, Runnable action);
+    void editLayout(Artifact artifact, Runnable action);
 
-  ArtifactEditor getOrCreateEditor(Artifact artifact);
+    ArtifactEditor getOrCreateEditor(Artifact artifact);
 
-  
-  Artifact getOriginalArtifact(Artifact artifact);
+    Artifact getOriginalArtifact(Artifact artifact);
 
-  @Nullable ModifiableModuleModel getModifiableModuleModel();
+    @Nullable ModifiableModuleModel getModifiableModuleModel();
 
-  void queueValidation(Artifact artifact);
+    void queueValidation(Artifact artifact);
 
-  
-  ArtifactProjectStructureElement getOrCreateArtifactElement(Artifact artifact);
+    ModifiableRootModel getOrCreateModifiableRootModel(Module module);
 
-  ModifiableRootModel getOrCreateModifiableRootModel(Module module);
-
-  ArtifactEditorSettings getDefaultSettings();
+    ArtifactEditorSettings getDefaultSettings();
 }

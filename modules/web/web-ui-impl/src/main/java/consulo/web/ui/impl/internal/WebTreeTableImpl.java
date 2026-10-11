@@ -40,6 +40,9 @@ import java.util.function.Function;
  * @since 2026-10-03
  */
 public class WebTreeTableImpl<E> extends WebTreeImpl<E> implements TreeTable<E> {
+    static final String OUTSIDE_COLUMN_CELL =
+        "!event.composedPath().some(node => node.classList && node.classList.contains('" + WebTreeTableColumnImpl.CELL_CLASS + "'))";
+
     private final TreeTableColumns<E> myColumns = new TreeTableColumns<>();
     private final List<WebTreeTableColumnImpl<E, ?>> myGridColumns = new ArrayList<>();
 

@@ -29,6 +29,7 @@ public final class WindowOptions extends ComponentOptions {
         private boolean myUndecorated;
         private @Nullable Window myOwner = null;
         private @Nullable String myApplicationIdSuffix;
+        private @Nullable String myDimensionKey;
 
         private Builder() {
         }
@@ -63,8 +64,17 @@ public final class WindowOptions extends ComponentOptions {
             return this;
         }
 
+        /**
+         * The key the window remembers its size under. A window opened with a key that an earlier window was closed
+         * with comes up at the size that window had, in place of the size it was given.
+         */
+        public Builder dimensionKey(@Nullable String dimensionKey) {
+            myDimensionKey = dimensionKey;
+            return this;
+        }
+
         public WindowOptions build() {
-            return new WindowOptions(myOwner, myClosable, myResizable, myModal, myUndecorated, myApplicationIdSuffix);
+            return new WindowOptions(myOwner, myClosable, myResizable, myModal, myUndecorated, myApplicationIdSuffix, myDimensionKey);
         }
     }
 
@@ -78,6 +88,7 @@ public final class WindowOptions extends ComponentOptions {
     private final boolean myModal;
     private final boolean myUndecorated;
     private final @Nullable String myApplicationIdSuffix;
+    private final @Nullable String myDimensionKey;
 
     private WindowOptions(
         @Nullable Window owner,
@@ -85,7 +96,8 @@ public final class WindowOptions extends ComponentOptions {
         boolean resizable,
         boolean modal,
         boolean undecorated,
-        @Nullable String applicationIdSuffix
+        @Nullable String applicationIdSuffix,
+        @Nullable String dimensionKey
     ) {
         super(true);
 
@@ -95,6 +107,7 @@ public final class WindowOptions extends ComponentOptions {
         myModal = modal;
         myUndecorated = undecorated;
         myApplicationIdSuffix = applicationIdSuffix;
+        myDimensionKey = dimensionKey;
     }
 
     public @Nullable Window getOwner() {
@@ -119,5 +132,9 @@ public final class WindowOptions extends ComponentOptions {
 
     public @Nullable String getApplicationIdSuffix() {
         return myApplicationIdSuffix;
+    }
+
+    public @Nullable String getDimensionKey() {
+        return myDimensionKey;
     }
 }

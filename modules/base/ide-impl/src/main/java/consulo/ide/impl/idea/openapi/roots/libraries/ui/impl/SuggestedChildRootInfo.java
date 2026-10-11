@@ -55,6 +55,12 @@ class SuggestedChildRootInfo {
         return mySelectedRootType;
     }
 
+    public void setSelectedRootType(LibraryRootType selectedRootType) {
+        if (myDetectedRoot.getTypes().contains(selectedRootType)) {
+            mySelectedRootType = selectedRootType;
+        }
+    }
+
     public void setSelectedRootType(String selectedRootType) {
         for (LibraryRootType type : myDetectedRoot.getTypes()) {
             if (getRootTypeName(type).equals(selectedRootType)) {

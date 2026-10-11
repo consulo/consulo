@@ -69,20 +69,20 @@ public class LayoutsUITesterTab implements UITesterTab {
         FoldoutLayout layout = FoldoutLayout.create(LocalizeValue.of("Show Me"), fold);
         layout.addOpenedListener(it -> MessageBoxes.okInfo(LocalizeValue.of("State " + it.isOpened())).showAsync());
 
-        tabbedLayout.addTab("FoldoutLayout", layout);
+        tabbedLayout.addTab(LocalizeValue.localizeTODO("FoldoutLayout"), layout);
 
         TwoComponentSplitLayout splitLayout = TwoComponentSplitLayout.create(SplitLayoutPosition.HORIZONTAL);
         splitLayout.setFirstComponent(DockLayout.create().center(Button.create("Left")));
         splitLayout.setSecondComponent(DockLayout.create().center(Button.create("Second")));
 
-        tabbedLayout.addTab("SplitLayout", splitLayout);
+        tabbedLayout.addTab(LocalizeValue.localizeTODO("SplitLayout"), splitLayout);
 
         SwipeLayout swipeLayout = SwipeLayout.create();
 
         swipeLayout.register("left", () -> swipeChildLayout(LocalizeValue.of("Right"), () -> swipeLayout.swipeRightTo("right")));
         swipeLayout.register("right", () -> swipeChildLayout(LocalizeValue.of("Left"), () -> swipeLayout.swipeLeftTo("left")));
 
-        tabbedLayout.addTab("SwipeLayout", swipeLayout);
+        tabbedLayout.addTab(LocalizeValue.localizeTODO("SwipeLayout"), swipeLayout);
 
         VerticalLayout borderLayout = VerticalLayout.create();
         DockLayout dockLayout = DockLayout.create();
@@ -93,8 +93,8 @@ public class LayoutsUITesterTab implements UITesterTab {
 
         borderLayout.add(centerBtn).add(dockLayout);
 
-        tabbedLayout.addTab("DockLayout", borderLayout);
-        tabbedLayout.addTab("LoadingLayout", loadingLayout(uiDisposable));
+        tabbedLayout.addTab(LocalizeValue.localizeTODO("DockLayout"), borderLayout);
+        tabbedLayout.addTab(LocalizeValue.localizeTODO("LoadingLayout"), loadingLayout(uiDisposable));
 
         return tabbedLayout;
     }

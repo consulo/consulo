@@ -64,6 +64,6 @@ public class SandMutableModuleExtension extends SandModuleExtension implements M
 
   @Override
   public boolean isModified(SandModuleExtension originalExtension) {
-    return myIsEnabled != originalExtension.isEnabled() || !getFlags().equals(originalExtension.getFlags());
+    return isModifiedImpl(originalExtension) || !getFlags().equals(originalExtension.getFlags());
   }
 }

@@ -19,6 +19,8 @@ import consulo.desktop.awt.ui.impl.AWTUIAccessImpl;
 import consulo.desktop.awt.ui.impl.DesktopFontImpl;
 import consulo.desktop.awt.ui.impl.DesktopLength;
 import consulo.desktop.awt.ui.impl.event.DesktopAWTInputDetails;
+import consulo.desktop.awt.ui.impl.facade.FromSwingComponentWrapper;
+import consulo.desktop.awt.ui.impl.facade.FromSwingWindowWrapper;
 import consulo.desktop.awt.ui.impl.facade.ToSwingComponentWrapper;
 import consulo.desktop.awt.ui.impl.util.AWTFocusAdapterAsBlurListener;
 import consulo.desktop.awt.ui.impl.util.AWTFocusAdapterAsFocusListener;
@@ -48,8 +50,12 @@ import org.jspecify.annotations.Nullable;
 
 import javax.accessibility.AccessibleContext;
 import javax.swing.*;
+import java.awt.AWTEvent;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Toolkit;
+import java.awt.event.AWTEventListener;
+import java.awt.event.HierarchyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.HashSet;
@@ -68,6 +74,7 @@ public abstract class SwingComponentDelegate<T extends java.awt.Component> imple
 
     private boolean myClickBridgeInstalled;
     private boolean myContextMenuInstalled;
+    private boolean myMousePressBridgeInstalled;
 
     private @Nullable Set<java.awt.Component> myCascadeDisabledChildren;
 
@@ -97,9 +104,22 @@ public abstract class SwingComponentDelegate<T extends java.awt.Component> imple
     }
 
     protected static void updateTextForButton(AbstractButton button, LocalizeValue textValue) {
+        updateTextForButton(button, textValue, null);
+    }
+
+    protected static void updateTextForButton(AbstractButton button, LocalizeValue textValue, @Nullable String searchHighlight) {
         String text = textValue.get();
 
         TextWithMnemonic mnemonicInfo = TextWithMnemonic.parse(text);
+
+        String highlighted = DesktopSearchHighlight.toHtml(mnemonicInfo.getText(), searchHighlight);
+        if (highlighted != null) {
+            button.setText(highlighted);
+            button.setMnemonic(mnemonicInfo.hasMnemonic() ? mnemonicInfo.getMnemonic() : 0);
+            button.setDisplayedMnemonicIndex(-1);
+            return;
+        }
+
         if (!mnemonicInfo.hasMnemonic()) {
             button.setText(text);
 
@@ -136,6 +156,40 @@ public abstract class SwingComponentDelegate<T extends java.awt.Component> imple
         }
 
         return dataObject().addListener(ClickEvent.class, clickListener);
+    }
+
+    @Override
+    public Disposable addMousePressedListener(ComponentEventListener<Component, MousePressedEvent> pressListener) {
+        if (!myMousePressBridgeInstalled) {
+            myMousePressBridgeInstalled = true;
+
+            T component = toAWTComponent();
+            AWTEventListener listener = event -> {
+                if (event.getID() == MouseEvent.MOUSE_PRESSED
+                    && event instanceof MouseEvent mouseEvent
+                    && SwingUtilities.isDescendingFrom(mouseEvent.getComponent(), component)) {
+                    getListenerDispatcher(MousePressedEvent.class)
+                        .onEvent(new MousePressedEvent(this, DesktopAWTInputDetails.convert(component, mouseEvent)));
+                }
+            };
+
+            component.addHierarchyListener(event -> {
+                if ((event.getChangeFlags() & HierarchyEvent.SHOWING_CHANGED) == 0) {
+                    return;
+                }
+
+                Toolkit.getDefaultToolkit().removeAWTEventListener(listener);
+                if (component.isShowing()) {
+                    Toolkit.getDefaultToolkit().addAWTEventListener(listener, AWTEvent.MOUSE_EVENT_MASK);
+                }
+            });
+
+            if (component.isShowing()) {
+                Toolkit.getDefaultToolkit().addAWTEventListener(listener, AWTEvent.MOUSE_EVENT_MASK);
+            }
+        }
+
+        return dataObject().addListener(MousePressedEvent.class, pressListener);
     }
 
     @RequiredUIAccess
@@ -240,7 +294,15 @@ public abstract class SwingComponentDelegate<T extends java.awt.Component> imple
 
     @Override
     public @Nullable Component getParent() {
-        return TargetAWT.from(toAWTComponent().getParent());
+        for (Container parent = toAWTComponent().getParent(); parent != null; parent = parent.getParent()) {
+            if (parent instanceof FromSwingComponentWrapper wrapper) {
+                return wrapper.toUIComponent();
+            }
+            if (parent instanceof FromSwingWindowWrapper windowWrapper) {
+                return windowWrapper.toUIWindow();
+            }
+        }
+        return null;
     }
 
     @RequiredUIAccess

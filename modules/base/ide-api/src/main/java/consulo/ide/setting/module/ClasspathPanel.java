@@ -18,30 +18,33 @@ package consulo.ide.setting.module;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.project.Project;
+import consulo.ui.Component;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-
 import org.jspecify.annotations.Nullable;
-import javax.swing.*;
+
 import java.util.List;
 
 /**
  * @author nik
  */
 public interface ClasspathPanel {
-  void addItems(List<ClasspathTableItem<?>> toAdd);
+    @RequiredUIAccess
+    void addItems(List<ClasspathTableItem<?>> toAdd);
 
-  ModifiableRootModel getRootModel();
+    ModifiableRootModel getRootModel();
 
-  Project getProject();
+    Project getProject();
 
-  JComponent getComponent();
+    Component getUIComponent();
 
-  ModuleConfigurationState getModuleConfigurationState();
+    ModuleConfigurationState getModuleConfigurationState();
 
-  void navigate(AnActionEvent fromInputEvent, boolean openLibraryEditor);
+    @RequiredUIAccess
+    void navigate(AnActionEvent fromInputEvent, boolean openLibraryEditor);
 
-  @Nullable OrderEntry getSelectedEntry();
+    @RequiredUIAccess
+    @Nullable OrderEntry getSelectedEntry();
 
-  
-  LibraryTableModifiableModelProvider getModifiableModelProvider(String tableLevel);
+    LibraryTableModifiableModelProvider getModifiableModelProvider(String tableLevel);
 }

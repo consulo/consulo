@@ -19,6 +19,7 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.TextAttribute;
 import consulo.ui.TextItemPresentation;
 import consulo.ui.color.ColorValue;
+import consulo.ui.font.Font;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
@@ -34,8 +35,10 @@ public class DesktopQtTextItemPresentation implements TextItemPresentation {
     private final List<DesktopQtTextFragment> myFragments = new ArrayList<>();
     private @Nullable Image myImage;
     private @Nullable ColorValue myBackgroundColor;
+    private @Nullable Font myFont;
     private LocalizeValue mySuffixText = LocalizeValue.empty();
     private @Nullable Image mySuffixImage;
+    private LocalizeValue myTooltip = LocalizeValue.empty();
 
     public @Nullable Image getImage() {
         return myImage;
@@ -49,12 +52,20 @@ public class DesktopQtTextItemPresentation implements TextItemPresentation {
         return myBackgroundColor;
     }
 
+    public @Nullable Font getFont() {
+        return myFont;
+    }
+
     public LocalizeValue getSuffixText() {
         return mySuffixText;
     }
 
     public @Nullable Image getSuffixImage() {
         return mySuffixImage;
+    }
+
+    public LocalizeValue getTooltip() {
+        return myTooltip;
     }
 
     public boolean hasSuffix() {
@@ -68,6 +79,12 @@ public class DesktopQtTextItemPresentation implements TextItemPresentation {
     }
 
     @Override
+    public TextItemPresentation withFont(Font font) {
+        myFont = font;
+        return this;
+    }
+
+    @Override
     public TextItemPresentation withBackgroundColor(@Nullable ColorValue color) {
         myBackgroundColor = color;
         return this;
@@ -77,6 +94,12 @@ public class DesktopQtTextItemPresentation implements TextItemPresentation {
     public TextItemPresentation withSuffix(LocalizeValue text, @Nullable Image icon) {
         mySuffixText = text;
         mySuffixImage = icon;
+        return this;
+    }
+
+    @Override
+    public TextItemPresentation withTooltip(LocalizeValue tooltip) {
+        myTooltip = tooltip;
         return this;
     }
 

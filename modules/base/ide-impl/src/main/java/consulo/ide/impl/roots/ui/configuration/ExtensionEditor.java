@@ -21,60 +21,74 @@ import consulo.ide.impl.idea.openapi.roots.ui.configuration.ClasspathEditor;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.CompilerOutputsEditor;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.ContentEntriesEditor;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.ModuleElementsEditor;
-import consulo.ide.impl.roots.ui.configuration.extension.ExtensionCheckedTreeNode;
-import consulo.ide.impl.roots.ui.configuration.extension.ExtensionTreeCellRenderer;
 import consulo.ide.setting.module.ModuleConfigurationState;
 import consulo.language.psi.PsiPackageManager;
 import consulo.language.psi.PsiPackageSupportProvider;
 import consulo.localize.LocalizeValue;
 import consulo.module.Module;
 import consulo.module.content.layer.ModifiableModuleRootLayer;
+import consulo.module.content.layer.ModifiableRootModel;
+import consulo.module.content.layer.ModuleExtensionProvider;
 import consulo.module.content.layer.extension.ModuleExtensionBase;
 import consulo.module.content.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.ModuleExtensionWithSdk;
 import consulo.module.extension.MutableModuleExtension;
-import consulo.module.extension.swing.SwingMutableModuleExtension;
+import consulo.project.localize.ProjectLocalize;
+import consulo.ui.CheckBoxTree;
+import consulo.ui.CheckBoxTreePolicy;
 import consulo.ui.Component;
+import consulo.ui.Label;
 import consulo.ui.Space;
+import consulo.ui.TextAttribute;
+import consulo.ui.TextItemPresentation;
+import consulo.ui.TreeModel;
+import consulo.ui.TreeNode;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.OnePixelSplitter;
-import consulo.ui.ex.awt.ScrollPaneFactory;
-import consulo.ui.ex.awt.Splitter;
-import consulo.ui.ex.awt.tree.CheckboxTreeNoPolicy;
-import consulo.ui.ex.awt.tree.CheckedTreeNode;
-import consulo.ui.ex.awt.tree.TreeUtil;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
+import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.Layout;
-import consulo.util.collection.ContainerUtil;
-import consulo.util.lang.Comparing;
+import consulo.ui.layout.ScrollableLayout;
+import consulo.ui.layout.SplitLayoutPosition;
+import consulo.ui.layout.TwoComponentSplitLayout;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreeNode;
-import javax.swing.tree.TreeSelectionModel;
-import java.awt.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.*;
+import java.util.Map;
+import java.util.Objects;
+import java.util.function.Function;
 
 /**
  * @author VISTALL
  * @since 2013-05-19
  */
 public class ExtensionEditor extends ModuleElementsEditor {
+    private static final Comparator<TreeNode<ModuleExtensionProvider>> NAME_COMPARATOR = (o1, o2) -> {
+        ModuleExtensionProvider p1 = o1.getValue();
+        ModuleExtensionProvider p2 = o2.getValue();
+        if (p1 == null || p2 == null) {
+            return 0;
+        }
+        return LocalizeValue.comparator().compare(p1.getName(), p2.getName());
+    };
+
     private final ModuleConfigurationState myState;
     private final CompilerOutputsEditor myCompilerOutputEditor;
     private final ClasspathEditor myClasspathEditor;
     private final ContentEntriesEditor myContentEntriesEditor;
-    private CheckboxTreeNoPolicy myTree;
-    private Splitter mySplitter;
 
-    private ModuleExtension<?> myConfigurablePanelExtension;
-
-    private final Map<JComponent, Disposable> myExtensionDisposables = new HashMap<>();
+    private @Nullable CheckBoxTree<ModuleExtensionProvider> myTree;
+    private @Nullable DockLayout myDetailsPanel;
+    private @Nullable Disposable myDetailsDisposable;
+    private @Nullable MutableModuleExtension<?> myShownExtension;
+    private @Nullable ModuleExtensionProvider mySelectedProvider;
+    private boolean myUpdatingChecks;
 
     public ExtensionEditor(
         ModuleConfigurationState state,
@@ -88,143 +102,69 @@ public class ExtensionEditor extends ModuleElementsEditor {
         myClasspathEditor = classpathEditor;
         myContentEntriesEditor = contentEntriesEditor;
 
-        registerDisposable(() -> {
-            for (Disposable disposable : myExtensionDisposables.values()) {
-                Disposer.dispose(disposable);
-            }
-
-            myExtensionDisposables.clear();
-        });
+        registerDisposable(this::disposeDetails);
     }
 
+    @RequiredUIAccess
     @Override
     public void moduleStateChanged() {
-        mySplitter.setSecondComponent(null);
-        myTree.setModel(new DefaultTreeModel(new ExtensionCheckedTreeNode(null, myState, this)));
-        TreeUtil.expandAll(myTree);
+        CheckBoxTree<ModuleExtensionProvider> tree = myTree;
+        if (tree == null) {
+            return;
+        }
+
+        syncChecks(tree);
+        onSelected(mySelectedProvider);
+
+        UIAccess uiAccess = UIAccess.current();
+        tree.refreshAll().whenCompleteAsync((ignored, error) -> {
+            if (myTree == tree) {
+                tree.expandAll().whenCompleteAsync((expanded, expandError) -> selectFirstEnabled(tree), uiAccess);
+            }
+        }, uiAccess);
     }
 
     @RequiredUIAccess
-    
     @Override
-    protected JComponent createComponentImpl(Disposable parentUIDisposable) {
-        JPanel rootPane = new JPanel(new BorderLayout());
-
-        mySplitter = new OnePixelSplitter();
-
-        myTree = new CheckboxTreeNoPolicy(new ExtensionTreeCellRenderer(), new ExtensionCheckedTreeNode(null, myState, this)) {
-            @Override
-            protected void adjustParentsAndChildren(CheckedTreeNode node, boolean checked) {
-                if (!checked) {
-                    changeNodeState(node, false);
-                    checkOrUncheckChildren(node, false);
-                }
-                else {
-                    // we need collect parents, and enable it in right order
-                    // A
-                    // - B
-                    // -- C
-                    // when we enable C, ill be calls like A -> B -> C
-                    List<CheckedTreeNode> parents = new ArrayList<>();
-                    TreeNode parent = node.getParent();
-                    while (parent != null) {
-                        if (parent instanceof CheckedTreeNode) {
-                            parents.add((CheckedTreeNode)parent);
-                        }
-                        parent = parent.getParent();
-                    }
-
-                    Collections.reverse(parents);
-                    for (CheckedTreeNode checkedTreeNode : parents) {
-                        checkNode(checkedTreeNode, true);
-                    }
-                    changeNodeState(node, true);
-                }
-                repaint();
-            }
-        };
-
-        myTree.setRootVisible(false);
-        myTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-        myTree.addTreeSelectionListener(new TreeSelectionListener() {
-            @Override
-            @RequiredUIAccess
-            public void valueChanged(TreeSelectionEvent e) {
-                List<MutableModuleExtension> selected = TreeUtil.collectSelectedObjectsOfType(myTree, MutableModuleExtension.class);
-                updateSecondComponent(ContainerUtil.<MutableModuleExtension>getFirstItem(selected));
-            }
+    protected Component createUIComponentImpl(Disposable parentUIDisposable) {
+        CheckBoxTree<ModuleExtensionProvider> tree = CheckBoxTree.create(new ExtensionTreeModel());
+        tree.setCheckPolicy(CheckBoxTreePolicy.INDEPENDENT);
+        tree.setCheckEnabledFilter(this::isCheckEnabled);
+        tree.addCheckListener(event -> onChecked(event.getValue(), event.isChecked()));
+        tree.addSelectListener(event -> {
+            TreeNode<ModuleExtensionProvider> node = event.getValue();
+            onSelected(node == null ? null : node.getValue());
         });
-        TreeUtil.expandAll(myTree);
+        Disposer.register(parentUIDisposable, tree.destroyHook());
+        myTree = tree;
 
-        mySplitter.setFirstComponent(myTree);
+        syncChecks(tree);
+        UIAccess uiAccess = UIAccess.current();
+        tree.expandAll().whenCompleteAsync((ignored, error) -> selectFirstEnabled(tree), uiAccess);
 
-        rootPane.add(ScrollPaneFactory.createScrollPane(mySplitter, true), BorderLayout.CENTER);
+        DockLayout detailsPanel = DockLayout.create(Space.NONE);
+        myDetailsPanel = detailsPanel;
 
-        return rootPane;
-    }
-
-    @RequiredUIAccess
-    @SuppressWarnings("deprecation")
-    private @Nullable JComponent createConfigurationPanel(MutableModuleExtension extension) {
-        myConfigurablePanelExtension = extension;
-        @RequiredUIAccess Runnable updateOnCheck = () -> extensionChanged(extension);
-
-        Disposable uiDisposable = Disposable.newDisposable("module extension: " + extension.getId());
-
-        JComponent result = null;
-
-        if (extension instanceof SwingMutableModuleExtension) {
-            result = ((SwingMutableModuleExtension)extension).createConfigurablePanel(uiDisposable, updateOnCheck);
-        }
-        else {
-            Component component = extension.createConfigurationComponent(uiDisposable, updateOnCheck);
-
-            if (component != null) {
-                if (component instanceof Layout) {
-                    component.borderBuilder().allReset().apply();
-                    component.paddingBuilder().allSet(Space.MEDIUM).apply();
-                }
-
-                result = (JComponent)TargetAWT.to(component);
-            }
-        }
-
-        if (result != null) {
-            myExtensionDisposables.put(result, uiDisposable);
-        }
-
-        return result;
-    }
-
-    @RequiredUIAccess
-    private void updateSecondComponent(@Nullable MutableModuleExtension extension) {
-        JComponent oldComponent;
-        if (extension == null || !extension.isEnabled()) {
-            oldComponent = mySplitter.replaceSecondComponent(null);
-        }
-        else {
-            oldComponent = mySplitter.replaceSecondComponent(createConfigurationPanel(extension));
-        }
-
-        if (oldComponent != null) {
-            Disposable disposable = myExtensionDisposables.remove(oldComponent);
-            if (disposable != null) {
-                Disposer.dispose(disposable);
-            }
-        }
+        TwoComponentSplitLayout splitLayout = TwoComponentSplitLayout.create(SplitLayoutPosition.HORIZONTAL);
+        splitLayout.setFirstComponent(ScrollableLayout.create(tree));
+        splitLayout.setSecondComponent(detailsPanel);
+        splitLayout.setProportion(30);
+        return splitLayout;
     }
 
     @RequiredUIAccess
     public void extensionChanged(MutableModuleExtension extension) {
-        JComponent secondComponent = myConfigurablePanelExtension != extension ? null : mySplitter.getSecondComponent();
-        if (secondComponent == null && extension.isEnabled() || secondComponent != null && !extension.isEnabled()) {
-            updateSecondComponent(!extension.isEnabled() ? null : extension);
+        if (myShownExtension == extension) {
+            if (!extension.isEnabled()) {
+                showDetails(null);
+            }
+        }
+        else if (extension.isEnabled() && mySelectedProvider != null && getExtension(mySelectedProvider) == extension) {
+            showDetails(extension);
         }
 
         if (extension instanceof ModuleExtensionWithSdk sdkExtension) {
-            // we using module layer, don't use modifiable model - it ill proxy, and methods 'addModuleExtensionSdkEntry' && 'removeOrderEntry'
-            // ill call this method again
-            ModifiableModuleRootLayer moduleRootLayer = (ModifiableModuleRootLayer)((ModuleExtensionBase)sdkExtension).getModuleRootLayer();
+            ModifiableModuleRootLayer moduleRootLayer = (ModifiableModuleRootLayer) ((ModuleExtensionBase) sdkExtension).getModuleRootLayer();
 
             ModuleExtensionWithSdkOrderEntry sdkOrderEntry = moduleRootLayer.findModuleExtensionSdkEntry(sdkExtension);
             if (!sdkExtension.isEnabled() && sdkOrderEntry != null) {
@@ -266,9 +206,255 @@ public class ExtensionEditor extends ModuleElementsEditor {
     public void saveData() {
     }
 
-    
     @Override
     public LocalizeValue getDisplayName() {
-        return LocalizeValue.localizeTODO("Extensions");
+        return ProjectLocalize.moduleExtensionsTitle();
+    }
+
+    @RequiredUIAccess
+    private void onSelected(@Nullable ModuleExtensionProvider provider) {
+        mySelectedProvider = provider;
+
+        MutableModuleExtension<?> extension = provider == null ? null : getExtension(provider);
+        if (extension == null || !extension.isEnabled()) {
+            showDetails(null);
+        }
+        else if (myShownExtension != extension) {
+            showDetails(extension);
+        }
+    }
+
+    @RequiredUIAccess
+    private void onChecked(ModuleExtensionProvider provider, boolean checked) {
+        CheckBoxTree<ModuleExtensionProvider> tree = myTree;
+        if (myUpdatingChecks || tree == null) {
+            return;
+        }
+
+        List<ModuleExtensionProvider> chain = checked ? collectParentChain(provider) : collectSubtree(provider);
+        for (ModuleExtensionProvider target : chain) {
+            MutableModuleExtension<?> extension = getExtension(target);
+            if (extension != null && extension.isEnabled() != checked) {
+                extension.setEnabled(checked);
+                extensionChanged(extension);
+            }
+        }
+
+        syncChecks(tree);
+        refreshTree(tree);
+
+        if (checked) {
+            selectProvider(tree, provider);
+        }
+    }
+
+    @RequiredUIAccess
+    private void selectProvider(CheckBoxTree<ModuleExtensionProvider> tree, ModuleExtensionProvider provider) {
+        TreeNode<ModuleExtensionProvider> rootNode = tree.getRootNode();
+        if (rootNode == null) {
+            return;
+        }
+
+        UIAccess uiAccess = UIAccess.current();
+        rootNode.findChildDeep(candidate -> candidate == provider).whenCompleteAsync((node, error) -> {
+            if (node != null && myTree == tree) {
+                tree.select(node);
+            }
+        }, uiAccess);
+    }
+
+    @RequiredUIAccess
+    private void selectFirstEnabled(CheckBoxTree<ModuleExtensionProvider> tree) {
+        TreeNode<ModuleExtensionProvider> rootNode = tree.getRootNode();
+        if (rootNode == null || myTree != tree || mySelectedProvider != null) {
+            return;
+        }
+
+        UIAccess uiAccess = UIAccess.current();
+        rootNode.findChildDeep(this::isEnabled).whenCompleteAsync((node, error) -> {
+            if (node != null && myTree == tree && mySelectedProvider == null) {
+                tree.select(node);
+            }
+        }, uiAccess);
+    }
+
+    private boolean isEnabled(@Nullable ModuleExtensionProvider provider) {
+        MutableModuleExtension<?> extension = provider == null ? null : getExtension(provider);
+        return extension != null && extension.isEnabled();
+    }
+
+    @RequiredUIAccess
+    private void refreshTree(CheckBoxTree<ModuleExtensionProvider> tree) {
+        UIAccess uiAccess = UIAccess.current();
+        tree.refreshAll().whenCompleteAsync((ignored, error) -> {
+            if (myTree == tree) {
+                tree.expandAll();
+            }
+        }, uiAccess);
+    }
+
+    @RequiredUIAccess
+    private void syncChecks(CheckBoxTree<ModuleExtensionProvider> tree) {
+        myUpdatingChecks = true;
+        try {
+            for (ModuleExtensionProvider provider : getProviders().values()) {
+                MutableModuleExtension<?> extension = getExtension(provider);
+                tree.setChecked(provider, extension != null && extension.isEnabled());
+            }
+        }
+        finally {
+            myUpdatingChecks = false;
+        }
+    }
+
+    @RequiredUIAccess
+    private void showDetails(@Nullable MutableModuleExtension<?> extension) {
+        DockLayout detailsPanel = myDetailsPanel;
+        disposeDetails();
+        myShownExtension = null;
+        if (detailsPanel == null) {
+            return;
+        }
+
+        Component component = null;
+        if (extension != null) {
+            Disposable uiDisposable = Disposable.newDisposable("module extension: " + extension.getId());
+            myDetailsDisposable = uiDisposable;
+            myShownExtension = extension;
+
+            @RequiredUIAccess Runnable updateOnCheck = () -> extensionChanged(extension);
+            component = extension.createConfigurationComponent(uiDisposable, updateOnCheck);
+            if (component instanceof Layout) {
+                component.borderBuilder().allReset().apply();
+                component.paddingBuilder().allSet(Space.MEDIUM).apply();
+            }
+        }
+
+        detailsPanel.center(component == null ? Label.create(LocalizeValue.empty()) : component);
+    }
+
+    private void disposeDetails() {
+        Disposable detailsDisposable = myDetailsDisposable;
+        myDetailsDisposable = null;
+        if (detailsDisposable != null) {
+            detailsDisposable.disposeWithTree();
+        }
+    }
+
+    private @Nullable MutableModuleExtension<?> getExtension(ModuleExtensionProvider provider) {
+        ModifiableRootModel model = myState.getRootModel();
+        return model == null ? null : model.getExtensionWithoutCheck(provider.getId());
+    }
+
+    @RequiredUIAccess
+    private boolean isCheckEnabled(ModuleExtensionProvider provider) {
+        MutableModuleExtension<?> extension = getExtension(provider);
+        if (extension == null) {
+            return false;
+        }
+        if (provider.isAllowMixin()) {
+            return true;
+        }
+        if (provider.isSystemOnly()) {
+            return false;
+        }
+
+        ModifiableRootModel rootModel = myState.getRootModel();
+        if (rootModel == null) {
+            return false;
+        }
+
+        ModuleExtensionProvider absoluteParent = findRootProvider(provider);
+        if (rootModel.getExtension(absoluteParent.getId()) != null) {
+            return true;
+        }
+
+        for (ModuleExtensionProvider candidate : getProviders().values()) {
+            if (candidate.getParentId() == null && rootModel.getExtension(candidate.getId()) != null) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private List<ModuleExtensionProvider> collectParentChain(ModuleExtensionProvider provider) {
+        Map<String, ModuleExtensionProvider> providers = getProviders();
+        List<ModuleExtensionProvider> chain = new ArrayList<>();
+        for (ModuleExtensionProvider current = provider; current != null; ) {
+            chain.add(current);
+            String parentId = current.getParentId();
+            current = parentId == null ? null : providers.get(parentId);
+        }
+        Collections.reverse(chain);
+        return chain;
+    }
+
+    private List<ModuleExtensionProvider> collectSubtree(ModuleExtensionProvider provider) {
+        List<ModuleExtensionProvider> result = new ArrayList<>();
+        result.add(provider);
+        for (int i = 0; i < result.size(); i++) {
+            String id = result.get(i).getId();
+            for (ModuleExtensionProvider candidate : getProviders().values()) {
+                if (id.equals(candidate.getParentId())) {
+                    result.add(candidate);
+                }
+            }
+        }
+        return result;
+    }
+
+    private ModuleExtensionProvider findRootProvider(ModuleExtensionProvider provider) {
+        List<ModuleExtensionProvider> chain = collectParentChain(provider);
+        return chain.get(0);
+    }
+
+    private Map<String, ModuleExtensionProvider> getProviders() {
+        Map<String, ModuleExtensionProvider> providers = new LinkedHashMap<>();
+        for (ModuleExtensionProvider provider : myProject.getApplication().getExtensionPoint(ModuleExtensionProvider.class).getExtensionList()) {
+            providers.put(provider.getId(), provider);
+        }
+        return providers;
+    }
+
+    @RequiredUIAccess
+    private void render(ModuleExtensionProvider provider, TextItemPresentation presentation) {
+        boolean enabled = isCheckEnabled(provider);
+        Image icon = provider.getIcon();
+        presentation.withIcon(enabled ? icon : ImageEffects.transparent(icon));
+        presentation.append(provider.getName(), enabled ? TextAttribute.REGULAR : TextAttribute.GRAYED);
+    }
+
+    private class ExtensionTreeModel implements TreeModel<ModuleExtensionProvider> {
+        @RequiredUIAccess
+        @Override
+        public void buildChildren(
+            Function<ModuleExtensionProvider, TreeNode<ModuleExtensionProvider>> nodeFactory,
+            @Nullable ModuleExtensionProvider parentValue
+        ) {
+            String parentId = parentValue == null ? null : parentValue.getId();
+            Map<String, ModuleExtensionProvider> providers = getProviders();
+            for (ModuleExtensionProvider provider : providers.values()) {
+                if (!Objects.equals(provider.getParentId(), parentId)) {
+                    continue;
+                }
+
+                boolean hasChildren = false;
+                for (ModuleExtensionProvider candidate : providers.values()) {
+                    if (provider.getId().equals(candidate.getParentId())) {
+                        hasChildren = true;
+                        break;
+                    }
+                }
+
+                TreeNode<ModuleExtensionProvider> node = nodeFactory.apply(provider);
+                node.setLeaf(!hasChildren);
+                node.setRenderer(ExtensionEditor.this::render);
+            }
+        }
+
+        @Override
+        public @Nullable Comparator<TreeNode<ModuleExtensionProvider>> getNodeComparator() {
+            return NAME_COMPARATOR;
+        }
     }
 }

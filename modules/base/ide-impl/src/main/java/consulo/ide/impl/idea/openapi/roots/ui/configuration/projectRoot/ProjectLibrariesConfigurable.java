@@ -20,7 +20,6 @@ import consulo.configurable.NonDefaultProjectConfigurable;
 import consulo.configurable.ProjectConfigurable;
 import consulo.configurable.StandardConfigurableIds;
 import consulo.configurable.internal.ConfigurableWeight;
-import consulo.configurable.internal.FullContentConfigurable;
 import consulo.content.library.LibraryTablePresentation;
 import consulo.content.library.LibraryTablesRegistrar;
 import consulo.ide.impl.roots.ui.configuration.ProjectConfigurableWeights;
@@ -28,40 +27,22 @@ import consulo.ide.setting.module.LibraryTableModifiableModelProvider;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.localize.ProjectLocalize;
-import consulo.ui.ex.awt.MasterDetailsStateService;
-import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
-import jakarta.inject.Provider;
-
-import javax.swing.*;
-import java.awt.*;
+import org.jspecify.annotations.Nullable;
 
 @ExtensionImpl
-public class ProjectLibrariesConfigurable extends BaseLibrariesConfigurable implements ConfigurableWeight,
-    ProjectConfigurable,
-    NonDefaultProjectConfigurable,
-    FullContentConfigurable {
+public class ProjectLibrariesConfigurable extends BaseLibrariesConfigurable
+    implements ConfigurableWeight, ProjectConfigurable, NonDefaultProjectConfigurable {
     public static final String ID = "project.libraries";
 
     @Inject
-    public ProjectLibrariesConfigurable(Project project, Provider<MasterDetailsStateService> masterDetailsStateService) {
-        super(project, masterDetailsStateService);
-        myLevel = LibraryTablesRegistrar.PROJECT_LEVEL;
-    }
-
-    @Override
-    public void setBannerComponent(JComponent bannerComponent) {
-        myNorthPanel.add(bannerComponent, BorderLayout.NORTH);
-    }
-
-    @Override
-    protected String getComponentStateKey() {
-        return "ProjectLibrariesConfigurable.UI";
+    public ProjectLibrariesConfigurable(Project project) {
+        super(project, LibraryTablesRegistrar.PROJECT_LEVEL);
     }
 
     @Override
     public LocalizeValue getDisplayName() {
-        return LocalizeValue.localizeTODO("Libraries");
+        return ProjectLocalize.librariesDisplayName();
     }
 
     @Override
@@ -85,8 +66,8 @@ public class ProjectLibrariesConfigurable extends BaseLibrariesConfigurable impl
     }
 
     @Override
-    protected String getAddText() {
-        return ProjectLocalize.addNewProjectLibraryText().get();
+    protected LocalizeValue getAddText() {
+        return ProjectLocalize.addNewProjectLibraryText();
     }
 
     @Override

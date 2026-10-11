@@ -16,56 +16,44 @@
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts;
 
 import consulo.compiler.artifact.internal.InvalidArtifact;
-import consulo.configurable.ConfigurationException;
+import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.ui.ex.awt.MultiLineLabel;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
-
-import javax.swing.*;
+import consulo.ui.Component;
+import consulo.ui.Label;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.layout.DockLayout;
 
 /**
  * @author nik
  */
 public class InvalidArtifactConfigurable extends ArtifactConfigurableBase {
-  private String myErrorMessage;
+    private final String myErrorMessage;
 
-  public InvalidArtifactConfigurable(InvalidArtifact originalArtifact,
-                                     ArtifactsStructureConfigurableContextImpl artifactsStructureContext,
-                                     Runnable updateTree) {
-    super(originalArtifact, artifactsStructureContext, updateTree, false);
-    myErrorMessage = originalArtifact.getErrorMessage();
-  }
-
-  @Override
-  public void setDisplayName(String name) {
-  }
-
-  @Override
-  public JComponent createOptionsPanel() {
-    return new InvalidArtifactComponent(myErrorMessage).myMainPanel;
-  }
-
-  @Override
-  public boolean isModified() {
-    return false;
-  }
-
-  @Override
-  public void apply() throws ConfigurationException {
-  }
-
-  @Override
-  public void reset() {
-  }
-
-  private static class InvalidArtifactComponent {
-    private JPanel myMainPanel;
-    private MultiLineLabel myDescriptionLabel;
-    private JLabel myIconLabel;
-
-    private InvalidArtifactComponent(String errorMessage) {
-      myIconLabel.setIcon(TargetAWT.to(PlatformIconGroup.generalError()));
-      myDescriptionLabel.setText(errorMessage);
+    public InvalidArtifactConfigurable(InvalidArtifact originalArtifact, ArtifactsStructureConfigurableContextImpl artifactsStructureContext) {
+        super(originalArtifact, artifactsStructureContext);
+        myErrorMessage = originalArtifact.getErrorMessage();
     }
-  }
+
+    @RequiredUIAccess
+    @Override
+    public Component createUIComponent(Disposable parentUIDisposable) {
+        Label errorLabel = Label.create(LocalizeValue.of(myErrorMessage));
+        errorLabel.setImage(PlatformIconGroup.generalError());
+
+        DockLayout panel = DockLayout.create();
+        panel.top(errorLabel);
+        return panel;
+    }
+
+    @RequiredUIAccess
+    @Override
+    public boolean isModified() {
+        return false;
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void apply() {
+    }
 }

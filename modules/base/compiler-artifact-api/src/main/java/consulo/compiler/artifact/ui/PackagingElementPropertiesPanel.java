@@ -15,15 +15,27 @@
  */
 package consulo.compiler.artifact.ui;
 
-import consulo.configurable.UnnamedConfigurable;
+import consulo.disposer.Disposable;
+import consulo.ui.Component;
+import consulo.ui.annotation.RequiredUIAccess;
 
 /**
  * @author nik
  */
-public abstract class PackagingElementPropertiesPanel implements UnnamedConfigurable {
+public abstract class PackagingElementPropertiesPanel {
+    @RequiredUIAccess
+    public abstract Component createUIComponent(Disposable uiDisposable);
 
-  public abstract void apply();
+    @RequiredUIAccess
+    public abstract boolean isModified();
 
-  public void disposeUIResources() {
-  }
+    @RequiredUIAccess
+    public abstract void apply();
+
+    @RequiredUIAccess
+    public abstract void reset();
+
+    @RequiredUIAccess
+    public void disposeUIResources() {
+    }
 }

@@ -29,6 +29,7 @@ import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.function.Consumer;
 
 /**
  * @author VISTALL
@@ -140,5 +141,15 @@ public class DesktopFoldoutLayoutImpl extends DesktopLayoutBase<DesktopFoldoutLa
         myTitleValue = title;
         toAWTComponent().updateTitle();
         return this;
+    }
+
+    @Override
+    public LocalizeValue getTitle() {
+        return myTitleValue;
+    }
+
+    @Override
+    public void forEachChild(@RequiredUIAccess Consumer<Component> consumer) {
+        consumer.accept(myComponent);
     }
 }

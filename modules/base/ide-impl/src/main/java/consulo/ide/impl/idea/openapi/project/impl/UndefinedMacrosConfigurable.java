@@ -17,11 +17,14 @@ package consulo.ide.impl.idea.openapi.project.impl;
 
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
+import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.application.options.pathMacros.PathMacroListEditor;
 import consulo.localize.LocalizeValue;
 import consulo.project.localize.ProjectLocalize;
+import consulo.ui.Component;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.internal.laf.MultiLineLabelUI;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 
 import javax.swing.*;
 import java.awt.*;
@@ -47,7 +50,7 @@ public class UndefinedMacrosConfigurable implements Configurable{
   }
 
   @Override
-  public JComponent createComponent() {
+  public Component createUIComponent(Disposable parentDisposable) {
     JPanel mainPanel = new JPanel(new BorderLayout());
     // important: do not allow to remove or change macro name for already defined macros before project is loaded
     myEditor = new PathMacroListEditor(myUndefinedMacroNames);
@@ -60,7 +63,7 @@ public class UndefinedMacrosConfigurable implements Configurable{
     textLabel.setBorder(IdeBorderFactory.createEmptyBorder(6, 6, 6, 6));
     mainPanel.add(textLabel, BorderLayout.NORTH);
 
-    return mainPanel;
+    return TargetAWT.wrap(mainPanel);
   }
 
   @Override

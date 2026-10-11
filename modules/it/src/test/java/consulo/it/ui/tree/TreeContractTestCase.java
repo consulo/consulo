@@ -194,6 +194,22 @@ public abstract class TreeContractTestCase {
     }
 
     @Test
+    public void theRendererGivesEachNodeItsOwnTooltip(Application application) {
+        MapTreeModel model = new MapTreeModel()
+            .put(ROOT, "jdk", "maven")
+            .tooltip("jdk", "/usr/lib/jvm/java-25");
+
+        TreeTester<String> tester = show(application, model);
+
+        tester.assertStructure("""
+            jdk
+            maven
+            """);
+        assertThat(tester.tooltip("jdk")).isEqualTo("/usr/lib/jvm/java-25");
+        assertThat(tester.tooltip("maven")).isEmpty();
+    }
+
+    @Test
     public void anEmptyLevelTurnsTheNodeIntoALeaf(Application application) {
         MapTreeModel model = new MapTreeModel()
             .put(ROOT, "docs")
@@ -519,5 +535,103 @@ public abstract class TreeContractTestCase {
 
         second.assertStructure(first.dump());
         assertThat(model.getBuildCount("a")).isEqualTo(2);
+    }
+
+    @Test
+    public void multipleSelectKeepsEverySelectedNodeAndTheLead(Application application) {
+        MapTreeModel model = new MapTreeModel().put(ROOT, "a", "b", "c");
+        TreeTester<String> tester = show(application, model);
+        Tree<String> tree = tester.getTree();
+        tree.setAllowMultipleSelect(true);
+
+        List<String> events = new CopyOnWriteArrayList<>();
+        tree.addSelectListener(event -> events.add("select " + valueOf(event.getValue())));
+
+        tester.userSelect("a");
+        tester.userAddToSelection("c");
+
+        tester.assertStructure("""
+            [a]
+            b
+            [c]
+            """);
+        assertThat(tree.getSelectedNode()).extracting(TreeNode::getValue).isEqualTo("c");
+        assertThat(tree.getSelectedNodes()).extracting(TreeNode::getValue).containsExactly("a", "c");
+        assertThat(events).containsExactly("select a", "select c");
+    }
+
+    @Test
+    public void singleSelectTreeKeepsOnlyTheLastNode(Application application) {
+        MapTreeModel model = new MapTreeModel().put(ROOT, "a", "b", "c");
+        TreeTester<String> tester = show(application, model);
+        Tree<String> tree = tester.getTree();
+
+        tester.userSelect("a");
+        tester.userAddToSelection("c");
+
+        tester.assertStructure("""
+            a
+            b
+            [c]
+            """);
+        assertThat(tree.getSelectedNodes()).extracting(TreeNode::getValue).containsExactly("c");
+    }
+
+    @Test
+    public void turningMultipleSelectOffKeepsTheLead(Application application) {
+        MapTreeModel model = new MapTreeModel().put(ROOT, "a", "b", "c");
+        TreeTester<String> tester = show(application, model);
+        Tree<String> tree = tester.getTree();
+        tree.setAllowMultipleSelect(true);
+
+        tester.userSelect("c");
+        tester.userAddToSelection("a");
+        tree.setAllowMultipleSelect(false);
+
+        tester.assertStructure("""
+            [a]
+            b
+            c
+            """);
+        assertThat(tree.getSelectedNodes()).extracting(TreeNode::getValue).containsExactly("a");
+    }
+
+    @Test
+    public void programmaticSelectReplacesAMultipleSelection(Application application) {
+        MapTreeModel model = new MapTreeModel().put(ROOT, "a", "b", "c");
+        TreeTester<String> tester = show(application, model);
+        Tree<String> tree = tester.getTree();
+        tree.setAllowMultipleSelect(true);
+
+        tester.userSelect("a");
+        tester.userAddToSelection("c");
+        tree.select(tester.node("b"));
+
+        tester.assertStructure("""
+            a
+            [b]
+            c
+            """);
+        assertThat(tree.getSelectedNodes()).extracting(TreeNode::getValue).containsExactly("b");
+    }
+
+    @Test
+    public void removedNodesLeaveTheMultipleSelection(Application application) {
+        MapTreeModel model = new MapTreeModel().put(ROOT, "a", "b", "c");
+        TreeTester<String> tester = show(application, model);
+        Tree<String> tree = tester.getTree();
+        tree.setAllowMultipleSelect(true);
+
+        tester.userSelect("a");
+        tester.userAddToSelection("c");
+
+        model.put(ROOT, "a", "b");
+        tree.refreshAll();
+
+        tester.assertStructure("""
+            [a]
+            b
+            """);
+        assertThat(tree.getSelectedNodes()).extracting(TreeNode::getValue).containsExactly("a");
     }
 }

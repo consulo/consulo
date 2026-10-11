@@ -19,22 +19,21 @@ import consulo.content.ContentFolderTypeProvider;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.ContentEntryEditor;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.ContentEntryTreeEditor;
 import consulo.module.content.layer.ContentFolder;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.swing.*;
+import java.util.List;
 
 /**
  * @author Eugene Zhuravlev
  * @since 2003-10-14
  */
 public class ToggleFolderStateAction extends ContentEntryEditingAction {
-    private final ContentEntryTreeEditor myEntryTreeEditor;
     private final ContentFolderTypeProvider myContentFolderType;
 
-    public ToggleFolderStateAction(JTree tree, ContentEntryTreeEditor entryEditor, ContentFolderTypeProvider contentFolderType) {
-        super(tree, contentFolderType.getName(), contentFolderType.getIcon());
-        myEntryTreeEditor = entryEditor;
+    public ToggleFolderStateAction(ContentEntryTreeEditor treeEditor, ContentFolderTypeProvider contentFolderType) {
+        super(treeEditor, contentFolderType.getName(), contentFolderType.getIcon());
         myContentFolderType = contentFolderType;
     }
 
@@ -44,42 +43,27 @@ public class ToggleFolderStateAction extends ContentEntryEditingAction {
     }
 
     @Override
+    @RequiredUIAccess
     public boolean isSelected(AnActionEvent e) {
-        VirtualFile[] selectedFiles = getSelectedFiles();
-        if (selectedFiles.length == 0) {
+        List<VirtualFile> selectedFiles = getSelectedFiles();
+        ContentEntryEditor editor = myTreeEditor.getContentEntryEditor();
+        if (selectedFiles.isEmpty() || editor == null) {
             return false;
         }
 
-        ContentEntryEditor editor = myEntryTreeEditor.getContentEntryEditor();
-        ContentFolder folder = editor.getFolder(selectedFiles[0]);
-        return folder != null && folder.getType() == myContentFolderType;
+        ContentFolder folder = editor.getFolder(selectedFiles.get(0));
+        return folder != null && myContentFolderType.equals(folder.getType());
     }
 
     @Override
+    @RequiredUIAccess
     public void setSelected(AnActionEvent e, boolean isSelected) {
-        VirtualFile[] selectedFiles = getSelectedFiles();
-        assert selectedFiles.length != 0;
-
-        ContentEntryEditor contentEntryEditor = myEntryTreeEditor.getContentEntryEditor();
-        for (VirtualFile selectedFile : selectedFiles) {
-            ContentFolder contentFolder = contentEntryEditor.getFolder(selectedFile);
-            if (isSelected) {
-                if (contentFolder == null) { // not marked yet
-                    contentEntryEditor.addFolder(selectedFile, myContentFolderType);
-                }
-                else {
-                    if (myContentFolderType.equals(contentFolder.getType())) {
-
-                        contentEntryEditor.removeFolder(contentFolder);
-                        contentEntryEditor.addFolder(selectedFile, myContentFolderType);
-                    }
-                }
-            }
-            else {
-                if (contentFolder != null) { // already marked
-                    contentEntryEditor.removeFolder(contentFolder);
-                }
-            }
+        List<VirtualFile> selectedFiles = getSelectedFiles();
+        ContentEntryEditor editor = myTreeEditor.getContentEntryEditor();
+        if (selectedFiles.isEmpty() || editor == null) {
+            return;
         }
+
+        editor.setFolderType(selectedFiles, isSelected ? myContentFolderType : null);
     }
 }

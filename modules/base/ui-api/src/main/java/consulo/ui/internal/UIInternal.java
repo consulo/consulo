@@ -56,6 +56,7 @@ import consulo.ui.event.ComponentEvent;
 import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.concurrent.coroutine.CoroutineContext;
 import consulo.util.concurrent.coroutine.CoroutineScope;
+import consulo.ui.layout.Layout;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -184,6 +185,14 @@ public abstract class UIInternal {
     }
 
     public <E> TreeTable<E> _Components_treeTable(@Nullable E rootValue, TreeModel<E> model, TreeExecutor executor) {
+        throw new UnsupportedOperationException();
+    }
+
+    public <E> CheckBoxTree<E> _Components_checkBoxTree(@Nullable E rootValue, TreeModel<E> model, TreeExecutor executor) {
+        throw new UnsupportedOperationException();
+    }
+
+    public <E> CheckBoxTreeTable<E> _Components_checkBoxTreeTable(@Nullable E rootValue, TreeModel<E> model, TreeExecutor executor) {
         throw new UnsupportedOperationException();
     }
 
@@ -390,6 +399,10 @@ public abstract class UIInternal {
     }
 
     public PopupMenu _PopupMenu_create(Component target) {
+        throw new UnsupportedOperationException();
+    }
+
+    public Spotlight _Spotlight_over(Layout<?> layout) {
         throw new UnsupportedOperationException();
     }
 

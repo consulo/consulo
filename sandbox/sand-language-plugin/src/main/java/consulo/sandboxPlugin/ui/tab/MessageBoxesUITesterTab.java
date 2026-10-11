@@ -38,7 +38,7 @@ import java.util.concurrent.TimeUnit;
  * @author VISTALL
  * @since 2026-10-03
  */
-@ExtensionImpl(id = "messageBoxes", order = "after treeTable")
+@ExtensionImpl(id = "messageBoxes", order = "after checkBoxTree")
 public class MessageBoxesUITesterTab implements UITesterTab {
     private static final class SandRemember implements MessageBoxRemember<Boolean> {
         private @Nullable Boolean myValue;

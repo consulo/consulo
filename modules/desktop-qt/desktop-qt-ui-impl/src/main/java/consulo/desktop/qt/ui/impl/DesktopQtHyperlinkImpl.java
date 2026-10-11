@@ -22,6 +22,8 @@ import consulo.ui.Hyperlink;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.HyperlinkEvent;
 import consulo.ui.image.Image;
+import consulo.ui.internal.SearchHighlightUtil;
+import consulo.util.lang.xml.XmlStringUtil;
 import io.qt.core.Qt;
 import io.qt.widgets.QHBoxLayout;
 import io.qt.widgets.QLabel;
@@ -36,6 +38,7 @@ import org.jspecify.annotations.Nullable;
 public class DesktopQtHyperlinkImpl extends QtComponentDelegate<QWidget> implements Hyperlink, DesktopQtIconOwner {
     private LocalizeValue myText = LocalizeValue.empty();
     private @Nullable Image myIcon;
+    private @Nullable String mySearchHighlight;
 
     private @Nullable DesktopQtImageWidget myIconLabel;
     private @Nullable QLabel myTextLabel;
@@ -80,7 +83,9 @@ public class DesktopQtHyperlinkImpl extends QtComponentDelegate<QWidget> impleme
     }
 
     private String buildHtml() {
-        return "<a href=\"click\">" + QtMnemonic.plain(myText) + "</a>";
+        String text = QtMnemonic.plain(myText);
+        String highlighted = DesktopQtSearchHighlight.toRichText(text, mySearchHighlight);
+        return "<a href=\"click\">" + (highlighted == null ? XmlStringUtil.escapeText(text) : highlighted) + "</a>";
     }
 
     @Override
@@ -96,6 +101,21 @@ public class DesktopQtHyperlinkImpl extends QtComponentDelegate<QWidget> impleme
         if (myTextLabel != null) {
             myTextLabel.setText(buildHtml());
         }
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setSearchHighlight(@Nullable String query) {
+        mySearchHighlight = SearchHighlightUtil.normalizeQuery(query);
+
+        if (myTextLabel != null) {
+            myTextLabel.setText(buildHtml());
+        }
+    }
+
+    @Override
+    public @Nullable String getSearchHighlight() {
+        return mySearchHighlight;
     }
 
     @Override

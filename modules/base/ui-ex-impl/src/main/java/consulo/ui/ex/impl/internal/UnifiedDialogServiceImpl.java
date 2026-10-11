@@ -17,15 +17,23 @@ package consulo.ui.ex.impl.internal;
 
 import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.ApplicationPropertiesComponent;
 import consulo.dataContext.DataContext;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
+import consulo.ui.Button;
+import consulo.ui.ButtonStyle;
 import consulo.ui.Component;
+import consulo.ui.HasFocus;
+import consulo.ui.Space;
+import consulo.ui.UIAccess;
 import consulo.ui.WidthAndHeight;
 import consulo.ui.Window;
 import consulo.ui.WindowOptions;
 import consulo.ui.WindowOwner;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.details.KeyCode;
+import consulo.ui.event.details.KeyboardInputDetails;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.action.AnAction;
@@ -36,6 +44,9 @@ import consulo.ui.ex.dialog.DialogValue;
 import consulo.ui.ex.dialog.action.DialogCancelAction;
 import consulo.ui.ex.impl.internal.action.UnifiedActionToolbarImpl;
 import consulo.ui.layout.DockLayout;
+import consulo.ui.layout.SplitLayoutPosition;
+import consulo.ui.layout.TwoComponentSplitLayout;
+import consulo.ui.ex.dialog.WholeLeftDialogDescriptor;
 import jakarta.inject.Singleton;
 import org.jspecify.annotations.Nullable;
 
@@ -57,15 +68,25 @@ public class UnifiedDialogServiceImpl implements DialogService {
     private static class DialogImpl implements Dialog {
         private static final String PLACE = "DialogRightButtons";
 
+        private static final Space CONTENT_VERTICAL_PADDING = Space.MEDIUM;
+        private static final Space CONTENT_HORIZONTAL_PADDING = Space.LARGE;
+
+        private static final int LEFT_PROPORTION = 30;
+
         private final DialogDescriptor myDescriptor;
         private final Window myWindow;
 
         private final CompletableFuture<DialogValue> myResult = new CompletableFuture<>();
 
+        private @Nullable Button myDefaultButton;
+
         private DialogImpl(DialogDescriptor descriptor, @Nullable Window owner) {
             myDescriptor = descriptor;
 
-            WindowOptions options = WindowOptions.builder().owner(owner).build();
+            WindowOptions options = WindowOptions.builder()
+                .owner(owner)
+                .dimensionKey(descriptor.getDimensionServiceKey())
+                .build();
 
             myWindow = Window.create(descriptor.getTitle().get(), options);
         }
@@ -110,29 +131,112 @@ public class UnifiedDialogServiceImpl implements DialogService {
                 throw e;
             }
 
+            if (myDescriptor.getPreferredFocusedComponent() instanceof HasFocus focusTarget) {
+                focusTarget.focus();
+            }
+
             return myResult;
         }
 
         @RequiredUIAccess
         private Component buildContent() {
-            DockLayout root = DockLayout.create();
+
+            DockLayout main = DockLayout.create();
             // the window is disposed when it closes, so anything the center component registers against it lives
             // exactly as long as the dialog does
-            root.center(myDescriptor.createCenterComponent(myWindow));
+            main.center(myDescriptor.createCenterComponent(myWindow));
 
             AnAction[] actions = myDescriptor.createActions(Platform.current().os().isMac());
             if (actions.length != 0) {
-                root.bottom(buildButtons(actions));
+                main.bottom(buildButtons(actions));
             }
 
+            if (myDescriptor.hasDefaultContentBorder()) {
+                main.paddingBuilder()
+                    .topSet(CONTENT_VERTICAL_PADDING)
+                    .bottomSet(CONTENT_VERTICAL_PADDING)
+                    .leftSet(CONTENT_HORIZONTAL_PADDING)
+                    .rightSet(CONTENT_HORIZONTAL_PADDING)
+                    .apply();
+            }
+
+            Component root = myDescriptor instanceof WholeLeftDialogDescriptor wholeLeft
+                ? buildWholeLeft(wholeLeft, wholeLeft.createLeftComponent(myWindow), main)
+                : main;
+
+            installDefaultActionKey(root);
+
             return root;
+        }
+
+        @RequiredUIAccess
+        private Component buildWholeLeft(WholeLeftDialogDescriptor descriptor, Component left, Component main) {
+            TwoComponentSplitLayout split = TwoComponentSplitLayout.create(SplitLayoutPosition.HORIZONTAL);
+            split.setFirstComponent(left);
+            split.setSecondComponent(main);
+
+            String splitterKey = descriptor.getLeftSplitterKey();
+            if (splitterKey == null) {
+                split.setProportion(LEFT_PROPORTION);
+            }
+            else {
+                ApplicationPropertiesComponent properties = ApplicationPropertiesComponent.getInstance();
+                split.setProportion(loadLeftProportion(properties, splitterKey));
+                split.addSplitProportionChangedListener(event -> saveLeftProportion(properties, splitterKey, event.getProportion()));
+            }
+            return split;
+        }
+
+        private static int loadLeftProportion(ApplicationPropertiesComponent properties, String splitterKey) {
+            int percent = Math.round(properties.getFloat(splitterKey, LEFT_PROPORTION / 100f) * 100);
+            return percent <= 0 || percent >= 100 ? LEFT_PROPORTION : percent;
+        }
+
+        private static void saveLeftProportion(ApplicationPropertiesComponent properties, String splitterKey, int percent) {
+            if (percent <= 0 || percent >= 100) {
+                return;
+            }
+
+            properties.setValue(splitterKey, percent / 100f, LEFT_PROPORTION / 100f);
+        }
+
+        @RequiredUIAccess
+        private void installDefaultActionKey(Component root) {
+            UIAccess uiAccess = UIAccess.current();
+            root.addKeyPressedListener(event -> {
+                if (!(event.getInputDetails() instanceof KeyboardInputDetails details)
+                    || details.getKeyCode() != KeyCode.ENTER
+                    || !details.getModifiers().isEmpty()) {
+                    return;
+                }
+
+                Button defaultButton = myDefaultButton;
+                if (defaultButton == null || !defaultButton.isEnabled()) {
+                    return;
+                }
+
+                uiAccess.execute(() -> {
+                    if (!myResult.isDone() && defaultButton.isEnabled()) {
+                        defaultButton.invoke(details);
+                    }
+                });
+            });
         }
 
         @RequiredUIAccess
         private Component buildButtons(AnAction[] actions) {
             ActionGroup group = ActionGroup.newImmutableBuilder().addAll(actions).build();
 
-            UnifiedActionToolbarImpl toolbar = new UnifiedActionToolbarImpl(PLACE, group, ActionToolbar.Style.BUTTON);
+            UnifiedActionToolbarImpl toolbar = new UnifiedActionToolbarImpl(PLACE, group, ActionToolbar.Style.BUTTON) {
+                @Override
+                @RequiredUIAccess
+                protected void tweakActionComponentUI(AnAction action, Component component) {
+                    if (myDescriptor.isDefaultAction(action) && component instanceof Button button) {
+                        button.addStyle(ButtonStyle.PRIMARY);
+                        myDefaultButton = button;
+                    }
+                }
+            };
             toolbar.setDataContextProvider(() -> DataContext.builder().add(Dialog.KEY, this).build());
 
             myDescriptor.setOkButtonStateUpdater(toolbar::updateActionsAsync);
@@ -140,7 +244,23 @@ public class UnifiedDialogServiceImpl implements DialogService {
             toolbar.updateActionsAsync();
 
             DockLayout buttons = DockLayout.create();
+
+            if (myDescriptor.hasHelp()) {
+                buttons.left(DialogHelpButton.create(myDescriptor));
+            }
+
             buttons.right(toolbar.getUIComponent());
+
+            buttons.paddingBuilder()
+                .topSet(CONTENT_VERTICAL_PADDING)
+                .bottomSet(CONTENT_VERTICAL_PADDING)
+                .leftSet(CONTENT_HORIZONTAL_PADDING)
+                .rightSet(CONTENT_HORIZONTAL_PADDING)
+                .apply();
+
+            if (myDescriptor.hasBorderAtButtonLayout()) {
+                buttons.borderBuilder().topSet().apply();
+            }
             return buttons;
         }
 

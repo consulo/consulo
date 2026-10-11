@@ -30,9 +30,12 @@ import consulo.ui.event.ClickEvent;
 import consulo.ui.event.ComponentEvent;
 import consulo.ui.event.ComponentEventListener;
 import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
+import consulo.ui.style.ComponentColors;
 import consulo.ui.impl.UIDataObject;
 import consulo.util.dataholder.Key;
 import io.qt.gui.QAction;
+import io.qt.gui.QIcon;
 import io.qt.widgets.QWidget;
 import org.jspecify.annotations.Nullable;
 
@@ -43,6 +46,8 @@ import java.util.Objects;
  * @since 2026-08-16
  */
 public class DesktopQtMenuItemImpl implements MenuItem, DesktopQtIconOwner {
+    private static final int POPPED_ARC = 4;
+
     protected final UIDataObject myDataObject = new UIDataObject();
 
     protected @Nullable QAction myAction;
@@ -118,14 +123,39 @@ public class DesktopQtMenuItemImpl implements MenuItem, DesktopQtIconOwner {
         action.setEnabled(myEnabled);
         action.setVisible(myVisible);
 
-        action.setIcon(DesktopQtLiveIconEngine.toQIcon(myIcon, animationHost));
-
-        action.setCheckable(myChecked != null);
-        if (myChecked != null) {
-            action.setChecked(myChecked);
+        if (myChecked != null && myIcon == null) {
+            action.setIcon(myChecked ? DesktopQtMenuCheckMark.create(action.parent() instanceof QWidget widget ? widget : null) : new QIcon());
+        }
+        else {
+            action.setIcon(DesktopQtLiveIconEngine.toQIcon(displayIcon(), animationHost));
         }
 
         action.setToolTip(QtToolTipMarkup.toText(myToolTip));
+    }
+
+    private @Nullable Image displayIcon() {
+        Image icon = myIcon;
+        if (icon == null || !Boolean.TRUE.equals(myChecked)) {
+            return icon;
+        }
+        return popped(icon);
+    }
+
+    private static Image popped(Image icon) {
+        int width = icon.getWidth();
+        int height = icon.getHeight();
+
+        Image frame = ImageEffects.canvas(width, height, canvas -> {
+            canvas.setFillStyle(ComponentColors.TOOL_WINDOW_BUTTON_SELECTED_BACKGROUND);
+            canvas.roundRect(0, 0, width, height, POPPED_ARC);
+            canvas.fill();
+
+            canvas.setStrokeStyle(ComponentColors.BORDER);
+            canvas.roundRect(0, 0, width - 1, height - 1, POPPED_ARC);
+            canvas.stroke();
+        });
+
+        return ImageEffects.layered(frame, icon);
     }
 
     @Override

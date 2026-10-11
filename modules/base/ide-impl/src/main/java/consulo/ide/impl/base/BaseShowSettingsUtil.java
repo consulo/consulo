@@ -21,11 +21,13 @@ import consulo.configurable.ConfigurationException;
 import consulo.configurable.ProjectConfigurable;
 import consulo.configurable.internal.ConfigurableExtensionPointUtil;
 import consulo.configurable.internal.ConfigurableWrapper;
+import consulo.disposer.Disposable;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.localize.LocalizeKey;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ContainerUtil;
 import org.jspecify.annotations.Nullable;
@@ -38,6 +40,12 @@ import java.util.List;
  */
 public abstract class BaseShowSettingsUtil extends ShowSettingsUtil {
     public static Configurable SKIP_SELECTION_CONFIGURATION = new Configurable() {
+        @RequiredUIAccess
+        @Override
+        public @Nullable Component createUIComponent(Disposable parentDisposable) {
+            return null;
+        }
+
         @RequiredUIAccess
         @Override
         public boolean isModified() {

@@ -23,5 +23,9 @@ public enum ButtonStyle implements ComponentStyle {
     PRIMARY,
     BORDERLESS,
     INPLACE,
-    TOOLBAR
+    TOOLBAR,
+    /**
+     * The button that opens help for the surrounding window, drawn the way the platform draws help buttons.
+     */
+    HELP
 }

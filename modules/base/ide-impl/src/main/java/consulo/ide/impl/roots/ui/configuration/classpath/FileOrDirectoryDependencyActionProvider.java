@@ -16,18 +16,16 @@
 package consulo.ide.impl.roots.ui.configuration.classpath;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.AllIcons;
-import consulo.fileChooser.FileChooser;
-import consulo.fileChooser.FileChooserDescriptor;
 import consulo.ide.setting.module.AddModuleDependencyActionProvider;
 import consulo.ide.setting.module.ClasspathPanel;
 import consulo.ide.setting.module.LibrariesConfigurator;
 import consulo.ide.setting.module.ModulesConfigurator;
 import consulo.localize.LocalizeValue;
 import consulo.module.content.layer.ModuleRootLayer;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.project.localize.ProjectLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
-import consulo.virtualFileSystem.VirtualFile;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -36,37 +34,35 @@ import java.util.concurrent.CompletableFuture;
  * @since 27.09.14
  */
 @ExtensionImpl
-public class FileOrDirectoryDependencyActionProvider implements AddModuleDependencyActionProvider<VirtualFile[], FileOrDirectoryDependencyContext> {
-  @Override
-  public boolean isAvailable(FileOrDirectoryDependencyContext context) {
-    return true;
-  }
+public class FileOrDirectoryDependencyActionProvider
+    implements AddModuleDependencyActionProvider<FileOrDirectoryDependencyRoots, FileOrDirectoryDependencyContext> {
+    @Override
+    public boolean isAvailable(FileOrDirectoryDependencyContext context) {
+        return true;
+    }
 
-  @Override
-  public FileOrDirectoryDependencyContext createContext(ClasspathPanel classpathPanel,
-                                                        ModulesConfigurator modulesConfigurator,
-                                                        LibrariesConfigurator librariesConfigurator) {
-    return new FileOrDirectoryDependencyContext(classpathPanel, modulesConfigurator, librariesConfigurator);
-  }
+    @Override
+    public FileOrDirectoryDependencyContext createContext(
+        ClasspathPanel classpathPanel,
+        ModulesConfigurator modulesConfigurator,
+        LibrariesConfigurator librariesConfigurator
+    ) {
+        return new FileOrDirectoryDependencyContext(classpathPanel, modulesConfigurator, librariesConfigurator);
+    }
 
-  
-  @Override
-  public LocalizeValue getActionName(ModuleRootLayer layer) {
-    return LocalizeValue.localizeTODO("File or Directory");
-  }
+    @Override
+    public LocalizeValue getActionName(ModuleRootLayer layer) {
+        return ProjectLocalize.classpathAddSimpleModuleLibraryAction();
+    }
 
-  
-  @Override
-  public Image getIcon(ModuleRootLayer layer) {
-    return AllIcons.Nodes.Folder;
-  }
+    @Override
+    public Image getIcon(ModuleRootLayer layer) {
+        return PlatformIconGroup.nodesFolder();
+    }
 
-  @RequiredUIAccess
-  
-  @Override
-  public CompletableFuture<VirtualFile[]> invoke(FileOrDirectoryDependencyContext context) {
-    FileChooserDescriptor descriptor = context.getFileChooserDescriptor();
-    ClasspathPanel classpathPanel = context.getClasspathPanel();
-    return FileChooser.chooseFiles(descriptor, classpathPanel.getComponent(), context.getProject(), classpathPanel.getRootModel().getModule().getModuleDir());
-  }
+    @RequiredUIAccess
+    @Override
+    public CompletableFuture<FileOrDirectoryDependencyRoots> invoke(FileOrDirectoryDependencyContext context) {
+        return context.chooseRoots();
+    }
 }

@@ -19,15 +19,15 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.configurable.*;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.webBrowser.WebBrowser;
 import consulo.webBrowser.WebSearchOptions;
 import consulo.webBrowser.localize.WebBrowserLocalize;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
-
-import javax.swing.*;
 
 @ExtensionImpl
 public class BrowserSettings implements ApplicationConfigurable, SearchableConfigurable, Configurable.NoScroll {
@@ -59,11 +59,11 @@ public class BrowserSettings implements ApplicationConfigurable, SearchableConfi
 
   @RequiredUIAccess
   @Override
-  public JComponent createComponent(Disposable uiDisposable) {
+  public Component createUIComponent(Disposable uiDisposable) {
     if (myPanel == null) {
       myPanel = new BrowserSettingsPanel(myWebSearchOptionsProvider, uiDisposable);
     }
-    return myPanel.getComponent();
+    return TargetAWT.wrap(myPanel.getComponent());
   }
 
   @RequiredUIAccess

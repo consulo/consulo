@@ -60,12 +60,17 @@ public class UnifiedActionToolbarImpl implements ActionToolbar {
             myPresentationFactory,
             style
         );
+        myRow.setComponentTweaker(this::tweakActionComponentUI);
 
         // a toolbar is a band of its own and must not sit flush against what stands around it, while an inplace
         // row is a part of the widget it belongs to - awt drops the border of its toolbar in the very same case
         if (style != Style.INPLACE) {
             myRow.getComponent().paddingBuilder().allSet(PADDING).apply();
         }
+    }
+
+    @RequiredUIAccess
+    protected void tweakActionComponentUI(AnAction action, Component component) {
     }
 
     @Override

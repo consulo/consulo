@@ -27,6 +27,7 @@ import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.function.Consumer;
 
 /**
  * @author VISTALL
@@ -69,6 +70,8 @@ public class DesktopWrappedLayoutImpl extends SwingComponentDelegate<JPanel> imp
         }
     }
 
+    private @Nullable Component myComponent;
+
     public DesktopWrappedLayoutImpl() {
     }
 
@@ -82,6 +85,7 @@ public class DesktopWrappedLayoutImpl extends SwingComponentDelegate<JPanel> imp
     @Override
     @RequiredUIAccess
     public WrappedLayout set(@Nullable Component component) {
+        myComponent = component;
         setContent(component == null ? null : (JComponent) TargetAWT.to(component));
         return this;
     }
@@ -98,6 +102,11 @@ public class DesktopWrappedLayoutImpl extends SwingComponentDelegate<JPanel> imp
             component.add(wrapped, BorderLayout.CENTER);
         }
         component.validate();
+    }
+
+    @Override
+    public void forEachChild(@RequiredUIAccess Consumer<Component> consumer) {
+        DesktopLayoutChildren.acceptAll(consumer, myComponent);
     }
 
     public JComponent getTargetComponent() {

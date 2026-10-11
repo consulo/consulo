@@ -21,7 +21,11 @@ import consulo.ui.ButtonStyle;
 import consulo.ui.event.ClickEvent;
 import consulo.ui.event.details.InputDetails;
 import consulo.ui.image.Image;
+import consulo.ui.internal.SearchHighlightUtil;
 import org.jspecify.annotations.Nullable;
+
+import java.util.EnumSet;
+import java.util.Set;
 
 /**
  * Dummy-but-creatable headless {@link Button}. {@link #invoke} dispatches the click to the registered listeners the
@@ -30,8 +34,12 @@ import org.jspecify.annotations.Nullable;
  * @author VISTALL
  */
 public class HeadlessButton extends HeadlessComponentBase implements Button {
+    private @Nullable String mySearchHighlight;
+
     private LocalizeValue myText;
     private @Nullable Image myImage;
+
+    private final Set<ButtonStyle> myStyles = EnumSet.noneOf(ButtonStyle.class);
 
     public HeadlessButton(LocalizeValue text) {
         myText = text;
@@ -82,5 +90,20 @@ public class HeadlessButton extends HeadlessComponentBase implements Button {
 
     @Override
     public void addStyle(ButtonStyle style) {
+        myStyles.add(style);
+    }
+
+    public boolean hasStyle(ButtonStyle style) {
+        return myStyles.contains(style);
+    }
+
+    @Override
+    public void setSearchHighlight(@Nullable String query) {
+        mySearchHighlight = SearchHighlightUtil.normalizeQuery(query);
+    }
+
+    @Override
+    public @Nullable String getSearchHighlight() {
+        return mySearchHighlight;
     }
 }

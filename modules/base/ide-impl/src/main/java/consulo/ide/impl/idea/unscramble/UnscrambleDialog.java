@@ -20,7 +20,6 @@ import consulo.application.ApplicationPropertiesComponent;
 import consulo.application.HelpManager;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.UnnamedConfigurable;
-import consulo.configurable.internal.ConfigurableUIMigrationUtil;
 import consulo.execution.icon.ExecutionIconGroup;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.execution.unscramble.*;
@@ -148,7 +147,7 @@ public class UnscrambleDialog extends DialogWrapper {
             UnnamedConfigurable configurable = unscrambleDialogOptionProvider.createConfigurable();
 
             if (configurable != null) {
-                JComponent component = ConfigurableUIMigrationUtil.createComponent(configurable, getDisposable());
+                JComponent component = (JComponent) TargetAWT.to(configurable.createUIComponent(getDisposable()));
                 bottomPanel.add(component);
                 configurable.reset();
 

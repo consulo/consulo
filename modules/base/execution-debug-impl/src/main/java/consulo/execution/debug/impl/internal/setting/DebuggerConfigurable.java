@@ -17,7 +17,6 @@ package consulo.execution.debug.impl.internal.setting;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.configurable.*;
-import consulo.configurable.internal.ConfigurableUIMigrationUtil;
 import consulo.disposer.Disposable;
 import consulo.execution.debug.breakpoint.XBreakpointType;
 import consulo.execution.debug.localize.XDebuggerLocalize;
@@ -29,7 +28,6 @@ import consulo.util.collection.SmartList;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -164,13 +162,6 @@ public class DebuggerConfigurable implements SearchableConfigurable.Parent, Appl
     @Override
     public boolean isVisible() {
         return XBreakpointType.EXTENSION_POINT_NAME.hasAnyExtensions();
-    }
-
-    @Override
-    @RequiredUIAccess
-    public JComponent createComponent(Disposable parent) {
-        compute();
-        return myRootConfigurable != null ? ConfigurableUIMigrationUtil.createComponent(myRootConfigurable, parent) : null;
     }
 
     @Override

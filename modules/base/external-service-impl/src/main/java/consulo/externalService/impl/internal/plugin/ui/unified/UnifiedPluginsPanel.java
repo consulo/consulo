@@ -58,8 +58,8 @@ public class UnifiedPluginsPanel implements Disposable {
         myInstalledTab = new UnifiedInstalledPluginsTab();
         Disposer.register(this, myInstalledTab);
 
-        myTabbedLayout.addTab(LocalizeValue.localizeTODO("Repository").get(), myRepositoryTab.getComponent());
-        myInstalledTabItem = myTabbedLayout.addTab(LocalizeValue.localizeTODO("Installed").get(), myInstalledTab.getComponent());
+        myTabbedLayout.addTab(LocalizeValue.localizeTODO("Repository"), myRepositoryTab.getComponent());
+        myInstalledTabItem = myTabbedLayout.addTab(LocalizeValue.localizeTODO("Installed"), myInstalledTab.getComponent());
 
         // a plugin installed from the repository tab is only in the state of the session, so the installed list
         // is rebuilt as it is shown rather than left as it was when the dialog opened

@@ -18,13 +18,13 @@ package consulo.versionControlSystem.ui;
 import consulo.application.HelpManager;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.UnnamedConfigurable;
-import consulo.configurable.internal.ConfigurableUIMigrationUtil;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.JBTabbedPane;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.OptionsDialog;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import org.jspecify.annotations.Nullable;
@@ -83,7 +83,7 @@ public abstract class UpdateOrStatusOptionsDialog extends OptionsDialog {
     @RequiredUIAccess
     private void addComponent(AbstractVcs vcs, UnnamedConfigurable configurable, String constraint) {
         myEnvToConfMap.put(vcs, configurable);
-        myMainPanel.add(ConfigurableUIMigrationUtil.createComponent(configurable, getDisposable()), constraint);
+        myMainPanel.add(TargetAWT.to(configurable.createUIComponent(getDisposable())), constraint);
         configurable.reset();
     }
 

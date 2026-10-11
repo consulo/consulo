@@ -18,10 +18,9 @@ package consulo.ide.impl.idea.openapi.roots.libraries.ui;
 import consulo.language.editor.LangDataKeys;
 import consulo.content.library.ui.AttachRootButtonDescriptor;
 import consulo.dataContext.DataContext;
-import consulo.fileChooser.IdeaFileChooser;
+import consulo.fileChooser.FileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
-import consulo.localization.LocalizedValue;
 import consulo.localize.LocalizeValue;
 import consulo.module.Module;
 import consulo.content.OrderRootType;
@@ -29,7 +28,10 @@ import consulo.content.library.ui.LibraryEditor;
 import consulo.virtualFileSystem.VirtualFile;
 
 import org.jspecify.annotations.Nullable;
-import javax.swing.*;
+import consulo.ui.Component;
+import consulo.ui.annotation.RequiredUIAccess;
+
+import java.util.concurrent.CompletableFuture;
 
 /**
 * @author nik
@@ -47,8 +49,11 @@ public abstract class ChooserBasedAttachRootButtonDescriptor extends AttachRootB
   public abstract String getChooserDescription();
 
   @Override
-  public VirtualFile[] selectFiles(JComponent parent, @Nullable VirtualFile initialSelection,
-                                   DataContext dataContext, LibraryEditor libraryEditor) {
+  @RequiredUIAccess
+  public CompletableFuture<VirtualFile[]> selectFiles(@Nullable Component parent,
+                                                     @Nullable VirtualFile initialSelection,
+                                                     DataContext dataContext,
+                                                     LibraryEditor libraryEditor) {
     FileChooserDescriptor chooserDescriptor = createChooserDescriptor();
     chooserDescriptor.setTitle(getChooserTitle(libraryEditor.getName()));
     chooserDescriptor.setDescription(getChooserDescription());
@@ -56,6 +61,6 @@ public abstract class ChooserBasedAttachRootButtonDescriptor extends AttachRootB
     if (contextModule != null) {
       chooserDescriptor.putUserData(LangDataKeys.MODULE_CONTEXT, contextModule);
     }
-    return IdeaFileChooser.chooseFiles(chooserDescriptor, parent, contextModule != null ? contextModule.getProject() : null, initialSelection);
+    return FileChooser.chooseFiles(chooserDescriptor, contextModule != null ? contextModule.getProject() : null, initialSelection);
   }
 }

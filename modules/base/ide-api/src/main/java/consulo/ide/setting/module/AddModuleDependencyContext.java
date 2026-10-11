@@ -18,6 +18,7 @@ package consulo.ide.setting.module;
 import consulo.module.content.layer.ModifiableModuleRootLayer;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,6 +62,7 @@ public abstract class AddModuleDependencyContext<T> {
     return myClasspathPanel.getProject();
   }
 
+  @RequiredUIAccess
   public final void processAddOrderEntries(T value) {
     ModifiableModuleRootLayer currentLayer = (ModifiableModuleRootLayer)myClasspathPanel.getRootModel().getCurrentLayer();
 

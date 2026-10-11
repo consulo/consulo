@@ -18,6 +18,8 @@ package consulo.it.internal.ui;
 import consulo.localize.LocalizeValue;
 import consulo.ui.CheckBox;
 import consulo.ui.CheckBoxStyle;
+import consulo.ui.internal.SearchHighlightUtil;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Dummy-but-creatable headless {@link CheckBox}.
@@ -25,6 +27,8 @@ import consulo.ui.CheckBoxStyle;
  * @author VISTALL
  */
 public class HeadlessCheckBox extends HeadlessBooleanValueComponentBase implements CheckBox {
+    private @Nullable String mySearchHighlight;
+
     private LocalizeValue myLabelText = LocalizeValue.empty();
 
     public HeadlessCheckBox() {
@@ -61,5 +65,15 @@ public class HeadlessCheckBox extends HeadlessBooleanValueComponentBase implemen
 
     @Override
     public void addStyle(CheckBoxStyle style) {
+    }
+
+    @Override
+    public void setSearchHighlight(@Nullable String query) {
+        mySearchHighlight = SearchHighlightUtil.normalizeQuery(query);
+    }
+
+    @Override
+    public @Nullable String getSearchHighlight() {
+        return mySearchHighlight;
     }
 }

@@ -59,6 +59,7 @@ import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.ui.ex.awt.tree.SmartExpander;
 import consulo.ui.ex.awt.tree.Tree;
 import consulo.ui.ex.awt.tree.TreeUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.usage.localize.UsageLocalize;
@@ -652,7 +653,7 @@ public class DependenciesPanel extends JPanel implements Disposable, UiDataProvi
         @RequiredUIAccess
         public void actionPerformed(AnActionEvent e) {
             ShowSettingsUtil.getInstance()
-                .editConfigurable(DependenciesPanel.this, new DependencyConfigurable(myProject))
+                .editConfigurable(TargetAWT.wrap(DependenciesPanel.this), new DependencyConfigurable(myProject))
                 .whenComplete((value, error) -> {
                     if (error == null) {
                         DependenciesPanel.this.rebuild();

@@ -15,54 +15,82 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts;
 
-import consulo.application.Application;
 import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ArtifactType;
-import consulo.compiler.artifact.element.*;
+import consulo.compiler.artifact.ArtifactUtil;
+import consulo.compiler.artifact.element.ArtifactRootElement;
+import consulo.compiler.artifact.element.ComplexPackagingElement;
+import consulo.compiler.artifact.element.CompositePackagingElement;
+import consulo.compiler.artifact.element.DirectoryPackagingElement;
+import consulo.compiler.artifact.element.PackagingElement;
+import consulo.compiler.artifact.element.PackagingElementFactory;
+import consulo.compiler.artifact.element.PackagingElementType;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import consulo.compiler.artifact.ui.PackagingElementPropertiesPanel;
 import consulo.compiler.artifact.ui.PackagingSourceItem;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.nodes.ArtifactRootNode;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.nodes.PackagingElementNode;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.nodes.PackagingNodeSource;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.nodes.PackagingTreeNodeFactory;
+import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceItems.SourceItemsTree;
+import consulo.localize.LocalizeValue;
+import consulo.project.localize.ProjectLocalize;
+import consulo.ui.Component;
+import consulo.ui.DragAndDropTransferHandler;
+import consulo.ui.MessageBoxes;
+import consulo.ui.Space;
+import consulo.ui.Tree;
+import consulo.ui.TreeExecutor;
+import consulo.ui.TreeModel;
+import consulo.ui.TreeNode;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.*;
-import consulo.ui.ex.awt.dnd.DnDEvent;
-import consulo.ui.ex.awt.dnd.DnDManager;
-import consulo.ui.ex.awt.dnd.DnDTarget;
-import consulo.ui.ex.awt.tree.*;
-import consulo.util.collection.ArrayUtil;
-import consulo.util.collection.ContainerUtil;
-import consulo.util.lang.Comparing;
+import consulo.ui.clipboard.DataTransfer;
+import consulo.ui.clipboard.DataTransferType;
+import consulo.ui.layout.DockLayout;
+import consulo.ui.layout.ScrollableLayout;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
-import org.jetbrains.annotations.TestOnly;
 
-import javax.swing.*;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreePath;
-import java.awt.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.IdentityHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.*;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Function;
 
-public class LayoutTreeComponent implements DnDTarget, Disposable {
-    private static final String EMPTY_CARD = "<empty>";
-    private static final String PROPERTIES_CARD = "properties";
+public class LayoutTreeComponent implements Disposable {
+    public static final DataTransferType<List<PackagingElement<?>>> LAYOUT_ELEMENTS =
+        DataTransferType.create("consulo.artifact.layout.elements");
+
+    private static final Comparator<LayoutElementInfo> SORT_COMPARATOR = (o1, o2) -> {
+        int weights = o2.getPresentation().getWeight() - o1.getPresentation().getWeight();
+        if (weights != 0) {
+            return weights;
+        }
+        return StringUtil.compare(o1.getPresentation().getPresentableName(), o2.getPresentation().getPresentableName(), true);
+    };
+
     private final ArtifactEditorImpl myArtifactsEditor;
-    private final LayoutTree myTree;
-    private final JPanel myTreePanel;
     private final ComplexElementSubstitutionParameters mySubstitutionParameters;
     private final ArtifactEditorContext myContext;
     private final Artifact myOriginalArtifact;
-    private SelectedElementInfo<?> mySelectedElementInfo = new SelectedElementInfo<>(null);
-    private JPanel myPropertiesPanelWrapper;
-    private JPanel myPropertiesPanel;
-    private final LayoutTreeBuilder myBuilder;
     private boolean mySortElements;
-    private final LayoutTreeStructure myTreeStructure;
+
+    private final Map<PackagingElement<?>, LayoutElementInfo> myInfos = new IdentityHashMap<>();
+    private final Map<PackagingElement<?>, TreeNode<PackagingElement<?>>> myTreeNodes = new IdentityHashMap<>();
+    private List<ArtifactProblem> myProblems = List.of();
+
+    private @Nullable Tree<PackagingElement<?>> myTree;
+    private @Nullable DockLayout myPropertiesPanel;
+    private @Nullable Disposable myUIDisposable;
+
+    private @Nullable PackagingElement<?> mySelectedElement;
+    private @Nullable PackagingElementPropertiesPanel myCurrentPropertiesPanel;
+    private boolean myProblemsUpdateQueued;
 
     public LayoutTreeComponent(
         ArtifactEditorImpl artifactsEditor,
@@ -76,156 +104,267 @@ public class LayoutTreeComponent implements DnDTarget, Disposable {
         myContext = context;
         myOriginalArtifact = originalArtifact;
         mySortElements = sortElements;
-        myTree = new LayoutTree(myArtifactsEditor);
-        myTreeStructure = new LayoutTreeStructure();
-        myBuilder = new LayoutTreeBuilder();
-        Disposer.register(this, myTree);
-        Disposer.register(this, myBuilder);
-
-        myTree.addTreeSelectionListener(e -> updatePropertiesPanel(false));
-        createPropertiesPanel();
-        myTreePanel = new JPanel(new BorderLayout());
-        myTreePanel.add(ScrollPaneFactory.createScrollPane(myTree, true), BorderLayout.CENTER);
-        myTreePanel.add(myPropertiesPanelWrapper, BorderLayout.SOUTH);
-        if (!Application.get().isUnitTestMode()) {
-            DnDManager.getInstance().registerTarget(this, myTree);
-        }
     }
 
-    private @Nullable WeightBasedComparator getComparator() {
-        return mySortElements ? new WeightBasedComparator(true) : null;
+    @RequiredUIAccess
+    public Component createUIComponent(Disposable uiDisposable) {
+        myUIDisposable = uiDisposable;
+
+        Tree<PackagingElement<?>> tree = Tree.create(new LayoutTreeModel(), TreeExecutor.uiThread());
+        tree.setAllowMultipleSelect(true);
+        tree.setSpeedSearchConverter(node -> {
+            LayoutElementInfo info = getInfo(node.getValue());
+            return info == null ? "" : info.getPresentation().getSearchName();
+        });
+        tree.addSelectListener(event -> updatePropertiesPanel(false));
+        tree.setTransferHandler(new LayoutTreeDragAndDropHandler());
+        Disposer.register(uiDisposable, tree.destroyHook());
+        myTree = tree;
+
+        DockLayout propertiesPanel = DockLayout.create(Space.NONE);
+        propertiesPanel.setVisible(false);
+        myPropertiesPanel = propertiesPanel;
+
+        DockLayout panel = DockLayout.create(Space.NONE);
+        panel.center(ScrollableLayout.create(tree));
+        panel.bottom(propertiesPanel);
+
+        rebuildTree();
+        return panel;
     }
 
-    public void setSortElements(boolean sortElements) {
-        mySortElements = sortElements;
-        myBuilder.setNodeDescriptorComparator(getComparator());
-        myArtifactsEditor.getContext().getParent().getDefaultSettings().setSortElements(sortElements);
-    }
-
-    private static @Nullable PackagingElementNode getNode(Object value) {
-        if (!(value instanceof DefaultMutableTreeNode)) {
-            return null;
-        }
-        Object userObject = ((DefaultMutableTreeNode) value).getUserObject();
-        return userObject instanceof PackagingElementNode ? (PackagingElementNode) userObject : null;
-    }
-
-    private void createPropertiesPanel() {
-        myPropertiesPanel = new JPanel(new BorderLayout());
-        JPanel emptyPanel = new JPanel();
-        emptyPanel.setMinimumSize(new Dimension(0, 0));
-        emptyPanel.setPreferredSize(new Dimension(0, 0));
-
-        myPropertiesPanelWrapper = new JPanel(new CardLayout());
-        myPropertiesPanel.setBorder(new CustomLineBorder(UIUtil.getBorderColor(), 1, 0, 0, 0));
-        myPropertiesPanelWrapper.add(EMPTY_CARD, emptyPanel);
-        myPropertiesPanelWrapper.add(PROPERTIES_CARD, myPropertiesPanel);
+    public @Nullable Tree<PackagingElement<?>> getTree() {
+        return myTree;
     }
 
     public Artifact getArtifact() {
         return myArtifactsEditor.getArtifact();
     }
 
-    public LayoutTree getLayoutTree() {
-        return myTree;
+    public boolean isSortElements() {
+        return mySortElements;
     }
 
     @RequiredUIAccess
-    public void updatePropertiesPanel(boolean force) {
-        PackagingElement<?> selected = getSelection().getElementIfSingle();
-        if (!force && Comparing.equal(selected, mySelectedElementInfo.myElement)) {
-            return;
+    public void setSortElements(boolean sortElements) {
+        mySortElements = sortElements;
+        myArtifactsEditor.getContext().getParent().getDefaultSettings().setSortElements(sortElements);
+        rebuildTree();
+    }
+
+    public @Nullable LayoutElementInfo getInfo(@Nullable PackagingElement<?> value) {
+        return value == null ? null : myInfos.get(value);
+    }
+
+    public @Nullable LayoutElementInfo getParentNode(LayoutElementInfo node) {
+        return getInfo(node.getParentValue());
+    }
+
+    public @Nullable LayoutElementInfo getRootNode() {
+        for (LayoutElementInfo info : myInfos.values()) {
+            if (info.isRoot()) {
+                return info;
+            }
         }
-        mySelectedElementInfo.save();
-        mySelectedElementInfo = new SelectedElementInfo<PackagingElement<?>>(selected);
-        mySelectedElementInfo.showPropertiesPanel();
-    }
-
-    @RequiredUIAccess
-    public void saveElementProperties() {
-        mySelectedElementInfo.save();
-    }
-
-    @RequiredUIAccess
-    public void rebuildTree() {
-        myBuilder.updateFromRoot(true);
-        updatePropertiesPanel(true);
-        myArtifactsEditor.queueValidation();
+        return null;
     }
 
     public LayoutTreeSelection getSelection() {
-        return myTree.getSelection();
+        Tree<PackagingElement<?>> tree = myTree;
+        if (tree == null) {
+            return new LayoutTreeSelection(List.of());
+        }
+        return new LayoutTreeSelection(getInfos(tree.getSelectedNodes()));
+    }
+
+    private List<LayoutElementInfo> getInfos(List<TreeNode<PackagingElement<?>>> nodes) {
+        List<LayoutElementInfo> infos = new ArrayList<>();
+        for (TreeNode<PackagingElement<?>> node : nodes) {
+            LayoutElementInfo info = getInfo(node.getValue());
+            if (info != null && !infos.contains(info)) {
+                infos.add(info);
+            }
+        }
+        return infos;
+    }
+
+    @RequiredUIAccess
+    public CompletableFuture<?> rebuildTree() {
+        return rebuildTree(List.of());
+    }
+
+    @RequiredUIAccess
+    public CompletableFuture<?> rebuildTree(List<? extends PackagingElement<?>> toSelect) {
+        myArtifactsEditor.queueValidation();
+
+        Tree<PackagingElement<?>> tree = myTree;
+        if (tree == null) {
+            myInfos.clear();
+            myTreeNodes.clear();
+            return CompletableFuture.completedFuture(null);
+        }
+
+        myInfos.clear();
+        myTreeNodes.clear();
+
+        UIAccess uiAccess = UIAccess.current();
+        return tree.refreshAll()
+            .thenComposeAsync(ignored -> expandRoot(tree), uiAccess)
+            .thenComposeAsync(ignored -> select(tree, toSelect), uiAccess)
+            .whenCompleteAsync((ignored, error) -> {
+                if (myTree == tree) {
+                    updatePropertiesPanel(true);
+                }
+            }, uiAccess);
+    }
+
+    @RequiredUIAccess
+    public CompletableFuture<?> updateAndSelect(List<? extends PackagingElement<?>> toSelect) {
+        return rebuildTree(toSelect);
+    }
+
+    @RequiredUIAccess
+    private CompletableFuture<?> expandRoot(Tree<PackagingElement<?>> tree) {
+        if (myTree != tree) {
+            return CompletableFuture.completedFuture(null);
+        }
+
+        TreeNode<PackagingElement<?>> invisibleRoot = tree.getRootNode();
+        if (invisibleRoot == null) {
+            return CompletableFuture.completedFuture(null);
+        }
+
+        UIAccess uiAccess = UIAccess.current();
+        return invisibleRoot.findChild(value -> true).thenComposeAsync(rootNode -> {
+            if (rootNode == null || myTree != tree) {
+                return CompletableFuture.<Object>completedFuture(null);
+            }
+            return tree.expand(rootNode).<Object>thenApply(ignored -> null);
+        }, uiAccess);
+    }
+
+    @RequiredUIAccess
+    private CompletableFuture<?> select(Tree<PackagingElement<?>> tree, List<? extends PackagingElement<?>> toSelect) {
+        TreeNode<PackagingElement<?>> rootNode = tree.getRootNode();
+        if (myTree != tree || toSelect.isEmpty() || rootNode == null) {
+            return CompletableFuture.completedFuture(null);
+        }
+
+        Set<PackagingElement<?>> targets = Collections.newSetFromMap(new IdentityHashMap<>());
+        targets.addAll(toSelect);
+
+        UIAccess uiAccess = UIAccess.current();
+        return rootNode.findChildDeep(value -> {
+            LayoutElementInfo info = getInfo(value);
+            if (info == null) {
+                return false;
+            }
+            for (PackagingElement<?> element : info.getElements()) {
+                if (targets.contains(element)) {
+                    return true;
+                }
+            }
+            return false;
+        }).whenCompleteAsync((node, error) -> {
+            if (node != null && myTree == tree) {
+                tree.select(node);
+            }
+        }, uiAccess);
+    }
+
+    public void editLayout(Runnable action) {
+        myContext.editLayout(myOriginalArtifact, action);
     }
 
     @RequiredUIAccess
     public void addNewPackagingElement(PackagingElementType<?> type) {
-        PackagingElementNode<?> parentNode = getParentNode(myTree.getSelection());
-        PackagingElement<?> element = parentNode.getFirstElement();
+        LayoutElementInfo parentNode = getParentNodeForAdd(getSelection());
+        if (parentNode == null) {
+            return;
+        }
+
         CompositePackagingElement<?> parent;
-        if (element instanceof CompositePackagingElement<?>) {
-            parent = (CompositePackagingElement<?>) element;
+        if (parentNode.getFirstElement() instanceof CompositePackagingElement<?> composite) {
+            parent = composite;
         }
         else {
+            LayoutElementInfo root = getRootNode();
+            if (root == null) {
+                return;
+            }
             parent = getArtifact().getRootElement();
-            parentNode = myTree.getRootPackagingNode();
+            parentNode = root;
         }
+
         if (!checkCanAdd(parent, parentNode)) {
             return;
         }
 
-        List<? extends PackagingElement<?>> children = type.chooseAndCreate(myContext, getArtifact(), parent);
-        PackagingElementNode<?> finalParentNode = parentNode;
-        editLayout(() -> {
-            CompositePackagingElement<?> actualParent = getOrCreateModifiableParent(parent, finalParentNode);
-            for (PackagingElement<?> child : children) {
-                actualParent.addOrFindChild(child);
+        LayoutElementInfo targetNode = parentNode;
+        UIAccess uiAccess = UIAccess.current();
+        type.chooseAndCreate(myContext, getArtifact(), parent).whenCompleteAsync((children, error) -> {
+            if (error != null || children.isEmpty() || myArtifactsEditor.isDisposed()) {
+                return;
             }
-        });
-        updateAndSelect(parentNode, children);
+
+            List<PackagingElement<?>> toSelect = new ArrayList<>();
+            editLayout(() -> {
+                CompositePackagingElement<?> actualParent = getOrCreateModifiableParent(parent, targetNode);
+                for (PackagingElement<?> child : children) {
+                    toSelect.add(actualParent.addOrFindChild(child));
+                }
+            });
+            myArtifactsEditor.getSourceItemsTree().rebuildTree();
+            updateAndSelect(toSelect);
+        }, uiAccess);
     }
 
-    private CompositePackagingElement<?> getOrCreateModifiableParent(
-        CompositePackagingElement<?> parentElement,
-        PackagingElementNode<?> node
-    ) {
-        PackagingElementNode<?> current = node;
+    private @Nullable LayoutElementInfo getParentNodeForAdd(LayoutTreeSelection selection) {
+        LayoutElementInfo node = selection.getNodeIfSingle();
+        if (node != null) {
+            if (node.getFirstElement() instanceof CompositePackagingElement) {
+                return node;
+            }
+            LayoutElementInfo parent = getParentNode(node);
+            if (parent != null) {
+                return parent;
+            }
+        }
+        return getRootNode();
+    }
+
+    private CompositePackagingElement<?> getOrCreateModifiableParent(CompositePackagingElement<?> parentElement, LayoutElementInfo node) {
+        LayoutElementInfo current = node;
         List<String> dirNames = new ArrayList<>();
-        while (current != null && !(current instanceof ArtifactRootNode)) {
-            PackagingElement<?> packagingElement = current.getFirstElement();
-            if (!(packagingElement instanceof DirectoryPackagingElement)) {
+        while (current != null && !current.isRoot()) {
+            if (!(current.getFirstElement() instanceof DirectoryPackagingElement directory)) {
                 return parentElement;
             }
-            dirNames.add(((DirectoryPackagingElement) packagingElement).getDirectoryName());
-            current = current.getParentNode();
+            dirNames.add(directory.getDirectoryName());
+            current = getParentNode(current);
         }
 
-        if (current == null) {
-            return parentElement;
-        }
-        PackagingElement<?> rootElement = current.getElementIfSingle();
-        if (!(rootElement instanceof CompositePackagingElement<?>)) {
+        if (current == null || !(current.getElementIfSingle() instanceof CompositePackagingElement<?> rootElement)) {
             return parentElement;
         }
 
         Collections.reverse(dirNames);
-        String path = StringUtil.join(dirNames, "/");
-        return PackagingElementFactory.getInstance(myContext.getProject())
-            .getOrCreateDirectory((CompositePackagingElement<?>) rootElement, path);
+        return PackagingElementFactory.getInstance(myContext.getProject()).getOrCreateDirectory(rootElement, StringUtil.join(dirNames, "/"));
     }
 
     @RequiredUIAccess
-    public boolean checkCanModify(PackagingElement<?> element, PackagingElementNode<?> node) {
+    public boolean checkCanModify(PackagingElement<?> element, LayoutElementInfo node) {
         return checkCanModify(node.getNodeSource(element));
     }
 
     @RequiredUIAccess
     public boolean checkCanModifyChildren(
         PackagingElement<?> parentElement,
-        PackagingElementNode<?> parentNode,
-        Collection<? extends PackagingElementNode<?>> children
+        LayoutElementInfo parentNode,
+        Collection<LayoutElementInfo> children
     ) {
         List<PackagingNodeSource> sources = new ArrayList<>(parentNode.getNodeSource(parentElement));
-        for (PackagingElementNode<?> child : children) {
+        for (LayoutElementInfo child : children) {
             sources.addAll(child.getNodeSources());
         }
         return checkCanModify(sources);
@@ -237,163 +376,92 @@ public class LayoutTreeComponent implements DnDTarget, Disposable {
             return true;
         }
 
+        LocalizeValue message;
         if (nodeSources.size() > 1) {
-            Messages.showErrorDialog(
-                myArtifactsEditor.getMainComponent(),
-                "The selected node consist of several elements so it cannot be edited.\n" +
-                    "Switch off 'Show content of elements' checkbox to edit the output layout."
-            );
+            message = ProjectLocalize.artifactNodeConsistsOfSeveralElementsError();
         }
         else {
-            PackagingNodeSource source = ContainerUtil.getFirstItem(nodeSources, null);
-            if (source != null) {
-                Messages.showErrorDialog(
-                    myArtifactsEditor.getMainComponent(),
-                    "The selected node belongs to '" + source.getPresentableName() + "' element so it cannot be edited.\n" +
-                        "Switch off 'Show content of elements' checkbox to edit the output layout."
-                );
-            }
+            message = ProjectLocalize.artifactNodeBelongsTo0Error(nodeSources.iterator().next().getPresentableName());
         }
+        MessageBoxes.okError(message).showAsync(myTree);
         return false;
     }
 
     @RequiredUIAccess
-    public boolean checkCanAdd(CompositePackagingElement<?> parentElement, PackagingElementNode<?> parentNode) {
+    public boolean checkCanAdd(CompositePackagingElement<?> parentElement, LayoutElementInfo parentNode) {
         boolean allParentsAreDirectories = true;
-        PackagingElementNode<?> current = parentNode;
-        while (current != null && !(current instanceof ArtifactRootNode)) {
-            PackagingElement<?> element = current.getFirstElement();
-            if (!(element instanceof DirectoryPackagingElement)) {
+        LayoutElementInfo current = parentNode;
+        while (current != null && !current.isRoot()) {
+            if (!(current.getFirstElement() instanceof DirectoryPackagingElement)) {
                 allParentsAreDirectories = false;
                 break;
             }
-            current = current.getParentNode();
+            current = getParentNode(current);
         }
 
         return allParentsAreDirectories || checkCanModify(parentElement, parentNode);
     }
 
     @RequiredUIAccess
-    public boolean checkCanRemove(List<? extends PackagingElementNode<?>> nodes) {
-        Set<PackagingNodeSource> rootSources = new HashSet<>();
-        for (PackagingElementNode<?> node : nodes) {
+    public CompletableFuture<Boolean> checkCanRemove(List<LayoutElementInfo> nodes) {
+        Set<PackagingNodeSource> rootSources = new LinkedHashSet<>();
+        for (LayoutElementInfo node : nodes) {
             rootSources.addAll(getRootNodeSources(node.getNodeSources()));
         }
 
-        if (!rootSources.isEmpty()) {
-            String message;
-            if (rootSources.size() == 1) {
-                String name = rootSources.iterator().next().getPresentableName();
-                message = "The selected node belongs to '" + name + "' element. " +
-                    "Do you want to remove the whole '" + name + "' element from the artifact?";
-            }
-            else {
-                message = "The selected node belongs to " + nodes.size() + " elements. " +
-                    "Do you want to remove all these elements from the artifact?";
-            }
-            int answer = Messages.showYesNoDialog(myArtifactsEditor.getMainComponent(), message, "Remove Elements", null);
-            if (answer != 0) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    public void updateAndSelect(PackagingElementNode<?> node, List<? extends PackagingElement<?>> toSelect) {
-        myArtifactsEditor.queueValidation();
-        DefaultMutableTreeNode treeNode = TreeUtil.findNodeWithObject(myTree.getRootNode(), node);
-        myTreeStructure.clearCaches();
-        myBuilder.addSubtreeToUpdate(
-            treeNode,
-            () -> {
-                List<PackagingElementNode<?>> nodes = myTree.findNodes(toSelect);
-                myBuilder.select(ArrayUtil.toObjectArray(nodes), null);
-            }
-        );
-    }
-
-    public void selectNode(String parentPath, PackagingElement<?> element) {
-        PackagingElementNode<?> parent = myTree.findCompositeNodeByPath(parentPath);
-        if (parent == null) {
-            return;
+        if (rootSources.isEmpty()) {
+            return CompletableFuture.completedFuture(Boolean.TRUE);
         }
 
-        for (SimpleNode node : parent.getChildren()) {
-            if (node instanceof PackagingElementNode) {
-                List<? extends PackagingElement<?>> elements = ((PackagingElementNode<?>) node).getPackagingElements();
-                for (PackagingElement<?> packagingElement : elements) {
-                    if (packagingElement.isEqualTo(element)) {
-                        myBuilder.select(node);
-                        return;
-                    }
-                }
-            }
+        LocalizeValue message;
+        if (rootSources.size() == 1) {
+            message = ProjectLocalize.artifactRemoveElementOf0Question(rootSources.iterator().next().getPresentableName());
         }
-    }
-
-    @TestOnly
-    public void selectNode(String parentPath, String nodeName) {
-        PackagingElementNode<?> parent = myTree.findCompositeNodeByPath(parentPath);
-        if (parent == null) {
-            return;
+        else {
+            message = ProjectLocalize.artifactRemoveElementsOf0Question(rootSources.size());
         }
-
-        for (SimpleNode node : parent.getChildren()) {
-            if (node instanceof PackagingElementNode) {
-                if (nodeName.equals(((PackagingElementNode) node).getElementPresentation().getSearchName())) {
-                    myBuilder.select(node);
-                    return;
-                }
-            }
-        }
-    }
-
-    public void editLayout(Runnable action) {
-        myContext.editLayout(myOriginalArtifact, action);
+        return MessageBoxes.yesNo().title(ProjectLocalize.artifactRemoveElementsTitle()).text(message).showAsync(myTree);
     }
 
     @RequiredUIAccess
     public void removeSelectedElements() {
-        LayoutTreeSelection selection = myTree.getSelection();
-        if (!checkCanRemove(selection.getNodes())) {
+        List<LayoutElementInfo> nodes = getSelection().getNodes();
+        if (nodes.isEmpty()) {
             return;
         }
 
-        editLayout(() -> removeNodes(selection.getNodes()));
+        UIAccess uiAccess = UIAccess.current();
+        checkCanRemove(nodes).whenCompleteAsync((remove, error) -> {
+            if (error != null || !Boolean.TRUE.equals(remove) || myArtifactsEditor.isDisposed()) {
+                return;
+            }
 
-        myArtifactsEditor.rebuildTries();
+            editLayout(() -> removeNodes(nodes));
+            myArtifactsEditor.rebuildTries();
+        }, uiAccess);
     }
 
-    public void removeNodes(List<PackagingElementNode<?>> nodes) {
-        Set<PackagingElement<?>> parents = new HashSet<>();
-        for (PackagingElementNode<?> node : nodes) {
-            List<? extends PackagingElement<?>> toDelete = node.getPackagingElements();
-            for (PackagingElement<?> element : toDelete) {
-                Collection<PackagingNodeSource> nodeSources = node.getNodeSource(element);
+    public void removeNodes(List<LayoutElementInfo> nodes) {
+        for (LayoutElementInfo node : nodes) {
+            for (PackagingElement<?> element : node.getElements()) {
+                List<PackagingNodeSource> nodeSources = node.getNodeSource(element);
                 if (nodeSources.isEmpty()) {
                     CompositePackagingElement<?> parent = node.getParentElement(element);
                     if (parent != null) {
-                        parents.add(parent);
                         parent.removeChild(element);
                     }
                 }
                 else {
-                    Collection<PackagingNodeSource> rootSources = getRootNodeSources(nodeSources);
-                    for (PackagingNodeSource source : rootSources) {
-                        parents.add(source.getSourceParentElement());
+                    for (PackagingNodeSource source : getRootNodeSources(nodeSources)) {
                         source.getSourceParentElement().removeChild(source.getSourceElement());
                     }
                 }
             }
         }
-        List<PackagingElementNode<?>> parentNodes = myTree.findNodes(parents);
-        for (PackagingElementNode<?> parentNode : parentNodes) {
-            myTree.addSubtreeToUpdate(parentNode);
-        }
     }
 
     private static Collection<PackagingNodeSource> getRootNodeSources(Collection<PackagingNodeSource> nodeSources) {
-        Set<PackagingNodeSource> result = new HashSet<>();
+        Set<PackagingNodeSource> result = new LinkedHashSet<>();
         collectRootNodeSources(nodeSources, result);
         return result;
     }
@@ -410,118 +478,9 @@ public class LayoutTreeComponent implements DnDTarget, Disposable {
         }
     }
 
-    private PackagingElementNode<?> getParentNode(LayoutTreeSelection selection) {
-        PackagingElementNode<?> node = selection.getNodeIfSingle();
-        if (node != null) {
-            if (node.getFirstElement() instanceof CompositePackagingElement) {
-                return node;
-            }
-            PackagingElementNode<?> parent = node.getParentNode();
-            if (parent != null) {
-                return parent;
-            }
-        }
-        return myTree.getRootPackagingNode();
-    }
-
-    public JPanel getTreePanel() {
-        return myTreePanel;
-    }
-
-    @Override
-    public void dispose() {
-        if (!Application.get().isUnitTestMode()) {
-            DnDManager.getInstance().unregisterTarget(this, myTree);
-        }
-    }
-
-    @Override
-    public boolean update(DnDEvent aEvent) {
-        aEvent.setDropPossible(false);
-        aEvent.hideHighlighter();
-        Object object = aEvent.getAttachedObject();
-        if (object instanceof PackagingElementDraggingObject) {
-            DefaultMutableTreeNode parent = findParentCompositeElementNode(aEvent.getRelativePoint().getPoint(myTree));
-            if (parent != null) {
-                PackagingElementDraggingObject draggingObject = (PackagingElementDraggingObject) object;
-                PackagingElementNode node = getNode(parent);
-                if (node != null && draggingObject.canDropInto(node)) {
-                    PackagingElement element = node.getFirstElement();
-                    if (element instanceof CompositePackagingElement) {
-                        draggingObject.setTargetNode(node);
-                        draggingObject.setTargetElement((CompositePackagingElement<?>) element);
-                        Rectangle bounds = myTree.getPathBounds(TreeUtil.getPathFromRoot(parent));
-                        aEvent.setHighlighting(new RelativeRectangle(myTree, bounds), DnDEvent.DropTargetHighlightingType.RECTANGLE);
-                        aEvent.setDropPossible(true);
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
-    @Override
-    @RequiredUIAccess
-    public void drop(DnDEvent aEvent) {
-        Object object = aEvent.getAttachedObject();
-        if (object instanceof PackagingElementDraggingObject draggingObject) {
-            PackagingElementNode<?> targetNode = draggingObject.getTargetNode();
-            CompositePackagingElement<?> targetElement = draggingObject.getTargetElement();
-            if (targetElement == null || targetNode == null || !draggingObject.checkCanDrop()) {
-                return;
-            }
-            if (!checkCanAdd(targetElement, targetNode)) {
-                return;
-            }
-            List<PackagingElement<?>> toSelect = new ArrayList<>();
-            editLayout(() -> {
-                draggingObject.beforeDrop();
-                CompositePackagingElement<?> parent = getOrCreateModifiableParent(targetElement, targetNode);
-                for (PackagingElement<?> element : draggingObject.createPackagingElements(myContext)) {
-                    toSelect.add(element);
-                    parent.addOrFindChild(element);
-                }
-            });
-            updateAndSelect(targetNode, toSelect);
-            myArtifactsEditor.getSourceItemsTree().rebuildTree();
-        }
-    }
-
-    private @Nullable DefaultMutableTreeNode findParentCompositeElementNode(Point point) {
-        TreePath path = myTree.getPathForLocation(point.x, point.y);
-        while (path != null) {
-            PackagingElement<?> element = myTree.getElementByPath(path);
-            if (element instanceof CompositePackagingElement) {
-                return (DefaultMutableTreeNode) path.getLastPathComponent();
-            }
-            path = path.getParentPath();
-        }
-        return null;
-    }
-
-    @Override
-    public void cleanUpOnLeave() {
-    }
-
-    @Override
-    public void updateDraggedImage(Image image, Point dropPoint, Point imageOffset) {
-    }
-
-    public void startRenaming(TreePath path) {
-        myTree.startEditingAtPath(path);
-    }
-
-    public boolean isEditing() {
-        return myTree.isEditing();
-    }
-
     @RequiredUIAccess
     public void setRootElement(CompositePackagingElement<?> rootElement) {
         myContext.getOrCreateModifiableArtifactModel().getOrCreateModifiableArtifact(myOriginalArtifact).setRootElement(rootElement);
-        myTreeStructure.updateRootElement();
-        DefaultMutableTreeNode node = myTree.getRootNode();
-        node.setUserObject(myTreeStructure.getRootElement());
-        myBuilder.updateNode(node);
         rebuildTree();
         myArtifactsEditor.getSourceItemsTree().rebuildTree();
     }
@@ -530,39 +489,27 @@ public class LayoutTreeComponent implements DnDTarget, Disposable {
         return myContext.getRootElement(myOriginalArtifact);
     }
 
-    public void updateTreeNodesPresentation() {
-        myBuilder.updateFromRoot(false);
-    }
-
-    public void updateRootNode() {
-        myBuilder.updateNode(myTree.getRootNode());
-    }
-
-    public void initTree() {
-        myBuilder.initRootNode();
-        mySelectedElementInfo.showPropertiesPanel();
-    }
-
+    @RequiredUIAccess
     public void putIntoDefaultLocations(List<? extends PackagingSourceItem> items) {
         List<PackagingElement<?>> toSelect = new ArrayList<>();
         editLayout(() -> {
             CompositePackagingElement<?> rootElement = getArtifact().getRootElement();
             ArtifactType artifactType = getArtifact().getArtifactType();
+            PackagingElementFactory factory = PackagingElementFactory.getInstance(myContext.getProject());
             for (PackagingSourceItem item : items) {
                 String path = artifactType.getDefaultPathFor(item);
                 if (path != null) {
-                    CompositePackagingElement<?> directory =
-                        PackagingElementFactory.getInstance(myContext.getProject()).getOrCreateDirectory(rootElement, path);
-                    List<? extends PackagingElement<?>> elements = item.createElements(myContext);
-                    toSelect.addAll(directory.addOrFindChildren(elements));
+                    CompositePackagingElement<?> directory = factory.getOrCreateDirectory(rootElement, path);
+                    toSelect.addAll(directory.addOrFindChildren(item.createElements(myContext)));
                 }
             }
         });
 
         myArtifactsEditor.getSourceItemsTree().rebuildTree();
-        updateAndSelect(myTree.getRootPackagingNode(), toSelect);
+        updateAndSelect(toSelect);
     }
 
+    @RequiredUIAccess
     public void putElements(String path, List<? extends PackagingElement<?>> elements) {
         List<PackagingElement<?>> toSelect = new ArrayList<>();
         editLayout(() -> {
@@ -571,9 +518,10 @@ public class LayoutTreeComponent implements DnDTarget, Disposable {
             toSelect.addAll(directory.addOrFindChildren(elements));
         });
         myArtifactsEditor.getSourceItemsTree().rebuildTree();
-        updateAndSelect(myTree.getRootPackagingNode(), toSelect);
+        updateAndSelect(toSelect);
     }
 
+    @RequiredUIAccess
     public void packInto(List<? extends PackagingSourceItem> items, String pathToJar) {
         List<PackagingElement<?>> toSelect = new ArrayList<>();
         CompositePackagingElement<?> rootElement = getArtifact().getRootElement();
@@ -581,107 +529,479 @@ public class LayoutTreeComponent implements DnDTarget, Disposable {
             CompositePackagingElement<?> archive =
                 PackagingElementFactory.getInstance(myContext.getProject()).getOrCreateArchive(rootElement, pathToJar);
             for (PackagingSourceItem item : items) {
-                List<? extends PackagingElement<?>> elements = item.createElements(myContext);
-                archive.addOrFindChildren(elements);
+                archive.addOrFindChildren(item.createElements(myContext));
             }
             toSelect.add(archive);
         });
 
         myArtifactsEditor.getSourceItemsTree().rebuildTree();
-        updateAndSelect(myTree.getRootPackagingNode(), toSelect);
+        updateAndSelect(toSelect);
+    }
+
+    @RequiredUIAccess
+    public void showContent(LayoutElementInfo node) {
+        mySubstitutionParameters.setShowContent(node.getElements());
+        rebuildTree();
+    }
+
+    @RequiredUIAccess
+    public void updatePropertiesPanel(boolean force) {
+        PackagingElement<?> selected = getSelection().getElementIfSingle();
+        if (!force && selected == mySelectedElement) {
+            return;
+        }
+
+        saveElementProperties();
+        disposePropertiesPanel();
+
+        mySelectedElement = selected;
+
+        DockLayout propertiesPanel = myPropertiesPanel;
+        Disposable uiDisposable = myUIDisposable;
+        if (propertiesPanel == null || uiDisposable == null) {
+            return;
+        }
+
+        PackagingElementPropertiesPanel panel = selected == null ? null : createPropertiesPanel(selected);
+        if (panel == null) {
+            propertiesPanel.setVisible(false);
+            return;
+        }
+
+        myCurrentPropertiesPanel = panel;
+        propertiesPanel.center(ScrollableLayout.create(panel.createUIComponent(uiDisposable)));
+        panel.reset();
+        propertiesPanel.setVisible(true);
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private @Nullable PackagingElementPropertiesPanel createPropertiesPanel(PackagingElement<?> element) {
+        PackagingElementType type = element.getType();
+        return type.createElementPropertiesPanel(element, myContext);
+    }
+
+    @RequiredUIAccess
+    public void saveElementProperties() {
+        PackagingElementPropertiesPanel panel = myCurrentPropertiesPanel;
+        if (panel != null && panel.isModified()) {
+            editLayout(panel::apply);
+        }
+    }
+
+    @RequiredUIAccess
+    private void disposePropertiesPanel() {
+        PackagingElementPropertiesPanel panel = myCurrentPropertiesPanel;
+        if (panel != null) {
+            panel.disposeUIResources();
+        }
+        myCurrentPropertiesPanel = null;
     }
 
     @RequiredUIAccess
     public boolean isPropertiesModified() {
-        PackagingElementPropertiesPanel panel = mySelectedElementInfo.myCurrentPanel;
+        PackagingElementPropertiesPanel panel = myCurrentPropertiesPanel;
         return panel != null && panel.isModified();
     }
 
     @RequiredUIAccess
     public void resetElementProperties() {
-        PackagingElementPropertiesPanel panel = mySelectedElementInfo.myCurrentPanel;
+        PackagingElementPropertiesPanel panel = myCurrentPropertiesPanel;
         if (panel != null) {
             panel.reset();
         }
     }
 
-    public boolean isSortElements() {
-        return mySortElements;
+    @RequiredUIAccess
+    public void setProblems(List<ArtifactProblem> problems) {
+        myProblems = List.copyOf(problems);
+        updateProblems();
     }
 
-    private class SelectedElementInfo<E extends PackagingElement<?>> {
-        private final E myElement;
-        private PackagingElementPropertiesPanel myCurrentPanel;
+    @RequiredUIAccess
+    private void queueProblemsUpdate() {
+        if (myProblemsUpdateQueued) {
+            return;
+        }
+        myProblemsUpdateQueued = true;
 
-        @RequiredUIAccess
-        private SelectedElementInfo(@Nullable E element) {
-            myElement = element;
-            if (myElement != null) {
-                //noinspection unchecked
-                myCurrentPanel = element.getType().createElementPropertiesPanel(myElement, myContext);
-                myPropertiesPanel.removeAll();
-                if (myCurrentPanel != null) {
-                    myPropertiesPanel.add(BorderLayout.CENTER, ScrollPaneFactory.createScrollPane(myCurrentPanel.createComponent(), true));
-                    myCurrentPanel.reset();
-                    myPropertiesPanel.revalidate();
+        UIAccess.current().give(() -> {
+            myProblemsUpdateQueued = false;
+            updateProblems();
+        });
+    }
+
+    @RequiredUIAccess
+    private void updateProblems() {
+        Map<LayoutElementInfo, List<ArtifactProblem>> problems = new IdentityHashMap<>();
+        LayoutElementInfo root = getRootNode();
+        if (root != null) {
+            for (ArtifactProblem problem : myProblems) {
+                List<PackagingElement<?>> pathToPlace = problem.pathToPlace();
+                if (pathToPlace == null || pathToPlace.isEmpty()) {
+                    continue;
+                }
+
+                for (LayoutElementInfo node : getNodesByPath(root, pathToPlace.subList(1, pathToPlace.size()))) {
+                    problems.computeIfAbsent(node, key -> new ArrayList<>()).add(problem);
                 }
             }
         }
 
+        Tree<PackagingElement<?>> tree = myTree;
+        for (LayoutElementInfo info : myInfos.values()) {
+            List<ArtifactProblem> nodeProblems = problems.getOrDefault(info, List.of());
+            if (!nodeProblems.equals(info.getProblems())) {
+                info.setProblems(nodeProblems);
+
+                TreeNode<PackagingElement<?>> treeNode = myTreeNodes.get(info.getFirstElement());
+                if (tree != null && treeNode != null) {
+                    tree.refreshItem(treeNode);
+                }
+            }
+        }
+    }
+
+    private static List<LayoutElementInfo> getNodesByPath(LayoutElementInfo root, List<PackagingElement<?>> pathToPlace) {
+        List<LayoutElementInfo> result = new ArrayList<>();
+        LayoutElementInfo current = root;
+        result.add(current);
+
+        int i = 0;
+        while (current != null && i < pathToPlace.size()) {
+            PackagingElement<?> element = pathToPlace.get(i);
+            LayoutElementInfo next = null;
+
+            search:
+            for (LayoutElementInfo child : current.getChildren()) {
+                for (PackagingElement<?> childElement : child.getElements()) {
+                    if (childElement.isEqualTo(element)) {
+                        next = child;
+                        break search;
+                    }
+                }
+                for (PackagingNodeSource nodeSource : child.getNodeSources()) {
+                    if (nodeSource.getSourceElement().isEqualTo(element)) {
+                        next = current;
+                        break search;
+                    }
+                }
+            }
+
+            current = next;
+            if (current != null) {
+                result.add(current);
+            }
+            i++;
+        }
+        return result;
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void dispose() {
+        disposePropertiesPanel();
+        myInfos.clear();
+        myTreeNodes.clear();
+        myTree = null;
+        myPropertiesPanel = null;
+        myUIDisposable = null;
+    }
+
+    private List<LayoutElementInfo> buildChildInfos(LayoutElementInfo parentInfo) {
+        List<LayoutElementInfo> result = new ArrayList<>();
+        Set<PackagingElement<?>> processed = Collections.newSetFromMap(new IdentityHashMap<>());
+        ArtifactType artifactType = getArtifact().getArtifactType();
+        for (PackagingElement<?> element : parentInfo.getElements()) {
+            if (element instanceof CompositePackagingElement<?> composite) {
+                addInfos(composite.getChildren(), parentInfo, composite, parentInfo.getNodeSource(element), result, processed, artifactType);
+            }
+        }
+
+        if (mySortElements) {
+            result.sort(SORT_COMPARATOR);
+        }
+        parentInfo.setChildren(List.copyOf(result));
+        return result;
+    }
+
+    private void addInfos(
+        List<? extends PackagingElement<?>> elements,
+        LayoutElementInfo parentInfo,
+        CompositePackagingElement<?> parentElement,
+        Collection<PackagingNodeSource> nodeSources,
+        List<LayoutElementInfo> infos,
+        Set<PackagingElement<?>> processed,
+        ArtifactType artifactType
+    ) {
+        PackagingElement<?> parentValue = parentInfo.getFirstElement();
+        for (PackagingElement<?> element : elements) {
+            LayoutElementInfo previous = findEqual(infos, element);
+            if (previous != null) {
+                previous.addElement(element, parentElement, nodeSources);
+                continue;
+            }
+
+            if (element instanceof ArtifactRootElement) {
+                throw new AssertionError("artifact root not expected here");
+            }
+
+            if (!(element instanceof CompositePackagingElement) && element instanceof ComplexPackagingElement<?> complexElement
+                && processed.add(element) && mySubstitutionParameters.shouldSubstitute(complexElement)) {
+                List<? extends PackagingElement<?>> substitution = complexElement.getSubstitution(myContext, artifactType);
+                if (substitution != null) {
+                    String presentableName = complexElement.createPresentation(myContext).getPresentableName();
+                    PackagingNodeSource source = new PackagingNodeSource(complexElement, parentValue, parentElement, nodeSources, presentableName);
+                    addInfos(substitution, parentInfo, parentElement, List.of(source), infos, processed, artifactType);
+                    continue;
+                }
+            }
+
+            PackagingElement<?> value = toUniqueValue(element, parentValue);
+            infos.add(new LayoutElementInfo(value, parentValue, parentElement, nodeSources, value.createPresentation(myContext)));
+        }
+    }
+
+    private PackagingElement<?> toUniqueValue(PackagingElement<?> element, PackagingElement<?> parentValue) {
+        LayoutElementInfo existing = myInfos.get(element);
+        if (existing == null || existing.getParentValue() == parentValue) {
+            return element;
+        }
+        return ArtifactUtil.copyWithChildren(element, myContext.getProject());
+    }
+
+    private static @Nullable LayoutElementInfo findEqual(List<LayoutElementInfo> infos, PackagingElement<?> element) {
+        for (LayoutElementInfo info : infos) {
+            if (info.getFirstElement().isEqualTo(element)) {
+                return info;
+            }
+        }
+        return null;
+    }
+
+    @RequiredUIAccess
+    private void registerNode(Function<PackagingElement<?>, TreeNode<PackagingElement<?>>> nodeFactory, LayoutElementInfo info) {
+        PackagingElement<?> value = info.getFirstElement();
+        myInfos.put(value, info);
+
+        TreeNode<PackagingElement<?>> node = nodeFactory.apply(value);
+        node.setLeaf(!(value instanceof CompositePackagingElement));
+        node.setRenderer((element, presentation) -> {
+            List<ArtifactProblem> problems = info.getProblems();
+            ArtifactTreePresentations.render(info.getPresentationData(), getTooltip(info, problems), !problems.isEmpty(), presentation);
+        });
+        myTreeNodes.put(value, node);
+    }
+
+    private static String getTooltip(LayoutElementInfo info, List<ArtifactProblem> problems) {
+        if (problems.isEmpty()) {
+            return StringUtil.notNullize(info.getPresentation().getTooltipText());
+        }
+
+        StringBuilder builder = new StringBuilder();
+        for (ArtifactProblem problem : problems) {
+            if (builder.length() > 0) {
+                builder.append('\n');
+            }
+            builder.append(problem.message());
+        }
+        return builder.toString();
+    }
+
+    private @Nullable LayoutElementInfo findDropTarget(LayoutElementInfo target, DragAndDropTransferHandler.DropPosition position) {
+        LayoutElementInfo current = target;
+        if (position != DragAndDropTransferHandler.DropPosition.INTO) {
+            LayoutElementInfo parent = getParentNode(target);
+            if (parent != null) {
+                current = parent;
+            }
+        }
+
+        while (current != null) {
+            if (current.getFirstElement() instanceof CompositePackagingElement) {
+                return current;
+            }
+            current = getParentNode(current);
+        }
+        return null;
+    }
+
+    private boolean isAncestorOrSelf(LayoutElementInfo ancestor, LayoutElementInfo node) {
+        LayoutElementInfo current = node;
+        while (current != null) {
+            if (current == ancestor) {
+                return true;
+            }
+            current = getParentNode(current);
+        }
+        return false;
+    }
+
+    @RequiredUIAccess
+    private void moveNodes(List<LayoutElementInfo> nodes, LayoutElementInfo targetNode, CompositePackagingElement<?> targetElement) {
+        if (!checkCanAdd(targetElement, targetNode)) {
+            return;
+        }
+
+        UIAccess uiAccess = UIAccess.current();
+        checkCanRemove(nodes).whenCompleteAsync((remove, error) -> {
+            if (error != null || !Boolean.TRUE.equals(remove) || myArtifactsEditor.isDisposed()) {
+                return;
+            }
+
+            List<PackagingElement<?>> toSelect = new ArrayList<>();
+            editLayout(() -> {
+                List<PackagingElement<?>> copies = new ArrayList<>();
+                for (LayoutElementInfo node : nodes) {
+                    for (PackagingElement<?> element : node.getElements()) {
+                        copies.add(ArtifactUtil.copyWithChildren(element, myContext.getProject()));
+                    }
+                }
+
+                removeNodes(nodes);
+
+                CompositePackagingElement<?> parent = getOrCreateModifiableParent(targetElement, targetNode);
+                for (PackagingElement<?> copy : copies) {
+                    toSelect.add(parent.addOrFindChild(copy));
+                }
+            });
+            myArtifactsEditor.getSourceItemsTree().rebuildTree();
+            updateAndSelect(toSelect);
+        }, uiAccess);
+    }
+
+    @RequiredUIAccess
+    private void addSourceItems(List<PackagingSourceItem> items, LayoutElementInfo targetNode, CompositePackagingElement<?> targetElement) {
+        if (!checkCanAdd(targetElement, targetNode)) {
+            return;
+        }
+
+        List<PackagingElement<?>> toSelect = new ArrayList<>();
+        editLayout(() -> {
+            CompositePackagingElement<?> parent = getOrCreateModifiableParent(targetElement, targetNode);
+            for (PackagingSourceItem item : items) {
+                for (PackagingElement<?> element : item.createElements(myContext)) {
+                    toSelect.add(parent.addOrFindChild(element));
+                }
+            }
+        });
+        myArtifactsEditor.getSourceItemsTree().rebuildTree();
+        updateAndSelect(toSelect);
+    }
+
+    private class LayoutTreeModel implements TreeModel<PackagingElement<?>> {
+        @Override
         @RequiredUIAccess
-        public void save() {
-            if (myCurrentPanel != null && myCurrentPanel.isModified()) {
-                editLayout(() -> myCurrentPanel.apply());
+        public void buildChildren(
+            Function<PackagingElement<?>, TreeNode<PackagingElement<?>>> nodeFactory,
+            @Nullable PackagingElement<?> parentValue
+        ) {
+            if (parentValue == null) {
+                CompositePackagingElement<?> rootElement = getRootElement();
+                registerNode(nodeFactory, new LayoutElementInfo(rootElement, null, null, List.of(), rootElement.createPresentation(myContext)));
+                return;
             }
-        }
 
-        public void showPropertiesPanel() {
-            CardLayout cardLayout = (CardLayout) myPropertiesPanelWrapper.getLayout();
-            if (myCurrentPanel != null) {
-                cardLayout.show(myPropertiesPanelWrapper, PROPERTIES_CARD);
+            LayoutElementInfo parentInfo = getInfo(parentValue);
+            if (parentInfo == null) {
+                return;
             }
-            else {
-                cardLayout.show(myPropertiesPanelWrapper, EMPTY_CARD);
+
+            for (LayoutElementInfo info : buildChildInfos(parentInfo)) {
+                registerNode(nodeFactory, info);
             }
-            myPropertiesPanelWrapper.repaint();
-        }
-    }
 
-    private class LayoutTreeStructure extends SimpleTreeStructure {
-        private ArtifactRootNode myRootNode;
-
-        
-        @Override
-        public Object getRootElement() {
-            if (myRootNode == null) {
-                myRootNode = PackagingTreeNodeFactory.createRootNode(
-                    myArtifactsEditor,
-                    myContext,
-                    mySubstitutionParameters,
-                    getArtifact().getArtifactType()
-                );
+            if (!myProblems.isEmpty()) {
+                queueProblemsUpdate();
             }
-            return myRootNode;
-        }
-
-        public void updateRootElement() {
-            myRootNode = null;
-        }
-    }
-
-    private class LayoutTreeBuilder extends SimpleTreeBuilder {
-        public LayoutTreeBuilder() {
-            super(
-                LayoutTreeComponent.this.myTree,
-                LayoutTreeComponent.this.myTree.getBuilderModel(),
-                LayoutTreeComponent.this.myTreeStructure,
-                LayoutTreeComponent.this.getComparator()
-            );
         }
 
         @Override
-        public void updateNode(DefaultMutableTreeNode node) {
-            super.updateNode(node);
+        public boolean isNeedBuildChildrenBeforeOpen(TreeNode<PackagingElement<?>> node) {
+            return node.getValue() instanceof CompositePackagingElement;
+        }
+
+        @Override
+        @RequiredUIAccess
+        public boolean onDoubleClick(Tree<PackagingElement<?>> tree, TreeNode<PackagingElement<?>> node) {
+            LayoutElementInfo info = getInfo(node.getValue());
+            if (info != null && info.getFirstElement() instanceof ComplexPackagingElement
+                && !(info.getFirstElement() instanceof CompositePackagingElement)) {
+                showContent(info);
+                return false;
+            }
+            return true;
+        }
+    }
+
+    private class LayoutTreeDragAndDropHandler implements DragAndDropTransferHandler<TreeNode<PackagingElement<?>>> {
+        @Override
+        public @Nullable DataTransfer createTransfer(Component component) {
+            return null;
+        }
+
+        @Override
+        public @Nullable DataTransfer createDragTransfer(Component component, List<TreeNode<PackagingElement<?>>> items, boolean move) {
+            List<LayoutElementInfo> nodes = getInfos(items);
+            if (nodes.isEmpty()) {
+                return null;
+            }
+
+            List<PackagingElement<?>> elements = new ArrayList<>();
+            StringBuilder text = new StringBuilder();
+            for (LayoutElementInfo node : nodes) {
+                if (node.isRoot()) {
+                    return null;
+                }
+                elements.addAll(node.getElements());
+                if (text.length() > 0) {
+                    text.append('\n');
+                }
+                text.append(node.getPresentation().getPresentableName());
+            }
+
+            return DataTransfer.builder().put(LAYOUT_ELEMENTS, elements).put(DataTransferType.TEXT, text.toString()).build();
+        }
+
+        @Override
+        @RequiredUIAccess
+        public boolean drop(Component component, DropContext<TreeNode<PackagingElement<?>>> context) {
+            LayoutElementInfo target = getInfo(context.getTarget().getValue());
+            if (target == null) {
+                return false;
+            }
+
+            LayoutElementInfo targetNode = findDropTarget(target, context.getPosition());
+            if (targetNode == null || !(targetNode.getFirstElement() instanceof CompositePackagingElement<?> targetElement)) {
+                return false;
+            }
+
+            List<TreeNode<PackagingElement<?>>> items = context.getItems();
+            if (!items.isEmpty()) {
+                List<LayoutElementInfo> nodes = getInfos(items);
+                if (nodes.isEmpty()) {
+                    return false;
+                }
+                for (LayoutElementInfo node : nodes) {
+                    if (node.isRoot() || isAncestorOrSelf(node, targetNode)) {
+                        return false;
+                    }
+                }
+
+                if (!context.isCheckOnly()) {
+                    moveNodes(nodes, targetNode, targetElement);
+                }
+                return true;
+            }
+
+            List<PackagingSourceItem> sourceItems = context.getTransfer().get(SourceItemsTree.SOURCE_ITEMS);
+            if (sourceItems == null || sourceItems.isEmpty()) {
+                return false;
+            }
+
+            if (!context.isCheckOnly()) {
+                addSourceItems(sourceItems, targetNode, targetElement);
+            }
+            return true;
         }
     }
 }

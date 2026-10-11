@@ -15,23 +15,39 @@
  */
 package consulo.it.internal.ui;
 
+import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.Tab;
 import consulo.ui.TextItemPresentation;
+import consulo.ui.internal.TabTitlePresentation;
 import org.jspecify.annotations.Nullable;
 
 import java.util.function.BiConsumer;
 
 /**
- * Dummy-but-creatable headless {@link Tab}.
+ * Headless {@link Tab}. It keeps its renderer, so its title reads as on a rendering frontend.
  *
  * @author VISTALL
  */
 public class HeadlessTab implements Tab {
+    private final @Nullable HeadlessTabbedLayout myTabbedLayout;
+
+    private BiConsumer<Tab, TextItemPresentation> myRenderer = (tab, presentation) -> presentation.append(tab.toString());
+
     private boolean myEnabled = true;
+
+    public HeadlessTab(@Nullable HeadlessTabbedLayout tabbedLayout) {
+        myTabbedLayout = tabbedLayout;
+    }
 
     @Override
     public void setRenderer(BiConsumer<Tab, TextItemPresentation> renderer) {
+        myRenderer = renderer;
+    }
+
+    @Override
+    public LocalizeValue getTitle() {
+        return TabTitlePresentation.titleOf(this, myRenderer);
     }
 
     @Override
@@ -44,6 +60,10 @@ public class HeadlessTab implements Tab {
 
     @Override
     public void select() {
+        HeadlessTabbedLayout tabbedLayout = myTabbedLayout;
+        if (tabbedLayout != null) {
+            tabbedLayout.select(this);
+        }
     }
 
     @Override

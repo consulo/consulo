@@ -17,53 +17,57 @@ package consulo.compiler.artifact.element;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
-import consulo.fileChooser.IdeaFileChooser;
-import consulo.fileChooser.FileChooserDescriptor;
-import consulo.localize.LocalizeValue;
-import consulo.project.Project;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
+import consulo.compiler.localize.CompilerLocalize;
+import consulo.fileChooser.FileChooser;
+import consulo.fileChooser.FileChooserDescriptor;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
+import consulo.virtualFileSystem.VirtualFile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
-* @author nik
-*/
+ * @author nik
+ */
 @ExtensionImpl
 public class FileCopyElementType extends PackagingElementType<FileCopyPackagingElement> {
-  public static FileCopyElementType getInstance() {
-    return getInstance(FileCopyElementType.class);
-  }
-
-  public FileCopyElementType() {
-    super("file-copy", LocalizeValue.localizeTODO("File"));
-  }
-
-  
-  @Override
-  public Image getIcon() {
-    return AllIcons.FileTypes.Text;
-  }
-
-  @Override
-  
-  public List<? extends FileCopyPackagingElement> chooseAndCreate(ArtifactEditorContext context, Artifact artifact,
-                                                                  CompositePackagingElement<?> parent) {
-    FileChooserDescriptor descriptor = new FileChooserDescriptor(true, false, true, true, false, true);
-    VirtualFile[] files = IdeaFileChooser.chooseFiles(descriptor, context.getProject(), null);
-    List<FileCopyPackagingElement> list = new ArrayList<>();
-    for (VirtualFile file : files) {
-      list.add(new FileCopyPackagingElement(file.getPath()));
+    public static FileCopyElementType getInstance() {
+        return getInstance(FileCopyElementType.class);
     }
-    return list;
-  }
 
-  @Override
-  
-  public FileCopyPackagingElement createEmpty(Project project) {
-    return new FileCopyPackagingElement();
-  }
+    public FileCopyElementType() {
+        super("file-copy", CompilerLocalize.elementTypeNameFile());
+    }
+
+    @Override
+    public Image getIcon() {
+        return AllIcons.FileTypes.Text;
+    }
+
+    @Override
+    @RequiredUIAccess
+    public CompletableFuture<List<? extends PackagingElement<?>>> chooseAndCreate(
+        ArtifactEditorContext context,
+        Artifact artifact,
+        CompositePackagingElement<?> parent
+    ) {
+        FileChooserDescriptor descriptor = new FileChooserDescriptor(true, false, true, true, false, true);
+        return FileChooser.chooseFiles(descriptor, context.getProject(), null).thenApply(files -> {
+            List<FileCopyPackagingElement> list = new ArrayList<>();
+            for (VirtualFile file : files) {
+                list.add(new FileCopyPackagingElement(file.getPath()));
+            }
+            return list;
+        });
+    }
+
+    @Override
+    public FileCopyPackagingElement createEmpty(Project project) {
+        return new FileCopyPackagingElement();
+    }
 }

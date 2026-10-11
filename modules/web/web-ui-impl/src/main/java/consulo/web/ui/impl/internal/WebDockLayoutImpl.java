@@ -18,6 +18,8 @@ package consulo.web.ui.impl.internal;
 import consulo.ui.Component;
 import consulo.ui.Space;
 import consulo.ui.StaticPosition;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.internal.LayoutVisualOrder;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.Layout;
 import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
@@ -26,6 +28,8 @@ import consulo.web.ui.impl.internal.vaadin.BorderLayoutEx;
 import consulo.web.ui.impl.internal.vaadin.VaadinSizeUtil;
 import consulo.web.ui.impl.internal.vaadin.WebSpace;
 import org.jspecify.annotations.Nullable;
+
+import java.util.function.Consumer;
 
 /**
  * @author VISTALL
@@ -52,20 +56,29 @@ public class WebDockLayoutImpl extends WebLayoutImpl<WebDockLayoutImpl.Vaadin, S
 
     @Override
     public Layout<StaticPosition> add(Component component, StaticPosition constraint) {
-        BorderLayoutEx.Constraint constraintEx = switch (constraint) {
+        if (constraint == StaticPosition.CENTER) {
+            VaadinSizeUtil.setSizeFull(component);
+        }
+
+        return replace(component, toConstraint(constraint));
+    }
+
+    private static BorderLayoutEx.Constraint toConstraint(StaticPosition position) {
+        return switch (position) {
             case TOP -> BorderLayoutEx.Constraint.NORTH;
             case BOTTOM -> BorderLayoutEx.Constraint.SOUTH;
             case LEFT -> BorderLayoutEx.Constraint.WEST;
             case RIGHT -> BorderLayoutEx.Constraint.EAST;
-            case CENTER -> {
-                VaadinSizeUtil.setSizeFull(component);
-
-                yield BorderLayoutEx.Constraint.CENTER;
-            }
-            default -> throw new IllegalArgumentException(constraint.name());
+            case CENTER -> BorderLayoutEx.Constraint.CENTER;
         };
+    }
 
-        return replace(component, constraintEx);
+    @Override
+    public void forEachChild(@RequiredUIAccess Consumer<Component> consumer) {
+        Vaadin vaadin = toVaadinComponent();
+        for (StaticPosition position : LayoutVisualOrder.DOCK_POSITIONS) {
+            WebLayoutChildren.accept(vaadin.getComponent(toConstraint(position)), consumer);
+        }
     }
 
     @Override

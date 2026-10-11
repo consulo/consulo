@@ -24,12 +24,68 @@ add.new.module.text.full:
     text: Module
 add.new.project.library.text:
     text: New Project Library
+artifact.action.extract.into.0.text:
+    text: Extract Into {0}
+artifact.action.hide.content.of.0.text:
+    text: Hide Content of ''{0}''
+artifact.action.hide.content.text:
+    text: Hide Content
+artifact.action.move.description:
+    text: Disabled when elements are sorted
+artifact.action.move.down.text:
+    text: Move Down
+artifact.action.move.up.text:
+    text: Move Up
+artifact.action.pack.into.0.text:
+    text: Pack Into {0}
+artifact.action.put.into.0.text:
+    text: Put into {0}
+artifact.action.show.content.all.text:
+    text: Show Content of All Elements
+artifact.action.show.content.text:
+    text: Show Content of Elements
+artifact.action.sort.elements.text:
+    text: Sort Elements by Names and Types
+artifact.available.elements.label:
+    text: Available Elements
+artifact.location.default.locations:
+    text: Default Locations
+artifact.location.output.root:
+    text: Output Root
+artifact.name.already.exists.error:
+    text: Artifact ''{0}'' already exists
+artifact.name.not.specified.error:
+    text: Please enter artifact name
+artifact.node.belongs.to.0.error:
+    text: The selected node belongs to ''{0}'' element so it cannot be edited. Hide the content of the elements to edit the output layout.
+artifact.node.consists.of.several.elements.error:
+    text: The selected node consists of several elements so it cannot be edited. Hide the content of the elements to edit the output layout.
+artifact.output.layout.tab:
+    text: Output Layout
+artifact.problem.fixes.button:
+    text: Fix…
+artifact.remove.element.of.0.question:
+    text: The selected node belongs to ''{0}'' element. Do you want to remove the whole ''{0}'' element from the artifact?
+artifact.remove.elements.of.0.question:
+    text: The selected nodes belong to {0} elements. Do you want to remove all these elements from the artifact?
+artifact.remove.elements.title:
+    text: Remove Elements
+artifact.rename.element.prompt:
+    text: 'New name:'
 artifact.source.items.tree.tooltip:
     text: <html>Double-click on element to put into default location<br>Drag-and-drop element to add into the desired location<br>More actions are available in the popup menu</html>
+artifact.template.empty:
+    text: Empty
 artifacts.add.copy.action:
     text: Add
+artifacts.copy.prompt:
+    text: 'Artifact name:'
+artifacts.copy.title:
+    text: Copy Artifact
 artifacts.create.action:
     text: Create {0}
+artifacts.empty.text:
+    text: Select an artifact to view or edit its details here
 attach.annotations.button:
     text: Attach Anno&tations...
 banner.slogan.artifact.0:
@@ -52,12 +108,16 @@ button.text.remove.selected:
     text: Remove Selected
 checkbox.text.build.on.make:
     text: '&Build on make'
+checkbox.text.include.in.project.build:
+    text: Include in project &build
 choose.module.home:
     text: Choose Module Home Dir
 choose.modules.dialog.description:
     text: Library ''{0}'' will be added to the selected modules.
 choose.modules.dialog.title:
     text: Choose Modules
+classpath.add.dependency.popup.title:
+    text: Add Dependency
 classpath.add.library.action:
     text: Library...
 classpath.add.module.dependency.action:
@@ -66,14 +126,24 @@ classpath.add.new.library.action:
     text: New Library...
 classpath.add.simple.module.library.action:
     text: Files or directories...
+classpath.chooser.description.add.library.dependency:
+    text: 'Select the libraries the current module should depend on:'
 classpath.chooser.description.add.module.dependency:
     text: 'Select the modules the current module should depend on:'
+classpath.chooser.title.add.library.dependency:
+    text: Choose Libraries
 classpath.chooser.title.add.module.dependency:
     text: Choose Modules
 classpath.message.library.already.added:
     text: Library ''{0}'' already added to this module
 classpath.panel.analyze:
     text: Analyze
+classpath.panel.analyze.dependencies.collected:
+    text: Dependencies were successfully collected in "{0}" tool window
+classpath.panel.analyze.no.dependencies.found:
+    text: No code dependencies were found. Would you like to remove the dependency?
+classpath.panel.analyze.this.dependency.action.text:
+    text: Analyze This Dependency
 classpath.panel.navigate.action.text:
     text: Navigate
 classpath.title.adding.dependency:
@@ -179,6 +249,8 @@ label.text.0.cannot.be.loaded.ignore:
     text: '{0} cannot be loaded. You can mark them as ignored to suppress this error notification.'
 label.text.0.cannot.be.loaded.remove:
     text: '{0} cannot be loaded. You can remove them from the project (no files will be deleted).'
+label.text.artifact.type:
+    text: 'Type:'
 label.text.framework.support.description:
     text: This will download all needed libraries and create Facets in project configuration.
 label.text.no.frameworks.detected:
@@ -191,12 +263,20 @@ label.text.specify.artifact.name:
     text: 'Specify artifact &name:'
 label.text.the.following.frameworks.are.detected:
     text: <html><body>Several frameworks are detected in the project. Please review the following items and exclude mistakenly detected.</body></html>
+libraries.display.name:
+    text: Libraries
+libraries.empty.text:
+    text: Select a library to view or edit its details here
 libraries.node.text.ide:
     text: Libraries contain classes that add up various functionality to your applications. Libraries also include source files and JavaDocs that can help you develop your projects.<br><br>Consulo uses libraries to assist you with code completion, validation, error highlighting, etc.<br><br>Global libraries are referenced through the entire project and can be used from all modules. Also they are available to all projects create locally on your computer.<br><br>Note that Global libraries are not available to anybody you share your project with. If you are sharing project with your team, please use Project libraries instead.<br><br>Expand the node and select child items to manage Global libraries. <br><br> To attach a library to a module, select that module, click the Dependencies tab, click Add and specify the library location.
 libraries.node.text.module:
     text: Libraries contain classes that add up various functionality to your applications. Libraries also include source files and JavaDocs that can help you develop your projects.<br><br>Consulo uses libraries to assist you with code completion, validation, error highlighting, etc.<br><br>Module libraries are referenced only from the module they are attached to. Expand the node and select child items to manage Module libraries.<br><br> To attach a library to a module, select that module, click the Dependencies tab, click Add and specify the library location.
 libraries.node.text.project:
     text: Libraries contain classes that add up various functionality to your applications. Libraries also include source files and JavaDocs that can help you develop your projects.<br><br>Consulo uses libraries to assist you with code completion, validation, error highlighting, etc.<br><br>Project libraries are referenced through the entire project and can be used from all modules. Also they are available to everybody you share the project with.<br><br>Expand the node and select child items to manage Project libraries.<br><br> To attach a library to a module, select that module, click the Dependencies tab, click Add and specify the library location.
+library.add.to.modules.action:
+    text: Add to Modules…
+library.add.to.modules.description:
+    text: Add the library to the dependencies list of chosen modules
 library.attach.files.action:
     text: Attach Files or Directories
 library.attach.files.description:
@@ -211,6 +291,12 @@ library.attach.sources.description:
     text: Select jar/zip files or directories in which library sources are located
 library.binaries.node:
     text: Binaries
+library.cancel.exclusion.action:
+    text: Cancel Exclusion
+library.choose.files.title:
+    text: Select Library Files
+library.configure.dialog.title:
+    text: Configure {0}
 library.configure.global.title:
     text: Configure Global Libraries
 library.configure.module.title:
@@ -219,12 +305,30 @@ library.configure.project.title:
     text: Configure Project Libraries
 library.configure.title:
     text: Configure Library
+library.copy.prompt:
+    text: 'Library name:'
+library.copy.title:
+    text: Copy Library
+library.detected.roots.description:
+    text: Choose the roots to add to the library
+library.detected.roots.root.column:
+    text: Root
+library.detected.roots.title:
+    text: Detected Roots
+library.detected.roots.type.column:
+    text: Type
 library.docs.node:
     text: Documentation
 library.empty.item:
     text: <empty library>
 library.empty.library.item:
     text: Empty Library
+library.exclude.action:
+    text: Exclude
+library.exclude.chooser.description:
+    text: Select directories which should be excluded from the library content. Content of excluded directories won''t be processed by IDE.
+library.exclude.chooser.title:
+    text: Exclude from Library
 library.global.settings:
     text: Global libraries
 library.javadocs.node:
@@ -239,8 +343,14 @@ library.name.not.specified.title:
     text: Library Name Not Specified
 library.remove.action:
     text: Remove
+library.root.categories.description:
+    text: '{0} cannot determine what kind of files the chosen items contain. Choose the appropriate categories from the list.'
+library.root.categories.title:
+    text: Choose Categories of Selected Files
 library.root.node:
     text: Root
+library.scanning.roots.progress:
+    text: Scanning for Roots
 library.sources.node:
     text: Sources
 library.sources.not.attached:
@@ -283,8 +393,12 @@ module.dependencies.title:
     text: Dependencies
 module.dir.does.not.exist.error:
     text: Module dir ''{0}'' does not exist
+module.extensions.title:
+    text: Extensions
 module.group.banner.text:
     text: Module group ''{0}''
+module.import.action:
+    text: Import Module
 module.javadoc.add.path.button:
     text: '&Add Path...'
 module.javadoc.add.path.prompt:
@@ -297,6 +411,20 @@ module.javadoc.remove.button:
     text: '&Remove'
 module.javadoc.title:
     text: JavaDoc
+module.layer.copy.action:
+    text: Copy Layer
+module.layer.delete.action:
+    text: Delete Layer
+module.layer.label:
+    text: 'Layer:'
+module.layer.name.already.exists.error:
+    text: Layer ''{0}'' already exists
+module.layer.name.empty.error:
+    text: Layer name is not specified
+module.layer.name.prompt:
+    text: 'Layer name:'
+module.layer.new.action:
+    text: New Layer
 module.libraries.add.button:
     text: '&Add Library...'
 module.libraries.attach.more.button:
@@ -317,6 +445,10 @@ module.module.language.level:
     text: '&Language level:'
 module.module.language.level.comment:
     text: (effective on project reload)
+module.name.already.exists.error:
+    text: Module ''{0}'' already exists
+module.name.empty.error:
+    text: Module name is not specified
 module.new.action:
     text: New Module
 module.new.action.description:
@@ -357,12 +489,22 @@ module.paths.excluded.group:
     text: Excluded Folders
 module.paths.include.excluded.tooltip:
     text: Include
+module.paths.mark.as.label:
+    text: 'Mark as:'
 module.paths.output.label:
     text: 'Output path:'
 module.paths.output.title:
     text: Select Output Path
+module.paths.properties.name.column:
+    text: Name
 module.paths.properties.tooltip:
     text: Properties
+module.paths.properties.value.column:
+    text: Value
+module.paths.provider.output.label:
+    text: '{0} Output:'
+module.paths.provider.output.title:
+    text: Select {0} Output
 module.paths.remove.content.prompt:
     text: Remove content root "{0}"?
 module.paths.remove.content.title:
@@ -490,8 +632,10 @@ progress.title.loading.modules:
     text: Loading modules…
 progress.title.preparing.workspace:
     text: Preparing workspace…
-project.compiler.output:
-    text: '<html><b>Project compiler output:</b><br>This path is used to store all project compilation results. <br>A directory corresponding to each module is created under this path. <br>This directory contains two subdirectories: Production and Test for production code and test sources, respectively.<br>A module specific compiler output path can be configured for each of the modules as required</html>'
+project.compiler.output.description:
+    text: This path is used to store all project compilation results.<br>A directory corresponding to each module is created under this path.<br>This directory contains two subdirectories, Production and Test, for production code and test sources.<br>A module-specific compiler output path can be configured for each module as required.
+project.compiler.output.label:
+    text: 'Project compiler output:'
 project.configuration.save.file.not.found:
     text: '{0} not found'
 project.configure.path.variables.description.title:
@@ -580,6 +724,10 @@ project.macros.variable.missing.title:
     text: Undefined Path Variable
 project.module.compile.output.path:
     text: Use module compile output path
+project.name.label:
+    text: 'Project name:'
+project.name.required.error:
+    text: Please specify project name
 project.new.wizard.description.title:
     text: Description
 project.new.wizard.from.existent.sources.description:
@@ -732,6 +880,10 @@ sdk.configure.title:
     text: Configure SDK
 sdk.configure.type.home.path:
     text: 'Path:'
+sdk.copy.prompt:
+    text: 'SDK name:'
+sdk.copy.title:
+    text: Copy SDK
 sdk.java.corrupt.error:
     text: Probably SDK installed in ''{0}'' is corrupt
 sdk.java.corrupt.title:
@@ -748,6 +900,8 @@ sdk.list.unique.name.required.error:
     text: Please specify a different SDK name
 sdk.paths.specify.url.button:
     text: Specify URL...
+sdk.setup.progress:
+    text: Setting up SDK…
 sdk.table.settings:
     text: SDK Table
 sdk.unknown.name:

@@ -93,7 +93,7 @@ public class DesktopQtTwoComponentSplitLayoutImpl extends DesktopQtLayoutCompone
 
     @Override
     protected void attach(QtComponentDelegate<?> child, @Nullable Object layoutData) {
-        int slot = ourSlots[1].equals(String.valueOf(layoutData)) ? 1 : 0;
+        int slot = slotOf(layoutData);
 
         QSplitter splitter = (QSplitter) myComponent;
 
@@ -102,6 +102,15 @@ public class DesktopQtTwoComponentSplitLayoutImpl extends DesktopQtLayoutCompone
         splitter.insertWidget(slot == 1 && myAttached[0] == null ? 0 : slot, child.toQtComponent());
 
         applyProportion();
+    }
+
+    @Override
+    protected int compareLayoutData(@Nullable Object first, @Nullable Object second) {
+        return Integer.compare(slotOf(first), slotOf(second));
+    }
+
+    private static int slotOf(@Nullable Object layoutData) {
+        return ourSlots[1].equals(String.valueOf(layoutData)) ? 1 : 0;
     }
 
     @Override

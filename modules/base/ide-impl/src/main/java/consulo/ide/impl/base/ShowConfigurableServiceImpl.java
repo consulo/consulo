@@ -21,12 +21,12 @@ import consulo.configurable.UnnamedConfigurable;
 import consulo.configurable.internal.ShowConfigurableService;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.Project;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import java.awt.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
@@ -47,7 +47,7 @@ public class ShowConfigurableServiceImpl implements ShowConfigurableService {
     @RequiredUIAccess
     @Override
     public CompletableFuture<?> showAndSelect(@Nullable Project project, String toSelectId) {
-        return myShowSettingsUtil.showSettingsDialog(project, toSelectId, null);
+        return myShowSettingsUtil.showSettingsDialog(project, toSelectId, "");
     }
 
     @RequiredUIAccess

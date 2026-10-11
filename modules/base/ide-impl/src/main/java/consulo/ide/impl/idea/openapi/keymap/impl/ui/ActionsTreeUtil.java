@@ -21,7 +21,7 @@ import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginManager;
 import consulo.ide.impl.idea.ide.actionMacro.ActionMacro;
 import consulo.ide.impl.idea.ide.plugins.PluginManagerCore;
-import consulo.ide.impl.idea.ide.ui.search.SearchUtil;
+import consulo.ide.impl.ui.app.impl.settings.OptionsSearchMatcher;
 import consulo.ui.ex.action.QuickList;
 import consulo.ui.ex.internal.KeymapManagerEx;
 import consulo.ui.ex.impl.internal.keymap.KeymapImpl;
@@ -247,7 +247,7 @@ public class ActionsTreeUtil {
             if (filtered != null && filtered.test(ActionManagerEx.getInstanceEx().getAction(quickList.getActionId()))) {
                 group.addQuickList(quickList);
             }
-            else if (SearchUtil.isComponentHighlighted(quickList.getDisplayName(), filter, forceFiltering, null)) {
+            else if (OptionsSearchMatcher.matches(quickList.getDisplayName(), filter, forceFiltering, null)) {
                 group.addQuickList(quickList);
             }
             else if (filtered == null && StringUtil.isEmpty(filter)) {
@@ -408,7 +408,7 @@ public class ActionsTreeUtil {
                 List list = mainGroup.getChildren();
                 for (Iterator i = list.iterator(); i.hasNext(); ) {
                     if (i.next() instanceof KeymapGroupImpl group && group.getSize() == 0
-                        && !SearchUtil.isComponentHighlighted(group.getName(), filter, forceFiltering, null)) {
+                        && !OptionsSearchMatcher.matches(group.getName(), filter, forceFiltering, null)) {
                         i.remove();
                     }
                 }
@@ -429,7 +429,7 @@ public class ActionsTreeUtil {
             String text = action.getTemplatePresentation().getText();
             if (text != null) {
                 String lowerText = text.toLowerCase();
-                if (SearchUtil.isComponentHighlighted(lowerText, insensitiveFilter, force, null)) {
+                if (OptionsSearchMatcher.matches(lowerText, insensitiveFilter, force, null)) {
                     return true;
                 }
                 else if (lowerText.contains(insensitiveFilter)) {
@@ -437,7 +437,7 @@ public class ActionsTreeUtil {
                 }
             }
             String insensitiveDescription = action.getTemplatePresentation().getDescription().get().toLowerCase();
-            if (SearchUtil.isComponentHighlighted(insensitiveDescription, insensitiveFilter, force, null)) {
+            if (OptionsSearchMatcher.matches(insensitiveDescription, insensitiveFilter, force, null)) {
                 return true;
             }
             else if (insensitiveDescription.contains(insensitiveFilter)) {

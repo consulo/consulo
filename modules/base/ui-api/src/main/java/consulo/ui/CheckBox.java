@@ -25,7 +25,7 @@ import org.jspecify.annotations.Nullable;
  * @author VISTALL
  * @since 2016-06-09
  */
-public interface CheckBox extends ValueComponent<Boolean>, HasFocus, HasMnemonic, HasComponentStyle<CheckBoxStyle> {
+public interface CheckBox extends ValueComponent<Boolean>, HasFocus, HasMnemonic, HasComponentStyle<CheckBoxStyle>, HasSearchHighlight {
     @Deprecated(forRemoval = true)
     @DeprecationInfo("Please don't use not localized text")
     @RequiredUIAccess

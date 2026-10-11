@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2009 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,114 +13,100 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot;
 
 import consulo.application.content.impl.internal.bundle.SdkImpl;
 import consulo.configurable.ConfigurationException;
+import consulo.configurable.MasterDetailsConfigurable;
 import consulo.content.bundle.Sdk;
 import consulo.content.bundle.SdkModel;
 import consulo.content.bundle.SdkType;
 import consulo.content.bundle.SdkUtil;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.bundle.SdkEditor;
-import consulo.ide.impl.idea.openapi.projectRoots.ui.BaseSdkEditor;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.SdkProjectStructureElement;
 import consulo.localize.LocalizeValue;
 import consulo.project.localize.ProjectLocalize;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import org.jspecify.annotations.Nullable;
-
-import javax.swing.*;
 
 /**
  * @author anna
  * @since 2006-06-05
  */
-public class SdkConfigurable extends ProjectStructureElementConfigurable<Sdk> {
-  private final SdkImpl mySdk;
-  private final BaseSdkEditor mySdkEditor;
-  private final SdkProjectStructureElement myProjectStructureElement;
+public class SdkConfigurable implements MasterDetailsConfigurable<Sdk> {
+    private final SdkImpl mySdk;
+    private final SdkEditor mySdkEditor;
 
-  public SdkConfigurable(SdkImpl sdk, SdkModel sdksModel, Runnable updateTree) {
-    super(!sdk.isPredefined(), updateTree);
-    mySdk = sdk;
-    mySdkEditor = createSdkEditor(sdksModel, mySdk);
-    myProjectStructureElement = new SdkProjectStructureElement(mySdk);
-  }
+    @RequiredUIAccess
+    public SdkConfigurable(SdkImpl sdk, SdkModel sdksModel, Runnable updateTree) {
+        mySdk = sdk;
+        mySdkEditor = new SdkEditor(sdksModel, mySdk, updateTree);
+    }
 
-  protected BaseSdkEditor createSdkEditor(SdkModel sdksModel, SdkImpl projectJdk) {
-    return new SdkEditor(sdksModel, projectJdk);
-  }
+    @Override
+    public Sdk getEditableObject() {
+        return mySdk;
+    }
 
-  @Override
-  public ProjectStructureElement getProjectStructureElement() {
-    return myProjectStructureElement;
-  }
+    @Override
+    public LocalizeValue getBannerSlogan() {
+        return ProjectLocalize.sdkBannerText(((SdkType) mySdk.getSdkType()).getDisplayName(), mySdk.getName());
+    }
 
-  @Override
-  public void setDisplayName(String name) {
-    mySdk.setName(name);
-  }
+    @Override
+    public LocalizeValue getDisplayName() {
+        return LocalizeValue.of(mySdk.getName());
+    }
 
-  @Override
-  public Sdk getEditableObject() {
-    return mySdk;
-  }
+    @Override
+    public Image getIcon() {
+        return SdkUtil.getIcon(mySdk);
+    }
 
-  @Override
-  public LocalizeValue getBannerSlogan() {
-    return ProjectLocalize.sdkBannerText(((SdkType) mySdk.getSdkType()).getDisplayName(), mySdk.getName());
-  }
+    @Override
+    public @Nullable String getHelpTopic() {
+        return ((SdkType) mySdk.getSdkType()).getHelpTopic();
+    }
 
-  @Override
-  public LocalizeValue getDisplayName() {
-    return LocalizeValue.ofNullable(mySdk.getName());
-  }
+    @RequiredUIAccess
+    @Override
+    public Component createUIComponent(Disposable parentUIDisposable) {
+        return mySdkEditor.createUIComponent(parentUIDisposable);
+    }
 
-  @Override
-  public Image getIcon(boolean open) {
-    return SdkUtil.getIcon(mySdk);
-  }
+    @RequiredUIAccess
+    @Override
+    public void updateName() {
+        mySdkEditor.updateName();
+    }
 
-  @Override
-  public @Nullable String getHelpTopic() {
-    return ((SdkType)mySdk.getSdkType()).getHelpTopic();
-  }
+    @RequiredUIAccess
+    @Override
+    public boolean isModified() {
+        return mySdkEditor.isModified();
+    }
 
-  @RequiredUIAccess
-  @Override
-  public JComponent createOptionsPanel(Disposable parentDisposable) {
-    return mySdkEditor.createComponent(parentDisposable);
-  }
+    @RequiredUIAccess
+    @Override
+    public void apply() throws ConfigurationException {
+        mySdkEditor.apply();
+    }
 
-  @RequiredUIAccess
-  @Override
-  public boolean isModified() {
-    return mySdkEditor.isModified();
-  }
+    @RequiredUIAccess
+    @Override
+    public void reset() {
+        mySdkEditor.reset();
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void apply() throws ConfigurationException {
-    mySdkEditor.apply();
-  }
+    @RequiredUIAccess
+    @Override
+    public void disposeUIResources() {
+        mySdkEditor.disposeUIResources();
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void reset() {
-    mySdkEditor.reset();
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void disposeUIResources() {
-    mySdkEditor.disposeUIResources();
-  }
-
-  public Sdk getSdk() {
-    return mySdk;
-  }
+    public Sdk getSdk() {
+        return mySdk;
+    }
 }

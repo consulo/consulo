@@ -21,21 +21,18 @@ import consulo.compiler.artifact.element.CompositePackagingElementType;
 import consulo.compiler.artifact.element.PackagingElement;
 import consulo.compiler.artifact.element.PackagingElementFactory;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.ArtifactEditorEx;
+import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.LayoutElementInfo;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.LayoutTreeComponent;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.LayoutTreeSelection;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.nodes.PackagingElementNode;
-import consulo.language.editor.internal.action.LanguageEditorActions;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.CustomShortcutSet;
-import consulo.ui.ex.keymap.KeymapManager;
-import consulo.ui.ex.popup.BaseListPopupStep;
+import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.ui.ex.popup.PopupStep;
-import consulo.ui.image.Image;
-import consulo.util.collection.ContainerUtil;
+import consulo.ui.ex.popup.ListPopup;
 import consulo.util.io.PathUtil;
 
 import java.util.List;
@@ -46,9 +43,6 @@ import java.util.List;
 public class SurroundElementWithAction extends LayoutTreeActionBase {
     public SurroundElementWithAction(ArtifactEditorEx artifactEditor) {
         super(ActionLocalize.actionSurroundwithText(), artifactEditor);
-        CustomShortcutSet shortcutSet =
-            new CustomShortcutSet(KeymapManager.getInstance().getActiveKeymap().getShortcuts(LanguageEditorActions.SURROUND_WITH));
-        registerCustomShortcutSet(shortcutSet, artifactEditor.getLayoutTreeComponent().getLayoutTree());
     }
 
     @Override
@@ -59,49 +53,45 @@ public class SurroundElementWithAction extends LayoutTreeActionBase {
     @Override
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
-        final LayoutTreeComponent treeComponent = myArtifactEditor.getLayoutTreeComponent();
+        LayoutTreeComponent treeComponent = myArtifactEditor.getLayoutTreeComponent();
         LayoutTreeSelection selection = treeComponent.getSelection();
-        final CompositePackagingElement<?> parent = selection.getCommonParentElement();
+        CompositePackagingElement<?> parent = selection.getCommonParentElement();
         if (parent == null) {
             return;
         }
-        PackagingElementNode<?> parentNode = selection.getNodes().get(0).getParentNode();
-        if (parentNode == null) {
+
+        LayoutElementInfo parentNode = treeComponent.getParentNode(selection.getNodes().get(0));
+        if (parentNode == null || !treeComponent.checkCanModifyChildren(parent, parentNode, selection.getNodes())) {
             return;
         }
 
-        if (!treeComponent.checkCanModifyChildren(parent, parentNode, selection.getNodes())) {
-            return;
-        }
-
-        Project project = e.getRequiredData(Project.KEY);
+        Project project = myArtifactEditor.getContext().getProject();
         CompositePackagingElementType<?>[] types = PackagingElementFactory.getInstance(project).getCompositeElementTypes();
         List<PackagingElement<?>> selected = selection.getElements();
         if (types.length == 1) {
             surroundWith(types[0], parent, selected, treeComponent);
+            return;
         }
-        else {
-            JBPopupFactory.getInstance().createListPopup(
-                project,
-                new BaseListPopupStep<CompositePackagingElementType>(getTemplatePresentation().getText(), types) {
-                    @Override
-                    public Image getIconFor(CompositePackagingElementType aValue) {
-                        return aValue.getIcon();
-                    }
 
-                    @Override
-                    public String getTextFor(CompositePackagingElementType value) {
-                        return value.getPresentableName().get();
-                    }
-
-                    @Override
-                    public PopupStep onChosen(CompositePackagingElementType selectedValue, boolean finalChoice) {
-                        project.getApplication().invokeLater(() -> surroundWith(selectedValue, parent, selected, treeComponent));
-                        return FINAL_CHOICE;
-                    }
+        ActionGroup.Builder group = ActionGroup.newImmutableBuilder();
+        for (CompositePackagingElementType<?> type : types) {
+            group.add(new DumbAwareAction(type.getPresentableName(), type.getPresentableName(), type.getIcon()) {
+                @Override
+                @RequiredUIAccess
+                public void actionPerformed(AnActionEvent event) {
+                    surroundWith(type, parent, selected, treeComponent);
                 }
-            ).showInBestPositionFor(e.getDataContext());
+            });
         }
+
+        ListPopup popup = JBPopupFactory.getInstance().createActionGroupPopup(
+            getTemplatePresentation().getText(),
+            group.build(),
+            e.getDataContext(),
+            JBPopupFactory.ActionSelectionAid.SPEEDSEARCH,
+            false
+        );
+        popup.showInBestPositionFor(e.getDataContext());
     }
 
     @RequiredUIAccess
@@ -116,12 +106,14 @@ public class SurroundElementWithAction extends LayoutTreeActionBase {
         }
 
         Project project = myArtifactEditor.getContext().getProject();
-        String elementName = ContainerUtil.getFirstItem(selected, null)
-            .createPresentation(myArtifactEditor.getContext())
-            .getPresentableName();
+        String elementName = selected.get(0).createPresentation(myArtifactEditor.getContext()).getPresentableName();
         String baseName = PathUtil.suggestFileName(elementName);
-        CompositePackagingElement<?> newParent = type.createComposite(parent, baseName, myArtifactEditor.getContext());
-        if (newParent != null) {
+        UIAccess uiAccess = UIAccess.current();
+        type.createComposite(parent, baseName, myArtifactEditor.getContext()).whenCompleteAsync((newParent, error) -> {
+            if (error != null || newParent == null || myArtifactEditor.isDisposed()) {
+                return;
+            }
+
             treeComponent.editLayout(() -> {
                 for (PackagingElement<?> element : selected) {
                     newParent.addOrFindChild(ArtifactUtil.copyWithChildren(element, project));
@@ -131,7 +123,7 @@ public class SurroundElementWithAction extends LayoutTreeActionBase {
                 }
                 parent.addOrFindChild(newParent);
             });
-            treeComponent.rebuildTree();
-        }
+            treeComponent.updateAndSelect(List.of(newParent));
+        }, uiAccess);
     }
 }

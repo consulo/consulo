@@ -25,8 +25,6 @@ import consulo.ui.TreeNode;
 import java.util.Comparator;
 
 /**
- * From OptionsTree - swing settings dialog
- *
  * @author VISTALL
  * @since 2020-05-11
  */

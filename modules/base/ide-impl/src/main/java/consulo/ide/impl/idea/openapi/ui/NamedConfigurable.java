@@ -23,6 +23,8 @@ import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.configurable.MasterDetailsConfigurable;
+import consulo.ui.Component;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 
 import org.jspecify.annotations.Nullable;
@@ -89,7 +91,7 @@ public abstract class NamedConfigurable<T> implements Configurable, MasterDetail
 
   @RequiredUIAccess
   @Override
-  public final JComponent createComponent(Disposable parentDisposable) {
+  public final Component createUIComponent(Disposable parentDisposable) {
     if (myOptionsComponent == null) {
       myOptionsComponent = createOptionsPanel(parentDisposable);
       JComponent component = createTopRightComponent(myNameField);
@@ -107,7 +109,7 @@ public abstract class NamedConfigurable<T> implements Configurable, MasterDetail
       Logger.getInstance(getClass()).error("Options component is null for " + getClass());
     }
     updateName();
-    return myWholePanel;
+    return TargetAWT.wrap(myWholePanel);
   }
 
   protected @Nullable JComponent createTopRightComponent(JTextField nameField) {

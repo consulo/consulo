@@ -19,12 +19,15 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.Hyperlink;
 import consulo.ui.event.HyperlinkEvent;
 import consulo.ui.image.Image;
+import consulo.ui.internal.SearchHighlightUtil;
 import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
  */
 public class HeadlessHyperlink extends HeadlessComponentBase implements Hyperlink {
+    private @Nullable String mySearchHighlight;
+
     private LocalizeValue myText;
     private @Nullable Image myIcon;
 
@@ -54,5 +57,15 @@ public class HeadlessHyperlink extends HeadlessComponentBase implements Hyperlin
     @Override
     public @Nullable Image getIcon() {
         return myIcon;
+    }
+
+    @Override
+    public void setSearchHighlight(@Nullable String query) {
+        mySearchHighlight = SearchHighlightUtil.normalizeQuery(query);
+    }
+
+    @Override
+    public @Nullable String getSearchHighlight() {
+        return mySearchHighlight;
     }
 }

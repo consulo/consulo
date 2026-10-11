@@ -17,62 +17,67 @@ package consulo.compiler.artifact.element;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
-import consulo.fileChooser.IdeaFileChooser;
-import consulo.fileChooser.FileChooserDescriptor;
-import consulo.localize.LocalizeValue;
-import consulo.project.Project;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
+import consulo.compiler.localize.CompilerLocalize;
+import consulo.fileChooser.FileChooser;
+import consulo.fileChooser.FileChooserDescriptor;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
+import consulo.virtualFileSystem.VirtualFile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
-* @author nik
-*/
+ * @author nik
+ */
 @ExtensionImpl
 public class ExtractedDirectoryElementType extends PackagingElementType<ExtractedDirectoryPackagingElement> {
-  public static ExtractedDirectoryElementType getInstance() {
-    return getInstance(ExtractedDirectoryElementType.class);
-  }
-
-  public ExtractedDirectoryElementType() {
-    super("extracted-dir", LocalizeValue.localizeTODO("Extracted Directory"));
-  }
-
-  
-  @Override
-  public Image getIcon() {
-    return AllIcons.Nodes.ExtractedFolder;
-  }
-
-  @Override
-  
-  public List<? extends PackagingElement<?>> chooseAndCreate(ArtifactEditorContext context, Artifact artifact,
-                                                             CompositePackagingElement<?> parent) {
-    FileChooserDescriptor descriptor = new FileChooserDescriptor(false, true, true, false, true, true) {
-      @RequiredUIAccess
-      @Override
-      public boolean isFileSelectable(VirtualFile file) {
-        if (file.isInLocalFileSystem() && file.isDirectory()) return false;
-        return super.isFileSelectable(file);
-      }
-    };
-    VirtualFile[] files = IdeaFileChooser.chooseFiles(descriptor, context.getProject(), null);
-    List<PackagingElement<?>> list = new ArrayList<>();
-    PackagingElementFactory factory = PackagingElementFactory.getInstance(context.getProject());
-    for (VirtualFile file : files) {
-      list.add(factory.createExtractedDirectory(file));
+    public static ExtractedDirectoryElementType getInstance() {
+        return getInstance(ExtractedDirectoryElementType.class);
     }
-    return list;
-  }
 
-  @Override
-  
-  public ExtractedDirectoryPackagingElement createEmpty(Project project) {
-    return new ExtractedDirectoryPackagingElement();
-  }
+    public ExtractedDirectoryElementType() {
+        super("extracted-dir", CompilerLocalize.elementTypeNameExtractedDirectory());
+    }
+
+    @Override
+    public Image getIcon() {
+        return AllIcons.Nodes.ExtractedFolder;
+    }
+
+    @Override
+    @RequiredUIAccess
+    public CompletableFuture<List<? extends PackagingElement<?>>> chooseAndCreate(
+        ArtifactEditorContext context,
+        Artifact artifact,
+        CompositePackagingElement<?> parent
+    ) {
+        FileChooserDescriptor descriptor = new FileChooserDescriptor(false, true, true, false, true, true) {
+            @RequiredUIAccess
+            @Override
+            public boolean isFileSelectable(VirtualFile file) {
+                if (file.isInLocalFileSystem() && file.isDirectory()) {
+                    return false;
+                }
+                return super.isFileSelectable(file);
+            }
+        };
+        PackagingElementFactory factory = PackagingElementFactory.getInstance(context.getProject());
+        return FileChooser.chooseFiles(descriptor, context.getProject(), null).thenApply(files -> {
+            List<PackagingElement<?>> list = new ArrayList<>();
+            for (VirtualFile file : files) {
+                list.add(factory.createExtractedDirectory(file));
+            }
+            return list;
+        });
+    }
+
+    @Override
+    public ExtractedDirectoryPackagingElement createEmpty(Project project) {
+        return new ExtractedDirectoryPackagingElement();
+    }
 }

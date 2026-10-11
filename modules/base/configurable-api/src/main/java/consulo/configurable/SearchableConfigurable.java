@@ -21,7 +21,6 @@ import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import org.jspecify.annotations.Nullable;
-import javax.swing.*;
 
 /**
  * SearchableConfigurable instances would be instantiated on buildSearchableOptions step during Installer's build to index of all available options.
@@ -60,27 +59,8 @@ public interface SearchableConfigurable extends Configurable {
 
       @RequiredUIAccess
       @Override
-      @Deprecated
-      public @Nullable JComponent createComponent() {
-        return null;
-      }
-
-      @RequiredUIAccess
-      @Override
-      public @Nullable JComponent createComponent(Disposable parentDisposable) {
-        return createComponent();
-      }
-
-      @RequiredUIAccess
-      @Override
-      public @Nullable Component createUIComponent() {
-        return null;
-      }
-
-      @RequiredUIAccess
-      @Override
       public @Nullable Component createUIComponent(Disposable parentDisposable) {
-        return createUIComponent();
+        return null;
       }
 
       @Override

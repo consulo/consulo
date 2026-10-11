@@ -17,57 +17,74 @@ package consulo.ide.impl.roots.ui.configuration.classpath;
 
 import consulo.ide.setting.module.AddModuleDependencyActionProvider;
 import consulo.ide.setting.module.AddModuleDependencyContext;
+import consulo.logging.Logger;
 import consulo.module.content.layer.ModifiableRootModel;
-import consulo.ui.ex.popup.PopupStep;
-import consulo.ui.ex.popup.BaseListPopupStep;
+import consulo.project.localize.ProjectLocalize;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.popup.BaseListPopupStep;
+import consulo.ui.ex.popup.PopupStep;
 import consulo.ui.image.Image;
 
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 
 /**
  * @author VISTALL
  * @since 2020-09-05
  */
 public class AddModuleDependencyListPopupStep extends BaseListPopupStep<Map.Entry<AddModuleDependencyActionProvider, AddModuleDependencyContext>> {
-  private final ModifiableRootModel myRootModel;
+    private static final Logger LOG = Logger.getInstance(AddModuleDependencyListPopupStep.class);
 
-  public AddModuleDependencyListPopupStep(ModifiableRootModel rootModel, Set<Map.Entry<AddModuleDependencyActionProvider, AddModuleDependencyContext>> values) {
-    super("Add Dependency", new ArrayList<>(values));
-    myRootModel = rootModel;
-  }
+    private final ModifiableRootModel myRootModel;
 
-  
-  @Override
-  public String getTextFor(Map.Entry<AddModuleDependencyActionProvider, AddModuleDependencyContext> value) {
-    return value.getKey().getActionName(myRootModel).get();
-  }
+    public AddModuleDependencyListPopupStep(
+        ModifiableRootModel rootModel,
+        Set<Map.Entry<AddModuleDependencyActionProvider, AddModuleDependencyContext>> values
+    ) {
+        super(ProjectLocalize.classpathAddDependencyPopupTitle().get(), new ArrayList<>(values));
+        myRootModel = rootModel;
+    }
 
-  @Override
-  public Image getIconFor(Map.Entry<AddModuleDependencyActionProvider, AddModuleDependencyContext> value) {
-    return value.getKey().getIcon(myRootModel);
-  }
+    @Override
+    public String getTextFor(Map.Entry<AddModuleDependencyActionProvider, AddModuleDependencyContext> value) {
+        return value.getKey().getActionName(myRootModel).get();
+    }
 
-  @Override
-  public PopupStep onChosen(Map.Entry<AddModuleDependencyActionProvider, AddModuleDependencyContext> selectedValue, boolean finalChoice) {
-    return doFinalStep(() -> providerSelected(selectedValue));
-  }
+    @Override
+    public Image getIconFor(Map.Entry<AddModuleDependencyActionProvider, AddModuleDependencyContext> value) {
+        return value.getKey().getIcon(myRootModel);
+    }
 
-  @RequiredUIAccess
-  @SuppressWarnings("unchecked")
-  public static void providerSelected(Map.Entry<AddModuleDependencyActionProvider, AddModuleDependencyContext> entry) {
-    AddModuleDependencyActionProvider provider = entry.getKey();
-    AddModuleDependencyContext value = entry.getValue();
+    @Override
+    public PopupStep onChosen(Map.Entry<AddModuleDependencyActionProvider, AddModuleDependencyContext> selectedValue, boolean finalChoice) {
+        return doFinalStep(() -> providerSelected(selectedValue));
+    }
 
-    CompletableFuture result = provider.invoke(value);
+    @RequiredUIAccess
+    @SuppressWarnings("unchecked")
+    public static void providerSelected(Map.Entry<AddModuleDependencyActionProvider, AddModuleDependencyContext> entry) {
+        AddModuleDependencyActionProvider provider = entry.getKey();
+        AddModuleDependencyContext context = entry.getValue();
 
-    result.whenComplete((o, error) -> {
-      if (error == null) {
-        value.processAddOrderEntries(o);
-      }
-    });
-  }
+        UIAccess uiAccess = UIAccess.current();
+        CompletableFuture<?> result = provider.invoke(context);
+        result.whenCompleteAsync((value, error) -> {
+            if (error != null) {
+                Throwable cause = error instanceof CompletionException && error.getCause() != null ? error.getCause() : error;
+                if (!(cause instanceof CancellationException)) {
+                    LOG.error(cause);
+                }
+                return;
+            }
+
+            if (value != null) {
+                context.processAddOrderEntries(value);
+            }
+        }, uiAccess);
+    }
 }

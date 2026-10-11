@@ -470,7 +470,7 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
 
     @RequiredUIAccess
     @Override
-    public JComponent createComponent(Disposable uiDisposable) {
+    public consulo.ui.Component createUIComponent(Disposable uiDisposable) {
         myRoot = new JPanel(new BorderLayout());
 
         myInjectionsTable = new InjectionsTable(getInjInfoList(myInfos));
@@ -490,7 +490,7 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
         myCountLabel.setForeground(SimpleTextAttributes.GRAY_ITALIC_ATTRIBUTES.getFgColor());
         myRoot.add(myCountLabel, BorderLayout.SOUTH);
         updateCountLabel();
-        return myRoot;
+        return TargetAWT.wrap(myRoot);
     }
 
     @RequiredUIAccess

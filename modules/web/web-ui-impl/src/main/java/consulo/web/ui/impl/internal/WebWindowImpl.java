@@ -18,10 +18,11 @@ package consulo.web.ui.impl.internal;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.dialog.DialogVariant;
-import com.vaadin.flow.component.icon.VaadinIcon;
 import consulo.disposer.Disposer;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.Component;
 import consulo.ui.MenuBar;
 import consulo.ui.Window;
@@ -33,7 +34,11 @@ import consulo.web.ui.impl.internal.base.ComponentHolder;
 import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
 import consulo.web.ui.impl.internal.base.TargetVaadin;
 import consulo.web.ui.impl.internal.base.VaadinComponentDelegate;
+import consulo.web.ui.impl.internal.base.WebFocusTracker;
+import consulo.web.ui.impl.internal.image.WebImageConverter;
 import consulo.web.ui.impl.internal.vaadin.VaadinSizeUtil;
+import consulo.ui.Length;
+import consulo.web.ui.impl.internal.vaadin.WebLength;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -41,6 +46,16 @@ import org.jspecify.annotations.Nullable;
  * @since 2017-09-15
  */
 public class WebWindowImpl extends VaadinComponentDelegate<WebWindowImpl.Vaadin> implements Window {
+    private static final String SIZE_STORAGE_PREFIX = "consulo.window.size.";
+
+    private static final String RESTORE_SIZE_SCRIPT = "try { const size = JSON.parse(localStorage.getItem($0) || 'null');"
+        + " if (size && size.width > 0 && size.height > 0) { this.width = size.width + 'px'; this.height = size.height + 'px'; } }"
+        + " catch (e) { }";
+
+    private static final String STORE_SIZE_SCRIPT =
+        "try { localStorage.setItem($0, JSON.stringify({width: $1, height: $2})); } catch (e) { }";
+
+    @StyleSheet("/button/webButton.css")
     public static class Vaadin extends Dialog implements ComponentHolder, FromVaadinComponentWrapper {
         private Component myComponent;
 
@@ -57,6 +72,7 @@ public class WebWindowImpl extends VaadinComponentDelegate<WebWindowImpl.Vaadin>
 
     private boolean myDisposed;
     private final boolean myUndecorated;
+    private final @Nullable String myDimensionKey;
     private final WebRootPaneImpl myRootPanel = new WebRootPaneImpl();
 
     public WebWindowImpl(boolean modal, WindowOptions options) {
@@ -69,6 +85,7 @@ public class WebWindowImpl extends VaadinComponentDelegate<WebWindowImpl.Vaadin>
         vaadinComponent.setDraggable(true);
 
         myUndecorated = options.isUndecorated();
+        myDimensionKey = options.getDimensionKey();
         if (myUndecorated) {
             vaadinComponent.addThemeVariants(DialogVariant.NO_PADDING);
         }
@@ -79,6 +96,10 @@ public class WebWindowImpl extends VaadinComponentDelegate<WebWindowImpl.Vaadin>
         VaadinSizeUtil.setSizeFull(myRootPanel.getComponent());
         vaadinComponent.add(TargetVaadin.to(myRootPanel.getComponent()));
 
+        if (myDimensionKey != null) {
+            vaadinComponent.addResizeListener(event -> rememberSize(event.getWidth(), event.getHeight()));
+        }
+
         vaadinComponent.addOpenedChangeListener(event -> {
             if (!event.isOpened()) {
                 closed();
@@ -86,13 +107,15 @@ public class WebWindowImpl extends VaadinComponentDelegate<WebWindowImpl.Vaadin>
         });
 
         WebFocusManagerImpl.register(toVaadinComponent());
+        WebFocusTracker.installActivityRoot(vaadinComponent.getElement());
     }
 
     private void addCloseDialogButton() {
-        // the lumo iconset is not part of the aura theme used by the app shell
-        Button closeButton = new Button(VaadinIcon.CLOSE_SMALL.create(), e -> close());
+        Button closeButton = new Button(WebImageConverter.getImage(PlatformIconGroup.actionsClose()), e -> close());
         // created outside a VaadinComponentDelegate, so the small variant has to be added by hand here
         closeButton.addThemeVariants(ButtonVariant.TERTIARY, ButtonVariant.SMALL);
+        closeButton.addClassName("consulo-toolbar-button");
+        closeButton.addClassName("consulo-window-close");
         getVaadinComponent().getHeader().add(closeButton);
     }
 
@@ -110,10 +133,46 @@ public class WebWindowImpl extends VaadinComponentDelegate<WebWindowImpl.Vaadin>
 
         Vaadin vaadin = toVaadinComponent();
         if (!vaadin.isAttached()) {
+            applyRememberedSize();
+
             UI.getCurrent().add(vaadin);
         }
 
         vaadin.open();
+    }
+
+    @RequiredUIAccess
+    private void applyRememberedSize() {
+        String dimensionKey = myDimensionKey;
+        if (dimensionKey == null) {
+            return;
+        }
+
+        getVaadinComponent().getElement().executeJs(RESTORE_SIZE_SCRIPT, SIZE_STORAGE_PREFIX + dimensionKey);
+    }
+
+    private void rememberSize(@Nullable String width, @Nullable String height) {
+        String dimensionKey = myDimensionKey;
+        int widthInPixels = toPixels(width);
+        int heightInPixels = toPixels(height);
+        if (dimensionKey == null || widthInPixels <= 0 || heightInPixels <= 0) {
+            return;
+        }
+
+        getVaadinComponent().getElement().executeJs(STORE_SIZE_SCRIPT, SIZE_STORAGE_PREFIX + dimensionKey, widthInPixels, heightInPixels);
+    }
+
+    private static int toPixels(@Nullable String cssSize) {
+        if (cssSize == null || !cssSize.endsWith("px")) {
+            return -1;
+        }
+
+        try {
+            return Math.round(Float.parseFloat(cssSize.substring(0, cssSize.length() - 2)));
+        }
+        catch (NumberFormatException e) {
+            return -1;
+        }
     }
 
     @Override
@@ -184,5 +243,17 @@ public class WebWindowImpl extends VaadinComponentDelegate<WebWindowImpl.Vaadin>
     @Override
     public @Nullable Window getParent() {
         return (Window) super.getParent();
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setWidth(Length width) {
+        getVaadinComponent().setWidth(WebLength.toWindowCss(width));
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setHeight(Length height) {
+        getVaadinComponent().setHeight(WebLength.toWindowCss(height));
     }
 }

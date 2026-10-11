@@ -15,11 +15,7 @@
  */
 package consulo.ui.ex.awt;
 
-import consulo.application.ui.ApplicationWindowStateService;
-import consulo.application.ui.WindowStateService;
-import consulo.dataContext.DataManager;
 import consulo.project.Project;
-import consulo.project.ui.ProjectWindowStateService;
 import consulo.ui.Size2D;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.TitlelessDecorator;
@@ -36,6 +32,8 @@ import java.awt.*;
  * @since 2015-07-28
  */
 public abstract class WholeWestDialogWrapper extends DialogWrapper {
+    public static final float DEFAULT_SPLITTER_PROPORTION = 0.3f;
+
     protected final TitlelessDecorator myTitlelessDecorator;
 
     public WholeWestDialogWrapper(@Nullable Project project, boolean canBeParent) {
@@ -93,7 +91,7 @@ public abstract class WholeWestDialogWrapper extends DialogWrapper {
     }
 
     public float getSplitterDefaultValue() {
-        return 0.3f;
+        return DEFAULT_SPLITTER_PROPORTION;
     }
 
     public Size2D getDefaultSize() {
@@ -112,53 +110,13 @@ public abstract class WholeWestDialogWrapper extends DialogWrapper {
     @Override
     @RequiredUIAccess
     protected void initRootPanel(JPanel rootPanel) {
-        JBSplitter splitter = new OnePixelSplitter();
-        splitter.setProportion(getSplitterDefaultValue());
-        splitter.setSplitterProportionKey(getSplitterKey());
-
-        rootPanel.add(splitter, BorderLayout.CENTER);
-
-        Couple<JComponent> splitterComponents = createSplitterComponents(rootPanel);
-
-        JComponent first = splitterComponents.getFirst();
-        assert first != null;
-        splitter.setFirstComponent(first);
-        if (myTitlelessDecorator instanceof AWTTitlelessDecorator awtTitlelessDecorator) {
-            awtTitlelessDecorator.makeLeftComponentLower(first);
-        }
-
-        JPanel rightComponent = new JPanel(new BorderLayout());
-        rightComponent.setBorder(createContentPaneBorder());
-        splitter.setSecondComponent(rightComponent);
-
-        JComponent second = splitterComponents.getSecond();
-        assert second != null;
-        if (myTitlelessDecorator instanceof AWTTitlelessDecorator awtTitlelessDecorator) {
-            rightComponent.add(awtTitlelessDecorator.modifyRightComponent(rootPanel, second), BorderLayout.CENTER);
-        } else {
-            rightComponent.add(second, BorderLayout.CENTER);
-        }
-        myErrorPane = second;
-
-        JPanel southSection = new JPanel(new BorderLayout());
-        rightComponent.add(southSection, BorderLayout.SOUTH);
-
-        southSection.add(myErrorText, BorderLayout.CENTER);
-        JComponent south = createSouthPanel();
-        if (south != null) {
-            southSection.add(south, BorderLayout.SOUTH);
-        }
-
-        String dimensionKey = getDimensionKey();
-        if (dimensionKey != null) {
-            Project projectGuess = DataManager.getInstance().getDataContext(rightComponent).getData(Project.KEY);
-            WindowStateService stateService = projectGuess == null
-                ? ApplicationWindowStateService.getInstance()
-                : ProjectWindowStateService.getInstance(projectGuess);
-            Size2D size = stateService.getSize(dimensionKey);
-            if (size == null) {
-                stateService.putSize(dimensionKey, getDefaultSize());
-            }
-        }
+        initWholeWestRootPanel(
+            rootPanel,
+            () -> createSplitterComponents(rootPanel),
+            getSplitterKey(),
+            getSplitterDefaultValue(),
+            getDefaultSize(),
+            myTitlelessDecorator
+        );
     }
 }

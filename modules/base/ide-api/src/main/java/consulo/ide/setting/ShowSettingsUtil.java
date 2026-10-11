@@ -22,14 +22,13 @@ import consulo.application.Application;
 import consulo.configurable.Configurable;
 import consulo.configurable.UnnamedConfigurable;
 import consulo.project.Project;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 
 import org.jspecify.annotations.Nullable;
 
-import java.awt.*;
 import java.util.function.Consumer;
 
 @ServiceAPI(ComponentScope.APPLICATION)

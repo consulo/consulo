@@ -29,8 +29,8 @@ import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.VcsConfigurableProvider;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import jakarta.inject.Inject;
+import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -111,25 +111,7 @@ public class VcsManagerConfigurable extends SearchableConfigurable.Parent.Abstra
 
       @RequiredUIAccess
       @Override
-      public JComponent createComponent() {
-        return delegate.createComponent();
-      }
-
-      @RequiredUIAccess
-      @Override
-      public JComponent createComponent(Disposable uiDisposable) {
-        return delegate.createComponent(uiDisposable);
-      }
-
-      @RequiredUIAccess
-      @Override
-      public Component createUIComponent() {
-        return delegate.createUIComponent();
-      }
-
-      @RequiredUIAccess
-      @Override
-      public Component createUIComponent(Disposable uiDisposable) {
+      public @Nullable Component createUIComponent(Disposable uiDisposable) {
         return delegate.createUIComponent(uiDisposable);
       }
 

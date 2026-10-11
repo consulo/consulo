@@ -6,9 +6,11 @@ import consulo.disposer.Disposable;
 import consulo.execution.ExecutionBundle;
 import consulo.execution.localize.ExecutionLocalize;
 import consulo.localize.LocalizeValue;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.InputValidatorEx;
 import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.encoding.ApplicationEncodingManager;
 import org.jspecify.annotations.Nullable;
@@ -142,11 +144,11 @@ public class ConsoleConfigurable implements SearchableConfigurable, Configurable
 
     @RequiredUIAccess
     @Override
-    public JComponent createComponent(Disposable disposable) {
+    public Component createUIComponent(Disposable disposable) {
         if (myPanel == null) {
             myPanel = new Panel();
         }
-        return myPanel.myMainComponent;
+        return TargetAWT.wrap(myPanel.myMainComponent);
     }
 
     public void addRule(String rule) {

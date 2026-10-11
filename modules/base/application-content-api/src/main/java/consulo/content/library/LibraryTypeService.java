@@ -18,12 +18,19 @@ package consulo.content.library;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
+import consulo.content.OrderRootType;
 import consulo.content.library.ui.LibraryRootsComponentDescriptor;
+import consulo.content.library.ui.LibraryRootsDetector;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
+import consulo.ui.Component;
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
-import javax.swing.*;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author nik
@@ -34,9 +41,25 @@ public abstract class LibraryTypeService {
     return Application.get().getInstance(LibraryTypeService.class);
   }
 
-  public abstract @Nullable NewLibraryConfiguration createLibraryFromFiles(LibraryRootsComponentDescriptor descriptor,
-                                                                 JComponent parentComponent,
+  @RequiredUIAccess
+  public abstract CompletableFuture<NewLibraryConfiguration> createLibraryFromFiles(LibraryRootsComponentDescriptor descriptor,
+                                                                 @Nullable Component parentComponent,
                                                                  @Nullable VirtualFile contextDirectory,
                                                                  @Nullable LibraryType<?> type,
                                                                  @Nullable Project project);
+
+  /**
+   * Scans the candidates for library roots under a modal progress. The roots the detector is not sure about are
+   * offered to the user to choose from, and when nothing is detected at all the user picks the kinds of the
+   * candidates among the given root types.
+   *
+   * @param rootTypesAllowedIfNothingDetected the root types offered when nothing is detected, empty to offer none
+   * @return the roots which were detected or chosen, completed exceptionally when the user cancels
+   */
+  @RequiredUIAccess
+  public abstract CompletableFuture<List<OrderRoot>> detectRootsAsync(Collection<VirtualFile> candidates,
+                                                                      @Nullable Component parentComponent,
+                                                                      @Nullable Project project,
+                                                                      LibraryRootsDetector detector,
+                                                                      List<OrderRootType> rootTypesAllowedIfNothingDetected);
 }

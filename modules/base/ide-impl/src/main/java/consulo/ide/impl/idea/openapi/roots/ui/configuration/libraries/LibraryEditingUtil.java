@@ -21,8 +21,9 @@ import consulo.content.OrderRootType;
 import consulo.content.internal.LibraryEx;
 import consulo.content.internal.LibraryKindRegistry;
 import consulo.content.library.*;
+import consulo.ide.impl.idea.openapi.roots.ui.configuration.ModuleEditor;
+import consulo.ide.impl.idea.openapi.roots.ui.configuration.ModulesConfiguratorImpl;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.LibrariesModifiableModel;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureValidator;
 import consulo.ide.localize.IdeLocalize;
 import consulo.ide.setting.ProjectStructureSettingsUtil;
 import consulo.ide.setting.ShowSettingsUtil;
@@ -30,6 +31,7 @@ import consulo.ide.setting.module.ClasspathPanel;
 import consulo.ide.setting.module.ModulesConfigurator;
 import consulo.logging.Logger;
 import consulo.module.Module;
+import consulo.module.content.layer.ModifiableRootModel;
 import consulo.module.content.layer.ModuleRootModel;
 import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
@@ -37,15 +39,22 @@ import consulo.module.content.library.ModuleAwareLibraryType;
 import consulo.module.content.library.ModuleLibraryTablePresentation;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
+import consulo.project.localize.ProjectLocalize;
+import consulo.ui.Component;
+import consulo.ui.MessageBoxes;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.dialog.ChooseItemsDialogDescriptor;
 import consulo.ui.ex.popup.BaseListPopupStep;
 import consulo.ui.ex.popup.PopupStep;
 import consulo.ui.image.Image;
 import consulo.util.io.URLUtil;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFileManager;
 import org.jspecify.annotations.Nullable;
 
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -213,12 +222,82 @@ public class LibraryEditingUtil {
     }
 
     @RequiredUIAccess
-    public static void showDialogAndAddLibraryToDependencies(
-        Library library,
-        Project project,
-        boolean allowEmptySelection
-    ) {
-        ProjectStructureValidator.showDialogAndAddLibraryToDependencies(library, project, allowEmptySelection);
+    public static void showDialogAndAddLibraryToDependencies(@Nullable Component parent, Library library, Project project) {
+        List<Module> modules = getSuitableModules(project, library.getKind(), library);
+        if (modules.isEmpty()) {
+            return;
+        }
+
+        UIAccess uiAccess = UIAccess.current();
+        ChooseItemsDialogDescriptor.showAsync(
+            parent,
+            ProjectLocalize.chooseModulesDialogTitle(),
+            ProjectLocalize.chooseModulesDialogDescription(StringUtil.notNullize(library.getName())),
+            modules,
+            (module, presentation) -> {
+                presentation.withIcon(PlatformIconGroup.nodesModule());
+                presentation.append(module.getName());
+            },
+            true,
+            modules
+        ).whenCompleteAsync((chosenModules, error) -> {
+            if (error == null && !chosenModules.isEmpty()) {
+                addLibraryOrderEntries(uiAccess, parent, new ArrayDeque<>(chosenModules), library);
+            }
+        }, uiAccess);
+    }
+
+    @RequiredUIAccess
+    private static void addLibraryOrderEntries(UIAccess uiAccess, @Nullable Component parent, Deque<Module> modules, Library library) {
+        Module module = modules.poll();
+        if (module == null) {
+            return;
+        }
+
+        addLibraryOrderEntry(uiAccess, parent, module, library).whenCompleteAsync((result, error) -> {
+            if (error != null) {
+                LOG.error(error);
+                return;
+            }
+            addLibraryOrderEntries(uiAccess, parent, modules, library);
+        }, uiAccess);
+    }
+
+    @RequiredUIAccess
+    private static CompletableFuture<?> addLibraryOrderEntry(UIAccess uiAccess, @Nullable Component parent, Module module, Library library) {
+        ProjectStructureSettingsUtil util = ShowSettingsUtil.getInstance();
+        ModulesConfiguratorImpl modulesModel = (ModulesConfiguratorImpl) util.getModulesModel(module.getProject());
+        ModuleEditor moduleEditor = modulesModel.getModuleEditor(module);
+        if (moduleEditor == null) {
+            LOG.error("Current module editor was not initialized");
+            return CompletableFuture.completedFuture(null);
+        }
+
+        ModifiableRootModel modelProxy = moduleEditor.getModifiableRootModelProxy();
+        OrderEntry existing = null;
+        for (OrderEntry entry : modelProxy.getOrderEntries()) {
+            if (entry instanceof LibraryOrderEntry && Objects.equals(entry.getPresentableName(), library.getName())) {
+                existing = entry;
+                break;
+            }
+        }
+
+        if (existing == null) {
+            modelProxy.addLibraryEntry(library);
+            return CompletableFuture.completedFuture(null);
+        }
+
+        OrderEntry existingEntry = existing;
+        return MessageBoxes.yesNo()
+            .title(ProjectLocalize.projectRootsReplaceLibraryEntryTitle())
+            .text(ProjectLocalize.projectRootsReplaceLibraryEntryMessage(existingEntry.getPresentableName()))
+            .showAsync(parent)
+            .thenAcceptAsync(replace -> {
+                if (Boolean.TRUE.equals(replace)) {
+                    modelProxy.removeOrderEntry(existingEntry);
+                }
+                modelProxy.addLibraryEntry(library);
+            }, uiAccess);
     }
 
     public static boolean isAvailable(LibraryType<?> type, ModuleRootModel moduleRootModel) {

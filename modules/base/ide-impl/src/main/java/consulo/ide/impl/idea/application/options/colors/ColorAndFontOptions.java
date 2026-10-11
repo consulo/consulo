@@ -61,6 +61,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
@@ -162,7 +163,7 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
                 Runnable runnable = search == null ? null : page.enableSearch(search);
                 Window window = UIUtil.getWindow(context.getData(UIExAWTDataKey.CONTEXT_COMPONENT));
                 if (window != null) {
-                    ShowSettingsUtil.getInstance().editConfigurable(window, page, runnable);
+                    ShowSettingsUtil.getInstance().editConfigurable(TargetAWT.wrap(window), page, runnable);
                 }
                 else {
                     ShowSettingsUtil.getInstance().editConfigurable(context.getData(Project.KEY), page, runnable);
@@ -403,7 +404,7 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
 
     @Override
     @RequiredUIAccess
-    public consulo.ui.@Nullable Component createUIComponent() {
+    public consulo.ui.@Nullable Component createUIComponent(Disposable parentDisposable) {
         if (myRootSchemesPanel == null) {
             ensureSchemesPanel();
         }
@@ -1317,8 +1318,8 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
 
         @Override
         @RequiredUIAccess
-        public JComponent createComponent() {
-            return createPanel().getPanel();
+        public consulo.ui.Component createUIComponent(Disposable parentDisposable) {
+            return TargetAWT.wrap(createPanel().getPanel());
         }
 
         @Override

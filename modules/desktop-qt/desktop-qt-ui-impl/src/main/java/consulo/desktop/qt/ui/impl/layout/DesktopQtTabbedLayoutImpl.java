@@ -45,7 +45,7 @@ import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 
 /**
  * @author VISTALL
@@ -185,7 +185,7 @@ public class DesktopQtTabbedLayoutImpl extends QtComponentDelegate<QTabWidget> i
 
             DesktopQtTabImpl selectedTab = mySelectedTab;
             int selectedIndex = selectedTab == null ? -1 : selectedTab.getIndex();
-            component.setCurrentIndex(selectedIndex == -1 ? myTabs.size() - 1 : selectedIndex);
+            component.setCurrentIndex(selectedIndex == -1 ? 0 : selectedIndex);
         }
         finally {
             myRestoringTabs = false;
@@ -322,11 +322,6 @@ public class DesktopQtTabbedLayoutImpl extends QtComponentDelegate<QTabWidget> i
 
         if (tabWidget != null && !tabWidget.isDisposed()) {
             tab.initialize(tabWidget, this);
-
-            tabWidget.setCurrentIndex(tab.getIndex());
-        }
-        else {
-            mySelectedTab = tab;
         }
     }
 
@@ -369,20 +364,6 @@ public class DesktopQtTabbedLayoutImpl extends QtComponentDelegate<QTabWidget> i
 
     @Override
     @RequiredUIAccess
-    public Tab addTab(String tabName, Component component) {
-        DesktopQtTabImpl tab = new DesktopQtTabImpl();
-        tab.setRenderer((t, p) -> p.append(tabName));
-
-        myTabs.add(tab);
-        tab.setComponent(component);
-        tab.update();
-
-        init(tab);
-        return tab;
-    }
-
-    @Override
-    @RequiredUIAccess
     public void removeTab(Tab tab) {
         if (tab instanceof DesktopQtTabImpl qtTab && myTabs.remove(qtTab)) {
             forgetTab(qtTab);
@@ -410,11 +391,28 @@ public class DesktopQtTabbedLayoutImpl extends QtComponentDelegate<QTabWidget> i
     }
 
     @Override
-    public void forEachChild(@RequiredUIAccess Consumer<Component> consumer) {
+    public @Nullable Tab getSelectedTab() {
+        QTabWidget tabWidget = myComponent;
+        if (tabWidget != null && !tabWidget.isDisposed()) {
+            DesktopQtTabImpl current = tabAtIndex(tabWidget.currentIndex());
+            if (current != null) {
+                return current;
+            }
+        }
+
+        DesktopQtTabImpl selected = mySelectedTab;
+        if (selected != null && myTabs.contains(selected)) {
+            return selected;
+        }
+        return myTabs.isEmpty() ? null : myTabs.get(0);
+    }
+
+    @Override
+    public void forEachTab(@RequiredUIAccess BiConsumer<Tab, Component> consumer) {
         for (DesktopQtTabImpl tab : new ArrayList<>(myTabs)) {
             QtComponentDelegate<?> component = tab.getComponent();
             if (component != null) {
-                consumer.accept(component);
+                consumer.accept(tab, component);
             }
         }
     }

@@ -15,39 +15,38 @@
  */
 package consulo.ide.impl.roots.ui.configuration.projectRoot.moduleLayerActions;
 
-import consulo.localize.LocalizeValue;
-import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.ui.ex.action.LegacyAnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.module.content.layer.ModifiableRootModel;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.ModuleEditor;
+import consulo.localize.LocalizeValue;
+import consulo.module.content.layer.ModifiableRootModel;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.project.localize.ProjectLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.internal.AnActionWithUIUpdate;
 
 /**
  * @author VISTALL
  * @since 2014-07-30
  */
-public class DeleteLayerAction extends LegacyAnAction {
-    private ModuleEditor myModuleEditor;
+public class DeleteLayerAction extends DumbAwareAction implements AnActionWithUIUpdate {
+    private final ModuleEditor myModuleEditor;
 
     public DeleteLayerAction(ModuleEditor moduleEditor) {
-        super(LocalizeValue.localizeTODO("Delete layer"), LocalizeValue.empty(), PlatformIconGroup.generalRemove());
+        super(ProjectLocalize.moduleLayerDeleteAction(), LocalizeValue.empty(), PlatformIconGroup.generalRemove());
         myModuleEditor = moduleEditor;
     }
 
-    @Override
     @RequiredUIAccess
+    @Override
     public void actionPerformed(AnActionEvent e) {
         ModifiableRootModel modifiableRootModelProxy = myModuleEditor.getModifiableRootModelProxy();
-
-        String currentLayerName = modifiableRootModelProxy.getCurrentLayerName();
-
-        modifiableRootModelProxy.removeLayer(currentLayerName, true);
+        modifiableRootModelProxy.removeLayer(modifiableRootModelProxy.getCurrentLayerName(), true);
     }
 
+    @RequiredUIAccess
     @Override
-    public void update(AnActionEvent e) {
-        ModifiableRootModel modifiableRootModelProxy = myModuleEditor.getModifiableRootModelProxy();
-        e.getPresentation().setEnabled(modifiableRootModelProxy != null && modifiableRootModelProxy.getLayers().size() > 1);
+    public void updateAtUI(AnActionEvent e) {
+        e.getPresentation().setEnabled(myModuleEditor.getRootModel().getLayers().size() > 1);
     }
 }

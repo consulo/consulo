@@ -20,6 +20,7 @@ import consulo.ui.Component;
 import consulo.ui.InputBoxBuilder;
 import consulo.ui.InputValidator;
 import consulo.ui.MessageSeverity;
+import consulo.ui.TextBox;
 import consulo.ui.image.Image;
 
 import org.jspecify.annotations.Nullable;
@@ -35,6 +36,8 @@ import java.util.function.Consumer;
  * @since 2026-09-04
  */
 public abstract class BaseInputBoxBuilder<V, C extends Component> implements InputBoxBuilder<V, C> {
+    private static final int EDITOR_COLUMNS = 30;
+
     protected LocalizeValue myTitle = LocalizeValue.empty();
     protected LocalizeValue myText = LocalizeValue.empty();
     protected MessageSeverity mySeverity = MessageSeverity.QUESTION;
@@ -145,6 +148,12 @@ public abstract class BaseInputBoxBuilder<V, C extends Component> implements Inp
         target.myCancelText = myCancelText;
         target.myHelpAction = myHelpAction;
         target.mySetups.addAll(mySetups);
+    }
+
+    protected void applyDefaultWidth(C component) {
+        if (component instanceof TextBox textBox) {
+            textBox.setVisibleLength(EDITOR_COLUMNS);
+        }
     }
 
     /**

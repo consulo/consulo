@@ -74,7 +74,7 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
         myEmptyText = new StatusText(this) {
             @Override
             protected boolean isStatusVisible() {
-                return Tree.this.isEmpty();
+                return Tree.this.isEmptyTextVisible();
             }
         };
 
@@ -90,26 +90,11 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
     }
 
     public boolean isEmpty() {
-        TreeModel model = getModel();
-        if (model == null) {
-            return true;
-        }
-        if (model.getRoot() == null) {
-            return true;
-        }
-        if (!isRootVisible()) {
-            int childCount = model.getChildCount(model.getRoot());
-            if (childCount == 0) {
-                return true;
-            }
-            if (childCount == 1) {
-                Object node = model.getChild(model.getRoot(), 0);
-                if (node instanceof LoadingNode) {
-                    return true;
-                }
-            }
-        }
-        return false;
+        return 0 >= getRowCount();
+    }
+
+    protected boolean isEmptyTextVisible() {
+        return isEmpty();
     }
 
     protected boolean isCustomUI() {

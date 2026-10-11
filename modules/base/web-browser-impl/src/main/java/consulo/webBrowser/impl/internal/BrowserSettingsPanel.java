@@ -214,7 +214,7 @@ final class BrowserSettingsPanel {
                 }
 
                 ShowConfigurableService service = Application.get().getInstance(ShowConfigurableService.class);
-                service.editConfigurable(browsersTable, settings.createConfigurable())
+                service.editConfigurable(TargetAWT.wrap(browsersTable), settings.createConfigurable())
                     .whenComplete((value, error) -> {
                         if (error == null) {
                             mutator.apply(browser).setSpecificSettings(settings);

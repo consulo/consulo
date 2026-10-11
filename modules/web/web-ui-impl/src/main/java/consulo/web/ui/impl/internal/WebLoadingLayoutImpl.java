@@ -121,6 +121,11 @@ public class WebLoadingLayoutImpl<L extends Layout> extends VaadinComponentDeleg
     }
 
     @Override
+    public void forEachChild(@RequiredUIAccess Consumer<Component> consumer) {
+        consumer.accept(myInnerLayout);
+    }
+
+    @Override
     @RequiredUIAccess
     public void remove(Component component) {
         myInnerLayout.remove(component);

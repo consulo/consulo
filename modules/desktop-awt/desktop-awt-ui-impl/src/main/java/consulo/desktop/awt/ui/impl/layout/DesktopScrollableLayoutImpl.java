@@ -18,14 +18,18 @@ package consulo.desktop.awt.ui.impl.layout;
 import consulo.desktop.awt.ui.impl.facade.FromSwingComponentWrapper;
 import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 import consulo.ui.Component;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.JBScrollPane;
+import consulo.ui.ex.awt.ScrollablePanel;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.layout.ScrollableLayout;
 import consulo.ui.layout.ScrollableLayoutOptions;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
+import java.awt.*;
+import java.util.function.Consumer;
 
 /**
  * @author VISTALL
@@ -43,6 +47,19 @@ public class DesktopScrollableLayoutImpl extends SwingComponentDelegate<JScrollP
         }
     }
 
+    static class WidthTrackingPanel extends ScrollablePanel {
+        WidthTrackingPanel(java.awt.Component view) {
+            super(new BorderLayout());
+            setOpaque(false);
+            add(view, BorderLayout.CENTER);
+        }
+
+        @Override
+        public boolean getScrollableTracksViewportHeight() {
+            return getParent() instanceof JViewport viewport && viewport.getHeight() > getPreferredSize().height;
+        }
+    }
+
     private final @Nullable Component myComponent;
     private final ScrollableLayoutOptions myOptions;
 
@@ -53,7 +70,12 @@ public class DesktopScrollableLayoutImpl extends SwingComponentDelegate<JScrollP
 
     @Override
     protected JScrollPane createComponent() {
-        MyJBScrollPane pane = new MyJBScrollPane(TargetAWT.to(myComponent));
+        java.awt.Component view = TargetAWT.to(myComponent);
+        if (view != null && myOptions.getHorizontalScrollPolicy() == ScrollableLayoutOptions.ScrollPolicy.NEVER) {
+            view = new WidthTrackingPanel(view);
+        }
+
+        MyJBScrollPane pane = new MyJBScrollPane(view);
 
         pane.setBorder(IdeBorderFactory.createEmptyBorder());
         pane.setViewportBorder(IdeBorderFactory.createEmptyBorder());
@@ -83,5 +105,13 @@ public class DesktopScrollableLayoutImpl extends SwingComponentDelegate<JScrollP
         }
 
         return pane;
+    }
+
+    @Override
+    public void forEachChild(@RequiredUIAccess Consumer<Component> consumer) {
+        Component component = myComponent;
+        if (component != null) {
+            consumer.accept(component);
+        }
     }
 }

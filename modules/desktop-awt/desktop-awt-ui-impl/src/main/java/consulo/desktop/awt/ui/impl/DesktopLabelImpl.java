@@ -16,6 +16,7 @@
 package consulo.desktop.awt.ui.impl;
 
 import consulo.desktop.awt.ui.impl.facade.FromSwingComponentWrapper;
+import consulo.desktop.awt.ui.impl.base.DesktopSearchHighlight;
 import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 import consulo.desktop.awt.ui.impl.util.AWTFocusAdapterAsBlurListener;
 import consulo.desktop.awt.ui.impl.util.AWTFocusAdapterAsFocusListener;
@@ -31,6 +32,7 @@ import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.internal.LocalizeValueWithMnemonic;
 import consulo.ui.image.Image;
+import consulo.ui.internal.SearchHighlightUtil;
 import consulo.ui.util.TextWithMnemonic;
 import org.jspecify.annotations.Nullable;
 
@@ -50,6 +52,8 @@ class DesktopLabelImpl extends SwingComponentDelegate<DesktopLabelImpl.MyJLabel>
         private ColorValue myForegroundColor;
 
         private @Nullable Length myMinWidth;
+
+        private @Nullable String mySearchHighlight;
 
         MyJLabel(LocalizeValue text, LabelOptions options) {
             super("");
@@ -134,6 +138,12 @@ class DesktopLabelImpl extends SwingComponentDelegate<DesktopLabelImpl.MyJLabel>
             updateText();
         }
 
+        public void setSearchHighlight(@Nullable String query) {
+            mySearchHighlight = query;
+
+            updateText();
+        }
+
         private void updateForegroundColor() {
             if (myForegroundColor == null) {
                 setForeground(null);
@@ -150,13 +160,24 @@ class DesktopLabelImpl extends SwingComponentDelegate<DesktopLabelImpl.MyJLabel>
             }
 
             if (!isMnemonicParsed()) {
-                setText(myTextValue.get());
+                String text = myTextValue.get();
+                String highlighted = DesktopSearchHighlight.toHtml(text, mySearchHighlight);
+                setText(highlighted == null ? text : highlighted);
                 setDisplayedMnemonicIndex(-1);
                 setDisplayedMnemonic(0);
                 return;
             }
 
             TextWithMnemonic mnemonicInfo = LocalizeValueWithMnemonic.get(myTextValue);
+
+            String highlighted = DesktopSearchHighlight.toHtml(mnemonicInfo.getText(), mySearchHighlight);
+            if (highlighted != null) {
+                setText(highlighted);
+                setDisplayedMnemonic(mnemonicInfo.hasMnemonic() ? mnemonicInfo.getMnemonic() : 0);
+                setDisplayedMnemonicIndex(-1);
+                return;
+            }
+
             if (!mnemonicInfo.hasMnemonic()) {
                 setText(mnemonicInfo.getText());
                 setDisplayedMnemonicIndex(-1);
@@ -277,5 +298,16 @@ class DesktopLabelImpl extends SwingComponentDelegate<DesktopLabelImpl.MyJLabel>
     @Override
     public void setTarget(@Nullable Component component) {
         toAWTComponent().setLabelFor(TargetAWT.to(component));
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setSearchHighlight(@Nullable String query) {
+        toAWTComponent().setSearchHighlight(SearchHighlightUtil.normalizeQuery(query));
+    }
+
+    @Override
+    public @Nullable String getSearchHighlight() {
+        return toAWTComponent().mySearchHighlight;
     }
 }

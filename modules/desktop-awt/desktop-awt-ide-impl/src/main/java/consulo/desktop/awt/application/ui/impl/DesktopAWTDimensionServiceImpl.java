@@ -3,9 +3,12 @@ package consulo.desktop.awt.application.ui.impl;
 
 import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.ui.ApplicationWindowStateService;
+import consulo.application.ui.WindowStateService;
 import consulo.application.ui.impl.internal.UnifiedDimensionServiceImpl;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.project.Project;
+import consulo.project.ui.ProjectWindowStateService;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.Point2D;
@@ -28,6 +31,11 @@ import java.awt.*;
 @Singleton
 @ServiceImpl(profiles = ComponentProfiles.AWT)
 public class DesktopAWTDimensionServiceImpl extends UnifiedDimensionServiceImpl {
+  @Override
+  protected WindowStateService findWindowStateService(@Nullable Project project) {
+    return project == null ? ApplicationWindowStateService.getInstance() : ProjectWindowStateService.getInstance(project);
+  }
+
   @Override
   protected boolean isOutVisibleScreenArea(Point2D point2D) {
     Point point = new Point(point2D.x(), point2D.y());

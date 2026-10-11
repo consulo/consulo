@@ -21,11 +21,13 @@ import consulo.ui.Component;
 import consulo.ui.StaticPosition;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.layout.TableLayout;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -87,12 +89,14 @@ public class DesktopTableLayoutImpl extends SwingComponentDelegate<JPanel> imple
 
         JPanel component = myGridPanel; // grid is owner of of children, not myComponent
 
-        for (int i = 0; i < component.getComponentCount(); i++) {
-            java.awt.Component child = component.getComponent(i);
+        GridBagLayout layout = (GridBagLayout) component.getLayout();
 
-            if (child instanceof FromSwingComponentWrapper fromSwingComponentWrapper) {
-                consumer.accept(fromSwingComponentWrapper.toUIComponent());
-            }
+        List<java.awt.Component> children = new ArrayList<>(List.of(component.getComponents()));
+        children.sort(Comparator.<java.awt.Component>comparingInt(child -> layout.getConstraints(child).gridy)
+            .thenComparingInt(child -> layout.getConstraints(child).gridx));
+
+        for (java.awt.Component child : children) {
+            DesktopLayoutChildren.accept(child, consumer);
         }
     }
 
@@ -109,7 +113,7 @@ public class DesktopTableLayoutImpl extends SwingComponentDelegate<JPanel> imple
         constraints.gridy = tableCell.getRow();
         constraints.weightx = tableCell.isFill() ? 1 : 0;
         constraints.insets = JBUI.insets(5, 0, 5, 0);
-        myGridPanel.add(TargetAWT.to(component), constraints);
+        myGridPanel.add(DesktopLayoutChildren.toAWT(component), constraints);
         return this;
     }
 }

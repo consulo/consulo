@@ -15,321 +15,420 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot;
 
-import consulo.application.content.impl.internal.library.LibraryImpl;
+import consulo.application.Application;
+import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.MasterDetailsConfigurable;
+import consulo.configurable.UnifiedMasterDetailsComponent;
 import consulo.content.internal.LibraryEx;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;
 import consulo.content.library.LibraryTablePresentation;
+import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.libraries.LibraryEditingUtil;
+import consulo.ide.impl.idea.openapi.roots.ui.configuration.libraries.LibraryPresentationManager;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.libraryEditor.CreateNewLibraryAction;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.LibraryProjectStructureElement;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
 import consulo.ide.setting.ProjectStructureSettingsUtil;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.ide.setting.module.LibrariesConfigurator;
 import consulo.ide.setting.module.LibraryTableModifiableModelProvider;
 import consulo.ide.setting.module.event.LibraryEditorListener;
 import consulo.localize.LocalizeValue;
+import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
+import consulo.project.localize.ProjectLocalize;
+import consulo.ui.InputBoxBuilder;
+import consulo.ui.InputProblem;
+import consulo.ui.TextItemPresentation;
+import consulo.ui.Tree;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.NonEmptyInputValidator;
+import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.awt.MasterDetailsStateService;
-import consulo.ui.ex.awt.Messages;
-import consulo.ui.ex.awt.tree.TreeUtil;
-import consulo.util.lang.Comparing;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
+import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.ui.ex.popup.ListPopup;
+import consulo.ui.image.Image;
 import org.jspecify.annotations.Nullable;
-import jakarta.inject.Provider;
 
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreeNode;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Supplier;
 
-public abstract class BaseLibrariesConfigurable extends BaseStructureConfigurable {
-    private static final Comparator<Object> NODE_DISPLAY_NAME_COMPARATOR =
-        Comparator.comparing(o -> ((MyNode) o).getDisplayName(), LocalizeValue.comparator());
+public abstract class BaseLibrariesConfigurable extends UnifiedMasterDetailsComponent
+    implements Configurable.NoMargin, Configurable.NoScroll {
+    private static final Logger LOG = Logger.getInstance(BaseLibrariesConfigurable.class);
 
-    
     protected final Project myProject;
-    
-    protected String myLevel;
+    protected final String myLevel;
 
-    protected BaseLibrariesConfigurable(Project project, Provider<MasterDetailsStateService> masterDetailsStateService) {
-        super(masterDetailsStateService);
+    private final Map<Library, Image> myIcons = new ConcurrentHashMap<>();
+
+    private @Nullable Disposable myListenerDisposable;
+
+    protected BaseLibrariesConfigurable(Project project, String level) {
         myProject = project;
-    }
-
-    @RequiredUIAccess
-    @Override
-    public void initialize() {
-        super.initialize();
-
-        getLibrariesConfigurator().addLibraryEditorListener(new LibraryEditorListener() {
-            @Override
-            public void libraryCreated(Library library) {
-                createLibraryNode(library);
-            }
-
-            @Override
-            public void libraryRenamed(Library library, String oldName, String newName) {
-
-            }
-        });
+        myLevel = level;
     }
 
     public abstract LibraryTablePresentation getLibraryTablePresentation();
 
-    @Override
-    protected void processRemovedItems() {
+    public abstract LibraryTableModifiableModelProvider getModelProvider();
+
+    protected abstract LocalizeValue getAddText();
+
+    public String getLevel() {
+        return myLevel;
     }
 
     @Override
-    protected boolean wasObjectStored(Object editableObject) {
-        return false;
+    protected LocalizeValue getEmptySelectionText() {
+        return ProjectLocalize.librariesEmptyText();
+    }
+
+    @Override
+    protected boolean isMultipleSelectAllowed() {
+        return true;
+    }
+
+    @Override
+    protected @Nullable Comparator<Object> getValueComparator() {
+        return Comparator.comparing(this::getValueText, String.CASE_INSENSITIVE_ORDER);
+    }
+
+    @Override
+    protected String getValueText(Object value) {
+        if (value instanceof Library library) {
+            return getLibraryName(library);
+        }
+        return String.valueOf(value);
+    }
+
+    @Override
+    protected void renderValue(Object value, TextItemPresentation presentation) {
+        if (value instanceof Library library) {
+            presentation.withIcon(myIcons.getOrDefault(library, PlatformIconGroup.nodesPplib()));
+            presentation.append(getLibraryName(library));
+        }
+    }
+
+    @RequiredUIAccess
+    @Override
+    protected void loadTree() {
+        disposeListener();
+
+        LibrariesConfigurator librariesConfigurator = getLibrariesConfigurator();
+
+        Disposable listenerDisposable = Disposable.newDisposable();
+        librariesConfigurator.addLibraryEditorListener(new LibraryEditorListener() {
+            @RequiredUIAccess
+            @Override
+            public void libraryCreated(Library library) {
+                addLibrary(library);
+            }
+
+            @RequiredUIAccess
+            @Override
+            public void libraryRenamed(Library library, String oldName, String newName) {
+                if (isAttached(library)) {
+                    refreshValue(library);
+                }
+            }
+        }, listenerDisposable);
+        myListenerDisposable = listenerDisposable;
+
+        List<Library> libraries = List.of(librariesConfigurator.createModifiableModelProvider(myLevel).getModifiableModel().getLibraries());
+        for (Library library : libraries) {
+            addValue(null, library);
+        }
+        updateIcons(libraries);
+    }
+
+    @RequiredUIAccess
+    @Override
+    protected @Nullable MasterDetailsConfigurable<?> createConfigurable(Object value) {
+        if (!(value instanceof Library library)) {
+            return null;
+        }
+
+        LibraryTable table = library.getTable();
+        String level = table != null ? table.getTableLevel() : myLevel;
+        return new LibraryConfigurable(
+            myProject,
+            getLibrariesConfigurator().createModifiableModelProvider(level),
+            library,
+            this::onLibraryRenamed,
+            this::onLibraryRootsChanged
+        );
+    }
+
+    @Override
+    protected List<AnAction> createActions() {
+        return List.of(new AddLibraryAction(), new RemoveLibraryAction(), new CopyLibraryAction());
+    }
+
+    @Override
+    protected List<AnAction> createPopupActions() {
+        return List.of(
+            new AddLibraryAction(),
+            new RemoveLibraryAction(),
+            new CopyLibraryAction(),
+            new AddLibraryToModuleDependenciesAction(myProject, this)
+        );
     }
 
     @RequiredUIAccess
     @Override
     public boolean isModified() {
-        boolean isModified = false;
-        for (LibraryTable.ModifiableModel provider : getLibrariesConfigurator().getModels()) {
-            isModified |= provider.isChanged();
-        }
-        return isModified || super.isModified();
-    }
-
-    @Override
-    public void checkCanApply() throws ConfigurationException {
-        super.checkCanApply();
-        for (LibraryConfigurable configurable : getLibraryConfigurables()) {
-            if (configurable.getDisplayName().isEmpty()) {
-                ((LibraryProjectStructureElement) configurable.getProjectStructureElement()).navigate(myProject);
-                throw new ConfigurationException("Library name is not specified");
+        for (LibraryTable.ModifiableModel model : getLibrariesConfigurator().getModels()) {
+            if (model.isChanged()) {
+                return true;
             }
         }
+        return super.isModified();
     }
 
     @RequiredUIAccess
     @Override
-    public void reset() {
-        super.reset();
-        myTree.setRootVisible(false);
-    }
-
-    @Override
-    protected void loadTree() {
-        createLibrariesNode(getLibrariesConfigurator().createModifiableModelProvider(myLevel));
-    }
-
-    
-    @Override
-    protected Collection<? extends ProjectStructureElement> getProjectStructureElements() {
-        List<ProjectStructureElement> result = new ArrayList<>();
-        for (LibraryConfigurable libraryConfigurable : getLibraryConfigurables()) {
-            result.add(new LibraryProjectStructureElement(libraryConfigurable.getEditableObject()));
-        }
-        return result;
-    }
-
-    private List<LibraryConfigurable> getLibraryConfigurables() {
-        //todo[nik] improve
-        List<LibraryConfigurable> libraryConfigurables = new ArrayList<>();
-        for (int i = 0; i < myRoot.getChildCount(); i++) {
-            TreeNode node = myRoot.getChildAt(i);
-            if (node instanceof MyNode) {
-                Configurable configurable = ((MyNode) node).getConfigurable();
-                if (configurable instanceof LibraryConfigurable) {
-                    libraryConfigurables.add((LibraryConfigurable) configurable);
-                }
-            }
-        }
-        return libraryConfigurables;
-    }
-
-    private void createLibrariesNode(LibraryTableModifiableModelProvider modelProvider) {
-        Library[] libraries = modelProvider.getModifiableModel().getLibraries();
-        for (Library library : libraries) {
-            myRoot.add(new MyNode(new LibraryConfigurable(myProject, modelProvider, library, getLibrariesConfigurator(), TREE_UPDATER)));
-        }
-        TreeUtil.sort(myRoot, NODE_DISPLAY_NAME_COMPARATOR);
-        ((DefaultTreeModel) myTree.getModel()).reload(myRoot);
-    }
-
-    @Override
-    @RequiredUIAccess
     public void apply() throws ConfigurationException {
+        checkLibraryNames();
+
         super.apply();
+
         myProject.getApplication().runWriteAction(() -> getLibrariesConfigurator().commit());
     }
 
-    
-    public String getLevel() {
-        return myLevel;
+    @RequiredUIAccess
+    @Override
+    public void disposeUIResources() {
+        super.disposeUIResources();
+
+        disposeListener();
+        myIcons.clear();
     }
 
-    public void createLibraryNode(Library library) {
-        LibrariesConfigurator librariesConfigurator = getLibrariesConfigurator();
+    @RequiredUIAccess
+    @Override
+    protected void updateSelection(@Nullable MasterDetailsConfigurable<?> configurable) {
+        MasterDetailsConfigurable<?> previous = getSelectedConfigurable();
+        boolean selectionChanged = previous != configurable;
+        if (previous instanceof LibraryConfigurable libraryConfigurable && selectionChanged) {
+            libraryConfigurable.onUnselected();
+        }
 
-        LibraryTable table = library.getTable();
-        if (table != null) {
-            String level = table.getTableLevel();
-            LibraryConfigurable configurable = new LibraryConfigurable(
-                myProject,
-                librariesConfigurator.createModifiableModelProvider(level),
-                library,
-                librariesConfigurator,
-                TREE_UPDATER
-            );
-            MyNode node = new MyNode(configurable);
-            addNode(node, myRoot);
-            //final ProjectStructureDaemonAnalyzer daemonAnalyzer = myContext.getDaemonAnalyzer();
-            //daemonAnalyzer.queueUpdate(new LibraryProjectStructureElement(library));
-            //daemonAnalyzer.queueUpdateForAllElementsWithErrors();
+        super.updateSelection(configurable);
+
+        if (configurable instanceof LibraryConfigurable libraryConfigurable && selectionChanged) {
+            libraryConfigurable.onSelected();
         }
     }
 
-    @Override
-    
-    protected List<? extends AnAction> createCopyActions(boolean fromPopup) {
-        ArrayList<AnAction> actions = new ArrayList<>();
-        actions.add(new CopyLibraryAction());
-        if (fromPopup) {
-            // actions.add(new ChangeLibraryLevelAction(myProject, myTree, this, targetGroup));
-            actions.add(new AddLibraryToModuleDependenciesAction(myProject, this));
+    @RequiredUIAccess
+    public CompletableFuture<?> selectLibrary(Library library) {
+        return select(findLibrary(library));
+    }
+
+    @RequiredUIAccess
+    public void removeLibrary(Library library) {
+        Library target = findLibrary(library);
+        if (target == null) {
+            return;
         }
-        return actions;
+
+        getModelProvider().getModifiableModel().removeLibrary(target);
+        removeValue(target);
+        refreshTree(getSelectedValue());
     }
 
-    @Override
-    protected AbstractAddGroup createAddAction() {
-        return new AbstractAddGroup(getAddText()) {
-            
-            @Override
-            public AnAction[] getChildren(@Nullable AnActionEvent e) {
-                return CreateNewLibraryAction.createActionOrGroup(getAddText(), BaseLibrariesConfigurable.this, myProject);
-            }
-        };
-    }
-
-    
     protected LibrariesConfigurator getLibrariesConfigurator() {
         ProjectStructureSettingsUtil util = ShowSettingsUtil.getInstance();
         return Objects.requireNonNull(util.getLibrariesModel(myProject), "Called libraries configurable without librariesConfigurator");
     }
 
-    protected abstract String getAddText();
-
-    public abstract LibraryTableModifiableModelProvider getModelProvider();
-
-    @RequiredUIAccess
-    @Override
-    protected void updateSelection(@Nullable MasterDetailsConfigurable configurable) {
-        boolean selectionChanged = !Comparing.equal(myCurrentConfigurable, configurable);
-        if (myCurrentConfigurable != null && selectionChanged) {
-            ((LibraryConfigurable) myCurrentConfigurable).onUnselected();
+    private @Nullable Library findLibrary(Library library) {
+        Object value = findValue(candidate -> candidate == library);
+        if (value == null) {
+            Library model = getLibrariesConfigurator().getLibraryModel(library);
+            value = findValue(candidate -> candidate == model);
         }
-        super.updateSelection(configurable);
-        if (myCurrentConfigurable != null && selectionChanged) {
-            ((LibraryConfigurable) myCurrentConfigurable).onSelected();
+        if (value == null) {
+            String name = library.getName();
+            value = findValue(candidate -> candidate instanceof Library candidateLibrary && Objects.equals(candidateLibrary.getName(), name));
         }
+        return value instanceof Library found ? found : null;
     }
 
-    @Override
-    public void onStructureUnselected() {
-        if (myCurrentConfigurable != null) {
-            ((LibraryConfigurable) myCurrentConfigurable).onUnselected();
-        }
-    }
-
-    @Override
-    public void onStructureSelected() {
-        if (myCurrentConfigurable != null) {
-            ((LibraryConfigurable) myCurrentConfigurable).onSelected();
-        }
+    private String getLibraryName(Library library) {
+        LibrariesModifiableModel model = (LibrariesModifiableModel) getModelProvider().getModifiableModel();
+        String name = model.hasLibraryEditor(library) ? model.getLibraryEditor(library).getName() : library.getName();
+        return name == null ? "" : name;
     }
 
     @RequiredUIAccess
-    public void removeLibrary(LibraryProjectStructureElement element) {
-        getModelProvider().getModifiableModel().removeLibrary(element.getLibrary());
-        // todo myContext.getDaemonAnalyzer().removeElement(element);
-        MyNode node = findNodeByObject(myRoot, element.getLibrary());
-        if (node != null) {
-            removePaths(TreeUtil.getPathFromRoot(node));
+    private void checkLibraryNames() throws ConfigurationException {
+        Set<String> names = new HashSet<>();
+        for (Object value : getChildren(null)) {
+            if (!(value instanceof Library library)) {
+                continue;
+            }
+
+            String name = getLibraryName(library);
+            if (name.isBlank()) {
+                select(library);
+                throw new ConfigurationException(ProjectLocalize.libraryNameNotSpecifiedError(), ProjectLocalize.libraryNameNotSpecifiedTitle());
+            }
+            if (!names.add(name)) {
+                select(library);
+                throw new ConfigurationException(ProjectLocalize.libraryNameAlreadyExistsError(name), ProjectLocalize.libraryNameAlreadyExistsTitle());
+            }
         }
     }
 
-    @Override
-    protected boolean removeLibrary(Library library) {
+    @RequiredUIAccess
+    private void addLibrary(Library library) {
         LibraryTable table = library.getTable();
-        if (table != null) {
-            LibraryProjectStructureElement libraryElement = new LibraryProjectStructureElement(library);
-            /*
-            final Collection<ProjectStructureElementUsage> usages = new ArrayList<>(myContext.getDaemonAnalyzer().getUsages(libraryElement));
-            if (usages.size() > 0) {
-                final MultiMap<String, ProjectStructureElementUsage> containerType2Usage = new MultiMap<>();
-                for (final ProjectStructureElementUsage usage : usages) {
-                    containerType2Usage.putValue(usage.getContainingElement().getTypeName(), usage);
-                }
-
-                List<String> types = new ArrayList<>(containerType2Usage.keySet());
-                Collections.sort(types);
-
-                final StringBuilder sb = new StringBuilder("Library '");
-                    Library libraryModel = myContext.getLibraryModel(library);
-                    sb.append(libraryModel != null ? libraryModel.getName() : library.getName()).append("' is used in ");
-                    for (int i = 0; i < types.size(); i++) {
-                    if (i > 0 && i == types.size() - 1) {
-                        sb.append(" and in ");
-                    }
-                    else if (i > 0) {
-                        sb.append(", in ");
-                    }
-                    String type = types.get(i);
-                    Collection<ProjectStructureElementUsage> usagesOfType = containerType2Usage.get(type);
-                    if (usagesOfType.size() > 1) {
-                        sb.append(usagesOfType.size()).append(" ").append(StringUtil.decapitalize(StringUtil.pluralize(type)));
-                    }
-                    else {
-                        sb.append(StringUtil.decapitalize(usagesOfType.iterator().next().getContainingElement().getPresentableName()));
-                    }
-                }
-
-                sb.append(".\n\nAre you sure you want to delete this library?");
-
-                if (DialogWrapper.OK_EXIT_CODE == Messages.showOkCancelDialog(myProject, sb.toString(), "Delete Library", Messages.getQuestionIcon())) {
-
-                for (final ProjectStructureElementUsage usage : usages) {
-                    usage.removeSourceElement();
-                }
-
-                getModelProvider().getModifiableModel().removeLibrary(library);
-                myContext.getDaemonAnalyzer().removeElement(libraryElement);
-                    return true;
-                }
-            }
-            else */{
-                getModelProvider().getModifiableModel().removeLibrary(library);
-                // todo myContext.getDaemonAnalyzer().removeElement(libraryElement);
-                return true;
-            }
+        if (table == null || !myLevel.equals(table.getTableLevel()) || isAttached(library)) {
+            return;
         }
 
-        return false;
+        addValue(null, library);
+        updateIcons(List.of(library));
+        refreshTree(library);
     }
 
-    @Override
-    protected @Nullable String getEmptySelectionString() {
-        return "Select a library to view or edit its details here";
+    @RequiredUIAccess
+    private void onLibraryRenamed(Library library) {
+        if (isAttached(library)) {
+            refreshValue(library);
+        }
     }
 
-    private class CopyLibraryAction extends LegacyAnAction {
+    @RequiredUIAccess
+    private void onLibraryRootsChanged(Library library) {
+        if (isAttached(library)) {
+            updateIcons(List.of(library));
+        }
+    }
+
+    @RequiredUIAccess
+    private void updateIcons(Collection<Library> libraries) {
+        if (libraries.isEmpty()) {
+            return;
+        }
+
+        LibrariesConfigurator librariesConfigurator = getLibrariesConfigurator();
+        List<Library> targets = List.copyOf(libraries);
+        UIAccess uiAccess = UIAccess.current();
+        Application application = myProject.getApplication();
+        CompletableFuture.supplyAsync(() -> {
+            Map<Library, Image> icons = new HashMap<>();
+            for (Library library : targets) {
+                Supplier<Image> icon = () -> LibraryPresentationManager.getInstance().getNamedLibraryIcon(library, librariesConfigurator);
+                icons.put(library, application.runReadAction(icon));
+            }
+            return icons;
+        }, AppExecutorUtil.getAppExecutorService()).whenCompleteAsync((icons, error) -> {
+            if (error != null) {
+                LOG.error(error);
+                return;
+            }
+
+            for (Map.Entry<Library, Image> entry : icons.entrySet()) {
+                Library library = entry.getKey();
+                if (isAttached(library)) {
+                    myIcons.put(library, entry.getValue());
+                    refreshValue(library);
+                }
+            }
+        }, uiAccess);
+    }
+
+    private void disposeListener() {
+        Disposable listenerDisposable = myListenerDisposable;
+        if (listenerDisposable != null) {
+            listenerDisposable.disposeWithTree();
+            myListenerDisposable = null;
+        }
+    }
+
+    private class AddLibraryAction extends DumbAwareAction {
+        private AddLibraryAction() {
+            super(getAddText(), LocalizeValue.empty(), PlatformIconGroup.generalAdd());
+        }
+
+        @RequiredUIAccess
+        @Override
+        public void actionPerformed(AnActionEvent e) {
+            ActionGroup.Builder group = ActionGroup.newImmutableBuilder();
+            for (AnAction action : CreateNewLibraryAction.createActionOrGroup(getAddText(), BaseLibrariesConfigurable.this, myProject)) {
+                group.add(action);
+            }
+
+            ListPopup popup = JBPopupFactory.getInstance().createActionGroupPopup(
+                getAddText().get(),
+                group.build(),
+                e.getDataContext(),
+                JBPopupFactory.ActionSelectionAid.SPEEDSEARCH,
+                false
+            );
+            popup.showUnderneathOf(e);
+        }
+    }
+
+    private class RemoveLibraryAction extends DumbAwareAction implements AnActionWithSyncUpdate {
+        private RemoveLibraryAction() {
+            super(CommonLocalize.buttonDelete(), CommonLocalize.buttonDelete(), PlatformIconGroup.generalRemove());
+        }
+
+        @RequiredUIAccess
+        @Override
+        public void actionPerformed(AnActionEvent e) {
+            List<Object> selected = getSelectedValues();
+            if (!canRemove(selected)) {
+                return;
+            }
+
+            LibraryTable.ModifiableModel model = getModelProvider().getModifiableModel();
+            for (Object value : selected) {
+                model.removeLibrary((Library) value);
+            }
+            removeSelected();
+        }
+
+        @Override
+        public void update(AnActionEvent e) {
+            e.getPresentation().setEnabled(canRemove(getSelectedValues()));
+        }
+
+        private boolean canRemove(List<Object> selected) {
+            if (selected.isEmpty()) {
+                return false;
+            }
+
+            for (Object value : selected) {
+                if (!(value instanceof Library)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+    }
+
+    private class CopyLibraryAction extends DumbAwareAction implements AnActionWithSyncUpdate {
         private CopyLibraryAction() {
             super(CommonLocalize.buttonCopy(), CommonLocalize.buttonCopy(), PlatformIconGroup.actionsCopy());
         }
@@ -337,39 +436,46 @@ public abstract class BaseLibrariesConfigurable extends BaseStructureConfigurabl
         @RequiredUIAccess
         @Override
         public void actionPerformed(AnActionEvent e) {
-            Object o = getSelectedObject();
-            if (o instanceof LibraryEx) {
-                LibraryEx selected = (LibraryEx) o;
-                String newName = Messages.showInputDialog(
-                    "Enter library name:",
-                    "Copy Library",
-                    null,
-                    selected.getName() + "2",
-                    new NonEmptyInputValidator()
-                );
-                if (newName == null) {
-                    return;
-                }
-
-                BaseLibrariesConfigurable configurable = BaseLibrariesConfigurable.this;
-                LibraryEx library = (LibraryEx) getLibrariesConfigurator().getLibrary(selected.getName(), myLevel);
-                LOG.assertTrue(library != null);
-
-                LibrariesModifiableModel libsModel = (LibrariesModifiableModel) configurable.getModelProvider().getModifiableModel();
-                Library lib = libsModel.createLibrary(newName, library.getKind());
-                LibraryEx.ModifiableModelEx model = libsModel.getLibraryEditor(lib).getModel();
-                LibraryEditingUtil.copyLibrary(library, Collections.<String, String>emptyMap(), model);
+            if (getSelectedValues().size() != 1 || !(getSelectedValue() instanceof LibraryEx selected)) {
+                return;
             }
+
+            LibrariesModifiableModel librariesModel = (LibrariesModifiableModel) getModelProvider().getModifiableModel();
+            String selectedName = getLibraryName(selected);
+
+            Tree<Object> parent = getTree();
+            UIAccess uiAccess = UIAccess.current();
+            InputBoxBuilder.text()
+                .title(ProjectLocalize.libraryCopyTitle())
+                .text(ProjectLocalize.libraryCopyPrompt())
+                .value(LibraryEditingUtil.suggestNewLibraryName(librariesModel, selectedName))
+                .validator(name -> {
+                    if (name.isBlank()) {
+                        return InputProblem.error(ProjectLocalize.libraryNameNotSpecifiedError());
+                    }
+                    if (librariesModel.getLibraryByName(name) != null) {
+                        return InputProblem.error(ProjectLocalize.libraryNameAlreadyExistsError(name));
+                    }
+                    return null;
+                })
+                .showAsync(parent)
+                .whenCompleteAsync((newName, error) -> {
+                    if (error != null || newName == null) {
+                        return;
+                    }
+                    LibraryEx library = (LibraryEx) getLibrariesConfigurator().getLibrary(selectedName, myLevel);
+                    LibraryEx source = library != null ? library : selected;
+
+                    Library copy = librariesModel.createLibrary(newName, source.getKind());
+                    LibraryEx.ModifiableModelEx model = librariesModel.getLibraryEditor(copy).getModel();
+                    LibraryEditingUtil.copyLibrary(source, Map.of(), model);
+                    updateIcons(List.of(copy));
+                 }, uiAccess);
         }
 
         @Override
         public void update(AnActionEvent e) {
-            if (myTree.getSelectionPaths() == null || myTree.getSelectionPaths().length != 1) {
-                e.getPresentation().setEnabled(false);
-            }
-            else {
-                e.getPresentation().setEnabled(getSelectedObject() instanceof LibraryImpl);
-            }
+            e.getPresentation().setEnabled(getSelectedValues().size() == 1 && getSelectedValue() instanceof LibraryEx);
         }
     }
 }

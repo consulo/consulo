@@ -30,6 +30,8 @@ import consulo.web.ui.impl.internal.base.TargetVaadin;
 import consulo.web.ui.impl.internal.base.VaadinComponentDelegate;
 import org.jspecify.annotations.Nullable;
 
+import java.util.function.Consumer;
+
 /**
  * @author VISTALL
  * @since 2019-02-18
@@ -50,6 +52,10 @@ public class WebLabeledLayoutImpl extends VaadinComponentDelegate<WebLabeledLayo
             addClassName(AuraUtility.Border.ALL);
             addClassName(AuraUtility.BorderRadius.SMALL);
             addClassName(AuraUtility.BorderColor.CONTRAST_10);
+        }
+
+        public LocalizeValue getLabelValue() {
+            return myLabelValue;
         }
 
         public void setLabelValue(LocalizeValue labelValue) {
@@ -84,6 +90,16 @@ public class WebLabeledLayoutImpl extends VaadinComponentDelegate<WebLabeledLayo
 
     @Override
     public void addStyle(LabeledLayoutStyle style) {
+    }
+
+    @Override
+    public LocalizeValue getLabel() {
+        return getVaadinComponent().getLabelValue();
+    }
+
+    @Override
+    public void forEachChild(@RequiredUIAccess Consumer<Component> consumer) {
+        getVaadinComponent().getChildren().toList().forEach(child -> WebLayoutChildren.accept(child, consumer));
     }
 
     @Override

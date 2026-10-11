@@ -22,6 +22,7 @@ import consulo.ui.ex.awt.ColoredTableCellRenderer;
 import consulo.ui.ex.awt.ColumnInfo;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.util.lang.ref.SimpleReference;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
@@ -178,7 +179,9 @@ public class DesktopTableColumnImpl<Item, Value> extends ColumnInfo<Item, Value>
             return myComponentRenderer;
         }
 
-        return new ColoredTableCellRenderer() {
+        SimpleReference<DesktopTextItemPresentationImpl> rendered = SimpleReference.create();
+
+        ColoredTableCellRenderer renderer = new ColoredTableCellRenderer() {
             @Override
             protected void customizeCellRenderer(JTable table, @Nullable Object value, boolean selected, boolean hasFocus, int row, int column) {
                 setTextAlign(toSwingAlignment(myAlignment));
@@ -192,8 +195,34 @@ public class DesktopTableColumnImpl<Item, Value> extends ColumnInfo<Item, Value>
                     }
                 }
 
-                myRender.render(new DesktopTextItemPresentationImpl(this), RenderItem.of(typedValue(value), selected), item);
+                DesktopTextItemPresentationImpl presentation = new DesktopTextItemPresentationImpl(this);
+                rendered.set(presentation);
+                myRender.render(presentation, RenderItem.of(typedValue(value), selected), item);
             }
+
+            @Override
+            protected boolean shouldPaintBackground() {
+                return isOpaque();
+            }
+        };
+
+        return (table, value, selected, hasFocus, row, column) -> {
+            rendered.set(null);
+
+            java.awt.Component component = renderer.getTableCellRendererComponent(table, value, selected, hasFocus, row, column);
+
+            DesktopTextItemPresentationImpl presentation = rendered.get();
+            if (presentation == null || !presentation.hasSuffix()) {
+                return component;
+            }
+
+            Color background = renderer.isBackgroundSet() ? renderer.getBackground() : table.getBackground();
+            return new DesktopSuffixCellRendererPanel().compose(
+                renderer,
+                background,
+                presentation,
+                selected ? table.getSelectionForeground() : null
+            );
         };
     }
 
@@ -229,8 +258,12 @@ public class DesktopTableColumnImpl<Item, Value> extends ColumnInfo<Item, Value>
 
                 // a button carries its whole value in the click, so there is nothing further to type and
                 // waiting for focus to leave would only lose the change
-                if (awtComponent instanceof AbstractButton) {
+                if (awtComponent instanceof AbstractButton || awtComponent instanceof JComboBox) {
                     myValueComponent.addValueListener(event -> stopCellEditing());
+                }
+                // a text field commits on enter, as the text field of DefaultCellEditor does
+                else if (awtComponent instanceof JTextField textField) {
+                    textField.addActionListener(event -> stopCellEditing());
                 }
 
                 return awtComponent;

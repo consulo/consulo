@@ -17,6 +17,7 @@ package consulo.web.ui.impl.internal;
 
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.ClickNotifier;
+import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.HasComponents;
 import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.UI;
@@ -32,6 +33,7 @@ import com.vaadin.flow.data.selection.SelectionModel;
 import com.vaadin.flow.dom.Style;
 import com.vaadin.flow.function.SerializableComparator;
 import com.vaadin.flow.server.VaadinSession;
+import com.vaadin.flow.shared.Registration;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ui.Component;
@@ -46,6 +48,7 @@ import consulo.ui.TreeExecutor;
 import consulo.ui.TreeModel;
 import consulo.ui.TreeNode;
 import consulo.ui.TreeStyle;
+import consulo.ui.impl.font.FontSizeLadder;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.clipboard.DataTransfer;
@@ -81,12 +84,20 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl<NODE>
     private static final String OUTSIDE_HEADER =
         "!event.composedPath().some(node => node.localName === 'thead' || node.localName === 'tfoot')";
 
+    static final String CHECK_BOX_CLASS = "web-tree-check";
+
+    static final String OUTSIDE_CHECK_BOX =
+        "!event.composedPath().some(node => node.classList && node.classList.contains('" + CHECK_BOX_CLASS + "'))";
+
     private @Nullable TransferHandler<TreeNode<NODE>> myTransferHandler;
     private @Nullable Function<TreeNode<NODE>, Length> myItemHeightGetter;
     private @Nullable Function<TreeNode<NODE>, String> mySpeedSearchConverter;
 
     /** where the row of the last right click ended up, which is what a popup raised over the tree hangs off */
     private volatile @Nullable Point2D myPopupPosition;
+
+    private boolean myAllowMultipleSelect;
+    private @Nullable Registration mySelectionRegistration;
 
     private final Disposable myDestroyHook = Disposable.newDisposable("Tree");
 
@@ -124,11 +135,18 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl<NODE>
                 myDraggedItems = nodesOf(event.getDraggedItems());
                 DataTransfer transfer = handler.createDragTransfer(WebTreeImpl.this, myDraggedItems, true);
                 myDragTransfer = transfer == null ? DataTransfer.EMPTY : transfer;
+                getUI().ifPresent(ui -> ComponentUtil.setData(ui, ActiveDrag.class, new ActiveDrag(this, myDragTransfer)));
             });
 
             addDragEndListener(event -> {
                 myDraggedItems = List.of();
                 myDragTransfer = DataTransfer.EMPTY;
+                getUI().ifPresent(ui -> {
+                    ActiveDrag activeDrag = ComponentUtil.getData(ui, ActiveDrag.class);
+                    if (activeDrag != null && activeDrag.source() == this) {
+                        ComponentUtil.setData(ui, ActiveDrag.class, null);
+                    }
+                });
             });
 
             addDropListener(event -> {
@@ -139,13 +157,20 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl<NODE>
                     return;
                 }
 
-                DropContextImpl context = new DropContextImpl(targetNode, position, myDragTransfer, myDraggedItems, true);
+                DataTransfer transfer = myDraggedItems.isEmpty() ? foreignDragTransfer() : myDragTransfer;
+                DropContextImpl context = new DropContextImpl(targetNode, position, transfer, myDraggedItems, true);
                 if (!handler.drop(WebTreeImpl.this, context)) {
                     return;
                 }
 
                 handler.drop(WebTreeImpl.this, context.toPerforming());
             });
+        }
+
+        private DataTransfer foreignDragTransfer() {
+            UI ui = getUI().orElse(null);
+            ActiveDrag activeDrag = ui == null ? null : ComponentUtil.getData(ui, ActiveDrag.class);
+            return activeDrag == null || activeDrag.source() == this ? DataTransfer.EMPTY : activeDrag.transfer();
         }
 
         public Vaadin() {
@@ -179,7 +204,14 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl<NODE>
                 // a click anywhere on the toggle selects - the label is inside it - while opening a node is
                 // the chevron's alone. the filter keeps the label clicks off the wire entirely, and the
                 // client half of this is treeToggle.js, which stops the element flipping itself for them
-                toggle.addClickListener(event -> selectRow(row));
+                toggle.addClickListener(event -> {
+                    if (myAllowMultipleSelect && (event.isCtrlKey() || event.isMetaKey())) {
+                        toggleRow(row);
+                    }
+                    else {
+                        selectRow(row);
+                    }
+                });
 
                 toggle.getElement().addEventListener("click", event -> {
                     if (getDataCommunicator().hasChildren(row)) {
@@ -201,6 +233,7 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl<NODE>
 
                 applyItemHeight(node);
 
+                decorateRow(toggle, node);
                 toggle.add(item.toComponent());
                 return toggle;
             }).setAutoWidth(true).setFlexGrow(1);
@@ -334,8 +367,27 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl<NODE>
                 return;
             }
 
+            if (myAllowMultipleSelect) {
+                deselectAll();
+            }
             select(row);
             myController.onSelected(node, ProgrammaticInputDetails.INSTANCE);
+        }
+
+        private void toggleRow(WebTreeRow<NODE> row) {
+            TreeNodeImpl<NODE> node = row.getNode();
+            if (node == null) {
+                return;
+            }
+
+            boolean selected = getSelectedItems().contains(row);
+            if (selected) {
+                deselect(row);
+            }
+            else {
+                select(row);
+            }
+            myController.onSelectionChanged(selected ? null : node, selectedNodes(getSelectedItems()), ProgrammaticInputDetails.INSTANCE);
         }
 
         private @Nullable WebTreeRow<NODE> liveRow(TreeNodeImpl<NODE> node) {
@@ -488,8 +540,15 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl<NODE>
 
             WebTreeRow<NODE> row = liveRow(node);
             if (row != null) {
+                if (myAllowMultipleSelect) {
+                    deselectAll();
+                }
                 select(row);
             }
+        }
+
+        void refreshNode(TreeNodeImpl<NODE> node) {
+            refreshRow(liveRow(node));
         }
 
         void refreshRow(@Nullable WebTreeRow<NODE> row) {
@@ -576,20 +635,84 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl<NODE>
         vaadin.addClassName(TREE_CLASS);
         vaadin.resetData();
 
-        vaadin.asSingleSelect().addValueChangeListener(event -> {
-            WebTreeRow<NODE> row = event.getValue();
-            TreeNodeImpl<NODE> node = row == null ? null : row.getNode();
-            if (event.isFromClient() && node != null) {
-                myController.onSelected(node, ProgrammaticInputDetails.INSTANCE);
-            }
-        });
+        installSelectionListener();
 
         WebInputDetails.addClickListener(vaadin.getElement(), "dblclick", inputDetails -> {
             TreeNodeImpl<NODE> selectedNode = myController.getSelected();
             if (selectedNode != null) {
                 myController.onDoubleClick(selectedNode, inputDetails);
             }
-        }).setFilter(OUTSIDE_HEADER);
+        }).setFilter(OUTSIDE_HEADER + " && " + OUTSIDE_CHECK_BOX);
+    }
+
+    private void installSelectionListener() {
+        Registration registration = mySelectionRegistration;
+        if (registration != null) {
+            registration.remove();
+        }
+
+        mySelectionRegistration = toVaadinComponent().addSelectionListener(event -> {
+            if (!event.isFromClient()) {
+                return;
+            }
+
+            if (myAllowMultipleSelect) {
+                List<TreeNodeImpl<NODE>> nodes = selectedNodes(event.getAllSelectedItems());
+                List<TreeNode<NODE>> previous = myController.getSelection();
+                TreeNodeImpl<NODE> lead = null;
+                for (TreeNodeImpl<NODE> node : nodes) {
+                    if (!previous.contains(node)) {
+                        lead = node;
+                    }
+                }
+                myController.onSelectionChanged(lead, nodes, ProgrammaticInputDetails.INSTANCE);
+            }
+            else {
+                WebTreeRow<NODE> row = event.getFirstSelectedItem().orElse(null);
+                TreeNodeImpl<NODE> node = row == null ? null : row.getNode();
+                if (node != null) {
+                    myController.onSelected(node, ProgrammaticInputDetails.INSTANCE);
+                }
+            }
+        });
+    }
+
+    private static <NODE> List<TreeNodeImpl<NODE>> selectedNodes(Collection<WebTreeRow<NODE>> rows) {
+        List<TreeNodeImpl<NODE>> nodes = new ArrayList<>();
+        for (WebTreeRow<NODE> row : rows) {
+            TreeNodeImpl<NODE> node = row.getNode();
+            if (node != null) {
+                nodes.add(node);
+            }
+        }
+        return nodes;
+    }
+
+    @Override
+    public void setAllowMultipleSelect(boolean allow) {
+        if (myAllowMultipleSelect == allow) {
+            return;
+        }
+
+        myAllowMultipleSelect = allow;
+
+        Vaadin vaadin = toVaadinComponent();
+        vaadin.setSelectionMode(allow ? Grid.SelectionMode.MULTI : Grid.SelectionMode.SINGLE);
+        if (allow) {
+            WebGridSelectionColumn.hide(vaadin);
+        }
+        else {
+            ((SelectionModel.Single<?, ?>) vaadin.getSelectionModel()).setDeselectAllowed(false);
+        }
+
+        installSelectionListener();
+
+        myController.setAllowMultipleSelect(allow);
+    }
+
+    @Override
+    public List<TreeNode<NODE>> getSelectedNodes() {
+        return myController.getSelection();
     }
 
     @Override
@@ -602,6 +725,9 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl<NODE>
     }
 
     void childrenApplied(TreeNodeImpl<NODE> node) {
+    }
+
+    void decorateRow(VaadinGridTreeToggle toggle, @Nullable TreeNodeImpl<NODE> node) {
     }
 
     @Nullable ColorValue rowBackground(@Nullable TreeNodeImpl<NODE> node) {
@@ -687,6 +813,9 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl<NODE>
             case BELOW -> DragAndDropTransferHandler.DropPosition.BELOW;
             case EMPTY -> null;
         };
+    }
+
+    private record ActiveDrag(com.vaadin.flow.component.Component source, DataTransfer transfer) {
     }
 
     private class DropContextImpl implements DragAndDropTransferHandler.DropContext<TreeNode<NODE>> {
@@ -783,24 +912,8 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl<NODE>
             return;
         }
 
-        vaadinStyle.set("font-size", fontSize(style));
-    }
-
-    /**
-     * The ladder jetbrains gives a label - h4/h3/h2 are one, three and five points above it, and medium and
-     * small one and two below. The css keywords are absolute sizes and step far wider than that, so the size
-     * is written against the one inherited, where {@code em} is the size of the parent.
-     */
-    private static String fontSize(TreeStyle style) {
-        return switch (style) {
-            case FONT_XX_SMALL -> "calc(1em - 3px)";
-            case FONT_X_SMALL -> "calc(1em - 2px)";
-            case FONT_SMALL -> "calc(1em - 1px)";
-            case FONT_LARGE -> "calc(1em + 1px)";
-            case FONT_X_LARGE -> "calc(1em + 3px)";
-            case FONT_XX_LARGE -> "calc(1em + 5px)";
-            default -> "1em";
-        };
+        int pointDelta = FontSizeLadder.pointDelta(style);
+        vaadinStyle.set("font-size", pointDelta == 0 ? "1em" : "calc(1em " + (pointDelta < 0 ? "- " : "+ ") + Math.abs(pointDelta) + "pt)");
     }
 
     @Override

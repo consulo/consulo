@@ -428,3 +428,65 @@ table.web-table-layout > tr:has(> td > *):not(:has(> td > :not([hidden])))
 {
   display: none;
 }
+
+.consulo-spotlight
+{
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 10;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.consulo-spotlight > svg
+{
+  display: block;
+  overflow: hidden;
+}
+
+.consulo-spotlight-dim
+{
+  fill: color-mix(in srgb, color-mix(in srgb, var(--consulo-panel-background, #f2f2f2) 70%, black) 39%, transparent);
+}
+
+.consulo-spotlight-border
+{
+  fill: rgba(255, 200, 0, 0.39);
+}
+
+vaadin-dialog:not(.web-heavy-popup)
+{
+  --vaadin-dialog-padding: var(--vaadin-padding-s);
+}
+
+vaadin-dialog:not(.web-heavy-popup)::part(overlay)
+{
+  border-radius: 8px;
+}
+
+vaadin-dialog:not(.web-heavy-popup)::part(header)
+{
+  padding: 6px var(--vaadin-padding-xs) 6px var(--vaadin-padding-s);
+  gap: var(--vaadin-gap-xs);
+  min-height: 0;
+}
+
+vaadin-dialog:not(.web-heavy-popup) .consulo-window-close
+{
+  --vaadin-button-height: 20px;
+  width: 20px;
+  min-width: 20px;
+  height: 20px !important;
+  block-size: 20px !important;
+  min-block-size: 0;
+  padding: 0;
+}
+
+vaadin-dialog:not(.web-heavy-popup)::part(title)
+{
+  font-size: inherit;
+  line-height: inherit;
+}

@@ -21,6 +21,7 @@ import consulo.content.bundle.SdkModificator;
 import consulo.fileChooser.FileChooserDescriptor;
 
 import consulo.localize.LocalizeValue;
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
 import java.util.List;
 
@@ -62,6 +63,7 @@ public class SdkPathEditor extends PathEditor {
     setModified(false);
   }
 
+  @RequiredUIAccess
   public void reset(@Nullable SdkModificator modificator) {
     if (modificator != null) {
       resetPath(List.of(modificator.getRoots(myOrderRootType)));

@@ -28,7 +28,9 @@ import consulo.disposer.Disposer;
 import consulo.externalService.localize.ExternalServiceLocalize;
 import consulo.externalService.plugin.PluginsConfigurable;
 import consulo.localize.LocalizeValue;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
@@ -53,20 +55,21 @@ public class PluginsConfigurableImpl implements SearchableConfigurable,
     }
 
     @Override
-    public void setBannerComponent(JComponent bannerComponent) {
+    @RequiredUIAccess
+    public void setBannerComponent(consulo.ui.Component bannerComponent) {
         if (myPanel != null) {
-            myPanel.setBannerComponent(bannerComponent);
+            myPanel.setBannerComponent((JComponent) TargetAWT.to(bannerComponent));
         }
     }
 
     @Override
     @RequiredUIAccess
-    public @Nullable JComponent createComponent(Disposable parentDisposable) {
+    public @Nullable Component createUIComponent(Disposable parentDisposable) {
         if (myPanel == null) {
             myPanel = new PluginsPanel();
             Disposer.register(parentDisposable, myPanel);
         }
-        return myPanel.getComponent();
+        return TargetAWT.wrap(myPanel.getComponent());
     }
 
     

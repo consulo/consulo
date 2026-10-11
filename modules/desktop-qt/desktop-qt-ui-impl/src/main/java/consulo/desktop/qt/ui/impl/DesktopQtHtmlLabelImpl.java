@@ -20,6 +20,8 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.HorizontalAlignment;
 import consulo.ui.HtmlLabel;
 import io.qt.core.Qt;
+import io.qt.gui.QKeySequence;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -30,11 +32,35 @@ public class DesktopQtHtmlLabelImpl extends DesktopQtLabelImpl implements HtmlLa
         super(html, HorizontalAlignment.LEFT);
     }
 
+    /**
+     * A qt label guesses between plain and rich text, and markup which does not look like html - a bare ampersand of
+     * a build string - is then drawn as it stands.
+     */
+    @Override
+    protected Qt.TextFormat textFormat() {
+        return Qt.TextFormat.RichText;
+    }
+
+    /**
+     * An ampersand of markup opens a character entity rather than marking a mnemonic, so the markup is shown as given.
+     */
+    @Override
+    protected String currentText() {
+        return getText().get();
+    }
+
+    @Override
+    protected @Nullable String highlightedText(String query) {
+        return DesktopQtSearchHighlight.markupRichText(currentText(), query);
+    }
+
+    @Override
+    protected @Nullable QKeySequence mnemonicShortcut() {
+        return null;
+    }
+
     @Override
     protected void initialize(DesktopQtIconLabel component) {
-        // a qt label guesses between plain and rich text, and markup which does not look like html - a bare
-        // ampersand of a build string - is then drawn as it stands
-        component.setTextFormat(Qt.TextFormat.RichText);
         component.setWordWrap(true);
         component.setTextInteractionFlags(
             Qt.TextInteractionFlag.LinksAccessibleByMouse,

@@ -17,12 +17,13 @@ package consulo.language.editor.impl.internal.template;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.configurable.*;
+import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.localize.LocalizeValue;
+import consulo.ui.Component;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import org.jspecify.annotations.Nullable;
-
-import javax.swing.*;
 
 @ExtensionImpl
 public class LiveTemplatesConfigurable implements SearchableConfigurable, Configurable.NoScroll, ApplicationConfigurable {
@@ -34,9 +35,9 @@ public class LiveTemplatesConfigurable implements SearchableConfigurable, Config
     }
 
     @Override
-    public JComponent createComponent() {
+    public Component createUIComponent(Disposable parentDisposable) {
         myPanel = new TemplateListPanel();
-        return myPanel;
+        return TargetAWT.wrap(myPanel);
     }
 
     @Override

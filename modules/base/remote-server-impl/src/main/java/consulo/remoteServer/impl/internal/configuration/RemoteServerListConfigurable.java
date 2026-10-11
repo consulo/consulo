@@ -12,6 +12,7 @@ import consulo.remoteServer.ServerType;
 import consulo.remoteServer.configuration.RemoteServer;
 import consulo.remoteServer.configuration.RemoteServersManager;
 import consulo.remoteServer.localize.RemoteServerLocalize;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.JBUI;
@@ -74,12 +75,12 @@ public class RemoteServerListConfigurable extends MasterDetailsComponent impleme
     
     @Override
     @RequiredUIAccess
-    public JComponent createComponent(Disposable uiDisposable) {
+    public Component createUIComponent(Disposable uiDisposable) {
         if (!isTreeInitialized) {
             initTree();
             isTreeInitialized = true;
         }
-        return super.createComponent(uiDisposable);
+        return super.createUIComponent(uiDisposable);
     }
 
     private @Nullable ServerType<?> getSingleServerType() {

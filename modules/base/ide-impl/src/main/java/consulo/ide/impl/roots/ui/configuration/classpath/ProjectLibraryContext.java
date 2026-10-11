@@ -24,8 +24,8 @@ import consulo.module.content.layer.orderEntry.LibraryDependencyScopeSuggester;
 import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.project.localize.ProjectLocalize;
+import consulo.ui.MessageBoxes;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.Messages;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
@@ -40,7 +40,7 @@ import java.util.function.Predicate;
  * @since 2014-09-28
  */
 public class ProjectLibraryContext extends AddModuleDependencyContext<List<Library>> {
-    private List<Library> myItems;
+    private final List<Library> myItems;
 
     public ProjectLibraryContext(
         ClasspathPanel classpathPanel,
@@ -73,10 +73,9 @@ public class ProjectLibraryContext extends AddModuleDependencyContext<List<Libra
                     String name = item.getName();
                     if (name != null && name.equals(libraryOrderEntry.getLibraryName())) {
                         if (orderEntry.isValid()) {
-                            Messages.showErrorDialog(
-                                ProjectLocalize.classpathMessageLibraryAlreadyAdded(item.getName()).get(),
-                                ProjectLocalize.classpathTitleAddingDependency().get()
-                            );
+                            MessageBoxes.okError(ProjectLocalize.classpathMessageLibraryAlreadyAdded(name))
+                                .title(ProjectLocalize.classpathTitleAddingDependency())
+                                .showAsync(myClasspathPanel.getUIComponent());
                             return Collections.emptyList();
                         }
                         else {

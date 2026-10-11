@@ -1,0 +1,49 @@
+/*
+ * Copyright 2013-2026 consulo.io
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package consulo.ide.impl.ui.app.impl.settings;
+
+import consulo.annotation.component.ComponentProfiles;
+import consulo.annotation.component.ServiceImpl;
+import consulo.configurable.internal.ConfigurableForeignComponentSearch;
+import consulo.configurable.internal.ConfigurableSearchHits;
+import consulo.localize.LocalizeValue;
+import consulo.ui.Component;
+import consulo.ui.annotation.RequiredUIAccess;
+import jakarta.inject.Singleton;
+
+import java.util.List;
+import java.util.function.BiConsumer;
+import java.util.function.Predicate;
+
+/**
+ * @author VISTALL
+ * @since 2026-10-11
+ */
+@Singleton
+@ServiceImpl(profiles = ComponentProfiles.UNIFIED)
+public class UnifiedConfigurableForeignComponentSearch implements ConfigurableForeignComponentSearch {
+    @Override
+    @RequiredUIAccess
+    public boolean findHits(Component component, Predicate<LocalizeValue> matcher, ConfigurableSearchHits hits) {
+        return false;
+    }
+
+    @Override
+    @RequiredUIAccess
+    public boolean collectTexts(Component component, List<LocalizeValue> tabPath, BiConsumer<LocalizeValue, List<LocalizeValue>> consumer) {
+        return false;
+    }
+}

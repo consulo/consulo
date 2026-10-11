@@ -15,50 +15,68 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.actions;
 
+import consulo.compiler.artifact.element.FilePathValidator;
 import consulo.compiler.artifact.element.PackagingElement;
 import consulo.compiler.artifact.element.RenameablePackagingElement;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.ArtifactEditorEx;
+import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.LayoutElementInfo;
+import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.LayoutTreeComponent;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.LayoutTreeSelection;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.nodes.PackagingElementNode;
 import consulo.project.localize.ProjectLocalize;
+import consulo.ui.InputBoxBuilder;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.CommonShortcuts;
-import consulo.ui.ex.action.LegacyDumbAwareAction;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
+import consulo.ui.ex.action.DumbAwareAction;
 
-import javax.swing.tree.TreePath;
+import java.util.List;
 
 /**
  * @author nik
  */
-public class RenamePackagingElementAction extends LegacyDumbAwareAction {
-  private final ArtifactEditorEx myArtifactEditor;
+public class RenamePackagingElementAction extends DumbAwareAction implements AnActionWithSyncUpdate {
+    private final ArtifactEditorEx myArtifactEditor;
 
-  public RenamePackagingElementAction(ArtifactEditorEx artifactEditor) {
-    super(ProjectLocalize.actionNameRenamePackagingElement());
-    registerCustomShortcutSet(CommonShortcuts.getRename(), artifactEditor.getLayoutTreeComponent().getTreePanel());
-    myArtifactEditor = artifactEditor;
-  }
+    public RenamePackagingElementAction(ArtifactEditorEx artifactEditor) {
+        super(ProjectLocalize.actionNameRenamePackagingElement());
+        myArtifactEditor = artifactEditor;
+    }
 
-  @Override
-  public void update(AnActionEvent e) {
-    LayoutTreeSelection selection = myArtifactEditor.getLayoutTreeComponent().getSelection();
-    e.getPresentation().setEnabledAndVisible(
-        selection.getElementIfSingle() instanceof RenameablePackagingElement renameablePackagingElement
-            && renameablePackagingElement.canBeRenamed()
-    );
-  }
+    @Override
+    public void update(AnActionEvent e) {
+        LayoutTreeSelection selection = myArtifactEditor.getLayoutTreeComponent().getSelection();
+        e.getPresentation().setEnabledAndVisible(
+            selection.getElementIfSingle() instanceof RenameablePackagingElement renameablePackagingElement
+                && renameablePackagingElement.canBeRenamed()
+        );
+    }
 
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(AnActionEvent e) {
-    LayoutTreeSelection selection = myArtifactEditor.getLayoutTreeComponent().getSelection();
-    PackagingElementNode<?> node = selection.getNodeIfSingle();
-    PackagingElement<?> element = selection.getElementIfSingle();
-    if (node == null || element == null) return;
-    if (!myArtifactEditor.getLayoutTreeComponent().checkCanModify(element, node)) return;
-    
-    TreePath path = selection.getPath(node);
-    myArtifactEditor.getLayoutTreeComponent().startRenaming(path);
-  }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(AnActionEvent e) {
+        LayoutTreeComponent treeComponent = myArtifactEditor.getLayoutTreeComponent();
+        LayoutTreeSelection selection = treeComponent.getSelection();
+        LayoutElementInfo node = selection.getNodeIfSingle();
+        PackagingElement<?> element = selection.getElementIfSingle();
+        if (node == null || !(element instanceof RenameablePackagingElement renameableElement) || !treeComponent.checkCanModify(element, node)) {
+            return;
+        }
+
+        UIAccess uiAccess = UIAccess.current();
+        InputBoxBuilder.text()
+            .title(ProjectLocalize.actionNameRenamePackagingElement())
+            .text(ProjectLocalize.artifactRenameElementPrompt())
+            .value(renameableElement.getName())
+            .validator(new FilePathValidator())
+            .showAsync(treeComponent.getTree())
+            .whenCompleteAsync((newName, error) -> {
+                if (error != null || newName == null || newName.equals(renameableElement.getName()) || myArtifactEditor.isDisposed()) {
+                    return;
+                }
+
+                treeComponent.editLayout(() -> renameableElement.rename(newName));
+                treeComponent.updateAndSelect(List.of(element));
+            }, uiAccess);
+    }
 }

@@ -40,6 +40,20 @@ public final class DesktopAWTDataTransfers {
     private static final Logger LOG = Logger.getInstance(DesktopAWTDataTransfers.class);
 
     private static final Map<DataTransferType<?>, DataFlavor> FLAVORS = createFlavors();
+    private static final DataFlavor LOCAL_FLAVOR = createLocalFlavor();
+
+    private static DataFlavor createLocalFlavor() {
+        try {
+            return new DataFlavor(
+                DataFlavor.javaJVMLocalObjectMimeType + ";class=" + DataTransfer.class.getName(),
+                null,
+                DataTransfer.class.getClassLoader()
+            );
+        }
+        catch (ClassNotFoundException e) {
+            throw new IllegalStateException(e);
+        }
+    }
 
     private static Map<DataTransferType<?>, DataFlavor> createFlavors() {
         Map<DataTransferType<?>, DataFlavor> flavors = new LinkedHashMap<>();
@@ -64,6 +78,17 @@ public final class DesktopAWTDataTransfers {
     }
 
     public static DataTransfer fromTransferable(Transferable transferable) {
+        if (transferable.isDataFlavorSupported(LOCAL_FLAVOR)) {
+            try {
+                if (transferable.getTransferData(LOCAL_FLAVOR) instanceof DataTransfer transfer) {
+                    return transfer;
+                }
+            }
+            catch (Exception e) {
+                LOG.warn(e);
+            }
+        }
+
         DataTransfer.Builder builder = DataTransfer.builder();
         readInto(builder, transferable, DataTransferType.TEXT, String.class);
         readInto(builder, transferable, DataTransferType.HTML, String.class);
@@ -119,6 +144,9 @@ public final class DesktopAWTDataTransfers {
         @Override
         public DataFlavor[] getTransferDataFlavors() {
             List<DataFlavor> flavors = new ArrayList<>();
+            if (hasLocalTypes()) {
+                flavors.add(LOCAL_FLAVOR);
+            }
             for (DataTransferType<?> type : myTransfer.getTypes()) {
                 DataFlavor flavor = FLAVORS.get(type);
                 if (flavor != null) {
@@ -128,6 +156,15 @@ public final class DesktopAWTDataTransfers {
             return flavors.toArray(new DataFlavor[0]);
         }
 
+        private boolean hasLocalTypes() {
+            for (DataTransferType<?> type : myTransfer.getTypes()) {
+                if (!type.isNative()) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         @Override
         public boolean isDataFlavorSupported(DataFlavor flavor) {
             return Arrays.asList(getTransferDataFlavors()).contains(flavor);
@@ -135,6 +172,9 @@ public final class DesktopAWTDataTransfers {
 
         @Override
         public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException {
+            if (LOCAL_FLAVOR.equals(flavor) && hasLocalTypes()) {
+                return myTransfer;
+            }
             for (DataTransferType<?> type : myTransfer.getTypes()) {
                 if (flavor.equals(FLAVORS.get(type))) {
                     Object value = myTransfer.get(type);

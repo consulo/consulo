@@ -16,156 +16,240 @@
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceItems;
 
 import consulo.application.Application;
+import consulo.compiler.artifact.Artifact;
+import consulo.compiler.artifact.ArtifactType;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import consulo.compiler.artifact.ui.PackagingSourceItem;
+import consulo.compiler.artifact.ui.PackagingSourceItemsProvider;
+import consulo.compiler.artifact.ui.SourceItemPresentation;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.ArtifactEditorImpl;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.SimpleDnDAwareTree;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.SourceItemsDraggingObject;
+import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.ArtifactTreeContextMenu;
+import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.ArtifactTreePresentations;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceItems.actions.ExtractIntoDefaultLocationAction;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceItems.actions.PackAndPutIntoDefaultLocationAction;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceItems.actions.PutSourceItemIntoDefaultLocationAction;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceItems.actions.SourceItemNavigateAction;
-import consulo.project.localize.ProjectLocalize;
-import consulo.ui.ex.action.*;
-import consulo.ui.ex.awt.PopupHandler;
-import consulo.ui.ex.awt.dnd.*;
-import consulo.ui.ex.awt.tree.*;
-import consulo.util.lang.Pair;
+import consulo.ui.Component;
+import consulo.ui.DragAndDropTransferHandler;
+import consulo.ui.Tree;
+import consulo.ui.TreeExecutor;
+import consulo.ui.TreeModel;
+import consulo.ui.TreeNode;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.clipboard.DataTransfer;
+import consulo.ui.clipboard.DataTransferType;
+import consulo.ui.ex.TreeExpander;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.CommonActionsManager;
+import consulo.ui.ex.tree.PresentationData;
+import consulo.util.lang.StringUtil;
+import org.jspecify.annotations.Nullable;
 
-import javax.swing.tree.DefaultMutableTreeNode;
-import java.awt.*;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 
 /**
  * @author nik
  */
-public class SourceItemsTree extends SimpleDnDAwareTree implements AdvancedDnDSource, Disposable {
-  private final ArtifactEditorImpl myArtifactsEditor;
-  private final SimpleTreeBuilder myBuilder;
+public class SourceItemsTree implements Disposable {
+    public static final DataTransferType<List<PackagingSourceItem>> SOURCE_ITEMS = DataTransferType.create("consulo.artifact.source.items");
 
-  public SourceItemsTree(ArtifactEditorContext editorContext, ArtifactEditorImpl artifactsEditor) {
-    myArtifactsEditor = artifactsEditor;
-    myBuilder = new SimpleTreeBuilder(this, this.getBuilderModel(), new SourceItemsTreeStructure(editorContext, artifactsEditor), new WeightBasedComparator(true));
-    setRootVisible(false);
-    setShowsRootHandles(true);
-    Disposer.register(this, myBuilder);
-    PopupHandler.installPopupHandler(this, createPopupGroup(), ActionPlaces.UNKNOWN, ActionManager.getInstance());
-    installDnD();
-  }
+    private static final Comparator<SourceItemPresentation> COMPARATOR = (o1, o2) -> {
+        int weights = o2.getWeight() - o1.getWeight();
+        if (weights != 0) {
+            return weights;
+        }
+        return StringUtil.compare(o1.getPresentableName(), o2.getPresentableName(), true);
+    };
 
-  private void installDnD() {
-    if (!Application.get().isUnitTestMode()) {
-      DnDManager.getInstance().registerSource(this);
-    }
-  }
-
-  private ActionGroup createPopupGroup() {
-    DefaultActionGroup group = new DefaultActionGroup();
-    group.add(new PutSourceItemIntoDefaultLocationAction(this, myArtifactsEditor));
-    group.add(new PackAndPutIntoDefaultLocationAction(this, myArtifactsEditor));
-    // java specific group.add(new PutSourceItemIntoParentAndLinkViaManifestAction(this, myArtifactsEditor));
-    group.add(new ExtractIntoDefaultLocationAction(this, myArtifactsEditor));
-
-    group.add(AnSeparator.getInstance());
-    group.add(new SourceItemNavigateAction(this));
-    //group.add(new SourceItemFindUsagesAction(this, myArtifactsEditor.getContext().getProject(), myArtifactsEditor.getContext().getParent()));
-
-    DefaultTreeExpander expander = new DefaultTreeExpander(this);
-    CommonActionsManager commonActionsManager = CommonActionsManager.getInstance();
-    group.add(AnSeparator.getInstance());
-    group.addAction(commonActionsManager.createExpandAllAction(expander, this));
-    group.addAction(commonActionsManager.createCollapseAllAction(expander, this));
-    return group;
-  }
-
-  public void rebuildTree() {
-    myBuilder.updateFromRoot(true);
-  }
-
-  public void initTree() {
-    myBuilder.initRootNode();
-  }
-
-  @Override
-  public void dispose() {
-    if (!Application.get().isUnitTestMode()) {
-      DnDManager.getInstance().unregisterSource(this);
-    }
-  }
-
-  private DefaultMutableTreeNode[] getSelectedTreeNodes() {
-    return getSelectedNodes(DefaultMutableTreeNode.class, null);
-  }
-
-  @Override
-  public boolean canStartDragging(DnDAction action, Point dragOrigin) {
-    return !getSelectedItems().isEmpty();
-  }
-
-  @Override
-  public DnDDragStartBean startDragging(DnDAction action, Point dragOrigin) {
-    List<PackagingSourceItem> items = getSelectedItems();
-    return new DnDDragStartBean(new SourceItemsDraggingObject(items.toArray(new PackagingSourceItem[items.size()])));
-  }
-
-  public List<SourceItemNode> getSelectedSourceItemNodes() {
-    List<SourceItemNode> nodes = new ArrayList<SourceItemNode>();
-    for (DefaultMutableTreeNode treeNode : getSelectedTreeNodes()) {
-      Object userObject = treeNode.getUserObject();
-      if (userObject instanceof SourceItemNode) {
-        nodes.add((SourceItemNode)userObject);
-      }
-    }
-    return nodes;
-  }
-
-  public List<PackagingSourceItem> getSelectedItems() {
-    List<PackagingSourceItem> items = new ArrayList<PackagingSourceItem>();
-    for (SourceItemNode node : getSelectedSourceItemNodes()) {
-      PackagingSourceItem sourceItem = node.getSourceItem();
-      if (sourceItem != null && sourceItem.isProvideElements()) {
-        items.add(sourceItem);
-      }
-    }
-    return items;
-  }
-
-  @Override
-  public Pair<Image, Point> createDraggedImage(DnDAction action, Point dragOrigin, DnDDragStartBean bean) {
-    DefaultMutableTreeNode[] nodes = getSelectedTreeNodes();
-    if (nodes.length == 1) {
-      return DnDAwareTree.getDragImage(this, TreeUtil.getPathFromRoot(nodes[0]), dragOrigin);
-    }
-    return DnDAwareTree.getDragImage(this, ProjectLocalize.dragNDropText0PackagingElements(nodes.length).get(), dragOrigin);
-  }
-
-  @Override
-  public void dragDropEnd() {
-  }
-
-  @Override
-  public void dropActionChanged(int gestureModifiers) {
-  }
-
-  private static class SourceItemsTreeStructure extends SimpleTreeStructure {
     private final ArtifactEditorContext myEditorContext;
     private final ArtifactEditorImpl myArtifactsEditor;
-    private SourceItemsTreeRoot myRoot;
+    private final Map<PackagingSourceItem, SourceItemPresentation> myPresentations = new HashMap<>();
 
-    public SourceItemsTreeStructure(ArtifactEditorContext editorContext, ArtifactEditorImpl artifactsEditor) {
-      myEditorContext = editorContext;
-      myArtifactsEditor = artifactsEditor;
+    private @Nullable Tree<PackagingSourceItem> myTree;
+
+    public SourceItemsTree(ArtifactEditorContext editorContext, ArtifactEditorImpl artifactsEditor) {
+        myEditorContext = editorContext;
+        myArtifactsEditor = artifactsEditor;
+    }
+
+    @RequiredUIAccess
+    public Component createUIComponent(Disposable uiDisposable) {
+        Tree<PackagingSourceItem> tree = Tree.create(new SourceItemsTreeModel(), TreeExecutor.uiThread());
+        tree.setAllowMultipleSelect(true);
+        tree.setSpeedSearchConverter(node -> {
+            SourceItemPresentation presentation = getPresentation(node.getValue());
+            return presentation == null ? "" : presentation.getSearchName();
+        });
+        tree.setTransferHandler(new SourceItemsDragAndDropHandler());
+        Disposer.register(uiDisposable, tree.destroyHook());
+        myTree = tree;
+
+        ArtifactTreeContextMenu.install(tree, createPopupGroup(tree));
+        return tree;
+    }
+
+    private ActionGroup createPopupGroup(Tree<PackagingSourceItem> tree) {
+        TreeExpander treeExpander = TreeExpander.of(tree);
+        CommonActionsManager actionsManager = CommonActionsManager.getInstance();
+        return ActionGroup.newImmutableBuilder()
+            .add(new PutSourceItemIntoDefaultLocationAction(this, myArtifactsEditor))
+            .add(new PackAndPutIntoDefaultLocationAction(this, myArtifactsEditor))
+            .add(new ExtractIntoDefaultLocationAction(this, myArtifactsEditor))
+            .addSeparator()
+            .add(new SourceItemNavigateAction(this))
+            .addSeparator()
+            .add(actionsManager.createExpandAllAction(treeExpander))
+            .add(actionsManager.createCollapseAllAction(treeExpander))
+            .build();
+    }
+
+    public @Nullable Tree<PackagingSourceItem> getTree() {
+        return myTree;
+    }
+
+    @RequiredUIAccess
+    public void rebuildTree() {
+        Tree<PackagingSourceItem> tree = myTree;
+        if (tree != null) {
+            tree.refreshAll();
+        }
+    }
+
+    public @Nullable SourceItemPresentation getPresentation(@Nullable PackagingSourceItem item) {
+        return item == null ? null : myPresentations.get(item);
+    }
+
+    public List<PackagingSourceItem> getSelectedSourceItems() {
+        Tree<PackagingSourceItem> tree = myTree;
+        if (tree == null) {
+            return List.of();
+        }
+
+        List<PackagingSourceItem> items = new ArrayList<>();
+        for (TreeNode<PackagingSourceItem> node : tree.getSelectedNodes()) {
+            PackagingSourceItem item = node.getValue();
+            if (item != null) {
+                items.add(item);
+            }
+        }
+        return items;
+    }
+
+    public List<PackagingSourceItem> getSelectedItems() {
+        return getProvidingItems(getSelectedSourceItems());
+    }
+
+    private static List<PackagingSourceItem> getProvidingItems(List<PackagingSourceItem> items) {
+        List<PackagingSourceItem> result = new ArrayList<>();
+        for (PackagingSourceItem item : items) {
+            if (item.isProvideElements()) {
+                result.add(item);
+            }
+        }
+        return result;
     }
 
     @Override
-    public Object getRootElement() {
-      if (myRoot == null) {
-        myRoot = new SourceItemsTreeRoot(myEditorContext, myArtifactsEditor);
-      }
-      return myRoot;
+    @RequiredUIAccess
+    public void dispose() {
+        myPresentations.clear();
+        myTree = null;
     }
-  }
+
+    private class SourceItemsTreeModel implements TreeModel<PackagingSourceItem> {
+        @Override
+        @RequiredUIAccess
+        public void buildChildren(Function<PackagingSourceItem, TreeNode<PackagingSourceItem>> nodeFactory, @Nullable PackagingSourceItem parentValue) {
+            Artifact artifact = myArtifactsEditor.getArtifact();
+            ArtifactType artifactType = artifact.getArtifactType();
+
+            List<SourceItemEntry> entries = new ArrayList<>();
+            Application.get().getExtensionPoint(PackagingSourceItemsProvider.class).forEach(provider -> {
+                for (PackagingSourceItem item : provider.getSourceItems(myEditorContext, artifact, parentValue)) {
+                    if (artifactType.isSuitableItem(item)) {
+                        entries.add(new SourceItemEntry(item, item.createPresentation(myEditorContext)));
+                    }
+                }
+            });
+            entries.sort((o1, o2) -> COMPARATOR.compare(o1.presentation(), o2.presentation()));
+
+            for (SourceItemEntry entry : entries) {
+                SourceItemPresentation presentation = entry.presentation();
+                myPresentations.put(entry.item(), presentation);
+
+                PresentationData presentationData = ArtifactTreePresentations.createPresentationData(presentation);
+                String tooltip = StringUtil.notNullize(presentation.getTooltipText());
+
+                TreeNode<PackagingSourceItem> node = nodeFactory.apply(entry.item());
+                node.setRenderer((value, itemPresentation) -> ArtifactTreePresentations.render(presentationData, tooltip, false, itemPresentation));
+            }
+        }
+
+        @Override
+        public boolean isNeedBuildChildrenBeforeOpen(TreeNode<PackagingSourceItem> node) {
+            return true;
+        }
+
+        @Override
+        @RequiredUIAccess
+        public boolean onDoubleClick(Tree<PackagingSourceItem> tree, TreeNode<PackagingSourceItem> node) {
+            PackagingSourceItem item = node.getValue();
+            if (item != null && item.isProvideElements() && node.isLeaf()) {
+                myArtifactsEditor.getLayoutTreeComponent().putIntoDefaultLocations(List.of(item));
+                return false;
+            }
+            return true;
+        }
+    }
+
+    private class SourceItemsDragAndDropHandler implements DragAndDropTransferHandler<TreeNode<PackagingSourceItem>> {
+        @Override
+        public @Nullable DataTransfer createTransfer(Component component) {
+            return null;
+        }
+
+        @Override
+        public @Nullable DataTransfer createDragTransfer(Component component, List<TreeNode<PackagingSourceItem>> items, boolean move) {
+            List<PackagingSourceItem> sourceItems = new ArrayList<>();
+            for (TreeNode<PackagingSourceItem> node : items) {
+                PackagingSourceItem item = node.getValue();
+                if (item != null) {
+                    sourceItems.add(item);
+                }
+            }
+
+            List<PackagingSourceItem> providing = getProvidingItems(sourceItems);
+            if (providing.isEmpty()) {
+                return null;
+            }
+
+            StringBuilder text = new StringBuilder();
+            for (PackagingSourceItem item : providing) {
+                SourceItemPresentation presentation = getPresentation(item);
+                if (presentation != null) {
+                    if (text.length() > 0) {
+                        text.append('\n');
+                    }
+                    text.append(presentation.getPresentableName());
+                }
+            }
+
+            return DataTransfer.builder().put(SOURCE_ITEMS, List.copyOf(providing)).put(DataTransferType.TEXT, text.toString()).build();
+        }
+
+        @Override
+        public boolean drop(Component component, DropContext<TreeNode<PackagingSourceItem>> context) {
+            return false;
+        }
+    }
+
+    private record SourceItemEntry(PackagingSourceItem item, SourceItemPresentation presentation) {
+    }
 }

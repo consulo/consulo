@@ -50,9 +50,9 @@ import consulo.module.content.layer.ModifiableRootModel;
 import consulo.module.content.layer.ModuleRootModel;
 import consulo.project.Project;
 import consulo.project.localize.ProjectLocalize;
+import consulo.ui.MessageBoxes;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.Messages;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.util.concurrent.AsyncPromise;
 import consulo.util.concurrent.Promise;
 import consulo.util.concurrent.Promises;
@@ -323,9 +323,29 @@ public class ModulesConfiguratorImpl implements ModulesConfigurator, ModuleEdito
     }
 
     @RequiredUIAccess
-    public boolean deleteModule(Module module) {
+    public CompletableFuture<Boolean> deleteModule(Module module, consulo.ui.@Nullable Component parent) {
         ModuleEditor moduleEditor = getModuleEditor(module);
-        return moduleEditor == null || doRemoveModule(moduleEditor);
+        if (moduleEditor == null) {
+            return CompletableFuture.completedFuture(true);
+        }
+
+        LocalizeValue question = myModuleEditors.size() == 1
+            ? ProjectLocalize.moduleRemoveLastConfirmation()
+            : ProjectLocalize.moduleRemoveConfirmation(module.getName());
+
+        UIAccess uiAccess = UIAccess.current();
+        return MessageBoxes.yesNo()
+            .title(ProjectLocalize.moduleRemoveConfirmationTitle())
+            .text(question)
+            .showAsync(parent)
+            .thenApplyAsync(remove -> {
+                if (!Boolean.TRUE.equals(remove)) {
+                    return false;
+                }
+
+                doRemoveModule(moduleEditor);
+                return true;
+            }, uiAccess);
     }
 
     
@@ -428,23 +448,7 @@ public class ModulesConfiguratorImpl implements ModulesConfigurator, ModuleEdito
     }
 
     @RequiredUIAccess
-    private boolean doRemoveModule(ModuleEditor selectedEditor) {
-        LocalizeValue question;
-        if (myModuleEditors.size() == 1) {
-            question = ProjectLocalize.moduleRemoveLastConfirmation();
-        }
-        else {
-            question = ProjectLocalize.moduleRemoveConfirmation(selectedEditor.getModule().getName());
-        }
-        int result = Messages.showYesNoDialog(
-            myProject,
-            question.get(),
-            ProjectLocalize.moduleRemoveConfirmationTitle().get(),
-            UIUtil.getQuestionIcon()
-        );
-        if (result != Messages.YES) {
-            return false;
-        }
+    private void doRemoveModule(ModuleEditor selectedEditor) {
         // do remove
         myModuleEditors.remove(selectedEditor);
 
@@ -461,8 +465,6 @@ public class ModulesConfiguratorImpl implements ModulesConfigurator, ModuleEdito
         ModuleDeleteProvider.removeModule(moduleToRemove, null, modifiableRootModels, myModuleModel);
         processModuleCountChanged();
         Disposer.dispose(selectedEditor);
-
-        return true;
     }
 
     private void processModuleCountChanged() {

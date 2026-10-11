@@ -16,11 +16,12 @@
 package consulo.it.internal.ui;
 
 import consulo.localize.LocalizeValue;
+import consulo.ui.Component;
 import consulo.ui.layout.FoldoutLayout;
 import consulo.ui.layout.LayoutConstraint;
 
 /**
- * Dummy-but-creatable headless {@link FoldoutLayout}.
+ * Headless {@link FoldoutLayout} over the single component it folds.
  *
  * @author VISTALL
  */
@@ -28,9 +29,11 @@ public class HeadlessFoldoutLayout extends HeadlessLayoutBase<LayoutConstraint> 
     private LocalizeValue myTitle;
     private boolean myState;
 
-    public HeadlessFoldoutLayout(LocalizeValue title, boolean state) {
+    public HeadlessFoldoutLayout(LocalizeValue title, Component component, boolean state) {
         myTitle = title;
         myState = state;
+
+        addChild(component);
     }
 
     @Override
@@ -39,9 +42,18 @@ public class HeadlessFoldoutLayout extends HeadlessLayoutBase<LayoutConstraint> 
         return this;
     }
 
+    public boolean getState() {
+        return myState;
+    }
+
     @Override
     public FoldoutLayout setTitle(LocalizeValue title) {
         myTitle = title;
         return this;
+    }
+
+    @Override
+    public LocalizeValue getTitle() {
+        return myTitle;
     }
 }

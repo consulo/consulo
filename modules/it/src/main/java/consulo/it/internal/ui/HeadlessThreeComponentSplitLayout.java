@@ -16,28 +16,38 @@
 package consulo.it.internal.ui;
 
 import consulo.ui.Component;
-import consulo.ui.layout.LayoutConstraint;
 import consulo.ui.layout.ThreeComponentSplitLayout;
 import org.jspecify.annotations.Nullable;
 
 /**
- * Dummy-but-creatable headless {@link ThreeComponentSplitLayout}.
+ * Headless {@link ThreeComponentSplitLayout} keeping its three panes.
  *
  * @author VISTALL
  */
-public class HeadlessThreeComponentSplitLayout extends HeadlessLayoutBase<LayoutConstraint> implements ThreeComponentSplitLayout {
+public class HeadlessThreeComponentSplitLayout extends HeadlessSplitSlots implements ThreeComponentSplitLayout {
+    private static final int FIRST = 0;
+    private static final int CENTER = 1;
+    private static final int SECOND = 2;
+
+    public HeadlessThreeComponentSplitLayout() {
+        super(3);
+    }
+
     @Override
     public ThreeComponentSplitLayout setFirstComponent(@Nullable Component component) {
+        setSlot(FIRST, component);
         return this;
     }
 
     @Override
     public ThreeComponentSplitLayout setCenterComponent(@Nullable Component component) {
+        setSlot(CENTER, component);
         return this;
     }
 
     @Override
     public ThreeComponentSplitLayout setSecondComponent(@Nullable Component component) {
+        setSlot(SECOND, component);
         return this;
     }
 }

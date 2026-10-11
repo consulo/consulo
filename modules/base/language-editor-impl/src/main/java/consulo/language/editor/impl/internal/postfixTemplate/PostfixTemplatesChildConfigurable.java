@@ -24,11 +24,13 @@ import consulo.language.editor.postfixTemplate.PostfixTemplate;
 import consulo.language.editor.postfixTemplate.PostfixTemplateProvider;
 import consulo.language.editor.postfixTemplate.PostfixTemplatesSettings;
 import consulo.localize.LocalizeValue;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.CheckBoxList;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.OnePixelSplitter;
 import consulo.ui.ex.awt.ScrollPaneFactory;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
@@ -69,7 +71,7 @@ public class PostfixTemplatesChildConfigurable implements Configurable, Configur
 
   @RequiredUIAccess
   @Override
-  public @Nullable JComponent createComponent(Disposable uiDisposable) {
+  public @Nullable Component createUIComponent(Disposable uiDisposable) {
     OnePixelSplitter splitter = new OnePixelSplitter();
     splitter.setSplitterProportionKey("PostfixTemplatesChildConfigurable.splitter");
 
@@ -89,7 +91,7 @@ public class PostfixTemplatesChildConfigurable implements Configurable, Configur
 
       myPostfixDescriptionPanel.reset(PostfixTemplateMetaData.createMetaData(itemAt));
     });
-    return splitter;
+    return TargetAWT.wrap(splitter);
   }
 
   @RequiredUIAccess

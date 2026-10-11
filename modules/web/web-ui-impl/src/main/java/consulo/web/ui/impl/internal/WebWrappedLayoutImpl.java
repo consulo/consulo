@@ -21,9 +21,12 @@ import consulo.ui.layout.WrappedLayout;
 import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
 import consulo.web.ui.impl.internal.base.TargetVaadin;
 import consulo.web.ui.impl.internal.base.VaadinComponentDelegate;
+import consulo.web.ui.impl.internal.vaadin.BorderLayoutEx;
 import consulo.web.ui.impl.internal.vaadin.SingleComponentLayout;
 import consulo.web.ui.impl.internal.vaadin.VaadinSizeUtil;
 import org.jspecify.annotations.Nullable;
+
+import java.util.function.Consumer;
 
 /**
  * @author VISTALL
@@ -51,6 +54,11 @@ public class WebWrappedLayoutImpl extends VaadinComponentDelegate<WebWrappedLayo
     @Override
     public void remove(Component component) {
         getVaadinComponent().removeIfContent(TargetVaadin.to(component));
+    }
+
+    @Override
+    public void forEachChild(@RequiredUIAccess Consumer<Component> consumer) {
+        WebLayoutChildren.accept(getVaadinComponent().getComponent(BorderLayoutEx.Constraint.CENTER), consumer);
     }
 
     @Override

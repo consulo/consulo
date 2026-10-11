@@ -21,8 +21,6 @@ import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
-
 /**
  * @author VISTALL
  * @since 06.01.2016
@@ -32,12 +30,6 @@ public class ConfigurableAdapter implements Configurable {
     @Override
     public LocalizeValue getDisplayName() {
         return LocalizeValue.empty();
-    }
-
-    @RequiredUIAccess
-    @Override
-    public @Nullable JComponent createComponent(Disposable parentDisposable) {
-        return null;
     }
 
     @RequiredUIAccess

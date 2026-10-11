@@ -15,8 +15,34 @@
  */
 package consulo.ui.ex;
 
+import consulo.ui.Tree;
+
 // TODO move to consulo.ui.ex.tree
 public interface TreeExpander {
+  static TreeExpander of(Tree<?> tree) {
+    return new TreeExpander() {
+      @Override
+      public void expandAll() {
+        tree.expandAll();
+      }
+
+      @Override
+      public boolean canExpand() {
+        return true;
+      }
+
+      @Override
+      public void collapseAll() {
+        tree.collapseAll();
+      }
+
+      @Override
+      public boolean canCollapse() {
+        return true;
+      }
+    };
+  }
+
   void expandAll();
 
   boolean canExpand();

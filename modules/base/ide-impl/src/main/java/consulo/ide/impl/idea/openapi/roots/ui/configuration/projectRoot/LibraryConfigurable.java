@@ -15,71 +15,101 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot;
 
+import consulo.configurable.MasterDetailsConfigurable;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;
 import consulo.content.library.ui.LibraryEditor;
+import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.libraries.LibraryPresentationManager;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.libraryEditor.LibraryRootsComponent;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.LibraryProjectStructureElement;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
-import consulo.ide.setting.module.LibrariesConfigurator;
 import consulo.ide.setting.module.LibraryTableModifiableModelProvider;
 import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.project.localize.ProjectLocalize;
+import consulo.ui.Component;
+import consulo.ui.TextBox;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
+import consulo.ui.layout.DockLayout;
+import consulo.ui.util.FormBuilder;
+import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
+import java.util.function.Consumer;
 
 /**
  * @author anna
  * @since 2006-06-02
  */
-public class LibraryConfigurable extends ProjectStructureElementConfigurable<Library> {
-    private LibraryRootsComponent myLibraryEditorComponent;
-    private final Library myLibrary;
-    private final LibraryTableModifiableModelProvider myModel;
-    private final LibrariesConfigurator myLibrariesConfigurator;
+public class LibraryConfigurable implements MasterDetailsConfigurable<Library> {
     private final Project myProject;
-    private final LibraryProjectStructureElement myProjectStructureElement;
-    private boolean myUpdatingName;
+    private final LibraryTableModifiableModelProvider myModel;
+    private final Library myLibrary;
+    private final Consumer<Library> myNameChanged;
+    private final Consumer<Library> myRootsChanged;
+
+    private @Nullable LibraryRootsComponent myLibraryEditorComponent;
+    private @Nullable TextBox myNameComponent;
+    private @Nullable DockLayout myMainPanel;
     private boolean myPropertiesLoaded;
 
-    protected LibraryConfigurable(
+    public LibraryConfigurable(
         Project project,
         LibraryTableModifiableModelProvider modelProvider,
         Library library,
-        LibrariesConfigurator librariesConfigurator,
-        Runnable updateTree
+        Consumer<Library> nameChanged,
+        Consumer<Library> rootsChanged
     ) {
-        super(true, updateTree);
-        myModel = modelProvider;
-        myLibrariesConfigurator = librariesConfigurator;
         myProject = project;
+        myModel = modelProvider;
         myLibrary = library;
-        myProjectStructureElement = new LibraryProjectStructureElement(myLibrary);
+        myNameChanged = nameChanged;
+        myRootsChanged = rootsChanged;
     }
 
+    @RequiredUIAccess
     @Override
-    public JComponent createOptionsPanel() {
-        myLibraryEditorComponent = new LibraryRootsComponent(myProject, this::getLibraryEditor);
-        // TODO myLibrariesConfigurator.getDaemonAnalyzer().queueUpdate(myProjectStructureElement);
-        myLibraryEditorComponent.addListener(this::updateName);
-        return myLibraryEditorComponent.getComponent();
+    public Component createUIComponent(Disposable parentUIDisposable) {
+        DockLayout mainPanel = myMainPanel;
+        if (mainPanel == null) {
+            mainPanel = createMainPanel(parentUIDisposable);
+            myMainPanel = mainPanel;
+        }
+        return mainPanel;
+    }
+
+    @RequiredUIAccess
+    private DockLayout createMainPanel(Disposable parentUIDisposable) {
+        LibraryRootsComponent libraryEditorComponent = new LibraryRootsComponent(myProject, this::getLibraryEditor);
+        Disposer.register(parentUIDisposable, libraryEditorComponent);
+        libraryEditorComponent.addListener(() -> myRootsChanged.accept(myLibrary));
+        myLibraryEditorComponent = libraryEditorComponent;
+
+        TextBox nameComponent = TextBox.create(getLibraryName());
+        nameComponent.addValueListener(event -> {
+            String name = event.getValue();
+            if (name != null && !name.equals(getLibraryName())) {
+                getLibraryEditor().setName(name);
+                myNameChanged.accept(myLibrary);
+            }
+        });
+        myNameComponent = nameComponent;
+
+        FormBuilder formBuilder = FormBuilder.create();
+        formBuilder.addLabeled(CommonLocalize.nameLabelText(), nameComponent);
+
+        DockLayout mainPanel = DockLayout.create();
+        mainPanel.top(formBuilder.build());
+        mainPanel.center(libraryEditorComponent.createUIComponent(parentUIDisposable));
+        return mainPanel;
     }
 
     @RequiredUIAccess
     @Override
     public boolean isModified() {
-        return myLibraryEditorComponent != null && myLibraryEditorComponent.hasChanges();
-    }
-
-    @Override
-    
-    public ProjectStructureElement getProjectStructureElement() {
-        return myProjectStructureElement;
+        LibraryRootsComponent libraryEditorComponent = myLibraryEditorComponent;
+        return libraryEditorComponent != null && libraryEditorComponent.hasChanges();
     }
 
     @RequiredUIAccess
@@ -97,33 +127,32 @@ public class LibraryConfigurable extends ProjectStructureElementConfigurable<Lib
     @RequiredUIAccess
     @Override
     public void disposeUIResources() {
-        if (myLibraryEditorComponent != null) {
-            Disposer.dispose(myLibraryEditorComponent);
-            myLibraryEditorComponent = null;
+        LibraryRootsComponent libraryEditorComponent = myLibraryEditorComponent;
+        if (libraryEditorComponent != null) {
+            Disposer.dispose(libraryEditorComponent);
         }
+        myLibraryEditorComponent = null;
+        myNameComponent = null;
+        myMainPanel = null;
+        myPropertiesLoaded = false;
     }
 
-    @Override
-    public void setDisplayName(String name) {
-        if (!myUpdatingName) {
-            getLibraryEditor().setName(name);
-            // todo myLibrariesConfigurator.getDaemonAnalyzer().queueUpdateForAllElementsWithErrors();
-        }
-    }
-
-    protected LibraryEditor getLibraryEditor() {
+    public LibraryEditor getLibraryEditor() {
         return ((LibrariesModifiableModel) myModel.getModifiableModel()).getLibraryEditor(myLibrary);
     }
 
+    public String getLibraryName() {
+        LibrariesModifiableModel model = (LibrariesModifiableModel) myModel.getModifiableModel();
+        String name = model.hasLibraryEditor(myLibrary) ? getLibraryEditor().getName() : myLibrary.getName();
+        return name == null ? "" : name;
+    }
+
+    @RequiredUIAccess
     @Override
     public void updateName() {
-        //todo[nik] pull up to NamedConfigurable
-        myUpdatingName = true;
-        try {
-            super.updateName();
-        }
-        finally {
-            myUpdatingName = false;
+        TextBox nameComponent = myNameComponent;
+        if (nameComponent != null) {
+            nameComponent.setValue(getLibraryName(), false);
         }
     }
 
@@ -138,16 +167,17 @@ public class LibraryConfigurable extends ProjectStructureElementConfigurable<Lib
         String libraryType = libraryTable == null
             ? ProjectLocalize.moduleLibraryDisplayName(1).get()
             : libraryTable.getPresentation().getDisplayName(false);
-        return ProjectLocalize.projectRootsLibraryBannerText(getDisplayName(), libraryType);
+        return ProjectLocalize.projectRootsLibraryBannerText(getLibraryName(), libraryType);
     }
 
     @Override
     public LocalizeValue getDisplayName() {
-        if (((LibrariesModifiableModel) myModel.getModifiableModel()).hasLibraryEditor(myLibrary)) {
-            return LocalizeValue.of(getLibraryEditor().getName());
-        }
+        return LocalizeValue.of(getLibraryName());
+    }
 
-        return LocalizeValue.of(myLibrary.getName());
+    @Override
+    public @Nullable Image getIcon() {
+        return PlatformIconGroup.nodesPplib();
     }
 
     @RequiredUIAccess
@@ -162,29 +192,28 @@ public class LibraryConfigurable extends ProjectStructureElementConfigurable<Lib
 
     @RequiredUIAccess
     private void resetProperties() {
-        if (myLibraryEditorComponent != null) {
-            myLibraryEditorComponent.updatePropertiesLabel();
-            myLibraryEditorComponent.resetProperties();
+        LibraryRootsComponent libraryEditorComponent = myLibraryEditorComponent;
+        if (libraryEditorComponent != null) {
+            libraryEditorComponent.updatePropertiesLabel();
+            libraryEditorComponent.resetProperties();
             myPropertiesLoaded = true;
         }
     }
 
     @RequiredUIAccess
     private void applyProperties() {
-        if (myLibraryEditorComponent != null && myPropertiesLoaded) {
-            myLibraryEditorComponent.applyProperties();
+        LibraryRootsComponent libraryEditorComponent = myLibraryEditorComponent;
+        if (libraryEditorComponent != null && myPropertiesLoaded) {
+            libraryEditorComponent.applyProperties();
             myPropertiesLoaded = false;
         }
     }
 
-    @Override
-    public Image getIcon(boolean open) {
-        return LibraryPresentationManager.getInstance().getNamedLibraryIcon(myLibrary, myLibrariesConfigurator);
-    }
-
+    @RequiredUIAccess
     public void updateComponent() {
-        if (myLibraryEditorComponent != null) {
-            myLibraryEditorComponent.updateRootsTree();
+        LibraryRootsComponent libraryEditorComponent = myLibraryEditorComponent;
+        if (libraryEditorComponent != null) {
+            libraryEditorComponent.updateRootsTree();
         }
     }
 }

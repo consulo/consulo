@@ -69,6 +69,11 @@ public class DesktopLabeledLayoutImpl extends DesktopLayoutBase<JPanel, LayoutCo
     }
 
     @Override
+    public LocalizeValue getLabel() {
+        return myLabel;
+    }
+
+    @Override
     public LabeledLayout add(Component component, LayoutConstraint constraint) {
         addImpl(component, BorderLayout.CENTER);
         return this;

@@ -16,22 +16,25 @@
 package consulo.ide.impl.roots.ui.configuration.classpath;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.AllIcons;
-import consulo.ui.ex.awt.ChooseElementsDialog;
-import consulo.ide.setting.module.AddModuleDependencyActionProvider;
-import consulo.project.Project;
 import consulo.content.library.Library;
-import consulo.ide.setting.module.ClasspathPanel;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.libraries.LibraryPresentationManager;
-import consulo.localize.LocalizeValue;
-import consulo.module.content.layer.ModuleRootLayer;
+import consulo.ide.setting.module.AddModuleDependencyActionProvider;
+import consulo.ide.setting.module.ClasspathPanel;
 import consulo.ide.setting.module.LibrariesConfigurator;
 import consulo.ide.setting.module.ModulesConfigurator;
+import consulo.localize.LocalizeValue;
+import consulo.module.content.layer.ModuleRootLayer;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.project.localize.ProjectLocalize;
+import consulo.ui.TextItemPresentation;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.dialog.ChooseItemsDialogDescriptor;
 import consulo.ui.image.Image;
-import org.jspecify.annotations.Nullable;
+import consulo.util.lang.StringUtil;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -40,51 +43,48 @@ import java.util.concurrent.CompletableFuture;
  */
 @ExtensionImpl
 public class ProjectLibraryActionProvider implements AddModuleDependencyActionProvider<List<Library>, ProjectLibraryContext> {
-  private static class ChooseLibrariesDialogImpl extends ChooseElementsDialog<Library> {
-    private final LibrariesConfigurator myLibrariesConfigurator;
-
-    protected ChooseLibrariesDialogImpl(Project project, LibrariesConfigurator librariesConfigurator, List<Library> libraries) {
-      super(project, libraries, "Add Library Dependency", "Choose libraries for adding as dependency");
-      myLibrariesConfigurator = librariesConfigurator;
+    @Override
+    public LocalizeValue getActionName(ModuleRootLayer layer) {
+        return ProjectLocalize.classpathAddLibraryAction();
     }
 
     @Override
-    protected String getItemText(Library item) {
-      return item.getName();
+    public Image getIcon(ModuleRootLayer layer) {
+        return PlatformIconGroup.nodesPplib();
     }
 
     @Override
-    protected @Nullable Image getItemIcon(Library item) {
-      Image customIcon = LibraryPresentationManager.getInstance().getCustomIcon(item, myLibrariesConfigurator);
-      if(customIcon != null) {
-        return customIcon;
-      }
-
-      return AllIcons.Nodes.PpLib;
+    public ProjectLibraryContext createContext(
+        ClasspathPanel classpathPanel,
+        ModulesConfigurator modulesConfigurator,
+        LibrariesConfigurator librariesConfigurator
+    ) {
+        return new ProjectLibraryContext(classpathPanel, modulesConfigurator, librariesConfigurator);
     }
-  }
 
-  
-  @Override
-  public LocalizeValue getActionName(ModuleRootLayer layer) {
-    return LocalizeValue.localizeTODO("Library");
-  }
+    @RequiredUIAccess
+    @Override
+    public CompletableFuture<List<Library>> invoke(ProjectLibraryContext context) {
+        List<Library> libraries = context.getItems();
+        Map<Library, Image> icons = new HashMap<>();
+        for (Library library : libraries) {
+            Image customIcon = LibraryPresentationManager.getInstance().getCustomIcon(library, context.getLibrariesConfigurator());
+            icons.put(library, customIcon != null ? customIcon : PlatformIconGroup.nodesPplib());
+        }
 
-  
-  @Override
-  public Image getIcon(ModuleRootLayer layer) {
-    return AllIcons.Nodes.PpLib;
-  }
+        return ChooseItemsDialogDescriptor.showAsync(
+            context.getClasspathPanel().getUIComponent(),
+            ProjectLocalize.classpathChooserTitleAddLibraryDependency(),
+            ProjectLocalize.classpathChooserDescriptionAddLibraryDependency(),
+            libraries,
+            (library, presentation) -> render(presentation, library, icons),
+            true,
+            List.of()
+        );
+    }
 
-  @Override
-  public ProjectLibraryContext createContext(ClasspathPanel classpathPanel, ModulesConfigurator modulesConfigurator, LibrariesConfigurator librariesConfigurator) {
-    return new ProjectLibraryContext(classpathPanel, modulesConfigurator, librariesConfigurator);
-  }
-
-  @RequiredUIAccess
-  
-  @Override
-  public CompletableFuture<List<Library>> invoke(ProjectLibraryContext context) {
-    return new ChooseLibrariesDialogImpl(context.getProject(), context.getLibrariesConfigurator(), context.getItems()).showAsync2();
-  }
+    private static void render(TextItemPresentation presentation, Library library, Map<Library, Image> icons) {
+        presentation.withIcon(icons.get(library));
+        presentation.append(StringUtil.notNullize(library.getName()));
+    }
 }

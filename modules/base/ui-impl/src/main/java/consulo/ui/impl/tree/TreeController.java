@@ -66,12 +66,15 @@ public final class TreeController<E> implements Disposable {
     private final TreeNodeImpl<E> myRoot;
 
     private volatile @Nullable TreeNodeImpl<E> mySelected;
+    private volatile List<TreeNodeImpl<E>> mySelection = List.of();
+    private volatile boolean myAllowMultipleSelect;
     private volatile boolean myDisposed;
 
     private volatile @Nullable Function<E, List<@Nullable Object>> myColumnValueFactory;
     private final AtomicInteger myColumnVersion = new AtomicInteger();
     private final AtomicLong myUpdateStamp = new AtomicLong();
     private volatile @Nullable Comparator<TreeNodeImpl<E>> mySortComparator;
+    private volatile @Nullable Runnable myStructureListener;
 
     private final Map<TreeNodeImpl<E>, CompletableFuture<List<TreeNodeImpl<E>>>> myDeferred = new LinkedHashMap<>();
     private final List<Runnable> myQueued = new ArrayList<>();
@@ -97,6 +100,10 @@ public final class TreeController<E> implements Disposable {
         myColumnVersion.incrementAndGet();
     }
 
+    public void setStructureListener(@Nullable Runnable listener) {
+        myStructureListener = listener;
+    }
+
     public @Nullable Comparator<TreeNodeImpl<E>> getSortComparator() {
         return mySortComparator;
     }
@@ -117,6 +124,34 @@ public final class TreeController<E> implements Disposable {
     public @Nullable TreeNodeImpl<E> getSelected() {
         TreeNodeImpl<E> selected = mySelected;
         return selected == null || selected.myRemoved ? null : selected;
+    }
+
+    public List<TreeNode<E>> getSelection() {
+        List<TreeNodeImpl<E>> selection = new ArrayList<>();
+        for (TreeNodeImpl<E> node : mySelection) {
+            if (!node.myRemoved) {
+                selection.add(node);
+            }
+        }
+        selection.sort(this::compareByTreeOrder);
+        return List.copyOf(selection);
+    }
+
+    public boolean isAllowMultipleSelect() {
+        return myAllowMultipleSelect;
+    }
+
+    public void setAllowMultipleSelect(boolean allow) {
+        myAllowMultipleSelect = allow;
+
+        if (!allow) {
+            track(onUI(() -> {
+                if (!myAllowMultipleSelect && mySelection.size() > 1) {
+                    TreeNodeImpl<E> lead = getSelected();
+                    setSelection(lead, lead == null ? List.of() : List.of(lead), ProgrammaticInputDetails.INSTANCE, true);
+                }
+            }));
+        }
     }
 
     public @Nullable TreeNodeImpl<E> toNode(@Nullable TreeNode<E> node) {
@@ -369,6 +404,11 @@ public final class TreeController<E> implements Disposable {
                 myWidget.setExpanded(node, false);
             }
             myWidget.update(node);
+        }
+
+        Runnable structureListener = myStructureListener;
+        if (structureListener != null) {
+            runSafely(structureListener);
         }
 
         recomputeStaleColumnValues(applied);
@@ -632,6 +672,11 @@ public final class TreeController<E> implements Disposable {
         if (mySelected == node) {
             mySelected = null;
         }
+        if (mySelection.contains(node)) {
+            List<TreeNodeImpl<E>> selection = new ArrayList<>(mySelection);
+            selection.remove(node);
+            mySelection = List.copyOf(selection);
+        }
 
         for (TreeNodeImpl<E> child : node.myChildren) {
             remove(child);
@@ -854,6 +899,29 @@ public final class TreeController<E> implements Disposable {
     }
 
     @RequiredUIAccess
+    public void onSelectionChanged(@Nullable TreeNodeImpl<E> leadHandle, List<TreeNodeImpl<E>> handles, InputDetails details) {
+        if (!myAllowMultipleSelect) {
+            onSelected(leadHandle != null ? leadHandle : handles.isEmpty() ? null : handles.get(handles.size() - 1), details);
+            return;
+        }
+
+        List<TreeNodeImpl<E>> selection = new ArrayList<>();
+        for (TreeNodeImpl<E> handle : handles) {
+            TreeNodeImpl<E> node = toNode(handle);
+            if (node != null && node != myRoot && !selection.contains(node)) {
+                selection.add(node);
+            }
+        }
+
+        TreeNodeImpl<E> lead = leadHandle == null ? null : toNode(leadHandle);
+        if (lead == null || !selection.contains(lead)) {
+            lead = selection.isEmpty() ? null : selection.get(selection.size() - 1);
+        }
+
+        setSelection(lead, List.copyOf(selection), details, false);
+    }
+
+    @RequiredUIAccess
     public void onDoubleClick(TreeNodeImpl<E> handle, InputDetails details) {
         TreeNodeImpl<E> node = toNode(handle);
         if (node == null || node == myRoot) {
@@ -908,16 +976,40 @@ public final class TreeController<E> implements Disposable {
 
     @RequiredUIAccess
     private void setSelection(@Nullable TreeNodeImpl<E> node, InputDetails details, boolean updateWidget) {
-        boolean changed = mySelected != node;
-        mySelected = node;
+        setSelection(node, node == null ? List.of() : List.of(node), details, updateWidget);
+    }
+
+    @RequiredUIAccess
+    private void setSelection(
+        @Nullable TreeNodeImpl<E> lead,
+        List<TreeNodeImpl<E>> selection,
+        InputDetails details,
+        boolean updateWidget
+    ) {
+        boolean changed = mySelected != lead || !mySelection.equals(selection);
+        mySelected = lead;
+        mySelection = selection;
 
         if (updateWidget) {
-            myWidget.setSelected(node);
+            myWidget.setSelected(lead);
         }
 
-        if (changed && node != null) {
-            fireSelect(node, details);
+        if (changed && lead != null) {
+            fireSelect(lead, details);
         }
+    }
+
+    private int compareByTreeOrder(TreeNodeImpl<E> o1, TreeNodeImpl<E> o2) {
+        List<TreeNodeImpl<E>> path1 = pathTo(o1);
+        List<TreeNodeImpl<E>> path2 = pathTo(o2);
+        int size = Math.min(path1.size(), path2.size());
+        for (int i = 1; i < size; i++) {
+            if (path1.get(i) != path2.get(i)) {
+                List<TreeNodeImpl<E>> siblings = path1.get(i - 1).myChildren;
+                return Integer.compare(siblings.indexOf(path1.get(i)), siblings.indexOf(path2.get(i)));
+            }
+        }
+        return Integer.compare(path1.size(), path2.size());
     }
 
     public CompletableFuture<?> whenIdle() {

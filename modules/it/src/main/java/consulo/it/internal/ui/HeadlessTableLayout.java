@@ -17,11 +17,16 @@ package consulo.it.internal.ui;
 
 import consulo.ui.Component;
 import consulo.ui.StaticPosition;
+import consulo.ui.internal.LayoutVisualOrder;
 import consulo.ui.layout.TableLayout;
 import org.jspecify.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 
 /**
  * @author VISTALL
@@ -61,5 +66,13 @@ public class HeadlessTableLayout extends HeadlessLayoutBase<TableLayout.TableCel
     public void removeAll() {
         myCells.clear();
         super.removeAll();
+    }
+
+    @Override
+    public void forEachChild(Consumer<Component> consumer) {
+        List<Component> children = new ArrayList<>();
+        super.forEachChild(children::add);
+        children.sort(Comparator.comparing(myCells::get, Comparator.nullsLast(LayoutVisualOrder.TABLE_CELLS)));
+        children.forEach(consumer);
     }
 }

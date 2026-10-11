@@ -20,8 +20,13 @@ import consulo.ui.RadioButton;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ValueComponentEvent;
 import consulo.ui.event.details.ProgrammaticInputDetails;
+import consulo.ui.internal.SearchHighlightUtil;
+import io.qt.gui.QPaintEvent;
 import io.qt.widgets.QRadioButton;
+import io.qt.widgets.QStyle;
+import io.qt.widgets.QStyleOptionButton;
 import io.qt.widgets.QWidget;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -29,7 +34,37 @@ import io.qt.widgets.QWidget;
  */
 @SuppressWarnings({"unchecked", "rawtypes"})
 public class DesktopQtRadioButtonImpl extends QtComponentDelegate<QRadioButton> implements RadioButton {
+    private class HighlightRadioButton extends QRadioButton {
+        private HighlightRadioButton(QWidget parent) {
+            super(parent);
+        }
+
+        @Override
+        protected void paintEvent(QPaintEvent event) {
+            String query = mySearchHighlight;
+            String text = QtMnemonic.plain(myText);
+            if (query == null || !SearchHighlightUtil.matches(text, query)) {
+                super.paintEvent(event);
+                return;
+            }
+
+            QStyleOptionButton option = new QStyleOptionButton();
+            initStyleOption(option);
+
+            DesktopQtSearchHighlight.paintCheckable(
+                this,
+                option,
+                QStyle.ControlElement.CE_RadioButton,
+                QStyle.SubElement.SE_RadioButtonContents,
+                text,
+                query
+            );
+        }
+    }
+
     private LocalizeValue myText;
+
+    private @Nullable String mySearchHighlight;
     private boolean mySelected;
 
     private boolean myFireListeners = true;
@@ -41,7 +76,7 @@ public class DesktopQtRadioButtonImpl extends QtComponentDelegate<QRadioButton> 
 
     @Override
     protected QRadioButton createQt(QWidget parent) {
-        return new QRadioButton(parent);
+        return new HighlightRadioButton(parent);
     }
 
     @Override
@@ -103,5 +138,20 @@ public class DesktopQtRadioButtonImpl extends QtComponentDelegate<QRadioButton> 
         if (myComponent != null) {
             myComponent.setText(QtMnemonic.withMnemonic(text));
         }
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setSearchHighlight(@Nullable String query) {
+        mySearchHighlight = SearchHighlightUtil.normalizeQuery(query);
+
+        if (myComponent != null) {
+            myComponent.update();
+        }
+    }
+
+    @Override
+    public @Nullable String getSearchHighlight() {
+        return mySearchHighlight;
     }
 }

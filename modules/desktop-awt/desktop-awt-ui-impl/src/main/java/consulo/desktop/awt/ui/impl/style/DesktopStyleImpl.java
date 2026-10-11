@@ -34,6 +34,7 @@ import consulo.ui.style.StandardColors;
 import consulo.ui.style.StyleColorValue;
 import org.jspecify.annotations.Nullable;
 
+import java.awt.Color;
 import javax.swing.*;
 import java.util.Objects;
 
@@ -42,6 +43,8 @@ import java.util.Objects;
  * @since 2020-08-23
  */
 public class DesktopStyleImpl extends StyleImpl {
+    private static final Color SEARCH_MATCH_BACKGROUND = new Color(0xffdd72);
+
     private final MorphValue<Boolean> myDarkValue = MorphValue.of(FlatLaf::isLafDark);
 
     private final UIManager.LookAndFeelInfo myLookAndFeelInfo;
@@ -122,7 +125,13 @@ public class DesktopStyleImpl extends StyleImpl {
         else if (colorValue == StandardColors.ORANGE) {
             return TargetAWT.from(JBColor.ORANGE);
         }
-        else if (colorValue == StandardColors.LIGHT_RED) {
+        else if (colorValue == ComponentColors.SEARCH_MATCH_BACKGROUND) {
+            return TargetAWT.from(SEARCH_MATCH_BACKGROUND);
+        }
+        else if (colorValue == ComponentColors.SEARCH_MATCH_FOREGROUND) {
+            return TargetAWT.from(JBColor.BLACK);
+        }
+        else if (colorValue == StandardColors.LIGHT_RED || colorValue == ComponentColors.ERROR_BACKGROUND) {
             return TargetAWT.from(LightColors.RED);
         }
         else if (colorValue == StandardColors.CYAN) {

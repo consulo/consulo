@@ -20,6 +20,7 @@ import consulo.compiler.localize.CompilerLocalize;
 import consulo.compiler.setting.ExcludeEntryDescription;
 import consulo.compiler.setting.ExcludedEntriesConfiguration;
 import consulo.configurable.UnnamedConfigurable;
+import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.fileChooser.FileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
@@ -29,6 +30,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.ToolbarDecorator;
 import consulo.ui.ex.awt.table.JBTable;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatusManager;
 
@@ -103,11 +105,11 @@ public class ExcludedEntriesConfigurable implements UnnamedConfigurable {
 
     @Override
     @RequiredUIAccess
-    public JComponent createComponent() {
+    public consulo.ui.Component createUIComponent(Disposable parentDisposable) {
         if (myExcludedEntriesPanel == null) {
             myExcludedEntriesPanel = new ExcludedEntriesPanel();
         }
-        return myExcludedEntriesPanel;
+        return TargetAWT.wrap(myExcludedEntriesPanel);
     }
 
     @Override

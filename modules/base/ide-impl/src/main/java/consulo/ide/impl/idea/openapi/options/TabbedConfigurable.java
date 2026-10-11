@@ -20,6 +20,8 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.TabbedPaneWrapper;
 import consulo.configurable.Configurable;
 import consulo.disposer.Disposable;
+import consulo.ui.Component;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 
 import javax.swing.*;
 import java.awt.*;
@@ -36,17 +38,17 @@ public abstract class TabbedConfigurable extends CompositeConfigurable<Configura
   }
 
   @Override
-  public JComponent createComponent() {
+  public Component createUIComponent(Disposable parentDisposable) {
     myTabbedPane = new TabbedPaneWrapper(myParent);
     createConfigurableTabs();
     JComponent component = myTabbedPane.getComponent();
     component.setPreferredSize(new Dimension(500, 400));
-    return component;
+    return TargetAWT.wrap(component);
   }
 
   protected void createConfigurableTabs() {
     for (Configurable configurable : getConfigurables()) {
-      myTabbedPane.addTab(configurable.getDisplayName().get(), configurable.createComponent());
+      myTabbedPane.addTab(configurable.getDisplayName().get(), (JComponent) TargetAWT.to(configurable.createUIComponent(myParent)));
     }
   }
 

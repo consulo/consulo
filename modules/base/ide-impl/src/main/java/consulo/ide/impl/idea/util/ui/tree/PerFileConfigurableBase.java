@@ -37,6 +37,7 @@ import consulo.ui.ex.awt.speedSearch.SpeedSearchUtil;
 import consulo.ui.ex.awt.speedSearch.TableSpeedSearch;
 import consulo.ui.ex.awt.table.JBTable;
 import consulo.ui.ex.awt.util.TableUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.image.Image;
@@ -145,7 +146,7 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
 
     @Override
     @RequiredUIAccess
-    public JComponent createComponent(Disposable uiDisposable) {
+    public consulo.ui.Component createUIComponent(Disposable uiDisposable) {
         myPanel = new JPanel(new BorderLayout());
         myTable = new JBTable(myModel = new MyModel<>(getTargetTitle().get(), getMappingTitle().get())) {
             @SuppressWarnings("unchecked")
@@ -185,7 +186,7 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
         myPanel.add(label, BorderLayout.SOUTH);
         myPanel.add(tablePanel, BorderLayout.CENTER);
 
-        return myPanel;
+        return TargetAWT.wrap(myPanel);
     }
 
     protected @Nullable String getToolTipFor(@Nullable T value) {

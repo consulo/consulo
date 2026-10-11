@@ -15,12 +15,14 @@
  */
 package consulo.configurable.internal;
 
-import javax.swing.*;
+import consulo.ui.Component;
+import consulo.ui.annotation.RequiredUIAccess;
 
 /**
  * @author VISTALL
  * @since 2024-12-23
  */
 public interface FullContentConfigurable {
-    void setBannerComponent(JComponent bannerComponent);
+    @RequiredUIAccess
+    void setBannerComponent(Component bannerComponent);
 }

@@ -181,6 +181,14 @@ public interface Component extends UserDataHolder {
         return addListener(ContextMenuEvent.class, contextMenuListener);
     }
 
+    /**
+     * Listens to the presses of a mouse button on this component and on everything inside it, see
+     * {@link MousePressedEvent}.
+     */
+    default Disposable addMousePressedListener(ComponentEventListener<Component, MousePressedEvent> pressListener) {
+        return addListener(MousePressedEvent.class, pressListener);
+    }
+
     default void forceRepaint() {
     }
 }

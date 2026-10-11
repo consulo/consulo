@@ -15,76 +15,39 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts;
 
-import consulo.application.Application;
 import consulo.compiler.artifact.Artifact;
-import consulo.compiler.artifact.ArtifactType;
-import consulo.configurable.ConfigurationException;
 import consulo.disposer.Disposable;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.ComboBox;
-import consulo.ui.ex.awt.LabeledComponent;
-import consulo.util.lang.Comparing;
+import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
+import java.util.function.Consumer;
 
 /**
  * @author nik
  */
 public class ArtifactConfigurable extends ArtifactConfigurableBase {
-    private boolean myIsInUpdateName;
+    private final Consumer<Artifact> myNameChanged;
 
     public ArtifactConfigurable(
         Artifact originalArtifact,
         ArtifactsStructureConfigurableContextImpl artifactsStructureContext,
-        Runnable updateTree
+        Consumer<Artifact> nameChanged
     ) {
-        super(originalArtifact, artifactsStructureContext, updateTree, true);
-    }
-
-    @Override
-    public void setDisplayName(String name) {
-        String oldName = getArtifact().getName();
-        if (name != null && !name.equals(oldName) && !myIsInUpdateName) {
-            myArtifactsStructureContext.getOrCreateModifiableArtifactModel()
-                .getOrCreateModifiableArtifact(myOriginalArtifact)
-                .setName(name);
-            getEditor().updateOutputPath(oldName, name);
-        }
-    }
-
-    @Override
-    public void updateName() {
-        myIsInUpdateName = true;
-        try {
-            super.updateName();
-        }
-        finally {
-            myIsInUpdateName = false;
-        }
+        super(originalArtifact, artifactsStructureContext);
+        myNameChanged = nameChanged;
     }
 
     @RequiredUIAccess
     @Override
-    public JComponent createOptionsPanel(Disposable parentDisposable) {
-        return getEditor().createMainComponent();
+    public Component createUIComponent(Disposable parentUIDisposable) {
+        return getEditor().createMainComponent(parentUIDisposable, () -> myNameChanged.accept(myOriginalArtifact));
     }
 
+    @RequiredUIAccess
     @Override
-    protected JComponent createTopRightComponent(JTextField nameField) {
-        ComboBox<ArtifactType> artifactTypeBox = new ComboBox<>();
-        Application.get().getExtensionPoint(ArtifactType.class).forEach(artifactTypeBox::addItem);
-
-        artifactTypeBox.setRenderer(new ArtifactTypeCellRenderer());
-
-        artifactTypeBox.setSelectedItem(getArtifact().getArtifactType());
-        artifactTypeBox.addActionListener(e -> {
-            ArtifactType selected = (ArtifactType)artifactTypeBox.getSelectedItem();
-            if (selected != null && !Comparing.equal(selected, getArtifact().getArtifactType())) {
-                getEditor().setArtifactType(selected);
-            }
-        });
-
-        return LabeledComponent.left(artifactTypeBox, "Type");
+    public void updateName() {
+        getEditor().updateNameField();
     }
 
     @Override
@@ -95,17 +58,12 @@ public class ArtifactConfigurable extends ArtifactConfigurableBase {
 
     @Override
     @RequiredUIAccess
-    public void apply() throws ConfigurationException {
+    public void apply() {
         getEditor().apply();
     }
 
     @Override
-    @RequiredUIAccess
-    public void reset() {
-    }
-
-    @Override
-    public String getHelpTopic() {
+    public @Nullable String getHelpTopic() {
         return getEditor().getHelpTopic();
     }
 

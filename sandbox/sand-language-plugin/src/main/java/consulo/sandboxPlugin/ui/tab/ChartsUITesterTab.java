@@ -75,8 +75,8 @@ public class ChartsUITesterTab implements UITesterTab {
     @Override
     public Component createComponent(Disposable uiDisposable) {
         TabbedLayout tabs = TabbedLayout.create();
-        tabs.addTab("Live", live(uiDisposable));
-        tabs.addTab("Flame Graph", flameGraph());
+        tabs.addTab(LocalizeValue.localizeTODO("Live"), live(uiDisposable));
+        tabs.addTab(LocalizeValue.localizeTODO("Flame Graph"), flameGraph());
         return tabs;
     }
 

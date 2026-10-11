@@ -23,7 +23,6 @@ import consulo.application.localize.ApplicationLocalize;
 import consulo.codeEditor.EditorHighlighter;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.configurable.ConfigurationException;
-import consulo.configurable.internal.ConfigurableUIMigrationUtil;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.application.options.codeStyle.excludedFiles.ExcludedFilesList;
 import consulo.language.Language;
@@ -143,7 +142,7 @@ public class GeneralCodeStylePanel extends CodeStyleAbstractPanel {
         myAdditionalSettingsPanel.removeAll();
         myAdditionalOptions = Application.get().getExtensionList(GeneralCodeStyleOptionsProvider.class);
         for (GeneralCodeStyleOptionsProvider provider : myAdditionalOptions) {
-            JComponent generalSettingsComponent = ConfigurableUIMigrationUtil.createComponent(provider, this);
+            JComponent generalSettingsComponent = (JComponent) TargetAWT.to(provider.createUIComponent(this));
             if (generalSettingsComponent != null) {
                 myAdditionalSettingsPanel.add(generalSettingsComponent);
             }

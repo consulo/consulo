@@ -15,44 +15,37 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts;
 
-import consulo.disposer.Disposable;
-import consulo.util.dataholder.Key;
 import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.element.CompositePackagingElement;
-import consulo.compiler.artifact.element.PackagingElement;
 import consulo.compiler.artifact.element.PackagingElementType;
 import consulo.compiler.artifact.ui.ArtifactEditor;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
-
-import javax.swing.*;
+import consulo.disposer.Disposable;
+import consulo.ui.annotation.RequiredUIAccess;
 
 /**
  * @author nik
  */
 public interface ArtifactEditorEx extends ArtifactEditor, Disposable {
-  Key<ArtifactEditorEx> ARTIFACTS_EDITOR_KEY = Key.create("artifactsEditor");
+    @RequiredUIAccess
+    void addNewPackagingElement(PackagingElementType<?> type);
 
-  void addNewPackagingElement(PackagingElementType<?> type);
+    @RequiredUIAccess
+    void removeSelectedElements();
 
-  void removeSelectedElements();
+    LayoutTreeComponent getLayoutTreeComponent();
 
-  void removePackagingElement(String pathToParent, PackagingElement<?> element);
+    Artifact getArtifact();
 
-  void replacePackagingElement(String pathToParent, PackagingElement<?> element, PackagingElement<?> replacement);
+    CompositePackagingElement<?> getRootElement();
 
-  LayoutTreeComponent getLayoutTreeComponent();
+    ArtifactEditorContext getContext();
 
-  Artifact getArtifact();
+    ComplexElementSubstitutionParameters getSubstitutionParameters();
 
-  CompositePackagingElement<?> getRootElement();
+    @RequiredUIAccess
+    void queueValidation();
 
-  ArtifactEditorContext getContext();
-
-  JComponent getMainComponent();
-
-  ComplexElementSubstitutionParameters getSubstitutionParameters();
-
-  void queueValidation();
-
-  void rebuildTries();
+    @RequiredUIAccess
+    void rebuildTries();
 }

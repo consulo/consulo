@@ -22,6 +22,7 @@ import consulo.ui.LabelStyle;
 import consulo.ui.image.Image;
 import consulo.ui.Length;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.internal.SearchHighlightUtil;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -30,6 +31,8 @@ import org.jspecify.annotations.Nullable;
  * @author VISTALL
  */
 public class HeadlessLabel extends HeadlessComponentBase implements Label {
+    private @Nullable String mySearchHighlight;
+
     private LocalizeValue myText;
     private @Nullable Image myImage;
     private @Nullable Component myTarget;
@@ -107,5 +110,15 @@ public class HeadlessLabel extends HeadlessComponentBase implements Label {
     @RequiredUIAccess
     @Override
     public void setMinHeight(Length height) {
+    }
+
+    @Override
+    public void setSearchHighlight(@Nullable String query) {
+        mySearchHighlight = SearchHighlightUtil.normalizeQuery(query);
+    }
+
+    @Override
+    public @Nullable String getSearchHighlight() {
+        return mySearchHighlight;
     }
 }

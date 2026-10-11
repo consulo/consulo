@@ -15,13 +15,14 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceItems.actions;
 
+import consulo.compiler.artifact.ui.PackagingSourceItem;
+import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.ArtifactEditorEx;
+import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceItems.SourceItemsTree;
+import consulo.project.localize.ProjectLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.ArtifactEditorEx;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceItems.SourceItemsTree;
 import consulo.util.lang.StringUtil;
-import consulo.compiler.artifact.ui.PackagingSourceItem;
 
 import java.util.HashSet;
 import java.util.List;
@@ -31,34 +32,34 @@ import java.util.Set;
  * @author nik
  */
 public class PutSourceItemIntoDefaultLocationAction extends PutIntoDefaultLocationActionBase {
-  public PutSourceItemIntoDefaultLocationAction(SourceItemsTree sourceItemsTree, ArtifactEditorEx artifactEditor) {
-    super(sourceItemsTree, artifactEditor);
-  }
-
-  @Override
-  public void update(AnActionEvent e) {
-    List<PackagingSourceItem> items = mySourceItemsTree.getSelectedItems();
-    boolean enabled = false;
-    Presentation presentation = e.getPresentation();
-    if (!items.isEmpty()) {
-      enabled = true;
-      Set<String> paths = new HashSet<String>();
-      for (PackagingSourceItem item : items) {
-        String path = getDefaultPath(item);
-        if (path == null) {
-          enabled = false;
-          break;
-        }
-        paths.add(StringUtil.trimStart(StringUtil.trimEnd(path, "/"), "/"));
-      }
-      presentation.setText("Put into " + PutIntoDefaultLocationActionBase.getTargetLocationText(paths));
+    public PutSourceItemIntoDefaultLocationAction(SourceItemsTree sourceItemsTree, ArtifactEditorEx artifactEditor) {
+        super(sourceItemsTree, artifactEditor);
     }
-    presentation.setEnabledAndVisible(enabled);
-  }
 
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(AnActionEvent e) {
-    myArtifactEditor.getLayoutTreeComponent().putIntoDefaultLocations(mySourceItemsTree.getSelectedItems());
-  }
+    @Override
+    public void update(AnActionEvent e) {
+        List<PackagingSourceItem> items = mySourceItemsTree.getSelectedItems();
+        boolean enabled = false;
+        Presentation presentation = e.getPresentation();
+        if (!items.isEmpty()) {
+            enabled = true;
+            Set<String> paths = new HashSet<>();
+            for (PackagingSourceItem item : items) {
+                String path = getDefaultPath(item);
+                if (path == null) {
+                    enabled = false;
+                    break;
+                }
+                paths.add(StringUtil.trimStart(StringUtil.trimEnd(path, "/"), "/"));
+            }
+            presentation.setText(ProjectLocalize.artifactActionPutInto0Text(getTargetLocationText(paths)));
+        }
+        presentation.setEnabledAndVisible(enabled);
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(AnActionEvent e) {
+        myArtifactEditor.getLayoutTreeComponent().putIntoDefaultLocations(mySourceItemsTree.getSelectedItems());
+    }
 }

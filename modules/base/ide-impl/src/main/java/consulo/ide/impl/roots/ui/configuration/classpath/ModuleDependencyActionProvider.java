@@ -16,16 +16,17 @@
 package consulo.ide.impl.roots.ui.configuration.classpath;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.AllIcons;
 import consulo.ide.setting.module.AddModuleDependencyActionProvider;
-import consulo.module.Module;
-import consulo.module.ui.awt.ChooseModulesDialog;
 import consulo.ide.setting.module.ClasspathPanel;
-import consulo.localize.LocalizeValue;
-import consulo.module.content.layer.ModuleRootLayer;
 import consulo.ide.setting.module.LibrariesConfigurator;
 import consulo.ide.setting.module.ModulesConfigurator;
+import consulo.localize.LocalizeValue;
+import consulo.module.Module;
+import consulo.module.content.layer.ModuleRootLayer;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.project.localize.ProjectLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.dialog.ChooseItemsDialogDescriptor;
 import consulo.ui.image.Image;
 
 import java.util.List;
@@ -37,27 +38,39 @@ import java.util.concurrent.CompletableFuture;
  */
 @ExtensionImpl
 public class ModuleDependencyActionProvider implements AddModuleDependencyActionProvider<List<Module>, ModuleDependencyContext> {
-  
-  @Override
-  public LocalizeValue getActionName(ModuleRootLayer layer) {
-    return LocalizeValue.localizeTODO("Module");
-  }
+    @Override
+    public LocalizeValue getActionName(ModuleRootLayer layer) {
+        return ProjectLocalize.classpathAddModuleDependencyAction();
+    }
 
-  
-  @Override
-  public Image getIcon(ModuleRootLayer layer) {
-    return AllIcons.Nodes.Module;
-  }
+    @Override
+    public Image getIcon(ModuleRootLayer layer) {
+        return PlatformIconGroup.nodesModule();
+    }
 
-  @Override
-  public ModuleDependencyContext createContext(ClasspathPanel classpathPanel, ModulesConfigurator modulesConfigurator, LibrariesConfigurator librariesConfigurator) {
-    return new ModuleDependencyContext(classpathPanel, modulesConfigurator, librariesConfigurator);
-  }
+    @Override
+    public ModuleDependencyContext createContext(
+        ClasspathPanel classpathPanel,
+        ModulesConfigurator modulesConfigurator,
+        LibrariesConfigurator librariesConfigurator
+    ) {
+        return new ModuleDependencyContext(classpathPanel, modulesConfigurator, librariesConfigurator);
+    }
 
-  @RequiredUIAccess
-  
-  @Override
-  public CompletableFuture<List<Module>> invoke(ModuleDependencyContext context) {
-    return new ChooseModulesDialog(context.getProject(), context.getNotAddedModules(), "Add Module Dependency", "Select modules for adding as dependency").showAsync2();
-  }
+    @RequiredUIAccess
+    @Override
+    public CompletableFuture<List<Module>> invoke(ModuleDependencyContext context) {
+        return ChooseItemsDialogDescriptor.showAsync(
+            context.getClasspathPanel().getUIComponent(),
+            ProjectLocalize.classpathChooserTitleAddModuleDependency(),
+            ProjectLocalize.classpathChooserDescriptionAddModuleDependency(),
+            context.getNotAddedModules(),
+            (module, presentation) -> {
+                presentation.withIcon(PlatformIconGroup.nodesModule());
+                presentation.append(module.getName());
+            },
+            true,
+            List.of()
+        );
+    }
 }

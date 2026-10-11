@@ -18,6 +18,7 @@ package consulo.desktop.awt.ui.impl.layout;
 import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.impl.LoadingLayoutLoader;
@@ -82,6 +83,11 @@ public class DesktopAWTLoadingLayout<L extends Layout> extends SwingComponentDel
     private void forceUpdate() {
         toAWTComponent().invalidate();
         toAWTComponent().repaint();
+    }
+
+    @Override
+    public void forEachChild(@RequiredUIAccess Consumer<Component> consumer) {
+        consumer.accept(myInnerLayout);
     }
 
     @Override

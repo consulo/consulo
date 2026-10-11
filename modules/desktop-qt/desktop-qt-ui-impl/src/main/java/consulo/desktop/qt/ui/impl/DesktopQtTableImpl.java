@@ -61,6 +61,8 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableWidget>
     private boolean myAllowMultipleSelect;
     private boolean myShowHeader = true;
 
+    private @Nullable Item myPendingSelection;
+
     private @Nullable Function<Item, String> mySpeedSearchConverter;
     private @Nullable Function<Item, Length> myItemHeightGetter;
 
@@ -116,6 +118,12 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableWidget>
         updateSortable();
         updateSelectionMode();
         updateRows();
+
+        Item pendingSelection = myPendingSelection;
+        myPendingSelection = null;
+        if (pendingSelection != null) {
+            select(pendingSelection);
+        }
     }
 
     private void rebuildRows() {
@@ -257,8 +265,9 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableWidget>
         int index = column.getIndex();
         Value value = column.getValueProvider().apply(item);
 
-        QWidget widget = createCellWidget(row, item, column, value);
+        QWidget widget = createCellWidget(component, row, item, column, value);
         if (widget != null) {
+            component.takeItem(row, index);
             component.setCellWidget(row, index, widget);
             return;
         }
@@ -329,7 +338,8 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableWidget>
      *
      * @return the widget the cell shows, or {@code null} when the column falls back to text
      */
-    private <Value> @Nullable QWidget createCellWidget(int row,
+    private <Value> @Nullable QWidget createCellWidget(QTableWidget table,
+                                                       int row,
                                                        Item item,
                                                        TableColumnImpl<Item, Value> column,
                                                        Value value) {
@@ -338,19 +348,25 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableWidget>
             ValueComponent<Value> valueComponent = editor.createComponent(item);
             valueComponent.setValue(value, false);
             valueComponent.addValueListener(event -> editor.commit(item, event.getValue()));
-            return toQtWidget(valueComponent);
+            return toQtWidget(table, valueComponent);
         }
 
         ComponentItemRender<Value> componentRender = column.getComponentRender();
         if (componentRender != null) {
-            return toQtWidget(componentRender.render(RenderItem.of(value, isSelected(row))));
+            return toQtWidget(table, componentRender.render(RenderItem.of(value, isSelected(row))));
         }
 
         return null;
     }
 
-    private static @Nullable QWidget toQtWidget(consulo.ui.@Nullable Component component) {
-        return component instanceof QtComponentDelegate<?> delegate ? delegate.toQtComponent() : null;
+    private @Nullable QWidget toQtWidget(QTableWidget table, consulo.ui.@Nullable Component component) {
+        if (!(component instanceof QtComponentDelegate<?> delegate)) {
+            return null;
+        }
+
+        delegate.setParent(this);
+        delegate.bind(table.viewport(), null);
+        return delegate.toQtComponent();
     }
 
     private boolean isSelected(int row) {
@@ -404,6 +420,7 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableWidget>
     public void select(Item item) {
         QTableWidget component = myComponent;
         if (component == null) {
+            myPendingSelection = item;
             return;
         }
 
@@ -416,6 +433,8 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableWidget>
     @RequiredUIAccess
     @Override
     public void deselectAll() {
+        myPendingSelection = null;
+
         QTableWidget component = myComponent;
         if (component != null) {
             component.clearSelection();

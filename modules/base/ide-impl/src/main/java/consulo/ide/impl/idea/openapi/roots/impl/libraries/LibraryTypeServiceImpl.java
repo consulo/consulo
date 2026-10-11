@@ -16,22 +16,31 @@
 package consulo.ide.impl.idea.openapi.roots.impl.libraries;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.content.OrderRootType;
 import consulo.content.library.*;
 import consulo.content.library.ui.LibraryEditor;
 import consulo.content.library.ui.LibraryRootsComponentDescriptor;
+import consulo.content.library.ui.LibraryRootsDetector;
 import consulo.fileChooser.FileChooserDescriptor;
-import consulo.fileChooser.IdeaFileChooser;
+import consulo.fileChooser.FileChooser;
 import consulo.ide.impl.idea.openapi.roots.libraries.ui.impl.RootDetectionUtil;
 import consulo.project.Project;
+import consulo.project.localize.ProjectLocalize;
+import consulo.ui.Component;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.io.FileUtil;
 import consulo.util.io.PathUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Singleton;
 
 import org.jspecify.annotations.Nullable;
-import javax.swing.*;
+
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author nik
@@ -42,22 +51,36 @@ public class LibraryTypeServiceImpl extends LibraryTypeService {
   private static final String DEFAULT_LIBRARY_NAME = "Unnamed";
 
   @Override
-  public NewLibraryConfiguration createLibraryFromFiles(LibraryRootsComponentDescriptor descriptor,
-                                                        JComponent parentComponent,
-                                                        @Nullable VirtualFile contextDirectory,
-                                                        LibraryType<?> type,
-                                                        Project project) {
+  @RequiredUIAccess
+  public CompletableFuture<NewLibraryConfiguration> createLibraryFromFiles(LibraryRootsComponentDescriptor descriptor,
+                                                                          @Nullable Component parentComponent,
+                                                                          @Nullable VirtualFile contextDirectory,
+                                                                          @Nullable LibraryType<?> type,
+                                                                          @Nullable Project project) {
     FileChooserDescriptor chooserDescriptor = descriptor.createAttachFilesChooserDescriptor(null);
-    chooserDescriptor.setTitle("Select Library Files");
-    VirtualFile[] rootCandidates = IdeaFileChooser.chooseFiles(chooserDescriptor, parentComponent, project, contextDirectory);
-    if (rootCandidates.length == 0) {
-      return null;
-    }
+    chooserDescriptor.withTitle(ProjectLocalize.libraryChooseFilesTitle());
+    UIAccess uiAccess = UIAccess.current();
+    return FileChooser.chooseFiles(chooserDescriptor, project, contextDirectory)
+      .thenComposeAsync(
+        rootCandidates -> RootDetectionUtil.detectRootsAsync(Arrays.asList(rootCandidates), parentComponent, project, descriptor),
+        uiAccess
+      )
+      .thenApply(roots -> {
+        if (roots.isEmpty()) {
+          throw new CancellationException();
+        }
+        return doCreate(type, suggestLibraryName(roots), roots);
+      });
+  }
 
-    List<OrderRoot> roots = RootDetectionUtil.detectRoots(Arrays.asList(rootCandidates), parentComponent, project, descriptor);
-    if (roots.isEmpty()) return null;
-    String name = suggestLibraryName(roots);
-    return doCreate(type, name, roots);
+  @Override
+  @RequiredUIAccess
+  public CompletableFuture<List<OrderRoot>> detectRootsAsync(Collection<VirtualFile> candidates,
+                                                             @Nullable Component parentComponent,
+                                                             @Nullable Project project,
+                                                             LibraryRootsDetector detector,
+                                                             List<OrderRootType> rootTypesAllowedIfNothingDetected) {
+    return RootDetectionUtil.detectRootsAsync(candidates, parentComponent, project, detector, rootTypesAllowedIfNothingDetected);
   }
 
   private static <P extends LibraryProperties<?>> NewLibraryConfiguration doCreate(final LibraryType<P> type, final String name, final List<OrderRoot> roots) {

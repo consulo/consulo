@@ -41,6 +41,7 @@ import consulo.ui.ex.awt.JBPopupMenu;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.TabbedPaneWrapper;
 import consulo.ui.ex.awt.util.GraphicsUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.virtualFileSystem.fileType.FileType;
 import org.jspecify.annotations.Nullable;
 
@@ -486,7 +487,7 @@ public abstract class TabbedLanguageCodeStylePanel extends CodeStyleAbstractPane
         @RequiredUIAccess
         public @Nullable JComponent getPanel() {
             if (myComponent == null) {
-                myComponent = myConfigurable.createComponent();
+                myComponent = (JComponent) TargetAWT.to(myConfigurable.createUIComponent(this));
             }
             return myComponent;
         }

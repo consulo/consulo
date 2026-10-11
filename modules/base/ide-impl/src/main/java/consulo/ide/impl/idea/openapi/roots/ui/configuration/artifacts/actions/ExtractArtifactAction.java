@@ -15,23 +15,30 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.actions;
 
-import consulo.compiler.artifact.*;
+import consulo.compiler.artifact.ArtifactPointerManager;
+import consulo.compiler.artifact.ArtifactPointerUtil;
+import consulo.compiler.artifact.ArtifactUtil;
+import consulo.compiler.artifact.ModifiableArtifact;
+import consulo.compiler.artifact.ModifiableArtifactModel;
 import consulo.compiler.artifact.element.ArtifactPackagingElement;
 import consulo.compiler.artifact.element.CompositePackagingElement;
 import consulo.compiler.artifact.element.PackagingElement;
+import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.ArtifactEditorEx;
+import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.LayoutElementInfo;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.LayoutTreeComponent;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.LayoutTreeSelection;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.nodes.PackagingElementNode;
 import consulo.project.Project;
 import consulo.project.localize.ProjectLocalize;
+import consulo.ui.Tree;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.util.collection.ContainerUtil;
+import consulo.ui.ex.dialog.Dialog;
+import consulo.ui.ex.dialog.DialogService;
 import consulo.util.io.PathUtil;
-import org.jspecify.annotations.Nullable;
 
-import java.util.Collection;
+import java.util.List;
 
 /**
  * @author nik
@@ -55,53 +62,43 @@ public class ExtractArtifactAction extends LayoutTreeActionBase {
         if (parent == null) {
             return;
         }
-        PackagingElementNode<?> parentNode = selection.getNodes().get(0).getParentNode();
-        if (parentNode == null) {
+
+        LayoutElementInfo parentNode = treeComponent.getParentNode(selection.getNodes().get(0));
+        if (parentNode == null || !treeComponent.checkCanModifyChildren(parent, parentNode, selection.getNodes())) {
             return;
         }
 
-        if (!treeComponent.checkCanModifyChildren(parent, parentNode, selection.getNodes())) {
-            return;
-        }
-
-        Collection<? extends PackagingElement> selectedElements = selection.getElements();
+        ArtifactEditorContext context = myArtifactEditor.getContext();
+        List<PackagingElement<?>> selectedElements = selection.getElements();
         String initialName = "artifact";
         if (selectedElements.size() == 1) {
-            initialName = PathUtil.suggestFileName(ContainerUtil.getFirstItem(selectedElements, null)
-                .createPresentation(myArtifactEditor.getContext())
-                .getPresentableName());
-        }
-        IExtractArtifactDialog dialog = showDialog(treeComponent, initialName);
-        if (dialog == null) {
-            return;
+            initialName = PathUtil.suggestFileName(selectedElements.get(0).createPresentation(context).getPresentableName());
         }
 
-        Project project = myArtifactEditor.getContext().getProject();
-        ModifiableArtifactModel model = myArtifactEditor.getContext().getOrCreateModifiableArtifactModel();
-        ModifiableArtifact artifact = model.addArtifact(dialog.getArtifactName(), dialog.getArtifactType());
-        treeComponent.editLayout(() -> {
-            for (PackagingElement<?> element : selectedElements) {
-                artifact.getRootElement().addOrFindChild(ArtifactUtil.copyWithChildren(element, project));
+        ExtractArtifactDialog descriptor = new ExtractArtifactDialog(context, initialName);
+        DialogService dialogService = context.getProject().getApplication().getInstance(DialogService.class);
+        Tree<?> tree = treeComponent.getTree();
+        Dialog dialog = tree == null ? dialogService.build(descriptor) : dialogService.build(tree, descriptor);
+        UIAccess uiAccess = UIAccess.current();
+        dialog.showAsync().whenCompleteAsync((value, error) -> {
+            if (error != null || !(value instanceof ExtractArtifactDialog.Result result) || myArtifactEditor.isDisposed()) {
+                return;
             }
-            for (PackagingElement element : selectedElements) {
-                parent.removeChild(element);
-            }
-            ArtifactPointerManager pointerManager = ArtifactPointerUtil.getPointerManager(project);
-            parent.addOrFindChild(new ArtifactPackagingElement(
-                pointerManager,
-                pointerManager.create(artifact, myArtifactEditor.getContext().getArtifactModel())
-            ));
-        });
-        treeComponent.rebuildTree();
-    }
 
-    @RequiredUIAccess
-    protected @Nullable IExtractArtifactDialog showDialog(LayoutTreeComponent treeComponent, String initialName) {
-        ExtractArtifactDialog dialog = new ExtractArtifactDialog(myArtifactEditor.getContext(), treeComponent, initialName);
-        dialog.show();
-        if (!dialog.isOK()) {
-            return null;
-        }
-        return dialog;
+            Project project = context.getProject();
+            ModifiableArtifactModel model = context.getOrCreateModifiableArtifactModel();
+            ModifiableArtifact artifact = model.addArtifact(result.artifactName(), result.artifactType());
+            treeComponent.editLayout(() -> {
+                for (PackagingElement<?> element : selectedElements) {
+                    artifact.getRootElement().addOrFindChild(ArtifactUtil.copyWithChildren(element, project));
+                }
+                for (PackagingElement<?> element : selectedElements) {
+                    parent.removeChild(element);
+                }
+                ArtifactPointerManager pointerManager = ArtifactPointerUtil.getPointerManager(project);
+                parent.addOrFindChild(new ArtifactPackagingElement(pointerManager, pointerManager.create(artifact, context.getArtifactModel())));
+            });
+            treeComponent.rebuildTree();
+        }, uiAccess);
     }
 }

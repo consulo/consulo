@@ -65,6 +65,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
 /**
@@ -95,6 +96,9 @@ public class UnifiedActionRow {
     private final List<@Nullable Button> myButtons = new ArrayList<>();
 
     private final List<Runnable> myActionsUpdatedListeners = Lists.newLockFreeCopyOnWriteList();
+
+    private BiConsumer<AnAction, Component> myComponentTweaker = (action, component) -> {
+    };
 
     private String mySignature = "";
     private List<AnAction> myActions = List.of();
@@ -217,6 +221,10 @@ public class UnifiedActionRow {
         myActionsUpdatedListeners.add(listener);
     }
 
+    public void setComponentTweaker(BiConsumer<AnAction, Component> componentTweaker) {
+        myComponentTweaker = componentTweaker;
+    }
+
     @RequiredUIAccess
     private void fireActionsUpdated() {
         for (Runnable listener : myActionsUpdatedListeners) {
@@ -336,6 +344,7 @@ public class UnifiedActionRow {
 
             if (node.action() instanceof ComboBoxAction comboBoxAction) {
                 Component comboBox = createComboBox(node, comboBoxAction);
+                tweakComponent(comboBoxAction, comboBox);
                 add(comboBox);
                 myButtons.add(comboBox instanceof Button fallbackButton ? fallbackButton : null);
                 continue;
@@ -343,18 +352,33 @@ public class UnifiedActionRow {
 
             AnAction nodeAction = node.action();
             if (nodeAction instanceof CustomUIComponentAction customComponentAction) {
-                add(getOrCreateCustomComponent(nodeAction, customComponentAction));
+                Component customComponent = getOrCreateCustomComponent(nodeAction, customComponentAction);
+                tweakComponent(nodeAction, customComponent);
+                add(customComponent);
                 myButtons.add(null);
                 continue;
             }
 
             Button button = node.children() == null ? createActionButton(node) : createActionMenu(node);
+            if (nodeAction != null) {
+                tweakComponent(nodeAction, button);
+            }
             add(button);
             myButtons.add(button);
         }
 
         myNodes = nodes;
         mySignature = signature;
+    }
+
+    @RequiredUIAccess
+    private void tweakComponent(AnAction action, Component component) {
+        try {
+            myComponentTweaker.accept(action, component);
+        }
+        catch (Throwable e) {
+            LOG.error("Component tweaker of " + myPlace + " failed", e);
+        }
     }
 
     private static String rowSignature(List<UnifiedActionMenuExpander.MenuNode> nodes) {

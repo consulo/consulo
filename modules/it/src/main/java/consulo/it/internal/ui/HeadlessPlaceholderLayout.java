@@ -20,8 +20,10 @@ import consulo.ui.layout.Layout;
 import consulo.ui.layout.PlaceholderLayout;
 
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.BooleanSupplier;
+import java.util.function.Consumer;
 
 public class HeadlessPlaceholderLayout extends HeadlessLayoutBase<PlaceholderLayout.Layer> implements PlaceholderLayout {
     private final Map<Layer, Component> myChildren = new EnumMap<>(Layer.class);
@@ -47,6 +49,11 @@ public class HeadlessPlaceholderLayout extends HeadlessLayoutBase<PlaceholderLay
     public void removeAll() {
         myChildren.clear();
         super.removeAll();
+    }
+
+    @Override
+    public void forEachChild(Consumer<Component> consumer) {
+        List.copyOf(myChildren.values()).forEach(consumer);
     }
 
     @Override

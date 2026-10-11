@@ -79,17 +79,20 @@ class DesktopTreeNodeImpl<K> implements TreeNode<K> {
 
         List<DesktopTreeNodeImpl<K>> built = myStructure.buildChildren(this);
 
+        List<DesktopTreeNodeImpl<K>> children;
         synchronized (this) {
             List<DesktopTreeNodeImpl<K>> current = myChildren;
             if (current != null && epoch < myChildrenEpoch) {
                 return current;
             }
 
-            List<DesktopTreeNodeImpl<K>> children = List.copyOf(current == null ? built : reuse(current, built));
+            children = List.copyOf(current == null ? built : reuse(current, built));
             myChildren = children;
             myChildrenEpoch = epoch;
-            return children;
         }
+
+        myStructure.childrenBuilt(this);
+        return children;
     }
 
     synchronized @Nullable List<DesktopTreeNodeImpl<K>> getKnownChildren() {

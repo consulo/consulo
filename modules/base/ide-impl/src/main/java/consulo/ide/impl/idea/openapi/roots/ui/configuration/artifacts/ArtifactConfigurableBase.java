@@ -16,56 +16,50 @@
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts;
 
 import consulo.compiler.artifact.Artifact;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.ProjectStructureElementConfigurable;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
+import consulo.configurable.MasterDetailsConfigurable;
 import consulo.localize.LocalizeValue;
 import consulo.project.localize.ProjectLocalize;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 
 /**
  * @author nik
  */
-public abstract class ArtifactConfigurableBase extends ProjectStructureElementConfigurable<Artifact> {
-  protected final Artifact myOriginalArtifact;
-  protected final ArtifactsStructureConfigurableContextImpl myArtifactsStructureContext;
-  private final ProjectStructureElement myProjectStructureElement;
+public abstract class ArtifactConfigurableBase implements MasterDetailsConfigurable<Artifact> {
+    protected final Artifact myOriginalArtifact;
+    protected final ArtifactsStructureConfigurableContextImpl myArtifactsStructureContext;
 
-  protected ArtifactConfigurableBase(Artifact originalArtifact,
-                                     ArtifactsStructureConfigurableContextImpl artifactsStructureContext,
-                                     Runnable updateTree,
-                                     boolean nameEditable) {
-    super(nameEditable, updateTree);
-    myOriginalArtifact = originalArtifact;
-    myArtifactsStructureContext = artifactsStructureContext;
-    myProjectStructureElement = myArtifactsStructureContext.getOrCreateArtifactElement(myOriginalArtifact);
-  }
+    protected ArtifactConfigurableBase(Artifact originalArtifact, ArtifactsStructureConfigurableContextImpl artifactsStructureContext) {
+        myOriginalArtifact = originalArtifact;
+        myArtifactsStructureContext = artifactsStructureContext;
+    }
 
-  @Override
-  public ProjectStructureElement getProjectStructureElement() {
-    return myProjectStructureElement;
-  }
+    protected Artifact getArtifact() {
+        return myArtifactsStructureContext.getArtifactModel().getArtifactByOriginal(myOriginalArtifact);
+    }
 
-  protected Artifact getArtifact() {
-    return myArtifactsStructureContext.getArtifactModel().getArtifactByOriginal(myOriginalArtifact);
-  }
+    @Override
+    public Artifact getEditableObject() {
+        return getArtifact();
+    }
 
-  @Override
-  public Artifact getEditableObject() {
-    return getArtifact();
-  }
+    @Override
+    public LocalizeValue getBannerSlogan() {
+        return ProjectLocalize.bannerSloganArtifact0(getArtifact().getName());
+    }
 
-  @Override
-  public LocalizeValue getBannerSlogan() {
-    return ProjectLocalize.bannerSloganArtifact0(getArtifact().getName());
-  }
+    @Override
+    public LocalizeValue getDisplayName() {
+        return LocalizeValue.of(getArtifact().getName());
+    }
 
-  @Override
-  public LocalizeValue getDisplayName() {
-    return LocalizeValue.of(getArtifact().getName());
-  }
+    @Override
+    public Image getIcon() {
+        return getArtifact().getArtifactType().getIcon();
+    }
 
-  @Override
-  public Image getIcon(boolean open) {
-    return getArtifact().getArtifactType().getIcon();
-  }
+    @RequiredUIAccess
+    @Override
+    public void updateName() {
+    }
 }

@@ -24,8 +24,12 @@ import consulo.ui.Label;
 import consulo.ui.LabelStyle;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
+import consulo.ui.internal.SearchHighlightUtil;
 import consulo.ui.Length;
 import io.qt.core.Qt;
+import io.qt.gui.QKeySequence;
+import io.qt.gui.QShortcut;
+import io.qt.widgets.QAbstractButton;
 import io.qt.widgets.QWidget;
 import org.jspecify.annotations.Nullable;
 
@@ -40,6 +44,8 @@ public class DesktopQtLabelImpl extends QtComponentDelegate<DesktopQtIconLabel> 
     private LocalizeValue myText = LocalizeValue.empty();
     private @Nullable Component myLabeledComponent;
     private @Nullable Image myImage;
+    private @Nullable String mySearchHighlight;
+    private @Nullable QShortcut myHighlightShortcut;
 
     private final Set<LabelStyle> myStyles = EnumSet.noneOf(LabelStyle.class);
 
@@ -57,7 +63,7 @@ public class DesktopQtLabelImpl extends QtComponentDelegate<DesktopQtIconLabel> 
 
     @Override
     protected void initialize(DesktopQtIconLabel component) {
-        component.setText(currentText());
+        applyText(component);
         component.setTextAlignment(switch (myHorizontalAlignment) {
             case LEFT -> Qt.AlignmentFlag.AlignLeft;
             case CENTER -> Qt.AlignmentFlag.AlignHCenter;
@@ -77,8 +83,84 @@ public class DesktopQtLabelImpl extends QtComponentDelegate<DesktopQtIconLabel> 
      * A qt label only turns a {@code &} into an underline once it has a buddy to hand the key press to, so a
      * label standing on its own is given the text with the marker taken back out.
      */
-    private String currentText() {
+    protected String currentText() {
         return myComponent != null && myComponent.buddy() != null ? QtMnemonic.withMnemonic(myText) : QtMnemonic.plain(myText);
+    }
+
+    protected Qt.TextFormat textFormat() {
+        return Qt.TextFormat.AutoText;
+    }
+
+    protected @Nullable String highlightedText(String query) {
+        return DesktopQtSearchHighlight.toRichText(QtMnemonic.plain(myText), query);
+    }
+
+    protected @Nullable QKeySequence mnemonicShortcut() {
+        QKeySequence sequence = QKeySequence.mnemonic(QtMnemonic.withMnemonic(myText));
+        return sequence.isEmpty() ? null : sequence;
+    }
+
+    private void applyText(DesktopQtIconLabel component) {
+        String query = mySearchHighlight;
+        String highlighted = query == null ? null : highlightedText(query);
+        if (highlighted != null) {
+            component.setTextFormat(Qt.TextFormat.RichText);
+            component.setText(highlighted);
+        }
+        else {
+            component.setTextFormat(textFormat());
+            component.setText(currentText());
+        }
+
+        updateHighlightShortcut(component, highlighted != null);
+    }
+
+    private void updateHighlightShortcut(DesktopQtIconLabel component, boolean highlighted) {
+        QKeySequence sequence = highlighted && component.buddy() != null ? mnemonicShortcut() : null;
+
+        QShortcut shortcut = myHighlightShortcut;
+        if (sequence == null) {
+            if (shortcut != null && !shortcut.isDisposed()) {
+                shortcut.setEnabled(false);
+            }
+            return;
+        }
+
+        if (shortcut == null || shortcut.isDisposed()) {
+            shortcut = new QShortcut(component);
+            shortcut.activated.connect(() -> activateBuddy(component, true));
+            shortcut.activatedAmbiguously.connect(() -> activateBuddy(component, false));
+            myHighlightShortcut = shortcut;
+        }
+
+        shortcut.setKey(sequence);
+        shortcut.setEnabled(true);
+    }
+
+    private static void activateBuddy(DesktopQtIconLabel component, boolean click) {
+        if (component.isDisposed()) {
+            return;
+        }
+
+        QWidget buddy = component.buddy();
+        if (buddy == null || buddy.isDisposed()) {
+            return;
+        }
+
+        if (buddy.focusPolicy() != Qt.FocusPolicy.NoFocus) {
+            buddy.setFocus(Qt.FocusReason.ShortcutFocusReason);
+        }
+
+        if (click && buddy instanceof QAbstractButton button) {
+            button.animateClick();
+        }
+    }
+
+    @Override
+    public void disposeQt() {
+        myHighlightShortcut = null;
+
+        super.disposeQt();
     }
 
     @Override
@@ -92,8 +174,23 @@ public class DesktopQtLabelImpl extends QtComponentDelegate<DesktopQtIconLabel> 
         myText = text;
 
         if (myComponent != null) {
-            myComponent.setText(currentText());
+            applyText(myComponent);
         }
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setSearchHighlight(@Nullable String query) {
+        mySearchHighlight = SearchHighlightUtil.normalizeQuery(query);
+
+        if (myComponent != null) {
+            applyText(myComponent);
+        }
+    }
+
+    @Override
+    public @Nullable String getSearchHighlight() {
+        return mySearchHighlight;
     }
 
     @Override
@@ -136,7 +233,7 @@ public class DesktopQtLabelImpl extends QtComponentDelegate<DesktopQtIconLabel> 
         delegate.whenBound(widget -> {
             if (myComponent != null) {
                 myComponent.setBuddy(widget);
-                myComponent.setText(currentText());
+                applyText(myComponent);
             }
         });
     }

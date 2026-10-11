@@ -1,10 +1,8 @@
 package consulo.execution.debug.impl.internal.setting;
 
-import consulo.application.Application;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.SearchableConfigurable;
-import consulo.configurable.internal.ConfigurableUIMigrationUtil;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
@@ -18,16 +16,11 @@ import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import java.awt.*;
 
 class MergedCompositeConfigurable implements SearchableConfigurable {
   static final EmptyBorder BOTTOM_INSETS = new EmptyBorder(0, 0, IdeBorderFactory.TITLED_BORDER_BOTTOM_INSET, 0);
 
-  private static final Insets FIRST_COMPONENT_INSETS = new Insets(0, 0, IdeBorderFactory.TITLED_BORDER_BOTTOM_INSET, 0);
-  private static final Insets N_COMPONENT_INSETS = new Insets(IdeBorderFactory.TITLED_BORDER_TOP_INSET, 0, IdeBorderFactory.TITLED_BORDER_BOTTOM_INSET, 0);
-
   protected final Configurable[] children;
-  protected JComponent myRootPanel;
 
   private Component myRootComponent;
 
@@ -89,42 +82,6 @@ class MergedCompositeConfigurable implements SearchableConfigurable {
     return myRootComponent;
   }
 
-  @RequiredUIAccess
-  @Override
-  public @Nullable JComponent createComponent(Disposable parentDisposable) {
-    if (!Application.get().isSwingApplication()) {
-      return null;
-    }
-
-    if (myRootPanel == null) {
-      Configurable firstConfigurable = children[0];
-      if (children.length == 1) {
-        myRootPanel = ConfigurableUIMigrationUtil.createComponent(firstConfigurable, parentDisposable);
-      }
-      else {
-        JPanel panel = createPanel(true);
-        for (Configurable configurable : children) {
-          JComponent component = ConfigurableUIMigrationUtil.createComponent(configurable, parentDisposable);
-          assert component != null;
-          LocalizeValue displayName = configurable.getDisplayName();
-          if (displayName.isEmpty()) {
-            component.setBorder(BOTTOM_INSETS);
-          }
-          else {
-            component.setBorder(IdeBorderFactory.createTitledBorder(
-              displayName.get(),
-              false,
-              firstConfigurable == configurable ? FIRST_COMPONENT_INSETS : N_COMPONENT_INSETS
-            ));
-          }
-          panel.add(component);
-        }
-        myRootPanel = panel;
-      }
-    }
-    return myRootPanel;
-  }
-
   
   static JPanel createPanel(boolean isUseTitledBorder) {
     int verticalGap = TitledSeparator.TOP_INSET;
@@ -168,7 +125,6 @@ class MergedCompositeConfigurable implements SearchableConfigurable {
   @RequiredUIAccess
   @Override
   public void disposeUIResources() {
-    myRootPanel = null;
     myRootComponent = null;
 
     for (Configurable child : children) {

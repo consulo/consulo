@@ -15,7 +15,9 @@
  */
 package consulo.ui.layout;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.HasComponentStyle;
 import consulo.ui.HasPrefixComponent;
@@ -27,6 +29,10 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ComponentEventListener;
 import consulo.ui.event.TabSelectEvent;
 import consulo.ui.internal.UIInternal;
+import org.jspecify.annotations.Nullable;
+
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 /**
  * @author VISTALL
@@ -78,18 +84,59 @@ public interface TabbedLayout extends Layout<LayoutConstraint>, HasPrefixCompone
         return addTab(tab, component.getComponent());
     }
 
+    @Deprecated
+    @DeprecationInfo("Use #addTab(LocalizeValue, PseudoComponent)")
     @RequiredUIAccess
     default Tab addTab(String tabName, PseudoComponent component) {
+        return addTab(LocalizeValue.of(tabName), component.getComponent());
+    }
+
+    @RequiredUIAccess
+    default Tab addTab(LocalizeValue tabName, PseudoComponent component) {
         return addTab(tabName, component.getComponent());
     }
 
     @RequiredUIAccess
     Tab addTab(Tab tab, Component component);
 
+    @Deprecated
+    @DeprecationInfo("Use #addTab(LocalizeValue, Component)")
     @RequiredUIAccess
-    Tab addTab(String tabName, Component component);
+    default Tab addTab(String tabName, Component component) {
+        return addTab(LocalizeValue.of(tabName), component);
+    }
+
+    /**
+     * Adds a tab whose caption is the given value, so the caption follows the locale and {@link Tab#getTitle()} answers
+     * the value itself.
+     */
+    @RequiredUIAccess
+    default Tab addTab(LocalizeValue tabName, Component component) {
+        Tab tab = createTab();
+        tab.setRenderer((t, presentation) -> presentation.append(tabName));
+        return addTab(tab, component);
+    }
 
     void removeTab(Tab tab);
+
+    /**
+     * Visits every tab with its content, in the order the tabs are shown. The content of a tab which was never
+     * selected is visited as well.
+     */
+    void forEachTab(@RequiredUIAccess BiConsumer<Tab, Component> consumer);
+
+    /**
+     * The tab whose content is shown, also before the layout is on screen. Empty only while there are no tabs.
+     */
+    @Nullable Tab getSelectedTab();
+
+    /**
+     * Visits the content of every tab, in the order the tabs are shown.
+     */
+    @Override
+    default void forEachChild(@RequiredUIAccess Consumer<Component> consumer) {
+        forEachTab((tab, component) -> consumer.accept(component));
+    }
 
     default Disposable addSelectListener(ComponentEventListener<Component, TabSelectEvent> listener) {
         return addListener(TabSelectEvent.class, listener);

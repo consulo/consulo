@@ -30,7 +30,7 @@ public abstract class ComplexPackagingElementType<E extends ComplexPackagingElem
     super(id, presentableName);
   }
 
-  public abstract String getShowContentActionText();
+  public abstract LocalizeValue getShowContentActionText();
 
   public @Nullable ModificationTracker getAllSubstitutionsModificationTracker(Project project) {
     return null;

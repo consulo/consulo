@@ -15,9 +15,9 @@
  */
 package consulo.content.bundle;
 
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import javax.swing.*;
 import java.util.function.Consumer;
 
 /**
@@ -34,5 +34,6 @@ public interface SdkTypeWithCustomCreateUI {
    * @param sdkCreatedCallback the callback to which the created SDK is passed.
    * @since 12.0
    */
-  void showCustomCreateUI(SdkModel sdkModel, JComponent parentComponent, @RequiredUIAccess Consumer<Sdk> sdkCreatedCallback);
+  @RequiredUIAccess
+  void showCustomCreateUI(SdkModel sdkModel, Component parentComponent, @RequiredUIAccess Consumer<Sdk> sdkCreatedCallback);
 }

@@ -23,71 +23,64 @@ import consulo.compiler.artifact.element.CompositePackagingElement;
 import consulo.compiler.artifact.element.PackagingElement;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.ArtifactEditorEx;
+import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.LayoutElementInfo;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.LayoutTreeComponent;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.LayoutTreeSelection;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.nodes.CompositePackagingElementNode;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.nodes.PackagingElementNode;
 import consulo.project.localize.ProjectLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.LegacyDumbAwareAction;
 
-import java.util.Collections;
+import java.util.List;
 
 /**
  * @author nik
  */
-public class InlineArtifactAction extends LegacyDumbAwareAction {
-  private final ArtifactEditorEx myEditor;
-
-  public InlineArtifactAction(ArtifactEditorEx editor) {
-    super(ProjectLocalize.actionNameInlineArtifact());
-    myEditor = editor;
-  }
-
-  @Override
-  public void update(AnActionEvent e) {
-    LayoutTreeSelection selection = myEditor.getLayoutTreeComponent().getSelection();
-    PackagingElementNode<?> node = selection.getNodeIfSingle();
-    PackagingElement<?> element = selection.getElementIfSingle();
-    e.getPresentation().setEnabled(element instanceof ArtifactPackagingElement && node != null && node.getParentElement(element) != null);
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(AnActionEvent e) {
-    LayoutTreeComponent treeComponent = myEditor.getLayoutTreeComponent();
-    LayoutTreeSelection selection = treeComponent.getSelection();
-    final PackagingElement<?> element = selection.getElementIfSingle();
-    PackagingElementNode<?> node = selection.getNodeIfSingle();
-    if (node == null || !(element instanceof ArtifactPackagingElement)) return;
-
-    final CompositePackagingElement<?> parent = node.getParentElement(element);
-    CompositePackagingElementNode parentNode = node.getParentNode();
-    if (parent == null || parentNode == null) {
-      return;
+public class InlineArtifactAction extends LayoutTreeActionBase {
+    public InlineArtifactAction(ArtifactEditorEx editor) {
+        super(ProjectLocalize.actionNameInlineArtifact(), editor);
     }
-    if (!treeComponent.checkCanModifyChildren(parent, parentNode, Collections.singletonList(node))) return;
 
-    treeComponent.editLayout(new Runnable() {
-      @Override
-      public void run() {
-        parent.removeChild(element);
-        ArtifactEditorContext context = myEditor.getContext();
-        Artifact artifact = ((ArtifactPackagingElement)element).findArtifact(context);
-        if (artifact != null) {
-          CompositePackagingElement<?> rootElement = artifact.getRootElement();
-          if (rootElement instanceof ArtifactRootElement<?>) {
-            for (PackagingElement<?> child : rootElement.getChildren()) {
-              parent.addOrFindChild(ArtifactUtil.copyWithChildren(child, context.getProject()));
-            }
-          }
-          else {
-            parent.addOrFindChild(ArtifactUtil.copyWithChildren(rootElement, context.getProject()));
-          }
+    @Override
+    protected boolean isEnabled() {
+        LayoutTreeSelection selection = myArtifactEditor.getLayoutTreeComponent().getSelection();
+        LayoutElementInfo node = selection.getNodeIfSingle();
+        PackagingElement<?> element = selection.getElementIfSingle();
+        return element instanceof ArtifactPackagingElement && node != null && node.getParentElement(element) != null;
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(AnActionEvent e) {
+        LayoutTreeComponent treeComponent = myArtifactEditor.getLayoutTreeComponent();
+        LayoutTreeSelection selection = treeComponent.getSelection();
+        PackagingElement<?> element = selection.getElementIfSingle();
+        LayoutElementInfo node = selection.getNodeIfSingle();
+        if (node == null || !(element instanceof ArtifactPackagingElement artifactElement)) {
+            return;
         }
-      }
-    });
-    treeComponent.rebuildTree();
-  }
+
+        CompositePackagingElement<?> parent = node.getParentElement(element);
+        LayoutElementInfo parentNode = treeComponent.getParentNode(node);
+        if (parent == null || parentNode == null || !treeComponent.checkCanModifyChildren(parent, parentNode, List.of(node))) {
+            return;
+        }
+
+        treeComponent.editLayout(() -> {
+            parent.removeChild(element);
+            ArtifactEditorContext context = myArtifactEditor.getContext();
+            Artifact artifact = artifactElement.findArtifact(context);
+            if (artifact != null) {
+                CompositePackagingElement<?> rootElement = artifact.getRootElement();
+                if (rootElement instanceof ArtifactRootElement<?>) {
+                    for (PackagingElement<?> child : rootElement.getChildren()) {
+                        parent.addOrFindChild(ArtifactUtil.copyWithChildren(child, context.getProject()));
+                    }
+                }
+                else {
+                    parent.addOrFindChild(ArtifactUtil.copyWithChildren(rootElement, context.getProject()));
+                }
+            }
+        });
+        treeComponent.rebuildTree();
+    }
 }

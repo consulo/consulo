@@ -19,264 +19,246 @@ import consulo.content.bundle.Sdk;
 import consulo.content.internal.LibraryEx;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;
+import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
+import consulo.disposer.Disposable;
 import consulo.find.localize.FindLocalize;
-import consulo.ui.ex.impl.internal.action.ActionImplUtil;
 import consulo.ide.impl.idea.openapi.module.impl.scopes.LibraryScope;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.FindUsagesInProjectStructureActionBase;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.LibraryProjectStructureElement;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.ModuleProjectStructureElement;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.SdkProjectStructureElement;
 import consulo.ide.impl.idea.packageDependencies.DependenciesBuilder;
 import consulo.ide.impl.idea.packageDependencies.actions.AnalyzeDependenciesOnSpecifiedTargetHandler;
 import consulo.ide.impl.roots.ui.configuration.classpath.AddModuleDependencyListPopupStep;
 import consulo.ide.setting.ProjectStructureSelector;
-import consulo.ide.setting.module.*;
+import consulo.ide.setting.module.AddModuleDependencyActionProvider;
+import consulo.ide.setting.module.AddModuleDependencyContext;
+import consulo.ide.setting.module.ClasspathPanel;
+import consulo.ide.setting.module.ClasspathTableItem;
+import consulo.ide.setting.module.LibraryTableModifiableModelProvider;
+import consulo.ide.setting.module.ModuleConfigurationState;
 import consulo.ide.ui.OrderEntryAppearanceService;
 import consulo.language.editor.scope.AnalysisScope;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.localize.LocalizeValue;
-import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.content.layer.ModifiableRootModel;
-import consulo.module.content.layer.orderEntry.*;
+import consulo.module.content.layer.orderEntry.DependencyScope;
+import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
+import consulo.module.content.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
+import consulo.module.content.layer.orderEntry.ModuleOrderEntry;
+import consulo.module.content.layer.orderEntry.ModuleSourceOrderEntry;
+import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.project.localize.ProjectLocalize;
-import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.wm.ToolWindowId;
+import consulo.ui.CheckBox;
+import consulo.ui.ComboBox;
+import consulo.ui.Component;
+import consulo.ui.ComponentItemRender;
+import consulo.ui.MessageBoxes;
+import consulo.ui.RenderItem;
+import consulo.ui.Space;
+import consulo.ui.Table;
+import consulo.ui.TableItemEditor;
+import consulo.ui.TextItemPresentation;
+import consulo.ui.UIAccess;
+import consulo.ui.ValueComponent;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.ColoredStringBuilder;
-import consulo.ui.ex.ColoredTextContainer;
-import consulo.ui.ex.RelativePoint;
-import consulo.ui.ex.action.*;
-import consulo.ui.ex.awt.*;
-import consulo.ui.ex.awt.event.DoubleClickListener;
-import consulo.ui.ex.awt.speedSearch.SpeedSearchBase;
-import consulo.ui.ex.awt.table.ComboBoxTableRenderer;
-import consulo.ui.ex.awt.table.JBTable;
-import consulo.ui.ex.awt.util.TableUtil;
+import consulo.ui.event.ContextMenuEvent;
+import consulo.ui.ex.UnifiedColoredTextContainer;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.ActionPlaces;
+import consulo.ui.ex.action.ActionPopupMenu;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
+import consulo.ui.ex.action.CustomShortcutSet;
+import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.IdeActions;
+import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
+import consulo.ui.ex.toolbar.AddAction;
+import consulo.ui.ex.toolbar.DownMoveAction;
+import consulo.ui.ex.toolbar.EditAction;
+import consulo.ui.ex.toolbar.RemoveAction;
+import consulo.ui.ex.toolbar.ToolbarDecoratorBuilderFactory;
+import consulo.ui.ex.toolbar.UpMoveAction;
+import consulo.ui.layout.DockLayout;
+import consulo.ui.model.FlatDataModel;
+import consulo.ui.model.MutableFlatDataModel;
+import consulo.util.dataholder.Key;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
-import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.IdentityHashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.*;
-import java.util.function.Consumer;
+import java.util.Map;
+import java.util.SequencedMap;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
-public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
-    private static final Logger LOG = Logger.getInstance(ClasspathPanelImpl.class);
-    private final JBTable myEntryTable;
-    private final ClasspathTableModel myModel;
-    private AnAction myEditButton;
+public class ClasspathPanelImpl implements ClasspathPanel {
+    private static final Key<CheckBox> EXPORT_CHECK_BOX = Key.create("ClasspathPanelImpl.exportCheckBox");
+
+    private static final int EXPORT_COLUMN_WIDTH = 60;
+    private static final int SCOPE_COLUMN_WIDTH = 100;
+
     private final ModuleConfigurationState myState;
+    private final MutableFlatDataModel<ClasspathTableItem<?>> myModel;
+    private final Map<ClasspathTableItem<?>, ClasspathTableItemPresentation> myPresentations = new ConcurrentHashMap<>();
+    private final Table<ClasspathTableItem<?>> myTable;
+    private final Component myComponent;
+    private final NavigateAction myNavigateAction = new NavigateAction();
 
-    public ClasspathPanelImpl(ModuleConfigurationState state) {
-        super(new BorderLayout());
-
+    @RequiredUIAccess
+    public ClasspathPanelImpl(ModuleConfigurationState state, Disposable uiDisposable) {
         myState = state;
-        myModel = new ClasspathTableModel(state);
-        myEntryTable = new JBTable(myModel);
-        myEntryTable.setShowGrid(false);
-        myEntryTable.setDragEnabled(false);
-        myEntryTable.setIntercellSpacing(new Dimension(0, 0));
+        myModel = FlatDataModel.of(createItems());
 
-        myEntryTable.setDefaultRenderer(ClasspathTableItem.class, new TableItemRenderer());
-        myEntryTable.setDefaultRenderer(Boolean.class, new ExportFlagRenderer(myEntryTable.getDefaultRenderer(Boolean.class)));
+        Table<ClasspathTableItem<?>> table = Table.create(myModel);
+        table.setAllowMultipleSelect(true);
+        table.setSpeedSearchConverter(this::getSearchText);
 
-        JComboBox<DependencyScope> scopeEditor = new ComboBox<>(new EnumComboBoxModel<>(DependencyScope.class));
-        myEntryTable.setDefaultEditor(DependencyScope.class, new DefaultCellEditor(scopeEditor));
-        myEntryTable.setDefaultRenderer(DependencyScope.class, new ComboBoxTableRenderer<>(DependencyScope.values()) {
-            @Override
-            protected String getTextFor(DependencyScope value) {
-                return value.getDisplayName();
-            }
-        });
+        table.addColumn(ProjectLocalize.modulesOrderExportExportColumn(), ClasspathPanelImpl::getExportValue)
+            .setWidth(EXPORT_COLUMN_WIDTH)
+            .setResizable(false)
+            .setRender(ComponentItemRender.reusable(ClasspathPanelImpl::createExportRender, ClasspathPanelImpl::bindExportRender))
+            .setEditor(new ExportColumnEditor());
 
-        myEntryTable.getSelectionModel().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        table.addColumn(LocalizeValue.empty(), item -> item)
+            .setRender((presentation, value) -> renderItem(presentation, value.getValue()));
 
-        new SpeedSearchBase<>(myEntryTable) {
-            @Override
-            public int getSelectedIndex() {
-                return myEntryTable.getSelectedRow();
-            }
+        table.addColumn(ProjectLocalize.modulesOrderExportScopeColumn(), ClasspathPanelImpl::getScopeValue)
+            .setWidth(SCOPE_COLUMN_WIDTH)
+            .setResizable(false)
+            .setRender((presentation, value) -> renderScope(presentation, value.getValue()))
+            .setEditor(new ScopeColumnEditor());
 
-            @Override
-            protected int convertIndexToModel(int viewIndex) {
-                return myEntryTable.convertRowIndexToModel(viewIndex);
-            }
+        table.addDoubleClickListener(event -> navigate(createActionEvent(), true));
+        table.addContextMenuListener(this::showContextMenu);
+        myTable = table;
 
-            
-            @Override
-            public Object[] getAllElements() {
-                int count = myModel.getRowCount();
-                Object[] elements = new Object[count];
-                for (int idx = 0; idx < count; idx++) {
-                    elements[idx] = myModel.getItemAt(idx);
-                }
-                return elements;
-            }
+        AnAction editSourceAction = ActionManager.getInstance().getAction(IdeActions.ACTION_EDIT_SOURCE);
+        if (editSourceAction != null) {
+            myNavigateAction.registerCustomShortcutSet(editSourceAction.getShortcutSet(), table, uiDisposable);
+        }
+        new ToggleExportAction().registerCustomShortcutSet(CustomShortcutSet.fromString("SPACE"), table, uiDisposable);
 
-            @Override
-            public String getElementText(Object element) {
-                Consumer<ColoredTextContainer> render = getRender((ClasspathTableItem<?>)element);
-                ColoredStringBuilder b = new ColoredStringBuilder();
-                render.accept(b);
-                return b.toString();
-            }
+        myComponent = ToolbarDecoratorBuilderFactory.getInstance()
+            .create(table)
+            .addOrReplaceAction(new AddDependencyAction())
+            .addOrReplaceAction(new RemoveDependencyAction())
+            .addOrReplaceAction(new EditDependencyAction())
+            .addOrReplaceAction(new MoveUpDependencyAction())
+            .addOrReplaceAction(new MoveDownDependencyAction())
+            .build();
 
-            @Override
-            public void selectElement(Object element, String selectedText) {
-                int count = myModel.getRowCount();
-                for (int row = 0; row < count; row++) {
-                    if (element.equals(myModel.getItemAt(row))) {
-                        int viewRow = myEntryTable.convertRowIndexToView(row);
-                        myEntryTable.getSelectionModel().setSelectionInterval(viewRow, viewRow);
-                        TableUtil.scrollSelectionToVisible(myEntryTable);
-                        break;
-                    }
-                }
-            }
-        };
-        setFixedColumnWidth(ClasspathTableModel.EXPORT_COLUMN, ClasspathTableModel.EXPORT_COLUMN_NAME.get());
-        // leave space for combobox border
-        setFixedColumnWidth(ClasspathTableModel.SCOPE_COLUMN, DependencyScope.COMPILE.toString() + "     ");
+        if (myModel.getSize() > 0) {
+            table.select(myModel.get(0));
+        }
+    }
 
-        myEntryTable.registerKeyboardAction(
-            e -> {
-                int[] selectedRows = myEntryTable.getSelectedRows();
-                boolean currentlyMarked = true;
-                for (int selectedRow : selectedRows) {
-                    ClasspathTableItem<?> item = myModel.getItemAt(myEntryTable.convertRowIndexToModel(selectedRow));
-                    if (selectedRow < 0 || !item.isExportable()) {
-                        return;
-                    }
-                    currentlyMarked &= item.isExported();
-                }
-                for (int selectedRow : selectedRows) {
-                    myModel.getItemAt(myEntryTable.convertRowIndexToModel(selectedRow)).setExported(!currentlyMarked);
-                }
-                myModel.fireTableDataChanged();
-                TableUtil.selectRows(myEntryTable, selectedRows);
-            },
-            KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0),
-            WHEN_FOCUSED
-        );
+    private List<ClasspathTableItem<?>> createItems() {
+        List<ClasspathTableItem<?>> items = new ArrayList<>();
+        for (OrderEntry orderEntry : getRootModel().getOrderEntries()) {
+            ClasspathTableItem<?> item = ClasspathTableItem.createItem(
+                orderEntry,
+                myState.getProject(),
+                myState.getModulesConfigurator(),
+                myState.getLibrariesConfigurator()
+            );
+            myPresentations.put(item, createPresentation(item));
+            items.add(item);
+        }
+        return items;
+    }
 
-        myEditButton = new LegacyDumbAwareAction(
-            ProjectLocalize.moduleClasspathButtonEdit(),
-            LocalizeValue.empty(),
-            PlatformIconGroup.actionsEdit()
-        ) {
-            @RequiredUIAccess
-            @Override
-            public void actionPerformed(AnActionEvent e) {
-                doEdit();
-            }
+    private static ClasspathTableItemPresentation createPresentation(ClasspathTableItem<?> item) {
+        UnifiedColoredTextContainer text = new UnifiedColoredTextContainer();
+        OrderEntryAppearanceService.getInstance().getRenderForOrderEntry(item.getEntry()).accept(text);
+        return new ClasspathTableItemPresentation(text, item.getTooltipText());
+    }
 
-            @RequiredUIAccess
-            @Override
-            public void update(AnActionEvent e) {
-                int[] selectedRows = myEntryTable.getSelectedRows();
-                ClasspathTableItem<?> selectedItem = selectedRows.length == 1 ? myModel.getItemAt(selectedRows[0]) : null;
-                e.getPresentation().setEnabled(selectedItem != null && selectedItem.isEditable());
-            }
-        };
-        add(createTableWithButtons(), BorderLayout.CENTER);
+    private String getSearchText(ClasspathTableItem<?> item) {
+        ClasspathTableItemPresentation presentation = myPresentations.get(item);
+        return presentation == null ? item.getEntry().getPresentableName() : presentation.getSearchText();
+    }
 
-        if (myEntryTable.getRowCount() > 0) {
-            myEntryTable.getSelectionModel().setSelectionInterval(0, 0);
+    private void renderItem(TextItemPresentation presentation, @Nullable ClasspathTableItem<?> item) {
+        ClasspathTableItemPresentation itemPresentation = item == null ? null : myPresentations.get(item);
+        if (itemPresentation != null) {
+            itemPresentation.render(presentation);
+        }
+    }
+
+    private static void renderScope(TextItemPresentation presentation, @Nullable DependencyScope scope) {
+        if (scope != null) {
+            presentation.append(scope.getDisplayName());
+        }
+    }
+
+    private static @Nullable Boolean getExportValue(ClasspathTableItem<?> item) {
+        return item.isExportable() ? item.isExported() : null;
+    }
+
+    private static @Nullable DependencyScope getScopeValue(ClasspathTableItem<?> item) {
+        return item.getScope();
+    }
+
+    @RequiredUIAccess
+    private static DockLayout createExportRender() {
+        CheckBox checkBox = CheckBox.create(LocalizeValue.empty());
+        DockLayout layout = DockLayout.create(Space.NONE);
+        layout.center(checkBox);
+        layout.putUserData(EXPORT_CHECK_BOX, checkBox);
+        return layout;
+    }
+
+    @RequiredUIAccess
+    private static void bindExportRender(DockLayout layout, RenderItem<Boolean> item) {
+        CheckBox checkBox = layout.getUserData(EXPORT_CHECK_BOX);
+        if (checkBox == null) {
+            return;
         }
 
-        new DoubleClickListener() {
-            @Override
-            @RequiredUIAccess
-            protected boolean onDoubleClick(MouseEvent e) {
-                navigate(
-                    AnActionEvent.createFromInputEvent(
-                        e,
-                        ActionPlaces.UNKNOWN,
-                        null,
-                        DataManager.getInstance().getDataContext(myEntryTable)
-                    ),
-                    true
-                );
-                return true;
-            }
-        }.installOn(myEntryTable);
+        Boolean value = item.getValue();
+        checkBox.setVisible(value != null);
+        checkBox.setValue(Boolean.TRUE.equals(value), false);
+    }
 
-        ActionGroup.Builder actionGroup = ActionGroup.newImmutableBuilder();
-        AnAction navigateAction = new LegacyAnAction(ProjectLocalize.classpathPanelNavigateActionText()) {
-            @RequiredUIAccess
-            @Override
-            public void actionPerformed(AnActionEvent e) {
-                navigate(e, false);
-            }
+    @RequiredUIAccess
+    private AnActionEvent createActionEvent() {
+        DataContext dataContext = DataManager.getInstance().getDataContext(myTable);
+        return AnActionEvent.createFromDataContext(ActionPlaces.UNKNOWN, null, dataContext);
+    }
 
-            @Override
-            @RequiredUIAccess
-            public void update(AnActionEvent e) {
-                Presentation presentation = e.getPresentation();
-                presentation.setEnabled(false);
-                OrderEntry entry = getSelectedEntry();
-                if (entry != null && entry.isValid()) {
-                    if (!(entry instanceof ModuleSourceOrderEntry)) {
-                        presentation.setEnabled(true);
-                    }
-                }
-            }
-        };
-        navigateAction.registerCustomShortcutSet(
-            ActionManager.getInstance().getAction(IdeActions.ACTION_EDIT_SOURCE).getShortcutSet(),
-            myEntryTable
-        );
-        actionGroup.add(myEditButton);
-        actionGroup.add(new LegacyDumbAwareAction(CommonLocalize.buttonRemove(), LocalizeValue.empty(), PlatformIconGroup.generalRemove()) {
-            @Override
-            @RequiredUIAccess
-            public void actionPerformed(AnActionEvent e) {
-                removeSelectedItems(TableUtil.removeSelectedItems(myEntryTable));
-            }
+    @RequiredUIAccess
+    private void showContextMenu(ContextMenuEvent event) {
+        ActionGroup group = ActionGroup.newImmutableBuilder()
+            .add(new EditContextAction())
+            .add(new RemoveContextAction())
+            .add(myNavigateAction)
+            .add(new AnalyzeDependencyAction())
+            .build();
 
-            @Override
-            @RequiredUIAccess
-            public void update(AnActionEvent e) {
-                e.getPresentation().setEnabled(isRemoveActionEnabled());
-            }
-        });
-        actionGroup.add(navigateAction);
-        actionGroup.add(new MyFindUsagesAction());
-        actionGroup.add(new AnalyzeDependencyAction());
-
-        PopupHandler.installPopupHandler(
-            myEntryTable,
-            actionGroup.build(),
-            ActionPlaces.UNKNOWN,
-            ActionManager.getInstance()
-        );
+        ActionPopupMenu menu = ActionManager.getInstance().createActionPopupMenu(ActionPlaces.UNKNOWN, group);
+        menu.setTargetComponent(myTable);
+        menu.show(event.getComponent(), event.getInputDetails().getX(), event.getInputDetails().getY());
     }
 
     @Override
+    @RequiredUIAccess
     public @Nullable OrderEntry getSelectedEntry() {
-        if (myEntryTable.getSelectedRowCount() != 1) {
+        List<ClasspathTableItem<?>> selected = myTable.getSelectedItems();
+        if (selected.size() != 1) {
             return null;
         }
-        return myModel.getItemAt(myEntryTable.getSelectedRow()).getEntry();
-    }
-
-    private void setFixedColumnWidth(int columnIndex, String textToMeasure) {
-        TableColumn column = myEntryTable.getTableHeader().getColumnModel().getColumn(columnIndex);
-        column.setResizable(false);
-        column.setMaxWidth(column.getPreferredWidth());
+        return selected.get(0).getEntry();
     }
 
     @Override
@@ -284,6 +266,9 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
     public void navigate(AnActionEvent e, boolean openLibraryEditor) {
         OrderEntry entry = getSelectedEntry();
         ProjectStructureSelector selector = e.getData(ProjectStructureSelector.KEY);
+        if (entry == null || selector == null) {
+            return;
+        }
 
         if (entry instanceof ModuleOrderEntry moduleOrderEntry) {
             Module module = moduleOrderEntry.getModule();
@@ -296,7 +281,7 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
                 selector.select(libraryOrderEntry, true);
             }
             else {
-                myEditButton.actionPerformed(ActionImplUtil.createEmptyEvent());
+                doEdit();
             }
         }
         else if (entry instanceof ModuleExtensionWithSdkOrderEntry withSdkOrderEntry) {
@@ -307,94 +292,116 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
         }
     }
 
-    private JComponent createTableWithButtons() {
-        ToolbarDecorator decorator = ToolbarDecorator.createDecorator(myEntryTable);
-        decorator.setPanelBorder(JBUI.Borders.empty());
-        decorator.setAddAction((button, event) -> showAddPopup(event));
-        decorator.setRemoveAction(button -> removeSelectedItems(TableUtil.removeSelectedItems(myEntryTable)));
-        decorator.setRemoveActionUpdater(e -> isRemoveActionEnabled());
-
-        decorator.setMoveUpAction(button -> moveSelectedRows(-1));
-        decorator.setMoveDownAction(button -> moveSelectedRows(+1));
-        decorator.addExtraAction(myEditButton);
-        return decorator.createPanel();
-    }
-
-    @SuppressWarnings("unchecked")
     @RequiredUIAccess
     private void showAddPopup(AnActionEvent event) {
         SequencedMap<AddModuleDependencyActionProvider, AddModuleDependencyContext> contexts = new LinkedHashMap<>();
 
         AddModuleDependencyActionProvider.EP.forEachExtensionSafe(
             getProject().getApplication(),
-            it -> {
+            provider -> {
+                @SuppressWarnings("unchecked")
                 AddModuleDependencyContext context =
-                    it.createContext(this, myState.getModulesConfigurator(), myState.getLibrariesConfigurator());
-                if (it.isAvailable(context)) {
-                    contexts.put(it, context);
+                    provider.createContext(this, myState.getModulesConfigurator(), myState.getLibrariesConfigurator());
+                if (provider.isAvailable(context)) {
+                    contexts.put(provider, context);
                 }
             }
         );
 
-        // can't be empty - file adding available always
-        if (contexts.size() == 1) {
-            Map.Entry<AddModuleDependencyActionProvider, AddModuleDependencyContext> entry = contexts.sequencedEntrySet().getFirst();
+        if (contexts.isEmpty()) {
+            return;
+        }
 
-            AddModuleDependencyListPopupStep.providerSelected(entry);
+        if (contexts.size() == 1) {
+            AddModuleDependencyListPopupStep.providerSelected(contexts.sequencedEntrySet().getFirst());
         }
         else {
             AddModuleDependencyListPopupStep step = new AddModuleDependencyListPopupStep(getRootModel(), contexts.entrySet());
 
             ListPopup popup = JBPopupFactory.getInstance().createListPopup(myState.getProject(), step);
-
-            popup.showUnderneathOf(event.getRequiredData(UIExAWTDataKey.CONTEXT_COMPONENT));
+            popup.showUnderneathOf(event);
         }
     }
 
+    @RequiredUIAccess
     private boolean isRemoveActionEnabled() {
-        int[] selectedRows = myEntryTable.getSelectedRows();
-        boolean removeButtonEnabled = true;
-        int minRow = myEntryTable.getRowCount() + 1;
-        int maxRow = -1;
-        for (int selectedRow : selectedRows) {
-            minRow = Math.min(minRow, selectedRow);
-            maxRow = Math.max(maxRow, selectedRow);
-            ClasspathTableItem<?> item = myModel.getItemAt(selectedRow);
+        List<ClasspathTableItem<?>> selected = myTable.getSelectedItems();
+        if (selected.isEmpty()) {
+            return false;
+        }
+
+        for (ClasspathTableItem<?> item : selected) {
             if (!item.isRemovable()) {
-                removeButtonEnabled = false;
+                return false;
             }
         }
-        return removeButtonEnabled && selectedRows.length > 0;
+        return true;
     }
 
+    @RequiredUIAccess
+    private @Nullable ClasspathTableItem<?> getEditableItem() {
+        List<ClasspathTableItem<?>> selected = myTable.getSelectedItems();
+        if (selected.size() != 1) {
+            return null;
+        }
+
+        ClasspathTableItem<?> item = selected.get(0);
+        return item.isEditable() ? item : null;
+    }
+
+    @RequiredUIAccess
     private void doEdit() {
-        if (myEntryTable.getSelectedRowCount() != 1) {
+        ClasspathTableItem<?> item = getEditableItem();
+        if (item == null) {
             return;
         }
-        ClasspathTableItem<?> itemAt = myModel.getItemAt(myEntryTable.getSelectedRow());
-        itemAt.doEdit(this);
-        myEntryTable.repaint();
+
+        UIAccess uiAccess = UIAccess.current();
+        item.doEdit(this).whenCompleteAsync((result, error) -> {
+            if (error == null) {
+                refreshItem(item);
+            }
+        }, uiAccess);
     }
 
-    private void removeSelectedItems(List removedRows) {
-        if (removedRows.isEmpty()) {
+    @RequiredUIAccess
+    private void refreshItem(ClasspathTableItem<?> item) {
+        if (myModel.indexOf(item) < 0) {
             return;
         }
-        for (Object removedRow : removedRows) {
-            ClasspathTableItem<?> item = (ClasspathTableItem<?>)((Object[])removedRow)[ClasspathTableModel.ITEM_COLUMN];
-            OrderEntry orderEntry = item.getEntry();
 
-            getRootModel().removeOrderEntry(orderEntry);
+        myPresentations.put(item, createPresentation(item));
+        myModel.update(item);
+    }
+
+    @RequiredUIAccess
+    private void removeSelectedItems() {
+        List<ClasspathTableItem<?>> selected = List.copyOf(myTable.getSelectedItems());
+        if (selected.isEmpty()) {
+            return;
         }
-        int[] selectedRows = myEntryTable.getSelectedRows();
-        myModel.fireTableDataChanged();
-        TableUtil.selectRows(myEntryTable, selectedRows);
 
-        // TODO [VISTALL] context.getDaemonAnalyzer().queueUpdate(new ModuleProjectStructureElement(myState.getModulesConfigurator(), getRootModel().getModule()));
+        int firstIndex = myModel.getSize();
+        for (ClasspathTableItem<?> item : selected) {
+            firstIndex = Math.min(firstIndex, myModel.indexOf(item));
+        }
+
+        for (ClasspathTableItem<?> item : selected) {
+            getRootModel().removeOrderEntry(item.getEntry());
+            myModel.remove(item);
+            myPresentations.remove(item);
+        }
+
+        int size = myModel.getSize();
+        if (size > 0) {
+            ClasspathTableItem<?> toSelect = myModel.get(Math.max(0, Math.min(firstIndex, size - 1)));
+            myTable.deselectAll();
+            myTable.select(toSelect);
+            myTable.scrollTo(toSelect);
+        }
     }
 
     @Override
-    
     public LibraryTableModifiableModelProvider getModifiableModelProvider(String tableLevel) {
         if (LibraryEx.MODULE_LEVEL.equals(tableLevel)) {
             LibraryTable moduleLibraryTable = getRootModel().getModuleLibraryTable();
@@ -406,16 +413,22 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
     }
 
     @Override
+    @RequiredUIAccess
     public void addItems(List<ClasspathTableItem<?>> toAdd) {
-        for (ClasspathTableItem<?> item : toAdd) {
-            myModel.addItem(item);
+        if (toAdd.isEmpty()) {
+            return;
         }
-        myModel.fireTableDataChanged();
-        ListSelectionModel selectionModel = myEntryTable.getSelectionModel();
-        selectionModel.setSelectionInterval(myModel.getRowCount() - toAdd.size(), myModel.getRowCount() - 1);
-        TableUtil.scrollSelectionToVisible(myEntryTable);
 
-        // TODO [VISTALL] context.getDaemonAnalyzer().queueUpdate(new ModuleProjectStructureElement(myState.getModulesConfigurator(), getRootModel().getModule()));
+        for (ClasspathTableItem<?> item : toAdd) {
+            myPresentations.put(item, createPresentation(item));
+            myModel.add(item);
+        }
+
+        myTable.deselectAll();
+        for (ClasspathTableItem<?> item : toAdd) {
+            myTable.select(item);
+        }
+        myTable.scrollTo(toAdd.get(toAdd.size() - 1));
     }
 
     @Override
@@ -429,219 +442,314 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
     }
 
     @Override
+    public Component getUIComponent() {
+        return myComponent;
+    }
+
+    @Override
     public ModuleConfigurationState getModuleConfigurationState() {
         return myState;
     }
 
-    @Override
-    public JComponent getComponent() {
-        return this;
+    @RequiredUIAccess
+    private void moveSelectedRows(int increment) {
+        List<ClasspathTableItem<?>> selected = List.copyOf(myTable.getSelectedItems());
+        if (selected.isEmpty()) {
+            return;
+        }
+
+        Set<ClasspathTableItem<?>> selectedSet = Collections.newSetFromMap(new IdentityHashMap<>());
+        selectedSet.addAll(selected);
+
+        List<ClasspathTableItem<?>> items = getItems();
+        int size = items.size();
+        if (increment < 0) {
+            for (int index = 1; index < size; index++) {
+                if (selectedSet.contains(items.get(index)) && !selectedSet.contains(items.get(index - 1))) {
+                    Collections.swap(items, index, index - 1);
+                }
+            }
+        }
+        else {
+            for (int index = size - 2; index >= 0; index--) {
+                if (selectedSet.contains(items.get(index)) && !selectedSet.contains(items.get(index + 1))) {
+                    Collections.swap(items, index, index + 1);
+                }
+            }
+        }
+
+        List<OrderEntry> entries = new ArrayList<>(size);
+        for (ClasspathTableItem<?> item : items) {
+            entries.add(item.getEntry());
+        }
+        getRootModel().rearrangeOrderEntries(entries.toArray(OrderEntry[]::new));
+
+        myModel.replaceAll(items);
+
+        myTable.deselectAll();
+        for (ClasspathTableItem<?> item : selected) {
+            myTable.select(item);
+        }
+        myTable.scrollTo(increment < 0 ? selected.get(0) : selected.get(selected.size() - 1));
     }
 
+    private List<ClasspathTableItem<?>> getItems() {
+        List<ClasspathTableItem<?>> items = new ArrayList<>(myModel.getSize());
+        for (ClasspathTableItem<?> item : myModel) {
+            items.add(item);
+        }
+        return items;
+    }
+
+    @RequiredUIAccess
+    public void selectOrderEntry(OrderEntry entry) {
+        for (ClasspathTableItem<?> item : myModel) {
+            if (entry.getPresentableName().equals(item.getEntry().getPresentableName())) {
+                myTable.deselectAll();
+                myTable.select(item);
+                myTable.scrollTo(item);
+                return;
+            }
+        }
+    }
+
+    @RequiredUIAccess
     public void rootsChanged() {
         forceInitFromModel();
     }
 
-    private void enableModelUpdate() {
-        myInsideChange--;
+    @RequiredUIAccess
+    public void initFromModel() {
+        forceInitFromModel();
     }
 
-    private void disableModelUpdate() {
-        myInsideChange++;
+    @RequiredUIAccess
+    public void forceInitFromModel() {
+        List<Integer> selectedIndexes = new ArrayList<>();
+        for (ClasspathTableItem<?> item : myTable.getSelectedItems()) {
+            int index = myModel.indexOf(item);
+            if (index >= 0) {
+                selectedIndexes.add(index);
+            }
+        }
+
+        myPresentations.clear();
+        myModel.replaceAll(createItems());
+
+        myTable.deselectAll();
+        int size = myModel.getSize();
+        for (int index : selectedIndexes) {
+            if (index < size) {
+                myTable.select(myModel.get(index));
+            }
+        }
     }
 
-    private void moveSelectedRows(int increment) {
-        if (increment == 0) {
+    @RequiredUIAccess
+    private void toggleSelectedExport() {
+        List<ClasspathTableItem<?>> selected = List.copyOf(myTable.getSelectedItems());
+        if (selected.isEmpty()) {
             return;
         }
-        if (myEntryTable.isEditing()) {
-            myEntryTable.getCellEditor().stopCellEditing();
-        }
-        ListSelectionModel selectionModel = myEntryTable.getSelectionModel();
-        for (int row = increment < 0 ? 0 : myModel.getRowCount() - 1; increment < 0 ? row < myModel.getRowCount() : row >= 0;
-             row += increment < 0 ? +1 : -1) {
-            if (selectionModel.isSelectedIndex(row)) {
-                int newRow = moveRow(row, increment);
-                selectionModel.removeSelectionInterval(row, row);
-                selectionModel.addSelectionInterval(newRow, newRow);
+
+        boolean allExported = true;
+        for (ClasspathTableItem<?> item : selected) {
+            if (!item.isExportable()) {
+                return;
             }
+            allExported &= item.isExported();
         }
 
-        List<OrderEntry> entries = getEntries();
-        myState.getRootModel().rearrangeOrderEntries(entries.toArray(new OrderEntry[entries.size()]));
-
-        myModel.fireTableRowsUpdated(0, myModel.getRowCount() - 1);
-        Rectangle cellRect = myEntryTable.getCellRect(selectionModel.getMinSelectionIndex(), 0, true);
-        myEntryTable.scrollRectToVisible(cellRect);
-        myEntryTable.repaint();
-    }
-
-    public void selectOrderEntry(OrderEntry entry) {
-        for (int row = 0; row < myModel.getRowCount(); row++) {
-            OrderEntry orderEntry = myModel.getItemAt(row).getEntry();
-            if (entry.getPresentableName().equals(orderEntry.getPresentableName())) {
-                myEntryTable.getSelectionModel().setSelectionInterval(row, row);
-                TableUtil.scrollSelectionToVisible(myEntryTable);
-            }
-        }
-        ProjectIdeFocusManager.getInstance(myState.getProject()).requestFocus(myEntryTable, true);
-    }
-
-    private int moveRow(int row, int increment) {
-        int newIndex = Math.abs(row + increment) % myModel.getRowCount();
-        ClasspathTableItem<?> item = myModel.removeDataRow(row);
-        myModel.addItemAt(item, newIndex);
-        return newIndex;
-    }
-
-    public void stopEditing() {
-        TableUtil.stopEditing(myEntryTable);
-    }
-
-    public List<OrderEntry> getEntries() {
-        int count = myModel.getRowCount();
-        List<OrderEntry> entries = new ArrayList<>(count);
-        for (int row = 0; row < count; row++) {
-            OrderEntry entry = myModel.getItemAt(row).getEntry();
-            entries.add(entry);
-        }
-        return entries;
-    }
-
-    private int myInsideChange = 0;
-
-    public void initFromModel() {
-        if (myInsideChange == 0) {
-            forceInitFromModel();
+        for (ClasspathTableItem<?> item : selected) {
+            item.setExported(!allExported);
+            myModel.update(item);
         }
     }
 
-    public void forceInitFromModel() {
-        int[] selection = myEntryTable.getSelectedRows();
-        myModel.clear();
-        myModel.init();
-        myModel.fireTableDataChanged();
-        TableUtil.selectRows(myEntryTable, selection);
-    }
-
-    private static Consumer<ColoredTextContainer> getRender(ClasspathTableItem<?> item) {
-        OrderEntryAppearanceService service = OrderEntryAppearanceService.getInstance();
-        OrderEntry entry = item.getEntry();
-        return service.getRenderForOrderEntry(entry);
-    }
-
-    private static class TableItemRenderer extends ColoredTableCellRenderer {
+    private class ExportColumnEditor implements TableItemEditor<ClasspathTableItem<?>, Boolean> {
         @Override
-        protected void customizeCellRenderer(
-            JTable table,
-            Object value,
-            boolean selected,
-            boolean hasFocus,
-            int row,
-            int column
-        ) {
-            setPaintFocusBorder(false);
-            setFocusBorderAroundIcon(true);
-            setBorder(JBUI.Borders.empty(1));
-            if (value instanceof ClasspathTableItem<?> tableItem) {
-                getRender(tableItem).accept(this);
-                setToolTipText(tableItem.getTooltipText());
-            }
-        }
-    }
-
-    private static class ExportFlagRenderer implements TableCellRenderer {
-        private final TableCellRenderer myDelegate;
-        private final JPanel myBlankPanel;
-
-        public ExportFlagRenderer(TableCellRenderer delegate) {
-            myDelegate = delegate;
-            myBlankPanel = new JPanel();
-        }
-
-        @Override
-        public Component getTableCellRendererComponent(
-            JTable table,
-            Object value,
-            boolean isSelected,
-            boolean hasFocus,
-            int row,
-            int column
-        ) {
-            if (!table.isCellEditable(row, column)) {
-                myBlankPanel.setBackground(isSelected ? table.getSelectionBackground() : table.getBackground());
-                return myBlankPanel;
-            }
-            return myDelegate.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-        }
-    }
-
-    private class MyFindUsagesAction extends FindUsagesInProjectStructureActionBase {
-        private MyFindUsagesAction() {
-            super(myEntryTable);
-        }
-
-        @Override
-        protected boolean isEnabled() {
-            return getSelectedElement() != null;
-        }
-
-        @Override
-        protected ProjectStructureElement getSelectedElement() {
-            OrderEntry entry = getSelectedEntry();
-            if (entry instanceof LibraryOrderEntry libraryOrderEntry) {
-                Library library = libraryOrderEntry.getLibrary();
-                if (library != null) {
-                    return new LibraryProjectStructureElement(library);
-                }
-            }
-            else if (entry instanceof ModuleOrderEntry moduleOrderEntry) {
-                Module module = moduleOrderEntry.getModule();
-                if (module != null) {
-                    return new ModuleProjectStructureElement(myState.getModulesConfigurator(), module);
-                }
-            }
-            else if (entry instanceof ModuleExtensionWithSdkOrderEntry withSdkOrderEntry) {
-                Sdk sdk = withSdkOrderEntry.getSdk();
-                if (sdk != null) {
-                    return new SdkProjectStructureElement(sdk);
-                }
-            }
-            return null;
-        }
-
-        @Override
-        protected RelativePoint getPointToShowResults() {
-            Rectangle rect = myEntryTable.getCellRect(myEntryTable.getSelectedRow(), 1, false);
-            Point location = rect.getLocation();
-            location.y += rect.height;
-            return new RelativePoint(myEntryTable, location);
-        }
-    }
-
-    private class AnalyzeDependencyAction extends LegacyAnAction {
-        private AnalyzeDependencyAction() {
-            super("Analyze This Dependency");
-        }
-
         @RequiredUIAccess
+        public ValueComponent<Boolean> createComponent(ClasspathTableItem<?> item) {
+            return CheckBox.create(LocalizeValue.empty(), item.isExported());
+        }
+
         @Override
+        @RequiredUIAccess
+        public void commit(ClasspathTableItem<?> item, @Nullable Boolean value) {
+            item.setExported(Boolean.TRUE.equals(value));
+            myModel.update(item);
+        }
+
+        @Override
+        public boolean isEditable(ClasspathTableItem<?> item) {
+            return item.isExportable();
+        }
+    }
+
+    private class ScopeColumnEditor implements TableItemEditor<ClasspathTableItem<?>, DependencyScope> {
+        @Override
+        @RequiredUIAccess
+        public ValueComponent<DependencyScope> createComponent(ClasspathTableItem<?> item) {
+            return ComboBox.<DependencyScope>builder().fillByEnum(DependencyScope.class, DependencyScope::getDisplayName).build();
+        }
+
+        @Override
+        @RequiredUIAccess
+        public void commit(ClasspathTableItem<?> item, @Nullable DependencyScope value) {
+            if (value != null) {
+                item.setScope(value);
+                myModel.update(item);
+            }
+        }
+
+        @Override
+        public boolean isEditable(ClasspathTableItem<?> item) {
+            return item.getScope() != null;
+        }
+    }
+
+    private class AddDependencyAction extends AddAction<ClasspathTableItem<?>> {
+        @Override
+        @RequiredUIAccess
+        protected void doAdd(AnActionEvent e) {
+            showAddPopup(e);
+        }
+    }
+
+    private class RemoveDependencyAction extends RemoveAction<ClasspathTableItem<?>> {
+        @Override
+        @RequiredUIAccess
+        public void updateAtUI(AnActionEvent e) {
+            super.updateAtUI(e);
+            if (!isRemoveActionEnabled()) {
+                e.getPresentation().setEnabled(false);
+            }
+        }
+
+        @Override
+        @RequiredUIAccess
         public void actionPerformed(AnActionEvent e) {
-            OrderEntry selectedEntry = getSelectedEntry();
-            GlobalSearchScope targetScope;
-            if (selectedEntry instanceof ModuleOrderEntry moduleOrderEntry) {
-                Module module = moduleOrderEntry.getModule();
-                LOG.assertTrue(module != null);
-                targetScope = GlobalSearchScope.moduleScope(module);
+            if (isRemoveActionEnabled()) {
+                removeSelectedItems();
             }
-            else {
-                Library library = ((LibraryOrderEntry)selectedEntry).getLibrary();
-                LOG.assertTrue(library != null);
-                targetScope = new LibraryScope(getProject(), library);
+        }
+    }
+
+    private class EditDependencyAction extends EditAction<ClasspathTableItem<?>> {
+        @Override
+        @RequiredUIAccess
+        public void updateAtUI(AnActionEvent e) {
+            super.updateAtUI(e);
+            if (getEditableItem() == null) {
+                e.getPresentation().setEnabled(false);
             }
+        }
+
+        @Override
+        @RequiredUIAccess
+        protected void doEdit(ClasspathTableItem<?> value, AnActionEvent e) {
+            ClasspathPanelImpl.this.doEdit();
+        }
+    }
+
+    private class MoveUpDependencyAction extends UpMoveAction<ClasspathTableItem<?>> {
+        @Override
+        @RequiredUIAccess
+        public void actionPerformed(AnActionEvent e) {
+            moveSelectedRows(-1);
+        }
+    }
+
+    private class MoveDownDependencyAction extends DownMoveAction<ClasspathTableItem<?>> {
+        @Override
+        @RequiredUIAccess
+        public void actionPerformed(AnActionEvent e) {
+            moveSelectedRows(1);
+        }
+    }
+
+    private class EditContextAction extends DumbAwareAction implements AnActionWithSyncUpdate {
+        private EditContextAction() {
+            super(ProjectLocalize.moduleClasspathButtonEdit(), LocalizeValue.empty(), PlatformIconGroup.actionsEdit());
+        }
+
+        @Override
+        @RequiredUIAccess
+        public void actionPerformed(AnActionEvent e) {
+            doEdit();
+        }
+
+        @Override
+        @RequiredUIAccess
+        public void update(AnActionEvent e) {
+            e.getPresentation().setEnabled(getEditableItem() != null);
+        }
+    }
+
+    private class RemoveContextAction extends DumbAwareAction implements AnActionWithSyncUpdate {
+        private RemoveContextAction() {
+            super(CommonLocalize.buttonRemove(), LocalizeValue.empty(), PlatformIconGroup.generalRemove());
+        }
+
+        @Override
+        @RequiredUIAccess
+        public void actionPerformed(AnActionEvent e) {
+            if (isRemoveActionEnabled()) {
+                removeSelectedItems();
+            }
+        }
+
+        @Override
+        @RequiredUIAccess
+        public void update(AnActionEvent e) {
+            e.getPresentation().setEnabled(isRemoveActionEnabled());
+        }
+    }
+
+    private class NavigateAction extends DumbAwareAction implements AnActionWithSyncUpdate {
+        private NavigateAction() {
+            super(ProjectLocalize.classpathPanelNavigateActionText());
+        }
+
+        @Override
+        @RequiredUIAccess
+        public void actionPerformed(AnActionEvent e) {
+            navigate(e, false);
+        }
+
+        @Override
+        @RequiredUIAccess
+        public void update(AnActionEvent e) {
+            OrderEntry entry = getSelectedEntry();
+            e.getPresentation().setEnabled(entry != null && entry.isValid() && !(entry instanceof ModuleSourceOrderEntry));
+        }
+    }
+
+    private class ToggleExportAction extends DumbAwareAction {
+        @Override
+        @RequiredUIAccess
+        public void actionPerformed(AnActionEvent e) {
+            toggleSelectedExport();
+        }
+    }
+
+    private class AnalyzeDependencyAction extends DumbAwareAction implements AnActionWithSyncUpdate {
+        private AnalyzeDependencyAction() {
+            super(ProjectLocalize.classpathPanelAnalyzeThisDependencyActionText());
+        }
+
+        @Override
+        @RequiredUIAccess
+        public void actionPerformed(AnActionEvent e) {
+            GlobalSearchScope targetScope = getTargetScope(getSelectedEntry());
+            if (targetScope == null) {
+                return;
+            }
+
+            UIAccess uiAccess = UIAccess.current();
             new AnalyzeDependenciesOnSpecifiedTargetHandler(
                 getProject(),
-                new AnalysisScope(myState.getRootModel().getModule()),
+                new AnalysisScope(getRootModel().getModule()),
                 targetScope
             ) {
                 @Override
@@ -655,23 +763,24 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
                     for (DependenciesBuilder builder : builders) {
                         for (Set<PsiFile> files : builder.getDependencies().values()) {
                             if (!files.isEmpty()) {
-                                Messages.showInfoMessage(
-                                    myEntryTable,
-                                    "Dependencies were successfully collected in \"" + ToolWindowId.DEPENDENCIES + "\" toolwindow",
-                                    FindLocalize.findPointcutApplicationsNotFoundTitle().get()
-                                );
+                                MessageBoxes.okInfo(ProjectLocalize.classpathPanelAnalyzeDependenciesCollected(ToolWindowId.DEPENDENCIES))
+                                    .title(FindLocalize.findPointcutApplicationsNotFoundTitle())
+                                    .showAsync(myTable);
                                 return true;
                             }
                         }
                     }
-                    if (Messages.showOkCancelDialog(
-                        myEntryTable,
-                        "No code dependencies were found. Would you like to remove the dependency?",
-                        CommonLocalize.titleWarning().get(),
-                        UIUtil.getWarningIcon()
-                    ) == DialogWrapper.OK_EXIT_CODE) {
-                        removeSelectedItems(TableUtil.removeSelectedItems(myEntryTable));
-                    }
+
+                    MessageBoxes.okCancel()
+                        .asWarning()
+                        .title(CommonLocalize.titleWarning())
+                        .text(ProjectLocalize.classpathPanelAnalyzeNoDependenciesFound())
+                        .showAsync(myTable)
+                        .whenCompleteAsync((remove, error) -> {
+                            if (error == null && Boolean.TRUE.equals(remove)) {
+                                removeSelectedItems();
+                            }
+                        }, uiAccess);
                     return false;
                 }
             }.analyze();
@@ -681,10 +790,23 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
         @RequiredUIAccess
         public void update(AnActionEvent e) {
             OrderEntry entry = getSelectedEntry();
-            e.getPresentation().setVisible(
+            Presentation presentation = e.getPresentation();
+            presentation.setVisible(
                 entry instanceof ModuleOrderEntry moduleOrderEntry && moduleOrderEntry.getModule() != null
                     || entry instanceof LibraryOrderEntry libraryOrderEntry && libraryOrderEntry.getLibrary() != null
             );
+        }
+
+        private @Nullable GlobalSearchScope getTargetScope(@Nullable OrderEntry entry) {
+            if (entry instanceof ModuleOrderEntry moduleOrderEntry) {
+                Module module = moduleOrderEntry.getModule();
+                return module == null ? null : GlobalSearchScope.moduleScope(module);
+            }
+            if (entry instanceof LibraryOrderEntry libraryOrderEntry) {
+                Library library = libraryOrderEntry.getLibrary();
+                return library == null ? null : new LibraryScope(getProject(), library);
+            }
+            return null;
         }
     }
 }

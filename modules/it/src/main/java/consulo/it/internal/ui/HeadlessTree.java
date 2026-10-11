@@ -70,6 +70,16 @@ public class HeadlessTree<E> extends HeadlessComponentBase implements Tree<E> {
     }
 
     @Override
+    public List<TreeNode<E>> getSelectedNodes() {
+        return myController.getSelection();
+    }
+
+    @Override
+    public void setAllowMultipleSelect(boolean allow) {
+        myController.setAllowMultipleSelect(allow);
+    }
+
+    @Override
     public CompletableFuture<?> expand(TreeNode<E> node, int depth) {
         return myController.expand(node, depth);
     }

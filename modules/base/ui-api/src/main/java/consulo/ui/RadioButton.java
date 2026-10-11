@@ -36,7 +36,7 @@ import org.jspecify.annotations.Nullable;
  * @author VISTALL
  * @since 2016-06-14
  */
-public interface RadioButton extends ValueComponent<Boolean>, HasFocus {
+public interface RadioButton extends ValueComponent<Boolean>, HasFocus, HasSearchHighlight {
     /**
      * A button which belongs to nothing. Whether it is chosen, and what that means, is the caller's to keep - see
      * {@link RadioGroup} for the case where the platform should keep it instead.

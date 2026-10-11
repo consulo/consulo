@@ -28,6 +28,7 @@ import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.LabeledComponent;
 import consulo.ui.ex.awt.OptionGroup;
 import consulo.ui.ex.awt.TextFieldWithBrowseButton;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 
 import javax.swing.*;
 import java.awt.event.ActionListener;
@@ -119,7 +120,7 @@ public class ExportToHTMLDialog extends DialogWrapper {
     optionGroup.add(myCbLineNumbers);
 
     for (UnnamedConfigurable printOption : myExtensions) {
-      optionGroup.add(printOption.createComponent());
+      optionGroup.add((JComponent) TargetAWT.to(printOption.createUIComponent(getDisposable())));
     }
 
     myCbOpenInBrowser = new JCheckBox(CodeEditorBundle.message("export.to.html.open.generated.html.checkbox"));

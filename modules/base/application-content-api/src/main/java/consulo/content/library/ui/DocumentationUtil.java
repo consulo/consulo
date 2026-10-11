@@ -15,28 +15,44 @@
  */
 package consulo.content.library.ui;
 
-import consulo.application.Application;
-import consulo.content.internal.ContentInternalHelper;
+import consulo.localize.LocalizeValue;
+import consulo.project.localize.ProjectLocalize;
+import consulo.ui.Component;
+import consulo.ui.InputBoxBuilder;
+import consulo.ui.InputProblem;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author MYakovlev
  * @since 2002-10-29
  */
 public class DocumentationUtil {
-  public static @Nullable VirtualFile showSpecifyJavadocUrlDialog(JComponent parent) {
-    return showSpecifyJavadocUrlDialog(parent, "");
+  @RequiredUIAccess
+  public static CompletableFuture<@Nullable VirtualFile> showSpecifyJavadocUrlDialogAsync(@Nullable Component parent, String initialValue) {
+    return InputBoxBuilder.text()
+      .title(ProjectLocalize.sdkConfigureJavadocUrlTitle())
+      .text(ProjectLocalize.sdkConfigureJavadocUrlPrompt())
+      .asQuestion()
+      .value(initialValue)
+      .validator(DocumentationUtil::validateUrl)
+      .showAsync(parent)
+      .thenApply(url -> url == null ? null : VirtualFileManager.getInstance().findFileByUrl(url));
   }
 
-  public static @Nullable VirtualFile showSpecifyJavadocUrlDialog(JComponent parent, String initialValue) {
-    String url = Application.get().getInstance(ContentInternalHelper.class).showSpecifyJavadocUrlDialog(parent, initialValue);
-    if (url == null) {
+  private static @Nullable InputProblem validateUrl(String url) {
+    try {
+      URI.create(url).toURL();
       return null;
     }
-    return VirtualFileManager.getInstance().findFileByUrl(url);
+    catch (IllegalArgumentException | MalformedURLException e) {
+      return InputProblem.error(LocalizeValue.ofNullable(e.getMessage()));
+    }
   }
 }

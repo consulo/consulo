@@ -15,31 +15,37 @@
  */
 package consulo.compiler.artifact.element;
 
-import consulo.ui.ex.InputValidator;
+import consulo.compiler.localize.CompilerLocalize;
+import consulo.ui.InputProblem;
+import consulo.ui.InputValidator;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.io.FileUtil;
 import consulo.util.io.PathUtil;
 import consulo.util.lang.StringUtil;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
 /**
  * @author nik
  */
-public class FilePathValidator implements InputValidator {
-  public boolean checkInput(String inputString) {
-    List<String> fileNames = StringUtil.split(FileUtil.toSystemIndependentName(inputString), "/");
-    if (fileNames.isEmpty()) {
-      return false;
+public class FilePathValidator implements InputValidator<String> {
+    public static boolean isValidPath(String path) {
+        List<String> fileNames = StringUtil.split(FileUtil.toSystemIndependentName(path), "/");
+        if (fileNames.isEmpty()) {
+            return false;
+        }
+        for (String fileName : fileNames) {
+            if (!PathUtil.isValidFileName(fileName)) {
+                return false;
+            }
+        }
+        return true;
     }
-    for (String fileName : fileNames) {
-      if (!PathUtil.isValidFileName(fileName)) {
-        return false;
-      }
-    }
-    return true;
-  }
 
-  public boolean canClose(String inputString) {
-    return checkInput(inputString);
-  }
+    @RequiredUIAccess
+    @Override
+    public @Nullable InputProblem validate(String value) {
+        return isValidPath(value) ? null : InputProblem.error(CompilerLocalize.dialogMessageInvalidFilePath());
+    }
 }

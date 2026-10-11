@@ -16,8 +16,8 @@
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.actions;
 
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.ArtifactEditorEx;
+import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.LayoutElementInfo;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.LayoutTreeSelection;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.nodes.PackagingElementNode;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.localize.ProjectLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -39,11 +39,11 @@ public class RemovePackagingElementAction extends LayoutTreeActionBase {
     @Override
     protected boolean isEnabled() {
         LayoutTreeSelection selection = myArtifactEditor.getLayoutTreeComponent().getSelection();
-        if (selection.getElements().isEmpty() || myArtifactEditor.getLayoutTreeComponent().isEditing()) {
+        if (selection.getElements().isEmpty()) {
             return false;
         }
-        for (PackagingElementNode<?> node : selection.getNodes()) {
-            if (node.getParentNode() == null) {
+        for (LayoutElementInfo node : selection.getNodes()) {
+            if (node.isRoot()) {
                 return false;
             }
         }

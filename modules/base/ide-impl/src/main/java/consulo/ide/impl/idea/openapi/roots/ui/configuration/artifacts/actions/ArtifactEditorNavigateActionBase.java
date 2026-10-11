@@ -15,24 +15,20 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.actions;
 
+import consulo.compiler.artifact.ui.TreeNodePresentation;
 import consulo.project.localize.ProjectLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.CommonShortcuts;
-import consulo.ui.ex.action.LegacyDumbAwareAction;
-import consulo.compiler.artifact.ui.TreeNodePresentation;
-
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
+import consulo.ui.ex.action.DumbAwareAction;
 import org.jspecify.annotations.Nullable;
-
-import javax.swing.*;
 
 /**
  * @author nik
  */
-public abstract class ArtifactEditorNavigateActionBase extends LegacyDumbAwareAction {
-    public ArtifactEditorNavigateActionBase(JComponent contextComponent) {
+public abstract class ArtifactEditorNavigateActionBase extends DumbAwareAction implements AnActionWithSyncUpdate {
+    protected ArtifactEditorNavigateActionBase() {
         super(ProjectLocalize.actionNameFacetNavigate());
-        registerCustomShortcutSet(CommonShortcuts.getEditSource(), contextComponent);
     }
 
     @Override

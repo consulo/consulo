@@ -19,6 +19,7 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import consulo.localize.LocalizeValue;
@@ -58,11 +59,9 @@ public abstract class WebGridColumnBase<Row, Item, Value> {
 
     protected abstract @Nullable TableItemEditor<Item, Value> getEditor();
 
-    protected abstract void decorateCell(Component cell, Row row, @Nullable Item item);
+    protected abstract void decorateCell(Component cell, Row row, @Nullable Item item, @Nullable ColorValue background);
 
-    protected Component wrapCell(Component content) {
-        return content;
-    }
+    protected abstract Component wrapCell(Component content);
 
     protected @Nullable ColorValue rowBackground(Row row, Item item) {
         return null;
@@ -74,7 +73,7 @@ public abstract class WebGridColumnBase<Row, Item, Value> {
     private Component renderCell(Row row) {
         Item item = itemOf(row);
         if (item == null) {
-            return decorated(wrapCell(new Span()), row, null);
+            return decorated(wrapCell(new Span()), row, null, null);
         }
 
         TableItemEditor<Item, Value> editor = getEditor();
@@ -84,10 +83,21 @@ public abstract class WebGridColumnBase<Row, Item, Value> {
 
             Component cell = wrapCell(cellEditor.getVaadinComponent());
             ComponentUtil.setData(cell, WebGridCellEditor.class, cellEditor);
-            return decorated(cell, row, item);
+            return decorated(cell, row, item, unselectedRowBackground(row, item));
         }
 
-        return decorated(wrapCell(renderValue(row, item, valueOf(row, item))), row, item);
+        RenderItem<Value> renderItem = RenderItem.of(valueOf(row, item), isSelected(row));
+
+        ComponentItemRender<Value> componentRender = getComponentRender();
+        if (componentRender != null) {
+            Component content = ((ToVaadinComponentWrapper) componentRender.render(renderItem)).toVaadinComponent();
+            return decorated(wrapCell(content), row, item, unselectedRowBackground(row, item));
+        }
+
+        WebItemPresentationImpl presentation = new WebItemPresentationImpl();
+        presentation.withBackgroundColor(unselectedRowBackground(row, item));
+        getRender().render(presentation, renderItem, item);
+        return decorated(wrapCell(presentation.toComponent()), row, item, presentation.getBackgroundColor());
     }
 
     @SuppressWarnings("unchecked")
@@ -99,29 +109,30 @@ public abstract class WebGridColumnBase<Row, Item, Value> {
         }
 
         cellEditor.showValue(valueOf(row, item));
-        return decorated(cell, row, item);
+        return decorated(cell, row, item, unselectedRowBackground(row, item));
     }
 
-    private Component decorated(Component cell, Row row, @Nullable Item item) {
-        decorateCell(cell, row, item);
+    private @Nullable ColorValue unselectedRowBackground(Row row, Item item) {
+        return isSelected(row) ? null : rowBackground(row, item);
+    }
+
+    private Component decorated(Component cell, Row row, @Nullable Item item, @Nullable ColorValue background) {
+        decorateCell(cell, row, item, background);
         return cell;
     }
 
-    private Component renderValue(Row row, Item item, @Nullable Value value) {
-        RenderItem<Value> renderItem = RenderItem.of(value, isSelected(row));
+    protected static Component wrapCell(Component content, String className) {
+        Div cell = new Div(content);
+        cell.addClassName(className);
+        return cell;
+    }
 
-        ComponentItemRender<Value> componentRender = getComponentRender();
-        if (componentRender != null) {
-            return ((ToVaadinComponentWrapper) componentRender.render(renderItem)).toVaadinComponent();
-        }
-
-        WebItemPresentationImpl presentation = new WebItemPresentationImpl();
-        if (!renderItem.isSelected()) {
-            presentation.withBackgroundColor(rowBackground(row, item));
-        }
-
-        getRender().render(presentation, renderItem, item);
-        return presentation.toComponent();
+    protected static String justifyContent(HorizontalAlignment alignment) {
+        return switch (alignment) {
+            case LEFT -> "flex-start";
+            case CENTER -> "center";
+            case RIGHT -> "flex-end";
+        };
     }
 
     protected void applyHeader(LocalizeValue header) {

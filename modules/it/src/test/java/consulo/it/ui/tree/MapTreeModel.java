@@ -16,6 +16,7 @@
 package consulo.it.ui.tree;
 
 import consulo.component.ProcessCanceledException;
+import consulo.localize.LocalizeValue;
 import consulo.ui.Tree;
 import consulo.ui.TreeModel;
 import consulo.ui.TreeNode;
@@ -42,12 +43,18 @@ final class MapTreeModel implements TreeModel<String> {
     private final Map<String, AtomicInteger> myCancellations = new ConcurrentHashMap<>();
     private final Set<String> myPrebuilt = ConcurrentHashMap.newKeySet();
     private final Set<Boolean> myRenderedOnUIThread = ConcurrentHashMap.newKeySet();
+    private final Map<String, String> myTooltips = new ConcurrentHashMap<>();
 
     private volatile @Nullable Comparator<TreeNode<String>> myComparator;
     private volatile boolean myDoubleClickToggles = true;
 
     MapTreeModel put(String parent, String... children) {
         myChildren.put(parent, List.of(children));
+        return this;
+    }
+
+    MapTreeModel tooltip(String value, String tooltip) {
+        myTooltips.put(value, tooltip);
         return this;
     }
 
@@ -96,6 +103,11 @@ final class MapTreeModel implements TreeModel<String> {
             node.setRenderer((value, presentation) -> {
                 myRenderedOnUIThread.add(UIAccess.isUIThread());
                 presentation.append(value);
+
+                String tooltip = myTooltips.get(value);
+                if (tooltip != null) {
+                    presentation.withTooltip(LocalizeValue.of(tooltip));
+                }
             });
         }
     }

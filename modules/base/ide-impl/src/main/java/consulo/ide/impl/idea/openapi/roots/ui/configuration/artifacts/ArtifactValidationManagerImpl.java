@@ -15,89 +15,63 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts;
 
-import consulo.disposer.Disposable;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.nodes.PackagingElementNode;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.ConfigurationErrorQuickFix;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemDescription;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemsHolderImpl;
-import consulo.disposer.Disposer;
-import consulo.util.collection.MultiValuesMap;
-import consulo.compiler.artifact.element.PackagingElement;
-
+import consulo.compiler.artifact.Artifact;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
-import javax.swing.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
+
 import java.util.List;
 
 /**
-* @author nik
-*/
-public class ArtifactValidationManagerImpl implements Disposable {
-  private final ArtifactErrorPanel myErrorPanel;
-  private final ArtifactEditorImpl myArtifactEditor;
-  private final MultiValuesMap<PackagingElementNode<?>, ArtifactProblemDescription> myProblemsForNodes = new MultiValuesMap<PackagingElementNode<?>, ArtifactProblemDescription>(true);
-  private final List<ArtifactProblemDescription> myProblems = new ArrayList<ArtifactProblemDescription>();
+ * @author nik
+ */
+public class ArtifactValidationManagerImpl {
+    private final ArtifactEditorImpl myArtifactEditor;
+    private final ArtifactErrorPanel myErrorPanel;
 
-  ArtifactValidationManagerImpl(ArtifactEditorImpl artifactEditor) {
-    Disposer.register(artifactEditor, this);
-    myArtifactEditor = artifactEditor;
-    myErrorPanel = new ArtifactErrorPanel(artifactEditor);
-  }
+    private boolean myValidationQueued;
 
-  @Override
-  public void dispose() {
-  }
-
-  public JComponent getMainErrorPanel() {
-    return myErrorPanel.getMainPanel();
-  }
-
-  public void onNodesAdded() {
-    for (ArtifactProblemDescription problem : myProblems) {
-      showProblemInTree(problem);
+    public ArtifactValidationManagerImpl(ArtifactEditorImpl artifactEditor) {
+        myArtifactEditor = artifactEditor;
+        myErrorPanel = new ArtifactErrorPanel(artifactEditor);
     }
-  }
 
-  public @Nullable Collection<ArtifactProblemDescription> getProblems(PackagingElementNode<?> node) {
-    return myProblemsForNodes.get(node);
-  }
+    public ArtifactErrorPanel getErrorPanel() {
+        return myErrorPanel;
+    }
 
-  public void updateProblems(@Nullable ProjectStructureProblemsHolderImpl holder) {
-    myErrorPanel.clearError();
-    myProblemsForNodes.clear();
-    myProblems.clear();
-    if (holder != null) {
-      List<ProjectStructureProblemDescription> problemDescriptions = holder.getProblemDescriptions();
-      if (problemDescriptions != null) {
-        for (ProjectStructureProblemDescription description : problemDescriptions) {
-          String message = description.getMessage(false);
-          List<? extends ConfigurationErrorQuickFix> quickFixes = Collections.emptyList();
-          if (description instanceof ArtifactProblemDescription) {
-            ArtifactProblemDescription artifactProblem = (ArtifactProblemDescription)description;
-            quickFixes = artifactProblem.getFixes();
-            if (artifactProblem.getPathToPlace() != null) {
-              myProblems.add(artifactProblem);
-              showProblemInTree(artifactProblem);
-            }
-          }
-          myErrorPanel.showError(message, quickFixes);
+    @RequiredUIAccess
+    public void queueValidation() {
+        if (myValidationQueued) {
+            return;
         }
-      }
-    }
-    myArtifactEditor.getLayoutTreeComponent().updateTreeNodesPresentation();
-  }
+        myValidationQueued = true;
 
-  private void showProblemInTree(ArtifactProblemDescription problem) {
-    LayoutTree layoutTree = myArtifactEditor.getLayoutTreeComponent().getLayoutTree();
-    PackagingElementNode<?> node = layoutTree.getRootPackagingNode();
-    List<PackagingElement<?>> pathToPlace = problem.getPathToPlace();
-    if (node != null && pathToPlace != null) {
-      List<PackagingElementNode<?>> nodes = node.getNodesByPath(pathToPlace.subList(1, pathToPlace.size()));
-      for (PackagingElementNode<?> elementNode : nodes) {
-        myProblemsForNodes.put(elementNode, problem);
-      }
+        UIAccess.current().give(() -> {
+            myValidationQueued = false;
+            if (!myArtifactEditor.isDisposed()) {
+                validate();
+            }
+        });
     }
-  }
+
+    @RequiredUIAccess
+    private void validate() {
+        Artifact artifact = myArtifactEditor.getArtifact();
+        ArtifactProblemsHolderImpl holder = new ArtifactProblemsHolderImpl(myArtifactEditor.getContext());
+        artifact.getArtifactType().checkRootElement(myArtifactEditor.getRootElement(), artifact, holder);
+
+        List<ArtifactProblem> problems = holder.getProblems();
+        myErrorPanel.showProblem(findMainProblem(problems));
+        myArtifactEditor.getLayoutTreeComponent().setProblems(problems);
+    }
+
+    private static @Nullable ArtifactProblem findMainProblem(List<ArtifactProblem> problems) {
+        for (ArtifactProblem problem : problems) {
+            if (problem.error()) {
+                return problem;
+            }
+        }
+        return problems.isEmpty() ? null : problems.get(0);
+    }
 }

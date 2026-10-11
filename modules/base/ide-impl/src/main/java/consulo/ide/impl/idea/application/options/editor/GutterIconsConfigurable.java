@@ -33,6 +33,7 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.ui.CheckBox;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.CheckBoxList;
 import consulo.ui.ex.awt.EmptyIcon;
@@ -77,7 +78,7 @@ public class GutterIconsConfigurable implements SearchableConfigurable, Configur
 
   @RequiredUIAccess
   @Override
-  public @Nullable JComponent createComponent(Disposable uiDisposable) {
+  public @Nullable Component createUIComponent(Disposable uiDisposable) {
     myShowGutterIconsJBCheckBox = CheckBox.create(ApplicationLocalize.checkboxShowGutterIcons());
 
     JPanel panel = new JPanel(new BorderLayout());
@@ -180,7 +181,7 @@ public class GutterIconsConfigurable implements SearchableConfigurable, Configur
 
     myList.setItems(myDescriptors, descr -> descr.getName().get());
     myShowGutterIconsJBCheckBox.addValueListener(e -> myList.setEnabled(myShowGutterIconsJBCheckBox.getValueOrError()));
-    return panel;
+    return TargetAWT.wrap(panel);
   }
 
   @RequiredUIAccess

@@ -18,9 +18,10 @@ package consulo.configurable;
 import consulo.annotation.DeprecationInfo;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
+import consulo.ui.Component;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import org.jspecify.annotations.Nullable;
-
-import javax.swing.*;
 
 @Deprecated
 @DeprecationInfo("Use SimpleConfigurable")
@@ -66,12 +67,13 @@ public abstract class IdeaConfigurableBase<UI extends IdeaConfigurableUi<S>, S> 
         }
     }
 
+    @RequiredUIAccess
     @Override
-    public final @Nullable JComponent createComponent(Disposable disposable) {
+    public final @Nullable Component createUIComponent(Disposable disposable) {
         if (ui == null) {
             ui = createUi();
         }
-        return ui.getComponent(disposable);
+        return TargetAWT.wrap(ui.getComponent(disposable));
     }
 
     protected abstract UI createUi();

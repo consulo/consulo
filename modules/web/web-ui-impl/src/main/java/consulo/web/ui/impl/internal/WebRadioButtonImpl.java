@@ -25,6 +25,7 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ValueComponentEvent;
 import consulo.ui.ex.internal.LocalizeValueWithMnemonic;
+import consulo.ui.internal.SearchHighlightUtil;
 import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
 import consulo.web.ui.impl.internal.base.VaadinComponentDelegate;
 import org.jspecify.annotations.Nullable;
@@ -39,6 +40,9 @@ public class WebRadioButtonImpl extends VaadinComponentDelegate<WebRadioButtonIm
     public class Vaadin extends Div implements FromVaadinComponentWrapper {
         private final Input myInput;
         private final NativeLabel myLabel;
+
+        private LocalizeValue myLabelText = LocalizeValue.empty();
+        private @Nullable String mySearchHighlight;
 
         public Vaadin() {
             myInput = new Input();
@@ -58,7 +62,23 @@ public class WebRadioButtonImpl extends VaadinComponentDelegate<WebRadioButtonIm
         }
 
         public void setText(LocalizeValue text) {
-            myLabel.setText(LocalizeValueWithMnemonic.get(text).getText());
+            myLabelText = text;
+            updateText();
+        }
+
+        public void setSearchHighlight(@Nullable String query) {
+            mySearchHighlight = query;
+            updateText();
+        }
+
+        private void updateText() {
+            String text = LocalizeValueWithMnemonic.get(myLabelText).getText();
+            if (SearchHighlightUtil.matches(text, mySearchHighlight)) {
+                WebSearchHighlight.setText(myLabel.getElement(), text, mySearchHighlight);
+            }
+            else {
+                myLabel.setText(text);
+            }
         }
 
         public Input getInput() {
@@ -135,5 +155,16 @@ public class WebRadioButtonImpl extends VaadinComponentDelegate<WebRadioButtonIm
         myText = text;
 
         getVaadinComponent().setText(text);
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void setSearchHighlight(@Nullable String query) {
+        getVaadinComponent().setSearchHighlight(SearchHighlightUtil.normalizeQuery(query));
+    }
+
+    @Override
+    public @Nullable String getSearchHighlight() {
+        return getVaadinComponent().mySearchHighlight;
     }
 }

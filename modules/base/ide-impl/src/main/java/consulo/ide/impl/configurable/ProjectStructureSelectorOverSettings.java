@@ -16,7 +16,6 @@
 package consulo.ide.impl.configurable;
 
 import consulo.compiler.artifact.Artifact;
-import consulo.configurable.MasterDetailsConfigurable;
 import consulo.configurable.SearchableConfigurable;
 import consulo.configurable.StandardConfigurableIds;
 import consulo.configurable.UnnamedConfigurable;
@@ -27,7 +26,6 @@ import consulo.ide.impl.idea.openapi.roots.ui.configuration.ClasspathEditor;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.ModuleEditor;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.ProjectConfigurableGroup;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.ArtifactsStructureConfigurable;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.ModuleConfigurable;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.ModuleStructureConfigurable;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.ProjectLibrariesConfigurable;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.SdkListConfigurable;
@@ -39,7 +37,6 @@ import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.project.localize.ProjectLocalize;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.MasterDetailsComponent;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import org.jspecify.annotations.Nullable;
@@ -61,8 +58,7 @@ public class ProjectStructureSelectorOverSettings implements ProjectStructureSel
     @RequiredUIAccess
     public CompletableFuture<?> select(@Nullable Artifact artifact, boolean requestFocus) {
         return selectAsync(ArtifactsStructureConfigurable.ID, ArtifactsStructureConfigurable.class, (artifactsStructureConfigurable, runnable) -> {
-            artifactsStructureConfigurable.selectNodeInTree(artifact);
-            runnable.run();
+            artifactsStructureConfigurable.selectArtifact(artifact).whenComplete((value, error) -> runnable.run());
         });
     }
 
@@ -70,7 +66,7 @@ public class ProjectStructureSelectorOverSettings implements ProjectStructureSel
     @RequiredUIAccess
     public CompletableFuture<?> select(Sdk sdk, boolean requestFocus) {
         return selectAsync(SdkListConfigurable.ID, SdkListConfigurable.class, (sdkListConfigurable, runnable) -> {
-            sdkListConfigurable.selectNodeInTree(sdk);
+            sdkListConfigurable.selectSdk(sdk);
             runnable.run();
         });
     }
@@ -84,17 +80,10 @@ public class ProjectStructureSelectorOverSettings implements ProjectStructureSel
                 runnable.run();
                 return;
             }
-            moduleStructureConfigurable.selectNodeInTree(moduleToSelect).whenComplete((node, error) -> {
-                if (error != null) {
+            moduleStructureConfigurable.selectModule(moduleToSelect).whenComplete((moduleEditor, error) -> {
+                if (error != null || moduleEditor == null) {
                     return;
                 }
-
-                MasterDetailsConfigurable configurable = ((MasterDetailsComponent.MyNode) node).getConfigurable();
-                if (configurable == null) {
-                    return;
-                }
-
-                ModuleEditor moduleEditor = ((ModuleConfigurable) configurable).getModuleEditor();
 
                 if (tabId == null) {
                     moduleEditor.selectEditor(ProjectLocalize.modulePathsTitle().get());
@@ -122,12 +111,10 @@ public class ProjectStructureSelectorOverSettings implements ProjectStructureSel
     @RequiredUIAccess
     public CompletableFuture<?> selectOrderEntry(Module module, @Nullable OrderEntry orderEntry) {
         return selectAsync(ModuleStructureConfigurable.ID, ModuleStructureConfigurable.class, (moduleStructureConfigurable, runnable) -> {
-            moduleStructureConfigurable.selectNodeInTree(module).whenComplete((node, error) -> {
-                if (error != null) {
+            moduleStructureConfigurable.selectModule(module).whenComplete((moduleEditor, error) -> {
+                if (error != null || moduleEditor == null) {
                     return;
                 }
-
-                ModuleEditor moduleEditor = ((ModuleConfigurable) ((MasterDetailsComponent.MyNode) node).getConfigurable()).getModuleEditor();
 
                 moduleEditor.selectEditor(ProjectLocalize.moduleDependenciesTitle().get());
 
@@ -147,8 +134,7 @@ public class ProjectStructureSelectorOverSettings implements ProjectStructureSel
     @Override
     public CompletableFuture<?> selectProjectOrGlobalLibrary(Library library, boolean requestFocus) {
         return selectAsync(ProjectLibrariesConfigurable.ID, ProjectLibrariesConfigurable.class, (projectLibrariesConfigurable, runnable) -> {
-            projectLibrariesConfigurable.selectNodeInTree(library);
-            runnable.run();
+            projectLibrariesConfigurable.selectLibrary(library).whenComplete((value, error) -> runnable.run());
         });
     }
 

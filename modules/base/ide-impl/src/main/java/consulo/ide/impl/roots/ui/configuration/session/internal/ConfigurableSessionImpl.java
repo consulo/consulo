@@ -45,15 +45,12 @@ public final class ConfigurableSessionImpl implements Disposable, ConfigurableSe
     private final Project myProject;
     private final Supplier<Configurable[]> myConfigurables;
 
+    @RequiredUIAccess
     public ConfigurableSessionImpl(Project project, Supplier<Configurable[]> configurables) {
         myProject = project;
         myConfigurables = configurables;
 
-        if (ConfigurableSessionHolder.ourCurrentSession != null) {
-            throw new IllegalArgumentException("already initialized");
-        }
-
-        ConfigurableSessionHolder.ourCurrentSession = this;
+        ConfigurableSessionHolder.register(this);
     }
 
     @Override
@@ -68,7 +65,7 @@ public final class ConfigurableSessionImpl implements Disposable, ConfigurableSe
 
     @RequiredUIAccess
     public void drop() {
-        ConfigurableSessionHolder.ourCurrentSession = null;
+        ConfigurableSessionHolder.unregister(this);
 
         disposeWithTree();
     }
@@ -96,7 +93,19 @@ public final class ConfigurableSessionImpl implements Disposable, ConfigurableSe
     @Override
     @SuppressWarnings("unchecked")
     public <T> T get(Class<T> key, Function<Project, T> factory) {
-        return (T) myInstances.computeIfAbsent(key, it -> factory.apply(myProject));
+        Object instance = myInstances.get(key);
+        if (instance == null) {
+            instance = factory.apply(myProject);
+
+            Object previous = myInstances.putIfAbsent(key, instance);
+            if (previous != null) {
+                if (instance instanceof Disposable disposable) {
+                    disposable.disposeWithTree();
+                }
+                instance = previous;
+            }
+        }
+        return (T) instance;
     }
 
 
@@ -139,5 +148,13 @@ public final class ConfigurableSessionImpl implements Disposable, ConfigurableSe
         }
 
         myStateInstances.clear();
+
+        for (Object instance : myInstances.values()) {
+            if (instance instanceof Disposable disposable) {
+                disposable.disposeWithTree();
+            }
+        }
+
+        myInstances.clear();
     }
 }

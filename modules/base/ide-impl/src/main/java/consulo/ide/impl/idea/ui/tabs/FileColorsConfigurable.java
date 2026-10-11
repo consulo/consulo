@@ -23,11 +23,11 @@ import consulo.disposer.Disposer;
 import consulo.language.editor.FileColorManager;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
-
-import javax.swing.*;
 
 /**
  * @author spleaner
@@ -55,14 +55,14 @@ public class FileColorsConfigurable implements SearchableConfigurable, Configura
 
     @RequiredUIAccess
     @Override
-    public JComponent createComponent(Disposable uiDisposable) {
+    public Component createUIComponent(Disposable uiDisposable) {
         if (myPanel == null) {
             FileColorsConfigurablePanel panel = new FileColorsConfigurablePanel(myProject, (FileColorManagerImpl) FileColorManager.getInstance(myProject));
             myPanel = panel;
             Disposer.register(uiDisposable, panel);
         }
 
-        return myPanel;
+        return TargetAWT.wrap(myPanel);
     }
 
     @RequiredUIAccess

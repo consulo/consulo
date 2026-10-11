@@ -16,74 +16,92 @@
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.classpath;
 
 import consulo.content.base.BinariesOrderRootType;
-import consulo.content.internal.LibraryEx;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;
 import consulo.content.library.LibraryTablePresentation;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.libraries.LibraryEditingUtil;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.libraries.LibraryPresentationManager;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.libraryEditor.EditExistingLibraryDialog;
-import consulo.ide.setting.module.*;
+import consulo.ide.impl.idea.openapi.roots.ui.configuration.libraryEditor.EditExistingLibraryDialogDescriptor;
+import consulo.ide.setting.module.ClasspathPanel;
+import consulo.ide.setting.module.ClasspathTableItem;
+import consulo.ide.setting.module.LibrariesConfigurator;
+import consulo.ide.setting.module.LibraryTableModifiableModelProvider;
+import consulo.ide.setting.module.ModulesConfigurator;
+import consulo.localize.LocalizeValue;
 import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.impl.internal.layer.library.LibraryTableImplUtil;
 import consulo.project.Project;
 import consulo.project.localize.ProjectLocalize;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.xml.XmlStringUtil;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
-/**
- * @author nik
- */
 public class LibraryClasspathTableItem<T extends LibraryOrderEntry> extends ClasspathTableItem<T> {
-  
-  private final Project myProject;
-  
-  private final LibrariesConfigurator myLibrariesConfigurator;
+    private final Project myProject;
+    private final LibrariesConfigurator myLibrariesConfigurator;
 
-  public LibraryClasspathTableItem(T orderEntry, Project project, ModulesConfigurator modulesConfigurator, LibrariesConfigurator librariesConfigurator) {
-    super(orderEntry);
-    myProject = project;
-    myLibrariesConfigurator = librariesConfigurator;
-  }
-
-  @Override
-  public boolean isEditable() {
-    return myEntry.isValid();
-  }
-
-  @Override
-  public void doEdit(ClasspathPanel panel) {
-    Library library = getEntry().getLibrary();
-    if (library == null) {
-      return;
-    }
-    LibraryTable table = library.getTable();
-    String tableLevel = table != null ? table.getTableLevel() : LibraryTableImplUtil.MODULE_LEVEL;
-    LibraryTablePresentation presentation = LibraryEditingUtil.getLibraryTablePresentation(myProject, tableLevel);
-    LibraryTableModifiableModelProvider provider = panel.getModifiableModelProvider(tableLevel);
-    EditExistingLibraryDialog dialog = EditExistingLibraryDialog.createDialog(panel.getComponent(), provider, library, myProject, presentation, myLibrariesConfigurator);
-    dialog.setContextModule(getEntry().getOwnerModule());
-    dialog.show();
-  }
-
-  @Override
-  public String getTooltipText() {
-    Library library = myEntry.getLibrary();
-    if (library == null) return null;
-
-    String name = library.getName();
-    if (name != null) {
-      List<String> invalidUrls = library.getInvalidRootUrls(BinariesOrderRootType.ID);
-      if (!invalidUrls.isEmpty()) {
-        return ProjectLocalize.projectRootsTooltipLibraryHasBrokenPaths(name, invalidUrls.size()).get();
-      }
+    public LibraryClasspathTableItem(
+        T orderEntry,
+        Project project,
+        ModulesConfigurator modulesConfigurator,
+        LibrariesConfigurator librariesConfigurator
+    ) {
+        super(orderEntry);
+        myProject = project;
+        myLibrariesConfigurator = librariesConfigurator;
     }
 
-    List<String> descriptions = LibraryPresentationManager.getInstance().getDescriptions(library, myLibrariesConfigurator);
-    if (descriptions.isEmpty()) return null;
+    @Override
+    public boolean isEditable() {
+        return myEntry.isValid();
+    }
 
-    return XmlStringUtil.wrapInHtml(StringUtil.join(descriptions, "<br>"));
-  }
+    @Override
+    @RequiredUIAccess
+    public CompletableFuture<?> doEdit(ClasspathPanel panel) {
+        Library library = getEntry().getLibrary();
+        if (library == null) {
+            return CompletableFuture.completedFuture(null);
+        }
+
+        LibraryTable table = library.getTable();
+        String tableLevel = table != null ? table.getTableLevel() : LibraryTableImplUtil.MODULE_LEVEL;
+        LibraryTablePresentation presentation = LibraryEditingUtil.getLibraryTablePresentation(myProject, tableLevel);
+        LibraryTableModifiableModelProvider provider = panel.getModifiableModelProvider(tableLevel);
+        return EditExistingLibraryDialogDescriptor.showAsync(
+            panel.getUIComponent(),
+            provider,
+            library,
+            myProject,
+            presentation,
+            myLibrariesConfigurator,
+            getEntry().getOwnerModule()
+        );
+    }
+
+    @Override
+    public LocalizeValue getTooltipText() {
+        Library library = myEntry.getLibrary();
+        if (library == null) {
+            return LocalizeValue.empty();
+        }
+
+        String name = library.getName();
+        if (name != null) {
+            List<String> invalidUrls = library.getInvalidRootUrls(BinariesOrderRootType.ID);
+            if (!invalidUrls.isEmpty()) {
+                return ProjectLocalize.projectRootsTooltipLibraryHasBrokenPaths(name, invalidUrls.size());
+            }
+        }
+
+        List<String> descriptions = LibraryPresentationManager.getInstance().getDescriptions(library, myLibrariesConfigurator);
+        if (descriptions.isEmpty()) {
+            return LocalizeValue.empty();
+        }
+
+        return LocalizeValue.of(XmlStringUtil.wrapInHtml(StringUtil.join(descriptions, "<br>")));
+    }
 }

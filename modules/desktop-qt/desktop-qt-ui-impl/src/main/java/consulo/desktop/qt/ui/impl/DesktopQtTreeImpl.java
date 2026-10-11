@@ -15,10 +15,14 @@
  */
 package consulo.desktop.qt.ui.impl;
 
+import consulo.desktop.qt.ui.impl.clipboard.DesktopQtDragAndDropSupport;
+import consulo.desktop.qt.ui.impl.clipboard.DesktopQtDrop;
+import consulo.desktop.qt.ui.impl.clipboard.DesktopQtTransferTarget;
 import consulo.desktop.qt.ui.impl.image.DesktopQtIconOwner;
 import consulo.desktop.qt.ui.impl.image.DesktopQtImage;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.ui.DragAndDropTransferHandler;
 import consulo.ui.Length;
 import consulo.ui.Point2D;
 import consulo.ui.PopupOwner;
@@ -29,6 +33,7 @@ import consulo.ui.TreeExecutor;
 import consulo.ui.TreeModel;
 import consulo.ui.TreeNode;
 import consulo.ui.TreeStyle;
+import consulo.ui.impl.font.FontSizeLadder;
 import consulo.ui.UIAccess;
 import consulo.ui.event.details.InputDetails;
 import consulo.ui.ex.localize.UILocalize;
@@ -38,11 +43,19 @@ import consulo.ui.impl.tree.TreeWidget;
 import io.qt.core.QPoint;
 import io.qt.core.QRect;
 import io.qt.core.QSize;
+import io.qt.core.QTimer;
 import io.qt.core.Qt;
+import io.qt.gui.QDragEnterEvent;
+import io.qt.gui.QDragLeaveEvent;
+import io.qt.gui.QDragMoveEvent;
+import io.qt.gui.QDropEvent;
 import io.qt.gui.QFont;
+import io.qt.gui.QKeyEvent;
 import io.qt.gui.QMouseEvent;
+import io.qt.gui.QPaintEvent;
 import io.qt.widgets.QAbstractItemView;
 import io.qt.widgets.QApplication;
+import io.qt.widgets.QFrame;
 import io.qt.widgets.QTreeWidget;
 import io.qt.widgets.QTreeWidgetItem;
 import io.qt.widgets.QWidget;
@@ -55,14 +68,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 /**
  * @author VISTALL
  * @since 2026-08-16
  */
-public class DesktopQtTreeImpl<E> extends QtComponentDelegate<QTreeWidget> implements Tree<E>, PopupOwner, DesktopQtIconOwner {
+public class DesktopQtTreeImpl<E> extends QtComponentDelegate<QTreeWidget>
+    implements Tree<E>, PopupOwner, DesktopQtIconOwner, DesktopQtTransferTarget<TreeNode<E>> {
+    private static final int ourDropExpandDelay = 2000;
+    private static final float PIXELS_PER_POINT = 4f / 3f;
+
     private @Nullable TransferHandler<TreeNode<E>> myTransferHandler;
+    private final DesktopQtDragAndDropSupport<TreeNode<E>> myDragAndDrop = new DesktopQtDragAndDropSupport<>(this, this);
+    private @Nullable QTreeWidgetItem myDropExpandItem;
+    private int myDropExpandGeneration;
     private @Nullable Function<TreeNode<E>, String> mySpeedSearchConverter;
     private @Nullable Function<TreeNode<E>, Length> myItemHeightGetter;
 
@@ -75,6 +96,7 @@ public class DesktopQtTreeImpl<E> extends QtComponentDelegate<QTreeWidget> imple
     private final Map<TreeNodeImpl<E>, QTreeWidgetItem> myLoadingItems = new HashMap<>();
 
     private boolean mySyncing;
+    private boolean myAllowMultipleSelect;
 
     public DesktopQtTreeImpl(@Nullable E rootValue, TreeModel<E> model, TreeExecutor executor) {
         myController = new TreeController<>(this, rootValue, model, executor, new Binding());
@@ -91,14 +113,17 @@ public class DesktopQtTreeImpl<E> extends QtComponentDelegate<QTreeWidget> imple
      * the right button opens the context menu, and answering it with the action of a double click as well would
      * run that action every time the menu is asked for.
      */
-    private static class QtTree extends QTreeWidget {
-        private QtTree(QWidget parent) {
+    private class QtTree extends QTreeWidget {
+        private final DesktopQtDragAndDropSupport<?> myDragAndDrop;
+
+        private QtTree(QWidget parent, DesktopQtDragAndDropSupport<?> dragAndDrop) {
             super(parent);
+            myDragAndDrop = dragAndDrop;
         }
 
         @Override
         protected void mouseDoubleClickEvent(QMouseEvent event) {
-            if (event.button() != Qt.MouseButton.LeftButton) {
+            if (event.button() != Qt.MouseButton.LeftButton || isPressOnly(this, event)) {
                 // the second click of a pair arrives as a double click rather than as a press, so it has to be
                 // handled as the press it stands for - dropping it would swallow every other right click
                 mousePressEvent(event);
@@ -107,14 +132,67 @@ public class DesktopQtTreeImpl<E> extends QtComponentDelegate<QTreeWidget> imple
 
             super.mouseDoubleClickEvent(event);
         }
+
+        @Override
+        protected void keyPressEvent(QKeyEvent event) {
+            if (consumeKeyPress(this, event)) {
+                event.accept();
+                return;
+            }
+
+            super.keyPressEvent(event);
+        }
+
+        @Override
+        protected void startDrag(Qt.DropActions supportedActions) {
+            myDragAndDrop.startDrag(this);
+        }
+
+        @Override
+        protected void dragEnterEvent(QDragEnterEvent event) {
+            myDragAndDrop.dragEnter(this, event);
+        }
+
+        @Override
+        protected void dragMoveEvent(QDragMoveEvent event) {
+            myDragAndDrop.dragMove(this, event);
+            if (myDragAndDrop.shouldAutoScroll(this, event.position().toPoint())) {
+                startAutoScroll();
+            }
+        }
+
+        @Override
+        protected void dragLeaveEvent(QDragLeaveEvent event) {
+            stopAutoScroll();
+            myDragAndDrop.dragLeave(this);
+        }
+
+        @Override
+        protected void dropEvent(QDropEvent event) {
+            stopAutoScroll();
+            myDragAndDrop.drop(this, event);
+        }
+
+        @Override
+        protected void paintEvent(QPaintEvent event) {
+            super.paintEvent(event);
+            myDragAndDrop.paintIndicator(this);
+        }
+
+        @Override
+        protected void scrollContentsBy(int dx, int dy) {
+            super.scrollContentsBy(dx, dy);
+            myDragAndDrop.contentsScrolled(this);
+        }
     }
 
     @Override
     protected QTreeWidget createQt(QWidget parent) {
-        QTreeWidget tree = new QtTree(parent);
+        QTreeWidget tree = new QtTree(parent, myDragAndDrop);
         tree.setColumnCount(1);
         tree.setHeaderHidden(true);
-        tree.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection);
+        tree.setFrameShape(QFrame.Shape.NoFrame);
+        tree.setSelectionMode(selectionMode());
         tree.setItemDelegate(new DesktopQtTextItemDelegate(tree));
 
         // a view opens and closes the row of a double click by itself, and here that is the answer of the model -
@@ -129,9 +207,19 @@ public class DesktopQtTreeImpl<E> extends QtComponentDelegate<QTreeWidget> imple
         myNodes.clear();
         myItems.clear();
         myLoadingItems.clear();
+        myDropExpandItem = null;
+
+        myDragAndDrop.install(tree);
 
         tree.itemSelectionChanged.connect(() -> {
-            if (!mySyncing) {
+            if (mySyncing) {
+                return;
+            }
+
+            if (myAllowMultipleSelect) {
+                myController.onSelectionChanged(leadNode(tree), selectedNodes(tree), DesktopQtCurrentInput.current(tree));
+            }
+            else {
                 myController.onSelected(selectedNode(tree), DesktopQtCurrentInput.current(tree));
             }
         });
@@ -167,6 +255,26 @@ public class DesktopQtTreeImpl<E> extends QtComponentDelegate<QTreeWidget> imple
     private @Nullable TreeNodeImpl<E> selectedNode(QTreeWidget tree) {
         List<QTreeWidgetItem> selection = tree.selectedItems();
         return selection.size() == 1 ? myNodes.get(selection.get(0)) : null;
+    }
+
+    private @Nullable TreeNodeImpl<E> leadNode(QTreeWidget tree) {
+        QTreeWidgetItem current = tree.currentItem();
+        return current != null && current.isSelected() ? myNodes.get(current) : null;
+    }
+
+    private List<TreeNodeImpl<E>> selectedNodes(QTreeWidget tree) {
+        List<TreeNodeImpl<E>> nodes = new ArrayList<>();
+        for (QTreeWidgetItem item : tree.selectedItems()) {
+            TreeNodeImpl<E> node = myNodes.get(item);
+            if (node != null) {
+                nodes.add(node);
+            }
+        }
+        return nodes;
+    }
+
+    private QAbstractItemView.SelectionMode selectionMode() {
+        return myAllowMultipleSelect ? QAbstractItemView.SelectionMode.ExtendedSelection : QAbstractItemView.SelectionMode.SingleSelection;
     }
 
     private class Binding implements TreeWidget<E> {
@@ -394,6 +502,15 @@ public class DesktopQtTreeImpl<E> extends QtComponentDelegate<QTreeWidget> imple
         if (tree != null && item != null && !item.isSelected()) {
             tree.setCurrentItem(item);
         }
+
+        if (tree != null && myAllowMultipleSelect) {
+            for (TreeNode<E> node : myController.getSelection()) {
+                QTreeWidgetItem selectedItem = node instanceof TreeNodeImpl<E> impl ? liveItem(impl) : null;
+                if (selectedItem != null && !selectedItem.isSelected()) {
+                    selectedItem.setSelected(true);
+                }
+            }
+        }
     }
 
     protected void render(TreeNodeImpl<E> node, QTreeWidgetItem item) {
@@ -419,6 +536,27 @@ public class DesktopQtTreeImpl<E> extends QtComponentDelegate<QTreeWidget> imple
         }
     }
 
+    protected boolean isPressOnly(QTreeWidget tree, QMouseEvent event) {
+        return false;
+    }
+
+    protected boolean consumeKeyPress(QTreeWidget tree, QKeyEvent event) {
+        return false;
+    }
+
+    protected final @Nullable TreeNodeImpl<E> nodeOf(QTreeWidgetItem item) {
+        return myNodes.get(item);
+    }
+
+    protected final void forEachItem(BiConsumer<TreeNodeImpl<E>, QTreeWidgetItem> action) {
+        for (Map.Entry<TreeNodeImpl<E>, QTreeWidgetItem> entry : List.copyOf(myItems.entrySet())) {
+            QTreeWidgetItem item = entry.getValue();
+            if (!item.isDisposed()) {
+                action.accept(entry.getKey(), item);
+            }
+        }
+    }
+
     protected final boolean isSyncing() {
         return mySyncing;
     }
@@ -437,6 +575,23 @@ public class DesktopQtTreeImpl<E> extends QtComponentDelegate<QTreeWidget> imple
     @Override
     public @Nullable TreeNode<E> getSelectedNode() {
         return myController.getSelected();
+    }
+
+    @Override
+    public List<TreeNode<E>> getSelectedNodes() {
+        return myController.getSelection();
+    }
+
+    @Override
+    public void setAllowMultipleSelect(boolean allow) {
+        myAllowMultipleSelect = allow;
+
+        QTreeWidget tree = myComponent;
+        if (tree != null && !tree.isDisposed()) {
+            tree.setSelectionMode(selectionMode());
+        }
+
+        myController.setAllowMultipleSelect(allow);
     }
 
     @Override
@@ -558,20 +713,20 @@ public class DesktopQtTreeImpl<E> extends QtComponentDelegate<QTreeWidget> imple
                 widget.setAutoFillBackground(false);
                 ((QTreeWidget) widget).viewport().setAutoFillBackground(false);
             });
-            case FONT_XX_SMALL -> scaleFont(0.6f);
-            case FONT_X_SMALL -> scaleFont(0.75f);
-            case FONT_SMALL -> scaleFont(0.9f);
-            case FONT_MEDIUM -> scaleFont(1.0f);
-            case FONT_LARGE -> scaleFont(1.2f);
-            case FONT_X_LARGE -> scaleFont(1.5f);
-            case FONT_XX_LARGE -> scaleFont(2.0f);
+            default -> applyFontSize(FontSizeLadder.pointDelta(style));
         }
     }
 
-    private void scaleFont(float scale) {
+    private void applyFontSize(int pointDelta) {
         whenBound(widget -> {
+            QFont base = QApplication.font();
             QFont font = new QFont(widget.font());
-            font.setPointSizeF(Math.max(1.0, QApplication.font().pointSizeF() * scale));
+            if (base.pointSizeF() > 0) {
+                font.setPointSizeF(Math.max(1.0, base.pointSizeF() + pointDelta));
+            }
+            else {
+                font.setPixelSize(Math.max(1, base.pixelSize() + Math.round(pointDelta * PIXELS_PER_POINT)));
+            }
             widget.setFont(font);
         });
     }
@@ -579,11 +734,89 @@ public class DesktopQtTreeImpl<E> extends QtComponentDelegate<QTreeWidget> imple
     @Override
     public void setTransferHandler(@Nullable TransferHandler<TreeNode<E>> handler) {
         myTransferHandler = handler;
+        myDragAndDrop.setHandler(handler, myComponent);
     }
 
     @Override
     public @Nullable TransferHandler<TreeNode<E>> getTransferHandler() {
         return myTransferHandler;
+    }
+
+    @Override
+    public List<TreeNode<E>> getTransferItems() {
+        QTreeWidget tree = myComponent;
+        if (tree == null || tree.isDisposed()) {
+            return List.of();
+        }
+        return new ArrayList<>(selectedNodes(tree));
+    }
+
+    @Override
+    public @Nullable DesktopQtDrop<TreeNode<E>> resolveDrop(QPoint position) {
+        QTreeWidget tree = myComponent;
+        if (tree == null || tree.isDisposed()) {
+            return null;
+        }
+
+        QTreeWidgetItem item = tree.itemAt(position);
+        if (item == null) {
+            QTreeWidgetItem root = tree.invisibleRootItem();
+            int count = root.childCount();
+            QTreeWidgetItem last = count == 0 ? null : root.child(count - 1);
+            TreeNodeImpl<E> node = last == null ? null : myNodes.get(last);
+            if (last == null || node == null) {
+                return null;
+            }
+            return new DesktopQtDrop<>(node, DragAndDropTransferHandler.DropPosition.BELOW, lineBelow(tree, last));
+        }
+
+        TreeNodeImpl<E> node = myNodes.get(item);
+        if (node == null) {
+            return null;
+        }
+
+        QRect rect = tree.visualItemRect(item);
+        DragAndDropTransferHandler.DropPosition dropPosition = DesktopQtDragAndDropSupport.positionOf(rect, position);
+        return switch (dropPosition) {
+            case ABOVE -> new DesktopQtDrop<>(node, dropPosition, DesktopQtDragAndDropSupport.lineAbove(rect));
+            case BELOW -> new DesktopQtDrop<>(node, dropPosition, lineBelow(tree, item));
+            case INTO -> new DesktopQtDrop<>(node, dropPosition, rect);
+        };
+    }
+
+    private static QRect lineBelow(QTreeWidget tree, QTreeWidgetItem item) {
+        QTreeWidgetItem last = item;
+        while (last.isExpanded() && last.childCount() > 0) {
+            last = last.child(last.childCount() - 1);
+        }
+
+        QRect rect = tree.visualItemRect(item);
+        return new QRect(rect.left(), tree.visualItemRect(last).bottom(), rect.width(), 0);
+    }
+
+    @Override
+    public void dragHovered(@Nullable QPoint position) {
+        QTreeWidget tree = myComponent;
+        QTreeWidgetItem item = tree == null || tree.isDisposed() || position == null ? null : tree.itemAt(position);
+        if (item == myDropExpandItem) {
+            return;
+        }
+
+        myDropExpandItem = item;
+        myDropExpandGeneration++;
+
+        TreeNodeImpl<E> node = item == null ? null : myNodes.get(item);
+        if (tree != null && item != null && node != null && !node.isLeaf() && !item.isExpanded()) {
+            expandOnDropHover(tree, item, myDropExpandGeneration);
+        }
+    }
+
+    private void expandOnDropHover(QTreeWidget tree, QTreeWidgetItem item, int generation) {
+        QTimer.singleShot(ourDropExpandDelay, tree, () -> {
+            if (generation == myDropExpandGeneration && !tree.isDisposed() && !item.isDisposed() && !item.isExpanded()) {
+                item.setExpanded(true);
+            }
+        });
     }
 
     @Override

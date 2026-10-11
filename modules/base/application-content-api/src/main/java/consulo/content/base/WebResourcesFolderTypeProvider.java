@@ -25,6 +25,7 @@ import consulo.project.localize.ProjectLocalize;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
 import consulo.ui.image.Image;
+import consulo.ui.util.LightDarkColorValue;
 
 import java.util.function.Supplier;
 
@@ -74,6 +75,6 @@ public class WebResourcesFolderTypeProvider extends ContentFolderTypeProvider {
 
   @Override
   public ColorValue getGroupColor() {
-    return new RGBColor(129, 45, 243);
+    return new LightDarkColorValue(new RGBColor(129, 45, 243), new RGBColor(127, 96, 144));
   }
 }

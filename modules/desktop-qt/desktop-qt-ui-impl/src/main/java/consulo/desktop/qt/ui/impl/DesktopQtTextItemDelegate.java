@@ -15,6 +15,7 @@
  */
 package consulo.desktop.qt.ui.impl;
 
+import consulo.desktop.qt.ui.impl.font.DesktopQtFontImpl;
 import consulo.desktop.qt.ui.impl.image.DesktopQtImage;
 import consulo.ui.TextAttribute;
 import consulo.ui.TextEffect;
@@ -32,6 +33,7 @@ import io.qt.gui.QBrush;
 import io.qt.gui.QColor;
 import io.qt.gui.QFont;
 import io.qt.gui.QFontMetrics;
+import io.qt.gui.QFontMetricsF;
 import io.qt.gui.QPainter;
 import io.qt.gui.QPalette;
 import io.qt.widgets.QApplication;
@@ -51,6 +53,7 @@ public class DesktopQtTextItemDelegate extends QStyledItemDelegate {
 
     private static final int SUFFIX_GAP = 16;
     private static final int SUFFIX_ICON_GAP = 4;
+    private static final int TRAILING_PADDING = 6;
 
     public DesktopQtTextItemDelegate(QObject parent) {
         super(parent);
@@ -58,14 +61,17 @@ public class DesktopQtTextItemDelegate extends QStyledItemDelegate {
 
     public static void bind(QListWidgetItem item, DesktopQtTextItemPresentation presentation) {
         item.setData(PRESENTATION_ROLE, presentation);
+        item.setToolTip(presentation.getTooltip().get());
     }
 
     public static void bind(QTreeWidgetItem item, int column, DesktopQtTextItemPresentation presentation) {
         item.setData(column, PRESENTATION_ROLE, presentation);
+        item.setToolTip(column, presentation.getTooltip().get());
     }
 
     public static void bind(QTableWidgetItem item, DesktopQtTextItemPresentation presentation) {
         item.setData(PRESENTATION_ROLE, presentation);
+        item.setToolTip(presentation.getTooltip().get());
     }
 
     public static QBrush toBrush(@Nullable ColorValue color) {
@@ -76,12 +82,26 @@ public class DesktopQtTextItemDelegate extends QStyledItemDelegate {
         return 0;
     }
 
+    public static @Nullable QFont toQFont(@Nullable Font font) {
+        return font instanceof DesktopQtFontImpl qtFont ? qtFont.toQFont() : null;
+    }
+
     @Override
     protected void initStyleOption(QStyleOptionViewItem option, QModelIndex index) {
         super.initStyleOption(option, index);
 
         DesktopQtTextItemPresentation presentation = presentationOf(index);
-        Image image = presentation == null ? null : presentation.getImage();
+        if (presentation == null) {
+            return;
+        }
+
+        QFont font = toQFont(presentation.getFont());
+        if (font != null) {
+            option.setFont(font);
+            option.setFontMetrics(new QFontMetrics(font));
+        }
+
+        Image image = presentation.getImage();
         if (image == null || !option.features().testFlag(QStyleOptionViewItem.ViewItemFeature.HasDecoration)) {
             return;
         }
@@ -109,14 +129,15 @@ public class DesktopQtTextItemDelegate extends QStyledItemDelegate {
         QStyle style = widget != null ? widget.style() : QApplication.style();
 
         QRect textRect = style.subElementRect(QStyle.SubElement.SE_ItemViewItemText, styleOption, widget);
-        int right = textRect.right() - reservedTrailingWidth(option, index);
+        int left = textRect.left() + leadingPadding(style, styleOption, widget, presentation);
+        int right = textRect.right() - reservedTrailingWidth(option, index) - TRAILING_PADDING;
 
         styleOption.setText("");
         style.drawControl(QStyle.ControlElement.CE_ItemViewItem, styleOption, painter, widget);
 
         painter.save();
         try {
-            paintPresentation(painter, styleOption, presentation, textRect.left(), right, textRect.top(), textRect.height());
+            paintPresentation(painter, styleOption, presentation, left, right, textRect.top(), textRect.height());
         }
         finally {
             painter.restore();
@@ -132,7 +153,8 @@ public class DesktopQtTextItemDelegate extends QStyledItemDelegate {
             return size;
         }
 
-        QFont font = option.font();
+        QFont presentationFont = toQFont(presentation.getFont());
+        QFont font = presentationFont == null ? option.font() : presentationFont;
         int plainWidth = new QFontMetrics(font).horizontalAdvance(presentation.toString());
 
         int styledWidth = fragmentsWidth(font, presentation);
@@ -140,7 +162,25 @@ public class DesktopQtTextItemDelegate extends QStyledItemDelegate {
             styledWidth += SUFFIX_GAP + suffixWidth(font, presentation);
         }
 
-        return new QSize(size.width() + Math.max(0, styledWidth - plainWidth), size.height());
+        QWidget widget = option.widget();
+        QStyle style = widget != null ? widget.style() : QApplication.style();
+        int leading = leadingPadding(style, option, widget, presentation);
+
+        return new QSize(size.width() + Math.max(0, styledWidth - plainWidth) + leading + TRAILING_PADDING, size.height());
+    }
+
+    private static int leadingPadding(
+        QStyle style,
+        QStyleOptionViewItem option,
+        @Nullable QWidget widget,
+        DesktopQtTextItemPresentation presentation
+    ) {
+        if (presentation.getImage() != null) {
+            return 0;
+        }
+
+        int styleMargin = style.pixelMetric(QStyle.PixelMetric.PM_FocusFrameHMargin, option, widget) + 1;
+        return Math.max(0, TRAILING_PADDING - styleMargin);
     }
 
     private static @Nullable DesktopQtTextItemPresentation presentationOf(QModelIndex index) {
@@ -152,7 +192,7 @@ public class DesktopQtTextItemDelegate extends QStyledItemDelegate {
     }
 
     private static boolean isStyled(DesktopQtTextItemPresentation presentation) {
-        if (presentation.hasSuffix()) {
+        if (presentation.hasSuffix() || presentation.getImage() == null) {
             return true;
         }
 
@@ -272,8 +312,9 @@ public class DesktopQtTextItemDelegate extends QStyledItemDelegate {
             return;
         }
 
-        QFontMetrics metrics = new QFontMetrics(font);
-        String elided = metrics.elidedText(text, Qt.TextElideMode.ElideRight, available);
+        String elided = new QFontMetricsF(font).horizontalAdvance(text) <= available
+            ? text
+            : new QFontMetrics(font).elidedText(text, Qt.TextElideMode.ElideRight, available);
 
         painter.setFont(font);
         painter.setPen(color);
@@ -305,7 +346,7 @@ public class DesktopQtTextItemDelegate extends QStyledItemDelegate {
         }
 
         if (!text.isEmpty()) {
-            width += new QFontMetrics(font).horizontalAdvance(text);
+            width += (int) Math.ceil(new QFontMetricsF(font).horizontalAdvance(text));
         }
         return width;
     }

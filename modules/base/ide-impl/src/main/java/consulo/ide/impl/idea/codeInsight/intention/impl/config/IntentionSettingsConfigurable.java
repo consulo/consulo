@@ -24,10 +24,10 @@ import consulo.configurable.StandardConfigurableIds;
 import consulo.disposer.Disposable;
 import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.localize.LocalizeValue;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import org.jspecify.annotations.Nullable;
-
-import javax.swing.*;
 
 @ExtensionImpl
 public class IntentionSettingsConfigurable implements ApplicationConfigurable, SearchableConfigurable, Configurable.NoMargin, Configurable.NoScroll {
@@ -35,17 +35,17 @@ public class IntentionSettingsConfigurable implements ApplicationConfigurable, S
 
   @RequiredUIAccess
   @Override
-  public JComponent createComponent(Disposable uiDisposable) {
+  public Component createUIComponent(Disposable uiDisposable) {
     if (myPanel == null) {
       myPanel = new IntentionSettingsPanel();
     }
-    return myPanel.getComponent();
+    return TargetAWT.wrap(myPanel.getComponent());
   }
 
   @RequiredUIAccess
   @Override
-  public JComponent getPreferredFocusedComponent() {
-    return myPanel.getIntentionTree();
+  public @Nullable Component getPreferredFocusedUIComponent() {
+    return TargetAWT.wrap(myPanel.getIntentionTree());
   }
 
   @RequiredUIAccess

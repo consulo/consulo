@@ -18,155 +18,79 @@ package consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.content.impl.internal.bundle.SdkImpl;
 import consulo.configurable.ApplicationConfigurable;
+import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.MasterDetailsConfigurable;
-import consulo.configurable.internal.FullContentConfigurable;
-import consulo.content.bundle.*;
+import consulo.configurable.UnifiedMasterDetailsComponent;
+import consulo.content.bundle.Sdk;
+import consulo.content.bundle.SdkModel;
+import consulo.content.bundle.SdkType;
+import consulo.content.bundle.SdkTypeId;
+import consulo.content.bundle.SdkUtil;
+import consulo.content.bundle.UnknownSdkType;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.SdkProjectStructureElement;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.ide.setting.bundle.SettingsSdksModel;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.localize.ProjectLocalize;
+import consulo.ui.Component;
+import consulo.ui.InputBoxBuilder;
+import consulo.ui.InputProblem;
+import consulo.ui.TextAttribute;
+import consulo.ui.TextItemPresentation;
+import consulo.ui.Tree;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.NonEmptyInputValidator;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.LegacyAnAction;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
 import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ui.ex.awt.MasterDetailsComponent;
-import consulo.ui.ex.awt.Messages;
-import consulo.ui.ex.awt.tree.TreeUtil;
-import org.jspecify.annotations.Nullable;
+import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.ui.ex.popup.ListPopup;
 import jakarta.inject.Inject;
+import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.MutableTreeNode;
-import javax.swing.tree.TreeNode;
-import javax.swing.tree.TreePath;
-import java.awt.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.*;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
 
 @ExtensionImpl
-public class SdkListConfigurable extends BaseStructureConfigurable implements ApplicationConfigurable, FullContentConfigurable {
+public class SdkListConfigurable extends UnifiedMasterDetailsComponent
+    implements ApplicationConfigurable, Configurable.NoMargin, Configurable.NoScroll {
     public static final String ID = "sdks.list";
 
     public static final Predicate<SdkTypeId> ADD_SDK_FILTER = sdkTypeId -> sdkTypeId instanceof SdkType && ((SdkType) sdkTypeId).supportsUserAdd();
 
     private static final UnknownSdkType ourUnknownSdkType = UnknownSdkType.getInstance("UNKNOWN_BUNDLE");
+
     private final SdkModel.Listener myListener = new SdkModel.Listener() {
         @RequiredUIAccess
         @Override
-        public void sdkAdded(Sdk sdk) {
-        }
-
-        @RequiredUIAccess
-        @Override
-        public void sdkRemove(Sdk sdk) {
-        }
-
-        @RequiredUIAccess
-        @Override
         public void sdkChanged(Sdk sdk, String previousName) {
-            updateName();
+            updateSelectedName();
         }
 
         @RequiredUIAccess
         @Override
         public void sdkHomeSelected(Sdk sdk, String newSdkHome) {
-            updateName();
-        }
-
-        private void updateName() {
-            TreePath path = myTree.getSelectionPath();
-            if (path != null) {
-                MasterDetailsConfigurable configurable = ((MyNode) path.getLastPathComponent()).getConfigurable();
-                if (configurable != null && configurable instanceof SdkConfigurable) {
-                    configurable.updateName();
-                }
-            }
+            updateSelectedName();
         }
     };
 
-    private class CopySdkAction extends LegacyAnAction {
-        private CopySdkAction() {
-            super(CommonLocalize.buttonCopy(), CommonLocalize.buttonCopy(), PlatformIconGroup.actionsCopy());
-        }
-
-        @RequiredUIAccess
-        @Override
-        public void actionPerformed(AnActionEvent e) {
-            SettingsSdksModel sdksModel = myShowSettingsUtil.getSdksModel();
-
-            Object o = getSelectedObject();
-            if (o instanceof SdkImpl) {
-                SdkImpl selected = (SdkImpl) o;
-                String defaultNewName = SdkUtil.createUniqueSdkName(selected.getName(), sdksModel.getSdks());
-                String newName = Messages.showInputDialog("Enter bundle name:", "Copy Bundle", null, defaultNewName, new NonEmptyInputValidator() {
-                    @RequiredUIAccess
-                    @Override
-                    public boolean checkInput(String inputString) {
-                        return super.checkInput(inputString) && sdksModel.findSdk(inputString) == null;
-                    }
-                });
-                if (newName == null) {
-                    return;
-                }
-
-                SdkImpl sdk = selected.clone();
-                sdk.setName(newName);
-                sdk.setPredefined(false);
-
-                sdksModel.doAdd(sdk, SdkListConfigurable.this::addSdkNode);
-            }
-        }
-
-        @RequiredUIAccess
-        @Override
-        public void update(AnActionEvent e) {
-            if (myTree.getSelectionPaths() == null || myTree.getSelectionPaths().length != 1) {
-                e.getPresentation().setEnabled(false);
-            }
-            else {
-                Object selectedObject = getSelectedObject();
-                e.getPresentation().setEnabled(selectedObject instanceof SdkImpl && !(((SdkImpl) selectedObject).getSdkType() instanceof UnknownSdkType));
-            }
-        }
-    }
-
     private final ShowSettingsUtil myShowSettingsUtil;
 
-    private Disposable myListenerDisposable;
+    private @Nullable Disposable myListenerDisposable;
 
     @Inject
     public SdkListConfigurable(ShowSettingsUtil showSettingsUtil) {
-        super(() -> null);
         myShowSettingsUtil = showSettingsUtil;
-    }
-
-    @Override
-    protected String getComponentStateKey() {
-        return "JdkListConfigurable.UI";
-    }
-
-    @Override
-    public void setBannerComponent(JComponent bannerComponent) {
-        myNorthPanel.add(bannerComponent, BorderLayout.NORTH);
-    }
-
-    @Override
-    protected void processRemovedItems() {
-    }
-
-    @Override
-    protected boolean wasObjectStored(Object editableObject) {
-        return false;
     }
 
     @Override
@@ -175,127 +99,135 @@ public class SdkListConfigurable extends BaseStructureConfigurable implements Ap
     }
 
     @Override
-    public @Nullable String getHelpTopic() {
-        return myCurrentConfigurable != null ? myCurrentConfigurable.getHelpTopic() : null;
-    }
-
-    @Override
     public String getId() {
         return ID;
     }
 
     @Override
-    protected void loadTree() {
-        if (myListenerDisposable != null) {
-            myListenerDisposable.dispose();
-            myListenerDisposable = null;
+    protected LocalizeValue getEmptySelectionText() {
+        return ProjectLocalize.globalBundlesEmptyText();
+    }
+
+    @Override
+    protected boolean isExpandAllByDefault() {
+        return true;
+    }
+
+    @Override
+    protected boolean isMultipleSelectAllowed() {
+        return true;
+    }
+
+    @Override
+    protected boolean isRemovedWhenEmpty(Object value) {
+        return value instanceof SdkType;
+    }
+
+    @Override
+    protected @Nullable Comparator<Object> getValueComparator() {
+        return Comparator.comparing(this::getValueText, String.CASE_INSENSITIVE_ORDER);
+    }
+
+    @Override
+    protected String getValueText(Object value) {
+        if (value instanceof SdkType sdkType) {
+            return sdkType.getDisplayName().get();
         }
+        if (value instanceof Sdk sdk) {
+            return sdk.getName();
+        }
+        return String.valueOf(value);
+    }
 
-        SettingsSdksModel sdksModel = myShowSettingsUtil.getSdksModel();
-        myListenerDisposable = Disposable.newDisposable();
-        sdksModel.addListener(myListener, myListenerDisposable);
+    @Override
+    protected void renderValue(Object value, TextItemPresentation presentation) {
+        if (value instanceof SdkType sdkType) {
+            presentation.withIcon(sdkType.getGroupIcon());
+            presentation.append(sdkType.getDisplayName(), TextAttribute.REGULAR_BOLD);
+        }
+        else if (value instanceof Sdk sdk) {
+            presentation.withIcon(SdkUtil.getIcon(sdk));
+            presentation.append(sdk.getName());
 
-        Map<SdkType, List<Sdk>> map = new HashMap<>();
-
-        for (Sdk sdk : sdksModel.getModifiedSdksMap().values()) {
-            SdkType sdkType = (SdkType) sdk.getSdkType();
-            if (sdkType instanceof UnknownSdkType) {
-                sdkType = ourUnknownSdkType;
+            String versionString = sdk.getVersionString();
+            if (versionString != null) {
+                presentation.append(" (" + versionString + ")", TextAttribute.GRAYED);
             }
 
-            List<Sdk> list = map.get(sdkType);
-            if (list == null) {
-                map.put(sdkType, list = new ArrayList<>());
-            }
-
-            list.add(sdk);
-        }
-
-        for (Map.Entry<SdkType, List<Sdk>> entry : map.entrySet()) {
-            SdkType key = entry.getKey();
-            List<Sdk> value = entry.getValue();
-
-            MyNode groupNode = createSdkGroupNode(key);
-            groupNode.setAllowsChildren(true);
-            addNode(groupNode, myRoot);
-
-            for (Sdk sdk : value) {
-                SdkConfigurable configurable = new SdkConfigurable((SdkImpl) sdk, sdksModel, TREE_UPDATER);
-
-                addNode(new MyNode(configurable), groupNode);
+            String homePath = sdk.getHomePath();
+            if (homePath != null) {
+                presentation.withTooltip(LocalizeValue.of(homePath));
             }
         }
     }
 
     @RequiredUIAccess
     @Override
-    protected void initSelection() {
-        super.initSelection();
-        TreeUtil.expandAll(getTree());
-    }
+    protected void loadTree() {
+        Disposable listenerDisposable = myListenerDisposable;
+        if (listenerDisposable != null) {
+            listenerDisposable.disposeWithTree();
+        }
 
-    private static MyNode createSdkGroupNode(SdkType key) {
-        return new MyNode(new TextConfigurable<>(key, key.getDisplayName(), LocalizeValue.empty(), "", key.getGroupIcon()), true);
-    }
-
-    @Override
-    protected Collection<? extends ProjectStructureElement> getProjectStructureElements() {
         SettingsSdksModel sdksModel = myShowSettingsUtil.getSdksModel();
-        List<ProjectStructureElement> result = new ArrayList<>();
+        listenerDisposable = Disposable.newDisposable();
+        sdksModel.addListener(myListener, listenerDisposable);
+        myListenerDisposable = listenerDisposable;
+
+        Map<SdkType, List<Sdk>> map = new LinkedHashMap<>();
         for (Sdk sdk : sdksModel.getModifiedSdksMap().values()) {
-            result.add(new SdkProjectStructureElement(sdk));
+            map.computeIfAbsent(getGroupType(sdk), type -> new ArrayList<>()).add(sdk);
         }
-        return result;
+
+        for (Map.Entry<SdkType, List<Sdk>> entry : map.entrySet()) {
+            SdkType sdkType = entry.getKey();
+            addValue(null, sdkType);
+
+            for (Sdk sdk : entry.getValue()) {
+                addValue(sdkType, sdk);
+            }
+        }
     }
 
-    public boolean addSdkNode(Sdk sdk) {
-        if (myUiDisposed) {
-            return false;
+    @RequiredUIAccess
+    @Override
+    protected @Nullable MasterDetailsConfigurable<?> createConfigurable(Object value) {
+        if (value instanceof SdkImpl sdk) {
+            return new SdkConfigurable(sdk, myShowSettingsUtil.getSdksModel(), () -> refreshValue(sdk));
         }
+        return null;
+    }
 
+    @Override
+    protected List<AnAction> createActions() {
+        return List.of(new AddSdkAction(), new RemoveSdkAction(), new CopySdkAction());
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void reset() {
+        myShowSettingsUtil.getSdksModel().reset();
+
+        super.reset();
+    }
+
+    @RequiredUIAccess
+    @Override
+    public boolean isModified() {
+        return super.isModified() || myShowSettingsUtil.getSdksModel().isModified();
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void apply() throws ConfigurationException {
         SettingsSdksModel sdksModel = myShowSettingsUtil.getSdksModel();
 
-        // todo myContext.getDaemonAnalyzer().queueUpdate(new SdkProjectStructureElement(sdk));
+        boolean modifiedSdks = super.isModified();
 
-        MyNode newSdkNode = new MyNode(new SdkConfigurable((SdkImpl) sdk, sdksModel, TREE_UPDATER));
+        super.apply();
 
-        MyNode groupNode = MasterDetailsComponent.findNodeByObject(myRoot, sdk.getSdkType());
-        if (groupNode != null) {
-            addNode(newSdkNode, groupNode);
-        }
-        else {
-            MyNode sdkGroupNode = createSdkGroupNode((SdkType) sdk.getSdkType());
-
-            sdkGroupNode.add(newSdkNode);
-
-            addNode(sdkGroupNode, myRoot);
-
-            TreeUtil.expandAll(myTree);
-        }
-
-        selectNodeInTree(newSdkNode);
-        return true;
-    }
-
-    @Override
-    protected boolean canBeRemoved(Object[] editableObjects) {
-        for (Object editableObject : editableObjects) {
-            if (editableObject instanceof Sdk && ((Sdk) editableObject).isPredefined()) {
-                return false;
-            }
-        }
-        return super.canBeRemoved(editableObjects);
-    }
-
-    @Override
-    protected void onItemDeleted(Object item) {
-        for (int i = 0; i < myRoot.getChildCount(); i++) {
-            TreeNode childAt = myRoot.getChildAt(i);
-            if (childAt instanceof MyNode) {
-                if (childAt.getChildCount() == 0) {
-                    ((DefaultTreeModel) myTree.getModel()).removeNodeFromParent((MutableTreeNode) childAt);
-                }
-            }
+        if (sdksModel.isModified() || modifiedSdks) {
+            sdksModel.apply(this::select);
         }
     }
 
@@ -304,88 +236,176 @@ public class SdkListConfigurable extends BaseStructureConfigurable implements Ap
     public void disposeUIResources() {
         super.disposeUIResources();
 
-        SettingsSdksModel sdksModel = myShowSettingsUtil.getSdksModel();
-
-        if (myListenerDisposable != null) {
-            myListenerDisposable.disposeWithTree();
+        Disposable listenerDisposable = myListenerDisposable;
+        if (listenerDisposable != null) {
+            listenerDisposable.disposeWithTree();
+            myListenerDisposable = null;
         }
 
-        sdksModel.dispose();
+        myShowSettingsUtil.getSdksModel().dispose();
     }
 
     @RequiredUIAccess
-    @Override
-    public void reset() {
-        SettingsSdksModel sdksModel = myShowSettingsUtil.getSdksModel();
+    public CompletableFuture<?> selectSdk(Sdk sdk) {
+        Sdk modifiedSdk = myShowSettingsUtil.getSdksModel().getModifiedSdksMap().get(sdk);
+        Sdk target = modifiedSdk != null ? modifiedSdk : sdk;
+        Object value = findValue(candidate -> candidate == target);
+        if (value == null) {
+            value = findValue(candidate -> candidate instanceof Sdk candidateSdk && candidateSdk.getName().equals(sdk.getName()));
+        }
+        return select(value);
+    }
 
-        sdksModel.reset();
-
-        super.reset();
-
-        myTree.setRootVisible(false);
+    private static SdkType getGroupType(Sdk sdk) {
+        SdkType sdkType = (SdkType) sdk.getSdkType();
+        return sdkType instanceof UnknownSdkType ? ourUnknownSdkType : sdkType;
     }
 
     @RequiredUIAccess
-    @Override
-    public void apply() throws ConfigurationException {
-        SettingsSdksModel sdksModel = myShowSettingsUtil.getSdksModel();
+    private void addSdkNode(Sdk sdk) {
+        if (getTree() == null) {
+            return;
+        }
 
-        boolean modifiedSdks = false;
-        for (int i = 0; i < myRoot.getChildCount(); i++) {
-            TreeNode groupNode = myRoot.getChildAt(i);
+        SdkType sdkType = getGroupType(sdk);
+        if (!isAttached(sdkType)) {
+            addValue(null, sdkType);
+        }
+        addValue(sdkType, sdk);
 
-            for (int k = 0; k < groupNode.getChildCount(); k++) {
-                MyNode sdkNode = (MyNode) groupNode.getChildAt(k);
-                MasterDetailsConfigurable configurable = sdkNode.getConfigurable();
-                if (configurable.isModified()) {
-                    configurable.apply();
-                    modifiedSdks = true;
+        refreshTree(sdk);
+    }
+
+    @RequiredUIAccess
+    private void updateSelectedName() {
+        Object selected = getSelectedValue();
+        if (selected == null) {
+            return;
+        }
+
+        MasterDetailsConfigurable<?> configurable = getConfigurable(selected);
+        if (configurable instanceof SdkConfigurable && isInitialized(configurable)) {
+            configurable.updateName();
+        }
+        refreshValue(selected);
+    }
+
+    private class AddSdkAction extends DumbAwareAction {
+        private AddSdkAction() {
+            super(ProjectLocalize.addActionName(), LocalizeValue.empty(), PlatformIconGroup.generalAdd());
+        }
+
+        @RequiredUIAccess
+        @Override
+        public void actionPerformed(AnActionEvent e) {
+            Tree<Object> tree = getTree();
+            if (tree == null) {
+                return;
+            }
+
+            DefaultActionGroup group = new DefaultActionGroup();
+            myShowSettingsUtil.getSdksModel().createAddActions(group, tree, SdkListConfigurable.this::addSdkNode, ADD_SDK_FILTER);
+
+            ListPopup popup = JBPopupFactory.getInstance().createActionGroupPopup(
+                ProjectLocalize.addActionName().get(),
+                group,
+                e.getDataContext(),
+                JBPopupFactory.ActionSelectionAid.SPEEDSEARCH,
+                false
+            );
+            popup.showUnderneathOf(e);
+        }
+    }
+
+    private class RemoveSdkAction extends DumbAwareAction implements AnActionWithSyncUpdate {
+        private RemoveSdkAction() {
+            super(CommonLocalize.buttonDelete(), CommonLocalize.buttonDelete(), PlatformIconGroup.generalRemove());
+        }
+
+        @RequiredUIAccess
+        @Override
+        public void actionPerformed(AnActionEvent e) {
+            List<Object> selected = getSelectedValues();
+            if (!canRemove(selected)) {
+                return;
+            }
+
+            SettingsSdksModel sdksModel = myShowSettingsUtil.getSdksModel();
+            for (Object value : selected) {
+                sdksModel.removeSdk((Sdk) value);
+            }
+            removeSelected();
+        }
+
+        @Override
+        public void update(AnActionEvent e) {
+            e.getPresentation().setEnabled(canRemove(getSelectedValues()));
+        }
+
+        private boolean canRemove(List<Object> selected) {
+            if (selected.isEmpty()) {
+                return false;
+            }
+
+            for (Object value : selected) {
+                if (!(value instanceof Sdk sdk) || sdk.isPredefined()) {
+                    return false;
                 }
             }
-        }
-
-        if (sdksModel.isModified() || modifiedSdks) {
-            sdksModel.apply(this);
+            return true;
         }
     }
 
-    @RequiredUIAccess
-    @Override
-    public boolean isModified() {
-        SettingsSdksModel sdksModel = myShowSettingsUtil.getSdksModel();
+    private class CopySdkAction extends DumbAwareAction implements AnActionWithSyncUpdate {
+        private CopySdkAction() {
+            super(CommonLocalize.buttonCopy(), CommonLocalize.buttonCopy(), PlatformIconGroup.actionsCopy());
+        }
 
-        return super.isModified() || sdksModel.isModified();
-    }
-
-    @Override
-    protected List<? extends AnAction> createCopyActions(boolean fromPopup) {
-        return Collections.singletonList(new CopySdkAction());
-    }
-
-    @Override
-    public AbstractAddGroup createAddAction() {
-        return new AbstractAddGroup(ProjectLocalize.addActionName()) {
-            
-            @Override
-            public AnAction[] getChildren(@Nullable AnActionEvent e) {
-                SettingsSdksModel sdksModel = myShowSettingsUtil.getSdksModel();
-
-                DefaultActionGroup group = new DefaultActionGroup(ProjectLocalize.addActionName(), true);
-                sdksModel.createAddActions(group, myTree, sdk -> addSdkNode(sdk), ADD_SDK_FILTER);
-                return group.getChildren(null);
+        @RequiredUIAccess
+        @Override
+        public void actionPerformed(AnActionEvent e) {
+            if (getSelectedValues().size() != 1
+                || !(getSelectedValue() instanceof SdkImpl selected)
+                || selected.getSdkType() instanceof UnknownSdkType) {
+                return;
             }
-        };
-    }
 
-    @Override
-    protected void removeSdk(Sdk jdk) {
-        SettingsSdksModel sdksModel = myShowSettingsUtil.getSdksModel();
-        sdksModel.removeSdk(jdk);
-        // todo myContext.getDaemonAnalyzer().removeElement(new SdkProjectStructureElement(jdk));
-    }
+            SettingsSdksModel sdksModel = myShowSettingsUtil.getSdksModel();
+            String defaultNewName = SdkUtil.createUniqueSdkName(selected.getName(), sdksModel.getSdks());
 
-    @Override
-    protected @Nullable String getEmptySelectionString() {
-        return ProjectLocalize.globalBundlesEmptyText().get();
+            Component parent = getTree();
+            UIAccess uiAccess = UIAccess.current();
+            InputBoxBuilder.text()
+                .title(ProjectLocalize.sdkCopyTitle())
+                .text(ProjectLocalize.sdkCopyPrompt())
+                .value(defaultNewName)
+                .validator(name -> {
+                    if (name.isBlank()) {
+                        return InputProblem.error(ProjectLocalize.sdkListNameRequiredError());
+                    }
+                    if (sdksModel.findSdk(name) != null) {
+                        return InputProblem.error(ProjectLocalize.sdkListUniqueNameRequiredError());
+                    }
+                    return null;
+                })
+                .showAsync(parent)
+                .whenCompleteAsync((newName, error) -> {
+                    if (error != null || newName == null) {
+                        return;
+                    }
+                    SdkImpl sdk = selected.clone();
+                    sdk.setName(newName);
+                    sdk.setPredefined(false);
+
+                    sdksModel.doAdd(sdk, SdkListConfigurable.this::addSdkNode);
+                 }, uiAccess);
+        }
+
+        @Override
+        public void update(AnActionEvent e) {
+            e.getPresentation().setEnabled(
+                getSelectedValues().size() == 1 && getSelectedValue() instanceof SdkImpl sdk && !(sdk.getSdkType() instanceof UnknownSdkType)
+            );
+        }
     }
 }

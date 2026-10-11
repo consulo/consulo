@@ -19,12 +19,14 @@ import consulo.desktop.awt.ui.impl.DesktopSpace;
 import consulo.ui.Component;
 import consulo.ui.Space;
 import consulo.ui.StaticPosition;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.internal.LayoutVisualOrder;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.Layout;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.function.Consumer;
 
 /**
  * @author VISTALL
@@ -54,6 +56,14 @@ public class DesktopDockLayoutImpl extends DesktopLayoutBase<JPanel, StaticPosit
         return this;
     }
 
+    @Override
+    public void forEachChild(@RequiredUIAccess Consumer<Component> consumer) {
+        BorderLayout layout = (BorderLayout) toAWTComponent().getLayout();
+        for (StaticPosition position : LayoutVisualOrder.DOCK_POSITIONS) {
+            DesktopLayoutChildren.accept(layout.getLayoutComponent(convertConstraints(position)), consumer);
+        }
+    }
+
     protected void set(Component component, Object constraints) {
         JPanel panel = toAWTComponent();
 
@@ -63,7 +73,7 @@ public class DesktopDockLayoutImpl extends DesktopLayoutBase<JPanel, StaticPosit
             panel.remove(old);
         }
 
-        panel.add(TargetAWT.to(component), constraints);
+        panel.add(DesktopLayoutChildren.toAWT(component), constraints);
         panel.validate();
         panel.repaint();
     }

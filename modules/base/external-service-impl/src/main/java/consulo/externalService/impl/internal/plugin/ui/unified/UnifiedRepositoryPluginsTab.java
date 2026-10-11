@@ -15,7 +15,10 @@
  */
 package consulo.externalService.impl.internal.plugin.ui.unified;
 
+import consulo.application.Application;
 import consulo.application.eap.EarlyAccessProgramManager;
+import consulo.configurable.ConfigurableSession;
+import consulo.configurable.internal.ConfigurableSessionHolder;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.disposer.Disposable;
 import consulo.externalService.impl.internal.repository.RepositoryHelper;
@@ -52,9 +55,10 @@ public class UnifiedRepositoryPluginsTab extends UnifiedPluginTab {
     @Override
     @RequiredUIAccess
     public void reload() {
-        // the unified settings dialog does not open a ConfigurableSession yet, so the application instance is
-        // read directly - the list just does not follow an unapplied eap toggle of the same dialog
-        EarlyAccessProgramManager earlyAccessProgramManager = EarlyAccessProgramManager.getInstance();
+        ConfigurableSession session = ConfigurableSessionHolder.getNullable();
+        EarlyAccessProgramManager earlyAccessProgramManager = session == null
+            ? EarlyAccessProgramManager.getInstance()
+            : session.getOrCopy(Application.get(), EarlyAccessProgramManager.class);
 
         myLoadingLayout.startLoading(
             () -> {

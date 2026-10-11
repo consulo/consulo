@@ -15,30 +15,37 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.actions;
 
-import consulo.application.AllIcons;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.ToggleAction;
 import consulo.application.dumb.DumbAware;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.LayoutTreeComponent;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.project.localize.ProjectLocalize;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.ToggleAction;
 
 /**
  * @author nik
  */
 public class SortElementsToggleAction extends ToggleAction implements DumbAware {
-  private final LayoutTreeComponent myLayoutTreeComponent;
+    private final LayoutTreeComponent myLayoutTreeComponent;
 
-  public SortElementsToggleAction(LayoutTreeComponent layoutTreeComponent) {
-    super("Sort Elements by Names and Types", "Sort Elements by Names and Types", AllIcons.ObjectBrowser.Sorted);
-    myLayoutTreeComponent = layoutTreeComponent;
-  }
+    public SortElementsToggleAction(LayoutTreeComponent layoutTreeComponent) {
+        super(
+            ProjectLocalize.artifactActionSortElementsText(),
+            ProjectLocalize.artifactActionSortElementsText(),
+            PlatformIconGroup.objectbrowserSorted()
+        );
+        myLayoutTreeComponent = layoutTreeComponent;
+    }
 
-  @Override
-  public boolean isSelected(AnActionEvent e) {
-    return myLayoutTreeComponent.isSortElements();
-  }
+    @Override
+    public boolean isSelected(AnActionEvent e) {
+        return myLayoutTreeComponent.isSortElements();
+    }
 
-  @Override
-  public void setSelected(AnActionEvent e, boolean state) {
-    myLayoutTreeComponent.setSortElements(state);
-  }
+    @Override
+    @RequiredUIAccess
+    public void setSelected(AnActionEvent e, boolean state) {
+        myLayoutTreeComponent.setSortElements(state);
+    }
 }

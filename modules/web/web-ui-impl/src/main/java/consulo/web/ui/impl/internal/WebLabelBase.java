@@ -23,6 +23,7 @@ import consulo.ui.LabelStyle;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
+import consulo.ui.internal.SearchHighlightUtil;
 import consulo.web.ui.impl.internal.base.VaadinComponentDelegate;
 import consulo.web.ui.impl.internal.vaadin.VaadinLabelComponentBase;
 import consulo.ui.Length;
@@ -97,5 +98,16 @@ public abstract class WebLabelBase<V extends VaadinLabelComponentBase> extends V
     @Override
     public void setMinHeight(Length height) {
         throw new UnsupportedOperationException();
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setSearchHighlight(@Nullable String query) {
+        getVaadinComponent().setSearchHighlight(SearchHighlightUtil.normalizeQuery(query));
+    }
+
+    @Override
+    public @Nullable String getSearchHighlight() {
+        return getVaadinComponent().getSearchHighlight();
     }
 }

@@ -23,12 +23,14 @@ import consulo.desktop.qt.ui.impl.image.DesktopQtIconOwner;
 import consulo.desktop.qt.ui.impl.image.DesktopQtIconRefresher;
 import consulo.desktop.qt.ui.impl.image.DesktopQtLiveIconEngine;
 import consulo.desktop.qt.ui.impl.QtComponentDelegate;
+import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.Tab;
 import consulo.ui.TextItemPresentation;
 import consulo.ui.image.Image;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.internal.TabSelectionUtil;
+import consulo.ui.internal.TabTitlePresentation;
 import io.qt.core.Qt;
 import io.qt.widgets.QTabBar;
 import io.qt.widgets.QTabWidget;
@@ -205,6 +207,11 @@ public class DesktopQtTabImpl implements Tab, DesktopQtAnimationHost, DesktopQtI
     }
 
     @Override
+    public LocalizeValue getTitle() {
+        return TabTitlePresentation.titleOf(this, myRenderer);
+    }
+
+    @Override
     public void update() {
         int index = getIndex();
         if (myTabWidget == null || index == -1) {
@@ -257,6 +264,11 @@ public class DesktopQtTabImpl implements Tab, DesktopQtAnimationHost, DesktopQtI
 
     public @Nullable QtComponentDelegate<?> getComponent() {
         return myComponent;
+    }
+
+    public @Nullable QTabWidget getTabWidget() {
+        QTabWidget tabWidget = myTabWidget;
+        return tabWidget == null || tabWidget.isDisposed() ? null : tabWidget;
     }
 
     /**

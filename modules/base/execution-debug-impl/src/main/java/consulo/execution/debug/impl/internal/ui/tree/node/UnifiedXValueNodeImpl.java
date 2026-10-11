@@ -21,7 +21,7 @@ import consulo.execution.debug.frame.XValueNode;
 import consulo.execution.debug.frame.XValuePlace;
 import consulo.execution.debug.frame.presentation.XValueNodePresentationConfigurator;
 import consulo.execution.debug.frame.presentation.XValuePresentation;
-import consulo.execution.debug.impl.internal.frame.UnifiedColoredTextContainer;
+import consulo.ui.ex.UnifiedColoredTextContainer;
 import consulo.execution.debug.impl.internal.ui.tree.UnifiedXDebuggerTree;
 import consulo.execution.debug.ui.XDebuggerUIConstants;
 import consulo.execution.debug.ui.XValuePresentationUtil;

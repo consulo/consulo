@@ -15,26 +15,24 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.actions;
 
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.LayoutTreeComponent;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.nodes.PackagingElementNode;
 import consulo.compiler.artifact.ui.TreeNodePresentation;
+import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.LayoutElementInfo;
+import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.LayoutTreeComponent;
 import org.jspecify.annotations.Nullable;
 
 /**
-* @author nik
-*/
+ * @author nik
+ */
 public class LayoutTreeNavigateAction extends ArtifactEditorNavigateActionBase {
-  private final LayoutTreeComponent myLayoutTreeComponent;
+    private final LayoutTreeComponent myLayoutTreeComponent;
 
-  public LayoutTreeNavigateAction(LayoutTreeComponent layoutTreeComponent) {
-    super(layoutTreeComponent.getLayoutTree());
-    myLayoutTreeComponent = layoutTreeComponent;
-  }
+    public LayoutTreeNavigateAction(LayoutTreeComponent layoutTreeComponent) {
+        myLayoutTreeComponent = layoutTreeComponent;
+    }
 
-  @Override
-  protected @Nullable TreeNodePresentation getPresentation() {
-    PackagingElementNode<?> node = myLayoutTreeComponent.getSelection().getNodeIfSingle();
-    return node != null ? node.getElementPresentation() : null;
-  }
-
+    @Override
+    protected @Nullable TreeNodePresentation getPresentation() {
+        LayoutElementInfo node = myLayoutTreeComponent.getSelection().getNodeIfSingle();
+        return node != null ? node.getPresentation() : null;
+    }
 }

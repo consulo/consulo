@@ -19,7 +19,6 @@ import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.EditorFactory;
 import consulo.configurable.*;
-import consulo.configurable.internal.ConfigurableUIMigrationUtil;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.application.options.codeStyle.CodeStyleMainPanel;
 import consulo.ide.impl.idea.application.options.codeStyle.CodeStyleSettingsPanelFactory;
@@ -33,11 +32,12 @@ import consulo.language.codeStyle.localize.CodeStyleLocalize;
 import consulo.language.codeStyle.setting.CodeStyleSettingsProvider;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -73,11 +73,11 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
 
     @Override
     @RequiredUIAccess
-    public JComponent createComponent(Disposable uiDisposable) {
+    public @Nullable Component createUIComponent(Disposable uiDisposable) {
         myModel = ensureModel();
 
         if (myRootConfigurable != null) {
-            return ConfigurableUIMigrationUtil.createComponent(myRootConfigurable, uiDisposable);
+            return myRootConfigurable.createUIComponent(uiDisposable);
         }
         return null;
     }
@@ -383,8 +383,8 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
 
         @Override
         @RequiredUIAccess
-        public JComponent createComponent(Disposable uiDisposable) {
-            return ensurePanel();
+        public Component createUIComponent(Disposable uiDisposable) {
+            return TargetAWT.wrap(ensurePanel());
         }
 
         @Override

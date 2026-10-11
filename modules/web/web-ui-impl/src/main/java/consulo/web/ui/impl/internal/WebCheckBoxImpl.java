@@ -16,6 +16,7 @@
 package consulo.web.ui.impl.internal;
 
 import com.vaadin.flow.component.checkbox.Checkbox;
+import com.vaadin.flow.component.html.Span;
 import consulo.localize.LocalizeValue;
 import consulo.ui.CheckBox;
 import consulo.ui.CheckBoxStyle;
@@ -23,6 +24,7 @@ import consulo.ui.Component;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.internal.LocalizeValueWithMnemonic;
+import consulo.ui.internal.SearchHighlightUtil;
 import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
 import consulo.web.ui.impl.internal.vaadin.WebBooleanValueComponentBase;
 import org.jspecify.annotations.Nullable;
@@ -34,6 +36,8 @@ import org.jspecify.annotations.Nullable;
 public class WebCheckBoxImpl extends WebBooleanValueComponentBase<WebCheckBoxImpl.Vaadin> implements CheckBox {
     public class Vaadin extends Checkbox implements FromVaadinComponentWrapper {
         private LocalizeValue myLabelText = LocalizeValue.empty();
+
+        private @Nullable String mySearchHighlight;
 
         public Vaadin() {
             getStyle().set("white-space", "nowrap");
@@ -48,8 +52,21 @@ public class WebCheckBoxImpl extends WebBooleanValueComponentBase<WebCheckBoxImp
             return myLabelText;
         }
 
+        public void setSearchHighlight(@Nullable String query) {
+            mySearchHighlight = query;
+            updateLabelText();
+        }
+
         private void updateLabelText() {
-            setLabel(LocalizeValueWithMnemonic.get(myLabelText).getText());
+            String text = LocalizeValueWithMnemonic.get(myLabelText).getText();
+            if (SearchHighlightUtil.matches(text, mySearchHighlight)) {
+                Span label = new Span();
+                WebSearchHighlight.appendText(label.getElement(), text, mySearchHighlight);
+                setLabelComponent(label);
+            }
+            else {
+                setLabel(text);
+            }
         }
 
         @Override
@@ -82,5 +99,16 @@ public class WebCheckBoxImpl extends WebBooleanValueComponentBase<WebCheckBoxImp
         UIAccess.assertIsUIThread();
 
         toVaadinComponent().setLabelText(textValue);
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void setSearchHighlight(@Nullable String query) {
+        toVaadinComponent().setSearchHighlight(SearchHighlightUtil.normalizeQuery(query));
+    }
+
+    @Override
+    public @Nullable String getSearchHighlight() {
+        return toVaadinComponent().mySearchHighlight;
     }
 }

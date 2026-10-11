@@ -13,135 +13,173 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot;
 
-import consulo.application.AllIcons;
 import consulo.configurable.ConfigurationException;
+import consulo.configurable.MasterDetailsConfigurable;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.ModuleEditor;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.ModulesConfiguratorImpl;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.ModuleProjectStructureElement;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
 import consulo.ide.impl.roots.ui.configuration.projectRoot.moduleLayerActions.DeleteLayerAction;
 import consulo.ide.impl.roots.ui.configuration.projectRoot.moduleLayerActions.NewLayerAction;
-import consulo.ide.setting.module.ModulesConfigurator;
 import consulo.localize.LocalizeValue;
 import consulo.module.ModifiableModuleModel;
 import consulo.module.Module;
 import consulo.module.ModuleWithNameAlreadyExistsException;
 import consulo.module.content.layer.ModifiableRootModel;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.localize.ProjectLocalize;
+import consulo.ui.ComboBox;
+import consulo.ui.Component;
+import consulo.ui.TextBox;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.ActionToolbar;
-import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ui.ex.awt.*;
+import consulo.ui.ex.action.ActionToolbarFactory;
 import consulo.ui.image.Image;
-import consulo.util.lang.Comparing;
-import consulo.util.lang.StringUtil;
+import consulo.ui.layout.DockLayout;
+import consulo.ui.model.FlatDataModel;
+import consulo.ui.model.MutableFlatDataModel;
+import consulo.ui.util.FormBuilder;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
-import java.awt.event.ItemEvent;
-import java.util.ArrayList;
 import java.util.Objects;
+import java.util.function.BiConsumer;
 
 /**
  * @author anna
  * @since 2006-06-04
  */
-public class ModuleConfigurable extends ProjectStructureElementConfigurable<Module> {
+public class ModuleConfigurable implements MasterDetailsConfigurable<Module> {
     private final Module myModule;
     private final ModulesConfiguratorImpl myConfigurator;
+    private final BiConsumer<Module, String> myNameChanged;
+
     private String myModuleName;
-    private final ModuleProjectStructureElement myProjectStructureElement;
 
-    public ModuleConfigurable(ModulesConfigurator modulesConfigurator, Module module, Runnable updateTree) {
-        super(true, updateTree);
+    private @Nullable DockLayout myMainPanel;
+    private @Nullable TextBox myNameComponent;
+    private ModuleEditor.@Nullable ChangeListener myLayerListener;
+
+    public ModuleConfigurable(ModulesConfiguratorImpl configurator, Module module, BiConsumer<Module, String> nameChanged) {
         myModule = module;
-        myModuleName = myModule.getName();
-        myConfigurator = (ModulesConfiguratorImpl) modulesConfigurator;
-        myProjectStructureElement = new ModuleProjectStructureElement(modulesConfigurator, myModule);
+        myConfigurator = configurator;
+        myNameChanged = nameChanged;
+        myModuleName = module.getName();
     }
 
+    @RequiredUIAccess
     @Override
-    public void setDisplayName(String name) {
-        name = name.trim();
-        ModifiableModuleModel modifiableModuleModel = myConfigurator.getModuleModel();
-        if (StringUtil.isEmpty(name)) {
-            return; //empty string comes on double click on module node
+    public Component createUIComponent(Disposable parentUIDisposable) {
+        DockLayout mainPanel = myMainPanel;
+        if (mainPanel == null) {
+            mainPanel = createMainPanel(parentUIDisposable);
+            myMainPanel = mainPanel;
         }
-        if (Comparing.strEqual(name, myModuleName)) {
-            return; //nothing changed
-        }
-        try {
-            modifiableModuleModel.renameModule(myModule, name);
-        }
-        catch (ModuleWithNameAlreadyExistsException ignored) {
-        }
-        myConfigurator.moduleRenamed(myModule, myModuleName, name);
-        myModuleName = name;
-        myConfigurator.setModified(!Comparing.strEqual(myModuleName, myModule.getName()));
-
-        // TODO [VISTALL] myContext.getDaemonAnalyzer().queueUpdateForAllElementsWithErrors();
+        return mainPanel;
     }
 
-    @Override
-    protected @Nullable JComponent createTopRightComponent(JTextField nameField) {
-        return createLayerConfigurationPanel(getModuleEditor());
+    @RequiredUIAccess
+    private DockLayout createMainPanel(Disposable parentUIDisposable) {
+        ModuleEditor moduleEditor = getModuleEditor();
+
+        TextBox nameComponent = TextBox.create(myModuleName);
+        nameComponent.addValueListener(event -> rename(Objects.requireNonNullElse(event.getValue(), "")));
+        myNameComponent = nameComponent;
+
+        FormBuilder formBuilder = FormBuilder.create();
+        formBuilder.addLabeled(CommonLocalize.nameLabelText(), nameComponent);
+        formBuilder.addLabeled(ProjectLocalize.moduleLayerLabel(), createLayerComponent(moduleEditor));
+
+        DockLayout mainPanel = DockLayout.create();
+        mainPanel.top(formBuilder.build());
+        mainPanel.center(moduleEditor.getUIComponent(parentUIDisposable));
+        return mainPanel;
     }
 
-    
-    private static JPanel createLayerConfigurationPanel(ModuleEditor moduleEditor) {
-        BorderLayoutPanel panel = JBUI.Panels.simplePanel();
+    @RequiredUIAccess
+    private Component createLayerComponent(ModuleEditor moduleEditor) {
+        ModifiableRootModel rootModel = moduleEditor.getModifiableRootModelProxy();
 
-        ModifiableRootModel moduleRootModel = moduleEditor.getModifiableRootModelProxy();
-
-        MutableCollectionComboBoxModel<String> model = new MutableCollectionComboBoxModel<String>(new ArrayList<String>(moduleRootModel.getLayers().keySet()), moduleRootModel.getCurrentLayerName());
-
-        ComboBox comboBox = new ComboBox(model);
-        comboBox.setEnabled(model.getSize() > 1);
-
-        moduleEditor.addChangeListener(moduleRootModel1 -> {
-            model.update(new ArrayList<String>(moduleRootModel1.getLayers().keySet()));
-            model.setSelectedItem(moduleRootModel1.getCurrentLayerName());
-            model.update();
-
-            comboBox.setEnabled(comboBox.getItemCount() > 1);
-        });
-
-        comboBox.addItemListener(e -> {
-            if (e.getStateChange() == ItemEvent.SELECTED) {
-                String selectedItem = (String) comboBox.getSelectedItem();
-                if (!Objects.equals(moduleEditor.getModifiableRootModelProxy().getCurrentLayerName(), selectedItem)) {
-                    moduleEditor.getModifiableRootModelProxy().setCurrentLayer(selectedItem);
-                }
+        MutableFlatDataModel<String> layers = FlatDataModel.of(rootModel.getLayers().keySet());
+        ComboBox<String> layerComponent = ComboBox.create(layers);
+        layerComponent.setValue(rootModel.getCurrentLayerName(), false);
+        layerComponent.setEnabled(rootModel.getLayers().size() > 1);
+        layerComponent.addValueListener(event -> {
+            String layer = event.getValue();
+            ModifiableRootModel proxy = moduleEditor.getModifiableRootModelProxy();
+            if (layer != null && !Objects.equals(proxy.getCurrentLayerName(), layer)) {
+                proxy.setCurrentLayer(layer);
             }
         });
 
-        DefaultActionGroup group = new DefaultActionGroup();
-        group.add(new NewLayerAction(moduleEditor, false));
-        group.add(new DeleteLayerAction(moduleEditor));
-        group.add(new NewLayerAction(moduleEditor, true));
+        ModuleEditor.ChangeListener layerListener = model -> {
+            layers.replaceAll(model.getLayers().keySet());
+            layerComponent.setValue(model.getCurrentLayerName(), false);
+            layerComponent.setEnabled(model.getLayers().size() > 1);
+        };
+        moduleEditor.addChangeListener(layerListener);
+        myLayerListener = layerListener;
 
-        ActionToolbar actionToolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group, true);
-        actionToolbar.setTargetComponent(panel);
-        JComponent toolbarComponent = actionToolbar.getComponent();
-        toolbarComponent.setBorder(JBUI.Borders.empty());
+        ActionGroup group = ActionGroup.newImmutableBuilder()
+            .add(new NewLayerAction(moduleEditor, false, () -> layerComponent))
+            .add(new DeleteLayerAction(moduleEditor))
+            .add(new NewLayerAction(moduleEditor, true, () -> layerComponent))
+            .build();
 
-        panel.addToLeft(LabeledComponent.left(comboBox, "Layer")).addToRight(toolbarComponent);
-        return panel;
+        ActionToolbar toolbar = ActionToolbarFactory.getInstance()
+            .createActionToolbar(ActionPlaces.UNKNOWN, group, ActionToolbar.Style.HORIZONTAL);
+        toolbar.setTargetUIComponent(layerComponent);
+
+        DockLayout layerRow = DockLayout.create();
+        layerRow.center(layerComponent);
+        layerRow.right(toolbar.getUIComponent());
+        return layerRow;
     }
 
+    @RequiredUIAccess
+    private void rename(String newName) {
+        String name = newName.trim();
+        if (name.equals(myModuleName)) {
+            return;
+        }
+
+        if (!name.isEmpty()) {
+            ModifiableModuleModel moduleModel = myConfigurator.getModuleModel();
+            try {
+                moduleModel.renameModule(myModule, name);
+            }
+            catch (ModuleWithNameAlreadyExistsException ignored) {
+            }
+            myConfigurator.moduleRenamed(myModule, myModuleName, name);
+        }
+
+        myModuleName = name;
+        myConfigurator.setModified(!Objects.equals(myModuleName, myModule.getName()));
+        myNameChanged.accept(myModule, name);
+    }
+
+    public String getModuleName() {
+        return myModuleName;
+    }
+
+    @RequiredUIAccess
     @Override
-    public ProjectStructureElement getProjectStructureElement() {
-        return myProjectStructureElement;
+    public void updateName() {
+        TextBox nameComponent = myNameComponent;
+        if (nameComponent != null) {
+            nameComponent.setValue(myModuleName, false);
+        }
     }
 
     @Override
     public Module getEditableObject() {
+        return myModule;
+    }
+
+    public Module getModule() {
         return myModule;
     }
 
@@ -152,28 +190,18 @@ public class ModuleConfigurable extends ProjectStructureElementConfigurable<Modu
 
     @Override
     public LocalizeValue getDisplayName() {
-        return LocalizeValue.ofNullable(myModuleName);
+        return LocalizeValue.of(myModuleName);
     }
 
     @Override
-    public Image getIcon(boolean open) {
-        return AllIcons.Nodes.Module;
-    }
-
-    public Module getModule() {
-        return myModule;
+    public @Nullable Image getIcon() {
+        return PlatformIconGroup.nodesModule();
     }
 
     @Override
     public @Nullable String getHelpTopic() {
-        ModuleEditor moduleEditor = getModuleEditor();
+        ModuleEditor moduleEditor = myConfigurator.getModuleEditor(myModule);
         return moduleEditor != null ? moduleEditor.getHelpTopic() : null;
-    }
-
-    @RequiredUIAccess
-    @Override
-    public JComponent createOptionsPanel(Disposable parentUIDisposable) {
-        return getModuleEditor().getPanel(parentUIDisposable);
     }
 
     @RequiredUIAccess
@@ -187,7 +215,20 @@ public class ModuleConfigurable extends ProjectStructureElementConfigurable<Modu
     public void apply() throws ConfigurationException {
     }
 
+    @RequiredUIAccess
+    @Override
+    public void disposeUIResources() {
+        ModuleEditor.ChangeListener layerListener = myLayerListener;
+        ModuleEditor moduleEditor = myConfigurator.getModuleEditor(myModule);
+        if (layerListener != null && moduleEditor != null) {
+            moduleEditor.removeChangeListener(layerListener);
+        }
+        myLayerListener = null;
+        myMainPanel = null;
+        myNameComponent = null;
+    }
+
     public ModuleEditor getModuleEditor() {
-        return myConfigurator.getModuleEditor(myModule);
+        return myConfigurator.getOrCreateModuleEditor(myModule);
     }
 }

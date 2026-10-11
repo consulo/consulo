@@ -15,13 +15,11 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts;
 
-import consulo.component.persist.PersistentStateComponent;
-import consulo.project.Project;
 import consulo.compiler.artifact.element.ComplexPackagingElementType;
 import consulo.compiler.artifact.element.PackagingElementFactory;
 import consulo.compiler.artifact.element.PackagingElementType;
-import consulo.util.xml.serializer.annotation.AbstractCollection;
-import consulo.util.xml.serializer.annotation.Tag;
+import consulo.project.Project;
+import consulo.project.ProjectPropertiesComponent;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -30,67 +28,66 @@ import java.util.List;
 /**
  * @author nik
  */
-public class ArtifactEditorSettings implements PersistentStateComponent<ArtifactEditorSettings.ArtifactEditorSettingsState> {
-  private final Project myProject;
-  private boolean mySortElements = true;
-  private final List<ComplexPackagingElementType<?>> myTypesToShowContent = new ArrayList<ComplexPackagingElementType<?>>();
+public class ArtifactEditorSettings {
+    private static final String SORT_ELEMENTS_KEY = "artifact.editor.sort.elements";
+    private static final String SHOW_CONTENT_KEY = "artifact.editor.show.content.types";
 
-  public ArtifactEditorSettings(Project project) {
-    myProject = project;
-  }
+    private final Project myProject;
+    private boolean mySortElements = true;
+    private final List<ComplexPackagingElementType<?>> myTypesToShowContent = new ArrayList<>();
 
-  public ArtifactEditorSettings(Project project, boolean sortElements, Collection<ComplexPackagingElementType<?>> typesToShowContent) {
-    this(project);
-
-    mySortElements = sortElements;
-    myTypesToShowContent.addAll(typesToShowContent);
-  }
-
-  @Override
-  public ArtifactEditorSettingsState getState() {
-    ArtifactEditorSettingsState state = new ArtifactEditorSettingsState();
-    state.mySortElements = mySortElements;
-    for (ComplexPackagingElementType<?> type : myTypesToShowContent) {
-      state.myTypesToShowContentIds.add(type.getId());
+    public ArtifactEditorSettings(Project project) {
+        myProject = project;
     }
-    return state;
-  }
 
-  @Override
-  public void loadState(ArtifactEditorSettingsState state) {
-    mySortElements = state.mySortElements;
-    myTypesToShowContent.clear();
-    for (String id : state.myTypesToShowContentIds) {
-      PackagingElementType<?> type = PackagingElementFactory.getInstance(myProject).findElementType(id);
-      if (type instanceof ComplexPackagingElementType<?>) {
-        myTypesToShowContent.add((ComplexPackagingElementType<?>)type);
-      }
+    public ArtifactEditorSettings(Project project, boolean sortElements, Collection<ComplexPackagingElementType<?>> typesToShowContent) {
+        this(project);
+        mySortElements = sortElements;
+        myTypesToShowContent.addAll(typesToShowContent);
     }
-  }
 
-  public boolean isSortElements() {
-    return mySortElements;
-  }
+    public void load(ProjectPropertiesComponent properties) {
+        mySortElements = properties.getBoolean(SORT_ELEMENTS_KEY, true);
+        myTypesToShowContent.clear();
 
-  public List<ComplexPackagingElementType<?>> getTypesToShowContent() {
-    return myTypesToShowContent;
-  }
+        String[] ids = properties.getValues(SHOW_CONTENT_KEY);
+        if (ids == null) {
+            return;
+        }
 
-  public void setSortElements(boolean sortElements) {
-    mySortElements = sortElements;
-  }
+        PackagingElementFactory factory = PackagingElementFactory.getInstance(myProject);
+        for (String id : ids) {
+            PackagingElementType<?> type = factory.findElementType(id);
+            if (type instanceof ComplexPackagingElementType<?> complexType) {
+                myTypesToShowContent.add(complexType);
+            }
+        }
+    }
 
-  public void setTypesToShowContent(Collection<ComplexPackagingElementType<?>> typesToShowContent) {
-    myTypesToShowContent.clear();
-    myTypesToShowContent.addAll(typesToShowContent);
-  }
+    public void save(ProjectPropertiesComponent properties) {
+        properties.setValue(SORT_ELEMENTS_KEY, mySortElements, true);
 
-  @Tag("artifact-editor")
-  public static class ArtifactEditorSettingsState {
-    @Tag("show-sorted")
-    public boolean mySortElements = true;
-    @Tag("show-content")
-    @AbstractCollection(surroundWithTag = false, elementTag = "type", elementValueAttribute = "id")
-    public List<String> myTypesToShowContentIds = new ArrayList<String>();
-  }
+        String[] ids = new String[myTypesToShowContent.size()];
+        for (int i = 0; i < ids.length; i++) {
+            ids[i] = myTypesToShowContent.get(i).getId();
+        }
+        properties.setValues(SHOW_CONTENT_KEY, ids);
+    }
+
+    public boolean isSortElements() {
+        return mySortElements;
+    }
+
+    public List<ComplexPackagingElementType<?>> getTypesToShowContent() {
+        return myTypesToShowContent;
+    }
+
+    public void setSortElements(boolean sortElements) {
+        mySortElements = sortElements;
+    }
+
+    public void setTypesToShowContent(Collection<ComplexPackagingElementType<?>> typesToShowContent) {
+        myTypesToShowContent.clear();
+        myTypesToShowContent.addAll(typesToShowContent);
+    }
 }

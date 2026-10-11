@@ -17,9 +17,12 @@ package consulo.desktop.awt.ui.impl;
 
 import consulo.desktop.awt.ui.impl.facade.FromSwingComponentWrapper;
 import consulo.ui.Component;
+import consulo.ui.color.ColorValue;
 import consulo.ui.ex.awt.dnd.DnDAwareTree;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.tree.TreeModel;
+import java.awt.Graphics;
 
 /**
  * @author VISTALL
@@ -36,5 +39,22 @@ public class DesktopAWTTree extends DnDAwareTree implements FromSwingComponentWr
     @Override
     public Component toUIComponent() {
         return myOwner;
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        if (!isFileColorsEnabled()) {
+            paintFileColorGutter(g);
+        }
+
+        super.paintComponent(g);
+    }
+
+    @Override
+    public @Nullable ColorValue getFileColorFor(Object object) {
+        if (object instanceof DesktopTreeNodeDescriptor<?> descriptor) {
+            return descriptor.getPresentation().getBackground();
+        }
+        return null;
     }
 }

@@ -22,11 +22,12 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.localize.LocalizeValue;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
 import java.util.Set;
 
 public abstract class CodeStyleAbstractConfigurable implements Configurable, OptionsContainingConfigurable {
@@ -53,9 +54,9 @@ public abstract class CodeStyleAbstractConfigurable implements Configurable, Opt
 
     @Override
     @RequiredUIAccess
-    public JComponent createComponent(Disposable uiDisposable) {
+    public Component createUIComponent(Disposable uiDisposable) {
         myPanel = createPanel(myCloneSettings);
-        return myPanel.getPanel();
+        return TargetAWT.wrap(myPanel.getPanel());
     }
 
     protected abstract CodeStyleAbstractPanel createPanel(CodeStyleSettings settings);

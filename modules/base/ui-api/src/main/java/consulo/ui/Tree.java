@@ -70,6 +70,9 @@ public interface Tree<E> extends Component, HasDestroyHook, HasTransferHandler<T
         return node == null ? List.of() : List.of(node);
     }
 
+    default void setAllowMultipleSelect(boolean allow) {
+    }
+
     /**
      * Opens the node, building its children first when they were not built yet.
      *

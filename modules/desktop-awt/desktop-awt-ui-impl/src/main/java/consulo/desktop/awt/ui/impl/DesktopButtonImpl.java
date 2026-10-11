@@ -30,6 +30,7 @@ import consulo.ui.event.ComponentEventListener;
 import consulo.ui.event.details.InputDetails;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
+import consulo.ui.internal.SearchHighlightUtil;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
@@ -43,6 +44,8 @@ class DesktopButtonImpl extends SwingComponentDelegate<DesktopButtonImpl.MyButto
         private LocalizeValue myTextValue = LocalizeValue.empty();
 
         private Boolean myDefaultButton;
+
+        private @Nullable String mySearchHighlight;
 
         MyButton(LocalizeValue textValue) {
             super("");
@@ -76,8 +79,13 @@ class DesktopButtonImpl extends SwingComponentDelegate<DesktopButtonImpl.MyButto
             return DesktopButtonImpl.this;
         }
 
+        public void setSearchHighlight(@Nullable String query) {
+            mySearchHighlight = query;
+            updateText();
+        }
+
         private void updateText() {
-            updateTextForButton(this, myTextValue);
+            updateTextForButton(this, myTextValue, mySearchHighlight);
         }
     }
 
@@ -115,6 +123,9 @@ class DesktopButtonImpl extends SwingComponentDelegate<DesktopButtonImpl.MyButto
             case PRIMARY:
                 toAWTComponent().myDefaultButton = true;
                 break;
+            case HELP:
+                toAWTComponent().putClientProperty("JButton.buttonType", "help");
+                break;
         }
     }
 
@@ -150,5 +161,16 @@ class DesktopButtonImpl extends SwingComponentDelegate<DesktopButtonImpl.MyButto
     @Override
     public void setIcon(@Nullable Image image) {
         toAWTComponent().setIcon(TargetAWT.to(image));
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setSearchHighlight(@Nullable String query) {
+        toAWTComponent().setSearchHighlight(SearchHighlightUtil.normalizeQuery(query));
+    }
+
+    @Override
+    public @Nullable String getSearchHighlight() {
+        return toAWTComponent().mySearchHighlight;
     }
 }

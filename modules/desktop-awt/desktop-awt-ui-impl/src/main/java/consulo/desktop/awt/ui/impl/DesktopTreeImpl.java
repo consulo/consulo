@@ -19,6 +19,8 @@ import consulo.ui.TreeExecutor;
 import consulo.ui.TreeModel;
 import org.jspecify.annotations.Nullable;
 
+import javax.swing.tree.TreeSelectionModel;
+
 /**
  * @author VISTALL
  * @since 2021-07-14
@@ -31,6 +33,7 @@ public class DesktopTreeImpl<E> extends DesktopTreeBase<E, DesktopAWTTree> {
     @Override
     protected DesktopAWTTree createComponent() {
         DesktopAWTTree tree = createTree(createAsyncTreeModel());
+        tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         installTree(tree);
         return tree;
     }

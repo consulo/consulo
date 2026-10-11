@@ -1,6 +1,7 @@
 // Copyright 2000-2026 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.fileChooser.impl.internal;
 
+import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.disposer.Disposable;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.localize.FileChooserLocalize;
@@ -45,6 +46,8 @@ class FileView {
     private final DockLayout myTopComponent;
 
     private @Nullable Path myFileToSelect;
+    private boolean myPathUpdating;
+    private boolean myTreeIsUpdating;
 
     @RequiredUIAccess
     FileView(
@@ -74,6 +77,7 @@ class FileView {
         myPathTextField = new NioPathTextField(descriptor.isChooseFiles(), descriptor.isChooseJarContents());
         myPathTextField.setShowHiddenSupplier(myFileTree::areHiddensShown);
         myPathTextField.setPathParser(contributor::parsePresentablePath);
+        myPathTextField.getTextBox().addValueListener(event -> updateTreeFromPath(event.getValue()));
 
         myTreeComponent = ScrollableLayout.create(myFileTree.getTree());
         myContent = LoadingLayout.create(DockLayout.create(), disposable);
@@ -103,7 +107,30 @@ class FileView {
     }
 
     List<Path> getSelectedFiles() {
-        return myFileTree.getSelectedFiles();
+        List<Path> selected = myFileTree.getSelectedFiles();
+        Path typed = getTypedPath();
+        if (typed == null || selected.contains(typed)) {
+            return selected;
+        }
+        return List.of(typed);
+    }
+
+    private @Nullable Path getTypedPath() {
+        String text = myPathTextField.getTextBox().getValue();
+        if (text == null || text.isBlank()) {
+            return null;
+        }
+
+        Path path = myContributor.parsePresentablePath(text);
+        if (path == null || !Files.exists(path)) {
+            return null;
+        }
+
+        boolean directory = Files.isDirectory(path);
+        if (directory ? !myChooseFolders : !myChooseFiles) {
+            return null;
+        }
+        return path.toAbsolutePath().normalize();
     }
 
     boolean isOkEnabled() {
@@ -218,13 +245,27 @@ class FileView {
             });
     }
 
-    void navigateToTextFieldPath() {
-        String text = myPathTextField.getTextBox().getValueOrError();
+    @RequiredUIAccess
+    private void updateTreeFromPath(@Nullable String text) {
+        if (myPathUpdating || text == null || text.isEmpty()) {
+            return;
+        }
+
         Path path = myContributor.parsePresentablePath(text);
         if (path == null) {
             return;
         }
-        myFileTree.select(path);
+
+        UIAccess uiAccess = UIAccess.current();
+        CompletableFuture.supplyAsync(() -> Files.exists(path), AppExecutorUtil.getAppExecutorService())
+            .whenCompleteAsync((exists, error) -> {
+                if (!Boolean.TRUE.equals(exists) || !text.equals(myPathTextField.getTextBox().getValue())) {
+                    return;
+                }
+
+                myTreeIsUpdating = true;
+                myFileTree.select(path).whenCompleteAsync((node, selectError) -> myTreeIsUpdating = false, uiAccess);
+            }, uiAccess);
     }
 
     void navigateToFile(Path file) {
@@ -249,7 +290,9 @@ class FileView {
 
     @RequiredUIAccess
     private void onSelectionChanged(List<Path> selection) {
-        updatePathField(selection);
+        if (!myTreeIsUpdating) {
+            updatePathField(selection);
+        }
         myOkEnabledUpdater.run();
     }
 
@@ -258,6 +301,12 @@ class FileView {
         if (selection.isEmpty()) {
             return;
         }
-        myPathTextField.getTextBox().setValue(myContributor.getPresentablePath(selection.get(0)));
+        myPathUpdating = true;
+        try {
+            myPathTextField.getTextBox().setValue(myContributor.getPresentablePath(selection.get(0)));
+        }
+        finally {
+            myPathUpdating = false;
+        }
     }
 }

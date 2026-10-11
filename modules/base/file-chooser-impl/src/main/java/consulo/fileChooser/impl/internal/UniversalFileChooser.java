@@ -65,7 +65,11 @@ public class UniversalFileChooser implements FileChooserDialog, PathChooserDialo
         CompletableFuture<VirtualFile[]> result = new CompletableFuture<>();
 
         Dialog dialog = Application.get().getInstance(DialogService.class).build(dialogDescriptor);
-        dialogDescriptor.setOkAction(() -> dialog.doOkAction(dialogDescriptor.getOkValue()));
+        dialogDescriptor.setOkAction(() -> {
+            if (dialogDescriptor.validateSelectedFiles(dialog.getWindow())) {
+                dialog.doOkAction(dialogDescriptor.getOkValue());
+            }
+        });
         dialog.showAsync().whenComplete((value, throwable) -> {
             if (throwable != null || value == null) {
                 result.completeExceptionally(new CancellationException());
@@ -75,13 +79,13 @@ public class UniversalFileChooser implements FileChooserDialog, PathChooserDialo
             if (!selectedPaths.isEmpty()) {
                 NioFileChooserUtil.setLastOpenedFile(targetProject, selectedPaths.get(0));
             }
-            result.complete(toVirtualFiles(selectedPaths).toArray(VirtualFile.EMPTY_ARRAY));
+            result.complete(toVirtualFiles(myDescriptor, selectedPaths).toArray(VirtualFile.EMPTY_ARRAY));
         });
 
         return result;
     }
 
-    private List<VirtualFile> toVirtualFiles(List<Path> paths) {
+    static List<VirtualFile> toVirtualFiles(FileChooserDescriptor descriptor, List<Path> paths) {
         // Mirror FileChooserDialogImpl.doOKAction: after resolving NIO paths to VirtualFiles, run each
         // result through `descriptor.getFileToSelect(...)` so that, e.g., an archive file is returned as
         // its `jar://...!/` archive file system VirtualFile when the descriptor has `isChooseJarContents = true`.
@@ -89,7 +93,7 @@ public class UniversalFileChooser implements FileChooserDialog, PathChooserDialo
         for (Path path : paths) {
             VirtualFile file = LocalFileSystem.getInstance().refreshAndFindFileByNioFile(path);
             if (file != null && file.isValid()) {
-                VirtualFile toSelect = myDescriptor.getFileToSelect(file);
+                VirtualFile toSelect = descriptor.getFileToSelect(file);
                 if (toSelect != null) {
                     resolved.add(toSelect);
                 }

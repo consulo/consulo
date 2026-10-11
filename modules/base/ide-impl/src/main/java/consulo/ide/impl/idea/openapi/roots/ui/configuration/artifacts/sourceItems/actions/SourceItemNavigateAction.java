@@ -15,10 +15,11 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceItems.actions;
 
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.actions.ArtifactEditorNavigateActionBase;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceItems.SourceItemNode;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceItems.SourceItemsTree;
+import consulo.compiler.artifact.ui.PackagingSourceItem;
 import consulo.compiler.artifact.ui.TreeNodePresentation;
+import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.actions.ArtifactEditorNavigateActionBase;
+import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceItems.SourceItemsTree;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -26,19 +27,15 @@ import java.util.List;
  * @author nik
  */
 public class SourceItemNavigateAction extends ArtifactEditorNavigateActionBase {
-  private final SourceItemsTree mySourceItemsTree;
+    private final SourceItemsTree mySourceItemsTree;
 
-  public SourceItemNavigateAction(SourceItemsTree sourceItemsTree) {
-    super(sourceItemsTree);
-    mySourceItemsTree = sourceItemsTree;
-  }
-
-  @Override
-  protected TreeNodePresentation getPresentation() {
-    List<SourceItemNode> nodes = mySourceItemsTree.getSelectedSourceItemNodes();
-    if (nodes.size() == 1) {
-      return nodes.get(0).getElementPresentation();
+    public SourceItemNavigateAction(SourceItemsTree sourceItemsTree) {
+        mySourceItemsTree = sourceItemsTree;
     }
-    return null;
-  }
+
+    @Override
+    protected @Nullable TreeNodePresentation getPresentation() {
+        List<PackagingSourceItem> items = mySourceItemsTree.getSelectedSourceItems();
+        return items.size() == 1 ? mySourceItemsTree.getPresentation(items.get(0)) : null;
+    }
 }

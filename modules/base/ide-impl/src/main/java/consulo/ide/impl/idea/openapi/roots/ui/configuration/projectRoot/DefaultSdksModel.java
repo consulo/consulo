@@ -18,8 +18,6 @@ package consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot;
 
 import consulo.application.Application;
 import consulo.application.content.impl.internal.bundle.SdkImpl;
-import consulo.application.progress.ProgressIndicator;
-import consulo.application.progress.Task;
 import consulo.component.extension.ExtensionPoint;
 import consulo.configurable.ConfigurationException;
 import consulo.content.bundle.*;
@@ -30,22 +28,23 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.project.localize.ProjectLocalize;
-import consulo.ui.UIAccess;
+import consulo.ui.Component;
+import consulo.ui.MessageBoxes;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.DumbAwareAction;
-import consulo.ui.ex.awt.MasterDetailsComponent;
-import consulo.ui.ex.awt.Messages;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Comparing;
+import consulo.application.progress.ProgressBuilderFactory;
+import consulo.ui.UIAccess;
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.step.CodeExecution;
 import jakarta.inject.Provider;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -161,14 +160,14 @@ public class DefaultSdksModel implements SdkModel, SettingsSdksModel {
 
     @Override
     @RequiredUIAccess
-    public void apply(@Nullable MasterDetailsComponent configurable) throws ConfigurationException {
-        apply(configurable, false);
+    public void apply(@Nullable Consumer<Sdk> invalidSdkSelector) throws ConfigurationException {
+        apply(invalidSdkSelector, false);
     }
 
     @RequiredUIAccess
-    public void apply(@Nullable MasterDetailsComponent configurable, boolean addedOnly) throws ConfigurationException {
+    public void apply(@Nullable Consumer<Sdk> invalidSdkSelector, boolean addedOnly) throws ConfigurationException {
         String[] errorString = new String[1];
-        if (!canApply(errorString, configurable, addedOnly)) {
+        if (!canApply(errorString, invalidSdkSelector, addedOnly)) {
             throw new ConfigurationException(errorString[0]);
         }
         Sdk[] allFromTable = mySdkTableProvider.get().getAllSdks();
@@ -208,7 +207,7 @@ public class DefaultSdksModel implements SdkModel, SettingsSdksModel {
 
     private boolean canApply(
         String[] errorString,
-        @Nullable MasterDetailsComponent rootConfigurable,
+        @Nullable Consumer<Sdk> invalidSdkSelector,
         boolean addedOnly
     ) throws ConfigurationException {
         Map<Sdk, Sdk> sdks = new LinkedHashMap<>(mySdks);
@@ -237,12 +236,8 @@ public class DefaultSdksModel implements SdkModel, SettingsSdksModel {
                     sdkAdditionalData.checkValid(this);
                 }
                 catch (ConfigurationException e) {
-                    if (rootConfigurable != null) {
-                        if (!(rootConfigurable.getSelectedObject() instanceof Sdk projectJdk
-                            && Comparing.strEqual(projectJdk.getName(), currName))) {
-                            //do not leave current item with current name
-                            rootConfigurable.selectNodeInTree(currName);
-                        }
+                    if (invalidSdkSelector != null) {
+                        invalidSdkSelector.accept(currItem);
                     }
                     throw new ConfigurationException(ProjectLocalize.sdkConfigurationException(currName) + " " + e.getMessage());
                 }
@@ -252,8 +247,8 @@ public class DefaultSdksModel implements SdkModel, SettingsSdksModel {
         if (itemWithError == null) {
             return true;
         }
-        if (rootConfigurable != null) {
-            rootConfigurable.selectNodeInTree(itemWithError.getName());
+        if (invalidSdkSelector != null) {
+            invalidSdkSelector.accept(itemWithError);
         }
         return false;
     }
@@ -278,7 +273,7 @@ public class DefaultSdksModel implements SdkModel, SettingsSdksModel {
     @Override
     public void createAddActions(
         DefaultActionGroup group,
-        JComponent parent,
+        Component parent,
         Consumer<Sdk> updateTree,
         @Nullable Predicate<SdkTypeId> filter
     ) {
@@ -306,7 +301,7 @@ public class DefaultSdksModel implements SdkModel, SettingsSdksModel {
     }
 
     @RequiredUIAccess
-    public void doAdd(JComponent parent, SdkType type, Consumer<Sdk> callback) {
+    public void doAdd(Component parent, SdkType type, Consumer<Sdk> callback) {
         myModified = true;
         if (type instanceof SdkTypeWithCustomCreateUI customCreateUI) {
             customCreateUI.showCustomCreateUI(this, parent, sdk -> setupSdk(sdk, callback));
@@ -335,27 +330,24 @@ public class DefaultSdksModel implements SdkModel, SettingsSdksModel {
     @RequiredUIAccess
     private void setupSdk(Sdk newSdk, Consumer<Sdk> callback) {
         UIAccess uiAccess = UIAccess.current();
+        Application.get().getInstance(ProgressBuilderFactory.class)
+            .newProgressBuilder(null, ProjectLocalize.sdkSetupProgress())
+            .modal()
+            .execute(uiAccess, () -> Coroutine.first(CodeExecution.run(() -> ((SdkType) newSdk.getSdkType()).setupSdkPaths(newSdk))))
+            .whenCompleteAsync((value, error) -> {
+                if (error != null) {
+                    LOG.error(error);
+                    return;
+                }
 
-        new Task.Modal(null, "Setting up SDK…", false) {
-            @Override
-            public void run(ProgressIndicator indicator) {
-                SdkType sdkType = (SdkType) newSdk.getSdkType();
-                sdkType.setupSdkPaths(newSdk);
+                doAdd(newSdk, callback);
 
-                uiAccess.give(() -> {
-                    if (newSdk.getVersionString() == null) {
-                        String home = newSdk.getHomePath();
-                        Messages.showMessageDialog(
-                            ProjectLocalize.sdkJavaCorruptError(home).get(),
-                            ProjectLocalize.sdkJavaCorruptTitle().get(),
-                            UIUtil.getErrorIcon()
-                        );
-                    }
-
-                    doAdd(newSdk, callback);
-                });
-            }
-        }.queue();
+                if (newSdk.getVersionString() == null) {
+                    MessageBoxes.okError(ProjectLocalize.sdkJavaCorruptError(String.valueOf(newSdk.getHomePath())))
+                        .title(ProjectLocalize.sdkJavaCorruptTitle())
+                        .showAsync();
+                }
+            }, uiAccess);
     }
 
     @Override

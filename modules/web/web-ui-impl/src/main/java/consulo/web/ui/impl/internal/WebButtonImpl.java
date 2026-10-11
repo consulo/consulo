@@ -19,6 +19,7 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.dom.Style;
 import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.Button;
 import consulo.ui.ButtonStyle;
 import consulo.ui.Component;
@@ -27,6 +28,7 @@ import consulo.ui.event.ClickEvent;
 import consulo.ui.event.details.InputDetails;
 import consulo.ui.ex.internal.LocalizeValueWithMnemonic;
 import consulo.ui.image.Image;
+import consulo.ui.internal.SearchHighlightUtil;
 import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
 import consulo.web.ui.impl.internal.base.VaadinComponentDelegate;
 import consulo.web.ui.impl.internal.base.WebInputDetails;
@@ -56,6 +58,8 @@ public class WebButtonImpl extends VaadinComponentDelegate<WebButtonImpl.Vaadin>
 
     private @Nullable Image myImage;
 
+    private @Nullable String mySearchHighlight;
+
     public WebButtonImpl(LocalizeValue text) {
         Vaadin component = toVaadinComponent();
 
@@ -63,7 +67,7 @@ public class WebButtonImpl extends VaadinComponentDelegate<WebButtonImpl.Vaadin>
         myClickInstalled = true;
 
         myTextValue = text;
-        component.setText(plainText(text));
+        WebSearchHighlight.setButtonText(component, plainText(text), mySearchHighlight);
     }
 
     /**
@@ -89,7 +93,19 @@ public class WebButtonImpl extends VaadinComponentDelegate<WebButtonImpl.Vaadin>
             case TOOLBAR:
                 applyToolbarStyle(toVaadinComponent());
                 break;
+            case HELP:
+                applyHelpStyle();
+                break;
         }
+    }
+
+    @RequiredUIAccess
+    private void applyHelpStyle() {
+        if (myImage == null) {
+            setIcon(PlatformIconGroup.actionsHelp());
+        }
+
+        toVaadinComponent().addClassName("consulo-help-button");
     }
 
     /**
@@ -122,7 +138,19 @@ public class WebButtonImpl extends VaadinComponentDelegate<WebButtonImpl.Vaadin>
     @RequiredUIAccess
     public void setText(LocalizeValue text) {
         myTextValue = text;
-        toVaadinComponent().setText(plainText(text));
+        WebSearchHighlight.setButtonText(toVaadinComponent(), plainText(text), mySearchHighlight);
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void setSearchHighlight(@Nullable String query) {
+        mySearchHighlight = SearchHighlightUtil.normalizeQuery(query);
+        WebSearchHighlight.setButtonText(toVaadinComponent(), plainText(myTextValue), mySearchHighlight);
+    }
+
+    @Override
+    public @Nullable String getSearchHighlight() {
+        return mySearchHighlight;
     }
 
     @Override

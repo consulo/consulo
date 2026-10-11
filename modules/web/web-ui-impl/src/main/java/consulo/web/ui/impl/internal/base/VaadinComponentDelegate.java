@@ -35,6 +35,7 @@ import consulo.ui.impl.BorderBuilderImpl;
 import consulo.ui.impl.PaddingBuilderImpl;
 import consulo.ui.impl.UIDataObject;
 import consulo.ui.internal.BorderPosition;
+import consulo.ui.layout.Layout;
 import consulo.util.dataholder.Key;
 import consulo.web.ui.impl.internal.WebColors;
 import consulo.web.ui.impl.internal.WebUIAccessImpl;
@@ -54,6 +55,12 @@ import java.util.Optional;
  */
 public abstract class VaadinComponentDelegate<T extends com.vaadin.flow.component.Component & FromVaadinComponentWrapper>
     implements consulo.ui.Component, consulo.ui.HasSize, DataObjectHolder, ToVaadinComponentWrapper {
+    private static final String KEY_LEFT_BY_DESCENDANT = "!event.defaultPrevented && (target => !target"
+        + " || !(target.tagName === 'TEXTAREA' || target.isContentEditable || (target.tagName === 'INPUT'"
+        + " && !event.ctrlKey && !event.altKey && !event.metaKey && (event.key.length === 1"
+        + " || ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)))))"
+        + "(event.composedPath()[0])";
+
     private T myVaadinComponent;
 
     private Cursor myCursor;
@@ -96,6 +103,7 @@ public abstract class VaadinComponentDelegate<T extends com.vaadin.flow.componen
      */
     protected boolean myClickInstalled;
     private boolean myContextMenuInstalled;
+    private boolean myMousePressInstalled;
     private boolean myKeyReleasedInstalled;
 
     public VaadinComponentDelegate() {
@@ -229,6 +237,16 @@ public abstract class VaadinComponentDelegate<T extends com.vaadin.flow.componen
             ).stopPropagation();
         }
 
+        if (eventClass == MousePressedEvent.class && !myMousePressInstalled) {
+            myMousePressInstalled = true;
+
+            WebInputDetails.addClickListener(
+                toVaadinComponent().getElement(),
+                "mousedown",
+                details -> getListenerDispatcher(MousePressedEvent.class).onEvent(new MousePressedEvent(this, details))
+            );
+        }
+
         if (eventClass == ContextMenuEvent.class && !myContextMenuInstalled) {
             myContextMenuInstalled = true;
 
@@ -251,25 +269,21 @@ public abstract class VaadinComponentDelegate<T extends com.vaadin.flow.componen
         if (eventClass == KeyPressedEvent.class && !myKeyPressedInstalled) {
             myKeyPressedInstalled = true;
 
-            keepKeysFromShortcuts();
-
-            WebInputDetails.addKeyListener(
+            scopeKeys(WebInputDetails.addKeyListener(
                 toVaadinComponent().getElement(),
                 "keydown",
                 details -> getListenerDispatcher(KeyPressedEvent.class).onEvent(new KeyPressedEvent(this, details))
-            );
+            ));
         }
 
         if (eventClass == KeyReleasedEvent.class && !myKeyReleasedInstalled) {
             myKeyReleasedInstalled = true;
 
-            keepKeysFromShortcuts();
-
-            WebInputDetails.addKeyListener(
+            scopeKeys(WebInputDetails.addKeyListener(
                 toVaadinComponent().getElement(),
                 "keyup",
                 details -> getListenerDispatcher(KeyReleasedEvent.class).onEvent(new KeyReleasedEvent(this, details))
-            );
+            ));
         }
 
         return dataObject().addListener(eventClass, listener);
@@ -277,6 +291,15 @@ public abstract class VaadinComponentDelegate<T extends com.vaadin.flow.componen
 
     protected @Nullable String contextMenuCondition() {
         return null;
+    }
+
+    private void scopeKeys(DomListenerRegistration registration) {
+        if (this instanceof Layout) {
+            registration.setFilter(KEY_LEFT_BY_DESCENDANT);
+        }
+        else {
+            keepKeysFromShortcuts();
+        }
     }
 
     /**

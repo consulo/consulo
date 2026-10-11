@@ -48,6 +48,20 @@ public abstract class LocalizeManager {
      * @throws IllegalArgumentException if key is invalid
      */
     public abstract Map.Entry<Locale, String> getUnformattedText(LocalizeKey key);
+
+    /**
+     * Return unformatted localize text in the given locale, whatever the current locale is. Unlike
+     * {@link #getUnformattedText(LocalizeKey)} it never falls back to another locale.
+     *
+     * @return the text, or {@code null} if the locale has no text for the key
+     */
+    public abstract @Nullable String getUnformattedText(LocalizeKey key, Locale locale);
+
+    /**
+     * @return the locale every key has a text in, and which the other locales fall back to
+     */
+    public abstract Locale getDefaultLocale();
+
     public abstract Locale parseLocale(String localeText);
 
     public void setLocale(@Nullable Locale locale) {

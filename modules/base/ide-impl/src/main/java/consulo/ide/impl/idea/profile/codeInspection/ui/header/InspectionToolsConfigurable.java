@@ -22,6 +22,7 @@ import consulo.colorScheme.TextAttributesKey;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.SearchableConfigurable;
+import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
@@ -41,10 +42,12 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.internal.laf.MultiLineLabelUI;
 import consulo.ui.ex.awt.util.Alarm;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.collection.SmartHashSet;
 import consulo.util.io.FileUtil;
 import consulo.util.jdom.JDOMUtil;
@@ -477,11 +480,11 @@ public abstract class InspectionToolsConfigurable implements ErrorsConfigurable,
 
   @RequiredUIAccess
   @Override
-  public JComponent createComponent() {
+  public Component createUIComponent(Disposable parentDisposable) {
     buildUI();
 
     myPanel.setLayout(myLayout);
-    return myWholePanel;
+    return TargetAWT.wrap(myWholePanel);
   }
 
   protected abstract InspectionProfileImpl getCurrentProfile();
@@ -696,8 +699,9 @@ public abstract class InspectionToolsConfigurable implements ErrorsConfigurable,
 
   @RequiredUIAccess
   @Override
-  public JComponent getPreferredFocusedComponent() {
+  public @Nullable Component getPreferredFocusedUIComponent() {
     InspectionProfileImpl inspectionProfile = getSelectedObject();
-    return getProfilePanel(inspectionProfile).getPreferredFocusedComponent();
+    JComponent component = getProfilePanel(inspectionProfile).getPreferredFocusedComponent();
+    return component == null ? null : TargetAWT.wrap(component);
   }
 }

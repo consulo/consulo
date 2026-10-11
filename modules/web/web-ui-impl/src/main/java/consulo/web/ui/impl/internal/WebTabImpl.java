@@ -19,6 +19,7 @@ import com.vaadin.flow.component.html.Span;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.fileEditor.FileEditorWindow;
+import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.color.ColorValue;
 import consulo.ui.Tab;
@@ -26,6 +27,7 @@ import consulo.ui.TextItemPresentation;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.IdeActions;
+import consulo.ui.internal.TabTitlePresentation;
 import consulo.web.ui.impl.internal.action.WebActionContextMenu;
 import org.jspecify.annotations.Nullable;
 
@@ -54,6 +56,15 @@ class WebTabImpl implements Tab {
     @Override
     public void setRenderer(BiConsumer<Tab, TextItemPresentation> renderer) {
         myRenderer = renderer;
+    }
+
+    @Override
+    public LocalizeValue getTitle() {
+        return TabTitlePresentation.titleOf(this, myRenderer);
+    }
+
+    public @Nullable Component getContent() {
+        return myContent;
     }
 
     @Override

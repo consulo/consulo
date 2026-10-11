@@ -45,7 +45,17 @@ public enum ComponentColors implements StyleColorValue {
 
     LINK_FOREGROUND,
 
+    /**
+     * The fill and the text of a run of text which matches a search.
+     */
+    SEARCH_MATCH_BACKGROUND,
+    SEARCH_MATCH_FOREGROUND,
+
     ERROR_FOREGROUND,
+    /**
+     * The fill of a component which shows that its content is in error, such as a search box which found nothing.
+     */
+    ERROR_BACKGROUND,
 
     ERROR_BORDER,
     WARNING_BORDER,

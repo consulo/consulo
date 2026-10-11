@@ -21,10 +21,10 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.notification.impl.ui.NotificationsConfigurablePanel;
 import consulo.localize.LocalizeValue;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import org.jspecify.annotations.Nullable;
-
-import javax.swing.*;
 
 /**
  * @author spleaner
@@ -52,13 +52,13 @@ public class NotificationsConfigurable implements Configurable, SearchableConfig
 
   @RequiredUIAccess
   @Override
-  public JComponent createComponent(Disposable uiDisposable) {
+  public Component createUIComponent(Disposable uiDisposable) {
     if (myComponent == null) {
       myComponent = new NotificationsConfigurablePanel();
       Disposer.register(uiDisposable, myComponent);
     }
 
-    return myComponent;
+    return TargetAWT.wrap(myComponent);
   }
 
   @RequiredUIAccess

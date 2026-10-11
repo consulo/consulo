@@ -67,6 +67,7 @@
       "focusColor": "#0069ff80",
       "linkColor": "#007aff",
       "error": {
+        "background": "#ffcccc",
         "borderColor": "#ebb8bc"
       },
       "warning": {
@@ -85,6 +86,10 @@
       "currentParameterForeground": "#1d1d1d",
       "disabledForeground": "#a8a8a8",
       "infoForeground": "#787878"
+    },
+    "SearchMatch": {
+      "background": "#ffdd72",
+      "foreground": "#000000"
     },
     "DataGrid": {
       "Cell": {

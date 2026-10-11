@@ -25,11 +25,13 @@ import consulo.configurable.StandardConfigurableIds;
 import consulo.disposer.Disposable;
 import consulo.ui.ex.impl.internal.action.QuickListsManager;
 import consulo.localize.LocalizeValue;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionToolbarPosition;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.ui.ex.awt.util.ListUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.keymap.localize.KeyMapLocalize;
 import consulo.util.collection.ArrayUtil;
 import org.jspecify.annotations.Nullable;
@@ -245,7 +247,7 @@ public class QuickListsPanel implements SearchableConfigurable, Configurable.NoS
 
     @RequiredUIAccess
     @Override
-    public JComponent createComponent(Disposable uiDisposable) {
+    public Component createUIComponent(Disposable uiDisposable) {
         myRoot = new JPanel(new BorderLayout());
         myRightPanel = new JPanel(new BorderLayout());
 
@@ -253,7 +255,7 @@ public class QuickListsPanel implements SearchableConfigurable, Configurable.NoS
         splitter.setFirstComponent(createQuickListsPanel());
         splitter.setSecondComponent(myRightPanel);
         myRoot.add(splitter, BorderLayout.CENTER);
-        return myRoot;
+        return TargetAWT.wrap(myRoot);
     }
 
     @RequiredUIAccess

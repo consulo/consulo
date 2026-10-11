@@ -16,16 +16,22 @@
 package consulo.it.internal.ui;
 
 import consulo.ui.Component;
-import consulo.ui.layout.LayoutConstraint;
 import consulo.ui.layout.SplitLayoutPosition;
 import consulo.ui.layout.TwoComponentSplitLayout;
 
 /**
- * Dummy-but-creatable headless {@link TwoComponentSplitLayout}.
+ * Headless {@link TwoComponentSplitLayout} keeping its two sides.
  *
  * @author VISTALL
  */
-public class HeadlessTwoComponentSplitLayout extends HeadlessLayoutBase<LayoutConstraint> implements TwoComponentSplitLayout {
+public class HeadlessTwoComponentSplitLayout extends HeadlessSplitSlots implements TwoComponentSplitLayout {
+    private static final int FIRST = 0;
+    private static final int SECOND = 1;
+
+    public HeadlessTwoComponentSplitLayout() {
+        super(2);
+    }
+
     @Override
     public void setProportion(int percent) {
     }
@@ -36,9 +42,11 @@ public class HeadlessTwoComponentSplitLayout extends HeadlessLayoutBase<LayoutCo
 
     @Override
     public void setFirstComponent(Component component) {
+        setSlot(FIRST, component);
     }
 
     @Override
     public void setSecondComponent(Component component) {
+        setSlot(SECOND, component);
     }
 }

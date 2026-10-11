@@ -19,6 +19,7 @@ import com.vaadin.flow.component.HasSize;
 import consulo.ui.Component;
 import consulo.ui.StaticPosition;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.internal.LayoutVisualOrder;
 import consulo.ui.layout.TableLayout;
 import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
 import consulo.web.ui.impl.internal.base.TargetVaadin;
@@ -28,9 +29,11 @@ import org.vaadin.stefan.table.Table;
 import org.vaadin.stefan.table.TableDataCell;
 import org.vaadin.stefan.table.TableRow;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * @author VISTALL
@@ -132,5 +135,15 @@ public class WebTableLayoutImpl extends VaadinComponentDelegate<WebTableLayoutIm
     public TableLayout add(Component component, TableCell tableCell) {
         toVaadinComponent().add(component, tableCell);
         return this;
+    }
+
+    @Override
+    public void forEachChild(@RequiredUIAccess Consumer<Component> consumer) {
+        List<Map.Entry<Component, TableCell>> children = new ArrayList<>(toVaadinComponent().myChildren.entrySet());
+        children.sort(Map.Entry.comparingByValue(LayoutVisualOrder.TABLE_CELLS));
+
+        for (Map.Entry<Component, TableCell> child : children) {
+            consumer.accept(child.getKey());
+        }
     }
 }

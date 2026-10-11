@@ -27,6 +27,8 @@ import consulo.web.ui.impl.internal.base.TargetVaadin;
 import consulo.web.ui.impl.internal.base.VaadinComponentDelegate;
 import org.jspecify.annotations.Nullable;
 
+import java.util.function.Consumer;
+
 /**
  * @author VISTALL
  * @since 2023-05-28
@@ -97,6 +99,19 @@ public class WebHorizontalTwoComponentSplitLayoutImpl extends VaadinComponentDel
 
         ((HasSize) vComponent).setSizeFull();
         toVaadinComponent().addToSecondary(vComponent);
+    }
+
+    @Override
+    public void forEachChild(@RequiredUIAccess Consumer<Component> consumer) {
+        Vaadin vaadin = toVaadinComponent();
+        acceptSide(vaadin, vaadin.getPrimaryComponent(), consumer);
+        acceptSide(vaadin, vaadin.getSecondaryComponent(), consumer);
+    }
+
+    private static void acceptSide(Vaadin vaadin, com.vaadin.flow.component.@Nullable Component side, Consumer<Component> consumer) {
+        if (side != null && side.getParent().orElse(null) == vaadin) {
+            WebLayoutChildren.accept(side, consumer);
+        }
     }
 
     /**

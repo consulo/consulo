@@ -16,8 +16,8 @@
 package consulo.ide.impl.idea.openapi.roots.libraries.ui.impl;
 
 import consulo.application.Application;
+import consulo.application.progress.ProgressBuilderFactory;
 import consulo.application.progress.ProgressIndicator;
-import consulo.application.progress.Task;
 import consulo.component.ProcessCanceledException;
 import consulo.content.OrderRootType;
 import consulo.content.library.LibraryRootType;
@@ -25,20 +25,25 @@ import consulo.content.library.OrderRoot;
 import consulo.content.library.ui.DetectedLibraryRoot;
 import consulo.content.library.ui.LibraryRootsComponentDescriptor;
 import consulo.content.library.ui.LibraryRootsDetector;
-import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.project.localize.ProjectLocalize;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.ChooseElementsDialog;
-import consulo.ui.image.Image;
+import consulo.ui.ex.dialog.ChooseItemsDialogDescriptor;
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.step.CodeExecution;
 import consulo.util.lang.Pair;
-import consulo.util.lang.xml.XmlStringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
-import java.awt.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
-import java.util.*;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author nik
@@ -49,15 +54,14 @@ public class RootDetectionUtil {
     private RootDetectionUtil() {
     }
 
-    
     @RequiredUIAccess
-    public static List<OrderRoot> detectRoots(
+    public static CompletableFuture<List<OrderRoot>> detectRootsAsync(
         Collection<VirtualFile> rootCandidates,
-        @Nullable Component parentComponent,
+        consulo.ui.@Nullable Component parentComponent,
         @Nullable Project project,
         LibraryRootsComponentDescriptor rootsComponentDescriptor
     ) {
-        return detectRoots(
+        return detectRootsAsync(
             rootCandidates,
             parentComponent,
             project,
@@ -66,105 +70,140 @@ public class RootDetectionUtil {
         );
     }
 
-    
     @RequiredUIAccess
-    public static List<OrderRoot> detectRoots(
+    public static CompletableFuture<List<OrderRoot>> detectRootsAsync(
         Collection<VirtualFile> rootCandidates,
-        @Nullable Component parentComponent,
+        consulo.ui.@Nullable Component parentComponent,
         @Nullable Project project,
         LibraryRootsDetector detector,
         List<OrderRootType> rootTypesAllowedToBeSelectedByUserIfNothingIsDetected
     ) {
-        List<OrderRoot> result = new ArrayList<>();
+        List<OrderRoot> detected = new ArrayList<>();
         List<SuggestedChildRootInfo> suggestedRoots = new ArrayList<>();
-        new Task.Modal(project, LocalizeValue.localizeTODO("Scanning for Roots"), true) {
-            @Override
-            public void run(ProgressIndicator indicator) {
-                try {
-                    for (VirtualFile rootCandidate : rootCandidates) {
-                        Collection<DetectedLibraryRoot> roots = detector.detectRoots(rootCandidate, indicator);
-                        if (!roots.isEmpty() && allRootsHaveOneTypeAndEqualTo(roots, rootCandidate)) {
-                            for (DetectedLibraryRoot root : roots) {
-                                LibraryRootType libraryRootType = root.getTypes().get(0);
-                                result.add(new OrderRoot(root.getFile(), libraryRootType.getType(), libraryRootType.isJarDirectory()));
-                            }
-                        }
-                        else {
-                            for (DetectedLibraryRoot root : roots) {
-                                Map<LibraryRootType, String> names = new HashMap<>();
-                                for (LibraryRootType type : root.getTypes()) {
-                                    String typeName = detector.getRootTypeName(type);
-                                    LOG.assertTrue(
-                                        typeName != null,
-                                        "Unexpected root type " + type.getType() +
-                                            (type.isJarDirectory() ? " (jar directory)" : "") + ", " +
-                                            "detectors: " + detector
-                                    );
-                                    names.put(type, typeName);
-                                }
-                                suggestedRoots.add(new SuggestedChildRootInfo(rootCandidate, root, names));
-                            }
-                        }
-                    }
-                }
-                catch (ProcessCanceledException ignored) {
-                }
-            }
-        }.queue();
 
-        if (!suggestedRoots.isEmpty()) {
-            DetectedRootsChooserDialog dialog = parentComponent != null
-                ? new DetectedRootsChooserDialog(parentComponent, suggestedRoots)
-                : new DetectedRootsChooserDialog(project, suggestedRoots);
-            dialog.show();
-            if (!dialog.isOK()) {
-                return Collections.emptyList();
-            }
-            for (SuggestedChildRootInfo rootInfo : dialog.getChosenRoots()) {
-                LibraryRootType selectedRootType = rootInfo.getSelectedRootType();
-                result.add(new OrderRoot(
-                    rootInfo.getDetectedRoot().getFile(),
-                    selectedRootType.getType(),
-                    selectedRootType.isJarDirectory()
-                ));
-            }
+        UIAccess uiAccess = UIAccess.current();
+        CompletableFuture<?> scanned = Application.get().getInstance(ProgressBuilderFactory.class)
+            .newProgressBuilder(project, ProjectLocalize.libraryScanningRootsProgress())
+            .cancelable()
+            .modal()
+            .execute(uiAccess, () -> Coroutine.first(CodeExecution.run(continuation -> {
+                scan(rootCandidates, detector, ProgressIndicator.from(continuation), detected, suggestedRoots);
+            })));
+
+        return scanned
+            .thenComposeAsync(ignored -> chooseSuggestedRoots(parentComponent, suggestedRoots), uiAccess)
+            .thenComposeAsync(chosen -> {
+                List<OrderRoot> result = new ArrayList<>(detected);
+                result.addAll(chosen);
+                if (!result.isEmpty() || rootTypesAllowedToBeSelectedByUserIfNothingIsDetected.isEmpty()) {
+                    return CompletableFuture.completedFuture(result);
+                }
+                return chooseRootTypes(parentComponent, rootCandidates, detector, rootTypesAllowedToBeSelectedByUserIfNothingIsDetected);
+            }, uiAccess);
+    }
+
+    @RequiredUIAccess
+    private static CompletableFuture<List<OrderRoot>> chooseSuggestedRoots(
+        consulo.ui.@Nullable Component parentComponent,
+        List<SuggestedChildRootInfo> suggestedRoots
+    ) {
+        if (suggestedRoots.isEmpty()) {
+            return CompletableFuture.completedFuture(List.of());
         }
 
-        if (result.isEmpty() && !rootTypesAllowedToBeSelectedByUserIfNothingIsDetected.isEmpty()) {
-            Map<String, Pair<OrderRootType, Boolean>> types = new HashMap<>();
-            for (OrderRootType type : rootTypesAllowedToBeSelectedByUserIfNothingIsDetected) {
-                for (boolean isJarDirectory : new boolean[]{false, true}) {
-                    String typeName = detector.getRootTypeName(new LibraryRootType(type.getId(), isJarDirectory));
-                    if (typeName != null) {
-                        types.put(typeName, Pair.create(type, isJarDirectory));
-                    }
-                }
+        return DetectedRootsDialogDescriptor.showAsync(parentComponent, suggestedRoots).thenApply(chosen -> {
+            List<OrderRoot> roots = new ArrayList<>();
+            for (SuggestedChildRootInfo rootInfo : chosen) {
+                LibraryRootType type = rootInfo.getSelectedRootType();
+                roots.add(new OrderRoot(rootInfo.getDetectedRoot().getFile(), type.getType(), type.isJarDirectory()));
             }
-            if (types.isEmpty()) {
-                return Collections.emptyList();
-            }
-            List<String> names = new ArrayList<>(types.keySet());
-            LocalizeValue title = LocalizeValue.localizeTODO("Choose Categories of Selected Files");
-            LocalizeValue description = LocalizeValue.localizeTODO(XmlStringUtil.wrapInHtml(
-                Application.get().getName() + " cannot determine what kind of files the chosen items contain.<br>" +
-                    "Choose the appropriate categories from the list."
-            ));
-            ChooseElementsDialog<String> dialog;
-            if (parentComponent != null) {
-                dialog = new ChooseRootTypeElementsDialog(parentComponent, names, title, description);
-            }
-            else {
-                dialog = new ChooseRootTypeElementsDialog(project, names, title, description);
-            }
-            for (String rootType : dialog.showAndGetResult()) {
+            return roots;
+        });
+    }
+
+    @RequiredUIAccess
+    private static CompletableFuture<List<OrderRoot>> chooseRootTypes(
+        consulo.ui.@Nullable Component parentComponent,
+        Collection<VirtualFile> rootCandidates,
+        LibraryRootsDetector detector,
+        List<OrderRootType> rootTypes
+    ) {
+        Map<String, Pair<OrderRootType, Boolean>> types = collectRootTypeNames(detector, rootTypes);
+        if (types.isEmpty()) {
+            return CompletableFuture.completedFuture(List.of());
+        }
+
+        List<String> names = new ArrayList<>(types.keySet());
+        Collections.sort(names, String.CASE_INSENSITIVE_ORDER);
+        return ChooseItemsDialogDescriptor.showAsync(
+            parentComponent,
+            ProjectLocalize.libraryRootCategoriesTitle(),
+            ProjectLocalize.libraryRootCategoriesDescription(Application.get().getName()),
+            names,
+            (name, presentation) -> presentation.append(name),
+            true,
+            List.of()
+        ).thenApply(chosen -> {
+            List<OrderRoot> roots = new ArrayList<>();
+            for (String rootType : chosen) {
                 Pair<OrderRootType, Boolean> pair = types.get(rootType);
                 for (VirtualFile candidate : rootCandidates) {
-                    result.add(new OrderRoot(candidate, pair.getFirst().getId(), pair.getSecond()));
+                    roots.add(new OrderRoot(candidate, pair.getFirst().getId(), pair.getSecond()));
+                }
+            }
+            return roots;
+        });
+    }
+
+    private static Map<String, Pair<OrderRootType, Boolean>> collectRootTypeNames(LibraryRootsDetector detector, List<OrderRootType> rootTypes) {
+        Map<String, Pair<OrderRootType, Boolean>> types = new HashMap<>();
+        for (OrderRootType type : rootTypes) {
+            for (boolean isJarDirectory : new boolean[]{false, true}) {
+                String typeName = detector.getRootTypeName(new LibraryRootType(type.getId(), isJarDirectory));
+                if (typeName != null) {
+                    types.put(typeName, Pair.create(type, isJarDirectory));
                 }
             }
         }
+        return types;
+    }
 
-        return result;
+    private static void scan(
+        Collection<VirtualFile> rootCandidates,
+        LibraryRootsDetector detector,
+        ProgressIndicator indicator,
+        List<OrderRoot> result,
+        List<SuggestedChildRootInfo> suggestedRoots
+    ) {
+        try {
+            for (VirtualFile rootCandidate : rootCandidates) {
+                Collection<DetectedLibraryRoot> roots = detector.detectRoots(rootCandidate, indicator);
+                if (!roots.isEmpty() && allRootsHaveOneTypeAndEqualTo(roots, rootCandidate)) {
+                    for (DetectedLibraryRoot root : roots) {
+                        LibraryRootType libraryRootType = root.getTypes().get(0);
+                        result.add(new OrderRoot(root.getFile(), libraryRootType.getType(), libraryRootType.isJarDirectory()));
+                    }
+                }
+                else {
+                    for (DetectedLibraryRoot root : roots) {
+                        Map<LibraryRootType, String> names = new HashMap<>();
+                        for (LibraryRootType type : root.getTypes()) {
+                            String typeName = detector.getRootTypeName(type);
+                            LOG.assertTrue(
+                                typeName != null,
+                                "Unexpected root type " + type.getType() +
+                                    (type.isJarDirectory() ? " (jar directory)" : "") + ", " +
+                                    "detectors: " + detector
+                            );
+                            names.put(type, typeName);
+                        }
+                        suggestedRoots.add(new SuggestedChildRootInfo(rootCandidate, root, names));
+                    }
+                }
+            }
+        }
+        catch (ProcessCanceledException ignored) {
+        }
     }
 
     private static boolean allRootsHaveOneTypeAndEqualTo(Collection<DetectedLibraryRoot> roots, VirtualFile candidate) {
@@ -174,35 +213,5 @@ public class RootDetectionUtil {
             }
         }
         return true;
-    }
-
-    private static class ChooseRootTypeElementsDialog extends ChooseElementsDialog<String> {
-        public ChooseRootTypeElementsDialog(
-            Project project,
-            List<String> names,
-            LocalizeValue title,
-            LocalizeValue description
-        ) {
-            super(project, names, title, description, true);
-        }
-
-        private ChooseRootTypeElementsDialog(
-            Component parent,
-            List<String> names,
-            LocalizeValue title,
-            LocalizeValue description
-        ) {
-            super(parent, names, title, description, true);
-        }
-
-        @Override
-        protected String getItemText(String item) {
-            return item;
-        }
-
-        @Override
-        protected @Nullable Image getItemIcon(String item) {
-            return null;
-        }
     }
 }

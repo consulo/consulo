@@ -41,9 +41,12 @@ import java.util.Set;
 public class WebItemPresentationImpl implements TextItemPresentation {
     private Image myIcon;
     private @Nullable ColorValue myBackgroundColor;
+    private @Nullable Font myFont;
 
     private LocalizeValue mySuffixText = LocalizeValue.empty();
     private @Nullable Image mySuffixIcon;
+
+    private LocalizeValue myTooltip = LocalizeValue.empty();
 
     @Override
     public TextItemPresentation withIcon(@Nullable Image image) {
@@ -70,6 +73,22 @@ public class WebItemPresentationImpl implements TextItemPresentation {
         return this;
     }
 
+    @Override
+    public TextItemPresentation withFont(Font font) {
+        myFont = font;
+
+        after();
+        return this;
+    }
+
+    @Override
+    public TextItemPresentation withTooltip(LocalizeValue tooltip) {
+        myTooltip = tooltip;
+
+        after();
+        return this;
+    }
+
     /**
      * What each run says and how it is drawn, kept beside the span built from it - a consumer which owns its spans
      * already can bind these onto the ones it has rather than take new ones.
@@ -85,6 +104,10 @@ public class WebItemPresentationImpl implements TextItemPresentation {
 
     public @Nullable Image getIcon() {
         return myIcon;
+    }
+
+    public LocalizeValue getTooltip() {
+        return myTooltip;
     }
 
     @Override
@@ -161,6 +184,27 @@ public class WebItemPresentationImpl implements TextItemPresentation {
         }
     }
 
+    static void applyFont(Style style, Font font) {
+        style.set("font-family", "\"" + font.getFamily() + "\", " + genericFamily(font.getFamily()));
+        style.set("font-size", font.getFontSize() + "px");
+
+        int fontStyle = font.getFontStyle();
+        if ((fontStyle & Font.BOLD) != 0) {
+            style.set("font-weight", "bold");
+        }
+        if ((fontStyle & Font.ITALIC) != 0) {
+            style.set("font-style", "italic");
+        }
+    }
+
+    private static String genericFamily(String family) {
+        return switch (family) {
+            case "Monospaced", "DialogInput" -> "monospace";
+            case "Serif" -> "serif";
+            default -> "sans-serif";
+        };
+    }
+
     private static @Nullable String toTextDecoration(Set<TextEffect> effects) {
         if (effects.contains(TextEffect.WAVED)) {
             return "underline wavy";
@@ -191,6 +235,21 @@ public class WebItemPresentationImpl implements TextItemPresentation {
      * element rather than sharing it, so the row built first would lose its text.
      */
     public Component toComponent() {
+        Component component = buildComponent();
+
+        Font font = myFont;
+        if (font != null) {
+            applyFont(component.getElement().getStyle(), font);
+        }
+
+        String tooltip = myTooltip.get();
+        if (!tooltip.isEmpty()) {
+            component.getElement().setAttribute("title", tooltip);
+        }
+        return component;
+    }
+
+    private Component buildComponent() {
         Span span = new Span();
         span.addClassName("web-icon");
         if (myIcon != null) {

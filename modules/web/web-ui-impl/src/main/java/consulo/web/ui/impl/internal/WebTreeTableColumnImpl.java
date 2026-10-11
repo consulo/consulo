@@ -17,11 +17,9 @@ package consulo.web.ui.impl.internal;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.dom.Style;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ComponentItemRender;
-import consulo.ui.HorizontalAlignment;
 import consulo.ui.TableItemEditor;
 import consulo.ui.TableItemRender;
 import consulo.ui.color.ColorValue;
@@ -38,7 +36,7 @@ import java.util.function.Function;
  * @since 2026-10-03
  */
 public final class WebTreeTableColumnImpl<E, Value> extends WebGridColumnBase<WebTreeRow<E>, E, Value> implements TableColumnOwner {
-    private static final String CELL_CLASS = "web-tree-cell";
+    static final String CELL_CLASS = "web-tree-cell";
     private static final String ROW_BACKGROUND = "--consulo-tree-row-background";
 
     private final WebTreeTableImpl<E> myTable;
@@ -149,30 +147,20 @@ public final class WebTreeTableColumnImpl<E, Value> extends WebGridColumnBase<We
 
     @Override
     protected Component wrapCell(Component content) {
-        Div cell = new Div(content);
-        cell.addClassName(CELL_CLASS);
-        return cell;
+        return wrapCell(content, CELL_CLASS);
     }
 
     @Override
-    protected void decorateCell(Component cell, WebTreeRow<E> row, @Nullable E item) {
+    protected void decorateCell(Component cell, WebTreeRow<E> row, @Nullable E item, @Nullable ColorValue background) {
         Style style = cell.getElement().getStyle();
         style.set("justify-content", justifyContent(myState.getAlignment()));
 
-        ColorValue background = myTable.rowBackground(row.getNode());
-        if (background != null) {
-            style.set(ROW_BACKGROUND, WebColors.toCssColor(background));
+        ColorValue fill = background != null ? background : myTable.rowBackground(row.getNode());
+        if (fill != null) {
+            style.set(ROW_BACKGROUND, WebColors.toCssColor(fill));
         }
         else {
             style.remove(ROW_BACKGROUND);
         }
-    }
-
-    private static String justifyContent(HorizontalAlignment alignment) {
-        return switch (alignment) {
-            case LEFT -> "flex-start";
-            case CENTER -> "center";
-            case RIGHT -> "flex-end";
-        };
     }
 }

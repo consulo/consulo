@@ -15,14 +15,10 @@
  */
 package consulo.desktop.awt.ui.impl;
 
-import consulo.desktop.awt.ui.impl.facade.DesktopAWTTargetAWTImpl;
-import consulo.localize.LocalizeValue;
-import consulo.ui.TextAttribute;
 import consulo.ui.TextItemPresentation;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.ex.tree.PresentableNodeDescriptor;
 import consulo.ui.ex.tree.PresentationData;
-import consulo.ui.image.Image;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Arrays;
@@ -37,6 +33,7 @@ class DesktopTreeNodeDescriptor<K> extends PresentableNodeDescriptor<Object> {
     private final Object myElement;
 
     private volatile @Nullable Object @Nullable [] myColumnValues;
+    private volatile DesktopTreeRowDecoration myDecoration = DesktopTreeRowDecoration.EMPTY;
 
     @SuppressWarnings("rawtypes")
     DesktopTreeNodeDescriptor(DesktopTreeStructure<K> structure, Object element, @Nullable NodeDescriptor parentDescriptor) {
@@ -56,29 +53,24 @@ class DesktopTreeNodeDescriptor<K> extends PresentableNodeDescriptor<Object> {
 
         BiConsumer<K, TextItemPresentation> render = node.getRenderer();
 
-        render.accept(node.getValue(), new TextItemPresentation() {
-            @Override
-            public void clearText() {
-                presentation.clearText();
-            }
+        DesktopTreeNodePresentation itemPresentation = new DesktopTreeNodePresentation(presentation);
+        render.accept(node.getValue(), itemPresentation);
 
-            @Override
-            public TextItemPresentation withIcon(@Nullable Image image) {
-                presentation.setIcon(image);
-                return this;
-            }
-
-            @Override
-            public void append(LocalizeValue text, TextAttribute textAttribute) {
-                presentation.addText(text, DesktopAWTTargetAWTImpl.from(textAttribute));
-            }
-        });
+        DesktopTreeRowDecoration decoration = itemPresentation.toDecoration();
+        if (!decoration.equals(myDecoration)) {
+            myDecoration = decoration;
+            presentation.setChanged(true);
+        }
 
         Object[] values = myStructure.computeColumnValues(node.getValue());
         if (!Arrays.equals(values, myColumnValues)) {
             myColumnValues = values;
             presentation.setChanged(true);
         }
+    }
+
+    DesktopTreeRowDecoration getDecoration() {
+        return myDecoration;
     }
 
     @Nullable Object getColumnValue(int index) {

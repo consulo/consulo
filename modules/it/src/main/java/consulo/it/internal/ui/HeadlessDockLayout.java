@@ -17,11 +17,13 @@ package consulo.it.internal.ui;
 
 import consulo.ui.Component;
 import consulo.ui.StaticPosition;
+import consulo.ui.internal.LayoutVisualOrder;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.Layout;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 
 /**
  * Dummy-but-creatable headless {@link DockLayout}.
@@ -56,5 +58,15 @@ public class HeadlessDockLayout extends HeadlessLayoutBase<StaticPosition> imple
     public void removeAll() {
         myPositions.clear();
         super.removeAll();
+    }
+
+    @Override
+    public void forEachChild(Consumer<Component> consumer) {
+        for (StaticPosition position : LayoutVisualOrder.DOCK_POSITIONS) {
+            Component component = myPositions.get(position);
+            if (component != null) {
+                consumer.accept(component);
+            }
+        }
     }
 }

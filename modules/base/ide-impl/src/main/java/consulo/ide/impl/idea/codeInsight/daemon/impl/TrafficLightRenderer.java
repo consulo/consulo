@@ -632,10 +632,10 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
                     .collect(Collectors.toList());
 
                 for (HectorComponentPanel p : myAdditionalPanels) {
-                    JComponent c;
+                    Component c;
                     try {
                         p.reset();
-                        c = p.createComponent();
+                        c = TargetAWT.to(p.createUIComponent(TrafficLightRenderer.this));
                     }
                     catch (ProcessCanceledException e) {
                         throw e;

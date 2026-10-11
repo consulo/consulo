@@ -15,60 +15,57 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.actions;
 
+import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.ArtifactEditorEx;
+import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.LayoutElementInfo;
+import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.PackagingNodeSource;
+import consulo.project.localize.ProjectLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.LegacyDumbAwareAction;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.ArtifactEditorEx;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.LayoutTreeSelection;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.nodes.PackagingElementNode;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.nodes.PackagingNodeSource;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
+import consulo.ui.ex.action.DumbAwareAction;
 
-import java.util.Collection;
+import java.util.List;
 
 /**
  * @author nik
  */
-public class HideContentAction extends LegacyDumbAwareAction {
-  private final ArtifactEditorEx myArtifactEditor;
+public class HideContentAction extends DumbAwareAction implements AnActionWithSyncUpdate {
+    private final ArtifactEditorEx myArtifactEditor;
 
-  public HideContentAction(ArtifactEditorEx artifactEditor) {
-    super("Hide Content");
-    myArtifactEditor = artifactEditor;
-  }
+    public HideContentAction(ArtifactEditorEx artifactEditor) {
+        super(ProjectLocalize.artifactActionHideContentText());
+        myArtifactEditor = artifactEditor;
+    }
 
-  @Override
-  public void update(AnActionEvent e) {
-    LayoutTreeSelection selection = myArtifactEditor.getLayoutTreeComponent().getSelection();
-    PackagingElementNode<?> node = selection.getNodeIfSingle();
-    if (node != null) {
-      Collection<PackagingNodeSource> sources = node.getNodeSources();
-      if (!sources.isEmpty()) {
-        String description;
+    @Override
+    public void update(AnActionEvent e) {
+        LayoutElementInfo node = myArtifactEditor.getLayoutTreeComponent().getSelection().getNodeIfSingle();
+        List<PackagingNodeSource> sources = node == null ? List.of() : node.getNodeSources();
+        if (sources.isEmpty()) {
+            e.getPresentation().setVisible(false);
+            return;
+        }
+
+        e.getPresentation().setVisible(true);
         if (sources.size() == 1) {
-          description = "Hide Content of '" + sources.iterator().next().getPresentableName() + "'";
+            e.getPresentation().setText(ProjectLocalize.artifactActionHideContentOf0Text(sources.get(0).getPresentableName()));
         }
         else {
-          description = "Hide Content";
+            e.getPresentation().setText(ProjectLocalize.artifactActionHideContentText());
         }
-        e.getPresentation().setVisible(true);
-        e.getPresentation().setText(description);
-        return;
-      }
     }
-    e.getPresentation().setVisible(false);
-  }
 
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(AnActionEvent e) {
-    LayoutTreeSelection selection = myArtifactEditor.getLayoutTreeComponent().getSelection();
-    PackagingElementNode<?> node = selection.getNodeIfSingle();
-    if (node == null) return;
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(AnActionEvent e) {
+        LayoutElementInfo node = myArtifactEditor.getLayoutTreeComponent().getSelection().getNodeIfSingle();
+        if (node == null) {
+            return;
+        }
 
-    Collection<PackagingNodeSource> sources = node.getNodeSources();
-    for (PackagingNodeSource source : sources) {
-      myArtifactEditor.getSubstitutionParameters().doNotSubstitute(source.getSourceElement());
-      myArtifactEditor.getLayoutTreeComponent().getLayoutTree().addSubtreeToUpdate(source.getSourceParentNode());
+        for (PackagingNodeSource source : node.getNodeSources()) {
+            myArtifactEditor.getSubstitutionParameters().doNotSubstitute(source.getSourceElement());
+        }
+        myArtifactEditor.getLayoutTreeComponent().rebuildTree();
     }
-  }
 }

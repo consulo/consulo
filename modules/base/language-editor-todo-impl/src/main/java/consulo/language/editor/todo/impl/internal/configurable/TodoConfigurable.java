@@ -17,6 +17,7 @@ package consulo.language.editor.todo.impl.internal.configurable;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.configurable.*;
+import consulo.disposer.Disposable;
 import consulo.language.editor.todo.TodoAttributesUtil;
 import consulo.language.editor.todo.TodoConfiguration;
 import consulo.language.editor.todo.TodoFilter;
@@ -33,6 +34,7 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.event.DoubleClickListener;
 import consulo.ui.ex.awt.table.JBTable;
 import consulo.ui.ex.awt.util.TableUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import org.jspecify.annotations.Nullable;
 
@@ -131,7 +133,7 @@ public class TodoConfigurable implements SearchableConfigurable, Configurable.No
     }
 
     @Override
-    public JComponent createComponent() {
+    public consulo.ui.Component createUIComponent(Disposable parentDisposable) {
         // Panel with patterns
         PanelWithButtons patternsPanel = new PanelWithButtons() {
             {
@@ -313,7 +315,7 @@ public class TodoConfigurable implements SearchableConfigurable, Configurable.No
             new Insets(0, 0, 0, 0), 0, 0
         ));
 
-        return myPanel;
+        return TargetAWT.wrap(myPanel);
     }
 
     @RequiredUIAccess

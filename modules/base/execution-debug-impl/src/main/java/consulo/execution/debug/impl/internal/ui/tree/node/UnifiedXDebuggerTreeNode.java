@@ -15,7 +15,7 @@
  */
 package consulo.execution.debug.impl.internal.ui.tree.node;
 
-import consulo.execution.debug.impl.internal.frame.UnifiedColoredTextContainer;
+import consulo.ui.ex.UnifiedColoredTextContainer;
 import consulo.execution.debug.impl.internal.ui.tree.UnifiedXDebuggerTree;
 import consulo.ui.TextItemPresentation;
 import consulo.ui.TreeNode;

@@ -85,6 +85,11 @@ public class DesktopQtLabeledLayoutImpl extends DesktopQtLayoutComponent<LayoutC
     }
 
     @Override
+    public LocalizeValue getLabel() {
+        return myLabel;
+    }
+
+    @Override
     protected QLayout createLayout() {
         return new QVBoxLayout();
     }

@@ -19,11 +19,11 @@ import consulo.configurable.ConfigurationException;
 import consulo.content.bundle.Sdk;
 import consulo.content.bundle.SdkModel;
 import consulo.content.bundle.SdkTypeId;
-import consulo.ui.ex.awt.MasterDetailsComponent;
+import consulo.ui.Component;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.DefaultActionGroup;
-
 import org.jspecify.annotations.Nullable;
-import javax.swing.*;
+
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -39,7 +39,8 @@ public interface SettingsSdksModel extends SdkModel {
 
   boolean isModified();
 
-  void apply(MasterDetailsComponent masterDetailsComponent) throws ConfigurationException;
+  @RequiredUIAccess
+  void apply(@Nullable Consumer<Sdk> invalidSdkSelector) throws ConfigurationException;
 
   void dispose();
 
@@ -47,9 +48,9 @@ public interface SettingsSdksModel extends SdkModel {
 
   void removeSdk(Sdk sdk);
 
-  default void createAddActions(DefaultActionGroup group, JComponent parent, Consumer<Sdk> updateTree) {
+  default void createAddActions(DefaultActionGroup group, Component parent, Consumer<Sdk> updateTree) {
     createAddActions(group, parent, updateTree, null);
   }
 
-  void createAddActions(DefaultActionGroup group, JComponent parent, Consumer<Sdk> updateTree, @Nullable Predicate<SdkTypeId> filter);
+  void createAddActions(DefaultActionGroup group, Component parent, Consumer<Sdk> updateTree, @Nullable Predicate<SdkTypeId> filter);
 }

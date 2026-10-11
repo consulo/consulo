@@ -23,6 +23,7 @@ import consulo.ui.ValueComponent;
 import consulo.ui.Window;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogWrapper;
+import consulo.ui.ex.awt.IdeFocusTraversalPolicy;
 import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
@@ -90,6 +91,16 @@ public class DesktopInputBoxBuilderImpl<V, C extends ValueComponent<V>> extends 
             panel.add(fields, BorderLayout.CENTER);
 
             return panel;
+        }
+
+        @Override
+        public @Nullable JComponent getPreferredFocusedComponent() {
+            java.awt.Component component = TargetAWT.to(myEditor);
+            if (component instanceof JComponent jComponent) {
+                JComponent focused = IdeFocusTraversalPolicy.getPreferredFocusedComponent(jComponent);
+                return focused != null ? focused : jComponent;
+            }
+            return null;
         }
 
         @Override
@@ -170,6 +181,7 @@ public class DesktopInputBoxBuilderImpl<V, C extends ValueComponent<V>> extends 
     @RequiredUIAccess
     public CompletableFuture<V> showAsync(@Nullable Window owner) {
         C editor = myEditorFactory.get();
+        applyDefaultWidth(editor);
         if (myInitialValue != null) {
             editor.setValue(myInitialValue);
         }

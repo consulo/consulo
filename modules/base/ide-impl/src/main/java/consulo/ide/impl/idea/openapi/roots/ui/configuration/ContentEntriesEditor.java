@@ -16,12 +16,12 @@
 
 package consulo.ide.impl.idea.openapi.roots.ui.configuration;
 
+import consulo.application.ReadAction;
+import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.disposer.Disposable;
 import consulo.fileChooser.FileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.ide.impl.idea.openapi.fileChooser.ex.FileChooserKeys;
-import consulo.ide.impl.idea.openapi.roots.ui.componentsList.layout.VerticalStackLayout;
-import consulo.ide.impl.idea.ui.roots.ToolbarPanel;
 import consulo.ide.setting.module.ModuleConfigurationState;
 import consulo.language.editor.LangDataKeys;
 import consulo.localize.LocalizeValue;
@@ -32,25 +32,37 @@ import consulo.module.content.layer.ModifiableRootModel;
 import consulo.module.content.layer.ModuleRootModel;
 import consulo.module.content.layer.ModulesProvider;
 import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.project.Project;
 import consulo.project.localize.ProjectLocalize;
+import consulo.ui.Component;
+import consulo.ui.Space;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.*;
-import consulo.ui.ex.awt.*;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.ActionPlaces;
+import consulo.ui.ex.action.ActionToolbar;
+import consulo.ui.ex.action.ActionToolbarFactory;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.CustomShortcutSet;
+import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.layout.DockLayout;
+import consulo.ui.layout.ScrollableLayout;
+import consulo.ui.layout.ScrollableLayoutOptions;
+import consulo.ui.layout.SplitLayoutPosition;
+import consulo.ui.layout.TwoComponentSplitLayout;
+import consulo.ui.layout.VerticalLayout;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.event.VirtualFileManagerListener;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author Eugene Zhuravlev
@@ -59,41 +71,24 @@ import java.util.Map;
 public class ContentEntriesEditor extends ModuleElementsEditor {
     private static final Logger LOG = Logger.getInstance(ContentEntriesEditor.class);
 
-    protected ContentEntryTreeEditor myRootTreeEditor;
-    private MyContentEntryEditorListener myContentEntryEditorListener;
-    protected JPanel myEditorsPanel;
-    private final Map<ContentEntry, ContentEntryEditor> myEntryToEditorMap = new HashMap<>();
-    private ContentEntry mySelectedEntry;
-
-    private VirtualFile myLastSelectedDir = null;
     private final String myModuleName;
     private final ModulesProvider myModulesProvider;
     private final ModuleConfigurationState myState;
-    private ActionToolbar myActionToolbar;
+    private final Map<ContentEntry, ContentEntryEditor> myEntryToEditorMap = new LinkedHashMap<>();
+    private final ContentEntryEditorListener myContentEntryEditorListener = new MyContentEntryEditorListener();
 
-    public ContentEntriesEditor(String moduleName, final ModuleConfigurationState state) {
+    private @Nullable ContentEntryTreeEditor myRootTreeEditor;
+    private @Nullable DockLayout myEntriesLayout;
+    private @Nullable ContentEntry mySelectedEntry;
+    private @Nullable VirtualFile myLastSelectedDir;
+    private boolean myRebuildScheduled;
+    private int myRebuildStamp;
+
+    public ContentEntriesEditor(String moduleName, ModuleConfigurationState state) {
         super(state);
         myState = state;
         myModuleName = moduleName;
         myModulesProvider = state.getModulesConfigurator();
-        VirtualFileManagerListener fileManagerListener = new VirtualFileManagerListener() {
-            @Override
-            public void afterRefreshFinish(boolean asynchronous) {
-                if (state.getProject().isDisposed()) {
-                    return;
-                }
-                Module module = getModule();
-                if (module == null || module.isDisposed()) {
-                    return;
-                }
-                for (ContentEntryEditor editor : myEntryToEditorMap.values()) {
-                    editor.update();
-                }
-            }
-        };
-        VirtualFileManager fileManager = VirtualFileManager.getInstance();
-        fileManager.addVirtualFileManagerListener(fileManagerListener);
-        registerDisposable(() -> fileManager.removeVirtualFileManagerListener(fileManagerListener));
     }
 
     @Override
@@ -109,8 +104,9 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
     @RequiredUIAccess
     @Override
     public void disposeUIResources() {
-        if (myRootTreeEditor != null) {
-            myRootTreeEditor.setContentEntryEditor(null);
+        ContentEntryTreeEditor treeEditor = myRootTreeEditor;
+        if (treeEditor != null) {
+            treeEditor.setContentEntryEditor(null);
         }
 
         myEntryToEditorMap.clear();
@@ -118,157 +114,183 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
     }
 
     @RequiredUIAccess
-    
     @Override
-    public JPanel createComponentImpl(Disposable parentUIDisposable) {
-        Module module = getModule();
-        Project project = module.getProject();
+    protected Component createUIComponentImpl(Disposable parentUIDisposable) {
+        UIAccess uiAccess = UIAccess.current();
 
-        myContentEntryEditorListener = new MyContentEntryEditorListener();
+        ContentEntryTreeEditor treeEditor = new ContentEntryTreeEditor(myProject, myState);
+        myRootTreeEditor = treeEditor;
+        Component treeComponent = treeEditor.createComponent(parentUIDisposable);
 
-        JPanel mainPanel = new JPanel(new BorderLayout());
+        AddContentEntryAction addAction = new AddContentEntryAction();
+        ActionToolbar toolbar = ActionToolbarFactory.getInstance().createActionToolbar(
+            ActionPlaces.UNKNOWN,
+            ActionGroup.newImmutableBuilder().add(addAction).build(),
+            ActionToolbar.Style.HORIZONTAL
+        );
 
-        JPanel entriesPanel = new JPanel(new BorderLayout());
+        DockLayout entriesLayout = DockLayout.create(Space.NONE);
+        myEntriesLayout = entriesLayout;
 
-        AddContentEntryAction action = new AddContentEntryAction();
-        action.registerCustomShortcutSet(KeyEvent.VK_C, InputEvent.ALT_DOWN_MASK, mainPanel);
+        DockLayout entriesPanel = DockLayout.create(Space.NONE);
+        entriesPanel.top(toolbar.getUIComponent());
+        entriesPanel.center(entriesLayout);
+        toolbar.setTargetUIComponent(entriesPanel);
 
-        myEditorsPanel = new ScrollablePanel(new VerticalStackLayout());
-        myEditorsPanel.setBackground(UIUtil.getListBackground());
+        TwoComponentSplitLayout splitLayout = TwoComponentSplitLayout.create(SplitLayoutPosition.HORIZONTAL);
+        splitLayout.setFirstComponent(treeComponent);
+        splitLayout.setSecondComponent(entriesPanel);
+        splitLayout.setProportion(60);
 
-        JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(myEditorsPanel, true);
-        entriesPanel.add(new ToolbarPanel(scrollPane, ActionGroup.newImmutableBuilder().add(action).build()), BorderLayout.CENTER);
+        addAction.registerCustomShortcutSet(CustomShortcutSet.fromString("alt C"), splitLayout, parentUIDisposable);
 
-        JBSplitter splitter = new OnePixelSplitter(false);
-        splitter.setProportion(0.6f);
-        splitter.setHonorComponentsMinimumSize(true);
-
-        myRootTreeEditor = new ContentEntryTreeEditor(project, myState);
-        JComponent component = myRootTreeEditor.createComponent();
-        component.setBorder(new CustomLineBorder(JBUI.scale(1), 0, 0, 0));
-
-        splitter.setFirstComponent(component);
-        splitter.setSecondComponent(entriesPanel);
-        JPanel contentPanel = new JPanel(new BorderLayout());
-
-        myActionToolbar = ActionManager.getInstance()
-            .createActionToolbar(ActionPlaces.UNKNOWN, myRootTreeEditor.getEditingActionsGroup(), true);
-        myActionToolbar.setTargetComponent(contentPanel);
-        myActionToolbar.updateActionsAsync();
-
-        contentPanel.add(myActionToolbar.getComponent(), BorderLayout.NORTH);
-        contentPanel.add(splitter, BorderLayout.CENTER);
-
-        mainPanel.add(contentPanel, BorderLayout.CENTER);
-
-        ModifiableRootModel model = getModel();
-        if (model != null) {
-            boolean onlySingleFile = model.getModule().getModuleDirPath() == null;
-            ContentEntry[] contentEntries = model.getContentEntries();
-            if (contentEntries.length > 0) {
-                for (ContentEntry contentEntry : contentEntries) {
-                    addContentEntryPanel(contentEntry, onlySingleFile);
-                }
-                selectContentEntry(contentEntries[0]);
+        VirtualFileManager.getInstance().addVirtualFileManagerListener(new VirtualFileManagerListener() {
+            @Override
+            public void afterRefreshFinish(boolean asynchronous) {
+                uiAccess.give(() -> onFileSystemRefreshed());
             }
-        }
+        }, parentUIDisposable);
 
-        return mainPanel;
+        reloadEntries();
+        return splitLayout;
     }
 
-    protected Module getModule() {
+    @RequiredUIAccess
+    private void onFileSystemRefreshed() {
+        Module module = getModule();
+        if (myProject.isDisposed() || module == null || module.isDisposed() || myEntriesLayout == null) {
+            return;
+        }
+
+        scheduleRebuild();
+
+        ContentEntryTreeEditor treeEditor = myRootTreeEditor;
+        if (treeEditor != null) {
+            treeEditor.scheduleRefresh();
+        }
+    }
+
+    protected @Nullable Module getModule() {
         return myModulesProvider.getModule(myModuleName);
     }
 
-    public ActionToolbar getActionToolbar() {
-        return myActionToolbar;
-    }
-
-    protected void addContentEntryPanel(ContentEntry contentEntry, boolean onlySingleFile) {
-        ContentEntryEditor contentEntryEditor = createContentEntryEditor(contentEntry, onlySingleFile);
-        contentEntryEditor.initUI();
-        contentEntryEditor.addContentEntryEditorListener(myContentEntryEditorListener);
-        registerDisposable(() -> contentEntryEditor.removeContentEntryEditorListener(myContentEntryEditorListener));
-        myEntryToEditorMap.put(contentEntry, contentEntryEditor);
-        JComponent component = contentEntryEditor.getComponent();
-
-        component.setBorder(JBUI.Borders.empty());
-        myEditorsPanel.add(component);
-    }
-
-    private ContentEntryEditor createContentEntryEditor(ContentEntry contentEntry, boolean onlySingleFile) {
-        return new ContentEntryEditor(contentEntry, onlySingleFile, this::getModel);
-    }
-
-    void selectContentEntry(@Nullable ContentEntry contentEntryUrl) {
-        if (mySelectedEntry != null && mySelectedEntry.equals(contentEntryUrl)) {
+    @Override
+    @RequiredUIAccess
+    public void moduleStateChanged() {
+        if (myEntriesLayout == null) {
             return;
         }
-        try {
-            if (mySelectedEntry != null) {
-                ContentEntryEditor editor = myEntryToEditorMap.get(mySelectedEntry);
-                if (editor != null) {
-                    editor.setSelected(false);
-                }
-            }
 
-            if (contentEntryUrl != null) {
-                ContentEntryEditor editor = myEntryToEditorMap.get(contentEntryUrl);
-                if (editor != null) {
-                    editor.setSelected(true);
-                    JComponent component = editor.getComponent();
-                    JComponent scroller = (JComponent) component.getParent();
-                    SwingUtilities.invokeLater(() -> scroller.scrollRectToVisible(component.getBounds()));
-                    myRootTreeEditor.setContentEntryEditor(editor);
-                    myRootTreeEditor.requestFocus();
-                }
-            }
-        }
-        finally {
-            mySelectedEntry = contentEntryUrl;
-        }
+        reloadEntries();
     }
 
-    @Override
-    public void moduleStateChanged() {
+    @RequiredUIAccess
+    private void reloadEntries() {
+        ContentEntryTreeEditor treeEditor = myRootTreeEditor;
+        if (treeEditor == null) {
+            return;
+        }
+
         myEntryToEditorMap.clear();
-        myEditorsPanel.removeAll();
 
         ModifiableRootModel model = getModel();
-        if (model != null) {
-            ContentEntry[] contentEntries = model.getContentEntries();
-            if (contentEntries.length > 0) {
-                boolean onlySingleFile = model.getModule().getModuleDirPath() == null;
-                for (ContentEntry contentEntry : contentEntries) {
-                    addContentEntryPanel(contentEntry, onlySingleFile);
+        boolean onlySingleFile = model.getModule().getModuleDirPath() == null;
+        for (ContentEntry contentEntry : model.getContentEntries()) {
+            ContentEntryEditor editor = new ContentEntryEditor(contentEntry, onlySingleFile, this::getModel);
+            editor.addContentEntryEditorListener(myContentEntryEditorListener);
+            myEntryToEditorMap.put(contentEntry, editor);
+        }
+
+        treeEditor.updateMarkActions();
+
+        ContentEntry selectedEntry = mySelectedEntry;
+        if (selectedEntry == null || !myEntryToEditorMap.containsKey(selectedEntry)) {
+            selectedEntry = myEntryToEditorMap.isEmpty() ? null : myEntryToEditorMap.keySet().iterator().next();
+        }
+
+        mySelectedEntry = selectedEntry;
+        treeEditor.setContentEntryEditor(selectedEntry == null ? null : myEntryToEditorMap.get(selectedEntry));
+
+        scheduleRebuild();
+    }
+
+    @RequiredUIAccess
+    void selectContentEntry(@Nullable ContentEntry contentEntry) {
+        mySelectedEntry = contentEntry;
+
+        ContentEntryTreeEditor treeEditor = myRootTreeEditor;
+        if (treeEditor != null) {
+            treeEditor.setContentEntryEditor(contentEntry == null ? null : myEntryToEditorMap.get(contentEntry));
+        }
+    }
+
+    @RequiredUIAccess
+    private void scheduleRebuild() {
+        if (myRebuildScheduled || myEntriesLayout == null) {
+            return;
+        }
+
+        myRebuildScheduled = true;
+        UIAccess.current().give(() -> {
+            myRebuildScheduled = false;
+            rebuildEntriesLayout();
+        });
+    }
+
+    @RequiredUIAccess
+    private void rebuildEntriesLayout() {
+        DockLayout entriesLayout = myEntriesLayout;
+        if (entriesLayout == null) {
+            return;
+        }
+
+        List<ContentEntryEditor> editors = new ArrayList<>(myEntryToEditorMap.values());
+        List<String> urls = new ArrayList<>();
+        for (ContentEntryEditor editor : editors) {
+            urls.addAll(editor.collectUrls());
+        }
+
+        int stamp = ++myRebuildStamp;
+        UIAccess uiAccess = UIAccess.current();
+        CompletableFuture.supplyAsync(() -> ReadAction.compute(() -> findMissingUrls(urls)), AppExecutorUtil.getAppExecutorService())
+            .whenCompleteAsync((missingUrls, error) -> {
+                if (stamp != myRebuildStamp || myEntriesLayout != entriesLayout) {
+                    return;
                 }
-                selectContentEntry(contentEntries[0]);
-            }
-            else {
-                selectContentEntry(null);
-                myRootTreeEditor.setContentEntryEditor(null);
-            }
-        }
 
-        if (myRootTreeEditor != null) {
-            myRootTreeEditor.update();
-        }
+                if (error != null) {
+                    LOG.error(error);
+                }
+
+                Set<String> missing = missingUrls == null ? Set.of() : missingUrls;
+                VerticalLayout column = VerticalLayout.create(Space.NONE);
+                for (ContentEntryEditor editor : editors) {
+                    column.add(editor.createComponent(missing));
+                }
+                entriesLayout.center(ScrollableLayout.create(
+                    column,
+                    ScrollableLayoutOptions.builder().horizontalScrollPolicy(ScrollableLayoutOptions.ScrollPolicy.NEVER).build()
+                ));
+            }, uiAccess);
     }
 
-    private @Nullable ContentEntry getNextContentEntry(ContentEntry contentEntryUrl) {
-        return getAdjacentContentEntry(contentEntryUrl, 1);
+    private static Set<String> findMissingUrls(List<String> urls) {
+        VirtualFileManager fileManager = VirtualFileManager.getInstance();
+        Set<String> missing = new HashSet<>();
+        for (String url : urls) {
+            if (fileManager.findFileByUrl(url) == null) {
+                missing.add(url);
+            }
+        }
+        return missing;
     }
 
-    private @Nullable ContentEntry getAdjacentContentEntry(ContentEntry contentEntryUrl, int delta) {
+    private @Nullable ContentEntry getNextContentEntry(ContentEntry contentEntry) {
         ContentEntry[] contentEntries = getModel().getContentEntries();
-        for (int idx = 0; idx < contentEntries.length; idx++) {
-            ContentEntry entry = contentEntries[idx];
-            if (contentEntryUrl.equals(entry)) {
-                int nextEntryIndex = (idx + delta) % contentEntries.length;
-                if (nextEntryIndex < 0) {
-                    nextEntryIndex += contentEntries.length;
-                }
-                return nextEntryIndex == idx ? null : contentEntries[nextEntryIndex];
+        for (int i = 0; i < contentEntries.length; i++) {
+            if (contentEntry.equals(contentEntries[i])) {
+                int next = (i + 1) % contentEntries.length;
+                return next == i ? null : contentEntries[next];
             }
         }
         return null;
@@ -280,15 +302,13 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
             if (isAlreadyAdded(file)) {
                 continue;
             }
-            ContentEntry contentEntry = getModel().addContentEntry(file);
-            contentEntries.add(contentEntry);
+            contentEntries.add(getModel().addContentEntry(file));
         }
         return contentEntries;
     }
 
     private boolean isAlreadyAdded(VirtualFile file) {
-        VirtualFile[] contentRoots = getModel().getContentRoots();
-        for (VirtualFile contentRoot : contentRoots) {
+        for (VirtualFile contentRoot : getModel().getContentRoots()) {
             if (contentRoot.equals(file)) {
                 return true;
             }
@@ -300,44 +320,36 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
     public void saveData() {
     }
 
-    private final class MyContentEntryEditorListener implements ContentEntryEditor.ContentEntryEditorListener {
+    private final class MyContentEntryEditorListener implements ContentEntryEditorListener {
         @Override
+        @RequiredUIAccess
         public void editingStarted(ContentEntryEditor editor) {
             selectContentEntry(editor.getContentEntry());
         }
 
         @Override
+        @RequiredUIAccess
         public void beforeEntryDeleted(ContentEntryEditor editor) {
-            ContentEntry entryUrl = editor.getContentEntry();
-            if (mySelectedEntry != null && mySelectedEntry.equals(entryUrl)) {
-                myRootTreeEditor.setContentEntryEditor(null);
+            ContentEntry contentEntry = editor.getContentEntry();
+            if (contentEntry.equals(mySelectedEntry)) {
+                mySelectedEntry = getNextContentEntry(contentEntry);
             }
-            ContentEntry nextContentEntryUrl = getNextContentEntry(entryUrl);
-            removeContentEntryPanel(entryUrl);
-            selectContentEntry(nextContentEntryUrl);
-            editor.removeContentEntryEditorListener(this);
         }
 
         @Override
-        public void navigationRequested(ContentEntryEditor editor, VirtualFile file) {
-            if (mySelectedEntry != null && mySelectedEntry.equals(editor.getContentEntry())) {
-                myRootTreeEditor.requestFocus();
-                myRootTreeEditor.select(file);
-            }
-            else {
-                selectContentEntry(editor.getContentEntry());
-                myRootTreeEditor.requestFocus();
-                myRootTreeEditor.select(file);
-            }
+        @RequiredUIAccess
+        public void foldersChanged(ContentEntryEditor editor) {
+            scheduleRebuild();
         }
 
-        private void removeContentEntryPanel(ContentEntry contentEntry) {
-            ContentEntryEditor editor = myEntryToEditorMap.get(contentEntry);
-            if (editor != null) {
-                myEditorsPanel.remove(editor.getComponent());
-                myEntryToEditorMap.remove(contentEntry);
-                myEditorsPanel.revalidate();
-                myEditorsPanel.repaint();
+        @Override
+        @RequiredUIAccess
+        public void navigationRequested(ContentEntryEditor editor, String folderUrl) {
+            selectContentEntry(editor.getContentEntry());
+
+            ContentEntryTreeEditor treeEditor = myRootTreeEditor;
+            if (treeEditor != null) {
+                treeEditor.select(folderUrl);
             }
         }
     }
@@ -346,7 +358,11 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
         private final FileChooserDescriptor myDescriptor;
 
         public AddContentEntryAction() {
-            super(ProjectLocalize.modulePathsAddContentAction(), ProjectLocalize.modulePathsAddContentActionDescription(), PlatformIconGroup.generalAdd());
+            super(
+                ProjectLocalize.modulePathsAddContentAction(),
+                ProjectLocalize.modulePathsAddContentActionDescription(),
+                PlatformIconGroup.generalAdd()
+            );
             myDescriptor = new FileChooserDescriptor(false, true, true, false, true, true) {
                 @Override
                 public void validateSelectedFiles(VirtualFile[] files) throws Exception {
@@ -362,57 +378,58 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
         @RequiredUIAccess
         @Override
         public void actionPerformed(AnActionEvent e) {
-            FileChooser.chooseFiles(myDescriptor, myProject, myLastSelectedDir).whenComplete((virtualFiles, error) -> {
-                if (error != null) {
+            UIAccess uiAccess = UIAccess.current();
+            FileChooser.chooseFiles(myDescriptor, myProject, myLastSelectedDir).whenCompleteAsync((virtualFiles, error) -> {
+                if (error != null || virtualFiles == null || virtualFiles.length == 0) {
                     return;
                 }
 
                 myLastSelectedDir = virtualFiles[0];
-                addContentEntries(virtualFiles);
-            });
+                List<ContentEntry> added = addContentEntries(virtualFiles);
+                if (!added.isEmpty()) {
+                    selectContentEntry(added.get(0));
+                    scheduleRebuild();
+                }
+            }, uiAccess);
         }
 
         private void validateContentEntriesCandidates(VirtualFile[] files) throws Exception {
             for (VirtualFile file : files) {
-                // check for collisions with already existing entries
                 for (ContentEntry contentEntry : myEntryToEditorMap.keySet()) {
                     VirtualFile contentEntryFile = contentEntry.getFile();
                     if (contentEntryFile == null) {
-                        continue;  // skip invalid entry
+                        continue;
                     }
                     if (contentEntryFile.equals(file)) {
                         throw new Exception(ProjectLocalize.modulePathsAddContentAlreadyExistsError(file.getPresentableUrl()).get());
                     }
                     if (VirtualFileUtil.isAncestor(contentEntryFile, file, true)) {
-                        // intersection not allowed
                         throw new Exception(
-                            ProjectLocalize.modulePathsAddContentIntersectError(file.getPresentableUrl(), contentEntryFile.getPresentableUrl()).get());
+                            ProjectLocalize.modulePathsAddContentIntersectError(file.getPresentableUrl(), contentEntryFile.getPresentableUrl()).get()
+                        );
                     }
                     if (VirtualFileUtil.isAncestor(file, contentEntryFile, true)) {
-                        // intersection not allowed
                         throw new Exception(
-                            ProjectLocalize.modulePathsAddContentDominateError(file.getPresentableUrl(), contentEntryFile.getPresentableUrl()).get());
+                            ProjectLocalize.modulePathsAddContentDominateError(file.getPresentableUrl(), contentEntryFile.getPresentableUrl()).get()
+                        );
                     }
                 }
-                // check if the same root is configured for another module
-                Module[] modules = myModulesProvider.getModules();
-                for (Module module : modules) {
+
+                for (Module module : myModulesProvider.getModules()) {
                     if (myModuleName.equals(module.getName())) {
                         continue;
                     }
                     ModuleRootModel rootModel = myModulesProvider.getRootModel(module);
                     LOG.assertTrue(rootModel != null);
-                    VirtualFile[] moduleContentRoots = rootModel.getContentRoots();
-                    for (VirtualFile moduleContentRoot : moduleContentRoots) {
+                    for (VirtualFile moduleContentRoot : rootModel.getContentRoots()) {
                         if (file.equals(moduleContentRoot)) {
                             throw new Exception(
-                                ProjectLocalize.modulePathsAddContentDuplicateError(file.getPresentableUrl(), module.getName()).get());
+                                ProjectLocalize.modulePathsAddContentDuplicateError(file.getPresentableUrl(), module.getName()).get()
+                            );
                         }
                     }
                 }
             }
         }
-
     }
-
 }

@@ -29,13 +29,15 @@ import org.jspecify.annotations.Nullable;
  */
 public class WebHtmlLabelImpl extends WebLabelBase<WebHtmlLabelImpl.Vaadin> implements HtmlLabel {
     public class Vaadin extends VaadinLabelComponentBase {
+        /**
+         * The markup is the content, so it replaces the text node the base would build.
+         */
         @Override
-        public void setText(LocalizeValue text) {
-            super.setText(text);
+        protected void updateContent() {
+            LocalizeValue text = getTextValue();
 
-            // the markup is the content, so the text node the base built is dropped in favour of it
             getElement().removeAllChildren();
-            getElement().setProperty("innerHTML", text.get());
+            getElement().setProperty("innerHTML", WebSearchHighlight.markupHtml(text == null ? "" : text.get(), getSearchHighlight()));
         }
 
         @Override

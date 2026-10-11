@@ -22,6 +22,7 @@ import consulo.compiler.artifact.ArtifactPointerManager;
 import consulo.compiler.artifact.ArtifactUtil;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import consulo.compiler.localize.CompilerLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -29,6 +30,7 @@ import consulo.ui.image.Image;
 import jakarta.inject.Inject;
 
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author nik
@@ -56,23 +58,21 @@ public class ArtifactElementType extends ComplexPackagingElementType<ArtifactPac
 
     @Override
     @RequiredUIAccess
-    public List<? extends ArtifactPackagingElement> chooseAndCreate(
+    public CompletableFuture<List<? extends PackagingElement<?>>> chooseAndCreate(
         ArtifactEditorContext context,
         Artifact artifact,
         CompositePackagingElement<?> parent
     ) {
-        List<Artifact> artifacts = context.chooseArtifacts(
-            getAvailableArtifacts(context, artifact, false),
-            CompilerLocalize.dialogTitleChooseArtifacts()
-        );
-        List<ArtifactPackagingElement> elements = new ArrayList<>();
-        for (Artifact selected : artifacts) {
+        List<? extends Artifact> available = getAvailableArtifacts(context, artifact, false);
+        return context.chooseArtifacts(available, CompilerLocalize.dialogTitleChooseArtifacts()).thenApply(artifacts -> {
             ArtifactPointerManager pointerManager = ArtifactPointerManager.getInstance(context.getProject());
-            elements.add(new ArtifactPackagingElement(pointerManager, pointerManager.create(selected, context.getArtifactModel())));
-        }
-        return elements;
+            List<ArtifactPackagingElement> elements = new ArrayList<>();
+            for (Artifact selected : artifacts) {
+                elements.add(new ArtifactPackagingElement(pointerManager, pointerManager.create(selected, context.getArtifactModel())));
+            }
+            return elements;
+        });
     }
-
 
     public static List<? extends Artifact> getAvailableArtifacts(
         ArtifactEditorContext context,
@@ -113,7 +113,7 @@ public class ArtifactElementType extends ComplexPackagingElementType<ArtifactPac
     }
 
     @Override
-    public String getShowContentActionText() {
-        return "Show Content of Included Artifacts";
+    public LocalizeValue getShowContentActionText() {
+        return CompilerLocalize.elementTypeArtifactShowContentActionText();
     }
 }

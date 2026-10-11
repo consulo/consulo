@@ -20,38 +20,42 @@ import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @SuppressWarnings("ExtensionImplIsNotAnnotatedInspection")
 public class ArtifactRootElementType extends PackagingElementType<ArtifactRootElement<?>> {
-  public static final ArtifactRootElementType INSTANCE = new ArtifactRootElementType();
+    public static final ArtifactRootElementType INSTANCE = new ArtifactRootElementType();
 
-  private ArtifactRootElementType() {
-    super("root", LocalizeValue.empty());
-  }
+    private ArtifactRootElementType() {
+        super("root", LocalizeValue.empty());
+    }
 
-  
-  @Override
-  public Image getIcon() {
-    return AllIcons.Nodes.Artifact;
-  }
+    @Override
+    public Image getIcon() {
+        return AllIcons.Nodes.Artifact;
+    }
 
-  @Override
-  public boolean isAvailableForAdd(ArtifactEditorContext context, Artifact artifact) {
-    return false;
-  }
+    @Override
+    public boolean isAvailableForAdd(ArtifactEditorContext context, Artifact artifact) {
+        return false;
+    }
 
-  @Override
-  
-  public List<? extends ArtifactRootElement<?>> chooseAndCreate(ArtifactEditorContext context, Artifact artifact, CompositePackagingElement<?> parent) {
-    throw new UnsupportedOperationException("'create' not implemented in " + getClass().getName());
-  }
+    @Override
+    @RequiredUIAccess
+    public CompletableFuture<List<? extends PackagingElement<?>>> chooseAndCreate(
+        ArtifactEditorContext context,
+        Artifact artifact,
+        CompositePackagingElement<?> parent
+    ) {
+        return CompletableFuture.failedFuture(new UnsupportedOperationException("'create' not implemented in " + getClass().getName()));
+    }
 
-  @Override
-  
-  public ArtifactRootElement<?> createEmpty(Project project) {
-    return new ArtifactRootElementImpl();
-  }
+    @Override
+    public ArtifactRootElement<?> createEmpty(Project project) {
+        return new ArtifactRootElementImpl();
+    }
 }

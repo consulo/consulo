@@ -15,50 +15,46 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot;
 
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.LegacyDumbAwareAction;
-import consulo.project.Project;
-import consulo.content.internal.LibraryEx;
 import consulo.content.library.Library;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.libraries.LibraryEditingUtil;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.LibraryProjectStructureElement;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
+import consulo.project.Project;
+import consulo.project.localize.ProjectLocalize;
+import consulo.ui.UIAction;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithAsyncUpdate;
+import consulo.ui.ex.action.DumbAwareAction;
+import consulo.util.concurrent.coroutine.Coroutine;
 
 /**
  * @author nik
  */
-public class AddLibraryToModuleDependenciesAction extends LegacyDumbAwareAction {
-    
+public class AddLibraryToModuleDependenciesAction extends DumbAwareAction implements AnActionWithAsyncUpdate {
     private final Project myProject;
-    
     private final BaseLibrariesConfigurable myConfigurable;
 
     public AddLibraryToModuleDependenciesAction(Project project, BaseLibrariesConfigurable configurable) {
-        super("Add to Modules…", "Add the library to the dependencies list of chosen modules", null);
+        super(ProjectLocalize.libraryAddToModulesAction(), ProjectLocalize.libraryAddToModulesDescription());
         myProject = project;
         myConfigurable = configurable;
     }
 
     @Override
-    public void update(AnActionEvent e) {
-        ProjectStructureElement element = myConfigurable.getSelectedElement();
-        boolean visible = false;
-        if (element instanceof LibraryProjectStructureElement) {
-            LibraryEx library = (LibraryEx) ((LibraryProjectStructureElement) element).getLibrary();
-            visible = !LibraryEditingUtil.getSuitableModules(myProject, library.getKind(), library).isEmpty();
-        }
-        e.getPresentation().setVisible(visible);
+    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
+        return Coroutine.first(UIAction.<Object, Object>apply(input -> {
+            boolean visible = myConfigurable.getSelectedValues().size() == 1
+                && myConfigurable.getSelectedValue() instanceof Library library
+                && !LibraryEditingUtil.getSuitableModules(myProject, library.getKind(), library).isEmpty();
+            e.getPresentation().setVisible(visible);
+            return input;
+        }));
     }
 
-    @Override
     @RequiredUIAccess
+    @Override
     public void actionPerformed(AnActionEvent e) {
-        LibraryProjectStructureElement element = (LibraryProjectStructureElement) myConfigurable.getSelectedElement();
-        if (element == null) {
-            return;
+        if (myConfigurable.getSelectedValue() instanceof Library library) {
+            LibraryEditingUtil.showDialogAndAddLibraryToDependencies(myConfigurable.getTree(), library, myProject);
         }
-        Library library = element.getLibrary();
-        LibraryEditingUtil.showDialogAndAddLibraryToDependencies(library, myProject, false);
     }
 }

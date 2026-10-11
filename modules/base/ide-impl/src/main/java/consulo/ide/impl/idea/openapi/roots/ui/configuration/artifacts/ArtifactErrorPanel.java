@@ -15,99 +15,128 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts;
 
-import consulo.dataContext.DataManager;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.ConfigurationErrorQuickFix;
+import consulo.compiler.artifact.ui.ArtifactProblemQuickFix;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.ui.ex.awt.update.UiNotifyConnector;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.project.localize.ProjectLocalize;
+import consulo.ui.Button;
+import consulo.ui.Component;
+import consulo.ui.HtmlLabel;
+import consulo.ui.Label;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.ClickEvent;
 import consulo.ui.ex.popup.BaseListPopupStep;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.PopupStep;
-import consulo.ui.ex.update.Activatable;
-import consulo.util.collection.ContainerUtil;
-import consulo.util.lang.xml.XmlStringUtil;
+import consulo.ui.layout.DockLayout;
+import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
 import java.util.List;
 
 /**
  * @author nik
  */
 public class ArtifactErrorPanel {
-    private JPanel myMainPanel;
-    private JButton myFixButton;
-    private JLabel myErrorLabel;
-    private List<? extends ConfigurationErrorQuickFix> myCurrentQuickFixes;
-    private String myErrorText;
+    private final ArtifactEditorImpl myArtifactEditor;
 
-    public ArtifactErrorPanel(final ArtifactEditorImpl artifactEditor) {
-        myErrorLabel.setIcon(TargetAWT.to(PlatformIconGroup.generalError()));
-        new UiNotifyConnector(myMainPanel, new Activatable() {
-            @Override
-            public void showNotify() {
-                if (myErrorText != null) {
-                    myErrorLabel.setText(myErrorText);
-                    myErrorText = null;
-                }
-            }
-        });
-        myFixButton.addActionListener(e -> {
-            if (!myCurrentQuickFixes.isEmpty()) {
-                if (myCurrentQuickFixes.size() == 1) {
-                    performFix(ContainerUtil.getFirstItem(myCurrentQuickFixes, null), artifactEditor);
-                }
-                else {
-                    JBPopupFactory.getInstance()
-                        .createListPopup(new BaseListPopupStep<ConfigurationErrorQuickFix>(null, myCurrentQuickFixes) {
-                            
-                            @Override
-                            public String getTextFor(ConfigurationErrorQuickFix value) {
-                                return value.getActionName();
-                            }
+    private @Nullable ArtifactProblem myProblem;
 
-                            @Override
-                            public PopupStep onChosen(ConfigurationErrorQuickFix selectedValue, boolean finalChoice) {
-                                performFix(selectedValue, artifactEditor);
-                                return FINAL_CHOICE;
-                            }
-                        })
-                        .showUnderneathOf(myFixButton);
-                }
-            }
-        });
-        clearError();
+    private @Nullable DockLayout myPanel;
+    private @Nullable Label myIconLabel;
+    private @Nullable HtmlLabel myErrorLabel;
+    private @Nullable Button myFixButton;
+
+    public ArtifactErrorPanel(ArtifactEditorImpl artifactEditor) {
+        myArtifactEditor = artifactEditor;
     }
 
-    private void performFix(ConfigurationErrorQuickFix quickFix, ArtifactEditorImpl artifactEditor) {
-        quickFix.performFix(DataManager.getInstance().getDataContext(myFixButton));
-        artifactEditor.queueValidation();
+    @RequiredUIAccess
+    public Component createUIComponent() {
+        Label iconLabel = Label.create();
+        HtmlLabel errorLabel = HtmlLabel.create(LocalizeValue.empty());
+        Button fixButton = Button.create(LocalizeValue.empty(), this::onFix);
+
+        DockLayout panel = DockLayout.create();
+        panel.left(iconLabel);
+        panel.center(errorLabel);
+        panel.right(fixButton);
+
+        myPanel = panel;
+        myIconLabel = iconLabel;
+        myErrorLabel = errorLabel;
+        myFixButton = fixButton;
+
+        update();
+        return panel;
     }
 
-    public void showError(String message, List<? extends ConfigurationErrorQuickFix> quickFixes) {
-        myErrorLabel.setVisible(true);
-        String errorText = XmlStringUtil.wrapInHtml(message);
-        if (myErrorLabel.isShowing()) {
-            myErrorLabel.setText(errorText);
+    @RequiredUIAccess
+    public void showProblem(@Nullable ArtifactProblem problem) {
+        myProblem = problem;
+        update();
+    }
+
+    @RequiredUIAccess
+    private void update() {
+        DockLayout panel = myPanel;
+        Label iconLabel = myIconLabel;
+        HtmlLabel errorLabel = myErrorLabel;
+        Button fixButton = myFixButton;
+        if (panel == null || iconLabel == null || errorLabel == null || fixButton == null) {
+            return;
+        }
+
+        ArtifactProblem problem = myProblem;
+        if (problem == null) {
+            panel.setVisible(false);
+            return;
+        }
+
+        iconLabel.setImage(problem.error() ? PlatformIconGroup.generalError() : PlatformIconGroup.generalWarning());
+        errorLabel.setText(LocalizeValue.of(problem.message()));
+
+        List<ArtifactProblemQuickFix> quickFixes = problem.quickFixes();
+        fixButton.setVisible(!quickFixes.isEmpty());
+        if (quickFixes.size() == 1) {
+            fixButton.setText(LocalizeValue.of(quickFixes.get(0).getActionName()));
         }
         else {
-            myErrorText = errorText;
+            fixButton.setText(ProjectLocalize.artifactProblemFixesButton());
         }
-        myMainPanel.setVisible(true);
-        myCurrentQuickFixes = quickFixes;
-        myFixButton.setVisible(!quickFixes.isEmpty());
-        if (!quickFixes.isEmpty()) {
-            myFixButton.setText(quickFixes.size() == 1 ? ContainerUtil.getFirstItem(quickFixes, null).getActionName() : "Fix…");
-        }
+        panel.setVisible(true);
     }
 
-    public void clearError() {
-        myErrorText = null;
-        myMainPanel.setVisible(false);
-        myErrorLabel.setVisible(false);
-        myFixButton.setVisible(false);
+    @RequiredUIAccess
+    private void onFix(ClickEvent event) {
+        ArtifactProblem problem = myProblem;
+        if (problem == null || problem.quickFixes().isEmpty()) {
+            return;
+        }
+
+        List<ArtifactProblemQuickFix> quickFixes = problem.quickFixes();
+        if (quickFixes.size() == 1) {
+            performFix(quickFixes.get(0));
+            return;
+        }
+
+        JBPopupFactory.getInstance().createListPopup(new BaseListPopupStep<ArtifactProblemQuickFix>(null, quickFixes) {
+            @Override
+            public String getTextFor(ArtifactProblemQuickFix value) {
+                return value.getActionName();
+            }
+
+            @Override
+            @RequiredUIAccess
+            public PopupStep onChosen(ArtifactProblemQuickFix selectedValue, boolean finalChoice) {
+                performFix(selectedValue);
+                return FINAL_CHOICE;
+            }
+        }).showBy(event.getComponent(), event.getInputDetails());
     }
 
-    public JComponent getMainPanel() {
-        return myMainPanel;
+    @RequiredUIAccess
+    private void performFix(ArtifactProblemQuickFix quickFix) {
+        quickFix.performFix(myArtifactEditor.getContext());
+        myArtifactEditor.queueValidation();
     }
 }

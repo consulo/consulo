@@ -15,12 +15,14 @@
  */
 package consulo.desktop.qt.ui.impl;
 
+import consulo.application.ui.DimensionService;
 import consulo.desktop.qt.ui.impl.titleless.DesktopQtTitleBarPlacement;
 import consulo.desktop.qt.ui.impl.titleless.DesktopQtWindowFrame;
 import consulo.disposer.Disposer;
 import consulo.project.ui.impl.internal.wm.UnifiedWelcomeIdeFrame;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.ui.Component;
+import consulo.ui.Length;
 import consulo.ui.MenuBar;
 import consulo.ui.Rectangle2D;
 import consulo.ui.Size2D;
@@ -100,6 +102,8 @@ public class DesktopQtWindowImpl extends QtComponentDelegate<QMainWindow> implem
 
     private final @Nullable String myApplicationIdSuffix;
 
+    private final @Nullable String myDimensionKey;
+
     private boolean myDisposed;
     private boolean myMainFrame;
 
@@ -119,6 +123,7 @@ public class DesktopQtWindowImpl extends QtComponentDelegate<QMainWindow> implem
 
         myResizable = options.isResizable();
         myApplicationIdSuffix = options.getApplicationIdSuffix();
+        myDimensionKey = options.getDimensionKey();
 
         myComponent = new QtWindow(parent);
         myComponent.setWindowTitle(title);
@@ -209,6 +214,28 @@ public class DesktopQtWindowImpl extends QtComponentDelegate<QMainWindow> implem
         myComponent.resize(size.width(), size.height());
 
         applyFixedSize();
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setWidth(Length width) {
+        setSize(new Size2D(DesktopQtLength.toPixels(myComponent, width), currentSize().height()));
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setHeight(Length height) {
+        setSize(new Size2D(currentSize().width(), DesktopQtLength.toPixels(myComponent, height)));
+    }
+
+    private Size2D currentSize() {
+        Size2D size = mySize;
+        if (size != null) {
+            return size;
+        }
+
+        QSize current = myComponent.size();
+        return new Size2D(current.width(), current.height());
     }
 
     private void applyFixedSize() {
@@ -322,6 +349,7 @@ public class DesktopQtWindowImpl extends QtComponentDelegate<QMainWindow> implem
         // leaves the maximized state
         if (!myComponent.isVisible()) {
             applyDialogRole();
+            applyRememberedSize();
             applyDefaultSize();
             applyFixedSize();
 
@@ -381,12 +409,49 @@ public class DesktopQtWindowImpl extends QtComponentDelegate<QMainWindow> implem
         return TargetQt.from(active) instanceof Window ? active : null;
     }
 
+    private void applyRememberedSize() {
+        String dimensionKey = myDimensionKey;
+        if (dimensionKey == null) {
+            return;
+        }
+
+        Size2D size = DimensionService.getInstance().getSize(dimensionKey);
+        if (size == null || size.width() <= 0 || size.height() <= 0) {
+            return;
+        }
+
+        mySize = size;
+        myComponent.resize(size.width(), size.height());
+    }
+
+    private void rememberSize() {
+        String dimensionKey = myDimensionKey;
+        if (dimensionKey == null || !isAlive() || isStateManagedByUser()) {
+            return;
+        }
+
+        QSize size = myComponent.size();
+        DimensionService.getInstance().setSize(dimensionKey, new Size2D(size.width(), size.height()));
+    }
+
     private void applyDefaultSize() {
         if (mySize != null || myComponent.testAttribute(Qt.WidgetAttribute.WA_Resized)) {
             return;
         }
 
         QRect available = availableGeometry();
+        if (!myMainFrame) {
+            myComponent.adjustSize();
+            if (available != null) {
+                QSize packed = myComponent.size();
+                myComponent.resize(
+                    Math.min(packed.width(), available.width() - ourScreenMarginX),
+                    Math.min(packed.height(), available.height() - ourScreenMarginY)
+                );
+            }
+            return;
+        }
+
         if (available == null) {
             myComponent.resize(ourDefaultWidth, ourDefaultHeight);
             return;
@@ -442,6 +507,8 @@ public class DesktopQtWindowImpl extends QtComponentDelegate<QMainWindow> implem
         }
 
         myDisposed = true;
+
+        rememberSize();
 
         getListenerDispatcher(WindowCloseEvent.class).onEvent(new WindowCloseEvent(this, DesktopQtCurrentInput.current(myComponent)));
 

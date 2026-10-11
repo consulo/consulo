@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.ui.impl;
 
+import consulo.application.ui.DimensionService;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.desktop.awt.ui.impl.facade.FromSwingWindowWrapper;
 import consulo.desktop.awt.ui.impl.glassPane.IdeGlassPaneImpl;
@@ -30,6 +31,8 @@ import consulo.desktop.awt.ui.impl.window.WindowOverAWTWindow;
 import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.Objects;
 
 /**
@@ -37,50 +40,104 @@ import java.util.Objects;
  * @since 2020-05-29
  */
 public class DesktopWindowWrapper extends WindowOverAWTWindow {
-  private static class MyJDialog extends JDialog implements FromSwingWindowWrapper {
-    private Window myWindow;
+    private static class MyJDialog extends JDialog implements FromSwingWindowWrapper {
+        private Window myWindow;
 
-    private MyJDialog(Frame owner, String title) {
-      super(owner, title);
+        private MyJDialog(Frame owner, String title) {
+            super(owner, title);
+        }
+
+        @Override
+        public @Nullable Window toUIWindow() {
+            return Objects.requireNonNull(myWindow);
+        }
     }
 
+    private final @Nullable String myDimensionKey;
+
+    public DesktopWindowWrapper(String title, WindowOptions options) {
+        super(new MyJDialog((Frame) TargetAWT.to(options.getOwner()), title));
+
+        MyJDialog dialog = (MyJDialog) toAWTWindow();
+        dialog.setGlassPane(new IdeGlassPaneImpl(dialog.getRootPane()));
+        dialog.myWindow = this;
+
+        if (options.isUndecorated()) {
+            dialog.setUndecorated(true);
+            dialog.getRootPane().setBorder(JBUI.Borders.customLine(JBColor.border(), 1));
+        }
+
+        myDimensionKey = options.getDimensionKey();
+        if (myDimensionKey != null) {
+            dialog.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosing(WindowEvent e) {
+                    rememberSize();
+                }
+            });
+        }
+    }
+
+    @RequiredUIAccess
     @Override
-    public @Nullable Window toUIWindow() {
-      return Objects.requireNonNull(myWindow);
+    public void setTitle(String title) {
+        JDialog dialog = (JDialog) toAWTWindow();
+        dialog.setTitle(title);
     }
-  }
 
-  public DesktopWindowWrapper(String title, WindowOptions options) {
-    super(new MyJDialog((Frame)TargetAWT.to(options.getOwner()), title));
+    @RequiredUIAccess
+    @Override
+    public void setContent(Component content) {
+        JDialog dialog = (JDialog) toAWTWindow();
 
-    MyJDialog dialog = (MyJDialog)toAWTWindow();
-    dialog.setGlassPane(new IdeGlassPaneImpl(dialog.getRootPane()));
-    dialog.myWindow = this;
-
-    if (options.isUndecorated()) {
-      dialog.setUndecorated(true);
-      dialog.getRootPane().setBorder(JBUI.Borders.customLine(JBColor.border(), 1));
+        dialog.setContentPane((java.awt.Container) TargetAWT.to(content));
     }
-  }
 
-  @RequiredUIAccess
-  @Override
-  public void setTitle(String title) {
-    JDialog dialog = (JDialog)toAWTWindow();
-    dialog.setTitle(title);
-  }
+    @RequiredUIAccess
+    @Override
+    public void setSize(Size2D size) {
+        toAWTWindow().setSize(TargetAWT.to(size));
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void setContent(Component content) {
-    JDialog dialog = (JDialog)toAWTWindow();
+    @RequiredUIAccess
+    @Override
+    public void show() {
+        if (!toAWTWindow().isVisible()) {
+            applyRememberedSize();
+        }
 
-    dialog.setContentPane((java.awt.Container)TargetAWT.to(content));
-  }
+        super.show();
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void setSize(Size2D size) {
-    toAWTWindow().setSize(TargetAWT.to(size));
-  }
+    @RequiredUIAccess
+    @Override
+    public void close() {
+        rememberSize();
+
+        super.close();
+    }
+
+    private void applyRememberedSize() {
+        String dimensionKey = myDimensionKey;
+        if (dimensionKey == null) {
+            return;
+        }
+
+        Size2D size = DimensionService.getInstance().getSize(dimensionKey);
+        if (size == null || size.width() <= 0 || size.height() <= 0) {
+            return;
+        }
+
+        toAWTWindow().setSize(TargetAWT.to(size));
+    }
+
+    private void rememberSize() {
+        String dimensionKey = myDimensionKey;
+        java.awt.Window window = toAWTWindow();
+        if (dimensionKey == null || !window.isVisible()) {
+            return;
+        }
+
+        DimensionService.getInstance().setSize(dimensionKey, TargetAWT.from(window.getSize()));
+    }
 }

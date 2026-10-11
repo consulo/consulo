@@ -26,6 +26,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.HyperlinkEvent;
 import consulo.ui.ex.internal.LocalizeValueWithMnemonic;
 import consulo.ui.image.Image;
+import consulo.ui.internal.SearchHighlightUtil;
 import consulo.ui.style.ComponentColors;
 import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
 import consulo.web.ui.impl.internal.base.VaadinComponentDelegate;
@@ -51,6 +52,7 @@ public class WebHyperlinkImpl extends VaadinComponentDelegate<WebHyperlinkImpl.V
     private final Span myTextLabel = new Span();
 
     private LocalizeValue myText = LocalizeValue.empty();
+    private @Nullable String mySearchHighlight;
     private @Nullable Image myIcon;
     private com.vaadin.flow.component.@Nullable Component myIconComponent;
 
@@ -80,7 +82,29 @@ public class WebHyperlinkImpl extends VaadinComponentDelegate<WebHyperlinkImpl.V
     @RequiredUIAccess
     public void setText(LocalizeValue text) {
         myText = text;
-        myTextLabel.setText(LocalizeValueWithMnemonic.get(text).getText());
+        updateText();
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void setSearchHighlight(@Nullable String query) {
+        mySearchHighlight = SearchHighlightUtil.normalizeQuery(query);
+        updateText();
+    }
+
+    @Override
+    public @Nullable String getSearchHighlight() {
+        return mySearchHighlight;
+    }
+
+    private void updateText() {
+        String text = LocalizeValueWithMnemonic.get(myText).getText();
+        if (SearchHighlightUtil.matches(text, mySearchHighlight)) {
+            WebSearchHighlight.setText(myTextLabel.getElement(), text, mySearchHighlight);
+        }
+        else {
+            myTextLabel.setText(text);
+        }
     }
 
     @Override

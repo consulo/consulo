@@ -19,6 +19,7 @@ import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.data.provider.ListDataProvider;
+import com.vaadin.flow.data.selection.MultiSelect;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Length;
 import consulo.web.ui.impl.internal.vaadin.WebLength;
@@ -30,6 +31,7 @@ import consulo.ui.color.ColorValue;
 import consulo.ui.event.TableDoubleClickEvent;
 import consulo.ui.event.TableSelectEvent;
 import consulo.ui.model.FlatDataModel;
+import consulo.ui.model.FlatDataModelEvent;
 import consulo.util.collection.ContainerUtil;
 import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
 import consulo.web.ui.impl.internal.base.VaadinComponentDelegate;
@@ -37,7 +39,9 @@ import consulo.web.ui.impl.internal.base.WebInputDetails;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Function;
 
 /**
@@ -71,13 +75,50 @@ public class WebTableImpl<Item> extends VaadinComponentDelegate<WebTableImpl<Ite
         grid.setSelectionMode(Grid.SelectionMode.SINGLE);
         grid.setItems(new ListDataProvider<>(ContainerUtil.collect(model.iterator())));
 
-        model.addListener(event -> grid.setItems(new ListDataProvider<>(ContainerUtil.collect(model.iterator()))));
+        model.addListener(this::onModelChanged);
 
         installSelectionListener();
+
+        grid.addItemClickListener(event -> {
+            if (myAllowMultipleSelect) {
+                selectClicked(event.getItem(), event.isCtrlKey() || event.isMetaKey());
+            }
+        });
 
         grid.addItemDoubleClickListener(event ->
             getListenerDispatcher(TableDoubleClickEvent.class)
                 .onEvent(new TableDoubleClickEvent(this, event.getItem(), WebInputDetails.details(event))));
+    }
+
+    private void onModelChanged(FlatDataModelEvent event) {
+        Vaadin grid = toVaadinComponent();
+        if (event.getType() == FlatDataModelEvent.Type.UPDATED) {
+            int size = myModel.getSize();
+            for (int i = Math.max(0, event.getFromIndex()); i <= event.getToIndex() && i < size; i++) {
+                grid.getDataProvider().refreshItem(myModel.get(i));
+            }
+            return;
+        }
+
+        grid.setItems(new ListDataProvider<>(ContainerUtil.collect(myModel.iterator())));
+    }
+
+    private void selectClicked(Item item, boolean toggle) {
+        MultiSelect<Grid<Item>, Item> selection = toVaadinComponent().asMultiSelect();
+        Set<Item> selected = selection.getSelectedItems();
+        if (toggle) {
+            if (selected.contains(item)) {
+                selection.deselect(item);
+            }
+            else {
+                selection.select(item);
+            }
+            return;
+        }
+
+        Set<Item> removed = new HashSet<>(selected);
+        removed.remove(item);
+        selection.updateSelection(Set.of(item), removed);
     }
 
     private void installSelectionListener() {
@@ -149,7 +190,11 @@ public class WebTableImpl<Item> extends VaadinComponentDelegate<WebTableImpl<Ite
 
         myAllowMultipleSelect = allow;
 
-        toVaadinComponent().setSelectionMode(allow ? Grid.SelectionMode.MULTI : Grid.SelectionMode.SINGLE);
+        Vaadin grid = toVaadinComponent();
+        grid.setSelectionMode(allow ? Grid.SelectionMode.MULTI : Grid.SelectionMode.SINGLE);
+        if (allow) {
+            WebGridSelectionColumn.hide(grid);
+        }
 
         installSelectionListener();
     }

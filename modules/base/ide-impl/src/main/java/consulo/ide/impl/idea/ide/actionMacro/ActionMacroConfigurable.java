@@ -17,12 +17,13 @@ package consulo.ide.impl.idea.ide.actionMacro;
 
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
+import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.localize.IdeLocalize;
 import consulo.localize.LocalizeValue;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
-
-import javax.swing.*;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 
 /**
  * @author max
@@ -38,9 +39,9 @@ public class ActionMacroConfigurable implements Configurable {
 
   @RequiredUIAccess
   @Override
-  public JComponent createComponent() {
+  public Component createUIComponent(Disposable parentDisposable) {
     myPanel = new ActionMacroConfigurationPanel();
-    return myPanel.getPanel();
+    return TargetAWT.wrap(myPanel.getPanel());
   }
 
   @RequiredUIAccess

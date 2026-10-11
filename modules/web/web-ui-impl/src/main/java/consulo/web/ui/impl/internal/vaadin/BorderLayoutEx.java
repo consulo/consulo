@@ -158,6 +158,17 @@ public class BorderLayoutEx extends VerticalLayout {
     myCenterLayout.addClassName(AuraUtility.Overflow.AUTO);
   }
 
+  public @Nullable Component getComponent(Constraint constraint) {
+    Component holder = switch (constraint) {
+      case NORTH -> myTopLayout;
+      case WEST -> myWestHolder;
+      case CENTER -> myCenterHolder;
+      case EAST -> myEastHolder;
+      case SOUTH -> myBottomLayout;
+    };
+    return holder.getChildren().findFirst().orElse(null);
+  }
+
   public void addComponent(@Nullable Component component, Constraint constraint) {
     setComponent(component, constraint);
   }

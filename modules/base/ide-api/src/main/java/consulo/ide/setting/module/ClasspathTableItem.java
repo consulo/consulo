@@ -15,82 +15,85 @@
  */
 package consulo.ide.setting.module;
 
-import consulo.project.Project;
+import consulo.localize.LocalizeValue;
 import consulo.module.content.layer.orderEntry.DependencyScope;
 import consulo.module.content.layer.orderEntry.ExportableOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntryType;
-
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
+
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author nik
  */
 public class ClasspathTableItem<T extends OrderEntry> {
-  
-  @SuppressWarnings("unchecked")
-  public static ClasspathTableItem<?> createItem(OrderEntry orderEntry,
-                                                 Project project,
-                                                 ModulesConfigurator modulesConfigurator,
-                                                 LibrariesConfigurator librariesConfigurator) {
-    OrderEntryType<?> type = orderEntry.getType();
+    @SuppressWarnings("unchecked")
+    public static ClasspathTableItem<?> createItem(
+        OrderEntry orderEntry,
+        Project project,
+        ModulesConfigurator modulesConfigurator,
+        LibrariesConfigurator librariesConfigurator
+    ) {
+        OrderEntryType<?> type = orderEntry.getType();
 
-    OrderEntryTypeEditor editor = OrderEntryTypeEditor.getEditor(type.getId());
-    if (editor != null) {
-      return editor.createTableItem(orderEntry, project, modulesConfigurator, librariesConfigurator);
+        OrderEntryTypeEditor editor = OrderEntryTypeEditor.getEditor(type.getId());
+        if (editor != null) {
+            return editor.createTableItem(orderEntry, project, modulesConfigurator, librariesConfigurator);
+        }
+        return new ClasspathTableItem<>(orderEntry);
     }
-    return new ClasspathTableItem<>(orderEntry);
-  }
 
-  
-  protected final T myEntry;
+    protected final T myEntry;
 
-  public ClasspathTableItem(T entry) {
-    myEntry = entry;
-  }
-
-  public final boolean isExportable() {
-    return myEntry instanceof ExportableOrderEntry;
-  }
-
-  public final boolean isExported() {
-    return myEntry instanceof ExportableOrderEntry && ((ExportableOrderEntry)myEntry).isExported();
-  }
-
-  public final void setExported(boolean isExported) {
-    if (myEntry instanceof ExportableOrderEntry) {
-      ((ExportableOrderEntry)myEntry).setExported(isExported);
+    public ClasspathTableItem(T entry) {
+        myEntry = entry;
     }
-  }
 
-  public final @Nullable DependencyScope getScope() {
-    return myEntry instanceof ExportableOrderEntry ? ((ExportableOrderEntry)myEntry).getScope() : null;
-  }
-
-  public final void setScope(DependencyScope scope) {
-    if (myEntry instanceof ExportableOrderEntry) {
-      ((ExportableOrderEntry)myEntry).setScope(scope);
+    public final boolean isExportable() {
+        return myEntry instanceof ExportableOrderEntry;
     }
-  }
 
-  
-  public final T getEntry() {
-    return myEntry;
-  }
+    public final boolean isExported() {
+        return myEntry instanceof ExportableOrderEntry exportableOrderEntry && exportableOrderEntry.isExported();
+    }
 
-  public boolean isRemovable() {
-    return !myEntry.isSynthetic();
-  }
+    public final void setExported(boolean isExported) {
+        if (myEntry instanceof ExportableOrderEntry exportableOrderEntry) {
+            exportableOrderEntry.setExported(isExported);
+        }
+    }
 
-  public boolean isEditable() {
-    return false;
-  }
+    public final @Nullable DependencyScope getScope() {
+        return myEntry instanceof ExportableOrderEntry exportableOrderEntry ? exportableOrderEntry.getScope() : null;
+    }
 
-  public void doEdit(ClasspathPanel panel) {
+    public final void setScope(DependencyScope scope) {
+        if (myEntry instanceof ExportableOrderEntry exportableOrderEntry) {
+            exportableOrderEntry.setScope(scope);
+        }
+    }
 
-  }
+    public final T getEntry() {
+        return myEntry;
+    }
 
-  public @Nullable String getTooltipText() {
-    return null;
-  }
+    public boolean isRemovable() {
+        return !myEntry.isSynthetic();
+    }
+
+    public boolean isEditable() {
+        return false;
+    }
+
+    @RequiredUIAccess
+    public CompletableFuture<?> doEdit(ClasspathPanel panel) {
+        return CompletableFuture.completedFuture(null);
+    }
+
+    public LocalizeValue getTooltipText() {
+        return LocalizeValue.empty();
+    }
 }

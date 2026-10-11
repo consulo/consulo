@@ -20,14 +20,20 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.ComboBox;
 import consulo.ui.Component;
 import consulo.ui.Tree;
 import consulo.ui.TreeModel;
 import consulo.ui.TreeNode;
+import consulo.ui.TreeStyle;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.tester.UITesterTab;
 import consulo.ui.image.Image;
+import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.ScrollableLayout;
+import consulo.ui.layout.WrappedLayout;
+import consulo.ui.util.LabeledBuilder;
+import consulo.util.lang.ref.SimpleReference;
 
 import java.util.List;
 import java.util.Random;
@@ -38,6 +44,16 @@ import java.util.Random;
  */
 @ExtensionImpl(id = "tree", order = "after table")
 public class TreeUITesterTab implements UITesterTab {
+    private static final List<TreeStyle> FONT_STYLES = List.of(
+        TreeStyle.FONT_XX_SMALL,
+        TreeStyle.FONT_X_SMALL,
+        TreeStyle.FONT_SMALL,
+        TreeStyle.FONT_MEDIUM,
+        TreeStyle.FONT_LARGE,
+        TreeStyle.FONT_X_LARGE,
+        TreeStyle.FONT_XX_LARGE
+    );
+
     @Override
     public LocalizeValue getName() {
         return LocalizeValue.localizeTODO("Components > Tree");
@@ -46,7 +62,52 @@ public class TreeUITesterTab implements UITesterTab {
     @RequiredUIAccess
     @Override
     public Component createComponent(Disposable uiDisposable) {
-        Tree<String> tree = Tree.create(
+        WrappedLayout treeHolder = WrappedLayout.create();
+        SimpleReference<Disposable> treeDisposable = SimpleReference.create();
+
+        ComboBox<TreeStyle> fontSize = ComboBox.create(FONT_STYLES);
+        fontSize.setValue(TreeStyle.FONT_MEDIUM);
+        fontSize.addValueListener(event -> {
+            TreeStyle style = event.getValue();
+            if (style != null) {
+                showTree(treeHolder, treeDisposable, uiDisposable, style);
+            }
+        });
+
+        showTree(treeHolder, treeDisposable, uiDisposable, TreeStyle.FONT_MEDIUM);
+
+        DockLayout layout = DockLayout.create();
+        layout.top(LabeledBuilder.simple(LocalizeValue.localizeTODO("Font size:"), fontSize));
+        layout.center(treeHolder);
+        return layout;
+    }
+
+    @RequiredUIAccess
+    private static void showTree(
+        WrappedLayout treeHolder,
+        SimpleReference<Disposable> treeDisposable,
+        Disposable uiDisposable,
+        TreeStyle fontStyle
+    ) {
+        Disposable previous = treeDisposable.get();
+        if (previous != null) {
+            Disposer.dispose(previous);
+        }
+
+        Disposable disposable = Disposable.newDisposable("UI tester tree");
+        Disposer.register(uiDisposable, disposable);
+        treeDisposable.set(disposable);
+
+        Tree<String> tree = createTree();
+        tree.addStyle(fontStyle);
+        Disposer.register(disposable, tree.destroyHook());
+
+        treeHolder.set(ScrollableLayout.create(tree));
+    }
+
+    @RequiredUIAccess
+    private static Tree<String> createTree() {
+        return Tree.create(
             (TreeModel<String>) (nodeFactory, parentValue) -> {
                 if (parentValue == null) {
                     for (int i = 0; i < 50; i++) {
@@ -74,8 +135,5 @@ public class TreeUITesterTab implements UITesterTab {
                 }
             }
         );
-        Disposer.register(uiDisposable, tree.destroyHook());
-
-        return ScrollableLayout.create(tree);
     }
 }

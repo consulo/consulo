@@ -32,9 +32,11 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Comparing;
@@ -160,7 +162,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
 
     @RequiredUIAccess
     @Override
-    public JComponent createComponent(Disposable parentUIDisposable) {
+    public Component createUIComponent(Disposable parentUIDisposable) {
         myTemplatesList = new FileTemplateTabAsList(IdeLocalize.tabFiletemplatesTemplates()) {
             @Override
             @RequiredUIAccess
@@ -212,7 +214,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
 
         myEditor = new FileTemplateConfigurable(myProject);
         myEditor.addChangeListener(e -> onEditorChanged());
-        myEditorComponent = myEditor.createComponent();
+        myEditorComponent = (JComponent) TargetAWT.to(myEditor.createUIComponent(parentUIDisposable));
         myEditorComponent.setBorder(JBUI.Borders.empty(10, 0, 10, 10));
 
         myTabs = allTabs.toArray(new FileTemplateTab[allTabs.size()]);
@@ -337,7 +339,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
         }
 
         actionToolbar.setTargetComponent(myMainPanel);
-        return myMainPanel;
+        return TargetAWT.wrap(myMainPanel);
     }
 
     @RequiredUIAccess

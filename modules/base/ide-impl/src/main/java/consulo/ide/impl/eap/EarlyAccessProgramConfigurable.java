@@ -25,6 +25,7 @@ import consulo.ide.localize.IdeLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.CheckBox;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.*;
@@ -74,7 +75,7 @@ public class EarlyAccessProgramConfigurable implements ApplicationConfigurable, 
 
     @Override
     @RequiredUIAccess
-    public @Nullable JComponent createComponent(Disposable parentDisposable) {
+    public @Nullable Component createUIComponent(Disposable parentDisposable) {
         myCheckBoxes = new LinkedHashMap<>();
 
         JPanel panel = new JPanel(new VerticalFlowLayout());
@@ -124,7 +125,7 @@ public class EarlyAccessProgramConfigurable implements ApplicationConfigurable, 
             panel.add(eapPanel);
         }
 
-        return JBUI.Panels.simplePanel().addToTop(createWarningPanel()).addToCenter(ScrollPaneFactory.createScrollPane(panel, true));
+        return TargetAWT.wrap(JBUI.Panels.simplePanel().addToTop(createWarningPanel()).addToCenter(ScrollPaneFactory.createScrollPane(panel, true)));
     }
 
     private static JComponent createWarningPanel() {

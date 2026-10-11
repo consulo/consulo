@@ -66,6 +66,15 @@ public class DesktopQtPlaceholderLayoutImpl extends DesktopQtLayoutComponent<Pla
     }
 
     @Override
+    protected int compareLayoutData(@Nullable Object first, @Nullable Object second) {
+        return Integer.compare(layerIndex(first), layerIndex(second));
+    }
+
+    private static int layerIndex(@Nullable Object layoutData) {
+        return layoutData instanceof Layer layer ? layer.ordinal() : Layer.values().length;
+    }
+
+    @Override
     public Layer convertConstraintsToLayoutData(Layer constraint) {
         return constraint;
     }

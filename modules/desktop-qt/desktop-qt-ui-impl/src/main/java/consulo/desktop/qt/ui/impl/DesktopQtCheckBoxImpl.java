@@ -21,8 +21,13 @@ import consulo.ui.CheckBoxStyle;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ValueComponentEvent;
 import consulo.ui.event.details.ProgrammaticInputDetails;
+import consulo.ui.internal.SearchHighlightUtil;
+import io.qt.gui.QPaintEvent;
 import io.qt.widgets.QCheckBox;
+import io.qt.widgets.QStyle;
+import io.qt.widgets.QStyleOptionButton;
 import io.qt.widgets.QWidget;
+import org.jspecify.annotations.Nullable;
 
 import java.util.EnumSet;
 import java.util.Set;
@@ -33,7 +38,37 @@ import java.util.Set;
  */
 @SuppressWarnings({"unchecked", "rawtypes"})
 public class DesktopQtCheckBoxImpl extends QtComponentDelegate<QCheckBox> implements CheckBox {
+    private class HighlightCheckBox extends QCheckBox {
+        private HighlightCheckBox(QWidget parent) {
+            super(parent);
+        }
+
+        @Override
+        protected void paintEvent(QPaintEvent event) {
+            String query = mySearchHighlight;
+            String text = QtMnemonic.plain(myText);
+            if (query == null || !SearchHighlightUtil.matches(text, query)) {
+                super.paintEvent(event);
+                return;
+            }
+
+            QStyleOptionButton option = new QStyleOptionButton();
+            initStyleOption(option);
+
+            DesktopQtSearchHighlight.paintCheckable(
+                this,
+                option,
+                QStyle.ControlElement.CE_CheckBox,
+                QStyle.SubElement.SE_CheckBoxContents,
+                text,
+                query
+            );
+        }
+    }
+
     private LocalizeValue myText = LocalizeValue.empty();
+
+    private @Nullable String mySearchHighlight;
 
     private boolean myValue;
 
@@ -43,7 +78,7 @@ public class DesktopQtCheckBoxImpl extends QtComponentDelegate<QCheckBox> implem
 
     @Override
     protected QCheckBox createQt(QWidget parent) {
-        return new QCheckBox(parent);
+        return new HighlightCheckBox(parent);
     }
 
     @Override
@@ -126,5 +161,20 @@ public class DesktopQtCheckBoxImpl extends QtComponentDelegate<QCheckBox> implem
         switch (style) {
             case TRANSPARENT_BACKGROUND -> myComponent.setAutoFillBackground(false);
         }
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setSearchHighlight(@Nullable String query) {
+        mySearchHighlight = SearchHighlightUtil.normalizeQuery(query);
+
+        if (myComponent != null) {
+            myComponent.update();
+        }
+    }
+
+    @Override
+    public @Nullable String getSearchHighlight() {
+        return mySearchHighlight;
     }
 }

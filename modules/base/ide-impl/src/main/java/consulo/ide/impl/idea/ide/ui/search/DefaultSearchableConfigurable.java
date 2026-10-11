@@ -18,11 +18,11 @@ package consulo.ide.impl.idea.ide.ui.search;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.SearchableConfigurable;
+import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
-
-import javax.swing.*;
 
 /**
  * @author anna
@@ -30,7 +30,7 @@ import javax.swing.*;
  */
 public class DefaultSearchableConfigurable implements Configurable {
     private final SearchableConfigurable myDelegate;
-    private JComponent myComponent;
+    private @Nullable Component myComponent;
 
     public DefaultSearchableConfigurable(SearchableConfigurable delegate) {
         myDelegate = delegate;
@@ -63,8 +63,8 @@ public class DefaultSearchableConfigurable implements Configurable {
 
     @Override
     @RequiredUIAccess
-    public JComponent createComponent() {
-        myComponent = myDelegate.createComponent();
+    public @Nullable Component createUIComponent(Disposable parentDisposable) {
+        myComponent = myDelegate.createUIComponent(parentDisposable);
         return myComponent;
     }
 

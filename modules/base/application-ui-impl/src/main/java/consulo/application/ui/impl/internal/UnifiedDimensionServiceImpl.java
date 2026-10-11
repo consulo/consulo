@@ -17,7 +17,6 @@ package consulo.application.ui.impl.internal;
 
 import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.ui.ApplicationWindowStateService;
 import consulo.application.ui.DimensionService;
 import consulo.application.ui.WindowStateService;
 import consulo.component.persist.PersistentStateComponent;
@@ -27,7 +26,6 @@ import consulo.component.persist.Storage;
 import consulo.component.util.SimpleModificationTracker;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
-import consulo.project.ui.ProjectWindowStateService;
 import consulo.ui.Point2D;
 import consulo.ui.Size2D;
 import consulo.util.collection.primitive.objects.ObjectIntMap;
@@ -61,14 +59,14 @@ public class UnifiedDimensionServiceImpl extends SimpleModificationTracker imple
   private static final String ATTRIBUTE_WIDTH = "width";
   private static final String ATTRIBUTE_HEIGHT = "height";
 
-  
-  protected static WindowStateService getWindowStateService(@Nullable Project project) {
-    return project == null ? ApplicationWindowStateService.getInstance() : ProjectWindowStateService.getInstance(project);
+  protected @Nullable WindowStateService findWindowStateService(@Nullable Project project) {
+    return null;
   }
 
   @Override
   public synchronized @Nullable Point2D getLocation(String key, Project project) {
-    Point2D point = project == null ? null : ProjectWindowStateService.getInstance(project).getLocation(key);
+    WindowStateService windowStateService = project == null ? null : findWindowStateService(project);
+    Point2D point = windowStateService == null ? null : windowStateService.getLocation(key);
     if (point != null) return point;
 
     Pair<String, Float> pair = resolveScale(key, project);
@@ -89,7 +87,10 @@ public class UnifiedDimensionServiceImpl extends SimpleModificationTracker imple
 
   @Override
   public synchronized void setLocation(String key, Point2D point, Project project) {
-    getWindowStateService(project).putLocation(key, point);
+    WindowStateService windowStateService = findWindowStateService(project);
+    if (windowStateService != null) {
+      windowStateService.putLocation(key, point);
+    }
     Pair<String, Float> pair = resolveScale(key, project);
     if (point != null) {
       float scale = pair.second;
@@ -104,7 +105,8 @@ public class UnifiedDimensionServiceImpl extends SimpleModificationTracker imple
 
   @Override
   public synchronized @Nullable Size2D getSize(String key, Project project) {
-    Size2D size = project == null ? null : ProjectWindowStateService.getInstance(project).getSize(key);
+    WindowStateService windowStateService = project == null ? null : findWindowStateService(project);
+    Size2D size = windowStateService == null ? null : windowStateService.getSize(key);
     if (size != null) return size;
 
     Pair<String, Float> pair = resolveScale(key, project);
@@ -118,7 +120,10 @@ public class UnifiedDimensionServiceImpl extends SimpleModificationTracker imple
 
   @Override
   public synchronized void setSize(String key, Size2D size, Project project) {
-    getWindowStateService(project).putSize(key, size);
+    WindowStateService windowStateService = findWindowStateService(project);
+    if (windowStateService != null) {
+      windowStateService.putSize(key, size);
+    }
     Pair<String, Float> pair = resolveScale(key, project);
     if (size != null) {
       float scale = pair.second;

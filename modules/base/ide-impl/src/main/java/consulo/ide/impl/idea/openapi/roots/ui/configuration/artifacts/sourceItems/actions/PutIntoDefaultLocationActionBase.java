@@ -15,45 +15,40 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceItems.actions;
 
-import consulo.ui.ex.action.LegacyAnAction;
+import consulo.compiler.artifact.ui.PackagingSourceItem;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.ArtifactEditorEx;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceItems.SourceItemsTree;
+import consulo.localize.LocalizeValue;
+import consulo.project.localize.ProjectLocalize;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
+import consulo.ui.ex.action.DumbAwareAction;
 import consulo.util.lang.StringUtil;
-import consulo.compiler.artifact.ui.PackagingSourceItem;
-
 import org.jspecify.annotations.Nullable;
+
 import java.util.Set;
 
 /**
  * @author nik
  */
-public abstract class PutIntoDefaultLocationActionBase extends LegacyAnAction {
-  protected final SourceItemsTree mySourceItemsTree;
-  protected final ArtifactEditorEx myArtifactEditor;
+public abstract class PutIntoDefaultLocationActionBase extends DumbAwareAction implements AnActionWithSyncUpdate {
+    protected final SourceItemsTree mySourceItemsTree;
+    protected final ArtifactEditorEx myArtifactEditor;
 
-  public PutIntoDefaultLocationActionBase(SourceItemsTree sourceItemsTree, ArtifactEditorEx artifactEditor) {
-    mySourceItemsTree = sourceItemsTree;
-    myArtifactEditor = artifactEditor;
-  }
-
-  protected @Nullable String getDefaultPath(PackagingSourceItem item) {
-    return myArtifactEditor.getArtifact().getArtifactType().getDefaultPathFor(item);
-  }
-
-  protected static String getTargetLocationText(Set<String> paths) {
-    String target;
-    if (paths.size() == 1) {
-      String path = StringUtil.trimStart(StringUtil.trimEnd(paths.iterator().next(), "/"), "/");
-      if (path.length() > 0) {
-        target = "/" + path;
-      }
-      else {
-        target = "Output Root";
-      }
+    public PutIntoDefaultLocationActionBase(SourceItemsTree sourceItemsTree, ArtifactEditorEx artifactEditor) {
+        mySourceItemsTree = sourceItemsTree;
+        myArtifactEditor = artifactEditor;
     }
-    else {
-      target = "Default Locations";
+
+    protected @Nullable String getDefaultPath(PackagingSourceItem item) {
+        return myArtifactEditor.getArtifact().getArtifactType().getDefaultPathFor(item);
     }
-    return target;
-  }
+
+    protected static LocalizeValue getTargetLocationText(Set<String> paths) {
+        if (paths.size() != 1) {
+            return ProjectLocalize.artifactLocationDefaultLocations();
+        }
+
+        String path = StringUtil.trimStart(StringUtil.trimEnd(paths.iterator().next(), "/"), "/");
+        return path.isEmpty() ? ProjectLocalize.artifactLocationOutputRoot() : LocalizeValue.of("/" + path);
+    }
 }

@@ -33,6 +33,8 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ComponentEventListener;
 import consulo.ui.event.ValueComponentEvent;
 import consulo.ui.image.Image;
+import consulo.ui.layout.ScrollableLayout;
+import consulo.ui.layout.ScrollableLayoutOptions;
 import consulo.ui.layout.VerticalLayout;
 import consulo.ui.util.FormBuilder;
 import consulo.util.io.FileUtil;
@@ -81,11 +83,11 @@ public class CompilerOutputsEditor extends ModuleElementsEditor {
 
         for (ContentFolderTypeProvider provider : ContentFolderTypeProvider.filter(myFilter)) {
             CommitableFieldPanel panel = createOutputPathPanel(
-                "Select " + provider.getName() + " Output",
+                ProjectLocalize.modulePathsProviderOutputTitle(provider.getName()),
                 provider,
                 parentUIDisposable,
                 url -> {
-                    if (moduleCompilerPathsManager.isInheritedCompilerOutput()) {
+                    if (myInheritedOutput.getValueOrError()) {
                         return;
                     }
                     moduleCompilerPathsManager.setCompilerOutputUrl(provider, url);
@@ -96,7 +98,6 @@ public class CompilerOutputsEditor extends ModuleElementsEditor {
         }
 
         myCbExcludeOutput = CheckBox.create(ProjectLocalize.modulePathsExcludeOutputCheckbox(), moduleCompilerPathsManager.isExcludeOutput());
-        myCbExcludeOutput.addValueListener(e -> moduleCompilerPathsManager.setExcludeOutput(myCbExcludeOutput.getValueOrError()));
 
         VerticalLayout panel = VerticalLayout.create();
         panel.add(myInheritCompilerOutput);
@@ -124,13 +125,16 @@ public class CompilerOutputsEditor extends ModuleElementsEditor {
         enableCompilerSettings(!outputPathInherited);
 
         panel.paddingBuilder().allSet(Space.MEDIUM).apply();
-        return panel;
+        return ScrollableLayout.create(
+            panel,
+            ScrollableLayoutOptions.builder().horizontalScrollPolicy(ScrollableLayoutOptions.ScrollPolicy.NEVER).build()
+        );
     }
 
     @RequiredUIAccess
     private void updateOutputPathPresentation() {
         ModuleCompilerPathsManager moduleCompilerPathsManager = ModuleCompilerPathsManager.getInstance(getModule());
-        if (moduleCompilerPathsManager.isInheritedCompilerOutput()) {
+        if (myInheritedOutput.getValueOrError()) {
             String baseUrl = getState().getModulesConfigurator().getCompilerOutputUrl();
 
             moduleCompileOutputChanged(baseUrl, getModule().getName());
@@ -158,14 +162,12 @@ public class CompilerOutputsEditor extends ModuleElementsEditor {
         }
 
         myCbExcludeOutput.setEnabled(enabled);
-        ModuleCompilerPathsManager moduleCompilerPathsManager = ModuleCompilerPathsManager.getInstance(getModule());
-        moduleCompilerPathsManager.setInheritedCompilerOutput(!enabled);
         updateOutputPathPresentation();
     }
 
     @RequiredUIAccess
     private CommitableFieldPanel createOutputPathPanel(
-        String title,
+        LocalizeValue title,
         ContentFolderTypeProvider provider,
         Disposable parentUIDisposable,
         Consumer<String> commitPathRunnable
@@ -177,7 +179,7 @@ public class CompilerOutputsEditor extends ModuleElementsEditor {
 
         FileChooserTextBoxBuilder.Controller controller = builder.build();
 
-        Label label = Label.create(LocalizeValue.localizeTODO(provider.getName() + " Output: "));
+        Label label = Label.create(ProjectLocalize.modulePathsProviderOutputLabel(provider.getName()));
         CommitableFieldPanel commitableFieldPanel = new CommitableFieldPanel(controller, label);
         commitableFieldPanel.myCommitRunnable = () -> {
             if (!getModel().isWritable()) {
@@ -192,9 +194,22 @@ public class CompilerOutputsEditor extends ModuleElementsEditor {
     @Override
     @RequiredUIAccess
     public boolean isModified() {
+        RadioGroup<Boolean> inheritedOutput = myInheritedOutput;
+        CheckBox excludeOutput = myCbExcludeOutput;
+        if (inheritedOutput == null || excludeOutput == null) {
+            return false;
+        }
+
         ModuleCompilerPathsManager moduleCompilerPathsManager = ModuleCompilerPathsManager.getInstance(getModule());
-        if (myInheritedOutput.getValueOrError() != moduleCompilerPathsManager.isInheritedCompilerOutput()) {
+        boolean inherited = inheritedOutput.getValueOrError();
+        if (inherited != moduleCompilerPathsManager.isInheritedCompilerOutput()) {
             return true;
+        }
+        if (excludeOutput.getValueOrError() != moduleCompilerPathsManager.isExcludeOutput()) {
+            return true;
+        }
+        if (inherited) {
+            return false;
         }
         for (ContentFolderTypeProvider contentFolderTypeProvider : ContentFolderTypeProvider.filter(LanguageContentFolderScopes.productionAndTest())) {
             CommitableFieldPanel commitableFieldPanel = toField(contentFolderTypeProvider);
@@ -213,7 +228,18 @@ public class CompilerOutputsEditor extends ModuleElementsEditor {
     }
 
     @Override
+    @RequiredUIAccess
     public void saveData() {
+        RadioGroup<Boolean> inheritedOutput = myInheritedOutput;
+        CheckBox excludeOutput = myCbExcludeOutput;
+        if (inheritedOutput == null || excludeOutput == null || !getModel().isWritable()) {
+            return;
+        }
+
+        ModuleCompilerPathsManager moduleCompilerPathsManager = ModuleCompilerPathsManager.getInstance(getModule());
+        moduleCompilerPathsManager.setInheritedCompilerOutput(inheritedOutput.getValueOrError());
+        moduleCompilerPathsManager.setExcludeOutput(excludeOutput.getValueOrError());
+
         for (CommitableFieldPanel panel : myOutputFields.values()) {
             panel.commit();
         }
@@ -227,9 +253,6 @@ public class CompilerOutputsEditor extends ModuleElementsEditor {
     @Override
     @RequiredUIAccess
     public void moduleStateChanged() {
-        ModuleCompilerPathsManager moduleCompilerPathsManager = ModuleCompilerPathsManager.getInstance(getModule());
-        // If content of entire tree was changed
-        myCbExcludeOutput.setValue(moduleCompilerPathsManager.isExcludeOutput());
     }
 
     @Override

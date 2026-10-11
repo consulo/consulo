@@ -10,8 +10,35 @@
     background-color: transparent;
 }
 
+@property --consulo-table-row-selection {
+    syntax: '<color>';
+    inherits: true;
+    initial-value: transparent;
+}
+
 .web-table::part(selected-row-cell) {
     background-color: var(--vaadin-grid-row-selected-background-color, color-mix(in srgb, currentColor 8%, transparent));
+    --consulo-table-row-selection: var(--vaadin-grid-row-selected-background-color, color-mix(in srgb, currentColor 8%, transparent));
+}
+
+.web-table vaadin-grid-cell-content:has(> .web-table-cell) {
+    padding: 0;
+    align-self: stretch;
+}
+
+.web-table .web-table-cell {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    padding: var(--vaadin-grid-cell-padding, var(--_default-cell-padding));
+    overflow: hidden;
+}
+
+.web-table .web-table-cell-filled {
+    background-color: var(--consulo-table-cell-background);
+    background-image: linear-gradient(var(--consulo-table-row-selection), var(--consulo-table-row-selection));
 }
 
 /* vaadin has no api for hiding the header row, so WebTableImpl#setShowHeader toggles this class */

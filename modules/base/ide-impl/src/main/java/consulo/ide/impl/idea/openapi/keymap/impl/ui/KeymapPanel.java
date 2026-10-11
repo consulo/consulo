@@ -1119,11 +1119,11 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
 
     @Override
     @RequiredUIAccess
-    public JComponent createComponent() {
+    public consulo.ui.Component createUIComponent(Disposable parentDisposable) {
         if (myRootPanel == null) {
             myRootPanel = createKeymapRootPanel();
         }
-        return myRootPanel;
+        return TargetAWT.wrap(myRootPanel);
     }
 
     @Override

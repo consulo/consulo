@@ -43,6 +43,11 @@ public interface FoldoutLayout extends Layout<LayoutConstraint> {
     @RequiredUIAccess
     FoldoutLayout setTitle(LocalizeValue title);
 
+    /**
+     * @return the caption of the section, whether it is folded or not
+     */
+    LocalizeValue getTitle();
+
     default Disposable addOpenedListener(ComponentEventListener<FoldoutLayout, FoldoutLayoutOpenedEvent> stateListener) {
         return addListener(FoldoutLayoutOpenedEvent.class, stateListener);
     }

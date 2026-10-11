@@ -16,62 +16,45 @@
 package consulo.compiler.artifact;
 
 import consulo.compiler.artifact.element.CompositePackagingElement;
-
 import consulo.localize.LocalizeValue;
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
+
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author nik
  */
 public abstract class ArtifactTemplate {
-  public abstract LocalizeValue getPresentableName();
+    public abstract LocalizeValue getPresentableName();
 
-  /**
-   * @deprecated override {@link #createArtifact()} instead
-   */
-  @Deprecated
-  public CompositePackagingElement<?> createRootElement(String artifactName) {
-    return null;
-  }
+    @RequiredUIAccess
+    public abstract CompletableFuture<NewArtifactConfiguration> createArtifact();
 
-  /**
-   * @deprecated override {@link #createArtifact()} instead
-   */
-  @Deprecated
-  
-  public String suggestArtifactName() {
-    return "unnamed";
-  }
-
-  public @Nullable NewArtifactConfiguration createArtifact() {
-    String name = suggestArtifactName();
-    return new NewArtifactConfiguration(createRootElement(name), name, null);
-  }
-
-  public void setUpArtifact(Artifact artifact, NewArtifactConfiguration configuration) {
-  }
-
-  public static class NewArtifactConfiguration {
-    private final CompositePackagingElement<?> myRootElement;
-    private final String myArtifactName;
-    private final ArtifactType myArtifactType;
-
-    public NewArtifactConfiguration(CompositePackagingElement<?> rootElement, String artifactName, ArtifactType artifactType) {
-      myRootElement = rootElement;
-      myArtifactName = artifactName;
-      myArtifactType = artifactType;
+    public void setUpArtifact(Artifact artifact, NewArtifactConfiguration configuration) {
     }
 
-    public CompositePackagingElement<?> getRootElement() {
-      return myRootElement;
-    }
+    public static class NewArtifactConfiguration {
+        private final CompositePackagingElement<?> myRootElement;
+        private final String myArtifactName;
+        private final @Nullable ArtifactType myArtifactType;
 
-    public String getArtifactName() {
-      return myArtifactName;
-    }
+        public NewArtifactConfiguration(CompositePackagingElement<?> rootElement, String artifactName, @Nullable ArtifactType artifactType) {
+            myRootElement = rootElement;
+            myArtifactName = artifactName;
+            myArtifactType = artifactType;
+        }
 
-    public ArtifactType getArtifactType() {
-      return myArtifactType;
+        public CompositePackagingElement<?> getRootElement() {
+            return myRootElement;
+        }
+
+        public String getArtifactName() {
+            return myArtifactName;
+        }
+
+        public @Nullable ArtifactType getArtifactType() {
+            return myArtifactType;
+        }
     }
-  }
 }

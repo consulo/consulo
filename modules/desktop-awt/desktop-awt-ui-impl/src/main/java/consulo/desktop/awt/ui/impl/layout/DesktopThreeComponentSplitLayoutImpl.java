@@ -25,6 +25,7 @@ import consulo.ui.layout.ThreeComponentSplitLayout;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
+import java.util.function.Consumer;
 
 /**
  * @author VISTALL
@@ -32,6 +33,10 @@ import javax.swing.*;
  */
 public class DesktopThreeComponentSplitLayoutImpl extends SwingComponentDelegate<ThreeComponentsSplitter> implements ThreeComponentSplitLayout {
     private final SplitLayoutPosition myPosition;
+
+    private @Nullable Component myFirstComponent;
+    private @Nullable Component myCenterComponent;
+    private @Nullable Component mySecondComponent;
 
     public DesktopThreeComponentSplitLayoutImpl(SplitLayoutPosition position) {
         myPosition = position;
@@ -45,6 +50,7 @@ public class DesktopThreeComponentSplitLayoutImpl extends SwingComponentDelegate
     @Override
     @RequiredUIAccess
     public ThreeComponentSplitLayout setFirstComponent(@Nullable Component component) {
+        myFirstComponent = component;
         toAWTComponent().setFirstComponent((JComponent) TargetAWT.to(component));
         return this;
     }
@@ -52,6 +58,7 @@ public class DesktopThreeComponentSplitLayoutImpl extends SwingComponentDelegate
     @Override
     @RequiredUIAccess
     public ThreeComponentSplitLayout setCenterComponent(@Nullable Component component) {
+        myCenterComponent = component;
         toAWTComponent().setInnerComponent((JComponent) TargetAWT.to(component));
         return this;
     }
@@ -59,7 +66,13 @@ public class DesktopThreeComponentSplitLayoutImpl extends SwingComponentDelegate
     @Override
     @RequiredUIAccess
     public ThreeComponentSplitLayout setSecondComponent(@Nullable Component component) {
+        mySecondComponent = component;
         toAWTComponent().setLastComponent((JComponent) TargetAWT.to(component));
         return this;
+    }
+
+    @Override
+    public void forEachChild(@RequiredUIAccess Consumer<Component> consumer) {
+        DesktopLayoutChildren.acceptAll(consumer, myFirstComponent, myCenterComponent, mySecondComponent);
     }
 }

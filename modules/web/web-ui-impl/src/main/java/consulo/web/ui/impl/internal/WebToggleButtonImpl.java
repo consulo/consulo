@@ -27,6 +27,7 @@ import consulo.ui.event.ClickEvent;
 import consulo.ui.event.ValueComponentEvent;
 import consulo.ui.event.details.InputDetails;
 import consulo.ui.image.Image;
+import consulo.ui.internal.SearchHighlightUtil;
 import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
 import consulo.web.ui.impl.internal.base.VaadinComponentDelegate;
 import consulo.web.ui.impl.internal.base.WebInputDetails;
@@ -59,6 +60,8 @@ public class WebToggleButtonImpl extends VaadinComponentDelegate<WebToggleButton
 
     private @Nullable Image myImage;
 
+    private @Nullable String mySearchHighlight;
+
     private boolean mySelected;
 
     public WebToggleButtonImpl(LocalizeValue text) {
@@ -68,7 +71,7 @@ public class WebToggleButtonImpl extends VaadinComponentDelegate<WebToggleButton
         myClickInstalled = true;
 
         myTextValue = text;
-        component.setText(WebButtonImpl.plainText(text));
+        WebSearchHighlight.setButtonText(component, WebButtonImpl.plainText(text), mySearchHighlight);
 
         updateSelectedState();
     }
@@ -149,7 +152,19 @@ public class WebToggleButtonImpl extends VaadinComponentDelegate<WebToggleButton
     @Override
     public void setText(LocalizeValue text) {
         myTextValue = text;
-        toVaadinComponent().setText(WebButtonImpl.plainText(text));
+        WebSearchHighlight.setButtonText(toVaadinComponent(), WebButtonImpl.plainText(text), mySearchHighlight);
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setSearchHighlight(@Nullable String query) {
+        mySearchHighlight = SearchHighlightUtil.normalizeQuery(query);
+        WebSearchHighlight.setButtonText(toVaadinComponent(), WebButtonImpl.plainText(myTextValue), mySearchHighlight);
+    }
+
+    @Override
+    public @Nullable String getSearchHighlight() {
+        return mySearchHighlight;
     }
 
     @Override

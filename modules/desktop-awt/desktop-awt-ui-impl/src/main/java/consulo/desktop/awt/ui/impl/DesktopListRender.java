@@ -22,6 +22,7 @@ import consulo.ui.AntialiasingType;
 import consulo.ui.RenderItem;
 import consulo.ui.TextItemPresentation;
 import consulo.ui.TextItemRender;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,46 +33,65 @@ import java.util.function.Supplier;
  * @since 2020-08-23
  */
 class DesktopListRender<E> extends ColoredListCellRenderer<E> {
-  private Supplier<AntialiasingType> myAntialiasingType = () -> DesktopAntialiasingTypeUtil.getAntialiasingTypeForSwingComponent().to();
-  private Supplier<TextItemRender<E>> myRenderSupplier;
+    private Supplier<AntialiasingType> myAntialiasingType = () -> DesktopAntialiasingTypeUtil.getAntialiasingTypeForSwingComponent().to();
+    private Supplier<TextItemRender<E>> myRenderSupplier;
 
-  public DesktopListRender(Supplier<TextItemRender<E>> renderSupplier) {
-    myRenderSupplier = renderSupplier;
-  }
+    private final DesktopSuffixCellRendererPanel mySuffixPanel = new DesktopSuffixCellRendererPanel();
+    private @Nullable DesktopTextItemPresentationImpl myPresentation;
 
-  @Override
-  protected void customizeCellRenderer(JList<? extends E> list, E value, int index, boolean selected, boolean hasFocus) {
-    setBorder(JBCurrentTheme.listCellBorderFull());
-    DesktopTextItemPresentationImpl render = new DesktopTextItemPresentationImpl(this) {
-      
-      @Override
-      public TextItemPresentation withAntialiasingType(AntialiasingType type) {
-        myAntialiasingType = () -> type;
-        updateUI();
-        return super.withAntialiasingType(type);
-      }
-    };
-    myRenderSupplier.get().render(render, RenderItem.of(value, selected));
-  }
-
-  @Override
-  protected void applyAdditionalHints(Graphics2D g2d) {
-    super.applyAdditionalHints(g2d);
-
-    if(myAntialiasingType == null) {
-      return;
+    public DesktopListRender(Supplier<TextItemRender<E>> renderSupplier) {
+        myRenderSupplier = renderSupplier;
     }
 
-    AntialiasingType aa = myAntialiasingType.get();
-    g2d.setRenderingHint(RenderingHints.KEY_TEXT_LCD_CONTRAST, UIUtil.getLcdContrastValue());
-    g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, DesktopAntialiasingType.from(aa).getHint());
-  }
+    @Override
+    public Component getListCellRendererComponent(JList<? extends E> list, E value, int index, boolean selected, boolean hasFocus) {
+        myPresentation = null;
 
-  @Override
-  public void updateUI() {
-    if(myAntialiasingType == null) {
-      return;
+        Component component = super.getListCellRendererComponent(list, value, index, selected, hasFocus);
+
+        DesktopTextItemPresentationImpl presentation = myPresentation;
+        if (component != this || presentation == null) {
+            return component;
+        }
+
+        Color background = isOpaque() ? (isBackgroundSet() ? getBackground() : list.getBackground()) : null;
+        return mySuffixPanel.compose(this, background, presentation, selected ? list.getSelectionForeground() : null);
     }
-    GraphicsUtil.setAntialiasingType(this, myAntialiasingType.get());
-  }
+
+    @Override
+    protected void customizeCellRenderer(JList<? extends E> list, E value, int index, boolean selected, boolean hasFocus) {
+        setBorder(JBCurrentTheme.listCellBorderFull());
+        setToolTipText(null);
+        DesktopTextItemPresentationImpl render = new DesktopTextItemPresentationImpl(this) {
+            @Override
+            public TextItemPresentation withAntialiasingType(AntialiasingType type) {
+                myAntialiasingType = () -> type;
+                updateUI();
+                return super.withAntialiasingType(type);
+            }
+        };
+        myRenderSupplier.get().render(render, RenderItem.of(value, selected));
+        myPresentation = render;
+    }
+
+    @Override
+    protected void applyAdditionalHints(Graphics2D g2d) {
+        super.applyAdditionalHints(g2d);
+
+        if (myAntialiasingType == null) {
+            return;
+        }
+
+        AntialiasingType aa = myAntialiasingType.get();
+        g2d.setRenderingHint(RenderingHints.KEY_TEXT_LCD_CONTRAST, UIUtil.getLcdContrastValue());
+        g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, DesktopAntialiasingType.from(aa).getHint());
+    }
+
+    @Override
+    public void updateUI() {
+        if (myAntialiasingType == null) {
+            return;
+        }
+        GraphicsUtil.setAntialiasingType(this, myAntialiasingType.get());
+    }
 }

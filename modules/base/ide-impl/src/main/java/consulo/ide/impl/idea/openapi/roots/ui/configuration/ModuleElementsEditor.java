@@ -21,7 +21,6 @@ import consulo.configurable.ConfigurationException;
 import consulo.ide.setting.module.ModuleConfigurationState;
 import consulo.project.Project;
 import consulo.module.content.layer.ModifiableRootModel;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.disposer.CompositeDisposable;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -29,7 +28,6 @@ import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import org.jspecify.annotations.Nullable;
-import javax.swing.*;
 
 /**
  * @author Eugene Zhuravlev
@@ -37,7 +35,7 @@ import javax.swing.*;
  */
 public abstract class ModuleElementsEditor implements ModuleConfigurationEditor {
   protected final Project myProject;
-  protected JComponent myComponent;
+  private @Nullable Component myUIComponent;
   private final CompositeDisposable myDisposables = new CompositeDisposable();
 
   private final ModuleConfigurationState myState;
@@ -87,28 +85,22 @@ public abstract class ModuleElementsEditor implements ModuleConfigurationEditor 
     Disposer.dispose(myDisposables);
   }
 
-  // caching
-  @RequiredUIAccess
-  @Override
-  public final JComponent createComponent(Disposable parentUIDisposable) {
-    if (myComponent == null) {
-      myComponent = createComponentImpl(parentUIDisposable);
-    }
-    return myComponent;
-  }
-
   protected void registerDisposable(Disposable disposable) {
     myDisposables.add(disposable);
   }
 
   
   @RequiredUIAccess
-  protected JComponent createComponentImpl(Disposable parentUIDisposable) {
-    return (JComponent)TargetAWT.to(createUIComponentImpl(parentUIDisposable));
+  @Override
+  public @Nullable Component createUIComponent(Disposable parentUIDisposable) {
+    if (myUIComponent == null) {
+      myUIComponent = createUIComponentImpl(parentUIDisposable);
+    }
+    return myUIComponent;
   }
 
   @RequiredUIAccess
   protected @Nullable Component createUIComponentImpl(Disposable parentUIDisposable) {
-    throw new UnsupportedOperationException();
+    return null;
   }
 }

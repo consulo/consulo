@@ -45,6 +45,10 @@ public abstract class DialogDescriptor {
         return null;
     }
 
+    public boolean hasHelp() {
+        return getHelpId() != null;
+    }
+
     public @Nullable WidthAndHeight getInitialSize() {
         return null;
     }

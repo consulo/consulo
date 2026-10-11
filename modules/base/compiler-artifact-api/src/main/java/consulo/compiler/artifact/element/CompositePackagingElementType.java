@@ -16,32 +16,70 @@
 package consulo.compiler.artifact.element;
 
 import consulo.compiler.artifact.Artifact;
+import consulo.compiler.artifact.ArtifactUtil;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
-
 import consulo.localize.LocalizeValue;
+import consulo.ui.InputBoxBuilder;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.io.FileUtil;
+import consulo.util.io.PathUtil;
 import org.jspecify.annotations.Nullable;
-import java.util.Collections;
+
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Function;
 
 /**
  * @author nik
  */
 public abstract class CompositePackagingElementType<E extends CompositePackagingElement<?>> extends PackagingElementType<E> {
-  protected CompositePackagingElementType(String id, LocalizeValue presentableName) {
-    super(id, presentableName);
-  }
+    protected CompositePackagingElementType(String id, LocalizeValue presentableName) {
+        super(id, presentableName);
+    }
 
-  @Override
-  public boolean isAvailableForAdd(ArtifactEditorContext context, Artifact artifact) {
-    return true;
-  }
+    @Override
+    public boolean isAvailableForAdd(ArtifactEditorContext context, Artifact artifact) {
+        return true;
+    }
 
-  public abstract @Nullable CompositePackagingElement<?> createComposite(CompositePackagingElement<?> parent, @Nullable String baseName, ArtifactEditorContext context);
+    @RequiredUIAccess
+    public abstract CompletableFuture<CompositePackagingElement<?>> createComposite(
+        CompositePackagingElement<?> parent,
+        @Nullable String baseName,
+        ArtifactEditorContext context
+    );
 
-  @Override
-  
-  public List<? extends PackagingElement<?>> chooseAndCreate(ArtifactEditorContext context, Artifact artifact, CompositePackagingElement<?> parent) {
-    PackagingElement<?> composite = createComposite(parent, null, context);
-    return composite != null ? Collections.singletonList(composite) : Collections.<E>emptyList();
-  }
+    @Override
+    @RequiredUIAccess
+    public CompletableFuture<List<? extends PackagingElement<?>>> chooseAndCreate(
+        ArtifactEditorContext context,
+        Artifact artifact,
+        CompositePackagingElement<?> parent
+    ) {
+        return createComposite(parent, null, context).<List<? extends PackagingElement<?>>>thenApply(composite -> List.of(composite));
+    }
+
+    @RequiredUIAccess
+    protected CompletableFuture<CompositePackagingElement<?>> createCompositeByPath(
+        CompositePackagingElement<?> parent,
+        ArtifactEditorContext context,
+        LocalizeValue title,
+        LocalizeValue prompt,
+        String baseName,
+        String extension,
+        Function<String, PackagingElement<?>> elementFactory
+    ) {
+        return InputBoxBuilder.text()
+            .title(title)
+            .text(prompt)
+            .value(ArtifactUtil.suggestFileName(parent, baseName, extension))
+            .validator(new FilePathValidator())
+            .showAsync()
+            .thenApply(path -> {
+                String independentPath = FileUtil.toSystemIndependentName(path);
+                PackagingElement<?> element = elementFactory.apply(PathUtil.getFileName(independentPath));
+                PackagingElementFactory factory = PackagingElementFactory.getInstance(context.getProject());
+                return (CompositePackagingElement<?>) factory.createParentDirectories(PathUtil.getParentPath(independentPath), element);
+            });
+    }
 }

@@ -57,6 +57,16 @@ public class LightLocalizationManager extends LocalizeManager {
     }
 
     @Override
+    public @Nullable String getUnformattedText(LocalizeKey key, Locale locale) {
+        return myLocale.equals(locale) ? getUnformattedText(key).getValue() : null;
+    }
+
+    @Override
+    public Locale getDefaultLocale() {
+        return myLocale;
+    }
+
+    @Override
     public Locale parseLocale(String localeText) {
         throw new UnsupportedOperationException();
     }

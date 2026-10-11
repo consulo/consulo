@@ -23,8 +23,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ArrayUtil;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
-
 /**
  * @author Dmitry Avdeev
  * @since 2012-09-17
@@ -90,24 +88,6 @@ public class ConfigurableWrapper implements SearchableConfigurable {
   @Override
   public @Nullable String getHelpTopic() {
     return myConfigurable.getHelpTopic();
-  }
-
-  @RequiredUIAccess
-  @Override
-  public @Nullable JComponent createComponent(Disposable parentUIDisposable) {
-    return getConfigurable().createComponent(parentUIDisposable);
-  }
-
-  @RequiredUIAccess
-  @Override
-  public @Nullable JComponent createComponent() {
-    return getConfigurable().createComponent();
-  }
-
-  @RequiredUIAccess
-  @Override
-  public @Nullable Component createUIComponent() {
-    return getConfigurable().createUIComponent();
   }
 
   @RequiredUIAccess

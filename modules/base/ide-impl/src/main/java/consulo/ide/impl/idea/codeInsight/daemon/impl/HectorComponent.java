@@ -41,6 +41,7 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.virtualFileSystem.VirtualFile;
@@ -198,7 +199,7 @@ public class HectorComponent extends JPanel {
             HectorComponentPanel componentPanel = provider.createConfigurable(file);
             if (componentPanel != null) {
                 myAdditionalPanels.add(componentPanel);
-                add(componentPanel.createComponent(), gc);
+                add(TargetAWT.to(componentPanel.createUIComponent(project)), gc);
                 componentPanel.reset();
             }
         }

@@ -18,12 +18,14 @@ package consulo.externalTool.impl.internal;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.configurable.*;
+import consulo.disposer.Disposable;
 
 import consulo.externalTool.impl.internal.localize.ExternalToolLocalize;
 import consulo.localize.LocalizeValue;
+import consulo.ui.Component;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
 import java.io.IOException;
 
 @ExtensionImpl
@@ -42,9 +44,9 @@ public class ToolConfigurable implements SearchableConfigurable, Configurable.No
   }
 
   @Override
-  public JComponent createComponent() {
+  public Component createUIComponent(Disposable parentDisposable) {
     myPanel = new ToolsPanel();
-    return myPanel;
+    return TargetAWT.wrap(myPanel);
   }
 
   @Override

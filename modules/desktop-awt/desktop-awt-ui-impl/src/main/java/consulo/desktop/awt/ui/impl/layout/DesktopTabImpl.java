@@ -16,11 +16,13 @@
 package consulo.desktop.awt.ui.impl.layout;
 
 import consulo.desktop.awt.ui.impl.DesktopTextItemPresentationImpl;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.Component;
 import consulo.ui.Tab;
 import consulo.ui.TextItemPresentation;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.internal.TabTitlePresentation;
 import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.SimpleColoredComponent;
@@ -96,6 +98,15 @@ public class DesktopTabImpl implements Tab {
     @Override
     public void setRenderer(BiConsumer<Tab, TextItemPresentation> renderer) {
         myRenderer = renderer;
+    }
+
+    @Override
+    public LocalizeValue getTitle() {
+        return TabTitlePresentation.titleOf(this, myRenderer);
+    }
+
+    public Component getComponent() {
+        return myComponent;
     }
 
     @Override

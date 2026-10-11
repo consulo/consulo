@@ -17,13 +17,14 @@ package consulo.ide.impl.idea.ide.ui.customization;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.configurable.*;
+import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.localize.IdeLocalize;
 import consulo.localize.LocalizeValue;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import org.jspecify.annotations.Nullable;
-
-import javax.swing.*;
 
 /**
  * @author anna
@@ -35,11 +36,11 @@ public class CustomizationConfigurable implements SearchableConfigurable, Config
 
   @RequiredUIAccess
   @Override
-  public JComponent createComponent() {
+  public Component createUIComponent(Disposable parentDisposable) {
     if (myPanel == null) {
       myPanel = new CustomizableActionsPanel();
     }
-    return myPanel.getPanel();
+    return TargetAWT.wrap(myPanel.getPanel());
   }
 
   

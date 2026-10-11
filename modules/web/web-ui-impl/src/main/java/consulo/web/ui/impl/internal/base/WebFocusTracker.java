@@ -55,6 +55,8 @@ public final class WebFocusTracker {
     /** one report per interaction is enough, and it keeps a drag from flooding the server */
     private static final int DEBOUNCE_MS = 100;
 
+    private static final String[] ACTIVITY_EVENTS = {"mousedown", "focusin", "keydown"};
+
     /**
      * Held on the vaadin ui, not statically - a browser frontend serves several uis at once, and the focus of one
      * of them says nothing about the others.
@@ -115,13 +117,20 @@ public final class WebFocusTracker {
 
         Element element = wrapper.toVaadinComponent().getElement();
 
-        for (String eventType : new String[]{"mousedown", "focusin", "keydown"}) {
+        for (String eventType : ACTIVITY_EVENTS) {
             element.addEventListener(eventType, event -> {
                 ActivityTracker.getInstance().inc();
 
                 setFocusedScope(event.getEventData().path(SCOPE_OF_EVENT).asString(""));
             })
                 .addEventData(SCOPE_OF_EVENT)
+                .debounce(DEBOUNCE_MS, DebouncePhase.TRAILING);
+        }
+    }
+
+    public static void installActivityRoot(Element element) {
+        for (String eventType : ACTIVITY_EVENTS) {
+            element.addEventListener(eventType, event -> ActivityTracker.getInstance().inc())
                 .debounce(DEBOUNCE_MS, DebouncePhase.TRAILING);
         }
     }

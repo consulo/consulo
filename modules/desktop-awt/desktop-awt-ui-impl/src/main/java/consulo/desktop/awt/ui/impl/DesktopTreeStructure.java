@@ -129,6 +129,10 @@ class DesktopTreeStructure<K> extends AbstractTreeStructure {
         return result;
     }
 
+    void childrenBuilt(DesktopTreeNodeImpl<K> node) {
+        myTree.childrenBuilt(node);
+    }
+
     List<DesktopTreeNodeImpl<K>> buildChildren(DesktopTreeNodeImpl<K> parent) {
         List<DesktopTreeNodeImpl<K>> nodes = new ArrayList<>();
         myModel.buildChildren(

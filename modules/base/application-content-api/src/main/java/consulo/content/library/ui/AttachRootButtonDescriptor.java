@@ -18,8 +18,11 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
 
+import consulo.ui.Component;
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
-import javax.swing.*;
+
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Describes an 'attach' button in the library roots component.
@@ -51,7 +54,11 @@ public abstract class AttachRootButtonDescriptor {
     myToolbarIcon = toolbarIcon;
   }
 
-  public abstract VirtualFile[] selectFiles(JComponent parent, @Nullable VirtualFile initialSelection, DataContext dataContext, LibraryEditor libraryEditor);
+  @RequiredUIAccess
+  public abstract CompletableFuture<VirtualFile[]> selectFiles(@Nullable Component parent,
+                                                              @Nullable VirtualFile initialSelection,
+                                                              DataContext dataContext,
+                                                              LibraryEditor libraryEditor);
 
   public LocalizeValue getButtonText() {
     return myButtonText;
@@ -65,7 +72,7 @@ public abstract class AttachRootButtonDescriptor {
     return false;
   }
 
-  public VirtualFile[] scanForActualRoots(VirtualFile[] rootCandidates, JComponent parent) {
+  public VirtualFile[] scanForActualRoots(VirtualFile[] rootCandidates) {
     return rootCandidates;
   }
 

@@ -22,6 +22,7 @@ import consulo.language.codeStyle.arrangement.std.ArrangementStandardSettingsMan
 import consulo.language.codeStyle.arrangement.std.StdArrangementRuleAliasToken;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 
 import org.jspecify.annotations.Nullable;
 import javax.swing.*;
@@ -64,7 +65,7 @@ public class ArrangementRuleAliasDialog extends DialogWrapper {
 
   @Override
   protected @Nullable JComponent createCenterPanel() {
-    return myEditor.createComponent(getDisposable());
+    return (JComponent) TargetAWT.to(myEditor.createUIComponent(getDisposable()));
   }
 
   @Override

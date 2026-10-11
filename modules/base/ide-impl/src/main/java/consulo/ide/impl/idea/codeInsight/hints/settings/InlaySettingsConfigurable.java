@@ -12,11 +12,12 @@ import consulo.language.editor.impl.internal.inlay.setting.InlayProviderSettings
 import consulo.language.editor.localize.LanguageEditorLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
-import javax.swing.*;
 import java.util.function.Predicate;
 
 @ExtensionImpl
@@ -32,17 +33,17 @@ public class InlaySettingsConfigurable implements Configurable, SearchableConfig
 
     @Override
     @RequiredUIAccess
-    public JComponent createComponent(Disposable disposable) {
+    public Component createUIComponent(Disposable disposable) {
         if (panel == null) {
             panel = new InlaySettingsPanel(project);
         }
-        return panel;
+        return TargetAWT.wrap(panel);
     }
 
     @Override
     @RequiredUIAccess
-    public JComponent getPreferredFocusedComponent() {
-        return panel.getTree();
+    public @Nullable Component getPreferredFocusedUIComponent() {
+        return TargetAWT.wrap(panel.getTree());
     }
 
     @RequiredUIAccess

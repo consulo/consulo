@@ -16,20 +16,33 @@
 package consulo.it.internal.ui;
 
 import consulo.localize.LocalizeValue;
+import consulo.ui.Component;
 import consulo.ui.layout.LabeledLayout;
 import consulo.ui.layout.LabeledLayoutStyle;
+import consulo.ui.layout.Layout;
 import consulo.ui.layout.LayoutConstraint;
 
 /**
- * Dummy-but-creatable headless {@link LabeledLayout}.
+ * Headless {@link LabeledLayout} over the single component it captions.
  *
  * @author VISTALL
  */
 public class HeadlessLabeledLayout extends HeadlessLayoutBase<LayoutConstraint> implements LabeledLayout {
-    private LocalizeValue myLabel;
+    private final LocalizeValue myLabel;
 
     public HeadlessLabeledLayout(LocalizeValue label) {
         myLabel = label;
+    }
+
+    @Override
+    public LocalizeValue getLabel() {
+        return myLabel;
+    }
+
+    @Override
+    public Layout<LayoutConstraint> add(Component component, LayoutConstraint constraint) {
+        removeAll();
+        return super.add(component, constraint);
     }
 
     @Override

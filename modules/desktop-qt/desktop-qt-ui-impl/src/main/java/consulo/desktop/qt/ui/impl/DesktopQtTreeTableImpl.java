@@ -19,9 +19,11 @@ import consulo.desktop.qt.ui.impl.image.DesktopQtImage;
 import consulo.localize.LocalizeValue;
 import consulo.ui.HorizontalAlignment;
 import consulo.ui.TableColumn;
+import consulo.ui.TableItemEditor;
 import consulo.ui.TreeExecutor;
 import consulo.ui.TreeModel;
 import consulo.ui.TreeTable;
+import consulo.ui.ValueComponent;
 import consulo.ui.impl.table.TableColumnImpl;
 import consulo.ui.impl.table.TableColumnOwner;
 import consulo.ui.impl.tree.TreeNodeImpl;
@@ -48,6 +50,7 @@ import java.util.function.Function;
 public class DesktopQtTreeTableImpl<E> extends DesktopQtTreeImpl<E> implements TreeTable<E>, TableColumnOwner {
     private final TreeTableColumns<E> myColumns = new TreeTableColumns<>();
     private final Map<Integer, Integer> myUserWidths = new HashMap<>();
+    private final Map<TreeNodeImpl<E>, Map<Integer, DesktopQtTreeTableEditorCell>> myEditorCells = new HashMap<>();
 
     private LocalizeValue myTreeColumnHeader = LocalizeValue.empty();
 
@@ -75,6 +78,8 @@ public class DesktopQtTreeTableImpl<E> extends DesktopQtTreeImpl<E> implements T
 
     @Override
     protected void initialize(QTreeWidget tree) {
+        myEditorCells.clear();
+
         QTimer fitTimer = new QTimer(tree);
         fitTimer.setSingleShot(true);
         fitTimer.setInterval(0);
@@ -168,7 +173,7 @@ public class DesktopQtTreeTableImpl<E> extends DesktopQtTreeImpl<E> implements T
             int section = index + 1;
 
             DesktopQtTextItemPresentation presentation = new DesktopQtTextItemPresentation();
-            if (index < computed) {
+            if (!applyEditor(node, item, myColumns.get(index), index < computed) && index < computed) {
                 myColumns.render(index, presentation, node, false);
             }
 
@@ -180,6 +185,91 @@ public class DesktopQtTreeTableImpl<E> extends DesktopQtTreeImpl<E> implements T
         }
 
         requestFit();
+    }
+
+    private <V> boolean applyEditor(TreeNodeImpl<E> node, QTreeWidgetItem item, TableColumnImpl<E, V> column, boolean computed) {
+        QTreeWidget tree = boundTree();
+        int section = column.getIndex() + 1;
+        E value = node.getValue();
+        TableItemEditor<E, V> editor = column.getEditor();
+
+        Map<Integer, DesktopQtTreeTableEditorCell> cells = myEditorCells.get(node);
+        DesktopQtTreeTableEditorCell cell = cells == null ? null : cells.get(section);
+
+        if (tree == null || value == null || !computed || editor == null || !editor.isEditable(value)) {
+            if (cell != null) {
+                removeEditor(tree, node, section, cell);
+            }
+            return false;
+        }
+
+        V columnValue = columnValue(node, column.getIndex());
+        if (cell != null && cell.isLive(item, editor)) {
+            DesktopQtTreeTableImpl.<V>typed(cell.component()).setValue(columnValue, false);
+            return true;
+        }
+
+        if (cell != null) {
+            removeEditor(tree, node, section, cell);
+        }
+
+        ValueComponent<V> component = editor.createComponent(value);
+        component.setValue(columnValue, false);
+        if (!(component instanceof QtComponentDelegate<?> delegate)) {
+            return false;
+        }
+
+        delegate.bind(tree.viewport(), null);
+        QWidget widget = delegate.toQtComponent();
+        if (widget == null) {
+            return false;
+        }
+
+        component.addValueListener(event -> {
+            editor.commit(value, event.getValue());
+            refreshItem(node);
+        });
+
+        tree.setItemWidget(item, section, widget);
+        myEditorCells.computeIfAbsent(node, key -> new HashMap<>()).put(section, new DesktopQtTreeTableEditorCell(item, widget, component, editor));
+        return true;
+    }
+
+    private void removeEditor(@Nullable QTreeWidget tree,
+                              TreeNodeImpl<E> node,
+                              int section,
+                              DesktopQtTreeTableEditorCell cell) {
+        Map<Integer, DesktopQtTreeTableEditorCell> cells = myEditorCells.get(node);
+        if (cells != null) {
+            cells.remove(section);
+            if (cells.isEmpty()) {
+                myEditorCells.remove(node);
+            }
+        }
+
+        if (tree != null && !cell.isGone()) {
+            tree.removeItemWidget(cell.item(), section);
+        }
+    }
+
+    private void forgetGoneEditors() {
+        myEditorCells.entrySet().removeIf(entry -> {
+            if (entry.getKey().isRemoved()) {
+                return true;
+            }
+            entry.getValue().values().removeIf(DesktopQtTreeTableEditorCell::isGone);
+            return entry.getValue().isEmpty();
+        });
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <V> @Nullable V columnValue(TreeNodeImpl<?> node, int index) {
+        return (V) node.getColumnValue(index);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <V> ValueComponent<V> typed(ValueComponent<?> component) {
+        return (ValueComponent<V>) component;
     }
 
     private @Nullable QTreeWidget boundTree() {
@@ -248,6 +338,8 @@ public class DesktopQtTreeTableImpl<E> extends DesktopQtTreeImpl<E> implements T
     }
 
     private void fitColumns() {
+        forgetGoneEditors();
+
         QTreeWidget tree = boundTree();
         if (tree == null) {
             return;

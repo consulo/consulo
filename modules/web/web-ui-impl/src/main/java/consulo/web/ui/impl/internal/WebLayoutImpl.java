@@ -20,12 +20,10 @@ import com.vaadin.flow.component.HasComponents;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.Layout;
 import consulo.ui.layout.LayoutConstraint;
-import consulo.util.lang.ObjectUtil;
 import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
 import consulo.web.ui.impl.internal.base.TargetVaadin;
 import consulo.web.ui.impl.internal.base.VaadinComponentDelegate;
 
-import java.util.Objects;
 import java.util.function.Consumer;
 
 /**
@@ -49,12 +47,6 @@ public abstract class WebLayoutImpl<C extends Component & HasComponents & FromVa
 
     @Override
     public void forEachChild(Consumer<consulo.ui.Component> consumer) {
-        C c = toVaadinComponent();
-
-        c.getChildren()
-            .map(component -> ObjectUtil.tryCast(component, FromVaadinComponentWrapper.class))
-            .filter(Objects::nonNull)
-            .map(FromVaadinComponentWrapper::toUIComponent)
-            .forEach(consumer::accept);
+        toVaadinComponent().getChildren().toList().forEach(child -> WebLayoutChildren.accept(child, consumer));
     }
 }

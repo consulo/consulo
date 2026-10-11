@@ -30,16 +30,26 @@ import java.util.stream.Collectors;
  * {@code em} is the font size of the element itself, so one text line is {@code 1em} times the line height - {@code em}
  * alone would leave out the leading and come up short of a rendered line. The line height carries a literal fallback
  * because an undefined variable makes the whole {@code calc} invalid, which drops the height instead of missing it.
+ * <p/>
+ * A window is sized in the font height the desktop frontends use instead, so a dialog sized in fonts keeps the
+ * proportions it has there rather than growing with the roomier line of the web theme.
  *
  * @author VISTALL
  * @since 2026-08-24
  */
 public final class WebLength {
+    private static final String LINE_UNIT = "em * var(--vaadin-line-height-m, 1.625)";
+    private static final String WINDOW_UNIT = "em * 1.3";
+
     public static String toCss(Length length) {
-        return "calc(" + toExpression(length) + ")";
+        return "calc(" + toExpression(length, LINE_UNIT) + ")";
     }
 
-    private static String toExpression(Length length) {
+    public static String toWindowCss(Length length) {
+        return "calc(" + toExpression(length, WINDOW_UNIT) + ")";
+    }
+
+    private static String toExpression(Length length, String fontUnit) {
         return length.accept(new Length.Visitor<String>() {
             @Override
             public String visitPixel(int pixels) {
@@ -48,12 +58,12 @@ public final class WebLength {
 
             @Override
             public String visitFont(float fonts) {
-                return fonts + "em * var(--vaadin-line-height-m, 1.625)";
+                return fonts + fontUnit;
             }
 
             @Override
             public String visitComposite(List<Length> parts) {
-                return parts.stream().map(WebLength::toExpression).collect(Collectors.joining(" + "));
+                return parts.stream().map(part -> toExpression(part, fontUnit)).collect(Collectors.joining(" + "));
             }
         });
     }

@@ -126,6 +126,11 @@ public class DesktopQtThreeComponentSplitLayoutImpl extends DesktopQtLayoutCompo
         }
     }
 
+    @Override
+    protected int compareLayoutData(@Nullable Object first, @Nullable Object second) {
+        return Integer.compare(slotOf(first), slotOf(second));
+    }
+
     private static int slotOf(@Nullable Object layoutData) {
         String key = String.valueOf(layoutData);
         for (int slot = 0; slot < ourSlots.length; slot++) {

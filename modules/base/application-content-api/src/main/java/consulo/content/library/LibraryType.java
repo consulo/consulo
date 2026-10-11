@@ -24,11 +24,14 @@ import consulo.content.library.ui.LibraryPropertiesEditor;
 import consulo.content.library.ui.LibraryRootsComponentDescriptor;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.ui.Component;
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author nik
@@ -61,14 +64,15 @@ public abstract class LibraryType<P extends LibraryProperties> implements Librar
     /**
      * Called when a new library of this type is created in Project Structure dialog
      */
-    public @Nullable NewLibraryConfiguration createNewLibrary(
-        JComponent parentComponent,
+    @RequiredUIAccess
+    public CompletableFuture<NewLibraryConfiguration> createNewLibrary(
+        @Nullable Component parentComponent,
         @Nullable VirtualFile contextDirectory,
         Project project
     ) {
         LibraryRootsComponentDescriptor descriptor = createLibraryRootsComponentDescriptor();
         if (descriptor == null) {
-            return null;
+            return CompletableFuture.failedFuture(new CancellationException());
         }
         return LibraryTypeService.getInstance().createLibraryFromFiles(descriptor, parentComponent, contextDirectory, this, project);
     }

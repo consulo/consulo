@@ -15,13 +15,11 @@
  */
 package consulo.configurable;
 
-import consulo.annotation.DeprecationInfo;
 import consulo.disposer.Disposable;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import org.jspecify.annotations.Nullable;
-import javax.swing.*;
 
 /**
  * Component which provides a configuration user interface.
@@ -37,46 +35,7 @@ public interface UnnamedConfigurable {
    * @return the component instance.
    */
   @RequiredUIAccess
-  @SuppressWarnings("deprecation")
-  default @Nullable JComponent createComponent(Disposable parentDisposable) {
-    return createComponent();
-  }
-
-  /**
-   * Returns the user interface component for editing the configuration.
-   *
-   * @return the component instance.
-   */
-  @RequiredUIAccess
-  @Deprecated(forRemoval = true)
-  @DeprecationInfo("Use with Disposable parameter")
-  default @Nullable JComponent createComponent() {
-    return null;
-  }
-
-  /**
-   * Returns the user interface component for editing the configuration.
-   *
-   * @param parentDisposable disposable parameter, per ui page, dispose on ui close
-   * @return the component instance.
-   */
-  @RequiredUIAccess
-  @SuppressWarnings("deprecation")
-  default @Nullable Component createUIComponent(Disposable parentDisposable) {
-    return createUIComponent();
-  }
-
-  @RequiredUIAccess
-  @Deprecated(forRemoval = true)
-  @DeprecationInfo("Use with Disposable parameter")
-  default @Nullable Component createUIComponent() {
-    return null;
-  }
-
-  @RequiredUIAccess
-  default @Nullable JComponent getPreferredFocusedComponent() {
-    return null;
-  }
+  @Nullable Component createUIComponent(Disposable parentDisposable);
 
   @RequiredUIAccess
   default @Nullable Component getPreferredFocusedUIComponent() {

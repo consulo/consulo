@@ -86,6 +86,7 @@ import java.util.function.Supplier;
 import consulo.desktop.qt.ui.impl.messagebox.DesktopQtMessageBoxBuilderImpl;
 import consulo.desktop.qt.ui.impl.messagebox.DesktopQtInputBoxBuilderImpl;
 import consulo.ui.ex.impl.internal.UnifiedInputBoxBuilderImpl;
+import consulo.ui.layout.Layout;
 import java.util.ArrayList;
 
 /**
@@ -599,8 +600,24 @@ public class DesktopQtUIInternalImpl extends UIInternal implements UIInternalEx 
     }
 
     @Override
+    public <E> CheckBoxTree<E> _Components_checkBoxTree(@Nullable E rootValue, TreeModel<E> model, TreeExecutor executor) {
+        return new DesktopQtCheckBoxTreeImpl<>(rootValue, model, executor);
+    }
+
+    @Override
+    public <E> CheckBoxTreeTable<E> _Components_checkBoxTreeTable(@Nullable E rootValue, TreeModel<E> model, TreeExecutor executor) {
+        return new DesktopQtCheckBoxTreeTableImpl<>(rootValue, model, executor);
+    }
+
+    @Override
     public void _ShowNotifier_once(Component component, Runnable action) {
         DesktopQtShowNotifier.once(component, action);
+    }
+
+    @RequiredUIAccess
+    @Override
+    public Spotlight _Spotlight_over(Layout<?> layout) {
+        return new DesktopQtSpotlightImpl(layout);
     }
 
     @Override

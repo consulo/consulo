@@ -42,6 +42,12 @@ actions.exclude.from.compile.text:
     text: Exclude from Compile
 annotation.processing.compiler.description:
     text: Java Annotation Processing Compiler
+artifact.properties.tab.post.processing:
+    text: Post-processing
+artifact.properties.tab.pre.processing:
+    text: Pre-processing
+artifact.properties.tab.validation:
+    text: Validation
 artifact.type.plain:
     text: Other
 artifacts.menu.item.all:
@@ -96,6 +102,12 @@ compiler.results.export.text.prefix:
     text: line ({0})
 compiler.running.dialog.title:
     text: Compiler Running
+dialog.message.enter.archive.name:
+    text: 'Enter archive name:'
+dialog.message.enter.directory.name:
+    text: 'Enter directory name:'
+dialog.message.invalid.file.path:
+    text: Invalid file path
 dialog.message.output.dir.artifact:
     text: |4
          ''{0}'' artifact (''{1}'')
@@ -109,12 +121,26 @@ dialog.title.choose.artifacts:
     text: Choose Artifacts
 dialog.title.clean.artifacts:
     text: Clean Artifacts
+dialog.title.new.archive:
+    text: New Archive
+dialog.title.new.directory:
+    text: New Directory
 dialog.title.output.directory.for.artifact:
     text: Output Directory for Artifact
+element.type.artifact.show.content.action.text:
+    text: Show Content of Included Artifacts
+element.type.library.show.content.action.text:
+    text: Show Library Files
 element.type.name.artifact:
     text: Artifact
 element.type.name.directory:
     text: Directory
+element.type.name.directory.content:
+    text: Directory Content
+element.type.name.extracted.directory:
+    text: Extracted Directory
+element.type.name.file:
+    text: File
 element.type.name.jar.archive:
     text: Jar Archive
 element.type.name.library.files:

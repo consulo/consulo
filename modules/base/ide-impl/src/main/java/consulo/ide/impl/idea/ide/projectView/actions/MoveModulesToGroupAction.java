@@ -87,11 +87,9 @@ public class MoveModulesToGroupAction extends LegacyAnAction {
 
         if (dataContext != null) {
             Settings settings = dataContext.getData(Settings.KEY);
-            if (settings != null) {
-                ModuleStructureConfigurable configurable = settings.findConfigurable(ModuleStructureConfigurable.class);
-                if (configurable != null) {
-                    processedInsideSettings = ModuleStructureConfigurable.processModulesMoved(configurable, modules, group);
-                }
+            ModuleStructureConfigurable configurable = settings == null ? null : settings.findConfigurable(ModuleStructureConfigurable.class);
+            if (configurable != null) {
+                processedInsideSettings = ModuleStructureConfigurable.processModulesMoved(configurable, modules, group);
             }
         }
 

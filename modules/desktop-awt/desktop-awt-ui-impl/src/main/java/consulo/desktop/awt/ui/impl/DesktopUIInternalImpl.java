@@ -105,6 +105,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import consulo.desktop.awt.ui.impl.messagebox.DesktopMessageBoxBuilderImpl;
 import consulo.desktop.awt.ui.impl.messagebox.DesktopInputBoxBuilderImpl;
+import consulo.ui.layout.Layout;
 import java.util.ArrayList;
 
 /**
@@ -172,6 +173,16 @@ public class DesktopUIInternalImpl extends UIInternal implements UIInternalEx {
     @Override
     public <E> TreeTable<E> _Components_treeTable(@Nullable E rootValue, TreeModel<E> model, TreeExecutor executor) {
         return new DesktopTreeTableImpl<>(rootValue, model, executor);
+    }
+
+    @Override
+    public <E> CheckBoxTree<E> _Components_checkBoxTree(@Nullable E rootValue, TreeModel<E> model, TreeExecutor executor) {
+        return new DesktopCheckBoxTreeImpl<>(rootValue, model, executor);
+    }
+
+    @Override
+    public <E> CheckBoxTreeTable<E> _Components_checkBoxTreeTable(@Nullable E rootValue, TreeModel<E> model, TreeExecutor executor) {
+        return new DesktopCheckBoxTreeTableImpl<>(rootValue, model, executor);
     }
 
     @Override
@@ -595,6 +606,12 @@ public class DesktopUIInternalImpl extends UIInternal implements UIInternalEx {
         java.awt.Component awtComponent = TargetAWT.to(component);
 
         UiNotifyConnector.doWhenFirstShown(awtComponent, action);
+    }
+
+    @RequiredUIAccess
+    @Override
+    public Spotlight _Spotlight_over(Layout<?> layout) {
+        return new DesktopSpotlightImpl(layout);
     }
 
     @Override

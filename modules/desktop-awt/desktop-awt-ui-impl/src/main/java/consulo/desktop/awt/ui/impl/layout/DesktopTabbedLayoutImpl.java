@@ -33,6 +33,7 @@ import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiConsumer;
 
 /**
  * @author VISTALL
@@ -131,14 +132,6 @@ public class DesktopTabbedLayoutImpl extends SwingComponentDelegate<JTabbedPane>
     }
 
     @Override
-    @RequiredUIAccess
-    public Tab addTab(String tabName, Component component) {
-        Tab tab = createTab();
-        tab.setRenderer((t, p) -> p.append(tabName));
-        return addTab(tab, component);
-    }
-
-    @Override
     public void removeTab(Tab tab) {
         DesktopTabImpl desktopTab = (DesktopTabImpl) tab;
 
@@ -149,6 +142,19 @@ public class DesktopTabbedLayoutImpl extends SwingComponentDelegate<JTabbedPane>
 
         toAWTComponent().removeTabAt(index);
         myTabs.remove(index);
+    }
+
+    @Override
+    public void forEachTab(@RequiredUIAccess BiConsumer<Tab, Component> consumer) {
+        for (DesktopTabImpl tab : new ArrayList<>(myTabs)) {
+            consumer.accept(tab, tab.getComponent());
+        }
+    }
+
+    @Override
+    public @Nullable Tab getSelectedTab() {
+        int index = toAWTComponent().getSelectedIndex();
+        return index >= 0 && index < myTabs.size() ? myTabs.get(index) : null;
     }
 
     int indexOf(DesktopTabImpl tab) {

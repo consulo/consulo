@@ -16,52 +16,43 @@
 
 package consulo.ide.impl.idea.openapi.roots.ui.configuration;
 
-import consulo.annotation.access.RequiredReadAction;
-import consulo.application.ui.wm.IdeFocusManager;
 import consulo.content.ContentFolderTypeProvider;
-import consulo.dataContext.DataSink;
-import consulo.dataContext.UiDataProvider;
+import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.fileChooser.FileChooserDescriptor;
-import consulo.fileChooser.FileChooserDescriptorFactory;
-import consulo.ui.ex.awt.action.ToolbarLabelAction;
-import consulo.fileChooser.FileSystemTree;
-import consulo.ide.impl.idea.openapi.fileChooser.actions.NewFolderAction;
-import consulo.ide.impl.idea.openapi.fileChooser.ex.FileSystemTreeImpl;
-import consulo.ide.impl.idea.openapi.fileChooser.tree.FileNode;
-import consulo.ide.impl.idea.openapi.fileChooser.tree.FileRenderer;
+import consulo.ide.impl.idea.openapi.roots.ui.configuration.actions.ContentEntryNewFolderAction;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.actions.ToggleFolderStateAction;
-import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.ide.setting.module.ModuleConfigurationState;
 import consulo.language.content.ContentFoldersSupportUtil;
-import consulo.language.content.LanguageContentFolderScopes;
 import consulo.language.psi.PsiPackageSupportProvider;
-import consulo.localize.LocalizeValue;
-import consulo.module.content.layer.ContentEntry;
-import consulo.module.content.layer.ContentFolder;
 import consulo.module.extension.ModuleExtension;
-import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
+import consulo.project.localize.ProjectLocalize;
+import consulo.ui.Component;
+import consulo.ui.Label;
+import consulo.ui.Space;
+import consulo.ui.Tree;
+import consulo.ui.TreeNode;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.ContextMenuEvent;
 import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.ActionPlaces;
+import consulo.ui.ex.action.ActionPopupMenu;
+import consulo.ui.ex.action.ActionToolbar;
+import consulo.ui.ex.action.ActionToolbarFactory;
 import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ui.ex.awt.ScrollPaneFactory;
-import consulo.ui.ex.awt.SimpleColoredComponent;
-import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
-import consulo.ui.ex.awt.tree.Tree;
-import consulo.ui.ex.awt.tree.TreeUtil;
-import consulo.ui.image.Image;
-import consulo.util.io.FileUtil;
-import consulo.util.lang.ComparatorUtil;
+import consulo.ui.ex.tree.ApplicationTreeExecutorFactory;
+import consulo.ui.layout.DockLayout;
+import consulo.ui.layout.ScrollableLayout;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
-import javax.swing.tree.TreeCellRenderer;
-import java.awt.*;
-import java.util.Arrays;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author Eugene Zhuravlev
@@ -70,212 +61,245 @@ import java.util.Set;
 public class ContentEntryTreeEditor {
     private final Project myProject;
     private final ModuleConfigurationState myState;
-    protected final Tree myTree;
-    private FileSystemTreeImpl myFileSystemTree;
-    private final JPanel myTreePanel;
-    protected final DefaultActionGroup myEditingActionsGroup;
-    private ContentEntryEditor myContentEntryEditor;
-    private final MyContentEntryEditorListener myContentEntryEditorListener = new MyContentEntryEditorListener();
-    private final FileChooserDescriptor myDescriptor;
+    private final ContentEntryTreeModel myModel = new ContentEntryTreeModel();
+    private final DefaultActionGroup myEditingActionsGroup = new DefaultActionGroup();
+    private final ContentEntryEditorListener myContentEntryEditorListener = new ContentEntryEditorListener() {
+        @Override
+        @RequiredUIAccess
+        public void foldersChanged(ContentEntryEditor editor) {
+            scheduleRefresh();
+        }
+    };
+
+    private @Nullable Tree<VirtualFile> myTree;
+    private @Nullable ActionToolbar myToolbar;
+    private @Nullable ContentEntryEditor myContentEntryEditor;
+    private boolean myRefreshScheduled;
 
     public ContentEntryTreeEditor(Project project, ModuleConfigurationState state) {
         myProject = project;
         myState = state;
-        myTree = new Tree();
-        myTree.setRootVisible(true);
-        myTree.setShowsRootHandles(true);
-
-        myEditingActionsGroup = new DefaultActionGroup();
-
-        TreeUtil.installActions(myTree);
-        new TreeSpeedSearch(myTree);
-
-        myTreePanel = new MyPanel(new BorderLayout());
-        JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(myTree, true);
-        myTreePanel.add(scrollPane, BorderLayout.CENTER);
-
-        myTreePanel.setVisible(false);
-        myDescriptor = FileChooserDescriptorFactory.createMultipleFoldersDescriptor();
-        myDescriptor.setShowFileSystemRoots(false);
     }
 
-    protected void updateMarkActions() {
+    @RequiredUIAccess
+    public Component createComponent(Disposable uiDisposable) {
+        ApplicationTreeExecutorFactory executorFactory = myProject.getApplication().getInstance(ApplicationTreeExecutorFactory.class);
+
+        Tree<VirtualFile> tree = Tree.create(null, myModel, executorFactory.forBackgroundThreadWithReadAction(uiDisposable));
+        Disposer.register(uiDisposable, tree.destroyHook());
+        tree.setAllowMultipleSelect(true);
+        tree.setSpeedSearchConverter(node -> {
+            VirtualFile file = node.getValue();
+            return file == null ? "" : file.getName();
+        });
+        tree.addSelectListener(event -> updateToolbar());
+        tree.addContextMenuListener(this::showContextMenu);
+        myTree = tree;
+
+        updateMarkActions();
+
+        ActionToolbar toolbar = ActionToolbarFactory.getInstance()
+            .createActionToolbar(ActionPlaces.UNKNOWN, myEditingActionsGroup, ActionToolbar.Style.HORIZONTAL);
+        toolbar.setTargetUIComponent(tree);
+        myToolbar = toolbar;
+
+        DockLayout toolbarLayout = DockLayout.create(Space.NONE);
+        toolbarLayout.left(Label.create(ProjectLocalize.modulePathsMarkAsLabel()));
+        toolbarLayout.center(toolbar.getUIComponent());
+        toolbarLayout.paddingBuilder().leftSet(Space.MEDIUM).apply();
+
+        DockLayout layout = DockLayout.create(Space.NONE);
+        layout.top(toolbarLayout);
+        layout.center(ScrollableLayout.create(tree));
+        return layout;
+    }
+
+    @RequiredUIAccess
+    public void updateMarkActions() {
         myEditingActionsGroup.removeAll();
 
-        myEditingActionsGroup.add(new ToolbarLabelAction(LocalizeValue.localizeTODO("Mark as:")) {
-        });
-        Set<ContentFolderTypeProvider> folders = ContentFoldersSupportUtil.getSupportedFolders(myState.getRootModel());
-        ContentFolderTypeProvider[] supportedFolders = folders.toArray(new ContentFolderTypeProvider[folders.size()]);
-        Arrays.sort(supportedFolders, (o1, o2) -> ComparatorUtil.compareInt(o1.getWeight(), o2.getWeight()));
-        for (ContentFolderTypeProvider contentFolderTypeProvider : supportedFolders) {
-            ToggleFolderStateAction action = new ToggleFolderStateAction(myTree, this, contentFolderTypeProvider);
-
-            myEditingActionsGroup.add(action);
+        List<ContentFolderTypeProvider> providers = new ArrayList<>(ContentFoldersSupportUtil.getSupportedFolders(myState.getRootModel()));
+        providers.sort(Comparator.comparingInt(ContentFolderTypeProvider::getWeight));
+        for (ContentFolderTypeProvider provider : providers) {
+            myEditingActionsGroup.add(new ToggleFolderStateAction(this, provider));
         }
+
+        updateToolbar();
     }
 
-    /**
-     * @param contentEntryEditor : null means to clear the editor
-     */
-    public void setContentEntryEditor(@Nullable ContentEntryEditor contentEntryEditor) {
-        if (myContentEntryEditor != null && myContentEntryEditor.equals(contentEntryEditor)) {
-            return;
-        }
-        if (myFileSystemTree != null) {
-            Disposer.dispose(myFileSystemTree);
-            myFileSystemTree = null;
-        }
-        if (myContentEntryEditor != null) {
-            myContentEntryEditor.removeContentEntryEditorListener(myContentEntryEditorListener);
-            myContentEntryEditor = null;
-        }
-        if (contentEntryEditor == null) {
-            myTreePanel.setVisible(false);
-            return;
-        }
-        myTreePanel.setVisible(true);
-        myContentEntryEditor = contentEntryEditor;
-        myContentEntryEditor.addContentEntryEditorListener(myContentEntryEditorListener);
-
-        ContentEntry entry = contentEntryEditor.getContentEntry();
-        assert entry != null : contentEntryEditor;
-        VirtualFile file = entry.getFile();
-        myDescriptor.setRoots(file);
-        if (file == null) {
-            String path = VirtualFileUtil.urlToPath(entry.getUrl());
-            myDescriptor.setTitle(FileUtil.toSystemDependentName(path));
-        }
-
-        myFileSystemTree = new FileSystemTreeImpl(myProject, myDescriptor, myTree, null, null) {
-            @Override
-            protected TreeCellRenderer createFileRender() {
-                return new FileRenderer() {
-                    @Override
-                    @RequiredUIAccess
-                    protected void customize(SimpleColoredComponent renderer, Object value, boolean selected, boolean focused) {
-                        super.customize(renderer, value, selected, focused);
-
-                        ContentEntryEditor contentEntryEditor = getContentEntryEditor();
-                        if (contentEntryEditor == null) {
-                            return;
-                        }
-                        
-                        if (value instanceof FileNode fileNode) {
-                            VirtualFile treeFile = fileNode.getFile();
-                            if (treeFile != null && treeFile.isDirectory()) {
-                                ContentEntry contentEntry = contentEntryEditor.getContentEntry();
-                                renderer.setIcon(updateIcon(contentEntry, treeFile, renderer.getIcon()));
-                            }
-                        }
-                        else if (value instanceof VirtualFile virtualFile) {
-                            if (virtualFile.isDirectory()) {
-                                ContentEntry contentEntry = contentEntryEditor.getContentEntry();
-                                renderer.setIcon(updateIcon(contentEntry, virtualFile, renderer.getIcon()));
-                            }
-                        }
-                    }
-                }.forTree();
-            }
-        };
-        myFileSystemTree.showHiddens(true);
-
-        Disposer.register(myProject, myFileSystemTree);
-
-        NewFolderAction newFolderAction = new MyNewFolderAction();
-        ActionGroup.Builder mousePopupGroup = ActionGroup.newImmutableBuilder();
-        mousePopupGroup.add(myEditingActionsGroup);
-        mousePopupGroup.addSeparator();
-        mousePopupGroup.add(newFolderAction);
-
-        myFileSystemTree.registerMouseListener(mousePopupGroup.build());
-    }
-
-    @RequiredReadAction
-    private Image updateIcon(ContentEntry entry, VirtualFile file, Image originalIcon) {
-        Image icon = originalIcon;
-        VirtualFile currentRoot = null;
-        for (ContentFolder contentFolder : entry.getFolders(LanguageContentFolderScopes.all())) {
-            VirtualFile contentPath = contentFolder.getFile();
-            if (file.equals(contentPath)) {
-                icon = ContentFoldersSupportUtil.getContentFolderIcon(contentFolder.getType(), contentFolder.getProperties());
-            }
-            else if (contentPath != null && VirtualFileUtil.isAncestor(contentPath, file, true)) {
-                if (currentRoot != null && VirtualFileUtil.isAncestor(contentPath, currentRoot, false)) {
-                    continue;
-                }
-
-                boolean hasSupport = false;
-                for (ModuleExtension moduleExtension : getContentEntryEditor().getModel().getExtensions()) {
-                    hasSupport = myProject.getApplication().getExtensionPoint(PsiPackageSupportProvider.class)
-                        .anyMatchSafe(supportProvider -> supportProvider.isSupported(moduleExtension));
-                    if (hasSupport) {
-                        break;
-                    }
-                }
-                icon = hasSupport ? contentFolder.getType().getChildDirectoryIcon(null, null) : PlatformIconGroup.nodesTreeopen();
-                currentRoot = contentPath;
-            }
-        }
-        return icon;
-    }
-
-    public ContentEntryEditor getContentEntryEditor() {
+    public @Nullable ContentEntryEditor getContentEntryEditor() {
         return myContentEntryEditor;
     }
 
-    public JComponent createComponent() {
-        updateMarkActions();
-        return myTreePanel;
+    @RequiredUIAccess
+    public void setContentEntryEditor(@Nullable ContentEntryEditor contentEntryEditor) {
+        ContentEntryEditor oldEditor = myContentEntryEditor;
+        if (oldEditor == contentEntryEditor) {
+            return;
+        }
+
+        if (oldEditor != null) {
+            oldEditor.removeContentEntryEditorListener(myContentEntryEditorListener);
+        }
+
+        myContentEntryEditor = contentEntryEditor;
+        if (contentEntryEditor != null) {
+            contentEntryEditor.addContentEntryEditorListener(myContentEntryEditorListener);
+        }
+
+        boolean sameEntry = oldEditor != null
+            && contentEntryEditor != null
+            && oldEditor.getContentEntry().equals(contentEntryEditor.getContentEntry());
+        refresh(!sameEntry);
     }
 
-    public void select(VirtualFile file) {
-        if (myFileSystemTree != null) {
-            myFileSystemTree.select(file, null);
+    @RequiredUIAccess
+    public List<VirtualFile> getSelectedFiles() {
+        Tree<VirtualFile> tree = myTree;
+        if (tree == null) {
+            return List.of();
+        }
+
+        List<VirtualFile> files = new ArrayList<>();
+        for (TreeNode<VirtualFile> node : tree.getSelectedNodes()) {
+            VirtualFile file = node.getValue();
+            if (file != null) {
+                files.add(file);
+            }
+        }
+        return files;
+    }
+
+    public @Nullable Tree<VirtualFile> getTree() {
+        return myTree;
+    }
+
+    public Project getProject() {
+        return myProject;
+    }
+
+    @RequiredUIAccess
+    public void scheduleRefresh() {
+        if (myRefreshScheduled) {
+            return;
+        }
+
+        myRefreshScheduled = true;
+        UIAccess.current().give(() -> {
+            myRefreshScheduled = false;
+            refresh(false);
+        });
+    }
+
+    @RequiredUIAccess
+    public CompletableFuture<?> refresh(boolean expandRoot) {
+        Tree<VirtualFile> tree = myTree;
+        if (tree == null) {
+            return CompletableFuture.completedFuture(null);
+        }
+
+        ContentEntryEditor editor = myContentEntryEditor;
+        myModel.setSnapshot(editor == null ? null : editor.createSnapshot(hasPackageSupport()));
+
+        UIAccess uiAccess = UIAccess.current();
+        CompletableFuture<Object> result = new CompletableFuture<>();
+        tree.refreshAll().whenCompleteAsync((refreshed, error) -> {
+            if (expandRoot && myTree == tree) {
+                expandRoot(tree, uiAccess);
+            }
+            updateToolbar();
+            result.complete(null);
+        }, uiAccess);
+        return result;
+    }
+
+    @RequiredUIAccess
+    public void refreshAndSelect(String url) {
+        UIAccess uiAccess = UIAccess.current();
+        refresh(false).whenCompleteAsync((refreshed, error) -> select(url), uiAccess);
+    }
+
+    @RequiredUIAccess
+    private void expandRoot(Tree<VirtualFile> tree, UIAccess uiAccess) {
+        TreeNode<VirtualFile> rootNode = tree.getRootNode();
+        if (rootNode == null) {
+            return;
+        }
+
+        rootNode.findChild(file -> true).whenCompleteAsync((node, error) -> {
+            if (node != null && myTree == tree) {
+                tree.expand(node);
+            }
+        }, uiAccess);
+    }
+
+    @RequiredUIAccess
+    public CompletableFuture<?> select(String url) {
+        Tree<VirtualFile> tree = myTree;
+        TreeNode<VirtualFile> rootNode = tree == null ? null : tree.getRootNode();
+        if (tree == null || rootNode == null) {
+            return CompletableFuture.completedFuture(null);
+        }
+
+        UIAccess uiAccess = UIAccess.current();
+        CompletableFuture<Object> result = new CompletableFuture<>();
+        descend(rootNode, url).whenCompleteAsync((node, error) -> {
+            if (node != null && myTree == tree) {
+                tree.select(node);
+            }
+            result.complete(null);
+        }, uiAccess);
+        return result;
+    }
+
+    private CompletableFuture<@Nullable TreeNode<VirtualFile>> descend(TreeNode<VirtualFile> node, String url) {
+        VirtualFile file = node.getValue();
+        if (file != null && url.equals(file.getUrl())) {
+            return CompletableFuture.completedFuture(node);
+        }
+
+        return node.findChild(child -> VirtualFileUtil.isEqualOrAncestor(child.getUrl(), url)).thenCompose(child -> {
+            if (child == null) {
+                return CompletableFuture.completedFuture(null);
+            }
+            return descend(child, url);
+        });
+    }
+
+    @RequiredUIAccess
+    private void updateToolbar() {
+        ActionToolbar toolbar = myToolbar;
+        if (toolbar != null) {
+            toolbar.updateActionsAsync();
         }
     }
 
-    public void requestFocus() {
-        IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(myTree);
-    }
-
-    public void update() {
-        updateMarkActions();
-    }
-
-    private class MyContentEntryEditorListener implements ContentEntryEditor.ContentEntryEditorListener {
-        @Override
-        public void folderAdded(ContentEntryEditor editor, ContentFolder folder) {
-            update();
+    @RequiredUIAccess
+    private void showContextMenu(ContextMenuEvent event) {
+        Tree<VirtualFile> tree = myTree;
+        if (tree == null || myContentEntryEditor == null) {
+            return;
         }
 
-        @Override
-        public void folderRemoved(ContentEntryEditor editor, ContentFolder file) {
-            update();
-        }
+        ActionGroup.Builder group = ActionGroup.newImmutableBuilder();
+        group.add(myEditingActionsGroup);
+        group.addSeparator();
+        group.add(new ContentEntryNewFolderAction(this));
+
+        ActionPopupMenu menu = ActionManager.getInstance().createActionPopupMenu(ActionPlaces.UNKNOWN, group.build());
+        menu.setTargetComponent(tree);
+        menu.show(event.getComponent(), event.getInputDetails().getX(), event.getInputDetails().getY());
     }
 
-    private static class MyNewFolderAction extends NewFolderAction {
-        private MyNewFolderAction() {
-            super(
-                ActionLocalize.actionFilechooserNewfolderText(),
-                ActionLocalize.actionFilechooserNewfolderDescription(),
-                PlatformIconGroup.actionsNewfolder()
-            );
+    private boolean hasPackageSupport() {
+        for (ModuleExtension<?> moduleExtension : myState.getRootModel().getExtensions()) {
+            boolean supported = myProject.getApplication()
+                .getExtensionPoint(PsiPackageSupportProvider.class)
+                .anyMatchSafe(provider -> provider.isSupported(moduleExtension));
+            if (supported) {
+                return true;
+            }
         }
-    }
-
-    private class MyPanel extends JPanel implements UiDataProvider {
-        private MyPanel(LayoutManager layout) {
-            super(layout);
-        }
-
-        @Override
-        public void uiDataSnapshot(DataSink sink) {
-            sink.set(FileSystemTree.DATA_KEY, myFileSystemTree);
-        }
-    }
-
-    public DefaultActionGroup getEditingActionsGroup() {
-        return myEditingActionsGroup;
+        return false;
     }
 }

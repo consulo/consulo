@@ -15,10 +15,14 @@
  */
 package consulo.desktop.qt.ui.impl;
 
+import consulo.desktop.qt.ui.impl.clipboard.DesktopQtDragAndDropSupport;
+import consulo.desktop.qt.ui.impl.clipboard.DesktopQtDrop;
+import consulo.desktop.qt.ui.impl.clipboard.DesktopQtTransferTarget;
 import consulo.desktop.qt.ui.impl.image.DesktopQtIconOwner;
 import consulo.desktop.qt.ui.impl.image.DesktopQtImage;
 import consulo.ui.Length;
 import consulo.ui.ComponentItemRender;
+import consulo.ui.DragAndDropTransferHandler;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ListBoxBase;
 import consulo.ui.RenderItem;
@@ -38,6 +42,10 @@ import io.qt.core.QPoint;
 import io.qt.core.QRect;
 import io.qt.core.QSize;
 import io.qt.core.Qt;
+import io.qt.gui.QDragEnterEvent;
+import io.qt.gui.QDragLeaveEvent;
+import io.qt.gui.QDragMoveEvent;
+import io.qt.gui.QDropEvent;
 import io.qt.gui.QKeyEvent;
 import io.qt.gui.QMouseEvent;
 import io.qt.gui.QResizeEvent;
@@ -66,7 +74,8 @@ import java.util.function.Predicate;
  * @author VISTALL
  * @since 2026-10-02
  */
-public abstract class DesktopQtListBoxBaseImpl<E> extends QtComponentDelegate<QListWidget> implements ListBoxBase<E>, DesktopQtIconOwner {
+public abstract class DesktopQtListBoxBaseImpl<E> extends QtComponentDelegate<QListWidget>
+    implements ListBoxBase<E>, DesktopQtIconOwner, DesktopQtTransferTarget<E> {
     /**
      * A list of a popup is as tall as it needs to be, which is only bearable up to a point - the awt popup stops
      * at fifteen rows and scrolls the rest.
@@ -104,6 +113,8 @@ public abstract class DesktopQtListBoxBaseImpl<E> extends QtComponentDelegate<QL
         @Override
         protected void paintEvent(QPaintEvent event) {
             super.paintEvent(event);
+
+            myDragAndDrop.paintIndicator(this);
 
             if (count() != 0 || myPlaceholder.isEmpty()) {
                 return;
@@ -174,6 +185,8 @@ public abstract class DesktopQtListBoxBaseImpl<E> extends QtComponentDelegate<QL
             super.scrollContentsBy(dx, dy);
 
             layoutPool();
+
+            myDragAndDrop.contentsScrolled(this);
         }
 
         @Override
@@ -194,6 +207,36 @@ public abstract class DesktopQtListBoxBaseImpl<E> extends QtComponentDelegate<QL
 
             super.keyPressEvent(event);
         }
+
+        @Override
+        protected void startDrag(Qt.DropActions supportedActions) {
+            myDragAndDrop.startDrag(this);
+        }
+
+        @Override
+        protected void dragEnterEvent(QDragEnterEvent event) {
+            myDragAndDrop.dragEnter(this, event);
+        }
+
+        @Override
+        protected void dragMoveEvent(QDragMoveEvent event) {
+            myDragAndDrop.dragMove(this, event);
+            if (myDragAndDrop.shouldAutoScroll(this, event.position().toPoint())) {
+                startAutoScroll();
+            }
+        }
+
+        @Override
+        protected void dragLeaveEvent(QDragLeaveEvent event) {
+            stopAutoScroll();
+            myDragAndDrop.dragLeave(this);
+        }
+
+        @Override
+        protected void dropEvent(QDropEvent event) {
+            stopAutoScroll();
+            myDragAndDrop.drop(this, event);
+        }
     }
 
     private final FlatDataModel<E> myModel;
@@ -207,6 +250,7 @@ public abstract class DesktopQtListBoxBaseImpl<E> extends QtComponentDelegate<QL
     private @Nullable Function<E, Length> myItemHeightGetter;
     private LocalizeValue myPlaceholder = LocalizeValue.empty();
     private @Nullable TransferHandler<E> myTransferHandler;
+    private final DesktopQtDragAndDropSupport<E> myDragAndDrop = new DesktopQtDragAndDropSupport<>(this, this);
     private @Nullable Function<E, String> mySpeedSearchConverter;
 
     // clearing the widget takes the selection down to nothing on its way, which is not a value the caller chose
@@ -245,6 +289,7 @@ public abstract class DesktopQtListBoxBaseImpl<E> extends QtComponentDelegate<QL
 
         component.setSelectionMode(selectionMode());
         component.setItemDelegate(createItemDelegate(component));
+        myDragAndDrop.install(component);
         component.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff);
 
         // itemEntered is only sent while the viewport is tracking the pointer, and a list does not track by default
@@ -957,10 +1002,68 @@ public abstract class DesktopQtListBoxBaseImpl<E> extends QtComponentDelegate<QL
     @Override
     public void setTransferHandler(@Nullable TransferHandler<E> handler) {
         myTransferHandler = handler;
+        myDragAndDrop.setHandler(handler, myComponent);
     }
 
     @Override
     public @Nullable TransferHandler<E> getTransferHandler() {
         return myTransferHandler;
+    }
+
+    @Override
+    public List<E> getTransferItems() {
+        QListWidget component = myComponent;
+        if (component == null || component.isDisposed()) {
+            return List.of();
+        }
+
+        List<Integer> rows = new ArrayList<>();
+        for (QListWidgetItem item : component.selectedItems()) {
+            rows.add(component.row(item));
+        }
+        Collections.sort(rows);
+
+        List<E> items = new ArrayList<>(rows.size());
+        for (int row : rows) {
+            E value = valueAt(row);
+            if (value != null) {
+                items.add(value);
+            }
+        }
+        return items;
+    }
+
+    @Override
+    public @Nullable DesktopQtDrop<E> resolveDrop(QPoint position) {
+        QListWidget component = myComponent;
+        if (component == null || component.isDisposed()) {
+            return null;
+        }
+
+        QListWidgetItem item = component.itemAt(position);
+        if (item == null) {
+            for (int row = component.count() - 1; row >= 0; row--) {
+                E value = valueAt(row);
+                if (value != null) {
+                    QRect rect = component.visualItemRect(component.item(row));
+                    QRect indicator = DesktopQtDragAndDropSupport.lineBelow(rect);
+                    return new DesktopQtDrop<>(value, DragAndDropTransferHandler.DropPosition.BELOW, indicator);
+                }
+            }
+            return null;
+        }
+
+        E value = valueAt(component.row(item));
+        if (value == null) {
+            return null;
+        }
+
+        QRect rect = component.visualItemRect(item);
+        DragAndDropTransferHandler.DropPosition dropPosition = DesktopQtDragAndDropSupport.positionOf(rect, position);
+        return switch (dropPosition) {
+            case ABOVE -> new DesktopQtDrop<>(value, dropPosition, DesktopQtDragAndDropSupport.lineAbove(rect));
+            case BELOW -> new DesktopQtDrop<>(value, dropPosition, DesktopQtDragAndDropSupport.lineBelow(rect));
+            case INTO -> new DesktopQtDrop<>(value, dropPosition, rect);
+        };
     }
 }

@@ -75,7 +75,8 @@ vaadin-grid.web-tree vaadin-grid-cell-content:has(vaadin-grid-tree-toggle, .web-
 
 vaadin-grid.web-tree::part(selected-row-cell)
 {
-  --consulo-tree-row-selection: var(--vaadin-grid-row-selected-background-color, color-mix(in srgb, currentColor 8%, transparent));
+  --consulo-tree-row-selection: var(--consulo-list-selection-background, var(--vaadin-grid-row-selected-background-color, color-mix(in srgb, currentColor 8%, transparent)));
+  background-image: none;
 }
 
 /* the file colour is the fill and the selection is a layer over it - a background-image sits above the
@@ -88,6 +89,7 @@ vaadin-grid.web-tree .web-tree-cell
   height: 100%;
   align-items: center;
   padding: 0 7px;
+  border-radius: var(--consulo-list-row-selection-radius, 4px);
   background-color: var(--consulo-tree-row-background, transparent);
   background-image: linear-gradient(var(--consulo-tree-row-selection), var(--consulo-tree-row-selection));
 }
@@ -102,4 +104,10 @@ vaadin-grid.web-tree .web-tree-cell
 vaadin-grid.web-tree vaadin-grid-tree-toggle::part(toggle)
 {
   cursor: pointer;
+}
+
+vaadin-grid.web-tree vaadin-checkbox.web-tree-check
+{
+  flex: none;
+  margin-inline-end: 4px;
 }

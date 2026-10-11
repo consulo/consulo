@@ -23,6 +23,7 @@ import consulo.ide.setting.module.OrderEntryTypeEditor;
 import consulo.module.impl.internal.layer.orderEntry.ModuleExtensionWithSdkOrderEntryImpl;
 import consulo.module.impl.internal.layer.orderEntry.ModuleExtensionWithSdkOrderEntryType;
 import consulo.project.Project;
+import consulo.project.localize.ProjectLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.ex.SimpleTextAttributes;
@@ -59,6 +60,10 @@ public class ModuleExtensionWithSdkOrderEntryTypeEditor implements OrderEntryTyp
       Sdk sdk = orderEntry.getSdk();
 
       it.setIcon(SdkUtil.getIcon(sdk));
+      if (sdk == null && orderEntry.getSdkName() == null) {
+        it.append(ProjectLocalize.sdkComboBoxItem().get(), SimpleTextAttributes.ERROR_ATTRIBUTES);
+        return;
+      }
       it.append(orderEntry.getPresentableName(), sdk == null ? SimpleTextAttributes.ERROR_ATTRIBUTES : SimpleTextAttributes.SYNTHETIC_ATTRIBUTES);
     };
   }

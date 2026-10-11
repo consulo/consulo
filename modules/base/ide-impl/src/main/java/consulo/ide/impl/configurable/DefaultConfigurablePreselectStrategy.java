@@ -49,6 +49,10 @@ public class DefaultConfigurablePreselectStrategy implements ConfigurablePresele
     return findConfigurableInGroups(id, configurables);
   }
 
+  public static @Nullable Configurable findById(String id, Configurable[] configurables) {
+    return findConfigurableInGroups(id, configurables);
+  }
+
   private static @Nullable Configurable findConfigurableInGroups(String id, Configurable[] configurables) {
     // avoid unnecessary group expand: check top-level configurables in all groups before looking at children
     for (Configurable c : configurables) {

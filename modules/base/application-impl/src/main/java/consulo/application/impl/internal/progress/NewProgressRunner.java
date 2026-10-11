@@ -6,11 +6,11 @@ import consulo.application.internal.BlockingProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.ClientId;
+import consulo.application.util.Semaphore;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
-import consulo.util.lang.EmptyRunnable;
 import consulo.util.lang.ref.SimpleReference;
 
 import java.util.concurrent.CompletableFuture;
@@ -53,6 +53,8 @@ public final class NewProgressRunner<R> {
             return progress;
         });
 
+        Semaphore modalityEntered = new Semaphore(1);
+
         Supplier<R> onThreadCallable = () -> {
             SimpleReference<R> result = SimpleReference.create();
 
@@ -69,15 +71,20 @@ public final class NewProgressRunner<R> {
                 throw new IllegalStateException("Expected not-null progress indicator but got null from " + myProgressIndicatorFuture);
             }
 
+            if (isModal) {
+                modalityEntered.waitFor();
+            }
+
             ProgressManager.getInstance().runProcess(() -> result.set(myComputation.apply(progressIndicator)), progressIndicator);
             return result.get();
         };
 
-        return exec(progressFuture, onThreadCallable);
+        return exec(progressFuture, modalityEntered, onThreadCallable);
     }
 
     
     private CompletableFuture<R> exec(CompletableFuture<? extends ProgressIndicator> progressFuture,
+                                      Semaphore modalityEntered,
                                       Supplier<R> onThreadCallable) {
         CompletableFuture<R> taskFuture = launchTask(onThreadCallable);
         CompletableFuture<R> resultFuture;
@@ -90,13 +97,15 @@ public final class NewProgressRunner<R> {
             //   but EDT is broken due an exception. Hence, initial task should be completed exceptionally
             CompletableFuture<Void> blockingRunFuture = progressFuture.thenAccept(progressIndicator -> {
                 if (progressIndicator instanceof BlockingProgressIndicator) {
-                    ((BlockingProgressIndicator) progressIndicator).startBlocking(EmptyRunnable.getInstance(), taskFuture);
+                    ((BlockingProgressIndicator) progressIndicator).startBlocking(modalityEntered::up, taskFuture);
                 }
                 else {
                     Logger.getInstance(NewProgressRunner.class).warn("Can't go modal without BlockingProgressIndicator");
+                    modalityEntered.up();
                 }
             }).exceptionally(throwable -> {
                 taskFuture.completeExceptionally(throwable);
+                modalityEntered.up();
                 return null;
             });
             // `startBlocking` might throw unrelated exceptions execute the submitted task so potential failure should be handled.

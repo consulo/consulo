@@ -15,16 +15,19 @@
  */
 package consulo.it.internal.ui;
 
-
 import consulo.localize.LocalizeValue;
 import consulo.ui.RadioButton;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.internal.SearchHighlightUtil;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 2026-10-03
  */
 public class HeadlessRadioButton extends HeadlessBooleanValueComponentBase implements RadioButton {
+    private @Nullable String mySearchHighlight;
+
     private LocalizeValue myLabelText;
     private boolean myFocusable = true;
 
@@ -61,5 +64,15 @@ public class HeadlessRadioButton extends HeadlessBooleanValueComponentBase imple
     @Override
     public boolean isFocusable() {
         return myFocusable;
+    }
+
+    @Override
+    public void setSearchHighlight(@Nullable String query) {
+        mySearchHighlight = SearchHighlightUtil.normalizeQuery(query);
+    }
+
+    @Override
+    public @Nullable String getSearchHighlight() {
+        return mySearchHighlight;
     }
 }

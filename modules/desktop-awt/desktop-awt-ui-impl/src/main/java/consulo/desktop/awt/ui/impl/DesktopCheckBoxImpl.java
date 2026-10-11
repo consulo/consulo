@@ -25,6 +25,8 @@ import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ValueComponentEvent;
 import consulo.ui.ex.awt.JBCheckBox;
+import consulo.ui.internal.SearchHighlightUtil;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -33,6 +35,8 @@ import consulo.ui.ex.awt.JBCheckBox;
 public class DesktopCheckBoxImpl extends SwingComponentDelegate<DesktopCheckBoxImpl.MyJBCheckBox> implements CheckBox {
     class MyJBCheckBox extends JBCheckBox implements FromSwingComponentWrapper {
         private LocalizeValue myLabelText = LocalizeValue.empty();
+
+        private @Nullable String mySearchHighlight;
 
         @Override
         public void updateUI() {
@@ -58,8 +62,13 @@ public class DesktopCheckBoxImpl extends SwingComponentDelegate<DesktopCheckBoxI
             return myLabelText;
         }
 
+        public void setSearchHighlight(@Nullable String query) {
+            mySearchHighlight = query;
+            updateLabelText();
+        }
+
         private void updateLabelText() {
-            updateTextForButton(this, myLabelText);
+            updateTextForButton(this, myLabelText, mySearchHighlight);
         }
     }
 
@@ -114,5 +123,16 @@ public class DesktopCheckBoxImpl extends SwingComponentDelegate<DesktopCheckBoxI
     public void setLabelText(LocalizeValue labelText) {
         toAWTComponent().setLabelText(labelText);
         toAWTComponent().updateLabelText();
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setSearchHighlight(@Nullable String query) {
+        toAWTComponent().setSearchHighlight(SearchHighlightUtil.normalizeQuery(query));
+    }
+
+    @Override
+    public @Nullable String getSearchHighlight() {
+        return toAWTComponent().mySearchHighlight;
     }
 }

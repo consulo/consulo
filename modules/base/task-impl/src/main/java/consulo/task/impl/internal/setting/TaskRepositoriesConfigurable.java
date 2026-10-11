@@ -4,6 +4,7 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.application.util.ConcurrentFactoryMap;
 import consulo.configurable.*;
 import consulo.dataContext.DataManager;
+import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
@@ -14,12 +15,14 @@ import consulo.task.TaskRepositoryType;
 import consulo.task.impl.internal.RecentTaskRepositories;
 import consulo.task.impl.internal.TaskManagerImpl;
 import consulo.task.ui.TaskRepositoryEditor;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.AnSeparator;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.util.collection.ContainerUtil;
 import jakarta.inject.Inject;
@@ -203,14 +206,14 @@ public class TaskRepositoriesConfigurable implements Configurable.NoScroll, Proj
 
     @Override
     @RequiredUIAccess
-    public JComponent createComponent() {
-        return myPanel;
+    public Component createUIComponent(Disposable parentDisposable) {
+        return TargetAWT.wrap(myPanel);
     }
 
     @RequiredUIAccess
     @Override
-    public JComponent getPreferredFocusedComponent() {
-        return myRepositoriesList;
+    public @Nullable Component getPreferredFocusedUIComponent() {
+        return myRepositoriesList == null ? null : TargetAWT.wrap(myRepositoriesList);
     }
 
     @Override

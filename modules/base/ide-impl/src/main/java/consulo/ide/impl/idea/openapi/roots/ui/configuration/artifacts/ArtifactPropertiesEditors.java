@@ -15,135 +15,160 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts;
 
-import consulo.ui.ex.awt.VerticalFlowLayout;
 import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ArtifactProperties;
 import consulo.compiler.artifact.ArtifactPropertiesProvider;
-import consulo.compiler.artifact.ModifiableArtifact;
 import consulo.compiler.artifact.ArtifactUtil;
+import consulo.compiler.artifact.ModifiableArtifact;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import consulo.compiler.artifact.ui.ArtifactPropertiesEditor;
-import consulo.ui.ex.awt.TabbedPaneWrapper;
+import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
+import consulo.ui.Tab;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.layout.ScrollableLayout;
+import consulo.ui.layout.TabbedLayout;
+import consulo.ui.layout.VerticalLayout;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.IdentityHashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author nik
  */
 public class ArtifactPropertiesEditors {
-  private static final List<String> STANDARD_TABS_ORDER = Arrays.asList(
-    ArtifactPropertiesEditor.VALIDATION_TAB, ArtifactPropertiesEditor.PRE_PROCESSING_TAB, ArtifactPropertiesEditor.POST_PROCESSING_TAB
-  );
-  private final Map<String, JPanel> myMainPanels;
-  private final ArtifactEditorContext myContext;
-  private final Artifact myOriginalArtifact;
-  private final List<PropertiesEditorInfo> myEditors;
+    private static final List<LocalizeValue> STANDARD_TABS_ORDER = List.of(
+        ArtifactPropertiesEditor.VALIDATION_TAB,
+        ArtifactPropertiesEditor.PRE_PROCESSING_TAB,
+        ArtifactPropertiesEditor.POST_PROCESSING_TAB
+    );
 
-  public ArtifactPropertiesEditors(ArtifactEditorContext context, Artifact originalArtifact, Artifact artifact) {
-    myContext = context;
-    myOriginalArtifact = originalArtifact;
-    myMainPanels = new HashMap<String, JPanel>();
-    myEditors = new ArrayList<PropertiesEditorInfo>();
-    for (ArtifactPropertiesProvider provider : artifact.getPropertiesProviders()) {
-      PropertiesEditorInfo editorInfo = new PropertiesEditorInfo(provider);
-      myEditors.add(editorInfo);
-      String tabName = editorInfo.myEditor.getTabName();
-      JPanel panel = myMainPanels.get(tabName);
-      if (panel == null) {
-        panel = new JPanel(new VerticalFlowLayout());
-        myMainPanels.put(tabName, panel);
-      }
-      panel.add(editorInfo.myEditor.createComponent());
-    }
-  }
+    private final ArtifactEditorContext myContext;
+    private final Artifact myOriginalArtifact;
+    private final List<PropertiesEditorInfo> myEditors = new ArrayList<>();
+    private final Map<Tab, LocalizeValue> myTabs = new IdentityHashMap<>();
+    private boolean myUICreated;
 
-  public void applyProperties() {
-    for (PropertiesEditorInfo editor : myEditors) {
-      if (editor.isModified()) {
-        editor.applyProperties();
-      }
-    }
-  }
-
-  public void addTabs(TabbedPaneWrapper tabbedPane) {
-    List<String> sortedTabs = new ArrayList<String>(myMainPanels.keySet());
-    Collections.sort(sortedTabs, new Comparator<String>() {
-      @Override
-      public int compare(String o1, String o2) {
-        int i1 = STANDARD_TABS_ORDER.indexOf(o1);
-        if (i1 == -1) i1 = STANDARD_TABS_ORDER.size();
-        int i2 = STANDARD_TABS_ORDER.indexOf(o2);
-        if (i2 == -1) i2 = STANDARD_TABS_ORDER.size();
-        if (i1 != i2) {
-          return i1 - i2;
+    public ArtifactPropertiesEditors(ArtifactEditorContext context, Artifact originalArtifact, Artifact artifact) {
+        myContext = context;
+        myOriginalArtifact = originalArtifact;
+        for (ArtifactPropertiesProvider provider : artifact.getPropertiesProviders()) {
+            myEditors.add(new PropertiesEditorInfo(provider));
         }
-        return o1.compareTo(o2);
-      }
-    });
-    for (String tab : sortedTabs) {
-      tabbedPane.addTab(tab, myMainPanels.get(tab));
     }
-  }
 
-  public boolean isModified() {
-    for (PropertiesEditorInfo editor : myEditors) {
-      if (editor.isModified()) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  public void removeTabs(TabbedPaneWrapper tabbedPane) {
-    for (String tabName : myMainPanels.keySet()) {
-      for (int i = 0; i < tabbedPane.getTabCount(); i++) {
-        if (tabName.equals(tabbedPane.getTitleAt(i))) {
-          tabbedPane.removeTabAt(i);
-          break;
+    @RequiredUIAccess
+    public void addTabs(TabbedLayout tabbedLayout, Disposable uiDisposable) {
+        Map<LocalizeValue, VerticalLayout> panels = new LinkedHashMap<>();
+        for (PropertiesEditorInfo info : myEditors) {
+            VerticalLayout panel = panels.computeIfAbsent(info.myEditor.getTabName(), name -> VerticalLayout.create());
+            panel.add(info.myEditor.createUIComponent(uiDisposable));
+            info.myEditor.reset();
         }
-      }
-    }
-  }
+        myUICreated = true;
 
-  public static @Nullable String getHelpId(String title) {
-    if (ArtifactPropertiesEditor.VALIDATION_TAB.equals(title)) {
-      return "reference.project.structure.artifacts.validation";
-    }
-    else if (ArtifactPropertiesEditor.PRE_PROCESSING_TAB.equals(title)) {
-      return "reference.project.structure.artifacts.preprocessing";
-    }
-    else if (ArtifactPropertiesEditor.POST_PROCESSING_TAB.equals(title)) {
-      return "reference.project.structure.artifacts.postprocessing";
-    }
-    return null;
-  }
+        List<LocalizeValue> sortedTabs = new ArrayList<>(panels.keySet());
+        sortedTabs.sort(Comparator.comparingInt(ArtifactPropertiesEditors::getStandardTabIndex).thenComparing(LocalizeValue::get));
 
-  private class PropertiesEditorInfo {
-    private final ArtifactPropertiesEditor myEditor;
-    private final ArtifactProperties<?> myProperties;
-    private final ArtifactPropertiesProvider myProvider;
-
-    private PropertiesEditorInfo(ArtifactPropertiesProvider provider) {
-      myProvider = provider;
-      myProperties = provider.createProperties(myOriginalArtifact.getArtifactType());
-      ArtifactProperties<?> originalProperties = myOriginalArtifact.getProperties(provider);
-      if (originalProperties != null) {
-        ArtifactUtil.copyProperties(originalProperties, myProperties);
-      }
-      myEditor = myProperties.createEditor(myContext);
-      myEditor.reset();
+        for (LocalizeValue tabName : sortedTabs) {
+            Tab tab = tabbedLayout.createTab();
+            tab.setRenderer((it, presentation) -> presentation.append(tabName));
+            tabbedLayout.addTab(tab, ScrollableLayout.create(panels.get(tabName)));
+            myTabs.put(tab, tabName);
+        }
     }
 
+    @RequiredUIAccess
+    public void removeTabs(TabbedLayout tabbedLayout) {
+        for (Tab tab : myTabs.keySet()) {
+            tabbedLayout.removeTab(tab);
+        }
+        myTabs.clear();
+    }
+
+    private static int getStandardTabIndex(LocalizeValue tabName) {
+        int index = STANDARD_TABS_ORDER.indexOf(tabName);
+        return index == -1 ? STANDARD_TABS_ORDER.size() : index;
+    }
+
+    @RequiredUIAccess
     public void applyProperties() {
-      myEditor.apply();
-      ModifiableArtifact artifact = myContext.getOrCreateModifiableArtifactModel().getOrCreateModifiableArtifact(myOriginalArtifact);
-      artifact.setProperties(myProvider, myProperties);
+        if (!myUICreated) {
+            return;
+        }
+
+        for (PropertiesEditorInfo editor : myEditors) {
+            if (editor.myEditor.isModified()) {
+                editor.applyProperties();
+            }
+        }
     }
 
+    @RequiredUIAccess
     public boolean isModified() {
-      return myEditor.isModified();
+        if (!myUICreated) {
+            return false;
+        }
+
+        for (PropertiesEditorInfo editor : myEditors) {
+            if (editor.myEditor.isModified()) {
+                return true;
+            }
+        }
+        return false;
     }
-  }
+
+    @RequiredUIAccess
+    public void disposeUIResources() {
+        if (!myUICreated) {
+            return;
+        }
+
+        for (PropertiesEditorInfo editor : myEditors) {
+            editor.myEditor.disposeUIResources();
+        }
+        myUICreated = false;
+    }
+
+    public @Nullable String getHelpId(Tab tab) {
+        LocalizeValue tabName = myTabs.get(tab);
+        if (ArtifactPropertiesEditor.VALIDATION_TAB.equals(tabName)) {
+            return "reference.project.structure.artifacts.validation";
+        }
+        else if (ArtifactPropertiesEditor.PRE_PROCESSING_TAB.equals(tabName)) {
+            return "reference.project.structure.artifacts.preprocessing";
+        }
+        else if (ArtifactPropertiesEditor.POST_PROCESSING_TAB.equals(tabName)) {
+            return "reference.project.structure.artifacts.postprocessing";
+        }
+        return null;
+    }
+
+    private class PropertiesEditorInfo {
+        private final ArtifactPropertiesEditor myEditor;
+        private final ArtifactProperties<?> myProperties;
+        private final ArtifactPropertiesProvider myProvider;
+
+        private PropertiesEditorInfo(ArtifactPropertiesProvider provider) {
+            myProvider = provider;
+            myProperties = provider.createProperties(myOriginalArtifact.getArtifactType());
+            ArtifactProperties<?> originalProperties = myOriginalArtifact.getProperties(provider);
+            if (originalProperties != null) {
+                ArtifactUtil.copyProperties(originalProperties, myProperties);
+            }
+            myEditor = myProperties.createEditor(myContext);
+        }
+
+        @RequiredUIAccess
+        private void applyProperties() {
+            myEditor.apply();
+            ModifiableArtifact artifact = myContext.getOrCreateModifiableArtifactModel().getOrCreateModifiableArtifact(myOriginalArtifact);
+            artifact.setProperties(myProvider, myProperties);
+        }
+    }
 }

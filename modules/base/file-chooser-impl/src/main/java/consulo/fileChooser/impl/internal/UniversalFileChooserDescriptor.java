@@ -3,12 +3,18 @@ package consulo.fileChooser.impl.internal;
 
 import consulo.disposer.Disposable;
 import consulo.fileChooser.FileChooserDescriptor;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.Component;
+import consulo.ui.MessageBoxes;
 import consulo.ui.WidthAndHeight;
+import consulo.ui.Window;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.dialog.DialogDescriptor;
+import consulo.ui.ex.dialog.DialogValue;
 import consulo.ui.ex.tree.ApplicationTreeExecutorFactory;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
 import java.nio.file.Path;
@@ -80,6 +86,30 @@ class UniversalFileChooserDescriptor extends DialogDescriptor {
 
     void setOkAction(Runnable okAction) {
         myOkAction = okAction;
+    }
+
+    @RequiredUIAccess
+    @Override
+    public boolean canHandle(AnAction action, @Nullable DialogValue value, Window window) {
+        if (value == null) {
+            return true;
+        }
+        return validateSelectedFiles(window);
+    }
+
+    @RequiredUIAccess
+    boolean validateSelectedFiles(@Nullable Window window) {
+        List<VirtualFile> files = UniversalFileChooser.toVirtualFiles(myDescriptor, getSelectedFiles());
+        try {
+            myDescriptor.validateSelectedFiles(files.toArray(VirtualFile.EMPTY_ARRAY));
+            return true;
+        }
+        catch (Exception e) {
+            MessageBoxes.okError(LocalizeValue.ofNullable(e.getMessage()))
+                .title(getTitle())
+                .showAsync(window);
+            return false;
+        }
     }
 
     List<Path> getSelectedFiles() {

@@ -21,13 +21,14 @@ import consulo.compiler.localize.CompilerLocalize;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.ProjectConfigurable;
 import consulo.configurable.StandardConfigurableIds;
+import consulo.disposer.Disposable;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.Component;
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
-
-import javax.swing.*;
 
 /**
  * @author VISTALL
@@ -45,9 +46,10 @@ public class CompilerExcludedConfigurable implements ProjectConfigurable {
                                                      compilerManager.getExcludedEntriesConfiguration());
   }
 
+  @RequiredUIAccess
   @Override
-  public @Nullable JComponent createComponent() {
-    return myConfigurable.createComponent();
+  public @Nullable Component createUIComponent(Disposable parentDisposable) {
+    return myConfigurable.createUIComponent(parentDisposable);
   }
 
   @Override

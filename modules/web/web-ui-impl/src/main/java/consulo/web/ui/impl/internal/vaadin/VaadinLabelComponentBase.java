@@ -19,15 +19,16 @@ import com.vaadin.flow.component.HasEnabled;
 import com.vaadin.flow.component.HasSize;
 import com.vaadin.flow.component.HasText;
 import com.vaadin.flow.component.Tag;
-import com.vaadin.flow.dom.Element;
 import consulo.localize.LocalizeValue;
 import consulo.ui.HorizontalAlignment;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
 import consulo.ui.ex.internal.LocalizeValueWithMnemonic;
 import consulo.ui.image.Image;
+import consulo.web.ui.impl.internal.WebSearchHighlight;
 import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
 import consulo.web.ui.impl.internal.image.WebImageConverter;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -39,6 +40,7 @@ public abstract class VaadinLabelComponentBase extends SimpleComponent implement
     private LocalizeValue myText;
     private HorizontalAlignment myHorizontalAlignment;
     private ColorValue myForegroundColor;
+    private @Nullable String mySearchHighlight;
 
     public VaadinLabelComponentBase() {
         // a span wraps and nothing of the label api asks for more than one line - the status bar widget reporting a
@@ -80,7 +82,17 @@ public abstract class VaadinLabelComponentBase extends SimpleComponent implement
         return myText;
     }
 
-    private void updateContent() {
+    public void setSearchHighlight(@Nullable String query) {
+        mySearchHighlight = query;
+
+        updateContent();
+    }
+
+    public @Nullable String getSearchHighlight() {
+        return mySearchHighlight;
+    }
+
+    protected void updateContent() {
         getElement().removeAllChildren();
 
         if (myImage != null) {
@@ -89,7 +101,7 @@ public abstract class VaadinLabelComponentBase extends SimpleComponent implement
 
         String text = getText();
         if (!text.isEmpty()) {
-            getElement().appendChild(Element.createText(text));
+            WebSearchHighlight.appendText(getElement(), text, mySearchHighlight);
         }
     }
 

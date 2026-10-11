@@ -25,6 +25,7 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.xml.XmlStringUtil;
 import consulo.versionControlSystem.AbstractVcs;
@@ -134,7 +135,7 @@ public class VcsMappingConfigurationDialog extends DialogWrapper {
                 UnnamedConfigurable configurable = vcs.getRootConfigurable(myMappingCopy);
                 if (configurable != null) {
                     myVcsConfigurable = configurable;
-                    myVcsConfigurableComponent = myVcsConfigurable.createComponent();
+                    myVcsConfigurableComponent = (JComponent) TargetAWT.to(myVcsConfigurable.createUIComponent(getDisposable()));
                     myVcsConfigurablePlaceholder.add(myVcsConfigurableComponent, BorderLayout.CENTER);
                 }
             }

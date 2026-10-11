@@ -39,6 +39,7 @@ import consulo.ui.TextAttribute;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
+import consulo.ui.ex.UnifiedColoredTextContainer;
 import consulo.ui.image.Image;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.model.FlatDataModel;

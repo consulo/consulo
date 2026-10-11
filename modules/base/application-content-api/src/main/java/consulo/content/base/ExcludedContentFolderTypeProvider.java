@@ -24,7 +24,6 @@ import consulo.project.localize.ProjectLocalize;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
 import consulo.ui.image.Image;
-import consulo.ui.style.StandardColors;
 import consulo.ui.util.LightDarkColorValue;
 
 import java.util.function.Supplier;
@@ -37,7 +36,7 @@ import java.util.function.Supplier;
 public final class ExcludedContentFolderTypeProvider extends ContentFolderTypeProvider implements BuiltInGeneratedIconOwner {
     private static final Supplier<ExcludedContentFolderTypeProvider> INSTANCE = ExtensionInstance.from(ContentFolderTypeProvider.class);
 
-    private static final ColorValue EXCLUDED_COLOR = new LightDarkColorValue(new RGBColor(153, 46, 0), StandardColors.RED);
+    private static final ColorValue EXCLUDED_COLOR = new LightDarkColorValue(new RGBColor(153, 46, 0), new RGBColor(255, 100, 100));
 
     public static ExcludedContentFolderTypeProvider getInstance() {
         return INSTANCE.get();

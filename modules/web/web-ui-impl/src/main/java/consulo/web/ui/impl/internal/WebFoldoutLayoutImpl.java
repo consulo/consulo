@@ -79,6 +79,11 @@ public class WebFoldoutLayoutImpl extends VaadinComponentDelegate<WebFoldoutLayo
     }
 
     @Override
+    public LocalizeValue getTitle() {
+        return myTitleValue;
+    }
+
+    @Override
     public void forEachChild(@RequiredUIAccess Consumer<Component> consumer) {
         consumer.accept(myComponent);
     }

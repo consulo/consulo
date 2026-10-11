@@ -2,7 +2,6 @@
 package consulo.remoteServer.impl.internal.configuration;
 
 import consulo.configurable.ConfigurationException;
-import consulo.configurable.internal.ConfigurableUIMigrationUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;
@@ -14,6 +13,7 @@ import consulo.remoteServer.localize.RemoteServerLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.util.xml.serializer.XmlSerializerUtil;
 import org.jspecify.annotations.Nullable;
@@ -120,7 +120,7 @@ public class SingleRemoteServerConfigurable extends NamedConfigurable<RemoteServ
     @RequiredUIAccess
     @Override
     public JComponent createOptionsPanel(Disposable uiDisposable) {
-        mySettingsPanel.add(BorderLayout.CENTER, ConfigurableUIMigrationUtil.createComponent(myConfigurable, uiDisposable));
+        mySettingsPanel.add(BorderLayout.CENTER, TargetAWT.to(myConfigurable.createUIComponent(uiDisposable)));
         return myMainPanel;
     }
 

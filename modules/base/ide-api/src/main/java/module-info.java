@@ -37,6 +37,5 @@ module consulo.ide.api {
     exports consulo.ide.util;
 
     exports consulo.ide.internal to
-        consulo.ide.impl,
-        consulo.sand.language.plugin;
+        consulo.ide.impl;
 }

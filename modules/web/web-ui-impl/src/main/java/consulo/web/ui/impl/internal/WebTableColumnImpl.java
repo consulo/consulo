@@ -17,6 +17,8 @@ package consulo.web.ui.impl.internal;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.dom.Element;
+import com.vaadin.flow.dom.Style;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ComponentItemRender;
 import consulo.ui.HorizontalAlignment;
@@ -35,12 +37,17 @@ import java.util.function.Function;
  * @since 2026-08-02
  */
 public class WebTableColumnImpl<Item, Value> extends WebGridColumnBase<Item, Item, Value> implements TableColumn<Item, Value> {
+    private static final String CELL_CLASS = "web-table-cell";
+    private static final String FILLED_CELL_CLASS = "web-table-cell-filled";
+    private static final String CELL_BACKGROUND = "--consulo-table-cell-background";
+
     private final WebTableImpl<Item> myTable;
     private final Function<Item, Value> myValueProvider;
 
     private TableItemRender<Item, Value> myRender = TableItemRender.of(TextItemRender.defaultRender());
     private @Nullable ComponentItemRender<Value> myComponentRender;
     private @Nullable TableItemEditor<Item, Value> myEditor;
+    private HorizontalAlignment myAlignment = HorizontalAlignment.LEFT;
 
     public WebTableColumnImpl(WebTableImpl<Item> table, Function<Item, Value> valueProvider) {
         super(table.toVaadinComponent());
@@ -84,8 +91,25 @@ public class WebTableColumnImpl<Item, Value> extends WebGridColumnBase<Item, Ite
     }
 
     @Override
-    protected void decorateCell(Component cell, Item row, @Nullable Item item) {
+    protected Component wrapCell(Component content) {
+        return wrapCell(content, CELL_CLASS);
+    }
+
+    @Override
+    protected void decorateCell(Component cell, Item row, @Nullable Item item, @Nullable ColorValue background) {
         myTable.applyItemHeight(cell, item);
+
+        Element element = cell.getElement();
+        Style style = element.getStyle();
+        style.set("justify-content", justifyContent(myAlignment));
+
+        element.getClassList().set(FILLED_CELL_CLASS, background != null);
+        if (background != null) {
+            style.set(CELL_BACKGROUND, WebColors.toCssColor(background));
+        }
+        else {
+            style.remove(CELL_BACKGROUND);
+        }
     }
 
     @Override
@@ -128,7 +152,9 @@ public class WebTableColumnImpl<Item, Value> extends WebGridColumnBase<Item, Ite
 
     @Override
     public TableColumn<Item, Value> setHorizontalAlignment(HorizontalAlignment alignment) {
+        myAlignment = alignment;
         applyAlignment(alignment);
+        myTable.toVaadinComponent().getDataProvider().refreshAll();
         return this;
     }
 

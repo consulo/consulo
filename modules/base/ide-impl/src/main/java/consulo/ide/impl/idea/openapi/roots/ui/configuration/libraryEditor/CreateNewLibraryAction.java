@@ -31,20 +31,19 @@ import consulo.ide.localize.IdeLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
+import consulo.ui.Component;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
-import consulo.ui.ex.awt.MasterDetailsComponent;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreeNode;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author nik
@@ -52,7 +51,6 @@ import java.util.List;
 public class CreateNewLibraryAction extends DumbAwareAction {
     private final @Nullable LibraryType myType;
     private final BaseLibrariesConfigurable myLibrariesConfigurable;
-    
     private final Project myProject;
 
     private CreateNewLibraryAction(
@@ -71,33 +69,33 @@ public class CreateNewLibraryAction extends DumbAwareAction {
     @RequiredUIAccess
     @Override
     public void actionPerformed(AnActionEvent e) {
-        Library library = createLibrary(
-            myType,
-            myLibrariesConfigurable.getTree(),
-            myProject,
-            (LibrariesModifiableModel)myLibrariesConfigurable.getModelProvider().getModifiableModel()
-        );
-        if (library == null) {
-            return;
-        }
+        Component parent = myLibrariesConfigurable.getTree();
+        LibrariesModifiableModel model = (LibrariesModifiableModel) myLibrariesConfigurable.getModelProvider().getModifiableModel();
 
-        BaseLibrariesConfigurable rootConfigurable = myLibrariesConfigurable;
-        DefaultMutableTreeNode libraryNode =
-            MasterDetailsComponent.findNodeByObject((TreeNode)rootConfigurable.getTree().getModel().getRoot(), library);
-        rootConfigurable.selectNodeInTree(libraryNode);
-        LibraryEditingUtil.showDialogAndAddLibraryToDependencies(library, myProject, true);
+        UIAccess uiAccess = UIAccess.current();
+        createLibrary(myType, parent, myProject, model).whenCompleteAsync((library, error) -> {
+            if (error != null || library == null) {
+                return;
+            }
+            myLibrariesConfigurable.selectLibrary(library);
+            LibraryEditingUtil.showDialogAndAddLibraryToDependencies(parent, library, myProject);
+         }, uiAccess);
     }
 
-    public static @Nullable Library createLibrary(
+    @RequiredUIAccess
+    public static CompletableFuture<Library> createLibrary(
         @Nullable LibraryType type,
-        JComponent parentComponent,
+        @Nullable Component parentComponent,
         Project project,
         LibrariesModifiableModel modifiableModel
     ) {
-        NewLibraryConfiguration configuration = createNewLibraryConfiguration(type, parentComponent, project);
-        if (configuration == null) {
-            return null;
-        }
+        UIAccess uiAccess = UIAccess.current();
+        return createNewLibraryConfiguration(type, parentComponent, project)
+            .thenApplyAsync(configuration -> createLibrary(configuration, modifiableModel), uiAccess);
+    }
+
+    @RequiredUIAccess
+    private static Library createLibrary(NewLibraryConfiguration configuration, LibrariesModifiableModel modifiableModel) {
         LibraryType<?> libraryType = configuration.getLibraryType();
         Library library = modifiableModel.createLibrary(
             LibraryEditingUtil.suggestNewLibraryName(modifiableModel, configuration.getDefaultLibraryName()),
@@ -107,33 +105,27 @@ public class CreateNewLibraryAction extends DumbAwareAction {
         NewLibraryEditor editor = new NewLibraryEditor(libraryType, configuration.getProperties());
         configuration.addRoots(editor);
         Library.ModifiableModel model = library.getModifiableModel();
-        editor.applyTo((LibraryEx.ModifiableModelEx)model);
+        editor.applyTo((LibraryEx.ModifiableModelEx) model);
         WriteAction.run(model::commit);
         return library;
     }
 
-    public static @Nullable NewLibraryConfiguration createNewLibraryConfiguration(
+    @RequiredUIAccess
+    public static CompletableFuture<NewLibraryConfiguration> createNewLibraryConfiguration(
         @Nullable LibraryType type,
-        JComponent parentComponent,
+        @Nullable Component parentComponent,
         Project project
     ) {
-        NewLibraryConfiguration configuration;
         VirtualFile baseDir = project.getBaseDir();
         if (type != null) {
-            configuration = type.createNewLibrary(parentComponent, baseDir, project);
+            return type.createNewLibrary(parentComponent, baseDir, project);
         }
-        else {
-            configuration = LibraryTypeService.getInstance()
-                .createLibraryFromFiles(new DefaultLibraryRootsComponentDescriptor(), parentComponent, baseDir, null, project);
-        }
-        if (configuration == null) {
-            return null;
-        }
-        return configuration;
+        return LibraryTypeService.getInstance()
+            .createLibraryFromFiles(new DefaultLibraryRootsComponentDescriptor(), parentComponent, baseDir, null, project);
     }
 
     public static AnAction[] createActionOrGroup(
-        String text,
+        LocalizeValue text,
         BaseLibrariesConfigurable librariesConfigurable,
         Project project
     ) {
@@ -149,13 +141,7 @@ public class CreateNewLibraryAction extends DumbAwareAction {
         }
 
         if (suitableTypes.isEmpty()) {
-            return new AnAction[]{new CreateNewLibraryAction(
-                LocalizeValue.localizeTODO(text),
-                PlatformIconGroup.nodesPplib(),
-                null,
-                librariesConfigurable,
-                project
-            )};
+            return new AnAction[]{new CreateNewLibraryAction(text, PlatformIconGroup.nodesPplib(), null, librariesConfigurable, project)};
         }
         List<AnAction> actions = new ArrayList<>();
         actions.add(new CreateNewLibraryAction(

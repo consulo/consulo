@@ -19,7 +19,10 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.execution.configuration.RunConfigurationsSettings;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.UnnamedConfigurable;
+import consulo.disposer.Disposable;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 
 import org.jspecify.annotations.Nullable;
 import javax.swing.*;
@@ -36,10 +39,10 @@ public class SandRunConfigurationsSettings implements RunConfigurationsSettings 
 
     @RequiredUIAccess
     @Override
-    public @Nullable JComponent createComponent() {
+    public @Nullable Component createUIComponent(Disposable parentDisposable) {
       JPanel panel = new JPanel();
       panel.add(new JLabel("test label"));
-      return panel;
+      return TargetAWT.wrap(panel);
     }
 
     @RequiredUIAccess

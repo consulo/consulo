@@ -26,6 +26,8 @@ import consulo.ui.TextItemRender;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.model.FlatDataModel;
+import io.qt.core.Qt;
+import io.qt.gui.QFont;
 import io.qt.widgets.QAbstractItemView;
 import io.qt.widgets.QComboBox;
 import io.qt.widgets.QWidget;
@@ -82,6 +84,11 @@ public abstract class DesktopQtComboBoxBaseImpl<E, W extends QComboBox> extends 
                 }
                 else {
                     component.addItem(presentation.toString());
+                }
+
+                QFont font = DesktopQtTextItemDelegate.toQFont(presentation.getFont());
+                if (font != null) {
+                    component.setItemData(component.count() - 1, font, Qt.ItemDataRole.FontRole);
                 }
             }
 

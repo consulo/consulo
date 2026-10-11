@@ -16,55 +16,49 @@
 package consulo.ide.impl.idea.openapi.roots.ui.configuration;
 
 import consulo.application.Application;
-import consulo.component.extension.ExtensionPoint;
+import consulo.content.ContentFolderPropertyProvider;
 import consulo.content.ContentFolderTypeProvider;
-import consulo.ide.impl.idea.ui.HoverHyperlinkLabel;
-import consulo.ide.impl.idea.ui.roots.FilePathClipper;
-import consulo.ide.impl.idea.ui.roots.ResizingWrapper;
 import consulo.localize.LocalizeValue;
 import consulo.module.content.layer.ContentEntry;
 import consulo.module.content.layer.ContentFolder;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.localize.ProjectLocalize;
+import consulo.ui.AdvancedLabel;
 import consulo.ui.Button;
 import consulo.ui.ButtonStyle;
+import consulo.ui.Component;
+import consulo.ui.Hyperlink;
 import consulo.ui.Space;
+import consulo.ui.TextAttribute;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.JBColor;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awt.VerticalFlowLayout;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.color.ColorValue;
+import consulo.ui.font.Font;
+import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.HorizontalLayout;
+import consulo.ui.layout.VerticalLayout;
 import consulo.util.lang.StringUtil;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.util.VirtualFileUtil;
 
-import javax.swing.*;
-import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author VISTALL
  * @since 2025-01-07
  */
 public class FolderContentRootPanel extends ContentRootPanel {
-    public FolderContentRootPanel(ActionCallback callback, ContentEntry contentEntry) {
+    public FolderContentRootPanel(ContentRootPanelCallback callback, ContentEntry contentEntry) {
         super(callback, contentEntry);
     }
 
     @Override
-    protected void addBottomComponents() {
-        ContentFolder[] contentFolders = getContentEntry().getFolders(t -> true);
-
-        ExtensionPoint<ContentFolderTypeProvider> point = Application.get().getExtensionPoint(ContentFolderTypeProvider.class);
-
-        Map<ContentFolderTypeProvider, List<ContentFolder>> folderByType = new HashMap<>();
-        for (ContentFolder folder : contentFolders) {
+    @RequiredUIAccess
+    protected void addBottomComponents(VerticalLayout layout, Set<String> missingUrls) {
+        Map<ContentFolderTypeProvider, List<ContentFolder>> folderByType = new LinkedHashMap<>();
+        for (ContentFolder folder : getContentEntry().getFolders(t -> true)) {
             if (folder.isSynthetic()) {
                 continue;
             }
@@ -72,178 +66,108 @@ public class FolderContentRootPanel extends ContentRootPanel {
             folderByType.computeIfAbsent(folder.getType(), t -> new ArrayList<>()).add(folder);
         }
 
-        Insets insets = JBUI.insetsBottom(10);
-        GridBagConstraints constraints = new GridBagConstraints(
-            0,
-            GridBagConstraints.RELATIVE,
-            1,
-            1,
-            1.0,
-            0.0,
-            GridBagConstraints.NORTH,
-            GridBagConstraints.HORIZONTAL,
-            insets,
-            0,
-            0
-        );
+        Application application = Application.get();
+        boolean hasProperties = application.getExtensionPoint(ContentFolderPropertyProvider.class).hasAnyExtensions();
 
-        // use extension point order
-        point.forEachExtensionSafe(provider -> {
-            List<ContentFolder> folders = folderByType.get(provider);
-            if (folders == null || folders.isEmpty()) {
-                return;
+        List<ContentFolderTypeProvider> providers = new ArrayList<>();
+        application.getExtensionPoint(ContentFolderTypeProvider.class).forEachExtensionSafe(provider -> {
+            if (folderByType.containsKey(provider)) {
+                providers.add(provider);
             }
-
-            JComponent sourcesComponent = createFolderGroupComponent(
-                provider.getName().get(),
-                folders,
-                TargetAWT.to(provider.getGroupColor()),
-                provider
-            );
-            add(sourcesComponent, constraints);
         });
+        for (ContentFolderTypeProvider provider : folderByType.keySet()) {
+            if (!providers.contains(provider)) {
+                providers.add(provider);
+            }
+        }
 
-        JComponent bottom = new JPanel(new BorderLayout());
-        bottom.add(Box.createVerticalStrut(3), BorderLayout.NORTH);
-        this.add(bottom,
-            new GridBagConstraints(0,
-                GridBagConstraints.RELATIVE,
-                1,
-                1,
-                1.0,
-                1.0,
-                GridBagConstraints.NORTH,
-                GridBagConstraints.HORIZONTAL,
-                JBUI.emptyInsets(),
-                0,
-                0));
+        for (ContentFolderTypeProvider provider : providers) {
+            List<ContentFolder> folders = folderByType.get(provider);
+            if (folders != null) {
+                layout.add(createFolderGroupComponent(provider, folders, missingUrls, hasProperties));
+            }
+        }
     }
 
     @RequiredUIAccess
-    protected JComponent createFolderGroupComponent(
-        String title,
+    protected Component createFolderGroupComponent(
+        ContentFolderTypeProvider provider,
         List<ContentFolder> folders,
-        Color foregroundColor,
-        ContentFolderTypeProvider editor
+        Set<String> missingUrls,
+        boolean hasProperties
     ) {
-        JPanel rowsPanel = new JPanel(new VerticalFlowLayout(VerticalFlowLayout.TOP, 0, 4, true, false));
-        rowsPanel.setBorder(JBUI.Borders.emptyLeft(14));
-        rowsPanel.setOpaque(false);
+        ColorValue color = provider.getGroupColor();
+
+        AdvancedLabel titleLabel = AdvancedLabel.create();
+        titleLabel.updatePresentation(presentation -> presentation.append(provider.getName(), new TextAttribute(Font.BOLD, color)));
+
+        VerticalLayout groupLayout = VerticalLayout.create(Space.X_SMALL);
+        groupLayout.add(titleLabel);
 
         for (ContentFolder folder : folders) {
-            JPanel rowPanel = new JPanel(new BorderLayout());
-            rowPanel.setOpaque(false);
-
-            rowsPanel.add(rowPanel);
-
-            rowPanel.add(createFolderComponent(folder, foregroundColor), BorderLayout.CENTER);
+            boolean valid = !missingUrls.contains(folder.getUrl()) && !missingUrls.contains(getContentEntry().getUrl());
 
             HorizontalLayout buttonsLayout = HorizontalLayout.create(Space.NONE);
-            buttonsLayout.add(createChangeOptionsAction(folder, editor));
-            buttonsLayout.add(createFolderDeleteAction(folder, editor));
+            if (hasProperties || !folder.getProperties().isEmpty()) {
+                buttonsLayout.add(createChangeOptionsButton(folder));
+            }
+            buttonsLayout.add(createFolderDeleteButton(folder, provider, valid));
 
-            rowPanel.add(TargetAWT.to(buttonsLayout), BorderLayout.EAST);
+            DockLayout rowLayout = DockLayout.create(Space.NONE);
+            rowLayout.center(createFolderComponent(folder, valid));
+            rowLayout.right(buttonsLayout);
+            rowLayout.paddingBuilder().leftSet(Space.LARGE).apply();
+
+            groupLayout.add(rowLayout);
         }
-
-        JLabel titleLabel = new JLabel(title);
-        Font labelFont = UIUtil.getLabelFont();
-        titleLabel.setFont(labelFont.deriveFont(Font.BOLD));
-        titleLabel.setOpaque(false);
-        registerTextComponent(titleLabel, foregroundColor);
-
-        JPanel groupPanel = new JPanel(new BorderLayout());
-        groupPanel.setBorder(JBUI.Borders.empty(0, 4));
-        groupPanel.setOpaque(false);
-        groupPanel.add(titleLabel, BorderLayout.NORTH);
-        groupPanel.add(rowsPanel, BorderLayout.CENTER);
-
-        return groupPanel;
+        return groupLayout;
     }
 
-    private JComponent createFolderComponent(ContentFolder folder, Color foreground) {
-        VirtualFile folderFile = folder.getFile();
-        VirtualFile contentEntryFile = getContentEntry().getFile();
-        String properties = "";
-        if (folderFile != null && contentEntryFile != null) {
-            String path =
-                folderFile.equals(contentEntryFile) ? "." : VirtualFileUtil.getRelativePath(folderFile, contentEntryFile, File.separatorChar);
-            HoverHyperlinkLabel hyperlinkLabel = new HoverHyperlinkLabel(path + properties, foreground);
-            hyperlinkLabel.setMinimumSize(new Dimension(0, 0));
-            hyperlinkLabel.addHyperlinkListener(e -> myCallback.navigateFolder(getContentEntry(), folder));
-            registerTextComponent(hyperlinkLabel, foreground);
-            return new UnderlinedPathLabel(hyperlinkLabel);
+    @RequiredUIAccess
+    private Component createFolderComponent(ContentFolder folder, boolean valid) {
+        LocalizeValue path = LocalizeValue.of(toRelativeDisplayPath(folder.getUrl(), getContentEntry().getUrl()));
+
+        HorizontalLayout layout = HorizontalLayout.create(Space.NONE);
+        if (valid) {
+            layout.add(Hyperlink.create(path, event -> myCallback.navigateFolder(folder)));
         }
         else {
-            String path = toRelativeDisplayPath(folder.getUrl(), getContentEntry().getUrl());
-            JLabel pathLabel = new JLabel(path + properties);
-            pathLabel.setOpaque(false);
-            pathLabel.setForeground(JBColor.RED);
-
-            return new UnderlinedPathLabel(pathLabel);
+            AdvancedLabel label = AdvancedLabel.create();
+            label.updatePresentation(presentation -> presentation.append(path, TextAttribute.ERROR));
+            layout.add(label);
         }
+        return layout;
     }
 
     protected static String toRelativeDisplayPath(String url, String ancestorUrl) {
-        if (!StringUtil.endsWithChar(ancestorUrl, '/')) {
-            ancestorUrl += "/";
+        if (url.equals(ancestorUrl)) {
+            return ".";
         }
-        if (url.startsWith(ancestorUrl)) {
-            return url.substring(ancestorUrl.length()).replace('/', File.separatorChar);
+
+        String prefix = StringUtil.endsWithChar(ancestorUrl, '/') ? ancestorUrl : ancestorUrl + "/";
+        if (url.startsWith(prefix)) {
+            return url.substring(prefix.length()).replace('/', File.separatorChar);
         }
         return toDisplayPath(url);
     }
 
-    private void registerTextComponent(JComponent component, Color foreground) {
-        component.setForeground(foreground);
-    }
-
     @RequiredUIAccess
-    private Button createChangeOptionsAction(ContentFolder folder, ContentFolderTypeProvider editor) {
+    private Button createChangeOptionsButton(ContentFolder folder) {
         Button button = Button.create(LocalizeValue.empty());
         button.setToolTipText(ProjectLocalize.modulePathsPropertiesTooltip());
         button.addStyle(ButtonStyle.INPLACE);
-        button.addClickListener(event -> myCallback.showChangeOptionsDialog(getContentEntry(), folder));
         button.setIcon(PlatformIconGroup.generalInline_edit());
+        button.addClickListener(event -> myCallback.showChangeOptionsDialog(folder, event.getComponent()));
         return button;
     }
 
     @RequiredUIAccess
-    private Button createFolderDeleteAction(ContentFolder folder, ContentFolderTypeProvider editor) {
-        LocalizeValue tooltipText;
-        if (folder.getFile() != null && getContentEntry().getFile() != null) {
-            tooltipText = ProjectLocalize.modulePathsUnmark0Tooltip(editor.getName());
-        }
-        else {
-            tooltipText = ProjectLocalize.modulePathsRemoveTooltip();
-        }
-
+    private Button createFolderDeleteButton(ContentFolder folder, ContentFolderTypeProvider provider, boolean valid) {
         Button button = Button.create(LocalizeValue.empty());
-        button.setToolTipText(tooltipText);
+        button.setToolTipText(valid ? ProjectLocalize.modulePathsUnmark0Tooltip(provider.getName()) : ProjectLocalize.modulePathsRemoveTooltip());
         button.addStyle(ButtonStyle.INPLACE);
-        button.addClickListener(event -> myCallback.deleteContentFolder(getContentEntry(), folder));
         button.setIcon(PlatformIconGroup.actionsClose());
+        button.addClickListener(event -> myCallback.deleteContentFolder(folder));
         return button;
-    }
-
-    private static class UnderlinedPathLabel extends ResizingWrapper {
-        public UnderlinedPathLabel(JLabel wrappedComponent) {
-            super(wrappedComponent);
-            FilePathClipper.install(wrappedComponent, this);
-        }
-
-        @Override
-        protected void paintComponent(Graphics g) {
-            super.paintComponent(g);
-            int startX = myWrappedComponent.getWidth();
-            int endX = getWidth();
-            if (endX > startX) {
-                FontMetrics fontMetrics = myWrappedComponent.getFontMetrics(myWrappedComponent.getFont());
-                int y = fontMetrics.getMaxAscent();
-                Color savedColor = g.getColor();
-                g.setColor(JBColor.border());
-                UIUtil.drawLine((Graphics2D) g, startX, y, endX, y);
-                g.setColor(savedColor);
-            }
-        }
     }
 }

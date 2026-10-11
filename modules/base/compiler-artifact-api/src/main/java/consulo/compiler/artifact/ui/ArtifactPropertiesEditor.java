@@ -15,17 +15,35 @@
  */
 package consulo.compiler.artifact.ui;
 
-import consulo.configurable.UnnamedConfigurable;
+import consulo.compiler.localize.CompilerLocalize;
+import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
+import consulo.ui.Component;
+import consulo.ui.annotation.RequiredUIAccess;
 
 /**
  * @author nik
  */
-public abstract class ArtifactPropertiesEditor implements UnnamedConfigurable {
-  public static final String VALIDATION_TAB = "Validation";  
-  public static final String POST_PROCESSING_TAB = "Post-processing";
-  public static final String PRE_PROCESSING_TAB = "Pre-processing";
+public abstract class ArtifactPropertiesEditor {
+    public static final LocalizeValue VALIDATION_TAB = CompilerLocalize.artifactPropertiesTabValidation();
+    public static final LocalizeValue POST_PROCESSING_TAB = CompilerLocalize.artifactPropertiesTabPostProcessing();
+    public static final LocalizeValue PRE_PROCESSING_TAB = CompilerLocalize.artifactPropertiesTabPreProcessing();
 
-  public abstract String getTabName();
+    public abstract LocalizeValue getTabName();
 
-  public abstract void apply();
+    @RequiredUIAccess
+    public abstract Component createUIComponent(Disposable uiDisposable);
+
+    @RequiredUIAccess
+    public abstract boolean isModified();
+
+    @RequiredUIAccess
+    public abstract void apply();
+
+    @RequiredUIAccess
+    public abstract void reset();
+
+    @RequiredUIAccess
+    public void disposeUIResources() {
+    }
 }

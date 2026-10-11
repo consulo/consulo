@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiConsumer;
 
 /**
  * @author VISTALL
@@ -214,14 +215,6 @@ public class WebTabbedLayoutImpl extends VaadinComponentDelegate<WebTabbedLayout
     }
 
     @Override
-    @RequiredUIAccess
-    public Tab addTab(String tabName, Component component) {
-        WebTabImpl tab = new WebTabImpl(this);
-        tab.setRenderer((t, p) -> p.append(tabName));
-        return addTab(tab, component);
-    }
-
-    @Override
     public void setPrefixComponent(@Nullable Component prefixComponent) {
         myPrefixComponent = prefixComponent;
         toVaadinComponent().setPrefixComponent(prefixComponent == null ? null : toStripComponent(prefixComponent));
@@ -251,6 +244,26 @@ public class WebTabbedLayoutImpl extends VaadinComponentDelegate<WebTabbedLayout
     @Override
     public @Nullable Component getSuffixComponent() {
         return mySuffixComponent;
+    }
+
+    @Override
+    public void forEachTab(@RequiredUIAccess BiConsumer<Tab, Component> consumer) {
+        for (WebTabImpl tab : new ArrayList<>(myTabs.values())) {
+            Component content = tab.getContent();
+            if (content != null) {
+                consumer.accept(tab, content);
+            }
+        }
+    }
+
+    @Override
+    public @Nullable Tab getSelectedTab() {
+        com.vaadin.flow.component.tabs.Tab selected = toVaadinComponent().getSelectedTab();
+        WebTabImpl tab = selected == null ? null : myTabs.get(selected);
+        if (tab != null) {
+            return tab;
+        }
+        return myTabs.isEmpty() ? null : myTabs.values().iterator().next();
     }
 
     @Override

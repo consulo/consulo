@@ -18,18 +18,31 @@ package consulo.it.internal.ui;
 import consulo.ui.Component;
 import consulo.ui.StaticPosition;
 import consulo.ui.Tab;
+import consulo.ui.event.TabSelectEvent;
 import consulo.ui.layout.LayoutConstraint;
 import consulo.ui.layout.TabbedLayout;
 import consulo.ui.layout.TabbedLayoutStyle;
 import org.jspecify.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+
 /**
- * Dummy-but-creatable headless {@link TabbedLayout}.
+ * Headless {@link TabbedLayout}. It keeps its tabs with their content in the order they were added, and remembers
+ * which one is selected.
  *
  * @author VISTALL
  */
 public class HeadlessTabbedLayout extends HeadlessLayoutBase<LayoutConstraint> implements TabbedLayout {
     private final StaticPosition myTabPosition;
+
+    private final Map<Tab, Component> myTabs = new LinkedHashMap<>();
+
+    private @Nullable Tab mySelectedTab;
 
     private @Nullable Component myPrefixComponent;
     private @Nullable Component mySuffixComponent;
@@ -51,7 +64,7 @@ public class HeadlessTabbedLayout extends HeadlessLayoutBase<LayoutConstraint> i
 
     @Override
     public Tab createTab() {
-        return new HeadlessTab();
+        return new HeadlessTab(this);
     }
 
     @Override
@@ -80,15 +93,71 @@ public class HeadlessTabbedLayout extends HeadlessLayoutBase<LayoutConstraint> i
 
     @Override
     public Tab addTab(Tab tab, Component component) {
+        Component old = myTabs.put(tab, component);
+        if (old != null) {
+            super.remove(old);
+        }
+
+        addChild(component);
+
+        if (mySelectedTab == null) {
+            mySelectedTab = tab;
+        }
         return tab;
     }
 
     @Override
-    public Tab addTab(String tabName, Component component) {
-        return new HeadlessTab();
+    public void removeTab(Tab tab) {
+        Component component = myTabs.remove(tab);
+        if (component != null) {
+            super.remove(component);
+        }
+
+        if (mySelectedTab == tab) {
+            mySelectedTab = myTabs.isEmpty() ? null : myTabs.keySet().iterator().next();
+        }
     }
 
     @Override
-    public void removeTab(Tab tab) {
+    public void remove(Component component) {
+        List<Tab> tabs = new ArrayList<>();
+        myTabs.forEach((tab, content) -> {
+            if (content == component) {
+                tabs.add(tab);
+            }
+        });
+        tabs.forEach(this::removeTab);
+    }
+
+    @Override
+    public void removeAll() {
+        myTabs.clear();
+        mySelectedTab = null;
+        super.removeAll();
+    }
+
+    @Override
+    public void forEachTab(BiConsumer<Tab, Component> consumer) {
+        new ArrayList<>(myTabs.entrySet()).forEach(entry -> consumer.accept(entry.getKey(), entry.getValue()));
+    }
+
+    @Override
+    public void forEachChild(Consumer<Component> consumer) {
+        forEachTab((tab, component) -> consumer.accept(component));
+    }
+
+    @Override
+    public @Nullable Tab getSelectedTab() {
+        return mySelectedTab;
+    }
+
+    void select(Tab tab) {
+        if (!myTabs.containsKey(tab) || mySelectedTab == tab) {
+            return;
+        }
+
+        mySelectedTab = tab;
+
+        getListenerDispatcher(TabSelectEvent.class).onEvent(new TabSelectEvent(this, tab));
     }
 }

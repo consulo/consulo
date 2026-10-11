@@ -5,12 +5,14 @@ import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.configurable.*;
+import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.fileChooser.FileTypeDescriptor;
 import consulo.fileChooser.IdeaFileChooser;
 import consulo.http.localize.HttpLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.ui.CheckBox;
+import consulo.ui.Component;
 import consulo.ui.Label;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.*;
@@ -151,11 +153,11 @@ public class CertificateConfigurable implements SearchableConfigurable, Configur
 
     @Override
     @RequiredUIAccess
-    public @Nullable JComponent createComponent() {
+    public @Nullable Component createUIComponent(Disposable parentDisposable) {
         // lazily initialized to ensure that disposeUIResources() will be called, if
         // tree builder was created
         initializeUI();
-        return myRootPanel;
+        return myRootPanel == null ? null : TargetAWT.wrap(myRootPanel);
     }
 
     @Override

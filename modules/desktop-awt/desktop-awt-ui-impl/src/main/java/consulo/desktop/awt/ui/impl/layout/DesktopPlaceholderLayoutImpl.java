@@ -15,7 +15,6 @@
  */
 package consulo.desktop.awt.ui.impl.layout;
 
-import consulo.desktop.awt.ui.impl.facade.FromSwingComponentWrapper;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
@@ -57,7 +56,7 @@ public class DesktopPlaceholderLayoutImpl extends DesktopLayoutBase<JPanel, Plac
     public Layout<Layer> add(Component component, Layer constraint) {
         JPanel slot = slot(constraint);
         slot.removeAll();
-        slot.add(TargetAWT.to(component), BorderLayout.CENTER);
+        slot.add(DesktopLayoutChildren.toAWT(component), BorderLayout.CENTER);
 
         JPanel panel = toAWTComponent();
         panel.revalidate();
@@ -93,9 +92,7 @@ public class DesktopPlaceholderLayoutImpl extends DesktopLayoutBase<JPanel, Plac
     public void forEachChild(@RequiredUIAccess Consumer<Component> consumer) {
         for (JPanel slot : slots()) {
             for (java.awt.Component child : slot.getComponents()) {
-                if (child instanceof FromSwingComponentWrapper wrapper) {
-                    consumer.accept(wrapper.toUIComponent());
-                }
+                DesktopLayoutChildren.accept(child, consumer);
             }
         }
     }

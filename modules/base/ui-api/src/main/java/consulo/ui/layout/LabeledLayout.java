@@ -52,6 +52,11 @@ public interface LabeledLayout extends Layout<LayoutConstraint>, HasComponentSty
         return create(LocalizeValue.of(label), component);
     }
 
+    /**
+     * @return the caption of the section, as given at creation
+     */
+    LocalizeValue getLabel();
+
     @RequiredUIAccess
     default LabeledLayout set(PseudoComponent component) {
         return set(component.getComponent());

@@ -17,66 +17,53 @@ package consulo.compiler.artifact.element;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
-import consulo.compiler.CompilerBundle;
-import consulo.compiler.artifact.ArtifactUtil;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import consulo.compiler.localize.CompilerLocalize;
 import consulo.project.Project;
-import consulo.ui.ex.awt.Messages;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
-import consulo.util.io.FileUtil;
-import consulo.util.io.PathUtil;
+import org.jspecify.annotations.Nullable;
+
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author nik
  */
 @ExtensionImpl
 public class DirectoryElementType extends CompositePackagingElementType<DirectoryPackagingElement> {
-  public static DirectoryElementType getInstance() {
-    return getInstance(DirectoryElementType.class);
-  }
-
-  public DirectoryElementType() {
-    super("directory", CompilerLocalize.elementTypeNameDirectory());
-  }
-
-  
-  @Override
-  public Image getIcon() {
-    return AllIcons.Actions.NewFolder;
-  }
-
-  @Override
-  
-  public DirectoryPackagingElement createEmpty(Project project) {
-    return new DirectoryPackagingElement();
-  }
-
-  /*@Override
-  public PackagingElementPropertiesPanel createElementPropertiesPanel(@NotNull DirectoryPackagingElement element,
-                                                                      @NotNull ArtifactEditorContext context) {
-    if (JpsArtifactUtil.isArchiveName(element.getDirectoryName())) {
-      return new DirectoryElementPropertiesPanel(element, context);
+    public static DirectoryElementType getInstance() {
+        return getInstance(DirectoryElementType.class);
     }
-    return null;
-  }    */
 
-  @Override
-  public CompositePackagingElement<?> createComposite(CompositePackagingElement<?> parent,
-                                                      String baseName,
-                                                      ArtifactEditorContext context) {
-    String initialValue = ArtifactUtil.suggestFileName(parent, baseName != null ? baseName : "folder", "");
-    String path = Messages
-      .showInputDialog(context.getProject(), "Enter directory name: ", "New Directory", null, initialValue, new FilePathValidator());
-    if (path == null) {
-      return null;
+    public DirectoryElementType() {
+        super("directory", CompilerLocalize.elementTypeNameDirectory());
     }
-    path = FileUtil.toSystemIndependentName(path);
-    String parentPath = PathUtil.getParentPath(path);
-    String fileName = PathUtil.getFileName(path);
-    PackagingElement<?> element = new DirectoryPackagingElement(fileName);
-    return (CompositePackagingElement<?>)PackagingElementFactory.getInstance(context.getProject()).createParentDirectories(parentPath, element);
 
-  }
+    @Override
+    public Image getIcon() {
+        return AllIcons.Actions.NewFolder;
+    }
 
+    @Override
+    public DirectoryPackagingElement createEmpty(Project project) {
+        return new DirectoryPackagingElement();
+    }
+
+    @Override
+    @RequiredUIAccess
+    public CompletableFuture<CompositePackagingElement<?>> createComposite(
+        CompositePackagingElement<?> parent,
+        @Nullable String baseName,
+        ArtifactEditorContext context
+    ) {
+        return createCompositeByPath(
+            parent,
+            context,
+            CompilerLocalize.dialogTitleNewDirectory(),
+            CompilerLocalize.dialogMessageEnterDirectoryName(),
+            baseName != null ? baseName : "folder",
+            "",
+            DirectoryPackagingElement::new
+        );
+    }
 }

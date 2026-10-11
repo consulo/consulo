@@ -1,0 +1,146 @@
+/*
+ * Copyright 2000-2009 JetBrains s.r.o.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package consulo.ide.impl.ui.app.impl.settings;
+
+import consulo.configurable.Configurable;
+import consulo.configurable.ConfigurationException;
+import consulo.util.collection.MultiValuesMap;
+import org.jspecify.annotations.Nullable;
+
+import java.util.*;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.function.Function;
+
+public class OptionsEditorContext {
+    private final Set<OptionsEditorColleague> myColleagues = new CopyOnWriteArraySet<>();
+
+    private @Nullable Configurable myCurrentConfigurable;
+    private final Set<Configurable> myModified = new CopyOnWriteArraySet<>();
+    private Map<Configurable, ConfigurationException> myErrors = new HashMap<>();
+    private boolean myHoldingFilter;
+    private final Map<Configurable, Configurable> myConfigurableToParentMap = new HashMap<>();
+    private final MultiValuesMap<Configurable, Configurable> myParentToChildrenMap = new MultiValuesMap<>();
+
+    public CompletableFuture<Void> fireSelected(@Nullable Configurable configurable, OptionsEditorColleague requestor) {
+        Configurable old = myCurrentConfigurable;
+        myCurrentConfigurable = configurable;
+
+        return notify(colleague -> colleague.onSelected(configurable, old), requestor);
+    }
+
+    public CompletableFuture<Void> fireModifiedAdded(Configurable configurable, @Nullable OptionsEditorColleague requestor) {
+        if (myModified.contains(configurable)) {
+            return CompletableFuture.failedFuture(new CancellationException());
+        }
+
+        myModified.add(configurable);
+
+        return notify(colleague -> colleague.onModifiedAdded(configurable), requestor);
+    }
+
+    public CompletableFuture<Void> fireModifiedRemoved(Configurable configurable, @Nullable OptionsEditorColleague requestor) {
+        if (!myModified.contains(configurable)) {
+            return CompletableFuture.failedFuture(new CancellationException());
+        }
+
+        myModified.remove(configurable);
+
+        return notify(colleague -> colleague.onModifiedRemoved(configurable), requestor);
+    }
+
+    public CompletableFuture<Void> fireErrorsChanged(
+        Map<Configurable, ConfigurationException> errors,
+        @Nullable OptionsEditorColleague requestor
+    ) {
+        if (myErrors.equals(errors)) {
+            return CompletableFuture.failedFuture(new CancellationException());
+        }
+
+        myErrors = errors;
+
+        return notify(OptionsEditorColleague::onErrorsChanged, requestor);
+    }
+
+    private CompletableFuture<Void> notify(
+        Function<OptionsEditorColleague, CompletableFuture<Void>> action,
+        @Nullable OptionsEditorColleague requestor
+    ) {
+        List<CompletableFuture<Void>> all = new ArrayList<>();
+        for (OptionsEditorColleague each : myColleagues) {
+            if (each != requestor) {
+                all.add(action.apply(each));
+            }
+        }
+
+        return CompletableFuture.allOf(all.toArray(CompletableFuture[]::new));
+    }
+
+    public void fireReset(Configurable configurable) {
+        if (myModified.contains(configurable)) {
+            fireModifiedRemoved(configurable, null);
+        }
+
+        if (myErrors.containsKey(configurable)) {
+            Map<Configurable, ConfigurationException> newErrors = new HashMap<>();
+            newErrors.remove(configurable);
+            fireErrorsChanged(newErrors, null);
+        }
+    }
+
+    public boolean isModified(Configurable configurable) {
+        return myModified.contains(configurable);
+    }
+
+    public void setHoldingFilter(boolean holding) {
+        myHoldingFilter = holding;
+    }
+
+    public boolean isHoldingFilter() {
+        return myHoldingFilter;
+    }
+
+    public @Nullable Configurable getParentConfigurable(@Nullable Configurable configurable) {
+        return myConfigurableToParentMap.get(configurable);
+    }
+
+    public void registerKid(Configurable parent, Configurable kid) {
+        myConfigurableToParentMap.put(kid, parent);
+        myParentToChildrenMap.put(parent, kid);
+    }
+
+    public Collection<Configurable> getChildren(Configurable parent) {
+        Collection<Configurable> result = myParentToChildrenMap.get(parent);
+        return result == null ? Collections.emptySet() : result;
+    }
+
+    public @Nullable Configurable getCurrentConfigurable() {
+        return myCurrentConfigurable;
+    }
+
+    public Set<Configurable> getModified() {
+        return myModified;
+    }
+
+    public Map<Configurable, ConfigurationException> getErrors() {
+        return myErrors;
+    }
+
+    public void addColleague(OptionsEditorColleague colleague) {
+        myColleagues.add(colleague);
+    }
+}

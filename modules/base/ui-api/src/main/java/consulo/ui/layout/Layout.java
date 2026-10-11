@@ -48,6 +48,12 @@ public interface Layout<C extends LayoutConstraint> extends Component, HasSize, 
         forEachChild(component -> component.setEnabledRecursive(value));
     }
 
+    /**
+     * Visits the direct children of this layout in the order they are shown: the order of the rows or columns of a
+     * stacking layout, row by row and from the leading side for a layout placing its children by a constraint, first
+     * before center before second for a split, and the order of the tabs for tabs. A child built on demand is visited
+     * once it was built; a child which is hidden, folded away or on a tab which is not selected is visited as well.
+     */
     default void forEachChild(@RequiredUIAccess Consumer<Component> consumer) {
         throw new AbstractMethodError(getClass().getName());
     }

@@ -17,9 +17,14 @@ package consulo.ide.impl.roots.ui.configuration.classpath;
 
 import consulo.content.base.BinariesOrderRootType;
 import consulo.content.internal.LibraryEx;
-import consulo.content.library.*;
+import consulo.content.library.Library;
+import consulo.content.library.LibraryTable;
+import consulo.content.library.LibraryType;
+import consulo.content.library.OrderRoot;
+import consulo.content.library.PersistentLibraryKind;
 import consulo.content.library.ui.DefaultLibraryRootsComponentDescriptor;
 import consulo.content.library.ui.LibraryRootsComponentDescriptor;
+import consulo.fileChooser.FileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.ide.impl.idea.openapi.fileChooser.impl.FileChooserUtil;
 import consulo.ide.impl.idea.openapi.roots.libraries.ui.impl.RootDetectionUtil;
@@ -32,22 +37,30 @@ import consulo.language.editor.LangDataKeys;
 import consulo.module.content.layer.ModifiableModuleRootLayer;
 import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author VISTALL
  * @since 2014-09-27
  */
-public class FileOrDirectoryDependencyContext extends AddModuleDependencyContext<VirtualFile[]> {
+public class FileOrDirectoryDependencyContext extends AddModuleDependencyContext<FileOrDirectoryDependencyRoots> {
     private final FileChooserDescriptor myFileChooserDescriptor;
 
-    private final Map<LibraryRootsComponentDescriptor, LibraryType> myLibraryTypes;
+    private final Map<LibraryRootsComponentDescriptor, @Nullable LibraryType<?>> myLibraryTypes;
     private final DefaultLibraryRootsComponentDescriptor myDefaultDescriptor;
 
     public FileOrDirectoryDependencyContext(
@@ -78,10 +91,7 @@ public class FileOrDirectoryDependencyContext extends AddModuleDependencyContext
 
     private FileChooserDescriptor createFileChooserDescriptor() {
         FileChooserDescriptor chooserDescriptor;
-        final List<Pair<LibraryRootsComponentDescriptor, FileChooserDescriptor>> descriptors = new ArrayList<>();
-        for (LibraryRootsComponentDescriptor componentDescriptor : myLibraryTypes.keySet()) {
-            descriptors.add(Pair.create(componentDescriptor, componentDescriptor.createAttachFilesChooserDescriptor(null)));
-        }
+        List<Pair<LibraryRootsComponentDescriptor, FileChooserDescriptor>> descriptors = createDescriptors();
         if (descriptors.size() == 1) {
             chooserDescriptor = descriptors.get(0).getSecond();
         }
@@ -113,29 +123,37 @@ public class FileOrDirectoryDependencyContext extends AddModuleDependencyContext
         return chooserDescriptor;
     }
 
-    
-    @Override
-    @RequiredUIAccess
-    public List<OrderEntry> createOrderEntries(ModifiableModuleRootLayer layer, VirtualFile[] value) {
-        List<VirtualFile> chosenFiles = FileChooserUtil.getChosenFiles(myFileChooserDescriptor, Arrays.asList(value));
-        if (chosenFiles.isEmpty()) {
-            return Collections.emptyList();
-        }
-
+    private List<Pair<LibraryRootsComponentDescriptor, FileChooserDescriptor>> createDescriptors() {
         List<Pair<LibraryRootsComponentDescriptor, FileChooserDescriptor>> descriptors = new ArrayList<>();
         for (LibraryRootsComponentDescriptor componentDescriptor : myLibraryTypes.keySet()) {
             descriptors.add(Pair.create(componentDescriptor, componentDescriptor.createAttachFilesChooserDescriptor(null)));
         }
+        return descriptors;
+    }
+
+    @RequiredUIAccess
+    public CompletableFuture<FileOrDirectoryDependencyRoots> chooseRoots() {
+        UIAccess uiAccess = UIAccess.current();
+        VirtualFile moduleDir = myClasspathPanel.getRootModel().getModule().getModuleDir();
+        return FileChooser.chooseFiles(myFileChooserDescriptor, getProject(), moduleDir).thenComposeAsync(this::detectRoots, uiAccess);
+    }
+
+    @RequiredUIAccess
+    private CompletableFuture<FileOrDirectoryDependencyRoots> detectRoots(VirtualFile[] files) {
+        List<VirtualFile> chosenFiles = FileChooserUtil.getChosenFiles(myFileChooserDescriptor, Arrays.asList(files));
+        if (chosenFiles.isEmpty()) {
+            return CompletableFuture.completedFuture(new FileOrDirectoryDependencyRoots(List.of(), null));
+        }
 
         List<LibraryRootsComponentDescriptor> suitableDescriptors = new ArrayList<>();
-        for (Pair<LibraryRootsComponentDescriptor, FileChooserDescriptor> pair : descriptors) {
+        for (Pair<LibraryRootsComponentDescriptor, FileChooserDescriptor> pair : createDescriptors()) {
             if (acceptAll(pair.getSecond(), chosenFiles)) {
                 suitableDescriptors.add(pair.getFirst());
             }
         }
 
         LibraryRootsComponentDescriptor rootsComponentDescriptor;
-        LibraryType libraryType = null;
+        LibraryType<?> libraryType = null;
         if (suitableDescriptors.size() == 1) {
             rootsComponentDescriptor = suitableDescriptors.get(0);
             libraryType = myLibraryTypes.get(rootsComponentDescriptor);
@@ -143,13 +161,21 @@ public class FileOrDirectoryDependencyContext extends AddModuleDependencyContext
         else {
             rootsComponentDescriptor = myDefaultDescriptor;
         }
-        List<OrderRoot> chosenRoots = RootDetectionUtil.detectRoots(chosenFiles, null, layer.getProject(), rootsComponentDescriptor);
 
-        List<OrderRoot> roots = filterAlreadyAdded(layer, chosenRoots);
+        LibraryType<?> detectedType = libraryType;
+        return RootDetectionUtil.detectRootsAsync(chosenFiles, myClasspathPanel.getUIComponent(), getProject(), rootsComponentDescriptor)
+            .thenApply(roots -> new FileOrDirectoryDependencyRoots(roots, detectedType));
+    }
+
+    @Override
+    @RequiredUIAccess
+    public List<OrderEntry> createOrderEntries(ModifiableModuleRootLayer layer, FileOrDirectoryDependencyRoots value) {
+        List<OrderRoot> roots = filterAlreadyAdded(layer, value.roots());
         if (roots.isEmpty()) {
             return Collections.emptyList();
         }
 
+        LibraryType<?> libraryType = value.libraryType();
         List<Library> addedLibraries = new ArrayList<>();
         boolean onlyClasses = true;
         for (OrderRoot root : roots) {
@@ -174,10 +200,10 @@ public class FileOrDirectoryDependencyContext extends AddModuleDependencyContext
         return orderEntries;
     }
 
-    private Library createLibraryFromRoots(ModifiableModuleRootLayer layer, List<OrderRoot> roots, @Nullable LibraryType libraryType) {
+    private Library createLibraryFromRoots(ModifiableModuleRootLayer layer, List<OrderRoot> roots, @Nullable LibraryType<?> libraryType) {
         LibraryTable.ModifiableModel moduleLibraryModel = layer.getModuleLibraryTable().getModifiableModel();
 
-        PersistentLibraryKind kind = libraryType == null ? null : libraryType.getKind();
+        PersistentLibraryKind<?> kind = libraryType == null ? null : libraryType.getKind();
         Library library = moduleLibraryModel.createLibrary(null, kind);
         LibraryEx.ModifiableModelEx libModel = (LibraryEx.ModifiableModelEx) library.getModifiableModel();
 
@@ -194,7 +220,7 @@ public class FileOrDirectoryDependencyContext extends AddModuleDependencyContext
     }
 
     private List<OrderRoot> filterAlreadyAdded(ModifiableModuleRootLayer layer, List<OrderRoot> roots) {
-        if (roots == null || roots.isEmpty()) {
+        if (roots.isEmpty()) {
             return Collections.emptyList();
         }
 
@@ -225,9 +251,5 @@ public class FileOrDirectoryDependencyContext extends AddModuleDependencyContext
             }
         }
         return true;
-    }
-
-    public FileChooserDescriptor getFileChooserDescriptor() {
-        return myFileChooserDescriptor;
     }
 }

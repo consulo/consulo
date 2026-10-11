@@ -89,6 +89,7 @@ import org.vaadin.stefan.table.Table;
 @JsModule("./shortcuts.js")
 @JsModule("./showNotifier.js")
 @JsModule("./treeToggle.js")
+@JsModule("./spotlight.js")
 @Push(PushMode.AUTOMATIC)
 @Uses(Dialog.class)
 @Uses(Carousel.class)

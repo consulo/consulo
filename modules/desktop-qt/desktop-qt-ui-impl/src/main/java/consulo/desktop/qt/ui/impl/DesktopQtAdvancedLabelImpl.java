@@ -62,6 +62,7 @@ public class DesktopQtAdvancedLabelImpl extends QtComponentDelegate<DesktopQtAdv
 
             myIcon.setVisible(false);
             myText.setTextFormat(Qt.TextFormat.RichText);
+            myText.setMinimumWidth(1);
         }
     }
 

@@ -20,51 +20,51 @@ import consulo.compiler.artifact.element.PackagingElementOutputKind;
 import consulo.compiler.artifact.ui.PackagingSourceItem;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.ArtifactEditorEx;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceItems.SourceItemsTree;
+import consulo.project.localize.ProjectLocalize;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import org.jspecify.annotations.Nullable;
-
-import java.util.List;
 
 /**
  * @author nik
  */
 public class PackAndPutIntoDefaultLocationAction extends PutIntoDefaultLocationActionBase {
-  public PackAndPutIntoDefaultLocationAction(SourceItemsTree sourceItemsTree, ArtifactEditorEx artifactEditor) {
-    super(sourceItemsTree, artifactEditor);
-  }
+    public PackAndPutIntoDefaultLocationAction(SourceItemsTree sourceItemsTree, ArtifactEditorEx artifactEditor) {
+        super(sourceItemsTree, artifactEditor);
+    }
 
-  @Override
-  public void update(AnActionEvent e) {
-    String jarName = suggestJarName();
-    String pathForJars = myArtifactEditor.getArtifact().getArtifactType().getDefaultPathFor(PackagingElementOutputKind.JAR_FILES);
-    Presentation presentation = e.getPresentation();
-    if (jarName != null && pathForJars != null) {
-      presentation.setText("Pack Into " + ArtifactUtil.appendToPath(pathForJars, jarName + ".jar"));
-      presentation.setVisible(true);
+    @Override
+    public void update(AnActionEvent e) {
+        String jarName = suggestJarName();
+        String pathForJars = myArtifactEditor.getArtifact().getArtifactType().getDefaultPathFor(PackagingElementOutputKind.JAR_FILES);
+        Presentation presentation = e.getPresentation();
+        if (jarName != null && pathForJars != null) {
+            presentation.setText(ProjectLocalize.artifactActionPackInto0Text(ArtifactUtil.appendToPath(pathForJars, jarName + ".jar")));
+            presentation.setVisible(true);
+        }
+        else {
+            presentation.setVisible(false);
+        }
     }
-    else {
-      presentation.setVisible(false);
-    }
-  }
 
-  private @Nullable String suggestJarName() {
-    List<PackagingSourceItem> items = mySourceItemsTree.getSelectedItems();
-    for (PackagingSourceItem item : items) {
-      if (item.isProvideElements() && item.getKindOfProducedElements().containsDirectoriesWithClasses()) {
-        return item.createPresentation(myArtifactEditor.getContext()).getPresentableName();
-      }
+    private @Nullable String suggestJarName() {
+        for (PackagingSourceItem item : mySourceItemsTree.getSelectedItems()) {
+            if (item.isProvideElements() && item.getKindOfProducedElements().containsDirectoriesWithClasses()) {
+                return item.createPresentation(myArtifactEditor.getContext()).getPresentableName();
+            }
+        }
+        return null;
     }
-    return null;
-  }
 
-  @Override
-  public void actionPerformed(AnActionEvent e) {
-    String pathForJars = myArtifactEditor.getArtifact().getArtifactType().getDefaultPathFor(PackagingElementOutputKind.JAR_FILES);
-    String jarName = suggestJarName();
-    if (pathForJars != null) {
-      myArtifactEditor.getLayoutTreeComponent().packInto(mySourceItemsTree.getSelectedItems(),
-          ArtifactUtil.appendToPath(pathForJars, jarName + ".jar"));
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(AnActionEvent e) {
+        String pathForJars = myArtifactEditor.getArtifact().getArtifactType().getDefaultPathFor(PackagingElementOutputKind.JAR_FILES);
+        String jarName = suggestJarName();
+        if (pathForJars != null && jarName != null) {
+            myArtifactEditor.getLayoutTreeComponent()
+                .packInto(mySourceItemsTree.getSelectedItems(), ArtifactUtil.appendToPath(pathForJars, jarName + ".jar"));
+        }
     }
-  }
 }

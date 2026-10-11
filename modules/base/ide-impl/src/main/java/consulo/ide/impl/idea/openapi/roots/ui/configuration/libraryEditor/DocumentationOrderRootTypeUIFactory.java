@@ -27,15 +27,17 @@ import consulo.ide.ui.SdkPathEditor;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.localize.ProjectLocalize;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.CustomShortcutSet;
-import consulo.ui.ex.action.LegacyDumbAwareAction;
-import consulo.ui.ex.awt.ToolbarDecorator;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
+import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.toolbar.ToolbarDecoratorBuilder;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
+
+import java.util.List;
 
 /**
  * @author anna
@@ -78,37 +80,39 @@ public class DocumentationOrderRootTypeUIFactory implements OrderRootTypeUIFacto
         }
 
         @Override
-        protected void addToolbarButtons(ToolbarDecorator toolbarDecorator) {
-            AnAction specifyUrlButton =
-                new LegacyDumbAwareAction(ProjectLocalize.sdkPathsSpecifyUrlButton(), LocalizeValue.empty(), PlatformIconGroup.nodesPpweb()) {
-                    {
-                        setShortcutSet(CustomShortcutSet.fromString("alt S"));
-                    }
-
-                    @RequiredUIAccess
-                    @Override
-                    public void actionPerformed(AnActionEvent e) {
-                        onSpecifyUrlButtonClicked();
-                    }
-
-                    @RequiredUIAccess
-                    @Override
-                    public void update(AnActionEvent e) {
-                        e.getPresentation().setEnabled(myEnabled);
-                    }
-                };
-            toolbarDecorator.addExtraAction(specifyUrlButton);
+        protected void addToolbarActions(ToolbarDecoratorBuilder<VirtualFile> builder) {
+            builder.addExtraAction(new SpecifyUrlAction());
         }
 
+        @RequiredUIAccess
         private void onSpecifyUrlButtonClicked() {
-            String defaultDocsUrl =
-                mySdk == null ? "" : StringUtil.notNullize(((SdkType) mySdk.getSdkType()).getDefaultDocumentationUrl(mySdk), "");
-            VirtualFile virtualFile = DocumentationUtil.showSpecifyJavadocUrlDialog(myComponent, defaultDocsUrl);
-            if (virtualFile != null) {
-                addElement(virtualFile);
-                setModified(true);
-                requestDefaultFocus();
-                setSelectedRoots(new Object[]{virtualFile});
+            String defaultDocsUrl = StringUtil.notNullize(((SdkType) mySdk.getSdkType()).getDefaultDocumentationUrl(mySdk), "");
+            UIAccess uiAccess = UIAccess.current();
+            DocumentationUtil.showSpecifyJavadocUrlDialogAsync(null, defaultDocsUrl).whenCompleteAsync((virtualFile, error) -> {
+                if (error != null || virtualFile == null) {
+                    return;
+                }
+                addPaths(virtualFile);
+                setSelectedRoots(List.of(virtualFile));
+             }, uiAccess);
+        }
+
+        private class SpecifyUrlAction extends DumbAwareAction implements AnActionWithSyncUpdate {
+            private SpecifyUrlAction() {
+                super(ProjectLocalize.sdkPathsSpecifyUrlButton(), LocalizeValue.empty(), PlatformIconGroup.nodesPpweb());
+            }
+
+            @RequiredUIAccess
+            @Override
+            public void actionPerformed(AnActionEvent e) {
+                if (myEnabled) {
+                    onSpecifyUrlButtonClicked();
+                }
+            }
+
+            @Override
+            public void update(AnActionEvent e) {
+                e.getPresentation().setEnabled(myEnabled);
             }
         }
     }

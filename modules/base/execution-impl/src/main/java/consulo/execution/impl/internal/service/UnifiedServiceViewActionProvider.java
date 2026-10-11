@@ -76,7 +76,7 @@ final class UnifiedServiceViewActionProvider {
         DefaultActionGroup group = new DefaultActionGroup();
 
         if (component instanceof Tree<?> tree && tree.isExpandCollapseAllSupported()) {
-            TreeExpander treeExpander = new ServiceViewTreeExpander(tree);
+            TreeExpander treeExpander = TreeExpander.of(tree);
             group.add(CommonActionsManager.getInstance().createExpandAllAction(treeExpander));
             group.add(CommonActionsManager.getInstance().createCollapseAllAction(treeExpander));
             group.addSeparator();
@@ -89,27 +89,5 @@ final class UnifiedServiceViewActionProvider {
             ActionToolbarFactory.getInstance().createActionToolbar(ActionPlaces.SERVICES_TOOLBAR, group, ActionToolbar.Style.HORIZONTAL);
         treeActionsToolBar.setTargetUIComponent(component);
         return treeActionsToolBar;
-    }
-
-    private record ServiceViewTreeExpander(Tree<?> tree) implements TreeExpander {
-        @Override
-        public void expandAll() {
-            tree.expandAll();
-        }
-
-        @Override
-        public boolean canExpand() {
-            return true;
-        }
-
-        @Override
-        public void collapseAll() {
-            tree.collapseAll();
-        }
-
-        @Override
-        public boolean canCollapse() {
-            return true;
-        }
     }
 }

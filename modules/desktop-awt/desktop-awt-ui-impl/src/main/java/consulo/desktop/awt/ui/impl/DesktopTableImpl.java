@@ -49,6 +49,8 @@ class DesktopTableImpl<Item> extends SwingComponentDelegate<TableView<Item>> imp
     class MyTableView extends TableView<Item> implements FromSwingComponentWrapper {
         MyTableView(DesktopTableModel<Item> model) {
             super(model);
+            // an editor whose focus moves out of the table commits - otherwise it stays open and its value is lost
+            putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
         }
 
         @Override

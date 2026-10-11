@@ -200,6 +200,11 @@ public class DesktopQtFoldoutLayoutImpl extends DesktopQtLayoutComponent<LayoutC
     }
 
     @Override
+    public LocalizeValue getTitle() {
+        return myTitle;
+    }
+
+    @Override
     @RequiredUIAccess
     public FoldoutLayout setTitle(LocalizeValue title) {
         myTitle = title;

@@ -23,10 +23,8 @@ import consulo.compiler.artifact.ModifiableArtifactModel;
 import consulo.compiler.artifact.element.CompositePackagingElement;
 import consulo.compiler.artifact.ui.ArtifactEditor;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
-import consulo.compiler.artifact.ui.awt.ChooseArtifactsDialog;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;
-import consulo.ide.impl.idea.util.ui.classpath.ChooseLibrariesFromTablesDialog;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.localize.LocalizeValue;
 import consulo.module.ModifiableModuleModel;
@@ -36,44 +34,45 @@ import consulo.module.content.layer.ModuleRootModel;
 import consulo.module.content.layer.ModulesProvider;
 import consulo.module.content.layer.orderEntry.ModuleLibraryOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
-import consulo.module.ui.awt.ChooseModulesDialog;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
+import consulo.project.content.library.ProjectLibraryTable;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.dialog.ChooseItemsDialogDescriptor;
+import consulo.util.lang.StringUtil;
+import org.jspecify.annotations.Nullable;
 
-import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author nik
  */
 public class ArtifactEditorContextImpl implements ArtifactEditorContext {
     private final ArtifactsStructureConfigurableContext myParent;
-    private final ArtifactEditorEx myEditor;
+    private final ArtifactEditorImpl myEditor;
 
-    public ArtifactEditorContextImpl(ArtifactsStructureConfigurableContext parent, ArtifactEditorEx editor) {
+    public ArtifactEditorContextImpl(ArtifactsStructureConfigurableContext parent, ArtifactEditorImpl editor) {
         myParent = parent;
         myEditor = editor;
     }
 
     @Override
-    
     public ModifiableArtifactModel getOrCreateModifiableArtifactModel() {
         return myParent.getOrCreateModifiableArtifactModel();
     }
 
     @Override
-    public ModifiableModuleModel getModifiableModuleModel() {
+    public @Nullable ModifiableModuleModel getModifiableModuleModel() {
         return myParent.getModifiableModuleModel();
     }
 
     @Override
-    
     public ModifiableRootModel getOrCreateModifiableRootModel(Module module) {
         return myParent.getOrCreateModifiableRootModel(module);
     }
 
     @Override
-    
     public Project getProject() {
         return myParent.getProject();
     }
@@ -125,23 +124,25 @@ public class ArtifactEditorContextImpl implements ArtifactEditorContext {
                 myParent.getProject(),
                 projectStructureSelector -> projectStructureSelector.selectProjectOrGlobalLibrary(library, true)
             );
+            return;
         }
-        else {
-            Module module = (Module)((LibraryImpl)library).getModule();
-            if (module != null) {
-                ModuleRootModel rootModel = myParent.getModulesProvider().getRootModel(module);
-                String libraryName = library.getName();
-                for (OrderEntry entry : rootModel.getOrderEntries()) {
-                    if (entry instanceof ModuleLibraryOrderEntry libraryEntry) {
-                        if (libraryName != null && libraryName.equals(libraryEntry.getLibraryName())
-                            || libraryName == null && library.equals(libraryEntry.getLibrary())) {
-                            ShowSettingsUtil.getInstance().showProjectStructureDialog(
-                                myParent.getProject(),
-                                projectStructureSelector -> projectStructureSelector.selectOrderEntry(module, libraryEntry)
-                            );
-                            return;
-                        }
-                    }
+
+        Module module = (Module) ((LibraryImpl) library).getModule();
+        if (module == null) {
+            return;
+        }
+
+        ModuleRootModel rootModel = myParent.getModulesProvider().getRootModel(module);
+        String libraryName = library.getName();
+        for (OrderEntry entry : rootModel.getOrderEntries()) {
+            if (entry instanceof ModuleLibraryOrderEntry libraryEntry) {
+                if (libraryName != null && libraryName.equals(libraryEntry.getLibraryName())
+                    || libraryName == null && library.equals(libraryEntry.getLibrary())) {
+                    ShowSettingsUtil.getInstance().showProjectStructureDialog(
+                        myParent.getProject(),
+                        projectStructureSelector -> projectStructureSelector.selectOrderEntry(module, libraryEntry)
+                    );
+                    return;
                 }
             }
         }
@@ -149,52 +150,80 @@ public class ArtifactEditorContextImpl implements ArtifactEditorContext {
 
     @Override
     @RequiredUIAccess
-    public List<Artifact> chooseArtifacts(List<? extends Artifact> artifacts, LocalizeValue title) {
-        ChooseArtifactsDialog dialog = new ChooseArtifactsDialog(getProject(), artifacts, title, LocalizeValue.empty());
-        dialog.show();
-        return dialog.isOK() ? dialog.getChosenElements() : Collections.<Artifact>emptyList();
+    public CompletableFuture<List<Artifact>> chooseArtifacts(List<? extends Artifact> artifacts, LocalizeValue title) {
+        return ChooseItemsDialogDescriptor.<Artifact>showAsync(
+            myEditor.getMainComponent(),
+            title,
+            LocalizeValue.empty(),
+            List.copyOf(artifacts),
+            (artifact, presentation) -> {
+                presentation.withIcon(artifact.getArtifactType().getIcon());
+                presentation.append(artifact.getName());
+            },
+            true,
+            List.of()
+        );
     }
 
     @Override
-    
+    @RequiredUIAccess
+    public CompletableFuture<List<Module>> chooseModules(List<Module> modules, LocalizeValue title) {
+        return ChooseItemsDialogDescriptor.showAsync(
+            myEditor.getMainComponent(),
+            title,
+            LocalizeValue.empty(),
+            modules,
+            (module, presentation) -> {
+                presentation.withIcon(PlatformIconGroup.nodesModule());
+                presentation.append(module.getName());
+            },
+            true,
+            List.of()
+        );
+    }
+
+    @Override
+    @RequiredUIAccess
+    public CompletableFuture<List<Library>> chooseLibraries(LocalizeValue title) {
+        List<Library> libraries = List.of(ProjectLibraryTable.getInstance(getProject()).getLibraries());
+        return ChooseItemsDialogDescriptor.showAsync(
+            myEditor.getMainComponent(),
+            title,
+            LocalizeValue.empty(),
+            libraries,
+            (library, presentation) -> {
+                presentation.withIcon(PlatformIconGroup.nodesPplib());
+                presentation.append(StringUtil.notNullize(library.getName()));
+            },
+            true,
+            List.of()
+        );
+    }
+
+    @Override
     public ArtifactModel getArtifactModel() {
         return myParent.getArtifactModel();
     }
 
     @Override
-    
     public ModulesProvider getModulesProvider() {
         return myParent.getModulesProvider();
     }
 
     @Override
-    public Library findLibrary(String level, String libraryName) {
+    public @Nullable Library findLibrary(String level, String libraryName) {
         return myParent.findLibrary(level, libraryName);
     }
 
     @Override
+    @RequiredUIAccess
     public void queueValidation() {
-        myParent.queueValidation(getArtifact());
+        myEditor.queueValidation();
     }
 
     @Override
-    
     public ArtifactType getArtifactType() {
         return myEditor.getArtifact().getArtifactType();
-    }
-
-    @Override
-    @RequiredUIAccess
-    public List<Module> chooseModules(List<Module> modules, LocalizeValue title) {
-        return new ChooseModulesDialog(getProject(), modules, title, LocalizeValue.empty()).showAndGetResult();
-    }
-
-    @Override
-    @RequiredUIAccess
-    public List<Library> chooseLibraries(LocalizeValue title) {
-        ChooseLibrariesFromTablesDialog dialog = ChooseLibrariesFromTablesDialog.createDialog(title, getProject());
-        dialog.show();
-        return dialog.isOK() ? dialog.getSelectedLibraries() : Collections.<Library>emptyList();
     }
 
     @Override

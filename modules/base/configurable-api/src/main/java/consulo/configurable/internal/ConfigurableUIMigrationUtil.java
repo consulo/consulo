@@ -15,44 +15,50 @@
  */
 package consulo.configurable.internal;
 
+import consulo.application.Application;
 import consulo.configurable.UnnamedConfigurable;
+import consulo.configurable.localize.ConfigurableLocalize;
 import consulo.disposer.Disposable;
+import consulo.logging.Logger;
 import consulo.ui.Component;
+import consulo.ui.Label;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import org.jspecify.annotations.Nullable;
-
-import javax.swing.*;
 
 /**
  * @author VISTALL
  * @since 2016-11-05
  */
 public class ConfigurableUIMigrationUtil {
-    @RequiredUIAccess
-    public static @Nullable JComponent createComponent(UnnamedConfigurable configurable, Disposable parentUIDisposable) {
-        JComponent component = configurable.createComponent(parentUIDisposable);
-        if (component != null) {
-            return component;
-        }
+    private static final Logger LOG = Logger.getInstance(ConfigurableUIMigrationUtil.class);
 
-        Component uiComponent = configurable.createUIComponent(parentUIDisposable);
-        if (uiComponent != null) {
-            return (JComponent)TargetAWT.to(uiComponent);
+    @RequiredUIAccess
+    public static @Nullable Component createUIComponent(UnnamedConfigurable configurable, Disposable parentUIDisposable) {
+        Component uiComponent = createSupportedUIComponent(configurable, parentUIDisposable);
+        if (uiComponent == null && Application.get().isUnifiedApplication()) {
+            return createNotSupportedComponent();
         }
-        return null;
+        return uiComponent;
     }
 
     @RequiredUIAccess
-    public static @Nullable JComponent getPreferredFocusedComponent(UnnamedConfigurable component) {
-        JComponent preferredFocusedComponent = component.getPreferredFocusedComponent();
-        if (preferredFocusedComponent != null) {
-            return preferredFocusedComponent;
+    public static @Nullable Component createSupportedUIComponent(UnnamedConfigurable configurable, Disposable parentUIDisposable) {
+        try {
+            return configurable.createUIComponent(parentUIDisposable);
         }
-        Component uiComponent = component.getPreferredFocusedUIComponent();
-        if (uiComponent != null) {
-            return (JComponent)TargetAWT.to(uiComponent);
+        catch (RuntimeException | LinkageError e) {
+            if (!Application.get().isUnifiedApplication()) {
+                throw e;
+            }
+
+            UnnamedConfigurable original = configurable instanceof ConfigurableWrapper wrapper ? wrapper.getConfigurable() : configurable;
+            LOG.warn("Configurable " + original.getClass().getName() + " is not supported by this frontend", e);
+            return null;
         }
-        return null;
+    }
+
+    @RequiredUIAccess
+    public static Component createNotSupportedComponent() {
+        return Label.create(ConfigurableLocalize.configurableNotSupportedHere());
     }
 }

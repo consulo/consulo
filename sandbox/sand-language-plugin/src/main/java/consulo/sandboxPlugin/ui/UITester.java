@@ -52,7 +52,7 @@ public class UITester {
             TabbedLayout tabbedLayout = TabbedLayout.create();
 
             myApplication.getExtensionPoint(UITesterTab.class).forEach(tab -> {
-                Tab added = tabbedLayout.addTab(tab.getName().get(), createTabComponent(tab, uiDisposable));
+                Tab added = tabbedLayout.addTab(tab.getName(), createTabComponent(tab, uiDisposable));
                 if (tab.isClosable()) {
                     added.setCloseHandler((closedTab, component) -> {
                     });

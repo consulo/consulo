@@ -23,6 +23,7 @@ import consulo.codeEditor.EditorFactory;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.SearchableConfigurable;
+import consulo.disposer.Disposable;
 import consulo.document.Document;
 import consulo.language.Commenter;
 import consulo.language.copyright.UpdateCopyrightsProvider;
@@ -39,10 +40,12 @@ import consulo.language.file.LanguageFileType;
 import consulo.language.plain.PlainTextFileType;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.event.DocumentAdapter;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.fileType.FileType;
 import org.jspecify.annotations.Nullable;
@@ -357,9 +360,9 @@ public class TemplateCommentPanel implements SearchableConfigurable, Configurabl
 
   @Override
   @RequiredUIAccess
-  public JComponent createComponent() {
+  public Component createUIComponent(Disposable parentDisposable) {
     initEditor();
-    return mainPanel;
+    return TargetAWT.wrap(mainPanel);
   }
 
   private void initEditor() {

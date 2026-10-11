@@ -20,10 +20,18 @@ color.settings.console.red:
     text: ANSI Colors//Red
 color.settings.console.yellow:
     text: ANSI Colors//Yellow
+configurable.changes.not.applied.error:
+    text: Changes were not applied because of an error
 configurable.current.project.tooltip:
     text: For current project
 configurable.default.project.tooltip:
     text: For new projects
+configurable.empty.content.text:
+    text: Select configuration element in the tree to edit its settings
+configurable.not.supported.here:
+    text: These settings cannot be edited here
+configurable.search.placeholder:
+    text: Search settings
 control.panel.classic.view.button:
     text: Classic &View
 explorer.panel.default.view.button:

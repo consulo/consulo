@@ -54,6 +54,10 @@ public final class StyleColorKeys {
 
         ourKeys.put(ComponentColors.LINK_FOREGROUND, "Component.linkColor");
 
+        ourKeys.put(ComponentColors.SEARCH_MATCH_BACKGROUND, "SearchMatch.background");
+        ourKeys.put(ComponentColors.SEARCH_MATCH_FOREGROUND, "SearchMatch.foreground");
+
+        ourKeys.put(ComponentColors.ERROR_BACKGROUND, "Component.error.background");
         ourKeys.put(ComponentColors.ERROR_BORDER, "Component.error.borderColor");
         ourKeys.put(ComponentColors.WARNING_BORDER, "Component.warning.borderColor");
         ourKeys.put(ComponentColors.SUCCESS_BORDER, "Component.success.borderColor");

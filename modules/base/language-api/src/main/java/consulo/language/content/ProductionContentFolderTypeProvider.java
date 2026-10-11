@@ -27,7 +27,6 @@ import consulo.project.localize.ProjectLocalize;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
 import consulo.ui.image.Image;
-import consulo.ui.style.StandardColors;
 import consulo.ui.util.LightDarkColorValue;
 
 import java.util.function.Supplier;
@@ -39,7 +38,7 @@ import java.util.function.Supplier;
 @ExtensionImpl(order = "first", id = "production")
 public class ProductionContentFolderTypeProvider extends PackageBasedContentFolderTypeProvider
     implements BuiltInGeneratedIconOwner, ProductionLikeContentFolderTypeProvider {
-    private static final ColorValue SOURCES_COLOR = new LightDarkColorValue(new RGBColor(10, 80, 161), StandardColors.BLUE);
+    private static final ColorValue SOURCES_COLOR = new LightDarkColorValue(new RGBColor(10, 80, 161), new RGBColor(88, 157, 246));
     private static final Supplier<ProductionContentFolderTypeProvider> INSTANCE = ExtensionInstance.from(ContentFolderTypeProvider.class);
 
     public static ProductionContentFolderTypeProvider getInstance() {

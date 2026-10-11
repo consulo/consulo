@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration;
 
-import consulo.dataContext.DataSink;
 import consulo.dataContext.UiDataProvider;
 import consulo.ide.setting.module.ModuleConfigurationState;
 import consulo.language.editor.LangDataKeys;
@@ -39,10 +38,12 @@ import consulo.disposer.Disposable;
 import consulo.ide.impl.roots.ui.configuration.ExtensionEditor;
 import consulo.ide.setting.module.LibrariesConfigurator;
 import consulo.ide.setting.module.ModulesConfigurator;
+import consulo.ui.Component;
+import consulo.ui.Space;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.layout.DockLayout;
 
 import org.jspecify.annotations.Nullable;
-import javax.swing.*;
-import java.awt.*;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -58,7 +59,7 @@ public abstract class ModuleEditor implements Disposable {
   public static final String SELECTED_EDITOR_NAME = "selectedEditor";
 
   private final Project myProject;
-  private JPanel myGenericSettingsPanel;
+  private @Nullable Component myGenericSettingsPanel;
   private ModifiableRootModel myModifiableRootModel; // important: in order to correctly update OrderEntries UI use corresponding proxy for the model
 
   private final ModulesConfigurator myModulesConfigurator;
@@ -81,7 +82,8 @@ public abstract class ModuleEditor implements Disposable {
     myName = module.getName();
   }
 
-  protected abstract JComponent createCenterPanel(Disposable parentUIDisposable);
+  @RequiredUIAccess
+  protected abstract Component createCenterPanel(Disposable parentUIDisposable);
 
   public abstract @Nullable ModuleConfigurationEditor getSelectedEditor();
 
@@ -176,29 +178,27 @@ public abstract class ModuleEditor implements Disposable {
     return new ModuleConfigurationStateImpl(myProject, myModulesConfigurator, myLibrariesConfigurator, this::getModifiableRootModelProxy);
   }
 
-  private JPanel createPanel(Disposable parentUIDisposable) {
-    getModifiableRootModel(); //initialize model if needed
+  @RequiredUIAccess
+  private Component createPanel(Disposable parentUIDisposable) {
+    getModifiableRootModel();
     getModifiableRootModelProxy();
-
-    myGenericSettingsPanel = new ModuleEditorPanel();
 
     createEditors();
 
-    JPanel northPanel = new JPanel(new GridBagLayout());
-
-    myGenericSettingsPanel.add(northPanel, BorderLayout.NORTH);
-
-    JComponent component = createCenterPanel(parentUIDisposable);
-    myGenericSettingsPanel.add(component, BorderLayout.CENTER);
-    return myGenericSettingsPanel;
+    DockLayout panel = DockLayout.create(Space.NONE);
+    panel.center(createCenterPanel(parentUIDisposable));
+    panel.putUserData(UiDataProvider.KEY, sink -> sink.set(LangDataKeys.MODULE_CONTEXT, getModule()));
+    return panel;
   }
 
-  public JPanel getPanel(Disposable parentUIDisposable) {
-    if (myGenericSettingsPanel == null) {
-      myGenericSettingsPanel = createPanel(parentUIDisposable);
+  @RequiredUIAccess
+  public Component getUIComponent(Disposable parentUIDisposable) {
+    Component panel = myGenericSettingsPanel;
+    if (panel == null) {
+      panel = createPanel(parentUIDisposable);
+      myGenericSettingsPanel = panel;
     }
-
-    return myGenericSettingsPanel;
+    return panel;
   }
 
   public void fireModuleStateChanged() {
@@ -475,17 +475,5 @@ public abstract class ModuleEditor implements Disposable {
 
   public void setModuleName(String name) {
     myName = name;
-  }
-
-  private class ModuleEditorPanel extends JPanel implements UiDataProvider {
-    public ModuleEditorPanel() {
-      super(new BorderLayout());
-    }
-
-    @Override
-    public void uiDataSnapshot(DataSink sink) {
-      sink.set(LangDataKeys.MODULE_CONTEXT, getModule());
-    }
-
   }
 }

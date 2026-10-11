@@ -28,7 +28,7 @@ import org.jspecify.annotations.Nullable;
  * @author VISTALL
  * @since 2018-05-11
  */
-public interface Hyperlink extends Component {
+public interface Hyperlink extends Component, HasSearchHighlight {
     static Hyperlink create(LocalizeValue text) {
         return UIInternal.get()._Components_hyperlink(text);
     }

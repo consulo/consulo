@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
@@ -134,6 +135,16 @@ public class WebSwipeLayoutImpl extends VaadinComponentDelegate<WebSwipeLayoutIm
 
         myShownInfo = layoutInfo;
         return layout;
+    }
+
+    @Override
+    public void forEachChild(@RequiredUIAccess Consumer<Component> consumer) {
+        for (LayoutInfo info : new ArrayList<>(mySlideOrder)) {
+            Layout layout = info.myLayout;
+            if (layout != null) {
+                consumer.accept(layout);
+            }
+        }
     }
 
     @Override

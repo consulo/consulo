@@ -17,63 +17,45 @@
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.actions;
 
 import consulo.application.dumb.DumbAware;
-import consulo.ide.impl.idea.openapi.fileChooser.ex.FileSystemTreeImpl;
+import consulo.ide.impl.idea.openapi.roots.ui.configuration.ContentEntryTreeEditor;
 import consulo.localize.LocalizeValue;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.ToggleAction;
+import consulo.ui.ex.internal.AnActionWithUIUpdate;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
-
 import org.jspecify.annotations.Nullable;
-import javax.swing.*;
-import javax.swing.tree.TreePath;
-import java.util.ArrayList;
+
 import java.util.List;
 
 /**
  * @author Eugene Zhuravlev
  * @since 2003-10-14
  */
-public abstract class ContentEntryEditingAction extends ToggleAction implements DumbAware {
-  protected final JTree myTree;
+public abstract class ContentEntryEditingAction extends ToggleAction implements DumbAware, AnActionWithUIUpdate {
+    protected final ContentEntryTreeEditor myTreeEditor;
 
-  protected ContentEntryEditingAction(JTree tree, LocalizeValue text, @Nullable Image image) {
-    super(text, text, image);
-    myTree = tree;
-  }
+    protected ContentEntryEditingAction(ContentEntryTreeEditor treeEditor, LocalizeValue text, @Nullable Image image) {
+        super(text, text, image);
+        myTreeEditor = treeEditor;
+    }
 
-  @Override
-  public void update(AnActionEvent e) {
-    super.update(e);
-    Presentation presentation = e.getPresentation();
-    presentation.setEnabled(true);
-    VirtualFile[] files = getSelectedFiles();
-    if (files.length == 0) {
-      presentation.setEnabled(false);
-      return;
+    @Override
+    @RequiredUIAccess
+    public void updateAtUI(AnActionEvent e) {
+        update(e);
     }
-    for (VirtualFile file : files) {
-      if (file == null || !file.isDirectory()) {
-        presentation.setEnabled(false);
-        break;
-      }
-    }
-  }
 
-  
-  protected final VirtualFile[] getSelectedFiles() {
-    TreePath[] selectionPaths = myTree.getSelectionPaths();
-    if (selectionPaths == null) {
-      return VirtualFile.EMPTY_ARRAY;
+    @Override
+    @RequiredUIAccess
+    public void update(AnActionEvent e) {
+        super.update(e);
+        e.getPresentation().setEnabled(myTreeEditor.getContentEntryEditor() != null && !getSelectedFiles().isEmpty());
     }
-    List<VirtualFile> selected = new ArrayList<>();
-    for (TreePath treePath : selectionPaths) {
-      VirtualFile file = FileSystemTreeImpl.getVirtualFile(treePath);
-      if (file != null) {
-        selected.add(file);
-      }
+
+    @RequiredUIAccess
+    protected final List<VirtualFile> getSelectedFiles() {
+        return myTreeEditor.getSelectedFiles();
     }
-    return selected.toArray(new VirtualFile[selected.size()]);
-  }
 }

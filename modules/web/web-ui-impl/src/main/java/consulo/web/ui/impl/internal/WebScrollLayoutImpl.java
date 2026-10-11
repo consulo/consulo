@@ -27,6 +27,8 @@ import consulo.web.ui.impl.internal.base.TargetVaadin;
 import consulo.web.ui.impl.internal.base.VaadinComponentDelegate;
 import org.jspecify.annotations.Nullable;
 
+import java.util.function.Consumer;
+
 /**
  * @author VISTALL
  * @since 2020-05-10
@@ -81,12 +83,17 @@ public class WebScrollLayoutImpl extends VaadinComponentDelegate<WebScrollLayout
         }
     }
 
-    private com.vaadin.flow.component.Component getFirstChild() {
+    private com.vaadin.flow.component.@Nullable Component getFirstChild() {
         int componentCount = toVaadinComponent().getComponentCount();
         if (componentCount == 1) {
             return toVaadinComponent().getComponentAt(0);
         }
         return null;
+    }
+
+    @Override
+    public void forEachChild(@RequiredUIAccess Consumer<Component> consumer) {
+        WebLayoutChildren.accept(getFirstChild(), consumer);
     }
 
     @Override

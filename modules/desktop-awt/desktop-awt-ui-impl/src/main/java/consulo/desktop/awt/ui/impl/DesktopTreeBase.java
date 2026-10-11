@@ -32,6 +32,7 @@ import consulo.ui.TreeExecutor;
 import consulo.ui.TreeModel;
 import consulo.ui.TreeNode;
 import consulo.ui.TreeStyle;
+import consulo.ui.impl.font.FontSizeLadder;
 import consulo.ui.event.TreeCollapseEvent;
 import consulo.ui.event.TreeDoubleClickEvent;
 import consulo.ui.event.TreeExpandEvent;
@@ -43,7 +44,6 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.event.DoubleClickListener;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
 import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
-import consulo.ui.ex.awt.tree.NodeRenderer;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.awt.tree.TreeVisitor;
 import consulo.util.concurrent.Promise;
@@ -54,11 +54,13 @@ import javax.swing.DropMode;
 import javax.swing.JComponent;
 import javax.swing.JTree;
 import javax.swing.SwingUtilities;
+import javax.swing.ToolTipManager;
 import javax.swing.UIManager;
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeExpansionListener;
 import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreePath;
+import javax.swing.tree.TreeSelectionModel;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Point;
@@ -67,6 +69,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
@@ -90,6 +93,7 @@ public abstract class DesktopTreeBase<E, T extends java.awt.Component> extends S
     private @Nullable TransferHandler<TreeNode<E>> myTransferHandler;
     private @Nullable Function<TreeNode<E>, Length> myItemHeightGetter;
     private @Nullable Function<TreeNode<E>, String> mySpeedSearchConverter;
+    private boolean myAllowMultipleSelect;
 
     protected DesktopTreeBase(@Nullable E rootValue, TreeModel<E> model, TreeExecutor executor) {
         myModel = model;
@@ -166,12 +170,20 @@ public abstract class DesktopTreeBase<E, T extends java.awt.Component> extends S
         }
     }
 
+    TreeCellRenderer createCellRenderer() {
+        return new DesktopTreeCellRenderer();
+    }
+
+    void childrenBuilt(DesktopTreeNodeImpl<E> node) {
+    }
+
     void installTree(DesktopAWTTree tree) {
         tree.setRootVisible(false);
         // the root is hidden, so without this the rows which stand for its children - the top level of the
         // tree - are drawn with no expand control at all, see BasicTreeUI#shouldPaintExpandControl
         tree.setShowsRootHandles(true);
-        tree.setCellRenderer(wrapWithItemHeight(new NodeRenderer()));
+        tree.setCellRenderer(wrapWithItemHeight(createCellRenderer()));
+        ToolTipManager.sharedInstance().registerComponent(tree);
         if (myItemHeightGetter != null && isItemHeightSupported()) {
             tree.setRowHeight(0);
         }
@@ -204,7 +216,7 @@ public abstract class DesktopTreeBase<E, T extends java.awt.Component> extends S
         }.installOn(tree);
 
         tree.addTreeSelectionListener(e -> {
-            TreePath path = TreeUtil.getSelectedPathIfOne(tree);
+            TreePath path = selectedPath(tree);
             if (path == null) {
                 return;
             }
@@ -269,8 +281,52 @@ public abstract class DesktopTreeBase<E, T extends java.awt.Component> extends S
 
     @Override
     public @Nullable TreeNode<E> getSelectedNode() {
-        TreePath path = TreeUtil.getSelectedPathIfOne(getTree());
+        TreePath path = selectedPath(getTree());
         return path == null ? null : nodeOf(path);
+    }
+
+    @Override
+    public List<TreeNode<E>> getSelectedNodes() {
+        DesktopAWTTree tree = getTree();
+        TreePath[] paths = tree.getSelectionPaths();
+        if (paths == null) {
+            return List.of();
+        }
+
+        TreePath[] sorted = paths.clone();
+        Arrays.sort(sorted, Comparator.comparingInt(tree::getRowForPath));
+
+        List<TreeNode<E>> nodes = new ArrayList<>();
+        for (TreePath path : sorted) {
+            TreeNode<E> node = nodeOf(path);
+            if (node != null) {
+                nodes.add(node);
+            }
+        }
+        return nodes;
+    }
+
+    @Override
+    public void setAllowMultipleSelect(boolean allow) {
+        myAllowMultipleSelect = allow;
+
+        getTree().getSelectionModel().setSelectionMode(
+            allow ? TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION : TreeSelectionModel.SINGLE_TREE_SELECTION
+        );
+    }
+
+    private @Nullable TreePath selectedPath(JTree tree) {
+        if (!myAllowMultipleSelect) {
+            return TreeUtil.getSelectedPathIfOne(tree);
+        }
+
+        TreePath lead = tree.getSelectionModel().getLeadSelectionPath();
+        if (lead != null && tree.isPathSelected(lead)) {
+            return lead;
+        }
+
+        TreePath[] paths = tree.getSelectionPaths();
+        return paths == null || paths.length == 0 ? null : paths[paths.length - 1];
     }
 
     @Override
@@ -287,7 +343,7 @@ public abstract class DesktopTreeBase<E, T extends java.awt.Component> extends S
 
     @Override
     public List<TreeNode<E>> getSelectedPath() {
-        TreePath path = TreeUtil.getSelectedPathIfOne(getTree());
+        TreePath path = selectedPath(getTree());
         return path == null ? List.of() : nodesOf(path);
     }
 
@@ -405,7 +461,7 @@ public abstract class DesktopTreeBase<E, T extends java.awt.Component> extends S
         DesktopAWTTree tree = getTree();
 
         List<TreeNode<E>> expanded = expandedNodes(tree);
-        TreeNode<E> selected = getSelectedNode();
+        List<TreeNode<E>> selected = getSelectedNodes();
 
         return toFuture(action.get())
             .thenCompose(ignored -> restoreExpanded(tree, expanded))
@@ -471,12 +527,21 @@ public abstract class DesktopTreeBase<E, T extends java.awt.Component> extends S
         return toFuture(Promises.collectResults(visitors, true).thenAsync(list -> TreeUtil.promiseExpand(tree, list.stream())));
     }
 
-    private CompletableFuture<?> restoreSelected(DesktopAWTTree tree, @Nullable TreeNode<E> node) {
-        if (node == null) {
+    private CompletableFuture<?> restoreSelected(DesktopAWTTree tree, List<TreeNode<E>> nodes) {
+        if (nodes.isEmpty()) {
             return CompletableFuture.completedFuture(null);
         }
 
-        return toFuture(myStructureTreeModel.promiseVisitor(node).thenAsync(visitor -> TreeUtil.promiseSelect(tree, visitor)));
+        if (nodes.size() == 1) {
+            return toFuture(myStructureTreeModel.promiseVisitor(nodes.get(0)).thenAsync(visitor -> TreeUtil.promiseSelect(tree, visitor)));
+        }
+
+        List<Promise<TreeVisitor>> visitors = new ArrayList<>();
+        for (TreeNode<E> node : nodes) {
+            visitors.add(myStructureTreeModel.promiseVisitor(node));
+        }
+
+        return toFuture(Promises.collectResults(visitors, true).thenAsync(list -> TreeUtil.promiseSelect(tree, list.stream())));
     }
 
     private CompletableFuture<?> restoreLostSelection(DesktopAWTTree tree, @Nullable TreeNode<E> node) {
@@ -568,23 +633,7 @@ public abstract class DesktopTreeBase<E, T extends java.awt.Component> extends S
             font = UIUtil.getLabelFont();
         }
 
-        component.setFont(font.deriveFont(font.getSize2D() + JBUI.scale(fontDelta(style))));
-    }
-
-    /**
-     * The ladder {@link consulo.ui.ex.awt.JBFont} gives a label - h4/h3/h2 are one, three and five points
-     * above it, and medium and small one and two below.
-     */
-    private static float fontDelta(TreeStyle style) {
-        return switch (style) {
-            case FONT_XX_SMALL -> -3f;
-            case FONT_X_SMALL -> -2f;
-            case FONT_SMALL -> -1f;
-            case FONT_LARGE -> 1f;
-            case FONT_X_LARGE -> 3f;
-            case FONT_XX_LARGE -> 5f;
-            default -> 0f;
-        };
+        component.setFont(font.deriveFont(font.getSize2D() + JBUI.scale((float) FontSizeLadder.pointDelta(style))));
     }
 
     @Override

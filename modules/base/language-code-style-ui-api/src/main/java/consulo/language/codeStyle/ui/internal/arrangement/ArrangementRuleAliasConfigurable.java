@@ -23,7 +23,9 @@ import consulo.language.codeStyle.arrangement.ArrangementColorsProvider;
 import consulo.language.codeStyle.arrangement.match.StdArrangementMatchRule;
 import consulo.language.codeStyle.arrangement.std.ArrangementStandardSettingsManager;
 import consulo.language.codeStyle.arrangement.std.StdArrangementRuleAliasToken;
+import consulo.ui.Component;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 
 import org.jspecify.annotations.Nullable;
 import javax.swing.*;
@@ -69,8 +71,8 @@ public class ArrangementRuleAliasConfigurable implements UnnamedConfigurable {
   }
 
   @Override
-  public @Nullable JComponent createComponent() {
-    return myTokenRulesPanel;
+  public @Nullable Component createUIComponent(Disposable parentDisposable) {
+    return myTokenRulesPanel == null ? null : TargetAWT.wrap(myTokenRulesPanel);
   }
 
   @Override

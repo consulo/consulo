@@ -23,6 +23,7 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.TextBox;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.color.ColorValue;
 import consulo.ui.event.ValueComponentEvent;
 import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
 import consulo.web.ui.impl.internal.base.ToVaadinComponentWrapper;
@@ -155,6 +156,17 @@ public class WebTextBoxImpl extends VaadinComponentDelegate<WebTextBoxImpl.Vaadi
     @Override
     public boolean isEditable() {
         return !getVaadinComponent().isReadOnly();
+    }
+
+    @Override
+    public void setForegroundColor(@Nullable ColorValue foreground) {
+        String color = WebColors.toCssColor(foreground);
+        if (color == null) {
+            toVaadinComponent().getStyle().remove("--vaadin-input-field-value-color");
+        }
+        else {
+            toVaadinComponent().getStyle().set("--vaadin-input-field-value-color", color);
+        }
     }
 
     @Override

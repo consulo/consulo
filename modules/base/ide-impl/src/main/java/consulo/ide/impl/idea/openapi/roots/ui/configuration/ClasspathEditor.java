@@ -15,67 +15,74 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration;
 
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.classpath.ClasspathPanelImpl;
 import consulo.disposer.Disposable;
+import consulo.ide.impl.idea.openapi.roots.ui.configuration.classpath.ClasspathPanelImpl;
 import consulo.ide.setting.module.ModuleConfigurationState;
 import consulo.localize.LocalizeValue;
 import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.module.content.layer.event.ModuleRootListener;
 import consulo.module.content.layer.orderEntry.OrderEntry;
-import consulo.project.ProjectBundle;
 import consulo.project.localize.ProjectLocalize;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
-
-import javax.swing.*;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Eugene Zhuravlev
  * @since 2003-10-04
  */
 public class ClasspathEditor extends ModuleElementsEditor implements ModuleRootListener {
-  private ClasspathPanelImpl myPanel;
+    private @Nullable ClasspathPanelImpl myPanel;
 
-  public ClasspathEditor(ModuleConfigurationState state) {
-    super(state);
+    public ClasspathEditor(ModuleConfigurationState state) {
+        super(state);
 
-    Disposable disposable = Disposable.newDisposable();
+        Disposable disposable = Disposable.newDisposable();
 
-    state.getProject().getMessageBus().connect(disposable).subscribe(ModuleRootListener.class, this);
-    registerDisposable(disposable);
-  }
-
-  @Override
-  public LocalizeValue getDisplayName() {
-    return ProjectLocalize.modulesClasspathTitle();
-  }
-
-  @Override
-  public void saveData() {
-    myPanel.stopEditing();
-  }
-
-  @RequiredUIAccess
-  
-  @Override
-  public JComponent createComponentImpl(Disposable parentUIDisposable) {
-    return myPanel = new ClasspathPanelImpl(getState());
-  }
-
-  public void selectOrderEntry(OrderEntry entry) {
-    myPanel.selectOrderEntry(entry);
-  }
-
-  @Override
-  public void moduleStateChanged() {
-    if (myPanel != null) {
-      myPanel.initFromModel();
+        state.getProject().getMessageBus().connect(disposable).subscribe(ModuleRootListener.class, this);
+        registerDisposable(disposable);
     }
-  }
 
-  @Override
-  public void rootsChanged(ModuleRootEvent event) {
-    if (myPanel != null) {
-      myPanel.rootsChanged();
+    @Override
+    public LocalizeValue getDisplayName() {
+        return ProjectLocalize.modulesClasspathTitle();
     }
-  }
+
+    @Override
+    public void saveData() {
+    }
+
+    @RequiredUIAccess
+    @Override
+    protected Component createUIComponentImpl(Disposable parentUIDisposable) {
+        ClasspathPanelImpl panel = new ClasspathPanelImpl(getState(), parentUIDisposable);
+        myPanel = panel;
+        return panel.getUIComponent();
+    }
+
+    @RequiredUIAccess
+    public void selectOrderEntry(OrderEntry entry) {
+        ClasspathPanelImpl panel = myPanel;
+        if (panel != null) {
+            panel.selectOrderEntry(entry);
+        }
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void moduleStateChanged() {
+        ClasspathPanelImpl panel = myPanel;
+        if (panel != null) {
+            panel.initFromModel();
+        }
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void rootsChanged(ModuleRootEvent event) {
+        ClasspathPanelImpl panel = myPanel;
+        if (panel != null) {
+            panel.rootsChanged();
+        }
+    }
 }

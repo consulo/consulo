@@ -1,102 +1,108 @@
 package consulo.ide.impl.idea.openapi.roots.ui.configuration;
 
-import consulo.module.Module;
-import consulo.ide.impl.idea.openapi.module.ModuleConfigurationEditor;
-import consulo.project.Project;
-import consulo.ui.ex.awt.TabbedPaneWrapper;
-import consulo.disposer.Disposable;
 import consulo.configurable.internal.ConfigurableUIMigrationUtil;
+import consulo.disposer.Disposable;
+import consulo.ide.impl.idea.openapi.module.ModuleConfigurationEditor;
 import consulo.ide.setting.module.LibrariesConfigurator;
 import consulo.ide.setting.module.ModulesConfigurator;
+import consulo.localize.LocalizeValue;
+import consulo.module.Module;
+import consulo.project.Project;
+import consulo.ui.Component;
+import consulo.ui.Label;
+import consulo.ui.Tab;
 import consulo.ui.annotation.RequiredUIAccess;
-
+import consulo.ui.layout.TabbedLayout;
 import org.jspecify.annotations.Nullable;
-import javax.swing.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author ksafonov
  */
 public class TabbedModuleEditor extends ModuleEditor {
-  private TabbedPaneWrapper myTabbedPane;
+    private final List<Tab> myTabs = new ArrayList<>();
 
-  public TabbedModuleEditor(Project project, ModulesConfigurator modulesProvider, LibrariesConfigurator librariesConfigurator, Module module) {
-    super(project, modulesProvider, librariesConfigurator, module);
-  }
+    private @Nullable Tab mySelectedTab;
 
-  @Override
-  @RequiredUIAccess
-  protected JComponent createCenterPanel(Disposable parentUIDisposable) {
-    myTabbedPane = new TabbedPaneWrapper(this);
-
-    for (ModuleConfigurationEditor editor : myEditors) {
-      myTabbedPane.addTab(editor.getDisplayName().get(), ConfigurableUIMigrationUtil.createComponent(editor, parentUIDisposable));
-      editor.initialize();
-      editor.reset();
+    public TabbedModuleEditor(Project project, ModulesConfigurator modulesProvider, LibrariesConfigurator librariesConfigurator, Module module) {
+        super(project, modulesProvider, librariesConfigurator, module);
     }
-    restoreSelectedEditor();
 
-    return myTabbedPane.getComponent();
-  }
+    @RequiredUIAccess
+    @Override
+    protected Component createCenterPanel(Disposable parentUIDisposable) {
+        TabbedLayout tabbedLayout = TabbedLayout.create();
+        myTabs.clear();
 
-  @Override
-  protected void restoreSelectedEditor() {
-    myTabbedPane.setSelectedIndex(0);
-  }
+        for (ModuleConfigurationEditor editor : myEditors) {
+            Component component = ConfigurableUIMigrationUtil.createUIComponent(editor, parentUIDisposable);
+            editor.initialize();
+            editor.reset();
 
-  private @Nullable String getSelectedTabName() {
-    return myTabbedPane == null || myTabbedPane.getSelectedIndex() == -1 ? null : myTabbedPane.getTitleAt(myTabbedPane.getSelectedIndex());
-  }
-
-  @Override
-  public void selectEditor(@Nullable String name) {
-    if (name != null) {
-      //getPanel(parentUIDisposable);
-      int editorTabIndex = getEditorTabIndex(name);
-      if (editorTabIndex >= 0 && editorTabIndex < myTabbedPane.getTabCount()) {
-        myTabbedPane.setSelectedIndex(editorTabIndex);
-      }
-    }
-  }
-
-  private int getEditorTabIndex(String editorName) {
-    if (myTabbedPane != null && editorName != null) {
-      int tabCount = myTabbedPane.getTabCount();
-      for (int idx = 0; idx < tabCount; idx++) {
-        if (editorName.equals(myTabbedPane.getTitleAt(idx))) {
-          return idx;
+            LocalizeValue title = editor.getDisplayName();
+            Tab tab = tabbedLayout.createTab();
+            tab.setRenderer((it, presentation) -> presentation.append(title));
+            myTabs.add(tabbedLayout.addTab(tab, component == null ? Label.create(LocalizeValue.empty()) : component));
         }
-      }
-    }
-    return -1;
-  }
 
-  @Override
-  public @Nullable ModuleConfigurationEditor getEditor(String displayName) {
-    int index = getEditorTabIndex(displayName);
-    if (0 <= index && index < myEditors.size()) {
-      return myEditors.get(index);
-    }
-    return null;
-  }
+        tabbedLayout.addSelectListener(event -> mySelectedTab = event.getTab());
 
-  @Override
-  public ModuleConfigurationEditor getSelectedEditor() {
-    if (myTabbedPane == null) {
-      return null;
+        restoreSelectedEditor();
+        return tabbedLayout;
     }
 
-    String title = myTabbedPane.getSelectedTitle();
-    if (title == null) {
-      return null;
+    @RequiredUIAccess
+    @Override
+    protected void restoreSelectedEditor() {
+        if (!myTabs.isEmpty()) {
+            Tab tab = myTabs.get(0);
+            tab.select();
+            mySelectedTab = tab;
+        }
     }
 
-    return getEditor(title);
-  }
-
-  @Override
-  protected void disposeCenterPanel() {
-    if (myTabbedPane != null) {
-      myTabbedPane = null;
+    @RequiredUIAccess
+    @Override
+    public void selectEditor(@Nullable String name) {
+        int index = getEditorTabIndex(name);
+        if (index >= 0) {
+            Tab tab = myTabs.get(index);
+            tab.select();
+            mySelectedTab = tab;
+        }
     }
-  }
+
+    private int getEditorTabIndex(@Nullable String editorName) {
+        if (editorName == null) {
+            return -1;
+        }
+
+        for (int index = 0; index < myEditors.size() && index < myTabs.size(); index++) {
+            if (editorName.equals(myEditors.get(index).getDisplayName().get())) {
+                return index;
+            }
+        }
+        return -1;
+    }
+
+    @Override
+    public @Nullable ModuleConfigurationEditor getEditor(String displayName) {
+        int index = getEditorTabIndex(displayName);
+        return index >= 0 ? myEditors.get(index) : null;
+    }
+
+    @Override
+    public @Nullable ModuleConfigurationEditor getSelectedEditor() {
+        Tab selectedTab = mySelectedTab;
+        int index = selectedTab == null ? -1 : myTabs.indexOf(selectedTab);
+        return index >= 0 && index < myEditors.size() ? myEditors.get(index) : null;
+    }
+
+    @Override
+    protected void disposeCenterPanel() {
+        mySelectedTab = null;
+        myTabs.clear();
+    }
 }

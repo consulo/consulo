@@ -447,6 +447,24 @@ public class LocalizeManagerImpl extends LocalizeManager implements LocalizeMana
         return Map.entry(ourDefaultLocale, key.toString());
     }
 
+    @Override
+    public @Nullable String getUnformattedText(LocalizeKey key, Locale locale) {
+        if (!myInitialized.get()) {
+            throw new IllegalArgumentException("not initialized");
+        }
+
+        if (StringUtil.isEmptyOrSpaces(key.getKey())) {
+            return "";
+        }
+
+        return getValue(key, locale);
+    }
+
+    @Override
+    public Locale getDefaultLocale() {
+        return ourDefaultLocale;
+    }
+
 
     @Override
     public String formatText(String unformattedText, Locale locale, Object... args) {

@@ -94,6 +94,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import consulo.ui.ex.impl.internal.UnifiedMessageBoxBuilderImpl;
 import consulo.ui.ex.impl.internal.UnifiedInputBoxBuilderImpl;
+import consulo.ui.layout.Layout;
 import java.util.ArrayList;
 
 /**
@@ -357,6 +358,16 @@ public class WebUIInternalImpl extends UIInternal implements UIInternalEx {
     @Override
     public <E> TreeTable<E> _Components_treeTable(@Nullable E rootValue, TreeModel<E> model, TreeExecutor executor) {
         return new WebTreeTableImpl<>(rootValue, model, executor);
+    }
+
+    @Override
+    public <E> CheckBoxTree<E> _Components_checkBoxTree(@Nullable E rootValue, TreeModel<E> model, TreeExecutor executor) {
+        return new WebCheckBoxTreeImpl<>(rootValue, model, executor);
+    }
+
+    @Override
+    public <E> CheckBoxTreeTable<E> _Components_checkBoxTreeTable(@Nullable E rootValue, TreeModel<E> model, TreeExecutor executor) {
+        return new WebCheckBoxTreeTableImpl<>(rootValue, model, executor);
     }
 
     @Override
@@ -665,6 +676,12 @@ public class WebUIInternalImpl extends UIInternal implements UIInternalEx {
     @Override
     public void _ShowNotifier_once(Component component, Runnable action) {
         WebShowNotifier.once(component, action);
+    }
+
+    @RequiredUIAccess
+    @Override
+    public Spotlight _Spotlight_over(Layout<?> layout) {
+        return new WebSpotlightImpl(layout);
     }
 
     @Override

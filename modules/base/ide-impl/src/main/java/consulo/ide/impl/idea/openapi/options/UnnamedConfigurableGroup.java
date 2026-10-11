@@ -15,9 +15,13 @@
  */
 package consulo.ide.impl.idea.openapi.options;
 
-import consulo.ui.ex.awt.VerticalFlowLayout;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.UnnamedConfigurable;
+import consulo.disposer.Disposable;
+import consulo.ui.Component;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.VerticalFlowLayout;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -26,13 +30,18 @@ import java.util.List;
 public class UnnamedConfigurableGroup implements UnnamedConfigurable {
   private final List<UnnamedConfigurable> myConfigurables = new ArrayList<UnnamedConfigurable>();
 
-  public JComponent createComponent() {
+  @RequiredUIAccess
+  @Override
+  public Component createUIComponent(Disposable parentDisposable) {
     JPanel panel = new JPanel(new VerticalFlowLayout());
     for (UnnamedConfigurable configurable : myConfigurables) {
-      panel.add(configurable.createComponent());
+      Component component = configurable.createUIComponent(parentDisposable);
+      if (component != null) {
+        panel.add(TargetAWT.to(component));
+      }
     }
 
-    return panel;
+    return TargetAWT.wrap(panel);
   }
 
   public boolean isModified() {

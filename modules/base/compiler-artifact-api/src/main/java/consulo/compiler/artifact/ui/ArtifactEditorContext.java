@@ -15,7 +15,6 @@
  */
 package consulo.compiler.artifact.ui;
 
-import consulo.annotation.DeprecationInfo;
 import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ArtifactType;
 import consulo.compiler.artifact.ModifiableArtifactModel;
@@ -26,11 +25,11 @@ import consulo.localize.LocalizeValue;
 import consulo.module.ModifiableModuleModel;
 import consulo.module.Module;
 import consulo.module.content.layer.ModifiableRootModel;
-
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author nik
@@ -38,15 +37,12 @@ import java.util.List;
 public interface ArtifactEditorContext extends PackagingElementResolvingContext {
     void queueValidation();
 
-    
     ArtifactType getArtifactType();
 
-    
     ModifiableArtifactModel getOrCreateModifiableArtifactModel();
 
     @Nullable ModifiableModuleModel getModifiableModuleModel();
 
-    
     ModifiableRootModel getOrCreateModifiableRootModel(Module module);
 
     CompositePackagingElement<?> getRootElement(Artifact artifact);
@@ -64,34 +60,13 @@ public interface ArtifactEditorContext extends PackagingElementResolvingContext 
     void selectLibrary(Library library);
 
     @RequiredUIAccess
-    List<Artifact> chooseArtifacts(List<? extends Artifact> artifacts, LocalizeValue title);
+    CompletableFuture<List<Artifact>> chooseArtifacts(List<? extends Artifact> artifacts, LocalizeValue title);
 
     @RequiredUIAccess
-    List<Module> chooseModules(List<Module> modules, LocalizeValue title);
+    CompletableFuture<List<Module>> chooseModules(List<Module> modules, LocalizeValue title);
 
     @RequiredUIAccess
-    List<Library> chooseLibraries(LocalizeValue title);
-
-    @Deprecated
-    @DeprecationInfo("Use variant with LocalizeValue")
-    @RequiredUIAccess
-    default List<Artifact> chooseArtifacts(List<? extends Artifact> artifacts, String title) {
-        return chooseArtifacts(artifacts, LocalizeValue.ofNullable(title));
-    }
-
-    @Deprecated
-    @DeprecationInfo("Use variant with LocalizeValue")
-    @RequiredUIAccess
-    default List<Module> chooseModules(List<Module> modules, String title) {
-        return chooseModules(modules, LocalizeValue.ofNullable(title));
-    }
-
-    @Deprecated
-    @DeprecationInfo("Use variant with LocalizeValue")
-    @RequiredUIAccess
-    default List<Library> chooseLibraries(String title) {
-        return chooseLibraries(LocalizeValue.ofNullable(title));
-    }
+    CompletableFuture<List<Library>> chooseLibraries(LocalizeValue title);
 
     Artifact getArtifact();
 }

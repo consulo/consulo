@@ -21,15 +21,19 @@ import consulo.ui.Button;
 import consulo.ui.ButtonStyle;
 import consulo.ui.Component;
 import consulo.ui.DialogCancelledException;
+import consulo.ui.HasFocus;
 import consulo.ui.ImageBox;
 import consulo.ui.InputProblem;
 import consulo.ui.InputValidator;
 import consulo.ui.Label;
 import consulo.ui.Space;
+import consulo.ui.UIAccess;
 import consulo.ui.ValueComponent;
 import consulo.ui.Window;
 import consulo.ui.WindowOptions;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.details.KeyCode;
+import consulo.ui.event.details.KeyboardInputDetails;
 import consulo.ui.image.Image;
 import consulo.ui.impl.BaseInputBoxBuilder;
 import consulo.ui.impl.MessagePresentation;
@@ -66,6 +70,7 @@ public class UnifiedInputBoxBuilderImpl<V, C extends ValueComponent<V>> extends 
         Window window = Window.create(MessagePresentation.title(myTitle).get(), WindowOptions.builder().owner(owner).build());
 
         C editor = myEditorFactory.get();
+        applyDefaultWidth(editor);
         if (myInitialValue != null) {
             editor.setValue(myInitialValue);
         }
@@ -75,13 +80,8 @@ public class UnifiedInputBoxBuilderImpl<V, C extends ValueComponent<V>> extends 
 
         AtomicBoolean confirmed = new AtomicBoolean();
 
-        Button confirmButton = Button.create(
-            myConfirmText.orIfEmpty(CommonLocalize.buttonOk()),
-            event -> {
-                confirmed.set(true);
-                window.close();
-            }
-        );
+        Button confirmButton = Button.create(myConfirmText.orIfEmpty(CommonLocalize.buttonOk()));
+        confirmButton.addClickListener(event -> confirm(window, editor, problemLabel, confirmButton, confirmed));
         confirmButton.addStyle(ButtonStyle.PRIMARY);
 
         Button cancelButton = Button.create(
@@ -93,6 +93,16 @@ public class UnifiedInputBoxBuilderImpl<V, C extends ValueComponent<V>> extends 
         // or its answer would be null and indistinguishable from a dismissal
         editor.addValueListener(event -> revalidate(editor, problemLabel, confirmButton));
         revalidate(editor, problemLabel, confirmButton);
+
+        UIAccess uiAccess = UIAccess.current();
+        editor.addKeyPressedListener(event -> {
+            if (event.getInputDetails() instanceof KeyboardInputDetails details
+                && details.getKeyCode() == KeyCode.ENTER
+                && details.getModifiers().isEmpty()
+                && confirmButton.isEnabled()) {
+                uiAccess.execute(() -> confirm(window, editor, problemLabel, confirmButton, confirmed));
+            }
+        });
 
         window.setContent(buildContent(editor, problemLabel, confirmButton, cancelButton));
 
@@ -110,7 +120,41 @@ public class UnifiedInputBoxBuilderImpl<V, C extends ValueComponent<V>> extends 
 
         window.show();
 
+        if (editor instanceof HasFocus hasFocus) {
+            hasFocus.focus();
+        }
+
         return result;
+    }
+
+    @RequiredUIAccess
+    private void confirm(Window window, C editor, Label problemLabel, Button confirmButton, AtomicBoolean confirmed) {
+        V value = editor.getValue();
+        InputValidator<V> validator = myValidator;
+        if (validator == null || value == null) {
+            confirmed.set(true);
+            window.close();
+            return;
+        }
+
+        confirmButton.setEnabled(false);
+
+        validator.confirm(value).whenCompleteAsync((problem, error) -> {
+            confirmButton.setEnabled(true);
+
+            if (error != null) {
+                problemLabel.setText(LocalizeValue.of(String.valueOf(error.getMessage())));
+                return;
+            }
+
+            if (problem != null && problem.blocksConfirm()) {
+                problemLabel.setText(problem.message());
+                return;
+            }
+
+            confirmed.set(true);
+            window.close();
+        }, UIAccess.current());
     }
 
     @RequiredUIAccess

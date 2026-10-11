@@ -36,6 +36,7 @@ public class HeadlessTextItemPresentation implements TextItemPresentation {
     private @Nullable Image myIcon;
     private @Nullable ColorValue myBackgroundColor;
     private LocalizeValue mySuffix = LocalizeValue.empty();
+    private LocalizeValue myTooltip = LocalizeValue.empty();
 
     @Override
     public TextItemPresentation withIcon(@Nullable Image image) {
@@ -52,6 +53,12 @@ public class HeadlessTextItemPresentation implements TextItemPresentation {
     @Override
     public TextItemPresentation withSuffix(LocalizeValue text, @Nullable Image icon) {
         mySuffix = text;
+        return this;
+    }
+
+    @Override
+    public TextItemPresentation withTooltip(LocalizeValue tooltip) {
+        myTooltip = tooltip;
         return this;
     }
 
@@ -89,5 +96,9 @@ public class HeadlessTextItemPresentation implements TextItemPresentation {
 
     public LocalizeValue getSuffix() {
         return mySuffix;
+    }
+
+    public LocalizeValue getTooltip() {
+        return myTooltip;
     }
 }

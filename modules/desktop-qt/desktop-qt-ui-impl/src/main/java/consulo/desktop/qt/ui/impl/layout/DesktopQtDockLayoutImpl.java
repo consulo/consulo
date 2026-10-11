@@ -19,6 +19,7 @@ import consulo.desktop.qt.ui.impl.DesktopQtSpace;
 import consulo.desktop.qt.ui.impl.QtComponentDelegate;
 import consulo.ui.Space;
 import consulo.ui.StaticPosition;
+import consulo.ui.internal.LayoutVisualOrder;
 import consulo.ui.layout.DockLayout;
 import io.qt.widgets.QGridLayout;
 import io.qt.widgets.QLayout;
@@ -88,6 +89,15 @@ public class DesktopQtDockLayoutImpl extends DesktopQtLayoutComponent<StaticPosi
 
     private static QGridLayout middleRowOf(QGridLayout rows) {
         return (QGridLayout) rows.itemAtPosition(1, 0).layout();
+    }
+
+    @Override
+    protected int compareLayoutData(@Nullable Object first, @Nullable Object second) {
+        return Integer.compare(visualIndex(first), visualIndex(second));
+    }
+
+    private static int visualIndex(@Nullable Object layoutData) {
+        return LayoutVisualOrder.DOCK_POSITIONS.indexOf(layoutData instanceof StaticPosition position ? position : StaticPosition.CENTER);
     }
 
     @Override

@@ -18,15 +18,16 @@ package consulo.language.copyright.impl.internal.ui;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.configurable.*;
+import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.MasterDetailsStateService;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
-
-import javax.swing.*;
 
 @ExtensionImpl
 public class CopyrightProjectConfigurable extends SearchableConfigurable.Parent.Abstract implements Configurable.NoScroll, ProjectConfigurable {
@@ -53,10 +54,10 @@ public class CopyrightProjectConfigurable extends SearchableConfigurable.Parent.
 
   @RequiredUIAccess
   @Override
-  public JComponent createComponent() {
+  public Component createUIComponent(Disposable parentDisposable) {
     myOptionsPanel = new ProjectSettingsPanel(project, myProfilesPanel);
     myProfilesPanel.setUpdate(() -> reloadProfiles());
-    return myOptionsPanel.getMainComponent();
+    return TargetAWT.wrap(myOptionsPanel.getMainComponent());
   }
 
   @RequiredUIAccess

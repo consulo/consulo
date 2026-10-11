@@ -21,7 +21,6 @@ import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
-import consulo.configurable.internal.ConfigurableUIMigrationUtil;
 import consulo.ide.impl.base.BaseShowSettingsUtil;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
@@ -31,6 +30,7 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.util.Alarm;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
@@ -326,7 +326,7 @@ public class SingleConfigurableEditor extends DialogWrapper {
     @Override
     @RequiredUIAccess
     protected JComponent createCenterPanel() {
-        myCenterPanel = ConfigurableUIMigrationUtil.createComponent(myConfigurable, getDisposable());
+        myCenterPanel = (JComponent) TargetAWT.to(myConfigurable.createUIComponent(getDisposable()));
         return myCenterPanel;
     }
 
@@ -337,7 +337,7 @@ public class SingleConfigurableEditor extends DialogWrapper {
             // too early initialize
             return null;
         }
-        JComponent preferred = ConfigurableUIMigrationUtil.getPreferredFocusedComponent(myConfigurable);
+        JComponent preferred = (JComponent) TargetAWT.to(myConfigurable.getPreferredFocusedUIComponent());
         if (preferred != null) {
             return preferred;
         }

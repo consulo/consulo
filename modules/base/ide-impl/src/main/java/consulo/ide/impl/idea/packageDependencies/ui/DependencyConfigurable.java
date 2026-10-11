@@ -28,10 +28,13 @@ import consulo.language.editor.packageDependency.DependencyRule;
 import consulo.language.editor.packageDependency.DependencyValidationManager;
 import consulo.content.scope.NamedScope;
 import consulo.content.scope.PackageSet;
+import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.table.TableView;
 import consulo.ui.ex.awt.table.ListTableModel;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -74,7 +77,7 @@ public class DependencyConfigurable implements Configurable {
 
     @Override
     @RequiredUIAccess
-    public JComponent createComponent() {
+    public consulo.ui.Component createUIComponent(Disposable parentDisposable) {
         myDenyRulesModel = new MyTableModel(myProject, new ColumnInfo[]{DENY_USAGES_OF, DENY_USAGES_IN}, true);
         myDenyRulesModel.setSortable(false);
 
@@ -85,7 +88,7 @@ public class DependencyConfigurable implements Configurable {
         myDenyPanel.add(createRulesPanel(myDenyRulesModel, myDenyTable), BorderLayout.CENTER);
         myAllowTable = new TableView<>(myAllowRulesModel);
         myAllowPanel.add(createRulesPanel(myAllowRulesModel, myAllowTable), BorderLayout.CENTER);
-        return myWholePanel;
+        return TargetAWT.wrap(myWholePanel);
     }
 
     private JPanel createRulesPanel(MyTableModel model, TableView<DependencyRule> table) {
@@ -99,8 +102,8 @@ public class DependencyConfigurable implements Configurable {
 
     @Override
     @RequiredUIAccess
-    public JComponent getPreferredFocusedComponent() {
-        return myDenyTable;
+    public consulo.ui.@Nullable Component getPreferredFocusedUIComponent() {
+        return myDenyTable == null ? null : TargetAWT.wrap(myDenyTable);
     }
 
     @Override

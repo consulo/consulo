@@ -15,81 +15,50 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts;
 
-import consulo.dataContext.DataContext;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.ConfigurationErrorQuickFix;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemType;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemsHolder;
-import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.element.PackagingElement;
-import consulo.compiler.artifact.PackagingElementPath;
-import consulo.compiler.artifact.ui.ArtifactProblemsHolderBase;
-import consulo.compiler.artifact.ui.ArtifactEditor;
+import consulo.compiler.artifact.element.PackagingElementResolvingContext;
 import consulo.compiler.artifact.ui.ArtifactProblemQuickFix;
-import consulo.util.collection.SmartList;
+import consulo.compiler.artifact.ui.ArtifactProblemsHolderBase;
 import org.jspecify.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author nik
  */
 public class ArtifactProblemsHolderImpl extends ArtifactProblemsHolderBase {
-  private final ArtifactsStructureConfigurableContext myContext;
-  private final Artifact myOriginalArtifact;
-  private final ProjectStructureProblemsHolder myProblemsHolder;
+    private final List<ArtifactProblem> myProblems = new ArrayList<>();
 
-  public ArtifactProblemsHolderImpl(ArtifactsStructureConfigurableContext context,
-                                    Artifact originalArtifact,
-                                    ProjectStructureProblemsHolder problemsHolder) {
-    super(context);
-    myContext = context;
-    myOriginalArtifact = originalArtifact;
-    myProblemsHolder = problemsHolder;
-  }
-
-  @Override
-  public void registerError(String message,
-                            String problemTypeId,
-                            @Nullable List<PackagingElement<?>> pathToPlace,
-                            ArtifactProblemQuickFix... quickFixes) {
-    registerProblem(message, pathToPlace, ProjectStructureProblemType.error(problemTypeId), quickFixes);
-  }
-
-  @Override
-  public void registerWarning(String message,
-                              String problemTypeId, @Nullable List<PackagingElement<?>> pathToPlace,
-                              ArtifactProblemQuickFix... quickFixes) {
-    registerProblem(message, pathToPlace, ProjectStructureProblemType.warning(problemTypeId), quickFixes);
-  }
-
-  private void registerProblem(String message, @Nullable List<PackagingElement<?>> pathToPlace,
-                               ProjectStructureProblemType problemType, ArtifactProblemQuickFix... quickFixes) {
-    String parentPath;
-    PackagingElement<?> element;
-    if (pathToPlace != null && !pathToPlace.isEmpty()) {
-      parentPath = PackagingElementPath.createPath(pathToPlace.subList(1, pathToPlace.size()-1)).getPathString();
-      element = pathToPlace.get(pathToPlace.size() - 1);
+    public ArtifactProblemsHolderImpl(PackagingElementResolvingContext context) {
+        super(context);
     }
-    else {
-      parentPath = null;
-      element = null;
-    }
-    Artifact artifact = myContext.getArtifactModel().getArtifactByOriginal(myOriginalArtifact);
-    PlaceInArtifact place = new PlaceInArtifact(artifact, myContext, parentPath, element);
-    myProblemsHolder.registerProblem(new ArtifactProblemDescription(message, problemType, pathToPlace, place, convertQuickFixes(quickFixes)));
-  }
 
-  private List<ConfigurationErrorQuickFix> convertQuickFixes(ArtifactProblemQuickFix[] quickFixes) {
-    List<ConfigurationErrorQuickFix> result = new SmartList<ConfigurationErrorQuickFix>();
-    for (final ArtifactProblemQuickFix fix : quickFixes) {
-      result.add(new ConfigurationErrorQuickFix(fix.getActionName()) {
-        @Override
-        public void performFix(DataContext dataContext) {
-          ArtifactEditor editor = myContext.getOrCreateEditor(myOriginalArtifact);
-          fix.performFix(((ArtifactEditorEx)editor).getContext());
-        }
-      });
+    @Override
+    public void registerError(
+        String message,
+        String problemTypeId,
+        @Nullable List<PackagingElement<?>> pathToPlace,
+        ArtifactProblemQuickFix... quickFixes
+    ) {
+        myProblems.add(new ArtifactProblem(message, true, copyPath(pathToPlace), List.of(quickFixes)));
     }
-    return result;
-  }
+
+    @Override
+    public void registerWarning(
+        String message,
+        String problemTypeId,
+        @Nullable List<PackagingElement<?>> pathToPlace,
+        ArtifactProblemQuickFix... quickFixes
+    ) {
+        myProblems.add(new ArtifactProblem(message, false, copyPath(pathToPlace), List.of(quickFixes)));
+    }
+
+    public List<ArtifactProblem> getProblems() {
+        return myProblems;
+    }
+
+    private static @Nullable List<PackagingElement<?>> copyPath(@Nullable List<PackagingElement<?>> pathToPlace) {
+        return pathToPlace == null ? null : List.copyOf(pathToPlace);
+    }
 }

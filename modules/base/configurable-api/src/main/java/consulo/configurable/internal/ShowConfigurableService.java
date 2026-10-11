@@ -20,10 +20,10 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.configurable.Configurable;
 import consulo.configurable.UnnamedConfigurable;
 import consulo.project.Project;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
 
-import java.awt.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 

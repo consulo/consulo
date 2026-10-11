@@ -50,3 +50,22 @@ vaadin-button.consulo-inplace-button[theme~='tertiary-inline'] {
 .consulo-inplace-button:active {
     background: color-mix(in srgb, currentColor 22%, transparent);
 }
+
+vaadin-button.consulo-help-button {
+    --vaadin-button-height: 30px;
+    width: 30px;
+    min-width: 30px;
+    height: 30px !important;
+    block-size: 30px !important;
+    min-block-size: 0;
+    aspect-ratio: 1 / 1;
+    padding: 0;
+    border-radius: 50%;
+    align-self: center;
+}
+
+vaadin-button.consulo-help-button::part(label) {
+    display: flex;
+    align-items: center;
+    line-height: 1;
+}

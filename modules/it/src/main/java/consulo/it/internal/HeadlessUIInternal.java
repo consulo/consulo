@@ -69,6 +69,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import consulo.ui.impl.ScriptedMessageBoxBuilder;
 import consulo.ui.impl.ScriptedInputBoxBuilder;
+import consulo.ui.layout.Layout;
 
 /**
  * Headless {@link UIInternal}: real UI-thread / modality resolution for integration tests, plus
@@ -299,6 +300,16 @@ public class HeadlessUIInternal extends UIInternal implements UIInternalEx {
     }
 
     @Override
+    public <E> CheckBoxTree<E> _Components_checkBoxTree(@Nullable E rootValue, TreeModel<E> model, TreeExecutor executor) {
+        return new HeadlessCheckBoxTree<>(rootValue, model, executor);
+    }
+
+    @Override
+    public <E> CheckBoxTreeTable<E> _Components_checkBoxTreeTable(@Nullable E rootValue, TreeModel<E> model, TreeExecutor executor) {
+        return new HeadlessCheckBoxTreeTable<>(rootValue, model, executor);
+    }
+
+    @Override
     public <E> Graph<E> _Components_graph(GraphModel<E> model) {
         return new HeadlessGraph<>(model);
     }
@@ -430,6 +441,11 @@ public class HeadlessUIInternal extends UIInternal implements UIInternalEx {
     }
 
     @Override
+    public Spotlight _Spotlight_over(Layout<?> layout) {
+        return new HeadlessSpotlight(layout);
+    }
+
+    @Override
     public MenuSeparator _MenuSeparator_create() {
         return new HeadlessMenuSeparator();
     }
@@ -499,7 +515,7 @@ public class HeadlessUIInternal extends UIInternal implements UIInternalEx {
 
     @Override
     public FoldoutLayout _Layouts_foldout(LocalizeValue titleValue, Component component, boolean show) {
-        return new HeadlessFoldoutLayout(titleValue, show);
+        return new HeadlessFoldoutLayout(titleValue, component, show);
     }
 
     @Override

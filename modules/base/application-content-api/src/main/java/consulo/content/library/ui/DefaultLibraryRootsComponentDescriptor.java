@@ -20,11 +20,13 @@ import consulo.content.base.DocumentationOrderRootType;
 import consulo.dataContext.DataContext;
 import consulo.project.localize.ProjectLocalize;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.ui.Component;
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author nik
@@ -48,17 +50,15 @@ public class DefaultLibraryRootsComponentDescriptor extends LibraryRootsComponen
     }
 
     @Override
-    public VirtualFile[] selectFiles(
-      JComponent parent,
+    @RequiredUIAccess
+    public CompletableFuture<VirtualFile[]> selectFiles(
+      @Nullable Component parent,
       @Nullable VirtualFile initialSelection,
-      @Nullable DataContext dataContext,
+      DataContext dataContext,
       LibraryEditor libraryEditor
     ) {
-      VirtualFile vFile = DocumentationUtil.showSpecifyJavadocUrlDialog(parent);
-      if (vFile != null) {
-        return new VirtualFile[]{vFile};
-      }
-      return VirtualFile.EMPTY_ARRAY;
+      return DocumentationUtil.showSpecifyJavadocUrlDialogAsync(parent, "")
+        .thenApply(file -> file == null ? VirtualFile.EMPTY_ARRAY : new VirtualFile[]{file});
     }
   }
 }

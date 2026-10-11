@@ -18,15 +18,16 @@ package consulo.ide.impl.idea.application.options.pathMacros;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.localize.ApplicationLocalize;
 import consulo.configurable.*;
+import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.impl.internal.ProjectStorageUtil;
 import consulo.project.internal.ProjectEx;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import org.jspecify.annotations.Nullable;
-
-import javax.swing.*;
 
 /**
  * @author dsl
@@ -38,9 +39,9 @@ public class PathMacroConfigurable implements SearchableConfigurable, Configurab
 
   @RequiredUIAccess
   @Override
-  public JComponent createComponent() {
+  public Component createUIComponent(Disposable parentDisposable) {
     myEditor = new PathMacroListEditor();
-    return myEditor.getPanel();
+    return TargetAWT.wrap(myEditor.getPanel());
   }
 
   @RequiredUIAccess

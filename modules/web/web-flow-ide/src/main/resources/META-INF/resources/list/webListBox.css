@@ -20,7 +20,7 @@ vaadin-list-box.web-list-box vaadin-item
 vaadin-list-box.web-list-box vaadin-item[selected]
 {
   border-radius: var(--consulo-list-row-selection-radius, 4px);
-  background: var(--consulo-list-row-selection, #d4e2ff);
+  background: var(--consulo-list-selection-background, #d4e2ff);
 }
 
 vaadin-list-box.web-list-box vaadin-item[selected] .web-icon > span,
@@ -83,7 +83,7 @@ vaadin-virtual-list.web-list-box > * > *
 vaadin-virtual-list.web-list-box [selected]
 {
   border-radius: var(--consulo-list-row-selection-radius, 4px);
-  background: var(--consulo-list-row-selection, #d4e2ff);
+  background: var(--consulo-list-selection-background, #d4e2ff);
 }
 
 /* the pooled list scrolls over a count instead of over its rows, so the height the scrollbar runs against belongs
@@ -117,7 +117,7 @@ consulo-virtual-list.web-list-box > *
 consulo-virtual-list.web-list-box [selected]
 {
   border-radius: var(--consulo-list-row-selection-radius, 4px);
-  background: var(--consulo-list-row-selection, #d4e2ff);
+  background: var(--consulo-list-selection-background, #d4e2ff);
 }
 
 consulo-virtual-list.web-list-box > [separator]

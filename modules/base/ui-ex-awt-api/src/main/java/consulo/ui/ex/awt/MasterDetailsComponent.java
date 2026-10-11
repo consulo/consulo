@@ -18,7 +18,6 @@ package consulo.ui.ex.awt;
 import consulo.application.dumb.DumbAware;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.configurable.*;
-import consulo.configurable.internal.ConfigurableUIMigrationUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;
@@ -31,6 +30,7 @@ import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.ui.ex.awt.tree.Tree;
 import consulo.ui.ex.awt.tree.TreeUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.localize.UILocalize;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
@@ -60,7 +60,7 @@ import java.util.function.Predicate;
  * @author anna
  * @since 2006-05-29
  */
-public abstract class MasterDetailsComponent implements Configurable, MasterDetails {
+public abstract class MasterDetailsComponent implements Configurable {
     protected static final Logger LOG = Logger.getInstance(MasterDetailsComponent.class);
 
     protected static final Comparator<MyNode> NODE_COMPARATOR =
@@ -284,7 +284,12 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
 
     @RequiredUIAccess
     @Override
-    public JComponent createComponent(Disposable parentUIDisposable) {
+    public consulo.ui.Component createUIComponent(Disposable parentUIDisposable) {
+        return TargetAWT.wrap(createSwingComponent());
+    }
+
+    @RequiredUIAccess
+    private JComponent createSwingComponent() {
         reInitWholePanelIfNeeded();
 
         updateSelectionFromTree();
@@ -677,13 +682,13 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
         myCurrentConfigurable = configurable;
 
         if (configurable != null) {
-            JComponent comp = ConfigurableUIMigrationUtil.createComponent(configurable, myDisposable);
+            consulo.ui.Component comp = configurable.createUIComponent(myDisposable);
             if (comp == null) {
                 setEmpty();
-                LOG.error("createComponent() returned null. configurable=" + configurable);
+                LOG.error("createUIComponent() returned null. configurable=" + configurable);
             }
             else {
-                myDetails.setContent(comp);
+                myDetails.setContent((JComponent) TargetAWT.to(comp));
                 ensureInitialized(configurable);
             }
         }
@@ -1007,27 +1012,23 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
         }
     }
 
-    @Override
     public JComponent getToolbar() {
         myToReInitWholePanel = true;
         return myNorthPanel;
     }
 
-    @Override
     public JComponent getMaster() {
         myToReInitWholePanel = true;
         return myMaster;
     }
 
-    @Override
     public DetailsComponent getDetails() {
         myToReInitWholePanel = true;
         return myDetails;
     }
 
-    @Override
     @RequiredUIAccess
     public void initUi() {
-        createComponent();
+        createSwingComponent();
     }
 }

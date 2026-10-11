@@ -23,10 +23,12 @@ import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import consulo.compiler.artifact.ui.PackagingElementPropertiesPanel;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author nik
@@ -45,26 +47,23 @@ public abstract class PackagingElementType<E extends PackagingElement<?>> {
         return myId;
     }
 
-    
     public LocalizeValue getPresentableName() {
         return myPresentableName;
     }
 
-    
     public abstract Image getIcon();
 
     public boolean isAvailableForAdd(ArtifactEditorContext context, Artifact artifact) {
         return true;
     }
 
-    
-    public abstract List<? extends PackagingElement<?>> chooseAndCreate(
+    @RequiredUIAccess
+    public abstract CompletableFuture<List<? extends PackagingElement<?>>> chooseAndCreate(
         ArtifactEditorContext context,
         Artifact artifact,
         CompositePackagingElement<?> parent
     );
 
-    
     public abstract E createEmpty(Project project);
 
     protected static <T extends PackagingElementType<?>> T getInstance(Class<T> aClass) {

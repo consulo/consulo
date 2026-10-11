@@ -148,9 +148,20 @@ public abstract class DesktopQtLayoutComponent<C extends LayoutConstraint, Layou
 
     @Override
     public void forEachChild(@RequiredUIAccess Consumer<Component> consumer) {
-        for (Pair<QtComponentDelegate<?>, Object> pair : new ArrayList<>(myChildren)) {
+        List<Pair<QtComponentDelegate<?>, Object>> children = new ArrayList<>(myChildren);
+        children.sort((first, second) -> compareLayoutData(first.getSecond(), second.getSecond()));
+
+        for (Pair<QtComponentDelegate<?>, Object> pair : children) {
             consumer.accept(pair.getFirst());
         }
+    }
+
+    /**
+     * The order {@link #forEachChild} visits two children in, by what they were placed with. Children which compare
+     * equal keep the order they were added in, which is all a stacking layout needs.
+     */
+    protected int compareLayoutData(@Nullable Object first, @Nullable Object second) {
+        return 0;
     }
 
     /**

@@ -367,7 +367,7 @@ public class FileTypeConfigurable implements SearchableConfigurable, Configurabl
 
     @RequiredUIAccess
     @Override
-    public @Nullable JComponent createComponent(Disposable parentDisposable) {
+    public consulo.ui.@Nullable Component createUIComponent(Disposable parentDisposable) {
         TabbedPaneWrapper tabbedPaneWrapper = new TabbedPaneWrapper(parentDisposable);
 
         myRecognizedFileType = new RecognizedFileTypes();
@@ -403,7 +403,7 @@ public class FileTypeConfigurable implements SearchableConfigurable, Configurabl
         tabbedPaneWrapper.addTab("Recognized File Types", splitter);
         tabbedPaneWrapper.addTab("Ignored Files and Folders", decorator.createPanel());
 
-        return tabbedPaneWrapper.getComponent();
+        return TargetAWT.wrap(tabbedPaneWrapper.getComponent());
     }
 
     @RequiredUIAccess

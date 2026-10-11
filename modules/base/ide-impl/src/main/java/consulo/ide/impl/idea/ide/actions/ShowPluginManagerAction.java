@@ -47,6 +47,6 @@ public class ShowPluginManagerAction extends DumbAwareAction {
     @Override
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
-        myShowSettingsUtilProvider.get().showSettingsDialog(e.getData(Project.KEY), PluginContants.CONFIGURABLE_ID, null);
+        myShowSettingsUtilProvider.get().showSettingsDialog(e.getData(Project.KEY), PluginContants.CONFIGURABLE_ID, "");
     }
 }

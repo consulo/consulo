@@ -16,9 +16,9 @@
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts;
 
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.nodes.ComplexPackagingElementNode;
 import consulo.compiler.artifact.element.ComplexPackagingElement;
 import consulo.compiler.artifact.element.ComplexPackagingElementType;
+import consulo.compiler.artifact.element.PackagingElement;
 import consulo.compiler.artifact.element.PackagingElementFactory;
 import consulo.util.collection.ContainerUtil;
 
@@ -70,8 +70,12 @@ public class ComplexElementSubstitutionParameters {
         return Collections.unmodifiableSet(myTypesToSubstitute);
     }
 
-    public void setShowContent(ComplexPackagingElementNode complexNode) {
-        mySubstituted.addAll(complexNode.getPackagingElements());
+    public void setShowContent(Collection<? extends PackagingElement<?>> elements) {
+        for (PackagingElement<?> element : elements) {
+            if (element instanceof ComplexPackagingElement<?> complexElement) {
+                mySubstituted.add(complexElement);
+            }
+        }
     }
 
     public void doNotSubstitute(ComplexPackagingElement<?> element) {

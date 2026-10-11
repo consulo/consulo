@@ -69,7 +69,7 @@ class UniversalFileChooserPanel {
         else {
             TabbedLayout tabbedLayout = TabbedLayout.create();
             for (FileView fileView : myFileViews) {
-                tabbedLayout.addTab(fileView.getContributor().getTabTitle().get(), fileView.getTopComponent());
+                tabbedLayout.addTab(fileView.getContributor().getTabTitle(), fileView.getTopComponent());
             }
             myTabbedLayout = tabbedLayout;
             contentComponent = tabbedLayout;

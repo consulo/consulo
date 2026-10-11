@@ -35,6 +35,8 @@ import consulo.ui.event.ContextMenuEvent;
 import consulo.ui.event.DetachEvent;
 import consulo.ui.event.KeyPressedEvent;
 import consulo.ui.event.KeyReleasedEvent;
+import consulo.ui.event.MousePressedEvent;
+import consulo.ui.event.details.MouseInputDetails;
 import consulo.ui.impl.BorderBuilderImpl;
 import consulo.ui.impl.PaddingBuilderImpl;
 import consulo.ui.impl.UIDataObject;
@@ -96,6 +98,7 @@ public abstract class QtComponentDelegate<T extends QWidget> implements Componen
     private boolean myAttachDispatchInstalled;
     private boolean myClickDispatchInstalled;
     private boolean myContextMenuDispatchInstalled;
+    private boolean myMousePressDispatchInstalled;
 
     private boolean myEnabled = true;
     private boolean myVisible = true;
@@ -548,6 +551,10 @@ public abstract class QtComponentDelegate<T extends QWidget> implements Componen
             installContextMenuDispatch();
         }
 
+        if (eventClass == MousePressedEvent.class) {
+            installMousePressDispatch();
+        }
+
         return myDataObject.addListener(eventClass, listener);
     }
 
@@ -611,6 +618,53 @@ public abstract class QtComponentDelegate<T extends QWidget> implements Componen
                         return true;
                     }
 
+                    return false;
+                }
+            });
+        });
+    }
+
+    private void installMousePressDispatch() {
+        if (myMousePressDispatchInstalled) {
+            return;
+        }
+
+        myMousePressDispatchInstalled = true;
+
+        whenBound(widget -> {
+            QApplication application = QApplication.instance();
+            if (application == null) {
+                return;
+            }
+
+            application.installEventFilter(new QObject(widget) {
+                private long myLastPressTime = Long.MIN_VALUE;
+
+                @Override
+                public boolean eventFilter(QObject watched, QEvent event) {
+                    if (event.type() != QEvent.Type.MouseButtonPress
+                        || !(event instanceof QMouseEvent mouseEvent)
+                        || !(watched instanceof QWidget pressed)
+                        || widget.isDisposed()
+                        || pressed != widget && !widget.isAncestorOf(pressed)) {
+                        return false;
+                    }
+
+                    long time = mouseEvent.timestamp();
+                    if (time == myLastPressTime) {
+                        return false;
+                    }
+
+                    myLastPressTime = time;
+
+                    MouseInputDetails details = DesktopQtInputDetails.mouse(pressed, mouseEvent);
+                    DesktopQtUIAccess.INSTANCE.execute(() -> {
+                        if (widget.isDisposed()) {
+                            return;
+                        }
+
+                        fireComponentEvent(MousePressedEvent.class, new MousePressedEvent(QtComponentDelegate.this, details));
+                    });
                     return false;
                 }
             });

@@ -26,6 +26,7 @@ import consulo.language.codeStyle.ui.setting.TabbedLanguageCodeStylePanel;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
@@ -50,7 +51,7 @@ public class NewCodeStyleSettingsPanel implements TabbedLanguageCodeStylePanel.T
     @RequiredUIAccess
     public JComponent getPanel(Disposable uiDisposable) {
         if (myPanel.getComponentCount() == 0) {
-            JComponent component = myTab.createComponent(uiDisposable);
+            JComponent component = (JComponent) TargetAWT.to(myTab.createUIComponent(uiDisposable));
             myPanel.add(component, BorderLayout.CENTER);
         }
         return myPanel;

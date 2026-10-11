@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.ui.impl;
 
+import consulo.desktop.awt.ui.impl.base.DesktopSearchHighlight;
 import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 import consulo.desktop.awt.ui.impl.event.DesktopAWTInputDetails;
 import consulo.desktop.awt.ui.impl.facade.FromSwingComponentWrapper;
@@ -26,6 +27,7 @@ import consulo.ui.event.HyperlinkEvent;
 import consulo.ui.ex.awt.LocalizeAction;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
+import consulo.ui.internal.SearchHighlightUtil;
 import org.jdesktop.swingx.JXHyperlink;
 import org.jspecify.annotations.Nullable;
 
@@ -58,13 +60,17 @@ public class DesktopHyperlinkImpl extends SwingComponentDelegate<DesktopHyperlin
 
     private LocalizeValue myText = LocalizeValue.empty();
 
+    private @Nullable String mySearchHighlight;
+
     public DesktopHyperlinkImpl(LocalizeValue text) {
         myText = text;
     }
 
     @Override
     protected MyLinkLabel createComponent() {
-        return new MyLinkLabel(myText.get(), null);
+        MyLinkLabel label = new MyLinkLabel(myText.get(), null);
+        updateText(label);
+        return label;
     }
 
     @Override
@@ -77,7 +83,26 @@ public class DesktopHyperlinkImpl extends SwingComponentDelegate<DesktopHyperlin
     public void setText(LocalizeValue text) {
         myText = text;
 
-        toAWTComponent().setText(text.get());
+        updateText(toAWTComponent());
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setSearchHighlight(@Nullable String query) {
+        mySearchHighlight = SearchHighlightUtil.normalizeQuery(query);
+
+        updateText(toAWTComponent());
+    }
+
+    @Override
+    public @Nullable String getSearchHighlight() {
+        return mySearchHighlight;
+    }
+
+    private void updateText(MyLinkLabel label) {
+        String text = myText.get();
+        String highlighted = DesktopSearchHighlight.toHtml(text, mySearchHighlight);
+        label.setText(highlighted == null ? text : highlighted);
     }
 
     @Override

@@ -29,7 +29,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.InputValidator;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.tree.TreeUtil;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.lang.Comparing;
@@ -259,7 +258,7 @@ public abstract class NamedItemsListEditor<T> extends MasterDetailsComponent {
         @Override
         @RequiredUIAccess
         public Component createOptionsPanel(Disposable uiDisposable) {
-            return TargetAWT.wrap(myConfigurable.createComponent(uiDisposable));
+            return myConfigurable.createUIComponent(uiDisposable);
         }
 
         @Override

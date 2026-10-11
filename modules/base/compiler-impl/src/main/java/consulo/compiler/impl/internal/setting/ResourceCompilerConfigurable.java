@@ -22,12 +22,15 @@ import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.ProjectConfigurable;
 import consulo.configurable.StandardConfigurableIds;
+import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.Component;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.InputValidatorEx;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.lang.Comparing;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
@@ -74,7 +77,7 @@ public class ResourceCompilerConfigurable implements ProjectConfigurable, Config
   }
 
   @Override
-  public @Nullable JComponent createComponent() {
+  public @Nullable Component createUIComponent(Disposable parentDisposable) {
     JBList list = new JBList(myModel);
     ToolbarDecorator decorator = ToolbarDecorator.createDecorator(list);
     decorator.disableUpDownActions();
@@ -106,7 +109,7 @@ public class ResourceCompilerConfigurable implements ProjectConfigurable, Config
                      "</body></html>");
     textPane.setForeground(new JBColor(Gray._50, Gray._130));
     panel.add(textPane, BorderLayout.SOUTH);
-    return panel;
+    return TargetAWT.wrap(panel);
   }
 
   private void showAddOrChangeDialog(final String initialValue) {

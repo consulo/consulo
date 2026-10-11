@@ -62,6 +62,10 @@ public interface TextItemPresentation {
         return this;
     }
 
+    default TextItemPresentation withTooltip(LocalizeValue tooltip) {
+        return this;
+    }
+
     void clearText();
 
     default void append(String text) {

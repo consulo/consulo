@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2009 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,373 +15,337 @@
  */
 package consulo.ide.ui;
 
-import consulo.application.AllIcons;
-import consulo.application.Application;
-import consulo.application.ui.wm.IdeFocusManager;
-import consulo.dataContext.DataManager;
+import consulo.fileChooser.FileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDialog;
-import consulo.fileChooser.IdeaFileChooser;
-import consulo.logging.Logger;
-import consulo.project.Project;
-import consulo.ui.ex.JBColor;
-import consulo.ui.ex.awt.JBList;
-import consulo.ui.ex.awt.ScrollPaneFactory;
-import consulo.ui.ex.awt.ToolbarDecorator;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awt.util.ListUtil;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.Component;
+import consulo.ui.Table;
+import consulo.ui.TextAttribute;
+import consulo.ui.TextItemPresentation;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.toolbar.AddAction;
+import consulo.ui.ex.toolbar.DownMoveAction;
+import consulo.ui.ex.toolbar.EditAction;
+import consulo.ui.ex.toolbar.RemoveAction;
+import consulo.ui.ex.toolbar.ToolbarDecoratorBuilder;
+import consulo.ui.ex.toolbar.UpMoveAction;
 import consulo.ui.image.Image;
-import consulo.util.collection.primitive.ints.IntList;
-import consulo.util.collection.primitive.ints.IntLists;
-import consulo.virtualFileSystem.LocalFileSystem;
+import consulo.ui.layout.ScrollableLayout;
+import consulo.ui.model.FlatDataModel;
+import consulo.ui.model.MutableFlatDataModel;
+import consulo.util.io.URLUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 import consulo.virtualFileSystem.archive.ArchiveFileType;
 import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.virtualFileSystem.http.HttpVirtualFile;
-import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
-import java.awt.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
-import java.util.*;
-import java.util.function.Supplier;
+import java.util.Map;
+import java.util.Set;
 
-/**
- * @author MYakovlev
- */
 public class PathEditor {
-  private static final Logger LOG = Logger.getInstance(PathEditor.class);
-
-  protected JComponent myComponent;
-  private JBList myList;
-  private final DefaultListModel myModel;
-  private final Set<VirtualFile> myAllFiles = new HashSet<>();
-  private boolean myModified = false;
-  protected boolean myEnabled = false;
-  private final FileChooserDescriptor myDescriptor;
-  private VirtualFile myAddBaseDir;
-
-  public PathEditor(FileChooserDescriptor descriptor) {
-    myDescriptor = descriptor;
-    myDescriptor.putUserData(FileChooserDialog.PREFER_LAST_OVER_TO_SELECT, Boolean.TRUE);
-    myModel = createListModel();
-  }
-
-  public void setAddBaseDir(@Nullable VirtualFile addBaseDir) {
-    myAddBaseDir = addBaseDir;
-  }
-
-  protected void setEnabled(boolean enabled) {
-    myEnabled = enabled;
-  }
-
-  protected void setModified(boolean modified) {
-    myModified = modified;
-  }
-
-  public boolean isModified() {
-    return myModified;
-  }
-
-  public VirtualFile[] getRoots() {
-    int count = getRowCount();
-    if (count == 0) {
-      return VirtualFile.EMPTY_ARRAY;
+    private record RootPresentation(String text, Image icon, boolean valid) {
     }
-    VirtualFile[] roots = new VirtualFile[count];
-    for (int i = 0; i < count; i++) {
-      roots[i] = getValueAt(i);
+
+    private final List<VirtualFile> myItems = new ArrayList<>();
+    private final Map<VirtualFile, RootPresentation> myPresentations = new HashMap<>();
+    private boolean myModified = false;
+    protected boolean myEnabled = false;
+    private final FileChooserDescriptor myDescriptor;
+    private @Nullable VirtualFile myAddBaseDir;
+
+    private @Nullable MutableFlatDataModel<VirtualFile> myModel;
+    private @Nullable Table<VirtualFile> myTable;
+
+    public PathEditor(FileChooserDescriptor descriptor) {
+        myDescriptor = descriptor;
+        myDescriptor.putUserData(FileChooserDialog.PREFER_LAST_OVER_TO_SELECT, Boolean.TRUE);
     }
-    return roots;
-  }
 
-  public void resetPath(List<VirtualFile> paths) {
-    keepSelectionState();
-    clearList();
-    setEnabled(true);
-    for (VirtualFile file : paths) {
-      addElement(file);
+    public void setAddBaseDir(@Nullable VirtualFile addBaseDir) {
+        myAddBaseDir = addBaseDir;
     }
-    setModified(false);
-  }
 
-  protected boolean isImmutable() {
-    return false;
-  }
-
-  public JComponent createComponent() {
-    myList = new JBList(getListModel());
-    myList.setCellRenderer(createListCellRenderer(myList));
-
-    if (isImmutable()) {
-      myComponent = ScrollPaneFactory.createScrollPane(myList, true);
+    protected void setEnabled(boolean enabled) {
+        myEnabled = enabled;
     }
-    else {
-      ToolbarDecorator toolbarDecorator = ToolbarDecorator.createDecorator(myList)
-        .disableUpDownActions()
-        .setAddAction(button-> {
-          VirtualFile[] added = doAdd();
-          if (added.length > 0) {
-            setModified(true);
-          }
-          requestDefaultFocus();
-          setSelectedRoots(added);
-        })
-        .setRemoveAction(button-> {
-          int[] idxs = myList.getSelectedIndices();
-          doRemoveItems(idxs, myList);
-        })
-        .setAddActionUpdater(e-> myEnabled)
-        .setRemoveActionUpdater(e-> {
-          Object[] values = getSelectedRoots();
-          return values.length > 0 && myEnabled;
+
+    protected void setModified(boolean modified) {
+        myModified = modified;
+    }
+
+    public boolean isModified() {
+        return myModified;
+    }
+
+    public VirtualFile[] getRoots() {
+        return myItems.toArray(VirtualFile.EMPTY_ARRAY);
+    }
+
+    @RequiredUIAccess
+    public void resetPath(List<VirtualFile> paths) {
+        myItems.clear();
+        myPresentations.clear();
+        setEnabled(true);
+        for (VirtualFile file : paths) {
+            addElement(file);
+        }
+        syncModel();
+        setModified(false);
+    }
+
+    protected boolean isImmutable() {
+        return false;
+    }
+
+    @RequiredUIAccess
+    public Component createUIComponent() {
+        MutableFlatDataModel<VirtualFile> model = FlatDataModel.of(myItems);
+        myModel = model;
+
+        Table<VirtualFile> table = Table.create(model);
+        table.setShowHeader(false);
+        table.setAllowMultipleSelect(true);
+        table.addColumn(LocalizeValue.empty(), file -> file).setRender((presentation, item) -> {
+            VirtualFile file = item.getValue();
+            if (file != null) {
+                render(presentation, file);
+            }
         });
+        myTable = table;
 
-      addToolbarButtons(toolbarDecorator);
+        if (isImmutable()) {
+            return ScrollableLayout.create(table);
+        }
 
-      myComponent = toolbarDecorator.createPanel();
-      myComponent.setBorder(null);
+        ToolbarDecoratorBuilder<VirtualFile> builder = ToolbarDecoratorBuilder.newBuilder(table)
+            .addOrReplaceAction(new PathAddAction())
+            .addOrReplaceAction(new PathRemoveAction())
+            .disableAction(EditAction.class)
+            .disableAction(UpMoveAction.class)
+            .disableAction(DownMoveAction.class);
+
+        addToolbarActions(builder);
+
+        return builder.build();
     }
 
-    return myComponent;
-  }
-
-  protected void addToolbarButtons(ToolbarDecorator toolbarDecorator) {
-  }
-
-  protected void doRemoveItems(int[] idxs, JList list) {
-    List removedItems = ListUtil.removeIndices(list, idxs);
-    itemsRemoved(removedItems);
-  }
-
-  protected DefaultListModel createListModel() {
-    return new DefaultListModel();
-  }
-
-  protected ListCellRenderer createListCellRenderer(JBList list) {
-    return new MyCellRenderer();
-  }
-
-  protected void itemsRemoved(List removedItems) {
-    myAllFiles.removeAll(removedItems);
-    if (removedItems.size() > 0) {
-      setModified(true);
+    protected void addToolbarActions(ToolbarDecoratorBuilder<VirtualFile> builder) {
     }
-    requestDefaultFocus();
-  }
 
-  private VirtualFile[] doAdd() {
-    VirtualFile baseDir = myAddBaseDir;
-    Project project = DataManager.getInstance().getDataContext(myComponent).getData(Project.KEY);
-    if (baseDir == null && project != null) {
-      baseDir = project.getBaseDir();
+    @RequiredUIAccess
+    protected void doRemoveItems(List<VirtualFile> items) {
+        List<VirtualFile> removed = new ArrayList<>();
+        for (VirtualFile item : items) {
+            if (myItems.remove(item)) {
+                myPresentations.remove(item);
+                removed.add(item);
+            }
+        }
+        syncModel();
+        itemsRemoved(removed);
     }
-    VirtualFile[] files = IdeaFileChooser.chooseFiles(myDescriptor, myComponent, project, baseDir);
-    files = adjustAddedFileSet(myComponent, files);
-    List<VirtualFile> added = new ArrayList<>(files.length);
-    for (VirtualFile vFile : files) {
-      if (addElement(vFile)) {
-        added.add(vFile);
-      }
+
+    protected void itemsRemoved(List<VirtualFile> removedItems) {
+        if (!removedItems.isEmpty()) {
+            setModified(true);
+        }
     }
-    return VirtualFileUtil.toVirtualFileArray(added);
-  }
 
-  /**
-   * Implement this method to adjust adding behavior, this method is called right after the files
-   * or directories are selected for added. This method allows adding UI that modify file set.
-   * <p/>
-   * The default implementation returns a value passed the parameter files and does nothing.
-   *
-   * @param component a component that could be used as a parent.
-   * @param files     a selected file set
-   * @return adjusted file set
-   */
-  protected VirtualFile[] adjustAddedFileSet(Component component, VirtualFile[] files) {
-    return files;
-  }
+    @RequiredUIAccess
+    private void doAdd() {
+        UIAccess uiAccess = UIAccess.current();
+        FileChooser.chooseFiles(myDescriptor, null, myAddBaseDir).whenCompleteAsync((files, error) -> {
+            if (error != null) {
+                return;
+            }
+            List<VirtualFile> added = new ArrayList<>();
+            for (VirtualFile file : adjustAddedFileSet(files)) {
+                if (addElement(file)) {
+                    added.add(file);
+                }
+            }
 
-  protected boolean isUrlInserted() {
-    return getRowCount() > 0 && (VirtualFile)getListModel().lastElement() instanceof HttpVirtualFile;
-  }
-
-  protected void requestDefaultFocus() {
-    if (myList != null) {
-      IdeFocusManager.getGlobalInstance()
-        .doWhenFocusSettlesDown(() -> IdeFocusManager.getGlobalInstance().requestFocus(myList, true));
+            if (!added.isEmpty()) {
+                syncModel();
+                setModified(true);
+                setSelectedRoots(added);
+            }
+         }, uiAccess);
     }
-  }
 
-  public void addPaths(VirtualFile... paths) {
-    boolean added = false;
-    keepSelectionState();
-    for (VirtualFile path : paths) {
-      if (addElement(path)) {
-        added = true;
-      }
+    protected VirtualFile[] adjustAddedFileSet(VirtualFile[] files) {
+        return files;
     }
-    if (added) {
-      setModified(true);
+
+    protected boolean isUrlInserted() {
+        return !myItems.isEmpty() && myItems.get(myItems.size() - 1) instanceof HttpVirtualFile;
     }
-  }
 
-  public void removePaths(VirtualFile... paths) {
-    Set<VirtualFile> pathsSet = new HashSet<>(Arrays.asList(paths));
-    int size = getRowCount();
-    IntList indicesToRemove = IntLists.newArrayList(paths.length);
-    for (int idx = 0; idx < size; idx++) {
-      VirtualFile path = getValueAt(idx);
-      if (pathsSet.contains(path)) {
-        indicesToRemove.add(idx);
-      }
+    @RequiredUIAccess
+    public void addPaths(VirtualFile... paths) {
+        boolean added = false;
+        for (VirtualFile path : paths) {
+            if (addElement(path)) {
+                added = true;
+            }
+        }
+        if (added) {
+            syncModel();
+            setModified(true);
+        }
     }
-    List list = ListUtil.removeIndices(myList, indicesToRemove.toArray());
-    itemsRemoved(list);
-  }
 
-  /**
-   * Method adds element only if it is not added yet.
-   */
-  protected boolean addElement(VirtualFile item) {
-    if (item == null) {
-      return false;
+    @RequiredUIAccess
+    public void removePaths(VirtualFile... paths) {
+        Set<VirtualFile> pathsSet = new HashSet<>(Arrays.asList(paths));
+        List<VirtualFile> toRemove = new ArrayList<>();
+        for (VirtualFile item : myItems) {
+            if (pathsSet.contains(item)) {
+                toRemove.add(item);
+            }
+        }
+        doRemoveItems(toRemove);
     }
-    if (myAllFiles.contains(item)) {
-      return false;
+
+    protected boolean addElement(@Nullable VirtualFile item) {
+        if (item == null || myPresentations.containsKey(item)) {
+            return false;
+        }
+
+        if (isUrlInserted()) {
+            myItems.add(myItems.size() - 1, item);
+        }
+        else {
+            myItems.add(item);
+        }
+        myPresentations.put(item, createPresentation(item));
+        return true;
     }
-    if (isUrlInserted()) {
-      getListModel().insertElementAt(item, getRowCount() - 1);
+
+    @RequiredUIAccess
+    protected void setSelectedRoots(List<VirtualFile> roots) {
+        Table<VirtualFile> table = myTable;
+        if (table == null || roots.isEmpty()) {
+            return;
+        }
+
+        VirtualFile last = roots.get(roots.size() - 1);
+        if (myPresentations.containsKey(last)) {
+            table.select(last);
+            table.scrollTo(last);
+        }
     }
-    else {
-      getListModel().addElement(item);
+
+    @RequiredUIAccess
+    protected List<VirtualFile> getSelectedRoots() {
+        Table<VirtualFile> table = myTable;
+        return table == null ? List.of() : table.getSelectedItems();
     }
-    myAllFiles.add(item);
-    return true;
-  }
 
-  protected DefaultListModel getListModel() {
-    return myModel;
-  }
-
-  protected void setSelectedRoots(Object[] roots) {
-    ArrayList<Object> rootsList = new ArrayList<>(roots.length);
-    for (Object root : roots) {
-      if (root != null) {
-        rootsList.add(root);
-      }
+    protected int getRowCount() {
+        return myItems.size();
     }
-    myList.getSelectionModel().clearSelection();
-    int rowCount = getRowCount();
-    for (int i = 0; i < rowCount; i++) {
-      Object currObject = getValueAt(i);
-      LOG.assertTrue(currObject != null);
-      if (rootsList.contains(currObject)) {
-        myList.getSelectionModel().addSelectionInterval(i, i);
-      }
+
+    protected VirtualFile getValueAt(int row) {
+        return myItems.get(row);
     }
-  }
 
-  private void keepSelectionState() {
-    Object[] selectedItems = getSelectedRoots();
+    @RequiredUIAccess
+    public void clearList() {
+        myItems.clear();
+        myPresentations.clear();
+        syncModel();
+        setModified(true);
+    }
 
-    SwingUtilities.invokeLater(() -> {
-      if (selectedItems != null) {
-        setSelectedRoots(selectedItems);
-      }
-    });
-  }
+    @RequiredUIAccess
+    private void syncModel() {
+        MutableFlatDataModel<VirtualFile> model = myModel;
+        if (model != null) {
+            model.replaceAll(new ArrayList<>(myItems));
+        }
+    }
 
-  protected Object[] getSelectedRoots() {
-    return myList.getSelectedValues();
-  }
+    private void render(TextItemPresentation presentation, VirtualFile file) {
+        RootPresentation rootPresentation = myPresentations.get(file);
+        if (rootPresentation == null) {
+            return;
+        }
 
-  protected int getRowCount() {
-    return getListModel().getSize();
-  }
+        presentation.withIcon(rootPresentation.icon());
+        presentation.append(rootPresentation.text(), rootPresentation.valid() ? TextAttribute.REGULAR : TextAttribute.ERROR);
+    }
 
-  protected VirtualFile getValueAt(int row) {
-    return (VirtualFile)getListModel().get(row);
-  }
+    private static RootPresentation createPresentation(VirtualFile file) {
+        boolean valid = file.isValid();
+        return new RootPresentation(file.getPresentableUrl(), getIconForRoot(file, valid), valid);
+    }
 
-  public void clearList() {
-    getListModel().clear();
-    myAllFiles.clear();
-    setModified(true);
-  }
+    private static Image getIconForRoot(VirtualFile file, boolean valid) {
+        if (!valid) {
+            return PlatformIconGroup.nodesPpinvalid();
+        }
 
-  private static @Nullable FileType findFileType(VirtualFile file) {
-    return Application.get().runReadAction((Supplier<FileType>)() -> {
-      VirtualFile tempFile = file;
-      if ((file.getFileSystem() instanceof ArchiveFileSystem) && file.getParent() == null) {
-        //[myakovlev] It was bug - directories with *.jar extensions was saved as files of JarFileSystem.
-        //    so we can not just return true, we should filter such directories.
-        String path = file.getPath().substring(0, file.getPath().length() - ArchiveFileSystem.ARCHIVE_SEPARATOR.length());
-        tempFile = LocalFileSystem.getInstance().findFileByPath(path);
-      }
-      if (tempFile != null && !tempFile.isDirectory()) {
-        return tempFile.getFileType();
-      }
-      return null;
-    });
-  }
+        if (file instanceof HttpVirtualFile) {
+            return PlatformIconGroup.nodesPpweb();
+        }
 
-  /**
-   * @return icon for displaying parameter (ProjectRoot or VirtualFile)
-   */
-  private static consulo.ui.image.Image getIconForRoot(Object projectRoot) {
-    if (projectRoot instanceof VirtualFile) {
-      VirtualFile file = (VirtualFile)projectRoot;
-      if (!file.isValid()) {
-        return AllIcons.Nodes.PpInvalid;
-      }
-      else if (isHttpRoot(file)) {
-        return AllIcons.Nodes.PpWeb;
-      }
-      else {
         FileType fileType = findFileType(file);
-        if(fileType instanceof ArchiveFileType) {
-          return fileType.getIcon();
+        if (fileType instanceof ArchiveFileType) {
+            return fileType.getIcon();
         }
-        else if(file.isDirectory()) {
-          return AllIcons.Nodes.Folder;
+
+        if (file.isDirectory()) {
+            return PlatformIconGroup.nodesFolder();
         }
-        return file.getFileType().getIcon();
-      }
-    }
-    return Image.empty(Image.DEFAULT_ICON_SIZE);
-  }
 
-  private static boolean isHttpRoot(VirtualFile virtualFileOrProjectRoot) {
-    return virtualFileOrProjectRoot instanceof HttpVirtualFile;
-  }
-
-  private final class MyCellRenderer extends DefaultListCellRenderer {
-    private String getPresentableString(Object value) {
-      return Application.get().runReadAction((Supplier<String>)() -> {
-        //noinspection HardCodedStringLiteral
-        return (value instanceof VirtualFile virtualFile) ? virtualFile.getPresentableUrl() : "UNKNOWN OBJECT";
-      });
+        return fileType != null ? fileType.getIcon() : FileTypeRegistry.getInstance().getFileTypeByFileName(file.getName()).getIcon();
     }
 
-    @Override
-    public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-      super.getListCellRendererComponent(list, getPresentableString(value), index, isSelected, cellHasFocus);
-      if (isSelected) {
-        setForeground(UIUtil.getListSelectionForeground());
-      }
-      else {
-        if (value instanceof VirtualFile) {
-          VirtualFile file = (VirtualFile)value;
-          if (!file.isValid()) {
-            setForeground(JBColor.RED);
-          }
+    private static @Nullable FileType findFileType(VirtualFile file) {
+        String name = file.getName();
+        if (file.getFileSystem() instanceof ArchiveFileSystem && file.getParent() == null) {
+            String path = file.getPath();
+            String localPath = path.endsWith(URLUtil.ARCHIVE_SEPARATOR)
+                ? path.substring(0, path.length() - URLUtil.ARCHIVE_SEPARATOR.length())
+                : path;
+            name = localPath.substring(localPath.lastIndexOf('/') + 1);
         }
-      }
-      setIcon(TargetAWT.to(getIconForRoot(value)));
-      return this;
+        else if (file.isDirectory()) {
+            return null;
+        }
+        return FileTypeRegistry.getInstance().getFileTypeByFileName(name);
     }
-  }
+
+    private class PathAddAction extends AddAction<VirtualFile> {
+        @Override
+        @RequiredUIAccess
+        protected void doAdd(AnActionEvent e) {
+            if (myEnabled) {
+                PathEditor.this.doAdd();
+            }
+        }
+    }
+
+    private class PathRemoveAction extends RemoveAction<VirtualFile> {
+        @Override
+        @RequiredUIAccess
+        public void actionPerformed(AnActionEvent e) {
+            if (myEnabled) {
+                doRemoveItems(getSelectedRoots());
+            }
+        }
+    }
 }

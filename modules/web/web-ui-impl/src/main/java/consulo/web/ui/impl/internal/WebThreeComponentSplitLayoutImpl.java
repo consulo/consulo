@@ -27,6 +27,8 @@ import consulo.web.ui.impl.internal.base.VaadinComponentDelegate;
 import consulo.web.ui.impl.internal.vaadin.CompositeComponent;
 import org.jspecify.annotations.Nullable;
 
+import java.util.function.Consumer;
+
 /**
  * @author VISTALL
  * @since 2023-05-29
@@ -180,6 +182,14 @@ public class WebThreeComponentSplitLayoutImpl extends VaadinComponentDelegate<We
     public ThreeComponentSplitLayout setSecondComponent(@Nullable Component component) {
         toVaadinComponent().setSecond(toSizedVaadin(component));
         return this;
+    }
+
+    @Override
+    public void forEachChild(@RequiredUIAccess Consumer<Component> consumer) {
+        Vaadin vaadin = toVaadinComponent();
+        WebLayoutChildren.accept(vaadin.myFirstComponent, consumer);
+        WebLayoutChildren.accept(vaadin.myCenterComponent, consumer);
+        WebLayoutChildren.accept(vaadin.mySecondComponent, consumer);
     }
 
     private static com.vaadin.flow.component.@Nullable Component toSizedVaadin(@Nullable Component component) {

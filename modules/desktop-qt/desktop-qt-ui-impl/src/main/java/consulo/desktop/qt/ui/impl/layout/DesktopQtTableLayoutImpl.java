@@ -54,6 +54,15 @@ public class DesktopQtTableLayoutImpl extends DesktopQtLayoutComponent<TableLayo
     }
 
     @Override
+    protected int compareLayoutData(@Nullable Object first, @Nullable Object second) {
+        Cell firstCell = first instanceof Cell cell ? cell : new Cell(0, 0, false);
+        Cell secondCell = second instanceof Cell cell ? cell : new Cell(0, 0, false);
+
+        int byRow = Integer.compare(firstCell.row(), secondCell.row());
+        return byRow != 0 ? byRow : Integer.compare(firstCell.column(), secondCell.column());
+    }
+
+    @Override
     protected void attach(QtComponentDelegate<?> child, @Nullable Object layoutData) {
         QGridLayout layout = (QGridLayout) myComponent.layout();
 

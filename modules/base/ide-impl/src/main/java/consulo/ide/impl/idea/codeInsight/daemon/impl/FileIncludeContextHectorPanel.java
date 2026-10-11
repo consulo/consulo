@@ -17,12 +17,14 @@
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
 import consulo.configurable.ConfigurationException;
+import consulo.disposer.Disposable;
 import consulo.language.editor.HectorComponentPanel;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.include.FileIncludeManager;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
 import consulo.ui.ex.awt.ComboboxWithBrowseButton;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jspecify.annotations.Nullable;
@@ -47,8 +49,8 @@ public class FileIncludeContextHectorPanel extends HectorComponentPanel {
   }
 
   @Override
-  public JComponent createComponent() {
-    return myPanel;
+  public consulo.ui.Component createUIComponent(Disposable parentDisposable) {
+    return TargetAWT.wrap(myPanel);
   }
 
   @Override

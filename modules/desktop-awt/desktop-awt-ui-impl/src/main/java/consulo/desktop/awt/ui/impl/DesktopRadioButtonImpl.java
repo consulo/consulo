@@ -24,6 +24,8 @@ import consulo.ui.RadioButton;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ValueComponentEvent;
 import consulo.ui.ex.awt.JBRadioButton;
+import consulo.ui.internal.SearchHighlightUtil;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -32,6 +34,8 @@ import consulo.ui.ex.awt.JBRadioButton;
 class DesktopRadioButtonImpl extends SwingComponentDelegate<DesktopRadioButtonImpl.MyJBRadioButton> implements RadioButton {
     class MyJBRadioButton extends JBRadioButton implements FromSwingComponentWrapper {
         private LocalizeValue myLabelText = LocalizeValue.empty();
+
+        private @Nullable String mySearchHighlight;
 
         public MyJBRadioButton() {
 
@@ -61,8 +65,13 @@ class DesktopRadioButtonImpl extends SwingComponentDelegate<DesktopRadioButtonIm
             return myLabelText;
         }
 
+        public void setSearchHighlight(@Nullable String query) {
+            mySearchHighlight = query;
+            updateLabelText();
+        }
+
         private void updateLabelText() {
-            updateTextForButton(this, myLabelText);
+            updateTextForButton(this, myLabelText, mySearchHighlight);
         }
     }
 
@@ -139,5 +148,16 @@ class DesktopRadioButtonImpl extends SwingComponentDelegate<DesktopRadioButtonIm
     public void setLabelText(LocalizeValue labelText) {
         toAWTComponent().setLabelText(labelText);
         toAWTComponent().updateLabelText();
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setSearchHighlight(@Nullable String query) {
+        toAWTComponent().setSearchHighlight(SearchHighlightUtil.normalizeQuery(query));
+    }
+
+    @Override
+    public @Nullable String getSearchHighlight() {
+        return toAWTComponent().mySearchHighlight;
     }
 }
