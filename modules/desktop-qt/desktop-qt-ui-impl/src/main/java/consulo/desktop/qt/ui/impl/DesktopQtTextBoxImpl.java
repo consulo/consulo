@@ -19,6 +19,7 @@ import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.TextBox;
+import consulo.ui.TextBoxStyle;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ValueComponentEvent;
 import consulo.ui.event.details.ProgrammaticInputDetails;
@@ -44,6 +45,8 @@ public class DesktopQtTextBoxImpl extends QtComponentDelegate<QLineEdit> impleme
     private boolean myFireListeners = true;
 
     private LocalizeValue myPlaceholder = LocalizeValue.empty();
+
+    private boolean myClearButton;
 
     private int myVisibleLength = -1;
 
@@ -78,6 +81,7 @@ public class DesktopQtTextBoxImpl extends QtComponentDelegate<QLineEdit> impleme
 
         applyPlaceholder();
         applyVisibleLength();
+        component.setClearButtonEnabled(myClearButton);
         mySides.attach(component);
 
         component.textChanged.connect(text -> {
@@ -88,6 +92,18 @@ public class DesktopQtTextBoxImpl extends QtComponentDelegate<QLineEdit> impleme
                     .onEvent(new ValueComponentEvent(this, myText, DesktopQtCurrentInput.current(component)));
             }
         });
+    }
+
+    @Override
+    public void addStyle(TextBoxStyle style) {
+        switch (style) {
+            case HAS_CLEAR_BUTTON -> {
+                myClearButton = true;
+                if (myComponent != null) {
+                    myComponent.setClearButtonEnabled(true);
+                }
+            }
+        }
     }
 
     @Override

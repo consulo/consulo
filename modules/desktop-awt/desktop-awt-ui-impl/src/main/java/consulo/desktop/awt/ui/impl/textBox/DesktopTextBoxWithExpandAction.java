@@ -22,6 +22,7 @@ import consulo.desktop.awt.ui.impl.plaf.extend.textBox.SupportTextBoxWithExpandA
 import consulo.desktop.awt.ui.impl.components.fields.ExpandableTextField;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
+import consulo.ui.TextBoxStyle;
 import consulo.ui.TextBoxWithExpandAction;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ValueComponentEvent;
@@ -121,6 +122,13 @@ public class DesktopTextBoxWithExpandAction {
         @Override
         public TextBoxWithExpandAction withDialogTitle(String text) {
             return this;
+        }
+
+        @Override
+        public void addStyle(TextBoxStyle style) {
+            switch (style) {
+                case HAS_CLEAR_BUTTON -> toAWTComponent().putClientProperty("JTextField.showClearButton", true);
+            }
         }
 
         @Override

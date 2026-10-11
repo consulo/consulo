@@ -20,6 +20,7 @@ import consulo.desktop.awt.ui.impl.facade.FromSwingComponentWrapper;
 import consulo.desktop.awt.ui.impl.validableComponent.DocumentSwingValidator;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
+import consulo.ui.TextBoxStyle;
 import consulo.ui.TextBoxWithHistory;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ValueComponentEvent;
@@ -176,6 +177,13 @@ public class DesktopTextBoxWithHistoryImpl extends DocumentSwingValidator<String
     }
 
     @RequiredUIAccess
+    @Override
+    public void addStyle(TextBoxStyle style) {
+        switch (style) {
+            case HAS_CLEAR_BUTTON -> toAWTComponent().getTextEditor().putClientProperty("JTextField.showClearButton", true);
+        }
+    }
+
     @Override
     public void setPlaceholder(LocalizeValue text) {
         toAWTComponent().putClientProperty("JTextField.placeholderText", text.getNullIfEmpty());

@@ -20,6 +20,7 @@ import consulo.desktop.awt.ui.impl.facade.FromSwingComponentWrapper;
 import consulo.desktop.awt.ui.impl.validableComponent.DocumentSwingValidator;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
+import consulo.ui.TextBoxStyle;
 import consulo.ui.TextBox;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
@@ -144,6 +145,13 @@ public class DesktopTextBoxImpl extends DocumentSwingValidator<String, DesktopTe
     @Override
     public JTextField getTextField() {
         return toAWTComponent();
+    }
+
+    @Override
+    public void addStyle(TextBoxStyle style) {
+        switch (style) {
+            case HAS_CLEAR_BUTTON -> toAWTComponent().putClientProperty("JTextField.showClearButton", true);
+        }
     }
 
     @Override

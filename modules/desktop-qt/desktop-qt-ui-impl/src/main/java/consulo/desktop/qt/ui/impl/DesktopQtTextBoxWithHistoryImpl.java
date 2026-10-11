@@ -19,6 +19,7 @@ import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.TextBoxWithHistory;
+import consulo.ui.TextBoxStyle;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ValueComponentEvent;
 import consulo.ui.event.details.ProgrammaticInputDetails;
@@ -60,6 +61,8 @@ public class DesktopQtTextBoxWithHistoryImpl extends QtComponentDelegate<QComboB
     private boolean myRebuilding;
 
     private LocalizeValue myPlaceholder = LocalizeValue.empty();
+
+    private boolean myClearButton;
 
     private final DesktopQtSideComponents mySides = new DesktopQtSideComponents(this);
 
@@ -144,6 +147,7 @@ public class DesktopQtTextBoxWithHistoryImpl extends QtComponentDelegate<QComboB
         if (lineEdit != null) {
             lineEdit.setReadOnly(!myEditable);
             lineEdit.setPlaceholderText(myPlaceholder.get());
+            lineEdit.setClearButtonEnabled(myClearButton);
 
             mySides.attach(lineEdit);
         }
@@ -235,6 +239,19 @@ public class DesktopQtTextBoxWithHistoryImpl extends QtComponentDelegate<QComboB
     }
 
     @RequiredUIAccess
+    @Override
+    public void addStyle(TextBoxStyle style) {
+        switch (style) {
+            case HAS_CLEAR_BUTTON -> {
+                myClearButton = true;
+                QLineEdit lineEdit = lineEdit();
+                if (lineEdit != null) {
+                    lineEdit.setClearButtonEnabled(true);
+                }
+            }
+        }
+    }
+
     @Override
     public void setPlaceholder(LocalizeValue text) {
         myPlaceholder = text == null ? LocalizeValue.empty() : text;

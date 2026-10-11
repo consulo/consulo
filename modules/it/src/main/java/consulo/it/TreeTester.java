@@ -29,6 +29,7 @@ import consulo.ui.TreeExecutor;
 import consulo.ui.TreeModel;
 import consulo.ui.TreeNode;
 import consulo.ui.TreeTable;
+import consulo.ui.TriStateCheckBoxTree;
 import consulo.ui.event.details.InputDetails;
 import consulo.ui.impl.tree.TreeController;
 import consulo.ui.impl.tree.TreeNodeImpl;
@@ -70,6 +71,10 @@ public final class TreeTester<E> {
 
     public static <E> TreeTester<E> createCheckBoxTree(@Nullable E rootValue, TreeModel<E> model, TreeExecutor executor) {
         return of(CheckBoxTree.create(rootValue, model, executor));
+    }
+
+    public static <E> TreeTester<E> createTriStateCheckBoxTree(@Nullable E rootValue, TreeModel<E> model, TreeExecutor executor) {
+        return of(TriStateCheckBoxTree.create(rootValue, model, executor));
     }
 
     public static <E> TreeTester<E> createCheckBoxTreeTable(@Nullable E rootValue, TreeModel<E> model, TreeExecutor executor) {

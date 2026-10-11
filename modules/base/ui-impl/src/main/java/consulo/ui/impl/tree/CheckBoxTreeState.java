@@ -55,6 +55,8 @@ public final class CheckBoxTreeState<E> {
     private volatile Predicate<E> myEnabledFilter = value -> true;
 
     private final Set<E> myChecked = new LinkedHashSet<>();
+    private final Set<E> myUnsure = new LinkedHashSet<>();
+    private volatile boolean myUnsureEnabled;
 
     private Set<E> myKnown = new HashSet<>();
     private @Nullable Map<TreeNode<E>, @Nullable ThreeState> myShownStates;
@@ -89,12 +91,20 @@ public final class CheckBoxTreeState<E> {
         finish(Map.of(), ProgrammaticInputDetails.INSTANCE);
     }
 
+    public boolean isUnsureEnabled() {
+        return myUnsureEnabled;
+    }
+
+    public void setUnsureEnabled(boolean unsureEnabled) {
+        myUnsureEnabled = unsureEnabled;
+    }
+
     @RequiredUIAccess
     public void setCheckableFilter(Predicate<E> filter) {
         myCheckableFilter = filter;
 
-        Map<E, Boolean> changes = new LinkedHashMap<>();
-        for (E value : checkedSnapshot()) {
+        Map<E, ThreeState> changes = new LinkedHashMap<>();
+        for (E value : markedSnapshot()) {
             if (!isCheckable(value)) {
                 remove(value, changes);
             }
@@ -126,6 +136,22 @@ public final class CheckBoxTreeState<E> {
         }
     }
 
+    public ThreeState getOwnCheckState(@Nullable E value) {
+        if (value == null || !isCheckable(value)) {
+            return ThreeState.NO;
+        }
+        return ownState(value);
+    }
+
+    private ThreeState ownState(E value) {
+        synchronized (myChecked) {
+            if (myChecked.contains(value)) {
+                return ThreeState.YES;
+            }
+            return myUnsure.contains(value) ? ThreeState.UNSURE : ThreeState.NO;
+        }
+    }
+
     public List<E> getCheckedValues() {
         Set<E> checked = new LinkedHashSet<>(checkedSnapshot());
 
@@ -152,7 +178,7 @@ public final class CheckBoxTreeState<E> {
 
         TreeNode<E> node = find(myRoot, value);
         if (node == null) {
-            return isChecked(value) ? ThreeState.YES : ThreeState.NO;
+            return ownState(value);
         }
 
         ThreeState state = shownState(node, new IdentityHashMap<>());
@@ -179,7 +205,7 @@ public final class CheckBoxTreeState<E> {
         }
 
         E value = node.getValue();
-        ThreeState own = isCheckable(value) ? (isChecked(value) ? ThreeState.YES : ThreeState.NO) : null;
+        ThreeState own = value != null && isCheckable(value) ? ownState(value) : null;
 
         ThreeState state = own;
         if (!myPolicy.isIndependent()) {
@@ -212,16 +238,27 @@ public final class CheckBoxTreeState<E> {
 
     @RequiredUIAccess
     public void setChecked(E value, boolean checked, InputDetails details) {
+        setCheckState(value, checked ? ThreeState.YES : ThreeState.NO, details);
+    }
+
+    @RequiredUIAccess
+    public void setCheckState(E value, ThreeState state, InputDetails details) {
         if (!isCheckable(value)) {
             return;
         }
 
-        Map<E, Boolean> changes = new LinkedHashMap<>();
-        change(value, checked, changes);
+        Map<E, ThreeState> changes = new LinkedHashMap<>();
+        if (state == ThreeState.UNSURE) {
+            markUnsure(value, changes);
+        }
+        else {
+            boolean checked = state == ThreeState.YES;
+            change(value, checked, changes);
 
-        TreeNode<E> node = find(myRoot, value);
-        if (node != null) {
-            spread(node, checked, changes);
+            TreeNode<E> node = find(myRoot, value);
+            if (node != null) {
+                spread(node, checked, changes);
+            }
         }
         finish(changes, details);
     }
@@ -233,11 +270,10 @@ public final class CheckBoxTreeState<E> {
             return false;
         }
 
-        boolean checked = !isChecked(value);
+        ThreeState next = nextState(ownState(value));
 
-        Map<E, Boolean> changes = new LinkedHashMap<>();
-        change(value, checked, changes);
-        spread(node, checked, changes);
+        Map<E, ThreeState> changes = new LinkedHashMap<>();
+        apply(node, value, next, changes);
 
         for (TreeNode<E> other : selection) {
             E otherValue = other.getValue();
@@ -245,17 +281,35 @@ public final class CheckBoxTreeState<E> {
                 continue;
             }
 
-            change(otherValue, checked, changes);
-            spread(other, checked, changes);
+            apply(other, otherValue, next, changes);
         }
 
         finish(changes, details);
         return true;
     }
 
+    private ThreeState nextState(ThreeState state) {
+        return switch (state) {
+            case YES -> ThreeState.NO;
+            case NO -> myUnsureEnabled ? ThreeState.UNSURE : ThreeState.YES;
+            case UNSURE -> ThreeState.YES;
+        };
+    }
+
+    private void apply(TreeNode<E> node, E value, ThreeState state, Map<E, ThreeState> changes) {
+        if (state == ThreeState.UNSURE) {
+            markUnsure(value, changes);
+            return;
+        }
+
+        boolean checked = state == ThreeState.YES;
+        change(value, checked, changes);
+        spread(node, checked, changes);
+    }
+
     @RequiredUIAccess
     public void structureChanged() {
-        Map<E, Boolean> changes = new LinkedHashMap<>();
+        Map<E, ThreeState> changes = new LinkedHashMap<>();
         Set<E> present = new HashSet<>();
         inherit(myRoot, false, myPolicy.checkChildrenWithCheckedParent(), present, changes);
 
@@ -269,7 +323,7 @@ public final class CheckBoxTreeState<E> {
         finish(changes, ProgrammaticInputDetails.INSTANCE);
     }
 
-    private void inherit(TreeNode<E> node, boolean parentChecked, boolean inherit, Set<E> present, Map<E, Boolean> changes) {
+    private void inherit(TreeNode<E> node, boolean parentChecked, boolean inherit, Set<E> present, Map<E, ThreeState> changes) {
         for (TreeNode<E> child : node.getLoadedChildren()) {
             E value = child.getValue();
 
@@ -290,7 +344,7 @@ public final class CheckBoxTreeState<E> {
         }
     }
 
-    private void spread(TreeNode<E> node, boolean checked, Map<E, Boolean> changes) {
+    private void spread(TreeNode<E> node, boolean checked, Map<E, ThreeState> changes) {
         CheckBoxTreePolicy policy = myPolicy;
 
         if (checked ? policy.checkChildrenWithCheckedParent() : policy.uncheckChildrenWithUncheckedParent()) {
@@ -302,7 +356,7 @@ public final class CheckBoxTreeState<E> {
         }
     }
 
-    private void setBelow(TreeNode<E> node, boolean checked, Map<E, Boolean> changes) {
+    private void setBelow(TreeNode<E> node, boolean checked, Map<E, ThreeState> changes) {
         for (TreeNode<E> child : node.getLoadedChildren()) {
             E value = child.getValue();
             if (value != null) {
@@ -312,7 +366,7 @@ public final class CheckBoxTreeState<E> {
         }
     }
 
-    private void setAbove(TreeNode<E> node, boolean checked, Map<E, Boolean> changes) {
+    private void setAbove(TreeNode<E> node, boolean checked, Map<E, ThreeState> changes) {
         for (TreeNode<E> parent = myParent.apply(node); parent != null && parent != myRoot; parent = myParent.apply(parent)) {
             E value = parent.getValue();
             if (value != null) {
@@ -321,43 +375,45 @@ public final class CheckBoxTreeState<E> {
         }
     }
 
-    private void change(E value, boolean checked, Map<E, Boolean> changes) {
+    private void change(E value, boolean checked, Map<E, ThreeState> changes) {
         if (!isCheckable(value)) {
             return;
         }
 
-        boolean changed;
         synchronized (myChecked) {
-            changed = checked ? myChecked.add(value) : myChecked.remove(value);
-        }
-
-        if (changed) {
-            record(value, checked, changes);
+            changes.putIfAbsent(value, ownState(value));
+            myUnsure.remove(value);
+            if (checked) {
+                myChecked.add(value);
+            }
+            else {
+                myChecked.remove(value);
+            }
         }
     }
 
-    private void remove(E value, Map<E, Boolean> changes) {
-        boolean changed;
-        synchronized (myChecked) {
-            changed = myChecked.remove(value);
+    private void markUnsure(E value, Map<E, ThreeState> changes) {
+        if (!isCheckable(value)) {
+            return;
         }
 
-        if (changed) {
-            record(value, false, changes);
+        synchronized (myChecked) {
+            changes.putIfAbsent(value, ownState(value));
+            myChecked.remove(value);
+            myUnsure.add(value);
         }
     }
 
-    private static <E> void record(E value, boolean checked, Map<E, Boolean> changes) {
-        if (changes.containsKey(value)) {
-            changes.remove(value);
-        }
-        else {
-            changes.put(value, checked);
+    private void remove(E value, Map<E, ThreeState> changes) {
+        synchronized (myChecked) {
+            changes.putIfAbsent(value, ownState(value));
+            myChecked.remove(value);
+            myUnsure.remove(value);
         }
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    private void finish(Map<E, Boolean> changes, InputDetails details) {
+    private void finish(Map<E, ThreeState> changes, InputDetails details) {
         myShownStates = null;
 
         try {
@@ -367,8 +423,12 @@ public final class CheckBoxTreeState<E> {
             LOG.error(e);
         }
 
-        for (Map.Entry<E, Boolean> change : changes.entrySet()) {
-            myTree.getListenerDispatcher(TreeCheckEvent.class).onEvent(new TreeCheckEvent<>(myTree, change.getKey(), change.getValue(), details));
+        for (Map.Entry<E, ThreeState> change : changes.entrySet()) {
+            E value = change.getKey();
+            ThreeState state = ownState(value);
+            if (state != change.getValue()) {
+                myTree.getListenerDispatcher(TreeCheckEvent.class).onEvent(new TreeCheckEvent<>(myTree, value, state, details));
+            }
         }
     }
 
@@ -389,6 +449,14 @@ public final class CheckBoxTreeState<E> {
     private List<E> checkedSnapshot() {
         synchronized (myChecked) {
             return List.copyOf(myChecked);
+        }
+    }
+
+    private List<E> markedSnapshot() {
+        synchronized (myChecked) {
+            List<E> marked = new ArrayList<>(myChecked);
+            marked.addAll(myUnsure);
+            return marked;
         }
     }
 

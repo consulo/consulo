@@ -18,7 +18,11 @@ package consulo.it.internal.ui;
 import consulo.disposer.Disposable;
 import consulo.ui.Component;
 import consulo.ui.TextBox;
+import consulo.ui.TextBoxStyle;
 import org.jspecify.annotations.Nullable;
+
+import java.util.EnumSet;
+import java.util.Set;
 
 /**
  * Dummy-but-creatable headless {@link TextBox}.
@@ -26,6 +30,8 @@ import org.jspecify.annotations.Nullable;
  * @author VISTALL
  */
 public class HeadlessTextBox extends HeadlessValueComponentBase<String> implements TextBox {
+    private final Set<TextBoxStyle> myStyles = EnumSet.noneOf(TextBoxStyle.class);
+
     private boolean myEditable = true;
     private @Nullable Component mySuffixComponent;
 
@@ -84,6 +90,15 @@ public class HeadlessTextBox extends HeadlessValueComponentBase<String> implemen
     @Override
     public boolean isFocusable() {
         return false;
+    }
+
+    @Override
+    public void addStyle(TextBoxStyle style) {
+        myStyles.add(style);
+    }
+
+    public Set<TextBoxStyle> getStyles() {
+        return Set.copyOf(myStyles);
     }
 
     @Override

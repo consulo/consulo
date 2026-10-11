@@ -605,6 +605,11 @@ public class DesktopQtUIInternalImpl extends UIInternal implements UIInternalEx 
     }
 
     @Override
+    public <E> TriStateCheckBoxTree<E> _Components_triStateCheckBoxTree(@Nullable E rootValue, TreeModel<E> model, TreeExecutor executor) {
+        return new DesktopQtTriStateCheckBoxTreeImpl<>(rootValue, model, executor);
+    }
+
+    @Override
     public <E> CheckBoxTreeTable<E> _Components_checkBoxTreeTable(@Nullable E rootValue, TreeModel<E> model, TreeExecutor executor) {
         return new DesktopQtCheckBoxTreeTableImpl<>(rootValue, model, executor);
     }

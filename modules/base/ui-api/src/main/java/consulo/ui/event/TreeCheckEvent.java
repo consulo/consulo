@@ -18,6 +18,7 @@ package consulo.ui.event;
 import consulo.ui.CheckableTree;
 import consulo.ui.event.details.InputDetails;
 import consulo.ui.event.details.ProgrammaticInputDetails;
+import consulo.util.lang.ThreeState;
 
 /**
  * Sent once for every value whose own check state changed - the one the user or a call changed, and every one the
@@ -29,16 +30,20 @@ import consulo.ui.event.details.ProgrammaticInputDetails;
  */
 public final class TreeCheckEvent<V> extends ComponentEvent<CheckableTree<V>> {
     private final V myValue;
-    private final boolean myChecked;
+    private final ThreeState myState;
 
     public TreeCheckEvent(CheckableTree<V> component, V value, boolean checked) {
         this(component, value, checked, ProgrammaticInputDetails.INSTANCE);
     }
 
     public TreeCheckEvent(CheckableTree<V> component, V value, boolean checked, InputDetails inputDetails) {
+        this(component, value, checked ? ThreeState.YES : ThreeState.NO, inputDetails);
+    }
+
+    public TreeCheckEvent(CheckableTree<V> component, V value, ThreeState state, InputDetails inputDetails) {
         super(component, inputDetails);
         myValue = value;
-        myChecked = checked;
+        myState = state;
     }
 
     public V getValue() {
@@ -46,6 +51,14 @@ public final class TreeCheckEvent<V> extends ComponentEvent<CheckableTree<V>> {
     }
 
     public boolean isChecked() {
-        return myChecked;
+        return myState == ThreeState.YES;
+    }
+
+    /**
+     * The new own state of the value - {@link ThreeState#UNSURE} only ever comes from a
+     * {@link consulo.ui.TriStateCheckBoxTree}.
+     */
+    public ThreeState getState() {
+        return myState;
     }
 }

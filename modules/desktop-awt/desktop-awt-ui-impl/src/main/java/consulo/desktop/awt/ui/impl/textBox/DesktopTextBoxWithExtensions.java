@@ -22,6 +22,7 @@ import consulo.desktop.awt.ui.impl.components.fields.ExtendableTextComponent;
 import consulo.desktop.awt.ui.impl.components.fields.ExtendableTextField;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
+import consulo.ui.TextBoxStyle;
 import consulo.ui.TextBoxWithExtensions;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
@@ -138,6 +139,13 @@ public class DesktopTextBoxWithExtensions {
         @Override
         public void setForegroundColor(@Nullable ColorValue foreground) {
             toAWTComponent().setForegroundColor(foreground);
+        }
+
+        @Override
+        public void addStyle(TextBoxStyle style) {
+            switch (style) {
+                case HAS_CLEAR_BUTTON -> toAWTComponent().putClientProperty("JTextField.showClearButton", true);
+            }
         }
 
         @Override

@@ -192,6 +192,10 @@ public abstract class UIInternal {
         throw new UnsupportedOperationException();
     }
 
+    public <E> TriStateCheckBoxTree<E> _Components_triStateCheckBoxTree(@Nullable E rootValue, TreeModel<E> model, TreeExecutor executor) {
+        throw new UnsupportedOperationException();
+    }
+
     public <E> CheckBoxTreeTable<E> _Components_checkBoxTreeTable(@Nullable E rootValue, TreeModel<E> model, TreeExecutor executor) {
         throw new UnsupportedOperationException();
     }

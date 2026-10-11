@@ -44,6 +44,7 @@ import consulo.ui.Space;
 import consulo.ui.Tab;
 import consulo.ui.TextAttribute;
 import consulo.ui.TextBox;
+import consulo.ui.TextBoxStyle;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.KeyPressedEvent;
@@ -164,6 +165,7 @@ public class UnifiedOptionsEditor implements OptionsEditorHost, Disposable {
 
         mySearch = TextBox.create();
         mySearch.setPlaceholder(ConfigurableLocalize.configurableSearchPlaceholder());
+        mySearch.addStyle(TextBoxStyle.HAS_CLEAR_BUTTON);
         Label searchIcon = Label.create();
         searchIcon.setImage(PlatformIconGroup.actionsSearch());
         mySearch.setPrefixComponent(searchIcon);

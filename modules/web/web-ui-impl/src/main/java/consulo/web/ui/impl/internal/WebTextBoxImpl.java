@@ -22,6 +22,7 @@ import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.TextBox;
+import consulo.ui.TextBoxStyle;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.event.ValueComponentEvent;
@@ -197,5 +198,12 @@ public class WebTextBoxImpl extends VaadinComponentDelegate<WebTextBoxImpl.Vaadi
     @Override
     public void setPlaceholder(LocalizeValue text) {
         getVaadinComponent().setPlaceholder(text.getNullIfEmpty());
+    }
+
+    @Override
+    public void addStyle(TextBoxStyle style) {
+        switch (style) {
+            case HAS_CLEAR_BUTTON -> getVaadinComponent().setClearButtonVisible(true);
+        }
     }
 }

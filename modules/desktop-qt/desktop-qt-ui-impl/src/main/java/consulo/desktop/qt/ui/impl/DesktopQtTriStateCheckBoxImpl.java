@@ -48,7 +48,18 @@ public class DesktopQtTriStateCheckBoxImpl extends QtComponentDelegate<QCheckBox
 
     @Override
     protected QCheckBox createQt(QWidget parent) {
-        return new QCheckBox(parent);
+        return new QCheckBox(parent) {
+            @Override
+            protected void nextCheckState() {
+                if (myUnsureEnabled) {
+                    super.nextCheckState();
+                    return;
+                }
+
+                setCheckState(checkState() == Qt.CheckState.Checked ? Qt.CheckState.Unchecked : Qt.CheckState.Checked);
+                setTristate(false);
+            }
+        };
     }
 
     @Override
