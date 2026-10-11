@@ -165,9 +165,8 @@ public class DesktopAWTHtmlViewImpl extends SwingComponentDelegate<DesktopAWTHtm
                     panel.setDocument(document, context);
 
                     SwingUtilities.invokeLater(() -> {
-                        if (mySizeToContent) {
-                            panel.revalidate();
-                        }
+                        panel.revalidate();
+                        panel.repaint();
                         future.complete(null);
                     });
                 }

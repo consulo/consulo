@@ -490,3 +490,16 @@ vaadin-dialog:not(.web-heavy-popup)::part(title)
   font-size: inherit;
   line-height: inherit;
 }
+
+vaadin-select::part(input-field) {
+    width: auto;
+    min-width: 2em;
+}
+
+vaadin-select.consulo-select-with-suffix::part(toggle-button) {
+    order: 2;
+}
+
+vaadin-select > .consulo-select-suffix {
+    order: 1;
+}

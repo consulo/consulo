@@ -16,14 +16,13 @@
 package consulo.colorScheme.ui;
 
 import consulo.colorScheme.EditorColorsScheme;
+import consulo.ui.Component;
 
-import javax.swing.*;
-import javax.swing.event.HyperlinkEvent;
 import java.util.EventListener;
 
 public interface ColorDescriptionPanel {
     
-    JComponent getPanel();
+    Component getUIComponent();
 
     void resetDefault();
 
@@ -36,6 +35,6 @@ public interface ColorDescriptionPanel {
     interface Listener extends EventListener {
         void onSettingsChanged();
 
-        void onHyperLinkClicked(HyperlinkEvent e);
+        void onHyperLinkClicked(String pageName, String attributeName);
     }
 }

@@ -27,7 +27,6 @@ import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.virtualFileSystem.status.FileStatus;
-import consulo.ide.impl.idea.profile.codeInspection.ui.inspectionsTree.InspectionsConfigTreeComparator;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.SimpleTextAttributes;
@@ -71,7 +70,7 @@ public class InspectionTree extends Tree {
         myExpandedUserObjects.add(project);
 
         TreeUtil.installActions(this);
-        new TreeSpeedSearch(this, o -> InspectionsConfigTreeComparator.getDisplayTextToSort(o.getLastPathComponent().toString()));
+        new TreeSpeedSearch(this, o -> InspectionResultsViewComparator.getDisplayTextToSort(o.getLastPathComponent().toString()));
 
         addTreeSelectionListener(e -> {
             TreePath newSelection = e.getNewLeadSelectionPath();

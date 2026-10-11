@@ -25,9 +25,7 @@ import consulo.localize.LocalizeValue;
  */
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface ProjectConfigurable extends Configurable {
-    
     String getId();
 
-    
     LocalizeValue getDisplayName();
 }

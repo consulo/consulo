@@ -15,14 +15,15 @@
  */
 package consulo.ide.impl.idea.codeInspection.actions;
 
+import consulo.application.Application;
 import consulo.annotation.component.ActionImpl;
 import consulo.document.FileDocumentManager;
 import consulo.ide.impl.idea.codeInspection.ex.GlobalInspectionContextImpl;
 import consulo.ide.impl.idea.codeInspection.ex.InspectionManagerImpl;
 import consulo.ide.impl.idea.openapi.options.ex.SingleConfigurableEditor;
 import consulo.language.editor.impl.internal.inspection.InspectionProjectProfileManager;
-import consulo.ide.impl.idea.profile.codeInspection.ui.ErrorsConfigurable;
-import consulo.ide.impl.idea.profile.codeInspection.ui.IDEInspectionToolsConfigurable;
+import consulo.language.editor.impl.internal.inspection.setting.IDEInspectionToolsConfigurable;
+import consulo.language.editor.impl.internal.inspection.setting.InspectionToolsConfigurable;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.impl.action.BaseAnalysisAction;
 import consulo.language.editor.inspection.localize.InspectionLocalize;
@@ -170,7 +171,7 @@ public class CodeInspectionAction extends BaseAnalysisAction {
         InspectionProjectProfileManager projectProfileManager,
         InspectionProfileManager profileManager
     ) {
-        return new IDEInspectionToolsConfigurable(projectProfileManager, profileManager);
+        return new IDEInspectionToolsConfigurable(Application.get(), projectProfileManager, profileManager);
     }
 
     @RequiredUIAccess
@@ -199,7 +200,7 @@ public class CodeInspectionAction extends BaseAnalysisAction {
     private static class MySingleConfigurableEditor extends SingleConfigurableEditor {
         private final InspectionManagerImpl myManager;
 
-        public MySingleConfigurableEditor( Project project, ErrorsConfigurable configurable, InspectionManagerImpl manager) {
+        public MySingleConfigurableEditor( Project project, InspectionToolsConfigurable configurable, InspectionManagerImpl manager) {
             super(project, configurable, createDimensionKey(configurable));
             myManager = manager;
             setTitle(configurable.getDisplayName());
@@ -208,7 +209,7 @@ public class CodeInspectionAction extends BaseAnalysisAction {
         @Override
         @RequiredUIAccess
         protected void doOKAction() {
-            Object o = ((ErrorsConfigurable) getConfigurable()).getSelectedObject();
+            Object o = ((InspectionToolsConfigurable) getConfigurable()).getSelectedObject();
             if (o instanceof InspectionProfile inspectionProfile) {
                 myManager.setProfile(inspectionProfile.getName());
             }

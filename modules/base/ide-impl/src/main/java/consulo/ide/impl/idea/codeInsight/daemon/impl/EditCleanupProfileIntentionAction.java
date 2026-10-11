@@ -15,9 +15,10 @@
  */
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
+import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.ide.impl.idea.codeInspection.actions.CodeCleanupAction;
-import consulo.ide.impl.idea.profile.codeInspection.ui.ProjectInspectionToolsConfigurable;
+import consulo.language.editor.impl.internal.inspection.setting.ProjectInspectionToolsConfigurable;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.language.editor.impl.internal.inspection.InspectionProjectProfileManager;
 import consulo.language.editor.inspection.scheme.InspectionProfileManager;
@@ -52,7 +53,7 @@ public class EditCleanupProfileIntentionAction implements IntentionAction {
   @Override
   public void invoke(Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
     final InspectionProjectProfileManager profileManager = InspectionProjectProfileManager.getInstance(project);
-    ProjectInspectionToolsConfigurable configurable = new ProjectInspectionToolsConfigurable(InspectionProfileManager.getInstance(), profileManager) {
+    ProjectInspectionToolsConfigurable configurable = new ProjectInspectionToolsConfigurable(Application.get(), InspectionProfileManager.getInstance(), profileManager) {
       @Override
       protected boolean acceptTool(InspectionToolWrapper entry) {
         return super.acceptTool(entry) && entry.isCleanupTool();

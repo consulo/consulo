@@ -597,8 +597,14 @@ intention.replace.concatenation.with.formatted.output.text:
     text: Replace '+' with 'java.text.MessageFormat.format()'
 intention.settings:
     text: Code Intentions
+intention.settings.after.title:
+    text: After
+intention.settings.before.title:
+    text: Before
 intention.settings.category.text:
     text: <html><body><font face="verdana" size="-1"><center>You have selected the intention category ''<b>{0}</b>''.</center><center>By clicking the checkbox, you can enable/disable all intentions in this category.</center><center>To enable/disable a particular intention, select the intention inside this category.</center></font></body></html>
+intention.settings.filter.placeholder:
+    text: Filter intentions
 intention.split.declaration.assignment.text:
     text: Split into declaration and assignment
 intention.split.declaration.family:

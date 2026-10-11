@@ -15,6 +15,7 @@
  */
 package consulo.desktop.qt.ui.impl;
 
+import consulo.ui.Component;
 import consulo.ui.ComboBox;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ValueComponentEvent;
@@ -30,6 +31,7 @@ import org.jspecify.annotations.Nullable;
 public class DesktopQtComboBoxImpl<E> extends DesktopQtComboBoxBaseImpl<E, QComboBox> implements ComboBox<E> {
     private int mySelectedIndex = 0;
     private boolean myFireListeners = true;
+    private @Nullable Component mySuffixComponent;
 
     public DesktopQtComboBoxImpl(FlatDataModel<E> model) {
         super(model);
@@ -59,6 +61,47 @@ public class DesktopQtComboBoxImpl<E> extends DesktopQtComboBoxBaseImpl<E, QComb
         applyStyles(component);
 
         rebuild(component);
+
+        attachSuffix(component);
+    }
+
+    @Override
+    public void setSuffixComponent(@Nullable Component suffixComponent) {
+        Component oldSuffix = mySuffixComponent;
+        if (oldSuffix == suffixComponent) {
+            return;
+        }
+
+        if (oldSuffix instanceof QtComponentDelegate<?> oldDelegate) {
+            oldDelegate.setParent(null);
+        }
+
+        mySuffixComponent = suffixComponent;
+
+        QComboBox component = myComponent;
+        if (component != null && !component.isDisposed()) {
+            attachSuffix(component);
+        }
+    }
+
+    @Override
+    public @Nullable Component getSuffixComponent() {
+        return mySuffixComponent;
+    }
+
+    private void attachSuffix(QComboBox component) {
+        if (!(component instanceof DesktopQtComboBox comboBox)) {
+            return;
+        }
+
+        if (!(mySuffixComponent instanceof QtComponentDelegate<?> suffix)) {
+            comboBox.setSuffixWidget(null);
+            return;
+        }
+
+        suffix.setParent(this);
+        suffix.bind(comboBox, null);
+        comboBox.setSuffixWidget(suffix.toQtComponent());
     }
 
     @Override

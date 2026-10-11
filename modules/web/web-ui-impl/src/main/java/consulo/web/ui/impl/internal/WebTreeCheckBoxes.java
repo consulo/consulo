@@ -15,8 +15,10 @@
  */
 package consulo.web.ui.impl.internal;
 
+import com.vaadin.flow.component.HasComponents;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.checkbox.Checkbox;
+import com.vaadin.flow.component.html.Span;
 import consulo.ui.CheckableTree;
 import consulo.ui.TreeNode;
 import consulo.ui.event.details.InputDetails;
@@ -56,15 +58,15 @@ final class WebTreeCheckBoxes<NODE> {
         return myState;
     }
 
-    void decorateRow(WebTreeImpl.VaadinGridTreeToggle toggle, @Nullable TreeNodeImpl<NODE> node) {
+    HasComponents decorateRow(WebTreeImpl.VaadinGridTreeToggle toggle, @Nullable TreeNodeImpl<NODE> node) {
         if (node == null) {
-            return;
+            return toggle;
         }
 
         ThreeState state = myState.getShownState(node);
         if (state == null) {
             myCheckBoxes.put(node, null);
-            return;
+            return toggle;
         }
 
         Checkbox checkBox = new Checkbox();
@@ -79,7 +81,11 @@ final class WebTreeCheckBoxes<NODE> {
         });
 
         myCheckBoxes.put(node, checkBox);
-        toggle.add(checkBox);
+
+        Span row = new Span(checkBox);
+        row.addClassName(WebTreeImpl.CHECK_ROW_CLASS);
+        toggle.add(row);
+        return row;
     }
 
     private void toggleByClick(TreeNodeImpl<NODE> node, InputDetails details) {

@@ -15,6 +15,7 @@
  */
 package consulo.desktop.qt.editor.impl.internal;
 
+import consulo.language.editor.highlight.EmptyEditorHighlighter;
 import consulo.application.Application;
 import consulo.codeEditor.*;
 import consulo.codeEditor.event.*;
@@ -108,6 +109,8 @@ public class DesktopQtEditorImpl extends CodeEditorBase implements RealEditor, C
         myComponent = new DesktopQtEditorComponent(this);
         myComponent.whenBound(widget -> recreateEditorFloatingToolbar());
         myGutterComponent = new DesktopQtEditorGutterComponentImpl(this);
+
+        setHighlighter(new EmptyEditorHighlighter(new TextAttributes()));
 
         // the caret and the selection are painted, so moving either is a visual change the surface has to hear
         // about - but only the rows either of them left or arrived at, never the whole document

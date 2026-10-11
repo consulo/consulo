@@ -12,6 +12,7 @@ import consulo.colorScheme.ui.ColorDescriptionPanel;
 import consulo.diff.util.TextDiffTypeFactory;
 import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.ui.CheckBox;
+import consulo.ui.Component;
 import consulo.ui.ColorBox;
 import consulo.ui.Label;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -85,8 +86,8 @@ class DiffColorDescriptionPanel implements ColorDescriptionPanel {
 
   
   @Override
-  public JComponent getPanel() {
-    return (JComponent)TargetAWT.to(myPanel);
+  public Component getUIComponent() {
+    return myPanel;
   }
 
   private void onSettingsChanged() {

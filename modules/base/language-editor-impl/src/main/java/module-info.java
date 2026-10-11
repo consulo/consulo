@@ -18,6 +18,7 @@ module consulo.language.editor.impl {
     requires consulo.application.impl;
     requires consulo.project.impl;
     requires consulo.language.editor.ui.api;
+    requires consulo.color.scheme.ui.api;
     requires consulo.code.editor.impl;
 
     requires consulo.language.impl;
@@ -60,9 +61,11 @@ module consulo.language.editor.impl {
         consulo.ide.impl,
         consulo.web.editor.impl;
     exports consulo.language.editor.impl.internal.parser to consulo.ide.impl;
+    exports consulo.language.editor.impl.internal.intention.setting to consulo.ide.impl;
     exports consulo.language.editor.impl.internal.packageDependency to consulo.ide.impl;
     exports consulo.language.editor.impl.internal.inspection.scheme to consulo.ide.impl, consulo.it;
     exports consulo.language.editor.impl.internal.inspection to consulo.ide.impl, consulo.it;
+    exports consulo.language.editor.impl.internal.inspection.setting to consulo.ide.impl, consulo.it;
     exports consulo.language.editor.impl.internal.psi.path to consulo.ide.impl;
     exports consulo.language.editor.impl.internal.template to consulo.ide.impl;
     exports consulo.language.editor.impl.internal.highlight to consulo.ide.impl;

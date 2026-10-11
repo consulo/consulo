@@ -73,8 +73,7 @@ public class WebColorBoxImpl extends VaadinComponentDelegate<WebColorBoxImpl.Vaa
     public void setValue(@Nullable ColorValue value, boolean fireListeners) {
         myValue = value;
 
-        String cssColor = WebColors.toCssColor(value);
-        getVaadinComponent().setValue(cssColor == null ? "" : cssColor);
+        getVaadinComponent().setValue(WebColors.toCssColor(value));
 
         if (fireListeners) {
             getListenerDispatcher(ValueComponentEvent.class).onEvent(new ValueComponentEvent(this, value));

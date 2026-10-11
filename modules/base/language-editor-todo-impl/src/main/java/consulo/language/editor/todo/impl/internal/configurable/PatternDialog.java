@@ -15,6 +15,7 @@
  */
 package consulo.language.editor.todo.impl.internal.configurable;
 
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.TextAttributes;
@@ -195,7 +196,7 @@ class PatternDialog extends DialogWrapper {
         gb.gridx = 0;
         gb.gridwidth = GridBagConstraints.REMAINDER;
         gb.weightx = 1;
-        panel.add(myColorAndFontDescriptionPanel.getPanel(), gb);
+        panel.add(TargetAWT.to(myColorAndFontDescriptionPanel.getUIComponent()), gb);
         return panel;
     }
 }

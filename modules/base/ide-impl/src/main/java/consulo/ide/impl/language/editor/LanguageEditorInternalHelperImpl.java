@@ -33,7 +33,7 @@ import consulo.ide.impl.idea.codeInsight.editorActions.EnterHandler;
 import consulo.ide.impl.idea.codeInsight.highlighting.HighlightUsagesHandler;
 import consulo.ide.impl.idea.find.actions.ShowUsagesAction;
 import consulo.ide.impl.idea.find.actions.UnifiedShowUsagesPopup;
-import consulo.ide.impl.idea.profile.codeInspection.ui.ErrorsConfigurable;
+import consulo.language.editor.impl.internal.inspection.setting.ProjectInspectionToolsConfigurable;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.language.Language;
 import consulo.language.codeStyle.CodeStyleSettingsManager;
@@ -125,7 +125,7 @@ public class LanguageEditorInternalHelperImpl implements LanguageEditorInternalH
     @Override
     @RequiredUIAccess
     public void showInspectionsSettings(Project project) {
-        ShowSettingsUtil.getInstance().showAndSelect(project, ErrorsConfigurable.class);
+        ShowSettingsUtil.getInstance().showAndSelect(project, ProjectInspectionToolsConfigurable.class);
     }
 
     @Override

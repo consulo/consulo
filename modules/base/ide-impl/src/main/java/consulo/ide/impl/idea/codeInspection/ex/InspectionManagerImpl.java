@@ -18,15 +18,11 @@ package consulo.ide.impl.idea.codeInspection.ex;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.util.NotNullLazyValue;
-import consulo.configurable.SearchableOptionsRegistrar;
-import consulo.ide.impl.idea.profile.codeInspection.ui.header.InspectionToolsConfigurable;
 import consulo.language.Language;
 import consulo.language.editor.impl.internal.inspection.InspectionManagerBase;
 import consulo.language.editor.inspection.*;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.language.editor.intention.SuppressIntentionAction;
-import consulo.language.editor.internal.InspectionCache;
-import consulo.language.editor.internal.InspectionCacheService;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowId;
@@ -43,8 +39,6 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.regex.Pattern;
 
 /**
  * @author max
@@ -53,10 +47,8 @@ import java.util.regex.Pattern;
 @Singleton
 @ServiceImpl
 public class InspectionManagerImpl extends InspectionManagerBase {
-    private static final Pattern HTML_PATTERN = Pattern.compile("<[^<>]*>");
     private final NotNullLazyValue<ContentManager> myContentManager;
     private final Set<GlobalInspectionContextImpl> myRunningContexts = new HashSet<>();
-    private final AtomicBoolean myToolsAreInitialized = new AtomicBoolean(false);
     private GlobalInspectionContextImpl myGlobalInspectionContext;
 
     @Inject
@@ -103,20 +95,6 @@ public class InspectionManagerImpl extends InspectionManagerBase {
         );
     }
 
-    private static void processText(
-        String descriptionText,
-        InspectionToolWrapper tool,
-        SearchableOptionsRegistrar myOptionsRegistrar
-    ) {
-        if (Application.get().isDisposed()) {
-            return;
-        }
-        Set<String> words = myOptionsRegistrar.getProcessedWordsWithoutStemming(descriptionText);
-        for (String word : words) {
-            myOptionsRegistrar.addOption(word, tool.getShortName(), tool.getDisplayName().get(), InspectionToolsConfigurable.ID, "Inspections");
-        }
-    }
-
     @Override
     public GlobalInspectionContextImpl createNewGlobalContext(boolean reuse) {
         GlobalInspectionContextImpl inspectionContext;
@@ -145,29 +123,5 @@ public class InspectionManagerImpl extends InspectionManagerBase {
 
     public Set<GlobalInspectionContextImpl> getRunningContexts() {
         return myRunningContexts;
-    }
-
-    public void buildInspectionSearchIndexIfNecessary() {
-        if (!myToolsAreInitialized.getAndSet(true)) {
-            Application app = Application.get();
-            if (app.isUnitTestMode() || app.isHeadlessEnvironment()) {
-                return;
-            }
-
-            app.executeOnPooledThread((Runnable) () -> {
-                SearchableOptionsRegistrar optionsRegistrar = SearchableOptionsRegistrar.getInstance();
-
-                InspectionCache cache = app.getInstance(InspectionCacheService.class).get();
-                for (InspectionToolWrapper toolWrapper : cache.wrapTools()) {
-                    processText(toolWrapper.getDisplayName().toLowerCase().get(), toolWrapper, optionsRegistrar);
-
-                    String description = toolWrapper.loadDescription();
-                    if (description != null) {
-                        String descriptionText = HTML_PATTERN.matcher(description).replaceAll(" ");
-                        processText(descriptionText, toolWrapper, optionsRegistrar);
-                    }
-                }
-            });
-        }
     }
 }

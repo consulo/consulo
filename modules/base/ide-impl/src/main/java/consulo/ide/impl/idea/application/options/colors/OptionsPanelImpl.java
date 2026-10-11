@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.application.options.colors;
 
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.colorScheme.ui.ColorAndFontDescription;
 import consulo.colorScheme.ui.ColorAndFontDescriptionPanel;
 import consulo.colorScheme.ui.ColorDescriptionPanel;
@@ -32,9 +33,6 @@ import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.Wrapper;
 
 import javax.swing.*;
-import javax.swing.event.HyperlinkEvent;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.Element;
 import java.awt.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -83,32 +81,20 @@ public class OptionsPanelImpl implements OptionsPanel {
             }
 
             @Override
-            public void onHyperLinkClicked(HyperlinkEvent e) {
-                if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-                    Settings settings = DataManager.getInstance().getDataContext(myPanel).getData(Settings.KEY);
-                    String pageName = e.getDescription();
-                    Element element = e.getSourceElement();
-                    String attrName;
-                    try {
-                        attrName =
-                            element.getDocument().getText(element.getStartOffset(), element.getEndOffset() - element.getStartOffset());
-                    }
-                    catch (BadLocationException e1) {
-                        return;
-                    }
-                    SearchableConfigurable page = myOptions.findSubConfigurable(pageName);
-                    if (page != null && settings != null) {
-                        Runnable runnable = page.enableSearch(attrName);
-                        CompletableFuture<Void> callback = settings.select(page);
-                        if (runnable != null) {
-                            callback.whenComplete((value, error) -> {
-                                if (error != null) {
-                                    return;
-                                }
+            public void onHyperLinkClicked(String pageName, String attributeName) {
+                Settings settings = DataManager.getInstance().getDataContext(myPanel).getData(Settings.KEY);
+                SearchableConfigurable page = myOptions.findSubConfigurable(pageName);
+                if (page != null && settings != null) {
+                    Runnable runnable = page.enableSearch(attributeName);
+                    CompletableFuture<Void> callback = settings.select(page);
+                    if (runnable != null) {
+                        callback.whenComplete((value, error) -> {
+                            if (error != null) {
+                                return;
+                            }
 
-                                runnable.run();
-                            });
-                        }
+                            runnable.run();
+                        });
                     }
                 }
             }
@@ -125,7 +111,7 @@ public class OptionsPanelImpl implements OptionsPanel {
 
         JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(myOptionsTree, true);
         myPanel.add(scrollPane, BorderLayout.CENTER);
-        JComponent panel = myOptionsPanel.getPanel();
+        JComponent panel = (JComponent) TargetAWT.to(myOptionsPanel.getUIComponent());
         panel.setBorder(JBUI.Borders.empty(5));
 
         Wrapper wrapper = new Wrapper(panel);

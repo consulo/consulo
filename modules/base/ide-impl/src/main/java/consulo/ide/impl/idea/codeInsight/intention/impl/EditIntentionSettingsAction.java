@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.codeInsight.intention.impl;
 
 import consulo.codeEditor.Editor;
-import consulo.ide.impl.idea.codeInsight.intention.impl.config.IntentionSettingsConfigurable;
+import consulo.language.editor.impl.internal.intention.setting.IntentionSettingsConfigurable;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.language.editor.impl.internal.intention.AbstractEditIntentionSettingsAction;
 import consulo.language.editor.intention.HighPriorityAction;
@@ -28,7 +28,7 @@ public class EditIntentionSettingsAction extends AbstractEditIntentionSettingsAc
   @RequiredUIAccess
   public void invoke(Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
     ShowSettingsUtil.getInstance().showAndSelect(project, IntentionSettingsConfigurable.class, configurable -> {
-      configurable.selectIntention(myText.get());
+      configurable.selectIntention(myText);
     });
   }
 }

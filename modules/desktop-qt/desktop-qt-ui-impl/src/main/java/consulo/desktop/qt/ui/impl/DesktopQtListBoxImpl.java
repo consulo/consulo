@@ -18,6 +18,7 @@ package consulo.desktop.qt.ui.impl;
 import consulo.ui.ListBox;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ValueComponentEvent;
+import consulo.ui.event.details.ProgrammaticInputDetails;
 import consulo.ui.model.FlatDataModel;
 import io.qt.widgets.QAbstractItemView;
 import io.qt.widgets.QListWidget;
@@ -141,7 +142,12 @@ public class DesktopQtListBoxImpl<E> extends DesktopQtListBoxBaseImpl<E> impleme
         int index = value == null ? -1 : getDataModel().indexOf(value);
 
         if (fireListeners) {
+            boolean changed = index != mySelectedIndex;
             setValueByIndex(index);
+            if (myComponent == null && changed) {
+                getListenerDispatcher(ValueComponentEvent.class)
+                    .onEvent(new ValueComponentEvent(this, getValue(), ProgrammaticInputDetails.INSTANCE));
+            }
             return;
         }
 

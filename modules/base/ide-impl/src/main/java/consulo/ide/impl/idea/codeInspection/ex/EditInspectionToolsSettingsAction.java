@@ -19,7 +19,7 @@ import consulo.application.AllIcons;
 import consulo.codeEditor.Editor;
 import consulo.component.util.Iconable;
 import consulo.language.editor.impl.internal.inspection.InspectionProjectProfileManager;
-import consulo.ide.impl.idea.profile.codeInspection.ui.ProjectInspectionToolsConfigurable;
+import consulo.language.editor.impl.internal.inspection.setting.ProjectInspectionToolsConfigurable;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileImpl;
 import consulo.language.editor.inspection.LocalInspectionTool;
@@ -37,7 +37,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import java.util.concurrent.CompletableFuture;
 
-import javax.swing.*;
 
 /**
  * @author anna
@@ -95,7 +94,7 @@ public class EditInspectionToolsSettingsAction implements IntentionAction, Icona
     return settingsUtil.showAndSelect(project, ProjectInspectionToolsConfigurable.class, errorsConfigurable -> {
       errorsConfigurable.selectProfile(inspectionProfile);
 
-      SwingUtilities.invokeLater(() -> errorsConfigurable.selectInspectionTool(selectedToolShortName));
+      errorsConfigurable.selectInspectionTool(selectedToolShortName);
     });
   }
 

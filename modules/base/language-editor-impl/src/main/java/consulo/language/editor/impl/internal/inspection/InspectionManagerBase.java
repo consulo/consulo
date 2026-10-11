@@ -16,6 +16,12 @@
 package consulo.language.editor.impl.internal.inspection;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.application.Application;
+import consulo.configurable.SearchableOptionsRegistrar;
+import consulo.language.editor.impl.internal.inspection.setting.InspectionToolsConfigurable;
+import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
+import consulo.language.editor.internal.InspectionCache;
+import consulo.language.editor.internal.InspectionCacheService;
 import consulo.language.editor.inspection.*;
 import consulo.language.editor.inspection.scheme.InspectionManager;
 import consulo.language.editor.inspection.scheme.InspectionProfileManager;
@@ -27,9 +33,16 @@ import consulo.module.Module;
 import consulo.project.Project;
 
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.regex.Pattern;
 
 public abstract class InspectionManagerBase extends InspectionManager {
     private static final Logger LOG = Logger.getInstance(InspectionManagerBase.class);
+
+    private static final Pattern HTML_PATTERN = Pattern.compile("<[^<>]*>");
+
+    private final AtomicBoolean myToolsAreInitialized = new AtomicBoolean(false);
 
     private final Project myProject;
     protected String myCurrentProfileName;
@@ -105,5 +118,47 @@ public abstract class InspectionManagerBase extends InspectionManager {
             }
         }
         return myCurrentProfileName;
+    }
+
+    public void buildInspectionSearchIndexIfNecessary() {
+        if (myToolsAreInitialized.getAndSet(true)) {
+            return;
+        }
+
+        Application application = myProject.getApplication();
+        if (application.isUnitTestMode() || application.isHeadlessEnvironment()) {
+            return;
+        }
+
+        application.executeOnPooledThread(() -> {
+            SearchableOptionsRegistrar optionsRegistrar = SearchableOptionsRegistrar.getInstance();
+
+            InspectionCache cache = application.getInstance(InspectionCacheService.class).get();
+            for (InspectionToolWrapper toolWrapper : cache.wrapTools()) {
+                processText(application, toolWrapper.getDisplayName().toLowerCase().get(), toolWrapper, optionsRegistrar);
+
+                String description = toolWrapper.loadDescription();
+                if (description != null) {
+                    String descriptionText = HTML_PATTERN.matcher(description).replaceAll(" ");
+                    processText(application, descriptionText, toolWrapper, optionsRegistrar);
+                }
+            }
+        });
+    }
+
+    private static void processText(
+        Application application,
+        String text,
+        InspectionToolWrapper tool,
+        SearchableOptionsRegistrar optionsRegistrar
+    ) {
+        if (application.isDisposed()) {
+            return;
+        }
+
+        Set<String> words = optionsRegistrar.getProcessedWordsWithoutStemming(text);
+        for (String word : words) {
+            optionsRegistrar.addOption(word, tool.getShortName(), tool.getDisplayName().get(), InspectionToolsConfigurable.ID, "Inspections");
+        }
     }
 }

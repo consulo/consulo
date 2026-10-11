@@ -20,12 +20,14 @@ import io.qt.core.QSize;
 import io.qt.core.Qt;
 import io.qt.gui.QFontMetrics;
 import io.qt.gui.QPaintEvent;
+import io.qt.gui.QResizeEvent;
 import io.qt.gui.QPalette;
 import io.qt.widgets.QComboBox;
 import io.qt.widgets.QStyle;
 import io.qt.widgets.QStyleOptionComboBox;
 import io.qt.widgets.QStylePainter;
 import io.qt.widgets.QWidget;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -36,8 +38,51 @@ public class DesktopQtComboBox extends QComboBox {
     private static final int MAXIMUM_VISIBLE_CHARS = 32;
     private static final int ICON_TEXT_GAP = 4;
 
+    private @Nullable QWidget mySuffix;
+
     public DesktopQtComboBox(QWidget parent) {
         super(parent);
+    }
+
+    public void setSuffixWidget(@Nullable QWidget suffix) {
+        mySuffix = suffix;
+        layoutSuffix();
+        updateGeometry();
+        update();
+    }
+
+    private int suffixWidth() {
+        QWidget suffix = mySuffix;
+        return suffix == null || suffix.isDisposed() ? 0 : suffix.sizeHint().width();
+    }
+
+    private void layoutSuffix() {
+        QWidget suffix = mySuffix;
+        if (suffix == null || suffix.isDisposed()) {
+            return;
+        }
+
+        QStyleOptionComboBox option = new QStyleOptionComboBox();
+        super.initStyleOption(option);
+        QRect arrow = style().subControlRect(QStyle.ComplexControl.CC_ComboBox, option, QStyle.SubControl.SC_ComboBoxArrow, this);
+
+        QSize hint = suffix.sizeHint();
+        int height = Math.max(0, Math.min(hint.height(), height()));
+        suffix.setGeometry(arrow.left() - hint.width(), (height() - height) / 2, hint.width(), height);
+        suffix.raise();
+        suffix.show();
+    }
+
+    @Override
+    protected void resizeEvent(QResizeEvent event) {
+        super.resizeEvent(event);
+        layoutSuffix();
+    }
+
+    @Override
+    public QSize sizeHint() {
+        QSize hint = super.sizeHint();
+        return new QSize(hint.width() + suffixWidth(), hint.height());
     }
 
     @Override
@@ -49,7 +94,7 @@ public class DesktopQtComboBox extends QComboBox {
 
         int contentWidth = minimumContentWidth();
         QSize minimum = style().sizeFromContents(QStyle.ContentsType.CT_ComboBox, option, new QSize(contentWidth, hint.height()), this);
-        return new QSize(Math.min(hint.width(), minimum.width()), hint.height());
+        return new QSize(Math.min(hint.width(), minimum.width()) + suffixWidth(), hint.height());
     }
 
     @Override
@@ -117,7 +162,7 @@ public class DesktopQtComboBox extends QComboBox {
 
     private void elideLabel(QStyleOptionComboBox option) {
         QRect textRect = style().subControlRect(QStyle.ComplexControl.CC_ComboBox, option, QStyle.SubControl.SC_ComboBoxEditField, this);
-        int available = textRect.width() - (option.currentIcon().isNull() ? 0 : iconSize().width() + ICON_TEXT_GAP);
+        int available = textRect.width() - suffixWidth() - (option.currentIcon().isNull() ? 0 : iconSize().width() + ICON_TEXT_GAP);
         if (available > 0) {
             option.setCurrentText(fontMetrics().elidedText(option.currentText(), Qt.TextElideMode.ElideRight, available));
         }

@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.application.options.colors;
 
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.ui.ColorDescriptionPanel;
 import consulo.colorScheme.ui.EditorSchemeAttributeDescriptor;
@@ -54,7 +55,7 @@ public class CompositeColorDescriptionPanel extends JPanel implements ColorDescr
     private void updatePreferredSize() {
         Dimension preferredSize = new Dimension();
         for (ColorDescriptionPanel panel : myDescriptionPanels) {
-            Dimension size = panel.getPanel().getPreferredSize();
+            Dimension size = swingOf(panel).getPreferredSize();
             preferredSize.setSize(
                 Math.max(size.getWidth(), preferredSize.getWidth()),
                 Math.max(size.getHeight(), preferredSize.getHeight())
@@ -65,8 +66,12 @@ public class CompositeColorDescriptionPanel extends JPanel implements ColorDescr
 
     
     @Override
-    public JComponent getPanel() {
-        return this;
+    public consulo.ui.Component getUIComponent() {
+        return TargetAWT.wrap(this);
+    }
+
+    private static JComponent swingOf(ColorDescriptionPanel panel) {
+        return (JComponent) TargetAWT.to(panel.getUIComponent());
     }
 
     @Override
@@ -75,7 +80,7 @@ public class CompositeColorDescriptionPanel extends JPanel implements ColorDescr
             PaintLocker locker = new PaintLocker(this);
             try {
                 setPreferredSize(getSize());// froze [this] size
-                remove(myActive.getPanel());
+                remove(swingOf(myActive));
                 myActive = null;
             }
             finally {
@@ -86,9 +91,9 @@ public class CompositeColorDescriptionPanel extends JPanel implements ColorDescr
 
     @Override
     public void reset(EditorSchemeAttributeDescriptor descriptor) {
-        JComponent oldPanel = myActive == null ? null : myActive.getPanel();
+        JComponent oldPanel = myActive == null ? null : swingOf(myActive);
         myActive = getPanelForDescriptor(descriptor);
-        JComponent newPanel = myActive == null ? null : myActive.getPanel();
+        JComponent newPanel = myActive == null ? null : swingOf(myActive);
 
         if (oldPanel != newPanel) {
             PaintLocker locker = new PaintLocker(this);

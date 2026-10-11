@@ -15,6 +15,7 @@
  */
 package consulo.web.ui.impl.internal;
 
+import com.vaadin.flow.component.HasComponents;
 import consulo.ui.CheckBoxTreeTable;
 import consulo.ui.TreeExecutor;
 import consulo.ui.TreeModel;
@@ -39,8 +40,8 @@ public class WebCheckBoxTreeTableImpl<NODE> extends WebTreeTableImpl<NODE> imple
     }
 
     @Override
-    void decorateRow(VaadinGridTreeToggle toggle, @Nullable TreeNodeImpl<NODE> node) {
-        myCheckBoxes.decorateRow(toggle, node);
+    HasComponents decorateRow(VaadinGridTreeToggle toggle, @Nullable TreeNodeImpl<NODE> node) {
+        return myCheckBoxes.decorateRow(toggle, node);
     }
 
     @Override

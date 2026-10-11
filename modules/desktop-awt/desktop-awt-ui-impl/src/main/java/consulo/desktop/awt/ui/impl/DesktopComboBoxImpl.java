@@ -15,6 +15,8 @@
  */
 package consulo.desktop.awt.ui.impl;
 
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.awt.internal.AWTHasSuffixComponent;
 import consulo.desktop.awt.ui.impl.facade.FromSwingComponentWrapper;
 import consulo.disposer.Disposable;
 import consulo.ui.ComboBox;
@@ -27,6 +29,8 @@ import consulo.ui.model.FlatDataModel;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import java.awt.Dimension;
 
 /**
  * @author VISTALL
@@ -38,18 +42,45 @@ public class DesktopComboBoxImpl<E> extends DesktopComboBoxBaseImpl<E, DesktopCo
         public Component toUIComponent() {
             return DesktopComboBoxImpl.this;
         }
+
+        @Override
+        public Dimension getPreferredSize() {
+            Dimension size = super.getPreferredSize();
+            JComponent suffix = AWTHasSuffixComponent.getSuffixComponent(this);
+            if (suffix == null || !suffix.isVisible()) {
+                return size;
+            }
+            return new Dimension(size.width + suffix.getPreferredSize().width, size.height);
+        }
     }
+
+    private @Nullable Component mySuffixComponent;
 
     public DesktopComboBoxImpl(FlatDataModel<E> model) {
         super(model);
     }
 
     @Override
+    public void setSuffixComponent(@Nullable Component suffixComponent) {
+        mySuffixComponent = suffixComponent;
+        AWTHasSuffixComponent.setSuffixComponent(toAWTComponent(), suffixComponent == null ? null : TargetAWT.to(suffixComponent));
+    }
+
+    @Override
+    public @Nullable Component getSuffixComponent() {
+        return mySuffixComponent;
+    }
+
+    @Override
     protected MyComboBox createComponent() {
-        MyComboBox component = new MyComboBox();
+        MyComboBox component = newComboBox();
         component.setModel(new DesktopFlatDataModelWrapper<>(myModel));
         initComboBox(component);
         return component;
+    }
+
+    protected MyComboBox newComboBox() {
+        return new MyComboBox();
     }
 
     @Override

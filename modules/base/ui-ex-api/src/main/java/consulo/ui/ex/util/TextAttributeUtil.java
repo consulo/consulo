@@ -96,6 +96,10 @@ public final class TextAttributeUtil {
             };
         }
 
+        if (attribute.getBackgroundColor() != null) {
+            style |= SimpleTextAttributes.STYLE_OPAQUE;
+        }
+
         return SimpleTextAttributes.of(attribute.getBackgroundColor(), attribute.getForegroundColor(), null, style);
     }
 

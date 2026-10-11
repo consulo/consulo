@@ -17,6 +17,7 @@ package consulo.language.editor.internal.inspection;
 
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.UnnamedConfigurable;
+import consulo.configurable.internal.ConfigurableUIMigrationUtil;
 import consulo.content.scope.NamedScope;
 import consulo.content.scope.NamedScopesHolder;
 import consulo.disposer.Disposable;
@@ -99,7 +100,7 @@ public class ScopeToolState {
     public @Nullable Component getConfigurablePanel(Disposable parentDisposable) {
         if (myConfigurableRef != null) {
             UnnamedConfigurable unnamedConfigurable = myConfigurableRef.get();
-            return unnamedConfigurable == null ? null : unnamedConfigurable.createUIComponent(parentDisposable);
+            return unnamedConfigurable == null ? null : ConfigurableUIMigrationUtil.createUIComponent(unnamedConfigurable, parentDisposable);
         }
 
         UnnamedConfigurable configurable = myToolWrapper.getToolState().createConfigurable();
@@ -108,7 +109,7 @@ public class ScopeToolState {
             return null;
         }
         else {
-            Component uiComponent = configurable.createUIComponent(parentDisposable);
+            Component uiComponent = ConfigurableUIMigrationUtil.createUIComponent(configurable, parentDisposable);
             configurable.initialize();
             configurable.reset();
             return uiComponent;

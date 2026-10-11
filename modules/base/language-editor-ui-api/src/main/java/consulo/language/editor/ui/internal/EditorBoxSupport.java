@@ -273,6 +273,9 @@ public final class EditorBoxSupport {
                 editor.setHighlighter(EditorHighlighterFactory.getInstance().createEditorHighlighter(project, fileType));
             }
         }
+        else if (fileType != null) {
+            editor.setHighlighter(EditorHighlighterFactory.getInstance().createEditorHighlighter(fileType, editor.getColorsScheme(), null));
+        }
 
         editor.setOneLineMode(oneLine);
         if (editor.isScrollPaneAvailable()) {

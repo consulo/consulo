@@ -996,6 +996,8 @@ label.font.type:
     text: 'Font type:'
 label.inherit.attributes:
     text: 'Inherit Attributes From:'
+label.inherit.attributes.from:
+    text: "''{0}'' of {1}"
 label.insert.new.line.before:
     text: 'Insert new line before:'
 label.keep.white.spaces.inside:

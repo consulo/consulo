@@ -39,10 +39,28 @@ public class WebComboBoxImpl<V> extends WebSingleListComponentBase<V, WebComboBo
         }
     }
 
+    private @Nullable WebSelectSuffix mySuffix;
+
     public WebComboBoxImpl(FlatDataModel<V> model) {
         super(model);
 
         setRender(TextItemRender.defaultRender());
+    }
+
+    @Override
+    public void setSuffixComponent(@Nullable Component suffixComponent) {
+        WebSelectSuffix suffix = mySuffix;
+        if (suffix == null) {
+            suffix = new WebSelectSuffix(toVaadinComponent());
+            mySuffix = suffix;
+        }
+        suffix.set(suffixComponent);
+    }
+
+    @Override
+    public @Nullable Component getSuffixComponent() {
+        WebSelectSuffix suffix = mySuffix;
+        return suffix == null ? null : suffix.get();
     }
 
     @Override

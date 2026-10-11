@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.codeInspection.actions;
 
+import consulo.application.Application;
 import consulo.language.editor.scope.AnalysisScope;
 import consulo.language.editor.inspection.scheme.InspectionManager;
 import consulo.language.editor.inspection.scheme.InspectionProfile;
@@ -24,7 +25,7 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.language.editor.inspection.scheme.InspectionProfileManager;
 import consulo.language.editor.impl.internal.inspection.InspectionProjectProfileManager;
-import consulo.ide.impl.idea.profile.codeInspection.ui.IDEInspectionToolsConfigurable;
+import consulo.language.editor.impl.internal.inspection.setting.IDEInspectionToolsConfigurable;
 
 public class CodeCleanupAction extends CodeInspectionAction {
     public static final LocalizeValue CODE_CLEANUP_INSPECTIONS_DISPLAY_NAME = LocalizeValue.localizeTODO("Code Cleanup Inspections");
@@ -52,7 +53,7 @@ public class CodeCleanupAction extends CodeInspectionAction {
         InspectionProjectProfileManager projectProfileManager,
         InspectionProfileManager profileManager
     ) {
-        return new IDEInspectionToolsConfigurable(projectProfileManager, profileManager) {
+        return new IDEInspectionToolsConfigurable(Application.get(), projectProfileManager, profileManager) {
             @Override
             protected boolean acceptTool(InspectionToolWrapper entry) {
                 return super.acceptTool(entry) && entry.isCleanupTool();

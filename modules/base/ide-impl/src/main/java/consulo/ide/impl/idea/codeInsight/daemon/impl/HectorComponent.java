@@ -21,7 +21,7 @@ import consulo.configurable.ConfigurationException;
 import consulo.disposer.Disposer;
 import consulo.language.editor.highlight.HighlightLevelUtil;
 import consulo.language.editor.highlight.HighlightingLevelManager;
-import consulo.ide.impl.idea.profile.codeInspection.ui.ErrorsConfigurable;
+import consulo.language.editor.impl.internal.inspection.setting.ProjectInspectionToolsConfigurable;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.language.Language;
 import consulo.language.editor.DaemonCodeAnalyzer;
@@ -184,7 +184,7 @@ public class HectorComponent extends JPanel {
 
                 ShowSettingsUtil.getInstance().showAndSelect(
                     project,
-                    ErrorsConfigurable.class,
+                    ProjectInspectionToolsConfigurable.class,
                     inspectionToolsConfigurable -> inspectionToolsConfigurable.setFilterLanguages(languages)
                 );
             }

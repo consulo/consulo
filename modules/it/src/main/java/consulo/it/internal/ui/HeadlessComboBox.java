@@ -15,6 +15,8 @@
  */
 package consulo.it.internal.ui;
 
+import org.jspecify.annotations.Nullable;
+import consulo.ui.Component;
 import consulo.ui.ComboBox;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.model.FlatDataModel;
@@ -25,6 +27,8 @@ import consulo.ui.model.FlatDataModel;
  * @author VISTALL
  */
 public class HeadlessComboBox<E> extends HeadlessComboBoxBase<E, E> implements ComboBox<E> {
+    private @Nullable Component mySuffixComponent;
+
     public HeadlessComboBox(FlatDataModel<E> model) {
         super(model);
     }
@@ -36,5 +40,15 @@ public class HeadlessComboBox<E> extends HeadlessComboBoxBase<E, E> implements C
         if (index >= 0 && index < model.getSize()) {
             setValue(model.get(index));
         }
+    }
+
+    @Override
+    public void setSuffixComponent(@Nullable Component suffixComponent) {
+        mySuffixComponent = suffixComponent;
+    }
+
+    @Override
+    public @Nullable Component getSuffixComponent() {
+        return mySuffixComponent;
     }
 }

@@ -85,6 +85,7 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl<NODE>
         "!event.composedPath().some(node => node.localName === 'thead' || node.localName === 'tfoot')";
 
     static final String CHECK_BOX_CLASS = "web-tree-check";
+    static final String CHECK_ROW_CLASS = "web-tree-check-row";
 
     static final String OUTSIDE_CHECK_BOX =
         "!event.composedPath().some(node => node.classList && node.classList.contains('" + CHECK_BOX_CLASS + "'))";
@@ -233,8 +234,7 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl<NODE>
 
                 applyItemHeight(node);
 
-                decorateRow(toggle, node);
-                toggle.add(item.toComponent());
+                decorateRow(toggle, node).add(item.toComponent());
                 return toggle;
             }).setAutoWidth(true).setFlexGrow(1);
 
@@ -727,7 +727,8 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl<NODE>
     void childrenApplied(TreeNodeImpl<NODE> node) {
     }
 
-    void decorateRow(VaadinGridTreeToggle toggle, @Nullable TreeNodeImpl<NODE> node) {
+    HasComponents decorateRow(VaadinGridTreeToggle toggle, @Nullable TreeNodeImpl<NODE> node) {
+        return toggle;
     }
 
     @Nullable ColorValue rowBackground(@Nullable TreeNodeImpl<NODE> node) {

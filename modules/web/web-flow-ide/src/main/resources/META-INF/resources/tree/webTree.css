@@ -106,6 +106,14 @@ vaadin-grid.web-tree vaadin-grid-tree-toggle::part(toggle)
   cursor: pointer;
 }
 
+vaadin-grid.web-tree .web-tree-check-row
+{
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  width: 100%;
+}
+
 vaadin-grid.web-tree vaadin-checkbox.web-tree-check
 {
   flex: none;

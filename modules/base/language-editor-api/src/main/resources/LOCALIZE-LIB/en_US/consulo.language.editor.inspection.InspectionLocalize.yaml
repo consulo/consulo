@@ -906,6 +906,102 @@ inspection.same.return.value.problem.descriptor2:
     text: All implementations of this method always return {0}
 inspection.scope.for.title:
     text: Scope
+inspection.settings.add.description:
+    text: Add Description…
+inspection.settings.advanced:
+    text: Advanced Settings
+inspection.settings.application.profile.exists:
+    text: An application-level profile with the same name already exists.
+inspection.settings.copy.name:
+    text: '{0} (copy)'
+inspection.settings.description.text:
+    text: 'Enter description:'
+inspection.settings.description.title:
+    text: Profile Description
+inspection.settings.disable.new.inspections:
+    text: Disable New Inspections by Default
+inspection.settings.edit.description:
+    text: Edit Description…
+inspection.settings.edit.severities:
+    text: Edit Severities…
+inspection.settings.export:
+    text: Export…
+inspection.settings.export.description:
+    text: Choose directory to store profile file
+inspection.settings.export.overwrite:
+    text: File ''{0}'' already exists. Do you want to overwrite it?
+inspection.settings.filter.action:
+    text: Filter Inspections
+inspection.settings.filter.batch.only:
+    text: Show Only "Available only for Analyze | Inspect Code"
+inspection.settings.filter.cleanup.only:
+    text: Show Only Cleanup Inspections
+inspection.settings.filter.disabled.only:
+    text: Show Only Disabled
+inspection.settings.filter.enabled.only:
+    text: Show Only Enabled
+inspection.settings.filter.placeholder:
+    text: Filter inspections
+inspection.settings.filter.reset:
+    text: Reset Filter
+inspection.settings.ide.display.name:
+    text: Inspections
+inspection.settings.import:
+    text: Import…
+inspection.settings.import.description:
+    text: Choose profile file
+inspection.settings.import.overwrite:
+    text: Profile with name ''{0}'' already exists. Do you want to overwrite it?
+inspection.settings.import.undefined.severities:
+    text: 'Undefined severities detected: {0}. Do you want to create them?'
+inspection.settings.manage:
+    text: Manage
+inspection.settings.multiple.selected:
+    text: Multiple inspections are selected. You can edit them as a single inspection.
+inspection.settings.name.empty:
+    text: Name must not be empty
+inspection.settings.name.in.use:
+    text: Name is already in use. Please choose a unique name.
+inspection.settings.no.description:
+    text: Can't find inspection description.
+inspection.settings.options.title:
+    text: Options
+inspection.settings.profile.label:
+    text: 'Profile:'
+inspection.settings.profile.shared:
+    text: Project
+inspection.settings.project.display.name:
+    text: Code Inspections
+inspection.settings.rename:
+    text: Rename…
+inspection.settings.rename.text:
+    text: 'Enter name:'
+inspection.settings.rename.title:
+    text: Rename Profile
+inspection.settings.reset.to.empty:
+    text: Reset to Empty
+inspection.settings.restore.defaults:
+    text: Restore Defaults
+inspection.settings.scope.all:
+    text: In All Scopes
+inspection.settings.scope.column:
+    text: Scope
+inspection.settings.scope.everywhere.else:
+    text: Everywhere else
+inspection.settings.scope.popup.title:
+    text: Select a scope to change its settings
+inspection.settings.severity.by.scope:
+    text: Severity by Scope
+inspection.settings.severity.column:
+    text: Severity
+inspection.settings.severity.label:
+    text: 'Severity:'
+inspection.settings.severity.mixed:
+    text: Mixed
+inspection.settings.share.to.team:
+    text: Share to Team Members
+inspection.settings.shared.profile.exists:
+    text: A shared profile with the same name already exists.
 inspection.severity:
     text: 'Se&verity:'
 inspection.surround.if.family:
@@ -1103,7 +1199,7 @@ run.with.choosen.profile.dialog.option:
 run.with.editor.settings.dialog.option:
     text: Run with &editor settings
 severities.default.settings.message:
-    text: Edit Settings|Colors \& Fonts
+    text: Edit Colors and Fonts…
 severities.editor.dialog.title:
     text: Severities Editor
 special.annotations.annotations.list:

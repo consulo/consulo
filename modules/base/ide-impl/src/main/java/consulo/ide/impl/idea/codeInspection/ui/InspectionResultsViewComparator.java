@@ -27,7 +27,6 @@ import consulo.language.editor.inspection.reference.RefEntity;
 import consulo.document.Document;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
-import consulo.ide.impl.idea.profile.codeInspection.ui.inspectionsTree.InspectionsConfigTreeComparator;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiNamedElement;
@@ -72,8 +71,8 @@ public class InspectionResultsViewComparator implements Comparator {
         }
 
         if (node1 instanceof InspectionNode && node2 instanceof InspectionNode) {
-            return InspectionsConfigTreeComparator.getDisplayTextToSort(node1.toString())
-                .compareToIgnoreCase(InspectionsConfigTreeComparator.getDisplayTextToSort(node2.toString()));
+            return getDisplayTextToSort(node1.toString())
+                .compareToIgnoreCase(getDisplayTextToSort(node2.toString()));
         }
         if (node1 instanceof InspectionNode) {
             return -1;
@@ -214,5 +213,13 @@ public class InspectionResultsViewComparator implements Comparator {
 
     public static InspectionResultsViewComparator getInstance() {
         return InspectionResultsViewComparatorHolder.ourInstance;
+    }
+
+    static String getDisplayTextToSort(String text) {
+        int index = 0;
+        while (index < text.length() && !Character.isLetterOrDigit(text.charAt(index))) {
+            index++;
+        }
+        return text.substring(index);
     }
 }

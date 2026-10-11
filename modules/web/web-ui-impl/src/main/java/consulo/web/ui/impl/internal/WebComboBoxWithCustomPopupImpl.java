@@ -37,6 +37,8 @@ import org.jspecify.annotations.Nullable;
 @SuppressWarnings("unchecked")
 public class WebComboBoxWithCustomPopupImpl<V> extends WebSingleListComponentBase<V, WebComboBoxWithCustomPopupImpl.Vaadin>
     implements ComboBoxWithCustomPopup<V> {
+    private @Nullable WebSelectSuffix mySuffix;
+
 
     public class Vaadin extends Select<V> implements FromVaadinComponentWrapper {
         @Override
@@ -55,12 +57,20 @@ public class WebComboBoxWithCustomPopupImpl<V> extends WebSingleListComponentBas
                 }
                 el.__consuloComboShell = true;
 
+                const inSuffix = event => event.composedPath().some(node => node.classList && node.classList.contains($1));
                 const block = event => {
                     event.stopImmediatePropagation();
                     event.preventDefault();
                 };
-                el.addEventListener('mousedown', block, true);
+                el.addEventListener('mousedown', event => {
+                    if (!inSuffix(event)) {
+                        block(event);
+                    }
+                }, true);
                 el.addEventListener('click', event => {
+                    if (inSuffix(event)) {
+                        return;
+                    }
                     block(event);
                     el.dispatchEvent(new MouseEvent($0, {
                         clientX: event.clientX,
@@ -74,7 +84,7 @@ public class WebComboBoxWithCustomPopupImpl<V> extends WebSingleListComponentBas
                         metaKey: event.metaKey
                     }));
                 }, true);
-                """, SHELL_PRESS_EVENT);
+                """, SHELL_PRESS_EVENT, WebSelectSuffix.SUFFIX_CLASS);
         }
     }
 
@@ -124,5 +134,21 @@ public class WebComboBoxWithCustomPopupImpl<V> extends WebSingleListComponentBas
 
     private boolean isSelected(@Nullable V item) {
         return item != null && item.equals(getValue());
+    }
+
+    @Override
+    public void setSuffixComponent(@Nullable Component suffixComponent) {
+        WebSelectSuffix suffix = mySuffix;
+        if (suffix == null) {
+            suffix = new WebSelectSuffix(toVaadinComponent());
+            mySuffix = suffix;
+        }
+        suffix.set(suffixComponent);
+    }
+
+    @Override
+    public @Nullable Component getSuffixComponent() {
+        WebSelectSuffix suffix = mySuffix;
+        return suffix == null ? null : suffix.get();
     }
 }

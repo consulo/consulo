@@ -23,6 +23,7 @@ import consulo.execution.debug.frame.XStackFrame;
 import consulo.execution.debug.frame.XStackFrameContainerEx;
 import consulo.execution.debug.frame.XSuspendContext;
 import consulo.execution.debug.impl.internal.XDebugSessionImpl;
+import consulo.execution.debug.impl.internal.action.XFrameThreadsComboBoxGroup;
 import consulo.execution.debug.internal.ExectutionDebugInternal;
 import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.language.editor.FileColorManager;
@@ -40,6 +41,10 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.UnifiedColoredTextContainer;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.ActionToolbar;
+import consulo.ui.ex.action.ActionToolbarFactory;
 import consulo.ui.image.Image;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.model.FlatDataModel;
@@ -164,6 +169,13 @@ public class UnifiedXFramesView extends XDebugView {
         myRoot = DockLayout.create();
         myRoot.top(myStacksPanel);
         myRoot.center(myFramesList);
+
+        ActionGroup tailGroup = (ActionGroup) ActionManager.getInstance().getAction(XFrameThreadsComboBoxGroup.ID);
+        ActionToolbar toolbar = ActionToolbarFactory.getInstance()
+            .createActionToolbar(XFrameThreadsComboBoxGroup.ID, tailGroup, ActionToolbar.Style.INPLACE);
+        toolbar.setTargetUIComponent(myRoot);
+        toolbar.updateActionsAsync();
+        myStacksComboBox.setSuffixComponent(toolbar.getUIComponent());
     }
 
     public Component getMainPanel() {

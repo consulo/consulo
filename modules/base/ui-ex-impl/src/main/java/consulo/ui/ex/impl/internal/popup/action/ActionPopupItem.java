@@ -15,11 +15,11 @@
  */
 package consulo.ui.ex.impl.internal.popup.action;
 
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.impl.internal.action.MenuItemPresentationFactory;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.util.ActionUtil;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.util.dataholder.Key;
@@ -137,7 +137,7 @@ public class ActionPopupItem implements ShortcutProvider, UserDataHolder {
 
         if (icon == null && selectedIcon == null) {
             if (myAction instanceof Toggleable && Toggleable.isSelected(presentation)) {
-                selectedIcon = TargetAWT.wrap(UIManager.getIcon("Menu.selectedCheckboxIcon"));
+                selectedIcon = PlatformIconGroup.actionsChecked();
                 disabledIcon = null;
             }
         }
