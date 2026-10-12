@@ -27,6 +27,7 @@ import consulo.project.event.ProjectManagerListener;
 import consulo.ui.UIAccess;
 import consulo.ui.ex.IconDeferrer;
 import consulo.ui.image.Image;
+import consulo.ui.internal.UIInternal;
 import consulo.virtualFileSystem.event.BulkFileListener;
 import consulo.virtualFileSystem.event.VFileEvent;
 import jakarta.inject.Inject;
@@ -36,6 +37,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * An icon which is deferred because it is expensive - the run configurations combo answers its error mark by
@@ -43,7 +45,7 @@ import java.util.function.Function;
  * <p/>
  * Deferring means the caller never pays: an action update runs on a background thread without any locks, by
  * contract, so the evaluator must not run there at all. What is handed back is a lazy image - the evaluator runs
- * when the icon is rendered, on the ui thread, which reads for free the way the awt dispatch thread does. The awt
+ * under a read lock once the icon is rendered, the same lock the awt deferrer evaluates under. The awt
  * deferrer keeps the same shape with a painted placeholder; the stand-in dummy before this one evaluated inline,
  * which was a full psi resolve per toolbar tick inside the lock-free update, and typing waited on every one.
  * <p/>
@@ -58,6 +60,8 @@ import java.util.function.Function;
 public class UnifiedIconDeferrer extends IconDeferrer implements Disposable {
     private static final int CACHE_LIMIT = 1000;
 
+    private final Application myApplication;
+
     private final Object myLock = new Object();
 
     private final Map<Object, Image> myIconsCache = new LinkedHashMap<>() {
@@ -69,6 +73,8 @@ public class UnifiedIconDeferrer extends IconDeferrer implements Disposable {
 
     @Inject
     public UnifiedIconDeferrer(Application application) {
+        myApplication = application;
+
         // the same invalidations the awt deferrer listens for - an icon computed from the psi holds until the psi
         // moves, a file changes under it, or the project it was asked for goes away
         MessageBusConnection connection = application.getMessageBus().connect();
@@ -101,20 +107,19 @@ public class UnifiedIconDeferrer extends IconDeferrer implements Disposable {
 
     @Override
     public <T> Image defer(Image base, T param, Function<T, Image> f) {
-        return deferImpl(param, f);
+        return deferImpl(base, param, f);
     }
 
     @Override
     public <T> Image deferAutoUpdatable(Image base, T param, Function<T, Image> f) {
-        return deferImpl(param, f);
+        return deferImpl(base, param, f);
     }
 
-    private <T> Image deferImpl(T param, Function<T, Image> evaluator) {
+    private <T> Image deferImpl(Image base, T param, Function<T, Image> evaluator) {
         synchronized (myLock) {
             Image cached = myIconsCache.get(param);
             if (cached == null) {
-                // nothing expensive happens here - the evaluator is only wrapped, and runs when the icon is drawn
-                cached = Image.lazy(() -> evaluator.apply(param));
+                cached = UIInternal.get()._Image_deferred(base, () -> myApplication.runReadAction((Supplier<Image>) () -> evaluator.apply(param)));
                 myIconsCache.put(param, cached);
             }
 
