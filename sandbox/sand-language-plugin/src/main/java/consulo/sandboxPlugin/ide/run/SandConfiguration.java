@@ -26,6 +26,8 @@ import consulo.execution.configuration.RunProfileState;
 import consulo.execution.configuration.log.ui.LogConfigurationPanel;
 import consulo.execution.configuration.ui.SettingsEditor;
 import consulo.execution.configuration.ui.SettingsEditorGroup;
+import consulo.execution.debug.DefaultDebugExecutor;
+import consulo.execution.executor.DefaultRunExecutor;
 import consulo.execution.executor.Executor;
 import consulo.execution.executor.ExecutorGroup;
 import consulo.execution.localize.ExecutionLocalize;
@@ -101,6 +103,11 @@ public class SandConfiguration extends LocatableConfigurationBase implements Com
         SandProfilerConfigurationState profilerConfiguration = SandProfilerRunState.findConfiguration(executor);
         if (profilerConfiguration != null) {
             return new SandProfilerRunState(env, profilerConfiguration);
+        }
+
+        String executorId = executor.getId();
+        if (DefaultRunExecutor.EXECUTOR_ID.equals(executorId) || DefaultDebugExecutor.EXECUTOR_ID.equals(executorId)) {
+            return new SandRunState(env);
         }
         return null;
     }
