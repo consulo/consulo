@@ -2,6 +2,7 @@
 package consulo.ide.impl.idea.ide.ui.search;
 
 import consulo.configurable.SearchableConfigurable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Set;
 
@@ -22,7 +23,7 @@ public interface SearchableOptionProcessor {
      * @param configurableId          the id of the topmost configurable containing the search result. See {@link SearchableConfigurable#getId()}
      * @param configurableDisplayName display name of the configurable containing the search result
      */
-    void addOption(String option, String path, String hit, String configurableId, String configurableDisplayName);
+    void addOption(String option, @Nullable String path, String hit, String configurableId, String configurableDisplayName);
 
     Set<String> getProcessedWordsWithoutStemming(String text);
 

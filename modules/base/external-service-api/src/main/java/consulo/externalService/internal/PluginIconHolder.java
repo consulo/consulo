@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.externalService.impl.internal;
+package consulo.externalService.internal;
 
 import consulo.container.plugin.PluginDescriptor;
 import consulo.logging.Logger;

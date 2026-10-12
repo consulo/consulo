@@ -28,7 +28,6 @@ import consulo.configurable.Configurable;
 import consulo.configurable.SimpleConfigurableByProperties;
 import consulo.configurable.StandardConfigurableIds;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.configurable.EditorGeneralConfigurable;
 import consulo.language.editor.folding.CodeFoldingManager;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
@@ -104,7 +103,7 @@ public class CodeFoldingConfigurable extends SimpleConfigurableByProperties impl
           foldingManager.buildInitialFoldings(each.first);
         }
       }
-      EditorGeneralConfigurable.reinitAllEditors();
+      EditorFactory.getInstance().refreshAllEditors();
     }, IdeaModalityState.nonModal());
   }
 }

@@ -162,7 +162,7 @@ public class SearchableOptionsRegistrarImpl extends SearchableOptionsRegistrar {
         myApplication.getExtensionPoint(SearchableOptionContributor.class).forEach(
             contributor -> contributor.processOptions(new SearchableOptionProcessor() {
                 @Override
-                public void addOption(String option, String path, String hit, String configurableId, String configurableDisplayName) {
+                public void addOption(String option, @Nullable String path, String hit, String configurableId, String configurableDisplayName) {
                     SearchableOptionsRegistrarImpl.this.addOption(option, path, hit, configurableId, configurableDisplayName);
                 }
 
@@ -179,7 +179,7 @@ public class SearchableOptionsRegistrarImpl extends SearchableOptionsRegistrar {
         );
     }
 
-    private synchronized void putOptionWithHelpId(String option, String id, String groupName, String hit, String path) {
+    private synchronized void putOptionWithHelpId(String option, String id, String groupName, String hit, @Nullable String path) {
         if (isStopWord(option)) {
             return;
         }
@@ -419,7 +419,7 @@ public class SearchableOptionsRegistrarImpl extends SearchableOptionsRegistrar {
     }
 
     @Override
-    public void addOption(String option, String path, String hit, String configurableId, String configurableDisplayName) {
+    public void addOption(String option, @Nullable String path, String hit, String configurableId, String configurableDisplayName) {
         putOptionWithHelpId(option, configurableId, configurableDisplayName, hit, path);
     }
 

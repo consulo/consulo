@@ -21,8 +21,6 @@ import consulo.application.Application;
 import consulo.application.localize.ApplicationLocalize;
 import consulo.application.ui.UISettings;
 import consulo.application.ui.setting.AdditionalEditorGeneralSettingProvider;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.SoftWrapAppliancePlaces;
 import consulo.codeEditor.impl.EditorSettingsExternalizable;
@@ -450,7 +448,7 @@ public class EditorGeneralConfigurable extends SimpleConfigurableByProperties im
 
         clearAllIdentifierHighlighters();
 
-        reinitAllEditors();
+        EditorFactory.getInstance().refreshAllEditors();
 
         restartDaemons();
     }
@@ -487,13 +485,6 @@ public class EditorGeneralConfigurable extends SimpleConfigurableByProperties im
                     IdentifierHighlighterPass.clearMyHighlights(document, project);
                 }
             }
-        }
-    }
-
-    public static void reinitAllEditors() {
-        Editor[] editors = EditorFactory.getInstance().getAllEditors();
-        for (Editor editor : editors) {
-            ((EditorEx) editor).reinitSettings();
         }
     }
 }

@@ -19,7 +19,7 @@ import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.externalService.impl.internal.PluginIconHolder;
+import consulo.externalService.internal.PluginIconHolder;
 import consulo.externalService.impl.internal.plugin.ui.PluginTagUtil;
 import consulo.externalService.internal.startup.StartupCustomizeContext;
 import consulo.externalService.internal.startup.StartupCustomizeStep;

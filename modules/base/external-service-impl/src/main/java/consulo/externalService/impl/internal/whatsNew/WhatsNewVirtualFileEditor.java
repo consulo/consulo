@@ -24,7 +24,7 @@ import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginManager;
-import consulo.externalService.impl.internal.PluginIconHolder;
+import consulo.externalService.internal.PluginIconHolder;
 import consulo.externalService.impl.internal.pluginHistory.UpdateHistory;
 import consulo.externalService.impl.internal.repository.api.pluginHistory.PluginHistoryEntry;
 import consulo.externalService.impl.internal.repository.api.pluginHistory.PluginHistoryManager;

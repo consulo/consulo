@@ -21,7 +21,8 @@ module consulo.external.service.api {
 
     exports consulo.externalService.internal to
         consulo.external.service.impl,
-        consulo.ide.impl;
+        consulo.ide.impl,
+        consulo.language.editor.impl;
     exports consulo.externalService.internal.startup to
         consulo.desktop.awt.ide.impl,
         consulo.desktop.qt.ide.impl,

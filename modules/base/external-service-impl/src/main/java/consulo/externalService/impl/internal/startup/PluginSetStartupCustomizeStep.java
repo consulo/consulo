@@ -18,7 +18,7 @@ package consulo.externalService.impl.internal.startup;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.disposer.Disposable;
-import consulo.externalService.impl.internal.PluginIconHolder;
+import consulo.externalService.internal.PluginIconHolder;
 import consulo.externalService.internal.startup.StartupCustomizeContext;
 import consulo.externalService.internal.startup.StartupCustomizeStep;
 import consulo.externalService.internal.startup.StartupCustomizeUI;
