@@ -232,7 +232,7 @@ public class DesktopApplicationImpl extends BaseApplication {
         ModalityState state,
         BooleanSupplier expired
     ) {
-        LaterInvocator.invokeLaterWithCallback(runnable, state, expired, null);
+        LaterInvocator.of(AWTUIAccessImpl.ourInstance).invokeLaterWithCallback(runnable, state, expired, null);
     }
 
     @RequiredUIAccess
@@ -251,7 +251,7 @@ public class DesktopApplicationImpl extends BaseApplication {
             throw new IllegalStateException("Calling invokeAndWait from read-action leads to possible deadlock.");
         }
 
-        LaterInvocator.invokeAndWait(runnable, modalityState);
+        LaterInvocator.of(AWTUIAccessImpl.ourInstance).invokeAndWait(runnable, modalityState);
     }
 
     @Override
@@ -284,7 +284,7 @@ public class DesktopApplicationImpl extends BaseApplication {
         if (window == null) {
             return getNoneModalityState();
         }
-        return LaterInvocator.modalityStateForWindow(window);
+        return LaterInvocator.of(AWTUIAccessImpl.ourInstance).modalityStateForWindow(window);
     }
 
     @Override
