@@ -49,6 +49,15 @@ public class ActionToolbarButtonImpl extends JButton implements ActionButton {
     }
 
     @Override
+    public void updateUI() {
+        super.updateUI();
+
+        if (myEngine != null) {
+            myEngine.updateTextAndMnemonic(myEngine.getPresentation().getTextValue());
+        }
+    }
+
+    @Override
     public void addNotify() {
         super.addNotify();
         myEngine.addNotify();

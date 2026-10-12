@@ -18,6 +18,7 @@ package consulo.web.ui.impl.internal;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
+import com.vaadin.flow.dom.Style;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
@@ -115,7 +116,11 @@ public class WebTextBoxImpl extends VaadinComponentDelegate<WebTextBoxImpl.Vaadi
         }
 
         com.vaadin.flow.component.Component vaadinComponent = ((ToVaadinComponentWrapper) component).toVaadinComponent();
-        vaadinComponent.getElement().getStyle().set("width", "auto");
+        Style style = vaadinComponent.getElement().getStyle();
+        String width = style.get("width");
+        if (width == null || "100%".equals(width)) {
+            style.set("width", "auto");
+        }
         return vaadinComponent;
     }
 
@@ -161,7 +166,7 @@ public class WebTextBoxImpl extends VaadinComponentDelegate<WebTextBoxImpl.Vaadi
 
     @Override
     public void setForegroundColor(@Nullable ColorValue foreground) {
-        String color = WebColors.toCssColor(foreground);
+        String color = WebColors.toStyleCssColor(foreground);
         if (color == null) {
             toVaadinComponent().getStyle().remove("--vaadin-input-field-value-color");
         }
@@ -204,6 +209,11 @@ public class WebTextBoxImpl extends VaadinComponentDelegate<WebTextBoxImpl.Vaadi
     public void addStyle(TextBoxStyle style) {
         switch (style) {
             case HAS_CLEAR_BUTTON -> getVaadinComponent().setClearButtonVisible(true);
+            case INPLACE -> getVaadinComponent().getStyle()
+                .set("--vaadin-input-field-border-color", "transparent")
+                .set("--vaadin-input-field-border-radius", "0")
+                .set("--vaadin-focus-ring-width", "0")
+                .set("--aura-shadow-xs", "none");
         }
     }
 }

@@ -15,10 +15,31 @@
  */
 package consulo.ui;
 
+import consulo.ui.internal.FontSizeStyle;
+
 /**
  * @author VISTALL
  * @since 2025-12-21
  */
-public enum LabelStyle implements ComponentStyle {
-    TRANSPARENT_BACKGROUND
+public enum LabelStyle implements ComponentStyle, FontSizeStyle {
+    TRANSPARENT_BACKGROUND(0),
+    FONT_XX_SMALL(-3),
+    FONT_X_SMALL(-2),
+    FONT_SMALL(-1),
+    FONT_MEDIUM(0),
+    FONT_LARGE(1),
+    FONT_X_LARGE(3),
+    FONT_XX_LARGE(5),
+    FONT_BOLD(0);
+
+    private final int myFontPointDelta;
+
+    LabelStyle(int fontPointDelta) {
+        myFontPointDelta = fontPointDelta;
+    }
+
+    @Override
+    public int getFontPointDelta() {
+        return myFontPointDelta;
+    }
 }

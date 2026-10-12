@@ -151,6 +151,10 @@ public class DesktopTextBoxImpl extends DocumentSwingValidator<String, DesktopTe
     public void addStyle(TextBoxStyle style) {
         switch (style) {
             case HAS_CLEAR_BUTTON -> toAWTComponent().putClientProperty("JTextField.showClearButton", true);
+            case INPLACE -> toAWTComponent().putClientProperty(
+                "FlatLaf.style",
+                "borderColor: #0000; disabledBorderColor: #0000; borderWidth: 0; focusWidth: 0; innerFocusWidth: 0; arc: 0; margin: 6,6,6,6"
+            );
         }
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2023 consulo.io
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,15 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.ui.impl.internal;
-
-import consulo.application.impl.internal.IdeaModalityStateEx;
-import consulo.ui.ModalityState;
+package consulo.ui;
 
 /**
  * @author VISTALL
- * @since 2023-11-10
+ * @since 2026-10-11
  */
-public class WebModalityState extends IdeaModalityStateEx implements ModalityState {
-    public static final WebModalityState INSTANCE = new WebModalityState();
+public enum CardStyle implements ComponentStyle {
+    /**
+     * Lifted off the surface it lies on.
+     */
+    ELEVATED,
+    /**
+     * Drawn with a line around it.
+     */
+    OUTLINED,
+    /**
+     * The media stands beside the header and the content instead of above them.
+     */
+    HORIZONTAL,
+    /**
+     * The media takes the whole width of the card.
+     */
+    STRETCH_MEDIA,
+    /**
+     * The media takes the whole width of the card and reaches its edges.
+     */
+    COVER_MEDIA
 }

@@ -36,11 +36,15 @@ public abstract class DesktopQtBoxLayoutComponent<C extends LayoutConstraint> ex
     @Override
     protected final QLayout createLayout() {
         QBoxLayout layout = createBoxLayout();
-        layout.addStretch(1);
+        layout.addStretch(trailingStretch());
         return layout;
     }
 
     protected abstract QBoxLayout createBoxLayout();
+
+    protected int trailingStretch() {
+        return 1;
+    }
 
     /**
      * How every child is placed on the axis the layout does not fill. No flag at all - the default - hands the

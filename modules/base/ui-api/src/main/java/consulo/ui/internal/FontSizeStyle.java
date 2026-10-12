@@ -13,27 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.impl.font;
-
-import consulo.ui.TreeStyle;
+package consulo.ui.internal;
 
 /**
  * @author VISTALL
- * @since 2026-10-11
+ * @since 2026-10-12
  */
-public final class FontSizeLadder {
-    private FontSizeLadder() {
-    }
-
-    public static int pointDelta(TreeStyle style) {
-        return switch (style) {
-            case FONT_XX_SMALL -> -3;
-            case FONT_X_SMALL -> -2;
-            case FONT_SMALL -> -1;
-            case FONT_LARGE -> 1;
-            case FONT_X_LARGE -> 3;
-            case FONT_XX_LARGE -> 5;
-            case FONT_MEDIUM, TRANSPARENT_BACKGROUND -> 0;
-        };
-    }
+public interface FontSizeStyle {
+    int getFontPointDelta();
 }

@@ -18,6 +18,7 @@ package consulo.application.impl.internal;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentProfiles;
 import consulo.application.ApplicationManager;
+import consulo.application.impl.internal.progress.CoreProgressManager;
 import consulo.application.internal.StartupProgress;
 import consulo.component.ComponentManager;
 import consulo.component.internal.ComponentBinding;
@@ -87,30 +88,30 @@ public abstract class UnifiedApplication extends BaseApplication {
 
     @Override
     public void invokeLater(Runnable runnable) {
-        UIAccess lastUIAccess = getLastUIAccess();
-
-        lastUIAccess.give(runnable);
+        invokeLater(runnable, getDisposed());
     }
 
     @Override
     public void invokeLater(Runnable runnable, BooleanSupplier expired) {
-        UIAccess lastUIAccess = getLastUIAccess();
-
-        lastUIAccess.give(runnable);
+        invokeLater(runnable, getDefaultModalityState(), expired);
     }
 
     @Override
     public void invokeLater(Runnable runnable, consulo.ui.ModalityState state) {
-        UIAccess lastUIAccess = getLastUIAccess();
-
-        lastUIAccess.give(runnable);
+        invokeLater(runnable, state, getDisposed());
     }
 
     @Override
     public void invokeLater(Runnable runnable, consulo.ui.ModalityState state, BooleanSupplier expired) {
-        UIAccess lastUIAccess = getLastUIAccess();
+        if (expired.getAsBoolean()) {
+            return;
+        }
 
-        lastUIAccess.give(runnable);
+        getLastUIAccess().giveLater(() -> {
+            if (!expired.getAsBoolean()) {
+                runnable.run();
+            }
+        }, state);
     }
 
     @RequiredUIAccess
@@ -129,7 +130,13 @@ public abstract class UnifiedApplication extends BaseApplication {
             throw new IllegalStateException("Calling invokeAndWait from read-action leads to possible deadlock.");
         }
 
-        getLastUIAccess().giveAndWait(runnable);
+        UIAccess uiAccess = getLastUIAccess();
+        if (uiAccess instanceof ModalityUIAccess) {
+            LaterInvocator.of(uiAccess).invokeAndWait(runnable, modalityState);
+        }
+        else {
+            uiAccess.giveAndWait(runnable);
+        }
     }
 
     @Override
@@ -146,19 +153,20 @@ public abstract class UnifiedApplication extends BaseApplication {
 
     @Override
     public ModalityState getCurrentModalityState() {
-        return ModalityState.nonModal();
+        if (!UIAccess.isUIThread()) {
+            return ModalityState.nonModal();
+        }
+        return UIAccess.current().getCurrentModalityState();
     }
 
-    
     @Override
     public ModalityState getModalityStateForComponent(Component c) {
-        return ModalityState.nonModal();
+        return getCurrentModalityState();
     }
 
-    
     @Override
     public ModalityState getDefaultModalityState() {
-        return ModalityState.nonModal();
+        return UIAccess.isUIThread() ? getCurrentModalityState() : CoreProgressManager.getCurrentThreadProgressModality();
     }
 
     @RequiredUIAccess

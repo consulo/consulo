@@ -26,6 +26,7 @@ import consulo.ui.internal.TabTitlePresentation;
 import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.SimpleColoredComponent;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
@@ -51,6 +52,8 @@ public class DesktopTabImpl implements Tab {
     private Component myComponent;
 
     private boolean myEnabled = true;
+
+    private boolean myPinned;
 
     public DesktopTabImpl(DesktopTabbedLayoutImpl tabbedLayout) {
         myTabbedLayout = tabbedLayout;
@@ -113,6 +116,24 @@ public class DesktopTabImpl implements Tab {
     public void setCloseHandler(@Nullable BiConsumer<Tab, Component> closeHandler) {
         myCloseHandler = closeHandler;
         myCloseButton.setVisible(closeHandler != null);
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void setPinned(boolean pinned) {
+        if (myPinned == pinned) {
+            return;
+        }
+
+        myPinned = pinned;
+        myCloseButton.setIcon(TargetAWT.to(pinned ? PlatformIconGroup.actionsPintab() : PlatformIconGroup.actionsCancel()));
+        myTabComponent.revalidate();
+        myTabComponent.repaint();
+    }
+
+    @Override
+    public boolean isPinned() {
+        return myPinned;
     }
 
     @Override

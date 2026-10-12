@@ -20,11 +20,13 @@ import consulo.desktop.awt.ui.impl.image.DesktopAWTImage;
 import consulo.desktop.awt.ui.impl.plaf.LafWithIconLibrary;
 import consulo.desktop.awt.ui.impl.plaf2.IdeLookAndFeelInfo;
 import consulo.ui.color.ColorValue;
+import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.MorphValue;
 import consulo.ui.ex.awt.LightColors;
 import consulo.ui.ex.awt.JBCurrentTheme;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.IconLibraryManager;
 import consulo.ui.image.Image;
@@ -32,6 +34,7 @@ import consulo.ui.impl.style.StyleImpl;
 import consulo.ui.style.ComponentColors;
 import consulo.ui.style.StandardColors;
 import consulo.ui.style.StyleColorValue;
+import consulo.ui.style.StyleManager;
 import org.jspecify.annotations.Nullable;
 
 import java.awt.Color;
@@ -44,6 +47,12 @@ import java.util.Objects;
  */
 public class DesktopStyleImpl extends StyleImpl {
     private static final Color SEARCH_MATCH_BACKGROUND = new Color(0xffdd72);
+
+    private static final Color EDITOR_AREA_FOREGROUND = new JBColor(Gray._80, Gray._160);
+
+    private static final Color EDITOR_AREA_BACKGROUND = new JBColor(
+        () -> StyleManager.get().getCurrentStyle().isDark() ? Gray._40 : ColorUtil.darker(UIUtil.getPanelBackground(), 3)
+    );
 
     private final MorphValue<Boolean> myDarkValue = MorphValue.of(FlatLaf::isLafDark);
 
@@ -130,6 +139,12 @@ public class DesktopStyleImpl extends StyleImpl {
         }
         else if (colorValue == ComponentColors.SEARCH_MATCH_FOREGROUND) {
             return TargetAWT.from(JBColor.BLACK);
+        }
+        else if (colorValue == ComponentColors.EDITOR_AREA_BACKGROUND) {
+            return TargetAWT.from(EDITOR_AREA_BACKGROUND);
+        }
+        else if (colorValue == ComponentColors.EDITOR_AREA_FOREGROUND) {
+            return TargetAWT.from(EDITOR_AREA_FOREGROUND);
         }
         else if (colorValue == StandardColors.LIGHT_RED || colorValue == ComponentColors.ERROR_BACKGROUND) {
             return TargetAWT.from(LightColors.RED);

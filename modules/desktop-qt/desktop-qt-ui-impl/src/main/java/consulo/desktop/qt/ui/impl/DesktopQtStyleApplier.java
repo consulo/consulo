@@ -35,6 +35,8 @@ import java.util.List;
  * @since 2026-08-16
  */
 public final class DesktopQtStyleApplier {
+    public static final String TAB_POSITION_PROPERTY = "consuloTabPosition";
+
     private static final List<QPalette.ColorGroup> ourGroups =
         List.of(QPalette.ColorGroup.Active, QPalette.ColorGroup.Inactive, QPalette.ColorGroup.Disabled);
 
@@ -49,8 +51,8 @@ public final class DesktopQtStyleApplier {
      * What an item of the menu bar in the header of a titleless window is padded by, which is what decides how
      * tall the menu bar asks to be.
      */
-    private static final int ourTabVerticalPadding = 2;
-    private static final int ourTabVerticalMargin = 2;
+    private static final int ourTabVerticalPadding = 3;
+    private static final int ourTabVerticalMargin = 5;
     private static final int ourTabHorizontalPadding = 8;
     /** what separates one tab from the next, so a rounded tab is not drawn against its neighbour */
     private static final int ourTabGap = 2;
@@ -217,7 +219,28 @@ public final class DesktopQtStyleApplier {
             inactiveSelected,
             inactiveSelectedBorder,
             disabledForeground
-        );
+        ) + buildTabSeparatorStyleSheet(css(style, ComponentColors.BORDER));
+    }
+
+    private static String buildTabSeparatorStyleSheet(String border) {
+        StringBuilder builder = new StringBuilder();
+        appendTabSeparator(builder, "top", "border-top", border);
+        appendTabSeparator(builder, "bottom", "border-bottom", border);
+        appendTabSeparator(builder, "left", "border-left", border);
+        appendTabSeparator(builder, "right", "border-right", border);
+        return builder.toString();
+    }
+
+    private static void appendTabSeparator(StringBuilder builder, String position, String edge, String border) {
+        builder.append("QTabWidget[")
+            .append(TAB_POSITION_PROPERTY)
+            .append("=\"")
+            .append(position)
+            .append("\"] > QStackedWidget { ")
+            .append(edge)
+            .append(": 1px solid ")
+            .append(border)
+            .append("; }\n");
     }
 
     /**

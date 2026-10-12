@@ -22,6 +22,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ComponentEventListener;
 import consulo.ui.internal.UIInternal;
 import consulo.ui.layout.event.SplitProportionChangedEvent;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -64,7 +65,7 @@ public interface TwoComponentSplitLayout extends Layout<LayoutConstraint> {
     }
 
     @RequiredUIAccess
-    void setFirstComponent(Component component);
+    void setFirstComponent(@Nullable Component component);
 
     @RequiredUIAccess
     default TwoComponentSplitLayout withSecondComponent(PseudoComponent component) {
@@ -78,5 +79,5 @@ public interface TwoComponentSplitLayout extends Layout<LayoutConstraint> {
     }
 
     @RequiredUIAccess
-    void setSecondComponent(Component component);
+    void setSecondComponent(@Nullable Component component);
 }

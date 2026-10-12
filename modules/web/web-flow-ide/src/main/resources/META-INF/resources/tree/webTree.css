@@ -119,3 +119,8 @@ vaadin-grid.web-tree vaadin-checkbox.web-tree-check
   flex: none;
   margin-inline-end: 4px;
 }
+
+vaadin-grid.web-tree vaadin-checkbox.web-tree-check::part(checkbox)
+{
+  align-self: center;
+}

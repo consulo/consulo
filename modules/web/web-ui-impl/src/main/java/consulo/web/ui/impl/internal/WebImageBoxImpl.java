@@ -42,8 +42,18 @@ public class WebImageBoxImpl extends VaadinComponentDelegate<WebImageBoxImpl.Vaa
         myImage = image;
 
         Vaadin component = toVaadinComponent();
-        // the image brings its own size, the box is only what holds it
-        component.getStyle().set("display", "inline-flex");
+        component.addClassName("web-image-box");
+
+        int width = image.getWidth();
+        int height = image.getHeight();
+        if (width > 0 && height > 0) {
+            component.getStyle()
+                .set("width", width + "px")
+                .set("container-type", "inline-size")
+                .set("--web-image-width", "100cqw")
+                .set("--web-image-height", "calc(100cqw * " + height + " / " + width + ")");
+        }
+
         component.add(WebImageConverter.getImage(image));
     }
 

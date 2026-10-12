@@ -15,14 +15,8 @@
  */
 package consulo.desktop.qt.ui.impl.image;
 
-import consulo.logging.Logger;
+import consulo.desktop.qt.ui.impl.base.DesktopQtRefreshRegistry;
 import consulo.ui.annotation.RequiredUIAccess;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-import java.util.WeakHashMap;
 
 /**
  * Where the frontend answers a change of the icon library, the way the web frontend answers it by rewriting the
@@ -33,37 +27,22 @@ import java.util.WeakHashMap;
  * @since 2026-08-16
  */
 public final class DesktopQtIconRefresher {
-    private static final Logger LOG = Logger.getInstance(DesktopQtIconRefresher.class);
-
     /**
      * An owner is held weakly, so a component whose widget is long gone does not keep it alive - registering is
      * the whole of what an owner has to do, there is nothing to unregister.
      */
-    private static final Set<DesktopQtIconOwner> ourOwners = Collections.newSetFromMap(new WeakHashMap<>());
+    private static final DesktopQtRefreshRegistry<DesktopQtIconOwner> ourOwners =
+        new DesktopQtRefreshRegistry<>(DesktopQtIconOwner::refreshIcons);
 
     private DesktopQtIconRefresher() {
     }
 
     public static void register(DesktopQtIconOwner owner) {
-        synchronized (ourOwners) {
-            ourOwners.add(owner);
-        }
+        ourOwners.register(owner);
     }
 
     @RequiredUIAccess
     public static void refreshAll() {
-        List<DesktopQtIconOwner> owners;
-        synchronized (ourOwners) {
-            owners = new ArrayList<>(ourOwners);
-        }
-
-        for (DesktopQtIconOwner owner : owners) {
-            try {
-                owner.refreshIcons();
-            }
-            catch (Throwable e) {
-                LOG.warn(e);
-            }
-        }
+        ourOwners.refreshAll();
     }
 }

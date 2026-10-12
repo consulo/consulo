@@ -22,6 +22,7 @@ import consulo.application.internal.ApplicationEx;
 import consulo.application.internal.StartupProgress;
 import consulo.component.internal.ComponentBinding;
 import consulo.container.util.StatCollector;
+import consulo.externalService.internal.startup.StartupCustomizeManager;
 import consulo.ui.impl.style.StyleManagerService;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.web.ui.impl.internal.WebApplicationImpl;
@@ -60,5 +61,7 @@ public class WebApplicationStarter extends ApplicationStarter {
 
         // load style state
         app.getInstance(StyleManagerService.class);
+
+        app.getInstance(StartupCustomizeManager.class).initialize(newConfigFolder);
     }
 }

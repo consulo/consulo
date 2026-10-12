@@ -20,6 +20,7 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.fileEditor.FileEditorWindow;
 import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.Component;
 import consulo.ui.color.ColorValue;
 import consulo.ui.Tab;
@@ -29,6 +30,7 @@ import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.internal.TabTitlePresentation;
 import consulo.web.ui.impl.internal.action.WebActionContextMenu;
+import consulo.web.ui.impl.internal.image.WebImageConverter;
 import org.jspecify.annotations.Nullable;
 
 import java.util.function.BiConsumer;
@@ -48,6 +50,8 @@ class WebTabImpl implements Tab {
     private @Nullable String myPopupGroupId;
     private @Nullable String myPopupPlace;
     private boolean myEnabled = true;
+    private boolean myPinned;
+    private boolean myDragAndDropInstalled;
 
     public WebTabImpl(WebTabbedLayoutImpl tabbedLayout) {
         myTabbedLayout = tabbedLayout;
@@ -73,6 +77,37 @@ class WebTabImpl implements Tab {
     }
 
     @Override
+    @RequiredUIAccess
+    public void setPinned(boolean pinned) {
+        if (myPinned == pinned) {
+            return;
+        }
+
+        myPinned = pinned;
+
+        if (myVaadinTab != null) {
+            update();
+        }
+    }
+
+    @Override
+    public boolean isPinned() {
+        return myPinned;
+    }
+
+    public WebTabbedLayoutImpl getTabbedLayout() {
+        return myTabbedLayout;
+    }
+
+    boolean isDragAndDropInstalled() {
+        return myDragAndDropInstalled;
+    }
+
+    void setDragAndDropInstalled(boolean dragAndDropInstalled) {
+        myDragAndDropInstalled = dragAndDropInstalled;
+    }
+
+    @Override
     public void update() {
         WebItemPresentationImpl presentation = new WebItemPresentationImpl();
         myRenderer.accept(this, presentation);
@@ -92,11 +127,19 @@ class WebTabImpl implements Tab {
 
         // vaadin tabs carry no close affordance, the awt tabbed container draws the cross itself as well
         BiConsumer<Tab, Component> closeHandler = myCloseHandler;
-        if (closeHandler != null) {
-            Span close = new Span("\u00d7");
+        if (closeHandler != null || myPinned) {
+            Span close = myPinned ? new Span(WebImageConverter.getImage(PlatformIconGroup.actionsPintab())) : new Span("\u00d7");
             close.addClassName("web-tab-close");
+            if (myPinned) {
+                close.addClassName("web-tab-pin");
+            }
             close.getElement()
-                .addEventListener("click", event -> closeHandler.accept(this, myContent))
+                .addEventListener("click", event -> {
+                    BiConsumer<Tab, Component> handler = myCloseHandler;
+                    if (handler != null) {
+                        handler.accept(this, myContent);
+                    }
+                })
                 // otherwise the click selects the tab that is about to go away
                 .addEventData("event.stopPropagation()");
 

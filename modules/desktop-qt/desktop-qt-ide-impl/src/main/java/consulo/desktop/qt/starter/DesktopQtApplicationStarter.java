@@ -24,6 +24,7 @@ import consulo.application.internal.StartupProgress;
 import consulo.component.internal.ComponentBinding;
 import consulo.container.util.StatCollector;
 import consulo.desktop.qt.application.impl.DesktopQtApplicationImpl;
+import consulo.externalService.internal.startup.StartupCustomizeManager;
 import consulo.externalService.statistic.UsageTrigger;
 import consulo.ide.impl.idea.ide.CommandLineProcessor;
 import consulo.ide.impl.idea.ide.RecentProjectsManagerImpl;
@@ -32,6 +33,7 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.internal.RecentProjectsManager;
 import consulo.project.ui.wm.WelcomeFrameManager;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.impl.style.StyleManagerService;
 import consulo.util.concurrent.AsyncResult;
@@ -74,6 +76,21 @@ public class DesktopQtApplicationStarter extends ApplicationStarter {
     ) {
         appInitializeMark.run();
 
+        StartupCustomizeManager customizeManager = app.getInstance(StartupCustomizeManager.class);
+        customizeManager.initialize(newConfigFolder);
+
+        if (customizeManager.isPending()) {
+            app.invokeLater(() -> {
+                UIAccess uiAccess = UIAccess.current();
+                customizeManager.showAsync(true).whenCompleteAsync((result, error) -> startNormally(stat, app, args), uiAccess);
+            }, IdeaModalityState.any());
+        }
+        else {
+            startNormally(stat, app, args);
+        }
+    }
+
+    private void startNormally(StatCollector stat, ApplicationEx app, CommandLineArgs args) {
         SystemDock.getInstance().updateMenu();
 
         RecentProjectsManagerImpl recentProjectsManager = (RecentProjectsManagerImpl) RecentProjectsManager.getInstance();

@@ -33,6 +33,10 @@
     "Panel": {
       "background": "background"
     },
+    "EditorArea": {
+      "background": "#282828",
+      "foreground": "#a0a0a0"
+    },
     "Label": {
       "foreground": "foreground",
       "disabledForeground": "#9a9a9a",

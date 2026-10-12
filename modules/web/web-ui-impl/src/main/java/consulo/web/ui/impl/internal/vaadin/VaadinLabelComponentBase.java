@@ -22,9 +22,9 @@ import com.vaadin.flow.component.Tag;
 import consulo.localize.LocalizeValue;
 import consulo.ui.HorizontalAlignment;
 import consulo.ui.color.ColorValue;
-import consulo.ui.color.RGBColor;
 import consulo.ui.ex.internal.LocalizeValueWithMnemonic;
 import consulo.ui.image.Image;
+import consulo.web.ui.impl.internal.WebColors;
 import consulo.web.ui.impl.internal.WebSearchHighlight;
 import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
 import consulo.web.ui.impl.internal.image.WebImageConverter;
@@ -128,8 +128,7 @@ public abstract class VaadinLabelComponentBase extends SimpleComponent implement
             getStyle().remove("color");
         }
         else {
-            RGBColor color = foregroundColor.toRGB();
-            getStyle().set("color", "rgb(" + color.getRed() + "," + color.getGreen() + "," + color.getBlue() + ")");
+            getStyle().set("color", WebColors.toStyleCssColor(foregroundColor));
         }
     }
 

@@ -32,5 +32,10 @@ public enum ComboBoxStyle implements ComponentStyle {
      * press, and loses the chrome which would separate it from its host: the border, the corners and the ring
      * drawn around it while it holds the focus.
      */
-    INPLACE
+    INPLACE,
+
+    /**
+     * For a control which stands in a toolbar - it keeps its chrome but is no taller than the buttons beside it.
+     */
+    TOOLBAR
 }

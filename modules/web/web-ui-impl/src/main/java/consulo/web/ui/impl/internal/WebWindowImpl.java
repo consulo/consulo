@@ -25,6 +25,7 @@ import consulo.disposer.Disposer;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.Component;
 import consulo.ui.MenuBar;
+import consulo.ui.UIAccess;
 import consulo.ui.Window;
 import consulo.ui.WindowOptions;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -40,6 +41,10 @@ import consulo.web.ui.impl.internal.vaadin.VaadinSizeUtil;
 import consulo.ui.Length;
 import consulo.web.ui.impl.internal.vaadin.WebLength;
 import org.jspecify.annotations.Nullable;
+
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * @author VISTALL
@@ -72,6 +77,9 @@ public class WebWindowImpl extends VaadinComponentDelegate<WebWindowImpl.Vaadin>
 
     private boolean myDisposed;
     private final boolean myUndecorated;
+    private final boolean myReattachable;
+    private final @Nullable WebWindowImpl myOwner;
+    private final List<WebWindowImpl> myOwnedWindows = new CopyOnWriteArrayList<>();
     private final @Nullable String myDimensionKey;
     private final WebRootPaneImpl myRootPanel = new WebRootPaneImpl();
 
@@ -86,6 +94,11 @@ public class WebWindowImpl extends VaadinComponentDelegate<WebWindowImpl.Vaadin>
 
         myUndecorated = options.isUndecorated();
         myDimensionKey = options.getDimensionKey();
+        myOwner = options.getOwner() instanceof WebWindowImpl owner ? owner : null;
+        myReattachable = options.isReattachable() || myOwner != null && myOwner.myReattachable;
+        if (myOwner != null) {
+            myOwner.myOwnedWindows.add(this);
+        }
         if (myUndecorated) {
             vaadinComponent.addThemeVariants(DialogVariant.NO_PADDING);
         }
@@ -101,8 +114,14 @@ public class WebWindowImpl extends VaadinComponentDelegate<WebWindowImpl.Vaadin>
         }
 
         vaadinComponent.addOpenedChangeListener(event -> {
-            if (!event.isOpened()) {
+            if (event.isFromClient() && !event.isOpened()) {
                 closed();
+            }
+        });
+
+        vaadinComponent.addDetachListener(event -> {
+            if (!myReattachable && event.getUI().isClosing()) {
+                fireClosed();
             }
         });
 
@@ -197,16 +216,74 @@ public class WebWindowImpl extends VaadinComponentDelegate<WebWindowImpl.Vaadin>
             return;
         }
 
-        myDisposed = true;
-
         // vaadin detaches an auto added overlay only when the browser reports back the 'closed' dom event, and it
         // nests an overlay opened on top of another modal inside that modal - so a window closed out of order stays
         // attached and keeps the ui element inert. detaching here runs the modal stack cleanup right away
         getVaadinComponent().getElement().removeFromParent();
 
+        fireClosed();
+    }
+
+    @RequiredUIAccess
+    private void fireClosed() {
+        if (myDisposed) {
+            return;
+        }
+
+        myDisposed = true;
+
+        if (myOwner != null) {
+            myOwner.myOwnedWindows.remove(this);
+        }
+
         getListenerDispatcher(WindowCloseEvent.class).onEvent(new WindowCloseEvent(this));
 
         Disposer.dispose(this);
+    }
+
+    @RequiredUIAccess
+    public CompletableFuture<?> moveTo(WebUIAccessImpl target) {
+        UI targetUI = target.getUI();
+        UI previous = getVaadinComponent().getUI().orElse(null);
+        if (myDisposed || previous == targetUI) {
+            return CompletableFuture.completedFuture(null);
+        }
+
+        if (previous != null && !previous.isClosing() && previous.getSession() != null) {
+            UIAccess previousAccess = VaadinComponentDelegate.getUIAccess(previous);
+            return previousAccess.giveAsync(() -> {
+                previous.push();
+
+                releaseFromTree();
+            }).thenCompose(ignored -> target.giveAsync(() -> attachTo(targetUI)));
+        }
+
+        releaseFromTree();
+        attachTo(targetUI);
+        return CompletableFuture.completedFuture(null);
+    }
+
+    private void releaseFromTree() {
+        for (WebWindowImpl owned : myOwnedWindows) {
+            owned.releaseFromTree();
+        }
+
+        getVaadinComponent().getElement().removeFromTree(false);
+    }
+
+    @RequiredUIAccess
+    private void attachTo(UI ui) {
+        if (myDisposed) {
+            return;
+        }
+
+        Vaadin vaadin = getVaadinComponent();
+        ui.add(vaadin);
+        vaadin.open();
+
+        for (WebWindowImpl owned : myOwnedWindows) {
+            owned.attachTo(ui);
+        }
     }
 
     @Override

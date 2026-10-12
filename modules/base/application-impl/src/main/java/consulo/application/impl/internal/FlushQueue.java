@@ -24,15 +24,15 @@ public final class FlushQueue {
   private final List<RunnableInfo> mySkippedItems = new ArrayList<>(); //protected by LOCK
 
   private final ArrayDeque<RunnableInfo> myQueue = new ArrayDeque<>(); //protected by LOCK
-  private final
-  
-  Consumer<? super Runnable> myRunnableExecutor;
+  private final ModalityContext myContext;
+  private final Consumer<? super Runnable> myRunnableExecutor;
 
   private volatile boolean myMayHaveItems;
 
   private RunnableInfo myLastInfo;
 
-  FlushQueue(Consumer<? super Runnable> executor) {
+  FlushQueue(ModalityContext context, Consumer<? super Runnable> executor) {
+    myContext = context;
     myRunnableExecutor = executor;
   }
 
@@ -41,7 +41,7 @@ public final class FlushQueue {
   }
 
   public void flushNow() {
-    LaterInvocator.FLUSHER_SCHEDULED.set(false);
+    myContext.myFlusherScheduled.set(false);
     myMayHaveItems = false;
 
     long startTime = System.currentTimeMillis();
@@ -54,7 +54,7 @@ public final class FlushQueue {
         break;
       }
     }
-    LaterInvocator.requestFlush();
+    myContext.requestFlush();
   }
 
   public void push(RunnableInfo runnableInfo) {
@@ -95,7 +95,7 @@ public final class FlushQueue {
 
   @Nullable RunnableInfo getNextEvent(boolean remove) {
     synchronized (LOCK) {
-      ModalityState currentModality = LaterInvocator.getCurrentModalityState();
+      ModalityState currentModality = myContext.getCurrentModalityState();
 
       while (!myQueue.isEmpty()) {
         RunnableInfo info = myQueue.getFirst();

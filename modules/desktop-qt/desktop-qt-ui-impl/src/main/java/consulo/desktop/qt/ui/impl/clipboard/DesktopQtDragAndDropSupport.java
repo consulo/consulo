@@ -244,7 +244,7 @@ public final class DesktopQtDragAndDropSupport<Item> {
         return mimeData == null ? DataTransfer.EMPTY : DesktopQtDataTransfers.fromMimeData(mimeData);
     }
 
-    private static boolean isCopyGesture(Qt.KeyboardModifiers modifiers) {
+    public static boolean isCopyGesture(Qt.KeyboardModifiers modifiers) {
         Qt.KeyboardModifier copy = Platform.current().os().isMac() ? Qt.KeyboardModifier.AltModifier : Qt.KeyboardModifier.ControlModifier;
         return modifiers.testFlag(copy);
     }

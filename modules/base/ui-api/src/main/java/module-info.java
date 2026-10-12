@@ -42,6 +42,7 @@ module consulo.ui.api {
     exports consulo.ui.image.internal;
 
     exports consulo.ui.internal to
+        consulo.application.impl,
         consulo.color.scheme.ui.api,
         consulo.desktop.awt.editor.impl,
         consulo.desktop.awt.ide.impl,
@@ -49,12 +50,14 @@ module consulo.ui.api {
         consulo.desktop.qt.editor.impl,
         consulo.desktop.qt.ide.impl,
         consulo.desktop.qt.ui.impl,
+        consulo.external.service.impl,
         consulo.ide.impl,
         consulo.it,
         consulo.language.editor.impl,
         consulo.test.impl,
         consulo.ui.ex.api,
         consulo.ui.ex.awt.api,
+        consulo.ui.ex.impl,
         consulo.ui.impl,
         consulo.web.editor.impl,
         consulo.project.api,

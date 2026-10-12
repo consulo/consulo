@@ -231,10 +231,15 @@ public abstract class VaadinComponentDelegate<T extends com.vaadin.flow.componen
         if (eventClass == ClickEvent.class && !myClickInstalled) {
             myClickInstalled = true;
 
-            WebInputDetails.addClickListener(
+            DomListenerRegistration registration = WebInputDetails.addClickListener(
                 toVaadinComponent().getElement(),
                 details -> getListenerDispatcher(ClickEvent.class).onEvent(new ClickEvent(this, details))
             ).stopPropagation();
+
+            String filter = clickFilter();
+            if (filter != null) {
+                registration.setFilter(filter);
+            }
         }
 
         if (eventClass == MousePressedEvent.class && !myMousePressInstalled) {
@@ -290,6 +295,10 @@ public abstract class VaadinComponentDelegate<T extends com.vaadin.flow.componen
     }
 
     protected @Nullable String contextMenuCondition() {
+        return null;
+    }
+
+    protected @Nullable String clickFilter() {
         return null;
     }
 
@@ -363,7 +372,7 @@ public abstract class VaadinComponentDelegate<T extends com.vaadin.flow.componen
         myBackgroundColor = background;
 
         Style style = myVaadinComponent.getStyle();
-        String cssColor = WebColors.toCssColor(background);
+        String cssColor = WebColors.toStyleCssColor(background);
         if (cssColor == null) {
             style.remove("background-color");
         }

@@ -59,6 +59,15 @@ public class ActionToggleToolbarButtonImpl extends JToggleButton implements Acti
     }
 
     @Override
+    public void updateUI() {
+        super.updateUI();
+
+        if (myEngine != null) {
+            myEngine.updateTextAndMnemonic(myEngine.getPresentation().getTextValue());
+        }
+    }
+
+    @Override
     public void addNotify() {
         super.addNotify();
         myEngine.addNotify();

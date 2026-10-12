@@ -19,10 +19,14 @@ import consulo.logging.Logger;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.HSLColor;
 import consulo.ui.color.RGBColor;
+import consulo.ui.impl.style.StyleColorKeys;
+import consulo.ui.style.StyleColorValue;
 import consulo.ui.util.ColorValueUtil;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Locale;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -42,11 +46,42 @@ public final class WebColors {
 
     private static final int MAX_COMPONENT = 255;
 
+    /**
+     * The css colour of each {@link StyleColorValue} which has a style variable: {@code var(--consulo-...)}, so that it follows
+     * the style on the client.
+     */
+    private static final Map<StyleColorValue, String> ourStyleCssColors = new ConcurrentHashMap<>();
+
     private WebColors() {
     }
 
     public static @Nullable String toCssColor(@Nullable ColorValue colorValue) {
         return ColorValueUtil.toCssColor(colorValue);
+    }
+
+    /**
+     * A colour as the css value the client sets: a colour of the style which has a style variable ({@code --consulo-...}, see
+     * {@link WebStyleCssRegistry}) as {@code var(--consulo-...)}, so that it follows a change of the style on the client; any
+     * other colour as the literal colour of its rgb, its alpha included ({@link #toCssColor}). {@code null} for no
+     * colour.
+     */
+    public static @Nullable String toStyleCssColor(@Nullable ColorValue color) {
+        if (color == null) {
+            return null;
+        }
+        if (color instanceof StyleColorValue styleColor) {
+            String cssColor = ourStyleCssColors.get(styleColor);
+            if (cssColor != null) {
+                return cssColor;
+            }
+            String key = StyleColorKeys.getKey(styleColor);
+            if (key != null) {
+                cssColor = "var(" + WebStyleCssRegistry.toVariableName(key) + ")";
+                ourStyleCssColors.put(styleColor, cssColor);
+                return cssColor;
+            }
+        }
+        return toCssColor(color);
     }
 
     public static @Nullable ColorValue fromCssColor(@Nullable String cssColor) {

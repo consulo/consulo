@@ -18,6 +18,7 @@ package consulo.desktop.qt.ui.impl.layout;
 import consulo.desktop.qt.ui.impl.DesktopQtSpace;
 import consulo.ui.HorizontalAlignment;
 import consulo.ui.Space;
+import consulo.ui.VerticalAlignment;
 import consulo.ui.layout.LayoutConstraint;
 import consulo.ui.layout.VerticalLayout;
 import io.qt.core.Qt;
@@ -32,21 +33,35 @@ import org.jspecify.annotations.Nullable;
 public class DesktopQtVerticalLayoutImpl extends DesktopQtBoxLayoutComponent<LayoutConstraint> implements VerticalLayout {
     private final Space myVGap;
     private final @Nullable HorizontalAlignment myAlignment;
+    private final @Nullable VerticalAlignment myVerticalAlignment;
 
     public DesktopQtVerticalLayoutImpl(Space vGap) {
         this(vGap, null);
     }
 
     public DesktopQtVerticalLayoutImpl(Space vGap, @Nullable HorizontalAlignment alignment) {
+        this(vGap, alignment, null);
+    }
+
+    public DesktopQtVerticalLayoutImpl(Space vGap, @Nullable HorizontalAlignment alignment, @Nullable VerticalAlignment verticalAlignment) {
         myVGap = vGap;
         myAlignment = alignment;
+        myVerticalAlignment = verticalAlignment;
     }
 
     @Override
     protected QBoxLayout createBoxLayout() {
         QVBoxLayout layout = new QVBoxLayout();
         layout.setSpacing(DesktopQtSpace.toPixels(myVGap));
+        if (myVerticalAlignment == VerticalAlignment.CENTER || myVerticalAlignment == VerticalAlignment.BOTTOM) {
+            layout.addStretch(1);
+        }
         return layout;
+    }
+
+    @Override
+    protected int trailingStretch() {
+        return myVerticalAlignment == VerticalAlignment.BOTTOM ? 0 : 1;
     }
 
     /**

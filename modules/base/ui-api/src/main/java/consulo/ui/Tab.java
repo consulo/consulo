@@ -41,6 +41,15 @@ public interface Tab {
     void setCloseHandler(@Nullable BiConsumer<Tab, Component> closeHandler);
 
     /**
+     * A pinned tab shows a pin where it otherwise offers to close. A click there still runs the close handler, which
+     * decides what a pinned tab does with it.
+     */
+    @RequiredUIAccess
+    void setPinned(boolean pinned);
+
+    boolean isPinned();
+
+    /**
      * The group shown on a right click of the tab itself. Whoever builds the tab knows what it stands for, so
      * the group is given rather than looked up from the data below it - the content of a tab which was never
      * selected is not in the ui yet, and nothing can be read off it.

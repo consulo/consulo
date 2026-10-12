@@ -15,6 +15,7 @@
  */
 package consulo.desktop.qt.ui.impl;
 
+import consulo.desktop.qt.ui.impl.base.DesktopQtRefreshRegistry;
 import consulo.desktop.qt.ui.impl.image.DesktopQtAnimationHost;
 import consulo.desktop.qt.ui.impl.image.DesktopQtIconOwner;
 import consulo.desktop.qt.ui.impl.image.DesktopQtIconRefresher;
@@ -79,6 +80,9 @@ public abstract class QtComponentDelegate<T extends QWidget> implements Componen
     private @Nullable List<Consumer<QWidget>> myBindListeners;
 
     /** the two blocks of the style sheet of the widget, so either of them can be rewritten on its own */
+    private static final DesktopQtRefreshRegistry<QtComponentDelegate<?>> ourColorOwners =
+        new DesktopQtRefreshRegistry<>(QtComponentDelegate::refreshColors);
+
     private String myOwnStyleSheet = "";
     private static final int HAIRLINE = 1;
     private static final int ARC = 4;
@@ -306,6 +310,10 @@ public abstract class QtComponentDelegate<T extends QWidget> implements Componen
 
         Map<BorderPosition, ColorValue> borders = myDataObject.getBorders();
         Map<BorderPosition, Space> paddings = myDataObject.getPaddings();
+
+        if (!borders.isEmpty()) {
+            ourColorOwners.register(this);
+        }
 
         int[] space = new int[BorderPosition.values().length];
 
@@ -808,9 +816,28 @@ public abstract class QtComponentDelegate<T extends QWidget> implements Componen
         applyColors();
     }
 
+    @RequiredUIAccess
+    public static void refreshAllColors() {
+        ourColorOwners.refreshAll();
+    }
+
+    @RequiredUIAccess
+    private void refreshColors() {
+        if (myComponent == null || myComponent.isDisposed()) {
+            return;
+        }
+
+        applyColors();
+        applyBorders();
+    }
+
     private void applyColors() {
         if (myComponent == null) {
             return;
+        }
+
+        if (myForegroundColor != null || myBackgroundColor != null) {
+            ourColorOwners.register(this);
         }
 
         if (myForegroundColor == null && myBackgroundColor == null) {

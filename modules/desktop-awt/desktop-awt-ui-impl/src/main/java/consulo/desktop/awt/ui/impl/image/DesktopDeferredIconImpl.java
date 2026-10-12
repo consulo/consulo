@@ -42,7 +42,11 @@ import javax.swing.*;
 import javax.swing.plaf.TreeUI;
 import javax.swing.plaf.basic.BasicTreeUI;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
@@ -76,6 +80,18 @@ public class DesktopDeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<Deskt
         AppExecutorUtil.createBoundedApplicationPoolExecutor("OurIconCalculating Pool", 1);
 
     private final IconListener<T> myEvalListener;
+
+    private final Map<Component, PendingRepaint> myPendingRepaints = new LinkedHashMap<>();
+
+    private record PendingRepaint(
+        Component component,
+        int x,
+        int y,
+        Component target,
+        @Nullable Component paintingParent,
+        @Nullable Rectangle paintingParentRec
+    ) {
+    }
 
     private DesktopDeferredIconImpl(DesktopDeferredIconImpl<T> icon) {
         super(icon);
@@ -182,20 +198,31 @@ public class DesktopDeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<Deskt
             TargetAWT.to(myScaledDelegateIcon).paintIcon(c, g, x, y); //SOE protection
         }
 
-        if (isDone() || myIsScheduled || PowerSaveMode.isEnabled()) {
+        if (isDone() || PowerSaveMode.isEnabled()) {
+            return;
+        }
+
+        if (myIsScheduled) {
+            addPendingRepaint(c, x, y);
             return;
         }
 
         scheduleEvaluation(c, x, y);
     }
 
+    private void addPendingRepaint(Component c, int x, int y) {
+        Component target = getTarget(c);
+        Component paintingParent = SwingUtilities.getAncestorOfClass(PaintingParent.class, c);
+        Rectangle paintingParentRec = paintingParent == null ? null : ((PaintingParent) paintingParent).getChildRec(c);
+        myPendingRepaints.putIfAbsent(target, new PendingRepaint(c, x, y, target, paintingParent, paintingParentRec));
+    }
+
     @VisibleForTesting
     Future<?> scheduleEvaluation(Component c, int x, int y) {
         myIsScheduled = true;
 
-        Component target = getTarget(c);
-        Component paintingParent = SwingUtilities.getAncestorOfClass(PaintingParent.class, c);
-        Rectangle paintingParentRec = paintingParent == null ? null : ((PaintingParent) paintingParent).getChildRec(c);
+        addPendingRepaint(c, x, y);
+
         return ourIconCalculatingExecutor.submit(() -> {
             int oldWidth = myScaledDelegateIcon.getWidth();
             SimpleReference<Image> evaluated = SimpleReference.create();
@@ -231,37 +258,43 @@ public class DesktopDeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<Deskt
             SwingUtilities.invokeLater(() -> {
                 setDone(result);
 
-                Component actualTarget = target;
-                if (actualTarget != null && SwingUtilities.getWindowAncestor(actualTarget) == null) {
-                    actualTarget = paintingParent;
-                    if (actualTarget == null || SwingUtilities.getWindowAncestor(actualTarget) == null) {
-                        actualTarget = null;
-                    }
-                }
+                List<PendingRepaint> pendingRepaints = new ArrayList<>(myPendingRepaints.values());
+                myPendingRepaints.clear();
 
-                if (actualTarget == null) {
-                    return;
-                }
-
-                if (shouldRevalidate) {
-                    // revalidate will not work: JTree caches size of nodes
-                    if (actualTarget instanceof JTree) {
-                        TreeUI ui = ((JTree) actualTarget).getUI();
-                        if (ui instanceof BasicTreeUI) {
-                            // this call is "fake" and only need to reset tree layout cache
-                            ((BasicTreeUI) ui).setLeftChildIndent(UIUtil.getTreeLeftChildIndent());
-                        }
-                    }
-                }
-
-                if (c == actualTarget) {
-                    c.repaint(x, y, getIconWidth(), getIconHeight());
-                }
-                else {
-                    ourRepaintScheduler.pushDirtyComponent(actualTarget, paintingParentRec);
+                for (PendingRepaint pendingRepaint : pendingRepaints) {
+                    repaint(pendingRepaint, shouldRevalidate);
                 }
             });
         });
+    }
+
+    private void repaint(PendingRepaint pendingRepaint, boolean shouldRevalidate) {
+        Component actualTarget = pendingRepaint.target();
+        if (SwingUtilities.getWindowAncestor(actualTarget) == null) {
+            actualTarget = pendingRepaint.paintingParent();
+            if (actualTarget == null || SwingUtilities.getWindowAncestor(actualTarget) == null) {
+                return;
+            }
+        }
+
+        if (shouldRevalidate) {
+            // revalidate will not work: JTree caches size of nodes
+            if (actualTarget instanceof JTree) {
+                TreeUI ui = ((JTree) actualTarget).getUI();
+                if (ui instanceof BasicTreeUI) {
+                    // this call is "fake" and only need to reset tree layout cache
+                    ((BasicTreeUI) ui).setLeftChildIndent(UIUtil.getTreeLeftChildIndent());
+                }
+            }
+        }
+
+        Component c = pendingRepaint.component();
+        if (c == actualTarget) {
+            c.repaint(pendingRepaint.x(), pendingRepaint.y(), getIconWidth(), getIconHeight());
+        }
+        else {
+            ourRepaintScheduler.pushDirtyComponent(actualTarget, pendingRepaint.paintingParentRec());
+        }
     }
 
     private static Component getTarget(Component c) {

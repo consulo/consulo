@@ -57,6 +57,10 @@ public abstract class DialogDescriptor {
         return null;
     }
 
+    public boolean isReattachable() {
+        return false;
+    }
+
     
     @RequiredUIAccess
     public abstract Component createCenterComponent(Disposable uiDisposable);

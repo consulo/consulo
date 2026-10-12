@@ -18,6 +18,7 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.logging.attachment.Attachment;
 import consulo.logging.attachment.AttachmentFactory;
+import consulo.ui.Component;
 import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -414,6 +415,7 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
     @SuppressWarnings("unchecked")
     public <V> CompletableFuture<V> executeTask(UIAccess uiAccess,
                                                 @Nullable ComponentManager project,
+                                                @Nullable Component parent,
                                                 LocalizeValue titleText,
                                                 boolean modal,
                                                 boolean cancelable,
@@ -427,13 +429,15 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
         Supplier<ProgressIndicator> indicatorFactory = () -> {
             ProgressIndicator indicator;
             if (modal) {
-                indicator = application.createProgressWindow(titleText.get(),
+                ProgressWindow progressWindow = application.createProgressWindow(titleText.get(),
                     cancelable,
                     true,
                     project,
                     null,
                     ApplicationLocalize.taskButtonCancel()
                 );
+                progressWindow.setParent(parent);
+                indicator = progressWindow;
             }
             else {
                 indicator = newBackgroundableProcessIndicator(project, info, PerformInBackgroundOption.ALWAYS_BACKGROUND);

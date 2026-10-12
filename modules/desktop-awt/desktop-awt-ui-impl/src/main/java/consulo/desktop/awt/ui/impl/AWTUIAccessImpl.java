@@ -17,13 +17,12 @@ package consulo.desktop.awt.ui.impl;
 
 import consulo.application.Application;
 import consulo.application.concurrent.ApplicationConcurrency;
-import consulo.application.impl.internal.LaterInvocator;
+import consulo.application.impl.internal.ModalityUIAccess;
 import consulo.component.ProcessCanceledException;
 import consulo.component.store.impl.internal.ComponentStoreImpl;
 import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.desktop.awt.ui.impl.clipboard.DesktopAWTClipboardImpl;
 import consulo.logging.Logger;
-import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.clipboard.Clipboard;
@@ -40,7 +39,7 @@ import java.util.function.Supplier;
  * @author VISTALL
  * @since 11-Jun-16
  */
-public class AWTUIAccessImpl extends BaseUIAccess implements UIAccess {
+public class AWTUIAccessImpl extends BaseUIAccess implements ModalityUIAccess {
     public static UIAccess ourInstance = new AWTUIAccessImpl();
     private static final Logger LOGGER = Logger.getInstance(AWTUIAccessImpl.class);
 
@@ -52,17 +51,6 @@ public class AWTUIAccessImpl extends BaseUIAccess implements UIAccess {
     @Override
     public void give(Runnable runnable) {
         SwingUtilities.invokeLater(runnable);
-    }
-
-    @Override
-    public void giveLater(Runnable runnable, ModalityState modalityState) {
-        LaterInvocator.invokeLaterWithCallback(runnable, modalityState, Application.get().getDisposed(), null);
-    }
-
-    @RequiredUIAccess
-    @Override
-    public boolean isInModalContext() {
-        return LaterInvocator.isInModalContext();
     }
 
     @RequiredUIAccess

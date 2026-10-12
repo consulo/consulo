@@ -19,9 +19,12 @@ import consulo.desktop.awt.ui.impl.DesktopSpace;
 import consulo.ui.Component;
 import consulo.ui.HorizontalAlignment;
 import consulo.ui.Space;
+import consulo.ui.VerticalAlignment;
 import consulo.ui.layout.Layout;
 import consulo.ui.layout.LayoutConstraint;
 import consulo.ui.layout.VerticalLayout;
+
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -30,6 +33,8 @@ import javax.swing.*;
  * @since 2016-06-11
  */
 public class DesktopVerticalLayoutImpl extends DesktopLayoutBase<JPanel, LayoutConstraint> implements VerticalLayout {
+    private @Nullable String myGroup;
+
     public DesktopVerticalLayoutImpl(Space vGap) {
         initDefaultPanel(new consulo.ui.ex.awt.VerticalLayout(DesktopSpace.toPixels(vGap)));
     }
@@ -42,9 +47,19 @@ public class DesktopVerticalLayoutImpl extends DesktopLayoutBase<JPanel, LayoutC
         }));
     }
 
+    public DesktopVerticalLayoutImpl(Space vGap, HorizontalAlignment alignment, VerticalAlignment verticalAlignment) {
+        this(vGap, alignment);
+
+        myGroup = switch (verticalAlignment) {
+            case TOP -> consulo.ui.ex.awt.VerticalLayout.TOP;
+            case CENTER -> consulo.ui.ex.awt.VerticalLayout.CENTER;
+            case BOTTOM -> consulo.ui.ex.awt.VerticalLayout.BOTTOM;
+        };
+    }
+
     @Override
     public Layout<LayoutConstraint> add(Component component, LayoutConstraint constraint) {
-        addImpl(component, null);
+        addImpl(component, myGroup);
         return this;
     }
 }

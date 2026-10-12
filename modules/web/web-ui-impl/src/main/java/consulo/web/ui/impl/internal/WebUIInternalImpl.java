@@ -19,6 +19,8 @@ import consulo.ui.event.ModalityStateListener;
 import consulo.ui.RadioGroup;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
+import consulo.application.impl.internal.LaterInvocator;
+import consulo.application.impl.internal.ModalityStateImpl;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.server.VaadinSession;
 import consulo.ui.event.ComponentEvent;
@@ -137,6 +139,11 @@ public class WebUIInternalImpl extends UIInternal implements UIInternalEx {
     }
 
     @Override
+    public VerticalLayout _Layouts_vertical(Space vGap, HorizontalAlignment alignment, VerticalAlignment verticalAlignment) {
+        return new WebVerticalLayoutImpl(vGap, alignment, verticalAlignment);
+    }
+
+    @Override
     public SwipeLayout _Layouts_swipe() {
         return new WebSwipeLayoutImpl();
     }
@@ -169,6 +176,11 @@ public class WebUIInternalImpl extends UIInternal implements UIInternalEx {
     @Override
     public TableLayout _Layouts_table(StaticPosition fillOption) {
         return new WebTableLayoutImpl(fillOption);
+    }
+
+    @Override
+    public TileLayout _Layouts_tile(Length minTileWidth, Space gap) {
+        return new WebTileLayoutImpl(minTileWidth, gap);
     }
 
     @Override
@@ -358,6 +370,11 @@ public class WebUIInternalImpl extends UIInternal implements UIInternalEx {
     @Override
     public <E> TreeTable<E> _Components_treeTable(@Nullable E rootValue, TreeModel<E> model, TreeExecutor executor) {
         return new WebTreeTableImpl<>(rootValue, model, executor);
+    }
+
+    @Override
+    public Card _Components_card() {
+        return new WebCardImpl();
     }
 
     @Override
@@ -691,12 +708,12 @@ public class WebUIInternalImpl extends UIInternal implements UIInternalEx {
 
     @Override
     public ModalityState _ModalityState_any() {
-        return WebModalityState.INSTANCE;
+        return ModalityStateImpl.ANY;
     }
 
     @Override
     public ModalityState _ModalityState_nonModal() {
-        return WebModalityState.INSTANCE;
+        return ModalityStateImpl.NON_MODAL;
     }
 
     private RuntimeException notSupported() {
@@ -735,12 +752,9 @@ public class WebUIInternalImpl extends UIInternal implements UIInternalEx {
         return new UnifiedInputBoxBuilderImpl<>(PasswordBox::create);
     }
 
-    /**
-     * Nothing of the platform is modal from the frontend's side, so a listener of the state has nothing to be
-     * told about - it is taken and dropped rather than refused, which would take the caller down with it.
-     */
     @Override
     public void addModalityStateListener(ModalityStateListener listener, Disposable parentDisposable) {
+        LaterInvocator.addModalityStateListener(listener, parentDisposable);
     }
 
     @Override

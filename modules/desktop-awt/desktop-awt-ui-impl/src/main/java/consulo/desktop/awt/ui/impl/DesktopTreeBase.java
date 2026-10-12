@@ -32,7 +32,6 @@ import consulo.ui.TreeExecutor;
 import consulo.ui.TreeModel;
 import consulo.ui.TreeNode;
 import consulo.ui.TreeStyle;
-import consulo.ui.impl.font.FontSizeLadder;
 import consulo.ui.event.TreeCollapseEvent;
 import consulo.ui.event.TreeDoubleClickEvent;
 import consulo.ui.event.TreeExpandEvent;
@@ -633,7 +632,7 @@ public abstract class DesktopTreeBase<E, T extends java.awt.Component> extends S
             font = UIUtil.getLabelFont();
         }
 
-        component.setFont(font.deriveFont(font.getSize2D() + JBUI.scale((float) FontSizeLadder.pointDelta(style))));
+        component.setFont(font.deriveFont(font.getSize2D() + JBUI.scale((float) style.getFontPointDelta())));
     }
 
     @Override

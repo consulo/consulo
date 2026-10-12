@@ -22,6 +22,7 @@ import consulo.application.internal.ApplicationEx;
 import consulo.disposer.Disposer;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
+import consulo.externalService.internal.startup.StartupCustomizeManager;
 import consulo.project.ui.wm.WelcomeFrameManager;
 import consulo.ui.UIAccess;
 import consulo.ui.Window;
@@ -29,6 +30,8 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.DockLayout;
 import consulo.util.lang.TimeoutUtil;
 import consulo.web.ui.impl.internal.WebApplicationImpl;
+
+import java.util.concurrent.CancellationException;
 
 /**
  * @author VISTALL
@@ -88,6 +91,21 @@ public class RootUIBuilder implements UIBuilder {
       webApplication.registerUIAccess(uiAccess);
     }
 
-    welcomeFrameManager.showIfNoProjectOpened();
+    StartupCustomizeManager customizeManager = application.getInstance(StartupCustomizeManager.class);
+    if (customizeManager.isPending()) {
+      customizeManager.showAsync(true).whenCompleteAsync((result, error) -> {
+        if (error instanceof CancellationException) {
+          if (UI.getCurrent().getCurrentView() instanceof VaadinRootLayout rootLayout) {
+            rootLayout.showClosed();
+          }
+          return;
+        }
+
+        welcomeFrameManager.showIfNoProjectOpened();
+      }, uiAccess);
+    }
+    else {
+      welcomeFrameManager.showIfNoProjectOpened();
+    }
   }
 }

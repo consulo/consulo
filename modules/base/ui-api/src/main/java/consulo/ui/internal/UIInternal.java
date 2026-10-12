@@ -92,6 +92,10 @@ public abstract class UIInternal {
         return _Layouts_vertical(vGap);
     }
 
+    public VerticalLayout _Layouts_vertical(Space vGap, HorizontalAlignment alignment, VerticalAlignment verticalAlignment) {
+        return _Layouts_vertical(vGap, alignment);
+    }
+
     public abstract SwipeLayout _Layouts_swipe();
 
     public abstract PlaceholderLayout _Layouts_placeholder();
@@ -107,6 +111,10 @@ public abstract class UIInternal {
     public abstract LabeledLayout _Layouts_labeled(LocalizeValue label);
 
     public TableLayout _Layouts_table(StaticPosition fillOption) {
+        throw new UnsupportedOperationException();
+    }
+
+    public TileLayout _Layouts_tile(Length minTileWidth, Space gap) {
         throw new UnsupportedOperationException();
     }
 
@@ -204,6 +212,10 @@ public abstract class UIInternal {
         throw new UnsupportedOperationException();
     }
 
+    public Card _Components_card() {
+        throw new UnsupportedOperationException();
+    }
+
     public TimeAxis _Chart_timeAxis(Instant dataStart) {
         throw new UnsupportedOperationException();
     }
@@ -237,6 +249,10 @@ public abstract class UIInternal {
     }
 
     public abstract Image _Image_lazy(Supplier<Image> imageSupplier);
+
+    public Image _Image_deferred(Image base, Supplier<Image> imageSupplier) {
+        return _Image_lazy(imageSupplier);
+    }
 
     public abstract Image _ImageEffects_layered(Image[] images);
 

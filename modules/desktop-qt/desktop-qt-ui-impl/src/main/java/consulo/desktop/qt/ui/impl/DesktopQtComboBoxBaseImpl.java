@@ -22,6 +22,7 @@ import consulo.ui.ComboBoxStyle;
 import consulo.ui.ComponentItemRender;
 import consulo.ui.Length;
 import consulo.ui.RenderItem;
+import consulo.ui.Space;
 import consulo.ui.TextItemRender;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
@@ -155,6 +156,7 @@ public abstract class DesktopQtComboBoxBaseImpl<E, W extends QComboBox> extends 
         switch (style) {
             case INPLACE -> component.setFrame(false);
             case TRANSPARENT_BACKGROUND -> component.setAutoFillBackground(false);
+            case TOOLBAR -> component.setMaximumHeight(component.fontMetrics().height() + 2 * DesktopQtSpace.toPixels(Space.MEDIUM));
         }
     }
 

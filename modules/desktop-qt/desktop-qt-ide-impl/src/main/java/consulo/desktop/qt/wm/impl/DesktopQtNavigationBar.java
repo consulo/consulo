@@ -151,6 +151,7 @@ public class DesktopQtNavigationBar implements Disposable {
             }
             myToolbar = new UnifiedActionToolbarImpl(ActionPlaces.NAVIGATION_BAR_TOOLBAR, group, ActionToolbar.Style.HORIZONTAL);
             myToolbar.setDataContextProvider(this::createDataContext);
+            myToolbar.getUIComponent().paddingBuilder().verticalSet(Space.NONE).apply();
 
             myRowLayout.right(myToolbar.getUIComponent());
         });

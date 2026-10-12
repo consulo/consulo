@@ -52,7 +52,7 @@ public class ProgressBuilderFactoryImpl implements ProgressBuilderFactory {
             @Override
             public <V> CompletableFuture<V> execute(UIAccess uiAccess, Supplier<Coroutine<?, V>> supplier) {
                 assertCreated();
-                return myProgressManager.executeTask(uiAccess, myProject, myTitle, myModal, myCancelable, supplier);
+                return myProgressManager.executeTask(uiAccess, myProject, myParent, myTitle, myModal, myCancelable, supplier);
             }
         };
     }

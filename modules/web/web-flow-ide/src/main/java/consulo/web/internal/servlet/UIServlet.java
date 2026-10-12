@@ -132,9 +132,12 @@ public class UIServlet extends VaadinServlet {
 
             Collection<UI> children = session.getUIs();
             for (UI child : children) {
-                Disposable disposable = getDisposable(child);
+                DisposingTarget target = ComponentUtil.getData(child, DisposingTarget.class);
+                if (target == null) {
+                    continue;
+                }
 
-                disposable.disposeWithTree();
+                target.disposable().disposeWithTree();
 
                 ComponentUtil.setData(child, DisposingTarget.class, null);
             }
@@ -146,6 +149,12 @@ public class UIServlet extends VaadinServlet {
             Disposable vaadinUiDisposable = Disposable.newDisposable("Vaadin UI Disposable");
 
             ComponentUtil.setData(ui, DisposingTarget.class, new DisposingTarget(vaadinUiDisposable));
+
+            ui.addDetachListener(detachEvent -> {
+                vaadinUiDisposable.disposeWithTree();
+
+                ComponentUtil.setData(ui, DisposingTarget.class, null);
+            });
 
             StyleManager styleManager = StyleManager.get();
 

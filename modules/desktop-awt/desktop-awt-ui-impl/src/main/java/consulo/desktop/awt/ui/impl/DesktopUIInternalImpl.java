@@ -177,6 +177,11 @@ public class DesktopUIInternalImpl extends UIInternal implements UIInternalEx {
     }
 
     @Override
+    public Card _Components_card() {
+        return new DesktopCardImpl();
+    }
+
+    @Override
     public <E> CheckBoxTree<E> _Components_checkBoxTree(@Nullable E rootValue, TreeModel<E> model, TreeExecutor executor) {
         return new DesktopCheckBoxTreeImpl<>(rootValue, model, executor);
     }
@@ -364,6 +369,11 @@ public class DesktopUIInternalImpl extends UIInternal implements UIInternalEx {
     }
 
     @Override
+    public VerticalLayout _Layouts_vertical(Space vGap, HorizontalAlignment alignment, VerticalAlignment verticalAlignment) {
+        return new DesktopVerticalLayoutImpl(vGap, alignment, verticalAlignment);
+    }
+
+    @Override
     public SwipeLayout _Layouts_swipe() {
         return new DesktopSwipeLayoutImpl();
     }
@@ -396,6 +406,11 @@ public class DesktopUIInternalImpl extends UIInternal implements UIInternalEx {
     @Override
     public TableLayout _Layouts_table(StaticPosition fillOption) {
         return new DesktopTableLayoutImpl(fillOption);
+    }
+
+    @Override
+    public TileLayout _Layouts_tile(Length minTileWidth, Space gap) {
+        return new DesktopTileLayoutImpl(minTileWidth, gap);
     }
 
     @Override

@@ -18,6 +18,8 @@ package consulo.application.impl.internal.progress;
 import consulo.application.progress.ProgressBuilder;
 import consulo.component.ComponentManager;
 import consulo.localize.LocalizeValue;
+import consulo.ui.Component;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -28,6 +30,7 @@ public abstract class BaseProgressBuilderImpl implements ProgressBuilder {
     protected final LocalizeValue myTitle;
     protected boolean myCancelable;
     protected boolean myModal;
+    protected @Nullable Component myParent;
 
     private boolean myCreated;
 
@@ -48,6 +51,12 @@ public abstract class BaseProgressBuilderImpl implements ProgressBuilder {
     @Override
     public ProgressBuilder modal() {
         myModal = true;
+        return this;
+    }
+
+    @Override
+    public ProgressBuilder parent(Component component) {
+        myParent = component;
         return this;
     }
 

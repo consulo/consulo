@@ -16,9 +16,11 @@
 package consulo.web.ui.impl.internal;
 
 import com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment;
+import com.vaadin.flow.component.orderedlayout.FlexComponent.JustifyContentMode;
 import consulo.ui.Component;
 import consulo.ui.HorizontalAlignment;
 import consulo.ui.Space;
+import consulo.ui.VerticalAlignment;
 import consulo.ui.layout.Layout;
 import consulo.ui.layout.LayoutConstraint;
 import consulo.ui.layout.VerticalLayout;
@@ -49,6 +51,17 @@ public class WebVerticalLayoutImpl extends WebLayoutImpl<WebVerticalLayoutImpl.V
 
     public WebVerticalLayoutImpl(Space vGap) {
         this(vGap, null);
+    }
+
+    public WebVerticalLayoutImpl(Space vGap, @Nullable HorizontalAlignment alignment, VerticalAlignment verticalAlignment) {
+        this(vGap, alignment);
+
+        VaadinSizeUtil.setHeightFull(this);
+        toVaadinComponent().setJustifyContentMode(switch (verticalAlignment) {
+            case TOP -> JustifyContentMode.START;
+            case CENTER -> JustifyContentMode.CENTER;
+            case BOTTOM -> JustifyContentMode.END;
+        });
     }
 
     public WebVerticalLayoutImpl(Space vGap, @Nullable HorizontalAlignment alignment) {

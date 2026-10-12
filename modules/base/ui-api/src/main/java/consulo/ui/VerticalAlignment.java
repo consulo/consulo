@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2021 consulo.io
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,18 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.startup.customize;
-
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.ServiceAPI;
-import consulo.ui.annotation.RequiredUIAccess;
+package consulo.ui;
 
 /**
  * @author VISTALL
- * @since 09/01/2021
+ * @since 2026-10-12
  */
-@ServiceAPI(ComponentScope.APPLICATION)
-public interface StartupCustomizeManager {
-  @RequiredUIAccess
-  void showAsync(boolean firstShow);
+public enum VerticalAlignment {
+    TOP,
+    CENTER,
+    BOTTOM
 }

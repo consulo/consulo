@@ -18,6 +18,7 @@ package consulo.desktop.qt.ui.impl;
 import consulo.application.Application;
 import consulo.application.ApplicationProperties;
 import consulo.application.concurrent.ApplicationConcurrency;
+import consulo.application.impl.internal.ModalityUIAccess;
 import consulo.desktop.qt.ui.impl.clipboard.DesktopQtClipboardImpl;
 import consulo.desktop.qt.ui.impl.font.DesktopQtFontRegistry;
 import consulo.logging.Logger;
@@ -43,7 +44,7 @@ import java.util.function.Supplier;
  * @author VISTALL
  * @since 2026-08-16
  */
-public class DesktopQtUIAccess extends BaseUIAccess implements UIAccess {
+public class DesktopQtUIAccess extends BaseUIAccess implements ModalityUIAccess {
     public static final DesktopQtUIAccess INSTANCE = new DesktopQtUIAccess();
 
     private static final Logger LOG = Logger.getInstance(DesktopQtUIAccess.class);
@@ -68,6 +69,8 @@ public class DesktopQtUIAccess extends BaseUIAccess implements UIAccess {
             @Override
             public void run() {
                 DesktopQtNativePaths.applyBundledPluginPath();
+
+                QCoreApplication.setAttribute(Qt.ApplicationAttribute.AA_UseStyleSheetPropagationInWidgetStyles, true);
 
                 QApplication.initialize(new String[0]);
                 QApplication.setQuitOnLastWindowClosed(false);

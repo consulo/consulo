@@ -1,13 +1,14 @@
 /* owned by a single area of the frontend, keeps the theme files from colliding */
 
-/* the strip and the tab inside it are two independent metrics in awt - TabsUtil.getRealTabsHeight() is 30 for
-   the strip, TabsUtil.getTabsHeight() is 26 for the tab, the difference is TabsUtil.TAB_VERTICAL_PADDING on
-   each side. keeping them apart is what lets the tab change height without the strip following it */
+/* the strip and the tab inside it are two independent metrics in awt - TabbedPane.tabHeight is 36 for the
+   strip, the tab inside it is inset by TabbedPane.selectedInsets (5) on each side and is 26 tall. keeping them
+   apart is what lets the tab change height without the strip following it */
 .web-tabbed-layout
 {
   --web-tab-height: 26px;
-  --web-tab-strip-padding: 2px;
-  --web-tab-strip-height: calc(var(--web-tab-height) + var(--web-tab-strip-padding) * 2);
+  --web-tab-strip-padding: 5px;
+  --web-tab-strip-separator: 1px;
+  --web-tab-strip-height: calc(var(--web-tab-height) + var(--web-tab-strip-padding) * 2 + var(--web-tab-strip-separator));
 }
 
 /* the part of the sheet that holds the tabs is named tabs-container, not tabs - tabs is the slot the
@@ -24,6 +25,8 @@
   /* aura sinks the strip into a container shade of its own, which drifts almost black on the dark themes -
      the awt strip carries the tabbed pane background of the theme */
   background-color: var(--consulo-tabbed-pane-background, var(--consulo-panel-background));
+
+  border-bottom: var(--web-tab-strip-separator) solid var(--consulo-component-border-color, lightgray);
 }
 
 /* aura paints vaadin-tabs as a sunken surface - a filled bar with a shadow like edge behind the whole row.
@@ -68,6 +71,11 @@
   --vaadin-tab-background: var(--consulo-tab-background, transparent);
 }
 
+.web-tabbed-layout vaadin-tab .web-icon > span
+{
+  vertical-align: baseline;
+}
+
 .web-tabbed-layout vaadin-tab:not([selected]):hover
 {
   --vaadin-tab-background: var(--consulo-tab-background, var(--consulo-tabbed-pane-hover-color, transparent));
@@ -84,6 +92,7 @@
      light fill, shift(fill, 1.2) on a dark one. mixing the fill toward the foreground of the theme lands in
      the same place on either side, since the foreground is the far end of the contrast on both */
   border: 1px solid color-mix(in srgb, var(--vaadin-tab-background) 88%, var(--consulo-tabbed-pane-foreground, currentColor));
+  box-shadow: none;
 }
 
 /* a window which is not the active one draws its selected tab weaker - TabbedPane.inactiveSelectedBackground */
@@ -118,6 +127,13 @@ vaadin-tab:has(> .web-tab-close)
 
   opacity: 0.5;
   cursor: pointer;
+}
+
+.web-tab-pin
+{
+  display: inline-flex;
+  align-items: center;
+  opacity: 0.8;
 }
 
 .web-tab-close:hover
@@ -165,4 +181,42 @@ vaadin-tab:has(> .web-tab-close)
 .web-tabbed-layout:is([theme~="consulo-tabs-left"], [theme~="consulo-tabs-right"]) > vaadin-tabs > vaadin-tab
 {
   margin: 2px 0;
+}
+
+.web-tabbed-layout[theme~="consulo-tabs-bottom"]::part(tabs-container)
+{
+  border-bottom: none;
+  border-top: var(--web-tab-strip-separator) solid var(--consulo-component-border-color, lightgray);
+}
+
+.web-tabbed-layout[theme~="consulo-tabs-left"]::part(tabs-container)
+{
+  border-bottom: none;
+  border-right: var(--web-tab-strip-separator) solid var(--consulo-component-border-color, lightgray);
+}
+
+.web-tabbed-layout[theme~="consulo-tabs-right"]::part(tabs-container)
+{
+  border-bottom: none;
+  border-left: var(--web-tab-strip-separator) solid var(--consulo-component-border-color, lightgray);
+}
+
+.web-tabbed-layout vaadin-tab[consulo-drop-before]
+{
+  box-shadow: inset 2px 0 0 var(--aura-accent-color, var(--vaadin-focus-ring-color, #3574f0)) !important;
+}
+
+.web-tabbed-layout vaadin-tab[consulo-drop-after]
+{
+  box-shadow: inset -2px 0 0 var(--aura-accent-color, var(--vaadin-focus-ring-color, #3574f0)) !important;
+}
+
+.web-tabbed-layout:is([theme~="consulo-tabs-left"], [theme~="consulo-tabs-right"]) vaadin-tab[consulo-drop-before]
+{
+  box-shadow: inset 0 2px 0 var(--aura-accent-color, var(--vaadin-focus-ring-color, #3574f0)) !important;
+}
+
+.web-tabbed-layout:is([theme~="consulo-tabs-left"], [theme~="consulo-tabs-right"]) vaadin-tab[consulo-drop-after]
+{
+  box-shadow: inset 0 -2px 0 var(--aura-accent-color, var(--vaadin-focus-ring-color, #3574f0)) !important;
 }

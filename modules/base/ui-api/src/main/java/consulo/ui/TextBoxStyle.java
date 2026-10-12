@@ -24,5 +24,6 @@ public enum TextBoxStyle implements ComponentStyle {
      * A button inside the box which empties it. It is shown only while the box holds text, the way a search or a
      * filter box offers it.
      */
-    HAS_CLEAR_BUTTON
+    HAS_CLEAR_BUTTON,
+    INPLACE
 }

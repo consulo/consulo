@@ -15,12 +15,16 @@
  */
 package consulo.desktop.awt.ui.impl.layout;
 
+import consulo.desktop.awt.ui.impl.clipboard.DesktopAWTTransferHandlerAdapter;
+import consulo.desktop.awt.ui.impl.clipboard.DesktopAWTTransferTarget;
 import consulo.desktop.awt.ui.impl.event.DesktopAWTInputDetails;
 import consulo.desktop.awt.ui.impl.facade.FromSwingComponentWrapper;
 import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 import consulo.ui.Component;
+import consulo.ui.DragAndDropTransferHandler;
 import consulo.ui.StaticPosition;
 import consulo.ui.Tab;
+import consulo.ui.TransferHandler;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.TabSelectEvent;
 import consulo.ui.internal.TabSelectionUtil;
@@ -31,6 +35,10 @@ import consulo.ui.layout.TabbedLayoutStyle;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DragSource;
+import java.awt.event.InputEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -39,7 +47,7 @@ import java.util.function.BiConsumer;
  * @author VISTALL
  * @since 2016-06-14
  */
-public class DesktopTabbedLayoutImpl extends SwingComponentDelegate<JTabbedPane> implements TabbedLayout {
+public class DesktopTabbedLayoutImpl extends SwingComponentDelegate<JTabbedPane> implements TabbedLayout, DesktopAWTTransferTarget<Tab> {
     class MyTabbedPane extends JBTabbedPane implements FromSwingComponentWrapper {
         MyTabbedPane(int tabPlacement) {
             super(tabPlacement);
@@ -59,6 +67,11 @@ public class DesktopTabbedLayoutImpl extends SwingComponentDelegate<JTabbedPane>
     private @Nullable Component myPrefixComponent;
     private @Nullable Component mySuffixComponent;
 
+    private @Nullable TransferHandler<Tab> myTransferHandler;
+    private @Nullable DesktopTabImpl myDraggedTab;
+    private boolean myMovingTab;
+    private boolean myDragGestureInstalled;
+
     /**
      * @throws IllegalArgumentException if {@code tabPosition} is {@link StaticPosition#CENTER}, which is not a side
      */
@@ -74,6 +87,10 @@ public class DesktopTabbedLayoutImpl extends SwingComponentDelegate<JTabbedPane>
     protected JTabbedPane createComponent() {
         JTabbedPane pane = new MyTabbedPane(myTabPlacement);
         pane.addChangeListener(event -> {
+            if (myMovingTab) {
+                return;
+            }
+
             int index = pane.getSelectedIndex();
             if (index >= 0 && index < myTabs.size()) {
                 getListenerDispatcher(TabSelectEvent.class)
@@ -113,22 +130,131 @@ public class DesktopTabbedLayoutImpl extends SwingComponentDelegate<JTabbedPane>
     @Override
     @RequiredUIAccess
     public Tab addTab(Tab tab, Component component) {
+        return addTab(tab, component, myTabs.size());
+    }
+
+    @Override
+    @RequiredUIAccess
+    public Tab addTab(Tab tab, Component component, int index) {
         DesktopTabImpl desktopTab = (DesktopTabImpl) tab;
 
         desktopTab.setComponent(component);
 
-        JTabbedPane pane = toAWTComponent();
-        pane.addTab("", TargetAWT.to(component));
+        int position = Math.max(0, Math.min(index, myTabs.size()));
 
-        int index = pane.getTabCount() - 1;
-        pane.setTabComponentAt(index, desktopTab.getTabComponent());
-        myTabs.add(desktopTab);
+        JTabbedPane pane = toAWTComponent();
+        pane.insertTab("", null, TargetAWT.to(component), null, position);
+        pane.setTabComponentAt(position, desktopTab.getTabComponent());
+        myTabs.add(position, desktopTab);
 
         desktopTab.update();
 
         applyEnabled(desktopTab);
 
         return tab;
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void moveTab(Tab tab, int index) {
+        DesktopTabImpl desktopTab = (DesktopTabImpl) tab;
+
+        int from = myTabs.indexOf(desktopTab);
+        int to = Math.max(0, Math.min(index, myTabs.size() - 1));
+        if (from == -1 || from == to) {
+            return;
+        }
+
+        JTabbedPane pane = toAWTComponent();
+        boolean selected = pane.getSelectedIndex() == from;
+        java.awt.Component content = pane.getComponentAt(from);
+
+        myMovingTab = true;
+        try {
+            pane.removeTabAt(from);
+            myTabs.remove(from);
+
+            pane.insertTab("", null, content, null, to);
+            pane.setTabComponentAt(to, desktopTab.getTabComponent());
+            myTabs.add(to, desktopTab);
+
+            pane.setEnabledAt(to, desktopTab.isEnabled());
+            if (selected) {
+                pane.setSelectedIndex(to);
+            }
+        }
+        finally {
+            myMovingTab = false;
+        }
+    }
+
+    @Override
+    public void setTransferHandler(@Nullable TransferHandler<Tab> handler) {
+        myTransferHandler = handler;
+
+        JTabbedPane pane = toAWTComponent();
+        pane.setTransferHandler(handler == null ? null : new DesktopAWTTransferHandlerAdapter<>(this, handler, this));
+
+        if (handler != null && !myDragGestureInstalled) {
+            myDragGestureInstalled = true;
+            installDragGesture(pane);
+        }
+    }
+
+    @Override
+    public @Nullable TransferHandler<Tab> getTransferHandler() {
+        return myTransferHandler;
+    }
+
+    private void installDragGesture(JTabbedPane pane) {
+        DragSource.getDefaultDragSource().createDefaultDragGestureRecognizer(pane, DnDConstants.ACTION_COPY_OR_MOVE, event -> {
+            if (!(pane.getTransferHandler() instanceof DesktopAWTTransferHandlerAdapter<?> adapter) || !adapter.isDragAndDropSupported()) {
+                return;
+            }
+
+            Point origin = event.getDragOrigin();
+            int index = pane.indexAtLocation(origin.x, origin.y);
+            if (index < 0 || index >= myTabs.size()) {
+                return;
+            }
+
+            DesktopTabImpl tab = myTabs.get(index);
+            InputEvent trigger = event.getTriggerEvent();
+            int action = event.getDragAction() == DnDConstants.ACTION_COPY ? javax.swing.TransferHandler.COPY : javax.swing.TransferHandler.MOVE;
+
+            myDraggedTab = tab;
+            try {
+                adapter.exportAsDrag(pane, trigger, action);
+            }
+            finally {
+                myDraggedTab = null;
+            }
+        });
+    }
+
+    @Override
+    public List<Tab> getTransferItems() {
+        DesktopTabImpl tab = myDraggedTab;
+        return tab == null ? List.of() : List.of(tab);
+    }
+
+    @Override
+    public @Nullable Drop<Tab> resolveDrop(javax.swing.TransferHandler.TransferSupport support) {
+        if (myTabs.isEmpty()) {
+            return null;
+        }
+
+        JTabbedPane pane = toAWTComponent();
+        Point point = support.getDropLocation().getDropPoint();
+        int index = pane.indexAtLocation(point.x, point.y);
+        if (index == -1) {
+            return new Drop<>(myTabs.get(myTabs.size() - 1), DragAndDropTransferHandler.DropPosition.BELOW);
+        }
+
+        Rectangle bounds = pane.getBoundsAt(index);
+        boolean horizontal = myTabPlacement == SwingConstants.TOP || myTabPlacement == SwingConstants.BOTTOM;
+        boolean before = horizontal ? point.x < bounds.getCenterX() : point.y < bounds.getCenterY();
+        return new Drop<>(myTabs.get(index), before ? DragAndDropTransferHandler.DropPosition.ABOVE : DragAndDropTransferHandler.DropPosition.BELOW);
     }
 
     @Override

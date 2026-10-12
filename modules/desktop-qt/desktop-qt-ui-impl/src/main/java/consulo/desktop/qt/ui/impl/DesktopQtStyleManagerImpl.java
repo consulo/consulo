@@ -113,6 +113,8 @@ public class DesktopQtStyleManagerImpl extends PersistentStyleManagerImpl<Deskto
     public void forceRepaintAll() {
         DesktopQtStyleApplier.apply(myCurrentStyle);
 
+        QtComponentDelegate.refreshAllColors();
+
         DesktopQtIconRefresher.refreshAll();
     }
 
@@ -121,6 +123,8 @@ public class DesktopQtStyleManagerImpl extends PersistentStyleManagerImpl<Deskto
         myCurrentStyle = style;
 
         DesktopQtStyleApplier.apply(style);
+
+        QtComponentDelegate.refreshAllColors();
 
         DesktopQtIconLibraryManager.INSTANCE.setActiveLibraryFromActiveStyle();
 

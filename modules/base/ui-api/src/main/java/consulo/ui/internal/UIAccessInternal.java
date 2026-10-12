@@ -16,7 +16,10 @@
 package consulo.ui.internal;
 
 import consulo.ui.UIAccess;
+import consulo.ui.Window;
+import consulo.ui.annotation.RequiredUIAccess;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.function.BooleanSupplier;
 
 /**
@@ -29,6 +32,20 @@ public interface UIAccessInternal extends UIAccess {
     void releaseProtection();
 
     UIAccess getOriginal();
+
+    @RequiredUIAccess
+    default void enterModal(Object modalEntity) {
+    }
+
+    @RequiredUIAccess
+    default void leaveModal(Object modalEntity) {
+    }
+
+    @RequiredUIAccess
+    default CompletableFuture<?> attachWindow(Window window) {
+        window.show();
+        return CompletableFuture.completedFuture(null);
+    }
 
     static UIAccess original(UIAccess uiAccess) {
         return uiAccess instanceof UIAccessInternal internal ? internal.getOriginal() : uiAccess;

@@ -19,6 +19,7 @@ import consulo.application.Application;
 import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
+import consulo.ui.Window;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.clipboard.Clipboard;
 import consulo.util.dataholder.Key;
@@ -117,6 +118,30 @@ final class ProtectedUIAccess extends BaseUIAccess {
     @Override
     public boolean isInModalContext() {
         return myOriginal.isInModalContext();
+    }
+
+    @RequiredUIAccess
+    @Override
+    public ModalityState getCurrentModalityState() {
+        return myOriginal.getCurrentModalityState();
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void enterModal(Object modalEntity) {
+        myOriginal.enterModal(modalEntity);
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void leaveModal(Object modalEntity) {
+        myOriginal.leaveModal(modalEntity);
+    }
+
+    @RequiredUIAccess
+    @Override
+    public CompletableFuture<?> attachWindow(Window window) {
+        return myOriginal.attachWindow(window);
     }
 
     @Override

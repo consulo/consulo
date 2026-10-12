@@ -11,6 +11,7 @@ module consulo.web.ide {
     requires consulo.application.impl;
     requires consulo.application.ui.api;
     requires consulo.application.ui.impl;
+    requires consulo.external.service.api;
     requires consulo.base.icon.library;
     requires consulo.base.localize.library;
     requires consulo.builtin.web.server.api;
@@ -66,6 +67,7 @@ module consulo.web.ide {
     requires vaadin.aura.theme;
     requires vaadin.breadcrumbs.flow;
     requires vaadin.button.flow;
+    requires vaadin.card.flow;
     requires vaadin.checkbox.flow;
     requires vaadin.combo.box.flow;
     requires vaadin.context.menu.flow;

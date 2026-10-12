@@ -82,6 +82,8 @@ abstract class DesktopComboBoxBaseImpl<E, C extends JComponent> extends SwingCom
             case INPLACE:
                 AWTComboBoxStyle.makeBorderInline(comboBox);
                 break;
+            case TOOLBAR:
+                break;
         }
     }
 

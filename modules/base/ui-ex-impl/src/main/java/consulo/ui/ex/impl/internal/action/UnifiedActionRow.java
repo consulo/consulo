@@ -27,6 +27,7 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.ui.Button;
 import consulo.ui.ButtonStyle;
+import consulo.ui.ComboBoxStyle;
 import consulo.ui.Component;
 import consulo.ui.ModalityState;
 import consulo.ui.PopupMenu;
@@ -477,6 +478,7 @@ public class UnifiedActionRow {
             return createActionButton(node, true);
         }
 
+        comboBox.addStyle(ComboBoxStyle.TOOLBAR);
         comboBox.setRender((itemPresentation, item) -> {
             itemPresentation.append(presentation.getTextValue().map(Presentation.NO_MNEMONIC));
             itemPresentation.withIcon(presentation.getIcon());

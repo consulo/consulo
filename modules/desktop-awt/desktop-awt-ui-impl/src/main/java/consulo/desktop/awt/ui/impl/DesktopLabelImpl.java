@@ -29,6 +29,8 @@ import consulo.ui.event.BlurEvent;
 import consulo.ui.event.ComponentEventListener;
 import consulo.ui.event.FocusEvent;
 import consulo.ui.ex.awt.JBLabel;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.internal.LocalizeValueWithMnemonic;
 import consulo.ui.image.Image;
@@ -38,6 +40,7 @@ import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.Dimension;
+import java.awt.Font;
 
 /**
  * @author VISTALL
@@ -209,10 +212,14 @@ class DesktopLabelImpl extends SwingComponentDelegate<DesktopLabelImpl.MyJLabel>
 
     @Override
     public void addStyle(LabelStyle style) {
+        MyJLabel label = toAWTComponent();
         switch (style) {
-            case TRANSPARENT_BACKGROUND:
-                toAWTComponent().setOpaque(false);
-                break;
+            case TRANSPARENT_BACKGROUND -> label.setOpaque(false);
+            case FONT_BOLD -> label.setFont(label.getFont().deriveFont(Font.BOLD));
+            default -> {
+                Font base = UIUtil.getLabelFont();
+                label.setFont(base.deriveFont(label.getFont().getStyle(), base.getSize2D() + JBUI.scale((float) style.getFontPointDelta())));
+            }
         }
     }
 

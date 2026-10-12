@@ -114,7 +114,13 @@ public class DesktopQtProgressBarImpl extends QtComponentDelegate<QWidget> imple
 
     @Override
     protected QWidget createQt(QWidget parent) {
-        return mySpinner ? new SpinnerWidget(parent) : new QProgressBar(parent);
+        if (mySpinner) {
+            return new SpinnerWidget(parent);
+        }
+
+        QProgressBar bar = new QProgressBar(parent);
+        bar.setTextVisible(false);
+        return bar;
     }
 
     @Override
@@ -186,9 +192,8 @@ public class DesktopQtProgressBarImpl extends QtComponentDelegate<QWidget> imple
             return;
         }
 
-        switch (style) {
-            case SPINNER -> bar.setTextVisible(false);
-            case TRANSPARENT_BACKGROUND -> bar.setAutoFillBackground(false);
+        if (style == ProgressBarStyle.TRANSPARENT_BACKGROUND) {
+            bar.setAutoFillBackground(false);
         }
     }
 

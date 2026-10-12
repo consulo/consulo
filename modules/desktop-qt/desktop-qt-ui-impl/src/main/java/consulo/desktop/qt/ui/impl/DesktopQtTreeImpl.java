@@ -15,6 +15,7 @@
  */
 package consulo.desktop.qt.ui.impl;
 
+import consulo.desktop.qt.ui.impl.font.DesktopQtFontSize;
 import consulo.desktop.qt.ui.impl.clipboard.DesktopQtDragAndDropSupport;
 import consulo.desktop.qt.ui.impl.clipboard.DesktopQtDrop;
 import consulo.desktop.qt.ui.impl.clipboard.DesktopQtTransferTarget;
@@ -33,7 +34,6 @@ import consulo.ui.TreeExecutor;
 import consulo.ui.TreeModel;
 import consulo.ui.TreeNode;
 import consulo.ui.TreeStyle;
-import consulo.ui.impl.font.FontSizeLadder;
 import consulo.ui.UIAccess;
 import consulo.ui.event.details.InputDetails;
 import consulo.ui.ex.localize.UILocalize;
@@ -78,7 +78,6 @@ import java.util.function.Function;
 public class DesktopQtTreeImpl<E> extends QtComponentDelegate<QTreeWidget>
     implements Tree<E>, PopupOwner, DesktopQtIconOwner, DesktopQtTransferTarget<TreeNode<E>> {
     private static final int ourDropExpandDelay = 2000;
-    private static final float PIXELS_PER_POINT = 4f / 3f;
 
     private @Nullable TransferHandler<TreeNode<E>> myTransferHandler;
     private final DesktopQtDragAndDropSupport<TreeNode<E>> myDragAndDrop = new DesktopQtDragAndDropSupport<>(this, this);
@@ -713,22 +712,12 @@ public class DesktopQtTreeImpl<E> extends QtComponentDelegate<QTreeWidget>
                 widget.setAutoFillBackground(false);
                 ((QTreeWidget) widget).viewport().setAutoFillBackground(false);
             });
-            default -> applyFontSize(FontSizeLadder.pointDelta(style));
+            default -> applyFontSize(style.getFontPointDelta());
         }
     }
 
     private void applyFontSize(int pointDelta) {
-        whenBound(widget -> {
-            QFont base = QApplication.font();
-            QFont font = new QFont(widget.font());
-            if (base.pointSizeF() > 0) {
-                font.setPointSizeF(Math.max(1.0, base.pointSizeF() + pointDelta));
-            }
-            else {
-                font.setPixelSize(Math.max(1, base.pixelSize() + Math.round(pointDelta * PIXELS_PER_POINT)));
-            }
-            widget.setFont(font);
-        });
+        whenBound(widget -> widget.setFont(DesktopQtFontSize.withPointDelta(widget.font(), pointDelta)));
     }
 
     @Override

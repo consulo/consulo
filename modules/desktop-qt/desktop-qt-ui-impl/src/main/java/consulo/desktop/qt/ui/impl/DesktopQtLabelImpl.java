@@ -15,6 +15,7 @@
  */
 package consulo.desktop.qt.ui.impl;
 
+import consulo.desktop.qt.ui.impl.font.DesktopQtFontSize;
 import consulo.desktop.qt.ui.impl.base.DesktopQtIconLabel;
 import consulo.desktop.qt.ui.impl.image.DesktopQtIconOwner;
 import consulo.localize.LocalizeValue;
@@ -27,6 +28,7 @@ import consulo.ui.image.Image;
 import consulo.ui.internal.SearchHighlightUtil;
 import consulo.ui.Length;
 import io.qt.core.Qt;
+import io.qt.gui.QFont;
 import io.qt.gui.QKeySequence;
 import io.qt.gui.QShortcut;
 import io.qt.widgets.QAbstractButton;
@@ -257,6 +259,12 @@ public class DesktopQtLabelImpl extends QtComponentDelegate<DesktopQtIconLabel> 
 
         switch (style) {
             case TRANSPARENT_BACKGROUND -> myComponent.setAutoFillBackground(false);
+            case FONT_BOLD -> {
+                QFont font = myComponent.font();
+                font.setBold(true);
+                myComponent.setFont(font);
+            }
+            default -> myComponent.setFont(DesktopQtFontSize.withPointDelta(myComponent.font(), style.getFontPointDelta()));
         }
     }
 

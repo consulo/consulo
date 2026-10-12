@@ -138,10 +138,13 @@ body
 
 /* the desktop ide draws a one pixel divider, vaadin ships a fat draggable one by default.
    the part stays 5px so it can still be grabbed - like the awt divider mouse zone - but only the
-   middle pixel is painted */
+   middle pixel is painted, and it lies over its neighbours so the layout gives it that one pixel only */
 vaadin-split-layout::part(splitter)
 {
   flex: 0 0 5px;
+  margin: 0 -2px;
+  position: relative;
+  z-index: 1;
 
   background-color: transparent;
   background-image: linear-gradient(to right,
@@ -153,6 +156,8 @@ vaadin-split-layout::part(splitter)
 
 vaadin-split-layout[orientation="vertical"]::part(splitter)
 {
+  margin: -2px 0;
+
   background-image: linear-gradient(to bottom,
     transparent 2px,
     var(--consulo-component-border-color, lightgray) 2px,
@@ -251,6 +256,11 @@ vaadin-split-layout.web-split-layout-no-divider::part(splitter)
 .web-icon > *
 {
   vertical-align: middle;
+}
+
+.web-label:is([class*=" pt-"], [class*=" pb-"], [class*=" py-"], [class*=" p-"])
+{
+  display: inline-block;
 }
 .web-menu-bar
 {
@@ -422,6 +432,29 @@ vaadin-button[theme~="pressed"]
 {
   flex: 1 1 auto;
   min-height: 0;
+}
+
+.web-image-box
+{
+  display: inline-flex;
+  max-width: 100%;
+}
+
+.web-tile-layout
+{
+  display: grid;
+  align-items: stretch;
+  box-sizing: border-box;
+}
+
+.web-tile-layout > *
+{
+  min-width: 0;
+}
+
+vaadin-card.web-card > [slot='header-prefix']
+{
+  grid-row: 1;
 }
 
 table.web-table-layout > tr:has(> td > *):not(:has(> td > :not([hidden])))

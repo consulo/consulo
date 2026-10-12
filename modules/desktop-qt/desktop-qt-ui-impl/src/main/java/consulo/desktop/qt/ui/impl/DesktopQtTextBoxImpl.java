@@ -47,6 +47,7 @@ public class DesktopQtTextBoxImpl extends QtComponentDelegate<QLineEdit> impleme
     private LocalizeValue myPlaceholder = LocalizeValue.empty();
 
     private boolean myClearButton;
+    private boolean myInplace;
 
     private int myVisibleLength = -1;
 
@@ -82,6 +83,9 @@ public class DesktopQtTextBoxImpl extends QtComponentDelegate<QLineEdit> impleme
         applyPlaceholder();
         applyVisibleLength();
         component.setClearButtonEnabled(myClearButton);
+        if (myInplace) {
+            component.setFrame(false);
+        }
         mySides.attach(component);
 
         component.textChanged.connect(text -> {
@@ -101,6 +105,13 @@ public class DesktopQtTextBoxImpl extends QtComponentDelegate<QLineEdit> impleme
                 myClearButton = true;
                 if (myComponent != null) {
                     myComponent.setClearButtonEnabled(true);
+                }
+            }
+            case INPLACE -> {
+                myInplace = true;
+                if (myComponent != null) {
+                    myComponent.setFrame(false);
+                    mySides.layoutSides(myComponent);
                 }
             }
         }

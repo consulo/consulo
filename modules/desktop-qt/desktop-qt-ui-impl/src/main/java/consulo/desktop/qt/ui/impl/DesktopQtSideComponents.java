@@ -16,6 +16,7 @@
 package consulo.desktop.qt.ui.impl;
 
 import consulo.ui.Component;
+import consulo.ui.Space;
 import io.qt.core.QEvent;
 import io.qt.core.QMargins;
 import io.qt.core.QObject;
@@ -33,6 +34,8 @@ import org.jspecify.annotations.Nullable;
  * @since 2026-10-01
  */
 public final class DesktopQtSideComponents {
+    private static final int INPLACE_INSET = DesktopQtSpace.toPixels(Space.MEDIUM);
+
     private final QtComponentDelegate<?> myOwner;
 
     private @Nullable Component myPrefixComponent;
@@ -133,14 +136,15 @@ public final class DesktopQtSideComponents {
     }
 
     public void layoutSides(QWidget host) {
-        int frameWidth = host.style().pixelMetric(QStyle.PixelMetric.PM_DefaultFrameWidth, null, host);
+        boolean inplace = host instanceof QLineEdit lineEdit && !lineEdit.hasFrame();
+        int inset = inplace ? INPLACE_INSET : host.style().pixelMetric(QStyle.PixelMetric.PM_DefaultFrameWidth, null, host);
 
         QWidget prefix = sideWidget(myPrefixComponent, host);
         QWidget suffix = sideWidget(mySuffixComponent, host);
 
         int prefixWidth = 0;
         if (prefix != null) {
-            int left = frameWidth;
+            int left = inset;
             for (QObject child : host.children()) {
                 if (child != prefix && child != suffix && child instanceof QToolButton sideButton && sideButton.isVisible() && sideButton.x() < host.width() / 2) {
                     left = Math.max(left, sideButton.x() + sideButton.width());
@@ -148,7 +152,7 @@ public final class DesktopQtSideComponents {
             }
 
             QSize hint = prefix.sizeHint();
-            int height = Math.max(0, Math.min(hint.height(), host.height() - frameWidth * 2));
+            int height = Math.max(0, Math.min(hint.height(), host.height() - inset * 2));
             prefixWidth = hint.width();
 
             prefix.setGeometry(left, (host.height() - height) / 2, prefixWidth, height);
@@ -156,7 +160,7 @@ public final class DesktopQtSideComponents {
 
         int suffixWidth = 0;
         if (suffix != null) {
-            int right = host.width() - frameWidth;
+            int right = host.width() - inset;
             for (QObject child : host.children()) {
                 if (child != suffix && child != prefix && child instanceof QToolButton sideButton && sideButton.isVisible() && sideButton.x() > host.width() / 2) {
                     right = Math.min(right, sideButton.x());
@@ -164,16 +168,23 @@ public final class DesktopQtSideComponents {
             }
 
             QSize hint = suffix.sizeHint();
-            int height = Math.max(0, Math.min(hint.height(), host.height() - frameWidth * 2));
+            int height = Math.max(0, Math.min(hint.height(), host.height() - inset * 2));
             suffixWidth = hint.width();
 
             suffix.setGeometry(right - suffixWidth, (host.height() - height) / 2, suffixWidth, height);
         }
 
         if (host instanceof QLineEdit lineEdit) {
+            int leftMargin = inplace ? INPLACE_INSET + prefixWidth : prefixWidth;
+            int rightMargin = inplace ? INPLACE_INSET + suffixWidth : suffixWidth;
+            int verticalMargin = inplace ? INPLACE_INSET : 0;
+
             QMargins margins = lineEdit.textMargins();
-            if (margins.left() != prefixWidth || margins.right() != suffixWidth) {
-                lineEdit.setTextMargins(prefixWidth, margins.top(), suffixWidth, margins.bottom());
+            if (inplace && (margins.top() != verticalMargin || margins.bottom() != verticalMargin)) {
+                lineEdit.setTextMargins(leftMargin, verticalMargin, rightMargin, verticalMargin);
+            }
+            else if (margins.left() != leftMargin || margins.right() != rightMargin) {
+                lineEdit.setTextMargins(leftMargin, margins.top(), rightMargin, margins.bottom());
             }
         }
         else if (host instanceof DesktopQtSideMarginsHost marginsHost) {

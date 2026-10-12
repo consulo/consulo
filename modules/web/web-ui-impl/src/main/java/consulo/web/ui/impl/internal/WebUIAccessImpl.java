@@ -18,9 +18,12 @@ package consulo.web.ui.impl.internal;
 import com.vaadin.flow.component.UI;
 import consulo.application.Application;
 import consulo.application.concurrent.ApplicationConcurrency;
+import consulo.application.impl.internal.ModalityUIAccess;
 import consulo.component.store.impl.internal.ComponentStoreImpl;
 import consulo.logging.Logger;
 import consulo.ui.UIAccess;
+import consulo.ui.Window;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.clipboard.Clipboard;
 import consulo.ui.impl.BaseUIAccess;
 import consulo.ui.impl.SingleUIAccessScheduler;
@@ -36,7 +39,7 @@ import java.util.function.Supplier;
  * @author VISTALL
  * @since 2016-06-16
  */
-public class WebUIAccessImpl extends BaseUIAccess implements UIAccess {
+public class WebUIAccessImpl extends BaseUIAccess implements ModalityUIAccess {
     private static final Logger LOG = Logger.getInstance(WebUIAccessImpl.class);
 
     private static final BooleanSupplier NOT_DISPOSED = () -> false;
@@ -204,6 +207,15 @@ public class WebUIAccessImpl extends BaseUIAccess implements UIAccess {
             // project runs through here - stopped with nothing in the log to say so
             LOG.warn("giveAndWait skipped, ui detached", new Throwable());
         }
+    }
+
+    @RequiredUIAccess
+    @Override
+    public CompletableFuture<?> attachWindow(Window window) {
+        if (window instanceof WebWindowImpl webWindow) {
+            return webWindow.moveTo(this);
+        }
+        return ModalityUIAccess.super.attachWindow(window);
     }
 
     public UI getUI() {

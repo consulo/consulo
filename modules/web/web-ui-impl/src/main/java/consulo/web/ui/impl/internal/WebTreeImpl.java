@@ -48,7 +48,6 @@ import consulo.ui.TreeExecutor;
 import consulo.ui.TreeModel;
 import consulo.ui.TreeNode;
 import consulo.ui.TreeStyle;
-import consulo.ui.impl.font.FontSizeLadder;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.clipboard.DataTransfer;
@@ -913,7 +912,7 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl<NODE>
             return;
         }
 
-        int pointDelta = FontSizeLadder.pointDelta(style);
+        int pointDelta = style.getFontPointDelta();
         vaadinStyle.set("font-size", pointDelta == 0 ? "1em" : "calc(1em " + (pointDelta < 0 ? "- " : "+ ") + Math.abs(pointDelta) + "pt)");
     }
 

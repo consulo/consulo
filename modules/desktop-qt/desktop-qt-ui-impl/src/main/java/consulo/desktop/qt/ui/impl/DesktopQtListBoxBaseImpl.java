@@ -287,6 +287,7 @@ public abstract class DesktopQtListBoxBaseImpl<E> extends QtComponentDelegate<QL
     protected void initialize(QListWidget component) {
         super.initialize(component);
 
+        component.setFrameShape(QFrame.Shape.NoFrame);
         component.setSelectionMode(selectionMode());
         component.setItemDelegate(createItemDelegate(component));
         myDragAndDrop.install(component);

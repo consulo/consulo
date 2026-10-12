@@ -50,12 +50,10 @@ import consulo.ui.grid.RowSortOrder;
 import consulo.ui.grid.editor.GridCellEditorPresentation;
 import consulo.ui.grid.editor.GridEditInitiator;
 import consulo.ui.grid.editor.UnparsedValue;
-import consulo.ui.impl.style.StyleColorKeys;
 import consulo.ui.internal.DataGridAppearanceImpl;
 import consulo.ui.internal.DataGridController;
 import consulo.ui.internal.DataGridControllerOwner;
 import consulo.ui.internal.DataGridEditSession;
-import consulo.ui.style.StyleColorValue;
 import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
 import consulo.web.ui.impl.internal.base.TargetVaadin;
 import consulo.web.ui.impl.internal.base.VaadinComponentDelegate;
@@ -73,7 +71,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.IntStream;
@@ -108,12 +105,6 @@ public class WebDataGridImpl extends VaadinComponentDelegate<WebDataGridImpl.Vaa
      */
     private static final KeyCode CONTEXT_MENU_KEY = KeyCode.of(0x20D, "VK_CONTEXT_MENU");
     private static final KeyCode F10_KEY = KeyCode.of(0x79, "VK_F10");
-
-    /**
-     * The css colour of each {@link StyleColorValue} which has a style variable: {@code var(--consulo-...)}, so that it follows
-     * the style on the client.
-     */
-    private static final Map<StyleColorValue, String> ourStyleCssColors = new ConcurrentHashMap<>();
 
     /**
      * Rows per request of the client - a page of 1000 rows or an unlimited one is never sent whole.
@@ -749,14 +740,14 @@ public class WebDataGridImpl extends VaadinComponentDelegate<WebDataGridImpl.Vaa
 
     /**
      * The index of a colour in the css colours of a response (1-based, 0 = none). A colour is resolved to its css colour
-     * ({@link #toCssColor}) the first time the response meets it; {@code colorIndices} remembers the index of each colour met.
+     * ({@link WebColors#toStyleCssColor}) the first time the response meets it; {@code colorIndices} remembers the index of each colour met.
      */
     private static int colorIndex(Map<String, Integer> colors, Map<ColorValue, Integer> colorIndices, ColorValue color) {
         Integer index = colorIndices.get(color);
         if (index != null) {
             return index;
         }
-        String cssColor = toCssColor(color);
+        String cssColor = WebColors.toStyleCssColor(color);
         if (cssColor == null) {
             index = 0;
         }
@@ -783,7 +774,7 @@ public class WebDataGridImpl extends VaadinComponentDelegate<WebDataGridImpl.Vaa
 
     /**
      * The text the controller renders for a cell, the {@code FLAG_*} styles of its fragments, and its colours, which
-     * {@link #sendRows} sends as css colours (see {@link #toCssColor}): the background from the color model (for example the
+     * {@link #sendRows} sends as css colours (see {@link WebColors#toStyleCssColor}): the background from the color model (for example the
      * one of a pending change), the text color its value is rendered in. A selected cell keeps both - the client paints the
      * selection over them.
      */
@@ -818,30 +809,6 @@ public class WebDataGridImpl extends VaadinComponentDelegate<WebDataGridImpl.Vaa
     private record RenderedCell(String text, int flags, @Nullable ColorValue background, @Nullable ColorValue foreground) {
     }
 
-    /**
-     * A colour as the css value the client sets: a colour of the style which has a style variable ({@code --consulo-...}, see
-     * {@link WebStyleCssRegistry}) as {@code var(--consulo-...)}, so that it follows a change of the style on the client; any
-     * other colour as the literal colour of its rgb, its alpha included ({@link WebColors#toCssColor}). {@code null} for no
-     * colour.
-     */
-    private static @Nullable String toCssColor(@Nullable ColorValue color) {
-        if (color == null) {
-            return null;
-        }
-        if (color instanceof StyleColorValue styleColor) {
-            String cssColor = ourStyleCssColors.get(styleColor);
-            if (cssColor != null) {
-                return cssColor;
-            }
-            String key = StyleColorKeys.getKey(styleColor);
-            if (key != null) {
-                cssColor = "var(" + WebStyleCssRegistry.toVariableName(key) + ")";
-                ourStyleCssColors.put(styleColor, cssColor);
-                return cssColor;
-            }
-        }
-        return WebColors.toCssColor(color);
-    }
 
     @RequiredUIAccess
     private void reloadRows() {

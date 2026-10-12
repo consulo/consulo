@@ -24,6 +24,7 @@ import consulo.desktop.qt.ui.impl.image.DesktopQtIconRefresher;
 import consulo.desktop.qt.ui.impl.image.DesktopQtLiveIconEngine;
 import consulo.desktop.qt.ui.impl.QtComponentDelegate;
 import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.Component;
 import consulo.ui.Tab;
 import consulo.ui.TextItemPresentation;
@@ -66,6 +67,8 @@ public class DesktopQtTabImpl implements Tab, DesktopQtAnimationHost, DesktopQtI
 
     private boolean myEnabled = true;
 
+    private boolean myPinned;
+
     @Override
     public void setCloseHandler(@Nullable BiConsumer<Tab, Component> closeHandler) {
         myCloseHandler = closeHandler;
@@ -80,6 +83,26 @@ public class DesktopQtTabImpl implements Tab, DesktopQtAnimationHost, DesktopQtI
         return myCloseHandler;
     }
 
+    @Override
+    @RequiredUIAccess
+    public void setPinned(boolean pinned) {
+        if (myPinned == pinned) {
+            return;
+        }
+
+        myPinned = pinned;
+
+        QTabWidget tabWidget = myTabWidget;
+        if (tabWidget != null && !tabWidget.isDisposed()) {
+            applyClosable(tabWidget);
+        }
+    }
+
+    @Override
+    public boolean isPinned() {
+        return myPinned;
+    }
+
     public void applyClosable(QTabWidget tabWidget) {
         int index = getIndex();
         if (index == -1) {
@@ -91,11 +114,26 @@ public class DesktopQtTabImpl implements Tab, DesktopQtAnimationHost, DesktopQtI
         boolean closable = myCloseHandler != null;
 
         QWidget oldButton = tabBar.tabButton(index, QTabBar.ButtonPosition.RightSide);
-        if (oldButton != null && closable == oldButton instanceof DesktopQtTabCloseButton) {
-            return;
+        if (oldButton != null) {
+            boolean pinButton = oldButton instanceof DesktopQtTabPinButton;
+            boolean closeButton = oldButton instanceof DesktopQtTabCloseButton;
+            if (myPinned ? pinButton : closable ? closeButton : !pinButton && !closeButton) {
+                return;
+            }
         }
 
-        tabBar.setTabButton(index, QTabBar.ButtonPosition.RightSide, closable ? createCloseButton(tabBar) : createTrailingSpacer(tabBar));
+        QWidget newButton;
+        if (myPinned) {
+            newButton = createPinButton(tabBar);
+        }
+        else if (closable) {
+            newButton = createCloseButton(tabBar);
+        }
+        else {
+            newButton = createTrailingSpacer(tabBar);
+        }
+
+        tabBar.setTabButton(index, QTabBar.ButtonPosition.RightSide, newButton);
 
         if (oldButton != null) {
             oldButton.disposeLater();
@@ -104,6 +142,12 @@ public class DesktopQtTabImpl implements Tab, DesktopQtAnimationHost, DesktopQtI
 
     private QWidget createCloseButton(QTabBar tabBar) {
         DesktopQtTabCloseButton button = new DesktopQtTabCloseButton(tabBar);
+        button.clicked.connect(checked -> close());
+        return button;
+    }
+
+    private QWidget createPinButton(QTabBar tabBar) {
+        DesktopQtTabPinButton button = new DesktopQtTabPinButton(tabBar, DesktopQtLiveIconEngine.toQIcon(PlatformIconGroup.actionsPintab(), this));
         button.clicked.connect(checked -> close());
         return button;
     }
@@ -288,7 +332,7 @@ public class DesktopQtTabImpl implements Tab, DesktopQtAnimationHost, DesktopQtI
         return tabWidget.indexOf(content);
     }
 
-    public void initialize(QTabWidget tabWidget, Component parent) {
+    public void initialize(QTabWidget tabWidget, Component parent, int index) {
         QWidget content = null;
 
         if (myComponent != null) {
@@ -309,7 +353,7 @@ public class DesktopQtTabImpl implements Tab, DesktopQtAnimationHost, DesktopQtI
 
         DesktopQtIconRefresher.register(this);
 
-        tabWidget.addTab(content, "");
+        tabWidget.insertTab(index, content, "");
 
         applyClosable(tabWidget);
 

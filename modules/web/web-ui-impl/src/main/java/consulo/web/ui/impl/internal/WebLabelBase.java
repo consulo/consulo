@@ -54,6 +54,15 @@ public abstract class WebLabelBase<V extends VaadinLabelComponentBase> extends V
 
     @Override
     public void addStyle(LabelStyle style) {
+        switch (style) {
+            case TRANSPARENT_BACKGROUND -> {
+            }
+            case FONT_BOLD -> getVaadinComponent().getStyle().set("font-weight", "bold");
+            default -> {
+                int delta = style.getFontPointDelta();
+                getVaadinComponent().getStyle().set("font-size", delta == 0 ? "1em" : "calc(1em " + (delta < 0 ? "- " : "+ ") + Math.abs(delta) + "pt)");
+            }
+        }
     }
 
     @Override

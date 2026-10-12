@@ -177,6 +177,7 @@ public class DesktopQtToolWindowPanelImpl implements ToolWindowPanel, PseudoComp
         myRoot.left(myLeftStripe);
         myRoot.center(mySplitters.getRootSplitter());
         myRoot.right(myRightStripe);
+        myRoot.borderBuilder().topSet().apply();
     }
 
     @RequiredUIAccess

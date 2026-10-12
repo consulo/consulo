@@ -15,18 +15,31 @@
  */
 package consulo.ui;
 
+import consulo.ui.internal.FontSizeStyle;
+
 /**
  * @author VISTALL
  * @since 2026-08-16
  */
-public enum TreeStyle implements ComponentStyle {
-    TRANSPARENT_BACKGROUND,
+public enum TreeStyle implements ComponentStyle, FontSizeStyle {
+    TRANSPARENT_BACKGROUND(0),
 
-    FONT_XX_SMALL,
-    FONT_X_SMALL,
-    FONT_SMALL,
-    FONT_MEDIUM,
-    FONT_LARGE,
-    FONT_X_LARGE,
-    FONT_XX_LARGE
+    FONT_XX_SMALL(-3),
+    FONT_X_SMALL(-2),
+    FONT_SMALL(-1),
+    FONT_MEDIUM(0),
+    FONT_LARGE(1),
+    FONT_X_LARGE(3),
+    FONT_XX_LARGE(5);
+
+    private final int myFontPointDelta;
+
+    TreeStyle(int fontPointDelta) {
+        myFontPointDelta = fontPointDelta;
+    }
+
+    @Override
+    public int getFontPointDelta() {
+        return myFontPointDelta;
+    }
 }

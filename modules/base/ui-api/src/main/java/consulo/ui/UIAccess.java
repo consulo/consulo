@@ -185,6 +185,11 @@ public interface UIAccess extends Executor, UserDataHolder {
         return false;
     }
 
+    @RequiredUIAccess
+    default ModalityState getCurrentModalityState() {
+        return ModalityState.nonModal();
+    }
+
     @Override
     default void execute(@RequiredUIAccess Runnable command) {
         give(command);

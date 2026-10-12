@@ -30,6 +30,7 @@ import consulo.ui.graph.Graph;
 import consulo.ui.graph.GraphModel;
 import consulo.ui.event.ModalityStateListener;
 import consulo.ui.RadioGroup;
+import consulo.application.impl.internal.LaterInvocator;
 import consulo.application.impl.internal.ModalityStateImpl;
 import consulo.desktop.qt.ui.impl.graph.DesktopQtGraphImpl;
 import consulo.desktop.qt.ui.impl.image.viewer.DesktopQtImageViewerImpl;
@@ -179,6 +180,11 @@ public class DesktopQtUIInternalImpl extends UIInternal implements UIInternalEx 
     }
 
     @Override
+    public VerticalLayout _Layouts_vertical(Space vGap, HorizontalAlignment alignment, VerticalAlignment verticalAlignment) {
+        return new DesktopQtVerticalLayoutImpl(vGap, alignment, verticalAlignment);
+    }
+
+    @Override
     public SwipeLayout _Layouts_swipe() {
         return new DesktopQtSwipeLayoutImpl();
     }
@@ -211,6 +217,11 @@ public class DesktopQtUIInternalImpl extends UIInternal implements UIInternalEx 
     @Override
     public TableLayout _Layouts_table(StaticPosition fillOption) {
         return new DesktopQtTableLayoutImpl(fillOption);
+    }
+
+    @Override
+    public TileLayout _Layouts_tile(Length minTileWidth, Space gap) {
+        return new DesktopQtTileLayoutImpl(minTileWidth, gap);
     }
 
     @Override
@@ -407,6 +418,11 @@ public class DesktopQtUIInternalImpl extends UIInternal implements UIInternalEx 
     }
 
     @Override
+    public Image _Image_deferred(Image base, Supplier<Image> imageSupplier) {
+        return new DesktopQtDeferredImageImpl(base, imageSupplier);
+    }
+
+    @Override
     public <S> Image _Image_stated(ImageState<S> state, Function<S, Image> funcCall) {
         return new DesktopQtStatedImageImpl<>(state, funcCall);
     }
@@ -600,6 +616,11 @@ public class DesktopQtUIInternalImpl extends UIInternal implements UIInternalEx 
     }
 
     @Override
+    public Card _Components_card() {
+        return new DesktopQtCardImpl();
+    }
+
+    @Override
     public <E> CheckBoxTree<E> _Components_checkBoxTree(@Nullable E rootValue, TreeModel<E> model, TreeExecutor executor) {
         return new DesktopQtCheckBoxTreeImpl<>(rootValue, model, executor);
     }
@@ -677,11 +698,8 @@ public class DesktopQtUIInternalImpl extends UIInternal implements UIInternalEx 
         return new DesktopQtInputBoxBuilderImpl<>(DesktopQtInputBoxBuilderImpl.Mode.PASSWORD, PasswordBox::create);
     }
 
-    /**
-     * Nothing of the platform is modal from the frontend's side, so a listener of the state has nothing to be
-     * told about - it is taken and dropped rather than refused, which would take the caller down with it.
-     */
     @Override
     public void addModalityStateListener(ModalityStateListener listener, Disposable parentDisposable) {
+        LaterInvocator.addModalityStateListener(listener, parentDisposable);
     }
 }

@@ -21,11 +21,12 @@ import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.ui.Button;
+import consulo.ui.Component;
 import consulo.ui.Label;
 import consulo.ui.Window;
 import consulo.ui.*;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.DockLayout;
-import consulo.ui.layout.VerticalLayout;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
@@ -67,7 +68,15 @@ public class UnifiedProgressDialog implements ProgressDialog {
     @Override
     public @Nullable UIAccess getUIAccess() {
         Window window = myWindow;
-        return window == null ? null : window.getUIAccess();
+        if (window != null) {
+            UIAccess windowAccess = window.getUIAccess();
+            if (windowAccess != null) {
+                return windowAccess;
+            }
+        }
+
+        Component parent = myProgressWindow.getParent();
+        return parent == null ? null : parent.getUIAccess();
     }
 
     private @Nullable UIAccess uiAccess() {
@@ -96,18 +105,22 @@ public class UnifiedProgressDialog implements ProgressDialog {
     public void hide() {
         myHideRequested = true;
 
-        giveOnUI(() -> {
-            if (myWindow == null) {
-                return;
-            }
+        giveOnUI(this::closeWindow);
+    }
 
-            myWindow.close();
-            myWindow = null;
-            myTextLabel = null;
-            myTextLabel2 = null;
-            myProgressBar = null;
-            myCancelButton = null;
-        });
+    @RequiredUIAccess
+    private void closeWindow() {
+        Window window = myWindow;
+        if (window == null) {
+            return;
+        }
+
+        myWindow = null;
+        myTextLabel = null;
+        myTextLabel2 = null;
+        myProgressBar = null;
+        myCancelButton = null;
+        window.close();
     }
 
     @Override
@@ -134,10 +147,6 @@ public class UnifiedProgressDialog implements ProgressDialog {
                 return;
             }
 
-            VerticalLayout verticalLayout = VerticalLayout.create();
-
-            verticalLayout.add(myTextLabel = Label.create());
-
             DockLayout progressLayout = DockLayout.create();
             progressLayout.center(myProgressBar = ProgressBar.create());
 
@@ -146,17 +155,42 @@ public class UnifiedProgressDialog implements ProgressDialog {
                 progressLayout.right(myCancelButton);
             }
 
-            verticalLayout.add(progressLayout);
-            verticalLayout.add(myTextLabel2 = Label.create());
+            DockLayout contentLayout = DockLayout.create();
+            contentLayout.top(myTextLabel = Label.create());
+            contentLayout.center(progressLayout);
+            contentLayout.bottom(myTextLabel2 = Label.create());
+
+            String title = StringUtil.notNullize(myProgressWindow.getTitle());
+
+            DockLayout rootLayout = DockLayout.create(Space.MEDIUM);
+            rootLayout.top(Label.create(
+                LocalizeValue.of(title),
+                LabelOptions.builder().horizontalAlignment(HorizontalAlignment.CENTER).build()
+            ));
+            rootLayout.center(contentLayout);
+            rootLayout.paddingBuilder().allSet(Space.LARGE).apply();
 
             myWindow = Window.create(
-                "",
-                WindowOptions.builder().disableClose().disableResize().disableModal().build()
+                title,
+                WindowOptions.builder().owner(ownerWindow()).undecorated().disableClose().disableResize().build()
             );
-            myWindow.setSize(new Size2D(288, 123));
-            myWindow.setContent(verticalLayout);
+            myWindow.setSize(new Size2D(450, 120));
+            myWindow.setContent(rootLayout);
+            myWindow.addAttachListener(event -> {
+                if (myHideRequested) {
+                    closeWindow();
+                }
+            });
             myWindow.show();
         });
+    }
+
+    private @Nullable Window ownerWindow() {
+        Component component = myProgressWindow.getParent();
+        while (component != null && !(component instanceof Window)) {
+            component = component.getParent();
+        }
+        return (Window) component;
     }
 
     @Override

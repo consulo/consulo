@@ -86,6 +86,7 @@ public class WebHorizontalTwoComponentSplitLayoutImpl extends VaadinComponentDel
 
         ((HasSize) vComponent).setSizeFull();
         toVaadinComponent().addToPrimary(vComponent);
+        reapplySplitterPosition();
     }
 
     @Override
@@ -99,6 +100,15 @@ public class WebHorizontalTwoComponentSplitLayoutImpl extends VaadinComponentDel
 
         ((HasSize) vComponent).setSizeFull();
         toVaadinComponent().addToSecondary(vComponent);
+        reapplySplitterPosition();
+    }
+
+    private void reapplySplitterPosition() {
+        Vaadin vaadin = toVaadinComponent();
+        Double splitterPosition = vaadin.getSplitterPosition();
+        if (splitterPosition != null) {
+            vaadin.setSplitterPosition(splitterPosition);
+        }
     }
 
     @Override
@@ -121,14 +131,10 @@ public class WebHorizontalTwoComponentSplitLayoutImpl extends VaadinComponentDel
     private void removeSide(boolean primary) {
         Vaadin vaadin = toVaadinComponent();
 
-        java.util.List<com.vaadin.flow.component.Component> children = vaadin.getChildren().toList();
-        if (children.isEmpty()) {
-            return;
-        }
-
-        com.vaadin.flow.component.Component side = primary ? children.get(0) : children.get(children.size() - 1);
-        if (primary || children.size() > 1) {
+        com.vaadin.flow.component.Component side = primary ? vaadin.getPrimaryComponent() : vaadin.getSecondaryComponent();
+        if (side != null && side.getParent().orElse(null) == vaadin) {
             vaadin.remove(side);
+            side.getElement().getStyle().remove("flex");
         }
     }
 

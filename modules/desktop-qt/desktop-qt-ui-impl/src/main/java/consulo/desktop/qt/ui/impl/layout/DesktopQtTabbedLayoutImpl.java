@@ -15,10 +15,13 @@
  */
 package consulo.desktop.qt.ui.impl.layout;
 
+import consulo.desktop.qt.ui.impl.DesktopQtStyleApplier;
 import consulo.desktop.qt.ui.impl.QtComponentDelegate;
 import consulo.ui.Component;
+import consulo.ui.DragAndDropTransferHandler;
 import consulo.ui.StaticPosition;
 import consulo.ui.Tab;
+import consulo.ui.TransferHandler;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.TabSelectEvent;
 import consulo.ui.layout.TabbedLayout;
@@ -44,6 +47,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 
@@ -64,6 +68,9 @@ public class DesktopQtTabbedLayoutImpl extends QtComponentDelegate<QTabWidget> i
     private @Nullable DesktopQtTabImpl mySelectedTab;
 
     private boolean myRestoringTabs;
+
+    private @Nullable TransferHandler<Tab> myTransferHandler;
+    private final DesktopQtTabDragAndDrop myDragAndDrop = new DesktopQtTabDragAndDrop(this);
 
     /**
      * @throws IllegalArgumentException if {@code tabPosition} is {@link StaticPosition#CENTER}, which is not a side
@@ -133,6 +140,7 @@ public class DesktopQtTabbedLayoutImpl extends QtComponentDelegate<QTabWidget> i
         tabWidget.setDocumentMode(true);
         tabWidget.tabBar().setDrawBase(false);
         tabWidget.setTabPosition(toQtTabPosition(myTabPosition));
+        tabWidget.setProperty(DesktopQtStyleApplier.TAB_POSITION_PROPERTY, myTabPosition.name().toLowerCase(Locale.ROOT));
         return tabWidget;
     }
 
@@ -179,8 +187,8 @@ public class DesktopQtTabbedLayoutImpl extends QtComponentDelegate<QTabWidget> i
 
         myRestoringTabs = true;
         try {
-            for (DesktopQtTabImpl tab : myTabs) {
-                tab.initialize(component, this);
+            for (int i = 0; i < myTabs.size(); i++) {
+                myTabs.get(i).initialize(component, this, i);
             }
 
             DesktopQtTabImpl selectedTab = mySelectedTab;
@@ -199,6 +207,8 @@ public class DesktopQtTabbedLayoutImpl extends QtComponentDelegate<QTabWidget> i
         applyPagePadding();
 
         installTabPopupMenu(component);
+
+        myDragAndDrop.install(component.tabBar());
     }
 
     @Override
@@ -286,7 +296,7 @@ public class DesktopQtTabbedLayoutImpl extends QtComponentDelegate<QTabWidget> i
         }
     }
 
-    private @Nullable DesktopQtTabImpl tabAtIndex(int index) {
+    @Nullable DesktopQtTabImpl tabAtIndex(int index) {
         if (index == -1) {
             return null;
         }
@@ -315,13 +325,13 @@ public class DesktopQtTabbedLayoutImpl extends QtComponentDelegate<QTabWidget> i
         return null;
     }
 
-    private void init(DesktopQtTabImpl tab) {
+    private void init(DesktopQtTabImpl tab, int index) {
         tab.setTabbedLayout(this);
 
         QTabWidget tabWidget = myComponent;
 
         if (tabWidget != null && !tabWidget.isDisposed()) {
-            tab.initialize(tabWidget, this);
+            tab.initialize(tabWidget, this, index);
         }
     }
 
@@ -353,13 +363,58 @@ public class DesktopQtTabbedLayoutImpl extends QtComponentDelegate<QTabWidget> i
     @Override
     @RequiredUIAccess
     public Tab addTab(Tab tab, Component component) {
+        return addTab(tab, component, myTabs.size());
+    }
+
+    @Override
+    @RequiredUIAccess
+    public Tab addTab(Tab tab, Component component, int index) {
         DesktopQtTabImpl qtTab = (DesktopQtTabImpl) tab;
 
-        myTabs.add(qtTab);
+        int position = Math.max(0, Math.min(index, myTabs.size()));
+
+        myTabs.add(position, qtTab);
         qtTab.setComponent(component);
 
-        init(qtTab);
+        init(qtTab, position);
         return tab;
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void moveTab(Tab tab, int index) {
+        if (!(tab instanceof DesktopQtTabImpl qtTab)) {
+            return;
+        }
+
+        int from = myTabs.indexOf(qtTab);
+        int to = Math.max(0, Math.min(index, myTabs.size() - 1));
+        if (from == -1 || from == to) {
+            return;
+        }
+
+        myTabs.remove(from);
+        myTabs.add(to, qtTab);
+
+        QTabWidget tabWidget = myComponent;
+        int current = qtTab.getIndex();
+        if (tabWidget != null && !tabWidget.isDisposed() && current != -1) {
+            tabWidget.tabBar().moveTab(current, to);
+        }
+    }
+
+    @Override
+    public void setTransferHandler(@Nullable TransferHandler<Tab> handler) {
+        myTransferHandler = handler;
+    }
+
+    @Override
+    public @Nullable TransferHandler<Tab> getTransferHandler() {
+        return myTransferHandler;
+    }
+
+    @Nullable DragAndDropTransferHandler<Tab> getDragAndDropHandler() {
+        return myTransferHandler instanceof DragAndDropTransferHandler<Tab> handler ? handler : null;
     }
 
     @Override

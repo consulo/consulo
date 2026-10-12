@@ -29,6 +29,7 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.internal.ProjectWindowFocuser;
+import consulo.ui.Component;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.EmptyRunnable;
@@ -57,6 +58,7 @@ public class ProgressWindow extends ProgressIndicatorBase implements UnsafeProgr
     public LocalizeValue myCancelText = LocalizeValue.empty();
 
     private LocalizeValue myTitle = LocalizeValue.empty();
+    private @Nullable Component myParent;
 
     private boolean myStoppedAlready;
     private boolean myStarted;
@@ -191,24 +193,28 @@ public class ProgressWindow extends ProgressIndicatorBase implements UnsafeProgr
         enterModality();
         init.run();
 
+        boolean finished = true;
         try {
-            try {
-                ((ApplicationWithIntentWriteLock) Application.get()).runUnlockingIntendedWrite(() -> {
-                    // guarantee AWT event after the future is done will be pumped and loop exited
-                    stopCondition.thenRun(() -> SwingUtilities.invokeLater(EmptyRunnable.INSTANCE));
-                    myDialog.startBlocking(stopCondition, this::isCancellationEvent);
-                    return null;
-                });
-            }
-            finally {
+            ((ApplicationWithIntentWriteLock) Application.get()).runUnlockingIntendedWrite(() -> {
+                // guarantee AWT event after the future is done will be pumped and loop exited
+                stopCondition.thenRun(() -> SwingUtilities.invokeLater(EmptyRunnable.INSTANCE));
+                myDialog.startBlocking(stopCondition, this::isCancellationEvent);
+                return null;
+            });
+            finished = stopCondition.isDone();
+        }
+        finally {
+            if (finished) {
                 exitModality();
                 // make sure focus returns to original component (at least requested to do so)
                 // before other code executed after showing modal progress
                 myDialog.hideImmediately();
             }
         }
-        finally {
-            exitModality();
+
+        if (!finished) {
+            UIAccess uiAccess = UIAccess.current();
+            stopCondition.whenCompleteAsync((result, error) -> exitModality(), uiAccess);
         }
     }
 
@@ -344,6 +350,14 @@ public class ProgressWindow extends ProgressIndicatorBase implements UnsafeProgr
 
     public String getTitle() {
         return myTitle.getNullIfEmpty();
+    }
+
+    public void setParent(@Nullable Component parent) {
+        myParent = parent;
+    }
+
+    public @Nullable Component getParent() {
+        return myParent;
     }
 
     public void setCancelButtonText(LocalizeValue text) {

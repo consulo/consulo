@@ -27,6 +27,7 @@ public final class WindowOptions extends ComponentOptions {
         private boolean myResizable = true;
         private boolean myModal = true;
         private boolean myUndecorated;
+        private boolean myReattachable;
         private @Nullable Window myOwner = null;
         private @Nullable String myApplicationIdSuffix;
         private @Nullable String myDimensionKey;
@@ -59,6 +60,11 @@ public final class WindowOptions extends ComponentOptions {
             return this;
         }
 
+        public Builder reattachable() {
+            myReattachable = true;
+            return this;
+        }
+
         public Builder applicationIdSuffix(String applicationIdSuffix) {
             myApplicationIdSuffix = applicationIdSuffix;
             return this;
@@ -74,7 +80,16 @@ public final class WindowOptions extends ComponentOptions {
         }
 
         public WindowOptions build() {
-            return new WindowOptions(myOwner, myClosable, myResizable, myModal, myUndecorated, myApplicationIdSuffix, myDimensionKey);
+            return new WindowOptions(
+                myOwner,
+                myClosable,
+                myResizable,
+                myModal,
+                myUndecorated,
+                myReattachable,
+                myApplicationIdSuffix,
+                myDimensionKey
+            );
         }
     }
 
@@ -87,6 +102,7 @@ public final class WindowOptions extends ComponentOptions {
     private final boolean myResizable;
     private final boolean myModal;
     private final boolean myUndecorated;
+    private final boolean myReattachable;
     private final @Nullable String myApplicationIdSuffix;
     private final @Nullable String myDimensionKey;
 
@@ -96,6 +112,7 @@ public final class WindowOptions extends ComponentOptions {
         boolean resizable,
         boolean modal,
         boolean undecorated,
+        boolean reattachable,
         @Nullable String applicationIdSuffix,
         @Nullable String dimensionKey
     ) {
@@ -106,6 +123,7 @@ public final class WindowOptions extends ComponentOptions {
         myResizable = resizable;
         myModal = modal;
         myUndecorated = undecorated;
+        myReattachable = reattachable;
         myApplicationIdSuffix = applicationIdSuffix;
         myDimensionKey = dimensionKey;
     }
@@ -128,6 +146,10 @@ public final class WindowOptions extends ComponentOptions {
 
     public boolean isUndecorated() {
         return myUndecorated;
+    }
+
+    public boolean isReattachable() {
+        return myReattachable;
     }
 
     public @Nullable String getApplicationIdSuffix() {

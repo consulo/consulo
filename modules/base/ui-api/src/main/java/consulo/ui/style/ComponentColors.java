@@ -64,6 +64,15 @@ public enum ComponentColors implements StyleColorValue {
     TOOLTIP_BACKGROUND,
     TOOLTIP_FOREGROUND,
 
+    /**
+     * The fill of the area editors are opened in, which shows while no editor is open.
+     */
+    EDITOR_AREA_BACKGROUND,
+    /**
+     * The text drawn on {@link #EDITOR_AREA_BACKGROUND} while no editor is open.
+     */
+    EDITOR_AREA_FOREGROUND,
+
     TOOL_WINDOW_BUTTON_HOVER_BACKGROUND,
     TOOL_WINDOW_BUTTON_SELECTED_BACKGROUND,
 

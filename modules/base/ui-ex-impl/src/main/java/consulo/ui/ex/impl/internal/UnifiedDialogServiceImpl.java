@@ -27,6 +27,7 @@ import consulo.ui.Component;
 import consulo.ui.HasFocus;
 import consulo.ui.Space;
 import consulo.ui.UIAccess;
+import consulo.ui.internal.UIAccessInternal;
 import consulo.ui.WidthAndHeight;
 import consulo.ui.Window;
 import consulo.ui.WindowOptions;
@@ -80,15 +81,19 @@ public class UnifiedDialogServiceImpl implements DialogService {
 
         private @Nullable Button myDefaultButton;
 
+        private @Nullable UIAccessInternal myModalAccess;
+
         private DialogImpl(DialogDescriptor descriptor, @Nullable Window owner) {
             myDescriptor = descriptor;
 
-            WindowOptions options = WindowOptions.builder()
+            WindowOptions.Builder options = WindowOptions.builder()
                 .owner(owner)
-                .dimensionKey(descriptor.getDimensionServiceKey())
-                .build();
+                .dimensionKey(descriptor.getDimensionServiceKey());
+            if (descriptor.isReattachable()) {
+                options.reattachable();
+            }
 
-            myWindow = Window.create(descriptor.getTitle().get(), options);
+            myWindow = Window.create(descriptor.getTitle().get(), options.build());
         }
 
         @Override
@@ -114,6 +119,8 @@ public class UnifiedDialogServiceImpl implements DialogService {
             // DialogWrapper is. doOkAction completes the result before it closes, so this only ever answers for a
             // close which no action handled
             myWindow.addCloseListener(event -> {
+                leaveModal();
+
                 if (myResult.isDone()) {
                     return;
                 }
@@ -123,10 +130,15 @@ public class UnifiedDialogServiceImpl implements DialogService {
                 myResult.completeExceptionally(new IllegalArgumentException("reject"));
             });
 
+            myWindow.addAttachListener(event -> followModality());
+
+            enterModal(UIAccess.current());
+
             try {
                 myWindow.show();
             }
             catch (Throwable e) {
+                leaveModal();
                 LOG.error("showAsync: cannot show window " + myWindow.getClass().getName(), e);
                 throw e;
             }
@@ -136,6 +148,35 @@ public class UnifiedDialogServiceImpl implements DialogService {
             }
 
             return myResult;
+        }
+
+        @RequiredUIAccess
+        private void enterModal(@Nullable UIAccess uiAccess) {
+            if (uiAccess instanceof UIAccessInternal internal) {
+                internal.enterModal(this);
+                myModalAccess = internal;
+            }
+        }
+
+        @RequiredUIAccess
+        private void leaveModal() {
+            UIAccessInternal access = myModalAccess;
+            myModalAccess = null;
+            if (access != null && access.isValid()) {
+                access.leaveModal(this);
+            }
+        }
+
+        @RequiredUIAccess
+        private void followModality() {
+            UIAccessInternal entered = myModalAccess;
+            UIAccess current = myWindow.getUIAccess();
+            if (entered == null || current == null || UIAccessInternal.original(current) == UIAccessInternal.original(entered)) {
+                return;
+            }
+
+            leaveModal();
+            enterModal(current);
         }
 
         @RequiredUIAccess

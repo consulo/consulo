@@ -19,6 +19,8 @@ import consulo.annotation.DeprecationInfo;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
+import consulo.ui.DragAndDropTransferHandler;
+import consulo.ui.HasTransferHandler;
 import consulo.ui.HasComponentStyle;
 import consulo.ui.HasPrefixComponent;
 import consulo.ui.HasSuffixComponent;
@@ -35,10 +37,21 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 /**
+ * A layout showing one of its contents at a time, picked by a row of tabs.
+ * <p>
+ * Given a {@link DragAndDropTransferHandler}, its tabs can be dragged. A drag carries the dragged tab as its only item,
+ * and a drop lands before ({@link DragAndDropTransferHandler.DropPosition#ABOVE}) or after
+ * ({@link DragAndDropTransferHandler.DropPosition#BELOW}) the tab it is made on. A drop on the strip past the last tab
+ * lands after the last one.
+ *
  * @author VISTALL
  * @since 2016-06-14
  */
-public interface TabbedLayout extends Layout<LayoutConstraint>, HasPrefixComponent, HasSuffixComponent, HasComponentStyle<TabbedLayoutStyle> {
+public interface TabbedLayout extends Layout<LayoutConstraint>,
+    HasPrefixComponent,
+    HasSuffixComponent,
+    HasComponentStyle<TabbedLayoutStyle>,
+    HasTransferHandler<Tab> {
     /**
      * Creates a tab layout with the tabs above the content.
      *
@@ -98,6 +111,18 @@ public interface TabbedLayout extends Layout<LayoutConstraint>, HasPrefixCompone
 
     @RequiredUIAccess
     Tab addTab(Tab tab, Component component);
+
+    /**
+     * Adds a tab at the given position among the tabs shown, the end for a position past the last one.
+     */
+    @RequiredUIAccess
+    Tab addTab(Tab tab, Component component, int index);
+
+    /**
+     * Moves a tab of this layout to the given position among the tabs shown, keeping its content as it is.
+     */
+    @RequiredUIAccess
+    void moveTab(Tab tab, int index);
 
     @Deprecated
     @DeprecationInfo("Use #addTab(LocalizeValue, Component)")

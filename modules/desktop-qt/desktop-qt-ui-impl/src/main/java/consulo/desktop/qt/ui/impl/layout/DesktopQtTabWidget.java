@@ -17,6 +17,7 @@ package consulo.desktop.qt.ui.impl.layout;
 
 import io.qt.core.QSize;
 import io.qt.gui.QIcon;
+import io.qt.widgets.QStackedWidget;
 import io.qt.widgets.QStyle;
 import io.qt.widgets.QStyleOptionTab;
 import io.qt.widgets.QTabBar;
@@ -76,5 +77,10 @@ final class DesktopQtTabWidget extends QTabWidget {
         super(parent);
 
         setTabBar(new TabBar());
+
+        QStackedWidget pages = findChild(QStackedWidget.class, "qt_tabwidget_stackedwidget");
+        if (pages != null) {
+            pages.raise();
+        }
     }
 }
