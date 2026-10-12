@@ -17,6 +17,7 @@ package consulo.desktop.awt.application.impl;
 
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.LaterInvocator;
+import consulo.desktop.awt.ui.impl.AWTUIAccessImpl;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.util.concurrent.AsyncResult;
 
@@ -38,13 +39,13 @@ class ModalityInvokatorImpl implements ModalityInvokator {
   
   @Override
   public AsyncResult<Void> invokeLater(Runnable runnable, BooleanSupplier expired) {
-    return LaterInvocator.invokeLater(runnable, expired);
+    return LaterInvocator.of(AWTUIAccessImpl.ourInstance).invokeLater(runnable, expired);
   }
 
   
   @Override
   public AsyncResult<Void> invokeLater(Runnable runnable, IdeaModalityState state, BooleanSupplier expired) {
-    return LaterInvocator.invokeLater(runnable, state, expired);
+    return LaterInvocator.of(AWTUIAccessImpl.ourInstance).invokeLater(runnable, state, expired);
   }
 
   
