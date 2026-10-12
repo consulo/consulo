@@ -43,7 +43,8 @@ module consulo.file.editor.impl {
         consulo.ide.impl;
 
     exports consulo.fileEditor.impl.internal.unified to
-        consulo.desktop.awt.ide.impl;
+        consulo.desktop.awt.ide.impl,
+        consulo.ide.impl;
 
     opens consulo.fileEditor.impl.internal.unified to
         consulo.proxy,

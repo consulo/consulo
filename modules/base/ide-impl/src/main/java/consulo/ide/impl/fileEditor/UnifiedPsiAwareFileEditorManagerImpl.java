@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.fileEditor.impl.internal.unified;
+package consulo.ide.impl.fileEditor;
 
 import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
@@ -24,6 +24,8 @@ import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorProvider;
 import consulo.fileEditor.FileEditorWithProviderComposite;
 import consulo.fileEditor.impl.internal.PsiAwareFileEditorManagerImpl;
+import consulo.fileEditor.impl.internal.unified.UnifiedFileEditorWithProviderComposite;
+import consulo.fileEditor.impl.internal.unified.UnifiedFileEditorsSplitters;
 import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.language.editor.wolfAnalyzer.WolfTheProblemSolver;
 import consulo.language.psi.PsiManager;

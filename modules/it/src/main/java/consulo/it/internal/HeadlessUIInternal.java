@@ -524,6 +524,16 @@ public class HeadlessUIInternal extends UIInternal implements UIInternalEx {
     }
 
     @Override
+    public TileLayout _Layouts_tile(Length minTileWidth, Space gap) {
+        return new HeadlessTileLayout(minTileWidth, gap);
+    }
+
+    @Override
+    public Card _Components_card() {
+        return new HeadlessCard();
+    }
+
+    @Override
     public UIAccess _UIAccess_get() {
         return HeadlessUIAccess.INSTANCE;
     }
