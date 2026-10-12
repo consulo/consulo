@@ -339,7 +339,7 @@ public class EditorComponentImpl extends JTextComponent
         // Don't use the default TextUI, BaseTextUI, which does a lot of unnecessary
         // work. We do however need to provide a TextUI implementation since some
         // screen reader support code will invoke it
-        setUI(new EditorAccessibilityTextUI(myEditor));
+        setUI(new EditorAccessibilityTextUI());
         UISettingsUtil.setupEditorAntialiasing(this);
         invalidate();
     }

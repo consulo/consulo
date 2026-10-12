@@ -18,6 +18,7 @@ package consulo.desktop.awt.ui.impl.base;
 import consulo.desktop.awt.ui.impl.AWTUIAccessImpl;
 import consulo.desktop.awt.ui.impl.DesktopFontImpl;
 import consulo.desktop.awt.ui.impl.DesktopLength;
+import consulo.desktop.awt.ui.impl.clipboard.DesktopAWTComponentDropHandler;
 import consulo.desktop.awt.ui.impl.event.DesktopAWTInputDetails;
 import consulo.desktop.awt.ui.impl.facade.FromSwingComponentWrapper;
 import consulo.desktop.awt.ui.impl.facade.FromSwingWindowWrapper;
@@ -440,6 +441,14 @@ public abstract class SwingComponentDelegate<T extends java.awt.Component> imple
     @Override
     public @Nullable Cursor getCursor() {
         return TargetAWT.from(toAWTComponent().getCursor());
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void setDropHandler(@Nullable DropHandler handler) {
+        if (toAWTComponent() instanceof JComponent component) {
+            component.setTransferHandler(handler == null ? null : new DesktopAWTComponentDropHandler(this, handler));
+        }
     }
 
     @Override

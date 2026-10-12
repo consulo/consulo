@@ -16,6 +16,7 @@
 package consulo.desktop.qt.ui.impl;
 
 import consulo.desktop.qt.ui.impl.base.DesktopQtRefreshRegistry;
+import consulo.desktop.qt.ui.impl.clipboard.DesktopQtComponentDropTarget;
 import consulo.desktop.qt.ui.impl.image.DesktopQtAnimationHost;
 import consulo.desktop.qt.ui.impl.image.DesktopQtIconOwner;
 import consulo.desktop.qt.ui.impl.image.DesktopQtIconRefresher;
@@ -48,6 +49,7 @@ import consulo.util.dataholder.Key;
 import io.qt.core.QEvent;
 import io.qt.core.QMargins;
 import io.qt.core.QObject;
+import io.qt.core.QTimer;
 import io.qt.core.Qt;
 import io.qt.gui.QColor;
 import io.qt.gui.QCursor;
@@ -98,11 +100,17 @@ public abstract class QtComponentDelegate<T extends QWidget> implements Componen
 
     private Component myParent;
 
+    private boolean myDisposePending;
+    private boolean myHiddenForDispose;
+
     private boolean myKeyDispatchInstalled;
     private boolean myAttachDispatchInstalled;
     private boolean myClickDispatchInstalled;
     private boolean myContextMenuDispatchInstalled;
     private boolean myMousePressDispatchInstalled;
+    private boolean myDropTargetInstalled;
+
+    private @Nullable DropHandler myDropHandler;
 
     private boolean myEnabled = true;
     private boolean myVisible = true;
@@ -123,19 +131,17 @@ public abstract class QtComponentDelegate<T extends QWidget> implements Componen
     }
 
     public final void bind(QWidget parent, @Nullable Object layoutData) {
-        if (myComponent != null) {
-            if (!myComponent.isDisposed()) {
-                return;
-            }
-
-            // qt took the widget down along with the tree it stood in - a dialog which was closed - without this
-            // component being told. The java object outlived the native one, so what is held is a widget every
-            // call on which throws, and the component has to be given a new one instead of handing that one out
-            myComponent = null;
-            myOwnStyleSheet = "";
-            myBorderStyleSheet = "";
-            myNaturalPalette = null;
+        if (myComponent != null && !myComponent.isDisposed()) {
+            return;
         }
+
+        // qt took the widget down along with the tree it stood in - a dialog which was closed - without this
+        // component being told. The java object outlived the native one, so what is held is a widget every
+        // call on which throws, and the component has to be given a new one instead of handing that one out
+        myComponent = null;
+        myOwnStyleSheet = "";
+        myBorderStyleSheet = "";
+        myNaturalPalette = null;
 
         myComponent = createQt(parent);
 
@@ -222,7 +228,48 @@ public abstract class QtComponentDelegate<T extends QWidget> implements Componen
     public void setParent(@Nullable Component component) {
         myParent = component;
 
-        if (component == null) {
+        if (component != null) {
+            cancelPendingDispose();
+            return;
+        }
+
+        T widget = myComponent;
+        if (widget == null || widget.isDisposed() || myDisposePending) {
+            return;
+        }
+
+        myDisposePending = true;
+        if (!widget.isHidden()) {
+            widget.hide();
+            myHiddenForDispose = true;
+        }
+
+        QTimer.singleShot(0, this::disposeIfDetached);
+    }
+
+    private void cancelPendingDispose() {
+        if (!myDisposePending) {
+            return;
+        }
+
+        myDisposePending = false;
+
+        T widget = myComponent;
+        if (myHiddenForDispose && widget != null && !widget.isDisposed()) {
+            widget.show();
+        }
+        myHiddenForDispose = false;
+    }
+
+    private void disposeIfDetached() {
+        if (!myDisposePending) {
+            return;
+        }
+
+        myDisposePending = false;
+        myHiddenForDispose = false;
+
+        if (myParent == null) {
             disposeQt();
         }
     }
@@ -241,6 +288,9 @@ public abstract class QtComponentDelegate<T extends QWidget> implements Componen
     }
 
     public void disposeQt() {
+        myDisposePending = false;
+        myHiddenForDispose = false;
+
         if (myComponent != null) {
             TargetQt.unregister(myComponent);
 
@@ -889,6 +939,23 @@ public abstract class QtComponentDelegate<T extends QWidget> implements Componen
     @Override
     public @Nullable Cursor getCursor() {
         return myCursor;
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void setDropHandler(@Nullable DropHandler handler) {
+        myDropHandler = handler;
+
+        if (handler != null && !myDropTargetInstalled) {
+            myDropTargetInstalled = true;
+            whenBound(widget -> DesktopQtComponentDropTarget.install(widget, this, () -> myDropHandler));
+            return;
+        }
+
+        T widget = myComponent;
+        if (widget != null && !widget.isDisposed()) {
+            widget.setAcceptDrops(handler != null);
+        }
     }
 
     @Override

@@ -1053,6 +1053,17 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
         }
     }
 
+    @RequiredUIAccess
+    public void fireFocusChanged(boolean gained) {
+        FocusEvent event = new FocusEvent(getContentComponent(), gained ? FocusEvent.FOCUS_GAINED : FocusEvent.FOCUS_LOST);
+        if (gained) {
+            fireFocusGained(event);
+        }
+        else {
+            fireFocusLost(event);
+        }
+    }
+
     @Override
     public void addFocusListener(FocusChangeListener listener) {
         myFocusListeners.add(listener);

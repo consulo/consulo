@@ -16,30 +16,23 @@
 package consulo.versionControlSystem.impl.internal.change.patch;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.codeEditor.CustomFileDropHandler;
-import consulo.codeEditor.Editor;
-import consulo.project.Project;
-import consulo.ui.ex.awt.dnd.FileCopyPasteUtil;
+import consulo.codeEditor.FileDropEvent;
+import consulo.codeEditor.FileDropHandler;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.versionControlSystem.impl.internal.patch.PatchFileType;
 
-import java.awt.datatransfer.Transferable;
 import java.io.File;
 import java.util.List;
 
 @ExtensionImpl
-public class PatchFileDropHandler extends CustomFileDropHandler {
-
-  @Override
-  public boolean canHandle(Transferable t, Editor editor) {
-    List<File> list = FileCopyPasteUtil.getFileList(t);
-    if (list == null || list.size() != 1) return false;
-    return PatchFileType.isPatchFile(list.get(0));
-  }
-
-  @Override
-  public boolean handleDrop(Transferable t, Editor editor, Project project) {
-    List<File> list = FileCopyPasteUtil.getFileList(t);
-    if (list == null || list.size() != 1) return false;
-    return ApplyPatchAction.showAndGetApplyPatch(project, list.get(0));
-  }
+public class PatchFileDropHandler implements FileDropHandler {
+    @Override
+    @RequiredUIAccess
+    public boolean handleDrop(FileDropEvent event) {
+        List<File> files = event.files();
+        if (files.size() != 1 || !PatchFileType.isPatchFile(files.get(0))) {
+            return false;
+        }
+        return ApplyPatchAction.showAndGetApplyPatch(event.project(), files.get(0));
+    }
 }

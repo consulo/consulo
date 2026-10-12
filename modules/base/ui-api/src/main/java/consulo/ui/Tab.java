@@ -41,13 +41,13 @@ public interface Tab {
     void setCloseHandler(@Nullable BiConsumer<Tab, Component> closeHandler);
 
     /**
-     * A pinned tab shows a pin where it otherwise offers to close. A click there still runs the close handler, which
-     * decides what a pinned tab does with it.
+     * A component shown at the trailing end of the tab in place of the close affordance, such as a toolbar of the
+     * actions of the tab.
      */
     @RequiredUIAccess
-    void setPinned(boolean pinned);
+    void setSuffixComponent(@Nullable Component component);
 
-    boolean isPinned();
+    @Nullable Component getSuffixComponent();
 
     /**
      * The group shown on a right click of the tab itself. Whoever builds the tab knows what it stands for, so

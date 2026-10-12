@@ -24,7 +24,6 @@ import consulo.desktop.qt.ui.impl.image.DesktopQtIconRefresher;
 import consulo.desktop.qt.ui.impl.image.DesktopQtLiveIconEngine;
 import consulo.desktop.qt.ui.impl.QtComponentDelegate;
 import consulo.localize.LocalizeValue;
-import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.Component;
 import consulo.ui.Tab;
 import consulo.ui.TextItemPresentation;
@@ -32,6 +31,9 @@ import consulo.ui.image.Image;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.internal.TabSelectionUtil;
 import consulo.ui.internal.TabTitlePresentation;
+import io.qt.core.QEvent;
+import io.qt.core.QObject;
+import io.qt.core.QTimer;
 import io.qt.core.Qt;
 import io.qt.widgets.QTabBar;
 import io.qt.widgets.QTabWidget;
@@ -46,6 +48,7 @@ import java.util.function.BiConsumer;
  */
 public class DesktopQtTabImpl implements Tab, DesktopQtAnimationHost, DesktopQtIconOwner {
     private static final int TRAILING_SPACER_WIDTH = 4;
+    private static final String TRAILING_SPACER_NAME = "consuloTabTrailingSpacer";
 
     private BiConsumer<Tab, TextItemPresentation> myRenderer = (tab, presentation) -> presentation.append(toString());
 
@@ -67,7 +70,9 @@ public class DesktopQtTabImpl implements Tab, DesktopQtAnimationHost, DesktopQtI
 
     private boolean myEnabled = true;
 
-    private boolean myPinned;
+    private @Nullable QtComponentDelegate<?> mySuffixComponent;
+
+    private @Nullable QWidget myObservedSuffix;
 
     @Override
     public void setCloseHandler(@Nullable BiConsumer<Tab, Component> closeHandler) {
@@ -85,22 +90,28 @@ public class DesktopQtTabImpl implements Tab, DesktopQtAnimationHost, DesktopQtI
 
     @Override
     @RequiredUIAccess
-    public void setPinned(boolean pinned) {
-        if (myPinned == pinned) {
+    public void setSuffixComponent(@Nullable Component component) {
+        QtComponentDelegate<?> oldSuffix = mySuffixComponent;
+        QtComponentDelegate<?> newSuffix = (QtComponentDelegate<?>) component;
+        if (oldSuffix == newSuffix) {
             return;
         }
 
-        myPinned = pinned;
+        mySuffixComponent = newSuffix;
 
         QTabWidget tabWidget = myTabWidget;
         if (tabWidget != null && !tabWidget.isDisposed()) {
             applyClosable(tabWidget);
         }
+
+        if (oldSuffix != null) {
+            oldSuffix.setParent(null);
+        }
     }
 
     @Override
-    public boolean isPinned() {
-        return myPinned;
+    public @Nullable Component getSuffixComponent() {
+        return mySuffixComponent;
     }
 
     public void applyClosable(QTabWidget tabWidget) {
@@ -114,30 +125,75 @@ public class DesktopQtTabImpl implements Tab, DesktopQtAnimationHost, DesktopQtI
         boolean closable = myCloseHandler != null;
 
         QWidget oldButton = tabBar.tabButton(index, QTabBar.ButtonPosition.RightSide);
-        if (oldButton != null) {
-            boolean pinButton = oldButton instanceof DesktopQtTabPinButton;
-            boolean closeButton = oldButton instanceof DesktopQtTabCloseButton;
-            if (myPinned ? pinButton : closable ? closeButton : !pinButton && !closeButton) {
+
+        QtComponentDelegate<?> suffix = mySuffixComponent;
+        if (suffix != null) {
+            if (myTabbedLayout != null) {
+                suffix.setParent(myTabbedLayout);
+            }
+            suffix.bind(tabBar, null);
+
+            QWidget suffixWidget = suffix.toQtComponent();
+            observeSuffix(suffixWidget);
+            if (oldButton == suffixWidget) {
                 return;
             }
+
+            tabBar.setTabButton(index, QTabBar.ButtonPosition.RightSide, suffixWidget);
+            if (oldButton instanceof DesktopQtTabCloseButton || isTrailingSpacer(oldButton)) {
+                oldButton.disposeLater();
+            }
+            return;
         }
 
-        QWidget newButton;
-        if (myPinned) {
-            newButton = createPinButton(tabBar);
+        if (oldButton != null && closable == oldButton instanceof DesktopQtTabCloseButton && (closable || isTrailingSpacer(oldButton))) {
+            return;
         }
-        else if (closable) {
-            newButton = createCloseButton(tabBar);
-        }
-        else {
-            newButton = createTrailingSpacer(tabBar);
-        }
+
+        QWidget newButton = closable ? createCloseButton(tabBar) : createTrailingSpacer(tabBar);
 
         tabBar.setTabButton(index, QTabBar.ButtonPosition.RightSide, newButton);
 
-        if (oldButton != null) {
+        if (oldButton instanceof DesktopQtTabCloseButton || isTrailingSpacer(oldButton)) {
             oldButton.disposeLater();
         }
+    }
+
+    private void observeSuffix(QWidget suffixWidget) {
+        if (myObservedSuffix == suffixWidget) {
+            return;
+        }
+
+        myObservedSuffix = suffixWidget;
+        suffixWidget.installEventFilter(new QObject(suffixWidget) {
+            @Override
+            public boolean eventFilter(QObject watched, QEvent event) {
+                if (event.type() == QEvent.Type.LayoutRequest && !suffixWidget.sizeHint().equals(suffixWidget.size())) {
+                    QTimer.singleShot(0, () -> relayoutSuffix(suffixWidget));
+                }
+                return false;
+            }
+        });
+    }
+
+    private void relayoutSuffix(QWidget suffixWidget) {
+        QTabWidget tabWidget = myTabWidget;
+        int index = getIndex();
+        if (suffixWidget.isDisposed() || tabWidget == null || tabWidget.isDisposed() || index == -1) {
+            return;
+        }
+
+        QTabBar tabBar = tabWidget.tabBar();
+        if (tabBar.tabButton(index, QTabBar.ButtonPosition.RightSide) != suffixWidget) {
+            return;
+        }
+
+        suffixWidget.resize(suffixWidget.sizeHint());
+        tabBar.setTabText(index, tabBar.tabText(index));
+    }
+
+    private static boolean isTrailingSpacer(@Nullable QWidget widget) {
+        return widget != null && TRAILING_SPACER_NAME.equals(widget.objectName());
     }
 
     private QWidget createCloseButton(QTabBar tabBar) {
@@ -146,14 +202,9 @@ public class DesktopQtTabImpl implements Tab, DesktopQtAnimationHost, DesktopQtI
         return button;
     }
 
-    private QWidget createPinButton(QTabBar tabBar) {
-        DesktopQtTabPinButton button = new DesktopQtTabPinButton(tabBar, DesktopQtLiveIconEngine.toQIcon(PlatformIconGroup.actionsPintab(), this));
-        button.clicked.connect(checked -> close());
-        return button;
-    }
-
     private static QWidget createTrailingSpacer(QTabBar tabBar) {
         QWidget spacer = new QWidget(tabBar);
+        spacer.setObjectName(TRAILING_SPACER_NAME);
         spacer.setAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents);
         spacer.resize(TRAILING_SPACER_WIDTH, 1);
         return spacer;
@@ -365,6 +416,13 @@ public class DesktopQtTabImpl implements Tab, DesktopQtAnimationHost, DesktopQtI
     public void detach() {
         int index = getIndex();
         if (index != -1) {
+            QtComponentDelegate<?> suffix = mySuffixComponent;
+            QTabBar tabBar = myTabWidget.tabBar();
+            if (suffix != null && suffix.toQtComponent() != null && tabBar.tabButton(index, QTabBar.ButtonPosition.RightSide) == suffix.toQtComponent()) {
+                tabBar.setTabButton(index, QTabBar.ButtonPosition.RightSide, null);
+                suffix.setParent(null);
+            }
+
             myTabWidget.removeTab(index);
         }
 

@@ -12,6 +12,10 @@ module consulo.file.editor.impl {
 
     requires consulo.language.editor.impl;
 
+    requires consulo.ide.api;
+    requires consulo.project.ui.impl;
+    requires consulo.ui.ex.impl;
+
     requires static consulo.task.api;
 
     requires com.google.common;
@@ -37,6 +41,13 @@ module consulo.file.editor.impl {
         consulo.desktop.awt.ide.impl,
         consulo.desktop.awt.ui.impl,
         consulo.ide.impl;
+
+    exports consulo.fileEditor.impl.internal.unified to
+        consulo.desktop.awt.ide.impl;
+
+    opens consulo.fileEditor.impl.internal.unified to
+        consulo.proxy,
+        consulo.util.xml.serializer;
 
     // TODO remove in future
     requires java.desktop;

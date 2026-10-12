@@ -20,6 +20,7 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.UiDataProvider;
+import consulo.util.dataholder.Key;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.event.ComponentEvent;
@@ -74,6 +75,8 @@ import java.util.List;
 public class UnifiedWelcomeFrameManager extends WelcomeFrameManager {
     private static final String WELCOME_SCREEN_RECENT_PROJECT_ACTION_GROUP = "WelcomeScreenRecentProjectActionGroup";
 
+    private static final Key<Boolean> CLOSED_BY_MANAGER = Key.create("UnifiedWelcomeFrameManager.closedByManager");
+
     private @Nullable ActionPopupMenu myRecentProjectMenu;
 
     private final Provider<ProjectManager> myProjectManager;
@@ -100,6 +103,11 @@ public class UnifiedWelcomeFrameManager extends WelcomeFrameManager {
 
     @Override
     public void closeFrame(@Nullable UIAccess uiAccess) {
+        IdeFrame frame = uiAccess == null ? null : uiAccess.getUserData(IdeFrame.KEY);
+        if (frame != null) {
+            frame.getWindow().putUserData(CLOSED_BY_MANAGER, Boolean.TRUE);
+        }
+
         super.closeFrame(uiAccess);
 
         if (uiAccess != null) {
@@ -150,6 +158,13 @@ public class UnifiedWelcomeFrameManager extends WelcomeFrameManager {
             checker.removeCallback(checkerCallback);
             Disposer.dispose(uiDisposable);
             frameClosed();
+
+            if (!Boolean.TRUE.equals(welcomeFrame.getUserData(CLOSED_BY_MANAGER))
+                && !UIAccess.supportsMultipleUI()
+                && !myApplication.isDisposeInProgress()
+                && myProjectManager.get().getOpenProjects().length == 0) {
+                myApplication.exit();
+            }
         });
 
         TitlelessDecorator titlelessDecorator =

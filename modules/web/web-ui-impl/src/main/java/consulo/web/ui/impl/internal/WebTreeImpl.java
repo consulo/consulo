@@ -17,7 +17,6 @@ package consulo.web.ui.impl.internal;
 
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.ClickNotifier;
-import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.HasComponents;
 import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.UI;
@@ -135,18 +134,13 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl<NODE>
                 myDraggedItems = nodesOf(event.getDraggedItems());
                 DataTransfer transfer = handler.createDragTransfer(WebTreeImpl.this, myDraggedItems, true);
                 myDragTransfer = transfer == null ? DataTransfer.EMPTY : transfer;
-                getUI().ifPresent(ui -> ComponentUtil.setData(ui, ActiveDrag.class, new ActiveDrag(this, myDragTransfer)));
+                getUI().ifPresent(ui -> WebDragSession.start(ui, this, myDragTransfer));
             });
 
             addDragEndListener(event -> {
                 myDraggedItems = List.of();
                 myDragTransfer = DataTransfer.EMPTY;
-                getUI().ifPresent(ui -> {
-                    ActiveDrag activeDrag = ComponentUtil.getData(ui, ActiveDrag.class);
-                    if (activeDrag != null && activeDrag.source() == this) {
-                        ComponentUtil.setData(ui, ActiveDrag.class, null);
-                    }
-                });
+                getUI().ifPresent(ui -> WebDragSession.end(ui, this));
             });
 
             addDropListener(event -> {
@@ -169,8 +163,7 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl<NODE>
 
         private DataTransfer foreignDragTransfer() {
             UI ui = getUI().orElse(null);
-            ActiveDrag activeDrag = ui == null ? null : ComponentUtil.getData(ui, ActiveDrag.class);
-            return activeDrag == null || activeDrag.source() == this ? DataTransfer.EMPTY : activeDrag.transfer();
+            return ui == null || WebDragSession.getSource(ui) == this ? DataTransfer.EMPTY : WebDragSession.getTransfer(ui);
         }
 
         public Vaadin() {
@@ -815,9 +808,6 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl<NODE>
         };
     }
 
-    private record ActiveDrag(com.vaadin.flow.component.Component source, DataTransfer transfer) {
-    }
-
     private class DropContextImpl implements DragAndDropTransferHandler.DropContext<TreeNode<NODE>> {
         private final TreeNode<NODE> myTarget;
         private final DragAndDropTransferHandler.DropPosition myPosition;
@@ -928,6 +918,7 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl<NODE>
         }
 
         vaadin.setRowsDraggable(true);
+        vaadin.setDragDataGenerator(WebDragSession.DRAG_TYPE, row -> "");
         vaadin.setDropMode(GridDropMode.ON_TOP_OR_BETWEEN);
         vaadin.bindDragAndDrop(dragAndDrop);
     }

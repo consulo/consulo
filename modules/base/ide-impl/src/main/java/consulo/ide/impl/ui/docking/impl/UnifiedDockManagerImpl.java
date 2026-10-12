@@ -32,6 +32,7 @@ import consulo.project.ui.wm.dock.DockableContent;
 import consulo.project.ui.wm.dock.DragSession;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
+import org.jdom.Element;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -54,6 +55,16 @@ public class UnifiedDockManagerImpl extends BaseDockManager implements FileEdito
   @Override
   protected DockWindow createWindowFor(@Nullable String id, DockContainer container) {
     return null;
+  }
+
+  @Override
+  public void readState() {
+  }
+
+  @Override
+  public Element getState() {
+    Element loadedState = getLoadedState();
+    return loadedState != null ? loadedState.clone() : super.getState();
   }
 
   @Override

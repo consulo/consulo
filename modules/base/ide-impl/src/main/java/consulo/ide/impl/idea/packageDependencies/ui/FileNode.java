@@ -24,7 +24,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
-import consulo.ide.impl.virtualFileSystem.VfsIconUtil;
+import consulo.fileEditor.impl.internal.VfsIconUtil;
 import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
 

@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.virtualFileSystem;
+package consulo.fileEditor.impl.internal;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.component.ComponentManager;
 import consulo.component.util.Iconable;
-import consulo.ui.ex.internal.AnyIconKey;
 import consulo.language.icon.IconDescriptor;
 import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.language.psi.PsiElement;
@@ -27,6 +26,7 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.ui.ex.IconDeferrer;
+import consulo.ui.ex.internal.AnyIconKey;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.BitUtil;

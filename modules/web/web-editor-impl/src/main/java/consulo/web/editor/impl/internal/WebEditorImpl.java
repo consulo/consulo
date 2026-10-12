@@ -100,6 +100,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationProvider {
     private static final Logger LOG = Logger.getInstance(WebEditorImpl.class);
 
+    private static final String FOCUS_FROM_OUTSIDE = "!(event.relatedTarget && element.contains(event.relatedTarget))";
+
     public static class Vaadin extends ArquillEditorElement implements ComponentHolder, FromVaadinComponentWrapper {
         private consulo.ui.Component myComponent;
 
@@ -317,6 +319,9 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
         }, myDisposable);
 
 //    vaadin.addMouseDownListener(this::runMousePressedCommand);
+
+        vaadin.getElement().addEventListener("focusin", event -> fireFocusChanged(true)).setFilter(FOCUS_FROM_OUTSIDE);
+        vaadin.getElement().addEventListener("focusout", event -> fireFocusChanged(false)).setFilter(FOCUS_FROM_OUTSIDE);
 
         vaadin.addMetricsListener(event -> {
             if (event.getCharWidth() > 0 && event.getLineHeight() > 0) {

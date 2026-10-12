@@ -57,11 +57,13 @@ public class DesktopAWTDockableEditorContainerFactory implements DockableEditorC
       new DesktopFileEditorsSplitters(myProject, myApplicationConcurrency, myFileEditorManager, dockManager, false) {
         @Override
         public void afterFileClosed(VirtualFile file) {
+          super.afterFileClosed(file);
           containerRef.get().fireContentClosed(file);
         }
 
         @Override
         public void afterFileOpen(VirtualFile file) {
+          super.afterFileOpen(file);
           containerRef.get().fireContentOpen(file);
         }
 

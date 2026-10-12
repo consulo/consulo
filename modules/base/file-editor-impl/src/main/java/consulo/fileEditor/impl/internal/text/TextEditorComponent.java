@@ -170,7 +170,7 @@ public class TextEditorComponent implements UiDataProvider, Disposable {
 
     ((EditorEx)editor).setContextMenuGroupId(IdeActions.GROUP_EDITOR_POPUP);
 
-    ((CodeEditorBase)editor).setDropHandler(new FileDropHandler(editor));
+    ((CodeEditorBase)editor).setDropHandler(new FileEditorDropHandler(editor));
 
     TextEditorProvider.putTextEditor(editor, myTextEditor);
     return editor;

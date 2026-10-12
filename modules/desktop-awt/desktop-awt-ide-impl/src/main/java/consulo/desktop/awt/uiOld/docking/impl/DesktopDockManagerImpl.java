@@ -52,7 +52,6 @@ import consulo.ui.ex.awt.internal.SwingDockContainer;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.util.collection.MutualMap;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
@@ -78,8 +77,6 @@ import java.util.function.Predicate;
 @ServiceImpl
 @State(name = "DockManager", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
 public class DesktopDockManagerImpl extends BaseDockManager implements FileEditorDockManager {
-    private final MutualMap<DockContainer, DockWindow> myWindows = new MutualMap<>();
-
     private MyDragSession myCurrentDragSession;
 
     private final BusyObject.Impl myBusyObject = new BusyObject.Impl() {
@@ -112,7 +109,7 @@ public class DesktopDockManagerImpl extends BaseDockManager implements FileEdito
             return key;
         }
 
-        DockWindow wnd = myWindows.getValue(getContainerFor(owner));
+        DockWindow wnd = (DockWindow) myWindows.getValue(getContainerFor(owner));
 
         return wnd != null ? key + "#" + wnd.myId : key;
     }
@@ -154,7 +151,7 @@ public class DesktopDockManagerImpl extends BaseDockManager implements FileEdito
 
         for (DockContainer each : myContainers) {
             if (each.isEmpty() && each.isDisposeWhenEmpty()) {
-                DockWindow window = myWindows.getValue(each);
+                DockWindow window = (DockWindow) myWindows.getValue(each);
                 if (window != null) {
                     window.setTransparent(true);
                 }
@@ -173,7 +170,7 @@ public class DesktopDockManagerImpl extends BaseDockManager implements FileEdito
 
             for (DockContainer each : myContainers) {
                 if (!each.isEmpty()) {
-                    DockWindow window = myWindows.getValue(each);
+                    DockWindow window = (DockWindow) myWindows.getValue(each);
                     if (window != null) {
                         window.setTransparent(false);
                     }

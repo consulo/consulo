@@ -19,6 +19,7 @@ import consulo.application.*;
 import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.application.ui.UISettings;
 import consulo.application.ui.event.UISettingsListener;
+import consulo.component.ProcessCanceledException;
 import consulo.disposer.Disposable;
 import consulo.fileEditor.*;
 import consulo.logging.Logger;
@@ -28,19 +29,27 @@ import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.util.MergingProcessingQueueInUI;
 import consulo.project.ui.wm.FrameTitleBuilder;
 import consulo.project.ui.wm.IdeFrame;
+import consulo.project.ui.wm.ToolWindowId;
+import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.image.Image;
+import consulo.ui.layout.WrappedLayout;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Pair;
+import consulo.util.xml.serializer.InvalidDataException;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 
+import javax.swing.*;
 import java.io.File;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -69,11 +78,17 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
     private final MergingProcessingQueueInUI<VirtualFile, Pair<W, Image>> myIconUpdater;
     private final MergingProcessingQueueInUI<VirtualFile, EditorTablInfo> myFileNameUpdater;
 
+    private @Nullable EditorSplitNode myRootNode;
+    private final EditorSplitLayout mySplitLayout;
+    private final UIBuilder myUIBuilder = new UIBuilder();
+
     protected FileEditorsSplittersBase(ApplicationConcurrency applicationConcurrency,
                                        Project project,
                                        FileEditorManagerImpl manager) {
         myProject = project;
         myManager = manager;
+
+        mySplitLayout = new EditorSplitLayout();
 
         myIconUpdater = new MergingProcessingQueueInUI<>(applicationConcurrency, project, 200) {
             @Override
@@ -129,7 +144,412 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
     protected abstract W[] createArray(int size);
 
     @RequiredUIAccess
-    protected abstract void createCurrentWindow();
+    protected abstract W createEditorWindow();
+
+    @RequiredUIAccess
+    public void createCurrentWindow() {
+        LOG.assertTrue(myCurrentWindow == null);
+        W window = createEditorWindow();
+        setCurrentWindow(window);
+        setRootNode(window);
+    }
+
+    protected WrappedLayout getSplitComponent() {
+        return mySplitLayout.getComponent();
+    }
+
+    protected void afterSplitLayoutUpdated() {
+    }
+
+    public @Nullable EditorSplitNode getRootNode() {
+        return myRootNode;
+    }
+
+    @RequiredUIAccess
+    protected void setRootNode(@Nullable EditorSplitNode rootNode) {
+        myRootNode = rootNode;
+        if (rootNode != null) {
+            rootNode.setParentBranch(null);
+        }
+        updateSplitLayout();
+    }
+
+    @RequiredUIAccess
+    public void updateSplitLayout() {
+        mySplitLayout.update(myRootNode, node -> ((FileEditorWindowBase) node).getUIComponent());
+        afterSplitLayoutUpdated();
+    }
+
+    @RequiredUIAccess
+    FileEditorWindowBase splitWindow(FileEditorWindowBase window, boolean vertical) {
+        W newWindow = createEditorWindow();
+        EditorSplitBranch parent = window.getParentBranch();
+        EditorSplitBranch branch = new EditorSplitBranch(vertical, 0.5f, window, newWindow);
+        putNode(parent, window, branch);
+        updateSplitLayout();
+        return newWindow;
+    }
+
+    @RequiredUIAccess
+    void removeWindowNode(FileEditorWindowBase window) {
+        EditorSplitBranch branch = window.getParentBranch();
+        if (branch == null) {
+            return;
+        }
+
+        putNode(branch.getParentBranch(), branch, branch.getOther(window));
+        window.setParentBranch(null);
+        updateSplitLayout();
+    }
+
+    @RequiredUIAccess
+    void replaceNode(EditorSplitNode oldNode, EditorSplitNode newNode) {
+        putNode(oldNode.getParentBranch(), oldNode, newNode);
+        updateSplitLayout();
+    }
+
+    private void putNode(@Nullable EditorSplitBranch parent, EditorSplitNode oldNode, EditorSplitNode newNode) {
+        if (parent == null) {
+            myRootNode = newNode;
+            newNode.setParentBranch(null);
+        }
+        else {
+            parent.replace(oldNode, newNode);
+        }
+    }
+
+    static void collectWindows(EditorSplitNode node, List<FileEditorWindowBase> windows) {
+        if (node instanceof EditorSplitBranch branch) {
+            collectWindows(branch.getFirst(), windows);
+            collectWindows(branch.getSecond(), windows);
+        }
+        else {
+            windows.add((FileEditorWindowBase) node);
+        }
+    }
+
+    @Override
+    public int getSplitCount() {
+        EditorSplitNode rootNode = myRootNode;
+        if (rootNode == null) {
+            return 0;
+        }
+
+        List<FileEditorWindowBase> windows = new ArrayList<>();
+        collectWindows(rootNode, windows);
+        return windows.size();
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public W[] getOrderedWindows() {
+        EditorSplitNode rootNode = myRootNode;
+        if (rootNode == null) {
+            return createArray(0);
+        }
+
+        List<FileEditorWindowBase> windows = new ArrayList<>();
+        collectWindows(rootNode, windows);
+
+        W[] result = createArray(windows.size());
+        for (int i = 0; i < result.length; i++) {
+            result[i] = (W) windows.get(i);
+        }
+        return result;
+    }
+
+    @RequiredUIAccess
+    @Override
+    public @Nullable FileEditorWindow openInRightSplit(VirtualFile file, boolean requestFocus) {
+        W window = getCurrentWindow();
+        if (window == null) {
+            return null;
+        }
+
+        EditorSplitBranch branch = window.getParentBranch();
+        if (branch != null && branch.getSecond() != window && branch.getSecond() instanceof FileEditorWindowBase rightSplitWindow) {
+            myManager.openFileWithProviders(file, requestFocus, rightSplitWindow);
+            return rightSplitWindow;
+        }
+
+        return window.split(SwingConstants.VERTICAL, true, file, requestFocus);
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void clear() {
+        for (W window : myWindows) {
+            window.dispose();
+        }
+        myWindows.clear();
+        setRootNode(null);
+        setCurrentWindow(null);
+    }
+
+    @Override
+    public void writeExternal(Element element) {
+        EditorSplitNode rootNode = myRootNode;
+        if (rootNode == null) {
+            return;
+        }
+
+        try {
+            element.addContent(writeNode(rootNode));
+        }
+        catch (ProcessCanceledException e) {
+            throw e;
+        }
+        catch (Throwable e) {
+            LOG.error(e);
+        }
+    }
+
+    private Element writeNode(EditorSplitNode node) {
+        if (node instanceof EditorSplitBranch branch) {
+            Element result = new Element(AsyncConfigTreeReader.SPLITTER);
+            result.setAttribute(AsyncConfigTreeReader.SPLIT_ORIENTATION, branch.isVertical() ? "vertical" : "horizontal");
+            result.setAttribute(AsyncConfigTreeReader.SPLIT_PROPORTION, Float.toString(branch.getProportion()));
+
+            Element first = new Element(AsyncConfigTreeReader.SPLIT_FIRST);
+            first.addContent(writeNode(branch.getFirst()));
+            Element second = new Element(AsyncConfigTreeReader.SPLIT_SECOND);
+            second.addContent(writeNode(branch.getSecond()));
+
+            result.addContent(first);
+            result.addContent(second);
+            return result;
+        }
+
+        FileEditorWindowBase window = (FileEditorWindowBase) node;
+        Element result = new Element(AsyncConfigTreeReader.LEAF);
+        String sideTabsSizeLimit = window.getSideTabsSizeLimit();
+        if (sideTabsSizeLimit != null) {
+            result.setAttribute(AsyncConfigTreeReader.SIDE_TABS_SIZE_LIMIT, sideTabsSizeLimit);
+        }
+
+        FileEditorWithProviderComposite[] composites = window.getEditors();
+        FileEditorWithProviderComposite selectedEditor = window.getSelectedEditor();
+        for (int i = 0; i < composites.length; i++) {
+            VirtualFile file = window.getFileAt(i);
+            result.addContent(writeComposite(file, composites[i], window.isFilePinned(file), selectedEditor));
+        }
+        return result;
+    }
+
+    private Element writeComposite(VirtualFile file,
+                                   FileEditorWithProviderComposite composite,
+                                   boolean pinned,
+                                   @Nullable FileEditorWithProviderComposite selectedEditor) {
+        Element fileElement = new Element(AsyncConfigTreeReader.FILE);
+        fileElement.setAttribute(AsyncConfigTreeReader.LEAF_FILE_NAME, file.getName());
+        FileEditorHistoryUtil.currentStateAsHistoryEntry(composite).writeExternal(fileElement, myProject);
+        fileElement.setAttribute(AsyncConfigTreeReader.PINNED, Boolean.toString(pinned));
+        fileElement.setAttribute(AsyncConfigTreeReader.CURRENT_IN_TAB, Boolean.toString(composite.equals(selectedEditor)));
+        return fileElement;
+    }
+
+    @Override
+    public CompletableFuture<?> openFilesAsync(UIAccess uiAccess) {
+        Element splittersElement = mySplittersElement;
+        if (splittersElement == null) {
+            return CompletableFuture.completedFuture(null);
+        }
+
+        return myUIBuilder.process(splittersElement, myRootNode, uiAccess).whenCompleteAsync((node, throwable) -> {
+            mySplittersElement = null;
+
+            if (throwable != null) {
+                LOG.error(throwable);
+            }
+
+            if (node != null) {
+                setRootNode(node);
+                adoptDetachedWindows();
+            }
+
+            for (W window : getWindows()) {
+                if (window.getTabCount() == 0 && !window.isDisposed() && window.inSplitter()) {
+                    window.removeFromSplitter();
+                }
+            }
+        }, uiAccess);
+    }
+
+    @RequiredUIAccess
+    private void adoptDetachedWindows() {
+        W[] ordered = getOrderedWindows();
+        if (ordered.length == 0) {
+            return;
+        }
+
+        Set<W> attached = new HashSet<>(Arrays.asList(ordered));
+        for (W window : getWindows()) {
+            if (attached.contains(window)) {
+                continue;
+            }
+
+            for (FileEditorWithProviderComposite composite : window.getEditors()) {
+                window.detachEditor(composite);
+                if (ordered[0].findFileComposite(composite.getFile()) == null) {
+                    ordered[0].setEditor(composite, false);
+                }
+                else {
+                    myManager.disposeComposite(composite);
+                }
+            }
+            window.dispose();
+        }
+    }
+
+    private @Nullable W findContextWindow(@Nullable EditorSplitNode context) {
+        if (context == null) {
+            return null;
+        }
+
+        List<FileEditorWindowBase> windows = new ArrayList<>();
+        collectWindows(context, windows);
+        return windows.isEmpty() ? null : (W) windows.get(0);
+    }
+
+    private final class UIBuilder extends AsyncConfigTreeReader<EditorSplitNode> {
+        @Override
+        protected CompletableFuture<EditorSplitNode> processFiles(List<Element> fileElements,
+                                                                  @Nullable EditorSplitNode context,
+                                                                  Element parent,
+                                                                  UIAccess uiAccess) {
+            return uiAccess.<W>giveAsync(() -> {
+                    W window = findContextWindow(context);
+                    if (window == null) {
+                        window = createEditorWindow();
+                    }
+                    window.setSideTabsSizeLimit(parent.getAttributeValue(SIDE_TABS_SIZE_LIMIT));
+                    return window;
+                })
+                .thenCompose(window -> reopenFiles(fileElements, window, uiAccess));
+        }
+
+        @Override
+        protected CompletableFuture<EditorSplitNode> processSplitter(Element element,
+                                                                     @Nullable Element firstChild,
+                                                                     @Nullable Element secondChild,
+                                                                     @Nullable EditorSplitNode context,
+                                                                     UIAccess uiAccess) {
+            boolean vertical = "vertical".equals(element.getAttributeValue(SPLIT_ORIENTATION));
+            float proportion = parseProportion(element.getAttributeValue(SPLIT_PROPORTION));
+
+            EditorSplitNode firstContext = context instanceof EditorSplitBranch branch ? branch.getFirst() : context;
+            EditorSplitNode secondContext = context instanceof EditorSplitBranch branch ? branch.getSecond() : null;
+
+            return process(firstChild, firstContext, uiAccess)
+                .thenCompose(first -> process(secondChild, secondContext, uiAccess)
+                    .thenApplyAsync(second -> combine(context, vertical, proportion, first, second), uiAccess));
+        }
+    }
+
+    private static float parseProportion(@Nullable String value) {
+        if (value == null) {
+            return 0.5f;
+        }
+
+        try {
+            return Float.parseFloat(value);
+        }
+        catch (NumberFormatException e) {
+            return 0.5f;
+        }
+    }
+
+    private static @Nullable EditorSplitNode combine(@Nullable EditorSplitNode context,
+                                                     boolean vertical,
+                                                     float proportion,
+                                                     @Nullable EditorSplitNode first,
+                                                     @Nullable EditorSplitNode second) {
+        if (first == null) {
+            return second;
+        }
+        if (second == null || second == first) {
+            return first;
+        }
+
+        if (context instanceof EditorSplitBranch branch && branch.getFirst() == first && branch.getSecond() == second) {
+            branch.setVertical(vertical);
+            branch.setProportion(proportion);
+            return branch;
+        }
+        return new EditorSplitBranch(vertical, proportion, first, second);
+    }
+
+    private CompletableFuture<EditorSplitNode> reopenFiles(List<Element> fileElements, W window, UIAccess uiAccess) {
+        CompletableFuture<?> reopened = CompletableFuture.completedFuture(null);
+        VirtualFile focusedFile = null;
+
+        for (int i = 0; i < fileElements.size(); i++) {
+            Element file = fileElements.get(i);
+            Element historyElement = file.getChild(HistoryEntry.TAG);
+
+            try {
+                HistoryEntry entry = HistoryEntry.createLight(myProject, historyElement);
+                VirtualFile virtualFile = entry.getFile();
+                if (virtualFile == null) {
+                    throw new InvalidDataException("No file exists: " + entry.getFilePointer().getUrl());
+                }
+
+                FileEditorOpenOptions openOptions = new FileEditorOpenOptions()
+                    .withPin(Boolean.valueOf(file.getAttributeValue(AsyncConfigTreeReader.PINNED)))
+                    .withIndex(i)
+                    .withReopeningEditorsOnStartup();
+
+                reopened = reopened.thenCompose(ignored -> reopenFile(uiAccess, window, virtualFile, entry, openOptions));
+
+                if (Boolean.valueOf(file.getAttributeValue(AsyncConfigTreeReader.CURRENT_IN_TAB))) {
+                    focusedFile = virtualFile;
+                }
+            }
+            catch (InvalidDataException e) {
+                LOG.warn(e);
+            }
+            catch (Throwable e) {
+                LOG.error("Cannot reopen editor for " + file.getAttributeValue(AsyncConfigTreeReader.LEAF_FILE_NAME), e);
+            }
+        }
+
+        VirtualFile finalFocusedFile = focusedFile;
+        return reopened.<EditorSplitNode>thenApplyAsync(ignored -> {
+            if (finalFocusedFile != null) {
+                myManager.addSelectionRecord(finalFocusedFile, window);
+
+                FileEditorWithProviderComposite editor = window.findFileComposite(finalFocusedFile);
+                if (editor != null) {
+                    window.setEditor(editor, true, true);
+                }
+            }
+            else {
+                ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(myProject);
+                if (toolWindowManager.getActiveToolWindowId() == null) {
+                    ToolWindow toolWindow = toolWindowManager.getToolWindow(ToolWindowId.PROJECT_VIEW);
+                    if (toolWindow != null) {
+                        toolWindow.activate(null);
+                    }
+                }
+            }
+            return window;
+        }, uiAccess);
+    }
+
+    private CompletableFuture<?> reopenFile(UIAccess uiAccess,
+                                            W window,
+                                            VirtualFile file,
+                                            HistoryEntry entry,
+                                            FileEditorOpenOptions openOptions) {
+        file.putUserData(OPENED_IN_BULK, Boolean.TRUE);
+        return myManager.reopenFileAsync(uiAccess, window, file, entry, openOptions).handle((result, throwable) -> {
+            file.putUserData(OPENED_IN_BULK, null);
+            if (throwable != null) {
+                LOG.error("Cannot reopen editor for " + file.getPath(), throwable);
+            }
+            return null;
+        });
+    }
 
     protected void stopListeningFocus() {
     }
@@ -447,14 +867,14 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
         myWindows.add(window);
     }
 
-    public void removeWindow(W window) {
+    public void removeWindow(FileEditorWindowBase window) {
         myWindows.remove(window);
         if (myCurrentWindow == window) {
             myCurrentWindow = null;
         }
     }
 
-    public boolean containsWindow(W window) {
+    public boolean containsWindow(FileEditorWindowBase window) {
         return myWindows.contains(window);
     }
 

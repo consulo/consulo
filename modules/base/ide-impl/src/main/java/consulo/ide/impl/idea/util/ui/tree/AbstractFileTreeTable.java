@@ -16,7 +16,7 @@
 
 package consulo.ide.impl.idea.util.ui.tree;
 
-import consulo.ide.impl.virtualFileSystem.VfsIconUtil;
+import consulo.fileEditor.impl.internal.VfsIconUtil;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
 import consulo.platform.base.icon.PlatformIconGroup;

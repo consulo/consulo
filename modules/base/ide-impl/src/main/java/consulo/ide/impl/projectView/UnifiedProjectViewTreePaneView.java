@@ -41,16 +41,21 @@ import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.project.ui.view.tree.ModuleGroup;
 import consulo.project.ui.view.tree.ProjectViewNode;
 import consulo.ui.Component;
+import consulo.ui.DragAndDropTransferHandler;
 import consulo.ui.HasFocus;
 import consulo.ui.Tree;
 import consulo.ui.TreeNode;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.clipboard.DataTransfer;
+import consulo.ui.clipboard.DataTransferType;
 import consulo.ui.ex.TreeExpander;
 import consulo.ui.ex.tree.ApplicationTreeExecutorFactory;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.ex.tree.TreeStructureWrappenModel;
 import consulo.ui.ex.tree.UITreeState;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.collection.HashingStrategy;
 import consulo.util.xml.serializer.XmlSerializer;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatusListener;
@@ -58,6 +63,7 @@ import consulo.virtualFileSystem.status.FileStatusManager;
 import org.jdom.Element;
 import org.jspecify.annotations.Nullable;
 
+import java.io.File;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
@@ -76,6 +82,8 @@ public class UnifiedProjectViewTreePaneView implements UnifiedProjectViewPaneVie
     private final Map<@Nullable String, UITreeState> myTreeStates = new HashMap<>();
 
     private final TreeExpander myTreeExpander = new MyTreeExpander();
+
+    private final Map<AbstractTreeNode, VirtualFile> myNodeFiles = ContainerUtil.createConcurrentWeakMap(HashingStrategy.identity());
 
     private boolean myStructureRefreshScheduled;
 
@@ -117,6 +125,23 @@ public class UnifiedProjectViewTreePaneView implements UnifiedProjectViewPaneVie
             public Comparator<TreeNode<AbstractTreeNode>> getNodeComparator() {
                 return (o1, o2) -> nodeOrder.compare(o1.getValue(), o2.getValue());
             }
+
+            @Override
+            @RequiredReadAction
+            public void buildChildren(
+                Function<AbstractTreeNode, TreeNode<AbstractTreeNode>> nodeFactory,
+                @Nullable AbstractTreeNode parentValue
+            ) {
+                super.buildChildren(element -> {
+                    if (element instanceof ProjectViewNode<?> projectViewNode) {
+                        VirtualFile file = projectViewNode.getVirtualFile();
+                        if (file != null) {
+                            myNodeFiles.put(element, file);
+                        }
+                    }
+                    return nodeFactory.apply(element);
+                }, parentValue);
+            }
         };
 
         myTree = Tree.create(
@@ -125,6 +150,8 @@ public class UnifiedProjectViewTreePaneView implements UnifiedProjectViewPaneVie
             treeExecutorFactory.forBackgroundThreadWithReadAction(this)
         );
         Disposer.register(this, myTree.destroyHook());
+
+        myTree.setTransferHandler(new MyDragSource());
 
         pane.setRebuildHandler(this::rebuild);
 
@@ -445,6 +472,30 @@ public class UnifiedProjectViewTreePaneView implements UnifiedProjectViewPaneVie
         return node.getValue() instanceof PsiElement element && element.isValid()
             ? PsiUtilCore.getVirtualFile(element)
             : null;
+    }
+
+    private class MyDragSource implements DragAndDropTransferHandler<TreeNode<AbstractTreeNode>> {
+        @Override
+        public @Nullable DataTransfer createTransfer(Component component) {
+            return null;
+        }
+
+        @Override
+        public @Nullable DataTransfer createDragTransfer(Component component, List<TreeNode<AbstractTreeNode>> items, boolean move) {
+            List<File> files = new ArrayList<>(items.size());
+            for (TreeNode<AbstractTreeNode> item : items) {
+                VirtualFile file = myNodeFiles.get(item.getValue());
+                if (file != null && file.isValid() && file.isInLocalFileSystem()) {
+                    files.add(new File(file.getPath()));
+                }
+            }
+            return files.isEmpty() ? null : DataTransfer.builder().put(DataTransferType.FILE_LIST, files).build();
+        }
+
+        @Override
+        public boolean drop(Component component, DropContext<TreeNode<AbstractTreeNode>> context) {
+            return false;
+        }
     }
 
     private class MyTreeExpander implements TreeExpander {

@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.annotation.component.ActionImpl;
+import consulo.fileEditor.FileEditorWindow;
 import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
@@ -34,9 +35,13 @@ public class UnsplitAction extends SplitterActionBase {
     @Override
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent event) {
+        FileEditorWindow window = event.getData(FileEditorWindow.DATA_KEY);
+        if (window != null) {
+            window.unsplit(true);
+            return;
+        }
+
         Project project = event.getRequiredData(Project.KEY);
-        FileEditorManagerEx fileEditorManager = FileEditorManagerEx.getInstanceEx(project);
-        //VirtualFile file = fileEditorManager.getSelectedFiles()[0];
-        fileEditorManager.unsplitWindow();
+        FileEditorManagerEx.getInstanceEx(project).unsplitWindow();
     }
 }

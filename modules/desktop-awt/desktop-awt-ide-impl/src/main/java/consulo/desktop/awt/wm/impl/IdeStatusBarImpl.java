@@ -425,7 +425,7 @@ public class IdeStatusBarImpl extends JPanel implements StatusBarEx, Predicate<A
             return false;
         }
 
-        if (ComponentUtil.getWindow(myFrame.getComponent()) != ComponentUtil.getWindow(component)) {
+        if (ComponentUtil.getWindow(this) != ComponentUtil.getWindow(component)) {
             hoverComponent(null);
             return false;
         }

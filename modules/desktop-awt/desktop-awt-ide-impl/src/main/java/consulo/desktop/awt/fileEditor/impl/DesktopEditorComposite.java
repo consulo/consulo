@@ -225,7 +225,8 @@ public abstract class DesktopEditorComposite implements FileEditorComposite {
     /**
      * Sets new "pinned" state
      */
-    void setPinned(boolean pinned) {
+    @Override
+    public void setPinned(boolean pinned) {
         myPinned = pinned;
     }
 

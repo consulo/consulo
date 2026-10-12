@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.fileEditor;
+package consulo.fileEditor.impl.internal.unified;
 
 import consulo.codeEditor.EditorColors;
 import consulo.colorScheme.EditorColorKey;

@@ -15,68 +15,42 @@
  */
 package consulo.desktop.awt.fileEditor.impl;
 
-import consulo.application.ReadAction;
 import consulo.application.concurrent.ApplicationConcurrency;
-import consulo.application.internal.perfomance.Activity;
-import consulo.application.internal.perfomance.ActivityCategory;
-import consulo.application.internal.perfomance.StartUpMeasurer;
-import consulo.component.ProcessCanceledException;
 import consulo.dataContext.DataManager;
 import consulo.desktop.awt.ui.impl.facade.AWTComponentProviderUtil;
-import consulo.disposer.Disposer;
-import consulo.document.Document;
-import consulo.document.FileDocumentManager;
-import consulo.fileEditor.FileEditorWindow;
-import consulo.fileEditor.FileEditorWithProviderComposite;
-import consulo.fileEditor.impl.internal.*;
-import consulo.fileEditor.impl.internal.text.FileDropHandler;
 import consulo.desktop.awt.wm.impl.IdePanePanel;
-import consulo.desktop.awt.ui.impl.tabs.JBTabsImpl;
-import consulo.logging.Logger;
+import consulo.disposer.Disposer;
+import consulo.fileEditor.impl.internal.FileEditorManagerImpl;
+import consulo.fileEditor.impl.internal.FileEditorsSplittersBase;
+import consulo.fileEditor.impl.internal.text.FileEditorDropHandler;
+import consulo.fileEditor.impl.internal.unified.EditorEmptyTextPanel;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
-import consulo.project.ui.wm.ToolWindowId;
-import consulo.project.ui.wm.ToolWindowManager;
 import consulo.project.ui.wm.dock.DockManager;
-import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.IdeFocusTraversalPolicy;
-import consulo.ui.ex.awt.OnePixelSplitter;
-import consulo.ui.ex.awt.Splitter;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.tab.JBTabs;
 import consulo.ui.ex.awt.util.FocusWatcher;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.ex.keymap.event.KeymapManagerListener;
-import consulo.ui.ex.toolWindow.ToolWindow;
-import consulo.ui.style.StyleManager;
-import consulo.util.dataholder.Key;
-import consulo.util.io.PathUtil;
-import consulo.util.lang.Couple;
-import consulo.util.xml.serializer.InvalidDataException;
+import consulo.ui.layout.PlaceholderLayout;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
-import org.jdom.Element;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ContainerEvent;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
+import javax.swing.*;
 
 public class DesktopFileEditorsSplitters extends FileEditorsSplittersBase<DesktopFileEditorWindow> {
-    private static final Logger LOG = Logger.getInstance(DesktopFileEditorsSplitters.class);
-
-    private static final Key<Object> DUMMY_KEY = Key.create("EditorsSplitters.dummy.key");
-
     private final MyFocusWatcher myFocusWatcher;
-    private final UIBuilder myUIBuilder = new UIBuilder();
 
     private final IdePanePanel myComponent;
+    private final PlaceholderLayout myPlaceholder;
+    private final EditorEmptyTextPanel myEmptyTextPanel;
 
     public DesktopFileEditorsSplitters(Project project,
                                        ApplicationConcurrency applicationConcurrency,
@@ -85,22 +59,7 @@ public class DesktopFileEditorsSplitters extends FileEditorsSplittersBase<Deskto
                                        boolean createOwnDockableContainer) {
         super(applicationConcurrency, project, manager);
 
-        myComponent = new IdePanePanel(new BorderLayout()) {
-            @Override
-            protected void paintComponent(Graphics g) {
-                if (showEmptyText()) {
-                    super.paintComponent(g);
-                    g.setColor(
-                        StyleManager.get().getCurrentStyle().isDark()
-                            ? UIUtil.getBorderColor()
-                            : new Color(0, 0, 0, 50)
-                    );
-                    g.drawLine(0, 0, getWidth(), 0);
-
-                    EditorEmptyTextPainter.ourInstance.paintEmptyText(this, g);
-                }
-            }
-        };
+        myComponent = new IdePanePanel(new BorderLayout());
         myComponent.setFocusTraversalPolicy(new MyFocusTraversalPolicy());
         myComponent.setTransferHandler(new MyTransferHandler());
         DataManager.registerUiDataProvider(myComponent, sink -> {
@@ -111,6 +70,23 @@ public class DesktopFileEditorsSplitters extends FileEditorsSplittersBase<Deskto
 
         myFocusWatcher = new MyFocusWatcher();
 
+        myEmptyTextPanel = new EditorEmptyTextPanel(project, this, this::showEmptyText) {
+            @RequiredUIAccess
+            @Override
+            protected void afterRefresh() {
+                makeTransparent(TargetAWT.to(getComponent()));
+            }
+        };
+
+        myPlaceholder = PlaceholderLayout.create();
+        myPlaceholder.setContent(getSplitComponent());
+        myPlaceholder.setPlaceholder(myEmptyTextPanel.getComponent());
+        myPlaceholder.setPlaceholderVisibility(this::showEmptyText);
+
+        JComponent placeholderComponent = (JComponent) TargetAWT.to(myPlaceholder);
+        placeholderComponent.setOpaque(false);
+        myComponent.add(placeholderComponent, BorderLayout.CENTER);
+
         clear();
 
         if (createOwnDockableContainer) {
@@ -119,10 +95,7 @@ public class DesktopFileEditorsSplitters extends FileEditorsSplittersBase<Deskto
             Disposer.register(manager.getProject(), dockable);
             dockManager.register(dockable);
         }
-        KeymapManagerListener keymapListener = keymap -> {
-            myComponent.invalidate();
-            myComponent.repaint();
-        };
+        KeymapManagerListener keymapListener = keymap -> updatePlaceholder();
         KeymapManager.getInstance().addKeymapManagerListener(keymapListener, this);
     }
 
@@ -131,27 +104,56 @@ public class DesktopFileEditorsSplitters extends FileEditorsSplittersBase<Deskto
         myComponent.revalidate();
     }
 
-    
+    private static void makeTransparent(Component component) {
+        if (component instanceof JPanel panel) {
+            panel.setOpaque(false);
+            for (Component child : panel.getComponents()) {
+                makeTransparent(child);
+            }
+        }
+    }
+
+    @RequiredUIAccess
+    private void updatePlaceholder() {
+        if (showEmptyText()) {
+            myEmptyTextPanel.refresh();
+        }
+        myPlaceholder.testPlaceholder();
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void afterFileOpen(VirtualFile file) {
+        updatePlaceholder();
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void afterFileClosed(VirtualFile file) {
+        updatePlaceholder();
+    }
+
+    @RequiredUIAccess
+    @Override
+    protected void setCurrentWindow(@Nullable DesktopFileEditorWindow currentWindow) {
+        super.setCurrentWindow(currentWindow);
+        updatePlaceholder();
+    }
+
+    @Override
+    protected void afterSplitLayoutUpdated() {
+        myComponent.revalidate();
+        myComponent.repaint();
+    }
+
     @Override
     protected DesktopFileEditorWindow[] createArray(int size) {
         return new DesktopFileEditorWindow[size];
     }
 
-    
     @Override
     public JComponent getComponent() {
         return myComponent;
-    }
-
-    @Override
-    public void clear() {
-        for (DesktopFileEditorWindow window : myWindows) {
-            window.dispose();
-        }
-        myComponent.removeAll();
-        myWindows.clear();
-        setCurrentWindow(null);
-        myComponent.repaint(); // revalidate doesn't repaint correctly after "Close All"
     }
 
     @Override
@@ -165,127 +167,8 @@ public class DesktopFileEditorsSplitters extends FileEditorsSplittersBase<Deskto
     }
 
     @Override
-    public void writeExternal(Element element) {
-        if (myComponent.getComponentCount() == 0) {
-            return;
-        }
-
-        JPanel panel = (JPanel) myComponent.getComponent(0);
-        if (panel.getComponentCount() != 0) {
-            try {
-                element.addContent(writePanel(panel.getComponent(0)));
-            }
-            catch (ProcessCanceledException e) {
-                throw e;
-            }
-            catch (Throwable e) {
-                LOG.error(e);
-            }
-        }
-    }
-
-    @SuppressWarnings("HardCodedStringLiteral")
-    private Element writePanel(Component comp) {
-        if (comp instanceof Splitter splitter) {
-            Element res = new Element("splitter");
-            res.setAttribute("split-orientation", splitter.getOrientation() ? "vertical" : "horizontal");
-            res.setAttribute("split-proportion", Float.toString(splitter.getProportion()));
-            Element first = new Element("split-first");
-            first.addContent(writePanel(splitter.getFirstComponent().getComponent(0)));
-            Element second = new Element("split-second");
-            second.addContent(writePanel(splitter.getSecondComponent().getComponent(0)));
-            res.addContent(first);
-            res.addContent(second);
-            return res;
-        }
-        else if (comp instanceof JBTabs jbTabs) {
-            Element res = new Element("leaf");
-            Integer limit = UIUtil.getClientProperty(jbTabs.getComponent(), JBTabsImpl.SIDE_TABS_SIZE_LIMIT_KEY);
-            if (limit != null) {
-                res.setAttribute(JBTabsImpl.SIDE_TABS_SIZE_LIMIT_KEY.toString(), String.valueOf(limit));
-            }
-
-            writeWindow(res, findWindowWith(comp));
-            return res;
-        }
-        else {
-            LOG.error(comp.getClass().getName());
-            return null;
-        }
-    }
-
-    private void writeWindow(Element res, @Nullable DesktopFileEditorWindow window) {
-        if (window != null) {
-            FileEditorWithProviderComposite[] composites = window.getEditors();
-            for (int i = 0; i < composites.length; i++) {
-                VirtualFile file = window.getFileAt(i);
-                res.addContent(writeComposite(file, composites[i], window.isFilePinned(file), window.getSelectedEditor()));
-            }
-        }
-    }
-
-    
-    private Element writeComposite(
-        VirtualFile file,
-        FileEditorWithProviderComposite composite,
-        boolean pinned,
-        FileEditorWithProviderComposite selectedEditor
-    ) {
-        Element fileElement = new Element("file");
-        fileElement.setAttribute("leaf-file-name", file.getName()); // TODO: all files
-        FileEditorHistoryUtil.currentStateAsHistoryEntry(composite).writeExternal(fileElement, myProject);
-        fileElement.setAttribute(AsyncConfigTreeReader.PINNED, Boolean.toString(pinned));
-        fileElement.setAttribute(AsyncConfigTreeReader.CURRENT_IN_TAB, Boolean.toString(composite.equals(selectedEditor)));
-        return fileElement;
-    }
-
-    
-    @Override
-    public CompletableFuture<?> openFilesAsync(UIAccess uiAccess) {
-        if (mySplittersElement == null) {
-            return CompletableFuture.completedFuture(null);
-        }
-
-        return myUIBuilder.process(mySplittersElement, getTopPanel(), uiAccess).whenCompleteAsync((comp, throwable) -> {
-            if (comp != null) {
-                myComponent.removeAll();
-                myComponent.add(comp, BorderLayout.CENTER);
-                mySplittersElement = null;
-            }
-            // clear empty splitters
-            for (DesktopFileEditorWindow window : getWindows()) {
-                if (window.getEditors().length == 0) {
-                    for (DesktopFileEditorWindow sibling : window.findSiblings()) {
-                        sibling.unsplit(false);
-                    }
-                }
-            }
-        }, uiAccess);
-    }
-
-    @Override
     public boolean isShowing() {
         return myComponent.isShowing();
-    }
-
-    @Override
-    public int getSplitCount() {
-        if (myComponent.getComponentCount() > 0) {
-            JPanel panel = (JPanel) myComponent.getComponent(0);
-            return getSplitCount(panel);
-        }
-        return 0;
-    }
-
-    private static int getSplitCount(JComponent component) {
-        if (component.getComponentCount() > 0) {
-            JComponent firstChild = (JComponent) component.getComponent(0);
-            if (firstChild instanceof Splitter splitter) {
-                return getSplitCount(splitter.getFirstComponent()) + getSplitCount(splitter.getSecondComponent());
-            }
-            return 1;
-        }
-        return 0;
     }
 
     @Nullable JBTabs getTabsAt(RelativePoint point) {
@@ -324,91 +207,21 @@ public class DesktopFileEditorsSplitters extends FileEditorsSplittersBase<Deskto
         }
     }
 
-    public @Nullable JPanel getTopPanel() {
-        return myComponent.getComponentCount() > 0 ? (JPanel) myComponent.getComponent(0) : null;
-    }
-
     @RequiredUIAccess
     @Override
-    protected void createCurrentWindow() {
-        LOG.assertTrue(myCurrentWindow == null);
-        setCurrentWindow(createEditorWindow());
-        myComponent.add(myCurrentWindow.myPanel, BorderLayout.CENTER);
-    }
-
     protected DesktopFileEditorWindow createEditorWindow() {
         return new DesktopFileEditorWindow(this);
-    }
-
-    @Override
-    
-    public DesktopFileEditorWindow[] getOrderedWindows() {
-        final List<DesktopFileEditorWindow> res = new ArrayList<>();
-
-        // Collector for windows in tree ordering:
-        class Inner {
-            private void collect(JPanel panel) {
-                Component comp = panel.getComponent(0);
-                if (comp instanceof Splitter splitter) {
-                    collect((JPanel) splitter.getFirstComponent());
-                    collect((JPanel) splitter.getSecondComponent());
-                }
-                else if (comp instanceof JPanel || comp instanceof JBTabs) {
-                    DesktopFileEditorWindow window = findWindowWith(comp);
-                    if (window != null) {
-                        res.add(window);
-                    }
-                }
-            }
-        }
-
-        // get root component and traverse splitters tree:
-        if (myComponent.getComponentCount() != 0) {
-            Component comp = myComponent.getComponent(0);
-            LOG.assertTrue(comp instanceof JPanel);
-            JPanel panel = (JPanel) comp;
-            if (panel.getComponentCount() != 0) {
-                new Inner().collect(panel);
-            }
-        }
-
-        LOG.assertTrue(res.size() == myWindows.size());
-        return res.toArray(new DesktopFileEditorWindow[res.size()]);
     }
 
     private @Nullable DesktopFileEditorWindow findWindowWith(Component component) {
         if (component != null) {
             for (DesktopFileEditorWindow window : myWindows) {
-                if (SwingUtilities.isDescendingFrom(component, window.myPanel)) {
+                if (SwingUtilities.isDescendingFrom(component, window.getPanel())) {
                     return window;
                 }
             }
         }
         return null;
-    }
-
-    @RequiredUIAccess
-    @Override
-    public @Nullable FileEditorWindow openInRightSplit(VirtualFile file, boolean requestFocus) {
-        DesktopFileEditorWindow window = getCurrentWindow();
-
-        if (window == null) {
-            return null;
-        }
-        Container parent = window.myPanel.getParent();
-        if (parent instanceof Splitter splitter) {
-            JComponent component = splitter.getSecondComponent();
-            if (component != window.myPanel) {
-                //reuse
-                FileEditorWindow rightSplitWindow = findWindowWith(component);
-                if (rightSplitWindow != null) {
-                    myManager.openFileWithProviders(file, requestFocus, rightSplitWindow);
-                    return rightSplitWindow;
-                }
-            }
-        }
-
-        return window.split(SwingConstants.VERTICAL, true, file, requestFocus);
     }
 
     public boolean isFloating() {
@@ -444,7 +257,7 @@ public class DesktopFileEditorsSplitters extends FileEditorsSplittersBase<Deskto
     }
 
     private final class MyTransferHandler extends TransferHandler {
-        private final FileDropHandler myFileDropHandler = new FileDropHandler(null);
+        private final FileEditorDropHandler myFileDropHandler = new FileEditorDropHandler(null);
 
         @Override
         public boolean importData(JComponent comp, Transferable t) {
@@ -458,163 +271,6 @@ public class DesktopFileEditorsSplitters extends FileEditorsSplittersBase<Deskto
         @Override
         public boolean canImport(JComponent comp, DataFlavor[] transferFlavors) {
             return myFileDropHandler.canHandleDrop(transferFlavors);
-        }
-    }
-
-    private class UIBuilder extends AsyncConfigTreeReader<JPanel> {
-        
-        @Override
-        protected CompletableFuture<JPanel> processFiles(List<Element> fileElements,
-                                                         JPanel context,
-                                                         Element parent,
-                                                         UIAccess uiAccess) {
-            return uiAccess.giveAsync(() -> createEditorWindow(context, parent))
-                .thenApplyAsync((window) -> processFilesImpl(fileElements, uiAccess, window));
-        }
-
-        private DesktopFileEditorWindow createEditorWindow(JPanel context, Element parent) {
-            DesktopFileEditorWindow editorWindow =
-                context == null ? DesktopFileEditorsSplitters.this.createEditorWindow() : findWindowWith(context);
-            if (editorWindow != null) {
-                updateTabSizeLimit(editorWindow, parent.getAttributeValue(JBTabsImpl.SIDE_TABS_SIZE_LIMIT_KEY.toString()));
-            }
-            return editorWindow;
-        }
-
-        private JPanel processFilesImpl(List<Element> fileElements,
-                                        UIAccess uiAccess,
-                                        DesktopFileEditorWindow window) {
-            LOG.assertTrue(window != null);
-            VirtualFile focusedFile = null;
-
-            for (int i = 0; i < fileElements.size(); i++) {
-                Element file = fileElements.get(i);
-                Element historyElement = file.getChild(HistoryEntry.TAG);
-                String fileName = historyElement.getAttributeValue(HistoryEntry.FILE_ATTR);
-                Activity activity = StartUpMeasurer.startActivity(PathUtil.getFileName(fileName), ActivityCategory.REOPENING_EDITOR);
-                VirtualFile virtualFile = null;
-                try {
-                    FileEditorManagerImpl fileEditorManager = getManager();
-                    HistoryEntry entry = HistoryEntry.createLight(fileEditorManager.getProject(), historyElement);
-                    virtualFile = entry.getFile();
-                    if (virtualFile == null) {
-                        throw new InvalidDataException("No file exists: " + entry.getFilePointer().getUrl());
-                    }
-                    virtualFile.putUserData(OPENED_IN_BULK, Boolean.TRUE);
-                    VirtualFile finalVirtualFile = virtualFile;
-                    Document document =
-                        ReadAction.compute(() -> finalVirtualFile.isValid() ? FileDocumentManager.getInstance().getDocument(finalVirtualFile) : null);
-
-                    boolean isCurrentTab = Boolean.valueOf(file.getAttributeValue(CURRENT_IN_TAB));
-                    FileEditorOpenOptions openOptions = new FileEditorOpenOptions().withPin(Boolean.valueOf(file.getAttributeValue(PINNED)))
-                        .withIndex(i)
-                        .withReopeningEditorsOnStartup();
-
-                    fileEditorManager.openFileImpl4(uiAccess, window, virtualFile, entry, openOptions);
-                    if (isCurrentTab) {
-                        focusedFile = virtualFile;
-                    }
-                    if (document != null) {
-                        // This is just to make sure document reference is kept on stack till this point
-                        // so that document is available for folding state deserialization in HistoryEntry constructor
-                        // and that document will be created only once during file opening
-                        document.putUserData(DUMMY_KEY, null);
-                    }
-                }
-                catch (InvalidDataException e) {
-                    LOG.warn(e);
-                }
-                finally {
-                    if (virtualFile != null) {
-                        virtualFile.putUserData(OPENED_IN_BULK, null);
-                    }
-                }
-                activity.end();
-            }
-            if (focusedFile != null) {
-                getManager().addSelectionRecord(focusedFile, window);
-                VirtualFile finalFocusedFile = focusedFile;
-                uiAccess.execute(() -> {
-                    FileEditorWithProviderComposite editor = window.findFileComposite(finalFocusedFile);
-                    if (editor != null) {
-                        window.setEditor(editor, true, true);
-                    }
-                });
-            }
-            else {
-                ToolWindowManager manager = ToolWindowManager.getInstance(getManager().getProject());
-                uiAccess.execute(() -> {
-                    if (null == manager.getActiveToolWindowId()) {
-                        ToolWindow toolWindow = manager.getToolWindow(ToolWindowId.PROJECT_VIEW);
-                        if (toolWindow != null) {
-                            toolWindow.activate(null);
-                        }
-                    }
-                });
-            }
-            return window.myPanel;
-        }
-
-        
-        @Override
-        protected CompletableFuture<JPanel> processSplitter(Element splitterElement,
-                                                            Element firstChild,
-                                                            Element secondChild,
-                                                            JPanel context,
-                                                            UIAccess uiAccess) {
-            return processSplitterImpl(splitterElement, firstChild, secondChild, context, uiAccess);
-        }
-
-        protected CompletableFuture<JPanel> processSplitterImpl(Element splitterElement,
-                                                                Element firstChild,
-                                                                Element secondChild,
-                                                                JPanel context,
-                                                                UIAccess uiAccess) {
-            if (context == null) {
-                boolean orientation = "vertical".equals(splitterElement.getAttributeValue("split-orientation"));
-                float proportion = Float.valueOf(splitterElement.getAttributeValue("split-proportion"));
-                CompletableFuture<JPanel> firstComponent = process(firstChild, null, uiAccess);
-                CompletableFuture<JPanel> secondComponent = process(secondChild, null, uiAccess);
-
-                return firstComponent.thenCombineAsync(secondComponent, (p1, p2) -> {
-                    JPanel panel = new JPanel(new BorderLayout());
-                    panel.setOpaque(false);
-                    Splitter splitter = new OnePixelSplitter(orientation, proportion, 0.1f, 0.9f);
-                    panel.add(splitter, BorderLayout.CENTER);
-                    splitter.setFirstComponent(p1);
-                    splitter.setSecondComponent(p2);
-                    return panel;
-                }, uiAccess);
-            }
-            else {
-                return uiAccess.giveAsync(() -> {
-                    if (context.getComponent(0) instanceof Splitter splitter) {
-                        return Couple.of((JPanel) splitter.getFirstComponent(), (JPanel) splitter.getSecondComponent());
-                    }
-                    else {
-                        return Couple.create(context, context);
-                    }
-                }).thenCompose(couple -> {
-                    CompletableFuture<JPanel> f1 = process(firstChild, couple.getFirst(), uiAccess);
-                    CompletableFuture<JPanel> f2 = process(firstChild, couple.getSecond(), uiAccess);
-
-                    return f1.thenCombineAsync(f2, (jPanel, jPanel2) -> context, uiAccess);
-                });
-            }
-        }
-    }
-
-    private static void updateTabSizeLimit(DesktopFileEditorWindow editorWindow, String tabSizeLimit) {
-        DesktopAWTEditorTabbedContainer tabbedPane = editorWindow.getTabbedPane();
-        if (tabSizeLimit != null) {
-            try {
-                int limit = Integer.parseInt(tabSizeLimit);
-                UIUtil.invokeAndWaitIfNeeded((Runnable) () -> UIUtil.putClientProperty(tabbedPane.getComponent(),
-                    JBTabsImpl.SIDE_TABS_SIZE_LIMIT_KEY,
-                    limit));
-            }
-            catch (NumberFormatException ignored) {
-            }
         }
     }
 }

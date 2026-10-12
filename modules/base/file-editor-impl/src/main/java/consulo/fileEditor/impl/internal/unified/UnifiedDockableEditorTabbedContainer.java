@@ -13,21 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.ui.docking.impl;
+package consulo.fileEditor.impl.internal.unified;
 
-import consulo.fileEditor.impl.internal.DockableEditorContainerFactory;
-import consulo.fileEditor.DockableEditorTabbedContainer;
 import consulo.disposer.Disposable;
+import consulo.fileEditor.DockableEditorTabbedContainer;
 import consulo.fileEditor.FileEditorsSplitters;
-import consulo.ide.impl.fileEditor.UnifiedFileEditorsSplitters;
+import consulo.fileEditor.impl.internal.DockableEditorContainerFactory;
 import consulo.project.Project;
 import consulo.project.ui.wm.dock.DockableContent;
 import consulo.ui.Component;
 import consulo.ui.ex.RelativePoint;
 import org.jdom.Element;
 
-import org.jspecify.annotations.Nullable;
 import java.awt.*;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL

@@ -22,8 +22,7 @@ import consulo.disposer.Disposer;
 import consulo.fileEditor.DockableEditorTabbedContainer;
 import consulo.fileEditor.FileEditorWindow;
 import consulo.fileEditor.impl.internal.DockableEditorContainerFactory;
-import consulo.fileEditor.impl.internal.FileEditorManagerImpl;
-import consulo.fileEditor.internal.FileEditorManagerEx;
+import consulo.fileEditor.impl.internal.FileEditorWindowBase;
 import consulo.desktop.awt.ui.impl.tabs.JBTabsImpl;
 import consulo.project.Project;
 import consulo.project.ui.wm.dock.DockableContent;
@@ -152,13 +151,13 @@ public class DesktopDockableEditorTabbedContainer implements DockableEditorTabbe
         }
 
 
+        FileEditorWindowBase target = (FileEditorWindowBase) window;
         if (myCurrentOver != null) {
-            int index = ((JBTabsImpl) myCurrentOver).getDropInfoIndex();
-            file.putUserData(FileEditorWindow.INITIAL_INDEX_KEY, index);
+            target.openDroppedFile(file, ((JBTabsImpl) myCurrentOver).getDropInfoIndex(), dockableEditor.isPinned());
         }
-
-        ((FileEditorManagerImpl) FileEditorManagerEx.getInstanceEx(myProject)).openFileImpl2(UIAccess.get(), window, file, true);
-        window.setFilePinned(file, dockableEditor.isPinned());
+        else {
+            target.openDroppedFile(file, dockableEditor.isPinned());
+        }
     }
 
     @Override

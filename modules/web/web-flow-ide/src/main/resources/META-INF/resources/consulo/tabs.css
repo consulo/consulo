@@ -110,7 +110,7 @@
 
 /* the label and the close cross are two separate children of the tab, without this they are laid out on the
    text baseline and the cross sits below the label */
-vaadin-tab:has(> .web-tab-close)
+vaadin-tab:has(> :is(.web-tab-close, .web-tab-suffix))
 {
   display: flex;
   align-items: center;
@@ -129,11 +129,11 @@ vaadin-tab:has(> .web-tab-close)
   cursor: pointer;
 }
 
-.web-tab-pin
+.web-tab-suffix
 {
-  display: inline-flex;
-  align-items: center;
-  opacity: 0.8;
+  margin-inline-start: 4px;
+  flex: 0 0 auto;
+  width: auto;
 }
 
 .web-tab-close:hover

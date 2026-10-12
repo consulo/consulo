@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.fileEditor.impl.tabActions;
+package consulo.fileEditor.impl.internal;
 
 import consulo.application.ui.UISettings;
 import consulo.fileEditor.FileEditorWindow;
 import consulo.fileEditor.internal.FileEditorManagerEx;
-import consulo.ui.ex.awt.action.ShadowAction;
 import consulo.ide.localize.IdeLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -26,12 +25,13 @@ import consulo.project.Project;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.action.ShadowAction;
 import consulo.util.lang.BitUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
 import java.awt.event.InputEvent;
+import javax.swing.*;
 
 public class CloseTab extends LegacyDumbAwareAction {
     private final Project myProject;

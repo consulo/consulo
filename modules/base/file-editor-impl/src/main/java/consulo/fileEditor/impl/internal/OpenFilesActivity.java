@@ -22,6 +22,8 @@ import consulo.application.progress.ProgressManager;
 import consulo.fileEditor.FileEditorManager;
 import consulo.project.Project;
 import consulo.project.startup.PostStartupActivity;
+import consulo.project.ui.wm.dock.BaseDockManager;
+import consulo.project.ui.wm.dock.DockManager;
 import consulo.ui.UIAccess;
 
 /**
@@ -43,6 +45,10 @@ public class OpenFilesActivity implements PostStartupActivity, DumbAware {
     }
 
     FileEditorManagerImpl manager = (FileEditorManagerImpl)fileEditorManager;
-    manager.getMainSplitters().openFilesAsync(uiAccess);
+    manager.getMainSplitters().openFilesAsync(uiAccess).whenCompleteAsync((result, throwable) -> {
+      if (!project.isDisposed() && DockManager.getInstance(project) instanceof BaseDockManager dockManager) {
+        dockManager.readState();
+      }
+    }, uiAccess);
   }
 }

@@ -13,22 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.desktop.qt.startup.customize;
+package consulo.ui;
 
-import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.startup.customize.StartupCustomizeManager;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.inject.Singleton;
+import consulo.ui.clipboard.DataTransfer;
 
 /**
+ * Takes drops made onto a component which is not made of items, see {@link Component#setDropHandler}.
+ *
  * @author VISTALL
- * @since 2026-08-16
+ * @since 2026-10-12
  */
-@Singleton
-@ServiceImpl
-public class DesktopQtStartupCustomizeManager implements StartupCustomizeManager {
+@FunctionalInterface
+public interface DropHandler {
+    /**
+     * Called while the drop is only offered with {@code checkOnly} set, then again to carry it out. Both passes run
+     * the same decision, so a handler never states its rules twice, and must not change anything until the second.
+     *
+     * @return whether the drop is, or was, possible
+     */
     @RequiredUIAccess
-    @Override
-    public void showAsync(boolean firstShow) {
-    }
+    boolean drop(Component component, DataTransfer transfer, boolean checkOnly);
 }

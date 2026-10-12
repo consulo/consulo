@@ -36,6 +36,8 @@ public class HeadlessTab implements Tab {
 
     private boolean myEnabled = true;
 
+    private @Nullable Component mySuffixComponent;
+
     public HeadlessTab(@Nullable HeadlessTabbedLayout tabbedLayout) {
         myTabbedLayout = tabbedLayout;
     }
@@ -52,6 +54,16 @@ public class HeadlessTab implements Tab {
 
     @Override
     public void setCloseHandler(@Nullable BiConsumer<Tab, Component> closeHandler) {
+    }
+
+    @Override
+    public void setSuffixComponent(@Nullable Component component) {
+        mySuffixComponent = component;
+    }
+
+    @Override
+    public @Nullable Component getSuffixComponent() {
+        return mySuffixComponent;
     }
 
     @Override

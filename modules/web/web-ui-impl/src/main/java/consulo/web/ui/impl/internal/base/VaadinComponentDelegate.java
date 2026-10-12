@@ -21,6 +21,7 @@ import com.vaadin.flow.component.HasSize;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.dom.ClassList;
 import com.vaadin.flow.dom.DomListenerRegistration;
+import com.vaadin.flow.dom.Element;
 import com.vaadin.flow.dom.Style;
 import consulo.application.util.matcher.NameUtilCore;
 import consulo.dataContext.UiDataProvider;
@@ -28,6 +29,7 @@ import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.clipboard.DataTransfer;
 import consulo.ui.color.ColorValue;
 import consulo.ui.cursor.Cursor;
 import consulo.ui.event.*;
@@ -38,6 +40,7 @@ import consulo.ui.internal.BorderPosition;
 import consulo.ui.layout.Layout;
 import consulo.util.dataholder.Key;
 import consulo.web.ui.impl.internal.WebColors;
+import consulo.web.ui.impl.internal.WebDragSession;
 import consulo.web.ui.impl.internal.WebUIAccessImpl;
 import consulo.web.ui.impl.internal.vaadin.AuraUtility;
 import consulo.web.ui.impl.internal.vaadin.InitiableComponent;
@@ -66,6 +69,9 @@ public abstract class VaadinComponentDelegate<T extends com.vaadin.flow.componen
     private Cursor myCursor;
 
     private @Nullable ColorValue myBackgroundColor;
+
+    private @Nullable DropHandler myDropHandler;
+    private boolean myDropTargetInstalled;
 
     /**
      * The web frontend has one ui per browser session, so the access is the one of the ui this component is
@@ -390,6 +396,43 @@ public abstract class VaadinComponentDelegate<T extends com.vaadin.flow.componen
     @Override
     public @Nullable Cursor getCursor() {
         return myCursor;
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void setDropHandler(@Nullable DropHandler handler) {
+        myDropHandler = handler;
+        if (handler == null || myDropTargetInstalled) {
+            return;
+        }
+        myDropTargetInstalled = true;
+
+        Element element = toVaadinComponent().getElement();
+        element.addEventListener("drop", event -> onDrop())
+            .addEventData("event.preventDefault()")
+            .addEventData("event.stopPropagation()");
+
+        String script = "if (this.__consuloDropTarget) { return; } this.__consuloDropTarget = true;"
+            + "this.addEventListener('dragover', e => {"
+            + "  if (e.dataTransfer && e.dataTransfer.types.includes('" + WebDragSession.DRAG_TYPE + "')) { e.preventDefault(); }"
+            + "});";
+
+        element.executeJs(script);
+        element.addAttachListener(event -> element.executeJs(script));
+    }
+
+    @RequiredUIAccess
+    private void onDrop() {
+        DropHandler handler = myDropHandler;
+        UI ui = toVaadinComponent().getUI().orElse(null);
+        if (handler == null || ui == null) {
+            return;
+        }
+
+        DataTransfer transfer = WebDragSession.getTransfer(ui);
+        if (handler.drop(this, transfer, true)) {
+            handler.drop(this, transfer, false);
+        }
     }
 
     public boolean hasFocus() {

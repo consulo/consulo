@@ -20,7 +20,6 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.fileEditor.FileEditorWindow;
 import consulo.localize.LocalizeValue;
-import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.Component;
 import consulo.ui.color.ColorValue;
 import consulo.ui.Tab;
@@ -30,7 +29,7 @@ import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.internal.TabTitlePresentation;
 import consulo.web.ui.impl.internal.action.WebActionContextMenu;
-import consulo.web.ui.impl.internal.image.WebImageConverter;
+import consulo.web.ui.impl.internal.base.TargetVaadin;
 import org.jspecify.annotations.Nullable;
 
 import java.util.function.BiConsumer;
@@ -50,7 +49,7 @@ class WebTabImpl implements Tab {
     private @Nullable String myPopupGroupId;
     private @Nullable String myPopupPlace;
     private boolean myEnabled = true;
-    private boolean myPinned;
+    private @Nullable Component mySuffixComponent;
     private boolean myDragAndDropInstalled;
 
     public WebTabImpl(WebTabbedLayoutImpl tabbedLayout) {
@@ -78,12 +77,13 @@ class WebTabImpl implements Tab {
 
     @Override
     @RequiredUIAccess
-    public void setPinned(boolean pinned) {
-        if (myPinned == pinned) {
-            return;
-        }
+    public void setSuffixComponent(@Nullable Component component) {
+        mySuffixComponent = component;
 
-        myPinned = pinned;
+        if (component != null) {
+            TargetVaadin.to(component).getElement()
+                .executeJs("if (!this.__consuloTabSuffix) { this.__consuloTabSuffix = true; this.addEventListener('click', e => e.stopPropagation()); }");
+        }
 
         if (myVaadinTab != null) {
             update();
@@ -91,8 +91,8 @@ class WebTabImpl implements Tab {
     }
 
     @Override
-    public boolean isPinned() {
-        return myPinned;
+    public @Nullable Component getSuffixComponent() {
+        return mySuffixComponent;
     }
 
     public WebTabbedLayoutImpl getTabbedLayout() {
@@ -126,20 +126,21 @@ class WebTabImpl implements Tab {
         myVaadinTab.add(presentation.toComponent());
 
         // vaadin tabs carry no close affordance, the awt tabbed container draws the cross itself as well
+        Component suffix = mySuffixComponent;
+        if (suffix != null) {
+            com.vaadin.flow.component.Component vaadinSuffix = TargetVaadin.to(suffix);
+            vaadinSuffix.getElement().getClassList().add("web-tab-suffix");
+            vaadinSuffix.getElement().getStyle().set("width", "auto");
+            myVaadinTab.add(vaadinSuffix);
+            return;
+        }
+
         BiConsumer<Tab, Component> closeHandler = myCloseHandler;
-        if (closeHandler != null || myPinned) {
-            Span close = myPinned ? new Span(WebImageConverter.getImage(PlatformIconGroup.actionsPintab())) : new Span("\u00d7");
+        if (closeHandler != null) {
+            Span close = new Span("\u00d7");
             close.addClassName("web-tab-close");
-            if (myPinned) {
-                close.addClassName("web-tab-pin");
-            }
             close.getElement()
-                .addEventListener("click", event -> {
-                    BiConsumer<Tab, Component> handler = myCloseHandler;
-                    if (handler != null) {
-                        handler.accept(this, myContent);
-                    }
-                })
+                .addEventListener("click", event -> closeHandler.accept(this, myContent))
                 // otherwise the click selects the tab that is about to go away
                 .addEventData("event.stopPropagation()");
 

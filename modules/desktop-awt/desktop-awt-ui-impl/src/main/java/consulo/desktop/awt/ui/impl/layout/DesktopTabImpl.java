@@ -53,7 +53,8 @@ public class DesktopTabImpl implements Tab {
 
     private boolean myEnabled = true;
 
-    private boolean myPinned;
+    private final JPanel myTrailingPanel;
+    private @Nullable Component mySuffixComponent;
 
     public DesktopTabImpl(DesktopTabbedLayoutImpl tabbedLayout) {
         myTabbedLayout = tabbedLayout;
@@ -74,10 +75,14 @@ public class DesktopTabImpl implements Tab {
             }
         });
 
+        myTrailingPanel = new JPanel(new BorderLayout());
+        myTrailingPanel.setOpaque(false);
+        myTrailingPanel.add(myCloseButton, BorderLayout.CENTER);
+
         myTabComponent = new JPanel(new BorderLayout());
         myTabComponent.setOpaque(false);
         myTabComponent.add(myLabel, BorderLayout.CENTER);
-        myTabComponent.add(myCloseButton, BorderLayout.EAST);
+        myTabComponent.add(myTrailingPanel, BorderLayout.EAST);
     }
 
     public void setComponent(Component component) {
@@ -115,25 +120,32 @@ public class DesktopTabImpl implements Tab {
     @Override
     public void setCloseHandler(@Nullable BiConsumer<Tab, Component> closeHandler) {
         myCloseHandler = closeHandler;
-        myCloseButton.setVisible(closeHandler != null);
+        myCloseButton.setVisible(closeHandler != null && mySuffixComponent == null);
     }
 
     @Override
     @RequiredUIAccess
-    public void setPinned(boolean pinned) {
-        if (myPinned == pinned) {
-            return;
-        }
+    public void setSuffixComponent(@Nullable Component component) {
+        mySuffixComponent = component;
 
-        myPinned = pinned;
-        myCloseButton.setIcon(TargetAWT.to(pinned ? PlatformIconGroup.actionsPintab() : PlatformIconGroup.actionsCancel()));
+        myTrailingPanel.removeAll();
+        if (component != null) {
+            JComponent suffix = (JComponent) TargetAWT.to(component);
+            suffix.setOpaque(false);
+            myTrailingPanel.add(suffix, BorderLayout.CENTER);
+        }
+        else {
+            myTrailingPanel.add(myCloseButton, BorderLayout.CENTER);
+        }
+        myCloseButton.setVisible(myCloseHandler != null && component == null);
+
         myTabComponent.revalidate();
         myTabComponent.repaint();
     }
 
     @Override
-    public boolean isPinned() {
-        return myPinned;
+    public @Nullable Component getSuffixComponent() {
+        return mySuffixComponent;
     }
 
     @Override

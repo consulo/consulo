@@ -20,6 +20,7 @@ import consulo.application.AccessToken;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.LaterInvocator;
+import consulo.desktop.awt.ui.impl.AWTUIAccessImpl;
 import consulo.application.impl.internal.performance.ActivityTracker;
 import consulo.application.impl.internal.start.ApplicationStarter;
 import consulo.application.internal.ApplicationWithIntentWriteLock;
@@ -1210,7 +1211,7 @@ public class IdeEventQueue extends EventQueue {
         if (event != null) {
             return event;
         }
-        if (LaterInvocator.ensureFlushRequested()) {
+        if (LaterInvocator.of(AWTUIAccessImpl.ourInstance).ensureFlushRequested()) {
             return super.peekEvent();
         }
         return null;

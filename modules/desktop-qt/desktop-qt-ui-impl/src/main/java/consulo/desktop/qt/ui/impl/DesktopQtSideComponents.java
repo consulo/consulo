@@ -23,6 +23,7 @@ import io.qt.core.QObject;
 import io.qt.core.QSize;
 import io.qt.core.Qt;
 import io.qt.gui.QCursor;
+import io.qt.widgets.QComboBox;
 import io.qt.widgets.QLineEdit;
 import io.qt.widgets.QStyle;
 import io.qt.widgets.QToolButton;
@@ -136,7 +137,7 @@ public final class DesktopQtSideComponents {
     }
 
     public void layoutSides(QWidget host) {
-        boolean inplace = host instanceof QLineEdit lineEdit && !lineEdit.hasFrame();
+        boolean inplace = host instanceof QLineEdit lineEdit && !lineEdit.hasFrame() && !(lineEdit.parentWidget() instanceof QComboBox);
         int inset = inplace ? INPLACE_INSET : host.style().pixelMetric(QStyle.PixelMetric.PM_DefaultFrameWidth, null, host);
 
         QWidget prefix = sideWidget(myPrefixComponent, host);

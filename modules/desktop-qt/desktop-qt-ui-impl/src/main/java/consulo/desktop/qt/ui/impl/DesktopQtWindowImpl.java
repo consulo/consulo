@@ -127,6 +127,7 @@ public class DesktopQtWindowImpl extends QtComponentDelegate<QMainWindow> implem
 
         myComponent = new QtWindow(parent);
         myComponent.setWindowTitle(title);
+        myComponent.setProperty(DesktopQtStyleApplier.MENULESS_WINDOW_PROPERTY, true);
 
         if (parent != null) {
             myComponent.setWindowModality(Qt.WindowModality.ApplicationModal);
@@ -330,6 +331,9 @@ public class DesktopQtWindowImpl extends QtComponentDelegate<QMainWindow> implem
             DesktopQtWindowFrame titlelessFrame = myTitlelessFrame;
             if (titlelessFrame == null || !titlelessFrame.setMenuBar(built)) {
                 myComponent.setMenuBar(built);
+                myComponent.setProperty(DesktopQtStyleApplier.MENULESS_WINDOW_PROPERTY, false);
+                myComponent.style().unpolish(myComponent);
+                myComponent.style().polish(myComponent);
             }
         }
     }

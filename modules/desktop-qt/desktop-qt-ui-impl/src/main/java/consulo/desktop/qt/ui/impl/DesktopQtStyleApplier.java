@@ -37,6 +37,8 @@ import java.util.List;
 public final class DesktopQtStyleApplier {
     public static final String TAB_POSITION_PROPERTY = "consuloTabPosition";
 
+    public static final String MENULESS_WINDOW_PROPERTY = "consuloMenulessWindow";
+
     private static final List<QPalette.ColorGroup> ourGroups =
         List.of(QPalette.ColorGroup.Active, QPalette.ColorGroup.Inactive, QPalette.ColorGroup.Disabled);
 
@@ -135,7 +137,11 @@ public final class DesktopQtStyleApplier {
      * instead.
      */
     private static String buildStyleSheet(Style style) {
-        return buildTitleBarStyleSheet(style) + buildTabStyleSheet(style) + buildItemViewStyleSheet(style);
+        return buildTitleBarStyleSheet(style) + buildTabStyleSheet(style) + buildItemViewStyleSheet(style) + buildMenulessWindowStyleSheet();
+    }
+
+    private static String buildMenulessWindowStyleSheet() {
+        return "\nQMainWindow[" + MENULESS_WINDOW_PROPERTY + "=\"true\"] { border: none; }\n";
     }
 
     private static String buildItemViewStyleSheet(Style style) {

@@ -19,6 +19,7 @@ import consulo.ui.clipboard.DataTransfer;
 import consulo.ui.clipboard.DataTransferType;
 import io.qt.core.QMimeData;
 import io.qt.core.QUrl;
+import io.qt.gui.QDropEvent;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
@@ -39,6 +40,11 @@ public final class DesktopQtDataTransfers {
             return transferMimeData.getTransfer();
         }
         return readNative(mimeData);
+    }
+
+    public static DataTransfer fromDropEvent(QDropEvent event) {
+        QMimeData mimeData = event.mimeData();
+        return mimeData == null ? DataTransfer.EMPTY : fromMimeData(mimeData);
     }
 
     public static QMimeData toMimeData(DataTransfer transfer) {

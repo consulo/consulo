@@ -184,8 +184,6 @@ open module consulo.ide.impl {
     exports consulo.ide.impl.eap;
     exports consulo.ide.impl.execution;
     exports consulo.ide.impl.fileChooser;
-    exports consulo.ide.impl.fileEditor;
-    exports consulo.ide.impl.fileEditor.text;
     exports consulo.ide.impl.find;
     exports consulo.ide.impl.idea.analysis;
     exports consulo.ide.impl.idea.application.options;
@@ -369,7 +367,6 @@ open module consulo.ide.impl {
     exports consulo.ide.impl.idea.openapi.fileChooser.tree;
     exports consulo.ide.impl.idea.openapi.fileEditor.impl;
     exports consulo.ide.impl.idea.openapi.fileEditor.impl.http;
-    exports consulo.ide.impl.idea.openapi.fileEditor.impl.tabActions;
     exports consulo.ide.impl.idea.openapi.fileTypes;
     exports consulo.ide.impl.idea.openapi.fileTypes.ex;
     exports consulo.ide.impl.idea.openapi.fileTypes.impl;
@@ -496,7 +493,6 @@ open module consulo.ide.impl {
     exports consulo.ide.impl.roots.ui.configuration.session.internal;
     exports consulo.ide.impl.script;
     exports consulo.ide.impl.start;
-    exports consulo.ide.impl.startup.customize;
     exports consulo.ide.impl.ui;
     exports consulo.ide.impl.ui.app.impl.settings;
     exports consulo.ide.impl.ui.docking.impl;

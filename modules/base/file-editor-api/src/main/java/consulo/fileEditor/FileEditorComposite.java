@@ -68,6 +68,8 @@ public interface FileEditorComposite extends Disposable {
 
   boolean isPinned();
 
+  void setPinned(boolean pinned);
+
   boolean isDisposed();
 
   default Component getUIComponent() {

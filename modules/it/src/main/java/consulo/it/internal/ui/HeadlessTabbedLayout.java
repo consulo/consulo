@@ -18,6 +18,7 @@ package consulo.it.internal.ui;
 import consulo.ui.Component;
 import consulo.ui.StaticPosition;
 import consulo.ui.Tab;
+import consulo.ui.TransferHandler;
 import consulo.ui.event.TabSelectEvent;
 import consulo.ui.layout.LayoutConstraint;
 import consulo.ui.layout.TabbedLayout;
@@ -46,6 +47,8 @@ public class HeadlessTabbedLayout extends HeadlessLayoutBase<LayoutConstraint> i
 
     private @Nullable Component myPrefixComponent;
     private @Nullable Component mySuffixComponent;
+
+    private @Nullable TransferHandler<Tab> myTransferHandler;
 
     /**
      * @throws IllegalArgumentException if {@code tabPosition} is {@link StaticPosition#CENTER}, which is not a side
@@ -104,6 +107,40 @@ public class HeadlessTabbedLayout extends HeadlessLayoutBase<LayoutConstraint> i
             mySelectedTab = tab;
         }
         return tab;
+    }
+
+    @Override
+    public Tab addTab(Tab tab, Component component, int index) {
+        addTab(tab, component);
+        moveTab(tab, index);
+        return tab;
+    }
+
+    @Override
+    public void moveTab(Tab tab, int index) {
+        Component component = myTabs.get(tab);
+        if (component == null) {
+            return;
+        }
+
+        List<Map.Entry<Tab, Component>> entries = new ArrayList<>(myTabs.entrySet());
+        entries.removeIf(entry -> entry.getKey() == tab);
+        entries.add(Math.max(0, Math.min(index, entries.size())), Map.entry(tab, component));
+
+        myTabs.clear();
+        for (Map.Entry<Tab, Component> entry : entries) {
+            myTabs.put(entry.getKey(), entry.getValue());
+        }
+    }
+
+    @Override
+    public void setTransferHandler(@Nullable TransferHandler<Tab> handler) {
+        myTransferHandler = handler;
+    }
+
+    @Override
+    public @Nullable TransferHandler<Tab> getTransferHandler() {
+        return myTransferHandler;
     }
 
     @Override

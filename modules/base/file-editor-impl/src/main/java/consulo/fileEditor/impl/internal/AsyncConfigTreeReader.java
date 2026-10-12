@@ -31,6 +31,15 @@ import java.util.concurrent.CompletableFuture;
 public abstract class AsyncConfigTreeReader<T> {
   public static final String PINNED = "pinned";
   public static final String CURRENT_IN_TAB = "current-in-tab";
+  public static final String SPLITTER = "splitter";
+  public static final String SPLIT_FIRST = "split-first";
+  public static final String SPLIT_SECOND = "split-second";
+  public static final String SPLIT_ORIENTATION = "split-orientation";
+  public static final String SPLIT_PROPORTION = "split-proportion";
+  public static final String LEAF = "leaf";
+  public static final String FILE = "file";
+  public static final String LEAF_FILE_NAME = "leaf-file-name";
+  public static final String SIDE_TABS_SIZE_LIMIT = "SIDE_TABS_SIZE_LIMIT_KEY";
 
   
   public CompletableFuture<T> process(@Nullable Element element, @Nullable T context, UIAccess uiAccess) {
@@ -38,19 +47,19 @@ public abstract class AsyncConfigTreeReader<T> {
       return CompletableFuture.completedFuture(null);
     }
 
-    Element splitterElement = element.getChild("splitter");
+    Element splitterElement = element.getChild(SPLITTER);
     if (splitterElement != null) {
-      Element first = splitterElement.getChild("split-first");
-      Element second = splitterElement.getChild("split-second");
+      Element first = splitterElement.getChild(SPLIT_FIRST);
+      Element second = splitterElement.getChild(SPLIT_SECOND);
       return processSplitter(splitterElement, first, second, context, uiAccess);
     }
 
-    Element leaf = element.getChild("leaf");
+    Element leaf = element.getChild(LEAF);
     if (leaf == null) {
       return CompletableFuture.completedFuture(null);
     }
 
-    List<Element> fileElements = leaf.getChildren("file");
+    List<Element> fileElements = leaf.getChildren(FILE);
     List<Element> children = new ArrayList<>(fileElements.size());
 
     // trim to EDITOR_TAB_LIMIT, ignoring CLOSE_NON_MODIFIED_FILES_FIRST policy

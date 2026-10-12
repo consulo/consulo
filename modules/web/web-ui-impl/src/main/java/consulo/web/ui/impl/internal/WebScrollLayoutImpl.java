@@ -47,6 +47,7 @@ public class WebScrollLayoutImpl extends VaadinComponentDelegate<WebScrollLayout
         // full width but its own height: pinning the height to the box would make the content exactly as tall
         // as what it is scrolled inside, so there would never be anything to scroll to
         content.setWidthFull();
+        content.setMinHeight("100%");
 
         Vaadin vaadin = getVaadinComponent();
         vaadin.setSizeFull();

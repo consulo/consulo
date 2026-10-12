@@ -13,17 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.fileEditor;
+package consulo.fileEditor.impl.internal.unified;
 
 import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.concurrent.ApplicationConcurrency;
+import consulo.disposer.Disposer;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorProvider;
 import consulo.fileEditor.FileEditorWithProviderComposite;
-import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.fileEditor.impl.internal.PsiAwareFileEditorManagerImpl;
+import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.language.editor.wolfAnalyzer.WolfTheProblemSolver;
 import consulo.language.psi.PsiManager;
 import consulo.project.Project;
@@ -53,7 +54,9 @@ public class UnifiedPsiAwareFileEditorManagerImpl extends PsiAwareFileEditorMana
   @Override
   protected void initUI() {
     if (mySplitters == null) {
-      mySplitters = new UnifiedFileEditorsSplitters(myApplicationConcurrency, myProject, this, myDockManager, true);
+      UnifiedFileEditorsSplitters splitters = new UnifiedFileEditorsSplitters(myApplicationConcurrency, myProject, this, myDockManager, true);
+      Disposer.register(myProject, splitters);
+      mySplitters = splitters;
     }
   }
 

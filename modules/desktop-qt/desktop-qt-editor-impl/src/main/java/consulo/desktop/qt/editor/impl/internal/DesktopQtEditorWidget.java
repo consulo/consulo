@@ -42,6 +42,7 @@ import io.qt.core.QSize;
 import io.qt.core.QTimer;
 import io.qt.core.Qt;
 import io.qt.gui.QCursor;
+import io.qt.gui.QFocusEvent;
 import io.qt.gui.QHelpEvent;
 import io.qt.gui.QKeyEvent;
 import io.qt.gui.QMouseEvent;
@@ -522,6 +523,24 @@ public class DesktopQtEditorWidget extends QAbstractScrollArea implements Deskto
         }
         finally {
             ourKeyPressDepth--;
+        }
+    }
+
+    @Override
+    protected void focusInEvent(QFocusEvent event) {
+        super.focusInEvent(event);
+
+        if (event.reason() != Qt.FocusReason.PopupFocusReason) {
+            myEditor.fireFocusChanged(true);
+        }
+    }
+
+    @Override
+    protected void focusOutEvent(QFocusEvent event) {
+        super.focusOutEvent(event);
+
+        if (event.reason() != Qt.FocusReason.PopupFocusReason) {
+            myEditor.fireFocusChanged(false);
         }
     }
 

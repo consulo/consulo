@@ -21,7 +21,6 @@ import consulo.ui.DragAndDropTransferHandler;
 import consulo.ui.TransferHandler;
 import consulo.ui.clipboard.DataTransfer;
 import io.qt.core.QItemSelectionModel;
-import io.qt.core.QMimeData;
 import io.qt.core.QModelIndex;
 import io.qt.core.QPoint;
 import io.qt.core.QRect;
@@ -139,7 +138,7 @@ public final class DesktopQtDragAndDropSupport<Item> {
             return;
         }
 
-        myHoverTransfer = transferOf(event);
+        myHoverTransfer = DesktopQtDataTransfers.fromDropEvent(event);
         event.acceptProposedAction();
     }
 
@@ -172,7 +171,7 @@ public final class DesktopQtDragAndDropSupport<Item> {
             return;
         }
 
-        DesktopQtDropContext<Item> context = new DesktopQtDropContext<>(drop, transferOf(event), myDraggedItems, true);
+        DesktopQtDropContext<Item> context = new DesktopQtDropContext<>(drop, DesktopQtDataTransfers.fromDropEvent(event), myDraggedItems, true);
         if (!handler.drop(myComponent, context) || !handler.drop(myComponent, context.toPerforming())) {
             event.ignore();
             return;
@@ -237,11 +236,6 @@ public final class DesktopQtDragAndDropSupport<Item> {
         if (!view.isDisposed()) {
             view.viewport().update();
         }
-    }
-
-    private static DataTransfer transferOf(QDropEvent event) {
-        QMimeData mimeData = event.mimeData();
-        return mimeData == null ? DataTransfer.EMPTY : DesktopQtDataTransfers.fromMimeData(mimeData);
     }
 
     public static boolean isCopyGesture(Qt.KeyboardModifiers modifiers) {

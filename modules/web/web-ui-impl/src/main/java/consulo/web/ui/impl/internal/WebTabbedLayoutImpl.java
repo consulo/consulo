@@ -15,13 +15,18 @@
  */
 package consulo.web.ui.impl.internal;
 
+import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.HasSize;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.tabs.TabSheet;
 import com.vaadin.flow.component.tabs.TabSheetVariant;
 import com.vaadin.flow.component.tabs.Tabs;
+import com.vaadin.flow.dom.Element;
 import consulo.ui.Component;
+import consulo.ui.DragAndDropTransferHandler;
 import consulo.ui.StaticPosition;
 import consulo.ui.Tab;
+import consulo.ui.TransferHandler;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.TabSelectEvent;
 import consulo.ui.internal.TabSelectionUtil;
@@ -57,6 +62,10 @@ public class WebTabbedLayoutImpl extends VaadinComponentDelegate<WebTabbedLayout
 
     private final Map<com.vaadin.flow.component.tabs.Tab, WebTabImpl> myTabs = new LinkedHashMap<>();
 
+    private @Nullable TransferHandler<Tab> myTransferHandler;
+    private boolean myMovingTab;
+    private boolean myStripDropInstalled;
+
     private final StaticPosition myTabPosition;
 
     private @Nullable Component myPrefixComponent;
@@ -71,6 +80,10 @@ public class WebTabbedLayoutImpl extends VaadinComponentDelegate<WebTabbedLayout
         applyTabPosition(tabPosition);
 
         toVaadinComponent().addSelectedChangeListener(event -> {
+            if (myMovingTab) {
+                return;
+            }
+
             com.vaadin.flow.component.tabs.Tab selectedTab = event.getSelectedTab();
             if (selectedTab == null) {
                 restoreSelection(event.getPreviousTab());
@@ -167,6 +180,12 @@ public class WebTabbedLayoutImpl extends VaadinComponentDelegate<WebTabbedLayout
     @Override
     @RequiredUIAccess
     public Tab addTab(Tab tab, Component component) {
+        return addTab(tab, component, toVaadinComponent().getTabCount());
+    }
+
+    @Override
+    @RequiredUIAccess
+    public Tab addTab(Tab tab, Component component, int index) {
         WebTabImpl webTab = (WebTabImpl) tab;
 
         com.vaadin.flow.component.tabs.Tab vaadinTab = new com.vaadin.flow.component.tabs.Tab();
@@ -183,8 +202,15 @@ public class WebTabbedLayoutImpl extends VaadinComponentDelegate<WebTabbedLayout
 
         boolean first = toVaadinComponent().getTabCount() == 0;
 
-        toVaadinComponent().add(vaadinTab, vaadinContent);
+        int position = Math.max(0, Math.min(index, toVaadinComponent().getTabCount()));
+
+        ComponentUtil.setData(vaadinTab, WebTabImpl.class, webTab);
+        toVaadinComponent().add(vaadinTab, vaadinContent, position);
         myTabs.put(vaadinTab, webTab);
+
+        if (getDragAndDropHandler() != null) {
+            installTabDragAndDrop(webTab);
+        }
 
         applyEnabled(webTab);
 
@@ -196,6 +222,193 @@ public class WebTabbedLayoutImpl extends VaadinComponentDelegate<WebTabbedLayout
         return tab;
     }
 
+    @Override
+    @RequiredUIAccess
+    public void moveTab(Tab tab, int index) {
+        WebTabImpl webTab = (WebTabImpl) tab;
+        com.vaadin.flow.component.tabs.Tab vaadinTab = webTab.getVaadinTab();
+        Vaadin sheet = toVaadinComponent();
+        if (vaadinTab == null || !myTabs.containsKey(vaadinTab)) {
+            return;
+        }
+
+        int from = sheet.getIndexOf(vaadinTab);
+        int to = Math.max(0, Math.min(index, sheet.getTabCount() - 1));
+        if (from == -1 || from == to) {
+            return;
+        }
+
+        com.vaadin.flow.component.Component content = sheet.getComponent(vaadinTab);
+        boolean selected = sheet.getSelectedTab() == vaadinTab;
+
+        myMovingTab = true;
+        try {
+            sheet.remove(vaadinTab);
+            sheet.add(vaadinTab, content, to);
+            if (selected) {
+                sheet.setSelectedTab(vaadinTab);
+            }
+        }
+        finally {
+            myMovingTab = false;
+        }
+    }
+
+    private List<WebTabImpl> orderedTabs() {
+        Vaadin sheet = toVaadinComponent();
+        List<WebTabImpl> tabs = new ArrayList<>(sheet.getTabCount());
+        for (int i = 0; i < sheet.getTabCount(); i++) {
+            WebTabImpl tab = myTabs.get(sheet.getTabAt(i));
+            if (tab != null) {
+                tabs.add(tab);
+            }
+        }
+        return tabs;
+    }
+
+    @Override
+    public void setTransferHandler(@Nullable TransferHandler<Tab> handler) {
+        myTransferHandler = handler;
+
+        boolean enabled = getDragAndDropHandler() != null;
+        for (WebTabImpl tab : orderedTabs()) {
+            if (enabled) {
+                installTabDragAndDrop(tab);
+            }
+            else {
+                tab.getVaadinTab().getElement().removeAttribute("draggable");
+            }
+        }
+
+        if (enabled) {
+            installStripDrop();
+        }
+    }
+
+    @Override
+    public @Nullable TransferHandler<Tab> getTransferHandler() {
+        return myTransferHandler;
+    }
+
+    private @Nullable DragAndDropTransferHandler<Tab> getDragAndDropHandler() {
+        return myTransferHandler instanceof DragAndDropTransferHandler<Tab> handler ? handler : null;
+    }
+
+    private boolean isHorizontal() {
+        return myTabPosition == StaticPosition.TOP || myTabPosition == StaticPosition.BOTTOM;
+    }
+
+    private String beforeExpression() {
+        return isHorizontal()
+            ? "event.clientX < element.getBoundingClientRect().left + element.getBoundingClientRect().width / 2"
+            : "event.clientY < element.getBoundingClientRect().top + element.getBoundingClientRect().height / 2";
+    }
+
+    private void installTabDragAndDrop(WebTabImpl webTab) {
+        Element element = webTab.getVaadinTab().getElement();
+        element.setAttribute("draggable", "true");
+
+        if (webTab.isDragAndDropInstalled()) {
+            return;
+        }
+        webTab.setDragAndDropInstalled(true);
+
+        String before = beforeExpression();
+
+        element.addEventListener("dragstart", event -> onDragStart(webTab))
+            .addEventData("event.dataTransfer.setData('" + WebDragSession.DRAG_TYPE + "', '')")
+            .addEventData("event.dataTransfer.effectAllowed = 'copyMove'");
+
+        element.addEventListener("dragend", event -> onDragEnd(webTab));
+
+        element.addEventListener("drop", event -> onDrop(webTab, event.getEventData().path(before).asBoolean(false)))
+            .addEventData(before)
+            .addEventData("event.preventDefault()")
+            .addEventData("event.stopPropagation()");
+
+        String script = "if (this.__consuloTabDrop) { return; } this.__consuloTabDrop = true;"
+            + "const clear = () => { this.removeAttribute('consulo-drop-before'); this.removeAttribute('consulo-drop-after'); };"
+            + "this.addEventListener('dragover', e => {"
+            + "  if (!e.dataTransfer.types.includes('" + WebDragSession.DRAG_TYPE + "')) { return; }"
+            + "  e.preventDefault(); e.stopPropagation();"
+            + "  const element = this; const event = e; const before = " + before + ";"
+            + "  this.toggleAttribute('consulo-drop-before', before); this.toggleAttribute('consulo-drop-after', !before);"
+            + "});"
+            + "this.addEventListener('dragleave', clear); this.addEventListener('drop', clear); this.addEventListener('dragend', clear);";
+
+        element.executeJs(script);
+        element.addAttachListener(event -> element.executeJs(script));
+    }
+
+    private void installStripDrop() {
+        if (myStripDropInstalled) {
+            return;
+        }
+        myStripDropInstalled = true;
+
+        Element strip = getTabs(toVaadinComponent()).getElement();
+
+        strip.addEventListener("drop", event -> onStripDrop())
+            .addEventData("event.preventDefault()")
+            .addEventData("event.stopPropagation()");
+
+        String script = "if (this.__consuloStripDrop) { return; } this.__consuloStripDrop = true;"
+            + "const last = () => { const tabs = this.querySelectorAll(':scope > vaadin-tab'); return tabs.length ? tabs[tabs.length - 1] : null; };"
+            + "this.addEventListener('dragover', e => {"
+            + "  if (!e.dataTransfer.types.includes('" + WebDragSession.DRAG_TYPE + "')) { return; }"
+            + "  e.preventDefault(); const tab = last(); if (tab) { tab.toggleAttribute('consulo-drop-after', true); }"
+            + "});"
+            + "const clear = () => { const tab = last(); if (tab) { tab.removeAttribute('consulo-drop-after'); } };"
+            + "this.addEventListener('dragleave', clear); this.addEventListener('drop', clear);";
+
+        strip.executeJs(script);
+        strip.addAttachListener(event -> strip.executeJs(script));
+    }
+
+    private void onDragStart(WebTabImpl webTab) {
+        DragAndDropTransferHandler<Tab> handler = getDragAndDropHandler();
+        UI ui = toVaadinComponent().getUI().orElse(null);
+        if (handler == null || ui == null) {
+            return;
+        }
+
+        WebDragSession.start(ui, webTab, handler.createDragTransfer(this, List.of(webTab), true));
+    }
+
+    private void onDragEnd(WebTabImpl webTab) {
+        toVaadinComponent().getUI().ifPresent(ui -> WebDragSession.end(ui, webTab));
+    }
+
+    private void onStripDrop() {
+        List<WebTabImpl> tabs = orderedTabs();
+        if (!tabs.isEmpty()) {
+            performDrop(tabs.get(tabs.size() - 1), false);
+        }
+    }
+
+    private void onDrop(WebTabImpl target, boolean before) {
+        performDrop(target, before);
+    }
+
+    private void performDrop(WebTabImpl target, boolean before) {
+        DragAndDropTransferHandler<Tab> handler = getDragAndDropHandler();
+        UI ui = toVaadinComponent().getUI().orElse(null);
+        Object source = ui == null ? null : WebDragSession.getSource(ui);
+        if (handler == null || source == null) {
+            return;
+        }
+
+        List<Tab> items = source instanceof WebTabImpl tab && tab.getTabbedLayout() == this ? List.of(tab) : List.of();
+        DragAndDropTransferHandler.DropPosition position = before
+            ? DragAndDropTransferHandler.DropPosition.ABOVE
+            : DragAndDropTransferHandler.DropPosition.BELOW;
+
+        WebDropContext<Tab> context = new WebDropContext<>(target, position, WebDragSession.getTransfer(ui), items, true);
+        if (handler.drop(this, context)) {
+            handler.drop(this, context.toPerforming());
+        }
+    }
+
     void applyEnabled(WebTabImpl webTab) {
         com.vaadin.flow.component.tabs.Tab vaadinTab = webTab.getVaadinTab();
         if (vaadinTab == null || !myTabs.containsKey(vaadinTab)) {
@@ -204,7 +417,7 @@ public class WebTabbedLayoutImpl extends VaadinComponentDelegate<WebTabbedLayout
 
         boolean enabled = webTab.isEnabled();
         if (!enabled && toVaadinComponent().getSelectedTab() == vaadinTab) {
-            List<WebTabImpl> tabs = new ArrayList<>(myTabs.values());
+            List<WebTabImpl> tabs = orderedTabs();
             int target = TabSelectionUtil.findSelectionOnDisable(tabs.indexOf(webTab), tabs.size(), i -> tabs.get(i).isEnabled());
             if (target != -1) {
                 tabs.get(target).select();
@@ -248,7 +461,7 @@ public class WebTabbedLayoutImpl extends VaadinComponentDelegate<WebTabbedLayout
 
     @Override
     public void forEachTab(@RequiredUIAccess BiConsumer<Tab, Component> consumer) {
-        for (WebTabImpl tab : new ArrayList<>(myTabs.values())) {
+        for (WebTabImpl tab : orderedTabs()) {
             Component content = tab.getContent();
             if (content != null) {
                 consumer.accept(tab, content);
@@ -263,7 +476,8 @@ public class WebTabbedLayoutImpl extends VaadinComponentDelegate<WebTabbedLayout
         if (tab != null) {
             return tab;
         }
-        return myTabs.isEmpty() ? null : myTabs.values().iterator().next();
+        List<WebTabImpl> tabs = orderedTabs();
+        return tabs.isEmpty() ? null : tabs.get(0);
     }
 
     @Override

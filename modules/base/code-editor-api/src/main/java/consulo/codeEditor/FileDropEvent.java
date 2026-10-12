@@ -15,18 +15,14 @@
  */
 package consulo.codeEditor;
 
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
+import org.jspecify.annotations.Nullable;
 
-import java.awt.datatransfer.Transferable;
+import java.io.File;
+import java.util.List;
 
-@ExtensionAPI(ComponentScope.PROJECT)
-public abstract class CustomFileDropHandler {
-  public static final ExtensionPointName<CustomFileDropHandler> CUSTOM_DROP_HANDLER_EP = ExtensionPointName.create(CustomFileDropHandler.class);
-
-  public abstract boolean canHandle(Transferable t, Editor editor);
-
-  public abstract boolean handleDrop(Transferable t, Editor editor, Project project);
+/**
+ * @param editor the editor the files were dropped onto, {@code null} for any other place of the editor area
+ */
+public record FileDropEvent(Project project, List<File> files, @Nullable Editor editor) {
 }

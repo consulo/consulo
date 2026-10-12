@@ -162,9 +162,13 @@ public class KeymapUtil {
     }
 
     public static String getFirstKeyboardShortcutText(String actionId) {
+        return getFirstKeyboardShortcutTextValue(actionId).get();
+    }
+
+    public static LocalizeValue getFirstKeyboardShortcutTextValue(String actionId) {
         Shortcut[] shortcuts = KeymapManager.getInstance().getActiveKeymap().getShortcuts(actionId);
         KeyboardShortcut shortcut = ContainerUtil.findInstance(shortcuts, KeyboardShortcut.class);
-        return shortcut == null ? "" : getShortcutText(shortcut);
+        return shortcut == null ? LocalizeValue.empty() : getShortcutTextValue(shortcut, isUseUnicodeShortcuts());
     }
 
     public static String getFirstKeyboardShortcutText(AnAction action) {

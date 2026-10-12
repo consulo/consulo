@@ -18,6 +18,7 @@ package consulo.web.ui.impl.internal;
 import consulo.project.ui.wm.StatusBar;
 import consulo.ui.Component;
 import consulo.ui.MenuBar;
+import consulo.ui.Space;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.VerticalLayout;
@@ -28,7 +29,7 @@ import consulo.web.ui.impl.internal.base.ToVaadinComponentWrapper;
  * @since 2023-05-27
  */
 public class WebRootPaneImpl {
-    private final DockLayout myDockLayout = DockLayout.create();
+    private final DockLayout myDockLayout = DockLayout.create(Space.NONE);
 
     // the dock has a single top slot, the menu bar and the navigation bar are stacked inside it
     private final VerticalLayout myTopLayout = VerticalLayout.create();

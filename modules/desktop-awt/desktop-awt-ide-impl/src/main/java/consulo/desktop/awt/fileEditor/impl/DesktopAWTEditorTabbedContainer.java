@@ -15,7 +15,6 @@
  */
 package consulo.desktop.awt.fileEditor.impl;
 
-import consulo.logging.Logger;
 import consulo.application.HelpManager;
 import consulo.application.concurrent.coroutine.ReadLock;
 import consulo.application.ui.UISettings;
@@ -25,22 +24,22 @@ import consulo.colorScheme.EditorColorsManager;
 import consulo.dataContext.DataSink;
 import consulo.dataContext.UiDataProvider;
 import consulo.desktop.awt.ui.IdeEventQueue;
+import consulo.desktop.awt.ui.impl.tabs.JBEditorTabs;
+import consulo.desktop.awt.ui.impl.tabs.JBTabsImpl;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.*;
 import consulo.fileEditor.history.IdeDocumentHistory;
+import consulo.fileEditor.impl.internal.CloseTab;
 import consulo.fileEditor.impl.internal.DockableEditorContainerFactory;
-import consulo.fileEditor.impl.internal.FileEditorManagerImpl;
+import consulo.fileEditor.impl.internal.FileEditorWindowBase;
 import consulo.fileEditor.impl.internal.IdeDocumentHistoryImpl;
-import consulo.fileEditor.impl.internal.text.FileDropHandler;
+import consulo.fileEditor.impl.internal.text.FileEditorDropHandler;
 import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.ide.impl.idea.ide.GeneralSettings;
 import consulo.ide.impl.idea.ide.actions.ShowFilePathAction;
-import consulo.ide.impl.idea.openapi.fileEditor.impl.tabActions.CloseTab;
-import consulo.virtualFileSystem.util.VirtualFileUtil;
-import consulo.desktop.awt.ui.impl.tabs.JBEditorTabs;
-import consulo.desktop.awt.ui.impl.tabs.JBTabsImpl;
 import consulo.localize.LocalizeValue;
+import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
@@ -52,9 +51,9 @@ import consulo.project.ui.wm.dock.DockManager;
 import consulo.project.ui.wm.dock.DockableContent;
 import consulo.project.ui.wm.dock.DragSession;
 import consulo.ui.UIAccess;
+import consulo.ui.UIAction;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
-import consulo.ui.UIAction;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.*;
@@ -63,10 +62,10 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.tab.*;
 import consulo.ui.ex.awt.util.TimedDeadzone;
-import consulo.ui.ex.toolWindow.ToolWindowSettings;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
+import consulo.ui.ex.toolWindow.ToolWindowSettings;
 import consulo.ui.ex.toolWindow.ToolWindowType;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.concurrent.ActionCallback;
@@ -74,9 +73,9 @@ import consulo.util.concurrent.AsyncResult;
 import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.concurrent.coroutine.CoroutineScope;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -85,6 +84,7 @@ import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
+import javax.swing.*;
 
 /**
  * @author Anton Katilin
@@ -615,17 +615,13 @@ public final class DesktopAWTEditorTabbedContainer implements FileEditorTabbedCo
         public void dragOutFinished(MouseEvent event, TabInfo source) {
             boolean copy = UIUtil.isControlKeyDown(event) || mySession.getResponse(event) == DockContainer.ContentResponse.ACCEPT_COPY;
             if (!copy) {
-                myFile.putUserData(FileEditorManagerImpl.CLOSING_TO_REOPEN, Boolean.TRUE);
-                FileEditorManagerEx.getInstanceEx(myProject).closeFile(myFile, myWindow);
+                ((FileEditorWindowBase) myWindow).closeFileToReopen(myFile);
             }
             else {
                 source.setHidden(false);
             }
 
             mySession.process(event);
-            if (!copy) {
-                myFile.putUserData(FileEditorManagerImpl.CLOSING_TO_REOPEN, null);
-            }
 
             myFile = null;
             mySession = null;
@@ -709,7 +705,7 @@ public final class DesktopAWTEditorTabbedContainer implements FileEditorTabbedCo
     }
 
     private final class MyTransferHandler extends TransferHandler {
-        private final FileDropHandler myFileDropHandler = new FileDropHandler(null);
+        private final FileEditorDropHandler myFileDropHandler = new FileEditorDropHandler(null);
 
         @Override
         @RequiredUIAccess

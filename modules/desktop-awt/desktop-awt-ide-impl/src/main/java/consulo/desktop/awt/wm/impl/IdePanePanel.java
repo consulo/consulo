@@ -15,12 +15,9 @@
  */
 package consulo.desktop.awt.wm.impl;
 
-import consulo.ui.ex.Gray;
-import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.JBPanel;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awt.util.ColorUtil;
-import consulo.ui.style.StyleManager;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.style.ComponentColors;
 
 import java.awt.*;
 
@@ -28,9 +25,6 @@ public class IdePanePanel extends JBPanel {
   public IdePanePanel(LayoutManager layout) {
     super(layout);
 
-    setBackground(new JBColor(() -> {
-      Color light = ColorUtil.darker(UIUtil.getPanelBackground(), 3);
-      return StyleManager.get().getCurrentStyle().isDark() ? Gray._40 : light;
-    }));
+    setBackground(TargetAWT.to(ComponentColors.EDITOR_AREA_BACKGROUND));
   }
 }

@@ -191,4 +191,12 @@ public interface Component extends UserDataHolder {
 
     default void forceRepaint() {
     }
+
+    /**
+     * Makes this component a target of drops made anywhere inside it. A component under the pointer which takes
+     * drops itself is offered the drop instead.
+     */
+    @RequiredUIAccess
+    default void setDropHandler(@Nullable DropHandler handler) {
+    }
 }

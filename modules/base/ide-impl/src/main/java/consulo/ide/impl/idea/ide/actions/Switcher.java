@@ -23,7 +23,7 @@ import consulo.fileEditor.impl.internal.EditorHistoryManagerImpl;
 import consulo.fileEditor.impl.internal.FileEditorManagerImpl;
 import consulo.fileEditor.impl.internal.IdeDocumentHistoryImpl;
 import consulo.fileEditor.internal.FileEditorManagerEx;
-import consulo.ide.impl.virtualFileSystem.VfsIconUtil;
+import consulo.fileEditor.impl.internal.VfsIconUtil;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.ui.impl.internal.wm.action.ActivateToolWindowAction;
 import consulo.project.ui.impl.internal.wm.action.ToolWindowsGroup;

@@ -664,6 +664,11 @@
             </dependency>
             <dependency>
                 <groupId>com.vaadin</groupId>
+                <artifactId>vaadin-card-flow</artifactId>
+                <version>${vaadin.flow.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.vaadin</groupId>
                 <artifactId>vaadin-details-flow</artifactId>
                 <version>${vaadin.flow.version}</version>
             </dependency>
@@ -896,7 +901,7 @@
             <dependency>
                 <groupId>consulo.internal.org.cobraparser</groupId>
                 <artifactId>cobra-core</artifactId>
-                <version>3.4</version>
+                <version>3.6</version>
                 <exclusions>
                     <exclusion>
                         <groupId>org.slf4j</groupId>
@@ -907,7 +912,7 @@
             <dependency>
                 <groupId>consulo.internal.org.cobraparser</groupId>
                 <artifactId>cobra-jstyleparser</artifactId>
-                <version>3.4</version>
+                <version>3.6</version>
                 <exclusions>
                     <exclusion>
                         <groupId>org.slf4j</groupId>

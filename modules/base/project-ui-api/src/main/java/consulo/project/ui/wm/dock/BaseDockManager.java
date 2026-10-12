@@ -15,13 +15,15 @@
  */
 package consulo.project.ui.wm.dock;
 
-import consulo.component.persist.PersistentStateComponent;
+import consulo.component.persist.PersistentStateComponentWithAsyncGet;
 import consulo.disposer.Disposer;
 import consulo.project.Project;
 import consulo.ui.Component;
+import consulo.ui.UIAction;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.util.TraverseUtil;
 import consulo.util.collection.MutualMap;
+import consulo.util.concurrent.coroutine.Coroutine;
 import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 
@@ -31,7 +33,7 @@ import java.util.*;
  * @author VISTALL
  * @since 2020-11-21
  */
-public abstract class BaseDockManager implements DockManager, PersistentStateComponent<Element> {
+public abstract class BaseDockManager implements DockManager, PersistentStateComponentWithAsyncGet<Element> {
   public interface DockWindow {
     void show();
 
@@ -117,6 +119,15 @@ public abstract class BaseDockManager implements DockManager, PersistentStateCom
   @Override
   public void loadState(Element state) {
     myLoadedState = state;
+  }
+
+  protected @Nullable Element getLoadedState() {
+    return myLoadedState;
+  }
+
+  @Override
+  public Coroutine<?, Element> getStateAsync() {
+    return UIAction.<Void, Element>apply((input, continuation) -> getState()).toCoroutine();
   }
 
   @Override

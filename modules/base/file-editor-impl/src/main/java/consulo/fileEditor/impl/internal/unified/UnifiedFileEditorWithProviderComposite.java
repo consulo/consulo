@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.fileEditor;
+package consulo.fileEditor.impl.internal.unified;
 
 import consulo.disposer.Disposable;
 import consulo.fileEditor.FileEditor;
@@ -37,8 +37,8 @@ import consulo.util.collection.ArrayUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
 import java.util.List;
+import javax.swing.*;
 
 /**
  * @author VISTALL
@@ -59,6 +59,7 @@ public class UnifiedFileEditorWithProviderComposite implements FileEditorWithPro
   private final Tab[] myTabs;
   private final Component myRootComponent;
   private int mySelectedIndex;
+  private boolean myPinned;
 
   public UnifiedFileEditorWithProviderComposite(VirtualFile file, FileEditor[] editors, FileEditorProvider[] providers, FileEditorManagerEx fileEditorManager) {
     myFile = file;
@@ -201,7 +202,12 @@ public class UnifiedFileEditorWithProviderComposite implements FileEditorWithPro
 
   @Override
   public boolean isPinned() {
-    return false;
+    return myPinned;
+  }
+
+  @Override
+  public void setPinned(boolean pinned) {
+    myPinned = pinned;
   }
 
   @Override

@@ -33,25 +33,24 @@ import java.awt.Rectangle;
  * Specialized TextUI intended *only* for accessibility usage. Not all the methods are called; only viewToModel, not modelToView.
  */
 final class EditorAccessibilityTextUI extends TextUI {
-    private final DesktopEditorImpl myEditor;
-
-    EditorAccessibilityTextUI(DesktopEditorImpl editor) {
-        myEditor = editor;
+    private static DesktopEditorImpl editorOf(JTextComponent component) {
+        return ((EditorComponentImpl) component).getEditor();
     }
 
     @Override
     public @Nullable Rectangle modelToView(JTextComponent tc, int offset) throws BadLocationException {
-        LogicalPosition pos = myEditor.offsetToLogicalPosition(offset);
-        Point point = myEditor.logicalPositionToXY(pos);
-        FontMetrics fontMetrics = myEditor.getFontMetrics(Font.PLAIN);
-        char c = myEditor.getDocument().getCharsSequence().subSequence(offset, offset + 1).charAt(0);
+        DesktopEditorImpl editor = editorOf(tc);
+        LogicalPosition pos = editor.offsetToLogicalPosition(offset);
+        Point point = editor.logicalPositionToXY(pos);
+        FontMetrics fontMetrics = editor.getFontMetrics(Font.PLAIN);
+        char c = editor.getDocument().getCharsSequence().subSequence(offset, offset + 1).charAt(0);
         return new Rectangle(point.x, point.y, fontMetrics.charWidth(c), fontMetrics.getHeight());
     }
 
     @Override
     public int viewToModel(JTextComponent tc, Point pt) {
-        LogicalPosition logicalPosition = myEditor.xyToLogicalPosition(pt);
-        return myEditor.logicalPositionToOffset(logicalPosition);
+        DesktopEditorImpl editor = editorOf(tc);
+        return editor.logicalPositionToOffset(editor.xyToLogicalPosition(pt));
     }
 
     @Override
@@ -78,7 +77,7 @@ final class EditorAccessibilityTextUI extends TextUI {
 
     @Override
     public void damageRange(JTextComponent t, int p0, int p1) {
-        myEditor.repaint(p0, p1);
+        editorOf(t).repaint(p0, p1);
     }
 
     @Override

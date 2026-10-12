@@ -22,6 +22,7 @@ import consulo.application.localize.ApplicationLocalize;
 import consulo.application.ui.UISettings;
 import consulo.component.ComponentManager;
 import consulo.component.util.Iconable;
+import consulo.fileEditor.impl.internal.VfsIconUtil;
 import consulo.ide.impl.idea.ide.GeneralSettings;
 import consulo.localize.LocalizeValue;
 import consulo.process.io.ProcessIOExecutorService;

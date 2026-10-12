@@ -76,6 +76,7 @@ module consulo.ui.ex.api {
         consulo.external.service.impl,
         consulo.external.system.api,
         consulo.external.tool.impl,
+        consulo.file.editor.impl,
         consulo.ide.impl,
         consulo.it,
         consulo.language.editor.api,
