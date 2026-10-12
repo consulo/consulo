@@ -31,7 +31,7 @@ public class IndexLocalizeLoader extends LocalizeLoader<Map<String, LocalizeKeyT
     private final Map<String, LocalizeKeyText> myData;
 
     public IndexLocalizeLoader(String localizeId,
-                               PluginDescriptor pluginDescriptor,
+                               @Nullable PluginDescriptor pluginDescriptor,
                                Map<String, LocalizeKeyText> data) {
         super(localizeId, pluginDescriptor, "");
         myData = data;
