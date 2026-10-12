@@ -132,6 +132,7 @@ public class UnifiedXFramesView extends XDebugView {
         // the threads take the width of the view, the way the swing combo box does
         myStacksPanel = DockLayout.create();
         myStacksPanel.center(myStacksComboBox);
+        myStacksPanel.borderBuilder().bottomSet().apply();
         myStacksPanel.setVisible(false);
 
         myFramesModel = FlatDataModel.lazyOf(List.of());
