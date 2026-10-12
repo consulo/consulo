@@ -16,8 +16,8 @@
 package consulo.externalService.impl.internal.plugin.ui.action;
 
 import consulo.application.dumb.DumbAware;
+import consulo.externalService.impl.internal.plugin.ui.PluginFilterHost;
 import consulo.externalService.impl.internal.plugin.ui.PluginSorter;
-import consulo.externalService.impl.internal.plugin.ui.PluginTab;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
@@ -28,6 +28,8 @@ import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import org.jspecify.annotations.Nullable;
 
+import java.util.List;
+
 /**
  * @author VISTALL
  * @since 2024-12-23
@@ -35,6 +37,18 @@ import org.jspecify.annotations.Nullable;
 public class PluginSortFilterGroup extends DefaultActionGroup implements DumbAware, AnActionWithSyncUpdate {
     public PluginSortFilterGroup() {
         super("Sort & Filters", true);
+    }
+
+    public static PluginSortFilterGroup create(List<PluginSorter> sorters) {
+        PluginSortActionGroup sortBy = new PluginSortActionGroup();
+        for (PluginSorter sorter : sorters) {
+            sortBy.add(new PluginSorterAction(sorter));
+        }
+
+        PluginSortFilterGroup group = new PluginSortFilterGroup();
+        group.add(sortBy);
+        group.add(new PluginTagFilterGroup());
+        return group;
     }
 
     @Override
@@ -49,10 +63,10 @@ public class PluginSortFilterGroup extends DefaultActionGroup implements DumbAwa
 
     @Override
     public void update(AnActionEvent e) {
-        PluginTab tab = e.getRequiredData(PluginTab.KEY);
+        PluginFilterHost host = e.getRequiredData(PluginFilterHost.KEY);
 
         Presentation presentation = e.getPresentation();
-        if (tab.getSorter() != PluginSorter.DEFAULT_SORTER || tab.getPluginList().getTag() != null) {
+        if (host.getSorter() != PluginSorter.DEFAULT_SORTER || host.getTagFilter() != null) {
             presentation.setIcon(ImageEffects.layered(getTemplateIcon(), PlatformIconGroup.greenbadge()));
         } else {
             presentation.setIcon(getTemplateIcon());

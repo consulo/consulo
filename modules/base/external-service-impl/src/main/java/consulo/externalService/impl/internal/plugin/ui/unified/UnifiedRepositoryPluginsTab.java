@@ -21,6 +21,7 @@ import consulo.configurable.ConfigurableSession;
 import consulo.configurable.internal.ConfigurableSessionHolder;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.disposer.Disposable;
+import consulo.externalService.impl.internal.plugin.ui.PluginSorter;
 import consulo.externalService.impl.internal.repository.RepositoryHelper;
 import consulo.externalService.update.UpdateSettings;
 import consulo.logging.Logger;
@@ -50,6 +51,11 @@ public class UnifiedRepositoryPluginsTab extends UnifiedPluginTab {
     @Override
     public Component getComponent() {
         return myLoadingLayout;
+    }
+
+    @Override
+    public List<PluginSorter> getSorters() {
+        return List.of(PluginSorter.NAME, PluginSorter.RATING, PluginSorter.DOWNLOADS, PluginSorter.LAST_UPDATED);
     }
 
     @Override

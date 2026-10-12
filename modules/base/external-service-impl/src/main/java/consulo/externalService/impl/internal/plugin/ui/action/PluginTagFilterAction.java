@@ -16,7 +16,7 @@
 package consulo.externalService.impl.internal.plugin.ui.action;
 
 import consulo.application.dumb.DumbAware;
-import consulo.externalService.impl.internal.plugin.ui.PluginTab;
+import consulo.externalService.impl.internal.plugin.ui.PluginFilterHost;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
@@ -38,15 +38,15 @@ public class PluginTagFilterAction extends ToggleAction implements DumbAware {
 
     @Override
     public boolean isSelected(AnActionEvent e) {
-        PluginTab tab = e.getRequiredData(PluginTab.KEY);
-        return Objects.equals(tab.getPluginList().getTag(), myTag);
+        PluginFilterHost host = e.getRequiredData(PluginFilterHost.KEY);
+        return Objects.equals(host.getTagFilter(), myTag);
     }
 
     @Override
     @RequiredUIAccess
     public void setSelected(AnActionEvent e, boolean state) {
-        PluginTab tab = e.getRequiredData(PluginTab.KEY);
+        PluginFilterHost host = e.getRequiredData(PluginFilterHost.KEY);
 
-        tab.getPluginList().setTagFilter(state ? myTag : null);
+        host.setTagFilter(state ? myTag : null);
     }
 }

@@ -34,8 +34,10 @@ import java.util.function.Supplier;
  */
 public class PluginIconHolder {
     private static final String PLUGIN_ICON_KEY = "PLUGIN_ICON_KEY";
+    private static final String PLUGIN_SMALL_ICON_KEY = "PLUGIN_SMALL_ICON_KEY";
 
     public static final int ICON_SIZE = 32;
+    public static final int SMALL_ICON_SIZE = 16;
 
     private static final Logger LOG = Logger.getInstance(PluginIconHolder.class);
 
@@ -54,6 +56,17 @@ public class PluginIconHolder {
 
                     canvas2D.drawImage(pluginImage, 0, 0);
                 }
+            )
+        );
+    }
+
+    public static Image getSmall(PluginDescriptor pluginDescriptor) {
+        return pluginDescriptor.computeUserData(
+            PLUGIN_SMALL_ICON_KEY,
+            s -> IconDeferrer.getInstance().defer(
+                PlatformIconGroup.nodesPlugin(),
+                pluginDescriptor.getPluginId().getIdString() + "@" + SMALL_ICON_SIZE,
+                it -> ImageEffects.resize(initializeImage(pluginDescriptor), SMALL_ICON_SIZE, SMALL_ICON_SIZE)
             )
         );
     }

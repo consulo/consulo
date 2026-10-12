@@ -15,14 +15,27 @@
  */
 package consulo.externalService.impl.internal.plugin.ui.unified;
 
+import consulo.configurable.SearchableOptionsRegistrar;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
+import consulo.externalService.impl.internal.plugin.ui.PluginFilterHost;
+import consulo.externalService.impl.internal.plugin.ui.PluginSorter;
+import consulo.externalService.impl.internal.plugin.ui.PluginTagUtil;
+import consulo.externalService.impl.internal.plugin.ui.action.PluginSortFilterGroup;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.Component;
+import consulo.ui.ImageBox;
 import consulo.ui.ListBox;
 import consulo.ui.Space;
 import consulo.ui.TextBox;
+import consulo.ui.TextBoxStyle;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.ActionToolbar;
+import consulo.ui.ex.action.ActionToolbarFactory;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.ScrollableLayout;
 import consulo.ui.layout.SplitLayoutPosition;
@@ -35,38 +48,62 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
+import java.util.Set;
 
 /**
  * @author VISTALL
  * @since 2026-08-13
  */
-public abstract class UnifiedPluginTab implements Disposable {
+public abstract class UnifiedPluginTab implements Disposable, PluginFilterHost {
     private final DockLayout myContent;
     private final ListBox<PluginDescriptor> myList;
-    private final TextBox myFilterBox;
+    private final TextBox mySearchBox;
+    private final ActionToolbar myFilterToolbar;
     private final UnifiedPluginDescriptionPanel myDescriptionPanel;
 
     private List<PluginDescriptor> myPlugins = List.of();
+    private PluginSorter mySorter = PluginSorter.DEFAULT_SORTER;
+    private @Nullable String myTagFilter;
 
     @RequiredUIAccess
     protected UnifiedPluginTab(boolean installedTab) {
+        myContent = DockLayout.create(Space.NONE);
+        myContent.putUserData(UiDataProvider.KEY, sink -> sink.set(PluginFilterHost.KEY, this));
+
         myList = ListBox.create(FlatDataModel.lazyOf(List.of()));
-        myList.setRender(UnifiedPluginRowRender::render);
+        myList.setRender(UnifiedPluginRowRender.reusable());
         myList.setItemHeightGetter(item -> UnifiedPluginRowRender.ROW_HEIGHT);
 
         myDescriptionPanel = new UnifiedPluginDescriptionPanel(installedTab, this::select, this::getPlugins);
 
         myList.addValueListener(event -> myDescriptionPanel.update(event.getValue(), myPlugins));
 
-        myFilterBox = TextBox.create("");
-        myFilterBox.addValueListener(event -> applyFilter());
+        myFilterToolbar = ActionToolbarFactory.getInstance().createActionToolbar(
+            getClass().getSimpleName() + "Toolbar",
+            ActionGroup.newImmutableBuilder().add(PluginSortFilterGroup.create(getSorters())).build(),
+            ActionToolbar.Style.INPLACE
+        );
+        myFilterToolbar.setTargetUIComponent(myContent);
+
+        mySearchBox = TextBox.create("");
+        mySearchBox.addStyle(TextBoxStyle.INPLACE);
+        mySearchBox.setPrefixComponent(ImageBox.create(PlatformIconGroup.actionsSearch()));
+        mySearchBox.setSuffixComponent(myFilterToolbar.getUIComponent());
+        mySearchBox.addValueListener(event -> {
+            applyFilter();
+            ensureSelection();
+        });
+
+        DockLayout searchRow = DockLayout.create(Space.NONE);
+        searchRow.center(mySearchBox);
+        searchRow.borderBuilder().bottomSet().apply();
 
         // the awt and qt lists only scroll inside a scroll layout; the web list scrolls itself and fills the
         // layout, which then never overflows
         DockLayout listSide = DockLayout.create(Space.NONE);
-        listSide.top(myFilterBox);
+        listSide.top(searchRow);
         listSide.center(ScrollableLayout.create(myList));
 
         TwoComponentSplitLayout split = TwoComponentSplitLayout.create(SplitLayoutPosition.HORIZONTAL);
@@ -74,9 +111,12 @@ public abstract class UnifiedPluginTab implements Disposable {
         split.setFirstComponent(listSide);
         split.setSecondComponent(myDescriptionPanel.getComponent());
 
-        myContent = DockLayout.create(Space.NONE);
         myContent.center(split);
+
+        myFilterToolbar.updateActionsAsync();
     }
+
+    public abstract List<PluginSorter> getSorters();
 
     /**
      * The panel of the tab. A tab which loads its content asynchronously wraps this into a layout of its
@@ -96,26 +136,84 @@ public abstract class UnifiedPluginTab implements Disposable {
 
     @RequiredUIAccess
     public void setPlugins(List<PluginDescriptor> plugins) {
-        List<PluginDescriptor> sorted = new ArrayList<>(plugins);
-        sorted.sort(Comparator.comparing(descriptor -> StringUtil.notNullize(descriptor.getName()), String.CASE_INSENSITIVE_ORDER));
+        myPlugins = List.copyOf(plugins);
+        applyFilter();
+    }
 
-        myPlugins = sorted;
+    @RequiredUIAccess
+    public void filter(String text) {
+        mySearchBox.setValue(text);
+    }
+
+    @Override
+    public List<PluginDescriptor> getAllPlugins() {
+        return myPlugins;
+    }
+
+    @Override
+    public PluginSorter getSorter() {
+        return mySorter;
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void reSort(PluginSorter sorter) {
+        mySorter = sorter;
+        applyFilter();
+    }
+
+    @Override
+    public @Nullable String getTagFilter() {
+        return myTagFilter;
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setTagFilter(@Nullable String tag) {
+        myTagFilter = tag;
         applyFilter();
     }
 
     @RequiredUIAccess
     @SuppressWarnings("unchecked")
     private void applyFilter() {
-        String filter = StringUtil.notNullize(myFilterBox.getValue()).trim().toLowerCase(Locale.ROOT);
+        String text = StringUtil.nullize(mySearchBox.getValue(), true);
+        String filter = text == null ? null : text.toLowerCase();
+        Set<String> search = filter == null ? Set.of() : SearchableOptionsRegistrar.getInstance().getProcessedWords(filter);
+        String tag = myTagFilter;
 
-        List<PluginDescriptor> filtered = filter.isEmpty()
-            ? myPlugins
-            : ContainerUtil.filter(
-                myPlugins,
-                descriptor -> StringUtil.notNullize(descriptor.getName()).toLowerCase(Locale.ROOT).contains(filter)
-            );
+        List<PluginDescriptor> filtered = new ArrayList<>();
+        for (PluginDescriptor descriptor : myPlugins) {
+            if (filter != null && !isAccepted(filter, search, descriptor)) {
+                continue;
+            }
+            if (tag != null && !descriptor.getTags().contains(tag)) {
+                continue;
+            }
+            filtered.add(descriptor);
+        }
+
+        PluginSorter sorter = mySorter;
+        if (sorter != PluginSorter.AS_IS) {
+            filtered.sort(Comparator.comparing(descriptor -> sorter.getValueGetter().apply(descriptor)));
+        }
+
+        PluginDescriptor selected = myList.getValue();
 
         ((MutableFlatDataModel<PluginDescriptor>) myList.getDataModel()).replaceAll(filtered);
+
+        if (selected != null && filtered.contains(selected)) {
+            myList.setValue(selected);
+        }
+
+        myFilterToolbar.updateActionsAsync();
+    }
+
+    @RequiredUIAccess
+    protected void ensureSelection() {
+        if (myList.getValue() == null && myList.getDataModel().getSize() > 0) {
+            myList.setValue(myList.getDataModel().get(0));
+        }
     }
 
     @RequiredUIAccess
@@ -135,5 +233,35 @@ public abstract class UnifiedPluginTab implements Disposable {
 
     @Override
     public void dispose() {
+    }
+
+    private static boolean isAccepted(String filter, Set<String> search, PluginDescriptor descriptor) {
+        if (isAccepted(search, filter, descriptor.getName())) {
+            return true;
+        }
+
+        String description = descriptor.getDescription();
+        if (description != null && isAccepted(search, filter, description)) {
+            return true;
+        }
+
+        for (LocalizeValue tag : PluginTagUtil.getLocalizedTags(descriptor)) {
+            if (isAccepted(search, filter, tag.get())) {
+                return true;
+            }
+        }
+
+        String changeNotes = descriptor.getChangeNotes();
+        return changeNotes != null && isAccepted(search, filter, changeNotes);
+    }
+
+    private static boolean isAccepted(Set<String> search, String filter, String text) {
+        if (StringUtil.containsIgnoreCase(text, filter)) {
+            return true;
+        }
+
+        Set<String> words = new HashSet<>(search);
+        words.removeAll(SearchableOptionsRegistrar.getInstance().getProcessedWords(text));
+        return words.isEmpty();
     }
 }

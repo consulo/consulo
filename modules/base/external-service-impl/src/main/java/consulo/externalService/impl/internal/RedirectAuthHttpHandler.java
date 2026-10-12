@@ -23,6 +23,7 @@ import consulo.builtinWebServer.http.HttpRequest;
 import consulo.builtinWebServer.http.HttpRequestHandler;
 import consulo.builtinWebServer.http.HttpResponse;
 import consulo.externalService.ExternalServiceConfiguration;
+import consulo.externalService.impl.internal.auth.ExternalServiceLoginService;
 import consulo.externalService.impl.internal.repository.api.UserAccount;
 import consulo.externalService.localize.ExternalServiceLocalize;
 import consulo.http.HttpMethod;
@@ -74,6 +75,7 @@ public class RedirectAuthHttpHandler extends HttpRequestHandler {
             ExternalServiceLocalize.taskRequestingOauthToken(),
             indicator -> {
                 UIAccess uiAccess = Application.get().getLastUIAccess();
+                ExternalServiceLoginService loginService = Application.get().getInstance(ExternalServiceLoginService.class);
 
                 try {
                     String json =
@@ -90,12 +92,16 @@ public class RedirectAuthHttpHandler extends HttpRequestHandler {
 
                     externalServiceConfiguration.updateIcon();
 
-                    uiAccess.give(() -> MessageBoxes.okInfo(ExternalServiceLocalize.messageSuccessfullyLoggedInAs0(username)).showAsync());
+                    if (!loginService.complete(sharedToken, username, null)) {
+                        uiAccess.give(() -> MessageBoxes.okInfo(ExternalServiceLocalize.messageSuccessfullyLoggedInAs0(username)).showAsync());
+                    }
                 }
                 catch (IOException e) {
                     LOG.warn("Exception while receiving OAuth token", e);
 
-                    uiAccess.give(() -> MessageBoxes.okError(ExternalServiceLocalize.messageFailedToReceiveOauthToken()).showAsync());
+                    if (!loginService.complete(sharedToken, null, e)) {
+                        uiAccess.give(() -> MessageBoxes.okError(ExternalServiceLocalize.messageFailedToReceiveOauthToken()).showAsync());
+                    }
                 }
             }
         );

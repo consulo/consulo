@@ -15,7 +15,6 @@
  */
 package consulo.externalService.impl.internal.pluginAdvertiser;
 
-import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
 import consulo.component.extension.preview.ExtensionPreview;
 import consulo.container.plugin.PluginDescriptor;
@@ -35,7 +34,7 @@ import java.util.concurrent.ExecutionException;
  * @since 2026-08-13
  */
 @Singleton
-@ServiceImpl(profiles = ComponentProfiles.UNIFIED)
+@ServiceImpl
 public class UnifiedPluginAdvertiserDialogFactory implements PluginAdvertiserDialogFactory {
     @Override
     @RequiredUIAccess

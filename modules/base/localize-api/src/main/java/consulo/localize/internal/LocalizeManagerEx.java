@@ -15,6 +15,7 @@
  */
 package consulo.localize.internal;
 
+import java.nio.file.Path;
 import java.util.List;
 
 /**
@@ -25,4 +26,13 @@ public interface LocalizeManagerEx {
     void visitPlugins(List<Runnable> actions);
 
     void afterInit();
+
+    /**
+     * Reads the texts of a plugin which is on disk but not loaded - one installed during this run, which the application
+     * only loads at its next start. Only the prepared index of the plugin is read, so texts kept in files of their own
+     * stay missing until then.
+     *
+     * @return whether the plugin had an index to read
+     */
+    boolean loadPluginIndex(Path pluginPath);
 }

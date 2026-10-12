@@ -31,6 +31,7 @@ import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.action.AnSeparator;
 import consulo.ui.layout.TabbedLayout;
+import consulo.ui.layout.TabbedLayoutStyle;
 
 /**
  * @author VISTALL
@@ -47,6 +48,7 @@ public class UnifiedPluginsPanel implements Disposable {
     @RequiredUIAccess
     public UnifiedPluginsPanel() {
         myTabbedLayout = TabbedLayout.create();
+        myTabbedLayout.addStyle(TabbedLayoutStyle.NO_PADDING);
 
         Label title = Label.create(ExternalServiceLocalize.titlePlugins());
         title.paddingBuilder().horizontalSet(Space.LARGE).apply();
@@ -87,6 +89,17 @@ public class UnifiedPluginsPanel implements Disposable {
 
     public Component getComponent() {
         return myTabbedLayout;
+    }
+
+    @RequiredUIAccess
+    public void setBannerComponent(Component bannerComponent) {
+        myTabbedLayout.setPrefixComponent(bannerComponent);
+    }
+
+    @RequiredUIAccess
+    public void filter(String option) {
+        myInstalledTabItem.select();
+        myInstalledTab.filter(option);
     }
 
     @RequiredUIAccess

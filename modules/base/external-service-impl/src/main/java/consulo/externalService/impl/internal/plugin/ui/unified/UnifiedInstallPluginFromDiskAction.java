@@ -20,7 +20,7 @@ import consulo.container.internal.PluginValidator;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
 import consulo.externalService.impl.internal.plugin.InstalledPluginsState;
-import consulo.externalService.impl.internal.plugin.ui.InstalledPluginsTab;
+import consulo.externalService.impl.internal.plugin.PluginInstallUtil;
 import consulo.externalService.impl.internal.update.PluginDownloader;
 import consulo.fileChooser.FileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
@@ -82,7 +82,7 @@ public class UnifiedInstallPluginFromDiskAction extends DumbAwareAction {
 
         PluginDescriptor pluginDescriptor;
         try {
-            pluginDescriptor = InstalledPluginsTab.loadDescriptorFromArchive(file);
+            pluginDescriptor = PluginInstallUtil.loadDescriptorFromArchive(file);
         }
         catch (IOException ex) {
             LOG.warn(ex);

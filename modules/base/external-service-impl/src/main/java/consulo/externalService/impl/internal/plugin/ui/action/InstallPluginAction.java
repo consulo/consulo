@@ -18,29 +18,22 @@ package consulo.externalService.impl.internal.plugin.ui.action;
 import consulo.application.Application;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
-import consulo.externalService.impl.internal.plugin.InstalledPluginsState;
 import consulo.externalService.impl.internal.plugin.PluginInstallUtil;
-import consulo.externalService.impl.internal.plugin.PluginNode;
-import consulo.externalService.impl.internal.plugin.ui.PluginTab;
-import consulo.externalService.impl.internal.plugin.ui.PluginsPanel;
-import consulo.externalService.impl.internal.update.awt.PlatformOrPluginDialog;
 import consulo.externalService.impl.internal.update.PlatformOrPluginNode;
 import consulo.externalService.impl.internal.update.PlatformOrPluginUpdateResult;
+import consulo.externalService.impl.internal.update.UnifiedPlatformOrPluginDialog;
 import consulo.externalService.internal.PlatformOrPluginUpdateResultType;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import consulo.ui.UIAccess;
+import consulo.ui.MessageBoxes;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.Messages;
-import consulo.ui.ex.awt.UIUtil;
 import org.jspecify.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 /**
  * @author lloix
@@ -48,115 +41,53 @@ import java.util.stream.Collectors;
 public class InstallPluginAction {
     @RequiredUIAccess
     public static void install(
-        UIAccess uiAccess,
-        @Nullable PluginsPanel pluginsPanel,
-        @Nullable PluginTab installedTab,
         @Nullable Project project,
-        PluginDescriptor descr,
+        PluginDescriptor descriptor,
         List<PluginDescriptor> allPlugins,
         boolean alwaysShowDialog,
-        @Nullable Runnable onSuccess
+        @Nullable Consumer<Collection<PluginDescriptor>> afterCallback
     ) {
-        List<PluginDescriptor> list = new ArrayList<>();
-        PluginNode pluginNode = null;
-        if (descr instanceof PluginNode descrNode) {
-            pluginNode = descrNode;
-        }
-        else if (descr.isLoaded()) {
-            PluginId pluginId = descr.getPluginId();
-            pluginNode = new PluginNode(pluginId);
-            pluginNode.setName(descr.getName());
-            pluginNode.setExperimental(descr.isExperimental());
-            pluginNode.addDependency(descr.getDependentPluginIds());
-            pluginNode.addOptionalDependency(descr.getOptionalDependentPluginIds());
-            pluginNode.setSize("-1");
+        if (!descriptor.isExperimental()) {
+            downloadAndInstallPlugins(project, List.of(descriptor), allPlugins, alwaysShowDialog, afterCallback);
+            return;
         }
 
-        if (pluginNode != null) {
-            if (pluginNode.isExperimental()) {
-                if (Messages.showOkCancelDialog(
-                    "Are you sure install experimental plugin? Plugin can make IDE unstable, and may not implement expected features",
-                    Application.get().getName().get(),
-                    UIUtil.getWarningIcon()
-                ) != Messages.OK) {
-                    return;
+        MessageBoxes.yesNo()
+            .asWarning()
+            .title(Application.get().getName())
+            .text(LocalizeValue.localizeTODO(
+                "Are you sure install experimental plugin? Plugin can make IDE unstable, and may not implement expected features"))
+            .showAsync()
+            .whenComplete((agreed, error) -> {
+                if (Boolean.TRUE.equals(agreed)) {
+                    downloadAndInstallPlugins(project, List.of(descriptor), allPlugins, alwaysShowDialog, afterCallback);
                 }
-            }
-
-            list.add(pluginNode);
-        }
-
-        Consumer<Collection<PluginDescriptor>> afterCallback = pluginNodes -> {
-            if (pluginNodes.isEmpty()) {
-                return;
-            }
-
-            uiAccess.giveIfNeed(() -> installedPluginsToModel(pluginsPanel, pluginNodes));
-
-            if (installedTab != null) {
-                uiAccess.giveIfNeed(() -> installedTab.setRequireShutdown(true));
-            }
-            else {
-                PluginTab.notifyPluginsWereInstalled(pluginNodes, null);
-            }
-
-            if (onSuccess != null) {
-                uiAccess.giveIfNeed(onSuccess);
-            }
-        };
-
-        downloadAndInstallPlugins(project, list, allPlugins, alwaysShowDialog, afterCallback);
+            });
     }
 
     @RequiredUIAccess
-    public static boolean downloadAndInstallPlugins(
+    public static void downloadAndInstallPlugins(
         @Nullable Project project,
         List<PluginDescriptor> toInstall,
         List<PluginDescriptor> allPlugins,
         boolean alwaysShowDialog,
         @Nullable Consumer<Collection<PluginDescriptor>> afterCallback
     ) {
-        Set<PluginDescriptor> pluginsForInstallWithDependencies = PluginInstallUtil.getPluginsForInstall(toInstall, allPlugins);
+        Set<PluginDescriptor> withDependencies = PluginInstallUtil.getPluginsForInstall(toInstall, allPlugins);
 
-        List<PlatformOrPluginNode> remap = pluginsForInstallWithDependencies.stream()
-            .map(x -> new PlatformOrPluginNode(x.getPluginId(), null, x))
-            .collect(Collectors.toList());
-        PlatformOrPluginUpdateResult result = new PlatformOrPluginUpdateResult(PlatformOrPluginUpdateResultType.PLUGIN_INSTALL, remap);
-        Predicate<PluginId> greenNodeStrategy = pluginId -> {
-            // do not mark target node as green, only depend
-            for (PluginDescriptor node : toInstall) {
-                if (node.getPluginId().equals(pluginId)) {
-                    return false;
-                }
-            }
-            return true;
-        };
-        PlatformOrPluginDialog dialog = new PlatformOrPluginDialog(project, result, greenNodeStrategy, afterCallback, true);
-        if (pluginsForInstallWithDependencies.size() == toInstall.size() && !alwaysShowDialog) {
+        List<PlatformOrPluginNode> nodes = withDependencies.stream()
+            .map(descriptor -> new PlatformOrPluginNode(descriptor.getPluginId(), null, descriptor))
+            .toList();
+        PlatformOrPluginUpdateResult result = new PlatformOrPluginUpdateResult(PlatformOrPluginUpdateResultType.PLUGIN_INSTALL, nodes);
+
+        Predicate<PluginId> greenStrategy = pluginId -> toInstall.stream().noneMatch(it -> it.getPluginId().equals(pluginId));
+
+        UnifiedPlatformOrPluginDialog dialog = new UnifiedPlatformOrPluginDialog(project, result, greenStrategy, afterCallback, true);
+        if (withDependencies.size() == toInstall.size() && !alwaysShowDialog) {
             dialog.doOKAction();
-            return true;
         }
         else {
-            return dialog.showAndGet();
-        }
-    }
-
-    private static void installedPluginsToModel(
-        @Nullable PluginsPanel pluginsPanel,
-        Collection<PluginDescriptor> list
-    ) {
-        for (PluginDescriptor pluginNode : list) {
-            PluginId id = pluginNode.getPluginId();
-            InstalledPluginsState pluginsState = InstalledPluginsState.getInstance();
-
-            pluginsState.getInstalledPlugins().add(id);
-            pluginsState.getOutdatedPlugins().remove(id);
-        }
-
-        if (pluginsPanel != null) {
-            for (PluginDescriptor node : list) {
-                pluginsPanel.appendOrUpdateDescriptor(node);
-            }
+            dialog.show();
         }
     }
 }

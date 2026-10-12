@@ -42,9 +42,14 @@ import static consulo.util.lang.StringUtil.isEmptyOrSpaces;
  */
 public final class PluginDescriptionMarkup {
     public static final String PLUGIN_PREFIX = "plugin://";
+    public static final String TITLE_CLASS = "title";
+    public static final String DESCRIPTION_CLASS = "description";
 
     private static final String HTML_PREFIX = "<a href=\"";
     private static final String HTML_SUFFIX = "</a>";
+
+    private static final String SECTION_START = "<div>";
+    private static final String SECTION_END = "</div>";
 
     private static final float mgByte = 1024.0f * 1024.0f;
     private static final float kByte = 1024.0f;
@@ -55,31 +60,36 @@ public final class PluginDescriptionMarkup {
     public static StringBuilder buildBody(PluginDescriptor plugin, List<PluginDescriptor> allPlugins) {
         StringBuilder sb = new StringBuilder();
 
-        sb.append("<h3>Version:</h3>").append("&nbsp;&nbsp;").append(StringUtil.notNullize(plugin.getVersion(), "N/A"));
+        title(sb, "Version:");
+        sb.append(SECTION_START).append("&nbsp;&nbsp;").append(StringUtil.notNullize(plugin.getVersion(), "N/A")).append(SECTION_END);
 
         if (PluginIds.isPlatformPlugin(plugin.getPluginId())) {
             return sb;
         }
 
-        sb.append("<h3>Permissions:</h3>");
+        title(sb, "Permissions:");
+        sb.append(SECTION_START);
         boolean noPermissions = true;
         for (PluginPermissionType type : PluginPermissionType.values()) {
             PluginPermissionDescriptor pluginPermissionDescriptor = plugin.getPermissionDescriptor(type);
             if (pluginPermissionDescriptor != null) {
+                if (!noPermissions) {
+                    sb.append("<br>");
+                }
                 noPermissions = false;
 
-                sb.append("&nbsp;&nbsp;").append(type.name()).append("<br>");
+                sb.append("&nbsp;&nbsp;").append(type.name());
             }
         }
 
         if (noPermissions) {
             sb.append("&nbsp;&nbsp;<span style=\"color: gray\">");
             XmlStringUtil.escapeText("<no special permissions>", sb);
-            sb.append("</span><br>");
+            sb.append("</span>");
         }
+        sb.append(SECTION_END);
 
-        sb.append("<br>");
-
+        sb.append("<div class=\"").append(DESCRIPTION_CLASS).append("\">");
         String description = plugin.getDescription();
         if (!isEmptyOrSpaces(description)) {
             sb.append(description);
@@ -89,18 +99,20 @@ public final class PluginDescriptionMarkup {
             XmlStringUtil.escapeText("<description not provided>", sb);
             sb.append("</span>");
         }
+        sb.append("</div>");
 
         String changeNotes = plugin.getChangeNotes();
         if (!isEmptyOrSpaces(changeNotes)) {
-            sb.append("<h3>Change Notes</h3>");
-            sb.append(changeNotes);
+            title(sb, "Change Notes");
+            sb.append(SECTION_START).append(changeNotes).append(SECTION_END);
         }
 
         String vendor = plugin.getVendor();
         String vendorEmail = plugin.getVendorEmail();
         String vendorUrl = plugin.getVendorUrl();
         if (!isEmptyOrSpaces(vendor) || !isEmptyOrSpaces(vendorEmail) || !isEmptyOrSpaces(vendorUrl)) {
-            sb.append("<h3>Vendor</h3>");
+            title(sb, "Vendor");
+            sb.append(SECTION_START);
 
             if (!isEmptyOrSpaces(vendor)) {
                 sb.append("&nbsp;&nbsp;").append(vendor);
@@ -117,16 +129,19 @@ public final class PluginDescriptionMarkup {
             if (!isEmptyOrSpaces(vendorUrl)) {
                 sb.append("&nbsp;").append(composeHref(vendorUrl));
             }
+            sb.append(SECTION_END);
         }
 
         String pluginDescriptorUrl = plugin.getUrl();
         if (!isEmptyOrSpaces(pluginDescriptorUrl)) {
-            sb.append("<h3>Plugin homepage</h3>").append(composeHref(pluginDescriptorUrl));
+            title(sb, "Plugin homepage");
+            sb.append(SECTION_START).append(composeHref(pluginDescriptorUrl)).append(SECTION_END);
         }
 
         String size = plugin instanceof PluginNode pluginNode ? pluginNode.getSize() : null;
         if (!isEmptyOrSpaces(size)) {
-            sb.append("<h3>Size</h3>").append(getFormattedSize(size));
+            title(sb, "Size");
+            sb.append(SECTION_START).append(getFormattedSize(size)).append(SECTION_END);
         }
 
         Map<PluginDescriptor, Boolean> depends = new LinkedHashMap<>();
@@ -152,11 +167,18 @@ public final class PluginDescriptionMarkup {
         }
 
         if (!depends.isEmpty()) {
-            sb.append("<h3>Depends on plugins:</h3>");
+            title(sb, "Depends on plugins:");
+            sb.append(SECTION_START);
 
+            boolean first = true;
             for (Map.Entry<PluginDescriptor, Boolean> entry : depends.entrySet()) {
                 PluginDescriptor key = entry.getKey();
                 Boolean optional = entry.getValue();
+
+                if (!first) {
+                    sb.append("<br>");
+                }
+                first = false;
 
                 sb.append("&nbsp;&nbsp;");
                 sb.append("<a href=\"").append(PLUGIN_PREFIX).append(key.getPluginId()).append("\">").append(key.getName());
@@ -164,9 +186,8 @@ public final class PluginDescriptionMarkup {
                     sb.append("&nbsp;(optional)");
                 }
                 sb.append("</a>");
-
-                sb.append("<br>");
             }
+            sb.append(SECTION_END);
         }
 
         Map<PluginId, PluginDescriptor> dependentPlugins = new TreeMap<>();
@@ -181,9 +202,16 @@ public final class PluginDescriptionMarkup {
         }
 
         if (!dependentPlugins.isEmpty()) {
-            sb.append("<h3>Dependent plugins:</h3>");
+            title(sb, "Dependent plugins:");
+            sb.append(SECTION_START);
 
+            boolean first = true;
             for (PluginDescriptor pluginDescriptor : dependentPlugins.values()) {
+                if (!first) {
+                    sb.append("<br>");
+                }
+                first = false;
+
                 sb.append("&nbsp;&nbsp;");
                 sb.append("<a href=\"")
                     .append(PLUGIN_PREFIX)
@@ -191,19 +219,32 @@ public final class PluginDescriptionMarkup {
                     .append("\">")
                     .append(pluginDescriptor.getName());
                 sb.append("</a>");
-                sb.append("<br>");
             }
+            sb.append(SECTION_END);
         }
 
         Set<String> tags = plugin.getTags();
         if (!tags.isEmpty()) {
-            sb.append("<h3>Tags:</h3>");
+            title(sb, "Tags:");
+            sb.append(SECTION_START);
+
+            boolean first = true;
             for (String tag : tags) {
-                sb.append("&nbsp;&nbsp;").append(PluginTab.getTagLocalizeValue(tag).get()).append("<br>");
+                if (!first) {
+                    sb.append("<br>");
+                }
+                first = false;
+
+                sb.append("&nbsp;&nbsp;").append(PluginTagUtil.getTagLocalizeValue(tag).get());
             }
+            sb.append(SECTION_END);
         }
 
         return sb;
+    }
+
+    private static void title(StringBuilder sb, String title) {
+        sb.append("<div class=\"").append(TITLE_CLASS).append("\">").append(title).append("</div>");
     }
 
     @SuppressWarnings({"HardCodedStringLiteral"})

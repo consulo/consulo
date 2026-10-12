@@ -55,8 +55,7 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 /**
- * Unified counterpart of {@link PlatformOrPluginDialog} - lists what is about to be downloaded and hands the
- * confirmed set to {@link PlatformOrPluginInstallProcess}.
+ * Lists what is about to be downloaded and hands the confirmed set to {@link PlatformOrPluginInstallProcess}.
  *
  * @author VISTALL
  * @since 2026-08-13

@@ -110,39 +110,51 @@ public class LocalizeManagerImpl extends LocalizeManager implements LocalizeMana
 
     private void init(List<Runnable> actions) {
         PluginManager.forEachEnabledPlugin(pluginDescriptor -> actions.add(() -> {
-            Path indexFile = Objects.requireNonNull(pluginDescriptor.getNioPath()).resolve("localize-index.bin");
-            boolean processToSearch = true;
-
-            if (Files.exists(indexFile)) {
-                try (InputStream stream = Files.newInputStream(indexFile)) {
-                    LocalizeProto.LocalizeIndex from = LocalizeProto.LocalizeIndex.parseFrom(stream);
-
-                    from.getLocalizesList().forEach(localize -> {
-                        String localizeId = localize.getId();
-                        String localeStr = localize.getLocale();
-
-                        Locale locale = buildLocale(localeStr);
-
-                        Map<String, LocalizeLoader<?>> mapByLocalizeId = myLocalizes.computeIfAbsent(locale, l -> new ConcurrentHashMap<>());
-
-                        Map<String, LocalizeKeyText> map = localize.getTextsList()
-                            .stream()
-                            .collect(Collectors.toMap(LocalizeProto.Text::getId, text -> new LocalizeKeyText(text.getText()), (a, b) -> a));
-
-                        mapByLocalizeId.put(localizeId, new IndexLocalizeLoader(localizeId, pluginDescriptor, map));
-                    });
-
-                    processToSearch = false;
-                }
-                catch (Exception e) {
-                    LOG.warn("Failed to read " + indexFile, e);
-                }
-            }
-
-            if (processToSearch) {
+            if (!loadIndex(pluginDescriptor, Objects.requireNonNull(pluginDescriptor.getNioPath()))) {
                 loadWithoutIndex(pluginDescriptor);
             }
         }));
+    }
+
+    @Override
+    public boolean loadPluginIndex(Path pluginPath) {
+        boolean loaded = loadIndex(null, pluginPath);
+        if (loaded) {
+            myAutoDetectedLocale.clear();
+            myModificationCount++;
+        }
+        return loaded;
+    }
+
+    private boolean loadIndex(@Nullable PluginDescriptor pluginDescriptor, Path pluginPath) {
+        Path indexFile = pluginPath.resolve("localize-index.bin");
+        if (!Files.exists(indexFile)) {
+            return false;
+        }
+
+        try (InputStream stream = Files.newInputStream(indexFile)) {
+            LocalizeProto.LocalizeIndex from = LocalizeProto.LocalizeIndex.parseFrom(stream);
+
+            from.getLocalizesList().forEach(localize -> {
+                String localizeId = localize.getId();
+                String localeStr = localize.getLocale();
+
+                Locale locale = buildLocale(localeStr);
+
+                Map<String, LocalizeLoader<?>> mapByLocalizeId = myLocalizes.computeIfAbsent(locale, l -> new ConcurrentHashMap<>());
+
+                Map<String, LocalizeKeyText> map = localize.getTextsList()
+                    .stream()
+                    .collect(Collectors.toMap(LocalizeProto.Text::getId, text -> new LocalizeKeyText(text.getText()), (a, b) -> a));
+
+                mapByLocalizeId.put(localizeId, new IndexLocalizeLoader(localizeId, pluginDescriptor, map));
+            });
+            return true;
+        }
+        catch (Exception e) {
+            LOG.warn("Failed to read " + indexFile, e);
+            return false;
+        }
     }
 
     private void loadWithoutIndex(PluginDescriptor pluginDescriptor) {

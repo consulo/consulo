@@ -105,16 +105,14 @@ public class InstallPluginRestHandler extends JsonGetRequestHandler {
                         return;
                     }
 
-                    uiAccess.give(() -> InstallPluginAction.install(
-                        uiAccess,
-                        null,
-                        null,
-                        project,
-                        target.get(),
-                        pluginDescriptors,
-                        true,
-                        null
-                    ));
+                    uiAccess.give(() -> InstallPluginAction.install(project, target.get(), pluginDescriptors, true, installed -> {
+                        if (installed.isEmpty()) {
+                            return;
+                        }
+
+                        PluginInstallUtil.markInstalled(installed);
+                        PluginInstallUtil.notifyPluginsWereInstalled(installed, project);
+                    }));
                 }
                 catch (Exception e) {
                     LOG.warn(e);

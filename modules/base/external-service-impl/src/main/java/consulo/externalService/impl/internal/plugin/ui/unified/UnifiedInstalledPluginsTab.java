@@ -19,6 +19,7 @@ import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginManager;
 import consulo.externalService.impl.internal.plugin.InstalledPluginsState;
+import consulo.externalService.impl.internal.plugin.ui.PluginSorter;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import java.util.ArrayList;
@@ -36,6 +37,11 @@ public class UnifiedInstalledPluginsTab extends UnifiedPluginTab {
     }
 
     @Override
+    public List<PluginSorter> getSorters() {
+        return List.of(PluginSorter.NAME, PluginSorter.STATUS);
+    }
+
+    @Override
     @RequiredUIAccess
     public void reload() {
         List<PluginDescriptor> descriptors = new ArrayList<>(PluginManager.getPlugins());
@@ -43,5 +49,6 @@ public class UnifiedInstalledPluginsTab extends UnifiedPluginTab {
         descriptors.removeIf(descriptor -> PluginIds.isPlatformPlugin(descriptor.getPluginId()));
 
         setPlugins(descriptors);
+        ensureSelection();
     }
 }

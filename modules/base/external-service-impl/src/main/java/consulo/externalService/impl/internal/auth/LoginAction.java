@@ -15,14 +15,14 @@
  */
 package consulo.externalService.impl.internal.auth;
 
-import consulo.builtinWebServer.BuiltInServerManager;
+import consulo.application.Application;
 import consulo.externalService.ExternalServiceConfiguration;
 import consulo.externalService.impl.internal.ExternalServiceConfigurationImpl;
-import consulo.externalService.impl.internal.WebServiceApi;
 import consulo.localize.LocalizeValue;
-import consulo.platform.Platform;
+import consulo.externalService.localize.ExternalServiceLocalize;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.MessageBoxes;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.LegacyDumbAwareAction;
@@ -31,12 +31,6 @@ import consulo.ui.ex.action.RightAlignedToolbarAction;
 import consulo.ui.image.Image;
 import consulo.util.lang.ObjectUtil;
 import jakarta.inject.Provider;
-import org.apache.commons.lang3.RandomStringUtils;
-
-import java.net.InetAddress;
-import java.net.URLEncoder;
-import java.net.UnknownHostException;
-import java.nio.charset.StandardCharsets;
 
 /**
  * @author VISTALL
@@ -86,37 +80,16 @@ public class LoginAction extends LegacyDumbAwareAction implements RightAlignedTo
         }
       });
     } else {
-      String tokenForAuth = RandomStringUtils.randomAlphabetic(48);
-      
-      int localPort = BuiltInServerManager.getInstance().getPort();
+      UIAccess uiAccess = UIAccess.current();
 
-      StringBuilder builder = new StringBuilder(WebServiceApi.LINK_CONSULO.buildUrl());
-      builder.append("?");
-      builder.append("token=").append(tokenForAuth).append("&");
-      builder.append("host=").append(URLEncoder.encode(getHostName(), StandardCharsets.UTF_8)).append("&");
-      
-      String redirectUrl = "http://localhost:" + localPort + "/redirectAuth";
-      redirectUrl = redirectUrl.replace("&", "%26");
-      redirectUrl = redirectUrl.replace("/", "%2F");
-      redirectUrl = redirectUrl.replace(":", "%3A");
-
-      builder.append("redirect=").append(redirectUrl);
-
-      Platform.current().openInBrowser(builder.toString());
+      Application.get().getInstance(ExternalServiceLoginService.class).login().whenCompleteAsync((userName, error) -> {
+        if (error != null) {
+          MessageBoxes.okError(ExternalServiceLocalize.messageFailedToReceiveOauthToken()).showAsync();
+        }
+        else {
+          MessageBoxes.okInfo(ExternalServiceLocalize.messageSuccessfullyLoggedInAs0(userName)).showAsync();
+        }
+      }, uiAccess);
     }
-  }
-
-  private String getHostName() {
-    String hostname = "Unknown";
-
-    try {
-      InetAddress addr;
-      addr = InetAddress.getLocalHost();
-      hostname = addr.getHostName();
-    }
-    catch (UnknownHostException ignored) {
-    }
-
-    return hostname;
   }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2024 consulo.io
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,21 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.desktop.awt.startup.customize;
+package consulo.externalService.internal.startup;
 
-import consulo.container.plugin.PluginId;
-import consulo.ui.image.Image;
-
-import java.util.Set;
+import consulo.localize.LocalizeValue;
+import consulo.ui.ex.wizard.WizardStep;
 
 /**
+ * A page of the startup wizard.
+ *
  * @author VISTALL
- * @since 2020-08-02
+ * @since 2026-10-11
  */
-public record PluginTemplate(PluginId id,
-                             Set<PluginId> pluginIds,
-                             String name,
-                             String description,
-                             Image[] images,
-                             int downloadsAll) {
+public interface StartupCustomizeStep extends WizardStep<StartupCustomizeContext> {
+    /**
+     * The short name the wizard lists the page under.
+     */
+    LocalizeValue getTitle();
 }

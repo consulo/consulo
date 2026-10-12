@@ -51,7 +51,11 @@ import java.nio.file.Path;
 import java.nio.file.attribute.FileTime;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Enumeration;
 import java.util.Locale;
+import java.util.Objects;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 /**
  * @author anna
@@ -104,7 +108,7 @@ public class PluginDownloader {
 
     public void download(ProgressIndicator pi) throws PluginDownloadFailedException {
         PluginDescriptor descriptor;
-        if (!Boolean.getBoolean(StartupActionScriptManager.STARTUP_WIZARD_MODE) && PluginManager.findPlugin(myPluginId) != null) {
+        if (PluginManager.findPlugin(myPluginId) != null) {
             //store old plugins file
             descriptor = PluginManager.findPlugin(myPluginId);
 
@@ -257,6 +261,41 @@ public class PluginDownloader {
         else {
             install(myFile, getPluginName(), deleteTempFile);
         }
+    }
+
+    /**
+     * Unpacks the downloaded plugin into the directory plugins are installed to right away, instead of leaving it to the
+     * next start - for a plugin carrying data only, which nothing loads before that start anyway.
+     *
+     * @return the directory of the unpacked plugin
+     */
+    public Path installNow() throws IOException {
+        File file = Objects.requireNonNull(myFile, "Plugin is not downloaded");
+
+        Path installPath = Path.of(ContainerPathManager.get().getInstallPluginsPath());
+        String folder = topFolder(file);
+        Path target = folder != null ? installPath : installPath.resolve(getPluginName());
+
+        new StartupActionScriptManager.UnzipCommand(file, target.toFile()).execute(LOG);
+
+        FileUtil.delete(file);
+        myFile = null;
+
+        return folder != null ? installPath.resolve(folder) : target;
+    }
+
+    private static @Nullable String topFolder(File zipFile) throws IOException {
+        try (ZipFile zip = new ZipFile(zipFile)) {
+            Enumeration<? extends ZipEntry> entries = zip.entries();
+            while (entries.hasMoreElements()) {
+                String name = entries.nextElement().getName();
+                int slash = name.indexOf('/');
+                if (slash > 0) {
+                    return name.substring(0, slash);
+                }
+            }
+        }
+        return null;
     }
 
     public static void install(File fromFile, String pluginName, boolean deleteFromFile) throws IOException {

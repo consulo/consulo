@@ -37,6 +37,7 @@ import consulo.logging.Logger;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.ThreeState;
 
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -99,6 +100,14 @@ public class ExternalStoragePluginManager implements PluginActionListener {
         catch (Exception e) {
             LOG.warn(e);
         }
+    }
+
+    /**
+     * The plugins the account of the user keeps in the storage.
+     */
+    public static StoragePlugin[] list() throws IOException {
+        StoragePlugin[] plugins = WebServiceApiSender.doGet(WebServiceApi.STORAGE_API, "/plugins/list", StoragePlugin[].class);
+        return plugins == null ? new StoragePlugin[0] : plugins;
     }
 
     private static boolean toEnabledState(StoragePluginState state) {

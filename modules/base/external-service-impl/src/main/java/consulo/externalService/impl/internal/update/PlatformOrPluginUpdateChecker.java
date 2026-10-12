@@ -28,8 +28,8 @@ import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginManager;
 import consulo.externalService.impl.internal.PluginIconHolder;
 import consulo.externalService.impl.internal.plugin.InstalledPluginsState;
+import consulo.externalService.impl.internal.plugin.PluginInstallUtil;
 import consulo.externalService.impl.internal.plugin.PluginNode;
-import consulo.externalService.impl.internal.plugin.ui.PluginTab;
 import consulo.externalService.impl.internal.pluginAdvertiser.PluginAdvertiserRequester;
 import consulo.externalService.impl.internal.repository.RepositoryHelper;
 import consulo.externalService.internal.PlatformOrPluginUpdateResultType;
@@ -171,7 +171,7 @@ public class PlatformOrPluginUpdateChecker {
                 }
                 break;
             case RESTART_REQUIRED:
-                PluginTab.notifyPluginsWereInstalled(Collections.emptyList(), null);
+                PluginInstallUtil.notifyPluginsWereInstalled(Collections.emptyList(), null);
                 break;
             case PLUGIN_UPDATE:
             case PLATFORM_UPDATE:

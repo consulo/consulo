@@ -17,7 +17,8 @@ package consulo.externalService.impl.internal.plugin.ui.action;
 
 import consulo.application.dumb.DumbAware;
 import consulo.container.plugin.PluginDescriptor;
-import consulo.externalService.impl.internal.plugin.ui.PluginTab;
+import consulo.externalService.impl.internal.plugin.ui.PluginFilterHost;
+import consulo.externalService.impl.internal.plugin.ui.PluginTagUtil;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
@@ -44,14 +45,14 @@ public class PluginTagFilterGroup extends ActionGroup implements DumbAware {
     @Override
     public AnAction[] getChildren(@Nullable AnActionEvent e) {
         assert e != null;
-        PluginTab tab = e.getRequiredData(PluginTab.KEY);
+        PluginFilterHost host = e.getRequiredData(PluginFilterHost.KEY);
 
         Map<LocalizeValue, String> allTags = new TreeMap<>();
-        for (PluginDescriptor descriptor : tab.getPluginList().getAll()) {
+        for (PluginDescriptor descriptor : host.getAllPlugins()) {
             Set<String> tags = descriptor.getTags();
             if (!tags.isEmpty()) {
                 for (String tag : tags) {
-                    allTags.put(PluginTab.getTagLocalizeValue(tag), tag);
+                    allTags.put(PluginTagUtil.getTagLocalizeValue(tag), tag);
                 }
             }
         }

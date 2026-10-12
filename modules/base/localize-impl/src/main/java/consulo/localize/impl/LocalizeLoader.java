@@ -34,12 +34,12 @@ public abstract class LocalizeLoader<V> {
     private static final Logger LOG = Logger.getInstance(LocalizeLoader.class);
 
     protected final String myLocalizeId;
-    protected final PluginDescriptor myPluginDescriptor;
+    protected final @Nullable PluginDescriptor myPluginDescriptor;
     protected final String myResourcePath;
 
     private volatile Supplier<V> myValue;
 
-    public LocalizeLoader(String localizeId, PluginDescriptor pluginDescriptor, String resourcePath) {
+    public LocalizeLoader(String localizeId, @Nullable PluginDescriptor pluginDescriptor, String resourcePath) {
         myLocalizeId = localizeId;
         myPluginDescriptor = pluginDescriptor;
         myResourcePath = resourcePath;
@@ -58,12 +58,13 @@ public abstract class LocalizeLoader<V> {
     protected abstract V load(InputStream stream) throws IOException;
 
     protected V load() {
-        if (myPluginDescriptor.getStatus() != PluginDescriptorStatus.OK) {
-            LOG.info(myLocalizeId + " plugin status is not ok: " + myPluginDescriptor.getPluginId());
+        PluginDescriptor pluginDescriptor = myPluginDescriptor;
+        if (pluginDescriptor == null || pluginDescriptor.getStatus() != PluginDescriptorStatus.OK) {
+            LOG.info(myLocalizeId + " plugin is not loaded");
             return getInvalidValue();
         }
 
-        InputStream inputStream = myPluginDescriptor.getPluginClassLoader().getResourceAsStream(myResourcePath);
+        InputStream inputStream = pluginDescriptor.getPluginClassLoader().getResourceAsStream(myResourcePath);
         if (inputStream == null) {
             LOG.info(myLocalizeId + " can't find " + myResourcePath);
             return getInvalidValue();

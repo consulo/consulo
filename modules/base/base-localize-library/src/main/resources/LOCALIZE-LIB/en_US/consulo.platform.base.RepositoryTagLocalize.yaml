@@ -18,6 +18,8 @@ editor.spelling:
     text: Editor Spelling
 experimental:
     text: Experimental
+file.manager:
+    text: File Manager
 game.framework:
     text: Game Framework
 grammar.language:
@@ -66,6 +68,8 @@ ui.framework:
     text: UI Framework
 vcs:
     text: Version Control
+web:
+    text: Web
 web.framework:
     text: Web Framework
 web.server:

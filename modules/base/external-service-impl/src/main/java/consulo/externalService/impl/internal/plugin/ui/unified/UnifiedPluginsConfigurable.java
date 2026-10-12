@@ -15,12 +15,12 @@
  */
 package consulo.externalService.impl.internal.plugin.ui.unified;
 
-import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.configurable.ApplicationConfigurable;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.SearchableConfigurable;
+import consulo.configurable.internal.FullContentConfigurable;
 import consulo.container.plugin.PluginId;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -36,10 +36,11 @@ import org.jspecify.annotations.Nullable;
  * @author VISTALL
  * @since 2026-08-13
  */
-@ExtensionImpl(profiles = ComponentProfiles.UNIFIED)
+@ExtensionImpl
 public class UnifiedPluginsConfigurable implements SearchableConfigurable,
     Configurable.NoScroll,
     Configurable.NoMargin,
+    FullContentConfigurable,
     ApplicationConfigurable,
     PluginsConfigurable {
 
@@ -92,6 +93,23 @@ public class UnifiedPluginsConfigurable implements SearchableConfigurable,
     @RequiredUIAccess
     public void disposeUIResources() {
         myPanel = null;
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void setBannerComponent(Component bannerComponent) {
+        if (myPanel != null) {
+            myPanel.setBannerComponent(bannerComponent);
+        }
+    }
+
+    @Override
+    public @Nullable Runnable enableSearch(String option) {
+        return () -> {
+            if (myPanel != null) {
+                myPanel.filter(option);
+            }
+        };
     }
 
     @Override

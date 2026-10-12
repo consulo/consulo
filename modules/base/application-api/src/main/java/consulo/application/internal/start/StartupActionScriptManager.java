@@ -186,8 +186,6 @@ public class StartupActionScriptManager {
     }
   }
 
-  public static final String STARTUP_WIZARD_MODE = "StartupWizardMode";
-
   private static final String ourStartXmlFileName = "start.xml";
 
   private StartupActionScriptManager() {
@@ -224,11 +222,6 @@ public class StartupActionScriptManager {
   }
 
   public static synchronized void addActionCommand(Logger logger, ActionCommand command) throws IOException {
-    if (Boolean.getBoolean(STARTUP_WIZARD_MODE)) {
-      command.execute(logger);
-      return;
-    }
-
     List<ActionCommand> newCommands = new ArrayList<ActionCommand>(loadStartActions(logger));
     newCommands.add(command);
     saveStartActions(newCommands);

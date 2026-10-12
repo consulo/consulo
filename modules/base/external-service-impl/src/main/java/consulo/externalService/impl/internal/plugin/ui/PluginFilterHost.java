@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2021 consulo.io
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.internal.startup;
+package consulo.externalService.impl.internal.plugin.ui;
 
-import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.startup.customize.StartupCustomizeManager;
+import consulo.container.plugin.PluginDescriptor;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.inject.Singleton;
+import consulo.util.dataholder.Key;
+import org.jspecify.annotations.Nullable;
+
+import java.util.List;
 
 /**
  * @author VISTALL
- * @since 27/04/2021
+ * @since 2026-10-12
  */
-@Singleton
-@ServiceImpl
-public class WebStartupCustomizeManager implements StartupCustomizeManager {
-  @RequiredUIAccess
-  @Override
-  public void showAsync(boolean firstShow) {
-  }
+public interface PluginFilterHost {
+    Key<PluginFilterHost> KEY = Key.of(PluginFilterHost.class);
+
+    List<PluginDescriptor> getAllPlugins();
+
+    PluginSorter getSorter();
+
+    @RequiredUIAccess
+    void reSort(PluginSorter sorter);
+
+    @Nullable String getTagFilter();
+
+    @RequiredUIAccess
+    void setTagFilter(@Nullable String tag);
 }

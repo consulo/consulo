@@ -19,58 +19,64 @@ import consulo.application.Application;
 import consulo.application.plugin.PluginActionListener;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
+import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginManager;
 import consulo.externalService.impl.internal.PluginIconHolder;
 import consulo.externalService.impl.internal.plugin.InstalledPluginsState;
 import consulo.externalService.impl.internal.plugin.PluginInstallUtil;
 import consulo.externalService.impl.internal.plugin.PluginNode;
 import consulo.externalService.impl.internal.plugin.ui.PluginDescriptionMarkup;
+import consulo.externalService.impl.internal.plugin.ui.action.InstallPluginAction;
 import consulo.externalService.impl.internal.plugin.ui.action.UninstallPluginAction;
 import consulo.externalService.impl.internal.update.PlatformOrPluginInstallProcess;
-import consulo.externalService.impl.internal.update.PlatformOrPluginNode;
-import consulo.externalService.impl.internal.update.PlatformOrPluginUpdateResult;
-import consulo.externalService.impl.internal.update.UnifiedPlatformOrPluginDialog;
-import consulo.externalService.internal.PlatformOrPluginUpdateResultType;
 import consulo.externalService.localize.ExternalServiceLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.MessageBoxes;
 import consulo.ui.Button;
 import consulo.ui.Component;
 import consulo.ui.HtmlView;
 import consulo.ui.Label;
+import consulo.ui.LabelStyle;
 import consulo.ui.Space;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.image.Image;
 import consulo.ui.layout.DockLayout;
-import consulo.ui.layout.HorizontalLayout;
-import consulo.ui.layout.ScrollableLayout;
+import consulo.ui.layout.VerticalLayout;
 import consulo.ui.style.ComponentColors;
+import consulo.ui.style.StandardColors;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
-import java.util.Collection;
+import java.net.URL;
 import java.util.List;
-import java.util.Set;
 import java.util.function.Consumer;
-import java.util.function.Predicate;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 /**
  * @author VISTALL
  * @since 2026-08-13
  */
 public class UnifiedPluginDescriptionPanel {
+    private static final String DESCRIPTION_CSS = """
+        body { margin: 5px 7px 0 7px; font-size: 12px; }
+        .title { font-size: 13px; font-weight: bold; margin: 10px 0 10px 0; }
+        .description { margin: 12px 0 2px 0; }
+        """;
+
     private final boolean myInstalledTab;
     private final Supplier<List<PluginDescriptor>> myAllPluginsGetter;
 
     private final DockLayout myRoot;
+    private final VerticalLayout myHeader;
+    private final Label myIconLabel;
     private final Label myNameLabel;
-    private final Label myVersionLabel;
     private final Button myActionButton;
+    private final Label myExperimentalLabel;
     private final Label myDownloadsLabel;
     private final HtmlView myDescription;
 
@@ -86,12 +92,16 @@ public class UnifiedPluginDescriptionPanel {
         myInstalledTab = installedTab;
         myAllPluginsGetter = allPluginsGetter;
 
-        myNameLabel = Label.create(LocalizeValue.empty());
-        myVersionLabel = Label.create(LocalizeValue.empty());
+        myIconLabel = Label.create(LocalizeValue.empty());
 
-        HorizontalLayout titleLine = HorizontalLayout.create();
-        titleLine.add(myNameLabel);
-        titleLine.add(myVersionLabel);
+        myNameLabel = Label.create(LocalizeValue.empty());
+        myNameLabel.addStyle(LabelStyle.FONT_LARGE);
+        myNameLabel.addStyle(LabelStyle.FONT_BOLD);
+        myNameLabel.paddingBuilder().leftSet(Space.LARGE).apply();
+
+        DockLayout nameLine = DockLayout.create(Space.NONE);
+        nameLine.left(myIconLabel);
+        nameLine.center(myNameLabel);
 
         myActionButton = Button.create(LocalizeValue.empty(), event -> {
             Runnable action = myButtonAction;
@@ -101,17 +111,23 @@ public class UnifiedPluginDescriptionPanel {
         });
         myActionButton.setVisible(false);
 
+        myExperimentalLabel = Label.create(LocalizeValue.localizeTODO("Experimental"));
+        myExperimentalLabel.setImage(PlatformIconGroup.generalBalloonwarning());
+        myExperimentalLabel.addStyle(LabelStyle.FONT_LARGE);
+        myExperimentalLabel.addStyle(LabelStyle.FONT_BOLD);
+        myExperimentalLabel.setForegroundColor(StandardColors.RED);
+        myExperimentalLabel.setVisible(false);
+
         myDownloadsLabel = Label.create(LocalizeValue.empty());
-        myDownloadsLabel.setForegroundColor(ComponentColors.DISABLED_TEXT);
+        myDownloadsLabel.addStyle(LabelStyle.FONT_X_SMALL);
 
-        HorizontalLayout actionLine = HorizontalLayout.create(Space.LARGE);
-        actionLine.add(myActionButton);
-        actionLine.add(myDownloadsLabel);
-
-        DockLayout header = DockLayout.create(Space.NONE);
-        header.center(titleLine);
-        header.right(actionLine);
-        header.paddingBuilder().allSet(Space.MEDIUM).apply();
+        myHeader = VerticalLayout.create(Space.SMALL);
+        myHeader.add(nameLine);
+        myHeader.add(DockLayout.create(Space.NONE).right(myActionButton));
+        myHeader.add(DockLayout.create(Space.NONE).right(myExperimentalLabel));
+        myHeader.add(DockLayout.create(Space.NONE).right(myDownloadsLabel));
+        myHeader.paddingBuilder().topSet(Space.SMALL).horizontalSet(Space.SMALL).apply();
+        myHeader.setVisible(false);
 
         myDescription = HtmlView.create();
         myDescription.addHyperlinkListener(event -> {
@@ -124,9 +140,12 @@ public class UnifiedPluginDescriptionPanel {
             }
         });
 
+        myDescription.setBackgroundColor(ComponentColors.LAYOUT);
+
         myRoot = DockLayout.create(Space.NONE);
-        myRoot.top(header);
-        myRoot.center(ScrollableLayout.create(myDescription));
+        myRoot.top(myHeader);
+        myRoot.center(myDescription);
+        myRoot.setBackgroundColor(ComponentColors.LAYOUT);
     }
 
     public Component getComponent() {
@@ -138,30 +157,32 @@ public class UnifiedPluginDescriptionPanel {
         myPlugin = plugin;
 
         if (plugin == null) {
-            myNameLabel.setImage(null);
-            myNameLabel.setText(LocalizeValue.empty());
-            myVersionLabel.setText(LocalizeValue.empty());
-            myActionButton.setVisible(false);
-            myDownloadsLabel.setText(LocalizeValue.empty());
-            myDescription.render(new HtmlView.RenderData("<html><body></body></html>"));
+            myHeader.setVisible(false);
+            render("");
             return;
         }
 
-        myNameLabel.setImage(PluginIconHolder.get(plugin));
+        myHeader.setVisible(true);
+        myIconLabel.setImage(PluginIconHolder.get(plugin));
         myNameLabel.setText(LocalizeValue.of(StringUtil.notNullize(plugin.getName())));
-        myVersionLabel.setText(LocalizeValue.of(StringUtil.notNullize(plugin.getVersion())));
+        myExperimentalLabel.setVisible(plugin.isExperimental());
 
-        if (plugin instanceof PluginNode pluginNode && pluginNode.getDownloads() > 0) {
+        if (plugin instanceof PluginNode pluginNode) {
             myDownloadsLabel.setText(LocalizeValue.localizeTODO(pluginNode.getDownloads() + " downloads"));
+            myDownloadsLabel.setVisible(true);
         }
         else {
-            myDownloadsLabel.setText(LocalizeValue.empty());
+            myDownloadsLabel.setVisible(false);
         }
 
         updateButton(plugin);
 
-        StringBuilder body = PluginDescriptionMarkup.buildBody(plugin, allPlugins);
-        myDescription.render(new HtmlView.RenderData("<html><body>" + body + "</body></html>"));
+        render(PluginDescriptionMarkup.buildBody(plugin, allPlugins).toString());
+    }
+
+    @RequiredUIAccess
+    private void render(String body) {
+        myDescription.render(new HtmlView.RenderData("<html><body>" + body + "</body></html>", DESCRIPTION_CSS, new URL[0]));
     }
 
     @RequiredUIAccess
@@ -177,13 +198,18 @@ public class UnifiedPluginDescriptionPanel {
             LocalizeValue text = Application.get().isRestartCapable()
                 ? ExternalServiceLocalize.actionRestartText()
                 : ExternalServiceLocalize.actionShutdownText();
-            showButton(text, PlatformOrPluginInstallProcess::askRestart);
+            showButton(text, PlatformIconGroup.actionsRestart(), PlatformOrPluginInstallProcess::askRestart);
         }
         else if (myInstalledTab) {
-            showButton(ExternalServiceLocalize.actionUninstallPlugin(), () -> uninstall(plugin));
+            if (PluginIds.isPlatformPlugin(pluginId)) {
+                myActionButton.setVisible(false);
+            }
+            else {
+                showButton(ExternalServiceLocalize.actionUninstallPlugin(), PlatformIconGroup.actionsCancel(), () -> uninstall(plugin));
+            }
         }
         else if (PluginManager.findPlugin(pluginId) == null) {
-            showButton(LocalizeValue.localizeTODO("Install"), () -> install(plugin));
+            showButton(LocalizeValue.localizeTODO("Install"), PlatformIconGroup.actionsInstall(), () -> install(plugin));
         }
         else {
             myActionButton.setVisible(false);
@@ -191,8 +217,9 @@ public class UnifiedPluginDescriptionPanel {
     }
 
     @RequiredUIAccess
-    private void showButton(LocalizeValue text, Runnable action) {
+    private void showButton(LocalizeValue text, Image icon, Runnable action) {
         myActionButton.setText(text);
+        myActionButton.setIcon(icon);
         myButtonAction = action;
         myActionButton.setVisible(true);
         myActionButton.setEnabled(true);
@@ -200,59 +227,14 @@ public class UnifiedPluginDescriptionPanel {
 
     @RequiredUIAccess
     private void install(PluginDescriptor plugin) {
-        if (plugin.isExperimental()) {
-            MessageBoxes.yesNo()
-                .asWarning()
-                .title(Application.get().getName())
-                .text(LocalizeValue.localizeTODO(
-                    "Are you sure install experimental plugin? Plugin can make IDE unstable, and may not implement expected features"))
-                .showAsync()
-                .whenComplete((agreed, error) -> {
-                    if (Boolean.TRUE.equals(agreed)) {
-                        doInstall(plugin);
-                    }
-                });
-            return;
-        }
-
-        doInstall(plugin);
-    }
-
-    @RequiredUIAccess
-    private void doInstall(PluginDescriptor plugin) {
         UIAccess uiAccess = UIAccess.current();
 
-        List<PluginDescriptor> allPlugins = myAllPluginsGetter.get();
-
-        Set<PluginDescriptor> withDependencies = PluginInstallUtil.getPluginsForInstall(List.of(plugin), allPlugins);
-
-        List<PlatformOrPluginNode> nodes = withDependencies.stream()
-            .map(descriptor -> new PlatformOrPluginNode(descriptor.getPluginId(), null, descriptor))
-            .collect(Collectors.toList());
-        PlatformOrPluginUpdateResult result = new PlatformOrPluginUpdateResult(PlatformOrPluginUpdateResultType.PLUGIN_INSTALL, nodes);
-
-        // the picked plugin is the target, only its dependencies are drawn as new arrivals
-        Predicate<PluginId> greenStrategy = pluginId -> !pluginId.equals(plugin.getPluginId());
-
-        Consumer<Collection<PluginDescriptor>> afterCallback = installed -> {
+        InstallPluginAction.install(null, plugin, myAllPluginsGetter.get(), false, installed -> {
             if (installed.isEmpty()) {
                 return;
             }
 
-            InstalledPluginsState state = InstalledPluginsState.getInstance();
-            for (PluginDescriptor descriptor : installed) {
-                state.getInstalledPlugins().add(descriptor.getPluginId());
-                state.getOutdatedPlugins().remove(descriptor.getPluginId());
-
-                PluginDescriptor alreadyInstalled = PluginManager.findPlugin(descriptor.getPluginId());
-                if (alreadyInstalled != null) {
-                    state.updateExistingPlugin(descriptor, alreadyInstalled);
-                }
-                else {
-                    // the installed list is built from what the platform loaded plus what this session brought
-                    state.getAllPlugins().add(descriptor);
-                }
-            }
+            PluginInstallUtil.markInstalled(installed);
 
             uiAccess.give(() -> {
                 if (myPlugin == plugin) {
@@ -261,15 +243,7 @@ public class UnifiedPluginDescriptionPanel {
 
                 PlatformOrPluginInstallProcess.askRestart();
             });
-        };
-
-        UnifiedPlatformOrPluginDialog dialog = new UnifiedPlatformOrPluginDialog(null, result, greenStrategy, afterCallback, false);
-        if (withDependencies.size() == 1) {
-            dialog.doOKAction();
-        }
-        else {
-            dialog.show();
-        }
+        });
     }
 
     @RequiredUIAccess
@@ -314,7 +288,7 @@ public class UnifiedPluginDescriptionPanel {
 
     @RequiredUIAccess
     private void doUninstall(PluginDescriptor plugin) {
-        if (!UninstallPluginAction.uninstallPlugin(plugin, null)) {
+        if (!UninstallPluginAction.uninstallPlugin(plugin)) {
             return;
         }
 

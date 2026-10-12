@@ -17,20 +17,31 @@ package consulo.externalService.impl.internal.plugin;
 
 import consulo.application.Application;
 import consulo.application.internal.ApplicationEx;
+import consulo.application.internal.plugin.PluginsLoader;
 import consulo.application.internal.start.StartupActionScriptManager;
+import consulo.application.util.TempFileService;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginManager;
-import consulo.externalService.impl.internal.plugin.ui.PluginTab;
+import consulo.externalService.impl.internal.PlatformOrPluginsNotificationGroupContributor;
 import consulo.externalService.localize.ExternalServiceLocalize;
 import consulo.localize.LocalizeValue;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.project.ui.notification.NotificationService;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.util.io.FileUtil;
+import consulo.util.io.zip.ZipUtil;
+import consulo.util.lang.xml.XmlStringUtil;
 import org.jspecify.annotations.Nullable;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -40,6 +51,8 @@ import java.util.Set;
  * @since 2003-11-29
  */
 public class PluginInstallUtil {
+    private static final Logger LOG = Logger.getInstance(PluginInstallUtil.class);
+
     private PluginInstallUtil() {
     }
 
@@ -159,8 +172,75 @@ public class PluginInstallUtil {
                 StartupActionScriptManager.addActionCommand(deleteOld);
             }
             else {
-                PluginTab.LOG.error("Plugin not found: " + pluginId);
+                LOG.error("Plugin not found: " + pluginId);
             }
         }
+    }
+
+    public static void markInstalled(Collection<PluginDescriptor> installed) {
+        InstalledPluginsState state = InstalledPluginsState.getInstance();
+        for (PluginDescriptor descriptor : installed) {
+            state.getInstalledPlugins().add(descriptor.getPluginId());
+            state.getOutdatedPlugins().remove(descriptor.getPluginId());
+
+            PluginDescriptor alreadyInstalled = PluginManager.findPlugin(descriptor.getPluginId());
+            if (alreadyInstalled != null) {
+                state.updateExistingPlugin(descriptor, alreadyInstalled);
+            }
+            else {
+                state.getAllPlugins().add(descriptor);
+            }
+        }
+    }
+
+    public static void notifyPluginsWereInstalled(Collection<? extends PluginDescriptor> installed, @Nullable Project project) {
+        String pluginName = installed.size() == 1 ? installed.iterator().next().getName() : null;
+        notifyPluginsWereUpdated(
+            pluginName != null ? "Plugin '" + pluginName + "' was successfully installed" : "Plugins were installed",
+            project
+        );
+    }
+
+    public static void notifyPluginsWereUpdated(String title, @Nullable Project project) {
+        ApplicationEx app = (ApplicationEx) Application.get();
+        LocalizeValue appName = app.getName();
+        boolean restartCapable = app.isRestartCapable();
+        String message = restartCapable
+            ? ExternalServiceLocalize.messageIdeaRestartRequired(appName).get()
+            : ExternalServiceLocalize.messageIdeaShutdownRequired(appName).get();
+        message += "<br><a href=" + (restartCapable ? "\"restart\">Restart now" : "\"shutdown\">Shutdown") + "</a>";
+        NotificationService.getInstance()
+            .newInfo(PlatformOrPluginsNotificationGroupContributor.ourPluginsLifecycleGroup)
+            .title(LocalizeValue.localizeTODO(title))
+            .content(LocalizeValue.localizeTODO(XmlStringUtil.wrapInHtml(message)))
+            .hyperlinkListener((notification, event) -> {
+                notification.expire();
+                if (restartCapable) {
+                    app.restart(true);
+                }
+                else {
+                    app.exit(true, true);
+                }
+            })
+            .notify(project);
+    }
+
+    public static @Nullable PluginDescriptor loadDescriptorFromArchive(File file) throws IOException {
+        PluginDescriptor descriptor = null;
+
+        TempFileService tempFileService = Application.get().getInstance(TempFileService.class);
+        Path outputDirPath = tempFileService.createTempDirectory("plugin", "");
+        File outputDir = outputDirPath.toFile();
+        try {
+            ZipUtil.extract(file, outputDir, null);
+            File[] files = outputDir.listFiles();
+            if (files != null && files.length == 1) {
+                descriptor = PluginsLoader.loadPluginDescriptor(files[0]);
+            }
+        }
+        finally {
+            FileUtil.delete(outputDir);
+        }
+        return descriptor;
     }
 }

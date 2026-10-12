@@ -15,7 +15,6 @@
  */
 package consulo.externalService.impl.internal.update;
 
-import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
@@ -33,7 +32,7 @@ import java.util.function.Predicate;
  * @since 2026-08-13
  */
 @Singleton
-@ServiceImpl(profiles = ComponentProfiles.UNIFIED)
+@ServiceImpl
 public class UnifiedPlatformOrPluginDialogFactory implements PlatformOrPluginDialogFactory {
     @Override
     @RequiredUIAccess

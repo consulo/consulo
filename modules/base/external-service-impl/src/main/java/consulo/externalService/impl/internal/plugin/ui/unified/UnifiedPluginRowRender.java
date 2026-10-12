@@ -15,6 +15,7 @@
  */
 package consulo.externalService.impl.internal.plugin.ui.unified;
 
+import consulo.application.util.DateFormatUtil;
 import consulo.container.internal.PluginValidator;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginDescriptorStatus;
@@ -23,11 +24,12 @@ import consulo.container.plugin.PluginManager;
 import consulo.externalService.impl.internal.PluginIconHolder;
 import consulo.externalService.impl.internal.plugin.InstalledPluginsState;
 import consulo.externalService.impl.internal.plugin.PluginNode;
-import consulo.externalService.impl.internal.plugin.ui.PluginTab;
-import consulo.externalService.impl.internal.plugin.ui.PluginsPanel;
+import consulo.externalService.impl.internal.plugin.ui.PluginTagUtil;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
+import consulo.ui.ComponentItemRender;
 import consulo.ui.Label;
+import consulo.ui.LabelStyle;
 import consulo.ui.Length;
 import consulo.ui.RenderItem;
 import consulo.ui.Space;
@@ -37,11 +39,14 @@ import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.VerticalLayout;
 import consulo.ui.style.ComponentColors;
 import consulo.ui.style.StandardColors;
+import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.status.FileStatus;
 import org.jspecify.annotations.Nullable;
 
+import java.text.DecimalFormat;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -51,7 +56,16 @@ import java.util.stream.Collectors;
  * @since 2026-08-13
  */
 public class UnifiedPluginRowRender {
-    public static final Length ROW_HEIGHT = Length.ofFont(2).plusPixel(8);
+    public static final Length ROW_HEIGHT = Length.ofFont(2).plusPixel(20);
+
+    private static final Key<Label> ICON_KEY = Key.create("UnifiedPluginRowRender.icon");
+    private static final Key<Label> NAME_KEY = Key.create("UnifiedPluginRowRender.name");
+    private static final Key<Label> TAGS_KEY = Key.create("UnifiedPluginRowRender.tags");
+    private static final Key<Label> UPDATED_KEY = Key.create("UnifiedPluginRowRender.updated");
+
+    public static ComponentItemRender<PluginDescriptor> reusable() {
+        return ComponentItemRender.reusable(UnifiedPluginRowRender::createRow, (row, item) -> bindRow(row, item, null, null));
+    }
 
     @RequiredUIAccess
     public static Component render(RenderItem<PluginDescriptor> item) {
@@ -69,56 +83,108 @@ public class UnifiedPluginRowRender {
         @Nullable ColorValue nameColor,
         @Nullable LocalizeValue secondLine
     ) {
-        PluginDescriptor descriptor = item.getValue();
+        DockLayout row = createRow();
+        bindRow(row, item, nameColor, secondLine);
+        return row;
+    }
+
+    @RequiredUIAccess
+    private static DockLayout createRow() {
+        Label iconLabel = Label.create(LocalizeValue.empty());
+        iconLabel.paddingBuilder().rightSet(Space.LARGE).apply();
+
+        Label nameLabel = Label.create(LocalizeValue.empty());
+        nameLabel.addStyle(LabelStyle.FONT_LARGE);
+
+        Label tagsLabel = Label.create(LocalizeValue.empty());
+        tagsLabel.addStyle(LabelStyle.FONT_XX_SMALL);
+        tagsLabel.setForegroundColor(ComponentColors.DISABLED_TEXT);
+
+        VerticalLayout text = VerticalLayout.create(Space.LARGE);
+        text.add(nameLabel);
+        text.add(tagsLabel);
+        text.paddingBuilder().horizontalSet(Space.MEDIUM).apply();
+
+        Label updatedLabel = Label.create(LocalizeValue.empty());
+        updatedLabel.addStyle(LabelStyle.FONT_XX_SMALL);
+        updatedLabel.setForegroundColor(ComponentColors.DISABLED_TEXT);
+
+        DockLayout right = DockLayout.create(Space.NONE);
+        right.bottom(updatedLabel);
 
         DockLayout row = DockLayout.create(Space.NONE);
+        row.left(iconLabel);
+        row.center(text);
+        row.right(right);
+        row.paddingBuilder().allSet(Space.LARGE).apply();
+
+        row.putUserData(ICON_KEY, iconLabel);
+        row.putUserData(NAME_KEY, nameLabel);
+        row.putUserData(TAGS_KEY, tagsLabel);
+        row.putUserData(UPDATED_KEY, updatedLabel);
+        return row;
+    }
+
+    @RequiredUIAccess
+    private static void bindRow(
+        Component row,
+        RenderItem<PluginDescriptor> item,
+        @Nullable ColorValue nameColor,
+        @Nullable LocalizeValue secondLine
+    ) {
+        Label iconLabel = Objects.requireNonNull(row.getUserData(ICON_KEY));
+        Label nameLabel = Objects.requireNonNull(row.getUserData(NAME_KEY));
+        Label tagsLabel = Objects.requireNonNull(row.getUserData(TAGS_KEY));
+        Label updatedLabel = Objects.requireNonNull(row.getUserData(UPDATED_KEY));
+
+        PluginDescriptor descriptor = item.getValue();
         if (descriptor == null) {
-            return row;
+            iconLabel.setImage(null);
+            nameLabel.setText(LocalizeValue.empty());
+            tagsLabel.setText(LocalizeValue.empty());
+            updatedLabel.setText(LocalizeValue.empty());
+            row.setBackgroundColor(null);
+            return;
         }
 
-        Label iconLabel = Label.create(LocalizeValue.empty());
         iconLabel.setImage(PluginIconHolder.get(descriptor));
-        iconLabel.paddingBuilder().rightSet(Space.MEDIUM).apply();
-
-        Label nameLabel = Label.create(LocalizeValue.of(StringUtil.notNullize(descriptor.getName())));
-
-        if (!item.isSelected()) {
-            ColorValue background = getRowBackgroundColor(descriptor);
-            if (background != null) {
-                row.setBackgroundColor(background);
-            }
-
-            ColorValue foreground = nameColor != null ? nameColor : getNameColor(descriptor);
-            if (foreground != null) {
-                nameLabel.setForegroundColor(foreground);
-            }
-        }
-
-        VerticalLayout text = VerticalLayout.create(Space.NONE);
-        text.add(nameLabel);
+        nameLabel.setText(LocalizeValue.of(StringUtil.notNullize(descriptor.getName())));
 
         String under = secondLine != null
             ? secondLine.get()
             : descriptor.getTags()
                 .stream()
-                .map(tag -> PluginTab.getTagLocalizeValue(tag).get().toUpperCase(Locale.ROOT))
+                .map(tag -> PluginTagUtil.getTagLocalizeValue(tag).get().toUpperCase(Locale.ROOT))
                 .collect(Collectors.joining(", "));
-        if (!under.isEmpty()) {
-            Label underLabel = Label.create(LocalizeValue.of(under));
-            underLabel.setForegroundColor(ComponentColors.DISABLED_TEXT);
-            text.add(underLabel);
+        tagsLabel.setText(LocalizeValue.of(under));
+
+        updatedLabel.setText(descriptor instanceof PluginNode node ? updatedText(node) : LocalizeValue.empty());
+
+        ColorValue background = null;
+        ColorValue foreground = null;
+        if (!item.isSelected()) {
+            background = getRowBackgroundColor(descriptor);
+            foreground = nameColor != null ? nameColor : getNameColor(descriptor);
+        }
+        row.setBackgroundColor(background);
+        nameLabel.setForegroundColor(foreground);
+    }
+
+    private static LocalizeValue updatedText(PluginNode node) {
+        String downloads = String.valueOf(node.getDownloads());
+        if (downloads.length() > 3) {
+            downloads = new DecimalFormat("#,###").format(node.getDownloads());
         }
 
-        row.left(iconLabel);
-        row.center(text);
-        return row;
+        String updated = DateFormatUtil.formatBetweenDates(node.getDate(), System.currentTimeMillis()).get();
+        return LocalizeValue.of(updated + "  " + downloads);
     }
 
     private static @Nullable ColorValue getRowBackgroundColor(PluginDescriptor descriptor) {
         if (descriptor.isDeleted()) {
             return StandardColors.LIGHT_RED;
         }
-        if (PluginsPanel.isDownloaded(descriptor)) {
+        if (isDownloaded(descriptor)) {
             return StandardColors.LIGHT_GREEN;
         }
         return null;
@@ -135,7 +201,7 @@ public class UnifiedPluginRowRender {
                 : StandardColors.RED;
         }
 
-        if (PluginsPanel.isDownloaded(descriptor) || installed != null && state.wasUpdated(installed.getPluginId())) {
+        if (isDownloaded(descriptor) || installed != null && state.wasUpdated(installed.getPluginId())) {
             return FileStatus.ADDED.getColor();
         }
 
@@ -145,6 +211,18 @@ public class UnifiedPluginRowRender {
         }
 
         return null;
+    }
+
+    private static boolean isDownloaded(PluginDescriptor descriptor) {
+        if (descriptor instanceof PluginNode pluginNode && pluginNode.getInstallStatus() == PluginNode.STATUS_DOWNLOADED) {
+            return true;
+        }
+
+        PluginId pluginId = descriptor.getPluginId();
+        if (PluginManager.findPlugin(pluginId) != null) {
+            return false;
+        }
+        return InstalledPluginsState.getInstance().getInstalledPlugins().contains(pluginId);
     }
 
     private static boolean isIncompatible(PluginDescriptor descriptor) {

@@ -15,75 +15,23 @@
  */
 package consulo.externalService.impl.internal.plugin.ui.action;
 
-import consulo.application.Application;
-import consulo.application.plugin.PluginActionListener;
 import consulo.container.internal.plugin.PluginDescriptorImpl;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.externalService.impl.internal.plugin.InstalledPluginsState;
 import consulo.externalService.impl.internal.plugin.PluginInstallUtil;
-import consulo.externalService.impl.internal.plugin.ui.PluginTab;
-import consulo.externalService.localize.ExternalServiceLocalize;
-import consulo.localize.LocalizeValue;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.Messages;
-import consulo.ui.ex.awt.UIUtil;
-import org.jspecify.annotations.Nullable;
+import consulo.logging.Logger;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 /**
  * @author Konstantin Bulenkov
  */
 public class UninstallPluginAction {
-    @RequiredUIAccess
-    public static void uninstall(PluginTab host, PluginDescriptor... selection) {
-        LocalizeValue message = selection.length == 1
-            ? ExternalServiceLocalize.promptUninstallPlugin(selection[0].getName())
-            : ExternalServiceLocalize.promptUninstallSeveralPlugins(selection.length);
+    private static final Logger LOG = Logger.getInstance(UninstallPluginAction.class);
 
-        if (Messages.showYesNoDialog(
-            host.getMainPanel(),
-            message.get(),
-            ExternalServiceLocalize.titlePluginUninstall().get(),
-            UIUtil.getQuestionIcon()
-        ) != Messages.YES) {
-            return;
-        }
-
-        List<PluginId> uninstalledPluginIds = new ArrayList<>();
-        for (PluginDescriptor descriptor : selection) {
-            boolean actualDelete = true;
-
-            // Get the list of plugins which depend on this one. If this list is
-            // not empty - issue warning instead of simple prompt.
-            List<PluginDescriptor> dependant = host.getDependentList(descriptor);
-            if (dependant.size() > 0) {
-                message = ExternalServiceLocalize.severalPluginsDependOn0ContinueToRemove(descriptor.getName());
-                actualDelete = (Messages.showYesNoDialog(
-                    host.getMainPanel(),
-                    message.get(),
-                    ExternalServiceLocalize.titlePluginUninstall().get(),
-                    UIUtil.getQuestionIcon()
-                ) == Messages.YES);
-            }
-
-            if (actualDelete && uninstallPlugin(descriptor, host)) {
-                uninstalledPluginIds.add(descriptor.getPluginId());
-            }
-        }
-
-        if (!uninstalledPluginIds.isEmpty()) {
-            Application.get().getMessageBus()
-                .syncPublisher(PluginActionListener.class)
-                .pluginsUninstalled(uninstalledPluginIds.toArray(PluginId[]::new));
-        }
-    }
-
-    public static boolean uninstallPlugin(PluginDescriptor descriptor, @Nullable PluginTab host) {
+    public static boolean uninstallPlugin(PluginDescriptor descriptor) {
         PluginId pluginId = descriptor.getPluginId();
 
         try {
@@ -98,14 +46,10 @@ public class UninstallPluginAction {
                 installedPlugins.remove(pluginId);
             }
 
-            if (host != null) {
-                host.setRequireShutdown(descriptor.isEnabled());
-            }
-
             return true;
         }
         catch (IOException e) {
-            PluginTab.LOG.error(e);
+            LOG.error(e);
         }
 
         return false;

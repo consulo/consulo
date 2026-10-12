@@ -306,6 +306,60 @@ settings.update.group.repository.settings.label:
     text: Repository settings
 several.plugins.depend.on.0.continue.to.remove:
     text: Several plugins depend on {0}. Continue to remove?
+startup.customize.finish.nothing:
+    text: Everything is set. All of it can be changed later in Settings.
+startup.customize.finish.plugins:
+    text: '{0} plugins will be downloaded and installed, then {1} restarts.'
+startup.customize.finish.title:
+    text: Finish
+startup.customize.install.failed:
+    text: 'Failed to install {0}: {1}'
+startup.customize.installing:
+    text: Installing Plugins
+startup.customize.keymap.header:
+    text: Choose the keymap
+startup.customize.keymap.title:
+    text: Keymap
+startup.customize.language.downloading:
+    text: Downloading the language pack…
+startup.customize.language.header:
+    text: Choose the language of the interface
+startup.customize.language.title:
+    text: Language
+startup.customize.loading:
+    text: Connecting to the plugin repository…
+startup.customize.login.header:
+    text: Set up from scratch, or restore your setup from a hub account
+startup.customize.login.hub:
+    text: Log In
+startup.customize.login.hub.description:
+    text: Restore plugins from my hub account
+startup.customize.login.scratch:
+    text: From Scratch
+startup.customize.login.scratch.description:
+    text: 'I''m new and want to set up everything myself'
+startup.customize.login.title:
+    text: Account
+startup.customize.login.waiting:
+    text: Waiting for the browser…
+startup.customize.plugin.sets.header:
+    text: Choose what you are going to work on
+startup.customize.plugin.sets.title:
+    text: Plugin Sets
+startup.customize.plugins.group.other:
+    text: Other
+startup.customize.plugins.header:
+    text: Choose plugins to download
+startup.customize.plugins.title:
+    text: Plugins
+startup.customize.start:
+    text: Start Using {0}
+startup.customize.theme.header:
+    text: Choose the look of the interface
+startup.customize.theme.title:
+    text: Theme
+startup.customize.title:
+    text: Customize {0}
 task.requesting.oauth.token:
     text: Requesting OAuth token...
 title.plugin.notification.title:

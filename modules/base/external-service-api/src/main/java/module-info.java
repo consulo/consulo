@@ -10,6 +10,7 @@ module consulo.external.service.api {
     requires transitive consulo.application.api;
     requires transitive consulo.project.api;
     requires consulo.configurable.api;
+    requires consulo.ui.ex.api;
 
     exports consulo.externalService;
     exports consulo.externalService.update;
@@ -21,4 +22,10 @@ module consulo.external.service.api {
     exports consulo.externalService.internal to
         consulo.external.service.impl,
         consulo.ide.impl;
+    exports consulo.externalService.internal.startup to
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.qt.ide.impl,
+        consulo.external.service.impl,
+        consulo.ide.impl,
+        consulo.web.ide;
 }
