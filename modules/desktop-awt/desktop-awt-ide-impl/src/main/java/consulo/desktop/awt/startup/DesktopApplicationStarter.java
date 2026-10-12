@@ -37,7 +37,7 @@ import consulo.container.util.StatCollector;
 import consulo.desktop.application.jna.windows.WindowsAutoRestartManager;
 import consulo.desktop.awt.application.impl.AWTExceptionHandler;
 import consulo.desktop.awt.application.impl.DesktopApplicationImpl;
-import consulo.desktop.awt.startup.customize.FirstStartCustomizeUtil;
+import consulo.externalService.internal.startup.StartupCustomizeManager;
 import consulo.desktop.awt.startup.splash.DesktopSplash;
 import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.desktop.awt.ui.util.AppIconUtil;
@@ -68,6 +68,7 @@ import consulo.project.ui.notification.event.NotificationListener;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WelcomeFrameManager;
 import consulo.project.ui.wm.WindowManager;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.impl.style.StyleManagerService;
 import consulo.util.concurrent.AsyncResult;
@@ -235,52 +236,62 @@ public class DesktopApplicationStarter extends ApplicationStarter {
             ForkJoinPool.commonPool().execute(WindowsAutoRestartManager::register);
         }
 
-        if (Boolean.getBoolean("consulo.first.start.testing") || newConfigFolder && !ApplicationProperties.isInSandbox()) {
-            SwingUtilities.invokeLater(() -> FirstStartCustomizeUtil.showDialog(app));
+        StartupCustomizeManager customizeManager = app.getInstance(StartupCustomizeManager.class);
+        customizeManager.initialize(newConfigFolder);
+
+        if (customizeManager.isPending()) {
+            SwingUtilities.invokeLater(() -> {
+                UIAccess uiAccess = UIAccess.current();
+                customizeManager.showAsync(true).whenCompleteAsync((result, error) -> startNormally(stat, app, args), uiAccess);
+            });
         }
         else {
-            SystemDock.getInstance().updateMenu();
-
-            // Event queue should not be changed during initialization of application components.
-            // It also cannot be changed before initialization of application components because IdeEventQueue uses other
-            // application components. So it is proper to perform replacement only here.
-            DesktopWindowManagerImpl windowManager = (DesktopWindowManagerImpl)WindowManager.getInstance();
-            IdeEventQueue.getInstance().setWindowManager(windowManager);
-
-            RecentProjectsManagerImpl recentProjectsManager = (RecentProjectsManagerImpl)RecentProjectsManager.getInstance();
-
-            if (recentProjectsManager.willReopenProjectOnStart() && !args.isNoRecentProjects()) {
-                // frames will be showed, so not need show default frame
-            }
-            else {
-                SwingUtilities.invokeLater(() -> WelcomeFrameManager.getInstance().showFrame());
-            }
-
-            app.invokeLater(
-                () -> {
-                    if (!args.isNoRecentProjects()) {
-                        AsyncResult<Project> projectFromCommandLine = AsyncResult.rejected();
-
-                        if (isPerformProjectLoad()) {
-                            projectFromCommandLine = CommandLineProcessor.processExternalCommandLine(args, null);
-                        }
-
-                        projectFromCommandLine.doWhenRejected(recentProjectsManager::doReopenLastProject);
-                    }
-
-                    if (args.getJson() != null) {
-                        runJsonRequest(args.getJson());
-                    }
-
-                    SwingUtilities.invokeLater(() -> reportPluginError(myPluginsInitializeInfo));
-
-                    UsageTrigger.trigger("consulo.app.started");
-                },
-                app.getNoneModalityState()
-            );
-
-            stat.dump("Startup statistics", LOG::info);
+            startNormally(stat, app, args);
         }
+    }
+
+    private void startNormally(StatCollector stat, ApplicationEx app, CommandLineArgs args) {
+        SystemDock.getInstance().updateMenu();
+
+        // Event queue should not be changed during initialization of application components.
+        // It also cannot be changed before initialization of application components because IdeEventQueue uses other
+        // application components. So it is proper to perform replacement only here.
+        DesktopWindowManagerImpl windowManager = (DesktopWindowManagerImpl)WindowManager.getInstance();
+        IdeEventQueue.getInstance().setWindowManager(windowManager);
+
+        RecentProjectsManagerImpl recentProjectsManager = (RecentProjectsManagerImpl)RecentProjectsManager.getInstance();
+
+        if (recentProjectsManager.willReopenProjectOnStart() && !args.isNoRecentProjects()) {
+            // frames will be showed, so not need show default frame
+        }
+        else {
+            SwingUtilities.invokeLater(() -> WelcomeFrameManager.getInstance().showFrame());
+        }
+
+        app.invokeLater(
+            () -> {
+                if (!args.isNoRecentProjects()) {
+                    AsyncResult<Project> projectFromCommandLine = AsyncResult.rejected();
+
+                    if (isPerformProjectLoad()) {
+                        projectFromCommandLine = CommandLineProcessor.processExternalCommandLine(args, null);
+                    }
+
+                    projectFromCommandLine.doWhenRejected(recentProjectsManager::doReopenLastProject);
+                }
+
+                if (args.getJson() != null) {
+                    runJsonRequest(args.getJson());
+                }
+
+                SwingUtilities.invokeLater(() -> reportPluginError(myPluginsInitializeInfo));
+
+                UsageTrigger.trigger("consulo.app.started");
+            },
+            app.getNoneModalityState()
+        );
+
+        stat.dump("Startup statistics", LOG::info);
     }
 
     @SuppressWarnings("unchecked")
