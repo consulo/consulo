@@ -15,6 +15,7 @@
  */
 package consulo.application.progress;
 
+import consulo.ui.Component;
 import consulo.ui.UIAccess;
 import consulo.util.concurrent.coroutine.Coroutine;
 
@@ -29,6 +30,8 @@ public interface ProgressBuilder {
     ProgressBuilder cancelable();
 
     ProgressBuilder modal();
+
+    ProgressBuilder parent(Component component);
 
     <V> CompletableFuture<V> execute(UIAccess uiAccess,
                                      Supplier<Coroutine<?, V>> supplier);

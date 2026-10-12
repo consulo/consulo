@@ -19,6 +19,7 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
 import consulo.component.ComponentManager;
 import consulo.localize.LocalizeValue;
+import consulo.ui.Component;
 import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
 import consulo.util.concurrent.coroutine.Coroutine;
@@ -53,6 +54,7 @@ public interface ProgressManagerEx {
 
     <V> CompletableFuture<V> executeTask(UIAccess uiAccess,
                                          @Nullable ComponentManager project,
+                                         @Nullable Component parent,
                                          LocalizeValue titleText,
                                          boolean modal,
                                          boolean cancelable,
