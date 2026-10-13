@@ -43,13 +43,9 @@ public class AIChatToolWindowFactory implements ToolWindowFactory, DumbAware {
         return ID;
     }
 
-    /**
-     * Without a provider plugin there is nothing to talk to, so the tool window is not registered at
-     * all rather than shown empty. Installing one makes it appear on the next start.
-     */
     @Override
     public boolean validate(Project project) {
-        return !AIProviderTable.getInstance().getTypes().isEmpty();
+        return !AIProviderTable.getInstance().getProviders().isEmpty();
     }
 
     @Override

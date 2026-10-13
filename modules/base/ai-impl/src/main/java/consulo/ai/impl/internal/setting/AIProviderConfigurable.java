@@ -29,9 +29,13 @@ import consulo.configurable.StandardConfigurableIds;
 import consulo.configurable.UnifiedMasterDetailsComponent;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.project.Project;
+import consulo.project.ProjectManager;
+import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.TextAttribute;
 import consulo.ui.TextItemPresentation;
 import consulo.ui.Tree;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -252,6 +256,18 @@ public class AIProviderConfigurable extends UnifiedMasterDetailsComponent
                 }
             }
             table.setDefault(provider, model);
+        }
+
+        for (Project project : ProjectManager.getInstance().getOpenProjects()) {
+            UIAccess uiAccess = project.getUIAccess();
+
+            if (uiAccess.isValid()) {
+                uiAccess.execute(() -> {
+                    ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
+                    
+                    toolWindowManager.revalidateToolWindows();
+                });
+            }
         }
     }
 
