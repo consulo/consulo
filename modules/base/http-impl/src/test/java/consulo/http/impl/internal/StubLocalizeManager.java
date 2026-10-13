@@ -51,6 +51,11 @@ public class StubLocalizeManager extends LocalizeManager {
     }
 
     @Override
+    public @Nullable String getUnformattedText(LocalizeKey key, Locale locale) {
+        return Locale.US.equals(locale) ? getUnformattedText(key).getValue() : null;
+    }
+
+    @Override
     public Locale parseLocale(String localeText) {
         return Locale.US;
     }
@@ -66,6 +71,11 @@ public class StubLocalizeManager extends LocalizeManager {
 
     @Override
     public Locale getAutoDetectedLocale() {
+        return Locale.US;
+    }
+
+    @Override
+    public Locale getDefaultLocale() {
         return Locale.US;
     }
 
