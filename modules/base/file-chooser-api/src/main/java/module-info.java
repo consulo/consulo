@@ -21,4 +21,8 @@ module consulo.file.chooser.api {
   exports consulo.fileChooser.provider;
   exports consulo.fileChooser.node;
   exports consulo.fileChooser.util;
+
+  exports consulo.fileChooser.internal to
+    consulo.file.chooser.impl,
+    consulo.remote.server.impl;
 }

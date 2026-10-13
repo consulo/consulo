@@ -18,8 +18,11 @@ package consulo.content.bundle;
 import consulo.annotation.DeprecationInfo;
 import consulo.application.Application;
 import consulo.component.util.pointer.NamedPointer;
+import consulo.content.platform.PlatformTarget;
+import consulo.content.platform.PlatformTargetManager;
 import consulo.fileChooser.FileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -37,10 +40,12 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.CompletionException;
 import java.util.Set;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
-import consulo.localize.LocalizeValue;
 
 /**
  * @author VISTALL
@@ -252,6 +257,54 @@ public class SdkUtil {
         }
     }
 
+    /**
+     * Chooses the home of a new SDK on any machine - the local one or a remote platform, each as a tab of the chooser.
+     * The consumer gets the target the home lives on, null for the local machine.
+     */
+    @RequiredUIAccess
+    public static void selectSdkHomeOnAnyPlatform(
+        PlatformAwareSdkType platformAwareSdkType,
+        @RequiredUIAccess BiConsumer<@Nullable PlatformTarget, Path> consumer
+    ) {
+        PlatformTargetManager targetManager = Application.get().getInstance(PlatformTargetManager.class);
+        Platform local = Platform.current();
+        FileChooserDescriptor descriptor = platformAwareSdkType.getHomeChooserDescriptor(local).withAnyPlatform();
+
+        List<Path> suggested = new ArrayList<>();
+        platformAwareSdkType.collectHomePaths(local, suggested::add);
+        Path toSelect = suggested.isEmpty() ? null : suggested.getFirst();
+
+        FileChooser.choosePaths(descriptor, null, toSelect).whenComplete((paths, error) -> {
+            if (error != null || paths.isEmpty()) {
+                return;
+            }
+
+            Path path = paths.getFirst();
+            PlatformTarget target = targetManager.findTargetOf(path);
+            Platform platform = target == null ? null : target.getPlatform();
+            if (platform == null) {
+                return;
+            }
+            PlatformTarget owner = target == targetManager.getLocalTarget() ? null : target;
+
+            if (platformAwareSdkType.isValidSdkHome(platform, path)) {
+                consumer.accept(owner, path);
+                return;
+            }
+
+            Path adjustedPath = platformAwareSdkType.adjustSelectedSdkHome(platform, path);
+            if (platformAwareSdkType.isValidSdkHome(platform, adjustedPath)) {
+                consumer.accept(owner, adjustedPath);
+            }
+        }).exceptionally(error -> {
+            Throwable cause = error instanceof CompletionException && error.getCause() != null ? error.getCause() : error;
+            if (!(cause instanceof CancellationException)) {
+                LOG.error(cause);
+            }
+            return null;
+        });
+    }
+
     @RequiredUIAccess
     public static void selectSdkHome(
         Platform platform,
@@ -260,12 +313,16 @@ public class SdkUtil {
     ) {
         FileChooserDescriptor descriptor = platformAwareSdkType.getHomeChooserDescriptor(platform);
 
-        FileChooser.chooseFiles(descriptor, null, getSuggestedSdkPath(platformAwareSdkType)).whenComplete((virtualFiles, error) -> {
-            if (error != null) {
+        List<Path> suggested = new ArrayList<>();
+        platformAwareSdkType.collectHomePaths(platform, suggested::add);
+        Path toSelect = suggested.isEmpty() ? null : suggested.getFirst();
+
+        FileChooser.choosePaths(descriptor, null, toSelect).whenComplete((paths, error) -> {
+            if (error != null || paths.isEmpty()) {
                 return;
             }
 
-            Path path = virtualFiles[0].toNioPath();
+            Path path = paths.getFirst();
             if (platformAwareSdkType.isValidSdkHome(platform, path)) {
                 consumer.accept(path);
                 return;

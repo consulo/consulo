@@ -3,6 +3,7 @@ package consulo.fileChooser.impl.internal;
 
 import consulo.disposer.Disposable;
 import consulo.fileChooser.FileChooserDescriptor;
+import consulo.fileChooser.internal.UniversalFileChooserContributor;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.Component;

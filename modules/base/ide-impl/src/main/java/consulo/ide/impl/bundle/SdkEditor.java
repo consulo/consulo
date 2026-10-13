@@ -29,21 +29,26 @@ import consulo.content.bundle.SdkModificator;
 import consulo.content.bundle.SdkType;
 import consulo.content.bundle.SdkUtil;
 import consulo.content.bundle.UnknownSdkType;
+import consulo.content.platform.PlatformTarget;
+import consulo.content.platform.PlatformTargetManager;
 import consulo.disposer.Disposable;
 import consulo.ide.ui.OrderRootTypeUIFactory;
 import consulo.ide.ui.PathEditor;
 import consulo.ide.ui.SdkPathEditor;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.localize.ProjectLocalize;
 import consulo.ui.Component;
+import consulo.ui.Label;
 import consulo.ui.MessageBoxes;
 import consulo.ui.Space;
 import consulo.ui.Tab;
 import consulo.ui.TextBox;
 import consulo.ui.TextBoxWithExtensions;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.layout.DockLayout;
@@ -58,12 +63,15 @@ import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
 import java.io.File;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 
 public class SdkEditor implements UnnamedConfigurable {
     private static final Logger LOG = Logger.getInstance(SdkEditor.class);
@@ -154,6 +162,14 @@ public class SdkEditor implements UnnamedConfigurable {
         myHomeComponent = homeComponent;
 
         FormBuilder formBuilder = FormBuilder.create();
+        if (mySdk.getSdkType() instanceof PlatformAwareSdkType) {
+            PlatformTarget target = findPlatformTarget();
+            Label platformLabel = Label.create(
+                target == null ? ProjectLocalize.platformTargetMissing(mySdk.getPlatformTargetId()) : target.getDisplayName()
+            );
+            platformLabel.setImage(target == null ? null : target.getIcon());
+            formBuilder.addLabeled(ProjectLocalize.platformTargetLabel(), platformLabel);
+        }
         formBuilder.addLabeled(CommonLocalize.nameLabelText(), nameComponent);
         formBuilder.addLabeled(ProjectLocalize.sdkConfigureTypeHomePath(), homeComponent);
 
@@ -249,11 +265,15 @@ public class SdkEditor implements UnnamedConfigurable {
     @RequiredUIAccess
     @Override
     public void reset() {
-        SdkModificator sdkModificator = mySdk.getSdkModificator();
-        for (SdkPathEditor pathEditor : myPathEditors.values()) {
-            pathEditor.reset(sdkModificator);
+        resetPathEditors();
+        PlatformTarget target = findPlatformTarget();
+        if (target != null && target.getPlatform() == null) {
+            target.connect().whenCompleteAsync((platform, error) -> {
+                if (error == null && myMainPanel != null) {
+                    resetPathEditors();
+                }
+            }, UIAccess.current());
         }
-        sdkModificator.commitChanges();
         String homePath = mySdk.getHomePath();
         setHomePathValue(homePath == null ? null : homePath.replace('/', File.separatorChar));
         myVersionString = null;
@@ -262,6 +282,15 @@ public class SdkEditor implements UnnamedConfigurable {
         if (configurable != null) {
             configurable.reset();
         }
+    }
+
+    @RequiredUIAccess
+    private void resetPathEditors() {
+        SdkModificator sdkModificator = mySdk.getSdkModificator();
+        for (SdkPathEditor pathEditor : myPathEditors.values()) {
+            pathEditor.reset(sdkModificator);
+        }
+        sdkModificator.commitChanges();
     }
 
     @RequiredUIAccess
@@ -277,6 +306,18 @@ public class SdkEditor implements UnnamedConfigurable {
         myUIDisposable = null;
         myAdditionalDataConfigurables.clear();
         myAdditionalDataComponents.clear();
+    }
+
+    private @Nullable PlatformTarget findPlatformTarget() {
+        return Application.get().getInstance(PlatformTargetManager.class).findTarget(mySdk.getPlatformTargetId());
+    }
+
+    /**
+     * The platform of the SDK while it is reachable - it is chosen once, when the SDK is added.
+     */
+    private @Nullable Platform getEditedPlatform() {
+        PlatformTarget target = findPlatformTarget();
+        return target == null ? null : target.getPlatform();
     }
 
     private String getHomeValue() {
@@ -303,19 +344,20 @@ public class SdkEditor implements UnnamedConfigurable {
 
         homeComponent.setValue(absolutePath);
         ColorValue fg;
-        if (absolutePath != null && !absolutePath.isEmpty()) {
-            File homeDir = new File(absolutePath);
+        Platform platform = getEditedPlatform();
+        if (absolutePath != null && !absolutePath.isEmpty() && platform != null) {
+            Path homeDir = platform.fs().getPath(absolutePath);
             boolean homeMustBeDirectory;
 
             SdkType sdkType = (SdkType) mySdk.getSdkType();
             if (sdkType instanceof PlatformAwareSdkType platformAwareSdkType) {
-                homeMustBeDirectory = platformAwareSdkType.getHomeChooserDescriptor(mySdk.getPlatform()).isChooseFolders();
+                homeMustBeDirectory = platformAwareSdkType.getHomeChooserDescriptor(platform).isChooseFolders();
             }
             else {
                 homeMustBeDirectory = sdkType.getHomeChooserDescriptor().isChooseFolders();
             }
 
-            fg = homeDir.exists() && homeDir.isDirectory() == homeMustBeDirectory ? null : StandardColors.RED;
+            fg = Files.exists(homeDir) && Files.isDirectory(homeDir) == homeMustBeDirectory ? null : StandardColors.RED;
         }
         else {
             fg = null;
@@ -327,7 +369,21 @@ public class SdkEditor implements UnnamedConfigurable {
     private void doSelectHomePath() {
         SdkType sdkType = (SdkType) mySdk.getSdkType();
         if (sdkType instanceof PlatformAwareSdkType platformAwareSdkType) {
-            SdkUtil.selectSdkHome(mySdk.getPlatform(), platformAwareSdkType, path -> doSetHomePath(path.toString(), sdkType));
+            PlatformTarget target = findPlatformTarget();
+            CompletableFuture<Platform> platform = target == null
+                ? CompletableFuture.failedFuture(new IllegalStateException(
+                    ProjectLocalize.errorPlatformTargetMissing(mySdk.getPlatformTargetId()).get()
+                ))
+                : target.connect();
+            platform.whenCompleteAsync((connected, error) -> {
+                if (error != null) {
+                    Throwable cause = error instanceof CompletionException && error.getCause() != null ? error.getCause() : error;
+                    MessageBoxes.okError(cause).showAsync(myMainPanel);
+                    return;
+                }
+                setHomePathValue(getHomeValue());
+                SdkUtil.selectSdkHome(connected, platformAwareSdkType, path -> doSetHomePath(path.toString(), sdkType));
+            }, UIAccess.current());
         }
         else {
             SdkUtil.selectSdkHome(sdkType, path -> doSetHomePath(path, sdkType));
@@ -452,7 +508,18 @@ public class SdkEditor implements UnnamedConfigurable {
 
         @Override
         public Path getHomeNioPath() {
-            return Path.of(getHomeValue());
+            Platform platform = getEditedPlatform();
+            return platform == null ? Path.of(getHomeValue()) : platform.fs().getPath(getHomeValue());
+        }
+
+        @Override
+        public @Nullable String getPlatformTargetId() {
+            return mySdk.getPlatformTargetId();
+        }
+
+        @Override
+        public void setPlatformTargetId(@Nullable String targetId) {
+            throw new UnsupportedOperationException();
         }
 
         @Override

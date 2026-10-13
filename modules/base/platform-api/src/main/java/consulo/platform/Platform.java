@@ -18,11 +18,15 @@ package consulo.platform;
 import consulo.platform.internal.PlatformInternal;
 import consulo.ui.UIAccess;
 import consulo.util.dataholder.UserDataHolder;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author VISTALL
@@ -82,6 +86,38 @@ public interface Platform extends UserDataHolder {
     }
 
     void openDirectoryInFileManager(File file, UIAccess uiAccess);
+
+    default @Nullable Path findExecutableInPath(String name) {
+        String pathValue = os().getEnvironmentVariable("PATH");
+        if (pathValue == null || pathValue.isEmpty()) {
+            return null;
+        }
+
+        boolean windows = os().isWindows();
+        List<String> names = new ArrayList<>();
+        names.add(name);
+        if (windows && name.indexOf('.') < 0) {
+            String pathExt = os().getEnvironmentVariable("PATHEXT");
+            for (String extension : (pathExt == null ? ".COM;.EXE;.BAT;.CMD" : pathExt).split(";")) {
+                if (!extension.isEmpty()) {
+                    names.add(name + extension.toLowerCase());
+                }
+            }
+        }
+
+        for (String directory : pathValue.split(windows ? ";" : ":")) {
+            if (directory.isEmpty()) {
+                continue;
+            }
+            for (String candidateName : names) {
+                Path candidate = fs().getPath(directory, candidateName);
+                if (Files.isRegularFile(candidate) && Files.isExecutable(candidate)) {
+                    return candidate;
+                }
+            }
+        }
+        return null;
+    }
 
     default String mapExecutableName(String baseName) {
         String archSuffix = jvm().arch().fileNameSuffix();

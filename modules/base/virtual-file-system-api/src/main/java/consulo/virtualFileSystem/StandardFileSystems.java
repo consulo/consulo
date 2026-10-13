@@ -37,6 +37,11 @@ public class StandardFileSystems {
   public static String JAR_PROTOCOL_PREFIX = "jar://";
 
   public static final String ZIP_PROTOCOL = "zip";
+
+  /**
+   * Files of another machine, {@code platform://<platform id>/path}.
+   */
+  public static final String PLATFORM_PROTOCOL = "platform";
   public static final String ZIP_PROTOCOL_PREFIX = ZIP_PROTOCOL + URLUtil.SCHEME_SEPARATOR;
 
   @Deprecated

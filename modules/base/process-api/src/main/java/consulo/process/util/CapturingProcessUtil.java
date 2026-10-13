@@ -15,7 +15,9 @@
  */
 package consulo.process.util;
 
+import consulo.platform.Platform;
 import consulo.process.ExecutionException;
+import consulo.process.ProcessHandlerBuilder;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.internal.CapturingProcessHandler;
 
@@ -24,14 +26,25 @@ import consulo.process.internal.CapturingProcessHandler;
  * @since 04/06/2023
  */
 public class CapturingProcessUtil {
-  
   public static ProcessOutput execAndGetOutput(GeneralCommandLine commandLine) throws ExecutionException {
+    if (isRemote(commandLine)) {
+      return new CapturingProcessRunner(ProcessHandlerBuilder.create(commandLine).build()).runProcess();
+    }
     return new CapturingProcessHandler(commandLine).runProcess();
   }
 
-  
   public static ProcessOutput execAndGetOutput(GeneralCommandLine commandLine,
                                                int timeoutInMilliseconds) throws ExecutionException {
+    if (isRemote(commandLine)) {
+      return new CapturingProcessRunner(ProcessHandlerBuilder.create(commandLine).build()).runProcess(timeoutInMilliseconds);
+    }
     return new CapturingProcessHandler(commandLine).runProcess(timeoutInMilliseconds);
+  }
+
+  /**
+   * A command line of another machine runs through the platform's own process handler, a local process cannot start it.
+   */
+  private static boolean isRemote(GeneralCommandLine commandLine) {
+    return !commandLine.getPlatform().equals(Platform.current());
   }
 }

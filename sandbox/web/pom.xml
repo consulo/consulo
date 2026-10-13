@@ -251,6 +251,11 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-remote-server-agent-impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>consulo-language-code-style-impl</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -666,6 +671,10 @@
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-card-flow</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-messages-flow</artifactId>
         </dependency>
         <dependency>
             <groupId>com.vaadin</groupId>

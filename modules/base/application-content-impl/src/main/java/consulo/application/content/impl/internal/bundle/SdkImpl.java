@@ -9,11 +9,14 @@ import consulo.content.OrderRootType;
 import consulo.content.RootProvider;
 import consulo.content.RootProviderBase;
 import consulo.content.bundle.*;
+import consulo.content.platform.PlatformTarget;
+import consulo.content.platform.PlatformTargetManager;
 import consulo.content.internal.GlobalLibraryRootListenerProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
+import consulo.project.localize.ProjectLocalize;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.util.lang.StringUtil;
 import consulo.util.xml.serializer.InvalidDataException;
@@ -25,6 +28,7 @@ import org.jdom.Element;
 import org.jspecify.annotations.Nullable;
 
 import java.nio.file.Path;
+import java.util.Objects;
 
 public class SdkImpl extends UserDataHolderBase implements Sdk, SdkModificator, Disposable {
     private static final Logger LOG = Logger.getInstance(SdkImpl.class);
@@ -45,9 +49,11 @@ public class SdkImpl extends UserDataHolderBase implements Sdk, SdkModificator, 
     private static final String ELEMENT_ROOTS = "roots";
     private static final String ELEMENT_HOMEPATH = "homePath";
     private static final String ELEMENT_ADDITIONAL = "additional";
+    private static final String ELEMENT_PLATFORM_TARGET = "platformTarget";
     private final MyRootProvider myRootProvider = new MyRootProvider();
 
     private boolean myPredefined;
+    private @Nullable String myPlatformTargetId;
 
     @Deprecated
     @DeprecationInfo("Prefer with Path parameter")
@@ -130,7 +136,10 @@ public class SdkImpl extends UserDataHolderBase implements Sdk, SdkModificator, 
 
     private @Nullable String getBundleVersion(PlatformAwareSdkType platformAwareSdkType) {
         if (myVersionString == null && !myVersionDefined) {
-            setVersionString(platformAwareSdkType.getVersionString(getPlatform(), getHomeNioPath()));
+            Platform platform = findPlatform();
+            if (platform != null) {
+                setVersionString(platformAwareSdkType.getVersionString(platform, getHomeNioPath()));
+            }
         }
         return myVersionString;
     }
@@ -153,18 +162,50 @@ public class SdkImpl extends UserDataHolderBase implements Sdk, SdkModificator, 
 
     @Override
     public Path getHomeNioPath() {
-        // TODO [VISTALL] better handle remote paths
-        if (myHomePath != null) {
-            return Path.of(myHomePath);
-        }
-        return Path.of("");
+        Platform platform = myPlatformTargetId == null ? Platform.current() : findPlatform();
+        String home = myHomePath == null ? "" : myHomePath;
+        return platform == null ? Path.of(home) : platform.fs().getPath(home);
     }
 
 
     @Override
     public Platform getPlatform() {
-        // TODO [VISTALL] better handle remote platform
-        return Platform.current();
+        Platform platform = findPlatform();
+        if (platform == null) {
+            throw new IllegalStateException(ProjectLocalize.errorPlatformTargetConnecting(myPlatformTargetId).get());
+        }
+        return platform;
+    }
+
+    /**
+     * The platform while it is reachable; an unreachable remote one starts connecting and answers null.
+     */
+    private @Nullable Platform findPlatform() {
+        if (myPlatformTargetId == null) {
+            return Platform.current();
+        }
+        PlatformTarget target = Application.get().getInstance(PlatformTargetManager.class).findTarget(myPlatformTargetId);
+        if (target == null) {
+            return null;
+        }
+        Platform platform = target.getPlatform();
+        if (platform == null) {
+            target.connect();
+        }
+        return platform;
+    }
+
+    @Override
+    public @Nullable String getPlatformTargetId() {
+        return myPlatformTargetId;
+    }
+
+    @Override
+    public void setPlatformTargetId(@Nullable String targetId) {
+        if (!Objects.equals(myPlatformTargetId, targetId)) {
+            myPlatformTargetId = targetId;
+            resetVersionString();
+        }
     }
 
     @Override
@@ -207,6 +248,8 @@ public class SdkImpl extends UserDataHolderBase implements Sdk, SdkModificator, 
         }
         Element homePath = assertNotMissing(element, ELEMENT_HOMEPATH);
         myHomePath = homePath.getAttributeValue(ATTRIBUTE_VALUE);
+        Element platformTarget = element.getChild(ELEMENT_PLATFORM_TARGET);
+        myPlatformTargetId = platformTarget == null ? null : platformTarget.getAttributeValue(ATTRIBUTE_VALUE);
         Element elementRoots = assertNotMissing(element, ELEMENT_ROOTS);
         myRoots.readExternal(elementRoots);
 
@@ -250,6 +293,12 @@ public class SdkImpl extends UserDataHolderBase implements Sdk, SdkModificator, 
         home.setAttribute(ATTRIBUTE_VALUE, myHomePath);
         element.addContent(home);
 
+        if (myPlatformTargetId != null) {
+            Element platformTarget = new Element(ELEMENT_PLATFORM_TARGET);
+            platformTarget.setAttribute(ATTRIBUTE_VALUE, myPlatformTargetId);
+            element.addContent(platformTarget);
+        }
+
         Element roots = new Element(ELEMENT_ROOTS);
         myRoots.writeExternal(roots);
         element.addContent(roots);
@@ -273,7 +322,6 @@ public class SdkImpl extends UserDataHolderBase implements Sdk, SdkModificator, 
 
     @Override
     public void setHomeNioPath(Path path) {
-        // TODO [VISTALL] better handle
         setHomePath(path.toAbsolutePath().toString());
     }
 
@@ -300,6 +348,7 @@ public class SdkImpl extends UserDataHolderBase implements Sdk, SdkModificator, 
         dest.setName(name);
         dest.setHomePath(getHomePath());
         dest.setPredefined(myPredefined);
+        dest.myPlatformTargetId = myPlatformTargetId;
         dest.myVersionDefined = myVersionDefined;
         dest.myVersionString = myVersionString;
         dest.setSdkAdditionalData(getSdkAdditionalData());

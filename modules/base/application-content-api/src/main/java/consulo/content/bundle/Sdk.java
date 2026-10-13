@@ -47,7 +47,16 @@ public interface Sdk extends UserDataHolder, Named {
 
   Path getHomeNioPath();
 
+  /**
+   * The machine the SDK lives on. A remote machine that is not reachable right now starts connecting and fails with
+   * {@link IllegalStateException} - the SDK never silently falls back to the local machine.
+   */
   Platform getPlatform();
+
+  /**
+   * The {@link consulo.content.platform.PlatformTarget} id of the machine, null for the local one.
+   */
+  @Nullable String getPlatformTargetId();
 
   @Nullable VirtualFile getHomeDirectory();
 

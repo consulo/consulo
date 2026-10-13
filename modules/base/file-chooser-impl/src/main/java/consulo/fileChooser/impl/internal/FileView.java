@@ -4,18 +4,22 @@ package consulo.fileChooser.impl.internal;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.disposer.Disposable;
 import consulo.fileChooser.FileChooserDescriptor;
+import consulo.fileChooser.internal.UniversalFileChooserContributor;
 import consulo.fileChooser.localize.FileChooserLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.ui.MessageBoxes;
 import consulo.ui.Component;
+import consulo.ui.Label;
+import consulo.ui.MessageBoxes;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.tree.ApplicationTreeExecutorFactory;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.LoadingLayout;
 import consulo.ui.layout.ScrollableLayout;
+import consulo.ui.style.ComponentColors;
+import consulo.util.lang.ref.SimpleReference;
 import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
@@ -24,6 +28,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 import java.util.stream.Stream;
 
 class FileView {
@@ -221,17 +226,28 @@ class FileView {
         myContent.setLoadingText(customLoadingText.orIfEmpty(FileChooserLocalize.universalFileChooserLabelLoading()));
 
         UIAccess uiAccess = UIAccess.current();
+        SimpleReference<LocalizeValue> failure = SimpleReference.create();
+        CompletableFuture<List<UniversalFileChooserContributor.Root>> rootsFuture = rootsFuture();
         myContent.startLoading(
             () -> {
                 try {
-                    return rootsFuture().join();
+                    return rootsFuture.join();
                 }
                 catch (RuntimeException e) {
                     LOG.warn("cannot load roots", e);
+                    Throwable cause = e instanceof CompletionException && e.getCause() != null ? e.getCause() : e;
+                    failure.set(LocalizeValue.of(String.valueOf(cause.getMessage())));
                     return List.<UniversalFileChooserContributor.Root>of();
                 }
             },
             (inner, roots) -> {
+                LocalizeValue failureText = failure.get();
+                if (failureText != null) {
+                    Label label = Label.create(failureText);
+                    label.setForegroundColor(ComponentColors.ERROR_FOREGROUND);
+                    inner.center(label);
+                    return;
+                }
                 List<UniversalFileChooserContributor.Root> resolvedRoots = roots == null ? List.of() : roots;
                 myRoots.clear();
                 for (UniversalFileChooserContributor.Root root : resolvedRoots) {
@@ -299,6 +315,11 @@ class FileView {
     @RequiredUIAccess
     private void updatePathField(List<Path> selection) {
         if (selection.isEmpty()) {
+            return;
+        }
+        String text = myPathTextField.getTextBox().getValue();
+        Path typed = text == null || text.isEmpty() ? null : myContributor.parsePresentablePath(text);
+        if (typed != null && typed.startsWith(selection.get(0))) {
             return;
         }
         myPathUpdating = true;

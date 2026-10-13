@@ -23,6 +23,12 @@ import javax.swing.*;
  */
 public class AWTComboBoxStyle {
     public static void makeBorderInline(JComboBox<?> comboBox) {
-        comboBox.putClientProperty("FlatLaf.style", "borderColor: #0000; disabledBorderColor: #0000; borderWidth: 0; focusWidth: 0; innerFocusWidth: 1; innerOutlineWidth: 1; arc: 0");
+        comboBox.setOpaque(false);
+        comboBox.putClientProperty(
+            "FlatLaf.style",
+            "borderColor: #0000; disabledBorderColor: #0000; borderWidth: 0; focusWidth: 0; innerFocusWidth: 0; innerOutlineWidth: 0; arc: 0; "
+                + "background: #0000; disabledBackground: #0000; focusedBackground: #0000; "
+                + "buttonBackground: #0000; buttonEditableBackground: #0000; buttonFocusedBackground: #0000"
+        );
     }
 }

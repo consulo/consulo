@@ -2,6 +2,7 @@
 package consulo.fileChooser.impl.internal;
 
 import consulo.application.Application;
+import consulo.fileChooser.internal.UniversalFileChooserContributor;
 import consulo.ui.Component;
 import consulo.ui.PseudoComponent;
 import consulo.ui.TextBoxWithHistory;

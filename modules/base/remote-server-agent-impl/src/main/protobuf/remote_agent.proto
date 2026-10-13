@@ -1,0 +1,312 @@
+// Copyright 2013-2026 consulo.io
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+syntax = "proto3";
+
+package remote_agent;
+
+option java_package = "consulo.remoteServer.agent.impl.internal.protocol";
+option java_multiple_files = true;
+
+// Errors are gRPC statuses: PERMISSION_DENIED when a permission group is not granted
+// (the group is the "permission" trailer), NOT_FOUND / ALREADY_EXISTS for file errors,
+// INVALID_ARGUMENT for a bad request, UNKNOWN for any other failure.
+
+message Empty {
+}
+
+// ============================================================
+// Agent identity / system
+// ============================================================
+
+message AgentInfo {
+    string agent_id = 1;
+    string version = 2;
+    // expanded permission groups, e.g. ["fs", "process", "http"]
+    repeated string permissions = 3;
+}
+
+message SystemInfo {
+    string os_name = 1;
+    string os_version = 2;
+    string arch = 3;
+    string hostname = 4;
+    // console encoding for decoding process output, e.g. "UTF-8", "CP866"
+    string console_encoding = 5;
+    // system locale, e.g. "en_US.UTF-8"
+    string locale = 6;
+}
+
+message StatInfo {
+    int32 cpu_count = 1;
+    // CPU usage 0.0-1.0
+    double cpu_load = 2;
+    int64 total_memory = 3;
+    int64 used_memory = 4;
+}
+
+message UserInfo {
+    string user_name = 1;
+    string home_path = 2;
+}
+
+message EnvVariableRequest {
+    string name = 1;
+}
+
+message EnvVariable {
+    // absent when the variable is not set
+    optional string value = 1;
+}
+
+message EnvVariables {
+    map<string, string> variables = 1;
+}
+
+message WorkspacePath {
+    string path = 1;
+}
+
+message FreePort {
+    int32 port = 1;
+}
+
+// ============================================================
+// Processes
+// ============================================================
+
+message ExecStart {
+    string command = 1;
+    repeated string arguments = 2;
+    // empty = the agent's current directory
+    string working_directory = 3;
+    // added to the inherited environment
+    map<string, string> environment = 4;
+}
+
+message ExecKill {
+    // false = SIGTERM / Ctrl+C, true = SIGKILL / TerminateProcess
+    bool force = 1;
+}
+
+// The first message must be start; then stdin, close_stdin and kill in any order.
+// Half-closing the request stream closes stdin.
+message ExecInput {
+    oneof input {
+        ExecStart start = 1;
+        bytes stdin = 2;
+        Empty close_stdin = 3;
+        ExecKill kill = 4;
+    }
+}
+
+message ExecExit {
+    // absent when the process was killed by a signal
+    optional int32 exit_code = 1;
+    // the signal that killed the process (POSIX only)
+    optional int32 signal = 2;
+}
+
+// started first, then stdout / stderr chunks, exited last (after all output).
+message ExecEvent {
+    oneof event {
+        int64 started = 1;
+        bytes stdout = 2;
+        bytes stderr = 3;
+        ExecExit exited = 4;
+    }
+}
+
+message ProcessInfo {
+    int64 pid = 1;
+    bool alive = 2;
+    string command = 3;
+}
+
+message ProcessList {
+    repeated ProcessInfo processes = 1;
+}
+
+message KillRequest {
+    int64 pid = 1;
+    bool force = 2;
+}
+
+message KillResult {
+    bool killed = 1;
+}
+
+// ============================================================
+// Files
+// ============================================================
+
+// For a symlink, size / last_modified / directory / readable / writable / executable
+// describe the link target (symlink = true marks the entry itself); a broken link
+// describes the link.
+message FileInfo {
+    string name = 1;
+    string path = 2;
+    int64 size = 3;
+    optional int64 last_modified = 4;
+    bool directory = 5;
+    bool symlink = 6;
+    bool hidden = 7;
+    bool readable = 8;
+    bool writable = 9;
+    bool executable = 10;
+    optional string user_name = 11;
+}
+
+message FileInfoList {
+    repeated FileInfo files = 1;
+}
+
+message PathRequest {
+    string path = 1;
+}
+
+message FileContent {
+    bytes data = 1;
+}
+
+message WriteFileRequest {
+    string path = 1;
+    bytes data = 2;
+}
+
+message ExistsResult {
+    bool exists = 1;
+}
+
+message DeleteResult {
+    bool deleted = 1;
+}
+
+message CreateDirectoryRequest {
+    string path = 1;
+    bool recursive = 2;
+}
+
+message SetPermissionsRequest {
+    string path = 1;
+    // POSIX mode, e.g. 0755; a no-op returning false on Windows
+    int32 mode = 2;
+}
+
+message SetPermissionsResult {
+    bool changed = 1;
+}
+
+message ReadStreamRequest {
+    string path = 1;
+    // 0 = the agent default
+    int32 chunk_size = 2;
+}
+
+// The first message must be path; then data chunks. The file is written when the
+// request stream completes, and removed if the call is cancelled.
+message WriteStreamInput {
+    oneof input {
+        string path = 1;
+        bytes data = 2;
+    }
+}
+
+// ============================================================
+// HTTP client
+// ============================================================
+
+message HttpRequest {
+    string method = 1;
+    string url = 2;
+    map<string, string> headers = 3;
+    optional bytes body = 4;
+    // absent or 0 = no limit
+    optional int32 connect_timeout_millis = 5;
+    optional int32 read_timeout_millis = 6;
+    // absent = the agent default; 0 = a redirect response is returned as is
+    optional int32 max_redirects = 7;
+}
+
+message HttpResponse {
+    int32 status_code = 1;
+    bytes body = 2;
+    // a header sent several times has its values joined with ", "
+    map<string, string> headers = 3;
+    // the URL the response came from, after redirects
+    string url = 4;
+}
+
+// ============================================================
+// WebSocket proxy
+// ============================================================
+
+message WebSocketConnect {
+    string url = 1;
+    map<string, string> headers = 2;
+}
+
+// The first message must be connect; then text / binary frames.
+// Half-closing the request stream closes the socket.
+message WebSocketInput {
+    oneof input {
+        WebSocketConnect connect = 1;
+        string text = 2;
+        bytes binary = 3;
+    }
+}
+
+// opened first, then frames; the stream ends when the socket closes.
+message WebSocketEvent {
+    oneof event {
+        Empty opened = 1;
+        string text = 2;
+        bytes binary = 3;
+    }
+}
+
+// ============================================================
+// Service
+// ============================================================
+
+service RemoteAgentService {
+    rpc GetAgentInfo(Empty) returns (AgentInfo);
+    rpc GetWorkspacePath(Empty) returns (WorkspacePath);
+
+    rpc GetEnvVariable(EnvVariableRequest) returns (EnvVariable);
+    rpc GetEnvVariables(Empty) returns (EnvVariables);
+    rpc GetSystemInfo(Empty) returns (SystemInfo);
+    rpc GetStat(Empty) returns (StatInfo);
+    rpc GetUserInfo(Empty) returns (UserInfo);
+    rpc FindFreePort(Empty) returns (FreePort);
+
+    rpc Exec(stream ExecInput) returns (stream ExecEvent);
+    rpc KillProcess(KillRequest) returns (KillResult);
+    rpc ListProcesses(Empty) returns (ProcessList);
+
+    rpc ReadFile(PathRequest) returns (FileContent);
+    rpc WriteFile(WriteFileRequest) returns (Empty);
+    rpc ReadFileStream(ReadStreamRequest) returns (stream FileContent);
+    rpc WriteFileStream(stream WriteStreamInput) returns (Empty);
+    rpc DeleteFile(PathRequest) returns (DeleteResult);
+    rpc ListDirectory(PathRequest) returns (FileInfoList);
+    rpc FileExists(PathRequest) returns (ExistsResult);
+    rpc CreateDirectory(CreateDirectoryRequest) returns (Empty);
+    rpc ListRoots(Empty) returns (FileInfoList);
+    rpc SetPermissions(SetPermissionsRequest) returns (SetPermissionsResult);
+
+    rpc ExecuteHttpRequest(HttpRequest) returns (HttpResponse);
+
+    rpc WebSocket(stream WebSocketInput) returns (stream WebSocketEvent);
+}

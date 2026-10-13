@@ -31,6 +31,10 @@ public interface SdkModificator {
 
   void setHomeNioPath(Path path);
 
+  @Nullable String getPlatformTargetId();
+
+  void setPlatformTargetId(@Nullable String targetId);
+
   @Nullable String getVersionString();
 
   void setVersionString(String versionString);
@@ -49,6 +53,16 @@ public interface SdkModificator {
 
   default void addRoot(String url, String rootType) {
     VirtualFile rootFile = VirtualFileManager.getInstance().findFileByUrl(url);
+    if (rootFile != null) {
+      addRoot(rootFile, rootType);
+    }
+  }
+
+  /**
+   * Adds the file at the path as a root, when the virtual file system knows it.
+   */
+  default void addRoot(Path path, String rootType) {
+    VirtualFile rootFile = VirtualFileManager.getInstance().findFileByNioPath(path);
     if (rootFile != null) {
       addRoot(rootFile, rootType);
     }

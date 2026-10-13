@@ -15,23 +15,32 @@
  */
 package consulo.ide.ui;
 
+import consulo.application.Application;
 import consulo.content.OrderRootType;
 import consulo.content.bundle.Sdk;
 import consulo.content.bundle.SdkModificator;
+import consulo.content.platform.PlatformTarget;
+import consulo.content.platform.PlatformTargetManager;
 import consulo.fileChooser.FileChooserDescriptor;
-
 import consulo.localize.LocalizeValue;
+import consulo.platform.Platform;
+import consulo.project.localize.ProjectLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
+
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public class SdkPathEditor extends PathEditor {
   private final LocalizeValue myDisplayName;
   private final String myOrderRootType;
   private final boolean myImmutable;
 
+  private @Nullable String myPlatformTargetId;
+
   public SdkPathEditor(LocalizeValue displayName, String orderRootType, FileChooserDescriptor descriptor, Sdk sdk) {
     this(displayName, orderRootType, descriptor, sdk.isPredefined());
+    myPlatformTargetId = sdk.getPlatformTargetId();
   }
 
   public SdkPathEditor(LocalizeValue displayName, String orderRootType, FileChooserDescriptor descriptor, boolean immutable) {
@@ -39,6 +48,23 @@ public class SdkPathEditor extends PathEditor {
     myDisplayName = displayName;
     myOrderRootType = orderRootType;
     myImmutable = immutable;
+  }
+
+  /**
+   * Roots of an SDK on another machine are chosen there, connecting to it first.
+   */
+  @RequiredUIAccess
+  @Override
+  protected CompletableFuture<Platform> connectPlatform() {
+    String targetId = myPlatformTargetId;
+    if (targetId == null) {
+      return super.connectPlatform();
+    }
+    PlatformTarget target = Application.get().getInstance(PlatformTargetManager.class).findTarget(targetId);
+    if (target == null) {
+      return CompletableFuture.failedFuture(new IllegalStateException(ProjectLocalize.errorPlatformTargetMissing(targetId).get()));
+    }
+    return target.connect();
   }
 
   @Override

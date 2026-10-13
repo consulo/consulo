@@ -19,6 +19,7 @@ import consulo.annotation.access.RequiredWriteAction;
 import consulo.virtualFileSystem.BaseVirtualFileSystem;
 import consulo.virtualFileSystem.StandardFileSystems;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.util.io.FileUtil;
 import org.jspecify.annotations.Nullable;
 
 import java.io.File;
@@ -96,6 +97,17 @@ public class CoreLocalFileSystem extends BaseVirtualFileSystem {
 
   @Override
   public boolean isReadOnly() {
+    return true;
+  }
+
+  /**
+   * The path of a file in this file system, as {@link VirtualFile#getPath()} answers it.
+   */
+  public String toVfsPath(Path file) {
+    return FileUtil.toSystemIndependentName(file.toString());
+  }
+
+  public boolean isLocal() {
     return true;
   }
 

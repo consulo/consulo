@@ -16,14 +16,17 @@
 package consulo.virtualFileSystem.impl.internal;
 
 import consulo.disposer.Disposable;
+import consulo.util.io.URLUtil;
+import consulo.virtualFileSystem.StandardFileSystems;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 
 /**
  * @author cdr
  */
 class IdentityVirtualFilePointer extends VirtualFilePointerImpl implements VirtualFilePointer, Disposable {
-  private final VirtualFile myFile;
+  private volatile VirtualFile myFile;
   private final String myUrl;
   private volatile int useCount;
 
@@ -40,7 +43,12 @@ class IdentityVirtualFilePointer extends VirtualFilePointerImpl implements Virtu
 
   @Override
   public VirtualFile getFile() {
-    return isValid() ? myFile : null;
+    VirtualFile file = myFile;
+    if (file == null && myUrl.startsWith(StandardFileSystems.PLATFORM_PROTOCOL + URLUtil.SCHEME_SEPARATOR)) {
+      file = VirtualFileManager.getInstance().findFileByUrl(myUrl);
+      myFile = file;
+    }
+    return file != null && file.isValid() ? file : null;
   }
 
   @Override

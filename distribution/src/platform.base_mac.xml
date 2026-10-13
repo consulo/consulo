@@ -188,6 +188,7 @@
                 <include>consulo:consulo-language-spellchecker-editor-impl</include>
                 <include>consulo:consulo-remote-server-api</include>
                 <include>consulo:consulo-remote-server-impl</include>
+                <include>consulo:consulo-remote-server-agent-impl</include>
                 <include>consulo:consulo-credential-storage-api</include>
                 <include>consulo:consulo-credential-storage-impl</include>
                 <include>consulo:consulo-configuration-editor-api</include>
@@ -251,6 +252,10 @@
                 <include>io.netty:netty-resolver</include>
                 <include>io.netty:netty-codec</include>
                 <include>io.netty:netty-codec-http</include>
+                <include>io.netty:netty-codec-http2</include>
+                <include>io.netty:netty-codec-socks</include>
+                <include>io.netty:netty-handler-proxy</include>
+                <include>io.netty:netty-transport-native-unix-common</include>
                 <include>args4j:args4j</include>
                 <include>org.slf4j:jcl-over-slf4j</include>
                 <include>org.slf4j:slf4j-api</include>
@@ -291,6 +296,14 @@
                 <include>com.dynatrace.hash4j:hash4j</include>
                 <include>ch.qos.logback:logback-core</include>
                 <include>com.google.protobuf:protobuf-javalite</include>
+                <include>io.grpc:grpc-api</include>
+                <include>io.grpc:grpc-context</include>
+                <include>io.grpc:grpc-core</include>
+                <include>io.grpc:grpc-netty</include>
+                <include>io.grpc:grpc-protobuf-lite</include>
+                <include>io.grpc:grpc-stub</include>
+                <include>io.grpc:grpc-util</include>
+                <include>io.perfmark:perfmark-api</include>
                 <include>org.jetbrains.runtime:jbr-api</include>
 
                 <include>com.github.hypfvieh:dbus-java-core</include>

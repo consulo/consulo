@@ -53,7 +53,7 @@ public class PlatformFileSystemImpl implements PlatformFileSystem {
 
     @Override
     public Path getPath(String path, String... more) {
-        return Path.of(path, path);
+        return Path.of(path, more);
     }
 
     @Override

@@ -3,6 +3,7 @@ package consulo.remoteServer.impl.internal.configuration;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
+import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.component.persist.*;
 import consulo.component.util.text.UniqueNameGenerator;
 import consulo.remoteServer.ServerType;
@@ -21,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 @Singleton
@@ -31,10 +33,12 @@ public final class RemoteServersManagerImpl extends RemoteServersManager impleme
     private final List<RemoteServer<?>> myServers = new CopyOnWriteArrayList<>();
     private final List<RemoteServerState> myUnknownServers = new ArrayList<>();
     private final Application myApplication;
+    private final ApplicationConcurrency myApplicationConcurrency;
 
     @Inject
-    public RemoteServersManagerImpl(Application application) {
+    public RemoteServersManagerImpl(Application application, ApplicationConcurrency applicationConcurrency) {
         myApplication = application;
+        myApplicationConcurrency = applicationConcurrency;
     }
 
     @Override
@@ -122,11 +126,11 @@ public final class RemoteServersManagerImpl extends RemoteServersManager impleme
         }
 
         if (!needsMigration.isEmpty()) {
-            myApplication.invokeLater(() -> {
+            CompletableFuture.runAsync(() -> {
                 for (CloudConfigurationBase nextConfig : needsMigration) {
                     nextConfig.migrateToPasswordSafe();
                 }
-            });
+            }, myApplicationConcurrency.executor());
         }
     }
 

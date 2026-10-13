@@ -4,12 +4,14 @@ package consulo.fileChooser.impl.internal;
 import consulo.application.Application;
 import consulo.disposer.Disposable;
 import consulo.fileChooser.FileChooserDescriptor;
+import consulo.fileChooser.internal.UniversalFileChooserContributor;
 import consulo.fileChooser.localize.FileChooserLocalize;
 import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
-import consulo.ui.MessageBoxes;
 import consulo.ui.Component;
+import consulo.ui.MessageBoxes;
+import consulo.ui.Tab;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.action.ActionToolbarFactory;
@@ -28,7 +30,9 @@ import org.jspecify.annotations.Nullable;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 class UniversalFileChooserPanel {
     private static final String TOOLBAR_PLACE = "UniversalFileChooserTopToolbar";
@@ -39,6 +43,7 @@ class UniversalFileChooserPanel {
     private final DockLayout myComponent;
 
     private @Nullable TabbedLayout myTabbedLayout;
+    private final Map<Tab, FileView> myTabViews = new HashMap<>();
 
     @RequiredUIAccess
     UniversalFileChooserPanel(
@@ -69,8 +74,16 @@ class UniversalFileChooserPanel {
         else {
             TabbedLayout tabbedLayout = TabbedLayout.create();
             for (FileView fileView : myFileViews) {
-                tabbedLayout.addTab(fileView.getContributor().getTabTitle(), fileView.getTopComponent());
+                UniversalFileChooserContributor contributor = fileView.getContributor();
+                Tab tab = tabbedLayout.createTab();
+                tab.setRenderer((it, presentation) -> {
+                    presentation.withIcon(contributor.getTabIcon());
+                    presentation.append(contributor.getTabTitle());
+                });
+                tabbedLayout.addTab(tab, fileView.getTopComponent());
+                myTabViews.put(tab, fileView);
             }
+            tabbedLayout.addSelectListener(event -> okEnabledUpdater.run());
             myTabbedLayout = tabbedLayout;
             contentComponent = tabbedLayout;
         }
@@ -106,7 +119,10 @@ class UniversalFileChooserPanel {
         if (myFileViews.isEmpty()) {
             return null;
         }
-        return myFileViews.get(0);
+        TabbedLayout tabbedLayout = myTabbedLayout;
+        Tab selectedTab = tabbedLayout == null ? null : tabbedLayout.getSelectedTab();
+        FileView selectedView = selectedTab == null ? null : myTabViews.get(selectedTab);
+        return selectedView != null ? selectedView : myFileViews.get(0);
     }
 
     private class DesktopAction extends DumbAwareAction implements AnActionWithSyncUpdate {

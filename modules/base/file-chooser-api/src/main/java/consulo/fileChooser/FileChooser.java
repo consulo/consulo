@@ -15,13 +15,20 @@
  */
 package consulo.fileChooser;
 
+import consulo.application.Application;
 import consulo.component.ComponentManager;
+import consulo.fileChooser.internal.PathFileChooser;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-
 import org.jspecify.annotations.Nullable;
+
 import java.awt.*;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -112,5 +119,30 @@ public final class FileChooser {
   ) {
     LOG.assertTrue(!descriptor.isChooseMultiple());
     return chooseFiles(descriptor, project, parent, toSelect).thenApply(files -> files[0]);
+  }
+
+  /**
+   * Chooses files on the descriptor's {@link FileChooserDescriptor#getPlatform() platform}, or on any machine when it
+   * {@link FileChooserDescriptor#isAnyPlatform() allows that}, and answers their paths - the regular chooser for the
+   * local machine alone.
+   */
+  @RequiredUIAccess
+  public static CompletableFuture<List<Path>> choosePaths(
+    FileChooserDescriptor descriptor,
+    @Nullable ComponentManager project,
+    @Nullable Path toSelect
+  ) {
+    if (descriptor.isAnyPlatform() || !descriptor.getPlatform().equals(Platform.current())) {
+      return Application.get().getInstance(PathFileChooser.class).choose(descriptor, project, toSelect);
+    }
+
+    VirtualFile select = toSelect == null ? null : LocalFileSystem.getInstance().findFileByNioFile(toSelect);
+    return chooseFiles(descriptor, project, select).thenApply(files -> {
+      List<Path> paths = new ArrayList<>(files.length);
+      for (VirtualFile file : files) {
+        paths.add(file.toNioPath());
+      }
+      return paths;
+    });
   }
 }

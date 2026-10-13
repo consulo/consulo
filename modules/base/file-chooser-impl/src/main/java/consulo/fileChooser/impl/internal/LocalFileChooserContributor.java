@@ -2,8 +2,11 @@
 package consulo.fileChooser.impl.internal;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.fileChooser.internal.UniversalFileChooserContributor;
 import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.image.Image;
 import org.jspecify.annotations.Nullable;
 
 import java.nio.file.FileSystems;
@@ -17,6 +20,11 @@ public class LocalFileChooserContributor implements UniversalFileChooserContribu
     @Override
     public LocalizeValue getTabTitle() {
         return LocalizeValue.localizeTODO("Local");
+    }
+
+    @Override
+    public Image getTabIcon() {
+        return PlatformIconGroup.nodesHomefolder();
     }
 
     @Override

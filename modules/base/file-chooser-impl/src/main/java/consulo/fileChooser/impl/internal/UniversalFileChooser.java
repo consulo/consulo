@@ -6,6 +6,7 @@ import consulo.component.ComponentManager;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDialog;
 import consulo.fileChooser.PathChooserDialog;
+import consulo.fileChooser.internal.UniversalFileChooserContributor;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -59,10 +60,23 @@ public class UniversalFileChooser implements FileChooserDialog, PathChooserDialo
         List<UniversalFileChooserContributor> contributors =
             Application.get().getExtensionPoint(UniversalFileChooserContributor.class).getExtensionList();
 
-        UniversalFileChooserDescriptor dialogDescriptor =
-            new UniversalFileChooserDescriptor(myDescriptor, targetProject, contributors, preselectPath, myTreeExecutorFactory);
+        return choosePaths(targetProject, preselectPath, contributors, true)
+            .thenApply(paths -> toVirtualFiles(myDescriptor, paths).toArray(VirtualFile.EMPTY_ARRAY));
+    }
 
-        CompletableFuture<VirtualFile[]> result = new CompletableFuture<>();
+    /**
+     * Chooses in the file systems the given contributors list, answering the paths as they are - they may belong to
+     * another machine, where no virtual file can stand for them.
+     */
+    @RequiredUIAccess
+    public CompletableFuture<List<Path>> choosePaths(Project project,
+                                                     @Nullable Path preselectPath,
+                                                     List<UniversalFileChooserContributor> contributors,
+                                                     boolean rememberLastPath) {
+        UniversalFileChooserDescriptor dialogDescriptor =
+            new UniversalFileChooserDescriptor(myDescriptor, project, contributors, preselectPath, myTreeExecutorFactory);
+
+        CompletableFuture<List<Path>> result = new CompletableFuture<>();
 
         Dialog dialog = Application.get().getInstance(DialogService.class).build(dialogDescriptor);
         dialogDescriptor.setOkAction(() -> {
@@ -76,10 +90,10 @@ public class UniversalFileChooser implements FileChooserDialog, PathChooserDialo
                 return;
             }
             List<Path> selectedPaths = dialogDescriptor.getSelectedFiles();
-            if (!selectedPaths.isEmpty()) {
-                NioFileChooserUtil.setLastOpenedFile(targetProject, selectedPaths.get(0));
+            if (rememberLastPath && !selectedPaths.isEmpty()) {
+                NioFileChooserUtil.setLastOpenedFile(project, selectedPaths.get(0));
             }
-            result.complete(toVirtualFiles(myDescriptor, selectedPaths).toArray(VirtualFile.EMPTY_ARRAY));
+            result.complete(selectedPaths);
         });
 
         return result;

@@ -29,5 +29,6 @@ module consulo.process.api {
         consulo.ide.impl,
         consulo.process.impl,
         consulo.remote.server.impl,
+        consulo.remote.server.agent.impl,
         consulo.virtual.file.system.impl;
 }

@@ -918,3 +918,13 @@ unknown.sdk:
     text: Unknown SDK
 warning.message.some.required.libraries.wasn.t.downloaded:
     text: Some required library wasn't downloaded. Do you want to proceed without it?
+platform.target.local:
+    text: Local machine
+platform.target.missing:
+    text: '{0} (missing)'
+platform.target.label:
+    text: 'Platform:'
+error.platform.target.missing:
+    text: The platform {0} no longer exists
+error.platform.target.connecting:
+    text: '{0} is not connected. Connecting now - try again once it is connected'

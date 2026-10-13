@@ -5,12 +5,10 @@ import consulo.process.ExecutionException;
 import consulo.process.ProcessHandler;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.cmd.ParametersList;
-import consulo.process.event.ProcessListener;
 import consulo.process.internal.CapturingProcessHandler;
 import consulo.process.util.ProcessOutput;
 import consulo.project.Project;
 import consulo.util.collection.ArrayUtil;
-import consulo.util.dataholder.Key;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.SystemProperties;
@@ -39,7 +37,6 @@ public class WSLDistribution {
   private static final String RUN_PARAMETER = "run";
   private static final String UNC_PREFIX = "\\\\wsl$\\";
 
-  private static final Key<ProcessListener> SUDO_LISTENER_KEY = Key.create("WSL sudo listener");
 
   private final WslDistributionDescriptor myDescriptor;
   
@@ -156,7 +153,7 @@ public class WSLDistribution {
    * @param commandLine      command line to patch
    * @param project          current project
    * @param remoteWorkingDir path to WSL working directory
-   * @param askForSudo       true if we need to ask for sudo. To make this work, process handler, created from this command line should be patched using {@link #patchProcessHandler(GeneralCommandLine, ProcessHandler)}
+   * @param askForSudo       true if we need to ask for sudo.
    * @param <T>              GeneralCommandLine or descendant
    * @return original {@code commandLine}, prepared to run in WSL context
    */
@@ -187,30 +184,6 @@ public class WSLDistribution {
 
     if (askForSudo) { // fixme shouldn't we sudo for every chunk? also, preserve-env, login?
       prependCommandLineString(commandLineString, "sudo", "-S", "-p", "''");
-      //TODO[traff]: ask password only if it is needed. When user is logged as root, password isn't asked.
-
-        //TODO disabled !
-//      SUDO_LISTENER_KEY.set(commandLine, new ProcessAdapter() {
-//        @Override
-//        public void startNotified(ProcessEvent event) {
-//          OutputStream input = event.getProcessHandler().getProcessInput();
-//          if (input == null) {
-//            return;
-//          }
-//          String password = PasswordSafePromptDialogImpl.askPassword("Enter Root Password", "Sudo password for " + getPresentableName() + " root:", WSLDistribution.class, "WSL", true);
-//          //String password = CredentialPromptDialog
-//          //        .askPassword(project, "Enter Root Password", "Sudo password for " + getPresentableName() + " root:", new CredentialAttributes("WSL", "root", WSLDistribution.class), true);
-//          if (password != null) {
-//            try (PrintWriter pw = new PrintWriter(input)) {
-//              pw.println(password);
-//            }
-//          }
-//          else {
-//            // fixme notify user?
-//          }
-//          super.startNotified(event);
-//        }
-//      });
     }
 
     if (StringUtil.isNotEmpty(remoteWorkingDir)) {
@@ -263,22 +236,6 @@ public class WSLDistribution {
 
   public String resolveSymlink(String path) {
     return resolveSymlink(path, RESOLVE_SYMLINK_TIMEOUT);
-  }
-
-  /**
-   * Patches process handler with sudo listener, asking user for the password
-   *
-   * @param commandLine    patched command line
-   * @param processHandler process handler, created from patched commandline
-   * @return passed processHandler, patched with sudo listener if any
-   */
-  public <T extends ProcessHandler> T patchProcessHandler(GeneralCommandLine commandLine, T processHandler) {
-    ProcessListener listener = SUDO_LISTENER_KEY.get(commandLine);
-    if (listener != null) {
-      processHandler.addProcessListener(listener);
-      SUDO_LISTENER_KEY.set(commandLine, null);
-    }
-    return processHandler;
   }
 
   /**

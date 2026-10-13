@@ -21,6 +21,7 @@ import consulo.fileChooser.localize.FileChooserLocalize;
 import consulo.fileChooser.provider.FileOperateDialogProvider;
 import consulo.fileChooser.util.FileChooserUtil;
 import consulo.localize.LocalizeValue;
+import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
@@ -65,6 +66,8 @@ public class FileChooserDescriptor extends UserDataHolderBase implements Cloneab
   private @Nullable Predicate<VirtualFile> myFileFilter = null;
   private @Nullable Pair<LocalizeValue, List<String>> myExtensionFilter = null;
   private @Nullable String myForceOperateDialogProviderId = null;
+  private @Nullable Platform myPlatform = null;
+  private boolean myAnyPlatform = false;
 
   /**
    * Creates new instance. Use methods from {@link FileChooserDescriptorFactory} for most used descriptors.
@@ -94,6 +97,8 @@ public class FileChooserDescriptor extends UserDataHolderBase implements Cloneab
     withShowFileSystemRoots(d.isShowFileSystemRoots());
     withTreeRootVisible(d.isTreeRootVisible());
     withShowHiddenFiles(d.isShowHiddenFiles());
+    myPlatform = d.myPlatform;
+    myAnyPlatform = d.myAnyPlatform;
   }
 
   public boolean isChooseFiles() {
@@ -382,6 +387,31 @@ public class FileChooserDescriptor extends UserDataHolderBase implements Cloneab
   private boolean acceptAsGeneralFile(VirtualFile file) {
     if (FileChooserUtil.isArchive(file)) return false; // should be handle by acceptsAsJarFile
     return !file.isDirectory() && myChooseFiles;
+  }
+
+  /**
+   * The machine whose files are chosen, the local one unless set.
+   */
+  public FileChooserDescriptor withPlatform(Platform platform) {
+    myPlatform = platform;
+    return this;
+  }
+
+  public Platform getPlatform() {
+    return myPlatform == null ? Platform.current() : myPlatform;
+  }
+
+  /**
+   * Lets the user choose on any machine - the local one and every remote one, each as its own place to browse.
+   * Only {@link FileChooser#choosePaths} honours it, since a remote file has no virtual file.
+   */
+  public FileChooserDescriptor withAnyPlatform() {
+    myAnyPlatform = true;
+    return this;
+  }
+
+  public boolean isAnyPlatform() {
+    return myAnyPlatform;
   }
 
   public @Nullable String getForceOperateDialogProviderId() {

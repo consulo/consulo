@@ -63,7 +63,6 @@ public class ServerConnectionManagerImpl extends ServerConnectionManager {
 
     @Override
     public Collection<ServerConnection<?>> getConnections() {
-        ApplicationManager.getApplication().assertWriteAccessAllowed();
         return Collections.unmodifiableCollection(myConnections.values());
     }
 

@@ -23,6 +23,7 @@ import consulo.component.util.Iconable;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
+import consulo.platform.PlatformNioFileSystem;
 import consulo.proxy.EventDispatcher;
 import consulo.ui.UIAccess;
 import consulo.ui.image.Image;
@@ -30,6 +31,7 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Lists;
 import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.event.*;
+import consulo.virtualFileSystem.internal.core.local.CoreLocalFileSystem;
 import jakarta.inject.Inject;
 import org.jspecify.annotations.Nullable;
 
@@ -361,6 +363,11 @@ public class BaseVirtualFileManager extends VirtualFileManagerEx {
     }
 
     private @Nullable VirtualFile findByNioPath(Path nioPath, boolean refresh) {
+        if (nioPath.getFileSystem() instanceof PlatformNioFileSystem) {
+            return getFileSystem(StandardFileSystems.PLATFORM_PROTOCOL) instanceof CoreLocalFileSystem platformFileSystem
+                ? platformFileSystem.findFileByNioFile(nioPath)
+                : null;
+        }
         if (!FileSystems.getDefault().equals(nioPath.getFileSystem())) {
             return null;
         }

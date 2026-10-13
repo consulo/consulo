@@ -4,6 +4,7 @@ package consulo.fileChooser.impl.internal;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.fileChooser.FileChooserDescriptor;
+import consulo.fileChooser.internal.UniversalFileChooserContributor;
 import consulo.ui.Tree;
 import consulo.ui.TreeNode;
 import consulo.ui.ex.tree.ApplicationTreeExecutorFactory;

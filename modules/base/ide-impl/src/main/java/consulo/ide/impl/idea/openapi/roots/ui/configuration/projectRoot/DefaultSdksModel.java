@@ -307,10 +307,14 @@ public class DefaultSdksModel implements SdkModel, SettingsSdksModel {
             customCreateUI.showCustomCreateUI(this, parent, sdk -> setupSdk(sdk, callback));
         }
         else if (type instanceof PlatformAwareSdkType platformAwareSdkType) {
-            Platform platform = Platform.current();
-            SdkUtil.selectSdkHome(platform, platformAwareSdkType, homePath -> {
+            SdkUtil.selectSdkHomeOnAnyPlatform(platformAwareSdkType, (target, homePath) -> {
+                Platform platform = target == null ? Platform.current() : target.getPlatform();
+                if (platform == null) {
+                    return;
+                }
                 String newSdkName = SdkUtil.createUniqueSdkName(platform, platformAwareSdkType, homePath, getSdks());
                 SdkImpl newSdk = new SdkImpl(mySdkTableProvider.get(), type, homePath, newSdkName);
+                newSdk.setPlatformTargetId(target == null ? null : target.getId());
                 setupSdk(newSdk, callback);
             });
         }

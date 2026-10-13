@@ -15,17 +15,25 @@
  */
 package consulo.execution.impl.internal.ui;
 
+import consulo.application.Application;
 import consulo.configurable.ConfigurationException;
+import consulo.content.platform.PlatformTargetComboBox;
+import consulo.content.platform.PlatformTargetManager;
 import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposer;
 import consulo.execution.BeforeRunTask;
 import consulo.execution.RunnerAndConfigurationSettings;
+import consulo.execution.configuration.PlatformAwareRunProfile;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.impl.internal.configuration.RunManagerImpl;
 import consulo.execution.internal.ConfigurationSettingsEditorWrapper;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.ui.Component;
+import consulo.ui.Label;
+import consulo.ui.Space;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.DockLayout;
+import consulo.ui.layout.VerticalLayout;
 import consulo.util.jdom.JDOMUtil;
 import consulo.util.xml.serializer.WriteExternalException;
 import org.jdom.Element;
@@ -40,6 +48,7 @@ import java.util.List;
 public class ConfigurationSettingsEditorWrapperImpl extends ConfigurationSettingsEditorWrapper {
     private final ConfigurationSettingsEditor myEditor;
     private final BeforeRunStepsPanel myBeforeRunStepsPanel;
+    private final @Nullable PlatformTargetComboBox myPlatformTargetBox;
 
     private @Nullable Element myBaselineElement;
 
@@ -49,13 +58,36 @@ public class ConfigurationSettingsEditorWrapperImpl extends ConfigurationSetting
         Disposer.register(this, myEditor);
         myEditor.addSettingsEditorListener(editor -> fireEditorStateChanged());
         myBeforeRunStepsPanel = new BeforeRunStepsPanel(settings, this::fireEditorStateChanged);
+
+        if (settings.getConfiguration() instanceof PlatformAwareRunProfile) {
+            PlatformTargetComboBox box = new PlatformTargetComboBox(Application.get().getInstance(PlatformTargetManager.class));
+            box.addListener(id -> fireEditorStateChanged());
+            myPlatformTargetBox = box;
+        }
+        else {
+            myPlatformTargetBox = null;
+        }
     }
 
     @RequiredUIAccess
     @Override
     protected Component createUIComponent() {
         DockLayout layout = DockLayout.create();
-        layout.top(myEditor.getUIComponent());
+        PlatformTargetComboBox platformTargetBox = myPlatformTargetBox;
+        if (platformTargetBox != null) {
+            DockLayout runOn = DockLayout.create(Space.SMALL);
+            runOn.left(Label.create(ExecutionLocalize.labelRunOn()));
+            runOn.center(platformTargetBox.getComponent());
+            runOn.paddingBuilder().bottomSet(Space.MEDIUM).apply();
+
+            VerticalLayout top = VerticalLayout.create();
+            top.add(runOn);
+            top.add(myEditor.getUIComponent());
+            layout.top(top);
+        }
+        else {
+            layout.top(myEditor.getUIComponent());
+        }
         layout.center(myBeforeRunStepsPanel.createComponent());
         layout.putUserData(UiDataProvider.KEY, sink -> sink.set(CONFIGURATION_EDITOR_KEY, this));
         return layout;
@@ -66,6 +98,10 @@ public class ConfigurationSettingsEditorWrapperImpl extends ConfigurationSetting
     public void resetEditorFrom(RunnerAndConfigurationSettings settings) {
         myEditor.resetFrom(settings);
         myBeforeRunStepsPanel.reset(settings);
+        PlatformTargetComboBox platformTargetBox = myPlatformTargetBox;
+        if (platformTargetBox != null && settings.getConfiguration() instanceof PlatformAwareRunProfile profile) {
+            platformTargetBox.setTargetId(profile.getPlatformTargetId());
+        }
         myBaselineElement = writeSnapshotElement();
     }
 
@@ -83,8 +119,16 @@ public class ConfigurationSettingsEditorWrapperImpl extends ConfigurationSetting
         return result;
     }
 
+    private void applyPlatformTarget(RunConfiguration configuration) {
+        PlatformTargetComboBox platformTargetBox = myPlatformTargetBox;
+        if (platformTargetBox != null && configuration instanceof PlatformAwareRunProfile profile) {
+            profile.setPlatformTargetId(platformTargetBox.getTargetId());
+        }
+    }
+
     private void doApply(RunnerAndConfigurationSettings settings) {
         RunConfiguration runConfiguration = settings.getConfiguration();
+        applyPlatformTarget(runConfiguration);
         RunManagerImpl runManager = RunManagerImpl.getInstanceImpl(runConfiguration.getProject());
         runManager.setBeforeRunTasks(runConfiguration, myBeforeRunStepsPanel.getTasks(true), false);
         RunnerAndConfigurationSettings runManagerSettings = runManager.getSettings(runConfiguration);
@@ -100,6 +144,7 @@ public class ConfigurationSettingsEditorWrapperImpl extends ConfigurationSetting
     boolean isModified(RunnerAndConfigurationSettings settings) {
         try {
             RunnerAndConfigurationSettings snapshot = myEditor.getSnapshot();
+            applyPlatformTarget(snapshot.getConfiguration());
             Element baselineElement = myBaselineElement != null ? myBaselineElement : writeElement(settings.getConfiguration());
             Element snapshotElement = writeElement(snapshot.getConfiguration());
             return baselineElement == null || snapshotElement == null || !JDOMUtil.areElementsEqual(baselineElement, snapshotElement);
@@ -111,7 +156,9 @@ public class ConfigurationSettingsEditorWrapperImpl extends ConfigurationSetting
 
     private @Nullable Element writeSnapshotElement() {
         try {
-            return writeElement(myEditor.getSnapshot().getConfiguration());
+            RunConfiguration configuration = myEditor.getSnapshot().getConfiguration();
+            applyPlatformTarget(configuration);
+            return writeElement(configuration);
         }
         catch (ConfigurationException e) {
             return null;

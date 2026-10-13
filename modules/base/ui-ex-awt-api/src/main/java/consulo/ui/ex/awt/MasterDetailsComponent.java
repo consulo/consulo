@@ -871,8 +871,11 @@ public abstract class MasterDetailsComponent implements Configurable {
 
         public LocalizeValue getDisplayName() {
             Configurable configurable = ((Configurable)getUserObject());
-            LOG.assertTrue(configurable != null, "Tree was already disposed");
-            return configurable.getDisplayName();
+            if (configurable != null) {
+                return configurable.getDisplayName();
+            }
+            LOG.debug("Tree was already disposed");
+            return LocalizeValue.of("DISPOSED");
         }
 
         public MasterDetailsConfigurable getConfigurable() {

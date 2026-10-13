@@ -15,12 +15,14 @@
  */
 package consulo.process.impl.internal;
 
+import consulo.application.Application;
 import consulo.platform.Platform;
 import consulo.platform.PlatformOperatingSystem;
 import consulo.process.*;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.impl.internal.local.*;
 import consulo.process.internal.OSProcessHandler;
+import consulo.process.internal.PlatformProcessHandlerFactory;
 import consulo.process.internal.SudoBuilder;
 import consulo.process.io.BaseOutputReader;
 
@@ -40,9 +42,11 @@ public class ProcessHandlerBuilderImpl implements ProcessHandlerBuilder {
 
   private BaseOutputReader.Options myReaderOptions;
 
+  private final Application myApplication;
   private final GeneralCommandLine myCommandLine;
 
-  public ProcessHandlerBuilderImpl(GeneralCommandLine commandLine) {
+  public ProcessHandlerBuilderImpl(Application application, GeneralCommandLine commandLine) {
+    myApplication = application;
     myCommandLine = commandLine;
   }
 
@@ -107,6 +111,13 @@ public class ProcessHandlerBuilderImpl implements ProcessHandlerBuilder {
   public ProcessHandler build() throws ExecutionException {
     GeneralCommandLine line = myCommandLine;
 
+    Platform platform = line.getPlatform();
+    PlatformProcessHandlerFactory platformFactory =
+      myApplication.getExtensionPoint(PlatformProcessHandlerFactory.class).findFirstSafe(factory -> factory.isApplicable(platform));
+    if (platformFactory != null) {
+      return createPlatformProcessHandler(platformFactory, line);
+    }
+
     String sudoPrompt = line.getSudoPromt();
     if (sudoPrompt != null) {
       try {
@@ -155,6 +166,21 @@ public class ProcessHandlerBuilderImpl implements ProcessHandlerBuilder {
     }
 
     return processHandler;
+  }
+
+  private ProcessHandler createPlatformProcessHandler(PlatformProcessHandlerFactory factory, GeneralCommandLine line)
+    throws ExecutionException {
+    String platformName = line.getPlatform().getName();
+    if (myBinary) {
+      throw new ExecutionException("Binary process handler is not supported at " + platformName);
+    }
+    if (myConsoleType == ProcessConsoleType.EXTERNAL) {
+      throw new ExecutionException("Can't create process with EXTERNAL console at " + platformName);
+    }
+    if (line.getSudoPromt() != null) {
+      throw new ExecutionException("Sudo is not supported at " + platformName);
+    }
+    return factory.createProcessHandler(line);
   }
 
   private ProcessHandler createLocalProcessHandler(GeneralCommandLine commandLine) throws ExecutionException {

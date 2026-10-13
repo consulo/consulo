@@ -19,6 +19,8 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.SaveAndSyncHandler;
 import consulo.component.ProcessCanceledException;
+import consulo.content.platform.PlatformTarget;
+import consulo.content.platform.PlatformTargetManager;
 import consulo.dataContext.DataContext;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -67,6 +69,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -151,9 +154,10 @@ public class ExecutionManagerImpl implements ExecutionManager, Disposable {
     }
 
     private void compileAndRun(UIAccess uiAccess,
-                               Runnable startRunnable,
+                               Runnable runnable,
                                ExecutionEnvironment environment,
                                @Nullable Runnable onCancelRunnable) {
+        Runnable startRunnable = () -> connectPlatformThenRun(uiAccess, runnable, environment, onCancelRunnable);
         long id = environment.getExecutionId();
         if (id == 0) {
             environment.assignNewExecutionId();
@@ -209,6 +213,38 @@ public class ExecutionManagerImpl implements ExecutionManager, Disposable {
                 });
             });
         }
+    }
+
+    /**
+     * A profile running on a remote machine which is not connected yet connects first - starting a run is the user
+     * asking for that machine.
+     */
+    private void connectPlatformThenRun(UIAccess uiAccess,
+                                        Runnable startRunnable,
+                                        ExecutionEnvironment environment,
+                                        @Nullable Runnable onCancelRunnable) {
+        PlatformTarget target = environment.getRunProfile() instanceof PlatformAwareRunProfile profile
+            ? myProject.getApplication().getInstance(PlatformTargetManager.class).findTarget(profile.getPlatformTargetId())
+            : null;
+        if (target == null || target.getPlatform() != null) {
+            startRunnable.run();
+            return;
+        }
+
+        target.connect().whenCompleteAsync((platform, error) -> {
+            if (myProject.isDisposed()) {
+                return;
+            }
+            if (error != null) {
+                Throwable cause = error instanceof CompletionException && error.getCause() != null ? error.getCause() : error;
+                ExecutionUtil.handleExecutionError(environment, new ExecutionException(cause.getMessage(), cause));
+                if (onCancelRunnable != null) {
+                    onCancelRunnable.run();
+                }
+                return;
+            }
+            startRunnable.run();
+        }, uiAccess);
     }
 
     @SuppressWarnings("unchecked")

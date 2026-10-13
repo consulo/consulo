@@ -8,6 +8,7 @@ module consulo.remote.server.impl {
     requires consulo.execution.debug.api;
     requires consulo.remote.servers.agent.rt;
     requires consulo.http.api;
+    requires consulo.file.chooser.api;
     requires consulo.credential.storage.api;
 
     exports consulo.remoteServer.impl.internal.configuration to consulo.ide.impl;

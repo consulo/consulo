@@ -915,3 +915,5 @@ waiting.for.vm.detach.progress.text:
     text: Waiting for process detach
 warning.common.title:
     text: Warning
+label.run.on:
+    text: 'Run on:'

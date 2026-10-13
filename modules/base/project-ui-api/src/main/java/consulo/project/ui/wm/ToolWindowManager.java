@@ -141,6 +141,11 @@ public abstract class ToolWindowManager {
         return fallbackImage;
     }
 
+    /**
+     * @see ToolWindowFactory#validate(Project)
+     */
+    public abstract void revalidateToolWindows();
+
     // region AWT & Swing dependency
 
     /**

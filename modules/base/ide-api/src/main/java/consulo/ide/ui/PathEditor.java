@@ -19,8 +19,10 @@ import consulo.fileChooser.FileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDialog;
 import consulo.localize.LocalizeValue;
+import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.Component;
+import consulo.ui.MessageBoxes;
 import consulo.ui.Table;
 import consulo.ui.TextAttribute;
 import consulo.ui.TextItemPresentation;
@@ -39,6 +41,7 @@ import consulo.ui.model.FlatDataModel;
 import consulo.ui.model.MutableFlatDataModel;
 import consulo.util.io.URLUtil;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 import consulo.virtualFileSystem.archive.ArchiveFileType;
 import consulo.virtualFileSystem.fileType.FileType;
@@ -46,6 +49,7 @@ import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.virtualFileSystem.http.HttpVirtualFile;
 import org.jspecify.annotations.Nullable;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -53,6 +57,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 
 public class PathEditor {
     private record RootPresentation(String text, Image icon, boolean valid) {
@@ -163,26 +169,68 @@ public class PathEditor {
         }
     }
 
+    /**
+     * The machine whose files are added, reached first when it is a remote one.
+     */
+    @RequiredUIAccess
+    protected CompletableFuture<Platform> connectPlatform() {
+        return CompletableFuture.completedFuture(myDescriptor.getPlatform());
+    }
+
     @RequiredUIAccess
     private void doAdd() {
         UIAccess uiAccess = UIAccess.current();
+        connectPlatform().whenCompleteAsync((platform, error) -> {
+            if (error != null) {
+                Throwable cause = error instanceof CompletionException && error.getCause() != null ? error.getCause() : error;
+                MessageBoxes.okError(cause).showAsync();
+                return;
+            }
+            myDescriptor.withPlatform(platform);
+            choose(uiAccess);
+        }, uiAccess);
+    }
+
+    @RequiredUIAccess
+    private void choose(UIAccess uiAccess) {
+        if (!myDescriptor.getPlatform().equals(Platform.current())) {
+            FileChooser.choosePaths(myDescriptor, null, null).whenCompleteAsync((paths, error) -> {
+                if (error != null) {
+                    return;
+                }
+                List<VirtualFile> files = new ArrayList<>();
+                for (Path path : paths) {
+                    VirtualFile file = VirtualFileManager.getInstance().findFileByNioPath(path);
+                    if (file != null) {
+                        files.add(file);
+                    }
+                }
+                addChosen(files.toArray(VirtualFile.EMPTY_ARRAY));
+            }, uiAccess);
+            return;
+        }
         FileChooser.chooseFiles(myDescriptor, null, myAddBaseDir).whenCompleteAsync((files, error) -> {
             if (error != null) {
                 return;
             }
-            List<VirtualFile> added = new ArrayList<>();
-            for (VirtualFile file : adjustAddedFileSet(files)) {
-                if (addElement(file)) {
-                    added.add(file);
-                }
-            }
+            addChosen(files);
+        }, uiAccess);
+    }
 
-            if (!added.isEmpty()) {
-                syncModel();
-                setModified(true);
-                setSelectedRoots(added);
+    @RequiredUIAccess
+    private void addChosen(VirtualFile[] files) {
+        List<VirtualFile> added = new ArrayList<>();
+        for (VirtualFile file : adjustAddedFileSet(files)) {
+            if (addElement(file)) {
+                added.add(file);
             }
-         }, uiAccess);
+        }
+
+        if (!added.isEmpty()) {
+            syncModel();
+            setModified(true);
+            setSelectedRoots(added);
+        }
     }
 
     protected VirtualFile[] adjustAddedFileSet(VirtualFile[] files) {

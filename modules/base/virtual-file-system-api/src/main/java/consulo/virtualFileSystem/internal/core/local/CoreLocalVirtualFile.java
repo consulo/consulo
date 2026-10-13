@@ -15,7 +15,6 @@
  */
 package consulo.virtualFileSystem.internal.core.local;
 
-import consulo.util.io.FileUtil;
 import consulo.util.io.NioFiles;
 import consulo.virtualFileSystem.BaseVirtualFile;
 import consulo.virtualFileSystem.VFileProperty;
@@ -76,7 +75,7 @@ public class CoreLocalVirtualFile extends BaseVirtualFile {
 
     @Override
     public String getPath() {
-        return FileUtil.toSystemIndependentName(myFile.toString());
+        return myFileSystem.toVfsPath(myFile);
     }
 
     @Override
@@ -189,7 +188,7 @@ public class CoreLocalVirtualFile extends BaseVirtualFile {
 
     @Override
     public boolean isInLocalFileSystem() {
-        return true;
+        return myFileSystem.isLocal();
     }
 
     @Override

@@ -16,9 +16,11 @@
 package consulo.process.impl.internal;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
 import consulo.process.ProcessHandlerBuilder;
 import consulo.process.ProcessHandlerBuilderFactory;
 import consulo.process.cmd.GeneralCommandLine;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 /**
@@ -28,9 +30,15 @@ import jakarta.inject.Singleton;
 @ServiceImpl
 @Singleton
 public class ProcessHandlerBuilderFactoryImpl implements ProcessHandlerBuilderFactory {
-    
+    private final Application myApplication;
+
+    @Inject
+    public ProcessHandlerBuilderFactoryImpl(Application application) {
+        myApplication = application;
+    }
+
     @Override
     public ProcessHandlerBuilder newBuilder(GeneralCommandLine cmd) {
-        return new ProcessHandlerBuilderImpl(cmd);
+        return new ProcessHandlerBuilderImpl(myApplication, cmd);
     }
 }

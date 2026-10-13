@@ -272,6 +272,11 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-remote-server-agent-impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>consulo-language-code-style-impl</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -566,6 +571,18 @@
         <dependency>
             <groupId>consulo.internal.org.cobraparser</groupId>
             <artifactId>cobra-jstyleparser</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.commonmark</groupId>
+            <artifactId>commonmark</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.commonmark</groupId>
+            <artifactId>commonmark-ext-gfm-tables</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.commonmark</groupId>
+            <artifactId>commonmark-ext-gfm-strikethrough</artifactId>
         </dependency>
         <dependency>
             <groupId>xml-apis</groupId>

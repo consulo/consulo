@@ -30,6 +30,7 @@ module consulo.virtual.file.system.api {
     exports consulo.virtualFileSystem.localize;
 
     exports consulo.virtualFileSystem.internal.core.local to
+        consulo.virtual.file.system.impl,
         consulo.file.chooser.impl,
         consulo.test.impl;
     exports consulo.virtualFileSystem.internal.matcher to

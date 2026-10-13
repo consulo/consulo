@@ -15,6 +15,9 @@
  */
 package consulo.content.bundle;
 
+import consulo.application.Application;
+import consulo.content.platform.PlatformTarget;
+import consulo.content.platform.PlatformTargetManager;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
@@ -69,9 +72,10 @@ public abstract class PlatformAwareSdkType extends SdkType {
             public void validateSelectedFiles(VirtualFile[] files) throws Exception {
                 if (files.length != 0) {
                     Path selectedPath = files[0].toNioPath();
-                    boolean valid = isValidSdkHome(platform, selectedPath);
+                    Platform selectedPlatform = platformOf(selectedPath, platform);
+                    boolean valid = isValidSdkHome(selectedPlatform, selectedPath);
                     if (!valid) {
-                        valid = isValidSdkHome(platform, adjustSelectedSdkHome(platform, selectedPath));
+                        valid = isValidSdkHome(selectedPlatform, adjustSelectedSdkHome(selectedPlatform, selectedPath));
                         if (!valid) {
                             LocalizeValue message = files[0].isDirectory()
                                 ? ProjectLocalize.sdkConfigureHomeInvalidError(getDisplayName())
@@ -83,7 +87,17 @@ public abstract class PlatformAwareSdkType extends SdkType {
             }
         };
         descriptor.withTitle(ProjectLocalize.sdkConfigureHomeTitle(getDisplayName()));
+        descriptor.withPlatform(platform);
         return descriptor;
+    }
+
+    /**
+     * The machine a chosen path is on - the chooser may offer several of them.
+     */
+    static Platform platformOf(Path path, Platform fallback) {
+        PlatformTarget target = Application.get().getInstance(PlatformTargetManager.class).findTargetOf(path);
+        Platform platform = target == null ? null : target.getPlatform();
+        return platform == null ? fallback : platform;
     }
 
     // region obsolete stuff

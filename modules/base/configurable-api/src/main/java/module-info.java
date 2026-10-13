@@ -21,6 +21,7 @@ module consulo.configurable.api {
     exports consulo.configurable.localize;
 
     exports consulo.configurable.internal to
+        consulo.ai.impl,
         consulo.code.editor.impl,
         consulo.ide.impl,
         consulo.language.editor.api,
