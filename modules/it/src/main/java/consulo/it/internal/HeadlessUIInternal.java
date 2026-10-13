@@ -22,6 +22,8 @@ import consulo.disposer.Disposable;
 import consulo.it.internal.ui.*;
 import consulo.localize.LocalizeValue;
 import consulo.ui.*;
+import consulo.ui.messageList.MessageInput;
+import consulo.ui.messageList.MessageList;
 import consulo.ui.chart.ChartUnit;
 import consulo.ui.chart.FlameGraph;
 import consulo.ui.chart.FlameGraphModel;
@@ -531,6 +533,16 @@ public class HeadlessUIInternal extends UIInternal implements UIInternalEx {
     @Override
     public Card _Components_card() {
         return new HeadlessCard();
+    }
+
+    @Override
+    public MessageList _Components_messageList() {
+        return new HeadlessMessageList();
+    }
+
+    @Override
+    public MessageInput _Components_messageInput() {
+        return new HeadlessMessageInput();
     }
 
     @Override
