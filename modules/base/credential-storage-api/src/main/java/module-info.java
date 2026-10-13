@@ -11,5 +11,5 @@ module consulo.credential.storage.api {
     exports consulo.credentialStorage.ui;
     exports consulo.credentialStorage.localize;
 
-    exports consulo.credentialStorage.internal to consulo.credential.storage.impl;
+    exports consulo.credentialStorage.internal to consulo.credential.storage.impl, consulo.web.ide, consulo.it;
 }
