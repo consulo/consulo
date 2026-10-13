@@ -18,6 +18,7 @@ package consulo.credentialStorage.impl.internal.ui.action;
 import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionParentRef;
 import consulo.annotation.component.ActionRef;
+import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.application.ui.internal.InternalActionGroup;
 import consulo.credentialStorage.CredentialAttributes;
 import consulo.credentialStorage.CredentialAttributesUtil;
@@ -38,6 +39,9 @@ import consulo.ui.util.FormBuilder;
 import jakarta.inject.Inject;
 import consulo.ui.MessageBoxes;
 
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
+
 /**
  * @author VISTALL
  * @since 2025-04-04
@@ -46,10 +50,12 @@ import consulo.ui.MessageBoxes;
 public class CredentialStorageTesterAction extends DumbAwareAction {
     private static class CredentialStorageDialogDescriptor extends DialogDescriptor {
         private final PasswordSafe myPasswordSafe;
+        private final Executor myExecutor;
 
-        public CredentialStorageDialogDescriptor(LocalizeValue title, PasswordSafe passwordSafe) {
+        public CredentialStorageDialogDescriptor(LocalizeValue title, PasswordSafe passwordSafe, Executor executor) {
             super(title);
             myPasswordSafe = passwordSafe;
+            myExecutor = executor;
         }
 
         @Override
@@ -77,7 +83,10 @@ public class CredentialStorageTesterAction extends DumbAwareAction {
 
                     String serviceName = CredentialAttributesUtil.generateServiceName(serviceBox.getValue(), user);
 
-                    myPasswordSafe.set(new CredentialAttributes(serviceName, user), new Credentials(user, password));
+                    CompletableFuture.runAsync(
+                        () -> myPasswordSafe.set(new CredentialAttributes(serviceName, user), new Credentials(user, password)),
+                        myExecutor
+                    );
                 }
             );
 
@@ -90,14 +99,15 @@ public class CredentialStorageTesterAction extends DumbAwareAction {
 
                     CredentialAttributes attributes = new CredentialAttributes(serviceName, user);
 
-                    Credentials credentials = myPasswordSafe.get(attributes);
-                    if (credentials == null) {
-                        MessageBoxes.okError(LocalizeValue.localizeTODO("No Password")).showAsync(event.getComponent());
-                    }
-                    else {
-                        String password = credentials.getPasswordAsString();
-                        MessageBoxes.okInfo(LocalizeValue.ofNullable(password)).showAsync(event.getComponent());
-                    }
+                    myPasswordSafe.getAsync(attributes).whenCompleteAsync((credentials, error) -> {
+                        if (credentials == null) {
+                            MessageBoxes.okError(LocalizeValue.localizeTODO("No Password")).showAsync(event.getComponent());
+                        }
+                        else {
+                            String password = credentials.getPasswordAsString();
+                            MessageBoxes.okInfo(LocalizeValue.ofNullable(password)).showAsync(event.getComponent());
+                        }
+                    }, UIAccess.current());
                 }
             );
 
@@ -120,13 +130,17 @@ public class CredentialStorageTesterAction extends DumbAwareAction {
 
     private final DialogService myDialogService;
     private final PasswordSafe myPasswordSafe;
+    private final ApplicationConcurrency myApplicationConcurrency;
 
     @Inject
-    public CredentialStorageTesterAction(DialogService dialogService, PasswordSafe passwordSafe) {
+    public CredentialStorageTesterAction(DialogService dialogService,
+                                         PasswordSafe passwordSafe,
+                                         ApplicationConcurrency applicationConcurrency) {
         super(LocalizeValue.localizeTODO("Credential Storage Tester"));
 
         myDialogService = dialogService;
         myPasswordSafe = passwordSafe;
+        myApplicationConcurrency = applicationConcurrency;
     }
 
     @Override
@@ -136,7 +150,7 @@ public class CredentialStorageTesterAction extends DumbAwareAction {
 
         Dialog dialog = myDialogService.build(
             e.getRequiredData(Project.KEY),
-            new CredentialStorageDialogDescriptor(action, myPasswordSafe)
+            new CredentialStorageDialogDescriptor(action, myPasswordSafe, myApplicationConcurrency.executor())
         );
 
         dialog.showAsync();

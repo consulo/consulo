@@ -19,6 +19,7 @@ import consulo.credentialStorage.impl.internal.keePass.InMemoryCredentialStore;
 import consulo.credentialStorage.impl.internal.keePass.KeePassCredentialStore;
 import consulo.credentialStorage.impl.internal.ui.PasswordSafeConfigurable;
 import consulo.credentialStorage.impl.internal.ui.PasswordSafeNotificationGroupContributor;
+import consulo.credentialStorage.internal.AsyncCredentialStore;
 import consulo.credentialStorage.internal.CredentialStoreFactory;
 import consulo.credentialStorage.internal.CredentialStoreManager;
 import consulo.credentialStorage.internal.ProviderType;
@@ -144,7 +145,10 @@ public abstract class BasePasswordSafe implements PasswordSafe {
     @Override
     public Credentials get(CredentialAttributes attributes) {
         SlowOperations.assertNonCancelableSlowOperationsAreAllowed();
-        Credentials value = getCurrentProvider().get(attributes);
+        return withMemoryHelper(attributes, getCurrentProvider().get(attributes));
+    }
+
+    private @Nullable Credentials withMemoryHelper(CredentialAttributes attributes, @Nullable Credentials value) {
         if ((value == null || StringUtil.isEmptyOrSpaces(value.getPassword()))
             && isMemoryHelperProviderInitialized()) {
             Credentials memCred = getMemoryHelperProvider().get(attributes);
@@ -186,7 +190,12 @@ public abstract class BasePasswordSafe implements PasswordSafe {
 
     @Override
     public CompletableFuture<Credentials> getAsync(CredentialAttributes attributes) {
-        return CompletableFuture.supplyAsync(() -> get(attributes), myApplicationConcurrency.executor());
+        return CompletableFuture.supplyAsync(this::getCurrentProvider, myApplicationConcurrency.executor()).thenCompose(provider -> {
+            if (provider instanceof AsyncCredentialStore asyncProvider) {
+                return asyncProvider.getAsync(attributes).thenApply(value -> withMemoryHelper(attributes, value));
+            }
+            return CompletableFuture.completedFuture(get(attributes));
+        });
     }
 
     public void save() {

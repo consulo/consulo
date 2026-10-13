@@ -141,8 +141,7 @@ public class KdbxGroup {
     }
 
     public synchronized KdbxEntry getEntry(String title, String userName) {
-        return getEntry(entry -> entry.getTitle().equals(title) &&
-            (entry.getUserName() != null ? entry.getUserName().equals(userName) : userName == null));
+        return getEntry(entry -> entry.getTitle().equals(title) && (userName == null || userName.equals(entry.getUserName())));
     }
 
     public synchronized KdbxEntry createEntry(String title, String userName) {

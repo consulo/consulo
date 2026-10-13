@@ -18,6 +18,7 @@ package consulo.credentialStorage.impl.internal.kdbx;
 import consulo.credentialStorage.OneTimeString;
 import org.bouncycastle.crypto.SkippingStreamCipher;
 
+import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.StandardCharsets;
 
@@ -65,7 +66,9 @@ public class StringProtectedByStreamCipher implements SecureString {
 
     // Helper method to encode a CharSequence into a UTF-8 byte array.
     private static byte[] encodeToByteArray(CharSequence cs) {
-        CharBuffer charBuffer = CharBuffer.wrap(cs);
-        return StandardCharsets.UTF_8.encode(charBuffer).array();
+        ByteBuffer byteBuffer = StandardCharsets.UTF_8.encode(CharBuffer.wrap(cs));
+        byte[] bytes = new byte[byteBuffer.remaining()];
+        byteBuffer.get(bytes);
+        return bytes;
     }
 }
