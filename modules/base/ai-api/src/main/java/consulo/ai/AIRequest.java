@@ -17,6 +17,7 @@ package consulo.ai;
 
 import org.jspecify.annotations.Nullable;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,6 +38,8 @@ public final class AIRequest {
         private @Nullable String mySystemPrompt;
         private int myMaxTokens = -1;
         private double myTemperature = -1;
+        private @Nullable String mySessionId;
+        private @Nullable Path myWorkingDirectory;
 
         private Builder(AIModel model) {
             myModel = model;
@@ -83,8 +86,24 @@ public final class AIRequest {
             return this;
         }
 
+        /**
+         * The conversation the request belongs to, for a provider which keeps one on its side.
+         */
+        public Builder sessionId(String sessionId) {
+            mySessionId = sessionId;
+            return this;
+        }
+
+        /**
+         * Where an agent working on files runs - the project directory, unless the user chose another one.
+         */
+        public Builder workingDirectory(@Nullable Path workingDirectory) {
+            myWorkingDirectory = workingDirectory;
+            return this;
+        }
+
         public AIRequest build() {
-            return new AIRequest(myModel, mySystemPrompt, myMessages, myTools, myMaxTokens, myTemperature);
+            return new AIRequest(myModel, mySystemPrompt, myMessages, myTools, myMaxTokens, myTemperature, mySessionId, myWorkingDirectory);
         }
     }
 
@@ -94,19 +113,25 @@ public final class AIRequest {
     private final List<AITool> myTools;
     private final int myMaxTokens;
     private final double myTemperature;
+    private final @Nullable String mySessionId;
+    private final @Nullable Path myWorkingDirectory;
 
     private AIRequest(AIModel model,
                       @Nullable String systemPrompt,
                       List<AIMessage> messages,
                       List<AITool> tools,
                       int maxTokens,
-                      double temperature) {
+                      double temperature,
+                      @Nullable String sessionId,
+                      @Nullable Path workingDirectory) {
         myModel = model;
         mySystemPrompt = systemPrompt;
         myMessages = List.copyOf(messages);
         myTools = List.copyOf(tools);
         myMaxTokens = maxTokens;
         myTemperature = temperature;
+        mySessionId = sessionId;
+        myWorkingDirectory = workingDirectory;
     }
 
     public AIModel getModel() {
@@ -131,5 +156,13 @@ public final class AIRequest {
 
     public double getTemperature() {
         return myTemperature;
+    }
+
+    public @Nullable String getSessionId() {
+        return mySessionId;
+    }
+
+    public @Nullable Path getWorkingDirectory() {
+        return myWorkingDirectory;
     }
 }

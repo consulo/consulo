@@ -30,3 +30,65 @@ label.tool.call:
     text: called {0}
 label.failed:
     text: Request failed - {0}
+label.name:
+    text: 'Name:'
+label.type:
+    text: 'Type:'
+label.api.key:
+    text: 'API key:'
+label.use.as.default:
+    text: Use as the default account
+label.default.model.field:
+    text: 'Default model:'
+label.empty.selection:
+    text: Select an account or add one with +
+action.add.account:
+    text: Add Account
+action.remove.account:
+    text: Remove
+action.copy.account:
+    text: Copy
+error.name.required:
+    text: The name of an account is required
+error.name.unique:
+    text: An account named {0} already exists
+banner.account:
+    text: '{0} - {1}'
+action.new.chat:
+    text: New Chat
+action.rename.chat:
+    text: Rename Chat
+dialog.rename.chat.title:
+    text: Rename Chat
+dialog.rename.chat.prompt:
+    text: 'Name:'
+action.add.account.ellipsis:
+    text: Add Account...
+label.permission.title:
+    text: Allow {0}?
+button.allow:
+    text: Allow
+button.allow.always:
+    text: Allow for This Chat
+button.deny:
+    text: Deny
+label.permission.allowed:
+    text: Allowed {0}
+label.permission.denied:
+    text: Denied {0}
+label.question.other:
+    text: 'Other:'
+button.answer:
+    text: Answer
+button.skip:
+    text: Skip
+label.question.answered:
+    text: '{0} **{1}**'
+label.question.skipped:
+    text: Skipped the question
+message.permission.denied:
+    text: The user denied this tool call
+dialog.working.directory.title:
+    text: Working Directory of the Chat
+label.working.directory:
+    text: 'Working directory: {0}'

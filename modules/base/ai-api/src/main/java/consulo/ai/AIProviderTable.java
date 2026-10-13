@@ -21,6 +21,7 @@ import consulo.application.Application;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Registry of provider types and of the instances the user has configured - the analogue of
@@ -47,7 +48,7 @@ public interface AIProviderTable {
     /**
      * Instances that have credentials and can actually answer.
      */
-    List<AIProvider> getConfiguredProviders();
+    CompletableFuture<List<AIProvider>> getConfiguredProviders();
 
     @Nullable AIProvider findProvider(String name);
 
@@ -56,17 +57,20 @@ public interface AIProviderTable {
      */
     AIProvider addProvider(String name, AIProviderType type);
 
-    void removeProvider(AIProvider provider);
+    /**
+     * Completes once the key of the instance is dropped too.
+     */
+    CompletableFuture<?> removeProvider(AIProvider provider);
 
     /**
      * Instance chosen in settings, or the first configured one when nothing is chosen.
      */
-    @Nullable AIProvider getDefaultProvider();
+    CompletableFuture<@Nullable AIProvider> getDefaultProvider();
 
     /**
      * Model chosen in settings, or the first model of the default instance.
      */
-    @Nullable AIModel getDefaultModel();
+    CompletableFuture<@Nullable AIModel> getDefaultModel();
 
     void setDefault(@Nullable AIProvider provider, @Nullable AIModel model);
 }

@@ -18,6 +18,7 @@ package consulo.ai;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -31,10 +32,19 @@ import java.util.concurrent.CompletableFuture;
 public final class AIProvider {
     private final String myName;
     private final AIProviderType myType;
+    private final Map<String, String> myOptions;
 
     public AIProvider(String name, AIProviderType type) {
+        this(name, type, Map.of());
+    }
+
+    /**
+     * @param options settings of the account its type keeps - see {@link AIProviderType#createAccountComponent}
+     */
+    public AIProvider(String name, AIProviderType type, Map<String, String> options) {
         myName = name;
         myType = type;
+        myOptions = Map.copyOf(options);
     }
 
     /**
@@ -48,23 +58,31 @@ public final class AIProvider {
         return myType;
     }
 
+    public Map<String, String> getOptions() {
+        return myOptions;
+    }
+
+    public @Nullable String getOption(String key) {
+        return myOptions.get(key);
+    }
+
     public List<AIModel> getModels() {
         return myType.getModels();
     }
 
-    public @Nullable String getApiKey() {
+    public CompletableFuture<@Nullable String> getApiKey() {
         return AICredentials.getApiKey(myName);
     }
 
-    public void setApiKey(@Nullable String apiKey) {
-        AICredentials.setApiKey(myName, apiKey);
+    public CompletableFuture<?> setApiKey(@Nullable String apiKey) {
+        return AICredentials.setApiKey(myName, apiKey);
     }
 
     /**
      * Whether this instance can answer. The UI uses it to tell "no key yet" apart from "failing".
      */
-    public boolean isConfigured() {
-        return getApiKey() != null;
+    public CompletableFuture<Boolean> isConfigured() {
+        return myType.isConfigured(this);
     }
 
     public CompletableFuture<AIResponse> chat(AIRequest request, @Nullable AIStreamListener listener) {

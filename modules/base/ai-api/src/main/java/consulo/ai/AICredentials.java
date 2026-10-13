@@ -15,11 +15,16 @@
  */
 package consulo.ai;
 
+import consulo.application.Application;
+import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.credentialStorage.CredentialAttributes;
 import consulo.credentialStorage.Credentials;
 import consulo.credentialStorage.PasswordSafe;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
+
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 
 /**
  * API key storage for providers. Keys go through the platform password safe rather than a provider's
@@ -31,31 +36,28 @@ import org.jspecify.annotations.Nullable;
 public final class AICredentials {
     private static final String SERVICE_PREFIX = "Consulo AI - ";
 
-    public static @Nullable String getApiKey(String providerId) {
-        Credentials credentials = PasswordSafe.getInstance().get(attributes(providerId));
-        String password = credentials == null ? null : credentials.getPasswordAsString();
-        return StringUtil.isEmptyOrSpaces(password) ? null : password;
-    }
-
-    public static boolean hasApiKey(String providerId) {
-        return getApiKey(providerId) != null;
+    public static CompletableFuture<@Nullable String> getApiKey(String providerId) {
+        return PasswordSafe.getInstance().getAsync(attributes(providerId)).thenApply(credentials -> {
+            String password = credentials == null ? null : credentials.getPasswordAsString();
+            return StringUtil.isEmptyOrSpaces(password) ? null : password;
+        });
     }
 
     /**
      * @param apiKey {@code null} or blank clears the stored key
      */
-    public static void setApiKey(String providerId, @Nullable String apiKey) {
-        PasswordSafe.getInstance().set(
-            attributes(providerId),
-            StringUtil.isEmptyOrSpaces(apiKey) ? null : new Credentials(null, apiKey));
+    public static CompletableFuture<?> setApiKey(String providerId, @Nullable String apiKey) {
+        Executor executor = Application.get().getInstance(ApplicationConcurrency.class).executor();
+        return CompletableFuture.runAsync(
+            () -> PasswordSafe.getInstance().set(
+                attributes(providerId),
+                StringUtil.isEmptyOrSpaces(apiKey) ? null : new Credentials(null, apiKey)),
+            executor
+        );
     }
 
     /**
-     * The instance name is folded into the service name and no user name is used anywhere - neither
-     * here nor on the stored {@link Credentials}. The KeePass-backed store keys entries by
-     * (service, user) but derives the user differently on write, read and delete, so any non-null
-     * user name makes the three disagree: a stored key then either cannot be read back or survives
-     * deletion and leaks to the next instance that reuses the name.
+     * The instance name is folded into the service name, and no user name is stored.
      */
     private static CredentialAttributes attributes(String providerId) {
         return new CredentialAttributes(SERVICE_PREFIX + providerId);

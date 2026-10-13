@@ -16,17 +16,16 @@
 package consulo.ai.impl.internal.chat;
 
 import consulo.ai.AIProviderTable;
+import consulo.ai.icon.AIIconGroup;
 import consulo.ai.localize.AILocalize;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.localize.LocalizeValue;
-import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
+import consulo.project.ui.wm.ToolWindowManager;
+import consulo.project.ui.wm.ToolWindowManagerListener;
 import consulo.project.ui.wm.ToolWindowFactory;
-import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.content.Content;
-import consulo.ui.ex.content.ContentFactory;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.ui.image.Image;
@@ -53,14 +52,30 @@ public class AIChatToolWindowFactory implements ToolWindowFactory, DumbAware {
         return !AIProviderTable.getInstance().getTypes().isEmpty();
     }
 
+    @Override
+    public boolean canCloseContents() {
+        return true;
+    }
+
     @RequiredUIAccess
     @Override
     public void createToolWindowContent(Project project, ToolWindow toolWindow) {
-        AIChatPanel panel = new AIChatPanel(project, UIAccess.current());
+        AIChatView chatView = project.getInstance(AIChatView.class);
+        chatView.init(toolWindow);
 
-        Content content = ContentFactory.getInstance().createUIContent(panel.getComponent(), "", false);
-        content.setCloseable(false);
-        toolWindow.getContentManager().addContent(content);
+        // like the terminal: showing the window again after its last chat was closed starts a new one
+        project.getMessageBus().connect(project).subscribe(ToolWindowManagerListener.class, new ToolWindowManagerListener() {
+            @Override
+            public void stateChanged(ToolWindowManager manager) {
+                if (!toolWindow.isVisible()) {
+                    return;
+                }
+                toolWindow.setIcon(getIcon());
+                if (toolWindow.getContentManager().getContentCount() == 0) {
+                    chatView.addDefaultChat(toolWindow);
+                }
+            }
+        });
     }
 
     @Override
@@ -70,7 +85,7 @@ public class AIChatToolWindowFactory implements ToolWindowFactory, DumbAware {
 
     @Override
     public Image getIcon() {
-        return PlatformIconGroup.actionsLightning();
+        return AIIconGroup.toolwindowAiassistant();
     }
 
     @Override

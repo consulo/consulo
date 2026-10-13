@@ -52,6 +52,11 @@
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-file-chooser-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>consulo-ai-api</artifactId>
             <version>${project.version}</version>
         </dependency>

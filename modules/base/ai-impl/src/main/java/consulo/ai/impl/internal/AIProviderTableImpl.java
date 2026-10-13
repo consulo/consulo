@@ -29,6 +29,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author VISTALL
@@ -71,21 +72,29 @@ public class AIProviderTableImpl implements AIProviderTable {
             // the plugin that supplied the type can be gone, in which case the entry is simply skipped
             AIProviderType type = findType(entry.TYPE_ID);
             if (type != null) {
-                providers.add(new AIProvider(entry.NAME, type));
+                providers.add(new AIProvider(entry.NAME, type, entry.OPTIONS));
             }
         }
         return providers;
     }
 
     @Override
-    public List<AIProvider> getConfiguredProviders() {
-        List<AIProvider> configured = new ArrayList<>();
-        for (AIProvider provider : getProviders()) {
-            if (provider.isConfigured()) {
-                configured.add(provider);
-            }
+    public CompletableFuture<List<AIProvider>> getConfiguredProviders() {
+        List<AIProvider> providers = getProviders();
+        List<CompletableFuture<Boolean>> checks = new ArrayList<>(providers.size());
+        for (AIProvider provider : providers) {
+            checks.add(provider.isConfigured());
         }
-        return configured;
+
+        return CompletableFuture.allOf(checks.toArray(CompletableFuture[]::new)).thenApply(ignored -> {
+            List<AIProvider> configured = new ArrayList<>();
+            for (int i = 0; i < providers.size(); i++) {
+                if (checks.get(i).join()) {
+                    configured.add(providers.get(i));
+                }
+            }
+            return configured;
+        });
     }
 
     @Override
@@ -109,35 +118,33 @@ public class AIProviderTableImpl implements AIProviderTable {
     }
 
     @Override
-    public void removeProvider(AIProvider provider) {
+    public CompletableFuture<?> removeProvider(AIProvider provider) {
         mySettings.get().PROVIDERS.removeIf(entry -> entry.NAME.equals(provider.getName()));
-
-        // the key would otherwise outlive the instance it belongs to
-        provider.setApiKey(null);
 
         if (provider.getName().equals(mySettings.get().DEFAULT_PROVIDER_NAME)) {
             setDefault(null, null);
         }
+
+        // the key would otherwise outlive the instance it belongs to
+        return provider.setApiKey(null);
     }
 
     @Override
-    public @Nullable AIProvider getDefaultProvider() {
+    public CompletableFuture<@Nullable AIProvider> getDefaultProvider() {
         AIProvider chosen = findProvider(mySettings.get().DEFAULT_PROVIDER_NAME);
         if (chosen != null) {
-            return chosen;
+            return CompletableFuture.completedFuture(chosen);
         }
 
-        List<AIProvider> configured = getConfiguredProviders();
-        return configured.isEmpty() ? null : configured.getFirst();
+        return getConfiguredProviders().thenApply(configured -> configured.isEmpty() ? null : configured.getFirst());
     }
 
     @Override
-    public @Nullable AIModel getDefaultModel() {
-        AIProvider provider = getDefaultProvider();
-        if (provider == null) {
-            return null;
-        }
+    public CompletableFuture<@Nullable AIModel> getDefaultModel() {
+        return getDefaultProvider().thenApply(provider -> provider == null ? null : defaultModel(provider));
+    }
 
+    private @Nullable AIModel defaultModel(AIProvider provider) {
         String modelId = mySettings.get().DEFAULT_MODEL_ID;
         for (AIModel model : provider.getModels()) {
             if (model.getId().equals(modelId)) {

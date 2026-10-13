@@ -11,4 +11,5 @@ module consulo.ai.api {
     requires transitive consulo.ui.api;
 
     exports consulo.ai;
+    exports consulo.ai.icon;
 }

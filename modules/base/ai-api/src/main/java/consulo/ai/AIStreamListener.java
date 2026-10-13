@@ -15,6 +15,11 @@
  */
 package consulo.ai;
 
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.CompletableFuture;
+
 /**
  * Incremental delivery of an answer. Called on a background thread, so implementations must hop to
  * the UI themselves before touching components.
@@ -39,5 +44,22 @@ public interface AIStreamListener {
      * A complete tool request. Not streamed piecewise, since partial arguments are not parseable.
      */
     default void onToolUse(AIContent.ToolUse toolUse) {
+    }
+
+    /**
+     * The model wants to run a tool which needs the user's consent. The answer is awaited, so the turn pauses until
+     * the returned future completes. Without anyone to ask the tool is denied.
+     */
+    default CompletableFuture<AIToolPermissionDecision> onToolPermission(AIToolPermissionRequest request) {
+        return CompletableFuture.completedFuture(AIToolPermissionDecision.deny("Nobody can approve the tool here"));
+    }
+
+    /**
+     * The model asks the user one or more questions. The future completes with an answer per question
+     * ({@link AIQuestion#question()} to answer, several choices joined by {@code ", "}), or fails when the user
+     * declines to answer.
+     */
+    default CompletableFuture<Map<String, String>> onQuestion(List<AIQuestion> questions) {
+        return CompletableFuture.failedFuture(new CancellationException("Nobody can answer here"));
     }
 }

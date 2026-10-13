@@ -25,7 +25,9 @@ import consulo.util.xml.serializer.XmlSerializerUtil;
 import jakarta.inject.Singleton;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The configured instances and the default selection. API keys are never stored here - they live in
@@ -45,6 +47,7 @@ public class AISettings implements PersistentStateComponent<AISettings> {
     public static class ProviderEntry {
         public String NAME = "";
         public String TYPE_ID = "";
+        public Map<String, String> OPTIONS = new LinkedHashMap<>();
 
         public ProviderEntry() {
         }

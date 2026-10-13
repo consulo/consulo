@@ -18,8 +18,10 @@ package consulo.ai;
 import consulo.project.Project;
 import org.jspecify.annotations.Nullable;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -42,14 +44,30 @@ public final class AIChatSession {
     private final AIProvider myProvider;
     private final AIModel myModel;
     private final List<AIMessage> myMessages = new ArrayList<>();
+    private final String myId = UUID.randomUUID().toString();
 
     private @Nullable String mySystemPrompt;
     private boolean myToolsEnabled = true;
+    private @Nullable Path myWorkingDirectory;
 
     public AIChatSession(Project project, AIProvider provider, AIModel model) {
         myProject = project;
         myProvider = provider;
         myModel = model;
+        String basePath = project.getBasePath();
+        myWorkingDirectory = basePath == null ? null : Path.of(basePath);
+    }
+
+    /**
+     * Where the provider works on files - the project directory by default.
+     */
+    public AIChatSession workingDirectory(@Nullable Path workingDirectory) {
+        myWorkingDirectory = workingDirectory;
+        return this;
+    }
+
+    public @Nullable Path getWorkingDirectory() {
+        return myWorkingDirectory;
     }
 
     public AIChatSession systemPrompt(@Nullable String systemPrompt) {
@@ -66,6 +84,17 @@ public final class AIChatSession {
         return myModel;
     }
 
+    public AIProvider getProvider() {
+        return myProvider;
+    }
+
+    /**
+     * Identifies the conversation towards the provider, which may keep state of its own for it.
+     */
+    public String getId() {
+        return myId;
+    }
+
     /**
      * Full history, including the tool traffic, so a UI can show what the model actually did.
      */
@@ -75,6 +104,14 @@ public final class AIChatSession {
 
     public void clear() {
         myMessages.clear();
+        myProvider.getType().closeSession(myProvider, myId);
+    }
+
+    /**
+     * Ends the conversation: the provider drops whatever it kept for it.
+     */
+    public void close() {
+        myProvider.getType().closeSession(myProvider, myId);
     }
 
     /**
@@ -94,6 +131,8 @@ public final class AIChatSession {
             .systemPrompt(mySystemPrompt == null ? "" : mySystemPrompt)
             .messages(myMessages)
             .tools(tools)
+            .sessionId(myId)
+            .workingDirectory(myWorkingDirectory)
             .build();
 
         return myProvider.chat(request, listener).thenCompose(response -> {
