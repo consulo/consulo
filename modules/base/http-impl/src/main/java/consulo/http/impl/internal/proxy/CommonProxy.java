@@ -130,6 +130,13 @@ public class CommonProxy extends ProxySelector {
         Authenticator.setDefault(myAuthenticator);
     }
 
+    /**
+     * The authenticator {@link #ensureAuthenticator()} makes the default one.
+     */
+    public Authenticator getAuthenticator() {
+        return myAuthenticator;
+    }
+
     public void noProxy(String protocol, String host, int port) {
         synchronized (myLock) {
             LOG.debug("no proxy added: ", protocol, "://", host, ":", port);

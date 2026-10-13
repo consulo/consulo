@@ -14,5 +14,8 @@ module consulo.http.api {
     exports consulo.http.localize;
     exports consulo.http.ws;
 
-    exports consulo.http.internal to consulo.http.adapter.httpclient4;
+    exports consulo.http.internal to
+        consulo.http.adapter.httpclient4,
+        consulo.http.impl,
+        consulo.remote.server.agent.impl;
 }

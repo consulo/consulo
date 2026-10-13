@@ -27,6 +27,23 @@
     <version>3-SNAPSHOT</version>
     <packaging>jar</packaging>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <!--
+                      Run tests on the classpath (unnamed modules). A failed request builds its error message
+                      through LocalizeManager, which is found by a ServiceLoader - the test provider in
+                      META-INF/services is seen only on the classpath.
+                    -->
+                    <useModulePath>false</useModulePath>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
