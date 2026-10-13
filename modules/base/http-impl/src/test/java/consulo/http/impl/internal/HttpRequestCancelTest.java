@@ -19,9 +19,11 @@ import consulo.application.Application;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.component.ProcessCanceledException;
+import consulo.component.extension.ExtensionPoint;
 import consulo.http.HttpCertificateManager;
 import consulo.http.HttpMethod;
 import consulo.http.HttpProxyManager;
+import consulo.http.internal.PlatformHttpRequestSender;
 import consulo.platform.Platform;
 import org.junit.jupiter.api.Test;
 
@@ -29,6 +31,7 @@ import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -70,14 +73,22 @@ public class HttpRequestCancelTest {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void onlyTheLocalPlatformSends() {
         Platform remote = mock(Platform.class);
         when(remote.getId()).thenReturn("remote");
 
+        ExtensionPoint<PlatformHttpRequestSender> senders = mock(ExtensionPoint.class);
+        when(senders.findFirstSafe(any())).thenReturn(null);
+
+        Application application = mock(Application.class);
+        when(application.getExtensionPoint(PlatformHttpRequestSender.class)).thenReturn(senders);
+
         HttpRequestBuilderFactoryImpl factory =
-            new HttpRequestBuilderFactoryImpl(mock(Application.class), mock(HttpProxyManager.class), mock(HttpCertificateManager.class), false);
+            new HttpRequestBuilderFactoryImpl(application, mock(HttpProxyManager.class), mock(HttpCertificateManager.class), false);
 
         assertThatExceptionOfType(UnsupportedOperationException.class)
-            .isThrownBy(() -> factory.newBuilder(remote, "http://127.0.0.1/", HttpMethod.GET));
+            .isThrownBy(() -> factory.newBuilder(remote, "http://127.0.0.1/", HttpMethod.GET))
+            .withMessageContaining("remote");
     }
 }
