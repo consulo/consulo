@@ -252,6 +252,10 @@ message.successfully.logged.in.as.0:
     text: Successfully logged in as {0}
 notification.group.platform.or.plugins.update.display.name:
     text: Platform Or Plugins Update
+plugin.advestiser.notification.ignore.by.file.extension:
+    text: Ignore by extension
+plugin.advestiser.notification.ignore.by.file.name:
+    text: Ignore by file name
 plugin.advestiser.notification.install.link:
     text: Install {0, choice, 1#plugin|2#plugins}
 plugin.advestiser.notification.install.plugin.link:

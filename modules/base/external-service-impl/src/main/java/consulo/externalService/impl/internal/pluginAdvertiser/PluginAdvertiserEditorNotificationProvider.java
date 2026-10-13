@@ -72,14 +72,13 @@ public class PluginAdvertiserEditorNotificationProvider implements EditorNotific
         myPluginAdvertiserRequester = pluginAdvertiserRequester;
     }
 
-    
     @Override
     public String getId() {
         return "plugin-advertiser";
     }
 
-    @RequiredReadAction
     @Override
+    @RequiredReadAction
     public @Nullable EditorNotificationBuilder buildNotification(
         VirtualFile file,
         FileEditor fileEditor,
@@ -122,7 +121,6 @@ public class PluginAdvertiserEditorNotificationProvider implements EditorNotific
         return file.getFileType() instanceof PlainTextLikeFileType;
     }
 
-    
     @RequiredReadAction
     private EditorNotificationBuilder build(
         VirtualFile virtualFile,
@@ -152,20 +150,27 @@ public class PluginAdvertiserEditorNotificationProvider implements EditorNotific
             );
         }
         else {
-            builder.withAction(ExternalServiceLocalize.pluginAdvestiserNotificationInstallLink(plugins.size()), (i) -> {
-                PluginAdvertiserDialogFactory.getInstance().showDialog(null, allPlugins, new ArrayList<>(plugins));
-            });
+            builder.withAction(
+                ExternalServiceLocalize.pluginAdvestiserNotificationInstallLink(plugins.size()),
+                i -> PluginAdvertiserDialogFactory.getInstance().showDialog(null, allPlugins, new ArrayList<>(plugins))
+            );
         }
 
-        builder.withAction(LocalizeValue.localizeTODO("Ignore by file name"), (i) -> {
-            myUnknownFeaturesCollector.ignoreFeature(ExtensionPreview.of(FileTypeFactory.class, virtualFile.getName()));
-            myNotifications.updateAllNotifications();
-        });
+        builder.withAction(
+            ExternalServiceLocalize.pluginAdvestiserNotificationIgnoreByFileName(),
+            i -> {
+                myUnknownFeaturesCollector.ignoreFeature(ExtensionPreview.of(FileTypeFactory.class, virtualFile.getName()));
+                myNotifications.updateAllNotifications();
+            }
+        );
 
-        builder.withAction(LocalizeValue.localizeTODO("Ignore by extension"), (i) -> {
-            myUnknownFeaturesCollector.ignoreFeature(ExtensionPreview.of(FileTypeFactory.class, "*." + virtualFile.getExtension()));
-            myNotifications.updateAllNotifications();
-        });
+        builder.withAction(
+            ExternalServiceLocalize.pluginAdvestiserNotificationIgnoreByFileExtension(),
+            i -> {
+                myUnknownFeaturesCollector.ignoreFeature(ExtensionPreview.of(FileTypeFactory.class, "*." + virtualFile.getExtension()));
+                myNotifications.updateAllNotifications();
+            }
+        );
 
         return builder;
     }
