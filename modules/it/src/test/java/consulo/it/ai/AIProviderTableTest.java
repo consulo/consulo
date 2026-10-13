@@ -40,7 +40,7 @@ public class AIProviderTableTest {
     public void removeConfiguredProviders(Application application) {
         AIProviderTable table = application.getInstance(AIProviderTable.class);
         for (AIProvider provider : table.getProviders()) {
-            table.removeProvider(provider);
+            table.removeProvider(provider).join();
         }
     }
 
@@ -81,10 +81,10 @@ public class AIProviderTableTest {
         assertThat(work.getType()).isSameAs(personal.getType());
 
         // each instance owns its credentials
-        work.setApiKey("work-key");
-        assertThat(work.getApiKey()).isEqualTo("work-key");
-        assertThat(personal.getApiKey()).isNull();
-        assertThat(table.getConfiguredProviders()).containsExactly(work);
+        work.setApiKey("work-key").join();
+        assertThat(work.getApiKey().join()).isEqualTo("work-key");
+        assertThat(personal.getApiKey().join()).isNull();
+        assertThat(table.getConfiguredProviders().join()).containsExactly(work);
     }
 
     @Test
@@ -104,13 +104,13 @@ public class AIProviderTableTest {
         assertThat(type).isNotNull();
 
         AIProvider provider = table.addProvider("temporary", type);
-        provider.setApiKey("secret");
+        provider.setApiKey("secret").join();
 
-        table.removeProvider(provider);
+        table.removeProvider(provider).join();
 
         assertThat(table.findProvider("temporary")).isNull();
         // a stale key must not be handed to a later instance that happens to reuse the name
-        assertThat(table.addProvider("temporary", type).getApiKey()).isNull();
+        assertThat(table.addProvider("temporary", type).getApiKey().join()).isNull();
     }
 
     @Test
@@ -120,7 +120,7 @@ public class AIProviderTableTest {
         assertThat(type).isNotNull();
 
         AIProvider provider = table.addProvider("main", type);
-        provider.setApiKey("key");
+        provider.setApiKey("key").join();
 
         AIModel large = type.getModels().stream()
             .filter(model -> model.getId().equals(HeadlessAIProvider.LARGE_MODEL_ID))
@@ -128,12 +128,12 @@ public class AIProviderTableTest {
             .orElseThrow();
 
         table.setDefault(provider, large);
-        assertThat(table.getDefaultProvider()).isEqualTo(provider);
-        assertThat(table.getDefaultModel()).isEqualTo(large);
+        assertThat(table.getDefaultProvider().join()).isEqualTo(provider);
+        assertThat(table.getDefaultModel().join()).isEqualTo(large);
 
         // clearing falls back to a usable instance rather than leaving callers with null
         table.setDefault(null, null);
-        assertThat(table.getDefaultProvider()).isEqualTo(provider);
-        assertThat(table.getDefaultModel()).isNotNull();
+        assertThat(table.getDefaultProvider().join()).isEqualTo(provider);
+        assertThat(table.getDefaultModel().join()).isNotNull();
     }
 }
