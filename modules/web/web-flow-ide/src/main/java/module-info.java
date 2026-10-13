@@ -22,6 +22,7 @@ module consulo.web.ide {
     requires consulo.component.api;
     requires consulo.component.store.impl;
     requires consulo.container.api;
+    requires consulo.credential.storage.api;
     requires consulo.datacontext.api;
     requires consulo.diff.api;
     requires consulo.disposer.api;
@@ -68,6 +69,7 @@ module consulo.web.ide {
     requires vaadin.breadcrumbs.flow;
     requires vaadin.button.flow;
     requires vaadin.card.flow;
+    requires vaadin.messages.flow;
     requires vaadin.checkbox.flow;
     requires vaadin.combo.box.flow;
     requires vaadin.context.menu.flow;

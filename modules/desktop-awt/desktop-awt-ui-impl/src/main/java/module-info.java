@@ -46,6 +46,9 @@ open module consulo.desktop.awt.ui.impl {
 
     requires jdk.xml.dom;
     requires cobra.core;
+    requires org.commonmark;
+    requires org.commonmark.ext.gfm.tables;
+    requires org.commonmark.ext.gfm.strikethrough;
 
     requires consulo.container.api;
 

@@ -45,6 +45,8 @@ import consulo.desktop.awt.ui.impl.image.reference.DesktopAWTImageKey;
 import consulo.desktop.awt.ui.impl.image.reference.DesktopAWTPNGImageReference;
 import consulo.desktop.awt.ui.impl.image.reference.DesktopAWTSVGImageReference;
 import consulo.desktop.awt.ui.impl.layout.*;
+import consulo.desktop.awt.ui.impl.messageList.DesktopMessageInputImpl;
+import consulo.desktop.awt.ui.impl.messageList.DesktopMessageListImpl;
 import consulo.desktop.awt.ui.impl.style.DesktopAWTStyleManagerImpl;
 import consulo.desktop.awt.ui.impl.textBox.*;
 import consulo.desktop.awt.ui.impl.image.DesktopDeferredIconImpl;
@@ -60,6 +62,8 @@ import consulo.ui.MenuItem;
 import consulo.ui.Window;
 import consulo.desktop.awt.ui.impl.color.DesktopAWTColorPickerBuilder;
 import consulo.ui.*;
+import consulo.ui.messageList.MessageInput;
+import consulo.ui.messageList.MessageList;
 import consulo.ui.TextArea;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
@@ -179,6 +183,16 @@ public class DesktopUIInternalImpl extends UIInternal implements UIInternalEx {
     @Override
     public Card _Components_card() {
         return new DesktopCardImpl();
+    }
+
+    @Override
+    public MessageList _Components_messageList() {
+        return new DesktopMessageListImpl();
+    }
+
+    @Override
+    public MessageInput _Components_messageInput() {
+        return new DesktopMessageInputImpl();
     }
 
     @Override

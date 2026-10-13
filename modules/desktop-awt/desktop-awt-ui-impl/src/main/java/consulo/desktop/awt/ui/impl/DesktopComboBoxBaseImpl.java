@@ -30,6 +30,7 @@ import org.jspecify.annotations.Nullable;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.ListCellRenderer;
+import java.awt.event.ItemEvent;
 import java.util.function.Function;
 
 /**
@@ -81,10 +82,22 @@ abstract class DesktopComboBoxBaseImpl<E, C extends JComponent> extends SwingCom
                 break;
             case INPLACE:
                 AWTComboBoxStyle.makeBorderInline(comboBox);
+                fitToSelection(comboBox);
+                comboBox.addItemListener(event -> {
+                    if (event.getStateChange() == ItemEvent.SELECTED) {
+                        fitToSelection(comboBox);
+                    }
+                });
                 break;
             case TOOLBAR:
                 break;
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <E> void fitToSelection(JComboBox<E> comboBox) {
+        comboBox.setPrototypeDisplayValue((E) comboBox.getSelectedItem());
+        comboBox.revalidate();
     }
 
     @Override

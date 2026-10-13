@@ -30,6 +30,8 @@ import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.ui.AdvancedLabel;
 import consulo.ui.*;
+import consulo.ui.messageList.MessageInput;
+import consulo.ui.messageList.MessageList;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.font.FontManager;
@@ -375,6 +377,16 @@ public class WebUIInternalImpl extends UIInternal implements UIInternalEx {
     @Override
     public Card _Components_card() {
         return new WebCardImpl();
+    }
+
+    @Override
+    public MessageList _Components_messageList() {
+        return new WebMessageListImpl();
+    }
+
+    @Override
+    public MessageInput _Components_messageInput() {
+        return new WebMessageInputImpl();
     }
 
     @Override

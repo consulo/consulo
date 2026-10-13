@@ -1,0 +1,18 @@
+vaadin-message[theme~="consulo-error"]::part(content),
+vaadin-message[theme~="consulo-error"] :not(vaadin-avatar) {
+    color: var(--consulo-message-error-foreground);
+}
+
+vaadin-message[theme~="consulo-system"]::part(content),
+vaadin-message[theme~="consulo-system"] :not(vaadin-avatar) {
+    color: var(--consulo-message-system-foreground);
+}
+
+vaadin-message[theme~="consulo-own"] > [slot="avatar"],
+vaadin-message[theme~="consulo-system"] > [slot="avatar"] {
+    display: none;
+}
+
+vaadin-message[theme~="consulo-anonymous"]::part(name) {
+    display: none;
+}

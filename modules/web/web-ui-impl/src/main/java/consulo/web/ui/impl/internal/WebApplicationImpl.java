@@ -15,7 +15,9 @@ import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.BooleanSupplier;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
@@ -28,6 +30,8 @@ public class WebApplicationImpl extends UnifiedApplication {
   private final WebUnboundUIAccess myUnboundUIAccess = new WebUnboundUIAccess();
 
   private final Set<UIAccess> myUIAccesses = new LinkedHashSet<>();
+
+  private final List<Consumer<UIAccess>> myUIAccessListeners = new CopyOnWriteArrayList<>();
 
   public WebApplicationImpl(ComponentBinding componentBinding, SimpleReference<? extends StartupProgress> splash) {
     super(componentBinding, splash);
@@ -145,6 +149,22 @@ public class WebApplicationImpl extends UnifiedApplication {
       myUIAccesses.removeIf(access -> !access.isValid());
       myUIAccesses.add(uiAccess);
     }
+
+    for (Consumer<UIAccess> listener : myUIAccessListeners) {
+      try {
+        listener.accept(uiAccess);
+      }
+      catch (Throwable e) {
+        LOG.error(e);
+      }
+    }
+  }
+
+  /**
+   * Told about every ui {@link #registerUIAccess} adds, for work which waits until there is a browser page to run in.
+   */
+  public void addUIAccessListener(Consumer<UIAccess> listener) {
+    myUIAccessListeners.add(listener);
   }
 
   /**

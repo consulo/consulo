@@ -1,0 +1,41 @@
+vaadin-message-input[theme~="consulo-send-icon"] > vaadin-message-input-button {
+    font-size: 0;
+    min-width: 32px;
+    background-image: var(--consulo-message-input-send-icon);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 16px 16px;
+}
+
+vaadin-message-input[theme~="consulo-send-icon"] > vaadin-message-input-button[disabled] {
+    opacity: 0.5;
+}
+
+vaadin-message-input[theme~="consulo-inplace"] > vaadin-text-area {
+    --vaadin-input-field-border-width: 0;
+    --vaadin-input-field-border-radius: 0;
+    --vaadin-input-field-background: transparent;
+    --vaadin-focus-ring-width: 0;
+    --aura-shadow-xs: none;
+}
+
+vaadin-message-input[theme~="consulo-inplace"] > vaadin-text-area::part(input-field) {
+    border: none;
+    outline: none;
+    box-shadow: none;
+    background: transparent;
+}
+
+vaadin-message-input[theme~="consulo-inplace"] {
+    border: none;
+    border-radius: 0;
+    outline: none;
+    box-shadow: none;
+    background: var(--vaadin-background-color);
+    align-items: center;
+}
+
+vaadin-message-input[theme~="consulo-inplace"] > vaadin-message-input-button,
+vaadin-message-input[theme~="consulo-inplace"] textarea {
+    align-self: center;
+}

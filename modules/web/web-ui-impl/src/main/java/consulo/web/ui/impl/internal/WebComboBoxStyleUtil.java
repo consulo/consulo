@@ -36,6 +36,8 @@ final class WebComboBoxStyleUtil {
                     .set("--vaadin-input-field-border-width", "0")
                     .set("--vaadin-input-field-border-radius", "0")
                     .set("--vaadin-focus-ring-width", "0")
+                    .set("--vaadin-input-field-background", "transparent")
+                    .set("--vaadin-input-field-disabled-background", "transparent")
                     .set("--aura-shadow-xs", "none");
                 break;
             case TOOLBAR:

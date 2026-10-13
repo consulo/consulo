@@ -35,6 +35,7 @@ module consulo.ui.api {
     exports consulo.ui.image.viewer;
     exports consulo.ui.layout;
     exports consulo.ui.layout.event;
+    exports consulo.ui.messageList;
     exports consulo.ui.model;
     exports consulo.ui.style;
     exports consulo.ui.util;

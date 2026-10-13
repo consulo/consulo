@@ -19,6 +19,8 @@ import consulo.container.plugin.util.PlatformServiceLoader;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.ui.*;
+import consulo.ui.messageList.MessageInput;
+import consulo.ui.messageList.MessageList;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.event.ModalityStateListener;
@@ -213,6 +215,14 @@ public abstract class UIInternal {
     }
 
     public Card _Components_card() {
+        throw new UnsupportedOperationException();
+    }
+
+    public MessageList _Components_messageList() {
+        throw new UnsupportedOperationException();
+    }
+
+    public MessageInput _Components_messageInput() {
         throw new UnsupportedOperationException();
     }
 

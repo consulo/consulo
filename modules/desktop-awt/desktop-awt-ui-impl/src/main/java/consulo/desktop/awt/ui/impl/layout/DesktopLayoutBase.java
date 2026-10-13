@@ -83,7 +83,7 @@ abstract class DesktopLayoutBase<T extends JPanel, C extends LayoutConstraint> e
     protected void addImpl(Component component, Object constraints) {
         T panel = toAWTComponent();
         panel.add(DesktopLayoutChildren.toAWT(component), constraints);
-        panel.validate();
+        panel.revalidate();
         panel.repaint();
     }
 
@@ -91,5 +91,13 @@ abstract class DesktopLayoutBase<T extends JPanel, C extends LayoutConstraint> e
     @RequiredUIAccess
     public void removeAll() {
         toAWTComponent().removeAll();
+    }
+
+    @Override
+    public void remove(Component component) {
+        T panel = toAWTComponent();
+        panel.remove(DesktopLayoutChildren.toAWT(component));
+        panel.revalidate();
+        panel.repaint();
     }
 }

@@ -30,6 +30,8 @@ import com.flowingcode.vaadin.addons.xterm.ConsuloPtyTerm;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.details.Details;
 import com.vaadin.flow.component.card.Card;
+import com.vaadin.flow.component.messages.MessageInput;
+import com.vaadin.flow.component.messages.MessageList;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
@@ -94,6 +96,8 @@ import org.vaadin.stefan.table.Table;
 @Push(PushMode.AUTOMATIC)
 @Uses(Dialog.class)
 @Uses(Card.class)
+@Uses(MessageList.class)
+@Uses(MessageInput.class)
 @Uses(Carousel.class)
 @Uses(WebEChartVaadin.class)
 @Uses(RevoDataGridVaadin.class)

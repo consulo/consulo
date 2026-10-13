@@ -40,9 +40,13 @@ import consulo.desktop.qt.ui.impl.font.DesktopQtFontManagerImpl;
 import consulo.desktop.qt.ui.impl.htmlView.DesktopQtHtmlViewImpl;
 import consulo.desktop.qt.ui.impl.image.*;
 import consulo.desktop.qt.ui.impl.layout.*;
+import consulo.desktop.qt.ui.impl.messageList.DesktopQtMessageInputImpl;
+import consulo.desktop.qt.ui.impl.messageList.DesktopQtMessageListImpl;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.ui.*;
+import consulo.ui.messageList.MessageInput;
+import consulo.ui.messageList.MessageList;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.font.FontManager;
@@ -618,6 +622,16 @@ public class DesktopQtUIInternalImpl extends UIInternal implements UIInternalEx 
     @Override
     public Card _Components_card() {
         return new DesktopQtCardImpl();
+    }
+
+    @Override
+    public MessageList _Components_messageList() {
+        return new DesktopQtMessageListImpl();
+    }
+
+    @Override
+    public MessageInput _Components_messageInput() {
+        return new DesktopQtMessageInputImpl();
     }
 
     @Override

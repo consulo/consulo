@@ -74,7 +74,7 @@ public class DesktopDockLayoutImpl extends DesktopLayoutBase<JPanel, StaticPosit
         }
 
         panel.add(DesktopLayoutChildren.toAWT(component), constraints);
-        panel.validate();
+        panel.revalidate();
         panel.repaint();
     }
 }
