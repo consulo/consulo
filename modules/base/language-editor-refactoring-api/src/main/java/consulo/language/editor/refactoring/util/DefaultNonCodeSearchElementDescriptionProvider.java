@@ -15,6 +15,7 @@
  */
 package consulo.language.editor.refactoring.util;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.psi.*;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
@@ -31,25 +32,24 @@ public class DefaultNonCodeSearchElementDescriptionProvider implements ElementDe
     public static final DefaultNonCodeSearchElementDescriptionProvider INSTANCE = new DefaultNonCodeSearchElementDescriptionProvider();
 
     @Override
+    @RequiredReadAction
     public LocalizeValue getElementDescription(PsiElement element, ElementDescriptionLocation location) {
-        if (!(location instanceof NonCodeSearchDescriptionLocation)) {
+        if (!(location instanceof NonCodeSearchDescriptionLocation ncdLocation)) {
             return LocalizeValue.empty();
         }
-        NonCodeSearchDescriptionLocation ncdLocation = (NonCodeSearchDescriptionLocation) location;
 
-        if (element instanceof PsiDirectory) {
+        if (element instanceof PsiDirectory directory) {
             if (ncdLocation.isNonJava()) {
-                String qName = PsiPackageHelper.getInstance(element.getProject()).getQualifiedName((PsiDirectory) element, false);
+                String qName = PsiPackageHelper.getInstance(element.getProject()).getQualifiedName(directory, false);
                 return LocalizeValue.of(qName);
             }
-            return LocalizeValue.localizeTODO(((PsiDirectory) element).getName());
+            return LocalizeValue.of(directory.getName());
         }
 
-        if (element instanceof PsiMetaOwner) {
-            PsiMetaOwner psiMetaOwner = (PsiMetaOwner)element;
-            PsiMetaData metaData = psiMetaOwner.getMetaData();
+        if (element instanceof PsiMetaOwner metaOwner) {
+            PsiMetaData metaData = metaOwner.getMetaData();
             if (metaData != null) {
-                return LocalizeValue.localizeTODO(metaData.getName());
+                return LocalizeValue.ofNullable(metaData.getName());
             }
         }
         if (element instanceof PsiNamedElement namedElem) {
