@@ -87,7 +87,7 @@ public class DesktopDeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<Deskt
         Component component,
         int x,
         int y,
-        Component target,
+        @Nullable Component target,
         @Nullable Component paintingParent,
         @Nullable Rectangle paintingParentRec
     ) {
@@ -268,9 +268,11 @@ public class DesktopDeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<Deskt
         });
     }
 
+    @RequiredUIAccess
     private void repaint(PendingRepaint pendingRepaint, boolean shouldRevalidate) {
         Component actualTarget = pendingRepaint.target();
-        if (SwingUtilities.getWindowAncestor(actualTarget) == null) {
+        Window windowAncestor = actualTarget == null ? null : SwingUtilities.getWindowAncestor(actualTarget);
+        if (windowAncestor == null) {
             actualTarget = pendingRepaint.paintingParent();
             if (actualTarget == null || SwingUtilities.getWindowAncestor(actualTarget) == null) {
                 return;
