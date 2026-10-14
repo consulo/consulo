@@ -20,7 +20,6 @@ import consulo.application.Application;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.popup.Balloon;
 import org.jspecify.annotations.Nullable;
 
 import java.util.function.BooleanSupplier;
@@ -56,11 +55,6 @@ public class AppUIUtil {
   }
 
   public static void hideToolWindowBalloon(String id, Project project) {
-    invokeLaterIfProjectAlive(project, () -> {
-      Balloon balloon = ToolWindowManager.getInstance(project).getToolWindowBalloon(id);
-      if (balloon != null) {
-        balloon.hide();
-      }
-    });
+    invokeLaterIfProjectAlive(project, () -> ToolWindowManager.getInstance(project).hideToolWindowBalloon(id));
   }
 }

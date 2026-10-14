@@ -135,5 +135,12 @@ public enum ComponentColors implements StyleColorValue {
     PARAMETER_INFO_FOREGROUND,
     PARAMETER_INFO_CURRENT_PARAMETER_FOREGROUND,
     PARAMETER_INFO_DISABLED_FOREGROUND,
-    PARAMETER_INFO_INFO_FOREGROUND
+    PARAMETER_INFO_INFO_FOREGROUND,
+
+    /**
+     * The fill of a short message pointing at a tool window, by how serious it is.
+     */
+    NOTIFICATION_INFO_BACKGROUND,
+    NOTIFICATION_WARNING_BACKGROUND,
+    NOTIFICATION_ERROR_BACKGROUND
 }

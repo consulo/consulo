@@ -204,8 +204,18 @@ public class NotificationsManagerImpl extends NotificationsManager {
             case TOOL_WINDOW:
                 NotificationType messageType = notification.getType();
                 NotificationListener notificationListener = notification.getListener();
-                HyperlinkListener listener =
-                    notificationListener == null ? null : e -> notificationListener.hyperlinkUpdate(notification, e);
+                consulo.ui.event.ComponentEventListener<consulo.ui.Component, consulo.ui.event.HyperlinkEvent> listener =
+                    notificationListener == null
+                        ? null
+                        : event -> notificationListener.hyperlinkUpdate(
+                            notification,
+                            new javax.swing.event.HyperlinkEvent(
+                                event.getComponent(),
+                                javax.swing.event.HyperlinkEvent.EventType.ACTIVATED,
+                                null,
+                                event.getDescription()
+                            )
+                        );
                 assert toolWindowId != null;
                 String msg = notification.getTitle();
                 if (StringUtil.isNotEmpty(notification.getContent())) {
@@ -220,7 +230,6 @@ public class NotificationsManagerImpl extends NotificationsManager {
                     layoutEx.remove(notification);
                 }
 
-                //noinspection SSBasedInspection
                 ToolWindowManager.getInstance(project)
                     .notifyByBalloon(toolWindowId, messageType.toUI(), msg, notification.getIcon(), listener);
         }

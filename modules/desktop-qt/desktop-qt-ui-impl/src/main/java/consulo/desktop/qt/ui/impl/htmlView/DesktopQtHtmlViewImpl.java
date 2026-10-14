@@ -41,6 +41,7 @@ import io.qt.gui.QPixmap;
 import io.qt.gui.QTextDocument;
 import io.qt.widgets.QFrame;
 import io.qt.widgets.QStyle;
+import io.qt.widgets.QSizePolicy;
 import io.qt.widgets.QTextBrowser;
 import io.qt.widgets.QWidget;
 import org.jspecify.annotations.Nullable;
@@ -93,6 +94,15 @@ public class DesktopQtHtmlViewImpl extends QtComponentDelegate<QTextBrowser> imp
             finally {
                 myClickedAnchor = null;
             }
+        }
+
+        @Override
+        public QSize minimumSizeHint() {
+            QSize minimum = super.minimumSizeHint();
+            if (!mySizeToContent) {
+                return minimum;
+            }
+            return new QSize(minimum.width(), Math.min(minimum.height(), sizeHint().height()));
         }
 
         @Override
@@ -156,6 +166,8 @@ public class DesktopQtHtmlViewImpl extends QtComponentDelegate<QTextBrowser> imp
         // the view carries no frame of its own - whatever holds it draws the border, the way the awt one is put
         // inside a scroll pane which owns the frame
         component.setFrameShape(QFrame.Shape.NoFrame);
+
+        applySizePolicy(component);
 
         // a link is a choice the platform makes, not a page to walk to: the browser must neither navigate nor hand
         // the url to the desktop, only report it
@@ -229,8 +241,14 @@ public class DesktopQtHtmlViewImpl extends QtComponentDelegate<QTextBrowser> imp
 
         QTextBrowser component = myComponent;
         if (component != null) {
+            applySizePolicy(component);
             component.updateGeometry();
         }
+    }
+
+    private void applySizePolicy(QTextBrowser component) {
+        QSizePolicy.Policy policy = mySizeToContent ? QSizePolicy.Policy.Preferred : QSizePolicy.Policy.Expanding;
+        component.setSizePolicy(policy, policy);
     }
 
     private @Nullable QPixmap resolveImage(String source) {

@@ -35,9 +35,12 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.Component;
 import consulo.ui.NotificationType;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.ComponentEventListener;
+import consulo.ui.event.HyperlinkEvent;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.LegacyDumbAwareAction;
@@ -55,8 +58,6 @@ import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jspecify.annotations.Nullable;
 import org.xml.sax.SAXException;
 
-import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.HyperlinkListener;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
@@ -231,15 +232,11 @@ public class ExportTestResultsAction extends LegacyDumbAwareAction {
                         );
                     }
                     else {
-                        HyperlinkListener listener = e1 -> {
-                            if (e1.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-                                openEditorOrBrowser(
-                                    result.get(),
-                                    project,
-                                    config.getExportFormat() == ExportTestResultsConfiguration.ExportFormat.Xml
-                                );
-                            }
-                        };
+                        ComponentEventListener<Component, HyperlinkEvent> listener = event -> openEditorOrBrowser(
+                            result.get(),
+                            project,
+                            config.getExportFormat() == ExportTestResultsConfiguration.ExportFormat.Xml
+                        );
                         showBalloon(
                             project,
                             NotificationType.INFO,
@@ -340,7 +337,7 @@ public class ExportTestResultsAction extends LegacyDumbAwareAction {
         Project project,
         NotificationType type,
         String text,
-        @Nullable HyperlinkListener listener
+        @Nullable ComponentEventListener<Component, HyperlinkEvent> listener
     ) {
         project.getApplication().invokeLater(() -> {
             if (project.isDisposed()) {

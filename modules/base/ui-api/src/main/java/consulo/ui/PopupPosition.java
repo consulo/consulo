@@ -31,6 +31,11 @@ public enum PopupPosition {
      */
     END,
     /**
+     * Beside the target on the side its text starts from - a hint for something placed along the far edge of a
+     * window, which has no room on its other side.
+     */
+    START,
+    /**
      * Over the target, turned below it when there is no room above - a hint which must not cover what is under the
      * point it describes.
      */

@@ -15,6 +15,7 @@
  */
 package consulo.ui.ex.popup;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.disposer.Disposable;
 import consulo.ui.ex.LightweightWindow;
 import consulo.ui.ex.PositionTracker;
@@ -27,6 +28,8 @@ import java.awt.*;
 /**
  * @see JBPopupFactory
  */
+@Deprecated
+@DeprecationInfo("Legacy UI element in some cases will replaced by LightPopup with anchor")
 public interface Balloon extends Disposable, PositionTracker.Client<Balloon>, LightweightWindow {
 
     public static int getNormalInset() {

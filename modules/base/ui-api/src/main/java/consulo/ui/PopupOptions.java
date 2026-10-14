@@ -60,8 +60,8 @@ public final class PopupOptions extends ComponentOptions {
         }
 
         /**
-         * Draws a pointer from the popup to the point it was shown at, for a popup which describes that exact point.
-         * A popup shown against a whole component has nothing to point at and is drawn without one.
+         * Draws a pointer from the popup to what it describes - the point it was shown at, or the middle of the
+         * component it was shown against.
          */
         public Builder arrow() {
             myArrow = true;

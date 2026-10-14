@@ -38,12 +38,10 @@ import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.Component;
 import consulo.ui.Label;
-import consulo.ui.NotificationType;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.internal.ToolWindowEx;
-import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.toolWindow.InternalDecoratorListener;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowInternalDecorator;
@@ -204,26 +202,12 @@ public class DesktopQtToolWindowManagerImpl extends ToolWindowManagerBase {
     }
 
     @Override
-    public boolean canShowNotification(String toolWindowId) {
-        return false;
-    }
-
-    @Override
     public void activateEditorComponent() {
     }
 
     @Override
     public boolean isEditorComponentActive() {
         return false;
-    }
-
-    @Override
-    public void notifyByBalloon(String toolWindowId, NotificationType type, String htmlBody) {
-    }
-
-    @Override
-    public @Nullable Balloon getToolWindowBalloon(String id) {
-        return null;
     }
 
     @Override

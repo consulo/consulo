@@ -43,14 +43,15 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.Component;
 import consulo.ui.NotificationType;
+import consulo.ui.event.ComponentEventListener;
+import consulo.ui.event.HyperlinkEvent;
 import consulo.ui.ex.action.KeyboardShortcut;
-import consulo.ui.ex.awt.HyperlinkAdapter;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.keymap.util.KeymapUtil;
-import consulo.ui.ex.popup.Balloon;
 import consulo.usage.*;
 import consulo.usage.localize.UsageLocalize;
 import consulo.util.collection.ArrayUtil;
@@ -60,8 +61,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
-import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.HyperlinkListener;
 import java.awt.event.ActionEvent;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -128,7 +127,7 @@ class SearchForUsagesRunnable implements Runnable {
     }
 
     private static void notifyByFindBalloon(
-        @Nullable HyperlinkListener listener,
+        @Nullable ComponentEventListener<Component, HyperlinkEvent> listener,
         NotificationType info,
         FindUsagesProcessPresentation processPresentation,
         Project project,
@@ -138,7 +137,7 @@ class SearchForUsagesRunnable implements Runnable {
 
         Collection<VirtualFile> largeFiles = processPresentation.getLargeFiles();
         List<String> resultLines = new ArrayList<>(lines);
-        HyperlinkListener resultListener = listener;
+        ComponentEventListener<Component, HyperlinkEvent> resultListener = listener;
         if (!largeFiles.isEmpty()) {
             String shortMessage = "(<a href='" + LARGE_FILES_HREF_TARGET + "'>" +
                 UsageLocalize.largeFilesWereIgnored(largeFiles.size())
@@ -169,16 +168,17 @@ class SearchForUsagesRunnable implements Runnable {
             .notifyByBalloon(ToolWindowId.FIND, info, wrapInHtml(resultLines), PlatformIconGroup.actionsFind(), resultListener);
     }
 
-    private static HyperlinkListener addHrefHandling(@Nullable HyperlinkListener listener, String hrefTarget, Runnable handler) {
-        return new HyperlinkAdapter() {
-            @Override
-            protected void hyperlinkActivated(HyperlinkEvent e) {
-                if (e.getDescription().equals(hrefTarget)) {
-                    handler.run();
-                }
-                else if (listener != null) {
-                    listener.hyperlinkUpdate(e);
-                }
+    private static ComponentEventListener<Component, HyperlinkEvent> addHrefHandling(
+        @Nullable ComponentEventListener<Component, HyperlinkEvent> listener,
+        String hrefTarget,
+        Runnable handler
+    ) {
+        return event -> {
+            if (event.getDescription().equals(hrefTarget)) {
+                handler.run();
+            }
+            else if (listener != null) {
+                listener.onEvent(event);
             }
         };
     }
@@ -206,26 +206,20 @@ class SearchForUsagesRunnable implements Runnable {
         return "'" + ReadAction.compute(virtualFile::getPresentableUrl) + "'";
     }
 
-    private HyperlinkListener createGotToOptionsListener(final UsageTarget[] targets) {
-        return new HyperlinkAdapter() {
-            @Override
-            protected void hyperlinkActivated(HyperlinkEvent e) {
-                if (e.getDescription().equals(FIND_OPTIONS_HREF_TARGET)) {
-                    FindManager.getInstance(myProject).showSettingsAndFindUsages(targets);
-                }
+    private ComponentEventListener<Component, HyperlinkEvent> createGotToOptionsListener(UsageTarget[] targets) {
+        return event -> {
+            if (event.getDescription().equals(FIND_OPTIONS_HREF_TARGET)) {
+                FindManager.getInstance(myProject).showSettingsAndFindUsages(targets);
             }
         };
     }
 
-    private HyperlinkListener createSearchInProjectListener() {
-        return new HyperlinkAdapter() {
-            @Override
-            protected void hyperlinkActivated(HyperlinkEvent e) {
-                if (e.getDescription().equals(SEARCH_IN_PROJECT_HREF_TARGET)) {
-                    PsiElement psiElement = getPsiElement(mySearchFor);
-                    if (psiElement != null) {
-                        FindManager.getInstance(myProject).findUsagesInScope(psiElement, GlobalSearchScope.projectScope(myProject));
-                    }
+    private ComponentEventListener<Component, HyperlinkEvent> createSearchInProjectListener() {
+        return event -> {
+            if (event.getDescription().equals(SEARCH_IN_PROJECT_HREF_TARGET)) {
+                PsiElement psiElement = getPsiElement(mySearchFor);
+                if (psiElement != null) {
+                    FindManager.getInstance(myProject).findUsagesInScope(psiElement, GlobalSearchScope.projectScope(myProject));
                 }
             }
         };
@@ -372,10 +366,7 @@ class SearchForUsagesRunnable implements Runnable {
         application.invokeLater(
             () -> {
                 if (findStartedBalloonShown.get()) {
-                    Balloon balloon = myProject.getInstance(ToolWindowManager.class).getToolWindowBalloon(ToolWindowId.FIND);
-                    if (balloon != null) {
-                        balloon.hide();
-                    }
+                    myProject.getInstance(ToolWindowManager.class).hideToolWindowBalloon(ToolWindowId.FIND);
                 }
             },
             myProject.getDisposed()
@@ -486,7 +477,7 @@ class SearchForUsagesRunnable implements Runnable {
             }
 
             List<String> lines;
-            HyperlinkListener hyperlinkListener;
+            ComponentEventListener<Component, HyperlinkEvent> hyperlinkListener;
             if (myOutOfScopeUsages.get() == 0 || getPsiElement(mySearchFor) == null) {
                 lines = Collections.emptyList();
                 hyperlinkListener = null;

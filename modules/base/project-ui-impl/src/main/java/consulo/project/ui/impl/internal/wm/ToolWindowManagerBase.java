@@ -21,6 +21,18 @@ import consulo.component.ProcessCanceledException;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.component.persist.PersistentStateComponentWithAsyncGet;
 import consulo.ui.Component;
+import consulo.ui.HtmlView;
+import consulo.ui.Label;
+import consulo.ui.LightPopup;
+import consulo.ui.NotificationType;
+import consulo.ui.PopupOptions;
+import consulo.ui.PopupPosition;
+import consulo.ui.event.ComponentEventListener;
+import consulo.ui.event.HyperlinkEvent;
+import consulo.ui.layout.DockLayout;
+import consulo.ui.util.ColorValueUtil;
+import consulo.ui.style.ComponentColors;
+import consulo.ui.Space;
 import consulo.ui.UIAction;
 import consulo.ui.util.ShowNotifier;
 import consulo.util.concurrent.coroutine.Coroutine;
@@ -60,6 +72,7 @@ import kava.beans.PropertyChangeListener;
 import org.jdom.Element;
 
 import javax.swing.*;
+import java.net.URL;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
@@ -69,6 +82,7 @@ import java.util.concurrent.CompletableFuture;
  */
 public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implements PersistentStateComponentWithAsyncGet<Element>, Disposable {
     public static final String ID = "ToolWindowManager";
+
 
     /**
      * Spies on IdeToolWindow properties and applies them to the window
@@ -167,6 +181,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     protected final Map<String, ToolWindowWindowedDecorator> myId2WindowedDecorator = new HashMap<>();
 
     protected final Map<String, ToolWindowStripeButton> myId2StripeButton = new HashMap<>();
+    private final Map<String, LightPopup> myId2Balloon = new HashMap<>();
 
     protected final ToolWindowSideStack mySideStack = new ToolWindowSideStack();
     protected final ToolWindowActiveStack myActiveStack = new ToolWindowActiveStack();
@@ -407,6 +422,145 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
      */
     protected @Nullable ToolWindowStripeButton getStripeButton(String id) {
         return myId2StripeButton.get(id);
+    }
+
+    @Override
+    public boolean canShowNotification(String toolWindowId) {
+        return myLayout.isToolWindowRegistered(toolWindowId) && getStripeButton(toolWindowId) != null;
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void notifyByBalloon(String toolWindowId, NotificationType type, String htmlBody) {
+        notifyByBalloon(toolWindowId, type, htmlBody, null, null);
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void notifyByBalloon(
+        String toolWindowId,
+        NotificationType type,
+        String text,
+        @Nullable Image icon,
+        @Nullable ComponentEventListener<Component, HyperlinkEvent> linkListener
+    ) {
+        checkId(toolWindowId);
+
+        hideToolWindowBalloon(toolWindowId);
+
+        ToolWindowStripeButton button = getStripeButton(toolWindowId);
+        if (button == null) {
+            return;
+        }
+
+        ToolWindow toolWindow = getToolWindow(toolWindowId);
+        boolean placeholder = toolWindow instanceof ToolWindowBase base && !base.isAvailable();
+        if (placeholder) {
+            ((ToolWindowBase) toolWindow).setPlaceholderMode(true);
+            updateStripePresentation(toolWindowId, button);
+        }
+
+        LightPopup popup = LightPopup.create(
+            PopupOptions.builder()
+                .position(balloonPosition(getInfo(toolWindowId).getAnchor()))
+                .arrow()
+                .disableRequestFocus()
+                .build()
+        );
+        ComponentColors background = balloonColor(type);
+        popup.setBackgroundColor(background);
+        popup.setContent(createBalloonContent(popup, background, text, icon, linkListener));
+        popup.addCloseListener(event -> {
+            myId2Balloon.remove(toolWindowId, popup);
+            if (placeholder) {
+                ((ToolWindowBase) toolWindow).setPlaceholderMode(false);
+                updateStripePresentation(toolWindowId, button);
+            }
+        });
+        myId2Balloon.put(toolWindowId, popup);
+
+        showBalloon(toolWindowId, popup, button);
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void hideToolWindowBalloon(String id) {
+        LightPopup popup = myId2Balloon.get(id);
+        if (popup != null) {
+            popup.close();
+        }
+    }
+
+    protected boolean isBalloonShowing(String id, LightPopup popup) {
+        return myId2Balloon.get(id) == popup;
+    }
+
+    @RequiredUIAccess
+    protected void showBalloon(String toolWindowId, LightPopup popup, ToolWindowStripeButton button) {
+        popup.showBy(button.getComponent());
+    }
+
+    @RequiredUIAccess
+    protected void updateStripePresentation(String toolWindowId, ToolWindowStripeButton button) {
+        button.updatePresentation();
+    }
+
+    private static PopupPosition balloonPosition(ToolWindowAnchor anchor) {
+        if (ToolWindowAnchor.TOP == anchor) {
+            return PopupPosition.BOTTOM;
+        }
+        if (ToolWindowAnchor.BOTTOM == anchor) {
+            return PopupPosition.TOP;
+        }
+        if (ToolWindowAnchor.RIGHT == anchor) {
+            return PopupPosition.START;
+        }
+        return PopupPosition.END;
+    }
+
+    private static ComponentColors balloonColor(NotificationType type) {
+        return switch (type) {
+            case WARNING -> ComponentColors.NOTIFICATION_WARNING_BACKGROUND;
+            case ERROR -> ComponentColors.NOTIFICATION_ERROR_BACKGROUND;
+            default -> ComponentColors.NOTIFICATION_INFO_BACKGROUND;
+        };
+    }
+
+    @RequiredUIAccess
+    private static Component createBalloonContent(
+        LightPopup popup,
+        ComponentColors background,
+        String text,
+        @Nullable Image icon,
+        @Nullable ComponentEventListener<Component, HyperlinkEvent> linkListener
+    ) {
+        HtmlView view = HtmlView.create();
+        view.setSizeToContent(true);
+        view.setBackgroundColor(background);
+        view.render(new HtmlView.RenderData(text.replace("\n", "<br>"), balloonCss(background), new URL[0]))
+            .whenCompleteAsync((result, error) -> popup.pack(), UIAccess.current());
+        view.addHyperlinkListener(event -> {
+            popup.close();
+            if (linkListener != null) {
+                linkListener.onEvent(event);
+            }
+        });
+
+        DockLayout layout = DockLayout.create();
+        layout.paddingBuilder().verticalSet(Space.SMALL).horizontalSet(Space.MEDIUM).apply();
+        if (icon != null) {
+            Label iconLabel = Label.create();
+            iconLabel.setImage(icon);
+            iconLabel.paddingBuilder().rightSet(Space.SMALL).apply();
+            layout.left(iconLabel);
+        }
+        layout.center(view);
+        return layout;
+    }
+
+    private static String balloonCss(ComponentColors background) {
+        return "html, body { margin: 0; padding: 0; background-color: " + ColorValueUtil.toCssColor(background)
+            + "; color: " + ColorValueUtil.toCssColor(ComponentColors.TEXT_FOREGROUND) + "; }";
     }
 
     protected void fireToolWindowRegistered(String id) {

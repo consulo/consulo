@@ -18,7 +18,6 @@ package consulo.desktop.awt.wm.impl;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
-import consulo.application.ui.FrameStateManager;
 import consulo.application.ui.wm.ExpirableRunnable;
 import consulo.application.ui.wm.FocusableFrame;
 import consulo.application.ui.wm.IdeFocusManager;
@@ -30,7 +29,6 @@ import consulo.component.persist.StoragePathMacros;
 import consulo.dataContext.DataContext;
 import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.desktop.awt.ui.impl.facade.AWTComponentProviderUtil;
-import consulo.desktop.awt.ui.popup.BalloonImpl;
 import consulo.desktop.awt.wm.impl.commands.DesktopRequestFocusInToolWindowCmd;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.FileEditorManager;
@@ -38,7 +36,6 @@ import consulo.fileEditor.FileEditorWindow;
 import consulo.fileEditor.FileEditorWithProviderComposite;
 import consulo.fileEditor.FileEditorsSplitters;
 import consulo.fileEditor.event.FileEditorManagerListener;
-import consulo.ide.impl.idea.openapi.ui.MessageType;
 import consulo.ide.impl.wm.impl.ToolWindowAnchorUtil;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
@@ -52,11 +49,10 @@ import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.wm.FrameTitleBuilder;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
-import consulo.ui.NotificationType;
+import consulo.ui.LightPopup;
 import consulo.ui.Rectangle2D;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.PositionTracker;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -83,7 +79,6 @@ import consulo.ui.style.StyleManager;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.SystemProperties;
-import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
@@ -92,8 +87,6 @@ import org.jdom.Element;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
-import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.HyperlinkListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
@@ -181,7 +174,6 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
 
     private DesktopIdeFrameImpl myFrame;
 
-    private final Map<String, Balloon> myWindow2Balloon = new HashMap<>();
 
     private KeyState myCurrentState = KeyState.waiting;
     private final Alarm myWaiterForSecondPress = new Alarm();
@@ -624,157 +616,38 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
     }
 
     @Override
-    public boolean canShowNotification(String toolWindowId) {
-        if (!Arrays.asList(getToolWindowIds()).contains(toolWindowId)) {
-            return false;
-        }
-        DesktopStripePanelImpl stripe = getToolWindowPanel().getStripeFor(toolWindowId);
-        return stripe != null && stripe.getButtonFor(toolWindowId) != null;
-    }
-
-    @Override
     @RequiredUIAccess
-    public void notifyByBalloon(String toolWindowId, NotificationType type, String htmlBody) {
-        notifyByBalloon(toolWindowId, type, htmlBody, null, null);
-    }
-
-    @Override
-    @RequiredUIAccess
-    public void notifyByBalloon(
-        String toolWindowId,
-        NotificationType type,
-        String text,
-        @Nullable Image icon,
-        @Nullable HyperlinkListener listener
-    ) {
-        checkId(toolWindowId);
-
-        Balloon existing = myWindow2Balloon.get(toolWindowId);
-        if (existing != null) {
-            existing.hide();
-        }
-
-        DesktopStripePanelImpl stripe = getToolWindowPanel().getStripeFor(toolWindowId);
-        if (stripe == null) {
-            return;
-        }
-        DesktopToolWindowImpl window = getInternalDecorator(toolWindowId).getToolWindow();
-        if (!window.isAvailable()) {
-            window.setPlaceholderMode(true);
-            stripe.updatePresentation();
-            stripe.revalidate();
-            stripe.repaint();
-        }
-
+    protected void showBalloon(String toolWindowId, LightPopup popup, ToolWindowStripeButton button) {
+        DesktopStripeButton stripeButton = (DesktopStripeButton) button;
         ToolWindowAnchor anchor = getInfo(toolWindowId).getAnchor();
-        SimpleReference<Balloon.Position> position = SimpleReference.create(Balloon.Position.below);
-        if (ToolWindowAnchor.TOP == anchor) {
-            position.set(Balloon.Position.below);
-        }
-        else if (ToolWindowAnchor.BOTTOM == anchor) {
-            position.set(Balloon.Position.above);
-        }
-        else if (ToolWindowAnchor.LEFT == anchor) {
-            position.set(Balloon.Position.atRight);
-        }
-        else if (ToolWindowAnchor.RIGHT == anchor) {
-            position.set(Balloon.Position.atLeft);
-        }
-
-        MessageType messageType = switch (type) {
-            case INFO -> MessageType.INFO;
-            case WARNING -> MessageType.WARNING;
-            case ERROR -> MessageType.ERROR;
-            case QUESTION -> throw new IllegalArgumentException();
-        };
-
-        BalloonHyperlinkListener listenerWrapper = new BalloonHyperlinkListener(listener);
-        Balloon balloon = JBPopupFactory.getInstance()
-            .createHtmlTextBalloonBuilder(text.replace("\n", "<br>"), icon, messageType.getPopupBackground(), listenerWrapper)
-            .setHideOnClickOutside(false)
-            .setBorderColor(messageType.getBorderColor())
-            .setHideOnFrameResize(false)
-            .setPointerShiftedToStart(true)
-            .createBalloon();
-        FrameStateManager.getInstance().getApplicationActive().doWhenDone(() -> {
-            Alarm alarm = new Alarm();
-            alarm.addRequest(() -> {
-                ((BalloonImpl) balloon).setHideOnClickOutside(true);
-                Disposer.dispose(alarm);
-            }, 100);
-        });
-        listenerWrapper.myBalloon = balloon;
-        myWindow2Balloon.put(toolWindowId, balloon);
-        Disposer.register(
-            balloon,
-            () -> {
-                window.setPlaceholderMode(false);
-                stripe.updatePresentation();
-                stripe.revalidate();
-                stripe.repaint();
-                myWindow2Balloon.remove(toolWindowId);
-            }
-        );
-        Disposer.register(getProject(), balloon);
-
-        DesktopStripeButton button = stripe.getButtonFor(toolWindowId);
-        LOG.assertTrue(
-            button != null,
-            "Button was not found, popup won't be shown. Toolwindow id: " + toolWindowId +
-                ", message: " + text + ", message type: " + type
-        );
-        if (button == null) {
-            return;
-        }
-
         Runnable show = () -> {
-            if (button.isShowing()) {
-                PositionTracker<Balloon> tracker = new PositionTracker<>(button) {
-                    @Override
-                    public @Nullable RelativePoint recalculateLocation(Balloon object) {
-                        DesktopStripePanelImpl twStripe = getToolWindowPanel().getStripeFor(toolWindowId);
-                        DesktopStripeButton twButton = twStripe != null ? twStripe.getButtonFor(toolWindowId) : null;
-
-                        if (twButton == null) {
-                            return null;
-                        }
-
-                        if (getToolWindow(toolWindowId).getAnchor() != anchor) {
-                            object.hide();
-                            return null;
-                        }
-
-                        Point point = new Point(twButton.getBounds().width / 2, twButton.getHeight() / 2 - 2);
-                        return new RelativePoint(twButton, point);
-                    }
-                };
-                if (!balloon.isDisposed()) {
-                    balloon.show(tracker, position.get());
-                }
+            if (!isBalloonShowing(toolWindowId, popup)) {
+                return;
             }
-            else {
-                Rectangle bounds = getToolWindowPanel().getBounds();
-                Point target = UIUtil.getCenterPoint(bounds, new Dimension(1, 1));
-                if (ToolWindowAnchor.TOP == anchor) {
-                    target.y = 0;
-                }
-                else if (ToolWindowAnchor.BOTTOM == anchor) {
-                    target.y = bounds.height - 3;
-                }
-                else if (ToolWindowAnchor.LEFT == anchor) {
-                    target.x = 0;
-                }
-                else if (ToolWindowAnchor.RIGHT == anchor) {
-                    target.x = bounds.width;
-                }
-                if (!balloon.isDisposed()) {
-                    balloon.show(new RelativePoint(getToolWindowPanel(), target), position.get());
-                }
+            if (stripeButton.isShowing()) {
+                popup.showBy(TargetAWT.wrap(stripeButton));
+                return;
             }
+            JComponent panel = getToolWindowPanel();
+            int x = panel.getWidth() / 2;
+            int y = panel.getHeight() / 2;
+            if (ToolWindowAnchor.TOP == anchor) {
+                y = 0;
+            }
+            else if (ToolWindowAnchor.BOTTOM == anchor) {
+                y = panel.getHeight();
+            }
+            else if (ToolWindowAnchor.LEFT == anchor) {
+                x = 0;
+            }
+            else if (ToolWindowAnchor.RIGHT == anchor) {
+                x = panel.getWidth();
+            }
+            popup.showAt(TargetAWT.wrap(panel), x, y, 0);
         };
 
-        if (!button.isValid()) {
-            SwingUtilities.invokeLater(show::run);
+        if (!stripeButton.isValid()) {
+            SwingUtilities.invokeLater(show);
         }
         else {
             show.run();
@@ -782,8 +655,15 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
     }
 
     @Override
-    public Balloon getToolWindowBalloon(String id) {
-        return myWindow2Balloon.get(id);
+    @RequiredUIAccess
+    protected void updateStripePresentation(String toolWindowId, ToolWindowStripeButton button) {
+        DesktopStripePanelImpl stripe = getToolWindowPanel().getStripeFor(toolWindowId);
+        if (stripe == null) {
+            return;
+        }
+        stripe.updatePresentation();
+        stripe.revalidate();
+        stripe.repaint();
     }
 
     @Override
@@ -1009,25 +889,6 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
 
     public void stretchHeight(DesktopToolWindowImpl toolWindow, int value) {
         getToolWindowPanel().stretchHeight(toolWindow, value);
-    }
-
-    private static class BalloonHyperlinkListener implements HyperlinkListener {
-        private Balloon myBalloon;
-        private final HyperlinkListener myListener;
-
-        public BalloonHyperlinkListener(HyperlinkListener listener) {
-            myListener = listener;
-        }
-
-        @Override
-        public void hyperlinkUpdate(HyperlinkEvent e) {
-            if (myBalloon != null && e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-                myBalloon.hide();
-            }
-            if (myListener != null) {
-                myListener.hyperlinkUpdate(e);
-            }
-        }
     }
 
     /**

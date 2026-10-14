@@ -92,9 +92,8 @@ public abstract class DesktopQtPopupImpl extends QtComponentDelegate<QWidget> im
     private static final String ourSkipShadowProperty = "_KDE_NET_WM_SKIP_SHADOW";
 
     private class QtPopup extends QFrame {
-        private boolean myArrowShown;
-        private boolean myArrowAtTop;
-        private int myArrowX;
+        private DesktopQtPopupSide mySide = DesktopQtPopupSide.NONE;
+        private int myArrowPosition;
 
         QtPopup() {
             super(null, Qt.WindowType.ToolTip, Qt.WindowType.FramelessWindowHint, Qt.WindowType.WindowStaysOnTopHint);
@@ -143,16 +142,22 @@ public abstract class DesktopQtPopupImpl extends QtComponentDelegate<QWidget> im
         }
 
         void setArrow(boolean shown, boolean atTop) {
-            myArrowShown = shown;
-            myArrowAtTop = atTop;
-
-            int top = shown && atTop ? ourArrowHeight : 0;
-            int bottom = shown && !atTop ? ourArrowHeight : 0;
-            myLayout.setContentsMargins(1, 1 + top, 1, 1 + bottom);
+            setArrowSide(!shown ? DesktopQtPopupSide.NONE : atTop ? DesktopQtPopupSide.TOP : DesktopQtPopupSide.BOTTOM);
         }
 
-        void pointArrowAt(int x) {
-            myArrowX = x;
+        void setArrowSide(DesktopQtPopupSide side) {
+            mySide = side;
+
+            myLayout.setContentsMargins(
+                1 + (side == DesktopQtPopupSide.LEFT ? ourArrowHeight : 0),
+                1 + (side == DesktopQtPopupSide.TOP ? ourArrowHeight : 0),
+                1 + (side == DesktopQtPopupSide.RIGHT ? ourArrowHeight : 0),
+                1 + (side == DesktopQtPopupSide.BOTTOM ? ourArrowHeight : 0)
+            );
+        }
+
+        void pointArrowAt(int position) {
+            myArrowPosition = position;
 
             updateShape();
             update();
@@ -163,29 +168,40 @@ public abstract class DesktopQtPopupImpl extends QtComponentDelegate<QWidget> im
         }
 
         private QPainterPath outline(double inset) {
-            int top = myArrowShown && myArrowAtTop ? ourArrowHeight : 0;
-            int bottom = myArrowShown && !myArrowAtTop ? ourArrowHeight : 0;
+            int left = mySide == DesktopQtPopupSide.LEFT ? ourArrowHeight : 0;
+            int top = mySide == DesktopQtPopupSide.TOP ? ourArrowHeight : 0;
+            int right = mySide == DesktopQtPopupSide.RIGHT ? ourArrowHeight : 0;
+            int bottom = mySide == DesktopQtPopupSide.BOTTOM ? ourArrowHeight : 0;
 
             QPainterPath body = new QPainterPath();
             body.addRoundedRect(
-                new QRectF(inset, top + inset, width() - 2 * inset, height() - top - bottom - 2 * inset),
+                new QRectF(left + inset, top + inset, width() - left - right - 2 * inset, height() - top - bottom - 2 * inset),
                 ourCornerRadius,
                 ourCornerRadius
             );
 
-            if (!myArrowShown) {
+            if (mySide == DesktopQtPopupSide.NONE) {
                 return body;
             }
 
             double halfWidth = ourArrowWidth / 2.0;
-            double x = Math.max(ourCornerRadius + halfWidth, Math.min(width() - ourCornerRadius - halfWidth, myArrowX));
-            double baseY = myArrowAtTop ? top + inset + 1 : height() - bottom - inset - 1;
-            double tipY = myArrowAtTop ? inset : height() - inset;
-
             QPainterPath arrow = new QPainterPath();
-            arrow.moveTo(x - halfWidth, baseY);
-            arrow.lineTo(x, tipY);
-            arrow.lineTo(x + halfWidth, baseY);
+            if (mySide.isVertical()) {
+                double x = Math.max(ourCornerRadius + halfWidth, Math.min(width() - ourCornerRadius - halfWidth, myArrowPosition));
+                double baseY = mySide == DesktopQtPopupSide.TOP ? top + inset + 1 : height() - bottom - inset - 1;
+                double tipY = mySide == DesktopQtPopupSide.TOP ? inset : height() - inset;
+                arrow.moveTo(x - halfWidth, baseY);
+                arrow.lineTo(x, tipY);
+                arrow.lineTo(x + halfWidth, baseY);
+            }
+            else {
+                double y = Math.max(ourCornerRadius + halfWidth, Math.min(height() - ourCornerRadius - halfWidth, myArrowPosition));
+                double baseX = mySide == DesktopQtPopupSide.LEFT ? left + inset + 1 : width() - right - inset - 1;
+                double tipX = mySide == DesktopQtPopupSide.LEFT ? inset : width() - inset;
+                arrow.moveTo(baseX, y - halfWidth);
+                arrow.lineTo(tipX, y);
+                arrow.lineTo(baseX, y + halfWidth);
+            }
             arrow.closeSubpath();
 
             return body.united(arrow);
@@ -404,7 +420,7 @@ public abstract class DesktopQtPopupImpl extends QtComponentDelegate<QWidget> im
         myContent = delegate;
 
         // nothing lays a window out from above, so a popup is only ever the size it was told to take
-        myComponent.adjustSize();
+        fitToContent();
 
         placeSizeGrip();
     }
@@ -438,7 +454,7 @@ public abstract class DesktopQtPopupImpl extends QtComponentDelegate<QWidget> im
 
         if (myOptions.getPosition() == PopupPosition.TOP) {
             myPopup.setArrow(arrow, false);
-            myComponent.adjustSize();
+            fitToContent();
 
             QPoint above = new QPoint(left, point.y() - myComponent.height());
             if (fitsAbove(widget, above)) {
@@ -452,8 +468,79 @@ public abstract class DesktopQtPopupImpl extends QtComponentDelegate<QWidget> im
     }
 
     @RequiredUIAccess
+    protected void showPointingAtWidget(QWidget widget) {
+        setOwner(widget);
+
+        QPoint origin = widget.mapToGlobal(new QPoint(0, 0));
+        QRect target = new QRect(origin.x(), origin.y(), widget.width(), widget.height());
+        QRect available = availableGeometry(origin);
+
+        PopupPosition position = myOptions.getPosition();
+        QPoint placed = placeBeside(position, target);
+        if (available != null && !fits(placed, available)) {
+            PopupPosition flipped = switch (position) {
+                case TOP -> PopupPosition.BOTTOM;
+                case BOTTOM -> PopupPosition.TOP;
+                case END -> PopupPosition.START;
+                case START -> PopupPosition.END;
+            };
+            QPoint flippedPlaced = placeBeside(flipped, target);
+            if (fits(flippedPlaced, available)) {
+                position = flipped;
+                placed = flippedPlaced;
+            }
+            else {
+                placeBeside(position, target);
+            }
+        }
+
+        placed = clampToScreen(placed);
+        boolean vertical = position == PopupPosition.TOP || position == PopupPosition.BOTTOM;
+        myPopup.pointArrowAt(vertical
+            ? target.x() + target.width() / 2 - placed.x()
+            : target.y() + target.height() / 2 - placed.y());
+
+        showAtGlobal(placed);
+    }
+
+    private QPoint placeBeside(PopupPosition position, QRect target) {
+        myPopup.setArrowSide(switch (position) {
+            case TOP -> DesktopQtPopupSide.BOTTOM;
+            case BOTTOM -> DesktopQtPopupSide.TOP;
+            case END -> DesktopQtPopupSide.LEFT;
+            case START -> DesktopQtPopupSide.RIGHT;
+        });
+        fitToContent();
+
+        int width = myComponent.width();
+        int height = myComponent.height();
+        int middleY = target.y() + target.height() / 2 - height / 2;
+        return switch (position) {
+            case TOP -> new QPoint(target.x(), target.y() - height);
+            case BOTTOM -> new QPoint(target.x(), target.y() + target.height());
+            case END -> new QPoint(target.x() + target.width(), middleY);
+            case START -> new QPoint(target.x() - width, middleY);
+        };
+    }
+
+    private boolean fits(QPoint position, QRect available) {
+        return position.x() >= available.x()
+            && position.y() >= available.y()
+            && position.x() + myComponent.width() <= available.x() + available.width()
+            && position.y() + myComponent.height() <= available.y() + available.height();
+    }
+
+    private static @Nullable QRect availableGeometry(QPoint position) {
+        QScreen screen = QApplication.screenAt(position);
+        if (screen == null) {
+            screen = QApplication.primaryScreen();
+        }
+        return screen == null ? null : screen.availableGeometry();
+    }
+
+    @RequiredUIAccess
     private void showPointingAt(QPoint position, int pointX) {
-        myComponent.adjustSize();
+        fitToContent();
 
         QPoint placed = clampToScreen(position);
         if (myOptions.hasArrow()) {
@@ -461,6 +548,10 @@ public abstract class DesktopQtPopupImpl extends QtComponentDelegate<QWidget> im
         }
 
         showAtGlobal(placed);
+    }
+
+    private void fitToContent() {
+        myComponent.resize(myComponent.sizeHint().expandedTo(myComponent.minimumSizeHint()));
     }
 
     private static boolean isMaskOnlyForInput() {
@@ -555,7 +646,7 @@ public abstract class DesktopQtPopupImpl extends QtComponentDelegate<QWidget> im
     protected void showAtGlobal(QPoint position) {
         checkNotDisposed();
 
-        myComponent.adjustSize();
+        fitToContent();
         myComponent.move(clampToScreen(position));
         myComponent.show();
         myComponent.raise();
@@ -654,7 +745,7 @@ public abstract class DesktopQtPopupImpl extends QtComponentDelegate<QWidget> im
             return;
         }
 
-        myComponent.adjustSize();
+        fitToContent();
 
         if (myComponent.isVisible()) {
             myComponent.move(clampToScreen(myComponent.pos()));

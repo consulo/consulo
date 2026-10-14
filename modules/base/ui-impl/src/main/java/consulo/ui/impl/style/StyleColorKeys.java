@@ -105,6 +105,10 @@ public final class StyleColorKeys {
         ourKeys.put(ComponentColors.PARAMETER_INFO_CURRENT_PARAMETER_FOREGROUND, "ParameterInfo.currentParameterForeground");
         ourKeys.put(ComponentColors.PARAMETER_INFO_DISABLED_FOREGROUND, "ParameterInfo.disabledForeground");
         ourKeys.put(ComponentColors.PARAMETER_INFO_INFO_FOREGROUND, "ParameterInfo.infoForeground");
+
+        ourKeys.put(ComponentColors.NOTIFICATION_INFO_BACKGROUND, "Notification.ToolWindow.informativeBackground");
+        ourKeys.put(ComponentColors.NOTIFICATION_WARNING_BACKGROUND, "Notification.ToolWindow.warningBackground");
+        ourKeys.put(ComponentColors.NOTIFICATION_ERROR_BACKGROUND, "Notification.ToolWindow.errorBackground");
     }
 
     public static @Nullable String getKey(StyleColorValue colorValue) {

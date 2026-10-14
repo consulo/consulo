@@ -115,7 +115,7 @@ public final class DesktopStripeButton extends AnchoredButton implements ActionL
 
     @Override
     public consulo.ui.Component getComponent() {
-        throw new UnsupportedOperationException();
+        return TargetAWT.wrap(this);
     }
 
     /**

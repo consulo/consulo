@@ -110,6 +110,7 @@ public class WebLightPopupImpl extends VaadinComponentDelegate<WebLightPopupImpl
 
         popover.setPosition(switch (options.getPosition()) {
             case END -> PopoverPosition.END_TOP;
+            case START -> PopoverPosition.START_TOP;
             case TOP -> PopoverPosition.TOP_START;
             case BOTTOM -> PopoverPosition.BOTTOM_START;
         });
@@ -204,7 +205,16 @@ public class WebLightPopupImpl extends VaadinComponentDelegate<WebLightPopupImpl
 
         Vaadin popover = getVaadinComponent();
 
-        showArrow(false);
+        boolean arrow = myOptions.hasArrow();
+        showArrow(arrow);
+        if (arrow) {
+            popover.setPosition(switch (myOptions.getPosition()) {
+                case END -> PopoverPosition.END;
+                case START -> PopoverPosition.START;
+                case TOP -> PopoverPosition.TOP;
+                case BOTTOM -> PopoverPosition.BOTTOM;
+            });
+        }
 
         attachToUI();
 

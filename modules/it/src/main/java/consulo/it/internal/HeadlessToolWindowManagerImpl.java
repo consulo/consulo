@@ -31,12 +31,15 @@ import consulo.project.ui.impl.internal.wm.ToolWindowManagerBase;
 import consulo.project.ui.impl.internal.wm.UnifiedToolWindowImpl;
 import consulo.project.ui.internal.WindowInfoImpl;
 import consulo.project.ui.wm.WindowManager;
+import consulo.ui.Component;
 import consulo.ui.NotificationType;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.ComponentEventListener;
+import consulo.ui.event.HyperlinkEvent;
+import consulo.ui.image.Image;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.internal.ToolWindowEx;
-import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.toolWindow.InternalDecoratorListener;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
@@ -47,6 +50,7 @@ import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 import org.jspecify.annotations.Nullable;
+
 
 import java.util.function.BiConsumer;
 
@@ -241,8 +245,17 @@ public class HeadlessToolWindowManagerImpl extends ToolWindowManagerBase {
     }
 
     @Override
-    public @Nullable Balloon getToolWindowBalloon(String id) {
-        return null;
+    public void notifyByBalloon(
+        String toolWindowId,
+        NotificationType type,
+        String htmlBody,
+        @Nullable Image icon,
+        @Nullable ComponentEventListener<Component, HyperlinkEvent> linkListener
+    ) {
+    }
+
+    @Override
+    public void hideToolWindowBalloon(String id) {
     }
 
     @Override

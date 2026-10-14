@@ -43,7 +43,6 @@ import consulo.ui.image.ImageEffects;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
-import javax.swing.event.HyperlinkListener;
 
 public class ExecutionUtil {
     private static final Logger LOG = Logger.getInstance(ExecutionUtil.class);
@@ -87,7 +86,7 @@ public class ExecutionUtil {
             description = "Unknown error";
         }
 
-        HyperlinkListener listener = null;
+        Runnable linkAction = null;
         if ((description.contains("87") || description.contains("111") || description.contains("206"))
             && e instanceof ProcessNotCreatedException processNotCreatedException &&
             !ProjectPropertiesComponent.getInstance(project).isTrueValue("dynamic.classpath")) {
@@ -97,7 +96,7 @@ public class ExecutionUtil {
                     "Would you like to enable classpath file mode for all run configurations of your project?<br>" +
                     "<a href=\"\">Enable</a>";
 
-                listener = event -> ProjectPropertiesComponent.getInstance(project).setValue("dynamic.classpath", "true");
+                linkAction = () -> ProjectPropertiesComponent.getInstance(project).setValue("dynamic.classpath", "true");
             }
         }
         LocalizeValue title = ExecutionLocalize.errorRunningConfigurationMessage(taskName);
@@ -107,11 +106,7 @@ public class ExecutionUtil {
             LOG.error(fullMessage, e);
         }
 
-        if (listener == null && e instanceof HyperlinkListener hyperlinkListener) {
-            listener = hyperlinkListener;
-        }
-
-        HyperlinkListener finalListener = listener;
+        Runnable finalLinkAction = linkAction;
         String finalDescription = description;
         project.getUIAccess().execute(() -> {
             if (project.isDisposed()) {
@@ -121,7 +116,13 @@ public class ExecutionUtil {
             ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
             if (toolWindowManager.canShowNotification(toolWindowId)) {
                 //noinspection SSBasedInspection
-                toolWindowManager.notifyByBalloon(toolWindowId, NotificationType.ERROR, fullMessage, null, finalListener);
+                toolWindowManager.notifyByBalloon(
+                    toolWindowId,
+                    NotificationType.ERROR,
+                    fullMessage,
+                    null,
+                    finalLinkAction == null ? null : event -> finalLinkAction.run()
+                );
             }
             else {
                 Messages.showErrorDialog(project, UIUtil.toHtml(fullMessage), "");
@@ -130,7 +131,7 @@ public class ExecutionUtil {
                 .newError(ExecutionNotificationGroupHolder.BASE)
                 .title(title)
                 .content(LocalizeValue.localizeTODO(finalDescription))
-                .optionalHyperlinkListener(finalListener == null ? null : (notification, event) -> finalListener.hyperlinkUpdate(event))
+                .optionalHyperlinkListener(finalLinkAction == null ? null : (notification, event) -> finalLinkAction.run())
                 .notify(project);
         });
     }

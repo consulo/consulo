@@ -18,6 +18,7 @@ package consulo.desktop.awt.ui.impl;
 import com.github.weisj.jsvg.SVGDocument;
 import com.github.weisj.jsvg.geometry.size.FloatSize;
 import com.github.weisj.jsvg.parser.SVGLoader;
+import consulo.desktop.awt.ui.impl.popup.DesktopAWTLightPopupImpl;
 import consulo.ui.RadioGroup;
 import consulo.ui.graph.Graph;
 import consulo.ui.graph.GraphModel;
@@ -59,6 +60,8 @@ import consulo.ui.Label;
 import consulo.ui.Menu;
 import consulo.ui.MenuBar;
 import consulo.ui.MenuItem;
+import consulo.ui.LightPopup;
+import consulo.ui.PopupOptions;
 import consulo.ui.Window;
 import consulo.desktop.awt.ui.impl.color.DesktopAWTColorPickerBuilder;
 import consulo.ui.*;
@@ -329,6 +332,11 @@ public class DesktopUIInternalImpl extends UIInternal implements UIInternalEx {
     @Override
     public Window _Window_create(String title, WindowOptions options) {
         return new DesktopWindowWrapper(title, options);
+    }
+
+    @Override
+    public LightPopup _LightPopup_create(PopupOptions options) {
+        return new DesktopAWTLightPopupImpl(options);
     }
 
     @Override

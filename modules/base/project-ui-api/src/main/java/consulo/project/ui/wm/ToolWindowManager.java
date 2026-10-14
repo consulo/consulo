@@ -21,16 +21,17 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.disposer.Disposable;
 import consulo.project.Project;
+import consulo.ui.Component;
 import consulo.ui.NotificationType;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.popup.Balloon;
+import consulo.ui.event.ComponentEventListener;
+import consulo.ui.event.HyperlinkEvent;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.ui.image.Image;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.JComponent;
-import javax.swing.event.HyperlinkListener;
 
 /**
  * If you want to register a toolwindow, which will be enabled during the dumb mode, please use {@link ToolWindowManager}'s
@@ -131,7 +132,24 @@ public abstract class ToolWindowManager {
 
     public abstract void notifyByBalloon(String toolWindowId, NotificationType type, String htmlBody);
 
-    public abstract @Nullable Balloon getToolWindowBalloon(String id);
+    /**
+     * Shows a short message pointing at the tool window. A click on a link of {@code htmlBody} closes the message and
+     * reports the {@code href} of the link to {@code linkListener}.
+     */
+    @RequiredUIAccess
+    public abstract void notifyByBalloon(
+        String toolWindowId,
+        NotificationType type,
+        String htmlBody,
+        @Nullable Image icon,
+        @Nullable ComponentEventListener<Component, HyperlinkEvent> linkListener
+    );
+
+    /**
+     * Hides the balloon {@link #notifyByBalloon} put up next to the tool window, if one is still showing.
+     */
+    @RequiredUIAccess
+    public abstract void hideToolWindowBalloon(String id);
 
     public abstract boolean isMaximized(ToolWindow wnd);
 
@@ -203,17 +221,6 @@ public abstract class ToolWindowManager {
         boolean canWorkInDumbMode,
         boolean canCloseContents
     );
-
-    @Deprecated
-    public void notifyByBalloon(
-        String toolWindowId,
-        NotificationType type,
-        String htmlBody,
-        @Nullable Image icon,
-        @Nullable HyperlinkListener listener
-    ) {
-        throw new AbstractMethodError("AWT & Swing dependency");
-    }
 
     // endregion
 }

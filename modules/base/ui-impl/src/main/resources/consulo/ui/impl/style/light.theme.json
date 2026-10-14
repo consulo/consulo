@@ -81,6 +81,13 @@
         "borderColor": "#8be5c4"
       }
     },
+    "Notification": {
+      "ToolWindow": {
+        "informativeBackground": "#baeeba",
+        "warningBackground": "#f9f78e",
+        "errorBackground": "#ffcccc"
+      }
+    },
     "ParameterInfo": {
       "background": "#f7f7f7",
       "borderColor": "#e0e0e0",
