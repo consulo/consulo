@@ -15,6 +15,8 @@
  */
 package consulo.language.psi;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.application.Application;
 import consulo.localize.LocalizeValue;
 
 /**
@@ -24,17 +26,20 @@ public class ElementDescriptionUtil {
     private ElementDescriptionUtil() {
     }
 
+    @RequiredReadAction
     public static LocalizeValue getElementDescription(PsiElement element, ElementDescriptionLocation location) {
-        for (ElementDescriptionProvider provider : ElementDescriptionProvider.EP_NAME.getExtensionList()) {
-            LocalizeValue result = provider.getElementDescription(element, location);
-            if (result.isNotEmpty()) {
-                return result;
-            }
+        LocalizeValue result = Application.get().getExtensionPoint(ElementDescriptionProvider.class).computeSafeIfAny(
+            provider -> provider.getElementDescription(element, location),
+            LocalizeValue::isNotEmpty,
+            LocalizeValue.empty()
+        );
+        if (result.isNotEmpty()) {
+            return result;
         }
 
         ElementDescriptionProvider defaultProvider = location.getDefaultProvider();
         if (defaultProvider != null) {
-            LocalizeValue result = defaultProvider.getElementDescription(element, location);
+            result = defaultProvider.getElementDescription(element, location);
             if (result.isNotEmpty()) {
                 return result;
             }
