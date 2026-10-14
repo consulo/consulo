@@ -83,7 +83,6 @@ public abstract class UnifiedMasterDetailsComponent implements Configurable, Ful
     private volatile @Nullable Object mySelectedValue;
     private volatile List<Object> mySelectedValues = List.of();
     private @Nullable MasterDetailsConfigurable<?> myCurrentConfigurable;
-    private @Nullable String myLastEditedPath;
     private boolean myHasDeletedItems;
 
     @RequiredUIAccess
@@ -188,7 +187,6 @@ public abstract class UnifiedMasterDetailsComponent implements Configurable, Ful
 
         showEmpty();
 
-        restoreSelection();
         return splitLayout;
     }
 
@@ -217,8 +215,6 @@ public abstract class UnifiedMasterDetailsComponent implements Configurable, Ful
         showEmpty();
 
         loadTree();
-
-        restoreSelection();
     }
 
     @RequiredUIAccess
@@ -577,17 +573,6 @@ public abstract class UnifiedMasterDetailsComponent implements Configurable, Ful
     }
 
     @RequiredUIAccess
-    private void restoreSelection() {
-        String lastEditedPath = myLastEditedPath;
-        Object toSelect = lastEditedPath == null ? null : findValue(value -> lastEditedPath.equals(getPathString(value)));
-        if (toSelect == null) {
-            List<Object> roots = getSortedChildren(null);
-            toSelect = roots.isEmpty() ? null : roots.get(0);
-        }
-        refreshTree(toSelect);
-    }
-
-    @RequiredUIAccess
     private void onNodeSelected(@Nullable TreeNode<Object> node) {
         Object value = node == null ? null : node.getValue();
         if (value != null && !isAttached(value)) {
@@ -596,9 +581,6 @@ public abstract class UnifiedMasterDetailsComponent implements Configurable, Ful
 
         mySelectedValue = value;
         mySelectedValues = collectSelectedValues(value);
-        if (value != null) {
-            myLastEditedPath = getPathString(value);
-        }
 
         updateSelection(value == null ? null : getConfigurable(value));
         updateActions();
@@ -690,17 +672,6 @@ public abstract class UnifiedMasterDetailsComponent implements Configurable, Ful
         myCurrentConfigurable = null;
         mySelectedValue = null;
         mySelectedValues = List.of();
-    }
-
-    private String getPathString(Object value) {
-        StringBuilder path = new StringBuilder();
-        for (Object current = value; current != null; current = getParent(current)) {
-            if (path.length() > 0) {
-                path.append('|');
-            }
-            path.append(getValueText(current));
-        }
-        return path.toString();
     }
 
     private class ValueTreeModel implements TreeModel<Object> {
