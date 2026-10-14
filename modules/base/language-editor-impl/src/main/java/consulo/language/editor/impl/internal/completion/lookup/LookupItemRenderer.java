@@ -22,8 +22,7 @@ import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupElementPresentation;
 import consulo.localize.LocalizeValue;
 import consulo.ui.AdvancedLabel;
-import consulo.ui.Component;
-import consulo.ui.ComponentItemRender;
+import consulo.ui.ComponentItemRenderer;
 import consulo.ui.RenderItem;
 import consulo.ui.Space;
 import consulo.ui.TextAttribute;
@@ -53,7 +52,7 @@ import java.util.function.Function;
  *
  * @author VISTALL
  */
-public class LookupItemRender {
+public class LookupItemRenderer {
     /**
      * The part of the name the typed prefix matched, told apart from the rest of it.
      */
@@ -73,7 +72,7 @@ public class LookupItemRender {
      * @param presentations how an element renders, taken from wherever the lookup caches it rather than computed here
      * @param patterns      the prefix an element was matched with, for telling the matched part of the name apart
      */
-    public LookupItemRender(
+    public LookupItemRenderer(
         Function<LookupElement, LookupElementPresentation> presentations,
         Function<LookupElement, String> patterns
     ) {
@@ -82,17 +81,17 @@ public class LookupItemRender {
     }
 
     /**
-     * A row of the list, as a render which is built once per row on screen and rebound as the items under it change.
+     * A row of the list, as a renderer which is built once per row on screen and rebound as the items under it change.
      * <p/>
      * Typing changes every item at once, and a row rebuilt from nothing is a tree of components back over the wire
      * per visible line - the three runs are made here and only their text is replaced afterwards.
      */
-    public ComponentItemRender<LookupElement> asRender() {
-        return ComponentItemRender.reusable(this::createRow, this::bindRow);
+    public ComponentItemRenderer<LookupElement> asRenderer() {
+        return ComponentItemRenderer.reusable(this::createRow, this::bindRow);
     }
 
     /**
-     * The runs of each row, by the layout they were put in - a render hands the backend a component and is handed
+     * The runs of each row, by the layout they were put in - a renderer hands the backend a component and is handed
      * the same one back to rebind, and the layout is the only thing that travels between the two.
      */
     private final Map<HorizontalLayout, Row> myRows = new IdentityHashMap<>();

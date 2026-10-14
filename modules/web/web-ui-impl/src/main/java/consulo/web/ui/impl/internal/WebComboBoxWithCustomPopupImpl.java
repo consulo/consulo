@@ -20,8 +20,8 @@ import com.vaadin.flow.component.select.Select;
 import consulo.application.impl.internal.performance.ActivityTracker;
 import consulo.ui.ComboBoxStyle;
 import consulo.ui.Component;
-import consulo.ui.ComponentItemRender;
-import consulo.ui.TextItemRender;
+import consulo.ui.ComponentItemRenderer;
+import consulo.ui.TextItemRenderer;
 import consulo.ui.event.ClickEvent;
 import consulo.ui.ex.ComboBoxWithCustomPopup;
 import consulo.ui.model.FlatDataModel;
@@ -93,7 +93,7 @@ public class WebComboBoxWithCustomPopupImpl<V> extends WebSingleListComponentBas
     public WebComboBoxWithCustomPopupImpl(FlatDataModel<V> model) {
         super(model);
 
-        setRender(TextItemRender.defaultRender());
+        setRenderer(TextItemRenderer.defaultRenderer());
 
         WebInputDetails.addClickListener(
             toVaadinComponent().getElement(),
@@ -121,15 +121,15 @@ public class WebComboBoxWithCustomPopupImpl<V> extends WebSingleListComponentBas
     }
 
     @Override
-    public void setRender(TextItemRender<V> render) {
-        myTextRender = render;
+    public void setRenderer(TextItemRenderer<V> renderer) {
+        myTextRenderer = renderer;
 
-        toVaadinComponent().setRenderer(createRenderer(render, this::isSelected));
+        toVaadinComponent().setRenderer(createRenderer(renderer, this::isSelected));
     }
 
     @Override
-    public void setRender(ComponentItemRender<V> render) {
-        toVaadinComponent().setRenderer(createRenderer(render, this::isSelected));
+    public void setRenderer(ComponentItemRenderer<V> renderer) {
+        toVaadinComponent().setRenderer(createRenderer(renderer, this::isSelected));
     }
 
     private boolean isSelected(@Nullable V item) {

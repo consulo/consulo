@@ -18,9 +18,9 @@ package consulo.desktop.awt.ui.impl.graph;
 import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.graph.Graph;
-import consulo.ui.graph.GraphEdgeRender;
+import consulo.ui.graph.GraphEdgeRenderer;
 import consulo.ui.graph.GraphModel;
-import consulo.ui.graph.GraphNodeRender;
+import consulo.ui.graph.GraphNodeRenderer;
 
 import java.util.List;
 
@@ -31,8 +31,8 @@ import java.util.List;
 public class DesktopAWTGraphImpl<E> extends SwingComponentDelegate<DesktopAWTGraphComponent<E>> implements Graph<E> {
     private final GraphModel<E> myModel;
 
-    private GraphNodeRender<E> myNodeRender = GraphNodeRender.defaultRender();
-    private GraphEdgeRender<E> myEdgeRender = GraphEdgeRender.defaultRender();
+    private GraphNodeRenderer<E> myNodeRenderer = GraphNodeRenderer.defaultRenderer();
+    private GraphEdgeRenderer<E> myEdgeRenderer = GraphEdgeRenderer.defaultRenderer();
 
     public DesktopAWTGraphImpl(GraphModel<E> model) {
         myModel = model;
@@ -40,7 +40,7 @@ public class DesktopAWTGraphImpl<E> extends SwingComponentDelegate<DesktopAWTGra
 
     @Override
     protected DesktopAWTGraphComponent<E> createComponent() {
-        return new DesktopAWTGraphComponent<>(this, myModel, () -> myNodeRender, () -> myEdgeRender);
+        return new DesktopAWTGraphComponent<>(this, myModel, () -> myNodeRenderer, () -> myEdgeRenderer);
     }
 
     @Override
@@ -52,8 +52,8 @@ public class DesktopAWTGraphImpl<E> extends SwingComponentDelegate<DesktopAWTGra
 
     @RequiredUIAccess
     @Override
-    public void setNodeRender(GraphNodeRender<E> render) {
-        myNodeRender = render;
+    public void setNodeRenderer(GraphNodeRenderer<E> renderer) {
+        myNodeRenderer = renderer;
 
         if (isInitialized()) {
             toAWTComponent().rebuild();
@@ -62,8 +62,8 @@ public class DesktopAWTGraphImpl<E> extends SwingComponentDelegate<DesktopAWTGra
 
     @RequiredUIAccess
     @Override
-    public void setEdgeRender(GraphEdgeRender<E> render) {
-        myEdgeRender = render;
+    public void setEdgeRenderer(GraphEdgeRenderer<E> renderer) {
+        myEdgeRenderer = renderer;
 
         if (isInitialized()) {
             toAWTComponent().rebuild();

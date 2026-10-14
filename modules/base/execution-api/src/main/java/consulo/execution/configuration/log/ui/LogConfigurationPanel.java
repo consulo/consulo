@@ -28,7 +28,7 @@ import consulo.fileChooser.FileChooserTextBoxBuilder;
 import consulo.localize.LocalizeValue;
 import consulo.ui.CheckBox;
 import consulo.ui.Component;
-import consulo.ui.ComponentItemRender;
+import consulo.ui.ComponentItemRenderer;
 import consulo.ui.Table;
 import consulo.ui.TableItemEditor;
 import consulo.ui.ValueComponent;
@@ -80,7 +80,7 @@ public class LogConfigurationPanel<T extends RunConfigurationBase> extends Setti
         Table<LogFileOptions> table = Table.create(myModel);
         table.addColumn(ExecutionLocalize.logMonitorIsActiveColumn(), LogFileOptions::isEnabled)
             .setWidth(90)
-            .setRender(ComponentItemRender.reusable(
+            .setRenderer(ComponentItemRenderer.reusable(
                 () -> CheckBox.create(LocalizeValue.empty()),
                 (checkBox, item) -> checkBox.setValue(Boolean.TRUE.equals(item.getValue()))
             ))
@@ -106,7 +106,7 @@ public class LogConfigurationPanel<T extends RunConfigurationBase> extends Setti
         table.addColumn(ExecutionLocalize.logMonitorLogFileColumn(), LogFileOptions::getName);
         table.addColumn(ExecutionLocalize.logMonitorIsSkippedColumn(), LogFileOptions::isSkipContent)
             .setWidth(90)
-            .setRender(ComponentItemRender.reusable(
+            .setRenderer(ComponentItemRenderer.reusable(
                 () -> CheckBox.create(LocalizeValue.empty()),
                 (checkBox, item) -> checkBox.setValue(Boolean.TRUE.equals(item.getValue()))
             ))

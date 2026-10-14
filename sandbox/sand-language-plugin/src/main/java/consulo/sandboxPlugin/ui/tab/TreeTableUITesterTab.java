@@ -146,11 +146,11 @@ public class TreeTableUITesterTab implements UITesterTab {
 
         treeTable.setTreeColumnHeader(LocalizeValue.localizeTODO("Method"));
         treeTable.addColumn(LocalizeValue.localizeTODO("Total %"), frame -> percent(frame.getTotalSamples(), root.getTotalSamples()))
-            .setRender((presentation, item) -> presentation.append(formatPercent(item.getValue())))
+            .setRenderer((presentation, item) -> presentation.append(formatPercent(item.getValue())))
             .setHorizontalAlignment(HorizontalAlignment.RIGHT)
             .setSortable(Comparator.naturalOrder());
         treeTable.addColumn(LocalizeValue.localizeTODO("Self %"), frame -> percent(frame.getSelfSamples(), root.getTotalSamples()))
-            .setRender((presentation, item) -> presentation.append(formatPercent(item.getValue())))
+            .setRenderer((presentation, item) -> presentation.append(formatPercent(item.getValue())))
             .setHorizontalAlignment(HorizontalAlignment.RIGHT)
             .setSortable(Comparator.naturalOrder());
         treeTable.addColumn(LocalizeValue.localizeTODO("Samples"), Frame::getTotalSamples)

@@ -19,9 +19,9 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.dom.Style;
 import consulo.localize.LocalizeValue;
-import consulo.ui.ComponentItemRender;
+import consulo.ui.ComponentItemRenderer;
 import consulo.ui.TableItemEditor;
-import consulo.ui.TableItemRender;
+import consulo.ui.TableItemRenderer;
 import consulo.ui.color.ColorValue;
 import consulo.ui.impl.table.TableColumnImpl;
 import consulo.ui.impl.table.TableColumnOwner;
@@ -89,7 +89,7 @@ public final class WebTreeTableColumnImpl<E, Value> extends WebGridColumnBase<We
     }
 
     @Override
-    public void renderChanged() {
+    public void rendererChanged() {
         applyAlignment(myState.getAlignment());
         myTable.refreshRows();
     }
@@ -123,13 +123,13 @@ public final class WebTreeTableColumnImpl<E, Value> extends WebGridColumnBase<We
     }
 
     @Override
-    protected TableItemRender<E, Value> getRender() {
-        return myState.getRender();
+    protected TableItemRenderer<E, Value> getRenderer() {
+        return myState.getRenderer();
     }
 
     @Override
-    protected @Nullable ComponentItemRender<Value> getComponentRender() {
-        return myState.getComponentRender();
+    protected @Nullable ComponentItemRenderer<Value> getComponentRenderer() {
+        return myState.getComponentRenderer();
     }
 
     @Override

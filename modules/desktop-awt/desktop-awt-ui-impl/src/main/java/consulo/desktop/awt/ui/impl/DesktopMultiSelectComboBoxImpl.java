@@ -20,7 +20,7 @@ import consulo.desktop.awt.ui.impl.event.DesktopAWTInputDetails;
 import consulo.desktop.awt.ui.impl.facade.FromSwingComponentWrapper;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
-import consulo.ui.ComponentItemRender;
+import consulo.ui.ComponentItemRenderer;
 import consulo.ui.RenderItem;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ValueComponentEvent;
@@ -50,15 +50,15 @@ class DesktopMultiSelectComboBoxImpl<E> extends DesktopComboBoxBaseImpl<E, Deskt
 
         @Override
         protected java.awt.Component createItemComponent(E item) {
-            ComponentItemRender<E> componentRender = myComponentRender;
-            if (componentRender != null) {
-                return TargetAWT.to(componentRender.render(RenderItem.of(item, true)));
+            ComponentItemRenderer<E> componentRenderer = myComponentRenderer;
+            if (componentRenderer != null) {
+                return TargetAWT.to(componentRenderer.render(RenderItem.of(item, true)));
             }
 
             SimpleColoredComponent component = new SimpleColoredComponent();
             component.setOpaque(false);
             component.setIpad(JBUI.emptyInsets());
-            myTextRender.render(new DesktopTextItemPresentationImpl(component), RenderItem.of(item, true));
+            myTextRenderer.render(new DesktopTextItemPresentationImpl(component), RenderItem.of(item, true));
             return component;
         }
 
@@ -94,7 +94,7 @@ class DesktopMultiSelectComboBoxImpl<E> extends DesktopComboBoxBaseImpl<E, Deskt
     }
 
     @Override
-    protected void onRenderChanged(MyMultiSelectComboBox component) {
+    protected void onRendererChanged(MyMultiSelectComboBox component) {
         component.updateSelectedDisplay();
     }
 

@@ -41,7 +41,7 @@ public final class EndpointFilterComboBox {
         myComboBox = MultiSelectComboBox.create(myModel);
         myComboBox.setPlaceholder(name);
         myComboBox.setToolTipText(description);
-        myComboBox.setRender((presentation, item) -> {
+        myComboBox.setRenderer((presentation, item) -> {
             EndpointFilterChoice choice = item.getValue();
             if (choice != null) {
                 presentation.withIcon(choice.icon());

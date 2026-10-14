@@ -27,15 +27,15 @@ import java.util.Comparator;
 public interface TableColumn<Item, Value> {
     TableColumn<Item, Value> setHeader(LocalizeValue header);
 
-    TableColumn<Item, Value> setRender(TextItemRender<Value> render);
+    TableColumn<Item, Value> setRenderer(TextItemRenderer<Value> renderer);
 
-    TableColumn<Item, Value> setRender(ComponentItemRender<Value> render);
+    TableColumn<Item, Value> setRenderer(ComponentItemRenderer<Value> renderer);
 
     /**
-     * Render which is handed the row as well as the value, for a column whose look follows the kind of row
+     * Renderer which is handed the row as well as the value, for a column whose look follows the kind of row
      * it sits in. Mutually exclusive with the other renders - the last one set wins.
      */
-    TableColumn<Item, Value> setRender(TableItemRender<Item, Value> render);
+    TableColumn<Item, Value> setRenderer(TableItemRenderer<Item, Value> renderer);
 
     TableColumn<Item, Value> setWidth(int pixels);
 

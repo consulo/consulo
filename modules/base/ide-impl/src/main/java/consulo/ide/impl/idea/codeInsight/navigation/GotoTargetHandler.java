@@ -29,7 +29,7 @@ import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.ui.navigation.ItemWithPresentation;
 import consulo.language.editor.ui.navigation.PsiTargetPresentationFactory;
-import consulo.language.editor.ui.navigation.TargetPresentationRender;
+import consulo.language.editor.ui.navigation.TargetPresentationRenderer;
 import consulo.language.editor.ui.navigation.TargetUpdaterTask;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -147,14 +147,14 @@ public abstract class GotoTargetHandler implements CodeInsightActionHandler {
         };
 
         ListPopup popup = JBPopupFactory.getInstance().createListPopup(project, step);
-        popup.setRender((presentation, item) -> {
+        popup.setRenderer((presentation, item) -> {
             Object value = item.getValue();
             if (value instanceof AdditionalAction action) {
                 presentation.withIcon(action.getIcon());
                 presentation.append(LocalizeValue.of(action.getText()));
             }
             else if (value instanceof ItemWithPresentation<?> withPresentation) {
-                TargetPresentationRender.renderPresentation(presentation, withPresentation.getPresentation());
+                TargetPresentationRenderer.renderPresentation(presentation, withPresentation.getPresentation());
             }
         });
 

@@ -19,11 +19,11 @@ import consulo.desktop.qt.ui.impl.image.DesktopQtIconOwner;
 import consulo.desktop.qt.ui.impl.image.DesktopQtImage;
 import consulo.ui.ComboBoxBase;
 import consulo.ui.ComboBoxStyle;
-import consulo.ui.ComponentItemRender;
+import consulo.ui.ComponentItemRenderer;
 import consulo.ui.Length;
 import consulo.ui.RenderItem;
 import consulo.ui.Space;
-import consulo.ui.TextItemRender;
+import consulo.ui.TextItemRenderer;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.model.FlatDataModel;
@@ -46,7 +46,7 @@ public abstract class DesktopQtComboBoxBaseImpl<E, W extends QComboBox> extends 
     implements ComboBoxBase<E>, DesktopQtIconOwner {
     protected final FlatDataModel<E> myModel;
 
-    private TextItemRender<E> myRenderer = TextItemRender.defaultRender();
+    private TextItemRenderer<E> myRenderer = TextItemRenderer.defaultRenderer();
 
     private final Set<ComboBoxStyle> myStyles = EnumSet.noneOf(ComboBoxStyle.class);
 
@@ -67,6 +67,7 @@ public abstract class DesktopQtComboBoxBaseImpl<E, W extends QComboBox> extends 
 
     protected abstract void afterRebuild(W component);
 
+    @RequiredUIAccess
     protected final void rebuild(W component) {
         myRebuilding = true;
         try {
@@ -166,14 +167,14 @@ public abstract class DesktopQtComboBoxBaseImpl<E, W extends QComboBox> extends 
     }
 
     @Override
-    public void setRender(TextItemRender<E> render) {
-        myRenderer = render;
+    public void setRenderer(TextItemRenderer<E> renderer) {
+        myRenderer = renderer;
 
         rebuildIfBound();
     }
 
     @Override
-    public void setRender(ComponentItemRender<E> render) {
+    public void setRenderer(ComponentItemRenderer<E> renderer) {
     }
 
     @Override

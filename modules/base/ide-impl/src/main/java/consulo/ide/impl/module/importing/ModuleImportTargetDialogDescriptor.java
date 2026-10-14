@@ -51,7 +51,7 @@ public class ModuleImportTargetDialogDescriptor extends DialogDescriptor {
     @RequiredUIAccess
     public Component createCenterComponent(Disposable uiDisposable) {
         myBox = ComboBox.create(myProviders);
-        myBox.setRender((renderer, renderItem) -> {
+        myBox.setRenderer((renderer, renderItem) -> {
             ModuleImportProvider item = renderItem.getValue();
             if (item == null) {
                 return;

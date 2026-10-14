@@ -13,22 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.graph;
+package consulo.ui;
+
+import consulo.ui.annotation.RequiredUIAccess;
 
 /**
  * @author VISTALL
- * @since 2026-09-30
+ * @since 2026-08-02
  */
 @FunctionalInterface
-public interface GraphEdgeRender<E> {
-    static <V> GraphEdgeRender<V> defaultRender() {
-        return (presentation, source, target) -> {
+public interface TextItemRenderer<E> {
+    static <V> TextItemRenderer<V> defaultRenderer() {
+        return (presentation, item) -> {
+            V value = item.getValue();
+            presentation.append(value == null ? "" : value.toString());
         };
     }
 
-    /**
-     * Called for every arrow of the model, from {@code source} to {@code target}. A presentation left untouched is a
-     * solid line with a {@link GraphArrow#FILLED} head at the target.
-     */
-    void render(GraphEdgePresentation presentation, E source, E target);
+    @RequiredUIAccess
+    void render(TextItemPresentation presentation, RenderItem<E> item);
 }

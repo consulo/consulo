@@ -41,7 +41,6 @@ import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.ui.image.Image;
-import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
@@ -60,14 +59,14 @@ public class ActionsTree {
     private static final Logger LOG = Logger.getInstance(ActionsTree.class);
 
     private class MyRenderer extends CellRendererPanel implements TreeCellRenderer {
-        final KeymapsRenderer myNodeRender = new KeymapsRenderer();
+        final KeymapsRenderer myNodeRenderer = new KeymapsRenderer();
         final JPanel myShortcutPanel = new NonOpaquePanel(new HorizontalLayout(6));
         private final BooleanSupplier myUseUnicodeCharactersForShortcutsGetter;
 
         MyRenderer(BooleanSupplier useUnicodeCharactersForShortcutsGetter) {
             myUseUnicodeCharactersForShortcutsGetter = useUnicodeCharactersForShortcutsGetter;
             setLayout(new BorderLayout());
-            add(BorderLayout.CENTER, myNodeRender);
+            add(BorderLayout.CENTER, myNodeRenderer);
             add(BorderLayout.EAST, myShortcutPanel);
             myShortcutPanel.setBorder(JBUI.Borders.emptyRight(8));
         }
@@ -84,8 +83,8 @@ public class ActionsTree {
         ) {
             setFont(tree.getFont());
 
-            myNodeRender.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus);
-            myNodeRender.setFont(tree.getFont());
+            myNodeRenderer.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus);
+            myNodeRenderer.setFont(tree.getFont());
 
             Object data = unwrap(value);
             Shortcut[] shortcuts;

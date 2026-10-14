@@ -29,13 +29,14 @@ import java.util.function.Predicate;
  * @author VISTALL
  * @since 2026-10-02
  */
-public interface ListBoxBase<E> extends HasSpeedSearch<E>, HasItemSize<E>, HasTransferHandler<E>, HasSize, HasPlaceholder,
-    HasAccessibility {
+public interface ListBoxBase<E>
+    extends HasSpeedSearch<E>, HasItemSize<E>, HasTransferHandler<E>, HasSize, HasPlaceholder, HasAccessibility {
+
     FlatDataModel<E> getDataModel();
 
-    void setRender(TextItemRender<E> render);
+    void setRenderer(TextItemRenderer<E> renderer);
 
-    void setRender(ComponentItemRender<E> render);
+    void setRenderer(ComponentItemRenderer<E> renderer);
 
     @SuppressWarnings("unchecked")
     default Disposable addDoubleClickListener(ComponentEventListener<ListBoxBase<E>, ListDoubleClickEvent<E>> listener) {

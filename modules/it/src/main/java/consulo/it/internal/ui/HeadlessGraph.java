@@ -15,12 +15,11 @@
  */
 package consulo.it.internal.ui;
 
-
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.graph.Graph;
-import consulo.ui.graph.GraphEdgeRender;
+import consulo.ui.graph.GraphEdgeRenderer;
 import consulo.ui.graph.GraphModel;
-import consulo.ui.graph.GraphNodeRender;
+import consulo.ui.graph.GraphNodeRenderer;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -34,8 +33,8 @@ import java.util.List;
 public class HeadlessGraph<E> extends HeadlessComponentBase implements Graph<E> {
     private final GraphModel<E> myModel;
 
-    private @Nullable GraphNodeRender<E> myNodeRender;
-    private @Nullable GraphEdgeRender<E> myEdgeRender;
+    private @Nullable GraphNodeRenderer<E> myNodeRenderer;
+    private @Nullable GraphEdgeRenderer<E> myEdgeRenderer;
 
     private List<E> myNodes = List.of();
     private List<E> mySelection = List.of();
@@ -47,15 +46,15 @@ public class HeadlessGraph<E> extends HeadlessComponentBase implements Graph<E> 
 
     @Override
     @RequiredUIAccess
-    public void setNodeRender(GraphNodeRender<E> render) {
-        myNodeRender = render;
+    public void setNodeRenderer(GraphNodeRenderer<E> renderer) {
+        myNodeRenderer = renderer;
         rebuild();
     }
 
     @Override
     @RequiredUIAccess
-    public void setEdgeRender(GraphEdgeRender<E> render) {
-        myEdgeRender = render;
+    public void setEdgeRenderer(GraphEdgeRenderer<E> renderer) {
+        myEdgeRenderer = renderer;
         rebuild();
     }
 
@@ -94,11 +93,11 @@ public class HeadlessGraph<E> extends HeadlessComponentBase implements Graph<E> 
         return myNodes;
     }
 
-    public @Nullable GraphNodeRender<E> getNodeRender() {
-        return myNodeRender;
+    public @Nullable GraphNodeRenderer<E> getNodeRenderer() {
+        return myNodeRenderer;
     }
 
-    public @Nullable GraphEdgeRender<E> getEdgeRender() {
-        return myEdgeRender;
+    public @Nullable GraphEdgeRenderer<E> getEdgeRenderer() {
+        return myEdgeRenderer;
     }
 }

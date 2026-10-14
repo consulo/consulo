@@ -23,7 +23,7 @@ import consulo.language.editor.completion.lookup.LookupArranger;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupElementPresentation;
 import consulo.language.editor.impl.internal.completion.lookup.LookupBase;
-import consulo.language.editor.impl.internal.completion.lookup.LookupItemRender;
+import consulo.language.editor.impl.internal.completion.lookup.LookupItemRenderer;
 import consulo.localize.LocalizeValue;
 import consulo.application.ui.UISettings;
 import consulo.project.Project;
@@ -70,7 +70,7 @@ public class UnifiedLookupUI extends LookupBase {
         super(project, editor, arranger);
 
         // rendering only replays what was worked out off the ui thread - nothing here reaches for the psi
-        myList.setRender(new LookupItemRender(this::getPresentation, this::itemPattern).asRender());
+        myList.setRenderer(new LookupItemRenderer(this::getPresentation, this::itemPattern).asRenderer());
 
         // bounded before anything is pushed - the first refresh would otherwise hand the frontend every item there
         // is, and only then be told how many of them are shown

@@ -17,7 +17,7 @@
 package consulo.ui.ex.popup;
 
 import consulo.annotation.DeprecationInfo;
-import consulo.ui.TextItemRender;
+import consulo.ui.TextItemRenderer;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.popup.event.ListPopupKeyListener;
 import org.jspecify.annotations.Nullable;
@@ -65,7 +65,7 @@ public interface ListPopup extends JBPopup {
     void addSelectionListener(Consumer<Object> selectionListener);
 
     @RequiredUIAccess
-    default void setRender(TextItemRender<?> render) {
+    default void setRenderer(TextItemRenderer<?> renderer) {
     }
 
     /**

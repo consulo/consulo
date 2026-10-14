@@ -116,7 +116,7 @@ public class UnifiedXFramesView extends XDebugView {
         myStacksModel = FlatDataModel.lazyOf(List.of());
         myStacksComboBox = ComboBox.create(myStacksModel);
         myStacksComboBox.addStyle(ComboBoxStyle.INPLACE);
-        myStacksComboBox.setRender((presentation, item) -> {
+        myStacksComboBox.setRenderer((presentation, item) -> {
             XExecutionStack stack = item.getValue();
             if (stack != null) {
                 presentation.withIcon(stack.getIcon());
@@ -137,7 +137,7 @@ public class UnifiedXFramesView extends XDebugView {
 
         myFramesModel = FlatDataModel.lazyOf(List.of());
         myFramesList = ListBox.create(myFramesModel);
-        myFramesList.setRender((presentation, item) -> {
+        myFramesList.setRenderer((presentation, item) -> {
             Object value = item.getValue();
             if (value instanceof XStackFrame frame) {
                 UnifiedColoredTextContainer text = new UnifiedColoredTextContainer();

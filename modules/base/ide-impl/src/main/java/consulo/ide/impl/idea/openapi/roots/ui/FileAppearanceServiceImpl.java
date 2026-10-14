@@ -86,7 +86,7 @@ public class FileAppearanceServiceImpl extends FileAppearanceService {
 
   
   @Override
-  public Consumer<ColoredTextContainer> getRenderForInvalidUrl(String url) {
+  public Consumer<ColoredTextContainer> getRendererForInvalidUrl(String url) {
     return it -> {
       it.setIcon(PlatformIconGroup.nodesPpinvalid());
       it.append(url, SimpleTextAttributes.ERROR_ATTRIBUTES);
@@ -95,9 +95,9 @@ public class FileAppearanceServiceImpl extends FileAppearanceService {
 
   
   @Override
-  public Consumer<ColoredTextContainer> getRenderForVirtualFile(VirtualFile file) {
+  public Consumer<ColoredTextContainer> getRendererForVirtualFile(VirtualFile file) {
     if (!file.isValid()) {
-      return getRenderForInvalidUrl(file.getPresentableUrl());
+      return getRendererForInvalidUrl(file.getPresentableUrl());
     }
 
     return it -> forVirtualFile(file).customize(it);
@@ -105,10 +105,10 @@ public class FileAppearanceServiceImpl extends FileAppearanceService {
 
   
   @Override
-  public Consumer<ColoredTextContainer> getRenderForIoFile(File file) {
+  public Consumer<ColoredTextContainer> getRendererForIoFile(File file) {
     String absolutePath = file.getAbsolutePath();
     if (!file.exists()) {
-      return getRenderForInvalidUrl(absolutePath);
+      return getRendererForInvalidUrl(absolutePath);
     }
 
     if (file.isDirectory()) {

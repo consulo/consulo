@@ -20,15 +20,15 @@ import consulo.ui.annotation.RequiredUIAccess;
 /**
  * Render twin of {@link TableItemEditor} - a cell drawn from the row it belongs to, not from the column
  * value alone. A column whose look follows something the value does not carry (the kind of row it is, an
- * error the row holds) cannot answer from {@link TextItemRender}, which only ever sees the value.
+ * error the row holds) cannot answer from {@link TextItemRenderer}, which only ever sees the value.
  *
  * @author VISTALL
  * @since 2026-09-03
  */
 @FunctionalInterface
-public interface TableItemRender<Item, Value> {
-    static <Item, Value> TableItemRender<Item, Value> of(TextItemRender<Value> render) {
-        return (presentation, value, item) -> render.render(presentation, value);
+public interface TableItemRenderer<Item, Value> {
+    static <Item, Value> TableItemRenderer<Item, Value> of(TextItemRenderer<Value> renderer) {
+        return (presentation, value, item) -> renderer.render(presentation, value);
     }
 
     @RequiredUIAccess

@@ -55,7 +55,7 @@ public class ModuleExtensionWithSdkOrderEntryTypeEditor implements OrderEntryTyp
 
   
   @Override
-  public Consumer<ColoredTextContainer> getRender(ModuleExtensionWithSdkOrderEntryImpl orderEntry) {
+  public Consumer<ColoredTextContainer> getRenderer(ModuleExtensionWithSdkOrderEntryImpl orderEntry) {
     return it -> {
       Sdk sdk = orderEntry.getSdk();
 

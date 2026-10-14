@@ -23,11 +23,7 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import consulo.localize.LocalizeValue;
-import consulo.ui.ComponentItemRender;
-import consulo.ui.HorizontalAlignment;
-import consulo.ui.RenderItem;
-import consulo.ui.TableItemEditor;
-import consulo.ui.TableItemRender;
+import consulo.ui.*;
 import consulo.ui.color.ColorValue;
 import consulo.web.ui.impl.internal.base.ToVaadinComponentWrapper;
 import org.jspecify.annotations.Nullable;
@@ -53,9 +49,9 @@ public abstract class WebGridColumnBase<Row, Item, Value> {
 
     protected abstract boolean isSelected(Row row);
 
-    protected abstract TableItemRender<Item, Value> getRender();
+    protected abstract TableItemRenderer<Item, Value> getRenderer();
 
-    protected abstract @Nullable ComponentItemRender<Value> getComponentRender();
+    protected abstract @Nullable ComponentItemRenderer<Value> getComponentRenderer();
 
     protected abstract @Nullable TableItemEditor<Item, Value> getEditor();
 
@@ -88,15 +84,15 @@ public abstract class WebGridColumnBase<Row, Item, Value> {
 
         RenderItem<Value> renderItem = RenderItem.of(valueOf(row, item), isSelected(row));
 
-        ComponentItemRender<Value> componentRender = getComponentRender();
-        if (componentRender != null) {
-            Component content = ((ToVaadinComponentWrapper) componentRender.render(renderItem)).toVaadinComponent();
+        ComponentItemRenderer<Value> componentRenderer = getComponentRenderer();
+        if (componentRenderer != null) {
+            Component content = ((ToVaadinComponentWrapper) componentRenderer.render(renderItem)).toVaadinComponent();
             return decorated(wrapCell(content), row, item, unselectedRowBackground(row, item));
         }
 
         WebItemPresentationImpl presentation = new WebItemPresentationImpl();
         presentation.withBackgroundColor(unselectedRowBackground(row, item));
-        getRender().render(presentation, renderItem, item);
+        getRenderer().render(presentation, renderItem, item);
         return decorated(wrapCell(presentation.toComponent()), row, item, presentation.getBackgroundColor());
     }
 

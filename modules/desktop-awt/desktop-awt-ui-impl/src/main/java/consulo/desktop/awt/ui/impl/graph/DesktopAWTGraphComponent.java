@@ -32,11 +32,11 @@ import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.graph.GraphArrow;
-import consulo.ui.graph.GraphEdgeRender;
+import consulo.ui.graph.GraphEdgeRenderer;
 import consulo.ui.graph.GraphGroup;
 import consulo.ui.graph.GraphLineStyle;
 import consulo.ui.graph.GraphModel;
-import consulo.ui.graph.GraphNodeRender;
+import consulo.ui.graph.GraphNodeRenderer;
 import consulo.ui.impl.graph.GraphEdgeStyle;
 import consulo.ui.impl.graph.GraphNodeContent;
 import consulo.ui.impl.graph.LayeredGraphLayout;
@@ -60,23 +60,25 @@ import java.util.function.Supplier;
 public class DesktopAWTGraphComponent<E> extends mxGraphComponent implements FromSwingComponentWrapper {
     private final DesktopAWTGraphImpl<E> myGraph;
     private final GraphModel<E> myModel;
-    private final Supplier<GraphNodeRender<E>> myNodeRender;
-    private final Supplier<GraphEdgeRender<E>> myEdgeRender;
+    private final Supplier<GraphNodeRenderer<E>> myNodeRenderer;
+    private final Supplier<GraphEdgeRenderer<E>> myEdgeRenderer;
 
     private final Map<Object, DesktopAWTGraphNodeView> myNodeViews = new HashMap<>();
     private final Map<Object, LocalizeValue> myNodeTooltips = new HashMap<>();
     private final Map<Object, GraphGroup> myGroups = new HashMap<>();
     private @Nullable CellRendererPane myRendererPane;
 
-    public DesktopAWTGraphComponent(DesktopAWTGraphImpl<E> graph,
-                                    GraphModel<E> model,
-                                    Supplier<GraphNodeRender<E>> nodeRender,
-                                    Supplier<GraphEdgeRender<E>> edgeRender) {
+    public DesktopAWTGraphComponent(
+        DesktopAWTGraphImpl<E> graph,
+        GraphModel<E> model,
+        Supplier<GraphNodeRenderer<E>> nodeRenderer,
+        Supplier<GraphEdgeRenderer<E>> edgeRenderer
+    ) {
         super(new DesktopAWTMxGraph());
         myGraph = graph;
         myModel = model;
-        myNodeRender = nodeRender;
-        myEdgeRender = edgeRender;
+        myNodeRenderer = nodeRenderer;
+        myEdgeRenderer = edgeRenderer;
 
         setGridVisible(false);
         setConnectable(false);
@@ -219,8 +221,8 @@ public class DesktopAWTGraphComponent<E> extends mxGraphComponent implements Fro
         mxGraph graph = getGraph();
         Object parent = graph.getDefaultParent();
 
-        GraphNodeRender<E> nodeRender = myNodeRender.get();
-        GraphEdgeRender<E> edgeRender = myEdgeRender.get();
+        GraphNodeRenderer<E> nodeRenderer = myNodeRenderer.get();
+        GraphEdgeRenderer<E> edgeRenderer = myEdgeRenderer.get();
 
         graph.clearSelection();
         graph.getModel().beginUpdate();
@@ -230,7 +232,7 @@ public class DesktopAWTGraphComponent<E> extends mxGraphComponent implements Fro
             for (E node : myModel.getNodes()) {
                 GraphNodeContent<DesktopAWTGraphRowPresentation> content =
                     new GraphNodeContent<>(() -> new DesktopAWTGraphRowPresentation(DesktopAWTGraphNodeView.createRowComponent()));
-                nodeRender.render(content, RenderItem.of(node, false));
+                nodeRenderer.render(content, RenderItem.of(node, false));
                 myNodeViews.put(node, new DesktopAWTGraphNodeView(content));
                 myNodeTooltips.put(node, content.getTooltip());
 
@@ -267,7 +269,7 @@ public class DesktopAWTGraphComponent<E> extends mxGraphComponent implements Fro
                 for (E target : myModel.getArrows(entry.getKey())) {
                     Object targetVertex = vertices.get(target);
                     if (targetVertex != null && targetVertex != entry.getValue()) {
-                        GraphEdgeStyle style = GraphEdgeStyle.of(edgeRender, entry.getKey(), target);
+                        GraphEdgeStyle style = GraphEdgeStyle.of(edgeRenderer, entry.getKey(), target);
                         graph.insertEdge(parent, null, style, entry.getValue(), targetVertex, toMxStyle(style));
                     }
                 }

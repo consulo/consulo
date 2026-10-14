@@ -4,7 +4,7 @@ package consulo.ide.action.ui;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ImageBox;
 import consulo.ui.TextBox;
-import consulo.ui.TextItemRender;
+import consulo.ui.TextItemRenderer;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.lang.Trinity;
@@ -62,7 +62,7 @@ public class CreateWithTemplatesDialogPanel extends NewItemWithTemplatesPopupPan
         }
     }
 
-    private static final TextItemRender<Trinity<LocalizeValue, Image, String>> LIST_RENDERER = (presentation, item) -> {
+    private static final TextItemRenderer<Trinity<LocalizeValue, Image, String>> LIST_RENDERER = (presentation, item) -> {
         Trinity<LocalizeValue, Image, String> value = item.getValue();
         if (value != null) {
             presentation.withIcon(value.second);

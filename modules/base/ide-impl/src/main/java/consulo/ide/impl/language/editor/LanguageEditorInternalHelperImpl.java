@@ -112,7 +112,7 @@ public class LanguageEditorInternalHelperImpl implements LanguageEditorInternalH
     }
 
     @Override
-    public ListCellRenderer<LineMarkerInfo> createMergeableLineMarkerRender(Function<LineMarkerInfo, Pair<String, Image>> function) {
+    public ListCellRenderer<LineMarkerInfo> createMergeableLineMarkerRenderer(Function<LineMarkerInfo, Pair<String, Image>> function) {
         return new SelectionAwareListCellRenderer<>(lineMarkerInfo -> {
             Pair<String, Image> info = function.apply(lineMarkerInfo);
 

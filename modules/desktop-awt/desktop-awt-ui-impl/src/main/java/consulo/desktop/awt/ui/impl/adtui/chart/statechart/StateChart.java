@@ -46,7 +46,7 @@ public class StateChart<T> extends AnimatedComponent {
     private static final int PREFERRED_ROW_HEIGHT = 27;
 
     private final StateChartModel<T> myModel;
-    private final Renderer<T> myRender;
+    private final Renderer<T> myRenderer;
     private final StateChartConfig<T> myConfig;
 
     /**
@@ -75,9 +75,9 @@ public class StateChart<T> extends AnimatedComponent {
     private record SeriesIndex(int seriesIndex, int itemIndex) {
     }
 
-    public StateChart(StateChartModel<T> model, Renderer<T> render, StateChartConfig<T> config) {
+    public StateChart(StateChartModel<T> model, Renderer<T> renderer, StateChartConfig<T> config) {
         myModel = model;
-        myRender = render;
+        myRenderer = renderer;
         myConfig = config;
         myHeightGap = config.getHeightGap();
 
@@ -89,8 +89,8 @@ public class StateChart<T> extends AnimatedComponent {
         setPreferredSize(new Dimension(getPreferredSize().width, JBUI.scale(PREFERRED_ROW_HEIGHT) * model.getSeries().size()));
     }
 
-    public StateChart(StateChartModel<T> model, Renderer<T> render) {
-        this(model, render, defaultConfig());
+    public StateChart(StateChartModel<T> model, Renderer<T> renderer) {
+        this(model, renderer, defaultConfig());
     }
 
     public StateChart(StateChartModel<T> model, StateChartColorProvider<T> colorProvider, StateChartConfig<T> config) {
@@ -348,7 +348,7 @@ public class StateChart<T> extends AnimatedComponent {
                     float w = Math.min(scaleX - x, rect.width);
                     g2d.setClip(new Rectangle2D.Float(x, rect.y, w, rect.height));
                 }
-                myRender.render(g2d, rect, mDefaultFontMetrics, i == hoverIndex, transformedValues.get(i));
+                myRenderer.render(g2d, rect, mDefaultFontMetrics, i == hoverIndex, transformedValues.get(i));
             }
         }
 

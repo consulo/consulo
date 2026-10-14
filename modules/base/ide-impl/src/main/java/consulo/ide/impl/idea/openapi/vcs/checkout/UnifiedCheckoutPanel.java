@@ -111,7 +111,7 @@ public class UnifiedCheckoutPanel implements WelcomeSlide {
     @RequiredUIAccess
     private Component buildLeftPanel() {
         ListBox<CheckoutProvider> listBox = ListBox.create(myProviders);
-        listBox.setRender((presentation, item) -> {
+        listBox.setRenderer((presentation, item) -> {
             CheckoutProvider provider = item.getValue();
             if (provider == null) {
                 return;

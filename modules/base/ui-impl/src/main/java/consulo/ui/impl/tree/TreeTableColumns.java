@@ -176,7 +176,7 @@ public final class TreeTableColumns<E> {
                                       T item,
                                       boolean selected) {
         RenderItem<V> renderItem = RenderItem.of(TreeTableColumns.<V>cast(cached), selected);
-        column.getTextRender().render(presentation, renderItem, item);
+        column.getTextRenderer().render(presentation, renderItem, item);
     }
 
     @SuppressWarnings("unchecked")

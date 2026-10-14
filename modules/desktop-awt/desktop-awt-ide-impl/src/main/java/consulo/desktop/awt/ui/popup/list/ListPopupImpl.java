@@ -28,7 +28,7 @@ import consulo.project.Project;
 import consulo.ui.ModalityState;
 import consulo.ui.RenderItem;
 import consulo.ui.TextItemPresentation;
-import consulo.ui.TextItemRender;
+import consulo.ui.TextItemRenderer;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.event.details.KeyboardInputDetails;
@@ -54,7 +54,6 @@ import consulo.ui.ex.popup.MultiSelectionListPopupStep;
 import consulo.ui.ex.popup.PopupStep;
 import consulo.ui.ex.popup.event.ListPopupKeyListener;
 import consulo.util.collection.ContainerUtil;
-import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.lazy.LazyValue;
@@ -79,7 +78,7 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
         LazyValue.notNull(() -> PopupInlineActionsSupportKt.createSupport(this));
 
     private MyList myList;
-    private @Nullable TextItemRender<Object> myTextItemRender;
+    private @Nullable TextItemRenderer<Object> myTextItemRenderer;
 
     private MyMouseMotionListener myMouseMotionListener;
     private MyMouseListener myMouseListener;
@@ -491,9 +490,9 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
     }
 
     protected ListCellRenderer getListElementRenderer() {
-        TextItemRender<Object> render = myTextItemRender;
-        if (render != null) {
-            return new TextItemRenderCellRenderer(render, getSpeedSearch());
+        TextItemRenderer<Object> renderer = myTextItemRenderer;
+        if (renderer != null) {
+            return new TextItemRendererCellRenderer(renderer, getSpeedSearch());
         }
         return new PopupListElementRenderer(this);
     }
@@ -501,8 +500,8 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
     @Override
     @RequiredUIAccess
     @SuppressWarnings("unchecked")
-    public void setRender(TextItemRender<?> render) {
-        myTextItemRender = (TextItemRender<Object>) render;
+    public void setRenderer(TextItemRenderer<?> renderer) {
+        myTextItemRenderer = (TextItemRenderer<Object>) renderer;
         if (myList != null) {
             myList.setCellRenderer(getListElementRenderer());
         }
@@ -514,15 +513,15 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
      * own color to a row's. Whatever the render pins as a suffix is drawn on the trailing edge, past
      * the space the main text leaves.
      */
-    private static class TextItemRenderCellRenderer extends ColoredListCellRenderer<Object> {
-        private final TextItemRender<Object> myRender;
+    private static class TextItemRendererCellRenderer extends ColoredListCellRenderer<Object> {
+        private final TextItemRenderer<Object> myRenderer;
         private final @Nullable SpeedSearchSupply mySpeedSearch;
 
         private final DesktopSuffixCellRendererPanel mySuffixPanel = new DesktopSuffixCellRendererPanel(JBUI.insets(2, 8));
         private @Nullable DesktopTextItemPresentationImpl myPresentation;
 
-        private TextItemRenderCellRenderer(TextItemRender<Object> render, @Nullable SpeedSearchSupply speedSearch) {
-            myRender = render;
+        private TextItemRendererCellRenderer(TextItemRenderer<Object> renderer, @Nullable SpeedSearchSupply speedSearch) {
+            myRenderer = renderer;
             mySpeedSearch = speedSearch;
             setIpad(JBUI.insets(2, 8));
         }
@@ -553,7 +552,7 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
                     return this;
                 }
             };
-            myRender.render(presentation, RenderItem.of(value, selected));
+            myRenderer.render(presentation, RenderItem.of(value, selected));
             myPresentation = presentation;
 
             SpeedSearchUtil.applySpeedSearchHighlighting(mySpeedSearch, this, false, selected);

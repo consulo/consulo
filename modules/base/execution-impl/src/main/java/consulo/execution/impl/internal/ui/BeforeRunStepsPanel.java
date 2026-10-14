@@ -94,7 +94,7 @@ final class BeforeRunStepsPanel {
         }
 
         ListBox<BeforeRunTask> list = ListBox.create(myModel);
-        list.setRender((presentation, item) -> {
+        list.setRenderer((presentation, item) -> {
             BeforeRunTask task = item.getValue();
             BeforeRunTaskProvider<BeforeRunTask> provider = task == null ? null : getProvider(myRunConfiguration, task);
             if (provider != null) {

@@ -228,7 +228,7 @@ class ConfigurationSettingsEditor extends CompositeSettingsEditor<RunnerAndConfi
         RunnersEditorComponent() {
             ListBox<Executor> runnersList = ListBox.create(myModel);
             myRunnersList = runnersList;
-            runnersList.setRender((presentation, item) -> {
+            runnersList.setRenderer((presentation, item) -> {
                 Executor executor = item.getValue();
                 if (executor != null) {
                     presentation.withIcon(executor.getIcon());

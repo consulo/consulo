@@ -26,11 +26,11 @@ import com.vaadin.flow.data.provider.CallbackDataProvider;
 import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import consulo.ui.Component;
-import consulo.ui.ComponentItemRender;
-import consulo.ui.ReusableComponentItemRender;
+import consulo.ui.ComponentItemRenderer;
+import consulo.ui.ReusableComponentItemRenderer;
 import consulo.ui.ListBox;
 import consulo.ui.RenderItem;
-import consulo.ui.TextItemRender;
+import consulo.ui.TextItemRenderer;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ListDoubleClickEvent;
 import consulo.ui.event.ValueComponentEvent;
@@ -86,7 +86,7 @@ public class WebLazyListBoxImpl<E> extends VaadinComponentDelegate<WebLazyListBo
         toVaadinComponent().addClassName("web-list-box");
 
         setDataProvider();
-        setRender(TextItemRender.defaultRender());
+        setRenderer(TextItemRenderer.defaultRenderer());
 
         model.addListener(this::onModelChanged);
     }
@@ -158,27 +158,27 @@ public class WebLazyListBoxImpl<E> extends VaadinComponentDelegate<WebLazyListBo
     }
 
     @Override
-    public void setRender(TextItemRender<E> render) {
+    public void setRenderer(TextItemRenderer<E> renderer) {
         toVaadinComponent().setRenderer(new ComponentRenderer<>(item -> {
             WebItemPresentationImpl presentation = new WebItemPresentationImpl();
-            render.render(presentation, RenderItem.of((E) item, isSelected((E) item)));
+            renderer.render(presentation, RenderItem.of((E) item, isSelected((E) item)));
 
             return decorate(presentation.toComponent(), (E) item);
         }));
     }
 
     @Override
-    public void setRender(ComponentItemRender<E> render) {
-        // a render which says it may be reused is given a row per slot and asked to rebind it, rather than being
+    public void setRenderer(ComponentItemRenderer<E> renderer) {
+        // a renderer which says it may be reused is given a row per slot and asked to rebind it, rather than being
         // asked for a new one per item - a list which changes on every typed character is otherwise a fresh tree
         // of components per visible row over the wire, which is what a completion popup felt like
-        if (render instanceof ReusableComponentItemRender<E, ?> reusable) {
+        if (renderer instanceof ReusableComponentItemRenderer<E, ?> reusable) {
             toVaadinComponent().setRenderer(reusableRenderer(reusable));
             return;
         }
 
         toVaadinComponent().setRenderer(new ComponentRenderer<>(item -> {
-            Component rendered = render.render(RenderItem.of((E) item, isSelected((E) item)));
+            Component rendered = renderer.render(RenderItem.of((E) item, isSelected((E) item)));
 
             return decorate(((ToVaadinComponentWrapper) rendered).toVaadinComponent(), (E) item);
         }));
@@ -187,15 +187,15 @@ public class WebLazyListBoxImpl<E> extends VaadinComponentDelegate<WebLazyListBo
     /**
      * The reuse overload, and it has to be this one. {@code ComponentRenderer} keeps the rebinding half only when it
      * is handed a {@code BiFunction}; given a {@code BiConsumer} it leaves {@code componentUpdateFunction} null, and
-     * {@code updateComponent} then falls through to {@code createComponent} - so a render that says it may be reused
+     * {@code updateComponent} then falls through to {@code createComponent} - so a renderer that says it may be reused
      * was still built from nothing on every refresh, and the pooling here bought exactly nothing.
      */
     private <C extends Component> ComponentRenderer<com.vaadin.flow.component.Component, E> reusableRenderer(
-        ReusableComponentItemRender<E, C> render
+        ReusableComponentItemRenderer<E, C> renderer
     ) {
         return new ComponentRenderer<>(
             item -> {
-                C created = render.createComponent();
+                C created = renderer.createComponent();
                 com.vaadin.flow.component.Component vaadin = ((ToVaadinComponentWrapper) created).toVaadinComponent();
 
                 // the row a component stands for changes as the list scrolls, so the press reads it when it fires
@@ -203,11 +203,11 @@ public class WebLazyListBoxImpl<E> extends VaadinComponentDelegate<WebLazyListBo
                 listenForSelection(vaadin);
 
                 // a fresh row is bound here too - creating is the first binding, not a step before one
-                bindRow(render, vaadin, item);
+                bindRow(renderer, vaadin, item);
                 return vaadin;
             },
             (vaadin, item) -> {
-                bindRow(render, vaadin, item);
+                bindRow(renderer, vaadin, item);
                 return vaadin;
             }
         );
@@ -217,13 +217,13 @@ public class WebLazyListBoxImpl<E> extends VaadinComponentDelegate<WebLazyListBo
      * Sets everything a row shows. The row handed over is whatever the list last put there, never a clean one.
      */
     private <C extends Component> void bindRow(
-        ReusableComponentItemRender<E, C> render,
+        ReusableComponentItemRenderer<E, C> renderer,
         com.vaadin.flow.component.Component vaadin,
         E item
     ) {
         C created = (C) ComponentUtil.getData(vaadin, UI_COMPONENT);
         if (created != null) {
-            render.bind(created, RenderItem.of(item, isSelected(item)));
+            renderer.bind(created, RenderItem.of(item, isSelected(item)));
         }
 
         ComponentUtil.setData(vaadin, ITEM, item);
@@ -270,7 +270,7 @@ public class WebLazyListBoxImpl<E> extends VaadinComponentDelegate<WebLazyListBo
     }
 
     /**
-     * The component has no rows of its own to mark, so the row a render made carries the state instead - the same
+     * The component has no rows of its own to mark, so the row a renderer made carries the state instead - the same
      * attribute a list box item is selected with, so one stylesheet covers both.
      */
     private com.vaadin.flow.component.Component decorate(com.vaadin.flow.component.Component rendered, @Nullable E item) {

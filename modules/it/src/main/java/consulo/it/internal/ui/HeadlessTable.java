@@ -81,7 +81,7 @@ public class HeadlessTable<Item> extends HeadlessComponentBase implements Table<
     }
 
     @Override
-    public void renderChanged() {
+    public void rendererChanged() {
     }
 
     @Override

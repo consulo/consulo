@@ -25,7 +25,7 @@ import consulo.project.internal.RecentProjectsChecker;
 import consulo.project.internal.RecentProjectsManager;
 import consulo.project.localize.ProjectLocalize;
 import consulo.ui.Component;
-import consulo.ui.ComponentItemRender;
+import consulo.ui.ComponentItemRenderer;
 import consulo.ui.Label;
 import consulo.ui.Length;
 import consulo.ui.RenderItem;
@@ -48,7 +48,7 @@ import java.util.function.BiConsumer;
  * @author VISTALL
  * @since 2026-08-23
  */
-public class RecentProjectItemRender implements ComponentItemRender<AnAction> {
+public class RecentProjectItemRenderer implements ComponentItemRenderer<AnAction> {
     private static final Space GAP = Space.LARGE;
     private static final Space GROUP_INDENT = Space.XX_LARGE;
     private static final Space VERTICAL_GAP = Space.SMALL;
@@ -67,7 +67,7 @@ public class RecentProjectItemRender implements ComponentItemRender<AnAction> {
     private final BiConsumer<AnAction, ComponentEvent<Component>> myActivateHandler;
     private final BiConsumer<AnAction, ComponentEvent<Component>> myMenuHandler;
 
-    public RecentProjectItemRender(
+    public RecentProjectItemRenderer(
         RecentProjectsManager recentProjectsManager,
         RecentProjectsChecker recentProjectsChecker,
         @RequiredUIAccess BiConsumer<AnAction, ComponentEvent<Component>> activateHandler,

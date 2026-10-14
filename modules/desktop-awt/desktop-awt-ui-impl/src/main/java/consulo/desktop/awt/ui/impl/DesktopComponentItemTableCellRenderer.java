@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.ui.impl;
 
-import consulo.ui.ComponentItemRender;
+import consulo.ui.ComponentItemRenderer;
 import consulo.ui.RenderItem;
 
 import javax.swing.*;
@@ -23,7 +23,7 @@ import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 
 /**
- * Bridges a {@link ComponentItemRender} onto a swing table cell renderer.
+ * Bridges a {@link ComponentItemRenderer} onto a swing table cell renderer.
  * <p/>
  * A table asks its column for a renderer per row, so this is held by the column and answered every time
  * rather than built per call - that is what lets a reusable render keep its component.
@@ -31,11 +31,11 @@ import java.awt.*;
  * @author VISTALL
  * @since 2026-08-24
  */
-public class DesktopComponentItemTableCellRenderer<Value> extends DesktopComponentItemRenderBase<Value>
+public class DesktopComponentItemTableCellRenderer<Value> extends DesktopComponentItemRendererBase<Value>
     implements TableCellRenderer {
 
-    public DesktopComponentItemTableCellRenderer(ComponentItemRender<Value> render) {
-        super(render);
+    public DesktopComponentItemTableCellRenderer(ComponentItemRenderer<Value> renderer) {
+        super(renderer);
     }
 
     @Override

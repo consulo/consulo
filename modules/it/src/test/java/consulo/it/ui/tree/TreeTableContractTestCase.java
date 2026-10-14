@@ -22,7 +22,7 @@ import consulo.it.AllowLogError;
 import consulo.it.HeadlessApplicationExtension;
 import consulo.it.TreeTester;
 import consulo.localize.LocalizeValue;
-import consulo.ui.ComponentItemRender;
+import consulo.ui.ComponentItemRenderer;
 import consulo.ui.Label;
 import consulo.ui.TableColumn;
 import consulo.ui.TreeExecutor;
@@ -385,16 +385,16 @@ public abstract class TreeTableContractTestCase {
         mySamples.putAll(Map.of("a", 2, "b", 1));
         TreeTester<String> tester = create(application, new MapTreeModel().put(ROOT, "a", "b"));
         TreeTable<String> table = tester.getTreeTable();
-        table.addColumn(LocalizeValue.of("Share"), mySamples::get).setRender((presentation, item, row) -> {
+        table.addColumn(LocalizeValue.of("Share"), mySamples::get).setRenderer((presentation, item, row) -> {
             renderedOnUIThread.add(UIAccess.isUIThread());
             presentation.append(row + "=" + item.getValue());
         });
-        table.addColumn(LocalizeValue.of("Unit"), mySamples::get).setRender((presentation, item) -> {
+        table.addColumn(LocalizeValue.of("Unit"), mySamples::get).setRenderer((presentation, item) -> {
             renderedOnUIThread.add(UIAccess.isUIThread());
             presentation.append(item.getValue() + " ms");
         });
         table.addColumn(LocalizeValue.of("Bar"), mySamples::get)
-            .setRender((ComponentItemRender<Integer>) item -> Label.create(LocalizeValue.of("component")));
+            .setRenderer((ComponentItemRenderer<Integer>) item -> Label.create(LocalizeValue.of("component")));
         tester.show();
 
         tester.userSelect("b").assertStructure("""

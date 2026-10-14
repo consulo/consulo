@@ -16,14 +16,15 @@
 package consulo.ui.graph;
 
 import consulo.ui.Component;
+import consulo.ui.event.ContextMenuEvent;
 import consulo.ui.internal.UIInternal;
 
 import java.util.List;
 
 /**
  * A directed graph over a {@link GraphModel}: every node is drawn as a box with the presentation of its
- * {@link GraphNodeRender}, and every arrow of the model as a line from its node to its target, styled by the
- * {@link GraphEdgeRender}. Where the nodes are placed is up to the graph - arrows point from one layer down to the
+ * {@link GraphNodeRenderer}, and every arrow of the model as a line from its node to its target, styled by the
+ * {@link GraphEdgeRenderer}. Where the nodes are placed is up to the graph - arrows point from one layer down to the
  * next wherever the model allows it.
  *
  * @author VISTALL
@@ -34,13 +35,13 @@ public interface Graph<E> extends Component {
         return UIInternal.get()._Components_graph(model);
     }
 
-    void setNodeRender(GraphNodeRender<E> render);
+    void setNodeRenderer(GraphNodeRenderer<E> renderer);
 
-    void setEdgeRender(GraphEdgeRender<E> render);
+    void setEdgeRenderer(GraphEdgeRenderer<E> renderer);
 
     /**
      * The selected nodes, in the order they were selected. A right click selects the node under the pointer first, so a
-     * {@link consulo.ui.event.ContextMenuEvent} listener reads the nodes it was opened on here.
+     * {@link ContextMenuEvent} listener reads the nodes it was opened on here.
      */
     List<E> getSelectedValues();
 

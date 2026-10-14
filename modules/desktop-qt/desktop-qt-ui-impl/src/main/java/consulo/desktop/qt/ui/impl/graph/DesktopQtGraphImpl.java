@@ -23,10 +23,10 @@ import consulo.ui.RenderItem;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ContextMenuEvent;
 import consulo.ui.graph.Graph;
-import consulo.ui.graph.GraphEdgeRender;
+import consulo.ui.graph.GraphEdgeRenderer;
 import consulo.ui.graph.GraphGroup;
 import consulo.ui.graph.GraphModel;
-import consulo.ui.graph.GraphNodeRender;
+import consulo.ui.graph.GraphNodeRenderer;
 import consulo.ui.impl.graph.GraphEdgeStyle;
 import consulo.ui.impl.graph.GraphNodeContent;
 import consulo.ui.impl.graph.LayeredGraphLayout;
@@ -51,8 +51,8 @@ public class DesktopQtGraphImpl<E> extends QtComponentDelegate<QScrollArea> impl
 
     private final GraphModel<E> myModel;
 
-    private GraphNodeRender<E> myNodeRender = GraphNodeRender.defaultRender();
-    private GraphEdgeRender<E> myEdgeRender = GraphEdgeRender.defaultRender();
+    private GraphNodeRenderer<E> myNodeRenderer = GraphNodeRenderer.defaultRenderer();
+    private GraphEdgeRenderer<E> myEdgeRenderer = GraphEdgeRenderer.defaultRenderer();
 
     private @Nullable DesktopQtGraphCanvas myCanvas;
 
@@ -78,15 +78,15 @@ public class DesktopQtGraphImpl<E> extends QtComponentDelegate<QScrollArea> impl
 
     @RequiredUIAccess
     @Override
-    public void setNodeRender(GraphNodeRender<E> render) {
-        myNodeRender = render;
+    public void setNodeRenderer(GraphNodeRenderer<E> renderer) {
+        myNodeRenderer = renderer;
         rebuild();
     }
 
     @RequiredUIAccess
     @Override
-    public void setEdgeRender(GraphEdgeRender<E> render) {
-        myEdgeRender = render;
+    public void setEdgeRenderer(GraphEdgeRenderer<E> renderer) {
+        myEdgeRenderer = renderer;
         rebuild();
     }
 
@@ -123,7 +123,7 @@ public class DesktopQtGraphImpl<E> extends QtComponentDelegate<QScrollArea> impl
         Map<E, GraphNodeContent<DesktopQtTextItemPresentation>> contents = new HashMap<>();
         for (E node : myModel.getNodes()) {
             GraphNodeContent<DesktopQtTextItemPresentation> content = new GraphNodeContent<>(DesktopQtTextItemPresentation::new);
-            myNodeRender.render(content, RenderItem.of(node, false));
+            myNodeRenderer.render(content, RenderItem.of(node, false));
             contents.put(node, content);
         }
 
@@ -149,7 +149,7 @@ public class DesktopQtGraphImpl<E> extends QtComponentDelegate<QScrollArea> impl
             for (E target : myModel.getArrows(entry.getKey())) {
                 Integer targetIndex = indexes.get(target);
                 if (targetIndex != null && !targetIndex.equals(entry.getValue())) {
-                    edges.add(new DesktopQtGraphEdge(entry.getValue(), targetIndex, GraphEdgeStyle.of(myEdgeRender, entry.getKey(), target)));
+                    edges.add(new DesktopQtGraphEdge(entry.getValue(), targetIndex, GraphEdgeStyle.of(myEdgeRenderer, entry.getKey(), target)));
                 }
             }
         }

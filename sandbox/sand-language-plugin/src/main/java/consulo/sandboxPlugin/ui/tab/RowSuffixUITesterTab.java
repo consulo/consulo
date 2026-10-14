@@ -27,7 +27,7 @@ import consulo.ui.ListBox;
 import consulo.ui.Table;
 import consulo.ui.TextAttribute;
 import consulo.ui.TextItemPresentation;
-import consulo.ui.TextItemRender;
+import consulo.ui.TextItemRenderer;
 import consulo.ui.Tree;
 import consulo.ui.TreeModel;
 import consulo.ui.TreeNode;
@@ -128,7 +128,7 @@ public class RowSuffixUITesterTab implements UITesterTab {
         Disposer.register(uiDisposable, tree.destroyHook());
 
         ListBox<String> listBox = ListBox.create(ROWS);
-        listBox.setRender((presentation, item) -> {
+        listBox.setRenderer((presentation, item) -> {
             String value = item.getValue();
             if (value != null) {
                 render(value, presentation, false);
@@ -138,7 +138,7 @@ public class RowSuffixUITesterTab implements UITesterTab {
         Table<String> table = Table.create(FlatDataModel.of(ROWS));
         table.addColumn(LocalizeValue.localizeTODO("Name"), row -> row)
             .setWidth(220)
-            .setRender((presentation, item) -> {
+            .setRenderer((presentation, item) -> {
                 String value = item.getValue();
                 if (value != null) {
                     render(value, presentation, false);
@@ -163,7 +163,7 @@ public class RowSuffixUITesterTab implements UITesterTab {
         ));
         buttons.add(Button.create(LocalizeValue.localizeTODO("Open list popup"), event -> {
             ListPopup popup = JBPopupFactory.getInstance().createListPopup(new BaseListPopupStep<>(null, ROWS));
-            popup.setRender((TextItemRender<String>) (presentation, item) -> {
+            popup.setRenderer((TextItemRenderer<String>) (presentation, item) -> {
                 String value = item.getValue();
                 if (value != null) {
                     render(value, presentation, false);

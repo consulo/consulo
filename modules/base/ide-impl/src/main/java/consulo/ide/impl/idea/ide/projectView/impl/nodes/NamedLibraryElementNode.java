@@ -122,10 +122,10 @@ public class NamedLibraryElementNode extends ProjectViewNode<NamedLibraryElement
             presentation.setTooltip(StringUtil.capitalize(IdeLocalize.nodeProjectviewLibrary(libraryOrderEntry.getLibraryLevel()).get()));
         }
         else if (orderEntry instanceof OrderEntryWithTracking) {
-            Consumer<ColoredTextContainer> renderForOrderEntry =
-                OrderEntryAppearanceService.getInstance().getRenderForOrderEntry(orderEntry);
+            Consumer<ColoredTextContainer> rendererForOrderEntry =
+                OrderEntryAppearanceService.getInstance().getRendererForOrderEntry(orderEntry);
             ColoredStringBuilder builder = new ColoredStringBuilder();
-            renderForOrderEntry.accept(builder);
+            rendererForOrderEntry.accept(builder);
 
             Image icon = builder.getIcon();
             presentation.setIcon(icon == null ? PlatformIconGroup.actionsHelp() : icon);

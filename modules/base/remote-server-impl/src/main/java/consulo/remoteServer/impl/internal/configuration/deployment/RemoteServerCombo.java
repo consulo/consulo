@@ -45,7 +45,7 @@ public class RemoteServerCombo<S extends ServerConfiguration> implements PseudoC
         myServerType = serverType;
 
         myComboBox = ComboBox.create(myServerListModel);
-        myComboBox.setRender((presentation, item) -> {
+        myComboBox.setRenderer((presentation, item) -> {
             ServerItem value = item.getValue();
             if (value != null) {
                 value.render(presentation);

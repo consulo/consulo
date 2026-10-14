@@ -128,7 +128,7 @@ public class CompoundRunConfigurationSettingsEditor extends SettingsEditor<Compo
     @Override
     protected Component createUIComponent() {
         ListBox<RunConfiguration> list = ListBox.create(myModel);
-        list.setRender((presentation, item) -> {
+        list.setRenderer((presentation, item) -> {
             RunConfiguration configuration = item.getValue();
             if (configuration != null) {
                 presentation.withIcon(configuration.getType().getIcon());

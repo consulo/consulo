@@ -86,7 +86,7 @@ public class JumpFromRemoteFileToLocalAction extends LegacyAnAction {
                     boolean selected,
                     boolean hasFocus
                 ) {
-                    FileAppearanceService.getInstance().getRenderForVirtualFile(value).accept(this);
+                    FileAppearanceService.getInstance().getRendererForVirtualFile(value).accept(this);
                 }
             });
             new PopupChooserBuilder(list)

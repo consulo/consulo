@@ -87,14 +87,14 @@ public class ChooseItemsDialogDescriptor<T> extends DialogDescriptor {
         Component list;
         if (myMultipleSelect) {
             MultiSelectListBox<T> listBox = MultiSelectListBox.create(myItems);
-            listBox.setRender((presentation, item) -> render(presentation, item.getValue()));
+            listBox.setRenderer((presentation, item) -> render(presentation, item.getValue()));
             listBox.setValue(mySelected);
             myList = listBox;
             list = listBox;
         }
         else {
             ListBox<T> listBox = ListBox.create(myItems);
-            listBox.setRender((presentation, item) -> render(presentation, item.getValue()));
+            listBox.setRenderer((presentation, item) -> render(presentation, item.getValue()));
             listBox.setValue(mySelected.isEmpty() ? null : mySelected.get(0));
             myList = listBox;
             list = listBox;

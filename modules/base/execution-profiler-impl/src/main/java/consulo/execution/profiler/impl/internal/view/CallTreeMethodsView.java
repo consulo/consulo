@@ -78,30 +78,30 @@ public final class CallTreeMethodsView {
 
         Table<CallTreeMethod> table = Table.create(FlatDataModel.of(tree.getMethods()));
         table.addColumn(LocalizeValue.localizeTODO("Method"), CallTreeMethod::element)
-            .setRender((presentation, item) -> {
+            .setRenderer((presentation, item) -> {
                 BaseCallStackElement element = item.getValue();
                 if (element != null) {
                     renderer.render(element, presentation);
                 }
             });
         table.addColumn(LocalizeValue.localizeTODO("Self %"), method -> ProfilerFormat.percent(method.self(), total))
-            .setRender((presentation, item) -> presentation.append(ProfilerFormat.formatPercent(item.getValue())))
+            .setRenderer((presentation, item) -> presentation.append(ProfilerFormat.formatPercent(item.getValue())))
             .setHorizontalAlignment(HorizontalAlignment.RIGHT)
             .setSortable(Comparator.naturalOrder());
         table.addColumn(LocalizeValue.localizeTODO("Self"), CallTreeMethod::self)
-            .setRender((presentation, item) -> presentation.append(ProfilerFormat.formatCount(item.getValue())))
+            .setRenderer((presentation, item) -> presentation.append(ProfilerFormat.formatCount(item.getValue())))
             .setHorizontalAlignment(HorizontalAlignment.RIGHT)
             .setSortable(Comparator.naturalOrder());
         table.addColumn(LocalizeValue.localizeTODO("Total %"), method -> ProfilerFormat.percent(method.total(), total))
-            .setRender((presentation, item) -> presentation.append(ProfilerFormat.formatPercent(item.getValue())))
+            .setRenderer((presentation, item) -> presentation.append(ProfilerFormat.formatPercent(item.getValue())))
             .setHorizontalAlignment(HorizontalAlignment.RIGHT)
             .setSortable(Comparator.naturalOrder());
         table.addColumn(LocalizeValue.localizeTODO("Total"), CallTreeMethod::total)
-            .setRender((presentation, item) -> presentation.append(ProfilerFormat.formatCount(item.getValue())))
+            .setRenderer((presentation, item) -> presentation.append(ProfilerFormat.formatCount(item.getValue())))
             .setHorizontalAlignment(HorizontalAlignment.RIGHT)
             .setSortable(Comparator.naturalOrder());
         table.addColumn(LocalizeValue.localizeTODO("Samples"), CallTreeMethod::count)
-            .setRender((presentation, item) -> presentation.append(ProfilerFormat.formatCount(item.getValue())))
+            .setRenderer((presentation, item) -> presentation.append(ProfilerFormat.formatCount(item.getValue())))
             .setHorizontalAlignment(HorizontalAlignment.RIGHT)
             .setSortable(Comparator.naturalOrder());
 

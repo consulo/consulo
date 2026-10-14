@@ -97,7 +97,7 @@ class DetectedRootsDialogDescriptor extends DialogDescriptor {
         treeTable.setCheckPolicy(CheckBoxTreePolicy.INDEPENDENT);
         treeTable.setTreeColumnHeader(ProjectLocalize.libraryDetectedRootsRootColumn());
         treeTable.addColumn(ProjectLocalize.libraryDetectedRootsTypeColumn(), SuggestedChildRootInfo::getSelectedRootType)
-            .setRender((presentation, type, root) -> {
+            .setRenderer((presentation, type, root) -> {
                 LibraryRootType value = type.getValue();
                 if (value != null) {
                     presentation.append(root.getRootTypeName(value));

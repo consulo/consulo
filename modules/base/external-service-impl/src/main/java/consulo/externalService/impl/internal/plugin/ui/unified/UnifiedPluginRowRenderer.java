@@ -27,7 +27,7 @@ import consulo.externalService.impl.internal.plugin.PluginNode;
 import consulo.externalService.impl.internal.plugin.ui.PluginTagUtil;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
-import consulo.ui.ComponentItemRender;
+import consulo.ui.ComponentItemRenderer;
 import consulo.ui.Label;
 import consulo.ui.LabelStyle;
 import consulo.ui.Length;
@@ -55,16 +55,16 @@ import java.util.stream.Collectors;
  * @author VISTALL
  * @since 2026-08-13
  */
-public class UnifiedPluginRowRender {
+public class UnifiedPluginRowRenderer {
     public static final Length ROW_HEIGHT = Length.ofFont(2).plusPixel(20);
 
-    private static final Key<Label> ICON_KEY = Key.create("UnifiedPluginRowRender.icon");
-    private static final Key<Label> NAME_KEY = Key.create("UnifiedPluginRowRender.name");
-    private static final Key<Label> TAGS_KEY = Key.create("UnifiedPluginRowRender.tags");
-    private static final Key<Label> UPDATED_KEY = Key.create("UnifiedPluginRowRender.updated");
+    private static final Key<Label> ICON_KEY = Key.create("UnifiedPluginRowRenderer.icon");
+    private static final Key<Label> NAME_KEY = Key.create("UnifiedPluginRowRenderer.name");
+    private static final Key<Label> TAGS_KEY = Key.create("UnifiedPluginRowRenderer.tags");
+    private static final Key<Label> UPDATED_KEY = Key.create("UnifiedPluginRowRenderer.updated");
 
-    public static ComponentItemRender<PluginDescriptor> reusable() {
-        return ComponentItemRender.reusable(UnifiedPluginRowRender::createRow, (row, item) -> bindRow(row, item, null, null));
+    public static ComponentItemRenderer<PluginDescriptor> reusable() {
+        return ComponentItemRenderer.reusable(UnifiedPluginRowRenderer::createRow, (row, item) -> bindRow(row, item, null, null));
     }
 
     @RequiredUIAccess

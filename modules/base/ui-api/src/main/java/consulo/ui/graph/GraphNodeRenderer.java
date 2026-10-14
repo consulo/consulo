@@ -16,19 +16,21 @@
 package consulo.ui.graph;
 
 import consulo.ui.RenderItem;
+import consulo.ui.annotation.RequiredUIAccess;
 
 /**
  * @author VISTALL
  * @since 2026-09-30
  */
 @FunctionalInterface
-public interface GraphNodeRender<E> {
-    static <V> GraphNodeRender<V> defaultRender() {
+public interface GraphNodeRenderer<E> {
+    static <V> GraphNodeRenderer<V> defaultRenderer() {
         return (presentation, item) -> {
             V value = item.getValue();
             presentation.header().append(value == null ? "" : value.toString());
         };
     }
 
+    @RequiredUIAccess
     void render(GraphNodePresentation presentation, RenderItem<E> item);
 }

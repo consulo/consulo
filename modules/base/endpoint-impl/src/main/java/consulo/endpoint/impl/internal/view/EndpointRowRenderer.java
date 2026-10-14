@@ -3,10 +3,10 @@ package consulo.endpoint.impl.internal.view;
 import consulo.ui.RenderItem;
 import consulo.ui.TextAttribute;
 import consulo.ui.TextItemPresentation;
-import consulo.ui.TextItemRender;
+import consulo.ui.TextItemRenderer;
 import consulo.ui.color.ColorValue;
 
-public final class EndpointRowRender implements TextItemRender<EndpointViewRow> {
+public final class EndpointRowRenderer implements TextItemRenderer<EndpointViewRow> {
     private static final String GAP = "  ";
 
     @Override

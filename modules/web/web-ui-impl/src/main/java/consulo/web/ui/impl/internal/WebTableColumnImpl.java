@@ -20,12 +20,12 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.dom.Element;
 import com.vaadin.flow.dom.Style;
 import consulo.localize.LocalizeValue;
-import consulo.ui.ComponentItemRender;
+import consulo.ui.ComponentItemRenderer;
 import consulo.ui.HorizontalAlignment;
 import consulo.ui.TableColumn;
 import consulo.ui.TableItemEditor;
-import consulo.ui.TableItemRender;
-import consulo.ui.TextItemRender;
+import consulo.ui.TableItemRenderer;
+import consulo.ui.TextItemRenderer;
 import consulo.ui.color.ColorValue;
 import org.jspecify.annotations.Nullable;
 
@@ -44,8 +44,8 @@ public class WebTableColumnImpl<Item, Value> extends WebGridColumnBase<Item, Ite
     private final WebTableImpl<Item> myTable;
     private final Function<Item, Value> myValueProvider;
 
-    private TableItemRender<Item, Value> myRender = TableItemRender.of(TextItemRender.defaultRender());
-    private @Nullable ComponentItemRender<Value> myComponentRender;
+    private TableItemRenderer<Item, Value> myRenderer = TableItemRenderer.of(TextItemRenderer.defaultRenderer());
+    private @Nullable ComponentItemRenderer<Value> myComponentRenderer;
     private @Nullable TableItemEditor<Item, Value> myEditor;
     private HorizontalAlignment myAlignment = HorizontalAlignment.LEFT;
 
@@ -71,13 +71,13 @@ public class WebTableColumnImpl<Item, Value> extends WebGridColumnBase<Item, Ite
     }
 
     @Override
-    protected TableItemRender<Item, Value> getRender() {
-        return myRender;
+    protected TableItemRenderer<Item, Value> getRenderer() {
+        return myRenderer;
     }
 
     @Override
-    protected @Nullable ComponentItemRender<Value> getComponentRender() {
-        return myComponentRender;
+    protected @Nullable ComponentItemRenderer<Value> getComponentRenderer() {
+        return myComponentRenderer;
     }
 
     @Override
@@ -119,22 +119,22 @@ public class WebTableColumnImpl<Item, Value> extends WebGridColumnBase<Item, Ite
     }
 
     @Override
-    public TableColumn<Item, Value> setRender(TableItemRender<Item, Value> render) {
-        myRender = render;
-        myComponentRender = null;
+    public TableColumn<Item, Value> setRenderer(TableItemRenderer<Item, Value> renderer) {
+        myRenderer = renderer;
+        myComponentRenderer = null;
         return this;
     }
 
     @Override
-    public TableColumn<Item, Value> setRender(TextItemRender<Value> render) {
-        myRender = TableItemRender.of(render);
-        myComponentRender = null;
+    public TableColumn<Item, Value> setRenderer(TextItemRenderer<Value> renderer) {
+        myRenderer = TableItemRenderer.of(renderer);
+        myComponentRenderer = null;
         return this;
     }
 
     @Override
-    public TableColumn<Item, Value> setRender(ComponentItemRender<Value> render) {
-        myComponentRender = render;
+    public TableColumn<Item, Value> setRenderer(ComponentItemRenderer<Value> renderer) {
+        myComponentRenderer = renderer;
         return this;
     }
 

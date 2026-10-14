@@ -44,7 +44,7 @@ public class DesktopTableColumnImpl<Item, Value> extends ColumnInfo<Item, Value>
     private final Function<Item, @Nullable ColorValue> myRowBackground;
     private final Function<Item, Value> myValueProvider;
 
-    private TableItemRender<Item, Value> myRender = TableItemRender.of(TextItemRender.defaultRender());
+    private TableItemRenderer<Item, Value> myRenderer = TableItemRenderer.of(TextItemRenderer.defaultRenderer());
 
     /**
      * A table asks for a renderer per row, so the bridge is held here instead of being built per call - a
@@ -93,24 +93,24 @@ public class DesktopTableColumnImpl<Item, Value> extends ColumnInfo<Item, Value>
     }
 
     @Override
-    public TableColumn<Item, Value> setRender(TextItemRender<Value> render) {
-        myRender = TableItemRender.of(render);
+    public TableColumn<Item, Value> setRenderer(TextItemRenderer<Value> renderer) {
+        myRenderer = TableItemRenderer.of(renderer);
         myComponentRenderer = null;
         fireChanged();
         return this;
     }
 
     @Override
-    public TableColumn<Item, Value> setRender(TableItemRender<Item, Value> render) {
-        myRender = render;
+    public TableColumn<Item, Value> setRenderer(TableItemRenderer<Item, Value> renderer) {
+        myRenderer = renderer;
         myComponentRenderer = null;
         fireChanged();
         return this;
     }
 
     @Override
-    public TableColumn<Item, Value> setRender(ComponentItemRender<Value> render) {
-        myComponentRenderer = new DesktopComponentItemTableCellRenderer<>(render);
+    public TableColumn<Item, Value> setRenderer(ComponentItemRenderer<Value> renderer) {
+        myComponentRenderer = new DesktopComponentItemTableCellRenderer<>(renderer);
         fireChanged();
         return this;
     }
@@ -197,7 +197,7 @@ public class DesktopTableColumnImpl<Item, Value> extends ColumnInfo<Item, Value>
 
                 DesktopTextItemPresentationImpl presentation = new DesktopTextItemPresentationImpl(this);
                 rendered.set(presentation);
-                myRender.render(presentation, RenderItem.of(typedValue(value), selected), item);
+                myRenderer.render(presentation, RenderItem.of(typedValue(value), selected), item);
             }
 
             @Override
@@ -250,7 +250,7 @@ public class DesktopTableColumnImpl<Item, Value> extends ColumnInfo<Item, Value>
 
                 // the editor sits in the row it edits, so it is painted like one - a widget left on its own
                 // look and feel fill would otherwise flash a box of a different color the moment editing starts
-                DesktopComponentItemRenderBase.applyRowColors(
+                DesktopComponentItemRendererBase.applyRowColors(
                     awtComponent,
                     isSelected ? table.getSelectionBackground() : table.getBackground(),
                     isSelected ? table.getSelectionForeground() : table.getForeground()

@@ -19,7 +19,7 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
-import consulo.ui.ComponentItemRender;
+import consulo.ui.ComponentItemRenderer;
 import consulo.ui.HorizontalAlignment;
 import consulo.ui.MessageBoxes;
 import consulo.ui.Table;
@@ -75,7 +75,7 @@ public class TableUITesterTab implements UITesterTab {
         table.addColumn(LocalizeValue.localizeTODO("On"), key -> states.getOrDefault(key, ThreeState.NO))
             .setWidth(40)
             .setResizable(false)
-            .setRender(ComponentItemRender.reusable(
+            .setRenderer(ComponentItemRenderer.reusable(
                 () -> TriStateCheckBox.create(LocalizeValue.empty()),
                 (checkBox, item) -> checkBox.setValue(item.getValue() == null ? ThreeState.NO : item.getValue())))
             .setEditor(new TableItemEditor<>() {
@@ -103,7 +103,7 @@ public class TableUITesterTab implements UITesterTab {
         table.addColumn(LocalizeValue.localizeTODO("Value"), values::get)
             .setHorizontalAlignment(HorizontalAlignment.RIGHT)
             .setSortable(Comparator.naturalOrder())
-            .setRender((presentation, item) -> presentation.append(
+            .setRenderer((presentation, item) -> presentation.append(
                 String.valueOf(item.getValue()),
                 item.isSelected() ? TextAttribute.REGULAR_BOLD : TextAttribute.REGULAR
             ))

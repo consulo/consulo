@@ -16,12 +16,7 @@
 package consulo.ui.impl.table;
 
 import consulo.localize.LocalizeValue;
-import consulo.ui.ComponentItemRender;
-import consulo.ui.HorizontalAlignment;
-import consulo.ui.TableColumn;
-import consulo.ui.TableItemEditor;
-import consulo.ui.TableItemRender;
-import consulo.ui.TextItemRender;
+import consulo.ui.*;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Comparator;
@@ -37,8 +32,8 @@ public class TableColumnImpl<Item, Value> implements TableColumn<Item, Value> {
     private final int myIndex;
 
     private volatile LocalizeValue myHeader;
-    private volatile TableItemRender<Item, Value> myRender = TableItemRender.of(TextItemRender.defaultRender());
-    private volatile @Nullable ComponentItemRender<Value> myComponentRender;
+    private volatile TableItemRenderer<Item, Value> myRenderer = TableItemRenderer.of(TextItemRenderer.defaultRenderer());
+    private volatile @Nullable ComponentItemRenderer<Value> myComponentRenderer;
     private volatile @Nullable Comparator<Value> myComparator;
     private volatile @Nullable TableItemEditor<Item, Value> myEditor;
 
@@ -69,16 +64,16 @@ public class TableColumnImpl<Item, Value> implements TableColumn<Item, Value> {
         return myValueProvider.apply(item);
     }
 
-    public TableItemRender<Item, Value> getRender() {
-        return myRender;
+    public TableItemRenderer<Item, Value> getRenderer() {
+        return myRenderer;
     }
 
-    public TableItemRender<Item, Value> getTextRender() {
-        return myComponentRender == null ? myRender : TableItemRender.of(TextItemRender.defaultRender());
+    public TableItemRenderer<Item, Value> getTextRenderer() {
+        return myComponentRenderer == null ? myRenderer : TableItemRenderer.of(TextItemRenderer.defaultRenderer());
     }
 
-    public @Nullable ComponentItemRender<Value> getComponentRender() {
-        return myComponentRender;
+    public @Nullable ComponentItemRenderer<Value> getComponentRenderer() {
+        return myComponentRenderer;
     }
 
     public @Nullable Comparator<Value> getComparator() {
@@ -113,25 +108,25 @@ public class TableColumnImpl<Item, Value> implements TableColumn<Item, Value> {
     }
 
     @Override
-    public TableColumn<Item, Value> setRender(TableItemRender<Item, Value> render) {
-        myRender = render;
-        myComponentRender = null;
-        myOwner.renderChanged();
+    public TableColumn<Item, Value> setRenderer(TableItemRenderer<Item, Value> renderer) {
+        myRenderer = renderer;
+        myComponentRenderer = null;
+        myOwner.rendererChanged();
         return this;
     }
 
     @Override
-    public TableColumn<Item, Value> setRender(TextItemRender<Value> render) {
-        myRender = TableItemRender.of(render);
-        myComponentRender = null;
-        myOwner.renderChanged();
+    public TableColumn<Item, Value> setRenderer(TextItemRenderer<Value> renderer) {
+        myRenderer = TableItemRenderer.of(renderer);
+        myComponentRenderer = null;
+        myOwner.rendererChanged();
         return this;
     }
 
     @Override
-    public TableColumn<Item, Value> setRender(ComponentItemRender<Value> render) {
-        myComponentRender = render;
-        myOwner.renderChanged();
+    public TableColumn<Item, Value> setRenderer(ComponentItemRenderer<Value> renderer) {
+        myComponentRenderer = renderer;
+        myOwner.rendererChanged();
         return this;
     }
 
@@ -152,7 +147,7 @@ public class TableColumnImpl<Item, Value> implements TableColumn<Item, Value> {
     @Override
     public TableColumn<Item, Value> setHorizontalAlignment(HorizontalAlignment alignment) {
         myAlignment = alignment;
-        myOwner.renderChanged();
+        myOwner.rendererChanged();
         return this;
     }
 
@@ -166,7 +161,7 @@ public class TableColumnImpl<Item, Value> implements TableColumn<Item, Value> {
     @Override
     public TableColumn<Item, Value> setEditor(@Nullable TableItemEditor<Item, Value> editor) {
         myEditor = editor;
-        myOwner.renderChanged();
+        myOwner.rendererChanged();
         return this;
     }
 }

@@ -34,7 +34,7 @@ import consulo.ui.Button;
 import consulo.ui.ButtonStyle;
 import consulo.ui.ComboBox;
 import consulo.ui.Component;
-import consulo.ui.ComponentItemRender;
+import consulo.ui.ComponentItemRenderer;
 import consulo.ui.Label;
 import consulo.ui.Space;
 import consulo.ui.Table;
@@ -203,7 +203,7 @@ public class InspectionToolDetailsPanel {
         }
 
         ComboBox<HighlightSeverity> severityBox = ComboBox.create(severities);
-        severityBox.setRender((presentation, item) -> renderSeverity(presentation, item.getValue(), false));
+        severityBox.setRenderer((presentation, item) -> renderSeverity(presentation, item.getValue(), false));
         if (current != null) {
             severityBox.setValue(current);
         }
@@ -232,7 +232,7 @@ public class InspectionToolDetailsPanel {
 
         LocalizeValue allScopes = InspectionLocalize.inspectionSettingsScopeAll();
         ComboBoxWithCustomPopup<LocalizeValue> scopeBox = ComboBoxWithCustomPopup.create(FlatDataModel.of(List.of(allScopes)));
-        scopeBox.setRender((presentation, item) -> {
+        scopeBox.setRenderer((presentation, item) -> {
             LocalizeValue value = item.getValue();
             if (value != null) {
                 presentation.append(value);
@@ -264,7 +264,7 @@ public class InspectionToolDetailsPanel {
         table.addColumn(LocalizeValue.empty(), ScopeSeverityRow::enabled)
             .setWidth(30)
             .setResizable(false)
-            .setRender(ComponentItemRender.reusable(
+            .setRenderer(ComponentItemRenderer.reusable(
                 () -> TriStateCheckBox.create(LocalizeValue.empty()),
                 (checkBox, item) -> checkBox.setValue(item.getValue(), false)
             ))
@@ -283,7 +283,7 @@ public class InspectionToolDetailsPanel {
             });
 
         table.addColumn(InspectionLocalize.inspectionSettingsScopeColumn(), ScopeSeverityRow::name)
-            .setRender((presentation, item) -> {
+            .setRenderer((presentation, item) -> {
                 LocalizeValue name = item.getValue();
                 if (name != null) {
                     presentation.append(name);
@@ -291,7 +291,7 @@ public class InspectionToolDetailsPanel {
             });
 
         table.addColumn(InspectionLocalize.inspectionSettingsSeverityColumn(), row -> row)
-            .setRender((presentation, item) -> {
+            .setRenderer((presentation, item) -> {
                 ScopeSeverityRow row = item.getValue();
                 if (row != null) {
                     renderSeverity(presentation, row.severity(), row.enabled() == ThreeState.NO);
@@ -312,7 +312,7 @@ public class InspectionToolDetailsPanel {
                         choices.add(severity.equals(row.severity()) ? row : choice);
                     }
                     ComboBox<ScopeSeverityRow> box = ComboBox.create(choices);
-                    box.setRender((presentation, item) -> {
+                    box.setRenderer((presentation, item) -> {
                         ScopeSeverityRow value = item.getValue();
                         if (value != null) {
                             renderSeverity(presentation, value.severity(), false);

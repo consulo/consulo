@@ -21,7 +21,7 @@ import consulo.navigation.TargetPresentation;
 import consulo.ui.RenderItem;
 import consulo.ui.TextAttribute;
 import consulo.ui.TextItemPresentation;
-import consulo.ui.TextItemRender;
+import consulo.ui.TextItemRenderer;
 
 /**
  * Draws a row of a target popup. Reads nothing but the {@link TargetPresentation} it is handed, which
@@ -30,7 +30,7 @@ import consulo.ui.TextItemRender;
  * @author VISTALL
  * @since 2026-08-27
  */
-public class TargetPresentationRender<T extends PsiElement> implements TextItemRender<ItemWithPresentation<T>> {
+public class TargetPresentationRenderer<T extends PsiElement> implements TextItemRenderer<ItemWithPresentation<T>> {
     @Override
     public void render(TextItemPresentation presentation, RenderItem<ItemWithPresentation<T>> item) {
         ItemWithPresentation<T> value = item.getValue();

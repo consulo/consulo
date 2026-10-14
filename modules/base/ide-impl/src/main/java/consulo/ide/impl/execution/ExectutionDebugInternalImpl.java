@@ -52,9 +52,9 @@ public class ExectutionDebugInternalImpl implements ExectutionDebugInternal {
             for (OrderEntry entry : entries) {
                 OrderEntryTypeEditor<OrderEntry> editor = OrderEntryTypeEditor.getEditor(entry.getType().getId());
 
-                Consumer<ColoredTextContainer> render = editor.getRender(entry);
+                Consumer<ColoredTextContainer> renderer = editor.getRenderer(entry);
                 ColoredStringBuilder builder = new ColoredStringBuilder();
-                render.accept(builder);
+                renderer.accept(builder);
                 Image icon = builder.getIcon();
                 if (icon != null) {
                     return icon;

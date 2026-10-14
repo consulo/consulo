@@ -15,15 +15,11 @@
  */
 package consulo.web.ui.impl.internal;
 
-import consulo.ui.TransferHandler;
+import consulo.ui.*;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
-import consulo.ui.ComponentItemRender;
 import com.vaadin.flow.component.html.Hr;
 import consulo.localize.LocalizeValue;
-import consulo.ui.ListBox;
-import consulo.ui.RenderItem;
-import consulo.ui.TextItemRender;
 import consulo.ui.event.ListDoubleClickEvent;
 import consulo.ui.event.ClickEvent;
 import consulo.ui.model.FlatDataModel;
@@ -46,13 +42,13 @@ public class WebListBoxImpl<E> extends WebSingleListComponentBase<E, WebListBoxI
 
     private @Nullable TransferHandler<E> myTransferHandler;
     private Predicate<E> mySeparatorPredicate = item -> false;
-    private @Nullable ComponentItemRender<E> myComponentRender;
+    private @Nullable ComponentItemRenderer<E> myComponentRenderer;
     // served straight from META-INF/resources - the theme goes through the vite bundle, which skips rebuilding
     // on css only changes
     @StyleSheet("/list/webListBox.css")
     public class Vaadin extends com.vaadin.flow.component.listbox.ListBox<E> implements FromVaadinComponentWrapper {
         @Override
-        public consulo.ui.@Nullable Component toUIComponent() {
+        public @Nullable Component toUIComponent() {
             return WebListBoxImpl.this;
         }
     }
@@ -62,7 +58,7 @@ public class WebListBoxImpl<E> extends WebSingleListComponentBase<E, WebListBoxI
 
         toVaadinComponent().addClassName("web-list-box");
 
-        setRender(TextItemRender.defaultRender());
+        setRenderer(TextItemRenderer.defaultRenderer());
 
         myClickInstalled = true;
     }
@@ -149,15 +145,15 @@ public class WebListBoxImpl<E> extends WebSingleListComponentBase<E, WebListBoxI
         toVaadinComponent().setItemEnabledProvider(item -> !predicate.test((E) item));
 
         // the rows are built when the renderer is set, so one already built knows nothing of this predicate
-        applyRender();
+        applyRenderer();
     }
 
-    protected void applyRender() {
-        if (myComponentRender != null) {
-            setRender(myComponentRender);
+    protected void applyRenderer() {
+        if (myComponentRenderer != null) {
+            setRenderer(myComponentRenderer);
         }
         else {
-            setRender(myTextRender);
+            setRenderer(myTextRenderer);
         }
     }
 
@@ -180,9 +176,9 @@ public class WebListBoxImpl<E> extends WebSingleListComponentBase<E, WebListBoxI
     }
 
     @Override
-    public void setRender(TextItemRender<E> render) {
-        myTextRender = render;
-        myComponentRender = null;
+    public void setRenderer(TextItemRenderer<E> renderer) {
+        myTextRenderer = renderer;
+        myComponentRenderer = null;
 
         toVaadinComponent().setRenderer(new ComponentRenderer<>(item -> {
             com.vaadin.flow.component.Component separator = separatorOrNull((E) item);
@@ -191,7 +187,7 @@ public class WebListBoxImpl<E> extends WebSingleListComponentBase<E, WebListBoxI
             }
 
             WebItemPresentationImpl presentation = new WebItemPresentationImpl();
-            render.render(presentation, RenderItem.of((E) item, isSelected((E) item)));
+            renderer.render(presentation, RenderItem.of((E) item, isSelected((E) item)));
 
             com.vaadin.flow.component.Component component = decorateRow(presentation.toComponent(), (E) item);
             String background = WebColors.toCssColor(presentation.getBackgroundColor());
@@ -204,8 +200,8 @@ public class WebListBoxImpl<E> extends WebSingleListComponentBase<E, WebListBoxI
     }
 
     @Override
-    public void setRender(ComponentItemRender<E> render) {
-        myComponentRender = render;
+    public void setRenderer(ComponentItemRenderer<E> renderer) {
+        myComponentRenderer = renderer;
 
         toVaadinComponent().setRenderer(new ComponentRenderer<>(item -> {
             com.vaadin.flow.component.Component separator = separatorOrNull((E) item);
@@ -213,7 +209,7 @@ public class WebListBoxImpl<E> extends WebSingleListComponentBase<E, WebListBoxI
                 return separator;
             }
 
-            consulo.ui.Component rendered = render.render(RenderItem.of((E) item, isSelected((E) item)));
+            Component rendered = renderer.render(RenderItem.of((E) item, isSelected((E) item)));
 
             com.vaadin.flow.component.Component component = decorateRow(((ToVaadinComponentWrapper) rendered).toVaadinComponent(), (E) item);
             applyItemHeight(component, (E) item);

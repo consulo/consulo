@@ -157,10 +157,10 @@ public class VcsDirectoryConfigurationPanel {
         table.setEnabled(!myIsDisabled);
 
         table.addColumn(VcsLocalize.columnInfoConfigureVcsesDirectory(), info -> info)
-            .setRender((presentation, value) -> renderDirectory(presentation, value.getValue()));
+            .setRenderer((presentation, value) -> renderDirectory(presentation, value.getValue()));
 
         table.addColumn(VcsLocalize.columnNameConfigureVcsesVcs(), info -> info.mapping.getVcs())
-            .setRender((presentation, value, info) -> renderVcs(presentation, info))
+            .setRenderer((presentation, value, info) -> renderVcs(presentation, info))
             .setEditor(new VcsColumnEditor());
 
         Component decorated = ToolbarDecoratorBuilderFactory.getInstance()

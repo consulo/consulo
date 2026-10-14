@@ -60,26 +60,22 @@ import java.util.function.Consumer;
 @Singleton
 @ServiceImpl
 public class OrderEntryAppearanceServiceImpl extends OrderEntryAppearanceService {
-
-  
   @Override
   @SuppressWarnings("unchecked")
-  public Consumer<ColoredTextContainer> getRenderForOrderEntry(OrderEntry orderEntry) {
+  public Consumer<ColoredTextContainer> getRendererForOrderEntry(OrderEntry orderEntry) {
     OrderEntryType<?> type = orderEntry.getType();
     OrderEntryTypeEditor editor = OrderEntryTypeEditor.getEditor(type.getId());
-    return editor.getRender(orderEntry);
+    return editor.getRenderer(orderEntry);
   }
 
-  
   @Override
-  public Consumer<ColoredTextContainer> getRenderForModule(Module module) {
+  public Consumer<ColoredTextContainer> getRendererForModule(Module module) {
     return it -> {
       it.setIcon(PlatformIconGroup.nodesModule());
       it.append(module.getName());
     };
   }
 
-  
   @Override
   public CellAppearanceEx forLibrary(Project project, Library library, boolean hasInvalidRoots) {
     LibrariesConfigurator context = ShowSettingsUtil.getInstance().getLibrariesModel(project);
@@ -103,7 +99,6 @@ public class OrderEntryAppearanceServiceImpl extends OrderEntryAppearanceService
     return SimpleTextCellAppearance.regular(PathUtil.getFileName(url), AllIcons.Nodes.PpLib);
   }
 
-  
   @Override
   public CellAppearanceEx forSdk(@Nullable Sdk jdk, boolean isInComboBox, boolean selected, boolean showVersion) {
     if (jdk == null) {
@@ -140,30 +135,25 @@ public class OrderEntryAppearanceServiceImpl extends OrderEntryAppearanceService
     }
   }
 
-  
   @Override
   public CellAppearanceEx forContentFolder(ContentFolder folder) {
     return formatRelativePath(folder, folder.getType().getChildDirectoryIcon(null, null));
   }
 
-  
   @Override
   public CellAppearanceEx forModule(Module module) {
     return SimpleTextCellAppearance.regular(module.getName(), AllIcons.Nodes.Module);
   }
 
-  
   private static CellAppearanceEx normalOrRedWaved(String text, @Nullable Image icon, boolean waved) {
     return waved ? new SimpleTextCellAppearance(text, icon, new SimpleTextAttributes(SimpleTextAttributes.STYLE_WAVED, null, JBColor.RED)) : SimpleTextCellAppearance.regular(text, icon);
   }
 
-  
   private static CellAppearanceEx forVirtualFilePointer(LightFilePointer filePointer) {
     VirtualFile file = filePointer.getFile();
     return file != null ? FileAppearanceService.getInstance().forVirtualFile(file) : FileAppearanceService.getInstance().forInvalidUrl(filePointer.getPresentableUrl());
   }
 
-  
   private static CellAppearanceEx formatRelativePath(ContentFolder folder, Image icon) {
     LightFilePointer folderFile = new LightFilePointer(folder.getUrl());
     VirtualFile file = VirtualFileManager.getInstance().findFileByUrl(folder.getContentEntry().getUrl());

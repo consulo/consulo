@@ -116,7 +116,7 @@ public class CodeInspectionAction extends BaseAnalysisAction {
 
         MutableFlatDataModel<InspectionProfile> model = FlatDataModel.of(List.of());
         ComboBox<InspectionProfile> profiles = ComboBox.create(model);
-        profiles.setRender((renderer, renderItem) -> {
+        profiles.setRenderer((renderer, renderItem) -> {
             var profile = renderItem.getValue();
             if (profile != null) {
                 renderer.append(profile.getName());

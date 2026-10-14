@@ -16,6 +16,7 @@
 package consulo.ui;
 
 import consulo.localize.LocalizeValue;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.model.FlatDataModel;
 import org.jspecify.annotations.Nullable;
 
@@ -31,11 +32,11 @@ import java.util.function.Function;
 public interface ComboBoxBase<E> extends HasSpeedSearch<E>, HasItemSize<E>, HasComponentStyle<ComboBoxStyle> {
     FlatDataModel<E> getDataModel();
 
-    void setRender(TextItemRender<E> render);
+    void setRenderer(TextItemRenderer<E> renderer);
 
-    void setRender(ComponentItemRender<E> render);
+    void setRenderer(ComponentItemRenderer<E> renderer);
 
-    default void setTextRenderer(Function<@Nullable E, LocalizeValue> localizeValueFunction) {
-        setRender((presentation, item) -> presentation.append(localizeValueFunction.apply(item.getValue())));
+    default void setTextRenderer(@RequiredUIAccess Function<@Nullable E, LocalizeValue> localizeValueFunction) {
+        setRenderer((presentation, item) -> presentation.append(localizeValueFunction.apply(item.getValue())));
     }
 }

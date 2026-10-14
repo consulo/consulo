@@ -479,7 +479,7 @@ public class UnifiedActionRow {
         }
 
         comboBox.addStyle(ComboBoxStyle.TOOLBAR);
-        comboBox.setRender((itemPresentation, item) -> {
+        comboBox.setRenderer((itemPresentation, item) -> {
             itemPresentation.append(presentation.getTextValue().map(Presentation.NO_MNEMONIC));
             itemPresentation.withIcon(presentation.getIcon());
         });

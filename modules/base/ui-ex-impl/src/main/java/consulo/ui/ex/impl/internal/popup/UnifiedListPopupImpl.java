@@ -17,15 +17,7 @@ package consulo.ui.ex.impl.internal.popup;
 
 import consulo.component.ComponentManager;
 import consulo.logging.Logger;
-import consulo.ui.HeavyPopup;
-import consulo.ui.Popup;
-import consulo.ui.LightPopup;
-import consulo.ui.PopupOptions;
-import consulo.ui.PopupPosition;
-import consulo.ui.Point2D;
-import consulo.ui.ListBox;
-import consulo.ui.TextAttribute;
-import consulo.ui.TextItemRender;
+import consulo.ui.*;
 import consulo.ui.ex.action.Shortcut;
 import consulo.ui.ex.action.ShortcutProvider;
 import consulo.ui.ex.action.ShortcutSet;
@@ -45,7 +37,6 @@ import consulo.ui.event.details.InputDetails;
 import consulo.ui.event.details.KeyCode;
 import consulo.ui.event.details.KeyboardInputDetails;
 import consulo.ui.event.details.MouseInputDetails;
-import consulo.ui.UIAccess;
 import consulo.ui.model.FlatDataModel;
 import consulo.ui.ex.popup.AsyncPopupStep;
 import consulo.ui.ex.popup.JBPopup;
@@ -106,14 +97,14 @@ public class UnifiedListPopupImpl extends UnifiedPopupImpl implements ListPopup 
      */
     private final Deque<Level> myLevels = new ArrayDeque<>();
 
-    private @Nullable TextItemRender<Object> myRender;
+    private @Nullable TextItemRenderer<Object> myRenderer;
 
     /** kept until the unified popups grow title chrome to put the pin button on */
     private @Nullable Predicate<? super JBPopup> myCouldPin;
     private int myMinimumWidth = -1;
     private boolean myResizable;
 
-    private consulo.ui.@Nullable Component myAnchor;
+    private @Nullable Component myAnchor;
     private @Nullable InputDetails myAnchorDetails;
     private @Nullable Point2D myAnchorPoint;
     private int myAnchorHeight;
@@ -145,12 +136,12 @@ public class UnifiedListPopupImpl extends UnifiedPopupImpl implements ListPopup 
 
     @SuppressWarnings("unchecked")
     @Override
-    public void setRender(TextItemRender<?> render) {
-        myRender = (TextItemRender<Object>) render;
+    public void setRenderer(TextItemRenderer<?> renderer) {
+        myRenderer = (TextItemRenderer<Object>) renderer;
 
         Level top = myLevels.peek();
         if (top != null) {
-            top.myList.setRender(myRender);
+            top.myList.setRenderer(myRenderer);
         }
     }
 
@@ -201,7 +192,7 @@ public class UnifiedListPopupImpl extends UnifiedPopupImpl implements ListPopup 
         FlatDataModel<Object> model = step.getModel();
         ListBox<Object> list = UIInternalEx.get()._Components_popupListBox(model != null ? model : FlatDataModel.of(step.getValues()));
 
-        list.setRender(renderFor(step));
+        list.setRenderer(rendererFor(step));
 
         list.isSeparator(step::isSeparator);
 
@@ -246,10 +237,10 @@ public class UnifiedListPopupImpl extends UnifiedPopupImpl implements ListPopup 
     }
 
     @SuppressWarnings("unchecked")
-    private TextItemRender<Object> renderFor(ListPopupStep<Object> step) {
-        TextItemRender<Object> render = myRender;
-        if (render != null) {
-            return render;
+    private TextItemRenderer<Object> rendererFor(ListPopupStep<Object> step) {
+        TextItemRenderer<Object> renderer = myRenderer;
+        if (renderer != null) {
+            return renderer;
         }
 
         return (presentation, item) -> {
@@ -450,7 +441,7 @@ public class UnifiedListPopupImpl extends UnifiedPopupImpl implements ListPopup 
     private void updateStepItems(Level level, ActionPopupStep step) {
         step.updateStepItems().whenComplete((ignored, throwable) -> {
             if (throwable == null && !isDisposed() && myLevels.contains(level)) {
-                level.myList.setRender(renderFor(level.myStep));
+                level.myList.setRenderer(rendererFor(level.myStep));
             }
         });
     }
@@ -589,7 +580,7 @@ public class UnifiedListPopupImpl extends UnifiedPopupImpl implements ListPopup 
 
     @Override
     @RequiredUIAccess
-    public void showBy(consulo.ui.Component component, @Nullable InputDetails inputDetails) {
+    public void showBy(Component component, @Nullable InputDetails inputDetails) {
         myAnchor = component;
         myAnchorDetails = inputDetails;
         show();
@@ -597,7 +588,7 @@ public class UnifiedListPopupImpl extends UnifiedPopupImpl implements ListPopup 
 
     @Override
     @RequiredUIAccess
-    public void showAtPoint(consulo.ui.Component target, int x, int y, int anchorHeight) {
+    public void showAtPoint(Component target, int x, int y, int anchorHeight) {
         myAnchor = target;
         myAnchorDetails = null;
         myAnchorPoint = new Point2D(x, y);

@@ -90,7 +90,7 @@ public class InputsUITesterTab implements UITesterTab {
             LocalizeValue.of("One of a list"),
             event -> InputBoxBuilder.items(List.of(StandardCursors.values()))
                 .text(LocalizeValue.of("Pick a cursor:"))
-                .setupComponent(box -> box.setRender((presentation, item) -> presentation.append(item.getValue().name())))
+                .setupComponent(box -> box.setRenderer((presentation, item) -> presentation.append(item.getValue().name())))
                 .showAsync()
                 .whenComplete((answer, error) -> UITesterTabUtil.report("items", answer, error))
         ));

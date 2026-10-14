@@ -20,10 +20,10 @@ import com.vaadin.flow.component.dependency.StyleSheet;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ComboBoxStyle;
 import consulo.ui.Component;
-import consulo.ui.ComponentItemRender;
+import consulo.ui.ComponentItemRenderer;
 import consulo.ui.MultiSelectComboBox;
 import consulo.ui.RenderItem;
-import consulo.ui.TextItemRender;
+import consulo.ui.TextItemRenderer;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ValueComponentEvent;
 import consulo.ui.model.FlatDataModel;
@@ -138,7 +138,7 @@ public class WebMultiSelectComboBoxImpl<E> extends WebListComponentBase<E, WebMu
             }
         });
 
-        setRender(TextItemRender.defaultRender());
+        setRenderer(TextItemRenderer.defaultRenderer());
     }
 
     @Override
@@ -186,20 +186,21 @@ public class WebMultiSelectComboBoxImpl<E> extends WebListComponentBase<E, WebMu
     }
 
     @Override
-    public void setRender(TextItemRender<E> render) {
-        myTextRender = render;
+    public void setRenderer(TextItemRenderer<E> renderer) {
+        myTextRenderer = renderer;
 
         Vaadin component = toVaadinComponent();
-        component.setItemLabelGenerator(item -> textOf(render, item));
-        component.setRenderer(createRenderer(render, this::isSelected));
+        component.setItemLabelGenerator(item -> textOf(renderer, item));
+        component.setRenderer(createRenderer(renderer, this::isSelected));
     }
 
     @Override
-    public void setRender(ComponentItemRender<E> render) {
-        toVaadinComponent().setRenderer(createRenderer(render, this::isSelected));
+    public void setRenderer(ComponentItemRenderer<E> renderer) {
+        toVaadinComponent().setRenderer(createRenderer(renderer, this::isSelected));
     }
 
     @Override
+    @RequiredUIAccess
     public void setSpeedSearchConverter(@Nullable Function<E, String> converter) {
         super.setSpeedSearchConverter(converter);
 
@@ -323,9 +324,9 @@ public class WebMultiSelectComboBoxImpl<E> extends WebListComponentBase<E, WebMu
         return item != null && toVaadinComponent().getValue().contains(item);
     }
 
-    private static <E> String textOf(TextItemRender<E> render, @Nullable E item) {
+    private static <E> String textOf(TextItemRenderer<E> renderer, @Nullable E item) {
         WebItemPresentationImpl presentation = new WebItemPresentationImpl();
-        render.render(presentation, RenderItem.of(item, false));
+        renderer.render(presentation, RenderItem.of(item, false));
 
         StringBuilder builder = new StringBuilder();
         for (WebItemPresentationImpl.Fragment fragment : presentation.getFragments()) {
