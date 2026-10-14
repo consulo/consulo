@@ -16,6 +16,7 @@
 package consulo.ui.graph;
 
 import consulo.ui.RenderItem;
+import consulo.ui.annotation.RequiredUIAccess;
 
 /**
  * @author VISTALL
@@ -30,5 +31,6 @@ public interface GraphNodeRenderer<E> {
         };
     }
 
+    @RequiredUIAccess
     void render(GraphNodePresentation presentation, RenderItem<E> item);
 }

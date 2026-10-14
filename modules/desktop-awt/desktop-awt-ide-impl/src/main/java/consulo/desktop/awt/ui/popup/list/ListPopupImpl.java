@@ -492,7 +492,7 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
     protected ListCellRenderer getListElementRenderer() {
         TextItemRenderer<Object> renderer = myTextItemRenderer;
         if (renderer != null) {
-            return new TextItemRenderCellRenderer(renderer, getSpeedSearch());
+            return new TextItemRendererCellRenderer(renderer, getSpeedSearch());
         }
         return new PopupListElementRenderer(this);
     }
@@ -513,14 +513,14 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
      * own color to a row's. Whatever the render pins as a suffix is drawn on the trailing edge, past
      * the space the main text leaves.
      */
-    private static class TextItemRenderCellRenderer extends ColoredListCellRenderer<Object> {
+    private static class TextItemRendererCellRenderer extends ColoredListCellRenderer<Object> {
         private final TextItemRenderer<Object> myRenderer;
         private final @Nullable SpeedSearchSupply mySpeedSearch;
 
         private final DesktopSuffixCellRendererPanel mySuffixPanel = new DesktopSuffixCellRendererPanel(JBUI.insets(2, 8));
         private @Nullable DesktopTextItemPresentationImpl myPresentation;
 
-        private TextItemRenderCellRenderer(TextItemRenderer<Object> renderer, @Nullable SpeedSearchSupply speedSearch) {
+        private TextItemRendererCellRenderer(TextItemRenderer<Object> renderer, @Nullable SpeedSearchSupply speedSearch) {
             myRenderer = renderer;
             mySpeedSearch = speedSearch;
             setIpad(JBUI.insets(2, 8));
