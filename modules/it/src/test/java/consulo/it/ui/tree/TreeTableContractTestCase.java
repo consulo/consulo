@@ -22,7 +22,7 @@ import consulo.it.AllowLogError;
 import consulo.it.HeadlessApplicationExtension;
 import consulo.it.TreeTester;
 import consulo.localize.LocalizeValue;
-import consulo.ui.ComponentItemRender;
+import consulo.ui.ComponentItemRenderer;
 import consulo.ui.Label;
 import consulo.ui.TableColumn;
 import consulo.ui.TreeExecutor;
@@ -394,7 +394,7 @@ public abstract class TreeTableContractTestCase {
             presentation.append(item.getValue() + " ms");
         });
         table.addColumn(LocalizeValue.of("Bar"), mySamples::get)
-            .setRenderer((ComponentItemRender<Integer>) item -> Label.create(LocalizeValue.of("component")));
+            .setRenderer((ComponentItemRenderer<Integer>) item -> Label.create(LocalizeValue.of("component")));
         tester.show();
 
         tester.userSelect("b").assertStructure("""

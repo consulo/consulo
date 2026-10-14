@@ -87,7 +87,7 @@ class WebPopupListBoxImpl<E> extends WebListBoxImpl<E> implements InlineButtonsL
     public void setInlineButtons(Function<E, List<InlineButton>> buttons) {
         myInlineButtons = buttons;
 
-        applyRender();
+        applyRenderer();
     }
 
     @Override

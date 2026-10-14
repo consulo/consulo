@@ -13,22 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.graph;
+package consulo.ui;
 
-import consulo.ui.RenderItem;
+import consulo.ui.annotation.RequiredUIAccess;
 
 /**
  * @author VISTALL
- * @since 2026-09-30
+ * @since 2026-08-02
  */
 @FunctionalInterface
-public interface GraphNodeRender<E> {
-    static <V> GraphNodeRender<V> defaultRender() {
+public interface TextItemRenderer<E> {
+    static <V> TextItemRenderer<V> defaultRenderer() {
         return (presentation, item) -> {
             V value = item.getValue();
-            presentation.header().append(value == null ? "" : value.toString());
+            presentation.append(value == null ? "" : value.toString());
         };
     }
 
-    void render(GraphNodePresentation presentation, RenderItem<E> item);
+    @RequiredUIAccess
+    void render(TextItemPresentation presentation, RenderItem<E> item);
 }

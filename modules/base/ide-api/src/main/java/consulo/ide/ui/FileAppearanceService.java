@@ -31,27 +31,21 @@ public abstract class FileAppearanceService {
     return Application.get().getInstance(FileAppearanceService.class);
   }
 
-  
   public abstract CellAppearanceEx forVirtualFile(VirtualFile file);
 
-  
   public abstract CellAppearanceEx forIoFile(File file);
 
-  
   public abstract CellAppearanceEx forInvalidUrl(String url);
 
-  
-  public Consumer<ColoredTextContainer> getRenderForVirtualFile(VirtualFile file) {
+  public Consumer<ColoredTextContainer> getRendererForVirtualFile(VirtualFile file) {
     return it -> forVirtualFile(file).customize(it);
   }
 
-  
-  public Consumer<ColoredTextContainer> getRenderForIoFile(File file) {
+  public Consumer<ColoredTextContainer> getRendererForIoFile(File file) {
     return it -> forIoFile(file).customize(it);
   }
 
-  
-  public Consumer<ColoredTextContainer> getRenderForInvalidUrl(String url) {
+  public Consumer<ColoredTextContainer> getRendererForInvalidUrl(String url) {
     return it -> forInvalidUrl(url).customize(it);
   }
 }

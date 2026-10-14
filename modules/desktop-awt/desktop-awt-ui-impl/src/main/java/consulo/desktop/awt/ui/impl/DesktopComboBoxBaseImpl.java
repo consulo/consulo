@@ -18,9 +18,9 @@ package consulo.desktop.awt.ui.impl;
 import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 import consulo.ui.ComboBoxBase;
 import consulo.ui.ComboBoxStyle;
-import consulo.ui.ComponentItemRender;
+import consulo.ui.ComponentItemRenderer;
 import consulo.ui.Length;
-import consulo.ui.TextItemRender;
+import consulo.ui.TextItemRenderer;
 import consulo.ui.ex.awt.ComboboxSpeedSearch;
 import consulo.ui.ex.awt.internal.AWTComboBoxStyle;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
@@ -40,8 +40,8 @@ import java.util.function.Function;
 abstract class DesktopComboBoxBaseImpl<E, C extends JComponent> extends SwingComponentDelegate<C> implements ComboBoxBase<E> {
     protected final FlatDataModel<E> myModel;
 
-    protected TextItemRender<E> myTextRenderer = TextItemRender.defaultRenderer();
-    protected @Nullable ComponentItemRender<E> myComponentRenderer;
+    protected TextItemRenderer<E> myTextRenderer = TextItemRenderer.defaultRenderer();
+    protected @Nullable ComponentItemRenderer<E> myComponentRenderer;
     private @Nullable Function<E, String> mySpeedSearchConverter;
     private @Nullable Function<E, Length> myItemHeightGetter;
 
@@ -52,19 +52,19 @@ abstract class DesktopComboBoxBaseImpl<E, C extends JComponent> extends SwingCom
     protected abstract JComboBox<E> getComboBox(C component);
 
     protected void initComboBox(JComboBox<E> comboBox) {
-        applyRender(comboBox);
+        applyRenderer(comboBox);
         applySpeedSearch(comboBox);
     }
 
-    protected void onRenderChanged(C component) {
+    protected void onRendererChanged(C component) {
     }
 
-    private void applyRender(JComboBox<E> comboBox) {
-        ListCellRenderer<E> render = myComponentRenderer != null
-            ? new DesktopComponentItemRenderAdapter<>(myComponentRenderer, () -> -1)
-            : new DesktopListRender<>(() -> myTextRenderer);
+    private void applyRenderer(JComboBox<E> comboBox) {
+        ListCellRenderer<E> renderer = myComponentRenderer != null
+            ? new DesktopComponentItemRenderingAdapter<>(myComponentRenderer, () -> -1)
+            : new DesktopListRenderer<>(() -> myTextRenderer);
 
-        comboBox.setRenderer(DesktopItemHeightRender.wrap(render, () -> myItemHeightGetter));
+        comboBox.setRenderer(DesktopItemHeightRenderer.wrap(renderer, () -> myItemHeightGetter));
     }
 
     private void applySpeedSearch(JComboBox<E> comboBox) {
@@ -106,23 +106,23 @@ abstract class DesktopComboBoxBaseImpl<E, C extends JComponent> extends SwingCom
     }
 
     @Override
-    public void setRender(TextItemRender<E> render) {
-        myTextRenderer = render;
+    public void setRenderer(TextItemRenderer<E> renderer) {
+        myTextRenderer = renderer;
         myComponentRenderer = null;
-        refreshRender();
+        refreshRenderer();
     }
 
     @Override
-    public void setRender(ComponentItemRender<E> render) {
-        myComponentRenderer = render;
-        refreshRender();
+    public void setRenderer(ComponentItemRenderer<E> renderer) {
+        myComponentRenderer = renderer;
+        refreshRenderer();
     }
 
-    private void refreshRender() {
+    private void refreshRenderer() {
         if (isInitialized()) {
             C component = toAWTComponent();
-            applyRender(getComboBox(component));
-            onRenderChanged(component);
+            applyRenderer(getComboBox(component));
+            onRendererChanged(component);
         }
     }
 

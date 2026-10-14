@@ -71,7 +71,7 @@ public class FileSystemTreeImpl implements FileSystemTree {
         myProject = project;
 
         if (renderer == null) {
-            renderer = createFileRender();
+            renderer = createFileRenderer();
             myFileTreeModel = new FileTreeModel(
                 descriptor,
                 new FileRefresher(true, 3, () -> IdeaModalityState.stateForComponent(tree))
@@ -129,7 +129,7 @@ public class FileSystemTreeImpl implements FileSystemTree {
         myTree.setCellRenderer(renderer);
     }
 
-    protected TreeCellRenderer createFileRender() {
+    protected TreeCellRenderer createFileRenderer() {
         return new FileRenderer().forTree();
     }
 

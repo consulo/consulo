@@ -19,8 +19,8 @@ import com.vaadin.flow.component.select.Select;
 import consulo.ui.ComboBox;
 import consulo.ui.ComboBoxStyle;
 import consulo.ui.Component;
-import consulo.ui.ComponentItemRender;
-import consulo.ui.TextItemRender;
+import consulo.ui.ComponentItemRenderer;
+import consulo.ui.TextItemRenderer;
 import consulo.ui.model.FlatDataModel;
 import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
 import consulo.web.ui.impl.internal.vaadin.WebSingleListComponentBase;
@@ -44,7 +44,7 @@ public class WebComboBoxImpl<V> extends WebSingleListComponentBase<V, WebComboBo
     public WebComboBoxImpl(FlatDataModel<V> model) {
         super(model);
 
-        setRenderer(TextItemRender.defaultRenderer());
+        setRenderer(TextItemRenderer.defaultRenderer());
     }
 
     @Override
@@ -69,14 +69,14 @@ public class WebComboBoxImpl<V> extends WebSingleListComponentBase<V, WebComboBo
     }
 
     @Override
-    public void setRender(TextItemRender<V> renderer) {
+    public void setRenderer(TextItemRenderer<V> renderer) {
         myTextRenderer = renderer;
 
         toVaadinComponent().setRenderer(createRenderer(renderer, this::isSelected));
     }
 
     @Override
-    public void setRender(ComponentItemRender<V> renderer) {
+    public void setRenderer(ComponentItemRenderer<V> renderer) {
         toVaadinComponent().setRenderer(createRenderer(renderer, this::isSelected));
     }
 

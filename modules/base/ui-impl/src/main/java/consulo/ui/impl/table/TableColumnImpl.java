@@ -15,7 +15,6 @@
  */
 package consulo.ui.impl.table;
 
-import consulo.annotation.DeprecationInfo;
 import consulo.localize.LocalizeValue;
 import consulo.ui.*;
 import org.jspecify.annotations.Nullable;
@@ -33,8 +32,8 @@ public class TableColumnImpl<Item, Value> implements TableColumn<Item, Value> {
     private final int myIndex;
 
     private volatile LocalizeValue myHeader;
-    private volatile TableItemRender<Item, Value> myRenderer = TableItemRender.of(TextItemRender.defaultRenderer());
-    private volatile @Nullable ComponentItemRender<Value> myComponentRenderer;
+    private volatile TableItemRenderer<Item, Value> myRenderer = TableItemRenderer.of(TextItemRenderer.defaultRenderer());
+    private volatile @Nullable ComponentItemRenderer<Value> myComponentRenderer;
     private volatile @Nullable Comparator<Value> myComparator;
     private volatile @Nullable TableItemEditor<Item, Value> myEditor;
 
@@ -65,36 +64,15 @@ public class TableColumnImpl<Item, Value> implements TableColumn<Item, Value> {
         return myValueProvider.apply(item);
     }
 
-    @SuppressWarnings("deprecation")
-    public TableItemRender<Item, Value> getRenderer() {
-        return getRender();
-    }
-
-    @Deprecated
-    @DeprecationInfo("Use #getRenderer")
-    public TableItemRender<Item, Value> getRender() {
+    public TableItemRenderer<Item, Value> getRenderer() {
         return myRenderer;
     }
 
-    @SuppressWarnings("deprecation")
-    public TableItemRender<Item, Value> getTextRenderer() {
-        return getTextRender();
+    public TableItemRenderer<Item, Value> getTextRenderer() {
+        return myComponentRenderer == null ? myRenderer : TableItemRenderer.of(TextItemRenderer.defaultRenderer());
     }
 
-    @Deprecated
-    @DeprecationInfo("Use #getTextRenderer")
-    public TableItemRender<Item, Value> getTextRender() {
-        return myComponentRenderer == null ? myRenderer : TableItemRender.of(TextItemRender.defaultRenderer());
-    }
-
-    @SuppressWarnings("deprecation")
-    public @Nullable ComponentItemRender<Value> getComponentRenderer() {
-        return getComponentRender();
-    }
-
-    @Deprecated
-    @DeprecationInfo("Use #getComponentRenderer")
-    public @Nullable ComponentItemRender<Value> getComponentRender() {
+    public @Nullable ComponentItemRenderer<Value> getComponentRenderer() {
         return myComponentRenderer;
     }
 
@@ -130,25 +108,25 @@ public class TableColumnImpl<Item, Value> implements TableColumn<Item, Value> {
     }
 
     @Override
-    public TableColumn<Item, Value> setRender(TableItemRender<Item, Value> renderer) {
+    public TableColumn<Item, Value> setRenderer(TableItemRenderer<Item, Value> renderer) {
         myRenderer = renderer;
         myComponentRenderer = null;
-        myOwner.renderChanged();
+        myOwner.rendererChanged();
         return this;
     }
 
     @Override
-    public TableColumn<Item, Value> setRender(TextItemRender<Value> renderer) {
-        myRenderer = TableItemRender.of(renderer);
+    public TableColumn<Item, Value> setRenderer(TextItemRenderer<Value> renderer) {
+        myRenderer = TableItemRenderer.of(renderer);
         myComponentRenderer = null;
-        myOwner.renderChanged();
+        myOwner.rendererChanged();
         return this;
     }
 
     @Override
-    public TableColumn<Item, Value> setRender(ComponentItemRender<Value> renderer) {
+    public TableColumn<Item, Value> setRenderer(ComponentItemRenderer<Value> renderer) {
         myComponentRenderer = renderer;
-        myOwner.renderChanged();
+        myOwner.rendererChanged();
         return this;
     }
 
@@ -169,7 +147,7 @@ public class TableColumnImpl<Item, Value> implements TableColumn<Item, Value> {
     @Override
     public TableColumn<Item, Value> setHorizontalAlignment(HorizontalAlignment alignment) {
         myAlignment = alignment;
-        myOwner.renderChanged();
+        myOwner.rendererChanged();
         return this;
     }
 
@@ -183,7 +161,7 @@ public class TableColumnImpl<Item, Value> implements TableColumn<Item, Value> {
     @Override
     public TableColumn<Item, Value> setEditor(@Nullable TableItemEditor<Item, Value> editor) {
         myEditor = editor;
-        myOwner.renderChanged();
+        myOwner.rendererChanged();
         return this;
     }
 }

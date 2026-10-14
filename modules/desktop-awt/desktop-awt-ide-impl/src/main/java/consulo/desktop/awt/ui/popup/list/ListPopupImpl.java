@@ -28,7 +28,7 @@ import consulo.project.Project;
 import consulo.ui.ModalityState;
 import consulo.ui.RenderItem;
 import consulo.ui.TextItemPresentation;
-import consulo.ui.TextItemRender;
+import consulo.ui.TextItemRenderer;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.event.details.KeyboardInputDetails;
@@ -78,7 +78,7 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
         LazyValue.notNull(() -> PopupInlineActionsSupportKt.createSupport(this));
 
     private MyList myList;
-    private @Nullable TextItemRender<Object> myTextItemRenderer;
+    private @Nullable TextItemRenderer<Object> myTextItemRenderer;
 
     private MyMouseMotionListener myMouseMotionListener;
     private MyMouseListener myMouseListener;
@@ -490,7 +490,7 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
     }
 
     protected ListCellRenderer getListElementRenderer() {
-        TextItemRender<Object> renderer = myTextItemRenderer;
+        TextItemRenderer<Object> renderer = myTextItemRenderer;
         if (renderer != null) {
             return new TextItemRenderCellRenderer(renderer, getSpeedSearch());
         }
@@ -500,8 +500,8 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
     @Override
     @RequiredUIAccess
     @SuppressWarnings("unchecked")
-    public void setRender(TextItemRender<?> render) {
-        myTextItemRenderer = (TextItemRender<Object>) render;
+    public void setRenderer(TextItemRenderer<?> renderer) {
+        myTextItemRenderer = (TextItemRenderer<Object>) renderer;
         if (myList != null) {
             myList.setCellRenderer(getListElementRenderer());
         }
@@ -514,13 +514,13 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
      * the space the main text leaves.
      */
     private static class TextItemRenderCellRenderer extends ColoredListCellRenderer<Object> {
-        private final TextItemRender<Object> myRenderer;
+        private final TextItemRenderer<Object> myRenderer;
         private final @Nullable SpeedSearchSupply mySpeedSearch;
 
         private final DesktopSuffixCellRendererPanel mySuffixPanel = new DesktopSuffixCellRendererPanel(JBUI.insets(2, 8));
         private @Nullable DesktopTextItemPresentationImpl myPresentation;
 
-        private TextItemRenderCellRenderer(TextItemRender<Object> renderer, @Nullable SpeedSearchSupply speedSearch) {
+        private TextItemRenderCellRenderer(TextItemRenderer<Object> renderer, @Nullable SpeedSearchSupply speedSearch) {
             myRenderer = renderer;
             mySpeedSearch = speedSearch;
             setIpad(JBUI.insets(2, 8));

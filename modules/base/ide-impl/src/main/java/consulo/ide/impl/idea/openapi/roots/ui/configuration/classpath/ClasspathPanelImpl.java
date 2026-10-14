@@ -55,7 +55,7 @@ import consulo.project.ui.wm.ToolWindowId;
 import consulo.ui.CheckBox;
 import consulo.ui.ComboBox;
 import consulo.ui.Component;
-import consulo.ui.ComponentItemRender;
+import consulo.ui.ComponentItemRenderer;
 import consulo.ui.MessageBoxes;
 import consulo.ui.RenderItem;
 import consulo.ui.Space;
@@ -127,7 +127,7 @@ public class ClasspathPanelImpl implements ClasspathPanel {
         table.addColumn(ProjectLocalize.modulesOrderExportExportColumn(), ClasspathPanelImpl::getExportValue)
             .setWidth(EXPORT_COLUMN_WIDTH)
             .setResizable(false)
-            .setRenderer(ComponentItemRender.reusable(ClasspathPanelImpl::createExportRender, ClasspathPanelImpl::bindExportRender))
+            .setRenderer(ComponentItemRenderer.reusable(ClasspathPanelImpl::createExportRenderer, ClasspathPanelImpl::bindExportRenderer))
             .setEditor(new ExportColumnEditor());
 
         table.addColumn(LocalizeValue.empty(), item -> item)
@@ -180,7 +180,7 @@ public class ClasspathPanelImpl implements ClasspathPanel {
 
     private static ClasspathTableItemPresentation createPresentation(ClasspathTableItem<?> item) {
         UnifiedColoredTextContainer text = new UnifiedColoredTextContainer();
-        OrderEntryAppearanceService.getInstance().getRenderForOrderEntry(item.getEntry()).accept(text);
+        OrderEntryAppearanceService.getInstance().getRendererForOrderEntry(item.getEntry()).accept(text);
         return new ClasspathTableItemPresentation(text, item.getTooltipText());
     }
 
@@ -211,7 +211,7 @@ public class ClasspathPanelImpl implements ClasspathPanel {
     }
 
     @RequiredUIAccess
-    private static DockLayout createExportRender() {
+    private static DockLayout createExportRenderer() {
         CheckBox checkBox = CheckBox.create(LocalizeValue.empty());
         DockLayout layout = DockLayout.create(Space.NONE);
         layout.center(checkBox);
@@ -220,7 +220,7 @@ public class ClasspathPanelImpl implements ClasspathPanel {
     }
 
     @RequiredUIAccess
-    private static void bindExportRender(DockLayout layout, RenderItem<Boolean> item) {
+    private static void bindExportRenderer(DockLayout layout, RenderItem<Boolean> item) {
         CheckBox checkBox = layout.getUserData(EXPORT_CHECK_BOX);
         if (checkBox == null) {
             return;

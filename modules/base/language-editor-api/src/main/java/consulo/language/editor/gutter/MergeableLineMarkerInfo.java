@@ -121,7 +121,7 @@ public abstract class MergeableLineMarkerInfo<T extends PsiElement> extends Line
           List<LineMarkerInfo> infos = new ArrayList<>(markers);
           Collections.sort(infos, (o1, o2) -> o1.startOffset - o2.startOffset);
           IPopupChooserBuilder<LineMarkerInfo> builder = JBPopupFactory.getInstance().createPopupChooserBuilder(infos);
-          builder.setRenderer(LanguageEditorInternalHelper.getInstance().createMergeableLineMarkerRender(new Function<>() {
+          builder.setRenderer(LanguageEditorInternalHelper.getInstance().createMergeableLineMarkerRenderer(new Function<>() {
             
             @Override
             public Pair<String, Image> apply(LineMarkerInfo dom) {

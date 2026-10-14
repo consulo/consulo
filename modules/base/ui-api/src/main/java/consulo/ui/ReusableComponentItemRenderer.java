@@ -24,13 +24,13 @@ import java.util.function.Supplier;
  *
  * @author VISTALL
  * @since 2026-08-02
- * @see ComponentItemRender#reusable(Supplier, BiConsumer)
+ * @see ComponentItemRenderer#reusable(Supplier, BiConsumer)
  */
-public final class ReusableComponentItemRender<E, C extends Component> implements ComponentItemRender<E> {
+public final class ReusableComponentItemRenderer<E, C extends Component> implements ComponentItemRenderer<E> {
     private final Supplier<C> myFactory;
     private final BiConsumer<C, RenderItem<E>> myBinder;
 
-    ReusableComponentItemRender(Supplier<C> factory, BiConsumer<C, RenderItem<E>> binder) {
+    ReusableComponentItemRenderer(Supplier<C> factory, BiConsumer<C, RenderItem<E>> binder) {
         myFactory = factory;
         myBinder = binder;
     }

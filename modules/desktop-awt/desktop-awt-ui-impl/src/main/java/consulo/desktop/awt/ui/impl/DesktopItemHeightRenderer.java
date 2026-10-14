@@ -29,7 +29,7 @@ import java.util.function.Function;
  * @author VISTALL
  * @since 2026-08-02
  */
-final class DesktopItemHeightRender {
+final class DesktopItemHeightRenderer {
     static <E> ListCellRenderer<E> wrap(ListCellRenderer<E> delegate, Supplier<Function<E, Length>> getterSupplier) {
         return (list, value, index, selected, hasFocus) -> {
             Component component = delegate.getListCellRendererComponent(list, value, index, selected, hasFocus);
@@ -44,6 +44,6 @@ final class DesktopItemHeightRender {
         };
     }
 
-    private DesktopItemHeightRender() {
+    private DesktopItemHeightRenderer() {
     }
 }

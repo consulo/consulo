@@ -39,7 +39,7 @@ public class UnknownOrderEntryTypeEditor implements OrderEntryTypeEditor<OrderEn
 
   
   @Override
-  public Consumer<ColoredTextContainer> getRender(OrderEntry orderEntry) {
+  public Consumer<ColoredTextContainer> getRenderer(OrderEntry orderEntry) {
     return it -> {
       it.setIcon(PlatformIconGroup.actionsHelp());
       it.append(orderEntry.getPresentableName(), SimpleTextAttributes.ERROR_ATTRIBUTES);

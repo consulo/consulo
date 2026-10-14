@@ -19,17 +19,14 @@ import consulo.application.ui.wm.IdeFocusManager;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.ide.PopupProjectGroupActionGroup;
 import consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen.RecentProjectsWelcomeScreenActionBase;
-import consulo.ide.impl.welcomeScreen.RecentProjectItemRender;
+import consulo.ide.impl.welcomeScreen.RecentProjectItemRenderer;
 import consulo.project.ProjectGroup;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
-import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.FocusTraversalPolicy;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -55,9 +52,9 @@ public class NewRecentProjectPanel extends RecentProjectPanel {
             myScrollPane.getViewport().setOpaque(false);
             myList.setOpaque(false);
 
-            myScrollLayout.setSize(RecentProjectItemRender.LIST_WIDTH, RecentProjectItemRender.LIST_HEIGHT);
-            myScrollLayout.setMinWidth(RecentProjectItemRender.LIST_WIDTH);
-            myScrollLayout.setMinHeight(RecentProjectItemRender.LIST_HEIGHT);
+            myScrollLayout.setSize(RecentProjectItemRenderer.LIST_WIDTH, RecentProjectItemRenderer.LIST_HEIGHT);
+            myScrollLayout.setMinWidth(RecentProjectItemRenderer.LIST_WIDTH);
+            myScrollLayout.setMinHeight(RecentProjectItemRenderer.LIST_HEIGHT);
         }
     }
 

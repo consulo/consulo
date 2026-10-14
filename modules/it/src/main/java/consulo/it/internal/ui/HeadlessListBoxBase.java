@@ -16,10 +16,10 @@
 package consulo.it.internal.ui;
 
 import consulo.localize.LocalizeValue;
-import consulo.ui.ComponentItemRender;
+import consulo.ui.ComponentItemRenderer;
 import consulo.ui.Length;
 import consulo.ui.ListBoxBase;
-import consulo.ui.TextItemRender;
+import consulo.ui.TextItemRenderer;
 import consulo.ui.TransferHandler;
 import consulo.ui.model.FlatDataModel;
 import org.jspecify.annotations.Nullable;
@@ -50,11 +50,11 @@ public abstract class HeadlessListBoxBase<E, V> extends HeadlessValueComponentBa
     }
 
     @Override
-    public void setRender(TextItemRender<E> render) {
+    public void setRenderer(TextItemRenderer<E> renderer) {
     }
 
     @Override
-    public void setRender(ComponentItemRender<E> render) {
+    public void setRenderer(ComponentItemRenderer<E> renderer) {
     }
 
     @Override

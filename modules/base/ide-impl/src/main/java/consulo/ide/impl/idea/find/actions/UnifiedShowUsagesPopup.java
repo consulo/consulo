@@ -54,7 +54,7 @@ import consulo.ui.Label;
 import consulo.ui.RelativePoint2D;
 import consulo.ui.Space;
 import consulo.ui.TextAttribute;
-import consulo.ui.TextItemRender;
+import consulo.ui.TextItemRenderer;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
@@ -428,7 +428,7 @@ public final class UnifiedShowUsagesPopup {
 
         ListPopup popup = JBPopupFactory.getInstance().createListPopup(myProject, step);
         Disposer.register(popup, () -> dispose(items));
-        popup.setRender((TextItemRender<UnifiedShowUsagesItem>) (presentation, renderItem) -> {
+        popup.setRenderer((TextItemRenderer<UnifiedShowUsagesItem>) (presentation, renderItem) -> {
             UnifiedShowUsagesItem item = renderItem.getValue();
             if (item == null) {
                 return;

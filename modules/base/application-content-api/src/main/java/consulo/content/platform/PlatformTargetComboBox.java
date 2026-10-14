@@ -47,7 +47,7 @@ public final class PlatformTargetComboBox {
         myManager = manager;
         myModel = FlatDataModel.of(manager.getTargets());
         myComboBox = ComboBox.create(myModel);
-        myComboBox.setRender((presentation, item) -> {
+        myComboBox.setRenderer((presentation, item) -> {
             PlatformTarget target = item.getValue();
             if (target != null) {
                 presentation.withIcon(target.getIcon());

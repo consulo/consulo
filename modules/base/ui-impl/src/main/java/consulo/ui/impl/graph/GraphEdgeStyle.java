@@ -19,7 +19,7 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.color.ColorValue;
 import consulo.ui.graph.GraphArrow;
 import consulo.ui.graph.GraphEdgePresentation;
-import consulo.ui.graph.GraphEdgeRender;
+import consulo.ui.graph.GraphEdgeRenderer;
 import consulo.ui.graph.GraphLineStyle;
 import org.jspecify.annotations.Nullable;
 
@@ -35,9 +35,9 @@ public final class GraphEdgeStyle implements GraphEdgePresentation {
     private LocalizeValue myTooltip = LocalizeValue.empty();
     private @Nullable ColorValue myColor;
 
-    public static <E> GraphEdgeStyle of(GraphEdgeRender<E> render, E source, E target) {
+    public static <E> GraphEdgeStyle of(GraphEdgeRenderer<E> renderer, E source, E target) {
         GraphEdgeStyle style = new GraphEdgeStyle();
-        render.render(style, source, target);
+        renderer.render(style, source, target);
         return style;
     }
 

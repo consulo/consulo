@@ -17,7 +17,6 @@ package consulo.ide.impl.roots.orderEntry;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.content.base.BinariesOrderRootType;
-import consulo.content.internal.LibraryEx;
 import consulo.content.library.Library;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.classpath.LibraryClasspathTableItem;
 import consulo.ide.setting.ShowSettingsUtil;
@@ -76,14 +75,14 @@ public class ModuleLibraryOrderEntryTypeEditor implements OrderEntryTypeEditor<M
 
   
   @Override
-  public Consumer<ColoredTextContainer> getRender(ModuleLibraryOrderEntryImpl orderEntry) {
+  public Consumer<ColoredTextContainer> getRenderer(ModuleLibraryOrderEntryImpl orderEntry) {
     if (!orderEntry.isValid()) {
-      return myFileAppearanceService.get().getRenderForInvalidUrl(orderEntry.getPresentableName());
+      return myFileAppearanceService.get().getRendererForInvalidUrl(orderEntry.getPresentableName());
     }
 
     Library library = orderEntry.getLibrary();
     assert library != null : orderEntry;
     return myOrderEntryAppearanceService.get()
-            .getRenderForLibrary(orderEntry.getModuleRootLayer().getProject(), library, !library.getInvalidRootUrls(BinariesOrderRootType.ID).isEmpty());
+            .getRendererForLibrary(orderEntry.getModuleRootLayer().getProject(), library, !library.getInvalidRootUrls(BinariesOrderRootType.ID).isEmpty());
   }
 }

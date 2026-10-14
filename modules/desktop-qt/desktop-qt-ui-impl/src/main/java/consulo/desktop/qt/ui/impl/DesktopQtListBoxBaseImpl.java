@@ -20,15 +20,8 @@ import consulo.desktop.qt.ui.impl.clipboard.DesktopQtDrop;
 import consulo.desktop.qt.ui.impl.clipboard.DesktopQtTransferTarget;
 import consulo.desktop.qt.ui.impl.image.DesktopQtIconOwner;
 import consulo.desktop.qt.ui.impl.image.DesktopQtImage;
-import consulo.ui.Length;
-import consulo.ui.ComponentItemRender;
-import consulo.ui.DragAndDropTransferHandler;
+import consulo.ui.*;
 import consulo.localize.LocalizeValue;
-import consulo.ui.ListBoxBase;
-import consulo.ui.RenderItem;
-import consulo.ui.ReusableComponentItemRender;
-import consulo.ui.TextItemRender;
-import consulo.ui.TransferHandler;
 import consulo.ui.color.ColorValue;
 import consulo.ui.event.ClickEvent;
 import consulo.ui.event.ListDoubleClickEvent;
@@ -241,9 +234,9 @@ public abstract class DesktopQtListBoxBaseImpl<E> extends QtComponentDelegate<QL
 
     private final FlatDataModel<E> myModel;
 
-    private TextItemRender<E> myRenderer = TextItemRender.defaultRenderer();
+    private TextItemRenderer<E> myRenderer = TextItemRenderer.defaultRenderer();
 
-    private @Nullable ComponentItemRender<E> myComponentRenderer;
+    private @Nullable ComponentItemRenderer<E> myComponentRenderer;
 
     private Predicate<E> mySeparatorPredicate = item -> false;
 
@@ -328,7 +321,7 @@ public abstract class DesktopQtListBoxBaseImpl<E> extends QtComponentDelegate<QL
     protected void rowActivated(int row) {
     }
 
-    /** the icon of a row is drawn from what the render answered, so the rows are asked to render once more */
+    /** the icon of a row is drawn from what the renderer answered, so the rows are asked to render once more */
     @Override
     public void refreshIcons() {
         if (myComponent == null) {
@@ -455,7 +448,7 @@ public abstract class DesktopQtListBoxBaseImpl<E> extends QtComponentDelegate<QL
     }
 
     private boolean isPooled() {
-        return myComponentRenderer instanceof ReusableComponentItemRender<E, ?> && !myPoolUnsupported;
+        return myComponentRenderer instanceof ReusableComponentItemRenderer<E, ?> && !myPoolUnsupported;
     }
 
     private void syncPooledItems(QListWidget component) {
@@ -586,11 +579,11 @@ public abstract class DesktopQtListBoxBaseImpl<E> extends QtComponentDelegate<QL
 
     @SuppressWarnings("unchecked")
     private @Nullable PooledRow createPooledRow(QListWidget component) {
-        if (!(myComponentRenderer instanceof ReusableComponentItemRender<E, ?> render)) {
+        if (!(myComponentRenderer instanceof ReusableComponentItemRenderer<E, ?> renderer)) {
             return null;
         }
 
-        consulo.ui.Component rendered = render.createComponent();
+        Component rendered = renderer.createComponent();
         if (!(rendered instanceof QtComponentDelegate<?> delegate)) {
             myPoolUnsupported = true;
             return null;
@@ -613,8 +606,8 @@ public abstract class DesktopQtListBoxBaseImpl<E> extends QtComponentDelegate<QL
 
     @SuppressWarnings("unchecked")
     private void bindPooledRow(PooledRow row, E element, boolean selected) {
-        if (myComponentRenderer instanceof ReusableComponentItemRender<E, ?> render) {
-            ((ReusableComponentItemRender<E, consulo.ui.Component>) render).bind(row.myRendered, RenderItem.of(element, selected));
+        if (myComponentRenderer instanceof ReusableComponentItemRenderer<E, ?> renderer) {
+            ((ReusableComponentItemRenderer<E, Component>) renderer).bind(row.myRendered, RenderItem.of(element, selected));
         }
     }
 
@@ -818,12 +811,12 @@ public abstract class DesktopQtListBoxBaseImpl<E> extends QtComponentDelegate<QL
      * the api allows for it cannot be bound again for the next row.
      */
     private void addRenderedItem(QListWidget component, E element, int index) {
-        ComponentItemRender<E> render = myComponentRenderer;
-        if (render == null) {
+        ComponentItemRenderer<E> renderer = myComponentRenderer;
+        if (renderer == null) {
             return;
         }
 
-        consulo.ui.Component rendered = render.render(RenderItem.of(element, isSelectedRow(index)));
+        Component rendered = renderer.render(RenderItem.of(element, isSelectedRow(index)));
         if (!(rendered instanceof QtComponentDelegate<?> delegate)) {
             return;
         }
@@ -949,14 +942,14 @@ public abstract class DesktopQtListBoxBaseImpl<E> extends QtComponentDelegate<QL
     }
 
     @Override
-    public void setRender(TextItemRender<E> renderer) {
+    public void setRenderer(TextItemRenderer<E> renderer) {
         myRenderer = renderer;
 
         rebuildIfBound();
     }
 
     @Override
-    public void setRender(ComponentItemRender<E> renderer) {
+    public void setRenderer(ComponentItemRenderer<E> renderer) {
         destroyPool();
         myPoolUnsupported = false;
 

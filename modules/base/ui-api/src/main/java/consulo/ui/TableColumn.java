@@ -15,7 +15,6 @@
  */
 package consulo.ui;
 
-import consulo.annotation.DeprecationInfo;
 import consulo.localize.LocalizeValue;
 import org.jspecify.annotations.Nullable;
 
@@ -28,36 +27,15 @@ import java.util.Comparator;
 public interface TableColumn<Item, Value> {
     TableColumn<Item, Value> setHeader(LocalizeValue header);
 
-    @SuppressWarnings("deprecation")
-    default TableColumn<Item, Value> setRenderer(TextItemRender<Value> renderer) {
-        return setRender(renderer);
-    }
+    TableColumn<Item, Value> setRenderer(TextItemRenderer<Value> renderer);
 
-    @Deprecated
-    @DeprecationInfo("Use #setRenderer")
-    TableColumn<Item, Value> setRender(TextItemRender<Value> render);
-
-    @SuppressWarnings("deprecation")
-    default TableColumn<Item, Value> setRenderer(ComponentItemRender<Value> renderer) {
-        return setRender(renderer);
-    }
-
-    @Deprecated
-    @DeprecationInfo("Use #setRenderer")
-    TableColumn<Item, Value> setRender(ComponentItemRender<Value> render);
+    TableColumn<Item, Value> setRenderer(ComponentItemRenderer<Value> renderer);
 
     /**
      * Renderer which is handed the row as well as the value, for a column whose look follows the kind of row
      * it sits in. Mutually exclusive with the other renders - the last one set wins.
      */
-    @SuppressWarnings("deprecation")
-    default TableColumn<Item, Value> setRenderer(TableItemRender<Item, Value> renderer) {
-        return setRender(renderer);
-    }
-
-    @Deprecated
-    @DeprecationInfo("Use #setRenderer")
-    TableColumn<Item, Value> setRender(TableItemRender<Item, Value> render);
+    TableColumn<Item, Value> setRenderer(TableItemRenderer<Item, Value> renderer);
 
     TableColumn<Item, Value> setWidth(int pixels);
 

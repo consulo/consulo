@@ -27,7 +27,7 @@ import consulo.language.editor.ui.navigation.ItemWithPresentation;
 import consulo.language.editor.ui.navigation.PsiTargetNavigator;
 import consulo.language.editor.ui.navigation.PsiTargetPresentationFactory;
 import consulo.language.editor.ui.navigation.TargetPresentationProvider;
-import consulo.language.editor.ui.navigation.TargetPresentationRender;
+import consulo.language.editor.ui.navigation.TargetPresentationRenderer;
 import consulo.language.editor.ui.navigation.TargetUpdaterTask;
 import consulo.ide.impl.idea.find.FindUtil;
 import consulo.language.psi.PsiElement;
@@ -259,7 +259,7 @@ class PsiTargetNavigatorImpl<T extends PsiElement> implements PsiTargetNavigator
         }
 
         ListPopup popup = JBPopupFactory.getInstance().createListPopup(project, step);
-        popup.setRender(new TargetPresentationRender<>());
+        popup.setRenderer(new TargetPresentationRenderer<>());
 
         SimpleReference<UsageView> usageView = SimpleReference.create();
 

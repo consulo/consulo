@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.ui.impl;
 
-import consulo.ui.ComponentItemRender;
+import consulo.ui.ComponentItemRenderer;
 import consulo.ui.RenderItem;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.style.ComponentColors;
@@ -25,16 +25,16 @@ import java.awt.*;
 import java.util.function.IntSupplier;
 
 /**
- * Bridges a {@link ComponentItemRender} onto a swing list cell renderer.
+ * Bridges a {@link ComponentItemRenderer} onto a swing list cell renderer.
  *
  * @author VISTALL
  * @since 2026-08-02
  */
-public class DesktopComponentItemRenderAdapter<E> extends DesktopComponentItemRenderBase<E> implements ListCellRenderer<E> {
+public class DesktopComponentItemRenderingAdapter<E> extends DesktopComponentItemRendererBase<E> implements ListCellRenderer<E> {
     private final IntSupplier myHoveredIndex;
 
-    public DesktopComponentItemRenderAdapter(ComponentItemRender<E> render, IntSupplier hoveredIndex) {
-        super(render);
+    public DesktopComponentItemRenderingAdapter(ComponentItemRenderer<E> renderer, IntSupplier hoveredIndex) {
+        super(renderer);
         myHoveredIndex = hoveredIndex;
     }
 

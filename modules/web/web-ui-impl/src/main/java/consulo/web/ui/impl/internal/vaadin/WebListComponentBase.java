@@ -18,10 +18,10 @@ package consulo.web.ui.impl.internal.vaadin;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.data.provider.HasListDataView;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
-import consulo.ui.ComponentItemRender;
+import consulo.ui.ComponentItemRenderer;
 import consulo.ui.Length;
 import consulo.ui.RenderItem;
-import consulo.ui.TextItemRender;
+import consulo.ui.TextItemRenderer;
 import consulo.ui.model.FlatDataModel;
 import consulo.util.collection.ContainerUtil;
 import consulo.web.ui.impl.internal.WebItemPresentationImpl;
@@ -40,7 +40,7 @@ import java.util.function.Predicate;
 public abstract class WebListComponentBase<V, C extends Component & HasListDataView & FromVaadinComponentWrapper>
     extends VaadinComponentDelegate<C> {
     protected final FlatDataModel<V> myModel;
-    protected TextItemRender<V> myTextRenderer = TextItemRender.defaultRenderer();
+    protected TextItemRenderer<V> myTextRenderer = TextItemRenderer.defaultRenderer();
 
     protected @Nullable Function<V, String> mySpeedSearchConverter;
     protected @Nullable Function<V, Length> myItemHeightGetter;
@@ -84,10 +84,10 @@ public abstract class WebListComponentBase<V, C extends Component & HasListDataV
         pushItems();
     }
 
-    protected ComponentRenderer<Component, V> createRenderer(TextItemRender<V> render, Predicate<V> selected) {
+    protected ComponentRenderer<Component, V> createRenderer(TextItemRenderer<V> renderer, Predicate<V> selected) {
         return new ComponentRenderer<>(item -> {
             WebItemPresentationImpl presentation = new WebItemPresentationImpl();
-            render.render(presentation, RenderItem.of(item, selected.test(item)));
+            renderer.render(presentation, RenderItem.of(item, selected.test(item)));
 
             Component component = presentation.toComponent();
             applyItemHeight(component, item);
@@ -95,9 +95,9 @@ public abstract class WebListComponentBase<V, C extends Component & HasListDataV
         });
     }
 
-    protected ComponentRenderer<Component, V> createRenderer(ComponentItemRender<V> render, Predicate<V> selected) {
+    protected ComponentRenderer<Component, V> createRenderer(ComponentItemRenderer<V> renderer, Predicate<V> selected) {
         return new ComponentRenderer<>(item -> {
-            consulo.ui.Component rendered = render.render(RenderItem.of(item, selected.test(item)));
+            consulo.ui.Component rendered = renderer.render(RenderItem.of(item, selected.test(item)));
 
             Component component = ((ToVaadinComponentWrapper) rendered).toVaadinComponent();
             applyItemHeight(component, item);

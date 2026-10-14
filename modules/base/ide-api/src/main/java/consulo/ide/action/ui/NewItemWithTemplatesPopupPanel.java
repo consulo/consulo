@@ -2,7 +2,7 @@
 package consulo.ide.action.ui;
 
 import consulo.ui.ListBox;
-import consulo.ui.TextItemRender;
+import consulo.ui.TextItemRenderer;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.details.KeyCode;
 import consulo.ui.layout.ScrollableLayout;
@@ -23,11 +23,11 @@ public class NewItemWithTemplatesPopupPanel<T> extends NewItemSimplePopupPanel {
     private final Collection<TemplatesListVisibilityListener> myVisibilityListeners = new ArrayList<>();
 
     @RequiredUIAccess
-    public NewItemWithTemplatesPopupPanel(List<T> templatesList, TextItemRender<T> render) {
+    public NewItemWithTemplatesPopupPanel(List<T> templatesList, TextItemRenderer<T> renderer) {
         myTemplatesModel = FlatDataModel.of(templatesList);
 
         myTemplatesList = ListBox.create(myTemplatesModel);
-        myTemplatesList.setRenderer(render);
+        myTemplatesList.setRenderer(renderer);
         myTemplatesList.addDoubleClickListener(event -> {
             if (myApplyAction != null) {
                 myApplyAction.accept(null);

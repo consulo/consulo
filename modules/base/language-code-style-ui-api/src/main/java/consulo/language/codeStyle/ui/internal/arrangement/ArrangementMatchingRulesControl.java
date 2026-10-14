@@ -77,7 +77,7 @@ public class ArrangementMatchingRulesControl extends JBTable {
     super(new ArrangementMatchingRulesModel());
     myRepresentationCallback = callback;
     myFactory = new ArrangementMatchNodeComponentFactory(settingsManager, colorsProvider, this);
-    myRenderer = createRender();
+    myRenderer = createRenderer();
     setDefaultRenderer(Object.class, myRenderer);
     getColumnModel().getColumn(0).setCellEditor(new MyEditor());
     setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
@@ -111,7 +111,7 @@ public class ArrangementMatchingRulesControl extends JBTable {
     });
   }
 
-  protected MatchingRulesRendererBase createRender() {
+  protected MatchingRulesRendererBase createRenderer() {
     return new MatchingRulesRendererBase();
   }
 

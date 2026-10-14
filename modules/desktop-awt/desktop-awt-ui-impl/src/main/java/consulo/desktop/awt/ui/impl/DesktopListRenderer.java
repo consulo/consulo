@@ -21,7 +21,7 @@ import consulo.ui.ex.awt.util.GraphicsUtil;
 import consulo.ui.AntialiasingType;
 import consulo.ui.RenderItem;
 import consulo.ui.TextItemPresentation;
-import consulo.ui.TextItemRender;
+import consulo.ui.TextItemRenderer;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
@@ -32,15 +32,15 @@ import java.util.function.Supplier;
  * @author VISTALL
  * @since 2020-08-23
  */
-class DesktopListRender<E> extends ColoredListCellRenderer<E> {
+class DesktopListRenderer<E> extends ColoredListCellRenderer<E> {
     private Supplier<AntialiasingType> myAntialiasingType = () -> DesktopAntialiasingTypeUtil.getAntialiasingTypeForSwingComponent().to();
-    private Supplier<TextItemRender<E>> myRenderSupplier;
+    private Supplier<TextItemRenderer<E>> myRendererSupplier;
 
     private final DesktopSuffixCellRendererPanel mySuffixPanel = new DesktopSuffixCellRendererPanel();
     private @Nullable DesktopTextItemPresentationImpl myPresentation;
 
-    public DesktopListRender(Supplier<TextItemRender<E>> renderSupplier) {
-        myRenderSupplier = renderSupplier;
+    public DesktopListRenderer(Supplier<TextItemRenderer<E>> rendererSupplier) {
+        myRendererSupplier = rendererSupplier;
     }
 
     @Override
@@ -62,7 +62,7 @@ class DesktopListRender<E> extends ColoredListCellRenderer<E> {
     protected void customizeCellRenderer(JList<? extends E> list, E value, int index, boolean selected, boolean hasFocus) {
         setBorder(JBCurrentTheme.listCellBorderFull());
         setToolTipText(null);
-        DesktopTextItemPresentationImpl render = new DesktopTextItemPresentationImpl(this) {
+        DesktopTextItemPresentationImpl renderer = new DesktopTextItemPresentationImpl(this) {
             @Override
             public TextItemPresentation withAntialiasingType(AntialiasingType type) {
                 myAntialiasingType = () -> type;
@@ -70,8 +70,8 @@ class DesktopListRender<E> extends ColoredListCellRenderer<E> {
                 return super.withAntialiasingType(type);
             }
         };
-        myRenderSupplier.get().render(render, RenderItem.of(value, selected));
-        myPresentation = render;
+        myRendererSupplier.get().render(renderer, RenderItem.of(value, selected));
+        myPresentation = renderer;
     }
 
     @Override

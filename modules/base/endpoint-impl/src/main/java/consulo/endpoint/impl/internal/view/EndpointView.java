@@ -134,7 +134,7 @@ public final class EndpointView implements Disposable, UiDataProvider {
 
         myModel = FlatDataModel.lazyOf(List.of());
         myListBox = MultiSelectListBox.create(myModel);
-        myListBox.setRenderer(new EndpointRowRender());
+        myListBox.setRenderer(new EndpointRowRenderer());
         myListBox.setSpeedSearchConverter(EndpointViewRow::getSpeedSearchText);
         myListBox.addValueListener(event -> {
             if (!myApplyingRows) {

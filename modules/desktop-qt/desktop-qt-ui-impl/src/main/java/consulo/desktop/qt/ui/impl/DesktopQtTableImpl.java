@@ -19,7 +19,7 @@ import consulo.desktop.qt.ui.impl.image.DesktopQtIconOwner;
 import consulo.desktop.qt.ui.impl.image.DesktopQtImage;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Length;
-import consulo.ui.ComponentItemRender;
+import consulo.ui.ComponentItemRenderer;
 import consulo.ui.RenderItem;
 import consulo.ui.Table;
 import consulo.ui.TableColumn;
@@ -170,7 +170,7 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableWidget>
     }
 
     @Override
-    public void renderChanged() {
+    public void rendererChanged() {
         updateRows();
     }
 
@@ -272,7 +272,7 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableWidget>
             return;
         }
 
-        // a cell keeps whatever widget was put in it, so one left from an earlier render would sit on top of the text
+        // a cell keeps whatever widget was put in it, so one left from an earlier renderer would sit on top of the text
         component.removeCellWidget(row, index);
 
         DesktopQtTextItemPresentation presentation = renderCell(row, item, column, value);
@@ -333,7 +333,7 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableWidget>
 
     /**
      * A cell widget is live from the moment it is placed, so an editable column puts its editor straight in the cell
-     * rather than a read only render - there is no separate edit mode to enter, which is why the edit triggers are off,
+     * rather than a read only renderer - there is no separate edit mode to enter, which is why the edit triggers are off,
      * and a value listener is the only point at which the change can be committed.
      *
      * @return the widget the cell shows, or {@code null} when the column falls back to text
@@ -351,7 +351,7 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableWidget>
             return toQtWidget(table, valueComponent);
         }
 
-        ComponentItemRender<Value> componentRenderer = column.getComponentRenderer();
+        ComponentItemRenderer<Value> componentRenderer = column.getComponentRenderer();
         if (componentRenderer != null) {
             return toQtWidget(table, componentRenderer.render(RenderItem.of(value, isSelected(row))));
         }
@@ -471,7 +471,7 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableWidget>
 
         QTableWidget component = myComponent;
         if (component != null) {
-            // the built in search of an item view reads the display role, which is what the text render already wrote
+            // the built in search of an item view reads the display role, which is what the text renderer already wrote
             component.setProperty("showDropIndicator", false);
         }
     }

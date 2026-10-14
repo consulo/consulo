@@ -114,7 +114,7 @@ public class DiagramFileEditor extends UserDataHolderBase implements FileEditor 
         DiagramEditorController<T> controller = new DiagramEditorController<>(myProject, myVirtualFile, session, graphModel, graph);
         myController = controller;
 
-        graph.setNodeRender((presentation, item) -> {
+        graph.setNodeRenderer((presentation, item) -> {
             DiagramGraphNode node = item.getValue();
             if (node == null) {
                 return;
@@ -136,7 +136,7 @@ public class DiagramFileEditor extends UserDataHolderBase implements FileEditor 
             }
         });
 
-        graph.setEdgeRender((presentation, source, target) -> {
+        graph.setEdgeRenderer((presentation, source, target) -> {
             DiagramGraphEdgeStyle style = graphModel.getEdgeStyle(source, target);
             if (style == null) {
                 return;

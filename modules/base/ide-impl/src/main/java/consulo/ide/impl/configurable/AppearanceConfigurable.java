@@ -155,12 +155,12 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
             TableLayout aaPanel = TableLayout.create(StaticPosition.CENTER);
 
             myAntialiasingInIDE = ComboBox.create(AntialiasingType.values());
-            myAntialiasingInIDE.setRenderer(buildItemRender(false));
+            myAntialiasingInIDE.setRenderer(buildItemRenderer(false));
 
             aaPanel.add(LabeledBuilder.simple(IdeLocalize.labelTextAntialiasingScopeIde(), myAntialiasingInIDE), TableLayout.cell(0, 0).fill());
 
             myAntialiasingInEditor = ComboBox.create(AntialiasingType.values());
-            myAntialiasingInEditor.setRenderer(buildItemRender(true));
+            myAntialiasingInEditor.setRenderer(buildItemRenderer(true));
             aaPanel.add(LabeledBuilder.simple(IdeLocalize.labelTextAntialiasingScopeEditor(), myAntialiasingInEditor), TableLayout.cell(0, 1).fill());
 
             myPanel.add(LabeledLayout.create(IdeLocalize.groupAntialiasingMode(), aaPanel));
@@ -193,7 +193,7 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
             myPanel.add(LabeledLayout.create(IdeLocalize.groupPresentationMode(), presentationOptions));
         }
 
-        private TextItemRender<AntialiasingType> buildItemRender(boolean editor) {
+        private TextItemRenderer<AntialiasingType> buildItemRenderer(boolean editor) {
             return (renderer, renderItem) -> {
                 AntialiasingType item = renderItem.getValue();
                 if (item == null) {

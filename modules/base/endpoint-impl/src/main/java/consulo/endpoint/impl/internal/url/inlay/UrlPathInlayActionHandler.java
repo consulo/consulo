@@ -21,7 +21,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.SmartPsiElementPointer;
 import consulo.language.sem.SemService;
 import consulo.project.Project;
-import consulo.ui.TextItemRender;
+import consulo.ui.TextItemRenderer;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
@@ -161,14 +161,14 @@ public final class UrlPathInlayActionHandler implements InlayActionHandler {
     ) {
         ListPopup popup = JBPopupFactory.getInstance().createListPopup(new UrlPathInlayActionsStep(file, editor, event, actions, hint));
 
-        TextItemRender<UrlPathInlayAction> render = (presentation, item) -> {
+        TextItemRenderer<UrlPathInlayAction> renderer = (presentation, item) -> {
             UrlPathInlayAction action = item.getValue();
             if (action != null) {
                 presentation.withIcon(action.getIcon());
                 presentation.append(action.getName());
             }
         };
-        popup.setRender(render);
+        popup.setRenderer(renderer);
 
         popup.showBy(editor.getUIComponent(), event.getInputDetails());
     }

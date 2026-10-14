@@ -42,7 +42,7 @@ public class WebListBoxImpl<E> extends WebSingleListComponentBase<E, WebListBoxI
 
     private @Nullable TransferHandler<E> myTransferHandler;
     private Predicate<E> mySeparatorPredicate = item -> false;
-    private @Nullable ComponentItemRender<E> myComponentRenderer;
+    private @Nullable ComponentItemRenderer<E> myComponentRenderer;
     // served straight from META-INF/resources - the theme goes through the vite bundle, which skips rebuilding
     // on css only changes
     @StyleSheet("/list/webListBox.css")
@@ -58,7 +58,7 @@ public class WebListBoxImpl<E> extends WebSingleListComponentBase<E, WebListBoxI
 
         toVaadinComponent().addClassName("web-list-box");
 
-        setRenderer(TextItemRender.defaultRenderer());
+        setRenderer(TextItemRenderer.defaultRenderer());
 
         myClickInstalled = true;
     }
@@ -145,10 +145,10 @@ public class WebListBoxImpl<E> extends WebSingleListComponentBase<E, WebListBoxI
         toVaadinComponent().setItemEnabledProvider(item -> !predicate.test((E) item));
 
         // the rows are built when the renderer is set, so one already built knows nothing of this predicate
-        applyRender();
+        applyRenderer();
     }
 
-    protected void applyRender() {
+    protected void applyRenderer() {
         if (myComponentRenderer != null) {
             setRenderer(myComponentRenderer);
         }
@@ -176,7 +176,7 @@ public class WebListBoxImpl<E> extends WebSingleListComponentBase<E, WebListBoxI
     }
 
     @Override
-    public void setRender(TextItemRender<E> renderer) {
+    public void setRenderer(TextItemRenderer<E> renderer) {
         myTextRenderer = renderer;
         myComponentRenderer = null;
 
@@ -200,7 +200,7 @@ public class WebListBoxImpl<E> extends WebSingleListComponentBase<E, WebListBoxI
     }
 
     @Override
-    public void setRender(ComponentItemRender<E> renderer) {
+    public void setRenderer(ComponentItemRenderer<E> renderer) {
         myComponentRenderer = renderer;
 
         toVaadinComponent().setRenderer(new ComponentRenderer<>(item -> {

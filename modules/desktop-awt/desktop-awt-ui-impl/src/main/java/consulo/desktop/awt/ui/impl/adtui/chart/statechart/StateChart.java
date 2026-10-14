@@ -89,8 +89,8 @@ public class StateChart<T> extends AnimatedComponent {
         setPreferredSize(new Dimension(getPreferredSize().width, JBUI.scale(PREFERRED_ROW_HEIGHT) * model.getSeries().size()));
     }
 
-    public StateChart(StateChartModel<T> model, Renderer<T> render) {
-        this(model, render, defaultConfig());
+    public StateChart(StateChartModel<T> model, Renderer<T> renderer) {
+        this(model, renderer, defaultConfig());
     }
 
     public StateChart(StateChartModel<T> model, StateChartColorProvider<T> colorProvider, StateChartConfig<T> config) {

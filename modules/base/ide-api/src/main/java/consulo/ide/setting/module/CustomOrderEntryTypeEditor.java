@@ -30,12 +30,10 @@ import java.util.function.Consumer;
  */
 public interface CustomOrderEntryTypeEditor<M extends CustomOrderEntryModel> extends OrderEntryTypeEditor<CustomOrderEntry<M>> {
   @Override
-  
-  default Consumer<ColoredTextContainer> getRender(CustomOrderEntry<M> orderEntry) {
-    return getRender(orderEntry, orderEntry.getModel());
+  default Consumer<ColoredTextContainer> getRenderer(CustomOrderEntry<M> orderEntry) {
+    return getRenderer(orderEntry, orderEntry.getModel());
   }
 
-  
   @Override
   default ClasspathTableItem<CustomOrderEntry<M>> createTableItem(CustomOrderEntry<M> orderEntry,
                                                                   Project project,
@@ -50,8 +48,7 @@ public interface CustomOrderEntryTypeEditor<M extends CustomOrderEntryModel> ext
     navigate(orderEntry, orderEntry.getModel());
   }
 
-  
-  default Consumer<ColoredTextContainer> getRender(CustomOrderEntry<M> orderEntry, M model) {
+  default Consumer<ColoredTextContainer> getRenderer(CustomOrderEntry<M> orderEntry, M model) {
     return it -> it.append(orderEntry.getPresentableName());
   }
 
@@ -61,7 +58,6 @@ public interface CustomOrderEntryTypeEditor<M extends CustomOrderEntryModel> ext
     ShowSettingsUtil.getInstance().showProjectStructureDialog(project, config -> config.selectOrderEntry(orderEntry.getOwnerModule(), orderEntry));
   }
 
-  
   default ClasspathTableItem<CustomOrderEntry<M>> createTableItem(CustomOrderEntry<M> orderEntry,
                                                                   M model,
                                                                   Project project,

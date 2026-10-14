@@ -19,10 +19,10 @@ import com.vaadin.flow.component.html.Div;
 import consulo.ui.RenderItem;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.graph.Graph;
-import consulo.ui.graph.GraphEdgeRender;
+import consulo.ui.graph.GraphEdgeRenderer;
 import consulo.ui.graph.GraphGroup;
 import consulo.ui.graph.GraphModel;
-import consulo.ui.graph.GraphNodeRender;
+import consulo.ui.graph.GraphNodeRenderer;
 import consulo.ui.impl.graph.GraphEdgeStyle;
 import consulo.ui.impl.graph.GraphNodeContent;
 import consulo.ui.impl.graph.LayeredGraphLayout;
@@ -255,8 +255,8 @@ public class WebGraphImpl<E> extends VaadinComponentDelegate<WebGraphVaadin> imp
 
     private final GraphModel<E> myModel;
 
-    private GraphNodeRender<E> myNodeRender = GraphNodeRender.defaultRender();
-    private GraphEdgeRender<E> myEdgeRender = GraphEdgeRender.defaultRender();
+    private GraphNodeRenderer<E> myNodeRenderer = GraphNodeRenderer.defaultRenderer();
+    private GraphEdgeRenderer<E> myEdgeRenderer = GraphEdgeRenderer.defaultRenderer();
 
     private final Div myCanvas = new Div();
     private final List<Div> myLayers = new ArrayList<>();
@@ -328,15 +328,15 @@ public class WebGraphImpl<E> extends VaadinComponentDelegate<WebGraphVaadin> imp
 
     @RequiredUIAccess
     @Override
-    public void setNodeRender(GraphNodeRender<E> render) {
-        myNodeRender = render;
+    public void setNodeRenderer(GraphNodeRenderer<E> renderer) {
+        myNodeRenderer = renderer;
         rebuild();
     }
 
     @RequiredUIAccess
     @Override
-    public void setEdgeRender(GraphEdgeRender<E> render) {
-        myEdgeRender = render;
+    public void setEdgeRenderer(GraphEdgeRenderer<E> renderer) {
+        myEdgeRenderer = renderer;
         rebuild();
     }
 
@@ -384,7 +384,7 @@ public class WebGraphImpl<E> extends VaadinComponentDelegate<WebGraphVaadin> imp
                     continue;
                 }
 
-                GraphEdgeStyle style = GraphEdgeStyle.of(myEdgeRender, entry.getKey(), target);
+                GraphEdgeStyle style = GraphEdgeStyle.of(myEdgeRenderer, entry.getKey(), target);
                 ObjectNode edge = edges.addObject();
                 edge.put("from", entry.getValue());
                 edge.put("to", targetId);
@@ -420,7 +420,7 @@ public class WebGraphImpl<E> extends VaadinComponentDelegate<WebGraphVaadin> imp
 
     private Div createNode(E value, int id) {
         GraphNodeContent<WebItemPresentationImpl> content = new GraphNodeContent<>(WebItemPresentationImpl::new);
-        myNodeRender.render(content, RenderItem.of(value, false));
+        myNodeRenderer.render(content, RenderItem.of(value, false));
 
         Div header = new Div(content.getHeader().toComponent());
         header.getStyle()

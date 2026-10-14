@@ -82,7 +82,7 @@ public class ArrangementSectionRulesControl extends ArrangementMatchingRulesCont
   }
 
   @Override
-  protected MatchingRulesRendererBase createRender() {
+  protected MatchingRulesRendererBase createRenderer() {
     return new MatchingRulesRenderer();
   }
 

@@ -13,30 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui;
+package consulo.ui.graph;
 
-import consulo.annotation.DeprecationInfo;
-import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.RenderItem;
 
 /**
  * @author VISTALL
- * @since 2026-08-02
+ * @since 2026-09-30
  */
 @FunctionalInterface
-public interface TextItemRender<E> {
-    static <V> TextItemRender<V> defaultRenderer() {
+public interface GraphNodeRenderer<E> {
+    static <V> GraphNodeRenderer<V> defaultRenderer() {
         return (presentation, item) -> {
             V value = item.getValue();
-            presentation.append(value == null ? "" : value.toString());
+            presentation.header().append(value == null ? "" : value.toString());
         };
     }
 
-    @Deprecated
-    @DeprecationInfo("Use #defaultRenderer")
-    static <V> TextItemRender<V> defaultRender() {
-        return defaultRenderer();
-    }
-
-    @RequiredUIAccess
-    void render(TextItemPresentation presentation, RenderItem<E> item);
+    void render(GraphNodePresentation presentation, RenderItem<E> item);
 }

@@ -22,7 +22,7 @@ package consulo.ui.impl.table;
 public interface TableColumnOwner {
     void headerChanged();
 
-    void renderChanged();
+    void rendererChanged();
 
     void layoutChanged();
 

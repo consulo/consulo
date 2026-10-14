@@ -16,9 +16,9 @@
 package consulo.desktop.awt.ui.impl;
 
 import consulo.desktop.awt.ui.impl.facade.FromSwingComponentWrapper;
-import consulo.ui.ComponentItemRender;
+import consulo.ui.ComponentItemRenderer;
 import consulo.ui.RenderItem;
-import consulo.ui.ReusableComponentItemRender;
+import consulo.ui.ReusableComponentItemRenderer;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 
@@ -27,25 +27,25 @@ import javax.swing.plaf.UIResource;
 import java.awt.*;
 
 /**
- * Shared part of bridging a {@link ComponentItemRender} onto a swing cell renderer - lists and tables differ
+ * Shared part of bridging a {@link ComponentItemRenderer} onto a swing cell renderer - lists and tables differ
  * only in where the row colors come from.
  * <p/>
- * A swing renderer is a rubber stamp, re-invoked on every paint, so a {@link ReusableComponentItemRender}
+ * A swing renderer is a rubber stamp, re-invoked on every paint, so a {@link ReusableComponentItemRenderer}
  * builds its component once and only rebinds per row. That only holds while the bridge itself outlives a
  * single paint, so a host which asks for a renderer per row has to keep one bridge per column, not per call.
  *
  * @author VISTALL
  * @since 2026-08-24
  */
-public abstract class DesktopComponentItemRenderBase<E> {
-    private final ComponentItemRender<E> myRenderer;
+public abstract class DesktopComponentItemRendererBase<E> {
+    private final ComponentItemRenderer<E> myRenderer;
 
     @SuppressWarnings("rawtypes")
     private consulo.ui.Component myReusedComponent;
 
     private boolean myMouseEventsAllowed;
 
-    protected DesktopComponentItemRenderBase(@RequiredUIAccess ComponentItemRender<E> renderer) {
+    protected DesktopComponentItemRendererBase(@RequiredUIAccess ComponentItemRenderer<E> renderer) {
         myRenderer = renderer;
     }
 
@@ -74,7 +74,7 @@ public abstract class DesktopComponentItemRenderBase<E> {
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     private Component doRender(RenderItem<E> item) {
-        if (myRenderer instanceof ReusableComponentItemRender reusable) {
+        if (myRenderer instanceof ReusableComponentItemRenderer reusable) {
             if (myReusedComponent == null) {
                 myReusedComponent = (consulo.ui.Component) reusable.createComponent();
             }

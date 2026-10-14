@@ -25,13 +25,12 @@ import consulo.util.lang.ref.SimpleReference;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.event.ComponentEvent;
 import consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen.RecentProjectsWelcomeScreenActionBase;
-import consulo.dataContext.DataContext;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.application.FrameTitleUtil;
 import consulo.ide.impl.idea.ide.ReopenProjectAction;
 import consulo.ide.impl.welcomeScreen.BaseUnifiedWelcomeScreenPanel;
-import consulo.ide.impl.welcomeScreen.RecentProjectItemRender;
+import consulo.ide.impl.welcomeScreen.RecentProjectItemRenderer;
 import consulo.project.ui.impl.internal.wm.UnifiedWelcomeIdeFrame;
 import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
@@ -205,7 +204,7 @@ public class UnifiedWelcomeFrameManager extends WelcomeFrameManager {
 
         ListBox<AnAction> listSelect = ListBox.create(model);
         listBoxRef.set(listSelect);
-        listSelect.setRenderer(new RecentProjectItemRender(
+        listSelect.setRenderer(new RecentProjectItemRenderer(
             myRecentProjectsManager.get(),
             RecentProjectsChecker.getInstance(),
             (action, event) -> {
@@ -229,8 +228,8 @@ public class UnifiedWelcomeFrameManager extends WelcomeFrameManager {
 
         listSelect.setSelectOnHover(true);
         listSelect.setPlaceholder(ProjectLocalize.recentProjectsNoProjectOpenYet());
-        listSelect.setItemHeightGetter(action -> RecentProjectItemRender.ROW_HEIGHT);
-        listSelect.setSize(RecentProjectItemRender.LIST_WIDTH, null);
+        listSelect.setItemHeightGetter(action -> RecentProjectItemRenderer.ROW_HEIGHT);
+        listSelect.setSize(RecentProjectItemRenderer.LIST_WIDTH, null);
         return listSelect;
     }
 

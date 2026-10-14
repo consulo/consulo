@@ -39,7 +39,7 @@ public class ModuleSourceOrderEntryTypeEditor implements OrderEntryTypeEditor<Mo
 
   
   @Override
-  public Consumer<ColoredTextContainer> getRender(ModuleSourceOrderEntryImpl orderEntry) {
+  public Consumer<ColoredTextContainer> getRenderer(ModuleSourceOrderEntryImpl orderEntry) {
     return it -> {
       it.setIcon(PlatformIconGroup.nodesModule());
       it.append(orderEntry.getPresentableName(), SimpleTextAttributes.SYNTHETIC_ATTRIBUTES);

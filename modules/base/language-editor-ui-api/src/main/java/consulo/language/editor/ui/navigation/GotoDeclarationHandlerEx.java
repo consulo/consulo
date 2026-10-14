@@ -24,6 +24,5 @@ import consulo.language.psi.PsiElement;
  * @since 2015-05-02
  */
 public interface GotoDeclarationHandlerEx extends GotoDeclarationHandler {
-    
-    PsiElementListCellRenderer<PsiElement> createRender(PsiElement[] elements);
+    PsiElementListCellRenderer<PsiElement> createRenderer(PsiElement[] elements);
 }

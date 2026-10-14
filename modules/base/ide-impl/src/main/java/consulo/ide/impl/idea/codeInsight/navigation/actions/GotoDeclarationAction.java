@@ -134,7 +134,7 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
                         return;
                     }
                 }
-                chooseAmbiguousTarget(editor, offset, elements, calcElementRender(elementsInfo.getSecond(), elements), navigationContexts);
+                chooseAmbiguousTarget(editor, offset, elements, calcElementRenderer(elementsInfo.getSecond(), elements), navigationContexts);
                 return;
             }
 
@@ -199,11 +199,11 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
         return declaration instanceof Navigatable target ? target : EditSourceUtil.getDescriptor(declaration);
     }
 
-    private static @Nullable PsiElementListCellRenderer<PsiElement> calcElementRender(
+    private static @Nullable PsiElementListCellRenderer<PsiElement> calcElementRenderer(
         @Nullable GotoDeclarationHandler declarationHandler,
         PsiElement[] elements
     ) {
-        return declarationHandler instanceof GotoDeclarationHandlerEx handlerEx ? handlerEx.createRender(elements) : null;
+        return declarationHandler instanceof GotoDeclarationHandlerEx handlerEx ? handlerEx.createRenderer(elements) : null;
     }
 
     @RequiredReadAction
@@ -218,7 +218,7 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
         Editor editor,
         int offset,
         PsiElement[] elements,
-        @Nullable PsiElementListCellRenderer<PsiElement> render,
+        @Nullable PsiElementListCellRenderer<PsiElement> renderer,
         List<Object> navigationContexts
     ) {
         PsiElementProcessor<PsiElement> navigateProcessor = element -> {
@@ -234,7 +234,7 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
             navigateProcessor,
             CodeInsightLocalize.declarationNavigationTitle().get(),
             elements,
-            render
+            renderer
         );
         if (!found) {
             HintManager.getInstance().showErrorHint(editor, "Cannot find declaration to go to");

@@ -19,7 +19,7 @@ import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginManager;
 import consulo.externalService.impl.internal.plugin.ui.PluginSorter;
-import consulo.externalService.impl.internal.plugin.ui.unified.UnifiedPluginRowRender;
+import consulo.externalService.impl.internal.plugin.ui.unified.UnifiedPluginRowRenderer;
 import consulo.externalService.internal.PlatformOrPluginUpdateResultType;
 import consulo.externalService.localize.ExternalServiceLocalize;
 import consulo.localize.LocalizeValue;
@@ -133,7 +133,7 @@ public class UnifiedPlatformOrPluginDialog {
 
         ListBox<PluginDescriptor> list = ListBox.create(toShowPluginList);
         list.setRenderer(this::renderRow);
-        list.setItemHeightGetter(item -> UnifiedPluginRowRender.ROW_HEIGHT);
+        list.setItemHeightGetter(item -> UnifiedPluginRowRenderer.ROW_HEIGHT);
 
         Button okButton = Button.create(CommonLocalize.buttonOk(), event -> {
             close();
@@ -168,7 +168,7 @@ public class UnifiedPlatformOrPluginDialog {
     private Component renderRow(RenderItem<PluginDescriptor> item) {
         PluginDescriptor descriptor = item.getValue();
         if (descriptor == null) {
-            return UnifiedPluginRowRender.render(item);
+            return UnifiedPluginRowRenderer.render(item);
         }
 
         PlatformOrPluginNode node = ContainerUtil.find(myNodes, it -> it.getPluginId().equals(descriptor.getPluginId()));
@@ -187,7 +187,7 @@ public class UnifiedPlatformOrPluginDialog {
             ? currentDescriptor.getVersion() + " \u2192 " + (node.getFutureDescriptor() == null ? "??" : descriptor.getVersion())
             : StringUtil.notNullize(descriptor.getVersion());
 
-        return UnifiedPluginRowRender.render(item, status.getColor(), LocalizeValue.of(versions));
+        return UnifiedPluginRowRenderer.render(item, status.getColor(), LocalizeValue.of(versions));
     }
 
     @RequiredUIAccess

@@ -51,10 +51,10 @@ class DesktopTreeNodeDescriptor<K> extends PresentableNodeDescriptor<Object> {
 
         DesktopTreeNodeImpl<K> node = (DesktopTreeNodeImpl<K>) myElement;
 
-        BiConsumer<K, TextItemPresentation> render = node.getRenderer();
+        BiConsumer<K, TextItemPresentation> renderer = node.getRenderer();
 
         DesktopTreeNodePresentation itemPresentation = new DesktopTreeNodePresentation(presentation);
-        render.accept(node.getValue(), itemPresentation);
+        renderer.accept(node.getValue(), itemPresentation);
 
         DesktopTreeRowDecoration decoration = itemPresentation.toDecoration();
         if (!decoration.equals(myDecoration)) {

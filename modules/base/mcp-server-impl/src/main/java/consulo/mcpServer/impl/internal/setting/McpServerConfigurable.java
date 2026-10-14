@@ -30,7 +30,7 @@ import consulo.mcpServer.impl.internal.McpToolRegistry;
 import consulo.mcpServer.impl.internal.http.McpCustomPortServerManager;
 import consulo.mcpServer.localize.McpServerLocalize;
 import consulo.ui.CheckBox;
-import consulo.ui.ComponentItemRender;
+import consulo.ui.ComponentItemRenderer;
 import consulo.ui.Component;
 import consulo.ui.IntBox;
 import consulo.ui.Label;
@@ -102,7 +102,7 @@ public class McpServerConfigurable extends SimpleConfigurableByProperties implem
 
         table.addColumn(McpServerLocalize.columnEnabled(), descriptor -> settings.isToolEnabled(descriptor.getName()))
             .setWidth(70)
-            .setRenderer(ComponentItemRender.reusable(
+            .setRenderer(ComponentItemRenderer.reusable(
                 () -> CheckBox.create(LocalizeValue.empty()),
                 (checkBox, item) -> checkBox.setValue(Boolean.TRUE.equals(item.getValue()))))
             .setEditor(new TableItemEditor<>() {

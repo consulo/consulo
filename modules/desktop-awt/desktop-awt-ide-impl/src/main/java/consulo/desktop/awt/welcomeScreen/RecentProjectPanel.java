@@ -15,7 +15,6 @@
  */
 package consulo.desktop.awt.welcomeScreen;
 
-import consulo.annotation.DeprecationInfo;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
@@ -23,14 +22,15 @@ import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.ide.PopupProjectGroupActionGroup;
 import consulo.ide.impl.idea.ide.ReopenProjectAction;
 import consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen.RecentProjectsWelcomeScreenActionBase;
-import consulo.ide.impl.welcomeScreen.RecentProjectItemRender;
+import consulo.ide.impl.welcomeScreen.RecentProjectItemRenderer;
 import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
 import consulo.project.ProjectGroup;
 import consulo.project.internal.RecentProjectsChecker;
 import consulo.project.internal.RecentProjectsManager;
 import consulo.project.localize.ProjectLocalize;
-import consulo.ui.ComponentItemRender;
+import consulo.ui.Component;
+import consulo.ui.ComponentItemRenderer;
 import consulo.ui.ListBox;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ComponentEvent;
@@ -92,7 +92,7 @@ public class RecentProjectPanel {
         myListBox = ListBox.create(myModel);
         myListBox.setRenderer(createItemRenderer());
         myListBox.setSpeedSearchConverter(RecentProjectPanel::getSearchText);
-        myListBox.setItemHeightGetter(action -> RecentProjectItemRender.ROW_HEIGHT);
+        myListBox.setItemHeightGetter(action -> RecentProjectItemRenderer.ROW_HEIGHT);
 
         myListBox.setSelectOnHover(true);
         myListBox.setPlaceholder(ProjectLocalize.recentProjectsNoProjectOpenYet());
@@ -227,15 +227,8 @@ public class RecentProjectPanel {
         return false;
     }
 
-    @SuppressWarnings("deprecation")
-    protected ComponentItemRender<AnAction> createItemRenderer() {
-        return createItemRender();
-    }
-
-    @Deprecated
-    @DeprecationInfo("Use #createItemRenderer")
-    protected ComponentItemRender<AnAction> createItemRender() {
-        return new RecentProjectItemRender(
+    protected ComponentItemRenderer<AnAction> createItemRenderer() {
+        return new RecentProjectItemRenderer(
             RecentProjectsManager.getInstance(),
             RecentProjectsChecker.getInstance(),
             this::onActivate,
@@ -244,7 +237,7 @@ public class RecentProjectPanel {
     }
 
     @RequiredUIAccess
-    protected void onActivate(AnAction action, ComponentEvent<consulo.ui.Component> event) {
+    protected void onActivate(AnAction action, ComponentEvent<Component> event) {
         performSelectedAction(event, action);
 
         if (action instanceof ReopenProjectAction reopenProjectAction && reopenProjectAction.isRemoved()) {
@@ -253,7 +246,7 @@ public class RecentProjectPanel {
     }
 
     @RequiredUIAccess
-    protected void onMenuClick(AnAction action, ComponentEvent<consulo.ui.Component> event) {
+    protected void onMenuClick(AnAction action, ComponentEvent<Component> event) {
         if (!(ActionManager.getInstance().getAction(WELCOME_SCREEN_RECENT_PROJECT_ACTION_GROUP) instanceof ActionGroup group)) {
             return;
         }

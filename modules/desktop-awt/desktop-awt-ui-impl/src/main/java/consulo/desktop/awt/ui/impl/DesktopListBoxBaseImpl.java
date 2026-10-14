@@ -109,7 +109,7 @@ abstract class DesktopListBoxBaseImpl<E, V> extends SwingComponentDelegate<JBLis
 
         @Override
         public boolean getScrollableTracksViewportWidth() {
-            return myRenderAdapter != null || super.getScrollableTracksViewportWidth();
+            return myRenderingAdapter != null || super.getScrollableTracksViewportWidth();
         }
 
         @Override
@@ -154,7 +154,7 @@ abstract class DesktopListBoxBaseImpl<E, V> extends SwingComponentDelegate<JBLis
         }
 
         private @Nullable ClickTarget findTarget(Point point, Class<? extends ComponentEvent<?>> eventClass) {
-            if (myHitTestRenderer == null || myRenderAdapter == null || !myRenderAdapter.isMouseEventsAllowed()) {
+            if (myHitTestRenderer == null || myRenderingAdapter == null || !myRenderingAdapter.isMouseEventsAllowed()) {
                 return null;
             }
 
@@ -197,9 +197,9 @@ abstract class DesktopListBoxBaseImpl<E, V> extends SwingComponentDelegate<JBLis
 
     protected final FlatDataModel<E> myModel;
 
-    private TextItemRender<E> myTextRenderer = TextItemRender.defaultRenderer();
-    private @Nullable ComponentItemRender<E> myComponentRenderer;
-    private @Nullable DesktopComponentItemRenderAdapter<E> myRenderAdapter;
+    private TextItemRenderer<E> myTextRenderer = TextItemRenderer.defaultRenderer();
+    private @Nullable ComponentItemRenderer<E> myComponentRenderer;
+    private @Nullable DesktopComponentItemRenderingAdapter<E> myRenderingAdapter;
     private @Nullable ListCellRenderer<E> myHitTestRenderer;
     private @Nullable Function<E, String> mySpeedSearchConverter;
     private @Nullable Function<E, Length> myItemHeightGetter;
@@ -247,7 +247,7 @@ abstract class DesktopListBoxBaseImpl<E, V> extends SwingComponentDelegate<JBLis
     @Override
     protected JBList<E> createComponent() {
         MyJBList component = new MyJBList(new DesktopFlatDataModelWrapper<>(myModel));
-        applyRender(component);
+        applyRenderer(component);
         applySpeedSearch(component);
         applySelectionModel(component);
         applyDoubleClick(component);
@@ -281,12 +281,12 @@ abstract class DesktopListBoxBaseImpl<E, V> extends SwingComponentDelegate<JBLis
         }.installOn(component);
     }
 
-    private void applyRender(JBList<E> component) {
-        myRenderAdapter = myComponentRenderer == null ? null : new DesktopComponentItemRenderAdapter<>(myComponentRenderer, () -> myHoverIndex);
+    private void applyRenderer(JBList<E> component) {
+        myRenderingAdapter = myComponentRenderer == null ? null : new DesktopComponentItemRenderingAdapter<>(myComponentRenderer, () -> myHoverIndex);
 
-        ListCellRenderer<E> renderer = myRenderAdapter != null ? myRenderAdapter : new DesktopListRender<>(() -> myTextRenderer);
+        ListCellRenderer<E> renderer = myRenderingAdapter != null ? myRenderingAdapter : new DesktopListRenderer<>(() -> myTextRenderer);
 
-        ListCellRenderer<E> withHeight = DesktopItemHeightRender.wrap(renderer, () -> myItemHeightGetter);
+        ListCellRenderer<E> withHeight = DesktopItemHeightRenderer.wrap(renderer, () -> myItemHeightGetter);
 
         // the swing popups do the same - the renderer answers a separator with a component of its own rather than
         // with a row, see GroupedItemsListRenderer
@@ -311,7 +311,7 @@ abstract class DesktopListBoxBaseImpl<E, V> extends SwingComponentDelegate<JBLis
     public void isSeparator(Predicate<E> predicate) {
         mySeparatorPredicate = predicate;
         if (isInitialized()) {
-            applyRender(toAWTComponent());
+            applyRenderer(toAWTComponent());
             applySelectionModel(toAWTComponent());
         }
     }
@@ -328,19 +328,19 @@ abstract class DesktopListBoxBaseImpl<E, V> extends SwingComponentDelegate<JBLis
     }
 
     @Override
-    public void setRender(TextItemRender<E> renderer) {
+    public void setRenderer(TextItemRenderer<E> renderer) {
         myTextRenderer = renderer;
         myComponentRenderer = null;
         if (isInitialized()) {
-            applyRender(toAWTComponent());
+            applyRenderer(toAWTComponent());
         }
     }
 
     @Override
-    public void setRender(ComponentItemRender<E> renderer) {
+    public void setRenderer(ComponentItemRenderer<E> renderer) {
         myComponentRenderer = renderer;
         if (isInitialized()) {
-            applyRender(toAWTComponent());
+            applyRenderer(toAWTComponent());
         }
     }
 

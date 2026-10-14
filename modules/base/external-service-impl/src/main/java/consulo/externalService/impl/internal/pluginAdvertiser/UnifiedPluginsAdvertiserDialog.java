@@ -18,7 +18,7 @@ package consulo.externalService.impl.internal.pluginAdvertiser;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.externalService.impl.internal.plugin.ui.unified.UnifiedPluginDescriptionPanel;
-import consulo.externalService.impl.internal.plugin.ui.unified.UnifiedPluginRowRender;
+import consulo.externalService.impl.internal.plugin.ui.unified.UnifiedPluginRowRenderer;
 import consulo.externalService.pluginAdvertiser.PluginAdvertiserHelper;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ListBox;
@@ -80,8 +80,8 @@ public class UnifiedPluginsAdvertiserDialog {
     @RequiredUIAccess
     private TwoComponentSplitLayout buildContent(List<PluginDescriptor> toInstallPlugins) {
         myList = ListBox.create(toInstallPlugins);
-        myList.setRender(UnifiedPluginRowRender::render);
-        myList.setItemHeightGetter(item -> UnifiedPluginRowRender.ROW_HEIGHT);
+        myList.setRenderer(UnifiedPluginRowRenderer::render);
+        myList.setItemHeightGetter(item -> UnifiedPluginRowRenderer.ROW_HEIGHT);
 
         UnifiedPluginDescriptionPanel descriptionPanel = new UnifiedPluginDescriptionPanel(false, this::select, () -> myAllPlugins);
 

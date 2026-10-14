@@ -134,7 +134,7 @@ public class DesktopQtTreeTableImpl<E> extends DesktopQtTreeImpl<E> implements T
     }
 
     @Override
-    public void renderChanged() {
+    public void rendererChanged() {
         QTreeWidget tree = boundTree();
         if (tree != null) {
             applyHeader(tree);

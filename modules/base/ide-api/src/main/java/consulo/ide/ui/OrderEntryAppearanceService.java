@@ -36,28 +36,21 @@ public abstract class OrderEntryAppearanceService {
     return Application.get().getInstance(OrderEntryAppearanceService.class);
   }
 
-  
-  public abstract Consumer<ColoredTextContainer> getRenderForOrderEntry(OrderEntry orderEntry);
+  public abstract Consumer<ColoredTextContainer> getRendererForOrderEntry(OrderEntry orderEntry);
 
-  
-  public Consumer<ColoredTextContainer> getRenderForModule(Module module) {
+  public Consumer<ColoredTextContainer> getRendererForModule(Module module) {
     return it -> forModule(module).customize(it);
   }
 
-  
-  public Consumer<ColoredTextContainer> getRenderForLibrary(Project project, Library library, boolean hasInvalidRoots) {
+  public Consumer<ColoredTextContainer> getRendererForLibrary(Project project, Library library, boolean hasInvalidRoots) {
     return it -> forLibrary(project, library, hasInvalidRoots).customize(it);
   }
 
-  
   public abstract CellAppearanceEx forLibrary(Project project, Library library, boolean hasInvalidRoots);
 
-  
   public abstract CellAppearanceEx forSdk(@Nullable Sdk jdk, boolean isInComboBox, boolean selected, boolean showVersion);
 
-  
   public abstract CellAppearanceEx forContentFolder(ContentFolder folder);
 
-  
   public abstract CellAppearanceEx forModule(Module module);
 }

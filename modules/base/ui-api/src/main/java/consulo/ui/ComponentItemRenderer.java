@@ -27,7 +27,7 @@ import java.util.function.Supplier;
  * @since 2026-08-02
  */
 @FunctionalInterface
-public interface ComponentItemRender<E> {
+public interface ComponentItemRenderer<E> {
     /**
      * Builds the component once and rebinds it per item, instead of allocating a fresh one every
      * time.
@@ -36,9 +36,11 @@ public interface ComponentItemRender<E> {
      * for every row, web needs one per row because each lives in the document. So {@code binder}
      * must set every piece of state it cares about, never assuming a clean component.
      */
-    static <E, C extends Component> ComponentItemRender<E> reusable(@RequiredUIAccess Supplier<C> factory,
-                                                                    @RequiredUIAccess BiConsumer<C, RenderItem<E>> binder) {
-        return new ReusableComponentItemRender<>(factory, binder);
+    static <E, C extends Component> ComponentItemRenderer<E> reusable(
+        @RequiredUIAccess Supplier<C> factory,
+        @RequiredUIAccess BiConsumer<C, RenderItem<E>> binder
+    ) {
+        return new ReusableComponentItemRenderer<>(factory, binder);
     }
 
     @RequiredUIAccess

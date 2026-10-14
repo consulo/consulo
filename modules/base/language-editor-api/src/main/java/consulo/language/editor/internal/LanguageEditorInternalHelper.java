@@ -79,7 +79,9 @@ public interface LanguageEditorInternalHelper {
         // [VISTALL] hack due we don't have hard dependency to AWT impl
     }
 
-    default ListCellRenderer<LineMarkerInfo> createMergeableLineMarkerRender(Function<LineMarkerInfo, Pair<String, Image>> function) {
+    default ListCellRenderer<LineMarkerInfo> createMergeableLineMarkerRenderer(
+        @RequiredUIAccess Function<LineMarkerInfo, Pair<String, Image>> function
+    ) {
         throw new UnsupportedOperationException();
     }
 

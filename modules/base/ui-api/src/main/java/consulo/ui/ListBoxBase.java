@@ -15,9 +15,7 @@
  */
 package consulo.ui;
 
-import consulo.annotation.DeprecationInfo;
 import consulo.disposer.Disposable;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ComponentEventListener;
 import consulo.ui.event.ListDoubleClickEvent;
 import consulo.ui.model.FlatDataModel;
@@ -36,23 +34,9 @@ public interface ListBoxBase<E>
 
     FlatDataModel<E> getDataModel();
 
-    @SuppressWarnings("deprecation")
-    default void setRenderer(TextItemRender<E> render) {
-        setRender(render);
-    }
+    void setRenderer(TextItemRenderer<E> renderer);
 
-    @Deprecated
-    @DeprecationInfo("Use #setRenderer")
-    void setRender(TextItemRender<E> renderer);
-
-    @SuppressWarnings("deprecation")
-    default void setRenderer(ComponentItemRender<E> renderer) {
-        setRender(renderer);
-    }
-
-    @Deprecated
-    @DeprecationInfo("Use #setRenderer")
-    void setRender(ComponentItemRender<E> render);
+    void setRenderer(ComponentItemRenderer<E> renderer);
 
     @SuppressWarnings("unchecked")
     default Disposable addDoubleClickListener(ComponentEventListener<ListBoxBase<E>, ListDoubleClickEvent<E>> listener) {

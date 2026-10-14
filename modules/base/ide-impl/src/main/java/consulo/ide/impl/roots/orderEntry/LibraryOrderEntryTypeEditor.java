@@ -56,14 +56,14 @@ public class LibraryOrderEntryTypeEditor implements OrderEntryTypeEditor<Library
 
   
   @Override
-  public Consumer<ColoredTextContainer> getRender(LibraryOrderEntryImpl orderEntry) {
+  public Consumer<ColoredTextContainer> getRenderer(LibraryOrderEntryImpl orderEntry) {
     if (!orderEntry.isValid()) { //library can be removed
-      return FileAppearanceService.getInstance().getRenderForInvalidUrl(orderEntry.getPresentableName());
+      return FileAppearanceService.getInstance().getRendererForInvalidUrl(orderEntry.getPresentableName());
     }
     Library library = orderEntry.getLibrary();
     assert library != null : orderEntry;
     return OrderEntryAppearanceService.getInstance()
-            .getRenderForLibrary(orderEntry.getModuleRootLayer().getProject(), library, !((LibraryEx)library).getInvalidRootUrls(BinariesOrderRootType.ID).isEmpty());
+            .getRendererForLibrary(orderEntry.getModuleRootLayer().getProject(), library, !((LibraryEx)library).getInvalidRootUrls(BinariesOrderRootType.ID).isEmpty());
 
   }
 

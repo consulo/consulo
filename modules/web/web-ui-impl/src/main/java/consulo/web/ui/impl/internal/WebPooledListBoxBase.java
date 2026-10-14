@@ -18,12 +18,12 @@ package consulo.web.ui.impl.internal;
 import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import consulo.localize.LocalizeValue;
-import consulo.ui.ComponentItemRender;
+import consulo.ui.ComponentItemRenderer;
 import consulo.ui.Length;
 import consulo.ui.ListBoxBase;
 import consulo.ui.RenderItem;
-import consulo.ui.ReusableComponentItemRender;
-import consulo.ui.TextItemRender;
+import consulo.ui.ReusableComponentItemRenderer;
+import consulo.ui.TextItemRenderer;
 import consulo.ui.TransferHandler;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ListDoubleClickEvent;
@@ -93,7 +93,7 @@ public abstract class WebPooledListBoxBase<E> extends VaadinComponentDelegate<We
     }
 
     /**
-     * One pooled row - the component a render made, the vaadin component it is drawn with, and the item it currently
+     * One pooled row - the component a renderer made, the vaadin component it is drawn with, and the item it currently
      * stands for.
      */
     private final class Row {
@@ -136,8 +136,8 @@ public abstract class WebPooledListBoxBase<E> extends VaadinComponentDelegate<We
     private final FlatDataModel<E> myModel;
     private final List<Row> myPool = new ArrayList<>();
 
-    private @Nullable ReusableComponentItemRender<E, ?> myReusableRenderer;
-    private @Nullable ComponentItemRender<E> myRenderer;
+    private @Nullable ReusableComponentItemRenderer<E, ?> myReusableRenderer;
+    private @Nullable ComponentItemRenderer<E> myRenderer;
     private @Nullable Function<E, Length> myItemHeightGetter;
     private @Nullable Function<E, String> mySpeedSearchConverter;
     private Predicate<E> mySeparatorPredicate = item -> false;
@@ -173,7 +173,7 @@ public abstract class WebPooledListBoxBase<E> extends VaadinComponentDelegate<We
         });
         loadScript();
 
-        setRenderer(TextItemRender.defaultRenderer());
+        setRenderer(TextItemRenderer.defaultRenderer());
 
         pushItemCount();
     }
@@ -274,7 +274,7 @@ public abstract class WebPooledListBoxBase<E> extends VaadinComponentDelegate<We
         boolean selected = !separator && isSelected(item);
 
         if (!separator && myReusableRenderer != null) {
-            ((ReusableComponentItemRender<E, consulo.ui.Component>) myReusableRenderer)
+            ((ReusableComponentItemRenderer<E, consulo.ui.Component>) myReusableRenderer)
                 .bind(row.myRendered, RenderItem.of(item, selected));
         }
 
@@ -370,17 +370,17 @@ public abstract class WebPooledListBoxBase<E> extends VaadinComponentDelegate<We
     }
 
     /**
-     * A text render is turned into a component one, because the pool keeps rows and a presentation is built per call
+     * A text renderer is turned into a component one, because the pool keeps rows and a presentation is built per call
      * with no identity to rebind. The kept row is a holder whose content is replaced - the runs a presentation makes
      * are cheap next to the row itself, which is what the pool is protecting.
      */
     @Override
-    public void setRender(TextItemRender<E> render) {
-        setRenderer(ComponentItemRender.<E, TextRow>reusable(
+    public void setRenderer(TextItemRenderer<E> renderer) {
+        setRenderer(ComponentItemRenderer.<E, TextRow>reusable(
             TextRow::new,
             (row, item) -> {
                 WebItemPresentationImpl presentation = new WebItemPresentationImpl();
-                render.render(presentation, item);
+                renderer.render(presentation, item);
                 row.setContent(presentation.toComponent());
                 // the fill of an item is the whole row - and a kept row must lose the fill of the item before it
                 row.setBackgroundColor(presentation.getBackgroundColor());
@@ -399,7 +399,7 @@ public abstract class WebPooledListBoxBase<E> extends VaadinComponentDelegate<We
     }
 
     /**
-     * Holds whatever a text render made, so the pool has one component per row rather than one per call.
+     * Holds whatever a text renderer made, so the pool has one component per row rather than one per call.
      */
     public static class TextRow extends VaadinComponentDelegate<TextRowVaadin> {
         public TextRow() {
@@ -420,23 +420,23 @@ public abstract class WebPooledListBoxBase<E> extends VaadinComponentDelegate<We
     }
 
     @Override
-    public void setRender(ComponentItemRender<E> renderer) {
+    public void setRenderer(ComponentItemRenderer<E> renderer) {
         myRenderer = renderer;
 
-        if (renderer instanceof ReusableComponentItemRender<E, ?> reusable) {
+        if (renderer instanceof ReusableComponentItemRenderer<E, ?> reusable) {
             myReusableRenderer = reusable;
         }
         else {
-            // a plain render builds a fresh component per item and has nothing to rebind, so it is held the way
-            // a text render is - in a kept row whose content is replaced. without this the pool had no way to
+            // a plain renderer builds a fresh component per item and has nothing to rebind, so it is held the way
+            // a text renderer is - in a kept row whose content is replaced. without this the pool had no way to
             // make rows at all and the list stayed empty
-            myReusableRenderer = (ReusableComponentItemRender<E, ?>) ComponentItemRender.<E, TextRow>reusable(
+            myReusableRenderer = (ReusableComponentItemRenderer<E, ?>) ComponentItemRenderer.<E, TextRow>reusable(
                 TextRow::new,
                 (row, item) -> row.setContent(((ToVaadinComponentWrapper) renderer.render(item)).toVaadinComponent())
             );
         }
 
-        // the pool was made by the render that came before, so it goes and is built again on the next range
+        // the pool was made by the renderer that came before, so it goes and is built again on the next range
         for (Row row : myPool) {
             row.myVaadin.getElement().removeFromParent();
         }

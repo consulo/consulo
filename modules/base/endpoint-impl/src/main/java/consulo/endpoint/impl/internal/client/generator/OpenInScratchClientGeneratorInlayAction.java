@@ -17,7 +17,7 @@ import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
-import consulo.ui.TextItemRender;
+import consulo.ui.TextItemRenderer;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.popup.BaseListPopupStep;
 import consulo.ui.ex.popup.JBPopupFactory;
@@ -79,13 +79,13 @@ public final class OpenInScratchClientGeneratorInlayAction implements UrlPathInl
 
         ListPopup popup = JBPopupFactory.getInstance().createListPopup(step);
 
-        TextItemRender<ClientGenerator> render = (presentation, item) -> {
+        TextItemRenderer<ClientGenerator> renderer = (presentation, item) -> {
             ClientGenerator clientGenerator = item.getValue();
             if (clientGenerator != null) {
                 presentation.append(clientGenerator.getTitle());
             }
         };
-        popup.setRender(render);
+        popup.setRenderer(renderer);
 
         popup.showBy(editor.getUIComponent(), mouseEvent.getInputDetails());
     }

@@ -40,7 +40,6 @@ public abstract interface OrderEntryTypeEditor<T extends OrderEntry> {
     ExtensionPointCacheKey<OrderEntryTypeEditor, Map<String, OrderEntryTypeEditor>> CACHE_KEY =
         ExtensionPointCacheKey.groupBy("OrderEntryTypeEditor", OrderEntryTypeEditor::getOrderTypeId);
 
-    
     static OrderEntryTypeEditor getEditor(String id) {
         ExtensionPoint<OrderEntryTypeEditor> extensionPoint = Application.get().getExtensionPoint(OrderEntryTypeEditor.class);
 
@@ -53,15 +52,12 @@ public abstract interface OrderEntryTypeEditor<T extends OrderEntry> {
         return Objects.requireNonNull(map.get(""), "can't find unknown order entry type. Id: " + id);
     }
 
-    
     String getOrderTypeId();
 
-    
-    default Consumer<ColoredTextContainer> getRender(T orderEntry) {
+    default Consumer<ColoredTextContainer> getRenderer(T orderEntry) {
         return it -> it.append(orderEntry.getPresentableName());
     }
 
-    
     default ClasspathTableItem<T> createTableItem(
         T orderEntry,
         Project project,

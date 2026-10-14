@@ -15,13 +15,15 @@
  */
 package consulo.ui.graph;
 
+import consulo.ui.annotation.RequiredUIAccess;
+
 /**
  * @author VISTALL
  * @since 2026-09-30
  */
 @FunctionalInterface
-public interface GraphEdgeRender<E> {
-    static <V> GraphEdgeRender<V> defaultRender() {
+public interface GraphEdgeRenderer<E> {
+    static <V> GraphEdgeRenderer<V> defaultRenderer() {
         return (presentation, source, target) -> {
         };
     }
@@ -30,5 +32,6 @@ public interface GraphEdgeRender<E> {
      * Called for every arrow of the model, from {@code source} to {@code target}. A presentation left untouched is a
      * solid line with a {@link GraphArrow#FILLED} head at the target.
      */
+    @RequiredUIAccess
     void render(GraphEdgePresentation presentation, E source, E target);
 }

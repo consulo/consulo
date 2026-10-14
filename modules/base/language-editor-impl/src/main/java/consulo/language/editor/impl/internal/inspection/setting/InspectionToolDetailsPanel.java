@@ -34,7 +34,7 @@ import consulo.ui.Button;
 import consulo.ui.ButtonStyle;
 import consulo.ui.ComboBox;
 import consulo.ui.Component;
-import consulo.ui.ComponentItemRender;
+import consulo.ui.ComponentItemRenderer;
 import consulo.ui.Label;
 import consulo.ui.Space;
 import consulo.ui.Table;
@@ -264,7 +264,7 @@ public class InspectionToolDetailsPanel {
         table.addColumn(LocalizeValue.empty(), ScopeSeverityRow::enabled)
             .setWidth(30)
             .setResizable(false)
-            .setRenderer(ComponentItemRender.reusable(
+            .setRenderer(ComponentItemRenderer.reusable(
                 () -> TriStateCheckBox.create(LocalizeValue.empty()),
                 (checkBox, item) -> checkBox.setValue(item.getValue(), false)
             ))

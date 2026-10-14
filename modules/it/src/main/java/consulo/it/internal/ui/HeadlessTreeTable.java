@@ -107,7 +107,7 @@ public class HeadlessTreeTable<E> extends HeadlessTree<E> implements TreeTable<E
     }
 
     @Override
-    public void renderChanged() {
+    public void rendererChanged() {
     }
 
     @Override
