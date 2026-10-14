@@ -167,10 +167,16 @@ public class ActionGroupPopup extends ListPopupImpl {
             actionPlace,
             presentationFactory,
             myExpansionIndicator
-        ).thenAccept(items -> SwingUtilities.invokeLater(() -> {
+        ).whenComplete((items, e) -> SwingUtilities.invokeLater(() -> {
+            if (e != null) {
+                LOG.warn(e);
+                return;
+            }
+            
             if (isDisposed()) {
                 return;
             }
+
             ActionPopupStep step = (ActionPopupStep) getListStep();
             step.setItems(items);
             getListModel().syncModel();

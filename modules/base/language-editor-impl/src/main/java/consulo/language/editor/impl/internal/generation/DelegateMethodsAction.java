@@ -18,12 +18,19 @@ package consulo.language.editor.impl.internal.generation;
 import consulo.annotation.component.ActionImpl;
 import consulo.application.Application;
 import consulo.language.editor.generation.DelegateMethodHandler;
+import consulo.platform.base.localize.ActionLocalize;
 import jakarta.inject.Inject;
 
 @ActionImpl(id = "DelegateMethods")
 public class DelegateMethodsAction extends MethodsBasedAction<DelegateMethodHandler> {
     @Inject
     public DelegateMethodsAction(Application application) {
-        super(application, DelegateMethodHandler.class, DelegateMethodHandler.KEY);
+        super(
+            ActionLocalize.actionDelegatemethodsText(),
+            ActionLocalize.actionDelegatemethodsDescription(),
+            application,
+            DelegateMethodHandler.class,
+            DelegateMethodHandler.KEY
+        );
     }
 }

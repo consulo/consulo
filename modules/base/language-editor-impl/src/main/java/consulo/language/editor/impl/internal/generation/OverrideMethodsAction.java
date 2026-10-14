@@ -25,8 +25,12 @@ import jakarta.inject.Inject;
 public class OverrideMethodsAction extends MethodsBasedAction<OverrideMethodHandler> {
     @Inject
     public OverrideMethodsAction(Application application) {
-        super(application, OverrideMethodHandler.class, OverrideMethodHandler.KEY);
-        getTemplatePresentation().setText(ActionLocalize.actionOverridemethodsText());
-        getTemplatePresentation().setDescription(ActionLocalize.actionOverridemethodsDescription());
+        super(
+            ActionLocalize.actionOverridemethodsText(),
+            ActionLocalize.actionOverridemethodsDescription(),
+            application,
+            OverrideMethodHandler.class,
+            OverrideMethodHandler.KEY
+        );
     }
 }

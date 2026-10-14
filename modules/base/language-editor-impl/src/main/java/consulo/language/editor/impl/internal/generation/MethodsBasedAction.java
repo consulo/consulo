@@ -28,6 +28,7 @@ import consulo.language.editor.util.LanguageEditorUtil;
 import consulo.language.extension.ByLanguageValue;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
@@ -42,10 +43,13 @@ public abstract class MethodsBasedAction<T extends LanguageCodeInsightActionHand
     private final ExtensionPointCacheKey<T, ByLanguageValue<T>> myExtensionCacheKey;
 
     public MethodsBasedAction(
+        LocalizeValue text,
+        LocalizeValue description,
         Application application,
         Class<T> handlerType,
         ExtensionPointCacheKey<T, ByLanguageValue<T>> extensionCacheKey
     ) {
+        super(text, description);
         myApplication = application;
         myHandlerType = handlerType;
         myExtensionCacheKey = extensionCacheKey;

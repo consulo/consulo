@@ -25,8 +25,12 @@ import jakarta.inject.Inject;
 public class ImplementMethodsAction extends MethodsBasedAction<ImplementMethodHandler> {
     @Inject
     public ImplementMethodsAction(Application application) {
-        super(application, ImplementMethodHandler.class, ImplementMethodHandler.KEY);
-        getTemplatePresentation().setText(ActionLocalize.actionImplementmethodsText());
-        getTemplatePresentation().setDescription(ActionLocalize.actionImplementmethodsDescription());
+        super(
+            ActionLocalize.actionImplementmethodsText(),
+            ActionLocalize.actionImplementmethodsDescription(),
+            application,
+            ImplementMethodHandler.class,
+            ImplementMethodHandler.KEY
+        );
     }
 }

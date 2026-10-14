@@ -15,6 +15,7 @@
  */
 package consulo.ui.ex.impl.internal.popup.action;
 
+import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.impl.internal.action.MenuItemPresentationFactory;
 import consulo.localize.LocalizeValue;
@@ -32,6 +33,8 @@ import java.util.Collections;
 import java.util.List;
 
 public class ActionPopupItem implements ShortcutProvider, UserDataHolder {
+    private static final Logger LOG = Logger.getInstance(ActionPopupItem.class);
+
     // do not expose myPresentation
     private final Presentation myPresentation = Presentation.newTemplatePresentation();
 
@@ -158,7 +161,10 @@ public class ActionPopupItem implements ShortcutProvider, UserDataHolder {
         if (icon == null) {
             icon = selectedIcon != null ? selectedIcon : getEmptyIconIfCan();
         }
-        assert textValue.isNotEmpty() : myAction + " has no presentation";
+
+        if (textValue.isEmpty()) {
+            LOG.warn("Action: " + myAction.getClass() + "/" + myAction + " has no presentation");
+        }
 
         myTextValue = textValue;
         myDescription = presentation.getDescription();
