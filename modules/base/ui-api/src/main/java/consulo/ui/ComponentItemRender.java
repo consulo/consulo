@@ -41,5 +41,6 @@ public interface ComponentItemRender<E> {
         return new ReusableComponentItemRender<>(factory, binder);
     }
 
+    @RequiredUIAccess
     Component render(RenderItem<E> item);
 }

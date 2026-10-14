@@ -127,16 +127,16 @@ public class ClasspathPanelImpl implements ClasspathPanel {
         table.addColumn(ProjectLocalize.modulesOrderExportExportColumn(), ClasspathPanelImpl::getExportValue)
             .setWidth(EXPORT_COLUMN_WIDTH)
             .setResizable(false)
-            .setRender(ComponentItemRender.reusable(ClasspathPanelImpl::createExportRender, ClasspathPanelImpl::bindExportRender))
+            .setRenderer(ComponentItemRender.reusable(ClasspathPanelImpl::createExportRender, ClasspathPanelImpl::bindExportRender))
             .setEditor(new ExportColumnEditor());
 
         table.addColumn(LocalizeValue.empty(), item -> item)
-            .setRender((presentation, value) -> renderItem(presentation, value.getValue()));
+            .setRenderer((presentation, value) -> renderItem(presentation, value.getValue()));
 
         table.addColumn(ProjectLocalize.modulesOrderExportScopeColumn(), ClasspathPanelImpl::getScopeValue)
             .setWidth(SCOPE_COLUMN_WIDTH)
             .setResizable(false)
-            .setRender((presentation, value) -> renderScope(presentation, value.getValue()))
+            .setRenderer((presentation, value) -> renderScope(presentation, value.getValue()))
             .setEditor(new ScopeColumnEditor());
 
         table.addDoubleClickListener(event -> navigate(createActionEvent(), true));

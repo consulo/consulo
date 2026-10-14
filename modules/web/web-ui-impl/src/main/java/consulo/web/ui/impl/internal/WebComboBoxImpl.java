@@ -44,7 +44,7 @@ public class WebComboBoxImpl<V> extends WebSingleListComponentBase<V, WebComboBo
     public WebComboBoxImpl(FlatDataModel<V> model) {
         super(model);
 
-        setRender(TextItemRender.defaultRender());
+        setRenderer(TextItemRender.defaultRenderer());
     }
 
     @Override
@@ -69,15 +69,15 @@ public class WebComboBoxImpl<V> extends WebSingleListComponentBase<V, WebComboBo
     }
 
     @Override
-    public void setRender(TextItemRender<V> render) {
-        myTextRender = render;
+    public void setRender(TextItemRender<V> renderer) {
+        myTextRenderer = renderer;
 
-        toVaadinComponent().setRenderer(createRenderer(render, this::isSelected));
+        toVaadinComponent().setRenderer(createRenderer(renderer, this::isSelected));
     }
 
     @Override
-    public void setRender(ComponentItemRender<V> render) {
-        toVaadinComponent().setRenderer(createRenderer(render, this::isSelected));
+    public void setRender(ComponentItemRender<V> renderer) {
+        toVaadinComponent().setRenderer(createRenderer(renderer, this::isSelected));
     }
 
     private boolean isSelected(@Nullable V item) {

@@ -70,7 +70,7 @@ public class UnifiedLookupUI extends LookupBase {
         super(project, editor, arranger);
 
         // rendering only replays what was worked out off the ui thread - nothing here reaches for the psi
-        myList.setRender(new LookupItemRender(this::getPresentation, this::itemPattern).asRender());
+        myList.setRenderer(new LookupItemRender(this::getPresentation, this::itemPattern).asRender());
 
         // bounded before anything is pushed - the first refresh would otherwise hand the frontend every item there
         // is, and only then be told how many of them are shown

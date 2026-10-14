@@ -86,7 +86,7 @@ public class WebLazyListBoxImpl<E> extends VaadinComponentDelegate<WebLazyListBo
         toVaadinComponent().addClassName("web-list-box");
 
         setDataProvider();
-        setRender(TextItemRender.defaultRender());
+        setRenderer(TextItemRender.defaultRenderer());
 
         model.addListener(this::onModelChanged);
     }
@@ -168,17 +168,17 @@ public class WebLazyListBoxImpl<E> extends VaadinComponentDelegate<WebLazyListBo
     }
 
     @Override
-    public void setRender(ComponentItemRender<E> render) {
+    public void setRender(ComponentItemRender<E> renderer) {
         // a render which says it may be reused is given a row per slot and asked to rebind it, rather than being
         // asked for a new one per item - a list which changes on every typed character is otherwise a fresh tree
         // of components per visible row over the wire, which is what a completion popup felt like
-        if (render instanceof ReusableComponentItemRender<E, ?> reusable) {
+        if (renderer instanceof ReusableComponentItemRender<E, ?> reusable) {
             toVaadinComponent().setRenderer(reusableRenderer(reusable));
             return;
         }
 
         toVaadinComponent().setRenderer(new ComponentRenderer<>(item -> {
-            Component rendered = render.render(RenderItem.of((E) item, isSelected((E) item)));
+            Component rendered = renderer.render(RenderItem.of((E) item, isSelected((E) item)));
 
             return decorate(((ToVaadinComponentWrapper) rendered).toVaadinComponent(), (E) item);
         }));

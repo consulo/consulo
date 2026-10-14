@@ -15,18 +15,28 @@
  */
 package consulo.ui;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.ui.annotation.RequiredUIAccess;
+
 /**
  * @author VISTALL
  * @since 2026-08-02
  */
 @FunctionalInterface
 public interface TextItemRender<E> {
-    static <V> TextItemRender<V> defaultRender() {
+    static <V> TextItemRender<V> defaultRenderer() {
         return (presentation, item) -> {
             V value = item.getValue();
             presentation.append(value == null ? "" : value.toString());
         };
     }
 
+    @Deprecated
+    @DeprecationInfo("Use #defaultRenderer")
+    static <V> TextItemRender<V> defaultRender() {
+        return defaultRenderer();
+    }
+
+    @RequiredUIAccess
     void render(TextItemPresentation presentation, RenderItem<E> item);
 }

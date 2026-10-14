@@ -73,7 +73,7 @@ public abstract class UnifiedPluginTab implements Disposable, PluginFilterHost {
         myContent.putUserData(UiDataProvider.KEY, sink -> sink.set(PluginFilterHost.KEY, this));
 
         myList = ListBox.create(FlatDataModel.lazyOf(List.of()));
-        myList.setRender(UnifiedPluginRowRender.reusable());
+        myList.setRenderer(UnifiedPluginRowRender.reusable());
         myList.setItemHeightGetter(item -> UnifiedPluginRowRender.ROW_HEIGHT);
 
         myDescriptionPanel = new UnifiedPluginDescriptionPanel(installedTab, this::select, this::getPlugins);

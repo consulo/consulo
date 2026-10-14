@@ -136,7 +136,7 @@ public class AnimatedImagesUITesterTab implements UITesterTab {
         }
 
         ListBox<String> listBox = ListBox.create(listItems);
-        listBox.setRender((presentation, item) -> {
+        listBox.setRenderer((presentation, item) -> {
             presentation.append(item.getValue());
             presentation.withIcon(Image.busy());
         });

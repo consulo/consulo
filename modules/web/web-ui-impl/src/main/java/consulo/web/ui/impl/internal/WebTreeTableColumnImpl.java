@@ -124,12 +124,12 @@ public final class WebTreeTableColumnImpl<E, Value> extends WebGridColumnBase<We
 
     @Override
     protected TableItemRender<E, Value> getRender() {
-        return myState.getRender();
+        return myState.getRenderer();
     }
 
     @Override
     protected @Nullable ComponentItemRender<Value> getComponentRender() {
-        return myState.getComponentRender();
+        return myState.getComponentRenderer();
     }
 
     @Override

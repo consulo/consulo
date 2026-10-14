@@ -19,6 +19,7 @@ import consulo.desktop.awt.ui.impl.facade.FromSwingComponentWrapper;
 import consulo.ui.ComponentItemRender;
 import consulo.ui.RenderItem;
 import consulo.ui.ReusableComponentItemRender;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 
 import javax.swing.*;
@@ -37,15 +38,15 @@ import java.awt.*;
  * @since 2026-08-24
  */
 public abstract class DesktopComponentItemRenderBase<E> {
-    private final ComponentItemRender<E> myRender;
+    private final ComponentItemRender<E> myRenderer;
 
     @SuppressWarnings("rawtypes")
     private consulo.ui.Component myReusedComponent;
 
     private boolean myMouseEventsAllowed;
 
-    protected DesktopComponentItemRenderBase(ComponentItemRender<E> render) {
-        myRender = render;
+    protected DesktopComponentItemRenderBase(@RequiredUIAccess ComponentItemRender<E> renderer) {
+        myRenderer = renderer;
     }
 
     public boolean isMouseEventsAllowed() {
@@ -73,7 +74,7 @@ public abstract class DesktopComponentItemRenderBase<E> {
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     private Component doRender(RenderItem<E> item) {
-        if (myRender instanceof ReusableComponentItemRender reusable) {
+        if (myRenderer instanceof ReusableComponentItemRender reusable) {
             if (myReusedComponent == null) {
                 myReusedComponent = (consulo.ui.Component) reusable.createComponent();
             }
@@ -81,7 +82,7 @@ public abstract class DesktopComponentItemRenderBase<E> {
             return TargetAWT.to(myReusedComponent);
         }
 
-        return TargetAWT.to(myRender.render(item));
+        return TargetAWT.to(myRenderer.render(item));
     }
 
     /**

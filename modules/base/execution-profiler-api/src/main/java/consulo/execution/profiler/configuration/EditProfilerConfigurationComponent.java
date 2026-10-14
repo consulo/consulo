@@ -103,7 +103,7 @@ public class EditProfilerConfigurationComponent implements UnnamedConfigurable {
         myUiDisposable = uiDisposable;
 
         ListBox<ProfilerConfigurationState> list = ListBox.create(myModel);
-        list.setRender((presentation, item) -> {
+        list.setRenderer((presentation, item) -> {
             ProfilerConfigurationState state = item.getValue();
             if (state != null) {
                 ProfilerConfigurationTypeBase<?> type = getTypes().get(state.getConfigurationTypeId());

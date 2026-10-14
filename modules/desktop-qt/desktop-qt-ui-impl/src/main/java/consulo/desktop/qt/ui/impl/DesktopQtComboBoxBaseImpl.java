@@ -46,7 +46,7 @@ public abstract class DesktopQtComboBoxBaseImpl<E, W extends QComboBox> extends 
     implements ComboBoxBase<E>, DesktopQtIconOwner {
     protected final FlatDataModel<E> myModel;
 
-    private TextItemRender<E> myRenderer = TextItemRender.defaultRender();
+    private TextItemRender<E> myRenderer = TextItemRender.defaultRenderer();
 
     private final Set<ComboBoxStyle> myStyles = EnumSet.noneOf(ComboBoxStyle.class);
 

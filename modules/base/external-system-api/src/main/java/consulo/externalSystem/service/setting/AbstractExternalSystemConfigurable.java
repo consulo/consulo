@@ -138,7 +138,7 @@ public abstract class AbstractExternalSystemConfigurable<
         myProjectSettingsHolder = projectSettingsHolder;
 
         ListBox<ProjectSettings> projectsBox = ListBox.create(myProjectSettings);
-        projectsBox.setRender((presentation, item) -> {
+        projectsBox.setRenderer((presentation, item) -> {
             ProjectSettings value = item.getValue();
             presentation.append(value == null ? "" : getProjectName(value.getExternalProjectPath()));
         });

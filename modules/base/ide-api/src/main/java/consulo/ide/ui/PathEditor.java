@@ -123,7 +123,7 @@ public class PathEditor {
         Table<VirtualFile> table = Table.create(model);
         table.setShowHeader(false);
         table.setAllowMultipleSelect(true);
-        table.addColumn(LocalizeValue.empty(), file -> file).setRender((presentation, item) -> {
+        table.addColumn(LocalizeValue.empty(), file -> file).setRenderer((presentation, item) -> {
             VirtualFile file = item.getValue();
             if (file != null) {
                 render(presentation, file);

@@ -167,7 +167,7 @@ public abstract class DeployToServerSettingsEditor<S extends ServerConfiguration
             sources.sort(Comparator.comparing(deploymentSource -> deploymentSource.getPresentableName().get(), String.CASE_INSENSITIVE_ORDER));
 
             mySourceComboBox = ComboBox.create(sources);
-            mySourceComboBox.setRender((presentation, item) -> {
+            mySourceComboBox.setRenderer((presentation, item) -> {
                 DeploymentSource value = item.getValue();
                 if (value == null) {
                     return;

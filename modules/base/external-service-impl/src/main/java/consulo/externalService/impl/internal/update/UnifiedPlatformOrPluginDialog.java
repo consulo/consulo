@@ -132,7 +132,7 @@ public class UnifiedPlatformOrPluginDialog {
         });
 
         ListBox<PluginDescriptor> list = ListBox.create(toShowPluginList);
-        list.setRender(this::renderRow);
+        list.setRenderer(this::renderRow);
         list.setItemHeightGetter(item -> UnifiedPluginRowRender.ROW_HEIGHT);
 
         Button okButton = Button.create(CommonLocalize.buttonOk(), event -> {

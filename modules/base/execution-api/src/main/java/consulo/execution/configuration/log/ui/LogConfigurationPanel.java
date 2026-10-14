@@ -80,7 +80,7 @@ public class LogConfigurationPanel<T extends RunConfigurationBase> extends Setti
         Table<LogFileOptions> table = Table.create(myModel);
         table.addColumn(ExecutionLocalize.logMonitorIsActiveColumn(), LogFileOptions::isEnabled)
             .setWidth(90)
-            .setRender(ComponentItemRender.reusable(
+            .setRenderer(ComponentItemRender.reusable(
                 () -> CheckBox.create(LocalizeValue.empty()),
                 (checkBox, item) -> checkBox.setValue(Boolean.TRUE.equals(item.getValue()))
             ))
@@ -106,7 +106,7 @@ public class LogConfigurationPanel<T extends RunConfigurationBase> extends Setti
         table.addColumn(ExecutionLocalize.logMonitorLogFileColumn(), LogFileOptions::getName);
         table.addColumn(ExecutionLocalize.logMonitorIsSkippedColumn(), LogFileOptions::isSkipContent)
             .setWidth(90)
-            .setRender(ComponentItemRender.reusable(
+            .setRenderer(ComponentItemRender.reusable(
                 () -> CheckBox.create(LocalizeValue.empty()),
                 (checkBox, item) -> checkBox.setValue(Boolean.TRUE.equals(item.getValue()))
             ))

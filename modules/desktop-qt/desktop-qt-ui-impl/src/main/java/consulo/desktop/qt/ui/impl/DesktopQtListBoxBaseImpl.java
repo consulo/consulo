@@ -241,9 +241,9 @@ public abstract class DesktopQtListBoxBaseImpl<E> extends QtComponentDelegate<QL
 
     private final FlatDataModel<E> myModel;
 
-    private TextItemRender<E> myRenderer = TextItemRender.defaultRender();
+    private TextItemRender<E> myRenderer = TextItemRender.defaultRenderer();
 
-    private @Nullable ComponentItemRender<E> myComponentRender;
+    private @Nullable ComponentItemRender<E> myComponentRenderer;
 
     private Predicate<E> mySeparatorPredicate = item -> false;
 
@@ -455,7 +455,7 @@ public abstract class DesktopQtListBoxBaseImpl<E> extends QtComponentDelegate<QL
     }
 
     private boolean isPooled() {
-        return myComponentRender instanceof ReusableComponentItemRender<E, ?> && !myPoolUnsupported;
+        return myComponentRenderer instanceof ReusableComponentItemRender<E, ?> && !myPoolUnsupported;
     }
 
     private void syncPooledItems(QListWidget component) {
@@ -586,7 +586,7 @@ public abstract class DesktopQtListBoxBaseImpl<E> extends QtComponentDelegate<QL
 
     @SuppressWarnings("unchecked")
     private @Nullable PooledRow createPooledRow(QListWidget component) {
-        if (!(myComponentRender instanceof ReusableComponentItemRender<E, ?> render)) {
+        if (!(myComponentRenderer instanceof ReusableComponentItemRender<E, ?> render)) {
             return null;
         }
 
@@ -613,7 +613,7 @@ public abstract class DesktopQtListBoxBaseImpl<E> extends QtComponentDelegate<QL
 
     @SuppressWarnings("unchecked")
     private void bindPooledRow(PooledRow row, E element, boolean selected) {
-        if (myComponentRender instanceof ReusableComponentItemRender<E, ?> render) {
+        if (myComponentRenderer instanceof ReusableComponentItemRender<E, ?> render) {
             ((ReusableComponentItemRender<E, consulo.ui.Component>) render).bind(row.myRendered, RenderItem.of(element, selected));
         }
     }
@@ -784,7 +784,7 @@ public abstract class DesktopQtListBoxBaseImpl<E> extends QtComponentDelegate<QL
                 continue;
             }
 
-            if (myComponentRender != null) {
+            if (myComponentRenderer != null) {
                 addRenderedItem(component, element, i);
                 continue;
             }
@@ -818,7 +818,7 @@ public abstract class DesktopQtListBoxBaseImpl<E> extends QtComponentDelegate<QL
      * the api allows for it cannot be bound again for the next row.
      */
     private void addRenderedItem(QListWidget component, E element, int index) {
-        ComponentItemRender<E> render = myComponentRender;
+        ComponentItemRender<E> render = myComponentRenderer;
         if (render == null) {
             return;
         }
@@ -949,18 +949,18 @@ public abstract class DesktopQtListBoxBaseImpl<E> extends QtComponentDelegate<QL
     }
 
     @Override
-    public void setRender(TextItemRender<E> render) {
-        myRenderer = render;
+    public void setRender(TextItemRender<E> renderer) {
+        myRenderer = renderer;
 
         rebuildIfBound();
     }
 
     @Override
-    public void setRender(ComponentItemRender<E> render) {
+    public void setRender(ComponentItemRender<E> renderer) {
         destroyPool();
         myPoolUnsupported = false;
 
-        myComponentRender = render;
+        myComponentRenderer = renderer;
 
         rebuildIfBound();
     }

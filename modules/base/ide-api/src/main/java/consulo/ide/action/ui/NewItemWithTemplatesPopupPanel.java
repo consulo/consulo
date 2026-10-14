@@ -27,7 +27,7 @@ public class NewItemWithTemplatesPopupPanel<T> extends NewItemSimplePopupPanel {
         myTemplatesModel = FlatDataModel.of(templatesList);
 
         myTemplatesList = ListBox.create(myTemplatesModel);
-        myTemplatesList.setRender(render);
+        myTemplatesList.setRenderer(render);
         myTemplatesList.addDoubleClickListener(event -> {
             if (myApplyAction != null) {
                 myApplyAction.accept(null);

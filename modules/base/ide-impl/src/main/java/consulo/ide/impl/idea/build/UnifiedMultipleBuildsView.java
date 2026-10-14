@@ -310,7 +310,7 @@ public class UnifiedMultipleBuildsView extends BaseMultipleBuildsView {
         }
 
         myBuildsList = ListBox.create(List.<AbstractViewManager.BuildInfo>of());
-        myBuildsList.setRender((presentation, item) -> {
+        myBuildsList.setRenderer((presentation, item) -> {
             AbstractViewManager.BuildInfo buildInfo = item.getValue();
             if (buildInfo == null) {
                 return;

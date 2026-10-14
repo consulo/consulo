@@ -44,8 +44,8 @@ public class WebTableColumnImpl<Item, Value> extends WebGridColumnBase<Item, Ite
     private final WebTableImpl<Item> myTable;
     private final Function<Item, Value> myValueProvider;
 
-    private TableItemRender<Item, Value> myRender = TableItemRender.of(TextItemRender.defaultRender());
-    private @Nullable ComponentItemRender<Value> myComponentRender;
+    private TableItemRender<Item, Value> myRenderer = TableItemRender.of(TextItemRender.defaultRenderer());
+    private @Nullable ComponentItemRender<Value> myComponentRenderer;
     private @Nullable TableItemEditor<Item, Value> myEditor;
     private HorizontalAlignment myAlignment = HorizontalAlignment.LEFT;
 
@@ -72,12 +72,12 @@ public class WebTableColumnImpl<Item, Value> extends WebGridColumnBase<Item, Ite
 
     @Override
     protected TableItemRender<Item, Value> getRender() {
-        return myRender;
+        return myRenderer;
     }
 
     @Override
     protected @Nullable ComponentItemRender<Value> getComponentRender() {
-        return myComponentRender;
+        return myComponentRenderer;
     }
 
     @Override
@@ -119,22 +119,22 @@ public class WebTableColumnImpl<Item, Value> extends WebGridColumnBase<Item, Ite
     }
 
     @Override
-    public TableColumn<Item, Value> setRender(TableItemRender<Item, Value> render) {
-        myRender = render;
-        myComponentRender = null;
+    public TableColumn<Item, Value> setRender(TableItemRender<Item, Value> renderer) {
+        myRenderer = renderer;
+        myComponentRenderer = null;
         return this;
     }
 
     @Override
-    public TableColumn<Item, Value> setRender(TextItemRender<Value> render) {
-        myRender = TableItemRender.of(render);
-        myComponentRender = null;
+    public TableColumn<Item, Value> setRender(TextItemRender<Value> renderer) {
+        myRenderer = TableItemRender.of(renderer);
+        myComponentRenderer = null;
         return this;
     }
 
     @Override
-    public TableColumn<Item, Value> setRender(ComponentItemRender<Value> render) {
-        myComponentRender = render;
+    public TableColumn<Item, Value> setRender(ComponentItemRender<Value> renderer) {
+        myComponentRenderer = renderer;
         return this;
     }
 

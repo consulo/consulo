@@ -49,7 +49,7 @@ public class CodeStyleSchemesPanel {
 
         mySchemeComboBoxModel = FlatDataModel.of(List.of());
         mySchemeComboBox = ComboBox.create(mySchemeComboBoxModel);
-        mySchemeComboBox.setRender((renderer, renderItem) -> {
+        mySchemeComboBox.setRenderer((renderer, renderItem) -> {
             var scheme = renderItem.getValue();
             if (scheme == null) {
                 return;

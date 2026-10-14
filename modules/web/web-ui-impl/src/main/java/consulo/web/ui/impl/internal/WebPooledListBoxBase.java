@@ -136,8 +136,8 @@ public abstract class WebPooledListBoxBase<E> extends VaadinComponentDelegate<We
     private final FlatDataModel<E> myModel;
     private final List<Row> myPool = new ArrayList<>();
 
-    private @Nullable ReusableComponentItemRender<E, ?> myReusableRender;
-    private @Nullable ComponentItemRender<E> myRender;
+    private @Nullable ReusableComponentItemRender<E, ?> myReusableRenderer;
+    private @Nullable ComponentItemRender<E> myRenderer;
     private @Nullable Function<E, Length> myItemHeightGetter;
     private @Nullable Function<E, String> mySpeedSearchConverter;
     private Predicate<E> mySeparatorPredicate = item -> false;
@@ -173,7 +173,7 @@ public abstract class WebPooledListBoxBase<E> extends VaadinComponentDelegate<We
         });
         loadScript();
 
-        setRender(TextItemRender.defaultRender());
+        setRenderer(TextItemRender.defaultRenderer());
 
         pushItemCount();
     }
@@ -250,8 +250,8 @@ public abstract class WebPooledListBoxBase<E> extends VaadinComponentDelegate<We
     }
 
     private @Nullable Row createRow() {
-        if (myReusableRender != null) {
-            return new Row(myReusableRender.createComponent());
+        if (myReusableRenderer != null) {
+            return new Row(myReusableRenderer.createComponent());
         }
         return null;
     }
@@ -273,8 +273,8 @@ public abstract class WebPooledListBoxBase<E> extends VaadinComponentDelegate<We
 
         boolean selected = !separator && isSelected(item);
 
-        if (!separator && myReusableRender != null) {
-            ((ReusableComponentItemRender<E, consulo.ui.Component>)myReusableRender)
+        if (!separator && myReusableRenderer != null) {
+            ((ReusableComponentItemRender<E, consulo.ui.Component>) myReusableRenderer)
                 .bind(row.myRendered, RenderItem.of(item, selected));
         }
 
@@ -376,7 +376,7 @@ public abstract class WebPooledListBoxBase<E> extends VaadinComponentDelegate<We
      */
     @Override
     public void setRender(TextItemRender<E> render) {
-        setRender(ComponentItemRender.<E, TextRow>reusable(
+        setRenderer(ComponentItemRender.<E, TextRow>reusable(
             TextRow::new,
             (row, item) -> {
                 WebItemPresentationImpl presentation = new WebItemPresentationImpl();
@@ -420,19 +420,19 @@ public abstract class WebPooledListBoxBase<E> extends VaadinComponentDelegate<We
     }
 
     @Override
-    public void setRender(ComponentItemRender<E> render) {
-        myRender = render;
+    public void setRender(ComponentItemRender<E> renderer) {
+        myRenderer = renderer;
 
-        if (render instanceof ReusableComponentItemRender<E, ?> reusable) {
-            myReusableRender = reusable;
+        if (renderer instanceof ReusableComponentItemRender<E, ?> reusable) {
+            myReusableRenderer = reusable;
         }
         else {
             // a plain render builds a fresh component per item and has nothing to rebind, so it is held the way
             // a text render is - in a kept row whose content is replaced. without this the pool had no way to
             // make rows at all and the list stayed empty
-            myReusableRender = (ReusableComponentItemRender<E, ?>) ComponentItemRender.<E, TextRow>reusable(
+            myReusableRenderer = (ReusableComponentItemRender<E, ?>) ComponentItemRender.<E, TextRow>reusable(
                 TextRow::new,
-                (row, item) -> row.setContent(((ToVaadinComponentWrapper) render.render(item)).toVaadinComponent())
+                (row, item) -> row.setContent(((ToVaadinComponentWrapper) renderer.render(item)).toVaadinComponent())
             );
         }
 

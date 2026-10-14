@@ -44,7 +44,7 @@ public class DesktopTableColumnImpl<Item, Value> extends ColumnInfo<Item, Value>
     private final Function<Item, @Nullable ColorValue> myRowBackground;
     private final Function<Item, Value> myValueProvider;
 
-    private TableItemRender<Item, Value> myRender = TableItemRender.of(TextItemRender.defaultRender());
+    private TableItemRender<Item, Value> myRenderer = TableItemRender.of(TextItemRender.defaultRenderer());
 
     /**
      * A table asks for a renderer per row, so the bridge is held here instead of being built per call - a
@@ -93,24 +93,24 @@ public class DesktopTableColumnImpl<Item, Value> extends ColumnInfo<Item, Value>
     }
 
     @Override
-    public TableColumn<Item, Value> setRender(TextItemRender<Value> render) {
-        myRender = TableItemRender.of(render);
+    public TableColumn<Item, Value> setRender(TextItemRender<Value> renderer) {
+        myRenderer = TableItemRender.of(renderer);
         myComponentRenderer = null;
         fireChanged();
         return this;
     }
 
     @Override
-    public TableColumn<Item, Value> setRender(TableItemRender<Item, Value> render) {
-        myRender = render;
+    public TableColumn<Item, Value> setRender(TableItemRender<Item, Value> renderer) {
+        myRenderer = renderer;
         myComponentRenderer = null;
         fireChanged();
         return this;
     }
 
     @Override
-    public TableColumn<Item, Value> setRender(ComponentItemRender<Value> render) {
-        myComponentRenderer = new DesktopComponentItemTableCellRenderer<>(render);
+    public TableColumn<Item, Value> setRender(ComponentItemRender<Value> renderer) {
+        myComponentRenderer = new DesktopComponentItemTableCellRenderer<>(renderer);
         fireChanged();
         return this;
     }
@@ -197,7 +197,7 @@ public class DesktopTableColumnImpl<Item, Value> extends ColumnInfo<Item, Value>
 
                 DesktopTextItemPresentationImpl presentation = new DesktopTextItemPresentationImpl(this);
                 rendered.set(presentation);
-                myRender.render(presentation, RenderItem.of(typedValue(value), selected), item);
+                myRenderer.render(presentation, RenderItem.of(typedValue(value), selected), item);
             }
 
             @Override

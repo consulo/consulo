@@ -355,7 +355,7 @@ public class DesktopQtNavigationBar implements Disposable {
         }
 
         ListBox<T> list = ListBox.create(items);
-        list.setRender((presentation, item) -> {
+        list.setRenderer((presentation, item) -> {
             T value = item.getValue();
             if (value == null) {
                 return;

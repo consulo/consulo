@@ -128,7 +128,7 @@ public class RowSuffixUITesterTab implements UITesterTab {
         Disposer.register(uiDisposable, tree.destroyHook());
 
         ListBox<String> listBox = ListBox.create(ROWS);
-        listBox.setRender((presentation, item) -> {
+        listBox.setRenderer((presentation, item) -> {
             String value = item.getValue();
             if (value != null) {
                 render(value, presentation, false);
@@ -138,7 +138,7 @@ public class RowSuffixUITesterTab implements UITesterTab {
         Table<String> table = Table.create(FlatDataModel.of(ROWS));
         table.addColumn(LocalizeValue.localizeTODO("Name"), row -> row)
             .setWidth(220)
-            .setRender((presentation, item) -> {
+            .setRenderer((presentation, item) -> {
                 String value = item.getValue();
                 if (value != null) {
                     render(value, presentation, false);

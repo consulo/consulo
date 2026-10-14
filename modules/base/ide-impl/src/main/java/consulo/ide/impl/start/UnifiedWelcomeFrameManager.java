@@ -205,7 +205,7 @@ public class UnifiedWelcomeFrameManager extends WelcomeFrameManager {
 
         ListBox<AnAction> listSelect = ListBox.create(model);
         listBoxRef.set(listSelect);
-        listSelect.setRender(new RecentProjectItemRender(
+        listSelect.setRenderer(new RecentProjectItemRender(
             myRecentProjectsManager.get(),
             RecentProjectsChecker.getInstance(),
             (action, event) -> {

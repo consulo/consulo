@@ -442,7 +442,7 @@ public class UnifiedFindPopupPanel implements FindUI {
 
         myResultsModel = FlatDataModel.of(new ArrayList<>());
         myResultsList = ListBox.create(myResultsModel);
-        myResultsList.setRender(ComponentItemRender.reusable(this::createResultRow, this::bindResultRow));
+        myResultsList.setRenderer(ComponentItemRender.reusable(this::createResultRow, this::bindResultRow));
         myResultsList.setPlaceholder(UILocalize.messageNothingtoshow());
         myResultsList.addValueListener(event -> {
             if (!myApplyingResults) {

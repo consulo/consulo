@@ -15,7 +15,9 @@
  */
 package consulo.ui;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.disposer.Disposable;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ComponentEventListener;
 import consulo.ui.event.ListDoubleClickEvent;
 import consulo.ui.model.FlatDataModel;
@@ -29,12 +31,27 @@ import java.util.function.Predicate;
  * @author VISTALL
  * @since 2026-10-02
  */
-public interface ListBoxBase<E> extends HasSpeedSearch<E>, HasItemSize<E>, HasTransferHandler<E>, HasSize, HasPlaceholder,
-    HasAccessibility {
+public interface ListBoxBase<E>
+    extends HasSpeedSearch<E>, HasItemSize<E>, HasTransferHandler<E>, HasSize, HasPlaceholder, HasAccessibility {
+
     FlatDataModel<E> getDataModel();
 
-    void setRender(TextItemRender<E> render);
+    @SuppressWarnings("deprecation")
+    default void setRenderer(TextItemRender<E> render) {
+        setRender(render);
+    }
 
+    @Deprecated
+    @DeprecationInfo("Use #setRenderer")
+    void setRender(TextItemRender<E> renderer);
+
+    @SuppressWarnings("deprecation")
+    default void setRenderer(ComponentItemRender<E> renderer) {
+        setRender(renderer);
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use #setRenderer")
     void setRender(ComponentItemRender<E> render);
 
     @SuppressWarnings("unchecked")

@@ -303,7 +303,7 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableWidget>
 
     private <Value> DesktopQtTextItemPresentation renderCell(int row, Item item, TableColumnImpl<Item, Value> column, Value value) {
         DesktopQtTextItemPresentation presentation = new DesktopQtTextItemPresentation();
-        column.getRender().render(presentation, RenderItem.of(value, isSelected(row)), item);
+        column.getRenderer().render(presentation, RenderItem.of(value, isSelected(row)), item);
         return presentation;
     }
 
@@ -351,9 +351,9 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableWidget>
             return toQtWidget(table, valueComponent);
         }
 
-        ComponentItemRender<Value> componentRender = column.getComponentRender();
-        if (componentRender != null) {
-            return toQtWidget(table, componentRender.render(RenderItem.of(value, isSelected(row))));
+        ComponentItemRender<Value> componentRenderer = column.getComponentRenderer();
+        if (componentRenderer != null) {
+            return toQtWidget(table, componentRenderer.render(RenderItem.of(value, isSelected(row))));
         }
 
         return null;

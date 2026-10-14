@@ -40,7 +40,7 @@ import java.util.function.Predicate;
 public abstract class WebListComponentBase<V, C extends Component & HasListDataView & FromVaadinComponentWrapper>
     extends VaadinComponentDelegate<C> {
     protected final FlatDataModel<V> myModel;
-    protected TextItemRender<V> myTextRender = TextItemRender.defaultRender();
+    protected TextItemRender<V> myTextRenderer = TextItemRender.defaultRenderer();
 
     protected @Nullable Function<V, String> mySpeedSearchConverter;
     protected @Nullable Function<V, Length> myItemHeightGetter;

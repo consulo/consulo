@@ -102,7 +102,7 @@ public class McpServerConfigurable extends SimpleConfigurableByProperties implem
 
         table.addColumn(McpServerLocalize.columnEnabled(), descriptor -> settings.isToolEnabled(descriptor.getName()))
             .setWidth(70)
-            .setRender(ComponentItemRender.reusable(
+            .setRenderer(ComponentItemRender.reusable(
                 () -> CheckBox.create(LocalizeValue.empty()),
                 (checkBox, item) -> checkBox.setValue(Boolean.TRUE.equals(item.getValue()))))
             .setEditor(new TableItemEditor<>() {

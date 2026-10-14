@@ -301,7 +301,7 @@ public class EditorGeneralConfigurable extends SimpleConfigurableByProperties im
         EditorColorsScheme[] schemes = editorColorsManager.getAllSchemes();
         ContainerUtil.addAll(colorSchemeList, schemes);
         ComboBox<Object> colorSchemeBox = ComboBox.create(colorSchemeList);
-        colorSchemeBox.setRender((renderer, renderItem) -> {
+        colorSchemeBox.setRenderer((renderer, renderItem) -> {
             var item = renderItem.getValue();
             if (RichCopySettings.ACTIVE_GLOBAL_SCHEME_MARKER.equals(item)) {
                 renderer.append(ApplicationLocalize.comboboxRichcopyColorSchemeActive());

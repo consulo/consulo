@@ -138,7 +138,7 @@ public class WebMultiSelectComboBoxImpl<E> extends WebListComponentBase<E, WebMu
             }
         });
 
-        setRender(TextItemRender.defaultRender());
+        setRenderer(TextItemRender.defaultRenderer());
     }
 
     @Override
@@ -186,17 +186,17 @@ public class WebMultiSelectComboBoxImpl<E> extends WebListComponentBase<E, WebMu
     }
 
     @Override
-    public void setRender(TextItemRender<E> render) {
-        myTextRender = render;
+    public void setRender(TextItemRender<E> renderer) {
+        myTextRenderer = renderer;
 
         Vaadin component = toVaadinComponent();
-        component.setItemLabelGenerator(item -> textOf(render, item));
-        component.setRenderer(createRenderer(render, this::isSelected));
+        component.setItemLabelGenerator(item -> textOf(renderer, item));
+        component.setRenderer(createRenderer(renderer, this::isSelected));
     }
 
     @Override
-    public void setRender(ComponentItemRender<E> render) {
-        toVaadinComponent().setRenderer(createRenderer(render, this::isSelected));
+    public void setRender(ComponentItemRender<E> renderer) {
+        toVaadinComponent().setRenderer(createRenderer(renderer, this::isSelected));
     }
 
     @Override

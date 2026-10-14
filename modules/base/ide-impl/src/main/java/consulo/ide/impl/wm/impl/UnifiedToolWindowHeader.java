@@ -232,7 +232,7 @@ public class UnifiedToolWindowHeader implements Disposable {
     @RequiredUIAccess
     private Component createCombo(ContentManager contentManager, Content selected) {
         ComboBox<Content> comboBox = ComboBox.create(contentManager.getContents());
-        comboBox.setRender((presentation, item) -> {
+        comboBox.setRenderer((presentation, item) -> {
             Content content = item.getValue();
             if (content == null) {
                 return;

@@ -114,7 +114,7 @@ class UnifiedFindPopupScopeUI {
 
         myScopeComboBox = ComboBox.create(collectScopes());
         myScopeComboBox.addStyle(ComboBoxStyle.INPLACE);
-        myScopeComboBox.setRender((presentation, item) -> {
+        myScopeComboBox.setRenderer((presentation, item) -> {
             ScopeDescriptor descriptor = item.getValue();
             if (descriptor != null) {
                 presentation.withIcon(descriptor.getIcon());

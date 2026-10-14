@@ -40,8 +40,8 @@ import java.util.function.Function;
 abstract class DesktopComboBoxBaseImpl<E, C extends JComponent> extends SwingComponentDelegate<C> implements ComboBoxBase<E> {
     protected final FlatDataModel<E> myModel;
 
-    protected TextItemRender<E> myTextRender = TextItemRender.defaultRender();
-    protected @Nullable ComponentItemRender<E> myComponentRender;
+    protected TextItemRender<E> myTextRenderer = TextItemRender.defaultRenderer();
+    protected @Nullable ComponentItemRender<E> myComponentRenderer;
     private @Nullable Function<E, String> mySpeedSearchConverter;
     private @Nullable Function<E, Length> myItemHeightGetter;
 
@@ -60,9 +60,9 @@ abstract class DesktopComboBoxBaseImpl<E, C extends JComponent> extends SwingCom
     }
 
     private void applyRender(JComboBox<E> comboBox) {
-        ListCellRenderer<E> render = myComponentRender != null
-            ? new DesktopComponentItemRenderAdapter<>(myComponentRender, () -> -1)
-            : new DesktopListRender<>(() -> myTextRender);
+        ListCellRenderer<E> render = myComponentRenderer != null
+            ? new DesktopComponentItemRenderAdapter<>(myComponentRenderer, () -> -1)
+            : new DesktopListRender<>(() -> myTextRenderer);
 
         comboBox.setRenderer(DesktopItemHeightRender.wrap(render, () -> myItemHeightGetter));
     }
@@ -107,14 +107,14 @@ abstract class DesktopComboBoxBaseImpl<E, C extends JComponent> extends SwingCom
 
     @Override
     public void setRender(TextItemRender<E> render) {
-        myTextRender = render;
-        myComponentRender = null;
+        myTextRenderer = render;
+        myComponentRenderer = null;
         refreshRender();
     }
 
     @Override
     public void setRender(ComponentItemRender<E> render) {
-        myComponentRender = render;
+        myComponentRenderer = render;
         refreshRender();
     }
 

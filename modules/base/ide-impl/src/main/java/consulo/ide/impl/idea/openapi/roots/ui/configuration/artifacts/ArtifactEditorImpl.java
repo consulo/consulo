@@ -195,7 +195,7 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
         myProject.getApplication().getExtensionPoint(ArtifactType.class).forEach(types::add);
 
         ComboBox<ArtifactType> typeBox = ComboBox.create(types);
-        typeBox.setRender((presentation, item) -> {
+        typeBox.setRenderer((presentation, item) -> {
             ArtifactType type = item.getValue();
             if (type != null) {
                 presentation.withIcon(type.getIcon());

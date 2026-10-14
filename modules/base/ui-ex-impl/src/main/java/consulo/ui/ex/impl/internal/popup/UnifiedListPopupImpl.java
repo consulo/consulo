@@ -150,7 +150,7 @@ public class UnifiedListPopupImpl extends UnifiedPopupImpl implements ListPopup 
 
         Level top = myLevels.peek();
         if (top != null) {
-            top.myList.setRender(myRender);
+            top.myList.setRenderer(myRender);
         }
     }
 
@@ -201,7 +201,7 @@ public class UnifiedListPopupImpl extends UnifiedPopupImpl implements ListPopup 
         FlatDataModel<Object> model = step.getModel();
         ListBox<Object> list = UIInternalEx.get()._Components_popupListBox(model != null ? model : FlatDataModel.of(step.getValues()));
 
-        list.setRender(renderFor(step));
+        list.setRenderer(renderFor(step));
 
         list.isSeparator(step::isSeparator);
 
@@ -450,7 +450,7 @@ public class UnifiedListPopupImpl extends UnifiedPopupImpl implements ListPopup 
     private void updateStepItems(Level level, ActionPopupStep step) {
         step.updateStepItems().whenComplete((ignored, throwable) -> {
             if (throwable == null && !isDisposed() && myLevels.contains(level)) {
-                level.myList.setRender(renderFor(level.myStep));
+                level.myList.setRenderer(renderFor(level.myStep));
             }
         });
     }

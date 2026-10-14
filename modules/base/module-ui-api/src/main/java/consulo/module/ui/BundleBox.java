@@ -289,7 +289,7 @@ public class BundleBox implements PseudoComponent {
     ) {
         myOriginalComboBox = ComboBox.create(model(bundleHolder, filter, nullItemName));
 
-        myOriginalComboBox.setRender((renderer, renderItem) -> {
+        myOriginalComboBox.setRenderer((renderer, renderItem) -> {
             var value = renderItem.getValue();
             if (value instanceof InvalidBundleBoxItem) {
                 renderer.withIcon(PlatformIconGroup.actionsHelp());

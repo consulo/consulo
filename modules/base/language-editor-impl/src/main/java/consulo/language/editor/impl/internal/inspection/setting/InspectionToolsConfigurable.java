@@ -186,7 +186,7 @@ public abstract class InspectionToolsConfigurable implements SearchableConfigura
         myProfilesModel = profilesModel;
 
         ComboBox<InspectionProfilePanel> profiles = ComboBox.create(profilesModel);
-        profiles.setRender((presentation, item) -> {
+        profiles.setRenderer((presentation, item) -> {
             InspectionProfilePanel panel = item.getValue();
             if (panel == null) {
                 return;

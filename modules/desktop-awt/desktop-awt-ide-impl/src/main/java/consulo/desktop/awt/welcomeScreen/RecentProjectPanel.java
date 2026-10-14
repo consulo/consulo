@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.welcomeScreen;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
@@ -89,7 +90,7 @@ public class RecentProjectPanel {
         myModel = FlatDataModel.of(Arrays.asList(recentProjectActions));
 
         myListBox = ListBox.create(myModel);
-        myListBox.setRender(createItemRender());
+        myListBox.setRenderer(createItemRenderer());
         myListBox.setSpeedSearchConverter(RecentProjectPanel::getSearchText);
         myListBox.setItemHeightGetter(action -> RecentProjectItemRender.ROW_HEIGHT);
 
@@ -226,6 +227,13 @@ public class RecentProjectPanel {
         return false;
     }
 
+    @SuppressWarnings("deprecation")
+    protected ComponentItemRender<AnAction> createItemRenderer() {
+        return createItemRender();
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use #createItemRenderer")
     protected ComponentItemRender<AnAction> createItemRender() {
         return new RecentProjectItemRender(
             RecentProjectsManager.getInstance(),

@@ -15,13 +15,9 @@
  */
 package consulo.ui.impl.table;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.localize.LocalizeValue;
-import consulo.ui.ComponentItemRender;
-import consulo.ui.HorizontalAlignment;
-import consulo.ui.TableColumn;
-import consulo.ui.TableItemEditor;
-import consulo.ui.TableItemRender;
-import consulo.ui.TextItemRender;
+import consulo.ui.*;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Comparator;
@@ -37,8 +33,8 @@ public class TableColumnImpl<Item, Value> implements TableColumn<Item, Value> {
     private final int myIndex;
 
     private volatile LocalizeValue myHeader;
-    private volatile TableItemRender<Item, Value> myRender = TableItemRender.of(TextItemRender.defaultRender());
-    private volatile @Nullable ComponentItemRender<Value> myComponentRender;
+    private volatile TableItemRender<Item, Value> myRenderer = TableItemRender.of(TextItemRender.defaultRenderer());
+    private volatile @Nullable ComponentItemRender<Value> myComponentRenderer;
     private volatile @Nullable Comparator<Value> myComparator;
     private volatile @Nullable TableItemEditor<Item, Value> myEditor;
 
@@ -69,16 +65,37 @@ public class TableColumnImpl<Item, Value> implements TableColumn<Item, Value> {
         return myValueProvider.apply(item);
     }
 
+    @SuppressWarnings("deprecation")
+    public TableItemRender<Item, Value> getRenderer() {
+        return getRender();
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use #getRenderer")
     public TableItemRender<Item, Value> getRender() {
-        return myRender;
+        return myRenderer;
     }
 
+    @SuppressWarnings("deprecation")
+    public TableItemRender<Item, Value> getTextRenderer() {
+        return getTextRender();
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use #getTextRenderer")
     public TableItemRender<Item, Value> getTextRender() {
-        return myComponentRender == null ? myRender : TableItemRender.of(TextItemRender.defaultRender());
+        return myComponentRenderer == null ? myRenderer : TableItemRender.of(TextItemRender.defaultRenderer());
     }
 
+    @SuppressWarnings("deprecation")
+    public @Nullable ComponentItemRender<Value> getComponentRenderer() {
+        return getComponentRender();
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use #getComponentRenderer")
     public @Nullable ComponentItemRender<Value> getComponentRender() {
-        return myComponentRender;
+        return myComponentRenderer;
     }
 
     public @Nullable Comparator<Value> getComparator() {
@@ -113,24 +130,24 @@ public class TableColumnImpl<Item, Value> implements TableColumn<Item, Value> {
     }
 
     @Override
-    public TableColumn<Item, Value> setRender(TableItemRender<Item, Value> render) {
-        myRender = render;
-        myComponentRender = null;
+    public TableColumn<Item, Value> setRender(TableItemRender<Item, Value> renderer) {
+        myRenderer = renderer;
+        myComponentRenderer = null;
         myOwner.renderChanged();
         return this;
     }
 
     @Override
-    public TableColumn<Item, Value> setRender(TextItemRender<Value> render) {
-        myRender = TableItemRender.of(render);
-        myComponentRender = null;
+    public TableColumn<Item, Value> setRender(TextItemRender<Value> renderer) {
+        myRenderer = TableItemRender.of(renderer);
+        myComponentRenderer = null;
         myOwner.renderChanged();
         return this;
     }
 
     @Override
-    public TableColumn<Item, Value> setRender(ComponentItemRender<Value> render) {
-        myComponentRender = render;
+    public TableColumn<Item, Value> setRender(ComponentItemRender<Value> renderer) {
+        myComponentRenderer = renderer;
         myOwner.renderChanged();
         return this;
     }

@@ -102,7 +102,7 @@ public class SeverityEditorDialogDescriptor extends DialogDescriptor {
     @Override
     public Component createCenterComponent(Disposable uiDisposable) {
         ListBox<SeverityBasedTextAttributes> list = ListBox.create(myModel);
-        list.setRender((presentation, item) -> {
+        list.setRenderer((presentation, item) -> {
             SeverityBasedTextAttributes value = item.getValue();
             if (value != null) {
                 presentation.append(LocalizeValue.of(value.getSeverity().getName()));

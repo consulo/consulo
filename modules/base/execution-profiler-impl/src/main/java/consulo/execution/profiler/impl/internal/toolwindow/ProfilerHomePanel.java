@@ -164,7 +164,7 @@ public final class ProfilerHomePanel implements Disposable {
 
         myRecentModel = FlatDataModel.of(List.of());
         ListBox<String> recentList = ListBox.create(myRecentModel);
-        recentList.setRender((presentation, item) -> {
+        recentList.setRenderer((presentation, item) -> {
             String path = item.getValue();
             if (path != null) {
                 renderRecentSnapshot(path, presentation);

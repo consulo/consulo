@@ -50,15 +50,15 @@ class DesktopMultiSelectComboBoxImpl<E> extends DesktopComboBoxBaseImpl<E, Deskt
 
         @Override
         protected java.awt.Component createItemComponent(E item) {
-            ComponentItemRender<E> componentRender = myComponentRender;
-            if (componentRender != null) {
-                return TargetAWT.to(componentRender.render(RenderItem.of(item, true)));
+            ComponentItemRender<E> componentRenderer = myComponentRenderer;
+            if (componentRenderer != null) {
+                return TargetAWT.to(componentRenderer.render(RenderItem.of(item, true)));
             }
 
             SimpleColoredComponent component = new SimpleColoredComponent();
             component.setOpaque(false);
             component.setIpad(JBUI.emptyInsets());
-            myTextRender.render(new DesktopTextItemPresentationImpl(component), RenderItem.of(item, true));
+            myTextRenderer.render(new DesktopTextItemPresentationImpl(component), RenderItem.of(item, true));
             return component;
         }
 

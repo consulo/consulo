@@ -75,7 +75,7 @@ public class TableUITesterTab implements UITesterTab {
         table.addColumn(LocalizeValue.localizeTODO("On"), key -> states.getOrDefault(key, ThreeState.NO))
             .setWidth(40)
             .setResizable(false)
-            .setRender(ComponentItemRender.reusable(
+            .setRenderer(ComponentItemRender.reusable(
                 () -> TriStateCheckBox.create(LocalizeValue.empty()),
                 (checkBox, item) -> checkBox.setValue(item.getValue() == null ? ThreeState.NO : item.getValue())))
             .setEditor(new TableItemEditor<>() {
@@ -103,7 +103,7 @@ public class TableUITesterTab implements UITesterTab {
         table.addColumn(LocalizeValue.localizeTODO("Value"), values::get)
             .setHorizontalAlignment(HorizontalAlignment.RIGHT)
             .setSortable(Comparator.naturalOrder())
-            .setRender((presentation, item) -> presentation.append(
+            .setRenderer((presentation, item) -> presentation.append(
                 String.valueOf(item.getValue()),
                 item.isSelected() ? TextAttribute.REGULAR_BOLD : TextAttribute.REGULAR
             ))

@@ -197,8 +197,8 @@ abstract class DesktopListBoxBaseImpl<E, V> extends SwingComponentDelegate<JBLis
 
     protected final FlatDataModel<E> myModel;
 
-    private TextItemRender<E> myTextRender = TextItemRender.defaultRender();
-    private @Nullable ComponentItemRender<E> myComponentRender;
+    private TextItemRender<E> myTextRenderer = TextItemRender.defaultRenderer();
+    private @Nullable ComponentItemRender<E> myComponentRenderer;
     private @Nullable DesktopComponentItemRenderAdapter<E> myRenderAdapter;
     private @Nullable ListCellRenderer<E> myHitTestRenderer;
     private @Nullable Function<E, String> mySpeedSearchConverter;
@@ -282,11 +282,11 @@ abstract class DesktopListBoxBaseImpl<E, V> extends SwingComponentDelegate<JBLis
     }
 
     private void applyRender(JBList<E> component) {
-        myRenderAdapter = myComponentRender == null ? null : new DesktopComponentItemRenderAdapter<>(myComponentRender, () -> myHoverIndex);
+        myRenderAdapter = myComponentRenderer == null ? null : new DesktopComponentItemRenderAdapter<>(myComponentRenderer, () -> myHoverIndex);
 
-        ListCellRenderer<E> render = myRenderAdapter != null ? myRenderAdapter : new DesktopListRender<>(() -> myTextRender);
+        ListCellRenderer<E> renderer = myRenderAdapter != null ? myRenderAdapter : new DesktopListRender<>(() -> myTextRenderer);
 
-        ListCellRenderer<E> withHeight = DesktopItemHeightRender.wrap(render, () -> myItemHeightGetter);
+        ListCellRenderer<E> withHeight = DesktopItemHeightRender.wrap(renderer, () -> myItemHeightGetter);
 
         // the swing popups do the same - the renderer answers a separator with a component of its own rather than
         // with a row, see GroupedItemsListRenderer
@@ -328,17 +328,17 @@ abstract class DesktopListBoxBaseImpl<E, V> extends SwingComponentDelegate<JBLis
     }
 
     @Override
-    public void setRender(TextItemRender<E> render) {
-        myTextRender = render;
-        myComponentRender = null;
+    public void setRender(TextItemRender<E> renderer) {
+        myTextRenderer = renderer;
+        myComponentRenderer = null;
         if (isInitialized()) {
             applyRender(toAWTComponent());
         }
     }
 
     @Override
-    public void setRender(ComponentItemRender<E> render) {
-        myComponentRender = render;
+    public void setRender(ComponentItemRender<E> renderer) {
+        myComponentRenderer = renderer;
         if (isInitialized()) {
             applyRender(toAWTComponent());
         }
