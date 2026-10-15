@@ -15,12 +15,15 @@
  */
 package consulo.project.ui.wm;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.ui.ex.popup.Balloon;
 import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
  */
+@Deprecated
+@DeprecationInfo("AWT code will be moved to desktop-awt")
 public interface BalloonLayout {
     void add(Balloon balloon);
 
