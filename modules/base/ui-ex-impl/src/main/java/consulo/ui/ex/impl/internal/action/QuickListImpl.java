@@ -16,6 +16,7 @@
 package consulo.ui.ex.impl.internal.action;
 
 import consulo.component.persist.scheme.ExternalInfo;
+import consulo.logging.Logger;
 import consulo.ui.ex.action.QuickList;
 import consulo.component.persist.scheme.ExternalizableScheme;
 import consulo.util.collection.ArrayUtil;
@@ -26,6 +27,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class QuickListImpl implements QuickList, ExternalizableScheme {
+    private static final Logger LOG = Logger.getInstance(QuickListImpl.class);
+
     private static final String ID_TAG = "id";
     private static final String READONLY_TAG = "readonly";
     private static final String ACTION_TAG = "action";
@@ -43,9 +46,12 @@ public class QuickListImpl implements QuickList, ExternalizableScheme {
      * With read external to be called immediately after in mind
      */
     public QuickListImpl() {
+        LOG.info(new Exception("Creating QuickList"));
     }
 
     public QuickListImpl(String displayName, String description, String[] actionIds, boolean isReadonly) {
+        this();
+        
         myDisplayName = displayName == null ? "" : displayName;
         myDescription = description == null ? "" : description;
         myActionIds = actionIds;
@@ -56,7 +62,6 @@ public class QuickListImpl implements QuickList, ExternalizableScheme {
         return myDisplayName;
     }
 
-    
     @Override
     public String getName() {
         return getDisplayName();
@@ -76,11 +81,11 @@ public class QuickListImpl implements QuickList, ExternalizableScheme {
 
     @Override
     public boolean equals(Object o) {
-      return this == o
-          || o instanceof QuickListImpl that
-          && Arrays.equals(myActionIds, that.myActionIds)
-          && myDescription.equals(that.myDescription)
-          && myDisplayName.equals(that.myDisplayName);
+        return this == o
+            || o instanceof QuickListImpl that
+            && Arrays.equals(myActionIds, that.myActionIds)
+            && myDescription.equals(that.myDescription)
+            && myDisplayName.equals(that.myDisplayName);
     }
 
     @Override
@@ -122,7 +127,7 @@ public class QuickListImpl implements QuickList, ExternalizableScheme {
         myDisplayName = name;
     }
 
-    
+
     @Override
     public ExternalInfo getExternalInfo() {
         return myExternalInfo;
