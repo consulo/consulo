@@ -858,7 +858,6 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
                 }
             }
         };
-        statusPanel.setVisible(!myEditor.isOneLineMode());
         statusPanel.setLayout(new BoxLayout(statusPanel, BoxLayout.X_AXIS));
         statusPanel.add(toolbarComponent);
 

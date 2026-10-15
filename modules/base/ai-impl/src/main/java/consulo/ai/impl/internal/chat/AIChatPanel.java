@@ -44,6 +44,7 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.HorizontalLayout;
+import consulo.ui.layout.HorizontalLayoutStyle;
 import consulo.ui.messageList.MessageInput;
 import consulo.ui.messageList.MessageInputStyle;
 import consulo.ui.messageList.MessageList;
@@ -112,6 +113,7 @@ public class AIChatPanel implements Disposable {
 
         ComboBox<AIModel> modelBox = ComboBox.create(models);
         modelBox.addStyle(ComboBoxStyle.INPLACE);
+        modelBox.addStyle(ComboBoxStyle.TRANSPARENT_BACKGROUND);
         modelBox.setTextRenderer(value -> value == null ? LocalizeValue.empty() : value.getDisplayName());
         modelBox.setValue(chatModel);
         modelBox.addValueListener(event -> switchModel(event.getValue()));
@@ -132,6 +134,7 @@ public class AIChatPanel implements Disposable {
         updateWorkingDirectoryTooltip();
 
         HorizontalLayout suffix = HorizontalLayout.create(Space.NONE);
+        suffix.addStyle(HorizontalLayoutStyle.TRANSPARENT_BACKGROUND);
         suffix.add(myWorkingDirectoryButton);
         suffix.add(modelBox);
         myInput.setSuffixComponent(suffix);

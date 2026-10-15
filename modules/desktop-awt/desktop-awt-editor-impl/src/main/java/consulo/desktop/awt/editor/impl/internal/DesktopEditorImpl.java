@@ -885,7 +885,9 @@ public final class DesktopEditorImpl extends CodeEditorBase
             layeredPanel.addLayerPanel(panel);
         }
 
-        layeredPanel.addLayerPanel(myStatusComponentContainer.getPanel());
+        if (!isOneLineMode()) {
+            layeredPanel.addLayerPanel(myStatusComponentContainer.getPanel());
+        }
 
         myPanel.add(layeredPanel.getPanel(), BorderLayout.CENTER);
 
@@ -1022,6 +1024,25 @@ public final class DesktopEditorImpl extends CodeEditorBase
                 myEditorFloatingToolbar = editorFloatingToolbar;
             }
         });
+    }
+
+    @Override
+    public void setOneLineMode(boolean isOneLineMode) {
+        super.setOneLineMode(isOneLineMode);
+
+        DesktopEditorLayeredPanel layeredPanel = myLayeredPanel;
+        if (layeredPanel == null) {
+            return;
+        }
+
+        JPanel statusPanel = myStatusComponentContainer.getPanel();
+        boolean added = statusPanel.getParent() != null;
+        if (isOneLineMode && added) {
+            layeredPanel.removeLayerPanel(statusPanel);
+        }
+        else if (!isOneLineMode && !added) {
+            layeredPanel.addLayerPanel(statusPanel);
+        }
     }
 
     @Override

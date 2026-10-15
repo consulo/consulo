@@ -29,15 +29,15 @@ final class WebComboBoxStyleUtil {
     static void apply(Component component, ComboBoxStyle style) {
         switch (style) {
             case TRANSPARENT_BACKGROUND:
-                component.getStyle().set("--vaadin-input-field-background", "transparent");
+                component.getStyle()
+                    .set("--vaadin-input-field-background", "transparent")
+                    .set("--vaadin-input-field-disabled-background", "transparent");
                 break;
             case INPLACE:
                 component.getStyle()
                     .set("--vaadin-input-field-border-width", "0")
                     .set("--vaadin-input-field-border-radius", "0")
                     .set("--vaadin-focus-ring-width", "0")
-                    .set("--vaadin-input-field-background", "transparent")
-                    .set("--vaadin-input-field-disabled-background", "transparent")
                     .set("--aura-shadow-xs", "none");
                 break;
             case TOOLBAR:

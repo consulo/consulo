@@ -20,6 +20,7 @@ import consulo.execution.ExecutionResult;
 import consulo.execution.debug.XDebugProcess;
 import consulo.execution.debug.XDebugSession;
 import consulo.execution.debug.XSourcePosition;
+import consulo.execution.debug.evaluation.XDebuggerEditorsProvider;
 import consulo.execution.debug.frame.XSuspendContext;
 import consulo.execution.ui.ExecutionConsole;
 import consulo.process.ProcessHandler;
@@ -43,6 +44,11 @@ public class SandDebugProcess extends XDebugProcess {
     public SandDebugProcess(XDebugSession session, ExecutionResult executionResult) {
         super(session);
         myExecutionResult = executionResult;
+    }
+
+    @Override
+    public XDebuggerEditorsProvider getEditorsProvider() {
+        return SandDebuggerEditorsProvider.INSTANCE;
     }
 
     @Override

@@ -78,7 +78,7 @@ abstract class DesktopComboBoxBaseImpl<E, C extends JComponent> extends SwingCom
         JComboBox<E> comboBox = getComboBox(toAWTComponent());
         switch (style) {
             case TRANSPARENT_BACKGROUND:
-                comboBox.setOpaque(false);
+                AWTComboBoxStyle.makeTransparent(comboBox);
                 break;
             case INPLACE:
                 AWTComboBoxStyle.makeBorderInline(comboBox);
