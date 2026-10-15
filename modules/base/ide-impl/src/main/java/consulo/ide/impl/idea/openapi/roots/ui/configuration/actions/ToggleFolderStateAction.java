@@ -38,11 +38,6 @@ public class ToggleFolderStateAction extends ContentEntryEditingAction {
     }
 
     @Override
-    public boolean displayTextInToolbar() {
-        return true;
-    }
-
-    @Override
     @RequiredUIAccess
     public boolean isSelected(AnActionEvent e) {
         List<VirtualFile> selectedFiles = getSelectedFiles();
