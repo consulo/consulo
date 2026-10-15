@@ -1744,8 +1744,9 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
             useSafely(
                 image.createGraphics(),
                 imageGraphics -> {
+                    Color fillColor = Objects.requireNonNullElseGet(myFillColor, UIUtil::getPanelBackground);
                     //noinspection UseJBColor
-                    imageGraphics.setPaint(new Color(myFillColor.getRGB())); // create a copy to remove alpha
+                    imageGraphics.setPaint(new Color(fillColor.getRGB())); // create a copy to remove alpha
                     imageGraphics.fillRect(0, 0, getWidth(), getHeight());
 
                     super.paintChildren(imageGraphics);
