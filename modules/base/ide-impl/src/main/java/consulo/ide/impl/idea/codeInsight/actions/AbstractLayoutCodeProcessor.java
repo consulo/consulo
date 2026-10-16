@@ -1,7 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-
 package consulo.ide.impl.idea.codeInsight.actions;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
 import consulo.application.ReadAction;
@@ -76,7 +76,8 @@ public abstract class AbstractLayoutCodeProcessor implements LayoutCodeProcessor
 
     private final LocalizeValue myProgressText;
     private final LocalizeValue myCommandName;
-    private Runnable myPostRunnable;
+    private final List<Runnable> myInCommandRunnables = new SmartList<>();
+    private final List<Runnable> myPostRunnables = new SmartList<>();
     private boolean myProcessChangedTextOnly;
 
     protected AbstractLayoutCodeProcessor myPreviousCodeProcessor;
@@ -90,7 +91,7 @@ public abstract class AbstractLayoutCodeProcessor implements LayoutCodeProcessor
         LocalizeValue progressText,
         boolean processChangedTextOnly
     ) {
-        this(project, (Module)null, commandName, progressText, processChangedTextOnly);
+        this(project, (Module) null, commandName, progressText, processChangedTextOnly);
     }
 
     protected AbstractLayoutCodeProcessor(AbstractLayoutCodeProcessor previous, LocalizeValue commandName, LocalizeValue progressText) {
@@ -102,7 +103,6 @@ public abstract class AbstractLayoutCodeProcessor implements LayoutCodeProcessor
         myIncludeSubdirs = previous.myIncludeSubdirs;
         myProcessChangedTextOnly = previous.myProcessChangedTextOnly;
 
-        myPostRunnable = null;
         myProgressText = progressText;
         myCommandName = commandName;
         myPreviousCodeProcessor = previous;
@@ -123,7 +123,6 @@ public abstract class AbstractLayoutCodeProcessor implements LayoutCodeProcessor
         myIncludeSubdirs = true;
         myCommandName = commandName;
         myProgressText = progressText;
-        myPostRunnable = null;
         myProcessChangedTextOnly = processChangedTextOnly;
     }
 
@@ -141,7 +140,6 @@ public abstract class AbstractLayoutCodeProcessor implements LayoutCodeProcessor
         myIncludeSubdirs = includeSubdirs;
         myProgressText = progressText;
         myCommandName = commandName;
-        myPostRunnable = null;
         myProcessChangedTextOnly = processChangedTextOnly;
     }
 
@@ -157,7 +155,6 @@ public abstract class AbstractLayoutCodeProcessor implements LayoutCodeProcessor
         myFile = file;
         myProgressText = progressText;
         myCommandName = commandName;
-        myPostRunnable = null;
         myProcessChangedTextOnly = processChangedTextOnly;
     }
 
@@ -176,12 +173,16 @@ public abstract class AbstractLayoutCodeProcessor implements LayoutCodeProcessor
         myFiles = ContainerUtil.filter(files, AbstractLayoutCodeProcessor::canBeFormatted);
         myProgressText = progressText;
         myCommandName = commandName;
-        myPostRunnable = postRunnable;
+        ContainerUtil.addIfNotNull(myPostRunnables, postRunnable);
         myProcessChangedTextOnly = processChangedTextOnly;
     }
 
-    public void setPostRunnable(Runnable postRunnable) {
-        myPostRunnable = postRunnable;
+    public void addInCommandRunnable(Runnable inCommandRunnable) {
+        myInCommandRunnables.add(inCommandRunnable);
+    }
+
+    public void addPostRunnable(Runnable postRunnable) {
+        myPostRunnables.add(postRunnable);
     }
 
     private @Nullable FutureTask<Boolean> getPreviousProcessorTask(PsiFile file, boolean processChangedTextOnly) {
@@ -381,8 +382,12 @@ public abstract class AbstractLayoutCodeProcessor implements LayoutCodeProcessor
             myProject
         );
 
-        if (isSuccess && myPostRunnable != null) {
-            myPostRunnable.run();
+        if (!isSuccess) {
+            return;
+        }
+
+        for (Runnable postRunnable : myPostRunnables) {
+            postRunnable.run();
         }
     }
 
@@ -432,8 +437,12 @@ public abstract class AbstractLayoutCodeProcessor implements LayoutCodeProcessor
                     try {
                         writeAction.run();
 
-                        if (myPostRunnable != null) {
-                            app.invokeLater(myPostRunnable);
+                        for (Runnable inCommandRunnable : myInCommandRunnables) {
+                            inCommandRunnable.run();
+                        }
+
+                        if (!myPostRunnables.isEmpty()) {
+                            app.invokeLater(() -> myPostRunnables.forEach(Runnable::run), modalityState, myProject.getDisposed());
                         }
                     }
                     catch (IndexNotReadyException e) {
@@ -575,7 +584,7 @@ public abstract class AbstractLayoutCodeProcessor implements LayoutCodeProcessor
         }
 
         private void updateIndicatorFraction(int processed) {
-            myProgressIndicator.setFraction((double)processed / myTotalFiles);
+            myProgressIndicator.setFraction((double) processed / myTotalFiles);
         }
 
         @Override

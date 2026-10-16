@@ -26,16 +26,12 @@ import consulo.language.psi.PsiFile;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.proxy.EventDispatcher;
-import consulo.util.collection.Lists;
 import consulo.util.xml.serializer.DefaultJDOMExternalizer;
 import consulo.util.xml.serializer.DifferenceFilter;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
 import org.jdom.Element;
-
 import org.jspecify.annotations.Nullable;
-
-import java.util.List;
 
 public class CodeStyleSettingsManager implements PersistentStateComponent<Element> {
     private static final Logger LOG = Logger.getInstance(CodeStyleSettingsManager.class);
@@ -48,8 +44,6 @@ public class CodeStyleSettingsManager implements PersistentStateComponent<Elemen
 
     private final SimpleModificationTracker myTracker = new SimpleModificationTracker();
     private final EventDispatcher<CodeStyleSettingsListener> myEventDispatcher = EventDispatcher.create(CodeStyleSettingsListener.class);
-
-    private final List<CodeStyleSettingsListener> myListeners = Lists.newLockFreeCopyOnWriteList();
 
     public static CodeStyleSettingsManager getInstance(@Nullable Project project) {
         if (project == null || project.isDefault()) {
@@ -69,12 +63,10 @@ public class CodeStyleSettingsManager implements PersistentStateComponent<Elemen
     public CodeStyleSettingsManager() {
     }
 
-    
     public static CodeStyleSettings getSettings(@Nullable Project project) {
         return getInstance(project).getCurrentSettings();
     }
 
-    
     public CodeStyleSettings getCurrentSettings() {
         CodeStyleSettings temporarySettings = myTemporarySettings;
         if (temporarySettings != null) {
@@ -164,12 +156,11 @@ public class CodeStyleSettingsManager implements PersistentStateComponent<Elemen
     }
 
     public void fireCodeStyleSettingsChanged(@Nullable PsiFile file) {
-        for (CodeStyleSettingsListener listener : myListeners) {
+        for (CodeStyleSettingsListener listener : myEventDispatcher.getListeners()) {
             listener.codeStyleSettingsChanged(new CodeStyleSettingsChangeEvent(file));
         }
     }
 
-    
     public final ModificationTracker getModificationTracker() {
         return myTracker;
     }
