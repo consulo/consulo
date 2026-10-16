@@ -82,7 +82,7 @@ public abstract class ConfigurableFileEditor<U extends UnnamedConfigurable> exte
         myApplyPanel.setVisible(false);
         myContentPanel.bottom(myApplyPanel);
 
-        DumbAwareAction.create(anActionEvent -> doSave()).registerCustomShortcutSet(CommonShortcuts.getSaveAll(), myContentPanel, this);
+        DumbAwareAction.create(e -> doSave()).registerCustomShortcutSet(CommonShortcuts.getSaveAll(), myContentPanel, this);
 
         myUpdateFuture = myProject.getUIAccess().getScheduler().scheduleWithFixedDelay(this::checkModified, 500, 500, TimeUnit.MILLISECONDS);
     }
