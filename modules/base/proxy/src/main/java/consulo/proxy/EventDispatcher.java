@@ -47,20 +47,19 @@ public class EventDispatcher<T extends EventListener> {
             String methodName = entry.getKey();
             Method found = ContainerUtil.find(declared, m -> methodName.equals(m.getName()));
             assert found != null : "Method " + methodName + " must be declared in " + listenerClass;
-            assert !found.getReturnType().equals(void.class) : "Method " + methodName + " must be non-void if you want to specify what its proxy should return";
+            assert !found.getReturnType().equals(void.class)
+                : "Method " + methodName + " must be non-void if you want to specify what its proxy should return";
             Object returnValue = entry.getValue();
-            assert ReflectionUtil.boxType(found.getReturnType()).isAssignableFrom(returnValue.getClass()) : "You specified that method " +
-                methodName +
-                " proxy will return " +
-                returnValue +
-                " but its return type is " +
-                found.getReturnType() +
-                " which is incompatible with " +
-                returnValue.getClass();
+            assert ReflectionUtil.boxType(found.getReturnType()).isAssignableFrom(returnValue.getClass())
+                : "You specified that method " + methodName +
+                " proxy will return " + returnValue +
+                " but its return type is " + found.getReturnType() +
+                " which is incompatible with " + returnValue.getClass();
             declared.remove(found);
         }
         for (Method method : declared) {
-            assert method.getReturnType().equals(void.class) : "Method " + method + " returns " + method.getReturnType() + " and yet you didn't specify what its proxy should return";
+            assert method.getReturnType().equals(void.class)
+                : "Method " + method + " returns " + method.getReturnType() + " and yet you didn't specify what its proxy should return";
         }
     }
 
@@ -90,17 +89,15 @@ public class EventDispatcher<T extends EventListener> {
     }
 
     public static @Nullable Object handleObjectMethod(Object proxy, Object[] args, String methodName) {
-        switch (methodName) {
-            case "toString":
-                return "Multicaster";
-            case "hashCode":
-                return System.identityHashCode(proxy);
-            case "equals":
-                return proxy == args[0] ? Boolean.TRUE : Boolean.FALSE;
-            default:
+        return switch (methodName) {
+            case "toString" -> "Multicaster";
+            case "hashCode" -> System.identityHashCode(proxy);
+            case "equals" -> proxy == args[0];
+            default -> {
                 LOG.error("Incorrect Object's method invoked for proxy:" + methodName);
-                return null;
-        }
+                yield null;
+            }
+        };
     }
 
     public T getMulticaster() {

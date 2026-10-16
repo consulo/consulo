@@ -37,134 +37,138 @@ import static consulo.ide.impl.idea.codeInsight.actions.OptimizeImportsProcessor
 import static consulo.ide.impl.idea.codeInsight.actions.OptimizeImportsProcessor.NotificationInfo.SOMETHING_CHANGED_WITHOUT_MESSAGE_NOTIFICATION;
 
 public class OptimizeImportsProcessor extends AbstractLayoutCodeProcessor {
-  public static final LocalizeValue COMMAND_NAME = CodeInsightLocalize.processOptimizeImports();
-  private final List<NotificationInfo> myOptimizerNotifications = new SmartList<>();
+    public static final LocalizeValue COMMAND_NAME = CodeInsightLocalize.processOptimizeImports();
+    private final List<NotificationInfo> myOptimizerNotifications = new SmartList<>();
 
-  public OptimizeImportsProcessor(Project project) {
-    super(project, COMMAND_NAME, CodeInsightLocalize.progressTextOptimizingImports(), false);
-  }
-
-  public OptimizeImportsProcessor(Project project, Module module) {
-    super(project, module, COMMAND_NAME, CodeInsightLocalize.progressTextOptimizingImports(), false);
-  }
-
-  public OptimizeImportsProcessor(Project project, PsiDirectory directory, boolean includeSubdirs) {
-    super(project, directory, includeSubdirs, CodeInsightLocalize.progressTextOptimizingImports(), COMMAND_NAME, false);
-  }
-
-  public OptimizeImportsProcessor(Project project, PsiDirectory directory, boolean includeSubdirs, boolean processOnlyVcsChangedFiles) {
-    super(project, directory, includeSubdirs,
-      CodeInsightLocalize.progressTextOptimizingImports(), COMMAND_NAME, processOnlyVcsChangedFiles);
-  }
-
-  public OptimizeImportsProcessor(Project project, PsiFile file) {
-    super(project, file, CodeInsightLocalize.progressTextOptimizingImports(), COMMAND_NAME, false);
-  }
-
-  @RequiredReadAction
-  public OptimizeImportsProcessor(Project project, PsiFile[] files, Runnable postRunnable) {
-    this(project, files, COMMAND_NAME, postRunnable);
-  }
-
-  @RequiredReadAction
-  public OptimizeImportsProcessor(Project project, PsiFile[] files, LocalizeValue commandName, Runnable postRunnable) {
-    super(project, files, CodeInsightLocalize.progressTextOptimizingImports(), commandName, postRunnable, false);
-  }
-
-  public OptimizeImportsProcessor(AbstractLayoutCodeProcessor processor) {
-    super(processor, COMMAND_NAME, CodeInsightLocalize.progressTextOptimizingImports());
-  }
-
-  @Override
-  @RequiredReadAction
-  protected FutureTask<Boolean> prepareTask(PsiFile file, boolean processChangedTextOnly) {
-    if (DumbService.isDumb(file.getProject())) {
-      return new FutureTask<>(EmptyRunnable.INSTANCE, true);
+    public OptimizeImportsProcessor(Project project) {
+        super(project, COMMAND_NAME, CodeInsightLocalize.progressTextOptimizingImports(), false);
     }
 
-    Set<ImportOptimizer> optimizers = ImportOptimizer.forFile(file);
-    List<Runnable> runnables = new ArrayList<>();
-    List<PsiFile> files = file.getViewProvider().getAllFiles();
-    for (ImportOptimizer optimizer : optimizers) {
-      for (PsiFile psiFile : files) {
-        if (optimizer.supports(psiFile)) {
-          runnables.add(optimizer.processFile(psiFile));
+    public OptimizeImportsProcessor(Project project, Module module) {
+        super(project, module, COMMAND_NAME, CodeInsightLocalize.progressTextOptimizingImports(), false);
+    }
+
+    public OptimizeImportsProcessor(Project project, PsiDirectory directory, boolean includeSubdirs) {
+        super(project, directory, includeSubdirs, CodeInsightLocalize.progressTextOptimizingImports(), COMMAND_NAME, false);
+    }
+
+    public OptimizeImportsProcessor(Project project, PsiDirectory directory, boolean includeSubdirs, boolean processOnlyVcsChangedFiles) {
+        super(project, directory, includeSubdirs,
+            CodeInsightLocalize.progressTextOptimizingImports(), COMMAND_NAME, processOnlyVcsChangedFiles
+        );
+    }
+
+    public OptimizeImportsProcessor(Project project, PsiFile file) {
+        super(project, file, CodeInsightLocalize.progressTextOptimizingImports(), COMMAND_NAME, false);
+    }
+
+    @RequiredReadAction
+    public OptimizeImportsProcessor(Project project, PsiFile[] files, Runnable postRunnable) {
+        this(project, files, COMMAND_NAME, postRunnable);
+    }
+
+    @RequiredReadAction
+    public OptimizeImportsProcessor(Project project, PsiFile[] files, LocalizeValue commandName, Runnable postRunnable) {
+        super(project, files, CodeInsightLocalize.progressTextOptimizingImports(), commandName, postRunnable, false);
+    }
+
+    public OptimizeImportsProcessor(AbstractLayoutCodeProcessor processor) {
+        super(processor, COMMAND_NAME, CodeInsightLocalize.progressTextOptimizingImports());
+    }
+
+    @Override
+    @RequiredReadAction
+    protected FutureTask<Boolean> prepareTask(PsiFile file, boolean processChangedTextOnly) {
+        if (DumbService.isDumb(file.getProject())) {
+            return new FutureTask<>(EmptyRunnable.INSTANCE, true);
         }
-      }
-    }
 
-    Runnable runnable = !runnables.isEmpty() ? () -> {
-      CoreCodeStyleUtil.setSequentialProcessingAllowed(false);
-      try {
-        for (Runnable runnable1 : runnables) {
-          runnable1.run();
-          retrieveAndStoreNotificationInfo(runnable1);
+        Set<ImportOptimizer> optimizers = ImportOptimizer.forFile(file);
+        List<Runnable> runnables = new ArrayList<>();
+        List<PsiFile> files = file.getViewProvider().getAllFiles();
+        for (ImportOptimizer optimizer : optimizers) {
+            for (PsiFile psiFile : files) {
+                if (optimizer.supports(psiFile)) {
+                    runnables.add(optimizer.processFile(psiFile));
+                }
+            }
         }
-        putNotificationInfoIntoCollector();
-      }
-      finally {
-        CoreCodeStyleUtil.setSequentialProcessingAllowed(true);
-      }
-    } : EmptyRunnable.getInstance();
 
-    return new FutureTask<>(runnable, true);
-  }
+        Runnable runnable = !runnables.isEmpty() ? () -> {
+            CoreCodeStyleUtil.setSequentialProcessingAllowed(false);
+            try {
+                for (Runnable runnable1 : runnables) {
+                    runnable1.run();
+                    retrieveAndStoreNotificationInfo(runnable1);
+                }
+                putNotificationInfoIntoCollector();
+            }
+            finally {
+                CoreCodeStyleUtil.setSequentialProcessingAllowed(true);
+            }
+        } : EmptyRunnable.getInstance();
 
-  private void retrieveAndStoreNotificationInfo(Runnable runnable) {
-    if (runnable instanceof ImportOptimizer.CollectingInfoRunnable collectingInfoRunnable) {
-      LocalizeValue optimizerMessage = collectingInfoRunnable.getUserNotificationInfo();
-      myOptimizerNotifications.add(optimizerMessage != null ? new NotificationInfo(optimizerMessage) : NOTHING_CHANGED_NOTIFICATION);
-    }
-    else if (runnable == EmptyRunnable.getInstance()) {
-      myOptimizerNotifications.add(NOTHING_CHANGED_NOTIFICATION);
-    }
-    else {
-      myOptimizerNotifications.add(SOMETHING_CHANGED_WITHOUT_MESSAGE_NOTIFICATION);
-    }
-  }
-
-  private void putNotificationInfoIntoCollector() {
-    LayoutCodeInfoCollector collector = getInfoCollector();
-    if (collector == null) {
-      return;
+        return new FutureTask<>(runnable, true);
     }
 
-    boolean atLeastOneOptimizerChangedSomething = false;
-    for (NotificationInfo info : myOptimizerNotifications) {
-      atLeastOneOptimizerChangedSomething |= info.isSomethingChanged();
-      if (info.getMessage().isNotEmpty()) {
-        collector.setOptimizeImportsNotification(info.getMessage());
-        return;
-      }
+    private void retrieveAndStoreNotificationInfo(Runnable runnable) {
+        if (runnable instanceof ImportOptimizer.CollectingInfoRunnable collectingInfoRunnable) {
+            LocalizeValue optimizerMessage = collectingInfoRunnable.getUserNotificationInfo();
+            myOptimizerNotifications.add(optimizerMessage != null ? new NotificationInfo(optimizerMessage) : NOTHING_CHANGED_NOTIFICATION);
+        }
+        else if (runnable == EmptyRunnable.getInstance()) {
+            myOptimizerNotifications.add(NOTHING_CHANGED_NOTIFICATION);
+        }
+        else {
+            myOptimizerNotifications.add(SOMETHING_CHANGED_WITHOUT_MESSAGE_NOTIFICATION);
+        }
     }
 
-    collector.setOptimizeImportsNotification(
-        atLeastOneOptimizerChangedSomething ? CodeInsightLocalize.hintTextImportsOptimized() : LocalizeValue.empty()
-    );
-  }
+    private void putNotificationInfoIntoCollector() {
+        LayoutCodeInfoCollector collector = getInfoCollector();
+        if (collector == null) {
+            return;
+        }
 
-  static class NotificationInfo {
-    public static final NotificationInfo NOTHING_CHANGED_NOTIFICATION = new NotificationInfo(false, LocalizeValue.empty());
-    public static final NotificationInfo SOMETHING_CHANGED_WITHOUT_MESSAGE_NOTIFICATION = new NotificationInfo(true, LocalizeValue.empty());
+        boolean atLeastOneOptimizerChangedSomething = false;
+        for (NotificationInfo info : myOptimizerNotifications) {
+            atLeastOneOptimizerChangedSomething |= info.isSomethingChanged();
+            if (info.getMessage().isNotEmpty()) {
+                collector.setOptimizeImportsNotification(info.getMessage());
+                return;
+            }
+        }
 
-    private final boolean mySomethingChanged;
-    private final LocalizeValue myMessage;
-
-    NotificationInfo(LocalizeValue message) {
-      this(true, message);
+        collector.setOptimizeImportsNotification(
+            atLeastOneOptimizerChangedSomething ? CodeInsightLocalize.hintTextImportsOptimized() : LocalizeValue.empty()
+        );
     }
 
-    public boolean isSomethingChanged() {
-      return mySomethingChanged;
-    }
+    static class NotificationInfo {
+        public static final NotificationInfo NOTHING_CHANGED_NOTIFICATION = new NotificationInfo(false, LocalizeValue.empty());
+        public static final NotificationInfo SOMETHING_CHANGED_WITHOUT_MESSAGE_NOTIFICATION = new NotificationInfo(
+            true,
+            LocalizeValue.empty()
+        );
 
-    public LocalizeValue getMessage() {
-      return myMessage;
-    }
+        private final boolean mySomethingChanged;
+        private final LocalizeValue myMessage;
 
-    private NotificationInfo(boolean isSomethingChanged, LocalizeValue message) {
-      mySomethingChanged = isSomethingChanged;
-      myMessage = message;
+        NotificationInfo(LocalizeValue message) {
+            this(true, message);
+        }
+
+        public boolean isSomethingChanged() {
+            return mySomethingChanged;
+        }
+
+        public LocalizeValue getMessage() {
+            return myMessage;
+        }
+
+        private NotificationInfo(boolean isSomethingChanged, LocalizeValue message) {
+            mySomethingChanged = isSomethingChanged;
+            myMessage = message;
+        }
     }
-  }
 }
