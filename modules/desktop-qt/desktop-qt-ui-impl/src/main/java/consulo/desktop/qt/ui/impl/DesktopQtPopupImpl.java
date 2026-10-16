@@ -450,6 +450,13 @@ public abstract class DesktopQtPopupImpl extends QtComponentDelegate<QWidget> im
 
         QPoint point = widget.mapToGlobal(new QPoint(x, y));
         boolean arrow = myOptions.hasArrow();
+
+        PopupPosition requested = myOptions.getPosition();
+        if (arrow && (requested == PopupPosition.END || requested == PopupPosition.START)) {
+            showPointingAtRect(widget, new QRect(point.x(), point.y(), 0, Math.max(0, anchorHeight)));
+            return;
+        }
+
         int left = arrow ? point.x() - ourArrowInset : point.x();
 
         if (myOptions.getPosition() == PopupPosition.TOP) {
@@ -469,11 +476,15 @@ public abstract class DesktopQtPopupImpl extends QtComponentDelegate<QWidget> im
 
     @RequiredUIAccess
     protected void showPointingAtWidget(QWidget widget) {
-        setOwner(widget);
-
         QPoint origin = widget.mapToGlobal(new QPoint(0, 0));
-        QRect target = new QRect(origin.x(), origin.y(), widget.width(), widget.height());
-        QRect available = availableGeometry(origin);
+        showPointingAtRect(widget, new QRect(origin.x(), origin.y(), widget.width(), widget.height()));
+    }
+
+    @RequiredUIAccess
+    private void showPointingAtRect(QWidget owner, QRect target) {
+        setOwner(owner);
+
+        QRect available = availableGeometry(target.topLeft());
 
         PopupPosition position = myOptions.getPosition();
         QPoint placed = placeBeside(position, target);

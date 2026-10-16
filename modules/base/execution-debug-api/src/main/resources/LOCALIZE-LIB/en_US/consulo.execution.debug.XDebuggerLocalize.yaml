@@ -192,6 +192,8 @@ breakpoints.dialog.create.new.group:
     text: Create New…
 breakpoints.dialog.edit.description:
     text: Edit Description
+breakpoints.dialog.move.to.group:
+    text: Move to Group
 breakpoints.dialog.new.group:
     text: New Group
 breakpoints.dialog.new.group.name:
@@ -400,6 +402,12 @@ tab.content.no.result:
     text: There is no result of such stream chain
 xbreakpoint.default.display.text:
     text: Line {0} in {1}
+xbreakpoint.editor.done.button:
+    text: Done
+xbreakpoint.editor.more.link:
+    text: More
+xbreakpoint.editor.more.link.with.shortcut:
+    text: More ({0})
 xbreakpoint.group.depends.on:
     text: Depends on
 xbreakpoint.label.after.breakpoint.was.hit:
@@ -452,6 +460,8 @@ xbreakpoints.log.message.checkbox:
     text: Log &message to console
 xbreakpoints.properties.actions.group.title:
     text: Actions
+xbreakpoints.remove.once.hit.checkbox:
+    text: '&Remove once hit'
 xdebugger.attach.action:
     text: Attach to Process...
 xdebugger.attach.action.collectingItems:

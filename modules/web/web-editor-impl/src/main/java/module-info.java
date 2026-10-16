@@ -45,7 +45,9 @@ module consulo.web.editor.impl {
     requires consulo.version.control.system.api;
     requires consulo.virtual.file.system.api;
 
+    requires flow.data;
     requires flow.server;
+    requires vaadin.select.flow;
 
     requires jakarta.inject;
 

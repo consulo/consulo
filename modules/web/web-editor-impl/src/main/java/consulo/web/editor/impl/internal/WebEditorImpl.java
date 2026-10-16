@@ -48,6 +48,7 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.*;
 import consulo.ui.Component;
+import consulo.ui.image.Image;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
@@ -85,6 +86,7 @@ import org.intellij.lang.annotations.MagicConstant;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.*;
@@ -189,12 +191,15 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
     /**
      * the browser identifies a clicked marker by its index here - a line carries more than one of them
      */
-    private final java.util.List<GutterMark> myGutterMarks = new java.util.ArrayList<>();
+    private final java.util.List<GutterMark> myGutterMarks = new ArrayList<>();
+
+    private @Nullable GutterIconRenderer myLastRightClickedMark;
+    private @Nullable Point2D myLastRightClickedIconCenter;
 
     /**
      * which lines already show a mark in place of their number, so the hovered offer is not drawn over one
      */
-    private final java.util.Set<Integer> myLineNumberMarkLines = new java.util.HashSet<>();
+    private final Set<Integer> myLineNumberMarkLines = new HashSet<>();
 
     private final List<BandHit> myGutterBandHits = new ArrayList<>();
 
@@ -357,6 +362,8 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
         vaadin.addInlayClickListener(event -> performInlayClick(event.getId(), event.isControlDown(), event.getDetails()));
 
         vaadin.addGutterClickListener(event -> performGutterClick(event.getId(), event.getDetails()));
+
+        vaadin.addGutterRightClickListener(event -> performGutterRightClick(event.getId(), event.getDetails(), event.getIconCenter()));
 
         vaadin.addGutterBandClickListener(event -> performGutterBandClick(event.getId(), event.getDetails()));
 
@@ -722,15 +729,35 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
      */
     @RequiredUIAccess
     private void performGutterClick(int id, InputDetails details) {
-        if (id < 0 || id >= myGutterMarks.size()) {
-            return;
+        if (id >= 0 && id < myGutterMarks.size() && myGutterMarks.get(id) instanceof GutterIconRenderer renderer) {
+            performGutterAction(renderer.getClickAction(), details);
         }
+    }
 
-        if (!(myGutterMarks.get(id) instanceof GutterIconRenderer renderer)) {
-            return;
+    /**
+     * Runs the right click action of a gutter marker, which the awt gutter prefers over the marker's menu. The
+     * centre of the icon is kept so the popup the action opens can point at it.
+     */
+    @RequiredUIAccess
+    private void performGutterRightClick(int id, InputDetails details, Point2D iconCenter) {
+        if (id >= 0 && id < myGutterMarks.size() && myGutterMarks.get(id) instanceof GutterIconRenderer renderer) {
+            myLastRightClickedMark = renderer;
+            myLastRightClickedIconCenter = iconCenter;
+
+            performGutterAction(renderer.getRightButtonClickAction(), details);
         }
+    }
 
-        AnAction action = renderer.getClickAction();
+    public @Nullable RelativePoint2D getGutterIconCenter(GutterIconRenderer renderer) {
+        Point2D center = myLastRightClickedIconCenter;
+        if (center == null || !renderer.equals(myLastRightClickedMark)) {
+            return null;
+        }
+        return RelativePoint2D.of(getContentUIComponent(), center);
+    }
+
+    @RequiredUIAccess
+    private void performGutterAction(@Nullable AnAction action, InputDetails details) {
         if (action == null) {
             return;
         }
@@ -1027,6 +1054,10 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
 
     // due EditorMouseEvent use awt Event, we need set fake event, until migrate to own event system
     private static final MouseEvent fakeEvent = new MouseEvent(new JLabel("fake"), 0, 0, 0, 0, 0, 1, false);
+
+    @Override
+    public void setBorder(@Nullable Border border) {
+    }
 
     @Override
     public JComponent getComponent() {
@@ -1447,7 +1478,7 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
         boolean last,
         boolean styled,
         boolean boxed,
-        consulo.ui.image.@Nullable Image image,
+        @Nullable Image image,
         @Nullable Inlay<?> inlay,
         int contentIndex
     ) {
@@ -1743,7 +1774,7 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
 
     /**
      * Whether the folding ruler draws an anchor for the region. Mirrors
-     * {@link consulo.codeEditor.impl.FoldingAnchorsOverlayStrategy} - a region which can never be opened is
+     * {@link FoldingAnchorsOverlayStrategy} - a region which can never be opened is
      * folded without an anchor, and one which stays inside a single logical line is not marked unless it asked
      * to be. Without this every region of the pass gets a marker, which the awt ruler never shows.
      */
@@ -1805,9 +1836,9 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
      * editor does when the gutter anchor of a region holding the caret is clicked.
      * <p>
      * A collapse with the caret inside it is refused by
-     * {@link consulo.codeEditor.impl.CodeEditorFoldingModelBase#collapseFoldRegion}, and moving the caret back into
+     * {@link CodeEditorFoldingModelBase#collapseFoldRegion}, and moving the caret back into
      * a region which did close reopens it - see the fold expansion scheduled by
-     * {@link consulo.codeEditor.impl.CodeEditorCaretBase#moveToLogicalPosition}. Either way the region stays open
+     * {@link CodeEditorCaretBase#moveToLogicalPosition}. Either way the region stays open
      * while the browser has already drawn it folded, and the push at the end of the batch takes that back: the
      * click reads as doing nothing. The caret is moved before the batch, so the collapse meets none of it.
      */
@@ -2170,9 +2201,13 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
                 myLineNumberMarkLines.add(line);
             }
 
+            boolean rightClick = renderer instanceof GutterIconRenderer iconRenderer
+                && iconRenderer.getRightButtonClickAction() != null;
+
             marks.append("{\"id\":").append(myGutterMarks.size())
                 .append(",\"line\":").append(line)
                 .append(",\"onLineNumbers\":").append(onLineNumbers)
+                .append(",\"rightClick\":").append(rightClick)
                 .append(",\"iconHtml\":\"").append(escapeJson(iconHtml)).append('"')
                 .append(",\"tooltip\":\"").append(escapeJson(toHtmlContent(renderer.getTooltipValue().get()))).append("\"}");
 
@@ -2311,7 +2346,7 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
     void updateHoverMark() {
         JComponent gutter = getGutterComponentEx().getComponent();
 
-        consulo.ui.image.Image icon = gutter.getClientProperty("line.number.hover.icon") instanceof consulo.ui.image.Image hovered
+        Image icon = gutter.getClientProperty("line.number.hover.icon") instanceof Image hovered
             ? hovered
             : null;
 
@@ -2331,7 +2366,7 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
      * The markup of the custom elements which apply the effects in the browser - the editor pushes its icons
      * inside a json payload and never gets a component to attach, so it needs the tree as a string.
      */
-    private static @Nullable String toIconHtml(consulo.ui.image.@Nullable Image icon) {
+    private static @Nullable String toIconHtml(@Nullable Image icon) {
         return icon == null ? null : WebImageElement.toHtml(icon);
     }
 
@@ -3134,13 +3169,13 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
         return 0;
     }
 
-    public LogicalPosition xyToLogicalPosition(java.awt.Point p) {
+    public LogicalPosition xyToLogicalPosition(Point p) {
         // todo fake return
         return new LogicalPosition(0, 0);
     }
 
     @Override
-    public java.awt.Point visualPositionToXY(VisualPosition visible) {
+    public Point visualPositionToXY(VisualPosition visible) {
         return new Point(visible.column * myCharWidth, visualLineToY(visible.line));
     }
 

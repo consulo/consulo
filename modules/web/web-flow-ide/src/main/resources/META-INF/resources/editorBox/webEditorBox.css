@@ -40,3 +40,38 @@ vaadin-input-container.consulo-editor-box > [slot="suffix"] {
 vaadin-input-container.consulo-editor-box .arquill-editor:not(:focus-within) .arquill-caret {
     visibility: hidden;
 }
+
+vaadin-select.consulo-editor-combo-box > vaadin-select-value-button {
+    display: none;
+}
+
+vaadin-select.consulo-editor-combo-box::part(input-field) {
+    width: 100%;
+}
+
+vaadin-select.consulo-editor-combo-box::part(toggle-button) {
+    order: 2;
+}
+
+vaadin-select.consulo-editor-combo-box > .consulo-editor-combo-box-editor {
+    flex: 1 1 auto;
+    min-width: 8em;
+    align-self: center;
+    cursor: text;
+    --arquill-editor-background: transparent !important;
+}
+
+vaadin-select.consulo-editor-combo-box:not(.consulo-editor-box-editor-font) > .consulo-editor-combo-box-editor {
+    --arquill-editor-font-family: var(--aura-font-family) !important;
+    --arquill-editor-font-size: 1em !important;
+}
+
+vaadin-select.consulo-editor-combo-box > .consulo-editor-combo-box-suffix {
+    order: 1;
+    width: auto !important;
+    flex: none;
+}
+
+vaadin-select.consulo-editor-combo-box .arquill-editor:not(:focus-within) .arquill-caret {
+    visibility: hidden;
+}

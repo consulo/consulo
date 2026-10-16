@@ -37,17 +37,20 @@ import consulo.language.editor.completion.CompletionResultSet;
 import consulo.language.editor.completion.lookup.LookupElementBuilder;
 import consulo.language.editor.ui.EditorBox;
 import consulo.language.editor.ui.EditorBoxBuilderFactory;
+import consulo.language.editor.ui.EditorComboBox;
 import consulo.language.editor.ui.awt.DefaultTextCompletionValueDescriptor;
 import consulo.language.editor.ui.awt.TextFieldCompletionProvider;
 import consulo.language.editor.ui.awt.TextFieldWithAutoCompletion;
 import consulo.language.editor.ui.awt.ValuesCompletionProvider;
 import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.process.ExecutionException;
 import consulo.project.Project;
 import consulo.sandboxPlugin.ide.profiler.SandProfilerConfigurationState;
 import consulo.sandboxPlugin.ide.profiler.SandProfilerRunState;
 import consulo.sandboxPlugin.lang.SandLanguage;
 import consulo.ui.Component;
+import consulo.ui.ImageBox;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.dialog.DialogService;
 import consulo.ui.util.FormBuilder;
@@ -253,7 +256,7 @@ public class SandConfiguration extends LocatableConfigurationBase implements Com
         private @Nullable CommonProgramParametersLayout<SandConfiguration> myLayout;
         private @Nullable EditorBox myEntryPointBox;
         private @Nullable EditorBox myExpressionBox;
-        private @Nullable EditorBox myProfileBox;
+        private @Nullable EditorComboBox myProfileBox;
         private @Nullable EditorBox myTagsBox;
 
         private SandConfigurationEditor(Project project) {
@@ -278,7 +281,7 @@ public class SandConfiguration extends LocatableConfigurationBase implements Com
                 expressionBox.setValue(StringUtil.notNullize(configuration.getExpression()));
             }
 
-            EditorBox profileBox = myProfileBox;
+            EditorComboBox profileBox = myProfileBox;
             if (profileBox != null) {
                 profileBox.setValue(StringUtil.notNullize(configuration.getProfile()));
             }
@@ -307,7 +310,7 @@ public class SandConfiguration extends LocatableConfigurationBase implements Com
                 configuration.setExpression(expressionBox.getValue());
             }
 
-            EditorBox profileBox = myProfileBox;
+            EditorComboBox profileBox = myProfileBox;
             if (profileBox != null) {
                 configuration.setProfile(profileBox.getValue());
             }
@@ -342,12 +345,14 @@ public class SandConfiguration extends LocatableConfigurationBase implements Com
                         builder.addLabeled(LocalizeValue.localizeTODO("Expression:"), expressionBox);
                         myExpressionBox = expressionBox;
 
-                        EditorBox profileBox = editorBoxBuilderFactory.create(myProject)
+                        EditorComboBox profileBox = editorBoxBuilderFactory.create(myProject)
                             .completion(new ValuesCompletionProvider<>(
                                 new DefaultTextCompletionValueDescriptor.StringValueDescriptor(),
                                 List.of("debug", "release", "profile")
                             ))
-                            .build();
+                            .buildComboBox();
+                        profileBox.setItems(List.of("debug", "release", "profile"));
+                        profileBox.setSuffixComponent(ImageBox.create(PlatformIconGroup.generalInformation()));
                         builder.addLabeled(LocalizeValue.localizeTODO("Profile:"), profileBox);
                         myProfileBox = profileBox;
 

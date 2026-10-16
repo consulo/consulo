@@ -19,6 +19,7 @@ import consulo.ui.Component;
 
 import javax.swing.SwingUtilities;
 import javax.swing.tree.TreeModel;
+import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.util.function.Predicate;
 
@@ -28,12 +29,19 @@ import java.util.function.Predicate;
  */
 public class DesktopAWTCheckBoxTree extends DesktopAWTTree {
     private final Predicate<MouseEvent> myCheckBoxPress;
+    private final Predicate<Point> myOverCheckBox;
 
     private boolean myPressedOnCheckBox;
 
-    public DesktopAWTCheckBoxTree(TreeModel model, Component owner, Predicate<MouseEvent> checkBoxPress) {
+    public DesktopAWTCheckBoxTree(TreeModel model, Component owner, Predicate<MouseEvent> checkBoxPress, Predicate<Point> overCheckBox) {
         super(model, owner);
         myCheckBoxPress = checkBoxPress;
+        myOverCheckBox = overCheckBox;
+    }
+
+    @Override
+    public boolean isOverSelection(Point point) {
+        return !myOverCheckBox.test(point) && super.isOverSelection(point);
     }
 
     @Override

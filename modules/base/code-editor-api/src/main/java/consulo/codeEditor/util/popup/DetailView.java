@@ -18,11 +18,12 @@ package consulo.codeEditor.util.popup;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;
 import consulo.colorScheme.TextAttributes;
+import consulo.ui.Component;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
 import java.util.Objects;
 
 /**
@@ -30,19 +31,22 @@ import java.util.Objects;
  * @since 2012-05-09
  */
 public interface DetailView extends UserDataHolder {
-  Editor getEditor();
+  Component getUIComponent();
+
+  @Nullable Editor getEditor();
 
   void navigateInPreviewEditor(PreviewEditorState editorState);
 
-  JPanel getPropertiesPanel();
+  @Nullable Component getPropertiesPanel();
 
-  void setPropertiesPanel(@Nullable JPanel panel);
+  @RequiredUIAccess
+  void setPropertiesPanel(@Nullable Component panel);
 
   void clearEditor();
 
   PreviewEditorState getEditorState();
 
-  ItemWrapper getCurrentItem();
+  @Nullable ItemWrapper getCurrentItem();
 
   boolean hasEditorOnly();
 

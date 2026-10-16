@@ -4,6 +4,7 @@ package consulo.codeEditor;
 import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.codeEditor.markup.GutterMark;
 import consulo.codeEditor.markup.RangeHighlighterEx;
+import consulo.ui.RelativePoint2D;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.util.dataholder.Key;
 import org.jspecify.annotations.Nullable;
@@ -50,6 +51,13 @@ public interface EditorGutterComponentEx extends EditorGutter {
     int getAnnotationsAreaWidth();
 
     @Nullable Point getCenterPoint(GutterIconRenderer renderer);
+
+    /**
+     * The centre of the renderer's icon, relative to the component the gutter is drawn in, or {@code null} while the icon is not shown.
+     */
+    default @Nullable RelativePoint2D getIconCenter(GutterIconRenderer renderer) {
+        return null;
+    }
 
     @Deprecated
     default void setLineNumberConvertor(@Nullable IntUnaryOperator lineNumberConverter) {

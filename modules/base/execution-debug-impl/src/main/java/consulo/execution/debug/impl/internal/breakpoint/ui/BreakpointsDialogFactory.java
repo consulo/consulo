@@ -18,13 +18,17 @@ package consulo.execution.debug.impl.internal.breakpoint.ui;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
-import consulo.execution.debug.impl.internal.breakpoint.XBreakpointUtil;
+import consulo.configuration.editor.ConfigurationFileEditorManager;
+import consulo.execution.debug.impl.internal.breakpoint.XBreakpointBase;
 import consulo.project.Project;
-import consulo.ui.ex.popup.Balloon;
+import consulo.ui.Popup;
+import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import org.jspecify.annotations.Nullable;
+
+import java.util.Map;
 
 @Singleton
 @ServiceAPI(ComponentScope.PROJECT)
@@ -32,17 +36,16 @@ import org.jspecify.annotations.Nullable;
 public class BreakpointsDialogFactory {
 
   private Project myProject;
-  private Balloon myBalloonToHide;
-  private Object myBreakpoint;
-  private BreakpointsDialog myDialogShowing;
+  private @Nullable Popup myPopupToHide;
+  private @Nullable Object myBreakpoint;
 
   @Inject
   public BreakpointsDialogFactory(Project project) {
     myProject = project;
   }
 
-  public void setBalloonToHide(Balloon balloonToHide, Object breakpoint) {
-    myBalloonToHide = balloonToHide;
+  public void setPopupToHide(Popup popupToHide, Object breakpoint) {
+    myPopupToHide = popupToHide;
     myBreakpoint = breakpoint;
   }
 
@@ -51,34 +54,28 @@ public class BreakpointsDialogFactory {
   }
 
   public boolean isBreakpointPopupShowing() {
-    return (myBalloonToHide != null && !myBalloonToHide.isDisposed()) || myDialogShowing != null;
+    Popup popup = myPopupToHide;
+    return popup != null && popup.isVisible();
   }
 
+  @RequiredUIAccess
   public void showDialog(@Nullable Object initialBreakpoint) {
-    if (myDialogShowing != null) {
-      return;
+    Object breakpoint = initialBreakpoint != null ? initialBreakpoint : myBreakpoint;
+
+    Popup popup = myPopupToHide;
+    if (popup != null) {
+      if (popup.isVisible()) {
+        popup.close();
+      }
+      myPopupToHide = null;
     }
 
-    BreakpointsDialog dialog = new BreakpointsDialog(myProject, initialBreakpoint != null ? initialBreakpoint : myBreakpoint, XBreakpointUtil.collectPanelProviders()) {
-      @Override
-      protected void dispose() {
-        for (BreakpointPanelProvider provider : XBreakpointUtil.collectPanelProviders()) {
-          provider.onDialogClosed(myProject);
-        }
-        myDialogShowing = null;
+    Map<String, String> params = breakpoint instanceof XBreakpointBase<?, ?, ?> base
+      ? Map.of(BreakpointsEditorProvider.BREAKPOINT_ID, BreakpointsEditorProvider.breakpointId(base))
+      : Map.of();
 
-        super.dispose();
-      }
-    };
-
-    if (myBalloonToHide != null) {
-      if (!myBalloonToHide.isDisposed()) {
-        myBalloonToHide.hide();
-      }
-      myBalloonToHide = null;
-    }
-    myDialogShowing = dialog;
-
-    dialog.show();
+    myProject.getApplication()
+      .getInstance(ConfigurationFileEditorManager.class)
+      .open(myProject, BreakpointsEditorProvider.class, params);
   }
 }

@@ -26,6 +26,8 @@ import consulo.colorScheme.TextAttributes;
 import consulo.execution.debug.ui.DebuggerColors;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
+import consulo.ui.TextItemPresentation;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
@@ -68,6 +70,9 @@ public abstract class BreakpointItem extends ItemWrapper implements Comparable<B
         }
 
         Editor editor = panel.getEditor();
+        if (editor == null) {
+            return;
+        }
         MarkupModel editorModel = editor.getMarkupModel();
         MarkupModel documentModel = DocumentMarkupModel.forDocument(editor.getDocument(), editor.getProject(), false);
 
@@ -97,6 +102,11 @@ public abstract class BreakpointItem extends ItemWrapper implements Comparable<B
     }
 
     public abstract void setupGenericRenderer(ColoredTextContainer renderer, boolean plainView);
+
+    @RequiredUIAccess
+    public void setupRenderer(TextItemPresentation presentation) {
+        presentation.append(getDisplayText());
+    }
 
     public abstract Image getIcon();
 

@@ -21,6 +21,7 @@ import consulo.document.Document;
 import consulo.language.Language;
 import consulo.language.editor.ui.EditorBox;
 import consulo.language.editor.ui.EditorBoxBuilder;
+import consulo.language.editor.ui.EditorComboBox;
 import consulo.language.editor.ui.awt.TextCompletionProvider;
 import consulo.language.editor.ui.awt.TextFieldCompletionProvider;
 import consulo.language.editor.ui.awt.TextFieldWithAutoCompletionListProvider;
@@ -127,6 +128,13 @@ public class HeadlessEditorBoxBuilder implements EditorBoxBuilder {
     public EditorBox build() {
         Document document = myDocument != null ? myDocument : myEditorFactory.createDocument(myText);
         return new HeadlessEditorBox(myProject, document, getFileType(), myPlaceholder);
+    }
+
+    @RequiredUIAccess
+    @Override
+    public EditorComboBox buildComboBox() {
+        Document document = myDocument != null ? myDocument : myEditorFactory.createDocument(myText);
+        return new HeadlessEditorComboBox(myProject, document, getFileType(), myPlaceholder);
     }
 
     private FileType getFileType() {

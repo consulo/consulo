@@ -17,6 +17,7 @@ package consulo.desktop.awt.editor.impl.internal;
 
 import consulo.desktop.awt.editor.impl.internal.stickyLine.StickyLinesPanel;
 import consulo.desktop.awt.editor.impl.internal.DesktopEditorPanelLayer;
+import consulo.desktop.awt.ui.impl.base.UIComponentBorder;
 import consulo.ui.ex.awt.JBLayeredPane;
 import consulo.ui.ex.awt.JBUI;
 
@@ -78,6 +79,29 @@ public class DesktopEditorLayeredPanel {
             @Override
             public Dimension getPreferredSize() {
                 return myEditor.getScrollPane().getPreferredSize();
+            }
+
+            @Override
+            public boolean isPaintingOrigin() {
+                return super.isPaintingOrigin() || UIComponentBorder.findRoundedInnerArea(this) != null;
+            }
+
+            @Override
+            public void paint(Graphics g) {
+                Shape area = UIComponentBorder.findRoundedInnerArea(this);
+                if (area == null) {
+                    super.paint(g);
+                    return;
+                }
+
+                Graphics2D clipped = (Graphics2D) g.create();
+                try {
+                    clipped.clip(area);
+                    super.paint(clipped);
+                }
+                finally {
+                    clipped.dispose();
+                }
             }
         };
     }

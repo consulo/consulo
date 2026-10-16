@@ -49,9 +49,11 @@ import consulo.project.Project;
 import consulo.project.startup.StartupManager;
 import consulo.project.ui.wm.MergingQueue;
 import consulo.ui.ModalityState;
+import consulo.ui.Point2D;
 import consulo.ui.UIAccess;
 import consulo.ui.event.details.MouseInputDetails;
 import consulo.ui.ex.action.IdeActions;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.util.collection.BidirectionalMap;
 import consulo.util.collection.SmartList;
@@ -291,8 +293,8 @@ public class XLineBreakpointManager {
             }
             // edit breakpoint
             DebuggerUIImplUtil.showXBreakpointEditorBalloon(myProject,
-                                                        mouseEvent.getPoint(),
-                                                        ((EditorEx)editor).getGutterComponentEx().getComponent(),
+                                                        TargetAWT.wrap(((EditorEx)editor).getGutterComponentEx().getComponent()),
+                                                        new Point2D(mouseEvent.getX(), mouseEvent.getY()),
                                                         false,
                                                         breakpoint);
           }

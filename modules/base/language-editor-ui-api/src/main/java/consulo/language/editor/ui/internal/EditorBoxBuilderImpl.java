@@ -21,6 +21,7 @@ import consulo.document.Document;
 import consulo.language.Language;
 import consulo.language.editor.ui.EditorBox;
 import consulo.language.editor.ui.EditorBoxBuilder;
+import consulo.language.editor.ui.EditorComboBox;
 import consulo.language.editor.ui.awt.TextCompletionProvider;
 import consulo.language.editor.ui.awt.TextCompletionUtil;
 import consulo.language.editor.ui.awt.TextFieldCompletionProvider;
@@ -44,6 +45,7 @@ public final class EditorBoxBuilderImpl implements EditorBoxBuilder {
     private final @Nullable Project myProject;
     private final EditorFactory myEditorFactory;
     private final Function<EditorBoxOptions, EditorBox> myBoxFactory;
+    private final Function<EditorBoxOptions, EditorComboBox> myComboBoxFactory;
 
     private String myText = "";
     private @Nullable Document myDocument;
@@ -58,10 +60,16 @@ public final class EditorBoxBuilderImpl implements EditorBoxBuilder {
     private LocalizeValue myPlaceholder = LocalizeValue.empty();
     private final List<Consumer<EditorEx>> myCustomizations = new ArrayList<>();
 
-    public EditorBoxBuilderImpl(@Nullable Project project, EditorFactory editorFactory, Function<EditorBoxOptions, EditorBox> boxFactory) {
+    public EditorBoxBuilderImpl(
+        @Nullable Project project,
+        EditorFactory editorFactory,
+        Function<EditorBoxOptions, EditorBox> boxFactory,
+        Function<EditorBoxOptions, EditorComboBox> comboBoxFactory
+    ) {
         myProject = project;
         myEditorFactory = editorFactory;
         myBoxFactory = boxFactory;
+        myComboBoxFactory = comboBoxFactory;
     }
 
     @Override
@@ -149,22 +157,31 @@ public final class EditorBoxBuilderImpl implements EditorBoxBuilder {
     @RequiredUIAccess
     @Override
     public EditorBox build() {
+        return myBoxFactory.apply(buildOptions(!myMultiline));
+    }
+
+    @RequiredUIAccess
+    @Override
+    public EditorComboBox buildComboBox() {
+        return myComboBoxFactory.apply(buildOptions(true));
+    }
+
+    private EditorBoxOptions buildOptions(boolean oneLine) {
         List<Consumer<EditorEx>> customizations = new ArrayList<>(myCustomizations);
         if (myEmbeddedIntoDialog) {
             customizations.add(editor -> editor.setEmbeddedIntoDialogWrapper(true));
         }
 
-        EditorBoxOptions options = new EditorBoxOptions(
+        return new EditorBoxOptions(
             myProject,
             createDocument(),
             getFileType(),
-            !myMultiline,
+            oneLine,
             myViewer,
             myEditorFont,
             myPlaceholder,
             List.copyOf(customizations)
         );
-        return myBoxFactory.apply(options);
     }
 
     private Document createDocument() {

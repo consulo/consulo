@@ -18,6 +18,7 @@ package consulo.web.editor.impl.internal;
 import consulo.codeEditor.*;
 import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.codeEditor.markup.GutterMark;
+import consulo.ui.RelativePoint2D;
 import consulo.ui.ex.action.ActionGroup;
 
 import org.jspecify.annotations.Nullable;
@@ -122,6 +123,11 @@ public class WebEditorGutterComponentImpl implements EditorGutterComponentEx {
   @Override
   public @Nullable Point getCenterPoint(GutterIconRenderer renderer) {
     return null;
+  }
+
+  @Override
+  public @Nullable RelativePoint2D getIconCenter(GutterIconRenderer renderer) {
+    return myEditor.getGutterIconCenter(renderer);
   }
 
   @Override

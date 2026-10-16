@@ -978,6 +978,7 @@
                 icon.className = 'arquill-gutter-mark arquill-gutter-mark-line-number'
                     + (mark.hover ? ' arquill-gutter-mark-hover' : '');
                 icon.$arquillMarkId = mark.id;
+                icon.$arquillRightClick = mark.rightClick === true;
                 icon.innerHTML = mark.iconHtml;
                 icon.style.top = top + 'px';
                 icon.style.height = lineHeight + 'px';
@@ -1121,6 +1122,7 @@
                 const icon = document.createElement('span');
                 icon.className = 'arquill-gutter-mark';
                 icon.$arquillMarkId = mark.id;
+                icon.$arquillRightClick = mark.rightClick === true;
 
                 if (mark.iconHtml) {
                     icon.innerHTML = mark.iconHtml;
@@ -1399,6 +1401,22 @@
             const overGutter = target.closest && target.closest('.textviewLeftRuler, .arquill-gutter');
 
             const mark = target.closest && target.closest('.arquill-gutter-mark');
+
+            // a mark with a right click action of its own takes the click instead of the menu, as the awt gutter does
+            if (mark && mark.$arquillRightClick) {
+                domEvent.preventDefault();
+                domEvent.stopImmediatePropagation();
+                hideTooltip();
+
+                const hostRect = element.getBoundingClientRect();
+                const iconRect = mark.getBoundingClientRect();
+                const detail = gutterClickDetail(mark.$arquillMarkId, domEvent);
+                detail.iconX = Math.round(iconRect.left + iconRect.width / 2 - hostRect.left);
+                detail.iconY = Math.round(iconRect.top + iconRect.height / 2 - hostRect.top);
+
+                element.dispatchEvent(new CustomEvent('arquill-gutter-right-click', { detail: detail }));
+                return;
+            }
 
             const annotation = target.closest && target.closest('.arquill-gutter-annotation');
 

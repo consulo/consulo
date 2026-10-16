@@ -17,13 +17,11 @@ package consulo.execution.debug.impl.internal.ui;
 
 import consulo.application.ApplicationManager;
 import consulo.application.ui.DimensionService;
-import consulo.application.ui.wm.IdeFocusManager;
 import consulo.codeEditor.Editor;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
 import consulo.execution.debug.XBreakpointManager;
 import consulo.execution.debug.XDebuggerManager;
 import consulo.execution.debug.XDebuggerUtil;
@@ -49,22 +47,23 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.util.AppUIUtil;
 import consulo.project.ui.wm.WindowManager;
+import consulo.ui.Component;
+import consulo.ui.Point2D;
 import consulo.ui.Size2D;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.RelativePoint2D;
-import consulo.ui.ex.RelativePoint;
+import consulo.ui.LightPopup;
+import consulo.ui.PopupOptions;
+import consulo.ui.PopupPosition;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.util.ShortcutUtil;
 import consulo.ui.ex.awt.EditorColorsUtil;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.JBPopup;
-import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
-import consulo.ui.ex.popup.event.JBPopupListener;
-import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.concurrent.Obsolescent;
 import consulo.util.lang.ref.Ref;
@@ -72,8 +71,6 @@ import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
@@ -82,18 +79,6 @@ public class DebuggerUIImplUtil {
     public static final String FULL_VALUE_POPUP_DIMENSION_KEY = DebuggerUIUtil.FULL_VALUE_POPUP_DIMENSION_KEY;
 
     private DebuggerUIImplUtil() {
-    }
-
-    public static void enableEditorOnCheck(JCheckBox checkbox, JComponent textField) {
-        checkbox.addActionListener(e -> {
-            boolean selected = checkbox.isSelected();
-            textField.setEnabled(selected);
-        });
-        textField.setEnabled(checkbox.isSelected());
-    }
-
-    public static void focusEditorOnCheck(JCheckBox checkbox, JComponent component) {
-        DebuggerUIUtil.focusEditorOnCheck(checkbox, component);
     }
 
     @Deprecated
@@ -143,16 +128,19 @@ public class DebuggerUIImplUtil {
         return DebuggerUIUtil.createValuePopup(project, component, callback == null ? null : callback::setObsolete);
     }
 
-    public static void showXBreakpointEditorBalloon(Project project,
-                                                    @Nullable Point point,
-                                                    JComponent component,
-                                                    boolean showAllOptions,
-                                                    final XBreakpoint breakpoint) {
+    @RequiredUIAccess
+    public static void showXBreakpointEditorBalloon(
+        Project project,
+        Component anchor,
+        @Nullable Point2D point,
+        boolean showAllOptions,
+        XBreakpoint breakpoint
+    ) {
         XBreakpointManager breakpointManager = XDebuggerManager.getInstance(project).getBreakpointManager();
-        final XLightBreakpointPropertiesPanel propertiesPanel =
+        XLightBreakpointPropertiesPanel propertiesPanel =
             new XLightBreakpointPropertiesPanel(project, breakpointManager, (XBreakpointBase) breakpoint, showAllOptions);
 
-        Ref<Balloon> balloonRef = Ref.create(null);
+        Ref<LightPopup> popupRef = Ref.create(null);
         Ref<Boolean> isLoading = Ref.create(Boolean.FALSE);
         Ref<Boolean> moreOptionsRequested = Ref.create(Boolean.FALSE);
 
@@ -160,10 +148,10 @@ public class DebuggerUIImplUtil {
             if (!isLoading.get()) {
                 propertiesPanel.saveProperties();
             }
-            if (!balloonRef.isNull()) {
-                balloonRef.get().hide();
+            if (!popupRef.isNull()) {
+                popupRef.get().close();
             }
-            showXBreakpointEditorBalloon(project, point, component, true, breakpoint);
+            showXBreakpointEditorBalloon(project, anchor, point, true, breakpoint);
             moreOptionsRequested.set(true);
         });
 
@@ -181,15 +169,14 @@ public class DebuggerUIImplUtil {
             BreakpointsDialogFactory.getInstance(project).showDialog(breakpoint);
         };
 
-        JComponent mainPanel = propertiesPanel.getMainPanel();
-        Balloon balloon = showBreakpointEditor(project, mainPanel, point, component, showMoreOptions, breakpoint);
-        balloonRef.set(balloon);
+        LightPopup popup = showBreakpointEditor(project, propertiesPanel.getMainPanel(), point, anchor, showMoreOptions, breakpoint);
+        popupRef.set(popup);
 
         XTopicBreakpointListener breakpointListener = new XTopicBreakpointListener() {
             @Override
             public void breakpointRemoved(XBreakpoint<?> removedBreakpoint) {
                 if (removedBreakpoint.equals(breakpoint)) {
-                    balloon.hide();
+                    popup.close();
                 }
             }
         };
@@ -197,76 +184,58 @@ public class DebuggerUIImplUtil {
         MessageBusConnection connection = project.getMessageBus().connect();
         connection.subscribe(XTopicBreakpointListener.class, breakpointListener);
 
-        balloon.addListener(new JBPopupListener() {
-            @Override
-            public void onClosed(LightweightWindowEvent event) {
-                propertiesPanel.saveProperties();
-                propertiesPanel.dispose();
-                connection.disconnect();
-            }
+        popup.addCloseListener(event -> {
+            propertiesPanel.saveProperties();
+            propertiesPanel.dispose();
+            connection.disconnect();
         });
 
-        ApplicationManager.getApplication().invokeLater(() -> IdeFocusManager.findInstance().requestFocus(mainPanel, true));
+        UIAccess.current().give(propertiesPanel::requestDefaultFocus);
     }
 
-    public static Balloon showBreakpointEditor(Project project,
-                                               JComponent mainPanel,
-                                               Point whereToShow,
-                                               JComponent component,
-                                               final @Nullable Runnable showMoreOptions,
-                                               Object breakpoint) {
+    @RequiredUIAccess
+    public static LightPopup showBreakpointEditor(
+        Project project,
+        Component mainPanel,
+        @Nullable Point2D whereToShow,
+        Component anchor,
+        @Nullable Runnable showMoreOptions,
+        Object breakpoint
+    ) {
         BreakpointEditor editor = new BreakpointEditor();
         editor.setPropertiesPanel(mainPanel);
-        editor.setShowMoreOptionsLink(true);
+        editor.setShowMoreOptionsLink(showMoreOptions != null);
 
-        JPanel panel = editor.getMainPanel();
-        final Balloon balloon =
-            JBPopupFactory.getInstance().createDialogBalloonBuilder(panel, null).setHideOnClickOutside(true).setCloseButtonEnabled(false).setAnimationCycle(0)
-                .setBlockClicksThroughBalloon(true).createBalloon();
+        LightPopup popup = LightPopup.create(PopupOptions.builder().position(PopupPosition.END).arrow().build());
+        popup.setContent(editor.getMainPanel());
 
         editor.setDelegate(new BreakpointEditor.Delegate() {
             @Override
             public void done() {
-                balloon.hide();
+                popup.close();
             }
 
             @Override
             public void more() {
-                assert showMoreOptions != null;
-                balloon.hide();
-                showMoreOptions.run();
+                popup.close();
+                if (showMoreOptions != null) {
+                    showMoreOptions.run();
+                }
             }
         });
 
-        ComponentAdapter moveListener = new ComponentAdapter() {
-            @Override
-            public void componentMoved(ComponentEvent e) {
-                balloon.hide();
-            }
-        };
-        component.addComponentListener(moveListener);
-        Disposer.register(balloon, () -> component.removeComponentListener(moveListener));
-
         if (whereToShow == null) {
-            balloon.showInCenterOf(component);
+            popup.showBy(anchor);
         }
         else {
-            //todo[kb] modify and move to BalloonImpl?
-            Window window = SwingUtilities.windowForComponent(component);
-            RelativePoint p = new RelativePoint(component, whereToShow);
-            if (window != null) {
-                RelativePoint point = new RelativePoint(window, new Point(0, 0));
-                if (p.getScreenPoint().getX() - point.getScreenPoint().getX() < 40) { // triangle + offsets is ~40px
-                    p.getPoint().x += 40;
-                }
-            }
-            balloon.show(p, Balloon.Position.below);
+            popup.showAt(anchor, whereToShow.x(), whereToShow.y(), 0);
         }
 
-        BreakpointsDialogFactory.getInstance(project).setBalloonToHide(balloon, breakpoint);
+        BreakpointsDialogFactory.getInstance(project).setPopupToHide(popup, breakpoint);
 
-        return balloon;
+        return popup;
     }
+
 
     
     public static EditorColorsScheme getColorScheme() {

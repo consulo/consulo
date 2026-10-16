@@ -29,6 +29,7 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.dom.DebouncePhase;
 import com.vaadin.flow.shared.Registration;
 
+import consulo.ui.Point2D;
 import consulo.ui.event.details.InputDetails;
 import consulo.web.ui.impl.internal.base.WebInputDetails;
 import consulo.web.editor.impl.internal.gutter.GutterBand;
@@ -420,6 +421,47 @@ public class ArquillEditorElement extends Component implements HasSize {
 
         public boolean isCollapsed() {
             return myCollapsed;
+        }
+    }
+
+    @DomEvent("arquill-gutter-right-click")
+    public static class ArquillGutterRightClickEvent extends ComponentEvent<ArquillEditorElement> {
+        private final int myId;
+        private final InputDetails myDetails;
+        private final Point2D myIconCenter;
+
+        public ArquillGutterRightClickEvent(
+            ArquillEditorElement source,
+            boolean fromClient,
+            @EventData("event.detail.id") int id,
+            @EventData("event.detail.x") int x,
+            @EventData("event.detail.y") int y,
+            @EventData("event.detail.screenX") int screenX,
+            @EventData("event.detail.screenY") int screenY,
+            @EventData("event.detail.button") int button,
+            @EventData("event.detail.alt") boolean alt,
+            @EventData("event.detail.ctrl") boolean ctrl,
+            @EventData("event.detail.shift") boolean shift,
+            @EventData("event.detail.meta") boolean meta,
+            @EventData("event.detail.iconX") int iconX,
+            @EventData("event.detail.iconY") int iconY
+        ) {
+            super(source, fromClient);
+            myId = id;
+            myDetails = WebInputDetails.mouse(x, y, screenX, screenY, button, alt, ctrl, shift, meta);
+            myIconCenter = new Point2D(iconX, iconY);
+        }
+
+        public int getId() {
+            return myId;
+        }
+
+        public InputDetails getDetails() {
+            return myDetails;
+        }
+
+        public Point2D getIconCenter() {
+            return myIconCenter;
         }
     }
 
@@ -874,6 +916,10 @@ public class ArquillEditorElement extends Component implements HasSize {
 
     public Registration addGutterLineClickListener(ComponentEventListener<ArquillGutterLineClickEvent> listener) {
         return addListener(ArquillGutterLineClickEvent.class, listener);
+    }
+
+    public Registration addGutterRightClickListener(ComponentEventListener<ArquillGutterRightClickEvent> listener) {
+        return addListener(ArquillGutterRightClickEvent.class, listener);
     }
 
     public Registration addGutterContextMenuListener(ComponentEventListener<ArquillGutterContextMenuEvent> listener) {

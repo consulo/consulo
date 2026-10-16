@@ -32,7 +32,7 @@ public abstract class BreakpointPanelProvider<B> {
   public abstract void createBreakpointsGroupingRules(Collection<XBreakpointGroupingRule> rules);
 
   public interface BreakpointsListener {
-    void breakpointsChanged();
+    void breakpointsChanged(Object breakpoint);
   }
 
   public abstract void addListener(BreakpointsListener listener, Project project, Disposable disposable);

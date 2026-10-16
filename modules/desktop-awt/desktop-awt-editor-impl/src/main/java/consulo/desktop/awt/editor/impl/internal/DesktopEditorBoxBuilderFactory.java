@@ -38,6 +38,6 @@ public class DesktopEditorBoxBuilderFactory implements EditorBoxBuilderFactory {
 
     @Override
     public EditorBoxBuilder create(@Nullable Project project) {
-        return new EditorBoxBuilderImpl(project, myEditorFactory, DesktopEditorBoxImpl::new);
+        return new EditorBoxBuilderImpl(project, myEditorFactory, DesktopEditorBoxImpl::new, DesktopEditorComboBoxImpl::new);
     }
 }

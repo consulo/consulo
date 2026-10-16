@@ -22,7 +22,12 @@ import consulo.codeEditor.LineNumberConverter;
 import consulo.codeEditor.TextAnnotationGutterProvider;
 import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.codeEditor.markup.GutterMark;
+import consulo.desktop.qt.ui.impl.QtComponentDelegate;
+import consulo.ui.Point2D;
+import consulo.ui.RelativePoint2D;
 import consulo.ui.ex.action.ActionGroup;
+import io.qt.core.QPoint;
+import io.qt.core.QRect;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.JComponent;
@@ -193,7 +198,21 @@ public class DesktopQtEditorGutterComponentImpl implements EditorGutterComponent
 
     @Override
     public @Nullable Point getCenterPoint(GutterIconRenderer renderer) {
-        return null;
+        DesktopQtEditorGutterWidget widget = getWidget();
+        QRect bounds = widget == null ? null : widget.iconBounds(renderer);
+        return bounds == null ? null : new Point(bounds.center().x(), bounds.center().y());
+    }
+
+    @Override
+    public @Nullable RelativePoint2D getIconCenter(GutterIconRenderer renderer) {
+        DesktopQtEditorGutterWidget widget = getWidget();
+        QRect bounds = widget == null ? null : widget.iconBounds(renderer);
+        if (bounds == null || !(myEditor.getContentUIComponent() instanceof QtComponentDelegate<?> content)) {
+            return null;
+        }
+
+        QPoint center = widget.mapTo(content.toQtComponent(), bounds.center());
+        return RelativePoint2D.of(content, new Point2D(center.x(), center.y()));
     }
 
     @Override

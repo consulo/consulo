@@ -6,6 +6,7 @@
 module consulo.execution.debug.impl {
     requires consulo.diff.api;
     requires consulo.execution.debug.api;
+    requires consulo.configuration.editor.api;
     requires consulo.bookmark.ui.view.api;
     requires consulo.task.api;
     requires consulo.virtual.file.system.http.api;

@@ -23,18 +23,19 @@ import consulo.execution.debug.impl.internal.breakpoint.XBreakpointUtil;
 import consulo.execution.debug.impl.internal.breakpoint.XLineBreakpointImpl;
 import consulo.execution.debug.impl.internal.ui.DebuggerUIImplUtil;
 import consulo.project.Project;
+import consulo.ui.Component;
+import consulo.ui.Point2D;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.lang.Pair;
-
-import javax.swing.*;
-import java.awt.*;
 
 public class XDebuggerEditBreakpointActionHandler extends EditBreakpointActionHandler {
     public static final XDebuggerEditBreakpointActionHandler INSTANCE = new XDebuggerEditBreakpointActionHandler();
 
+    @RequiredUIAccess
     @Override
-    protected void doShowPopup(Project project, JComponent component, Point whereToShow, Object breakpoint) {
-        DebuggerUIImplUtil.showXBreakpointEditorBalloon(project, whereToShow, component, false, (XBreakpoint) breakpoint);
+    protected void doShowPopup(Project project, Component anchor, Point2D whereToShow, Object breakpoint) {
+        DebuggerUIImplUtil.showXBreakpointEditorBalloon(project, anchor, whereToShow, false, (XBreakpoint) breakpoint);
     }
 
     @Override

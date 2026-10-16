@@ -325,7 +325,7 @@ public class DesktopAWTLightPopupImpl extends SwingComponentDelegate<DesktopAWTP
         if (event instanceof MouseEvent mouseEvent
             && mouseEvent.getID() == MouseEvent.MOUSE_PRESSED
             && myOptions.isCancelOnClickOutside()
-            && !SwingUtilities.isDescendingFrom(mouseEvent.getComponent(), panel)) {
+            && isOutside(mouseEvent.getComponent(), panel)) {
             close();
         }
         else if (event instanceof KeyEvent keyEvent
@@ -336,6 +336,22 @@ public class DesktopAWTLightPopupImpl extends SwingComponentDelegate<DesktopAWTP
             keyEvent.consume();
             close();
         }
+    }
+
+    private boolean isOutside(java.awt.@Nullable Component component, DesktopAWTPopupPanel panel) {
+        JLayeredPane layeredPane = myLayeredPane;
+        if (component == null || layeredPane == null || SwingUtilities.isDescendingFrom(component, panel)) {
+            return false;
+        }
+        if (!sameWindow(component)) {
+            return false;
+        }
+        for (java.awt.Component current = component; current != null; current = current.getParent()) {
+            if (current.getParent() == layeredPane) {
+                return layeredPane.getLayer(current) < JLayeredPane.POPUP_LAYER;
+            }
+        }
+        return true;
     }
 
     private boolean sameWindow(java.awt.@Nullable Component component) {

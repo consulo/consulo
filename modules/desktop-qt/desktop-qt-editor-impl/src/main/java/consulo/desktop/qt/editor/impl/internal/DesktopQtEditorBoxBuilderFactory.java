@@ -44,7 +44,8 @@ public class DesktopQtEditorBoxBuilderFactory implements EditorBoxBuilderFactory
         return new EditorBoxBuilderImpl(
             project,
             myEditorFactory,
-            options -> new DesktopQtEditorBoxImpl(options, myEditorFactory, myProjectManager)
+            options -> new DesktopQtEditorBoxImpl(options, myEditorFactory, myProjectManager),
+            options -> new DesktopQtEditorComboBoxImpl(options, myEditorFactory, myProjectManager)
         );
     }
 }

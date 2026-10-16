@@ -32,7 +32,7 @@ import io.qt.widgets.QStyleOptionFrame;
 import io.qt.widgets.QWidget;
 import org.jspecify.annotations.Nullable;
 
-final class DesktopQtEditorBoxFrame extends QFrame {
+final class DesktopQtEditorBoxFrame extends QFrame implements DesktopQtEditorHost {
     private static final int HORIZONTAL_MARGIN = 2;
     private static final int VERTICAL_MARGIN = 1;
 
@@ -68,11 +68,13 @@ final class DesktopQtEditorBoxFrame extends QFrame {
         updateMargins();
     }
 
-    QHBoxLayout getBoxLayout() {
+    @Override
+    public QHBoxLayout getBoxLayout() {
         return myLayout;
     }
 
-    void setOneLine(boolean oneLine) {
+    @Override
+    public void setOneLine(boolean oneLine) {
         myOneLine = oneLine;
         if (oneLine) {
             setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed);
@@ -81,15 +83,18 @@ final class DesktopQtEditorBoxFrame extends QFrame {
         updateGeometry();
     }
 
-    void watchFocus(QWidget widget) {
+    @Override
+    public void watchFocus(QWidget widget) {
         widget.installEventFilter(myFocusFilter);
     }
 
-    void setPaletteListener(@Nullable Runnable listener) {
+    @Override
+    public void setPaletteListener(@Nullable Runnable listener) {
         myPaletteListener = listener;
     }
 
-    QColor getBaseColor() {
+    @Override
+    public QColor getBaseColor() {
         return palette().color(QPalette.ColorRole.Base);
     }
 

@@ -155,17 +155,17 @@ public class XBreakpointPanelProvider extends BreakpointPanelProvider<XBreakpoin
 
         @Override
         public void breakpointAdded(XBreakpoint<?> breakpoint) {
-            myListener.breakpointsChanged();
+            myListener.breakpointsChanged(breakpoint);
         }
 
         @Override
         public void breakpointRemoved(XBreakpoint<?> breakpoint) {
-            myListener.breakpointsChanged();
+            myListener.breakpointsChanged(breakpoint);
         }
 
         @Override
         public void breakpointChanged(XBreakpoint<?> breakpoint) {
-            myListener.breakpointsChanged();
+            myListener.breakpointsChanged(breakpoint);
         }
     }
 

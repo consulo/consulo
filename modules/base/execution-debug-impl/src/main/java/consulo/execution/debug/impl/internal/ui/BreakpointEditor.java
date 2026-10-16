@@ -17,93 +17,109 @@ package consulo.execution.debug.impl.internal.ui;
 
 import consulo.codeEditor.Editor;
 import consulo.execution.debug.XDebuggerActions;
+import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.language.editor.completion.lookup.LookupManager;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.Button;
+import consulo.ui.Component;
+import consulo.ui.Hyperlink;
+import consulo.ui.Space;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.*;
-import consulo.ui.ex.awt.LinkLabel;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.CompositeShortcutSet;
+import consulo.ui.ex.action.CustomShortcutSet;
+import consulo.ui.ex.internal.AnActionWithUIUpdate;
 import consulo.ui.ex.keymap.util.KeymapUtil;
+import consulo.ui.layout.DockLayout;
+import consulo.ui.layout.HorizontalLayout;
 import consulo.util.lang.StringUtil;
-
-import javax.swing.*;
-import java.awt.*;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author zajac
  * @since 2012-04-04
  */
 public class BreakpointEditor {
-    public JPanel getMainPanel() {
-        return myMainPanel;
-    }
-
-    private void createUIComponents() {
-        AnAction action = ActionManager.getInstance().getAction(XDebuggerActions.VIEW_BREAKPOINTS);
-        String shortcutText = action != null ? KeymapUtil.getFirstKeyboardShortcutText(action) : null;
-        String text = shortcutText != null ? "More (" + shortcutText + ")" : "More";
-        myShowMoreOptionsLink = new LinkLabel(
-            text,
-            null,
-            (aSource, aLinkData) -> {
-                if (myDelegate != null) {
-                    myDelegate.more();
-                }
-            }
-        );
-    }
-
-    public void setShowMoreOptionsLink(boolean b) {
-        myShowMoreOptionsLink.setVisible(b);
-    }
-
     public interface Delegate {
         void done();
 
         void more();
     }
 
-    private JPanel myMainPanel;
-    private JButton myDoneButton;
-    private JPanel myPropertiesPlaceholder;
-    private LinkLabel myShowMoreOptionsLink;
-    private Delegate myDelegate;
+    private final DockLayout myMainPanel = DockLayout.create();
+    private final Hyperlink myShowMoreOptionsLink;
+    private @Nullable Delegate myDelegate;
 
+    @RequiredUIAccess
     public BreakpointEditor() {
-        myDoneButton.addActionListener(actionEvent -> done());
-
-        AnAction doneAction = new LegacyAnAction() {
-            @Override
-            public void update(AnActionEvent e) {
-                boolean lookup = LookupManager.getInstance(e.getRequiredData(Project.KEY)).getActiveLookup() != null;
-                Editor editor = e.getData(Editor.KEY);
-                e.getPresentation()
-                    .setEnabled(!lookup && (editor == null || StringUtil.isEmpty(editor.getSelectionModel().getSelectedText())));
+        AnAction viewBreakpoints = ActionManager.getInstance().getAction(XDebuggerActions.VIEW_BREAKPOINTS);
+        String shortcutText = viewBreakpoints != null ? KeymapUtil.getFirstKeyboardShortcutText(viewBreakpoints) : null;
+        LocalizeValue moreText = StringUtil.isEmpty(shortcutText)
+            ? XDebuggerLocalize.xbreakpointEditorMoreLink()
+            : XDebuggerLocalize.xbreakpointEditorMoreLinkWithShortcut(shortcutText);
+        myShowMoreOptionsLink = Hyperlink.create(moreText, event -> {
+            Delegate delegate = myDelegate;
+            if (delegate != null) {
+                delegate.more();
             }
+        });
 
-            @Override
-            @RequiredUIAccess
-            public void actionPerformed(AnActionEvent e) {
-                done();
-            }
-        };
+        Button doneButton = Button.create(XDebuggerLocalize.xbreakpointEditorDoneButton(), event -> done());
+
+        myMainPanel.bottom(DockLayout.create()
+            .left(myShowMoreOptionsLink)
+            .right(HorizontalLayout.create().add(doneButton)));
+
+        myMainPanel.paddingBuilder().horizontalSet(Space.LARGE).verticalSet(Space.MEDIUM).apply();
+
+        AnAction doneAction = new DoneAction();
         doneAction.registerCustomShortcutSet(
             new CompositeShortcutSet(CustomShortcutSet.fromString("ESCAPE"), CustomShortcutSet.fromString("ENTER")),
             myMainPanel
         );
     }
 
-    private void done() {
-        if (myDelegate != null) {
-            myDelegate.done();
+    private class DoneAction extends AnAction implements AnActionWithUIUpdate {
+        @RequiredUIAccess
+        @Override
+        public void updateAtUI(AnActionEvent e) {
+            Project project = e.getData(Project.KEY);
+            boolean lookup = project != null && LookupManager.getInstance(project).getActiveLookup() != null;
+            Editor editor = e.getData(Editor.KEY);
+            e.getPresentation()
+                .setEnabled(!lookup && (editor == null || StringUtil.isEmpty(editor.getSelectionModel().getSelectedText())));
+        }
+
+        @RequiredUIAccess
+        @Override
+        public void actionPerformed(AnActionEvent e) {
+            done();
         }
     }
 
-    public void setPropertiesPanel(JComponent p) {
-        myPropertiesPlaceholder.removeAll();
-        myPropertiesPlaceholder.add(p, BorderLayout.CENTER);
+    public Component getMainPanel() {
+        return myMainPanel;
     }
 
-    public void setDelegate(Delegate d) {
-        myDelegate = d;
+    public void setShowMoreOptionsLink(boolean visible) {
+        myShowMoreOptionsLink.setVisible(visible);
+    }
+
+    private void done() {
+        Delegate delegate = myDelegate;
+        if (delegate != null) {
+            delegate.done();
+        }
+    }
+
+    public void setPropertiesPanel(Component panel) {
+        myMainPanel.center(panel);
+    }
+
+    public void setDelegate(@Nullable Delegate delegate) {
+        myDelegate = delegate;
     }
 }

@@ -36,9 +36,11 @@ import consulo.navigation.Navigatable;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.project.ui.view.tree.AbstractTreeNode;
+import consulo.ui.Point2D;
 import consulo.ui.ex.awt.CommonActionsPanel;
 import consulo.ui.ex.awt.tree.CheckedTreeNode;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.tree.PresentationData;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
@@ -84,7 +86,7 @@ public class BreakpointsFavoriteListProvider extends AbstractFavoritesListProvid
 
     @Override
     @RequiredReadAction
-    public void breakpointsChanged() {
+    public void breakpointsChanged(Object breakpoint) {
         updateChildren();
     }
 
@@ -201,10 +203,10 @@ public class BreakpointsFavoriteListProvider extends AbstractFavoritesListProvid
             bounds.y += bounds.height / 2;
             bounds = tree.getVisibleRect().intersection(bounds);
         }
-        Point whereToShow = new Point((int) bounds.getCenterX(), (int) bounds.getCenterY());
+        Point2D whereToShow = new Point2D((int) bounds.getCenterX(), (int) bounds.getCenterY());
         BreakpointItem breakpointItem = (BreakpointItem) ((AbstractTreeNode) selectedObjects.iterator().next()).getValue();
         switch (type) {
-            case EDIT -> XDebuggerEditBreakpointActionHandler.INSTANCE.editBreakpoint(myProject, component, whereToShow, breakpointItem);
+            case EDIT -> XDebuggerEditBreakpointActionHandler.INSTANCE.editBreakpoint(myProject, TargetAWT.wrap(component), whereToShow, breakpointItem);
             case REMOVE -> breakpointItem.removed(myProject);
         }
     }

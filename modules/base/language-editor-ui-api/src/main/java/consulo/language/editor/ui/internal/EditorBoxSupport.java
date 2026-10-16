@@ -149,6 +149,13 @@ public final class EditorBoxSupport {
         }
     }
 
+    public void moveCaretToEnd() {
+        EditorEx editor = myEditor;
+        if (editor != null) {
+            editor.getCaretModel().moveToOffset(myDocument.getTextLength());
+        }
+    }
+
     public void selectAll() {
         EditorEx editor = myEditor;
         if (editor != null) {

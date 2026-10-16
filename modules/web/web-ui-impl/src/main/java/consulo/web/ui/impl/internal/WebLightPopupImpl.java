@@ -29,6 +29,7 @@ import consulo.ui.Component;
 import consulo.ui.LightPopup;
 import consulo.ui.Popup;
 import consulo.ui.PopupOptions;
+import consulo.ui.PopupPosition;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.event.PopupCloseEvent;
@@ -337,7 +338,16 @@ public class WebLightPopupImpl extends VaadinComponentDelegate<WebLightPopupImpl
 
         anchor.getStyle().set("height", Math.max(anchorHeight, 1) + "px");
 
-        showArrow(myOptions.hasArrow());
+        boolean arrow = myOptions.hasArrow();
+        showArrow(arrow);
+        if (arrow) {
+            switch (myOptions.getPosition()) {
+                case END -> getVaadinComponent().setPosition(PopoverPosition.END);
+                case START -> getVaadinComponent().setPosition(PopoverPosition.START);
+                default -> {
+                }
+            }
+        }
 
         // a popup which is already up is only moved. re-targeting an open popover tears the overlay down and builds
         // it again, which is every row of the list back over the wire for one typed character
@@ -434,7 +444,8 @@ public class WebLightPopupImpl extends VaadinComponentDelegate<WebLightPopupImpl
 
         Div anchor = myAnchor;
         if (anchor != null) {
-            anchor.setClassName(ARROW_ANCHOR_CLASS, arrow);
+            PopupPosition position = myOptions.getPosition();
+            anchor.setClassName(ARROW_ANCHOR_CLASS, arrow && (position == PopupPosition.TOP || position == PopupPosition.BOTTOM));
         }
     }
 

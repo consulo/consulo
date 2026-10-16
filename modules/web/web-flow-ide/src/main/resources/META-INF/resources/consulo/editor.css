@@ -494,6 +494,7 @@
 {
   font-family: var(--arquill-editor-font-family);
   font-size: var(--arquill-editor-font-size);
+  min-width: calc(1em + 2px);
 }
 
 /* the ruler rows are laid out at the height of a text row but keep the default line height, so the number is

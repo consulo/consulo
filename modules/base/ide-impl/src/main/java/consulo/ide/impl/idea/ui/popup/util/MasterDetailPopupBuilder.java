@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.ui.popup.util;
 
 import consulo.codeEditor.util.popup.*;
 import consulo.ide.impl.ui.impl.PopupChooserBuilder;
-import consulo.language.editor.ui.awt.DetailViewImpl;
+import consulo.language.editor.ui.DetailViewImpl;
 import consulo.language.editor.ui.awt.ItemWrapperListRenderer;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -28,6 +28,7 @@ import consulo.ui.ex.Gray;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.speedSearch.FilteringListModel;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
@@ -436,7 +437,7 @@ public class MasterDetailPopupBuilder implements MasterController {
                 JBSplitter splitPane = new JBSplitter(0.3f);
                 splitPane.setSplitterProportionKey(getSplitterProportionKey());
                 splitPane.setFirstComponent(component);
-                splitPane.setSecondComponent((JComponent) myDetailView);
+                splitPane.setSecondComponent((JComponent) TargetAWT.to(myDetailView.getUIComponent()));
 
                 contentPane.add(splitPane, BorderLayout.CENTER);
             }

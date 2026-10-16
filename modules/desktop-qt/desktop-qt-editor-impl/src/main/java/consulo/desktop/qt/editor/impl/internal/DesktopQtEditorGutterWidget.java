@@ -52,6 +52,7 @@ import consulo.ui.Component;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ComponentEvent;
+import consulo.ui.event.details.MouseInputDetails;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.impl.internal.action.ActionImplUtil;
@@ -67,6 +68,7 @@ import io.qt.core.Qt;
 import io.qt.gui.QColor;
 import io.qt.gui.QCursor;
 import io.qt.gui.QEnterEvent;
+import io.qt.gui.QGuiApplication;
 import io.qt.gui.QMouseEvent;
 import io.qt.gui.QPaintEvent;
 import io.qt.gui.QPainter;
@@ -169,6 +171,16 @@ public class DesktopQtEditorGutterWidget extends QWidget {
      * which is the order the web frontend resolves it in.
      */
     private CompletableFuture<@Nullable ActionGroup> gutterPopupGroupAsync(QPoint position) {
+        GutterIconRenderer target = gutterRendererAt(position);
+        AnAction rightButtonAction = target == null ? null : target.getRightButtonClickAction();
+        if (rightButtonAction != null) {
+            performAction(
+                rightButtonAction,
+                DesktopQtInputDetails.mouse(editorWidget(), new QPointF(mapToGlobal(position)), Qt.MouseButton.RightButton, QGuiApplication.keyboardModifiers())
+            );
+            return CompletableFuture.completedFuture(null);
+        }
+
         for (GutterMark mark : myEditor.getGutterComponentEx().getGutterRenderers(visualLineAt(position.y()))) {
             if (mark instanceof GutterIconRenderer renderer) {
                 ActionGroup rendererGroup = renderer.getPopupMenuActions();
@@ -441,9 +453,19 @@ public class DesktopQtEditorGutterWidget extends QWidget {
      * which is the target the row looks like it offers.
      */
     private @Nullable GutterIconRenderer gutterRendererAt(QPoint position) {
+        int visualLine = visualLineAt(position.y());
+
+        GutterIconRenderer onLineNumbers = lineNumbersRenderer(visualLine);
+        if (onLineNumbers != null) {
+            QRect bounds = lineNumberIconBounds(scaledIconSize(onLineNumbers.getIcon()), visualLine, 0, myEditor.getLineHeight());
+            if (position.x() >= bounds.left() && position.x() <= bounds.right()) {
+                return onLineNumbers;
+            }
+        }
+
         SimpleReference<GutterIconRenderer> found = SimpleReference.create();
 
-        layoutRowIcons(visualLineAt(position.y()), 0, myEditor.getLineHeight(), (mark, bounds) -> {
+        layoutRowIcons(visualLine, 0, myEditor.getLineHeight(), (mark, bounds) -> {
             if (found.get() == null
                 && mark instanceof GutterIconRenderer renderer
                 && position.x() >= bounds.left()
@@ -473,17 +495,25 @@ public class DesktopQtEditorGutterWidget extends QWidget {
      */
     @RequiredUIAccess
     private void performClickAction(AnAction action, QMouseEvent event) {
+        performAction(action, DesktopQtInputDetails.mouse(editorWidget(), event));
+    }
+
+    private @Nullable QWidget editorWidget() {
+        return myEditor.getContentUIComponent() instanceof QtComponentDelegate<?> delegate ? delegate.toQtComponent() : null;
+    }
+
+    @RequiredUIAccess
+    private void performAction(AnAction action, MouseInputDetails details) {
         DataContext context = myEditor.getDataContext();
 
         Component editorComponent = myEditor.getContentUIComponent();
-        QWidget editorWidget = editorComponent instanceof QtComponentDelegate<?> delegate ? delegate.toQtComponent() : null;
 
         AnActionEvent actionEvent = AnActionEvent.createFromAnAction(
             action,
             null,
             ActionPlaces.EDITOR_GUTTER,
             context,
-            new ComponentEvent<>(editorComponent, DesktopQtInputDetails.mouse(editorWidget, event))
+            new ComponentEvent<>(editorComponent, details)
         );
 
         UIAccess uiAccess = UIAccess.current();
@@ -711,15 +741,60 @@ public class DesktopQtEditorGutterWidget extends QWidget {
             return false;
         }
 
-        int size = scaledIconSize(image);
-        int y = visualLine * lineHeight - scrollY + (lineHeight - size) / 2;
-
         painter.save();
         painter.setOpacity(opacity);
-        paintIcon(painter, image, new QRect(Math.max(0, lineNumberAreaOffset() + lineNumberAreaWidth() - RIGHT_PADDING - size), y, size, size));
+        paintIcon(painter, image, lineNumberIconBounds(scaledIconSize(image), visualLine, scrollY, lineHeight));
         painter.restore();
 
         return true;
+    }
+
+    private QRect lineNumberIconBounds(int size, int visualLine, int scrollY, int lineHeight) {
+        int y = visualLine * lineHeight - scrollY + (lineHeight - size) / 2;
+        return new QRect(Math.max(0, lineNumberAreaOffset() + lineNumberAreaWidth() - RIGHT_PADDING - size), y, size, size);
+    }
+
+    private @Nullable GutterIconRenderer lineNumbersRenderer(int visualLine) {
+        if (!BreakpointEditorUtil.isBreakPointsOnLineNumbers() || !myEditor.getSettings().isLineNumbersShown()) {
+            return null;
+        }
+
+        for (GutterMark mark : myEditor.getGutterComponentEx().getGutterRenderers(visualLine)) {
+            if (mark instanceof GutterIconRenderer renderer && renderer.getAlignment() == GutterIconRenderer.Alignment.LINE_NUMBERS) {
+                return renderer;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Where the renderer's icon is drawn in this widget, or null while it is not on one of the rows in view.
+     */
+    public @Nullable QRect iconBounds(GutterIconRenderer renderer) {
+        int lineHeight = myEditor.getLineHeight();
+        int scrollY = mySurface.verticalScrollBar().value();
+        int firstLine = Math.max(0, scrollY / lineHeight);
+        int lastLine = (scrollY + height()) / lineHeight;
+
+        for (int line = firstLine; line <= lastLine; line++) {
+            if (renderer.equals(lineNumbersRenderer(line))) {
+                return lineNumberIconBounds(scaledIconSize(renderer.getIcon()), line, scrollY, lineHeight);
+            }
+
+            SimpleReference<QRect> found = SimpleReference.create();
+            layoutRowIcons(line, line * lineHeight - scrollY, lineHeight, (mark, bounds) -> {
+                if (found.get() == null && renderer.equals(mark)) {
+                    found.set(bounds);
+                }
+            });
+
+            if (found.get() != null) {
+                return found.get();
+            }
+        }
+
+        return null;
     }
 
     private void paintFoldAnchors(QPainter painter, int firstLine, int lastLine, int scrollY, int lineHeight) {

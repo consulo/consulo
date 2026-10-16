@@ -22,7 +22,7 @@ import consulo.bookmark.localize.BookmarkLocalize;
 import consulo.bookmark.ui.view.internal.BookmarkItem;
 import consulo.codeEditor.util.popup.ItemWrapper;
 import consulo.ide.impl.idea.ui.popup.util.MasterDetailPopupBuilder;
-import consulo.language.editor.ui.awt.DetailViewImpl;
+import consulo.language.editor.ui.DetailViewImpl;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;

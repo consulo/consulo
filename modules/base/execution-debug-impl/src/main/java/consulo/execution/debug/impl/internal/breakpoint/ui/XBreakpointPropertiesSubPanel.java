@@ -15,29 +15,37 @@
  */
 package consulo.execution.debug.impl.internal.breakpoint.ui;
 
-import consulo.project.Project;
 import consulo.execution.debug.XBreakpointManager;
 import consulo.execution.debug.breakpoint.XBreakpointType;
 import consulo.execution.debug.impl.internal.breakpoint.XBreakpointBase;
+import consulo.project.Project;
+import consulo.ui.Component;
+import consulo.ui.annotation.RequiredUIAccess;
 
 public abstract class XBreakpointPropertiesSubPanel {
-  protected Project myProject;
-  protected XBreakpointManager myBreakpointManager;
-  protected XBreakpointBase myBreakpoint;
-  protected XBreakpointType myBreakpointType;
+    protected Project myProject;
+    protected XBreakpointManager myBreakpointManager;
+    protected XBreakpointBase myBreakpoint;
+    protected XBreakpointType myBreakpointType;
 
-  public void init(Project project, XBreakpointManager breakpointManager, XBreakpointBase breakpoint) {
-    myProject = project;
-    myBreakpointManager = breakpointManager;
-    myBreakpoint = breakpoint;
-    myBreakpointType = breakpoint.getType();
-  }
+    @RequiredUIAccess
+    public void init(Project project, XBreakpointManager breakpointManager, XBreakpointBase breakpoint) {
+        myProject = project;
+        myBreakpointManager = breakpointManager;
+        myBreakpoint = breakpoint;
+        myBreakpointType = breakpoint.getType();
+    }
 
-  abstract void loadProperties();
+    public abstract Component getComponent();
 
-  abstract void saveProperties();
+    @RequiredUIAccess
+    abstract void loadProperties();
 
-  public boolean lightVariant(boolean showAllOptions) {
-    return false;
-  }
+    @RequiredUIAccess
+    abstract void saveProperties();
+
+    @RequiredUIAccess
+    public boolean lightVariant(boolean showAllOptions) {
+        return false;
+    }
 }

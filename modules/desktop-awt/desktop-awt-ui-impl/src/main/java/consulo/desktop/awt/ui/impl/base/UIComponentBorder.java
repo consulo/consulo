@@ -21,7 +21,10 @@ import consulo.ui.color.ColorValue;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.internal.BorderPosition;
+import org.jspecify.annotations.Nullable;
 
+import javax.swing.JComponent;
+import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.geom.RoundRectangle2D;
@@ -32,7 +35,7 @@ import java.util.function.IntConsumer;
  * @author VISTALL
  * @since 19/12/2021
  */
-class UIComponentBorder implements Border {
+public class UIComponentBorder implements Border {
     private static final int ARC = 4;
 
     private final Map<BorderPosition, ColorValue> myBorders;
@@ -65,6 +68,25 @@ class UIComponentBorder implements Border {
      * A corner is shared by two sides, so a component asking for every side is drawn as one shape around the whole
      * of it, with whatever corner the style rounds it to, rather than side by side.
      */
+    public static @Nullable Shape findRoundedInnerArea(Component child) {
+        for (Container parent = child.getParent(); parent != null && !(parent instanceof Window); parent = parent.getParent()) {
+            if (parent instanceof JComponent component && component.getBorder() instanceof UIComponentBorder border && border.isFullBorder()) {
+                Point offset = SwingUtilities.convertPoint(parent, 0, 0, child);
+                int thickness = JBUI.scale(1);
+                int arc = JBUI.scale(ARC);
+                return new RoundRectangle2D.Float(
+                    offset.x + thickness,
+                    offset.y + thickness,
+                    parent.getWidth() - 2 * thickness,
+                    parent.getHeight() - 2 * thickness,
+                    arc,
+                    arc
+                );
+            }
+        }
+        return null;
+    }
+
     private boolean isFullBorder() {
         return myBorders.size() == BorderPosition.values().length;
     }

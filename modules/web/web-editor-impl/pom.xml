@@ -213,6 +213,14 @@
             <groupId>com.vaadin</groupId>
             <artifactId>flow-client</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>flow-data</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-select-flow</artifactId>
+        </dependency>
         <!-- the colorpicker addon carries every dependency of a standalone app, so it is taken bare - this is
              the one component of the toolkit it actually reaches for -->
         <dependency>

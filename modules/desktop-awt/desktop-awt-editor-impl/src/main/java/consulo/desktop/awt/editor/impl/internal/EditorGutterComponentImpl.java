@@ -48,6 +48,8 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.event.DumbModeListener;
+import consulo.ui.Point2D;
+import consulo.ui.RelativePoint2D;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
@@ -2443,6 +2445,12 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
         public void actionPerformed(AnActionEvent e) {
             closeAllAnnotations();
         }
+    }
+
+    @Override
+    public @Nullable RelativePoint2D getIconCenter(GutterIconRenderer renderer) {
+        Point point = getCenterPoint(renderer);
+        return point == null ? null : RelativePoint2D.of(TargetAWT.wrap(this), new Point2D(point.x, point.y));
     }
 
     @Override

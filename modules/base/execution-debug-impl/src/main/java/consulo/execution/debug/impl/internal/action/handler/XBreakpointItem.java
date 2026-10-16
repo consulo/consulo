@@ -26,6 +26,9 @@ import consulo.execution.debug.impl.internal.breakpoint.ui.BreakpointItem;
 import consulo.execution.debug.impl.internal.breakpoint.ui.XLightBreakpointPropertiesPanel;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
+import consulo.ui.TextAttribute;
+import consulo.ui.TextItemPresentation;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.image.Image;
@@ -51,6 +54,16 @@ class XBreakpointItem extends BreakpointItem {
     String description = getUserDescription();
     if (!StringUtil.isEmpty(description)) {
       renderer.append(" (" + description + ")", SimpleTextAttributes.REGULAR_ITALIC_ATTRIBUTES);
+    }
+  }
+
+  @RequiredUIAccess
+  @Override
+  public void setupRenderer(TextItemPresentation presentation) {
+    presentation.append(StringUtil.notNullize(getDisplayText()), myBreakpoint.isEnabled() ? TextAttribute.REGULAR : TextAttribute.GRAYED);
+    String description = getUserDescription();
+    if (!StringUtil.isEmpty(description)) {
+      presentation.append(" (" + description + ")", TextAttribute.REGULAR_ITALIC);
     }
   }
 
@@ -109,9 +122,7 @@ class XBreakpointItem extends BreakpointItem {
     }
 
     if (myPropertiesPanel != null) {
-      myPropertiesPanel.setDetailView(panel);
       myPropertiesPanel.loadProperties();
-      myPropertiesPanel.getMainPanel().revalidate();
 
     }
 

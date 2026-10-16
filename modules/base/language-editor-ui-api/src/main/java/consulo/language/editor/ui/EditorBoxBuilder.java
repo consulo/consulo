@@ -69,4 +69,7 @@ public interface EditorBoxBuilder {
 
     @RequiredUIAccess
     EditorBox build();
+
+    @RequiredUIAccess
+    EditorComboBox buildComboBox();
 }

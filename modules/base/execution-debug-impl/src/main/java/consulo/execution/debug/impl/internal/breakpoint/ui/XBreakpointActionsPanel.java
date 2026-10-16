@@ -21,115 +21,152 @@ import consulo.execution.debug.breakpoint.XExpression;
 import consulo.execution.debug.breakpoint.XLineBreakpoint;
 import consulo.execution.debug.evaluation.XDebuggerEditorsProvider;
 import consulo.execution.debug.impl.internal.breakpoint.XBreakpointBase;
-import consulo.execution.debug.impl.internal.ui.DebuggerUIImplUtil;
-import consulo.execution.debug.impl.internal.ui.XDebuggerExpressionComboBox;
+import consulo.execution.debug.impl.internal.ui.UnifiedXDebuggerExpressionComboBox;
+import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.project.Project;
+import consulo.ui.CheckBox;
+import consulo.ui.Component;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.layout.LabeledLayout;
+import consulo.ui.layout.VerticalLayout;
 import org.jspecify.annotations.Nullable;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 /**
  * @author zajac
  * @since 2011-06-18
  */
 public class XBreakpointActionsPanel extends XBreakpointPropertiesSubPanel {
-  public static final String LOG_EXPRESSION_HISTORY_ID = "breakpointLogExpression";
+    public static final String LOG_EXPRESSION_HISTORY_ID = "breakpointLogExpression";
 
-  private JCheckBox myLogMessageCheckBox;
-  private JCheckBox myLogExpressionCheckBox;
-  private JPanel myLogExpressionPanel;
-  private JPanel myContentPane;
-  private JPanel myMainPanel;
-  private JCheckBox myTemporaryCheckBox;
-  private JPanel myExpressionPanel;
-  private XDebuggerExpressionComboBox myLogExpressionComboBox;
+    private final VerticalLayout myMainPanel = VerticalLayout.create();
+    private final LabeledLayout myContentPane = LabeledLayout.create(XDebuggerLocalize.xbreakpointsPropertiesActionsGroupTitle(), myMainPanel);
 
-  public void init(Project project, XBreakpointManager breakpointManager, XBreakpointBase breakpoint, @Nullable XDebuggerEditorsProvider debuggerEditorsProvider) {
-    init(project, breakpointManager, breakpoint);
-    if (debuggerEditorsProvider != null) {
-      ActionListener listener = new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-          onCheckboxChanged();
+    private CheckBox myLogMessageCheckBox;
+    private @Nullable CheckBox myLogExpressionCheckBox;
+    private CheckBox myTemporaryCheckBox;
+    private @Nullable UnifiedXDebuggerExpressionComboBox myLogExpressionComboBox;
+
+    @RequiredUIAccess
+    public void init(
+        Project project,
+        XBreakpointManager breakpointManager,
+        XBreakpointBase breakpoint,
+        @Nullable XDebuggerEditorsProvider debuggerEditorsProvider
+    ) {
+        init(project, breakpointManager, breakpoint);
+
+        myLogMessageCheckBox = CheckBox.create(XDebuggerLocalize.xbreakpointsLogMessageCheckbox());
+        myMainPanel.add(myLogMessageCheckBox);
+
+        myTemporaryCheckBox = CheckBox.create(XDebuggerLocalize.xbreakpointsRemoveOnceHitCheckbox());
+
+        if (debuggerEditorsProvider != null) {
+            CheckBox logExpressionCheckBox = CheckBox.create(XDebuggerLocalize.xbreakpointsLogExpressionCheckbox());
+            myLogExpressionCheckBox = logExpressionCheckBox;
+
+            UnifiedXDebuggerExpressionComboBox comboBox = new UnifiedXDebuggerExpressionComboBox(
+                project,
+                debuggerEditorsProvider,
+                LOG_EXPRESSION_HISTORY_ID,
+                myBreakpoint.getSourcePosition(),
+                true
+            );
+            myLogExpressionComboBox = comboBox;
+            comboBox.setEnabled(false);
+
+            myMainPanel.add(logExpressionCheckBox);
+            myMainPanel.add(comboBox.getUIComponent());
+
+            myTemporaryCheckBox.setVisible(breakpoint instanceof XLineBreakpoint);
+            logExpressionCheckBox.addValueListener(event -> {
+                onCheckboxChanged();
+                if (logExpressionCheckBox.getValueOrError()) {
+                    comboBox.requestFocusInEditor();
+                }
+            });
         }
-      };
-      myLogExpressionComboBox = new XDebuggerExpressionComboBox(project, debuggerEditorsProvider, LOG_EXPRESSION_HISTORY_ID, myBreakpoint.getSourcePosition(), true);
-      JComponent logExpressionComponent = myLogExpressionComboBox.getComponent();
-      myLogExpressionPanel.add(logExpressionComponent, BorderLayout.CENTER);
-      myLogExpressionComboBox.setEnabled(false);
-      myTemporaryCheckBox.setVisible(breakpoint instanceof XLineBreakpoint);
-      myLogExpressionCheckBox.addActionListener(listener);
-      DebuggerUIImplUtil.focusEditorOnCheck(myLogExpressionCheckBox, myLogExpressionComboBox.getEditorComponent());
-    }
-    else {
-      myExpressionPanel.getParent().remove(myExpressionPanel);
-    }
-  }
 
-  @Override
-  public boolean lightVariant(boolean showAllOptions) {
-    if (!showAllOptions && !myBreakpoint.isLogMessage() && myBreakpoint.getLogExpression() == null &&
-        (!(myBreakpoint instanceof XLineBreakpoint) || !((XLineBreakpoint)myBreakpoint).isTemporary()) ) {
-      myMainPanel.setVisible(false);
-      return true;
-    } else {
-      myMainPanel.setBorder(null);
-      return false;
-    }
-  }
-
-  private void onCheckboxChanged() {
-    if (myLogExpressionComboBox != null) {
-      myLogExpressionComboBox.setEnabled(myLogExpressionCheckBox.isSelected());
-    }
-  }
-
-  @Override
-  void loadProperties() {
-    myLogMessageCheckBox.setSelected(myBreakpoint.isLogMessage());
-
-    if (myBreakpoint instanceof XLineBreakpoint) {
-      myTemporaryCheckBox.setSelected(((XLineBreakpoint)myBreakpoint).isTemporary());
+        myMainPanel.add(myTemporaryCheckBox);
     }
 
-    if (myLogExpressionComboBox != null) {
-      XExpression logExpression = myBreakpoint.getLogExpressionObjectInt();
-      myLogExpressionComboBox.setExpression(logExpression);
-      myLogExpressionCheckBox.setSelected(myBreakpoint.isLogExpressionEnabled() && logExpression != null);
-    }
-    onCheckboxChanged();
-  }
-
-  @Override
-  void saveProperties() {
-    myBreakpoint.setLogMessage(myLogMessageCheckBox.isSelected());
-
-    if (myBreakpoint instanceof XLineBreakpoint) {
-      ((XLineBreakpoint)myBreakpoint).setTemporary(myTemporaryCheckBox.isSelected());
+    @Override
+    public Component getComponent() {
+        return myContentPane;
     }
 
-    if (myLogExpressionComboBox != null) {
-      XExpression expression = myLogExpressionComboBox.getExpression();
-      XExpression logExpression = !XDebuggerUtil.getInstance().isEmptyExpression(expression) ? expression : null;
-      myBreakpoint.setLogExpressionEnabled(logExpression == null || myLogExpressionCheckBox.isSelected());
-      myBreakpoint.setLogExpressionObject(logExpression);
-      myLogExpressionComboBox.saveTextInHistory();
+    @RequiredUIAccess
+    @Override
+    public boolean lightVariant(boolean showAllOptions) {
+        if (!showAllOptions && !myBreakpoint.isLogMessage() && myBreakpoint.getLogExpression() == null
+            && (!(myBreakpoint instanceof XLineBreakpoint lineBreakpoint) || !lineBreakpoint.isTemporary())) {
+            myContentPane.setVisible(false);
+            return true;
+        }
+        return false;
     }
-  }
 
-  JComponent getDefaultFocusComponent() {
-    if (myLogExpressionComboBox != null && myLogExpressionComboBox.getComboBox().isEnabled()) {
-      return myLogExpressionComboBox.getEditorComponent();
+    @RequiredUIAccess
+    private void onCheckboxChanged() {
+        UnifiedXDebuggerExpressionComboBox comboBox = myLogExpressionComboBox;
+        CheckBox checkBox = myLogExpressionCheckBox;
+        if (comboBox != null && checkBox != null) {
+            comboBox.setEnabled(checkBox.getValueOrError());
+        }
     }
-    return null;
-  }
 
-  public void dispose() {
-  }
+    @RequiredUIAccess
+    @Override
+    void loadProperties() {
+        myLogMessageCheckBox.setValue(myBreakpoint.isLogMessage(), false);
 
-  public void hide() {
-    myContentPane.setVisible(false);
-  }
+        if (myBreakpoint instanceof XLineBreakpoint lineBreakpoint) {
+            myTemporaryCheckBox.setValue(lineBreakpoint.isTemporary(), false);
+        }
+
+        UnifiedXDebuggerExpressionComboBox comboBox = myLogExpressionComboBox;
+        CheckBox checkBox = myLogExpressionCheckBox;
+        if (comboBox != null && checkBox != null) {
+            XExpression logExpression = myBreakpoint.getLogExpressionObjectInt();
+            comboBox.setExpression(logExpression);
+            checkBox.setValue(myBreakpoint.isLogExpressionEnabled() && logExpression != null, false);
+        }
+        onCheckboxChanged();
+    }
+
+    @RequiredUIAccess
+    @Override
+    void saveProperties() {
+        myBreakpoint.setLogMessage(myLogMessageCheckBox.getValueOrError());
+
+        if (myBreakpoint instanceof XLineBreakpoint lineBreakpoint) {
+            lineBreakpoint.setTemporary(myTemporaryCheckBox.getValueOrError());
+        }
+
+        UnifiedXDebuggerExpressionComboBox comboBox = myLogExpressionComboBox;
+        CheckBox checkBox = myLogExpressionCheckBox;
+        if (comboBox != null && checkBox != null) {
+            XExpression expression = comboBox.getExpression();
+            XExpression logExpression = !XDebuggerUtil.getInstance().isEmptyExpression(expression) ? expression : null;
+            myBreakpoint.setLogExpressionEnabled(logExpression == null || checkBox.getValueOrError());
+            myBreakpoint.setLogExpressionObject(logExpression);
+            comboBox.saveTextInHistory();
+        }
+    }
+
+    @RequiredUIAccess
+    boolean focusDefaultComponent() {
+        UnifiedXDebuggerExpressionComboBox comboBox = myLogExpressionComboBox;
+        if (comboBox != null && comboBox.getComboBox().isEnabled()) {
+            comboBox.requestFocusInEditor();
+            return true;
+        }
+        return false;
+    }
+
+    public void dispose() {
+    }
+
+    public void hide() {
+        myContentPane.setVisible(false);
+    }
 }

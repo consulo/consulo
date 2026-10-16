@@ -19,26 +19,16 @@ import com.vaadin.flow.component.HasSize;
 import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.dom.Element;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.EditorFactory;
-import consulo.document.Document;
-import consulo.language.editor.ui.EditorBox;
 import consulo.language.editor.ui.internal.EditorBoxOptions;
-import consulo.language.editor.ui.internal.EditorBoxSupport;
-import consulo.localize.LocalizeValue;
 import consulo.project.ProjectManager;
 import consulo.ui.Component;
-import consulo.ui.HasFocus;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.event.ValueComponentEvent;
-import consulo.virtualFileSystem.fileType.FileType;
 import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
 import consulo.web.ui.impl.internal.base.ToVaadinComponentWrapper;
-import consulo.web.ui.impl.internal.base.VaadinComponentDelegate;
 import org.jspecify.annotations.Nullable;
 
-class WebEditorBoxImpl extends VaadinComponentDelegate<WebEditorBoxImpl.Vaadin> implements EditorBox {
+class WebEditorBoxImpl extends WebEditorBoxBase<WebEditorBoxImpl.Vaadin> {
     @Tag("vaadin-input-container")
     @StyleSheet("/editorBox/webEditorBox.css")
     public class Vaadin extends com.vaadin.flow.component.Component implements FromVaadinComponentWrapper, HasSize {
@@ -48,27 +38,17 @@ class WebEditorBoxImpl extends VaadinComponentDelegate<WebEditorBoxImpl.Vaadin> 
         }
     }
 
-    private final EditorBoxSupport mySupport;
-
     private @Nullable Component mySuffixComponent;
-
-    private @Nullable Element myEditorElement;
-
-    private boolean myFireListeners = true;
 
     @RequiredUIAccess
     WebEditorBoxImpl(EditorBoxOptions options, EditorFactory editorFactory, ProjectManager projectManager) {
-        mySupport = new EditorBoxSupport(options, editorFactory, projectManager, this::valueChanged, editor -> {
-        });
+        super(options, editorFactory, projectManager);
 
         Vaadin vaadin = toVaadinComponent();
         vaadin.getElement().getClassList().add("consulo-editor-box");
         vaadin.getElement().getClassList().add("aura-surface");
         vaadin.getElement().getClassList().set("consulo-editor-box-multiline", !options.oneLine());
         vaadin.getElement().getClassList().set("consulo-editor-box-editor-font", options.editorFont());
-
-        vaadin.addAttachListener(event -> attachEditor());
-        vaadin.addDetachListener(event -> mySupport.releaseEditor());
     }
 
     @Override
@@ -76,90 +56,9 @@ class WebEditorBoxImpl extends VaadinComponentDelegate<WebEditorBoxImpl.Vaadin> 
         return new Vaadin();
     }
 
-    @RequiredUIAccess
-    private void attachEditor() {
-        Element container = toVaadinComponent().getElement();
-
-        Element staleElement = myEditorElement;
-        if (staleElement != null) {
-            container.removeChild(staleElement);
-            myEditorElement = null;
-        }
-
-        EditorEx editor = mySupport.createEditor();
-
-        com.vaadin.flow.component.Component editorComponent = ((ToVaadinComponentWrapper) editor.getContentUIComponent()).toVaadinComponent();
-        if (editorComponent instanceof ArquillEditorElement arquillEditor) {
-            arquillEditor.setOneLine(mySupport.isOneLine());
-        }
-
-        Element editorElement = editorComponent.getElement();
+    @Override
+    protected void insertEditorElement(Element container, Element editorElement) {
         container.insertChild(0, editorElement);
-        myEditorElement = editorElement;
-    }
-
-    @RequiredUIAccess
-    private void recreateEditor() {
-        if (mySupport.getEditor() != null) {
-            attachEditor();
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    @RequiredUIAccess
-    private void valueChanged() {
-        if (myFireListeners) {
-            getListenerDispatcher(ValueComponentEvent.class).onEvent(new ValueComponentEvent(this, getValue()));
-        }
-    }
-
-    @Override
-    public Document getDocument() {
-        return mySupport.getDocument();
-    }
-
-    @RequiredUIAccess
-    @Override
-    public void setDocument(Document document, FileType fileType) {
-        mySupport.setDocument(document, fileType);
-
-        recreateEditor();
-    }
-
-    @Override
-    public @Nullable Editor getEditor() {
-        return mySupport.getEditor();
-    }
-
-    @RequiredUIAccess
-    @Override
-    public void selectAll() {
-        mySupport.selectAll();
-    }
-
-    @RequiredUIAccess
-    @Override
-    public void setEnabled(boolean value) {
-        super.setEnabled(value);
-
-        if (mySupport.isEnabled() != value) {
-            mySupport.setEnabled(value);
-
-            recreateEditor();
-        }
-    }
-
-    @Override
-    public void focus() {
-        EditorEx editor = mySupport.getEditor();
-        if (editor != null && editor.getContentUIComponent() instanceof HasFocus hasFocus) {
-            hasFocus.focus();
-        }
-    }
-
-    @Override
-    public void setPlaceholder(LocalizeValue text) {
-        mySupport.setPlaceholder(text);
     }
 
     @Override
@@ -183,22 +82,5 @@ class WebEditorBoxImpl extends VaadinComponentDelegate<WebEditorBoxImpl.Vaadin> 
     @Override
     public @Nullable Component getSuffixComponent() {
         return mySuffixComponent;
-    }
-
-    @Override
-    public String getValue() {
-        return mySupport.getText();
-    }
-
-    @RequiredUIAccess
-    @Override
-    public void setValue(@Nullable String value, boolean fireListeners) {
-        myFireListeners = fireListeners;
-        try {
-            mySupport.setText(value);
-        }
-        finally {
-            myFireListeners = true;
-        }
     }
 }

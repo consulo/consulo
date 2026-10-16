@@ -41,6 +41,11 @@ public class WebEditorBoxBuilderFactory implements EditorBoxBuilderFactory {
 
     @Override
     public EditorBoxBuilder create(@Nullable Project project) {
-        return new EditorBoxBuilderImpl(project, myEditorFactory, options -> new WebEditorBoxImpl(options, myEditorFactory, myProjectManager));
+        return new EditorBoxBuilderImpl(
+            project,
+            myEditorFactory,
+            options -> new WebEditorBoxImpl(options, myEditorFactory, myProjectManager),
+            options -> new WebEditorComboBoxImpl(options, myEditorFactory, myProjectManager)
+        );
     }
 }

@@ -27,6 +27,7 @@ import org.jspecify.annotations.Nullable;
 import javax.swing.SwingUtilities;
 import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreePath;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -61,7 +62,7 @@ final class DesktopTreeCheckBoxes<E> {
     }
 
     DesktopAWTTree createTree(javax.swing.tree.TreeModel model) {
-        return new DesktopAWTCheckBoxTree(model, myOwner, this::toggleAt);
+        return new DesktopAWTCheckBoxTree(model, myOwner, this::toggleAt, this::isOverCheckBox);
     }
 
     void installToggleKey(DesktopAWTTree tree, java.awt.Component component) {
@@ -88,13 +89,13 @@ final class DesktopTreeCheckBoxes<E> {
         });
     }
 
-    private boolean toggleAt(MouseEvent e) {
+    private int checkBoxRowAt(int x, int y) {
         DesktopAWTTree tree = myOwner.getTree();
-        int row = tree.getRowForLocation(e.getX(), e.getY());
+        int row = tree.getRowForLocation(x, y);
         TreePath path = row < 0 ? null : tree.getPathForRow(row);
         TreeNode<E> node = path == null ? null : myOwner.nodeOf(path);
         if (path == null || node == null || myState.getShownState(node) == null || !myState.isCheckEnabled(node.getValue())) {
-            return false;
+            return -1;
         }
 
         Rectangle rowBounds = tree.getRowBounds(row);
@@ -107,7 +108,23 @@ final class DesktopTreeCheckBoxes<E> {
             row,
             false
         );
-        if (!myRenderer.getCheckBoxBounds(rowBounds).contains(e.getPoint())) {
+        return myRenderer.getCheckBoxBounds(rowBounds).contains(x, y) ? row : -1;
+    }
+
+    private boolean isOverCheckBox(Point point) {
+        return checkBoxRowAt(point.x, point.y) >= 0;
+    }
+
+    private boolean toggleAt(MouseEvent e) {
+        int row = checkBoxRowAt(e.getX(), e.getY());
+        if (row < 0) {
+            return false;
+        }
+
+        DesktopAWTTree tree = myOwner.getTree();
+        TreePath path = tree.getPathForRow(row);
+        TreeNode<E> node = path == null ? null : myOwner.nodeOf(path);
+        if (node == null) {
             return false;
         }
 
