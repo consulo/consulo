@@ -156,9 +156,7 @@ public class CodeStyleSettingsManager implements PersistentStateComponent<Elemen
     }
 
     public void fireCodeStyleSettingsChanged(@Nullable PsiFile file) {
-        for (CodeStyleSettingsListener listener : myEventDispatcher.getListeners()) {
-            listener.codeStyleSettingsChanged(new CodeStyleSettingsChangeEvent(file));
-        }
+        myEventDispatcher.getMulticaster().codeStyleSettingsChanged(new CodeStyleSettingsChangeEvent(file));
     }
 
     public final ModificationTracker getModificationTracker() {
