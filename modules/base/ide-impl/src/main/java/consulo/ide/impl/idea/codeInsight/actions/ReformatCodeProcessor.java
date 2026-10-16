@@ -44,163 +44,164 @@ import java.util.*;
 import java.util.concurrent.FutureTask;
 
 public class ReformatCodeProcessor extends AbstractLayoutCodeProcessor {
-  public static final LocalizeValue COMMAND_NAME = FormatterUtil.REFORMAT_COMMAND_NAME;
+    public static final LocalizeValue COMMAND_NAME = FormatterUtil.REFORMAT_COMMAND_NAME;
 
-  private static final Logger LOG = Logger.getInstance(ReformatCodeProcessor.class);
+    private static final Logger LOG = Logger.getInstance(ReformatCodeProcessor.class);
 
-  private static final LocalizeValue PROGRESS_TEXT = CodeInsightLocalize.reformatProgressCommonText();
-  private final Collection<TextRange> myRanges = new ArrayList<>();
-  private SelectionModel mySelectionModel;
+    private static final LocalizeValue PROGRESS_TEXT = CodeInsightLocalize.reformatProgressCommonText();
+    private final Collection<TextRange> myRanges = new ArrayList<>();
+    private SelectionModel mySelectionModel;
 
-  public ReformatCodeProcessor(Project project, boolean processChangedTextOnly) {
-    super(project, COMMAND_NAME, PROGRESS_TEXT, processChangedTextOnly);
-  }
-
-  public ReformatCodeProcessor(PsiFile file, SelectionModel selectionModel) {
-    super(file.getProject(), file, PROGRESS_TEXT, COMMAND_NAME, false);
-    mySelectionModel = selectionModel;
-  }
-
-  public ReformatCodeProcessor(AbstractLayoutCodeProcessor processor, SelectionModel selectionModel) {
-    super(processor, COMMAND_NAME, PROGRESS_TEXT);
-    mySelectionModel = selectionModel;
-  }
-
-  public ReformatCodeProcessor(AbstractLayoutCodeProcessor processor, boolean processChangedTextOnly) {
-    super(processor, COMMAND_NAME, PROGRESS_TEXT);
-    setProcessChangedTextOnly(processChangedTextOnly);
-  }
-
-  public ReformatCodeProcessor(Project project, Module module, boolean processChangedTextOnly) {
-    super(project, module, COMMAND_NAME, PROGRESS_TEXT, processChangedTextOnly);
-  }
-
-  public ReformatCodeProcessor(Project project, PsiDirectory directory, boolean includeSubdirs, boolean processChangedTextOnly) {
-    super(project, directory, includeSubdirs, PROGRESS_TEXT, COMMAND_NAME, processChangedTextOnly);
-  }
-
-  public ReformatCodeProcessor(Project project, PsiFile file, @Nullable TextRange range, boolean processChangedTextOnly) {
-    super(project, file, PROGRESS_TEXT, COMMAND_NAME, processChangedTextOnly);
-    if (range != null) {
-      myRanges.add(range);
+    public ReformatCodeProcessor(Project project, boolean processChangedTextOnly) {
+        super(project, COMMAND_NAME, PROGRESS_TEXT, processChangedTextOnly);
     }
-  }
 
-  public ReformatCodeProcessor(PsiFile file, boolean processChangedTextOnly) {
-    super(file.getProject(), file, PROGRESS_TEXT, COMMAND_NAME, processChangedTextOnly);
-  }
+    public ReformatCodeProcessor(PsiFile file, SelectionModel selectionModel) {
+        super(file.getProject(), file, PROGRESS_TEXT, COMMAND_NAME, false);
+        mySelectionModel = selectionModel;
+    }
 
-  @RequiredReadAction
-  public ReformatCodeProcessor(Project project, PsiFile[] files, @Nullable Runnable postRunnable, boolean processChangedTextOnly) {
-    this(project, files, COMMAND_NAME, postRunnable, processChangedTextOnly);
-  }
+    public ReformatCodeProcessor(AbstractLayoutCodeProcessor processor, SelectionModel selectionModel) {
+        super(processor, COMMAND_NAME, PROGRESS_TEXT);
+        mySelectionModel = selectionModel;
+    }
 
-  @RequiredReadAction
-  public ReformatCodeProcessor(Project project,
-                               PsiFile[] files,
-                               LocalizeValue commandName,
-                               @Nullable Runnable postRunnable,
-                               boolean processChangedTextOnly)
-  {
-    super(project, files, PROGRESS_TEXT, commandName, postRunnable, processChangedTextOnly);
-  }
+    public ReformatCodeProcessor(AbstractLayoutCodeProcessor processor, boolean processChangedTextOnly) {
+        super(processor, COMMAND_NAME, PROGRESS_TEXT);
+        setProcessChangedTextOnly(processChangedTextOnly);
+    }
 
-  @Override
-  
-  protected FutureTask<Boolean> prepareTask(PsiFile file, boolean processChangedTextOnly)
-          throws IncorrectOperationException
-  {
-    return new FutureTask<>(() -> {
-      FormattingProgressTask.FORMATTING_CANCELLED_FLAG.set(false);
-      try {
-        Collection<TextRange> ranges = getRangesToFormat(processChangedTextOnly, file);
+    public ReformatCodeProcessor(Project project, Module module, boolean processChangedTextOnly) {
+        super(project, module, COMMAND_NAME, PROGRESS_TEXT, processChangedTextOnly);
+    }
 
-        CharSequence before = null;
-        Document document = PsiDocumentManager.getInstance(myProject).getDocument(file);
-        if (getInfoCollector() != null) {
-          LOG.assertTrue(document != null);
-          before = document.getImmutableCharSequence();
+    public ReformatCodeProcessor(Project project, PsiDirectory directory, boolean includeSubdirs, boolean processChangedTextOnly) {
+        super(project, directory, includeSubdirs, PROGRESS_TEXT, COMMAND_NAME, processChangedTextOnly);
+    }
+
+    public ReformatCodeProcessor(Project project, PsiFile file, @Nullable TextRange range, boolean processChangedTextOnly) {
+        super(project, file, PROGRESS_TEXT, COMMAND_NAME, processChangedTextOnly);
+        if (range != null) {
+            myRanges.add(range);
         }
+    }
 
-        CaretVisualPositionKeeper caretPositionKeeper = new CaretVisualPositionKeeper(document);
+    public ReformatCodeProcessor(PsiFile file, boolean processChangedTextOnly) {
+        super(file.getProject(), file, PROGRESS_TEXT, COMMAND_NAME, processChangedTextOnly);
+    }
+
+    @RequiredReadAction
+    public ReformatCodeProcessor(Project project, PsiFile[] files, @Nullable Runnable postRunnable, boolean processChangedTextOnly) {
+        this(project, files, COMMAND_NAME, postRunnable, processChangedTextOnly);
+    }
+
+    @RequiredReadAction
+    public ReformatCodeProcessor(
+        Project project,
+        PsiFile[] files,
+        LocalizeValue commandName,
+        @Nullable Runnable postRunnable,
+        boolean processChangedTextOnly
+    ) {
+        super(project, files, PROGRESS_TEXT, commandName, postRunnable, processChangedTextOnly);
+    }
+
+    @Override
+
+    protected FutureTask<Boolean> prepareTask(PsiFile file, boolean processChangedTextOnly)
+        throws IncorrectOperationException {
+        return new FutureTask<>(() -> {
+            FormattingProgressTask.FORMATTING_CANCELLED_FLAG.set(false);
+            try {
+                Collection<TextRange> ranges = getRangesToFormat(processChangedTextOnly, file);
+
+                CharSequence before = null;
+                Document document = PsiDocumentManager.getInstance(myProject).getDocument(file);
+                if (getInfoCollector() != null) {
+                    LOG.assertTrue(document != null);
+                    before = document.getImmutableCharSequence();
+                }
+
+                CaretVisualPositionKeeper caretPositionKeeper = new CaretVisualPositionKeeper(document);
+
+                if (processChangedTextOnly) {
+                    CodeStyleManager.getInstance(myProject).reformatTextWithContext(file, ranges);
+                }
+                else {
+                    CodeStyleManager.getInstance(myProject).reformatText(file, ranges);
+                }
+
+                caretPositionKeeper.restoreOriginalLocation();
+
+                if (before != null) {
+                    prepareUserNotificationMessage(document, before);
+                }
+
+                return !FormattingProgressTask.FORMATTING_CANCELLED_FLAG.get();
+            }
+            catch (FilesTooBigForDiffException e) {
+                handleFileTooBigException(LOG, e, file);
+                return false;
+            }
+            catch (IncorrectOperationException e) {
+                LOG.error(e);
+                return false;
+            }
+            finally {
+                myRanges.clear();
+            }
+        });
+    }
+
+    private void prepareUserNotificationMessage(Document document, CharSequence before) {
+        LOG.assertTrue(getInfoCollector() != null);
+        int number = FormatChangedTextUtil.getInstance().calculateChangedLinesNumber(document, before);
+        if (number > 0) {
+            String message = "formatted " + number + " line" + (number > 1 ? "s" : "");
+            getInfoCollector().setReformatCodeNotification(message);
+        }
+    }
+
+    @RequiredReadAction
+    private Collection<TextRange> getRangesToFormat(boolean processChangedTextOnly, PsiFile file) throws FilesTooBigForDiffException {
+        if (mySelectionModel != null) {
+            return getSelectedRanges(mySelectionModel);
+        }
 
         if (processChangedTextOnly) {
-          CodeStyleManager.getInstance(myProject).reformatTextWithContext(file, ranges);
-        }
-        else {
-          CodeStyleManager.getInstance(myProject).reformatText(file, ranges);
+            return FormatChangedTextUtil.getInstance().getChangedTextRanges(myProject, file);
         }
 
-        caretPositionKeeper.restoreOriginalLocation();
+        return !myRanges.isEmpty() ? myRanges : List.of(file.getTextRange());
+    }
 
-        if (before != null) {
-          prepareUserNotificationMessage(document, before);
+    private static class CaretVisualPositionKeeper {
+        private final Map<Editor, Integer> myCaretRelativeVerticalPositions = new HashMap<>();
+
+        private CaretVisualPositionKeeper(@Nullable Document document) {
+            if (document == null) {
+                return;
+            }
+
+            Editor[] editors = EditorFactory.getInstance().getEditors(document);
+            for (Editor editor : editors) {
+                Rectangle visibleArea = editor.getScrollingModel().getVisibleArea();
+                Point pos = editor.visualPositionToXY(editor.getCaretModel().getVisualPosition());
+                int relativePosition = pos.y - visibleArea.y;
+                myCaretRelativeVerticalPositions.put(editor, relativePosition);
+            }
         }
 
-        return !FormattingProgressTask.FORMATTING_CANCELLED_FLAG.get();
-      }
-      catch (FilesTooBigForDiffException e) {
-        handleFileTooBigException(LOG, e, file);
-        return false;
-      }
-      catch (IncorrectOperationException e) {
-        LOG.error(e);
-        return false;
-      }
-      finally {
-        myRanges.clear();
-      }
-    });
-  }
-
-  private void prepareUserNotificationMessage(Document document, CharSequence before) {
-    LOG.assertTrue(getInfoCollector() != null);
-    int number = FormatChangedTextUtil.getInstance().calculateChangedLinesNumber(document, before);
-    if (number > 0) {
-      String message = "formatted " + number + " line" + (number > 1 ? "s" : "");
-      getInfoCollector().setReformatCodeNotification(message);
+        private void restoreOriginalLocation() {
+            for (Map.Entry<Editor, Integer> e : myCaretRelativeVerticalPositions.entrySet()) {
+                Editor editor = e.getKey();
+                int relativePosition = e.getValue();
+                Point caretLocation = editor.visualPositionToXY(editor.getCaretModel().getVisualPosition());
+                int scrollOffset = caretLocation.y - relativePosition;
+                editor.getScrollingModel().disableAnimation();
+                editor.getScrollingModel().scrollVertically(scrollOffset);
+                editor.getScrollingModel().enableAnimation();
+            }
+        }
     }
-  }
-
-  
-  @RequiredReadAction
-  private Collection<TextRange> getRangesToFormat(boolean processChangedTextOnly, PsiFile file) throws FilesTooBigForDiffException {
-    if (mySelectionModel != null) {
-      return getSelectedRanges(mySelectionModel);
-    }
-
-    if (processChangedTextOnly) {
-      return FormatChangedTextUtil.getInstance().getChangedTextRanges(myProject, file);
-    }
-
-    return !myRanges.isEmpty() ? myRanges : List.of(file.getTextRange());
-  }
-
-  private static class CaretVisualPositionKeeper {
-    private final Map<Editor, Integer> myCaretRelativeVerticalPositions = new HashMap<>();
-
-    private CaretVisualPositionKeeper(@Nullable Document document) {
-      if (document == null) return;
-
-      Editor[] editors = EditorFactory.getInstance().getEditors(document);
-      for (Editor editor : editors) {
-        Rectangle visibleArea = editor.getScrollingModel().getVisibleArea();
-        Point pos = editor.visualPositionToXY(editor.getCaretModel().getVisualPosition());
-        int relativePosition = pos.y - visibleArea.y;
-        myCaretRelativeVerticalPositions.put(editor, relativePosition);
-      }
-    }
-
-    private void restoreOriginalLocation() {
-      for (Map.Entry<Editor, Integer> e : myCaretRelativeVerticalPositions.entrySet()) {
-        Editor editor = e.getKey();
-        int relativePosition = e.getValue();
-        Point caretLocation = editor.visualPositionToXY(editor.getCaretModel().getVisualPosition());
-        int scrollOffset = caretLocation.y - relativePosition;
-        editor.getScrollingModel().disableAnimation();
-        editor.getScrollingModel().scrollVertically(scrollOffset);
-        editor.getScrollingModel().enableAnimation();
-      }
-    }
-  }
 }

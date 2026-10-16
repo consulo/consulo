@@ -16,42 +16,41 @@
 package consulo.ide.impl.idea.codeInsight.actions;
 
 public class ReformatCodeRunOptions implements LayoutCodeOptions {
+    private boolean myRearrangeCode;
+    private boolean myOptimizeImports;
+    private TextRangeType myProcessingScope;
 
-  private boolean myRearrangeCode;
-  private boolean myOptimizeImports;
-  private TextRangeType myProcessingScope;
+    public ReformatCodeRunOptions(TextRangeType processingScope) {
+        myProcessingScope = processingScope;
+    }
 
-  public ReformatCodeRunOptions(TextRangeType processingScope) {
-    myProcessingScope = processingScope;
-  }
+    public void setProcessingScope(TextRangeType processingScope) {
+        myProcessingScope = processingScope;
+    }
 
-  public void setProcessingScope(TextRangeType processingScope) {
-    myProcessingScope = processingScope;
-  }
+    @Override
+    public boolean isOptimizeImports() {
+        return myOptimizeImports;
+    }
 
-  @Override
-  public boolean isOptimizeImports() {
-    return myOptimizeImports;
-  }
+    @Override
+    public boolean isRearrangeCode() {
+        return myRearrangeCode;
+    }
 
-  @Override
-  public boolean isRearrangeCode() {
-    return myRearrangeCode;
-  }
+    public ReformatCodeRunOptions setRearrangeCode(boolean rearrangeCode) {
+        myRearrangeCode = rearrangeCode;
+        return this;
+    }
 
-  public ReformatCodeRunOptions setRearrangeCode(boolean rearrangeCode) {
-    myRearrangeCode = rearrangeCode;
-    return this;
-  }
+    public ReformatCodeRunOptions setOptimizeImports(boolean optimizeImports) {
+        myOptimizeImports = optimizeImports;
+        return this;
+    }
 
-  public ReformatCodeRunOptions setOptimizeImports(boolean optimizeImports) {
-    myOptimizeImports = optimizeImports;
-    return this;
-  }
-
-  @Override
-  public TextRangeType getTextRangeType() {
-    return myProcessingScope;
-  }
+    @Override
+    public TextRangeType getTextRangeType() {
+        return myProcessingScope;
+    }
 }
 

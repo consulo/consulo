@@ -15,18 +15,23 @@
  */
 package consulo.ide.impl.idea.codeInsight.actions;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.impl.EditorSettingsExternalizable;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
+import consulo.document.Document;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
+import consulo.language.codeStyle.CodeStyleSettingsManager;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.ui.awt.HintUtil;
+import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.ui.ModalityState;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.ActionManager;
@@ -37,6 +42,8 @@ import consulo.ui.ex.awt.hint.LightweightHint;
 import consulo.ui.ex.awt.hint.LightweightHintFactory;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.keymap.util.KeymapUtil;
+import consulo.undoRedo.BasicUndoableAction;
+import consulo.undoRedo.ProjectUndoManager;
 import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.FormatChangedTextUtil;
 import org.jspecify.annotations.Nullable;
@@ -45,10 +52,48 @@ import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
+import java.util.Objects;
+
 import static consulo.ide.impl.idea.codeInsight.actions.TextRangeType.SELECTED_TEXT;
 import static consulo.ide.impl.idea.codeInsight.actions.TextRangeType.VCS_CHANGED_TEXT;
 
 class FileInEditorProcessor {
+    private static class WholeFileChangedNotifier extends BasicUndoableAction implements Runnable {
+        private final Project myProject;
+
+        private WholeFileChangedNotifier(Project project, Document document) {
+            super(document);
+            myProject = project;
+        }
+
+        @Override
+        @RequiredReadAction
+        public void run() {
+            if (myProject.isDisposed()) {
+                return;
+            }
+            Document document = Objects.requireNonNull(Objects.requireNonNull(getAffectedDocuments())[0].getDocument());
+            PsiFile file = PsiDocumentManager.getInstance(myProject).getPsiFile(document);
+            if (file != null && file.isValid()) {
+                CodeStyleSettingsManager.getInstance(myProject).fireCodeStyleSettingsChanged(file);
+            }
+        }
+
+        public void runLater() {
+            myProject.getUIAccess().giveLater(this, ModalityState.nonModal());
+        }
+
+        @Override
+        public void undo() {
+            runLater();
+        }
+
+        @Override
+        public void redo() {
+            runLater();
+        }
+    }
+
     private static final Logger LOG = Logger.getInstance(FileInEditorProcessor.class);
 
     private final Editor myEditor;
@@ -59,6 +104,7 @@ class FileInEditorProcessor {
     private final boolean myShouldOptimizeImports;
     private final boolean myShouldRearrangeCode;
     private final boolean myProcessSelectedText;
+    private final boolean myProcessWholeFile;
 
     private final Project myProject;
 
@@ -74,6 +120,7 @@ class FileInEditorProcessor {
         myShouldRearrangeCode = runOptions.isRearrangeCode();
         myProcessSelectedText = myEditor != null && runOptions.getTextRangeType() == SELECTED_TEXT;
         myProcessChangesTextOnly = runOptions.getTextRangeType() == VCS_CHANGED_TEXT;
+        myProcessWholeFile = runOptions.getTextRangeType() == TextRangeType.WHOLE_FILE;
     }
 
     @RequiredUIAccess
@@ -93,7 +140,7 @@ class FileInEditorProcessor {
 
         if (shouldNotify()) {
             myProcessor.setCollectInfo(true);
-            myProcessor.setPostRunnable(() -> {
+            myProcessor.addPostRunnable(() -> {
                 LocalizeValue message = prepareMessage();
                 if (!myEditor.isDisposed() && myEditor.getComponent().isShowing()) {
                     HyperlinkListener hyperlinkListener = new HyperlinkAdapter() {
@@ -111,6 +158,20 @@ class FileInEditorProcessor {
             });
         }
 
+        if (myProcessWholeFile) {
+            Document document = PsiDocumentManager.getInstance(myProject).getDocument(myFile);
+            if (document != null) {
+                WholeFileChangedNotifier notifier = new WholeFileChangedNotifier(myProject, document);
+                long stampBefore = document.getModificationStamp();
+                myProcessor.addInCommandRunnable(() -> {
+                    if (document.getModificationStamp() != stampBefore) {
+                        ProjectUndoManager.getInstance(myProject).undoableActionPerformed(notifier);
+                    }
+                });
+                myProcessor.addPostRunnable(notifier);
+            }
+        }
+
         myProcessor.run();
     }
 
@@ -126,20 +187,14 @@ class FileInEditorProcessor {
 
     private AbstractLayoutCodeProcessor mixWithReformatProcessor(@Nullable AbstractLayoutCodeProcessor processor) {
         if (processor != null) {
-            if (myProcessSelectedText) {
-                processor = new ReformatCodeProcessor(processor, myEditor.getSelectionModel());
-            }
-            else {
-                processor = new ReformatCodeProcessor(processor, myProcessChangesTextOnly);
-            }
+            processor = myProcessSelectedText
+                ? new ReformatCodeProcessor(processor, myEditor.getSelectionModel())
+                : new ReformatCodeProcessor(processor, myProcessChangesTextOnly);
         }
         else {
-            if (myProcessSelectedText) {
-                processor = new ReformatCodeProcessor(myFile, myEditor.getSelectionModel());
-            }
-            else {
-                processor = new ReformatCodeProcessor(myFile, myProcessChangesTextOnly);
-            }
+            processor = myProcessSelectedText
+                ? new ReformatCodeProcessor(myFile, myEditor.getSelectionModel())
+                : new ReformatCodeProcessor(myFile, myProcessChangesTextOnly);
         }
         return processor;
     }
@@ -189,7 +244,6 @@ class FileInEditorProcessor {
 
         return LocalizeValue.localizeTODO(builder.toString());
     }
-
 
     private static String joinWithCommaAndCapitalize(String reformatNotification, String rearrangeNotification) {
         String firstNotificationLine = reformatNotification != null ? reformatNotification : rearrangeNotification;
