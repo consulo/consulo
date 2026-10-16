@@ -22,21 +22,15 @@ import consulo.fileEditor.internal.FileEditorWithModifiedIcon;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
-import consulo.ui.Button;
-import consulo.ui.ButtonStyle;
-import consulo.ui.Component;
-import consulo.ui.MessageBoxes;
-import consulo.ui.Space;
+import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.CommonShortcuts;
 import consulo.ui.ex.action.DumbAwareAction;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.HorizontalLayout;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -88,9 +82,7 @@ public abstract class ConfigurableFileEditor<U extends UnnamedConfigurable> exte
         myApplyPanel.setVisible(false);
         myContentPanel.bottom(myApplyPanel);
 
-        if (TargetAWT.to(myContentPanel) instanceof JComponent contentComponent) {
-            DumbAwareAction.create(anActionEvent -> doSave()).registerCustomShortcutSet(CommonShortcuts.getSaveAll(), contentComponent, this);
-        }
+        DumbAwareAction.create(anActionEvent -> doSave()).registerCustomShortcutSet(CommonShortcuts.getSaveAll(), myContentPanel, this);
 
         myUpdateFuture = myProject.getUIAccess().getScheduler().scheduleWithFixedDelay(this::checkModified, 500, 500, TimeUnit.MILLISECONDS);
     }
