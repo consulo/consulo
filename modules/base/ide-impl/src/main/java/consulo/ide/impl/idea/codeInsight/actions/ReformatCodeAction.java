@@ -62,7 +62,11 @@ public class ReformatCodeAction extends AnAction implements DumbAware, AnActionW
     protected static ReformatFilesOptions myTestOptions;
 
     public ReformatCodeAction() {
-        super(ActionLocalize.actionReformatcodeText(), ActionLocalize.actionReformatcodeDescription(), PlatformIconGroup.actionsReformatcode());
+        super(
+            ActionLocalize.actionReformatcodeText(),
+            ActionLocalize.actionReformatcodeDescription(),
+            PlatformIconGroup.actionsReformatcode()
+        );
     }
 
     @Override
@@ -196,13 +200,12 @@ public class ReformatCodeAction extends AnAction implements DumbAware, AnActionW
     }
 
     @RequiredUIAccess
-    private static void reformatDirectory(
-        Project project,
-        PsiDirectory dir,
-        DirectoryFormattingOptions options
-    ) {
+    private static void reformatDirectory(Project project, PsiDirectory dir, DirectoryFormattingOptions options) {
         AbstractLayoutCodeProcessor processor = new ReformatCodeProcessor(
-            project, dir, options.isIncludeSubdirectories(), options.getTextRangeType() == TextRangeType.VCS_CHANGED_TEXT
+            project,
+            dir,
+            options.isIncludeSubdirectories(),
+            options.getTextRangeType() == TextRangeType.VCS_CHANGED_TEXT
         );
 
         registerScopeFilter(processor, options.getSearchScope());
@@ -219,11 +222,7 @@ public class ReformatCodeAction extends AnAction implements DumbAware, AnActionW
     }
 
     @RequiredUIAccess
-    private static void reformatModule(
-        Project project,
-        @Nullable Module moduleContext,
-        ReformatFilesOptions selectedFlags
-    ) {
+    private static void reformatModule(Project project, @Nullable Module moduleContext, ReformatFilesOptions selectedFlags) {
         boolean shouldOptimizeImports = selectedFlags.isOptimizeImports() && !DumbService.getInstance(project).isDumb();
         boolean processOnlyChangedText = selectedFlags.getTextRangeType() == TextRangeType.VCS_CHANGED_TEXT;
 
@@ -249,10 +248,7 @@ public class ReformatCodeAction extends AnAction implements DumbAware, AnActionW
         processor.run();
     }
 
-    public static void registerScopeFilter(
-        AbstractLayoutCodeProcessor processor,
-        @Nullable SearchScope scope
-    ) {
+    public static void registerScopeFilter(AbstractLayoutCodeProcessor processor, @Nullable SearchScope scope) {
         if (scope == null) {
             return;
         }
