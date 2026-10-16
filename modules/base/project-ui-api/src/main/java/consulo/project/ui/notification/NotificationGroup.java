@@ -24,7 +24,8 @@ import org.jspecify.annotations.Nullable;
  * @author peter
  */
 public final class NotificationGroup {
-    
+    public static final NotificationGroup SYSTEM_MESSAGES = balloonGroup("System Messages", LocalizeValue.localizeTODO("System Messages"));
+
     private final String myId;
     
     private final LocalizeValue myDisplayName;
@@ -185,7 +186,7 @@ public final class NotificationGroup {
         return NotificationService.getInstance().newOfType(this, type)
             .title(LocalizeValue.ofNullable(title))
             .subtitle(LocalizeValue.ofNullable(subtitle))
-            .subtitle(LocalizeValue.ofNullable(content))
+            .content(LocalizeValue.ofNullable(content))
             .create();
     }
 
@@ -202,7 +203,7 @@ public final class NotificationGroup {
         return NotificationService.getInstance().newOfType(this, type)
             .title(LocalizeValue.ofNullable(title))
             .subtitle(LocalizeValue.ofNullable(subtitle))
-            .subtitle(LocalizeValue.ofNullable(content))
+            .content(LocalizeValue.ofNullable(content))
             .optionalHyperlinkListener(listener)
             .create();
     }

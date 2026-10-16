@@ -21,6 +21,7 @@ import consulo.disposer.Disposer;
 import consulo.ui.Component;
 import consulo.ui.MenuBar;
 import consulo.ui.Size2D;
+import consulo.ui.Toast;
 import consulo.ui.UIAccess;
 import consulo.ui.Window;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -33,9 +34,11 @@ import consulo.ui.event.ComponentEvent;
 import consulo.ui.event.ComponentEventListener;
 import consulo.ui.font.Font;
 import consulo.ui.font.FontManager;
+import consulo.ui.internal.ToastOverlay;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.web.ui.impl.internal.WebRootPaneImpl;
+import consulo.web.ui.impl.internal.WebToastStack;
 import consulo.web.ui.impl.internal.base.TargetVaadin;
 import consulo.web.ui.impl.internal.base.VaadinComponentDelegate;
 import org.jspecify.annotations.Nullable;
@@ -45,17 +48,48 @@ import org.jspecify.annotations.Nullable;
  * @author VISTALL
  * @since 2017-09-11
  */
-class UIWindowOverRouterLayout extends UserDataHolderBase implements Window {
+class UIWindowOverRouterLayout extends UserDataHolderBase implements Window, ToastOverlay {
     private final VaadinRootLayout myRouterLayout;
 
     private final WebRootPaneImpl myRootPanel = new WebRootPaneImpl();
 
     private boolean myDisposed;
 
+    private @Nullable WebToastStack myToastStack;
+
     @RequiredUIAccess
     public UIWindowOverRouterLayout(VaadinRootLayout routerLayout) {
         myRouterLayout = routerLayout;
         routerLayout.add(TargetVaadin.to(myRootPanel.getComponent()));
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void showToast(Toast toast) {
+        toastStack().show(toast);
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setToastArea(@Nullable Component area) {
+        toastStack().setArea(area == null ? null : TargetVaadin.to(area));
+    }
+
+    private WebToastStack toastStack() {
+        WebToastStack stack = myToastStack;
+        if (stack == null) {
+            stack = myToastStack = new WebToastStack();
+        }
+        return stack;
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void hideToast(Toast toast) {
+        WebToastStack stack = myToastStack;
+        if (stack != null) {
+            stack.hide(toast);
+        }
     }
 
     @Override

@@ -19,7 +19,7 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.util.AtomicNullableLazyValue;
 import consulo.application.util.NullableLazyValue;
-import consulo.ide.impl.idea.notification.impl.NotificationsConfigurationImpl;
+import consulo.project.ui.impl.internal.notification.NotificationsConfigurationImpl;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.platform.PlatformOperatingSystem;

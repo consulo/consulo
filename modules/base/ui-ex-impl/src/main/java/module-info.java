@@ -46,7 +46,8 @@ module consulo.ui.ex.impl {
         consulo.ide.impl,
         consulo.web.editor.impl,
         consulo.web.ide,
-        consulo.web.ui.impl;
+        consulo.web.ui.impl,
+        consulo.project.ui.impl;
 
     exports consulo.ui.ex.impl.internal.popup.action to
         consulo.desktop.awt.editor.impl,

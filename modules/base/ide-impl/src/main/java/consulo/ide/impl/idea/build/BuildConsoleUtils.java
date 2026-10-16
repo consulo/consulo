@@ -17,12 +17,11 @@ import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationService;
 import consulo.project.ui.notification.event.NotificationListener;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.IJSwingUtilities;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.event.HyperlinkEvent;
 import java.awt.*;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -73,18 +72,10 @@ public final class BuildConsoleUtils {
             .newWarn(group)
             .title(buildIssue.getTitle())
             .content(buildIssue.getDescription())
-            .hyperlinkListener(new NotificationListener.Adapter() {
-                @Override
-                @RequiredUIAccess
-                protected void hyperlinkActivated(Notification notification, HyperlinkEvent event) {
-                    if (event.getEventType() != HyperlinkEvent.EventType.ACTIVATED) {
-                        return;
-                    }
-
-                    NotificationListener notificationListener = listenerMap.get(event.getDescription());
-                    if (notificationListener != null) {
-                        notificationListener.hyperlinkUpdate(notification, event);
-                    }
+            .hyperlinkListener((n, event) -> {
+                NotificationListener notificationListener = listenerMap.get(event.getDescription());
+                if (notificationListener != null) {
+                    notificationListener.hyperlinkActivated(n, event);
                 }
             })
             .create();
@@ -113,7 +104,7 @@ public final class BuildConsoleUtils {
                         public void navigate(Project project) {
                             if (notification != null && notification.getListener() != null) {
                                 notification.getListener()
-                                    .hyperlinkUpdate(notification, IJSwingUtilities.createHyperlinkEvent(href, consoleView.getComponent()));
+                                    .hyperlinkActivated(notification, new consulo.ui.event.HyperlinkEvent(TargetAWT.wrap(consoleView.getComponent()), href));
                             }
                         }
                     });

@@ -21,6 +21,7 @@ import consulo.disposer.Disposable;
 import consulo.ui.Component;
 import consulo.ui.MenuBar;
 import consulo.ui.Size2D;
+import consulo.ui.Toast;
 import consulo.ui.Window;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.BorderBuilder;
@@ -33,6 +34,7 @@ import consulo.ui.event.ComponentEventListener;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.font.Font;
 import consulo.ui.impl.UIDataObject;
+import consulo.ui.internal.ToastOverlay;
 import consulo.util.dataholder.Key;
 import org.jspecify.annotations.Nullable;
 
@@ -44,9 +46,10 @@ import java.awt.event.WindowEvent;
  * @author VISTALL
  * @since 2019-02-16
  */
-public abstract class WindowOverAWTWindow implements Window, ToSwingWindowWrapper {
+public abstract class WindowOverAWTWindow implements Window, ToSwingWindowWrapper, ToastOverlay {
     protected final java.awt.Window myWindow;
     private final UIDataObject myUIDataObject = new UIDataObject();
+    private @Nullable DesktopToastStack myToastStack;
 
     public WindowOverAWTWindow(java.awt.Window window) {
         myWindow = window;
@@ -61,6 +64,41 @@ public abstract class WindowOverAWTWindow implements Window, ToSwingWindowWrappe
     @Override
     public void dispose() {
         myWindow.dispose();
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void showToast(Toast toast) {
+        DesktopToastStack stack = toastStack();
+        if (stack != null) {
+            stack.show(toast);
+        }
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setToastArea(@Nullable Component area) {
+        DesktopToastStack stack = toastStack();
+        if (stack != null) {
+            stack.setArea(area == null ? null : TargetAWT.to(area));
+        }
+    }
+
+    private @Nullable DesktopToastStack toastStack() {
+        DesktopToastStack stack = myToastStack;
+        if (stack == null && toAWTWindow() instanceof RootPaneContainer container) {
+            stack = myToastStack = new DesktopToastStack(container.getRootPane());
+        }
+        return stack;
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void hideToast(Toast toast) {
+        DesktopToastStack stack = myToastStack;
+        if (stack != null) {
+            stack.hide(toast);
+        }
     }
 
     @Override

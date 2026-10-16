@@ -22,11 +22,15 @@ import consulo.component.messagebus.MessageBusConnection;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.internal.NotificationIconBuilder;
+import consulo.project.ui.impl.internal.notification.NotificationsToolWindowFactory;
 import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationService;
+import consulo.project.ui.notification.event.NotificationServiceListener;
 import consulo.project.ui.wm.CustomStatusBarWidget;
 import consulo.project.ui.wm.IconLikeCustomStatusBarWidget;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidgetFactory;
+import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.Component;
 import consulo.ui.Label;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -49,12 +53,20 @@ public class IdeNotificationArea implements CustomStatusBarWidget, IconLikeCusto
     public IdeNotificationArea(StatusBarWidgetFactory factory) {
         myFactory = factory;
         myLabel = Label.create();
-        myLabel.addClickListener(event -> EventLog.toggleLog(getProject(), null));
+        myLabel.addClickListener(event -> toggleActionCenter());
 
         Application application = Application.get();
         MessageBusConnection connection = application.getMessageBus().connect(this);
         connection.subscribe(UISettingsListener.class, source -> updateStatus());
-        connection.subscribe(LogModelListener.class, (project) -> application.invokeLater(IdeNotificationArea.this::updateStatus));
+        connection.subscribe(NotificationServiceListener.class, new NotificationServiceListener() {
+            @Override
+            public void stateChanged(@Nullable Project project) {
+                Project own = getProject();
+                if (own != null && (project == null || project == own)) {
+                    own.getUIAccess().give(IdeNotificationArea.this::updateStatus);
+                }
+            }
+        });
     }
 
     
@@ -86,7 +98,10 @@ public class IdeNotificationArea implements CustomStatusBarWidget, IconLikeCusto
     @RequiredUIAccess
     private void updateStatus() {
         Project project = getProject();
-        List<Notification> notifications = EventLog.getLogModel(project).getNotifications();
+        if (project == null) {
+            return;
+        }
+        List<Notification> notifications = Application.get().getInstance(NotificationService.class).getUnreadNotifications(project);
 
         applyIconToStatusAndToolWindow(
             project,
@@ -108,11 +123,22 @@ public class IdeNotificationArea implements CustomStatusBarWidget, IconLikeCusto
             myLabel.setImage(icon);
         }
         else {
-            ToolWindow eventLog = EventLog.getEventLog(project);
-            if (eventLog != null) {
-                eventLog.setIcon(icon);
-            }
             myLabel.setVisible(false);
+        }
+    }
+
+    @RequiredUIAccess
+    private void toggleActionCenter() {
+        Project project = getProject();
+        ToolWindow toolWindow = project == null ? null : ToolWindowManager.getInstance(project).getToolWindow(NotificationsToolWindowFactory.ID);
+        if (toolWindow == null) {
+            return;
+        }
+        if (toolWindow.isVisible()) {
+            toolWindow.hide();
+        }
+        else {
+            toolWindow.activate(null);
         }
     }
 

@@ -28,7 +28,6 @@ import consulo.versionControlSystem.VcsToolWindow;
 
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.event.HyperlinkEvent;
 
 /**
  * Shows a notification balloon over one of version control related tool windows: Changes View or Version Control View.
@@ -121,23 +120,21 @@ public class VcsBalloonProblemNotifier implements Runnable {
                 .title(LocalizeValue.localizeTODO(myMessageType.name()))
                 .content(LocalizeValue.localizeTODO(sb.toString()))
                 .hyperlinkListener((thisNotification, event) -> {
-                    if (HyperlinkEvent.EventType.ACTIVATED.equals(event.getEventType())) {
-                        if (myNotificationListener.length == 1) {
-                            myNotificationListener[0].run();
-                        }
-                        else {
-                            String description = event.getDescription();
-                            if (description != null) {
-                                for (NamedRunnable runnable : myNotificationListener) {
-                                    if (description.equals(runnable.toString())) {
-                                        runnable.run();
-                                        break;
-                                    }
+                    if (myNotificationListener.length == 1) {
+                        myNotificationListener[0].run();
+                    }
+                    else {
+                        String description = event.getDescription();
+                        if (description != null) {
+                            for (NamedRunnable runnable : myNotificationListener) {
+                                if (description.equals(runnable.toString())) {
+                                    runnable.run();
+                                    break;
                                 }
                             }
                         }
-                        thisNotification.expire();
                     }
+                    thisNotification.expire();
                 })
                 .create();
         }

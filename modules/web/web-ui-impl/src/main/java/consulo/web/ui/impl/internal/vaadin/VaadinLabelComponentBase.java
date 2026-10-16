@@ -114,7 +114,18 @@ public abstract class VaadinLabelComponentBase extends SimpleComponent implement
                 case CENTER -> "center";
                 case RIGHT -> "right";
             });
+            getStyle().set("justify-content", switch (horizontalAlignment) {
+                case LEFT -> "flex-start";
+                case CENTER -> "center";
+                case RIGHT -> "flex-end";
+            });
         }
+    }
+
+    @Override
+    public void setHeight(@Nullable String height) {
+        super.setHeight(height);
+        getElement().getClassList().set("web-label-filled", height != null && !height.isEmpty());
     }
 
     public HorizontalAlignment getHorizontalAlignment() {

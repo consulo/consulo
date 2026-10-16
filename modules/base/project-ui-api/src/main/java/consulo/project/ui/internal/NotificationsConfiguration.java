@@ -18,12 +18,34 @@ package consulo.project.ui.internal;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
+import org.jspecify.annotations.Nullable;
 import consulo.project.ui.notification.NotificationDisplayType;
 import consulo.project.ui.notification.NotificationGroup;
 
 @ServiceAPI(value = ComponentScope.APPLICATION)
 public interface NotificationsConfiguration {
   void changeSettings(NotificationGroup group, NotificationDisplayType displayType, boolean shouldLog, boolean shouldReadAloud);
+
+  /**
+   * How notifications of the group are shown - the user's choice, else the default of the group.
+   */
+  NotificationDisplayType getDisplayType(String groupId);
+
+  /**
+   * Whether notifications of the group are kept in the Notifications tool window.
+   */
+  boolean isShouldLog(String groupId);
+
+  /**
+   * Whether notifications are shown as toasts at all.
+   */
+  boolean isShowBalloons();
+
+  boolean isRegistered(String groupId);
+
+  void changeDisplayType(String groupId, NotificationDisplayType displayType);
+
+  @Nullable String getToolWindowId(String groupId);
 
   public static NotificationsConfiguration getNotificationsConfiguration() {
     return Application.get().getInstance(NotificationsConfiguration.class);

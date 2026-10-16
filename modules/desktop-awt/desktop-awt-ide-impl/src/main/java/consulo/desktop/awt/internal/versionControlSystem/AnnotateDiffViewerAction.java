@@ -42,7 +42,6 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationService;
-import consulo.project.ui.notification.NotificationsManager;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
@@ -426,33 +425,7 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
 
     @RequiredUIAccess
     private static void showNotification(DiffViewerBase viewer, Notification notification) {
-        JComponent component = viewer.getComponent();
-
-        Window awtWindow = UIUtil.getWindow(component);
-
-        if (awtWindow != null) {
-            consulo.ui.Window uiWindow = TargetAWT.from(awtWindow);
-
-            IdeFrame ideFrame = uiWindow.getUserData(IdeFrame.KEY);
-
-            if (ideFrame != null && NotificationsManager.getNotificationsManager().findWindowForBalloon(viewer.getProject()) == awtWindow) {
-                notification.notify(viewer.getProject());
-                return;
-            }
-        }
-
-        Balloon balloon = NotificationsManager.getNotificationsManager()
-            .createBalloon(component, notification, false, true, new SimpleReference<>(), viewer);
-
-        Dimension componentSize = component.getSize();
-        Dimension balloonSize = balloon.getPreferredSize();
-
-        int width = Math.min(balloonSize.width, componentSize.width);
-        int height = Math.min(balloonSize.height, componentSize.height);
-
-        // top-right corner, 20px to the edges
-        RelativePoint point = new RelativePoint(component, new Point(componentSize.width - 20 - width / 2, 20 + height / 2));
-        balloon.show(point, Balloon.Position.above);
+        notification.notify(viewer.getProject());
     }
 
     private static class TwosideAnnotatorFactory extends TwosideViewerAnnotatorFactory<TwosideTextDiffViewer> {

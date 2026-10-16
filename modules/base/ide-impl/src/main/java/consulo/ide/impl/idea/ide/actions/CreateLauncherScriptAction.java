@@ -29,7 +29,7 @@ import consulo.process.local.ExecUtil;
 import consulo.process.util.CapturingProcessUtil;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationService;
-import consulo.project.ui.notification.Notifications;
+import consulo.project.ui.notification.NotificationGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.LegacyDumbAwareAction;
@@ -137,7 +137,7 @@ public class CreateLauncherScriptAction extends LegacyDumbAwareAction {
             if (!StringUtil.isEmptyOrSpaces(message)) {
                 LOG.warn(e);
                 NotificationService.getInstance()
-                    .newError(Notifications.SYSTEM_MESSAGES_GROUP)
+                    .newError(NotificationGroup.SYSTEM_MESSAGES)
                     .title(LocalizeValue.localizeTODO("Failed to create launcher script"))
                     .content(LocalizeValue.localizeTODO(message))
                     .notify(project);

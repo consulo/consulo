@@ -1,0 +1,93 @@
+.consulo-toast {
+    box-sizing: border-box;
+    align-self: stretch;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 8px 8px 8px 10px;
+    border: 1px solid;
+    border-radius: 10px;
+    line-height: 1.35;
+}
+
+.consulo-toast-shadow {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+.consulo-toast-icon {
+    flex: none;
+    display: flex;
+    margin-top: 2px;
+}
+
+.consulo-toast-center {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.consulo-toast-title {
+    font-weight: bold;
+}
+
+.consulo-toast-text {
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
+
+.consulo-toast-html a {
+    color: var(--consulo-component-link-color);
+    text-decoration: none;
+}
+
+.consulo-toast-html a:hover {
+    text-decoration: underline;
+}
+
+.consulo-toast-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    padding-top: 4px;
+}
+
+.consulo-toast-link {
+    cursor: pointer;
+}
+
+.consulo-toast-link:hover {
+    text-decoration: underline;
+}
+
+.consulo-toast-toolbar {
+    flex: none;
+    margin-top: -2px;
+}
+
+.consulo-toast:not(:hover, :focus-within) > .consulo-toast-toolbar {
+    visibility: hidden;
+}
+
+
+vaadin-notification-container {
+    padding-right: calc(var(--consulo-toast-right, 0px) + 8px);
+    padding-bottom: calc(var(--consulo-toast-bottom, 0px) + 8px);
+}
+
+vaadin-notification-card[theme~="consulo-toast"] {
+    width: 360px;
+}
+
+vaadin-notification-card[theme~="consulo-toast"]::part(overlay) {
+    background: transparent;
+    box-shadow: none;
+    border: none;
+    padding: 0;
+    overflow: visible;
+}
+
+vaadin-notification-card[theme~="consulo-toast"]::part(content) {
+    padding: 0;
+}

@@ -16,11 +16,9 @@
 package consulo.externalSystem.service.notification;
 
 import consulo.navigation.Navigatable;
-import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.event.NotificationListener;
 
 import org.jspecify.annotations.Nullable;
-import javax.swing.event.HyperlinkEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -70,15 +68,10 @@ public class NotificationData {
     myNotificationCategory = notificationCategory;
     myNotificationSource = notificationSource;
     myListenerMap = new HashMap<>();
-    myListener = new NotificationListener.Adapter() {
-      @Override
-      protected void hyperlinkActivated(Notification notification, HyperlinkEvent event) {
-        if (event.getEventType() != HyperlinkEvent.EventType.ACTIVATED) return;
-
-        NotificationListener notificationListener = myListenerMap.get(event.getDescription());
-        if (notificationListener != null) {
-          notificationListener.hyperlinkUpdate(notification, event);
-        }
+    myListener = (notification, event) -> {
+      NotificationListener notificationListener = myListenerMap.get(event.getDescription());
+      if (notificationListener != null) {
+        notificationListener.hyperlinkActivated(notification, event);
       }
     };
     myFilePath = filePath;

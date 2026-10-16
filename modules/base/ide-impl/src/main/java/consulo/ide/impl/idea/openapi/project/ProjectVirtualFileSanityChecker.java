@@ -23,7 +23,7 @@ import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.project.startup.BackgroundStartupActivity;
 import consulo.project.ui.notification.NotificationService;
-import consulo.project.ui.notification.Notifications;
+import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.event.NotificationListener;
 import consulo.ui.UIAccess;
 import consulo.util.io.FileUtil;
@@ -64,7 +64,7 @@ public class ProjectVirtualFileSanityChecker implements BackgroundStartupActivit
             LOG.info(path + " case-sensitivity: expected=" + expected + " actual=" + actual);
             if (actual != expected) {
                 int prefix = expected ? 1 : 0;  // IDE=true -> FS=false -> prefix='in'
-                myNotificationService.newWarn(Notifications.SYSTEM_MESSAGES_GROUP)
+                myNotificationService.newWarn(NotificationGroup.SYSTEM_MESSAGES)
                     .title(ApplicationLocalize.fsCaseSensitivityMismatchTitle())
                     .content(ApplicationLocalize.fsCaseSensitivityMismatchMessage(prefix))
                     .hyperlinkListener(NotificationListener.URL_OPENING_LISTENER)

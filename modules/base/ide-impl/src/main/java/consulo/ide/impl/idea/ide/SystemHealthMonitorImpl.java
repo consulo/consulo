@@ -38,7 +38,6 @@ import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.project.ui.internal.NotificationsConfiguration;
 import consulo.project.ui.notification.*;
-import consulo.project.ui.notification.event.NotificationListener;
 import consulo.ui.ex.awt.HyperlinkAdapter;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.Messages;
@@ -186,12 +185,7 @@ public class SystemHealthMonitorImpl extends PreloadingActivity {
             () -> myNotificationService.newWarn(GROUP)
                 .content(message)
                 .important()
-                .hyperlinkListener(new NotificationListener.Adapter() {
-                    @Override
-                    protected void hyperlinkActivated(Notification notification, HyperlinkEvent e) {
-                        adapter.hyperlinkActivated(e);
-                    }
-                })
+                .hyperlinkListener((notification, e) -> BrowserUtil.browse(e.getDescription()))
                 .addClosingAction(
                     LocalizeValue.localizeTODO("Do not show again"),
                     () -> myProperties.setValue("ignore." + adapter.key, "true")

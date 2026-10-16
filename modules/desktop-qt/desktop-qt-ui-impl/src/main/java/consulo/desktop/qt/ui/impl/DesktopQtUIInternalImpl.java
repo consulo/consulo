@@ -625,6 +625,11 @@ public class DesktopQtUIInternalImpl extends UIInternal implements UIInternalEx 
     }
 
     @Override
+    public Toast _Components_toast() {
+        return new DesktopQtToastImpl();
+    }
+
+    @Override
     public MessageList _Components_messageList() {
         return new DesktopQtMessageListImpl();
     }

@@ -50,7 +50,6 @@ public class IdeFrameTest {
         assertThat(frame.getFrameState()).isEqualTo(IdeFrameState.EMPTY);
         assertThat(frame.isInFullScreen()).isFalse();
         assertThat(frame.suggestChildFrameBounds()).isNull();
-        assertThat(frame.getBalloonLayout()).isNull();
 
         // the status bar is reachable both from the frame and from the window manager, and is the same instance
         StatusBar statusBar = frame.getStatusBar();

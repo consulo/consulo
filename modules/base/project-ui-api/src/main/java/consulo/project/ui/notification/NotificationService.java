@@ -19,12 +19,21 @@ import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
+import consulo.dataContext.DataContext;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnAction;
 import org.jspecify.annotations.Nullable;
 
+import java.util.List;
+
 /**
- * @author VISTALL
- * @since 2023-08-21
+ * Notifies and keeps every notification until it expires - the store behind the toasts and the Notifications tool
+ * window. Everything here can be called from any thread and never needs UI access; whoever shows notifications
+ * listens to {@link consulo.project.ui.notification.event.NotificationServiceListener} and switches to its own UI.
+ * <p/>
+ * Notifications without a project belong to the application: every welcome screen shows them and every project
+ * lists them next to its own.
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface NotificationService {
@@ -49,6 +58,41 @@ public interface NotificationService {
     }
 
     void notify(Notification notification, @Nullable Project project);
+
+    /**
+     * The notifications of the project together with those of the application, newest last. {@code null} - those of
+     * the application only.
+     */
+    List<Notification> getNotifications(@Nullable Project project);
+
+    List<Notification> getUnreadNotifications(@Nullable Project project);
+
+    <T extends Notification> List<T> getNotificationsOfType(Class<T> type, @Nullable Project project);
+
+    void markAllRead(@Nullable Project project);
+
+    /**
+     * Expires and forgets every notification of the project and of the application.
+     */
+    void clearAll(@Nullable Project project);
+
+    /**
+     * Expires and forgets the notifications which are not suggestions.
+     */
+    void clearTimeline(@Nullable Project project);
+
+    void remove(Notification notification);
+
+    /**
+     * Called by {@link Notification#expire()}.
+     */
+    void expire(Notification notification);
+
+    /**
+     * Runs an action of a notification; see {@link Notification#fire(Notification, AnAction, DataContext)}.
+     */
+    @RequiredUIAccess
+    void fire(Notification notification, AnAction action, @Nullable DataContext context);
 
     @Deprecated
     @DeprecationInfo("Use injection instead")

@@ -26,6 +26,7 @@ import java.util.Set;
 @SuppressWarnings({"HardCodedStringLiteral"})
 public abstract class ActionPlaces {
     public static final String UNKNOWN = "unknown";
+    public static final String NOTIFICATION = "Notification";
     public static final String TOOLBAR = "toolbar";
     public static final String POPUP = "popup";
 

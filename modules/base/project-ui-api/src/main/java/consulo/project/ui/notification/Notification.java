@@ -18,53 +18,39 @@ package consulo.project.ui.notification;
 import consulo.annotation.DeprecationInfo;
 import consulo.application.Application;
 import consulo.dataContext.DataContext;
-import consulo.dataContext.DataManager;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.project.ui.internal.NotificationActionInvoker;
 import consulo.project.ui.notification.event.NotificationListener;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
-import consulo.ui.ex.popup.Balloon;
-import consulo.ui.ex.popup.event.JBPopupAdapter;
-import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Lists;
 import consulo.util.collection.SmartList;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.function.Functions;
-import consulo.util.lang.ref.SoftReference;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
  * <p>Notification bean class contains <b>title:</b>subtitle, content (plain text or HTML) and actions.</p>
  *
- * <p>The notifications, generally, are shown in the balloons that appear on the screen when the corresponding events take place.</p>
- *
- * <p>Notification balloon is of two types: two or three lines.</p>
- *
- * <p>Two lines: title and content line; title and actions; content line and actions; contents on two lines.</p>
- *
- * <p>Three lines: title and content line and actions; contents on two lines and actions; contents on three lines or more; etc.</p>
+ * <p>A notification is kept by {@link NotificationService} until it expires, shown as a toast over the window and
+ * listed in the Notifications tool window. Notifying, expiring and every query can be done from any thread.</p>
  *
  * <p>Warning: be careful not to use the links in HTML content, use {@link #addAction(AnAction)}</p>
  *
- * <p>Construct new notifications starting from {@link NotificationGroup}:</p>
+ * <p>Construct new notifications starting from {@link NotificationService}:</p>
  *
- * <code>GROUP.newError()
+ * <code>notificationService.newError(GROUP)
  *     .title(...)
  *     .content(...)
  *     .icon(...)
@@ -92,6 +78,8 @@ public class Notification {
         private LocalizeValue myContent = LocalizeValue.empty();
         private @Nullable Image myIcon = null;
         private @Nullable Boolean myImportant = null;
+        private boolean mySuggestion;
+        private boolean myRemoveWhenExpired;
         private @Nullable NotificationListener myListener = null;
         private @Nullable List<Function<Notification, ? extends AnAction>> myActionAdders = null;
         private @Nullable Runnable myWhenExpired = null;
@@ -151,6 +139,22 @@ public class Notification {
                 throw new IllegalStateException("Flag 'important' is already initialized");
             }
             myImportant = important;
+            return this;
+        }
+
+        /**
+         * A suggestion is listed apart from the timeline of events and stays until it is acted on or dismissed.
+         */
+        public Builder suggestion() {
+            mySuggestion = true;
+            return this;
+        }
+
+        /**
+         * An expired notification leaves the Notifications tool window instead of staying there greyed out.
+         */
+        public Builder removeWhenExpired() {
+            myRemoveWhenExpired = true;
             return this;
         }
 
@@ -231,20 +235,16 @@ public class Notification {
         }
 
         public Notification create() {
-            Notification notification = new Notification(myGroup, myIcon, myTitle, mySubtitle, myContent, myType, myListener);
-            postInit(notification);
-            return notification;
+            return new Notification(this);
         }
 
-        protected void init(Notification notification) {
+        private void init(Notification notification) {
             notification.setIcon(myIcon);
             notification.setTitle(myTitle);
             notification.setSubtitle(mySubtitle);
             notification.setContent(myContent);
-            postInit(notification);
-        }
-
-        private void postInit(Notification notification) {
+            notification.mySuggestion = mySuggestion;
+            notification.myRemoveWhenExpired = myRemoveWhenExpired;
             if (myImportant != null) {
                 notification.setImportant(myImportant);
             }
@@ -273,16 +273,8 @@ public class Notification {
     }
 
     private static final Logger LOG = Logger.getInstance(Notification.class);
-    private static final Key<Notification> KEY = Key.create(Notification.class);
 
-    /**
-     * Which actions to keep and which to show under the "Actions" drop-down link if actions do not fit horizontally
-     * into the width of the notification.
-     */
-    public enum CollapseActionsDirection {
-        KEEP_LEFTMOST,
-        KEEP_RIGHTMOST
-    }
+    public static final Key<Notification> KEY = Key.create(Notification.class);
 
     public final String id;
     private final String myGroupId;
@@ -294,51 +286,16 @@ public class Notification {
     private LocalizeValue mySubtitle = LocalizeValue.empty();
     private LocalizeValue myContent = LocalizeValue.empty();
 
-    private NotificationListener myListener;
-    private String myDropDownText;
-    private List<AnAction> myActions;
-    private CollapseActionsDirection myCollapseActionsDirection = CollapseActionsDirection.KEEP_RIGHTMOST;
+    private @Nullable NotificationListener myListener;
+    private @Nullable List<AnAction> myActions;
 
-    private AtomicReference<Boolean> myExpired = new AtomicReference<>(false);
-    private Runnable myWhenExpired;
-    private Boolean myImportant;
-    private WeakReference<Balloon> myBalloonRef;
+    private final AtomicBoolean myExpired = new AtomicBoolean();
+    private @Nullable Runnable myWhenExpired;
+    private @Nullable Boolean myImportant;
+    private boolean mySuggestion;
+    private boolean myRemoveWhenExpired;
     private final long myTimestamp = System.currentTimeMillis();
 
-    /**
-     * @param group    notification group
-     * @param icon     notification icon, if {@code null} uses icon from type
-     * @param title    notification title
-     * @param subtitle notification subtitle
-     * @param content  notification content
-     * @param type     notification type
-     * @param listener notification lifecycle listener
-     */
-    private Notification(
-        NotificationGroup group,
-        @Nullable Image icon,
-        LocalizeValue title,
-        LocalizeValue subtitle,
-        LocalizeValue content,
-        NotificationType type,
-        @Nullable NotificationListener listener
-    ) {
-        myGroupId = group.getId();
-        myTitle = title;
-        myContent = content;
-        myType = type;
-        myListener = listener;
-
-        myIcon = icon;
-        mySubtitle = subtitle;
-
-        assertHasTitleOrContent();
-        id = calculateId();
-    }
-
-    /**
-     * @param notificationBuilder notification builder
-     */
     protected Notification(Builder notificationBuilder) {
         myGroupId = notificationBuilder.myGroup.getId();
         myType = notificationBuilder.myType;
@@ -346,79 +303,6 @@ public class Notification {
 
         assertHasTitleOrContent();
         id = calculateId();
-    }
-
-    /**
-     * @param group   notification group
-     * @param title   notification title
-     * @param content notification content
-     * @param type    notification type
-     */
-    @Deprecated
-    @DeprecationInfo("Use NotificationGroup#newError/newWarning/newInfo/newOfType()...create()")
-    public Notification(NotificationGroup group, String title, String content, NotificationType type) {
-        this(
-            NotificationService.getInstance()
-                .newOfType(group, type)
-                .title(LocalizeValue.of(title))
-                .content(LocalizeValue.of(content))
-        );
-    }
-
-    /**
-     * @param group    notification group
-     * @param icon     notification icon, if {@code null} uses icon from type
-     * @param title    notification title
-     * @param subtitle notification subtitle
-     * @param content  notification content
-     * @param type     notification type
-     * @param listener notification lifecycle listener
-     */
-    @Deprecated
-    @DeprecationInfo("Use NotificationGroup#newError/newWarning/newInfo/newOfType()...create()")
-    public Notification(
-        NotificationGroup group,
-        @Nullable Image icon,
-        @Nullable String title,
-        @Nullable String subtitle,
-        @Nullable String content,
-        NotificationType type,
-        @Nullable NotificationListener listener
-    ) {
-        this(
-            NotificationService.getInstance()
-                .newOfType(group, type)
-                .optionalIcon(icon)
-                .title(LocalizeValue.ofNullable(title))
-                .subtitle(LocalizeValue.ofNullable(subtitle))
-                .content(LocalizeValue.ofNullable(content))
-                .optionalHyperlinkListener(listener)
-        );
-    }
-
-    /**
-     * @param group    notification group
-     * @param title    notification title
-     * @param content  notification content
-     * @param type     notification type
-     * @param listener notification lifecycle listener
-     */
-    @Deprecated
-    @DeprecationInfo("Use NotificationGroup#newError/newWarning/newInfo/newOfType()...create()")
-    public Notification(
-        NotificationGroup group,
-        String title,
-        String content,
-        NotificationType type,
-        @Nullable @RequiredUIAccess NotificationListener listener
-    ) {
-        this(
-            NotificationService.getInstance()
-                .newOfType(group, type)
-                .title(LocalizeValue.of(title))
-                .content(LocalizeValue.of(content))
-                .optionalHyperlinkListener(listener)
-        );
     }
 
     /**
@@ -445,6 +329,10 @@ public class Notification {
         return myTitle.isNotEmpty() || mySubtitle.isNotEmpty();
     }
 
+    public LocalizeValue getTitleValue() {
+        return myTitle;
+    }
+
     public String getTitle() {
         return myTitle.get();
     }
@@ -459,6 +347,10 @@ public class Notification {
     public Notification setTitle(@Nullable String title) {
         myTitle = LocalizeValue.ofNullable(title);
         return this;
+    }
+
+    public LocalizeValue getSubtitleValue() {
+        return mySubtitle;
     }
 
     public @Nullable String getSubtitle() {
@@ -479,6 +371,10 @@ public class Notification {
 
     public boolean hasContent() {
         return myContent.isNotEmpty();
+    }
+
+    public LocalizeValue getContentValue() {
+        return myContent;
     }
 
     public String getContent() {
@@ -515,50 +411,13 @@ public class Notification {
         return e.getData(KEY);
     }
 
-    public static void fire(Notification notification, AnAction action) {
-        fire(notification, action, null);
-    }
-
-    public static void fire(final Notification notification, AnAction action, @Nullable DataContext context) {
-        AnActionEvent event = AnActionEvent.createFromAnAction(action, null, ActionPlaces.UNKNOWN, new DataContext() {
-            @Override
-            @SuppressWarnings("unchecked")
-            public <T> @Nullable T getData(Key<T> dataId) {
-                if (KEY == dataId) {
-                    return (T) notification;
-                }
-                return context == null ? null : context.getData(dataId);
-            }
-        });
-
-        NotificationActionInvoker.getInstance().invoke(action, event);
-    }
-
-    public static void setDataProvider(Notification notification, JComponent component) {
-        DataManager.registerUiDataProvider(component, sink -> sink.set(KEY, notification));
-    }
-
-    public String getDropDownText() {
-        if (myDropDownText == null) {
-            myDropDownText = "Actions";
-        }
-        return myDropDownText;
-    }
-
     /**
-     * @param dropDownText text for popup when all actions collapsed (when all actions width more notification width)
+     * Runs an action of a notification the way a click on its link does. The event carries the notification under
+     * {@link #KEY} and whatever the context gives.
      */
-    public Notification setDropDownText(String dropDownText) {
-        myDropDownText = dropDownText;
-        return this;
-    }
-
-    public CollapseActionsDirection getCollapseActionsDirection() {
-        return myCollapseActionsDirection;
-    }
-
-    public void setCollapseActionsDirection(CollapseActionsDirection collapseActionsDirection) {
-        myCollapseActionsDirection = collapseActionsDirection;
+    @RequiredUIAccess
+    public static void fire(Notification notification, AnAction action, @Nullable DataContext context) {
+        Application.get().getInstance(NotificationService.class).fire(notification, action, context);
     }
 
     public Notification addActions(AnAction... actions) {
@@ -580,17 +439,28 @@ public class Notification {
         return myType;
     }
 
+    public boolean isSuggestion() {
+        return mySuggestion;
+    }
+
+    public boolean isRemoveWhenExpired() {
+        return myRemoveWhenExpired;
+    }
+
     public boolean isExpired() {
         return myExpired.get();
     }
 
+    /**
+     * Hides the toast of the notification and greys it out in the Notifications tool window. Safe from any thread;
+     * the expiration listener runs on the calling thread.
+     */
     public void expire() {
         if (!myExpired.compareAndSet(false, true)) {
             return;
         }
 
-        Application.get().getLastUIAccess().giveIfNeed(this::hideBalloon);
-        NotificationsManager.getNotificationsManager().expire(this);
+        Application.get().getInstance(NotificationService.class).expire(this);
 
         Runnable whenExpired = myWhenExpired;
         if (whenExpired != null) {
@@ -598,42 +468,15 @@ public class Notification {
         }
     }
 
-    public Notification whenExpired(@Nullable Runnable whenExpired) {
-        myWhenExpired = whenExpired;
-        return this;
-    }
-
-    public void hideBalloon() {
-        if (myBalloonRef != null) {
-            Balloon balloon = myBalloonRef.get();
-            if (balloon != null) {
-                balloon.hide();
-            }
-            myBalloonRef = null;
-        }
-    }
-
-    public void setBalloon(final Balloon balloon) {
-        hideBalloon();
-        myBalloonRef = new WeakReference<>(balloon);
-        balloon.addListener(new JBPopupAdapter() {
-            @Override
-            public void onClosed(LightweightWindowEvent event) {
-                if (SoftReference.dereference(myBalloonRef) == balloon) {
-                    myBalloonRef = null;
-                }
-            }
-        });
-    }
-
-    public @Nullable Balloon getBalloon() {
-        return SoftReference.dereference(myBalloonRef);
-    }
-
     @Deprecated
     @DeprecationInfo("Use Notification.Builder#notify()")
     public void notify(@Nullable Project project) {
-        NotificationService.getInstance().notify(this, project);
+        Application.get().getInstance(NotificationService.class).notify(this, project);
+    }
+
+    public Notification whenExpired(@Nullable Runnable whenExpired) {
+        myWhenExpired = whenExpired;
+        return this;
     }
 
     public Notification setImportant(boolean important) {

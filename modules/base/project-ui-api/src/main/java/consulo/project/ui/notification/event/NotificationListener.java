@@ -18,46 +18,33 @@ package consulo.project.ui.notification.event;
 import consulo.platform.Platform;
 import consulo.project.ui.notification.Notification;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.HyperlinkEvent;
 
-import javax.swing.event.HyperlinkEvent;
-import java.net.URL;
-
+/**
+ * Called when a link in the HTML content of a notification is clicked. {@link HyperlinkEvent#getDescription()} is the
+ * {@code href} of the link.
+ */
+@FunctionalInterface
 public interface NotificationListener {
-  @RequiredUIAccess
-  void hyperlinkUpdate(Notification notification, HyperlinkEvent event);
+    NotificationListener URL_OPENING_LISTENER = new UrlOpeningListener(false);
 
-  abstract class Adapter implements NotificationListener {
-    @Override
-    public final void hyperlinkUpdate(Notification notification, HyperlinkEvent event) {
-      if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-        hyperlinkActivated(notification, event);
-      }
+    @RequiredUIAccess
+    void hyperlinkActivated(Notification notification, HyperlinkEvent event);
+
+    class UrlOpeningListener implements NotificationListener {
+        private final boolean myExpireNotification;
+
+        public UrlOpeningListener(boolean expireNotification) {
+            myExpireNotification = expireNotification;
+        }
+
+        @RequiredUIAccess
+        @Override
+        public void hyperlinkActivated(Notification notification, HyperlinkEvent event) {
+            Platform.current().openInBrowser(event.getDescription());
+            if (myExpireNotification) {
+                notification.expire();
+            }
+        }
     }
-
-    protected abstract void hyperlinkActivated(Notification notification, HyperlinkEvent e);
-  }
-
-  NotificationListener URL_OPENING_LISTENER = new UrlOpeningListener(false);
-
-  class UrlOpeningListener extends Adapter {
-    private final boolean myExpireNotification;
-
-    public UrlOpeningListener(boolean expireNotification) {
-      myExpireNotification = expireNotification;
-    }
-
-    @Override
-    protected void hyperlinkActivated(Notification notification, HyperlinkEvent event) {
-      URL url = event.getURL();
-      if (url == null) {
-        Platform.current().openInBrowser(event.getDescription());
-      }
-      else {
-        Platform.current().openInBrowser(url);
-      }
-      if (myExpireNotification) {
-        notification.expire();
-      }
-    }
-  }
 }

@@ -104,9 +104,8 @@ public class WindowsDefenderCheckerActivity implements BackgroundStartupActivity
             paths
         );
 
-        notification.setCollapseActionsDirection(Notification.CollapseActionsDirection.KEEP_LEFTMOST);
         checker.configureActions(project, notification);
 
-        myApplication.invokeLater(() -> notification.notify(project));
+        notification.notify(project);
     }
 }

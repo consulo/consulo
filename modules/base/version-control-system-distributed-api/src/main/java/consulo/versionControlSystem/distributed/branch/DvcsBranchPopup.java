@@ -37,7 +37,6 @@ import consulo.versionControlSystem.distributed.repository.Repository;
 import consulo.versionControlSystem.internal.FlatSpeedSearchPopupFactory;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.event.HyperlinkEvent;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -115,17 +114,11 @@ public abstract class DvcsBranchPopup<Repo extends Repository> {
             .newInfo(VcsNotifier.IMPORTANT_ERROR_NOTIFICATION)
             .title(DistributedVcsLocalize.notificationSynchedBranchesTitle())
             .content(DistributedVcsLocalize.notificationSynchedBranchesContent(myVcs.getDisplayName()))
-            .hyperlinkListener(new NotificationListener() {
-                @Override
-                @RequiredUIAccess
-                public void hyperlinkUpdate(Notification notification, HyperlinkEvent event) {
-                    if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-                        Application.get().getInstance(ShowConfigurableService.class).showAndSelect(myProject, "vcs." + myVcs.getId());
+            .hyperlinkListener((notification, event) -> {
+                Application.get().getInstance(ShowConfigurableService.class).showAndSelect(myProject, "vcs." + myVcs.getId());
 
-                        if (myVcsSettings.getSyncSetting() == DvcsSyncSettings.Value.DONT_SYNC) {
-                            notification.expire();
-                        }
-                    }
+                if (myVcsSettings.getSyncSetting() == DvcsSyncSettings.Value.DONT_SYNC) {
+                    notification.expire();
                 }
             })
             .notify(myProject);

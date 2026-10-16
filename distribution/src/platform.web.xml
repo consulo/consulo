@@ -49,6 +49,7 @@
         <include>com.vaadin:vaadin-radio-button-flow</include>
         <include>com.vaadin:vaadin-dialog-flow</include>
         <include>com.vaadin:vaadin-popover-flow</include>
+        <include>com.vaadin:vaadin-notification-flow</include>
         <include>com.vaadin:vaadin-button-flow</include>
         <include>com.vaadin:vaadin-renderer-flow</include>
         <include>com.helger.commons:ph-commons</include>

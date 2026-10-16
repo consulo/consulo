@@ -26,8 +26,6 @@ import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationService;
 import consulo.project.ui.notification.NotificationType;
-import consulo.project.ui.notification.NotificationsManager;
-import consulo.project.ui.notification.event.NotificationListener;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
@@ -35,7 +33,6 @@ import consulo.ui.image.Image;
 import consulo.util.io.CharsetToolkit;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.event.HyperlinkEvent;
 import java.awt.*;
 import java.util.Collections;
 import java.util.List;
@@ -54,7 +51,7 @@ public abstract class ExecutableValidator {
     
     protected final Project myProject;
     
-    protected final NotificationsManager myNotificationManager;
+    protected final NotificationService myNotificationService;
 
     
     private final String myNotificationErrorTitle;
@@ -76,7 +73,7 @@ public abstract class ExecutableValidator {
         myProject = project;
         myNotificationErrorTitle = notificationErrorTitle;
         myNotificationErrorDescription = notificationErrorDescription;
-        myNotificationManager = NotificationsManager.getNotificationsManager();
+        myNotificationService = NotificationService.getInstance();
     }
 
     protected abstract String getCurrentExecutable();
@@ -140,7 +137,7 @@ public abstract class ExecutableValidator {
         }
 
         LOG.info("Executable is not valid: " + getCurrentExecutable());
-        if (myNotificationManager.getNotificationsOfType(notification.getClass(), myProject).length == 0) { // show only once
+        if (myNotificationService.getNotificationsOfType(notification.getClass(), myProject).isEmpty()) { // show only once
             notification.notify(myProject.isDefault() ? null : myProject);
         }
     }
@@ -248,12 +245,7 @@ public abstract class ExecutableValidator {
                 NotificationService.getInstance()
                     .newOfType(ExecutionNotificationGroupHolder.EXTERNAL, type)
                     .content(LocalizeValue.localizeTODO(preparedDescription))
-                    .hyperlinkListener(new NotificationListener.Adapter() {
-                        @Override
-                        protected void hyperlinkActivated(Notification notification, HyperlinkEvent event) {
-                            showSettingsAndExpireIfFixed(notification);
-                        }
-                    })
+                    .hyperlinkListener((notification, event) -> showSettingsAndExpireIfFixed(notification))
             );
         }
     }

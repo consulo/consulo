@@ -142,5 +142,13 @@ public enum ComponentColors implements StyleColorValue {
      */
     NOTIFICATION_INFO_BACKGROUND,
     NOTIFICATION_WARNING_BACKGROUND,
-    NOTIFICATION_ERROR_BACKGROUND
+    NOTIFICATION_ERROR_BACKGROUND,
+
+    /**
+     * The fill of a toast, by its style.
+     */
+    TOAST_INFO_BACKGROUND,
+    TOAST_SUCCESS_BACKGROUND,
+    TOAST_WARNING_BACKGROUND,
+    TOAST_ERROR_BACKGROUND
 }

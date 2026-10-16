@@ -23,10 +23,12 @@ import consulo.ide.impl.wm.impl.UnifiedToolWindowSplitters;
 import consulo.project.Project;
 import consulo.project.ui.internal.WindowInfoImpl;
 import consulo.ui.Component;
+import consulo.ui.Space;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.toolWindow.*;
 import consulo.ide.impl.wm.impl.ToolWindowAnchorUtil;
 import consulo.project.ui.impl.internal.wm.ToolWindowBase;
+import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.SplitLayoutPosition;
 import consulo.ui.layout.ThreeComponentSplitLayout;
 import consulo.ui.layout.TwoComponentSplitLayout;
@@ -49,8 +51,6 @@ import java.util.Map;
  */
 public class WebToolWindowPanelImpl extends VaadinComponentDelegate<WebToolWindowPanelImpl.Vaadin> implements ToolWindowPanel {
     private static final Logger LOG = Logger.getInstance(WebToolWindowPanelImpl.class);
-
-    private static final String ROOT_SPLITTER_ATTRIBUTE = "consulo-root-splitter";
 
     public class Vaadin extends Div implements FromVaadinComponentWrapper, InitiableComponent, FlexComponent {
         private Div myTopDiv = new Div();
@@ -221,6 +221,8 @@ public class WebToolWindowPanelImpl extends VaadinComponentDelegate<WebToolWindo
     private final Map<ToolWindowAnchor, ToolWindowInternalDecorator> myAnchor2Secondary = new HashMap<>();
     private final Map<ToolWindowAnchor, ToolWindowInternalDecorator> myAnchor2Sliding = new HashMap<>();
 
+    private final DockLayout myContent = DockLayout.create(Space.NONE);
+
     private final UnifiedToolWindowSplitters mySplitters;
 
     @RequiredUIAccess
@@ -232,7 +234,10 @@ public class WebToolWindowPanelImpl extends VaadinComponentDelegate<WebToolWindo
 
         mySplitters = new UnifiedToolWindowSplitters(project, project, this::setRootSplitter);
 
-        attachRootSplitter(mySplitters.getRootSplitter());
+        VaadinSizeUtil.setWidthFull(myContent);
+        TargetVaadin.to(myContent).addClassName("web-tool-window-content");
+        myContent.center(mySplitters.getRootSplitter());
+        vaadinComponent.myCenterDiv.add(TargetVaadin.to(myContent));
         vaadinComponent.myCenterDiv.add(TargetVaadin.to(myRightStripe));
 
         // tttttttttttttttttttttttttttttttt
@@ -247,46 +252,16 @@ public class WebToolWindowPanelImpl extends VaadinComponentDelegate<WebToolWindo
 
     }
 
-    /**
-     * The splitter which is the outer one sits between the two side stripes, so the one taking its place goes
-     * back in at the same index.
-     */
     @RequiredUIAccess
     private void setRootSplitter(ThreeComponentSplitLayout rootSplitter) {
-        Div centerDiv = getVaadinComponent().myCenterDiv;
-
-        int index = centerDiv.getComponentCount() - 1;
-        for (int i = 0; i < centerDiv.getComponentCount(); i++) {
-            if (centerDiv.getComponentAt(i).getElement().hasAttribute(ROOT_SPLITTER_ATTRIBUTE)) {
-                index = i;
-                centerDiv.remove(centerDiv.getComponentAt(i));
-                break;
-            }
-        }
-
-        attachRootSplitter(rootSplitter, index);
+        myContent.center(rootSplitter);
     }
 
-    @RequiredUIAccess
-    private void attachRootSplitter(ThreeComponentSplitLayout rootSplitter) {
-        attachRootSplitter(rootSplitter, -1);
-    }
-
-    @RequiredUIAccess
-    private void attachRootSplitter(ThreeComponentSplitLayout rootSplitter, int index) {
-        VaadinSizeUtil.setWidthFull(rootSplitter);
-
-        com.vaadin.flow.component.Component splitter = TargetVaadin.to(rootSplitter);
-        splitter.addClassName("web-tool-window-content");
-        splitter.getElement().setAttribute(ROOT_SPLITTER_ATTRIBUTE, "");
-
-        Div centerDiv = getVaadinComponent().myCenterDiv;
-        if (index < 0) {
-            centerDiv.add(splitter);
-        }
-        else {
-            centerDiv.addComponentAtIndex(index, splitter);
-        }
+    /**
+     * The area between the stripes, which the toasts of the frame float in.
+     */
+    public Component getContentComponent() {
+        return myContent;
     }
 
     public WebToolWindowStripeImpl getBottomStripe() {

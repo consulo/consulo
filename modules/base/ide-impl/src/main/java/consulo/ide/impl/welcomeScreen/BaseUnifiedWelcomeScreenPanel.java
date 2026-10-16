@@ -18,6 +18,8 @@ package consulo.ide.impl.welcomeScreen;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
+import consulo.project.ui.impl.internal.notification.WelcomeNotifications;
+import consulo.project.ui.localize.ProjectUILocalize;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.Button;
@@ -153,6 +155,11 @@ public abstract class BaseUnifiedWelcomeScreenPanel implements UnifiedWelcomeScr
             IdeActions.GROUP_WELCOME_SCREEN_DOC,
             PlatformIconGroup.welcomeHelp()
         ));
+
+        Button notifications = Button.create(ProjectUILocalize.toolwindowNotificationsDisplayName());
+        notifications.addStyle(ButtonStyle.BORDERLESS);
+        WelcomeNotifications.install(notifications, myParentDisposable);
+        actionLayout.add(notifications);
 
         DockLayout rightDock = DockLayout.create();
         rightDock.top(rightLayout);

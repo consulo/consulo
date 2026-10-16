@@ -76,7 +76,6 @@ import consulo.util.lang.ref.SimpleReference;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
-import javax.swing.event.HyperlinkEvent;
 import java.awt.*;
 import java.io.Reader;
 import java.lang.reflect.InvocationTargetException;
@@ -344,10 +343,7 @@ public class DesktopApplicationStarter extends ApplicationStarter {
                     .newError(PlatformOrPluginsNotificationGroupContributor.ourPluginsLifecycleGroup)
                     .title(ExternalServiceLocalize.titlePluginNotificationTitle())
                     .content(LocalizeValue.localizeTODO(pluginError.toString()))
-                    .hyperlinkListener(new NotificationListener() {
-                        @Override
-                        @RequiredUIAccess
-                        public void hyperlinkUpdate(Notification notification, HyperlinkEvent event) {
+                    .hyperlinkListener((notification, event) -> {
                             notification.expire();
 
                             String description = event.getDescription();
@@ -359,8 +355,7 @@ public class DesktopApplicationStarter extends ApplicationStarter {
                                     ""
                                 );
                             }
-                        }
-                    })
+                        })
                     .notify(null);
             }
         }

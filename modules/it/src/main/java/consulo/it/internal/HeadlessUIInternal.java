@@ -536,6 +536,11 @@ public class HeadlessUIInternal extends UIInternal implements UIInternalEx {
     }
 
     @Override
+    public Toast _Components_toast() {
+        return new HeadlessToast();
+    }
+
+    @Override
     public MessageList _Components_messageList() {
         return new HeadlessMessageList();
     }

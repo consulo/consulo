@@ -25,11 +25,13 @@ import consulo.disposer.Disposer;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.Component;
 import consulo.ui.MenuBar;
+import consulo.ui.Toast;
 import consulo.ui.UIAccess;
 import consulo.ui.Window;
 import consulo.ui.WindowOptions;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.WindowCloseEvent;
+import consulo.ui.internal.ToastOverlay;
 import consulo.util.lang.StringUtil;
 import consulo.web.ui.impl.internal.base.ComponentHolder;
 import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
@@ -50,7 +52,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * @author VISTALL
  * @since 2017-09-15
  */
-public class WebWindowImpl extends VaadinComponentDelegate<WebWindowImpl.Vaadin> implements Window {
+public class WebWindowImpl extends VaadinComponentDelegate<WebWindowImpl.Vaadin> implements Window, ToastOverlay {
     private static final String SIZE_STORAGE_PREFIX = "consulo.window.size.";
 
     private static final String RESTORE_SIZE_SCRIPT = "try { const size = JSON.parse(localStorage.getItem($0) || 'null');"
@@ -82,6 +84,7 @@ public class WebWindowImpl extends VaadinComponentDelegate<WebWindowImpl.Vaadin>
     private final List<WebWindowImpl> myOwnedWindows = new CopyOnWriteArrayList<>();
     private final @Nullable String myDimensionKey;
     private final WebRootPaneImpl myRootPanel = new WebRootPaneImpl();
+    private @Nullable WebToastStack myToastStack;
 
     public WebWindowImpl(boolean modal, WindowOptions options) {
         Vaadin vaadinComponent = getVaadinComponent();
@@ -294,6 +297,35 @@ public class WebWindowImpl extends VaadinComponentDelegate<WebWindowImpl.Vaadin>
         }
 
         getVaadinComponent().setHeaderTitle(StringUtil.notNullize(title));
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void showToast(Toast toast) {
+        toastStack().show(toast);
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setToastArea(@Nullable Component area) {
+        toastStack().setArea(area == null ? null : TargetVaadin.to(area));
+    }
+
+    private WebToastStack toastStack() {
+        WebToastStack stack = myToastStack;
+        if (stack == null) {
+            stack = myToastStack = new WebToastStack();
+        }
+        return stack;
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void hideToast(Toast toast) {
+        WebToastStack stack = myToastStack;
+        if (stack != null) {
+            stack.hide(toast);
+        }
     }
 
     @Override

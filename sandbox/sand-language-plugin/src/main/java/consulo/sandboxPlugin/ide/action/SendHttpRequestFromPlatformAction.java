@@ -26,7 +26,7 @@ import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationService;
-import consulo.project.ui.notification.Notifications;
+import consulo.project.ui.notification.NotificationGroup;
 import consulo.remoteServer.configuration.deployment.DeploymentConfiguration;
 import consulo.remoteServer.platformAware.PlatformAwareServerRuntimeInstance;
 import consulo.remoteServer.runtime.ConnectionStatus;
@@ -94,7 +94,7 @@ public class SendHttpRequestFromPlatformAction extends DumbAwareAction {
             @RequiredUIAccess
             @Override
             public void onSuccess() {
-                myNotificationService.newInfo(Notifications.SYSTEM_MESSAGES_GROUP)
+                myNotificationService.newInfo(NotificationGroup.SYSTEM_MESSAGES)
                     .title(LocalizeValue.localizeTODO("HTTP requests from platforms"))
                     .content(LocalizeValue.localizeTODO(String.join("\n", myResults)))
                     .notify(project);

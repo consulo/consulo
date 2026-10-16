@@ -81,6 +81,12 @@
         "borderColor": "#647255"
       }
     },
+    "Toast": {
+      "infoBackground": "#2e3b4f",
+      "successBackground": "#33412e",
+      "warningBackground": "#5a5221",
+      "errorBackground": "#704745"
+    },
     "Notification": {
       "ToolWindow": {
         "informativeBackground": "#33412e",

@@ -22,6 +22,8 @@ import consulo.application.dumb.DumbAwareRunnable;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.event.ProjectManagerListener;
+import consulo.project.ui.internal.IdeFrameEx;
+import consulo.project.ui.internal.NotificationToastService;
 import consulo.project.ui.internal.WindowManagerEx;
 import consulo.ui.Size2D;
 import consulo.ui.UIAccess;
@@ -108,6 +110,10 @@ public abstract class WelcomeFrameManager {
     IdeFrame frame = createFrame();
     uiAccess.putUserData(IdeFrame.KEY, frame);
     frame.getWindow().show();
+
+    if (frame instanceof IdeFrameEx frameEx) {
+      myApplication.getInstance(NotificationToastService.class).showLaterOver(frameEx);
+    }
   }
 
   @RequiredUIAccess

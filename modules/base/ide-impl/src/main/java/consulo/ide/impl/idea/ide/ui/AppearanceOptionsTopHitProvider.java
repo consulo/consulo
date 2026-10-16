@@ -19,7 +19,7 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.application.ui.UISettings;
 import consulo.component.ComponentManager;
 import consulo.ui.ex.action.BooleanOptionDescription;
-import consulo.ide.impl.idea.notification.impl.NotificationsConfigurationImpl;
+import consulo.project.ui.impl.internal.notification.NotificationsConfigurationImpl;
 import consulo.ide.localize.IdeLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.OptionsTopHitProvider;

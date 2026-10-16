@@ -17,7 +17,6 @@ package consulo.project.ui.impl.internal.wm;
 
 import consulo.project.Project;
 import consulo.project.ui.internal.IdeFrameEx;
-import consulo.project.ui.wm.BalloonLayout;
 import consulo.project.ui.wm.IdeRootPaneNorthExtension;
 import consulo.project.ui.wm.StatusBar;
 import consulo.ui.Rectangle2D;
@@ -72,11 +71,6 @@ public class UnifiedWelcomeIdeFrame implements IdeFrameEx {
 
     @Override
     public <E extends IdeRootPaneNorthExtension> @Nullable E getNorthExtension(Class<? extends E> extensionClass) {
-        return null;
-    }
-
-    @Override
-    public @Nullable BalloonLayout getBalloonLayout() {
         return null;
     }
 }

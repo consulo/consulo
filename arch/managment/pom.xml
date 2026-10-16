@@ -654,6 +654,11 @@
             </dependency>
             <dependency>
                 <groupId>com.vaadin</groupId>
+                <artifactId>vaadin-notification-flow</artifactId>
+                <version>${vaadin.flow.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.vaadin</groupId>
                 <artifactId>vaadin-virtual-list-flow</artifactId>
                 <version>${vaadin.flow.version}</version>
             </dependency>

@@ -1,0 +1,46 @@
+/*
+ * Copyright 2013-2026 consulo.io
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package consulo.ui.internal;
+
+import consulo.ui.Component;
+import consulo.ui.Toast;
+import consulo.ui.Window;
+import consulo.ui.annotation.RequiredUIAccess;
+import org.jspecify.annotations.Nullable;
+
+/**
+ * A {@link Window} which floats toasts over its content: a stack in the bottom right corner, the newest at the bottom,
+ * each toast with a shadow. Implemented by the windows of every frontend.
+ *
+ * @author VISTALL
+ * @since 2026-10-16
+ */
+public interface ToastOverlay {
+    @RequiredUIAccess
+    void showToast(Toast toast);
+
+    @RequiredUIAccess
+    void hideToast(Toast toast);
+
+    /**
+     * The component of the window whose bottom right corner the toasts float in - the frame of a project keeps them
+     * off its tool window stripes and its status bar.
+     *
+     * @param area {@code null} - the whole window
+     */
+    @RequiredUIAccess
+    void setToastArea(@Nullable Component area);
+}

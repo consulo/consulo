@@ -25,7 +25,6 @@ import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.ui.internal.IdeFrameEx;
-import consulo.project.ui.wm.BalloonLayout;
 import consulo.project.ui.wm.FrameTitleBuilder;
 import consulo.project.ui.wm.IdeFrameState;
 import consulo.project.ui.wm.IdeRootPaneNorthExtension;
@@ -218,11 +217,6 @@ public class DesktopQtIdeFrameImpl implements IdeFrameEx, Disposable {
 
     @Override
     public <E extends IdeRootPaneNorthExtension> @Nullable E getNorthExtension(Class<? extends E> extensionClass) {
-        return null;
-    }
-
-    @Override
-    public @Nullable BalloonLayout getBalloonLayout() {
         return null;
     }
 

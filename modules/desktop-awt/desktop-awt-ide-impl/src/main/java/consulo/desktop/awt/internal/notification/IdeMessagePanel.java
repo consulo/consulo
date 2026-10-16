@@ -3,7 +3,6 @@ package consulo.desktop.awt.internal.notification;
 
 import consulo.application.internal.MessagePool;
 import consulo.application.internal.MessagePoolListener;
-import consulo.desktop.awt.uiOld.BalloonLayoutData;
 import consulo.disposer.Disposer;
 import consulo.externalService.impl.internal.errorReport.IdeErrorsDialog;
 import consulo.externalService.impl.internal.errorReport.ReportMessages;
@@ -21,7 +20,6 @@ import consulo.ui.ex.awt.ClickListener;
 import consulo.ui.ex.awt.JBCurrentTheme;
 import consulo.ui.ex.awt.NonOpaquePanel;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.popup.Balloon;
 import consulo.util.lang.ref.SimpleReference;
 import org.jspecify.annotations.Nullable;
 
@@ -38,7 +36,7 @@ public final class IdeMessagePanel extends NonOpaquePanel implements MessagePool
     
     private final StatusBarWidgetFactory myFactory;
 
-    private Balloon myBalloon;
+    private @Nullable Notification myNotification;
     private IdeErrorsDialog myDialog;
     private boolean myOpeningInProgress;
     private boolean myNotificationPopupAlreadyShown;
@@ -183,8 +181,10 @@ public final class IdeMessagePanel extends NonOpaquePanel implements MessagePool
 
         if (state == MessagePool.State.NoErrors) {
             myNotificationPopupAlreadyShown = false;
-            if (myBalloon != null) {
-                Disposer.dispose(myBalloon);
+            Notification notification = myNotification;
+            myNotification = null;
+            if (notification != null) {
+                notification.expire();
             }
         }
         else if (state == MessagePool.State.UnreadErrors && !myNotificationPopupAlreadyShown && isActive(myFrame)) {
@@ -201,26 +201,12 @@ public final class IdeMessagePanel extends NonOpaquePanel implements MessagePool
     }
 
     private void showErrorNotification(Project project) {
-        Notification notification = NotificationService.getInstance()
+        myNotification = NotificationService.getInstance()
             .newError(ReportMessages.GROUP)
             .icon(PlatformIconGroup.ideFatalerror())
             .title(ExternalServiceLocalize.errorNewNotificationTitle())
+            .removeWhenExpired()
             .addClosingAction(ExternalServiceLocalize.errorNewNotificationLink(), () -> openErrorsDialog(null))
-            .create();
-
-        BalloonLayout layout = myFrame.getBalloonLayout();
-        assert layout != null : myFrame;
-
-        BalloonLayoutData layoutData = BalloonLayoutData.createEmpty();
-        layoutData.fadeoutTime = 5000;
-        layoutData.textColor = JBCurrentTheme.Notification.Error.FOREGROUND;
-        layoutData.fillColor = JBCurrentTheme.Notification.Error.BACKGROUND;
-        layoutData.borderColor = JBCurrentTheme.Notification.Error.BORDER_COLOR;
-
-        assert myBalloon == null;
-        myBalloon = NotificationsManagerImpl.getNotificationsManager()
-            .createBalloon(myFrame, notification, false, false, new SimpleReference<>(layoutData), project);
-        Disposer.register(myBalloon, () -> myBalloon = null);
-        layout.add(myBalloon);
+            .notifyAndGet(project);
     }
 }

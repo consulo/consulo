@@ -33,6 +33,7 @@ import com.vaadin.flow.component.card.Card;
 import com.vaadin.flow.component.messages.MessageInput;
 import com.vaadin.flow.component.messages.MessageList;
 import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.icon.Icon;
@@ -95,6 +96,7 @@ import org.vaadin.stefan.table.Table;
 @JsModule("./spotlight.js")
 @Push(PushMode.AUTOMATIC)
 @Uses(Dialog.class)
+@Uses(Notification.class)
 @Uses(Card.class)
 @Uses(MessageList.class)
 @Uses(MessageInput.class)

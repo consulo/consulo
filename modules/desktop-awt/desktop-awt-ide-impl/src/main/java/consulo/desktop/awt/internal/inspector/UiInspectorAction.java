@@ -23,8 +23,7 @@ import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationService;
-import consulo.project.ui.notification.Notifications;
-import consulo.project.ui.notification.NotificationsManager;
+import consulo.project.ui.notification.NotificationGroup;
 import consulo.ui.AntialiasingType;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
@@ -100,12 +99,11 @@ public class UiInspectorAction extends UiMouseAction {
         if (state) {
             Toolkit.getDefaultToolkit().addAWTEventListener(myContainerListener, AWTEvent.CONTAINER_EVENT_MASK);
 
-            UiInspectorNotification[] existing =
-                NotificationsManager.getNotificationsManager().getNotificationsOfType(UiInspectorNotification.class, null);
-            if (existing.length == 0) {
+            List<UiInspectorNotification> existing = NotificationService.getInstance().getNotificationsOfType(UiInspectorNotification.class, null);
+            if (existing.isEmpty()) {
                 new UiInspectorNotification(
                     NotificationService.getInstance()
-                        .newInfo(Notifications.SYSTEM_MESSAGES_GROUP)
+                        .newInfo(NotificationGroup.SYSTEM_MESSAGES)
                         .title(LocalizeValue.localizeTODO("UI Inspector"))
                         .content(LocalizeValue.localizeTODO("Control-Alt-Click to view component info!"))
                 ).notify(null);

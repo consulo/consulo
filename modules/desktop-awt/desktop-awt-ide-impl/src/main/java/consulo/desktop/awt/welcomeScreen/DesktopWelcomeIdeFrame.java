@@ -19,7 +19,6 @@ import consulo.application.Application;
 import consulo.dataContext.UiDataProvider;
 import consulo.project.Project;
 import consulo.project.ui.internal.IdeFrameEx;
-import consulo.project.ui.wm.BalloonLayout;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.IdeRootPaneNorthExtension;
 import consulo.project.ui.wm.StatusBar;
@@ -85,8 +84,4 @@ class DesktopWelcomeIdeFrame implements IdeFrameEx {
         return null;
     }
 
-    @Override
-    public @Nullable BalloonLayout getBalloonLayout() {
-        return myFrame.getBalloonLayout();
-    }
 }

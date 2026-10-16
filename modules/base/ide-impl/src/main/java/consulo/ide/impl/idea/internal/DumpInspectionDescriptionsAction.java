@@ -23,7 +23,7 @@ import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.ui.notification.NotificationService;
-import consulo.project.ui.notification.Notifications;
+import consulo.project.ui.notification.NotificationGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -147,7 +147,7 @@ public class DumpInspectionDescriptionsAction extends AnAction implements DumbAw
 
     private static void doNotify(String message) {
         NotificationService.getInstance()
-            .newInfo(Notifications.SYSTEM_MESSAGES_GROUP)
+            .newInfo(NotificationGroup.SYSTEM_MESSAGES)
             .title(LocalizeValue.localizeTODO("Inspection descriptions dumped"))
             .content(LocalizeValue.ofNullable(message))
             .notify(null);

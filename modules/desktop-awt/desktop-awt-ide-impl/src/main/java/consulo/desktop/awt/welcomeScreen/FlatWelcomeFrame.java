@@ -30,7 +30,6 @@ import consulo.platform.Platform;
 import consulo.platform.os.UnixOperationSystem;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
-import consulo.project.ui.wm.BalloonLayout;
 import consulo.project.ui.wm.WelcomeFrameManager;
 import consulo.ui.Point2D;
 import consulo.ui.Rectangle2D;
@@ -56,8 +55,6 @@ import java.awt.event.WindowEvent;
  */
 public class FlatWelcomeFrame extends JFrameAsUIWindow implements Disposable, AccessibleContextAccessor {
     private final Runnable myClearInstance;
-    
-    private WelcomeDesktopBalloonLayoutImpl myBalloonLayout;
 
     private boolean myDisposed;
 
@@ -84,14 +81,6 @@ public class FlatWelcomeFrame extends JFrameAsUIWindow implements Disposable, Ac
         Point location = TargetAWT.to(ApplicationWindowStateService.getInstance().getLocation(WelcomeFrameManager.DIMENSION_KEY));
         Rectangle screenBounds = ScreenUtil.getScreenRectangle(location != null ? location : new Point(0, 0));
         setLocation(new Point(screenBounds.x + (screenBounds.width - getWidth()) / 2, screenBounds.y + (screenBounds.height - getHeight()) / 3));
-
-        myBalloonLayout = new WelcomeDesktopBalloonLayoutImpl(rootPane,
-            JBUI.insets(8),
-            screen.getEventListener(),
-            screen.getEventLocation()
-        );
-
-        screen.setWelcomeDesktopBalloonLayout(myBalloonLayout);
 
         setupCloseAction(this);
         MnemonicHelper.init(this);
@@ -183,11 +172,6 @@ public class FlatWelcomeFrame extends JFrameAsUIWindow implements Disposable, Ac
         myDisposed = true;
         super.dispose();
 
-        if (myBalloonLayout != null) {
-            myBalloonLayout.dispose();
-            myBalloonLayout = null;
-        }
-
         if (muTouchBarDisposable != null) {
             muTouchBarDisposable.disposeWithTree();
             muTouchBarDisposable = null;
@@ -201,9 +185,6 @@ public class FlatWelcomeFrame extends JFrameAsUIWindow implements Disposable, Ac
         return accessibleContext;
     }
 
-    public BalloonLayout getBalloonLayout() {
-        return myBalloonLayout;
-    }
 
     public Rectangle2D suggestChildFrameBounds() {
         return TargetAWT.from(getBounds());

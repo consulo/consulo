@@ -61,9 +61,6 @@ public class HeadlessStatusBar implements StatusBarEx {
         return Optional.empty();
     }
 
-    @Override
-    public void fireNotificationPopup(JComponent content, Color backgroundColor) {
-    }
 
     @Override
     public StatusBar createChild() {

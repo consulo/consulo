@@ -43,8 +43,6 @@ public interface StatusBar extends Disposable {
     
     <W extends StatusBarWidget> Optional<W> findWidget(Predicate<StatusBarWidget> predicate);
 
-    void fireNotificationPopup(JComponent content, Color backgroundColor);
-
     StatusBar createChild();
 
     StatusBar findChild(Component c);

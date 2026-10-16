@@ -10,6 +10,7 @@ module consulo.project.ui.impl {
     requires consulo.file.editor.api;
     requires consulo.module.content.api;
     requires consulo.external.service.api;
+    requires consulo.ui.ex.impl;
     
     exports consulo.project.ui.impl.internal to
         consulo.version.control.system.impl,
@@ -30,6 +31,10 @@ module consulo.project.ui.impl {
         consulo.web.ui.impl;
 
     exports consulo.project.ui.impl.internal.wm.statusBar to consulo.ide.impl;
+
+    exports consulo.project.ui.impl.internal.notification to
+        consulo.ide.impl,
+        consulo.desktop.awt.ide.impl;
 
     opens consulo.project.ui.impl.internal.wm.statusBar to
         consulo.util.xml.serializer,

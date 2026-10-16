@@ -17,6 +17,8 @@ package consulo.desktop.awt.welcomeScreen;
 
 import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
+import consulo.project.ui.impl.internal.notification.WelcomeNotifications;
+import consulo.project.ui.localize.ProjectUILocalize;
 import consulo.externalService.statistic.UsageTrigger;
 import consulo.ide.impl.welcomeScreen.WelcomeScreenSlider;
 import consulo.localize.LocalizeValue;
@@ -60,10 +62,7 @@ public class FlatWelcomeScreen extends JPanel implements WelcomeScreenSlider {
     private final FlatWelcomeFrame myWelcomeFrame;
     private final TitlelessDecorator myTitlelessDecorator;
 
-    private Consumer<List<NotificationType>> myEventListener;
-    private Supplier<Point> myEventLocation;
 
-    private WelcomeDesktopBalloonLayoutImpl myWelcomeDesktopBalloonLayout;
 
     @RequiredUIAccess
     public FlatWelcomeScreen(FlatWelcomeFrame welcomeFrame, TitlelessDecorator titlelessDecorator) {
@@ -160,37 +159,14 @@ public class FlatWelcomeScreen extends JPanel implements WelcomeScreenSlider {
         return component;
     }
 
-    public Consumer<List<NotificationType>> getEventListener() {
-        return myEventListener;
-    }
-
-    public Supplier<Point> getEventLocation() {
-        return myEventLocation;
-    }
-
-    public void setWelcomeDesktopBalloonLayout(WelcomeDesktopBalloonLayoutImpl welcomeDesktopBalloonLayout) {
-        myWelcomeDesktopBalloonLayout = welcomeDesktopBalloonLayout;
-    }
-
     @RequiredUIAccess
     private consulo.ui.Component createEventsLink() {
-        Button eventsButton = createActionComponent(LocalizeValue.localizeTODO("Notifications"),
+        Button eventsButton = createActionComponent(ProjectUILocalize.toolwindowNotificationsDisplayName(),
             PlatformIconGroup.toolwindowsNotifications(),
-            (e) -> myWelcomeDesktopBalloonLayout.showPopup()
+            (e) -> {
+            }
         );
-
-        eventsButton.setVisible(false);
-
-        myEventListener = types -> {
-            eventsButton.setIcon(NotificationIconBuilder.getIcon(types));
-            eventsButton.setVisible(true);
-        };
-
-        myEventLocation = () -> {
-            Point location = SwingUtilities.convertPoint(TargetAWT.to(eventsButton), 0, 0, getRootPane().getLayeredPane());
-            return new Point(location.x, location.y + 5);
-        };
-
+        WelcomeNotifications.install(eventsButton, myWelcomeFrame);
         return eventsButton;
     }
 

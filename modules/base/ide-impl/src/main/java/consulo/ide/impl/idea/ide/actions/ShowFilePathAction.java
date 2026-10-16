@@ -48,11 +48,10 @@ import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.event.HyperlinkEvent;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -64,21 +63,15 @@ public class ShowFilePathAction extends LegacyAnAction {
     private static final Logger LOG = Logger.getInstance(ShowFilePathAction.class);
 
     @UsedInPlugin
-    public static final NotificationListener FILE_SELECTING_LISTENER = new NotificationListener.Adapter() {
-        @Override
-        @RequiredUIAccess
-        protected void hyperlinkActivated(Notification notification, HyperlinkEvent e) {
-            URL url = e.getURL();
-            if (url != null) {
-                try {
-                    Platform.current().openFileInFileManager(new File(url.toURI()), UIAccess.current());
-                }
-                catch (URISyntaxException ex) {
-                    LOG.warn("invalid URL: " + url, ex);
-                }
-            }
-            notification.expire();
+    public static final NotificationListener FILE_SELECTING_LISTENER = (notification, e) -> {
+        String href = e.getDescription();
+        try {
+            Platform.current().openFileInFileManager(new File(new URI(href)), UIAccess.current());
         }
+        catch (URISyntaxException | IllegalArgumentException ex) {
+            LOG.warn("invalid URL: " + href, ex);
+        }
+        notification.expire();
     };
 
     public ShowFilePathAction() {

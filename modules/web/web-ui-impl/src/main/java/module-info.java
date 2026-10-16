@@ -57,6 +57,7 @@ module consulo.web.ui.impl {
     requires vaadin.menu.bar.flow;
     requires vaadin.ordered.layout.flow;
     requires vaadin.popover.flow;
+    requires vaadin.notification.flow;
     requires vaadin.progress.bar.flow;
     requires vaadin.renderer.flow;
     requires vaadin.select.flow;

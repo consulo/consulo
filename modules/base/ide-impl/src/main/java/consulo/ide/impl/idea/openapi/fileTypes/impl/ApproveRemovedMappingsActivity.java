@@ -18,7 +18,6 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.virtualFileSystem.fileType.FileNameMatcher;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import javax.swing.event.HyperlinkEvent;
 import java.util.List;
 
 /**
@@ -44,17 +43,13 @@ public class ApproveRemovedMappingsActivity implements PostStartupActivity {
                             "File extension " + matcher.getPresentableString() + " was reassigned to " + fileType.getDisplayName() +
                                 " <a href='revert'>Revert</a>"
                         ))
-                        .hyperlinkListener(new NotificationListener.Adapter() {
-                            @Override
-                            @RequiredUIAccess
-                            protected void hyperlinkActivated(Notification notification, HyperlinkEvent e) {
+                        .hyperlinkListener((notification, e) -> {
                                 Application.get().runWriteAction(() -> {
                                     FileTypeManager.getInstance().associate(PlainTextFileType.INSTANCE, matcher);
                                     removedMappings.add(matcher, fileType.getId(), true);
                                 });
                                 notification.expire();
-                            }
-                        })
+                            })
                         .notify(project);
                     Application.get().runWriteAction(() -> FileTypeManager.getInstance().associate(fileType, matcher));
                 }

@@ -380,6 +380,11 @@ public class WebUIInternalImpl extends UIInternal implements UIInternalEx {
     }
 
     @Override
+    public Toast _Components_toast() {
+        return new WebToastImpl();
+    }
+
+    @Override
     public MessageList _Components_messageList() {
         return new WebMessageListImpl();
     }

@@ -24,7 +24,6 @@ import consulo.dataContext.DataManager;
 import consulo.dataContext.UiDataProvider;
 import consulo.desktop.awt.ui.impl.window.JFrameAsUIWindow;
 import consulo.desktop.awt.ui.util.AppIconUtil;
-import consulo.desktop.awt.uiOld.DesktopBalloonLayoutImpl;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.application.FrameTitleUtil;
@@ -165,11 +164,6 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
 
             MouseGestureManager.getInstance().remove(DesktopIdeFrameImpl.this);
 
-            if (myBalloonLayout != null) {
-                ((DesktopBalloonLayoutImpl) myBalloonLayout).dispose();
-                myBalloonLayout = null;
-            }
-
             // clear both our and swing hard refs
             if (myRootPane != null) {
                 if (ApplicationManager.getApplication().isUnitTestMode()) {
@@ -238,7 +232,6 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
     private Project myProject;
 
     private IdeRootPane myRootPane;
-    private BalloonLayout myBalloonLayout;
     private IdeFrameDecorator myFrameDecorator;
     private PropertyChangeListener myWindowsBorderUpdater;
     private boolean myRestoreFullScreen;
@@ -287,8 +280,6 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
 
         setupCloseAction();
         MnemonicHelper.init(myJFrame);
-
-        myBalloonLayout = new DesktopBalloonLayoutImpl(myRootPane, JBUI.insets(8));
 
         // to show window thumbnail under Macs
         // http://lists.apple.com/archives/java-dev/2009/Dec/msg00240.html
@@ -571,10 +562,6 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
         return TargetAWT.from(b);
     }
 
-    @Override
-    public final BalloonLayout getBalloonLayout() {
-        return myBalloonLayout;
-    }
 
     @Override
     public boolean isInFullScreen() {

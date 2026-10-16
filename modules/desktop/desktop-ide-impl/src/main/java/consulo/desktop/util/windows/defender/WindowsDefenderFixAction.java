@@ -69,13 +69,11 @@ public class WindowsDefenderFixAction extends NotificationAction {
                 notification.expire();
                 myApplication.executeOnPooledThread(() -> {
                     if (WindowsDefenderChecker.getInstance().runExcludePathsCommand(e.getData(Project.KEY), myPaths)) {
-                        UIUtil.invokeLaterIfNeeded(() -> Notifications.Bus.notifyAndHide(
-                            NotificationService.getInstance()
-                                .newInfo(SystemHealthMonitorImpl.GROUP)
-                                .content(ExternalServiceLocalize.virusScanningFixSuccessNotification())
-                                .create(),
-                            e.getData(Project.KEY)
-                        ));
+                        NotificationService.getInstance()
+                            .newInfo(SystemHealthMonitorImpl.GROUP)
+                            .content(ExternalServiceLocalize.virusScanningFixSuccessNotification())
+                            .removeWhenExpired()
+                            .notify(e.getData(Project.KEY));
                     }
                 });
 

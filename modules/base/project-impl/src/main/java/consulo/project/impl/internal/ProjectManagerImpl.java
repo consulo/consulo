@@ -15,6 +15,7 @@
  */
 package consulo.project.impl.internal;
 
+import consulo.project.ui.notification.NotificationService;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
@@ -37,7 +38,6 @@ import consulo.project.ProjectOpenContext;
 import consulo.project.event.ProjectManagerListener;
 import consulo.project.internal.*;
 import consulo.project.localize.ProjectLocalize;
-import consulo.project.ui.notification.NotificationsManager;
 import consulo.proxy.EventDispatcher;
 import consulo.ui.MessageBoxes;
 import consulo.ui.UIAccess;
@@ -340,13 +340,12 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
 
     @RequiredUIAccess
     private static boolean ensureCouldCloseIfUnableToSave(Project project) {
-        ProjectStorageUtil.UnableToSaveProjectNotification[] notifications = NotificationsManager.getNotificationsManager()
-            .getNotificationsOfType(ProjectStorageUtil.UnableToSaveProjectNotification.class, project);
-        if (notifications.length == 0) {
+        List<ProjectStorageUtil.UnableToSaveProjectNotification> notifications = NotificationService.getInstance().getNotificationsOfType(ProjectStorageUtil.UnableToSaveProjectNotification.class, project);
+        if (notifications.isEmpty()) {
             return true;
         }
 
-        String fileNames = StringUtil.join(notifications[0].getFileNames(), "\n");
+        String fileNames = StringUtil.join(notifications.get(0).getFileNames(), "\n");
 
         return Messages.showDialog(
             project,

@@ -27,7 +27,9 @@ import consulo.ui.MenuBar;
 import consulo.ui.Rectangle2D;
 import consulo.ui.Size2D;
 import consulo.ui.UIAccess;
+import consulo.ui.Toast;
 import consulo.ui.Window;
+import consulo.ui.internal.ToastOverlay;
 import consulo.ui.WindowOptions;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.WindowCloseEvent;
@@ -52,7 +54,7 @@ import org.jspecify.annotations.Nullable;
  * @author VISTALL
  * @since 2026-08-16
  */
-public class DesktopQtWindowImpl extends QtComponentDelegate<QMainWindow> implements Window {
+public class DesktopQtWindowImpl extends QtComponentDelegate<QMainWindow> implements Window, ToastOverlay {
     private class QtWindow extends QMainWindow {
         QtWindow(@Nullable QMainWindow parent) {
             super(parent);
@@ -93,6 +95,8 @@ public class DesktopQtWindowImpl extends QtComponentDelegate<QMainWindow> implem
     private QtComponentDelegate<?> myContent;
 
     private final QWidget myCentralWidget;
+
+    private @Nullable DesktopQtToastStack myToastStack;
 
     private @Nullable Size2D mySize;
 
@@ -313,6 +317,35 @@ public class DesktopQtWindowImpl extends QtComponentDelegate<QMainWindow> implem
     @Override
     public void setTitle(String title) {
         myComponent.setWindowTitle(title);
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void showToast(Toast toast) {
+        toastStack().show(toast);
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setToastArea(@Nullable Component area) {
+        toastStack().setArea(area instanceof QtComponentDelegate<?> delegate ? delegate : null);
+    }
+
+    private DesktopQtToastStack toastStack() {
+        DesktopQtToastStack stack = myToastStack;
+        if (stack == null || stack.isDisposed()) {
+            stack = myToastStack = new DesktopQtToastStack(myCentralWidget);
+        }
+        return stack;
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void hideToast(Toast toast) {
+        DesktopQtToastStack stack = myToastStack;
+        if (stack != null && !stack.isDisposed()) {
+            stack.hide(toast);
+        }
     }
 
     @RequiredUIAccess

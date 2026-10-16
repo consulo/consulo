@@ -29,7 +29,6 @@ import consulo.ide.impl.idea.openapi.ui.MessageType;
 import consulo.ide.impl.idea.openapi.wm.impl.status.MemoryUsagePanel;
 import consulo.ide.impl.idea.openapi.wm.impl.status.widget.StatusBarWidgetWrapper;
 import consulo.ide.impl.idea.openapi.wm.impl.status.widget.StatusBarWidgetsActionGroup;
-import consulo.desktop.awt.ui.popup.NotificationPopup;
 import consulo.ide.impl.project.ui.impl.StatusWidgetBorders;
 import consulo.platform.Platform;
 import consulo.project.Project;
@@ -371,10 +370,6 @@ public class IdeStatusBarImpl extends JPanel implements StatusBarEx, Predicate<A
         return optional.get().notifyByBalloon(MessageType.from(type), htmlBody, icon, listener);
     }
 
-    @Override
-    public void fireNotificationPopup(JComponent content, Color backgroundColor) {
-        new NotificationPopup(this, content, backgroundColor);
-    }
 
     private static JComponent wrap(StatusBarWidget widget) {
         if (widget instanceof CustomStatusBarWidget) {

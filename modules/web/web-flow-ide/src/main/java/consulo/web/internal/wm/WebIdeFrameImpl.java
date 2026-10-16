@@ -22,7 +22,6 @@ import consulo.ide.impl.wm.impl.UnifiedStatusBarImpl;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.project.ui.internal.IdeFrameEx;
-import consulo.project.ui.wm.BalloonLayout;
 import consulo.project.ui.wm.FrameTitleBuilder;
 import consulo.project.ui.wm.IdeRootPaneNorthExtension;
 import consulo.project.ui.wm.StatusBar;
@@ -160,11 +159,6 @@ public class WebIdeFrameImpl implements IdeFrameEx, Disposable {
 
     @Override
     public <E extends IdeRootPaneNorthExtension> @Nullable E getNorthExtension(Class<? extends E> extensionClass) {
-        return null;
-    }
-
-    @Override
-    public @Nullable BalloonLayout getBalloonLayout() {
         return null;
     }
 

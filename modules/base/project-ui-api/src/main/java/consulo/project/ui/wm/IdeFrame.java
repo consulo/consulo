@@ -48,8 +48,6 @@ public interface IdeFrame extends FocusableFrame {
 
     <E extends IdeRootPaneNorthExtension> @Nullable E getNorthExtension(Class<? extends E> extensionClass);
 
-    @Nullable BalloonLayout getBalloonLayout();
-
     default boolean isInFullScreen() {
         return false;
     }

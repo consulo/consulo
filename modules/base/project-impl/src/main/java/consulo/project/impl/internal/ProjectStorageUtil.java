@@ -25,8 +25,6 @@ import consulo.project.internal.ProjectEx;
 import consulo.project.ui.internal.UnknownMacroNotification;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationService;
-import consulo.project.ui.notification.Notifications;
-import consulo.project.ui.notification.NotificationsManager;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ContainerUtil;
@@ -117,8 +115,7 @@ public class ProjectStorageUtil {
                         substitutor.invalidateUnknownMacros(macros2invalidate);
                     }
 
-                    UnknownMacroNotification[] notifications =
-                        NotificationsManager.getNotificationsManager().getNotificationsOfType(UnknownMacroNotification.class, project);
+                    List<UnknownMacroNotification> notifications = NotificationService.getInstance().getNotificationsOfType(UnknownMacroNotification.class, project);
                     for (UnknownMacroNotification notification : notifications) {
                         if (macros2invalidate.containsAll(notification.getMacros())) {
                             notification.expire();
@@ -138,10 +135,9 @@ public class ProjectStorageUtil {
     }
 
     public static void dropUnableToSaveProjectNotification(Project project, Collection<File> readOnlyFiles) {
-        UnableToSaveProjectNotification[] notifications =
-            NotificationsManager.getNotificationsManager().getNotificationsOfType(UnableToSaveProjectNotification.class, project);
-        if (notifications.length == 0) {
-            Notifications.Bus.notify(new UnableToSaveProjectNotification(project, readOnlyFiles), project);
+        List<UnableToSaveProjectNotification> notifications = NotificationService.getInstance().getNotificationsOfType(UnableToSaveProjectNotification.class, project);
+        if (notifications.isEmpty()) {
+            NotificationService.getInstance().notify(new UnableToSaveProjectNotification(project, readOnlyFiles), project);
         }
     }
 }

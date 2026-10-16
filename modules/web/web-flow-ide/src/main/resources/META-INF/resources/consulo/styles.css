@@ -262,6 +262,12 @@ vaadin-split-layout.web-split-layout-no-divider::part(splitter)
 {
   display: inline-block;
 }
+
+.web-label.web-label-filled
+{
+  display: flex;
+  align-items: center;
+}
 .web-menu-bar
 {
   border-bottom: 1px solid var(--consulo-component-border-color, lightgray);

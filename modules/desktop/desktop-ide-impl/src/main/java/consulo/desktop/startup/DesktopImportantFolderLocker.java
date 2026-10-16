@@ -24,7 +24,7 @@ import consulo.ide.impl.idea.openapi.application.JetBrainsProtocolHandler;
 import consulo.ide.localize.IdeLocalize;
 import consulo.logging.Logger;
 import consulo.project.ui.notification.NotificationService;
-import consulo.project.ui.notification.Notifications;
+import consulo.project.ui.notification.NotificationGroup;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.MultiMap;
 import consulo.util.io.FileUtil;
@@ -371,7 +371,7 @@ public final class DesktopImportantFolderLocker implements ImportantFolderLocker
                             if (!tokenOK) {
                                 log(new UnsupportedOperationException("unauthorized request: " + command));
                                 NotificationService.getInstance()
-                                    .newWarn(Notifications.SYSTEM_MESSAGES_GROUP)
+                                    .newWarn(NotificationGroup.SYSTEM_MESSAGES)
                                     .title(IdeLocalize.activationAuthTitle())
                                     .content(IdeLocalize.activationAuthMessage())
                                     .notify(null);

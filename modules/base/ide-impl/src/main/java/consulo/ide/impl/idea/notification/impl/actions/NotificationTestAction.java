@@ -34,7 +34,7 @@ import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
-import javax.swing.event.HyperlinkEvent;
+import consulo.ui.event.HyperlinkEvent;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -255,7 +255,7 @@ public class NotificationTestAction extends AnAction implements DumbAware {
 
         @Override
         @RequiredUIAccess
-        public void hyperlinkUpdate(Notification notification, HyperlinkEvent event) {
+        public void hyperlinkActivated(Notification notification, HyperlinkEvent event) {
             if (MessageDialogBuilder.yesNo("VcsBranchMappingChangedNotification Listener", event.getDescription() + "      Expire?")
                 .isYes()) {
                 myNotification.expire();

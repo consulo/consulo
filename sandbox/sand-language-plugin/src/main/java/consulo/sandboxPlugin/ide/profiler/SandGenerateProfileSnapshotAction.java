@@ -32,7 +32,7 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationService;
-import consulo.project.ui.notification.Notifications;
+import consulo.project.ui.notification.NotificationGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.AnActionWithSyncUpdate;
@@ -130,7 +130,7 @@ public class SandGenerateProfileSnapshotAction extends DumbAwareAction implement
                     return;
                 }
 
-                Notification.Builder notification = myNotificationService.newInfo(Notifications.SYSTEM_MESSAGES_GROUP)
+                Notification.Builder notification = myNotificationService.newInfo(NotificationGroup.SYSTEM_MESSAGES)
                     .title(LocalizeValue.localizeTODO("Sample profile snapshot created"))
                     .content(LocalizeValue.localizeTODO(file.getPath()));
                 VirtualFile snapshot = mySnapshot;
@@ -148,7 +148,7 @@ public class SandGenerateProfileSnapshotAction extends DumbAwareAction implement
             public void onThrowable(Throwable error) {
                 LOG.warn("Failed to create the sample profile snapshot", error);
                 String message = error.getMessage();
-                myNotificationService.newError(Notifications.SYSTEM_MESSAGES_GROUP)
+                myNotificationService.newError(NotificationGroup.SYSTEM_MESSAGES)
                     .title(LocalizeValue.localizeTODO("Failed to create the sample profile snapshot"))
                     .content(LocalizeValue.localizeTODO(message == null ? error.getClass().getSimpleName() : message))
                     .notify(project);

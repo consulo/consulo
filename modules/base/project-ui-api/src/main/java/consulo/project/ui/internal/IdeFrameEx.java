@@ -15,6 +15,8 @@
  */
 package consulo.project.ui.internal;
 
+import consulo.application.Application;
+import consulo.project.ui.notification.Notification;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.dataholder.Key;
@@ -44,5 +46,18 @@ public interface IdeFrameEx extends IdeFrame {
 
   @RequiredUIAccess
   default void initialize() {
+  }
+
+  /**
+   * Shows the notification as a toast over this frame, until it is hidden.
+   */
+  @RequiredUIAccess
+  default void showNotification(Notification notification) {
+    Application.get().getInstance(NotificationToastService.class).show(this, notification);
+  }
+
+  @RequiredUIAccess
+  default void hideNotification(Notification notification) {
+    Application.get().getInstance(NotificationToastService.class).hide(this, notification);
   }
 }

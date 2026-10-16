@@ -25,7 +25,7 @@ import consulo.ui.ModalityState;
 import consulo.ui.ex.awt.UIUtil;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.event.HyperlinkEvent;
+import consulo.ui.event.HyperlinkEvent;
 import java.util.*;
 
 public abstract class GenericNotifierImpl<T, Key> {
@@ -123,7 +123,7 @@ public abstract class GenericNotifierImpl<T, Key> {
             removeLazyNotification(obj);
             return true;
         }
-        Notifications.Bus.notify(notification, myProject);
+        NotificationService.getInstance().notify(notification, myProject);
         return false;
     }
 
@@ -160,7 +160,7 @@ public abstract class GenericNotifierImpl<T, Key> {
 
     private class MyListener implements NotificationListener {
         @Override
-        public void hyperlinkUpdate(Notification notification, HyperlinkEvent event) {
+        public void hyperlinkActivated(Notification notification, HyperlinkEvent event) {
             MyNotification concreteNotification = (MyNotification) notification;
             T obj = concreteNotification.getObj();
             boolean state = ask(obj, event.getDescription());

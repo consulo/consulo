@@ -20,7 +20,7 @@ import consulo.index.io.storage.AbstractStorage;
 import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
 import consulo.project.ui.notification.NotificationService;
-import consulo.project.ui.notification.Notifications;
+import consulo.project.ui.notification.NotificationGroup;
 import consulo.ui.UIAccess;
 import consulo.util.collection.primitive.ints.IntSet;
 import consulo.util.collection.primitive.ints.IntSets;
@@ -29,7 +29,6 @@ import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.ManagingFS;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.event.HyperlinkEvent;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -132,17 +131,15 @@ public class ChangeListStorageImpl implements ChangeListStorage {
                              "Please attach log files from <a href=\"file\">" + logFile + "</a><br>" +
                              "to the <a href=\"url\">YouTrack issue</a>";*/
         NotificationService.getInstance()
-            .newError(Notifications.SYSTEM_MESSAGES_GROUP)
+            .newError(NotificationGroup.SYSTEM_MESSAGES)
             .title(LocalizeValue.localizeTODO("Local History is broken"))
             .content(LocalizeValue.localizeTODO(message /*+ createIssuePart*/))
             .hyperlinkListener((notification, event) -> {
-                if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-                    if ("url".equals(event.getDescription())) {
-                        Platform.current().openInBrowser("http://youtrack.jetbrains.net/issue/IDEA-71270");
-                    }
-                    else {
-                        Platform.current().openDirectoryInFileManager(ContainerPathManager.get().getLogPath(), UIAccess.current());
-                    }
+                if ("url".equals(event.getDescription())) {
+                    Platform.current().openInBrowser("http://youtrack.jetbrains.net/issue/IDEA-71270");
+                }
+                else {
+                    Platform.current().openDirectoryInFileManager(ContainerPathManager.get().getLogPath(), UIAccess.current());
                 }
             })
             .notify(null);

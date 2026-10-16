@@ -284,11 +284,6 @@ public class UnifiedStatusBarImpl implements StatusBarEx {
   }
 
   @Override
-  public void fireNotificationPopup(JComponent content, Color backgroundColor) {
-
-  }
-
-  @Override
   public StatusBar createChild() {
     return null;
   }

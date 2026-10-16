@@ -14,10 +14,6 @@ action.notification.settings.description:
     text: Edit notification settings
 action.notification.settings.text:
     text: Settings
-action.notification.show.balloons.description:
-    text: Enable or suppress notification balloons
-action.notification.show.balloons.text:
-    text: Show balloons
 action.recent.projects.edit.group.text:
     text: Edit…
 action.recent.projects.move.to.group.text:
@@ -44,6 +40,20 @@ error.recent.projects.name.cannot.be.empty:
     text: Name cannot be empty.
 label.recent.projects.enter.group.name:
     text: 'Enter group name:'
+notification.list.empty:
+    text: No notifications
+notification.list.suggestions:
+    text: Suggestions
+notification.list.timeline:
+    text: Timeline
+notification.settings.display.balloons:
+    text: Display balloon notifications
+notification.settings.log:
+    text: Show in the Notifications tool window
+notification.settings.popup.type:
+    text: 'Popup:'
+notification.settings.system:
+    text: Enable system notifications
 toolwindow.messages.display.name:
     text: Messages
 toolwindow.notifications.display.name:

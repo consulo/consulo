@@ -34,7 +34,7 @@ import consulo.process.local.ExecUtil;
 import consulo.process.util.CapturingProcessUtil;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationService;
-import consulo.project.ui.notification.Notifications;
+import consulo.project.ui.notification.NotificationGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.LegacyDumbAwareAction;
@@ -104,7 +104,7 @@ public class CreateDesktopEntryAction extends LegacyDumbAwareAction {
             indicator.setFraction(indicator.getFraction() + step);
 
             NotificationService.getInstance()
-                .newInfo(Notifications.SYSTEM_MESSAGES_GROUP)
+                .newInfo(NotificationGroup.SYSTEM_MESSAGES)
                 .title(LocalizeValue.localizeTODO("Desktop entry created"))
                 .content(ApplicationLocalize.desktopEntrySuccess(Application.get().getName()))
                 .notify(null);
@@ -114,7 +114,7 @@ public class CreateDesktopEntryAction extends LegacyDumbAwareAction {
             if (!StringUtil.isEmptyOrSpaces(message)) {
                 LOG.warn(e);
                 NotificationService.getInstance()
-                    .newError(Notifications.SYSTEM_MESSAGES_GROUP)
+                    .newError(NotificationGroup.SYSTEM_MESSAGES)
                     .title(LocalizeValue.localizeTODO("Failed to create desktop entry"))
                     .content(LocalizeValue.localizeTODO(message))
                     .notify(project);

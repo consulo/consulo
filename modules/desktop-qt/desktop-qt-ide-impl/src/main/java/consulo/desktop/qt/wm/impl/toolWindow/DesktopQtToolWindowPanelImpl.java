@@ -157,6 +157,7 @@ public class DesktopQtToolWindowPanelImpl implements ToolWindowPanel, PseudoComp
     private final Map<ToolWindowAnchor, ToolWindowInternalDecorator> myAnchor2Sliding = new HashMap<>();
 
     private final DockLayout myRoot = DockLayout.create(Space.NONE);
+    private final DockLayout myContent = DockLayout.create(Space.NONE);
 
     private final UnifiedToolWindowSplitters mySplitters;
 
@@ -175,19 +176,27 @@ public class DesktopQtToolWindowPanelImpl implements ToolWindowPanel, PseudoComp
         // where it shares one row with the widgets, like the awt frame does
         myRoot.top(myTopStripe);
         myRoot.left(myLeftStripe);
-        myRoot.center(mySplitters.getRootSplitter());
+        myContent.center(mySplitters.getRootSplitter());
+        myRoot.center(myContent);
         myRoot.right(myRightStripe);
         myRoot.borderBuilder().topSet().apply();
     }
 
     @RequiredUIAccess
     private void setRootSplitter(ThreeComponentSplitLayout rootSplitter) {
-        myRoot.center(rootSplitter);
+        myContent.center(rootSplitter);
     }
 
     @Override
     public Component getComponent() {
         return myRoot;
+    }
+
+    /**
+     * The area between the stripes, which the toasts of the frame float in.
+     */
+    public Component getContentComponent() {
+        return myContent;
     }
 
     public DesktopQtToolWindowStripeImpl getBottomStripe() {

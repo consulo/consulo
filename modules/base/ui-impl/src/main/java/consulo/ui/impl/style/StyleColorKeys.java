@@ -109,6 +109,11 @@ public final class StyleColorKeys {
         ourKeys.put(ComponentColors.NOTIFICATION_INFO_BACKGROUND, "Notification.ToolWindow.informativeBackground");
         ourKeys.put(ComponentColors.NOTIFICATION_WARNING_BACKGROUND, "Notification.ToolWindow.warningBackground");
         ourKeys.put(ComponentColors.NOTIFICATION_ERROR_BACKGROUND, "Notification.ToolWindow.errorBackground");
+
+        ourKeys.put(ComponentColors.TOAST_INFO_BACKGROUND, "Toast.infoBackground");
+        ourKeys.put(ComponentColors.TOAST_SUCCESS_BACKGROUND, "Toast.successBackground");
+        ourKeys.put(ComponentColors.TOAST_WARNING_BACKGROUND, "Toast.warningBackground");
+        ourKeys.put(ComponentColors.TOAST_ERROR_BACKGROUND, "Toast.errorBackground");
     }
 
     public static @Nullable String getKey(StyleColorValue colorValue) {

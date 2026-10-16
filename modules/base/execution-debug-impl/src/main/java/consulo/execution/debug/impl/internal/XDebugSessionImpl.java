@@ -999,11 +999,9 @@ public class XDebugSessionImpl implements XDebugSession {
         NotificationService.getInstance()
             .newOfType(NOTIFICATION_GROUP, consulo.project.ui.notification.NotificationType.from(type))
             .content(LocalizeValue.localizeTODO(message))
-            .optionalHyperlinkListener(listener == null ? null : (notification, event) -> {
-                if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-                    listener.hyperlinkUpdate(event);
-                }
-            })
+            .optionalHyperlinkListener(listener == null ? null : (notification, event) -> listener.hyperlinkUpdate(
+                new HyperlinkEvent(this, HyperlinkEvent.EventType.ACTIVATED, null, event.getDescription())
+            ))
             .notify(myProject);
     }
 

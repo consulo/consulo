@@ -218,6 +218,10 @@ public abstract class UIInternal {
         throw new UnsupportedOperationException();
     }
 
+    public Toast _Components_toast() {
+        throw new UnsupportedOperationException();
+    }
+
     public MessageList _Components_messageList() {
         throw new UnsupportedOperationException();
     }

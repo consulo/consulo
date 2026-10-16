@@ -20,7 +20,6 @@ import consulo.application.Application;
 import consulo.application.ui.UISettings;
 import consulo.application.ui.event.UISettingsListener;
 import consulo.dataContext.DataManager;
-import consulo.desktop.awt.uiOld.DesktopBalloonLayoutImpl;
 import consulo.desktop.awt.ui.mac.screenmenu.Menu;
 import consulo.desktop.awt.wm.impl.mac.MacScreenIdeMenuBar;
 import consulo.desktop.awt.wm.navigationToolbar.IdeRootPaneNorthExtensionWithDecorator;
@@ -337,11 +336,6 @@ public class IdeRootPane extends JRootPane implements Disposable, UISettingsList
         updateStatusBarVisibility();
         for (IdeRootPaneNorthExtension component : myNorthComponents.values()) {
             component.uiSettingsChanged(uiSettings);
-        }
-        IdeFrame frame = DesktopIdeFrameUtil.findIdeFrameFromParent(this);
-        BalloonLayout layout = frame != null ? frame.getBalloonLayout() : null;
-        if (layout instanceof DesktopBalloonLayoutImpl) {
-            ((DesktopBalloonLayoutImpl) layout).queueRelayout();
         }
     }
 

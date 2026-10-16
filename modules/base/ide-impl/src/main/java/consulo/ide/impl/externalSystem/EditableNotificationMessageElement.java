@@ -19,6 +19,7 @@ import consulo.ide.impl.idea.ide.IdeTooltipManagerImpl;
 import consulo.ide.impl.idea.ide.errorTreeView.*;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.event.NotificationListener;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.navigation.Navigatable;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
@@ -188,7 +189,10 @@ public class EditableNotificationMessageElement extends NotificationMessageEleme
         if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
           NotificationListener notificationListener = myNotification.getListener();
           if (notificationListener != null) {
-            notificationListener.hyperlinkUpdate(myNotification, e);
+            notificationListener.hyperlinkActivated(
+              myNotification,
+              new consulo.ui.event.HyperlinkEvent(TargetAWT.wrap((java.awt.Component) e.getSource()), e.getDescription())
+            );
           }
         }
       }

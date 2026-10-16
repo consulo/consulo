@@ -15,6 +15,7 @@
  */
 package consulo.project.impl.internal.store;
 
+import consulo.project.ui.notification.NotificationService;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.AccessRule;
 import consulo.application.Application;
@@ -43,7 +44,6 @@ import consulo.util.concurrent.coroutine.CoroutineScope;
 import consulo.project.impl.internal.ProjectImpl;
 import consulo.project.impl.internal.ProjectStorageUtil;
 import consulo.project.macro.ProjectPathMacroManager;
-import consulo.project.ui.notification.NotificationsManager;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
@@ -264,9 +264,8 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
 
   @Override
   protected final void doSave(boolean force, @Nullable List<SaveSession> saveSessions, List<Pair<SaveSession, File>> readonlyFiles) {
-    ProjectStorageUtil.UnableToSaveProjectNotification[] notifications =
-            NotificationsManager.getNotificationsManager().getNotificationsOfType(ProjectStorageUtil.UnableToSaveProjectNotification.class, myProject);
-    if (notifications.length > 0) {
+    List<ProjectStorageUtil.UnableToSaveProjectNotification> notifications = NotificationService.getInstance().getNotificationsOfType(ProjectStorageUtil.UnableToSaveProjectNotification.class, myProject);
+    if (!notifications.isEmpty()) {
       throw new SaveCancelledException();
     }
 

@@ -65,6 +65,7 @@ import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awt.util.FocusWatcher;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.internal.ToastOverlay;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.internal.ToolWindowEx;
 import consulo.ui.ex.keymap.Keymap;
@@ -473,6 +474,9 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
         Disposer.register(myProject, getToolWindowPanel());
         JFrame jFrame = (JFrame) TargetAWT.to(myFrame.getWindow());
         ((IdeRootPane) jFrame.getRootPane()).setToolWindowsPane(myToolWindowPanel);
+        if (myFrame.getWindow() instanceof ToastOverlay overlay) {
+            overlay.setToastArea(TargetAWT.wrap(getToolWindowPanel().getMyLayeredPane()));
+        }
         IdeStatusBarImpl statusBar = (IdeStatusBarImpl) myFrame.getStatusBar();
         statusBar.addToLeft(((DesktopToolWindowPanelImpl) myToolWindowPanel).getBottomStripe());
 
@@ -547,6 +551,9 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
         // Remove ToolWindowsPane
         JFrame window = (JFrame) TargetAWT.to(myFrame.getWindow());
         ((IdeRootPane) window.getRootPane()).setToolWindowsPane(null);
+        if (myFrame.getWindow() instanceof ToastOverlay overlay) {
+            overlay.setToastArea(null);
+        }
         windowManager.releaseFrame(myFrame);
         updateToolWindowsPane();
 

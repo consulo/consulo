@@ -27,7 +27,6 @@ import consulo.desktop.awt.ui.mac.screenmenu.Menu;
 import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.project.ui.internal.IdeFrameEx;
-import consulo.project.ui.wm.BalloonLayout;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.IdeRootPaneNorthExtension;
 import consulo.project.ui.wm.StatusBar;
@@ -133,10 +132,6 @@ public class FrameWrapperPeerFactoryImpl implements FrameWrapperPeerFactory {
       return myOwner.getNorthExtension(extensionClass);
     }
 
-    @Override
-    public BalloonLayout getBalloonLayout() {
-      return null;
-    }
 
     private void updateTitle() {
       DesktopIdeFrameImpl.updateTitle(this, myFrameTitle, myFileTitle, myFile);
@@ -206,10 +201,6 @@ public class FrameWrapperPeerFactoryImpl implements FrameWrapperPeerFactory {
       return null;
     }
 
-    @Override
-    public @Nullable BalloonLayout getBalloonLayout() {
-      return null;
-    }
 
     @Override
     public Rectangle2D suggestChildFrameBounds() {

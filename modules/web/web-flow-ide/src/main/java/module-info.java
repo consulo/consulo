@@ -70,6 +70,7 @@ module consulo.web.ide {
     requires vaadin.button.flow;
     requires vaadin.card.flow;
     requires vaadin.messages.flow;
+    requires vaadin.notification.flow;
     requires vaadin.checkbox.flow;
     requires vaadin.combo.box.flow;
     requires vaadin.context.menu.flow;

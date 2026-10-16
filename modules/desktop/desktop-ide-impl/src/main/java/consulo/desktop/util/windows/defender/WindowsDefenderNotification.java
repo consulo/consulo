@@ -15,7 +15,6 @@
  */
 package consulo.desktop.util.windows.defender;
 
-import consulo.project.ui.internal.NotificationFullContent;
 import consulo.project.ui.notification.Notification;
 
 import java.nio.file.Path;
@@ -24,7 +23,7 @@ import java.util.Collection;
 /**
  * from kotlin
  */
-public class WindowsDefenderNotification extends Notification implements NotificationFullContent {
+public class WindowsDefenderNotification extends Notification {
     private final Collection<Path> myPaths;
 
     public WindowsDefenderNotification(Notification.Builder notificationBuilder, Collection<Path> paths) {

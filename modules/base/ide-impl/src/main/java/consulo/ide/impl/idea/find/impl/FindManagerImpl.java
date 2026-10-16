@@ -35,7 +35,7 @@ import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.ide.impl.idea.find.EditorSearchSession;
 import consulo.ide.impl.idea.find.findUsages.FindUsagesManager;
 import consulo.ide.impl.idea.find.impl.livePreview.SearchResults;
-import consulo.ide.impl.idea.notification.impl.NotificationsConfigurationImpl;
+import consulo.project.ui.impl.internal.notification.NotificationsConfigurationImpl;
 import consulo.ide.impl.idea.openapi.fileTypes.impl.AbstractFileType;
 import consulo.language.Language;
 import consulo.language.ast.IElementType;

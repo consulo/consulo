@@ -18,7 +18,6 @@ package consulo.it.internal;
 import consulo.project.Project;
 import consulo.project.ui.internal.IdeFrameEx;
 import consulo.project.ui.internal.StatusBarEx;
-import consulo.project.ui.wm.BalloonLayout;
 import consulo.project.ui.wm.IdeRootPaneNorthExtension;
 import consulo.project.ui.wm.StatusBar;
 import consulo.ui.Rectangle2D;
@@ -70,10 +69,6 @@ public class HeadlessIdeFrame implements IdeFrameEx {
         return null;
     }
 
-    @Override
-    public @Nullable BalloonLayout getBalloonLayout() {
-        return null;
-    }
 
     @Override
     public Window getWindow() {

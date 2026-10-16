@@ -67,7 +67,7 @@ public class IdeStorageNotificationService implements StorageNotificationService
         @Nullable ComponentManager project
     ) {
         myNotificationService
-            .newOfType(Notifications.SYSTEM_MESSAGES_GROUP, consulo.project.ui.notification.NotificationType.from(notificationType))
+            .newOfType(NotificationGroup.SYSTEM_MESSAGES, consulo.project.ui.notification.NotificationType.from(notificationType))
             .title(LocalizeValue.localizeTODO(title))
             .content(LocalizeValue.localizeTODO(text))
             .notify(ObjectUtil.tryCast(project, Project.class));
@@ -118,8 +118,7 @@ public class IdeStorageNotificationService implements StorageNotificationService
 
     private static List<String> getMacrosFromExistingNotifications(Project project) {
         List<String> notified = new ArrayList<>();
-        NotificationsManager manager = NotificationsManager.getNotificationsManager();
-        for (UnknownMacroNotification notification : manager.getNotificationsOfType(UnknownMacroNotification.class, project)) {
+        for (UnknownMacroNotification notification : NotificationService.getInstance().getNotificationsOfType(UnknownMacroNotification.class, project)) {
             notified.addAll(notification.getMacros());
         }
         return notified;

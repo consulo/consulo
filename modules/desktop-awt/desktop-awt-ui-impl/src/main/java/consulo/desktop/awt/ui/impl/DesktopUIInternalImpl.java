@@ -189,6 +189,11 @@ public class DesktopUIInternalImpl extends UIInternal implements UIInternalEx {
     }
 
     @Override
+    public Toast _Components_toast() {
+        return new DesktopToastImpl();
+    }
+
+    @Override
     public MessageList _Components_messageList() {
         return new DesktopMessageListImpl();
     }

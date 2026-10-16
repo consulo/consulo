@@ -44,6 +44,7 @@ import consulo.ui.ex.toolWindow.InternalDecoratorListener;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowInternalDecorator;
 import consulo.ui.ex.toolWindow.ToolWindowStripeButton;
+import consulo.ui.internal.ToastOverlay;
 import consulo.web.ui.impl.internal.base.TargetVaadin;
 import consulo.ui.layout.DockLayout;
 import consulo.web.ui.impl.internal.WebRootPaneImpl;
@@ -109,11 +110,17 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
         ((UnifiedStatusBarImpl) myFrame.getStatusBar()).addToLeft(toolWindowPanel.getBottomStripe());
 
         ((WebIdeFrameImpl) myFrame).show();
+        if (myFrame.getWindow() instanceof ToastOverlay overlay) {
+            overlay.setToastArea(toolWindowPanel.getContentComponent());
+        }
     }
 
     private void projectClosed() {
         WindowManagerEx windowManager = (WindowManagerEx) myWindowManager.get();
 
+        if (myFrame != null && myFrame.getWindow() instanceof ToastOverlay overlay) {
+            overlay.setToastArea(null);
+        }
         windowManager.releaseFrame(myFrame);
 
         myFrame = null;
