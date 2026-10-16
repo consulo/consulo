@@ -202,7 +202,7 @@ public class OptimizeImportsAction extends AnAction implements AnActionWithAsync
             if (editor != null
                 && EditorSettingsExternalizable.getInstance().getOptions().SHOW_NOTIFICATION_AFTER_OPTIMIZE_IMPORTS_ACTION) {
                 optimizer.setCollectInfo(true);
-                optimizer.setPostRunnable(() -> {
+                optimizer.addPostRunnable(() -> {
                     LayoutCodeInfoCollector collector = optimizer.getInfoCollector();
                     if (collector != null) {
                         LocalizeValue info = collector.getOptimizeImportsNotification();
