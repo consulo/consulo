@@ -3,7 +3,7 @@
   "project" : "consulo",
   "projectVersion" : "master",
   "sourceLocale" : "en-US",
-  "generatedAt" : "2026-10-16T11:32:41.762053270Z",
+  "generatedAt" : "2026-10-17T13:58:16.169972015Z",
   "documents" : {
     "consulo.ai.AILocalize" : {
       "source" : {
@@ -92,7 +92,7 @@
     },
     "consulo.externalService.ExternalServiceLocalize" : {
       "source" : {
-        "sig" : "68af1ba30f95c1c808747697f721b9e7"
+        "sig" : "5bce5b151e3de643e965dec3be2b10a2"
       }
     },
     "consulo.externalService.FeatureStatisticsLocalize" : {
@@ -137,7 +137,7 @@
     },
     "consulo.ide.IdeLocalize" : {
       "source" : {
-        "sig" : "93a82b2cc8e7e86ba022112ff8fd1b97"
+        "sig" : "4257f9a7d4239ff439b473c73e430ed4"
       }
     },
     "consulo.ide.tipOfDay.impl.TipOfDayLocalize" : {
@@ -282,7 +282,7 @@
     },
     "consulo.project.ui.ProjectUILocalize" : {
       "source" : {
-        "sig" : "079592eef99ad56d331a6041060e7607"
+        "sig" : "2615c673ab393e09b7753195e6aabf6b"
       }
     },
     "consulo.project.ui.view.ProjectUIViewLocalize" : {
