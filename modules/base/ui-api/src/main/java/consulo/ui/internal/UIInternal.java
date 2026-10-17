@@ -170,6 +170,10 @@ public abstract class UIInternal {
         throw new UnsupportedOperationException();
     }
 
+    public OptionButton _Components_optionButton(LocalizeValue text) {
+        throw new UnsupportedOperationException();
+    }
+
     public ToggleButton _Components_toggleButton(LocalizeValue text) {
         throw new UnsupportedOperationException();
     }

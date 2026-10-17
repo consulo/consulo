@@ -112,6 +112,11 @@ public class HeadlessUIInternal extends UIInternal implements UIInternalEx {
     }
 
     @Override
+    public OptionButton _Components_optionButton(LocalizeValue text) {
+        return new HeadlessOptionButton(text);
+    }
+
+    @Override
     public DockLayout _Layouts_dock(Space gapInPixels) {
         return new HeadlessDockLayout();
     }

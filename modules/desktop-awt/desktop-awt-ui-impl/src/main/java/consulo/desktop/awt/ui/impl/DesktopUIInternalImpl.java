@@ -523,6 +523,11 @@ public class DesktopUIInternalImpl extends UIInternal implements UIInternalEx {
     }
 
     @Override
+    public OptionButton _Components_optionButton(LocalizeValue text) {
+        return new DesktopOptionButtonImpl(text);
+    }
+
+    @Override
     public Hyperlink _Components_hyperlink(LocalizeValue text) {
         return new DesktopHyperlinkImpl(text);
     }

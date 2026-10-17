@@ -385,6 +385,11 @@ public class DesktopQtUIInternalImpl extends UIInternal implements UIInternalEx 
     }
 
     @Override
+    public OptionButton _Components_optionButton(LocalizeValue text) {
+        return new DesktopQtOptionButtonImpl(text);
+    }
+
+    @Override
     public ToggleButton _Components_toggleButton(LocalizeValue text) {
         return new DesktopQtToggleButtonImpl(text);
     }

@@ -69,3 +69,27 @@ vaadin-button.consulo-help-button::part(label) {
     align-items: center;
     line-height: 1;
 }
+
+vaadin-button.consulo-option-button {
+    padding-inline-end: 0;
+}
+
+.consulo-option-button-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-self: stretch;
+    width: 20px;
+    margin-inline-start: 8px;
+    border-inline-start: 1px solid color-mix(in srgb, currentColor 30%, transparent);
+    cursor: default;
+}
+
+.consulo-option-button-arrow::before {
+    content: '';
+    width: 5px;
+    height: 5px;
+    border-right: 1.5px solid currentColor;
+    border-bottom: 1.5px solid currentColor;
+    transform: translateY(-2px) rotate(45deg);
+}

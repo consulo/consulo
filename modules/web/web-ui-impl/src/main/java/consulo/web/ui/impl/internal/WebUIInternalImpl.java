@@ -334,6 +334,11 @@ public class WebUIInternalImpl extends UIInternal implements UIInternalEx {
     }
 
     @Override
+    public OptionButton _Components_optionButton(LocalizeValue text) {
+        return new WebOptionButtonImpl(text);
+    }
+
+    @Override
     public ToggleButton _Components_toggleButton(LocalizeValue text) {
         return new WebToggleButtonImpl(text);
     }

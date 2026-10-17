@@ -148,6 +148,15 @@ public class WebPopupMenuImpl extends VaadinComponentDelegate<WebPopupMenuImpl.V
     @Override
     @RequiredUIAccess
     public void show(int relativeX, int relativeY) {
+        open(relativeX, relativeY, false);
+    }
+
+    @RequiredUIAccess
+    public void showBelowTarget() {
+        open(0, 0, true);
+    }
+
+    private void open(int relativeX, int relativeY, boolean belowTarget) {
         Vaadin menu = getVaadinComponent();
 
         // vaadin only attaches the overlay by itself on the browser driven open, a programmatic one has to
@@ -175,7 +184,7 @@ public class WebPopupMenuImpl extends VaadinComponentDelegate<WebPopupMenuImpl.V
                 const target = $0;
                 const rect = target.getBoundingClientRect();
                 this.open({
-                    detail: {x: rect.left + $1, y: rect.top + $2},
+                    detail: {x: rect.left + $1, y: ($3 ? rect.bottom : rect.top) + $2},
                     target: target,
                     composedPath: () => [target],
                     preventDefault: () => {},
@@ -184,7 +193,8 @@ public class WebPopupMenuImpl extends VaadinComponentDelegate<WebPopupMenuImpl.V
                 """,
             myTarget.getElement(),
             relativeX,
-            relativeY
+            relativeY,
+            belowTarget
         );
     }
 }

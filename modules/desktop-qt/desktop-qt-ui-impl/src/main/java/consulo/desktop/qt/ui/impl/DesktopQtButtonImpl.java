@@ -51,12 +51,12 @@ import java.util.Set;
  * @since 2026-08-16
  */
 public class DesktopQtButtonImpl extends QtComponentDelegate<QPushButton> implements Button, DesktopQtIconOwner {
-    private class HighlightPushButton extends QPushButton {
+    protected class HighlightPushButton extends QPushButton {
         private boolean myFieldHeight;
 
         private @Nullable QLineEdit myMetricsLineEdit;
 
-        private HighlightPushButton(QWidget parent) {
+        protected HighlightPushButton(QWidget parent) {
             super(parent);
         }
 
@@ -127,7 +127,7 @@ public class DesktopQtButtonImpl extends QtComponentDelegate<QPushButton> implem
      * with the padding and the minimum width the awt look and feel carries. The frame is left to the style, which
      * is what keeps a plain button looking native.
      */
-    private static final String DEFAULT_STYLE_SHEET = "QPushButton { padding: " + TEXT_PADDING + "; min-width: 42px; }";
+    private static final String DEFAULT_STYLE_SHEET = "QPushButton { padding: %s; min-width: 42px; }";
 
     /**
      * An icon only button carries no text to be measured by, and flatlaf drops the minimum width for it and pads
@@ -316,7 +316,11 @@ public class DesktopQtButtonImpl extends QtComponentDelegate<QPushButton> implem
         return "rgba(%d, %d, %d, %d)".formatted(rgb.getRed(), rgb.getGreen(), rgb.getBlue(), rgb.getAlpha());
     }
 
-    private void updateStyleSheet() {
+    protected String textPadding() {
+        return TEXT_PADDING;
+    }
+
+    protected void updateStyleSheet() {
         boolean iconOnly = myIcon != null && myText.isEmpty();
         boolean fieldHeight = false;
 
@@ -324,13 +328,13 @@ public class DesktopQtButtonImpl extends QtComponentDelegate<QPushButton> implem
             setOwnStyleSheet(HELP_STYLE_SHEET.formatted(helpBorderColor()));
         }
         else if (myFlat) {
-            setOwnStyleSheet(FLAT_STYLE_SHEET.formatted(iconOnly ? ICON_PADDING : TEXT_PADDING));
+            setOwnStyleSheet(FLAT_STYLE_SHEET.formatted(iconOnly ? ICON_PADDING : textPadding()));
         }
         else if (iconOnly) {
             setOwnStyleSheet(DEFAULT_ICON_STYLE_SHEET);
         }
         else {
-            setOwnStyleSheet(DEFAULT_STYLE_SHEET);
+            setOwnStyleSheet(DEFAULT_STYLE_SHEET.formatted(textPadding()));
 
             fieldHeight = true;
         }
