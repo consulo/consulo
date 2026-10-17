@@ -24,25 +24,26 @@ import consulo.logging.Logger;
 import consulo.util.lang.StringUtil;
 
 public class DescriptiveNameUtil {
-  private static final Logger LOG = Logger.getInstance(DescriptiveNameUtil.class);
+    private static final Logger LOG = Logger.getInstance(DescriptiveNameUtil.class);
 
-  public static String getMetaDataName(PsiMetaData metaData) {
-    String name = metaData.getName();
-    return StringUtil.isEmpty(name) ? "''" : name;
-  }
-
-  @RequiredReadAction
-  public static String getDescriptiveName(PsiElement psiElement) {
-    LOG.assertTrue(psiElement.isValid());
-
-    if (psiElement instanceof PsiMetaOwner) {
-      PsiMetaOwner psiMetaOwner = (PsiMetaOwner)psiElement;
-      PsiMetaData metaData = psiMetaOwner.getMetaData();
-      if (metaData != null) return getMetaDataName(metaData);
+    public static String getMetaDataName(PsiMetaData metaData) {
+        String name = metaData.getName();
+        return StringUtil.isEmpty(name) ? "''" : name;
     }
 
-    Language lang = psiElement.getLanguage();
-    FindUsagesProvider provider = FindUsagesProvider.forLanguage(lang);
-    return provider.getDescriptiveName(psiElement);
-  }
+    @RequiredReadAction
+    public static String getDescriptiveName(PsiElement psiElement) {
+        LOG.assertTrue(psiElement.isValid());
+
+        if (psiElement instanceof PsiMetaOwner metaOwner) {
+            PsiMetaData metaData = metaOwner.getMetaData();
+            if (metaData != null) {
+                return getMetaDataName(metaData);
+            }
+        }
+
+        Language lang = psiElement.getLanguage();
+        FindUsagesProvider provider = FindUsagesProvider.forLanguage(lang);
+        return provider.getDescriptiveName(psiElement);
+    }
 }

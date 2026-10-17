@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.psi;
 
 import consulo.annotation.component.ComponentScope;
@@ -27,14 +26,13 @@ import org.jspecify.annotations.Nullable;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public abstract class PsiPackageHelper {
-  public static PsiPackageHelper getInstance(Project project) {
-    return project.getInstance( PsiPackageHelper.class);
-  }
+    public static PsiPackageHelper getInstance(Project project) {
+        return project.getInstance(PsiPackageHelper.class);
+    }
 
-  
-  public abstract String getQualifiedName(PsiDirectory directory, boolean presentable);
+    public abstract String getQualifiedName(PsiDirectory directory, boolean presentable);
 
-  public abstract @Nullable PsiDirectoryContainer getDirectoryContainer(PsiDirectory directory);
+    public abstract @Nullable PsiDirectoryContainer getDirectoryContainer(PsiDirectory directory);
 
-  public abstract boolean isPackage(PsiDirectory directory);
+    public abstract boolean isPackage(PsiDirectory directory);
 }

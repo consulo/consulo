@@ -23,7 +23,7 @@ import org.jspecify.annotations.Nullable;
  * @author peter
  */
 public interface PsiPresentableMetaData extends PsiMetaData {
-  String getTypeName();
+    String getTypeName();
 
-  @Nullable Image getIcon();
+    @Nullable Image getIcon();
 }

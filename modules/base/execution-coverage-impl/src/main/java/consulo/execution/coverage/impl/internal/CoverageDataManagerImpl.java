@@ -628,7 +628,6 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
         }
     }
 
-
     private CoverageSuite createCoverageSuite(
         CoverageEnabledConfiguration config,
         String name,
@@ -643,7 +642,6 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
         LOG.assertTrue(suite != null, "Cannot create coverage suite for runner: " + coverageRunner.getPresentableName());
         return suite;
     }
-
 
     private CoverageSuite createCoverageSuite(
         CoverageRunner coverageRunner,

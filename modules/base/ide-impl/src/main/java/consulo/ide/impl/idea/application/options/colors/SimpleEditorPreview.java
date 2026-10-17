@@ -214,8 +214,8 @@ public class SimpleEditorPreview implements PreviewPanel {
 
     @Override
     public void blinkSelectedHighlightType(Object description) {
-        if (description instanceof EditorSchemeAttributeDescriptor) {
-            String type = ((EditorSchemeAttributeDescriptor) description).getType();
+        if (description instanceof EditorSchemeAttributeDescriptor editorSchemeAttributeDescriptor) {
+            String type = editorSchemeAttributeDescriptor.getType();
 
             List<HighlightData> highlights = startBlinkingHighlights(
                 myEditor,
@@ -401,7 +401,8 @@ public class SimpleEditorPreview implements PreviewPanel {
                         }
                     }
                     // TODO: <remove the hack>
-                    // At some point highlighting data is applied in reversed order. To ensure rainbow highlighting is always on top, we add it twice.
+                    // At some point highlighting data is applied in reversed order.
+                    // To ensure rainbow highlighting is always on top, we add it twice.
                     rainbowMarkup.add(rainbowTemp);
                     rainbowMarkup.add(rainbowAnchor);
                     rainbowMarkup.add(d);

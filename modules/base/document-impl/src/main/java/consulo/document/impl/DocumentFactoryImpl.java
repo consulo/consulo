@@ -27,7 +27,6 @@ import jakarta.inject.Singleton;
 @ServiceImpl
 @Singleton
 public class DocumentFactoryImpl implements DocumentFactory {
-    
     @Override
     public DocumentEx createDocument(CharSequence chars, boolean acceptSlashR, boolean forUseInNonAWTThread) {
         return new DocumentImpl(chars, acceptSlashR, forUseInNonAWTThread);

@@ -1,7 +1,6 @@
 /*
  * Copyright (c) 2000-2006 JetBrains s.r.o. All Rights Reserved.
  */
-
 package consulo.execution.coverage.impl.internal;
 
 import consulo.execution.coverage.data.CoverageUnit;
@@ -123,16 +122,12 @@ public class SrcFileAnnotator implements Disposable {
         }
     }
 
-    private static
-    
-    String[] getCoveredLines(byte[] oldContent, VirtualFile vFile) {
+    private static String[] getCoveredLines(byte[] oldContent, VirtualFile vFile) {
         String text = LoadTextUtil.getTextByBinaryPresentation(oldContent, vFile, false, false).toString();
         return LineTokenizer.tokenize(text, false);
     }
 
-    private
-    
-    String[] getUpToDateLines() {
+    private String[] getUpToDateLines() {
         SimpleReference<String[]> linesRef = new SimpleReference<>();
         Runnable runnable = () -> {
             int lineCount = myDocument.getLineCount();
@@ -265,7 +260,6 @@ public class SrcFileAnnotator implements Disposable {
             // check local history
             oldToNewLineMapping = getOldToNewLineMapping(coverageTimeStamp);
             if (oldToNewLineMapping == null) {
-
                 // if history for file isn't available let's check timestamps
                 if (fileTimeStamp > coverageTimeStamp && classesArePresentInCoverageData(data, qualifiedNames)) {
                     showEditorWarningMessage(CodeInsightLocalize.coverageDataOutdated());
@@ -351,9 +345,9 @@ public class SrcFileAnnotator implements Disposable {
                         }
                     }
                 }
-                else if (outputFile != null &&
-                    !subCoverageActive &&
-                    engine.includeUntouchedFileInCoverage(qualifiedName, outputFile, myFile, suite)) {
+                else if (outputFile != null
+                    && !subCoverageActive
+                    && engine.includeUntouchedFileInCoverage(qualifiedName, outputFile, myFile, suite)) {
                     collectNonCoveredFileInfo(outputFile, highlighters, markupModel, executableLines, coverageByTestApplicable);
                 }
             }
@@ -414,21 +408,20 @@ public class SrcFileAnnotator implements Disposable {
                                     for (int line = lineNumber; line <= lastLineNumber; line++) {
                                         int oldLineNumber = newToOldLineMapping.get(line);
                                         CoverageLine lineData = executableLines.get(oldLineNumber);
-                                        if (lineData != null) {
-                                            RangeHighlighter rangeHighlighter =
-                                                createRangeHighlighter(
-                                                    suite.getLastCoverageTimeStamp(),
-                                                    markupModel,
-                                                    coverageByTestApplicable,
-                                                    executableLines,
-                                                    classNames.get(oldLineNumber),
-                                                    oldLineNumber,
-                                                    line,
-                                                    suite,
-                                                    classLines.get(oldLineNumber)
-                                                );
-                                            highlighters.add(rangeHighlighter);
+                                        if (lineData == null) {
+                                            continue;
                                         }
+                                        highlighters.add(createRangeHighlighter(
+                                            suite.getLastCoverageTimeStamp(),
+                                            markupModel,
+                                            coverageByTestApplicable,
+                                            executableLines,
+                                            classNames.get(oldLineNumber),
+                                            oldLineNumber,
+                                            line,
+                                            suite,
+                                            classLines.get(oldLineNumber)
+                                        ));
                                     }
                                     myEditor.putUserData(COVERAGE_HIGHLIGHTERS, highlighters.size() > 0 ? highlighters : null);
                                 });
@@ -538,7 +531,10 @@ public class SrcFileAnnotator implements Disposable {
                     EditorNotificationBuilderEx builder = (EditorNotificationBuilderEx) factory.newBuilder();
                     builder.withIcon(PlatformIconGroup.generalExclmark());
                     builder.withText(message);
-                    builder.withAction(CommonLocalize.closeActionName(), event -> fileEditorManager.removeTopComponent(editor, builder.getComponent()));
+                    builder.withAction(
+                        CommonLocalize.closeActionName(),
+                        event -> fileEditorManager.removeTopComponent(editor, builder.getComponent())
+                    );
 
                     fileEditorManager.addTopComponent(editor, builder);
                     break;
@@ -548,7 +544,7 @@ public class SrcFileAnnotator implements Disposable {
     }
 
     private boolean isCurrentEditor(FileEditor editor) {
-        return editor instanceof TextEditor && ((TextEditor) editor).getEditor() == myEditor;
+        return editor instanceof TextEditor textEditor && textEditor.getEditor() == myEditor;
     }
 
     private void collectNonCoveredFileInfo(
