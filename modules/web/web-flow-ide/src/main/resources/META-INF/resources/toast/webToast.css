@@ -82,6 +82,7 @@ vaadin-notification-card[theme~="consulo-toast"] {
 
 vaadin-notification-card[theme~="consulo-toast"]::part(overlay) {
     background: transparent;
+    backdrop-filter: none;
     box-shadow: none;
     border: none;
     padding: 0;

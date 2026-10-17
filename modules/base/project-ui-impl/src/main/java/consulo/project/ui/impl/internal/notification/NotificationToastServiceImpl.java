@@ -62,7 +62,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * The card of a notification - style by type, title, HTML content, actions as links, and a toolbar with the options
- * ("⋮": settings, do not show again) and close - and the toasts floating over frames. At most {@link #MAX_VISIBLE}
+ * ("⋮": settings, do not show again) and close - and the toasts floating over frames, which are glassy. At most {@link #MAX_VISIBLE}
  * toasts stay over a frame; a balloon goes after {@link #BALLOON_DELAY_SECONDS}, a sticky one after
  * {@link #STICKY_DELAY_SECONDS}. Hiding a toast does not expire the notification - it stays in the Notifications tool
  * window - unless the notification is not kept there.
@@ -194,6 +194,7 @@ public class NotificationToastServiceImpl implements NotificationToastService {
         }
 
         Toast toast = createToast(notification, frame.getProject(), () -> close(frame, notification));
+        toast.addStyle(ToastStyle.GLASSY);
         shown.put(notification, toast);
         synchronized (myFrames) {
             myFrames.computeIfAbsent(notification, it -> new ArrayList<>()).add(frame);

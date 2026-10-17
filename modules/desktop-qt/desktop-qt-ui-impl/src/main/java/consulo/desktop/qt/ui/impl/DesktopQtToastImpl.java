@@ -29,6 +29,9 @@ import consulo.ui.internal.ToastInternal;
 import consulo.ui.style.StyleManager;
 import consulo.util.lang.xml.XmlStringUtil;
 import io.qt.core.QEvent;
+import io.qt.core.QObject;
+import io.qt.core.QPoint;
+import io.qt.core.QRect;
 import io.qt.core.QRectF;
 import io.qt.core.Qt;
 import io.qt.gui.QBrush;
@@ -42,6 +45,7 @@ import io.qt.gui.QPainterPath;
 import io.qt.gui.QPalette;
 import io.qt.gui.QPen;
 import io.qt.gui.QPixmap;
+import io.qt.gui.QRegion;
 import io.qt.gui.QResizeEvent;
 import io.qt.widgets.QGraphicsBlurEffect;
 import io.qt.widgets.QGraphicsPixmapItem;
@@ -120,6 +124,11 @@ public class DesktopQtToastImpl extends QtComponentDelegate<QWidget> implements 
                 QPainterPath shape = new QPainterPath();
                 shape.addRoundedRect(new QRectF(shadow + 0.5, shadow + 0.5, width - 1, height - 1), ARC / 2.0, ARC / 2.0);
 
+                if (isGlassy()) {
+                    paintBackdrop(painter, shape, new QRect(x() + shadow, y() + shadow, (int) width, (int) height));
+                    background.setAlphaF(background.alphaF() * ToastPresentation.GLASSY_OPACITY);
+                }
+
                 painter.setPen(Qt.PenStyle.NoPen);
                 painter.setBrush(new QBrush(background));
                 painter.drawPath(shape);
@@ -132,9 +141,62 @@ public class DesktopQtToastImpl extends QtComponentDelegate<QWidget> implements 
                 painter.end();
             }
         }
+
+        void dropShadow() {
+            myShadowImage = null;
+        }
+
+        /**
+         * What lies under the card are the other children of the host - never the host itself, it holds this
+         * toast. Other toasts are left out.
+         */
+        private void paintBackdrop(QPainter painter, QPainterPath shape, QRect card) {
+            QWidget host = parentWidget();
+            if (host == null) {
+                return;
+            }
+
+            int margin = 2 * ToastPresentation.GLASSY_BLUR;
+            QRect area = card.adjusted(-margin, -margin, margin, margin).intersected(host.rect());
+            if (area.isEmpty()) {
+                return;
+            }
+
+            QImage snapshot = new QImage(area.width(), area.height(), QImage.Format.Format_ARGB32_Premultiplied);
+            snapshot.fill(palette().color(QPalette.ColorRole.Window));
+            QPainter snapshotPainter = new QPainter(snapshot);
+            try {
+                for (QObject child : host.children()) {
+                    if (child instanceof QWidget widget && !(widget instanceof ToastWidget) && !widget.isWindow() && widget.isVisible()) {
+                        QRect visible = widget.geometry().intersected(area);
+                        if (!visible.isEmpty()) {
+                            widget.render(
+                                snapshotPainter,
+                                new QPoint(visible.x() - area.x(), visible.y() - area.y()),
+                                new QRegion(visible.translated(-widget.x(), -widget.y()))
+                            );
+                        }
+                    }
+                }
+            }
+            finally {
+                snapshotPainter.end();
+            }
+
+            QImage blurred = blur(snapshot, 2 * ToastPresentation.GLASSY_BLUR);
+            painter.save();
+            try {
+                painter.setClipPath(shape);
+                painter.drawImage(area.x() - x(), area.y() - y(), blurred);
+            }
+            finally {
+                painter.restore();
+            }
+        }
     }
 
     private @Nullable ToastStyle myStyle;
+    private boolean myGlassy;
     private @Nullable Image myIcon;
     private LocalizeValue myTitle = LocalizeValue.empty();
     private LocalizeValue myText = LocalizeValue.empty();
@@ -215,12 +277,24 @@ public class DesktopQtToastImpl extends QtComponentDelegate<QWidget> implements 
 
     @Override
     public void addStyle(ToastStyle style) {
-        myStyle = style;
-        updateIcon();
+        if (style == ToastStyle.GLASSY) {
+            myGlassy = true;
+            if (toQtComponent() instanceof ToastWidget widget) {
+                widget.dropShadow();
+            }
+        }
+        else {
+            myStyle = style;
+            updateIcon();
+        }
         QWidget component = toQtComponent();
         if (component != null) {
             component.update();
         }
+    }
+
+    private boolean isGlassy() {
+        return myGlassy && myShadow;
     }
 
     @RequiredUIAccess
@@ -295,6 +369,9 @@ public class DesktopQtToastImpl extends QtComponentDelegate<QWidget> implements 
     @Override
     public void setShadow(boolean shadow) {
         myShadow = shadow;
+        if (toQtComponent() instanceof ToastWidget widget) {
+            widget.dropShadow();
+        }
         updateMargins();
         QWidget component = toQtComponent();
         if (component != null) {
@@ -434,14 +511,37 @@ public class DesktopQtToastImpl extends QtComponentDelegate<QWidget> implements 
             painter.end();
         }
 
+        QImage blurred = blur(mask, SHADOW_BLUR * 2);
+        if (isGlassy()) {
+            QPainter cut = new QPainter(blurred);
+            try {
+                cut.setRenderHint(QPainter.RenderHint.Antialiasing, true);
+                cut.setCompositionMode(QPainter.CompositionMode.CompositionMode_Clear);
+                QPainterPath card = new QPainterPath();
+                card.addRoundedRect(
+                    new QRectF(pad + SHADOW_SIZE + 1, pad + SHADOW_SIZE + 1, width - 2 * SHADOW_SIZE - 2, height - 2 * SHADOW_SIZE - 2),
+                    ARC / 2.0,
+                    ARC / 2.0
+                );
+                cut.fillPath(card, new QBrush(new QColor(0, 0, 0)));
+            }
+            finally {
+                cut.end();
+            }
+        }
+        return blurred.copy(pad, pad, width, height);
+    }
+
+    private static QImage blur(QImage image, double radius) {
         QGraphicsScene scene = new QGraphicsScene();
         try {
-            QGraphicsPixmapItem item = scene.addPixmap(QPixmap.fromImage(mask));
-            QGraphicsBlurEffect blur = new QGraphicsBlurEffect();
-            blur.setBlurRadius(SHADOW_BLUR * 2);
-            item.setGraphicsEffect(blur);
+            QGraphicsPixmapItem item = scene.addPixmap(QPixmap.fromImage(image));
+            QGraphicsBlurEffect effect = new QGraphicsBlurEffect();
+            effect.setBlurHints(QGraphicsBlurEffect.BlurHint.QualityHint);
+            effect.setBlurRadius(radius);
+            item.setGraphicsEffect(effect);
 
-            QImage blurred = new QImage(mask.size(), QImage.Format.Format_ARGB32_Premultiplied);
+            QImage blurred = new QImage(image.size(), QImage.Format.Format_ARGB32_Premultiplied);
             blurred.fill(Qt.GlobalColor.transparent);
             QPainter scenePainter = new QPainter(blurred);
             try {
@@ -451,7 +551,7 @@ public class DesktopQtToastImpl extends QtComponentDelegate<QWidget> implements 
             finally {
                 scenePainter.end();
             }
-            return blurred.copy(pad, pad, width, height);
+            return blurred;
         }
         finally {
             scene.dispose();

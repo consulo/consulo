@@ -29,6 +29,15 @@ import org.jspecify.annotations.Nullable;
  * @since 2026-10-16
  */
 public final class ToastPresentation {
+    /**
+     * How much of its fill a {@link ToastStyle#GLASSY} toast keeps.
+     */
+    public static final float GLASSY_OPACITY = 0.8f;
+    /**
+     * The deviation of the gaussian blur behind a {@link ToastStyle#GLASSY} toast, in unscaled pixels.
+     */
+    public static final int GLASSY_BLUR = 3;
+
     public static @Nullable Image icon(@Nullable ToastStyle style) {
         if (style == null) {
             return null;
@@ -38,6 +47,7 @@ public final class ToastPresentation {
             case SUCCESS -> PlatformIconGroup.generalBalloonsuccess();
             case WARNING -> PlatformIconGroup.generalBalloonwarning();
             case ERROR -> PlatformIconGroup.generalBalloonerror();
+            case GLASSY -> null;
         };
     }
 
@@ -50,6 +60,7 @@ public final class ToastPresentation {
             case SUCCESS -> ComponentColors.TOAST_SUCCESS_BACKGROUND;
             case WARNING -> ComponentColors.TOAST_WARNING_BACKGROUND;
             case ERROR -> ComponentColors.TOAST_ERROR_BACKGROUND;
+            case GLASSY -> ComponentColors.LAYOUT;
         };
     }
 
@@ -62,6 +73,7 @@ public final class ToastPresentation {
             case SUCCESS -> ComponentColors.SUCCESS_BORDER;
             case WARNING -> ComponentColors.WARNING_BORDER;
             case ERROR -> ComponentColors.ERROR_BORDER;
+            case GLASSY -> ComponentColors.BORDER;
         };
     }
 

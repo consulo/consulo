@@ -96,13 +96,80 @@ public class DesktopToastImpl extends SwingComponentDelegate<JPanel> implements 
 
                 int arc = JBUI.scale(ARC);
                 g.translate(shadow, shadow);
-                g.setColor(TargetAWT.to(ToastPresentation.background(myStyle)));
-                g.fill(new RoundRectangle2D.Float(0, 0, width, height, arc, arc));
+                RoundRectangle2D card = new RoundRectangle2D.Float(0, 0, width, height, arc, arc);
+                Color background = TargetAWT.to(ToastPresentation.background(myStyle));
+                if (isGlassy()) {
+                    paintBackdrop(g, card, new Rectangle(shadow, shadow, width, height));
+                    background = new Color(
+                        background.getRed(),
+                        background.getGreen(),
+                        background.getBlue(),
+                        Math.round(background.getAlpha() * ToastPresentation.GLASSY_OPACITY)
+                    );
+                }
+                g.setColor(background);
+                g.fill(card);
                 g.setColor(TargetAWT.to(ToastPresentation.border(myStyle)));
                 g.draw(new RoundRectangle2D.Float(0.5f, 0.5f, width - 1, height - 1, arc, arc));
             }
             finally {
                 g.dispose();
+            }
+        }
+
+        void dropShadow() {
+            myShadow = null;
+        }
+
+        /**
+         * What lies under the card is the content pane of the frame - the toasts float in its layered pane, outside
+         * of it. {@code print} and not {@code paint}: inside a paint cycle {@code paint} goes through the back buffer
+         * of the repaint manager instead of the given graphics.
+         */
+        private void paintBackdrop(Graphics2D g, Shape card, Rectangle cardBounds) {
+            JRootPane rootPane = SwingUtilities.getRootPane(this);
+            if (rootPane == null || !(rootPane.getContentPane() instanceof JComponent content) || SwingUtilities.isDescendingFrom(this, content)) {
+                return;
+            }
+
+            Rectangle bounds = SwingUtilities.convertRectangle(this, cardBounds, content);
+            int sigma = JBUI.scale(ToastPresentation.GLASSY_BLUR);
+            int margin = 2 * sigma;
+            Rectangle area = new Rectangle(bounds.x - margin, bounds.y - margin, bounds.width + 2 * margin, bounds.height + 2 * margin)
+                .intersection(new Rectangle(0, 0, content.getWidth(), content.getHeight()));
+            if (area.isEmpty()) {
+                return;
+            }
+
+            double scale = g.getTransform().getScaleX();
+            BufferedImage snapshot = new BufferedImage(
+                (int) Math.ceil(area.width * scale),
+                (int) Math.ceil(area.height * scale),
+                BufferedImage.TYPE_INT_ARGB
+            );
+            Graphics2D snapshotGraphics = snapshot.createGraphics();
+            try {
+                snapshotGraphics.scale(scale, scale);
+                snapshotGraphics.translate(-area.x, -area.y);
+                snapshotGraphics.setClip(area.x, area.y, area.width, area.height);
+                content.print(snapshotGraphics);
+            }
+            finally {
+                snapshotGraphics.dispose();
+            }
+
+            float[] kernel = gaussian(2 * Math.max(1, (int) Math.round(sigma * scale)));
+            ConvolveOp horizontal = new ConvolveOp(new Kernel(kernel.length, 1, kernel), ConvolveOp.EDGE_NO_OP, null);
+            ConvolveOp vertical = new ConvolveOp(new Kernel(1, kernel.length, kernel), ConvolveOp.EDGE_NO_OP, null);
+            BufferedImage blurred = vertical.filter(horizontal.filter(snapshot, null), null);
+
+            Graphics2D backdrop = (Graphics2D) g.create();
+            try {
+                backdrop.clip(card);
+                backdrop.drawImage(blurred, area.x - bounds.x, area.y - bounds.y, area.width, area.height, null);
+            }
+            finally {
+                backdrop.dispose();
             }
         }
     }
@@ -219,6 +286,7 @@ public class DesktopToastImpl extends SwingComponentDelegate<JPanel> implements 
     private final MyToolbarPanel myToolbarPanel = new MyToolbarPanel();
 
     private @Nullable ToastStyle myStyle;
+    private boolean myGlassy;
     private @Nullable Image myIcon;
     private boolean myShadowVisible;
     private boolean myHovered;
@@ -269,9 +337,19 @@ public class DesktopToastImpl extends SwingComponentDelegate<JPanel> implements 
 
     @Override
     public void addStyle(ToastStyle style) {
-        myStyle = style;
-        updateIcon();
+        if (style == ToastStyle.GLASSY) {
+            myGlassy = true;
+            ((MyToastPanel) toAWTComponent()).dropShadow();
+        }
+        else {
+            myStyle = style;
+            updateIcon();
+        }
         toAWTComponent().repaint();
+    }
+
+    private boolean isGlassy() {
+        return myGlassy && myShadowVisible;
     }
 
     @RequiredUIAccess
@@ -338,6 +416,7 @@ public class DesktopToastImpl extends SwingComponentDelegate<JPanel> implements 
     @Override
     public void setShadow(boolean shadow) {
         myShadowVisible = shadow;
+        ((MyToastPanel) toAWTComponent()).dropShadow();
         updateInsets(toAWTComponent());
         revalidate();
     }
@@ -383,6 +462,18 @@ public class DesktopToastImpl extends SwingComponentDelegate<JPanel> implements 
         ConvolveOp horizontal = new ConvolveOp(new Kernel(kernel.length, 1, kernel), ConvolveOp.EDGE_NO_OP, null);
         ConvolveOp vertical = new ConvolveOp(new Kernel(1, kernel.length, kernel), ConvolveOp.EDGE_NO_OP, null);
         BufferedImage blurred = vertical.filter(horizontal.filter(mask, null), null);
+
+        if (isGlassy()) {
+            Graphics2D cut = blurred.createGraphics();
+            try {
+                cut.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                cut.setComposite(AlphaComposite.Clear);
+                cut.fill(new RoundRectangle2D.Float(pad + shadow + 1, pad + shadow + 1, width - 2, height - 2, arc, arc));
+            }
+            finally {
+                cut.dispose();
+            }
+        }
         return blurred.getSubimage(pad, pad, width + 2 * shadow, height + 2 * shadow);
     }
 

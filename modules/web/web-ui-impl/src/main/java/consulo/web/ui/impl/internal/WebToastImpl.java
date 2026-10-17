@@ -59,6 +59,8 @@ public class WebToastImpl extends VaadinComponentDelegate<WebToastImpl.Vaadin> i
     private final Div myToolbarHolder = new Div();
 
     private @Nullable ToastStyle myStyle;
+    private boolean myGlassy;
+    private boolean myShadow;
     private @Nullable Image myIcon;
     private @Nullable Component myToolbar;
 
@@ -103,9 +105,14 @@ public class WebToastImpl extends VaadinComponentDelegate<WebToastImpl.Vaadin> i
 
     @Override
     public void addStyle(ToastStyle style) {
-        myStyle = style;
+        if (style == ToastStyle.GLASSY) {
+            myGlassy = true;
+        }
+        else {
+            myStyle = style;
+            updateIcon();
+        }
         updateColors();
-        updateIcon();
     }
 
     @RequiredUIAccess
@@ -169,12 +176,26 @@ public class WebToastImpl extends VaadinComponentDelegate<WebToastImpl.Vaadin> i
     @RequiredUIAccess
     @Override
     public void setShadow(boolean shadow) {
+        myShadow = shadow;
         getVaadinComponent().setClassName("consulo-toast-shadow", shadow);
+        updateColors();
     }
 
     private void updateColors() {
         Vaadin vaadin = getVaadinComponent();
-        vaadin.getStyle().set("background-color", WebColors.toStyleCssColor(ToastPresentation.background(myStyle)));
+        String background = WebColors.toStyleCssColor(ToastPresentation.background(myStyle));
+        if (myGlassy && myShadow) {
+            int opacity = Math.round(ToastPresentation.GLASSY_OPACITY * 100);
+            String blur = "blur(" + ToastPresentation.GLASSY_BLUR + "px)";
+            vaadin.getStyle().set("background-color", "color-mix(in srgb, " + background + " " + opacity + "%, transparent)");
+            vaadin.getStyle().set("backdrop-filter", blur);
+            vaadin.getStyle().set("-webkit-backdrop-filter", blur);
+        }
+        else {
+            vaadin.getStyle().set("background-color", background);
+            vaadin.getStyle().remove("backdrop-filter");
+            vaadin.getStyle().remove("-webkit-backdrop-filter");
+        }
         vaadin.getStyle().set("border-color", WebColors.toStyleCssColor(ToastPresentation.border(myStyle)));
     }
 

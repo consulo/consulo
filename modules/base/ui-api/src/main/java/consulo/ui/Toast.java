@@ -31,7 +31,8 @@ import org.jspecify.annotations.Nullable;
  * Actions stand as links under the text. The toolbar component sits in the top right corner, level with the title -
  * a toolbar of actions such as the less used options and close.
  * <p/>
- * When more than one {@link ToastStyle} is added, the last one is used.
+ * When more than one of {@link ToastStyle#INFO}, {@link ToastStyle#SUCCESS}, {@link ToastStyle#WARNING} and
+ * {@link ToastStyle#ERROR} is added, the last one is used. {@link ToastStyle#GLASSY} goes together with any of them.
  *
  * @author VISTALL
  * @since 2026-10-16
