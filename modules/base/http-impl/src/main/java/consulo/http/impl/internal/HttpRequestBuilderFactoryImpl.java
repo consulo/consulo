@@ -50,16 +50,25 @@ public class HttpRequestBuilderFactoryImpl implements HttpRequestBuilderFactory 
     private final HttpRequestExecutor myLocalExecutor;
 
     @Inject
-    public HttpRequestBuilderFactoryImpl(Application application,
-                                         HttpProxyManager proxyManager,
-                                         HttpCertificateManager certificateManager) {
-        this(application, proxyManager, certificateManager, Boolean.getBoolean(USE_HTTP_CLIENT_PROPERTY));
+    public HttpRequestBuilderFactoryImpl(
+        Application application,
+        HttpProxyManager proxyManager,
+        HttpCertificateManager certificateManager
+    ) {
+        this(
+            application,
+            proxyManager,
+            certificateManager,
+            Boolean.valueOf(Platform.current().jvm().getRuntimeProperty(USE_HTTP_CLIENT_PROPERTY, String.valueOf(true)))
+        );
     }
 
-    HttpRequestBuilderFactoryImpl(Application application,
-                                  HttpProxyManager proxyManager,
-                                  HttpCertificateManager certificateManager,
-                                  boolean useHttpClient) {
+    HttpRequestBuilderFactoryImpl(
+        Application application,
+        HttpProxyManager proxyManager,
+        HttpCertificateManager certificateManager,
+        boolean useHttpClient
+    ) {
         myApplication = application;
 
         LocalUrlConnectionExecutor urlConnectionExecutor = new LocalUrlConnectionExecutor(proxyManager, certificateManager);
@@ -79,8 +88,8 @@ public class HttpRequestBuilderFactoryImpl implements HttpRequestBuilderFactory 
             return newBuilder(url, httpMethod);
         }
 
-        PlatformHttpRequestSender sender =
-            myApplication.getExtensionPoint(PlatformHttpRequestSender.class).findFirstSafe(it -> it.isApplicable(platform));
+        PlatformHttpRequestSender sender = myApplication.getExtensionPoint(PlatformHttpRequestSender.class)
+            .findFirstSafe(it -> it.isApplicable(platform));
         if (sender == null) {
             throw new UnsupportedOperationException("Requests can not be sent from the platform " + platform.getId());
         }
