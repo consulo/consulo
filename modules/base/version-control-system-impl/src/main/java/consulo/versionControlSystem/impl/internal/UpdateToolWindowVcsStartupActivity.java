@@ -16,7 +16,7 @@
 package consulo.versionControlSystem.impl.internal;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesViewContentManager;
+import consulo.versionControlSystem.impl.internal.change.ui.UnifiedChangesViewContentManager;
 import consulo.project.Project;
 import consulo.versionControlSystem.VcsInitObject;
 import consulo.versionControlSystem.VcsStartupActivity;
@@ -33,9 +33,7 @@ public class UpdateToolWindowVcsStartupActivity implements VcsStartupActivity {
 
   @Override
   public void runActivity() {
-    ChangesViewContentManager manager = (ChangesViewContentManager)ChangesViewContentManager.getInstance(myProject);
-
-    manager.update();
+    UnifiedChangesViewContentManager.getInstanceImpl(myProject).update();
   }
 
   @Override

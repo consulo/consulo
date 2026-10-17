@@ -111,6 +111,35 @@ final class DesktopTreeCheckBoxes<E> {
         return myRenderer.getCheckBoxBounds(rowBounds).contains(x, y) ? row : -1;
     }
 
+    int checkBoxWidth(int row) {
+        DesktopAWTTree tree = myOwner.getTree();
+        TreePath path = tree.getPathForRow(row);
+        Rectangle rowBounds = tree.getRowBounds(row);
+        TreeNode<E> node = path == null ? null : myOwner.nodeOf(path);
+        if (path == null || rowBounds == null || node == null || myState.getShownState(node) == null) {
+            return 0;
+        }
+
+        myRenderer.getTreeCellRendererComponent(
+            tree,
+            path.getLastPathComponent(),
+            tree.isRowSelected(row),
+            tree.isExpanded(row),
+            tree.getModel().isLeaf(path.getLastPathComponent()),
+            row,
+            false
+        );
+        Rectangle checkBox = myRenderer.getCheckBoxBounds(rowBounds);
+        return Math.max(0, checkBox.x + checkBox.width - rowBounds.x);
+    }
+
+    void toggle(TreePath path, MouseEvent e) {
+        TreeNode<E> node = myOwner.nodeOf(path);
+        if (node != null && myState.getShownState(node) != null && myState.isCheckEnabled(node.getValue())) {
+            myState.toggle(node, List.of(), DesktopAWTInputDetails.convert(myOwner.getTree(), e));
+        }
+    }
+
     private boolean isOverCheckBox(Point point) {
         return checkBoxRowAt(point.x, point.y) >= 0;
     }

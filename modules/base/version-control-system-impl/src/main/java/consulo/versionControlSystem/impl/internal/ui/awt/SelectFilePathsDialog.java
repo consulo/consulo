@@ -32,6 +32,8 @@ import java.util.List;
 /**
  * @author yole
  */
+@Deprecated
+@DeprecationInfo("Use VcsChangesDialogFactory#selectFilePaths")
 public class SelectFilePathsDialog extends AbstractSelectFilesDialog<FilePath> implements LegacyDialog {
     private final ChangesTreeListImpl<FilePath> myFileList;
 

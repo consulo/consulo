@@ -30,7 +30,9 @@ import consulo.ui.ex.impl.internal.action.UnifiedActionMenuExpander;
 import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
+import io.qt.core.QCoreApplication;
 import io.qt.gui.QKeyEvent;
+import io.qt.widgets.QWidget;
 
 import javax.swing.KeyStroke;
 import java.awt.event.InputEvent;
@@ -70,10 +72,10 @@ public class DesktopQtEditorKeyHandler {
 
         KeyCode keyCode = DesktopQtInputDetails.keyCode(event, modifiers);
 
-        return keyCode != null && performKeymapAction(keyCode, modifiers) || typeCharacter(event);
+        return keyCode != null && performKeymapAction(event, keyCode, modifiers) || typeCharacter(event);
     }
 
-    private boolean performKeymapAction(KeyCode keyCode, EnumSet<Modifier> modifiers) {
+    private boolean performKeymapAction(QKeyEvent keyEvent, KeyCode keyCode, EnumSet<Modifier> modifiers) {
         Keymap keymap = KeymapManager.getInstance().getActiveKeymap();
         if (keymap == null) {
             return false;
@@ -99,13 +101,19 @@ public class DesktopQtEditorKeyHandler {
 
         // whether an action is enabled is only answerable asynchronously, but the key has to be claimed or dropped
         // now - so a stroke the keymap knows is claimed, and the search for a live action for it continues after
-        performFirstEnabled(actions, 0, keyCode, myEditor.getDataContext(), UIAccess.current());
+        performFirstEnabled(actions, 0, keyCode, keyEvent.clone(), myEditor.getDataContext(), UIAccess.current());
         return true;
     }
 
-    private void performFirstEnabled(List<AnAction> actions, int index, KeyCode keyCode, DataContext context, UIAccess uiAccess) {
+    private void performFirstEnabled(List<AnAction> actions,
+                                     int index,
+                                     KeyCode keyCode,
+                                     QKeyEvent keyEvent,
+                                     DataContext context,
+                                     UIAccess uiAccess) {
         if (index >= actions.size()) {
             myEditor.fireKeyNotConsumed(keyCode);
+            passToParent(keyEvent);
             return;
         }
 
@@ -114,12 +122,20 @@ public class DesktopQtEditorKeyHandler {
 
         ActionRunnerAsync.lastUpdateAndCheckDumbAsync(action, event, false).whenCompleteAsync((enabled, throwable) -> {
             if (throwable != null || !Boolean.TRUE.equals(enabled)) {
-                performFirstEnabled(actions, index + 1, keyCode, context, uiAccess);
+                performFirstEnabled(actions, index + 1, keyCode, keyEvent, context, uiAccess);
                 return;
             }
 
             UnifiedActionMenuExpander.performActionWithCallbacks(action, context, event);
         }, uiAccess);
+    }
+
+    private void passToParent(QKeyEvent keyEvent) {
+        DesktopQtEditorWidget surface = myEditor.getSurface();
+        QWidget parent = surface == null || surface.isDisposed() ? null : surface.parentWidget();
+        if (parent != null && !parent.isDisposed()) {
+            QCoreApplication.sendEvent(parent, keyEvent);
+        }
     }
 
     private boolean isTypedCharacter(QKeyEvent event, EnumSet<Modifier> modifiers) {

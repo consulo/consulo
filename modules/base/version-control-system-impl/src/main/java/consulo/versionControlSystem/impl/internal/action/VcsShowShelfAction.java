@@ -28,7 +28,7 @@ public class VcsShowShelfAction extends VcsShowToolWindowTabAction {
 
     
     @Override
-    protected String getTabName() {
+    protected String getContentId() {
         return ChangesViewContentManager.SHELF;
     }
 }

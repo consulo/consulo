@@ -20,6 +20,7 @@ module consulo.language.editor.ui.api {
     exports consulo.language.editor.ui.navigationBar;
     exports consulo.language.editor.ui.awt;
     exports consulo.language.editor.ui.scope;
+    exports consulo.language.editor.ui.textCompletion;
     exports consulo.language.editor.ui.awt.scope;
     exports consulo.language.editor.ui.util;
 

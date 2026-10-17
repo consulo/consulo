@@ -17,14 +17,15 @@ package consulo.versionControlSystem.distributed.impl.internal;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.versionControlSystem.distributed.DistributedVersionControlHelper;
-import consulo.versionControlSystem.distributed.impl.internal.push.VcsPushDialog;
+import consulo.versionControlSystem.distributed.impl.internal.push.UnifiedPushDialog;
 import consulo.versionControlSystem.distributed.repository.Repository;
-import consulo.versionControlSystem.ui.awt.LegacyDialog;
-import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author VISTALL
@@ -33,9 +34,9 @@ import java.util.List;
 @Singleton
 @ServiceImpl
 public class DistributedVersionControlHelperImpl implements DistributedVersionControlHelper {
-    
+    @RequiredUIAccess
     @Override
-    public LegacyDialog createPushDialog(Project project, List<? extends Repository> selectedRepositories, @Nullable Repository currentRepo) {
-        return new VcsPushDialog(project, selectedRepositories, currentRepo);
+    public CompletableFuture<?> showPushDialog(Project project, List<? extends Repository> selectedRepositories, @Nullable Repository currentRepo) {
+        return UnifiedPushDialog.show(project, selectedRepositories, currentRepo);
     }
 }

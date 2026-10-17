@@ -92,6 +92,12 @@ final class DesktopQtTreeCheckBoxes<E> {
         return delegate.checkBoxRect(tree, tree.visualRect(index), index).contains(position);
     }
 
+    void toggle(QTreeWidget tree, TreeNodeImpl<E> node) {
+        if (myState.getShownState(node) != null && myState.isCheckEnabled(node.getValue())) {
+            myState.toggle(node, List.of(), DesktopQtCurrentInput.current(tree));
+        }
+    }
+
     boolean toggleByKey(QTreeWidget tree, QKeyEvent event) {
         if (event.key() != Qt.Key.Key_Space.value() || event.modifiers().value() != 0) {
             return false;

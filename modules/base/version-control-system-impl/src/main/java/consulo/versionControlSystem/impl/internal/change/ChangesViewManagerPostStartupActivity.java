@@ -15,8 +15,7 @@
  */
 package consulo.versionControlSystem.impl.internal.change;
 
-import consulo.annotation.component.ComponentProfiles;
-import consulo.annotation.component.ExtensionImpl;
+import consulo.annotation.DeprecationInfo;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.project.startup.PostStartupActivity;
@@ -26,7 +25,8 @@ import consulo.ui.UIAccess;
  * @author VISTALL
  * @since 10-Jul-22
  */
-@ExtensionImpl(order = "after changelist-manager", profiles = ComponentProfiles.AWT)
+@Deprecated
+@DeprecationInfo("Use UnifiedChangesViewStartupActivity")
 public class ChangesViewManagerPostStartupActivity implements PostStartupActivity, DumbAware {
   @Override
   public void runActivity(Project project, UIAccess uiAccess) {

@@ -16,6 +16,7 @@
 package consulo.ui;
 
 import consulo.disposer.Disposable;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ComponentEventListener;
 import consulo.ui.event.TreeCollapseEvent;
 import consulo.ui.event.TreeDoubleClickEvent;
@@ -157,6 +158,44 @@ public interface Tree<E> extends Component, HasDestroyHook, HasTransferHandler<T
      * Rebuilds the whole tree from the model, for a change no single node can be pointed at.
      */
     CompletableFuture<?> refreshAll();
+
+    /**
+     * Lets the nodes the editor accepts be edited in place. A null editor turns editing off.
+     */
+    @RequiredUIAccess
+    default void setNodeEditor(@Nullable TreeNodeEditor<E> editor) {
+    }
+
+    /**
+     * Shows the editor in the row of the node. The node must be loaded and accepted by the editor.
+     *
+     * @return true if editing started
+     */
+    @RequiredUIAccess
+    default boolean startEditing(TreeNode<E> node) {
+        return false;
+    }
+
+    /**
+     * Applies and closes the open editor, if any.
+     *
+     * @return false if the editor refused to stop and stays open
+     */
+    @RequiredUIAccess
+    default boolean stopEditing() {
+        return true;
+    }
+
+    /**
+     * Drops and closes the open editor, if any.
+     */
+    @RequiredUIAccess
+    default void cancelEditing() {
+    }
+
+    default boolean isEditing() {
+        return false;
+    }
 
     @SuppressWarnings("unchecked")
     default Disposable addSelectListener(ComponentEventListener<Tree<E>, TreeSelectEvent<E>> listener) {

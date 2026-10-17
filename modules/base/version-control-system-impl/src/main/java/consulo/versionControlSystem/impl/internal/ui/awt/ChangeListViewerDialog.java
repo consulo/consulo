@@ -15,6 +15,7 @@
  */
 package consulo.versionControlSystem.impl.internal.ui.awt;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.dataContext.DataSink;
 import consulo.dataContext.UiDataProvider;
 import consulo.platform.base.localize.CommonLocalize;
@@ -51,6 +52,8 @@ import java.util.function.Function;
  * @author max
  * @since 2006-07-20
  */
+@Deprecated
+@DeprecationInfo("Use VcsChangesDialogFactory#showChanges")
 public class ChangeListViewerDialog extends DialogWrapper implements UiDataProvider, LegacyDialog {
   private Project myProject;
   private CommittedChangeList myChangeList;

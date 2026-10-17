@@ -160,7 +160,7 @@ public class ShelvedChangesViewManagerImpl implements ShelvedChangesViewManager 
         if (changeLists.size() == 0) {
             if (myContent != null) {
                 myContentManager.removeContent(myContent);
-                myContentManager.selectContent("Local");
+                myContentManager.selectContent(ChangesViewContentI.LOCAL_CHANGES);
             }
             myContent = null;
         }
@@ -170,6 +170,7 @@ public class ShelvedChangesViewManagerImpl implements ShelvedChangesViewManager 
                 scrollPane.setBorder(null);
                 myContent = ContentFactory.getInstance().createContent(scrollPane, VcsLocalize.shelfTab().get(), false);
                 myContent.setCloseable(false);
+                myContent.putUserData(ChangesViewContentI.CONTENT_ID_KEY, ChangesViewContentI.SHELF);
                 myContentManager.addContent(myContent);
             }
             TreeState state = TreeState.createOn(myTree);

@@ -50,6 +50,7 @@ import java.util.Set;
 
 public class DesktopQtTextItemDelegate extends QStyledItemDelegate {
     public static final int PRESENTATION_ROLE = Qt.ItemDataRole.UserRole + 1;
+    public static final int EDITING_ROLE = Qt.ItemDataRole.UserRole + 2;
 
     private static final int SUFFIX_GAP = 16;
     private static final int SUFFIX_ICON_GAP = 4;
@@ -115,7 +116,54 @@ public class DesktopQtTextItemDelegate extends QStyledItemDelegate {
     }
 
     @Override
+    public void updateEditorGeometry(@Nullable QWidget editor, QStyleOptionViewItem option, QModelIndex index) {
+        if (editor == null || !isEditingRow(index)) {
+            super.updateEditorGeometry(editor, option, index);
+            return;
+        }
+
+        QStyleOptionViewItem styleOption = new QStyleOptionViewItem(option);
+        initStyleOption(styleOption, index);
+
+        QWidget widget = styleOption.widget();
+        QStyle style = widget != null ? widget.style() : QApplication.style();
+
+        QRect rect = option.rect();
+        int left = rect.left();
+        if (styleOption.features().testFlag(QStyleOptionViewItem.ViewItemFeature.HasCheckIndicator)) {
+            QRect check = style.subElementRect(QStyle.SubElement.SE_ItemViewItemCheckIndicator, styleOption, widget);
+            left = check.right() + 1 + style.pixelMetric(QStyle.PixelMetric.PM_FocusFrameHMargin, styleOption, widget) + 1;
+        }
+
+        editor.setGeometry(new QRect(left, rect.top(), Math.max(0, rect.right() + 1 - left), rect.height()));
+    }
+
+    private void paintEditing(QPainter painter, QStyleOptionViewItem option, QModelIndex index) {
+        QStyleOptionViewItem styleOption = new QStyleOptionViewItem(option);
+        initStyleOption(styleOption, index);
+
+        QStyleOptionViewItem.ViewItemFeatures features = styleOption.features();
+        features.setFlag(QStyleOptionViewItem.ViewItemFeature.HasDecoration, false);
+        features.setFlag(QStyleOptionViewItem.ViewItemFeature.HasDisplay, false);
+        styleOption.setFeatures(features);
+        styleOption.setText("");
+
+        QWidget widget = styleOption.widget();
+        QStyle style = widget != null ? widget.style() : QApplication.style();
+        style.drawControl(QStyle.ControlElement.CE_ItemViewItem, styleOption, painter, widget);
+    }
+
+    protected static boolean isEditingRow(QModelIndex index) {
+        return index.isValid() && Boolean.TRUE.equals(index.data(EDITING_ROLE));
+    }
+
+    @Override
     public void paint(@Nullable QPainter painter, QStyleOptionViewItem option, QModelIndex index) {
+        if (painter != null && isEditingRow(index)) {
+            paintEditing(painter, option, index);
+            return;
+        }
+
         DesktopQtTextItemPresentation presentation = presentationOf(index);
         if (painter == null || presentation == null || !isStyled(presentation)) {
             super.paint(painter, option, index);

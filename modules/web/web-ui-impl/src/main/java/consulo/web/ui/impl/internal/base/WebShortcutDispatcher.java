@@ -15,6 +15,7 @@
  */
 package consulo.web.ui.impl.internal.base;
 
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.dom.Element;
 import consulo.dataContext.DataContext;
 import consulo.logging.Logger;
@@ -115,22 +116,24 @@ public final class WebShortcutDispatcher {
             );
 
             List<String> actionIds = shortcuts.getOrDefault(combo, List.of());
+            boolean modalContext = wrapper.toVaadinComponent().getUI().map(UI::hasModalComponent).orElse(false);
             strokeQueue.updateAndGet(previous -> previous
                 .exceptionally(throwable -> null)
-                .thenCompose(ignored -> perform(actionIds, root)));
+                .thenCompose(ignored -> perform(actionIds, root, modalContext)));
         })
+            .allowInert()
             .addEventData("event.detail.combo")
             .addEventData("event.detail.pasteText")
             .addEventData("event.detail.pasteHtml");
     }
 
-    private static CompletableFuture<Void> perform(List<String> actionIds, Component root) {
+    private static CompletableFuture<Void> perform(List<String> actionIds, Component root, boolean modalContext) {
         ActionManager actionManager = ActionManager.getInstance();
 
         List<AnAction> actions = new ArrayList<>();
         for (String actionId : actionIds) {
             AnAction action = actionManager.getAction(actionId);
-            if (action != null) {
+            if (action != null && (!modalContext || action.isEnabledInModalContext())) {
                 actions.add(action);
             }
         }

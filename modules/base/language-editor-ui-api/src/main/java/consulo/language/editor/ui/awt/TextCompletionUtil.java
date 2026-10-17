@@ -23,6 +23,7 @@ import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
 import consulo.language.editor.AutoPopupController;
 import consulo.language.editor.hint.HintManager;
+import consulo.language.editor.ui.textCompletion.TextCompletionProvider;
 import consulo.language.psi.PsiFile;
 import consulo.language.spellchecker.editor.SpellcheckingEditorCustomizationProvider;
 import consulo.project.DumbService;

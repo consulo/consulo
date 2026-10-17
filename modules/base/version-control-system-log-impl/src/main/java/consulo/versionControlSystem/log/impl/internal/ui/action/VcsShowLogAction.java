@@ -30,7 +30,7 @@ public class VcsShowLogAction extends VcsShowToolWindowTabAction {
 
     
     @Override
-    protected String getTabName() {
+    protected String getContentId() {
         return VcsLogContentProvider.TAB_NAME;
     }
 }

@@ -15,16 +15,15 @@
  */
 package consulo.versionControlSystem.change;
 
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
-
-import javax.swing.*;
 
 /**
  * @author yole
  */
 public interface ChangesViewContentProvider {
   @RequiredUIAccess
-  JComponent initContent();
+  Component initContent();
 
   void disposeContent();
 }

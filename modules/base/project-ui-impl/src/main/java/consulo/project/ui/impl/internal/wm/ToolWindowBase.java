@@ -95,7 +95,9 @@ public abstract class ToolWindowBase extends UserDataHolderBase implements ToolW
 
     @Override
     public void setDisplayName(LocalizeValue displayName) {
+        LocalizeValue oldDisplayName = myDisplayName;
         myDisplayName = displayName;
+        myChangeSupport.firePropertyChange(PROP_STRIPE_TITLE, oldDisplayName, displayName);
     }
 
     @Override

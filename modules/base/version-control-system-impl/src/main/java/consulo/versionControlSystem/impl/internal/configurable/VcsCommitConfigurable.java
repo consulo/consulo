@@ -15,6 +15,7 @@
  */
 package consulo.versionControlSystem.impl.internal.configurable;
 
+import consulo.application.Application;
 import consulo.application.localize.ApplicationLocalize;
 import consulo.configurable.SearchableConfigurable;
 import consulo.configurable.SimpleConfigurableByProperties;
@@ -24,10 +25,16 @@ import consulo.project.Project;
 import consulo.ui.CheckBox;
 import consulo.ui.Component;
 import consulo.ui.IntBox;
+import consulo.ui.RadioGroup;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.layout.LabeledLayout;
 import consulo.ui.layout.VerticalLayout;
+import consulo.versionControlSystem.VcsApplicationSettings;
 import consulo.versionControlSystem.VcsConfiguration;
+import consulo.versionControlSystem.commit.CommitModeSettingsListener;
+import consulo.versionControlSystem.commit.CommitModeType;
 import consulo.versionControlSystem.localize.VcsLocalize;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -46,6 +53,8 @@ public class VcsCommitConfigurable extends SimpleConfigurableByProperties implem
         VcsConfiguration settings = VcsConfiguration.getInstance(myProject);
 
         VerticalLayout root = VerticalLayout.create();
+
+        root.add(createCommitModeLayout(propertyBuilder));
 
         CheckBox clearInitialCommitMessageBox = CheckBox.create(VcsLocalize.settingsClearInitialCommitMessage());
         propertyBuilder.add(
@@ -101,6 +110,45 @@ public class VcsCommitConfigurable extends SimpleConfigurableByProperties implem
         root.add(showUnversionedBox);
 
         return root;
+    }
+
+    @RequiredUIAccess
+    private static Component createCommitModeLayout(PropertyBuilder propertyBuilder) {
+        VcsApplicationSettings settings = VcsApplicationSettings.getInstance();
+
+        VerticalLayout modeLayout = VerticalLayout.create();
+
+        RadioGroup<CommitModeType> modeGroup = RadioGroup.create();
+        modeLayout.add(modeGroup.newButton(VcsLocalize.settingsCommitModeToolWindow(), CommitModeType.TOOL_WINDOW));
+        modeLayout.add(modeGroup.newButton(
+            VcsLocalize.settingsCommitModeVersionControlToolWindow(),
+            CommitModeType.VERSION_CONTROL_TOOL_WINDOW
+        ));
+        modeLayout.add(modeGroup.newButton(VcsLocalize.settingsCommitModeDialog(), CommitModeType.DIALOG));
+        propertyBuilder.add(modeGroup, () -> settings.COMMIT_MODE, value -> {
+            settings.COMMIT_MODE = value;
+            fireCommitModeSettingsChanged();
+        });
+
+        CheckBox toggleModeBox = CheckBox.create(VcsLocalize.settingsCommitModeToggle());
+        propertyBuilder.add(toggleModeBox, () -> settings.COMMIT_TOGGLE_MODE, value -> {
+            settings.COMMIT_TOGGLE_MODE = value;
+            fireCommitModeSettingsChanged();
+        });
+        toggleModeBox.setEnabled(isPanelMode(settings.COMMIT_MODE));
+        modeGroup.addValueListener(value -> toggleModeBox.setEnabled(isPanelMode(value)));
+        modeLayout.add(toggleModeBox);
+
+        return LabeledLayout.create(VcsLocalize.settingsCommitModeTitle(), modeLayout);
+    }
+
+    private static boolean isPanelMode(@Nullable CommitModeType type) {
+        return type == CommitModeType.TOOL_WINDOW || type == CommitModeType.VERSION_CONTROL_TOOL_WINDOW;
+    }
+
+    private static void fireCommitModeSettingsChanged() {
+        Application application = Application.get();
+        application.getMessageBus().syncPublisher(CommitModeSettingsListener.class).settingsChanged();
     }
 
     @Override

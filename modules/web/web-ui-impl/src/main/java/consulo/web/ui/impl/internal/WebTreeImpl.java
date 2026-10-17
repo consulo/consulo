@@ -25,6 +25,7 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.grid.dnd.GridDropLocation;
 import com.vaadin.flow.component.grid.dnd.GridDropMode;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.treegrid.TreeGrid;
 import com.vaadin.flow.data.provider.hierarchy.TreeData;
 import com.vaadin.flow.data.provider.hierarchy.TreeDataProvider;
@@ -46,6 +47,7 @@ import consulo.ui.Tree;
 import consulo.ui.TreeExecutor;
 import consulo.ui.TreeModel;
 import consulo.ui.TreeNode;
+import consulo.ui.TreeNodeEditor;
 import consulo.ui.TreeStyle;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -57,6 +59,7 @@ import consulo.ui.impl.tree.TreeController;
 import consulo.ui.impl.tree.TreeNodeImpl;
 import consulo.ui.impl.tree.TreeWidget;
 import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
+import consulo.web.ui.impl.internal.base.TargetVaadin;
 import consulo.web.ui.impl.internal.base.VaadinComponentDelegate;
 import consulo.web.ui.impl.internal.base.WebInputDetails;
 import consulo.web.ui.impl.internal.vaadin.WebLength;
@@ -88,6 +91,44 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl<NODE>
     static final String OUTSIDE_CHECK_BOX =
         "!event.composedPath().some(node => node.classList && node.classList.contains('" + CHECK_BOX_CLASS + "'))";
 
+    private static final String EDITOR_CLASS = "web-tree-editor";
+
+    private static final String NO_MODIFIERS = "!event.ctrlKey && !event.metaKey && !event.shiftKey && !event.altKey";
+
+    private static final String CLICK_ON_SELECTED_ROW = "event.detail === 1 && event.button === 0 && " + NO_MODIFIERS
+        + " && " + OUTSIDE_CHECK_BOX
+        + " && !event.composedPath().some(node => node.getAttribute && node.getAttribute('part') === 'toggle')"
+        + " && event.composedPath().some(node => node.localName === 'tr' && node.hasAttribute('selected'))";
+
+    private static final String EDITOR_STOP_EVENT = "consulo-tree-editor-stop";
+    private static final String EDITOR_CANCEL_EVENT = "consulo-tree-editor-cancel";
+
+    private static final String OWN_KEYS = "13\n27";
+
+    private static final String ISOLATE_EDITOR = "const host = this;"
+        + "for (const type of ['keydown', 'keypress', 'keyup', 'click', 'dblclick', 'mousedown']) {"
+        + " host.addEventListener(type, event => event.stopPropagation());"
+        + "}"
+        + "host.addEventListener('keydown', event => {"
+        + " if (event.isComposing || event.ctrlKey || event.metaKey || event.altKey || event.shiftKey) { return; }"
+        + " if (event.key !== 'Enter' && event.key !== 'Escape') { return; }"
+        + " if (document.querySelector('vaadin-popover[opened]')) { return; }"
+        + " event.preventDefault();"
+        + " event.stopPropagation();"
+        + " host.dispatchEvent(new CustomEvent(event.key === 'Enter' ? '" + EDITOR_STOP_EVENT + "' : '" + EDITOR_CANCEL_EVENT + "'));"
+        + "}, true);";
+
+    private static final String EDITOR_SHOWN_EVENT = "consulo-tree-editor-shown";
+
+    private static final String FOCUS_EDITOR = "const host = this; let tries = 0;"
+        + "const run = () => {"
+        + " if (!host.isConnected || host.getClientRects().length === 0) { if (tries++ < 40) { setTimeout(run, 25); } return; }"
+        + " const target = host.querySelector('input, textarea, [contenteditable=\"true\"], [tabindex]:not([tabindex=\"-1\"])');"
+        + " if (target) { target.focus(); }"
+        + " host.dispatchEvent(new CustomEvent('" + EDITOR_SHOWN_EVENT + "'));"
+        + "};"
+        + "run();";
+
     private @Nullable TransferHandler<TreeNode<NODE>> myTransferHandler;
     private @Nullable Function<TreeNode<NODE>, Length> myItemHeightGetter;
     private @Nullable Function<TreeNode<NODE>, String> mySpeedSearchConverter;
@@ -97,6 +138,9 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl<NODE>
 
     private boolean myAllowMultipleSelect;
     private @Nullable Registration mySelectionRegistration;
+
+    private @Nullable TreeNodeEditor<NODE> myNodeEditor;
+    private @Nullable WebTreeEditing<NODE> myEditing;
 
     private final Disposable myDestroyHook = Disposable.newDisposable("Tree");
 
@@ -197,6 +241,10 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl<NODE>
                 // a click anywhere on the toggle selects - the label is inside it - while opening a node is
                 // the chevron's alone. the filter keeps the label clicks off the wire entirely, and the
                 // client half of this is treeToggle.js, which stops the element flipping itself for them
+                if (node != null && isEditable(node)) {
+                    toggle.getElement().addEventListener("click", event -> startEditing(node)).setFilter(CLICK_ON_SELECTED_ROW);
+                }
+
                 toggle.addClickListener(event -> {
                     if (myAllowMultipleSelect && (event.isCtrlKey() || event.isMetaKey())) {
                         toggleRow(row);
@@ -226,7 +274,13 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl<NODE>
 
                 applyItemHeight(node);
 
-                decorateRow(toggle, node).add(item.toComponent());
+                WebTreeEditing<NODE> editing = myEditing;
+                if (editing != null && editing.node() == node) {
+                    decorateRow(toggle, node).add(editing.host());
+                }
+                else {
+                    decorateRow(toggle, node).add(item.toComponent());
+                }
                 return toggle;
             }).setAutoWidth(true).setFlexGrow(1);
 
@@ -358,6 +412,8 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl<NODE>
             if (node == null) {
                 return;
             }
+
+            leaveEditing(node);
 
             if (myAllowMultipleSelect) {
                 deselectAll();
@@ -506,6 +562,15 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl<NODE>
             if (node != null && myRows.get(node) == row) {
                 myRows.remove(node);
             }
+
+            WebTreeEditing<NODE> editing = myEditing;
+            TreeNodeEditor<NODE> editor = myNodeEditor;
+            if (editing != null && editing.node() == node) {
+                myEditing = null;
+                if (editor != null) {
+                    editor.cancelEditing(editing.value(), editing.component());
+                }
+            }
         }
 
         private void setExpanded(TreeNodeImpl<NODE> node, boolean expanded) {
@@ -629,6 +694,13 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl<NODE>
 
         installSelectionListener();
 
+        vaadin.getElement().addEventListener("keydown", event -> {
+            TreeNode<NODE> selected = myController.getSelected();
+            if (selected != null) {
+                startEditing(selected);
+            }
+        }).setFilter("event.key === 'F2' && " + NO_MODIFIERS);
+
         WebInputDetails.addClickListener(vaadin.getElement(), "dblclick", inputDetails -> {
             TreeNodeImpl<NODE> selectedNode = myController.getSelected();
             if (selectedNode != null) {
@@ -647,6 +719,9 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl<NODE>
             if (!event.isFromClient()) {
                 return;
             }
+
+            WebTreeRow<NODE> first = event.getFirstSelectedItem().orElse(null);
+            leaveEditing(first == null ? null : first.getNode());
 
             if (myAllowMultipleSelect) {
                 List<TreeNodeImpl<NODE>> nodes = selectedNodes(event.getAllSelectedItems());
@@ -714,6 +789,122 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl<NODE>
 
     TreeController<NODE> getController() {
         return myController;
+    }
+
+    private boolean isEditable(TreeNodeImpl<NODE> node) {
+        TreeNodeEditor<NODE> editor = myNodeEditor;
+        NODE value = node.getValue();
+        return editor != null && value != null && editor.isEditable(value);
+    }
+
+    private void leaveEditing(@Nullable TreeNodeImpl<NODE> selected) {
+        WebTreeEditing<NODE> editing = myEditing;
+        if (editing != null && editing.node() != selected && !stopEditing()) {
+            cancelEditing();
+        }
+    }
+
+    @Override
+    public void setNodeEditor(@Nullable TreeNodeEditor<NODE> editor) {
+        cancelEditing();
+        myNodeEditor = editor;
+        toVaadinComponent().getDataProvider().refreshAll();
+    }
+
+    @Override
+    public boolean startEditing(TreeNode<NODE> node) {
+        TreeNodeEditor<NODE> editor = myNodeEditor;
+        NODE value = node.getValue();
+        if (editor == null || value == null || !(node instanceof TreeNodeImpl<NODE> impl) || !editor.isEditable(value)) {
+            return false;
+        }
+
+        Vaadin vaadin = toVaadinComponent();
+        WebTreeRow<NODE> row = vaadin.liveRow(impl);
+        if (row == null) {
+            return false;
+        }
+
+        WebTreeEditing<NODE> current = myEditing;
+        if (current != null) {
+            if (current.node() == impl) {
+                return true;
+            }
+            if (!stopEditing()) {
+                return false;
+            }
+        }
+
+        if (myController.getSelected() != impl) {
+            vaadin.selectRow(row);
+        }
+
+        Component component = editor.createEditor(value);
+        Div host = new Div(TargetVaadin.to(component));
+        host.addClassName(EDITOR_CLASS);
+        host.getElement().setAttribute("consulo-own-keys", OWN_KEYS);
+        host.getElement().executeJs(ISOLATE_EDITOR);
+        host.getElement().addEventListener(EDITOR_STOP_EVENT, event -> stopEditing());
+        host.getElement().addEventListener(EDITOR_CANCEL_EVENT, event -> cancelEditing());
+
+        WebTreeEditing<NODE> editing = new WebTreeEditing<>(impl, value, component, host);
+        host.getElement().addEventListener(EDITOR_SHOWN_EVENT, event -> {
+            if (myEditing == editing) {
+                editor.editingStarted(value, component);
+            }
+        });
+
+        myEditing = editing;
+        vaadin.refreshRow(row);
+        vaadin.scrollToItem(row);
+
+        host.getElement().executeJs(FOCUS_EDITOR);
+        return true;
+    }
+
+    @Override
+    public boolean stopEditing() {
+        WebTreeEditing<NODE> editing = myEditing;
+        if (editing == null) {
+            return true;
+        }
+
+        TreeNodeEditor<NODE> editor = myNodeEditor;
+        if (editor != null && !editor.stopEditing(editing.value(), editing.component())) {
+            return false;
+        }
+
+        finishEditing(editing);
+        return true;
+    }
+
+    @Override
+    public void cancelEditing() {
+        WebTreeEditing<NODE> editing = myEditing;
+        if (editing == null) {
+            return;
+        }
+
+        TreeNodeEditor<NODE> editor = myNodeEditor;
+        if (editor != null) {
+            editor.cancelEditing(editing.value(), editing.component());
+        }
+        finishEditing(editing);
+    }
+
+    @Override
+    public boolean isEditing() {
+        return myEditing != null;
+    }
+
+    private void finishEditing(WebTreeEditing<NODE> editing) {
+        if (myEditing == editing) {
+            myEditing = null;
+        }
+
+        Vaadin vaadin = toVaadinComponent();
+        vaadin.refreshNode(editing.node());
+        vaadin.focus();
     }
 
     void scrollTo(@Nullable TreeNode<NODE> node) {

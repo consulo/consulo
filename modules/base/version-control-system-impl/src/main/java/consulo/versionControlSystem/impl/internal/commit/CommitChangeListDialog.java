@@ -15,6 +15,7 @@
  */
 package consulo.versionControlSystem.impl.internal.commit;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.application.Application;
 import consulo.application.ApplicationPropertiesComponent;
 import consulo.application.progress.ProgressManager;
@@ -69,6 +70,8 @@ import java.util.List;
 import java.util.*;
 import java.util.function.Supplier;
 
+@Deprecated
+@DeprecationInfo("Use UnifiedCommitChangeListDialog")
 public class CommitChangeListDialog extends DialogWrapper implements CheckinProjectPanel, UiDataProvider {
     private final static String outCommitHelpId = "reference.dialogs.vcs.commit";
     private static final int LAYOUT_VERSION = 2;

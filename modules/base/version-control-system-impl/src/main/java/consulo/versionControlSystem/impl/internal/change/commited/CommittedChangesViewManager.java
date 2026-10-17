@@ -15,6 +15,8 @@
  */
 package consulo.versionControlSystem.impl.internal.change.commited;
 
+import consulo.ui.Component;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.application.ApplicationManager;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.messagebus.MessageBusConnection;
@@ -81,13 +83,13 @@ public class CommittedChangesViewManager implements ChangesViewContentProvider {
     }, () -> (!myProject.isOpen()) || myProject.isDisposed() || myComponent == null);
   }
 
-  public JComponent initContent() {
+  public Component initContent() {
     myVcsManager.addVcsListener(myVcsListener);
     myConnection = myBus.connect();
     myConnection.subscribe(CommittedChangesListener.class, new MyCommittedChangesListener());
     updateChangesContent();
     myComponent.refreshChanges(true);
-    return myComponent;
+    return TargetAWT.wrap(myComponent);
   }
 
   public void disposeContent() {

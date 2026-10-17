@@ -17,12 +17,10 @@ package consulo.versionControlSystem.ui;
 
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.toolWindow.ToolWindow;
-import consulo.versionControlSystem.VcsToolWindow;
 import consulo.versionControlSystem.internal.ChangesViewContentI;
 import org.jspecify.annotations.Nullable;
 
@@ -39,23 +37,23 @@ public abstract class VcsShowToolWindowTabAction extends LegacyDumbAwareAction {
         Project project = e.getRequiredData(Project.KEY);
         ToolWindow toolWindow = assertNotNull(getToolWindow(project));
         ChangesViewContentI changesViewContentManager = ChangesViewContentI.getInstance(project);
-        String tabName = getTabName();
+        String contentId = getContentId();
 
-        boolean contentAlreadySelected = changesViewContentManager.isContentSelected(tabName);
+        boolean contentAlreadySelected = changesViewContentManager.isContentSelected(contentId);
         if (toolWindow.isActive() && contentAlreadySelected) {
             toolWindow.hide(null);
         }
         else {
-            Runnable runnable = contentAlreadySelected ? null : () -> changesViewContentManager.selectContent(tabName, true);
+            Runnable runnable = contentAlreadySelected ? null : () -> changesViewContentManager.selectContent(contentId, true);
             toolWindow.activate(runnable, true, true);
         }
     }
 
-    private static @Nullable ToolWindow getToolWindow(@Nullable Project project) {
+    private @Nullable ToolWindow getToolWindow(@Nullable Project project) {
         if (project == null) {
             return null;
         }
-        return ToolWindowManager.getInstance(project).getToolWindow(VcsToolWindow.ID);
+        return ChangesViewContentI.getInstance(project).getToolWindowFor(getContentId());
     }
 
     @Override
@@ -64,5 +62,5 @@ public abstract class VcsShowToolWindowTabAction extends LegacyDumbAwareAction {
     }
 
     
-    protected abstract String getTabName();
+    protected abstract String getContentId();
 }

@@ -110,6 +110,11 @@ public class CommonCheckinFilesAction extends AbstractCommonCheckinAction {
     }
 
     @Override
+    protected boolean isForceUpdateCommitStateFromContext() {
+        return true;
+    }
+
+    @Override
     protected boolean approximatelyHasRoots(VcsContext dataContext) {
         FileStatusManager manager = FileStatusManager.getInstance(dataContext.getProject());
 

@@ -64,7 +64,7 @@ public class DesktopQtCheckBoxTreeItemDelegate extends DesktopQtTextItemDelegate
 
     @Override
     public void paint(@Nullable QPainter painter, QStyleOptionViewItem option, QModelIndex index) {
-        if (painter == null || !isCheckDisabled(index)) {
+        if (painter == null || !isCheckDisabled(index) || isEditingRow(index)) {
             super.paint(painter, option, index);
             return;
         }

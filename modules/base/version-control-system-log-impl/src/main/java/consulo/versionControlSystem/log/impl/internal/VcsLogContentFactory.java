@@ -40,6 +40,11 @@ public class VcsLogContentFactory implements ChangesViewContentFactory {
 
   
   @Override
+  public String getId() {
+    return VcsLogContentProvider.TAB_NAME;
+  }
+
+  @Override
   public LocalizeValue getTabName() {
     return LocalizeValue.localizeTODO("Log");
   }

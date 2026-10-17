@@ -15,6 +15,8 @@
  */
 package consulo.versionControlSystem.impl.internal.change.commited;
 
+import consulo.ui.Component;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.application.ApplicationManager;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.messagebus.MessageBusConnection;
@@ -65,7 +67,7 @@ public class IncomingChangesViewProvider implements ChangesViewContentProvider {
     });
   }
 
-  public JComponent initContent() {
+  public Component initContent() {
     myBrowser = new CommittedChangesTreeBrowser(myProject, Collections.<CommittedChangeList>emptyList());
     myBrowser.getEmptyText().setText(VcsLocalize.incomingChangesNotLoadedMessage());
     ActionGroup group = (ActionGroup) ActionManager.getInstance().getAction("IncomingChangesToolbar");
@@ -78,7 +80,7 @@ public class IncomingChangesViewProvider implements ChangesViewContentProvider {
 
     JPanel contentPane = new JPanel(new BorderLayout());
     contentPane.add(myBrowser, BorderLayout.CENTER);
-    return contentPane;
+    return TargetAWT.wrap(contentPane);
   }
 
   public void disposeContent() {

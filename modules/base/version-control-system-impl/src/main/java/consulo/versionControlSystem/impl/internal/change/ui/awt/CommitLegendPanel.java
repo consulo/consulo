@@ -15,6 +15,7 @@
  */
 package consulo.versionControlSystem.impl.internal.change.ui.awt;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.localize.LocalizeValue;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.status.FileStatus;
@@ -24,6 +25,8 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 
 import javax.swing.*;
 
+@Deprecated
+@DeprecationInfo("Use the legend of UnifiedCommitChangeListDialog")
 public class CommitLegendPanel {
     private final SimpleColoredComponent myRootPanel;
 

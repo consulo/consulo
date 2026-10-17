@@ -85,6 +85,7 @@ public class WebWindowImpl extends VaadinComponentDelegate<WebWindowImpl.Vaadin>
     private final @Nullable String myDimensionKey;
     private final WebRootPaneImpl myRootPanel = new WebRootPaneImpl();
     private @Nullable WebToastStack myToastStack;
+    private @Nullable Component myFocusedBeforeShow;
 
     public WebWindowImpl(boolean modal, WindowOptions options) {
         Vaadin vaadinComponent = getVaadinComponent();
@@ -129,7 +130,7 @@ public class WebWindowImpl extends VaadinComponentDelegate<WebWindowImpl.Vaadin>
         });
 
         WebFocusManagerImpl.register(toVaadinComponent());
-        WebFocusTracker.installActivityRoot(vaadinComponent.getElement());
+        WebFocusTracker.installRoot(vaadinComponent.getElement());
     }
 
     private void addCloseDialogButton() {
@@ -158,6 +159,10 @@ public class WebWindowImpl extends VaadinComponentDelegate<WebWindowImpl.Vaadin>
             applyRememberedSize();
 
             UI.getCurrent().add(vaadin);
+        }
+
+        if (!vaadin.isOpened()) {
+            myFocusedBeforeShow = WebFocusTracker.getFocusedComponent();
         }
 
         vaadin.open();
@@ -223,6 +228,11 @@ public class WebWindowImpl extends VaadinComponentDelegate<WebWindowImpl.Vaadin>
         // nests an overlay opened on top of another modal inside that modal - so a window closed out of order stays
         // attached and keeps the ui element inert. detaching here runs the modal stack cleanup right away
         getVaadinComponent().getElement().removeFromParent();
+
+        if (WebFocusTracker.getFocusedComponent() == null) {
+            WebFocusTracker.setFocusedComponent(myFocusedBeforeShow);
+        }
+        myFocusedBeforeShow = null;
 
         fireClosed();
     }

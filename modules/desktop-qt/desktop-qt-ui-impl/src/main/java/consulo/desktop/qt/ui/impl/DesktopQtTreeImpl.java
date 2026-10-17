@@ -23,6 +23,7 @@ import consulo.desktop.qt.ui.impl.image.DesktopQtIconOwner;
 import consulo.desktop.qt.ui.impl.image.DesktopQtImage;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.ui.Component;
 import consulo.ui.DragAndDropTransferHandler;
 import consulo.ui.Length;
 import consulo.ui.Point2D;
@@ -33,6 +34,7 @@ import consulo.ui.Tree;
 import consulo.ui.TreeExecutor;
 import consulo.ui.TreeModel;
 import consulo.ui.TreeNode;
+import consulo.ui.TreeNodeEditor;
 import consulo.ui.TreeStyle;
 import consulo.ui.UIAccess;
 import consulo.ui.event.details.InputDetails;
@@ -97,6 +99,10 @@ public class DesktopQtTreeImpl<E> extends QtComponentDelegate<QTreeWidget>
     private boolean mySyncing;
     private boolean myAllowMultipleSelect;
 
+    private @Nullable TreeNodeEditor<E> myNodeEditor;
+    private @Nullable DesktopQtTreeEditing<E> myEditing;
+    private @Nullable QTreeWidgetItem myEditOnRelease;
+
     public DesktopQtTreeImpl(@Nullable E rootValue, TreeModel<E> model, TreeExecutor executor) {
         myController = new TreeController<>(this, rootValue, model, executor, new Binding());
         Disposer.register(myDestroyHook, myController);
@@ -121,7 +127,36 @@ public class DesktopQtTreeImpl<E> extends QtComponentDelegate<QTreeWidget>
         }
 
         @Override
+        protected void mousePressEvent(QMouseEvent event) {
+            myEditOnRelease = editOnRelease(this, event);
+            super.mousePressEvent(event);
+        }
+
+        @Override
+        protected void mouseReleaseEvent(QMouseEvent event) {
+            super.mouseReleaseEvent(event);
+
+            DesktopQtTreeEditing<E> editing = myEditing;
+            if (editing != null && !editing.isGone() && itemAt(event.position().toPoint()) == editing.item()) {
+                if (event.button() == Qt.MouseButton.LeftButton) {
+                    editedRowClicked(this, event, editing.node());
+                }
+                editing.host().restoreFocus();
+            }
+
+            QTreeWidgetItem item = myEditOnRelease;
+            myEditOnRelease = null;
+            if (item != null && !item.isDisposed() && itemAt(event.position().toPoint()) == item) {
+                TreeNodeImpl<E> node = myNodes.get(item);
+                if (node != null) {
+                    startEditing(node);
+                }
+            }
+        }
+
+        @Override
         protected void mouseDoubleClickEvent(QMouseEvent event) {
+            myEditOnRelease = null;
             if (event.button() != Qt.MouseButton.LeftButton || isPressOnly(this, event)) {
                 // the second click of a pair arrives as a double click rather than as a press, so it has to be
                 // handled as the press it stands for - dropping it would swallow every other right click
@@ -134,6 +169,15 @@ public class DesktopQtTreeImpl<E> extends QtComponentDelegate<QTreeWidget>
 
         @Override
         protected void keyPressEvent(QKeyEvent event) {
+            if (event.key() == Qt.Key.Key_F2.value() && event.modifiers().value() == 0 && myNodeEditor != null) {
+                QTreeWidgetItem current = currentItem();
+                TreeNodeImpl<E> node = current == null ? null : myNodes.get(current);
+                if (node != null && startEditing(node)) {
+                    event.accept();
+                    return;
+                }
+            }
+
             if (consumeKeyPress(this, event)) {
                 event.accept();
                 return;
@@ -211,6 +255,11 @@ public class DesktopQtTreeImpl<E> extends QtComponentDelegate<QTreeWidget>
         myDragAndDrop.install(tree);
 
         tree.itemSelectionChanged.connect(() -> {
+            DesktopQtTreeEditing<E> editing = myEditing;
+            if (editing != null && (editing.isGone() || !editing.item().isSelected()) && !stopEditing()) {
+                cancelEditing();
+            }
+
             if (mySyncing) {
                 return;
             }
@@ -479,6 +528,155 @@ public class DesktopQtTreeImpl<E> extends QtComponentDelegate<QTreeWidget>
             myItems.remove(node);
             myLoadingItems.remove(node);
         }
+
+        DesktopQtTreeEditing<E> editing = myEditing;
+        TreeNodeEditor<E> editor = myNodeEditor;
+        if (editing != null && editing.item() == item) {
+            myEditing = null;
+            editing.host().untrackFocus();
+            if (editor != null) {
+                editor.cancelEditing(editing.value(), editing.component());
+            }
+        }
+    }
+
+    private @Nullable QTreeWidgetItem editOnRelease(QTreeWidget tree, QMouseEvent event) {
+        TreeNodeEditor<E> editor = myNodeEditor;
+        if (editor == null
+            || myEditing != null
+            || event.button() != Qt.MouseButton.LeftButton
+            || event.modifiers().value() != 0
+            || isPressOnly(tree, event)) {
+            return null;
+        }
+
+        QPoint position = event.position().toPoint();
+        QTreeWidgetItem item = tree.itemAt(position);
+        if (item == null || !item.isSelected() || tree.selectedItems().size() != 1 || !tree.visualItemRect(item).contains(position)) {
+            return null;
+        }
+
+        TreeNodeImpl<E> node = myNodes.get(item);
+        E value = node == null ? null : node.getValue();
+        return value != null && editor.isEditable(value) ? item : null;
+    }
+
+    @Override
+    public void setNodeEditor(@Nullable TreeNodeEditor<E> editor) {
+        cancelEditing();
+        myNodeEditor = editor;
+    }
+
+    @Override
+    public boolean startEditing(TreeNode<E> node) {
+        QTreeWidget tree = myComponent;
+        TreeNodeEditor<E> editor = myNodeEditor;
+        E value = node.getValue();
+        if (tree == null || tree.isDisposed() || editor == null || value == null || !(node instanceof TreeNodeImpl<E> impl)) {
+            return false;
+        }
+
+        QTreeWidgetItem item = liveItem(impl);
+        if (item == null || !editor.isEditable(value)) {
+            return false;
+        }
+
+        DesktopQtTreeEditing<E> current = myEditing;
+        if (current != null) {
+            if (current.node() == impl && !current.isGone()) {
+                return true;
+            }
+            if (!stopEditing()) {
+                return false;
+            }
+        }
+
+        if (!item.isSelected() || tree.currentItem() != item) {
+            tree.setCurrentItem(item);
+        }
+        tree.scrollToItem(item);
+
+        Component component = editor.createEditor(value);
+        if (!(component instanceof QtComponentDelegate<?> delegate)) {
+            return false;
+        }
+
+        DesktopQtTreeEditorHost host = new DesktopQtTreeEditorHost(tree.viewport(), this::stopEditing, this::cancelEditing);
+        delegate.bind(host, null);
+        QWidget widget = delegate.toQtComponent();
+        if (widget == null) {
+            host.dispose();
+            return false;
+        }
+        host.setEditor(widget);
+
+        sync(() -> item.setData(0, DesktopQtTextItemDelegate.EDITING_ROLE, Boolean.TRUE));
+        tree.setItemWidget(item, 0, host);
+
+        myEditing = new DesktopQtTreeEditing<>(impl, value, item, host, component);
+
+        host.trackFocus();
+        host.focusEditor();
+        editor.editingStarted(value, component);
+        return true;
+    }
+
+    @Override
+    public boolean stopEditing() {
+        DesktopQtTreeEditing<E> editing = myEditing;
+        if (editing == null) {
+            return true;
+        }
+
+        TreeNodeEditor<E> editor = myNodeEditor;
+        if (editor != null && !editing.isGone() && !editor.stopEditing(editing.value(), editing.component())) {
+            return false;
+        }
+
+        finishEditing(editing);
+        return true;
+    }
+
+    @Override
+    public void cancelEditing() {
+        DesktopQtTreeEditing<E> editing = myEditing;
+        if (editing == null) {
+            return;
+        }
+
+        TreeNodeEditor<E> editor = myNodeEditor;
+        if (editor != null) {
+            editor.cancelEditing(editing.value(), editing.component());
+        }
+        finishEditing(editing);
+    }
+
+    @Override
+    public boolean isEditing() {
+        DesktopQtTreeEditing<E> editing = myEditing;
+        return editing != null && !editing.isGone();
+    }
+
+    private void finishEditing(DesktopQtTreeEditing<E> editing) {
+        if (myEditing == editing) {
+            myEditing = null;
+        }
+
+        QTreeWidget tree = myComponent;
+        boolean hadFocus = !editing.host().isDisposed() && editing.host().hasFocusInside(QApplication.focusWidget());
+        editing.host().untrackFocus();
+
+        QTreeWidgetItem item = editing.item();
+        if (!item.isDisposed()) {
+            sync(() -> item.setData(0, DesktopQtTextItemDelegate.EDITING_ROLE, null));
+            if (tree != null && !tree.isDisposed()) {
+                tree.removeItemWidget(item, 0);
+            }
+        }
+
+        if (hadFocus && tree != null && !tree.isDisposed()) {
+            tree.setFocus(Qt.FocusReason.OtherFocusReason);
+        }
     }
 
     private void restoreExpanded(TreeNodeImpl<E> node, QTreeWidgetItem item) {
@@ -541,6 +739,9 @@ public class DesktopQtTreeImpl<E> extends QtComponentDelegate<QTreeWidget>
 
     protected boolean consumeKeyPress(QTreeWidget tree, QKeyEvent event) {
         return false;
+    }
+
+    protected void editedRowClicked(QTreeWidget tree, QMouseEvent event, TreeNodeImpl<E> node) {
     }
 
     protected final @Nullable TreeNodeImpl<E> nodeOf(QTreeWidgetItem item) {

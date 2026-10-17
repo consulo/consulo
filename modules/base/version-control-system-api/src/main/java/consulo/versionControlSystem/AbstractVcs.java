@@ -32,6 +32,7 @@ import consulo.versionControlSystem.change.CommitExecutor;
 import consulo.versionControlSystem.change.LocalChangeList;
 import consulo.versionControlSystem.change.VcsDirtyScopeBuilder;
 import consulo.versionControlSystem.checkin.CheckinEnvironment;
+import consulo.versionControlSystem.commit.CommitMode;
 import consulo.versionControlSystem.diff.DiffProvider;
 import consulo.versionControlSystem.diff.RevisionSelector;
 import consulo.versionControlSystem.history.VcsHistoryProvider;
@@ -503,6 +504,10 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
 
     public VcsType getType() {
         return VcsType.centralized;
+    }
+
+    public @Nullable CommitMode getForcedCommitMode(CommitMode commitMode) {
+        return null;
     }
 
     protected @Nullable VcsOutgoingChangesProvider<ComList> getOutgoingProviderImpl() {

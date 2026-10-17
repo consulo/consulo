@@ -15,11 +15,22 @@
  */
 package consulo.versionControlSystem.distributed.push;
 
+import consulo.ui.Component;
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
-import javax.swing.*;
 
-public abstract class VcsPushOptionsPanel extends JPanel {
+public abstract class VcsPushOptionsPanel {
+    @RequiredUIAccess
+    public abstract Component getComponent();
 
-  public abstract @Nullable VcsPushOptionValue getValue();
+    public abstract @Nullable VcsPushOptionValue getValue();
 
+    public OptionsPanelPosition getPosition() {
+        return OptionsPanelPosition.DEFAULT;
+    }
+
+    public enum OptionsPanelPosition {
+        DEFAULT,
+        SOUTH
+    }
 }

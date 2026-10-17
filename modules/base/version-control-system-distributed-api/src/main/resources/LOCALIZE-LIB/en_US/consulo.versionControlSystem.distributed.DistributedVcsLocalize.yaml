@@ -2,18 +2,36 @@ action.BranchActionGroupPopup.Anonymous.text.restore.size:
     text: Restore Size
 action.BranchActionGroupPopup.settings.text:
     text: Settings
+action.complex.push:
+    text: _Push
+action.force.push.confirmation.text:
+    text: You're going to force push. It may overwrite commits at the remote. Are you sure you want to proceed?
+action.force.push.don.t.warn.about.this.target:
+    text: Don't warn about this target
+action.force.push.is.prohibited.description:
+    text: Force push to {0} is prohibited
+action.force.push.is.prohibited.settings.link:
+    text: Configure protected branches in ''{0}''
+action.force.push.to.confirmation.text:
+    text: You''re going to force push to {0}. It may overwrite commits at the remote. Are you sure you want to proceed?
+action.force.push:
+    text: _Force Push
 action.new.branch.description:
     text: Create and checkout new branch
 action.new.branch.no.commits.description:
     text: Checkout of a new branch is not possible before the first commit
 action.new.branch.text:
     text: New Branch
+action.push.anyway:
+    text: _Push Anyway
+action.push:
+    text: _Push
 branch.popup.maximum.branch.length.sample:
     text: 'VCS: Rebasing feature-12345 in custom development branch'
-branch.popup.vcs.name.branches:
-    text: '{0} Branches'
 branch.popup.vcs.name.branches.in.repo:
     text: '{0} Branches in {1}'
+branch.popup.vcs.name.branches:
+    text: '{0} Branches'
 branch.popup.warning.branches.have.diverged:
     text: Branches have diverged
 clone.button:
@@ -34,18 +52,18 @@ clone.parent.dir:
     text: '&Parent Directory:'
 clone.parent.missing.error:
     text: The parent path {0} must exist.
-clone.repository.url:
-    text: '{0} &Repository URL:'
 clone.repository.url.test.failed.message:
     text: Repository test failed<br/>{0}
-clone.test:
-    text: '&Test'
+clone.repository.url:
+    text: '{0} &Repository URL:'
 clone.test.connection.title:
     text: Test Connection
 clone.test.failed.error:
     text: Repository test has failed.
 clone.test.success.message:
     text: <html>Connection to repository {0} has been successful.</html>
+clone.test:
+    text: '&Test'
 clone.testing:
     text: Testing repository {0}
 clone.title:
@@ -54,20 +72,58 @@ clone.url.is.not.directory.error:
     text: Repository URL is not a directory.
 cloning.repository:
     text: Cloning source repository {0}
-commit.amend:
-    text: Amend commit
 commit.amend.tooltip:
     text: <html>Merge this commit with the previous one</html>
+commit.amend:
+    text: Amend commit
+force.push.dialog.title:
+    text: Force Push
 notification.synched.branches.content:
     text: You have several {0} roots in the project and they all are checked out at the same branch. We've enabled synchronous branch control for the project.<br/>If you wish to control branches in different roots separately, you may <a href='settings'>disable</a> the setting.
 notification.synched.branches.title:
     text: Synchronous branch control enabled
+push.commit.node.tooltip.0.hash.1.date.2.author.3.message:
+    text: "{0}  {1}  by {2}\n\n{3}"
+push.dialog.push.anyway.confirmation:
+    text: Would you like to push anyway or cancel the push completely?
+push.dialog.push.cancelled.message:
+    text: '{0} has been cancelled.'
+push.dialog.push.commits.title:
+    text: Push Commits
+push.dialog.push.commits.to.title:
+    text: Push Commits to {0}
+push.dialog.push.failed.message:
+    text: '{0} has failed. See log for more details.'
+push.dialog.skip.all.remaining.steps.confirmation:
+    text: Would you like to skip all remaining pre-push steps and push, or cancel the push completely?
+push.dialog.skip.all.steps.confirmation:
+    text: Would you like to skip all pre-push steps and push, or cancel the push completely?
+push.edit.all.targets:
+    text: Edit all targets
+push.error.specify.not.empty.remote.push.path.0:
+    text: Please, specify not empty remote push path for repository {0}.
 push.force.confirmation.text:
     text: You''re going to force push{0}. It may overwrite commits at the remote. Are you sure you want to proceed?
-sync.setting:
-    text: Control repositories &synchronously
+push.load.more.commits:
+    text: Load more commits…
+push.loading.commits:
+    text: Loading commits…
+push.no.commits.selected:
+    text: No commits selected
+push.no.differences:
+    text: No differences
+push.process.checking.commits:
+    text: Checking Commits…
+push.process.pushing:
+    text: Pushing…
+push.select.all.commit.details:
+    text: Select to show commit details
+push.show.details:
+    text: Show Details
 sync.setting.description:
     text: If selected, you would be able to checkout, compare, delete and create new branches in all {0} roots with a single action. It will also affect behavior of the push dialog.
+sync.setting:
+    text: Control repositories &synchronously
 tooltip.branch.widget.root.name.text:
     text: 'Root: {0}'
 tooltip.branch.widget.vcs.branch.name.text:

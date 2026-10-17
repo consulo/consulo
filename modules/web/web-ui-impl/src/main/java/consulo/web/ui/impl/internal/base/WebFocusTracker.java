@@ -115,8 +115,14 @@ public final class WebFocusTracker {
             return;
         }
 
-        Element element = wrapper.toVaadinComponent().getElement();
+        installRoot(wrapper.toVaadinComponent().getElement());
+    }
 
+    /**
+     * Same as {@link #installRoot(Component)} for a window, which the browser puts under the body rather than
+     * below the frame root.
+     */
+    public static void installRoot(Element element) {
         for (String eventType : ACTIVITY_EVENTS) {
             element.addEventListener(eventType, event -> {
                 ActivityTracker.getInstance().inc();
@@ -124,13 +130,6 @@ public final class WebFocusTracker {
                 setFocusedScope(event.getEventData().path(SCOPE_OF_EVENT).asString(""));
             })
                 .addEventData(SCOPE_OF_EVENT)
-                .debounce(DEBOUNCE_MS, DebouncePhase.TRAILING);
-        }
-    }
-
-    public static void installActivityRoot(Element element) {
-        for (String eventType : ACTIVITY_EVENTS) {
-            element.addEventListener(eventType, event -> ActivityTracker.getInstance().inc())
                 .debounce(DEBOUNCE_MS, DebouncePhase.TRAILING);
         }
     }

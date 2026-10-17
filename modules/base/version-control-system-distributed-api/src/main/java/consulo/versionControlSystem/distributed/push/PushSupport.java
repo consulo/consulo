@@ -17,10 +17,11 @@ package consulo.versionControlSystem.distributed.push;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
+import consulo.localize.LocalizeValue;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.distributed.repository.Repository;
 import consulo.versionControlSystem.distributed.repository.RepositoryManager;
-
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -28,61 +29,66 @@ import org.jspecify.annotations.Nullable;
  */
 @ExtensionAPI(ComponentScope.PROJECT)
 public abstract class PushSupport<Repo extends Repository, Source extends PushSource, Target extends PushTarget> {
-  
-  public abstract AbstractVcs getVcs();
+    public abstract AbstractVcs getVcs();
 
-  
-  public abstract Pusher<Repo, Source, Target> getPusher();
+    public abstract Pusher<Repo, Source, Target> getPusher();
 
-  
-  public abstract OutgoingCommitsProvider<Repo, Source, Target> getOutgoingCommitsProvider();
+    public abstract OutgoingCommitsProvider<Repo, Source, Target> getOutgoingCommitsProvider();
 
-  /**
-   * @return Default push destination
-   */
-  public abstract @Nullable Target getDefaultTarget(Repo repository);
+    public boolean canBePushed(Repo repository, Source source, Target target) {
+        return true;
+    }
 
-  /**
-   * @return current source(branch) for repository
-   */
-  public abstract Source getSource(Repo repository);
+    /**
+     * @return Default push destination
+     */
+    public abstract @Nullable Target getDefaultTarget(Repo repository);
 
-  /**
-   * @return RepositoryManager for vcs
-   */
-  public abstract RepositoryManager<Repo> getRepositoryManager();
+    /**
+     * @return Push destination for source
+     */
+    public @Nullable Target getDefaultTarget(Repo repository, Source source) {
+        return null;
+    }
 
-  public @Nullable VcsPushOptionsPanel createOptionsPanel() {
-    return null;
-  }
+    /**
+     * @return current source(branch) for repository
+     */
+    public abstract @Nullable Source getSource(Repo repository);
 
-  
-  public abstract PushTargetPanel<Target> createTargetPanel(Repo repository, @Nullable Target defaultTarget);
+    /**
+     * @return RepositoryManager for vcs
+     */
+    public abstract RepositoryManager<Repo> getRepositoryManager();
 
-  public boolean shouldRequestIncomingChangesForNotCheckedRepositories() {
-    return true;
-  }
+    @RequiredUIAccess
+    public @Nullable VcsPushOptionsPanel createOptionsPanel() {
+        return null;
+    }
 
-  /**
-   * Returns true if force push is allowed now in the selected repository.
-   * <p/>
-   * Force push may be completely disabled for the project which is checked by {@link #isForcePushEnabled()},
-   * or it might depend e.g. on the branch user is pushing to.
-   */
-  public abstract boolean isForcePushAllowed(Repo repo, Target target);
+    @RequiredUIAccess
+    public abstract PushTargetPanel<Target> createTargetPanel(Repo repository, Source source, @Nullable Target defaultTarget);
 
-  /**
-   * Checks if force push is allowed for this VCS at all.
-   * <p/>
-   * If it is not allowed for all PushSupports in the project, the "Force Push" button will be invisible.
-   */
-  public abstract boolean isForcePushEnabled();
+    public boolean shouldRequestIncomingChangesForNotCheckedRepositories() {
+        return true;
+    }
 
-  public abstract boolean isSilentForcePushAllowed(Target target);
+    /**
+     * Returns true if force push is allowed now in the selected repository.
+     * <p/>
+     * Force push might depend on the branch user is pushing to.
+     */
+    public abstract boolean isForcePushAllowed(Repo repo, Target target);
 
-  public abstract void saveSilentForcePushTarget(Target target);
+    public abstract boolean isSilentForcePushAllowed(Target target);
 
-  public boolean mayChangeTargetsSync() {
-    return false;
-  }
+    public LocalizeValue getForcePushConfigurablePath() {
+        return LocalizeValue.empty();
+    }
+
+    public abstract void saveSilentForcePushTarget(Target target);
+
+    public boolean mayChangeTargetsSync() {
+        return false;
+    }
 }

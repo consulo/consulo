@@ -15,33 +15,48 @@
  */
 package consulo.versionControlSystem.distributed.push;
 
+import consulo.localize.LocalizeValue;
+import consulo.versionControlSystem.distributed.localize.DistributedVcsLocalize;
 import org.jspecify.annotations.Nullable;
 
 public class VcsError {
-  
-  String myErrorText;
-  private final @Nullable VcsErrorHandler myErrorHandleListener;
+    private final LocalizeValue myErrorText;
+    private final LocalizeValue myHandlerText;
+    private final @Nullable VcsErrorHandler myErrorHandleListener;
 
-  public VcsError(String text) {
-    this(text, null);
-  }
-
-  public VcsError(String text, @Nullable VcsErrorHandler listener) {
-    myErrorText = text;
-    myErrorHandleListener = listener;
-  }
-
-  public String getText() {
-    return myErrorText;
-  }
-
-  public void handleError(CommitLoader loader) {
-    if (myErrorHandleListener != null) {
-      myErrorHandleListener.handleError(loader);
+    public VcsError(LocalizeValue text) {
+        this(text, LocalizeValue.empty(), null);
     }
-  }
 
-  public static VcsError createEmptyTargetError(String name) {
-    return new VcsError("Please, specify not empty remote push path for repository " + name + ".");
-  }
+    public VcsError(LocalizeValue text, @Nullable VcsErrorHandler listener) {
+        this(text, LocalizeValue.empty(), listener);
+    }
+
+    public VcsError(LocalizeValue text, LocalizeValue handlerText, @Nullable VcsErrorHandler listener) {
+        myErrorText = text;
+        myHandlerText = handlerText;
+        myErrorHandleListener = listener;
+    }
+
+    public LocalizeValue getText() {
+        return myErrorText;
+    }
+
+    public LocalizeValue getHandlerText() {
+        return myHandlerText;
+    }
+
+    public boolean hasHandler() {
+        return myErrorHandleListener != null;
+    }
+
+    public void handleError(CommitLoader loader) {
+        if (myErrorHandleListener != null) {
+            myErrorHandleListener.handleError(loader);
+        }
+    }
+
+    public static VcsError createEmptyTargetError(String name) {
+        return new VcsError(DistributedVcsLocalize.pushErrorSpecifyNotEmptyRemotePushPath0(name));
+    }
 }

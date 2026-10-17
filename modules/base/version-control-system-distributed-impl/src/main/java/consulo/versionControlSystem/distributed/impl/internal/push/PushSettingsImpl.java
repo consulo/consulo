@@ -29,9 +29,7 @@ import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Singleton
 @State(name = "Push.Settings", storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
@@ -40,12 +38,11 @@ public class PushSettingsImpl implements PushSettings, PersistentStateComponent<
     private State myState = new State();
 
     public static class State {
-        @Tag("excluded-roots")
-        @AbstractCollection(surroundWithTag = false, elementTag = "path")
-        public Set<String> EXCLUDED_ROOTS = new HashSet<>();
         @AbstractCollection(surroundWithTag = false)
         @Tag("force-push-targets")
         public List<ForcePushTargetInfo> FORCE_PUSH_TARGETS = new ArrayList<>();
+
+        public boolean SHOW_DETAILS_PANEL = true;
     }
 
     @Override
@@ -56,17 +53,6 @@ public class PushSettingsImpl implements PushSettings, PersistentStateComponent<
     @Override
     public void loadState(State state) {
         myState = state;
-    }
-
-    @Override
-    
-    public Set<String> getExcludedRepoRoots() {
-        return myState.EXCLUDED_ROOTS;
-    }
-
-    @Override
-    public void saveExcludedRepoRoots(Set<String> roots) {
-        myState.EXCLUDED_ROOTS = roots;
     }
 
     @Override
@@ -84,6 +70,16 @@ public class PushSettingsImpl implements PushSettings, PersistentStateComponent<
             targets.add(new ForcePushTargetInfo(targetRemote, targetBranch));
             myState.FORCE_PUSH_TARGETS = targets;
         }
+    }
+
+    @Override
+    public boolean getShowDetailsInPushDialog() {
+        return myState.SHOW_DETAILS_PANEL;
+    }
+
+    @Override
+    public void setShowDetailsInPushDialog(boolean value) {
+        myState.SHOW_DETAILS_PANEL = value;
     }
 
     @Tag("force-push-target")

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2017 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,705 +15,586 @@
  */
 package consulo.versionControlSystem.distributed.impl.internal.push;
 
-import consulo.application.Application;
 import consulo.dataContext.DataSink;
 import consulo.dataContext.UiDataProvider;
+import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
+import consulo.ui.CheckBoxTree;
+import consulo.ui.CheckBoxTreePolicy;
+import consulo.ui.Component;
+import consulo.ui.Hyperlink;
+import consulo.ui.Label;
+import consulo.ui.Space;
+import consulo.ui.TextAttribute;
+import consulo.ui.TextItemPresentation;
+import consulo.ui.TreeModel;
+import consulo.ui.TreeNode;
+import consulo.ui.TreeNodeEditor;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.*;
-import consulo.ui.ex.awt.*;
-import consulo.ui.ex.awt.event.AncestorListenerAdapter;
-import consulo.ui.ex.awt.internal.laf.WideSelectionTreeUI;
-import consulo.ui.ex.awt.tree.CheckboxTree;
-import consulo.ui.ex.awt.tree.CheckedTreeNode;
-import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
-import consulo.ui.ex.awt.tree.TreeUtil;
-import consulo.ui.ex.keymap.util.KeymapUtil;
-import consulo.util.collection.ArrayUtil;
-import consulo.util.collection.ContainerUtil;
+import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DumbAwareToggleAction;
+import consulo.ui.ex.util.TextAttributeUtil;
+import consulo.ui.image.Image;
+import consulo.ui.layout.DockLayout;
+import consulo.ui.layout.HorizontalLayout;
+import consulo.ui.layout.ScrollableLayout;
+import consulo.ui.layout.SplitLayoutPosition;
+import consulo.ui.layout.TwoComponentSplitLayout;
+import consulo.ui.style.ComponentColors;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.change.Change;
-import consulo.versionControlSystem.change.ChangesBrowser;
-import consulo.versionControlSystem.change.ChangesBrowserFactory;
 import consulo.versionControlSystem.change.ChangesBrowserUtil;
-import consulo.versionControlSystem.distributed.ui.awt.VcsEditableComponent;
+import consulo.versionControlSystem.distributed.DvcsUtil;
+import consulo.versionControlSystem.distributed.localize.DistributedVcsLocalize;
+import consulo.versionControlSystem.distributed.push.PushSettings;
+import consulo.versionControlSystem.distributed.push.PushSource;
+import consulo.versionControlSystem.distributed.push.PushTarget;
+import consulo.versionControlSystem.distributed.push.PushTargetPanel;
+import consulo.versionControlSystem.distributed.repository.Repository;
 import consulo.versionControlSystem.history.TextRevisionNumber;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
-import consulo.versionControlSystem.internal.EditSourceForDialogAction;
 import consulo.versionControlSystem.log.Hash;
-import consulo.versionControlSystem.log.internal.VcsLogActionPlaces;
+import consulo.versionControlSystem.log.VcsFullCommitDetails;
+import consulo.versionControlSystem.log.util.VcsUserUtil;
+import consulo.versionControlSystem.ui.VcsChangesBrowser;
+import consulo.versionControlSystem.ui.VcsChangesDialogFactory;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import javax.swing.event.AncestorEvent;
-import javax.swing.event.AncestorListener;
-import javax.swing.event.CellEditorListener;
-import javax.swing.event.ChangeEvent;
-import javax.swing.tree.*;
-import java.awt.*;
-import java.awt.event.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.*;
-import java.util.function.Function;
+import java.util.Map;
+import java.util.Set;
 
-public class PushLog extends JPanel implements UiDataProvider {
-    private static final String START_EDITING = "startEditing";
-    private final ChangesBrowser<Change> myChangesBrowser;
-    private final CheckboxTree myTree;
-    private final MyTreeCellRenderer myTreeCellRenderer;
-    private final JScrollPane myScrollPane;
-    private final VcsCommitInfoBalloon myBalloon;
-    private boolean myShouldRepaint = false;
+public final class PushLog {
+    private static final String ARROW = " → ";
+
+    private final Project myProject;
+    private final PushController myController;
+    private final List<PushRepoModel<Repository, PushSource, PushTarget>> myModels;
+    private final boolean myAllowSyncStrategy;
+    private final PushSettings mySettings;
+
+    private final Map<PushRepoModel<?, ?, ?>, TreeNode<Object>> myNodes = new HashMap<>();
+    private final Set<PushRepoModel<?, ?, ?>> myPendingExpand = new LinkedHashSet<>();
+    private final CheckBoxTree<Object> myTree;
+    private final VcsChangesBrowser myChangesBrowser;
+    private final PushCommitDetailsPanel myDetailsPanel;
+    private final TwoComponentSplitLayout myDetailsSplitter;
+    private final Label myValidation = Label.create();
+    private final DockLayout myRoot = DockLayout.create();
+
+    private boolean myDetailsAvailable;
     private boolean mySyncStrategy;
     private @Nullable String mySyncRenderedText;
-    private final boolean myAllowSyncStrategy;
+    private boolean myUpdatingChecks;
+    private boolean myShouldRepaint;
 
-    public PushLog(Project project, CheckedTreeNode root, boolean allowSyncStrategy) {
+    @RequiredUIAccess
+    PushLog(Project project,
+            PushController controller,
+            List<PushRepoModel<Repository, PushSource, PushTarget>> models,
+            boolean allowSyncStrategy,
+            Disposable uiDisposable) {
+        myProject = project;
+        myController = controller;
+        myModels = models;
         myAllowSyncStrategy = allowSyncStrategy;
-        DefaultTreeModel treeModel = new DefaultTreeModel(root);
-        treeModel.nodeStructureChanged(root);
-        AnAction quickDocAction = ActionManager.getInstance().getAction(IdeActions.ACTION_QUICK_JAVADOC);
-        myTreeCellRenderer = new MyTreeCellRenderer();
-        myTree = new CheckboxTree(myTreeCellRenderer, root) {
-            @Override
-            protected boolean shouldShowBusyIconIfNeeded() {
-                return true;
-            }
+        mySettings = project.getInstance(PushSettings.class);
 
-            @Override
-            public boolean isPathEditable(TreePath path) {
-                return isEditable() && path.getLastPathComponent() instanceof DefaultMutableTreeNode;
-            }
-
-            @Override
-            protected void onNodeStateChanged(CheckedTreeNode node) {
-                if (node instanceof EditableTreeNode editableTreeNode) {
-                    editableTreeNode.fireOnSelectionChange(node.isChecked());
-                }
-            }
-
-            @Override
-            public String getToolTipText(MouseEvent event) {
-                TreePath path = myTree.getPathForLocation(event.getX(), event.getY());
-                if (path == null) {
-                    return "";
-                }
-                Object node = path.getLastPathComponent();
-                if (node == null || !(node instanceof DefaultMutableTreeNode)) {
-                    return "";
-                }
-                if (node instanceof TooltipNode tooltipNode) {
-                    return KeymapUtil.createTooltipText(
-                        tooltipNode.getTooltip() +
-                            "<p style='font-style:italic;color:gray;'>Show commit details",
-                        quickDocAction
-                    ) + "</p>";
-                }
-                return "";
-            }
-
-            @Override
-            public boolean stopEditing() {
-                DefaultMutableTreeNode node = (DefaultMutableTreeNode)myTree.getLastSelectedPathComponent();
-                if (node instanceof EditableTreeNode) {
-                    JComponent editedComponent = (JComponent)node.getUserObject();
-                    InputVerifier verifier = editedComponent.getInputVerifier();
-                    if (verifier != null && !verifier.verify(editedComponent)) {
-                        return false;
-                    }
-                }
-                boolean result = super.stopEditing();
-                if (myShouldRepaint) {
-                    refreshNode(root);
-                }
-                restoreSelection(node);
-                return result;
-            }
-
-            @Override
-            public void cancelEditing() {
-                DefaultMutableTreeNode lastSelectedPathComponent = (DefaultMutableTreeNode)myTree.getLastSelectedPathComponent();
-                super.cancelEditing();
-                if (myShouldRepaint) {
-                    refreshNode(root);
-                }
-                restoreSelection(lastSelectedPathComponent);
-            }
-        };
-        myTree.setUI(new MyTreeUi());
-        myTree.setBorder(new EmptyBorder(2, 0, 0, 0));  //additional vertical indent
-        myTree.setEditable(true);
-        myTree.setHorizontalAutoScrollingEnabled(false);
-        myTree.setShowsRootHandles(root.getChildCount() > 1);
-        MyTreeCellEditor treeCellEditor = new MyTreeCellEditor();
-        myTree.setCellEditor(treeCellEditor);
-        treeCellEditor.addCellEditorListener(new CellEditorListener() {
-            @Override
-            public void editingStopped(ChangeEvent e) {
-                DefaultMutableTreeNode node = (DefaultMutableTreeNode)myTree.getLastSelectedPathComponent();
-                if (node instanceof EditableTreeNode treeNode) {
-                    JComponent editedComponent = (JComponent)node.getUserObject();
-                    InputVerifier verifier = editedComponent.getInputVerifier();
-                    if (verifier != null && !verifier.verify(editedComponent)) {
-                        // if invalid and interrupted, then revert
-                        treeNode.fireOnCancel();
-                    }
-                    else if (mySyncStrategy) {
-                        resetEditSync();
-                        ContainerUtil.process(
-                            getChildNodesByType(root, RepositoryNode.class, false),
-                            node1 -> {
-                                node1.fireOnChange();
-                                return true;
-                            }
-                        );
-                    }
-                    else {
-                        treeNode.fireOnChange();
-                    }
-                }
-                myTree.firePropertyChange(PushLogTreeImplUtil.EDIT_MODE_PROP, true, false);
-            }
-
-            @Override
-            public void editingCanceled(ChangeEvent e) {
-                DefaultMutableTreeNode node = (DefaultMutableTreeNode)myTree.getLastSelectedPathComponent();
-                if (node instanceof EditableTreeNode editableTreeNode) {
-                    editableTreeNode.fireOnCancel();
-                }
-                resetEditSync();
-                myTree.firePropertyChange(PushLogTreeImplUtil.EDIT_MODE_PROP, true, false);
+        myTree = CheckBoxTree.create(null, createTreeModel());
+        myTree.setAllowMultipleSelect(true);
+        myTree.setCheckPolicy(CheckBoxTreePolicy.INDEPENDENT);
+        myTree.setCheckableFilter(value -> value instanceof PushRepoModel<?, ?, ?> model && !model.isSingle());
+        myTree.setCheckEnabledFilter(value -> value instanceof PushRepoModel<?, ?, ?> model && model.isEnabled());
+        myTree.setNodeEditor(new TargetEditor());
+        myTree.addCheckListener(event -> {
+            if (!myUpdatingChecks && event.getValue() instanceof PushRepoModel<?, ?, ?> model) {
+                myController.onSelectionChanged(model, event.isChecked());
+                refreshRepository(model, true);
             }
         });
-        // complete editing when interrupt
-        myTree.setInvokesStopCellEditing(true);
-        myTree.setRootVisible(false);
-        TreeUtil.collapseAll(myTree, 1);
-        VcsBranchEditorListener linkMouseListener = new VcsBranchEditorListener(myTreeCellRenderer);
-        linkMouseListener.installOn(myTree);
-        myBalloon = new VcsCommitInfoBalloon(myTree);
-        myTree.getSelectionModel().setSelectionMode(TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
-        myTree.addTreeSelectionListener(e -> {
-            updateChangesView();
-            myBalloon.updateCommitDetails();
-        });
-        myTree.addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusLost(FocusEvent e) {
-                DefaultMutableTreeNode node = (DefaultMutableTreeNode)myTree.getLastSelectedPathComponent();
-                if (node instanceof RepositoryNode && myTree.isEditing()) {
-                    //need to force repaint foreground  for non-focused editing node
-                    myTree.getCellEditor().getTreeCellEditorComponent(
-                        myTree,
-                        node,
-                        true,
-                        false,
-                        false,
-                        myTree.getRowForPath(TreeUtil.getPathFromRoot(node))
-                    );
-                }
+        myTree.addSelectListener(event -> onSelectionChanges());
+        myTree.addDoubleClickListener(event -> {
+            Object value = event.getValue().getValue();
+            if (value instanceof PushErrorRow error) {
+                myController.handleError(error);
+            }
+            else if (value instanceof PushMoreCommitsRow more) {
+                myController.addMoreCommits(more.repository());
             }
         });
-        myTree.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0), START_EDITING);
-        //override default tree behaviour.
-        myTree.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "");
-        MyShowCommitInfoAction showCommitInfoAction = new MyShowCommitInfoAction();
-        showCommitInfoAction.registerCustomShortcutSet(quickDocAction.getShortcutSet(), myTree);
 
-        ToolTipManager.sharedInstance().registerComponent(myTree);
-        PopupHandler.installPopupHandler(myTree, VcsLogActionPlaces.POPUP_ACTION_GROUP, VcsLogActionPlaces.POPUP_ACTION_GROUP);
+        myChangesBrowser = myProject.getApplication().getInstance(VcsChangesDialogFactory.class)
+            .changesBrowser(myProject)
+            .emptyText(DistributedVcsLocalize.pushNoCommitsSelected())
+            .toolbarAction(new ShowDetailsAction())
+            .build(uiDisposable);
 
-        myChangesBrowser = Application.get().getInstance(ChangesBrowserFactory.class).createChangeBrowser(
-            project,
-            null,
-            Collections.<Change>emptyList(),
-            null,
-            false,
-            false,
-            null,
-            ChangesBrowser.MyUseCase.LOCAL_CHANGES,
-            null
-        );
-        myChangesBrowser.getDiffAction().registerCustomShortcutSet(myChangesBrowser.getDiffAction().getShortcutSet(), myTree);
-        EditSourceForDialogAction editSourceAction = new EditSourceForDialogAction(myChangesBrowser.getComponent());
-        editSourceAction.registerCustomShortcutSet(CommonShortcuts.getEditSource(), myChangesBrowser.getComponent());
-        myChangesBrowser.addToolbarAction(editSourceAction);
-        setDefaultEmptyText();
+        myDetailsPanel = new PushCommitDetailsPanel();
+        myDetailsSplitter = TwoComponentSplitLayout.create(SplitLayoutPosition.VERTICAL).withProportion(67);
+        myDetailsSplitter.setFirstComponent(myChangesBrowser.getComponent());
 
-        Splitter splitter = new Splitter(false, 0.7f);
-        JComponent syncStrategyPanel = myAllowSyncStrategy ? createStrategyPanel() : null;
-        myScrollPane = new JBScrollPane(myTree) {
-            @Override
-            public void layout() {
-                super.layout();
-                if (syncStrategyPanel != null) {
-                    Rectangle bounds = this.getViewport().getBounds();
-                    int height = bounds.height - syncStrategyPanel.getPreferredSize().height;
-                    this.getViewport().setBounds(bounds.x, bounds.y, bounds.width, height);
-                    syncStrategyPanel.setBounds(bounds.x, bounds.y + height, bounds.width,
-                        syncStrategyPanel.getPreferredSize().height
-                    );
+        DockLayout left = DockLayout.create();
+        left.center(ScrollableLayout.create(myTree));
+        if (myAllowSyncStrategy) {
+            Hyperlink editAll = Hyperlink.create(DistributedVcsLocalize.pushEditAllTargets(), event -> startSyncEditing());
+            DockLayout editAllRow = DockLayout.create();
+            editAllRow.right(editAll);
+            editAllRow.paddingBuilder().allSet(Space.SMALL).apply();
+            left.bottom(editAllRow);
+        }
+
+        TwoComponentSplitLayout splitter = TwoComponentSplitLayout.create(SplitLayoutPosition.HORIZONTAL).withProportion(50);
+        splitter.setFirstComponent(left);
+        splitter.setSecondComponent(myDetailsSplitter);
+
+        myValidation.setForegroundColor(ComponentColors.ERROR_FOREGROUND);
+        myValidation.setVisible(false);
+
+        myRoot.putUserData(UiDataProvider.KEY, this::uiDataSnapshot);
+        myRoot.center(splitter);
+        myRoot.bottom(myValidation);
+    }
+
+    private TreeModel<Object> createTreeModel() {
+        return (nodeFactory, parentValue) -> {
+            if (parentValue == null) {
+                for (PushRepoModel<Repository, PushSource, PushTarget> model : myModels) {
+                    TreeNode<Object> node = nodeFactory.apply(model);
+                    node.setLeaf(false);
+                    node.setRenderer(this::render);
+                    myNodes.put(model, node);
+                }
+                if (!myPendingExpand.isEmpty()) {
+                    UIAccess.current().give(this::expandPending);
+                }
+            }
+            else if (parentValue instanceof PushRepoModel<?, ?, ?> model) {
+                for (Object row : model.getRows()) {
+                    TreeNode<Object> node = nodeFactory.apply(row);
+                    node.setLeaf(true);
+                    node.setRenderer(this::render);
                 }
             }
         };
-        if (syncStrategyPanel != null) {
-            myScrollPane.setViewport(new MyTreeViewPort(myTree, syncStrategyPanel.getPreferredSize().height));
-        }
-        myScrollPane.getViewport().setScrollMode(JViewport.SIMPLE_SCROLL_MODE);
-        myScrollPane.setOpaque(false);
-        if (syncStrategyPanel != null) {
-            myScrollPane.add(syncStrategyPanel);
-        }
-        splitter.setFirstComponent(myScrollPane);
-        splitter.setSecondComponent(myChangesBrowser.getComponent());
-
-        setLayout(new BorderLayout());
-        add(splitter);
-        myTree.setMinimumSize(new Dimension(200, myTree.getPreferredSize().height));
-        myTree.setRowHeight(0);
     }
 
-    private class MyShowCommitInfoAction extends LegacyDumbAwareAction {
-        @Override
-        @RequiredUIAccess
-        public void actionPerformed(AnActionEvent e) {
-            myBalloon.showCommitDetails();
-        }
-
-        @Override
-        public void update(AnActionEvent e) {
-            e.getPresentation().setEnabled(getSelectedCommitNodes().size() == 1);
-        }
+    public Component getComponent() {
+        return myRoot;
     }
 
-    private void restoreSelection(@Nullable DefaultMutableTreeNode node) {
-        if (node != null) {
-            TreeUtil.selectNode(myTree, node);
-        }
+    public Component getPreferredFocusedComponent() {
+        return myTree;
     }
 
-    private JComponent createStrategyPanel() {
-        JPanel labelPanel = new JPanel(new BorderLayout());
-        labelPanel.setBackground(myTree.getBackground());
-        LinkLabel<String> linkLabel = new LinkLabel<>("Edit all targets", null);
-        linkLabel.setBorder(new EmptyBorder(2, 2, 2, 2));
-        linkLabel.setListener(
-            (aSource, aLinkData) -> {
-                if (linkLabel.isEnabled()) {
-                    startSyncEditing();
-                }
-            },
-            null
-        );
-        myTree.addPropertyChangeListener(
-            PushLogTreeImplUtil.EDIT_MODE_PROP,
-            evt -> {
-                Boolean editMode = (Boolean)evt.getNewValue();
-                linkLabel.setEnabled(!editMode);
-                linkLabel.setPaintUnderline(!editMode);
-                linkLabel.repaint();
+    private void render(Object value, TextItemPresentation presentation) {
+        if (value instanceof PushRepoModel<?, ?, ?> model) {
+            renderRepository(model, presentation);
+        }
+        else if (value instanceof PushCommitRow row) {
+            presentation.append(row.commit().getSubject(), active(row.repository().isSelected(), SimpleTextAttributes.REGULAR_ATTRIBUTES));
+            presentation.withTooltip(DistributedVcsLocalize.pushCommitNodeTooltip0Hash1Date2Author3Message(
+                DvcsUtil.getShortHash(row.commit().getId().asString()),
+                DvcsUtil.getDateString(row.commit()),
+                VcsUserUtil.getShortPresentation(row.commit().getAuthor()),
+                row.commit().getFullMessage()
+            ));
+        }
+        else if (value instanceof PushErrorRow row) {
+            presentation.append(row.error().getText(), TextAttribute.ERROR);
+            if (row.error().hasHandler() && row.error().getHandlerText().isNotEmpty()) {
+                presentation.append(LocalizeValue.of(" "));
+                presentation.append(row.error().getHandlerText(), TextAttributeUtil.toTextAttribute(SimpleTextAttributes.LINK_PLAIN_ATTRIBUTES));
             }
-        );
-        labelPanel.add(linkLabel, BorderLayout.EAST);
-        return labelPanel;
+        }
+        else if (value instanceof PushMoreCommitsRow) {
+            presentation.append(DistributedVcsLocalize.pushLoadMoreCommits(), TextAttributeUtil.toTextAttribute(SimpleTextAttributes.LINK_PLAIN_ATTRIBUTES));
+        }
     }
 
+    private void renderRepository(PushRepoModel<?, ?, ?> model, TextItemPresentation presentation) {
+        if (model.isLoading()) {
+            presentation.withIcon(Image.busy(Image.DEFAULT_ICON_SIZE));
+        }
+
+        PushTargetPanel<?> targetPanel = model.getTargetPanel();
+        if (model.isSingle()) {
+            presentation.append(model.getSource().getPresentation() + ARROW);
+            targetPanel.render(presentation, false, true, null);
+            return;
+        }
+
+        TextAttribute details = active(model.isSelected(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
+        presentation.append(model.getRepositoryName() + "  ", details);
+        presentation.append(model.getSource().getPresentation() + ARROW, details);
+        String syncText = mySyncStrategy && myTree.isEditing() ? mySyncRenderedText : null;
+        targetPanel.render(presentation, false, model.isSelected(), syncText);
+    }
+
+    private static TextAttribute active(boolean active, SimpleTextAttributes attributes) {
+        return TextAttributeUtil.toTextAttribute(active ? attributes : SimpleTextAttributes.GRAYED_ATTRIBUTES);
+    }
+
+    @RequiredUIAccess
     private void startSyncEditing() {
         mySyncStrategy = true;
-        DefaultMutableTreeNode nodeToEdit = getFirstNodeToEdit();
-        if (nodeToEdit != null) {
-            myTree.startEditingAtPath(TreeUtil.getPathFromRoot(nodeToEdit));
+        PushRepoModel<?, ?, ?> modelToEdit = getFirstNodeToEdit();
+        TreeNode<Object> node = modelToEdit == null ? null : myNodes.get(modelToEdit);
+        if (node == null || !myTree.startEditing(node)) {
+            resetEditSync();
         }
     }
 
-    private static List<Change> collectAllChanges(List<CommitNode> commitNodes) {
-        return ChangesBrowserUtil.zipChanges(collectChanges(commitNodes));
-    }
-
-    private static List<CommitNode> collectSelectedCommitNodes(List<DefaultMutableTreeNode> selectedNodes) {
-        List<CommitNode> nodes = new ArrayList<>();
-        for (DefaultMutableTreeNode node : selectedNodes) {
-            if (node instanceof RepositoryNode) {
-                nodes.addAll(getChildNodesByType(node, CommitNode.class, true));
-            }
-            else if (node instanceof CommitNode commitNode && !nodes.contains(node)) {
-                nodes.add(commitNode);
+    private @Nullable PushRepoModel<?, ?, ?> getFirstNodeToEdit() {
+        TreeNode<Object> selected = myTree.getSelectedNode();
+        if (selected != null && selected.getValue() instanceof PushRepoModel<?, ?, ?> model && model.isEditable()) {
+            return model;
+        }
+        for (PushRepoModel<?, ?, ?> model : myModels) {
+            if (model.isEditable()) {
+                return model;
             }
         }
-        return nodes;
+        return null;
     }
 
-    private static List<Change> collectChanges(List<CommitNode> commitNodes) {
+    @RequiredUIAccess
+    private void onSelectionChanges() {
+        List<TreeNode<Object>> selected = myTree.getSelectedNodes();
+        for (TreeNode<Object> node : selected) {
+            if (node.getValue() instanceof PushMoreCommitsRow more) {
+                myController.addMoreCommits(more.repository());
+                return;
+            }
+        }
+
+        List<PushCommitRow> commits = getSelectedCommitRows();
+        myChangesBrowser.setEmptyText(commits.isEmpty() ? DistributedVcsLocalize.pushNoCommitsSelected() : DistributedVcsLocalize.pushNoDifferences());
+        myChangesBrowser.setChanges(collectAllChanges(commits));
+        updateDetailsPanel(commits, selected);
+    }
+
+    @RequiredUIAccess
+    private void updateDetailsPanel(List<PushCommitRow> commits, List<TreeNode<Object>> selected) {
+        boolean noRepositories = true;
+        for (TreeNode<Object> node : selected) {
+            if (node.getValue() instanceof PushRepoModel<?, ?, ?>) {
+                noRepositories = false;
+                break;
+            }
+        }
+
+        myDetailsAvailable = commits.size() == 1 && noRepositories;
+        if (myDetailsAvailable) {
+            myDetailsPanel.setCommit(commits.get(0).commit());
+        }
+        updateDetailsVisibility();
+    }
+
+    @RequiredUIAccess
+    private void updateDetailsVisibility() {
+        myDetailsSplitter.setSecondComponent(myDetailsAvailable && mySettings.getShowDetailsInPushDialog() ? myDetailsPanel.getComponent() : null);
+    }
+
+    private static List<Change> collectAllChanges(List<PushCommitRow> commits) {
         List<Change> changes = new ArrayList<>();
-        for (CommitNode node : commitNodes) {
-            changes.addAll(node.getUserObject().getChanges());
+        for (PushCommitRow row : commits) {
+            changes.addAll(row.commit().getChanges());
         }
-        return changes;
+        return ChangesBrowserUtil.zipChanges(changes);
     }
 
-    private static <T> List<T> getChildNodesByType(DefaultMutableTreeNode node, Class<T> type, boolean reverseOrder) {
-        List<T> nodes = new ArrayList<>();
-        if (node.getChildCount() < 1) {
-            return nodes;
-        }
-        for (DefaultMutableTreeNode childNode = (DefaultMutableTreeNode)node.getFirstChild();
-             childNode != null;
-             childNode = (DefaultMutableTreeNode)node.getChildAfter(childNode)) {
-            if (type.isInstance(childNode)) {
-                @SuppressWarnings("unchecked")
-                T nodeT = (T)childNode;
-                if (reverseOrder) {
-                    nodes.add(0, nodeT);
-                }
-                else {
-                    nodes.add(nodeT);
-                }
-            }
-        }
-        return nodes;
-    }
-
-    private static List<Integer> getSortedRows(int[] rows) {
-        List<Integer> sorted = new ArrayList<>();
-        for (int row : rows) {
-            sorted.add(row);
-        }
-        Collections.sort(sorted, Collections.reverseOrder());
-        return sorted;
-    }
-
-    private void updateChangesView() {
-        List<CommitNode> commitNodes = getSelectedCommitNodes();
-        if (!commitNodes.isEmpty()) {
-            myChangesBrowser.getViewer().setEmptyText(LocalizeValue.localizeTODO("No differences"));
-        }
-        else {
-            setDefaultEmptyText();
-        }
-        myChangesBrowser.setChangesToDisplay(collectAllChanges(commitNodes));
-    }
-
-    private void setDefaultEmptyText() {
-        myChangesBrowser.getViewer().setEmptyText(LocalizeValue.localizeTODO("No commits selected"));
-    }
-
-    // Make changes available for diff action; revisionNumber for create patch and copy revision number actions
-    @Override
-    public void uiDataSnapshot(DataSink sink) {
-        sink.lazy(VcsDataKeys.CHANGES, () -> {
-            List<CommitNode> commitNodes = getSelectedCommitNodes();
-            return ArrayUtil.toObjectArray(collectAllChanges(commitNodes), Change.class);
-        });
-        sink.lazy(VcsDataKeys.VCS_REVISION_NUMBERS, () -> {
-            List<CommitNode> commitNodes = getSelectedCommitNodes();
-            return ArrayUtil.toObjectArray(
-                ContainerUtil.map(
-                    commitNodes,
-                    (Function<CommitNode, VcsRevisionNumber>)commitNode -> {
-                        Hash hash = commitNode.getUserObject().getId();
-                        return new TextRevisionNumber(hash.asString(), hash.toShortString());
+    private List<PushCommitRow> getSelectedCommitRows() {
+        Set<PushCommitRow> rows = new LinkedHashSet<>();
+        for (TreeNode<Object> node : myTree.getSelectedNodes()) {
+            if (node.getValue() instanceof PushRepoModel<?, ?, ?> model) {
+                List<Object> children = model.getRows();
+                for (int i = children.size() - 1; i >= 0; i--) {
+                    if (children.get(i) instanceof PushCommitRow row) {
+                        rows.add(row);
                     }
-                ),
-                VcsRevisionNumber.class
-            );
-        });
-    }
-
-    private List<CommitNode> getSelectedCommitNodes() {
-        int[] rows = myTree.getSelectionRows();
-        if (rows != null && rows.length != 0) {
-            List<DefaultMutableTreeNode> selectedNodes = getNodesForRows(getSortedRows(rows));
-            return collectSelectedCommitNodes(selectedNodes);
-        }
-        return List.of();
-    }
-
-    private List<DefaultMutableTreeNode> getNodesForRows(List<Integer> rows) {
-        List<DefaultMutableTreeNode> nodes = new ArrayList<>();
-        for (Integer row : rows) {
-            TreePath path = myTree.getPathForRow(row);
-            Object pathComponent = path == null ? null : path.getLastPathComponent();
-            if (pathComponent instanceof DefaultMutableTreeNode mutableTreeNode) {
-                nodes.add(mutableTreeNode);
-            }
-        }
-        return nodes;
-    }
-
-    @Override
-    protected boolean processKeyBinding(KeyStroke ks, KeyEvent e, int condition, boolean pressed) {
-        if (e.getKeyCode() == KeyEvent.VK_ENTER && e.getModifiers() == 0 && pressed) {
-            if (myTree.isEditing()) {
-                myTree.stopEditing();
-            }
-            else {
-                DefaultMutableTreeNode node = (DefaultMutableTreeNode)myTree.getLastSelectedPathComponent();
-                if (node != null) {
-                    myTree.startEditingAtPath(TreeUtil.getPathFromRoot(node));
                 }
             }
-            return true;
         }
-        if (myAllowSyncStrategy && e.getKeyCode() == KeyEvent.VK_F2 && e.getModifiers() == InputEvent.ALT_MASK && pressed) {
-            startSyncEditing();
-            return true;
-        }
-        return super.processKeyBinding(ks, e, condition, pressed);
-    }
-
-    private @Nullable DefaultMutableTreeNode getFirstNodeToEdit() {
-        // start edit last selected component if editable
-        if (myTree.getLastSelectedPathComponent() instanceof RepositoryNode repositoryNode) {
-            RepositoryNode selectedNode = repositoryNode;
-            if (selectedNode.isEditableNow()) {
-                return selectedNode;
+        for (TreeNode<Object> node : myTree.getSelectedNodes()) {
+            if (node.getValue() instanceof PushCommitRow row) {
+                rows.add(row);
             }
         }
-        List<RepositoryNode> repositoryNodes = getChildNodesByType(
-            (DefaultMutableTreeNode)myTree.getModel().getRoot(),
-            RepositoryNode.class,
-            false
-        );
-        RepositoryNode editableNode = ContainerUtil.find(repositoryNodes, RepositoryNode::isEditableNow);
-        if (editableNode != null) {
-            TreeUtil.selectNode(myTree, editableNode);
+        return new ArrayList<>(rows);
+    }
+
+    private void uiDataSnapshot(DataSink sink) {
+        List<PushCommitRow> commits = getSelectedCommitRows();
+        sink.set(VcsDataKeys.CHANGES, collectAllChanges(commits).toArray(Change[]::new));
+
+        List<VcsRevisionNumber> revisions = new ArrayList<>();
+        for (PushCommitRow row : commits) {
+            Hash hash = row.commit().getId();
+            revisions.add(new TextRevisionNumber(hash.asString(), hash.toShortString()));
         }
-        return editableNode;
+        sink.set(VcsDataKeys.VCS_REVISION_NUMBERS, revisions.toArray(VcsRevisionNumber[]::new));
     }
 
-    public JComponent getPreferredFocusedComponent() {
-        return myTree;
+    @RequiredUIAccess
+    public void highlightNodeOrFirst(@Nullable PushRepoModel<?, ?, ?> model) {
+        Object target = model != null ? model : (myModels.isEmpty() ? null : myModels.get(0));
+        if (target == null) {
+            return;
+        }
+        select(target);
     }
 
-    public CheckboxTree getTree() {
-        return myTree;
-    }
-
-    public void selectIfNothingSelected(TreeNode node) {
-        if (myTree.isSelectionEmpty()) {
-            myTree.setSelectionPath(TreeUtil.getPathFromRoot(node));
+    @RequiredUIAccess
+    public void selectIfNothingSelected(PushRepoModel<?, ?, ?> model) {
+        if (myTree.getSelectedNodes().isEmpty()) {
+            select(model);
         }
     }
 
-    public void setChildren(DefaultMutableTreeNode parentNode, Collection<? extends DefaultMutableTreeNode> childrenNodes) {
-        parentNode.removeAllChildren();
-        for (DefaultMutableTreeNode child : childrenNodes) {
-            parentNode.add(child);
+    @RequiredUIAccess
+    private void select(Object value) {
+        TreeNode<Object> root = myTree.getRootNode();
+        if (root == null) {
+            return;
         }
-        if (!myTree.isEditing()) {
-            refreshNode(parentNode);
-            TreePath path = TreeUtil.getPathFromRoot(parentNode);
-            if (myTree.getSelectionModel().isPathSelected(path)) {
-                updateChangesView();
+        UIAccess uiAccess = UIAccess.current();
+        root.findChild(child -> child == value).whenCompleteAsync((node, error) -> {
+            if (node != null) {
+                myTree.select(node);
+            }
+        }, uiAccess);
+    }
+
+    @RequiredUIAccess
+    public void setChecked(PushRepoModel<?, ?, ?> model, boolean checked) {
+        myUpdatingChecks = true;
+        try {
+            myTree.setChecked(model, checked);
+        }
+        finally {
+            myUpdatingChecks = false;
+        }
+        refreshRepository(model, true);
+    }
+
+    @RequiredUIAccess
+    public void syncChecks() {
+        myUpdatingChecks = true;
+        try {
+            for (PushRepoModel<?, ?, ?> model : myModels) {
+                myTree.setChecked(model, model.isSelected());
             }
         }
-        else {
+        finally {
+            myUpdatingChecks = false;
+        }
+    }
+
+    @RequiredUIAccess
+    public boolean isEditing() {
+        return myTree.isEditing();
+    }
+
+    @RequiredUIAccess
+    public void refreshRepository(PushRepoModel<?, ?, ?> model) {
+        refreshRepository(model, false);
+    }
+
+    @RequiredUIAccess
+    private void refreshRepository(PushRepoModel<?, ?, ?> model, boolean children) {
+        TreeNode<Object> node = myNodes.get(model);
+        if (node != null) {
+            myTree.refreshItem(node, children && !myTree.isEditing());
+        }
+    }
+
+    @RequiredUIAccess
+    public void setChildren(PushRepoModel<?, ?, ?> model) {
+        if (myTree.isEditing()) {
             myShouldRepaint = true;
+            refreshRepository(model, false);
+            return;
+        }
+        refreshNode(model);
+        if (isSelected(model)) {
+            onSelectionChanges();
         }
     }
 
-    private void refreshNode(DefaultMutableTreeNode parentNode) {
-        //todo should be optimized in case of start loading just edited node
-        DefaultTreeModel model = ((DefaultTreeModel)myTree.getModel());
-        model.nodeStructureChanged(parentNode);
-        expandSelected(parentNode);
+    @RequiredUIAccess
+    private void expandPending() {
+        List<PushRepoModel<?, ?, ?>> pending = new ArrayList<>(myPendingExpand);
+        myPendingExpand.clear();
+        for (PushRepoModel<?, ?, ?> model : pending) {
+            refreshNode(model);
+        }
+    }
+
+    @RequiredUIAccess
+    private void refreshNode(PushRepoModel<?, ?, ?> model) {
+        TreeNode<Object> node = myNodes.get(model);
+        if (node == null) {
+            if (model.isSelected() && !model.getRows().isEmpty()) {
+                myPendingExpand.add(model);
+            }
+            return;
+        }
+        myTree.refreshItem(node, true);
+        if (model.isSelected() && !model.getRows().isEmpty()) {
+            myTree.expand(node);
+        }
+    }
+
+    @RequiredUIAccess
+    private void refreshAll() {
+        for (PushRepoModel<?, ?, ?> model : myModels) {
+            refreshNode(model);
+        }
         myShouldRepaint = false;
     }
 
-    private void expandSelected(DefaultMutableTreeNode node) {
-        if (node.getChildCount() <= 0) {
-            return;
-        }
-        if (node instanceof RepositoryNode) {
-            TreePath path = TreeUtil.getPathFromRoot(node);
-            myTree.expandPath(path);
-            return;
-        }
-        for (DefaultMutableTreeNode childNode = (DefaultMutableTreeNode)node.getFirstChild();
-             childNode != null;
-             childNode = (DefaultMutableTreeNode)node.getChildAfter(childNode)) {
-            if (!(childNode instanceof RepositoryNode repositoryNode)) {
-                return;
-            }
-            if (repositoryNode.isChecked()) {
-                myTree.expandPath(TreeUtil.getPathFromRoot(childNode));
+    private boolean isSelected(PushRepoModel<?, ?, ?> model) {
+        for (TreeNode<Object> node : myTree.getSelectedNodes()) {
+            if (node.getValue() == model) {
+                return true;
             }
         }
+        return false;
     }
 
-    private void setSyncText(String value) {
-        mySyncRenderedText = value;
-    }
-
+    @RequiredUIAccess
     public void fireEditorUpdated(String currentText) {
         if (mySyncStrategy) {
-            //update ui model
-            List<RepositoryNode> repositoryNodes =
-                getChildNodesByType((DefaultMutableTreeNode)myTree.getModel().getRoot(), RepositoryNode.class, false);
-            for (RepositoryNode node : repositoryNodes) {
-                if (node.isEditableNow()) {
-                    node.forceUpdateUiModelWithTypedText(currentText);
+            for (PushRepoModel<?, ?, ?> model : myModels) {
+                if (model.isEditable()) {
+                    model.getTargetPanel().forceUpdateEditableUiModel(currentText);
                 }
             }
-            setSyncText(currentText);
-            myTree.repaint();
+            mySyncRenderedText = currentText;
+            for (PushRepoModel<?, ?, ?> model : myModels) {
+                refreshRepository(model, false);
+            }
         }
     }
 
     private void resetEditSync() {
-        if (mySyncStrategy) {
-            mySyncStrategy = false;
-            mySyncRenderedText = null;
-        }
+        mySyncStrategy = false;
+        mySyncRenderedText = null;
     }
 
-    private class MyTreeCellRenderer extends CheckboxTree.CheckboxTreeCellRenderer {
+    @RequiredUIAccess
+    private void showValidation(LocalizeValue message) {
+        myValidation.setText(message);
+        myValidation.setVisible(message.isNotEmpty());
+    }
+
+    @RequiredUIAccess
+    private void editingFinished() {
+        showValidation(LocalizeValue.empty());
+        if (myShouldRepaint) {
+            refreshAll();
+        }
+        else {
+            for (PushRepoModel<?, ?, ?> model : myModels) {
+                refreshRepository(model, false);
+            }
+        }
+        myController.getDialog().updateOkActions();
+    }
+
+    private class TargetEditor implements TreeNodeEditor<Object> {
         @Override
-        public void customizeRenderer(
-            JTree tree,
-            Object value,
-            boolean selected,
-            boolean expanded,
-            boolean leaf,
-            int row,
-            boolean hasFocus
-        ) {
-            if (!(value instanceof DefaultMutableTreeNode node)) {
-                return;
+        public boolean isEditable(Object value) {
+            return value instanceof PushRepoModel<?, ?, ?> model && model.isEditable();
+        }
+
+        @RequiredUIAccess
+        @Override
+        public Component createEditor(Object value) {
+            PushRepoModel<?, ?, ?> model = (PushRepoModel<?, ?, ?>) value;
+            PushTargetPanel<?> targetPanel = model.getTargetPanel();
+
+            HorizontalLayout layout = HorizontalLayout.create(Space.SMALL);
+            if (!model.isSingle()) {
+                Label name = Label.create(LocalizeValue.of(model.getRepositoryName()));
+                name.setForegroundColor(ComponentColors.DISABLED_TEXT);
+                layout.add(name);
             }
-            myCheckbox.setBorder(null); //checkBox may have no border by default, but insets are not null,
-            // it depends on LaF, OS and isItRenderedPane, see consulo.ide.impl.idea.ide.ui.laf.darcula.ui.DarculaCheckBoxBorder.
-            // null border works as expected always.
-            if (node instanceof RepositoryNode valueNode) {
-                //todo simplify, remove instance of
-                myCheckbox.setVisible(valueNode.isCheckboxVisible());
-                if (valueNode.isChecked() && valueNode.isLoading()) {
-                    myCheckbox.setState(ThreeStateCheckBox.State.DONT_CARE);
-                }
-                else {
-                    myCheckbox.setSelected(valueNode.isChecked());
-                }
+            if (targetPanel.showSourceWhenEditing()) {
+                layout.add(Label.create(LocalizeValue.of(model.getSource().getPresentation() + ARROW)));
             }
-            Object userObject = node.getUserObject();
-            ColoredTreeCellRenderer renderer = getTextRenderer();
-            if (node instanceof CustomRenderedTreeNode customRenderedTreeNode) {
-                if (tree.isEditing() && mySyncStrategy && node instanceof RepositoryNode repositoryNode) {
-                    //sync rendering all editable fields
-                    repositoryNode.render(renderer, mySyncRenderedText);
-                }
-                else {
-                    customRenderedTreeNode.render(renderer);
+            layout.add(targetPanel.getComponent());
+            return layout;
+        }
+
+        @RequiredUIAccess
+        @Override
+        public void editingStarted(Object value, Component editor) {
+            ((PushRepoModel<?, ?, ?>) value).getTargetPanel().editingStarted();
+            myController.getDialog().updateOkActions();
+        }
+
+        @RequiredUIAccess
+        @Override
+        @SuppressWarnings("unchecked")
+        public boolean stopEditing(Object value, Component editor) {
+            PushRepoModel<Repository, PushSource, PushTarget> model = (PushRepoModel<Repository, PushSource, PushTarget>) value;
+            LocalizeValue error = model.getTargetPanel().verify();
+            if (error.isNotEmpty()) {
+                showValidation(error);
+                return false;
+            }
+
+            if (mySyncStrategy) {
+                resetEditSync();
+                for (PushRepoModel<Repository, PushSource, PushTarget> other : myModels) {
+                    myController.fireOnChange(other);
                 }
             }
             else {
-                renderer.append(userObject == null ? "" : userObject.toString());
+                myController.fireOnChange(model);
             }
+            UIAccess.current().give(PushLog.this::editingFinished);
+            return true;
+        }
+
+        @RequiredUIAccess
+        @Override
+        public void cancelEditing(Object value, Component editor) {
+            ((PushRepoModel<?, ?, ?>) value).getTargetPanel().fireOnCancel();
+            resetEditSync();
+            UIAccess.current().give(PushLog.this::editingFinished);
         }
     }
 
-    private class MyTreeCellEditor extends AbstractCellEditor implements TreeCellEditor {
-        private RepositoryWithBranchPanel myValue;
-
-        @Override
-        public Component getTreeCellEditorComponent(JTree tree, Object value, boolean isSelected, boolean expanded, boolean leaf, int row) {
-            RepositoryWithBranchPanel panel = (RepositoryWithBranchPanel)((DefaultMutableTreeNode)value).getUserObject();
-            myValue = panel;
-            myTree.firePropertyChange(PushLogTreeImplUtil.EDIT_MODE_PROP, false, true);
-            return panel.getTreeCellEditorComponent(tree, value, isSelected, expanded, leaf, row, true);
+    private class ShowDetailsAction extends DumbAwareToggleAction {
+        private ShowDetailsAction() {
+            super(DistributedVcsLocalize.pushShowDetails(), LocalizeValue.empty(), PlatformIconGroup.actionsPreviewdetails());
         }
 
         @Override
-        public boolean isCellEditable(EventObject anEvent) {
-            if (anEvent instanceof MouseEvent me) {
-                TreePath path = myTree.getClosestPathForLocation(me.getX(), me.getY());
-                int row = myTree.getRowForLocation(me.getX(), me.getY());
-                myTree.getCellRenderer()
-                    .getTreeCellRendererComponent(myTree, path.getLastPathComponent(), false, false, true, row, true);
-                Object tag = me.getClickCount() >= 1 ? PushLogTreeImplUtil.getTagAtForRenderer(myTreeCellRenderer, me) : null;
-                return tag instanceof VcsEditableComponent;
-            }
-            //if keyboard event - then anEvent will be null =( See BasicTreeUi
-            TreePath treePath = myTree.getAnchorSelectionPath();
-            //there is no selection path if we start editing during initial validation//
-            if (treePath == null) {
-                return true;
-            }
-            Object treeNode = treePath.getLastPathComponent();
-            return treeNode instanceof EditableTreeNode editableTreeNode && editableTreeNode.isEditableNow();
+        public void update(AnActionEvent e) {
+            super.update(e);
+            e.getPresentation().setEnabled(myDetailsAvailable);
         }
 
         @Override
-        public Object getCellEditorValue() {
-            return myValue;
-        }
-    }
-
-    private class MyTreeUi extends WideSelectionTreeUI {
-        private final ComponentListener myTreeSizeListener = new ComponentAdapter() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-                // invalidate, revalidate etc may have no 'size' effects, you need to manually invalidateSizes before.
-                updateSizes();
-            }
-        };
-
-        private final AncestorListener myTreeAncestorListener = new AncestorListenerAdapter() {
-            @Override
-            public void ancestorMoved(AncestorEvent event) {
-                super.ancestorMoved(event);
-                updateSizes();
-            }
-        };
-
-        private void updateSizes() {
-            treeState.invalidateSizes();
-            tree.repaint();
+        public boolean isSelected(AnActionEvent e) {
+            return mySettings.getShowDetailsInPushDialog();
         }
 
+        @RequiredUIAccess
         @Override
-        protected void installListeners() {
-            super.installListeners();
-            tree.addComponentListener(myTreeSizeListener);
-            tree.addAncestorListener(myTreeAncestorListener);
-        }
-
-        @Override
-        protected void uninstallListeners() {
-            tree.removeComponentListener(myTreeSizeListener);
-            tree.removeAncestorListener(myTreeAncestorListener);
-            super.uninstallListeners();
-        }
-
-        @Override
-        protected AbstractLayoutCache.NodeDimensions createNodeDimensions() {
-            return new NodeDimensionsHandler() {
-                @Override
-                public Rectangle getNodeDimensions(Object value, int row, int depth, boolean expanded, Rectangle size) {
-                    Rectangle dimensions = super.getNodeDimensions(value, row, depth, expanded, size);
-                    dimensions.width = myScrollPane != null
-                        ? Math.max(myScrollPane.getViewport().getWidth() - getRowX(row, depth), dimensions.width)
-                        : Math.max(myTree.getMinimumSize().width, dimensions.width);
-                    return dimensions;
-                }
-            };
-        }
-    }
-
-    private static class MyTreeViewPort extends JBViewport {
-        final int myHeightToReduce;
-
-        public MyTreeViewPort(@Nullable Component view, int heightToReduce) {
-            super();
-            setView(view);
-            myHeightToReduce = heightToReduce;
-        }
-
-        @Override
-        public Dimension getExtentSize() {
-            Dimension defaultSize = super.getExtentSize();
-            return new Dimension(defaultSize.width, defaultSize.height - myHeightToReduce);
+        public void setSelected(AnActionEvent e, boolean state) {
+            mySettings.setShowDetailsInPushDialog(state);
+            updateDetailsVisibility();
         }
     }
 }

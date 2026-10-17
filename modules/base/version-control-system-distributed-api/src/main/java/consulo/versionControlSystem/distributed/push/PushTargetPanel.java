@@ -15,37 +15,60 @@
  */
 package consulo.versionControlSystem.distributed.push;
 
-import consulo.ui.ex.awt.ValidationInfo;
-import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
-
+import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
+import consulo.ui.Component;
+import consulo.ui.TextItemPresentation;
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
-import javax.swing.*;
 
-public abstract class PushTargetPanel<T extends PushTarget> extends JPanel {
+public abstract class PushTargetPanel<T extends PushTarget> implements Disposable {
+    /**
+     * @param isActive true if appropriate repository changes will be pushed, a.e. if repository checked
+     */
+    public abstract void render(TextItemPresentation presentation,
+                                boolean isSelected,
+                                boolean isActive,
+                                @Nullable String forceRenderedText);
 
-  /**
-   * @param isActive true if appropriate repository changes will be pushed, a.e. if repository checked
-   */
-  abstract public void render(ColoredTreeCellRenderer renderer,
-                              boolean isSelected,
-                              boolean isActive,
-                              @Nullable String forceRenderedText);
+    @RequiredUIAccess
+    public abstract Component getComponent();
 
-  abstract public @Nullable T getValue();
+    public abstract @Nullable T getValue();
 
-  public abstract void fireOnCancel();
+    public boolean isEditable() {
+        return getValue() != null;
+    }
 
-  public abstract void fireOnChange();
+    @RequiredUIAccess
+    public void editingStarted() {
+    }
 
-  public abstract @Nullable ValidationInfo verify();
+    @RequiredUIAccess
+    public abstract void fireOnCancel();
 
-  public abstract void setFireOnChangeAction(Runnable action);
+    @RequiredUIAccess
+    public abstract void fireOnChange();
 
-  /**
-   * Add an ability to track edit field process
-   */
-  public abstract void addTargetEditorListener(PushTargetEditorListener listener);
+    @RequiredUIAccess
+    public abstract LocalizeValue verify();
 
-  public void forceUpdateEditableUiModel(String forcedText) {
-  }
+    public abstract void setFireOnChangeAction(Runnable action);
+
+    /**
+     * Add an ability to track edit field process
+     */
+    public abstract void addTargetEditorListener(PushTargetEditorListener listener);
+
+    @RequiredUIAccess
+    public void forceUpdateEditableUiModel(String forcedText) {
+    }
+
+    public boolean showSourceWhenEditing() {
+        return true;
+    }
+
+    @Override
+    public void dispose() {
+    }
 }

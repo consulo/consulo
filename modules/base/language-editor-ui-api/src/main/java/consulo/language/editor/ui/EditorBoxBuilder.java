@@ -18,7 +18,7 @@ package consulo.language.editor.ui;
 import consulo.codeEditor.EditorEx;
 import consulo.document.Document;
 import consulo.language.Language;
-import consulo.language.editor.ui.awt.TextCompletionProvider;
+import consulo.language.editor.ui.textCompletion.TextCompletionProvider;
 import consulo.language.editor.ui.awt.TextFieldCompletionProvider;
 import consulo.language.editor.ui.awt.TextFieldWithAutoCompletionListProvider;
 import consulo.language.psi.PsiFile;

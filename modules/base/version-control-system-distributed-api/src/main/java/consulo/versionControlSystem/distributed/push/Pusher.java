@@ -16,26 +16,28 @@
 package consulo.versionControlSystem.distributed.push;
 
 import consulo.versionControlSystem.distributed.repository.Repository;
-
 import org.jspecify.annotations.Nullable;
+
 import java.util.Map;
 
 /**
  * Base class to execute push command.
  */
 public abstract class Pusher<Repo extends Repository, Source extends PushSource, Target extends PushTarget> {
+    /**
+     * Perform push for all given repositories.
+     *
+     * @param pushSpecs        push specs for each repository telling what to push and where.
+     * @param additionalOption some additional push option(s), which are received from
+     *                         {@link PushSupport#createOptionsPanel() the additional panel} if the plugin has one.
+     * @param force            if true then force push should be performed.
+     */
+    public abstract void push(Map<Repo, PushSpec<Source, Target>> pushSpecs, @Nullable VcsPushOptionValue additionalOption, boolean force);
 
-  /**
-   * Perform push for all given repositories.
-   *
-   * @param pushSpecs        push specs for each repository telling what to push and where.
-   * @param additionalOption some additional push option(s), which are received from
-   *                         {@link PushSupport#createOptionsPanel() the additional panel} if the plugin has one.
-   * @param force            if true then force push should be performed.
-   */
-  public abstract void push(Map<Repo, PushSpec<Source, Target>> pushSpecs,
-                            @Nullable VcsPushOptionValue additionalOption,
-                            boolean force);
-
+    public void push(Map<Repo, PushSpec<Source, Target>> pushSpecs,
+                     @Nullable VcsPushOptionValue additionalOption,
+                     boolean force,
+                     Map<String, VcsPushOptionValue> customParams) {
+        push(pushSpecs, additionalOption, force);
+    }
 }
-

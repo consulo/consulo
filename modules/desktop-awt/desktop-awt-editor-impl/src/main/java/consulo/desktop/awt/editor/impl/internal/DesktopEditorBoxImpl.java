@@ -86,6 +86,7 @@ class DesktopEditorBoxImpl extends SwingComponentDelegate<DesktopEditorBoxImpl.M
     @Override
     protected MyEditorTextField createComponent() {
         MyEditorTextField field = new MyEditorTextField();
+        field.ensureWillComputePreferredSize();
         if (myOptions.editorFont()) {
             field.setFontInheritedFromLAF(false);
             field.setFont(AWTLanguageEditorUtil.getEditorFont());

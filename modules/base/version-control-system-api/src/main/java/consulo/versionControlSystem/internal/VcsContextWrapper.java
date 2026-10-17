@@ -37,6 +37,7 @@ import org.jspecify.annotations.Nullable;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Stream;
 
 public class VcsContextWrapper implements VcsContext {
@@ -172,5 +173,11 @@ public class VcsContextWrapper implements VcsContext {
     @Override
     public @Nullable Change[] getSelectedChanges() {
         return myContext.getData(VcsDataKeys.CHANGES);
+    }
+
+    @Override
+    public List<VirtualFile> getSelectedUnversionedFiles() {
+        List<VirtualFile> files = myContext.getData(ChangesListView.UNVERSIONED_FILES_DATA_KEY);
+        return files == null ? List.of() : files;
     }
 }

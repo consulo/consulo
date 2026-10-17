@@ -16,8 +16,7 @@
 
 package consulo.versionControlSystem.impl.internal.change;
 
-import consulo.annotation.component.ComponentProfiles;
-import consulo.annotation.component.ServiceImpl;
+import consulo.annotation.DeprecationInfo;
 import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
 import consulo.application.dumb.DumbAware;
@@ -34,7 +33,6 @@ import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
-import consulo.project.internal.ProjectEx;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.ModalityState;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -77,9 +75,10 @@ import java.util.function.Supplier;
 
 import static java.util.stream.Collectors.toList;
 
+@Deprecated
+@DeprecationInfo("Use UnifiedChangesViewManager")
 @State(name = "ChangesViewManager", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
 @Singleton
-@ServiceImpl(profiles = ComponentProfiles.AWT | ProjectEx.REGULAR_PROJECT)
 public class ChangesViewManagerImpl implements ChangesViewManager, Disposable, PersistentStateComponent<ChangesViewManagerImpl.State> {
 
     private static final Logger LOG = Logger.getInstance(ChangesViewManagerImpl.class);

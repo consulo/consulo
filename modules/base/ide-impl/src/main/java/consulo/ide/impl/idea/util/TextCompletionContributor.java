@@ -23,7 +23,7 @@ import consulo.language.editor.completion.CompletionContributor;
 import consulo.language.editor.completion.CompletionParameters;
 import consulo.language.editor.completion.CompletionResultSet;
 import consulo.language.editor.completion.lookup.CharFilter;
-import consulo.language.editor.ui.awt.TextCompletionProvider;
+import consulo.language.editor.ui.textCompletion.TextCompletionProvider;
 import consulo.language.editor.ui.awt.TextCompletionUtil;
 import consulo.language.plain.PlainTextLanguage;
 import consulo.language.psi.PsiElement;

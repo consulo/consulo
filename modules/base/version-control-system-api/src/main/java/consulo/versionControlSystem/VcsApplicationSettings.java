@@ -23,6 +23,7 @@ import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.util.xml.serializer.XmlSerializerUtil;
+import consulo.versionControlSystem.commit.CommitModeType;
 import jakarta.inject.Singleton;
 
 /**
@@ -39,6 +40,8 @@ public class VcsApplicationSettings implements PersistentStateComponent<VcsAppli
   public boolean SHOW_LST_WORD_DIFFERENCES = true;
   public boolean DETECT_PATCH_ON_THE_FLY = false;
   public boolean CREATE_CHANGELISTS_AUTOMATICALLY = false;
+  public CommitModeType COMMIT_MODE = CommitModeType.VERSION_CONTROL_TOOL_WINDOW;
+  public boolean COMMIT_TOGGLE_MODE = false;
 
   public static VcsApplicationSettings getInstance() {
     return Application.get().getInstance(VcsApplicationSettings.class);

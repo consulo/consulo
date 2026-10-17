@@ -15,6 +15,7 @@
  */
 package consulo.versionControlSystem.ui.awt;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.AnAction;
 import consulo.virtualFileSystem.VirtualFile;
@@ -29,6 +30,8 @@ import java.util.List;
  * @author VISTALL
  * @since 2025-08-30
  */
+@Deprecated
+@DeprecationInfo("Use VcsChangesDialogFactory#fileList / #filePathList")
 public interface ChangesBrowserTree<T> {
     void setEmptyText(LocalizeValue emptyText);
 

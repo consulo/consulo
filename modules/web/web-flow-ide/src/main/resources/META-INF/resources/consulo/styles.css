@@ -387,6 +387,16 @@ vaadin-context-menu-item[disabled]
   color: var(--consulo-label-disabled-foreground);
 }
 
+vaadin-button[disabled][theme~="primary"]
+{
+  --vaadin-button-background: initial;
+}
+
+vaadin-button[disabled][theme~="primary"]::part(label)
+{
+  color: inherit;
+}
+
 /* a toolbar button standing for a selected toggle action - the awt toolbar paints the same fill behind the
    icon, and without it a borderless button gives the state away by nothing at all */
 vaadin-button[theme~="pressed"]

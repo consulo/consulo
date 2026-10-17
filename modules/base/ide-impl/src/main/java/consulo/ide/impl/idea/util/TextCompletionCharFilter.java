@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.util;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.completion.lookup.CharFilter;
 import consulo.language.editor.completion.lookup.Lookup;
-import consulo.language.editor.ui.awt.TextCompletionProvider;
+import consulo.language.editor.ui.textCompletion.TextCompletionProvider;
 import consulo.language.editor.ui.awt.TextCompletionUtil;
 import consulo.language.psi.PsiFile;
 import org.jspecify.annotations.Nullable;

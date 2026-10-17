@@ -30,6 +30,6 @@ public class TodoCheckinHandlerFactory extends CheckinHandlerFactory {
   
   @Override
   public CheckinHandler createHandler(CheckinProjectPanel panel, CommitContext commitContext) {
-    return new TodoCheckinHandler(panel);
+    return new TodoCheckinHandler(panel.getProject());
   }
 }

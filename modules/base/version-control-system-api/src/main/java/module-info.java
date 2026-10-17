@@ -28,6 +28,7 @@ module consulo.version.control.system.api {
     exports consulo.versionControlSystem.localize;
     exports consulo.versionControlSystem.contentAnnotation;
     exports consulo.versionControlSystem.change;
+    exports consulo.versionControlSystem.commit;
     exports consulo.versionControlSystem.change.action;
     exports consulo.versionControlSystem.change.diff;
     exports consulo.versionControlSystem.change.patch;

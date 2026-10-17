@@ -17,22 +17,18 @@ package consulo.versionControlSystem.impl.internal;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.dumb.DumbAware;
+import consulo.versionControlSystem.impl.internal.change.ui.UnifiedChangesViewContentManager;
 import consulo.versionControlSystem.internal.ChangesViewContentI;
-import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesViewContentManager;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowFactory;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.content.Content;
-import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.ui.image.Image;
-import consulo.util.lang.Trinity;
 import consulo.versionControlSystem.VcsToolWindow;
 
-import java.util.List;
 
 /**
  * @author VISTALL
@@ -49,38 +45,13 @@ public class VcsToolWindowFactory implements ToolWindowFactory, DumbAware {
     @RequiredUIAccess
     @Override
     public void createToolWindowContent(Project project, ToolWindow toolWindow) {
-        ContentManager contentManager = toolWindow.getContentManager();
-
-        ChangesViewContentManager manager = (ChangesViewContentManager) ChangesViewContentManager.getInstance(project);
-
-        manager.loadExtensionTabs();
-
-        Trinity<Image, LocalizeValue, Boolean> state = manager.getAlreadyLoadedState();
-        manager.setAlreadyLoadedState(null);
-        List<Content> contents = manager.setContentManager(toolWindow, contentManager);
-
-        List<Content> ordered = ChangesViewContentManager.doPresetOrdering(contents);
-        for (Content content : ordered) {
-            contentManager.addContent(content);
-        }
-
-        if (contentManager.getContentCount() > 0) {
-            contentManager.setSelectedContent(contentManager.getContent(0));
-        }
-
-        if (state != null) {
-            toolWindow.setIcon(state.getFirst());
-            toolWindow.setDisplayName(state.getSecond());
-            toolWindow.setAvailable(state.getThird(), null);
-        }
+        UnifiedChangesViewContentManager.getInstanceImpl(project).attachToolWindow(toolWindow);
     }
 
     @Override
     public boolean shouldBeAvailable(Project project) {
-        ChangesViewContentManager manager = (ChangesViewContentManager) project.getInstanceIfCreated(ChangesViewContentI.class);
-        if (manager != null) {
-            Trinity<Image, LocalizeValue, Boolean> alreadyLoadedState = manager.getAlreadyLoadedState();
-            return alreadyLoadedState != null && alreadyLoadedState.getThird();
+        if (project.getInstanceIfCreated(ChangesViewContentI.class) instanceof UnifiedChangesViewContentManager manager) {
+            return manager.isToolWindowAvailable();
         }
         return false;
     }

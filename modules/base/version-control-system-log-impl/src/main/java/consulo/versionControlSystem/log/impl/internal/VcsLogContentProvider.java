@@ -15,6 +15,8 @@
  */
 package consulo.versionControlSystem.log.impl.internal;
 
+import consulo.ui.Component;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowId;
@@ -85,9 +87,9 @@ public class VcsLogContentProvider implements ChangesViewContentProvider {
 
     @Override
     @RequiredUIAccess
-    public JComponent initContent() {
+    public Component initContent() {
         myProjectLog.createLog();
-        return myContainer;
+        return TargetAWT.wrap(myContainer);
     }
 
     @Override

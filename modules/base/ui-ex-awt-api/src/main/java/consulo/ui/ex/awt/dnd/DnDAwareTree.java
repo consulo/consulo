@@ -67,7 +67,7 @@ public class DnDAwareTree extends Tree implements DnDAware {
 
     @Override
     public boolean isOverSelection(Point point) {
-        TreePath path = getClosestPathForLocation(point.x, point.y);
+        TreePath path = TreeUtil.getPathForLocation(this, point.x, point.y);
         if (path == null) {
             return false;
         }

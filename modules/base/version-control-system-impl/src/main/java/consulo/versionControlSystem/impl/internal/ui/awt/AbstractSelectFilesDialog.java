@@ -15,6 +15,7 @@
  */
 package consulo.versionControlSystem.impl.internal.ui.awt;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -32,6 +33,8 @@ import java.awt.*;
 /**
  * @author yole
  */
+@Deprecated
+@DeprecationInfo("Use VcsChangesDialogFactory#selectFiles / #selectFilePaths")
 public abstract class AbstractSelectFilesDialog<T> extends DialogWrapper {
   protected JCheckBox myDoNotShowCheckbox;
   protected final VcsShowConfirmationOption myConfirmationOption;

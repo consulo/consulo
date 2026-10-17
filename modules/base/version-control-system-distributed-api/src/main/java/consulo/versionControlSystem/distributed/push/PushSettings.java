@@ -18,19 +18,17 @@ package consulo.versionControlSystem.distributed.push;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 
-import java.util.Set;
-
 /**
  * @author VISTALL
  * @since 2025-08-16
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface PushSettings {
-    Set<String> getExcludedRepoRoots();
-
-    void saveExcludedRepoRoots(Set<String> roots);
-
     boolean containsForcePushTarget(String remote, String branch);
 
     void addForcePushTarget(String targetRemote, String targetBranch);
+
+    boolean getShowDetailsInPushDialog();
+
+    void setShowDetailsInPushDialog(boolean value);
 }

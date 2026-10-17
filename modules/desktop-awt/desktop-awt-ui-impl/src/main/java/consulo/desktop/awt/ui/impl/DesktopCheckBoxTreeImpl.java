@@ -22,7 +22,10 @@ import consulo.ui.impl.tree.CheckBoxTreeState;
 import consulo.ui.impl.tree.CheckBoxTreeStateHolder;
 import org.jspecify.annotations.Nullable;
 
+import javax.swing.JTree;
 import javax.swing.tree.TreeCellRenderer;
+import javax.swing.tree.TreePath;
+import java.awt.event.MouseEvent;
 
 /**
  * @author VISTALL
@@ -52,6 +55,16 @@ public class DesktopCheckBoxTreeImpl<E> extends DesktopTreeImpl<E> implements Ch
         DesktopAWTTree tree = super.createComponent();
         myCheckBoxes.installToggleKey(tree, tree);
         return tree;
+    }
+
+    @Override
+    int editorLeftInset(JTree tree, int row) {
+        return myCheckBoxes.checkBoxWidth(row);
+    }
+
+    @Override
+    void editorPrefixPressed(TreePath path, MouseEvent event) {
+        myCheckBoxes.toggle(path, event);
     }
 
     @Override

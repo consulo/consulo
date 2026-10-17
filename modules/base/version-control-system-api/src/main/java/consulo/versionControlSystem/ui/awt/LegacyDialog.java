@@ -15,12 +15,15 @@
  */
 package consulo.versionControlSystem.ui.awt;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.localize.LocalizeValue;
 
 /**
  * @author VISTALL
  * @since 2025-09-07
  */
+@Deprecated
+@DeprecationInfo("Use the async dialogs of VcsChangesDialogFactory")
 public interface LegacyDialog {
     boolean isOK();
 

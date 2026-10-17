@@ -15,6 +15,7 @@
  */
 package consulo.versionControlSystem.impl.internal.ui.awt;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.dataContext.DataSink;
 import consulo.project.Project;
 import consulo.project.ui.impl.internal.VirtualFileDeleteProvider;
@@ -44,6 +45,8 @@ import java.util.List;
 /**
  * @author yole
  */
+@Deprecated
+@DeprecationInfo("Use VcsChangesDialogFactory#selectFiles")
 public class SelectFilesDialog extends AbstractSelectFilesDialog<VirtualFile> implements LegacyDialog {
     
     private final VirtualFileListImpl myFileList;

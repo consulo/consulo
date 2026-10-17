@@ -28,6 +28,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.util.Collection;
+import java.util.List;
 
 public class CachedVcsContext implements VcsContext {
   private final Project myProject;
@@ -44,6 +45,7 @@ public class CachedVcsContext implements VcsContext {
   private final FilePath mySelectedFilePath;
   private final ChangeList[] mySelectedChangeLists;
   private final Change[] mySelectedChanges;
+  private final List<VirtualFile> mySelectedUnversionedFiles;
   private final LocalizeValue myActionName;
 
   public CachedVcsContext(VcsContext baseContext) {
@@ -61,6 +63,7 @@ public class CachedVcsContext implements VcsContext {
     mySelectedFilePath = baseContext.getSelectedFilePath();
     mySelectedChangeLists = baseContext.getSelectedChangeLists();
     mySelectedChanges = baseContext.getSelectedChanges();
+    mySelectedUnversionedFiles = baseContext.getSelectedUnversionedFiles();
     myActionName = baseContext.getActionName();
   }
 
@@ -134,6 +137,11 @@ public class CachedVcsContext implements VcsContext {
   @Override
   public @Nullable Change[] getSelectedChanges() {
     return mySelectedChanges;
+  }
+
+  @Override
+  public List<VirtualFile> getSelectedUnversionedFiles() {
+    return mySelectedUnversionedFiles;
   }
 
   @Override

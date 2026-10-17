@@ -18,6 +18,7 @@ module consulo.version.control.system.impl {
     // TODO we need it?
     requires consulo.language.editor.api;
     requires consulo.language.editor.impl;
+    requires consulo.language.editor.ui.api;
 
     exports consulo.versionControlSystem.impl.internal to
         consulo.desktop.awt.editor.impl,
@@ -98,6 +99,7 @@ module consulo.version.control.system.impl {
         consulo.util.xml.serializer,
         consulo.ui.ex.awt.api;
     opens consulo.versionControlSystem.impl.internal.change to consulo.util.xml.serializer;
+    opens consulo.versionControlSystem.impl.internal.change.ui to consulo.util.xml.serializer;
     opens consulo.versionControlSystem.impl.internal.action to consulo.component.impl;
     opens consulo.versionControlSystem.impl.internal.checkout to consulo.component.impl;
     opens consulo.versionControlSystem.impl.internal.change.patch to consulo.component.impl;

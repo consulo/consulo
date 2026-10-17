@@ -17,6 +17,12 @@ package consulo.versionControlSystem.impl.internal.change.action;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.platform.base.localize.ActionLocalize;
+import consulo.project.Project;
+import consulo.ui.ex.action.ActionPlaces;
+import consulo.ui.ex.action.Presentation;
+import consulo.versionControlSystem.action.VcsContext;
+import consulo.versionControlSystem.commit.CommitModeManager;
+import consulo.versionControlSystem.commit.NonModalCommitMode;
 import consulo.versionControlSystem.icon.VersionControlSystemIconGroup;
 import consulo.versionControlSystem.impl.internal.action.CommonCheckinProjectAction;
 
@@ -32,5 +38,18 @@ public class CommitAction extends CommonCheckinProjectAction {
             ActionLocalize.actionChangesviewCommitDescription(),
             VersionControlSystemIconGroup.commit()
         );
+    }
+
+    @Override
+    protected void update(VcsContext vcsContext, Presentation presentation) {
+        Project project = vcsContext.getProject();
+        String place = vcsContext.getPlace();
+        boolean fromLocalChanges = ActionPlaces.CHANGES_VIEW_TOOLBAR.equals(place) || ActionPlaces.CHANGES_VIEW_POPUP.equals(place);
+        if (project != null && fromLocalChanges && CommitModeManager.getInstance(project).getCurrentCommitMode() instanceof NonModalCommitMode) {
+            presentation.setEnabledAndVisible(false);
+            return;
+        }
+
+        super.update(vcsContext, presentation);
     }
 }

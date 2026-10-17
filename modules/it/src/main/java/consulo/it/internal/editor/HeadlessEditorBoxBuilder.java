@@ -22,7 +22,7 @@ import consulo.language.Language;
 import consulo.language.editor.ui.EditorBox;
 import consulo.language.editor.ui.EditorBoxBuilder;
 import consulo.language.editor.ui.EditorComboBox;
-import consulo.language.editor.ui.awt.TextCompletionProvider;
+import consulo.language.editor.ui.textCompletion.TextCompletionProvider;
 import consulo.language.editor.ui.awt.TextFieldCompletionProvider;
 import consulo.language.editor.ui.awt.TextFieldWithAutoCompletionListProvider;
 import consulo.language.plain.PlainTextFileType;

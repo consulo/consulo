@@ -25,11 +25,16 @@ import consulo.localize.LocalizeValue;
  */
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface ChangesViewContentFactory {
-  
+  String getId();
+
   LocalizeValue getTabName();
 
   default boolean isAvailable() {
     return true;
+  }
+
+  default boolean isInCommitToolWindow() {
+    return false;
   }
 
   

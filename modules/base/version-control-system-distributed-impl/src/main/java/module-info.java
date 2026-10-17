@@ -10,7 +10,4 @@ module consulo.version.control.system.distributed.impl {
     requires consulo.ui.ex.impl;
 
     opens consulo.versionControlSystem.distributed.impl.internal.push to consulo.util.xml.serializer;
-
-    // TODO remove
-    requires miglayout;
 }

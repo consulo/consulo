@@ -15,11 +15,8 @@
  */
 package consulo.language.editor.todo.impl.internal.versionSystemControl;
 
-import consulo.application.Application;
-import consulo.application.ApplicationManager;
+import consulo.application.dumb.DumbAware;
 import consulo.application.progress.ProgressIndicator;
-import consulo.application.progress.ProgressManager;
-import consulo.application.progress.Task;
 import consulo.application.ui.util.TodoPanelSettings;
 import consulo.application.util.DateFormatUtil;
 import consulo.language.editor.todo.TodoConfiguration;
@@ -31,7 +28,6 @@ import consulo.language.editor.todo.impl.internal.localize.LanguageTodoLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.CommonLocalize;
-import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.*;
@@ -39,43 +35,39 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.ActionPopupMenu;
-import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.layout.HorizontalLayout;
-import consulo.util.lang.ref.SimpleReference;
 import consulo.versionControlSystem.VcsConfiguration;
-import consulo.versionControlSystem.change.Change;
-import consulo.versionControlSystem.change.CommitExecutor;
 import consulo.versionControlSystem.checkin.CheckinHandler;
 import consulo.versionControlSystem.checkin.CheckinHandlerUtil;
-import consulo.versionControlSystem.checkin.CheckinProjectPanel;
+import consulo.versionControlSystem.checkin.CommitCheck;
+import consulo.versionControlSystem.checkin.CommitInfo;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.ui.RefreshableOnComponent;
 import org.jspecify.annotations.Nullable;
 
-import java.util.Collection;
-import java.util.function.BiConsumer;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
-
-import static consulo.ui.ex.awt.Messages.*;
-import static consulo.ui.ex.awt.UIUtil.getWarningIcon;
 
 /**
  * @author irengrig
  * @since 2011-02-17
  */
-public class TodoCheckinHandler extends CheckinHandler {
+public class TodoCheckinHandler extends CheckinHandler implements CommitCheck, DumbAware {
     private final Project myProject;
-    private final CheckinProjectPanel myCheckinProjectPanel;
     private final VcsConfiguration myConfiguration;
-    private TodoFilter myTodoFilter;
+    private @Nullable TodoFilter myTodoFilter;
 
-    public TodoCheckinHandler(CheckinProjectPanel checkinProjectPanel) {
-        myProject = checkinProjectPanel.getProject();
-        myCheckinProjectPanel = checkinProjectPanel;
-        myConfiguration = VcsConfiguration.getInstance(myProject);
+    public TodoCheckinHandler(Project project) {
+        myProject = project;
+        myConfiguration = VcsConfiguration.getInstance(project);
+    }
+
+    @Override
+    public ExecutionOrder getExecutionOrder() {
+        return ExecutionOrder.POST_COMMIT;
     }
 
     @RequiredUIAccess
@@ -152,134 +144,99 @@ public class TodoCheckinHandler extends CheckinHandler {
     }
 
     @Override
-    @RequiredUIAccess
-    public ReturnResult beforeCheckin(@Nullable CommitExecutor executor, BiConsumer<Object, Object> additionalDataConsumer) {
-        if (!myConfiguration.CHECK_NEW_TODO) {
-            return ReturnResult.COMMIT;
-        }
-        if (DumbService.getInstance(myProject).isDumb()) {
-            LocalizeValue todoName = VcsLocalize.beforeCheckinNewTodoCheckTitle();
-            if (Messages.showOkCancelDialog(
-                    myProject,
-                    todoName +
-                            " can't be performed while " + Application.get().getName().get() + " updates the indices in background.\n" +
-                            "You can commit the changes without running checks, or you can wait until indices are built.",
-                    todoName + " is not possible right now",
-                    "&Wait",
-                    "&Commit",
-                    null
-            ) == Messages.OK) {
-                return ReturnResult.CANCEL;
-            }
-            return ReturnResult.COMMIT;
-        }
-        Collection<Change> changes = myCheckinProjectPanel.getSelectedChanges();
-        TodoCheckinHandlerWorker worker = new TodoCheckinHandlerWorker(myProject, changes, myTodoFilter, true);
+    public boolean isEnabled() {
+        return myConfiguration.CHECK_NEW_TODO;
+    }
 
-        SimpleReference<Boolean> completed = SimpleReference.create(Boolean.FALSE);
-        ProgressManager.getInstance().run(
-                new Task.Modal(myProject, LocalizeValue.localizeTODO("Looking for New and Edited TODO Items…"), true) {
-                    @Override
-                    public void run(ProgressIndicator indicator) {
-                        indicator.setIndeterminate(true);
-                        worker.execute();
-                    }
+    @Override
+    public @Nullable TodoCommitProblem runCheck(CommitInfo commitInfo, ProgressIndicator indicator) {
+        String filterName = myConfiguration.myTodoPanelSettings.todoFilterName;
+        TodoFilter todoFilter = filterName == null ? null : TodoConfiguration.getInstance().getTodoFilter(filterName);
+        TodoCheckinHandlerWorker worker = new TodoCheckinHandlerWorker(myProject, commitInfo.getCommittedChanges(), todoFilter, true);
 
-                    @Override
-                    @RequiredUIAccess
-                    public void onSuccess() {
-                        completed.set(Boolean.TRUE);
-                    }
-                }
-        );
-        if (completed.get() && (worker.getAddedOrEditedTodos().isEmpty() && worker.getInChangedTodos().isEmpty() &&
-                worker.getSkipped().isEmpty())) {
-            return ReturnResult.COMMIT;
+        indicator.setIndeterminate(true);
+        indicator.setText(VcsLocalize.progressTextCheckingForTodo());
+        worker.execute();
+
+        boolean noTodo = worker.inOneList().isEmpty();
+        boolean noSkipped = worker.getSkipped().isEmpty();
+        if (noTodo && noSkipped) {
+            return null;
         }
-        if (!completed.get()) {
-            return ReturnResult.CANCEL;
-        }
-        return showResults(worker, executor);
+        return new TodoCommitProblem(worker);
     }
 
     @RequiredUIAccess
-    private ReturnResult showResults(TodoCheckinHandlerWorker worker, CommitExecutor executor) {
-        LocalizeValue commitButtonText = executor != null ? executor.getActionText() : myCheckinProjectPanel.getCommitActionName();
-        commitButtonText = commitButtonText.removeEllipsis();
+    static CompletableFuture<ReturnResult> showDialog(Project project, TodoCheckinHandlerWorker worker, LocalizeValue commitActionText) {
+        boolean noTodo = worker.getAddedOrEditedTodos().isEmpty() && worker.getInChangedTodos().isEmpty();
+        boolean noSkipped = worker.getSkipped().isEmpty();
 
-        LocalizeValue text = createMessage(worker);
-        boolean thereAreTodoFound = worker.getAddedOrEditedTodos().size() + worker.getInChangedTodos().size() > 0;
-        String title = "TODO";
-        if (thereAreTodoFound) {
-            return askReviewOrCommit(worker, commitButtonText, text, title);
+        if (noTodo && noSkipped) {
+            return CompletableFuture.completedFuture(ReturnResult.COMMIT);
         }
-        else if (YES == showYesNoDialog(
-                myProject,
-                text.get(),
-                title,
-                commitButtonText.get(),
-                CommonLocalize.buttonCancel().get(),
-                getWarningIcon()
-        )) {
-            return ReturnResult.COMMIT;
+
+        if (noTodo) {
+            return MessageBoxBuilder.<ReturnResult>create()
+                .asWarning()
+                .richText()
+                .title(VcsLocalize.checkinDialogTitleTodo())
+                .text(getDescription(worker))
+                .button(MessageButtonRole.YES, commitActionText, ReturnResult.COMMIT)
+                .asDefaultButton()
+                .button(MessageButtonRole.CANCEL, CommonLocalize.buttonCancel(), ReturnResult.CANCEL)
+                .asExitButton()
+                .showAsync();
         }
-        return ReturnResult.CANCEL;
+
+        return MessageBoxBuilder.<ReturnResult>create()
+            .asWarning()
+            .richText()
+            .title(VcsLocalize.checkinDialogTitleTodo())
+            .text(getDescription(worker))
+            .button(MessageButtonRole.YES, VcsLocalize.todoInNewReviewButton(), () -> {
+                showTodoItems(project, worker);
+                return ReturnResult.CLOSE_WINDOW;
+            })
+            .asDefaultButton()
+            .button(MessageButtonRole.NO, commitActionText, ReturnResult.COMMIT)
+            .button(MessageButtonRole.CANCEL, CommonLocalize.buttonCancel(), ReturnResult.CANCEL)
+            .asExitButton()
+            .showAsync();
     }
 
-    
     @RequiredUIAccess
-    private ReturnResult askReviewOrCommit(
-            TodoCheckinHandlerWorker worker,
-            LocalizeValue commitButton,
-            LocalizeValue text,
-            String title
-    ) {
-        LocalizeValue yesButton = VcsLocalize.todoInNewReviewButton();
-        int result = showYesNoCancelDialog(
-            myProject,
-            text.get(),
+    static void showTodoItems(Project project, TodoCheckinHandlerWorker worker) {
+        String title = VcsLocalize.checkinTitleForCommit0(DateFormatUtil.formatDateTime(System.currentTimeMillis())).get();
+        project.getInstance(TodoView.class).addCustomTodoView(
+            (tree, p) -> new CustomChangelistTodosTreeBuilder(tree, project, title, worker.inOneList()),
             title,
-            yesButton.get(),
-            commitButton.get(),
-            CommonLocalize.buttonCancel().get(),
-            getWarningIcon()
-        );
-        return switch (result) {
-            case YES -> {
-                showTodo(worker);
-                yield ReturnResult.CLOSE_WINDOW;
-            }
-            case NO -> ReturnResult.COMMIT;
-            default -> ReturnResult.CANCEL;
-        };
-    }
-
-    private void showTodo(TodoCheckinHandlerWorker worker) {
-        String title = "For commit (" + DateFormatUtil.formatDateTime(System.currentTimeMillis()) + ")";
-        myProject.getInstance(TodoView.class).addCustomTodoView(
-                (tree, project) -> new CustomChangelistTodosTreeBuilder(tree, myProject, title, worker.inOneList()),
-                title,
-                new TodoPanelSettings(myConfiguration.myTodoPanelSettings)
+            new TodoPanelSettings(VcsConfiguration.getInstance(project).myTodoPanelSettings)
         );
 
-        ApplicationManager.getApplication().invokeLater(() -> {
-            ToolWindowManager manager = ToolWindowManager.getInstance(myProject);
-            if (manager != null) {
-                ToolWindow window = manager.getToolWindow("TODO");
-                if (window != null) {
-                    window.show(() -> {
-                        ContentManager cm = window.getContentManager();
-                        Content[] contents = cm.getContents();
-                        if (contents.length > 0) {
-                            cm.setSelectedContent(contents[contents.length - 1], true);
-                        }
-                    });
-                }
+        UIAccess uiAccess = project.getUIAccess();
+        if (!uiAccess.isValid()) {
+            return;
+        }
+
+        uiAccess.giveLater(() -> {
+            if (project.isDisposed()) {
+                return;
             }
-        }, ModalityState.nonModal(), myProject.getDisposed());
+
+            ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow("TODO");
+            if (toolWindow != null) {
+                toolWindow.show(() -> {
+                    ContentManager contentManager = toolWindow.getContentManager();
+                    Content[] contents = contentManager.getContents();
+                    if (contents.length > 0) {
+                        contentManager.setSelectedContent(contents[contents.length - 1], true);
+                    }
+                });
+            }
+        }, ModalityState.nonModal());
     }
 
-    private static LocalizeValue createMessage(TodoCheckinHandlerWorker worker) {
+    private static LocalizeValue getDescription(TodoCheckinHandlerWorker worker) {
         int added = worker.getAddedOrEditedTodos().size();
         int changed = worker.getInChangedTodos().size();
         int skipped = worker.getSkipped().size();

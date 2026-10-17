@@ -30,7 +30,7 @@ import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.versionControlSystem.VcsToolWindow;
-import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesViewContentManager;
+import consulo.versionControlSystem.internal.ChangesViewContentI;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 
@@ -97,7 +97,7 @@ class IncomingChangesWidget implements StatusBarWidget, StatusBarWidget.IconPres
                 Project project = myStatusBar.getProject();
                 if (project != null) {
                     ToolWindow changesView = ToolWindowManager.getInstance(project).getToolWindow(VcsToolWindow.ID);
-                    changesView.show(() -> ChangesViewContentManager.getInstance(project).selectContent("Incoming"));
+                    changesView.show(() -> ChangesViewContentI.getInstance(project).selectContent(ChangesViewContentI.INCOMING));
                 }
             }
         };

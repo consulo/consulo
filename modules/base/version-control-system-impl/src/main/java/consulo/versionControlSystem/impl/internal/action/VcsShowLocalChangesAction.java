@@ -28,7 +28,7 @@ public class VcsShowLocalChangesAction extends VcsShowToolWindowTabAction {
 
     
     @Override
-    protected String getTabName() {
+    protected String getContentId() {
         return ChangesViewContentManager.LOCAL_CHANGES;
     }
 }

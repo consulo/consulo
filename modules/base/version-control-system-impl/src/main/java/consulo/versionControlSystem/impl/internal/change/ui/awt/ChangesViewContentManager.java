@@ -17,7 +17,6 @@
 package consulo.versionControlSystem.impl.internal.change.ui.awt;
 
 import consulo.annotation.DeprecationInfo;
-import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
@@ -52,8 +51,9 @@ import java.util.*;
 /**
  * @author yole
  */
+@Deprecated
+@DeprecationInfo("Use UnifiedChangesViewContentManager")
 @Singleton
-@ServiceImpl
 public class ChangesViewContentManager implements ChangesViewContentI, Disposable {
     public static ChangesViewContentI getInstance(Project project) {
         return ChangesViewContentI.getInstance(project);
@@ -108,6 +108,7 @@ public class ChangesViewContentManager implements ChangesViewContentI, Disposabl
         for (ChangesViewContentFactory factory : contentEPs) {
             if (factory.isAvailable()) {
                 Content content = myContentFactory.createContent(new ContentStub(factory), factory.getTabName().get(), false);
+                content.putUserData(CONTENT_ID_KEY, factory.getId());
                 content.setCloseable(false);
                 content.putUserData(ourEpKey, factory);
                 contentList.add(content);
@@ -118,6 +119,7 @@ public class ChangesViewContentManager implements ChangesViewContentI, Disposabl
 
     private void addExtensionTab(ChangesViewContentFactory factory) {
         Content content = myContentFactory.createContent(new ContentStub(factory), factory.getTabName().get(), false);
+        content.putUserData(CONTENT_ID_KEY, factory.getId());
         content.setCloseable(false);
         content.putUserData(ourEpKey, factory);
         addIntoCorrectPlace(content);
@@ -229,22 +231,27 @@ public class ChangesViewContentManager implements ChangesViewContentI, Disposabl
     }
 
     @Override
-    public boolean isContentSelected(String contentName) {
+    public boolean isContentSelected(String contentId) {
         Content selectedContent = myContentManager.getSelectedContent();
         if (selectedContent == null) {
             return false;
         }
-        return Comparing.equal(contentName, selectedContent.getTabName());
+        return Comparing.equal(contentId, ChangesViewContentI.getContentId(selectedContent));
     }
 
     @Override
-    public void selectContent(String tabName, boolean requestFocus) {
+    public void selectContent(String contentId, boolean requestFocus) {
         for (Content content : myContentManager.getContents()) {
-            if (content.getDisplayName().equals(tabName)) {
+            if (contentId.equals(ChangesViewContentI.getContentId(content))) {
                 myContentManager.setSelectedContent(content, requestFocus);
                 break;
             }
         }
+    }
+
+    @Override
+    public @Nullable ToolWindow getToolWindowFor(String contentId) {
+        return myToolWindow;
     }
 
     public void update() {
@@ -280,8 +287,7 @@ public class ChangesViewContentManager implements ChangesViewContentI, Disposabl
             if (content.getComponent() instanceof ContentStub) {
                 ChangesViewContentFactory contentFactory = ((ContentStub) content.getComponent()).getChangesViewContentFactory();
                 ChangesViewContentProvider provider = contentFactory.create();
-                JComponent contentComponent = provider.initContent();
-                content.setComponent(contentComponent);
+                content.setUIComponent(provider.initContent());
                 content.setDisposer(provider::disposeContent);
             }
         }
@@ -298,7 +304,7 @@ public class ChangesViewContentManager implements ChangesViewContentI, Disposabl
         for (String preset : ourPresetOrder) {
             for (Iterator<Content> iterator = contents.iterator(); iterator.hasNext(); ) {
                 Content current = iterator.next();
-                if (preset.equals(current.getTabName())) {
+                if (preset.equals(ChangesViewContentI.getContentId(current))) {
                     iterator.remove();
                     result.add(current);
                 }
@@ -314,7 +320,7 @@ public class ChangesViewContentManager implements ChangesViewContentI, Disposabl
             return;
         }
 
-        String name = content.getTabName();
+        String name = ChangesViewContentI.getContentId(content);
         Content[] contents = myContentManager.getContents();
 
         int idxOfBeingInserted = -1;
@@ -331,7 +337,7 @@ public class ChangesViewContentManager implements ChangesViewContentI, Disposabl
 
         Set<String> existingNames = new HashSet<>();
         for (Content existingContent : contents) {
-            existingNames.add(existingContent.getTabName());
+            existingNames.add(ChangesViewContentI.getContentId(existingContent));
         }
 
         int place = idxOfBeingInserted;

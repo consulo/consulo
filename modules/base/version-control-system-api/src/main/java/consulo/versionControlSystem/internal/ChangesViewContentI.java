@@ -19,6 +19,8 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.project.Project;
 import consulo.ui.ex.content.Content;
+import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.util.dataholder.Key;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -26,6 +28,15 @@ import org.jspecify.annotations.Nullable;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface ChangesViewContentI {
+    String LOCAL_CHANGES = "Local Changes";
+    String REPOSITORY = "Repository";
+    String INCOMING = "Incoming";
+    String SHELF = "Shelf";
+
+    Key<Boolean> IN_COMMIT_TOOL_WINDOW_KEY = Key.create("ChangesViewContentI.IN_COMMIT_TOOL_WINDOW_KEY");
+
+    Key<String> CONTENT_ID_KEY = Key.create("ChangesViewContentI.CONTENT_ID_KEY");
+
     static ChangesViewContentI getInstance(Project project) {
         return project.getInstance(ChangesViewContentI.class);
     }
@@ -38,11 +49,17 @@ public interface ChangesViewContentI {
 
     <T> @Nullable T getActiveComponent(Class<T> aClass);
 
-    default void selectContent(String tabName) {
-        selectContent(tabName, false);
+    static @Nullable String getContentId(Content content) {
+        return content.getUserData(CONTENT_ID_KEY);
     }
 
-    void selectContent(String tabName, boolean requestFocus);
+    default void selectContent(String contentId) {
+        selectContent(contentId, false);
+    }
 
-    boolean isContentSelected(String contentName);
+    void selectContent(String contentId, boolean requestFocus);
+
+    boolean isContentSelected(String contentId);
+
+    @Nullable ToolWindow getToolWindowFor(String contentId);
 }

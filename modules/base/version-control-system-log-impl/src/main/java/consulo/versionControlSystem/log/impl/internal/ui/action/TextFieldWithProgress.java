@@ -15,7 +15,7 @@
  */
 package consulo.versionControlSystem.log.impl.internal.ui.action;
 
-import consulo.language.editor.ui.awt.TextCompletionProvider;
+import consulo.language.editor.ui.textCompletion.TextCompletionProvider;
 import consulo.language.editor.ui.awt.TextFieldWithCompletion;
 import consulo.project.Project;
 import consulo.ui.ex.awt.AsyncProcessIcon;

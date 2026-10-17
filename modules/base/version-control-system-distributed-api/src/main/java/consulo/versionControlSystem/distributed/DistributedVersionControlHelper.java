@@ -18,11 +18,12 @@ package consulo.versionControlSystem.distributed;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.versionControlSystem.distributed.repository.Repository;
-import consulo.versionControlSystem.ui.awt.LegacyDialog;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author VISTALL
@@ -30,8 +31,6 @@ import java.util.List;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface DistributedVersionControlHelper {
-    
-    LegacyDialog createPushDialog(Project project,
-                                  List<? extends Repository> selectedRepositories,
-                                  @Nullable Repository currentRepo);
+    @RequiredUIAccess
+    CompletableFuture<?> showPushDialog(Project project, List<? extends Repository> selectedRepositories, @Nullable Repository currentRepo);
 }

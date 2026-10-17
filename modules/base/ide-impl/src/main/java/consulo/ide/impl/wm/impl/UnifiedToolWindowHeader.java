@@ -24,6 +24,7 @@ import consulo.project.ui.impl.internal.wm.action.TabbedContentAction;
 import consulo.project.ui.internal.ToolWindowContentUI;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.internal.ToolWindowEx;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.PopupHandler;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
@@ -45,6 +46,7 @@ import consulo.ui.layout.HorizontalLayout;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.JComponent;
+import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 import java.util.function.Supplier;
 
@@ -88,6 +90,8 @@ public class UnifiedToolWindowHeader implements Disposable {
         }
     };
 
+    private final PropertyChangeListener myToolWindowPropertyListener = this::toolWindowPropertyChanged;
+
     private final UnifiedActionRow myTabActionRow = createActionRow(() -> myTabActions, this::createTabDataContext);
     private final UnifiedActionRow myTitleActionRow = createActionRow(
         () -> ActionGroup.newImmutableBuilder().addAll(myTitleActions, new GearActionGroup(), new HideAction()).build(),
@@ -114,6 +118,7 @@ public class UnifiedToolWindowHeader implements Disposable {
         myLayout.setSize(new Size2D(-1, HEIGHT));
 
         myTitleLabel = Label.create(toolWindow.getDisplayName());
+        toolWindow.addPropertyChangeListener(myToolWindowPropertyListener);
         myWestLayout.add(myTitleLabel);
         myWestLayout.add(myTabsLayout);
         myWestLayout.add(myTabActionRow.getComponent());
@@ -168,6 +173,22 @@ public class UnifiedToolWindowHeader implements Disposable {
         return myLayout;
     }
 
+    private void toolWindowPropertyChanged(PropertyChangeEvent event) {
+        if (!ToolWindowEx.PROP_STRIPE_TITLE.equals(event.getPropertyName())) {
+            return;
+        }
+
+        if (UIAccess.isUIThread()) {
+            myTitleLabel.setText(myToolWindow.getDisplayName());
+            return;
+        }
+
+        UIAccess uiAccess = myLayout.getUIAccess();
+        if (uiAccess != null) {
+            uiAccess.give(() -> myTitleLabel.setText(myToolWindow.getDisplayName()));
+        }
+    }
+
     @RequiredUIAccess
     public void setAdditionalTitleActions(AnAction[] actions) {
         myTitleActions.removeAll();
@@ -196,6 +217,7 @@ public class UnifiedToolWindowHeader implements Disposable {
 
         myRenderedContentUiType = getContentUiType();
 
+        myTitleLabel.setText(myToolWindow.getDisplayName());
         myTitleLabel.setVisible(!Boolean.TRUE.equals(myToolWindow.getUserData(ToolWindow.HIDE_ID_LABEL)));
 
         ContentManager contentManager = myToolWindow.getContentManagerIfCreated();
@@ -335,6 +357,7 @@ public class UnifiedToolWindowHeader implements Disposable {
 
     @Override
     public void dispose() {
+        myToolWindow.removePropertyChangeListener(myToolWindowPropertyListener);
         myTabActionRow.cancel();
         myTitleActionRow.cancel();
     }

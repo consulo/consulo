@@ -19,6 +19,7 @@ import consulo.application.Application;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.ui.MessageBoxes;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.Presentation;
@@ -30,13 +31,19 @@ import consulo.versionControlSystem.action.AbstractVcsAction;
 import consulo.versionControlSystem.action.VcsContext;
 import consulo.versionControlSystem.change.*;
 import consulo.versionControlSystem.impl.internal.action.DescindingFilesFilter;
-import consulo.versionControlSystem.impl.internal.commit.CommitChangeListDialog;
+import consulo.versionControlSystem.impl.internal.change.ui.UnifiedChangesViewManager;
+import consulo.versionControlSystem.impl.internal.commit.UnifiedCommitChangeListDialog;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.util.VcsUtil;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Stream;
 
 public abstract class AbstractCommonCheckinAction extends AbstractVcsAction {
@@ -81,14 +88,54 @@ public abstract class AbstractCommonCheckinAction extends AbstractVcsAction {
     protected void performCheckIn(VcsContext context, Project project, FilePath[] roots) {
         LOG.debug("invoking commit dialog after update");
         LocalChangeList initialSelection = getInitiallySelectedChangeList(context, project);
-        Change[] changes = context.getSelectedChanges();
+        CommitExecutor executor = getExecutor(project);
+        List<Object> included = getIncludedChanges(context, project, roots, initialSelection);
 
-        if (changes != null && changes.length > 0) {
-            CommitChangeListDialog.commitChanges(project, Arrays.asList(changes), initialSelection, getExecutor(project), null);
+        if (executor == null
+            && project.getInstance(ChangesViewManager.class) instanceof UnifiedChangesViewManager changesViewManager
+            && changesViewManager.activateCommitPanel(included, isForceUpdateCommitStateFromContext())) {
+            return;
         }
-        else {
-            CommitChangeListDialog.commitPaths(project, Arrays.asList(roots), initialSelection, getExecutor(project), null);
+
+        if (included.isEmpty()) {
+            MessageBoxes.okInfo(VcsLocalize.commitDialogNoChangesDetectedText())
+                .title(VcsLocalize.commitDialogNoChangesDetectedTitle())
+                .showAsync();
+            return;
         }
+
+        UnifiedCommitChangeListDialog.show(project, included, initialSelection, executor);
+    }
+
+    private static List<Object> getIncludedChanges(VcsContext context, Project project, FilePath[] roots, @Nullable LocalChangeList initialSelection) {
+        Change[] selectedChanges = context.getSelectedChanges();
+        List<VirtualFile> selectedUnversioned = context.getSelectedUnversionedFiles();
+
+        List<Object> result = new ArrayList<>();
+        if (!ArrayUtil.isEmpty(selectedChanges) || !selectedUnversioned.isEmpty()) {
+            if (selectedChanges != null) {
+                result.addAll(Arrays.asList(selectedChanges));
+            }
+            result.addAll(selectedUnversioned);
+            return result;
+        }
+
+        ChangeListManager manager = ChangeListManager.getInstance(project);
+        LocalChangeList changeList = initialSelection != null ? initialSelection : manager.getDefaultChangeList();
+        Set<Change> changesUnderRoots = new LinkedHashSet<>();
+        for (FilePath root : roots) {
+            changesUnderRoots.addAll(manager.getChangesIn(root));
+        }
+        for (Change change : changeList.getChanges()) {
+            if (changesUnderRoots.contains(change)) {
+                result.add(change);
+            }
+        }
+        return result;
+    }
+
+    protected boolean isForceUpdateCommitStateFromContext() {
+        return false;
     }
 
     @RequiredUIAccess

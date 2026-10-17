@@ -16,6 +16,7 @@
 package consulo.language.editor.ui.awt;
 
 import consulo.codeEditor.EditorEx;
+import consulo.language.editor.ui.textCompletion.TextCompletionProvider;
 import consulo.language.plain.PlainTextLanguage;
 import consulo.project.Project;
 import org.jspecify.annotations.Nullable;

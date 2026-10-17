@@ -29,6 +29,7 @@ import org.jspecify.annotations.Nullable;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Stream;
 
 public interface VcsContext extends PlaceProvider<String> {
@@ -61,6 +62,8 @@ public interface VcsContext extends PlaceProvider<String> {
   @Nullable ChangeList[] getSelectedChangeLists();
 
   @Nullable Change[] getSelectedChanges();
+
+  List<VirtualFile> getSelectedUnversionedFiles();
 
   LocalizeValue getActionName();
 }

@@ -30,10 +30,13 @@ import java.util.function.BiConsumer;
 /**
  * A callback which can be used to extend the user interface of the Checkin Project/Checkin File
  * dialogs and to perform actions before commit, on successful commit and on failed commit.
+ * <p>
+ * Handlers may also implement {@link CommitCheck} interface, that supersedes {@link #beforeCheckin} method.
  *
  * @author lesya
  * @see BaseCheckinHandlerFactory#createHandler(consulo.ide.impl.idea.openapi.vcs.CheckinProjectPanel, CommitContext)
  * @see CodeAnalysisBeforeCheckinHandler
+ * @see CheckinModificationHandler
  * @since 5.1
  */
 public abstract class CheckinHandler {
@@ -80,13 +83,17 @@ public abstract class CheckinHandler {
      * {@link consulo.ide.impl.idea.openapi.vcs.CheckinProjectPanel} instance passed to
      * {@link BaseCheckinHandlerFactory#createHandler(consulo.ide.impl.idea.openapi.vcs.CheckinProjectPanel, CommitContext)} to
      * get information about the files to be checked in.
+     * <p>
+     * This method will not be called if {@link CommitCheck} interface is implemented.
      *
      * @param executor               the commit executor, or null if the standard commit operation is executed.
      * @param additionalDataConsumer
      * @return the code indicating whether the check-in operation should be performed or aborted.
      */
+    @Deprecated
+    @DeprecationInfo("Implement CommitCheck")
     @RequiredUIAccess
-    public ReturnResult beforeCheckin(@Nullable CommitExecutor executor, BiConsumer<Object, Object> additionalDataConsumer) {
+    public @Nullable ReturnResult beforeCheckin(@Nullable CommitExecutor executor, BiConsumer<Object, Object> additionalDataConsumer) {
         return beforeCheckin();
     }
 
@@ -98,6 +105,8 @@ public abstract class CheckinHandler {
      *
      * @return the code indicating whether the check-in operation should be performed or aborted.
      */
+    @Deprecated
+    @DeprecationInfo("Implement CommitCheck")
     public ReturnResult beforeCheckin() {
         return ReturnResult.COMMIT;
     }

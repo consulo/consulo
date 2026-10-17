@@ -21,9 +21,10 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.view.SelectInContext;
 import consulo.project.ui.view.SelectInTarget;
-import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
-import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesViewContentManager;
+import consulo.versionControlSystem.VcsToolWindow;
+import consulo.versionControlSystem.internal.ChangesViewContentI;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatus;
@@ -63,12 +64,13 @@ public class SelectInChangesViewTarget implements SelectInTarget, DumbAware {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                ChangesViewContentManager.getInstance(myProject).selectContent("Local");
+                ChangesViewContentI.getInstance(myProject).selectContent(ChangesViewContentI.LOCAL_CHANGES);
                 ChangesViewManagerImpl.getInstance(myProject).selectFile(file);
             }
         };
-        if (requestFocus) {
-            ToolWindowManager.getInstance(myProject).getToolWindow(ChangesViewContentManager.TOOLWINDOW_ID).activate(runnable);
+        ToolWindow toolWindow = ChangesViewContentI.getInstance(myProject).getToolWindowFor(ChangesViewContentI.LOCAL_CHANGES);
+        if (requestFocus && toolWindow != null) {
+            toolWindow.activate(runnable);
         }
         else {
             runnable.run();
@@ -77,7 +79,8 @@ public class SelectInChangesViewTarget implements SelectInTarget, DumbAware {
 
     @Override
     public String getToolWindowId() {
-        return ChangesViewContentManager.TOOLWINDOW_ID;
+        ToolWindow toolWindow = ChangesViewContentI.getInstance(myProject).getToolWindowFor(ChangesViewContentI.LOCAL_CHANGES);
+        return toolWindow == null ? VcsToolWindow.ID : toolWindow.getId();
     }
 
     @Override

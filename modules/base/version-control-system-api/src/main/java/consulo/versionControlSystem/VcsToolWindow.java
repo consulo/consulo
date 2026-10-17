@@ -21,4 +21,6 @@ package consulo.versionControlSystem;
  */
 public class VcsToolWindow {
   public static final String ID = "Version Control";
+
+  public static final String COMMIT_ID = "Commit";
 }

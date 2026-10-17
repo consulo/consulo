@@ -140,3 +140,24 @@ vaadin-grid.web-tree vaadin-grid-tree-toggle[separator]::after
   top: 50%;
   border-top: 1px solid var(--vaadin-border-color, rgba(0, 0, 0, 0.1));
 }
+
+/* a row being edited - the editor takes what follows the check box, sized down to the row the way the cell
+   editors of a table are, and its text can be selected again */
+vaadin-grid.web-tree .web-tree-editor
+{
+  display: flex;
+  align-items: center;
+  flex: 1 1 auto;
+  min-width: 0;
+  width: 100%;
+  --vaadin-input-field-padding: var(--vaadin-padding-xs);
+  --vaadin-input-field-gap: var(--vaadin-gap-xs);
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+vaadin-grid.web-tree .web-tree-editor > *
+{
+  flex: 1 1 auto;
+  min-width: 0;
+}

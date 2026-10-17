@@ -144,10 +144,7 @@ public class IdeGlassPaneImpl extends JPanel implements IdeGlassPane, Predicate<
       int button1 = MouseEvent.BUTTON1_MASK | MouseEvent.BUTTON1_DOWN_MASK;
       boolean pureMouse1Event = (me.getModifiersEx() | button1) == button1;
       if (pureMouse1Event && me.getClickCount() <= 1 && !me.isPopupTrigger()) {
-        Point point = SwingUtilities.convertPoint(meComponent, me.getPoint(), myRootPane.getContentPane());
-        JMenuBar menuBar = myRootPane.getJMenuBar();
-        point.y += menuBar != null ? menuBar.getHeight() : 0;
-
+        Point point = SwingUtilities.convertPoint(meComponent, me.getPoint(), myRootPane.getContentPane().getParent());
         Component target = SwingUtilities.getDeepestComponentAt(myRootPane.getContentPane().getParent(), point.x, point.y);
         if (target instanceof DnDAware) {
           Point targetPoint = SwingUtilities.convertPoint(myRootPane.getContentPane().getParent(), point.x, point.y, target);
@@ -236,11 +233,6 @@ public class IdeGlassPaneImpl extends JPanel implements IdeGlassPane, Predicate<
       boolean cursorSet = false;
       if (meComponent != null) {
         Point point = SwingUtilities.convertPoint(meComponent, me.getPoint(), myRootPane.getContentPane().getParent());
-
-        if (myRootPane.getMenuBar() != null && myRootPane.getMenuBar().isVisible()) {
-          point.y += myRootPane.getMenuBar().getHeight();
-        }
-
         Component target = SwingUtilities.getDeepestComponentAt(myRootPane.getContentPane().getParent(), point.x, point.y);
         if (target != null) {
           setCursor(target.getCursor());

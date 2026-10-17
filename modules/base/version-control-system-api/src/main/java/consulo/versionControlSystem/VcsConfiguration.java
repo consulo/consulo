@@ -54,6 +54,7 @@ public final class VcsConfiguration implements PersistentStateComponent<VcsConfi
   public boolean CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT = true;
   public boolean CHECK_CODE_CLEANUP_BEFORE_PROJECT_COMMIT = false;
   public boolean CHECK_NEW_TODO = true;
+  public boolean NON_MODAL_COMMIT_POSTPONE_SLOW_CHECKS = true;
   public TodoPanelSettings myTodoPanelSettings = new TodoPanelSettings();
   public boolean PERFORM_UPDATE_IN_BACKGROUND = true;
   public boolean PERFORM_COMMIT_IN_BACKGROUND = true;

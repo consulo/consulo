@@ -26,4 +26,14 @@ public interface CommitExecutor {
 
     
     CommitSession createCommitSession();
+
+    /**
+     * Whether pre-commit checks {@link consulo.versionControlSystem.checkin.CheckinHandler} and {@link consulo.versionControlSystem.checkin.CommitCheck}
+     * need to be fully completed before actual commit via {@link CommitSession#execute}.
+     *
+     * @see consulo.versionControlSystem.checkin.CommitCheck.ExecutionOrder#LATE
+     */
+    default boolean requiresSyncCommitChecks() {
+        return false;
+    }
 }

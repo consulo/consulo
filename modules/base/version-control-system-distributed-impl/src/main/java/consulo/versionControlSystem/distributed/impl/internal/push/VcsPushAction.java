@@ -66,11 +66,11 @@ public class VcsPushAction extends LegacyDumbAwareAction {
             ? Collections.emptyList()
             : collectRepositories(manager, e.getData(VirtualFile.KEY_OF_ARRAY));
         VirtualFile selectedFile = DvcsUtil.getSelectedFile(project);
-        new VcsPushDialog(
+        UnifiedPushDialog.show(
             project,
             DvcsUtil.sortRepositories(repositories),
             selectedFile != null ? manager.getRepositoryForFileQuick(selectedFile) : null
-        ).show();
+        );
     }
 
     @Override

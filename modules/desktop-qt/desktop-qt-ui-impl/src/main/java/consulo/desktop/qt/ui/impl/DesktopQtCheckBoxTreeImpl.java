@@ -61,6 +61,13 @@ public class DesktopQtCheckBoxTreeImpl<E> extends DesktopQtTreeImpl<E> implement
     }
 
     @Override
+    protected void editedRowClicked(QTreeWidget tree, QMouseEvent event, TreeNodeImpl<E> node) {
+        if (myCheckBoxes.isCheckBoxPress(tree, event)) {
+            myCheckBoxes.toggle(tree, node);
+        }
+    }
+
+    @Override
     protected boolean consumeKeyPress(QTreeWidget tree, QKeyEvent event) {
         return myCheckBoxes.toggleByKey(tree, event);
     }
