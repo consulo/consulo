@@ -17,8 +17,6 @@ package consulo.test.light.impl;
 
 import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.Application;
-import consulo.application.internal.ApplicationEx;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.util.concurrent.Job;
 import consulo.application.util.concurrent.JobLauncher;
@@ -41,8 +39,7 @@ import java.util.function.Predicate;
 public class LightJobLauncher extends JobLauncher {
   @Override
   public <T> boolean invokeConcurrentlyUnderProgress(List<? extends T> things, ProgressIndicator progress, Predicate<? super T> thingProcessor) throws ProcessCanceledException {
-    ApplicationEx app = (ApplicationEx)Application.get();
-    return invokeConcurrentlyUnderProgress(things, progress, app.isReadAccessAllowed(), app.isInImpatientReader(), thingProcessor);
+    return invokeConcurrentlyUnderProgress(things, progress, false, false, thingProcessor);
   }
 
   @Override

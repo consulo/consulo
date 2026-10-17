@@ -1,6 +1,7 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.application.impl.internal.util;
 
+import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.util.*;
 import consulo.language.ast.ASTNode;
@@ -27,7 +28,7 @@ import java.util.function.Supplier;
  * @author ven
  */
 @Singleton
-@ServiceImpl
+@ServiceImpl(profiles = ComponentProfiles.PRODUCTION)
 public final class CachedValuesManagerImpl extends CachedValuesManager {
     private static final Logger LOG = Logger.getInstance(CachedValuesManagerImpl.class);
 

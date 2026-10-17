@@ -201,17 +201,35 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
         builder.bind(ComponentBinding.class).to(myComponentBinding);
     }
 
+    private void reportNotResolvedBindings(String apiClassName, Collection<InjectingBinding> bindings, int profiles) {
+        List<InjectingBinding> validBindings = new ArrayList<>();
+        for (InjectingBinding binding : bindings) {
+            if (InjectingBindingHolderImpl.isValid(binding, profiles)) {
+                validBindings.add(binding);
+            }
+        }
+
+        if (validBindings.size() > 1) {
+            LOG.error("There are " + validBindings.size() + " valid bindings of " + apiClassName
+                + ", but a service allows only one " + validBindings);
+        }
+        else if (!BitUtil.isSet(profiles, ComponentProfiles.LIGHT_TEST)) {
+            LOG.error("There no valid binding of " + apiClassName + " " + bindings);
+        }
+    }
+
     @SuppressWarnings("unchecked")
     protected void loadServices(List<Class> notLazyServices, InjectingContainerBuilder builder) {
         InjectingBindingHolder holder = myComponentBinding.injectingBindingLoader().getHolder(ServiceAPI.class, getComponentScope());
 
         int profiles = getProfiles();
 
-        for (Collection<InjectingBinding> listOfBindings : holder.getBindings().values()) {
+        for (Map.Entry<String, List<InjectingBinding>> entry : holder.getBindings().entrySet()) {
+            Collection<InjectingBinding> listOfBindings = entry.getValue();
             try {
                 InjectingBinding injectingBinding = InjectingBindingHolderImpl.findValid(listOfBindings, profiles);
                 if (injectingBinding == null) {
-                    LOG.error("There no valid binding " + listOfBindings);
+                    reportNotResolvedBindings(entry.getKey(), listOfBindings, profiles);
                     continue;
                 }
 
