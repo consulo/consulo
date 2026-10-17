@@ -6,7 +6,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.util.concurrent.AppExecutorUtil;
@@ -52,6 +51,7 @@ import consulo.project.Project;
 import consulo.ui.Point2D;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.cursor.StandardCursors;
+import consulo.ui.event.KeyEvent;
 import consulo.ui.event.details.InputDetails;
 import consulo.ui.event.details.KeyboardInputDetails;
 import consulo.ui.event.details.ModifiedInputDetails;
@@ -100,7 +100,7 @@ public final class CtrlMouseHandler {
     }
 
     @RequiredUIAccess
-    private void handleKeyEvent(consulo.ui.event.KeyEvent event) {
+    private void handleKeyEvent(KeyEvent event) {
         KeyboardInputDetails inputDetails = event.getInputDetails();
         handleModifiers(inputDetails == null ? Set.of() : inputDetails.getModifiers());
     }
@@ -261,8 +261,8 @@ public final class CtrlMouseHandler {
     }
 
     private static @Nullable String doGenerateInfo(PsiElement element) {
-        if (element instanceof PsiFile) {
-            VirtualFile virtualFile = ((PsiFile) element).getVirtualFile();
+        if (element instanceof PsiFile file) {
+            VirtualFile virtualFile = file.getVirtualFile();
             if (virtualFile != null) {
                 return virtualFile.getPresentableUrl();
             }
@@ -273,8 +273,8 @@ public final class CtrlMouseHandler {
             return info;
         }
 
-        if (element instanceof NavigationItem) {
-            ItemPresentation presentation = ((NavigationItem) element).getPresentation();
+        if (element instanceof NavigationItem navItem) {
+            ItemPresentation presentation = navItem.getPresentation();
             if (presentation != null) {
                 return presentation.getPresentableText().getNullIfEmpty();
             }
@@ -311,6 +311,7 @@ public final class CtrlMouseHandler {
             myRanges = ranges;
         }
 
+        @RequiredReadAction
         public Info(PsiElement elementAtPointer) {
             this(elementAtPointer, getReferenceRanges(elementAtPointer));
         }
@@ -322,9 +323,6 @@ public final class CtrlMouseHandler {
             }
             int textOffset = elementAtPointer.getTextOffset();
             TextRange range = elementAtPointer.getTextRange();
-            if (range == null) {
-                throw new AssertionError("Null range for " + elementAtPointer + " of " + elementAtPointer.getClass());
-            }
             if (textOffset < range.getStartOffset() || textOffset < 0) {
                 LOG.error("Invalid text offset " + textOffset + " of element " + elementAtPointer + " of " + elementAtPointer.getClass());
                 textOffset = range.getStartOffset();
@@ -365,6 +363,7 @@ public final class CtrlMouseHandler {
     private static class InfoSingle extends Info {
         private final PsiElement myTargetElement;
 
+        @RequiredReadAction
         InfoSingle(PsiElement elementAtPointer, PsiElement targetElement) {
             super(elementAtPointer);
             myTargetElement = targetElement;
@@ -377,6 +376,7 @@ public final class CtrlMouseHandler {
         }
 
         @Override
+        @RequiredReadAction
         public DocInfo getInfo() {
             return areElementsValid() ? generateInfo(myTargetElement, myElementAtPointer, isNavigatable()) : DocInfo.EMPTY;
         }
@@ -387,6 +387,7 @@ public final class CtrlMouseHandler {
         }
 
         @Override
+        @RequiredReadAction
         public boolean isValid(Document document) {
             return areElementsValid() && rangesAreCorrect(document);
         }
@@ -398,6 +399,7 @@ public final class CtrlMouseHandler {
     }
 
     private static class InfoMultiple extends Info {
+        @RequiredReadAction
         InfoMultiple(PsiElement elementAtPointer) {
             super(elementAtPointer);
         }
@@ -546,6 +548,7 @@ public final class CtrlMouseHandler {
                         }
 
                         @Override
+                        @RequiredReadAction
                         public boolean isValid(Document document) {
                             return element.isValid();
                         }
@@ -617,6 +620,7 @@ public final class CtrlMouseHandler {
             return myBrowseMode;
         }
 
+        @RequiredReadAction
         void execute(BrowseMode browseMode) {
             myBrowseMode = browseMode;
 
@@ -643,6 +647,7 @@ public final class CtrlMouseHandler {
             return CtrlMouseHandler.this::disposeHighlighter;
         }
 
+        @RequiredReadAction
         private Runnable doExecute() {
             EditorEx editor = getPossiblyInjectedEditor();
             int offset = getOffset(editor);
@@ -670,6 +675,7 @@ public final class CtrlMouseHandler {
             return () -> addHighlighterAndShowHint(info, docInfo, editor);
         }
 
+        @RequiredReadAction
         private EditorEx getPossiblyInjectedEditor() {
             Document document = myHostEditor.getDocument();
             if (PsiDocumentManager.getInstance(myProject).isCommitted(document)) {
@@ -680,13 +686,17 @@ public final class CtrlMouseHandler {
         }
 
         private boolean isTaskOutdated(Editor editor) {
-            return myDisposed || myProject.isDisposed() || editor.isDisposed() || !ApplicationManager.getApplication().isUnitTestMode() && !editor.getComponent().isShowing();
+            return myDisposed
+                || myProject.isDisposed()
+                || editor.isDisposed()
+                || !Application.get().isUnitTestMode() && !editor.getComponent().isShowing();
         }
 
         private int getOffset(Editor editor) {
-            return editor instanceof EditorWindow ? ((EditorWindow) editor).getDocument().hostToInjected(myHostOffset) : myHostOffset;
+            return editor instanceof EditorWindow editorWindow ? editorWindow.getDocument().hostToInjected(myHostOffset) : myHostOffset;
         }
 
+        @RequiredUIAccess
         private void addHighlighterAndShowHint(Info info, DocInfo docInfo, EditorEx editor) {
             if (myDisposed || editor.isDisposed()) {
                 return;

@@ -54,8 +54,8 @@ public final class SandInfoSidePanel implements EndpointSidePanel {
         return LocalizeValue.localizeTODO("Sand Info");
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public Component getComponent() {
         return myRoot;
     }

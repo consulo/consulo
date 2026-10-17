@@ -31,6 +31,7 @@ import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
@@ -82,7 +83,11 @@ final class UnifiedServiceViewTree {
 
     @RequiredUIAccess
     List<List<ServiceViewItem>> collectExpandedPaths() {
-        return myTree.getExpandedPaths().stream().map(path -> path.stream().map(TreeNode::getValue).filter(item -> item != null).toList()).filter(path -> !path.isEmpty()).toList();
+        return myTree.getExpandedPaths()
+            .stream()
+            .map(path -> path.stream().map(TreeNode::getValue).filter(Objects::nonNull).toList())
+            .filter(path -> !path.isEmpty())
+            .toList();
     }
 
     /**

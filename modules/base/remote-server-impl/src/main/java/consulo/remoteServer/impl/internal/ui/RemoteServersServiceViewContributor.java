@@ -144,22 +144,22 @@ public abstract class RemoteServersServiceViewContributor
 
         @Override
         public @Nullable String getId() {
-            if (myNode instanceof ServersTreeStructure.RemoteServerNode) {
-                ((ServersTreeStructure.RemoteServerNode) myNode).getServer().getName();
+            if (myNode instanceof ServersTreeStructure.RemoteServerNode remoteServerNode) {
+                return remoteServerNode.getServer().getName();
             }
-            if (myNode instanceof DeploymentNode) {
-                ((DeploymentNode) myNode).getDeploymentName();
+            if (myNode instanceof DeploymentNode deploymentNode) {
+                return deploymentNode.getDeploymentName();
             }
             return getPresentation().getPresentableText().getNullIfEmpty();
         }
 
         @Override
         public JComponent getContentComponent() {
-            if (myNode instanceof ServersTreeStructure.LogProvidingNode) {
-                return ((ServersTreeStructure.LogProvidingNode) myNode).getComponent();
+            if (myNode instanceof ServersTreeStructure.LogProvidingNode logProvidingNode) {
+                return logProvidingNode.getComponent();
             }
-            else if (myNode instanceof ServersTreeStructure.RemoteServerNode) {
-                return RemoteServersDeploymentManager.getInstance(myNode.getProject()).getServerContent(((ServersTreeStructure.RemoteServerNode) myNode).getServer());
+            else if (myNode instanceof ServersTreeStructure.RemoteServerNode remoteServerNode) {
+                return RemoteServersDeploymentManager.getInstance(myNode.getProject()).getServerContent(remoteServerNode.getServer());
             }
             return null;
         }
@@ -180,6 +180,7 @@ public abstract class RemoteServersServiceViewContributor
         }
 
         @Override
+        @RequiredUIAccess
         public boolean handleDoubleClick(MouseEvent event) {
             AnAction connectAction = ActionManager.getInstance().getAction("RemoteServers.ConnectServer");
             DataContext dataContext = DataManager.getInstance().getDataContext(event.getComponent());

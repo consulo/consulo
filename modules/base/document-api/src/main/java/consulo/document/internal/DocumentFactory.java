@@ -30,7 +30,6 @@ public interface DocumentFactory {
         return Application.get().getInstance(DocumentFactory.class);
     }
 
-    
     default DocumentEx createDocument(CharSequence chars) {
         return createDocument(chars, false);
     }
@@ -44,6 +43,5 @@ public interface DocumentFactory {
         return createDocument(chars, false, forUseInNonAWTThread);
     }
 
-    
     DocumentEx createDocument(CharSequence chars, boolean acceptSlashR, boolean forUseInNonAWTThread);
 }

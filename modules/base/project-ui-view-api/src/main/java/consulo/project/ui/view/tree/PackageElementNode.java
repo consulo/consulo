@@ -19,7 +19,6 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiPackage;
 import consulo.language.util.ModuleUtilCore;
-import consulo.localize.LocalizeValue;
 import consulo.module.Module;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
@@ -72,8 +71,8 @@ public class PackageElementNode extends ProjectViewNode<PackageElement> {
         return getValue() != null && getValue().isLibraryElement();
     }
 
-    @RequiredReadAction
     @Override
+    @RequiredReadAction
     public Collection<AbstractTreeNode> getChildren() {
         PackageElement value = getValue();
         if (value == null) {

@@ -36,23 +36,23 @@ public class SymbolPresentationUtil {
 
     @RequiredReadAction
     public static @Nullable String getSymbolPresentableText(PsiElement element) {
-        if (element instanceof NavigationItem) {
-            ItemPresentation presentation = ((NavigationItem)element).getPresentation();
+        if (element instanceof NavigationItem navItem) {
+            ItemPresentation presentation = navItem.getPresentation();
             if (presentation != null) {
                 return presentation.getPresentableText().getNullIfEmpty();
             }
         }
 
-        if (element instanceof PsiNamedElement) {
-            return ((PsiNamedElement)element).getName();
+        if (element instanceof PsiNamedElement namedElem) {
+            return namedElem.getName();
         }
         return element.getText();
     }
 
     @RequiredReadAction
     public static @Nullable String getSymbolContainerText(PsiElement element) {
-        if (element instanceof NavigationItem) {
-            ItemPresentation presentation = ((NavigationItem)element).getPresentation();
+        if (element instanceof NavigationItem navItem) {
+            ItemPresentation presentation = navItem.getPresentation();
             if (presentation != null) {
                 return presentation.getLocationString();
             }
