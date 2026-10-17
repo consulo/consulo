@@ -324,7 +324,7 @@ public class WebWindowImpl extends VaadinComponentDelegate<WebWindowImpl.Vaadin>
     private WebToastStack toastStack() {
         WebToastStack stack = myToastStack;
         if (stack == null) {
-            stack = myToastStack = new WebToastStack();
+            stack = myToastStack = new WebToastStack(getVaadinComponent());
         }
         return stack;
     }

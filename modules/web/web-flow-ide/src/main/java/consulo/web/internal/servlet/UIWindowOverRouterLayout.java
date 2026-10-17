@@ -78,7 +78,7 @@ class UIWindowOverRouterLayout extends UserDataHolderBase implements Window, Toa
     private WebToastStack toastStack() {
         WebToastStack stack = myToastStack;
         if (stack == null) {
-            stack = myToastStack = new WebToastStack();
+            stack = myToastStack = new WebToastStack(myRouterLayout);
         }
         return stack;
     }

@@ -31,12 +31,24 @@ import java.util.Map;
  * vaadin stacks them, the newest at the bottom, above dialogs too - with the card of the notification taken away, the
  * toast draws itself. The corner is the one of the area of the window: the browser keeps how far it is from the corner
  * of the page in {@code --consulo-toast-right} and {@code --consulo-toast-bottom}, which pad the notifications.
+ * <p/>
+ * The notifications belong to the window: vaadin puts a notification without a parent into the modal dialog which is
+ * open at the moment, and it would close together with the dialog. While a modal dialog is up the toasts of the
+ * window under it are inert, as the window is.
  *
  * @author VISTALL
  * @since 2026-10-16
  */
 public final class WebToastStack {
+    private final Component myOwner;
     private final Map<Toast, Notification> myNotifications = new IdentityHashMap<>();
+
+    /**
+     * @param owner the root of the window - the notifications are its children
+     */
+    public WebToastStack(Component owner) {
+        myOwner = owner;
+    }
 
     public void show(Toast toast) {
         if (myNotifications.containsKey(toast)) {
@@ -51,6 +63,7 @@ public final class WebToastStack {
         notification.addThemeName("consulo-toast");
         notification.add(TargetVaadin.to(toast));
         myNotifications.put(toast, notification);
+        myOwner.getElement().appendChild(notification.getElement());
         notification.open();
     }
 
@@ -90,6 +103,7 @@ public final class WebToastStack {
         Notification notification = myNotifications.remove(toast);
         if (notification != null) {
             notification.close();
+            notification.getElement().removeFromParent();
         }
     }
 }
