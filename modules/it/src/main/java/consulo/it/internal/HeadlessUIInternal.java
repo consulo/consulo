@@ -49,6 +49,7 @@ import consulo.ui.image.ImageKey;
 import consulo.ui.image.ImageState;
 import consulo.ui.image.canvas.Canvas2D;
 import consulo.ui.image.viewer.ImageViewer;
+import consulo.ui.ex.internal.MemoryIndicator;
 import consulo.ui.ex.internal.UIInternalEx;
 import consulo.ui.internal.UIInternal;
 import consulo.ui.layout.*;
@@ -538,6 +539,11 @@ public class HeadlessUIInternal extends UIInternal implements UIInternalEx {
     @Override
     public Toast _Components_toast() {
         return new HeadlessToast();
+    }
+
+    @Override
+    public MemoryIndicator _Components_memoryIndicator(LocalizeValue widestText) {
+        return new HeadlessMemoryIndicator();
     }
 
     @Override

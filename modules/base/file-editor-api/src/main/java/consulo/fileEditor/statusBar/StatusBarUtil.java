@@ -63,13 +63,7 @@ public class StatusBarUtil {
             return null;
         }
 
-        DockContainer c = null;
-        if (statusBar.isUnified()) {
-            c = DockManager.getInstance(project).getContainerFor(statusBar.getUIComponent());
-        }
-        else {
-            c = DockManager.getInstance(project).getContainerFor(statusBar.getComponent());
-        }
+        DockContainer c = DockManager.getInstance(project).getContainerFor(statusBar.getUIComponent());
 
         FileEditorsSplitters splitters = null;
         if (c instanceof DockableEditorTabbedContainer dockableEditorTabbedContainer) {

@@ -176,6 +176,7 @@ public class DesktopQtToastImpl extends QtComponentDelegate<QWidget> implements 
 
         myTitleLabel = new QLabel(component);
         myTitleLabel.setTextFormat(Qt.TextFormat.PlainText);
+        myTitleLabel.setWordWrap(true);
         QFont titleFont = myTitleLabel.font();
         titleFont.setBold(true);
         myTitleLabel.setFont(titleFont);

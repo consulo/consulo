@@ -45,6 +45,8 @@ import java.util.function.Supplier;
  * @since 2026-08-16
  */
 public class DesktopQtUIAccess extends BaseUIAccess implements ModalityUIAccess {
+    public static final String THREAD_NAME = "Qt Event Queue";
+
     public static final DesktopQtUIAccess INSTANCE = new DesktopQtUIAccess();
 
     private static final Logger LOG = Logger.getInstance(DesktopQtUIAccess.class);
@@ -65,7 +67,7 @@ public class DesktopQtUIAccess extends BaseUIAccess implements ModalityUIAccess 
         Logger logger = Logger.getInstance(DesktopQtUIAccess.class);
         List<BundledFont> bundledFonts = DesktopQtFontRegistry.collectBundledFonts();
 
-        Thread thread = new Thread("Qt Event Queue") {
+        Thread thread = new Thread(THREAD_NAME) {
             @Override
             public void run() {
                 DesktopQtNativePaths.applyBundledPluginPath();

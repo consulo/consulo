@@ -83,17 +83,24 @@ public class NotificationToastPresenter implements NotificationServiceListener {
         }
 
         String toolWindowId = displayType == NotificationDisplayType.TOOL_WINDOW ? myConfiguration.getToolWindowId(groupId) : null;
-        StartupManager.getInstance(project).runWhenProjectIsInitialized(() -> project.getUIAccess().give(() -> {
-            if (project.isDisposed() || notification.isExpired()) {
+        StartupManager.getInstance(project).runWhenProjectIsInitialized(() -> {
+            UIAccess uiAccess = project.getUIAccess();
+            if (!uiAccess.isValid()) {
                 return;
             }
-            if (toolWindowId != null && showInToolWindow(project, toolWindowId, notification)) {
-                return;
-            }
-            if (WindowManager.getInstance().getIdeFrame(project) instanceof IdeFrameEx frame) {
-                frame.showNotification(notification);
-            }
-        }));
+
+            uiAccess.give(() -> {
+                if (project.isDisposed() || notification.isExpired()) {
+                    return;
+                }
+                if (toolWindowId != null && showInToolWindow(project, toolWindowId, notification)) {
+                    return;
+                }
+                if (WindowManager.getInstance().getIdeFrame(project) instanceof IdeFrameEx frame) {
+                    frame.showNotification(notification);
+                }
+            });
+        });
     }
 
     @Override

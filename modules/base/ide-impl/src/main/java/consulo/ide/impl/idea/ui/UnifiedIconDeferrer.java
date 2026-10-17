@@ -119,7 +119,11 @@ public class UnifiedIconDeferrer extends IconDeferrer implements Disposable {
         synchronized (myLock) {
             Image cached = myIconsCache.get(param);
             if (cached == null) {
-                cached = UIInternal.get()._Image_deferred(base, () -> myApplication.runReadAction((Supplier<Image>) () -> evaluator.apply(param)));
+                Image placeholder = base != null ? base : Image.empty(Image.DEFAULT_ICON_SIZE);
+                cached = UIInternal.get()._Image_deferred(placeholder, () -> {
+                    Image image = myApplication.runReadAction((Supplier<Image>) () -> evaluator.apply(param));
+                    return image != null ? image : placeholder;
+                });
                 myIconsCache.put(param, cached);
             }
 

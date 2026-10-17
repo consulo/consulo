@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.ide.actions;
 import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionRef;
 import consulo.application.dumb.DumbAware;
+import consulo.fileEditor.impl.internal.action.GotoLineAction;
 import consulo.ide.impl.idea.codeInsight.navigation.actions.GoToMenuExGroup;
 import consulo.language.editor.impl.internal.action.GoToErrorGroup;
 import consulo.platform.base.localize.ActionLocalize;

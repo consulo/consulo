@@ -87,6 +87,10 @@
       "warningBackground": "#5a5221",
       "errorBackground": "#704745"
     },
+    "MemoryIndicator": {
+      "allocatedBackground": "#5a5a5a",
+      "usedBackground": "#6e6e6e"
+    },
     "Notification": {
       "ToolWindow": {
         "informativeBackground": "#33412e",

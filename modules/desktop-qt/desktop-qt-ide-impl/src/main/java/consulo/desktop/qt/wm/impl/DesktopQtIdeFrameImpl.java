@@ -20,7 +20,7 @@ import consulo.application.internal.AppLifecycleListener;
 import consulo.desktop.qt.ui.impl.DesktopQtWindowImpl;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.wm.impl.UnifiedStatusBarImpl;
+import consulo.project.ui.impl.internal.wm.statusBar.UnifiedStatusBarImpl;
 import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
@@ -73,7 +73,7 @@ public class DesktopQtIdeFrameImpl implements IdeFrameEx, Disposable {
     @RequiredUIAccess
     @Override
     public void initialize() {
-        myStatusBar = new UnifiedStatusBarImpl(myProject.getApplication(), null);
+        myStatusBar = new UnifiedStatusBarImpl(null);
         Disposer.register(this, myStatusBar);
         myStatusBar.install(this);
 

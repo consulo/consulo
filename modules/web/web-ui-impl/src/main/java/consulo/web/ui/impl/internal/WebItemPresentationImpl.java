@@ -281,16 +281,18 @@ public class WebItemPresentationImpl implements TextItemPresentation {
             .set("display", "inline-flex")
             .set("align-items", "center");
 
-        if (mySuffixIcon != null) {
-            Component image = WebImageConverter.getImage(mySuffixIcon);
-            image.addClassName(AuraUtility.Margin.Right.SMALL);
-            suffix.add(image);
-        }
-
         if (mySuffixText.isNotEmpty()) {
             Span suffixText = new Span(mySuffixText.get());
             applyAttribute(suffixText, TextAttribute.GRAYED);
             suffix.add(suffixText);
+        }
+
+        if (mySuffixIcon != null) {
+            Component image = WebImageConverter.getImage(mySuffixIcon);
+            if (mySuffixText.isNotEmpty()) {
+                image.addClassName(AuraUtility.Margin.Left.SMALL);
+            }
+            suffix.add(image);
         }
 
         row.add(span, suffix);

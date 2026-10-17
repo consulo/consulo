@@ -17,7 +17,7 @@ package consulo.web.internal.wm;
 
 import consulo.disposer.Disposer;
 import consulo.dataContext.UiDataProvider;
-import consulo.ide.impl.wm.impl.UnifiedStatusBarImpl;
+import consulo.project.ui.impl.internal.wm.statusBar.UnifiedStatusBarImpl;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;

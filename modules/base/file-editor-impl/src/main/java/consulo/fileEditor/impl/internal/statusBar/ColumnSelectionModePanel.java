@@ -1,0 +1,104 @@
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+package consulo.fileEditor.impl.internal.statusBar;
+
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorEx;
+import consulo.codeEditor.EditorFactory;
+import consulo.codeEditor.event.EditorEventMulticaster;
+import consulo.fileEditor.FileEditorManager;
+import consulo.fileEditor.event.FileEditorManagerEvent;
+import consulo.fileEditor.statusBar.EditorBasedWidget;
+import consulo.codeEditor.internal.EditorEventMulticasterEx;
+import consulo.localize.LocalizeValue;
+import consulo.project.Project;
+import consulo.project.ui.wm.StatusBar;
+import consulo.project.ui.wm.StatusBarWidget;
+import consulo.project.ui.wm.StatusBarWidgetFactory;
+import consulo.ui.ex.awt.FocusUtil;
+import consulo.ui.ex.localize.UILocalize;
+import consulo.virtualFileSystem.VirtualFile;
+import kava.beans.PropertyChangeEvent;
+import kava.beans.PropertyChangeListener;
+
+/**
+ * @author cdr
+ */
+public class ColumnSelectionModePanel extends EditorBasedWidget
+    implements StatusBarWidget.Multiframe, StatusBarWidget.TextPresentation, PropertyChangeListener {
+    private boolean myColumnMode;
+
+    public ColumnSelectionModePanel(Project project, StatusBarWidgetFactory factory) {
+        super(project, factory);
+    }
+
+    @Override
+    public WidgetPresentation getPresentation() {
+        return this;
+    }
+
+    @Override
+    public StatusBarWidget copy() {
+        return new ColumnSelectionModePanel(getProject(), myFactory);
+    }
+
+    @Override
+    public String getText() {
+        return myColumnMode ? UILocalize.statusBarColumnStatusText().get() : "";
+    }
+
+    @Override
+    public LocalizeValue getTooltipText() {
+        return myColumnMode ? UILocalize.statusBarColumnStatusTooltipText() : LocalizeValue.empty();
+    }
+
+    @Override
+    public void install(StatusBar statusBar) {
+        super.install(statusBar);
+
+        FocusUtil.addFocusOwnerListener(this, evt -> updateStatus());
+        EditorEventMulticaster multicaster = EditorFactory.getInstance().getEventMulticaster();
+        if (multicaster instanceof EditorEventMulticasterEx multicasterEx) {
+            multicasterEx.addPropertyChangeListener(this, this);
+        }
+    }
+
+    private void updateStatus() {
+        if (myProject.isDisposed()) {
+            return;
+        }
+        Editor editor = getFocusedEditor();
+        if (editor != null && !isOurEditor(editor)) {
+            return;
+        }
+
+        myColumnMode = editor != null && editor.isColumnMode();
+
+        StatusBar statusBar = myStatusBar;
+        if (statusBar != null) {
+            statusBar.updateWidget(getId());
+        }
+    }
+
+    @Override
+    public void fileOpened(FileEditorManager source, VirtualFile file) {
+        updateStatus();
+    }
+
+    @Override
+    public void fileClosed(FileEditorManager source, VirtualFile file) {
+        updateStatus();
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        String propertyName = evt.getPropertyName();
+        if (EditorEx.PROP_INSERT_MODE.equals(propertyName) || EditorEx.PROP_COLUMN_MODE.equals(propertyName)) {
+            updateStatus();
+        }
+    }
+
+    @Override
+    public void selectionChanged(FileEditorManagerEvent event) {
+        updateStatus();
+    }
+}

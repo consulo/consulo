@@ -416,7 +416,6 @@ open module consulo.ide.impl {
     exports consulo.ide.impl.idea.openapi.vfs.impl.local;
     exports consulo.ide.impl.idea.openapi.wm.impl;
     exports consulo.ide.impl.idea.openapi.wm.impl.status;
-    exports consulo.ide.impl.idea.openapi.wm.impl.status.widget;
     exports consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen;
     exports consulo.ide.impl.idea.packageDependencies;
     exports consulo.ide.impl.idea.packageDependencies.actions;
@@ -470,7 +469,6 @@ open module consulo.ide.impl {
     exports consulo.ide.impl.packageDependencies;
     exports consulo.ide.impl.project;
     exports consulo.ide.impl.projectView;
-    exports consulo.ide.impl.psi.codeStyle.statusbar;
     exports consulo.ide.impl.psi.impl;
     exports consulo.ide.impl.psi.impl.cache.impl.id;
     exports consulo.ide.impl.psi.impl.search;
@@ -499,7 +497,6 @@ open module consulo.ide.impl {
     exports consulo.ide.impl.usage;
     exports consulo.ide.impl.welcomeScreen;
     exports consulo.ide.impl.wm.impl;
-    exports consulo.ide.impl.wm.impl.status;
     exports consulo.ide.impl.wm.impl.welcomeScreen;
 
     exports consulo.ide.impl.project.ui.impl to
@@ -512,10 +509,6 @@ open module consulo.ide.impl {
         consulo.desktop.awt.ui.impl,
         consulo.sand.language.plugin;
     exports consulo.ide.impl.desktop.awt.editor to
-        consulo.desktop.awt.editor.impl,
-        consulo.desktop.awt.ide.impl,
-        consulo.desktop.awt.ui.impl;
-    exports consulo.ide.impl.wm.statusBar to
         consulo.desktop.awt.editor.impl,
         consulo.desktop.awt.ide.impl,
         consulo.desktop.awt.ui.impl;

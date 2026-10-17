@@ -7,6 +7,7 @@ module consulo.project.ui.impl {
     requires transitive consulo.project.ui.api;
     
     requires consulo.undo.redo.api;
+    requires consulo.ide.api;
     requires consulo.file.editor.api;
     requires consulo.module.content.api;
     requires consulo.external.service.api;
@@ -30,7 +31,11 @@ module consulo.project.ui.impl {
         consulo.web.ide,
         consulo.web.ui.impl;
 
-    exports consulo.project.ui.impl.internal.wm.statusBar to consulo.ide.impl;
+    exports consulo.project.ui.impl.internal.wm.statusBar to
+        consulo.ide.impl,
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.qt.ide.impl,
+        consulo.web.ide;
 
     exports consulo.project.ui.impl.internal.notification to
         consulo.ide.impl,

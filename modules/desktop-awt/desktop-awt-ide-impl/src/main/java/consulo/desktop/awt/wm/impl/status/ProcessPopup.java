@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.wm.impl.status;
 
-import consulo.ide.impl.idea.openapi.wm.impl.status.InlineProgressIndicator;
+import consulo.project.ui.impl.internal.wm.statusBar.InlineProgressIndicator;
 import consulo.ide.impl.idea.ui.components.panels.VerticalBox;
 import consulo.ide.localize.IdeLocalize;
 import consulo.localize.LocalizeValue;

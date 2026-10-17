@@ -712,6 +712,10 @@ dialog.directory.for.downloaded.files.title:
     text: Downloaded files will be copied to selected directory
 dialog.message.cannot.save.the.file.0:
     text: Cannot save the file {0}
+dialog.message.go.to.line.invalid.position:
+    text: Enter a line, or a line and a column, such as 12:5
+dialog.message.go.to.line.invalid.position.or.offset:
+    text: Enter a line, a line and a column such as 12:5, or an offset such as F:1024
 dialog.message.incompatible.encoding:
     text: The encoding you''ve chosen (''{0}'') may change the contents of ''{1}''.<br>Do you want to<br>1. <b>Reload</b> the file from disk in the new encoding ''{0}'' and overwrite editor contents or<br>2. <b>Convert</b> the text and overwrite file in the new encoding?
 dialog.title.abbreviation:

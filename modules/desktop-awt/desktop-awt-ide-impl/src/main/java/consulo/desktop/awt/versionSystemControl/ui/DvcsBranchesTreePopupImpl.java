@@ -19,7 +19,6 @@ package consulo.desktop.awt.versionSystemControl.ui;
 import consulo.ide.impl.idea.ui.WindowMoveListener;
 import consulo.desktop.awt.ui.popup.NextStepHandler;
 import consulo.desktop.awt.ui.popup.WizardPopup;
-import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.ProjectWindowStateService;
 import consulo.ui.Point2D;
@@ -27,7 +26,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.SeparatorWithText;
+import consulo.ui.ex.awt.internal.AWTHasSuffixComponent;
 import consulo.ui.ex.awt.tree.Tree;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
@@ -35,6 +34,7 @@ import consulo.ui.ex.popup.ListPopupStep;
 import consulo.ui.ex.popup.PopupStep;
 import consulo.versionControlSystem.distributed.repository.Repository;
 import consulo.versionControlSystem.distributed.ui.branch.popup.DvcsBranchesTreeModel;
+import consulo.versionControlSystem.distributed.ui.branch.popup.DvcsBranchesTreePopupActions;
 import consulo.versionControlSystem.distributed.ui.branch.popup.DvcsBranchesTreePopup;
 import consulo.versionControlSystem.distributed.ui.branch.popup.DvcsBranchesTreePopupModel;
 import consulo.versionControlSystem.distributed.ui.branch.popup.DvcsBranchesTreePopupStepBase;
@@ -47,6 +47,7 @@ import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -133,16 +134,9 @@ public class DvcsBranchesTreePopupImpl<T extends Repository> extends WizardPopup
         return (DvcsBranchesTreePopupStepBase) myStep;
     }
 
-    /**
-     * Separator node inserted between the actions section and the branch sections in the tree.
-     */
-    public static SeparatorWithText createTreeSeparator() {
-        return new SeparatorWithText();
-    }
-
     @Override
     protected JComponent createContent() {
-        myTree = new MyTree(getTreeStep().getTreeModel());
+        myTree = new MyTree(new DvcsBranchesSwingTreeModel(getTreeStep().getTreeModel()));
         myTree.getAccessibleContext().setAccessibleName("DvcsBranchesTree");
 
         myTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
@@ -224,6 +218,9 @@ public class DvcsBranchesTreePopupImpl<T extends Repository> extends WizardPopup
     public void dispose() {
         myTree.removeMouseMotionListener(myMouseMotionListener);
         myTree.removeMouseListener(myMouseListener);
+        if (myTree.getModel() instanceof DvcsBranchesSwingTreeModel model) {
+            model.dispose();
+        }
         super.dispose();
     }
 
@@ -253,11 +250,10 @@ public class DvcsBranchesTreePopupImpl<T extends Repository> extends WizardPopup
 
     private void installSearchFieldToolbar() {
         String id = myModel.getVcs().getId();
-        ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar(id + "BranchesPopup", createHeaderActionGroup(), true);
+        ActionToolbar toolbar = ActionToolbarFactory.getInstance()
+            .createActionToolbar(id + "BranchesPopup", createHeaderActionGroup(), ActionToolbar.Style.INPLACE);
         toolbar.setTargetComponent(myTree);
-        JComponent toolbarComponent = toolbar.getComponent();
-        toolbarComponent.setOpaque(false);
-        mySpeedSearchPatternField.getTextEditor().putClientProperty("JTextField.trailingComponent", toolbarComponent);
+        AWTHasSuffixComponent.setSuffixComponent(mySpeedSearchPatternField.getTextEditor(), toolbar.getComponent());
     }
 
     private void installDragStrip() {
@@ -304,47 +300,17 @@ public class DvcsBranchesTreePopupImpl<T extends Repository> extends WizardPopup
         }
     }
 
-    private DefaultActionGroup createHeaderActionGroup() {
-        DefaultActionGroup group = new DefaultActionGroup();
-        myModel.appendHeaderActions(group::add);
-        group.add(new SettingsActionGroup());
-        return group;
-    }
-
-    private class SettingsActionGroup extends DefaultActionGroup {
-        private SettingsActionGroup() {
-            super("Settings", true);
-            getTemplatePresentation().setIcon(PlatformIconGroup.generalGearplain());
-            add(new DirectoryGroupingToggleAction());
-        }
-
-        @Override
-        public boolean showBelowArrow() {
-            return false;
-        }
-    }
-
-    private class DirectoryGroupingToggleAction extends ToggleAction {
-        private DirectoryGroupingToggleAction() {
-            super("Group Branches by Directory");
-        }
-
-        @Override
-        public boolean isSelected(AnActionEvent e) {
-            return getTreeStep().getTreeModel().isDirectoryGrouping();
-        }
-
-        @Override
-        public void setSelected(AnActionEvent e, boolean state) {
-            getTreeStep().getTreeModel().setDirectoryGrouping(state);
+    private ActionGroup createHeaderActionGroup() {
+        return DvcsBranchesTreePopupActions.createHeaderGroup(myModel, getTreeStep(), () -> {
             TreeUtil.expandAll(myTree);
             selectPreferred();
-        }
+        });
     }
 
     private void selectPreferred() {
-        TreePath preferred = getTreeStep().getPreferredSelection();
-        if (preferred != null) {
+        List<Object> preferredPath = getTreeStep().getPreferredSelection();
+        if (preferredPath != null) {
+            TreePath preferred = new TreePath(preferredPath.toArray());
             myTree.setSelectionPath(preferred);
             TreeUtil.scrollToVisible(myTree, preferred, true);
             return;
@@ -472,7 +438,7 @@ public class DvcsBranchesTreePopupImpl<T extends Repository> extends WizardPopup
     }
 
     // --- ListPopup contract ---------------------------------------------------------------------
-    // Implemented so the popup can be returned through MultipleTextValuesPresentation.getPopupStep()
+    // Implemented so the popup can be returned through MultipleTextValuesPresentation.getPopupStep(DataContext)
     // and positioned by the status bar the same way as a plain list popup (anchored above the
     // widget). The tree drives selection itself, so most of the list-oriented API is a no-op.
 
@@ -530,7 +496,13 @@ public class DvcsBranchesTreePopupImpl<T extends Repository> extends WizardPopup
     @Override
     protected void onSpeedSearchPatternChanged() {
         String pattern = getSpeedSearch().getFilter();
-        getTreeStep().updateTreeModelIfNeeded(myTree, pattern);
+        if (getTreeStep().updateTreeModelIfNeeded(pattern)) {
+            TreeModel oldModel = myTree.getModel();
+            myTree.setModel(new DvcsBranchesSwingTreeModel(getTreeStep().getTreeModel()));
+            if (oldModel instanceof DvcsBranchesSwingTreeModel model) {
+                model.dispose();
+            }
+        }
         getTreeStep().setSearchPattern(pattern);
         TreeUtil.expandAll(myTree);
         selectPreferred();

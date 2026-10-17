@@ -124,3 +124,19 @@ vaadin-grid.web-tree vaadin-checkbox.web-tree-check::part(checkbox)
 {
   align-self: center;
 }
+
+/* a popup tree shows a separator as a rule across an empty row, which the pointer passes over */
+vaadin-grid.web-tree vaadin-grid-tree-toggle[separator]
+{
+  position: relative;
+  pointer-events: none;
+}
+
+vaadin-grid.web-tree vaadin-grid-tree-toggle[separator]::after
+{
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  top: 50%;
+  border-top: 1px solid var(--vaadin-border-color, rgba(0, 0, 0, 0.1));
+}

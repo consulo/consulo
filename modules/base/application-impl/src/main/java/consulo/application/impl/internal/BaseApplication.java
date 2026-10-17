@@ -1029,6 +1029,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
         return myLock.isWriteThread() && myLock.isWriteLocked();
     }
 
+    @Override
     public boolean isCurrentWriteOnUIThread() {
         return false;
     }

@@ -19,6 +19,7 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.dataContext.DataManager;
 import consulo.desktop.awt.ui.impl.action.toolbar.ActionButtonToolbarImpl;
+import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.project.Project;
@@ -60,6 +61,7 @@ import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -95,7 +97,21 @@ public class DesktopAwtDialogService implements DialogService {
         @Override
         @RequiredUIAccess
         public CompletableFuture<DialogValue> showAsync() {
-            return myDialogWrapper.showAsync().thenApply(ignored -> myValue);
+            if (myDescriptor.isModal()) {
+                return myDialogWrapper.showAsync().thenApply(ignored -> myValue);
+            }
+
+            CompletableFuture<DialogValue> result = new CompletableFuture<>();
+            Disposer.register(myDialogWrapper.getDisposable(), () -> {
+                if (myDialogWrapper.isOK()) {
+                    result.complete(myValue);
+                }
+                else {
+                    result.completeExceptionally(new CancellationException());
+                }
+            });
+            myDialogWrapper.show();
+            return result;
         }
 
         @Override
@@ -156,6 +172,7 @@ public class DesktopAwtDialogService implements DialogService {
         private void initImpl() {
 
             setTitle(myDescriptor.getTitle());
+            setModal(myDescriptor.isModal());
 
             try {
                 init();

@@ -114,6 +114,9 @@ public final class StyleColorKeys {
         ourKeys.put(ComponentColors.TOAST_SUCCESS_BACKGROUND, "Toast.successBackground");
         ourKeys.put(ComponentColors.TOAST_WARNING_BACKGROUND, "Toast.warningBackground");
         ourKeys.put(ComponentColors.TOAST_ERROR_BACKGROUND, "Toast.errorBackground");
+
+        ourKeys.put(ComponentColors.MEMORY_INDICATOR_ALLOCATED_BACKGROUND, "MemoryIndicator.allocatedBackground");
+        ourKeys.put(ComponentColors.MEMORY_INDICATOR_USED_BACKGROUND, "MemoryIndicator.usedBackground");
     }
 
     public static @Nullable String getKey(StyleColorValue colorValue) {

@@ -20,6 +20,7 @@ import consulo.logging.Logger;
 import consulo.ui.FocusManager;
 import consulo.ui.event.GlobalFocusListener;
 import consulo.util.lang.ControlFlowException;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -36,6 +37,11 @@ public class HeadlessFocusManager implements FocusManager {
     public Disposable addListener(GlobalFocusListener listener) {
         myListeners.add(listener);
         return () -> myListeners.remove(listener);
+    }
+
+    @Override
+    public consulo.ui.@Nullable Component getFocusedComponent() {
+        return null;
     }
 
     public void fireFocusChanged() {

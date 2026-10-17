@@ -26,6 +26,7 @@ public final class PopupOptions extends ComponentOptions {
         private boolean myRequestFocus = true;
         private boolean myResizable = false;
         private boolean myArrow = false;
+        private boolean myMovable = false;
         private PopupPosition myPosition = PopupPosition.BOTTOM;
 
         private Builder() {
@@ -68,8 +69,16 @@ public final class PopupOptions extends ComponentOptions {
             return this;
         }
 
+        /**
+         * Lets the user drag the popup by a strip along its top edge.
+         */
+        public Builder movable() {
+            myMovable = true;
+            return this;
+        }
+
         public PopupOptions build() {
-            return new PopupOptions(myCancelOnClickOutside, myCancelOnEscape, myRequestFocus, myResizable, myArrow, myPosition);
+            return new PopupOptions(myCancelOnClickOutside, myCancelOnEscape, myRequestFocus, myResizable, myArrow, myMovable, myPosition);
         }
     }
 
@@ -82,6 +91,7 @@ public final class PopupOptions extends ComponentOptions {
     private final boolean myRequestFocus;
     private final boolean myResizable;
     private final boolean myArrow;
+    private final boolean myMovable;
     private final PopupPosition myPosition;
 
     private PopupOptions(
@@ -90,6 +100,7 @@ public final class PopupOptions extends ComponentOptions {
         boolean requestFocus,
         boolean resizable,
         boolean arrow,
+        boolean movable,
         PopupPosition position
     ) {
         super(true);
@@ -99,7 +110,12 @@ public final class PopupOptions extends ComponentOptions {
         myRequestFocus = requestFocus;
         myResizable = resizable;
         myArrow = arrow;
+        myMovable = movable;
         myPosition = position;
+    }
+
+    public boolean isMovable() {
+        return myMovable;
     }
 
     public PopupPosition getPosition() {

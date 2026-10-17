@@ -17,6 +17,8 @@ package consulo.ui.ex.impl.internal.popup;
 
 import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.progress.EmptyProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
 import consulo.component.ComponentManager;
 import consulo.dataContext.DataContext;
 import consulo.project.Project;
@@ -108,7 +110,34 @@ public class UnifiedPopupFactoryImpl extends JBPopupFactory {
         int defaultOptionIndex,
         boolean autoSelectionEnabled
     ) {
-        throw new UnsupportedOperationException();
+        ProgressIndicator indicator = new EmptyProgressIndicator();
+        CompletableFuture<ListPopupStep<ActionPopupItem>> stepFuture = ActionPopupStep.createActionsStep(
+            actionGroup,
+            dataContext,
+            showNumbers,
+            true,
+            showDisabledActions,
+            title,
+            honorActionMnemonics,
+            autoSelectionEnabled,
+            () -> dataContext,
+            actionPlace,
+            null,
+            defaultOptionIndex,
+            new BasePresentationFactory(),
+            indicator
+        );
+        return new AsyncPopupStep<>() {
+            @Override
+            public PopupStep call() throws Exception {
+                return stepFuture.get();
+            }
+
+            @Override
+            public void cancelBackgroundWork() {
+                indicator.cancel();
+            }
+        };
     }
 
     @Override

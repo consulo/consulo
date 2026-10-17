@@ -92,6 +92,9 @@ public class UnifiedDialogServiceImpl implements DialogService {
             if (descriptor.isReattachable()) {
                 options.reattachable();
             }
+            if (!descriptor.isModal()) {
+                options.disableModal();
+            }
 
             myWindow = Window.create(descriptor.getTitle().get(), options.build());
         }
@@ -132,7 +135,9 @@ public class UnifiedDialogServiceImpl implements DialogService {
 
             myWindow.addAttachListener(event -> followModality());
 
-            enterModal(UIAccess.current());
+            if (myDescriptor.isModal()) {
+                enterModal(UIAccess.current());
+            }
 
             try {
                 myWindow.show();

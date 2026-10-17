@@ -16,7 +16,6 @@
 package consulo.externalService.impl.internal.errorReport;
 
 import consulo.application.Application;
-import consulo.application.progress.ProgressIndicator;
 import consulo.externalService.ExternalService;
 import consulo.externalService.ExternalServiceConfiguration;
 import consulo.externalService.impl.internal.WebServiceApi;
@@ -30,7 +29,7 @@ import java.util.List;
 
 public class DevelopersLoader {
     
-    public static List<Developer> fetchDevelopers(ProgressIndicator indicator) throws IOException {
+    public static List<Developer> fetchDevelopers() throws IOException {
         ExternalServiceConfiguration externalServiceConfiguration = Application.get().getInstance(ExternalServiceConfiguration.class);
 
         ThreeState state = externalServiceConfiguration.getState(ExternalService.DEVELOPER_LIST);

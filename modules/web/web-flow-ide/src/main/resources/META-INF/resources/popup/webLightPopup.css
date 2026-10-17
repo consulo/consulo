@@ -86,3 +86,11 @@ vaadin-popover.consulo-transparent-popup.consulo-hovered-popup::part(overlay)
 {
   translate: calc(-1 * var(--vaadin-popover-arrow-inset, calc(var(--vaadin-popover-arrow-size, 8px) * 2))) 0;
 }
+
+/* the strip a movable popup is dragged by, the way the desktop popups keep a band above their header for it */
+.consulo-popup-drag-strip
+{
+  height: 6px;
+  cursor: move;
+  touch-action: none;
+}

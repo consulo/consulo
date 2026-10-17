@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.diagnostic;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.logging.Logger;
 import consulo.logging.attachment.Attachment;
 import consulo.logging.attachment.AttachmentFactory;
@@ -24,6 +25,7 @@ import consulo.ui.ex.action.DumbAwareAction;
 
 import java.awt.event.InputEvent;
 
+@ActionImpl(id = "DropAnErrorWithAttachments")
 @SuppressWarnings({"HardCodedStringLiteral"})
 public class DropAnErrorWithAttachmentsAction extends DumbAwareAction {
     public DropAnErrorWithAttachmentsAction() {

@@ -18,7 +18,7 @@ package consulo.web.internal.wm;
 import com.vaadin.flow.component.UI;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.wm.impl.UnifiedStatusBarImpl;
+import consulo.project.ui.impl.internal.wm.statusBar.UnifiedStatusBarImpl;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.project.ui.internal.IdeFrameEx;
@@ -62,7 +62,7 @@ public class WebIdeFrameImpl implements IdeFrameEx, Disposable {
     @RequiredUIAccess
     @Override
     public void initialize() {
-        myStatusBar = new UnifiedStatusBarImpl(myProject.getApplication(), null);
+        myStatusBar = new UnifiedStatusBarImpl(null);
         Disposer.register(this, myStatusBar);
         myStatusBar.install(this);
 
@@ -113,6 +113,12 @@ public class WebIdeFrameImpl implements IdeFrameEx, Disposable {
     @Override
     public Window getWindow() {
         return (Window) Objects.requireNonNull(myRootLayout).toUIComponent();
+    }
+
+    @Override
+    public boolean isActive() {
+        VaadinRootLayout rootLayout = myRootLayout;
+        return rootLayout != null && rootLayout.toUIComponent().getUIAccess() != null;
     }
 
     /**

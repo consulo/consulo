@@ -63,6 +63,7 @@ public class DesktopQtFocusManagerImpl implements FocusManager {
      * The component the focus is in, or the last one it was in - a click on the navigation bar or on the menu says
      * nothing about which scope the user is working in, and the context has to keep answering with that scope.
      */
+    @Override
     public @Nullable Component getFocusedComponent() {
         connect();
 

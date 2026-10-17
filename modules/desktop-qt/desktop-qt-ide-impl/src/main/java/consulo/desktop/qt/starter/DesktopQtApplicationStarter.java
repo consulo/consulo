@@ -26,10 +26,12 @@ import consulo.container.util.StatCollector;
 import consulo.desktop.qt.application.impl.DesktopQtApplicationImpl;
 import consulo.externalService.internal.startup.StartupCustomizeManager;
 import consulo.externalService.statistic.UsageTrigger;
+import consulo.ide.impl.idea.diagnostic.DefaultIdeaErrorLogger;
 import consulo.ide.impl.idea.ide.CommandLineProcessor;
 import consulo.ide.impl.idea.ide.RecentProjectsManagerImpl;
 import consulo.ide.impl.idea.openapi.wm.impl.SystemDock;
 import consulo.logging.Logger;
+import consulo.logging.internal.FatalErrorReporter;
 import consulo.project.Project;
 import consulo.project.internal.RecentProjectsManager;
 import consulo.project.ui.wm.WelcomeFrameManager;
@@ -49,6 +51,8 @@ public class DesktopQtApplicationStarter extends ApplicationStarter {
 
     public DesktopQtApplicationStarter(CommandLineArgs commandLineArgs, StatCollector stat) {
         super(commandLineArgs, stat);
+
+        FatalErrorReporter.INSTANCE = new DefaultIdeaErrorLogger();
     }
 
     @Override

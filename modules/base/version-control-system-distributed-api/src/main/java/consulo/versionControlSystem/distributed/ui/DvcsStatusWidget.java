@@ -3,6 +3,7 @@ package consulo.versionControlSystem.distributed.ui;
 
 import consulo.application.internal.ProgressIndicatorUtils;
 import consulo.component.ProcessCanceledException;
+import consulo.dataContext.DataContext;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.event.FileEditorManagerEvent;
 import consulo.fileEditor.statusBar.EditorBasedWidget;
@@ -13,8 +14,8 @@ import consulo.project.Project;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
 import consulo.project.ui.wm.StatusBarWidgetFactory;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.image.Image;
@@ -27,9 +28,6 @@ import consulo.versionControlSystem.distributed.repository.VcsRepositoryMappingL
 import consulo.versionControlSystem.icon.VersionControlSystemIconGroup;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
-
-import java.awt.event.MouseEvent;
-import java.util.function.Consumer;
 
 public abstract class DvcsStatusWidget<T extends Repository> extends EditorBasedWidget
     implements StatusBarWidget.MultipleTextValuesPresentation, StatusBarWidget.Multiframe {
@@ -128,7 +126,8 @@ public abstract class DvcsStatusWidget<T extends Repository> extends EditorBased
     }
 
     @Override
-    public @Nullable ListPopup getPopupStep() {
+    @RequiredUIAccess
+    public @Nullable ListPopup getPopupStep(DataContext dataContext) {
         if (isDisposed()) {
             return null;
         }
@@ -141,12 +140,6 @@ public abstract class DvcsStatusWidget<T extends Repository> extends EditorBased
         return getPopup(getProject(), repository);
     }
 
-    @Override
-    public @Nullable Consumer<MouseEvent> getClickConsumer() {
-        // has no effect since the click opens a list popup, and the consumer is not called for the MultipleTextValuesPresentation
-        return null;
-    }
-
     private void clearStatus() {
         myText = null;
         myTooltip = LocalizeValue.empty();
@@ -155,7 +148,12 @@ public abstract class DvcsStatusWidget<T extends Repository> extends EditorBased
     }
 
     protected void updateLater() {
-        UIUtil.invokeLaterIfNeeded(() -> {
+        UIAccess uiAccess = getProject().getUIAccess();
+        if (!uiAccess.isValid()) {
+            return;
+        }
+
+        uiAccess.giveIfNeed(() -> {
             if (isDisposed()) {
                 return;
             }

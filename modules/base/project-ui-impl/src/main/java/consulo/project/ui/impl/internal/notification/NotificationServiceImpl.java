@@ -263,8 +263,18 @@ public class NotificationServiceImpl implements NotificationService {
 
         UIAccess uiAccess = UIAccess.current();
         ActionRunnerAsync.lastUpdateAndCheckDumbAsync(action, event, false).whenCompleteAsync((enabled, throwable) -> {
+            if (throwable != null) {
+                LOG.error(throwable);
+                return;
+            }
+
             if (Boolean.TRUE.equals(enabled)) {
-                ActionImplUtil.performActionDumbAware(action, event);
+                try {
+                    ActionImplUtil.performActionDumbAware(action, event);
+                }
+                catch (Throwable e) {
+                    LOG.error(e);
+                }
             }
         }, uiAccess);
     }

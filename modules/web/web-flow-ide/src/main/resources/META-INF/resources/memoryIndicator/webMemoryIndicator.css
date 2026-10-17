@@ -1,0 +1,37 @@
+.consulo-memory-indicator {
+    position: relative;
+    display: inline-grid;
+    box-sizing: border-box;
+    padding: 1px 6px;
+    border: 1px solid;
+    border-radius: var(--vaadin-radius-s, 4px);
+    overflow: hidden;
+    white-space: nowrap;
+    user-select: none;
+}
+
+.consulo-memory-indicator:hover {
+    background-color: var(--consulo-memory-indicator-hover);
+}
+
+.consulo-memory-indicator-allocated,
+.consulo-memory-indicator-used {
+    position: absolute;
+    inset-block: 0;
+    left: 0;
+    width: 0;
+}
+
+.consulo-memory-indicator-widest,
+.consulo-memory-indicator-text {
+    position: relative;
+    grid-area: 1 / 1;
+}
+
+.consulo-memory-indicator-widest {
+    visibility: hidden;
+}
+
+.consulo-memory-indicator-text {
+    justify-self: center;
+}

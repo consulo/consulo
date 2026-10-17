@@ -39,9 +39,9 @@ diagnostic.error.report.description:
         If you would like to get notified when the exceptions you submit are fixed,
         please fill in your Consulo Account login and password.
 diagnostic.error.report.include.attachment.warning:
-    text: 'Report will include attachment: ''''<a>{0}</a>''''.'
+    text: 'Report will include attachment: ''''<a href="#attachments">{0}</a>''''.'
 diagnostic.error.report.include.attachments.warning:
-    text: Report will include <a>{0} attachments</a>.
+    text: Report will include <a href="#attachments">{0} attachments</a>.
 diagnostic.error.report.login.name:
     text: '&Username:'
 diagnostic.error.report.login.password:
@@ -49,9 +49,9 @@ diagnostic.error.report.login.password:
 diagnostic.error.report.send:
     text: '&Send'
 diagnostic.error.report.submit.error.anonymously:
-    text: <html>Submit report anonymously or use <a>Consulo Account...</a></html>
+    text: <html>Submit report anonymously or use <a href="#login">Consulo Account...</a></html>
 diagnostic.error.report.submit.report.as:
-    text: <html>Submit report as <a>{0}</a></html>
+    text: <html>Submit report as <b>{0}</b></html>
 diagnostic.out.of.memory.continue:
     text: Continue
 diagnostic.out.of.memory.currentValue:
@@ -74,6 +74,8 @@ error.comments.tab.title:
     text: Comments
 error.details.tab.title:
     text: Details
+error.dialog.assignee.label:
+    text: '&Assignee:'
 error.dialog.attachment.include.column.title:
     text: Include
 error.dialog.attachment.path.column.title:
@@ -83,7 +85,7 @@ error.dialog.clear.action:
 error.dialog.clear.all.action:
     text: '&Clear all'
 error.dialog.comment.prompt:
-    text: '<html><u>P</u>lease fill in any details that may be important: steps to reproduce, what were you doing when problem occurred, etc.:</html>'
+    text: 'Please fill in any details that may be important: steps to reproduce, what were you doing when the problem occurred, etc.'
 error.dialog.conflict.plugin.button.disable.all:
     text: Disable All and Restart
 error.dialog.conflict.plugin.button.enable.and.restart:
@@ -96,6 +98,10 @@ error.dialog.conflict.plugin.header.platform:
     text: 'The following plugin{0,choice,1#|2#s} conflict{0,choice,1#s|2#} with IDE:'
 error.dialog.conflict.plugin.title:
     text: Conflicting Plugins
+error.dialog.developers.error.text:
+    text: Unable to load developers list from server.
+error.dialog.developers.error.title:
+    text: Communication error
 error.dialog.disable.plugin.action.disable:
     text: '&Disable'
 error.dialog.disable.plugin.action.disableAndRestart:
@@ -118,6 +124,8 @@ error.dialog.foreign.plugin.warning.text:
     text: This plugin is not a production of Consulo. Please report the problem to plugin vendor.
 error.dialog.foreign.plugin.warning.text.vendor:
     text: 'This plugin is not a production of Consulo. Please report the problem to plugin vendor:'
+error.dialog.stacktrace:
+    text: Stack Trace
 error.http.result.code:
     text: 'HTTP Result code: {0}'
 error.itn.returns.wrong.data:
@@ -154,6 +162,8 @@ error.list.message.submitted:
     text: Submitted
 error.list.message.submitted.as.link:
     text: Submitted as <a href="{0}">{1}</a>
+error.list.message.submitting:
+    text: Submitting…
 error.list.message.unread:
     text: Unread.
 error.list.of.plugins.was.not.loaded:

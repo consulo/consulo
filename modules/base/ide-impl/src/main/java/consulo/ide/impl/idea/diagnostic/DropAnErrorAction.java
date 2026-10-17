@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.diagnostic;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.compiler.artifact.ArtifactManager;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -26,6 +27,7 @@ import consulo.ui.ex.action.DumbAwareAction;
  * @author stathik
  * @since 2003-11-06
  */
+@ActionImpl(id = "DropAnError")
 @SuppressWarnings({"HardCodedStringLiteral"})
 public class DropAnErrorAction extends DumbAwareAction {
     public DropAnErrorAction() {

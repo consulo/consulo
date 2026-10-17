@@ -15,20 +15,28 @@
  */
 package consulo.project.ui.wm;
 
+import consulo.dataContext.DataContext;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.ClickEvent;
+import consulo.ui.event.ComponentEventListener;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.image.Image;
+import consulo.util.dataholder.Key;
 import org.jspecify.annotations.Nullable;
 
-import java.awt.event.MouseEvent;
-import java.util.function.Consumer;
-
 /**
+ * A widget of the status bar. A widget gives a {@link WidgetPresentation}, and the status bar shows it as a toolbar-style
+ * button: text and icon, tooltip, click, popup and hover look the same as every other widget's. Only content which a
+ * button cannot show is a {@link CustomStatusBarWidget}.
+ *
  * @author spLeaner
  */
 public interface StatusBarWidget extends Disposable {
+    Key<StatusBarWidget> KEY = Key.create(StatusBarWidget.class);
+
     @Deprecated(forRemoval = true)
     default String ID() {
         return getId();
@@ -55,7 +63,13 @@ public interface StatusBarWidget extends Disposable {
             return null;
         }
 
-        @Nullable Consumer<MouseEvent> getClickConsumer();
+        default @Nullable ComponentEventListener<Component, ClickEvent> getClickListener() {
+            return null;
+        }
+
+        default boolean isEnabled() {
+            return true;
+        }
     }
 
     interface IconPresentation extends WidgetPresentation {
@@ -64,23 +78,18 @@ public interface StatusBarWidget extends Disposable {
 
     interface TextPresentation extends WidgetPresentation {
         String getText();
-
-        float getAlignment();
     }
 
     interface MultipleTextValuesPresentation extends WidgetPresentation {
         /**
+         * @param dataContext the context of the widget the popup is opened from
          * @return null means the widget is unable to show the popup
          */
-        @Nullable ListPopup getPopupStep();
+        @RequiredUIAccess
+        @Nullable ListPopup getPopupStep(DataContext dataContext);
 
         @RequiredUIAccess
         @Nullable String getSelectedValue();
-
-        @Deprecated
-        default String getMaxValue() {
-            return "";
-        }
 
         default @Nullable Image getIcon() {
             return null;

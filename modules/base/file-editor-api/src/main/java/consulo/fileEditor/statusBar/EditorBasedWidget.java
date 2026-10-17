@@ -1,13 +1,10 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.fileEditor.statusBar;
 
-import consulo.application.Application;
-import consulo.application.ui.wm.FocusableFrame;
-import consulo.application.ui.wm.IdeFocusManager;
 import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorHolder;
 import consulo.codeEditor.internal.InternalEditorKeys;
 import consulo.component.messagebus.MessageBusConnection;
+import consulo.dataContext.DataManager;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
@@ -17,16 +14,16 @@ import consulo.fileEditor.TextEditor;
 import consulo.fileEditor.event.FileEditorManagerListener;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
 import consulo.project.ui.wm.StatusBarWidgetFactory;
 import consulo.project.ui.wm.WindowManager;
+import consulo.ui.Component;
+import consulo.ui.FocusManager;
 import consulo.util.collection.ArrayUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
-import java.awt.*;
 
 public abstract class EditorBasedWidget implements StatusBarWidget, FileEditorManagerListener {
     private static final Logger LOG = Logger.getInstance(EditorBasedWidget.class);
@@ -54,26 +51,18 @@ public abstract class EditorBasedWidget implements StatusBarWidget, FileEditorMa
             return null;
         }
 
+        if (project.getApplication().isUnitTestMode()) {
+            return FileEditorManager.getInstance(project).getSelectedTextEditor();
+        }
+
         FileEditor fileEditor = StatusBarUtil.getCurrentFileEditor(myStatusBar);
-        Editor result = null;
         if (fileEditor instanceof TextEditor textEditor) {
             Editor editor = textEditor.getEditor();
             if (ensureValidEditorFile(editor)) {
-                result = editor;
+                return editor;
             }
         }
-
-        if (result == null) {
-            FileEditorManager manager = FileEditorManager.getInstance(project);
-            Editor editor = manager.getSelectedTextEditor();
-            if (editor != null
-                && WindowManager.getInstance().getStatusBar(editor.getComponent(), project) == myStatusBar
-                && ensureValidEditorFile(editor)) {
-                result = editor;
-            }
-        }
-
-        return result;
+        return null;
     }
 
     private static boolean ensureValidEditorFile(Editor editor) {
@@ -95,30 +84,22 @@ public abstract class EditorBasedWidget implements StatusBarWidget, FileEditorMa
     }
 
     protected boolean isOurEditor(@Nullable Editor editor) {
-        if (!Application.get().isSwingApplication()) {
-            return true;
-        }
         return editor != null
             && editor.isShowing()
             && !Boolean.TRUE.equals(editor.getUserData(InternalEditorKeys.SUPPLEMENTARY_KEY))
-            && WindowManager.getInstance().getStatusBar(editor.getComponent(), editor.getProject()) == myStatusBar;
+            && WindowManager.getInstance().getStatusBar(editor.getUIComponent(), editor.getProject()) == myStatusBar;
     }
 
     protected @Nullable Component getFocusedComponent() {
-        Component focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
-        if (focusOwner == null) {
-            IdeFocusManager focusManager = ProjectIdeFocusManager.getInstance(myProject);
-            FocusableFrame frame = focusManager.getLastFocusedFrame();
-            if (frame != null) {
-                focusOwner = focusManager.getLastFocusedFor(frame);
-            }
-        }
-        return focusOwner;
+        return FocusManager.get().getFocusedComponent();
     }
 
     protected @Nullable Editor getFocusedEditor() {
         Component component = getFocusedComponent();
-        Editor editor = component instanceof EditorHolder editorHolder ? editorHolder.getEditor() : getEditor();
+        Editor editor = component == null ? null : DataManager.getInstance().getDataContext(component).getData(Editor.KEY);
+        if (editor == null) {
+            editor = getEditor();
+        }
         return editor != null && !editor.isDisposed() ? editor : null;
     }
 

@@ -15,11 +15,16 @@
  */
 package consulo.web.ui.impl.internal;
 
+import com.vaadin.flow.dom.Element;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.HtmlLabel;
 import consulo.ui.LabelOptions;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.HyperlinkEvent;
+import consulo.ui.image.Image;
+import consulo.web.ui.impl.internal.base.WebInputDetails;
+import consulo.web.ui.impl.internal.image.WebImageConverter;
 import consulo.web.ui.impl.internal.vaadin.VaadinLabelComponentBase;
 import org.jspecify.annotations.Nullable;
 
@@ -35,9 +40,26 @@ public class WebHtmlLabelImpl extends WebLabelBase<WebHtmlLabelImpl.Vaadin> impl
         @Override
         protected void updateContent() {
             LocalizeValue text = getTextValue();
+            String html = WebSearchHighlight.markupHtml(text == null ? "" : text.get(), getSearchHighlight());
 
             getElement().removeAllChildren();
-            getElement().setProperty("innerHTML", WebSearchHighlight.markupHtml(text == null ? "" : text.get(), getSearchHighlight()));
+
+            Image image = getImage();
+            if (image == null) {
+                getElement().setProperty("innerHTML", html);
+                return;
+            }
+
+            getElement().removeProperty("innerHTML");
+
+            Element icon = WebImageConverter.getImage(image).getElement();
+            icon.getStyle().set("vertical-align", "middle");
+            icon.getClassList().add("me-xs");
+
+            Element markup = new Element("span");
+            markup.setProperty("innerHTML", html);
+
+            getElement().appendChild(icon, markup);
         }
 
         @Override
@@ -49,6 +71,14 @@ public class WebHtmlLabelImpl extends WebLabelBase<WebHtmlLabelImpl.Vaadin> impl
     @RequiredUIAccess
     public WebHtmlLabelImpl(LocalizeValue html, LabelOptions options) {
         super(html, options);
+
+        WebInputDetails.addClickEventListener(getVaadinComponent().getElement(), "click", (event, details) -> {
+            String href = event.getEventData().path("event.target.closest('a').getAttribute('href')").asString("");
+            getListenerDispatcher(HyperlinkEvent.class).onEvent(new HyperlinkEvent(this, href, details));
+        })
+            .setFilter("event.target.closest('a') != null")
+            .addEventData("event.target.closest('a').getAttribute('href')")
+            .preventDefault();
     }
 
     @Override

@@ -82,6 +82,10 @@ public class DesktopQtDeferredImageImpl implements Image, DesktopQtImage {
             image = myBase;
         }
 
+        if (image == null) {
+            image = myBase;
+        }
+
         synchronized (this) {
             if (myGeneration == generation) {
                 myImage = image;

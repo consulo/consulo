@@ -61,12 +61,7 @@ public interface StatusBar extends Disposable {
     @Deprecated
     @DeprecationInfo("AWT Dependency")
     default JComponent getComponent() {
-        // override isUnified() too
         throw new AbstractMethodError();
-    }
-
-    default boolean isUnified() {
-        return false;
     }
 
     default BalloonHandler notifyProgressByBalloon(NotificationType type, String htmlBody) {

@@ -37,16 +37,48 @@ import org.jspecify.annotations.Nullable;
 
 import javax.swing.UIManager;
 import javax.swing.event.DocumentEvent;
+import java.awt.Dimension;
+import java.awt.Insets;
 
 /**
  * @author VISTALL
  * @since 2026-09-30
  */
 public class DesktopTextAreaImpl extends SwingComponentDelegate<DesktopTextAreaImpl.MyScrollPane> implements TextArea {
-    class MyScrollPane extends JBScrollPane implements FromSwingComponentWrapper {
-        private final JBTextArea myTextArea;
+    private static class MyTextArea extends JBTextArea {
+        private int myVisibleLength;
+        private int myMinRows;
+        private int myMaxRows;
 
-        MyScrollPane(JBTextArea textArea) {
+        MyTextArea(String text) {
+            super(text);
+        }
+
+        @Override
+        public Dimension getPreferredScrollableViewportSize() {
+            Dimension size = super.getPreferredScrollableViewportSize();
+            Insets insets = getInsets();
+            if (myVisibleLength > 0) {
+                size.width = myVisibleLength * getColumnWidth() + insets.left + insets.right;
+            }
+            if (myMinRows > 0 || myMaxRows > 0) {
+                int rows = getLineCount();
+                if (myMinRows > 0) {
+                    rows = Math.max(rows, myMinRows);
+                }
+                if (myMaxRows > 0) {
+                    rows = Math.min(rows, myMaxRows);
+                }
+                size.height = rows * getRowHeight() + insets.top + insets.bottom;
+            }
+            return size;
+        }
+    }
+
+    class MyScrollPane extends JBScrollPane implements FromSwingComponentWrapper {
+        private final MyTextArea myTextArea;
+
+        MyScrollPane(MyTextArea textArea) {
             super(textArea);
             myTextArea = textArea;
         }
@@ -68,7 +100,7 @@ public class DesktopTextAreaImpl extends SwingComponentDelegate<DesktopTextAreaI
 
     @Override
     protected MyScrollPane createComponent() {
-        JBTextArea textArea = new JBTextArea(myText);
+        MyTextArea textArea = new MyTextArea(myText);
         textArea.setLineWrap(true);
         textArea.setWrapStyleWord(true);
         textArea.getDocument().addDocumentListener(new DocumentAdapter() {
@@ -89,8 +121,32 @@ public class DesktopTextAreaImpl extends SwingComponentDelegate<DesktopTextAreaI
         component.myTextArea.addFocusListener(new AWTFocusAdapterAsBlurListener(this, getListenerDispatcher(BlurEvent.class)));
     }
 
-    private JBTextArea textArea() {
+    private MyTextArea textArea() {
         return toAWTComponent().myTextArea;
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void setVisibleLength(int columns) {
+        MyTextArea textArea = textArea();
+        textArea.myVisibleLength = columns;
+        textArea.revalidate();
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void setMinRows(int rows) {
+        MyTextArea textArea = textArea();
+        textArea.myMinRows = rows;
+        textArea.revalidate();
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void setMaxRows(int rows) {
+        MyTextArea textArea = textArea();
+        textArea.myMaxRows = rows;
+        textArea.revalidate();
     }
 
     @SuppressWarnings("unchecked")

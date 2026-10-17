@@ -14,8 +14,10 @@ import consulo.desktop.awt.ui.popup.WizardPopup;
 import consulo.desktop.awt.ui.popup.list.ListPopupImpl;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.ui.PopupPosition;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.details.InputDetails;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
@@ -243,6 +245,16 @@ public class ActionGroupPopup extends ListPopupImpl {
             return;
         }
         super.show(owner, aScreenX, aScreenY, considerForcedXY);
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void showBy(consulo.ui.Component component, @Nullable InputDetails inputDetails, PopupPosition position) {
+        if (!myItemsReady) {
+            myPendingShow = () -> super.showBy(component, inputDetails, position);
+            return;
+        }
+        super.showBy(component, inputDetails, position);
     }
 
     @RequiredUIAccess

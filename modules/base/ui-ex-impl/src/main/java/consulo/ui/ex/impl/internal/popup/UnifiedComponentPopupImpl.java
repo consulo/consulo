@@ -24,6 +24,7 @@ import consulo.ui.UIAccess;
 import consulo.ui.Point2D;
 import consulo.ui.Popup;
 import consulo.ui.PopupOptions;
+import consulo.ui.PopupPosition;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.details.InputDetails;
 import org.jspecify.annotations.Nullable;
@@ -38,7 +39,7 @@ import java.util.function.Supplier;
 public class UnifiedComponentPopupImpl extends UnifiedPopupImpl {
     private final Component myContent;
     private final @Nullable Component myPreferableFocusComponent;
-    private final PopupOptions myOptions;
+    private PopupOptions myOptions;
     private final @Nullable Supplier<Boolean> myCancelCallback;
 
     private @Nullable String myTitle;
@@ -68,6 +69,36 @@ public class UnifiedComponentPopupImpl extends UnifiedPopupImpl {
     @RequiredUIAccess
     public void showBy(Component component, @Nullable InputDetails inputDetails) {
         show(component, null, 0);
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void showBy(Component component, @Nullable InputDetails inputDetails, PopupPosition position) {
+        myOptions = withPosition(myOptions, position);
+        show(component, null, 0);
+    }
+
+    private static PopupOptions withPosition(PopupOptions options, PopupPosition position) {
+        PopupOptions.Builder builder = PopupOptions.builder().position(position);
+        if (!options.isCancelOnClickOutside()) {
+            builder.disableCancelOnClickOutside();
+        }
+        if (!options.isCancelOnEscape()) {
+            builder.disableCancelOnEscape();
+        }
+        if (!options.isRequestFocus()) {
+            builder.disableRequestFocus();
+        }
+        if (options.isResizable()) {
+            builder.resizable();
+        }
+        if (options.hasArrow()) {
+            builder.arrow();
+        }
+        if (options.isMovable()) {
+            builder.movable();
+        }
+        return builder.build();
     }
 
     @Override

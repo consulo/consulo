@@ -57,6 +57,7 @@ import consulo.ide.localize.IdeLocalize;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.ide.impl.idea.diagnostic.DefaultIdeaErrorLogger;
 import consulo.logging.internal.FatalErrorReporter;
 import consulo.platform.os.UnixOperationSystem;
 import consulo.project.Project;

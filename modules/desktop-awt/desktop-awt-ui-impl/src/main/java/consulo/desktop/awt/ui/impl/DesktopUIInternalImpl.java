@@ -90,6 +90,7 @@ import consulo.ui.image.*;
 import consulo.ui.image.canvas.Canvas2D;
 import consulo.ui.impl.model.FlatDataModelImpl;
 import consulo.ui.ex.ComboBoxWithCustomPopup;
+import consulo.ui.ex.internal.MemoryIndicator;
 import consulo.ui.ex.internal.UIInternalEx;
 import consulo.ui.internal.UIInternal;
 import consulo.ui.layout.*;
@@ -191,6 +192,11 @@ public class DesktopUIInternalImpl extends UIInternal implements UIInternalEx {
     @Override
     public Toast _Components_toast() {
         return new DesktopToastImpl();
+    }
+
+    @Override
+    public MemoryIndicator _Components_memoryIndicator(LocalizeValue widestText) {
+        return new DesktopMemoryIndicatorImpl(widestText);
     }
 
     @Override

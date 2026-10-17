@@ -65,6 +65,7 @@ import consulo.ui.impl.DummyTaskBarImpl;
 import consulo.ui.impl.model.FlatDataModelImpl;
 import consulo.ui.ex.ComboBoxWithCustomPopup;
 import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.internal.MemoryIndicator;
 import consulo.ui.ex.internal.UIInternalEx;
 import consulo.ui.internal.UIInternal;
 import consulo.ui.layout.*;
@@ -271,6 +272,12 @@ public class WebUIInternalImpl extends UIInternal implements UIInternalEx {
 
     @Override
     @RequiredUIAccess
+    public <E> Tree<E> _Components_popupTree(TreeModel<E> model) {
+        return new WebPopupTreeImpl<>(model);
+    }
+
+    @Override
+    @RequiredUIAccess
     public TextBox _Components_textBox(String text) {
         return new WebTextBoxImpl(text);
     }
@@ -382,6 +389,11 @@ public class WebUIInternalImpl extends UIInternal implements UIInternalEx {
     @Override
     public Toast _Components_toast() {
         return new WebToastImpl();
+    }
+
+    @Override
+    public MemoryIndicator _Components_memoryIndicator(LocalizeValue widestText) {
+        return new WebMemoryIndicatorImpl(widestText);
     }
 
     @Override

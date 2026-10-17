@@ -17,7 +17,6 @@ package consulo.versionControlSystem.distributed.ui.branch.popup;
 
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.awt.SeparatorWithText;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.distributed.repository.Repository;
 
@@ -55,7 +54,7 @@ public abstract class DvcsBranchesTreePopupModel<R extends Repository> {
 
         List<Object> result = new ArrayList<>(preActions);
         if (!preActions.isEmpty()) {
-            result.add(new SeparatorWithText());
+            result.add(new DvcsBranchesTreeSeparator());
         }
 
         appendFirstPopupActions(result::add);

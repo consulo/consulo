@@ -145,6 +145,11 @@ public class HeadlessStatusBar implements StatusBarEx {
     }
 
     @Override
+    public consulo.ui.@Nullable Component getWidgetComponent(String id) {
+        return null;
+    }
+
+    @Override
     public void dispose() {
     }
 }

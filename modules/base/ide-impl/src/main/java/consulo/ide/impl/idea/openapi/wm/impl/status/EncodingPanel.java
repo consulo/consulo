@@ -4,6 +4,7 @@ package consulo.ide.impl.idea.openapi.wm.impl.status;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
+import consulo.fileEditor.statusBar.EditorBasedStatusBarPopup;
 import consulo.ide.impl.idea.openapi.vfs.encoding.ChangeFileEncodingAction;
 import consulo.ide.impl.idea.openapi.vfs.encoding.EncodingManagerImpl;
 import consulo.ide.impl.idea.openapi.vfs.encoding.EncodingUtil;
@@ -39,15 +40,14 @@ public class EncodingPanel extends EditorBasedStatusBarPopup {
         }
 
         Pair<Charset, LocalizeValue> check = EncodingUtil.getCharsetAndTheReasonTooltip(file);
-        LocalizeValue failReason = check == null ? LocalizeValue.empty() : check.getSecond();
         Charset charset = ObjectUtil.notNull(Pair.getFirst(check), file.getCharset());
         LocalizeValue charsetName = StringUtil.isNotEmpty(charset.displayName())
             ? LocalizeValue.of(charset.displayName())
             : IdeLocalize.encodingNotAvailable();
-        LocalizeValue toolTipText = failReason == null
+        LocalizeValue toolTipText = check == null
             ? IdeLocalize.statusBarTextFileEncoding(charsetName)
-            : failReason.map(text -> StringUtil.capitalize(text) + ".");
-        return new WidgetState(toolTipText, charsetName, failReason == null);
+            : check.getSecond().map(text -> StringUtil.capitalize(text) + ".");
+        return new WidgetState(toolTipText, charsetName, check == null);
     }
 
     @Override

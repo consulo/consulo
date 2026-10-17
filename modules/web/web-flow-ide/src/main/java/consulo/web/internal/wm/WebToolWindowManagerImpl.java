@@ -23,7 +23,7 @@ import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.dataContext.DataContext;
 import consulo.fileEditor.internal.FileEditorManagerEx;
-import consulo.ide.impl.wm.impl.UnifiedStatusBarImpl;
+import consulo.project.ui.impl.internal.wm.statusBar.UnifiedStatusBarImpl;
 import consulo.project.ui.impl.internal.wm.ToolWindowManagerBase;
 import consulo.project.ui.impl.internal.wm.UnifiedToolWindowImpl;
 import consulo.localize.LocalizeValue;

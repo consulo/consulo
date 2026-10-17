@@ -23,6 +23,8 @@ import consulo.application.internal.StartupProgress;
 import consulo.component.internal.ComponentBinding;
 import consulo.container.util.StatCollector;
 import consulo.externalService.internal.startup.StartupCustomizeManager;
+import consulo.ide.impl.idea.diagnostic.DefaultIdeaErrorLogger;
+import consulo.logging.internal.FatalErrorReporter;
 import consulo.ui.impl.style.StyleManagerService;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.web.ui.impl.internal.WebApplicationImpl;
@@ -36,6 +38,8 @@ import org.jspecify.annotations.Nullable;
 public class WebApplicationStarter extends ApplicationStarter {
     public WebApplicationStarter(CommandLineArgs args, StatCollector stat) {
         super(args, stat);
+
+        FatalErrorReporter.INSTANCE = new DefaultIdeaErrorLogger();
     }
 
     @Override

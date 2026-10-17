@@ -298,16 +298,17 @@ public class DesktopQtTextItemDelegate extends QStyledItemDelegate {
         int top,
         int height
     ) {
-        int x = left;
-
         Image icon = presentation.getSuffixImage();
+        int textRight = right;
         if (icon != null) {
-            DesktopQtImage.paint(painter, new QRect(x, top + (height - icon.getHeight()) / 2, icon.getWidth(), icon.getHeight()), icon);
-            x += icon.getWidth() + SUFFIX_ICON_GAP;
+            int iconLeft = right - icon.getWidth() + 1;
+            int iconTop = top + (height - icon.getHeight()) / 2;
+            DesktopQtImage.paint(painter, new QRect(iconLeft, iconTop, icon.getWidth(), icon.getHeight()), icon);
+            textRight = iconLeft - SUFFIX_ICON_GAP - 1;
         }
 
         String text = presentation.getSuffixText().get();
-        int available = right - x + 1;
+        int available = textRight - left + 1;
         if (text.isEmpty() || available <= 0) {
             return;
         }
@@ -319,7 +320,7 @@ public class DesktopQtTextItemDelegate extends QStyledItemDelegate {
         painter.setFont(font);
         painter.setPen(color);
         painter.drawText(
-            new QRect(x, top, available, height),
+            new QRect(left, top, available, height),
             Qt.AlignmentFlag.AlignLeft.value() | Qt.AlignmentFlag.AlignVCenter.value(),
             elided
         );

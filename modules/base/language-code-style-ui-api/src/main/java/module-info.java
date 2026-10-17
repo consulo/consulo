@@ -18,6 +18,6 @@ module consulo.language.code.style.ui.api {
     exports consulo.language.codeStyle.ui.setting;
     exports consulo.language.codeStyle.ui.setting.arrangement;
 
-    exports consulo.language.codeStyle.ui.internal to consulo.ide.impl;
+    exports consulo.language.codeStyle.ui.internal to consulo.ide.impl, consulo.language.code.style.impl;
     exports consulo.language.codeStyle.ui.internal.arrangement to consulo.ide.impl;
 }

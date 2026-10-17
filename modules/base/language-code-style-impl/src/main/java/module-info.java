@@ -7,6 +7,7 @@ module consulo.language.code.style.impl {
     requires consulo.mcp.server.api;
     requires consulo.language.code.style.api;
     requires consulo.language.code.style.ui.api;
+    requires consulo.file.editor.api;
 
     requires consulo.language.editor.api;
 

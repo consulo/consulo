@@ -19,8 +19,10 @@ import consulo.desktop.qt.ui.impl.base.DesktopQtIconLabel;
 import consulo.localize.LocalizeValue;
 import consulo.ui.HorizontalAlignment;
 import consulo.ui.HtmlLabel;
+import consulo.ui.event.HyperlinkEvent;
 import io.qt.core.Qt;
 import io.qt.gui.QKeySequence;
+import io.qt.widgets.QLabel;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -66,6 +68,10 @@ public class DesktopQtHtmlLabelImpl extends DesktopQtLabelImpl implements HtmlLa
             Qt.TextInteractionFlag.LinksAccessibleByMouse,
             Qt.TextInteractionFlag.TextSelectableByMouse
         );
+
+        QLabel textLabel = component.textLabel();
+        textLabel.linkActivated.connect(href -> getListenerDispatcher(HyperlinkEvent.class)
+            .onEvent(new HyperlinkEvent(this, href, DesktopQtCurrentInput.current(textLabel))));
 
         super.initialize(component);
     }

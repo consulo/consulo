@@ -61,6 +61,9 @@ public abstract class DialogDescriptor {
         return false;
     }
 
+    public boolean isModal() {
+        return true;
+    }
     
     @RequiredUIAccess
     public abstract Component createCenterComponent(Disposable uiDisposable);

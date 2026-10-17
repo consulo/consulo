@@ -29,7 +29,6 @@ import jakarta.inject.Singleton;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * from kotlin
@@ -51,7 +50,7 @@ public class StatusBarWidgetSettings implements PersistentStateComponent<StatusB
 
   public boolean isEnabled(StatusBarWidgetFactory factory) {
     Boolean state = myState.widgets.get(factory.getId());
-    return Objects.equals(state, Boolean.TRUE) || factory.isEnabledByDefault();
+    return state != null ? state : factory.isEnabledByDefault();
   }
 
   public void setEnabled(StatusBarWidgetFactory factory, boolean newValue) {

@@ -46,15 +46,6 @@
         </group>
 
         <group id="Internal.Desktop" text="Internal Actions" internal="true" popup="false">
-            <group id="Internal.Errors" popup="true" text="Exceptions">
-                <action id="DropAnError" internal="true" class="consulo.ide.impl.idea.diagnostic.DropAnErrorAction"/>
-                <action id="DropAnErrorWithAttachments" internal="true"
-                        class="consulo.ide.impl.idea.diagnostic.DropAnErrorWithAttachmentsAction"/>
-                <action id="DropAnOutOfMemoryError" internal="true" class="consulo.ide.impl.idea.diagnostic.DropAnOutOfMemoryErrorAction"/>
-                <action id="DropAnOutOfPermGenMemoryError" internal="true"
-                        class="consulo.ide.impl.idea.diagnostic.DropAnOutOfPermGenMemoryErrorAction"/>
-            </group>
-            <separator/>
             <action internal="true" id="ReloadProjectAction" class="consulo.ide.impl.idea.internal.ReloadProjectAction"/>
             <action id="DumbMode" internal="true" class="consulo.ide.impl.idea.internal.ToggleDumbModeAction" text="Dumb mode"/>
             <action id="TestBackgroundableTask" internal="true" class="consulo.ide.impl.idea.internal.TestBackgroundableTaskAction" />

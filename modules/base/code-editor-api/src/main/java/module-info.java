@@ -47,6 +47,7 @@ module consulo.code.editor.api {
         consulo.execution.api,
         consulo.execution.debug.impl,
         consulo.file.editor.api,
+        consulo.file.editor.impl,
         consulo.ide.impl,
         consulo.it,
         consulo.language.code.style.ui.api,

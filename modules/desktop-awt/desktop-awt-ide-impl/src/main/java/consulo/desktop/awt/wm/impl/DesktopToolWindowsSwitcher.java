@@ -5,13 +5,13 @@ import consulo.application.ApplicationManager;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.desktop.awt.ui.IdeEventQueue;
-import consulo.ide.impl.wm.statusBar.BaseToolWindowsSwitcher;
+import consulo.project.ui.impl.internal.wm.statusBar.BaseToolWindowsSwitcher;
 import consulo.project.ui.impl.internal.wm.action.ActivateToolWindowAction;
 import consulo.project.ui.internal.IdeFrameEx;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.PopupPosition;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.internal.DesktopIdeFrameUtil;
 import consulo.ui.ex.awt.util.Alarm;
@@ -203,7 +203,7 @@ public class DesktopToolWindowsSwitcher extends BaseToolWindowsSwitcher {
 
                 this.popup = popup;
 
-                this.popup.show(new RelativePoint(TargetAWT.to(myButton), new Point(36, 36)));
+                this.popup.showBy(myButton, null, PopupPosition.TOP);
             }, 300);
         }
     }

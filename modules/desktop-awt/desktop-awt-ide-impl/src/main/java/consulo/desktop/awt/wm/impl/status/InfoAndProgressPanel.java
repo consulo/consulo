@@ -16,7 +16,7 @@ import consulo.disposer.Disposer;
 import consulo.application.internal.ProgressSuspender;
 import consulo.application.internal.ProgressSuspenderListener;
 import consulo.ide.impl.idea.openapi.ui.MessageType;
-import consulo.ide.impl.idea.openapi.wm.impl.status.InlineProgressIndicator;
+import consulo.project.ui.impl.internal.wm.statusBar.InlineProgressIndicator;
 import consulo.ide.impl.project.ui.impl.StatusWidgetBorders;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
@@ -91,6 +91,8 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
 
     private final JComponent myLayoutComponent;
     private final Label myMultiProcessLink;
+
+    private consulo.ui.@Nullable Component myRoot;
 
     @RequiredUIAccess
     public InfoAndProgressPanel() {
@@ -171,13 +173,17 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
         }
     }
 
-    
     @Override
-    public JComponent getComponent() {
-        return this;
+    @RequiredUIAccess
+    public consulo.ui.Component getUIComponent() {
+        consulo.ui.Component root = myRoot;
+        if (root == null) {
+            root = TargetAWT.wrap(this);
+            myRoot = root;
+        }
+        return root;
     }
 
-    
     public List<Pair<TaskInfo, ProgressIndicator>> getBackgroundProcesses() {
         synchronized (myOriginals) {
             if (myOriginals.isEmpty()) {

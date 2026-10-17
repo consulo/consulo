@@ -2,7 +2,6 @@
 package consulo.project.ui.impl.internal.wm.statusBar;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.Application;
 import consulo.component.util.SimpleModificationTracker;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
@@ -103,7 +102,8 @@ public final class StatusBarWidgetsManagerImpl extends SimpleModificationTracker
     @Override
     public void dispose() {
         synchronized (myWidgetFactories) {
-            myWidgetFactories.forEach((factory, createdWidget) -> disableWidget(factory, Application.get().getLastUIAccess()));
+            UIAccess uiAccess = myProject.getUIAccess();
+            myWidgetFactories.forEach((factory, createdWidget) -> disableWidget(factory, uiAccess));
             myWidgetFactories.clear();
         }
     }
@@ -129,8 +129,7 @@ public final class StatusBarWidgetsManagerImpl extends SimpleModificationTracker
             }
 
             StatusBarWidget createdWidget = myWidgetFactories.get(factory);
-            if (createdWidget != null) {
-                // widget is already enabled
+            if (createdWidget != null || !uiAccess.isValid()) {
                 return;
             }
 
@@ -156,6 +155,10 @@ public final class StatusBarWidgetsManagerImpl extends SimpleModificationTracker
             StatusBarWidget createdWidget = myWidgetFactories.put(factory, null);
             if (createdWidget != null) {
                 factory.disposeWidget(createdWidget);
+                if (!uiAccess.isValid()) {
+                    return;
+                }
+
                 uiAccess.giveIfNeed(() -> {
                     if (!myProject.isDisposed()) {
                         StatusBarEx statusBar = (StatusBarEx)myWindowManager.getStatusBar(myProject);
@@ -179,11 +182,14 @@ public final class StatusBarWidgetsManagerImpl extends SimpleModificationTracker
                 return;
             }
             myWidgetFactories.put(factory, null);
-            myProject.getApplication().invokeLater(() -> {
-                if (!myProject.isDisposed()) {
-                    updateWidget(factory, UIAccess.current());
-                }
-            });
+            UIAccess uiAccess = myProject.getUIAccess();
+            if (uiAccess.isValid()) {
+                uiAccess.give(() -> {
+                    if (!myProject.isDisposed()) {
+                        updateWidget(factory, uiAccess);
+                    }
+                });
+            }
             incModificationCount();
         }
     }

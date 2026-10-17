@@ -150,5 +150,11 @@ public enum ComponentColors implements StyleColorValue {
     TOAST_INFO_BACKGROUND,
     TOAST_SUCCESS_BACKGROUND,
     TOAST_WARNING_BACKGROUND,
-    TOAST_ERROR_BACKGROUND
+    TOAST_ERROR_BACKGROUND,
+
+    /**
+     * The fill of the allocated and of the used part of a memory gauge.
+     */
+    MEMORY_INDICATOR_ALLOCATED_BACKGROUND,
+    MEMORY_INDICATOR_USED_BACKGROUND
 }

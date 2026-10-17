@@ -47,6 +47,10 @@ public class DesktopQtIconLabel extends QFrame {
         layout.addWidget(myTextLabel, 1);
     }
 
+    public QLabel textLabel() {
+        return myTextLabel;
+    }
+
     public @Nullable Image getImage() {
         return myImage;
     }

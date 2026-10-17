@@ -38,6 +38,7 @@ class DesktopTextItemSuffixComponent extends SimpleColoredComponent {
     DesktopTextItemSuffixComponent(Insets ipad) {
         setOpaque(false);
         setIconOpaque(false);
+        setIconOnTheRight(true);
         setIpad(ipad);
     }
 

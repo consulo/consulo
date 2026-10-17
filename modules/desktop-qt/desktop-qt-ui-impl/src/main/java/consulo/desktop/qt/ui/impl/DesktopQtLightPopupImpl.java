@@ -50,13 +50,19 @@ public class DesktopQtLightPopupImpl extends DesktopQtPopupImpl implements Light
             return;
         }
 
-        QPoint anchor = myOptions.getPosition() == PopupPosition.END
-            ? new QPoint(widget.width(), rowOffset(target))
-            : new QPoint(0, widget.height());
+        if (myOptions.getPosition() == PopupPosition.TOP) {
+            showAtComponent(target, 0, 0, widget.height());
+            return;
+        }
+
+        if (myOptions.getPosition() == PopupPosition.END) {
+            showBeside(widget, rowOffset(target));
+            return;
+        }
 
         setOwner(widget);
 
-        showAtGlobal(widget.mapToGlobal(anchor));
+        showAtGlobal(widget.mapToGlobal(new QPoint(0, widget.height())));
     }
 
     @Override

@@ -18,6 +18,7 @@ package consulo.ui;
 import consulo.disposer.Disposable;
 import consulo.ui.event.GlobalFocusListener;
 import consulo.ui.internal.UIInternal;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -30,4 +31,9 @@ public interface FocusManager {
 
     // add global listener for focus change
     Disposable addListener(GlobalFocusListener listener);
+
+    /**
+     * The component the keyboard focus is in, or the one it was in last while the focus is outside the application.
+     */
+    @Nullable Component getFocusedComponent();
 }

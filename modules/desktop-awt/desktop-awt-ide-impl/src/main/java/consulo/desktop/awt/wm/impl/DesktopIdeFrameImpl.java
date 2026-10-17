@@ -29,7 +29,7 @@ import consulo.disposer.Disposer;
 import consulo.ide.impl.application.FrameTitleUtil;
 import consulo.application.internal.AppLifecycleListener;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.ide.impl.idea.openapi.wm.impl.status.widget.StatusBarWidgetsActionGroup;
+import consulo.project.ui.impl.internal.wm.statusBar.StatusBarWidgetsActionGroup;
 import consulo.ide.impl.idea.util.ui.accessibility.AccessibleContextAccessor;
 import consulo.logging.Logger;
 import consulo.platform.Platform;

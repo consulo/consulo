@@ -15,131 +15,41 @@
  */
 package consulo.ide.impl.idea.ide.actionMacro;
 
-import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.util.ui.BaseButtonBehavior;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.project.ui.wm.CustomStatusBarWidget;
+import consulo.project.ui.internal.StatusBarEx;
 import consulo.project.ui.wm.StatusBar;
-import consulo.ui.ex.PositionTracker;
-import consulo.ui.ex.RelativePoint;
-import consulo.ui.ex.action.*;
-import consulo.ui.ex.awt.AnimatedIconComponent;
-import consulo.ui.ex.awt.NonOpaquePanel;
-import consulo.ui.ex.popup.Balloon;
-import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.ui.ex.popup.event.JBPopupAdapter;
-import consulo.ui.ex.popup.event.LightweightWindowEvent;
+import consulo.project.ui.wm.StatusBarWidget;
+import consulo.ui.Component;
+import consulo.ui.Label;
+import consulo.ui.LightPopup;
+import consulo.ui.PopupOptions;
+import consulo.ui.PopupPosition;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.ClickEvent;
+import consulo.ui.event.ComponentEventListener;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.ActionPlaces;
+import consulo.ui.ex.action.ActionToolbar;
+import consulo.ui.ex.action.ActionToolbarFactory;
 import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
+import consulo.ui.layout.HorizontalLayout;
+import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.util.function.Consumer;
-
-class ActionMacroWidget implements CustomStatusBarWidget, Consumer<MouseEvent> {
-    private static final String TYPING_SAMPLE = "WWWWWWWWWWWWWWWWWWWW";
+class ActionMacroWidget implements StatusBarWidget, StatusBarWidget.IconPresentation {
+    private static final int TYPING_SAMPLE_LENGTH = 20;
     private static final String RECORDED = "Recorded: ";
 
-    private AnimatedIconComponent myIcon = new AnimatedIconComponent(
-        "Macro recording",
-        new Image[]{
-            PlatformIconGroup.ideMacroRecording_1(),
-            PlatformIconGroup.ideMacroRecording_2(),
-            PlatformIconGroup.ideMacroRecording_3(),
-            PlatformIconGroup.ideMacroRecording_4()
-        },
-        PlatformIconGroup.ideMacroRecording_1(),
-        1000
-    );
-    private final WidgetPresentation myPresentation;
+    private final Image myIcon = ImageEffects.blinking(PlatformIconGroup.ideMacroRecording_1());
 
-    private JPanel myBalloonComponent;
-    private Balloon myBalloon;
-    private final JLabel myText;
+    private @Nullable StatusBar myStatusBar;
+    private @Nullable LightPopup myPopup;
+    private @Nullable Label myText;
+    private LocalizeValue myTextValue = LocalizeValue.localizeTODO("Macro recording started…");
     private String myLastTyping = "";
-
-    ActionMacroWidget() {
-        myPresentation = new WidgetPresentation() {
-            @Override
-            public LocalizeValue getTooltipText() {
-                return LocalizeValue.localizeTODO("Macro is being recorded now");
-            }
-
-            @Override
-            public Consumer<MouseEvent> getClickConsumer() {
-                return ActionMacroWidget.this;
-            }
-        };
-
-        new BaseButtonBehavior(myIcon) {
-            @Override
-            protected void execute(MouseEvent e) {
-                showBalloon();
-            }
-        };
-
-        myBalloonComponent = new NonOpaquePanel(new BorderLayout());
-
-        AnAction stopAction = ActionManager.getInstance().getAction("StartStopMacroRecording");
-        DefaultActionGroup group = new DefaultActionGroup();
-        group.add(stopAction);
-        ActionToolbar tb = ActionManager.getInstance().createActionToolbar(ActionPlaces.STATUS_BAR_PLACE, group, true);
-        tb.setMiniMode(true);
-
-        NonOpaquePanel top = new NonOpaquePanel(new BorderLayout());
-        tb.setTargetComponent(top);
-        top.add(tb.getComponent(), BorderLayout.WEST);
-        myText = new JLabel(RECORDED + "..." + TYPING_SAMPLE, SwingConstants.LEFT);
-        Dimension preferredSize = myText.getPreferredSize();
-        myText.setPreferredSize(preferredSize);
-        myText.setText("Macro recording started…");
-        myLastTyping = "";
-        top.add(myText, BorderLayout.CENTER);
-        myBalloonComponent.add(top, BorderLayout.CENTER);
-    }
-
-    private void showBalloon() {
-        if (myBalloon != null) {
-            Disposer.dispose(myBalloon);
-            return;
-        }
-
-        myBalloon = JBPopupFactory.getInstance()
-            .createBalloonBuilder(myBalloonComponent)
-            .setAnimationCycle(200)
-            .setCloseButtonEnabled(true)
-            .setHideOnAction(false)
-            .setHideOnClickOutside(false)
-            .setHideOnFrameResize(false)
-            .setHideOnKeyOutside(false)
-            .setSmallVariant(true)
-            .setShadow(true)
-            .createBalloon();
-
-        Disposer.register(myBalloon, () -> myBalloon = null);
-
-        myBalloon.addListener(new JBPopupAdapter() {
-            @Override
-            public void onClosed(LightweightWindowEvent event) {
-                if (myBalloon != null) {
-                    Disposer.dispose(myBalloon);
-                }
-            }
-        });
-
-        myBalloon.show(new PositionTracker<>(myIcon) {
-            @Override
-            public RelativePoint recalculateLocation(Balloon object) {
-                return new RelativePoint(myIcon, new Point(myIcon.getSize().width / 2, 4));
-            }
-        }, Balloon.Position.above);
-    }
-
-    @Override
-    public JComponent getComponent() {
-        return myIcon;
-    }
 
     @Override
     public String getId() {
@@ -147,34 +57,101 @@ class ActionMacroWidget implements CustomStatusBarWidget, Consumer<MouseEvent> {
     }
 
     @Override
-    public void accept(MouseEvent mouseEvent) {
-    }
-
-    @Override
     public WidgetPresentation getPresentation() {
-        return myPresentation;
+        return this;
     }
 
     @Override
+    public Image getIcon() {
+        return myIcon;
+    }
+
+    @Override
+    public LocalizeValue getTooltipText() {
+        return LocalizeValue.localizeTODO("Macro is being recorded now");
+    }
+
+    @Override
+    public ComponentEventListener<Component, ClickEvent> getClickListener() {
+        return event -> togglePopup(event.getComponent());
+    }
+
+    @Override
+    @RequiredUIAccess
     public void install(StatusBar statusBar) {
-        showBalloon();
+        myStatusBar = statusBar;
+
+        UIAccess.current().give(() -> {
+            Component anchor = statusBar instanceof StatusBarEx statusBarEx ? statusBarEx.getWidgetComponent(getId()) : null;
+            if (anchor != null && myStatusBar != null) {
+                togglePopup(anchor);
+            }
+        });
+    }
+
+    @RequiredUIAccess
+    private void togglePopup(Component anchor) {
+        LightPopup shown = myPopup;
+        if (shown != null) {
+            shown.close();
+            return;
+        }
+
+        ActionGroup group = ActionGroup.newImmutableBuilder()
+            .add(ActionManager.getInstance().getAction("StartStopMacroRecording"))
+            .build();
+
+        HorizontalLayout layout = HorizontalLayout.create();
+
+        ActionToolbar toolbar =
+            ActionToolbarFactory.getInstance().createActionToolbar(ActionPlaces.STATUS_BAR_PLACE, group, ActionToolbar.Style.INPLACE);
+        toolbar.setTargetUIComponent(layout);
+
+        Label text = Label.create(myTextValue);
+
+        layout.add(toolbar.getUIComponent());
+        layout.add(text);
+
+        LightPopup popup = LightPopup.create(
+            PopupOptions.builder()
+                .position(PopupPosition.TOP)
+                .disableCancelOnClickOutside()
+                .disableRequestFocus()
+                .build()
+        );
+        popup.setContent(layout);
+        popup.addCloseListener(event -> {
+            if (myPopup == popup) {
+                myPopup = null;
+                myText = null;
+            }
+        });
+
+        myPopup = popup;
+        myText = text;
+
+        popup.showBy(anchor);
     }
 
     @Override
     public void dispose() {
-        myIcon.dispose();
-        if (myBalloon != null) {
-            Disposer.dispose(myBalloon);
+        myStatusBar = null;
+
+        LightPopup popup = myPopup;
+        myPopup = null;
+        myText = null;
+        if (popup != null) {
+            popup.close();
         }
     }
 
+    @RequiredUIAccess
     public void notifyUser(String text, boolean typing) {
         String actualText = text;
         if (typing) {
-            int maxLength = TYPING_SAMPLE.length();
             myLastTyping += text;
-            if (myLastTyping.length() > maxLength) {
-                myLastTyping = "..." + myLastTyping.substring(myLastTyping.length() - maxLength);
+            if (myLastTyping.length() > TYPING_SAMPLE_LENGTH) {
+                myLastTyping = "..." + myLastTyping.substring(myLastTyping.length() - TYPING_SAMPLE_LENGTH);
             }
             actualText = myLastTyping;
         }
@@ -182,12 +159,11 @@ class ActionMacroWidget implements CustomStatusBarWidget, Consumer<MouseEvent> {
             myLastTyping = "";
         }
 
-        notifyUser(RECORDED + actualText);
-    }
+        myTextValue = LocalizeValue.of(RECORDED + actualText);
 
-    private void notifyUser(String text) {
-        myText.setText(text);
-        myText.revalidate();
-        myText.repaint();
+        Label label = myText;
+        if (label != null) {
+            label.setText(myTextValue);
+        }
     }
 }

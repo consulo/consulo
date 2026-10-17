@@ -17,7 +17,7 @@ package consulo.desktop.qt.wm.impl;
 
 import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.wm.impl.UnifiedStatusBarImpl;
+import consulo.project.ui.impl.internal.wm.statusBar.UnifiedStatusBarImpl;
 import consulo.project.Project;
 import consulo.ui.MenuBar;
 import consulo.ui.annotation.RequiredUIAccess;

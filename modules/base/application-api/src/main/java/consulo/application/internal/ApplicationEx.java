@@ -68,6 +68,10 @@ public interface ApplicationEx extends Application {
      */
     boolean isWriteThread();
 
+    default boolean isCurrentWriteOnUIThread() {
+        return false;
+    }
+
     /**
      * The executor write actions run on - a single platform thread.
      * <p>

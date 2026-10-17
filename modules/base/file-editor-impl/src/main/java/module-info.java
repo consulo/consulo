@@ -30,6 +30,9 @@ module consulo.file.editor.impl {
         consulo.proxy,
         consulo.util.xml.serializer;
 
+    exports consulo.fileEditor.impl.internal.action to
+        consulo.ide.impl;
+
     exports consulo.fileEditor.impl.internal.search to
         consulo.desktop.awt.editor.impl,
         consulo.desktop.awt.ide.impl,

@@ -18,11 +18,11 @@ package consulo.versionControlSystem.impl.internal.change.commited;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.Application;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.wm.StatusBarWidgetsManager;
+import consulo.ui.UIAccess;
 import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.change.commited.CommittedChangesAdapter;
 import consulo.versionControlSystem.change.commited.CommittedChangesListener;
@@ -42,13 +42,11 @@ import java.util.List;
 public class IncomingChangesIndicator {
   private static final Logger LOG = Logger.getInstance(IncomingChangesIndicator.class);
 
-  private final Application myApplication;
   private final Project myProject;
   private final CommittedChangesCache myCache;
 
   @Inject
-  public IncomingChangesIndicator(Application application, Project project, CommittedChangesCache cache) {
-    myApplication = application;
+  public IncomingChangesIndicator(Project project, CommittedChangesCache cache) {
     myProject = project;
     myCache = cache;
 
@@ -60,18 +58,25 @@ public class IncomingChangesIndicator {
     connection.subscribe(CommittedChangesListener.class, new CommittedChangesAdapter() {
       @Override
       public void incomingChangesUpdated(@Nullable List<CommittedChangeList> receivedChanges) {
-        application.invokeLater(() -> updateWidget());
+        updateWidgetLater();
       }
     });
-    VcsListener listener = () -> application.invokeLater(this::updateWidget);
+    VcsListener listener = this::updateWidgetLater;
     connection.subscribe(VcsMappingListener.class, listener);
     connection.subscribe(PluginVcsMappingListener.class, listener);
   }
 
-  private void updateWidget() {
-    StatusBarWidgetsManager manager = StatusBarWidgetsManager.getInstance(myProject);
+  private void updateWidgetLater() {
+    UIAccess uiAccess = myProject.getUIAccess();
+    if (!uiAccess.isValid()) {
+      return;
+    }
 
-    manager.updateWidget(IncomingChangesWidgetFactory.class, myApplication.getLastUIAccess());
+    uiAccess.give(() -> {
+      if (!myProject.isDisposed()) {
+        StatusBarWidgetsManager.getInstance(myProject).updateWidget(IncomingChangesWidgetFactory.class, uiAccess);
+      }
+    });
   }
 
   public boolean needIndicator() {

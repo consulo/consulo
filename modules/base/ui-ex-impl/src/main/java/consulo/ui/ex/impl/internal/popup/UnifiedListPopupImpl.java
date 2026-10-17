@@ -106,6 +106,7 @@ public class UnifiedListPopupImpl extends UnifiedPopupImpl implements ListPopup 
 
     private @Nullable Component myAnchor;
     private @Nullable InputDetails myAnchorDetails;
+    private @Nullable PopupPosition myAnchorPosition;
     private @Nullable Point2D myAnchorPoint;
     private int myAnchorHeight;
 
@@ -167,6 +168,9 @@ public class UnifiedListPopupImpl extends UnifiedPopupImpl implements ListPopup 
         }
         if (nested) {
             options.position(PopupPosition.END);
+        }
+        else if (myAnchorPosition != null) {
+            options.position(myAnchorPosition);
         }
 
         PopupOptions built = options.build();
@@ -557,6 +561,9 @@ public class UnifiedListPopupImpl extends UnifiedPopupImpl implements ListPopup 
         else if (myAnchor != null && myAnchorPoint != null) {
             popup.showAt(myAnchor, myAnchorPoint.x(), myAnchorPoint.y(), myAnchorHeight);
         }
+        else if (myAnchor != null && myAnchorPosition != null && popup instanceof LightPopup light) {
+            light.showBy(myAnchor);
+        }
         else if (myAnchor != null && myAnchorDetails instanceof MouseInputDetails mouse) {
             // a menu asked for by pointing at something opens where it was pointed at, not at the corner of
             // whatever was pointed at
@@ -575,6 +582,7 @@ public class UnifiedListPopupImpl extends UnifiedPopupImpl implements ListPopup 
     public void showCenteredInCurrentWindow(ComponentManager project) {
         myAnchor = null;
         myAnchorDetails = null;
+        myAnchorPosition = null;
         show();
     }
 
@@ -583,6 +591,16 @@ public class UnifiedListPopupImpl extends UnifiedPopupImpl implements ListPopup 
     public void showBy(Component component, @Nullable InputDetails inputDetails) {
         myAnchor = component;
         myAnchorDetails = inputDetails;
+        myAnchorPosition = null;
+        show();
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void showBy(Component component, @Nullable InputDetails inputDetails, PopupPosition position) {
+        myAnchor = component;
+        myAnchorDetails = inputDetails;
+        myAnchorPosition = position;
         show();
     }
 
@@ -591,6 +609,7 @@ public class UnifiedListPopupImpl extends UnifiedPopupImpl implements ListPopup 
     public void showAtPoint(Component target, int x, int y, int anchorHeight) {
         myAnchor = target;
         myAnchorDetails = null;
+        myAnchorPosition = null;
         myAnchorPoint = new Point2D(x, y);
         myAnchorHeight = anchorHeight;
         show();

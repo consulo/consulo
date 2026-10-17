@@ -21,21 +21,20 @@ import consulo.localize.LocalizeValue;
 import consulo.navigation.ItemPresentation;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.awt.tree.AbstractTreeModel;
 import consulo.ui.ex.tree.PathElementIdProvider;
 import consulo.ui.image.Image;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.tree.TreePath;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * @author VISTALL
  */
-public abstract class DvcsBranchesTreeModel extends AbstractTreeModel {
+public abstract class DvcsBranchesTreeModel {
     protected final Project myProject;
     private final List<Object> myActions;
     protected final List<DvcsRepositoryModel> myRepositories;
@@ -44,6 +43,8 @@ public abstract class DvcsBranchesTreeModel extends AbstractTreeModel {
     protected final Map<DvcsRefType, DvcsBranchesTreeModelUtil.LazyRefsSubtreeHolder> myRefTrees = new HashMap<>();
 
     protected final Map<Object, List<Object>> myBranchesTreeCache = new HashMap<>();
+
+    private final List<Runnable> myChangeListeners = new CopyOnWriteArrayList<>();
 
     @Nullable
     private MinusculeMatcher myNameMatcher = null;
@@ -85,7 +86,17 @@ public abstract class DvcsBranchesTreeModel extends AbstractTreeModel {
     public void applyFilterAndRebuild(@Nullable MinusculeMatcher matcher) {
         myNameMatcher = matcher;
         rebuild(matcher);
-        treeStructureChanged(new TreePath(new Object[]{getRoot()}), null, null);
+        for (Runnable listener : myChangeListeners) {
+            listener.run();
+        }
+    }
+
+    public void addChangeListener(Runnable listener) {
+        myChangeListeners.add(listener);
+    }
+
+    public void removeChangeListener(Runnable listener) {
+        myChangeListeners.remove(listener);
     }
 
     protected void rebuild(@Nullable MinusculeMatcher matcher) {
@@ -118,7 +129,7 @@ public abstract class DvcsBranchesTreeModel extends AbstractTreeModel {
         return getRefComparator(myRepositories);
     }
 
-    public abstract TreePath getPreferredSelection();
+    public abstract @Nullable List<Object> getPreferredSelection();
 
     /**
      * All reference groups this model can display, in tree display order.
@@ -135,27 +146,14 @@ public abstract class DvcsBranchesTreeModel extends AbstractTreeModel {
      */
     public abstract DvcsRefType getRefType(DvcsRef ref);
 
-    @Override
     public final Object getRoot() {
         return TreeRoot.INSTANCE;
     }
 
-    @Override
-    public final Object getChild(Object parent, int index) {
-        return getChildren(parent).get(index);
+    public final List<Object> getChildNodes(Object parent) {
+        return getChildren(parent);
     }
 
-    @Override
-    public final int getChildCount(Object parent) {
-        return getChildren(parent).size();
-    }
-
-    @Override
-    public final int getIndexOfChild(Object parent, Object child) {
-        return getChildren(parent).indexOf(child);
-    }
-
-    @Override
     public boolean isLeaf(Object node) {
         return node instanceof DvcsRef
             || node instanceof RefUnderRepository

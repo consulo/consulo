@@ -20,6 +20,8 @@ import consulo.disposer.Disposable;
 import consulo.proxy.EventDispatcher;
 import consulo.ui.FocusManager;
 import consulo.ui.event.GlobalFocusListener;
+import consulo.web.ui.impl.internal.base.WebFocusTracker;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -49,5 +51,10 @@ public class WebFocusManagerImpl implements FocusManager {
         Disposable disposable = Disposable.newDisposable();
         myListeners.addListener(focusListener, disposable);
         return disposable;
+    }
+
+    @Override
+    public consulo.ui.@Nullable Component getFocusedComponent() {
+        return WebFocusTracker.getFocusedComponent();
     }
 }

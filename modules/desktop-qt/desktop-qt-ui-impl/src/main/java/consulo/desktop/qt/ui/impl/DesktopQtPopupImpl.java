@@ -37,8 +37,10 @@ import io.qt.core.Qt;
 import io.qt.gui.QBrush;
 import io.qt.gui.QCloseEvent;
 import io.qt.gui.QColor;
+import io.qt.gui.QCursor;
 import io.qt.gui.QGuiApplication;
 import io.qt.gui.QKeyEvent;
+import io.qt.gui.QMouseEvent;
 import io.qt.gui.QPaintEvent;
 import io.qt.gui.QPainter;
 import io.qt.gui.QPainterPath;
@@ -90,6 +92,38 @@ public abstract class DesktopQtPopupImpl extends QtComponentDelegate<QWidget> im
     private static final int ourArrowInset = 20;
 
     private static final String ourSkipShadowProperty = "_KDE_NET_WM_SKIP_SHADOW";
+
+    private class DragStrip extends QWidget {
+        private @Nullable QPoint myPressOffset;
+
+        private DragStrip(QWidget parent) {
+            super(parent);
+            setFixedHeight(6);
+            setCursor(new QCursor(Qt.CursorShape.SizeAllCursor));
+        }
+
+        @Override
+        protected void mousePressEvent(QMouseEvent event) {
+            if (event.button() == Qt.MouseButton.LeftButton) {
+                myPressOffset = event.globalPosition().toPoint().minus(myComponent.pos());
+                event.accept();
+            }
+        }
+
+        @Override
+        protected void mouseMoveEvent(QMouseEvent event) {
+            QPoint pressOffset = myPressOffset;
+            if (pressOffset != null) {
+                myComponent.move(event.globalPosition().toPoint().minus(pressOffset));
+                event.accept();
+            }
+        }
+
+        @Override
+        protected void mouseReleaseEvent(QMouseEvent event) {
+            myPressOffset = null;
+        }
+    }
 
     private class QtPopup extends QFrame {
         private DesktopQtPopupSide mySide = DesktopQtPopupSide.NONE;
@@ -273,6 +307,7 @@ public abstract class DesktopQtPopupImpl extends QtComponentDelegate<QWidget> im
     private @Nullable QSizeGrip mySizeGrip;
 
     private @Nullable QLabel myTitleLabel;
+    private @Nullable DragStrip myDragStrip;
     private @Nullable QtComponentDelegate<?> myContent;
 
     private QMetaObject.@Nullable Connection myFocusConnection;
@@ -319,6 +354,12 @@ public abstract class DesktopQtPopupImpl extends QtComponentDelegate<QWidget> im
         myLayout.setSpacing(0);
         myComponent.setLayout(myLayout);
 
+        if (options.isMovable()) {
+            DragStrip dragStrip = new DragStrip(myComponent);
+            myLayout.addWidget(dragStrip);
+            myDragStrip = dragStrip;
+        }
+
         if (options.isResizable()) {
             QSizeGrip sizeGrip = new QSizeGrip(myComponent);
             sizeGrip.resize(sizeGrip.sizeHint());
@@ -355,7 +396,7 @@ public abstract class DesktopQtPopupImpl extends QtComponentDelegate<QWidget> im
         if (label == null) {
             label = new QLabel(myComponent);
             label.setContentsMargins(8, 4, 8, 4);
-            myLayout.insertWidget(0, label);
+            myLayout.insertWidget(headerIndex(), label);
             myTitleLabel = label;
         }
 
@@ -411,7 +452,7 @@ public abstract class DesktopQtPopupImpl extends QtComponentDelegate<QWidget> im
             contentWidget.setPalette(DesktopQtStyleApplier.alwaysActive(contentWidget.palette()));
         }
 
-        myLayout.insertWidget(myTitleLabel == null ? 0 : 1, contentWidget);
+        myLayout.insertWidget(headerIndex() + (myTitleLabel == null ? 0 : 1), contentWidget);
 
         if (contentWidget != null && myComponent.isVisible()) {
             contentWidget.show();
@@ -423,6 +464,10 @@ public abstract class DesktopQtPopupImpl extends QtComponentDelegate<QWidget> im
         fitToContent();
 
         placeSizeGrip();
+    }
+
+    private int headerIndex() {
+        return myDragStrip == null ? 0 : 1;
     }
 
     private void placeSizeGrip() {
@@ -472,6 +517,24 @@ public abstract class DesktopQtPopupImpl extends QtComponentDelegate<QWidget> im
 
         myPopup.setArrow(arrow, true);
         showPointingAt(new QPoint(left, point.y() + anchorHeight), point.x());
+    }
+
+    @RequiredUIAccess
+    protected void showBeside(QWidget widget, int rowOffset) {
+        setOwner(widget);
+        fitToContent();
+
+        QPoint right = widget.mapToGlobal(new QPoint(widget.width(), rowOffset));
+        QRect available = availableGeometry(right);
+        if (available != null && right.x() + myComponent.width() > available.x() + available.width()) {
+            QPoint left = widget.mapToGlobal(new QPoint(-myComponent.width(), rowOffset));
+            if (left.x() >= available.x()) {
+                showAtGlobal(left);
+                return;
+            }
+        }
+
+        showAtGlobal(right);
     }
 
     @RequiredUIAccess

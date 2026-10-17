@@ -64,6 +64,7 @@ import consulo.ui.image.canvas.Canvas2D;
 import consulo.ui.impl.DummyTaskBarImpl;
 import consulo.ui.impl.model.FlatDataModelImpl;
 import consulo.ui.ex.ComboBoxWithCustomPopup;
+import consulo.ui.ex.internal.MemoryIndicator;
 import consulo.ui.ex.internal.UIInternalEx;
 import consulo.ui.internal.UIInternal;
 import consulo.ui.layout.*;
@@ -84,6 +85,7 @@ import java.net.URL;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -306,6 +308,11 @@ public class DesktopQtUIInternalImpl extends UIInternal implements UIInternalEx 
     @Override
     public <E> ListBox<E> _Components_popupListBox(FlatDataModel<E> model) {
         return new DesktopQtPopupListBoxImpl<>(model);
+    }
+
+    @Override
+    public <E> Tree<E> _Components_popupTree(TreeModel<E> model) {
+        return new DesktopQtPopupTreeImpl<>(model);
     }
 
     @Override
@@ -534,6 +541,9 @@ public class DesktopQtUIInternalImpl extends UIInternal implements UIInternalEx 
 
     @Override
     public StyleManager _StyleManager_get() {
+        if (!DesktopQtUIAccess.THREAD_NAME.equals(Thread.currentThread().getName())) {
+            Objects.requireNonNull(DesktopQtUIAccess.INSTANCE);
+        }
         return DesktopQtStyleManagerImpl.INSTANCE;
     }
 
@@ -627,6 +637,11 @@ public class DesktopQtUIInternalImpl extends UIInternal implements UIInternalEx 
     @Override
     public Toast _Components_toast() {
         return new DesktopQtToastImpl();
+    }
+
+    @Override
+    public MemoryIndicator _Components_memoryIndicator(LocalizeValue widestText) {
+        return new DesktopQtMemoryIndicatorImpl(widestText);
     }
 
     @Override

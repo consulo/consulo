@@ -133,7 +133,7 @@ public class DesktopQtWindowImpl extends QtComponentDelegate<QMainWindow> implem
         myComponent.setWindowTitle(title);
         myComponent.setProperty(DesktopQtStyleApplier.MENULESS_WINDOW_PROPERTY, true);
 
-        if (parent != null) {
+        if (parent != null && options.isModal()) {
             myComponent.setWindowModality(Qt.WindowModality.ApplicationModal);
         }
 

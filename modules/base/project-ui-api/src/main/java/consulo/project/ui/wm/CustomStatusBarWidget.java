@@ -16,32 +16,16 @@
 package consulo.project.ui.wm;
 
 import consulo.ui.Component;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
-
-import org.jspecify.annotations.Nullable;
-
-import javax.swing.*;
+import consulo.ui.annotation.RequiredUIAccess;
 
 /**
+ * A widget which shows a component of its own instead of a {@link StatusBarWidget.WidgetPresentation}. It is meant for
+ * content a button cannot show, such as a gauge: a text, an icon, a click or a popup is a presentation, never a custom
+ * widget built from labels. The status bar adds the padding and the context menu around the component.
+ *
  * @author spLeaner
  */
 public interface CustomStatusBarWidget extends StatusBarWidget {
-    
-    default JComponent getComponent() {
-        Component uiComponent = getUIComponent();
-        if (uiComponent != null) {
-            return (JComponent) TargetAWT.to(uiComponent);
-        }
-
-        throw new AbstractMethodError();
-    }
-
-    default @Nullable Component getUIComponent() {
-        // override isUnified() too
-        return null;
-    }
-
-    default boolean isUnified() {
-        return false;
-    }
+    @RequiredUIAccess
+    Component getUIComponent();
 }

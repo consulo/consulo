@@ -15,9 +15,11 @@
  */
 package consulo.ide.impl.idea.diagnostic;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 
+@ActionImpl(id = "DropAnOutOfMemoryError")
 @SuppressWarnings({"HardCodedStringLiteral"})
 public class DropAnOutOfMemoryErrorAction extends DumbAwareAction {
     public DropAnOutOfMemoryErrorAction() {

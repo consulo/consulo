@@ -17,12 +17,16 @@ package consulo.desktop.qt.ui.impl;
 
 import consulo.desktop.qt.ui.impl.image.DesktopQtIconOwner;
 import consulo.desktop.qt.ui.impl.image.DesktopQtImage;
+import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.Button;
 import consulo.ui.ButtonStyle;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ClickEvent;
+import consulo.ui.event.ComponentEvent;
+import consulo.ui.event.ComponentEventListener;
 import consulo.ui.event.details.InputDetails;
 import consulo.ui.image.Image;
 import consulo.ui.internal.SearchHighlightUtil;
@@ -181,6 +185,17 @@ public class DesktopQtButtonImpl extends QtComponentDelegate<QPushButton> implem
         component.clicked.connect(() -> getListenerDispatcher(ClickEvent.class)
             .onEvent(new ClickEvent(DesktopQtButtonImpl.this, DesktopQtInputDetails.mouseAtCursor(component)))
         );
+    }
+
+    @Override
+    public <C extends Component, E extends ComponentEvent<C>> Disposable addListener(
+        Class<? extends E> eventClass,
+        ComponentEventListener<C, E> listener
+    ) {
+        if (eventClass == ClickEvent.class) {
+            return myDataObject.addListener(eventClass, listener);
+        }
+        return super.addListener(eventClass, listener);
     }
 
     @Override

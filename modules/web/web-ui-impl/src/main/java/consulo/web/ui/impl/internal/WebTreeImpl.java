@@ -716,6 +716,16 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl<NODE>
         return myController;
     }
 
+    void scrollTo(@Nullable TreeNode<NODE> node) {
+        if (node instanceof TreeNodeImpl<NODE> impl) {
+            Vaadin vaadin = toVaadinComponent();
+            WebTreeRow<NODE> row = vaadin.liveRow(impl);
+            if (row != null) {
+                vaadin.scrollToItem(row);
+            }
+        }
+    }
+
     void childrenApplied(TreeNodeImpl<NODE> node) {
     }
 

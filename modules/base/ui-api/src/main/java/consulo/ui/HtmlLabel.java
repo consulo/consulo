@@ -15,7 +15,10 @@
  */
 package consulo.ui;
 
+import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
+import consulo.ui.event.ComponentEventListener;
+import consulo.ui.event.HyperlinkEvent;
 import consulo.ui.internal.UIInternal;
 
 /**
@@ -29,5 +32,9 @@ public interface HtmlLabel extends Label {
 
     static HtmlLabel create(LocalizeValue html, LabelOptions labelOptions) {
         return UIInternal.get()._Components_htmlLabel(html, labelOptions);
+    }
+
+    default Disposable addHyperlinkListener(ComponentEventListener<Component, HyperlinkEvent> hyperlinkListener) {
+        return addListener(HyperlinkEvent.class, hyperlinkListener);
     }
 }

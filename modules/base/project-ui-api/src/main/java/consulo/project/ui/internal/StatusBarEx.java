@@ -20,8 +20,9 @@ import consulo.application.progress.TaskInfo;
 import consulo.disposer.Disposable;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
-import consulo.util.dataholder.Key;
+import consulo.ui.Component;
 import consulo.util.lang.Pair;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.util.List;
@@ -30,27 +31,28 @@ import java.util.List;
  * @author spleaner
  */
 public interface StatusBarEx extends StatusBar, Disposable {
-  Key<String> HOVERED_WIDGET_ID = Key.create("HOVERED_WIDGET_ID");
+    void startRefreshIndication(String tooltipText);
 
-  void startRefreshIndication(String tooltipText);
+    void stopRefreshIndication();
 
-  void stopRefreshIndication();
+    void addProgress(ProgressIndicator indicator, TaskInfo info);
 
-  void addProgress(ProgressIndicator indicator, TaskInfo info);
+    List<Pair<TaskInfo, ProgressIndicator>> getBackgroundProcesses();
 
-  List<Pair<TaskInfo, ProgressIndicator>> getBackgroundProcesses();
+    void updateWidgets();
 
-  void updateWidgets();
+    boolean isProcessWindowOpen();
 
-  boolean isProcessWindowOpen();
+    void setProcessWindowOpen(boolean open);
 
-  void setProcessWindowOpen(boolean open);
+    Dimension getSize();
 
-  Dimension getSize();
+    boolean isVisible();
 
-  boolean isVisible();
+    void addWidget(StatusBarWidget widget, List<String> order, Disposable parentDisposable);
 
-  void addWidget(StatusBarWidget widget, List<String> order, Disposable parentDisposable);
+    void removeWidget(String id);
 
-  void removeWidget(String id);
+    @Nullable
+    Component getWidgetComponent(String id);
 }

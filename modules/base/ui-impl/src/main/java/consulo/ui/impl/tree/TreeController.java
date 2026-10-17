@@ -776,6 +776,53 @@ public final class TreeController<E> implements Disposable {
         }
     }
 
+    public boolean isExpanded(TreeNode<E> handle) {
+        TreeNodeImpl<E> node = toNode(handle);
+        return node != null && node.myExpanded;
+    }
+
+    public CompletableFuture<?> collapse(TreeNode<E> handle) {
+        TreeNodeImpl<E> node = toNode(handle);
+        if (node == null) {
+            return CompletableFuture.completedFuture(null);
+        }
+
+        return track(onUI(() -> close(node, ProgrammaticInputDetails.INSTANCE, true)));
+    }
+
+    public CompletableFuture<?> selectAdjacent(boolean forward, Predicate<@Nullable E> skip) {
+        return track(onUI(() -> {
+            List<TreeNodeImpl<E>> visible = new ArrayList<>();
+            collectVisible(myRoot, visible, skip);
+            if (visible.isEmpty()) {
+                return;
+            }
+
+            TreeNodeImpl<E> current = getSelected();
+            int index = current == null ? -1 : visible.indexOf(current);
+            int next = index < 0 ? (forward ? 0 : visible.size() - 1) : index + (forward ? 1 : -1);
+            if (next >= 0 && next < visible.size()) {
+                setSelection(visible.get(next), ProgrammaticInputDetails.INSTANCE, true);
+            }
+        }));
+    }
+
+    private void collectVisible(TreeNodeImpl<E> node, List<TreeNodeImpl<E>> visible, Predicate<@Nullable E> skip) {
+        for (TreeNodeImpl<E> child : node.myChildren) {
+            if (child.myRemoved) {
+                continue;
+            }
+
+            if (!skip.test(child.getValue())) {
+                visible.add(child);
+            }
+
+            if (child.myExpanded) {
+                collectVisible(child, visible, skip);
+            }
+        }
+    }
+
     public CompletableFuture<?> select(TreeNode<E> handle) {
         TreeNodeImpl<E> node = toNode(handle);
         if (node == null || node == myRoot) {

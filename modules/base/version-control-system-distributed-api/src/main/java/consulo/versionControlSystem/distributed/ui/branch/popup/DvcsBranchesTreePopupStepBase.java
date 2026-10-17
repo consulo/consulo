@@ -20,19 +20,22 @@ import consulo.annotation.UsedInPlugin;
 import consulo.application.util.matcher.MinusculeMatcher;
 import consulo.application.util.matcher.NameUtil;
 import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
+import consulo.ui.TextAttribute;
+import consulo.ui.TextItemPresentation;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.awt.tree.Tree;
+import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.ui.ex.popup.MnemonicNavigationFilter;
 import consulo.ui.ex.popup.PopupStep;
 import consulo.ui.ex.popup.SpeedSearchFilter;
+import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.internal.VersionControlSystemInternal;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.tree.TreePath;
 import java.util.List;
 
 /**
@@ -84,12 +87,12 @@ public abstract class DvcsBranchesTreePopupStepBase implements PopupStep<Object>
     protected abstract void setTreeModel(DvcsBranchesTreeModel treeModel);
 
     @Nullable
-    public TreePath getPreferredSelection() {
+    public List<Object> getPreferredSelection() {
         return getTreeModel().getPreferredSelection();
     }
 
     @Nullable
-    public TreePath createTreePathFor(Object value) {
+    public List<Object> createTreePathFor(Object value) {
         return DvcsBranchesTreeModelUtil.createTreePathFor(getTreeModel(), value);
     }
 
@@ -104,17 +107,14 @@ public abstract class DvcsBranchesTreePopupStepBase implements PopupStep<Object>
         getTreeModel().applyFilterAndRebuild(matcher);
     }
 
-    public void updateTreeModelIfNeeded(Tree tree, @Nullable String pattern) {
+    public boolean updateTreeModelIfNeeded(@Nullable String pattern) {
         if (shouldValidateNotNullTreeModel()) {
-            if (tree.getModel() == null) {
-                throw new IllegalStateException("Provided tree with null model");
-            }
-            return;
+            return false;
         }
 
         boolean filterActive = !(StringUtil.isEmptyOrSpaces(pattern) || "/".equals(pattern));
         setTreeModel(createTreeModel(filterActive));
-        tree.setModel(getTreeModel());
+        return true;
     }
 
     protected boolean shouldValidateNotNullTreeModel() {
@@ -215,6 +215,125 @@ public abstract class DvcsBranchesTreePopupStepBase implements PopupStep<Object>
             return presentableNode.getPresentableText().getNullIfEmpty();
         }
         return null;
+    }
+
+    public void renderNode(@Nullable Object node, TextItemPresentation presentation) {
+        presentation.withIcon(getNodeIcon(node, false, false));
+        presentation.append(StringUtil.notNullize(getNodeText(node)), getNodeTextAttribute(node));
+
+        String secondaryText = getNodeSecondaryText(node);
+        Image arrow = hasSubstep(node) ? PlatformIconGroup.ideMenuarrow() : null;
+        if (secondaryText != null || arrow != null) {
+            presentation.withSuffix(LocalizeValue.ofNullable(secondaryText), arrow);
+        }
+    }
+
+    public TextAttribute getNodeTextAttribute(@Nullable Object node) {
+        if (node instanceof AnAction action && !action.getTemplatePresentation().isEnabled()) {
+            return TextAttribute.GRAYED;
+        }
+        if (isCurrentRef(node)) {
+            return TextAttribute.REGULAR_BOLD;
+        }
+        return TextAttribute.REGULAR;
+    }
+
+    @Nullable
+    public Image getNodeIcon(@Nullable Object node, boolean selected, boolean favoriteToggleOnClick) {
+        if (node instanceof DvcsBranchesTreeModel.BranchesPrefixGroup) {
+            return DvcsBranchesTreeIconProvider.forGroup();
+        }
+        if (node instanceof DvcsBranchesTreeModel.RefUnderRepository refUnderRepository) {
+            return getBranchIcon(refUnderRepository.ref(), List.of(refUnderRepository.repository()), selected, favoriteToggleOnClick);
+        }
+        if (node instanceof DvcsRef ref) {
+            return getBranchIcon(ref, myAffectedRepositories, selected, favoriteToggleOnClick);
+        }
+        if (node instanceof DvcsBranchesTreeModel.RepositoryNode repositoryNode) {
+            return repositoryNode.repository().getIcon();
+        }
+        if (node instanceof AnAction action) {
+            return action.getTemplatePresentation().getIcon();
+        }
+        return null;
+    }
+
+    @Nullable
+    public String getNodeSecondaryText(@Nullable Object node) {
+        if (node instanceof AnAction action) {
+            String shortcut = KeymapUtil.getFirstKeyboardShortcutText(action);
+            return shortcut.isEmpty() ? null : shortcut;
+        }
+        if (node instanceof DvcsBranchesTreeModel.RefUnderRepository refUnderRepository) {
+            return getCommonTrackedBranchName(refUnderRepository.ref(), List.of(refUnderRepository.repository()));
+        }
+        if (node instanceof DvcsRef ref) {
+            return getCommonTrackedBranchName(ref, myAffectedRepositories);
+        }
+        return null;
+    }
+
+    private boolean isCurrentRef(@Nullable Object node) {
+        if (node instanceof DvcsBranchesTreeModel.RefUnderRepository refUnderRepository) {
+            return allCurrent(refUnderRepository.ref(), List.of(refUnderRepository.repository()));
+        }
+        if (node instanceof DvcsRef ref) {
+            return allCurrent(ref, myAffectedRepositories);
+        }
+        return false;
+    }
+
+    private static Image getBranchIcon(
+        DvcsRef ref,
+        List<DvcsRepositoryModel> repositories,
+        boolean selected,
+        boolean favoriteToggleOnClick
+    ) {
+        boolean current = allCurrent(ref, repositories);
+        boolean favorite = allFavorite(ref, repositories);
+        return DvcsBranchesTreeIconProvider.forRef(ref, current, favorite, selected, favoriteToggleOnClick);
+    }
+
+    @Nullable
+    private static String getCommonTrackedBranchName(DvcsRef ref, List<DvcsRepositoryModel> repositories) {
+        String commonTrackedBranch = null;
+        for (DvcsRepositoryModel repository : repositories) {
+            String trackedBranch = repository.getTrackedBranchName(ref);
+            if (trackedBranch == null) {
+                return null;
+            }
+            if (commonTrackedBranch == null) {
+                commonTrackedBranch = trackedBranch;
+            }
+            else if (!commonTrackedBranch.equals(trackedBranch)) {
+                return null;
+            }
+        }
+        return commonTrackedBranch;
+    }
+
+    private static boolean allCurrent(DvcsRef ref, List<DvcsRepositoryModel> repositories) {
+        if (repositories.isEmpty()) {
+            return false;
+        }
+        for (DvcsRepositoryModel repository : repositories) {
+            if (!repository.isCurrentRef(ref)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static boolean allFavorite(DvcsRef ref, List<DvcsRepositoryModel> repositories) {
+        if (repositories.isEmpty()) {
+            return false;
+        }
+        for (DvcsRepositoryModel repository : repositories) {
+            if (!repository.isFavorite(ref)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private static String getRefText(DvcsRef value, boolean prefixGrouping) {

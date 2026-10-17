@@ -15,12 +15,17 @@
  */
 package consulo.desktop.awt.ui.impl;
 
+import consulo.desktop.awt.ui.impl.facade.FromSwingComponentWrapper;
 import consulo.disposer.Disposable;
 import consulo.ui.FocusManager;
 import consulo.ui.event.GlobalFocusListener;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.beans.PropertyChangeListener;
+import java.lang.ref.Reference;
+import java.lang.ref.WeakReference;
 
 /**
  * @author VISTALL
@@ -29,7 +34,29 @@ import java.beans.PropertyChangeListener;
 public class DesktopAWTFocusManager implements FocusManager {
   public static final DesktopAWTFocusManager ourInstance = new DesktopAWTFocusManager();
 
-  
+  private volatile Reference<Component> myLastFocused = new WeakReference<>(null);
+
+  private DesktopAWTFocusManager() {
+    KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener("permanentFocusOwner", evt -> {
+      if (evt.getNewValue() instanceof Component component) {
+        myLastFocused = new WeakReference<>(component);
+      }
+    });
+  }
+
+  @Override
+  public consulo.ui.@Nullable Component getFocusedComponent() {
+    Component owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+    if (owner == null) {
+      owner = myLastFocused.get();
+    }
+
+    if (owner == null) {
+      return null;
+    }
+    return owner instanceof FromSwingComponentWrapper wrapper ? wrapper.toUIComponent() : TargetAWT.wrap(owner);
+  }
+
   @Override
   public Disposable addListener(GlobalFocusListener focusListener) {
     PropertyChangeListener listener = evt -> focusListener.focusChanged();

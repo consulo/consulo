@@ -26,7 +26,7 @@ import consulo.desktop.qt.wm.impl.toolWindow.DesktopQtToolWindowInternalDecorato
 import consulo.desktop.qt.wm.impl.toolWindow.DesktopQtToolWindowPanelImpl;
 import consulo.desktop.qt.wm.impl.toolWindow.DesktopQtToolWindowStripeButtonImpl;
 import consulo.fileEditor.internal.FileEditorManagerEx;
-import consulo.ide.impl.wm.impl.UnifiedStatusBarImpl;
+import consulo.project.ui.impl.internal.wm.statusBar.UnifiedStatusBarImpl;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.event.ProjectManagerListener;

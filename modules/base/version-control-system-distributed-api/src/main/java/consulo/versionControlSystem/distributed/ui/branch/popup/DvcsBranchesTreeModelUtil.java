@@ -20,11 +20,8 @@ import consulo.annotation.UsedInPlugin;
 import consulo.application.util.matcher.MinusculeMatcher;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.awt.SeparatorWithText;
-import consulo.ui.ex.awt.tree.TreePathUtil;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.tree.TreePath;
 import java.util.*;
 import java.util.function.BooleanSupplier;
 import java.util.function.Function;
@@ -101,19 +98,19 @@ public final class DvcsBranchesTreeModelUtil {
     }
 
     @Nullable
-    public static TreePath createTreePathFor(DvcsBranchesTreeModel model, Object value) {
+    public static List<Object> createTreePathFor(DvcsBranchesTreeModel model, Object value) {
         Object root = model.getRoot();
 
         if (value instanceof AnAction) {
-            return TreePathUtil.convertArrayToTreePath(root, value);
+            return List.of(root, value);
         }
 
         if (value instanceof DvcsBranchesTreeModel.RepositoryNode repositoryNode) {
-            return TreePathUtil.convertArrayToTreePath(root, repositoryNode);
+            return List.of(root, repositoryNode);
         }
 
         if (value instanceof DvcsBranchesTreeModel.RefTypeUnderRepository typeUnderRepository) {
-            return TreePathUtil.convertArrayToTreePath(
+            return List.of(
                 root,
                 new DvcsBranchesTreeModel.RepositoryNode(typeUnderRepository.repository(), false),
                 typeUnderRepository);
@@ -151,7 +148,7 @@ public final class DvcsBranchesTreeModelUtil {
         else {
             path.add(reference);
         }
-        return TreePathUtil.convertArrayToTreePath(path.toArray());
+        return List.copyOf(path);
     }
 
     static <N> MatchResult<N> match(@Nullable MinusculeMatcher matcher,
@@ -189,9 +186,9 @@ public final class DvcsBranchesTreeModelUtil {
     }
 
     @UsedInPlugin
-    public static List<Object> addSeparatorIfNeeded(Collection<Object> nodes, SeparatorWithText separator) {
+    public static List<Object> addSeparatorIfNeeded(Collection<Object> nodes, DvcsBranchesTreeSeparator separator) {
         List<Object> result = new ArrayList<>(nodes);
-        if (!result.isEmpty() && !(result.get(result.size() - 1) instanceof SeparatorWithText)) {
+        if (!result.isEmpty() && !(result.get(result.size() - 1) instanceof DvcsBranchesTreeSeparator)) {
             result.add(separator);
         }
         return result;
@@ -217,7 +214,7 @@ public final class DvcsBranchesTreeModelUtil {
         LazyActionsHolder(Project project, List<Object> actions, @Nullable MinusculeMatcher matcher) {
             super(actions,
                 matcher,
-                node -> node instanceof SeparatorWithText,
+                node -> node instanceof DvcsBranchesTreeSeparator,
                 LazyActionsHolder::actionName,
                 () -> matcher != null);
         }

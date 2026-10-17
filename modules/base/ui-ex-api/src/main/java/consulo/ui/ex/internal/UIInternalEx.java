@@ -15,8 +15,11 @@
  */
 package consulo.ui.ex.internal;
 
+import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.ListBox;
+import consulo.ui.Tree;
+import consulo.ui.TreeModel;
 import consulo.ui.ex.ComboBoxWithCustomPopup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.internal.UIInternal;
@@ -40,6 +43,14 @@ public interface UIInternalEx {
 
     default <E> ListBox<E> _Components_popupListBox(FlatDataModel<E> model) {
         return ListBox.create(model);
+    }
+
+    default <E> Tree<E> _Components_popupTree(TreeModel<E> model) {
+        return Tree.create(model);
+    }
+
+    default MemoryIndicator _Components_memoryIndicator(LocalizeValue widestText) {
+        throw new UnsupportedOperationException();
     }
 
     default void _AnAction_registerCustomShortcutSet(AnAction action, Component component) {

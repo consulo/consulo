@@ -40,6 +40,7 @@ import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.Point2D;
+import consulo.ui.PopupPosition;
 import consulo.ui.Size2D;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -930,6 +931,17 @@ public class AbstractPopup implements AWTPopup, ScreenAreaConsumer {
 
         Point2D positionOnScreen = inputDetails.getPositionOnScreen();
         show(TargetAWT.to(component), positionOnScreen.x(), positionOnScreen.y(), true);
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void showBy(consulo.ui.Component component, @Nullable InputDetails inputDetails, PopupPosition position) {
+        Component owner = TargetAWT.to(component);
+        switch (position) {
+            case TOP -> show(new RelativePoint(owner, new Point(0, -getContent().getPreferredSize().height)));
+            case BOTTOM -> showUnderneathOf(owner);
+            default -> showBy(component, inputDetails);
+        }
     }
 
     @RequiredUIAccess

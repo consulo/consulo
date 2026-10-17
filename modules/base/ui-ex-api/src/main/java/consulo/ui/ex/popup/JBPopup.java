@@ -5,6 +5,7 @@ import consulo.component.ComponentManager;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
+import consulo.ui.PopupPosition;
 import consulo.ui.RelativePoint2D;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -113,6 +114,13 @@ public interface JBPopup extends Disposable, LightweightWindow {
     }
 
     void showBy(consulo.ui.Component component, @Nullable InputDetails inputDetails);
+
+    /**
+     * Shows the popup on the given side of the component, turned to the other side when there is no room for it.
+     */
+    default void showBy(consulo.ui.Component component, @Nullable InputDetails inputDetails, PopupPosition position) {
+        showBy(component, inputDetails);
+    }
 
     /**
      * Whether the user may resize the popup. Set it before the popup is shown.

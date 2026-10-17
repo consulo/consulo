@@ -15,7 +15,6 @@
  */
 package consulo.externalService.impl.internal.errorReport;
 
-import consulo.application.Application;
 import consulo.application.internal.ApplicationInfo;
 import consulo.application.internal.LastActionTracker;
 import consulo.component.util.PluginExceptionUtil;
@@ -23,8 +22,6 @@ import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginManager;
-import consulo.dataContext.DataContext;
-import consulo.dataContext.DataManager;
 import consulo.externalService.impl.internal.PermanentInstallationID;
 import consulo.externalService.impl.internal.WebServiceApi;
 import consulo.externalService.impl.internal.WebServiceException;
@@ -45,15 +42,13 @@ import consulo.project.Project;
 import consulo.project.ui.notification.NotificationService;
 import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.notification.event.NotificationListener;
+import consulo.ui.MessageBoxes;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.Messages;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.xml.XmlStringUtil;
+import org.jspecify.annotations.Nullable;
 
-import java.awt.*;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -68,40 +63,28 @@ public class ITNReporter extends ErrorReportSubmitter {
     private static String ourPreviousErrorReporterId;
 
     @Override
+    @RequiredUIAccess
     public boolean trySubmitAsync(
         IdeaLoggingEvent[] events,
         String additionalInfo,
-        Component parentComponent,
+        @Nullable Project project,
         Consumer<SubmittedReportInfo> consumer
     ) {
-        return sendError(events[0], additionalInfo, parentComponent, consumer);
-    }
-
-    /**
-     * @noinspection ThrowablePrintStackTrace
-     */
-    private static boolean sendError(
-        IdeaLoggingEvent event,
-        String additionalInfo,
-        Component parentComponent,
-        Consumer<SubmittedReportInfo> callback
-    ) {
+        IdeaLoggingEvent event = events[0];
         ErrorReportBean errorBean =
             new ErrorReportBean(UpdateSettings.getInstance().getChannel(), event.getThrowable(), LastActionTracker.ourLastActionId);
 
-        return doSubmit(event, parentComponent, callback, errorBean, additionalInfo);
+        return doSubmit(event, project, UIAccess.current(), consumer, errorBean, additionalInfo);
     }
 
     private static boolean doSubmit(
         IdeaLoggingEvent event,
-        Component parentComponent,
+        @Nullable Project project,
+        UIAccess uiAccess,
         Consumer<SubmittedReportInfo> callback,
         ErrorReportBean errorBean,
         String description
     ) {
-        DataContext dataContext = DataManager.getInstance().getDataContext(parentComponent);
-        Project project = dataContext.getData(Project.KEY);
-
         errorBean.setInstallationID(PermanentInstallationID.get());
         errorBean.setDescription(description);
         errorBean.setMessage(event.getMessage());
@@ -142,7 +125,6 @@ public class ITNReporter extends ErrorReportSubmitter {
             errorBean.setAttachments(logMessageEx.getAttachments());
         }
 
-        Application application = Application.get();
         ErrorReportSender.sendReport(
             project,
             errorBean,
@@ -157,31 +139,29 @@ public class ITNReporter extends ErrorReportSubmitter {
                 );
                 callback.accept(reportInfo);
 
-                application.invokeLater(() -> {
-                    StringBuilder text = new StringBuilder();
-                    String url = SubmittedReportInfo.getUrl(reportInfo);
+                StringBuilder text = new StringBuilder();
+                String url = SubmittedReportInfo.getUrl(reportInfo);
 
-                    SubmittedReportInfoUtil.appendSubmissionInformation(reportInfo, text, url);
+                SubmittedReportInfoUtil.appendSubmissionInformation(reportInfo, text, url);
 
-                    text.append(".");
+                text.append(".");
 
-                    if (reportInfo.getStatus() != SubmittedReportInfo.SubmissionStatus.FAILED) {
-                        text.append("<br/>").append(ExternalServiceLocalize.errorReportGratitude().get());
-                    }
+                if (reportInfo.getStatus() != SubmittedReportInfo.SubmissionStatus.FAILED) {
+                    text.append("<br/>").append(ExternalServiceLocalize.errorReportGratitude().get());
+                }
 
-                    NotificationType type = reportInfo.getStatus() == SubmittedReportInfo.SubmissionStatus.FAILED
-                        ? NotificationType.ERROR
-                        : NotificationType.INFORMATION;
-                    NotificationService.getInstance()
-                        .newOfType(ReportMessages.GROUP, type)
-                        .title(ExternalServiceLocalize.errorReportTitle())
-                        .content(LocalizeValue.localizeTODO(XmlStringUtil.wrapInHtml(text)))
-                        .notImportant()
-                        .optionalHyperlinkListener(url != null ? new NotificationListener.UrlOpeningListener(true) : null)
-                        .notify(project);
-                });
+                NotificationType type = reportInfo.getStatus() == SubmittedReportInfo.SubmissionStatus.FAILED
+                    ? NotificationType.ERROR
+                    : NotificationType.INFORMATION;
+                NotificationService.getInstance()
+                    .newOfType(ReportMessages.GROUP, type)
+                    .title(ExternalServiceLocalize.errorReportTitle())
+                    .content(LocalizeValue.localizeTODO(XmlStringUtil.wrapInHtml(text)))
+                    .notImportant()
+                    .optionalHyperlinkListener(url != null ? new NotificationListener.UrlOpeningListener(true) : null)
+                    .notify(project);
             },
-            e -> application.invokeLater(() -> {
+            e -> uiAccess.execute(() -> {
                 LocalizeValue msg;
                 if (e instanceof AuthorizationFailedException) {
                     msg = ExternalServiceLocalize.errorReportAuthenticationFailed();
@@ -212,33 +192,23 @@ public class ITNReporter extends ErrorReportSubmitter {
                         )
                         .notify(project);
                 }
-                else if (showYesNoDialog(
-                    parentComponent,
-                    project,
-                    msg.get(),
-                    ExternalServiceLocalize.errorReportTitle().get(),
-                    UIUtil.getErrorIcon()
-                ) != 0) {
-                    callback.accept(new SubmittedReportInfo(null, "0", SubmittedReportInfo.SubmissionStatus.FAILED));
-                }
                 else {
-                    if (e instanceof AuthorizationFailedException) {
-                        // TODO [VISTALL]
-                    }
-                    application.invokeLater(() -> doSubmit(event, parentComponent, callback, errorBean, description));
+                    MessageBoxes.yesNo()
+                        .asError()
+                        .title(ExternalServiceLocalize.errorReportTitle())
+                        .text(msg)
+                        .showAsync(project)
+                        .whenCompleteAsync((retry, error) -> {
+                            if (Boolean.TRUE.equals(retry)) {
+                                doSubmit(event, project, uiAccess, callback, errorBean, description);
+                            }
+                            else {
+                                callback.accept(new SubmittedReportInfo(null, "0", SubmittedReportInfo.SubmissionStatus.FAILED));
+                            }
+                        }, uiAccess);
                 }
             })
         );
         return true;
-    }
-
-    @RequiredUIAccess
-    private static int showYesNoDialog(Component parentComponent, Project project, String message, String title, Image icon) {
-        if (parentComponent.isShowing()) {
-            return Messages.showYesNoDialog(parentComponent, message, title, icon);
-        }
-        else {
-            return Messages.showYesNoDialog(project, message, title, icon);
-        }
     }
 }

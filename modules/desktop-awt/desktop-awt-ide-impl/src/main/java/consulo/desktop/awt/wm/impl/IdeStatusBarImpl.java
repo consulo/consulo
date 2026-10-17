@@ -20,46 +20,32 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.TaskInfo;
 import consulo.dataContext.DataSink;
 import consulo.dataContext.UiDataProvider;
-import consulo.desktop.awt.ui.IdeEventQueue;
-import consulo.desktop.awt.ui.impl.plaf2.BasicStripeButtonUI;
 import consulo.desktop.awt.wm.impl.status.InfoAndProgressPanel;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.openapi.ui.MessageType;
-import consulo.ide.impl.idea.openapi.wm.impl.status.MemoryUsagePanel;
-import consulo.ide.impl.idea.openapi.wm.impl.status.widget.StatusBarWidgetWrapper;
-import consulo.ide.impl.idea.openapi.wm.impl.status.widget.StatusBarWidgetsActionGroup;
-import consulo.ide.impl.project.ui.impl.StatusWidgetBorders;
-import consulo.platform.Platform;
 import consulo.project.Project;
+import consulo.project.ui.impl.internal.wm.statusBar.StatusBarCustomWidgetHolder;
+import consulo.project.ui.impl.internal.wm.statusBar.StatusBarWidgetButton;
 import consulo.project.ui.internal.StatusBarEx;
 import consulo.project.ui.wm.*;
 import consulo.ui.NotificationType;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.RelativePoint;
-import consulo.ui.ex.action.ActionGroup;
-import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.action.ActionPopupMenu;
 import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.NonOpaquePanel;
 import consulo.ui.ex.awt.TabsUtil;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awt.util.ComponentUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.BalloonHandler;
 import consulo.ui.image.Image;
 import consulo.util.collection.Lists;
 import consulo.util.dataholder.Key;
-import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkListener;
 import java.awt.*;
-import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.*;
 import java.util.function.Consumer;
@@ -68,7 +54,7 @@ import java.util.function.Predicate;
 /**
  * @author spLeaner
  */
-public class IdeStatusBarImpl extends JPanel implements StatusBarEx, Predicate<AWTEvent>, UiDataProvider {
+public class IdeStatusBarImpl extends JPanel implements StatusBarEx, UiDataProvider {
     private static final Key<String> WIDGET_ID = Key.create("STATUS_BAR_WIDGET_ID");
 
     private static final int MIN_ICON_HEIGHT = 24 + 1 + 1;
@@ -82,19 +68,24 @@ public class IdeStatusBarImpl extends JPanel implements StatusBarEx, Predicate<A
 
     private JPanel myLeftPanel;
     private JPanel myRightPanel;
-    private Component myHoveredComponent;
+    private consulo.ui.@Nullable Component myUIComponent;
 
     private final Set<IdeStatusBarImpl> myChildren = new HashSet<>();
 
-    private static class WidgetBean {
-        JComponent component;
-        StatusBarWidget widget;
-
-        static WidgetBean create(StatusBarWidget widget, JComponent component) {
-            WidgetBean bean = new WidgetBean();
-            bean.widget = widget;
-            bean.component = component;
-            return bean;
+    private record WidgetBean(
+        StatusBarWidget widget,
+        consulo.ui.Component uiComponent,
+        JComponent component,
+        @Nullable StatusBarWidgetButton button
+    ) {
+        @RequiredUIAccess
+        void update() {
+            if (button != null) {
+                button.beforeUpdate();
+            }
+            else {
+                widget.beforeUpdate();
+            }
         }
     }
 
@@ -152,8 +143,8 @@ public class IdeStatusBarImpl extends JPanel implements StatusBarEx, Predicate<A
         }
 
         for (WidgetBean eachBean : myWidgetMap.values()) {
-            if (eachBean.widget instanceof StatusBarWidget.Multiframe) {
-                StatusBarWidget copy = ((StatusBarWidget.Multiframe) eachBean.widget).copy();
+            if (eachBean.widget() instanceof StatusBarWidget.Multiframe multiframe) {
+                StatusBarWidget copy = multiframe.copy();
                 bar.addWidget(copy, order);
             }
         }
@@ -165,6 +156,16 @@ public class IdeStatusBarImpl extends JPanel implements StatusBarEx, Predicate<A
     @Override
     public JComponent getComponent() {
         return this;
+    }
+
+    @Override
+    public consulo.ui.Component getUIComponent() {
+        consulo.ui.Component component = myUIComponent;
+        if (component == null) {
+            component = TargetAWT.wrap(this);
+            myUIComponent = component;
+        }
+        return component;
     }
 
     @RequiredUIAccess
@@ -189,11 +190,6 @@ public class IdeStatusBarImpl extends JPanel implements StatusBarEx, Predicate<A
 
             leftPanel().add(TargetAWT.to(switcher.getUIComponent()));
         }
-
-        enableEvents(AWTEvent.MOUSE_EVENT_MASK);
-        enableEvents(AWTEvent.MOUSE_MOTION_EVENT_MASK);
-
-        IdeEventQueue.getInstance().addPostprocessor(this, this);
     }
 
     public void addToLeft(JComponent component) {
@@ -241,7 +237,8 @@ public class IdeStatusBarImpl extends JPanel implements StatusBarEx, Predicate<A
         UIAccess.assertIsUIThread();
 
         JPanel panel = rightPanel();
-        JComponent c = wrap(widget);
+        WidgetBean bean = wrap(widget);
+        JComponent c = bean.component();
         c.putClientProperty(WIDGET_ID, widget.getId());
 
         List<Component> children = new ArrayList<>(List.of(panel.getComponents()));
@@ -256,16 +253,11 @@ public class IdeStatusBarImpl extends JPanel implements StatusBarEx, Predicate<A
             return order.indexOf(widgetId);
         });
 
-        myWidgetMap.put(widget.getId(), WidgetBean.create(widget, c));
-
-        if (c instanceof StatusBarWidgetWrapper) {
-            ((StatusBarWidgetWrapper) c).beforeUpdate();
-        }
-        else {
-            widget.beforeUpdate();
-        }
+        myWidgetMap.put(widget.getId(), bean);
 
         widget.install(this);
+
+        bean.update();
 
         panel.removeAll();
         for (Component child : children) {
@@ -285,21 +277,7 @@ public class IdeStatusBarImpl extends JPanel implements StatusBarEx, Predicate<A
         if (myRightPanel == null) {
             myRightPanel = new JPanel();
             myRightPanel.setBorder(JBUI.Borders.emptyLeft(1));
-            myRightPanel.setLayout(new BoxLayout(myRightPanel, BoxLayout.X_AXIS) {
-                @Override
-                public void layoutContainer(Container target) {
-                    super.layoutContainer(target);
-                    for (Component component : target.getComponents()) {
-                        if (component instanceof MemoryUsagePanel) {
-                            Rectangle r = component.getBounds();
-                            r.y = 0;
-                            r.width += Platform.current().os().isMac() ? 4 : 0;
-                            r.height = target.getHeight();
-                            component.setBounds(r);
-                        }
-                    }
-                }
-            });
+            myRightPanel.setLayout(new BoxLayout(myRightPanel, BoxLayout.X_AXIS));
             myRightPanel.setOpaque(false);
             add(myRightPanel, BorderLayout.EAST);
         }
@@ -321,7 +299,6 @@ public class IdeStatusBarImpl extends JPanel implements StatusBarEx, Predicate<A
     public void uiDataSnapshot(DataSink sink) {
         sink.lazy(Project.KEY, this::getProject);
         sink.set(StatusBar.KEY, this);
-        sink.lazy(HOVERED_WIDGET_ID, () -> myHoveredComponent instanceof JComponent ? UIUtil.getClientProperty((JComponent) myHoveredComponent, WIDGET_ID) : null);
     }
 
     @Override
@@ -371,83 +348,22 @@ public class IdeStatusBarImpl extends JPanel implements StatusBarEx, Predicate<A
     }
 
 
-    private static JComponent wrap(StatusBarWidget widget) {
-        if (widget instanceof CustomStatusBarWidget) {
-            JComponent component = ((CustomStatusBarWidget) widget).getComponent();
-            if (component.getBorder() == null) {
-                component.setBorder(widget instanceof IconLikeCustomStatusBarWidget ? StatusWidgetBorders.ICON : StatusWidgetBorders.INSTANCE);
-            }
-            // wrap with a panel, so it will fill entire status bar height
-            JComponent result = component instanceof JLabel ? new NonOpaquePanel(new BorderLayout(), component) : component;
-            return result;
+    @RequiredUIAccess
+    private static WidgetBean wrap(StatusBarWidget widget) {
+        if (widget instanceof CustomStatusBarWidget customWidget) {
+            consulo.ui.Component component = new StatusBarCustomWidgetHolder(customWidget).getComponent();
+            return new WidgetBean(widget, component, (JComponent) TargetAWT.to(component), null);
         }
 
-        JComponent wrapper = StatusBarWidgetWrapper.wrap(widget, Objects.requireNonNull(widget.getPresentation()));
-        wrapper.putClientProperty(UIUtil.CENTER_TOOLTIP_DEFAULT, Boolean.TRUE);
-        return wrapper;
-    }
-
-    private void hoverComponent(@Nullable Component component) {
-        if (myHoveredComponent == component) {
-            return;
-        }
-        myHoveredComponent = component;
-        // widgets shall not be opaque, as it may conflict with bg images
-        // the following code can be dropped in future
-        if (myHoveredComponent != null) {
-            myHoveredComponent.setBackground(null);
-        }
-        if (component != null && component.isEnabled()) {
-            component.setBackground(BasicStripeButtonUI.BACKGROUND_COLOR);
-        }
-        repaint();
+        StatusBarWidgetButton button = new StatusBarWidgetButton(widget, Objects.requireNonNull(widget.getPresentation()));
+        consulo.ui.Component component = button.getComponent();
+        return new WidgetBean(widget, component, (JComponent) TargetAWT.to(component), button);
     }
 
     @Override
-    public boolean test(AWTEvent e) {
-        if (e instanceof MouseEvent) {
-            return dispatchMouseEvent((MouseEvent) e);
-        }
-        return false;
-    }
-
-    private boolean dispatchMouseEvent(MouseEvent e) {
-        if (myRightPanel == null || !myRightPanel.isVisible()) {
-            return false;
-        }
-        Component component = e.getComponent();
-        if (component == null) {
-            return false;
-        }
-
-        if (ComponentUtil.getWindow(this) != ComponentUtil.getWindow(component)) {
-            hoverComponent(null);
-            return false;
-        }
-
-        Point point = SwingUtilities.convertPoint(component, e.getPoint(), myRightPanel);
-        Component widget = myRightPanel.getComponentAt(point);
-        if (e.getClickCount() == 0) {
-            hoverComponent(widget != myRightPanel ? widget : null);
-        }
-        if (e.isConsumed() || widget == null) {
-            return false;
-        }
-        if (e.isPopupTrigger() && (e.getID() == MouseEvent.MOUSE_PRESSED || e.getID() == MouseEvent.MOUSE_RELEASED)) {
-            Project project = getProject();
-            if (project != null) {
-                ActionManager actionManager = ActionManager.getInstance();
-                ActionGroup group = ObjectUtil.tryCast(actionManager.getAction(StatusBarWidgetsActionGroup.GROUP_ID), ActionGroup.class);
-                if (group != null) {
-                    ActionPopupMenu menu = actionManager.createActionPopupMenu(ActionPlaces.STATUS_BAR_PLACE, group);
-                    menu.setTargetComponent(this);
-                    menu.getComponent().show(myRightPanel, point.x, point.y);
-                    e.consume();
-                    return true;
-                }
-            }
-        }
-        return false;
+    public consulo.ui.@Nullable Component getWidgetComponent(String id) {
+        WidgetBean bean = myWidgetMap.get(id);
+        return bean == null ? null : bean.uiComponent();
     }
 
     @Override
@@ -461,9 +377,9 @@ public class IdeStatusBarImpl extends JPanel implements StatusBarEx, Predicate<A
             WidgetBean bean = myWidgetMap.remove(id);
             if (bean != null) {
                 JPanel targetPanel = rightPanel();
-                targetPanel.remove(bean.component);
+                targetPanel.remove(bean.component());
                 targetPanel.revalidate();
-                Disposer.dispose(bean.widget);
+                Disposer.dispose(bean.widget());
             }
             updateChildren(child -> child.removeWidget(id));
         });
@@ -484,8 +400,8 @@ public class IdeStatusBarImpl extends JPanel implements StatusBarEx, Predicate<A
         return myWidgetMap
             .values()
             .stream()
-            .filter(widgetBean -> predicate.test(widgetBean.widget))
-            .map(widgetBean -> (W) widgetBean.widget)
+            .filter(widgetBean -> predicate.test(widgetBean.widget()))
+            .map(widgetBean -> (W) widgetBean.widget())
             .findFirst();
     }
 
@@ -494,7 +410,7 @@ public class IdeStatusBarImpl extends JPanel implements StatusBarEx, Predicate<A
         myWidgetMap
             .entrySet()
             .stream()
-            .filter(it -> widgetPredicate.test(it.getValue().widget))
+            .filter(it -> widgetPredicate.test(it.getValue().widget()))
             .forEach(it -> updateWidget(it.getKey()));
     }
 
@@ -503,46 +419,12 @@ public class IdeStatusBarImpl extends JPanel implements StatusBarEx, Predicate<A
         myApplication.invokeLater(() -> {
             WidgetBean bean = myWidgetMap.get(id);
             if (bean != null) {
-                JComponent widgetComponent = bean.component;
-
-                if (widgetComponent instanceof StatusBarWidgetWrapper) {
-                    ((StatusBarWidgetWrapper) widgetComponent).beforeUpdate();
-                }
-                else {
-                    bean.widget.beforeUpdate();
-                }
-
-                widgetComponent.repaint();
+                bean.update();
+                bean.component().repaint();
             }
 
             updateChildren(child -> child.updateWidget(id));
         });
-    }
-
-    @Override
-    protected void paintChildren(Graphics g) {
-        paintHoveredComponentBackground(g);
-        super.paintChildren(g);
-    }
-
-    private void paintHoveredComponentBackground(Graphics g) {
-        if (myHoveredComponent != null && myHoveredComponent.isEnabled() && !(myHoveredComponent instanceof MemoryUsagePanel)) {
-            Rectangle bounds = myHoveredComponent.getBounds();
-            Container parent = myHoveredComponent.getParent();
-            if (parent == null) {
-                return;
-            }
-            
-            Point point = new RelativePoint(parent, bounds.getLocation()).getPoint(this);
-            g.setColor(BasicStripeButtonUI.BACKGROUND_COLOR);
-            int arc = UIManager.getInt("Component.arc");
-            if (arc > 0) {
-                g.fillRoundRect(3 + point.x, 3 + point.y, bounds.width - 6, bounds.height - 6, arc, arc);
-            }
-            else {
-                g.fillRect(point.x, point.y, bounds.width, bounds.height);
-            }
-        }
     }
 
     @Override

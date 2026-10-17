@@ -50,6 +50,12 @@ public class DesktopStyleImpl extends StyleImpl {
 
     private static final Color EDITOR_AREA_FOREGROUND = new JBColor(Gray._80, Gray._160);
 
+    private static final Color MEMORY_INDICATOR_ALLOCATED_BACKGROUND =
+        JBColor.namedColor("MemoryIndicator.allocatedBackground", new JBColor(Gray._215, Gray._90));
+
+    private static final Color MEMORY_INDICATOR_USED_BACKGROUND =
+        JBColor.namedColor("MemoryIndicator.usedBackground", new JBColor(Gray._185, Gray._110));
+
     private static final Color EDITOR_AREA_BACKGROUND = new JBColor(
         () -> StyleManager.get().getCurrentStyle().isDark() ? Gray._40 : ColorUtil.darker(UIUtil.getPanelBackground(), 3)
     );
@@ -151,6 +157,12 @@ public class DesktopStyleImpl extends StyleImpl {
         }
         else if (colorValue == StandardColors.CYAN) {
             return TargetAWT.from(JBColor.CYAN);
+        }
+        else if (colorValue == ComponentColors.MEMORY_INDICATOR_ALLOCATED_BACKGROUND) {
+            return TargetAWT.from(MEMORY_INDICATOR_ALLOCATED_BACKGROUND);
+        }
+        else if (colorValue == ComponentColors.MEMORY_INDICATOR_USED_BACKGROUND) {
+            return TargetAWT.from(MEMORY_INDICATOR_USED_BACKGROUND);
         }
         return super.getColorValue(colorValue);
     }

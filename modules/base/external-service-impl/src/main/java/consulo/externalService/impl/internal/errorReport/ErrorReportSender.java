@@ -26,6 +26,7 @@ import consulo.externalService.impl.internal.repository.api.ErrorReportBean;
 import consulo.externalService.localize.ExternalServiceLocalize;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.Map;
@@ -50,7 +51,7 @@ public class ErrorReportSender {
     }
 
     public static void sendReport(
-        Project project,
+        @Nullable Project project,
         ErrorReportBean errorBean,
         long assignUserId,
         Consumer<String> callback,

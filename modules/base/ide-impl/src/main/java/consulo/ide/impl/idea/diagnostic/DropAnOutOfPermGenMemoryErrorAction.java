@@ -15,9 +15,11 @@
  */
 package consulo.ide.impl.idea.diagnostic;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 
+@ActionImpl(id = "DropAnOutOfPermGenMemoryError")
 @SuppressWarnings({"HardCodedStringLiteral"})
 public class DropAnOutOfPermGenMemoryErrorAction extends DumbAwareAction {
     public DropAnOutOfPermGenMemoryErrorAction() {

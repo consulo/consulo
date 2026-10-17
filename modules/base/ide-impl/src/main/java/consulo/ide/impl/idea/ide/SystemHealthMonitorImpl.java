@@ -40,7 +40,6 @@ import consulo.project.ui.internal.NotificationsConfiguration;
 import consulo.project.ui.notification.*;
 import consulo.ui.ex.awt.HyperlinkAdapter;
 import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.util.jna.JnaLoader;
 import consulo.util.lang.StringUtil;
@@ -49,7 +48,6 @@ import consulo.util.lang.TimeoutUtil;
 import consulo.webBrowser.BrowserUtil;
 import jakarta.inject.Inject;
 
-import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import java.io.File;
 import java.util.concurrent.Future;
@@ -88,30 +86,23 @@ public class SystemHealthMonitorImpl extends PreloadingActivity {
         SystemHealthMonitor.Reporter reporter = new SystemHealthMonitor.Reporter() {
             @Override
             public void warning(String notificationText, String actionText, Runnable actionListener) {
-                myApplication.invokeLater(() -> myNotificationService.newWarn(GROUP)
+                myNotificationService.newWarn(GROUP)
                     .content(LocalizeValue.localizeTODO(notificationText))
                     .important()
                     .addAction(LocalizeValue.localizeTODO(actionText), actionListener)
-                    .notify(null)
-                );
+                    .notify(null);
             }
 
             @Override
             public void warning(String notificationText, String[] actionsText, Runnable[] actionsListener) {
-                myApplication.invokeLater(() -> {
-                        Notification.Builder builder = myNotificationService.newWarn(GROUP)
-                            .content(LocalizeValue.localizeTODO(notificationText))
-                            .important();
-                        for (int i = 0; i < actionsText.length; i++) {
-                            String actionText = actionsText[i];
-                            Runnable actionListener = actionsListener[i];
+                Notification.Builder builder = myNotificationService.newWarn(GROUP)
+                    .content(LocalizeValue.localizeTODO(notificationText))
+                    .important();
+                for (int i = 0; i < actionsText.length; i++) {
+                    builder = builder.addAction(LocalizeValue.localizeTODO(actionsText[i]), actionsListener[i]);
+                }
 
-                            builder = builder.addAction(LocalizeValue.localizeTODO(actionText), actionListener);
-                        }
-
-                        builder.notify(null);
-                    }
-                );
+                builder.notify(null);
             }
         };
 
@@ -181,17 +172,15 @@ public class SystemHealthMonitorImpl extends PreloadingActivity {
             return;
         }
 
-        Application.get().invokeLater(
-            () -> myNotificationService.newWarn(GROUP)
-                .content(message)
-                .important()
-                .hyperlinkListener((notification, e) -> BrowserUtil.browse(e.getDescription()))
-                .addClosingAction(
-                    LocalizeValue.localizeTODO("Do not show again"),
-                    () -> myProperties.setValue("ignore." + adapter.key, "true")
-                )
-                .notify(null)
-        );
+        myNotificationService.newWarn(GROUP)
+            .content(message)
+            .important()
+            .hyperlinkListener((notification, e) -> BrowserUtil.browse(e.getDescription()))
+            .addClosingAction(
+                LocalizeValue.localizeTODO("Do not show again"),
+                () -> myProperties.setValue("ignore." + adapter.key, "true")
+            )
+            .notify(null);
     }
 
     private static void startDiskSpaceMonitoring() {
@@ -248,27 +237,20 @@ public class SystemHealthMonitorImpl extends PreloadingActivity {
                                 }
                                 reported.compareAndSet(false, true);
 
-                                //noinspection SSBasedInspection
-                                SwingUtilities.invokeLater(() -> {
-                                    LocalizeValue message = IdeLocalize.lowDiskSpaceMessage(Application.get().getName());
-                                    if (fileUsableSpace < 100 * 1024) {
-                                        LOG.warn(message + " (" + fileUsableSpace + ")");
-                                        Messages.showErrorDialog(message.get(), "Fatal Configuration Problem");
+                                LocalizeValue message = IdeLocalize.lowDiskSpaceMessage(Application.get().getName());
+                                if (fileUsableSpace < 100 * 1024) {
+                                    LOG.warn(message + " (" + fileUsableSpace + ")");
+                                }
+                                NotificationService.getInstance()
+                                    .newOfType(GROUP, NotificationType.ERROR)
+                                    .title(message)
+                                    .content(LocalizeValue.of(file.getPath()))
+                                    .important()
+                                    .whenExpired(() -> {
                                         reported.compareAndSet(true, false);
                                         restart(timeout);
-                                    }
-                                    else {
-                                        NotificationService.getInstance()
-                                            .newOfType(GROUP, NotificationType.ERROR)
-                                            .title(message)
-                                            .content(LocalizeValue.of(file.getPath()))
-                                            .whenExpired(() -> {
-                                                reported.compareAndSet(true, false);
-                                                restart(timeout);
-                                            })
-                                            .notify(null);
-                                    }
-                                });
+                                    })
+                                    .notify(null);
                             }
                             else {
                                 restart(timeout);

@@ -1,0 +1,219 @@
+// Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+package consulo.language.codeStyle.impl.internal.statusBar;
+
+import consulo.annotation.access.RequiredReadAction;
+import consulo.application.Application;
+import consulo.application.ReadAction;
+import consulo.codeEditor.Editor;
+import consulo.dataContext.DataContext;
+import consulo.fileEditor.statusBar.EditorBasedStatusBarPopup;
+import consulo.language.codeStyle.CodeStyleSettingsModifier;
+import consulo.language.codeStyle.TransientCodeStyleSettings;
+import consulo.language.codeStyle.*;
+import consulo.language.codeStyle.event.CodeStyleSettingsChangeEvent;
+import consulo.language.codeStyle.event.CodeStyleSettingsListener;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiManager;
+import consulo.localize.LocalizeValue;
+import consulo.project.Project;
+import consulo.project.ui.wm.StatusBarWidget;
+import consulo.project.ui.wm.StatusBarWidgetFactory;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.ui.ex.popup.ListPopup;
+import consulo.virtualFileSystem.VirtualFile;
+import org.jspecify.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static consulo.language.codeStyle.CommonCodeStyleSettings.IndentOptions;
+
+public class CodeStyleStatusBarWidget extends EditorBasedStatusBarPopup implements CodeStyleSettingsListener {
+    public CodeStyleStatusBarWidget(Project project, StatusBarWidgetFactory factory) {
+        super(project, factory, true);
+    }
+
+    @Override
+    @RequiredReadAction
+    protected WidgetState getWidgetState(@Nullable VirtualFile file) {
+        if (file == null) {
+            return WidgetState.HIDDEN;
+        }
+        PsiFile psiFile = file.isValid() ? PsiManager.getInstance(getProject()).findFile(file) : null;
+        if (psiFile == null) {
+            return WidgetState.HIDDEN;
+        }
+        CodeStyleSettings settings = CodeStyle.getSettings(psiFile);
+        IndentOptions indentOptions = CodeStyle.getIndentOptions(psiFile);
+        if (settings instanceof TransientCodeStyleSettings codeStyleSettings) {
+            return createWidgetState(psiFile, indentOptions, getUiContributor(codeStyleSettings));
+        }
+        else {
+            return createWidgetState(psiFile, indentOptions, getUiContributor(file, indentOptions));
+        }
+    }
+
+    private static @Nullable CodeStyleStatusBarUIContributor getUiContributor(TransientCodeStyleSettings settings) {
+        CodeStyleSettingsModifier modifier = settings.getModifier();
+        return modifier != null ? modifier.getStatusBarUiContributor(settings) : null;
+    }
+
+    private static @Nullable IndentStatusBarUIContributor getUiContributor(VirtualFile file, IndentOptions indentOptions) {
+        FileIndentOptionsProvider provider = findProvider(file, indentOptions);
+        return provider != null ? provider.getIndentStatusBarUiContributor(indentOptions) : null;
+    }
+
+    private static @Nullable FileIndentOptionsProvider findProvider(VirtualFile file, IndentOptions indentOptions) {
+        FileIndentOptionsProvider optionsProvider = indentOptions.getFileIndentOptionsProvider();
+        if (optionsProvider != null) {
+            return optionsProvider;
+        }
+        return Application.get().getExtensionPoint(FileIndentOptionsProvider.class).findFirstSafe(provider -> {
+            IndentStatusBarUIContributor uiContributor = provider.getIndentStatusBarUiContributor(indentOptions);
+            return uiContributor != null && uiContributor.areActionsAvailable(file);
+        });
+    }
+
+    @RequiredReadAction
+    private static WidgetState createWidgetState(
+        PsiFile psiFile,
+        IndentOptions indentOptions,
+        @Nullable CodeStyleStatusBarUIContributor uiContributor
+    ) {
+        if (uiContributor != null) {
+            return new MyWidgetState(
+                uiContributor.getTooltip(),
+                uiContributor.getStatusText(psiFile),
+                psiFile,
+                indentOptions,
+                uiContributor
+            );
+        }
+        else {
+            LocalizeValue indentInfo = IndentStatusBarUIContributor.getIndentInfo(indentOptions);
+            LocalizeValue tooltip = IndentStatusBarUIContributor.createTooltip(indentInfo, LocalizeValue.empty());
+            return new MyWidgetState(tooltip, indentInfo, psiFile, indentOptions, null);
+        }
+    }
+
+    @RequiredReadAction
+    private @Nullable PsiFile getPsiFile() {
+        Editor editor = getEditor();
+        Project project = getProject();
+        if (editor != null && !project.isDisposed()) {
+            return PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
+        }
+        return null;
+    }
+
+    @Override
+    @RequiredReadAction
+    protected @Nullable ListPopup createPopup(DataContext context) {
+        WidgetState state = getWidgetState(context.getData(VirtualFile.KEY));
+        Editor editor = getEditor();
+        PsiFile psiFile = getPsiFile();
+        if (state instanceof MyWidgetState widgetState && editor != null && psiFile != null) {
+            CodeStyleStatusBarUIContributor uiContributor = widgetState.getContributor();
+            AnAction[] actions = getActions(uiContributor, psiFile);
+            ActionGroup actionGroup = new ActionGroup() {
+                @Override
+                public AnAction[] getChildren(@Nullable AnActionEvent e) {
+                    return actions;
+                }
+            };
+            return JBPopupFactory.getInstance().createActionGroupPopup(
+                uiContributor != null ? uiContributor.getActionGroupTitle() : null,
+                actionGroup,
+                context,
+                JBPopupFactory.ActionSelectionAid.SPEEDSEARCH,
+                false
+            );
+        }
+        return null;
+    }
+
+    @RequiredReadAction
+    private static AnAction[] getActions(@Nullable CodeStyleStatusBarUIContributor uiContributor, PsiFile psiFile) {
+        List<AnAction> allActions = new ArrayList<>();
+        if (uiContributor != null) {
+            AnAction[] actions = uiContributor.getActions(psiFile);
+            if (actions != null) {
+                allActions.addAll(Arrays.asList(actions));
+            }
+        }
+        if (uiContributor == null
+            || uiContributor instanceof IndentStatusBarUIContributor iUIContributor && iUIContributor.isShowFileIndentOptionsEnabled()) {
+            allActions.add(CodeStyleStatusBarWidgetFactory.createDefaultIndentConfigureAction(psiFile));
+        }
+        if (uiContributor != null) {
+            AnAction disabledAction = uiContributor.createDisableAction(psiFile.getProject());
+            if (disabledAction != null) {
+                allActions.add(disabledAction);
+            }
+            AnAction showAllAction = uiContributor.createShowAllAction(psiFile.getProject());
+            if (showAllAction != null) {
+                allActions.add(showAllAction);
+            }
+        }
+        return allActions.toArray(AnAction.EMPTY_ARRAY);
+    }
+
+    @Override
+    protected void registerCustomListeners() {
+        Project project = getProject();
+        ReadAction.nonBlocking(() -> CodeStyleSettingsManager.getInstance(project))
+            .expireWith(project)
+            .finishOnUiThread(Application::getAnyModalityState, manager -> manager.addListener(this, this))
+            .submitDefault();
+    }
+
+    @Override
+    public void codeStyleSettingsChanged(CodeStyleSettingsChangeEvent event) {
+        update();
+    }
+
+    @Override
+    protected StatusBarWidget createInstance(Project project) {
+        return new CodeStyleStatusBarWidget(project, myFactory);
+    }
+
+    private static class MyWidgetState extends WidgetState {
+        private final IndentOptions myIndentOptions;
+        private final @Nullable CodeStyleStatusBarUIContributor myContributor;
+
+        private final PsiFile myPsiFile;
+
+        protected MyWidgetState(
+            LocalizeValue toolTip,
+            LocalizeValue text,
+            PsiFile psiFile,
+            IndentOptions indentOptions,
+            @Nullable CodeStyleStatusBarUIContributor uiContributor
+        ) {
+            super(toolTip, text, true);
+            myIndentOptions = indentOptions;
+            myContributor = uiContributor;
+            myPsiFile = psiFile;
+            if (uiContributor != null) {
+                setIcon(uiContributor.getIcon());
+            }
+        }
+
+        public @Nullable CodeStyleStatusBarUIContributor getContributor() {
+            return myContributor;
+        }
+
+        public IndentOptions getIndentOptions() {
+            return myIndentOptions;
+        }
+
+        public PsiFile getPsiFile() {
+            return myPsiFile;
+        }
+    }
+}

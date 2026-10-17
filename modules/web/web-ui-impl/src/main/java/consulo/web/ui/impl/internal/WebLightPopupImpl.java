@@ -57,6 +57,7 @@ public class WebLightPopupImpl extends VaadinComponentDelegate<WebLightPopupImpl
     private static final Logger LOG = Logger.getInstance(WebLightPopupImpl.class);
 
     private static final String RESIZABLE_CLASS = "consulo-resizable-popup";
+    private static final String DRAG_STRIP_CLASS = "consulo-popup-drag-strip";
     private static final String MIN_WIDTH_PROPERTY = "--consulo-popup-min-width";
     private static final String ARROW_ANCHOR_CLASS = "consulo-popup-arrow-anchor";
     private static final String BACKGROUND_PROPERTY = "--vaadin-popover-background";
@@ -76,6 +77,8 @@ public class WebLightPopupImpl extends VaadinComponentDelegate<WebLightPopupImpl
     private @Nullable Div myAnchor;
 
     private final Div myTitle = new Div();
+
+    private @Nullable Div myDragStrip;
 
     private @Nullable Component myContent;
 
@@ -136,6 +139,45 @@ public class WebLightPopupImpl extends VaadinComponentDelegate<WebLightPopupImpl
             popover.getElement().getClassList().add(RESIZABLE_CLASS);
         }
 
+        if (options.isMovable()) {
+            Div dragStrip = new Div();
+            dragStrip.addClassName(DRAG_STRIP_CLASS);
+            myDragStrip = dragStrip;
+
+            popover.getElement().executeJs(
+                """
+                const popover = this;
+                popover.addEventListener('pointerdown', event => {
+                    const strip = event.target.closest && event.target.closest('.' + $0);
+                    const overlay = popover.shadowRoot && popover.shadowRoot.querySelector('vaadin-popover-overlay');
+                    if (!strip || !overlay || event.button !== 0) {
+                        return;
+                    }
+
+                    const offset = (overlay.style.translate || '0px 0px').split(' ').map(value => parseFloat(value) || 0);
+                    const originX = event.clientX - offset[0];
+                    const originY = event.clientY - offset[1];
+
+                    const move = moveEvent => {
+                        overlay.style.translate = (moveEvent.clientX - originX) + 'px ' + (moveEvent.clientY - originY) + 'px';
+                    };
+                    const release = () => {
+                        strip.removeEventListener('pointermove', move);
+                        strip.removeEventListener('pointerup', release);
+                        strip.removeEventListener('pointercancel', release);
+                    };
+
+                    strip.setPointerCapture(event.pointerId);
+                    strip.addEventListener('pointermove', move);
+                    strip.addEventListener('pointerup', release);
+                    strip.addEventListener('pointercancel', release);
+                    event.preventDefault();
+                });
+                """,
+                DRAG_STRIP_CLASS
+            );
+        }
+
         popover.addOpenedChangeListener(event -> {
             if (!event.isOpened()) {
                 closed();
@@ -186,6 +228,10 @@ public class WebLightPopupImpl extends VaadinComponentDelegate<WebLightPopupImpl
         WebPopupFocus.markContent(contentComponent.getElement());
 
         popover.removeAll();
+        Div dragStrip = myDragStrip;
+        if (dragStrip != null) {
+            popover.add(dragStrip);
+        }
         popover.add(myTitle);
         popover.add(contentComponent);
 
