@@ -443,6 +443,8 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
     private static final Logger LOG = Logger.getInstance(CodeEditorBase.class);
     public static final Key<Boolean> DISABLE_CARET_POSITION_KEEPING = Key.create("editor.disable.caret.position.keeping");
 
+    private static final Key<consulo.ui.Component> PERMANENT_HEADER = Key.create("PERMANENT_HEADER");
+
     protected static final int MIN_FONT_SIZE = 8;
 
     protected volatile EditorHighlighter myHighlighter; // updated in EDT, but can be accessed from other threads (under read action)
@@ -503,6 +505,8 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
     protected final EditorFilteringMarkupModelEx myDocumentMarkupModel;
 
     protected final List<IntFunction<Collection<LineExtensionInfo>>> myLineExtensionPainters = new SmartList<>();
+
+    private consulo.ui.@Nullable Component myHeaderComponent;
 
     protected @Nullable CharSequence myPlaceholderText;
     protected @Nullable TextAttributes myPlaceholderAttributes;
@@ -627,6 +631,13 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
     protected abstract DataContext getComponentContext();
 
     protected abstract void stopDumb();
+
+    /**
+     * Shows {@code header} above the editor in place of the header shown before, or no header when it is {@code null}. The
+     * header may be the {@linkplain #getPermanentHeaderComponent() permanent} one.
+     */
+    @RequiredUIAccess
+    protected abstract void updateHeaderView(consulo.ui.@Nullable Component header);
 
     protected boolean canImpactGutterSize(RangeHighlighter highlighter) {
         return false;
@@ -916,6 +927,41 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
         else {
             mySelectionModel.removeSelection();
         }
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void setHeaderComponent(consulo.ui.@Nullable Component header) {
+        consulo.ui.Component shownHeader = header == null ? getPermanentHeaderComponent() : header;
+        myHeaderComponent = shownHeader;
+        updateHeaderView(shownHeader);
+    }
+
+    /**
+     * @return the header which is shown: the one set last, or the permanent one
+     */
+    @Override
+    public consulo.ui.@Nullable Component getHeaderComponent() {
+        return myHeaderComponent;
+    }
+
+    /**
+     * @return {@code false} while the permanent header is the one shown, so that nothing closes it
+     */
+    @Override
+    public boolean hasHeaderComponent() {
+        consulo.ui.Component header = myHeaderComponent;
+        return header != null && header != getPermanentHeaderComponent();
+    }
+
+    @Override
+    public consulo.ui.@Nullable Component getPermanentHeaderComponent() {
+        return getUserData(PERMANENT_HEADER);
+    }
+
+    @Override
+    public void setPermanentHeaderComponent(consulo.ui.@Nullable Component component) {
+        putUserData(PERMANENT_HEADER, component);
     }
 
     @Override

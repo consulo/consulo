@@ -152,7 +152,7 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
 
     private @Nullable DockLayout myRootLayout;
 
-    private @Nullable Component myHeaderComponent;
+    private @Nullable EditorHeaderSlot myHeaderSlot;
 
     private final WebEditorView myView;
 
@@ -3129,39 +3129,27 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
     }
 
     @Override
-    public boolean hasHeaderComponent() {
-        return myHeaderComponent != null;
-    }
-
-    @Override
-    public @Nullable Component getHeaderComponent() {
-        return myHeaderComponent;
-    }
-
-    @Override
     @RequiredUIAccess
-    public void setHeaderComponent(@Nullable Component header) {
-        Component oldHeader = myHeaderComponent;
-        if (oldHeader == header) {
-            return;
+    protected void updateHeaderView(@Nullable Component header) {
+        EditorHeaderSlot headerSlot = myHeaderSlot;
+        if (headerSlot == null) {
+            if (header == null) {
+                return;
+            }
+
+            getUIComponent();
+
+            DockLayout rootLayout = myRootLayout;
+            if (rootLayout == null) {
+                return;
+            }
+
+            headerSlot = new EditorHeaderSlot();
+            rootLayout.top(headerSlot.getComponent());
+            myHeaderSlot = headerSlot;
         }
 
-        myHeaderComponent = header;
-
-        getUIComponent();
-
-        DockLayout rootLayout = myRootLayout;
-        if (rootLayout == null) {
-            return;
-        }
-
-        if (oldHeader != null) {
-            rootLayout.remove(oldHeader);
-        }
-
-        if (header != null) {
-            rootLayout.top(header);
-        }
+        headerSlot.show(header, getPermanentHeaderComponent());
     }
 
     @Override

@@ -150,8 +150,6 @@ public final class DesktopEditorImpl extends CodeEditorBase
     private static final Logger LOG = Logger.getInstance(DesktopEditorImpl.class);
     private static final Key DND_COMMAND_KEY = Key.create("DndCommand");
 
-    private static final Key<consulo.ui.Component> PERMANENT_HEADER = Key.create("PERMANENT_HEADER");
-
     private static final boolean HONOR_CAMEL_HUMPS_ON_TRIPLE_CLICK =
         Boolean.parseBoolean(System.getProperty("idea.honor.camel.humps.on.triple.click"));
     private static final Key<BufferedImage> BUFFER = Key.create("buffer");
@@ -263,7 +261,6 @@ public final class DesktopEditorImpl extends CodeEditorBase
     private boolean myDragStarted;
 
     private final JPanel myHeaderPanel;
-    private consulo.ui.@Nullable Component myHeaderUIComponent;
 
     private @Nullable MouseEvent myInitialMouseEvent;
     private boolean myIgnoreMouseEventsConsecutiveToInitial;
@@ -1664,13 +1661,11 @@ public final class DesktopEditorImpl extends CodeEditorBase
     }
 
     @Override
-    public void setHeaderComponent(consulo.ui.@Nullable Component header) {
+    @RequiredUIAccess
+    protected void updateHeaderView(consulo.ui.@Nullable Component header) {
         myHeaderPanel.removeAll();
 
-        consulo.ui.Component shownHeader = header == null ? getPermanentHeaderComponent() : header;
-        myHeaderUIComponent = shownHeader;
-
-        Component awtHeader = TargetAWT.to(shownHeader);
+        Component awtHeader = TargetAWT.to(header);
         if (awtHeader != null) {
             myHeaderPanel.add(awtHeader);
         }
@@ -1681,27 +1676,6 @@ public final class DesktopEditorImpl extends CodeEditorBase
         TouchBarControllerInternal touchBarController = (TouchBarControllerInternal) TouchBarController.getInstance();
 
         touchBarController.onUpdateEditorHeader(this, awtHeader instanceof JComponent jComponent ? jComponent : null);
-    }
-
-    @Override
-    public boolean hasHeaderComponent() {
-        consulo.ui.Component header = getHeaderComponent();
-        return header != null && header != getPermanentHeaderComponent();
-    }
-
-    @Override
-    public consulo.ui.@Nullable Component getPermanentHeaderComponent() {
-        return getUserData(PERMANENT_HEADER);
-    }
-
-    @Override
-    public void setPermanentHeaderComponent(consulo.ui.@Nullable Component component) {
-        putUserData(PERMANENT_HEADER, component);
-    }
-
-    @Override
-    public consulo.ui.@Nullable Component getHeaderComponent() {
-        return myHeaderPanel.getComponentCount() > 0 ? myHeaderUIComponent : null;
     }
 
     @Override

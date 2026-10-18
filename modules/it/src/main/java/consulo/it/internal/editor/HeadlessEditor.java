@@ -248,6 +248,11 @@ public class HeadlessEditor extends CodeEditorBase {
     }
 
     @Override
+    @RequiredUIAccess
+    protected void updateHeaderView(@Nullable Component header) {
+    }
+
+    @Override
     public JComponent getComponent() {
         JComponent component = myComponent;
         if (component == null) {

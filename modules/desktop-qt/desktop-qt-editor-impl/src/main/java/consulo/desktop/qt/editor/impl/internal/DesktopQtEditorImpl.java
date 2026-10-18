@@ -75,7 +75,7 @@ public class DesktopQtEditorImpl extends CodeEditorBase implements RealEditor, C
 
     private final List<Consumer<KeyCode>> myKeyNotConsumedListeners = Lists.newLockFreeCopyOnWriteList();
 
-    private @Nullable Component myHeaderComponent;
+    private @Nullable EditorHeaderSlot myHeaderSlot;
 
     private @Nullable DockLayout myRootLayout;
 
@@ -771,11 +771,6 @@ public class DesktopQtEditorImpl extends CodeEditorBase implements RealEditor, C
     }
 
     @Override
-    public boolean hasHeaderComponent() {
-        return myHeaderComponent != null;
-    }
-
-    @Override
     public int getAscent() {
         return myFontMetrics.getAscent();
     }
@@ -829,32 +824,25 @@ public class DesktopQtEditorImpl extends CodeEditorBase implements RealEditor, C
 
     @Override
     @RequiredUIAccess
-    public void setHeaderComponent(@Nullable Component header) {
-        Component oldHeader = myHeaderComponent;
-        if (oldHeader == header) {
-            return;
+    protected void updateHeaderView(@Nullable Component header) {
+        EditorHeaderSlot headerSlot = myHeaderSlot;
+        if (headerSlot == null) {
+            if (header == null) {
+                return;
+            }
+
+            getUIComponent();
+
+            DockLayout rootLayout = myRootLayout;
+            if (rootLayout == null) {
+                return;
+            }
+
+            headerSlot = new EditorHeaderSlot();
+            rootLayout.top(headerSlot.getComponent());
+            myHeaderSlot = headerSlot;
         }
 
-        myHeaderComponent = header;
-
-        getUIComponent();
-
-        DockLayout rootLayout = myRootLayout;
-        if (rootLayout == null) {
-            return;
-        }
-
-        if (oldHeader != null) {
-            rootLayout.remove(oldHeader);
-        }
-
-        if (header != null) {
-            rootLayout.top(header);
-        }
-    }
-
-    @Override
-    public @Nullable Component getHeaderComponent() {
-        return myHeaderComponent;
+        headerSlot.show(header, getPermanentHeaderComponent());
     }
 }

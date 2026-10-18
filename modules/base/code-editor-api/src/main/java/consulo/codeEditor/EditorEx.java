@@ -78,8 +78,12 @@ public interface EditorEx extends Editor {
 
     void setHighlighter(EditorHighlighter highlighter);
 
+    /**
+     * @return the header shown whenever no other header is set, or {@code null}
+     * @see #setPermanentHeaderComponent(Component)
+     */
     default @Nullable Component getPermanentHeaderComponent() {
-        throw new UnsupportedOperationException("Unsupported platform");
+        return null;
     }
 
     /**
@@ -87,8 +91,12 @@ public interface EditorEx extends Editor {
      */
     void setViewer(boolean isViewer);
 
+    /**
+     * Marks a header to show whenever no other header is set: {@link #setHeaderComponent(Component) setHeaderComponent(null)}
+     * shows it, and any other header replaces it while that one is shown. The call only remembers the header, so set it with
+     * {@link #setHeaderComponent(Component)} as well to show it at once. An editor which shows no headers ignores the call.
+     */
     default void setPermanentHeaderComponent(@Nullable Component component) {
-        throw new UnsupportedOperationException("Unsupported platform");
     }
 
     void setColorsScheme(EditorColorsScheme scheme);
