@@ -29,7 +29,7 @@ import jakarta.inject.Singleton;
  * @since 2026-08-11
  */
 @Singleton
-@ServiceImpl(profiles = ComponentProfiles.PRODUCTION | ComponentProfiles.INTEGRATION_TEST)
+@ServiceImpl(profiles = ComponentProfiles.PRODUCTION)
 public class UnifiedLineStatusMarkerPopupFactory implements LineStatusMarkerPopupFactory {
     @Override
     public LineStatusMarkerPopup create(LineStatusTrackerI tracker, Editor editor, VcsRange range) {
