@@ -15,6 +15,7 @@
  */
 package consulo.versionControlSystem.impl.internal;
 
+import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
 import consulo.codeEditor.Editor;
 import consulo.versionControlSystem.internal.LineStatusMarkerPopup;
@@ -28,7 +29,7 @@ import jakarta.inject.Singleton;
  * @since 2026-08-11
  */
 @Singleton
-@ServiceImpl
+@ServiceImpl(profiles = ComponentProfiles.PRODUCTION | ComponentProfiles.INTEGRATION_TEST)
 public class UnifiedLineStatusMarkerPopupFactory implements LineStatusMarkerPopupFactory {
     @Override
     public LineStatusMarkerPopup create(LineStatusTrackerI tracker, Editor editor, VcsRange range) {
