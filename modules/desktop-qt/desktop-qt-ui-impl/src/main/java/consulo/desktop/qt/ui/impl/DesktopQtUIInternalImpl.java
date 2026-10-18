@@ -15,6 +15,7 @@
  */
 package consulo.desktop.qt.ui.impl;
 
+import consulo.desktop.qt.ui.impl.avatar.DesktopQtAvatarImpl;
 import consulo.desktop.qt.ui.impl.chart.DesktopQtFlameGraphImpl;
 import consulo.desktop.qt.ui.impl.chart.DesktopQtStateChartImpl;
 import consulo.desktop.qt.ui.impl.chart.DesktopQtStopwatchTimer;
@@ -637,6 +638,11 @@ public class DesktopQtUIInternalImpl extends UIInternal implements UIInternalEx 
     @Override
     public Card _Components_card() {
         return new DesktopQtCardImpl();
+    }
+
+    @Override
+    public Avatar _Components_avatar(LocalizeValue name, @Nullable Image image) {
+        return new DesktopQtAvatarImpl(name, image);
     }
 
     @Override

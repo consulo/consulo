@@ -3,6 +3,7 @@ package consulo.project.impl.internal;
 
 import consulo.application.progress.ProgressIndicator;
 import consulo.logging.Logger;
+import consulo.util.concurrent.coroutine.MutableObservableValue;
 import consulo.util.concurrent.coroutine.ObservableValue;
 import org.jspecify.annotations.Nullable;
 
@@ -66,9 +67,9 @@ final class SingleTaskExecutor {
     private static final Logger LOG = Logger.getInstance(SingleTaskExecutor.class);
 
     private final Reportable myTask;
-    private final ObservableValue<RunState> myRunState = ObservableValue.of(RunState.STOPPED);
+    private final MutableObservableValue<RunState> myRunState = MutableObservableValue.of(RunState.STOPPED);
     private final AtomicBoolean myShouldContinueBackgroundProcessing = new AtomicBoolean(false);
-    private final ObservableValue<Long> myModificationCount = ObservableValue.of(0L);
+    private final MutableObservableValue<Long> myModificationCount = MutableObservableValue.of(0L);
     private final ObservableValue<Boolean> myIsRunning = myRunState.map(state -> state != RunState.STOPPED);
 
     SingleTaskExecutor(Reportable task) {

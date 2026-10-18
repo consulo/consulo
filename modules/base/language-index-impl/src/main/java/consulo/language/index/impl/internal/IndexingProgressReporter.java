@@ -25,6 +25,7 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.localize.ProjectLocalize;
+import consulo.util.concurrent.coroutine.MutableObservableValue;
 import consulo.util.concurrent.coroutine.ObservableValue;
 import org.jspecify.annotations.Nullable;
 
@@ -42,9 +43,9 @@ final class IndexingProgressReporter {
     private static final long PARK_NANOS = 50_000_000;
 
     private volatile int mySubTasksCount = 0;
-    private final ObservableValue<@Nullable LocalizeValue> myOperationName = ObservableValue.of(null);
-    private final ObservableValue<Integer> mySubTasksFinished = ObservableValue.of(0);
-    private final ObservableValue<List<LocalizeValue>> mySubTaskTexts = ObservableValue.of(List.of());
+    private final MutableObservableValue<@Nullable LocalizeValue> myOperationName = MutableObservableValue.of(null);
+    private final MutableObservableValue<Integer> mySubTasksFinished = MutableObservableValue.of(0);
+    private final MutableObservableValue<List<LocalizeValue>> mySubTaskTexts = MutableObservableValue.of(List.of());
 
     int getSubTasksCount() {
         return mySubTasksCount;
@@ -252,15 +253,15 @@ final class IndexingProgressReporter {
 
     static final class CheckPauseOnlyProgressIndicatorImpl implements CheckPauseOnlyProgressIndicator, Disposable {
         private final ObservableValue<List<LocalizeValue>> myPauseReason;
-        private final ObservableValue<@Nullable LocalizeValue> myFirstPauseReason;
-        private final ObservableValue<Boolean> myPaused;
+        private final MutableObservableValue<@Nullable LocalizeValue> myFirstPauseReason;
+        private final MutableObservableValue<Boolean> myPaused;
         private final ProgressIndicatorBase myProgressIndicator = new ProgressIndicatorBase();
         private final List<Runnable> mySubscriptions = new CopyOnWriteArrayList<>();
 
         CheckPauseOnlyProgressIndicatorImpl(ObservableValue<List<LocalizeValue>> pauseReason) {
             myPauseReason = pauseReason;
-            myFirstPauseReason = ObservableValue.of(firstOrNull(pauseReason.get()));
-            myPaused = ObservableValue.of(myFirstPauseReason.get() != null);
+            myFirstPauseReason = MutableObservableValue.of(firstOrNull(pauseReason.get()));
+            myPaused = MutableObservableValue.of(myFirstPauseReason.get() != null);
             mySubscriptions.add(pauseReason.addListener(reasons -> myFirstPauseReason.set(firstOrNull(reasons))));
             mySubscriptions.add(myFirstPauseReason.addListener(reason -> myPaused.set(reason != null)));
         }

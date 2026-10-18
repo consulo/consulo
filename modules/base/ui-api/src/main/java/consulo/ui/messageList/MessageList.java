@@ -57,4 +57,13 @@ public interface MessageList extends Component {
     void setMarkdown(boolean markdown);
 
     boolean isMarkdown();
+
+    /**
+     * Whether messages of {@link MessageListItemStyle#OWN} show the picture of their author too, the way a discussion
+     * does. Off by default, the way a chat does.
+     */
+    @RequiredUIAccess
+    void setShowOwnAvatar(boolean showOwnAvatar);
+
+    boolean isShowOwnAvatar();
 }

@@ -44,7 +44,7 @@ public final class ToastPresentation {
         }
         return switch (style) {
             case INFO -> PlatformIconGroup.generalBallooninformation();
-            case SUCCESS -> PlatformIconGroup.generalBalloonsuccess();
+            case SUCCESS -> PlatformIconGroup.statusSuccess();
             case WARNING -> PlatformIconGroup.generalBalloonwarning();
             case ERROR -> PlatformIconGroup.generalBalloonerror();
             case GLASSY -> null;

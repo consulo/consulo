@@ -18,6 +18,7 @@ package consulo.util.concurrent.coroutine.test;
 import consulo.util.concurrent.coroutine.Continuation;
 import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.concurrent.coroutine.CoroutineContext;
+import consulo.util.concurrent.coroutine.MutableObservableValue;
 import consulo.util.concurrent.coroutine.ObservableValue;
 import consulo.util.concurrent.coroutine.step.AwaitValue;
 import org.jspecify.annotations.Nullable;
@@ -41,7 +42,7 @@ public class AwaitValueTest {
     @Test
     public void testImmediateCompletion() {
         CoroutineContext context = TestCoroutineContext.newSilent();
-        ObservableValue<Boolean> value = ObservableValue.of(true);
+        MutableObservableValue<Boolean> value = MutableObservableValue.of(true);
 
         Coroutine<@Nullable Void, Boolean> cr = Coroutine.first(AwaitValue.until(value, v -> v));
 
@@ -60,7 +61,7 @@ public class AwaitValueTest {
     @Test
     public void testWakeUpOnMatchingSet() {
         CoroutineContext context = TestCoroutineContext.newSilent();
-        ObservableValue<Boolean> value = ObservableValue.of(false);
+        MutableObservableValue<Boolean> value = MutableObservableValue.of(false);
 
         Coroutine<@Nullable Void, String> cr = Coroutine.<@Nullable Void, Boolean>first(AwaitValue.until(value, v -> v == Boolean.TRUE))
             .then(apply(v -> "resumed:" + v));
@@ -81,7 +82,7 @@ public class AwaitValueTest {
     @Test
     public void testNoWakeUpOnNonMatchingSet() {
         CoroutineContext context = TestCoroutineContext.newSilent();
-        ObservableValue<Integer> value = ObservableValue.of(0);
+        MutableObservableValue<Integer> value = MutableObservableValue.of(0);
 
         Coroutine<@Nullable Void, Integer> cr = Coroutine.first(AwaitValue.until(value, v -> v > 5));
 
@@ -106,8 +107,8 @@ public class AwaitValueTest {
     @Test
     public void testCombineWakesWhenEitherSourceFlips() {
         CoroutineContext context = TestCoroutineContext.newSilent();
-        ObservableValue<Boolean> running = ObservableValue.of(true);
-        ObservableValue<Boolean> allowed = ObservableValue.of(false);
+        MutableObservableValue<Boolean> running = MutableObservableValue.of(true);
+        MutableObservableValue<Boolean> allowed = MutableObservableValue.of(false);
 
         Coroutine<String, String> cr = Coroutine.first(AwaitValue.until(() -> !running.get() && allowed.get(), running, allowed));
 
@@ -145,7 +146,7 @@ public class AwaitValueTest {
     @Test
     public void testCancellationDeregistersListeners() {
         CoroutineContext context = TestCoroutineContext.newSilent();
-        ObservableValue<Boolean> value = ObservableValue.of(false);
+        MutableObservableValue<Boolean> value = MutableObservableValue.of(false);
 
         Coroutine<@Nullable Void, Boolean> cr = Coroutine.first(AwaitValue.until(value, v -> v));
 
@@ -170,7 +171,7 @@ public class AwaitValueTest {
     @Test
     public void testBlockingWaitsForMatchingValue() {
         CoroutineContext context = TestCoroutineContext.newSilent();
-        ObservableValue<Boolean> value = ObservableValue.of(false);
+        MutableObservableValue<Boolean> value = MutableObservableValue.of(false);
 
         Coroutine<@Nullable Void, Boolean> cr = Coroutine.first(AwaitValue.until(value, v -> v));
 

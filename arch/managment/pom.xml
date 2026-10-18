@@ -694,6 +694,11 @@
             </dependency>
             <dependency>
                 <groupId>com.vaadin</groupId>
+                <artifactId>vaadin-avatar-flow</artifactId>
+                <version>${vaadin.flow.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.vaadin</groupId>
                 <artifactId>vaadin-card-flow</artifactId>
                 <version>${vaadin.flow.version}</version>
             </dependency>

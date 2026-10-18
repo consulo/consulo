@@ -97,6 +97,7 @@ public class HeadlessMessageList extends HeadlessComponentBase implements Messag
 
     private final List<MessageListItem> myItems = new ArrayList<>();
     private boolean myMarkdown;
+    private boolean myShowOwnAvatar;
 
     @Override
     public MessageListItem add(LocalizeValue author, String text) {
@@ -128,5 +129,15 @@ public class HeadlessMessageList extends HeadlessComponentBase implements Messag
     @Override
     public boolean isMarkdown() {
         return myMarkdown;
+    }
+
+    @Override
+    public void setShowOwnAvatar(boolean showOwnAvatar) {
+        myShowOwnAvatar = showOwnAvatar;
+    }
+
+    @Override
+    public boolean isShowOwnAvatar() {
+        return myShowOwnAvatar;
     }
 }

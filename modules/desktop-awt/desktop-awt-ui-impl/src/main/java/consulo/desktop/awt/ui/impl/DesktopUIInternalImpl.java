@@ -18,6 +18,7 @@ package consulo.desktop.awt.ui.impl;
 import com.github.weisj.jsvg.SVGDocument;
 import com.github.weisj.jsvg.geometry.size.FloatSize;
 import com.github.weisj.jsvg.parser.SVGLoader;
+import consulo.desktop.awt.ui.impl.avatar.DesktopAvatarImpl;
 import consulo.desktop.awt.ui.impl.popup.DesktopAWTLightPopupImpl;
 import consulo.ui.RadioGroup;
 import consulo.ui.graph.Graph;
@@ -192,6 +193,11 @@ public class DesktopUIInternalImpl extends UIInternal implements UIInternalEx {
     @Override
     public Card _Components_card() {
         return new DesktopCardImpl();
+    }
+
+    @Override
+    public Avatar _Components_avatar(LocalizeValue name, @Nullable Image image) {
+        return new DesktopAvatarImpl(name, image);
     }
 
     @Override

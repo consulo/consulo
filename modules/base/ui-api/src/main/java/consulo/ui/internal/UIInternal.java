@@ -222,6 +222,10 @@ public abstract class UIInternal {
         throw new UnsupportedOperationException();
     }
 
+    public Avatar _Components_avatar(LocalizeValue name, @Nullable Image image) {
+        throw new UnsupportedOperationException();
+    }
+
     public Toast _Components_toast() {
         throw new UnsupportedOperationException();
     }

@@ -30,6 +30,7 @@ module consulo.sand.language.plugin {
     requires consulo.module.ui.api;
     requires consulo.remote.server.api;
     requires consulo.repository.ui.api;
+    requires consulo.review.api;
     requires consulo.task.api;
     requires consulo.version.control.system.api;
     requires consulo.virtual.file.watcher.api;

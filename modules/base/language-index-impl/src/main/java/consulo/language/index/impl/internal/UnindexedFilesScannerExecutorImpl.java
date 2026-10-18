@@ -41,6 +41,7 @@ import consulo.project.internal.UnindexedFilesScannerExecutor;
 import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.concurrent.coroutine.CoroutineScope;
 import consulo.util.concurrent.coroutine.Mutex;
+import consulo.util.concurrent.coroutine.MutableObservableValue;
 import consulo.util.concurrent.coroutine.ObservableValue;
 import consulo.util.concurrent.coroutine.step.AwaitValue;
 import consulo.util.concurrent.coroutine.step.CallSubroutine;
@@ -79,18 +80,18 @@ public final class UnindexedFilesScannerExecutorImpl implements Disposable, Unin
     private final Project myProject;
 
     // helpers for tests
-    private final ObservableValue<@Nullable Boolean> myScanningWaitsForNonDumbModeOverride = ObservableValue.of(null);
+    private final MutableObservableValue<@Nullable Boolean> myScanningWaitsForNonDumbModeOverride = MutableObservableValue.of(null);
     private volatile @Nullable Predicate<UnindexedFilesScanner> myTaskFilter;
 
     // note that shouldShowProgressIndicator = false in UnindexedFilesScannerExecutor, so there is no suspender for the progress indicator
-    private final ObservableValue<List<LocalizeValue>> myPauseReason = ObservableValue.of(List.of());
+    private final MutableObservableValue<List<LocalizeValue>> myPauseReason = MutableObservableValue.of(List.of());
 
     // 1. Should only be SET inside WA to prevent mode change during RA.
     // 2. Will be cleared without WA to avoid deadlocks when some code waits for smart mode under modal progress
     //    (at the moment there are no real arguments for WA to clear the flag)
     // 3. You may set isRunning = true anywhere in the code (given, that it is set under WA), but never set to false.
     //    Only executor coroutine may set it to false, otherwise isRunning will be cleared in the middle of scanning task execution.
-    private final ObservableValue<Boolean> myIsRunning = ObservableValue.of(false);
+    private final MutableObservableValue<Boolean> myIsRunning = MutableObservableValue.of(false);
 
     /**
      * Modification counter that increases each time the executor starts or stops
@@ -101,9 +102,9 @@ public final class UnindexedFilesScannerExecutorImpl implements Disposable, Unin
      * <p>
      * TODO: {@link #myIsRunning} should be a shared flow without deduplication, then we wont need {@link #myStartedOrStoppedEvent}
      */
-    private final ObservableValue<Integer> myStartedOrStoppedEvent = ObservableValue.of(0);
+    private final MutableObservableValue<Integer> myStartedOrStoppedEvent = MutableObservableValue.of(0);
 
-    private final ObservableValue<Integer> myQueueChangedEvent = ObservableValue.of(0);
+    private final MutableObservableValue<Integer> myQueueChangedEvent = MutableObservableValue.of(0);
 
     private final AtomicLong myModCount = new AtomicLong();
     private final ModificationTracker myModificationTracker = new ModificationTracker() {
@@ -127,8 +128,8 @@ public final class UnindexedFilesScannerExecutorImpl implements Disposable, Unin
         }
     }
 
-    private final ObservableValue<@Nullable ScheduledScanningTask> myScanningTask = ObservableValue.of(null);
-    private final ObservableValue<Boolean> myScanningEnabled = ObservableValue.of(true);
+    private final MutableObservableValue<@Nullable ScheduledScanningTask> myScanningTask = MutableObservableValue.of(null);
+    private final MutableObservableValue<Boolean> myScanningEnabled = MutableObservableValue.of(true);
 
     private final CoroutineScope myCoroutineScope;
 

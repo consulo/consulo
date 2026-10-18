@@ -15,115 +15,47 @@
  */
 package consulo.util.concurrent.coroutine;
 
-import consulo.util.collection.Lists;
 import org.jspecify.annotations.Nullable;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.UnaryOperator;
 
 /**
- * A thread-safe holder of a single value that notifies listeners about changes. Listeners are
+ * A read-only view of a single value that notifies listeners about changes. Listeners are
  * invoked on the thread that changed the value and only see the latest value, so intermediate
  * values of rapid successive changes may be skipped.
  *
  * @author VISTALL
- * @since 2026-09-05
+ * @since 2026-10-18
+ * @see MutableObservableValue
  */
-public final class ObservableValue<T extends @Nullable Object> {
-    public static <T extends @Nullable Object> ObservableValue<T> of(T initialValue) {
-        return new ObservableValue<>(initialValue);
+public interface ObservableValue<T extends @Nullable Object> {
+    static <T extends @Nullable Object> ObservableValue<T> of(T value) {
+        return MutableObservableValue.of(value);
     }
 
-    private final AtomicReference<T> myValue;
-
-    private final List<Consumer<? super T>> myListeners = Lists.newLockFreeCopyOnWriteList();
-
-    public ObservableValue(T initialValue) {
-        myValue = new AtomicReference<>(initialValue);
+    static <A extends @Nullable Object, B extends @Nullable Object, R extends @Nullable Object> ObservableValue<R> combine(
+        ObservableValue<A> first,
+        ObservableValue<B> second,
+        BiFunction<? super A, ? super B, ? extends R> combiner
+    ) {
+        MutableObservableValue<R> combined = MutableObservableValue.of(combiner.apply(first.get(), second.get()));
+        first.addListener(value -> combined.set(combiner.apply(first.get(), second.get())));
+        second.addListener(value -> combined.set(combiner.apply(first.get(), second.get())));
+        return combined;
     }
 
-    public T get() {
-        return myValue.get();
-    }
+    T get();
 
-    public void set(T value) {
-        T previous = myValue.getAndSet(value);
-        if (!Objects.equals(previous, value)) {
-            fireChanged(value);
-        }
-    }
+    /**
+     * @return removes the listener
+     */
+    Runnable addListener(Consumer<? super T> listener);
 
-    public boolean compareAndSet(T expect, T update) {
-        if (!myValue.compareAndSet(expect, update)) {
-            return false;
-        }
-        if (!Objects.equals(expect, update)) {
-            fireChanged(update);
-        }
-        return true;
-    }
-
-    public T getAndUpdate(UnaryOperator<T> operator) {
-        T previous;
-        T next;
-        do {
-            previous = myValue.get();
-            next = operator.apply(previous);
-        }
-        while (!myValue.compareAndSet(previous, next));
-
-        if (!Objects.equals(previous, next)) {
-            fireChanged(next);
-        }
-        return previous;
-    }
-
-    public T updateAndGet(UnaryOperator<T> operator) {
-        T previous;
-        T next;
-        do {
-            previous = myValue.get();
-            next = operator.apply(previous);
-        }
-        while (!myValue.compareAndSet(previous, next));
-
-        if (!Objects.equals(previous, next)) {
-            fireChanged(next);
-        }
-        return next;
-    }
-
-    public void update(UnaryOperator<T> operator) {
-        updateAndGet(operator);
-    }
-
-    public Runnable addListener(Consumer<? super T> listener) {
-        myListeners.add(listener);
-        return () -> myListeners.remove(listener);
-    }
-
-    public int listenerCount() {
-        return myListeners.size();
-    }
-
-    public <R extends @Nullable Object> ObservableValue<R> map(Function<? super T, ? extends R> mapper) {
-        ObservableValue<R> mapped = new ObservableValue<>(mapper.apply(get()));
+    default <R extends @Nullable Object> ObservableValue<R> map(Function<? super T, ? extends R> mapper) {
+        MutableObservableValue<R> mapped = MutableObservableValue.of(mapper.apply(get()));
         addListener(value -> mapped.set(mapper.apply(get())));
         return mapped;
-    }
-
-    @Override
-    public String toString() {
-        return String.format("%s[%s]", getClass().getSimpleName(), myValue.get());
-    }
-
-    private void fireChanged(T value) {
-        for (Consumer<? super T> listener : myListeners) {
-            listener.accept(value);
-        }
     }
 }

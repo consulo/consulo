@@ -142,6 +142,12 @@ module consulo.ui.impl {
         consulo.it,
         consulo.web.ui.impl;
 
+    exports consulo.ui.impl.avatar to
+        consulo.desktop.awt.ui.impl,
+        consulo.desktop.qt.ui.impl,
+        consulo.it,
+        consulo.web.ui.impl;
+
     exports consulo.ui.impl.graph to
         consulo.desktop.awt.ui.impl,
         consulo.desktop.qt.ui.impl,

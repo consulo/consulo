@@ -15,6 +15,7 @@
  */
 package consulo.util.concurrent.coroutine.test;
 
+import consulo.util.concurrent.coroutine.MutableObservableValue;
 import consulo.util.concurrent.coroutine.ObservableValue;
 import org.junit.jupiter.api.Test;
 
@@ -24,15 +25,15 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Test of {@link ObservableValue}.
+ * Test of {@link MutableObservableValue}.
  *
  * @author VISTALL
  * @since 2026-09-05
  */
-public class ObservableValueTest {
+public class MutableObservableValueTest {
     @Test
     public void testSetAndGet() {
-        ObservableValue<String> value = ObservableValue.of("a");
+        MutableObservableValue<String> value = MutableObservableValue.of("a");
 
         assertEquals("a", value.get());
 
@@ -45,7 +46,7 @@ public class ObservableValueTest {
     public void testCompareAndSet() {
         Object first = new Object();
         Object second = new Object();
-        ObservableValue<Object> value = ObservableValue.of(first);
+        MutableObservableValue<Object> value = MutableObservableValue.of(first);
 
         assertFalse(value.compareAndSet(second, first));
         assertSame(first, value.get());
@@ -56,7 +57,7 @@ public class ObservableValueTest {
 
     @Test
     public void testGetAndUpdate() {
-        ObservableValue<Integer> value = ObservableValue.of(1);
+        MutableObservableValue<Integer> value = MutableObservableValue.of(1);
 
         assertEquals(Integer.valueOf(1), value.getAndUpdate(i -> i + 1));
         assertEquals(Integer.valueOf(2), value.get());
@@ -70,7 +71,7 @@ public class ObservableValueTest {
 
     @Test
     public void testListenersReceiveEveryDistinctValue() {
-        ObservableValue<Integer> value = ObservableValue.of(0);
+        MutableObservableValue<Integer> value = MutableObservableValue.of(0);
         List<Integer> seen = new ArrayList<>();
 
         value.addListener(seen::add);
@@ -88,7 +89,7 @@ public class ObservableValueTest {
 
     @Test
     public void testRemovedListenerIsNotNotified() {
-        ObservableValue<String> value = ObservableValue.of("a");
+        MutableObservableValue<String> value = MutableObservableValue.of("a");
         List<String> seen = new ArrayList<>();
 
         Runnable removal = value.addListener(seen::add);
@@ -103,7 +104,7 @@ public class ObservableValueTest {
 
     @Test
     public void testMapTracksSource() {
-        ObservableValue<List<String>> source = ObservableValue.of(List.of("a", "b"));
+        MutableObservableValue<List<String>> source = MutableObservableValue.of(List.of("a", "b"));
         ObservableValue<Integer> size = source.map(List::size);
         List<Integer> seen = new ArrayList<>();
 

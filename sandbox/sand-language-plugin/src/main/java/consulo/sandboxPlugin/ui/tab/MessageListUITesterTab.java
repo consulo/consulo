@@ -15,11 +15,11 @@
  */
 package consulo.sandboxPlugin.ui.tab;
 
-import consulo.ai.icon.AIIconGroup;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.Button;
 import consulo.ui.CheckBox;
 import consulo.ui.Component;
@@ -91,7 +91,7 @@ public class MessageListUITesterTab implements UITesterTab {
         MessageInput input = MessageInput.create();
         input.setPlaceholder(LocalizeValue.localizeTODO("Write a message"));
         input.setSendText(LocalizeValue.localizeTODO("Send"));
-        input.setSendIcon(AIIconGroup.chatSend());
+        input.setSendIcon(PlatformIconGroup.actionsSend());
 
         UIAccess uiAccess = UIAccess.current();
         input.addSubmitListener(event -> {

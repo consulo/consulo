@@ -23,6 +23,7 @@ import consulo.application.progress.ProgressManager;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.concurrent.coroutine.Mutex;
+import consulo.util.concurrent.coroutine.MutableObservableValue;
 import consulo.util.concurrent.coroutine.ObservableValue;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
@@ -46,7 +47,7 @@ public final class PerProjectIndexingQueue {
         // Files that will be re-indexed
         private final Set<VirtualFile> myRequestsSoFar = ConcurrentHashMap.newKeySet();
 
-        private final ObservableValue<Integer> myEstimatedFilesCount = ObservableValue.of(0);
+        private final MutableObservableValue<Integer> myEstimatedFilesCount = MutableObservableValue.of(0);
 
         // Ids of scannings from which [filesSoFar] came
         private final Set<Long> myScanningIdsSoFar = createSetForScanningIds();
@@ -115,10 +116,10 @@ public final class PerProjectIndexingQueue {
 
     private final Project myProject;
 
-    private final ObservableValue<QueuedFiles> myQueuedFiles = ObservableValue.of(new QueuedFiles());
+    private final MutableObservableValue<QueuedFiles> myQueuedFiles = MutableObservableValue.of(new QueuedFiles());
     private final ReadWriteLock myQueuedFilesLock = new ReentrantReadWriteLock();
 
-    private final ObservableValue<Integer> myEstimatedFilesCount = ObservableValue.of(0);
+    private final MutableObservableValue<Integer> myEstimatedFilesCount = MutableObservableValue.of(0);
     private @Nullable Runnable myEstimatedFilesCountSubscription;
 
     private volatile boolean myAllowFlushing = true;

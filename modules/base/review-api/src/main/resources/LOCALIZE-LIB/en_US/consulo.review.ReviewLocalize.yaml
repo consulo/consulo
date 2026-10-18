@@ -1,0 +1,6 @@
+review.diff.discussions.view.option.all:
+    text: All
+review.diff.discussions.view.option.do.not.show:
+    text: Do Not Show
+review.diff.discussions.view.option.unresolved.only:
+    text: Unresolved Only

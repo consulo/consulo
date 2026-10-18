@@ -542,6 +542,11 @@ public class HeadlessUIInternal extends UIInternal implements UIInternalEx {
     }
 
     @Override
+    public Avatar _Components_avatar(LocalizeValue name, @Nullable Image image) {
+        return new HeadlessAvatar(name, image);
+    }
+
+    @Override
     public Toast _Components_toast() {
         return new HeadlessToast();
     }

@@ -18,25 +18,22 @@ package consulo.desktop.qt.ui.impl.messageList;
 import consulo.desktop.qt.ui.impl.DesktopQtSpace;
 import consulo.desktop.qt.ui.impl.DesktopQtStyleApplier;
 import consulo.desktop.qt.ui.impl.QtComponentDelegate;
+import consulo.desktop.qt.ui.impl.avatar.DesktopQtAvatarPainter;
 import consulo.desktop.qt.ui.impl.base.DesktopQtWrappingLabel;
-import consulo.desktop.qt.ui.impl.image.DesktopQtImage;
 import consulo.localize.LocalizeValue;
+import consulo.ui.AvatarStyle;
 import consulo.ui.Space;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
+import consulo.ui.impl.avatar.AvatarPresentation;
 import consulo.ui.impl.messageList.MessageListPresentation;
 import consulo.ui.messageList.MessageList;
 import consulo.ui.messageList.MessageListItem;
 import consulo.ui.messageList.MessageListItemStyle;
 import consulo.ui.style.ComponentColors;
-import consulo.ui.style.StyleManager;
-import io.qt.core.QRectF;
 import io.qt.core.Qt;
 import io.qt.gui.QColor;
-import io.qt.gui.QFont;
-import io.qt.gui.QPainter;
 import io.qt.gui.QPalette;
-import io.qt.gui.QPixmap;
 import io.qt.gui.QTextDocument;
 import io.qt.widgets.QFrame;
 import io.qt.widgets.QHBoxLayout;
@@ -56,7 +53,7 @@ import java.util.List;
  * @since 2026-10-13
  */
 public class DesktopQtMessageListImpl extends QtComponentDelegate<QScrollArea> implements MessageList {
-    private static final int AVATAR_SIZE = 28;
+    private static final int AVATAR_SIZE = AvatarPresentation.sizeOf(AvatarStyle.SMALL);
     private static final int PINNED_DISTANCE = 24;
 
     private class Item implements MessageListItem {
@@ -119,8 +116,8 @@ public class DesktopQtMessageListImpl extends QtComponentDelegate<QScrollArea> i
                 return;
             }
             Image image = myAuthorImage;
-            avatar.setPixmap(avatarPixmap(myAuthor.get(), image, avatar.devicePixelRatioF(), avatar.palette()));
-            avatar.setVisible(MessageListPresentation.showsAvatar(myStyle));
+            avatar.setPixmap(DesktopQtAvatarPainter.paint(myAuthor.get(), image, AVATAR_SIZE, avatar.devicePixelRatioF(), avatar.palette()));
+            avatar.setVisible(MessageListPresentation.showsAvatar(myStyle, myShowOwnAvatar));
         }
 
         void updateHeader() {
@@ -137,7 +134,7 @@ public class DesktopQtMessageListImpl extends QtComponentDelegate<QScrollArea> i
         void updateBody() {
             QLabel avatar = myAvatar;
             if (avatar != null) {
-                avatar.setVisible(MessageListPresentation.showsAvatar(myStyle));
+                avatar.setVisible(MessageListPresentation.showsAvatar(myStyle, myShowOwnAvatar));
             }
             QLabel body = myBody;
             if (body == null) {
@@ -237,6 +234,7 @@ public class DesktopQtMessageListImpl extends QtComponentDelegate<QScrollArea> i
     }
 
     private boolean myMarkdown;
+    private boolean myShowOwnAvatar;
     private boolean myPinned = true;
 
     private @Nullable QWidget myContainer;
@@ -283,49 +281,6 @@ public class DesktopQtMessageListImpl extends QtComponentDelegate<QScrollArea> i
         }
         item.build(container);
         layout.insertWidget(layout.count() - 1, item.myRow);
-    }
-
-    private static QPixmap avatarPixmap(String name, @Nullable Image image, double ratio, QPalette palette) {
-        int pixels = (int) Math.ceil(AVATAR_SIZE * ratio);
-        QPixmap pixmap = new QPixmap(pixels, pixels);
-        pixmap.setDevicePixelRatio(ratio);
-        pixmap.fill(new QColor(Qt.GlobalColor.transparent));
-
-        boolean dark = StyleManager.get().getCurrentStyle().isDark();
-        QColor initialsColor = QColor.fromHsvF(
-            MessageListPresentation.hueOf(name),
-            MessageListPresentation.saturation(dark),
-            MessageListPresentation.brightness(dark)
-        );
-        QColor background = DesktopQtStyleApplier.themeColor(ComponentColors.COMPONENT_BACKGROUND, palette.color(QPalette.ColorRole.Base));
-        QColor border = DesktopQtStyleApplier.themeColor(ComponentColors.BORDER, palette.color(QPalette.ColorRole.Mid));
-
-        QPainter painter = new QPainter(pixmap);
-        try {
-            painter.setRenderHint(QPainter.RenderHint.Antialiasing, true);
-            painter.setPen(border);
-            painter.setBrush(background);
-            QRectF rect = new QRectF(0.5, 0.5, AVATAR_SIZE - 1, AVATAR_SIZE - 1);
-            painter.drawEllipse(rect);
-
-            if (image != null) {
-                QPixmap icon = DesktopQtImage.toQPixmap(image);
-                double width = icon.width() / icon.devicePixelRatio();
-                double height = icon.height() / icon.devicePixelRatio();
-                painter.drawPixmap(new QRectF((AVATAR_SIZE - width) / 2, (AVATAR_SIZE - height) / 2, width, height), icon, new QRectF(0, 0, icon.width(), icon.height()));
-            }
-            else {
-                QFont font = painter.font();
-                font.setPixelSize((int) (AVATAR_SIZE * 0.42));
-                painter.setFont(font);
-                painter.setPen(initialsColor);
-                painter.drawText(rect, Qt.AlignmentFlag.AlignCenter.value(), MessageListPresentation.initialsOf(name));
-            }
-        }
-        finally {
-            painter.end();
-        }
-        return pixmap;
     }
 
     private static String escape(String text) {
@@ -386,5 +341,22 @@ public class DesktopQtMessageListImpl extends QtComponentDelegate<QScrollArea> i
     @Override
     public boolean isMarkdown() {
         return myMarkdown;
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setShowOwnAvatar(boolean showOwnAvatar) {
+        if (myShowOwnAvatar == showOwnAvatar) {
+            return;
+        }
+        myShowOwnAvatar = showOwnAvatar;
+        for (Item item : myItems) {
+            item.updateBody();
+        }
+    }
+
+    @Override
+    public boolean isShowOwnAvatar() {
+        return myShowOwnAvatar;
     }
 }

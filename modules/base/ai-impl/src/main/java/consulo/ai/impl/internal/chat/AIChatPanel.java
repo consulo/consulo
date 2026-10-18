@@ -25,7 +25,6 @@ import consulo.ai.AIResponse;
 import consulo.ai.AIStreamListener;
 import consulo.ai.AIToolPermissionDecision;
 import consulo.ai.AIToolPermissionRequest;
-import consulo.ai.icon.AIIconGroup;
 import consulo.ai.localize.AILocalize;
 import consulo.disposer.Disposable;
 import consulo.fileChooser.FileChooser;
@@ -122,7 +121,7 @@ public class AIChatPanel implements Disposable {
 
         myInput.setPlaceholder(AILocalize.labelPromptPlaceholder());
         myInput.setSendText(AILocalize.buttonSend());
-        myInput.setSendIcon(AIIconGroup.chatSend());
+        myInput.setSendIcon(PlatformIconGroup.actionsSend());
         myInput.addSubmitListener(event -> send(event.getValue()));
 
         myRoot.center(myMessages);

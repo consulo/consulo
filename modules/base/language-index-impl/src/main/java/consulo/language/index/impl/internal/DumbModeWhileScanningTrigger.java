@@ -28,6 +28,7 @@ import consulo.project.impl.internal.DumbServiceImpl;
 import consulo.project.internal.UnindexedFilesScannerExecutor;
 import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.concurrent.coroutine.CoroutineScope;
+import consulo.util.concurrent.coroutine.MutableObservableValue;
 import consulo.util.concurrent.coroutine.ObservableValue;
 import consulo.util.concurrent.coroutine.step.AwaitValue;
 import consulo.util.concurrent.coroutine.step.CallSubroutine;
@@ -56,7 +57,7 @@ public final class DumbModeWhileScanningTrigger implements Disposable {
 
     private final Project myProject;
     private final CoroutineScope myCoroutineScope;
-    private final ObservableValue<Boolean> myDumbModeForScanningIsActive = ObservableValue.of(false);
+    private final MutableObservableValue<Boolean> myDumbModeForScanningIsActive = MutableObservableValue.of(false);
 
     @Inject
     public DumbModeWhileScanningTrigger(Project project) {

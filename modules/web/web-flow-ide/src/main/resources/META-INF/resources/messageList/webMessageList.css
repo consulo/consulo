@@ -8,7 +8,7 @@ vaadin-message[theme~="consulo-system"] :not(vaadin-avatar) {
     color: var(--consulo-message-system-foreground);
 }
 
-vaadin-message[theme~="consulo-own"] > [slot="avatar"],
+vaadin-message-list:not(.consulo-show-own-avatar) vaadin-message[theme~="consulo-own"] > [slot="avatar"],
 vaadin-message[theme~="consulo-system"] > [slot="avatar"] {
     display: none;
 }

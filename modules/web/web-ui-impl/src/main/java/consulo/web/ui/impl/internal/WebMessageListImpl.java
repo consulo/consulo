@@ -24,7 +24,7 @@ import consulo.ui.messageList.MessageListItemStyle;
 import consulo.ui.style.ComponentColors;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
-import consulo.ui.impl.messageList.MessageListPresentation;
+import consulo.ui.impl.avatar.AvatarPresentation;
 import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
 import consulo.web.ui.impl.internal.base.VaadinComponentDelegate;
 import consulo.web.ui.impl.internal.image.WebImageUrl;
@@ -58,8 +58,8 @@ public class WebMessageListImpl extends VaadinComponentDelegate<WebMessageListIm
             myAuthor = author;
             String name = author.get();
             myVaadinItem = new com.vaadin.flow.component.messages.MessageListItem(text, null, name);
-            myVaadinItem.setUserColorIndex(Math.floorMod(name.hashCode(), COLOR_COUNT));
-            myVaadinItem.setUserAbbreviation(MessageListPresentation.initialsOf(name));
+            myVaadinItem.setUserColorIndex(AvatarPresentation.colorIndexOf(name));
+            myVaadinItem.setUserAbbreviation(AvatarPresentation.initialsOf(name));
             if (name.isEmpty()) {
                 myVaadinItem.addThemeNames("consulo-anonymous");
             }
@@ -125,8 +125,6 @@ public class WebMessageListImpl extends VaadinComponentDelegate<WebMessageListIm
         }
     }
 
-    private static final int COLOR_COUNT = 7;
-
     private final List<Item> myItems = new ArrayList<>();
 
     public WebMessageListImpl() {
@@ -191,5 +189,16 @@ public class WebMessageListImpl extends VaadinComponentDelegate<WebMessageListIm
     @Override
     public boolean isMarkdown() {
         return toVaadinComponent().isMarkdown();
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setShowOwnAvatar(boolean showOwnAvatar) {
+        toVaadinComponent().setClassName("consulo-show-own-avatar", showOwnAvatar);
+    }
+
+    @Override
+    public boolean isShowOwnAvatar() {
+        return toVaadinComponent().hasClassName("consulo-show-own-avatar");
     }
 }

@@ -24,6 +24,7 @@ import consulo.project.DumbModeTask;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.ModalityState;
+import consulo.util.concurrent.coroutine.MutableObservableValue;
 import consulo.util.concurrent.coroutine.ObservableValue;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -43,7 +44,7 @@ public class LightDumbService extends DumbService implements ModificationTracker
     private long modificationTracker;
 
     private final Project myProject;
-    private final ObservableValue<DumbState> myState = ObservableValue.of(SMART);
+    private final MutableObservableValue<DumbState> myState = MutableObservableValue.of(SMART);
 
     @Inject
     public LightDumbService(Project project) {

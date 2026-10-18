@@ -16,9 +16,11 @@
 package consulo.desktop.awt.ui.impl.messageList;
 
 import consulo.desktop.awt.ui.impl.DesktopSpace;
+import consulo.desktop.awt.ui.impl.avatar.AvatarComponent;
 import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 import consulo.desktop.awt.ui.impl.facade.FromSwingComponentWrapper;
 import consulo.localize.LocalizeValue;
+import consulo.ui.AvatarStyle;
 import consulo.ui.Component;
 import consulo.ui.Space;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -118,7 +120,7 @@ public class DesktopMessageListImpl extends SwingComponentDelegate<JBScrollPane>
     private class Item implements MessageListItem {
         private final LocalizeValue myAuthor;
         private final JPanel myPanel = new JPanel(new BorderLayout(DesktopSpace.toPixels(Space.MEDIUM), 0));
-        private final MessageListAvatar myAvatar = new MessageListAvatar();
+        private final AvatarComponent myAvatar = new AvatarComponent(AvatarStyle.SMALL);
         private final JPanel myAvatarBox = new JPanel(new BorderLayout());
         private final JBLabel myHeader = new JBLabel();
         private final MessageBody myBody = new MessageBody();
@@ -151,7 +153,7 @@ public class DesktopMessageListImpl extends SwingComponentDelegate<JBScrollPane>
 
         private void updateHeader() {
             String name = myAuthor.get();
-            myAvatar.setAuthorName(name);
+            myAvatar.setAvatarName(name);
             String time = MessageListPresentation.formatTime(myTime);
             String timePart = time == null
                 ? ""
@@ -160,7 +162,7 @@ public class DesktopMessageListImpl extends SwingComponentDelegate<JBScrollPane>
         }
 
         private void updateBody() {
-            myAvatarBox.setVisible(MessageListPresentation.showsAvatar(myStyle));
+            myAvatarBox.setVisible(MessageListPresentation.showsAvatar(myStyle, myShowOwnAvatar));
             myBody.setForeground(switch (myStyle) {
                 case ERROR -> TargetAWT.to(ComponentColors.ERROR_FOREGROUND);
                 case SYSTEM -> UIUtil.getContextHelpForeground();
@@ -216,7 +218,7 @@ public class DesktopMessageListImpl extends SwingComponentDelegate<JBScrollPane>
         @Override
         public void setAuthorImage(@Nullable Image image) {
             myAuthorImage = image;
-            myAvatar.setIcon(image == null ? null : TargetAWT.to(image));
+            myAvatar.setImage(image);
         }
 
         @Override
@@ -235,6 +237,7 @@ public class DesktopMessageListImpl extends SwingComponentDelegate<JBScrollPane>
     private final ListPanel myListPanel = new ListPanel();
     private final List<Item> myItems = new ArrayList<>();
     private boolean myMarkdown;
+    private boolean myShowOwnAvatar;
 
     @Override
     protected JBScrollPane createComponent() {
@@ -310,5 +313,22 @@ public class DesktopMessageListImpl extends SwingComponentDelegate<JBScrollPane>
     @Override
     public boolean isMarkdown() {
         return myMarkdown;
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setShowOwnAvatar(boolean showOwnAvatar) {
+        if (myShowOwnAvatar == showOwnAvatar) {
+            return;
+        }
+        myShowOwnAvatar = showOwnAvatar;
+        for (Item item : myItems) {
+            item.updateBody();
+        }
+    }
+
+    @Override
+    public boolean isShowOwnAvatar() {
+        return myShowOwnAvatar;
     }
 }

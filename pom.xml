@@ -209,6 +209,7 @@
     <module>modules/base/http-adapter/httpclient4-adapter</module>
     <module>modules/base/http-impl</module>
     <module>modules/base/repository-ui-api</module>
+    <module>modules/base/review-api</module>
     <module>modules/base/language-spellchecker-api</module>
     <module>modules/base/language-spellchecker-editor-api</module>
     <module>modules/base/language-spellchecker-impl</module>

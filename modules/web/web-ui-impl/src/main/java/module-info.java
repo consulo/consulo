@@ -42,6 +42,7 @@ module consulo.web.ui.impl {
     requires flow.html.components;
     requires flow.server;
     requires vaadin.button.flow;
+    requires vaadin.avatar.flow;
     requires vaadin.card.flow;
     requires vaadin.messages.flow;
     requires vaadin.checkbox.flow;

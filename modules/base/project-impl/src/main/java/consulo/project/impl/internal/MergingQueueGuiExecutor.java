@@ -15,6 +15,7 @@ import consulo.project.Project;
 import consulo.project.impl.internal.MergingTaskQueue.QueuedTask;
 import consulo.project.impl.internal.MergingTaskQueue.SubmissionReceipt;
 import consulo.project.impl.internal.SingleTaskExecutor.AutoclosableProgressive;
+import consulo.util.concurrent.coroutine.MutableObservableValue;
 import consulo.util.concurrent.coroutine.ObservableValue;
 import org.jspecify.annotations.Nullable;
 
@@ -98,7 +99,7 @@ public class MergingQueueGuiExecutor<T extends MergeableQueueTask<T>> {
     private final LocalizeValue myProgressTitle;
     private final LocalizeValue mySuspendedText;
     private final AtomicInteger myBackgroundTasksSubmitted = new AtomicInteger(0);
-    private final ObservableValue<Integer> myScheduledTasks = ObservableValue.of(0);
+    private final MutableObservableValue<Integer> myScheduledTasks = MutableObservableValue.of(0);
     private final ExecutorService mySchedulingExecutor;
 
     protected MergingQueueGuiExecutor(

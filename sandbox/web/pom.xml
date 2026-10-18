@@ -356,6 +356,11 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-review-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>consulo-ai-impl</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -667,6 +672,10 @@
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-tabs-flow</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-avatar-flow</artifactId>
         </dependency>
         <dependency>
             <groupId>com.vaadin</groupId>

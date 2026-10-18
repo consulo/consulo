@@ -58,6 +58,7 @@ import consulo.util.concurrent.coroutine.Continuation;
 import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.concurrent.coroutine.CoroutineScope;
 import consulo.util.concurrent.coroutine.CoroutineStep;
+import consulo.util.concurrent.coroutine.MutableObservableValue;
 import consulo.util.concurrent.coroutine.ObservableValue;
 import consulo.util.concurrent.coroutine.step.CodeExecution;
 import jakarta.inject.Inject;
@@ -90,7 +91,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
     private static final Logger LOG = Logger.getInstance(DumbServiceImpl.class);
     private static final FrequentErrorLogger ourErrorLogger = FrequentErrorLogger.newInstance(LOG);
 
-    private final ObservableValue<DumbState> myState;
+    private final MutableObservableValue<DumbState> myState;
 
     private final AtomicBoolean myInitialDumbTaskRequiredForSmartModeSubmitted = new AtomicBoolean(false);
 
@@ -185,8 +186,8 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
 
     private volatile @Nullable Thread myWaitIntolerantThread;
 
-    private final ObservableValue<Integer> myPendingTasks = ObservableValue.of(0);
-    private final ObservableValue<Integer> myPendingPublications = ObservableValue.of(0);
+    private final MutableObservableValue<Integer> myPendingTasks = MutableObservableValue.of(0);
+    private final MutableObservableValue<Integer> myPendingPublications = MutableObservableValue.of(0);
     private final List<CompletableFuture<?>> myIdleFutures = Lists.newLockFreeCopyOnWriteList();
     private final AtomicLong myIdleTransitions = new AtomicLong();
     private final Object myIdleMonitorLock = new Object();
@@ -247,7 +248,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
     public DumbServiceImpl(Application application, Project project, ApplicationConcurrency concurrency) {
         myApplication = application;
         myProject = project;
-        myState = ObservableValue.<DumbState>of(new DumbStateImpl(!project.isDefault(), 0L, 0));
+        myState = MutableObservableValue.<DumbState>of(new DumbStateImpl(!project.isDefault(), 0L, 0));
         myPublisher = project.getMessageBus().syncPublisher(DumbModeListener.class);
         myPublisherBackgroundable = project.getMessageBus().syncPublisher(DumbModeListenerBackgroundable.class);
 
