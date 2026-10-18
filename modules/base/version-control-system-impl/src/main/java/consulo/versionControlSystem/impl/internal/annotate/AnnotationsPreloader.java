@@ -8,6 +8,7 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.PowerSaveMode;
+import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.event.FileEditorManagerEvent;
 import consulo.fileEditor.event.FileEditorManagerListener;
@@ -23,13 +24,19 @@ import consulo.versionControlSystem.annotate.VcsCacheManager;
 import consulo.versionControlSystem.annotate.VcsCacheableAnnotationProvider;
 import consulo.versionControlSystem.impl.internal.codeVision.VcsCodeVisionProvider;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ui.ex.awt.util.MergingUpdateQueue;
-import consulo.ui.ex.awt.util.Update;
 import consulo.logging.Logger;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusManager;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import org.jspecify.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Preloads VCS annotations in the background for the currently open file, so that
@@ -43,13 +50,13 @@ import jakarta.inject.Singleton;
 public class AnnotationsPreloader {
   private static final Logger LOG = Logger.getInstance(AnnotationsPreloader.class);
 
-  private final MergingUpdateQueue myUpdateQueue;
+  private final Set<VirtualFile> myPendingFiles = new LinkedHashSet<>();
+  private @Nullable Future<?> myFlushFuture;
   private final Project myProject;
 
   @Inject
   public AnnotationsPreloader(Project project) {
     myProject = project;
-    myUpdateQueue = new MergingUpdateQueue("Annotations preloader queue", 1000, true, null, project, null, false);
 
     project.getMessageBus().connect(project).subscribe(FileEditorManagerListener.class, new FileEditorManagerListener() {
       @Override
@@ -74,38 +81,57 @@ public class AnnotationsPreloader {
   public void schedulePreloading(final VirtualFile file) {
     if (myProject.isDisposed() || file.getFileType().isBinary()) return;
 
-    myUpdateQueue.queue(new Update(file) {
-      @Override
-      public void run() {
-        try {
-          long start = 0;
-          if (LOG.isDebugEnabled()) {
-            start = System.currentTimeMillis();
-          }
-          if (!FileEditorManager.getInstance(myProject).isFileOpen(file)) return;
-
-          CacheableAnnotationProvider annotationProvider = getAnnotationProvider(myProject, file);
-          if (annotationProvider == null) return;
-
-          // JB approach: delegate populateCache() to the CacheableAnnotationProvider.
-          // For VCS plugins that implement CacheableAnnotationProvider directly (e.g. future git).
-          annotationProvider.populateCache(file);
-
-          if (LOG.isDebugEnabled()) {
-            LOG.debug("Preloaded VCS annotations for ", file.getName(), " in ",
-                      String.valueOf(System.currentTimeMillis() - start), "ms");
-          }
-
-          Application.get().invokeLater(() -> {
-            if (myProject.isDisposed()) return;
-            DaemonCodeAnalyzer.getInstance(myProject).restart();
-          });
-        }
-        catch (VcsException e) {
-          LOG.info(e);
-        }
+    synchronized (myPendingFiles) {
+      myPendingFiles.add(file);
+      Future<?> future = myFlushFuture;
+      if (future == null || future.isDone()) {
+        myFlushFuture = AppExecutorUtil.getAppScheduledExecutorService().schedule(this::flush, 1000, TimeUnit.MILLISECONDS);
       }
-    });
+    }
+  }
+
+  private void flush() {
+    List<VirtualFile> files;
+    synchronized (myPendingFiles) {
+      files = new ArrayList<>(myPendingFiles);
+      myPendingFiles.clear();
+    }
+    for (VirtualFile file : files) {
+      if (myProject.isDisposed()) {
+        return;
+      }
+      preload(file);
+    }
+  }
+
+  private void preload(VirtualFile file) {
+    try {
+      long start = 0;
+      if (LOG.isDebugEnabled()) {
+        start = System.currentTimeMillis();
+      }
+      if (!FileEditorManager.getInstance(myProject).isFileOpen(file)) return;
+
+      CacheableAnnotationProvider annotationProvider = getAnnotationProvider(myProject, file);
+      if (annotationProvider == null) return;
+
+      // JB approach: delegate populateCache() to the CacheableAnnotationProvider.
+      // For VCS plugins that implement CacheableAnnotationProvider directly (e.g. future git).
+      annotationProvider.populateCache(file);
+
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("Preloaded VCS annotations for ", file.getName(), " in ",
+                  String.valueOf(System.currentTimeMillis() - start), "ms");
+      }
+
+      Application.get().invokeLater(() -> {
+        if (myProject.isDisposed()) return;
+        DaemonCodeAnalyzer.getInstance(myProject).restart();
+      });
+    }
+    catch (VcsException e) {
+      LOG.info(e);
+    }
   }
 
   /**

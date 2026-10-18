@@ -36,6 +36,10 @@ bugzilla.failure.malformed.response:
     text: Cannot decode server response. Check that XML-RPC plugin is enabled.
 bugzilla.failure.no.version:
     text: Cannot find Bugzilla version. Check that URL ends with "xmlrpc.cgi".
+changelist.track.context.checkbox:
+    text: _Track context
+changelist.track.context.tooltip:
+    text: Reload context (e.g. open editors) when changelist is set active
 command.name.load.context:
     text: Load Context {0}
 create.new.task.0:

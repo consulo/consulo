@@ -15,6 +15,7 @@
  */
 package consulo.versionControlSystem.impl.internal.change;
 
+import consulo.versionControlSystem.change.ChangesViewManager;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
 import consulo.localize.LocalizeValue;
@@ -69,7 +70,7 @@ public class Waiter extends Task.Modal {
         // Be careful with changes here as "Waiter.onSuccess()" is explicitly invoked from "FictiveBackgroundable"
         if (!myProject.isDisposed()) {
             myRunnable.run();
-            ChangesViewManagerImpl.getInstance((Project) myProject).scheduleRefresh();
+            ChangesViewManager.getInstance((Project) myProject).scheduleRefresh();
         }
     }
 

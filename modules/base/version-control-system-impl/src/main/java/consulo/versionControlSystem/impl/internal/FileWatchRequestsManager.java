@@ -2,13 +2,18 @@
 package consulo.versionControlSystem.impl.internal;
 
 import consulo.application.ApplicationManager;
+import consulo.application.util.concurrent.AppExecutorUtil;
+import consulo.disposer.Disposer;
 import consulo.project.Project;
-import consulo.ui.ex.awt.util.Alarm;
 import consulo.virtualFileSystem.LocalFileSystem;
+import org.jspecify.annotations.Nullable;
+
+import java.util.concurrent.Future;
 
 public class FileWatchRequestsManager {
   private final FileWatchRequestModifier myModifier;
-  private final Alarm myAlarm;
+  private @Nullable Future<?> myFuture;
+  private volatile boolean myDisposed;
 
   public FileWatchRequestsManager(Project project, NewMappings newMappings) {
     this(project, newMappings, LocalFileSystem.getInstance());
@@ -16,16 +21,28 @@ public class FileWatchRequestsManager {
 
   public FileWatchRequestsManager(Project project, NewMappings newMappings, LocalFileSystem localFileSystem) {
     myModifier = new FileWatchRequestModifier(project, newMappings, localFileSystem);
-    myAlarm = new Alarm(Alarm.ThreadToUse.POOLED_THREAD, newMappings);
+    Disposer.register(newMappings, () -> {
+      myDisposed = true;
+      cancel();
+    });
   }
 
   public void ping() {
-    if (myAlarm.isDisposed() || ApplicationManager.getApplication().isUnitTestMode()) {
+    if (myDisposed || ApplicationManager.getApplication().isUnitTestMode()) {
       myModifier.run();
     }
     else {
-      myAlarm.cancelAllRequests();
-      myAlarm.addRequest(myModifier, 0);
+      synchronized (this) {
+        cancel();
+        myFuture = AppExecutorUtil.getAppExecutorService().submit(myModifier);
+      }
+    }
+  }
+
+  private synchronized void cancel() {
+    Future<?> future = myFuture;
+    if (future != null) {
+      future.cancel(false);
     }
   }
 }

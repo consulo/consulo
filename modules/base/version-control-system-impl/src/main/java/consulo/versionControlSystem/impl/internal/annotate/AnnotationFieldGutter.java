@@ -18,6 +18,8 @@ package consulo.versionControlSystem.impl.internal.annotate;
 import consulo.codeEditor.Editor;
 import consulo.colorScheme.EditorColorKey;
 import consulo.colorScheme.EditorFontType;
+import consulo.ui.cursor.Cursor;
+import consulo.ui.cursor.StandardCursors;
 import consulo.versionControlSystem.impl.internal.annotate.ColorMode;
 import consulo.versionControlSystem.impl.internal.annotate.ShowAnnotationColorsAction;
 import consulo.versionControlSystem.internal.ActiveAnnotationGutter;
@@ -31,7 +33,6 @@ import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.versionControlSystem.util.VcsUtil;
 import org.jspecify.annotations.Nullable;
 
-import java.awt.*;
 import java.util.List;
 import java.util.Map;
 
@@ -72,7 +73,7 @@ public abstract class AnnotationFieldGutter implements ActiveAnnotationGutter {
 
     @Override
     public Cursor getCursor(int line) {
-        return Cursor.getDefaultCursor();
+        return StandardCursors.ARROW;
     }
 
     @Override

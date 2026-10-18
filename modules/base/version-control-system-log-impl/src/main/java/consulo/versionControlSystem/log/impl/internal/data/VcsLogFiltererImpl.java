@@ -22,7 +22,6 @@ import consulo.application.progress.Task;
 import consulo.component.ProcessCanceledException;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Lists;
 import consulo.util.lang.Pair;
@@ -76,7 +75,7 @@ public class VcsLogFiltererImpl implements VcsLogFilterer {
     }) {
       @Override
       protected void startNewBackgroundTask() {
-        UIUtil.invokeLaterIfNeeded(() -> {
+        runInEdt(project.getDisposed(), () -> {
           MyTask task = new MyTask(project, "Applying filters…");
           ProgressManager.getInstance().runProcessWithProgressAsynchronously(task, myLogData.getProgress().createProgressIndicator());
         });

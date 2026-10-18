@@ -22,11 +22,9 @@ import consulo.versionControlSystem.VcsProviderMarker;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
-
 public interface VcsHistoryProvider extends VcsProviderMarker {
 
-  VcsDependentHistoryComponents getUICustomization(VcsHistorySession session, JComponent forShortcutRegistration);
+  VcsDependentHistoryComponents getUICustomization(VcsHistorySession session);
 
   AnAction[] getAdditionalActions(Runnable refresher);
 

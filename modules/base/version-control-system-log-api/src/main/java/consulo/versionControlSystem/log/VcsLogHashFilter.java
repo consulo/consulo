@@ -15,10 +15,19 @@
  */
 package consulo.versionControlSystem.log;
 
+import consulo.versionControlSystem.log.util.VcsLogUtil;
+
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 public interface VcsLogHashFilter {
 
-  
   Collection<String> getHashes();
+
+  /**
+   * Text presentation of the filter, used for example in the title of a log tab.
+   */
+  default String getDisplayText() {
+    return getHashes().stream().map(VcsLogUtil::getShortHash).collect(Collectors.joining(", "));
+  }
 }

@@ -15,7 +15,9 @@
  */
 package consulo.versionControlSystem.log.impl.internal.ui;
 
-import consulo.ui.ex.JBColor;
+import consulo.ui.color.ColorValue;
+import consulo.ui.color.RGBColor;
+import consulo.ui.util.LightDarkColorValue;
 import consulo.util.lang.function.Predicates;
 import consulo.versionControlSystem.log.*;
 import consulo.versionControlSystem.log.impl.internal.data.VcsLogDataImpl;
@@ -23,13 +25,12 @@ import consulo.versionControlSystem.log.util.VcsLogUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
-import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Predicate;
 
 public class CurrentBranchHighlighter implements VcsLogHighlighter {
-    private static final JBColor CURRENT_BRANCH_BG = new JBColor(new Color(228, 250, 255), new Color(63, 71, 73));
+    private static final ColorValue CURRENT_BRANCH_BG = new LightDarkColorValue(new RGBColor(228, 250, 255), new RGBColor(63, 71, 73));
     private static final String HEAD = "HEAD";
     
     private final VcsLogData myLogData;

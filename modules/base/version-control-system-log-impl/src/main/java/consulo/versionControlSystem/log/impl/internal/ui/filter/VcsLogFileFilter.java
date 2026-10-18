@@ -36,4 +36,15 @@ import org.jspecify.annotations.Nullable;
   public @Nullable VcsLogRootFilter getRootFilter() {
     return myRootFilter;
   }
+
+  @Override
+  public String getDisplayText() {
+    if (myStructureFilter != null && myRootFilter != null) {
+      return myRootFilter.getDisplayText() + " " + myStructureFilter.getDisplayText();
+    }
+    if (myStructureFilter != null) {
+      return myStructureFilter.getDisplayText();
+    }
+    return myRootFilter != null ? myRootFilter.getDisplayText() : "";
+  }
 }

@@ -1,9 +1,10 @@
 package consulo.versionControlSystem.log.impl.internal.graph;
 
-import consulo.ui.ex.JBColor;
+import consulo.ui.color.ColorValue;
+import consulo.ui.color.RGBColor;
+import consulo.ui.style.ComponentColors;
 import consulo.versionControlSystem.log.ColorGenerator;
 
-import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,16 +12,16 @@ import java.util.Map;
  * @author erokhins
  */
 public class DefaultColorGenerator implements ColorGenerator {
-  private static final Map<Integer, JBColor> ourColorMap = new HashMap<>();
+  private static final Map<Integer, ColorValue> ourColorMap = new HashMap<>();
 
   static {
-    ourColorMap.put(GraphColorManagerImpl.DEFAULT_COLOR, JBColor.BLACK);
+    ourColorMap.put(GraphColorManagerImpl.DEFAULT_COLOR, ComponentColors.TEXT_FOREGROUND);
   }
 
   
   @Override
-  public JBColor getColor(int branchNumber) {
-    JBColor color = ourColorMap.get(branchNumber);
+  public ColorValue getColor(int branchNumber) {
+    ColorValue color = ourColorMap.get(branchNumber);
     if (color == null) {
       color = calcColor(branchNumber);
       ourColorMap.put(branchNumber, color);
@@ -33,13 +34,12 @@ public class DefaultColorGenerator implements ColorGenerator {
   }
 
   
-  private static JBColor calcColor(int indexColor) {
+  private static ColorValue calcColor(int indexColor) {
     int r = indexColor * 200 + 30;
     int g = indexColor * 130 + 50;
     int b = indexColor * 90 + 100;
     try {
-      Color color = new Color(rangeFix(r), rangeFix(g), rangeFix(b));
-      return new JBColor(color, color);
+      return new RGBColor(rangeFix(r), rangeFix(g), rangeFix(b));
     }
     catch (IllegalArgumentException a) {
       throw new IllegalArgumentException("indexColor: " + indexColor + " " + r % 256 + " " + (g % 256) + " " + (b % 256));

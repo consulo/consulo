@@ -37,9 +37,9 @@ import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
-import java.awt.*;
 import java.text.MessageFormat;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.*;
 import java.util.function.Function;
 
@@ -118,53 +118,6 @@ public abstract class AbstractVcsHelper {
     public void showChangesListBrowser(CommittedChangeList changelist, @Nullable VirtualFile toSelect, String title) {
         showChangesListBrowser(changelist, title);
     }
-
-    public abstract void showChangesBrowser(List<CommittedChangeList> changelists);
-
-    public void showChangesBrowser(List<CommittedChangeList> changelists, LocalizeValue title) {
-        showChangesBrowser(changelists, title.get());
-    }
-
-    @Deprecated
-    @DeprecationInfo("Use variant with LocalizeValue")
-    public void showChangesBrowser(List<CommittedChangeList> changelists, String title) {
-        showChangesBrowser(changelists, LocalizeValue.ofNullable(title));
-    }
-
-    public void showChangesBrowser(
-        CommittedChangesProvider provider,
-        RepositoryLocation location,
-        LocalizeValue title,
-        @Nullable Component parent
-    ) {
-        showChangesBrowser(provider, location, title.get(), parent);
-    }
-
-    @Deprecated
-    @DeprecationInfo("Use variant with LocalizeValue")
-    public void showChangesBrowser(
-        CommittedChangesProvider provider,
-        RepositoryLocation location,
-        String title,
-        @Nullable Component parent
-    ) {
-        showChangesBrowser(provider, location, LocalizeValue.ofNullable(title), parent);
-    }
-
-    public void showWhatDiffersBrowser(@Nullable Component parent, Collection<Change> changes, LocalizeValue title) {
-        showWhatDiffersBrowser(parent, changes, title.get());
-    }
-
-    @Deprecated
-    @DeprecationInfo("Use variant with LocalizeValue")
-    public void showWhatDiffersBrowser(@Nullable Component parent, Collection<Change> changes, String title) {
-        showWhatDiffersBrowser(parent, changes, LocalizeValue.ofNullable(title));
-    }
-
-    public abstract @Nullable <T extends CommittedChangeList, U extends ChangeBrowserSettings> T chooseCommittedChangeList(
-        CommittedChangesProvider<T, U> provider,
-        RepositoryLocation location
-    );
 
     public void openCommittedChangesTab(
         AbstractVcs vcs,
@@ -396,7 +349,7 @@ public abstract class AbstractVcsHelper {
     }
 
     @RequiredUIAccess
-    public boolean commitChanges(
+    public CompletableFuture<Boolean> commitChanges(
         Project project,
         List<Change> changes,
         LocalChangeList initialSelection,
@@ -420,7 +373,7 @@ public abstract class AbstractVcsHelper {
     }
 
     @RequiredUIAccess
-    public abstract boolean commitChanges(
+    public abstract CompletableFuture<Boolean> commitChanges(
         Project project,
         List<Change> changes,
         LocalChangeList initialSelection,
@@ -434,12 +387,14 @@ public abstract class AbstractVcsHelper {
 
     /**
      * <p>Shows commit dialog, fills it with the given changes and given commit message, initially selects the given changelist.</p>
-     * <p>Note that the method is asynchronous: it returns right after user presses "Commit" or "Cancel" and after all pre-commit handlers
-     * have been called. It doesn't wait for commit itself to succeed or fail - for this use the {@code customResultHandler}.</p>
+     * <p>Note that the method is asynchronous: the result completes right after user presses "Commit" or "Cancel" and after all
+     * pre-commit handlers have been called. It doesn't wait for commit itself to succeed or fail - for this use the
+     * {@code customResultHandler}.</p>
      *
-     * @return true if user decides to commit the changes, false if user presses Cancel.
+     * @return completes with true if user decides to commit the changes, false if user presses Cancel.
      */
-    public abstract boolean commitChanges(
+    @RequiredUIAccess
+    public abstract CompletableFuture<Boolean> commitChanges(
         Collection<Change> changes,
         LocalChangeList initialChangeList,
         String commitMessage,

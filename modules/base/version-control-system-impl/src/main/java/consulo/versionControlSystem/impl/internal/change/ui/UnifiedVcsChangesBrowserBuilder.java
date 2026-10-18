@@ -34,6 +34,7 @@ public class UnifiedVcsChangesBrowserBuilder implements VcsChangesBrowserBuilder
     private final Project myProject;
     private final List<AnAction> myToolbarActions = new ArrayList<>();
     private LocalizeValue myEmptyText = LocalizeValue.empty();
+    private boolean myWithRollback;
 
     public UnifiedVcsChangesBrowserBuilder(Project project) {
         myProject = project;
@@ -51,9 +52,15 @@ public class UnifiedVcsChangesBrowserBuilder implements VcsChangesBrowserBuilder
         return this;
     }
 
+    @Override
+    public VcsChangesBrowserBuilder withRollback() {
+        myWithRollback = true;
+        return this;
+    }
+
     @RequiredUIAccess
     @Override
     public VcsChangesBrowser build(Disposable parentDisposable) {
-        return new UnifiedVcsChangesBrowser(myProject, myEmptyText, List.copyOf(myToolbarActions), parentDisposable);
+        return new UnifiedVcsChangesBrowser(myProject, myEmptyText, List.copyOf(myToolbarActions), myWithRollback, parentDisposable);
     }
 }

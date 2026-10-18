@@ -39,9 +39,10 @@ import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangeList;
+import consulo.versionControlSystem.change.ChangeListDecorator;
 import consulo.versionControlSystem.change.ChangesUtil;
+import consulo.versionControlSystem.change.LocalChangeList;
 import consulo.versionControlSystem.change.LocallyDeletedChange;
-import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesListViewImpl;
 import consulo.versionControlSystem.internal.ChangesListView;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.util.VcsUtil;
@@ -57,8 +58,10 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * @author VISTALL
@@ -112,6 +115,8 @@ public final class UnifiedChangesTree {
     private boolean mySyncingChecks;
     private boolean myAutoIncludeDefaultList = true;
     private @Nullable Consumer<ChangesTreeItem> myDoubleClickHandler;
+    private @Nullable BiConsumer<Change, TextItemPresentation> myChangeDecorator;
+    private Predicate<Change> myIncludableFilter = change -> true;
 
     @RequiredUIAccess
     public UnifiedChangesTree(Project project, boolean checkable, Disposable parent) {
@@ -141,6 +146,20 @@ public final class UnifiedChangesTree {
 
     public void setDoubleClickHandler(@Nullable Consumer<ChangesTreeItem> handler) {
         myDoubleClickHandler = handler;
+    }
+
+    /**
+     * Appends to the presentation of every change, after its name.
+     */
+    public void setChangeDecorator(@Nullable BiConsumer<Change, TextItemPresentation> changeDecorator) {
+        myChangeDecorator = changeDecorator;
+    }
+
+    /**
+     * Changes the filter rejects get no check box and are never included. Takes effect with the next snapshot.
+     */
+    public void setIncludableFilter(Predicate<Change> includableFilter) {
+        myIncludableFilter = includableFilter;
     }
 
     public void setAutoIncludeDefaultList(boolean autoIncludeDefaultList) {
@@ -188,12 +207,19 @@ public final class UnifiedChangesTree {
         return item instanceof FilePath path ? path : null;
     }
 
+    private @Nullable FilePath includableKey(ChangesTreeItem item) {
+        if (item instanceof ChangeTreeItem changeItem && !myIncludableFilter.test(changeItem.change())) {
+            return null;
+        }
+        return inclusionKey(item);
+    }
+
     private boolean isCheckable(ChangesTreeItem item) {
-        if (inclusionKey(item) != null) {
+        if (includableKey(item) != null) {
             return true;
         }
         for (ChangesTreeItem leaf : mySnapshot.collectLeaves(item)) {
-            if (inclusionKey(leaf) != null) {
+            if (includableKey(leaf) != null) {
                 return true;
             }
         }
@@ -203,7 +229,7 @@ public final class UnifiedChangesTree {
     private boolean isIncluded(ChangesTreeItem item) {
         boolean any = false;
         for (ChangesTreeItem leaf : mySnapshot.collectLeaves(item)) {
-            FilePath key = inclusionKey(leaf);
+            FilePath key = includableKey(leaf);
             if (key == null) {
                 continue;
             }
@@ -218,7 +244,7 @@ public final class UnifiedChangesTree {
     @RequiredUIAccess
     private void setIncluded(ChangesTreeItem item, boolean included) {
         for (ChangesTreeItem leaf : mySnapshot.collectLeaves(item)) {
-            FilePath key = inclusionKey(leaf);
+            FilePath key = includableKey(leaf);
             if (key == null) {
                 continue;
             }
@@ -236,7 +262,9 @@ public final class UnifiedChangesTree {
     @RequiredUIAccess
     public void includeChanges(Collection<Change> changes) {
         for (Change change : changes) {
-            myIncludedKeys.add(ChangesUtil.getFilePath(change));
+            if (myIncludableFilter.test(change)) {
+                myIncludedKeys.add(ChangesUtil.getFilePath(change));
+            }
         }
         syncChecks();
         fireInclusionChanged();
@@ -298,7 +326,7 @@ public final class UnifiedChangesTree {
         for (ChangesTreeItem root : snapshot.getRoots()) {
             boolean defaultList = root instanceof ChangeListTreeItem changeList && changeList.isDefault();
             for (ChangesTreeItem leaf : snapshot.collectLeaves(root)) {
-                FilePath key = inclusionKey(leaf);
+                FilePath key = includableKey(leaf);
                 if (key == null) {
                     continue;
                 }
@@ -562,26 +590,26 @@ public final class UnifiedChangesTree {
         sink.lazy(Navigatable.KEY_OF_ARRAY, () -> ChangesUtil.getNavigatableArray(myProject, selectedFiles.stream()));
 
         sink.set(ChangesListView.UNVERSIONED_FILES_DATA_KEY, getSelectedFiles(ChangesTreeGroupKind.UNVERSIONED));
-        sink.set(ChangesListViewImpl.IGNORED_FILES_DATA_KEY, getSelectedFiles(ChangesTreeGroupKind.IGNORED));
+        sink.set(ChangesListView.IGNORED_FILES_DATA_KEY, getSelectedFiles(ChangesTreeGroupKind.IGNORED));
 
         List<VirtualFile> modifiedWithoutEditing = getSelectedFiles(ChangesTreeGroupKind.MODIFIED_WITHOUT_EDITING);
         sink.set(VcsDataKeys.MODIFIED_WITHOUT_EDITING_DATA_KEY, modifiedWithoutEditing);
         sink.set(VcsDataKeys.HAVE_MODIFIED_WITHOUT_EDITING, !modifiedWithoutEditing.isEmpty());
 
         List<LocallyDeletedChange> locallyDeleted = getSelectedLocallyDeleted();
-        sink.set(ChangesListViewImpl.LOCALLY_DELETED_CHANGES, locallyDeleted);
+        sink.set(ChangesListView.LOCALLY_DELETED_CHANGES, locallyDeleted);
         List<FilePath> missingFiles = locallyDeleted.stream().map(LocallyDeletedChange::getPath).toList();
-        sink.set(ChangesListViewImpl.MISSING_FILES_DATA_KEY, missingFiles);
+        sink.set(ChangesListView.MISSING_FILES_DATA_KEY, missingFiles);
         sink.set(VcsDataKeys.HAVE_LOCALLY_DELETED, !missingFiles.isEmpty());
 
-        sink.set(HelpManager.HELP_ID, ChangesListViewImpl.HELP_ID);
+        sink.set(HelpManager.HELP_ID, ChangesListView.HELP_ID);
 
         if (!selectedItems.isEmpty() && selectedItems.get(0) instanceof ChangeListTreeItem changeListItem) {
             sink.set(VcsDataKeys.CHANGES_IN_LIST_KEY, List.copyOf(changeListItem.changeList().getChanges()));
         }
     }
 
-    private static void render(ChangesTreeSnapshot snapshot, ChangesTreeItem item, TextItemPresentation presentation) {
+    private void render(ChangesTreeSnapshot snapshot, ChangesTreeItem item, TextItemPresentation presentation) {
         switch (item) {
             case ChangeListTreeItem changeList -> {
                 presentation.append(
@@ -589,6 +617,10 @@ public final class UnifiedChangesTree {
                     changeList.isDefault() ? TextAttribute.REGULAR_BOLD : TextAttribute.REGULAR
                 );
                 appendCount(snapshot, item, presentation);
+                if (changeList.changeList() instanceof LocalChangeList localChangeList) {
+                    myProject.getExtensionPoint(ChangeListDecorator.class)
+                        .forEach(decorator -> decorator.decorateChangeList(localChangeList, presentation, false, false, false));
+                }
             }
             case FileGroupTreeItem group -> {
                 presentation.append(group.kind().getTitle());
@@ -602,6 +634,10 @@ public final class UnifiedChangesTree {
             case ChangeTreeItem change -> {
                 FilePath path = ChangesUtil.getFilePath(change.change());
                 renderFile(snapshot, presentation, path, change.change().getFileStatus(), path.getFileType().getIcon());
+                BiConsumer<Change, TextItemPresentation> decorator = myChangeDecorator;
+                if (decorator != null) {
+                    decorator.accept(change.change(), presentation);
+                }
             }
             case FileTreeItem file -> {
                 FilePath path = VcsUtil.getFilePath(file.file());

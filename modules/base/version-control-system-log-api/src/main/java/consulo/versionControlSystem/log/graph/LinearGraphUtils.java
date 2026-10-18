@@ -18,7 +18,8 @@ package consulo.versionControlSystem.log.graph;
 import consulo.util.collection.ContainerUtil;
 import org.jspecify.annotations.Nullable;
 
-import java.awt.*;
+import consulo.ui.cursor.Cursor;
+import consulo.ui.cursor.StandardCursors;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -26,7 +27,7 @@ import java.util.Set;
 
 public class LinearGraphUtils {
   public static final LinearGraphController.LinearGraphAnswer DEFAULT_GRAPH_ANSWER =
-    new LinearGraphController.LinearGraphAnswer(Cursor.getDefaultCursor(), null);
+    new LinearGraphController.LinearGraphAnswer(StandardCursors.ARROW, null);
 
   public static boolean intEqual(@Nullable Integer value, int number) {
     return value != null && value == number;
@@ -107,10 +108,10 @@ public class LinearGraphUtils {
   
   public static Cursor getCursor(boolean hand) {
     if (hand) {
-      return Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
+      return StandardCursors.HAND;
     }
     else {
-      return Cursor.getDefaultCursor();
+      return StandardCursors.ARROW;
     }
   }
 

@@ -26,7 +26,6 @@ import consulo.versionControlSystem.change.ChangesUtil;
 import consulo.versionControlSystem.checkin.CheckinProjectPanel;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.swing.*;
 import java.io.File;
 import java.util.Collection;
 import java.util.LinkedHashSet;
@@ -46,16 +45,6 @@ public class UnifiedCommitProjectPanelAdapter implements CheckinProjectPanel {
         myProject = project;
         myUi = ui;
         myCommitActionName = commitActionName;
-    }
-
-    @Override
-    public JComponent getComponent() {
-        return null;
-    }
-
-    @Override
-    public JComponent getPreferredFocusedComponent() {
-        return null;
     }
 
     @Override

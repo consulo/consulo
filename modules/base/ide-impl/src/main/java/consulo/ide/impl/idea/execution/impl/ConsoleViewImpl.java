@@ -55,6 +55,7 @@ import consulo.project.event.DumbModeListener;
 import consulo.project.internal.StartupManagerEx;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.OccurenceNavigator;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.*;
@@ -1328,6 +1329,16 @@ public class ConsoleViewImpl extends JPanel
         //ensure editor created
         getComponent();
         return myEditor.getContentComponent();
+    }
+
+    @Override
+    public consulo.ui.Component getUIComponent() {
+        return TargetAWT.wrap(getComponent());
+    }
+
+    @Override
+    public consulo.ui.Component getUIPreferredFocusableComponent() {
+        return TargetAWT.wrap(getPreferredFocusableComponent());
     }
 
     // navigate up/down in stack trace

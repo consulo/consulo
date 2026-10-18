@@ -24,7 +24,7 @@ import consulo.versionControlSystem.log.graph.PermanentGraph;
 import consulo.versionControlSystem.log.impl.internal.data.MainVcsLogUiProperties;
 import consulo.versionControlSystem.log.impl.internal.data.VcsLogUiProperties;
 import consulo.versionControlSystem.log.impl.internal.ui.VcsLogInternalDataKeys;
-import consulo.versionControlSystem.log.impl.internal.ui.VcsLogUiImpl;
+import consulo.versionControlSystem.log.impl.internal.ui.AbstractVcsLogUi;
 import consulo.versionControlSystem.log.util.VcsLogUtil;
 
 abstract class CollapseOrExpandGraphAction extends LegacyDumbAwareAction {
@@ -56,7 +56,7 @@ abstract class CollapseOrExpandGraphAction extends LegacyDumbAwareAction {
         VcsLogUtil.triggerUsage(e);
 
         VcsLogUi ui = e.getRequiredData(VcsLogUi.KEY);
-        executeAction((VcsLogUiImpl) ui);
+        executeAction((AbstractVcsLogUi) ui);
     }
 
     @Override
@@ -78,5 +78,5 @@ abstract class CollapseOrExpandGraphAction extends LegacyDumbAwareAction {
         }
     }
 
-    protected abstract void executeAction(VcsLogUiImpl vcsLogUi);
+    protected abstract void executeAction(AbstractVcsLogUi vcsLogUi);
 }

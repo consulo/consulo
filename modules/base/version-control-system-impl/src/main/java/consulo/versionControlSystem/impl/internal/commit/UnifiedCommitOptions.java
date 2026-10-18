@@ -170,16 +170,6 @@ public class UnifiedCommitOptions {
             return false;
         }
 
-        try {
-            if (option.getClass().getMethod("getUIComponent").getDeclaringClass() == RefreshableOnComponent.class) {
-                LOG.warn("Commit option " + option.getClass().getName() + " has no unified component, skipped");
-                return false;
-            }
-        }
-        catch (NoSuchMethodException e) {
-            return false;
-        }
-
         option.restoreState();
         Component component = option.getUIComponent();
         if (component == null) {

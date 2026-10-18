@@ -27,7 +27,7 @@ import consulo.versionControlSystem.log.VcsLogUi;
 import consulo.versionControlSystem.log.impl.internal.VcsLogManager;
 import consulo.versionControlSystem.log.impl.internal.data.VcsLogFilterer;
 import consulo.versionControlSystem.log.impl.internal.ui.VcsLogInternalDataKeys;
-import consulo.versionControlSystem.log.impl.internal.ui.VcsLogUiImpl;
+import consulo.versionControlSystem.log.impl.internal.ui.AbstractVcsLogUi;
 import consulo.versionControlSystem.log.localize.VersionControlSystemLogLocalize;
 import consulo.versionControlSystem.log.util.VcsLogUtil;
 
@@ -52,7 +52,7 @@ public class RefreshLogAction extends RefreshAction {
 
         // diagnostic for possible refresh problems
         VcsLogUi ui = e.getRequiredData(VcsLogUi.KEY);
-        if (ui instanceof VcsLogUiImpl vcsLogUi) {
+        if (ui instanceof AbstractVcsLogUi vcsLogUi) {
             VcsLogFilterer filterer = vcsLogUi.getFilterer();
             if (!filterer.isValid()) {
                 String message = "Trying to refresh invalid log tab.";

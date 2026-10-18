@@ -18,7 +18,7 @@ package consulo.versionControlSystem.log.base;
 import consulo.versionControlSystem.log.RefGroup;
 import consulo.versionControlSystem.log.VcsRef;
 
-import java.awt.*;
+import consulo.ui.color.ColorValue;
 import java.util.Collections;
 import java.util.List;
 
@@ -52,7 +52,7 @@ public class SingletonRefGroup implements RefGroup {
 
     
     @Override
-    public List<Color> getColors() {
+    public List<ColorValue> getColors() {
         return Collections.singletonList(myRef.getType().getBackgroundColor());
     }
 }

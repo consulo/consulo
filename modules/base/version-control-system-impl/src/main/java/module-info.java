@@ -19,6 +19,7 @@ module consulo.version.control.system.impl {
     requires consulo.language.editor.api;
     requires consulo.language.editor.impl;
     requires consulo.language.editor.ui.api;
+    requires consulo.ui.ex.impl;
 
     exports consulo.versionControlSystem.impl.internal to
         consulo.desktop.awt.editor.impl,
@@ -31,16 +32,15 @@ module consulo.version.control.system.impl {
         consulo.desktop.awt.ide.impl,
         consulo.desktop.awt.ui.impl,
         consulo.ide.impl;
-    exports consulo.versionControlSystem.impl.internal.ui.awt to
-        consulo.ide.impl,
-        consulo.local.history.impl;
     exports consulo.versionControlSystem.impl.internal.change.ui.awt to
         consulo.desktop.awt.editor.impl,
         consulo.desktop.awt.ide.impl,
         consulo.desktop.awt.ui.impl,
         consulo.ide.impl,
         consulo.local.history.impl;
-    exports consulo.versionControlSystem.impl.internal.change.ui to consulo.ide.impl;
+    exports consulo.versionControlSystem.impl.internal.change.ui to
+        consulo.ide.impl,
+        consulo.local.history.impl;
     exports consulo.versionControlSystem.impl.internal.change.commited to consulo.ide.impl;
     exports consulo.versionControlSystem.impl.internal.update to consulo.ide.impl;
     exports consulo.versionControlSystem.impl.internal.commit to consulo.ide.impl;
@@ -54,7 +54,8 @@ module consulo.version.control.system.impl {
         consulo.ide.impl,
         consulo.desktop.awt.editor.impl,
         consulo.desktop.awt.ide.impl,
-        consulo.desktop.awt.ui.impl;
+        consulo.desktop.awt.ui.impl,
+        consulo.local.history.impl;
     exports consulo.versionControlSystem.impl.internal.change.shelf to
         consulo.desktop.awt.editor.impl,
         consulo.desktop.awt.ide.impl,
@@ -100,6 +101,7 @@ module consulo.version.control.system.impl {
         consulo.ui.ex.awt.api;
     opens consulo.versionControlSystem.impl.internal.change to consulo.util.xml.serializer;
     opens consulo.versionControlSystem.impl.internal.change.ui to consulo.util.xml.serializer;
+    opens consulo.versionControlSystem.impl.internal.change.shelf to consulo.util.xml.serializer;
     opens consulo.versionControlSystem.impl.internal.action to consulo.component.impl;
     opens consulo.versionControlSystem.impl.internal.checkout to consulo.component.impl;
     opens consulo.versionControlSystem.impl.internal.change.patch to consulo.component.impl;

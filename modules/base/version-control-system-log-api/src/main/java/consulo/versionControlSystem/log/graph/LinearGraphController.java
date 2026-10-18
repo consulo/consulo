@@ -18,7 +18,7 @@ package consulo.versionControlSystem.log.graph;
 import consulo.versionControlSystem.log.graph.action.GraphAction;
 import org.jspecify.annotations.Nullable;
 
-import java.awt.*;
+import consulo.ui.cursor.Cursor;
 import java.util.Set;
 
 public interface LinearGraphController {

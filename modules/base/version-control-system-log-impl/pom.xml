@@ -45,10 +45,6 @@
             <artifactId>guava</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.miglayout</groupId>
-            <artifactId>miglayout</artifactId>
-        </dependency>
-        <dependency>
             <!--obsolete dependency-->
             <groupId>consulo.internal</groupId>
             <artifactId>trove4j</artifactId>

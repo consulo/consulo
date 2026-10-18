@@ -23,20 +23,24 @@ import consulo.application.CachesInvalidator;
 import consulo.component.messagebus.MessageBus;
 import consulo.disposer.Disposer;
 import consulo.project.Project;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
+import consulo.versionControlSystem.VcsInitObject;
+import consulo.versionControlSystem.internal.ProjectLevelVcsManagerEx;
+import consulo.versionControlSystem.log.VcsLogFilterCollection;
 import consulo.versionControlSystem.log.impl.internal.data.VcsLogDataImpl;
 import consulo.versionControlSystem.log.impl.internal.data.VcsLogTabsProperties;
-import consulo.versionControlSystem.log.impl.internal.ui.VcsLogPanel;
-import consulo.versionControlSystem.log.impl.internal.ui.VcsLogUiImpl;
+import consulo.versionControlSystem.log.impl.internal.ui.AbstractVcsLogUi;
 import consulo.versionControlSystem.root.VcsRoot;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import javax.swing.*;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.function.Consumer;
 
 @Singleton
 @ServiceAPI(ComponentScope.PROJECT)
@@ -51,7 +55,8 @@ public class VcsProjectLog {
 
     
     private final LazyVcsLogManager myLogManager = new LazyVcsLogManager();
-    private volatile VcsLogUiImpl myUi;
+    private volatile AbstractVcsLogUi myUi;
+    private @Nullable VcsLogTabsManager myTabsManager;
 
     @Inject
     public VcsProjectLog(Project project, VcsLogTabsProperties uiProperties) {
@@ -74,15 +79,18 @@ public class VcsProjectLog {
     }
 
     
-    public JComponent initMainLog(String contentTabName) {
-        myUi = myLogManager.getValue().createLogUi(VcsLogTabsProperties.MAIN_LOG_ID, contentTabName, null);
-        return new VcsLogPanel(myLogManager.getValue(), myUi);
+    @RequiredUIAccess
+    public Component initMainLog(String contentTabName) {
+        VcsLogManager logManager = myLogManager.getValue();
+        AbstractVcsLogUi ui = logManager.createLogUi(VcsLogTabsProperties.MAIN_LOG_ID, contentTabName, null);
+        myUi = ui;
+        return ui.createPanel(logManager);
     }
 
     /**
-     * The instance of the {@link VcsLogUiImpl} or null if the log was not initialized yet.
+     * The instance of the {@link AbstractVcsLogUi} or null if the log was not initialized yet.
      */
-    public @Nullable VcsLogUiImpl getMainLogUi() {
+    public @Nullable AbstractVcsLogUi getMainLogUi() {
         return myUi;
     }
 
@@ -109,6 +117,10 @@ public class VcsProjectLog {
     @RequiredUIAccess
     public void createLog() {
         VcsLogManager logManager = myLogManager.getValue();
+        VcsLogTabsManager tabsManager = myTabsManager;
+        if (tabsManager != null) {
+            tabsManager.createTabs();
+        }
 
         if (logManager.isLogVisible()) {
             logManager.scheduleInitialization();
@@ -120,6 +132,55 @@ public class VcsProjectLog {
                 HeavyAwareExecutor.executeOutOfHeavyProcessLater(logManager::scheduleInitialization, 5000);
             }
         }
+    }
+
+    /**
+     * Runs the action once the VCS mappings are initialized and the log exists.
+     */
+    @RequiredUIAccess
+    public void runWhenLogIsReady(Consumer<VcsLogManager> action) {
+        VcsLogManager logManager = getLogManager();
+        if (logManager != null) {
+            action.accept(logManager);
+            return;
+        }
+
+        ProjectLevelVcsManagerEx.getInstanceEx(myProject).addInitializationRequest(
+            VcsInitObject.AFTER_COMMON,
+            () -> myProject.getUIAccess().give(() -> {
+                if (myProject.isDisposed()) {
+                    return;
+                }
+
+                VcsLogManager manager = getLogManager();
+                if (manager == null && hasDvcsRoots()) {
+                    createLog();
+                    manager = getLogManager();
+                }
+                if (manager != null) {
+                    action.accept(manager);
+                }
+            })
+        );
+    }
+
+    @RequiredUIAccess
+    public @Nullable AbstractVcsLogUi openLogTab(VcsLogFilterCollection filters, VcsLogTabLocation location) {
+        myLogManager.getValue();
+        VcsLogTabsManager tabsManager = myTabsManager;
+        return tabsManager == null ? null : tabsManager.openAnotherLogTab(filters, location);
+    }
+
+    @RequiredUIAccess
+    public void toolWindowShown(ToolWindow toolWindow) {
+        VcsLogTabsManager tabsManager = myTabsManager;
+        if (tabsManager != null) {
+            tabsManager.toolWindowShown(toolWindow);
+        }
+    }
+
+    public @Nullable VcsLogTabsManager getTabsManager() {
+        return myTabsManager;
     }
 
     protected boolean hasDvcsRoots() {
@@ -137,7 +198,11 @@ public class VcsProjectLog {
         @RequiredUIAccess
         public synchronized VcsLogManager getValue() {
             if (myValue == null) {
-                myValue = compute();
+                VcsLogManager value = compute();
+                myValue = value;
+                VcsLogTabsManager tabsManager = new VcsLogTabsManager(myProject, myUiProperties, value);
+                Disposer.register(value, tabsManager);
+                myTabsManager = tabsManager;
                 myMessageBus.syncPublisher(ProjectLogListener.class).logCreated();
             }
             return myValue;
@@ -152,6 +217,11 @@ public class VcsProjectLog {
         @RequiredUIAccess
         public synchronized void drop() {
             if (myValue != null) {
+                VcsLogTabsManager tabsManager = myTabsManager;
+                myTabsManager = null;
+                if (tabsManager != null) {
+                    Disposer.dispose(tabsManager);
+                }
                 myMessageBus.syncPublisher(ProjectLogListener.class).logDisposed();
                 Disposer.dispose(myValue);
             }

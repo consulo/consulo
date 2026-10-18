@@ -24,7 +24,7 @@ import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.util.ActionUtil;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.change.Change;
-import consulo.versionControlSystem.change.ChangesBrowser;
+import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesBrowser;
 import consulo.versionControlSystem.impl.internal.change.ui.awt.RollbackChangesDialog;
 import consulo.versionControlSystem.impl.internal.util.RollbackUtil;
 

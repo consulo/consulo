@@ -49,6 +49,11 @@ public class VcsToolWindowFactory implements ToolWindowFactory, DumbAware {
     }
 
     @Override
+    public boolean canCloseContents() {
+        return true;
+    }
+
+    @Override
     public boolean shouldBeAvailable(Project project) {
         if (project.getInstanceIfCreated(ChangesViewContentI.class) instanceof UnifiedChangesViewContentManager manager) {
             return manager.isToolWindowAvailable();

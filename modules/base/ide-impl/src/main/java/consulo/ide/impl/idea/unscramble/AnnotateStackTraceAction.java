@@ -27,6 +27,8 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
+import consulo.ui.cursor.Cursor;
+import consulo.ui.cursor.StandardCursors;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.LegacyDumbAwareAction;
@@ -45,7 +47,6 @@ import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
-import java.awt.*;
 import java.util.List;
 import java.util.*;
 
@@ -308,7 +309,7 @@ public class AnnotateStackTraceAction extends LegacyDumbAwareAction {
 
         @Override
         public Cursor getCursor(int lineNum) {
-            return myRevisions.containsKey(lineNum) ? Cursor.getPredefinedCursor(Cursor.HAND_CURSOR) : Cursor.getDefaultCursor();
+            return myRevisions.containsKey(lineNum) ? StandardCursors.HAND : StandardCursors.ARROW;
         }
 
         @Override

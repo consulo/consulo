@@ -131,7 +131,9 @@ public class MultipleFileMergeDialog extends DialogWrapper {
         });
         if (myProvider instanceof MergeProvider2 mergeProvider2) {
             myMergeSession = mergeProvider2.createMergeSession(files);
-            Collections.addAll(columns, myMergeSession.getMergeInfoColumns());
+            for (MergeInfoColumn column : myMergeSession.getMergeInfoColumns()) {
+                columns.add(new MergeInfoColumnInfo(column));
+            }
         }
         else {
             myMergeSession = null;

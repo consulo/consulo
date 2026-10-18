@@ -17,10 +17,10 @@ package consulo.versionControlSystem.virtualFileSystem;
 
 import consulo.application.Application;
 import consulo.component.ProcessCanceledException;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.ui.MessageBoxes;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.Messages;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.io.CharsetToolkit;
 import consulo.versionControlSystem.VcsException;
@@ -113,11 +113,8 @@ public class VcsVirtualFile extends AbstractVcsVirtualFile {
             myContent = ArrayUtil.EMPTY_BYTE_ARRAY;
             setRevision("0");
 
-            Messages.showMessageDialog(
-                VcsLocalize.messageTextCouldNotLoadVirtualFileContent(getPresentableUrl(), e.getLocalizedMessage()).get(),
-                VcsLocalize.messageTitleCouldNotLoadContent().get(),
-                UIUtil.getInformationIcon()
-            );
+            LocalizeValue message = VcsLocalize.messageTextCouldNotLoadVirtualFileContent(getPresentableUrl(), e.getLocalizedMessage());
+            Application.get().invokeLater(() -> MessageBoxes.okInfo(message).title(VcsLocalize.messageTitleCouldNotLoadContent()).showAsync());
 
             Application.get().runWriteAction(new Runnable() {
                 @Override

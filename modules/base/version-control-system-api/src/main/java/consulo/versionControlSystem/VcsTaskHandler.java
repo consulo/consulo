@@ -18,10 +18,12 @@ package consulo.versionControlSystem;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.Comparing;
-
 import org.jspecify.annotations.Nullable;
+
 import java.util.Collection;
+import java.util.concurrent.CompletableFuture;
 
 @ExtensionAPI(ComponentScope.PROJECT)
 public abstract class VcsTaskHandler {
@@ -89,7 +91,8 @@ public abstract class VcsTaskHandler {
 
   public abstract boolean isEnabled();
 
-  public abstract TaskInfo startNewTask(String taskName);
+  @RequiredUIAccess
+  public abstract CompletableFuture<TaskInfo> startNewTask(String taskName);
 
   public abstract void switchToTask(TaskInfo taskInfo, @Nullable Runnable invokeAfter);
 

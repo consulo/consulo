@@ -552,3 +552,34 @@ vaadin-select.consulo-select-with-suffix::part(toggle-button) {
 vaadin-select > .consulo-select-suffix {
     order: 1;
 }
+
+.web-table .web-table-cell:has(.web-image-fill-cell) {
+    padding-top: 0;
+    padding-bottom: 0;
+    align-items: stretch;
+}
+
+.web-table .web-table-cell:has(.web-image-fill-cell) > span {
+    align-self: stretch;
+}
+
+.web-icon:has(> .web-image-fill-cell) {
+    display: flex;
+    align-items: center;
+    align-self: stretch;
+    height: 100%;
+}
+
+.web-image-fill-cell {
+    position: relative;
+    align-self: stretch;
+    flex: none;
+    height: auto;
+}
+
+.web-image-fill-cell > svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+}

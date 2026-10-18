@@ -36,6 +36,7 @@ import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.project.Project;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.WindowManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
@@ -63,7 +64,10 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.Callable;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class DvcsUtil {
     private static final Logger LOG = Logger.getInstance(DvcsUtil.class);
@@ -88,6 +92,13 @@ public class DvcsUtil {
         }
         return o1.getPresentableUrl().compareTo(o2.getPresentableUrl());
     };
+
+    /**
+     * Shows a box from a background thread and waits for its answer. Never call it on the UI thread.
+     */
+    public static <T extends @Nullable Object> T showAndWait(Project project, @RequiredUIAccess Supplier<CompletableFuture<T>> box) {
+        return project.getUIAccess().giveAsync(box).thenCompose(Function.identity()).join();
+    }
 
     public static List<VirtualFile> sortVirtualFilesByPresentation(Collection<VirtualFile> virtualFiles) {
         return ContainerUtil.sorted(virtualFiles, VIRTUAL_FILE_PRESENTATION_COMPARATOR);

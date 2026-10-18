@@ -66,10 +66,6 @@ public class ChangesListViewImpl extends Tree implements ChangesListView, UiData
     private boolean myShowFlatten = false;
     private final CopyProvider myCopyProvider;
 
-    public static final String HELP_ID = "ideaInterface.changes";
-    public static final Key<List<VirtualFile>> IGNORED_FILES_DATA_KEY = Key.create("ChangeListView.IgnoredFiles");
-    public static final Key<List<FilePath>> MISSING_FILES_DATA_KEY = Key.create("ChangeListView.MissingFiles");
-    public static final Key<List<LocallyDeletedChange>> LOCALLY_DELETED_CHANGES = Key.create("ChangeListView.LocallyDeletedChanges");
 
     public ChangesListViewImpl(Project project) {
         myProject = project;

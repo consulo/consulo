@@ -29,6 +29,7 @@ import consulo.project.Project;
 import consulo.ui.ComboBox;
 import consulo.ui.Component;
 import consulo.ui.Label;
+import consulo.ui.MessageBoxes;
 import consulo.ui.OptionButtonItem;
 import consulo.ui.Space;
 import consulo.ui.TextAttribute;
@@ -66,6 +67,8 @@ import consulo.versionControlSystem.VcsConfiguration;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangeListListener;
 import consulo.versionControlSystem.change.ChangeListManager;
+import consulo.versionControlSystem.change.ChangesUtil;
+import consulo.versionControlSystem.change.CommitResultHandler;
 import consulo.versionControlSystem.change.CommitExecutor;
 import consulo.versionControlSystem.change.LocalChangeList;
 import consulo.versionControlSystem.checkin.BaseCheckinHandlerFactory;
@@ -77,6 +80,7 @@ import consulo.versionControlSystem.impl.internal.change.ChangeListManagerImpl;
 import consulo.versionControlSystem.impl.internal.change.action.RollbackDialogAction;
 import consulo.versionControlSystem.impl.internal.change.ui.ChangeTreeItem;
 import consulo.versionControlSystem.impl.internal.change.ui.ChangesTreeGroupKind;
+import consulo.versionControlSystem.impl.internal.change.ui.ChangesLegend;
 import consulo.versionControlSystem.impl.internal.change.ui.ChangesTreeItem;
 import consulo.versionControlSystem.impl.internal.change.ui.ChangesTreeSnapshot;
 import consulo.versionControlSystem.impl.internal.change.ui.ChangesTreeSnapshotBuilder;
@@ -120,11 +124,13 @@ public class UnifiedCommitChangeListDialog extends DialogDescriptor implements U
     private final Collection<?> myInitiallyIncluded;
     private final @Nullable CommitExecutor myExecutor;
     private final List<CommitExecutor> myExecutors;
+    private final @Nullable AbstractVcs mySingleVcs;
+    private final @Nullable String myComment;
+    private final @Nullable CommitResultHandler myResultHandler;
     private final LocalizeValue myCommitActionName;
 
     private final UnifiedCommitOptions myOptions = new UnifiedCommitOptions();
-    private final @Nullable Label[] myLegendLabels = new Label[LEGEND_SIZE];
-    private @Nullable HorizontalLayout myLegend;
+    private @Nullable ChangesLegend myLegend;
     private boolean myShowFlatten = true;
 
     private @Nullable UnifiedChangesTree myTree;
@@ -140,14 +146,20 @@ public class UnifiedCommitChangeListDialog extends DialogDescriptor implements U
                                           LocalChangeList changeList,
                                           Collection<?> included,
                                           @Nullable CommitExecutor executor,
-                                          List<CommitExecutor> executors) {
+                                          List<CommitExecutor> executors,
+                                          @Nullable AbstractVcs singleVcs,
+                                          @Nullable String comment,
+                                          @Nullable CommitResultHandler resultHandler) {
         super(VcsLocalize.commitDialogTitle());
         myProject = project;
         myChangeList = changeList;
         myInitiallyIncluded = included;
         myExecutor = executor;
         myExecutors = executors;
-        myCommitActionName = executor != null ? executor.getActionText() : commitActionName(project);
+        mySingleVcs = singleVcs;
+        myComment = comment;
+        myResultHandler = resultHandler;
+        myCommitActionName = executor != null ? executor.getActionText() : commitActionName(project, singleVcs);
     }
 
     @RequiredUIAccess
@@ -155,10 +167,36 @@ public class UnifiedCommitChangeListDialog extends DialogDescriptor implements U
                                                   Collection<?> included,
                                                   @Nullable LocalChangeList initialSelection,
                                                   @Nullable CommitExecutor executor) {
+        List<CommitExecutor> executors = executor != null ? List.of(executor) : collectExecutors(project);
+        return show(project, included, initialSelection, executors, executor == null, null, null, null, false);
+    }
+
+    /**
+     * Shows the commit dialog. When {@code showVcsCommit} is false the first executor becomes the main action.
+     */
+    @RequiredUIAccess
+    public static CompletableFuture<Boolean> show(Project project,
+                                                  Collection<?> included,
+                                                  @Nullable LocalChangeList initialSelection,
+                                                  List<CommitExecutor> executors,
+                                                  boolean showVcsCommit,
+                                                  @Nullable AbstractVcs singleVcs,
+                                                  @Nullable String comment,
+                                                  @Nullable CommitResultHandler resultHandler,
+                                                  boolean cancelIfNoChanges) {
+        if (cancelIfNoChanges && included.isEmpty()) {
+            return MessageBoxes.okInfo(VcsLocalize.commitDialogNoChangesDetectedText())
+                .title(VcsLocalize.commitDialogNoChangesDetectedTitle())
+                .showAsync()
+                .thenApply(value -> Boolean.FALSE);
+        }
+
         ChangeListManager changeListManager = ChangeListManager.getInstance(project);
         LocalChangeList changeList = initialSelection != null ? initialSelection : changeListManager.getDefaultChangeList();
 
-        List<CommitExecutor> executors = executor != null ? List.of() : collectExecutors(project);
+        boolean vcsCommit = showVcsCommit || executors.isEmpty();
+        CommitExecutor mainExecutor = vcsCommit ? null : executors.get(0);
+        List<CommitExecutor> optionExecutors = vcsCommit ? List.copyOf(executors) : List.copyOf(executors.subList(1, executors.size()));
 
         List<Change> changes = new ArrayList<>();
         for (Object item : included) {
@@ -166,16 +204,24 @@ public class UnifiedCommitChangeListDialog extends DialogDescriptor implements U
                 changes.add(change);
             }
         }
-        List<CommitExecutor> shownExecutors = executor != null ? List.of(executor) : executors;
         for (BaseCheckinHandlerFactory factory : CheckinHandlersManager.getInstance()
             .getRegisteredCheckinHandlerFactories(ProjectLevelVcsManager.getInstance(project).getAllActiveVcss())) {
             BeforeCheckinDialogHandler handler = factory.createSystemReadyHandler(project);
-            if (handler != null && !handler.beforeCommitDialogShown(project, changes, shownExecutors, executor == null)) {
+            if (handler != null && !handler.beforeCommitDialogShown(project, changes, executors, vcsCommit)) {
                 return CompletableFuture.completedFuture(Boolean.FALSE);
             }
         }
 
-        UnifiedCommitChangeListDialog descriptor = new UnifiedCommitChangeListDialog(project, changeList, included, executor, executors);
+        UnifiedCommitChangeListDialog descriptor = new UnifiedCommitChangeListDialog(
+            project,
+            changeList,
+            included,
+            mainExecutor,
+            optionExecutors,
+            singleVcs,
+            comment,
+            resultHandler
+        );
         Dialog dialog = project.getApplication().getInstance(DialogService.class).build(descriptor);
         descriptor.myDialog = dialog;
 
@@ -193,8 +239,17 @@ public class UnifiedCommitChangeListDialog extends DialogDescriptor implements U
         return executors;
     }
 
-    private static LocalizeValue commitActionName(Project project) {
-        AbstractVcs[] vcses = ProjectLevelVcsManager.getInstance(project).getAllActiveVcss();
+    public static List<CommitExecutor> collectExecutors(Project project, Collection<Change> changes) {
+        List<CommitExecutor> executors = new ArrayList<>();
+        for (AbstractVcs vcs : ChangesUtil.getAffectedVcses(changes, project)) {
+            executors.addAll(vcs.getCommitExecutors());
+        }
+        executors.addAll(ChangeListManager.getInstance(project).getRegisteredExecutors());
+        return executors;
+    }
+
+    private static LocalizeValue commitActionName(Project project, @Nullable AbstractVcs singleVcs) {
+        AbstractVcs[] vcses = singleVcs != null ? new AbstractVcs[]{singleVcs} : ProjectLevelVcsManager.getInstance(project).getAllActiveVcss();
         if (vcses.length == 1) {
             CheckinEnvironment environment = vcses[0].getCheckinEnvironment();
             if (environment != null) {
@@ -207,7 +262,8 @@ public class UnifiedCommitChangeListDialog extends DialogDescriptor implements U
     @RequiredUIAccess
     @Override
     public Component createCenterComponent(Disposable uiDisposable) {
-        myLegend = createLegend();
+        ChangesLegend legend = createLegend();
+        myLegend = legend;
 
         UnifiedChangesTree tree = new UnifiedChangesTree(myProject, true, uiDisposable);
         tree.setAutoIncludeDefaultList(false);
@@ -221,7 +277,9 @@ public class UnifiedCommitChangeListDialog extends DialogDescriptor implements U
             myProject,
             myProject.getApplication().getInstance(ProgressBuilderFactory.class),
             myExecutors,
-            true
+            true,
+            mySingleVcs,
+            myResultHandler
         );
         UnifiedCommitWorkflowHandler handler = new UnifiedCommitWorkflowHandler(workflow, this, myCommitActionName);
         myHandler = handler;
@@ -234,6 +292,9 @@ public class UnifiedCommitChangeListDialog extends DialogDescriptor implements U
         myMessageBox = messageBox;
 
         handler.activate();
+        if (myComment != null) {
+            messageBox.setValue(myComment);
+        }
 
         DockLayout left = DockLayout.create();
         left.putUserData(UiDataProvider.KEY, sink -> {
@@ -244,7 +305,7 @@ public class UnifiedCommitChangeListDialog extends DialogDescriptor implements U
 
         DockLayout treePanel = DockLayout.create();
         treePanel.center(tree.getComponent());
-        treePanel.bottom(DockLayout.create().right(myLegend));
+        treePanel.bottom(DockLayout.create().right(legend.getComponent()));
 
         ActionToolbar messageToolbar = createToolbar(MESSAGE_ACTION_GROUP, left, ActionToolbar.Style.VERTICAL);
 
@@ -353,16 +414,12 @@ public class UnifiedCommitChangeListDialog extends DialogDescriptor implements U
     }
 
     @RequiredUIAccess
-    private HorizontalLayout createLegend() {
+    private ChangesLegend createLegend() {
         FileStatus[] statuses = {FileStatus.ADDED, FileStatus.MODIFIED, FileStatus.DELETED, FileStatus.UNKNOWN};
 
-        HorizontalLayout legend = HorizontalLayout.create();
+        ChangesLegend legend = new ChangesLegend();
         for (int i = 0; i < LEGEND_SIZE; i++) {
-            Label label = Label.create(legendTitle(i));
-            label.setForegroundColor(statuses[i].getColor());
-            label.setVisible(false);
-            myLegendLabels[i] = label;
-            legend.add(label);
+            legend.addEntry(legendTitle(i), statuses[i]);
         }
         return legend;
     }
@@ -430,7 +487,8 @@ public class UnifiedCommitChangeListDialog extends DialogDescriptor implements U
     @RequiredUIAccess
     private void updateLegend() {
         UnifiedChangesTree tree = myTree;
-        if (tree == null) {
+        ChangesLegend legend = myLegend;
+        if (tree == null || legend == null) {
             return;
         }
 
@@ -454,15 +512,7 @@ public class UnifiedCommitChangeListDialog extends DialogDescriptor implements U
         included[UNVERSIONED] = tree.getIncludedUnversionedFiles().size();
 
         for (int i = 0; i < LEGEND_SIZE; i++) {
-            Label label = myLegendLabels[i];
-            if (label == null) {
-                continue;
-            }
-            LocalizeValue title = legendTitle(i);
-            label.setVisible(total[i] > 0);
-            label.setText(total[i] == included[i]
-                ? VcsLocalize.commitDialogLegendAll(title, included[i])
-                : VcsLocalize.commitDialogLegendPartial(title, included[i], total[i]));
+            legend.setCount(i, total[i], included[i]);
         }
     }
 

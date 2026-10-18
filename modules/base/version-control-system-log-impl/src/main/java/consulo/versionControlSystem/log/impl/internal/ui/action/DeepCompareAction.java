@@ -21,7 +21,7 @@ import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.RelativePoint;
+import consulo.ui.event.ComponentEvent;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
@@ -33,8 +33,6 @@ import consulo.versionControlSystem.log.util.VcsLogUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
-import java.awt.event.InputEvent;
-import java.awt.event.MouseEvent;
 import java.util.Collection;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -141,9 +139,9 @@ public class DeepCompareAction extends ToggleAction implements DumbAware {
             -1,
             null
         );
-        InputEvent inputEvent = event.getInputEvent();
-        if (inputEvent instanceof MouseEvent) {
-            popup.show(new RelativePoint((MouseEvent) inputEvent));
+        ComponentEvent<?> uiEvent = event.getUIEvent();
+        if (uiEvent != null) {
+            popup.showBy(uiEvent);
         }
         else {
             popup.showInBestPositionFor(event.getDataContext());

@@ -22,7 +22,7 @@ import consulo.versionControlSystem.log.RefGroup;
 import consulo.versionControlSystem.log.VcsRef;
 import consulo.versionControlSystem.log.VcsRefType;
 
-import java.awt.*;
+import consulo.ui.color.ColorValue;
 import java.util.List;
 import java.util.*;
 import java.util.stream.Stream;
@@ -57,22 +57,22 @@ public class SimpleRefGroup implements RefGroup {
 
     
     @Override
-    public List<Color> getColors() {
+    public List<ColorValue> getColors() {
         return getColors(myRefs);
     }
 
     
-    public static List<Color> getColors(Collection<VcsRef> refs) {
+    public static List<ColorValue> getColors(Collection<VcsRef> refs) {
         MultiMap<VcsRefType, VcsRef> referencesByType = ContainerUtil.groupBy(refs, VcsRef::getType);
         if (referencesByType.size() == 1) {
             Map.Entry<VcsRefType, Collection<VcsRef>> firstItem =
                 ObjectUtil.assertNotNull(ContainerUtil.getFirstItem(referencesByType.entrySet()));
             boolean multiple = firstItem.getValue().size() > 1;
-            Color color = firstItem.getKey().getBackgroundColor();
+            ColorValue color = firstItem.getKey().getBackgroundColor();
             return multiple ? Arrays.asList(color, color) : Collections.singletonList(color);
         }
         else {
-            List<Color> colorsList = new ArrayList<>();
+            List<ColorValue> colorsList = new ArrayList<>();
             for (VcsRefType type : referencesByType.keySet()) {
                 if (referencesByType.get(type).size() > 1) {
                     colorsList.add(type.getBackgroundColor());

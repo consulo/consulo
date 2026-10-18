@@ -18,14 +18,13 @@ package consulo.versionControlSystem.impl.internal;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.disposer.Disposable;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.language.editor.scratch.ScratchUtil;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.ui.ex.awt.util.MergingUpdateQueue;
-import consulo.ui.ex.awt.util.Update;
 import consulo.util.lang.ThreeState;
 import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.change.*;
@@ -46,6 +45,9 @@ import jakarta.inject.Singleton;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author yole
@@ -65,7 +67,8 @@ public class VcsFileStatusProvider implements FileStatusFacade, Disposable {
 
     private boolean myHaveEmptyContentRevisions;
 
-    private MergingUpdateQueue myMergingUpdateQueue;
+    private final AtomicBoolean myRefreshScheduled = new AtomicBoolean();
+    private volatile @Nullable Future<?> myRefreshFuture;
 
     private final Map<VirtualFile, Boolean> myRefreshedFileMap = new HashMap<>();
 
@@ -86,8 +89,6 @@ public class VcsFileStatusProvider implements FileStatusFacade, Disposable {
         myConfiguration = configuration;
         myHaveEmptyContentRevisions = true;
         myFileStatusManager.setFileStatusProvider(this);
-
-        myMergingUpdateQueue = new MergingUpdateQueue("FileStatusFacade", 100, true, null, this, null, false);
 
         myProject.getMessageBus().connect().subscribe(ChangeListListener.class, new ChangeListListener() {
             @Override
@@ -122,6 +123,10 @@ public class VcsFileStatusProvider implements FileStatusFacade, Disposable {
 
     @Override
     public void dispose() {
+        Future<?> future = myRefreshFuture;
+        if (future != null) {
+            future.cancel(false);
+        }
         myRefreshedFileMap.clear();
     }
 
@@ -165,7 +170,12 @@ public class VcsFileStatusProvider implements FileStatusFacade, Disposable {
                 myRefreshedFileMap.put(virtualFile, cachedStatus == FileStatus.MODIFIED);
             }
 
-            myMergingUpdateQueue.queue(Update.create("refreshFileStatusFromDocument", this::processModifiedDocuments));
+            if (myRefreshScheduled.compareAndSet(false, true)) {
+                myRefreshFuture = AppExecutorUtil.getAppScheduledExecutorService().schedule(() -> {
+                    myRefreshScheduled.set(false);
+                    processModifiedDocuments();
+                }, 100, TimeUnit.MILLISECONDS);
+            }
         }
     }
 

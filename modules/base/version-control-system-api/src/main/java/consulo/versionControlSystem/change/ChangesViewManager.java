@@ -17,6 +17,7 @@ package consulo.versionControlSystem.change;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
+import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
 /**
@@ -24,6 +25,10 @@ import consulo.virtualFileSystem.VirtualFile;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface ChangesViewManager {
+  static ChangesViewManager getInstance(Project project) {
+    return project.getInstance(ChangesViewManager.class);
+  }
+
   void scheduleRefresh();
 
   void selectFile(VirtualFile vFile);

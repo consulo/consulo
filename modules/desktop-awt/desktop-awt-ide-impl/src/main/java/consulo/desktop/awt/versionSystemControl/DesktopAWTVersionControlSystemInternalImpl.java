@@ -16,28 +16,12 @@
 package consulo.desktop.awt.versionSystemControl;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.codeEditor.Editor;
-import consulo.dataContext.DataContext;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.ide.impl.idea.openapi.editor.impl.FontFallbackIterator;
-import consulo.project.Project;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.impl.internal.action.ActionImplUtil;
-import consulo.versionControlSystem.change.Change;
-import consulo.versionControlSystem.impl.internal.LineStatusTracker;
-import consulo.versionControlSystem.impl.internal.LineStatusTrackerDrawing;
-import consulo.versionControlSystem.impl.internal.history.VcsDiffImplUtil;
-import consulo.versionControlSystem.internal.LineStatusTrackerI;
-import consulo.versionControlSystem.internal.VcsRange;
-import consulo.versionControlSystem.internal.VersionControlSystemInternal;
-import consulo.versionControlSystem.util.VcsUtil;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.versionControlSystem.impl.internal.BaseVersionControlSystemInternal;
 import jakarta.inject.Singleton;
 
 import java.awt.*;
-import java.util.Collection;
 
 /**
  * @author VISTALL
@@ -45,9 +29,14 @@ import java.util.Collection;
  */
 @ServiceImpl
 @Singleton
-public class DesktopAWTVersionControlSystemInternalImpl implements VersionControlSystemInternal {
+public class DesktopAWTVersionControlSystemInternalImpl extends BaseVersionControlSystemInternal {
     @Override
-    public String getHtmlWithFonts(String input, int style, Font baseFont) {
+    public String getHtmlWithFonts(String input) {
+        Font font = UIUtil.getLabelFont();
+        return getHtmlWithFonts(input, font.getStyle(), font);
+    }
+
+    private static String getHtmlWithFonts(String input, int style, Font baseFont) {
         int start = baseFont.canDisplayUpTo(input);
         if (start == -1) {
             return input;
@@ -78,32 +67,5 @@ public class DesktopAWTVersionControlSystemInternalImpl implements VersionContro
         }
 
         return result.toString();
-    }
-
-    @Override
-    public void moveToRange(VcsRange range, Editor editor, LineStatusTrackerI tracker) {
-        LineStatusTrackerDrawing.moveToRange(range, editor, (LineStatusTracker) tracker);
-    }
-
-    @Override
-    public void showDiffFor(Project project,
-                            Collection<Change> changes,
-                            String head,
-                            String compare,
-                            VirtualFile file) {
-        VcsDiffImplUtil.showDiffFor(
-            project,
-            changes,
-            VcsDiffImplUtil.getRevisionTitle(compare, false),
-            VcsDiffImplUtil.getRevisionTitle(head, true),
-            VcsUtil.getFilePath(file)
-        );
-    }
-
-    @RequiredUIAccess
-    @Override
-    public void invokeAction(Project project, AnAction action) {
-        DataContext dataContext = SimpleDataContext.getProjectContext(project);
-        ActionImplUtil.invokeAction(action, dataContext, ActionPlaces.UNKNOWN, null, null);
     }
 }

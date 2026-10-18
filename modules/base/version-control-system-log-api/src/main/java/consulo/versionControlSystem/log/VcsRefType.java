@@ -1,6 +1,6 @@
 package consulo.versionControlSystem.log;
 
-import java.awt.*;
+import consulo.ui.color.ColorValue;
 
 /**
  * @author Kirill Likhodedov
@@ -28,5 +28,5 @@ public interface VcsRefType {
    * Returns the background color which should be used to paint a {@link VcsRef reference label} of this type.
    * TODO maybe this is not the right place for color
    */
-  Color getBackgroundColor();
+  ColorValue getBackgroundColor();
 }

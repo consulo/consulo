@@ -16,6 +16,7 @@
 
 package consulo.versionControlSystem.impl.internal.change;
 
+import consulo.versionControlSystem.change.ChangesViewManager;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.language.editor.wolfAnalyzer.ProblemListener;
@@ -56,12 +57,12 @@ public class VcsEventWatcher implements PostStartupActivity {
 
     @Override
     public void problemsAppeared(VirtualFile file) {
-      ChangesViewManagerImpl.getInstance(myProject).refreshChangesViewNodeAsync(file);
+      ChangesViewManager.getInstance(myProject).refreshChangesViewNodeAsync(file);
     }
 
     @Override
     public void problemsDisappeared(VirtualFile file) {
-      ChangesViewManagerImpl.getInstance(myProject).refreshChangesViewNodeAsync(file);
+      ChangesViewManager.getInstance(myProject).refreshChangesViewNodeAsync(file);
     }
   }
 }

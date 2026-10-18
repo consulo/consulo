@@ -18,14 +18,14 @@ package consulo.versionControlSystem.log;
 import consulo.disposer.Disposable;
 import consulo.versionControlSystem.log.internal.VcsLogColors;
 
-import java.awt.*;
+import consulo.ui.color.ColorValue;
 
 /**
  * @author VISTALL
  * @since 2025-08-30
  */
 public interface VcsLogDeepComparator extends VcsLogHighlighter, Disposable {
-    Color COMMIT_FOREGROUND = VcsLogColors.MERGE_COMMIT_FOREGROUND;
+    ColorValue COMMIT_FOREGROUND = VcsLogColors.MERGE_COMMIT_FOREGROUND;
 
     void highlightInBackground(String branchToCompare, VcsLogDataProvider dataProvider);
 

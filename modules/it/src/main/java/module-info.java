@@ -24,6 +24,7 @@ module consulo.it {
     requires consulo.project.impl;
     requires consulo.project.ui.api;
     requires consulo.project.ui.impl;
+    requires consulo.version.control.system.api;
     requires consulo.application.content.api;
     requires consulo.module.api;
     requires consulo.module.content.api;

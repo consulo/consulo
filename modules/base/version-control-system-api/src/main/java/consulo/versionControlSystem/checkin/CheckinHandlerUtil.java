@@ -15,7 +15,6 @@
  */
 package consulo.versionControlSystem.checkin;
 
-import consulo.annotation.DeprecationInfo;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
@@ -32,7 +31,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -85,14 +83,6 @@ public class CheckinHandlerUtil {
     private static boolean isFileUnderSourceRoot(Project project, VirtualFile file) {
         ProjectFileIndex index = ProjectRootManager.getInstance(project).getFileIndex();
         return index.isInContent(file) && !index.isInLibrarySource(file);
-    }
-
-    @Deprecated
-    @DeprecationInfo("Use #disableWhenDumb() with new UI")
-    public static void disableWhenDumb(Project project, JCheckBox checkBox, String tooltip) {
-        boolean dumb = DumbService.isDumb(project);
-        checkBox.setEnabled(!dumb);
-        checkBox.setToolTipText(dumb ? tooltip : "");
     }
 
     @RequiredUIAccess

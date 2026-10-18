@@ -88,7 +88,7 @@ public interface TargetAWTFacade {
         throw new AbstractMethodError();
     }
 
-    default java.awt.Cursor to(Cursor cursor) {
+    default java.awt.@Nullable Cursor to(@Nullable Cursor cursor) {
         throw new AbstractMethodError();
     }
 

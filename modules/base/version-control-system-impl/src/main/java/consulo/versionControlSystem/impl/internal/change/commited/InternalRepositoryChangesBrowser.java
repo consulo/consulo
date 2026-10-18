@@ -27,7 +27,7 @@ import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangeList;
 import consulo.versionControlSystem.change.ChangesUtil;
-import consulo.versionControlSystem.change.RepositoryChangesBrowser;
+import consulo.versionControlSystem.impl.internal.change.ui.awt.RepositoryChangesBrowser;
 import consulo.versionControlSystem.impl.internal.change.action.OpenRepositoryVersionAction;
 import consulo.versionControlSystem.impl.internal.change.action.RevertSelectedChangesAction;
 import consulo.versionControlSystem.impl.internal.ui.awt.InternalChangesBrowser;

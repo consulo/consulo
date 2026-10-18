@@ -16,6 +16,7 @@
 package consulo.versionControlSystem.impl.internal;
 
 import consulo.application.ApplicationManager;
+import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.codeEditor.DocumentMarkupModel;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
@@ -30,10 +31,9 @@ import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.ui.ModalityState;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.details.InputDetails;
-import consulo.ui.ex.awt.util.MergingUpdateQueue;
-import consulo.ui.ex.awt.util.Update;
 import consulo.util.collection.PeekableIterator;
 import consulo.util.collection.PeekableIteratorWrapper;
 import consulo.versionControlSystem.internal.LineStatusMarkerPopupFactory;
@@ -45,6 +45,8 @@ import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Manages a single document-level gutter highlighter describing all VCS changed-line markers.
@@ -57,7 +59,7 @@ import java.util.Set;
  * <p>Error-stripe (scrollbar) markers are managed per-range here as well, and are reused across
  * updates whenever their offsets and change type still match.
  *
- * <p>Updates are debounced via {@link MergingUpdateQueue} (100 ms).
+ * <p>Updates are debounced (100 ms) and run on the UI thread.
  */
 public class LineStatusGutterMarkerRenderer {
     private static final Logger LOG = Logger.getInstance(LineStatusGutterMarkerRenderer.class);
@@ -69,7 +71,8 @@ public class LineStatusGutterMarkerRenderer {
     /** Controls the lifetime of the update queue, the EditorFactory listener and all highlighters. */
     private final Disposable myDisposable = Disposable.newDisposable();
 
-    private final MergingUpdateQueue myUpdateQueue;
+    private final AtomicBoolean myUpdateScheduled = new AtomicBoolean();
+    private final AtomicBoolean myValidateScheduled = new AtomicBoolean();
 
     /** Single document-wide gutter highlighter. Repainted on demand, recreated only on recovery. */
     private RangeHighlighter myGutterHighlighter;
@@ -85,11 +88,6 @@ public class LineStatusGutterMarkerRenderer {
         myTracker = tracker;
         myDocument = tracker.getDocument();
         myProject = tracker.getProject();
-
-        myUpdateQueue = new MergingUpdateQueue(
-            "LineStatusGutterMarkerRenderer", 100, true,
-            MergingUpdateQueue.ANY_COMPONENT, myDisposable
-        );
 
         myGutterHighlighter = createGutterHighlighter();
 
@@ -158,12 +156,7 @@ public class LineStatusGutterMarkerRenderer {
      * (100 ms debounce). Can be called from any thread; the actual work runs on EDT.
      */
     public void scheduleUpdate() {
-        myUpdateQueue.queue(new Update("update") {
-            @Override
-            public void run() {
-                ApplicationManager.getApplication().runReadAction(() -> updateHighlighters());
-            }
-        });
+        schedule(myUpdateScheduled, () -> ApplicationManager.getApplication().runReadAction(() -> updateHighlighters()));
     }
 
     /**
@@ -171,17 +164,30 @@ public class LineStatusGutterMarkerRenderer {
      * IDEA-331139 IDEA-246614
      */
     private void scheduleValidateHighlighter() {
-        myUpdateQueue.queue(new Update("validate highlighter") {
-            @Override
-            public void run() {
-                if (myDisposed || myGutterHighlighter.isValid()) return;
+        schedule(myValidateScheduled, () -> {
+            if (myDisposed || myGutterHighlighter.isValid()) return;
 
-                LOG.warn("Line marker highlighter was recovered. This incident will be reported.");
-                disposeHighlighter(myGutterHighlighter);
-                myGutterHighlighter = createGutterHighlighter();
-                ApplicationManager.getApplication().runReadAction(() -> updateHighlighters());
-            }
+            LOG.warn("Line marker highlighter was recovered. This incident will be reported.");
+            disposeHighlighter(myGutterHighlighter);
+            myGutterHighlighter = createGutterHighlighter();
+            ApplicationManager.getApplication().runReadAction(() -> updateHighlighters());
         });
+    }
+
+    private void schedule(AtomicBoolean scheduled, @RequiredUIAccess Runnable task) {
+        if (myDisposed || !scheduled.compareAndSet(false, true)) {
+            return;
+        }
+        AppExecutorUtil.getAppScheduledExecutorService().schedule(
+            () -> ApplicationManager.getApplication().invokeLater(() -> {
+                scheduled.set(false);
+                if (!myDisposed) {
+                    task.run();
+                }
+            }, ModalityState.any(), () -> myDisposed),
+            100,
+            TimeUnit.MILLISECONDS
+        );
     }
 
     @RequiredUIAccess

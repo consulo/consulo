@@ -78,7 +78,9 @@ public class ChangelistConflictAccessProvider extends WritingAccessProvider {
 
       if (dialog.isOK()) {
         options.LAST_RESOLUTION = dialog.getResolution();
-        return Collections.emptyList();
+        if (dialog.getResolution() != ChangelistConflictResolution.SHELVE) {
+          return Collections.emptyList();
+        }
       }
     }
     return denied;

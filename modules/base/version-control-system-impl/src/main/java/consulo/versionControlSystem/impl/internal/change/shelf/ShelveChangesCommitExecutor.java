@@ -19,9 +19,7 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
-import consulo.project.util.WaitForProgressToShow;
-import consulo.ui.ModalityState;
-import consulo.ui.ex.awt.Messages;
+import consulo.ui.MessageBoxes;
 import consulo.versionControlSystem.change.*;
 import consulo.versionControlSystem.change.shelf.ShelveChangesManager;
 import consulo.versionControlSystem.change.shelf.ShelvedChangeList;
@@ -29,7 +27,6 @@ import consulo.versionControlSystem.change.shelf.ShelvedChangesViewManager;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
 import java.util.Collection;
 
 /**
@@ -65,17 +62,7 @@ public class ShelveChangesCommitExecutor extends LocalCommitExecutor {
     private class ShelveChangesCommitSession implements CommitSession, CommitSessionContextAware {
 
         @Override
-        public @Nullable JComponent getAdditionalConfigurationUI() {
-            return null;
-        }
-
-        @Override
         public void setContext(CommitContext context) {
-        }
-
-        @Override
-        public @Nullable JComponent getAdditionalConfigurationUI(Collection<Change> changes, String commitMessage) {
-            return null;
         }
 
         @Override
@@ -86,15 +73,7 @@ public class ShelveChangesCommitExecutor extends LocalCommitExecutor {
         @Override
         public void execute(Collection<Change> changes, String commitMessage) {
             if (changes.size() > 0 && !ChangesUtil.hasFileChanges(changes)) {
-                WaitForProgressToShow.runOrInvokeLaterAboveProgress(
-                    () -> Messages.showErrorDialog(
-                        myProject,
-                        VcsLocalize.shelveChangesOnlyDirectories().get(),
-                        VcsLocalize.shelveChangesAction().get()
-                    ),
-                    null,
-                    myProject
-                );
+                showError(VcsLocalize.shelveChangesOnlyDirectories(), VcsLocalize.shelveChangesAction());
                 return;
             }
             try {
@@ -115,16 +94,15 @@ public class ShelveChangesCommitExecutor extends LocalCommitExecutor {
             }
             catch (Exception ex) {
                 LOG.info(ex);
-                WaitForProgressToShow.runOrInvokeLaterAboveProgress(
-                    () -> Messages.showErrorDialog(
-                        myProject,
-                        VcsLocalize.createPatchErrorTitle(ex.getMessage()).get(),
-                        CommonLocalize.titleError().get()
-                    ),
-                    ModalityState.nonModal(),
-                    myProject
-                );
+                showError(VcsLocalize.createPatchErrorTitle(ex.getMessage()), CommonLocalize.titleError());
             }
+        }
+
+        private void showError(LocalizeValue message, LocalizeValue title) {
+            myProject.getApplication().invokeLater(
+                () -> MessageBoxes.okError(message).title(title).showAsync(myProject),
+                myProject.getDisposed()
+            );
         }
 
         @Override
@@ -132,7 +110,7 @@ public class ShelveChangesCommitExecutor extends LocalCommitExecutor {
         }
 
         @Override
-        public String getHelpId() {
+        public @Nullable String getHelpId() {
             return null;
         }
     }

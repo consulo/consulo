@@ -168,6 +168,14 @@ action.show.tabbed.file.history.text:
     text: Show _History
 action.toolbar.label.text:
     text: VCS Label
+action.unshelve.silently.description:
+    text: Unshelve changes to appropriate changelists
+action.unshelve.silently.text:
+    text: Unshelve Silently
+action.unshelve.with.dialog.description:
+    text: Correct paths where to apply patches and unshelve
+action.unshelve.with.dialog.text:
+    text: Unshelve…
 action.update.files.text:
     text: _Update
 acton.name.get.revision:
@@ -371,8 +379,12 @@ changes.dialog.editchangelist.title:
     text: Edit Changelist
 changes.dialog.newchangelist.title:
     text: New Changelist
+changes.error.cannot.find.base.for.path:
+    text: Cannot find base for ''{0}''
 changes.minutes:
     text: minutes
+changes.new.changelist:
+    text: New changelist
 changes.newchangelist.warning.already.exists.text:
     text: Changelist ''{0}'' already exists.
 changes.newchangelist.warning.already.exists.title:
@@ -670,6 +682,8 @@ create.patch.partial.success.confirmation:
     text: Successfully created patch {0}. {1} of the selected files {1,choice,1#is|2#are} binary and {1,choice,1#was|2#were} not included in the patch.
 create.patch.reverse.checkbox:
     text: '&Reverse patch'
+create.patch.settings.dialog.title:
+    text: Patch File Settings
 create.patch.success.confirmation:
     text: Successfully created patch {0}
 current.version.text:
@@ -1042,8 +1056,12 @@ multiple.file.merge.type.text:
     text: Text
 new.changelist.duplicate.name.error:
     text: A changelist with that name already exists
+new.changelist.empty.name.error:
+    text: Cannot create new changelist with empty name
 new.changelist.make.active.checkbox:
     text: Make this changelist &active
+new.changelist.new.label:
+    text: New
 no.ignored.files:
     text: No ignored files
 none.vcs.presentation:
@@ -1072,6 +1090,10 @@ outdated.version.text.deleted:
     text: 'Outdated version. Deleted by {0} {1}: {2}'
 outdated.version.update.project.action:
     text: Update Project
+patch.apply.added.status:
+    text: Added
+patch.apply.already.exists.overwrite.prompt:
+    text: "File {0} ({1}) already exists.\nDo you want to overwrite it?"
 patch.apply.already.applied:
     text: All of the changes in the specified patch are already contained in the code
 patch.apply.analyze.from.clipboard.on.the.fly.checkbox:
@@ -1080,6 +1102,10 @@ patch.apply.base.directory.field:
     text: '&Base directory:'
 patch.apply.cannot.apply.now:
     text: Cannot Apply Patch Now
+patch.apply.cannot.find.patch.file.warning:
+    text: 'Cannot find patch file {0}'
+patch.apply.change.directory.paths.group:
+    text: Change Directory Paths
 patch.apply.changes.in.patch.resolve:
     text: '{0} in patch resolve'
 patch.apply.command:
@@ -1096,6 +1122,8 @@ patch.apply.conflict.patched.version:
     text: Patched Version
 patch.apply.conflict.title:
     text: Patch Conflict for {0}
+patch.apply.deleted.status:
+    text: Deleted
 patch.apply.dialog.title:
     text: Apply Patch
 patch.apply.error:
@@ -1106,22 +1134,68 @@ patch.apply.load.error:
     text: 'Error loading patch file: {0}'
 patch.apply.load.error.line:
     text: 'Error loading patch file: {0} at line {1}'
+patch.apply.map.base.directory.action:
+    text: Map Base Directory…
+patch.apply.missing.base.file.label:
+    text: 'Missing base:'
+patch.apply.modified.status:
+    text: Modified
+patch.apply.new.base.detected.node.description:
+    text: New base detected
 patch.apply.no.patches.found:
     text: Failed to find any patches in the specified file
+patch.apply.old.new.base.info:
+    text: 'was: {0} (base dir: {1}), now: {2} (base dir: {3})'
 patch.apply.open.error:
     text: 'Error opening patch file: {0}'
 patch.apply.partially.applied:
     text: Some of the changes in the specified patch were skipped because they are already contained in the code
+patch.apply.remove.all.leading.directories.action:
+    text: Remove All Leading Directories
+patch.apply.remove.leading.directory.action:
+    text: Remove Leading Directory
+patch.apply.restore.all.leading.directories.action:
+    text: Restore All Leading Directories
+patch.apply.restore.leading.directory.action:
+    text: Restore Leading Directory
+patch.apply.select.base.directory.for.a.path.popup:
+    text: Select base directory for a path
 patch.apply.select.base.directory.title:
     text: Select Base Directory
+patch.apply.select.base.file.title:
+    text: Select File Base
+patch.apply.select.base.for.a.path.message:
+    text: Select base for a path
+patch.apply.select.missing.base.link:
+    text: Select missing base
 patch.apply.select.title:
     text: Select Patch File
 patch.apply.somehow.diff.name:
     text: Apply patch somehow
 patch.apply.strip.leading.directories.field:
     text: '&Strip leading directories'
+patch.apply.stripped.description:
+    text: 'stripped {0}'
 patch.apply.success.applied.text:
     text: Patch successfully applied
+patch.creation.base.dir.does.not.exist.error:
+    text: Base dir doesn't exist
+patch.creation.base.path.field:
+    text: '&Base path:'
+patch.creation.can.not.write.patch.error:
+    text: 'Cannot write patch to specified file: {0}'
+patch.creation.empty.base.path.error:
+    text: Base path cannot be empty!
+patch.creation.empty.name.error:
+    text: File name cannot be empty
+patch.creation.file.already.exists.warning:
+    text: A file with the name ''{0}'' already exists
+patch.creation.name.too.long.error:
+    text: File path should not be too long.
+patch.creation.save.to.title:
+    text: Save Patch to
+patch.creation.wrong.base.path.for.changes.error:
+    text: Base path doesn''t contain all selected changes (use {0})
 patch.file.type.description:
     text: Patch files
 patch.load.base.revision.error:
@@ -1190,8 +1264,12 @@ remove.confirmation.label.text:
     text: 'When files are deleted with {0}:'
 retrieving.annotations:
     text: Loading Annotations
+revert.changes.changelist.chooser.title:
+    text: Select Target Changelist
 revert.changes.default.name:
     text: 'Revert: {0}'
+revert.changes.failed:
+    text: 'Failed to revert changes: {0}'
 revert.changes.title:
     text: Revert Changes
 revision.changes.not.supported:
@@ -1308,8 +1386,12 @@ settings.when.files.are.created:
     text: When files are created
 settings.when.files.are.deleted:
     text: When files are deleted
+shelf.node.project.root:
+    text: <project root>
 shelf.tab:
     text: Shelf
+shelve.binary.files.skipped.warning:
+    text: Binary file(s) would be skipped.
 shelve.changes.action:
     text: Shelve Changes
 shelve.changes.delete.confirm:
@@ -1322,10 +1404,38 @@ shelve.changes.delete.multiple.confirm:
     text: Are you sure you want to delete {0} shelved changelists? You will not be able to undo this operation.
 shelve.changes.only.directories:
     text: The selected changes affect only directories and no files, so they cannot be shelved
+shelve.changes.rename.duplicate:
+    text: A shelved changelist with this name already exists
+shelve.changes.rename.empty:
+    text: Specify a name for the changelist
 shelve.changes.rename.prompt:
     text: 'Please enter a name for the changelist:'
 shelve.changes.rename.title:
     text: Rename Shelved Changelist
+shelve.clean.unshelved.all:
+    text: all
+shelve.clean.unshelved.older.than:
+    text: older than one
+shelve.clean.unshelved.period.month:
+    text: month
+shelve.clean.unshelved.period.week:
+    text: week
+shelve.clean.unshelved.period.year:
+    text: year
+shelve.clean.unshelved.system:
+    text: created automatically
+shelve.clean.unshelved.title:
+    text: Clean Unshelved Changelists
+shelve.delete.already.unshelved.label:
+    text: 'Delete already unshelved changelists:'
+shelve.import.one.patch.file.prompt:
+    text: "Found one patch file ({0}).\nContinue with import?"
+shelve.import.patches.prompt:
+    text: "Found {0} patch files.\nContinue with import?"
+shelve.import.patches.title:
+    text: Import Patches
+shelve.remove.successfully.applied.files.checkbox:
+    text: Remove successfully applied files from the shelf
 shelved.version.name:
     text: Shelved version
 shelvedChanges.delete.title:
@@ -1410,6 +1520,8 @@ unknown.vcs.presentation:
     text: <Unknown VCS> ({0})
 unshelve.changelist.chooser.title:
     text: Unshelve Changes to Changelist
+unshelve.changes.action:
+    text: Unshelve Changes
 unshelve.changes.dialog.title:
     text: Unshelve Changes
 update.directories.scope.name:

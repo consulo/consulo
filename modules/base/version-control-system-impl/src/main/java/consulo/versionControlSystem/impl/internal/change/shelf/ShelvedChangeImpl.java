@@ -15,6 +15,7 @@
  */
 package consulo.versionControlSystem.impl.internal.change.shelf;
 
+import consulo.application.ReadAction;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.logging.Logger;
@@ -250,8 +251,10 @@ public class ShelvedChangeImpl implements ShelvedChange {
 
     private String getBaseContent() {
       myBeforeFilePath.refresh();
-      Document doc = FileDocumentManager.getInstance().getDocument(myBeforeFilePath.getVirtualFile());
-      return doc.getText();
+      return ReadAction.compute(() -> {
+        Document doc = FileDocumentManager.getInstance().getDocument(myBeforeFilePath.getVirtualFile());
+        return doc.getText();
+      });
     }
 
     @Override

@@ -49,7 +49,8 @@ import consulo.versionControlSystem.log.localize.VersionControlSystemLogLocalize
         @ActionRef(type = ShowRootsColumnAction.class),
         @ActionRef(type = AnSeparator.class),
         @ActionRef(type = RefreshLogAction.class),
-        @ActionRef(type = OpenAnotherLogTabAction.class),
+        @ActionRef(type = OpenAnotherLogTabInToolWindowAction.class),
+        @ActionRef(type = OpenAnotherLogTabInEditorAction.class),
         @ActionRef(type = CloseLogTabAction.class)
     },
     parents = @ActionParentRef(@ActionRef(id = "Vcs.KeymapGroup"))

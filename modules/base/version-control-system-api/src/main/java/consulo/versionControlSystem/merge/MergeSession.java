@@ -15,8 +15,9 @@
  */
 package consulo.versionControlSystem.merge;
 
-import consulo.ui.ex.awt.ColumnInfo;
 import consulo.virtualFileSystem.VirtualFile;
+
+import java.util.List;
 
 /**
  * Represents the state of a multiple file merge operation.
@@ -36,7 +37,7 @@ public interface MergeSession {
    *
    * @return the list of columns, or an empty list if no additional columns should be displayed.
    */
-  ColumnInfo[] getMergeInfoColumns();
+  List<MergeInfoColumn> getMergeInfoColumns();
 
   /**
    * Returns true if a merge operation can be invoked for the specified virtual file, false otherwise.

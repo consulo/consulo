@@ -59,8 +59,7 @@ module consulo.ui.ex.awt.api {
         consulo.language.editor.refactoring.api,
         consulo.language.editor.ui.api,
         consulo.ide.api,
-        consulo.task.impl,
-        consulo.version.control.system.log.impl;
+        consulo.task.impl;
 
     exports consulo.ui.ex.awt.internal.laf;
 

@@ -39,14 +39,16 @@ import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.ActionManager;
+import consulo.ui.Component;
 import consulo.ui.ex.action.ActionToolbar;
+import consulo.ui.ex.action.ActionToolbarFactory;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.content.ContentUtilEx;
 import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.ui.layout.DockLayout;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.*;
@@ -75,8 +77,6 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
 
-import javax.swing.*;
-import java.awt.*;
 import java.util.List;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -379,15 +379,17 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
 
             myConsole = TextConsoleBuilderFactory.getInstance().createBuilder(myProject).getConsole();
 
-            JPanel panel = new JPanel(new BorderLayout());
-            panel.add(myConsole.getComponent(), BorderLayout.CENTER);
+            Component consoleComponent = Objects.requireNonNull(myConsole.getUIComponent());
 
-            ActionToolbar toolbar = ActionManager.getInstance()
-                .createActionToolbar("VcsManager", new DefaultActionGroup(myConsole.createConsoleActions()), false);
-            toolbar.setTargetComponent(myConsole.getComponent());
-            panel.add(toolbar.getComponent(), BorderLayout.WEST);
+            ActionToolbar toolbar = ActionToolbarFactory.getInstance()
+                .createActionToolbar("VcsManager", new DefaultActionGroup(myConsole.createConsoleActions()), ActionToolbar.Style.VERTICAL);
+            toolbar.setTargetUIComponent(consoleComponent);
 
-            content = ContentFactory.getInstance().createContent(panel, displayName, true);
+            DockLayout panel = DockLayout.create();
+            panel.left(toolbar.getUIComponent());
+            panel.center(consoleComponent);
+
+            content = ContentFactory.getInstance().createUIContent(panel, displayName, true);
             content.setDisposer(myConsoleDisposer);
             contentManager.addContent(content);
 

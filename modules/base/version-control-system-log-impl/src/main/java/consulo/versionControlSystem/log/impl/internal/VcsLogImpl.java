@@ -15,15 +15,13 @@
  */
 package consulo.versionControlSystem.log.impl.internal;
 
-import com.google.common.primitives.Ints;
 import com.google.common.util.concurrent.SettableFuture;
 import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressIndicator;
 import consulo.versionControlSystem.log.*;
 import consulo.versionControlSystem.log.impl.internal.data.VcsLogDataImpl;
-import consulo.versionControlSystem.log.impl.internal.ui.GraphTableModel;
-import consulo.versionControlSystem.log.impl.internal.ui.VcsLogGraphTable;
-import consulo.versionControlSystem.log.impl.internal.ui.VcsLogUiImpl;
+import consulo.versionControlSystem.log.impl.internal.ui.AbstractVcsLogUi;
+import consulo.versionControlSystem.log.impl.internal.ui.VcsLogCommitModel;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
@@ -37,9 +35,9 @@ public class VcsLogImpl implements VcsLog {
   
   private final VcsLogDataImpl myLogData;
   
-  private final VcsLogUiImpl myUi;
+  private final AbstractVcsLogUi myUi;
 
-  public VcsLogImpl(VcsLogDataImpl manager, VcsLogUiImpl ui) {
+  public VcsLogImpl(VcsLogDataImpl manager, AbstractVcsLogUi ui) {
     myLogData = manager;
     myUi = ui;
   }
@@ -47,26 +45,26 @@ public class VcsLogImpl implements VcsLog {
   @Override
   
   public List<CommitId> getSelectedCommits() {
-    return getSelectedDataFromTable(GraphTableModel::getCommitIdAtRow);
+    return getSelectedDataFromTable(VcsLogCommitModel::getCommitIdAtRow);
   }
 
   
   @Override
   public List<VcsShortCommitDetails> getSelectedShortDetails() {
-    return getSelectedDataFromTable(GraphTableModel::getShortDetails);
+    return getSelectedDataFromTable(VcsLogCommitModel::getShortDetails);
   }
 
   
   @Override
   public List<VcsFullCommitDetails> getSelectedDetails() {
-    return getSelectedDataFromTable(GraphTableModel::getFullDetails);
+    return getSelectedDataFromTable(VcsLogCommitModel::getFullDetails);
   }
 
   @Override
   public void requestSelectedDetails(Consumer<List<VcsFullCommitDetails>> consumer, @Nullable ProgressIndicator indicator) {
-    List<Integer> rowsList = Ints.asList(myUi.getTable().getSelectedRows());
+    List<Integer> rowsList = myUi.getSelectedRows();
     myLogData.getCommitDetailsGetter()
-      .loadCommitsData(getTable().getModel().convertToCommitIds(rowsList), consumer, indicator);
+      .loadCommitsData(myUi.getCommitModel().convertToCommitIds(rowsList), consumer, indicator);
   }
 
   @Override
@@ -100,24 +98,18 @@ public class VcsLogImpl implements VcsLog {
     return myLogData.getLogProviders();
   }
 
-  
-  private VcsLogGraphTable getTable() {
-    return myUi.getTable();
-  }
-
-  
-  private <T> List<T> getSelectedDataFromTable(BiFunction<GraphTableModel, Integer, T> dataGetter) {
-    final int[] rows = myUi.getTable().getSelectedRows();
+  private <T> List<T> getSelectedDataFromTable(BiFunction<VcsLogCommitModel, Integer, T> dataGetter) {
+    List<Integer> rows = myUi.getSelectedRows();
+    VcsLogCommitModel model = myUi.getCommitModel();
     return new AbstractList<T>() {
-      
       @Override
       public T get(int index) {
-        return dataGetter.apply(getTable().getModel(), rows[index]);
+        return dataGetter.apply(model, rows.get(index));
       }
 
       @Override
       public int size() {
-        return rows.length;
+        return rows.size();
       }
     };
   }

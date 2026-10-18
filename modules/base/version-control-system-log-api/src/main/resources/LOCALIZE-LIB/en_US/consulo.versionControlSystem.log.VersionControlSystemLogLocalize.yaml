@@ -49,9 +49,13 @@ action.match.case.only.supported:
 action.match.case.text:
     text: Match Case
 action.open.another.tab.description:
-    text: Open another log tab
+    text: Open new tab with {0} Log
+action.open.another.tab.in.editor.description:
+    text: Open new tab with {0} Log in editor
+action.open.another.tab.in.editor.text:
+    text: Open New {0} Log Editor Tab
 action.open.another.tab.text:
-    text: Open Another Log Tab
+    text: Open New {0} Log Tab
 action.refresh.log.description:
     text: Check for new commits and refresh Log if necessary
 action.refresh.log.text:
@@ -64,6 +68,10 @@ action.show.details.description:
     text: Display details panel
 action.show.details.text:
     text: Show Details
+action.show.external.log.description:
+    text: Show the log of repositories outside the project
+action.show.external.log.text:
+    text: Show Repository Log…
 action.show.graph.history.description:
     text: Show history as graph
 action.show.graph.history.text:
@@ -80,6 +88,106 @@ action.show.tag.names.description:
     text: Show tag names in the table
 action.show.tag.names.text:
     text: Show Tag Names
+column.author:
+    text: Author
+column.date:
+    text: Date
+column.subject:
+    text: Subject
+duplicated.tab.id.error:
+    text: VCS Log tab cannot be opened twice
+editor.name:
+    text: VCS Log Editor
+external.log.tab.description:
+    text: Log for {0}
+external.log.window.title:
+    text: Repository Log
+filetype.vcs.log.description:
+    text: VCS Log
+filter.all:
+    text: All
+filter.branch:
+    text: Branch
+filter.combo.text:
+    text: '{0}: {1}'
+filter.date:
+    text: Date
+filter.date.after:
+    text: After
+filter.date.before:
+    text: Before
+filter.date.display.name.after:
+    text: since {0}
+filter.date.display.name.before:
+    text: until {0}
+filter.date.display.name.between:
+    text: between {0} and {1}
+filter.date.last.24.hours:
+    text: Last 24 hours
+filter.date.last.7.days:
+    text: Last 7 days
+filter.date.since:
+    text: Since {0}
+filter.date.until:
+    text: Until {0}
+filter.paths:
+    text: Paths
+filter.paths.no.folders:
+    text: No folders
+filter.paths.no.items:
+    text: No items
+filter.paths.no.roots:
+    text: No roots
+filter.paths.no.roots.selected:
+    text: No Roots Selected
+filter.paths.root.only.tooltip:
+    text: '{0}+Click to see only "{1}"'
+filter.paths.roots:
+    text: Roots
+filter.paths.select.folders:
+    text: Select Folders…
+filter.paths.select.folders.title:
+    text: Select Files or Folders to Filter by
+filter.paths.tooltip.folders:
+    text: 'Folders:'
+filter.paths.tooltip.roots:
+    text: 'Roots:'
+filter.presentation.branch.with.prefix:
+    text: on {0}
+filter.presentation.date.with.prefix.made.after:
+    text: made since {0}
+filter.presentation.date.with.prefix.made.before:
+    text: made until {0}
+filter.presentation.date.with.prefix.made.between:
+    text: made between {0} and {1}
+filter.presentation.root.with.prefix:
+    text: in {0}
+filter.presentation.structure.with.prefix:
+    text: for {0}
+filter.presentation.text.with.prefix:
+    text: containing {0}
+filter.presentation.user.with.prefix:
+    text: by {0}
+filter.recent:
+    text: Recent
+filter.select:
+    text: Select…
+filter.select.period.title:
+    text: Select Period
+filter.select.values.negative.text:
+    text: Values separated by | or new lines. Prefix a value with - to exclude it
+filter.select.values.text:
+    text: Values separated by | or new lines
+filter.select.values.title:
+    text: Select {0}
+filter.text.placeholder:
+    text: Text or Hash
+filter.text.shortcut.tooltip:
+    text: Use {0} to switch between text filter and commits list
+filter.user:
+    text: User
+filter.user.me:
+    text: me
 graph.sort.linear.description:
     text: In case of merge show incoming commits on top of main branch commits as if they were rebased
 graph.sort.linear.name:
@@ -118,6 +226,8 @@ group.text.filter.settings.text:
     text: Text Filter Settings
 group.toolbar.text:
     text: VCS Log Toolbar
+log.is.loading:
+    text: Loading VCS Log…
 process.collapsing.linear.branches:
     text: Collapsing linear branches…
 process.collapsing.merges:
@@ -126,3 +236,9 @@ process.expanding.linear.branches:
     text: Expanding linear branches…
 process.expanding.merges:
     text: Expanding merges…
+tab.name:
+    text: Log
+text.no.commits.selected:
+    text: No commits selected
+vcs:
+    text: VCS

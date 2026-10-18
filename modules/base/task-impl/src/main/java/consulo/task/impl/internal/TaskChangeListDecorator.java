@@ -6,7 +6,7 @@ import consulo.versionControlSystem.change.LocalChangeList;
 import consulo.task.LocalTask;
 import consulo.task.TaskManager;
 import consulo.project.Project;
-import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
+import consulo.ui.TextItemPresentation;
 import jakarta.inject.Inject;
 
 /**
@@ -23,10 +23,10 @@ public class TaskChangeListDecorator implements ChangeListDecorator {
   }
 
   @Override
-  public void decorateChangeList(LocalChangeList changeList, ColoredTreeCellRenderer cellRenderer, boolean selected, boolean expanded, boolean hasFocus) {
+  public void decorateChangeList(LocalChangeList changeList, TextItemPresentation presentation, boolean selected, boolean expanded, boolean hasFocus) {
     LocalTask task = TaskManager.getManager(myProject).getAssociatedTask(changeList);
     if (task != null && task.isIssue()) {
-      cellRenderer.setIcon(task.getIcon());
+      presentation.withIcon(task.getIcon());
     }
   }
 }

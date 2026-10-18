@@ -1,6 +1,7 @@
 package consulo.versionControlSystem.log;
 
-import java.awt.*;
+import consulo.ui.color.ColorValue;
+
 import java.util.Collection;
 import java.util.List;
 
@@ -29,5 +30,5 @@ public interface RefGroup {
     /**
      * Returns the colors of this ref group, which will be used to paint it in the table.
      */
-    List<Color> getColors();
+    List<ColorValue> getColors();
 }

@@ -15,6 +15,7 @@
  */
 package consulo.versionControlSystem.impl.internal.change.ui.awt;
 
+import consulo.versionControlSystem.internal.ChangesListView;
 import consulo.project.Project;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
@@ -28,7 +29,7 @@ import java.util.List;
 public class UnversionedViewDialog extends SpecificFilesViewDialog {
 
   public UnversionedViewDialog(Project project) {
-    super(project, "Unversioned Files", ChangesListViewImpl.UNVERSIONED_FILES_DATA_KEY,
+    super(project, "Unversioned Files", ChangesListView.UNVERSIONED_FILES_DATA_KEY,
           ChangeListManagerEx.getInstanceEx(project).getUnversionedFiles());
   }
 

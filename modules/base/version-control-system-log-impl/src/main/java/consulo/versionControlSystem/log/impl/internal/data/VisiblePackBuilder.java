@@ -16,7 +16,6 @@
 package consulo.versionControlSystem.log.impl.internal.data;
 
 import consulo.logging.Logger;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Pair;
 import consulo.versionControlSystem.FilePath;
@@ -34,7 +33,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
 import java.util.*;
-import java.util.function.Supplier;
 
 class VisiblePackBuilder {
     private static final Logger LOG = Logger.getInstance(VisiblePackBuilder.class);
@@ -290,7 +288,7 @@ class VisiblePackBuilder {
         if (details != null) {
             return details;
         }
-        return UIUtil.invokeAndWaitIfNeeded((Supplier<VcsCommitMetadata>)() -> myCommitDetailsGetter.getCommitDataIfAvailable(commitIndex));
+        return myCommitDetailsGetter.getCommitDataIfAvailable(commitIndex);
     }
 
     

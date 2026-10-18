@@ -16,11 +16,13 @@
 package consulo.versionControlSystem.distributed.ui;
 
 import consulo.application.progress.ProgressManager;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.ui.CheckBox;
+import consulo.ui.Component;
+import consulo.ui.MessageBoxes;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.Messages;
-import consulo.ui.ex.awt.NonFocusableCheckBox;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.FilePath;
@@ -36,8 +38,6 @@ import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
-import java.awt.*;
 import java.util.List;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -54,36 +54,41 @@ public abstract class AmendComponent {
     
     private final CheckinProjectPanel myCheckinPanel;
     
-    private final JCheckBox myAmend;
+    private final CheckBox myAmend;
     
     private final String myPreviousMessage;
 
     private @Nullable Map<VirtualFile, String> myMessagesForRoots;
     private @Nullable String myAmendedMessage;
+    private boolean myResetting;
 
+    @RequiredUIAccess
     public AmendComponent(
         Project project,
         RepositoryManager<? extends Repository> repoManager,
         CheckinProjectPanel panel
     ) {
-        this(project, repoManager, panel, DistributedVcsLocalize.commitAmend().get());
+        this(project, repoManager, panel, DistributedVcsLocalize.commitAmend());
     }
 
+    @RequiredUIAccess
     public AmendComponent(
         Project project,
         RepositoryManager<? extends Repository> repoManager,
         CheckinProjectPanel panel,
-        String title
+        LocalizeValue title
     ) {
         myRepoManager = repoManager;
         myCheckinPanel = panel;
-        myAmend = new NonFocusableCheckBox(title);
-        myAmend.setMnemonic('m');
-        myAmend.setToolTipText(DistributedVcsLocalize.commitAmendTooltip().get());
+        myAmend = CheckBox.create(title);
+        myAmend.setToolTipText(DistributedVcsLocalize.commitAmendTooltip());
         myPreviousMessage = myCheckinPanel.getCommitMessage();
 
-        myAmend.addActionListener(e -> {
-            if (myAmend.isSelected()) {
+        myAmend.addValueListener(event -> {
+            if (myResetting) {
+                return;
+            }
+            if (Boolean.TRUE.equals(event.getValue())) {
                 if (myPreviousMessage.equals(myCheckinPanel.getCommitMessage())) { // if user has already typed something, don't revert it
                     if (myMessagesForRoots == null) {
                         loadMessagesInModalTask(project); // load all commit messages for all repositories
@@ -116,17 +121,22 @@ public abstract class AmendComponent {
         return DvcsUtil.joinMessagesOrNull(messages);
     }
 
+    @RequiredUIAccess
     public void refresh() {
-        myAmend.setSelected(false);
+        myResetting = true;
+        try {
+            myAmend.setValue(false);
+        }
+        finally {
+            myResetting = false;
+        }
     }
 
-    
     public Component getComponent() {
         return myAmend;
     }
 
-    
-    public JCheckBox getCheckBox() {
+    public CheckBox getCheckBox() {
         return myAmend;
     }
 
@@ -141,11 +151,9 @@ public abstract class AmendComponent {
             );
         }
         catch (VcsException e) {
-            Messages.showErrorDialog(
-                project,
-                VcsLocalize.amendCommitLoadMessageErrorText(e.getMessage()).get(),
-                VcsLocalize.amendCommitLoadMessageErrorTitle().get()
-            );
+            MessageBoxes.okError(VcsLocalize.amendCommitLoadMessageErrorText(e.getMessage()))
+                .title(VcsLocalize.amendCommitLoadMessageErrorTitle())
+                .showAsync();
             LOG.info(e);
         }
     }
@@ -188,6 +196,6 @@ public abstract class AmendComponent {
     protected abstract @Nullable String getLastCommitMessage(VirtualFile repo) throws VcsException;
 
     public boolean isAmend() {
-        return myAmend.isSelected();
+        return myAmend.getValueOrError();
     }
 }

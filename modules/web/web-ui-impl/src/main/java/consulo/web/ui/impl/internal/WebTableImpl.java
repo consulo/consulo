@@ -18,31 +18,37 @@ package consulo.web.ui.impl.internal;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
-import com.vaadin.flow.data.provider.ListDataProvider;
+import com.vaadin.flow.data.provider.CallbackDataProvider;
+import com.vaadin.flow.data.provider.Query;
 import com.vaadin.flow.data.selection.MultiSelect;
+import com.vaadin.flow.data.selection.MultiSelectionEvent;
+import com.vaadin.flow.data.selection.SelectionEvent;
+import com.vaadin.flow.data.selection.SingleSelectionEvent;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Length;
-import consulo.web.ui.impl.internal.vaadin.WebLength;
-import consulo.ui.Component;
 import consulo.ui.Table;
 import consulo.ui.TableColumn;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.event.TableDoubleClickEvent;
 import consulo.ui.event.TableSelectEvent;
+import consulo.ui.impl.table.TableRowOrder;
 import consulo.ui.model.FlatDataModel;
 import consulo.ui.model.FlatDataModelEvent;
-import consulo.util.collection.ContainerUtil;
 import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
 import consulo.web.ui.impl.internal.base.VaadinComponentDelegate;
 import consulo.web.ui.impl.internal.base.WebInputDetails;
+import consulo.web.ui.impl.internal.vaadin.WebLength;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 /**
  * @author VISTALL
@@ -60,20 +66,27 @@ public class WebTableImpl<Item> extends VaadinComponentDelegate<WebTableImpl<Ite
     }
 
     private final FlatDataModel<Item> myModel;
+    private final TableRowOrder<Item> myOrder;
+    private final CallbackDataProvider<Item, Void> myDataProvider;
+    private @Nullable Comparator<Item> mySorting;
+
     private @Nullable Function<Item, ColorValue> myRowBackgroundGetter;
     private final List<WebTableColumnImpl<Item, ?>> myColumns = new ArrayList<>();
 
     private @Nullable Function<Item, Length> myItemHeightGetter;
     private @Nullable Function<Item, String> mySpeedSearchConverter;
     private boolean myAllowMultipleSelect;
+    private @Nullable Item mySelectionAnchor;
 
     public WebTableImpl(FlatDataModel<Item> model) {
         myModel = model;
+        myOrder = new TableRowOrder<>(model);
+        myDataProvider = new CallbackDataProvider<>(this::fetch, query -> myOrder.size(), model::getId);
 
         Vaadin grid = toVaadinComponent();
         grid.addThemeVariants(GridVariant.NO_ROW_BORDERS, GridVariant.COLUMN_BORDERS, GridVariant.NO_BORDER);
         grid.setSelectionMode(Grid.SelectionMode.SINGLE);
-        grid.setItems(new ListDataProvider<>(ContainerUtil.collect(model.iterator())));
+        grid.setItems(myDataProvider);
 
         model.addListener(this::onModelChanged);
 
@@ -81,7 +94,7 @@ public class WebTableImpl<Item> extends VaadinComponentDelegate<WebTableImpl<Ite
 
         grid.addItemClickListener(event -> {
             if (myAllowMultipleSelect) {
-                selectClicked(event.getItem(), event.isCtrlKey() || event.isMetaKey());
+                selectClicked(event.getItem(), event.isCtrlKey() || event.isMetaKey(), event.isShiftKey());
             }
         });
 
@@ -90,22 +103,48 @@ public class WebTableImpl<Item> extends VaadinComponentDelegate<WebTableImpl<Ite
                 .onEvent(new TableDoubleClickEvent(this, event.getItem(), WebInputDetails.details(event))));
     }
 
+    private Stream<Item> fetch(Query<Item, Void> query) {
+        Comparator<Item> sorting = query.getInMemorySorting();
+        if (sorting != mySorting) {
+            mySorting = sorting;
+            myOrder.sort(sorting);
+        }
+        return myOrder.fetch(query.getOffset(), query.getLimit()).stream();
+    }
+
     private void onModelChanged(FlatDataModelEvent event) {
-        Vaadin grid = toVaadinComponent();
-        if (event.getType() == FlatDataModelEvent.Type.UPDATED) {
+        myOrder.modelChanged();
+
+        if (event.getType() == FlatDataModelEvent.Type.UPDATED && !myOrder.isSorted()) {
             int size = myModel.getSize();
             for (int i = Math.max(0, event.getFromIndex()); i <= event.getToIndex() && i < size; i++) {
-                grid.getDataProvider().refreshItem(myModel.get(i));
+                myDataProvider.refreshItem(myModel.get(i));
             }
             return;
         }
 
-        grid.setItems(new ListDataProvider<>(ContainerUtil.collect(myModel.iterator())));
+        myDataProvider.refreshAll();
     }
 
-    private void selectClicked(Item item, boolean toggle) {
+    private void selectClicked(Item item, boolean toggle, boolean range) {
         MultiSelect<Grid<Item>, Item> selection = toVaadinComponent().asMultiSelect();
         Set<Item> selected = selection.getSelectedItems();
+
+        Item anchor = mySelectionAnchor;
+        if (range && anchor != null) {
+            Set<Item> rangeItems = rangeOf(anchor, item);
+            Set<Item> removed = new HashSet<>(selected);
+            if (toggle) {
+                removed.clear();
+            }
+            else {
+                removed.removeAll(rangeItems);
+            }
+            selection.updateSelection(rangeItems, removed);
+            return;
+        }
+
+        mySelectionAnchor = item;
         if (toggle) {
             if (selected.contains(item)) {
                 selection.deselect(item);
@@ -121,6 +160,18 @@ public class WebTableImpl<Item> extends VaadinComponentDelegate<WebTableImpl<Ite
         selection.updateSelection(Set.of(item), removed);
     }
 
+    private Set<Item> rangeOf(Item from, Item to) {
+        int fromRow = myOrder.rowOf(from);
+        int toRow = myOrder.rowOf(to);
+        if (fromRow < 0 || toRow < 0) {
+            return Set.of(to);
+        }
+
+        int first = Math.min(fromRow, toRow);
+        int last = Math.max(fromRow, toRow);
+        return new LinkedHashSet<>(myOrder.fetch(first, last - first + 1));
+    }
+
     private void installSelectionListener() {
         Vaadin grid = toVaadinComponent();
         grid.addSelectionListener(event -> {
@@ -128,10 +179,29 @@ public class WebTableImpl<Item> extends VaadinComponentDelegate<WebTableImpl<Ite
 
             // a ComponentRenderer is not re-run on selection change, so the rows entering and leaving
             // the selection are refreshed by hand to keep RenderItem#isSelected honest
-            grid.getDataProvider().refreshAll();
+            for (Item changed : changedSelection(event)) {
+                myDataProvider.refreshItem(changed);
+            }
 
             getListenerDispatcher(TableSelectEvent.class).onEvent(new TableSelectEvent(this, selected));
         });
+    }
+
+    private Set<Item> changedSelection(SelectionEvent<Grid<Item>, Item> event) {
+        Set<Item> changed = new LinkedHashSet<>();
+        if (event instanceof MultiSelectionEvent<Grid<Item>, Item> multi) {
+            changed.addAll(multi.getAddedSelection());
+            changed.addAll(multi.getRemovedSelection());
+        }
+        else if (event instanceof SingleSelectionEvent<Grid<Item>, Item> single) {
+            if (single.getOldValue() != null) {
+                changed.add(single.getOldValue());
+            }
+            if (single.getValue() != null) {
+                changed.add(single.getValue());
+            }
+        }
+        return changed;
     }
 
     @Override
@@ -212,12 +282,14 @@ public class WebTableImpl<Item> extends VaadinComponentDelegate<WebTableImpl<Ite
     @RequiredUIAccess
     @Override
     public void select(Item item) {
+        mySelectionAnchor = item;
         toVaadinComponent().select(item);
     }
 
     @RequiredUIAccess
     @Override
     public void deselectAll() {
+        mySelectionAnchor = null;
         toVaadinComponent().deselectAll();
     }
 
@@ -235,7 +307,10 @@ public class WebTableImpl<Item> extends VaadinComponentDelegate<WebTableImpl<Ite
     @RequiredUIAccess
     @Override
     public void scrollTo(Item item) {
-        toVaadinComponent().scrollToItem(item);
+        int row = myOrder.rowOf(item);
+        if (row >= 0) {
+            toVaadinComponent().scrollToIndex(row);
+        }
     }
 
     @Override
@@ -251,6 +326,6 @@ public class WebTableImpl<Item> extends VaadinComponentDelegate<WebTableImpl<Ite
     @Override
     public void setItemHeightGetter(@Nullable Function<Item, Length> getter) {
         myItemHeightGetter = getter;
-        toVaadinComponent().getDataProvider().refreshAll();
+        myDataProvider.refreshAll();
     }
 }

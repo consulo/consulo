@@ -15,6 +15,7 @@
  */
 package consulo.versionControlSystem.change.diff;
 
+import consulo.application.Application;
 import consulo.application.progress.ProgressIndicator;
 import consulo.component.ProcessCanceledException;
 import consulo.diff.DiffContentFactory;
@@ -34,7 +35,6 @@ import consulo.diff.util.DiffUtil;
 import consulo.diff.util.Side;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
@@ -254,14 +254,21 @@ public class ChangeDiffRequestProducer implements DiffRequestProducer {
                 SimpleReference<Throwable> exceptionRef = new SimpleReference<>();
                 SimpleReference<MergeData> mergeDataRef = new SimpleReference<>();
                 VirtualFile finalFile = file;
-                UIUtil.invokeAndWaitIfNeeded((Runnable)() -> {
+                Runnable loadRevisions = () -> {
                     try {
                         mergeDataRef.set(vcs.getMergeProvider().loadRevisions(finalFile));
                     }
                     catch (VcsException e) {
                         exceptionRef.set(e);
                     }
-                });
+                };
+                Application application = Application.get();
+                if (application.isDispatchThread()) {
+                    loadRevisions.run();
+                }
+                else {
+                    application.invokeAndWait(loadRevisions);
+                }
                 if (!exceptionRef.isNull()) {
                     Throwable e = exceptionRef.get();
                     if (e instanceof VcsException vcsException) {

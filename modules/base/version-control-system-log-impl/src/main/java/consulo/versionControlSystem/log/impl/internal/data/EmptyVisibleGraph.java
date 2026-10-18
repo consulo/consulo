@@ -24,7 +24,7 @@ import consulo.versionControlSystem.log.graph.action.GraphAction;
 import consulo.versionControlSystem.log.graph.action.GraphAnswer;
 import org.jspecify.annotations.Nullable;
 
-import java.awt.*;
+import consulo.ui.cursor.Cursor;
 import java.util.Collection;
 import java.util.Collections;
 

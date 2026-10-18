@@ -32,6 +32,7 @@ import consulo.versionControlSystem.impl.internal.change.action.CreatePatchFromC
     id = "ShelvedChangesPopupMenu",
     children = {
         @ActionRef(id = "ShelveChanges.UnshelveWithDialog"),
+        @ActionRef(type = UnshelveSilentlyAction.class),
         @ActionRef(type = RestoreShelvedChange.class),
         @ActionRef(type = DiffShelvedChangesAction.class),
         @ActionRef(type = CreatePatchFromChangesAction.class),

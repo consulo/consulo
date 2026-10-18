@@ -15,19 +15,9 @@
  */
 package consulo.versionControlSystem.log.impl.internal.ui.filter;
 
-import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.ActionGroup;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
-import consulo.ui.ex.action.Presentation;
-import consulo.ui.ex.awt.SearchTextField;
-import consulo.ui.ex.awt.SearchTextFieldWithStoredHistory;
-import consulo.ui.ex.awt.action.CustomComponentAction;
-import consulo.ui.ex.awt.event.DocumentAdapter;
-import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
@@ -38,29 +28,22 @@ import consulo.versionControlSystem.log.impl.internal.VcsLogFilterCollectionImpl
 import consulo.versionControlSystem.log.impl.internal.VcsLogHashFilterImpl;
 import consulo.versionControlSystem.log.impl.internal.VcsLogUserFilterImpl;
 import consulo.versionControlSystem.log.impl.internal.data.*;
+import consulo.versionControlSystem.log.impl.internal.ui.AbstractVcsLogUi;
 import consulo.versionControlSystem.log.impl.internal.ui.VcsLogRootFilterImpl;
-import consulo.versionControlSystem.log.impl.internal.ui.VcsLogUiImpl;
-import consulo.versionControlSystem.log.internal.VcsLogActionPlaces;
 import consulo.versionControlSystem.log.util.VcsLogUtil;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.text.BadLocationException;
 import java.util.*;
 import java.util.function.Supplier;
 
 public class VcsLogClassicFilterUi implements VcsLogFilterUi {
-    private static final String VCS_LOG_TEXT_FILTER_HISTORY = "Vcs.Log.Text.Filter.History";
-
     private static final String HASH_PATTERN = "[a-fA-F0-9]{7,}";
     private static final Logger LOG = Logger.getInstance(VcsLogClassicFilterUi.class);
 
-    
-    private final VcsLogUiImpl myUi;
+    private final AbstractVcsLogUi myUi;
 
     
     private final VcsLogDataImpl myLogData;
@@ -82,7 +65,7 @@ public class VcsLogClassicFilterUi implements VcsLogFilterUi {
     private final TextFilterModel myTextFilterModel;
 
     public VcsLogClassicFilterUi(
-        VcsLogUiImpl ui,
+        AbstractVcsLogUi ui,
         VcsLogDataImpl logData,
         MainVcsLogUiProperties uiProperties,
         VcsLogDataPack initialDataPack
@@ -118,31 +101,75 @@ public class VcsLogClassicFilterUi implements VcsLogFilterUi {
         myDataPack = dataPack;
     }
 
-    
-    public SearchTextField createTextFilter() {
-        return new TextFilterField(myTextFilterModel);
+    /**
+     * The filters of the Log toolbar, without widgets: each frontend shows them as it can.
+     */
+    public List<FilterPopup<?>> createFilterPopups() {
+        return List.of(
+            new BranchFilterPopup(myUiProperties, myBranchFilterModel),
+            new UserFilterPopup(myUiProperties, myLogData, myUserFilterModel),
+            new DateFilterPopup(myDateFilterModel),
+            new StructureFilterPopup(myStructureFilterModel, myUi.getColorManager())
+        );
     }
 
-    /**
-     * Returns filter components which will be added to the Log toolbar.
-     */
-    public ActionGroup createActionGroup() {
-        ActionGroup.Builder actionGroup = ActionGroup.newImmutableBuilder();
-        actionGroup.add(new FilterActionComponent(() -> new BranchFilterPopupComponent(
-            myUi,
-            myUiProperties,
-            myBranchFilterModel
-        ).initUi()));
-        actionGroup.add(new FilterActionComponent(() -> new UserFilterPopupComponent(
-            myUiProperties,
-            myLogData,
-            myUserFilterModel
-        ).initUi()));
-        actionGroup.add(new FilterActionComponent(() -> new DateFilterPopupComponent(myDateFilterModel).initUi()));
-        actionGroup.add(
-            new FilterActionComponent(() -> new StructureFilterPopupComponent(myStructureFilterModel, myUi.getColorManager()).initUi())
+    public String getTextFilterText() {
+        return myTextFilterModel.getText();
+    }
+
+    public void setUnsavedTextFilterText(String text) {
+        myTextFilterModel.setUnsavedText(text);
+    }
+
+    public boolean hasUnsavedTextFilterChanges() {
+        return myTextFilterModel.hasUnsavedChanges();
+    }
+
+    @RequiredUIAccess
+    public void applyTextFilter(String text) {
+        if (StringUtil.isEmptyOrSpaces(text)) {
+            myTextFilterModel.setFilter(null);
+            return;
+        }
+        myTextFilterModel.setFilter(new VcsLogTextFilterImpl(
+            text,
+            myUiProperties.get(MainVcsLogUiProperties.TEXT_FILTER_REGEX),
+            myUiProperties.get(MainVcsLogUiProperties.TEXT_FILTER_MATCH_CASE)
+        ));
+    }
+
+    public void addTextFilterListener(Runnable listener) {
+        myTextFilterModel.addSetFilterListener(listener);
+    }
+
+    public void addFilterListener(Runnable listener) {
+        myBranchFilterModel.addSetFilterListener(listener);
+        myUserFilterModel.addSetFilterListener(listener);
+        myDateFilterModel.addSetFilterListener(listener);
+        myStructureFilterModel.addSetFilterListener(listener);
+        myTextFilterModel.addSetFilterListener(listener);
+    }
+
+    @RequiredUIAccess
+    public void setFilters(VcsLogFilterCollection collection) {
+        UIAccess.assertIsUIThread();
+        myBranchFilterModel.setFilter(collection.getBranchFilter());
+        myUserFilterModel.setFilter(collection.getUserFilter());
+        myDateFilterModel.setFilter(collection.getDateFilter());
+
+        VcsLogHashFilter hashFilter = collection.getHashFilter();
+        if (hashFilter != null) {
+            myTextFilterModel.setFilter(new VcsLogTextFilterImpl(String.join(" ", hashFilter.getHashes()), false, false));
+        }
+        else {
+            myTextFilterModel.setFilter(collection.getTextFilter());
+        }
+
+        VcsLogStructureFilter structureFilter = collection.getStructureFilter();
+        VcsLogRootFilter rootFilter = collection.getRootFilter();
+        myStructureFilterModel.setFilter(
+            structureFilter == null && rootFilter == null ? null : new VcsLogFileFilter(structureFilter, rootFilter)
         );
-        return actionGroup.build();
     }
 
     
@@ -212,27 +239,8 @@ public class VcsLogClassicFilterUi implements VcsLogFilterUi {
         else if (filter instanceof VcsLogStructureFilter) {
             myStructureFilterModel.setFilter(new VcsLogFileFilter((VcsLogStructureFilter) filter, null));
         }
-        JComponent toolbar = myUi.getToolbar();
-        toolbar.revalidate();
-        toolbar.repaint();
-    }
-
-    private static class FilterActionComponent extends DumbAwareAction implements CustomComponentAction {
-        private final Supplier<JComponent> myComponentCreator;
-
-        public FilterActionComponent(Supplier<JComponent> componentCreator) {
-            myComponentCreator = componentCreator;
-        }
-
-        
-        @Override
-        public JComponent createCustomComponent(Presentation presentation, String place) {
-            return myComponentCreator.get();
-        }
-
-        @Override
-        @RequiredUIAccess
-        public void actionPerformed(AnActionEvent e) {
+        else if (filter instanceof VcsLogRootFilter rootFilter) {
+            myStructureFilterModel.setFilter(new VcsLogFileFilter(null, rootFilter));
         }
     }
 
@@ -467,58 +475,6 @@ public class VcsLogClassicFilterUi implements VcsLogFilterUi {
         @Override
         protected List<String> getFilterValues(VcsLogUserFilter filter) {
             return ContainerUtil.newArrayList(((VcsLogUserFilterImpl) filter).getUserNamesForPresentation());
-        }
-    }
-
-    private static class TextFilterField extends SearchTextFieldWithStoredHistory {
-        
-        private final TextFilterModel myTextFilterModel;
-
-        public TextFilterField(TextFilterModel model) {
-            super(VCS_LOG_TEXT_FILTER_HISTORY);
-            myTextFilterModel = model;
-            setText(myTextFilterModel.getText());
-            getTextEditor().addActionListener(e -> applyFilter());
-            setPlaceholder(LocalizeValue.localizeTODO("Text or Hash"));
-
-            addDocumentListener(new DocumentAdapter() {
-                @Override
-                protected void textChanged(DocumentEvent e) {
-                    try {
-                        myTextFilterModel.setUnsavedText(e.getDocument().getText(0, e.getDocument().getLength()));
-                    }
-                    catch (BadLocationException ex) {
-                        LOG.error(ex);
-                    }
-                }
-            });
-            
-            String shortcutText = KeymapUtil.getFirstKeyboardShortcutText(VcsLogActionPlaces.VCS_LOG_FOCUS_TEXT_FILTER);
-            if (!shortcutText.isEmpty()) {
-                getTextEditor().setToolTipText("Use " + shortcutText + " to switch between text filter and commits list");
-            }
-        }
-
-        protected void applyFilter() {
-            myTextFilterModel.setFilter(new VcsLogTextFilterImpl(
-                getText(),
-                myTextFilterModel.myUiProperties.get(MainVcsLogUiProperties.TEXT_FILTER_REGEX),
-                myTextFilterModel.myUiProperties
-                    .get(MainVcsLogUiProperties.TEXT_FILTER_MATCH_CASE)
-            ));
-            addCurrentTextToHistory();
-        }
-
-        @Override
-        protected void onFieldCleared() {
-            myTextFilterModel.setFilter(null);
-        }
-
-        @Override
-        protected void onFocusLost() {
-            if (myTextFilterModel.hasUnsavedChanges()) {
-                applyFilter();
-            }
         }
     }
 }

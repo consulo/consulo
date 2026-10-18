@@ -27,9 +27,9 @@ import consulo.versionControlSystem.AbstractVcsHelper;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.change.ChangesUtil;
-import consulo.versionControlSystem.impl.internal.change.ChangesViewManagerImpl;
+import consulo.versionControlSystem.change.ChangesViewManager;
 import consulo.versionControlSystem.change.VcsDirtyScopeManager;
-import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesListViewImpl;
+import consulo.versionControlSystem.internal.ChangesListView;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -53,7 +53,7 @@ public abstract class AbstractMissingFilesAction extends LegacyDumbAwareAction {
 
     @Override
     public void update(AnActionEvent e) {
-        List<FilePath> files = e.getData(ChangesListViewImpl.MISSING_FILES_DATA_KEY);
+        List<FilePath> files = e.getData(ChangesListView.MISSING_FILES_DATA_KEY);
         boolean enabled = files != null && !files.isEmpty();
         e.getPresentation().setEnabledAndVisible(enabled);
     }
@@ -62,7 +62,7 @@ public abstract class AbstractMissingFilesAction extends LegacyDumbAwareAction {
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
-        List<FilePath> files = e.getRequiredData(ChangesListViewImpl.MISSING_FILES_DATA_KEY);
+        List<FilePath> files = e.getRequiredData(ChangesListView.MISSING_FILES_DATA_KEY);
         ProgressManager progressManager = ProgressManager.getInstance();
         Runnable action = () -> {
             List<VcsException> allExceptions = new ArrayList<>();
@@ -76,7 +76,7 @@ public abstract class AbstractMissingFilesAction extends LegacyDumbAwareAction {
             for (FilePath file : files) {
                 VcsDirtyScopeManager.getInstance(project).fileDirty(file);
             }
-            ChangesViewManagerImpl.getInstance(project).scheduleRefresh();
+            ChangesViewManager.getInstance(project).scheduleRefresh();
             if (allExceptions.size() > 0) {
                 AbstractVcsHelper.getInstance(project).showErrors(allExceptions, "VCS Errors");
             }

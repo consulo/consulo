@@ -16,15 +16,20 @@
 package consulo.versionControlSystem.internal;
 
 import consulo.util.dataholder.Key;
+import consulo.versionControlSystem.FilePath;
+import consulo.versionControlSystem.change.LocallyDeletedChange;
 import consulo.virtualFileSystem.VirtualFile;
 
 import java.util.List;
-import java.util.stream.Stream;
 
 /**
  * @author VISTALL
  * @since 2025-09-05
  */
 public interface ChangesListView {
-    public static final Key<List<VirtualFile>> UNVERSIONED_FILES_DATA_KEY = Key.create("ChangeListView.UnversionedFiles");
+    String HELP_ID = "ideaInterface.changes";
+    Key<List<VirtualFile>> UNVERSIONED_FILES_DATA_KEY = Key.create("ChangeListView.UnversionedFiles");
+    Key<List<VirtualFile>> IGNORED_FILES_DATA_KEY = Key.create("ChangeListView.IgnoredFiles");
+    Key<List<FilePath>> MISSING_FILES_DATA_KEY = Key.create("ChangeListView.MissingFiles");
+    Key<List<LocallyDeletedChange>> LOCALLY_DELETED_CHANGES = Key.create("ChangeListView.LocallyDeletedChanges");
 }

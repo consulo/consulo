@@ -15,11 +15,13 @@
  */
 package consulo.versionControlSystem.log.impl.internal.data;
 
+import consulo.application.Application;
 import consulo.logging.Logger;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 
 /**
@@ -46,6 +48,16 @@ public abstract class SingleTaskController<Request, Result> {
   
   private List<Request> myAwaitingRequests;
   private boolean myActive;
+
+  public static void runInEdt(BooleanSupplier disposed, Runnable action) {
+    Application application = Application.get();
+    if (application.isDispatchThread()) {
+      action.run();
+    }
+    else {
+      application.invokeLater(action, disposed);
+    }
+  }
 
   public SingleTaskController(Consumer<Result> handler) {
     myResultHandler = handler;

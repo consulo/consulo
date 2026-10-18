@@ -22,7 +22,7 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.LegacyDumbAwareAction;
-import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesViewContentManager;
+import consulo.versionControlSystem.internal.ChangesViewContentI;
 
 /**
  * @author yole
@@ -41,7 +41,7 @@ public class FilterCommittedAction extends LegacyDumbAwareAction {
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
-        CommittedChangesPanel panel = ChangesViewContentManager.getInstance(project).getActiveComponent(CommittedChangesPanel.class);
+        CommittedChangesPanel panel = ChangesViewContentI.getInstance(project).getActiveComponent(CommittedChangesPanel.class);
         assert panel != null;
         panel.setChangesFilter();
     }
@@ -50,7 +50,7 @@ public class FilterCommittedAction extends LegacyDumbAwareAction {
     public void update(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         if (project != null) {
-            CommittedChangesPanel panel = ChangesViewContentManager.getInstance(project).getActiveComponent(CommittedChangesPanel.class);
+            CommittedChangesPanel panel = ChangesViewContentI.getInstance(project).getActiveComponent(CommittedChangesPanel.class);
             e.getPresentation().setVisible(panel != null && panel.getRepositoryLocation() != null);
         }
         else {

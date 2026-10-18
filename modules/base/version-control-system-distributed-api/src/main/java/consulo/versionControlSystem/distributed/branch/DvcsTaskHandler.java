@@ -17,19 +17,21 @@ package consulo.versionControlSystem.distributed.branch;
 
 import consulo.application.Application;
 import consulo.project.Project;
-import consulo.ui.ex.awt.Messages;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.MessageBoxes;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.FactoryMap;
 import consulo.util.collection.MultiMap;
 import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.VcsTaskHandler;
+import consulo.versionControlSystem.distributed.localize.DistributedVcsLocalize;
 import consulo.versionControlSystem.distributed.repository.AbstractRepositoryManager;
 import consulo.versionControlSystem.distributed.repository.Repository;
-
 import org.jspecify.annotations.Nullable;
 
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 public abstract class DvcsTaskHandler<R extends Repository> extends VcsTaskHandler {
     
@@ -55,33 +57,54 @@ public abstract class DvcsTaskHandler<R extends Repository> extends VcsTaskHandl
     }
 
     @Override
-    public TaskInfo startNewTask(String taskName) {
+    @RequiredUIAccess
+    public CompletableFuture<TaskInfo> startNewTask(String taskName) {
         List<R> repositories = myRepositoryManager.getRepositories();
         List<R> problems = ContainerUtil.filter(
             repositories,
             repository -> hasBranch(repository, new TaskInfo(taskName, Collections.emptyList()))
         );
-        List<R> map = new ArrayList<>();
-        if (!problems.isEmpty()) {
-            if (Application.get().isUnitTestMode()
-                || Messages.showDialog(myProject,
-                    "<html>The following repositories already have specified " + myBranchType + "<b>" + taskName + "</b>:<br>" +
-                        StringUtil.join(problems, "<br>") + ".<br>" +
-                        "Do you want to checkout existing " + myBranchType + "?", StringUtil.capitalize(myBranchType) + " Already Exists",
-                    new String[]{Messages.YES_BUTTON, Messages.NO_BUTTON}, 0,
-                    UIUtil.getWarningIcon()
-                ) == 0) {
-                checkout(taskName, problems, null);
-                map.addAll(problems);
-            }
+        if (problems.isEmpty()) {
+            return CompletableFuture.completedFuture(createTask(taskName, List.of(), repositories));
         }
-        repositories.removeAll(problems);
-        if (!repositories.isEmpty()) {
-            checkoutAsNewBranch(taskName, repositories);
+        if (Application.get().isUnitTestMode()) {
+            return CompletableFuture.completedFuture(checkoutExisting(taskName, problems, repositories));
         }
 
-        map.addAll(repositories);
-        return new TaskInfo(taskName, ContainerUtil.map(map, Repository::getPresentableUrl));
+        UIAccess uiAccess = UIAccess.current();
+        return MessageBoxes.yesNo()
+            .asWarning()
+            .richText()
+            .title(DistributedVcsLocalize.dialogTitleAlreadyExists(StringUtil.capitalize(myBranchType)))
+            .text(DistributedVcsLocalize.dialogMessageFollowingRepositoriesAlreadyHaveSpecified(
+                myBranchType,
+                taskName,
+                StringUtil.join(problems, "<br>"),
+                myBranchType
+            ))
+            .showAsync(myProject)
+            .thenApplyAsync(
+                yes -> Boolean.TRUE.equals(yes)
+                    ? checkoutExisting(taskName, problems, repositories)
+                    : createTask(taskName, List.of(), ContainerUtil.filter(repositories, r -> !problems.contains(r))),
+                uiAccess
+            );
+    }
+
+    @RequiredUIAccess
+    private TaskInfo checkoutExisting(String taskName, List<R> problems, List<R> repositories) {
+        checkout(taskName, problems, null);
+        return createTask(taskName, problems, ContainerUtil.filter(repositories, r -> !problems.contains(r)));
+    }
+
+    @RequiredUIAccess
+    private TaskInfo createTask(String taskName, List<R> existing, List<R> newBranches) {
+        if (!newBranches.isEmpty()) {
+            checkoutAsNewBranch(taskName, newBranches);
+        }
+        List<R> all = new ArrayList<>(existing);
+        all.addAll(newBranches);
+        return new TaskInfo(taskName, ContainerUtil.map(all, Repository::getPresentableUrl));
     }
 
     @Override

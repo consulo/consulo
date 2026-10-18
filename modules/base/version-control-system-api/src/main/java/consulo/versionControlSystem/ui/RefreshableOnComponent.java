@@ -17,23 +17,11 @@ package consulo.versionControlSystem.ui;
 
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
-
-import javax.swing.*;
 
 /**
  * @author lesya
  */
 public interface RefreshableOnComponent extends Refreshable {
-    
     @RequiredUIAccess
-    default JComponent getComponent() {
-      return (JComponent) TargetAWT.to(getUIComponent());
-    }
-
-    
-    @RequiredUIAccess
-    default Component getUIComponent() {
-      throw new AbstractMethodError();
-    }
+    Component getUIComponent();
 }

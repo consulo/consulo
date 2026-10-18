@@ -42,7 +42,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.LegacyDumbAwareAction;
-import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.util.collection.ContainerUtil;
@@ -131,7 +130,7 @@ public class ApplyPatchAction extends LegacyDumbAwareAction {
             showApplyPatch(project, vFile);
         }
         else {
-            FileChooserDescriptor descriptor = getDialogFactory(project).createSelectPatchDescriptor();
+            FileChooserDescriptor descriptor = ApplyPatchDifferentiatedDialog.createSelectPatchDescriptor();
             VcsApplicationSettings settings = VcsApplicationSettings.getInstance();
             VirtualFile toSelect = settings.PATCH_STORAGE_LOCATION == null
                 ? null
@@ -158,14 +157,13 @@ public class ApplyPatchAction extends LegacyDumbAwareAction {
     // used by TeamCity plugin
     @RequiredUIAccess
     public static void showApplyPatch(Project project, VirtualFile file) {
-        DialogWrapper dialog = getDialogFactory(project).create(
+        new ApplyPatchDifferentiatedDialog(
             project,
             new ApplyPatchDefaultExecutor(project),
-            Collections.<ApplyPatchExecutor>singletonList(new ImportToShelfExecutor(project)),
+            List.of(new ImportToShelfExecutor(project)),
             ApplyPatchMode.APPLY,
             file
-        );
-        dialog.show();
+        ).showAsync();
     }
 
     @RequiredUIAccess
@@ -187,15 +185,16 @@ public class ApplyPatchAction extends LegacyDumbAwareAction {
             return false;
         }
 
-        DialogWrapper dialog = getDialogFactory(project).create(
+        ApplyPatchDifferentiatedDialog dialog = new ApplyPatchDifferentiatedDialog(
             project,
             new ApplyPatchDefaultExecutor(project),
-            Collections.emptyList(),
+            List.of(),
             ApplyPatchMode.APPLY_PATCH_IN_MEMORY,
             vFile
         );
         dialog.setModal(true);
-        return dialog.showAndGet();
+        dialog.showAsync();
+        return true;
     }
 
     public static void applySkipDirs(List<FilePatch> patches, int skipDirs) {
@@ -370,10 +369,5 @@ public class ApplyPatchAction extends LegacyDumbAwareAction {
 
     private static @Nullable String toString(@Nullable CharSequence charSequence) {
         return charSequence != null ? StringUtil.convertLineSeparators(charSequence.toString()) : null;
-    }
-
-    
-    private static ApplyPatchDifferentiatedDialogFactory getDialogFactory(Project project) {
-        return project.getApplication().getInstance(ApplyPatchDifferentiatedDialogFactory.class);
     }
 }

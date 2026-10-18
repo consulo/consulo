@@ -11,23 +11,17 @@ module consulo.version.control.system.log.api {
 
     requires consulo.external.service.api;
 
-    // TODO remove in future
-    requires java.desktop;
-
     exports consulo.versionControlSystem.log;
     exports consulo.versionControlSystem.log.base;
     exports consulo.versionControlSystem.log.event;
     exports consulo.versionControlSystem.log.graph;
     exports consulo.versionControlSystem.log.graph.action;
+    exports consulo.versionControlSystem.log.graph.paint;
+    exports consulo.versionControlSystem.log.paint;
     exports consulo.versionControlSystem.log.localize;
     exports consulo.versionControlSystem.log.ui;
     exports consulo.versionControlSystem.log.util;
 
     exports consulo.versionControlSystem.log.internal to
-        consulo.desktop.awt.editor.impl,
-        consulo.desktop.awt.ide.impl,
-        consulo.desktop.awt.ui.impl,
-        consulo.ide.impl,
-        consulo.version.control.system.distributed.impl,
         consulo.version.control.system.log.impl;
 }

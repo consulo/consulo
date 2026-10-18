@@ -18,6 +18,7 @@ package consulo.versionControlSystem.log;
 import consulo.virtualFileSystem.VirtualFile;
 
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 /**
  * Tells the log to filter by vcs roots.
@@ -28,4 +29,9 @@ public interface VcsLogRootFilter extends VcsLogFilter {
    * Returns vcs roots that are visible.
    */
   Collection<VirtualFile> getRoots();
+
+  @Override
+  default String getDisplayText() {
+    return getRoots().stream().map(VirtualFile::getName).collect(Collectors.joining(", "));
+  }
 }

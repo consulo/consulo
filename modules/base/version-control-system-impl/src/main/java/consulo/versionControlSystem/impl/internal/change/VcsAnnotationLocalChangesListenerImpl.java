@@ -19,7 +19,6 @@ import consulo.application.ApplicationManager;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.disposer.Disposable;
 import consulo.project.Project;
-import consulo.ui.ex.awt.util.Alarm;
 import consulo.util.collection.MultiMap;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.VcsKey;
@@ -61,7 +60,7 @@ public class VcsAnnotationLocalChangesListenerImpl implements Disposable, VcsAnn
   public VcsAnnotationLocalChangesListenerImpl(Project project, ProjectLevelVcsManager vcsManager) {
     myLock = new Object();
     myUpdateStuff = createUpdateStuff();
-    myUpdater = new ZipperUpdater(ApplicationManager.getApplication().isUnitTestMode() ? 10 : 300, Alarm.ThreadToUse.POOLED_THREAD, project);
+    myUpdater = new ZipperUpdater(ApplicationManager.getApplication().isUnitTestMode() ? 10 : 300, project);
     myConnection = project.getMessageBus().connect();
     myLocalFileSystem = LocalFileSystem.getInstance();
     VcsAnnotationRefresher handler = createHandler();

@@ -83,7 +83,7 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup implements Bran
         );
         myProject = project;
         DataManager.registerUiDataProvider(getList(), sink -> {
-            sink.set(BranchListPopup.POPUP_MODEL, getListModel());
+            sink.set(BranchListPopup.REFILTER, getListModel()::refilter);
         });
         myKey = dimensionKey;
         if (myKey != null) {
@@ -160,7 +160,7 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup implements Bran
         // don't store children popup userSize;
         myKey = null;
         DataManager.registerUiDataProvider(getList(), sink -> {
-            sink.set(BranchListPopup.POPUP_MODEL, getListModel());
+            sink.set(BranchListPopup.REFILTER, getListModel()::refilter);
         });
     }
 

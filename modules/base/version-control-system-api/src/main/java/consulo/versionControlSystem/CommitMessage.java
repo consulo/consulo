@@ -17,8 +17,6 @@ package consulo.versionControlSystem;
 
 import consulo.util.dataholder.Key;
 
-import javax.swing.*;
-
 /**
  * @author Irina.Chernushina
  * @since 2012-09-14
@@ -46,6 +44,4 @@ public interface CommitMessage {
     void setCommitMessage(String currentDescription);
 
     String getCommitMessage();
-
-    JComponent getComponent();
 }

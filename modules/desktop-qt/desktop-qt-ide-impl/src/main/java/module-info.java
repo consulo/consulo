@@ -25,6 +25,7 @@ module consulo.desktop.qt.ide.impl {
     requires consulo.language.editor.refactoring.api;
     requires jediterm.core;
     requires consulo.external.service.api;
+    requires consulo.version.control.system.log.api;
 
     // TargetAWTFacade is typed against java.awt even on a frontend which never draws with it
     requires java.desktop;

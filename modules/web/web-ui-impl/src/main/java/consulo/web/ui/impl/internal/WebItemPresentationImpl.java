@@ -258,15 +258,27 @@ public class WebItemPresentationImpl implements TextItemPresentation {
             span.add(image);
         }
 
+        boolean hasSuffix = mySuffixText.isNotEmpty() || mySuffixIcon != null;
         for (Fragment fragment : myFragmentModels) {
             Span text = new Span();
             applyRun(text, fragment.text(), fragment.attribute());
+            if (hasSuffix) {
+                text.getStyle()
+                    .set("min-width", "0")
+                    .set("overflow", "hidden")
+                    .set("text-overflow", "ellipsis")
+                    .set("white-space", "nowrap");
+            }
             span.add(text);
         }
 
-        if (mySuffixText.isEmpty() && mySuffixIcon == null) {
+        if (!hasSuffix) {
             return span;
         }
+
+        span.getStyle()
+            .set("min-width", "0")
+            .set("overflow", "hidden");
 
         Span row = new Span();
         row.getStyle()
@@ -279,7 +291,8 @@ public class WebItemPresentationImpl implements TextItemPresentation {
             .set("margin-left", "auto")
             .set("padding-left", "16px")
             .set("display", "inline-flex")
-            .set("align-items", "center");
+            .set("align-items", "center")
+            .set("flex", "none");
 
         if (mySuffixText.isNotEmpty()) {
             Span suffixText = new Span(mySuffixText.get());

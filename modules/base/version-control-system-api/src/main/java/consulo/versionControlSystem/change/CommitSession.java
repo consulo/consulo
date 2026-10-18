@@ -16,65 +16,68 @@
 
 package consulo.versionControlSystem.change;
 
-import consulo.ui.ex.awt.ValidationInfo;
+import consulo.localize.LocalizeValue;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
-
 import org.jspecify.annotations.Nullable;
-import javax.swing.*;
+
 import java.util.Collection;
 
 /**
  * @author max
  */
 public interface CommitSession {
-  CommitSession VCS_COMMIT = new CommitSession() {
-    public JComponent getAdditionalConfigurationUI() {
-      return null;
+    CommitSession VCS_COMMIT = new CommitSession() {
+        @Override
+        public boolean canExecute(Collection<Change> changes, String commitMessage) {
+            return true;
+        }
+
+        @Override
+        public void execute(Collection<Change> changes, String commitMessage) {
+        }
+
+        @Override
+        public void executionCanceled() {
+        }
+
+        @Override
+        public @Nullable String getHelpId() {
+            return null;
+        }
+    };
+
+    /**
+     * Options asked for before {@link #execute}. The component calls {@code stateChanged} after each edit, so the
+     * dialog showing it re-reads {@link #canExecute} and {@link #validateFields()}.
+     */
+    @RequiredUIAccess
+    default @Nullable Component getAdditionalConfigurationUI(Collection<Change> changes, String commitMessage, Runnable stateChanged) {
+        return null;
     }
 
-    public JComponent getAdditionalConfigurationUI(Collection<Change> changes, String commitMessage) {
-      return null;
+    default LocalizeValue getAdditionalConfigurationTitle() {
+        return LocalizeValue.empty();
     }
 
-    public boolean canExecute(Collection<Change> changes, String commitMessage) {
-      return true;
+    @RequiredUIAccess
+    boolean canExecute(Collection<Change> changes, String commitMessage);
+
+    void execute(Collection<Change> changes, String commitMessage);
+
+    void executionCanceled();
+
+    /**
+     * @return the ID of the help topic to show for the dialog
+     * @since 10.5
+     */
+    @Nullable String getHelpId();
+
+    /**
+     * @return the problem to show under the options, empty when they are valid
+     */
+    @RequiredUIAccess
+    default LocalizeValue validateFields() {
+        return LocalizeValue.empty();
     }
-
-    public void execute(Collection<Change> changes, String commitMessage) {
-    }
-
-    public void executionCanceled() {
-    }
-
-    @Override
-    public String getHelpId() {
-      return null;
-    }
-  };
-
-  /**
-   * @deprecated Since version 7.0, {@link #getAdditionalConfigurationUI(Collection, String)} is called instead
-   */
-  @Nullable JComponent getAdditionalConfigurationUI();
-
-  default @Nullable JComponent getAdditionalConfigurationUI(Collection<Change> changes, String commitMessage) {
-    return getAdditionalConfigurationUI();
-  }
-
-  boolean canExecute(Collection<Change> changes, String commitMessage);
-
-  void execute(Collection<Change> changes, String commitMessage);
-
-  void executionCanceled();
-
-  /**
-   * @return the ID of the help topic to show for the dialog
-   * @since 10.5
-   */
-  String getHelpId();
-
-  @RequiredUIAccess
-  default ValidationInfo validateFields() {
-    return null;
-  }
 }

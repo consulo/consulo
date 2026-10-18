@@ -20,7 +20,6 @@ import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Pair;
 import consulo.versionControlSystem.VcsException;
@@ -99,7 +98,7 @@ public class VcsLogRefresherImpl implements VcsLogRefresher {
     }
 
     protected void startNewBackgroundTask(Task.Backgroundable refreshTask) {
-        UIUtil.invokeLaterIfNeeded(() -> {
+        SingleTaskController.runInEdt(myProject.getDisposed(), () -> {
             LOG.debug("Starting a background task...");
             ProgressManager.getInstance().runProcessWithProgressAsynchronously(refreshTask, myProgress.createProgressIndicator());
         });

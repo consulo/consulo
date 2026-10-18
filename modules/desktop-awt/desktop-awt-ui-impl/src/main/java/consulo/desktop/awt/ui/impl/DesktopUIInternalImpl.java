@@ -180,6 +180,11 @@ public class DesktopUIInternalImpl extends UIInternal implements UIInternalEx {
     }
 
     @Override
+    public <E> Tree<E> _Components_popupTree(TreeModel<E> model) {
+        return new DesktopPopupTreeImpl<>(model);
+    }
+
+    @Override
     public <E> TreeTable<E> _Components_treeTable(@Nullable E rootValue, TreeModel<E> model, TreeExecutor executor) {
         return new DesktopTreeTableImpl<>(rootValue, model, executor);
     }

@@ -18,40 +18,81 @@ package consulo.versionControlSystem.log.impl.internal.action;
 import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionParentRef;
 import consulo.annotation.component.ActionRef;
+import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.component.extension.ExtensionPoint;
 import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.fileChooser.FileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
-import consulo.fileChooser.IdeaFileChooser;
-import consulo.localize.LocalizeValue;
+import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.Component;
+import consulo.ui.UIAccess;
+import consulo.ui.Window;
+import consulo.ui.WindowOptions;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.content.Content;
+import consulo.ui.ex.content.ContentFactory;
 import consulo.ui.ex.content.ContentManager;
+import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.util.collection.ContainerUtil;
+import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.VcsKey;
 import consulo.versionControlSystem.VcsRootChecker;
+import consulo.versionControlSystem.VcsToolWindow;
+import consulo.versionControlSystem.distributed.repository.Repository;
+import consulo.versionControlSystem.distributed.repository.VcsRepositoryCreator;
+import consulo.versionControlSystem.distributed.repository.VcsRepositoryManager;
+import consulo.versionControlSystem.internal.ChangesViewContentI;
+import consulo.versionControlSystem.log.VcsLogFilterCollection;
 import consulo.versionControlSystem.log.impl.internal.VcsLogContentProvider;
+import consulo.versionControlSystem.log.impl.internal.VcsLogFilterCollectionImpl;
+import consulo.versionControlSystem.log.impl.internal.VcsLogManager;
+import consulo.versionControlSystem.log.impl.internal.VcsLogTabLocation;
+import consulo.versionControlSystem.log.impl.internal.VcsProjectLog;
+import consulo.versionControlSystem.log.impl.internal.data.VcsLogTabsProperties;
+import consulo.versionControlSystem.log.impl.internal.ui.AbstractVcsLogUi;
+import consulo.versionControlSystem.log.impl.internal.ui.VcsLogRootFilterImpl;
+import consulo.versionControlSystem.log.localize.VersionControlSystemLogLocalize;
+import consulo.versionControlSystem.root.VcsRoot;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
-import java.awt.*;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.*;
+import java.util.Map;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
+import java.util.function.BiConsumer;
 
+/**
+ * Shows the log of repositories outside the project, in the Version Control tool window or in a separate window.
+ */
 @ActionImpl(id = "Vcs.Log.ShowExternalLog", parents = @ActionParentRef(@ActionRef(id = "Vcs.Browse")))
 public class ShowExternalLogAction extends LegacyDumbAwareAction {
+    private static final Logger LOG = Logger.getInstance(ShowExternalLogAction.class);
+
     private static final String EXTERNAL = "EXTERNAL";
 
+    private static final Key<List<VirtualFile>> EXTERNAL_ROOTS_KEY = Key.create("ShowExternalLogAction.ExternalRoots");
+
     public ShowExternalLogAction() {
-        super(LocalizeValue.localizeTODO("Show Repository Log…"));
+        super(
+            VersionControlSystemLogLocalize.actionShowExternalLogText(),
+            VersionControlSystemLogLocalize.actionShowExternalLogDescription(),
+            null
+        );
     }
 
     @Override
@@ -63,233 +104,215 @@ public class ShowExternalLogAction extends LegacyDumbAwareAction {
     @Override
     public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
-        SequencedMap<VcsKey, List<VirtualFile>> roots = selectRoots(project);
-        if (roots.isEmpty()) {
-            return;
-        }
-
-        ProjectLevelVcsManager projectLevelVcsManager = ProjectLevelVcsManager.getInstance(project);
-        if (project.isDefault() || !projectLevelVcsManager.hasActiveVcss()) {
-//            ProgressManager.getInstance().run(new ShowLogInDialogTask(project, roots));
-            return;
-        }
-
-//        ToolWindow window = ToolWindowManager.getInstance(project).getToolWindow(VcsToolWindow.ID);
-//        Runnable showContent = () -> {
-//            ContentManager cm = window.getContentManager();
-//            if (checkIfProjectLogMatches(project, cm, roots) || checkIfAlreadyOpened(cm, roots)) {
-//                return;
-//            }
-//
-//            for (Map.Entry<VcsKey, List<VirtualFile>> entry : roots.entrySet()) {
-//                VcsKey vcsKey = entry.getKey();
-//                List<VirtualFile> vcsRoots = entry.getValue();
-//
-//                AbstractVcs vcs = projectLevelVcsManager.findVcsByName(vcsKey);
-//                if (vcs == null) {
-//                    continue;
-//                }
-//
-//                String tabName = calcTabName(cm, vcsRoots);
-//                MyContentComponent component = createManagerAndContent(project, vcs, vcsRoots, tabName);
-//                Content content = ContentFactory.getInstance().createContent(component, tabName, false);
-//                content.setDisposer(component.myDisposable);
-//                content.setDescription("Log for " + StringUtil.join(vcsRoots, VirtualFile::getPath, "\n"));
-//                content.setCloseable(true);
-//                cm.addContent(content);
-//                cm.setSelectedContent(content);
-//            }
-//
-//        };
-//
-//        if (!window.isVisible()) {
-//            window.activate(showContent, true);
-//        }
-//        else {
-//            showContent.run();
-//        }
-    }
-
-    
-    private static MyContentComponent createManagerAndContent(
-        Project project,
-        AbstractVcs vcs,
-        SequencedMap<VcsKey, List<VirtualFile>> roots,
-        @Nullable String tabName
-    ) {
-        for (Map.Entry<VcsKey, List<VirtualFile>> entry : roots.entrySet()) {
-            VcsKey vcsKey = entry.getKey();
-            List<VirtualFile> files = entry.getValue();
-        }
-
-//        GitRepositoryManager repositoryManager = ServiceManager.getService(project, GitRepositoryManager.class);
-//        for (VirtualFile root : roots) {
-//            repositoryManager.addExternalRepository(root, GitRepositoryImpl.getInstance(root, project, true));
-//        }
-//        VcsLogManager manager = new VcsLogManager(project,
-//            ServiceManager.getService(project, VcsLogTabsProperties.class),
-//            ContainerUtil.map(roots, root -> new VcsRoot(vcs, root)));
-//        return new MyContentComponent(manager.createLogPanel(calcLogId(roots), tabName), roots, () ->
-//        {
-//            for (VirtualFile root : roots) {
-//                repositoryManager.removeExternalRepository(root);
-//            }
-//        });
-        return null;
-    }
-
-    
-    private static String calcLogId(List<VirtualFile> roots) {
-        return EXTERNAL + " " + StringUtil.join(roots, VirtualFile::getPath, File.pathSeparator);
-    }
-
-    
-    private static String calcTabName(ContentManager cm, List<VirtualFile> roots) {
-        String name = VcsLogContentProvider.TAB_NAME + " (" + roots.get(0).getName();
-        if (roots.size() > 1) {
-            name += "+";
-        }
-        name += ")";
-
-        String candidate = name;
-        int cnt = 1;
-        while (hasContentsWithName(cm, candidate)) {
-            candidate = name + "-" + cnt;
-            cnt++;
-        }
-        return candidate;
-    }
-
-    private static boolean hasContentsWithName(ContentManager cm, String candidate) {
-        return ContainerUtil.exists(cm.getContents(), content -> content.getDisplayName().equals(candidate));
-    }
-
-    
-    private static SequencedMap<VcsKey, List<VirtualFile>> selectRoots(Project project) {
-        ExtensionPoint<VcsRootChecker> checkers = project.getApplication().getExtensionPoint(VcsRootChecker.class);
+        UIAccess uiAccess = UIAccess.current();
 
         FileChooserDescriptor descriptor = new FileChooserDescriptor(false, true, false, true, false, true);
-        VirtualFile[] virtualFiles = IdeaFileChooser.chooseFiles(descriptor, project, null);
-        descriptor.withFileFilter(file -> checkers.anyMatchSafe(r -> r.isRoot(file.getPath())));
+        FileChooser.chooseFiles(descriptor, project, null)
+            .thenApplyAsync(files -> getRootsFromUser(project, files), AppExecutorUtil.getAppExecutorService())
+            .whenCompleteAsync((roots, error) -> {
+                if (error != null) {
+                    if (!(unwrap(error) instanceof CancellationException)) {
+                        LOG.error(error);
+                    }
+                    return;
+                }
+                if (project.isDisposed()) {
+                    return;
+                }
+                for (Map.Entry<VcsKey, List<VirtualFile>> entry : roots.entrySet()) {
+                    showExternalLog(project, entry.getKey(), entry.getValue());
+                }
+            }, uiAccess);
+    }
 
-        SequencedMap<VcsKey, List<VirtualFile>> result = new LinkedHashMap<>();
-        for (VirtualFile file : virtualFiles) {
-            VcsRootChecker checker = checkers.findFirstSafe(r -> r.isRoot(file.getPath()));
+    private static Throwable unwrap(Throwable error) {
+        return error instanceof CompletionException && error.getCause() != null ? error.getCause() : error;
+    }
+
+    private static Map<VcsKey, List<VirtualFile>> getRootsFromUser(Project project, VirtualFile @Nullable [] files) {
+        Map<VcsKey, List<VirtualFile>> result = new LinkedHashMap<>();
+        if (files == null) {
+            return result;
+        }
+
+        ExtensionPoint<VcsRootChecker> checkers = project.getApplication().getExtensionPoint(VcsRootChecker.class);
+        for (VirtualFile file : files) {
+            VcsRootChecker checker = checkers.findFirstSafe(it -> it.isRoot(file.getPath()));
             if (checker != null) {
-                result.computeIfAbsent(checker.getSupportedVcs(), vcsKey -> new ArrayList<>(2)).add(file);
+                result.computeIfAbsent(checker.getSupportedVcs(), vcsKey -> new ArrayList<>()).add(file);
             }
         }
         return result;
     }
 
-    private static boolean checkIfProjectLogMatches(
-        Project project,
-        ContentManager cm,
-        SequencedMap<VcsKey, List<VirtualFile>> roots
-    ) {
-        ProjectLevelVcsManager manager = ProjectLevelVcsManager.getInstance(project);
+    @RequiredUIAccess
+    private static void showExternalLog(Project project, VcsKey vcsKey, List<VirtualFile> roots) {
+        ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow(VcsToolWindow.ID);
+        if (project.isDefault() || !ProjectLevelVcsManager.getInstance(project).hasActiveVcss() || toolWindow == null) {
+            showLog(project, vcsKey, roots, null, (logManager, ui) -> showLogContentWindow(ui.createPanel(logManager), ui));
+            return;
+        }
 
-        if (roots.size() == 1) {
-            Map.Entry<VcsKey, List<VirtualFile>> first = roots.firstEntry();
-
-            AbstractVcs vcs = manager.findVcsByName(first.getKey());
-            if (vcs == null) {
-                return false;
+        String description = VersionControlSystemLogLocalize.externalLogTabDescription(
+            StringUtil.join(roots, VirtualFile::getPath, "\n")
+        ).get();
+        Runnable showContent = () -> {
+            ContentManager contentManager = toolWindow.getContentManager();
+            if (selectProjectLog(project, vcsKey, roots) || selectAlreadyOpened(contentManager, roots)) {
+                return;
             }
 
-            VirtualFile[] projectRoots = manager.getRootsUnderVcs(vcs);
+            String tabName = calcTabName(contentManager, roots);
+            showLog(project, vcsKey, roots, tabName, (logManager, ui) -> {
+                Content content = ContentFactory.getInstance().createUIContent(ui.createPanel(logManager), tabName, false);
+                content.setDisposer(ui);
+                content.setDescription(description);
+                content.setCloseable(true);
+                content.putUserData(Content.TAB_GROUP_NAME_KEY, VcsLogContentProvider.TAB_NAME);
+                content.putUserData(EXTERNAL_ROOTS_KEY, List.copyOf(roots));
+                contentManager.addContent(content);
+                contentManager.setSelectedContent(content);
+            });
+        };
 
-            if (Comparing.haveEqualElements(first.getValue(), Arrays.asList(projectRoots))) {
-                Content[] contents = cm.getContents();
-                for (Content content : contents) {
-                    if (VcsLogContentProvider.TAB_NAME.equals(content.getDisplayName())) {
-                        cm.setSelectedContent(content);
-                        return true;
-                    }
+        if (!toolWindow.isVisible()) {
+            toolWindow.activate(showContent, true);
+        }
+        else {
+            showContent.run();
+        }
+    }
+
+    @RequiredUIAccess
+    private static void showLog(Project project,
+                                VcsKey vcsKey,
+                                List<VirtualFile> roots,
+                                @Nullable String contentTabName,
+                                BiConsumer<VcsLogManager, AbstractVcsLogUi> show) {
+        AbstractVcs vcs = ProjectLevelVcsManager.getInstance(project).findVcsByName(vcsKey);
+        if (vcs == null) {
+            return;
+        }
+
+        UIAccess uiAccess = UIAccess.current();
+        CompletableFuture.supplyAsync(() -> createRepositories(project, vcsKey, roots), AppExecutorUtil.getAppExecutorService())
+            .whenCompleteAsync((repositories, error) -> {
+                if (error != null) {
+                    LOG.error(error);
+                    return;
                 }
+                if (project.isDisposed()) {
+                    repositories.values().forEach(Disposer::dispose);
+                    return;
+                }
+
+                VcsRepositoryManager repositoryManager = VcsRepositoryManager.getInstance(project);
+                repositories.forEach(repositoryManager::addExternalRepository);
+
+                List<VcsRoot> vcsRoots = ContainerUtil.map(roots, root -> new VcsRoot(vcs, root));
+                VcsLogManager logManager = new VcsLogManager(
+                    project,
+                    project.getInstance(VcsLogTabsProperties.class),
+                    vcsRoots,
+                    true,
+                    null
+                );
+                AbstractVcsLogUi ui = logManager.createLogUi(calcLogId(roots), contentTabName, null);
+                Disposer.register(ui, () -> project.getApplication().invokeLater(() -> {
+                    Disposer.dispose(logManager);
+                    for (Map.Entry<VirtualFile, Repository> entry : repositories.entrySet()) {
+                        repositoryManager.removeExternalRepository(entry.getKey());
+                        Disposer.dispose(entry.getValue());
+                    }
+                }));
+                show.accept(logManager, ui);
+            }, uiAccess);
+    }
+
+    private static Map<VirtualFile, Repository> createRepositories(Project project, VcsKey vcsKey, List<VirtualFile> roots) {
+        Map<VirtualFile, Repository> result = new LinkedHashMap<>();
+        VcsRepositoryCreator creator = project.getExtensionPoint(VcsRepositoryCreator.class)
+            .findFirstSafe(it -> vcsKey.equals(it.getVcsKey()));
+        if (creator == null) {
+            return result;
+        }
+        for (VirtualFile root : roots) {
+            Repository repository = creator.createRepositoryIfValid(root);
+            if (repository != null) {
+                result.put(root, repository);
+            }
+        }
+        return result;
+    }
+
+    @RequiredUIAccess
+    private static void showLogContentWindow(Component content, Disposable disposable) {
+        Window window = Window.create(
+            VersionControlSystemLogLocalize.externalLogWindowTitle().get(),
+            WindowOptions.builder().disableModal().dimensionKey(ShowExternalLogAction.class.getName()).build()
+        );
+        window.setContent(content);
+        window.addCloseListener(event -> Disposer.dispose(disposable));
+        window.show();
+    }
+
+    private static String calcLogId(List<VirtualFile> roots) {
+        return EXTERNAL + " " + StringUtil.join(roots, VirtualFile::getPath, File.pathSeparator);
+    }
+
+    private static String calcTabName(ContentManager contentManager, List<VirtualFile> roots) {
+        String name = VersionControlSystemLogLocalize.tabName().get() + " (" + roots.get(0).getName() + (roots.size() > 1 ? "+" : "") + ")";
+        String candidate = name;
+        int count = 1;
+        while (hasContentWithName(contentManager, candidate)) {
+            candidate = name + "-" + count;
+            count++;
+        }
+        return candidate;
+    }
+
+    private static boolean hasContentWithName(ContentManager contentManager, String name) {
+        for (Content content : contentManager.getContents()) {
+            if (name.equals(content.getDisplayName())) {
+                return true;
             }
         }
         return false;
     }
 
-    private static boolean checkIfAlreadyOpened(ContentManager cm, SequencedMap<VcsKey, List<VirtualFile>> roots) {
-        Content toSelect = null;
-
-        for (Content content : cm.getContents()) {
-            JComponent component = content.getComponent();
-            if (!(component instanceof MyContentComponent targetComponent)) {
-                continue;
-            }
-
-            if (toSelect == null) {
-                toSelect = content;
-            }
-
-            for (List<VirtualFile> vcsRoots : roots.values()) {
-                if (!Comparing.haveEqualElements(vcsRoots, targetComponent.myRoots)) {
-                    return false;
-                }
-            }
+    @RequiredUIAccess
+    private static boolean selectProjectLog(Project project, VcsKey vcsKey, List<VirtualFile> roots) {
+        ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance(project);
+        AbstractVcs vcs = vcsManager.findVcsByName(vcsKey);
+        if (vcs == null) {
+            return false;
         }
 
-        if (toSelect != null) {
-            cm.setSelectedContent(toSelect);
+        List<VirtualFile> projectRoots = List.of(vcsManager.getRootsUnderVcs(vcs));
+        if (!projectRoots.containsAll(roots)) {
+            return false;
         }
-        return true;
+
+        if (roots.containsAll(projectRoots)) {
+            ChangesViewContentI.getInstance(project).selectContent(VcsLogContentProvider.TAB_NAME, true);
+            return true;
+        }
+
+        VcsLogFilterCollection filters = new VcsLogFilterCollectionImpl.VcsLogFilterCollectionBuilder()
+            .with(new VcsLogRootFilterImpl(roots))
+            .build();
+        return VcsProjectLog.getInstance(project).openLogTab(filters, VcsLogTabLocation.TOOL_WINDOW) != null;
     }
 
-    private static class MyContentComponent extends JPanel {
-        
-        private final Collection<VirtualFile> myRoots;
-        
-        private final Disposable myDisposable;
-
-        MyContentComponent(JComponent actualComponent, Collection<VirtualFile> roots, Disposable disposable) {
-            super(new BorderLayout());
-            myDisposable = disposable;
-            myRoots = roots;
-            add(actualComponent);
+    @RequiredUIAccess
+    private static boolean selectAlreadyOpened(ContentManager contentManager, Collection<VirtualFile> roots) {
+        for (Content content : contentManager.getContents()) {
+            List<VirtualFile> contentRoots = content.getUserData(EXTERNAL_ROOTS_KEY);
+            if (contentRoots != null && Comparing.haveEqualElements(roots, contentRoots)) {
+                contentManager.setSelectedContent(content);
+                return true;
+            }
         }
+        return false;
     }
-
-//    private static class ShowLogInDialogTask extends Task.Backgroundable {
-//        
-//        private final Project myProject;
-//        
-//        private final SequencedMap<VcsKey, List<VirtualFile>> myRoots;
-//        
-//        private final GitVcs myVcs;
-//        private GitVersion myVersion;
-//
-//        private ShowLogInDialogTask(Project project, SequencedMap<VcsKey, List<VirtualFile>> roots) {
-//            super(project, LocalizeValue.localizeTODO("Loading External Log..."), true);
-//            myProject = project;
-//            myRoots = roots;
-//            myVcs = vcs;
-//        }
-//
-//        @Override
-//        public void run(ProgressIndicator indicator) {
-//            myVersion = myVcs.getVersion();
-//            if (myVersion.isNull()) {
-//                myVcs.checkVersion();
-//                myVersion = myVcs.getVersion();
-//            }
-//        }
-//
-//        @RequiredUIAccess
-//        @Override
-//        public void onSuccess() {
-//            if (!myVersion.isNull() && !myProject.isDisposed()) {
-//                MyContentComponent content = createManagerAndContent(myProject, myVcs, myRoots, null);
-//                WindowWrapper window = new WindowWrapperBuilder(WindowWrapper.Mode.FRAME, content).setProject(myProject)
-//                    .setTitle("Git Log")
-//                    .setPreferredFocusedComponent(content)
-//                    .setDimensionServiceKey(ShowExternalLogAction.class.getName())
-//                    .build();
-//                Disposer.register(window, content.myDisposable);
-//                window.show();
-//            }
-//        }
-//    }
 }

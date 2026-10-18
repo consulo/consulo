@@ -22,7 +22,6 @@ import consulo.project.Project;
 import consulo.project.ui.notification.*;
 import consulo.project.ui.notification.event.NotificationListener;
 import consulo.ui.ModalityState;
-import consulo.ui.ex.awt.UIUtil;
 import org.jspecify.annotations.Nullable;
 
 import consulo.ui.event.HyperlinkEvent;
@@ -98,7 +97,13 @@ public abstract class GenericNotifierImpl<T, Key> {
     }
 
     private void expireNotification(MyNotification notification) {
-        UIUtil.invokeLaterIfNeeded(notification::expire);
+        Application application = myProject.getApplication();
+        if (application.isDispatchThread()) {
+            notification.expire();
+        }
+        else {
+            application.invokeLater(notification::expire, myProject.getDisposed());
+        }
     }
 
     public boolean ensureNotify(T obj) {

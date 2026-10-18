@@ -1,87 +1,66 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.versionControlSystem.impl.internal.util;
 
-import consulo.application.ApplicationManager;
 import consulo.application.internal.BackgroundTaskUtil;
+import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.disposer.Disposable;
-import consulo.ui.ModalityState;
-import consulo.ui.ex.awt.util.Alarm;
-import org.jetbrains.annotations.TestOnly;
+import consulo.disposer.Disposer;
+import org.jspecify.annotations.Nullable;
 
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
+/**
+ * Runs the last queued task on a pooled thread after a delay; requests queued while one is pending are merged into it.
+ */
 public class ZipperUpdater {
-  private final Alarm myAlarm;
-  private boolean myRaised;
   private final Object myLock = new Object();
   private final int myDelay;
-  private final Alarm.ThreadToUse myThreadToUse;
-  private boolean myIsEmpty;
+  private final Disposable myParentDisposable;
+  private boolean myRaised;
+  private boolean myIsEmpty = true;
+  private boolean myDisposed;
+  private @Nullable Future<?> myFuture;
 
   public ZipperUpdater(int delay, Disposable parentDisposable) {
     myDelay = delay;
-    myIsEmpty = true;
-    myThreadToUse = Alarm.ThreadToUse.POOLED_THREAD;
-    myAlarm = new Alarm(Alarm.ThreadToUse.POOLED_THREAD, parentDisposable);
-  }
-
-  public ZipperUpdater(int delay, Alarm.ThreadToUse threadToUse, Disposable parentDisposable) {
-    myDelay = delay;
-    myThreadToUse = threadToUse;
-    myIsEmpty = true;
-    myAlarm = new Alarm(threadToUse, parentDisposable);
+    myParentDisposable = parentDisposable;
+    Disposer.register(parentDisposable, () -> {
+      synchronized (myLock) {
+        myDisposed = true;
+      }
+      stop();
+    });
   }
 
   public void queue(Runnable runnable) {
     queue(runnable, false);
   }
 
-  private void queue(Runnable runnable, boolean urgent) {
-    queue(runnable, urgent, false);
-  }
-
-  public void queue(final Runnable runnable, boolean urgent, boolean anyModality) {
+  public void queue(Runnable runnable, boolean urgent) {
     synchronized (myLock) {
-      if (myAlarm.isDisposed()) return;
+      if (myDisposed) {
+        return;
+      }
       boolean wasRaised = myRaised;
       myRaised = true;
       myIsEmpty = false;
-      if (!wasRaised) {
-        Runnable request = new Runnable() {
-          @Override
-          public void run() {
-            synchronized (myLock) {
-              if (!myRaised) return;
-              myRaised = false;
-            }
-            BackgroundTaskUtil.runUnderDisposeAwareIndicator(myAlarm, runnable);
-            synchronized (myLock) {
-              myIsEmpty = !myRaised;
-            }
-          }
-
-          @Override
-          public String toString() {
-            return runnable.toString();
-          }
-        };
-        if (Alarm.ThreadToUse.SWING_THREAD.equals(myThreadToUse)) {
-          if (anyModality) {
-            myAlarm.addRequest(request, urgent ? 0 : myDelay, ModalityState.any());
-          }
-          else if (!ApplicationManager.getApplication().isDispatchThread()) {
-            myAlarm.addRequest(request, urgent ? 0 : myDelay, ModalityState.nonModal());
-          }
-          else {
-            myAlarm.addRequest(request, urgent ? 0 : myDelay);
-          }
-        }
-        else {
-          myAlarm.addRequest(request, urgent ? 0 : myDelay);
-        }
+      if (wasRaised) {
+        return;
       }
+
+      myFuture = AppExecutorUtil.getAppScheduledExecutorService().schedule(() -> {
+        synchronized (myLock) {
+          if (!myRaised) {
+            return;
+          }
+          myRaised = false;
+        }
+        BackgroundTaskUtil.runUnderDisposeAwareIndicator(myParentDisposable, runnable);
+        synchronized (myLock) {
+          myIsEmpty = !myRaised;
+        }
+      }, urgent ? 0 : myDelay, TimeUnit.MILLISECONDS);
     }
   }
 
@@ -92,16 +71,13 @@ public class ZipperUpdater {
   }
 
   public void stop() {
-    myAlarm.cancelAllRequests();
-  }
-
-  @TestOnly
-  public void waitForAllExecuted(long timeout, TimeUnit unit) {
-    try {
-      myAlarm.waitForAllExecuted(timeout, unit);
-    }
-    catch (InterruptedException | ExecutionException | TimeoutException e) {
-      throw new RuntimeException(e);
+    synchronized (myLock) {
+      myRaised = false;
+      myIsEmpty = true;
+      Future<?> future = myFuture;
+      if (future != null) {
+        future.cancel(false);
+      }
     }
   }
 }

@@ -49,7 +49,6 @@ import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ContentRevision;
 import consulo.versionControlSystem.localize.VcsLocalize;
-import consulo.versionControlSystem.ui.awt.ChangesBrowserTree;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 

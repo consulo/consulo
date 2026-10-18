@@ -124,7 +124,7 @@ public final class TargetAWT {
     }
 
     @Contract("null -> null")
-    public static java.awt.Cursor to(Cursor cursor) {
+    public static java.awt.@Nullable Cursor to(@Nullable Cursor cursor) {
         return ourFacade.to(cursor);
     }
 

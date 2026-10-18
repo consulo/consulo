@@ -33,6 +33,10 @@ public class DesktopSuffixCellRendererPanel extends CellRendererPanel {
 
     private @Nullable JComponent myMainComponent;
 
+    public @Nullable JComponent getMainComponent() {
+        return myMainComponent;
+    }
+
     public DesktopSuffixCellRendererPanel() {
         this(new DesktopTextItemSuffixComponent());
     }

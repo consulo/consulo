@@ -16,22 +16,20 @@
 package consulo.versionControlSystem.history;
 
 import consulo.annotation.UsedInPlugin;
-import consulo.application.Application;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationType;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.awt.DialogBuilder;
 import consulo.util.collection.Lists;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.change.Change;
-import consulo.versionControlSystem.change.ChangesBrowser;
-import consulo.versionControlSystem.change.ChangesBrowserFactory;
 import consulo.versionControlSystem.ui.VcsBalloonProblemNotifier;
+import consulo.versionControlSystem.ui.VcsChangesDialogFactory;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
@@ -121,19 +119,12 @@ public abstract class BaseDiffFromHistoryHandler<T extends VcsFileRevision> impl
 
     protected abstract String getPresentableName(T revision);
 
+    @RequiredUIAccess
     protected void showChangesDialog(String title, List<Change> changes) {
-        DialogBuilder dialogBuilder = new DialogBuilder(myProject);
-
-        dialogBuilder.setTitle(title);
-        dialogBuilder.setActionDescriptors(new DialogBuilder.CloseDialogAction());
-        ChangesBrowserFactory browserFactory = Application.get().getInstance(ChangesBrowserFactory.class);
-
-        ChangesBrowser<Change> changesBrowser =
-            browserFactory.createChangeBrowser(myProject, null, changes, null, false, true, null, ChangesBrowser.MyUseCase.COMMITTED_CHANGES, null);
-        changesBrowser.setChangesToDisplay(changes);
-        dialogBuilder.setCenterPanel(changesBrowser.getComponent());
-        dialogBuilder.setPreferredFocusComponent(changesBrowser.getPreferredFocusedComponent());
-        dialogBuilder.showNotModal();
+        myProject.getApplication().getInstance(VcsChangesDialogFactory.class)
+            .showChanges(myProject, changes)
+            .title(LocalizeValue.of(title))
+            .showAsync();
     }
 
     protected void showError(VcsException e, String logMessage) {

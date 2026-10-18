@@ -25,14 +25,13 @@ import consulo.platform.Platform;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.project.ProjectPropertiesComponent;
-import consulo.project.util.WaitForProgressToShow;
-import consulo.ui.ModalityState;
+import consulo.ui.Component;
+import consulo.ui.MessageBoxBuilder;
+import consulo.ui.MessageBoxRemember;
+import consulo.ui.MessageBoxes;
+import consulo.ui.MessageButtonRole;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.Messages;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awt.ValidationInfo;
-import consulo.ui.ex.awt.util.AskWithOpenFileInFileManager;
 import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.VcsApplicationSettings;
@@ -42,19 +41,17 @@ import consulo.versionControlSystem.change.patch.FilePatch;
 import consulo.versionControlSystem.change.patch.IdeaTextPatchBuilder;
 import consulo.versionControlSystem.change.patch.PatchWriter;
 import consulo.versionControlSystem.impl.internal.change.shelf.ShelveChangesManagerImpl;
-import consulo.versionControlSystem.impl.internal.change.ui.awt.SessionDialog;
-import consulo.versionControlSystem.impl.internal.ui.awt.CreatePatchConfigurationPanel;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
+import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
 import java.io.File;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 
 @ExtensionImpl
 public class CreatePatchCommitExecutor extends LocalCommitExecutor {
@@ -85,13 +82,13 @@ public class CreatePatchCommitExecutor extends LocalCommitExecutor {
     }
 
     private class CreatePatchCommitSession implements CommitSession, CommitSessionContextAware {
-        private final CreatePatchConfigurationPanel myPanel;
-        private CommitContext myCommitContext;
         private final Project myProject;
+        private @Nullable CreatePatchConfigurationPanel myPanel;
+        private @Nullable UIAccess myUIAccess;
+        private CommitContext myCommitContext = new CommitContext();
 
         public CreatePatchCommitSession(Project project) {
             myProject = project;
-            myPanel = new CreatePatchConfigurationPanel(myProject);
         }
 
         @Override
@@ -100,12 +97,12 @@ public class CreatePatchCommitExecutor extends LocalCommitExecutor {
         }
 
         @Override
-        public @Nullable JComponent getAdditionalConfigurationUI() {
-            return myPanel.getPanel();
-        }
+        @RequiredUIAccess
+        public Component getAdditionalConfigurationUI(Collection<Change> changes, String commitMessage, Runnable stateChanged) {
+            myUIAccess = UIAccess.current();
+            CreatePatchConfigurationPanel panel = new CreatePatchConfigurationPanel(myProject);
+            myPanel = panel;
 
-        @Override
-        public JComponent getAdditionalConfigurationUI(Collection<Change> changes, String commitMessage) {
             String patchPath = ProjectPropertiesComponent.getInstance(myProject).getValue(VCS_PATCH_PATH_KEY);
             if (StringUtil.isEmptyOrSpaces(patchPath)) {
                 VcsApplicationSettings settings = VcsApplicationSettings.getInstance();
@@ -116,55 +113,45 @@ public class CreatePatchCommitExecutor extends LocalCommitExecutor {
                 }
             }
 
-            myPanel.setFileName(ShelveChangesManagerImpl.suggestPatchName(myProject, commitMessage, new File(patchPath), null));
+            panel.setFileName(ShelveChangesManagerImpl.suggestPatchName(myProject, commitMessage, new File(patchPath), null));
             File commonAncestor = ChangesUtil.findCommonAncestor(changes);
-            myPanel.setCommonParentPath(commonAncestor);
+            panel.setCommonParentPath(commonAncestor);
             Set<AbstractVcs> affectedVcses = ChangesUtil.getAffectedVcses(changes, myProject);
             if (affectedVcses.size() == 1 && commonAncestor != null) {
                 VirtualFile vcsRoot = VcsUtil.getVcsRootFor(myProject, VcsUtil.getFilePath(commonAncestor));
                 if (vcsRoot != null) {
-                    myPanel.selectBasePath(vcsRoot);
+                    panel.selectBasePath(vcsRoot);
                 }
             }
-            myPanel.setReversePatch(false);
+            panel.setReversePatch(false);
+            panel.setStateChanged(stateChanged);
+            return panel.getComponent();
+        }
 
-            JComponent panel = myPanel.getPanel();
-            panel.putClientProperty(SessionDialog.VCS_CONFIGURATION_UI_TITLE, "Patch File Settings");
-            return panel;
+        @Override
+        public LocalizeValue getAdditionalConfigurationTitle() {
+            return VcsLocalize.createPatchSettingsDialogTitle();
         }
 
         @Override
         public boolean canExecute(Collection<Change> changes, String commitMessage) {
-            return myPanel.isOkToExecute();
+            return myPanel != null && myPanel.isOkToExecute();
         }
 
         @Override
-        @RequiredUIAccess
         public void execute(Collection<Change> changes, String commitMessage) {
-            String fileName = myPanel.getFileName();
+            CreatePatchConfigurationPanel panel = myPanel;
+            UIAccess uiAccess = myUIAccess;
+            if (panel == null || uiAccess == null) {
+                return;
+            }
+            String fileName = panel.getFileName();
             File file = new File(fileName).getAbsoluteFile();
-            if (file.exists()) {
-                int[] result = new int[1];
-                WaitForProgressToShow.runOrInvokeAndWaitAboveProgress(() -> result[0] = Messages.showYesNoDialog(
-                    myProject,
-                    "File " + file.getName() + " (" + file.getParent() + ") already exists.\nDo you want to overwrite it?",
-                    CommonLocalize.titleWarning().get(),
-                    UIUtil.getWarningIcon()
-                ));
-                if (Messages.NO == result[0]) {
-                    return;
-                }
+            if (file.exists() && !confirmOverwrite(uiAccess, file)) {
+                return;
             }
             if (file.getParentFile() == null) {
-                WaitForProgressToShow.runOrInvokeLaterAboveProgress(
-                    () -> Messages.showErrorDialog(
-                        myProject,
-                        VcsLocalize.createPatchErrorTitle("Can not write patch to specified file: " + file.getPath()).get(),
-                        CommonLocalize.titleError().get()
-                    ),
-                    ModalityState.nonModal(),
-                    myProject
-                );
+                showError(uiAccess, VcsLocalize.createPatchErrorTitle(VcsLocalize.patchCreationCanNotWritePatchError(file.getPath())));
                 return;
             }
 
@@ -175,15 +162,9 @@ public class CreatePatchCommitExecutor extends LocalCommitExecutor {
                 }
             }
             if (binaryCount == changes.size()) {
-                WaitForProgressToShow.runOrInvokeLaterAboveProgress(
-                    () -> Messages.showInfoMessage(
-                        myProject,
-                        VcsLocalize.createPatchAllBinary().get(),
-                        VcsLocalize.createPatchCommitActionTitle().get()
-                    ),
-                    null,
-                    myProject
-                );
+                uiAccess.give(() -> MessageBoxes.okInfo(VcsLocalize.createPatchAllBinary())
+                    .title(VcsLocalize.createPatchCommitActionTitle())
+                    .showAsync(myProject));
                 return;
             }
             try {
@@ -192,47 +173,72 @@ public class CreatePatchCommitExecutor extends LocalCommitExecutor {
                 String patchPath = file.getParent();
                 VcsApplicationSettings.getInstance().PATCH_STORAGE_LOCATION = patchPath;
                 ProjectPropertiesComponent.getInstance(myProject).setValue(VCS_PATCH_PATH_KEY, patchPath);
-                boolean reversePatch = myPanel.isReversePatch();
+                boolean reversePatch = panel.isReversePatch();
 
-                String baseDirName = myPanel.getBaseDirName();
+                String baseDirName = panel.getBaseDirName();
                 List<FilePatch> patches = IdeaTextPatchBuilder.buildPatch(myProject, changes, baseDirName, reversePatch);
-                PatchWriter.writePatches(myProject, fileName, baseDirName, patches, myCommitContext, myPanel.getEncoding());
-                LocalizeValue message;
-                if (binaryCount == 0) {
-                    message = VcsLocalize.createPatchSuccessConfirmation(file.getPath());
-                }
-                else {
-                    message = VcsLocalize.createPatchPartialSuccessConfirmation(file.getPath(), binaryCount);
-                }
-                WaitForProgressToShow.runOrInvokeLaterAboveProgress(() -> {
-                    VcsConfiguration configuration = VcsConfiguration.getInstance(myProject);
-                    if (Boolean.TRUE.equals(configuration.SHOW_PATCH_IN_EXPLORER)) {
-                        Platform.current().openFileInFileManager(file, UIAccess.current());
-                    }
-                    else if (Boolean.FALSE.equals(configuration.SHOW_PATCH_IN_EXPLORER)) {
-                        return;
-                    }
-                    else {
-                        configuration.SHOW_PATCH_IN_EXPLORER =
-                            AskWithOpenFileInFileManager.showDialog(myProject, message, VcsLocalize.createPatchCommitActionTitle(), file);
-                    }
-                }, null, myProject);
+                PatchWriter.writePatches(myProject, fileName, baseDirName, patches, myCommitContext, panel.getEncoding());
+                LocalizeValue message = binaryCount == 0
+                    ? VcsLocalize.createPatchSuccessConfirmation(file.getPath())
+                    : VcsLocalize.createPatchPartialSuccessConfirmation(file.getPath(), binaryCount);
+                uiAccess.give(() -> offerToOpenPatch(uiAccess, message, file));
             }
-            catch (ProcessCanceledException e) {
-                //
+            catch (ProcessCanceledException ignored) {
             }
             catch (Exception ex) {
                 LOG.info(ex);
-                WaitForProgressToShow.runOrInvokeLaterAboveProgress(
-                    () -> Messages.showErrorDialog(
-                        myProject,
-                        VcsLocalize.createPatchErrorTitle(ex.getMessage()).get(),
-                        CommonLocalize.titleError().get()
-                    ),
-                    null,
-                    myProject
-                );
+                showError(uiAccess, VcsLocalize.createPatchErrorTitle(ex.getMessage()));
             }
+        }
+
+        private boolean confirmOverwrite(UIAccess uiAccess, File file) {
+            CompletableFuture<Boolean> answer = new CompletableFuture<>();
+            uiAccess.give(() -> MessageBoxes.yesNo()
+                .asWarning()
+                .title(CommonLocalize.titleWarning())
+                .text(VcsLocalize.patchApplyAlreadyExistsOverwritePrompt(file.getName(), file.getParent()))
+                .showAsync(myProject)
+                .whenComplete((yes, error) -> answer.complete(Boolean.TRUE.equals(yes))));
+            return answer.join();
+        }
+
+        private void showError(UIAccess uiAccess, LocalizeValue message) {
+            uiAccess.give(() -> MessageBoxes.okError(message).title(CommonLocalize.titleError()).showAsync(myProject));
+        }
+
+        @RequiredUIAccess
+        private void offerToOpenPatch(UIAccess uiAccess, LocalizeValue message, File file) {
+            VcsConfiguration configuration = VcsConfiguration.getInstance(myProject);
+            MessageBoxBuilder.<Boolean>create()
+                .asInfo()
+                .title(VcsLocalize.createPatchCommitActionTitle())
+                .text(message)
+                .button(MessageButtonRole.YES, LocalizeValue.of(Platform.current().fileManagerName()), Boolean.TRUE)
+                .asDefaultButton()
+                .button(MessageButtonRole.NO, CommonLocalize.actionClose(), Boolean.FALSE)
+                .asExitButton()
+                .remember(new MessageBoxRemember<>() {
+                    @Override
+                    public void setValue(Boolean value) {
+                        configuration.SHOW_PATCH_IN_EXPLORER = value;
+                    }
+
+                    @Override
+                    public @Nullable Boolean getValue() {
+                        return configuration.SHOW_PATCH_IN_EXPLORER;
+                    }
+
+                    @Override
+                    public LocalizeValue getMessageText() {
+                        return CommonLocalize.dialogOptionsDoNotAsk();
+                    }
+                })
+                .showAsync(myProject)
+                .whenComplete((open, error) -> {
+                    if (Boolean.TRUE.equals(open)) {
+                        Platform.current().openFileInFileManager(file, uiAccess);
+                    }
+                });
         }
 
         @Override
@@ -241,12 +247,12 @@ public class CreatePatchCommitExecutor extends LocalCommitExecutor {
 
         @Override
         @RequiredUIAccess
-        public @Nullable ValidationInfo validateFields() {
-            return myPanel.validateFields();
+        public LocalizeValue validateFields() {
+            return myPanel == null ? LocalizeValue.empty() : myPanel.validateFields();
         }
 
         @Override
-        public String getHelpId() {
+        public @Nullable String getHelpId() {
             return null;
         }
     }

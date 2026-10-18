@@ -42,7 +42,7 @@ import consulo.util.lang.StringUtil;
 import consulo.util.lang.ThreeState;
 import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.change.*;
-import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesListViewImpl;
+import consulo.versionControlSystem.internal.ChangesListView;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.rollback.RollbackEnvironment;
 import consulo.virtualFileSystem.VirtualFile;
@@ -119,7 +119,7 @@ public class RollbackAction extends LegacyDumbAwareAction {
         }
         FileDocumentManager.getInstance().saveAllDocuments();
 
-        List<FilePath> missingFiles = e.getData(ChangesListViewImpl.MISSING_FILES_DATA_KEY);
+        List<FilePath> missingFiles = e.getData(ChangesListView.MISSING_FILES_DATA_KEY);
         boolean hasChanges = false;
         if (missingFiles != null && !missingFiles.isEmpty()) {
             hasChanges = true;

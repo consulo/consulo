@@ -22,7 +22,6 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -180,7 +179,7 @@ public final class VcsInitialization {
             if (myProject.getApplication().isWriteAccessAllowed()) {
                 // dispose happens without prior project close (most likely light project case in tests)
                 // get out of write action and wait there
-                SwingUtilities.invokeLater(this::waitNotRunning);
+                myProject.getApplication().invokeLater(this::waitNotRunning);
             }
             else {
                 waitNotRunning();

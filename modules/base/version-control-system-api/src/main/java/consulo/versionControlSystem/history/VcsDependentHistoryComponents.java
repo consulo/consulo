@@ -15,35 +15,42 @@
  */
 package consulo.versionControlSystem.history;
 
-import consulo.ui.ex.awt.ColumnInfo;
+import consulo.ui.Component;
+import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
+import java.util.List;
 import java.util.function.Consumer;
 
 public class VcsDependentHistoryComponents {
-  private final ColumnInfo[] myColumns;
-  private final Consumer<VcsFileRevision> myRevisionListener;
-  private final JComponent myDetailsComponent;
+  private final List<VcsHistoryColumn> myColumns;
+  private final @Nullable Consumer<VcsFileRevision> myRevisionListener;
+  private final @Nullable Component myDetailsComponent;
 
-  public VcsDependentHistoryComponents(ColumnInfo[] columns, Consumer<VcsFileRevision> revisionListener, JComponent detailsComponent) {
-    myColumns = columns;
+  public VcsDependentHistoryComponents(List<VcsHistoryColumn> columns,
+                                       @Nullable Consumer<VcsFileRevision> revisionListener,
+                                       @Nullable Component detailsComponent) {
+    myColumns = List.copyOf(columns);
     myRevisionListener = revisionListener;
     myDetailsComponent = detailsComponent;
   }
 
-  public static VcsDependentHistoryComponents createOnlyColumns(ColumnInfo[] columns) {
+  public static VcsDependentHistoryComponents createOnlyColumns(List<VcsHistoryColumn> columns) {
     return new VcsDependentHistoryComponents(columns, null, null);
   }
 
-  public ColumnInfo[] getColumns() {
+  public static VcsDependentHistoryComponents empty() {
+    return createOnlyColumns(List.of());
+  }
+
+  public List<VcsHistoryColumn> getColumns() {
     return myColumns;
   }
 
-  public Consumer<VcsFileRevision> getRevisionListener() {
+  public @Nullable Consumer<VcsFileRevision> getRevisionListener() {
     return myRevisionListener;
   }
 
-  public JComponent getDetailsComponent() {
+  public @Nullable Component getDetailsComponent() {
     return myDetailsComponent;
   }
 }

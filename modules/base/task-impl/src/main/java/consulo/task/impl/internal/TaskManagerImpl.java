@@ -426,6 +426,7 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
         return new VcsTaskHandler.TaskInfo(next.getKey(), next.getValue());
     }
 
+    @RequiredUIAccess
     public void createBranch(LocalTask task, LocalTask previousActive, String name, VcsTaskHandler.@Nullable TaskInfo branchFrom) {
         VcsTaskHandler[] handlers = VcsTaskHandler.getAllHandlers(myProject);
         for (VcsTaskHandler handler : handlers) {
@@ -437,7 +438,14 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
             if (info.length == 0 && branchFrom != null) {
                 addBranches(task, new VcsTaskHandler.TaskInfo[]{branchFrom}, true);
             }
-            addBranches(task, new VcsTaskHandler.TaskInfo[]{handler.startNewTask(name)}, false);
+            handler.startNewTask(name).whenComplete((taskInfo, error) -> {
+                if (taskInfo != null) {
+                    addBranches(task, new VcsTaskHandler.TaskInfo[]{taskInfo}, false);
+                }
+                else if (error != null) {
+                    LOG.error(error);
+                }
+            });
         }
     }
 

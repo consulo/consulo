@@ -29,7 +29,6 @@ import consulo.versionControlSystem.change.VcsDirtyScopeManager;
 import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -200,13 +199,7 @@ public class UpdateRequestsQueue {
     // do not run under lock; stopped cannot be switched into not stopped - can check without lock
     if (myStopped) {
       LOG.debug("invokeAfterUpdate: stopped, invoke right now for project: " + myProject.getName());
-      SwingUtilities.invokeLater(new Runnable() {
-        public void run() {
-          if (!myProject.isDisposed()) {
-            afterUpdate.run();
-          }
-        }
-      });
+      myProject.getApplication().invokeLater(afterUpdate, myProject.getDisposed());
       return;
     }
     // invoke progress if needed

@@ -15,13 +15,14 @@
  */
 package consulo.versionControlSystem.log.internal;
 
-import consulo.ui.ex.Gray;
-import consulo.ui.ex.JBColor;
+import consulo.ui.color.ColorValue;
+import consulo.ui.color.RGBColor;
+import consulo.ui.util.LightDarkColorValue;
 
 /**
  * @author VISTALL
  * @since 2025-08-31
  */
 public class VcsLogColors {
-    public static final JBColor MERGE_COMMIT_FOREGROUND = new JBColor(Gray._128, Gray._96);
+    public static final ColorValue MERGE_COMMIT_FOREGROUND = new LightDarkColorValue(new RGBColor(128, 128, 128), new RGBColor(96, 96, 96));
 }

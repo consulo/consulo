@@ -15,7 +15,7 @@
  */
 package consulo.codeEditor;
 
-import java.awt.*;
+import consulo.ui.cursor.Cursor;
 
 /**
  * Interface for executing actions when text annotations in the editor gutter are clicked.

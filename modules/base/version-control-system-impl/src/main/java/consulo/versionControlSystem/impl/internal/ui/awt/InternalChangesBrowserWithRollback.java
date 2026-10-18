@@ -21,7 +21,7 @@ import consulo.ui.ex.action.IdeActions;
 import consulo.util.collection.ContainerUtil;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangeListManager;
-import consulo.versionControlSystem.change.ChangesBrowser;
+import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesBrowser;
 import consulo.versionControlSystem.impl.internal.change.action.RollbackDialogAction;
 
 import java.util.Collection;

@@ -10,7 +10,6 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.MultiMap;
 import consulo.util.lang.Comparing;
@@ -82,7 +81,7 @@ abstract class AbstractDataGetter<T extends VcsShortCommitDetails> implements Di
   }
 
   private void notifyLoaded() {
-    UIUtil.invokeAndWaitIfNeeded((Runnable)() -> {
+    SingleTaskController.runInEdt(() -> Disposer.isDisposed(this), () -> {
       for (Runnable loadingFinishedListener : myLoadingFinishedListeners) {
         loadingFinishedListener.run();
       }

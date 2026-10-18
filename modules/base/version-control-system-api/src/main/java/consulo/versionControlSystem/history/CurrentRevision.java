@@ -15,11 +15,12 @@
  */
 package consulo.versionControlSystem.history;
 
+import consulo.application.Application;
 import consulo.application.ReadAction;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
-import consulo.ui.ex.awt.Messages;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.localize.LocalizeValue;
+import consulo.ui.MessageBoxes;
 import consulo.versionControlSystem.RepositoryLocation;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.localize.VcsLocalize;
@@ -65,11 +66,9 @@ public class CurrentRevision implements VcsFileRevision {
       }
     }
     catch (IOException e) {
-      UIUtil.invokeLaterIfNeeded(() -> Messages.showMessageDialog(
-        e.getLocalizedMessage(),
-        VcsLocalize.messageTextCouldNotLoadFileContent().get(),
-        Messages.getErrorIcon()
-      ));
+      Application.get().invokeLater(() -> MessageBoxes.okError(LocalizeValue.of(e.getLocalizedMessage()))
+        .title(VcsLocalize.messageTextCouldNotLoadFileContent())
+        .showAsync());
       return null;
     }
 

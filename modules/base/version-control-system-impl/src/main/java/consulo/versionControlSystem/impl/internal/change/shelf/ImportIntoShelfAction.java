@@ -22,14 +22,15 @@ import consulo.fileChooser.FileChooserDescriptor;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationType;
+import consulo.ui.MessageBoxes;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.LegacyDumbAwareAction;
-import consulo.ui.ex.awt.Messages;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.versionControlSystem.AbstractVcsHelper;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.change.shelf.ShelvedChangesViewManager;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.impl.internal.change.shelf.ShelveChangesManagerImpl;
 import consulo.versionControlSystem.impl.internal.change.shelf.ShelvedChangeListImpl;
 import consulo.versionControlSystem.ui.VcsBalloonProblemNotifier;
@@ -59,7 +60,8 @@ public class ImportIntoShelfAction extends LegacyDumbAwareAction {
     public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
         FileChooserDescriptor descriptor = new FileChooserDescriptor(true, true, false, false, false, true);
-        FileChooser.chooseFiles(descriptor, project, null).whenComplete((files, error) -> {
+        UIAccess uiAccess = UIAccess.current();
+        FileChooser.chooseFiles(descriptor, project, null).whenCompleteAsync((files, error) -> {
             if (error != null) {
                 return;
             }
@@ -79,34 +81,43 @@ public class ImportIntoShelfAction extends LegacyDumbAwareAction {
                 return;
             }
             if (!patchTypeFiles.equals(files)) {
-                String message = "Found " + (
-                    patchTypeFiles.size() == 1
-                        ? "one patch file (" + patchTypeFiles.get(0).getPath() + ")."
-                        : patchTypeFiles.size() + " patch files."
-                ) + "\nContinue with import?";
-                int toImport = Messages.showYesNoDialog(project, message, "Import Patches", UIUtil.getQuestionIcon());
-                if (toImport == Messages.NO) {
-                    return;
-                }
+                LocalizeValue message = patchTypeFiles.size() == 1
+                    ? VcsLocalize.shelveImportOnePatchFilePrompt(patchTypeFiles.get(0).getPath())
+                    : VcsLocalize.shelveImportPatchesPrompt(patchTypeFiles.size());
+                MessageBoxes.yesNo()
+                    .title(VcsLocalize.shelveImportPatchesTitle())
+                    .text(message)
+                    .showAsync(project)
+                    .whenCompleteAsync((yes, answerError) -> {
+                        if (Boolean.TRUE.equals(yes)) {
+                            importPatches(project, shelveChangesManager, patchTypeFiles);
+                        }
+                    }, uiAccess);
+                return;
             }
-            pm.runProcessWithProgressSynchronously(
-                () -> {
-                    List<VcsException> exceptions = new ArrayList<>();
-                    List<ShelvedChangeListImpl> lists = shelveChangesManager.importChangeLists(patchTypeFiles, exceptions::add);
-                    if (!lists.isEmpty()) {
-                        ShelvedChangesViewManager.getInstance(project).activateView(lists.get(lists.size() - 1));
-                    }
-                    if (!exceptions.isEmpty()) {
-                        AbstractVcsHelper.getInstance(project).showErrors(exceptions, "Import patches into shelf");
-                    }
-                    if (lists.isEmpty() && exceptions.isEmpty()) {
-                        VcsBalloonProblemNotifier.showOverChangesView(project, "No patches found", NotificationType.WARNING);
-                    }
-                },
-                LocalizeValue.localizeTODO("Import patches into shelf"),
-                true,
-                project
-            );
-        });
+            importPatches(project, shelveChangesManager, patchTypeFiles);
+        }, uiAccess);
+    }
+
+    @RequiredUIAccess
+    private static void importPatches(Project project, ShelveChangesManagerImpl shelveChangesManager, List<VirtualFile> patchTypeFiles) {
+        ProgressManager.getInstance().runProcessWithProgressSynchronously(
+            () -> {
+                List<VcsException> exceptions = new ArrayList<>();
+                List<ShelvedChangeListImpl> lists = shelveChangesManager.importChangeLists(patchTypeFiles, exceptions::add);
+                if (!lists.isEmpty()) {
+                    ShelvedChangesViewManager.getInstance(project).activateView(lists.get(lists.size() - 1));
+                }
+                if (!exceptions.isEmpty()) {
+                    AbstractVcsHelper.getInstance(project).showErrors(exceptions, "Import patches into shelf");
+                }
+                if (lists.isEmpty() && exceptions.isEmpty()) {
+                    VcsBalloonProblemNotifier.showOverChangesView(project, "No patches found", NotificationType.WARNING);
+                }
+            },
+            LocalizeValue.localizeTODO("Import patches into shelf"),
+            true,
+            project
+        );
     }
 }

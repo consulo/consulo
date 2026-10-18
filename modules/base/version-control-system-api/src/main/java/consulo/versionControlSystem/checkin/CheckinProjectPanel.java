@@ -22,7 +22,6 @@ import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.ui.Refreshable;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.swing.*;
 import java.io.File;
 import java.util.Collection;
 
@@ -34,11 +33,6 @@ import java.util.Collection;
  * @see BaseCheckinHandlerFactory#createHandler(CommitMessage, CommitContext)
  */
 public interface CheckinProjectPanel extends Refreshable, CommitMessage {
-    @Override
-    JComponent getComponent();
-
-    JComponent getPreferredFocusedComponent();
-
     /**
      * Checks if the checkin operation has anything to check in.
      *

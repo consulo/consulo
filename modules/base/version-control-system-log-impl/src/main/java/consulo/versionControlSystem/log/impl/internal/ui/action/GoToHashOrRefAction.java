@@ -18,20 +18,15 @@ package consulo.versionControlSystem.log.impl.internal.ui.action;
 import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionRef;
 import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.project.Project;
+import consulo.ui.InputBoxBuilder;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.IdeActions;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
+import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.log.VcsLog;
-import consulo.versionControlSystem.log.VcsLogUi;
-import consulo.versionControlSystem.log.impl.internal.VcsGoToRefComparator;
-import consulo.versionControlSystem.log.impl.internal.ui.VcsLogUiImpl;
 import consulo.versionControlSystem.log.localize.VersionControlSystemLogLocalize;
 import consulo.versionControlSystem.log.util.VcsLogUtil;
-import consulo.virtualFileSystem.VirtualFile;
-
-import java.util.Set;
 
 @ActionImpl(id = "Vcs.Log.GoToRef", shortcutFrom = @ActionRef(id = IdeActions.ACTION_FIND))
 public class GoToHashOrRefAction extends LegacyDumbAwareAction {
@@ -48,25 +43,20 @@ public class GoToHashOrRefAction extends LegacyDumbAwareAction {
     public void actionPerformed(AnActionEvent e) {
         VcsLogUtil.triggerUsage(e);
 
-        Project project = e.getRequiredData(Project.KEY);
         VcsLog log = e.getRequiredData(VcsLog.KEY);
-        VcsLogUiImpl logUi = (VcsLogUiImpl) e.getRequiredData(VcsLogUi.KEY);
-
-        Set<VirtualFile> visibleRoots = VcsLogUtil.getVisibleRoots(logUi);
-        GoToHashOrRefPopup popup = new GoToHashOrRefPopup(
-            project,
-            logUi.getDataPack().getRefs(),
-            visibleRoots,
-            log::jumpToReference,
-            vcsRef -> logUi.jumpToCommit(vcsRef.getCommitHash(), vcsRef.getRoot()),
-            logUi.getColorManager(),
-            new VcsGoToRefComparator(logUi.getDataPack().getLogProviders())
-        );
-        popup.show(logUi.getTable());
+        InputBoxBuilder.text()
+            .title(VersionControlSystemLogLocalize.actionGoToRefText())
+            .text(VersionControlSystemLogLocalize.actionGoToRefDescription())
+            .showAsync()
+            .whenComplete((reference, error) -> {
+                if (reference != null && !StringUtil.isEmptyOrSpaces(reference)) {
+                    log.jumpToReference(reference.trim());
+                }
+            });
     }
 
     @Override
     public void update(AnActionEvent e) {
-        e.getPresentation().setEnabledAndVisible(e.hasData(Project.KEY) && e.hasData(VcsLog.KEY) && e.hasData(VcsLogUi.KEY));
+        e.getPresentation().setEnabledAndVisible(e.hasData(VcsLog.KEY));
     }
 }

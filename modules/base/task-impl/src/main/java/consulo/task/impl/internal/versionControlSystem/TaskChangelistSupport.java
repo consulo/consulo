@@ -17,19 +17,22 @@
 package consulo.task.impl.internal.versionControlSystem;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.document.Document;
-import consulo.task.impl.internal.action.TaskAutoCompletionListProvider;
-import consulo.language.editor.ui.awt.EditorTextField;
+import consulo.language.editor.ui.EditorBox;
 import consulo.language.editor.ui.awt.TextFieldWithAutoCompletionContributor;
 import consulo.project.Project;
 import consulo.task.ChangeListInfo;
 import consulo.task.LocalTask;
 import consulo.task.TaskManager;
+import consulo.task.impl.internal.action.TaskAutoCompletionListProvider;
+import consulo.task.localize.TaskLocalize;
+import consulo.ui.CheckBox;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.layout.HorizontalLayout;
 import consulo.versionControlSystem.change.EditChangelistSupport;
 import consulo.versionControlSystem.change.LocalChangeList;
 import jakarta.inject.Inject;
+import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
 import java.util.function.Consumer;
 
 /**
@@ -37,57 +40,54 @@ import java.util.function.Consumer;
  */
 @ExtensionImpl
 public class TaskChangelistSupport implements EditChangelistSupport {
-  private final Project myProject;
-  private final TaskManager myTaskManager;
+    private final Project myProject;
+    private final TaskManager myTaskManager;
 
-  @Inject
-  public TaskChangelistSupport(Project project, TaskManager taskManager) {
-    myProject = project;
-    myTaskManager = taskManager;
-  }
+    @Inject
+    public TaskChangelistSupport(Project project, TaskManager taskManager) {
+        myProject = project;
+        myTaskManager = taskManager;
+    }
 
-  @Override
-  public void installSearch(EditorTextField name, EditorTextField comment) {
-    Document document = name.getDocument();
-    TaskAutoCompletionListProvider completionProvider = new TaskAutoCompletionListProvider(myProject);
+    @Override
+    @RequiredUIAccess
+    public void installSearch(EditorBox name, EditorBox comment) {
+        TaskAutoCompletionListProvider completionProvider = new TaskAutoCompletionListProvider(myProject);
 
-    TextFieldWithAutoCompletionContributor.installCompletion(document, myProject, completionProvider, false);
-  }
+        TextFieldWithAutoCompletionContributor.installCompletion(name.getDocument(), myProject, completionProvider, false);
+    }
 
-  @Override
-  public Consumer<LocalChangeList> addControls(JPanel bottomPanel, LocalChangeList initial) {
-    JCheckBox checkBox = new JCheckBox("Track context");
-    checkBox.setMnemonic('t');
-    checkBox.setToolTipText("Reload context (e.g. open editors) when changelist is set active");
-    checkBox.setSelected(initial == null ? myTaskManager.isTrackContextForNewChangelist() : myTaskManager.getAssociatedTask(initial) != null);
-    bottomPanel.add(checkBox);
-    return changeList -> {
-      if (initial == null) {
-        myTaskManager.setTrackContextForNewChangelist(checkBox.isSelected());
-        if (checkBox.isSelected()) {
-          myTaskManager.trackContext(changeList);
-        }
-        else {
-          myTaskManager.getActiveTask().addChangelist(new ChangeListInfo(changeList));
-        }
-      }
-      else {
-        LocalTask associatedTask = myTaskManager.getAssociatedTask(changeList);
-        if (checkBox.isSelected()) {
-          if (associatedTask == null) {
-            myTaskManager.trackContext(changeList);
-          }
-        }
-        else {
-          if (associatedTask != null) {
-            myTaskManager.removeTask(associatedTask);
-          }
-        }
-      }
-    };
-  }
-
-  @Override
-  public void changelistCreated(LocalChangeList changeList) {
-  }
+    @Override
+    @RequiredUIAccess
+    public Consumer<LocalChangeList> addControls(HorizontalLayout bottomPanel, @Nullable LocalChangeList initial) {
+        CheckBox checkBox = CheckBox.create(TaskLocalize.changelistTrackContextCheckbox());
+        checkBox.setToolTipText(TaskLocalize.changelistTrackContextTooltip());
+        checkBox.setValue(initial == null ? myTaskManager.isTrackContextForNewChangelist() : myTaskManager.getAssociatedTask(initial) != null);
+        bottomPanel.add(checkBox);
+        return changeList -> {
+            boolean selected = checkBox.getValueOrError();
+            if (initial == null) {
+                myTaskManager.setTrackContextForNewChangelist(selected);
+                if (selected) {
+                    myTaskManager.trackContext(changeList);
+                }
+                else {
+                    myTaskManager.getActiveTask().addChangelist(new ChangeListInfo(changeList));
+                }
+            }
+            else {
+                LocalTask associatedTask = myTaskManager.getAssociatedTask(changeList);
+                if (selected) {
+                    if (associatedTask == null) {
+                        myTaskManager.trackContext(changeList);
+                    }
+                }
+                else {
+                    if (associatedTask != null) {
+                        myTaskManager.removeTask(associatedTask);
+                    }
+                }
+            }
+        };
+    }
 }

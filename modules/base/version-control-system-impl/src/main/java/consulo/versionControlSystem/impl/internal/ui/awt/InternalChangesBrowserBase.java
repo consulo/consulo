@@ -42,6 +42,7 @@ import consulo.versionControlSystem.change.*;
 import consulo.versionControlSystem.impl.internal.action.ShowDiffAction;
 import consulo.versionControlSystem.impl.internal.change.RemoteRevisionsCache;
 import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangeNodeDecorator;
+import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesBrowser;
 import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesBrowserNode;
 import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesTreeListImpl;
 import consulo.versionControlSystem.internal.ShowDiffContext;

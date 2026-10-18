@@ -21,10 +21,15 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
+import consulo.localize.LocalizeValue;
+import consulo.project.Project;
+import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.FilePath;
+import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.log.*;
 import consulo.versionControlSystem.log.graph.VisibleGraph;
+import consulo.versionControlSystem.log.localize.VersionControlSystemLogLocalize;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 
@@ -37,6 +42,33 @@ import static java.util.Collections.singletonList;
 
 public class VcsLogUtil {
   public static final int MAX_SELECTED_COMMITS = 1000;
+  public static final int SHORT_HASH_LENGTH = 8;
+
+  public static LocalizeValue getVcsDisplayName(Project project, Collection<VcsLogProvider> logProviders) {
+    Set<AbstractVcs> vcs = new HashSet<>();
+    for (VcsLogProvider provider : logProviders) {
+      AbstractVcs found = ProjectLevelVcsManager.getInstance(project).findVcsByName(provider.getSupportedVcs());
+      if (found != null) {
+        vcs.add(found);
+      }
+    }
+    return getVcsDisplayName(vcs);
+  }
+
+  public static LocalizeValue getVcsDisplayName(Set<AbstractVcs> vcs) {
+    if (vcs.size() != 1) {
+      return VersionControlSystemLogLocalize.vcs();
+    }
+    return vcs.iterator().next().getDisplayName();
+  }
+
+  public static String getShortHash(String hashString) {
+    return getShortHash(hashString, SHORT_HASH_LENGTH);
+  }
+
+  public static String getShortHash(String hashString, int shortHashLength) {
+    return hashString.substring(0, Math.min(shortHashLength, hashString.length()));
+  }
 
   
   public static Map<VirtualFile, Set<VcsRef>> groupRefsByRoot(Collection<VcsRef> refs) {

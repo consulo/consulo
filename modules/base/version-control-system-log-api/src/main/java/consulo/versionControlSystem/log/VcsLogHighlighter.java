@@ -16,7 +16,7 @@
 package consulo.versionControlSystem.log;
 
 import org.jspecify.annotations.Nullable;
-import java.awt.*;
+import consulo.ui.color.ColorValue;
 
 /**
  * Allows to add some highlighting to the Vcs Log table entries.
@@ -51,12 +51,12 @@ public interface VcsLogHighlighter {
     /**
      * Text color for commit entry or null if unspecified.
      */
-    @Nullable Color getForeground();
+    @Nullable ColorValue getForeground();
 
     /**
      * Background color for commit entry or null if unspecified.
      */
-    @Nullable Color getBackground();
+    @Nullable ColorValue getBackground();
 
     /**
      * Text style for commit entry or null if unspecified.

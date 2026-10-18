@@ -16,7 +16,7 @@
 package consulo.versionControlSystem.impl.internal.change.action;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesViewContentManager;
+import consulo.versionControlSystem.internal.ChangesViewContentI;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
@@ -43,7 +43,7 @@ public class RefreshCommittedAction extends LegacyDumbAwareAction {
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
-        CommittedChangesPanel panel = ChangesViewContentManager.getInstance(project).getActiveComponent(CommittedChangesPanel.class);
+        CommittedChangesPanel panel = ChangesViewContentI.getInstance(project).getActiveComponent(CommittedChangesPanel.class);
         assert panel != null;
         if (panel.isInLoad()) {
             return;
@@ -60,7 +60,7 @@ public class RefreshCommittedAction extends LegacyDumbAwareAction {
     public void update(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         if (project != null) {
-            CommittedChangesPanel panel = ChangesViewContentManager.getInstance(project).getActiveComponent(CommittedChangesPanel.class);
+            CommittedChangesPanel panel = ChangesViewContentI.getInstance(project).getActiveComponent(CommittedChangesPanel.class);
             e.getPresentation().setEnabled(panel != null && !panel.isInLoad());
         }
         else {

@@ -2118,7 +2118,7 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
                     EditorGutterAction action = myProviderToListener.get(provider);
                     if (action != null) {
                         int line = getLineNumAtPoint(e.getPoint());
-                        cursor = action.getCursor(line);
+                        cursor = TargetAWT.to(action.getCursor(line));
                     }
                 }
             }

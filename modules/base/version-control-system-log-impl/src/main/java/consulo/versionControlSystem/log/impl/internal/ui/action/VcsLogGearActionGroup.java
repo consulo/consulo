@@ -26,8 +26,6 @@ import consulo.ui.image.Image;
 import consulo.versionControlSystem.log.VcsLogUi;
 import org.jspecify.annotations.Nullable;
 
-import java.awt.*;
-
 public class VcsLogGearActionGroup extends LegacyDumbAwareAction {
     
     private final String myActionGroup;
@@ -55,13 +53,7 @@ public class VcsLogGearActionGroup extends LegacyDumbAwareAction {
             true,
             ToolWindowContentUI.POPUP_PLACE
         );
-        Component component = e.getInputEvent().getComponent();
-        if (component instanceof ActionButtonComponent) {
-            popup.showUnderneathOf(component);
-        }
-        else {
-            popup.showInCenterOf(component);
-        }
+        popup.showUnderneathOf(e);
     }
 
     @Override

@@ -41,7 +41,9 @@ final class WebComboBoxStyleUtil {
                     .set("--aura-shadow-xs", "none");
                 break;
             case TOOLBAR:
-                component.getStyle().set("--vaadin-input-field-padding", "2px var(--vaadin-padding-inline-container)");
+                component.getStyle()
+                    .set("--vaadin-input-field-padding", "2px var(--vaadin-padding-inline-container)")
+                    .set("width", "max-content");
                 break;
         }
     }

@@ -16,7 +16,6 @@
 package consulo.versionControlSystem.distributed.internal;
 
 import consulo.localize.LocalizeValue;
-import consulo.ui.ex.awt.popup.ListPopupModel;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.util.dataholder.Key;
 
@@ -25,7 +24,7 @@ import consulo.util.dataholder.Key;
  * @since 2025-09-08
  */
 public interface BranchListPopup extends ListPopup {
-     Key<ListPopupModel> POPUP_MODEL = Key.create("VcsPopupModel");
+    Key<Runnable> REFILTER = Key.create("VcsPopupRefilter");
 
     void setWarning(LocalizeValue text);
 }

@@ -15,6 +15,7 @@
  */
 package consulo.desktop.qt.ui.impl;
 
+import consulo.desktop.qt.ui.impl.image.DesktopQtCellImage;
 import consulo.desktop.qt.ui.impl.font.DesktopQtFontImpl;
 import consulo.desktop.qt.ui.impl.image.DesktopQtImage;
 import consulo.ui.TextAttribute;
@@ -46,9 +47,12 @@ import io.qt.widgets.QTreeWidgetItem;
 import io.qt.widgets.QWidget;
 import org.jspecify.annotations.Nullable;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 public class DesktopQtTextItemDelegate extends QStyledItemDelegate {
+    private static final int CELL_IMAGE_GAP = 4;
     public static final int PRESENTATION_ROLE = Qt.ItemDataRole.UserRole + 1;
     public static final int EDITING_ROLE = Qt.ItemDataRole.UserRole + 2;
 
@@ -56,8 +60,25 @@ public class DesktopQtTextItemDelegate extends QStyledItemDelegate {
     private static final int SUFFIX_ICON_GAP = 4;
     private static final int TRAILING_PADDING = 6;
 
+    private final Map<Long, QRect> myCellImageRects = new HashMap<>();
+
     public DesktopQtTextItemDelegate(QObject parent) {
         super(parent);
+    }
+
+    /**
+     * Where the cell image of the item was painted last, in viewport coordinates, if it has one.
+     */
+    public @Nullable QRect getCellImageRect(QModelIndex index) {
+        return myCellImageRects.get(cellKey(index));
+    }
+
+    public void forgetCellImageRects() {
+        myCellImageRects.clear();
+    }
+
+    private static long cellKey(QModelIndex index) {
+        return ((long) index.row() << 32) | (index.column() & 0xffffffffL);
     }
 
     public static void bind(QListWidgetItem item, DesktopQtTextItemPresentation presentation) {
@@ -176,12 +197,27 @@ public class DesktopQtTextItemDelegate extends QStyledItemDelegate {
         QWidget widget = styleOption.widget();
         QStyle style = widget != null ? widget.style() : QApplication.style();
 
+        styleOption.setText("");
+
         QRect textRect = style.subElementRect(QStyle.SubElement.SE_ItemViewItemText, styleOption, widget);
         int left = textRect.left() + leadingPadding(style, styleOption, widget, presentation);
         int right = textRect.right() - reservedTrailingWidth(option, index) - TRAILING_PADDING;
 
-        styleOption.setText("");
         style.drawControl(QStyle.ControlElement.CE_ItemViewItem, styleOption, painter, widget);
+
+        if (presentation.getImage() instanceof DesktopQtCellImage cellImage) {
+            QRect cell = new QRect(left, option.rect().top(), cellImage.getWidth(), option.rect().height());
+            myCellImageRects.put(cellKey(index), cell);
+            painter.save();
+            try {
+                painter.setClipRect(option.rect());
+                cellImage.paintInCell(painter, cell);
+            }
+            finally {
+                painter.restore();
+            }
+            left += cellImage.getWidth() + CELL_IMAGE_GAP;
+        }
 
         painter.save();
         try {
@@ -213,6 +249,9 @@ public class DesktopQtTextItemDelegate extends QStyledItemDelegate {
         QWidget widget = option.widget();
         QStyle style = widget != null ? widget.style() : QApplication.style();
         int leading = leadingPadding(style, option, widget, presentation);
+        if (presentation.getImage() instanceof DesktopQtCellImage cellImage) {
+            leading += cellImage.getWidth() + CELL_IMAGE_GAP;
+        }
 
         return new QSize(size.width() + Math.max(0, styledWidth - plainWidth) + leading + TRAILING_PADDING, size.height());
     }
@@ -223,7 +262,7 @@ public class DesktopQtTextItemDelegate extends QStyledItemDelegate {
         @Nullable QWidget widget,
         DesktopQtTextItemPresentation presentation
     ) {
-        if (presentation.getImage() != null) {
+        if (presentation.getImage() != null && !(presentation.getImage() instanceof DesktopQtCellImage)) {
             return 0;
         }
 
@@ -240,7 +279,7 @@ public class DesktopQtTextItemDelegate extends QStyledItemDelegate {
     }
 
     private static boolean isStyled(DesktopQtTextItemPresentation presentation) {
-        if (presentation.hasSuffix() || presentation.getImage() == null) {
+        if (presentation.hasSuffix() || presentation.getImage() == null || presentation.getImage() instanceof DesktopQtCellImage) {
             return true;
         }
 

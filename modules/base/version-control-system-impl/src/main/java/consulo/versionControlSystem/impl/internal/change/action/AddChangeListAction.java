@@ -23,13 +23,9 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.LegacyDumbAwareAction;
-import consulo.ui.ex.awt.DialogWrapper;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.change.ChangeList;
-import consulo.versionControlSystem.change.ChangeListManager;
-import consulo.versionControlSystem.change.LocalChangeList;
-import consulo.versionControlSystem.impl.internal.change.ChangeListManagerImpl;
-import consulo.versionControlSystem.impl.internal.ui.awt.NewChangelistDialog;
+import consulo.versionControlSystem.impl.internal.change.ui.NewChangelistDialog;
 
 /**
  * @author yole
@@ -48,33 +44,8 @@ public class AddChangeListAction extends LegacyDumbAwareAction {
     @Override
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
-        Project project = e.getData(Project.KEY);
-        NewChangelistDialog dlg = new NewChangelistDialog(project);
-        dlg.show();
-        if (dlg.getExitCode() == DialogWrapper.OK_EXIT_CODE) {
-            String name = dlg.getName();
-            if (name.length() == 0) {
-                name = getUniqueName(project);
-            }
-
-            LocalChangeList list = ChangeListManager.getInstance(project).addChangeList(name, dlg.getDescription());
-            if (dlg.isNewChangelistActive()) {
-                ChangeListManager.getInstance(project).setDefaultChangeList(list);
-            }
-            dlg.getPanel().changelistCreatedOrChanged(list);
-        }
-    }
-
-    @SuppressWarnings({"HardCodedStringLiteral"})
-    private static String getUniqueName(Project project) {
-        int unnamedcount = 0;
-        for (ChangeList list : ChangeListManagerImpl.getInstanceImpl(project).getChangeListsCopy()) {
-            if (list.getName().startsWith("Unnamed")) {
-                unnamedcount++;
-            }
-        }
-
-        return unnamedcount == 0 ? "Unnamed" : "Unnamed (" + unnamedcount + ")";
+        Project project = e.getRequiredData(Project.KEY);
+        new NewChangelistDialog(project).showAsync();
     }
 
     @Override

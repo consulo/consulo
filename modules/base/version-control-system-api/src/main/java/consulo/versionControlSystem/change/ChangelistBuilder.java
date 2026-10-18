@@ -17,13 +17,12 @@
 package consulo.versionControlSystem.change;
 
 import consulo.application.progress.ProgressIndicator;
+import consulo.localize.LocalizeValue;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsKey;
 import consulo.virtualFileSystem.VirtualFile;
 
 import org.jspecify.annotations.Nullable;
-import javax.swing.*;
-import java.util.function.Supplier;
 
 /**
  * Builder for the changes list in the file system. The instances of
@@ -113,7 +112,5 @@ public interface ChangelistBuilder {
 
   boolean reportChangesOutsideProject();
   
-  void reportAdditionalInfo(String text);
-
-  void reportAdditionalInfo(Supplier<JComponent> infoComponent);
+  void reportAdditionalInfo(LocalizeValue text);
 }

@@ -56,7 +56,7 @@ public class LineStatusTracker extends LineStatusTrackerBase {
 
     /**
      * Document-level gutter renderer: ONE highlighter for the whole file, paints all
-     * changed-line markers at repaint time, debounced via {@link consulo.ui.ex.awt.util.MergingUpdateQueue}.
+     * changed-line markers at repaint time, debounced (100 ms) on the UI thread.
      * Created once, lives until {@link #release()}.
      */
     private @Nullable LineStatusGutterMarkerRenderer myGutterRenderer;

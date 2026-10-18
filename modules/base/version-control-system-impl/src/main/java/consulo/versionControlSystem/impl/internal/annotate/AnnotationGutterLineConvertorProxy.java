@@ -16,6 +16,8 @@
 package consulo.versionControlSystem.impl.internal.annotate;
 
 import consulo.localize.LocalizeValue;
+import consulo.ui.cursor.Cursor;
+import consulo.ui.cursor.StandardCursors;
 import consulo.ui.ex.action.AnAction;
 import consulo.codeEditor.Editor;
 import consulo.colorScheme.EditorColorKey;
@@ -25,7 +27,6 @@ import consulo.versionControlSystem.annotate.AnnotationSource;
 import consulo.ui.color.ColorValue;
 import consulo.versionControlSystem.internal.ActiveAnnotationGutter;
 
-import java.awt.*;
 import java.util.List;
 
 /**
@@ -110,7 +111,7 @@ public class AnnotationGutterLineConvertorProxy implements ActiveAnnotationGutte
     public Cursor getCursor(int lineNum) {
         int currentLine = myGetUpToDateLineNumber.getLineNumber(lineNum);
         return currentLine == UpToDateLineNumberProvider.ABSENT_LINE_NUMBER
-            ? Cursor.getDefaultCursor()
+            ? StandardCursors.ARROW
             : myDelegate.getCursor(currentLine);
     }
 }

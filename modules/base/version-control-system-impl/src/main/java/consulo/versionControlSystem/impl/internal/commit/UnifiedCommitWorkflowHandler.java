@@ -36,6 +36,7 @@ import consulo.versionControlSystem.checkin.CommitCheck;
 import consulo.versionControlSystem.checkin.CommitProblem;
 import consulo.versionControlSystem.checkin.TextCommitProblem;
 import consulo.versionControlSystem.impl.internal.change.ChangeListManagerImpl;
+import consulo.versionControlSystem.impl.internal.change.ui.SessionDialogDescriptor;
 import consulo.versionControlSystem.internal.ChangeListManagerEx;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
@@ -230,18 +231,25 @@ public class UnifiedCommitWorkflowHandler {
             return CompletableFuture.completedFuture(Boolean.FALSE);
         }
 
-        return myWorkflow.performExecutorCommit(uiAccess, executor, session, changes, commitInfo.getCommitMessage())
-            .handleAsync((completed, error) -> {
-                if (error != null) {
-                    MessageBoxes.okError(VcsLocalize.errorExecutingCommit(executor.getActionText(), error.getLocalizedMessage()))
-                        .showAsync();
-                    return Boolean.FALSE;
+        String commitMessage = commitInfo.getCommitMessage();
+        return SessionDialogDescriptor.configureCommitSession(myProject, executor.getActionText(), session, changes, commitMessage)
+            .thenComposeAsync(configured -> {
+                if (!configured) {
+                    return CompletableFuture.completedFuture(Boolean.FALSE);
                 }
+                return myWorkflow.performExecutorCommit(uiAccess, executor, session, changes, commitMessage)
+                    .handleAsync((completed, error) -> {
+                        if (error != null) {
+                            MessageBoxes.okError(VcsLocalize.errorExecutingCommit(executor.getActionText(), error.getLocalizedMessage()))
+                                .showAsync();
+                            return Boolean.FALSE;
+                        }
 
-                myMessagePolicy.onCommitSuccess(changeList, allIncluded);
-                myWorkflow.runPostponedChecks(uiAccess, commitInfo, postponedChecks);
-                myUi.deactivate(true);
-                return Boolean.TRUE;
+                        myMessagePolicy.onCommitSuccess(changeList, allIncluded);
+                        myWorkflow.runPostponedChecks(uiAccess, commitInfo, postponedChecks);
+                        myUi.deactivate(true);
+                        return Boolean.TRUE;
+                    }, uiAccess);
             }, uiAccess);
     }
 }

@@ -17,15 +17,18 @@ package consulo.versionControlSystem.ui;
 
 import consulo.disposer.Disposable;
 import consulo.localHistory.Label;
-
-import javax.swing.*;
+import consulo.ui.annotation.RequiredUIAccess;
 
 /**
  * @author VISTALL
  * @since 25-Jul-24
  */
 public interface UpdateInfoTree extends Disposable {
-  JComponent getComponent();
+  /**
+   * Brings the tab with this tree to front in the Version Control tool window.
+   */
+  @RequiredUIAccess
+  void focus();
 
   void setBefore(Label before);
 

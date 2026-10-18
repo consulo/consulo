@@ -19,6 +19,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorGutterAction;
 import consulo.localize.LocalizeValue;
 import consulo.ui.color.ColorValue;
+import consulo.ui.cursor.Cursor;
 import consulo.util.lang.Couple;
 import consulo.util.lang.xml.XmlStringUtil;
 import consulo.versionControlSystem.annotate.FileAnnotation;
@@ -27,7 +28,6 @@ import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.versionControlSystem.internal.TextAnnotationPresentation;
 import org.jspecify.annotations.Nullable;
 
-import java.awt.*;
 import java.util.Map;
 import java.util.function.Function;
 

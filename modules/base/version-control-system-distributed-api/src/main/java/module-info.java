@@ -10,11 +10,6 @@ module consulo.version.control.system.distributed.api {
     requires transitive consulo.module.content.api;
     requires consulo.language.editor.ui.api;
 
-    // TODO remove in future
-    requires java.desktop;
-    requires consulo.ui.ex.awt.api;
-    requires forms.rt;
-
     exports consulo.versionControlSystem.distributed;
     exports consulo.versionControlSystem.distributed.action;
     exports consulo.versionControlSystem.distributed.branch;

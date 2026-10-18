@@ -17,13 +17,10 @@ package consulo.versionControlSystem.impl.internal;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.Application;
 import consulo.application.internal.ProgressManagerEx;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
-import consulo.application.util.BufferedListConsumer;
-import consulo.application.util.function.AsynchConsumer;
 import consulo.codeEditor.Editor;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.FileEditor;
@@ -37,17 +34,14 @@ import consulo.project.Project;
 import consulo.project.ui.view.MessageView;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
-import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ModalityState;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.MessageCategory;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CloseTabToolbarAction;
 import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;
 import consulo.ui.ex.errorTreeView.*;
@@ -71,9 +65,8 @@ import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.versionControlSystem.impl.internal.annotate.AnnotateToggleAction;
 import consulo.versionControlSystem.impl.internal.annotate.ShowAllAffectedGenericAction;
 import consulo.versionControlSystem.impl.internal.change.commited.*;
-import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesViewContentManager;
 import consulo.versionControlSystem.impl.internal.change.ui.awt.RollbackChangesDialog;
-import consulo.versionControlSystem.impl.internal.commit.CommitChangeListDialog;
+import consulo.versionControlSystem.impl.internal.commit.UnifiedCommitChangeListDialog;
 import consulo.versionControlSystem.impl.internal.history.FileHistoryRefresher;
 import consulo.versionControlSystem.impl.internal.merge.MultipleFileMergeDialog;
 import consulo.versionControlSystem.impl.internal.ui.awt.ChangeListViewerDialog;
@@ -89,7 +82,6 @@ import consulo.versionControlSystem.merge.MergeDialogCustomizer;
 import consulo.versionControlSystem.merge.MergeProvider;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.versionControlSystem.versionBrowser.ChangeBrowserSettings;
-import consulo.versionControlSystem.versionBrowser.ChangesBrowserSettingsEditor;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import consulo.versionControlSystem.virtualFileSystem.VcsFileSystem;
 import consulo.versionControlSystem.virtualFileSystem.VcsVirtualFile;
@@ -100,9 +92,9 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
 
-import java.awt.*;
 import java.util.List;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -299,16 +291,16 @@ public class AbstractVcsHelperImpl extends AbstractVcsHelper {
 
     @RequiredUIAccess
     @Override
-    public boolean commitChanges(Project project,
-                                 List<Change> changes,
-                                 LocalChangeList initialSelection,
-                                 List<CommitExecutor> executors,
-                                 boolean showVcsCommit,
-                                 @Nullable AbstractVcs singleVcs,
-                                 String comment,
-                                 @Nullable CommitResultHandler customResultHandler,
-                                 boolean cancelIfNoChanges) {
-        return CommitChangeListDialog.commitChanges(
+    public CompletableFuture<Boolean> commitChanges(Project project,
+                                                    List<Change> changes,
+                                                    LocalChangeList initialSelection,
+                                                    List<CommitExecutor> executors,
+                                                    boolean showVcsCommit,
+                                                    @Nullable AbstractVcs singleVcs,
+                                                    String comment,
+                                                    @Nullable CommitResultHandler customResultHandler,
+                                                    boolean cancelIfNoChanges) {
+        return UnifiedCommitChangeListDialog.show(
             project,
             changes,
             initialSelection,
@@ -323,20 +315,22 @@ public class AbstractVcsHelperImpl extends AbstractVcsHelper {
 
     @Override
     @RequiredUIAccess
-    public boolean commitChanges(
+    public CompletableFuture<Boolean> commitChanges(
         Collection<Change> changes,
         LocalChangeList initialChangeList,
         String commitMessage,
         @Nullable CommitResultHandler customResultHandler
     ) {
-        return CommitChangeListDialog.commitChanges(
+        return UnifiedCommitChangeListDialog.show(
             myProject,
             changes,
             initialChangeList,
-            CommitChangeListDialog.collectExecutors(myProject, changes),
+            UnifiedCommitChangeListDialog.collectExecutors(myProject, changes),
             true,
+            null,
             commitMessage,
-            customResultHandler
+            customResultHandler,
+            true
         );
     }
 
@@ -540,52 +534,6 @@ public class AbstractVcsHelperImpl extends AbstractVcsHelper {
 
     @Override
     @RequiredUIAccess
-    public void showChangesBrowser(List<CommittedChangeList> changelists) {
-        showChangesBrowser(changelists, LocalizeValue.empty());
-    }
-
-    @Override
-    @RequiredUIAccess
-    public void showChangesBrowser(List<CommittedChangeList> changelists, LocalizeValue title) {
-        showChangesBrowser(new CommittedChangesTableModel(changelists, false), title, false, null);
-    }
-
-    private ChangesBrowserDialog createChangesBrowserDialog(
-        CommittedChangesTableModel changelists,
-        LocalizeValue title,
-        boolean showSearchAgain,
-        @Nullable Component parent,
-        Consumer<ChangesBrowserDialog> initRunnable
-    ) {
-        ChangesBrowserDialog.Mode mode = showSearchAgain ? ChangesBrowserDialog.Mode.Browse : ChangesBrowserDialog.Mode.Simple;
-        ChangesBrowserDialog dlg = parent != null
-            ? new ChangesBrowserDialog(myProject, parent, changelists, mode, initRunnable)
-            : new ChangesBrowserDialog(myProject, changelists, mode, initRunnable);
-        if (title.isNotEmpty()) {
-            dlg.setTitle(title);
-        }
-        return dlg;
-    }
-
-    @RequiredUIAccess
-    private void showChangesBrowser(
-        CommittedChangesTableModel changelists,
-        LocalizeValue title,
-        boolean showSearchAgain,
-        @Nullable Component parent
-    ) {
-        ChangesBrowserDialog.Mode mode = showSearchAgain ? ChangesBrowserDialog.Mode.Browse : ChangesBrowserDialog.Mode.Simple;
-        ChangesBrowserDialog dlg = parent != null
-            ? new ChangesBrowserDialog(myProject, parent, changelists, mode, null)
-            : new ChangesBrowserDialog(myProject, changelists, mode, null);
-        if (title.isNotEmpty()) {
-            dlg.setTitle(title);
-        }
-        dlg.show();
-    }
-
-    @Override
-    @RequiredUIAccess
     public void showChangesListBrowser(CommittedChangeList changelist, @Nullable VirtualFile toSelect, LocalizeValue title) {
         ChangeListViewerDialog dlg = new ChangeListViewerDialog(myProject, changelist, toSelect);
         if (title.isNotEmpty()) {
@@ -598,113 +546,6 @@ public class AbstractVcsHelperImpl extends AbstractVcsHelper {
     @RequiredUIAccess
     public void showChangesListBrowser(CommittedChangeList changelist, LocalizeValue title) {
         showChangesListBrowser(changelist, null, title);
-    }
-
-    @Override
-    @RequiredUIAccess
-    public void showWhatDiffersBrowser(Component parent, Collection<Change> changes, LocalizeValue title) {
-        ChangeListViewerDialog dlg = parent != null
-            ? new ChangeListViewerDialog(parent, myProject, changes, false)
-            : new ChangeListViewerDialog(myProject, changes, false);
-        if (title.isNotEmpty()) {
-            dlg.setTitle(title);
-        }
-        dlg.show();
-    }
-
-    @Override
-    @RequiredUIAccess
-    public void showChangesBrowser(
-        CommittedChangesProvider provider,
-        RepositoryLocation location,
-        LocalizeValue title,
-        Component parent
-    ) {
-        ChangesBrowserSettingsEditor filterUI = provider.createFilterUI(true);
-        ChangeBrowserSettings settings = provider.createDefaultSettings();
-        boolean ok;
-        if (filterUI != null) {
-            CommittedChangesFilterDialog dlg = new CommittedChangesFilterDialog(myProject, filterUI, settings);
-            dlg.show();
-            ok = dlg.getExitCode() == DialogWrapper.OK_EXIT_CODE;
-            settings = dlg.getSettings();
-        }
-        else {
-            ok = true;
-        }
-
-        if (ok) {
-            if (myProject.isDefault() || (ProjectLevelVcsManager.getInstance(myProject).getAllActiveVcss().length == 0)
-                || (!ModalityState.nonModal().equals(Application.get().getCurrentModalityState()))) {
-                List<CommittedChangeList> versions = new ArrayList<>();
-
-                if (parent == null || !parent.isValid()) {
-                    parent = TargetAWT.to(WindowManager.getInstance().suggestParentWindow(myProject));
-                }
-                CommittedChangesTableModel model = new CommittedChangesTableModel(versions, true);
-                AsynchronousListsLoader[] task = new AsynchronousListsLoader[1];
-                ChangeBrowserSettings finalSettings = settings;
-                ChangesBrowserDialog dlg = createChangesBrowserDialog(
-                    model,
-                    title,
-                    filterUI != null,
-                    parent,
-                    changesBrowserDialog -> {
-                        task[0] = new AsynchronousListsLoader(myProject, provider, location, finalSettings, changesBrowserDialog);
-                        ProgressManager.getInstance().run(task[0]);
-                    }
-                );
-
-                dlg.startLoading();
-                dlg.show();
-                if (task[0] != null) {
-                    task[0].cancel();
-                    List<VcsException> exceptions = task[0].getExceptions();
-                    if (!exceptions.isEmpty()) {
-                        Messages.showErrorDialog(
-                            myProject,
-                            VcsLocalize.browseChangesErrorMessage(exceptions.get(0).getMessage()).get(),
-                            VcsLocalize.browseChangesErrorTitle().get()
-                        );
-                        return;
-                    }
-
-                    if (!task[0].isRevisionsReturned()) {
-                        Messages.showInfoMessage(
-                            myProject,
-                            VcsLocalize.browseChangesNothingFound().get(),
-                            VcsLocalize.browseChangesNothingFoundTitle().get()
-                        );
-                    }
-                }
-            }
-            else {
-                openCommittedChangesTab(provider, location, settings, 0, title);
-            }
-        }
-    }
-
-    @Override
-    @RequiredUIAccess
-    @SuppressWarnings("unchecked")
-    public <T extends CommittedChangeList, U extends ChangeBrowserSettings> @Nullable T chooseCommittedChangeList(
-        CommittedChangesProvider<T, U> provider,
-        RepositoryLocation location
-    ) {
-        List<T> changes;
-        try {
-            changes = provider.getCommittedChanges(provider.createDefaultSettings(), location, 0);
-        }
-        catch (VcsException e) {
-            return null;
-        }
-        ChangesBrowserDialog dlg = new ChangesBrowserDialog(
-            myProject,
-            new CommittedChangesTableModel((List<CommittedChangeList>) changes, provider.getColumns(), false),
-            ChangesBrowserDialog.Mode.Choose,
-            null
-        );
-        return dlg.showAndGet() ? (T) dlg.getSelectedChangeList() : null;
     }
 
     @Override
@@ -756,7 +597,7 @@ public class AbstractVcsHelperImpl extends AbstractVcsHelper {
             title = VcsLocalize.browseChangesContentTitle(location.toPresentableString());
         }
         final Content content = factory.createContent(panel, title.get(), false);
-        final ChangesViewContentI contentManager = ChangesViewContentManager.getInstance(myProject);
+        final ChangesViewContentI contentManager = ChangesViewContentI.getInstance(myProject);
         contentManager.addContent(content);
         contentManager.setSelectedContent(content);
 
@@ -911,88 +752,6 @@ public class AbstractVcsHelperImpl extends AbstractVcsHelper {
     
     private static String failedText(VirtualFile virtualFile, VcsRevisionNumber revision) {
         return "Show all affected files for " + virtualFile.getPath() + " at " + revision.asString() + " failed";
-    }
-
-    private static class AsynchronousListsLoader extends Task.Backgroundable {
-        private final CommittedChangesProvider myProvider;
-        private final RepositoryLocation myLocation;
-        private final ChangeBrowserSettings mySettings;
-        private final ChangesBrowserDialog myDlg;
-        private final List<VcsException> myExceptions;
-        private volatile boolean myCanceled;
-        private boolean myRevisionsReturned;
-
-        private AsynchronousListsLoader(
-            @Nullable Project project,
-            CommittedChangesProvider provider,
-            RepositoryLocation location,
-            ChangeBrowserSettings settings,
-            ChangesBrowserDialog dlg
-        ) {
-            super(project, VcsLocalize.browseChangesProgressTitle(), true);
-            myProvider = provider;
-            myLocation = location;
-            mySettings = settings;
-            myDlg = dlg;
-            myExceptions = new LinkedList<>();
-        }
-
-        public void cancel() {
-            myCanceled = true;
-        }
-
-        @Override
-        public void run(final ProgressIndicator indicator) {
-            final AsynchConsumer<List<CommittedChangeList>> appender = myDlg.getAppender();
-            final BufferedListConsumer<CommittedChangeList> bufferedListConsumer = new BufferedListConsumer<>(10, appender, -1);
-
-            final Application application = Application.get();
-            try {
-                myProvider.loadCommittedChanges(
-                    mySettings,
-                    myLocation,
-                    0,
-                    new AsynchConsumer<CommittedChangeList>() {
-                        @Override
-                        public void accept(CommittedChangeList committedChangeList) {
-                            myRevisionsReturned = true;
-                            bufferedListConsumer.consumeOne(committedChangeList);
-                            if (myCanceled) {
-                                indicator.cancel();
-                            }
-                        }
-
-                        @Override
-                        public void finished() {
-                            bufferedListConsumer.flush();
-                            appender.finished();
-
-                            if (!myRevisionsReturned) {
-                                application.invokeLater(
-                                    () -> myDlg.close(-1),
-                                    application.getModalityStateForComponent(myDlg.getWindow())
-                                );
-                            }
-                        }
-                    }
-                );
-            }
-            catch (VcsException e) {
-                myExceptions.add(e);
-                application.invokeLater(
-                    () -> myDlg.close(-1),
-                    application.getModalityStateForComponent(myDlg.getWindow())
-                );
-            }
-        }
-
-        public List<VcsException> getExceptions() {
-            return myExceptions;
-        }
-
-        public boolean isRevisionsReturned() {
-            return myRevisionsReturned;
-        }
     }
 
     @TestOnly

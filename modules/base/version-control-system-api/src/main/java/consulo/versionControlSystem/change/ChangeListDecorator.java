@@ -17,8 +17,7 @@ package consulo.versionControlSystem.change;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
-import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
+import consulo.ui.TextItemPresentation;
 
 /**
  * Allows to modify the painting of changelists in the Changes view. Classes implementing this
@@ -29,11 +28,9 @@ import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
  */
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface ChangeListDecorator {
-    ExtensionPointName<ChangeListDecorator> EP_NAME = ExtensionPointName.create(ChangeListDecorator.class);
-
     void decorateChangeList(
         LocalChangeList changeList,
-        ColoredTreeCellRenderer cellRenderer,
+        TextItemPresentation presentation,
         boolean selected,
         boolean expanded,
         boolean hasFocus

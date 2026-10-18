@@ -15,18 +15,22 @@
  */
 package consulo.versionControlSystem.impl.internal.change;
 
+import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.component.ProcessCanceledException;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.ui.ex.awt.util.Alarm;
+import org.jspecify.annotations.Nullable;
 
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BooleanSupplier;
 
 public class ControlledCycle {
   private static final Logger LOG = Logger.getInstance(ControlledCycle.class);
 
-  private final Alarm mySimpleAlarm;
+  private final Project myProject;
+  private @Nullable Future<?> myFuture;
   // this interval is also to check for not initialized paths, so it is rather small
   private static final int ourRefreshInterval = 10000;
   private int myRefreshInterval;
@@ -52,17 +56,31 @@ public class ControlledCycle {
         if (! shouldBeContinued) {
           myActive.set(false);
         } else {
-          mySimpleAlarm.addRequest(myRunnable, myRefreshInterval);
+          schedule();
         }
       }
     };
-    mySimpleAlarm = new Alarm(Alarm.ThreadToUse.POOLED_THREAD, project);
+    myProject = project;
+  }
+
+  private synchronized void schedule() {
+    if (myProject.isDisposed()) {
+      return;
+    }
+    myFuture = AppExecutorUtil.getAppScheduledExecutorService().schedule(myRunnable, myRefreshInterval, TimeUnit.MILLISECONDS);
+  }
+
+  private synchronized void cancel() {
+    Future<?> future = myFuture;
+    if (future != null) {
+      future.cancel(false);
+    }
   }
 
   public boolean startIfNotStarted(int refreshInterval) {
     boolean refreshIntervalChanged = (refreshInterval > 0) && refreshInterval != myRefreshInterval;
     if (refreshIntervalChanged) {
-      mySimpleAlarm.cancelAllRequests();
+      cancel();
     }
     if (refreshInterval > 0) {
       myRefreshInterval = refreshInterval;
@@ -70,7 +88,7 @@ public class ControlledCycle {
 
     boolean wasSet = myActive.compareAndSet(false, true);
     if (wasSet || refreshIntervalChanged) {
-      mySimpleAlarm.addRequest(myRunnable, myRefreshInterval);
+      schedule();
     }
     return wasSet;
   }

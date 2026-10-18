@@ -19,7 +19,7 @@ import consulo.versionControlSystem.log.graph.action.ActionController;
 import consulo.versionControlSystem.log.graph.action.GraphAction;
 
 import org.jspecify.annotations.Nullable;
-import java.awt.*;
+import consulo.ui.cursor.Cursor;
 
 /**
  * The graph returns an instance of the GraphAnswer as a reaction to {@link ActionController#performAction(GraphAction)}.

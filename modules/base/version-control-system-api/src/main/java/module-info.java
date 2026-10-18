@@ -56,6 +56,7 @@ module consulo.version.control.system.api {
         consulo.desktop.awt.ide.impl,
         consulo.desktop.awt.ui.impl,
         consulo.ide.impl,
+        consulo.it,
         consulo.local.history.impl,
         consulo.test.impl,
         consulo.version.control.system.distributed.api,

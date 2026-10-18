@@ -16,7 +16,10 @@
 package consulo.versionControlSystem.log.impl.internal;
 
 import consulo.util.collection.ContainerUtil;
+import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.log.*;
+import consulo.versionControlSystem.log.impl.internal.data.VcsLogDateFilterImpl;
+import consulo.versionControlSystem.log.localize.VersionControlSystemLogLocalize;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Arrays;
@@ -94,6 +97,44 @@ public class VcsLogFilterCollectionImpl implements VcsLogFilterCollection {
   @Override
   public List<VcsLogDetailsFilter> getDetailsFilters() {
     return ContainerUtil.skipNulls(Arrays.asList(myUserFilter, myDateFilter, myTextFilter, myStructureFilter));
+  }
+
+  public static String getPresentation(VcsLogFilterCollection collection, boolean withPrefix) {
+    VcsLogHashFilter hashFilter = collection.getHashFilter();
+    if (hashFilter != null) {
+      return hashFilter.getDisplayText();
+    }
+    List<VcsLogFilter> filters = ContainerUtil.skipNulls(Arrays.asList(
+      collection.getBranchFilter(),
+      collection.getUserFilter(),
+      collection.getDateFilter(),
+      collection.getTextFilter(),
+      collection.getStructureFilter(),
+      collection.getRootFilter()
+    ));
+    return StringUtil.join(filters, filter -> filters.size() != 1 || withPrefix ? withPrefix(filter) : filter.getDisplayText(), " ");
+  }
+
+  private static String withPrefix(VcsLogFilter filter) {
+    if (filter instanceof VcsLogTextFilter) {
+      return VersionControlSystemLogLocalize.filterPresentationTextWithPrefix(filter.getDisplayText()).get();
+    }
+    if (filter instanceof VcsLogUserFilter) {
+      return VersionControlSystemLogLocalize.filterPresentationUserWithPrefix(filter.getDisplayText()).get();
+    }
+    if (filter instanceof VcsLogDateFilter dateFilter) {
+      return VcsLogDateFilterImpl.getDisplayTextWithPrefix(dateFilter);
+    }
+    if (filter instanceof VcsLogBranchFilter) {
+      return VersionControlSystemLogLocalize.filterPresentationBranchWithPrefix(filter.getDisplayText()).get();
+    }
+    if (filter instanceof VcsLogRootFilter) {
+      return VersionControlSystemLogLocalize.filterPresentationRootWithPrefix(filter.getDisplayText()).get();
+    }
+    if (filter instanceof VcsLogStructureFilter) {
+      return VersionControlSystemLogLocalize.filterPresentationStructureWithPrefix(filter.getDisplayText()).get();
+    }
+    return filter.getDisplayText();
   }
 
   @Override

@@ -19,16 +19,15 @@ import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionRef;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
+import consulo.ui.InputBoxBuilder;
+import consulo.ui.InputProblem;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.InputValidator;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.LegacyAnAction;
-import consulo.ui.ex.awt.Messages;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.versionControlSystem.change.shelf.ShelvedChangeList;
 import consulo.versionControlSystem.localize.VcsLocalize;
-
-import java.util.List;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author yole
@@ -42,43 +41,35 @@ public class RenameShelvedChangeListAction extends LegacyAnAction {
     @Override
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
-        final Project project = e.getRequiredData(Project.KEY);
+        Project project = e.getRequiredData(Project.KEY);
         ShelvedChangeListImpl[] changes = e.getData(ShelvedChangesViewManagerImpl.SHELVED_CHANGELIST_KEY);
         ShelvedChangeListImpl[] recycledChanges = e.getData(ShelvedChangesViewManagerImpl.SHELVED_RECYCLED_CHANGELIST_KEY);
         assert changes != null || recycledChanges != null;
-        final ShelvedChangeListImpl changeList = (changes != null && changes.length == 1) ? changes[0] : recycledChanges[0];
-        String newName = Messages.showInputDialog(
-            project,
-            VcsLocalize.shelveChangesRenamePrompt().get(),
-            VcsLocalize.shelveChangesRenameTitle().get(),
-            UIUtil.getQuestionIcon(),
-            changeList.DESCRIPTION,
-            new InputValidator() {
-                @Override
-                @RequiredUIAccess
-                public boolean checkInput(String inputString) {
-                    if (inputString.length() == 0) {
-                        return false;
-                    }
-                    List<ShelvedChangeList> list = ShelveChangesManagerImpl.getInstance(project).getShelvedChangeLists();
-                    for (ShelvedChangeList oldList : list) {
-                        if (oldList != changeList && oldList.getDescription().equals(inputString)) {
-                            return false;
-                        }
-                    }
-                    return true;
+        ShelvedChangeListImpl changeList = (changes != null && changes.length == 1) ? changes[0] : recycledChanges[0];
+        InputBoxBuilder.text()
+            .asQuestion()
+            .title(VcsLocalize.shelveChangesRenameTitle())
+            .text(VcsLocalize.shelveChangesRenamePrompt())
+            .value(changeList.DESCRIPTION)
+            .validator(value -> validateName(project, changeList, value))
+            .showAsync(project)
+            .whenCompleteAsync((newName, error) -> {
+                if (newName != null && !newName.equals(changeList.DESCRIPTION)) {
+                    ShelveChangesManagerImpl.getInstance(project).renameChangeList(changeList, newName);
                 }
+            }, UIAccess.current());
+    }
 
-                @Override
-                @RequiredUIAccess
-                public boolean canClose(String inputString) {
-                    return checkInput(inputString);
-                }
-            }
-        );
-        if (newName != null && !newName.equals(changeList.DESCRIPTION)) {
-            ShelveChangesManagerImpl.getInstance(project).renameChangeList(changeList, newName);
+    private static @Nullable InputProblem validateName(Project project, ShelvedChangeListImpl changeList, String name) {
+        if (name.isEmpty()) {
+            return InputProblem.error(VcsLocalize.shelveChangesRenameEmpty());
         }
+        for (ShelvedChangeList oldList : ShelveChangesManagerImpl.getInstance(project).getShelvedChangeLists()) {
+            if (oldList != changeList && oldList.getDescription().equals(name)) {
+                return InputProblem.error(VcsLocalize.shelveChangesRenameDuplicate());
+            }
+        }
+        return null;
     }
 
     @Override

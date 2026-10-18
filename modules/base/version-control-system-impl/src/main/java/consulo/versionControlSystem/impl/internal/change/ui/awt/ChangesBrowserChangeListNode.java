@@ -17,6 +17,7 @@ package consulo.versionControlSystem.impl.internal.change.ui.awt;
 
 import consulo.project.Project;
 import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.awt.ColoredTextItemPresentation;
 import consulo.versionControlSystem.change.*;
 import consulo.versionControlSystem.impl.internal.change.ChangeListOwner;
 import consulo.versionControlSystem.impl.internal.change.ui.ChangeListRemoteState;
@@ -41,7 +42,7 @@ public class ChangesBrowserChangeListNode extends ChangesBrowserNode<ChangeList>
         super(userObject);
         myChangeListRemoteState = changeListRemoteState;
         myClManager = (ChangeListManagerEx) ChangeListManager.getInstance(project);
-        myDecorators = ChangeListDecorator.EP_NAME.getExtensionList(project);
+        myDecorators = project.getExtensionList(ChangeListDecorator.class);
     }
 
     @Override
@@ -52,8 +53,9 @@ public class ChangesBrowserChangeListNode extends ChangesBrowserNode<ChangeList>
                 list.isDefault() ? SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES : SimpleTextAttributes.REGULAR_ATTRIBUTES
             );
             appendCount(renderer);
+            ColoredTextItemPresentation presentation = new ColoredTextItemPresentation(renderer);
             for (ChangeListDecorator decorator : myDecorators) {
-                decorator.decorateChangeList(list, renderer, selected, expanded, hasFocus);
+                decorator.decorateChangeList(list, presentation, selected, expanded, hasFocus);
             }
             String freezed = myClManager.isFreezed();
             if (freezed != null) {

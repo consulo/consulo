@@ -38,4 +38,9 @@ public interface VcsLogTextFilter extends VcsLogDetailsFilter {
    * @return true if case sensitive, false otherwise.
    */
   boolean matchesCase();
+
+  @Override
+  default String getDisplayText() {
+    return "'" + getText() + "'";
+  }
 }

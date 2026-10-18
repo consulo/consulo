@@ -21,6 +21,11 @@ import consulo.versionControlSystem.log.event.VcsLogListener;
 public interface VcsLogUi {
   Key<VcsLogUi> KEY = Key.create(VcsLogUi.class);
 
+  /**
+   * Identifier of this log UI, unique among the UIs of the same log.
+   */
+  String getId();
+
   
   VcsLogFilterUi getFilterUi();
 

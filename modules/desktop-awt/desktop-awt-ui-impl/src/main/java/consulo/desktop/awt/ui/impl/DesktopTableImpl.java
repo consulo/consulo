@@ -16,6 +16,7 @@
 package consulo.desktop.awt.ui.impl;
 
 import consulo.desktop.awt.ui.impl.event.DesktopAWTInputDetails;
+import consulo.desktop.awt.ui.impl.image.DesktopAWTCellImage;
 import consulo.desktop.awt.ui.impl.facade.FromSwingComponentWrapper;
 import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 import consulo.localize.LocalizeValue;
@@ -27,15 +28,20 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.TableDoubleClickEvent;
 import consulo.ui.event.TableSelectEvent;
 import consulo.ui.ex.awt.ColumnInfo;
+import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.awt.event.DoubleClickListener;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
 import consulo.ui.ex.awt.speedSearch.TableViewSpeedSearch;
 import consulo.ui.ex.awt.table.TableView;
 import consulo.ui.color.ColorValue;
 import consulo.ui.model.FlatDataModel;
+import consulo.ui.model.LazyFlatDataModel;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,6 +65,8 @@ class DesktopTableImpl<Item> extends SwingComponentDelegate<TableView<Item>> imp
         }
     }
 
+    private static final int MAX_ITEMS_FOR_SIZE_CALCULATION = 50;
+
     private final FlatDataModel<Item> myModel;
     private final List<DesktopTableColumnImpl<Item, ?>> myColumns = new ArrayList<>();
 
@@ -67,6 +75,8 @@ class DesktopTableImpl<Item> extends SwingComponentDelegate<TableView<Item>> imp
     private @Nullable Function<Item, String> mySpeedSearchConverter;
     private @Nullable Function<Item, Length> myItemHeightGetter;
     private @Nullable Function<Item, ColorValue> myRowBackgroundGetter;
+    private @Nullable DesktopAWTCellImage myHoveredCellImage;
+    private long myHoveredCellKey = -1;
 
     public DesktopTableImpl(FlatDataModel<Item> model) {
         myModel = model;
@@ -83,6 +93,9 @@ class DesktopTableImpl<Item> extends SwingComponentDelegate<TableView<Item>> imp
         applyHeader(tableView);
         applySpeedSearch(tableView);
         applyItemHeight(tableView);
+        if (myModel instanceof LazyFlatDataModel) {
+            tableView.setMaxItemsForSizeCalculation(MAX_ITEMS_FOR_SIZE_CALCULATION);
+        }
 
         tableView.getSelectionModel().addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {
@@ -104,7 +117,87 @@ class DesktopTableImpl<Item> extends SwingComponentDelegate<TableView<Item>> imp
             }
         }.installOn(tableView);
 
+        MouseAdapter cellImageMouse = new MouseAdapter() {
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                onCellImageMouse(tableView, e, false);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (e.getButton() == MouseEvent.BUTTON1) {
+                    onCellImageMouse(tableView, e, true);
+                }
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                if (tableView.getMousePosition() == null) {
+                    exitHoveredCellImage();
+                }
+            }
+        };
+        tableView.addMouseListener(cellImageMouse);
+        tableView.addMouseMotionListener(cellImageMouse);
+
         return tableView;
+    }
+
+    @RequiredUIAccess
+    private void onCellImageMouse(TableView<Item> tableView, MouseEvent event, boolean click) {
+        Point point = event.getPoint();
+        int row = tableView.rowAtPoint(point);
+        int column = tableView.columnAtPoint(point);
+
+        DesktopAWTCellImage image = null;
+        Rectangle imageRect = null;
+        if (row >= 0 && column >= 0) {
+            Rectangle cell = tableView.getCellRect(row, column, false);
+            Object value = tableView.getValueAt(row, column);
+            java.awt.Component rendered = tableView.getCellRenderer(row, column)
+                .getTableCellRendererComponent(tableView, value, tableView.isRowSelected(row), false, row, column);
+            if (rendered instanceof DesktopSuffixCellRendererPanel suffixPanel) {
+                rendered = suffixPanel.getMainComponent();
+            }
+            if (rendered instanceof SimpleColoredComponent colored
+                && !colored.isIconOnTheRight()
+                && colored.getIcon() instanceof DesktopAWTCellImage cellImage) {
+                Rectangle rect = new Rectangle(cell.x + colored.getIpad().left, cell.y, cellImage.getWidth(), cell.height);
+                if (rect.contains(point)) {
+                    image = cellImage;
+                    imageRect = rect;
+                }
+            }
+        }
+
+        long key = image == null ? -1 : ((long) row << 32) | (column & 0xffffffffL);
+        if (key != myHoveredCellKey) {
+            exitHoveredCellImage();
+        }
+        if (image == null || imageRect == null) {
+            return;
+        }
+
+        myHoveredCellKey = key;
+        myHoveredCellImage = image;
+        int x = point.x - imageRect.x;
+        int y = point.y - imageRect.y;
+        if (click) {
+            image.mouseClicked(x, y, imageRect.height);
+        }
+        else {
+            image.mouseMoved(x, y, imageRect.height);
+        }
+    }
+
+    @RequiredUIAccess
+    private void exitHoveredCellImage() {
+        DesktopAWTCellImage hovered = myHoveredCellImage;
+        myHoveredCellImage = null;
+        myHoveredCellKey = -1;
+        if (hovered != null) {
+            hovered.mouseExited();
+        }
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
@@ -196,7 +289,7 @@ class DesktopTableImpl<Item> extends SwingComponentDelegate<TableView<Item>> imp
     @RequiredUIAccess
     @Override
     public void select(Item item) {
-        toAWTComponent().addSelection(item);
+        toAWTComponent().setSelection(List.of(item));
     }
 
     @RequiredUIAccess

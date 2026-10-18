@@ -29,6 +29,8 @@ import consulo.navigation.Navigatable;
 import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
+import consulo.project.ui.wm.ToolWindowId;
+import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.TreeExpander;
@@ -37,6 +39,7 @@ import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import consulo.ui.ex.awt.tree.*;
 import consulo.ui.ex.content.ContentManager;
+import consulo.ui.ex.content.ContentUtilEx;
 import consulo.util.lang.Pair;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsConfiguration;
@@ -46,6 +49,7 @@ import consulo.versionControlSystem.impl.internal.change.commited.CommittedChang
 import consulo.versionControlSystem.impl.internal.change.commited.RefreshIncomingChangesAction;
 import consulo.versionControlSystem.impl.internal.ui.awt.PanelWithActionsAndCloseButton;
 import consulo.versionControlSystem.internal.CommittedChangesBrowserUseCase;
+import consulo.versionControlSystem.internal.ProjectLevelVcsManagerEx;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.ui.UpdateInfoTree;
 import consulo.versionControlSystem.update.ActionInfo;
@@ -134,8 +138,18 @@ public class UpdateInfoTreeImpl extends PanelWithActionsAndCloseButton implement
     }
 
     @Override
-    public JComponent getComponent() {
-        return this;
+    @RequiredUIAccess
+    public void focus() {
+        ToolWindowManager.getInstance(myProject).getToolWindow(ToolWindowId.VCS).activate(
+            () -> {
+                ContentManager contentManager = ProjectLevelVcsManagerEx.getInstanceEx(myProject).getContentManager();
+                if (contentManager != null) {
+                    ContentUtilEx.selectContent(contentManager, this, true);
+                }
+            },
+            true,
+            true
+        );
     }
 
     @Override

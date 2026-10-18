@@ -26,7 +26,7 @@ import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.change.ChangeList;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.change.LocalChangeList;
-import consulo.versionControlSystem.impl.internal.change.ui.awt.EditChangelistDialog;
+import consulo.versionControlSystem.impl.internal.change.ui.EditChangelistDialog;
 
 /**
  * @author yole
@@ -58,7 +58,7 @@ public class RenameChangeListAction extends LegacyDumbAwareAction {
         ChangeList[] lists = e.getRequiredData(VcsDataKeys.CHANGE_LISTS);
         LocalChangeList list = ChangeListManager.getInstance(project).findChangeList(lists[0].getName());
         if (list != null) {
-            new EditChangelistDialog(project, list).show();
+            new EditChangelistDialog(project, list).showAsync();
         }
     }
 }

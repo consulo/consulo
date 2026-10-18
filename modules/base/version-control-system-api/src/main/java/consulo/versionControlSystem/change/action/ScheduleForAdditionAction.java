@@ -29,10 +29,7 @@ import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.VcsException;
-import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangeListManager;
-import consulo.versionControlSystem.change.ChangesBrowser;
-import consulo.versionControlSystem.change.LocalChangeList;
 import consulo.versionControlSystem.internal.ChangeListManagerEx;
 import consulo.versionControlSystem.internal.ChangesListView;
 import consulo.virtualFileSystem.VirtualFile;
@@ -42,7 +39,6 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Set;
-import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -79,30 +75,22 @@ public abstract class ScheduleForAdditionAction extends LegacyDumbAwareAction {
         Project project = e.getRequiredData(Project.KEY);
         List<VirtualFile> unversionedFiles = getUnversionedFiles(e, project).collect(Collectors.toList());
 
-        addUnversioned(project, unversionedFiles, this::isStatusForAddition, e.getData(ChangesBrowser.DATA_KEY));
+        addUnversioned(project, unversionedFiles, this::isStatusForAddition);
     }
 
     @RequiredUIAccess
     public static boolean addUnversioned(
         Project project,
         List<VirtualFile> files,
-        Predicate<FileStatus> unversionedFileCondition,
-        @Nullable ChangesBrowser browser
+        Predicate<FileStatus> unversionedFileCondition
     ) {
         boolean result = true;
 
         if (!files.isEmpty()) {
             FileDocumentManager.getInstance().saveAllDocuments();
 
-            @SuppressWarnings("unchecked") Consumer<List<Change>> consumer = browser == null ? null : changes -> {
-                browser.rebuildList();
-                browser.getViewer().excludeChanges((List) files);
-                browser.getViewer().includeChanges((List) changes);
-            };
             ChangeListManagerEx manager = (ChangeListManagerEx) ChangeListManager.getInstance(project);
-            LocalChangeList targetChangeList =
-                browser == null ? manager.getDefaultChangeList() : (LocalChangeList) browser.getSelectedChangeList();
-            List<VcsException> exceptions = manager.addUnversionedFiles(targetChangeList, files, unversionedFileCondition, consumer);
+            List<VcsException> exceptions = manager.addUnversionedFiles(manager.getDefaultChangeList(), files, unversionedFileCondition, null);
 
             result = exceptions.isEmpty();
         }

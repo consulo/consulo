@@ -20,13 +20,8 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationAction;
-import consulo.project.ui.wm.ToolWindowId;
-import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.content.ContentManager;
-import consulo.ui.ex.content.ContentUtilEx;
-import consulo.versionControlSystem.internal.ProjectLevelVcsManagerEx;
 
 public class ViewUpdateInfoNotification extends NotificationAction {
     
@@ -54,15 +49,6 @@ public class ViewUpdateInfoNotification extends NotificationAction {
 
     @RequiredUIAccess
     public static void focusUpdateInfoTree(Project project, UpdateInfoTree updateInfoTree) {
-        ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.VCS).activate(
-            () -> {
-                ContentManager contentManager = ProjectLevelVcsManagerEx.getInstanceEx(project).getContentManager();
-                if (contentManager != null) {
-                    ContentUtilEx.selectContent(contentManager, updateInfoTree.getComponent(), true);
-                }
-            },
-            true,
-            true
-        );
+        updateInfoTree.focus();
     }
 }

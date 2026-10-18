@@ -23,11 +23,12 @@ import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.change.LocalChangeList;
 import consulo.versionControlSystem.impl.internal.change.ChangeListManagerImpl;
 import consulo.versionControlSystem.impl.internal.change.shelf.ShelveChangesCommitExecutor;
-import consulo.versionControlSystem.impl.internal.commit.CommitChangeListDialog;
+import consulo.versionControlSystem.impl.internal.commit.UnifiedCommitChangeListDialog;
 import consulo.virtualFileSystem.VirtualFile;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -39,7 +40,8 @@ public enum ChangelistConflictResolution {
     @Override
     public boolean resolveConflict(Project project, Collection<Change> changes, VirtualFile selected) {
       LocalChangeList changeList = getManager(project).getChangeList(changes.iterator().next());
-      return CommitChangeListDialog.commitChanges(project, changes, changeList, new ShelveChangesCommitExecutor(project), null);
+      UnifiedCommitChangeListDialog.show(project, changes, changeList, List.of(new ShelveChangesCommitExecutor(project)), false, null, null, null, true);
+      return true;
     }},
 
   MOVE {

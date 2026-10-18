@@ -21,6 +21,7 @@ import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationType;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.MultiMap;
 import consulo.versionControlSystem.AbstractVcs;
@@ -33,18 +34,20 @@ import consulo.versionControlSystem.log.impl.internal.data.VcsLogDataImpl;
 import consulo.versionControlSystem.log.impl.internal.data.VcsLogFiltererImpl;
 import consulo.versionControlSystem.log.impl.internal.data.VcsLogTabsProperties;
 import consulo.versionControlSystem.log.impl.internal.ui.VcsLogColorManagerImpl;
-import consulo.versionControlSystem.log.impl.internal.ui.VcsLogPanel;
-import consulo.versionControlSystem.log.impl.internal.ui.VcsLogUiImpl;
+import consulo.versionControlSystem.log.impl.internal.ui.AbstractVcsLogUi;
+import consulo.versionControlSystem.log.impl.internal.ui.UnifiedVcsLogUi;
 import consulo.versionControlSystem.root.VcsRoot;
 import consulo.versionControlSystem.ui.VcsBalloonProblemNotifier;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class VcsLogManager implements Disposable {
@@ -65,6 +68,7 @@ public class VcsLogManager implements Disposable {
   
   private final PostponableLogRefresher myPostponableRefresher;
   private boolean myInitialized = false;
+  private final Set<String> myLogUiIds = ConcurrentHashMap.newKeySet();
 
   public VcsLogManager(Project project, VcsLogTabsProperties uiProperties, Collection<VcsRoot> roots) {
     this(project, uiProperties, roots, true, null);
@@ -117,16 +121,19 @@ public class VcsLogManager implements Disposable {
   }
 
   
-  public JComponent createLogPanel(String logId, @Nullable String contentTabName) {
-    VcsLogUiImpl ui = createLogUi(logId, contentTabName, null);
-    return new VcsLogPanel(this, ui);
+  @RequiredUIAccess
+  public Component createLogPanel(String logId, @Nullable String contentTabName) {
+    AbstractVcsLogUi ui = createLogUi(logId, contentTabName, null);
+    return ui.createPanel(this);
   }
 
-  
-  public VcsLogUiImpl createLogUi(String logId, @Nullable String contentTabName, @Nullable VcsLogFilter filter) {
+  @RequiredUIAccess
+  public AbstractVcsLogUi createLogUi(String logId, @Nullable String contentTabName, @Nullable VcsLogFilter filter) {
     MainVcsLogUiProperties properties = myUiProperties.createProperties(logId);
     VcsLogFiltererImpl filterer = new VcsLogFiltererImpl(myProject, myLogData, properties.get(MainVcsLogUiProperties.BEK_SORT_TYPE));
-    VcsLogUiImpl ui = new VcsLogUiImpl(myLogData, myProject, myColorManager, properties, filterer);
+    AbstractVcsLogUi ui = new UnifiedVcsLogUi(logId, myLogData, myProject, myColorManager, properties, filterer);
+    myLogUiIds.add(logId);
+    Disposer.register(ui, () -> myLogUiIds.remove(logId));
     if (filter != null) {
       ui.getFilterUi().setFilter(filter);
     }
@@ -142,6 +149,19 @@ public class VcsLogManager implements Disposable {
 
     ui.requestFocus();
     return ui;
+  }
+
+  public boolean hasLogUi(String logId) {
+    return myLogUiIds.contains(logId);
+  }
+
+  public String generateNewLogId() {
+    String newId;
+    do {
+      newId = UUID.randomUUID().toString();
+    }
+    while (myLogUiIds.contains(newId));
+    return newId;
   }
 
   private static void refreshLogOnVcsEvents(Map<VirtualFile, VcsLogProvider> logProviders,

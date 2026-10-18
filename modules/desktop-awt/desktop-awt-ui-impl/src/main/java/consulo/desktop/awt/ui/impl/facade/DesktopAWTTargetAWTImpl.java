@@ -301,7 +301,10 @@ public class DesktopAWTTargetAWTImpl implements TargetAWTFacade {
     }
 
     @Override
-    public Cursor to(consulo.ui.cursor.Cursor cursor) {
+    public @Nullable Cursor to(consulo.ui.cursor.@Nullable Cursor cursor) {
+        if (cursor == null) {
+            return null;
+        }
         if (cursor instanceof StandardCursors systemCursor) {
             switch (systemCursor) {
                 case ARROW:

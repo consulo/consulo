@@ -16,15 +16,12 @@
 package consulo.versionControlSystem.log.impl.internal.ui.action;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.project.Project;
-import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.versionControlSystem.log.VcsLogUi;
-import consulo.versionControlSystem.log.impl.internal.ui.MainFrame;
+import consulo.versionControlSystem.log.impl.internal.ui.UnifiedVcsLogUi;
 import consulo.versionControlSystem.log.internal.VcsLogActionPlaces;
-import consulo.versionControlSystem.log.impl.internal.ui.VcsLogUiImpl;
 import consulo.versionControlSystem.log.localize.VersionControlSystemLogLocalize;
 
 @ActionImpl(id = VcsLogActionPlaces.VCS_LOG_FOCUS_TEXT_FILTER)
@@ -35,19 +32,14 @@ public class FocusTextFilterAction extends LegacyDumbAwareAction {
 
     @Override
     public void update(AnActionEvent e) {
-        e.getPresentation().setEnabledAndVisible(e.hasData(Project.KEY) && e.getData(VcsLogUi.KEY) instanceof VcsLogUiImpl);
+        e.getPresentation().setEnabledAndVisible(e.getData(VcsLogUi.KEY) instanceof UnifiedVcsLogUi);
     }
 
     @Override
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
-        Project project = e.getRequiredData(Project.KEY);
-        MainFrame mainFrame = ((VcsLogUiImpl) e.getRequiredData(VcsLogUi.KEY)).getMainFrame();
-        if (mainFrame.getTextFilter().getTextEditor().hasFocus()) {
-            ProjectIdeFocusManager.getInstance(project).requestFocus(mainFrame.getGraphTable(), true);
-        }
-        else {
-            ProjectIdeFocusManager.getInstance(project).requestFocus(mainFrame.getTextFilter(), true);
+        if (e.getData(VcsLogUi.KEY) instanceof UnifiedVcsLogUi logUi) {
+            logUi.toggleTextFilterFocus();
         }
     }
 }

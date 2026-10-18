@@ -18,6 +18,7 @@ package consulo.versionControlSystem.ui;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnAction;
 import consulo.versionControlSystem.change.Change;
 
 import java.util.List;
@@ -36,4 +37,9 @@ public interface VcsChangesBrowser {
 
     @RequiredUIAccess
     void setEmptyText(LocalizeValue text);
+
+    /**
+     * Shows the diff of the selected changes; can be registered on another component to diff from there.
+     */
+    AnAction getDiffAction();
 }

@@ -34,6 +34,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.FileDocumentManager;
 import consulo.fileEditor.EditorNotifications;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.event.ProjectManagerListener;
@@ -73,7 +74,6 @@ import org.jdom.Element;
 import org.jetbrains.annotations.TestOnly;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
 import java.io.File;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
@@ -100,7 +100,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
 
     private ChangeListWorker myWorker;
     private VcsException myUpdateException;
-    private Supplier<JComponent> myAdditionalInfo;
+    private @Nullable LocalizeValue myAdditionalInfo;
 
     private final EventDispatcher<ChangeListListener> myListeners = EventDispatcher.create(ChangeListListener.class);
 
@@ -968,7 +968,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
         }
     }
 
-    Supplier<JComponent> getAdditionalUpdateInfo() {
+    @Nullable LocalizeValue getAdditionalUpdateInfo() {
         synchronized (myDataLock) {
             return myAdditionalInfo;
         }

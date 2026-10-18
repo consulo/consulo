@@ -15,7 +15,7 @@ import consulo.util.lang.ref.SimpleReference;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.change.Change;
-import consulo.versionControlSystem.change.ChangesBrowser;
+import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesBrowser;
 import consulo.versionControlSystem.change.ContentRevision;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.versionControlSystem.impl.internal.ui.awt.InternalChangesBrowser;

@@ -82,6 +82,8 @@ public class UnifiedCommitWorkflow {
     private final ProgressBuilderFactory myProgressBuilderFactory;
     private final List<CommitExecutor> myExecutors;
     private final boolean myModalChecks;
+    private final @Nullable AbstractVcs mySingleVcs;
+    private final @Nullable CommitResultHandler myResultHandler;
 
     private final CommitContext myCommitContext = new CommitContext();
     private final PseudoMap<Object, Object> myAdditionalData = new PseudoMap<>();
@@ -95,11 +97,15 @@ public class UnifiedCommitWorkflow {
     public UnifiedCommitWorkflow(Project project,
                                  ProgressBuilderFactory progressBuilderFactory,
                                  List<CommitExecutor> executors,
-                                 boolean modalChecks) {
+                                 boolean modalChecks,
+                                 @Nullable AbstractVcs singleVcs,
+                                 @Nullable CommitResultHandler resultHandler) {
         myProject = project;
         myProgressBuilderFactory = progressBuilderFactory;
         myExecutors = List.copyOf(executors);
         myModalChecks = modalChecks;
+        mySingleVcs = singleVcs;
+        myResultHandler = resultHandler;
     }
 
     public Project getProject() {
@@ -138,7 +144,9 @@ public class UnifiedCommitWorkflow {
         myProjectPanel = panel;
         myHandlers.clear();
 
-        AbstractVcs[] activeVcses = ProjectLevelVcsManager.getInstance(myProject).getAllActiveVcss();
+        AbstractVcs[] activeVcses = mySingleVcs != null
+            ? new AbstractVcs[]{mySingleVcs}
+            : ProjectLevelVcsManager.getInstance(myProject).getAllActiveVcss();
         for (BaseCheckinHandlerFactory factory : CheckinHandlersManager.getInstance().getRegisteredCheckinHandlerFactories(activeVcses)) {
             CheckinHandler handler = factory.createHandler(panel, myCommitContext);
             if (handler != null && !CheckinHandler.DUMMY.equals(handler)) {
@@ -434,6 +442,9 @@ public class UnifiedCommitWorkflow {
                     if (resultHandler != null) {
                         resultHandler.onSuccess(commitMessage);
                     }
+                    if (myResultHandler != null) {
+                        myResultHandler.onSuccess(commitMessage);
+                    }
                 }
 
                 @Override
@@ -442,10 +453,13 @@ public class UnifiedCommitWorkflow {
                     if (resultHandler != null) {
                         resultHandler.onFailure();
                     }
+                    if (myResultHandler != null) {
+                        myResultHandler.onFailure();
+                    }
                 }
             }
         );
-        helper.doCommit((AbstractVcs) null);
+        helper.doCommit(mySingleVcs);
     }
 
     public CompletableFuture<Boolean> performExecutorCommit(UIAccess uiAccess,
@@ -467,11 +481,17 @@ public class UnifiedCommitWorkflow {
                     for (CheckinHandler handler : myHandlers) {
                         handler.checkinSuccessful();
                     }
+                    if (myResultHandler != null) {
+                        myResultHandler.onSuccess(commitMessage);
+                    }
                 }
                 else {
                     session.executionCanceled();
                     for (CheckinHandler handler : myHandlers) {
                         handler.checkinFailed(List.of(new VcsException(error)));
+                    }
+                    if (myResultHandler != null) {
+                        myResultHandler.onFailure();
                     }
                 }
             });

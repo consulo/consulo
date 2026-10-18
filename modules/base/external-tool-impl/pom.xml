@@ -64,6 +64,12 @@
             <artifactId>consulo-execution-api</artifactId>
             <version>${project.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-ide-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>consulo-version-control-system-api</artifactId>

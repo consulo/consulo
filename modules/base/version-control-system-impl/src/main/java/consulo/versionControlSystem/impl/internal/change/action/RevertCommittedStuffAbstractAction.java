@@ -20,21 +20,22 @@ import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
 import consulo.document.FileDocumentManager;
 import consulo.project.Project;
-import consulo.project.util.WaitForProgressToShow;
+import consulo.ui.MessageBoxes;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.LegacyDumbAwareAction;
-import consulo.ui.ex.awt.Messages;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangeList;
 import consulo.versionControlSystem.change.ChangeListManager;
+import consulo.versionControlSystem.change.LocalChangeList;
 import consulo.versionControlSystem.change.patch.BinaryFilePatch;
 import consulo.versionControlSystem.change.patch.FilePatch;
 import consulo.versionControlSystem.change.patch.IdeaTextPatchBuilder;
 import consulo.versionControlSystem.impl.internal.change.ChangesPreprocess;
-import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangeListChooser;
+import consulo.versionControlSystem.impl.internal.change.ui.ChangeListChooser;
 import consulo.versionControlSystem.impl.internal.patch.apply.PatchApplier;
 import consulo.versionControlSystem.internal.BackgroundFromStartOption;
 import consulo.versionControlSystem.localize.VcsLocalize;
@@ -77,19 +78,22 @@ abstract class RevertCommittedStuffAbstractAction extends LegacyDumbAwareAction 
             defaultName = VcsLocalize.revertChangesDefaultName(changeLists[0].getName()).get();
         }
 
-        final ChangeListChooser chooser = new ChangeListChooser(
+        new ChangeListChooser(
             project,
             ChangeListManager.getInstance(project).getChangeListsCopy(),
             null,
-            "Select Target Changelist",
+            VcsLocalize.revertChangesChangelistChooserTitle(),
             defaultName
-        );
-        chooser.show();
-        if (!chooser.isOK()) {
-            return;
-        }
+        ).showAsync().whenCompleteAsync((targetList, error) -> {
+            if (targetList != null) {
+                revert(project, baseDir, changesList, targetList);
+            }
+        }, UIAccess.current());
+    }
 
-        final List<FilePatch> patches = new ArrayList<>();
+    @RequiredUIAccess
+    private static void revert(Project project, VirtualFile baseDir, List<Change> changesList, LocalChangeList targetList) {
+        List<FilePatch> patches = new ArrayList<>();
         ProgressManager.getInstance().run(new Task.Backgroundable(
             project,
             VcsLocalize.revertChangesTitle(),
@@ -103,14 +107,10 @@ abstract class RevertCommittedStuffAbstractAction extends LegacyDumbAwareAction 
                     patches.addAll(IdeaTextPatchBuilder.buildPatch(project, preprocessed, baseDir.getPresentableUrl(), true));
                 }
                 catch (VcsException ex) {
-                    WaitForProgressToShow.runOrInvokeLaterAboveProgress(
-                        () -> Messages.showErrorDialog(
-                            project,
-                            "Failed to revert changes: " + ex.getMessage(),
-                            VcsLocalize.revertChangesTitle().get()
-                        ),
-                        null,
-                        (Project) myProject
+                    project.getUIAccess().give(
+                        () -> MessageBoxes.okError(VcsLocalize.revertChangesFailed(ex.getMessage()))
+                            .title(VcsLocalize.revertChangesTitle())
+                            .showAsync(project)
                     );
                     indicator.cancel();
                 }
@@ -119,7 +119,7 @@ abstract class RevertCommittedStuffAbstractAction extends LegacyDumbAwareAction 
             @RequiredUIAccess
             @Override
             public void onSuccess() {
-                new PatchApplier<BinaryFilePatch>(project, baseDir, patches, chooser.getSelectedList(), null, null).execute();
+                new PatchApplier<BinaryFilePatch>(project, baseDir, patches, targetList, null, null).execute();
             }
         });
     }

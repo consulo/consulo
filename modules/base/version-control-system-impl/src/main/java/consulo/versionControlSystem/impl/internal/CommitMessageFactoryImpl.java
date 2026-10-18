@@ -17,7 +17,8 @@ package consulo.versionControlSystem.impl.internal;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.project.Project;
-import consulo.versionControlSystem.CommitMessage;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.versionControlSystem.CommitMessageComponent;
 import consulo.versionControlSystem.CommitMessageFactory;
 import consulo.versionControlSystem.impl.internal.commit.CommitMessageImpl;
 import jakarta.inject.Inject;
@@ -39,7 +40,8 @@ public class CommitMessageFactoryImpl implements CommitMessageFactory {
 
     
     @Override
-    public CommitMessage create(boolean withSeparator) {
+    @RequiredUIAccess
+    public CommitMessageComponent create(boolean withSeparator) {
         return new CommitMessageImpl(myProject, withSeparator);
     }
 }

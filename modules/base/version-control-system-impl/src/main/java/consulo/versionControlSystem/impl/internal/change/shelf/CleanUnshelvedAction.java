@@ -19,11 +19,13 @@ import consulo.annotation.component.ActionImpl;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.AnActionWithSyncUpdate;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.dialog.DialogService;
 
 @ActionImpl(id = "ShelvedChanges.CleanMarkedToDelete")
 public class CleanUnshelvedAction extends DumbAwareAction implements AnActionWithSyncUpdate {
@@ -51,18 +53,17 @@ public class CleanUnshelvedAction extends DumbAwareAction implements AnActionWit
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
-        CleanUnshelvedFilterDialog dialog = new CleanUnshelvedFilterDialog(project);
-        dialog.show();
-        if (dialog.isOK()) {
-            if (dialog.isUnshelvedWithFilterSelected()) {
-                ShelveChangesManagerImpl.getInstance(project).cleanUnshelved(false, dialog.getTimeLimitInMillis());
+        CleanUnshelvedDialogDescriptor descriptor = new CleanUnshelvedDialogDescriptor();
+        project.getApplication().getInstance(DialogService.class).build(project, descriptor).showAsync().whenCompleteAsync((value, error) -> {
+            if (error != null || value == null) {
+                return;
             }
-            else if (dialog.isAllUnshelvedSelected()) {
-                ShelveChangesManagerImpl.getInstance(project).clearRecycled();
+            ShelveChangesManagerImpl manager = ShelveChangesManagerImpl.getInstance(project);
+            switch (descriptor.getScope()) {
+                case OLDER_THAN -> manager.cleanUnshelved(false, descriptor.getTimePeriod().getTimeLimitInMillis());
+                case ALL -> manager.clearRecycled();
+                case CREATED_AUTOMATICALLY -> manager.cleanUnshelved(true, System.currentTimeMillis());
             }
-            else {
-                ShelveChangesManagerImpl.getInstance(project).cleanUnshelved(true, System.currentTimeMillis());
-            }
-        }
+        }, UIAccess.current());
     }
 }

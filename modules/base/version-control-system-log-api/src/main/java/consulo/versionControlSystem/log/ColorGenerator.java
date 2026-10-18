@@ -15,11 +15,11 @@
  */
 package consulo.versionControlSystem.log;
 
-import java.awt.*;
+import consulo.ui.color.ColorValue;
 
 /**
  * @author erokhins
  */
 public interface ColorGenerator {
-  Color getColor(int colorId);
+  ColorValue getColor(int colorId);
 }

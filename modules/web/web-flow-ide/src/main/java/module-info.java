@@ -59,6 +59,7 @@ module consulo.web.ide {
     requires consulo.util.io;
     requires consulo.util.lang;
     requires consulo.version.control.system.api;
+    requires consulo.version.control.system.log.api;
     requires consulo.virtual.file.system.api;
 
     requires flow.data;

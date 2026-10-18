@@ -34,7 +34,6 @@ import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.util.dataholder.Key;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.change.InvokeAfterUpdateMode;
-import consulo.versionControlSystem.change.ChangesBrowser;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;

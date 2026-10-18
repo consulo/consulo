@@ -5,6 +5,7 @@
 @SuppressWarnings("module")
 module consulo.external.tool.impl {
     requires consulo.execution.api;
+    requires consulo.ide.api;
     requires consulo.version.control.system.api;
 
     // TODO remove in future

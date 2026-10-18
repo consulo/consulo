@@ -15,7 +15,6 @@
  */
 package consulo.versionControlSystem.distributed.impl.internal.branch;
 
-import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
 import consulo.project.Project;
 import consulo.versionControlSystem.distributed.repository.Repository;
@@ -30,7 +29,7 @@ import jakarta.inject.Singleton;
  * @since 2026-10-17
  */
 @Singleton
-@ServiceImpl(profiles = ComponentProfiles.UNIFIED)
+@ServiceImpl
 public class UnifiedDvcsBranchesTreePopupFactoryImpl implements DvcsBranchesTreePopupFactory {
     private final Project myProject;
 

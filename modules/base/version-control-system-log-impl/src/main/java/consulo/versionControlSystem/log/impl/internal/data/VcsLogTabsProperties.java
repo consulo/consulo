@@ -22,9 +22,12 @@ import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
+import consulo.versionControlSystem.log.impl.internal.VcsLogTabLocation;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -70,7 +73,30 @@ public class VcsLogTabsProperties implements PersistentStateComponent<VcsLogTabs
     };
   }
 
+  public boolean checkTabHasFilters(String id) {
+    VcsLogUiPropertiesImpl.State state = myState.TAB_STATES.get(id);
+    return state != null && !state.FILTERS.isEmpty();
+  }
+
+  public void addTab(String tabId, VcsLogTabLocation location) {
+    myState.OPEN_GENERIC_TABS.put(tabId, location);
+  }
+
+  public void removeTab(String tabId) {
+    myState.OPEN_GENERIC_TABS.remove(tabId);
+    resetState(tabId);
+  }
+
+  public void resetState(String tabId) {
+    myState.TAB_STATES.remove(tabId);
+  }
+
+  public Map<String, VcsLogTabLocation> getTabs() {
+    return Collections.unmodifiableMap(new LinkedHashMap<>(myState.OPEN_GENERIC_TABS));
+  }
+
   public static class State {
     public Map<String, VcsLogUiPropertiesImpl.State> TAB_STATES = new TreeMap<>();
+    public LinkedHashMap<String, VcsLogTabLocation> OPEN_GENERIC_TABS = new LinkedHashMap<>();
   }
 }

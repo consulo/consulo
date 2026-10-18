@@ -176,7 +176,9 @@ public class UnifiedCommitPanel implements UnifiedCommitWorkflowUi {
             myProject,
             myProject.getApplication().getInstance(ProgressBuilderFactory.class),
             List.of(),
-            false
+            false,
+            null,
+            null
         );
         UnifiedCommitWorkflowHandler handler = new UnifiedCommitWorkflowHandler(workflow, this, actionName);
         resetCommitOptions();

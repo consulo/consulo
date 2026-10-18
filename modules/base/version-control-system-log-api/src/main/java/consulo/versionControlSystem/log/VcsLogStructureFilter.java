@@ -18,6 +18,7 @@ package consulo.versionControlSystem.log;
 import consulo.versionControlSystem.FilePath;
 
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 /**
  * Tells the log to filter by files and folders.
@@ -31,4 +32,9 @@ public interface VcsLogStructureFilter extends VcsLogDetailsFilter {
    * if this method returns a set which includes a folder containing f.txt, or the file f.txt itself.</p>
    */
   Collection<FilePath> getFiles();
+
+  @Override
+  default String getDisplayText() {
+    return getFiles().stream().map(FilePath::getName).collect(Collectors.joining(", "));
+  }
 }

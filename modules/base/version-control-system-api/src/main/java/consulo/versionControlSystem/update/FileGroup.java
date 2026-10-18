@@ -16,7 +16,6 @@
 package consulo.versionControlSystem.update;
 
 import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.lang.Pair;
 import consulo.util.xml.serializer.DefaultJDOMExternalizer;
 import consulo.util.xml.serializer.InvalidDataException;
@@ -32,7 +31,6 @@ import consulo.virtualFileSystem.status.FileStatus;
 import org.jdom.Element;
 
 import org.jspecify.annotations.Nullable;
-import java.awt.*;
 import java.util.List;
 import java.util.*;
 
@@ -156,7 +154,7 @@ public class FileGroup implements JDOMExternalizable {
 
   public SimpleTextAttributes getInvalidAttributes() {
     if (myCanBeAbsent) {
-      return new SimpleTextAttributes(Font.PLAIN, TargetAWT.to(FileStatus.DELETED.getColor()));
+      return SimpleTextAttributes.of(SimpleTextAttributes.STYLE_PLAIN, FileStatus.DELETED.getColor());
     }
     else {
       return SimpleTextAttributes.ERROR_ATTRIBUTES;

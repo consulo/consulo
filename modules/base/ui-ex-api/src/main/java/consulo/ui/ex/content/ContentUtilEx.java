@@ -124,6 +124,9 @@ public class ContentUtilEx extends ContentsUtil {
 
   
   public static String getFullName(String groupPrefix, String tabName) {
+    if (tabName.isEmpty()) {
+      return groupPrefix;
+    }
     return getFullPrefix(groupPrefix) + tabName;
   }
 

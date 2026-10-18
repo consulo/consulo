@@ -34,7 +34,8 @@ import consulo.versionControlSystem.log.localize.VersionControlSystemLogLocalize
         @ActionRef(type = GoToHashOrRefAction.class),
         @ActionRef(type = ToolbarGroup.class),
         @ActionRef(type = AnSeparator.class),
-        @ActionRef(type = OpenAnotherLogTabAction.class),
+        @ActionRef(type = OpenAnotherLogTabInToolWindowAction.class),
+        @ActionRef(type = OpenAnotherLogTabInEditorAction.class),
         @ActionRef(type = CloseLogTabAction.class)
     }
 )

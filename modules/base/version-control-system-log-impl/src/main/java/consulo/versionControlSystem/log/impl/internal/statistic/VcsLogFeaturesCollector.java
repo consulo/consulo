@@ -22,7 +22,7 @@ import consulo.versionControlSystem.log.VcsLogHighlighterFactory;
 import consulo.versionControlSystem.log.graph.PermanentGraph;
 import consulo.versionControlSystem.log.impl.internal.VcsProjectLog;
 import consulo.versionControlSystem.log.impl.internal.data.MainVcsLogUiProperties;
-import consulo.versionControlSystem.log.impl.internal.ui.VcsLogUiImpl;
+import consulo.versionControlSystem.log.impl.internal.ui.AbstractVcsLogUi;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -37,7 +37,7 @@ public class VcsLogFeaturesCollector extends AbstractApplicationUsagesCollector 
     public Set<UsageDescriptor> getProjectUsages(Project project) throws CollectUsagesException {
         VcsProjectLog projectLog = VcsProjectLog.getInstance(project);
         if (projectLog != null) {
-            VcsLogUiImpl ui = projectLog.getMainLogUi();
+            AbstractVcsLogUi ui = projectLog.getMainLogUi();
             if (ui != null) {
                 MainVcsLogUiProperties properties = ui.getProperties();
 

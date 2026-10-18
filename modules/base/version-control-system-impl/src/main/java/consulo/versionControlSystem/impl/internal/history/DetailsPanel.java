@@ -18,24 +18,27 @@ package consulo.versionControlSystem.impl.internal.history;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataSink;
 import consulo.dataContext.UiDataProvider;
+import consulo.colorScheme.EditorColorsManager;
+import consulo.colorScheme.EditorFontType;
 import consulo.project.Project;
 import consulo.ui.ex.CopyProvider;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.CopyPasteManager;
 import consulo.ui.ex.awt.HtmlPanel;
+import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.StatusText;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.StringHtmlUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
-import consulo.versionControlSystem.history.VcsHistoryUtil;
+import consulo.versionControlSystem.internal.VersionControlSystemInternal;
 import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.util.List;
 
 import static consulo.versionControlSystem.ui.awt.IssueLinkHtmlRenderer.formatTextWithLinks;
-import static consulo.versionControlSystem.ui.awt.VcsFontUtil.getHtmlWithFonts;
 
 class DetailsPanel extends HtmlPanel implements UiDataProvider, CopyProvider {
   private final Project myProject;
@@ -88,12 +91,21 @@ class DetailsPanel extends HtmlPanel implements UiDataProvider, CopyProvider {
     }
     else {
       setText("<html><head>" +
-              UIUtil.getCssFontDeclaration(VcsHistoryUtil.getCommitDetailsFont()) +
+              UIUtil.getCssFontDeclaration(getCommitDetailsFont()) +
               "</head><body>" +
               myText +
               "</body></html>");
       setCaretPosition(0);
     }
+  }
+
+  private static String getHtmlWithFonts(String input) {
+    return VersionControlSystemInternal.getInstance().getHtmlWithFonts(input);
+  }
+
+  private static Font getCommitDetailsFont() {
+    consulo.ui.font.Font font = EditorColorsManager.getInstance().getGlobalScheme().getFont(EditorFontType.PLAIN);
+    return JBUI.scale(TargetAWT.to(font));
   }
 
   @Override

@@ -51,7 +51,8 @@ import consulo.util.lang.Pair;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.change.ChangesUtil;
-import consulo.versionControlSystem.impl.internal.ui.awt.CreatePatchConfigurationPanel;
+import consulo.versionControlSystem.impl.internal.change.patch.CreatePatchConfigurationPanel;
+import consulo.versionControlSystem.impl.internal.change.ui.SessionDialogDescriptor;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
@@ -464,18 +465,30 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
 
     @RequiredUIAccess
     private void createPatch() {
-        try {
-            if (!myModel.canPerformCreatePatch()) {
-                showError(LocalHistoryLocalize.messageCannotCreatePatchBecauseOfUnavailableContent());
-                return;
-            }
+        if (!myModel.canPerformCreatePatch()) {
+            showError(LocalHistoryLocalize.messageCannotCreatePatchBecauseOfUnavailableContent());
+            return;
+        }
 
-            CreatePatchConfigurationPanel p = new CreatePatchConfigurationPanel(myProject);
-            p.setFileName(getDefaultPatchFile());
-            p.setCommonParentPath(ChangesUtil.findCommonAncestor(myModel.getChanges()));
-            if (!showAsDialog(p)) {
-                return;
+        CreatePatchConfigurationPanel p = new CreatePatchConfigurationPanel(myProject);
+        p.setFileName(getDefaultPatchFile());
+        p.setCommonParentPath(ChangesUtil.findCommonAncestor(myModel.getChanges()));
+
+        SessionDialogDescriptor descriptor =
+            new SessionDialogDescriptor(LocalHistoryLocalize.createPatchDialogTitle(), p::isOkToExecute, p::validateFields, null);
+        p.setStateChanged(descriptor::refresh);
+
+        UIAccess uiAccess = UIAccess.current();
+        descriptor.show(myProject, p.getComponent()).whenCompleteAsync((ok, error) -> {
+            if (Boolean.TRUE.equals(ok)) {
+                writePatch(p);
             }
+        }, uiAccess);
+    }
+
+    @RequiredUIAccess
+    private void writePatch(CreatePatchConfigurationPanel p) {
+        try {
             myModel.createPatch(p.getFileName(), p.getBaseDirName(), p.isReversePatch(), p.getEncoding());
 
             showNotification(LocalHistoryLocalize.messagePatchCreated());
@@ -489,15 +502,6 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
 
     private File getDefaultPatchFile() {
         return FileUtil.findSequentNonexistentFile(new File(myProject.getBasePath()), "local_history", "patch");
-    }
-
-    @RequiredUIAccess
-    private boolean showAsDialog(CreatePatchConfigurationPanel p) {
-        DialogWrapper dialogWrapper = new MyDialogWrapper(myProject, p);
-        dialogWrapper.setTitle(LocalHistoryLocalize.createPatchDialogTitle());
-        dialogWrapper.setModal(true);
-        dialogWrapper.show();
-        return dialogWrapper.getExitCode() == DialogWrapper.OK_EXIT_CODE;
     }
 
     @RequiredUIAccess
@@ -655,35 +659,6 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
             public Dimension preferredLayoutSize(Container parent) {
                 return myContent.getPreferredSize();
             }
-        }
-    }
-
-    private static class MyDialogWrapper extends DialogWrapper {
-        
-        private final CreatePatchConfigurationPanel myPanel;
-
-        protected MyDialogWrapper(@Nullable Project project, CreatePatchConfigurationPanel centralPanel) {
-            super(project, true);
-            myPanel = centralPanel;
-            init();
-            initValidation();
-        }
-
-        @Override
-        protected @Nullable JComponent createCenterPanel() {
-            return myPanel.getPanel();
-        }
-
-        @Override
-        @RequiredUIAccess
-        public @Nullable JComponent getPreferredFocusedComponent() {
-            return IdeFocusTraversalPolicy.getPreferredFocusedComponent(myPanel.getPanel());
-        }
-
-        @Override
-        @RequiredUIAccess
-        protected @Nullable ValidationInfo doValidate() {
-            return myPanel.validateFields();
         }
     }
 }

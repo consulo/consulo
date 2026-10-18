@@ -15,14 +15,15 @@
  */
 package consulo.versionControlSystem.change;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
-import consulo.language.editor.ui.awt.EditorTextField;
-
+import consulo.language.editor.ui.EditorBox;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.layout.HorizontalLayout;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
 import java.util.function.Consumer;
 
 /**
@@ -32,9 +33,29 @@ import java.util.function.Consumer;
 public interface EditChangelistSupport {
     ExtensionPointName<EditChangelistSupport> EP_NAME = ExtensionPointName.create(EditChangelistSupport.class);
 
-    void installSearch(EditorTextField name, EditorTextField comment);
+    /**
+     * Customizes change list name and comment components.
+     * E.g., could be used to install completion to these components.
+     *
+     * @param name    change list name component
+     * @param comment change list comment component
+     */
+    @RequiredUIAccess
+    void installSearch(EditorBox name, EditorBox comment);
 
-    Consumer<LocalChangeList> addControls(JPanel bottomPanel, @Nullable LocalChangeList initial);
+    /**
+     * Allows adding custom components to create / edit change list UI.
+     * And reacting to successful change list creation or edition.
+     *
+     * @param bottomPanel panel to add custom components
+     * @param initial     change list being edited or {@code null} if a new change list is created
+     * @return callback to call after a change list is successfully created or edited
+     */
+    @RequiredUIAccess
+    @Nullable Consumer<LocalChangeList> addControls(HorizontalLayout bottomPanel, @Nullable LocalChangeList initial);
 
-    void changelistCreated(LocalChangeList changeList);
+    @Deprecated
+    @DeprecationInfo("Use return value of addControls(HorizontalLayout, LocalChangeList) instead")
+    default void changelistCreated(LocalChangeList changeList) {
+    }
 }

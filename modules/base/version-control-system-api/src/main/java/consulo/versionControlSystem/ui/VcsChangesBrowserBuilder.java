@@ -29,6 +29,11 @@ public interface VcsChangesBrowserBuilder {
 
     VcsChangesBrowserBuilder toolbarAction(AnAction action);
 
+    /**
+     * Adds the rollback action; rolled back changes leave the list.
+     */
+    VcsChangesBrowserBuilder withRollback();
+
     @RequiredUIAccess
     VcsChangesBrowser build(Disposable parentDisposable);
 }

@@ -17,8 +17,8 @@ package consulo.versionControlSystem.annotate;
 
 import consulo.codeEditor.EditorGutterAction;
 import consulo.localize.LocalizeValue;
-
-import java.awt.*;
+import consulo.ui.cursor.Cursor;
+import consulo.ui.cursor.StandardCursors;
 
 /**
  * @author Konstantin Bulenkov
@@ -58,7 +58,7 @@ public abstract class LineAnnotationAspectAdapter implements LineAnnotationAspec
 
     @Override
     public Cursor getCursor(int lineNum) {
-        return Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
+        return StandardCursors.HAND;
     }
 
     @Override

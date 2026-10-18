@@ -45,6 +45,7 @@ import consulo.ui.ex.awt.table.TableView;
 import consulo.ui.ex.awt.util.MergingUpdateQueue;
 import consulo.ui.ex.awt.util.PopupUtil;
 import consulo.ui.ex.awt.util.Update;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.function.Predicates;
@@ -142,15 +143,14 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements UiDataPro
         myComments.setEditable(false);
         myComments.addHyperlinkListener(BrowserHyperlinkListener.INSTANCE);
 
-        JRootPane rootPane = ((RootPaneContainer)getFrame()).getRootPane();
-        VcsDependentHistoryComponents components = vcsHistoryProvider.getUICustomization(session, rootPane);
+        VcsDependentHistoryComponents components = vcsHistoryProvider.getUICustomization(session);
 
         ColumnInfo[] defaultColumns = new ColumnInfo[]{
             new FileHistoryPanelImpl.RevisionColumnInfo(null),
             new FileHistoryPanelImpl.DateColumnInfo(),
             new FileHistoryPanelImpl.AuthorColumnInfo(),
             new FileHistoryPanelImpl.MessageColumnInfo(project)};
-        ColumnInfo[] additionalColumns = notNull(components.getColumns(), ColumnInfo.EMPTY_ARRAY);
+        ColumnInfo[] additionalColumns = components.getColumns().stream().map(VcsHistoryColumnInfo::new).toArray(ColumnInfo[]::new);
         myListModel = new ListTableModel<>(ArrayUtil.mergeArrays(defaultColumns, additionalColumns));
         myListModel.setSortable(false);
         myList = new TableView<>(myListModel);
@@ -168,7 +168,8 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements UiDataPro
         mySplitter = new JBSplitter(true, DIFF_SPLITTER_PROPORTION_KEY, DIFF_SPLITTER_PROPORTION);
 
         mySplitter.setFirstComponent(myDiffPanel.getComponent());
-        mySplitter.setSecondComponent(createBottomPanel(components.getDetailsComponent()));
+        consulo.ui.Component details = components.getDetailsComponent();
+        mySplitter.setSecondComponent(createBottomPanel(details == null ? null : (JComponent) TargetAWT.to(details)));
 
         ListSelectionListener selectionListener = e -> {
             VcsFileRevision revision;

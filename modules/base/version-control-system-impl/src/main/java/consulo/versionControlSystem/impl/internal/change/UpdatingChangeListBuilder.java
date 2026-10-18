@@ -18,6 +18,7 @@ package consulo.versionControlSystem.impl.internal.change;
 import consulo.application.ApplicationManager;
 import consulo.component.ProcessCanceledException;
 import consulo.language.file.FileTypeManager;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
@@ -27,7 +28,7 @@ import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
+
 import java.util.function.Supplier;
 
 class UpdatingChangeListBuilder implements ChangelistBuilder {
@@ -41,7 +42,7 @@ class UpdatingChangeListBuilder implements ChangelistBuilder {
   private final ChangeListManager myChangeListManager;
   private final ProjectLevelVcsManager myVcsManager;
   private final ChangeListManagerGate myGate;
-  private Supplier<JComponent> myAdditionalInfo;
+  private @Nullable LocalizeValue myAdditionalInfo;
 
   UpdatingChangeListBuilder(ChangeListWorker changeListWorker,
                             FileHolderComposite composite,
@@ -228,18 +229,13 @@ class UpdatingChangeListBuilder implements ChangelistBuilder {
   }
 
   @Override
-  public void reportAdditionalInfo(String text) {
-    reportAdditionalInfo(ChangesViewManagerImpl.createTextStatusFactory(text, true));
-  }
-
-  @Override
-  public void reportAdditionalInfo(Supplier<JComponent> infoComponent) {
+  public void reportAdditionalInfo(LocalizeValue text) {
     if (myAdditionalInfo == null) {
-      myAdditionalInfo = infoComponent;
+      myAdditionalInfo = text;
     }
   }
 
-  public Supplier<JComponent> getAdditionalInfo() {
+  public @Nullable LocalizeValue getAdditionalInfo() {
     return myAdditionalInfo;
   }
 }

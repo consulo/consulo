@@ -2,6 +2,7 @@
 package consulo.versionControlSystem.distributed.ui;
 
 import consulo.application.internal.ProgressIndicatorUtils;
+import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.component.ProcessCanceledException;
 import consulo.dataContext.DataContext;
 import consulo.fileEditor.FileEditorManager;
@@ -16,7 +17,6 @@ import consulo.project.ui.wm.StatusBarWidget;
 import consulo.project.ui.wm.StatusBarWidgetFactory;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
@@ -29,6 +29,9 @@ import consulo.versionControlSystem.icon.VersionControlSystemIconGroup;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+
 public abstract class DvcsStatusWidget<T extends Repository> extends EditorBasedWidget
     implements StatusBarWidget.MultipleTextValuesPresentation, StatusBarWidget.Multiframe {
     protected static final Logger LOG = Logger.getInstance(DvcsStatusWidget.class);
@@ -40,7 +43,7 @@ public abstract class DvcsStatusWidget<T extends Repository> extends EditorBased
     private volatile LocalizeValue myTooltip = LocalizeValue.empty();
     private volatile @Nullable Image myIcon;
     private volatile @Nullable T myRepository;
-    private final Alarm myUpdateBackgroundAlarm = new Alarm(Alarm.ThreadToUse.POOLED_THREAD, this);
+    private @Nullable Future<?> myUpdateBackgroundFuture;
 
     protected DvcsStatusWidget(Project project, StatusBarWidgetFactory factory, String vcsName) {
         super(project, factory);
@@ -159,8 +162,11 @@ public abstract class DvcsStatusWidget<T extends Repository> extends EditorBased
             }
 
             VirtualFile selectedFile = DvcsUtil.getSelectedFile(getProject());
-            myUpdateBackgroundAlarm.cancelAllRequests();
-            myUpdateBackgroundAlarm.addRequest(
+            Future<?> previous = myUpdateBackgroundFuture;
+            if (previous != null) {
+                previous.cancel(false);
+            }
+            myUpdateBackgroundFuture = AppExecutorUtil.getAppScheduledExecutorService().schedule(
                 () -> {
                     if (isDisposed()) {
                         clearStatus();
@@ -171,9 +177,19 @@ public abstract class DvcsStatusWidget<T extends Repository> extends EditorBased
                         updateLater();
                     }
                 },
-                10
+                10,
+                TimeUnit.MILLISECONDS
             );
         });
+    }
+
+    @Override
+    public void dispose() {
+        Future<?> future = myUpdateBackgroundFuture;
+        if (future != null) {
+            future.cancel(false);
+        }
+        super.dispose();
     }
 
     private void updateOnBackground(@Nullable VirtualFile selectedFile) {

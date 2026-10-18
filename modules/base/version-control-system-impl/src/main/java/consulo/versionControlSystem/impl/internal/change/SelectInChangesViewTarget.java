@@ -15,6 +15,7 @@
  */
 package consulo.versionControlSystem.impl.internal.change;
 
+import consulo.versionControlSystem.change.ChangesViewManager;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.localize.LocalizeValue;
@@ -65,7 +66,7 @@ public class SelectInChangesViewTarget implements SelectInTarget, DumbAware {
             @Override
             public void run() {
                 ChangesViewContentI.getInstance(myProject).selectContent(ChangesViewContentI.LOCAL_CHANGES);
-                ChangesViewManagerImpl.getInstance(myProject).selectFile(file);
+                ChangesViewManager.getInstance(myProject).selectFile(file);
             }
         };
         ToolWindow toolWindow = ChangesViewContentI.getInstance(myProject).getToolWindowFor(ChangesViewContentI.LOCAL_CHANGES);

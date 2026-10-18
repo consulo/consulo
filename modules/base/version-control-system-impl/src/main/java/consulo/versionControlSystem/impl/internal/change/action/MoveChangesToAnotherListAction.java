@@ -21,6 +21,7 @@ import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
@@ -35,9 +36,9 @@ import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.VcsToolWindow;
 import consulo.versionControlSystem.change.*;
 import consulo.versionControlSystem.impl.internal.change.ChangeListManagerImpl;
-import consulo.versionControlSystem.impl.internal.change.ChangesViewManagerImpl;
-import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangeListChooser;
-import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesListViewImpl;
+import consulo.versionControlSystem.change.ChangesViewManager;
+import consulo.versionControlSystem.impl.internal.change.ui.ChangeListChooser;
+import consulo.versionControlSystem.internal.ChangesListView;
 import consulo.versionControlSystem.ui.VcsBalloonProblemNotifier;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
@@ -45,6 +46,7 @@ import consulo.virtualFileSystem.status.FileStatus;
 import org.jspecify.annotations.Nullable;
 
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author max
@@ -77,7 +79,7 @@ public class MoveChangesToAnotherListAction extends LegacyDumbAwareAction {
             return false;
         }
 
-        List<VirtualFile> data = e.getData(ChangesListViewImpl.UNVERSIONED_FILES_DATA_KEY);
+        List<VirtualFile> data = e.getData(ChangesListView.UNVERSIONED_FILES_DATA_KEY);
         return data != null && !data.isEmpty()
             || !ArrayUtil.isEmpty(e.getData(VcsDataKeys.CHANGES))
             || !ArrayUtil.isEmpty(e.getData(VirtualFile.KEY_OF_ARRAY));
@@ -158,12 +160,12 @@ public class MoveChangesToAnotherListAction extends LegacyDumbAwareAction {
             return;
         }
 
-        if (!askAndMove(project, changesList, unversionedFiles)) {
-            return;
-        }
-        if (!changedFiles.isEmpty()) {
-            selectAndShowFile(project, changedFiles.get(0));
-        }
+        UIAccess uiAccess = UIAccess.current();
+        askAndMove(project, changesList, unversionedFiles).whenCompleteAsync((moved, error) -> {
+            if (Boolean.TRUE.equals(moved) && !changedFiles.isEmpty()) {
+                selectAndShowFile(project, changedFiles.get(0));
+            }
+        }, uiAccess);
     }
 
     @RequiredUIAccess
@@ -171,23 +173,28 @@ public class MoveChangesToAnotherListAction extends LegacyDumbAwareAction {
         ToolWindow window = ToolWindowManager.getInstance(project).getToolWindow(VcsToolWindow.ID);
 
         if (!window.isVisible()) {
-            window.activate(() -> ChangesViewManagerImpl.getInstance(project).selectFile(file));
+            window.activate(() -> ChangesViewManager.getInstance(project).selectFile(file));
         }
     }
 
+    /**
+     * @return whether the changes were moved - {@code false} when there was nothing to move or the user cancelled
+     */
     @RequiredUIAccess
-    public static boolean askAndMove(
+    public static CompletableFuture<Boolean> askAndMove(
         Project project,
         Collection<Change> changes,
         List<VirtualFile> unversionedFiles
     ) {
         if (changes.isEmpty() && unversionedFiles.isEmpty()) {
-            return false;
+            return CompletableFuture.completedFuture(false);
         }
 
-        LocalChangeList targetList = askTargetList(project, changes);
-
-        if (targetList != null) {
+        UIAccess uiAccess = UIAccess.current();
+        return askTargetList(project, changes).thenApplyAsync(targetList -> {
+            if (targetList == null) {
+                return false;
+            }
             ChangeListManagerImpl listManager = ChangeListManagerImpl.getInstanceImpl(project);
 
             listManager.moveChangesTo(targetList, ArrayUtil.toObjectArray(changes, Change.class));
@@ -195,26 +202,22 @@ public class MoveChangesToAnotherListAction extends LegacyDumbAwareAction {
                 listManager.addUnversionedFiles(targetList, unversionedFiles);
             }
             return true;
-        }
-        return false;
+        }, uiAccess);
     }
 
     @RequiredUIAccess
-    private static @Nullable LocalChangeList askTargetList(Project project, Collection<Change> changes) {
+    private static CompletableFuture<@Nullable LocalChangeList> askTargetList(Project project, Collection<Change> changes) {
         ChangeListManagerImpl listManager = ChangeListManagerImpl.getInstanceImpl(project);
         List<LocalChangeList> preferredLists = getPreferredLists(listManager.getChangeListsCopy(), changes);
         List<LocalChangeList> listsForChooser =
             preferredLists.isEmpty() ? Collections.singletonList(listManager.getDefaultChangeList()) : preferredLists;
-        ChangeListChooser chooser = new ChangeListChooser(
+        return new ChangeListChooser(
             project,
             listsForChooser,
             guessPreferredList(preferredLists),
-            ActionLocalize.actionChangesviewMoveText().get(),
+            ActionLocalize.actionChangesviewMoveText(),
             null
-        );
-        chooser.show();
-
-        return chooser.getSelectedList();
+        ).showAsync();
     }
 
     private static @Nullable ChangeList guessPreferredList(List<LocalChangeList> lists) {

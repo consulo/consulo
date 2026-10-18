@@ -17,12 +17,14 @@ package consulo.versionControlSystem.impl.internal.change.ui;
 
 import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.Component;
 import consulo.ui.HorizontalAlignment;
 import consulo.ui.Label;
 import consulo.ui.LabelOptions;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.TreeExpander;
 import consulo.ui.ex.action.ActionManager;
@@ -36,9 +38,14 @@ import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.PlaceholderLayout;
 import consulo.ui.style.ComponentColors;
 import consulo.versionControlSystem.change.Change;
+import consulo.versionControlSystem.change.ChangeListListener;
+import consulo.versionControlSystem.change.ChangeListManager;
+import consulo.versionControlSystem.impl.internal.change.action.RollbackDialogAction;
 import consulo.versionControlSystem.impl.internal.action.ShowDiffAction;
 import consulo.versionControlSystem.ui.VcsChangesBrowser;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -56,10 +63,16 @@ public class UnifiedVcsChangesBrowser implements VcsChangesBrowser {
 
     private List<Change> myChanges = List.of();
     private boolean myShowFlatten = true;
+    private final AnAction myDiffAction;
 
     @RequiredUIAccess
-    public UnifiedVcsChangesBrowser(Project project, LocalizeValue emptyText, List<AnAction> toolbarActions, Disposable parentDisposable) {
+    public UnifiedVcsChangesBrowser(Project project,
+                                    LocalizeValue emptyText,
+                                    List<AnAction> toolbarActions,
+                                    boolean withRollback,
+                                    Disposable parentDisposable) {
         myProject = project;
+        myDiffAction = ActionManager.getInstance().getAction(SHOW_DIFF_ACTION) instanceof AnAction showDiff ? showDiff : new ShowDiffAction();
         myTree = new UnifiedChangesTree(project, false, parentDisposable);
         myTree.setDoubleClickHandler(item -> {
             if (item instanceof ChangeTreeItem changeItem) {
@@ -77,19 +90,48 @@ public class UnifiedVcsChangesBrowser implements VcsChangesBrowser {
         myContent.setPlaceholder(placeholder);
         myContent.setPlaceholderVisibility(() -> myChanges.isEmpty());
 
+        List<AnAction> actions = new ArrayList<>(toolbarActions);
+        if (withRollback) {
+            actions.add(new RollbackDialogAction());
+            ChangeListManager changeListManager = ChangeListManager.getInstance(project);
+            ChangeListListener listener = new ChangeListListener() {
+                @Override
+                public void changeListUpdateDone() {
+                    UIAccess uiAccess = project.getUIAccess();
+                    if (uiAccess.isValid()) {
+                        uiAccess.give(() -> dropRolledBackChanges(changeListManager));
+                    }
+                }
+            };
+            changeListManager.addChangeListListener(listener);
+            Disposer.register(parentDisposable, () -> changeListManager.removeChangeListListener(listener));
+        }
+
         myRoot.putUserData(UiDataProvider.KEY, myTree::uiDataSnapshot);
-        myRoot.top(createToolbar(toolbarActions).getUIComponent());
+        myRoot.top(createToolbar(actions).getUIComponent());
         myRoot.center(myContent);
 
         myTree.setSnapshot(buildSnapshot());
     }
 
     @RequiredUIAccess
+    private void dropRolledBackChanges(ChangeListManager changeListManager) {
+        Collection<Change> allChanges = changeListManager.getAllChanges();
+        List<Change> remaining = new ArrayList<>();
+        for (Change change : myChanges) {
+            if (allChanges.contains(change)) {
+                remaining.add(change);
+            }
+        }
+        if (remaining.size() != myChanges.size()) {
+            setChanges(remaining);
+        }
+    }
+
+    @RequiredUIAccess
     private ActionToolbar createToolbar(List<AnAction> toolbarActions) {
         DefaultActionGroup group = new DefaultActionGroup();
-        if (ActionManager.getInstance().getAction(SHOW_DIFF_ACTION) instanceof AnAction showDiff) {
-            group.add(showDiff);
-        }
+        group.add(myDiffAction);
         group.addSeparator();
         TreeExpander expander = TreeExpander.of(myTree.getComponent());
         CommonActionsManager commonActionsManager = CommonActionsManager.getInstance();
@@ -140,5 +182,10 @@ public class UnifiedVcsChangesBrowser implements VcsChangesBrowser {
     @Override
     public void setEmptyText(LocalizeValue text) {
         myEmptyText.setText(text);
+    }
+
+    @Override
+    public AnAction getDiffAction() {
+        return myDiffAction;
     }
 }

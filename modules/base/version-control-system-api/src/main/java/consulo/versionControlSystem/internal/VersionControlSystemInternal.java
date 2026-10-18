@@ -25,7 +25,6 @@ import consulo.ui.ex.action.AnAction;
 import consulo.versionControlSystem.change.Change;
 import consulo.virtualFileSystem.VirtualFile;
 
-import java.awt.*;
 import java.util.Collection;
 
 /**
@@ -38,7 +37,7 @@ public interface VersionControlSystemInternal {
         return Application.get().getInstance(VersionControlSystemInternal.class);
     }
 
-    String getHtmlWithFonts(String input, int style, Font baseFont);
+    String getHtmlWithFonts(String input);
 
     // TODO remove in future, exists until LineStatusTracker not moved to vcs impl
     void moveToRange(VcsRange range, Editor editor, LineStatusTrackerI tracker);

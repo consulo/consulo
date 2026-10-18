@@ -16,22 +16,26 @@
 package consulo.versionControlSystem.impl.internal.change.action;
 
 import consulo.annotation.component.ActionImpl;
+import consulo.application.progress.ProgressBuilderFactory;
 import consulo.application.progress.ProgressManager;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.LegacyDumbAwareAction;
-import consulo.ui.ex.awt.DialogWrapper;
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.step.CodeExecution;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.change.*;
 import consulo.versionControlSystem.impl.internal.change.patch.CreatePatchCommitExecutor;
 import consulo.versionControlSystem.impl.internal.change.shelf.ShelvedChangeListImpl;
 import consulo.versionControlSystem.impl.internal.change.shelf.ShelvedChangesViewManagerImpl;
-import consulo.versionControlSystem.impl.internal.change.ui.awt.SessionDialog;
+import consulo.versionControlSystem.impl.internal.change.ui.SessionDialogDescriptor;
 import consulo.versionControlSystem.localize.VcsLocalize;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -81,51 +85,52 @@ public class CreatePatchFromChangesAction extends LegacyDumbAwareAction {
     }
 
     @RequiredUIAccess
-    public static void createPatch(Project project, String commitMessage, List<Change> changeCollection) {
-        project = project == null ? ProjectManager.getInstance().getDefaultProject() : project;
-        CreatePatchCommitExecutor executor = new CreatePatchCommitExecutor(project);
+    public static void createPatch(@Nullable Project project, String commitMessage, List<Change> changeCollection) {
+        Project targetProject = project == null ? ProjectManager.getInstance().getDefaultProject() : project;
+        CreatePatchCommitExecutor executor = new CreatePatchCommitExecutor(targetProject);
         CommitSession commitSession = executor.createCommitSession();
         if (commitSession instanceof CommitSessionContextAware commitSessionContextAware) {
             commitSessionContextAware.setContext(new CommitContext());
         }
-        DialogWrapper sessionDialog = new SessionDialog(executor.getActionText(), project, commitSession, changeCollection, commitMessage);
-        sessionDialog.show();
-        if (!sessionDialog.isOK()) {
-            return;
-        }
-        preloadContent(project, changeCollection);
-
-        commitSession.execute(changeCollection, commitMessage);
+        UIAccess uiAccess = UIAccess.current();
+        SessionDialogDescriptor.configureCommitSession(
+                targetProject,
+                executor.getActionText(),
+                commitSession,
+                changeCollection,
+                commitMessage
+            )
+            .whenCompleteAsync((ok, error) -> {
+                if (!Boolean.TRUE.equals(ok)) {
+                    return;
+                }
+                targetProject.getApplication().getInstance(ProgressBuilderFactory.class)
+                    .newProgressBuilder(targetProject, VcsLocalize.createPatchLoadingContentProgress())
+                    .cancelable()
+                    .execute(uiAccess, () -> Coroutine.first(CodeExecution.<Object, Object>apply((input, continuation) -> {
+                        preloadContent(changeCollection);
+                        commitSession.execute(changeCollection, commitMessage);
+                        return null;
+                    })));
+            }, uiAccess);
     }
 
-    private static void preloadContent(Project project, final List<Change> changes) {
-        // to avoid multiple progress dialogs, preload content under one progress
-        ProgressManager.getInstance().runProcessWithProgressSynchronously(
-            new Runnable() {
-                @Override
-                public void run() {
-                    for (Change change : changes) {
-                        checkLoadContent(change.getBeforeRevision());
-                        checkLoadContent(change.getAfterRevision());
-                    }
-                }
+    private static void preloadContent(List<Change> changes) {
+        for (Change change : changes) {
+            checkLoadContent(change.getBeforeRevision());
+            checkLoadContent(change.getAfterRevision());
+        }
+    }
 
-                private void checkLoadContent(ContentRevision revision) {
-                    ProgressManager.checkCanceled();
-                    if (revision != null && !(revision instanceof BinaryContentRevision)) {
-                        try {
-                            revision.getContent();
-                        }
-                        catch (VcsException e1) {
-                            // ignore at the moment
-                        }
-                    }
-                }
-            },
-            VcsLocalize.createPatchLoadingContentProgress(),
-            true,
-            project
-        );
+    private static void checkLoadContent(@Nullable ContentRevision revision) {
+        ProgressManager.checkCanceled();
+        if (revision != null && !(revision instanceof BinaryContentRevision)) {
+            try {
+                revision.getContent();
+            }
+            catch (VcsException ignored) {
+            }
+        }
     }
 
     @Override

@@ -22,6 +22,7 @@ import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.log.VcsCommitMetadata;
 import consulo.versionControlSystem.log.VcsLogUserFilter;
 import consulo.versionControlSystem.log.VcsUser;
+import consulo.versionControlSystem.log.localize.VersionControlSystemLogLocalize;
 import consulo.versionControlSystem.log.util.VcsUserUtil;
 import consulo.virtualFileSystem.VirtualFile;
 
@@ -29,6 +30,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class VcsLogUserFilterImpl implements VcsLogUserFilter {
   private static final Logger LOG = Logger.getInstance(VcsLogUserFilterImpl.class);
@@ -94,6 +96,13 @@ public class VcsLogUserFilterImpl implements VcsLogUserFilter {
   }
 
   
+  @Override
+  public String getDisplayText() {
+    return myUsers.stream()
+      .map(user -> ME.equals(user) ? VersionControlSystemLogLocalize.filterUserMe().get() : user)
+      .collect(Collectors.joining(", "));
+  }
+
   public Collection<String> getUserNamesForPresentation() {
     return myUsers;
   }

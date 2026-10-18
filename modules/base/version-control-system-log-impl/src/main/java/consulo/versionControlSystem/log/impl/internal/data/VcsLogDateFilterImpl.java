@@ -15,9 +15,11 @@
  */
 package consulo.versionControlSystem.log.impl.internal.data;
 
+import consulo.application.util.DateFormatUtil;
 import consulo.versionControlSystem.log.VcsCommitMetadata;
 import consulo.versionControlSystem.log.VcsLogDateFilter;
 import consulo.versionControlSystem.log.VcsLogDetailsFilter;
+import consulo.versionControlSystem.log.localize.VersionControlSystemLogLocalize;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Date;
@@ -53,5 +55,39 @@ public class VcsLogDateFilterImpl implements VcsLogDateFilter, VcsLogDetailsFilt
   @Override
   public @Nullable Date getBefore() {
     return myBefore;
+  }
+
+  @Override
+  public String getDisplayText() {
+    if (myBefore != null && myAfter != null) {
+      String after = DateFormatUtil.formatDate(myAfter);
+      String before = DateFormatUtil.formatDate(myBefore);
+      return VersionControlSystemLogLocalize.filterDateDisplayNameBetween(after, before).get();
+    }
+    else if (myAfter != null) {
+      return VersionControlSystemLogLocalize.filterDateDisplayNameAfter(DateFormatUtil.formatDate(myAfter)).get();
+    }
+    else if (myBefore != null) {
+      return VersionControlSystemLogLocalize.filterDateDisplayNameBefore(DateFormatUtil.formatDate(myBefore)).get();
+    }
+    return "";
+  }
+
+  public static String getDisplayTextWithPrefix(VcsLogDateFilter filter) {
+    Date after = filter.getAfter();
+    Date before = filter.getBefore();
+    if (before != null && after != null) {
+      return VersionControlSystemLogLocalize.filterPresentationDateWithPrefixMadeBetween(
+        DateFormatUtil.formatDate(after),
+        DateFormatUtil.formatDate(before)
+      ).get();
+    }
+    else if (after != null) {
+      return VersionControlSystemLogLocalize.filterPresentationDateWithPrefixMadeAfter(DateFormatUtil.formatDate(after)).get();
+    }
+    else if (before != null) {
+      return VersionControlSystemLogLocalize.filterPresentationDateWithPrefixMadeBefore(DateFormatUtil.formatDate(before)).get();
+    }
+    return "";
   }
 }

@@ -17,8 +17,6 @@ package consulo.versionControlSystem.history;
 
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
-import consulo.colorScheme.EditorColorsManager;
-import consulo.colorScheme.EditorFontType;
 import consulo.diff.DiffManager;
 import consulo.diff.content.DiffContent;
 import consulo.diff.internal.DiffContentFactoryEx;
@@ -28,9 +26,7 @@ import consulo.diff.request.SimpleDiffRequest;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.util.WaitForProgressToShow;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.Messages;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.MessageBoxes;
 import consulo.util.io.CharsetToolkit;
 import consulo.util.lang.Pair;
 import consulo.versionControlSystem.FilePath;
@@ -42,7 +38,6 @@ import consulo.virtualFileSystem.encoding.EncodingManager;
 import consulo.virtualFileSystem.encoding.EncodingProjectManager;
 import org.jspecify.annotations.Nullable;
 
-import java.awt.*;
 import java.io.IOException;
 
 public class VcsHistoryUtil {
@@ -207,13 +202,11 @@ public class VcsHistoryUtil {
                 }
                 catch (VcsException e) {
                     LOG.info(e);
-                    WaitForProgressToShow.runOrInvokeLaterAboveProgress(
-                        () -> Messages.showErrorDialog(
-                            VcsLocalize.messageTextCannotShowDifferences(e.getLocalizedMessage()).get(),
-                            VcsLocalize.messageTitleShowDifferences().get()
-                        ),
-                        null,
-                        project
+                    project.getApplication().invokeLater(
+                        () -> MessageBoxes.okError(VcsLocalize.messageTextCannotShowDifferences(e.getLocalizedMessage()))
+                            .title(VcsLocalize.messageTitleShowDifferences())
+                            .showAsync(project),
+                        project.getDisposed()
                     );
                 }
                 catch (IOException e) {
@@ -226,10 +219,5 @@ public class VcsHistoryUtil {
                     (revision instanceof CurrentRevision ? " (" + VcsLocalize.diffTitleLocal().get() + ")" : "");
             }
         }.queue();
-    }
-
-    public static Font getCommitDetailsFont() {
-        consulo.ui.font.Font font = EditorColorsManager.getInstance().getGlobalScheme().getFont(EditorFontType.PLAIN);
-        return JBUI.scale(TargetAWT.to(font));
     }
 }

@@ -76,6 +76,10 @@ commit.amend.tooltip:
     text: <html>Merge this commit with the previous one</html>
 commit.amend:
     text: Amend commit
+dialog.message.following.repositories.already.have.specified:
+    text: The following repositories already have specified {0} <b>{1}</b>:<br>{2}.<br>Do you want to checkout existing {3}?
+dialog.title.already.exists:
+    text: '{0} Already Exists'
 force.push.dialog.title:
     text: Force Push
 notification.synched.branches.content:

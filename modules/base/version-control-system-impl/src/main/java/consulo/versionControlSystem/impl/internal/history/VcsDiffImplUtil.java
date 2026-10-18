@@ -15,21 +15,18 @@
  */
 package consulo.versionControlSystem.impl.internal.history;
 
-import consulo.application.Application;
 import consulo.diff.DiffManager;
 import consulo.diff.request.MessageDiffRequest;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.DialogBuilder;
 import consulo.util.dataholder.Key;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.change.Change;
-import consulo.versionControlSystem.change.ChangesBrowser;
-import consulo.versionControlSystem.change.ChangesBrowserFactory;
 import consulo.versionControlSystem.impl.internal.action.ShowDiffAction;
-import consulo.versionControlSystem.impl.internal.ui.awt.InternalChangesBrowser;
 import consulo.versionControlSystem.internal.ShowDiffContext;
 import consulo.versionControlSystem.localize.VcsLocalize;
+import consulo.versionControlSystem.ui.VcsChangesDialogFactory;
 
 import java.util.*;
 
@@ -81,19 +78,9 @@ public class VcsDiffImplUtil {
 
     @RequiredUIAccess
     public static void showChangesDialog(Project project, String title, List<Change> changes) {
-        DialogBuilder dialogBuilder = new DialogBuilder(project);
-
-        dialogBuilder.setTitle(title);
-        dialogBuilder.setActionDescriptors(new DialogBuilder.CloseDialogAction());
-
-        ChangesBrowserFactory browserFactory = Application.get().getInstance(ChangesBrowserFactory.class);
-
-        ChangesBrowser<Change> changesBrowser =
-            browserFactory.createChangeBrowser(project, null, changes, null, false, true, null, InternalChangesBrowser.MyUseCase.COMMITTED_CHANGES, null);
-
-        changesBrowser.setChangesToDisplay(changes);
-        dialogBuilder.setCenterPanel(changesBrowser.getComponent());
-        dialogBuilder.setPreferredFocusComponent(changesBrowser.getPreferredFocusedComponent());
-        dialogBuilder.showNotModal();
+        project.getApplication().getInstance(VcsChangesDialogFactory.class)
+            .showChanges(project, changes)
+            .title(LocalizeValue.of(title))
+            .showAsync();
     }
 }

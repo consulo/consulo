@@ -58,6 +58,7 @@ import consulo.ui.ex.awt.speedSearch.TableSpeedSearch;
 import consulo.ui.ex.awt.table.TableView;
 import consulo.ui.ex.awt.table.TableViewModel;
 import consulo.ui.ex.awt.util.Alarm;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ui.image.Image;
 import consulo.undoRedo.CommandProcessor;
@@ -175,8 +176,9 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
 
         refreshRevisionsOrder();
 
-        VcsDependentHistoryComponents components = provider.getUICustomization(session, this);
-        myAdditionalDetails = components.getDetailsComponent();
+        VcsDependentHistoryComponents components = provider.getUICustomization(session);
+        consulo.ui.Component additionalDetails = components.getDetailsComponent();
+        myAdditionalDetails = additionalDetails == null ? null : (JComponent) TargetAWT.to(additionalDetails);
         myRevisionSelectionListener = components.getRevisionListener();
 
         DualViewColumnInfo[] columns = createColumnList(myProject, provider, components.getColumns());
@@ -325,7 +327,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
     private DualViewColumnInfo[] createColumnList(
         Project project,
         VcsHistoryProvider provider,
-        @Nullable ColumnInfo[] additionalColumns
+        List<VcsHistoryColumn> additionalColumns
     ) {
         ArrayList<DualViewColumnInfo> columns = new ArrayList<>();
         columns.add(new RevisionColumnInfo(myRevisionsInOrderComparator));
@@ -334,10 +336,8 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
         }
         columns.add(new AuthorColumnInfo());
         ArrayList<DualViewColumnInfo> additionalColumnInfo = new ArrayList<>();
-        if (additionalColumns != null) {
-            for (ColumnInfo additionalColumn : additionalColumns) {
-                additionalColumnInfo.add(new TreeNodeColumnInfoWrapper(additionalColumn));
-            }
+        for (VcsHistoryColumn additionalColumn : additionalColumns) {
+            additionalColumnInfo.add(new TreeNodeColumnInfoWrapper(new VcsHistoryColumnInfo(additionalColumn)));
         }
         columns.addAll(additionalColumnInfo);
         columns.add(new MessageColumnInfo(project));

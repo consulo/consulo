@@ -16,7 +16,7 @@
 package consulo.versionControlSystem.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesViewContentManager;
+import consulo.versionControlSystem.internal.ChangesViewContentI;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.ui.VcsShowToolWindowTabAction;
 
@@ -29,6 +29,6 @@ public class VcsShowLocalChangesAction extends VcsShowToolWindowTabAction {
     
     @Override
     protected String getContentId() {
-        return ChangesViewContentManager.LOCAL_CHANGES;
+        return ChangesViewContentI.LOCAL_CHANGES;
     }
 }

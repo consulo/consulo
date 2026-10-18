@@ -13,6 +13,10 @@ import consulo.ui.image.Image;
  */
 public class WebImageConverter {
     public static Component getImage(Image image) {
+        if (image instanceof WebComponentImage componentImage) {
+            return componentImage.createComponent();
+        }
+
         // the composition is a tree of custom elements which apply the effects in the browser, so the tags
         // carry their own size and nothing has to be set on the component around them
         Element element = WebImageElement.toElement(image);

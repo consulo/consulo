@@ -19,8 +19,6 @@ import consulo.application.Application;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationService;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.AbstractVcs;
@@ -114,14 +112,15 @@ public abstract class VcsIntegrationEnabler<VcsT extends AbstractVcs> {
     }
 
     protected static void refreshVcsDir(final VirtualFile projectDir, final String vcsDirName) {
-        UIUtil.invokeAndWaitIfNeeded(new Runnable() {
-            @Override
-            @RequiredUIAccess
-            public void run() {
-                Application.get().runWriteAction(() -> {
-                    LocalFileSystem.getInstance().refreshAndFindFileByPath(projectDir.getPath() + "/" + vcsDirName);
-                });
-            }
+        Application application = Application.get();
+        Runnable refresh = () -> application.runWriteAction((Runnable) () -> {
+            LocalFileSystem.getInstance().refreshAndFindFileByPath(projectDir.getPath() + "/" + vcsDirName);
         });
+        if (application.isDispatchThread()) {
+            refresh.run();
+        }
+        else {
+            application.invokeAndWait(refresh);
+        }
     }
 }

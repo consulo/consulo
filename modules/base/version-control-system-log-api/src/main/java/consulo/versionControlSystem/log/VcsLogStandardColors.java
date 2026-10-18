@@ -15,17 +15,18 @@
  */
 package consulo.versionControlSystem.log;
 
-import consulo.ui.ex.JBColor;
 
-import java.awt.*;
+import consulo.ui.color.ColorValue;
+import consulo.ui.color.RGBColor;
+import consulo.ui.util.LightDarkColorValue;
 
 // TODO migrated color scheme
 public class VcsLogStandardColors {
   public static class Refs {
-    public static final Color TIP = new JBColor(new Color(0xffe137), new Color(0xe1c731));
-    public static final Color LEAF = new JBColor(new Color(0x8a2d6b), new Color(0xc31e8c));
-    public static final Color BRANCH = new JBColor(new Color(0x3cb45c), new Color(0x3cb45c));
-    public static final Color BRANCH_REF = new JBColor(new Color(0x9f79b5), new Color(0x9f79b5));
-    public static final Color TAG = new JBColor(new Color(0x7a7a7a), new Color(0x999999));
+    public static final ColorValue TIP = new LightDarkColorValue(RGBColor.fromRGBValue(0xffe137), RGBColor.fromRGBValue(0xe1c731));
+    public static final ColorValue LEAF = new LightDarkColorValue(RGBColor.fromRGBValue(0x8a2d6b), RGBColor.fromRGBValue(0xc31e8c));
+    public static final ColorValue BRANCH = new LightDarkColorValue(RGBColor.fromRGBValue(0x3cb45c), RGBColor.fromRGBValue(0x3cb45c));
+    public static final ColorValue BRANCH_REF = new LightDarkColorValue(RGBColor.fromRGBValue(0x9f79b5), RGBColor.fromRGBValue(0x9f79b5));
+    public static final ColorValue TAG = new LightDarkColorValue(RGBColor.fromRGBValue(0x7a7a7a), RGBColor.fromRGBValue(0x999999));
   }
 }

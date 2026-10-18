@@ -34,7 +34,7 @@ import consulo.project.Project;
 import consulo.project.macro.ProjectPathMacroManager;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.action.Presentation;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.SmartList;
 import consulo.util.io.FilePermissionCopier;
@@ -54,15 +54,15 @@ import consulo.versionControlSystem.change.patch.*;
 import consulo.versionControlSystem.change.shelf.*;
 import consulo.versionControlSystem.impl.internal.change.ChangeListUtil;
 import consulo.versionControlSystem.impl.internal.change.patch.ApplyPatchDefaultExecutor;
+import consulo.versionControlSystem.impl.internal.change.patch.PatchNameChecker;
 import consulo.versionControlSystem.impl.internal.change.ui.RollbackWorker;
-import consulo.versionControlSystem.impl.internal.change.ui.awt.RollbackChangesDialog;
 import consulo.versionControlSystem.impl.internal.patch.*;
 import consulo.versionControlSystem.impl.internal.patch.apply.ApplyFilePatchBase;
 import consulo.versionControlSystem.impl.internal.patch.apply.ApplyPatchStatus;
 import consulo.versionControlSystem.impl.internal.patch.apply.CustomBinaryPatchApplier;
 import consulo.versionControlSystem.impl.internal.patch.apply.PatchApplier;
-import consulo.versionControlSystem.impl.internal.ui.awt.PatchNameChecker;
 import consulo.versionControlSystem.impl.internal.util.FilesProgress;
+import consulo.versionControlSystem.impl.internal.util.RollbackUtil;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.RawFileLoader;
 import consulo.virtualFileSystem.VirtualFile;
@@ -342,7 +342,9 @@ public class ShelveChangesManagerImpl implements ShelveChangesManager, JDOMExter
             mySchemeManager.addNewScheme(changeList, false);
 
             if (rollback) {
-                String operationName = UIUtil.removeMnemonic(RollbackChangesDialog.operationNameByChanges(myProject, changes));
+                String operationName = Presentation.NO_MNEMONIC.apply(
+                    RollbackUtil.getRollbackOperationName(ChangesUtil.getAffectedVcses(changes, myProject))
+                );
                 boolean modalContext = UIAccess.isUIThread() && UIAccess.current().isInModalContext();
                 if (progressIndicator != null) {
                     progressIndicator.startNonCancelableSection();

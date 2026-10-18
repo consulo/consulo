@@ -62,13 +62,18 @@ public class VcsLogTabsWatcher implements Disposable {
         if (myToolWindow != null && myToolWindow.isVisible()) {
             Content content = myToolWindow.getContentManager().getSelectedContent();
             if (content != null) {
-                return content.getTabName();
+                return getWatchName(content);
             }
         }
         return null;
     }
 
     
+    private static String getWatchName(Content content) {
+        String tabId = content.getUserData(VcsLogTabsManager.TAB_ID_KEY);
+        return tabId != null ? tabId : content.getTabName();
+    }
+
     public Disposable addTabToWatch(String contentTabName, VcsLogFilterer filterer) {
         return myRefresher.addLogWindow(new VcsLogTab(filterer, contentTabName));
     }
@@ -129,7 +134,7 @@ public class VcsLogTabsWatcher implements Disposable {
         @Override
         public void selectionChanged(ContentManagerEvent event) {
             if (ContentManagerEvent.ContentOperation.add.equals(event.getOperation())) {
-                selectionChanged(event.getContent().getTabName());
+                selectionChanged(getWatchName(event.getContent()));
             }
         }
 
