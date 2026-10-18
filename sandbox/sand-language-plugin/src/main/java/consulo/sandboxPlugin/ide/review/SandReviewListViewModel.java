@@ -15,7 +15,8 @@
  */
 package consulo.sandboxPlugin.ide.review;
 
-import consulo.review.list.ReviewListViewModel;
+import consulo.review.list.CodeReviewListItemsViewModel;
+import consulo.review.list.ReviewListItemPresentation;
 import consulo.review.util.ComputedResult;
 import consulo.util.concurrent.coroutine.MutableObservableValue;
 import consulo.util.concurrent.coroutine.ObservableValue;
@@ -23,31 +24,51 @@ import consulo.util.concurrent.coroutine.ObservableValue;
 import java.util.List;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
  * @author VISTALL
  * @since 2026-10-18
  */
-public class SandReviewListViewModel implements ReviewListViewModel {
+public class SandReviewListViewModel implements CodeReviewListItemsViewModel<SandReviewViewModel> {
     private final ScheduledExecutorService myScheduler;
     private final Supplier<List<SandReviewViewModel>> myLoader;
+    private final Consumer<SandReviewViewModel> myOpener;
     private final MutableObservableValue<ComputedResult<List<SandReviewViewModel>>> myReviews =
         MutableObservableValue.of(ComputedResult.loading());
 
-    public SandReviewListViewModel(ScheduledExecutorService scheduler, Supplier<List<SandReviewViewModel>> loader) {
+    public SandReviewListViewModel(ScheduledExecutorService scheduler,
+                                   Supplier<List<SandReviewViewModel>> loader,
+                                   Consumer<SandReviewViewModel> opener) {
         myScheduler = scheduler;
         myLoader = loader;
+        myOpener = opener;
         refresh();
     }
 
-    public ObservableValue<ComputedResult<List<SandReviewViewModel>>> getReviews() {
+    @Override
+    public ObservableValue<ComputedResult<List<SandReviewViewModel>>> getItems() {
         return myReviews;
     }
 
     @Override
+    public ReviewListItemPresentation getPresentation(SandReviewViewModel item) {
+        return item.toPresentation();
+    }
+
+    @Override
+    public void open(SandReviewViewModel item) {
+        item.setSeen(null);
+        myOpener.accept(item);
+    }
+
+    @Override
     public void refresh() {
-        myReviews.set(ComputedResult.loading());
-        myScheduler.schedule(() -> myReviews.set(ComputedResult.success(myLoader.get())), 700, TimeUnit.MILLISECONDS);
+        ComputedResult<List<SandReviewViewModel>> current = myReviews.get();
+        if (!current.isSuccess()) {
+            myReviews.set(ComputedResult.loading());
+        }
+        myScheduler.schedule(() -> myReviews.set(ComputedResult.success(List.copyOf(myLoader.get()))), 700, TimeUnit.MILLISECONDS);
     }
 }

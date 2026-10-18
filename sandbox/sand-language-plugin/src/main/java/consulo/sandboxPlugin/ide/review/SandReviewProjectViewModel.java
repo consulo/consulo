@@ -23,7 +23,10 @@ import consulo.util.concurrent.coroutine.ObservableValue;
 import org.jspecify.annotations.Nullable;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
@@ -34,8 +37,8 @@ public class SandReviewProjectViewModel implements ReviewToolwindowProjectViewMo
     private final MutableObservableValue<ReviewToolwindowTabs<SandReviewTab, SandReviewTabViewModel>> myTabs =
         MutableObservableValue.of(new ReviewToolwindowTabs<>(Map.of(), null));
 
-    public SandReviewProjectViewModel(SandReviewListViewModel listVm) {
-        myListVm = listVm;
+    public SandReviewProjectViewModel(ScheduledExecutorService scheduler, Supplier<List<SandReviewViewModel>> loader) {
+        myListVm = new SandReviewListViewModel(scheduler, loader, this::openReview);
     }
 
     @Override

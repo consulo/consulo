@@ -16,13 +16,16 @@
 package consulo.sandboxPlugin.ide.review;
 
 import consulo.localize.LocalizeValue;
-import consulo.review.toolwindow.ReviewTabViewModel;
+import consulo.review.details.model.CodeReviewDetailsTabViewModel;
+import consulo.review.details.model.CodeReviewDetailsViewModel;
+import consulo.review.details.model.CodeReviewStatusViewModel;
+import consulo.review.timeline.CodeReviewTimelineViewModel;
 
 /**
  * @author VISTALL
  * @since 2026-10-18
  */
-public record SandReviewTabViewModel(SandReviewViewModel review) implements ReviewTabViewModel {
+public record SandReviewTabViewModel(SandReviewViewModel review) implements CodeReviewDetailsTabViewModel {
     @Override
     public LocalizeValue getDisplayName() {
         return LocalizeValue.of("#" + review.getNumber());
@@ -31,5 +34,20 @@ public record SandReviewTabViewModel(SandReviewViewModel review) implements Revi
     @Override
     public LocalizeValue getDescription() {
         return LocalizeValue.of(review.getTitle().get());
+    }
+
+    @Override
+    public CodeReviewDetailsViewModel getDetailsVm() {
+        return review;
+    }
+
+    @Override
+    public CodeReviewStatusViewModel getStatusVm() {
+        return review;
+    }
+
+    @Override
+    public CodeReviewTimelineViewModel getTimelineVm() {
+        return review.getTimelineVm();
     }
 }

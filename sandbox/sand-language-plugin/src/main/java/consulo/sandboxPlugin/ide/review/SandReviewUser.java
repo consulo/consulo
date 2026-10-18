@@ -15,16 +15,34 @@
  */
 package consulo.sandboxPlugin.ide.review;
 
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.review.list.UserPresentation;
 import consulo.review.user.CodeReviewUser;
+import consulo.ui.image.Image;
 import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 2026-10-18
  */
-public record SandReviewUser(String username, String fullName) implements CodeReviewUser {
+public record SandReviewUser(String username, String fullName) implements CodeReviewUser, UserPresentation {
     @Override
     public @Nullable String getAvatarUrl() {
         return null;
+    }
+
+    @Override
+    public String getUsername() {
+        return username;
+    }
+
+    @Override
+    public String getFullName() {
+        return fullName;
+    }
+
+    @Override
+    public Image getAvatarIcon() {
+        return PlatformIconGroup.actionsLoginavatar();
     }
 }

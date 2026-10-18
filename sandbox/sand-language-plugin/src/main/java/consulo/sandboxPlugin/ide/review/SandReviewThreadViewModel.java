@@ -15,14 +15,20 @@
  */
 package consulo.sandboxPlugin.ide.review;
 
-import consulo.review.timeline.thread.CodeReviewFoldableThreadViewModel;
-import consulo.review.timeline.thread.CodeReviewResolvableItemViewModel;
-import consulo.review.timeline.thread.CodeReviewTrackableItemViewModel;
+import consulo.disposer.Disposable;
+import consulo.navigation.OpenFileDescriptorFactory;
+import consulo.project.Project;
+import consulo.review.comment.CodeReviewNewCommentViewModel;
+import consulo.review.timeline.CodeReviewCommentViewModel;
+import consulo.review.timeline.thread.CodeReviewThreadViewModel;
 import consulo.review.timeline.thread.DefaultRepliesStateData;
 import consulo.review.timeline.thread.RepliesStateData;
 import consulo.review.user.CodeReviewUser;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.concurrent.coroutine.MutableObservableValue;
 import consulo.util.concurrent.coroutine.ObservableValue;
+import consulo.virtualFileSystem.VirtualFile;
+import org.jspecify.annotations.Nullable;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -34,35 +40,101 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * A sand review thread on a line of a file - the file is matched by name, so any file of that name shows it.
+ *
  * @author VISTALL
  * @since 2026-10-18
  */
-public class SandReviewThreadViewModel implements CodeReviewResolvableItemViewModel,
-    CodeReviewFoldableThreadViewModel,
-    CodeReviewTrackableItemViewModel {
+public class SandReviewThreadViewModel implements CodeReviewThreadViewModel {
     private final String myTrackingId;
-    private final String myLocation;
+    private final String myFileName;
+    private final int myStartLine;
+    private final int myLine;
     private final ScheduledExecutorService myScheduler;
     private final MutableObservableValue<List<SandReviewComment>> myComments;
+    private final ObservableValue<List<CodeReviewCommentViewModel>> myCommentsView;
     private final MutableObservableValue<Boolean> myResolved = MutableObservableValue.of(false);
     private final MutableObservableValue<Boolean> myBusy = MutableObservableValue.of(false);
     private final MutableObservableValue<Boolean> myRepliesFolded = MutableObservableValue.of(true);
     private final ObservableValue<RepliesStateData> myRepliesState;
+    private final SandReviewNewCommentViewModel myReplyVm;
+    private final Project myProject;
+    private final MutableObservableValue<Boolean> myShownInEditor = MutableObservableValue.of(true);
 
-    public SandReviewThreadViewModel(String trackingId, String location, ScheduledExecutorService scheduler, List<SandReviewComment> comments) {
+    public SandReviewThreadViewModel(Project project,
+                                     Disposable parentDisposable,
+                                     String trackingId,
+                                     String fileName,
+                                     int startLine,
+                                     int line,
+                                     ScheduledExecutorService scheduler,
+                                     List<SandReviewComment> comments) {
+        myProject = project;
         myTrackingId = trackingId;
-        myLocation = location;
+        myFileName = fileName;
+        myStartLine = startLine;
+        myLine = line;
         myScheduler = scheduler;
         myComments = MutableObservableValue.of(List.copyOf(comments));
+        myCommentsView = myComments.map(List::copyOf);
         myRepliesState = myComments.map(SandReviewThreadViewModel::toRepliesState);
+        myReplyVm = new SandReviewNewCommentViewModel(project, parentDisposable, scheduler, this::addComment);
     }
 
+    public String getFileName() {
+        return myFileName;
+    }
+
+    /**
+     * @return the 0-based last line the thread is about, which it is anchored under
+     */
+    public int getLine() {
+        return myLine;
+    }
+
+    /**
+     * @return the 0-based first line the thread is about
+     */
+    public int getStartLine() {
+        return myStartLine;
+    }
+
+    @Override
     public String getLocation() {
-        return myLocation;
+        return myStartLine == myLine ? myFileName + ":" + (myLine + 1) : myFileName + ":" + (myStartLine + 1) + "-" + (myLine + 1);
     }
 
-    public ObservableValue<List<SandReviewComment>> getComments() {
-        return myComments;
+    /**
+     * Whether editors show the thread under its line; the gutter toggle flips it.
+     */
+    public MutableObservableValue<Boolean> getShownInEditor() {
+        return myShownInEditor;
+    }
+
+    @Override
+    public boolean canNavigate() {
+        return findFile() != null;
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void navigate() {
+        VirtualFile file = findFile();
+        if (file == null) {
+            return;
+        }
+        myShownInEditor.set(true);
+        OpenFileDescriptorFactory.getInstance(myProject).newBuilder(file).line(myLine).build().navigate(true);
+    }
+
+    private @Nullable VirtualFile findFile() {
+        VirtualFile baseDir = myProject.getBaseDir();
+        return baseDir == null ? null : baseDir.findChild(myFileName);
+    }
+
+    @Override
+    public ObservableValue<List<CodeReviewCommentViewModel>> getComments() {
+        return myCommentsView;
     }
 
     public void addComment(SandReviewComment comment) {
@@ -71,6 +143,11 @@ public class SandReviewThreadViewModel implements CodeReviewResolvableItemViewMo
             result.add(comment);
             return List.copyOf(result);
         });
+    }
+
+    @Override
+    public CodeReviewNewCommentViewModel getReplyVm() {
+        return myReplyVm;
     }
 
     @Override

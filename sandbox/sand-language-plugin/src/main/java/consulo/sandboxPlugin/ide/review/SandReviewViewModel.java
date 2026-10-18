@@ -18,25 +18,30 @@ package consulo.sandboxPlugin.ide.review;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.project.Project;
 import consulo.review.details.data.CodeReviewCIJob;
 import consulo.review.details.data.CodeReviewCIJobState;
 import consulo.review.details.data.ReviewRequestState;
 import consulo.review.details.model.CodeReviewDetailsViewModel;
 import consulo.review.details.model.CodeReviewStatusViewModel;
 import consulo.review.icon.CIBuildStatusIcons;
-import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.review.list.CommentsCounter;
+import consulo.review.list.NamedCollection;
 import consulo.review.list.ReviewListItemPresentation;
 import consulo.review.list.ReviewListItemStatus;
 import consulo.review.list.SimpleReviewListItemPresentation;
-import consulo.review.list.SimpleUserPresentation;
+import consulo.review.list.UserPresentation;
+import consulo.review.timeline.CodeReviewTimelineItem;
 import consulo.util.concurrent.coroutine.MutableObservableValue;
 import consulo.util.concurrent.coroutine.ObservableValue;
 import org.jspecify.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.function.Consumer;
 
 /**
@@ -53,9 +58,16 @@ public class SandReviewViewModel implements CodeReviewDetailsViewModel, CodeRevi
     private final MutableObservableValue<@Nullable Boolean> myHasConflicts;
     private final MutableObservableValue<List<CodeReviewCIJob>> myCiJobs;
     private final List<SandReviewThreadViewModel> myThreads;
+    private final SandReviewTimelineViewModel myTimelineVm;
+    private final SandReviewChangesViewModel myChangesVm;
+    private final SandReviewBranchesViewModel myBranchesVm = new SandReviewBranchesViewModel();
+    private volatile @Nullable Boolean mySeen;
     private final List<Consumer<List<CodeReviewCIJob>>> myShowJobsListeners = new CopyOnWriteArrayList<>();
 
-    public SandReviewViewModel(String number,
+    public SandReviewViewModel(Project project,
+                               Disposable parentDisposable,
+                               ScheduledExecutorService scheduler,
+                               String number,
                                String title,
                                String description,
                                ReviewRequestState state,
@@ -72,7 +84,33 @@ public class SandReviewViewModel implements CodeReviewDetailsViewModel, CodeRevi
         myState = MutableObservableValue.of(state);
         myHasConflicts = MutableObservableValue.of(hasConflicts);
         myCiJobs = MutableObservableValue.of(ciJobs);
-        myThreads = threads;
+        myThreads = new CopyOnWriteArrayList<>(threads);
+
+        myChangesVm = new SandReviewChangesViewModel(project, parentDisposable, myThreads::size);
+
+        List<CodeReviewTimelineItem> timeline = new ArrayList<>();
+        if (!description.isBlank()) {
+            timeline.add(new SandReviewComment(author, description, createdDate.toInstant()));
+        }
+        timeline.add(new SandReviewCommitsTimelineItem(author, myChangesVm.getReviewCommits().get(), myChangesVm));
+        timeline.addAll(threads);
+        myTimelineVm = new SandReviewTimelineViewModel(project, parentDisposable, scheduler, timeline);
+    }
+
+    public void setSeen(@Nullable Boolean seen) {
+        mySeen = seen;
+    }
+
+    public SandReviewTimelineViewModel getTimelineVm() {
+        return myTimelineVm;
+    }
+
+    public SandReviewChangesViewModel getChangesVm() {
+        return myChangesVm;
+    }
+
+    public SandReviewBranchesViewModel getBranchesVm() {
+        return myBranchesVm;
     }
 
     @Override
@@ -136,6 +174,11 @@ public class SandReviewViewModel implements CodeReviewDetailsViewModel, CodeRevi
         return myThreads;
     }
 
+    public void addThread(SandReviewThreadViewModel thread) {
+        myThreads.add(thread);
+        myTimelineVm.addItem(thread);
+    }
+
     public ReviewListItemPresentation toPresentation() {
         int comments = 0;
         for (SandReviewThreadViewModel thread : myThreads) {
@@ -145,17 +188,17 @@ public class SandReviewViewModel implements CodeReviewDetailsViewModel, CodeRevi
             myTitle.get(),
             "#" + myNumber,
             myCreatedDate,
-            new SimpleUserPresentation(myAuthor.username(), myAuthor.fullName(), PlatformIconGroup.actionsLoginavatar()),
+            myAuthor,
             null,
             Boolean.TRUE.equals(myHasConflicts.get())
                 ? new ReviewListItemStatus(PlatformIconGroup.generalError(), LocalizeValue.localizeTODO("Has conflicts"))
                 : null,
             buildStatus(myCiJobs.get()),
-            myState.get().name(),
+            myState.get() == ReviewRequestState.OPENED ? null : myState.get().name(),
             null,
-            null,
+            NamedCollection.create(LocalizeValue.localizeTODO("Reviewers"), List.<UserPresentation>of(SandReviewService.REVIEWER)),
             new CommentsCounter(comments, LocalizeValue.localizeTODO(comments + " comments")),
-            null
+            mySeen
         );
     }
 

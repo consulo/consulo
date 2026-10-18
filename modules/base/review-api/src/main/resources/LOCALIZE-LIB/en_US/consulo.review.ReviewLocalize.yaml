@@ -4,3 +4,123 @@ review.diff.discussions.view.option.do.not.show:
     text: Do Not Show
 review.diff.discussions.view.option.unresolved.only:
     text: Unresolved Only
+review.toolwindow.name:
+    text: Code Review
+review.toolwindow.no.project:
+    text: Nothing to review yet
+review.list.empty.state.loading:
+    text: Loading…
+review.list.empty.state.nothing:
+    text: No reviews in {0}
+review.list.info:
+    text: '{0} · created {1}'
+review.list.info.author:
+    text: '{0} · created {1}, by {2}'
+review.list.error.title:
+    text: Cannot load reviews
+review.list.error.retry:
+    text: Retry
+review.details.branch.cannot.checkout.as.branch:
+    text: Remote branches are not available for private forks
+review.details.branch.checkout.remote:
+    text: Checkout
+review.details.branch.checkout.in.new.worktree:
+    text: Open in Worktree
+review.details.branch.checkout.remote.as.detached.head:
+    text: Checkout as detached HEAD
+review.details.branch.show.remote.in.git.log:
+    text: Show in Git Log
+review.details.branch.copy.name:
+    text: Copy Branch Name
+review.details.branch.checkout.remote.ad.label:
+    text: "{0} \u2190 {1}"
+review.details.commits.details.hide:
+    text: Hide details
+review.details.commits.details.show:
+    text: Show details
+review.details.commits.popup.all:
+    text: All commits ({0})
+review.details.commits.popup.text:
+    text: "{0} commits"
+review.details.commits.search.placeholder:
+    text: Search commits
+review.details.commits.title.text:
+    text: "{0, choice, 1#Changes|2#Changes from}"
+review.details.commits.next:
+    text: Next Commit
+review.details.commits.previous:
+    text: Previous Commit
+review.timeline.commit.added:
+    text: added a commit to this review
+review.timeline.commits.added:
+    text: added {0} commits to this review
+review.diff.action.show.text:
+    text: Show Review Diff
+review.diff.action.show.description:
+    text: Show selected changes in review diff
+review.editor.action.highlight.lines.text:
+    text: Highlight Lines
+review.details.review.state.open:
+    text: OPEN
+review.details.review.state.closed:
+    text: CLOSED
+review.details.review.state.merged:
+    text: MERGED
+review.details.review.state.draft:
+    text: DRAFT
+review.details.status.ci.failed:
+    text: Checks failed
+review.details.status.ci.link.details:
+    text: Details…
+review.details.status.ci.passed:
+    text: All required checks have passed
+review.details.status.ci.progress.and.failed:
+    text: Checks in progress, and some already failed…
+review.details.status.ci.progress:
+    text: Checks in progress…
+review.details.status.ci.popup.title:
+    text: Open in Browser
+review.details.status.conflicts:
+    text: Branch has conflicts that must be resolved
+review.details.status.conflicts.pending:
+    text: Checking branch for conflicts
+review.details.view.timeline.action:
+    text: View Timeline
+review.timeline.editor.name:
+    text: Review Timeline
+review.timeline.no.description:
+    text: No description provided
+review.timeline.loading:
+    text: Loading timeline…
+review.comments.reply.action:
+    text: Reply
+review.comments.reply.hint:
+    text: '{0} to reply'
+review.comments.replies.action:
+    text: '{0} {0, choice, 1#reply|2#replies}'
+review.comments.resolve.action:
+    text: Resolve
+review.comments.unresolve.action:
+    text: Unresolve
+review.comments.resolved.tag:
+    text: Resolved
+review.comment.placeholder:
+    text: Review comment
+review.comment.submit:
+    text: Add Comment
+review.comment.hint:
+    text: '{0} to comment'
+review.comment.cancel:
+    text: Cancel
+review.editor.action.add.comment.text:
+    text: Add Review Comment
+review.editor.action.show.comments.text:
+    text: Show Review Comments
+action.code.review.next.comment.text:
+    text: Next Comment
+action.code.review.next.comment.description:
+    text: Go to next visible comment
+action.code.review.previous.comment.text:
+    text: Previous Comment
+action.code.review.previous.comment.description:
+    text: Go to previous visible comment

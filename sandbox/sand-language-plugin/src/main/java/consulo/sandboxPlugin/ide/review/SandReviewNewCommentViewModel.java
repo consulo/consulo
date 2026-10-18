@@ -17,42 +17,44 @@ package consulo.sandboxPlugin.ide.review;
 
 import consulo.disposer.Disposable;
 import consulo.project.Project;
+import consulo.review.comment.CodeReviewNewCommentViewModel;
 import consulo.review.comment.CodeReviewSubmittableTextViewModelBase;
 
 import java.time.Instant;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 /**
+ * A new comment of the sand review service - text containing "fail" is rejected, to show the error state.
+ *
  * @author VISTALL
  * @since 2026-10-18
  */
-public class SandReviewReplyViewModel extends CodeReviewSubmittableTextViewModelBase {
-    private final SandReviewThreadViewModel myThread;
-    private final SandReviewUser myCurrentUser;
+public class SandReviewNewCommentViewModel extends CodeReviewSubmittableTextViewModelBase implements CodeReviewNewCommentViewModel {
+    private final Consumer<SandReviewComment> mySink;
     private final ScheduledExecutorService myScheduler;
 
-    public SandReviewReplyViewModel(Project project,
-                                    Disposable parentDisposable,
-                                    SandReviewThreadViewModel thread,
-                                    SandReviewUser currentUser,
-                                    ScheduledExecutorService scheduler) {
+    public SandReviewNewCommentViewModel(Project project,
+                                         Disposable parentDisposable,
+                                         ScheduledExecutorService scheduler,
+                                         Consumer<SandReviewComment> sink) {
         super(project, parentDisposable, "");
-        myThread = thread;
-        myCurrentUser = currentUser;
+        mySink = sink;
         myScheduler = scheduler;
     }
 
-    public void submitReply() {
+    @Override
+    public void submit() {
         submit(text -> {
             CompletableFuture<Object> result = new CompletableFuture<>();
             myScheduler.schedule(() -> {
                 if (text.isBlank() || text.contains("fail")) {
-                    result.completeExceptionally(new IllegalArgumentException("The sand review service rejected the reply"));
+                    result.completeExceptionally(new IllegalArgumentException("The sand review service rejected the comment"));
                     return;
                 }
-                myThread.addComment(new SandReviewComment(myCurrentUser, text, Instant.now()));
+                mySink.accept(new SandReviewComment(SandReviewService.CURRENT_USER, text, Instant.now()));
                 getText().set("");
                 result.complete(text);
             }, 800, TimeUnit.MILLISECONDS);

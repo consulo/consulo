@@ -8,9 +8,11 @@ import org.jspecify.annotations.NullMarked;
 module consulo.review.api {
     requires transitive consulo.project.api;
     requires transitive consulo.ui.api;
+    requires transitive consulo.code.editor.api;
 
     exports consulo.review.comment;
     exports consulo.review.create;
+    exports consulo.review.details;
     exports consulo.review.details.data;
     exports consulo.review.details.model;
     exports consulo.review.diff;

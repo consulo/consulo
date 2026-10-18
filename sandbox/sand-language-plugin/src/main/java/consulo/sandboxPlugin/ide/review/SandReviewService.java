@@ -15,58 +15,154 @@
  */
 package consulo.sandboxPlugin.ide.review;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ServiceImpl;
+import consulo.application.concurrent.ApplicationConcurrency;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.project.Project;
 import consulo.review.details.data.CodeReviewCIJob;
 import consulo.review.details.data.CodeReviewCIJobState;
 import consulo.review.details.data.ReviewRequestState;
+import consulo.util.concurrent.coroutine.MutableObservableValue;
+import consulo.util.concurrent.coroutine.ObservableValue;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ScheduledExecutorService;
 
 /**
+ * An in-memory review service of a project - the reviews, threads and replies the review UI is tried against.
+ *
  * @author VISTALL
  * @since 2026-10-18
  */
-public final class SandReviewService {
+@Singleton
+@ServiceAPI(ComponentScope.PROJECT)
+@ServiceImpl
+public class SandReviewService {
     public static final SandReviewUser CURRENT_USER = new SandReviewUser("vistall", "Valery Semenchuk");
     public static final SandReviewUser REVIEWER = new SandReviewUser("sand-bot", "Sand Reviewer");
 
-    private SandReviewService() {
+    public static final String DEMO_FILE_NAME = "ReviewDemo.txt";
+
+    private final Project myProject;
+    private final Disposable myDisposable;
+    private final ScheduledExecutorService myScheduler;
+    private final List<SandReviewViewModel> myReviews;
+    private final SandReviewToolwindowViewModel myToolwindowVm;
+    private final MutableObservableValue<Integer> myThreadsModificationCount = MutableObservableValue.of(0);
+
+    @Inject
+    public SandReviewService(Project project, ApplicationConcurrency applicationConcurrency) {
+        myProject = project;
+        myScheduler = applicationConcurrency.getScheduledExecutorService();
+        myDisposable = Disposable.newDisposable("SandReviewService");
+        Disposer.register(project, myDisposable);
+
+        myReviews = createReviews(project, myDisposable, myScheduler);
+        myToolwindowVm = new SandReviewToolwindowViewModel(new SandReviewProjectViewModel(myScheduler, () -> myReviews));
     }
 
-    public static SandReviewToolwindowViewModel create(ScheduledExecutorService scheduler) {
-        List<SandReviewViewModel> reviews = createReviews(scheduler);
-        SandReviewListViewModel listVm = new SandReviewListViewModel(scheduler, () -> reviews);
-        return new SandReviewToolwindowViewModel(new SandReviewProjectViewModel(listVm));
+    public SandReviewToolwindowViewModel getToolwindowVm() {
+        return myToolwindowVm;
     }
 
-    private static List<SandReviewViewModel> createReviews(ScheduledExecutorService scheduler) {
+    public List<SandReviewViewModel> getReviews() {
+        return myReviews;
+    }
+
+    /**
+     * Changes whenever a thread is started, so editors re-read {@link #getThreads}.
+     */
+    public ObservableValue<Integer> getThreadsModificationCount() {
+        return myThreadsModificationCount;
+    }
+
+    /**
+     * Starts a thread on a line of the first open review, as a review service would after a new line comment.
+     */
+    public void createThread(String fileName, int startLine, int line, SandReviewComment comment) {
+        for (SandReviewViewModel review : myReviews) {
+            if (review.getReviewRequestState().get() == ReviewRequestState.OPENED) {
+                String trackingId = review.getNumber() + "-" + (review.getThreads().size() + 1);
+                review.addThread(new SandReviewThreadViewModel(myProject, myDisposable, trackingId, fileName, startLine, line,
+                    myScheduler, List.of(comment)));
+                myThreadsModificationCount.update(count -> count + 1);
+                return;
+            }
+        }
+    }
+
+    public Project getProject() {
+        return myProject;
+    }
+
+    public Disposable getDisposable() {
+        return myDisposable;
+    }
+
+    public ScheduledExecutorService getScheduler() {
+        return myScheduler;
+    }
+
+    /**
+     * @return the threads of open reviews anchored to files named {@code fileName}
+     */
+    public List<SandReviewThreadViewModel> getThreads(String fileName) {
+        List<SandReviewThreadViewModel> result = new ArrayList<>();
+        for (SandReviewViewModel review : myReviews) {
+            if (review.getReviewRequestState().get() != ReviewRequestState.OPENED) {
+                continue;
+            }
+            for (SandReviewThreadViewModel thread : review.getThreads()) {
+                if (thread.getFileName().equals(fileName)) {
+                    result.add(thread);
+                }
+            }
+        }
+        return result;
+    }
+
+    private static List<SandReviewViewModel> createReviews(Project project, Disposable disposable, ScheduledExecutorService scheduler) {
         Instant now = Instant.now();
         SandReviewViewModel first = new SandReviewViewModel(
+            project,
+            disposable,
+            scheduler,
             "42",
             "Add review API to the platform",
-            "Ports the code review view models from JetBrains collaboration tools.",
+            "Adds the code review view models to the platform.",
             ReviewRequestState.OPENED,
             CURRENT_USER,
             Date.from(now.minus(Duration.ofDays(2))),
             false,
             List.of(
-                new CodeReviewCIJob("build", CodeReviewCIJobState.SUCCESS, true, null),
-                new CodeReviewCIJob("tests", CodeReviewCIJobState.PENDING, true, null)
+                new CodeReviewCIJob("build", CodeReviewCIJobState.SUCCESS, true, "https://ci.consulo.io/build/42"),
+                new CodeReviewCIJob("tests", CodeReviewCIJobState.PENDING, true, "https://ci.consulo.io/tests/42")
             ),
             List.of(
-                new SandReviewThreadViewModel("42-1", "ObservableValue.java:34", scheduler, List.of(
-                    new SandReviewComment(REVIEWER, "Should `map` keep a listener on the source forever?", now.minus(Duration.ofHours(5))),
+                new SandReviewThreadViewModel(project, disposable, "42-1", DEMO_FILE_NAME, 2, 4, scheduler, List.of(
+                    new SandReviewComment(REVIEWER, "Should `map` keep a listener on the source forever?",
+                        now.minus(Duration.ofHours(5))),
                     new SandReviewComment(CURRENT_USER, "Yes, same as the mutable value did before.", now.minus(Duration.ofHours(4)))
                 )),
-                new SandReviewThreadViewModel("42-2", "ReviewListViewModel.java:12", scheduler, List.of(
-                    new SandReviewComment(REVIEWER, "**Nit:** javadoc came from the JetBrains source, keep it.", now.minus(Duration.ofHours(3)))
+                new SandReviewThreadViewModel(project, disposable, "42-2", DEMO_FILE_NAME, 8, 8, scheduler, List.of(
+                    new SandReviewComment(REVIEWER, "**Nit:** keep the javadoc of the api.",
+                        now.minus(Duration.ofHours(3)))
                 ))
             )
         );
         SandReviewViewModel second = new SandReviewViewModel(
+            project,
+            disposable,
+            scheduler,
             "41",
             "Unified commit modes",
             "Commit in the Version Control tool window, a modal dialog or the Commit tool window.",
@@ -76,12 +172,15 @@ public final class SandReviewService {
             null,
             List.of(new CodeReviewCIJob("build", CodeReviewCIJobState.FAILED, true, null)),
             List.of(
-                new SandReviewThreadViewModel("41-1", "UnifiedCommitPanel.java:120", scheduler, List.of(
+                new SandReviewThreadViewModel(project, disposable, "41-1", "UnifiedCommitPanel.java", 119, 119, scheduler, List.of(
                     new SandReviewComment(CURRENT_USER, "Looks good on every frontend.", now.minus(Duration.ofDays(4)))
                 ))
             )
         );
         SandReviewViewModel third = new SandReviewViewModel(
+            project,
+            disposable,
+            scheduler,
             "40",
             "Draft: component inlays on Qt",
             "",
@@ -92,6 +191,7 @@ public final class SandReviewService {
             List.of(),
             List.of()
         );
+        third.setSeen(false);
         return List.of(first, second, third);
     }
 }

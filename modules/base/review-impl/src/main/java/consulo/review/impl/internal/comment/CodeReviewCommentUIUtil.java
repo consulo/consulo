@@ -1,0 +1,122 @@
+// Copyright 2000-2024 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
+/*
+ * Copyright 2013-2026 consulo.io
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package consulo.review.impl.internal.comment;
+
+import consulo.application.util.DateFormatUtil;
+import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.review.impl.internal.ReviewUIUtil;
+import consulo.review.list.UserPresentation;
+import consulo.review.localize.ReviewLocalize;
+import consulo.review.timeline.thread.CodeReviewFoldableThreadViewModel;
+import consulo.review.timeline.thread.CodeReviewResolvableItemViewModel;
+import consulo.review.user.CodeReviewUser;
+import consulo.ui.Component;
+import consulo.ui.Hyperlink;
+import consulo.ui.Label;
+import consulo.ui.Space;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
+import consulo.ui.layout.HorizontalLayout;
+import consulo.ui.style.ComponentColors;
+import org.jspecify.annotations.Nullable;
+
+import java.util.Collection;
+import java.util.Date;
+
+/**
+ * The controls of a folded review thread: who replied, the link unfolding the replies, when the last reply came and
+ * the resolve toggle.
+ */
+public final class CodeReviewCommentUIUtil {
+    public static final int COMPACT_AVATAR_SIZE = 20;
+
+    private static final Space HORIZONTAL_GAP = Space.LARGE;
+    private static final Space HORIZONTAL_GROUP_GAP = Space.MEDIUM;
+    private static final Space VERTICAL_PADDING = Space.LARGE;
+
+    private CodeReviewCommentUIUtil() {
+    }
+
+    @RequiredUIAccess
+    public static Component createFoldedThreadControlsIn(Disposable parentDisposable, CodeReviewFoldableThreadViewModel vm) {
+        Label authorsLabel = Label.create();
+
+        Hyperlink repliesLink = Hyperlink.create(LocalizeValue.empty(), event -> vm.unfoldReplies());
+
+        Label lastReplyDateLabel = Label.create();
+        lastReplyDateLabel.setForegroundColor(ComponentColors.DISABLED_TEXT);
+
+        HorizontalLayout panel = HorizontalLayout.create(HORIZONTAL_GAP);
+        panel.paddingBuilder().verticalSet(VERTICAL_PADDING).apply();
+        panel.add(authorsLabel);
+        panel.add(repliesLink);
+        panel.add(lastReplyDateLabel);
+
+        ReviewUIUtil.bind(parentDisposable, vm.getRepliesState(), vm.getCanCreateReplies(), (data, canReply) -> {
+            authorsLabel.setImage(overlaidAvatars(data.getRepliesAuthors()));
+            authorsLabel.setVisible(data.getRepliesCount() > 0);
+
+            repliesLink.setVisible(data.getRepliesCount() > 0 || canReply);
+            repliesLink.setText(data.getRepliesCount() == 0
+                ? ReviewLocalize.reviewCommentsReplyAction()
+                : ReviewLocalize.reviewCommentsRepliesAction(data.getRepliesCount()));
+
+            Date lastReplyDate = data.getLastReplyDate();
+            lastReplyDateLabel.setVisible(lastReplyDate != null);
+            lastReplyDateLabel.setText(lastReplyDate == null
+                ? LocalizeValue.empty()
+                : LocalizeValue.of(DateFormatUtil.formatPrettyDateTime(lastReplyDate)));
+        });
+        ReviewUIUtil.bind(parentDisposable, vm.isBusy(), busy -> repliesLink.setEnabled(!busy));
+
+        if (vm instanceof CodeReviewResolvableItemViewModel resolvable) {
+            Component resolveLink = createResolveLink(parentDisposable, resolvable);
+            resolveLink.paddingBuilder().leftSet(HORIZONTAL_GROUP_GAP).apply();
+            panel.add(resolveLink);
+        }
+        return panel;
+    }
+
+    private static @Nullable Image overlaidAvatars(Collection<CodeReviewUser> authors) {
+        Image result = null;
+        for (CodeReviewUser author : authors) {
+            Image avatar = ImageEffects.resize(avatarOf(author), COMPACT_AVATAR_SIZE);
+            result = result == null ? avatar : ImageEffects.appendRight(result, avatar);
+        }
+        return result;
+    }
+
+    @RequiredUIAccess
+    public static Component createResolveLink(Disposable parentDisposable, CodeReviewResolvableItemViewModel vm) {
+        Hyperlink unResolveLink = Hyperlink.create(LocalizeValue.empty(), event -> vm.changeResolvedState());
+        ReviewUIUtil.bind(parentDisposable, vm.getCanChangeResolvedState(), unResolveLink::setVisible);
+        ReviewUIUtil.bind(parentDisposable, vm.isBusy(), busy -> unResolveLink.setEnabled(!busy));
+        ReviewUIUtil.bind(parentDisposable, vm.isResolved(), resolved -> unResolveLink.setText(getResolveToggleActionText(resolved)));
+        return unResolveLink;
+    }
+
+    public static LocalizeValue getResolveToggleActionText(boolean resolved) {
+        return resolved ? ReviewLocalize.reviewCommentsUnresolveAction() : ReviewLocalize.reviewCommentsResolveAction();
+    }
+
+    public static Image avatarOf(CodeReviewUser user) {
+        return user instanceof UserPresentation presentation ? presentation.getAvatarIcon() : PlatformIconGroup.actionsLoginavatar();
+    }
+}
