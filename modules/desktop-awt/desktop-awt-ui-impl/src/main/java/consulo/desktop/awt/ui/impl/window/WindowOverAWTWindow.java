@@ -16,12 +16,14 @@
 package consulo.desktop.awt.ui.impl.window;
 
 import consulo.desktop.awt.ui.impl.facade.ToSwingWindowWrapper;
+import consulo.desktop.awt.ui.impl.AWTUIAccessImpl;
 import consulo.desktop.awt.ui.impl.DesktopFontImpl;
 import consulo.disposer.Disposable;
 import consulo.ui.Component;
 import consulo.ui.MenuBar;
 import consulo.ui.Size2D;
 import consulo.ui.Toast;
+import consulo.ui.UIAccess;
 import consulo.ui.Window;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.BorderBuilder;
@@ -136,6 +138,11 @@ public abstract class WindowOverAWTWindow implements Window, ToSwingWindowWrappe
         if (stack != null) {
             stack.hide(toast);
         }
+    }
+
+    @Override
+    public UIAccess getUIAccess() {
+        return AWTUIAccessImpl.ourInstance;
     }
 
     @Override
