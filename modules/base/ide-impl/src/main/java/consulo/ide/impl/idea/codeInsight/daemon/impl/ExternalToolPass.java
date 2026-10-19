@@ -196,7 +196,7 @@ public class ExternalToolPass extends TextEditorHighlightingPass {
         for (ExternalAnnotator annotator : myAnnotator2DataMap.keySet()) {
             MyData data = myAnnotator2DataMap.get(annotator);
             if (data != null) {
-                annotator.apply(data.myPsiRoot, data.myAnnotationResult, myAnnotationHolder);
+                myAnnotationHolder.applyExternalAnnotatorWithContext(data.myPsiRoot, annotator, data.myAnnotationResult);
             }
         }
     }
