@@ -26,6 +26,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.VirtualFile;
 
 import org.jspecify.annotations.Nullable;
+
 import java.util.concurrent.CompletableFuture;
 
 public class ImportTestsFromFileAction extends AbstractImportTestsAction {

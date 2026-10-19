@@ -132,36 +132,34 @@ public abstract class AbstractImportTestsAction extends LegacyAnAction {
 
     @RequiredUIAccess
     private void importTests(Project project, VirtualFile file) {
-        {
-            try {
-                ImportRunProfile profile = new ImportRunProfile(file, project);
-                SMTRunnerConsoleProperties properties = profile.getProperties();
-                if (properties == null) {
-                    properties = myProperties;
-                    LOG.info(
-                        "Failed to detect test framework in " + file.getPath() + "; " +
-                            "use " + (properties != null ? properties.getTestFrameworkName() + " from toolbar" : "no properties")
-                    );
-                }
-                Executor executor = properties != null
-                    ? properties.getExecutor()
-                    : ExecutorRegistry.getInstance().getExecutorById(DefaultRunExecutor.EXECUTOR_ID);
-                ExecutionEnvironmentBuilder builder = ExecutionEnvironmentBuilder.create(project, executor, profile);
-                ExecutionTarget target = profile.getTarget();
-                if (target != null) {
-                    builder = builder.target(target);
-                }
-                RunConfiguration initialConfiguration = profile.getInitialConfiguration();
-                ProgramRunner runner =
-                    initialConfiguration != null ? RunnerRegistry.getInstance().getRunner(executor.getId(), initialConfiguration) : null;
-                if (runner != null) {
-                    builder = builder.runner(runner);
-                }
-                builder.buildAndExecute();
+        try {
+            ImportRunProfile profile = new ImportRunProfile(file, project);
+            SMTRunnerConsoleProperties properties = profile.getProperties();
+            if (properties == null) {
+                properties = myProperties;
+                LOG.info(
+                    "Failed to detect test framework in " + file.getPath() + "; " +
+                        "use " + (properties != null ? properties.getTestFrameworkName() + " from toolbar" : "no properties")
+                );
             }
-            catch (ExecutionException e1) {
-                Messages.showErrorDialog(project, e1.getMessage(), "Import Failed");
+            Executor executor = properties != null
+                ? properties.getExecutor()
+                : ExecutorRegistry.getInstance().getExecutorById(DefaultRunExecutor.EXECUTOR_ID);
+            ExecutionEnvironmentBuilder builder = ExecutionEnvironmentBuilder.create(project, executor, profile);
+            ExecutionTarget target = profile.getTarget();
+            if (target != null) {
+                builder = builder.target(target);
             }
+            RunConfiguration initialConfiguration = profile.getInitialConfiguration();
+            ProgramRunner runner =
+                initialConfiguration != null ? RunnerRegistry.getInstance().getRunner(executor.getId(), initialConfiguration) : null;
+            if (runner != null) {
+                builder = builder.runner(runner);
+            }
+            builder.buildAndExecute();
+        }
+        catch (ExecutionException e1) {
+            Messages.showErrorDialog(project, e1.getMessage(), "Import Failed");
         }
     }
 
