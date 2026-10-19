@@ -27,5 +27,6 @@ public enum ButtonStyle implements ComponentStyle {
     /**
      * The button that opens help for the surrounding window, drawn the way the platform draws help buttons.
      */
-    HELP
+    HELP,
+    VERTICAL
 }

@@ -6,6 +6,7 @@ import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.log.VcsFullCommitDetails;
 import consulo.versionControlSystem.log.*;
 import consulo.versionControlSystem.log.base.*;
+import consulo.versionControlSystem.log.impl.internal.data.VcsLogBranchFilterImpl;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -101,5 +102,10 @@ public class VcsLogObjectsFactoryImpl implements VcsLogObjectsFactory {
   @Override
   public VcsRef createRef(Hash commitHash, String name, VcsRefType type, VirtualFile root) {
     return new VcsRefImpl(commitHash, name, type, root);
+  }
+
+  @Override
+  public VcsLogBranchFilter createBranchFilter(Collection<String> branchNames) {
+    return VcsLogBranchFilterImpl.fromBranches(branchNames);
   }
 }

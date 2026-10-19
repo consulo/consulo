@@ -93,3 +93,31 @@ vaadin-button.consulo-option-button {
     border-bottom: 1.5px solid currentColor;
     transform: translateY(-2px) rotate(45deg);
 }
+
+vaadin-button.consulo-vertical-button[theme~='tertiary'] {
+    writing-mode: sideways-lr;
+    width: 26px;
+    min-width: 26px;
+    height: max-content;
+    min-height: 0;
+    block-size: 26px;
+    inline-size: max-content;
+    min-inline-size: 0;
+    margin: 0;
+    padding: 6px 0;
+    border-width: 0;
+    border-radius: 6px;
+    align-self: flex-start;
+    justify-content: flex-end;
+    --vaadin-button-text-color: var(--vaadin-text-color);
+}
+
+vaadin-button.consulo-vertical-button > [slot='prefix'] {
+    order: 1;
+}
+
+vaadin-button.consulo-vertical-button::part(label) {
+    display: flex;
+    align-items: center;
+    line-height: 1;
+}

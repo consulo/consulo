@@ -19,6 +19,8 @@ import consulo.annotation.component.ActionImpl;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.versionControlSystem.log.VcsLogUi;
 import consulo.versionControlSystem.log.impl.internal.VcsLogTabLocation;
 import consulo.versionControlSystem.log.localize.VersionControlSystemLogLocalize;
 
@@ -26,6 +28,14 @@ import consulo.versionControlSystem.log.localize.VersionControlSystemLogLocalize
 public class OpenAnotherLogTabInEditorAction extends OpenAnotherLogTabAction {
     public OpenAnotherLogTabInEditorAction() {
         super(PlatformIconGroup.generalOpennewtab());
+    }
+
+    @Override
+    public void update(AnActionEvent e) {
+        super.update(e);
+        if (e.hasData(ToolWindow.KEY) && e.hasData(VcsLogUi.KEY)) {
+            e.getPresentation().setEnabledAndVisible(false);
+        }
     }
 
     @Override

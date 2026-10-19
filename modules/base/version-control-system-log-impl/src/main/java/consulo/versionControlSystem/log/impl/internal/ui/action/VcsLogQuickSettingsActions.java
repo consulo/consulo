@@ -24,9 +24,9 @@ import consulo.versionControlSystem.log.localize.VersionControlSystemLogLocalize
 public class VcsLogQuickSettingsActions extends VcsLogGearActionGroup {
     public VcsLogQuickSettingsActions() {
         super(
-            VersionControlSystemLogLocalize.groupQuickSettingsText(),
-            VersionControlSystemLogLocalize.groupQuickSettingsDescription(),
-            PlatformIconGroup.generalGearplain(),
+            VersionControlSystemLogLocalize.groupPresentationSettingsText(),
+            VersionControlSystemLogLocalize.groupPresentationSettingsDescription(),
+            PlatformIconGroup.actionsShow(),
             VcsLogActionPlaces.SETTINGS_ACTION_GROUP
         );
     }

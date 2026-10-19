@@ -20,7 +20,6 @@ import consulo.annotation.component.ActionRef;
 import consulo.application.dumb.DumbAware;
 import consulo.ui.ex.action.AnSeparator;
 import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ui.ex.action.IdeActions;
 import consulo.versionControlSystem.log.localize.VersionControlSystemLogLocalize;
 
 /**
@@ -35,11 +34,8 @@ import consulo.versionControlSystem.log.localize.VersionControlSystemLogLocalize
         @ActionRef(type = ShowTagNamesAction.class),
         @ActionRef(type = ShowLongEdgesAction.class),
         @ActionRef(type = AnSeparator.class),
-        @ActionRef(type = CollapseGraphAction.class),
-        @ActionRef(type = ExpandGraphAction.class),
         @ActionRef(type = HighlightersActionGroup.class),
-        @ActionRef(type = AnSeparator.class),
-        @ActionRef(id = IdeActions.ACTION_CONTEXT_HELP)
+        @ActionRef(type = DeepCompareAction.class)
     }
 )
 public class SettingsGroup extends DefaultActionGroup implements DumbAware {

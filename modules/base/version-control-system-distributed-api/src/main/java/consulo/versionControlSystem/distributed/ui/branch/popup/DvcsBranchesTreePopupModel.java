@@ -15,10 +15,12 @@
  */
 package consulo.versionControlSystem.distributed.ui.branch.popup;
 
+import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.distributed.repository.Repository;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +46,20 @@ public abstract class DvcsBranchesTreePopupModel<R extends Repository> {
     public abstract DvcsBranchesTreeModel createTreeModel();
 
     public abstract DvcsBranchesTreePopupStepBase createTreePopupStep(DvcsBranchesTreeModel treeModel);
+
+    public abstract DvcsBranchesTreeModel createRefTreeModel();
+
+    public @Nullable ActionGroup createRefActionGroup(DvcsRef ref) {
+        return null;
+    }
+
+    public @Nullable AnAction createNewBranchAction() {
+        return null;
+    }
+
+    public @Nullable AnAction createCheckoutAction(DvcsRef ref) {
+        return null;
+    }
 
     protected List<Object> collectActions() {
         List<Object> preActions = new ArrayList<>();

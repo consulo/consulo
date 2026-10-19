@@ -72,6 +72,7 @@ import consulo.versionControlSystem.log.VcsLogDataKeys;
 import consulo.versionControlSystem.log.VcsLogDataProvider;
 import consulo.versionControlSystem.log.VcsLogHighlighter;
 import consulo.versionControlSystem.log.VcsLogHighlighterFactory;
+import consulo.versionControlSystem.log.VcsLogSidePanelProvider;
 import consulo.versionControlSystem.log.VcsLogRefManager;
 import consulo.versionControlSystem.log.VcsLogUi;
 import consulo.versionControlSystem.log.VcsRef;
@@ -90,6 +91,8 @@ import consulo.versionControlSystem.log.impl.internal.data.MainVcsLogUiPropertie
 import consulo.versionControlSystem.log.impl.internal.data.VcsLogDataImpl;
 import consulo.versionControlSystem.log.impl.internal.data.VcsLogFilterer;
 import consulo.versionControlSystem.log.impl.internal.graph.DefaultColorGenerator;
+import consulo.versionControlSystem.log.impl.internal.ui.action.GraphOptionsChooserAction;
+import consulo.versionControlSystem.log.impl.internal.ui.action.RightCornerToolbarGroup;
 import consulo.versionControlSystem.log.impl.internal.ui.filter.FilterPopup;
 import consulo.versionControlSystem.log.impl.internal.ui.filter.VcsLogClassicFilterUi;
 import consulo.versionControlSystem.log.internal.VcsLogActionPlaces;
@@ -211,8 +214,17 @@ public class UnifiedVcsLogUi extends AbstractVcsLogUi {
         myDetailsArea = detailsSplitter;
         detailsSplitter.setVisible(myUiProperties.get(MainVcsLogUiProperties.SHOW_DETAILS));
 
-        myRoot = DockLayout.create();
-        myRoot.center(splitter);
+        myRoot = DockLayout.create(Space.NONE);
+        VcsLogSidePanelProvider sidePanelProvider = project.getExtensionPoint(VcsLogSidePanelProvider.class)
+            .findFirstSafe(VcsLogSidePanelProvider::isAvailable);
+        if (sidePanelProvider != null) {
+            VcsLogSidePanelHost sidePanel = new VcsLogSidePanelHost(project, this, sidePanelProvider, splitter, this);
+            myRoot.left(sidePanel.getStripe());
+            myRoot.center(sidePanel.getComponent());
+        }
+        else {
+            myRoot.center(splitter);
+        }
         myRoot.putUserData(UiDataProvider.KEY, this::uiDataSnapshot);
 
         project.getExtensionPoint(VcsLogHighlighterFactory.class)
@@ -235,11 +247,8 @@ public class UnifiedVcsLogUi extends AbstractVcsLogUi {
         for (FilterPopup<?> filter : filters) {
             mainGroup.add(new VcsLogFilterComboBoxAction(filter));
         }
+        mainGroup.add(actionManager.getAction(GraphOptionsChooserAction.class));
         mainGroup.addSeparator();
-        AnAction intelliSort = actionManager.getAction(VcsLogActionPlaces.VCS_LOG_INTELLI_SORT_ACTION);
-        if (intelliSort != null) {
-            mainGroup.add(intelliSort);
-        }
         AnAction toolbarGroup = actionManager.getAction(VcsLogActionPlaces.TOOLBAR_ACTION_GROUP);
         if (toolbarGroup != null) {
             mainGroup.add(toolbarGroup);
@@ -252,19 +261,17 @@ public class UnifiedVcsLogUi extends AbstractVcsLogUi {
             filter.addChangeListener(main::updateActionsAsync);
         }
 
-        ActionGroup.Builder settingsGroup = ActionGroup.newImmutableBuilder();
-        AnAction quickSettings = actionManager.getAction(VcsLogActionPlaces.VCS_LOG_QUICK_SETTINGS_ACTION);
-        if (quickSettings != null) {
-            settingsGroup.add(quickSettings);
-        }
-        ActionToolbar settings = ActionToolbarFactory.getInstance()
-            .createActionToolbar(ActionPlaces.CHANGES_VIEW_TOOLBAR, settingsGroup.build(), ActionToolbar.Style.HORIZONTAL);
-        settings.setTargetUIComponent(myTable);
+        ActionToolbar rightCorner = ActionToolbarFactory.getInstance().createActionToolbar(
+            ActionPlaces.CHANGES_VIEW_TOOLBAR,
+            actionManager.getAction(RightCornerToolbarGroup.class),
+            ActionToolbar.Style.HORIZONTAL
+        );
+        rightCorner.setTargetUIComponent(myTable);
 
         DockLayout row = DockLayout.create();
         row.left(createTextFilter());
         row.center(main.getUIComponent());
-        row.right(settings.getUIComponent());
+        row.right(rightCorner.getUIComponent());
         return row;
     }
 

@@ -32,12 +32,19 @@ import consulo.ui.image.Image;
 import consulo.ui.internal.SearchHighlightUtil;
 import consulo.ui.style.ComponentColors;
 import consulo.ui.color.RGBColor;
+import io.qt.core.QRect;
+import io.qt.core.QRectF;
 import io.qt.core.QSize;
 import io.qt.core.Qt;
+import io.qt.gui.QColor;
+import io.qt.gui.QFontMetrics;
 import io.qt.gui.QIcon;
 import io.qt.gui.QPaintEvent;
+import io.qt.gui.QPainter;
+import io.qt.gui.QPalette;
 import io.qt.widgets.QLineEdit;
 import io.qt.widgets.QPushButton;
+import io.qt.widgets.QSizePolicy;
 import io.qt.widgets.QStyleOptionButton;
 import io.qt.widgets.QWidget;
 import org.jspecify.annotations.Nullable;
@@ -84,6 +91,11 @@ public class DesktopQtButtonImpl extends QtComponentDelegate<QPushButton> implem
 
         @Override
         protected void paintEvent(QPaintEvent event) {
+            if (isVertical()) {
+                paintVertical();
+                return;
+            }
+
             String query = mySearchHighlight;
             String text = QtMnemonic.plain(myText);
             if (query == null || !SearchHighlightUtil.matches(text, query)) {
@@ -99,14 +111,91 @@ public class DesktopQtButtonImpl extends QtComponentDelegate<QPushButton> implem
 
         @Override
         public QSize sizeHint() {
+            if (isVertical()) {
+                return verticalSizeHint();
+            }
             return withFieldHeight(super.sizeHint());
         }
 
         @Override
         public QSize minimumSizeHint() {
+            if (isVertical()) {
+                return verticalSizeHint();
+            }
             return withFieldHeight(super.minimumSizeHint());
         }
+
+        private QSize verticalSizeHint() {
+            QFontMetrics fm = fontMetrics();
+            String text = QtMnemonic.plain(myText);
+            Image icon = myIcon;
+
+            int thickness = fm.height();
+            int length = 0;
+            if (icon != null) {
+                thickness = Math.max(thickness, icon.getWidth());
+                length += icon.getHeight();
+            }
+            if (!text.isEmpty()) {
+                if (length > 0) {
+                    length += VERTICAL_GAP;
+                }
+                length += fm.horizontalAdvance(text);
+            }
+            return new QSize(thickness + VERTICAL_PADDING * 2, length + VERTICAL_PADDING * 2);
+        }
+
+        private void paintVertical() {
+            QPainter painter = new QPainter(this);
+            try {
+                painter.setRenderHint(QPainter.RenderHint.Antialiasing, true);
+                painter.setRenderHint(QPainter.RenderHint.TextAntialiasing, true);
+                painter.setRenderHint(QPainter.RenderHint.SmoothPixmapTransform, true);
+
+                if (isDown() || underMouse()) {
+                    QColor highlight = palette().color(QPalette.ColorRole.Highlight);
+                    painter.save();
+                    try {
+                        painter.setPen(Qt.PenStyle.NoPen);
+                        painter.setBrush(new QColor(highlight.red(), highlight.green(), highlight.blue(), isDown() ? 110 : 55));
+                        painter.drawRoundedRect(new QRectF(0, 0, width(), height()), 3, 3);
+                    }
+                    finally {
+                        painter.restore();
+                    }
+                }
+
+                int top = VERTICAL_PADDING;
+
+                Image icon = myIcon;
+                if (icon != null) {
+                    QRect iconRect = new QRect((width() - icon.getWidth()) / 2, top, icon.getWidth(), icon.getHeight());
+                    DesktopQtImage.paint(painter, iconRect, isEnabled() ? QIcon.Mode.Normal : QIcon.Mode.Disabled, icon, null);
+                    top += icon.getHeight() + VERTICAL_GAP;
+                }
+
+                String text = QtMnemonic.plain(myText);
+                if (!text.isEmpty()) {
+                    QFontMetrics fm = fontMetrics();
+                    QPalette.ColorGroup group = isEnabled() ? QPalette.ColorGroup.Active : QPalette.ColorGroup.Disabled;
+                    painter.setPen(palette().color(group, QPalette.ColorRole.ButtonText));
+                    painter.rotate(-90);
+                    int baseline = (width() - fm.height()) / 2 + fm.ascent();
+                    painter.drawText(-(top + fm.horizontalAdvance(text)), baseline, text);
+                }
+            }
+            finally {
+                painter.end();
+            }
+        }
     }
+
+    private static final int VERTICAL_PADDING = 6;
+
+    private static final int VERTICAL_GAP = 4;
+
+    private static final String VERTICAL_STYLE_SHEET =
+        "QPushButton { border: none; background: transparent; padding: 0px; min-width: 0px; min-height: 0px; }";
 
     /**
      * A qt push button reserves four pixels of width of its own for an icon, on top of whatever padding is asked
@@ -298,7 +387,20 @@ public class DesktopQtButtonImpl extends QtComponentDelegate<QPushButton> implem
 
                 updateStyleSheet();
             }
+            case VERTICAL -> {
+                myComponent.setAutoDefault(false);
+                myComponent.setFocusPolicy(Qt.FocusPolicy.NoFocus);
+                myComponent.setAttribute(Qt.WidgetAttribute.WA_Hover, true);
+                myComponent.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed);
+
+                updateStyleSheet();
+                myComponent.updateGeometry();
+            }
         }
+    }
+
+    private boolean isVertical() {
+        return myStyles.contains(ButtonStyle.VERTICAL);
     }
 
     private void applyFlat() {
@@ -324,7 +426,10 @@ public class DesktopQtButtonImpl extends QtComponentDelegate<QPushButton> implem
         boolean iconOnly = myIcon != null && myText.isEmpty();
         boolean fieldHeight = false;
 
-        if (myStyles.contains(ButtonStyle.HELP) && iconOnly) {
+        if (isVertical()) {
+            setOwnStyleSheet(VERTICAL_STYLE_SHEET);
+        }
+        else if (myStyles.contains(ButtonStyle.HELP) && iconOnly) {
             setOwnStyleSheet(HELP_STYLE_SHEET.formatted(helpBorderColor()));
         }
         else if (myFlat) {

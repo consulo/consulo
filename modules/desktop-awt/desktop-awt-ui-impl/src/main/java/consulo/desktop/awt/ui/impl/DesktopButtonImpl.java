@@ -31,6 +31,7 @@ import consulo.ui.event.details.InputDetails;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.ui.internal.SearchHighlightUtil;
+import consulo.ui.util.TextWithMnemonic;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
@@ -46,6 +47,8 @@ class DesktopButtonImpl extends SwingComponentDelegate<DesktopButtonImpl.MyButto
         private Boolean myDefaultButton;
 
         private @Nullable String mySearchHighlight;
+
+        private boolean myVertical;
 
         MyButton(LocalizeValue textValue) {
             super("");
@@ -65,12 +68,28 @@ class DesktopButtonImpl extends SwingComponentDelegate<DesktopButtonImpl.MyButto
 
         @Override
         public void updateUI() {
-            super.updateUI();
+            if (myVertical) {
+                setUI(new VerticalButtonUI());
+            }
+            else {
+                super.updateUI();
+            }
 
             // null if called from parent object before field initialize
             if (myTextValue != null) {
                 updateText();
             }
+        }
+
+        String getPlainText() {
+            return TextWithMnemonic.parse(myTextValue.get()).getText();
+        }
+
+        void setVertical() {
+            myVertical = true;
+            updateUI();
+            revalidate();
+            repaint();
         }
 
         
@@ -129,6 +148,9 @@ class DesktopButtonImpl extends SwingComponentDelegate<DesktopButtonImpl.MyButto
                 break;
             case HELP:
                 toAWTComponent().putClientProperty("JButton.buttonType", "help");
+                break;
+            case VERTICAL:
+                toAWTComponent().setVertical();
                 break;
         }
     }

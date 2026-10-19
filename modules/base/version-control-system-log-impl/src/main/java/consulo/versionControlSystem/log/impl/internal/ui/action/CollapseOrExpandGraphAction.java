@@ -17,8 +17,11 @@ package consulo.versionControlSystem.log.impl.internal.ui.action;
 
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.UIAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithAsyncUpdate;
 import consulo.ui.ex.action.LegacyDumbAwareAction;
+import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.versionControlSystem.log.VcsLogUi;
 import consulo.versionControlSystem.log.graph.PermanentGraph;
 import consulo.versionControlSystem.log.impl.internal.data.MainVcsLogUiProperties;
@@ -27,7 +30,7 @@ import consulo.versionControlSystem.log.impl.internal.ui.VcsLogInternalDataKeys;
 import consulo.versionControlSystem.log.impl.internal.ui.AbstractVcsLogUi;
 import consulo.versionControlSystem.log.util.VcsLogUtil;
 
-abstract class CollapseOrExpandGraphAction extends LegacyDumbAwareAction {
+abstract class CollapseOrExpandGraphAction extends LegacyDumbAwareAction implements AnActionWithAsyncUpdate {
     
     private final LocalizeValue myLinearBranchesText;
     
@@ -60,11 +63,19 @@ abstract class CollapseOrExpandGraphAction extends LegacyDumbAwareAction {
     }
 
     @Override
-    public void update(AnActionEvent e) {
+    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
+        return Coroutine.first(UIAction.apply(input -> {
+            updatePresentation(e);
+            return null;
+        }));
+    }
+
+    @RequiredUIAccess
+    private void updatePresentation(AnActionEvent e) {
         VcsLogUi ui = e.getData(VcsLogUi.KEY);
         VcsLogUiProperties properties = e.getData(VcsLogInternalDataKeys.LOG_UI_PROPERTIES);
 
-        if (ui != null && ui.areGraphActionsEnabled() && properties != null && !properties.exists(MainVcsLogUiProperties.BEK_SORT_TYPE)) {
+        if (ui != null && ui.areGraphActionsEnabled() && properties != null && properties.exists(MainVcsLogUiProperties.BEK_SORT_TYPE)) {
             e.getPresentation().setEnabled(ui.getFilterUi().getFilters().getDetailsFilters().isEmpty());
 
             boolean isMerges = properties.get(MainVcsLogUiProperties.BEK_SORT_TYPE) == PermanentGraph.SortType.LinearBek;

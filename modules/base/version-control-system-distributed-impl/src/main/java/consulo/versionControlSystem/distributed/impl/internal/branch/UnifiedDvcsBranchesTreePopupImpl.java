@@ -142,7 +142,6 @@ public class UnifiedDvcsBranchesTreePopupImpl<T extends Repository> extends Unif
         DockLayout searchRow = DockLayout.create(Space.NONE);
         searchRow.center(searchField);
         searchRow.borderBuilder().topSet().bottomSet().apply();
-        searchRow.paddingBuilder().horizontalSet(Space.SMALL).apply();
 
         DockLayout content = DockLayout.create(Space.NONE);
         content.top(searchRow);

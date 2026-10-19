@@ -40,10 +40,14 @@ action.intelli.sort.chooser.popup.text:
     text: IntelliSort
 action.intelli.sort.chooser.text:
     text: IntelliSort
+action.log.branches.separator:
+    text: Branch Actions
 action.log.deep.compare.description:
     text: Dims those commits which have equivalent changes in the current branch
 action.log.deep.compare.text:
     text: Highlight Non-picked Commits
+action.log.sort.type.separator:
+    text: Sort
 action.match.case.only.supported:
     text: Match Case ({0} Only)
 action.match.case.text:
@@ -88,6 +92,8 @@ action.show.tag.names.description:
     text: Show tag names in the table
 action.show.tag.names.text:
     text: Show Tag Names
+action.side.panel.hide.text:
+    text: Hide
 column.author:
     text: Author
 column.date:
@@ -202,12 +208,20 @@ graph.sort.standard.name:
     text: Topologically
 group.context.menu.text:
     text: VCS Log Context Menu
+group.graph.options.description:
+    text: VCS log graph options and actions
+group.graph.options.text:
+    text: Graph Options
 group.highlight.separator:
     text: Highlight
 group.highlight.text:
     text: Highlight Actions
 group.keymap.text:
     text: Log
+group.presentation.settings.description:
+    text: Configure presentation of the Log
+group.presentation.settings.text:
+    text: View Options
 group.quick.settings.description:
     text: Quick settings
 group.quick.settings.text:
@@ -224,6 +238,8 @@ group.text.filter.settings.description:
     text: Text filter settings
 group.text.filter.settings.text:
     text: Text Filter Settings
+group.tool.window.tab.actions.text:
+    text: Log Tab Actions
 group.toolbar.text:
     text: VCS Log Toolbar
 log.is.loading:

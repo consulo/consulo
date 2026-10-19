@@ -20,6 +20,8 @@ public class VcsLogActionPlaces {
     public static final String TOOLBAR_ACTION_GROUP = "Vcs.Log.Toolbar.Internal";
     public static final String SETTINGS_ACTION_GROUP = "Vcs.Log.Settings";
     public static final String TEXT_FILTER_SETTINGS_ACTION_GROUP = "Vcs.Log.TextFilterSettings";
+    public static final String GRAPH_OPTIONS_ACTION_GROUP = "Vcs.Log.GraphOptionsGroup";
+    public static final String TOOL_WINDOW_TAB_DROP_DOWN_ACTION_GROUP = "Vcs.Log.ToolWindow.TabActions.DropDown";
     public static final String VCS_LOG_INTELLI_SORT_ACTION = "Vcs.Log.IntelliSortChooser";
     public static final String VCS_LOG_QUICK_SETTINGS_ACTION = "Vcs.Log.QuickSettings";
     public static final String VCS_LOG_FOCUS_TEXT_FILTER = "Vcs.Log.FocusTextFilter";

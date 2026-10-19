@@ -34,6 +34,18 @@ branch.popup.vcs.name.branches:
     text: '{0} Branches'
 branch.popup.warning.branches.have.diverged:
     text: Branches have diverged
+branches.pane.action.checkout.text:
+    text: Checkout
+branches.pane.action.group.by.directory.text:
+    text: Group by Directory
+branches.pane.action.search.text:
+    text: Search Branches
+branches.pane.action.show.in.log.text:
+    text: Show Branch in Log
+branches.pane.search.placeholder:
+    text: Branch or tag
+branches.pane.title:
+    text: Branches
 clone.button:
     text: Clone
 clone.destination.directory.description:

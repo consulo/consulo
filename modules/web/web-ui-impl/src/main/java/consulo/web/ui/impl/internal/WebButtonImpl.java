@@ -96,6 +96,10 @@ public class WebButtonImpl extends VaadinComponentDelegate<WebButtonImpl.Vaadin>
             case HELP:
                 applyHelpStyle();
                 break;
+            case VERTICAL:
+                toVaadinComponent().addThemeVariants(ButtonVariant.TERTIARY);
+                toVaadinComponent().addClassName("consulo-vertical-button");
+                break;
         }
     }
 

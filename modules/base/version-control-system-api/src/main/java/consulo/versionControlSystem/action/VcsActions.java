@@ -24,4 +24,6 @@ public interface VcsActions {
     String ACTION_COPY_REVISION_NUMBER = "Vcs.CopyRevisionNumberAction";
 
     String ACTION_SHOW_ALL_AFFECTED = "VcsHistory.ShowAllAffected";
+
+    String CHANGES_VIEW_TAB_ACTIONS = "LocalChangesView.TabActions";
 }

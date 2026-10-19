@@ -17,8 +17,6 @@
 package consulo.versionControlSystem.distributed.ui.branch.popup;
 
 import consulo.annotation.UsedInPlugin;
-import consulo.application.util.matcher.MinusculeMatcher;
-import consulo.application.util.matcher.NameUtil;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
@@ -47,6 +45,7 @@ public abstract class DvcsBranchesTreePopupStepBase implements PopupStep<Object>
     protected final DvcsRepositoryModel mySelectedRepository;
     protected final List<DvcsRepositoryModel> myRepositories;
     protected final List<DvcsRepositoryModel> myAffectedRepositories;
+    private final DvcsBranchesTreeNodePresentation myPresentation;
 
     protected DvcsBranchesTreePopupStepBase(Project project,
                                             @Nullable DvcsRepositoryModel selectedRepository,
@@ -55,6 +54,7 @@ public abstract class DvcsBranchesTreePopupStepBase implements PopupStep<Object>
         mySelectedRepository = selectedRepository;
         myRepositories = repositories;
         myAffectedRepositories = selectedRepository != null ? List.of(selectedRepository) : repositories;
+        myPresentation = new DvcsBranchesTreeNodePresentation(this::getTreeModel, selectedRepository, repositories);
     }
 
     public Project getProject() {
@@ -97,14 +97,7 @@ public abstract class DvcsBranchesTreePopupStepBase implements PopupStep<Object>
     }
 
     public void setSearchPattern(@Nullable String pattern) {
-        if (pattern == null || pattern.equals("/")) {
-            getTreeModel().applyFilterAndRebuild(null);
-            return;
-        }
-
-        String trimmedPattern = pattern.trim(); // otherwise Character.isSpaceChar would affect filtering
-        MinusculeMatcher matcher = NameUtil.buildMatcher("*" + trimmedPattern).build();
-        getTreeModel().applyFilterAndRebuild(matcher);
+        getTreeModel().setSearchPattern(pattern);
     }
 
     public boolean updateTreeModelIfNeeded(@Nullable String pattern) {
@@ -181,40 +174,10 @@ public abstract class DvcsBranchesTreePopupStepBase implements PopupStep<Object>
 
     @Nullable
     public String getNodeText(@Nullable Object node) {
-        if (node == null) {
-            return null;
-        }
-        if (node instanceof DvcsRefType type) {
-            if (mySelectedRepository != null) {
-                return type.getInRepoText(mySelectedRepository.getShortName()).get();
-            }
-            else if (myRepositories.size() > 1) {
-                return type.getCommonText().get();
-            }
-            else {
-                return type.getText().get();
-            }
-        }
-        if (node instanceof DvcsBranchesTreeModel.BranchesPrefixGroup group) {
-            List<String> prefix = group.prefix();
-            return prefix.get(prefix.size() - 1);
-        }
-        if (node instanceof DvcsBranchesTreeModel.RefTypeUnderRepository typeUnderRepository) {
-            return typeUnderRepository.type().getText().get();
-        }
-        if (node instanceof DvcsBranchesTreeModel.RefUnderRepository refUnderRepository) {
-            return getRefText(refUnderRepository.ref(), getTreeModel().isDirectoryGrouping());
-        }
-        if (node instanceof DvcsRef ref) {
-            return getRefText(ref, getTreeModel().isDirectoryGrouping());
-        }
         if (node instanceof AnAction action) {
             return action.getTemplatePresentation().getText();
         }
-        if (node instanceof DvcsBranchesTreeModel.PresentableNode presentableNode) {
-            return presentableNode.getPresentableText().getNullIfEmpty();
-        }
-        return null;
+        return myPresentation.getText(node);
     }
 
     public void renderNode(@Nullable Object node, TextItemPresentation presentation) {
@@ -232,30 +195,15 @@ public abstract class DvcsBranchesTreePopupStepBase implements PopupStep<Object>
         if (node instanceof AnAction action && !action.getTemplatePresentation().isEnabled()) {
             return TextAttribute.GRAYED;
         }
-        if (isCurrentRef(node)) {
-            return TextAttribute.REGULAR_BOLD;
-        }
-        return TextAttribute.REGULAR;
+        return myPresentation.getTextAttribute(node);
     }
 
     @Nullable
     public Image getNodeIcon(@Nullable Object node, boolean selected, boolean favoriteToggleOnClick) {
-        if (node instanceof DvcsBranchesTreeModel.BranchesPrefixGroup) {
-            return DvcsBranchesTreeIconProvider.forGroup();
-        }
-        if (node instanceof DvcsBranchesTreeModel.RefUnderRepository refUnderRepository) {
-            return getBranchIcon(refUnderRepository.ref(), List.of(refUnderRepository.repository()), selected, favoriteToggleOnClick);
-        }
-        if (node instanceof DvcsRef ref) {
-            return getBranchIcon(ref, myAffectedRepositories, selected, favoriteToggleOnClick);
-        }
-        if (node instanceof DvcsBranchesTreeModel.RepositoryNode repositoryNode) {
-            return repositoryNode.repository().getIcon();
-        }
         if (node instanceof AnAction action) {
             return action.getTemplatePresentation().getIcon();
         }
-        return null;
+        return myPresentation.getIcon(node, selected, favoriteToggleOnClick);
     }
 
     @Nullable
@@ -264,85 +212,7 @@ public abstract class DvcsBranchesTreePopupStepBase implements PopupStep<Object>
             String shortcut = KeymapUtil.getFirstKeyboardShortcutText(action);
             return shortcut.isEmpty() ? null : shortcut;
         }
-        if (node instanceof DvcsBranchesTreeModel.RefUnderRepository refUnderRepository) {
-            return getCommonTrackedBranchName(refUnderRepository.ref(), List.of(refUnderRepository.repository()));
-        }
-        if (node instanceof DvcsRef ref) {
-            return getCommonTrackedBranchName(ref, myAffectedRepositories);
-        }
-        return null;
-    }
-
-    private boolean isCurrentRef(@Nullable Object node) {
-        if (node instanceof DvcsBranchesTreeModel.RefUnderRepository refUnderRepository) {
-            return allCurrent(refUnderRepository.ref(), List.of(refUnderRepository.repository()));
-        }
-        if (node instanceof DvcsRef ref) {
-            return allCurrent(ref, myAffectedRepositories);
-        }
-        return false;
-    }
-
-    private static Image getBranchIcon(
-        DvcsRef ref,
-        List<DvcsRepositoryModel> repositories,
-        boolean selected,
-        boolean favoriteToggleOnClick
-    ) {
-        boolean current = allCurrent(ref, repositories);
-        boolean favorite = allFavorite(ref, repositories);
-        return DvcsBranchesTreeIconProvider.forRef(ref, current, favorite, selected, favoriteToggleOnClick);
-    }
-
-    @Nullable
-    private static String getCommonTrackedBranchName(DvcsRef ref, List<DvcsRepositoryModel> repositories) {
-        String commonTrackedBranch = null;
-        for (DvcsRepositoryModel repository : repositories) {
-            String trackedBranch = repository.getTrackedBranchName(ref);
-            if (trackedBranch == null) {
-                return null;
-            }
-            if (commonTrackedBranch == null) {
-                commonTrackedBranch = trackedBranch;
-            }
-            else if (!commonTrackedBranch.equals(trackedBranch)) {
-                return null;
-            }
-        }
-        return commonTrackedBranch;
-    }
-
-    private static boolean allCurrent(DvcsRef ref, List<DvcsRepositoryModel> repositories) {
-        if (repositories.isEmpty()) {
-            return false;
-        }
-        for (DvcsRepositoryModel repository : repositories) {
-            if (!repository.isCurrentRef(ref)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private static boolean allFavorite(DvcsRef ref, List<DvcsRepositoryModel> repositories) {
-        if (repositories.isEmpty()) {
-            return false;
-        }
-        for (DvcsRepositoryModel repository : repositories) {
-            if (!repository.isFavorite(ref)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private static String getRefText(DvcsRef value, boolean prefixGrouping) {
-        String name = value.getName();
-        if (prefixGrouping) {
-            int idx = name.lastIndexOf('/');
-            return idx >= 0 ? name.substring(idx + 1) : name;
-        }
-        return name;
+        return myPresentation.getSecondaryText(node);
     }
 
     @RequiredUIAccess

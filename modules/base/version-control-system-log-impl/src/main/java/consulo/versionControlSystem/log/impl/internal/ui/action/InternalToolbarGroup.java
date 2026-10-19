@@ -18,7 +18,6 @@ package consulo.versionControlSystem.log.impl.internal.ui.action;
 import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionRef;
 import consulo.application.dumb.DumbAware;
-import consulo.ui.ex.action.AnSeparator;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.versionControlSystem.log.internal.VcsLogActionPlaces;
 import consulo.versionControlSystem.log.localize.VersionControlSystemLogLocalize;
@@ -29,15 +28,7 @@ import consulo.versionControlSystem.log.localize.VersionControlSystemLogLocalize
  */
 @ActionImpl(
     id = VcsLogActionPlaces.TOOLBAR_ACTION_GROUP,
-    children = {
-        @ActionRef(type = RefreshLogAction.class),
-        @ActionRef(type = GoToHashOrRefAction.class),
-        @ActionRef(type = ToolbarGroup.class),
-        @ActionRef(type = AnSeparator.class),
-        @ActionRef(type = OpenAnotherLogTabInToolWindowAction.class),
-        @ActionRef(type = OpenAnotherLogTabInEditorAction.class),
-        @ActionRef(type = CloseLogTabAction.class)
-    }
+    children = @ActionRef(type = OpenAnotherLogTabInEditorAction.class)
 )
 public class InternalToolbarGroup extends DefaultActionGroup implements DumbAware {
     public InternalToolbarGroup() {

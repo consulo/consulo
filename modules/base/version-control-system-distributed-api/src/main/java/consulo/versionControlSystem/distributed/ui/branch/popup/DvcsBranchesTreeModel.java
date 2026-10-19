@@ -17,6 +17,7 @@
 package consulo.versionControlSystem.distributed.ui.branch.popup;
 
 import consulo.application.util.matcher.MinusculeMatcher;
+import consulo.application.util.matcher.NameUtil;
 import consulo.localize.LocalizeValue;
 import consulo.navigation.ItemPresentation;
 import consulo.project.Project;
@@ -63,6 +64,20 @@ public abstract class DvcsBranchesTreeModel {
         return false;
     }
 
+    public List<DvcsRepositoryModel> getRepositories() {
+        return myRepositories;
+    }
+
+    public static @Nullable DvcsRef asRef(@Nullable Object node) {
+        if (node instanceof DvcsRef ref) {
+            return ref;
+        }
+        if (node instanceof RefUnderRepository refUnderRepository) {
+            return refUnderRepository.ref();
+        }
+        return null;
+    }
+
     public boolean isDirectoryGrouping() {
         return myDirectoryGrouping;
     }
@@ -81,6 +96,16 @@ public abstract class DvcsBranchesTreeModel {
 
     public void init() {
         applyFilterAndRebuild(null);
+    }
+
+    public void setSearchPattern(@Nullable String pattern) {
+        if (pattern == null || pattern.equals("/")) {
+            applyFilterAndRebuild(null);
+            return;
+        }
+
+        String trimmedPattern = pattern.trim(); // otherwise Character.isSpaceChar would affect filtering
+        applyFilterAndRebuild(NameUtil.buildMatcher("*" + trimmedPattern).build());
     }
 
     public void applyFilterAndRebuild(@Nullable MinusculeMatcher matcher) {

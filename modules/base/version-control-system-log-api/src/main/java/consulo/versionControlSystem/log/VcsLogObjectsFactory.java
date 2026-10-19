@@ -67,4 +67,6 @@ public interface VcsLogObjectsFactory {
 
   
   VcsRef createRef(Hash commitHash, String name, VcsRefType type, VirtualFile root);
+
+  VcsLogBranchFilter createBranchFilter(Collection<String> branchNames);
 }

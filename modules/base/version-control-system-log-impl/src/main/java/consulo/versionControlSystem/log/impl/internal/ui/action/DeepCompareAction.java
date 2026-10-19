@@ -18,7 +18,6 @@ package consulo.versionControlSystem.log.impl.internal.ui.action;
 import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.localize.LocalizeValue;
-import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ComponentEvent;
@@ -42,8 +41,7 @@ public class DeepCompareAction extends ToggleAction implements DumbAware {
     public DeepCompareAction() {
         super(
             VersionControlSystemLogLocalize.actionLogDeepCompareText(),
-            VersionControlSystemLogLocalize.actionLogDeepCompareDescription(),
-            PlatformIconGroup.vcslogDeepcompare()
+            VersionControlSystemLogLocalize.actionLogDeepCompareDescription()
         );
     }
 
