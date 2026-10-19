@@ -16,6 +16,7 @@
 package consulo.versionControlSystem.impl.internal.patch.apply;
 
 import consulo.util.lang.Pair;
+import consulo.versionControlSystem.change.patch.ApplyPatchStatus;
 import consulo.versionControlSystem.change.patch.FilePatch;
 import consulo.virtualFileSystem.VirtualFile;
 

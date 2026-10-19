@@ -2501,7 +2501,7 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
 
     @Override
     public void setLineNumberConverter(LineNumberConverter primaryConverter, @Nullable LineNumberConverter additionalConverter) {
-        myAdditionalLineNumberConverter = primaryConverter;
+        myLineNumberConverter = primaryConverter;
         myAdditionalLineNumberConverter = additionalConverter;
         repaint();
     }

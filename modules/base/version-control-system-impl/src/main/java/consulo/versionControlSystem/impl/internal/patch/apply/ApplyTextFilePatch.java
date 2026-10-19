@@ -20,6 +20,7 @@ import consulo.document.FileDocumentManager;
 import consulo.project.Project;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.change.CommitContext;
+import consulo.versionControlSystem.change.patch.ApplyPatchStatus;
 import consulo.versionControlSystem.change.patch.TextFilePatch;
 import consulo.versionControlSystem.impl.internal.patch.CharsetEP;
 import consulo.virtualFileSystem.VirtualFile;

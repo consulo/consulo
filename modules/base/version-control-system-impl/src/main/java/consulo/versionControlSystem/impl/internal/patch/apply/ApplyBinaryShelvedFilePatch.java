@@ -21,6 +21,7 @@ import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.change.CommitContext;
 import consulo.versionControlSystem.change.ContentRevision;
+import consulo.versionControlSystem.change.patch.ApplyPatchStatus;
 import consulo.versionControlSystem.impl.internal.change.shelf.ShelvedBinaryContentRevision;
 import consulo.versionControlSystem.impl.internal.change.shelf.ShelvedBinaryFilePatch;
 import consulo.virtualFileSystem.VirtualFile;

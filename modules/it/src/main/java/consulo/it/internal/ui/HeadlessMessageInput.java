@@ -33,6 +33,7 @@ public class HeadlessMessageInput extends HeadlessComponentBase implements Messa
     private LocalizeValue mySendText = LocalizeValue.empty();
     private @Nullable Image mySendIcon;
     private @Nullable Component mySuffixComponent;
+    private String myText = "";
 
     @Override
     public void setPlaceholder(LocalizeValue placeholder) {
@@ -50,6 +51,15 @@ public class HeadlessMessageInput extends HeadlessComponentBase implements Messa
 
     public LocalizeValue getSendText() {
         return mySendText;
+    }
+
+    @Override
+    public void insertText(String text) {
+        myText += text;
+    }
+
+    public String getText() {
+        return myText;
     }
 
     @Override

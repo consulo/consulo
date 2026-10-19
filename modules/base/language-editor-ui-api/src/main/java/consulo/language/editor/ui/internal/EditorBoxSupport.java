@@ -109,6 +109,10 @@ public final class EditorBoxSupport {
         return myOneLine;
     }
 
+    public boolean isViewer() {
+        return myViewer;
+    }
+
     public void setInheritedFont(String fontName, int fontSize) {
         myInheritedFontName = fontName;
         myInheritedFontSize = fontSize;

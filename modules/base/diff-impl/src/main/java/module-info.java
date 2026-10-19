@@ -48,7 +48,8 @@ module consulo.diff.impl {
         consulo.desktop.awt.ide.impl,
         consulo.desktop.awt.ui.impl,
         consulo.ide.impl,
-        consulo.version.control.system.impl;
+        consulo.version.control.system.impl,
+        consulo.version.control.system.review.impl;
 
     exports consulo.diff.impl.internal.viewer to
         consulo.desktop.awt.ide.impl,

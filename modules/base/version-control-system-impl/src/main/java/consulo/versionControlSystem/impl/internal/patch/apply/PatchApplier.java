@@ -36,6 +36,7 @@ import consulo.util.lang.xml.XmlStringUtil;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.change.*;
+import consulo.versionControlSystem.change.patch.ApplyPatchStatus;
 import consulo.versionControlSystem.change.patch.FilePatch;
 import consulo.versionControlSystem.impl.internal.change.patch.ApplyPatchAction;
 import consulo.versionControlSystem.impl.internal.patch.PathMerger;

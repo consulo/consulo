@@ -15,6 +15,7 @@
  */
 package consulo.versionControlSystem.impl.internal.patch.apply;
 
+import consulo.versionControlSystem.change.patch.ApplyPatchStatus;
 import consulo.versionControlSystem.change.patch.PatchHunk;
 import consulo.versionControlSystem.change.patch.PatchLine;
 

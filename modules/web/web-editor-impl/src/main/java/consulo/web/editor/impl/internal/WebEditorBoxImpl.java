@@ -48,6 +48,7 @@ class WebEditorBoxImpl extends WebEditorBoxBase<WebEditorBoxImpl.Vaadin> {
         vaadin.getElement().getClassList().add("consulo-editor-box");
         vaadin.getElement().getClassList().add("aura-surface");
         vaadin.getElement().getClassList().set("consulo-editor-box-multiline", !options.oneLine());
+        vaadin.getElement().getClassList().set("consulo-editor-box-viewer", !options.oneLine() && options.viewer());
         vaadin.getElement().getClassList().set("consulo-editor-box-editor-font", options.editorFont());
     }
 

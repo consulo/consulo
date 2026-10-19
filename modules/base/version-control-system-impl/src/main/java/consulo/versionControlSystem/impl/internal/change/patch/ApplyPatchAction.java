@@ -31,6 +31,7 @@ import consulo.fileChooser.FileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.IdeActions;
+import consulo.versionControlSystem.change.patch.ApplyPatchStatus;
 import consulo.versionControlSystem.impl.internal.patch.apply.*;
 import consulo.versionControlSystem.impl.internal.patch.*;
 import consulo.localize.LocalizeValue;

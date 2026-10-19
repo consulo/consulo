@@ -33,6 +33,13 @@ vaadin-input-container.consulo-editor-box-multiline > .arquill-editor {
     align-self: stretch;
 }
 
+/* a viewer of several lines is as wide as its row and as tall as its lines */
+vaadin-input-container.consulo-editor-box-viewer {
+    width: 100%;
+    min-height: 0;
+    box-sizing: border-box;
+}
+
 vaadin-input-container.consulo-editor-box > [slot="suffix"] {
     width: auto;
 }

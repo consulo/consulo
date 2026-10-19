@@ -37,6 +37,10 @@ import consulo.virtualFileSystem.fileType.FileType;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.JComponent;
+import javax.swing.JScrollBar;
+import java.awt.Dimension;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.util.function.Consumer;
 
 class DesktopEditorBoxImpl extends SwingComponentDelegate<DesktopEditorBoxImpl.MyEditorTextField> implements EditorBox {
@@ -54,7 +58,34 @@ class DesktopEditorBoxImpl extends SwingComponentDelegate<DesktopEditorBoxImpl.M
             for (Consumer<EditorEx> customization : myOptions.customizations()) {
                 customization.accept(editor);
             }
+
+            if (!myOptions.oneLine()) {
+                editor.getScrollPane().getHorizontalScrollBar().addComponentListener(new ComponentAdapter() {
+                    @Override
+                    public void componentShown(ComponentEvent e) {
+                        revalidate();
+                    }
+
+                    @Override
+                    public void componentHidden(ComponentEvent e) {
+                        revalidate();
+                    }
+                });
+            }
             return editor;
+        }
+
+        @Override
+        public Dimension getPreferredSize() {
+            Dimension size = super.getPreferredSize();
+            if (myOptions.oneLine() || isPreferredSizeSet() || !(getEditor() instanceof EditorEx editor)) {
+                return size;
+            }
+            JScrollBar bar = editor.getScrollPane().getHorizontalScrollBar();
+            if (!bar.isVisible()) {
+                return size;
+            }
+            return new Dimension(size.width, size.height + bar.getPreferredSize().height);
         }
 
         @Override

@@ -19,6 +19,7 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 import consulo.ui.messageList.MessageList;
 import consulo.ui.messageList.MessageListItem;
+import consulo.ui.messageList.MessageListItemPart;
 import consulo.ui.messageList.MessageListItemStyle;
 import consulo.ui.messageList.MessageListStyle;
 import org.jspecify.annotations.Nullable;
@@ -36,6 +37,7 @@ public class HeadlessMessageList extends HeadlessComponentBase implements Messag
     private static class Item implements MessageListItem {
         private final LocalizeValue myAuthor;
         private String myText;
+        private List<MessageListItemPart> myParts = List.of();
         private @Nullable Instant myTime;
         private @Nullable Image myAuthorImage;
         private MessageListItemStyle myStyle = MessageListItemStyle.OTHER;
@@ -58,6 +60,17 @@ public class HeadlessMessageList extends HeadlessComponentBase implements Messag
         @Override
         public void setText(String text) {
             myText = text;
+            myParts = List.of();
+        }
+
+        @Override
+        public List<MessageListItemPart> getParts() {
+            return myParts;
+        }
+
+        @Override
+        public void setParts(List<MessageListItemPart> parts) {
+            myParts = List.copyOf(parts);
         }
 
         @Override

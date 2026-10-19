@@ -58,6 +58,7 @@ public class SandReviewService {
     private final List<SandReviewViewModel> myReviews;
     private final SandReviewToolwindowViewModel myToolwindowVm;
     private final MutableObservableValue<Integer> myThreadsModificationCount = MutableObservableValue.of(0);
+    private final SandReviewSuggestedChangeSupport mySuggestedChangeSupport;
 
     @Inject
     public SandReviewService(Project project, ApplicationConcurrency applicationConcurrency) {
@@ -66,7 +67,8 @@ public class SandReviewService {
         myDisposable = Disposable.newDisposable("SandReviewService");
         Disposer.register(project, myDisposable);
 
-        myReviews = createReviews(project, myDisposable, myScheduler);
+        mySuggestedChangeSupport = new SandReviewSuggestedChangeSupport(project, this);
+        myReviews = createReviews(project, myDisposable, myScheduler, mySuggestedChangeSupport);
         myToolwindowVm = new SandReviewToolwindowViewModel(new SandReviewProjectViewModel(myScheduler, () -> myReviews));
     }
 
@@ -93,7 +95,7 @@ public class SandReviewService {
             if (review.getReviewRequestState().get() == ReviewRequestState.OPENED) {
                 String trackingId = review.getNumber() + "-" + (review.getThreads().size() + 1);
                 review.addThread(new SandReviewThreadViewModel(myProject, myDisposable, trackingId, fileName, startLine, line,
-                    myScheduler, List.of(comment)));
+                    myScheduler, mySuggestedChangeSupport, List.of(comment)));
                 myThreadsModificationCount.update(count -> count + 1);
                 return;
             }
@@ -102,6 +104,10 @@ public class SandReviewService {
 
     public Project getProject() {
         return myProject;
+    }
+
+    public SandReviewSuggestedChangeSupport getSuggestedChangeSupport() {
+        return mySuggestedChangeSupport;
     }
 
     public Disposable getDisposable() {
@@ -130,7 +136,10 @@ public class SandReviewService {
         return result;
     }
 
-    private static List<SandReviewViewModel> createReviews(Project project, Disposable disposable, ScheduledExecutorService scheduler) {
+    private static List<SandReviewViewModel> createReviews(Project project,
+                                                           Disposable disposable,
+                                                           ScheduledExecutorService scheduler,
+                                                           SandReviewSuggestedChangeSupport support) {
         Instant now = Instant.now();
         SandReviewViewModel first = new SandReviewViewModel(
             project,
@@ -148,14 +157,22 @@ public class SandReviewService {
                 new CodeReviewCIJob("tests", CodeReviewCIJobState.PENDING, true, "https://ci.consulo.io/tests/42")
             ),
             List.of(
-                new SandReviewThreadViewModel(project, disposable, "42-1", DEMO_FILE_NAME, 2, 4, scheduler, List.of(
+                new SandReviewThreadViewModel(project, disposable, "42-1", DEMO_FILE_NAME, 2, 4, scheduler, support, List.of(
                     new SandReviewComment(REVIEWER, "Should `map` keep a listener on the source forever?",
                         now.minus(Duration.ofHours(5))),
                     new SandReviewComment(CURRENT_USER, "Yes, same as the mutable value did before.", now.minus(Duration.ofHours(4)))
                 )),
-                new SandReviewThreadViewModel(project, disposable, "42-2", DEMO_FILE_NAME, 8, 8, scheduler, List.of(
+                new SandReviewThreadViewModel(project, disposable, "42-2", DEMO_FILE_NAME, 8, 8, scheduler, support, List.of(
                     new SandReviewComment(REVIEWER, "**Nit:** keep the javadoc of the api.",
                         now.minus(Duration.ofHours(3)))
+                )),
+                new SandReviewThreadViewModel(project, disposable, "42-3", DEMO_FILE_NAME, 13, 13, scheduler, support, List.of(
+                    new SandReviewComment(REVIEWER, """
+                        Say what the user gets:
+                        ```suggestion
+                        The sand review service rejects comments containing 'fail' with an error.
+                        ```
+                        The reply input shows it.""", now.minus(Duration.ofHours(2)))
                 ))
             )
         );
@@ -172,7 +189,7 @@ public class SandReviewService {
             null,
             List.of(new CodeReviewCIJob("build", CodeReviewCIJobState.FAILED, true, null)),
             List.of(
-                new SandReviewThreadViewModel(project, disposable, "41-1", "UnifiedCommitPanel.java", 119, 119, scheduler, List.of(
+                new SandReviewThreadViewModel(project, disposable, "41-1", "UnifiedCommitPanel.java", 119, 119, scheduler, support, List.of(
                     new SandReviewComment(CURRENT_USER, "Looks good on every frontend.", now.minus(Duration.ofDays(4)))
                 ))
             )

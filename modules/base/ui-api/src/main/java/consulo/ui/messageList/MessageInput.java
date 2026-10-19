@@ -49,6 +49,12 @@ public interface MessageInput extends HasSuffixComponent, HasComponentStyle<Mess
     void setSendText(LocalizeValue sendText);
 
     /**
+     * Puts the text where the caret is, in place of the selected text, and moves the focus into the input.
+     */
+    @RequiredUIAccess
+    void insertText(String text);
+
+    /**
      * Shown inside the field before the send button - what the message goes to, a chooser of a model for example.
      */
     @Override

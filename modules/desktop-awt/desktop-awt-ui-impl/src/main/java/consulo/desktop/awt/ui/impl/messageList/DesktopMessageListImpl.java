@@ -36,6 +36,7 @@ import consulo.ui.image.Image;
 import consulo.ui.impl.messageList.MessageListPresentation;
 import consulo.ui.messageList.MessageList;
 import consulo.ui.messageList.MessageListItem;
+import consulo.ui.messageList.MessageListItemPart;
 import consulo.ui.messageList.MessageListItemStyle;
 import consulo.ui.messageList.MessageListStyle;
 import consulo.ui.style.ComponentColors;
@@ -125,8 +126,10 @@ public class DesktopMessageListImpl extends SwingComponentDelegate<JBScrollPane>
         private final JPanel myAvatarBox = new JPanel(new BorderLayout());
         private final JBLabel myHeader = new JBLabel();
         private final MessageBody myBody = new MessageBody();
+        private final JPanel myPartsPanel = new JPanel(new VerticalLayout(DesktopSpace.toPixels(Space.SMALL)));
 
         private String myText;
+        private List<MessageListItemPart> myParts = List.of();
         private @Nullable Instant myTime;
         private @Nullable Image myAuthorImage;
         private MessageListItemStyle myStyle = MessageListItemStyle.OTHER;
@@ -146,6 +149,8 @@ public class DesktopMessageListImpl extends SwingComponentDelegate<JBScrollPane>
             content.setOpaque(false);
             content.add(myHeader);
             content.add(myBody);
+            myPartsPanel.setOpaque(false);
+            content.add(myPartsPanel);
             myPanel.add(content, BorderLayout.CENTER);
 
             updateHeader();
@@ -164,15 +169,34 @@ public class DesktopMessageListImpl extends SwingComponentDelegate<JBScrollPane>
 
         private void updateBody() {
             myAvatarBox.setVisible(MessageListPresentation.showsAvatar(myStyle, myShowOwnAvatar));
-            myBody.setForeground(switch (myStyle) {
+            fillBody(myBody, myText);
+            myBody.setVisible(myParts.isEmpty() && !myText.isEmpty());
+
+            myPartsPanel.removeAll();
+            for (MessageListItemPart part : myParts) {
+                String text = part.getText();
+                Component component = part.getComponent();
+                if (text != null) {
+                    MessageBody body = new MessageBody();
+                    fillBody(body, text);
+                    myPartsPanel.add(body);
+                }
+                else if (component != null) {
+                    myPartsPanel.add(TargetAWT.to(component));
+                }
+            }
+            myPartsPanel.setVisible(!myParts.isEmpty());
+            relayout();
+        }
+
+        private void fillBody(MessageBody body, String text) {
+            body.setForeground(switch (myStyle) {
                 case ERROR -> TargetAWT.to(ComponentColors.ERROR_FOREGROUND);
                 case SYSTEM -> UIUtil.getContextHelpForeground();
                 default -> UIUtil.getLabelForeground();
             });
-            myBody.setText("<html><head><style>" + MessageListMarkdown.styleSheet() + "</style></head><body>"
-                + MessageListMarkdown.toHtml(myText, myMarkdown) + "</body></html>");
-            myBody.setVisible(!myText.isEmpty());
-            relayout();
+            body.setText("<html><head><style>" + MessageListMarkdown.styleSheet() + "</style></head><body>"
+                + MessageListMarkdown.toHtml(text, myMarkdown) + "</body></html>");
         }
 
         @Override
@@ -189,6 +213,19 @@ public class DesktopMessageListImpl extends SwingComponentDelegate<JBScrollPane>
         @Override
         public void setText(String text) {
             myText = text;
+            myParts = List.of();
+            updateBody();
+        }
+
+        @Override
+        public List<MessageListItemPart> getParts() {
+            return myParts;
+        }
+
+        @RequiredUIAccess
+        @Override
+        public void setParts(List<MessageListItemPart> parts) {
+            myParts = List.copyOf(parts);
             updateBody();
         }
 

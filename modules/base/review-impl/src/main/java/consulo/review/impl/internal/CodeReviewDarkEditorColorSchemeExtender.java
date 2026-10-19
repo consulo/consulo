@@ -16,6 +16,7 @@
 package consulo.review.impl.internal;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.colorScheme.AttributesFlyweightBuilder;
 import consulo.colorScheme.EditorColorSchemeExtender;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.ui.color.RGBColor;
@@ -34,6 +35,9 @@ public class CodeReviewDarkEditorColorSchemeExtender implements EditorColorSchem
         builder.add(CodeReviewColorUtil.REVIEW_CHAT_ITEM_HOVER, new RGBColor(0x5A, 0x5D, 0x63, 0x33));
         builder.add(CodeReviewColorUtil.REVIEW_LINE_FRAME_BORDER, new RGBColor(0x54, 0x8A, 0xF7));
         builder.add(CodeReviewColorUtil.REVIEW_INLAY_BORDER, new RGBColor(0x39, 0x3B, 0x40));
+        builder.add(CodeReviewColorUtil.REVIEW_TIMELINE_DIFF_ANCHOR_LINE, AttributesFlyweightBuilder.create()
+            .withBackground(new RGBColor(0x54, 0x4B, 0x2D))
+            .build());
     }
 
     @Override

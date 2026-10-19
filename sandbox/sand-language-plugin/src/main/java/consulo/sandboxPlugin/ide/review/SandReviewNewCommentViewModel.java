@@ -19,12 +19,14 @@ import consulo.disposer.Disposable;
 import consulo.project.Project;
 import consulo.review.comment.CodeReviewNewCommentViewModel;
 import consulo.review.comment.CodeReviewSubmittableTextViewModelBase;
+import org.jspecify.annotations.Nullable;
 
 import java.time.Instant;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * A new comment of the sand review service - text containing "fail" is rejected, to show the error state.
@@ -35,14 +37,38 @@ import java.util.function.Consumer;
 public class SandReviewNewCommentViewModel extends CodeReviewSubmittableTextViewModelBase implements CodeReviewNewCommentViewModel {
     private final Consumer<SandReviewComment> mySink;
     private final ScheduledExecutorService myScheduler;
+    private final @Nullable Supplier<String> mySuggestedChange;
 
     public SandReviewNewCommentViewModel(Project project,
                                          Disposable parentDisposable,
                                          ScheduledExecutorService scheduler,
                                          Consumer<SandReviewComment> sink) {
+        this(project, parentDisposable, scheduler, sink, null);
+    }
+
+    /**
+     * @param suggestedChange a suggestion of the commented lines, {@code null} when the comment is on no lines
+     */
+    public SandReviewNewCommentViewModel(Project project,
+                                         Disposable parentDisposable,
+                                         ScheduledExecutorService scheduler,
+                                         Consumer<SandReviewComment> sink,
+                                         @Nullable Supplier<String> suggestedChange) {
         super(project, parentDisposable, "");
         mySink = sink;
         myScheduler = scheduler;
+        mySuggestedChange = suggestedChange;
+    }
+
+    @Override
+    public boolean canSuggestChange() {
+        return mySuggestedChange != null;
+    }
+
+    @Override
+    public String createSuggestedChange() {
+        Supplier<String> suggestedChange = mySuggestedChange;
+        return suggestedChange == null ? "" : suggestedChange.get();
     }
 
     @Override

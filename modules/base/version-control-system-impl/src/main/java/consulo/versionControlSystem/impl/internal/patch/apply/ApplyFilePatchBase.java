@@ -20,6 +20,7 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.change.CommitContext;
+import consulo.versionControlSystem.change.patch.ApplyPatchStatus;
 import consulo.versionControlSystem.change.patch.FilePatch;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;

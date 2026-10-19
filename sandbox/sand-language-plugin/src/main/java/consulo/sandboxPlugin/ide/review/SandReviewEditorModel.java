@@ -21,6 +21,8 @@ import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.ScrollType;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.document.Document;
+import consulo.document.util.TextRange;
 import consulo.review.editor.CodeReviewChangedRange;
 import consulo.review.editor.CodeReviewEditorGutterActionableChangesModel;
 import consulo.review.editor.CodeReviewEditorGutterControlsState;
@@ -206,10 +208,20 @@ public class SandReviewEditorModel implements CodeReviewEditorModel<CodeReviewIn
             comment -> {
                 cancelNewComment(lineIdx);
                 myService.createThread(myFileName, lineRange.start(), lineRange.end(), comment);
-            }
+            },
+            () -> createSuggestedChange(lineRange)
         );
         myNewComments.put(lineIdx, new SandReviewNewCommentInlayModel(lineRange, editor, () -> cancelNewComment(lineIdx)));
         publish();
+    }
+
+    private String createSuggestedChange(CodeReviewLineRange lineRange) {
+        Document document = myEditor.getDocument();
+        List<String> lines = new ArrayList<>();
+        for (int i = lineRange.start(); i <= lineRange.end() && i < document.getLineCount(); i++) {
+            lines.add(document.getText(new TextRange(document.getLineStartOffset(i), document.getLineEndOffset(i))));
+        }
+        return myService.getSuggestedChangeSupport().getSyntax().createSuggestion(lines);
     }
 
     @RequiredUIAccess

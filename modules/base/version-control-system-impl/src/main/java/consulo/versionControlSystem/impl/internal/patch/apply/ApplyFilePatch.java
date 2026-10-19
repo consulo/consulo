@@ -18,6 +18,7 @@ package consulo.versionControlSystem.impl.internal.patch.apply;
 import consulo.project.Project;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.change.CommitContext;
+import consulo.versionControlSystem.change.patch.ApplyPatchStatus;
 import consulo.virtualFileSystem.VirtualFile;
 
 import java.io.IOException;

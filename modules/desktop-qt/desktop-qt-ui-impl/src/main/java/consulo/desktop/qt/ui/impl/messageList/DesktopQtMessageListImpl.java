@@ -28,7 +28,9 @@ import consulo.ui.image.Image;
 import consulo.ui.impl.avatar.AvatarPresentation;
 import consulo.ui.impl.messageList.MessageListPresentation;
 import consulo.ui.messageList.MessageList;
+import consulo.ui.Component;
 import consulo.ui.messageList.MessageListItem;
+import consulo.ui.messageList.MessageListItemPart;
 import consulo.ui.messageList.MessageListItemStyle;
 import consulo.ui.messageList.MessageListStyle;
 import consulo.ui.style.ComponentColors;
@@ -63,11 +65,16 @@ public class DesktopQtMessageListImpl extends QtComponentDelegate<QScrollArea> i
         private @Nullable Instant myTime;
         private @Nullable Image myAuthorImage;
         private MessageListItemStyle myStyle = MessageListItemStyle.OTHER;
+        private List<MessageListItemPart> myParts = List.of();
 
         private @Nullable QWidget myRow;
         private @Nullable QLabel myAvatar;
         private @Nullable QLabel myHeader;
         private @Nullable QLabel myBody;
+        private @Nullable QWidget myPartsWidget;
+        private @Nullable QVBoxLayout myPartsLayout;
+        private final List<QLabel> myPartLabels = new ArrayList<>();
+        private final List<QtComponentDelegate<?>> myPartComponents = new ArrayList<>();
 
         Item(LocalizeValue author, String text) {
             myAuthor = author;
@@ -93,11 +100,14 @@ public class DesktopQtMessageListImpl extends QtComponentDelegate<QScrollArea> i
             header.setTextFormat(Qt.TextFormat.RichText);
             contentLayout.addWidget(header);
 
-            DesktopQtWrappingLabel body = new DesktopQtWrappingLabel(content);
-            body.setWordWrap(true);
-            body.setOpenExternalLinks(true);
-            body.setTextInteractionFlags(Qt.TextInteractionFlag.TextBrowserInteraction);
+            QLabel body = createBodyLabel(content);
             contentLayout.addWidget(body);
+
+            QWidget parts = new QWidget(content);
+            QVBoxLayout partsLayout = new QVBoxLayout(parts);
+            partsLayout.setContentsMargins(0, 0, 0, 0);
+            partsLayout.setSpacing(DesktopQtSpace.toPixels(Space.SMALL));
+            contentLayout.addWidget(parts);
 
             rowLayout.addWidget(content, 1);
 
@@ -105,10 +115,64 @@ public class DesktopQtMessageListImpl extends QtComponentDelegate<QScrollArea> i
             myAvatar = avatar;
             myHeader = header;
             myBody = body;
+            myPartsWidget = parts;
+            myPartsLayout = partsLayout;
 
             updateAvatar();
             updateHeader();
+            rebuildParts();
             updateBody();
+        }
+
+        private QLabel createBodyLabel(QWidget parent) {
+            DesktopQtWrappingLabel body = new DesktopQtWrappingLabel(parent);
+            body.setWordWrap(true);
+            body.setOpenExternalLinks(true);
+            body.setTextInteractionFlags(Qt.TextInteractionFlag.TextBrowserInteraction);
+            return body;
+        }
+
+        void rebuildParts() {
+            QWidget parts = myPartsWidget;
+            QVBoxLayout layout = myPartsLayout;
+            if (parts == null || layout == null || parts.isDisposed()) {
+                return;
+            }
+
+            for (QLabel label : myPartLabels) {
+                if (!label.isDisposed()) {
+                    layout.removeWidget(label);
+                    label.hide();
+                    label.disposeLater();
+                }
+            }
+            myPartLabels.clear();
+            for (QtComponentDelegate<?> delegate : myPartComponents) {
+                QWidget widget = delegate.toQtComponent();
+                if (widget != null && !widget.isDisposed()) {
+                    layout.removeWidget(widget);
+                }
+                delegate.disposeQt();
+            }
+            myPartComponents.clear();
+
+            for (MessageListItemPart part : myParts) {
+                Component component = part.getComponent();
+                if (part.getText() != null) {
+                    QLabel label = createBodyLabel(parts);
+                    layout.addWidget(label);
+                    myPartLabels.add(label);
+                }
+                else if (component instanceof QtComponentDelegate<?> delegate) {
+                    delegate.setParent(DesktopQtMessageListImpl.this);
+                    delegate.bind(parts, null);
+                    QWidget widget = delegate.toQtComponent();
+                    if (widget != null) {
+                        layout.addWidget(widget);
+                    }
+                    myPartComponents.add(delegate);
+                }
+            }
         }
 
         void updateAvatar() {
@@ -142,22 +206,41 @@ public class DesktopQtMessageListImpl extends QtComponentDelegate<QScrollArea> i
             if (body == null) {
                 return;
             }
+            fillLabel(body, myText);
+            body.setVisible(myParts.isEmpty() && !myText.isEmpty());
+
+            int labelIndex = 0;
+            for (MessageListItemPart part : myParts) {
+                String text = part.getText();
+                if (text != null && labelIndex < myPartLabels.size()) {
+                    fillLabel(myPartLabels.get(labelIndex++), text);
+                }
+            }
+            QWidget parts = myPartsWidget;
+            if (parts != null && !parts.isDisposed()) {
+                parts.setVisible(!myParts.isEmpty());
+            }
+        }
+
+        private void fillLabel(QLabel label, String text) {
+            if (label.isDisposed()) {
+                return;
+            }
             if (myMarkdown) {
-                body.setTextFormat(Qt.TextFormat.RichText);
-                body.setText(markdownToHtml(myText));
+                label.setTextFormat(Qt.TextFormat.RichText);
+                label.setText(markdownToHtml(text));
             }
             else {
-                body.setTextFormat(Qt.TextFormat.PlainText);
-                body.setText(myText);
+                label.setTextFormat(Qt.TextFormat.PlainText);
+                label.setText(text);
             }
-            body.setVisible(!myText.isEmpty());
 
             QColor color = switch (myStyle) {
-                case ERROR -> DesktopQtStyleApplier.themeColor(ComponentColors.ERROR_FOREGROUND, body.palette().color(QPalette.ColorRole.WindowText));
-                case SYSTEM -> DesktopQtStyleApplier.themeColor(ComponentColors.INFO_FOREGROUND, body.palette().color(QPalette.ColorRole.PlaceholderText));
+                case ERROR -> DesktopQtStyleApplier.themeColor(ComponentColors.ERROR_FOREGROUND, label.palette().color(QPalette.ColorRole.WindowText));
+                case SYSTEM -> DesktopQtStyleApplier.themeColor(ComponentColors.INFO_FOREGROUND, label.palette().color(QPalette.ColorRole.PlaceholderText));
                 default -> null;
             };
-            body.setStyleSheet(color == null ? "" : "QLabel { color: " + color.name() + "; }");
+            label.setStyleSheet(color == null ? "" : "QLabel { color: " + color.name() + "; }");
         }
 
         @Override
@@ -174,6 +257,23 @@ public class DesktopQtMessageListImpl extends QtComponentDelegate<QScrollArea> i
         @Override
         public void setText(String text) {
             myText = text;
+            if (!myParts.isEmpty()) {
+                myParts = List.of();
+                rebuildParts();
+            }
+            updateBody();
+        }
+
+        @Override
+        public List<MessageListItemPart> getParts() {
+            return myParts;
+        }
+
+        @RequiredUIAccess
+        @Override
+        public void setParts(List<MessageListItemPart> parts) {
+            myParts = List.copyOf(parts);
+            rebuildParts();
             updateBody();
         }
 
@@ -360,10 +460,17 @@ public class DesktopQtMessageListImpl extends QtComponentDelegate<QScrollArea> i
                 row.hide();
                 row.disposeLater();
             }
+            for (QtComponentDelegate<?> delegate : own.myPartComponents) {
+                delegate.disposeQt();
+            }
+            own.myPartComponents.clear();
+            own.myPartLabels.clear();
             own.myRow = null;
             own.myAvatar = null;
             own.myHeader = null;
             own.myBody = null;
+            own.myPartsWidget = null;
+            own.myPartsLayout = null;
         }
     }
 

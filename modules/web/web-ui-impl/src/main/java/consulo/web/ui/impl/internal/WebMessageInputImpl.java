@@ -77,6 +77,19 @@ public class WebMessageInputImpl extends VaadinComponentDelegate<WebMessageInput
 
     @RequiredUIAccess
     @Override
+    public void insertText(String text) {
+        toVaadinComponent().getElement().executeJs(
+            "const input = this.querySelector('vaadin-text-area')?.inputElement;"
+                + " if (!input) { this.value = (this.value || '') + $0; return; }"
+                + " input.focus();"
+                + " input.setRangeText($0, input.selectionStart, input.selectionEnd, 'end');"
+                + " input.dispatchEvent(new Event('input', {bubbles: true}));",
+            text
+        );
+    }
+
+    @RequiredUIAccess
+    @Override
     public void setSuffixComponent(@Nullable Component suffixComponent) {
         Component old = mySuffixComponent;
         if (old != null) {

@@ -24,6 +24,8 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.BeforeAfter;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
+import consulo.versionControlSystem.change.patch.AppliedPatch;
+import consulo.versionControlSystem.change.patch.ApplyPatchStatus;
 import consulo.versionControlSystem.change.patch.PatchHunk;
 import consulo.versionControlSystem.change.patch.PatchLine;
 import org.jspecify.annotations.Nullable;
@@ -66,6 +68,34 @@ public class GenericPatchApplier {
     myNotExact = new ArrayList<>();
     myNotBound = new ArrayList<>();
     myAppliedInfo = new ArrayList<>();
+  }
+
+  public static @Nullable AppliedPatch apply(CharSequence text, List<? extends PatchHunk> hunks) {
+    String patchedText = PlainSimplePatchApplier.apply(text, hunks);
+    if (patchedText != null) {
+      return new AppliedPatch(patchedText, ApplyPatchStatus.SUCCESS);
+    }
+
+    GenericPatchApplier applier = new GenericPatchApplier(text, new ArrayList<>(hunks));
+    boolean success = applier.execute();
+
+    if (!success) return null;
+
+    return new AppliedPatch(applier.getAfter(), applier.getStatus());
+  }
+
+  public static AppliedSomehowPatch applySomehow(CharSequence text, List<? extends PatchHunk> hunks) {
+    String patchedText = PlainSimplePatchApplier.apply(text, hunks);
+    if (patchedText != null) {
+      return new AppliedSomehowPatch(patchedText, ApplyPatchStatus.SUCCESS, false);
+    }
+
+    GenericPatchApplier applier = new GenericPatchApplier(text, new ArrayList<>(hunks));
+    boolean success = applier.execute();
+
+    if (!success) applier.trySolveSomehow();
+
+    return new AppliedSomehowPatch(applier.getAfter(), applier.getStatus(), !success);
   }
 
   public ApplyPatchStatus getStatus() {

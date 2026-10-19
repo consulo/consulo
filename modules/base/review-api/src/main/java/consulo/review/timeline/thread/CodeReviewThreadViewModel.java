@@ -15,9 +15,11 @@
  */
 package consulo.review.timeline.thread;
 
+import consulo.disposer.Disposable;
 import consulo.review.comment.CodeReviewNewCommentViewModel;
 import consulo.review.timeline.CodeReviewCommentViewModel;
 import consulo.review.timeline.CodeReviewTimelineItem;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.concurrent.coroutine.ObservableValue;
 import org.jspecify.annotations.Nullable;
@@ -63,6 +65,17 @@ public interface CodeReviewThreadViewModel extends CodeReviewTimelineItem,
      */
     @Nullable
     default CodeReviewNewCommentViewModel getReplyVm() {
+        return null;
+    }
+
+    /**
+     * The code the thread is about, shown in the timeline above its comments in place of the {@link #getLocation()
+     * location}, or {@code null} for none.
+     *
+     * @param parentDisposable disposed when the timeline stops showing the thread
+     */
+    @RequiredUIAccess
+    default @Nullable Component createDiffComponent(Disposable parentDisposable) {
         return null;
     }
 }

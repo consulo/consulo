@@ -15,10 +15,13 @@
  */
 package consulo.review.timeline;
 
+import consulo.review.comment.CodeReviewCommentBodyBlock;
 import consulo.review.list.UserPresentation;
 import consulo.util.concurrent.coroutine.ObservableValue;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author VISTALL
@@ -35,6 +38,14 @@ public interface CodeReviewCommentViewModel extends CodeReviewTimelineItem {
      * Markdown.
      */
     ObservableValue<String> getBody();
+
+    /**
+     * The body split into blocks, shown instead of the {@link #getBody() markdown} when a platform has more than
+     * markdown in its comments - suggested changes. {@code null} shows the markdown.
+     */
+    default @Nullable ObservableValue<List<CodeReviewCommentBodyBlock>> getBodyBlocks() {
+        return null;
+    }
 
     /**
      * Whether the comment was written by the current user.

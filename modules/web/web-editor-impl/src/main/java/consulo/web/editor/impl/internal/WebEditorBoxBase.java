@@ -20,6 +20,8 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.EditorFactory;
 import consulo.document.Document;
+import consulo.document.event.DocumentEvent;
+import consulo.document.event.DocumentListener;
 import consulo.language.editor.ui.EditorBox;
 import consulo.language.editor.ui.internal.EditorBoxOptions;
 import consulo.language.editor.ui.internal.EditorBoxSupport;
@@ -41,6 +43,16 @@ abstract class WebEditorBoxBase<V extends com.vaadin.flow.component.Component & 
 
     private boolean myFireListeners = true;
 
+    private final DocumentListener myViewerHeightListener = new DocumentListener() {
+        @Override
+        public void documentChanged(DocumentEvent event) {
+            EditorEx editor = mySupport.getEditor();
+            if (editor != null) {
+                fitContentHeight(editor);
+            }
+        }
+    };
+
     @RequiredUIAccess
     protected WebEditorBoxBase(EditorBoxOptions options, EditorFactory editorFactory, ProjectManager projectManager) {
         mySupport = new EditorBoxSupport(options, editorFactory, projectManager, this::valueChanged, editor -> {
@@ -48,7 +60,10 @@ abstract class WebEditorBoxBase<V extends com.vaadin.flow.component.Component & 
 
         V vaadin = toVaadinComponent();
         vaadin.addAttachListener(event -> attachEditor());
-        vaadin.addDetachListener(event -> mySupport.releaseEditor());
+        vaadin.addDetachListener(event -> {
+            mySupport.getDocument().removeDocumentListener(myViewerHeightListener);
+            mySupport.releaseEditor();
+        });
     }
 
     protected abstract void insertEditorElement(Element container, Element editorElement);
@@ -68,11 +83,33 @@ abstract class WebEditorBoxBase<V extends com.vaadin.flow.component.Component & 
         com.vaadin.flow.component.Component editorComponent = ((ToVaadinComponentWrapper) editor.getContentUIComponent()).toVaadinComponent();
         if (editorComponent instanceof ArquillEditorElement arquillEditor) {
             arquillEditor.setOneLine(mySupport.isOneLine());
+            if (!mySupport.isOneLine() && mySupport.isViewer()) {
+                arquillEditor.addMetricsListener(event -> fitContentHeight(editor.getDocument().getLineCount(), event.getLineHeight()));
+            }
         }
 
         Element editorElement = editorComponent.getElement();
         insertEditorElement(container, editorElement);
         myEditorElement = editorElement;
+
+        if (!mySupport.isOneLine() && mySupport.isViewer()) {
+            fitContentHeight(editor);
+            Document document = mySupport.getDocument();
+            document.removeDocumentListener(myViewerHeightListener);
+            document.addDocumentListener(myViewerHeightListener);
+        }
+    }
+
+    /**
+     * A viewer of several lines shows them all, with room for the horizontal scroll bar under them.
+     */
+    private void fitContentHeight(EditorEx editor) {
+        fitContentHeight(editor.getDocument().getLineCount(), editor.getLineHeight());
+    }
+
+    private void fitContentHeight(int lineCount, int lineHeight) {
+        int lines = Math.max(1, lineCount);
+        toVaadinComponent().getElement().getStyle().set("height", "calc(" + (lines * lineHeight) + "px + 1.5em)");
     }
 
     @RequiredUIAccess

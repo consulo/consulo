@@ -57,7 +57,11 @@ public final class CodeReviewThreadComponentFactory {
         VerticalLayout root = VerticalLayout.create(Space.NONE);
 
         if (!compact) {
-            root.add(createHeader(parentDisposable, thread));
+            Component diff = thread.createDiffComponent(parentDisposable);
+            root.add(createHeader(parentDisposable, thread, diff == null));
+            if (diff != null) {
+                root.add(diff);
+            }
         }
 
         MessageList messages = CodeReviewCommentItemFactory.createList();
@@ -113,9 +117,9 @@ public final class CodeReviewThreadComponentFactory {
     }
 
     @RequiredUIAccess
-    private static Component createHeader(Disposable parentDisposable, CodeReviewThreadViewModel thread) {
+    private static Component createHeader(Disposable parentDisposable, CodeReviewThreadViewModel thread, boolean showLocation) {
         HorizontalLayout header = HorizontalLayout.create(Space.LARGE);
-        String location = thread.getLocation();
+        String location = showLocation ? thread.getLocation() : null;
         if (location != null) {
             if (thread.canNavigate()) {
                 header.add(Hyperlink.create(LocalizeValue.of(location), event -> thread.navigate()));

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.versionControlSystem.impl.internal.patch.apply;
+package consulo.versionControlSystem.change.patch;
 
 import com.google.common.collect.Ordering;
 import consulo.util.collection.ContainerUtil;

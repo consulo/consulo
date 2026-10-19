@@ -191,6 +191,13 @@ public class DesktopMessageInputImpl extends SwingComponentDelegate<JPanel> impl
 
     @RequiredUIAccess
     @Override
+    public void insertText(String text) {
+        myTextArea.replaceSelection(text);
+        myTextArea.requestFocusInWindow();
+    }
+
+    @RequiredUIAccess
+    @Override
     public void setSendText(LocalizeValue sendText) {
         mySendText = sendText;
         updateSendButton();

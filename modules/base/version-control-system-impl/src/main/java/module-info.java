@@ -67,7 +67,8 @@ module consulo.version.control.system.impl {
         consulo.desktop.awt.editor.impl,
         consulo.desktop.awt.ide.impl,
         consulo.desktop.awt.ui.impl,
-        consulo.ide.impl;
+        consulo.ide.impl,
+        consulo.version.control.system.review.impl;
     exports consulo.versionControlSystem.impl.internal.change.conflict to consulo.ide.impl;
     exports consulo.versionControlSystem.impl.internal.checkin to consulo.ide.impl;
     exports consulo.versionControlSystem.impl.internal.diff to
@@ -89,11 +90,13 @@ module consulo.version.control.system.impl {
     exports consulo.versionControlSystem.impl.internal.patch.apply to
         consulo.desktop.awt.editor.impl,
         consulo.desktop.awt.ide.impl,
-        consulo.desktop.awt.ui.impl;
+        consulo.desktop.awt.ui.impl,
+        consulo.version.control.system.review.impl;
     exports consulo.versionControlSystem.impl.internal.patch.tool to
         consulo.desktop.awt.editor.impl,
         consulo.desktop.awt.ide.impl,
-        consulo.desktop.awt.ui.impl;
+        consulo.desktop.awt.ui.impl,
+        consulo.version.control.system.review.impl;
 
     opens consulo.versionControlSystem.impl.internal to consulo.util.xml.serializer;
     opens consulo.versionControlSystem.impl.internal.change.commited to consulo.util.xml.serializer;

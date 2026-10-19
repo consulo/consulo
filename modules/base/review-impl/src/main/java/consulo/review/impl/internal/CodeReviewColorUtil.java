@@ -18,6 +18,7 @@ package consulo.review.impl.internal;
 
 import consulo.colorScheme.EditorColorKey;
 import consulo.colorScheme.EditorColorsManager;
+import consulo.colorScheme.TextAttributesKey;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
 
@@ -38,6 +39,12 @@ public final class CodeReviewColorUtil {
         EditorColorKey.createColorKey("REVIEW_LINE_FRAME_BORDER", new RGBColor(0x35, 0x74, 0xF0));
     public static final EditorColorKey REVIEW_INLAY_BORDER =
         EditorColorKey.createColorKey("REVIEW_INLAY_BORDER", new RGBColor(0xEB, 0xEC, 0xF0));
+
+    /**
+     * The lines a review thread is on, inside the diff shown with the thread.
+     */
+    public static final TextAttributesKey REVIEW_TIMELINE_DIFF_ANCHOR_LINE =
+        TextAttributesKey.createTextAttributesKey("REVIEW_TIMELINE_DIFF_ANCHOR_LINE");
 
     /**
      * What an editor inlay stands on - the editor's own background, under its frame, padding and content alike.

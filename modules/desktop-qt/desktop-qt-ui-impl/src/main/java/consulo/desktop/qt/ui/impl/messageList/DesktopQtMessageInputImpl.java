@@ -231,6 +231,17 @@ public class DesktopQtMessageInputImpl extends QtComponentDelegate<QFrame> imple
 
     @RequiredUIAccess
     @Override
+    public void insertText(String text) {
+        QPlainTextEdit edit = myEdit;
+        if (edit == null || edit.isDisposed()) {
+            return;
+        }
+        edit.insertPlainText(text);
+        edit.setFocus();
+    }
+
+    @RequiredUIAccess
+    @Override
     public void setPlaceholder(LocalizeValue placeholder) {
         myPlaceholder = placeholder;
         applyTexts();

@@ -57,7 +57,7 @@ import consulo.versionControlSystem.impl.internal.change.patch.PatchNameChecker;
 import consulo.versionControlSystem.impl.internal.change.ui.RollbackWorker;
 import consulo.versionControlSystem.impl.internal.patch.*;
 import consulo.versionControlSystem.impl.internal.patch.apply.ApplyFilePatchBase;
-import consulo.versionControlSystem.impl.internal.patch.apply.ApplyPatchStatus;
+import consulo.versionControlSystem.change.patch.ApplyPatchStatus;
 import consulo.versionControlSystem.impl.internal.patch.apply.CustomBinaryPatchApplier;
 import consulo.versionControlSystem.impl.internal.patch.apply.PatchApplier;
 import consulo.versionControlSystem.impl.internal.util.FilesProgress;

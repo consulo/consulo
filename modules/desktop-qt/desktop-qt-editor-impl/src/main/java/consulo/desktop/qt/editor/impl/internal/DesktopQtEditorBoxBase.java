@@ -21,6 +21,8 @@ import consulo.codeEditor.EditorFactory;
 import consulo.desktop.qt.ui.impl.QtComponentDelegate;
 import consulo.desktop.qt.ui.impl.TargetQt;
 import consulo.document.Document;
+import consulo.document.event.DocumentEvent;
+import consulo.document.event.DocumentListener;
 import consulo.language.editor.ui.EditorBox;
 import consulo.language.editor.ui.internal.EditorBoxOptions;
 import consulo.language.editor.ui.internal.EditorBoxSupport;
@@ -33,6 +35,7 @@ import consulo.virtualFileSystem.fileType.FileType;
 import io.qt.core.Qt;
 import io.qt.gui.QFontInfo;
 import io.qt.widgets.QHBoxLayout;
+import io.qt.widgets.QScrollBar;
 import io.qt.widgets.QWidget;
 import org.jspecify.annotations.Nullable;
 
@@ -101,8 +104,38 @@ abstract class DesktopQtEditorBoxBase<W extends QWidget & DesktopQtEditorHost> e
                     surface.setFixedHeight(qtEditor.getLineHeight() + surface.frameWidth() * 2);
                     layout.setAlignment(editorWidget, Qt.AlignmentFlag.AlignVCenter);
                 }
+                else if (mySupport.isViewer()) {
+                    fitContentHeight(qtEditor, surface);
+                    surface.horizontalScrollBar().rangeChanged.connect((minimum, maximum) -> fitContentHeight(qtEditor, surface));
+
+                    Document document = editor.getDocument();
+                    DocumentListener listener = new DocumentListener() {
+                        @Override
+                        public void documentChanged(DocumentEvent event) {
+                            fitContentHeight(qtEditor, surface);
+                        }
+                    };
+                    document.addDocumentListener(listener);
+                    surface.destroyed.connect(() -> document.removeDocumentListener(listener));
+                }
             }
         }
+    }
+
+    /**
+     * A viewer of several lines shows them all, with the horizontal scroll bar under them while they are wider than it.
+     */
+    private static void fitContentHeight(DesktopQtEditorImpl editor, DesktopQtEditorWidget surface) {
+        if (surface.isDisposed()) {
+            return;
+        }
+        int lines = Math.max(1, editor.getDocument().getLineCount());
+        int height = lines * editor.getLineHeight() + surface.frameWidth() * 2;
+        QScrollBar bar = surface.horizontalScrollBar();
+        if (bar.maximum() > bar.minimum()) {
+            height += bar.sizeHint().height();
+        }
+        surface.setMinimumHeight(height);
     }
 
     private void updateEditorBackground(W frame) {

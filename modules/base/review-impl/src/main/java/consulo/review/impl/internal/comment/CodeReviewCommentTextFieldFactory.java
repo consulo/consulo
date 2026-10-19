@@ -20,12 +20,15 @@ import consulo.localize.LocalizeValue;
 import consulo.review.comment.CodeReviewNewCommentViewModel;
 import consulo.review.impl.internal.ReviewUIUtil;
 import consulo.review.util.ComputedResult;
+import consulo.review.localize.ReviewLocalize;
 import consulo.ui.Component;
+import consulo.ui.Hyperlink;
 import consulo.ui.Label;
 import consulo.ui.LabelStyle;
 import consulo.ui.Space;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.DockLayout;
+import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.messageList.MessageInput;
 import consulo.ui.style.StandardColors;
 import org.jspecify.annotations.Nullable;
@@ -50,7 +53,16 @@ public final class CodeReviewCommentTextFieldFactory {
         MessageInput input = MessageInput.create();
         input.setPlaceholder(placeholder);
         input.setSendText(sendText);
-        if (suffix != null) {
+        if (vm.canSuggestChange()) {
+            Hyperlink insertSuggestion = Hyperlink.create(ReviewLocalize.reviewSuggestedChangeInsertAction(),
+                event -> input.insertText(vm.createSuggestedChange()));
+            HorizontalLayout suffixes = HorizontalLayout.create(Space.MEDIUM).add(insertSuggestion);
+            if (suffix != null) {
+                suffixes.add(suffix);
+            }
+            input.setSuffixComponent(suffixes);
+        }
+        else if (suffix != null) {
             input.setSuffixComponent(suffix);
         }
         input.addSubmitListener(event -> {

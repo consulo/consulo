@@ -13,4 +13,6 @@ module consulo.version.control.system.review.impl {
     requires consulo.version.control.system.impl;
     requires consulo.diff.api;
     requires consulo.language.editor.api;
+    requires consulo.language.editor.ui.api;
+    requires consulo.diff.impl;
 }

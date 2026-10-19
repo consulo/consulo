@@ -24,4 +24,19 @@ package consulo.review.comment;
  */
 public interface CodeReviewNewCommentViewModel extends CodeReviewSubmittableTextViewModel {
     void submit();
+
+    /**
+     * Whether the comment is about lines a change can be suggested for - the input then offers to insert a suggestion.
+     */
+    default boolean canSuggestChange() {
+        return false;
+    }
+
+    /**
+     * A suggested change of the lines the comment is about, holding the lines as they are, written the way the
+     * platform writes suggestions.
+     */
+    default String createSuggestedChange() {
+        return "";
+    }
 }

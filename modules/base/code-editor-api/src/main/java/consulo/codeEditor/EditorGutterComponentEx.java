@@ -66,26 +66,10 @@ public interface EditorGutterComponentEx extends EditorGutter {
 
     @Deprecated
     default void setLineNumberConvertor(@Nullable IntUnaryOperator lineNumberConverter1, @Nullable IntUnaryOperator lineNumberConverter2) {
-        setLineNumberConverter(convertFromOperator(lineNumberConverter1),
-            lineNumberConverter2 == null ? null : convertFromOperator(lineNumberConverter2));
-    }
-
-    private static LineNumberConverter convertFromOperator(@Nullable IntUnaryOperator operator) {
-        if (operator == null) {
-            return LineNumberConverter.DEFAULT;
-        }
-
-        return new LineNumberConverter() {
-            @Override
-            public @Nullable Integer convert(Editor editor, int lineNumber) {
-                return operator.applyAsInt(lineNumber);
-            }
-
-            @Override
-            public @Nullable Integer getMaxLineNumber(Editor editor) {
-                return editor.getDocument().getLineCount();
-            }
-        };
+        setLineNumberConverter(
+            lineNumberConverter1 == null ? LineNumberConverter.DEFAULT : new LineNumberConverterAdapter(lineNumberConverter1),
+            lineNumberConverter2 == null ? null : new LineNumberConverterAdapter(lineNumberConverter2)
+        );
     }
 
     /**

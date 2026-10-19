@@ -16,6 +16,7 @@
 package consulo.versionControlSystem.impl.internal.patch.apply;
 
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.versionControlSystem.change.patch.ApplyPatchStatus;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 

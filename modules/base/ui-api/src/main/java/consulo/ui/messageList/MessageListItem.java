@@ -21,6 +21,7 @@ import consulo.ui.image.Image;
 import org.jspecify.annotations.Nullable;
 
 import java.time.Instant;
+import java.util.List;
 
 /**
  * One message of a {@link MessageList}. Changes show at once, so an answer can grow while it arrives.
@@ -33,11 +34,26 @@ public interface MessageListItem {
 
     String getText();
 
+    /**
+     * Shows the text alone, dropping the {@link #getParts() parts}.
+     */
     @RequiredUIAccess
     void setText(String text);
 
     @RequiredUIAccess
     void appendText(String text);
+
+    /**
+     * The parts the message shows instead of its text, empty for a message of text alone.
+     */
+    List<MessageListItemPart> getParts();
+
+    /**
+     * Shows the parts one under another instead of the text: a text part renders the way the text of the message does,
+     * a component part stands between them at the width of the text.
+     */
+    @RequiredUIAccess
+    void setParts(List<MessageListItemPart> parts);
 
     @Nullable Instant getTime();
 

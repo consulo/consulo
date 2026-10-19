@@ -195,7 +195,6 @@ public class EditorComponentImpl extends JTextComponent
     @Override
     public void paintComponent(Graphics g) {
         Graphics2D gg = (Graphics2D)g;
-        UIUtil.setupComposite(gg);
         if (myEditor.useEditorAntialiasing()) {
             DesktopAntialiasingTypeUtil.setupAntialiasing(gg);
         }

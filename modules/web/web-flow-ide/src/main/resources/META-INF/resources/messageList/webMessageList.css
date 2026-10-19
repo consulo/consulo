@@ -1,14 +1,44 @@
+.consulo-message-list {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    overflow: auto;
+    padding: var(--vaadin-padding-s, 0.5em) 0;
+}
+
+.consulo-message-list vaadin-markdown > :is(h1, h2, h3, h4, h5, h6, p, ul, ol):first-child {
+    margin-top: 0;
+}
+
+.consulo-message-list vaadin-markdown > :is(h1, h2, h3, h4, h5, h6, p, ul, ol):last-child {
+    margin-bottom: 0;
+}
+
+.consulo-message-list vaadin-message > span {
+    white-space: pre-wrap;
+}
+
+/* a component between the text parts is as wide as the text */
+.consulo-message-list vaadin-message > :not([slot="avatar"], span, vaadin-markdown) {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.consulo-message-list vaadin-message > :not([slot="avatar"]) + :not([slot="avatar"]) {
+    margin-top: var(--vaadin-gap-s, 0.5em);
+}
+
 vaadin-message[theme~="consulo-error"]::part(content),
-vaadin-message[theme~="consulo-error"] :not(vaadin-avatar) {
+vaadin-message[theme~="consulo-error"] > :is(span, vaadin-markdown) {
     color: var(--consulo-message-error-foreground);
 }
 
 vaadin-message[theme~="consulo-system"]::part(content),
-vaadin-message[theme~="consulo-system"] :not(vaadin-avatar) {
+vaadin-message[theme~="consulo-system"] > :is(span, vaadin-markdown) {
     color: var(--consulo-message-system-foreground);
 }
 
-vaadin-message-list:not(.consulo-show-own-avatar) vaadin-message[theme~="consulo-own"] > [slot="avatar"],
+.consulo-message-list:not(.consulo-show-own-avatar) vaadin-message[theme~="consulo-own"] > [slot="avatar"],
 vaadin-message[theme~="consulo-system"] > [slot="avatar"] {
     display: none;
 }
@@ -18,16 +48,16 @@ vaadin-message[theme~="consulo-anonymous"]::part(name) {
 }
 
 /* a discussion standing among other content - small pictures, little room, the background of what it stands on */
-vaadin-message-list.consulo-compact {
+.consulo-message-list.consulo-compact {
     padding: 0;
     background: transparent;
 }
 
-vaadin-message-list.consulo-compact vaadin-message {
+.consulo-message-list.consulo-compact vaadin-message {
     padding: 3px 0;
 }
 
-vaadin-message-list.consulo-compact vaadin-message > [slot="avatar"] {
+.consulo-message-list.consulo-compact vaadin-message > [slot="avatar"] {
     --vaadin-avatar-size: 24px;
     width: 24px;
     height: 24px;

@@ -16,17 +16,22 @@
 package consulo.web.ui.impl.internal;
 
 import com.vaadin.flow.component.dependency.StyleSheet;
+import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.dom.Element;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
-import consulo.ui.messageList.MessageList;
-import consulo.ui.messageList.MessageListItem;
-import consulo.ui.messageList.MessageListItemStyle;
-import consulo.ui.messageList.MessageListStyle;
-import consulo.ui.style.ComponentColors;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.impl.avatar.AvatarPresentation;
+import consulo.ui.impl.messageList.MessageListPresentation;
+import consulo.ui.messageList.MessageList;
+import consulo.ui.messageList.MessageListItem;
+import consulo.ui.messageList.MessageListItemPart;
+import consulo.ui.messageList.MessageListItemStyle;
+import consulo.ui.messageList.MessageListStyle;
+import consulo.ui.style.ComponentColors;
 import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
+import consulo.web.ui.impl.internal.base.TargetVaadin;
 import consulo.web.ui.impl.internal.base.VaadinComponentDelegate;
 import consulo.web.ui.impl.internal.image.WebImageUrl;
 import org.jspecify.annotations.Nullable;
@@ -37,12 +42,17 @@ import java.util.List;
 import java.util.Locale;
 
 /**
+ * The messages are {@code vaadin-message} elements of a list of its own rather than a {@code vaadin-message-list}: that
+ * one renders its messages from data alone, and a message here can hold components between the parts of its text. A
+ * hidden {@code vaadin-message-list} stays inside, since it is the one loading the markdown element once it shows
+ * markdown.
+ *
  * @author VISTALL
  * @since 2026-10-13
  */
 public class WebMessageListImpl extends VaadinComponentDelegate<WebMessageListImpl.Vaadin> implements MessageList {
     @StyleSheet("/messageList/webMessageList.css")
-    public class Vaadin extends com.vaadin.flow.component.messages.MessageList implements FromVaadinComponentWrapper {
+    public class Vaadin extends Div implements FromVaadinComponentWrapper {
         @Override
         public @Nullable Component toUIComponent() {
             return WebMessageListImpl.this;
@@ -51,19 +61,72 @@ public class WebMessageListImpl extends VaadinComponentDelegate<WebMessageListIm
 
     private class Item implements MessageListItem {
         private final LocalizeValue myAuthor;
-        private final com.vaadin.flow.component.messages.MessageListItem myVaadinItem;
+        private final Element myMessage = new Element("vaadin-message");
+        private final List<Element> myContent = new ArrayList<>();
+        private String myText;
+        private List<MessageListItemPart> myParts = List.of();
+        private @Nullable Instant myTime;
         private @Nullable Image myAuthorImage;
         private MessageListItemStyle myStyle = MessageListItemStyle.OTHER;
 
         Item(LocalizeValue author, String text) {
             myAuthor = author;
+            myText = text;
+
             String name = author.get();
-            myVaadinItem = new com.vaadin.flow.component.messages.MessageListItem(text, null, name);
-            updateColorIndex();
-            myVaadinItem.setUserAbbreviation(AvatarPresentation.initialsOf(name));
+            myMessage.setAttribute("role", "listitem");
+            myMessage.setProperty("userName", name);
+            myMessage.setProperty("userAbbr", AvatarPresentation.initialsOf(name));
             if (name.isEmpty()) {
-                myVaadinItem.addThemeNames("consulo-anonymous");
+                myMessage.getThemeList().add("consulo-anonymous");
             }
+
+            Element avatar = new Element("vaadin-avatar");
+            avatar.setAttribute("slot", "avatar");
+            myMessage.appendChild(avatar);
+
+            updateColorIndex();
+            updateContent();
+        }
+
+        void updateContent() {
+            for (Element element : myContent) {
+                element.removeFromParent();
+            }
+            myContent.clear();
+
+            if (myParts.isEmpty()) {
+                if (!myText.isEmpty()) {
+                    myContent.add(createText(myText));
+                }
+            }
+            else {
+                for (MessageListItemPart part : myParts) {
+                    String text = part.getText();
+                    Component component = part.getComponent();
+                    if (text != null) {
+                        myContent.add(createText(text));
+                    }
+                    else if (component != null) {
+                        myContent.add(TargetVaadin.to(component).getElement());
+                    }
+                }
+            }
+
+            for (Element element : myContent) {
+                myMessage.appendChild(element);
+            }
+        }
+
+        private Element createText(String text) {
+            if (myMarkdown) {
+                Element markdown = new Element("vaadin-markdown");
+                markdown.setProperty("content", text);
+                return markdown;
+            }
+            Element span = new Element("span");
+            span.setText(text);
+            return span;
         }
 
         @Override
@@ -73,31 +136,63 @@ public class WebMessageListImpl extends VaadinComponentDelegate<WebMessageListIm
 
         @Override
         public String getText() {
-            String text = myVaadinItem.getText();
-            return text == null ? "" : text;
+            return myText;
         }
 
         @RequiredUIAccess
         @Override
         public void setText(String text) {
-            myVaadinItem.setText(text);
+            myText = text;
+            if (myParts.isEmpty() && myContent.size() == 1 && !text.isEmpty()) {
+                Element element = myContent.get(0);
+                if (myMarkdown) {
+                    element.setProperty("content", text);
+                }
+                else {
+                    element.setText(text);
+                }
+            }
+            else {
+                myParts = List.of();
+                updateContent();
+            }
+            scrollToEndIfPinned();
         }
 
         @RequiredUIAccess
         @Override
         public void appendText(String text) {
-            myVaadinItem.appendText(text);
+            setText(myText + text);
+        }
+
+        @Override
+        public List<MessageListItemPart> getParts() {
+            return myParts;
+        }
+
+        @RequiredUIAccess
+        @Override
+        public void setParts(List<MessageListItemPart> parts) {
+            myParts = List.copyOf(parts);
+            updateContent();
         }
 
         @Override
         public @Nullable Instant getTime() {
-            return myVaadinItem.getTime();
+            return myTime;
         }
 
         @RequiredUIAccess
         @Override
         public void setTime(@Nullable Instant time) {
-            myVaadinItem.setTime(time);
+            myTime = time;
+            String formatted = MessageListPresentation.formatTime(time);
+            if (formatted == null) {
+                myMessage.removeProperty("time");
+            }
+            else {
+                myMessage.setProperty("time", formatted);
+            }
         }
 
         @Override
@@ -109,13 +204,24 @@ public class WebMessageListImpl extends VaadinComponentDelegate<WebMessageListIm
         @Override
         public void setAuthorImage(@Nullable Image image) {
             myAuthorImage = image;
-            myVaadinItem.setUserImage(image == null ? null : WebImageUrl.toURL(image));
+            String url = image == null ? null : WebImageUrl.toURL(image);
+            if (url == null) {
+                myMessage.removeProperty("userImg");
+            }
+            else {
+                myMessage.setProperty("userImg", url);
+            }
             updateColorIndex();
         }
 
         private void updateColorIndex() {
             String name = myAuthor.get();
-            myVaadinItem.setUserColorIndex(name.isEmpty() || myAuthorImage != null ? null : AvatarPresentation.colorIndexOf(name));
+            if (name.isEmpty() || myAuthorImage != null) {
+                myMessage.removeProperty("userColorIndex");
+            }
+            else {
+                myMessage.setProperty("userColorIndex", AvatarPresentation.colorIndexOf(name));
+            }
         }
 
         @Override
@@ -126,18 +232,25 @@ public class WebMessageListImpl extends VaadinComponentDelegate<WebMessageListIm
         @RequiredUIAccess
         @Override
         public void setStyle(MessageListItemStyle style) {
-            myVaadinItem.removeThemeNames(themeName(myStyle));
+            myMessage.getThemeList().remove(themeName(myStyle));
             myStyle = style;
-            myVaadinItem.addThemeNames(themeName(style));
+            myMessage.getThemeList().add(themeName(style));
         }
     }
 
     private final List<Item> myItems = new ArrayList<>();
+    private final com.vaadin.flow.component.messages.MessageList myMarkdownLoader = new com.vaadin.flow.component.messages.MessageList();
+    private boolean myMarkdown;
 
     public WebMessageListImpl() {
         Vaadin vaadin = toVaadinComponent();
+        vaadin.addClassName("consulo-message-list");
+        vaadin.getElement().setAttribute("role", "list");
         vaadin.getStyle().set("--consulo-message-error-foreground", WebColors.toStyleCssColor(ComponentColors.ERROR_FOREGROUND));
         vaadin.getStyle().set("--consulo-message-system-foreground", WebColors.toStyleCssColor(ComponentColors.INFO_FOREGROUND));
+
+        myMarkdownLoader.getStyle().set("display", "none");
+        vaadin.add(myMarkdownLoader);
     }
 
     @Override
@@ -149,37 +262,40 @@ public class WebMessageListImpl extends VaadinComponentDelegate<WebMessageListIm
         return "consulo-" + style.name().toLowerCase(Locale.ROOT);
     }
 
+    private void scrollToEndIfPinned() {
+        toVaadinComponent().getElement().executeJs(
+            "const list = this; requestAnimationFrame(() => {"
+                + " if (list.scrollHeight - list.clientHeight - list.scrollTop < list.clientHeight / 2) {"
+                + " list.scrollTop = list.scrollHeight; } })"
+        );
+    }
+
     @RequiredUIAccess
     @Override
     public MessageListItem add(LocalizeValue author, String text) {
         Item item = new Item(author, text);
         item.setStyle(MessageListItemStyle.OTHER);
         myItems.add(item);
-        toVaadinComponent().addItem(item.myVaadinItem);
+        toVaadinComponent().getElement().appendChild(item.myMessage);
+        toVaadinComponent().getElement().executeJs("const list = this; requestAnimationFrame(() => list.scrollTop = list.scrollHeight)");
         return item;
     }
 
     @RequiredUIAccess
     @Override
     public void remove(MessageListItem item) {
-        if (myItems.remove(item)) {
-            syncItems();
+        if (item instanceof Item own && myItems.remove(own)) {
+            own.myMessage.removeFromParent();
         }
     }
 
     @RequiredUIAccess
     @Override
     public void clear() {
-        myItems.clear();
-        syncItems();
-    }
-
-    private void syncItems() {
-        List<com.vaadin.flow.component.messages.MessageListItem> items = new ArrayList<>(myItems.size());
         for (Item item : myItems) {
-            items.add(item.myVaadinItem);
+            item.myMessage.removeFromParent();
         }
-        toVaadinComponent().setItems(items);
+        myItems.clear();
     }
 
     @Override
@@ -190,12 +306,19 @@ public class WebMessageListImpl extends VaadinComponentDelegate<WebMessageListIm
     @RequiredUIAccess
     @Override
     public void setMarkdown(boolean markdown) {
-        toVaadinComponent().setMarkdown(markdown);
+        if (myMarkdown == markdown) {
+            return;
+        }
+        myMarkdown = markdown;
+        myMarkdownLoader.setMarkdown(markdown);
+        for (Item item : myItems) {
+            item.updateContent();
+        }
     }
 
     @Override
     public boolean isMarkdown() {
-        return toVaadinComponent().isMarkdown();
+        return myMarkdown;
     }
 
     @RequiredUIAccess

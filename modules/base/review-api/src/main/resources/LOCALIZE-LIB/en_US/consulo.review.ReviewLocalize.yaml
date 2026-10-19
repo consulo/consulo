@@ -124,3 +124,25 @@ action.code.review.previous.comment.text:
     text: Previous Comment
 action.code.review.previous.comment.description:
     text: Go to previous visible comment
+review.suggested.change.title:
+    text: Suggested change
+review.suggested.change.apply.locally:
+    text: Apply Locally
+review.suggested.change.commit.action:
+    text: Commit…
+review.suggested.change.commit.button:
+    text: Commit
+review.suggested.change.commit.message.empty:
+    text: Specify commit message
+review.suggested.change.tooltip.outdated:
+    text: Outdated suggestions cannot be applied
+review.suggested.change.tooltip.resolved:
+    text: This suggestion has been resolved
+review.suggested.change.tooltip.different.branch:
+    text: Unable to apply the suggested change from a review in a different branch
+review.suggested.change.progress.apply:
+    text: Applying suggested change
+review.suggested.change.progress.commit:
+    text: Committing suggested change
+review.suggested.change.insert.action:
+    text: Insert Suggestion
