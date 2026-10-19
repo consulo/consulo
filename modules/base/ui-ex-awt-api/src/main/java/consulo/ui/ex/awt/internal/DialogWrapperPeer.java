@@ -17,6 +17,7 @@ package consulo.ui.ex.awt.internal;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
+import consulo.disposer.Disposable;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.concurrent.ActionCallback;
 
@@ -172,6 +173,8 @@ public abstract class DialogWrapperPeer {
   public abstract void pack();
 
   public abstract boolean isHeadless();
+
+  public abstract void setOnDeactivationAction(Disposable disposable, Runnable onDialogDeactivated);
 
   public Object[] getCurrentModalEntities() {
     return ArrayUtil.EMPTY_OBJECT_ARRAY;

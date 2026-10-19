@@ -370,22 +370,9 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
                 public void windowOpened(WindowEvent e) {
                     // schedule first search session
                     scheduleResultsUpdate();
-
-                    w.addWindowFocusListener(new WindowAdapter() {
-                        @Override
-                        public void windowLostFocus(WindowEvent e) {
-                            Window oppositeWindow = e.getOppositeWindow();
-                            if (oppositeWindow == w || oppositeWindow != null && oppositeWindow.getOwner() == w) {
-                                return;
-                            }
-                            if (canBeClosed() || !myIsPinned.get() && oppositeWindow != null) {
-                                //closeImmediately();
-                                myDialog.doCancelAction();
-                            }
-                        }
-                    });
                 }
             });
+            myDialog.setOnDeactivationAction(this::closeIfPossible);
 
             JRootPane rootPane = getRootPane();
             if (rootPane != null) {
@@ -406,6 +393,12 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
 
         CompletableFuture.allOf(myScopeSelectionToolbar.updateActionsAsync(), myFindInFilesTopMenu.updateActionsAsync())
             .whenCompleteAsync((unused, throwable) -> myDialog.showAsync(), uiAccess);
+    }
+
+    public void closeIfPossible() {
+        if (canBeClosed() && !myIsPinned.get()) {
+            myDialog.doCancelAction();
+        }
     }
 
     protected boolean canBeClosed() {

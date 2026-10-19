@@ -42,6 +42,7 @@ import consulo.logging.Logger;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.*;
@@ -66,8 +67,9 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.Callable;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Supplier;
 
 import static consulo.util.collection.ArrayUtil.toObjectArray;
 
@@ -296,8 +298,8 @@ public class DirDiffPanel implements Disposable, UiDataProvider {
         oldFilter = myFilter.getFilter();
         myFilterPanel.add(myFilter, BorderLayout.CENTER);
         myFilterLabel.setLabelFor(myFilter);
-        Callable<DiffElement> srcChooser = myModel.getSourceDir().getElementChooser(project);
-        Callable<DiffElement> trgChooser = myModel.getTargetDir().getElementChooser(project);
+        Supplier<CompletableFuture<DiffElement>> srcChooser = myModel.getSourceDir().getElementChooser(project);
+        Supplier<CompletableFuture<DiffElement>> trgChooser = myModel.getTargetDir().getElementChooser(project);
         mySourceDirField.setEditable(false);
         myTargetDirField.setEditable(false);
 
@@ -306,24 +308,21 @@ public class DirDiffPanel implements Disposable, UiDataProvider {
             mySourceDirField.addActionListener(new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    try {
-                        Callable<DiffElement> chooser = myModel.getSourceDir().getElementChooser(project);
-                        if (chooser == null) {
+                    Supplier<CompletableFuture<DiffElement>> chooser = myModel.getSourceDir().getElementChooser(project);
+                    if (chooser == null) {
+                        return;
+                    }
+                    UIAccess uiAccess = UIAccess.current();
+                    chooser.get().whenCompleteAsync((newElement, error) -> {
+                        if (newElement == null || StringUtil.equals(mySourceDirField.getText(), newElement.getPath())) {
                             return;
                         }
-                        DiffElement newElement = chooser.call();
-                        if (newElement != null) {
-                            if (!StringUtil.equals(mySourceDirField.getText(), newElement.getPath())) {
-                                myModel.setSourceDir(newElement);
-                                mySourceDirField.setText(newElement.getPath());
-                                String shortcutsText = KeymapUtil.getShortcutsText(RefreshDirDiffAction.REFRESH_SHORTCUT.getShortcuts());
-                                myModel.clearWithMessage("Source or Target has been changed." +
-                                    " Please run Refresh (" + shortcutsText + ")");
-                            }
-                        }
-                    }
-                    catch (Exception ignored) {
-                    }
+                        myModel.setSourceDir(newElement);
+                        mySourceDirField.setText(newElement.getPath());
+                        String shortcutsText = KeymapUtil.getShortcutsText(RefreshDirDiffAction.REFRESH_SHORTCUT.getShortcuts());
+                        myModel.clearWithMessage("Source or Target has been changed." +
+                            " Please run Refresh (" + shortcutsText + ")");
+                    }, uiAccess);
                 }
             });
         }
@@ -339,19 +338,17 @@ public class DirDiffPanel implements Disposable, UiDataProvider {
             myTargetDirField.addActionListener(new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    try {
-                        Callable<DiffElement> chooser = myModel.getTargetDir().getElementChooser(project);
-                        if (chooser == null) {
-                            return;
-                        }
-                        DiffElement newElement = chooser.call();
+                    Supplier<CompletableFuture<DiffElement>> chooser = myModel.getTargetDir().getElementChooser(project);
+                    if (chooser == null) {
+                        return;
+                    }
+                    UIAccess uiAccess = UIAccess.current();
+                    chooser.get().whenCompleteAsync((newElement, error) -> {
                         if (newElement != null) {
                             myModel.setTargetDir(newElement);
                             myTargetDirField.setText(newElement.getPath());
                         }
-                    }
-                    catch (Exception ignored) {
-                    }
+                    }, uiAccess);
                 }
             });
         }

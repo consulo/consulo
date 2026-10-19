@@ -153,6 +153,10 @@ public class GlassPaneDialogWrapperPeer extends DialogWrapperPeer {
     }
 
     @Override
+    public void setOnDeactivationAction(Disposable disposable, Runnable onDialogDeactivated) {
+    }
+
+    @Override
     public void setUndecorated(boolean undecorated) {
         LOG.assertTrue(undecorated, "Decorated dialogs are not supported!");
     }

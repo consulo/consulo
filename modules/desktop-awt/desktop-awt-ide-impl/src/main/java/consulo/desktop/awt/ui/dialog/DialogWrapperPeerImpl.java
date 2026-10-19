@@ -254,6 +254,11 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
     }
 
     @Override
+    public void setOnDeactivationAction(Disposable disposable, Runnable onDialogDeactivated) {
+        WindowDeactivationManager.addWindowDeactivationListener(getWindow(), myProject, disposable, onDialogDeactivated);
+    }
+
+    @Override
     public void setUndecorated(boolean undecorated) {
         myDialog.setUndecorated(undecorated);
     }

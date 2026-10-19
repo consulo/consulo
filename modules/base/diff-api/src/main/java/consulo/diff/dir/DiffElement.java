@@ -32,7 +32,8 @@ import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.concurrent.Callable;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Supplier;
 
 /**
  * @author Konstantin Bulenkov
@@ -110,7 +111,7 @@ public abstract class DiffElement<T> {
     }
   }
 
-  public @Nullable Callable<DiffElement<T>> getElementChooser(Project project) {
+  public @Nullable Supplier<CompletableFuture<DiffElement<T>>> getElementChooser(Project project) {
     return null;
   }
 

@@ -22,8 +22,8 @@ import consulo.application.progress.ProgressManager;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
+import consulo.fileChooser.FileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
-import consulo.fileChooser.IdeaFileChooser;
 import consulo.navigation.Navigatable;
 import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.project.Project;
@@ -40,7 +40,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Supplier;
 
 /**
  * @author Konstantin Bulenkov
@@ -124,12 +125,9 @@ public class VirtualFileDiffElement extends DiffElement<VirtualFile> {
   }
 
   @Override
-  public Callable<DiffElement<VirtualFile>> getElementChooser(Project project) {
-    return () -> {
-      FileChooserDescriptor descriptor = getChooserDescriptor();
-      VirtualFile[] result = IdeaFileChooser.chooseFiles(descriptor, project, getValue());
-      return result.length == 1 ? createElement(result[0]) : null;
-    };
+  public Supplier<CompletableFuture<DiffElement<VirtualFile>>> getElementChooser(Project project) {
+    return () -> FileChooser.chooseFiles(getChooserDescriptor(), project, getValue())
+      .<DiffElement<VirtualFile>>thenApply(result -> result.length == 1 ? createElement(result[0]) : null);
   }
 
   protected @Nullable VirtualFileDiffElement createElement(VirtualFile file) {

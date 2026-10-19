@@ -911,6 +911,10 @@ public abstract class DialogWrapper {
         myPeer.toFront();
     }
 
+    public void setOnDeactivationAction(Runnable action) {
+        myPeer.setOnDeactivationAction(myDisposable, action);
+    }
+
     /**
      * @see Window#toBack()
      */
