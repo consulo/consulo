@@ -15,11 +15,14 @@
  */
 package consulo.versionControlSystem.impl.internal.change.ui;
 
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareToggleAction;
+import consulo.ui.image.Image;
 import consulo.versionControlSystem.localize.VcsLocalize;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
@@ -33,11 +36,11 @@ public class GroupByDirectoryToggleAction extends DumbAwareToggleAction {
     private final Consumer<Boolean> mySetGrouped;
 
     public GroupByDirectoryToggleAction(BooleanSupplier grouped, Consumer<Boolean> setGrouped) {
-        super(
-            VcsLocalize.changesActionShowDirectoriesText(),
-            VcsLocalize.changesActionShowDirectoriesDescription(),
-            PlatformIconGroup.actionsGroupbypackage()
-        );
+        this(VcsLocalize.changesActionShowDirectoriesText(), PlatformIconGroup.actionsGroupbypackage(), grouped, setGrouped);
+    }
+
+    public GroupByDirectoryToggleAction(LocalizeValue text, @Nullable Image icon, BooleanSupplier grouped, Consumer<Boolean> setGrouped) {
+        super(text, VcsLocalize.changesActionShowDirectoriesDescription(), icon);
         myGrouped = grouped;
         mySetGrouped = setGrouped;
     }

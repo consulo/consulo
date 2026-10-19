@@ -73,7 +73,7 @@ public class ActionGroupExpander {
             List<AnAction> actions = new ArrayList<>(rawActions);
             actions.removeIf(filter.negate());
 
-            while (!actions.isEmpty() && actions.getFirst() instanceof AnSeparator) {
+            while (!actions.isEmpty() && actions.getFirst() instanceof AnSeparator separator && separator.getTextValue().isEmpty()) {
                 actions.removeFirst();
             }
 

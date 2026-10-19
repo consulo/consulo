@@ -20,6 +20,7 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.TextItemPresentation;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.ui.VcsChangesBrowser;
@@ -42,6 +43,7 @@ public class UnifiedVcsChangesBrowserBuilder implements VcsChangesBrowserBuilder
     private boolean myWithRollback;
     private @Nullable BiConsumer<Change, TextItemPresentation> myChangeDecorator;
     private @Nullable Consumer<Change> myOpenHandler;
+    private @Nullable ActionGroup myViewOptions;
 
     public UnifiedVcsChangesBrowserBuilder(Project project) {
         myProject = project;
@@ -56,6 +58,12 @@ public class UnifiedVcsChangesBrowserBuilder implements VcsChangesBrowserBuilder
     @Override
     public VcsChangesBrowserBuilder toolbarAction(AnAction action) {
         myToolbarActions.add(action);
+        return this;
+    }
+
+    @Override
+    public VcsChangesBrowserBuilder viewOptions(ActionGroup group) {
+        myViewOptions = group;
         return this;
     }
 
@@ -83,6 +91,7 @@ public class UnifiedVcsChangesBrowserBuilder implements VcsChangesBrowserBuilder
         return new UnifiedVcsChangesBrowser(myProject,
             myEmptyText,
             List.copyOf(myToolbarActions),
+            myViewOptions,
             myWithRollback,
             myChangeDecorator,
             myOpenHandler,

@@ -206,6 +206,10 @@ graph.sort.standard.description:
     text: In case of merge, show incoming commits first, directly below merge commit
 graph.sort.standard.name:
     text: Topologically
+group.changes.browser.presentation.settings.description:
+    text: Configure presentation of the changed files and commit details
+group.changes.browser.presentation.settings.text:
+    text: View Options
 group.context.menu.text:
     text: VCS Log Context Menu
 group.graph.options.description:
@@ -218,6 +222,8 @@ group.highlight.text:
     text: Highlight Actions
 group.keymap.text:
     text: Log
+group.layout.configuration.separator:
+    text: Layout
 group.presentation.settings.description:
     text: Configure presentation of the Log
 group.presentation.settings.text:

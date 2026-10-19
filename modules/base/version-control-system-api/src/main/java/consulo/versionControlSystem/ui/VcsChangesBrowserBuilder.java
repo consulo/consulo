@@ -19,6 +19,7 @@ import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.ui.TextItemPresentation;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.versionControlSystem.change.Change;
 
@@ -33,6 +34,12 @@ public interface VcsChangesBrowserBuilder {
     VcsChangesBrowserBuilder emptyText(LocalizeValue text);
 
     VcsChangesBrowserBuilder toolbarAction(AnAction action);
+
+    /**
+     * Replaces the grouping button with a view options popup, presented as the given group, that lists the grouping toggle
+     * followed by the group's actions.
+     */
+    VcsChangesBrowserBuilder viewOptions(ActionGroup group);
 
     /**
      * Adds the rollback action; rolled back changes leave the list.

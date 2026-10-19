@@ -28,6 +28,7 @@ import consulo.ui.TextItemPresentation;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.TreeExpander;
+import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.ActionToolbar;
@@ -46,6 +47,7 @@ import consulo.versionControlSystem.change.ChangeListListener;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.impl.internal.action.ShowDiffAction;
 import consulo.versionControlSystem.impl.internal.change.action.RollbackDialogAction;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.ui.VcsChangesBrowser;
 import org.jspecify.annotations.Nullable;
 
@@ -71,16 +73,19 @@ public class UnifiedVcsChangesBrowser implements VcsChangesBrowser {
     private List<Change> myChanges = List.of();
     private boolean myShowFlatten = true;
     private final AnAction myDiffAction;
+    private final @Nullable ActionGroup myViewOptions;
 
     @RequiredUIAccess
     public UnifiedVcsChangesBrowser(Project project,
                                     LocalizeValue emptyText,
                                     List<AnAction> toolbarActions,
+                                    @Nullable ActionGroup viewOptions,
                                     boolean withRollback,
                                     @Nullable BiConsumer<Change, TextItemPresentation> changeDecorator,
                                     @Nullable Consumer<Change> openHandler,
                                     Disposable parentDisposable) {
         myProject = project;
+        myViewOptions = viewOptions;
         AnAction showDiffAction = ActionManager.getInstance().getAction(SHOW_DIFF_ACTION) instanceof AnAction showDiff ? showDiff : new ShowDiffAction();
         myDiffAction = openHandler == null ? showDiffAction : createOpenAction(showDiffAction, openHandler);
         myTree = new UnifiedChangesTree(project, false, parentDisposable);
@@ -167,7 +172,18 @@ public class UnifiedVcsChangesBrowser implements VcsChangesBrowser {
         CommonActionsManager commonActionsManager = CommonActionsManager.getInstance();
         group.add(commonActionsManager.createExpandAllAction(expander));
         group.add(commonActionsManager.createCollapseAllAction(expander));
-        group.add(new GroupByDirectoryToggleAction(() -> !myShowFlatten, this::setGroupedByDirectory));
+        if (myViewOptions == null) {
+            group.add(new GroupByDirectoryToggleAction(() -> !myShowFlatten, this::setGroupedByDirectory));
+        }
+        else {
+            AnAction groupBy = new GroupByDirectoryToggleAction(
+                VcsLocalize.changesActionGroupByDirectoryText(),
+                null,
+                () -> !myShowFlatten,
+                this::setGroupedByDirectory
+            );
+            group.add(new ChangesBrowserViewOptionsAction(myViewOptions, groupBy));
+        }
         if (!toolbarActions.isEmpty()) {
             group.addSeparator();
             for (AnAction action : toolbarActions) {

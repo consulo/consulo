@@ -15,7 +15,7 @@
  */
 package consulo.versionControlSystem.log.impl.internal.ui.action;
 
-import consulo.annotation.component.ActionImpl;import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.annotation.component.ActionImpl;
 import consulo.versionControlSystem.log.impl.internal.data.MainVcsLogUiProperties;
 import consulo.versionControlSystem.log.impl.internal.data.VcsLogUiProperties;
 import consulo.versionControlSystem.log.internal.VcsLogActionPlaces;
@@ -26,8 +26,7 @@ public class ShowDetailsAction extends BooleanPropertyToggleAction {
     public ShowDetailsAction() {
         super(
             VersionControlSystemLogLocalize.actionShowDetailsText(),
-            VersionControlSystemLogLocalize.actionShowDetailsDescription(),
-            PlatformIconGroup.actionsPreview()
+            VersionControlSystemLogLocalize.actionShowDetailsDescription()
         );
     }
 

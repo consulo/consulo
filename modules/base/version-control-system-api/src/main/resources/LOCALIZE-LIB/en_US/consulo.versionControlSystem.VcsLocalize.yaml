@@ -325,6 +325,10 @@ changelist.details.committed.format:
     text: Committed by {0} {1}
 changelist.details.title:
     text: Changelist Details
+changes.action.group.by.directory.text:
+    text: Directory
+changes.action.group.by.separator:
+    text: Group By
 changes.action.rollback.custom.title:
     text: '{0} Changes'
 changes.action.rollback.description:

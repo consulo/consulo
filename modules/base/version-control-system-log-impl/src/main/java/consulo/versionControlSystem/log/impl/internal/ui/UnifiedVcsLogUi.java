@@ -91,6 +91,7 @@ import consulo.versionControlSystem.log.impl.internal.data.MainVcsLogUiPropertie
 import consulo.versionControlSystem.log.impl.internal.data.VcsLogDataImpl;
 import consulo.versionControlSystem.log.impl.internal.data.VcsLogFilterer;
 import consulo.versionControlSystem.log.impl.internal.graph.DefaultColorGenerator;
+import consulo.versionControlSystem.log.impl.internal.ui.action.ChangesBrowserPresentationSettingsGroup;
 import consulo.versionControlSystem.log.impl.internal.ui.action.GraphOptionsChooserAction;
 import consulo.versionControlSystem.log.impl.internal.ui.action.RightCornerToolbarGroup;
 import consulo.versionControlSystem.log.impl.internal.ui.filter.FilterPopup;
@@ -146,7 +147,9 @@ public class UnifiedVcsLogUi extends AbstractVcsLogUi {
     private @Nullable VcsLogManager myManager;
     private @Nullable Object mySelectionRequest;
     private @Nullable TextBox myTextFilter;
-    private @Nullable Component myDetailsArea;
+    private final DockLayout myRightArea;
+    private final TwoComponentSplitLayout myDetailsSplitter;
+    private final Component myDetailsScroll;
     private int myHoveredRow = -1;
     private @Nullable PrintElement myHoveredElement;
 
@@ -197,12 +200,12 @@ public class UnifiedVcsLogUi extends AbstractVcsLogUi {
         myChangesBrowser = project.getApplication().getInstance(VcsChangesDialogFactory.class)
             .changesBrowser(project)
             .emptyText(VersionControlSystemLogLocalize.textNoCommitsSelected())
-            .toolbarAction(ActionManager.getInstance().getAction(VcsLogActionPlaces.VCS_LOG_SHOW_DETAILS_ACTION))
+            .viewOptions(ActionManager.getInstance().getAction(ChangesBrowserPresentationSettingsGroup.class))
             .build(this);
 
-        TwoComponentSplitLayout detailsSplitter = TwoComponentSplitLayout.create(SplitLayoutPosition.VERTICAL).withProportion(70);
-        detailsSplitter.setFirstComponent(myChangesBrowser.getComponent());
-        detailsSplitter.setSecondComponent(ScrollableLayout.create(detailsContent));
+        myDetailsSplitter = TwoComponentSplitLayout.create(SplitLayoutPosition.VERTICAL).withProportion(70);
+        myDetailsScroll = ScrollableLayout.create(detailsContent);
+        myRightArea = DockLayout.create(Space.NONE);
 
         DockLayout tableArea = DockLayout.create();
         tableArea.top(createToolbar());
@@ -210,9 +213,8 @@ public class UnifiedVcsLogUi extends AbstractVcsLogUi {
 
         TwoComponentSplitLayout splitter = TwoComponentSplitLayout.create(SplitLayoutPosition.HORIZONTAL).withProportion(70);
         splitter.setFirstComponent(tableArea);
-        splitter.setSecondComponent(detailsSplitter);
-        myDetailsArea = detailsSplitter;
-        detailsSplitter.setVisible(myUiProperties.get(MainVcsLogUiProperties.SHOW_DETAILS));
+        splitter.setSecondComponent(myRightArea);
+        applyShowDetails();
 
         myRoot = DockLayout.create(Space.NONE);
         VcsLogSidePanelProvider sidePanelProvider = project.getExtensionPoint(VcsLogSidePanelProvider.class)
@@ -669,9 +671,21 @@ public class UnifiedVcsLogUi extends AbstractVcsLogUi {
     @RequiredUIAccess
     @Override
     protected void onShowDetailsChanged() {
-        Component detailsArea = myDetailsArea;
-        if (detailsArea != null) {
-            detailsArea.setVisible(myUiProperties.get(MainVcsLogUiProperties.SHOW_DETAILS));
+        applyShowDetails();
+    }
+
+    @RequiredUIAccess
+    private void applyShowDetails() {
+        Component changes = myChangesBrowser.getComponent();
+        if (myUiProperties.get(MainVcsLogUiProperties.SHOW_DETAILS)) {
+            myRightArea.center(myDetailsSplitter);
+            myDetailsSplitter.setFirstComponent(changes);
+            myDetailsSplitter.setSecondComponent(myDetailsScroll);
+        }
+        else {
+            myDetailsSplitter.setFirstComponent(null);
+            myDetailsSplitter.setSecondComponent(null);
+            myRightArea.center(changes);
         }
     }
 
