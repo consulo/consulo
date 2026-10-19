@@ -113,7 +113,8 @@ public class WebMessageInputImpl extends VaadinComponentDelegate<WebMessageInput
         }
         Element element = TargetVaadin.to(suffix).getElement();
         toVaadinComponent().getElement().executeJs(
-            "const area = this.querySelector('vaadin-text-area'); if (area && $0) { $0.setAttribute('slot', 'suffix'); area.appendChild($0); }",
+            "const area = this.querySelector('vaadin-text-area'); if (area && $0) { $0.setAttribute('slot', 'suffix');"
+                + " $0.style.width = 'auto'; $0.style.flex = 'none'; area.appendChild($0); }",
             element
         );
     }

@@ -18,10 +18,12 @@
     white-space: pre-wrap;
 }
 
-/* a component between the text parts is as wide as the text */
+/* a component between the text parts is as wide as the text, and does not inherit the pre-wrap the message keeps its
+   text lines with - its own template whitespace would turn into blank lines */
 .consulo-message-list vaadin-message > :not([slot="avatar"], span, vaadin-markdown) {
     width: 100%;
     box-sizing: border-box;
+    white-space: normal;
 }
 
 .consulo-message-list vaadin-message > :not([slot="avatar"]) + :not([slot="avatar"]) {

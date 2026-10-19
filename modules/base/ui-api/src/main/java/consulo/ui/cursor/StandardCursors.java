@@ -27,5 +27,9 @@ public enum StandardCursors implements Cursor {
     CROSSHAIR,
     TEXT,
     WAIT,
-    HAND
+    HAND,
+    /**
+     * Something is dragged up or down - an edge which resizes vertically.
+     */
+    VERTICAL_RESIZE
 }

@@ -317,6 +317,8 @@ public class DesktopAWTTargetAWTImpl implements TargetAWTFacade {
                     return Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR);
                 case HAND:
                     return Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
+                case VERTICAL_RESIZE:
+                    return Cursor.getPredefinedCursor(Cursor.N_RESIZE_CURSOR);
             }
         }
         throw new UnsupportedOperationException(cursor.toString());
@@ -339,6 +341,9 @@ public class DesktopAWTTargetAWTImpl implements TargetAWTFacade {
                 return StandardCursors.WAIT;
             case Cursor.HAND_CURSOR:
                 return StandardCursors.HAND;
+            case Cursor.N_RESIZE_CURSOR:
+            case Cursor.S_RESIZE_CURSOR:
+                return StandardCursors.VERTICAL_RESIZE;
 
         }
         throw new UnsupportedOperationException(cursor.toString());
