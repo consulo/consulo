@@ -88,9 +88,10 @@ public class CreatePatchFromChangesAction extends LegacyDumbAwareAction {
     public static void createPatch(@Nullable Project project, String commitMessage, List<Change> changeCollection) {
         Project targetProject = project == null ? ProjectManager.getInstance().getDefaultProject() : project;
         CreatePatchCommitExecutor executor = new CreatePatchCommitExecutor(targetProject);
-        CommitSession commitSession = executor.createCommitSession();
+        CommitContext commitContext = new CommitContext();
+        CommitSession commitSession = executor.createCommitSession(commitContext);
         if (commitSession instanceof CommitSessionContextAware commitSessionContextAware) {
-            commitSessionContextAware.setContext(new CommitContext());
+            commitSessionContextAware.setContext(commitContext);
         }
         UIAccess uiAccess = UIAccess.current();
         SessionDialogDescriptor.configureCommitSession(

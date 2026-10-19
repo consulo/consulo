@@ -50,7 +50,7 @@ public class ShelveChangesCommitExecutor extends LocalCommitExecutor {
 
     @Override
     
-    public CommitSession createCommitSession() {
+    public CommitSession createCommitSession(CommitContext commitContext) {
         return new ShelveChangesCommitSession();
     }
 

@@ -1416,7 +1416,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
             new ArrayList<>(),
             false,
             synchronously,
-            (v) -> null,
+            new CommitContext(),
             null
         ).doCommit();
     }

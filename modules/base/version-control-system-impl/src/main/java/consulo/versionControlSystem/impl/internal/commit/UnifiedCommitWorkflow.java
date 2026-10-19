@@ -434,11 +434,11 @@ public class UnifiedCommitWorkflow {
             myHandlers,
             allOfDefaultChangeListChangesIncluded,
             false,
-            myAdditionalData,
+            myCommitContext,
             new CommitResultHandler() {
                 @Override
                 public void onSuccess(String commitMessage) {
-                    myExecuting = false;
+                    endExecution();
                     if (resultHandler != null) {
                         resultHandler.onSuccess(commitMessage);
                     }
@@ -449,7 +449,7 @@ public class UnifiedCommitWorkflow {
 
                 @Override
                 public void onFailure() {
-                    myExecuting = false;
+                    endExecution();
                     if (resultHandler != null) {
                         resultHandler.onFailure();
                     }
@@ -476,7 +476,7 @@ public class UnifiedCommitWorkflow {
                 return Boolean.TRUE;
             })))
             .whenComplete((result, error) -> {
-                myExecuting = false;
+                endExecution();
                 if (error == null) {
                     for (CheckinHandler handler : myHandlers) {
                         handler.checkinSuccessful();
@@ -495,6 +495,11 @@ public class UnifiedCommitWorkflow {
                     }
                 }
             });
+    }
+
+    private void endExecution() {
+        myExecuting = false;
+        myCommitContext.cleanExecutorProperties();
     }
 
     public void moveToFailedList(LocalChangeList changeList, String commitMessage, List<Change> changes) {

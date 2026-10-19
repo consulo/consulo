@@ -24,8 +24,7 @@ public interface CommitExecutor {
     
     LocalizeValue getActionText();
 
-    
-    CommitSession createCommitSession();
+    CommitSession createCommitSession(CommitContext commitContext);
 
     /**
      * Whether pre-commit checks {@link consulo.versionControlSystem.checkin.CheckinHandler} and {@link consulo.versionControlSystem.checkin.CommitCheck}

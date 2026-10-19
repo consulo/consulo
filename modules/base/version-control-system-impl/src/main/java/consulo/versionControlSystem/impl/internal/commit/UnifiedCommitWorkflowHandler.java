@@ -26,6 +26,7 @@ import consulo.versionControlSystem.VcsConfiguration;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangeListManager;
+import consulo.versionControlSystem.change.CommitContext;
 import consulo.versionControlSystem.change.CommitExecutor;
 import consulo.versionControlSystem.change.CommitResultHandler;
 import consulo.versionControlSystem.change.CommitSession;
@@ -198,9 +199,11 @@ public class UnifiedCommitWorkflowHandler {
                                               LocalChangeList changeList,
                                               UnifiedCommitInfo commitInfo,
                                               List<CommitCheck> postponedChecks) {
-        CommitSession session = executor == null ? CommitSession.VCS_COMMIT : executor.createCommitSession();
+        CommitContext commitContext = myWorkflow.getCommitContext();
+        commitContext.cleanExecutorProperties();
+        CommitSession session = executor == null ? CommitSession.VCS_COMMIT : executor.createCommitSession(commitContext);
         if (session instanceof CommitSessionContextAware contextAware) {
-            contextAware.setContext(myWorkflow.getCommitContext());
+            contextAware.setContext(commitContext);
         }
 
         List<Change> changes = commitInfo.getCommittedChanges();

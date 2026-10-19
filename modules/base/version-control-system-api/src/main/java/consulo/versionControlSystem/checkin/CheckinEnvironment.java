@@ -23,14 +23,15 @@ import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.VcsProviderMarker;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangeList;
+import consulo.versionControlSystem.change.CommitContext;
 import consulo.versionControlSystem.ui.RefreshableOnComponent;
 import consulo.virtualFileSystem.VirtualFile;
 
 import org.jspecify.annotations.Nullable;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Function;
 
 /**
  * Interface for performing VCS checkin / commit / submit operations.
@@ -47,14 +48,11 @@ public interface CheckinEnvironment extends VcsProviderMarker {
 
     LocalizeValue getCheckinOperationName();
 
-    @Nullable List<VcsException> commit(List<Change> changes, String preparedComment);
+    default @Nullable List<VcsException> commit(List<Change> changes, String preparedComment) {
+        return commit(changes, preparedComment, new CommitContext(), new HashSet<>());
+    }
 
-    @Nullable List<VcsException> commit(
-        List<Change> changes,
-        String preparedComment,
-        Function<Object, Object> parametersHolder,
-        Set<String> feedback
-    );
+    @Nullable List<VcsException> commit(List<Change> changes, String commitMessage, CommitContext commitContext, Set<String> feedback);
 
     @Nullable List<VcsException> scheduleMissingFileForDeletion(List<FilePath> files);
 

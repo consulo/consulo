@@ -52,7 +52,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class CommitHelper {
@@ -71,7 +70,7 @@ public class CommitHelper {
     private final List<CheckinHandler> myHandlers;
     private final boolean myAllOfDefaultChangeListChangesIncluded;
     private final boolean myForceSyncCommit;
-    private final Function<Object, Object> myAdditionalData;
+    private final CommitContext myCommitContext;
     private final @Nullable CommitResultHandler myCustomResultHandler;
     private final List<Document> myCommittingDocuments = new ArrayList<>();
     private final VcsConfiguration myConfiguration;
@@ -87,7 +86,7 @@ public class CommitHelper {
         List<CheckinHandler> handlers,
         boolean allOfDefaultChangeListChangesIncluded,
         boolean synchronously,
-        Function<Object, Object> additionalDataHolder,
+        CommitContext commitContext,
         @Nullable CommitResultHandler customResultHandler
     ) {
         myProject = project;
@@ -98,7 +97,7 @@ public class CommitHelper {
         myHandlers = handlers;
         myAllOfDefaultChangeListChangesIncluded = allOfDefaultChangeListChangesIncluded;
         myForceSyncCommit = synchronously;
-        myAdditionalData = additionalDataHolder;
+        myCommitContext = commitContext;
         myCustomResultHandler = customResultHandler;
         myConfiguration = VcsConfiguration.getInstance(myProject);
         myDirtyScopeManager = VcsDirtyScopeManager.getInstance(myProject);
@@ -114,7 +113,7 @@ public class CommitHelper {
         List<CheckinHandler> handlers,
         boolean allOfDefaultChangeListChangesIncluded,
         boolean synchronously,
-        Function<Object, Object> additionalDataHolder,
+        CommitContext commitContext,
         @Nullable CommitResultHandler customResultHandler
     ) {
         this(
@@ -126,7 +125,7 @@ public class CommitHelper {
             handlers,
             allOfDefaultChangeListChangesIncluded,
             synchronously,
-            additionalDataHolder,
+            commitContext,
             customResultHandler
         );
     }
@@ -323,7 +322,7 @@ public class CommitHelper {
                     Collection<FilePath> paths = ChangesUtil.getPaths(items);
                     myPathsToRefresh.addAll(paths);
 
-                    List<VcsException> exceptions = environment.commit(items, myCommitMessage, myAdditionalData, myFeedback);
+                    List<VcsException> exceptions = environment.commit(items, myCommitMessage, myCommitContext, myFeedback);
                     if (exceptions != null && exceptions.size() > 0) {
                         myVcsExceptions.addAll(exceptions);
                         myChangesFailedToCommit.addAll(items);
@@ -444,7 +443,7 @@ public class CommitHelper {
                 if (environment.keepChangeListAfterCommit(myChangeList)) {
                     myKeepChangeListAfterCommit = true;
                 }
-                List<VcsException> exceptions = environment.commit(items, myCommitMessage, myAdditionalData, myFeedback);
+                List<VcsException> exceptions = environment.commit(items, myCommitMessage, myCommitContext, myFeedback);
                 if (exceptions != null && exceptions.size() > 0) {
                     myVcsExceptions.addAll(exceptions);
                     myChangesFailedToCommit.addAll(items);

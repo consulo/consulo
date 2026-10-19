@@ -77,7 +77,7 @@ public class CreatePatchCommitExecutor extends LocalCommitExecutor {
     }
 
     @Override
-    public CommitSession createCommitSession() {
+    public CommitSession createCommitSession(CommitContext commitContext) {
         return new CreatePatchCommitSession(myProject);
     }
 
