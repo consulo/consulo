@@ -16,7 +16,6 @@
 package consulo.versionControlSystem.impl.internal.change.ui;
 
 import consulo.application.HelpManager;
-import consulo.application.util.UserHomeFileUtil;
 import consulo.dataContext.DataSink;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -34,7 +33,6 @@ import consulo.ui.TreeModel;
 import consulo.ui.TreeNode;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.image.Image;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.change.Change;
@@ -675,43 +673,35 @@ public final class UnifiedChangesTree {
             }
             case ChangeTreeItem change -> {
                 FilePath path = ChangesUtil.getFilePath(change.change());
-                renderFile(snapshot, presentation, path, change.change().getFileStatus(), path.getFileType().getIcon());
+                renderFile(snapshot, item, presentation, path, change.change().getFileStatus());
                 BiConsumer<Change, TextItemPresentation> decorator = myChangeDecorator;
                 if (decorator != null) {
                     decorator.accept(change.change(), presentation);
                 }
             }
             case FileTreeItem file -> {
-                FilePath path = VcsUtil.getFilePath(file.file());
-                Image icon = file.file().isDirectory() ? PlatformIconGroup.nodesTreeclosed() : file.file().getFileType().getIcon();
-                renderFile(snapshot, presentation, path, file.kind().getFileStatus(), icon);
+                renderFile(snapshot, item, presentation, VcsUtil.getFilePath(file.file()), file.kind().getFileStatus());
             }
             case PathTreeItem pathItem -> {
-                FilePath path = pathItem.path();
-                Image icon = path.isDirectory() ? PlatformIconGroup.nodesTreeclosed() : path.getFileType().getIcon();
-                renderFile(snapshot, presentation, path, FileStatus.NOT_CHANGED, icon);
+                renderFile(snapshot, item, presentation, pathItem.path(), FileStatus.NOT_CHANGED);
             }
             case MissingFileTreeItem missing -> {
-                FilePath path = missing.change().getPath();
-                renderFile(snapshot, presentation, path, FileStatus.DELETED_FROM_FS, path.getFileType().getIcon());
+                renderFile(snapshot, item, presentation, missing.change().getPath(), FileStatus.DELETED_FROM_FS);
             }
         }
     }
 
     private static void renderFile(ChangesTreeSnapshot snapshot,
+                                   ChangesTreeItem item,
                                    TextItemPresentation presentation,
                                    FilePath path,
-                                   FileStatus status,
-                                   @Nullable Image icon) {
-        presentation.withIcon(icon);
+                                   FileStatus status) {
+        presentation.withIcon(snapshot.getIcon(item));
         presentation.append(LocalizeValue.of(path.getName()), new TextAttribute(TextAttribute.STYLE_PLAIN, status.getColor()));
 
-        if (snapshot.isFlatten()) {
-            FilePath parent = path.getParentPath();
-            if (parent != null) {
-                String location = Objects.requireNonNullElse(UserHomeFileUtil.getLocationRelativeToUserHome(parent.getPath()), parent.getPath());
-                presentation.append(LocalizeValue.of(THIN_SPACE + location), TextAttribute.GRAYED);
-            }
+        String location = snapshot.getLocation(item);
+        if (location != null) {
+            presentation.append(LocalizeValue.of(THIN_SPACE + location), TextAttribute.GRAYED);
         }
     }
 

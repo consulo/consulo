@@ -15,6 +15,7 @@
  */
 package consulo.versionControlSystem.impl.internal.change.ui;
 
+import consulo.ui.image.Image;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -26,21 +27,35 @@ import java.util.Map;
  * @since 2026-10-17
  */
 public final class ChangesTreeSnapshot {
-    public static final ChangesTreeSnapshot EMPTY = new ChangesTreeSnapshot(List.of(), Map.of(), Map.of(), false);
+    public static final ChangesTreeSnapshot EMPTY = new ChangesTreeSnapshot(List.of(), Map.of(), Map.of(), Map.of(), Map.of(), false);
 
     private final List<ChangesTreeItem> myRoots;
     private final Map<ChangesTreeItem, List<ChangesTreeItem>> myChildren;
     private final Map<ChangesTreeItem, Integer> myFileCounts;
+    private final Map<ChangesTreeItem, String> myLocations;
+    private final Map<ChangesTreeItem, Image> myIcons;
     private final boolean myFlatten;
 
     ChangesTreeSnapshot(List<ChangesTreeItem> roots,
                         Map<ChangesTreeItem, List<ChangesTreeItem>> children,
                         Map<ChangesTreeItem, Integer> fileCounts,
+                        Map<ChangesTreeItem, String> locations,
+                        Map<ChangesTreeItem, Image> icons,
                         boolean flatten) {
         myRoots = roots;
         myChildren = children;
         myFileCounts = fileCounts;
+        myLocations = locations;
+        myIcons = icons;
         myFlatten = flatten;
+    }
+
+    public @Nullable Image getIcon(ChangesTreeItem item) {
+        return myIcons.get(item);
+    }
+
+    public @Nullable String getLocation(ChangesTreeItem item) {
+        return myLocations.get(item);
     }
 
     public List<ChangesTreeItem> getChildren(@Nullable ChangesTreeItem parent) {

@@ -18,7 +18,10 @@ package consulo.versionControlSystem.impl.internal.change.ui;
 import consulo.application.util.UserHomeFileUtil;
 import consulo.module.Module;
 import consulo.module.content.ProjectFileIndex;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
+import consulo.ui.image.Image;
+import consulo.util.io.FileUtil;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangeList;
@@ -72,6 +75,8 @@ public final class ChangesTreeSnapshotBuilder {
     private final List<ChangesTreeItem> myRoots = new ArrayList<>();
     private final Map<ChangesTreeItem, List<ChangesTreeItem>> myChildren = new HashMap<>();
     private final Map<ChangesTreeItem, Integer> myFileCounts = new HashMap<>();
+    private final Map<ChangesTreeItem, String> myLocations = new HashMap<>();
+    private final Map<ChangesTreeItem, Image> myIcons = new HashMap<>();
     private final Map<String, Optional<ModuleRoot>> myModuleRoots = new HashMap<>();
 
     public ChangesTreeSnapshotBuilder(Project project, boolean flatten) {
@@ -84,7 +89,7 @@ public final class ChangesTreeSnapshotBuilder {
         for (ChangeList changeList : changeLists) {
             List<Leaf> leaves = new ArrayList<>();
             for (Change change : changeList.getChanges()) {
-                leaves.add(new Leaf(new ChangeTreeItem(change), ChangesUtil.getFilePath(change)));
+                leaves.add(leaf(new ChangeTreeItem(change), ChangesUtil.getFilePath(change)));
             }
             addScope(new ChangeListTreeItem(changeList), leaves, true);
         }
@@ -94,7 +99,7 @@ public final class ChangesTreeSnapshotBuilder {
     public ChangesTreeSnapshotBuilder files(ChangesTreeGroupKind kind, Collection<VirtualFile> files) {
         List<Leaf> leaves = new ArrayList<>();
         for (VirtualFile file : files) {
-            leaves.add(new Leaf(new FileTreeItem(kind, file), VcsUtil.getFilePath(file)));
+            leaves.add(leaf(new FileTreeItem(kind, file), VcsUtil.getFilePath(file)));
         }
         addScope(new FileGroupTreeItem(kind), leaves, false);
         return this;
@@ -103,7 +108,7 @@ public final class ChangesTreeSnapshotBuilder {
     public ChangesTreeSnapshotBuilder locallyDeleted(Collection<LocallyDeletedChange> changes) {
         List<Leaf> leaves = new ArrayList<>();
         for (LocallyDeletedChange change : changes) {
-            leaves.add(new Leaf(new MissingFileTreeItem(change), change.getPath()));
+            leaves.add(leaf(new MissingFileTreeItem(change), change.getPath()));
         }
         addScope(new FileGroupTreeItem(ChangesTreeGroupKind.LOCALLY_DELETED), leaves, false);
         return this;
@@ -112,7 +117,7 @@ public final class ChangesTreeSnapshotBuilder {
     public ChangesTreeSnapshotBuilder paths(Collection<FilePath> paths) {
         List<Leaf> leaves = new ArrayList<>();
         for (FilePath path : paths) {
-            leaves.add(new Leaf(new PathTreeItem(path), path));
+            leaves.add(leaf(new PathTreeItem(path), path));
         }
         addRootLeaves(leaves);
         return this;
@@ -121,7 +126,7 @@ public final class ChangesTreeSnapshotBuilder {
     public ChangesTreeSnapshotBuilder changes(Collection<Change> changes) {
         List<Leaf> leaves = new ArrayList<>();
         for (Change change : changes) {
-            leaves.add(new Leaf(new ChangeTreeItem(change), ChangesUtil.getFilePath(change)));
+            leaves.add(leaf(new ChangeTreeItem(change), ChangesUtil.getFilePath(change)));
         }
         addRootLeaves(leaves);
         return this;
@@ -132,6 +137,7 @@ public final class ChangesTreeSnapshotBuilder {
             List<Leaf> sorted = new ArrayList<>(leaves);
             sorted.sort(LEAF_ORDER);
             for (Leaf leaf : sorted) {
+                putLocation(leaf);
                 myRoots.add(leaf.item());
             }
             return;
@@ -141,7 +147,14 @@ public final class ChangesTreeSnapshotBuilder {
     }
 
     public ChangesTreeSnapshot build() {
-        return new ChangesTreeSnapshot(List.copyOf(myRoots), Map.copyOf(myChildren), Map.copyOf(myFileCounts), myFlatten);
+        return new ChangesTreeSnapshot(
+            List.copyOf(myRoots),
+            Map.copyOf(myChildren),
+            Map.copyOf(myFileCounts),
+            Map.copyOf(myLocations),
+            Map.copyOf(myIcons),
+            myFlatten
+        );
     }
 
     private void addScope(ChangesTreeItem scope, List<Leaf> leaves, boolean keepWhenEmpty) {
@@ -155,6 +168,7 @@ public final class ChangesTreeSnapshotBuilder {
         if (myFlatten) {
             List<Leaf> sorted = new ArrayList<>(leaves);
             sorted.sort(LEAF_ORDER);
+            sorted.forEach(this::putLocation);
             myChildren.put(scope, sorted.stream().map(Leaf::item).toList());
             return;
         }
@@ -244,7 +258,52 @@ public final class ChangesTreeSnapshotBuilder {
         return new ModuleRoot(module, contentRoot.getPath());
     }
 
-    private static String labelOf(String path) {
+    private Leaf leaf(ChangesTreeItem item, FilePath path) {
+        Image icon = iconOf(item, path);
+        if (icon != null) {
+            myIcons.put(item, icon);
+        }
+        return new Leaf(item, path);
+    }
+
+    private static @Nullable Image iconOf(ChangesTreeItem item, FilePath path) {
+        if (item instanceof FileTreeItem file) {
+            return file.file().isDirectory() ? PlatformIconGroup.nodesTreeclosed() : file.file().getFileType().getIcon();
+        }
+        if (item instanceof PathTreeItem && path.isDirectory()) {
+            return PlatformIconGroup.nodesTreeclosed();
+        }
+        return path.getFileType().getIcon();
+    }
+
+    private void putLocation(Leaf leaf) {
+        FilePath parent = leaf.path().getParentPath();
+        if (parent == null) {
+            return;
+        }
+        String location = presentablePath(parent.getPath());
+        if (!location.isEmpty()) {
+            myLocations.put(leaf.item(), location);
+        }
+    }
+
+    private String labelOf(String path) {
+        String presentable = presentablePath(path);
+        if (!presentable.isEmpty()) {
+            return presentable;
+        }
+        int index = path.lastIndexOf('/');
+        return index >= 0 ? path.substring(index + 1) : path;
+    }
+
+    private String presentablePath(String path) {
+        String basePath = myBasePath;
+        if (basePath != null && FileUtil.isAncestor(basePath, path, false)) {
+            if (path.length() == basePath.length()) {
+                return "";
+            }
+            return FileUtil.toSystemDependentName(path.substring(basePath.length() + 1));
+        }
         return Objects.requireNonNullElse(UserHomeFileUtil.getLocationRelativeToUserHome(path), path);
     }
 
@@ -309,7 +368,7 @@ public final class ChangesTreeSnapshotBuilder {
 
             String text = label.toString();
             if (text.startsWith("/")) {
-                text = labelOf(text);
+                text = labelOf(compacted.myPath);
             }
 
             DirectoryTreeItem item = new DirectoryTreeItem(scope, VcsUtil.getFilePath(compacted.myPath, true), text);
