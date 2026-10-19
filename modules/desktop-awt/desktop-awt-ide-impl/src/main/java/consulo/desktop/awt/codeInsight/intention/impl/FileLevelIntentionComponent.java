@@ -8,7 +8,7 @@ import consulo.language.editor.impl.internal.daemon.FileLevelHighlightComponentB
 import consulo.language.editor.intention.IntentionAction;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.ui.NotificationType;
+import consulo.project.ui.notification.NotificationType;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.ComponentContainer;
 import consulo.ui.ex.awt.LightColors;

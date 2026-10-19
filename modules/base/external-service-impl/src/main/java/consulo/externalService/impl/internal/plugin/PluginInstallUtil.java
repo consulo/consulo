@@ -210,7 +210,7 @@ public class PluginInstallUtil {
             : ExternalServiceLocalize.messageIdeaShutdownRequired(appName).get();
         message += "<br><a href=" + (restartCapable ? "\"restart\">Restart now" : "\"shutdown\">Shutdown") + "</a>";
         NotificationService.getInstance()
-            .newInfo(PlatformOrPluginsNotificationGroupContributor.ourPluginsLifecycleGroup)
+            .newSuccess(PlatformOrPluginsNotificationGroupContributor.ourPluginsLifecycleGroup)
             .title(LocalizeValue.localizeTODO(title))
             .content(LocalizeValue.localizeTODO(XmlStringUtil.wrapInHtml(message)))
             .hyperlinkListener((notification, event) -> {

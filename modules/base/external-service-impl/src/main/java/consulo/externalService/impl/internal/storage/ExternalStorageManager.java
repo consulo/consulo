@@ -248,7 +248,7 @@ public class ExternalStorageManager {
                     }
 
                     NotificationService.getInstance()
-                        .newInfo(ExternalStorageManager.GROUP)
+                        .newSuccess(ExternalStorageManager.GROUP)
                         .title(LocalizeValue.localizeTODO("External Storage"))
                         .content(LocalizeValue.localizeTODO("Local configuration refreshed"))
                         .notify(project);

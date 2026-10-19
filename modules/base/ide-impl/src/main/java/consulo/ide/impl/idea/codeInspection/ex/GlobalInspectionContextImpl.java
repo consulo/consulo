@@ -371,7 +371,7 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
             if (myView != null) {
                 if (!myView.update() && !getUIOptions().SHOW_ONLY_DIFF) {
                     NotificationService.getInstance()
-                        .newInfo(NOTIFICATION_GROUP)
+                        .newSuccess(NOTIFICATION_GROUP)
                         .content(InspectionLocalize.inspectionNoProblemsMessage())
                         .notify(getProject());
                     close(true);
@@ -1017,7 +1017,7 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
             UIUtil.invokeLaterIfNeeded(() -> {
                 if (commandName != null) {
                     NotificationService.getInstance()
-                        .newInfo(NOTIFICATION_GROUP)
+                        .newSuccess(NOTIFICATION_GROUP)
                         .content(InspectionLocalize.inspectionNoProblemsMessage())
                         .notify(getProject());
                 }

@@ -29,7 +29,6 @@ import consulo.fileEditor.internal.EditorNotificationBuilderFactory;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.Component;
-import consulo.ui.NotificationType;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.action.*;
@@ -162,7 +161,7 @@ public class AnnotateToggleAction extends AsyncToggleAction implements DumbAware
                 };
 
                 EditorNotificationBuilderEx builder = (EditorNotificationBuilderEx) factory.newBuilder();
-                builder.withType(NotificationType.ERROR);
+                builder.asError();
                 builder.withText(VcsLocalize.annotationWrongLineNumberNotificationText(vcs.getDisplayName()));
                 builder.withAction(LocalizeValue.localizeTODO("Display anyway"), event -> showAnnotation.run());
 

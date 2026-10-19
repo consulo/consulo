@@ -152,7 +152,7 @@ public class ITNReporter extends ErrorReportSubmitter {
 
                 NotificationType type = reportInfo.getStatus() == SubmittedReportInfo.SubmissionStatus.FAILED
                     ? NotificationType.ERROR
-                    : NotificationType.INFORMATION;
+                    : NotificationType.SUCCESS;
                 NotificationService.getInstance()
                     .newOfType(ReportMessages.GROUP, type)
                     .title(ExternalServiceLocalize.errorReportTitle())

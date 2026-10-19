@@ -309,6 +309,7 @@ public class NotificationToastServiceImpl implements NotificationToastService {
     private static ToastStyle styleOf(NotificationType type) {
         return switch (type) {
             case INFORMATION -> ToastStyle.INFO;
+            case SUCCESS -> ToastStyle.SUCCESS;
             case WARNING -> ToastStyle.WARNING;
             case ERROR -> ToastStyle.ERROR;
         };

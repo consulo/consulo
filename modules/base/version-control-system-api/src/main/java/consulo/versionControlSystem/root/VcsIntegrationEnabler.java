@@ -87,7 +87,7 @@ public abstract class VcsIntegrationEnabler<VcsT extends AbstractVcs> {
 
     protected void notifyAddedRoots(Collection<VirtualFile> roots) {
         NotificationService.getInstance()
-            .newInfo(VcsNotifier.NOTIFICATION_GROUP_ID)
+            .newSuccess(VcsNotifier.NOTIFICATION_GROUP_ID)
             .content(LocalizeValue.localizeTODO(String.format(
                 "Added %s %s: %s",
                 myVcs.getName(),

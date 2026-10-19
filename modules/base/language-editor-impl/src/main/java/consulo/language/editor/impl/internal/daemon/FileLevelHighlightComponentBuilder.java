@@ -34,8 +34,8 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.project.ui.notification.NotificationType;
 import consulo.ui.Component;
-import consulo.ui.NotificationType;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.details.InputDetails;
 import consulo.ui.ex.popup.JBPopupFactory;
@@ -137,7 +137,7 @@ public class FileLevelHighlightComponentBuilder {
             return NotificationType.WARNING;
         }
 
-        return NotificationType.INFO;
+        return NotificationType.INFORMATION;
     }
 
     public List<IntentionAction> getIntentionActions() {

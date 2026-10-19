@@ -25,7 +25,6 @@ import consulo.fileEditor.*;
 import consulo.ide.localize.IdeLocalize;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.ui.NotificationType;
 import consulo.util.io.FileAttributes;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
@@ -114,7 +113,7 @@ public class FileChangedNotificationProvider implements EditorNotificationProvid
 
     private EditorNotificationBuilder build(VirtualFile file, EditorNotificationBuilder builder) {
         builder.withText(IdeLocalize.fileChangedExternallyMessage());
-        builder.withType(NotificationType.WARNING);
+        builder.asWarning();
         builder.withAction(IdeLocalize.fileChangedExternallyReload(), (i) -> {
             if (!myProject.isDisposed()) {
                 file.refresh(false, false);

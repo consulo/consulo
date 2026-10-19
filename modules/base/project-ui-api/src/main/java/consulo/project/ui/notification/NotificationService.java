@@ -49,6 +49,10 @@ public interface NotificationService {
         return newOfType(group, NotificationType.INFORMATION);
     }
 
+    default Notification.Builder newSuccess(NotificationGroup group) {
+        return newOfType(group, NotificationType.SUCCESS);
+    }
+
     default Notification.Builder newOfType(NotificationGroup group, NotificationType type) {
         return new Notification.Builder(this, group, type);
     }

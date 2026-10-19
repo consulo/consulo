@@ -8,6 +8,7 @@
     <option name="EDITOR_FONT_SIZE" value="13"/>
     <option name="EDITOR_LIGATURES" value="true"/>
     <colors>
+        <option name="NOTIFICATION_SUCCESS_BACKGROUND" value="d4f2d4"/>
         <option name="NOTIFICATION_WARNING_BACKGROUND" value="ffffcc"/>
         <option name="NOTIFICATION_ERROR_BACKGROUND" value="ffcccc"/>
 

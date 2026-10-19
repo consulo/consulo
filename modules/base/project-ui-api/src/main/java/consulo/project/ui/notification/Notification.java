@@ -65,6 +65,7 @@ import java.util.function.Function;
  * @see NotificationService#newError(NotificationGroup)
  * @see NotificationService#newWarn(NotificationGroup)
  * @see NotificationService#newInfo(NotificationGroup)
+ * @see NotificationService#newSuccess(NotificationGroup)
  * @see NotificationService#newOfType(NotificationGroup, NotificationType)
  */
 public class Notification {

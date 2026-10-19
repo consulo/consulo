@@ -9,6 +9,7 @@
     <option name="EDITOR_LIGATURES" value="true"/>
 
     <colors>
+        <option name="NOTIFICATION_SUCCESS_BACKGROUND" value="3b5440"/>
         <option name="NOTIFICATION_WARNING_BACKGROUND" value="5c5c42"/>
         <option name="NOTIFICATION_ERROR_BACKGROUND" value="743A3A"/>
 

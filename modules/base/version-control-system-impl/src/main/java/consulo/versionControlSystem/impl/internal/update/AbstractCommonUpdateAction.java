@@ -466,7 +466,7 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
                     .content(LocalizeValue.localizeTODO(allFiles + " " + pluralize("file", allFiles) + " updated"));
             }
             else {
-                return notificationService.newInfo(STANDARD_NOTIFICATION)
+                return notificationService.newSuccess(STANDARD_NOTIFICATION)
                     .title(LocalizeValue.localizeTODO(allFiles + " Project " + pluralize("File", allFiles) + " Updated"))
                     .content(LocalizeValue.ofNullable(prepareScopeUpdatedText(tree)));
             }

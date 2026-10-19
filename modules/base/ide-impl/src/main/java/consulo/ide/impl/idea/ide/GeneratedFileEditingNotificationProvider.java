@@ -24,7 +24,6 @@ import consulo.fileEditor.FileEditor;
 import consulo.module.content.localize.ModuleContentLocalize;
 import consulo.project.Project;
 import consulo.project.content.GeneratedSourcesFilter;
-import consulo.ui.NotificationType;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
@@ -60,7 +59,7 @@ public class GeneratedFileEditingNotificationProvider implements EditorNotificat
         }
 
         EditorNotificationBuilder builder = builderFactory.get();
-        builder.withType(NotificationType.WARNING);
+        builder.asWarning();
         builder.withText(ModuleContentLocalize.linkLabelGeneratedSourceFiles());
         return builder;
     }

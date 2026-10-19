@@ -245,6 +245,9 @@ public class NotificationTestAction extends AnAction implements DumbAware {
             if ("info".equals(type)) {
                 myType = NotificationType.INFORMATION;
             }
+            else if ("success".equals(type)) {
+                myType = NotificationType.SUCCESS;
+            }
             else if ("error".equals(type)) {
                 myType = NotificationType.ERROR;
             }

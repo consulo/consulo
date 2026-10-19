@@ -179,6 +179,11 @@ public class GeneralColorsPage implements ColorSettingsPage, ConfigurableWeight 
             ColorDescriptor.Kind.BACKGROUND
         ),
         new ColorDescriptor(
+            ConfigurableLocalize.optionsGeneralColorDescriptorNotificationSuccessBackground(),
+            EditorColors.NOTIFICATION_SUCCESS_BACKGROUND,
+            ColorDescriptor.Kind.BACKGROUND
+        ),
+        new ColorDescriptor(
             ConfigurableLocalize.optionsGeneralColorDescriptorNotificationWarningBackground(),
             EditorColors.NOTIFICATION_WARNING_BACKGROUND,
             ColorDescriptor.Kind.BACKGROUND

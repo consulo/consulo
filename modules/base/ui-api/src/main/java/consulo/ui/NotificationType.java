@@ -15,10 +15,14 @@
  */
 package consulo.ui;
 
+import consulo.annotation.DeprecationInfo;
+
 /**
  * @author VISTALL
  * @since 2019-11-04
  */
+@Deprecated
+@DeprecationInfo("Use consulo.project.ui.notification.NotificationType")
 public enum NotificationType {
     INFO,
     WARNING,

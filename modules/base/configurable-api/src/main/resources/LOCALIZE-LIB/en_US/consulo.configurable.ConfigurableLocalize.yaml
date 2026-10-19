@@ -148,6 +148,8 @@ options.general.color.descriptor.notification.error.background:
     text: Editor//Notification//Error background
 options.general.color.descriptor.notification.information.background:
     text: Editor//Notification//Information background
+options.general.color.descriptor.notification.success.background:
+    text: Editor//Notification//Success background
 options.general.color.descriptor.notification.warning.background:
     text: Editor//Notification//Warning background
 options.general.color.descriptor.popups.documentation:

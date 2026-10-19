@@ -618,8 +618,10 @@ public class CompileDriverImpl implements CompileDriver {
                 warningCount = compileContext.getMessageCount(CompilerMessageCategory.WARNING);
                 if (!myProject.isDisposed()) {
                     LocalizeValue statusMessage = createStatusMessage(_status, warningCount, errorCount, duration);
-                    NotificationType messageType =
-                        errorCount > 0 ? NotificationType.ERROR : warningCount > 0 ? NotificationType.WARNING : NotificationType.INFORMATION;
+                    NotificationType messageType = errorCount > 0 ? NotificationType.ERROR
+                        : warningCount > 0 ? NotificationType.WARNING
+                        : _status == ExitStatus.SUCCESS ? NotificationType.SUCCESS
+                        : NotificationType.INFORMATION;
                     if (duration > ONE_MINUTE_MS) {
                         ToolWindowManager.getInstance(myProject)
                             .notifyByBalloon(BuildContentManager.TOOL_WINDOW_ID, messageType.toUI(), statusMessage.get());

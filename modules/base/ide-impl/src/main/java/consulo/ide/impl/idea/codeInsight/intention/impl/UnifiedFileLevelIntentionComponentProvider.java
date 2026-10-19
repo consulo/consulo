@@ -51,7 +51,12 @@ public class UnifiedFileLevelIntentionComponentProvider implements FileLevelHigh
     public @Nullable Disposable createComponent(FileEditor fileEditor, FileLevelHighlightComponentBuilder builder) {
         EditorNotificationBuilderEx notification = (EditorNotificationBuilderEx) myEditorNotificationBuilderFactory.newBuilder();
         notification.withText(builder.getDescription());
-        notification.withType(builder.getNotificationType());
+        switch (builder.getNotificationType()) {
+            case ERROR -> notification.asError();
+            case WARNING -> notification.asWarning();
+            case SUCCESS -> notification.asSuccess();
+            case INFORMATION -> notification.asInfo();
+        }
         GutterMark gutterMark = builder.getGutterMark();
         if (gutterMark != null) {
             notification.withIcon(gutterMark.getIcon());

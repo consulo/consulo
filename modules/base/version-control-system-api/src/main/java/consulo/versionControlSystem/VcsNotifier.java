@@ -149,29 +149,29 @@ public class VcsNotifier {
     }
 
     @Deprecated
-    @DeprecationInfo("Use NotificationGroup.newError/newWarning/newInfo()...notify()")
+    @DeprecationInfo("Use NotificationService.newSuccess()...notify()")
     
     public Notification notifySuccess(String message) {
-        return myNotificationService.newInfo(NOTIFICATION_GROUP_ID)
+        return myNotificationService.newSuccess(NOTIFICATION_GROUP_ID)
             .content(LocalizeValue.localizeTODO(message))
             .notifyAndGet(myProject);
     }
 
     @Deprecated
-    @DeprecationInfo("Use NotificationGroup.newError/newWarning/newInfo()...notify()")
+    @DeprecationInfo("Use NotificationService.newSuccess()...notify()")
     
     public Notification notifySuccess(String title, String message) {
-        return myNotificationService.newInfo(NOTIFICATION_GROUP_ID)
+        return myNotificationService.newSuccess(NOTIFICATION_GROUP_ID)
             .title(LocalizeValue.localizeTODO(title))
             .content(LocalizeValue.localizeTODO(message))
             .notifyAndGet(myProject);
     }
 
     @Deprecated
-    @DeprecationInfo("Use NotificationGroup.newError/newWarning/newInfo()...notify()")
+    @DeprecationInfo("Use NotificationService.newSuccess()...notify()")
     
     public Notification notifySuccess(String title, String message, @Nullable NotificationListener listener) {
-        return myNotificationService.newInfo(NOTIFICATION_GROUP_ID)
+        return myNotificationService.newSuccess(NOTIFICATION_GROUP_ID)
             .title(LocalizeValue.localizeTODO(title))
             .content(LocalizeValue.localizeTODO(message))
             .optionalHyperlinkListener(listener)

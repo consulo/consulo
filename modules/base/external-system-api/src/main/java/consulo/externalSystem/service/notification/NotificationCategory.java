@@ -61,6 +61,7 @@ public enum NotificationCategory {
   public static NotificationCategory convert(NotificationType notificationType) {
     switch (notificationType) {
       case INFORMATION:
+      case SUCCESS:
         return INFO;
       case WARNING:
         return WARNING;

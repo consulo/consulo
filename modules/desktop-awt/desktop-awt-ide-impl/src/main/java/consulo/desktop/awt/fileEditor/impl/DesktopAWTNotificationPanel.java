@@ -25,7 +25,6 @@ import consulo.ide.impl.idea.ui.EditorNotificationPanel;
 import consulo.language.editor.intention.IntentionActionWithOptions;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
-import consulo.ui.NotificationType;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.event.ComponentEvent;
@@ -87,20 +86,26 @@ public class DesktopAWTNotificationPanel extends EditorNotificationPanel impleme
 
     
     @Override
-    public EditorNotificationBuilder withType(NotificationType notificationType) {
-        switch (notificationType) {
-            case INFO:
-                myBackgroundKey = EditorColors.NOTIFICATION_INFORMATION_BACKGROUND;
-                break;
-            case WARNING:
-                myBackgroundKey = EditorColors.NOTIFICATION_WARNING_BACKGROUND;
-                break;
-            case ERROR:
-                myBackgroundKey = EditorColors.NOTIFICATION_ERROR_BACKGROUND;
-                break;
-            default:
-                throw new IllegalArgumentException("Can't set " + notificationType);
-        }
+    public EditorNotificationBuilder asInfo() {
+        myBackgroundKey = EditorColors.NOTIFICATION_INFORMATION_BACKGROUND;
+        return this;
+    }
+
+    @Override
+    public EditorNotificationBuilder asSuccess() {
+        myBackgroundKey = EditorColors.NOTIFICATION_SUCCESS_BACKGROUND;
+        return this;
+    }
+
+    @Override
+    public EditorNotificationBuilder asWarning() {
+        myBackgroundKey = EditorColors.NOTIFICATION_WARNING_BACKGROUND;
+        return this;
+    }
+
+    @Override
+    public EditorNotificationBuilder asError() {
+        myBackgroundKey = EditorColors.NOTIFICATION_ERROR_BACKGROUND;
         return this;
     }
 

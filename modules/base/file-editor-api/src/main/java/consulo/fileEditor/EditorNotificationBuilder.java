@@ -15,6 +15,7 @@
  */
 package consulo.fileEditor;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.Component;
@@ -34,8 +35,23 @@ public interface EditorNotificationBuilder {
     
     EditorNotificationBuilder withIcon(Image image);
 
-    
-    EditorNotificationBuilder withType(NotificationType notificationType);
+    EditorNotificationBuilder asInfo();
+
+    EditorNotificationBuilder asSuccess();
+
+    EditorNotificationBuilder asWarning();
+
+    EditorNotificationBuilder asError();
+
+    @Deprecated
+    @DeprecationInfo("Use #asInfo(), #asSuccess(), #asWarning() or #asError()")
+    default EditorNotificationBuilder withType(NotificationType notificationType) {
+        return switch (notificationType) {
+            case WARNING -> asWarning();
+            case ERROR -> asError();
+            default -> asInfo();
+        };
+    }
 
     
     default EditorNotificationBuilder withAction(LocalizeValue actionText,

@@ -314,7 +314,7 @@ public class TestsUIUtil {
                 else {
                     myTitle = ExecutionLocalize.junitRuningInfoTestsPassedLabel().get();
                     myText = passedCount + " passed";
-                    myType = NotificationType.INFORMATION;
+                    myType = NotificationType.SUCCESS;
                 }
                 if (myComment != null) {
                     myText += " " + myComment;

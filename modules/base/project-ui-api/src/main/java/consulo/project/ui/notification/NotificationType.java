@@ -20,12 +20,13 @@ package consulo.project.ui.notification;
  */
 public enum NotificationType {
     INFORMATION,
+    SUCCESS,
     WARNING,
     ERROR;
 
     public consulo.ui.NotificationType toUI() {
         return switch (this) {
-            case INFORMATION -> consulo.ui.NotificationType.INFO;
+            case INFORMATION, SUCCESS -> consulo.ui.NotificationType.INFO;
             case WARNING -> consulo.ui.NotificationType.WARNING;
             case ERROR -> consulo.ui.NotificationType.ERROR;
         };

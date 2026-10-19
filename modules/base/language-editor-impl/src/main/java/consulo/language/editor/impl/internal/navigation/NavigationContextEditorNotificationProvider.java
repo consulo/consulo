@@ -29,7 +29,6 @@ import consulo.language.editor.navigation.NavigationContexts;
 import consulo.language.psi.stub.ModuleAwareIndexOptions;
 import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.project.Project;
-import consulo.ui.NotificationType;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 import org.jspecify.annotations.Nullable;
@@ -60,7 +59,7 @@ public final class NavigationContextEditorNotificationProvider implements Editor
         }
         EditorNotificationBuilder builder = builderFactory.get();
         builder.withText(LanguageEditorLocalize.navigationContextNotificationText(context.getPresentableText(), context.getNavigationSource().getName()));
-        builder.withType(NotificationType.INFO);
+        builder.asInfo();
         builder.withAction(LanguageEditorLocalize.navigationContextViewOriginal(), event -> viewOriginal(file, fileEditor));
         return builder;
     }

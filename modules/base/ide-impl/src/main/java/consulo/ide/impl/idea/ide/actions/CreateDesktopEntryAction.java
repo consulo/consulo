@@ -104,7 +104,7 @@ public class CreateDesktopEntryAction extends LegacyDumbAwareAction {
             indicator.setFraction(indicator.getFraction() + step);
 
             NotificationService.getInstance()
-                .newInfo(NotificationGroup.SYSTEM_MESSAGES)
+                .newSuccess(NotificationGroup.SYSTEM_MESSAGES)
                 .title(LocalizeValue.localizeTODO("Desktop entry created"))
                 .content(ApplicationLocalize.desktopEntrySuccess(Application.get().getName()))
                 .notify(null);

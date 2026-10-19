@@ -700,7 +700,7 @@ public class PatchApplier<BinaryType extends FilePatch> {
         }
         else if (ApplyPatchStatus.SUCCESS.equals(status)) {
             NotificationService.getInstance()
-                .newInfo(VcsBalloonProblemNotifier.NOTIFICATION_GROUP)
+                .newSuccess(VcsBalloonProblemNotifier.NOTIFICATION_GROUP)
                 .content(VcsLocalize.patchApplySuccessAppliedText())
                 .notify(project);
         }

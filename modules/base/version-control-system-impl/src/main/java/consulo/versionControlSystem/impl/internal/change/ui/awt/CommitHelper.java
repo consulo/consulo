@@ -238,7 +238,7 @@ public class CommitHelper {
         boolean hasExceptions = !processor.getVcsExceptions().isEmpty();
         boolean hasOnlyWarnings = doesntContainErrors(processor.getVcsExceptions());
 
-        return hasExceptions ? (hasOnlyWarnings ? NotificationType.WARNING : NotificationType.ERROR) : NotificationType.INFORMATION;
+        return hasExceptions ? (hasOnlyWarnings ? NotificationType.WARNING : NotificationType.ERROR) : NotificationType.SUCCESS;
     }
 
     /*

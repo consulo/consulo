@@ -55,7 +55,7 @@ public class NotificationIconBuilder {
       if (NotificationType.WARNING == notificationType) {
         result = NotificationType.WARNING;
       }
-      else if (result == null && NotificationType.INFORMATION == notificationType) {
+      else if (result == null && (NotificationType.INFORMATION == notificationType || NotificationType.SUCCESS == notificationType)) {
         result = NotificationType.INFORMATION;
       }
     }
