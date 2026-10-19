@@ -21,8 +21,6 @@ import consulo.language.psi.stub.IndexOption;
 import consulo.language.psi.stub.IndexOptionSelector;
 import consulo.language.psi.stub.ModuleAwareIndexOptionProvider;
 import consulo.language.psi.stub.ModuleAwareIndexOptions;
-import consulo.module.Module;
-import consulo.module.content.ProjectFileIndex;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileWithId;
@@ -37,8 +35,9 @@ import java.util.Set;
 
 /**
  * The variants a file is indexed under and the choice among them at read time. The primary variant is the one every
- * applicable provider's first option (its module-settings default, or the first analysed value) describes; each further
- * value of a provider yields one secondary variant with only that provider's option replaced.
+ * applicable provider's first option (its default in the file's primary context, or the first analysed value)
+ * describes; each further value of a provider - the default in another context of a library file, or a further
+ * analysed value - yields one secondary variant with only that provider's option replaced.
  */
 public final class ModuleAwareIndexVariants {
     private ModuleAwareIndexVariants() {
@@ -52,14 +51,17 @@ public final class ModuleAwareIndexVariants {
         if (providers.isEmpty()) {
             return List.of();
         }
-        Module module = ProjectFileIndex.getInstance(project).getModuleForFile(file);
-        if (module == null) {
+        List<ModuleAwareIndexContexts.Context> contexts = ModuleAwareIndexContexts.contextsOf(project, file);
+        if (contexts.isEmpty()) {
             return List.of();
         }
-        return descriptorsFor(providers, module, file, withId.getId());
+        return descriptorsFor(providers, contexts, file, withId.getId());
     }
 
-    public static List<VariantDescriptor> descriptorsFor(List<ModuleAwareIndexOptionProvider> providers, Module module, VirtualFile file, int fileId) {
+    public static List<VariantDescriptor> descriptorsFor(List<ModuleAwareIndexOptionProvider> providers,
+                                                         List<ModuleAwareIndexContexts.Context> contexts,
+                                                         VirtualFile file,
+                                                         int fileId) {
         ModuleAwareIndexOptionValueStorage values = ModuleAwareIndexOptionValueStorage.getInstance();
         List<List<VariantDescriptor.ProviderOption>> optionsPerProvider = new ArrayList<>(providers.size());
         List<List<String>> namesPerProvider = new ArrayList<>(providers.size());
@@ -68,9 +70,10 @@ public final class ModuleAwareIndexVariants {
             List<String> names = new ArrayList<>();
             List<ModuleAwareIndexOptionValueStorage.StoredOption> stored = values.getVariants(provider.getId(), fileId);
             if (stored.isEmpty()) {
-                IndexOption option = provider.getOptions(module, file);
-                options.add(providerOption(provider.getId(), option));
-                names.add(displayNameOf(option));
+                for (IndexOption option : ModuleAwareIndexContexts.optionsOf(provider, contexts, file)) {
+                    options.add(providerOption(provider.getId(), option));
+                    names.add(displayNameOf(option));
+                }
             }
             else {
                 for (ModuleAwareIndexOptionValueStorage.StoredOption each : stored) {

@@ -62,7 +62,7 @@ public final class ExpectedHighlightingData {
     public static final String CARET_MARKER = "<caret>";
 
     private static final String TAG_NAMES = String.join("|", SEVERITIES.keySet()) + "|" + LINE_MARKER;
-    private static final Pattern OPENING_TAG = Pattern.compile("<(" + TAG_NAMES + ")(\\s[^>]*)?>");
+    private static final Pattern OPENING_TAG = Pattern.compile("<(" + TAG_NAMES + ")(\\s(?:\"(?:[^\"\\\\]|\\\\.)*\"|[^>\"])*)?>");
     private static final Pattern CLOSING_TAG = Pattern.compile("</(" + TAG_NAMES + ")>");
     private static final Pattern ATTRIBUTE = Pattern.compile("(\\w+)\\s*=\\s*\"((?:[^\"\\\\]|\\\\.)*)\"");
 

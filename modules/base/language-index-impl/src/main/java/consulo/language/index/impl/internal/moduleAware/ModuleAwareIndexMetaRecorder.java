@@ -25,8 +25,6 @@ import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.language.psi.stub.IndexedFile;
 import consulo.language.psi.stub.FileBasedIndexExtension;
 import consulo.language.psi.stub.ModuleAwareIndexOptionProvider;
-import consulo.module.Module;
-import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
 import consulo.project.Project;
 import consulo.util.collection.primitive.ints.ConcurrentIntObjectMap;
@@ -119,14 +117,14 @@ public final class ModuleAwareIndexMetaRecorder {
 
         int fileId = withId.getId();
 
-        Module module = ProjectFileIndex.getInstance(project).getModuleForFile(file);
-        if (module == null) {
+        List<ModuleAwareIndexOptionProvider> applicable = applicableOf(requestedIds, file.getFileType());
+        if (applicable.isEmpty()) {
             ourReindexRequested.remove(fileId);
             return false;
         }
 
-        List<ModuleAwareIndexOptionProvider> applicable = applicableOf(requestedIds, file.getFileType());
-        if (applicable.isEmpty()) {
+        List<ModuleAwareIndexContexts.Context> contexts = ModuleAwareIndexContexts.contextsOf(project, file);
+        if (contexts.isEmpty()) {
             ourReindexRequested.remove(fileId);
             return false;
         }
@@ -140,7 +138,7 @@ public final class ModuleAwareIndexMetaRecorder {
             return false;
         }
 
-        List<Map<String, OptionsMeta.PerProviderMeta>> currentState = cachedState(project, fileId, file, module);
+        List<Map<String, OptionsMeta.PerProviderMeta>> currentState = cachedState(project, fileId, file, contexts);
         boolean stale = OptionsRevalidator.needsReindex(extension.getVersion(), stored, idsOf(applicable), currentState);
         if (!stale) {
             ourReindexRequested.remove(fileId);
@@ -244,19 +242,19 @@ public final class ModuleAwareIndexMetaRecorder {
             return;
         }
 
-        Module module = ProjectFileIndex.getInstance(project).getModuleForFile(file);
-        if (module == null) {
-            return;
-        }
-
         List<ModuleAwareIndexOptionProvider> applicable = applicableOf(requestedIds, file.getFileType());
         if (applicable.isEmpty()) {
             return;
         }
 
+        List<ModuleAwareIndexContexts.Context> contexts = ModuleAwareIndexContexts.contextsOf(project, file);
+        if (contexts.isEmpty()) {
+            return;
+        }
+
         int fileId = withId.getId();
         List<ModuleAwareIndexOptionProvider> allApplicable = ModuleAwareIndexOptionRegistry.getApplicableProviders(file.getFileType());
-        List<Map<String, OptionsMeta.PerProviderMeta>> freshState = OptionsRevalidator.currentState(allApplicable, module, file, fileId);
+        List<Map<String, OptionsMeta.PerProviderMeta>> freshState = OptionsRevalidator.currentState(allApplicable, contexts, file, fileId);
 
         OptionsMeta snapshot = OptionsRevalidator.snapshot(extension.getVersion(), idsOf(applicable), freshState);
         ModuleAwareIndexMetaStorage storage = ModuleAwareIndexMetaStorage.getInstance();
@@ -308,14 +306,17 @@ public final class ModuleAwareIndexMetaRecorder {
         }
     }
 
-    private static List<Map<String, OptionsMeta.PerProviderMeta>> cachedState(Project project, int fileId, VirtualFile file, Module module) {
+    private static List<Map<String, OptionsMeta.PerProviderMeta>> cachedState(Project project,
+                                                                               int fileId,
+                                                                               VirtualFile file,
+                                                                               List<ModuleAwareIndexContexts.Context> contexts) {
         ProviderStateCache holder = cacheHolder(project);
         List<Map<String, OptionsMeta.PerProviderMeta>> state = holder.byFile().get(fileId);
         if (state != null) {
             return state;
         }
         List<ModuleAwareIndexOptionProvider> allApplicable = ModuleAwareIndexOptionRegistry.getApplicableProviders(file.getFileType());
-        state = OptionsRevalidator.currentState(allApplicable, module, file, fileId);
+        state = OptionsRevalidator.currentState(allApplicable, contexts, file, fileId);
         List<Map<String, OptionsMeta.PerProviderMeta>> existing = holder.byFile().putIfAbsent(fileId, state);
         return existing != null ? existing : state;
     }

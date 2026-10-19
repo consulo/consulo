@@ -130,6 +130,8 @@ public abstract class AbstractExternalModuleImportProvider implements ModuleImpo
 
         StartupManager.getInstance(project).runWhenProjectIsInitialized(() -> {
             AbstractExternalSystemSettings systemSettings = ExternalSystemApiUtil.getSettings(project, myExternalSystemId);
+            // a storable service, which must not be created inside the write action that imports the data below
+            ExternalSystemApiUtil.getLocalSettings(project, myExternalSystemId);
             ExternalProjectSettings projectSettings = getCurrentExternalProjectSettings(context);
             Set<ExternalProjectSettings> projects = new HashSet<>(systemSettings.getLinkedProjectsSettings());
             // add current importing project settings to linked projects settings or replace if similar already exist

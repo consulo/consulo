@@ -81,9 +81,13 @@ public final class SandFlagEnv {
 
     public static Set<String> moduleFlags(Project project, VirtualFile file) {
         Module module = ProjectFileIndex.getInstance(project).getModuleForFile(file);
-        if (module == null) {
-            return Set.of();
-        }
+        return module == null ? Set.of() : flagsOf(module);
+    }
+
+    /**
+     * The flags {@code module} compiles with - its own files, and the library files it reaches.
+     */
+    public static Set<String> flagsOf(Module module) {
         SandModuleExtension extension = module.getExtension(SandModuleExtension.class);
         return extension == null ? Set.of() : extension.getFlags();
     }

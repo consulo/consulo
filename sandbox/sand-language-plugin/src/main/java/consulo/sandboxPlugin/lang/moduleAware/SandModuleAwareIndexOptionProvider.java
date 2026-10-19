@@ -63,7 +63,7 @@ public final class SandModuleAwareIndexOptionProvider implements ModuleAwareInde
 
     @Override
     public IndexOption getOptions(Module module, VirtualFile file) {
-        return SandSeedEnv.optionsOf(module, SandFlagEnv.moduleFlags(module.getProject(), file));
+        return SandSeedEnv.optionsOf(module, SandFlagEnv.flagsOf(module));
     }
 
     @Override

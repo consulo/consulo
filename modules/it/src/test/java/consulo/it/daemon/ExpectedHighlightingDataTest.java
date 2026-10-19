@@ -70,6 +70,18 @@ public class ExpectedHighlightingDataTest {
     }
 
     @Test
+    public void descriptionMayContainAngleBrackets() {
+        ExpectedHighlightingData data =
+            ExpectedHighlightingData.parse("v <error descr=\"Invalid version requirement ~>master\">\"~>master\"</error>;");
+
+        assertThat(data.getText()).isEqualTo("v \"~>master\";");
+        assertThat(only("<error descr=\"expected > or >=, not <=\">x</error>").getDescription())
+            .isEqualTo("expected > or >=, not <=");
+        assertThat(data.getExpected()).hasSize(1);
+        assertThat(data.getExpected().get(0).getDescription()).isEqualTo("Invalid version requirement ~>master");
+    }
+
+    @Test
     public void tagsNest() {
         ExpectedHighlightingData data =
             ExpectedHighlightingData.parse("<warning descr=\"outer\">a<error descr=\"inner\">b</error>c</warning>");

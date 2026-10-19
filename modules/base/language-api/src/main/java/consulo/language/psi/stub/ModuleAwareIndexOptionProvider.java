@@ -18,6 +18,7 @@ package consulo.language.psi.stub;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.module.Module;
+import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 import consulo.project.Project;
@@ -66,8 +67,24 @@ public interface ModuleAwareIndexOptionProvider {
      * this is called while the file is being indexed and parsed. Must not return {@code null} — use
      * {@link IndexOption#fullySharable()} when no module-aware context applies to this particular file. When
      * {@link #analyze} has produced a value for the file, that value is what indexing and parsing see instead.
+     * <p>
+     * {@code module} is the module {@code file} is compiled in: the module whose content it is, or - for a file of a
+     * library or an SDK - a module reaching it through an order entry, see {@link #getOptions(OrderEntry, VirtualFile)}.
      */
     IndexOption getOptions(Module module, VirtualFile file);
+
+    /**
+     * The options of {@code file}, a file of a library or an SDK, as the owner module of {@code orderEntry} compiles it.
+     * Such a file belongs to no module: it is compiled as part of every module that reaches it - the same jar or header
+     * directory used by several modules, a library a dependency exports - so the platform asks once per order entry
+     * reaching the file and indexes it under each distinct answer, the first entry's being its primary variant.
+     * <p>
+     * By default the file is compiled like the sources of the entry's owner module; an order entry which knows how its
+     * own files are compiled - a package with its own build flags - may answer for itself.
+     */
+    default IndexOption getOptions(OrderEntry orderEntry, VirtualFile file) {
+        return getOptions(orderEntry.getOwnerModule(), file);
+    }
 
     /**
      * The analysis that needs more than one file: given the files that changed, returns new option values for every

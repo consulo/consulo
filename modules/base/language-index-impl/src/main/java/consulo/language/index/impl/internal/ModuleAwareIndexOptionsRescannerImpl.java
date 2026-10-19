@@ -19,6 +19,7 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.document.util.FileContentUtilCore;
 import consulo.language.index.impl.internal.moduleAware.IndexOptionHasher;
+import consulo.language.index.impl.internal.moduleAware.ModuleAwareIndexContexts;
 import consulo.language.index.impl.internal.moduleAware.ModuleAwareIndexMetaRecorder;
 import consulo.language.index.impl.internal.moduleAware.ModuleAwareIndexOptionRegistry;
 import consulo.language.index.impl.internal.moduleAware.ModuleAwareIndexOptionValueStorage;
@@ -32,8 +33,6 @@ import consulo.language.index.impl.internal.roots.IndexableFilesIterator;
 import consulo.language.internal.psi.stub.ModuleAwareIndexOptionsRescanner;
 import consulo.language.psi.stub.IndexOption;
 import consulo.language.psi.stub.ModuleAwareIndexOptionProvider;
-import consulo.module.Module;
-import consulo.module.content.ProjectFileIndex;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileWithId;
@@ -96,8 +95,9 @@ public class ModuleAwareIndexOptionsRescannerImpl implements ModuleAwareIndexOpt
         if (provider == null || project.isDisposed()) {
             return null;
         }
-        Module module = ProjectFileIndex.getInstance(project).getModuleForFile(file);
-        return module == null ? null : provider.getOptions(module, file);
+        // a file nothing was analysed for is parsed under its primary context - for a library file, its first order entry
+        List<ModuleAwareIndexContexts.Context> contexts = ModuleAwareIndexContexts.contextsOf(project, file);
+        return contexts.isEmpty() ? null : contexts.get(0).optionsOf(provider, file);
     }
 
     @Override

@@ -34,7 +34,6 @@ import jakarta.inject.Singleton;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -218,15 +217,13 @@ public final class ModuleAwareIndexOptionsAnalyzer {
     }
 
     /**
-     * A file that was never analysed was indexed and parsed under {@link ModuleAwareIndexOptionProvider#getOptions};
-     * its first analysed value is a change only if it differs from that single default variant.
+     * A file that was never analysed was indexed and parsed under {@link ModuleAwareIndexOptionProvider#getOptions} in
+     * each of its contexts - one variant for a file of a module, one per distinct order entry for a library file; its
+     * first analysed values are a change only if they differ from those default variants.
      */
     private boolean differsFromDefault(ModuleAwareIndexOptionProvider provider, VirtualFile file, List<ModuleAwareIndexOptionValueStorage.StoredOption> fresh) {
-        consulo.module.Module module = consulo.module.content.ProjectFileIndex.getInstance(myProject).getModuleForFile(file);
-        if (module == null || fresh.size() != 1) {
-            return true;
-        }
-        IndexOption option = provider.getOptions(module, file);
-        return OptionsRevalidator.tagOf(option) != fresh.get(0).tag() || !Arrays.equals(IndexOptionHasher.payloadOf(option), fresh.get(0).payload());
+        List<ModuleAwareIndexContexts.Context> contexts = ModuleAwareIndexContexts.contextsOf(myProject, file);
+        List<ModuleAwareIndexOptionValueStorage.StoredOption> defaults = toStored(ModuleAwareIndexContexts.optionsOf(provider, contexts, file));
+        return !sameVariants(defaults, fresh);
     }
 }

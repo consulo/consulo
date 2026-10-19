@@ -733,6 +733,8 @@ public class ExternalSystemUtil {
                 return;
             }
             ProjectDataManager projectDataManager = myProject.getApplication().getInstance(ProjectDataManager.class);
+            // a storable service, which must not be created inside the write action that imports the data below
+            ExternalSystemApiUtil.getLocalSettings(myProject, externalProject.getData().getOwner());
             ExternalSystemApiUtil.executeProjectChangeAction(new DisposeAwareProjectChange(myProject) {
                 @RequiredUIAccess
                 @Override

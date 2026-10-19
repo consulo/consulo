@@ -20,7 +20,6 @@ import consulo.language.index.impl.internal.moduleAware.OptionsMeta.VariantTag;
 import consulo.language.internal.psi.stub.IndexOptionImpl;
 import consulo.language.psi.stub.IndexOption;
 import consulo.language.psi.stub.ModuleAwareIndexOptionProvider;
-import consulo.module.Module;
 import consulo.virtualFileSystem.VirtualFile;
 
 import java.util.ArrayList;
@@ -38,14 +37,14 @@ public final class OptionsRevalidator {
      * is index-agnostic: callers subset it by an index's requested provider ids.
      */
     public static List<Map<String, PerProviderMeta>> currentState(List<ModuleAwareIndexOptionProvider> providers,
-                                                                  Module module,
+                                                                  List<ModuleAwareIndexContexts.Context> contexts,
                                                                   VirtualFile file,
                                                                   int fileId) {
         Map<String, Integer> versions = new HashMap<>(providers.size());
         for (ModuleAwareIndexOptionProvider provider : providers) {
             versions.put(provider.getId(), provider.getVersion());
         }
-        List<VariantDescriptor> descriptors = ModuleAwareIndexVariants.descriptorsFor(providers, module, file, fileId);
+        List<VariantDescriptor> descriptors = ModuleAwareIndexVariants.descriptorsFor(providers, contexts, file, fileId);
         List<Map<String, PerProviderMeta>> state = new ArrayList<>(descriptors.size());
         for (VariantDescriptor descriptor : descriptors) {
             state.add(descriptor.toMeta(versions));
