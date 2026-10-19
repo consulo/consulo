@@ -3,6 +3,7 @@ package consulo.searchEverywhere;
 
 import consulo.application.dumb.PossiblyDumbAware;
 import consulo.application.progress.ProgressIndicator;
+import consulo.application.util.matcher.MinusculeMatcher;
 import consulo.ui.ex.action.AnAction;
 import consulo.util.dataholder.Key;
 import org.jspecify.annotations.Nullable;
@@ -90,6 +91,16 @@ public interface SearchEverywhereContributor<Item> extends PossiblyDumbAware {
 
     
     ListCellRenderer<? super Item> getElementsRenderer();
+
+    /**
+     * Builds the row of a found item. Called on the search thread right after the item is found, never on the UI
+     * thread; an implementation reading the model takes its own read action.
+     *
+     * @param matcher the matcher of the current search pattern, for highlighting the matched fragments
+     */
+    default SearchEverywhereItemPresentation getItemPresentation(Item item, @Nullable MinusculeMatcher matcher) {
+        return SearchEverywhereItemPresentation.of(String.valueOf(item));
+    }
 
     @Nullable Object getDataForItem(Item element, Key dataId);
 

@@ -67,36 +67,10 @@ public class SearchEverywherePsiRenderer extends PsiElementListCellRenderer<PsiE
     @Override
     @RequiredReadAction
     protected @Nullable String getContainerTextForLeftComponent(PsiElement element, String name, int maxWidth, FontMetrics fm) {
-        String text = SymbolPresentationUtil.getSymbolContainerText(element);
+        String text = getRelativeContainerText(element);
 
         if (text == null) {
             return null;
-        }
-
-        if (text.startsWith("(") && text.endsWith(")")) {
-            text = text.substring(1, text.length() - 1);
-        }
-
-        if ((text.contains("/") || text.contains(File.separator)) && element instanceof PsiFileSystemItem fileSystemItem) {
-            Project project = fileSystemItem.getProject();
-            String basePath = Optional.ofNullable(project.getBasePath()).map(FileUtil::toSystemDependentName).orElse(null);
-            VirtualFile file = fileSystemItem.getVirtualFile();
-            if (file != null) {
-                text = FileUtil.toSystemDependentName(text);
-                String filePath = FileUtil.toSystemDependentName(file.getPath());
-                if (basePath != null && FileUtil.isAncestor(basePath, filePath, true)) {
-                    text = ObjectUtil.notNull(FileUtil.getRelativePath(basePath, text, File.separatorChar), text);
-                }
-                else {
-                    String rootPath = Optional.ofNullable(GotoFileCellRenderer.getAnyRoot(file, project))
-                        .map(root -> FileUtil.toSystemDependentName(root.getPath()))
-                        .filter(root -> basePath != null && FileUtil.isAncestor(basePath, root, true))
-                        .orElse(null);
-                    text = rootPath != null
-                        ? ObjectUtil.notNull(FileUtil.getRelativePath(rootPath, text, File.separatorChar), text)
-                        : UserHomeFileUtil.getLocationRelativeToUserHome(text);
-                }
-            }
         }
 
         boolean in = text.startsWith("in ");
@@ -128,6 +102,42 @@ public class SearchEverywherePsiRenderer extends PsiElementListCellRenderer<PsiE
         }
         int adjustedWidth = Math.max(adjustedText.length() * maxWidth / fullWidth - 1, left.length() + 3);
         return StringUtil.trimMiddle(adjustedText, adjustedWidth);
+    }
+
+    @RequiredReadAction
+    public static @Nullable String getRelativeContainerText(PsiElement element) {
+        String text = SymbolPresentationUtil.getSymbolContainerText(element);
+
+        if (text == null) {
+            return null;
+        }
+
+        if (text.startsWith("(") && text.endsWith(")")) {
+            text = text.substring(1, text.length() - 1);
+        }
+
+        if ((text.contains("/") || text.contains(File.separator)) && element instanceof PsiFileSystemItem fileSystemItem) {
+            Project project = fileSystemItem.getProject();
+            String basePath = Optional.ofNullable(project.getBasePath()).map(FileUtil::toSystemDependentName).orElse(null);
+            VirtualFile file = fileSystemItem.getVirtualFile();
+            if (file != null) {
+                text = FileUtil.toSystemDependentName(text);
+                String filePath = FileUtil.toSystemDependentName(file.getPath());
+                if (basePath != null && FileUtil.isAncestor(basePath, filePath, true)) {
+                    text = ObjectUtil.notNull(FileUtil.getRelativePath(basePath, text, File.separatorChar), text);
+                }
+                else {
+                    String rootPath = Optional.ofNullable(GotoFileCellRenderer.getAnyRoot(file, project))
+                        .map(root -> FileUtil.toSystemDependentName(root.getPath()))
+                        .filter(root -> basePath != null && FileUtil.isAncestor(basePath, root, true))
+                        .orElse(null);
+                    text = rootPath != null
+                        ? ObjectUtil.notNull(FileUtil.getRelativePath(rootPath, text, File.separatorChar), text)
+                        : UserHomeFileUtil.getLocationRelativeToUserHome(text);
+                }
+            }
+        }
+        return text;
     }
 
     @Override

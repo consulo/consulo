@@ -59,7 +59,7 @@ public class GotoFileItemProvider extends DefaultChooseByNameItemProvider {
     @Override
     @RequiredReadAction
     public boolean filterElementsWithWeights(
-        ChooseByNameBase base,
+        ChooseByNameViewModel base,
         FindSymbolParameters parameters,
         ProgressIndicator indicator,
         Predicate<FoundItemDescriptor<?>> consumer
@@ -69,7 +69,7 @@ public class GotoFileItemProvider extends DefaultChooseByNameItemProvider {
 
     @RequiredReadAction
     private boolean doFilterElements(
-        ChooseByNameBase base,
+        ChooseByNameViewModel base,
         FindSymbolParameters parameters,
         ProgressIndicator indicator,
         Predicate<FoundItemDescriptor<?>> consumer
@@ -101,7 +101,7 @@ public class GotoFileItemProvider extends DefaultChooseByNameItemProvider {
 
     @RequiredReadAction
     private boolean processItemsForPattern(
-        ChooseByNameBase base,
+        ChooseByNameViewModel base,
         FindSymbolParameters parameters,
         Predicate<FoundItemDescriptor<?>> consumer,
         ProgressIndicator indicator
@@ -319,7 +319,7 @@ public class GotoFileItemProvider extends DefaultChooseByNameItemProvider {
             return true;
         }
 
-        @Nullable SuffixMatches nextGroup(ChooseByNameBase base) {
+        @Nullable SuffixMatches nextGroup(ChooseByNameViewModel base) {
             if (index >= namePattern.length()) {
                 return null;
             }
@@ -353,7 +353,7 @@ public class GotoFileItemProvider extends DefaultChooseByNameItemProvider {
             return "SuffixMatches{" + "patternSuffix='" + patternSuffix + '\'' + ", matchingNames=" + matchingNames + '}';
         }
 
-        boolean matchName(ChooseByNameBase base, String name) {
+        boolean matchName(ChooseByNameViewModel base, String name) {
             MatchResult result = matches(base, patternSuffix, matcher, name);
             if (result != null) {
                 matchingNames.add(result);

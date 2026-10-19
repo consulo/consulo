@@ -4,6 +4,7 @@ package consulo.ide.impl.idea.ide.actions.searcheverywhere;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.util.matcher.MinusculeMatcher;
 import consulo.application.util.matcher.NameUtil;
+import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.execution.configuration.RunConfiguration;
@@ -14,10 +15,13 @@ import consulo.execution.impl.internal.action.ChooseRunConfigurationPopup;
 import consulo.execution.runner.RunnerRegistry;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.localize.IdeLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.searchEverywhere.SearchEverywhereCommandInfo;
 import consulo.searchEverywhere.SearchEverywhereContributor;
+import consulo.searchEverywhere.SearchEverywhereItemPresentation;
+import consulo.ui.TextAttribute;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.JBUIScale;
@@ -56,11 +60,22 @@ public class RunConfigurationsSEContributor implements SearchEverywhereContribut
 
     private final Project myProject;
     private final Component myContextComponent;
+    private final @Nullable DataContext myDataContext;
     private final Supplier<String> myCommandSupplier;
 
     public RunConfigurationsSEContributor(Project project, Component component, Supplier<String> commandSupplier) {
+        this(project, component, null, commandSupplier);
+    }
+
+    public RunConfigurationsSEContributor(
+        Project project,
+        Component component,
+        @Nullable DataContext dataContext,
+        Supplier<String> commandSupplier
+    ) {
         myProject = project;
         myContextComponent = component;
+        myDataContext = dataContext;
         myCommandSupplier = commandSupplier;
     }
 
@@ -97,8 +112,10 @@ public class RunConfigurationsSEContributor implements SearchEverywhereContribut
             int mode = getMode(searchText, modifiers);
             Executor executor = findExecutor(settings, mode);
             if (executor != null) {
-                DataManager dataManager = DataManager.getInstance();
-                selected.perform(myProject, executor, dataManager.getDataContext(myContextComponent));
+                DataContext dataContext = myContextComponent == null && myDataContext != null
+                    ? myDataContext
+                    : DataManager.getInstance().getDataContext(myContextComponent);
+                selected.perform(myProject, executor, dataContext);
             }
         }
 
@@ -114,6 +131,44 @@ public class RunConfigurationsSEContributor implements SearchEverywhereContribut
     @Override
     public ListCellRenderer<? super ChooseRunConfigurationPopup.ItemWrapper> getElementsRenderer() {
         return renderer;
+    }
+
+    @Override
+    public SearchEverywhereItemPresentation getItemPresentation(
+        ChooseRunConfigurationPopup.ItemWrapper wrapper,
+        @Nullable MinusculeMatcher matcher
+    ) {
+        SearchEverywhereItemPresentation.Builder builder = SearchEverywhereItemPresentation.builder()
+            .icon(wrapper.getIcon())
+            .appendMatched(wrapper.getText(), matcher, TextAttribute.REGULAR);
+
+        String input = myCommandSupplier.get();
+        int mode = isCommand(input, RUN_COMMAND) ? RUN_MODE : isCommand(input, DEBUG_COMMAND) ? DEBUG_MODE : -1;
+        if (mode != -1) {
+            RunnerAndConfigurationSettings settings = ObjectUtil.tryCast(wrapper.getValue(), RunnerAndConfigurationSettings.class);
+            Executor executor = settings == null ? null : findExecutor(settings, mode);
+            if (executor != null) {
+                builder.suffix(LocalizeValue.of(executor.getId()), executor.getToolWindowIcon());
+            }
+            return builder.build();
+        }
+
+        Executor debugExecutor = ExecutorRegistry.getInstance().getExecutorById(ToolWindowId.DEBUG);
+        Executor runExecutor = DefaultRunExecutor.getRunExecutorInstance();
+
+        String enter = KeymapUtil.getKeystrokeText(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0));
+        String shiftEnter = KeymapUtil.getKeystrokeText(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.SHIFT_DOWN_MASK));
+        if (debugExecutor != null) {
+            String text = debugExecutor.getId() + "(" + enter + ")";
+            if (runExecutor != null) {
+                text += " / " + runExecutor.getId() + "(" + shiftEnter + ")";
+            }
+            builder.suffix(LocalizeValue.of(text), null);
+        }
+        else if (runExecutor != null) {
+            builder.suffix(LocalizeValue.of(runExecutor.getId() + "(" + enter + ")"), null);
+        }
+        return builder.build();
     }
 
     

@@ -6,14 +6,18 @@ import consulo.application.internal.ProgressIndicatorBase;
 import consulo.application.internal.SensitiveProgressWrapper;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
+import consulo.application.util.matcher.MinusculeMatcher;
+import consulo.application.util.matcher.NameUtil;
 import consulo.component.ProcessCanceledException;
 import consulo.logging.Logger;
 import consulo.searchEverywhere.SEResultsEqualityProvider;
 import consulo.searchEverywhere.SearchEverywhereContributor;
 import consulo.searchEverywhere.SearchEverywhereFoundElementInfo;
+import consulo.searchEverywhere.SearchEverywhereItemPresentation;
 import consulo.searchEverywhere.WeightedSearchEverywhereContributor;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.concurrent.ConcurrencyUtil;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.concurrent.*;
@@ -39,6 +43,8 @@ class MultiThreadSearcher implements SESearcher {
     
     private final SEResultsEqualityProvider myEqualityProvider;
 
+    private final boolean myPresentItems;
+
     /**
      * Creates MultiThreadSearcher with search results {@link Listener} and specifies executor which going to be used to call listener methods.
      * Use this constructor when you for example need to receive listener events only in AWT thread
@@ -52,9 +58,19 @@ class MultiThreadSearcher implements SESearcher {
         Executor notificationExecutor,
         Collection<? extends SEResultsEqualityProvider> equalityProviders
     ) {
+        this(listener, notificationExecutor, equalityProviders, false);
+    }
+
+    MultiThreadSearcher(
+        Listener listener,
+        Executor notificationExecutor,
+        Collection<? extends SEResultsEqualityProvider> equalityProviders,
+        boolean presentItems
+    ) {
         myListener = listener;
         myNotificationExecutor = notificationExecutor;
         myEqualityProvider = SEResultsEqualityProvider.composite(equalityProviders);
+        myPresentItems = presentItems;
     }
 
     @Override
@@ -88,7 +104,8 @@ class MultiThreadSearcher implements SESearcher {
             );
 
             for (SearchEverywhereContributor<?> contributor : contributors) {
-                Runnable task = createSearchTask(pattern, accumulator, indicatorWithCancelListener, contributor, latch::countDown);
+                Runnable task =
+                    createSearchTask(pattern, accumulator, indicatorWithCancelListener, contributor, myPresentItems, latch::countDown);
                 Application.get().executeOnPooledThread(task);
             }
 
@@ -133,7 +150,7 @@ class MultiThreadSearcher implements SESearcher {
             indicator
         );
         indicator.start();
-        Runnable task = createSearchTask(pattern, accumulator, indicator, contributor, indicator::stop);
+        Runnable task = createSearchTask(pattern, accumulator, indicator, contributor, myPresentItems, indicator::stop);
         Application.get().executeOnPooledThread(task);
 
         return indicator;
@@ -145,11 +162,18 @@ class MultiThreadSearcher implements SESearcher {
         ResultsAccumulator accumulator,
         ProgressIndicator indicator,
         SearchEverywhereContributor<?> contributor,
+        boolean presentItems,
         Runnable finalCallback
     ) {
         //noinspection unchecked
-        ContributorSearchTask<?> task =
-            new ContributorSearchTask<>((SearchEverywhereContributor<Object>) contributor, pattern, accumulator, indicator, finalCallback);
+        ContributorSearchTask<?> task = new ContributorSearchTask<>(
+            (SearchEverywhereContributor<Object>) contributor,
+            pattern,
+            accumulator,
+            indicator,
+            presentItems,
+            finalCallback
+        );
         return ConcurrencyUtil.underThreadNameRunnable("SE-SearchTask", task);
     }
 
@@ -182,19 +206,35 @@ class MultiThreadSearcher implements SESearcher {
         private final SearchEverywhereContributor<Item> myContributor;
         private final String myPattern;
         private final ProgressIndicator myIndicator;
+        private final boolean myPresentItems;
+        private final @Nullable MinusculeMatcher myMatcher;
 
         private ContributorSearchTask(
             SearchEverywhereContributor<Item> contributor,
             String pattern,
             ResultsAccumulator accumulator,
             ProgressIndicator indicator,
+            boolean presentItems,
             Runnable callback
         ) {
             myContributor = contributor;
             myPattern = pattern;
             myAccumulator = accumulator;
             myIndicator = indicator;
+            myPresentItems = presentItems;
+            myMatcher = presentItems ? buildMatcher(contributor, pattern) : null;
             finishCallback = callback;
+        }
+
+        private static @Nullable MinusculeMatcher buildMatcher(SearchEverywhereContributor<?> contributor, String pattern) {
+            if (pattern.isEmpty()) {
+                return null;
+            }
+            return NameUtil.buildMatcherWithFallback(
+                "*" + pattern,
+                "*" + contributor.filterControlSymbols(pattern),
+                NameUtil.MatchingCaseSensitivity.NONE
+            );
         }
 
         @Override
@@ -246,7 +286,8 @@ class MultiThreadSearcher implements SESearcher {
                     return true;
                 }
 
-                boolean added = myAccumulator.addElement(element, myContributor, priority, wrapperIndicator);
+                SearchEverywhereItemPresentation presentation = myPresentItems ? present(element) : null;
+                boolean added = myAccumulator.addElement(element, presentation, myContributor, priority, wrapperIndicator);
                 if (!added) {
                     myAccumulator.setContributorHasMore(myContributor, true);
                 }
@@ -255,6 +296,19 @@ class MultiThreadSearcher implements SESearcher {
             catch (InterruptedException e) {
                 LOG.warn("Search task was interrupted");
                 return false;
+            }
+        }
+
+        private SearchEverywhereItemPresentation present(Item element) {
+            try {
+                return myContributor.getItemPresentation(element, myMatcher);
+            }
+            catch (ProcessCanceledException e) {
+                throw e;
+            }
+            catch (Throwable e) {
+                LOG.error(e);
+                return SearchEverywhereItemPresentation.of(String.valueOf(element));
             }
         }
     }
@@ -307,6 +361,7 @@ class MultiThreadSearcher implements SESearcher {
 
         public abstract boolean addElement(
             Object element,
+            @Nullable SearchEverywhereItemPresentation presentation,
             SearchEverywhereContributor<?> contributor,
             int priority,
             ProgressIndicator indicator
@@ -337,11 +392,18 @@ class MultiThreadSearcher implements SESearcher {
         }
 
         @Override
-        public boolean addElement(Object element, SearchEverywhereContributor<?> contributor, int priority, ProgressIndicator indicator) {
+        public boolean addElement(
+            Object element,
+            @Nullable SearchEverywhereItemPresentation presentation,
+            SearchEverywhereContributor<?> contributor,
+            int priority,
+            ProgressIndicator indicator
+        ) {
             assert contributor == myExpandedContributor; // Only expanded contributor items allowed
 
             Collection<SearchEverywhereFoundElementInfo> section = sections.get(contributor);
-            SearchEverywhereFoundElementInfo newElementInfo = new SearchEverywhereFoundElementInfo(element, priority, contributor);
+            SearchEverywhereFoundElementInfo newElementInfo =
+                new SearchEverywhereFoundElementInfo(element, priority, contributor, presentation);
 
             if (section.size() >= myNewLimit) {
                 return false;
@@ -425,11 +487,13 @@ class MultiThreadSearcher implements SESearcher {
         @Override
         public boolean addElement(
             Object element,
+            @Nullable SearchEverywhereItemPresentation presentation,
             SearchEverywhereContributor<?> contributor,
             int priority,
             ProgressIndicator indicator
         ) throws InterruptedException {
-            SearchEverywhereFoundElementInfo newElementInfo = new SearchEverywhereFoundElementInfo(element, priority, contributor);
+            SearchEverywhereFoundElementInfo newElementInfo =
+                new SearchEverywhereFoundElementInfo(element, priority, contributor, presentation);
             Condition condition = conditionsMap.get(contributor);
             Collection<SearchEverywhereFoundElementInfo> section = sections.get(contributor);
             int limit = sectionsLimits.get(contributor);

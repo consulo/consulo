@@ -20,6 +20,7 @@ import consulo.component.util.localize.BundleBase;
 import consulo.configurable.Configurable;
 import consulo.configurable.SearchableConfigurable;
 import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
 import consulo.ide.impl.base.BaseShowSettingsUtil;
 import consulo.ide.impl.idea.ide.actions.ApplyIntentionAction;
 import consulo.ide.localize.IdeLocalize;
@@ -73,6 +74,7 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
     private final @Nullable Project myProject;
     private final Component myContextComponent;
     private final @Nullable Editor myEditor;
+    private @Nullable DataContext myDataContext;
 
     protected final ActionManager myActionManager = ActionManager.getInstance();
 
@@ -459,6 +461,15 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
 
     protected Component getContextComponent() {
         return myContextComponent;
+    }
+
+    public void setDataContext(@Nullable DataContext dataContext) {
+        myDataContext = dataContext;
+    }
+
+    public DataContext getDataContext() {
+        DataContext dataContext = myDataContext;
+        return dataContext != null ? dataContext : DataManager.getInstance().getDataContext(myContextComponent);
     }
 
     public SortedSet<Object> sortItems(Set<Object> elements) {
@@ -875,7 +886,7 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
         }
 
         
-        private static String calcHit(OptionDescription value) {
+        public static String calcHit(OptionDescription value) {
             //if (value instanceof RegistryTextOptionDescriptor) {
             //    return value.getHit() + " = " + value.getValue();
             //}
@@ -939,7 +950,7 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
             panel.setBorder(JBUI.Borders.empty(0, 2));
         }
 
-        private static String getName(@Nullable String text, @Nullable String groupName, boolean toggle) {
+        public static String getName(@Nullable String text, @Nullable String groupName, boolean toggle) {
             return toggle && StringUtil.isNotEmpty(groupName) ? StringUtil.isNotEmpty(text) ? groupName + ": " + text : groupName : StringUtil.notNullize(
                 text);
         }

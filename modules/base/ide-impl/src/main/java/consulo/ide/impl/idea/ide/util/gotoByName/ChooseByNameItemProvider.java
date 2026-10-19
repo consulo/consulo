@@ -22,10 +22,10 @@ import java.util.function.Predicate;
 
 public interface ChooseByNameItemProvider {
     
-    List<String> filterNames(ChooseByNameBase base, String[] names, String pattern);
+    List<String> filterNames(ChooseByNameViewModel base, String[] names, String pattern);
 
     boolean filterElements(
-        ChooseByNameBase base,
+        ChooseByNameViewModel base,
         String pattern,
         boolean everywhere,
         ProgressIndicator cancelled,

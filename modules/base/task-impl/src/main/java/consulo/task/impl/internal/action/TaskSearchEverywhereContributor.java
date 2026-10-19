@@ -16,18 +16,23 @@
 package consulo.task.impl.internal.action;
 
 import consulo.application.progress.ProgressIndicator;
+import consulo.application.util.matcher.MinusculeMatcher;
 import consulo.language.psi.PsiManager;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.searchEverywhere.CheckBoxSearchEverywhereToggleAction;
 import consulo.searchEverywhere.SearchEverywhereContributor;
+import consulo.searchEverywhere.SearchEverywhereItemPresentation;
 import consulo.task.LocalTask;
 import consulo.task.Task;
 import consulo.task.TaskManager;
 import consulo.task.impl.internal.language.TaskPsiElement;
 import consulo.task.internal.CreateNewTaskAction;
 import consulo.task.localize.TaskLocalize;
+import consulo.ui.TextAttribute;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
+import consulo.ui.image.ImageEffects;
 import consulo.util.dataholder.Key;
 import org.jspecify.annotations.Nullable;
 
@@ -167,6 +172,26 @@ public class TaskSearchEverywhereContributor implements SearchEverywhereContribu
     @Override
     public ListCellRenderer<? super Object> getElementsRenderer() {
         return new TaskCellRenderer(myProject);
+    }
+
+    @Override
+    public SearchEverywhereItemPresentation getItemPresentation(Object item, @Nullable MinusculeMatcher matcher) {
+        if (item instanceof TaskPsiElement taskElement) {
+            Task task = taskElement.getTask();
+            TaskManager taskManager = TaskManager.getManager(myProject);
+            boolean isClosed = task.isClosed() || (task instanceof LocalTask localTask && taskManager.isLocallyClosed(localTask));
+            return SearchEverywhereItemPresentation.builder()
+                .icon(isClosed ? ImageEffects.transparent(task.getIcon()) : task.getIcon())
+                .appendMatched(task.getPresentableName(), matcher, isClosed ? TextAttribute.GRAYED : TextAttribute.REGULAR)
+                .build();
+        }
+        if (item instanceof CreateNewTaskAction taskAction) {
+            return SearchEverywhereItemPresentation.builder()
+                .icon(PlatformIconGroup.generalAdd())
+                .append(taskAction.getActionText(), TextAttribute.REGULAR)
+                .build();
+        }
+        return SearchEverywhereItemPresentation.of(String.valueOf(item));
     }
 
     @Override

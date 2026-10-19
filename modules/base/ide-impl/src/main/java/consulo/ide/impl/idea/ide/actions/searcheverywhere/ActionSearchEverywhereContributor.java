@@ -4,7 +4,10 @@ package consulo.ide.impl.idea.ide.actions.searcheverywhere;
 import consulo.application.Application;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.ui.UISettings;
+import consulo.application.util.matcher.MinusculeMatcher;
 import consulo.codeEditor.Editor;
+import consulo.dataContext.DataContext;
+import consulo.ide.impl.idea.ide.actions.ApplyIntentionAction;
 import consulo.ide.impl.idea.ide.actions.GotoActionAction;
 import consulo.ide.impl.idea.ide.actions.SetShortcutAction;
 import consulo.ui.ex.action.BooleanOptionDescription;
@@ -19,11 +22,16 @@ import consulo.project.Project;
 import consulo.project.ui.wm.WindowManager;
 import consulo.searchEverywhere.CheckBoxSearchEverywhereToggleAction;
 import consulo.searchEverywhere.SearchEverywhereContributor;
+import consulo.searchEverywhere.SearchEverywhereItemPresentation;
+import consulo.ui.TextAttribute;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
+import consulo.ui.style.ComponentColors;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
@@ -37,6 +45,7 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 import static consulo.ide.impl.idea.openapi.keymap.KeymapUtil.getFirstKeyboardShortcutText;
+import static consulo.ide.impl.idea.openapi.keymap.KeymapUtil.getPreferredShortcutText;
 import static consulo.ui.ex.keymap.util.KeymapUtil.getActiveKeymapShortcuts;
 
 public class ActionSearchEverywhereContributor implements SearchEverywhereContributor<GotoActionModel.MatchedValue> {
@@ -44,14 +53,26 @@ public class ActionSearchEverywhereContributor implements SearchEverywhereContri
 
     private final Project myProject;
     private final Component myContextComponent;
+    private final @Nullable DataContext myDataContext;
     private final GotoActionModel myModel;
     private final GotoActionItemProvider myProvider;
     private boolean myDisabledActions;
 
     public ActionSearchEverywhereContributor(Project project, Component contextComponent, Editor editor) {
+        this(project, contextComponent, editor, null);
+    }
+
+    public ActionSearchEverywhereContributor(
+        Project project,
+        Component contextComponent,
+        Editor editor,
+        @Nullable DataContext dataContext
+    ) {
         myProject = project;
         myContextComponent = contextComponent;
+        myDataContext = dataContext;
         myModel = new GotoActionModel(project, contextComponent, editor);
+        myModel.setDataContext(dataContext);
         myProvider = new GotoActionItemProvider(myModel);
     }
 
@@ -140,6 +161,72 @@ public class ActionSearchEverywhereContributor implements SearchEverywhereContri
     }
 
     @Override
+    public SearchEverywhereItemPresentation getItemPresentation(GotoActionModel.MatchedValue item, @Nullable MinusculeMatcher matcher) {
+        boolean showIcon = UISettings.getInstance().getShowIconsInMenus();
+
+        Object value = item.value;
+        if (value instanceof GotoActionModel.ActionWrapper actionWrapper) {
+            AnAction action = actionWrapper.getAction();
+            boolean toggle = action instanceof ToggleAction;
+            String groupName = action instanceof ApplyIntentionAction ? null : actionWrapper.getGroupName();
+            Presentation presentation = actionWrapper.getPresentation();
+            boolean disabled = !presentation.isEnabledAndVisible();
+
+            SearchEverywhereItemPresentation.Builder builder = SearchEverywhereItemPresentation.builder();
+            if (showIcon) {
+                Image icon = presentation.getIcon();
+                if (icon == null) {
+                    builder.icon(Image.empty(Image.DEFAULT_ICON_SIZE));
+                }
+                else {
+                    builder.icon(disabled ? ImageEffects.grayed(icon) : icon);
+                }
+            }
+
+            String name = GotoActionModel.GotoActionListCellRenderer.getName(presentation.getText(), groupName, toggle);
+            builder.appendMatched(name, matcher, disabled ? TextAttribute.GRAYED : TextAttribute.REGULAR);
+
+            Shortcut[] shortcuts = getActiveKeymapShortcuts(ActionManager.getInstance().getId(action)).getShortcuts();
+            String shortcutText = getPreferredShortcutText(shortcuts);
+            if (StringUtil.isNotEmpty(shortcutText)) {
+                builder.append(" " + shortcutText, new TextAttribute(TextAttribute.STYLE_BOLD, ComponentColors.DISABLED_TEXT));
+            }
+
+            if (toggle) {
+                builder.switchState(Toggleable.isSelected(presentation));
+            }
+            else if (groupName != null) {
+                builder.suffix(LocalizeValue.of(groupName), null);
+            }
+
+            return builder.tooltip(presentation.getDescription()).build();
+        }
+
+        if (value instanceof OptionDescription optionDescription) {
+            String hit = GotoActionModel.GotoActionListCellRenderer.calcHit(optionDescription);
+
+            SearchEverywhereItemPresentation.Builder builder = SearchEverywhereItemPresentation.builder();
+            if (showIcon) {
+                builder.icon(Image.empty(Image.DEFAULT_ICON_SIZE));
+            }
+            builder.appendMatched(hit, matcher, TextAttribute.REGULAR);
+
+            if (optionDescription instanceof BooleanOptionDescription booleanOptionDescription) {
+                builder.switchState(booleanOptionDescription.isOptionEnabled());
+            }
+            else {
+                String settingsName = myModel.getGroupName(optionDescription);
+                if (StringUtil.isNotEmpty(settingsName)) {
+                    builder.suffix(LocalizeValue.of(settingsName), null);
+                }
+            }
+            return builder.build();
+        }
+
+        return SearchEverywhereItemPresentation.of(String.valueOf(value));
+    }
+
+    @Override
     public boolean showInFindResults() {
         return false;
     }
@@ -175,7 +262,7 @@ public class ActionSearchEverywhereContributor implements SearchEverywhereContri
     @Override
     @RequiredUIAccess
     public boolean processSelectedItem(GotoActionModel.MatchedValue item, int modifiers, String text) {
-        if (modifiers == InputEvent.ALT_MASK) {
+        if (modifiers == InputEvent.ALT_MASK && myContextComponent != null) {
             showAssignShortcutDialog(item);
             return true;
         }
@@ -187,7 +274,13 @@ public class ActionSearchEverywhereContributor implements SearchEverywhereContri
             return false;
         }
 
-        GotoActionAction.openOptionOrPerformAction(selected, text, myProject, myContextComponent);
+        DataContext dataContext = myDataContext;
+        if (myContextComponent == null && dataContext != null) {
+            GotoActionAction.openOptionOrPerformAction(selected, text, myProject, dataContext);
+        }
+        else {
+            GotoActionAction.openOptionOrPerformAction(selected, text, myProject, myContextComponent);
+        }
         boolean inplaceChange = selected instanceof GotoActionModel.ActionWrapper actionWrapper
             && actionWrapper.getAction() instanceof ToggleAction;
         return !inplaceChange;

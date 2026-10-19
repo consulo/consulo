@@ -10,7 +10,6 @@ import consulo.application.util.matcher.WordPrefixMatcher;
 import consulo.application.util.registry.Registry;
 import consulo.configurable.SearchableOptionsRegistrar;
 import consulo.dataContext.DataContext;
-import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.ide.actions.ApplyIntentionAction;
 import consulo.ide.impl.idea.ide.ui.search.ActionFromOptionDescriptorProvider;
 import consulo.ide.impl.idea.ide.ui.search.SearchableOptionsRegistrarImpl;
@@ -44,13 +43,13 @@ public class GotoActionItemProvider implements ChooseByNameItemProvider {
 
     
     @Override
-    public List<String> filterNames(ChooseByNameBase base, String[] names, String pattern) {
+    public List<String> filterNames(ChooseByNameViewModel base, String[] names, String pattern) {
         return Collections.emptyList(); // no common prefix insertion in goto action
     }
 
     @Override
     public boolean filterElements(
-        ChooseByNameBase base,
+        ChooseByNameViewModel base,
         String pattern,
         boolean everywhere,
         ProgressIndicator cancelled,
@@ -64,7 +63,7 @@ public class GotoActionItemProvider implements ChooseByNameItemProvider {
     }
 
     public boolean filterElements(String pattern, Predicate<? super MatchedValue> consumer) {
-        DataContext dataContext = DataManager.getInstance().getDataContext(myModel.getContextComponent());
+        DataContext dataContext = myModel.getDataContext();
 
         return processAbbreviations(pattern, consumer, dataContext)
             && processIntentions(pattern, consumer, dataContext)

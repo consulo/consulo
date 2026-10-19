@@ -45,7 +45,7 @@ public class DefaultChooseByNameItemProvider implements ChooseByNameInScopeItemP
 
     @Override
     public boolean filterElements(
-        ChooseByNameBase base,
+        ChooseByNameViewModel base,
         String pattern,
         boolean everywhere,
         ProgressIndicator indicator,
@@ -61,7 +61,7 @@ public class DefaultChooseByNameItemProvider implements ChooseByNameInScopeItemP
 
     @Override
     public boolean filterElements(
-        ChooseByNameBase base,
+        ChooseByNameViewModel base,
         FindSymbolParameters parameters,
         ProgressIndicator indicator,
         Predicate<Object> consumer
@@ -71,7 +71,7 @@ public class DefaultChooseByNameItemProvider implements ChooseByNameInScopeItemP
 
     @Override
     public boolean filterElementsWithWeights(
-        ChooseByNameBase base,
+        ChooseByNameViewModel base,
         String pattern,
         boolean everywhere,
         ProgressIndicator indicator,
@@ -82,7 +82,7 @@ public class DefaultChooseByNameItemProvider implements ChooseByNameInScopeItemP
 
     @Override
     public boolean filterElementsWithWeights(
-        ChooseByNameBase base,
+        ChooseByNameViewModel base,
         FindSymbolParameters parameters,
         ProgressIndicator indicator,
         Predicate<FoundItemDescriptor<?>> consumer
@@ -91,7 +91,7 @@ public class DefaultChooseByNameItemProvider implements ChooseByNameInScopeItemP
             base,
             indicator,
             myContext == null ? null : myContext.getElement(),
-            () -> base.getNames(parameters.isSearchInLibraries()),
+            () -> base.getModel().getNames(parameters.isSearchInLibraries()),
             consumer,
             parameters
         ));
@@ -384,7 +384,7 @@ public class DefaultChooseByNameItemProvider implements ChooseByNameInScopeItemP
 
     
     @Override
-    public List<String> filterNames(ChooseByNameBase base, String[] names, String pattern) {
+    public List<String> filterNames(ChooseByNameViewModel base, String[] names, String pattern) {
         pattern = convertToMatchingPattern(base, pattern);
         if (pattern.isEmpty() && !base.canShowListForEmptyPattern()) {
             return Collections.emptyList();

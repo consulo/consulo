@@ -74,6 +74,51 @@ public class GotoActionAction extends SearchEverywhereBaseAction implements Dumb
         }
     }
 
+    @RequiredUIAccess
+    public static void openOptionOrPerformAction(Object element, String enteredText, @Nullable Project project, DataContext dataContext) {
+        if (element instanceof OptionDescription optionDescription) {
+            String configurableId = optionDescription.getConfigurableId();
+            if (optionDescription.hasExternalEditor()) {
+                optionDescription.invokeInternalEditor();
+            }
+            else {
+                ShowSettingsUtil.getInstance().showSettingsDialog(project, configurableId, enteredText);
+            }
+            return;
+        }
+
+        UIAccess uiAccess = UIAccess.current();
+        uiAccess.give(() -> performAction(element, dataContext, uiAccess));
+    }
+
+    @RequiredUIAccess
+    private static void performAction(Object element, DataContext context, UIAccess uiAccess) {
+        AnAction action = element instanceof AnAction anAction ? anAction : ((GotoActionModel.ActionWrapper)element).getAction();
+        AnActionEvent event = AnActionEvent.createFromAnAction(action, null, ActionPlaces.ACTION_SEARCH, context);
+        ActionRunnerAsync.lastUpdateAndCheckDumbAsync(action, event, false).whenCompleteAsync((enabled, throwable) -> {
+            if (!Boolean.TRUE.equals(enabled)) {
+                return;
+            }
+            if (action instanceof ActionGroup actionGroup && !event.getPresentation().isPerformGroup()) {
+                ListPopup popup = JBPopupFactory.getInstance()
+                    .createActionGroupPopup(event.getPresentation().getTextValue().get(), actionGroup, context, false, null, -1);
+                Project project = context.getData(Project.KEY);
+                if (project != null) {
+                    popup.showCenteredInCurrentWindow(project);
+                }
+                else {
+                    popup.showInFocusCenter();
+                }
+            }
+            else {
+                ActionManagerEx manager = ActionManagerEx.getInstanceEx();
+                manager.fireBeforeActionPerformed(action, context, event);
+                manager.performActionDumbAware(action, event);
+                manager.fireAfterActionPerformed(action, context, event);
+            }
+        }, uiAccess);
+    }
+
     public static void performAction(Object element, @Nullable Component component, @Nullable AnActionEvent e) {
         performAction(element, component, e, 0, null);
     }

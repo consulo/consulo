@@ -12,6 +12,7 @@ vaadin-dialog.web-heavy-popup::part(backdrop)
    as a bubble at the size a list of actions is */
 vaadin-dialog.web-heavy-popup::part(overlay)
 {
+  border: 1px solid var(--consulo-component-border-color, lightgray);
   border-radius: var(--consulo-popup-radius, 4px);
   box-shadow: none;
 }

@@ -25,6 +25,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.event.PopupCloseEvent;
 import consulo.ui.style.ComponentColors;
+import io.qt.core.QCoreApplication;
 import io.qt.core.QEvent;
 import io.qt.core.QMetaObject;
 import io.qt.core.QObject;
@@ -818,6 +819,10 @@ public abstract class DesktopQtPopupImpl extends QtComponentDelegate<QWidget> im
         if (myDisposed) {
             return;
         }
+
+        QCoreApplication.sendPostedEvents(null, QEvent.Type.LayoutRequest);
+        myLayout.invalidate();
+        myLayout.activate();
 
         fitToContent();
 

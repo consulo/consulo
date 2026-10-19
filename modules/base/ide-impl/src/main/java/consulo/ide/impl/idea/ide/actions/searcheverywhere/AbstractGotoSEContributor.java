@@ -2,9 +2,12 @@
 package consulo.ide.impl.idea.ide.actions.searcheverywhere;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.application.Application;
+import consulo.application.ReadAction;
 import consulo.application.dumb.DumbAware;
 import consulo.application.internal.ProgressIndicatorUtils;
 import consulo.application.progress.ProgressIndicator;
+import consulo.application.util.matcher.MinusculeMatcher;
 import consulo.content.scope.ScopeDescriptor;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;
@@ -17,6 +20,7 @@ import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.language.editor.QualifiedNameProviderUtil;
 import consulo.language.editor.ui.PopupNavigationUtil;
+import consulo.language.editor.ui.navigation.PsiTargetPresentationFactory;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiUtilCore;
 import consulo.language.psi.scope.GlobalSearchScope;
@@ -27,12 +31,16 @@ import consulo.logging.Logger;
 import consulo.navigation.ItemPresentation;
 import consulo.navigation.Navigatable;
 import consulo.navigation.NavigationItem;
+import consulo.navigation.TargetPresentation;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.searchEverywhere.FoundItemDescriptor;
+import consulo.searchEverywhere.SearchEverywhereItemPresentation;
 import consulo.searchEverywhere.SearchEverywhereToggleAction;
 import consulo.searchEverywhere.WeightedSearchEverywhereContributor;
+import consulo.ui.TextAttribute;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.usage.localize.UsageLocalize;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.action.ComboBoxAction;
@@ -230,42 +238,37 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
                 }
 
                 PsiElement context = psiContext != null && psiContext.isValid() ? psiContext : null;
-                ChooseByNamePopup popup = ChooseByNamePopup.createPopup(myProject, model, context);
-                try {
-                    ChooseByNameItemProvider provider = popup.getProvider();
-                    GlobalSearchScope scope = (GlobalSearchScope)ObjectUtil.notNull(myScopeDescriptor.getScope());
+                ChooseByNameItemProvider provider = ChooseByNameModelEx.getItemProvider(model, context);
+                GlobalSearchScope scope = (GlobalSearchScope)ObjectUtil.notNull(myScopeDescriptor.getScope());
 
-                    boolean everywhere = scope.isSearchInLibraries();
-                    if (provider instanceof ChooseByNameInScopeItemProvider chooseByNameInScopeItemProvider) {
-                        FindSymbolParameters parameters = FindSymbolParameters.wrap(pattern, scope);
-                        chooseByNameInScopeItemProvider.filterElementsWithWeights(
-                            popup,
-                            parameters,
-                            progressIndicator,
-                            item -> processElement(progressIndicator, predicate, model, item.getItem(), item.getWeight())
-                        );
-                    }
-                    else if (provider instanceof ChooseByNameWeightedItemProvider chooseByNameWeightedItemProvider) {
-                        chooseByNameWeightedItemProvider.filterElementsWithWeights(
-                            popup,
-                            pattern,
-                            everywhere,
-                            progressIndicator,
-                            item -> processElement(progressIndicator, predicate, model, item.getItem(), item.getWeight())
-                        );
-                    }
-                    else {
-                        provider.filterElements(
-                            popup,
-                            pattern,
-                            everywhere,
-                            progressIndicator,
-                            element -> processElement(progressIndicator, predicate, model, element, getElementPriority(element, pattern))
-                        );
-                    }
+                boolean everywhere = scope.isSearchInLibraries();
+                ChooseByNameViewModel viewModel = new MyViewModel(myProject, model);
+                if (provider instanceof ChooseByNameInScopeItemProvider chooseByNameInScopeItemProvider) {
+                    FindSymbolParameters parameters = FindSymbolParameters.wrap(pattern, scope);
+                    chooseByNameInScopeItemProvider.filterElementsWithWeights(
+                        viewModel,
+                        parameters,
+                        progressIndicator,
+                        item -> processElement(progressIndicator, predicate, model, item.getItem(), item.getWeight())
+                    );
                 }
-                finally {
-                    Disposer.dispose(popup);
+                else if (provider instanceof ChooseByNameWeightedItemProvider chooseByNameWeightedItemProvider) {
+                    chooseByNameWeightedItemProvider.filterElementsWithWeights(
+                        viewModel,
+                        pattern,
+                        everywhere,
+                        progressIndicator,
+                        item -> processElement(progressIndicator, predicate, model, item.getItem(), item.getWeight())
+                    );
+                }
+                else {
+                    provider.filterElements(
+                        viewModel,
+                        pattern,
+                        everywhere,
+                        progressIndicator,
+                        element -> processElement(progressIndicator, predicate, model, element, getElementPriority(element, pattern))
+                    );
                 }
             },
             progressIndicator
@@ -376,6 +379,71 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
     }
 
     @Override
+    public SearchEverywhereItemPresentation getItemPresentation(Object item, @Nullable MinusculeMatcher matcher) {
+        return ReadAction.compute(() -> buildItemPresentation(item, matcher));
+    }
+
+    @RequiredReadAction
+    protected SearchEverywhereItemPresentation buildItemPresentation(Object item, @Nullable MinusculeMatcher matcher) {
+        if (item instanceof PsiElement element) {
+            if (!element.isValid()) {
+                return SearchEverywhereItemPresentation.builder()
+                    .append(UsageLocalize.nodeInvalid(), TextAttribute.ERROR)
+                    .build();
+            }
+
+            TargetPresentation target = Application.get().getInstance(PsiTargetPresentationFactory.class).presentation(element);
+            String containerText = SearchEverywherePsiRenderer.getRelativeContainerText(element);
+            return targetPresentation(target, containerText == null ? LocalizeValue.empty() : LocalizeValue.of(containerText), matcher);
+        }
+
+        if (item instanceof NavigationItem navigationItem) {
+            ItemPresentation presentation = navigationItem.getPresentation();
+            if (presentation != null) {
+                SearchEverywhereItemPresentation.Builder builder = SearchEverywhereItemPresentation.builder()
+                    .icon(presentation.getIcon())
+                    .appendMatched(presentation.getPresentableText().get(), matcher, TextAttribute.REGULAR);
+
+                String location = presentation.getLocationString();
+                if (!StringUtil.isEmpty(location)) {
+                    builder.append(" ").append(location, TextAttribute.GRAYED);
+                }
+                return builder.build();
+            }
+        }
+
+        return SearchEverywhereItemPresentation.of(String.valueOf(item));
+    }
+
+    public static SearchEverywhereItemPresentation targetPresentation(TargetPresentation target, @Nullable MinusculeMatcher matcher) {
+        return targetPresentation(target, target.getContainerText(), matcher);
+    }
+
+    public static SearchEverywhereItemPresentation targetPresentation(
+        TargetPresentation target,
+        LocalizeValue containerText,
+        @Nullable MinusculeMatcher matcher
+    ) {
+        TextAttribute textAttribute = target.getPresentableTextAttribute();
+
+        SearchEverywhereItemPresentation.Builder builder = SearchEverywhereItemPresentation.builder()
+            .icon(target.getIcon())
+            .backgroundColor(target.getBackgroundColor())
+            .appendMatched(target.getPresentableText().get(), matcher, textAttribute == null ? TextAttribute.REGULAR : textAttribute);
+
+        if (containerText.isNotEmpty()) {
+            TextAttribute containerAttribute = target.getContainerTextAttribute();
+            builder.append(" ").append(containerText, containerAttribute == null ? TextAttribute.GRAYED : containerAttribute);
+        }
+
+        LocalizeValue locationText = target.getLocationText();
+        if (locationText.isNotEmpty()) {
+            builder.suffix(locationText, target.getLocationIcon());
+        }
+        return builder.build();
+    }
+
+    @Override
     public int getElementPriority(Object element, String searchPattern) {
         return 50;
     }
@@ -427,6 +495,46 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
 
     protected static boolean openInCurrentWindow(int modifiers) {
         return (modifiers & InputEvent.SHIFT_MASK) == 0;
+    }
+
+    private static class MyViewModel implements ChooseByNameViewModel {
+        private final Project myProject;
+        private final ChooseByNameModel myModel;
+
+        MyViewModel(Project project, ChooseByNameModel model) {
+            myProject = project;
+            myModel = model;
+        }
+
+        @Override
+        public Project getProject() {
+            return myProject;
+        }
+
+        @Override
+        public ChooseByNameModel getModel() {
+            return myModel;
+        }
+
+        @Override
+        public boolean isSearchInAnyPlace() {
+            return myModel.useMiddleMatching();
+        }
+
+        @Override
+        public String transformPattern(String pattern) {
+            return ChooseByNamePopup.getTransformedPattern(pattern, myModel);
+        }
+
+        @Override
+        public boolean canShowListForEmptyPattern() {
+            return false;
+        }
+
+        @Override
+        public int getMaximumListSizeLimit() {
+            return 0;
+        }
     }
 
     protected static class SERenderer extends SearchEverywherePsiRenderer {

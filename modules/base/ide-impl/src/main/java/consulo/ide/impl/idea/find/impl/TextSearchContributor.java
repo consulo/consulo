@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.find.impl;
 
 import consulo.application.dumb.DumbAware;
 import consulo.application.progress.ProgressIndicator;
+import consulo.application.util.matcher.MinusculeMatcher;
 import consulo.content.scope.ScopeDescriptor;
 import consulo.dataContext.DataContext;
 import consulo.disposer.Disposable;
@@ -32,9 +33,12 @@ import consulo.language.psi.SmartPointerManager;
 import consulo.language.psi.SmartPsiElementPointer;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.searchEverywhere.*;
 import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.style.ComponentColors;
+import consulo.usage.TextChunk;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.StatusText;
@@ -185,6 +189,22 @@ public class TextSearchContributor implements WeightedSearchEverywhereContributo
 
     private static @Nullable SearchEverywhereItem deref(@Nullable Reference<SearchEverywhereItem> ref) {
         return ref != null ? ref.get() : null;
+    }
+
+    @Override
+    public SearchEverywhereItemPresentation getItemPresentation(SearchEverywhereItem item, @Nullable MinusculeMatcher matcher) {
+        SearchEverywhereItem.UsagePresentation presentation = item.getPresentation();
+        TextChunk[] text = presentation.getText();
+
+        SearchEverywhereItemPresentation.Builder builder = SearchEverywhereItemPresentation.builder()
+            .icon(PlatformIconGroup.nodesTextarea())
+            .backgroundColor(presentation.getBackgroundColor());
+        for (int i = 1; i < text.length; i++) {
+            builder.append(text[i].getText(), UnifiedFindPopupPanel.toTextAttribute(text[i], ComponentColors.SEARCH_MATCH_BACKGROUND));
+        }
+
+        String fileString = text.length > 0 ? presentation.getFileString() + " " + text[0].getText() : presentation.getFileString();
+        return builder.suffix(LocalizeValue.of(fileString), null).build();
     }
 
     @Override

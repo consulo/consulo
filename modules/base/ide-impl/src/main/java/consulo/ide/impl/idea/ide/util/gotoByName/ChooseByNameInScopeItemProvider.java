@@ -23,7 +23,7 @@ public interface ChooseByNameInScopeItemProvider extends ChooseByNameWeightedIte
      * @see FindSymbolParameters
      */
     boolean filterElements(
-        ChooseByNameBase base,
+        ChooseByNameViewModel base,
         FindSymbolParameters parameters,
         ProgressIndicator indicator,
         Predicate<Object> consumer
@@ -43,7 +43,7 @@ public interface ChooseByNameInScopeItemProvider extends ChooseByNameWeightedIte
      * @see FoundItemDescriptor
      */
     boolean filterElementsWithWeights(
-        ChooseByNameBase base,
+        ChooseByNameViewModel base,
         FindSymbolParameters parameters,
         ProgressIndicator indicator,
         Predicate<FoundItemDescriptor<?>> consumer

@@ -35,7 +35,8 @@ public class GotoFileModel extends FilteringGotoByModel<FileType> implements Dum
 
   public GotoFileModel(Project project) {
     super(project, project.getApplication().getExtensionList(GotoFileContributor.class));
-    myMaxSize = project.getApplication().isUnitTestMode() ? Integer.MAX_VALUE : WindowManagerEx.getInstanceEx().getFrame(project).getSize().width;
+    JFrame frame = project.getApplication().isUnitTestMode() ? null : WindowManagerEx.getInstanceEx().getFrame(project);
+    myMaxSize = frame == null ? Integer.MAX_VALUE : frame.getSize().width;
   }
 
   public boolean isSlashlessMatchingEnabled() {

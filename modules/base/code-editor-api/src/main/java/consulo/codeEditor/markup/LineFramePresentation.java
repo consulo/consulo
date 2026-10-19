@@ -16,15 +16,20 @@
 package consulo.codeEditor.markup;
 
 import consulo.ui.color.ColorValue;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A frame around the lines of a range highlighter - from the line of its start to the line of its end - drawn through
  * the gutter and the text: closed on the left in the gutter, closed on the right in the text, open where the two
  * meet. What a code review draws around the lines a discussion is about.
  *
- * @param color the line of the frame
+ * @param color  the line of the frame
+ * @param resize whether and how the user may drag the edges of the frame, {@code null} for a frame which stays put
  * @author VISTALL
  * @since 2026-10-18
  */
-public record LineFramePresentation(ColorValue color) {
+public record LineFramePresentation(ColorValue color, @Nullable LineFrameResize resize) {
+    public LineFramePresentation(ColorValue color) {
+        this(color, null);
+    }
 }

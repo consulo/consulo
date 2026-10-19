@@ -17,7 +17,6 @@ package consulo.codeEditor.event;
 
 import consulo.codeEditor.*;
 import consulo.codeEditor.markup.GutterIconRenderer;
-import consulo.ui.Point2D;
 import consulo.ui.event.details.InputDetails;
 import org.jspecify.annotations.Nullable;
 
@@ -59,7 +58,6 @@ public class EditorMouseEvent extends EventObject {
     private final @Nullable FoldRegion myCollapsedFoldRegion;
     private final @Nullable Inlay myInlay;
     private final @Nullable GutterIconRenderer myGutterIconRenderer;
-    private final @Nullable Point2D myEditorPoint;
 
     public EditorMouseEvent(Editor editor, MouseEvent mouseEvent, EditorMouseEventArea area) {
         this(editor, mouseEvent, null, area);
@@ -119,31 +117,7 @@ public class EditorMouseEvent extends EventObject {
         @Nullable Inlay inlay,
         @Nullable GutterIconRenderer gutterIconRenderer
     ) {
-        this(editor, inputDetails, popupTrigger, area, offset, logicalPosition, visualPosition, isOverText, collapsedFoldRegion, inlay,
-            gutterIconRenderer, null);
-    }
-
-    /**
-     * Full-geometry event for frontends without an awt event to wrap, with the pointer in editor coordinates.
-     *
-     * @see #getEditorPoint()
-     */
-    public EditorMouseEvent(
-        Editor editor,
-        @Nullable InputDetails inputDetails,
-        boolean popupTrigger,
-        EditorMouseEventArea area,
-        int offset,
-        LogicalPosition logicalPosition,
-        VisualPosition visualPosition,
-        boolean isOverText,
-        @Nullable FoldRegion collapsedFoldRegion,
-        @Nullable Inlay inlay,
-        @Nullable GutterIconRenderer gutterIconRenderer,
-        @Nullable Point2D editorPoint
-    ) {
-        this(editor, FakeHolder.createFake(), inputDetails, popupTrigger, area, offset, logicalPosition, visualPosition, isOverText,
-            collapsedFoldRegion, inlay, gutterIconRenderer, editorPoint);
+        this(editor, FakeHolder.createFake(), inputDetails, popupTrigger, area, offset, logicalPosition, visualPosition, isOverText, collapsedFoldRegion, inlay, gutterIconRenderer);
     }
 
     public EditorMouseEvent(
@@ -160,28 +134,6 @@ public class EditorMouseEvent extends EventObject {
         @Nullable Inlay inlay,
         @Nullable GutterIconRenderer gutterIconRenderer
     ) {
-        this(editor, mouseEvent, inputDetails, popupTrigger, area, offset, logicalPosition, visualPosition, isOverText, collapsedFoldRegion,
-            inlay, gutterIconRenderer, null);
-    }
-
-    /**
-     * @see #getEditorPoint()
-     */
-    public EditorMouseEvent(
-        Editor editor,
-        MouseEvent mouseEvent,
-        @Nullable InputDetails inputDetails,
-        boolean popupTrigger,
-        EditorMouseEventArea area,
-        int offset,
-        LogicalPosition logicalPosition,
-        VisualPosition visualPosition,
-        boolean isOverText,
-        @Nullable FoldRegion collapsedFoldRegion,
-        @Nullable Inlay inlay,
-        @Nullable GutterIconRenderer gutterIconRenderer,
-        @Nullable Point2D editorPoint
-    ) {
         super(editor);
 
         myMouseEvent = mouseEvent;
@@ -195,7 +147,6 @@ public class EditorMouseEvent extends EventObject {
         myCollapsedFoldRegion = collapsedFoldRegion;
         myInlay = inlay;
         myGutterIconRenderer = gutterIconRenderer;
-        myEditorPoint = editorPoint;
     }
 
     public Editor getEditor() {
@@ -270,14 +221,5 @@ public class EditorMouseEvent extends EventObject {
 
     public @Nullable GutterIconRenderer getGutterIconRenderer() {
         return myGutterIconRenderer;
-    }
-
-    /**
-     * The pointer in the coordinates the editor lays its lines out in - the space of {@link Editor#visualLineToY(int)} -
-     * or {@code null} when the frontend does not tell it. Over the gutter only the y belongs to that space; the x is the
-     * one inside the gutter.
-     */
-    public @Nullable Point2D getEditorPoint() {
-        return myEditorPoint;
     }
 }

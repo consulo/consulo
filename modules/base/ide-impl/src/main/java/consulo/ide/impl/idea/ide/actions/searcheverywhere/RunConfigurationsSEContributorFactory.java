@@ -16,6 +16,8 @@
 package consulo.ide.impl.idea.ide.actions.searcheverywhere;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
 import consulo.execution.impl.internal.action.ChooseRunConfigurationPopup;
 import consulo.project.Project;
 import consulo.searchEverywhere.SearchEverywhereContributor;
@@ -37,8 +39,9 @@ public class RunConfigurationsSEContributorFactory implements SearchEverywhereCo
     public SearchEverywhereContributor<ChooseRunConfigurationPopup.@Nullable ItemWrapper> createContributor(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
         Component component = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
+        DataContext dataContext = component == null ? DataManager.getInstance().createAsyncDataContext(e.getDataContext()) : null;
 
-        return new RunConfigurationsSEContributor(project, component, () -> {
+        return new RunConfigurationsSEContributor(project, component, dataContext, () -> {
             SearchEverywhereManager manager = SearchEverywhereManager.getInstance(project);
             if (!manager.isShown()) {
                 return null;

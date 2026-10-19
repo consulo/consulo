@@ -2077,6 +2077,8 @@ searcheverywhere.indexing.incomplete.results:
     text: Search in ''{0}'' results maybe incomplete while {1} is updating indices
 searcheverywhere.indexing.mode.not.supported:
     text: Search in ''{0}'' is not available while {1} is updating indices
+searcheverywhere.more.elements:
+    text: '... more'
 searcheverywhere.nothing.found.for.all:
     text: Nothing found.
 searcheverywhere.nothing.found.for.all.anywhere:

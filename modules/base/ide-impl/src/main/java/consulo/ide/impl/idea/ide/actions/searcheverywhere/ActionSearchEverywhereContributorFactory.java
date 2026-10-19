@@ -17,6 +17,8 @@ package consulo.ide.impl.idea.ide.actions.searcheverywhere;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.Editor;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.ide.util.gotoByName.GotoActionModel;
 import consulo.project.Project;
 import consulo.searchEverywhere.SearchEverywhereContributor;
@@ -24,15 +26,20 @@ import consulo.searchEverywhere.SearchEverywhereContributorFactory;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 
+import java.awt.*;
+
 @ExtensionImpl
 public class ActionSearchEverywhereContributorFactory implements SearchEverywhereContributorFactory<GotoActionModel.MatchedValue> {
     
     @Override
     public SearchEverywhereContributor<GotoActionModel.MatchedValue> createContributor(AnActionEvent initEvent) {
+        Component component = initEvent.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
+        DataContext dataContext = component == null ? DataManager.getInstance().createAsyncDataContext(initEvent.getDataContext()) : null;
         return new ActionSearchEverywhereContributor(
             initEvent.getData(Project.KEY),
-            initEvent.getData(UIExAWTDataKey.CONTEXT_COMPONENT),
-            initEvent.getData(Editor.KEY)
+            component,
+            initEvent.getData(Editor.KEY),
+            dataContext
         );
     }
 }

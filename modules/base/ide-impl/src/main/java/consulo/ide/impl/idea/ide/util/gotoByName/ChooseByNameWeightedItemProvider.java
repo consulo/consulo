@@ -22,7 +22,7 @@ public interface ChooseByNameWeightedItemProvider extends ChooseByNameItemProvid
      * @see FoundItemDescriptor
      */
     boolean filterElementsWithWeights(
-        ChooseByNameBase base,
+        ChooseByNameViewModel base,
         String pattern,
         boolean everywhere,
         ProgressIndicator indicator,
