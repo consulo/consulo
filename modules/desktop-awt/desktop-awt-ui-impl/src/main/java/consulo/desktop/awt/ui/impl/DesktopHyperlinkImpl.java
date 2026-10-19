@@ -22,6 +22,7 @@ import consulo.desktop.awt.ui.impl.facade.FromSwingComponentWrapper;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.Hyperlink;
+import consulo.ui.HyperlinkStyle;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.HyperlinkEvent;
 import consulo.ui.ex.awt.LocalizeAction;
@@ -31,7 +32,10 @@ import consulo.ui.internal.SearchHighlightUtil;
 import org.jdesktop.swingx.JXHyperlink;
 import org.jspecify.annotations.Nullable;
 
+import java.awt.Font;
 import java.awt.event.ActionEvent;
+import java.awt.font.TextAttribute;
+import java.util.Map;
 
 /**
  * @author VISTALL
@@ -53,6 +57,14 @@ public class DesktopHyperlinkImpl extends SwingComponentDelegate<DesktopHyperlin
         }
 
         @Override
+        public void updateUI() {
+            super.updateUI();
+            if (myUnderline) {
+                underline(this);
+            }
+        }
+
+        @Override
         public Component toUIComponent() {
             return DesktopHyperlinkImpl.this;
         }
@@ -61,6 +73,8 @@ public class DesktopHyperlinkImpl extends SwingComponentDelegate<DesktopHyperlin
     private LocalizeValue myText = LocalizeValue.empty();
 
     private @Nullable String mySearchHighlight;
+
+    private boolean myUnderline;
 
     public DesktopHyperlinkImpl(LocalizeValue text) {
         myText = text;
@@ -113,5 +127,22 @@ public class DesktopHyperlinkImpl extends SwingComponentDelegate<DesktopHyperlin
     @Override
     public @Nullable Image getIcon() {
         return TargetAWT.from(toAWTComponent().getIcon());
+    }
+
+    @Override
+    public void addStyle(HyperlinkStyle style) {
+        switch (style) {
+            case UNDERLINE -> {
+                myUnderline = true;
+                underline(toAWTComponent());
+            }
+        }
+    }
+
+    private static void underline(MyLinkLabel label) {
+        Font font = label.getFont();
+        if (font != null) {
+            label.setFont(font.deriveFont(Map.of(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON)));
+        }
     }
 }

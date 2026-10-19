@@ -18,7 +18,7 @@ package consulo.review.impl.internal.editor;
 import consulo.codeEditor.Inlay;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ui.Component;
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -28,9 +28,17 @@ import org.jspecify.annotations.Nullable;
  * @since 2026-10-18
  */
 final class CodeReviewEditorInlayState {
-    @Nullable Component myComponent;
+    @Nullable CodeReviewComponentInlayRenderer myRenderer;
     @Nullable Disposable myRendererDisposable;
     @Nullable Inlay<?> myInlay;
+
+    @RequiredUIAccess
+    void setVisible(boolean visible) {
+        CodeReviewComponentInlayRenderer renderer = myRenderer;
+        if (renderer != null && renderer.isVisible() != visible) {
+            renderer.setVisible(visible);
+        }
+    }
 
     void disposeInlay() {
         Inlay<?> inlay = myInlay;
@@ -44,7 +52,7 @@ final class CodeReviewEditorInlayState {
         disposeInlay();
         Disposable rendererDisposable = myRendererDisposable;
         myRendererDisposable = null;
-        myComponent = null;
+        myRenderer = null;
         if (rendererDisposable != null) {
             Disposer.dispose(rendererDisposable);
         }

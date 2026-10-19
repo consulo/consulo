@@ -19,11 +19,14 @@ import consulo.desktop.qt.ui.impl.base.DesktopQtImageWidget;
 import consulo.desktop.qt.ui.impl.image.DesktopQtIconOwner;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Hyperlink;
+import consulo.ui.HyperlinkStyle;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.HyperlinkEvent;
 import consulo.ui.image.Image;
 import consulo.ui.internal.SearchHighlightUtil;
 import consulo.util.lang.xml.XmlStringUtil;
+import io.qt.core.QEvent;
+import io.qt.core.QObject;
 import io.qt.core.Qt;
 import io.qt.widgets.QHBoxLayout;
 import io.qt.widgets.QLabel;
@@ -39,6 +42,8 @@ public class DesktopQtHyperlinkImpl extends QtComponentDelegate<QWidget> impleme
     private LocalizeValue myText = LocalizeValue.empty();
     private @Nullable Image myIcon;
     private @Nullable String mySearchHighlight;
+    private boolean myUnderline;
+    private boolean myHovered;
 
     private @Nullable DesktopQtImageWidget myIconLabel;
     private @Nullable QLabel myTextLabel;
@@ -72,6 +77,15 @@ public class DesktopQtHyperlinkImpl extends QtComponentDelegate<QWidget> impleme
             Qt.TextInteractionFlag.LinksAccessibleByKeyboard
         );
         myTextLabel.setText(buildHtml());
+        myTextLabel.installEventFilter(new QObject(myTextLabel) {
+            @Override
+            public boolean eventFilter(@Nullable QObject watched, @Nullable QEvent event) {
+                if (event != null && (event.type() == QEvent.Type.Enter || event.type() == QEvent.Type.Leave)) {
+                    setHovered(event.type() == QEvent.Type.Enter);
+                }
+                return false;
+            }
+        });
         layout.addWidget(myTextLabel);
 
         myTextLabel.linkActivated.connect(href ->
@@ -85,7 +99,33 @@ public class DesktopQtHyperlinkImpl extends QtComponentDelegate<QWidget> impleme
     private String buildHtml() {
         String text = QtMnemonic.plain(myText);
         String highlighted = DesktopQtSearchHighlight.toRichText(text, mySearchHighlight);
-        return "<a href=\"click\">" + (highlighted == null ? XmlStringUtil.escapeText(text) : highlighted) + "</a>";
+        String decoration = myUnderline || myHovered ? "underline" : "none";
+        return "<a href=\"click\" style=\"text-decoration: " + decoration + "\">"
+            + (highlighted == null ? XmlStringUtil.escapeText(text) : highlighted) + "</a>";
+    }
+
+    private void setHovered(boolean hovered) {
+        if (myHovered != hovered) {
+            myHovered = hovered;
+            updateHtml();
+        }
+    }
+
+    private void updateHtml() {
+        QLabel textLabel = myTextLabel;
+        if (textLabel != null && !textLabel.isDisposed()) {
+            textLabel.setText(buildHtml());
+        }
+    }
+
+    @Override
+    public void addStyle(HyperlinkStyle style) {
+        switch (style) {
+            case UNDERLINE -> {
+                myUnderline = true;
+                updateHtml();
+            }
+        }
     }
 
     @Override

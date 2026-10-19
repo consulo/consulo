@@ -25,6 +25,7 @@ import consulo.ui.image.Image;
 import consulo.ui.messageList.MessageInput;
 import consulo.ui.messageList.MessageInputStyle;
 import consulo.ui.messageList.MessageInputSubmitEvent;
+import consulo.ui.messageList.MessageInputTextChangeEvent;
 import consulo.ui.style.ComponentColors;
 import io.qt.core.QRectF;
 import io.qt.core.Qt;
@@ -183,6 +184,7 @@ public class DesktopQtMessageInputImpl extends QtComponentDelegate<QFrame> imple
             return;
         }
         send.setEnabled(edit.isEnabled() && !edit.toPlainText().isBlank());
+        getListenerDispatcher(MessageInputTextChangeEvent.class).onEvent(new MessageInputTextChangeEvent(this, edit.toPlainText()));
 
         QFontMetrics metrics = edit.fontMetrics();
         int documentLines = (int) Math.ceil(edit.document().size().height());

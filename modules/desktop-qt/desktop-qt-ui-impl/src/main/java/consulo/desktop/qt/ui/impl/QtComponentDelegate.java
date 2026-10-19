@@ -967,7 +967,7 @@ public abstract class QtComponentDelegate<T extends QWidget> implements Componen
         }
     }
 
-    static Qt.CursorShape toCursorShape(@Nullable Cursor cursor) {
+    public static Qt.CursorShape toCursorShape(@Nullable Cursor cursor) {
         if (!(cursor instanceof StandardCursors standardCursor)) {
             return Qt.CursorShape.ArrowCursor;
         }
@@ -977,6 +977,7 @@ public abstract class QtComponentDelegate<T extends QWidget> implements Componen
             case TEXT -> Qt.CursorShape.IBeamCursor;
             case WAIT -> Qt.CursorShape.WaitCursor;
             case HAND -> Qt.CursorShape.PointingHandCursor;
+            case VERTICAL_RESIZE -> Qt.CursorShape.SizeVerCursor;
             case ARROW -> Qt.CursorShape.ArrowCursor;
         };
     }

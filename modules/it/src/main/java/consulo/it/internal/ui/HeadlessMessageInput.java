@@ -21,6 +21,7 @@ import consulo.ui.image.Image;
 import consulo.ui.messageList.MessageInput;
 import consulo.ui.messageList.MessageInputStyle;
 import consulo.ui.messageList.MessageInputSubmitEvent;
+import consulo.ui.messageList.MessageInputTextChangeEvent;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -56,6 +57,7 @@ public class HeadlessMessageInput extends HeadlessComponentBase implements Messa
     @Override
     public void insertText(String text) {
         myText += text;
+        getListenerDispatcher(MessageInputTextChangeEvent.class).onEvent(new MessageInputTextChangeEvent(this, myText));
     }
 
     public String getText() {

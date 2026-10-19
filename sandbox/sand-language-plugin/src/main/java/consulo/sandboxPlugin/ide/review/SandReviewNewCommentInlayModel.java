@@ -16,43 +16,83 @@
 package consulo.sandboxPlugin.ide.review;
 
 import consulo.review.comment.CodeReviewNewCommentViewModel;
+import consulo.review.editor.CodeReviewAdjustableInlayModel;
+import consulo.review.editor.CodeReviewInlayAdjustmentDisabledReason;
 import consulo.review.editor.CodeReviewLineRange;
 import consulo.review.editor.CodeReviewNewCommentInlayModel;
-import consulo.review.editor.CodeReviewRangedInlayModel;
+import consulo.util.concurrent.coroutine.MutableObservableValue;
 import consulo.util.concurrent.coroutine.ObservableValue;
+import consulo.versionControlSystem.review.comment.CodeReviewSuggestionSyntax;
+import org.jspecify.annotations.Nullable;
+
+import java.util.UUID;
 
 /**
  * @author VISTALL
  * @since 2026-10-18
  */
-public class SandReviewNewCommentInlayModel implements CodeReviewNewCommentInlayModel, CodeReviewRangedInlayModel {
-    private final int myLine;
-    private final ObservableValue<Integer> myLineValue;
-    private final ObservableValue<CodeReviewLineRange> myRange;
+public class SandReviewNewCommentInlayModel implements CodeReviewNewCommentInlayModel, CodeReviewAdjustableInlayModel {
+    private final Object myKey = "new-comment:" + UUID.randomUUID();
+    private final MutableObservableValue<CodeReviewLineRange> myRange;
+    private final MutableObservableValue<Integer> myLine;
+    private final ObservableValue<@Nullable CodeReviewInlayAdjustmentDisabledReason> myAdjustmentDisabledReason;
     private final SandReviewNewCommentViewModel myEditor;
     private final Runnable myCancel;
+    private final Runnable myRangeChanged;
 
-    public SandReviewNewCommentInlayModel(CodeReviewLineRange range, SandReviewNewCommentViewModel editor, Runnable cancel) {
-        myLine = range.end();
-        myLineValue = ObservableValue.of(range.end());
-        myRange = ObservableValue.of(range);
+    /**
+     * @param range        the lines of the comment, changed here when its frame is dragged
+     * @param rangeChanged told once the frame was dragged to other lines
+     */
+    public SandReviewNewCommentInlayModel(MutableObservableValue<CodeReviewLineRange> range,
+                                          SandReviewNewCommentViewModel editor,
+                                          CodeReviewSuggestionSyntax syntax,
+                                          Runnable cancel,
+                                          Runnable rangeChanged) {
+        myRange = range;
+        myLine = MutableObservableValue.of(range.get().end());
+        myAdjustmentDisabledReason = editor.getText()
+            .map(text -> syntax.containsSuggestedChange(text) ? CodeReviewInlayAdjustmentDisabledReason.SUGGESTED_CHANGE : null);
         myEditor = editor;
         myCancel = cancel;
+        myRangeChanged = rangeChanged;
     }
 
     @Override
     public Object getKey() {
-        return "new-comment:" + myLine;
+        return myKey;
     }
 
     @Override
     public ObservableValue<Integer> getLine() {
-        return myLineValue;
+        return myLine;
     }
 
     @Override
     public ObservableValue<CodeReviewLineRange> getRange() {
         return myRange;
+    }
+
+    @Override
+    public ObservableValue<@Nullable CodeReviewInlayAdjustmentDisabledReason> getAdjustmentDisabledReason() {
+        return myAdjustmentDisabledReason;
+    }
+
+    @Override
+    public void adjustRange(@Nullable Integer newStart, @Nullable Integer newEnd) {
+        if (newStart == null && newEnd == null) {
+            return;
+        }
+        CodeReviewLineRange current = myRange.get();
+        int start = newStart == null ? current.start() : newStart;
+        int end = newEnd == null ? current.end() : newEnd;
+        if (start > end) {
+            return;
+        }
+        myRange.set(new CodeReviewLineRange(start, end));
+        myLine.set(end);
+        myRangeChanged.run();
+        myEditor.requestFocus();
     }
 
     @Override

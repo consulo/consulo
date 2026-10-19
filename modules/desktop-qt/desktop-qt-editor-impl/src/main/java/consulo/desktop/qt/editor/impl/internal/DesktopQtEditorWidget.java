@@ -267,6 +267,11 @@ public class DesktopQtEditorWidget extends QAbstractScrollArea implements Deskto
 
     @Override
     protected void mousePressEvent(QMouseEvent event) {
+        if (viewport().childAt(event.pos()) != null) {
+            event.accept();
+            return;
+        }
+
         if (event.button() == Qt.MouseButton.RightButton) {
             // the menu is built out of the data context, so the caret has to have reached the click before the
             // handlers are asked. a click inside the selection is meant for it and leaves the caret alone
@@ -274,6 +279,11 @@ public class DesktopQtEditorWidget extends QAbstractScrollArea implements Deskto
 
             myEditor.fireMousePressed(editingAreaEvent(event));
 
+            event.accept();
+            return;
+        }
+
+        if (event.button() == Qt.MouseButton.LeftButton && myEditor.getLineFrameResize().pressed(documentPoint(event).y)) {
             event.accept();
             return;
         }
@@ -324,8 +334,15 @@ public class DesktopQtEditorWidget extends QAbstractScrollArea implements Deskto
 
     @Override
     protected void mouseMoveEvent(QMouseEvent event) {
+        DesktopQtLineFrameResize lineFrameResize = myEditor.getLineFrameResize();
+        if (lineFrameResize.dragged(documentPoint(event).y)) {
+            event.accept();
+            return;
+        }
+
         if (!mySelecting) {
             updateLinkUnderPointer(event);
+            lineFrameResize.moved(viewport(), event, documentPoint(event).y);
 
             super.mouseMoveEvent(event);
             return;
@@ -410,7 +427,13 @@ public class DesktopQtEditorWidget extends QAbstractScrollArea implements Deskto
 
     @Override
     protected boolean viewportEvent(QEvent event) {
+        if (event.type() == QEvent.Type.Leave) {
+            myEditor.getLineFrameResize().exited();
+        }
         if (event.type() == QEvent.Type.ToolTip && event instanceof QHelpEvent help) {
+            if (myEditor.getLineFrameResize().isTooltipShown()) {
+                return true;
+            }
             DesktopQtEditorCoordinateMapper.InlayHit hit = myEditor.inlayAt(documentPoint(help.pos()));
             LocalizeValue tooltip = hit == null ? LocalizeValue.empty() : myEditor.getInlays().tooltipAt(hit.inlay(), hit.xInInlay());
             if (tooltip.isNotEmpty()) {
@@ -435,6 +458,11 @@ public class DesktopQtEditorWidget extends QAbstractScrollArea implements Deskto
     @Override
     protected void mouseReleaseEvent(QMouseEvent event) {
         mySelecting = false;
+
+        if (myEditor.getLineFrameResize().released()) {
+            event.accept();
+            return;
+        }
 
         myEditor.fireMouseReleased(editingAreaEvent(event));
 

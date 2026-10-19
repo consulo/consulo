@@ -45,10 +45,10 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.event.details.KeyCode;
 import consulo.util.collection.Lists;
+import consulo.desktop.qt.ui.impl.QtComponentDelegate;
 import io.qt.core.Qt;
 import io.qt.gui.QCursor;
 import consulo.ui.cursor.Cursor;
-import consulo.ui.cursor.StandardCursors;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.CustomActionsSchema;
@@ -74,6 +74,7 @@ public class DesktopQtEditorImpl extends CodeEditorBase implements RealEditor, C
     private static final Logger LOG = Logger.getInstance(DesktopQtEditorImpl.class);
 
     private final java.util.Map<Object, Cursor> myCustomCursors = new java.util.LinkedHashMap<>();
+    private final DesktopQtLineFrameResize myLineFrameResize = new DesktopQtLineFrameResize(this);
     private final DesktopQtEditorComponent myComponent;
 
     private final List<Consumer<KeyCode>> myKeyNotConsumedListeners = Lists.newLockFreeCopyOnWriteList();
@@ -134,6 +135,12 @@ public class DesktopQtEditorImpl extends CodeEditorBase implements RealEditor, C
             }
         }, getDisposable());
         Disposer.register(getDisposable(), myComponentInlays::dispose);
+        getScrollingModel().addVisibleAreaListener(event -> {
+            java.awt.Rectangle oldRectangle = event.getOldRectangle();
+            if (oldRectangle != null) {
+                myLineFrameResize.scrolled(event.getNewRectangle().y - oldRectangle.y);
+            }
+        }, getDisposable());
         myGutterComponent = new DesktopQtEditorGutterComponentImpl(this);
 
         setHighlighter(new EmptyEditorHighlighter(new TextAttributes()));
@@ -326,6 +333,10 @@ public class DesktopQtEditorImpl extends CodeEditorBase implements RealEditor, C
      */
     public DesktopQtEditorRowLayout getRowLayout() {
         return myRowLayout;
+    }
+
+    public DesktopQtLineFrameResize getLineFrameResize() {
+        return myLineFrameResize;
     }
 
     public DesktopQtComponentInlays getComponentInlays() {
@@ -780,8 +791,8 @@ public class DesktopQtEditorImpl extends CodeEditorBase implements RealEditor, C
 
         DesktopQtEditorWidget widget = getSurface();
         if (widget != null) {
-            boolean hand = myCustomCursors.containsValue(StandardCursors.HAND);
-            widget.viewport().setCursor(new QCursor(hand ? Qt.CursorShape.PointingHandCursor : Qt.CursorShape.IBeamCursor));
+            Cursor customCursor = myCustomCursors.isEmpty() ? null : myCustomCursors.values().iterator().next();
+            widget.viewport().setCursor(new QCursor(customCursor == null ? Qt.CursorShape.IBeamCursor : QtComponentDelegate.toCursorShape(customCursor)));
         }
     }
 

@@ -22,6 +22,7 @@ import consulo.review.editor.CodeReviewEditorGutterChangesModel;
 import consulo.review.editor.CodeReviewEditorGutterControlsModel;
 import consulo.review.editor.CodeReviewEditorRenderer;
 import consulo.review.editor.CodeReviewInlayModel;
+import consulo.review.editor.CodeReviewMultilineCommentableEditorModel;
 import consulo.review.editor.CodeReviewNewCommentInlayModel;
 import consulo.review.timeline.thread.CodeReviewThreadViewModel;
 import consulo.ui.Component;
@@ -57,8 +58,9 @@ public class CodeReviewEditorRendererImpl implements CodeReviewEditorRenderer {
     public <I extends CodeReviewInlayModel> void renderInlays(Disposable parentDisposable,
                                                               Editor editor,
                                                               ObservableValue<? extends Collection<I>> inlays,
+                                                              @Nullable CodeReviewMultilineCommentableEditorModel editorModel,
                                                               BiFunction<Disposable, I, @Nullable Component> componentFactory) {
-        CodeReviewEditorInlaysRenderer.renderInlays(parentDisposable, editor, inlays, componentFactory);
+        CodeReviewEditorInlaysRenderer.renderInlays(parentDisposable, editor, inlays, editorModel, componentFactory);
     }
 
     @RequiredUIAccess

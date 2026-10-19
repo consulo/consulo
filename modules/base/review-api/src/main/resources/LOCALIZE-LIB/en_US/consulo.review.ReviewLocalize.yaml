@@ -146,3 +146,11 @@ review.suggested.change.progress.commit:
     text: Committing suggested change
 review.suggested.change.insert.action:
     text: Insert Suggestion
+review.comments.code.outline.tooltip.explanation:
+    text: Drag to select several lines for commenting
+review.comments.code.outline.tooltip.suggestion.disabling:
+    text: The range of this comment is not adjustable as it contains suggestion
+review.comments.code.outline.tooltip.commit.review.disabling:
+    text: Comment range cannot be adjusted while reviewing a single commit
+review.comments.code.outline.tooltip.version.not.supported.disabling:
+    text: Comment range adjustment requires a newer server version

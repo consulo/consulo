@@ -220,6 +220,9 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
 
     private boolean myLinkHovered;
 
+    private List<@Nullable LineFrameResize> myLineFrameResizes = List.of();
+    private @Nullable LineFrameResize myDraggedLineFrame;
+
     private final Map<Object, Cursor> myCustomCursors = new LinkedHashMap<>();
 
     private static final AtomicInteger ourComponentInlayIds = new AtomicInteger();
@@ -389,6 +392,7 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
         vaadin.addGutterBandClickListener(event -> performGutterBandClick(event.getId(), event.getDetails()));
 
         vaadin.addGutterHoverListener(event -> performGutterHover(event.getLine(), event.isLineNumbers()));
+        vaadin.addFrameDragListener(this::performFrameDrag);
 
         vaadin.addGutterContextMenuListener(
             event -> performGutterContextMenu(event.getLine(), event.getMarkId(), event.getAnnotationColumn())
@@ -1779,6 +1783,7 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
         }
         highlighters.addAll(Arrays.asList(getMarkupModel().getAllHighlighters()));
 
+        List<@Nullable LineFrameResize> resizes = new ArrayList<>();
         StringBuilder frames = new StringBuilder("[");
         for (RangeHighlighter highlighter : highlighters) {
             LineFramePresentation presentation = highlighter.getLineFramePresentation();
@@ -1794,11 +1799,49 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
             }
             frames.append("{\"start\":").append(myDocument.getLineNumber(highlighter.getStartOffset()))
                 .append(",\"end\":").append(myDocument.getLineNumber(highlighter.getEndOffset()))
-                .append(",\"color\":\"").append(escapeJson(color)).append("\"}");
+                .append(",\"color\":\"").append(escapeJson(color)).append('"');
+            LineFrameResize resize = presentation.resize();
+            if (resize != null) {
+                frames.append(",\"resize\":{\"enabled\":").append(resize.enabled())
+                    .append(",\"tooltip\":\"").append(escapeJson(resize.tooltip().get())).append("\"}");
+            }
+            frames.append('}');
+            resizes.add(resize);
         }
         frames.append(']');
 
+        myLineFrameResizes = resizes;
+
         myEditorComponent.toVaadinComponent().setLineFrames(frames.toString());
+    }
+
+    @RequiredUIAccess
+    private void performFrameDrag(ArquillEditorElement.ArquillFrameDragEvent event) {
+        switch (event.getPhase()) {
+            case "start" -> {
+                int index = event.getFrame();
+                LineFrameResize resize = index >= 0 && index < myLineFrameResizes.size() ? myLineFrameResizes.get(index) : null;
+                myDraggedLineFrame = resize != null && resize.enabled() ? resize : null;
+                if (myDraggedLineFrame != null) {
+                    myDraggedLineFrame.listener().dragStarted(LineFrameEdge.valueOf(event.getEdge()));
+                }
+            }
+            case "move" -> {
+                LineFrameResize resize = myDraggedLineFrame;
+                if (resize != null && event.getLine() >= 0) {
+                    resize.listener().dragged(Math.min(event.getLine(), Math.max(myDocument.getLineCount(), 1) - 1));
+                }
+            }
+            case "end" -> {
+                LineFrameResize resize = myDraggedLineFrame;
+                myDraggedLineFrame = null;
+                if (resize != null) {
+                    resize.listener().dragFinished();
+                }
+            }
+            default -> {
+            }
+        }
     }
 
     @RequiredReadAction

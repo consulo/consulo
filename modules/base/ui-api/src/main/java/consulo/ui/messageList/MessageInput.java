@@ -70,4 +70,12 @@ public interface MessageInput extends HasSuffixComponent, HasComponentStyle<Mess
     default Disposable addSubmitListener(ComponentEventListener<MessageInput, MessageInputSubmitEvent> listener) {
         return addListener(MessageInputSubmitEvent.class, listener);
     }
+
+    /**
+     * Told about the text while it is written. A frontend which learns about the text late may report several edits
+     * at once.
+     */
+    default Disposable addTextChangeListener(ComponentEventListener<MessageInput, MessageInputTextChangeEvent> listener) {
+        return addListener(MessageInputTextChangeEvent.class, listener);
+    }
 }

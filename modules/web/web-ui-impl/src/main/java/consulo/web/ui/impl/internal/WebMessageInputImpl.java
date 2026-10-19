@@ -25,6 +25,7 @@ import consulo.ui.image.Image;
 import consulo.ui.messageList.MessageInput;
 import consulo.ui.messageList.MessageInputStyle;
 import consulo.ui.messageList.MessageInputSubmitEvent;
+import consulo.ui.messageList.MessageInputTextChangeEvent;
 import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
 import consulo.web.ui.impl.internal.base.TargetVaadin;
 import consulo.web.ui.impl.internal.base.VaadinComponentDelegate;
@@ -44,6 +45,8 @@ public class WebMessageInputImpl extends VaadinComponentDelegate<WebMessageInput
         }
     }
 
+    private static final int TEXT_CHANGE_DEBOUNCE_MS = 250;
+
     private LocalizeValue myPlaceholder = LocalizeValue.empty();
     private LocalizeValue mySendText = LocalizeValue.empty();
     private @Nullable Image mySendIcon;
@@ -51,9 +54,18 @@ public class WebMessageInputImpl extends VaadinComponentDelegate<WebMessageInput
 
     public WebMessageInputImpl() {
         toVaadinComponent().addAttachListener(event -> placeSuffix());
-        toVaadinComponent().addSubmitListener(
-            event -> getListenerDispatcher(MessageInputSubmitEvent.class).onEvent(new MessageInputSubmitEvent(this, event.getValue()))
-        );
+        toVaadinComponent().addSubmitListener(event -> {
+            fireTextChange("");
+            getListenerDispatcher(MessageInputSubmitEvent.class).onEvent(new MessageInputSubmitEvent(this, event.getValue()));
+        });
+        toVaadinComponent().getElement()
+            .addEventListener("input", event -> fireTextChange(event.getEventData().get("event.target.value").asString()))
+            .addEventData("event.target.value")
+            .debounce(TEXT_CHANGE_DEBOUNCE_MS);
+    }
+
+    private void fireTextChange(@Nullable String text) {
+        getListenerDispatcher(MessageInputTextChangeEvent.class).onEvent(new MessageInputTextChangeEvent(this, text == null ? "" : text));
     }
 
     @Override

@@ -478,6 +478,10 @@
         };
 
         element.addEventListener('mousemove', domEvent => {
+            if (frameDrag) {
+                return;
+            }
+
             const offset = offsetAt(domEvent);
 
             const modifier = domEvent.ctrlKey || domEvent.metaKey;
@@ -495,7 +499,10 @@
 
             fireHover(modifier && !overInlayAction ? offset : -1);
 
-            const html = inlayTooltipAt(domEvent) || tooltipAt(offset);
+            const frameEdge = domEvent.buttons === 0 ? frameEdgeAt(domEvent) : null;
+            element.classList.toggle('arquill-frame-resize', !!(frameEdge && frameEdge.frame.resize.enabled));
+
+            const html = (frameEdge && escapeText(frameEdge.frame.resize.tooltip)) || inlayTooltipAt(domEvent) || tooltipAt(offset);
             if (html) {
                 showTooltip(html, domEvent.clientX, domEvent.clientY);
             }
@@ -507,6 +514,9 @@
         element.addEventListener('mouseleave', () => {
             fireHover(-1);
             hideTooltip();
+            if (!frameDrag) {
+                element.classList.remove('arquill-frame-resize');
+            }
         });
 
         const onKeyUp = domEvent => {
@@ -2524,6 +2534,89 @@
             }
         };
 
+        const FRAME_EDGE_OUTSIDE = 3;
+        const FRAME_EDGE_LINE_FRACTION = 0.3;
+
+        const escapeText = text => String(text).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+
+        const frameEdgeAt = domEvent => {
+            const frames = element.$arquillLineFrames || [];
+            const lineHeight = textView.getLineHeight();
+            const y = domEvent.clientY;
+            for (let index = 0; index < frames.length; index++) {
+                const frame = frames[index];
+                const startLine = frame.resize ? toViewLine(frame.start) : -1;
+                const endLine = frame.resize ? toViewLine(frame.end) : -1;
+                if (startLine < 0 || endLine < 0) {
+                    continue;
+                }
+
+                const top = pageY(startLine);
+                const bottom = pageY(endLine) + lineHeight;
+                if (y >= top - FRAME_EDGE_OUTSIDE && y <= top + lineHeight * FRAME_EDGE_LINE_FRACTION) {
+                    return { index: index, frame: frame, edge: 'TOP' };
+                }
+                if (y >= bottom - lineHeight * FRAME_EDGE_LINE_FRACTION && y <= bottom + FRAME_EDGE_OUTSIDE) {
+                    return { index: index, frame: frame, edge: 'BOTTOM' };
+                }
+            }
+            return null;
+        };
+
+        let frameDrag = null;
+
+        const fireFrameDrag = (phase, frame, edge, line) => {
+            element.dispatchEvent(new CustomEvent('arquill-frame-drag', {
+                detail: { phase: phase, frame: frame, edge: edge, line: line }
+            }));
+        };
+
+        element.addEventListener('mousedown', domEvent => {
+            if (domEvent.button !== 0 || domEvent.ctrlKey || domEvent.metaKey || frameDrag) {
+                return;
+            }
+
+            const hit = frameEdgeAt(domEvent);
+            if (!hit || !hit.frame.resize.enabled) {
+                return;
+            }
+
+            domEvent.preventDefault();
+            domEvent.stopPropagation();
+            hideTooltip();
+
+            frameDrag = { line: -1 };
+            document.body.classList.add('arquill-frame-resizing');
+            fireFrameDrag('start', hit.index, hit.edge, -1);
+
+            const move = moveEvent => {
+                moveEvent.preventDefault();
+                moveEvent.stopPropagation();
+
+                const line = lineAtPageY(moveEvent.clientY);
+                if (frameDrag && line >= 0 && line !== frameDrag.line) {
+                    frameDrag.line = line;
+                    fireFrameDrag('move', -1, '', line);
+                }
+            };
+
+            const up = upEvent => {
+                upEvent.preventDefault();
+                upEvent.stopPropagation();
+
+                document.removeEventListener('mousemove', move, true);
+                document.removeEventListener('mouseup', up, true);
+
+                frameDrag = null;
+                document.body.classList.remove('arquill-frame-resizing');
+                element.classList.remove('arquill-frame-resize');
+                fireFrameDrag('end', -1, '', -1);
+            };
+
+            document.addEventListener('mousemove', move, true);
+            document.addEventListener('mouseup', up, true);
+        }, true);
+
         // a component changing its height changes the height of the line it reserved, which orion only learns by
         // laying the lines out again
         const componentInlayResized = entries => {
@@ -2647,7 +2740,23 @@
             onScroll: listener => textView.addEventListener('Scroll', listener)
         };
 
+        const collapsedComponentInlayLine = viewLine => {
+            const layer = element.$arquillComponentLayer;
+            if (!layer || layer.childElementCount === 0) {
+                return false;
+            }
+            const found = componentInlayLines().find(it => it.viewLine === viewLine);
+            const host = found ? layer.querySelector('[data-arquill-component-inlay="' + found.id + '"]') : null;
+            return !!host && host.$arquillHeight === 0;
+        };
+
         textView.addEventListener('LineStyle', event => {
+            if (collapsedComponentInlayLine(event.lineIndex)) {
+                event.style = event.style || {};
+                event.style.style = Object.assign({}, event.style.style, { height: '0px', overflow: 'hidden' });
+                return;
+            }
+
             const backgrounds = element.$arquillLineBackgrounds;
             if (!backgrounds) {
                 return;

@@ -17,10 +17,14 @@ package consulo.it.internal.ui;
 
 import consulo.localize.LocalizeValue;
 import consulo.ui.Hyperlink;
+import consulo.ui.HyperlinkStyle;
 import consulo.ui.event.HyperlinkEvent;
 import consulo.ui.image.Image;
 import consulo.ui.internal.SearchHighlightUtil;
 import org.jspecify.annotations.Nullable;
+
+import java.util.EnumSet;
+import java.util.Set;
 
 /**
  * @author VISTALL
@@ -30,6 +34,7 @@ public class HeadlessHyperlink extends HeadlessComponentBase implements Hyperlin
 
     private LocalizeValue myText;
     private @Nullable Image myIcon;
+    private final Set<HyperlinkStyle> myStyles = EnumSet.noneOf(HyperlinkStyle.class);
 
     public HeadlessHyperlink(LocalizeValue text) {
         myText = text;
@@ -67,5 +72,14 @@ public class HeadlessHyperlink extends HeadlessComponentBase implements Hyperlin
     @Override
     public @Nullable String getSearchHighlight() {
         return mySearchHighlight;
+    }
+
+    @Override
+    public void addStyle(HyperlinkStyle style) {
+        myStyles.add(style);
+    }
+
+    public boolean hasStyle(HyperlinkStyle style) {
+        return myStyles.contains(style);
     }
 }

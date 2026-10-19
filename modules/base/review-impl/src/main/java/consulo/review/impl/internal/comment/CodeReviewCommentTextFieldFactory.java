@@ -65,6 +65,7 @@ public final class CodeReviewCommentTextFieldFactory {
         else if (suffix != null) {
             input.setSuffixComponent(suffix);
         }
+        input.addTextChangeListener(event -> vm.getText().set(event.getValue()));
         input.addSubmitListener(event -> {
             vm.getText().set(event.getValue());
             vm.submit();

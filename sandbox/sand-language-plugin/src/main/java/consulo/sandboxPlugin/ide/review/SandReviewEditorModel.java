@@ -44,6 +44,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * The review controls of an editor showing a sand demo file: the threads anchored to its lines and the inputs of new
@@ -60,7 +61,7 @@ public class SandReviewEditorModel implements CodeReviewEditorModel<CodeReviewIn
     private final Disposable myDisposable;
 
     private final Map<Object, SandReviewThreadInlayModel> myThreadInlays = new LinkedHashMap<>();
-    private final Map<Integer, SandReviewNewCommentInlayModel> myNewComments = new LinkedHashMap<>();
+    private final List<SandReviewNewCommentInlayModel> myNewComments = new ArrayList<>();
 
     private final List<String> myBaseLines;
     private final MutableObservableValue<@Nullable List<CodeReviewChangedRange>> myReviewRanges = MutableObservableValue.of(null);
@@ -114,14 +115,18 @@ public class SandReviewEditorModel implements CodeReviewEditorModel<CodeReviewIn
 
     private synchronized void publish() {
         List<CodeReviewInlayModel> inlays = new ArrayList<>(myThreadInlays.values());
-        inlays.addAll(myNewComments.values());
+        inlays.addAll(myNewComments);
         myInlays.set(List.copyOf(inlays));
 
         Set<Integer> linesWithComments = new LinkedHashSet<>();
         for (SandReviewThreadInlayModel inlay : myThreadInlays.values()) {
             linesWithComments.add(inlay.getLine().get());
         }
-        myGutterControlsState.set(new SandReviewGutterControlsState(Set.copyOf(linesWithComments), Set.copyOf(myNewComments.keySet())));
+        Set<Integer> linesWithNewComments = new LinkedHashSet<>();
+        for (SandReviewNewCommentInlayModel inlay : myNewComments) {
+            linesWithNewComments.add(inlay.getLine().get());
+        }
+        myGutterControlsState.set(new SandReviewGutterControlsState(Set.copyOf(linesWithComments), Set.copyOf(linesWithNewComments)));
     }
 
     @Override
@@ -197,22 +202,44 @@ public class SandReviewEditorModel implements CodeReviewEditorModel<CodeReviewIn
     @RequiredUIAccess
     @Override
     public synchronized void requestNewComment(CodeReviewLineRange lineRange) {
-        int lineIdx = lineRange.end();
-        if (myNewComments.containsKey(lineIdx)) {
+        if (findNewComment(lineRange.end()) != null) {
             return;
         }
+        MutableObservableValue<CodeReviewLineRange> range = MutableObservableValue.of(lineRange);
+        AtomicReference<@Nullable SandReviewNewCommentInlayModel> inlay = new AtomicReference<>();
         SandReviewNewCommentViewModel editor = new SandReviewNewCommentViewModel(
             myService.getProject(),
             myDisposable,
             myService.getScheduler(),
             comment -> {
-                cancelNewComment(lineIdx);
-                myService.createThread(myFileName, lineRange.start(), lineRange.end(), comment);
+                removeNewComment(inlay.get());
+                CodeReviewLineRange commented = range.get();
+                myService.createThread(myFileName, commented.start(), commented.end(), comment);
             },
-            () -> createSuggestedChange(lineRange)
+            () -> createSuggestedChange(range.get())
         );
-        myNewComments.put(lineIdx, new SandReviewNewCommentInlayModel(lineRange, editor, () -> cancelNewComment(lineIdx)));
+        inlay.set(new SandReviewNewCommentInlayModel(range,
+            editor,
+            myService.getSuggestedChangeSupport().getSyntax(),
+            () -> removeNewComment(inlay.get()),
+            this::publish));
+        myNewComments.add(inlay.get());
         publish();
+    }
+
+    private @Nullable SandReviewNewCommentInlayModel findNewComment(int lineIdx) {
+        for (SandReviewNewCommentInlayModel inlay : myNewComments) {
+            if (inlay.getLine().get() == lineIdx) {
+                return inlay;
+            }
+        }
+        return null;
+    }
+
+    private synchronized void removeNewComment(@Nullable SandReviewNewCommentInlayModel inlay) {
+        if (inlay != null && myNewComments.remove(inlay)) {
+            publish();
+        }
     }
 
     private String createSuggestedChange(CodeReviewLineRange lineRange) {
@@ -227,9 +254,7 @@ public class SandReviewEditorModel implements CodeReviewEditorModel<CodeReviewIn
     @RequiredUIAccess
     @Override
     public synchronized void cancelNewComment(int lineIdx) {
-        if (myNewComments.remove(lineIdx) != null) {
-            publish();
-        }
+        removeNewComment(findNewComment(lineIdx));
     }
 
     @Override

@@ -22,6 +22,7 @@ import com.vaadin.flow.component.html.Span;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.Hyperlink;
+import consulo.ui.HyperlinkStyle;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.HyperlinkEvent;
 import consulo.ui.ex.internal.LocalizeValueWithMnemonic;
@@ -128,5 +129,12 @@ public class WebHyperlinkImpl extends VaadinComponentDelegate<WebHyperlinkImpl.V
     @Override
     public @Nullable Image getIcon() {
         return myIcon;
+    }
+
+    @Override
+    public void addStyle(HyperlinkStyle style) {
+        switch (style) {
+            case UNDERLINE -> getVaadinComponent().addClassName("consulo-hyperlink-underline");
+        }
     }
 }

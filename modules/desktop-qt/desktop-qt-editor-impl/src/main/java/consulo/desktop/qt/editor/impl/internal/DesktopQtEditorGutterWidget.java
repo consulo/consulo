@@ -26,6 +26,7 @@ import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.codeEditor.markup.LineMarkerPresentationProvider;
 import consulo.codeEditor.markup.LineMarkerPresentationContext;
 import consulo.codeEditor.markup.LineMarkerPresentation;
+import consulo.codeEditor.impl.LineFrameEdgeHit;
 import consulo.codeEditor.markup.LineFramePresentation;
 import consulo.codeEditor.markup.EditorGutterArea;
 import consulo.codeEditor.impl.EditorLineMarkerPresentationContext;
@@ -269,7 +270,20 @@ public class DesktopQtEditorGutterWidget extends QWidget {
 
         boolean actionable = region != null || renderer != null && renderer.getClickAction() != null;
 
-        setCursor(new QCursor(actionable ? Qt.CursorShape.PointingHandCursor : Qt.CursorShape.ArrowCursor));
+        DesktopQtLineFrameResize lineFrameResize = myEditor.getLineFrameResize();
+        int y = event.pos().y() + mySurface.verticalScrollBar().value();
+        if (lineFrameResize.dragged(y)) {
+            event.accept();
+            return;
+        }
+
+        LineFrameEdgeHit edge = lineFrameResize.moved(this, event, y);
+        if (edge != null && edge.resize().enabled()) {
+            setCursor(new QCursor(Qt.CursorShape.SizeVerCursor));
+        }
+        else {
+            setCursor(new QCursor(actionable ? Qt.CursorShape.PointingHandCursor : Qt.CursorShape.ArrowCursor));
+        }
 
         fireMouseMoved(event, visualLine, areaAt(x));
 
@@ -322,6 +336,7 @@ public class DesktopQtEditorGutterWidget extends QWidget {
 
     @Override
     protected void leaveEvent(QEvent event) {
+        myEditor.getLineFrameResize().exited();
         myHovered = false;
         setCursor(new QCursor(Qt.CursorShape.ArrowCursor));
         update();
@@ -1146,6 +1161,12 @@ public class DesktopQtEditorGutterWidget extends QWidget {
         int x = logicalX(event.pos().x());
         int visualLine = visualLineAt(event.pos().y());
 
+        if (event.button() == Qt.MouseButton.LeftButton
+            && myEditor.getLineFrameResize().pressed(event.pos().y() + mySurface.verticalScrollBar().value())) {
+            event.accept();
+            return;
+        }
+
         // an anchor takes the click for itself, since folding is the gutter's own business
         if (x >= markerAreaOffset() && event.button() == Qt.MouseButton.LeftButton) {
             FoldRegion region = foldRegionAt(visualLine);
@@ -1208,6 +1229,12 @@ public class DesktopQtEditorGutterWidget extends QWidget {
 
     @Override
     protected void mouseReleaseEvent(QMouseEvent event) {
+        if (myEditor.getLineFrameResize().released()) {
+            myPressedLine = -1;
+            event.accept();
+            return;
+        }
+
         int visualLine = visualLineAt(event.pos().y());
 
         // the mark takes the click for itself, the way the awt gutter consumes one it found an action for -

@@ -48,7 +48,11 @@ public interface CodeReviewEditorRenderer {
             renderGutterChanges(parentDisposable, editor, changesModel);
         }
         renderGutterControls(parentDisposable, editor, model);
-        renderInlays(parentDisposable, editor, model.getInlays(), this::createInlayComponent);
+        renderInlays(parentDisposable,
+            editor,
+            model.getInlays(),
+            model instanceof CodeReviewMultilineCommentableEditorModel multiline ? multiline : null,
+            this::createInlayComponent);
     }
 
     /**
@@ -66,11 +70,16 @@ public interface CodeReviewEditorRenderer {
     /**
      * A block inlay under the line of every visible inlay model, keyed by {@link CodeReviewInlayModel#getKey()} so an
      * inlay survives updates of the collection; a {@code null} component skips the model.
+     *
+     * @param editorModel what says which lines can be commented, so the frame of a
+     *                    {@link CodeReviewAdjustableInlayModel} can be dragged over them; {@code null} keeps every frame
+     *                    where it is
      */
     @RequiredUIAccess
     <I extends CodeReviewInlayModel> void renderInlays(Disposable parentDisposable,
                                                        Editor editor,
                                                        ObservableValue<? extends Collection<I>> inlays,
+                                                       @Nullable CodeReviewMultilineCommentableEditorModel editorModel,
                                                        BiFunction<Disposable, I, @Nullable Component> componentFactory);
 
     /**

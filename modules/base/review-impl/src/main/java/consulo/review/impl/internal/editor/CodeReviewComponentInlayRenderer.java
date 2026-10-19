@@ -22,26 +22,30 @@ import consulo.codeEditor.Inlay;
 import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.layout.DockLayout;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 
 public class CodeReviewComponentInlayRenderer extends ComponentInlayRenderer {
+    private final Component myActualComponent;
     private @Nullable GutterIconRenderer myGutterIconRenderer;
 
-    public CodeReviewComponentInlayRenderer(Component component) {
-        super(component, ComponentInlayAlignment.FIT_VIEWPORT_WIDTH);
+    @RequiredUIAccess
+    public CodeReviewComponentInlayRenderer(Component actualComponent) {
+        super(DockLayout.create().center(actualComponent), ComponentInlayAlignment.FIT_VIEWPORT_WIDTH);
+        myActualComponent = actualComponent;
         // 52 for avatar and gaps
         setMaxWidth(CodeReviewEditorUIConstants.TEXT_CONTENT_WIDTH.plusPixel(52));
     }
 
     public boolean isVisible() {
-        return getComponent().isVisible();
+        return myActualComponent.isVisible();
     }
 
     @RequiredUIAccess
     public void setVisible(boolean value) {
-        getComponent().setVisible(value);
+        myActualComponent.setVisible(value);
     }
 
     public @Nullable GutterIconRenderer getGutterIconRenderer() {

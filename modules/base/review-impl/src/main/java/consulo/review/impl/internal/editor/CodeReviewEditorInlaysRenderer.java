@@ -24,6 +24,7 @@ import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.logging.Logger;
 import consulo.review.editor.CodeReviewInlayModel;
+import consulo.review.editor.CodeReviewMultilineCommentableEditorModel;
 import consulo.review.impl.internal.ReviewUIUtil;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -52,6 +53,7 @@ public final class CodeReviewEditorInlaysRenderer {
     public static <VM extends CodeReviewInlayModel> void renderInlays(Disposable parentDisposable,
                                                                       Editor editor,
                                                                       ObservableValue<? extends Collection<VM>> vms,
+                                                                      @Nullable CodeReviewMultilineCommentableEditorModel editorModel,
                                                                       BiFunction<Disposable, VM, @Nullable Component> rendererFactory) {
         Map<Object, Disposable> controllersByVmKey = new LinkedHashMap<>();
         Disposer.register(parentDisposable, () -> {
@@ -84,36 +86,38 @@ public final class CodeReviewEditorInlaysRenderer {
                 }
                 Disposable controller = Disposable.newDisposable("Code review editor inlay for " + vm.getKey());
                 controllersByVmKey.put(vm.getKey(), controller);
-                controlInlay(controller, vm, editor, rendererFactory);
-                CodeReviewEditorInlayRangeOutlineUtils.showOutlineIn(controller, editor, vm);
+                CodeReviewEditorInlayState state = new CodeReviewEditorInlayState();
+                controlInlay(controller, state, vm, editor, rendererFactory);
+                CodeReviewEditorInlayRangeOutlineUtils.showOutlineIn(controller, editor, vm, editorModel, state::setVisible);
             }
         });
     }
 
     @RequiredUIAccess
     private static <VM extends CodeReviewInlayModel> void controlInlay(Disposable controller,
+                                                                       CodeReviewEditorInlayState state,
                                                                        VM vm,
                                                                        Editor editor,
                                                                        BiFunction<Disposable, VM, @Nullable Component> rendererFactory) {
-        CodeReviewEditorInlayState state = new CodeReviewEditorInlayState();
         Disposer.register(controller, state::disposeRenderer);
 
         ReviewUIUtil.bind(controller, vm.getLine(), vm.isVisible(), (line, isVisible) -> {
             state.disposeInlay();
             if (line != null) {
                 if (isVisible) {
-                    Component component = state.myComponent;
-                    if (component == null) {
+                    CodeReviewComponentInlayRenderer renderer = state.myRenderer;
+                    if (renderer == null) {
                         Disposable rendererDisposable = Disposable.newDisposable("Code review editor inlay renderer for " + vm.getKey());
-                        component = rendererFactory.apply(rendererDisposable, vm);
+                        Component component = rendererFactory.apply(rendererDisposable, vm);
                         if (component == null) {
                             Disposer.dispose(rendererDisposable);
                             return;
                         }
-                        state.myComponent = component;
+                        renderer = new CodeReviewComponentInlayRenderer(component);
+                        state.myRenderer = renderer;
                         state.myRendererDisposable = rendererDisposable;
                     }
-                    state.myInlay = insertComponent(editor, component, line);
+                    state.myInlay = insertComponent(editor, renderer, line);
                 }
             }
             else {
@@ -123,7 +127,7 @@ public final class CodeReviewEditorInlaysRenderer {
     }
 
     @RequiredUIAccess
-    private static @Nullable Inlay<?> insertComponent(Editor editor, Component component, int line) {
+    private static @Nullable Inlay<?> insertComponent(Editor editor, CodeReviewComponentInlayRenderer renderer, int line) {
         Document document = editor.getDocument();
         if (document.getLineCount() <= line) {
             LOG.warn("Failed to insert inlay into " + editor + " at line " + line);
@@ -131,6 +135,6 @@ public final class CodeReviewEditorInlaysRenderer {
         }
         int offset = document.getLineEndOffset(line);
         InlayProperties properties = new InlayProperties().priority(0).relatesToPrecedingText(true);
-        return editor.getInlayModel().addBlockElement(offset, properties, new CodeReviewComponentInlayRenderer(component));
+        return editor.getInlayModel().addBlockElement(offset, properties, renderer);
     }
 }

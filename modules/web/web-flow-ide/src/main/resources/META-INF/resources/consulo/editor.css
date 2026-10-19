@@ -670,6 +670,19 @@
   border-radius: 0 4px 4px 0;
 }
 
+.arquill-frame-resize,
+.arquill-frame-resize *,
+body.arquill-frame-resizing,
+body.arquill-frame-resizing *
+{
+  cursor: ns-resize !important;
+}
+
+body.arquill-frame-resizing
+{
+  user-select: none;
+}
+
 .arquill-floating-toolbar-layer
 {
   position: absolute;

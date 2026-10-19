@@ -568,6 +568,45 @@ public class ArquillEditorElement extends Component implements HasSize {
         }
     }
 
+    @DomEvent("arquill-frame-drag")
+    public static class ArquillFrameDragEvent extends ComponentEvent<ArquillEditorElement> {
+        private final String myPhase;
+        private final int myFrame;
+        private final String myEdge;
+        private final int myLine;
+
+        public ArquillFrameDragEvent(
+            ArquillEditorElement source,
+            boolean fromClient,
+            @EventData("event.detail.phase") String phase,
+            @EventData("event.detail.frame") int frame,
+            @EventData("event.detail.edge") String edge,
+            @EventData("event.detail.line") int line
+        ) {
+            super(source, fromClient);
+            myPhase = phase;
+            myFrame = frame;
+            myEdge = edge;
+            myLine = line;
+        }
+
+        public String getPhase() {
+            return myPhase;
+        }
+
+        public int getFrame() {
+            return myFrame;
+        }
+
+        public String getEdge() {
+            return myEdge;
+        }
+
+        public int getLine() {
+            return myLine;
+        }
+    }
+
     @DomEvent("arquill-gutter-line-click")
     public static class ArquillGutterLineClickEvent extends ComponentEvent<ArquillEditorElement> {
         private final int myLine;
@@ -946,6 +985,10 @@ public class ArquillEditorElement extends Component implements HasSize {
 
     public Registration addGutterContextMenuListener(ComponentEventListener<ArquillGutterContextMenuEvent> listener) {
         return addListener(ArquillGutterContextMenuEvent.class, listener);
+    }
+
+    public Registration addFrameDragListener(ComponentEventListener<ArquillFrameDragEvent> listener) {
+        return addListener(ArquillFrameDragEvent.class, listener);
     }
 
     public Registration addGutterHoverListener(ComponentEventListener<ArquillGutterHoverEvent> listener) {

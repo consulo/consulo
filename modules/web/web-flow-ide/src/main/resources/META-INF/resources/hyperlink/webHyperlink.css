@@ -6,7 +6,8 @@
     text-decoration: none;
 }
 
-.consulo-hyperlink:hover {
+.consulo-hyperlink:hover,
+.consulo-hyperlink.consulo-hyperlink-underline {
     text-decoration: underline;
 }
 

@@ -28,6 +28,7 @@ import consulo.ui.image.Image;
 import consulo.ui.messageList.MessageInput;
 import consulo.ui.messageList.MessageInputStyle;
 import consulo.ui.messageList.MessageInputSubmitEvent;
+import consulo.ui.messageList.MessageInputTextChangeEvent;
 import consulo.ui.style.ComponentColors;
 import org.jspecify.annotations.Nullable;
 
@@ -149,6 +150,8 @@ public class DesktopMessageInputImpl extends SwingComponentDelegate<JPanel> impl
             protected void textChanged(DocumentEvent e) {
                 mySendButton.setEnabled(myTextArea.isEnabled() && !myTextArea.getText().isBlank());
                 panel.revalidate();
+                getListenerDispatcher(MessageInputTextChangeEvent.class)
+                    .onEvent(new MessageInputTextChangeEvent(DesktopMessageInputImpl.this, myTextArea.getText()));
             }
         });
         myTextArea.addFocusListener(new FocusAdapter() {
@@ -223,7 +226,11 @@ public class DesktopMessageInputImpl extends SwingComponentDelegate<JPanel> impl
         }
         mySuffixComponent = suffixComponent;
         if (suffixComponent != null) {
-            myButtonRow.add(TargetAWT.to(suffixComponent), 0);
+            java.awt.Component suffix = TargetAWT.to(suffixComponent);
+            if (suffix instanceof JPanel panel) {
+                panel.setOpaque(false);
+            }
+            myButtonRow.add(suffix, 0);
         }
         myButtonRow.revalidate();
         myButtonRow.repaint();

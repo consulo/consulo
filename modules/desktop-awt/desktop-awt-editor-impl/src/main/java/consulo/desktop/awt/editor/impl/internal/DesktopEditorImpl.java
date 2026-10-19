@@ -212,6 +212,9 @@ public final class DesktopEditorImpl extends CodeEditorBase
     private final MouseListener myMouseListener = new MyMouseAdapter();
     private final MouseMotionListener myMouseMotionListener = new MyMouseMotionListener();
 
+    private final LineFrameResizeGesture myLineFrameResize = new LineFrameResizeGesture(this);
+    private final OutlineTooltipManager myLineFrameTooltip = new OutlineTooltipManager(this);
+
     /**
      * Holds information about area where mouse was pressed.
      */
@@ -470,6 +473,12 @@ public final class DesktopEditorImpl extends CodeEditorBase
         updateCaretCursor();
 
         myScrollingModel.addVisibleAreaListener(this::moveCaretIntoViewIfCoveredByToolWindowBelow);
+        myScrollingModel.addVisibleAreaListener(e -> {
+            Rectangle oldRectangle = e.getOldRectangle();
+            if (oldRectangle != null) {
+                myLineFrameResize.scrolled(e.getNewRectangle().y - oldRectangle.y);
+            }
+        });
 
         PropertyChangeListener propertyChangeListener = e -> {
             if (Document.PROP_WRITABLE.equals(e.getPropertyName())) {
@@ -3183,6 +3192,11 @@ public final class DesktopEditorImpl extends CodeEditorBase
         @RequiredUIAccess
         public void mousePressed(MouseEvent e) {
             requestFocus();
+            if (SwingUtilities.isLeftMouseButton(e) && !e.isPopupTrigger() && myLineFrameResize.pressed(e.getY())) {
+                myLineFrameTooltip.hideTooltip();
+                e.consume();
+                return;
+            }
             runMousePressedCommand(e);
         }
 
@@ -3191,6 +3205,10 @@ public final class DesktopEditorImpl extends CodeEditorBase
         public void mouseReleased(MouseEvent e) {
             myMousePressArea = null;
             myLastMousePressedLocation = null;
+            if (myLineFrameResize.released()) {
+                e.consume();
+                return;
+            }
             runMouseReleasedCommand(e);
             if (!e.isConsumed() && myMousePressedEvent != null && !myMousePressedEvent.isConsumed()
                 && Math.abs(e.getX() - myMousePressedEvent.getX()) < EditorImplUtil.getSpaceWidth(Font.PLAIN, DesktopEditorImpl.this)
@@ -3206,6 +3224,8 @@ public final class DesktopEditorImpl extends CodeEditorBase
 
         @Override
         public void mouseExited(MouseEvent e) {
+            myLineFrameResize.exited();
+            myLineFrameTooltip.hideTooltip();
             runMouseExitedCommand(e);
             EditorMouseEvent event = createEditorMouseEvent(e);
             if (event.getArea() == EditorMouseEventArea.LINE_MARKERS_AREA) {
@@ -3759,6 +3779,9 @@ public final class DesktopEditorImpl extends CodeEditorBase
             if (myDraggedRange != null || myGutterComponent.myDnDInProgress) {
                 return; // on Mac we receive events even if drag-n-drop is in progress
             }
+            if (myLineFrameResize.dragged(e.getY())) {
+                return;
+            }
             validateMousePointer(e, null);
             EditorMouseEvent event = createEditorMouseEvent(e);
 
@@ -3807,12 +3830,27 @@ public final class DesktopEditorImpl extends CodeEditorBase
                 myGutterComponent.mouseMoved(e);
             }
 
+            updateLineFrameEdge(e);
+
             for (EditorMouseMotionListener listener : myMouseMotionListeners) {
                 listener.mouseMoved(event);
                 if (isReleased) {
                     return;
                 }
             }
+        }
+
+        @RequiredUIAccess
+        private void updateLineFrameEdge(MouseEvent e) {
+            LineFrameEdgeHit hit = myLineFrameResize.moved(e.getY());
+            if (hit == null) {
+                myLineFrameTooltip.hideTooltip();
+                return;
+            }
+            if (e.getSource() == myGutterComponent && hit.resize().enabled()) {
+                UIUtil.setCursor(myGutterComponent, Cursor.getPredefinedCursor(Cursor.N_RESIZE_CURSOR));
+            }
+            myLineFrameTooltip.showTooltip(e.getComponent(), e.getPoint(), hit.resize().tooltip().get());
         }
     }
 
