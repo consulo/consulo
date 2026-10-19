@@ -49,7 +49,9 @@ import org.jspecify.annotations.Nullable;
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NavigableMap;
 import java.util.Objects;
+import java.util.TreeMap;
 import java.util.function.Function;
 
 /**
@@ -72,6 +74,7 @@ public class PsiBuilderImpl extends UnprotectedUserDataHolder implements PsiBuil
     private int myCurrentLexeme;
 
     private final MyList myProduction = new MyList();
+    private final NavigableMap<Integer, IElementType> myTokenTypesToRestoreOnRollback = new TreeMap<>();
 
     private final Lexer myLexer;
     private final TokenSet myWhitespaces;
@@ -324,6 +327,7 @@ public class PsiBuilderImpl extends UnprotectedUserDataHolder implements PsiBuil
         private PsiBuilderImpl myBuilder;
         private IElementType myType;
         private DoneMarker myDoneMarker;
+        private @Nullable WhitespacesAndCommentsBinder myRightEdgeTokenBinder;
         private Throwable myDebugAllocationPosition;
         private ProductionMarker myFirstChild;
         private ProductionMarker myLastChild;
@@ -339,6 +343,7 @@ public class PsiBuilderImpl extends UnprotectedUserDataHolder implements PsiBuil
             myBuilder = null;
             myType = null;
             myDoneMarker = null;
+            myRightEdgeTokenBinder = null;
             myDebugAllocationPosition = null;
             myFirstChild = myLastChild = null;
             myHC = -1;
@@ -478,9 +483,11 @@ public class PsiBuilderImpl extends UnprotectedUserDataHolder implements PsiBuil
 
             if (right != null) {
                 if (myDoneMarker == null) {
-                    throw new IllegalArgumentException("Cannot set right-edge processor for unclosed marker");
+                    myRightEdgeTokenBinder = right;
                 }
-                myDoneMarker.myEdgeTokenBinder = right;
+                else {
+                    myDoneMarker.myEdgeTokenBinder = right;
+                }
             }
         }
 
@@ -801,6 +808,12 @@ public class PsiBuilderImpl extends UnprotectedUserDataHolder implements PsiBuil
     }
 
     @Override
+    public void remapCurrentTokenAndRestoreOnRollback(IElementType type) {
+        myTokenTypesToRestoreOnRollback.putIfAbsent(myCurrentLexeme, myLexTypes[myCurrentLexeme]);
+        remapCurrentToken(type);
+    }
+
+    @Override
     public @Nullable IElementType lookAhead(int steps) {
         if (eof()) {    // ensure we skip over whitespace if it's needed
             return null;
@@ -955,6 +968,13 @@ public class PsiBuilderImpl extends UnprotectedUserDataHolder implements PsiBuil
     }
 
     private void rollbackTo(Marker marker) {
+        // Empty unless remapCurrentTokenAndRestoreOnRollback was used; skip the tail-submap allocation on the common path.
+        if (!myTokenTypesToRestoreOnRollback.isEmpty()) {
+            NavigableMap<Integer, IElementType> remapped = myTokenTypesToRestoreOnRollback.tailMap(((StartMarker)marker).myLexemeIndex, true);
+            remapped.forEach((index, type) -> myLexTypes[index] = type);
+            remapped.clear();
+        }
+
         myCurrentLexeme = ((StartMarker)marker).myLexemeIndex;
         myTokenTypeChecked = true;
         int idx = myProduction.lastIndexOf(marker);
@@ -1007,7 +1027,7 @@ public class PsiBuilderImpl extends UnprotectedUserDataHolder implements PsiBuil
             startMarker.myEdgeTokenBinder = WhitespacesBinders.DEFAULT_RIGHT_BINDER;
         }
 
-        startMarker.myDoneMarker = doneMarker;
+        attachDoneMarker(startMarker, doneMarker);
         myProduction.add(doneMarker);
     }
 
@@ -1023,7 +1043,7 @@ public class PsiBuilderImpl extends UnprotectedUserDataHolder implements PsiBuil
             startMarker.myEdgeTokenBinder = WhitespacesBinders.DEFAULT_RIGHT_BINDER;
         }
 
-        startMarker.myDoneMarker = doneMarker;
+        attachDoneMarker(startMarker, doneMarker);
         myProduction.add(beforeIndex, doneMarker);
     }
 
@@ -1039,7 +1059,7 @@ public class PsiBuilderImpl extends UnprotectedUserDataHolder implements PsiBuil
             startMarker.myEdgeTokenBinder = WhitespacesBinders.DEFAULT_RIGHT_BINDER;
         }
 
-        startMarker.myDoneMarker = doneMarker;
+        attachDoneMarker(startMarker, doneMarker);
         myProduction.add(doneMarker);
     }
 
@@ -1058,8 +1078,15 @@ public class PsiBuilderImpl extends UnprotectedUserDataHolder implements PsiBuil
             startMarker.myEdgeTokenBinder = WhitespacesBinders.DEFAULT_RIGHT_BINDER;
         }
 
-        startMarker.myDoneMarker = doneMarker;
+        attachDoneMarker(startMarker, doneMarker);
         myProduction.add(beforeIndex, doneMarker);
+    }
+
+    private static void attachDoneMarker(StartMarker startMarker, DoneMarker doneMarker) {
+        if (startMarker.myRightEdgeTokenBinder != null) {
+            doneMarker.myEdgeTokenBinder = startMarker.myRightEdgeTokenBinder;
+        }
+        startMarker.myDoneMarker = doneMarker;
     }
 
     private boolean isEmpty(int startIdx, int endIdx) {
