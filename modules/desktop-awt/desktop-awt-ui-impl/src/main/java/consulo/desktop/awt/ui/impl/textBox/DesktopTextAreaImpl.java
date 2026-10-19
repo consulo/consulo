@@ -171,6 +171,7 @@ public class DesktopTextAreaImpl extends SwingComponentDelegate<DesktopTextAreaI
         myFireListeners = fireListeners;
         try {
             textArea().setText(StringUtil.notNullize(value));
+            textArea().setCaretPosition(0);
         }
         finally {
             myFireListeners = true;
