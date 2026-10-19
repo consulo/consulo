@@ -22,7 +22,7 @@ import consulo.component.ProcessCanceledException;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataSink;
 import consulo.dataContext.UiDataProvider;
-import consulo.desktop.awt.internal.diff.CacheDiffRequestProcessor;
+import consulo.diff.impl.internal.CacheDiffRequestProcessor;
 import consulo.desktop.awt.internal.diff.dir.action.DirDiffToolbarActions;
 import consulo.desktop.awt.internal.diff.dir.action.RefreshDirDiffAction;
 import consulo.diff.DiffContentFactory;
@@ -364,7 +364,7 @@ public class DirDiffPanel implements Disposable, UiDataProvider {
 
         myDiffRequestProcessor = new MyDiffRequestProcessor(project);
         Disposer.register(this, myDiffRequestProcessor);
-        myDiffPanel.add(myDiffRequestProcessor.getComponent(), BorderLayout.CENTER);
+        myDiffPanel.add(TargetAWT.to(myDiffRequestProcessor.getComponent()), BorderLayout.CENTER);
 
         myPrevNextDifferenceIterable = new MyPrevNextDifferenceIterable();
     }

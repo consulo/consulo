@@ -20,10 +20,12 @@ import consulo.fileEditor.TextEditor;
 import consulo.fileEditor.text.TextEditorProvider;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.EmptyAction;
 import consulo.ui.ex.action.IdeActions;
+import consulo.ui.ex.action.util.ActionUtil;
 import consulo.undoRedo.ApplicationUndoManager;
 import consulo.undoRedo.ProjectUndoManager;
 import consulo.undoRedo.UndoManager;
@@ -50,6 +52,18 @@ public class ProxyUndoRedoAction extends LegacyDumbAwareAction {
     if (undoManager != null) {
       EmptyAction.setupAction(new ProxyUndoRedoAction(undoManager, textEditor, true), IdeActions.ACTION_UNDO, component);
       EmptyAction.setupAction(new ProxyUndoRedoAction(undoManager, textEditor, false), IdeActions.ACTION_REDO, component);
+    }
+  }
+
+  @RequiredUIAccess
+  public static void register(@Nullable Project project, Editor editor, consulo.ui.Component component) {
+    UndoManager undoManager = project != null ? ProjectUndoManager.getInstance(project) : ApplicationUndoManager.getInstance();
+    TextEditor textEditor = TextEditorProvider.getInstance().getTextEditor(editor);
+    if (undoManager != null) {
+      AnAction undo = ActionUtil.mergeFrom(new ProxyUndoRedoAction(undoManager, textEditor, true), IdeActions.ACTION_UNDO);
+      undo.registerCustomShortcutSet(component, null);
+      AnAction redo = ActionUtil.mergeFrom(new ProxyUndoRedoAction(undoManager, textEditor, false), IdeActions.ACTION_REDO);
+      redo.registerCustomShortcutSet(component, null);
     }
   }
 

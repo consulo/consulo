@@ -25,6 +25,7 @@ public final class ScrollableLayoutOptions extends ComponentOptions {
     public static class Builder extends ComponentOptionsBuilder<Builder> {
         private ScrollPolicy myHorizontalScrollPolicy = ScrollPolicy.IF_NEEDED;
         private ScrollPolicy myVerticalScrollPolicy = ScrollPolicy.IF_NEEDED;
+        private VerticalScrollBarPosition myVerticalScrollBarPosition = VerticalScrollBarPosition.RIGHT;
 
         public Builder horizontalScrollPolicy(ScrollPolicy horizontalScrollPolicy) {
             myHorizontalScrollPolicy = horizontalScrollPolicy;
@@ -36,9 +37,14 @@ public final class ScrollableLayoutOptions extends ComponentOptions {
             return this;
         }
 
+        public Builder verticalScrollBarPosition(VerticalScrollBarPosition verticalScrollBarPosition) {
+            myVerticalScrollBarPosition = verticalScrollBarPosition;
+            return this;
+        }
+
         @Override
         public ScrollableLayoutOptions build() {
-            return new ScrollableLayoutOptions(myBackgroundPaint, myHorizontalScrollPolicy, myVerticalScrollPolicy);
+            return new ScrollableLayoutOptions(myBackgroundPaint, myHorizontalScrollPolicy, myVerticalScrollPolicy, myVerticalScrollBarPosition);
         }
     }
 
@@ -54,11 +60,18 @@ public final class ScrollableLayoutOptions extends ComponentOptions {
 
     private final ScrollPolicy myHorizontalScrollPolicy;
     private final ScrollPolicy myVerticalScrollPolicy;
+    private final VerticalScrollBarPosition myVerticalScrollBarPosition;
 
-    private ScrollableLayoutOptions(boolean backgroundPaint, ScrollPolicy horizontalScrollPolicy, ScrollPolicy verticalScrollPolicy) {
+    private ScrollableLayoutOptions(
+        boolean backgroundPaint,
+        ScrollPolicy horizontalScrollPolicy,
+        ScrollPolicy verticalScrollPolicy,
+        VerticalScrollBarPosition verticalScrollBarPosition
+    ) {
         super(backgroundPaint);
         myHorizontalScrollPolicy = horizontalScrollPolicy;
         myVerticalScrollPolicy = verticalScrollPolicy;
+        myVerticalScrollBarPosition = verticalScrollBarPosition;
     }
 
     public ScrollPolicy getHorizontalScrollPolicy() {
@@ -67,5 +80,9 @@ public final class ScrollableLayoutOptions extends ComponentOptions {
 
     public ScrollPolicy getVerticalScrollPolicy() {
         return myVerticalScrollPolicy;
+    }
+
+    public VerticalScrollBarPosition getVerticalScrollBarPosition() {
+        return myVerticalScrollBarPosition;
     }
 }

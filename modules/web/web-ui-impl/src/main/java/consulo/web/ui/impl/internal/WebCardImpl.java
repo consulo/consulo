@@ -25,6 +25,7 @@ import consulo.ui.layout.Layout;
 import consulo.ui.layout.LayoutConstraint;
 import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
 import consulo.web.ui.impl.internal.base.TargetVaadin;
+import consulo.web.ui.impl.internal.vaadin.VaadinSizeUtil;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -49,6 +50,10 @@ public class WebCardImpl extends WebLayoutImpl<WebCardImpl.Vaadin, LayoutConstra
     private @Nullable Component myHeaderSuffix;
     private final List<Component> myFooter = new ArrayList<>();
 
+    public WebCardImpl() {
+        VaadinSizeUtil.setWidthFull(this);
+    }
+
     @Override
     public Vaadin createVaadinComponent() {
         return new Vaadin();
@@ -61,13 +66,15 @@ public class WebCardImpl extends WebLayoutImpl<WebCardImpl.Vaadin, LayoutConstra
 
     @Override
     public void addStyle(CardStyle style) {
-        toVaadinComponent().addThemeVariants(switch (style) {
-            case ELEVATED -> CardVariant.ELEVATED;
-            case OUTLINED -> CardVariant.OUTLINED;
-            case HORIZONTAL -> CardVariant.HORIZONTAL;
-            case STRETCH_MEDIA -> CardVariant.STRETCH_MEDIA;
-            case COVER_MEDIA -> CardVariant.COVER_MEDIA;
-        });
+        switch (style) {
+            case ELEVATED -> toVaadinComponent().addThemeVariants(CardVariant.ELEVATED);
+            case OUTLINED -> toVaadinComponent().addThemeVariants(CardVariant.OUTLINED);
+            case HORIZONTAL -> toVaadinComponent().addThemeVariants(CardVariant.HORIZONTAL);
+            case STRETCH_MEDIA -> toVaadinComponent().addThemeVariants(CardVariant.STRETCH_MEDIA);
+            case COVER_MEDIA -> toVaadinComponent().addThemeVariants(CardVariant.COVER_MEDIA);
+            // the room the desktop cards keep when compact - Space.MEDIUM
+            case COMPACT -> toVaadinComponent().getStyle().set("--vaadin-card-padding", "6px");
+        }
     }
 
     @RequiredUIAccess

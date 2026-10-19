@@ -30,7 +30,9 @@ import consulo.ui.impl.messageList.MessageListPresentation;
 import consulo.ui.messageList.MessageList;
 import consulo.ui.messageList.MessageListItem;
 import consulo.ui.messageList.MessageListItemStyle;
+import consulo.ui.messageList.MessageListStyle;
 import consulo.ui.style.ComponentColors;
+import io.qt.core.QSize;
 import io.qt.core.Qt;
 import io.qt.gui.QColor;
 import io.qt.gui.QPalette;
@@ -53,7 +55,6 @@ import java.util.List;
  * @since 2026-10-13
  */
 public class DesktopQtMessageListImpl extends QtComponentDelegate<QScrollArea> implements MessageList {
-    private static final int AVATAR_SIZE = AvatarPresentation.sizeOf(AvatarStyle.SMALL);
     private static final int PINNED_DISTANCE = 24;
 
     private class Item implements MessageListItem {
@@ -80,7 +81,7 @@ public class DesktopQtMessageListImpl extends QtComponentDelegate<QScrollArea> i
             rowLayout.setSpacing(DesktopQtSpace.toPixels(Space.MEDIUM));
 
             QLabel avatar = new QLabel(row);
-            avatar.setFixedSize(AVATAR_SIZE, AVATAR_SIZE);
+            avatar.setFixedSize(avatarSize(), avatarSize());
             rowLayout.addWidget(avatar, 0, Qt.AlignmentFlag.AlignTop);
 
             QWidget content = new QWidget(row);
@@ -116,7 +117,8 @@ public class DesktopQtMessageListImpl extends QtComponentDelegate<QScrollArea> i
                 return;
             }
             Image image = myAuthorImage;
-            avatar.setPixmap(DesktopQtAvatarPainter.paint(myAuthor.get(), image, AVATAR_SIZE, avatar.devicePixelRatioF(), avatar.palette()));
+            avatar.setFixedSize(avatarSize(), avatarSize());
+            avatar.setPixmap(DesktopQtAvatarPainter.paint(myAuthor.get(), image, avatarSize(), avatar.devicePixelRatioF(), avatar.palette()));
             avatar.setVisible(MessageListPresentation.showsAvatar(myStyle, myShowOwnAvatar));
         }
 
@@ -235,23 +237,75 @@ public class DesktopQtMessageListImpl extends QtComponentDelegate<QScrollArea> i
 
     private boolean myMarkdown;
     private boolean myShowOwnAvatar;
+    private boolean myCompact;
     private boolean myPinned = true;
 
     private @Nullable QWidget myContainer;
     private @Nullable QVBoxLayout myContainerLayout;
 
+    private int avatarSize() {
+        return AvatarPresentation.sizeOf(myCompact ? AvatarStyle.X_SMALL : AvatarStyle.SMALL);
+    }
+
+    private void applyCompact(QVBoxLayout layout) {
+        int padding = myCompact ? 0 : DesktopQtSpace.toPixels(Space.MEDIUM);
+        layout.setContentsMargins(padding, padding, padding, padding);
+        layout.setSpacing(DesktopQtSpace.toPixels(myCompact ? Space.SMALL : Space.LARGE));
+    }
+
+    @Override
+    public void addStyle(MessageListStyle style) {
+        if (style != MessageListStyle.COMPACT || myCompact) {
+            return;
+        }
+        myCompact = true;
+
+        QVBoxLayout layout = myContainerLayout;
+        if (layout != null && !layout.isDisposed()) {
+            applyCompact(layout);
+        }
+        for (Item item : myItems) {
+            item.updateAvatar();
+        }
+    }
+
     @Override
     protected QScrollArea createQt(QWidget parent) {
-        QScrollArea area = new QScrollArea(parent);
+        // a list standing among other content is as tall as its messages at the width it gets - the scroll area
+        // would otherwise ask for the height its wrapping labels take at their narrowest
+        QScrollArea area = new QScrollArea(parent) {
+            @Override
+            public boolean hasHeightForWidth() {
+                QWidget content = widget();
+                return content != null && content.hasHeightForWidth();
+            }
+
+            @Override
+            public int heightForWidth(int width) {
+                QWidget content = widget();
+                if (content == null || !content.hasHeightForWidth()) {
+                    return super.heightForWidth(width);
+                }
+                return content.heightForWidth(Math.max(0, width - 2 * frameWidth())) + 2 * frameWidth();
+            }
+
+            @Override
+            public QSize sizeHint() {
+                QSize hint = super.sizeHint();
+                if (!myCompact || !hasHeightForWidth()) {
+                    return hint;
+                }
+                int width = width() > 0 ? width() : hint.width();
+                return new QSize(hint.width(), heightForWidth(width));
+            }
+        };
         area.setWidgetResizable(true);
         area.setFrameShape(QFrame.Shape.NoFrame);
         area.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff);
 
         QWidget container = new QWidget();
         QVBoxLayout layout = new QVBoxLayout(container);
-        int padding = DesktopQtSpace.toPixels(Space.MEDIUM);
-        layout.setContentsMargins(padding, padding, padding, padding);
-        layout.setSpacing(DesktopQtSpace.toPixels(Space.LARGE));
+        applyCompact(layout);
         layout.addStretch(1);
         area.setWidget(container);
 

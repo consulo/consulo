@@ -82,7 +82,15 @@ class TempComponentWrapper implements Component, ToSwingComponentWrapper, HasFoc
 
     @Override
     public @Nullable Component getParent() {
-        throw new UnsupportedOperationException();
+        for (java.awt.Container parent = myComponent.getParent(); parent != null; parent = parent.getParent()) {
+            if (parent instanceof FromSwingComponentWrapper wrapper) {
+                return wrapper.toUIComponent();
+            }
+            if (parent instanceof FromSwingWindowWrapper windowWrapper) {
+                return windowWrapper.toUIWindow();
+            }
+        }
+        return null;
     }
 
     @Override

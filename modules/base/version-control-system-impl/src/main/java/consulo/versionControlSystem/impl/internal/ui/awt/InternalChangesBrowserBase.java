@@ -15,6 +15,7 @@
  */
 package consulo.versionControlSystem.impl.internal.ui.awt;
 
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.application.Application;
 import consulo.dataContext.DataSink;
 import consulo.dataContext.UiDataProvider;
@@ -279,7 +280,7 @@ public abstract class InternalChangesBrowserBase<T> extends JPanel implements Ui
         context.addCurrentChangeListener(this::selectDiffChange);
         context.addActions(createDiffActions());
         if (myDiffBottomComponent != null) {
-            context.putChainContext(DiffUserDataKeysEx.BOTTOM_PANEL, myDiffBottomComponent);
+            context.putChainContext(DiffUserDataKeysEx.BOTTOM_PANEL, TargetAWT.wrap(myDiffBottomComponent));
         }
 
         updateDiffContext(context);

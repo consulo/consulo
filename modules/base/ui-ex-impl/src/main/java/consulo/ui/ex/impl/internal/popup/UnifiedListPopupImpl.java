@@ -16,8 +16,17 @@
 package consulo.ui.ex.impl.internal.popup;
 
 import consulo.component.ComponentManager;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.ui.*;
+import consulo.ui.Label;
+import consulo.ui.LabelStyle;
+import consulo.ui.Space;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.details.InputDetails;
+import consulo.ui.event.details.KeyCode;
+import consulo.ui.event.details.KeyboardInputDetails;
+import consulo.ui.event.details.MouseInputDetails;
 import consulo.ui.ex.action.Shortcut;
 import consulo.ui.ex.action.ShortcutProvider;
 import consulo.ui.ex.action.ShortcutSet;
@@ -30,24 +39,20 @@ import consulo.ui.ex.internal.InlineButton;
 import consulo.ui.ex.internal.InlineButtonsList;
 import consulo.ui.ex.internal.UIInternalEx;
 import consulo.ui.ex.keymap.util.KeymapUtil;
-import consulo.ui.image.Image;
-import consulo.util.collection.ArrayUtil;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.event.details.InputDetails;
-import consulo.ui.event.details.KeyCode;
-import consulo.ui.event.details.KeyboardInputDetails;
-import consulo.ui.event.details.MouseInputDetails;
-import consulo.ui.model.FlatDataModel;
 import consulo.ui.ex.popup.AsyncPopupStep;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.ex.popup.ListPopupStep;
 import consulo.ui.ex.popup.PopupStep;
 import consulo.ui.ex.popup.event.ListPopupKeyListener;
+import consulo.ui.image.Image;
+import consulo.ui.layout.DockLayout;
+import consulo.ui.model.FlatDataModel;
+import consulo.ui.style.ComponentColors;
 import consulo.ui.util.TextWithMnemonic;
+import consulo.util.collection.ArrayUtil;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.event.ListSelectionListener;
 import java.awt.event.InputEvent;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -57,6 +62,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import javax.swing.event.ListSelectionListener;
 
 /**
  * The counterpart of {@code ListPopupImpl} for the frontends which have no swing - each {@link ListPopupStep} is a
@@ -98,6 +104,8 @@ public class UnifiedListPopupImpl extends UnifiedPopupImpl implements ListPopup 
     private final Deque<Level> myLevels = new ArrayDeque<>();
 
     private @Nullable TextItemRenderer<Object> myRenderer;
+
+    private @Nullable String myAdText;
 
     /** kept until the unified popups grow title chrome to put the pin button on */
     private @Nullable Predicate<? super JBPopup> myCouldPin;
@@ -147,6 +155,11 @@ public class UnifiedListPopupImpl extends UnifiedPopupImpl implements ListPopup 
     }
 
     @Override
+    public void setAdText(String s, int alignment) {
+        myAdText = s;
+    }
+
+    @Override
     public void setMinimumWidth(int width) {
         myMinimumWidth = width;
     }
@@ -180,7 +193,20 @@ public class UnifiedListPopupImpl extends UnifiedPopupImpl implements ListPopup 
         Popup popup = nested || myAnchor != null ? LightPopup.create(built) : HeavyPopup.create(built);
 
         popup.setTitle(level.myStep.getTitle());
-        popup.setContent(level.myList);
+        String adText = myAdText;
+        if (!nested && adText != null && !adText.isBlank()) {
+            Label ad = Label.create(LocalizeValue.of(adText));
+            ad.addStyle(LabelStyle.FONT_SMALL);
+            ad.setForegroundColor(ComponentColors.DISABLED_TEXT);
+            DockLayout content = DockLayout.create();
+            content.center(level.myList);
+            content.bottom(ad);
+            ad.paddingBuilder().verticalSet(Space.SMALL).horizontalSet(Space.LARGE).apply();
+            popup.setContent(content);
+        }
+        else {
+            popup.setContent(level.myList);
+        }
         popup.setMinimumWidth(myMinimumWidth);
 
         popup.addCloseListener(event -> unwindTo(popup));

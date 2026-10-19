@@ -17,14 +17,16 @@ package consulo.execution.test.sm.action;
 
 import consulo.execution.test.sm.localize.SMTestLocalize;
 import consulo.execution.test.sm.runner.SMTRunnerConsoleProperties;
+import consulo.fileChooser.FileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
-import consulo.fileChooser.IdeaFileChooser;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.VirtualFile;
 
 import org.jspecify.annotations.Nullable;
+import java.util.concurrent.CompletableFuture;
 
 public class ImportTestsFromFileAction extends AbstractImportTestsAction {
     public ImportTestsFromFileAction(SMTRunnerConsoleProperties properties) {
@@ -37,10 +39,11 @@ public class ImportTestsFromFileAction extends AbstractImportTestsAction {
     }
 
     @Override
-    public @Nullable VirtualFile getFile(Project project) {
+    @RequiredUIAccess
+    public CompletableFuture<@Nullable VirtualFile> getFile(Project project) {
         FileChooserDescriptor xmlDescriptor = FileChooserDescriptorFactory.createSingleFileNoJarsDescriptor()
             .withFileFilter(virtualFile -> "xml".equals(virtualFile.getExtension()));
         xmlDescriptor.withTitle(SMTestLocalize.smTestRunnerImportTestChooseTestFileTitle());
-        return IdeaFileChooser.chooseFile(xmlDescriptor, project, null);
+        return FileChooser.chooseFile(xmlDescriptor, project, null);
     }
 }

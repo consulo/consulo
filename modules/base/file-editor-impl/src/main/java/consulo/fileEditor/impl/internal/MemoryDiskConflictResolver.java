@@ -1,6 +1,8 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.fileEditor.impl.internal;
 
+import javax.swing.JComponent;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.application.Application;
 import consulo.diff.DiffContentFactory;
 import consulo.diff.DiffManager;
@@ -123,10 +125,10 @@ class MemoryDiskConflictResolver {
 
                 DialogBuilder diffBuilder = new DialogBuilder(project);
 
-                DiffRequestPanel diffPanel = DiffManager.getInstance().createRequestPanel(project, diffBuilder, diffBuilder.getWindow());
+                DiffRequestPanel diffPanel = DiffManager.getInstance().createRequestPanel(project, diffBuilder, TargetAWT.from(diffBuilder.getWindow()));
                 diffPanel.setRequest(request);
 
-                diffBuilder.setCenterPanel(diffPanel.getComponent());
+                diffBuilder.setCenterPanel((JComponent) TargetAWT.to(diffPanel.getComponent()));
                 diffBuilder.setDimensionServiceKey("FileDocumentManager.FileCacheConflict");
                 diffBuilder.addOkAction().setText(UILocalize.fileCacheConflictSaveChangesButton());
                 diffBuilder.addCancelAction();

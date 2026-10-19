@@ -20,12 +20,21 @@ import consulo.codeEditor.EditorColors;
 import consulo.codeEditor.FoldRegion;
 import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.impl.CaretData;
+import consulo.codeEditor.impl.EditorLineMarkerPresentationContext;
 import consulo.codeEditor.impl.IterationState;
+import consulo.codeEditor.markup.LineFramePresentation;
+import consulo.codeEditor.markup.LineSeparatorPresentation;
+import consulo.codeEditor.markup.LineSeparatorPresentationProvider;
+import consulo.codeEditor.markup.MarkupModelEx;
+import consulo.codeEditor.markup.RangeHighlighter;
+import consulo.codeEditor.markup.SeparatorPlacement;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.EffectType;
 import consulo.colorScheme.TextAttributes;
 import consulo.document.Document;
 import consulo.ui.color.ColorValue;
+import consulo.desktop.qt.editor.impl.internal.gutter.QtLineSeparatorBounds;
+import consulo.desktop.qt.editor.impl.internal.gutter.QtLineSeparatorPresentationPainter;
 import consulo.desktop.qt.ui.impl.TargetQt;
 import io.qt.core.QPointF;
 import io.qt.core.Qt;
@@ -75,8 +84,9 @@ public class DesktopQtEditorPainter {
         painter.fillRect(clip, TargetQt.to(myEditor.getBackgroundColor()));
 
         int lineHeight = metrics.getLineHeight();
-        int firstLine = Math.max(0, (clip.top() + scrollY) / lineHeight);
-        int lastLine = Math.min(myEditor.getVisualLines().getVisualLineCount() - 1, (clip.bottom() + scrollY) / lineHeight);
+        DesktopQtEditorRowLayout rowLayout = myEditor.getRowLayout();
+        int firstLine = Math.max(0, rowLayout.yToVisualLine(clip.top() + scrollY));
+        int lastLine = Math.min(myEditor.getVisualLines().getVisualLineCount() - 1, rowLayout.yToVisualLine(clip.bottom() + scrollY));
 
         if (lastLine >= firstLine) {
             CaretData caretData = CaretData.createCaretData(document, myEditor.getCaretModel());
@@ -86,21 +96,62 @@ public class DesktopQtEditorPainter {
             ColorValue caretRowColor = caretRowBackground();
             Set<Integer> caretRows = caretRowColor == null ? Set.of() : caretRows();
 
+            List<LineCells> lineCells = new ArrayList<>(lastLine - firstLine + 1);
             for (int line = firstLine; line <= lastLine; line++) {
-                int y = line * lineHeight - scrollY;
+                int y = rowLayout.visualLineToY(line) - scrollY;
 
                 if (caretRows.contains(line)) {
                     painter.fillRect(clip.left(), y, clip.width(), lineHeight, TargetQt.to(caretRowColor));
                 }
 
-                paintLine(painter, line, y, -scrollX, caretData);
+                LineCells cells = collectCells(line, caretData);
+                lineCells.add(cells);
+                paintLineBackground(painter, cells, y, -scrollX, clip.left() + clip.width());
+            }
+
+            paintLineSeparators(painter, clip, scrollY);
+
+            for (int line = firstLine; line <= lastLine; line++) {
+                paintLineText(painter, lineCells.get(line - firstLine).cells(), rowLayout.visualLineToY(line) - scrollY, -scrollX);
             }
         }
+
+        paintLineFrames(painter, scrollX, scrollY);
 
         paintPlaceholder(painter, scrollX, scrollY);
 
         if (paintCarets) {
             paintCarets(painter, scrollX, scrollY);
+        }
+    }
+
+    /**
+     * The text half of the frames around lines - from the left of the text to the right of the viewport, less the room
+     * a scrollbar takes.
+     */
+    private void paintLineFrames(QPainter painter, int scrollX, int scrollY) {
+        DesktopQtEditorWidget surface = myEditor.getSurface();
+        if (surface == null) {
+            return;
+        }
+        int right = surface.viewport().width() - 15;
+        int lineHeight = myEditor.getLineHeight();
+        Document document = myEditor.getDocument();
+        DesktopQtEditorRowLayout rowLayout = myEditor.getRowLayout();
+        DesktopQtEditorVisualLines visualLines = myEditor.getVisualLines();
+
+        for (MarkupModelEx markupModel : List.of(myEditor.getFilteredDocumentMarkupModel(), myEditor.getMarkupModel())) {
+            for (RangeHighlighter highlighter : markupModel.getAllHighlighters()) {
+                LineFramePresentation presentation = highlighter.getLineFramePresentation();
+                if (presentation == null || !highlighter.isValid()) {
+                    continue;
+                }
+                int startLine = visualLines.logicalToVisualLine(document.getLineNumber(highlighter.getStartOffset()));
+                int endLine = visualLines.logicalToVisualLine(document.getLineNumber(highlighter.getEndOffset()));
+                int top = rowLayout.visualLineToY(startLine) - scrollY;
+                int bottom = rowLayout.visualLineToY(endLine) + lineHeight - scrollY;
+                DesktopQtLineFramePainter.paint(painter, TargetQt.to(presentation.color()), -scrollX, top, right, bottom, false);
+            }
         }
     }
 
@@ -117,21 +168,13 @@ public class DesktopQtEditorPainter {
         painter.drawText(new QPointF(-scrollX, metrics.getAscent() - scrollY), placeholder.toString());
     }
 
-    private void paintLine(QPainter painter, int line, int y, double startX, CaretData caretData) {
-        Document document = myEditor.getDocument();
+    private void paintLineBackground(QPainter painter, LineCells lineCells, int y, double startX, int endX) {
         DesktopQtEditorFontMetrics metrics = myEditor.getFontMetrics();
-        EditorColorsScheme scheme = myEditor.getColorsScheme();
-
-        CharSequence text = document.getCharsSequence();
-
+        CharSequence text = myEditor.getDocument().getCharsSequence();
         int lineHeight = metrics.getLineHeight();
-        int baseline = y + metrics.getAscent();
 
-        List<Cell> cells = collectCells(line, caretData);
-
-        // first pass lays down every background of the line, second pass draws the glyphs over them
         double x = startX;
-        for (Cell cell : cells) {
+        for (Cell cell : lineCells.cells()) {
             Run run = cell.run();
 
             if (run != null && run.background() != null) {
@@ -141,7 +184,64 @@ public class DesktopQtEditorPainter {
             x += cell.width(metrics, text);
         }
 
-        x = startX;
+        ColorValue pastLineEnd = lineCells.pastLineEndBackground();
+        if (pastLineEnd != null && x < endX) {
+            painter.fillRect(new QRectF(x, y, endX - x, lineHeight), TargetQt.to(pastLineEnd));
+        }
+    }
+
+    private void paintLineSeparators(QPainter painter, QRect clip, int scrollY) {
+        Document document = myEditor.getDocument();
+        DesktopQtEditorRowLayout rowLayout = myEditor.getRowLayout();
+        DesktopQtEditorVisualLines visualLines = myEditor.getVisualLines();
+
+        for (MarkupModelEx markupModel : List.of(myEditor.getFilteredDocumentMarkupModel(), myEditor.getMarkupModel())) {
+            for (RangeHighlighter highlighter : markupModel.getAllHighlighters()) {
+                LineSeparatorPresentationProvider provider = highlighter.getLineSeparatorPresentationProvider();
+                if (provider == null || !highlighter.isValid()) {
+                    continue;
+                }
+
+                LineSeparatorPresentation presentation = provider.buildPresentation(new EditorLineMarkerPresentationContext(myEditor, highlighter));
+                if (presentation == null) {
+                    continue;
+                }
+
+                QtLineSeparatorPresentationPainter<LineSeparatorPresentation> separatorPainter =
+                    QtLineSeparatorPresentationPainter.findPainter(presentation);
+                if (separatorPainter == null) {
+                    continue;
+                }
+
+                boolean isTop = highlighter.getLineSeparatorPlacement() == SeparatorPlacement.TOP;
+                int logicalLine = document.getLineNumber(isTop ? highlighter.getStartOffset() : highlighter.getEndOffset());
+                int visualLine = visualLines.logicalToVisualLine(logicalLine);
+                int y = (isTop ? rowLayout.visualLineAreaStartY(visualLine) : rowLayout.visualLineAreaEndY(visualLine)) - 1 - scrollY;
+                if (y < clip.top() - myEditor.getLineHeight() || y > clip.bottom() + myEditor.getLineHeight()) {
+                    continue;
+                }
+
+                QtLineSeparatorBounds bounds = new QtLineSeparatorBounds(
+                    clip.left(),
+                    clip.left() + clip.width(),
+                    y,
+                    isTop ? SeparatorPlacement.TOP : SeparatorPlacement.BOTTOM
+                );
+                separatorPainter.paint(presentation, myEditor, painter, bounds);
+            }
+        }
+    }
+
+    private void paintLineText(QPainter painter, List<Cell> cells, int y, double startX) {
+        DesktopQtEditorFontMetrics metrics = myEditor.getFontMetrics();
+        EditorColorsScheme scheme = myEditor.getColorsScheme();
+
+        CharSequence text = myEditor.getDocument().getCharsSequence();
+
+        int lineHeight = metrics.getLineHeight();
+        int baseline = y + metrics.getAscent();
+
+        double x = startX;
         for (Cell cell : cells) {
             Run run = cell.run();
 
@@ -289,6 +389,9 @@ public class DesktopQtEditorPainter {
      * two characters of it. The three passes over a row all walk the same cells, so a hint cannot advance the
      * glyphs by one amount and the backgrounds by another.
      */
+    private record LineCells(List<Cell> cells, @Nullable ColorValue pastLineEndBackground) {
+    }
+
     private record Cell(@Nullable Run run, DesktopQtEditorInlays.@Nullable Rendered inlay) {
         double width(DesktopQtEditorFontMetrics metrics, CharSequence documentText) {
             return run == null
@@ -301,13 +404,15 @@ public class DesktopQtEditorPainter {
      * The row cut into the pieces it is drawn from. A hint sits between two characters, so a run met across one
      * is split at it - otherwise the hint would be drawn over the glyphs rather than between them.
      */
-    private List<Cell> collectCells(int visualLine, CaretData caretData) {
+    private LineCells collectCells(int visualLine, CaretData caretData) {
         DesktopQtEditorVisualLines visualLines = myEditor.getVisualLines();
 
         int lineStart = visualLines.visualLineStartOffset(visualLine);
         int lineEnd = visualLines.visualLineEndOffset(visualLine);
 
-        List<Run> runs = collectRuns(lineStart, lineEnd, caretData);
+        IterationState state = createIterationState(lineStart, lineEnd, caretData);
+        List<Run> runs = collectRuns(state);
+        ColorValue pastLineEndBackground = state.getPastLineEndBackgroundAttributes().getBackgroundColor();
 
         List<DesktopQtEditorInlays.Rendered> inlines = myEditor.getInlays().inlineIn(lineStart, lineEnd);
         List<DesktopQtEditorInlays.Rendered> afterEnd = myEditor.getInlays().afterLineEndIn(lineStart, lineEnd);
@@ -355,7 +460,7 @@ public class DesktopQtEditorPainter {
             cells.add(new Cell(null, rendered));
         }
 
-        return cells;
+        return new LineCells(cells, pastLineEndBackground);
     }
 
     /**
@@ -367,10 +472,10 @@ public class DesktopQtEditorPainter {
      * coding font never appeared. Neighbours that would be drawn identically are therefore welded back together,
      * which also cuts the number of draw calls per line by an order of magnitude.
      */
-    private List<Run> collectRuns(int lineStart, int lineEnd, CaretData caretData) {
+    private List<Run> collectRuns(IterationState state) {
         List<Run> runs = new ArrayList<>();
 
-        for (IterationState state = createIterationState(lineStart, lineEnd, caretData); !state.atEnd(); state.advance()) {
+        for (; !state.atEnd(); state.advance()) {
             TextAttributes attributes = state.getMergedAttributes();
 
             ColorValue foreground = attributes.getForegroundColor();

@@ -16,6 +16,9 @@
 package consulo.versionControlSystem.impl.internal.change.ui;
 
 import consulo.application.util.UserHomeFileUtil;
+import consulo.module.Module;
+import consulo.module.content.ProjectFileIndex;
+import consulo.project.Project;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangeList;
@@ -32,6 +35,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.TreeMap;
 
 /**
@@ -40,6 +44,9 @@ import java.util.TreeMap;
  */
 public final class ChangesTreeSnapshotBuilder {
     private record Leaf(ChangesTreeItem item, FilePath path) {
+    }
+
+    private record ModuleRoot(Module module, String rootPath) {
     }
 
     private static final class Directory {
@@ -60,14 +67,17 @@ public final class ChangesTreeSnapshotBuilder {
 
     private final boolean myFlatten;
     private final @Nullable String myBasePath;
+    private final @Nullable ProjectFileIndex myFileIndex;
 
     private final List<ChangesTreeItem> myRoots = new ArrayList<>();
     private final Map<ChangesTreeItem, List<ChangesTreeItem>> myChildren = new HashMap<>();
     private final Map<ChangesTreeItem, Integer> myFileCounts = new HashMap<>();
+    private final Map<String, Optional<ModuleRoot>> myModuleRoots = new HashMap<>();
 
-    public ChangesTreeSnapshotBuilder(boolean flatten, @Nullable String basePath) {
+    public ChangesTreeSnapshotBuilder(Project project, boolean flatten) {
         myFlatten = flatten;
-        myBasePath = basePath;
+        myBasePath = project.getBasePath();
+        myFileIndex = project.isDefault() ? null : ProjectFileIndex.getInstance(project);
     }
 
     public ChangesTreeSnapshotBuilder changeLists(Collection<? extends ChangeList> changeLists) {
@@ -127,11 +137,7 @@ public final class ChangesTreeSnapshotBuilder {
             return;
         }
 
-        Directory root = new Directory("", "");
-        for (Leaf leaf : leaves) {
-            directoryOf(root, leaf.path()).myLeaves.add(leaf);
-        }
-        myRoots.addAll(emitChildren(null, root).items());
+        myRoots.addAll(groupChildren(null, leaves).items());
     }
 
     public ChangesTreeSnapshot build() {
@@ -153,14 +159,96 @@ public final class ChangesTreeSnapshotBuilder {
             return;
         }
 
-        Directory root = new Directory("", "");
-        for (Leaf leaf : leaves) {
-            directoryOf(root, leaf.path()).myLeaves.add(leaf);
-        }
-        emit(scope, scope, root);
+        myChildren.put(scope, groupChildren(scope, leaves).items());
     }
 
-    private Directory directoryOf(Directory root, FilePath path) {
+    private Children groupChildren(@Nullable ChangesTreeItem scope, List<Leaf> leaves) {
+        Map<Module, Map<String, Directory>> modules = new TreeMap<>(
+            Comparator.comparing(Module::getName, String.CASE_INSENSITIVE_ORDER).thenComparing(Module::getName)
+        );
+        Directory outside = new Directory("", "");
+        for (Leaf leaf : leaves) {
+            ModuleRoot moduleRoot = moduleRootOf(leaf.path());
+            if (moduleRoot == null) {
+                directoryOf(outside, leaf.path(), myBasePath).myLeaves.add(leaf);
+                continue;
+            }
+
+            String rootPath = moduleRoot.rootPath();
+            Directory root = modules.computeIfAbsent(moduleRoot.module(), module -> new TreeMap<>(String.CASE_INSENSITIVE_ORDER))
+                .computeIfAbsent(rootPath, path -> new Directory("", path));
+            Directory directory = leaf.path().getPath().equals(rootPath) ? root : directoryOf(root, leaf.path(), rootPath);
+            directory.myLeaves.add(leaf);
+        }
+
+        List<ChangesTreeItem> children = new ArrayList<>();
+        int fileCount = 0;
+        for (Map.Entry<Module, Map<String, Directory>> entry : modules.entrySet()) {
+            ModuleTreeItem item = new ModuleTreeItem(scope, entry.getKey());
+            Map<String, Directory> roots = entry.getValue();
+
+            int count;
+            if (roots.size() == 1) {
+                count = emit(scope, item, roots.values().iterator().next());
+            }
+            else {
+                List<ChangesTreeItem> rootItems = new ArrayList<>();
+                count = 0;
+                for (Map.Entry<String, Directory> root : roots.entrySet()) {
+                    DirectoryTreeItem rootItem = new DirectoryTreeItem(scope, VcsUtil.getFilePath(root.getKey(), true), labelOf(root.getKey()));
+                    int rootCount = emit(scope, rootItem, root.getValue());
+                    myFileCounts.put(rootItem, rootCount);
+                    rootItems.add(rootItem);
+                    count += rootCount;
+                }
+                myChildren.put(item, rootItems);
+            }
+
+            myFileCounts.put(item, count);
+            children.add(item);
+            fileCount += count;
+        }
+
+        Children rest = emitChildren(scope, outside);
+        children.addAll(rest.items());
+        fileCount += rest.fileCount();
+
+        return new Children(children, fileCount);
+    }
+
+    private @Nullable ModuleRoot moduleRootOf(FilePath path) {
+        ProjectFileIndex fileIndex = myFileIndex;
+        if (fileIndex == null) {
+            return null;
+        }
+
+        FilePath parent = path.getParentPath();
+        String key = path.isDirectory() || parent == null ? path.getPath() : parent.getPath();
+        return myModuleRoots.computeIfAbsent(key, ignored -> Optional.ofNullable(findModuleRoot(fileIndex, path))).orElse(null);
+    }
+
+    private static @Nullable ModuleRoot findModuleRoot(ProjectFileIndex fileIndex, FilePath path) {
+        VirtualFile file = path.getVirtualFile();
+        for (FilePath parent = path.getParentPath(); file == null && parent != null; parent = parent.getParentPath()) {
+            file = parent.getVirtualFile();
+        }
+        if (file == null) {
+            return null;
+        }
+
+        Module module = fileIndex.getModuleForFile(file);
+        VirtualFile contentRoot = fileIndex.getContentRootForFile(file);
+        if (module == null || contentRoot == null) {
+            return null;
+        }
+        return new ModuleRoot(module, contentRoot.getPath());
+    }
+
+    private static String labelOf(String path) {
+        return Objects.requireNonNullElse(UserHomeFileUtil.getLocationRelativeToUserHome(path), path);
+    }
+
+    private Directory directoryOf(Directory root, FilePath path, @Nullable String basePath) {
         FilePath parent = path.getParentPath();
         if (parent == null) {
             return root;
@@ -170,9 +258,9 @@ public final class ChangesTreeSnapshotBuilder {
         Directory current = root;
         String accumulated;
         String relative;
-        if (myBasePath != null && (parentPath.equals(myBasePath) || parentPath.startsWith(myBasePath + "/"))) {
-            accumulated = myBasePath;
-            relative = parentPath.length() == myBasePath.length() ? "" : parentPath.substring(myBasePath.length() + 1);
+        if (basePath != null && (parentPath.equals(basePath) || parentPath.startsWith(basePath + "/"))) {
+            accumulated = basePath;
+            relative = parentPath.length() == basePath.length() ? "" : parentPath.substring(basePath.length() + 1);
         }
         else {
             accumulated = "";
@@ -221,7 +309,7 @@ public final class ChangesTreeSnapshotBuilder {
 
             String text = label.toString();
             if (text.startsWith("/")) {
-                text = Objects.requireNonNullElse(UserHomeFileUtil.getLocationRelativeToUserHome(text), text);
+                text = labelOf(text);
             }
 
             DirectoryTreeItem item = new DirectoryTreeItem(scope, VcsUtil.getFilePath(compacted.myPath, true), text);

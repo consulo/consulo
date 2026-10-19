@@ -15,6 +15,8 @@
  */
 package consulo.ui.ex.action;
 
+import consulo.ui.event.details.ModifiedInputDetails;
+import consulo.ui.event.details.MouseInputDetails;
 import consulo.util.lang.BitUtil;
 
 import java.awt.event.InputEvent;
@@ -67,6 +69,28 @@ public class MouseShortcut extends Shortcut {
 
   public int getClickCount() {
     return myClickCount;
+  }
+
+  public boolean matches(MouseInputDetails details, int clickCount) {
+    if (myClickCount != clickCount) return false;
+
+    int button = switch (details.getButton()) {
+      case LEFT -> MouseEvent.BUTTON1;
+      case MIDDLE -> MouseEvent.BUTTON2;
+      case RIGHT -> MouseEvent.BUTTON3;
+    };
+    if (myButton != button) return false;
+
+    int modifiers = 0;
+    for (ModifiedInputDetails.Modifier modifier : details.getModifiers()) {
+      modifiers |= switch (modifier) {
+        case ALT -> InputEvent.ALT_DOWN_MASK;
+        case CTRL -> InputEvent.CTRL_DOWN_MASK;
+        case SHIFT -> InputEvent.SHIFT_DOWN_MASK;
+        case META -> InputEvent.META_DOWN_MASK;
+      };
+    }
+    return (myModifiers & ~InputEvent.ALT_GRAPH_DOWN_MASK) == modifiers;
   }
 
   public boolean equals(Object obj) {

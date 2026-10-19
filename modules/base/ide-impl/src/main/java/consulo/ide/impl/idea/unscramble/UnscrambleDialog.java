@@ -23,9 +23,9 @@ import consulo.configurable.UnnamedConfigurable;
 import consulo.execution.icon.ExecutionIconGroup;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.execution.unscramble.*;
+import consulo.fileChooser.FileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
-import consulo.fileChooser.IdeaFileChooser;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.localize.IdeLocalize;
 import consulo.localize.LocalizeValue;
@@ -33,6 +33,7 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.CheckBox;
 import consulo.ui.Label;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.internal.GuiUtils;
@@ -261,12 +262,12 @@ public class UnscrambleDialog extends DialogWrapper {
         myLogFile = new TextFieldWithHistory();
         JPanel panel = GuiUtils.constructFieldWithBrowseButton(myLogFile, e -> {
             FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFileNoJarsDescriptor();
-            IdeaFileChooser.chooseFiles(
-                descriptor,
-                myProject,
-                null,
-                files -> myLogFile.setText(FileUtil.toSystemDependentName(files.get(files.size() - 1).getPath()))
-            );
+            UIAccess uiAccess = UIAccess.current();
+            FileChooser.chooseFiles(descriptor, myProject, null).whenCompleteAsync((files, error) -> {
+                if (files != null && files.length > 0) {
+                    myLogFile.setText(FileUtil.toSystemDependentName(files[files.length - 1].getPath()));
+                }
+            }, uiAccess);
         });
         myLogFileChooserPanel.add(panel, BorderLayout.CENTER);
     }

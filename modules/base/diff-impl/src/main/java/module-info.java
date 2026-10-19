@@ -8,6 +8,7 @@ module consulo.diff.impl {
     requires transitive consulo.language.api;
     requires transitive consulo.language.editor.api;
     requires consulo.process.api;
+    requires consulo.external.service.api;
 
     // TODO remove in futures
     requires java.desktop;
@@ -16,13 +17,15 @@ module consulo.diff.impl {
         consulo.desktop.awt.editor.impl,
         consulo.desktop.awt.ide.impl,
         consulo.desktop.awt.ui.impl,
-        consulo.ide.impl;
+        consulo.ide.impl,
+        consulo.version.control.system.impl;
 
     exports consulo.diff.impl.internal.action to
         consulo.desktop.awt.editor.impl,
         consulo.desktop.awt.ide.impl,
         consulo.desktop.awt.ui.impl,
-        consulo.ide.impl;
+        consulo.ide.impl,
+        consulo.version.control.system.impl;
 
     exports consulo.diff.impl.internal.editor to
         consulo.desktop.awt.editor.impl,
@@ -44,7 +47,26 @@ module consulo.diff.impl {
         consulo.desktop.awt.editor.impl,
         consulo.desktop.awt.ide.impl,
         consulo.desktop.awt.ui.impl,
-        consulo.ide.impl;
+        consulo.ide.impl,
+        consulo.version.control.system.impl;
+
+    exports consulo.diff.impl.internal.viewer to
+        consulo.desktop.awt.ide.impl,
+        consulo.version.control.system.impl;
+
+    exports consulo.diff.impl.internal.viewer.side to
+        consulo.desktop.awt.ide.impl,
+        consulo.version.control.system.impl;
+
+    exports consulo.diff.impl.internal.viewer.simple to
+        consulo.desktop.awt.ide.impl;
+
+    exports consulo.diff.impl.internal.viewer.binary to
+        consulo.desktop.awt.ide.impl;
+
+    exports consulo.diff.impl.internal.merge to
+        consulo.desktop.awt.ide.impl,
+        consulo.version.control.system.impl;
 
     exports consulo.diff.impl.internal.external to
         consulo.desktop.awt.editor.impl,

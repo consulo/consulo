@@ -249,6 +249,10 @@ public class WebItemPresentationImpl implements TextItemPresentation {
         return component;
     }
 
+    public boolean hasSuffix() {
+        return mySuffixText.isNotEmpty() || mySuffixIcon != null;
+    }
+
     private Component buildComponent() {
         Span span = new Span();
         span.addClassName("web-icon");

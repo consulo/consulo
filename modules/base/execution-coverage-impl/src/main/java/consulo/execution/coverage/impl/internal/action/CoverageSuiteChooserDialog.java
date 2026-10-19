@@ -4,13 +4,14 @@ import consulo.application.Application;
 import consulo.application.util.DateFormatUtil;
 import consulo.execution.coverage.*;
 import consulo.execution.coverage.localize.ExecutionCoverageLocalize;
+import consulo.fileChooser.FileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
-import consulo.fileChooser.IdeaFileChooser;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.*;
@@ -280,7 +281,8 @@ public class CoverageSuiteChooserDialog extends DialogWrapper {
         @Override
         @RequiredUIAccess
         public void actionPerformed(AnActionEvent e) {
-            VirtualFile file = IdeaFileChooser.chooseFile(
+            UIAccess uiAccess = UIAccess.current();
+            FileChooser.chooseFile(
                 new FileChooserDescriptor(true, false, false, false, false, false) {
                     @Override
                     @RequiredUIAccess
@@ -290,56 +292,57 @@ public class CoverageSuiteChooserDialog extends DialogWrapper {
                 },
                 myProject,
                 null
-            );
-            if (file != null) {
-                CoverageRunner coverageRunner = getCoverageRunner(file);
-                LOG.assertTrue(coverageRunner != null);
+            ).whenCompleteAsync((file, chooseError) -> {
+                if (file != null) {
+                    CoverageRunner coverageRunner = getCoverageRunner(file);
+                    LOG.assertTrue(coverageRunner != null);
 
-                CoverageSuite coverageSuite = myCoverageManager.addExternalCoverageSuite(
-                    file.getName(),
-                    file.getTimeStamp(),
-                    coverageRunner,
-                    new DefaultCoverageFileProvider(file.getPath())
-                );
+                    CoverageSuite coverageSuite = myCoverageManager.addExternalCoverageSuite(
+                        file.getName(),
+                        file.getTimeStamp(),
+                        coverageRunner,
+                        new DefaultCoverageFileProvider(file.getPath())
+                    );
 
-                LocalizeValue coverageRunnerTitle = getCoverageRunnerTitle(coverageRunner);
-                DefaultMutableTreeNode node = TreeUtil.findNodeWithObject(myRootNode, coverageRunnerTitle.get());
-                if (node == null) {
-                    node = new DefaultMutableTreeNode(coverageRunnerTitle.get());
-                    myRootNode.add(node);
-                }
-                if (node.getChildCount() > 0) {
-                    TreeNode childNode = node.getChildAt(0);
-                    if (!(childNode instanceof CheckedTreeNode)) {
-                        DefaultMutableTreeNode defaultMutableTreeNode = (DefaultMutableTreeNode)childNode;
-                        if (LOCAL.equals(defaultMutableTreeNode.getUserObject())) {
-                            node = defaultMutableTreeNode;
-                        }
-                        else {
-                            DefaultMutableTreeNode localNode = new DefaultMutableTreeNode(LOCAL);
-                            node.add(localNode);
-                            node = localNode;
+                    LocalizeValue coverageRunnerTitle = getCoverageRunnerTitle(coverageRunner);
+                    DefaultMutableTreeNode node = TreeUtil.findNodeWithObject(myRootNode, coverageRunnerTitle.get());
+                    if (node == null) {
+                        node = new DefaultMutableTreeNode(coverageRunnerTitle.get());
+                        myRootNode.add(node);
+                    }
+                    if (node.getChildCount() > 0) {
+                        TreeNode childNode = node.getChildAt(0);
+                        if (!(childNode instanceof CheckedTreeNode)) {
+                            DefaultMutableTreeNode defaultMutableTreeNode = (DefaultMutableTreeNode)childNode;
+                            if (LOCAL.equals(defaultMutableTreeNode.getUserObject())) {
+                                node = defaultMutableTreeNode;
+                            }
+                            else {
+                                DefaultMutableTreeNode localNode = new DefaultMutableTreeNode(LOCAL);
+                                node.add(localNode);
+                                node = localNode;
+                            }
                         }
                     }
-                }
-                CheckedTreeNode suiteNode = new CheckedTreeNode(coverageSuite);
-                suiteNode.setChecked(true);
-                node.add(suiteNode);
-                TreeUtil.sort(
-                    node,
-                    (o1, o2) -> {
-                        if (o1 instanceof CheckedTreeNode node1
-                            && o2 instanceof CheckedTreeNode node2
-                            && node1.getUserObject() instanceof CoverageSuite suite1
-                            && node2.getUserObject() instanceof CoverageSuite suite2) {
-                            return suite1.getPresentableName().compareToIgnoreCase(suite2.getPresentableName());
+                    CheckedTreeNode suiteNode = new CheckedTreeNode(coverageSuite);
+                    suiteNode.setChecked(true);
+                    node.add(suiteNode);
+                    TreeUtil.sort(
+                        node,
+                        (o1, o2) -> {
+                            if (o1 instanceof CheckedTreeNode node1
+                                && o2 instanceof CheckedTreeNode node2
+                                && node1.getUserObject() instanceof CoverageSuite suite1
+                                && node2.getUserObject() instanceof CoverageSuite suite2) {
+                                return suite1.getPresentableName().compareToIgnoreCase(suite2.getPresentableName());
+                            }
+                            return 0;
                         }
-                        return 0;
-                    }
-                );
-                updateTree();
-                TreeUtil.selectNode(mySuitesTree, suiteNode);
-            }
+                    );
+                    updateTree();
+                    TreeUtil.selectNode(mySuitesTree, suiteNode);
+                }
+            }, uiAccess);
         }
     }
 

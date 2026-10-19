@@ -19,16 +19,16 @@ import consulo.annotation.DeprecationInfo;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.awt.hacking.AWTAccessorHacking;
+import consulo.fileChooser.FileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
-import consulo.fileChooser.IdeaFileChooser;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.*;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.CharFilter;
 import consulo.util.lang.StringUtil;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jspecify.annotations.Nullable;
 
@@ -80,11 +80,13 @@ public class GuiUtils {
       @Override
       public void actionPerformed(ActionEvent e) {
         FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor().withTitle("Select " + objectName);
-        VirtualFile file = IdeaFileChooser.chooseFile(descriptor, field, null, null);
-        if (file != null) {
-          field.setText(FileUtil.toSystemDependentName(file.getPath()));
-          field.postActionEvent();
-        }
+        UIAccess uiAccess = UIAccess.current();
+        FileChooser.chooseFile(descriptor, field, null, null).whenCompleteAsync((file, error) -> {
+          if (file != null) {
+            field.setText(FileUtil.toSystemDependentName(file.getPath()));
+            field.postActionEvent();
+          }
+        }, uiAccess);
       }
     });
   }
@@ -94,15 +96,17 @@ public class GuiUtils {
       @Override
       public void actionPerformed(ActionEvent e) {
         FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFileNoJarsDescriptor().withTitle("Select " + objectName);
-        VirtualFile file = IdeaFileChooser.chooseFile(descriptor, field, null, null);
-        if (file != null) {
-          try {
-            field.setText(VirtualFileUtil.virtualToIoFile(file).toURI().toURL().toString());
+        UIAccess uiAccess = UIAccess.current();
+        FileChooser.chooseFile(descriptor, field, null, null).whenCompleteAsync((file, error) -> {
+          if (file != null) {
+            try {
+              field.setText(VirtualFileUtil.virtualToIoFile(file).toURI().toURL().toString());
+            }
+            catch (MalformedURLException e1) {
+              field.setText("");
+            }
           }
-          catch (MalformedURLException e1) {
-            field.setText("");
-          }
-        }
+        }, uiAccess);
       }
     });
   }

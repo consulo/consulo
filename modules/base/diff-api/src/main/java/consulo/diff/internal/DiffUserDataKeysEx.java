@@ -28,10 +28,10 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.Couple;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
+import consulo.ui.Component;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
-import java.util.function.Predicate;
 
 public interface DiffUserDataKeysEx extends DiffUserDataKeys {
   Key<String> FILE_NAME = Key.create("Diff.FileName");
@@ -68,7 +68,7 @@ public interface DiffUserDataKeysEx extends DiffUserDataKeys {
   // DiffContext
   //
 
-  Key<JComponent> BOTTOM_PANEL = Key.create("Diff.BottomPanel"); // Could implement Disposable
+  Key<Component> BOTTOM_PANEL = Key.create("Diff.BottomPanel"); // Could implement Disposable
 
   Key<Boolean> SHOW_READ_ONLY_LOCK = Key.create("Diff.ShowReadOnlyLock");
 
@@ -76,8 +76,8 @@ public interface DiffUserDataKeysEx extends DiffUserDataKeys {
   // MergeContext / MergeRequest
   //
 
-  // return false if merge window should be prevented from closing and canceling resolve.
-  Key<Predicate<MergeTool.MergeViewer>> MERGE_CANCEL_HANDLER = Key.create("Diff.MergeCancelHandler");
+  // completes with false if merge window should be prevented from closing and canceling resolve.
+  Key<Function<MergeTool.MergeViewer, CompletableFuture<Boolean>>> MERGE_CANCEL_HANDLER = Key.create("Diff.MergeCancelHandler");
   // (title, message)
   Key<Couple<String>> MERGE_CANCEL_MESSAGE = Key.create("Diff.MergeCancelMessage");
   // null -> default

@@ -20,6 +20,7 @@ import consulo.ui.Component;
 import consulo.ui.layout.LayoutConstraint;
 import consulo.ui.layout.ScrollableLayout;
 import consulo.ui.layout.ScrollableLayoutOptions;
+import consulo.ui.layout.VerticalScrollBarPosition;
 import io.qt.core.QSize;
 import io.qt.core.Qt;
 import io.qt.widgets.QFrame;
@@ -72,6 +73,11 @@ public class DesktopQtScrollableLayoutImpl extends DesktopQtLayoutComponent<Layo
         scrollArea.setFrameShape(QFrame.Shape.NoFrame);
         scrollArea.setHorizontalScrollBarPolicy(toQt(myOptions.getHorizontalScrollPolicy()));
         scrollArea.setVerticalScrollBarPolicy(toQt(myOptions.getVerticalScrollPolicy()));
+        if (myOptions.getVerticalScrollBarPosition() == VerticalScrollBarPosition.LEFT) {
+            scrollArea.setLayoutDirection(Qt.LayoutDirection.RightToLeft);
+            scrollArea.viewport().setLayoutDirection(Qt.LayoutDirection.LeftToRight);
+            scrollArea.horizontalScrollBar().setLayoutDirection(Qt.LayoutDirection.LeftToRight);
+        }
         return scrollArea;
     }
 

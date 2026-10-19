@@ -15,18 +15,10 @@
  */
 package consulo.versionControlSystem.impl.internal;
 
-import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
-import consulo.application.internal.BackgroundTaskUtil;
-import consulo.application.util.registry.Registry;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
-import consulo.codeEditor.markup.RangeHighlighter;
-import consulo.diff.comparison.ByWord;
-import consulo.diff.comparison.ComparisonPolicy;
 import consulo.diff.fragment.DiffFragment;
-import consulo.diff.internal.DiffInternal;
-import consulo.diff.util.TextDiffType;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
@@ -53,10 +45,8 @@ import consulo.virtualFileSystem.fileType.FileType;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.JComponent;
-import java.util.ArrayList;
 import java.util.List;
 
-import static consulo.diff.internal.DiffImplUtil.getDiffType;
 import static consulo.diff.internal.DiffImplUtil.getLineCount;
 
 public abstract class LineStatusMarkerPopupBase implements LineStatusMarkerPopup {
@@ -154,40 +144,17 @@ public abstract class LineStatusMarkerPopupBase implements LineStatusMarkerPopup
             return null;
         }
 
-        CharSequence vcsContent = myTracker.getVcsContent(myRange);
-        CharSequence currentContent = myTracker.getCurrentContent(myRange);
-
-        return BackgroundTaskUtil.tryComputeFast(
-            indicator -> ByWord.compare(vcsContent, currentContent, ComparisonPolicy.DEFAULT, indicator),
-            Registry.intValue("diff.status.tracker.byword.delay")
-        );
+        return LineStatusMarkerPopupPanel.computeWordDiff(myTracker.getVcsContent(myRange), myTracker.getCurrentContent(myRange));
     }
 
     protected void installMasterEditorHighlighters(@Nullable List<DiffFragment> wordDiff, Disposable parentDisposable) {
         if (wordDiff == null) {
             return;
         }
-        List<RangeHighlighter> highlighters = new ArrayList<>();
-
-        DiffInternal diffInternal = Application.get().getInstance(DiffInternal.class);
-
-        int currentStartShift = myTracker.getCurrentTextRange(myRange).getStartOffset();
-        for (DiffFragment fragment : wordDiff) {
-            int currentStart = currentStartShift + fragment.getStartOffset2();
-            int currentEnd = currentStartShift + fragment.getEndOffset2();
-            TextDiffType type = getDiffType(fragment);
-
-            highlighters.addAll(diffInternal.createInlineHighlighter(myEditor, currentStart, currentEnd, type));
-        }
-
-        Disposer.register(
-            parentDisposable,
-            () -> {
-                for (RangeHighlighter highlighter : highlighters) {
-                    highlighter.dispose();
-                }
-            }
-        );
+        LineStatusMarkerPopupPanel.installMasterEditorWordHighlighters(myEditor,
+            myTracker.getCurrentTextRange(myRange).getStartOffset(),
+            wordDiff,
+            parentDisposable);
     }
 
     private static class ToggleByWordDiffAction extends ToggleAction implements DumbAware {

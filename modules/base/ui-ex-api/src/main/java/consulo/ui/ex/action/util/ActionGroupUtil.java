@@ -16,6 +16,9 @@
 
 package consulo.ui.ex.action.util;
 
+import consulo.disposer.Disposable;
+import consulo.ui.Component;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionUpdateSession;
 import consulo.ui.ex.action.AnAction;
@@ -23,11 +26,22 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.AnSeparator;
 import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.concurrent.coroutine.step.CompletableFutureStep;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public class ActionGroupUtil {
+    @RequiredUIAccess
+    public static void recursiveRegisterShortcutSet(ActionGroup group, Component component, @Nullable Disposable parentDisposable) {
+        for (AnAction action : group.getChildren(null)) {
+            if (action instanceof ActionGroup childGroup) {
+                recursiveRegisterShortcutSet(childGroup, component, parentDisposable);
+            }
+            action.registerCustomShortcutSet(component, parentDisposable);
+        }
+    }
+
     /**
      * Asynchronously validates the group and produces {@code true} if it has no enabled and visible action.
      * <p>

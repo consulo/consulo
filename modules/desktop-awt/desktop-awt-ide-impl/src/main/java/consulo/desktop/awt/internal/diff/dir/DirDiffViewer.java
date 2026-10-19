@@ -15,6 +15,9 @@
  */
 package consulo.desktop.awt.internal.diff.dir;
 
+import consulo.desktop.awt.internal.diff.util.AWTDiffUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.Component;
 import consulo.application.HelpManager;
 import consulo.dataContext.DataManager;
 import consulo.diff.content.DiffContent;
@@ -103,7 +106,7 @@ class DirDiffViewer implements FrameDiffTool.DiffViewer {
     // * they are already registered inside DirDiffPanel
     // * this fixes conflict between FilterPanel and SynchronizeDiff action for the 'Enter' shortcut
     components.toolbarActions =  Collections.<AnAction>singletonList(new DefaultActionGroup(myDirDiffPanel.getActions()));
-    components.statusPanel = myDirDiffPanel.extractFilterPanel();
+    components.statusPanel = AWTDiffUtil.wrap(myDirDiffPanel.extractFilterPanel());
     return components;
   }
 
@@ -115,13 +118,13 @@ class DirDiffViewer implements FrameDiffTool.DiffViewer {
 
   
   @Override
-  public JComponent getComponent() {
-    return myPanel;
+  public Component getComponent() {
+    return TargetAWT.wrap(myPanel);
   }
 
   @Override
-  public @Nullable JComponent getPreferredFocusedComponent() {
-    return myDirDiffPanel.getTable();
+  public @Nullable Component getPreferredFocusedComponent() {
+    return TargetAWT.wrap(myDirDiffPanel.getTable());
   }
 
   //

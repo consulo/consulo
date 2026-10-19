@@ -480,6 +480,43 @@ public final class UnifiedChangesTree {
         return valuesOf(myTree.getSelectedNodes());
     }
 
+    public boolean isGroupSelected() {
+        ChangesTreeSnapshot snapshot = mySnapshot;
+        for (ChangesTreeItem item : getSelectedItems()) {
+            if (snapshot.isGroup(item)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public @Nullable List<ChangesTreeItem> findPath(Change change) {
+        List<ChangesTreeItem> path = new ArrayList<>();
+        return findPath(mySnapshot, null, change, path) ? path : null;
+    }
+
+    private static boolean findPath(ChangesTreeSnapshot snapshot, @Nullable ChangesTreeItem parent, Change change, List<ChangesTreeItem> path) {
+        for (ChangesTreeItem item : snapshot.getChildren(parent)) {
+            path.add(item);
+            if (item instanceof ChangeTreeItem changeItem && changeItem.change().equals(change)) {
+                return true;
+            }
+            if (snapshot.isGroup(item) && findPath(snapshot, item, change, path)) {
+                return true;
+            }
+            path.remove(path.size() - 1);
+        }
+        return false;
+    }
+
+    @RequiredUIAccess
+    public void selectFirst() {
+        List<ChangesTreeItem> roots = mySnapshot.getRoots();
+        if (!roots.isEmpty()) {
+            selectPath(List.of(roots.get(0)));
+        }
+    }
+
     public List<Change> getSelectedChanges() {
         Set<Change> result = new LinkedHashSet<>();
         for (ChangesTreeItem item : getSelectedItems()) {
@@ -624,6 +661,11 @@ public final class UnifiedChangesTree {
             }
             case FileGroupTreeItem group -> {
                 presentation.append(group.kind().getTitle());
+                appendCount(snapshot, item, presentation);
+            }
+            case ModuleTreeItem module -> {
+                presentation.withIcon(PlatformIconGroup.nodesModule());
+                presentation.append(module.module().getName());
                 appendCount(snapshot, item, presentation);
             }
             case DirectoryTreeItem directory -> {

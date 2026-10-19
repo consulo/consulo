@@ -16,10 +16,9 @@
 package consulo.desktop.awt.find;
 
 import consulo.application.AllIcons;
-import consulo.application.Application;
+import consulo.fileChooser.FileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
-import consulo.fileChooser.IdeaFileChooser;
 import consulo.find.FindBundle;
 import consulo.find.FindInProjectSettings;
 import consulo.find.FindModel;
@@ -31,6 +30,7 @@ import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.ComboBox;
@@ -48,7 +48,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
-import java.util.List;
 
 public class FindPopupDirectoryChooser {
     
@@ -83,33 +82,21 @@ public class FindPopupDirectoryChooser {
             FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
             descriptor.setUseApplicationDialog();
             myFindPopupPanel.getCanClose().set(false);
-            IdeaFileChooser.chooseFiles(
+            UIAccess uiAccess = UIAccess.current();
+            FileChooser.chooseFiles(
                 descriptor,
                 myProject,
-                null,
-                VirtualFileUtil.findFileByIoFile(new File(getDirectory()), true),
-                new IdeaFileChooser.FileChooserConsumer() {
-                    @Override
-                    public void accept(List<VirtualFile> files) {
-                        Application.get().invokeLater(() -> {
-                            myFindPopupPanel.getCanClose().set(true);
-                            ProjectIdeFocusManager.getInstance(myProject)
-                                .requestFocus(myDirectoryComboBox.getEditor().getEditorComponent(), true);
-                            myHelper.getModel().setDirectoryName(files.get(0).getPresentableUrl());
-                            myDirectoryComboBox.getEditor().setItem(files.get(0).getPresentableUrl());
-                        });
-                    }
-
-                    @Override
-                    public void cancelled() {
-                        Application.get().invokeLater(() -> {
-                            myFindPopupPanel.getCanClose().set(true);
-                            ProjectIdeFocusManager.getInstance(myProject)
-                                .requestFocus(myDirectoryComboBox.getEditor().getEditorComponent(), true);
-                        });
-                    }
+                (Component) null,
+                VirtualFileUtil.findFileByIoFile(new File(getDirectory()), true)
+            ).whenCompleteAsync((files, error) -> {
+                myFindPopupPanel.getCanClose().set(true);
+                ProjectIdeFocusManager.getInstance(myProject)
+                    .requestFocus(myDirectoryComboBox.getEditor().getEditorComponent(), true);
+                if (files != null && files.length > 0) {
+                    myHelper.getModel().setDirectoryName(files[0].getPresentableUrl());
+                    myDirectoryComboBox.getEditor().setItem(files[0].getPresentableUrl());
                 }
-            );
+            }, uiAccess);
         });
 
         selectPathAction.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.SHIFT_DOWN_MASK)),

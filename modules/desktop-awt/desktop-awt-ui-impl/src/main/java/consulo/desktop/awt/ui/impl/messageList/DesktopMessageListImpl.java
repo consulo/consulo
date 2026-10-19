@@ -37,6 +37,7 @@ import consulo.ui.impl.messageList.MessageListPresentation;
 import consulo.ui.messageList.MessageList;
 import consulo.ui.messageList.MessageListItem;
 import consulo.ui.messageList.MessageListItemStyle;
+import consulo.ui.messageList.MessageListStyle;
 import consulo.ui.style.ComponentColors;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
@@ -120,7 +121,7 @@ public class DesktopMessageListImpl extends SwingComponentDelegate<JBScrollPane>
     private class Item implements MessageListItem {
         private final LocalizeValue myAuthor;
         private final JPanel myPanel = new JPanel(new BorderLayout(DesktopSpace.toPixels(Space.MEDIUM), 0));
-        private final AvatarComponent myAvatar = new AvatarComponent(AvatarStyle.SMALL);
+        private final AvatarComponent myAvatar = new AvatarComponent(myCompact ? AvatarStyle.X_SMALL : AvatarStyle.SMALL);
         private final JPanel myAvatarBox = new JPanel(new BorderLayout());
         private final JBLabel myHeader = new JBLabel();
         private final MessageBody myBody = new MessageBody();
@@ -238,6 +239,7 @@ public class DesktopMessageListImpl extends SwingComponentDelegate<JBScrollPane>
     private final List<Item> myItems = new ArrayList<>();
     private boolean myMarkdown;
     private boolean myShowOwnAvatar;
+    private boolean myCompact;
 
     @Override
     protected JBScrollPane createComponent() {
@@ -248,6 +250,29 @@ public class DesktopMessageListImpl extends SwingComponentDelegate<JBScrollPane>
         scrollPane.setBorder(JBUI.Borders.empty());
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         return scrollPane;
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void addStyle(MessageListStyle style) {
+        if (style != MessageListStyle.COMPACT || myCompact) {
+            return;
+        }
+        myCompact = true;
+
+        myListPanel.setBorder(JBUI.Borders.empty());
+        myListPanel.removeAll();
+        myListPanel.setLayout(new VerticalLayout(DesktopSpace.toPixels(Space.SMALL)));
+        for (Item item : myItems) {
+            item.myAvatar.setStyle(AvatarStyle.X_SMALL);
+            myListPanel.add(item.myPanel);
+        }
+
+        // a compact list stands on whatever is under it, so nothing of its own is painted
+        JBScrollPane scrollPane = toAWTComponent();
+        scrollPane.setOpaque(false);
+        scrollPane.getViewport().setOpaque(false);
+        relayout();
     }
 
     private void relayout() {

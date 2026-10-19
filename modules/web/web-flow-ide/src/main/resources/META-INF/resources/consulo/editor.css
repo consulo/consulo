@@ -129,17 +129,25 @@
   height: 100%;
   overflow: hidden;
   pointer-events: none;
+  z-index: 2;
+}
+
+.arquill-gutter-annotations
+{
   z-index: 1;
 }
 
-/* orion ships the annotation ruler at 16px and measures the left ruler width from the dom, so the column has to
-   be widened here rather than from script - the measurement is cached the moment the view is created, and two
-   markers on one line have to fit */
+/* orion measures the left ruler width from the dom and caches it the moment the view is created, so the columns
+   are sized here rather than from script - the script sets these properties and makes orion measure again */
 .textviewLeftRuler .ruler.annotations
 {
-  /* the script widens the column when a line carries more markers than it can hold, and makes orion measure
-     the view again - the value it sets is this property */
-  min-width: calc(var(--arquill-gutter-annotations-width, 0px) + var(--arquill-gutter-marks-width, 32px));
+  width: var(--arquill-gutter-annotations-width, 0px);
+  min-width: var(--arquill-gutter-annotations-width, 0px);
+}
+
+.textviewLeftRuler .ruler.marks
+{
+  min-width: var(--arquill-gutter-marks-width, 32px);
 }
 
 .arquill-gutter-annotation
@@ -495,6 +503,7 @@
   font-family: var(--arquill-editor-font-family);
   font-size: var(--arquill-editor-font-size);
   min-width: calc(1em + 2px);
+  z-index: 2;
 }
 
 /* the ruler rows are laid out at the height of a text row but keep the default line height, so the number is
@@ -575,6 +584,18 @@
   background-color: var(--arquill-editor-gutter-background, var(--consulo-panel-background, white));
 }
 
+.arquill-mirrored .textviewLeftRuler.textviewLeftRuler
+{
+  border-right: none;
+  border-left: 1px solid var(--arquill-editor-gutter-separator, #ebecf0);
+}
+
+.arquill-mirrored .textviewRightRuler.textviewRightRuler
+{
+  border-left: none;
+  border-right: 1px solid var(--consulo-component-border-color, #eaeaea);
+}
+
 .textviewInnerRightRuler.textviewInnerRightRuler
 {
   border-left: 1px solid var(--consulo-component-border-color, #eaeaea);
@@ -592,6 +613,61 @@
 .arquill-fold-hover .textview *
 {
   cursor: pointer;
+}
+
+/* the live components of component inlays, each standing over the line its inlay reserved - the layer itself lets the
+   pointer through to the text, only the components take it */
+.arquill-component-inlays
+{
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 2;
+
+  /* the editor host is a pre - its monospace face and kept whitespace would reach into the components, and the
+     whitespace between the parts of a component renders as empty lines */
+  white-space: normal;
+  font-family: var(--aura-font-family, var(--lumo-font-family, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif));
+  font-size: var(--aura-font-size-m, var(--lumo-font-size-m, 14px));
+  line-height: normal;
+  cursor: auto;
+}
+
+.arquill-component-inlay
+{
+  position: absolute;
+  box-sizing: border-box;
+  pointer-events: auto;
+}
+
+/* frames around lines, as a code review draws around the lines a discussion is about */
+.arquill-line-frames
+{
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.arquill-line-frame
+{
+  position: absolute;
+  box-sizing: border-box;
+  border: 1px solid;
+}
+
+.arquill-line-frame-gutter
+{
+  border-right: none;
+  border-radius: 4px 0 0 4px;
+}
+
+.arquill-line-frame-text
+{
+  border-left: none;
+  border-radius: 0 4px 4px 0;
 }
 
 .arquill-floating-toolbar-layer

@@ -22,6 +22,8 @@ import consulo.ui.event.WindowCloseEvent;
 import consulo.ui.internal.UIInternal;
 import org.jspecify.annotations.Nullable;
 
+import java.util.function.Consumer;
+
 /**
  * @author VISTALL
  * @since 2016-06-14
@@ -64,6 +66,13 @@ public interface Window extends Component, Disposable, HasSize {
     void close();
 
     boolean isActive();
+
+    /**
+     * Takes over the close the user asks for, through the close button of the window: the handler runs instead and
+     * decides whether to call {@link #close()}. Without a handler such a request closes the window.
+     */
+    @RequiredUIAccess
+    void setCloseHandler(@Nullable Consumer<Window> closeHandler);
 
     default Disposable addCloseListener(ComponentEventListener<Window, WindowCloseEvent> listener) {
         return addListener(WindowCloseEvent.class, listener);

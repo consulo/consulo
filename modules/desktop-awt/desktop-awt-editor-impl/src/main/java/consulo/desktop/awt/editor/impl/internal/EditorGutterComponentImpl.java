@@ -410,6 +410,7 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
 
                 paintFoldingTree(g, clip, firstVisibleOffset, lastVisibleOffset);
                 paintLineNumbers(g, startVisualLine, endVisualLine);
+                paintLineFrames(g, firstVisibleOffset, lastVisibleOffset);
                 paintCurrentAccessibleLine(g);
 
                 if (ExperimentalUI.isNewUI() && myPaintBackground) {
@@ -1186,6 +1187,24 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
         }
 
         paintIcons(firstVisibleLine, lastVisibleLine, g);
+    }
+
+    /**
+     * The gutter half of the frames around lines, closed on the left and open towards the text.
+     */
+    private void paintLineFrames(Graphics2D g, int firstVisibleOffset, int lastVisibleOffset) {
+        Document document = myEditor.getDocument();
+        processRangeHighlighters(firstVisibleOffset, lastVisibleOffset, highlighter -> {
+            LineFramePresentation presentation = highlighter.getLineFramePresentation();
+            if (presentation == null) {
+                return;
+            }
+            int startLine = document.getLineNumber(highlighter.getStartOffset());
+            int endLine = document.getLineNumber(highlighter.getEndOffset());
+            int top = myEditor.visualLineToY(myEditor.offsetToVisualLine(document.getLineStartOffset(startLine), false));
+            int bottom = myEditor.visualLineToYRange(myEditor.offsetToVisualLine(document.getLineEndOffset(endLine), true))[1];
+            LineFramePainter.paint(g, TargetAWT.to(presentation.color()), JBUI.scale(2), top, getWidth(), bottom, true);
+        });
     }
 
     private void paintIcons(int firstVisibleLine, int lastVisibleLine, Graphics2D g) {

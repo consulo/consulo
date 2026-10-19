@@ -39,5 +39,10 @@ public enum CardStyle implements ComponentStyle {
     /**
      * The media takes the whole width of the card and reaches its edges.
      */
-    COVER_MEDIA
+    COVER_MEDIA,
+    /**
+     * Little room between the edge and the content - a card standing among other content, such as a discussion
+     * inside the editor.
+     */
+    COMPACT
 }

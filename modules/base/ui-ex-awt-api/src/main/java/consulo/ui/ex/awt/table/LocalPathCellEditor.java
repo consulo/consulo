@@ -15,11 +15,12 @@
  */
 package consulo.ui.ex.awt.table;
 
+import consulo.fileChooser.FileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
-import consulo.fileChooser.IdeaFileChooser;
 import consulo.platform.Platform;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.ex.awt.AbstractTableCellEditor;
 import consulo.ui.ex.awt.CellEditorComponentWithBrowseButton;
 import consulo.ui.ex.awt.TextFieldWithBrowseButton;
@@ -33,7 +34,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.function.Consumer;
 
 public class LocalPathCellEditor extends AbstractTableCellEditor {
   private final String myTitle;
@@ -89,16 +89,17 @@ public class LocalPathCellEditor extends AbstractTableCellEditor {
       public void actionPerformed(ActionEvent e) {
         String initial = (String)getCellEditorValue();
         VirtualFile initialFile = StringUtil.isNotEmpty(initial) ? LocalFileSystem.getInstance().findFileByPath(initial) : null;
-        IdeaFileChooser.chooseFile(getFileChooserDescriptor(), myProject, table, initialFile, new Consumer<VirtualFile>() {
-          @Override
-          public void accept(VirtualFile file) {
-            String path = file.getPresentableUrl();
-            if (Platform.current().os().isWindows() && path.length() == 2 && Character.isLetter(path.charAt(0)) && path.charAt(1) == ':') {
-              path += "\\"; // make path absolute
-            }
-            myComponent.getChildComponent().setText(path);
+        UIAccess uiAccess = UIAccess.current();
+        FileChooser.chooseFile(getFileChooserDescriptor(), myProject, table, initialFile).whenCompleteAsync((file, error) -> {
+          if (file == null) {
+            return;
           }
-        });
+          String path = file.getPresentableUrl();
+          if (Platform.current().os().isWindows() && path.length() == 2 && Character.isLetter(path.charAt(0)) && path.charAt(1) == ':') {
+            path += "\\"; // make path absolute
+          }
+          myComponent.getChildComponent().setText(path);
+        }, uiAccess);
       }
     };
   }

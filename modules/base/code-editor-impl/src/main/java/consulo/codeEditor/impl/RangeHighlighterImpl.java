@@ -49,6 +49,7 @@ class RangeHighlighterImpl extends RangeMarkerImpl implements RangeHighlighterEx
     private @Nullable CustomHighlighterRenderer myCustomRenderer;
     private LineSeparatorRenderer myLineSeparatorRenderer;
     private @Nullable LineSeparatorPresentationProvider myLineSeparatorPresentationProvider;
+    private @Nullable LineFramePresentation myLineFramePresentation;
 
     @Mask
     private byte myFlags;
@@ -437,6 +438,20 @@ class RangeHighlighterImpl extends RangeMarkerImpl implements RangeHighlighterEx
         LineSeparatorPresentationProvider old = myLineSeparatorPresentationProvider;
         myLineSeparatorPresentationProvider = provider;
         if (!Comparing.equal(old, provider)) {
+            fireChanged(true, false, false);
+        }
+    }
+
+    @Override
+    public @Nullable LineFramePresentation getLineFramePresentation() {
+        return myLineFramePresentation;
+    }
+
+    @Override
+    public void setLineFramePresentation(@Nullable LineFramePresentation presentation) {
+        LineFramePresentation old = myLineFramePresentation;
+        myLineFramePresentation = presentation;
+        if (!Comparing.equal(old, presentation)) {
             fireChanged(true, false, false);
         }
     }

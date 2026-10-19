@@ -64,6 +64,8 @@ diff.can.not.show:
     text: Can not show diff
 diff.can.not.show.unknown:
     text: Can not show diff for unknown file type
+diff.associate.file.type:
+    text: Associate
 diff.clipboard.vs.editor.dialog.title:
     text: Clipboard vs Editor
 diff.clipboard.vs.file.dialog.title:

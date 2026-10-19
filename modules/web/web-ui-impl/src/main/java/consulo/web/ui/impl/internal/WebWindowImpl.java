@@ -47,6 +47,7 @@ import org.jspecify.annotations.Nullable;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.Consumer;
 
 /**
  * @author VISTALL
@@ -86,6 +87,7 @@ public class WebWindowImpl extends VaadinComponentDelegate<WebWindowImpl.Vaadin>
     private final WebRootPaneImpl myRootPanel = new WebRootPaneImpl();
     private @Nullable WebToastStack myToastStack;
     private @Nullable Component myFocusedBeforeShow;
+    private @Nullable Consumer<Window> myCloseHandler;
 
     public WebWindowImpl(boolean modal, WindowOptions options) {
         Vaadin vaadinComponent = getVaadinComponent();
@@ -134,7 +136,7 @@ public class WebWindowImpl extends VaadinComponentDelegate<WebWindowImpl.Vaadin>
     }
 
     private void addCloseDialogButton() {
-        Button closeButton = new Button(WebImageConverter.getImage(PlatformIconGroup.actionsClose()), e -> close());
+        Button closeButton = new Button(WebImageConverter.getImage(PlatformIconGroup.actionsClose()), e -> requestClose());
         // created outside a VaadinComponentDelegate, so the small variant has to be added by hand here
         closeButton.addThemeVariants(ButtonVariant.TERTIARY, ButtonVariant.SMALL);
         closeButton.addClassName("consulo-toolbar-button");
@@ -212,6 +214,23 @@ public class WebWindowImpl extends VaadinComponentDelegate<WebWindowImpl.Vaadin>
         getVaadinComponent().close();
 
         closed();
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setCloseHandler(@Nullable Consumer<Window> closeHandler) {
+        myCloseHandler = closeHandler;
+    }
+
+    @RequiredUIAccess
+    private void requestClose() {
+        Consumer<Window> closeHandler = myCloseHandler;
+        if (closeHandler != null && !myDisposed) {
+            closeHandler.accept(this);
+            return;
+        }
+
+        close();
     }
 
     /**

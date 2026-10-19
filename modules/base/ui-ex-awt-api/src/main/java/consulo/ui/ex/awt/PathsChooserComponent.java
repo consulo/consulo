@@ -15,10 +15,11 @@
  */
 package consulo.ui.ex.awt;
 
+import consulo.fileChooser.FileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
-import consulo.fileChooser.IdeaFileChooser;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.ex.localize.UILocalize;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
@@ -26,7 +27,6 @@ import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
 /**
  * @author oleg
@@ -63,18 +63,19 @@ public class PathsChooserComponent implements ComponentWithEmptyText {
         dirChooser.setShowFileSystemRoots(true);
         dirChooser.setHideIgnored(true);
         dirChooser.withTitle(UILocalize.fileChooserDefaultTitle());
-        IdeaFileChooser.chooseFiles(dirChooser, myProject, null, new Consumer<List<VirtualFile>>() {
-          @Override
-          public void accept(List<VirtualFile> files) {
-            for (VirtualFile file : files) {
-              // adding to the end
-              String path = file.getPath();
-              if (processor.addPath(myWorkingCollection, path)) {
-                myListModel.addElement(path);
-              }
+        UIAccess uiAccess = UIAccess.current();
+        FileChooser.chooseFiles(dirChooser, myProject, null).whenCompleteAsync((files, error) -> {
+          if (files == null) {
+            return;
+          }
+          for (VirtualFile file : files) {
+            // adding to the end
+            String path = file.getPath();
+            if (processor.addPath(myWorkingCollection, path)) {
+              myListModel.addElement(path);
             }
           }
-        });
+        }, uiAccess);
       }
     }).setRemoveAction(new AnActionButtonRunnable() {
       @Override

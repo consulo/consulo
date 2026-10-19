@@ -19,7 +19,7 @@ package consulo.ui;
  * How serious the message of a {@link Toast} is. Each style fills the toast with its own color and brings its own
  * icon. A toast without a style is drawn plain.
  * <p/>
- * {@link #GLASSY} is not about the message - it goes together with any of the others.
+ * {@link #GLASSY} and {@link #LEFT_LINE} are not about the message - they go together with any of the others.
  *
  * @author VISTALL
  * @since 2026-10-16
@@ -33,5 +33,11 @@ public enum ToastStyle implements ComponentStyle {
      * While the toast floats over content, its fill lets a blurred view of what lies behind it through. The text, the
      * icon and the actions stay solid. A toast inside a layout is drawn solid.
      */
-    GLASSY
+    GLASSY,
+    /**
+     * The toast is a line along its left edge in the colour of the message instead of a filled box - a message set
+     * inside other content. It goes together with any of {@link #INFO}, {@link #SUCCESS}, {@link #WARNING} and
+     * {@link #ERROR}, and brings no icon of its own.
+     */
+    LEFT_LINE
 }

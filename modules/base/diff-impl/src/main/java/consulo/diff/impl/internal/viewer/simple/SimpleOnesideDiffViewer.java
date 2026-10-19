@@ -1,0 +1,288 @@
+/*
+ * Copyright 2000-2015 JetBrains s.r.o.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package consulo.diff.impl.internal.viewer.simple;
+
+import consulo.application.progress.ProgressIndicator;
+import consulo.dataContext.DataSink;
+import consulo.codeEditor.LogicalPosition;
+import consulo.codeEditor.markup.RangeHighlighter;
+import consulo.diff.DiffContext;
+import consulo.diff.DiffDataKeys;
+import consulo.diff.DiffNavigationContext;
+import consulo.diff.content.DocumentContent;
+import consulo.diff.impl.internal.action.AllLinesIterator;
+import consulo.diff.impl.internal.util.DiffDrawUtil;
+import consulo.diff.impl.internal.util.UnifiedDiffUtil;
+import consulo.diff.impl.internal.viewer.TextDiffViewerUtil;
+import consulo.diff.impl.internal.viewer.side.OnesideTextDiffViewer;
+import consulo.diff.internal.DiffImplUtil;
+import consulo.diff.internal.HighlightPolicy;
+import consulo.diff.request.ContentDiffRequest;
+import consulo.diff.request.DiffRequest;
+import consulo.diff.util.LineRange;
+import consulo.diff.util.TextDiffType;
+import consulo.document.Document;
+import consulo.logging.Logger;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnSeparator;
+import consulo.util.dataholder.Key;
+import org.jspecify.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static consulo.diff.internal.DiffImplUtil.getLineCount;
+
+public class SimpleOnesideDiffViewer extends OnesideTextDiffViewer {
+    public static final Logger LOG = Logger.getInstance(SimpleOnesideDiffViewer.class);
+
+    private final MyInitialScrollHelper myInitialScrollHelper = new MyInitialScrollHelper();
+
+    private final List<RangeHighlighter> myHighlighters = new ArrayList<>();
+
+    @RequiredUIAccess
+    public SimpleOnesideDiffViewer(DiffContext context, DiffRequest request) {
+        super(context, (ContentDiffRequest)request);
+    }
+
+    @Override
+    @RequiredUIAccess
+    protected void onDispose() {
+        for (RangeHighlighter highlighter : myHighlighters) {
+            highlighter.dispose();
+        }
+        myHighlighters.clear();
+        super.onDispose();
+    }
+
+    @Override
+    protected List<AnAction> createToolbarActions() {
+        List<AnAction> group = new ArrayList<>();
+
+        group.add(new MyIgnorePolicySettingAction());
+        group.add(new MyHighlightPolicySettingAction());
+        group.add(new MyReadOnlyLockAction());
+        group.add(myEditorSettingsAction);
+
+        group.add(AnSeparator.getInstance());
+        group.addAll(super.createToolbarActions());
+
+        return group;
+    }
+
+    @Override
+    protected List<AnAction> createPopupActions() {
+        List<AnAction> group = new ArrayList<>();
+
+        group.add(AnSeparator.getInstance());
+        group.add(new MyIgnorePolicySettingAction().getPopupGroup());
+        group.add(AnSeparator.getInstance());
+        group.add(new MyHighlightPolicySettingAction().getPopupGroup());
+
+        group.add(AnSeparator.getInstance());
+        group.addAll(super.createPopupActions());
+
+        return group;
+    }
+
+    @Override
+    @RequiredUIAccess
+    protected void processContextHints() {
+        super.processContextHints();
+        myInitialScrollHelper.processContext(myRequest);
+    }
+
+    @Override
+    @RequiredUIAccess
+    protected void updateContextHints() {
+        super.updateContextHints();
+        myInitialScrollHelper.updateContext(myRequest);
+    }
+
+    //
+    // Diff
+    //
+
+    @Override
+    protected Runnable performRediff(ProgressIndicator indicator) {
+        return () -> {
+            clearDiffPresentation();
+
+            boolean shouldHighlight = getTextSettings().getHighlightPolicy() != HighlightPolicy.DO_NOT_HIGHLIGHT;
+            if (shouldHighlight) {
+                DocumentContent content = getContent();
+                Document document = content.getDocument();
+
+                TextDiffType type = getSide().select(TextDiffType.DELETED, TextDiffType.INSERTED);
+
+                myHighlighters.addAll(DiffDrawUtil.createHighlighter(getEditor(), 0, getLineCount(document), type, false));
+            }
+
+            myInitialScrollHelper.onRediff();
+        };
+    }
+
+
+    private void clearDiffPresentation() {
+        myPanel.resetNotifications();
+
+        for (RangeHighlighter highlighter : myHighlighters) {
+            highlighter.dispose();
+        }
+        myHighlighters.clear();
+    }
+
+    //
+    // Impl
+    //
+
+    private void doScrollToChange(boolean animated) {
+        DiffImplUtil.moveCaret(getEditor(), 0);
+        DiffImplUtil.scrollEditor(getEditor(), 0, animated);
+    }
+
+    @RequiredUIAccess
+    protected boolean doScrollToContext(DiffNavigationContext context) {
+        if (getSide().isLeft()) {
+            return false;
+        }
+
+        AllLinesIterator allLinesIterator = new AllLinesIterator(getEditor().getDocument());
+        int line = context.contextMatchCheck(allLinesIterator);
+        if (line == -1) {
+            return false;
+        }
+
+        scrollToLine(line);
+        return true;
+    }
+
+    //
+    // Misc
+    //
+
+    @SuppressWarnings("MethodOverridesStaticMethodOfSuperclass")
+    public static boolean canShowRequest(DiffContext context, DiffRequest request) {
+        return OnesideTextDiffViewer.canShowRequest(context, request);
+    }
+
+    //
+    // Actions
+    //
+
+    private class MyReadOnlyLockAction extends TextDiffViewerUtil.EditorReadOnlyLockAction {
+        public MyReadOnlyLockAction() {
+            super(getContext(), getEditableEditors());
+        }
+    }
+
+    //
+    // Modification operations
+    //
+
+    private class MyHighlightPolicySettingAction extends TextDiffViewerUtil.HighlightPolicySettingAction {
+        public MyHighlightPolicySettingAction() {
+            super(getTextSettings());
+        }
+
+        @Override
+        @RequiredUIAccess
+        protected void onSettingsChanged() {
+            rediff();
+        }
+    }
+
+    private class MyIgnorePolicySettingAction extends TextDiffViewerUtil.IgnorePolicySettingAction {
+        public MyIgnorePolicySettingAction() {
+            super(getTextSettings());
+        }
+
+        @Override
+        @RequiredUIAccess
+        protected void onSettingsChanged() {
+            rediff();
+        }
+    }
+
+    //
+    // Helpers
+    //
+
+    @Override
+    public void uiDataSnapshot(DataSink sink) {
+        super.uiDataSnapshot(sink);
+        sink.lazy(DiffDataKeys.CURRENT_CHANGE_RANGE, () -> {
+            int lineCount = getLineCount(getEditor().getDocument());
+            return new LineRange(0, lineCount);
+        });
+    }
+
+    private class MyInitialScrollHelper extends MyInitialScrollPositionHelper {
+        @Override
+        @RequiredUIAccess
+        protected boolean doScrollToChange() {
+            if (myScrollToChange == null) {
+                return false;
+            }
+            SimpleOnesideDiffViewer.this.doScrollToChange(false);
+            return true;
+        }
+
+        @Override
+        @RequiredUIAccess
+        protected boolean doScrollToFirstChange() {
+            SimpleOnesideDiffViewer.this.doScrollToChange(false);
+            return true;
+        }
+
+        @Override
+        @RequiredUIAccess
+        protected boolean doScrollToContext() {
+            return myNavigationContext != null && SimpleOnesideDiffViewer.this.doScrollToContext(myNavigationContext);
+        }
+
+        @Override
+        @RequiredUIAccess
+        protected boolean doScrollToPosition() {
+            if (myCaretPosition == null) {
+                return false;
+            }
+
+            LogicalPosition position = getSide().select(myCaretPosition);
+            getEditor().getCaretModel().moveToLogicalPosition(position);
+
+            if (myEditorsPosition != null && myEditorsPosition.isSame(position)) {
+                UnifiedDiffUtil.scrollToPoint(getEditor(), myEditorsPosition.myPoints[0], false);
+            }
+            else {
+                DiffImplUtil.scrollToCaret(getEditor(), false);
+            }
+            return true;
+        }
+
+        @Override
+        protected @Nullable LogicalPosition[] getCaretPositions() {
+            int index = getSide().getIndex();
+            int otherIndex = getSide().other().getIndex();
+
+            LogicalPosition[] carets = new LogicalPosition[2];
+            carets[index] = getEditor().getCaretModel().getLogicalPosition();
+            carets[otherIndex] = new LogicalPosition(0, 0);
+            return carets;
+        }
+    }
+}

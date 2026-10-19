@@ -1,0 +1,494 @@
+/*
+ * Copyright 2000-2015 JetBrains s.r.o.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package consulo.diff.impl.internal.viewer;
+
+import consulo.application.dumb.DumbAware;
+import consulo.codeEditor.ContextMenuPopupHandler;
+import consulo.codeEditor.EditorEx;
+import consulo.codeEditor.EditorPopupHandler;
+import consulo.dataContext.DataContext;
+import consulo.diff.DiffContext;
+import consulo.diff.DiffUserDataKeys;
+import consulo.diff.content.DiffContent;
+import consulo.diff.content.DocumentContent;
+import consulo.diff.content.EmptyContent;
+import consulo.diff.impl.internal.TextDiffSettingsHolder;
+import consulo.diff.impl.internal.TextDiffSettingsHolder.TextDiffSettings;
+import consulo.diff.internal.DiffImplUtil;
+import consulo.diff.internal.DiffUserDataKeysEx;
+import consulo.diff.internal.HighlightPolicy;
+import consulo.diff.internal.IgnorePolicy;
+import consulo.diff.localize.DiffLocalize;
+import consulo.diff.request.ContentDiffRequest;
+import consulo.disposer.Disposable;
+import consulo.externalService.statistic.UsageTrigger;
+import consulo.localize.LocalizeValue;
+import consulo.logging.Logger;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.Component;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.action.util.ActionGroupUtil;
+import consulo.util.collection.ContainerUtil;
+import kava.beans.PropertyChangeEvent;
+import kava.beans.PropertyChangeListener;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.function.Function;
+
+public class TextDiffViewerUtil {
+    public static final Logger LOG = Logger.getInstance(TextDiffViewerUtil.class);
+
+    public static List<AnAction> createEditorPopupActions() {
+        List<AnAction> result = new ArrayList<>();
+        result.add(ActionManager.getInstance().getAction("CompareClipboardWithSelection"));
+
+        result.add(AnSeparator.getInstance());
+        ContainerUtil.addAll(
+            result,
+            ((ActionGroup) ActionManager.getInstance().getAction(IdeActions.GROUP_DIFF_EDITOR_POPUP)).getChildren(null)
+        );
+
+        return result;
+    }
+
+    public static FoldingModelSupport.Settings getFoldingModelSettings(DiffContext context) {
+        TextDiffSettings settings = getTextSettings(context);
+        return new FoldingModelSupport.Settings(settings.getContextRange(), settings.isExpandByDefault());
+    }
+
+    public static TextDiffSettings getTextSettings(DiffContext context) {
+        TextDiffSettings settings = context.getUserData(TextDiffSettingsHolder.KEY);
+        if (settings == null) {
+            settings = TextDiffSettings.getSettings(context.getUserData(DiffUserDataKeys.PLACE));
+            context.putUserData(TextDiffSettingsHolder.KEY, settings);
+            if (DiffImplUtil.isUserDataFlagSet(DiffUserDataKeys.DO_NOT_IGNORE_WHITESPACES, context)) {
+                settings.setIgnorePolicy(IgnorePolicy.DEFAULT);
+            }
+        }
+        return settings;
+    }
+
+    public static boolean[] checkForceReadOnly(DiffContext context, ContentDiffRequest request) {
+        int contentCount = request.getContents().size();
+        boolean[] result = new boolean[contentCount];
+
+        if (DiffImplUtil.isUserDataFlagSet(DiffUserDataKeys.FORCE_READ_ONLY, request, context)) {
+            Arrays.fill(result, true);
+            return result;
+        }
+
+        boolean[] data = request.getUserData(DiffUserDataKeys.FORCE_READ_ONLY_CONTENTS);
+        if (data != null && data.length == contentCount) {
+            return data;
+        }
+
+        return result;
+    }
+
+    public static void checkDifferentDocuments(ContentDiffRequest request) {
+        // Actually, this should be a valid case. But it has little practical sense and will require explicit checks everywhere.
+        // Some listeners will be processed once instead of 2 times, some listeners will cause illegal document modifications.
+        List<DiffContent> contents = request.getContents();
+
+        boolean sameDocuments = false;
+        for (int i = 0; i < contents.size(); i++) {
+            for (int j = i + 1; j < contents.size(); j++) {
+                if (contents.get(i) instanceof DocumentContent content1 && contents.get(j) instanceof DocumentContent content2) {
+                    sameDocuments |= content1.getDocument() == content2.getDocument();
+                }
+            }
+        }
+
+        if (sameDocuments) {
+            StringBuilder message = new StringBuilder();
+            message.append("DiffRequest with same documents detected\n");
+            message.append(request.toString()).append("\n");
+            for (DiffContent content : contents) {
+                message.append(content.toString()).append("\n");
+            }
+            LOG.warn(new Throwable(message.toString()));
+        }
+    }
+
+    public static boolean areEqualLineSeparators(List<? extends DiffContent> contents) {
+        return areEqualDocumentContentProperties(contents, DocumentContent::getLineSeparator);
+    }
+
+    public static boolean areEqualCharsets(List<? extends DiffContent> contents) {
+        return areEqualDocumentContentProperties(contents, DocumentContent::getCharset);
+    }
+
+    private static <T> boolean areEqualDocumentContentProperties(
+        List<? extends DiffContent> contents,
+        Function<DocumentContent, T> propertyGetter
+    ) {
+        List<T> properties = ContainerUtil.mapNotNull(
+            contents,
+            content -> content instanceof EmptyContent ? null : propertyGetter.apply((DocumentContent) content)
+        );
+
+        return properties.size() < 2 || new HashSet<>(properties).size() == 1;
+    }
+
+    //
+    // Actions
+    //
+
+    // TODO: pretty icons ?
+    public static abstract class ComboBoxSettingAction<T> extends ComboBoxAction implements DumbAware {
+        private ActionGroup myChildren;
+
+        public ComboBoxSettingAction() {
+            setEnabledInModalContext(true);
+        }
+
+        @Override
+        public void update(AnActionEvent e) {
+            Presentation presentation = e.getPresentation();
+            presentation.setText(getText(getCurrentSetting()));
+        }
+
+        public ActionGroup getPopupGroup() {
+            initChildren();
+            return myChildren;
+        }
+
+        @Override
+        protected ActionGroup createPopupActionGroup(DataContext context) {
+            initChildren();
+            return myChildren;
+        }
+
+        private void initChildren() {
+            if (myChildren == null) {
+                ActionGroup.Builder builder = ActionGroup.newImmutableBuilder();
+                for (T setting : getAvailableSettings()) {
+                    builder.add(new MyAction(setting));
+                }
+
+                myChildren = builder.build();
+            }
+        }
+
+        protected abstract List<T> getAvailableSettings();
+
+        protected abstract LocalizeValue getText(T setting);
+
+        protected abstract T getCurrentSetting();
+
+        protected abstract void applySetting(T setting, AnActionEvent e);
+
+        private class MyAction extends AnAction implements DumbAware {
+            
+            private final T mySetting;
+
+            public MyAction(T setting) {
+                super(getText(setting));
+                setEnabledInModalContext(true);
+                mySetting = setting;
+            }
+
+            @RequiredUIAccess
+            @Override
+            public void actionPerformed(AnActionEvent e) {
+                applySetting(mySetting, e);
+            }
+        }
+    }
+
+    public static abstract class HighlightPolicySettingAction extends ComboBoxSettingAction<HighlightPolicy> {
+        protected final TextDiffSettings mySettings;
+
+        public HighlightPolicySettingAction(TextDiffSettings settings) {
+            mySettings = settings;
+        }
+
+        @Override
+        @RequiredUIAccess
+        protected void applySetting(HighlightPolicy setting, AnActionEvent e) {
+            if (getCurrentSetting() == setting) {
+                return;
+            }
+            UsageTrigger.trigger("diff.TextDiffSettings.HighlightPolicy." + setting.name());
+            mySettings.setHighlightPolicy(setting);
+            update(e);
+            onSettingsChanged();
+        }
+
+        @Override
+        protected HighlightPolicy getCurrentSetting() {
+            return mySettings.getHighlightPolicy();
+        }
+
+        @Override
+        protected LocalizeValue getText(HighlightPolicy setting) {
+            return setting.getText();
+        }
+
+        @Override
+        protected List<HighlightPolicy> getAvailableSettings() {
+            return Arrays.asList(HighlightPolicy.values());
+        }
+
+        protected abstract void onSettingsChanged();
+    }
+
+    public static abstract class IgnorePolicySettingAction extends ComboBoxSettingAction<IgnorePolicy> {
+        protected final TextDiffSettings mySettings;
+
+        public IgnorePolicySettingAction(TextDiffSettings settings) {
+            mySettings = settings;
+        }
+
+        @Override
+        @RequiredUIAccess
+        protected void applySetting(IgnorePolicy setting, AnActionEvent e) {
+            if (getCurrentSetting() == setting) {
+                return;
+            }
+            UsageTrigger.trigger("diff.TextDiffSettings.IgnorePolicy." + setting.name());
+            mySettings.setIgnorePolicy(setting);
+            update(e);
+            onSettingsChanged();
+        }
+
+        @Override
+        protected IgnorePolicy getCurrentSetting() {
+            return mySettings.getIgnorePolicy();
+        }
+
+        @Override
+        protected LocalizeValue getText(IgnorePolicy setting) {
+            return setting.getText();
+        }
+
+        @Override
+        protected List<IgnorePolicy> getAvailableSettings() {
+            return Arrays.asList(IgnorePolicy.values());
+        }
+
+        protected abstract void onSettingsChanged();
+    }
+
+    public static class ToggleAutoScrollAction extends ToggleAction implements DumbAware {
+        protected final TextDiffSettings mySettings;
+
+        public ToggleAutoScrollAction(TextDiffSettings settings) {
+            super(DiffLocalize.synchronizeScrolling(), LocalizeValue.empty(), PlatformIconGroup.actionsSynchronizescrolling());
+            mySettings = settings;
+            setEnabledInModalContext(true);
+        }
+
+        @Override
+        public boolean isSelected(AnActionEvent e) {
+            return mySettings.isEnableSyncScroll();
+        }
+
+        @Override
+        public void setSelected(AnActionEvent e, boolean state) {
+            mySettings.setEnableSyncScroll(state);
+        }
+    }
+
+    public static abstract class ToggleExpandByDefaultAction extends ToggleAction implements DumbAware {
+        protected final TextDiffSettings mySettings;
+
+        public ToggleExpandByDefaultAction(TextDiffSettings settings) {
+            super(DiffLocalize.collapseUnchangedFragments(), LocalizeValue.empty(), PlatformIconGroup.actionsCollapseall());
+            mySettings = settings;
+            setEnabledInModalContext(true);
+        }
+
+        @Override
+        public void update(AnActionEvent e) {
+            super.update(e);
+            e.getPresentation().setVisible(isVisible());
+        }
+
+        public boolean isVisible() {
+            return mySettings.getContextRange() != -1;
+        }
+
+        @Override
+        public boolean isSelected(AnActionEvent e) {
+            return !mySettings.isExpandByDefault();
+        }
+
+        @Override
+        public void setSelected(AnActionEvent e, boolean state) {
+            boolean expand = !state;
+            if (mySettings.isExpandByDefault() == expand) {
+                return;
+            }
+            mySettings.setExpandByDefault(expand);
+            expandAll(expand);
+        }
+
+        protected abstract void expandAll(boolean expand);
+    }
+
+    public static abstract class ReadOnlyLockAction extends ToggleAction implements DumbAware {
+        protected final DiffContext myContext;
+        
+        protected final TextDiffSettings mySettings;
+
+        public ReadOnlyLockAction(DiffContext context) {
+            super(LocalizeValue.localizeTODO("Disable Editing"), LocalizeValue.empty(), PlatformIconGroup.ideReadonly());
+            myContext = context;
+            mySettings = getTextSettings(context);
+            setEnabledInModalContext(true);
+        }
+
+        protected void applyDefaults() {
+            if (isVisible()) { // apply default state
+                setSelectedNoEvent(mySettings.isReadOnlyLock());
+            }
+        }
+
+        @Override
+        public void update(AnActionEvent e) {
+            if (!isVisible()) {
+                e.getPresentation().setEnabledAndVisible(false);
+            }
+            else {
+                super.update(e);
+            }
+        }
+
+        @Override
+        public boolean isSelected(AnActionEvent e) {
+            return mySettings.isReadOnlyLock();
+        }
+
+        @RequiredUIAccess
+        @Override
+        public void setSelected(AnActionEvent e, boolean state) {
+            setSelectedNoEvent(state);
+        }
+
+        private void setSelectedNoEvent(boolean state) {
+            mySettings.setReadOnlyLock(state);
+            doApply(state);
+        }
+
+        private boolean isVisible() {
+            return myContext.getUserData(DiffUserDataKeysEx.SHOW_READ_ONLY_LOCK) == Boolean.TRUE && canEdit();
+        }
+
+        protected abstract void doApply(boolean readOnly);
+
+        protected abstract boolean canEdit();
+    }
+
+    public static class EditorReadOnlyLockAction extends ReadOnlyLockAction {
+        private final List<? extends EditorEx> myEditableEditors;
+
+        public EditorReadOnlyLockAction(DiffContext context, List<? extends EditorEx> editableEditors) {
+            super(context);
+            myEditableEditors = editableEditors;
+            applyDefaults();
+        }
+
+        @Override
+        protected void doApply(boolean readOnly) {
+            for (EditorEx editor : myEditableEditors) {
+                editor.setViewer(readOnly);
+            }
+        }
+
+        @Override
+        protected boolean canEdit() {
+            return !myEditableEditors.isEmpty();
+        }
+    }
+
+    public static List<? extends EditorEx> getEditableEditors(List<? extends EditorEx> editors) {
+        return ContainerUtil.filter(editors, editor -> !editor.isViewer());
+    }
+
+    public static class EditorFontSizeSynchronizer implements PropertyChangeListener {
+        private final List<? extends EditorEx> myEditors;
+
+        private boolean myDuringUpdate = false;
+
+        public EditorFontSizeSynchronizer(List<? extends EditorEx> editors) {
+            myEditors = editors;
+        }
+
+        public void install(Disposable disposable) {
+            if (myEditors.size() < 2) {
+                return;
+            }
+            for (EditorEx editor : myEditors) {
+                editor.addPropertyChangeListener(this, disposable);
+            }
+        }
+
+        @Override
+        public void propertyChange(PropertyChangeEvent evt) {
+            if (myDuringUpdate) {
+                return;
+            }
+
+            if (!EditorEx.PROP_FONT_SIZE.equals(evt.getPropertyName())) {
+                return;
+            }
+            if (evt.getOldValue().equals(evt.getNewValue())) {
+                return;
+            }
+            int fontSize = (Integer) evt.getNewValue();
+
+            for (EditorEx editor : myEditors) {
+                if (evt.getSource() != editor) {
+                    updateEditor(editor, fontSize);
+                }
+            }
+        }
+
+        public void updateEditor(EditorEx editor, int fontSize) {
+            try {
+                myDuringUpdate = true;
+                editor.setFontSize(fontSize);
+            }
+            finally {
+                myDuringUpdate = false;
+            }
+        }
+    }
+
+    public static class EditorActionsPopup {
+        private final List<? extends AnAction> myEditorPopupActions;
+
+        public EditorActionsPopup(List<? extends AnAction> editorPopupActions) {
+            myEditorPopupActions = editorPopupActions;
+        }
+
+        @RequiredUIAccess
+        public void install(List<? extends EditorEx> editors, Component component) {
+            ActionGroupUtil.recursiveRegisterShortcutSet(new DefaultActionGroup(myEditorPopupActions), component, null);
+
+            EditorPopupHandler handler =
+                new ContextMenuPopupHandler.Simple(myEditorPopupActions.isEmpty() ? null : new DefaultActionGroup(myEditorPopupActions));
+            for (EditorEx editor : editors) {
+                editor.installPopupHandler(handler);
+            }
+        }
+    }
+}

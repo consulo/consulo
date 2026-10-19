@@ -102,16 +102,23 @@ public class WebAvatarImpl extends VaadinComponentDelegate<WebAvatarImpl.Vaadin>
         String name = myName.get();
         component.setName(name.isEmpty() ? null : name);
         component.setAbbreviation(name.isEmpty() ? null : AvatarPresentation.initialsOf(name));
-        if (name.isEmpty()) {
-            component.getElement().removeProperty("colorIndex");
-        }
-        else {
-            component.setColorIndex(AvatarPresentation.colorIndexOf(name));
-        }
+        updateColor();
     }
 
     private void updateImage() {
         Image image = AvatarPresentation.imageOf(myName.get(), myImage);
         toVaadinComponent().setImage(image == null ? null : WebImageUrl.toURL(image));
+        updateColor();
+    }
+
+    private void updateColor() {
+        Vaadin component = toVaadinComponent();
+        String name = myName.get();
+        if (name.isEmpty() || AvatarPresentation.imageOf(name, myImage) != null) {
+            component.getElement().removeProperty("colorIndex");
+        }
+        else {
+            component.setColorIndex(AvatarPresentation.colorIndexOf(name));
+        }
     }
 }

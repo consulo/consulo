@@ -16,6 +16,8 @@
 
 package consulo.language.inject.advanced.impl.internal;
 
+import consulo.fileChooser.FileChooser;
+import consulo.ui.UIAccess;
 import consulo.ui.ex.internal.ActionUpdateInvoker;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.configurable.Configurable;
@@ -28,7 +30,6 @@ import consulo.disposer.Disposable;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserFactory;
 import consulo.fileChooser.FileSaverDescriptor;
-import consulo.fileChooser.IdeaFileChooser;
 import consulo.fileEditor.util.FileContentUtil;
 import consulo.language.Language;
 import consulo.language.editor.LangDataKeys;
@@ -886,66 +887,68 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
         SplitterProportionsData splitterData = new SplitterProportionsDataImpl();
         splitterData.externalizeFromDimensionService("IntelliLang.ImportSettingsKey.SplitterProportions");
 
-        VirtualFile file = IdeaFileChooser.chooseFile(descriptor, myProject, null);
-        if (file == null) {
-            return;
-        }
-        try {
-            Configuration cfg = Configuration.load(file.getInputStream());
-            if (cfg == null) {
-                Messages.showWarningDialog(myProject, "The selected file does not contain any importable configuration.", "Nothing to Import");
+        UIAccess uiAccess = UIAccess.current();
+        FileChooser.chooseFile(descriptor, myProject, null).whenCompleteAsync((file, chooseError) -> {
+            if (file == null) {
                 return;
             }
-            CfgInfo info = getDefaultCfgInfo();
-            Map<String, Set<InjInfo>> currentMap = ContainerUtil.classify(info.injectionInfos.iterator(), new Function<InjInfo, String>() {
-                @Override
-                public String apply(InjInfo o) {
-                    return o.injection.getSupportId();
+            try {
+                Configuration cfg = Configuration.load(file.getInputStream());
+                if (cfg == null) {
+                    Messages.showWarningDialog(myProject, "The selected file does not contain any importable configuration.", "Nothing to Import");
+                    return;
                 }
-            });
-            List<BaseInjection> originalInjections = new ArrayList<>();
-            List<BaseInjection> newInjections = new ArrayList<>();
-            //// remove duplicates
-            //for (String supportId : InjectorUtils.getActiveInjectionSupportIds()) {
-            //  final Set<BaseInjection> currentInjections = currentMap.get(supportId);
-            //  if (currentInjections == null) continue;
-            //  for (BaseInjection injection : currentInjections) {
-            //    Configuration.importInjections(newInjections, Collections.singleton(injection), originalInjections, newInjections);
-            //  }
-            //}
-            //myInjections.clear();
-            //myInjections.addAll(newInjections);
+                CfgInfo info = getDefaultCfgInfo();
+                Map<String, Set<InjInfo>> currentMap = ContainerUtil.classify(info.injectionInfos.iterator(), new Function<InjInfo, String>() {
+                    @Override
+                    public String apply(InjInfo o) {
+                        return o.injection.getSupportId();
+                    }
+                });
+                List<BaseInjection> originalInjections = new ArrayList<>();
+                List<BaseInjection> newInjections = new ArrayList<>();
+                //// remove duplicates
+                //for (String supportId : InjectorUtils.getActiveInjectionSupportIds()) {
+                //  final Set<BaseInjection> currentInjections = currentMap.get(supportId);
+                //  if (currentInjections == null) continue;
+                //  for (BaseInjection injection : currentInjections) {
+                //    Configuration.importInjections(newInjections, Collections.singleton(injection), originalInjections, newInjections);
+                //  }
+                //}
+                //myInjections.clear();
+                //myInjections.addAll(newInjections);
 
-            for (String supportId : InjectorUtils.getActiveInjectionSupportIds()) {
-                ArrayList<InjInfo> list = new ArrayList<>(ObjectUtil.notNull(currentMap.get(supportId), Collections.<InjInfo>emptyList()));
-                List<BaseInjection> currentInjections = getInjectionList(list);
-                List<BaseInjection> importingInjections = cfg.getInjections(supportId);
-                if (currentInjections == null) {
-                    newInjections.addAll(importingInjections);
+                for (String supportId : InjectorUtils.getActiveInjectionSupportIds()) {
+                    ArrayList<InjInfo> list = new ArrayList<>(ObjectUtil.notNull(currentMap.get(supportId), Collections.<InjInfo>emptyList()));
+                    List<BaseInjection> currentInjections = getInjectionList(list);
+                    List<BaseInjection> importingInjections = cfg.getInjections(supportId);
+                    if (currentInjections == null) {
+                        newInjections.addAll(importingInjections);
+                    }
+                    else {
+                        Configuration.importInjections(currentInjections, importingInjections, originalInjections, newInjections);
+                    }
+                }
+                info.replace(originalInjections, newInjections);
+                myInjectionsTable.getListTableModel().setItems(getInjInfoList(myInfos));
+                int n = newInjections.size();
+                if (n > 1) {
+                    Messages.showInfoMessage(myProject, n + " entries have been successfully imported", "Import Successful");
+                }
+                else if (n == 1) {
+                    Messages.showInfoMessage(myProject, "One entry has been successfully imported", "Import Successful");
                 }
                 else {
-                    Configuration.importInjections(currentInjections, importingInjections, originalInjections, newInjections);
+                    Messages.showInfoMessage(myProject, "No new entries have been imported", "Import");
                 }
             }
-            info.replace(originalInjections, newInjections);
-            myInjectionsTable.getListTableModel().setItems(getInjInfoList(myInfos));
-            int n = newInjections.size();
-            if (n > 1) {
-                Messages.showInfoMessage(myProject, n + " entries have been successfully imported", "Import Successful");
-            }
-            else if (n == 1) {
-                Messages.showInfoMessage(myProject, "One entry has been successfully imported", "Import Successful");
-            }
-            else {
-                Messages.showInfoMessage(myProject, "No new entries have been imported", "Import");
-            }
-        }
-        catch (Exception ex) {
-            LOG.error(ex);
+            catch (Exception ex) {
+                LOG.error(ex);
 
-            String msg = ex.getLocalizedMessage();
-            Messages.showErrorDialog(myProject, msg != null && msg.length() > 0 ? msg : ex.toString(), "Import Failed");
-        }
+                String msg = ex.getLocalizedMessage();
+                Messages.showErrorDialog(myProject, msg != null && msg.length() > 0 ? msg : ex.toString(), "Import Failed");
+            }
+        }, uiAccess);
     }
 
     private static class CfgInfo {

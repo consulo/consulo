@@ -94,6 +94,13 @@ public class DesktopToastImpl extends SwingComponentDelegate<JPanel> implements 
                     g.drawImage(myShadow, 0, 0, null);
                 }
 
+                if (myLeftLine) {
+                    int lineWidth = JBUI.scale(ToastPresentation.LEFT_LINE_WIDTH);
+                    g.setColor(TargetAWT.to(ToastPresentation.border(myStyle)));
+                    g.fill(new RoundRectangle2D.Float(shadow, shadow, lineWidth, height, lineWidth, lineWidth));
+                    return;
+                }
+
                 int arc = JBUI.scale(ARC);
                 g.translate(shadow, shadow);
                 RoundRectangle2D card = new RoundRectangle2D.Float(0, 0, width, height, arc, arc);
@@ -287,6 +294,7 @@ public class DesktopToastImpl extends SwingComponentDelegate<JPanel> implements 
 
     private @Nullable ToastStyle myStyle;
     private boolean myGlassy;
+    private boolean myLeftLine;
     private @Nullable Image myIcon;
     private boolean myShadowVisible;
     private boolean myHovered;
@@ -340,6 +348,11 @@ public class DesktopToastImpl extends SwingComponentDelegate<JPanel> implements 
         if (style == ToastStyle.GLASSY) {
             myGlassy = true;
             ((MyToastPanel) toAWTComponent()).dropShadow();
+        }
+        else if (style == ToastStyle.LEFT_LINE) {
+            myLeftLine = true;
+            updateInsets(toAWTComponent());
+            updateIcon();
         }
         else {
             myStyle = style;
@@ -427,11 +440,16 @@ public class DesktopToastImpl extends SwingComponentDelegate<JPanel> implements 
 
     private void updateInsets(JPanel panel) {
         int shadow = shadowSize();
+        if (myLeftLine) {
+            int left = JBUI.scale(ToastPresentation.LEFT_LINE_WIDTH + ToastPresentation.LEFT_LINE_GAP);
+            panel.setBorder(BorderFactory.createEmptyBorder(JBUI.scale(2) + shadow, left + shadow, JBUI.scale(2) + shadow, shadow));
+            return;
+        }
         panel.setBorder(BorderFactory.createEmptyBorder(JBUI.scale(8) + shadow, JBUI.scale(10) + shadow, JBUI.scale(8) + shadow, JBUI.scale(8) + shadow));
     }
 
     private void updateIcon() {
-        Image icon = myIcon != null ? myIcon : ToastPresentation.icon(myStyle);
+        Image icon = myIcon != null ? myIcon : myLeftLine ? null : ToastPresentation.icon(myStyle);
         myIconLabel.setIcon(icon == null ? null : TargetAWT.to(icon));
         myIconLabel.setVisible(icon != null);
     }

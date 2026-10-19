@@ -26,6 +26,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.concurrent.coroutine.CoroutineScope;
 import consulo.util.concurrent.coroutine.CoroutineStep;
+import consulo.util.concurrent.coroutine.step.CompletableFutureStep;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
@@ -54,6 +55,17 @@ public final class McpToolActions {
 
     public static CompletableFuture<McpToolCallResult> uiAction(Project project, @RequiredUIAccess Supplier<McpToolCallResult> supplier) {
         return run(project, UIAction.<Object, McpToolCallResult>apply(ignored -> supplier.get()));
+    }
+
+    public static CompletableFuture<McpToolCallResult> uiActionAsync(
+        Project project,
+        @RequiredUIAccess Supplier<CompletableFuture<McpToolCallResult>> supplier
+    ) {
+        CoroutineScope scope = CoroutineScope.of(project.coroutineContext());
+        return Coroutine.first(UIAction.<Object, CompletableFuture<McpToolCallResult>>apply(ignored -> supplier.get()))
+            .then(CompletableFutureStep.<CompletableFuture<McpToolCallResult>, McpToolCallResult>await(future -> future))
+            .runAsync(scope, NO_INPUT)
+            .toFuture();
     }
 
     private static CompletableFuture<McpToolCallResult> run(Project project, CoroutineStep<Object, McpToolCallResult> step) {

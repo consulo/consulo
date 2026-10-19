@@ -159,6 +159,7 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl<NODE>
         private TreeData<WebTreeRow<NODE>> myData = new TreeData<>();
 
         private final Grid.Column<WebTreeRow<NODE>> myTreeColumn;
+        private boolean myFitsViewport;
 
         private List<TreeNode<NODE>> myDraggedItems = List.of();
         private DataTransfer myDragTransfer = DataTransfer.EMPTY;
@@ -229,6 +230,16 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl<NODE>
                     if (node == null) {
                         item.append(UILocalize.treenodeLoading());
                     }
+                }
+
+                if (item.hasSuffix() && !myFitsViewport) {
+                    myFitsViewport = true;
+                    getUI().ifPresent(ui -> ui.beforeClientResponse(this, context -> {
+                        Grid.Column<WebTreeRow<NODE>> column = getTreeColumn();
+                        column.setAutoWidth(false);
+                        column.setWidth("0px");
+                        column.setFlexGrow(1);
+                    }));
                 }
 
                 VaadinGridTreeToggle toggle = new VaadinGridTreeToggle();

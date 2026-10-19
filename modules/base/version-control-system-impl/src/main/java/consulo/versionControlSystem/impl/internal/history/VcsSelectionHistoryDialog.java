@@ -158,7 +158,7 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements UiDataPro
 
         myList.getEmptyText().setText(VcsLocalize.historyEmpty());
 
-        myDiffPanel = DiffManager.getInstance().createRequestPanel(myProject, this, getFrame());
+        myDiffPanel = DiffManager.getInstance().createRequestPanel(myProject, this, TargetAWT.from(getFrame()));
         myUpdateQueue = new MergingUpdateQueue("VcsSelectionHistoryDialog", 300, true, myList, this);
 
         myLocalRevision = new CurrentRevision(file, LOCAL_REVISION_NUMBER);
@@ -167,7 +167,7 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements UiDataPro
 
         mySplitter = new JBSplitter(true, DIFF_SPLITTER_PROPORTION_KEY, DIFF_SPLITTER_PROPORTION);
 
-        mySplitter.setFirstComponent(myDiffPanel.getComponent());
+        mySplitter.setFirstComponent((JComponent) TargetAWT.to(myDiffPanel.getComponent()));
         consulo.ui.Component details = components.getDetailsComponent();
         mySplitter.setSecondComponent(createBottomPanel(details == null ? null : (JComponent) TargetAWT.to(details)));
 

@@ -19,9 +19,9 @@ import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.SearchableConfigurable;
 import consulo.configurable.UnnamedConfigurable;
+import consulo.fileChooser.FileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
-import consulo.fileChooser.IdeaFileChooser;
 import consulo.language.copyright.config.CopyrightManager;
 import consulo.language.copyright.config.CopyrightProfile;
 import consulo.language.copyright.impl.internal.ExternalOptionHelper;
@@ -29,6 +29,7 @@ import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.InputValidator;
 import consulo.ui.ex.action.AnAction;
@@ -200,11 +201,16 @@ public class CopyrightProfilesPanel extends MasterDetailsComponent
                 FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFileNoJarsDescriptor();
                 descriptor.withFileFilter(file -> "xml".equals(file.getExtension()));
                 descriptor.setTitle("Choose file containing copyright notice");
-                VirtualFile file = IdeaFileChooser.chooseFile(descriptor, myProject, null);
-                if (file == null) {
-                    return;
-                }
+                UIAccess uiAccess = UIAccess.current();
+                FileChooser.chooseFile(descriptor, myProject, null).whenCompleteAsync((file, error) -> {
+                    if (file != null) {
+                        importFrom(file);
+                    }
+                }, uiAccess);
+            }
 
+            @RequiredUIAccess
+            private void importFrom(VirtualFile file) {
                 List<CopyrightProfile> copyrightProfiles = ExternalOptionHelper.loadOptions(VirtualFileUtil.virtualToIoFile(file));
                 if (copyrightProfiles == null) {
                     return;

@@ -41,7 +41,6 @@ import consulo.document.Document;
 import consulo.project.Project;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.color.ColorValue;
 import consulo.ui.cursor.Cursor;
 import consulo.ui.layout.VerticalLayout;
 import org.jspecify.annotations.Nullable;
@@ -308,15 +307,6 @@ public class HeadlessEditor extends CodeEditorBase {
     @Override
     public Dimension getContentSize() {
         return new Dimension(getMaxWidthInRange(0, myDocument.getTextLength()), getVisibleLineCount() * getLineHeight());
-    }
-
-    @Override
-    public ColorValue getBackgroundColor() {
-        return myScheme.getDefaultBackground();
-    }
-
-    @Override
-    public void setBackgroundColor(ColorValue color) {
     }
 
     @Override

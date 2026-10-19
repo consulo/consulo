@@ -121,6 +121,16 @@ public class DesktopQtToastImpl extends QtComponentDelegate<QWidget> implements 
                     painter.drawImage(0, 0, myShadowImage);
                 }
 
+                if (myLeftLine) {
+                    double lineWidth = ToastPresentation.LEFT_LINE_WIDTH;
+                    QPainterPath line = new QPainterPath();
+                    line.addRoundedRect(new QRectF(shadow, shadow, lineWidth, height), lineWidth / 2, lineWidth / 2);
+                    painter.setPen(Qt.PenStyle.NoPen);
+                    painter.setBrush(new QBrush(border));
+                    painter.drawPath(line);
+                    return;
+                }
+
                 QPainterPath shape = new QPainterPath();
                 shape.addRoundedRect(new QRectF(shadow + 0.5, shadow + 0.5, width - 1, height - 1), ARC / 2.0, ARC / 2.0);
 
@@ -197,6 +207,7 @@ public class DesktopQtToastImpl extends QtComponentDelegate<QWidget> implements 
 
     private @Nullable ToastStyle myStyle;
     private boolean myGlassy;
+    private boolean myLeftLine;
     private @Nullable Image myIcon;
     private LocalizeValue myTitle = LocalizeValue.empty();
     private LocalizeValue myText = LocalizeValue.empty();
@@ -282,6 +293,11 @@ public class DesktopQtToastImpl extends QtComponentDelegate<QWidget> implements 
             if (toQtComponent() instanceof ToastWidget widget) {
                 widget.dropShadow();
             }
+        }
+        else if (style == ToastStyle.LEFT_LINE) {
+            myLeftLine = true;
+            updateMargins();
+            updateIcon();
         }
         else {
             myStyle = style;
@@ -407,6 +423,10 @@ public class DesktopQtToastImpl extends QtComponentDelegate<QWidget> implements 
             return;
         }
         int shadow = shadowSize();
+        if (myLeftLine) {
+            row.setContentsMargins(ToastPresentation.LEFT_LINE_WIDTH + ToastPresentation.LEFT_LINE_GAP + shadow, 2 + shadow, shadow, 2 + shadow);
+            return;
+        }
         row.setContentsMargins(10 + shadow, 8 + shadow, 8 + shadow, 8 + shadow);
     }
 
@@ -415,7 +435,7 @@ public class DesktopQtToastImpl extends QtComponentDelegate<QWidget> implements 
         if (iconWidget == null || iconWidget.isDisposed()) {
             return;
         }
-        Image icon = myIcon != null ? myIcon : ToastPresentation.icon(myStyle);
+        Image icon = myIcon != null ? myIcon : myLeftLine ? null : ToastPresentation.icon(myStyle);
         iconWidget.setImage(icon);
         iconWidget.setVisible(icon != null);
     }

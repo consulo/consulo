@@ -13,6 +13,7 @@ import consulo.codeEditor.impl.internal.VisualLinesIterator;
 import consulo.codeEditor.internal.FoldingKeys;
 import consulo.codeEditor.markup.*;
 import consulo.colorScheme.internal.FontPreferences;
+import consulo.desktop.awt.editor.impl.internal.LineFramePainter;
 import consulo.desktop.awt.editor.impl.internal.LineMarkerPresentationContextImpl;
 import consulo.desktop.awt.editor.impl.internal.gutter.AwtLineSeparatorBounds;
 import consulo.desktop.awt.editor.impl.internal.gutter.AwtLineSeparatorPresentationPainter;
@@ -240,6 +241,8 @@ public final class EditorPainter implements TextDrawingCallback {
             paintCustomRenderers(myAfterBackgroundCustomHighlighters);
             paintLineMarkersSeparators(myDocMarkup);
             paintLineMarkersSeparators(myEditorMarkup);
+            paintLineFrames(myDocMarkup);
+            paintLineFrames(myEditorMarkup);
             paintTextWithEffects();
             paintHighlightersAfterEndOfLine(myDocMarkup);
             paintHighlightersAfterEndOfLine(myEditorMarkup);
@@ -772,6 +775,31 @@ public final class EditorPainter implements TextDrawingCallback {
                 }
                 myGraphics.translate(0, -myYShift);
             }
+        }
+
+        /**
+         * The text half of the frames around lines - from the left of the text to the right of the content, less the room
+         * a scrollbar takes.
+         */
+        private void paintLineFrames(MarkupModelEx markupModel) {
+            markupModel.processRangeHighlightersOverlappingWith(
+                mySeparatorHighlightersStartOffset,
+                mySeparatorHighlightersEndOffset,
+                highlighter -> {
+                    LineFramePresentation presentation = highlighter.getLineFramePresentation();
+                    if (presentation != null) {
+                        int startLine = myDocument.getLineNumber(highlighter.getStartOffset());
+                        int endLine = myDocument.getLineNumber(highlighter.getEndOffset());
+                        int startVisualLine = myView.offsetToVisualLine(myDocument.getLineStartOffset(startLine), false);
+                        int endVisualLine = myView.offsetToVisualLine(myDocument.getLineEndOffset(endLine), true);
+                        int top = myView.visualLineToY(startVisualLine) + myYShift;
+                        int bottom = myView.visualLineToYRange(endVisualLine)[1] + myYShift;
+                        int right = myEditor.getContentComponent().getWidth() - JBUI.scale(15);
+                        LineFramePainter.paint(myGraphics, TargetAWT.to(presentation.color()), 0, top, right, bottom, false);
+                    }
+                    return true;
+                }
+            );
         }
 
         @RequiredUIAccess

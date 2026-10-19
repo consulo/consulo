@@ -43,6 +43,8 @@ import consulo.web.ui.impl.internal.base.TargetVaadin;
 import consulo.web.ui.impl.internal.base.VaadinComponentDelegate;
 import org.jspecify.annotations.Nullable;
 
+import java.util.function.Consumer;
+
 
 /**
  * @author VISTALL
@@ -187,6 +189,11 @@ class UIWindowOverRouterLayout extends UserDataHolderBase implements Window, Toa
     @Override
     public void close() {
         Disposer.dispose(this);
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setCloseHandler(@Nullable Consumer<Window> closeHandler) {
     }
 
     @Override

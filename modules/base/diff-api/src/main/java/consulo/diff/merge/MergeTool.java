@@ -15,6 +15,7 @@
  */
 package consulo.diff.merge;
 
+import consulo.ui.Component;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.disposer.Disposable;
@@ -23,9 +24,9 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
 import java.util.List;
-import java.util.function.BooleanSupplier;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Supplier;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface MergeTool {
@@ -48,9 +49,9 @@ public interface MergeTool {
      */
     interface MergeViewer extends Disposable {
         
-        JComponent getComponent();
+        Component getComponent();
 
-        @Nullable JComponent getPreferredFocusedComponent();
+        @Nullable Component getPreferredFocusedComponent();
 
         /**
          * @return Action that should be triggered on the corresponding action.
@@ -74,11 +75,11 @@ public interface MergeTool {
 
     class ToolbarComponents {
         public @Nullable List<AnAction> toolbarActions;
-        public @Nullable JComponent statusPanel;
+        public @Nullable Component statusPanel;
 
         /**
-         * return false if merge window should be prevented from closing and canceling resolve.
+         * Completes with false if merge window should be prevented from closing and canceling resolve.
          */
-        public @Nullable BooleanSupplier closeHandler;
+        public @Nullable Supplier<CompletableFuture<Boolean>> closeHandler;
     }
 }

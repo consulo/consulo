@@ -156,11 +156,11 @@ public class DesktopQtEditorCoordinateMapper {
     public Point visualPositionToXY(VisualPosition position) {
         int x = (int) Math.round(columnToX(position.line, position.column));
 
-        return new Point(x, position.line * myEditor.getLineHeight());
+        return new Point(x, myEditor.getRowLayout().visualLineToY(position.line));
     }
 
     public Point2D visualPositionToPoint2D(VisualPosition position) {
-        return new Point2D.Double(columnToX(position.line, position.column), (double) position.line * myEditor.getLineHeight());
+        return new Point2D.Double(columnToX(position.line, position.column), myEditor.getRowLayout().visualLineToY(position.line));
     }
 
     public Point logicalPositionToXY(LogicalPosition position) {
@@ -168,8 +168,7 @@ public class DesktopQtEditorCoordinateMapper {
     }
 
     public VisualPosition xyToVisualPosition(Point p) {
-        int lineHeight = myEditor.getLineHeight();
-        int visualLine = Math.max(0, Math.min(p.y / lineHeight, myVisualLines.getVisualLineCount() - 1));
+        int visualLine = Math.max(0, Math.min(myEditor.getRowLayout().yToVisualLine(p.y), myVisualLines.getVisualLineCount() - 1));
 
         return new VisualPosition(visualLine, xToColumn(visualLine, p.x));
     }
@@ -236,8 +235,7 @@ public class DesktopQtEditorCoordinateMapper {
      * Walks the pieces of the row exactly as {@link #columnToX} does, so what is hit is what was drawn.
      */
     public @Nullable InlayHit inlayAt(Point p) {
-        int lineHeight = myEditor.getLineHeight();
-        int visualLine = Math.max(0, Math.min(p.y / lineHeight, myVisualLines.getVisualLineCount() - 1));
+        int visualLine = Math.max(0, Math.min(myEditor.getRowLayout().yToVisualLine(p.y), myVisualLines.getVisualLineCount() - 1));
 
         CharSequence text = myEditor.getDocument().getCharsSequence();
 

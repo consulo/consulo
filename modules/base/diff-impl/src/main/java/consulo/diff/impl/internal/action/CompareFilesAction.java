@@ -16,14 +16,17 @@
 package consulo.diff.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
+import consulo.diff.DiffManager;
 import consulo.diff.DiffRequestFactory;
 import consulo.diff.request.DiffRequest;
+import consulo.fileChooser.FileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
-import consulo.fileChooser.IdeaFileChooser;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.project.ProjectPropertiesComponent;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
@@ -34,6 +37,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 
 @ActionImpl(id = "CompareTwoFiles")
 public class CompareFilesAction extends BaseShowDiffAction {
@@ -107,6 +111,30 @@ public class CompareFilesAction extends BaseShowDiffAction {
     }
 
     @Override
+    @RequiredUIAccess
+    public void actionPerformed(AnActionEvent e) {
+        VirtualFile[] data = e.getData(VirtualFile.KEY_OF_ARRAY);
+        if (e.getData(DIFF_REQUEST) != null || data == null || data.length != 1) {
+            super.actionPerformed(e);
+            return;
+        }
+
+        Project project = e.getData(Project.KEY);
+        VirtualFile file = data[0];
+        if (!hasContent(file)) {
+            return;
+        }
+
+        UIAccess uiAccess = UIAccess.current();
+        chooseOtherFile(project, file).whenCompleteAsync((otherFile, error) -> {
+            if (otherFile == null) {
+                return;
+            }
+            DiffManager.getInstance().showDiff(project, DiffRequestFactory.getInstance().createFromFiles(project, file, otherFile));
+        }, uiAccess);
+    }
+
+    @Override
     protected @Nullable DiffRequest getDiffRequest(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         DiffRequest diffRequest = e.getData(DIFF_REQUEST);
@@ -115,22 +143,14 @@ public class CompareFilesAction extends BaseShowDiffAction {
         }
 
         VirtualFile[] data = e.getRequiredData(VirtualFile.KEY_OF_ARRAY);
-        if (data.length == 1) {
-            VirtualFile otherFile = getOtherFile(project, data[0]);
-            if (otherFile == null) {
-                return null;
-            }
-            if (!hasContent(data[0])) {
-                return null;
-            }
-            return DiffRequestFactory.getInstance().createFromFiles(project, data[0], otherFile);
+        if (data.length < 2) {
+            return null;
         }
-        else {
-            return DiffRequestFactory.getInstance().createFromFiles(project, data[0], data[1]);
-        }
+        return DiffRequestFactory.getInstance().createFromFiles(project, data[0], data[1]);
     }
 
-    private static @Nullable VirtualFile getOtherFile(@Nullable Project project, VirtualFile file) {
+    @RequiredUIAccess
+    private static CompletableFuture<VirtualFile> chooseOtherFile(@Nullable Project project, VirtualFile file) {
         FileChooserDescriptor descriptor;
         String key;
 
@@ -144,11 +164,12 @@ public class CompareFilesAction extends BaseShowDiffAction {
             key = LAST_USED_FILE_KEY;
         }
         VirtualFile selectedFile = getDefaultSelection(project, key, file);
-        VirtualFile otherFile = IdeaFileChooser.chooseFile(descriptor, project, selectedFile);
-        if (otherFile != null) {
-            updateDefaultSelection(project, key, otherFile);
-        }
-        return otherFile;
+        return FileChooser.chooseFile(descriptor, project, selectedFile).thenApply(otherFile -> {
+            if (otherFile != null) {
+                updateDefaultSelection(project, key, otherFile);
+            }
+            return otherFile;
+        });
     }
 
     

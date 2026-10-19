@@ -7,13 +7,14 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.configurable.*;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.fileChooser.FileChooser;
 import consulo.fileChooser.FileTypeDescriptor;
-import consulo.fileChooser.IdeaFileChooser;
 import consulo.http.localize.HttpLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.ui.CheckBox;
 import consulo.ui.Component;
 import consulo.ui.Label;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.tree.Tree;
@@ -72,7 +73,11 @@ public class CertificateConfigurable implements SearchableConfigurable, Configur
         ToolbarDecorator decorator = ToolbarDecorator.createDecorator(myTree).disableUpDownActions();
         decorator.setAddAction(button -> {
             // show choose file dialog, add certificate
-            IdeaFileChooser.chooseFile(CERTIFICATE_DESCRIPTOR, null, null, file -> {
+            UIAccess uiAccess = UIAccess.current();
+            FileChooser.chooseFile(CERTIFICATE_DESCRIPTOR, null, null).whenCompleteAsync((file, error) -> {
+                if (file == null) {
+                    return;
+                }
                 String path = file.getPath();
                 X509Certificate certificate = CertificateUtil.loadX509Certificate(path);
                 if (certificate == null) {
@@ -95,7 +100,7 @@ public class CertificateConfigurable implements SearchableConfigurable, Configur
                     addCertificatePanel(certificate);
                     myTreeBuilder.selectCertificate(certificate);
                 }
-            });
+            }, uiAccess);
         }).setRemoveAction(button -> {
             // allow to delete several certificates at once
             for (X509Certificate certificate : myTreeBuilder.getSelectedCertificates(true)) {

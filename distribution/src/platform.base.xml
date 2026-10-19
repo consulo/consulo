@@ -183,6 +183,9 @@
                 <include>consulo:consulo-mcp-server-impl</include>
                 <include>consulo:consulo-repository-ui-api</include>
                 <include>consulo:consulo-review-api</include>
+                <include>consulo:consulo-review-impl</include>
+                <include>consulo:consulo-version-control-system-review-api</include>
+                <include>consulo:consulo-version-control-system-review-impl</include>
                 <include>consulo:consulo-language-spellchecker-api</include>
                 <include>consulo:consulo-language-spellchecker-impl</include>
                 <include>consulo:consulo-language-spellchecker-editor-api</include>

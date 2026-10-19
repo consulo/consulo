@@ -117,7 +117,7 @@ public class UnifiedShowChangesDialog extends DialogDescriptor {
     }
 
     private ChangesTreeSnapshot buildSnapshot() {
-        return new ChangesTreeSnapshotBuilder(myShowFlatten, myProject.getBasePath()).changes(myChanges).build();
+        return new ChangesTreeSnapshotBuilder(myProject, myShowFlatten).changes(myChanges).build();
     }
 
     @Override

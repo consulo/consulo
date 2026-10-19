@@ -47,7 +47,7 @@ public final class ToastPresentation {
             case SUCCESS -> PlatformIconGroup.statusSuccess();
             case WARNING -> PlatformIconGroup.generalBalloonwarning();
             case ERROR -> PlatformIconGroup.generalBalloonerror();
-            case GLASSY -> null;
+            case GLASSY, LEFT_LINE -> null;
         };
     }
 
@@ -60,7 +60,7 @@ public final class ToastPresentation {
             case SUCCESS -> ComponentColors.TOAST_SUCCESS_BACKGROUND;
             case WARNING -> ComponentColors.TOAST_WARNING_BACKGROUND;
             case ERROR -> ComponentColors.TOAST_ERROR_BACKGROUND;
-            case GLASSY -> ComponentColors.LAYOUT;
+            case GLASSY, LEFT_LINE -> ComponentColors.LAYOUT;
         };
     }
 
@@ -73,9 +73,19 @@ public final class ToastPresentation {
             case SUCCESS -> ComponentColors.SUCCESS_BORDER;
             case WARNING -> ComponentColors.WARNING_BORDER;
             case ERROR -> ComponentColors.ERROR_BORDER;
-            case GLASSY -> ComponentColors.BORDER;
+            case GLASSY, LEFT_LINE -> ComponentColors.BORDER;
         };
     }
+
+    /**
+     * The width of the line a {@link ToastStyle#LEFT_LINE} toast is, in unscaled pixels.
+     */
+    public static final int LEFT_LINE_WIDTH = 4;
+
+    /**
+     * The gap between the line of a {@link ToastStyle#LEFT_LINE} toast and its content, in unscaled pixels.
+     */
+    public static final int LEFT_LINE_GAP = 8;
 
     private ToastPresentation() {
     }

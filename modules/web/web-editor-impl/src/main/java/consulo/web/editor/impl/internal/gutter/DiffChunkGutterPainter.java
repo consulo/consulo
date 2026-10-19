@@ -34,8 +34,8 @@ public class DiffChunkGutterPainter implements WebLineMarkerPresentationPainter<
 
     @Override
     public @Nullable GutterBand paint(DiffChunkPresentation presentation, Editor editor) {
-        return new GutterBand(
-            presentation.area().name(),
+        return GutterBand.chunk(
+            presentation.area(),
             presentation.startLine(),
             presentation.endLine(),
             WebColors.toCssColor(presentation.fillColor()),

@@ -24,6 +24,7 @@ import consulo.ui.Component;
 import consulo.ui.HorizontalAlignment;
 import consulo.ui.Label;
 import consulo.ui.LabelOptions;
+import consulo.ui.TextItemPresentation;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.TreeExpander;
@@ -32,21 +33,27 @@ import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.action.ActionToolbarFactory;
 import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CommonActionsManager;
 import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.Presentation;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.PlaceholderLayout;
 import consulo.ui.style.ComponentColors;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangeListListener;
 import consulo.versionControlSystem.change.ChangeListManager;
-import consulo.versionControlSystem.impl.internal.change.action.RollbackDialogAction;
 import consulo.versionControlSystem.impl.internal.action.ShowDiffAction;
+import consulo.versionControlSystem.impl.internal.change.action.RollbackDialogAction;
 import consulo.versionControlSystem.ui.VcsChangesBrowser;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 /**
  * @author VISTALL
@@ -70,15 +77,24 @@ public class UnifiedVcsChangesBrowser implements VcsChangesBrowser {
                                     LocalizeValue emptyText,
                                     List<AnAction> toolbarActions,
                                     boolean withRollback,
+                                    @Nullable BiConsumer<Change, TextItemPresentation> changeDecorator,
+                                    @Nullable Consumer<Change> openHandler,
                                     Disposable parentDisposable) {
         myProject = project;
-        myDiffAction = ActionManager.getInstance().getAction(SHOW_DIFF_ACTION) instanceof AnAction showDiff ? showDiff : new ShowDiffAction();
+        AnAction showDiffAction = ActionManager.getInstance().getAction(SHOW_DIFF_ACTION) instanceof AnAction showDiff ? showDiff : new ShowDiffAction();
+        myDiffAction = openHandler == null ? showDiffAction : createOpenAction(showDiffAction, openHandler);
         myTree = new UnifiedChangesTree(project, false, parentDisposable);
         myTree.setDoubleClickHandler(item -> {
             if (item instanceof ChangeTreeItem changeItem) {
-                ShowDiffAction.showDiffForChange(myProject, myChanges, Math.max(0, myChanges.indexOf(changeItem.change())));
+                if (openHandler != null) {
+                    openHandler.accept(changeItem.change());
+                }
+                else {
+                    ShowDiffAction.showDiffForChange(myProject, myChanges, Math.max(0, myChanges.indexOf(changeItem.change())));
+                }
             }
         });
+        myTree.setChangeDecorator(changeDecorator);
 
         myEmptyText = Label.create(emptyText, LabelOptions.builder().horizontalAlignment(HorizontalAlignment.CENTER).build());
         myEmptyText.setForegroundColor(ComponentColors.DISABLED_TEXT);
@@ -112,6 +128,20 @@ public class UnifiedVcsChangesBrowser implements VcsChangesBrowser {
         myRoot.center(myContent);
 
         myTree.setSnapshot(buildSnapshot());
+    }
+
+    private AnAction createOpenAction(AnAction showDiffAction, Consumer<Change> openHandler) {
+        Presentation template = showDiffAction.getTemplatePresentation();
+        return new DumbAwareAction(template.getTextValue(), template.getDescription(), template.getIcon()) {
+            @RequiredUIAccess
+            @Override
+            public void actionPerformed(AnActionEvent e) {
+                List<Change> selected = myTree.getSelectedChanges();
+                if (!selected.isEmpty()) {
+                    openHandler.accept(selected.get(0));
+                }
+            }
+        };
     }
 
     @RequiredUIAccess
@@ -157,7 +187,7 @@ public class UnifiedVcsChangesBrowser implements VcsChangesBrowser {
     }
 
     private ChangesTreeSnapshot buildSnapshot() {
-        return new ChangesTreeSnapshotBuilder(myShowFlatten, myProject.getBasePath()).changes(myChanges).build();
+        return new ChangesTreeSnapshotBuilder(myProject, myShowFlatten).changes(myChanges).build();
     }
 
     @Override
@@ -187,5 +217,39 @@ public class UnifiedVcsChangesBrowser implements VcsChangesBrowser {
     @Override
     public AnAction getDiffAction() {
         return myDiffAction;
+    }
+
+    @Override
+    public List<Change> getSelectedChanges() {
+        return myTree.getSelectedChanges();
+    }
+
+    @Override
+    public boolean isGroupSelected() {
+        return myTree.isGroupSelected();
+    }
+
+    @Override
+    public void addSelectionListener(Disposable parentDisposable, Runnable listener) {
+        Disposable registration = myTree.getComponent().addSelectListener(event -> listener.run());
+        Disposer.register(parentDisposable, registration);
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void selectChanges(Collection<Change> changes) {
+        for (Change change : changes) {
+            List<ChangesTreeItem> path = myTree.findPath(change);
+            if (path != null) {
+                myTree.selectPath(path);
+                return;
+            }
+        }
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void selectFirst() {
+        myTree.selectFirst();
     }
 }

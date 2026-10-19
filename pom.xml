@@ -210,6 +210,9 @@
     <module>modules/base/http-impl</module>
     <module>modules/base/repository-ui-api</module>
     <module>modules/base/review-api</module>
+    <module>modules/base/review-impl</module>
+    <module>modules/base/version-control-system-review-api</module>
+    <module>modules/base/version-control-system-review-impl</module>
     <module>modules/base/language-spellchecker-api</module>
     <module>modules/base/language-spellchecker-editor-api</module>
     <module>modules/base/language-spellchecker-impl</module>

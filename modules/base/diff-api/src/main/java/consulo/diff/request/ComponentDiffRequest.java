@@ -15,11 +15,11 @@
  */
 package consulo.diff.request;
 
+import consulo.ui.Component;
 import consulo.diff.DiffContext;
 
-import javax.swing.*;
 
 public abstract class ComponentDiffRequest extends DiffRequest {
   
-  public abstract JComponent getComponent(DiffContext context);
+  public abstract Component getComponent(DiffContext context);
 }

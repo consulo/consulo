@@ -33,6 +33,8 @@ import consulo.desktop.qt.ui.impl.base.DesktopQtAwtBridgeComponent;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
+import consulo.document.event.DocumentEvent;
+import consulo.document.event.DocumentListener;
 import consulo.document.util.TextRange;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -50,6 +52,7 @@ import consulo.ui.cursor.StandardCursors;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.CustomActionsSchema;
+import consulo.util.lang.StringUtil;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jspecify.annotations.Nullable;
 
@@ -95,7 +98,8 @@ public class DesktopQtEditorImpl extends CodeEditorBase implements RealEditor, C
 
     private boolean myCaretVisible = true;
 
-    private @Nullable ColorValue myForcedBackground;
+    private int myVerticalScrollbarOrientation = VERTICAL_SCROLLBAR_RIGHT;
+
 
     /**
      * Negative means "remeasure". Measuring the whole document is linear in its length, so it must not happen once
@@ -103,11 +107,33 @@ public class DesktopQtEditorImpl extends CodeEditorBase implements RealEditor, C
      */
     private int myDocumentWidth = -1;
 
+    private final DesktopQtEditorRowLayout myRowLayout = new DesktopQtEditorRowLayout(this);
+
+    private final DesktopQtComponentInlays myComponentInlays = new DesktopQtComponentInlays(this);
+
     public DesktopQtEditorImpl(Document document, boolean viewer, @Nullable Project project, EditorKind kind) {
         super(document, viewer, project, kind);
 
         myComponent = new DesktopQtEditorComponent(this);
         myComponent.whenBound(widget -> recreateEditorFloatingToolbar());
+        myComponent.whenBound(widget -> myComponentInlays.bound());
+
+        // a component inlay sits at an offset, which an edit or a fold moves to another row
+        document.addDocumentListener(new DocumentListener() {
+            @Override
+            public void documentChanged(DocumentEvent event) {
+                myRowLayout.invalidate();
+                myComponentInlays.scheduleLayout();
+            }
+        }, getDisposable());
+        getFoldingModel().addListener(new FoldingListener() {
+            @Override
+            public void onFoldProcessingEnd() {
+                myRowLayout.invalidate();
+                myComponentInlays.scheduleLayout();
+            }
+        }, getDisposable());
+        Disposer.register(getDisposable(), myComponentInlays::dispose);
         myGutterComponent = new DesktopQtEditorGutterComponentImpl(this);
 
         setHighlighter(new EmptyEditorHighlighter(new TextAttributes()));
@@ -129,7 +155,23 @@ public class DesktopQtEditorImpl extends CodeEditorBase implements RealEditor, C
         });
         getInlayModel().addListener(new InlayModel.SimpleAdapter() {
             @Override
+            public void onAdded(Inlay<?> inlay) {
+                myRowLayout.invalidate();
+                myComponentInlays.added(inlay);
+                super.onAdded(inlay);
+            }
+
+            @Override
+            public void onRemoved(Inlay<?> inlay) {
+                myRowLayout.invalidate();
+                myComponentInlays.removed(inlay);
+                myComponentInlays.scheduleLayout();
+                super.onRemoved(inlay);
+            }
+
+            @Override
             public void onUpdated(Inlay<?> inlay, int changeFlags) {
+                myRowLayout.invalidate();
                 int offset = inlay.getOffset();
                 repaint(offset, offset, true);
             }
@@ -282,6 +324,14 @@ public class DesktopQtEditorImpl extends CodeEditorBase implements RealEditor, C
      * asked for its geometry after that happens (the history manager reads the scroll position of a tab being
      * closed), so nothing may reach the widget without going through here.
      */
+    public DesktopQtEditorRowLayout getRowLayout() {
+        return myRowLayout;
+    }
+
+    public DesktopQtComponentInlays getComponentInlays() {
+        return myComponentInlays;
+    }
+
     public @Nullable DesktopQtEditorWidget getSurface() {
         DesktopQtEditorWidget widget = myComponent.getSurface();
         return widget != null && !widget.isDisposed() ? widget : null;
@@ -323,6 +373,12 @@ public class DesktopQtEditorImpl extends CodeEditorBase implements RealEditor, C
     public void fireMouseClicked(EditorMouseEvent event) {
         for (EditorMouseListener listener : myMouseListeners) {
             listener.mouseClicked(event);
+        }
+    }
+
+    public void fireMouseExited(EditorMouseEvent event) {
+        for (EditorMouseListener listener : myMouseListeners) {
+            listener.mouseExited(event);
         }
     }
 
@@ -459,6 +515,22 @@ public class DesktopQtEditorImpl extends CodeEditorBase implements RealEditor, C
     }
 
     @Override
+    @RequiredUIAccess
+    protected void changedUpdate(DocumentEvent e) {
+        super.changedUpdate(e);
+
+        DesktopQtEditorWidget widget = getSurface();
+        if (widget == null || getDocument().isInBulkUpdate()) {
+            return;
+        }
+
+        if (StringUtil.countNewLines(e.getOldFragment()) != StringUtil.countNewLines(e.getNewFragment())) {
+            int startLine = myVisualLines.offsetToVisualLine(e.getOffset());
+            widget.repaintLines(startLine, Math.max(startLine, myVisualLines.getVisualLineCount() - 1));
+        }
+    }
+
+    @Override
     public void release() {
     }
 
@@ -483,11 +555,20 @@ public class DesktopQtEditorImpl extends CodeEditorBase implements RealEditor, C
 
     @Override
     public void setVerticalScrollbarOrientation(@MagicConstant(intValues = {VERTICAL_SCROLLBAR_LEFT, VERTICAL_SCROLLBAR_RIGHT}) int type) {
+        if (myVerticalScrollbarOrientation == type) {
+            return;
+        }
+        myVerticalScrollbarOrientation = type;
+        myComponent.updateMirrored();
     }
 
     @Override
     public int getVerticalScrollbarOrientation() {
-        return 0;
+        return myVerticalScrollbarOrientation;
+    }
+
+    public boolean isMirrored() {
+        return myVerticalScrollbarOrientation != VERTICAL_SCROLLBAR_RIGHT;
     }
 
     @Override
@@ -612,14 +693,7 @@ public class DesktopQtEditorImpl extends CodeEditorBase implements RealEditor, C
     }
 
     @Override
-    public void setBackgroundColor(ColorValue color) {
-        if (getBackgroundIgnoreForced().equals(color)) {
-            myForcedBackground = null;
-        }
-        else {
-            myForcedBackground = color;
-        }
-
+    protected void onBackgroundColorChanged(ColorValue color) {
         DesktopQtEditorWidget widget = getSurface();
         if (widget != null) {
             widget.updateSideAreas();
@@ -627,28 +701,9 @@ public class DesktopQtEditorImpl extends CodeEditorBase implements RealEditor, C
         }
     }
 
-    @Override
-    public ColorValue getBackgroundColor() {
-        ColorValue forcedBackground = myForcedBackground;
-        if (forcedBackground != null) {
-            return forcedBackground;
-        }
-
-        return getBackgroundIgnoreForced();
-    }
-
     @Nullable ColorValue getBackgroundColor(TextAttributes attributes) {
         ColorValue attrColor = attributes.getBackgroundColor();
         return Objects.equals(attrColor, myScheme.getDefaultBackground()) ? getBackgroundColor() : attrColor;
-    }
-
-    private ColorValue getBackgroundIgnoreForced() {
-        ColorValue color = myScheme.getDefaultBackground();
-        if (myDocument.isWritable()) {
-            return color;
-        }
-        ColorValue readOnlyColor = myScheme.getColor(EditorColors.READONLY_BACKGROUND_COLOR);
-        return readOnlyColor != null ? readOnlyColor : color;
     }
 
     @Override

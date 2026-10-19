@@ -27,10 +27,13 @@ import org.jspecify.annotations.Nullable;
  * @param startLine first document line, inclusive
  * @param endLine   line past the last, exclusive - equal to {@code startLine} for a marker that sits on the
  *                  boundary between two lines, which is how a deletion is expressed
- * @param color     fill, or null for an outline only
- * @param borderColor outline, or null for a fill only
+ * @param color     fill, or null for an outline only; the band of a {@link #STYLE_WAVE} wave
+ * @param borderColor outline, or null for a fill only; the top edge of a {@link #STYLE_WAVE} wave
  * @param dotted    draw the outline dotted
  * @param clickId   index of the band in the update it belongs to, or -1 when nothing answers a click on it
+ * @param style     how the band is drawn: {@link #STYLE_BAND}, {@link #STYLE_CHUNK}, {@link #STYLE_LINE} or {@link #STYLE_WAVE}
+ * @param doubleLine draw the line of a {@link #STYLE_LINE} band two pixels thick
+ * @param bottomBorderColor the bottom edge of a {@link #STYLE_WAVE} wave
  *
  * @author VISTALL
  * @since 2026-08-01
@@ -42,17 +45,65 @@ public record GutterBand(
     @Nullable String color,
     @Nullable String borderColor,
     boolean dotted,
-    int clickId
+    int clickId,
+    String style,
+    boolean doubleLine,
+    @Nullable String bottomBorderColor
 ) {
+    /**
+     * A filled strip with an outline all around, a short bar across the boundary when its lines are empty.
+     */
+    public static final String STYLE_BAND = "BAND";
+
+    /**
+     * A filled strip with a rule above and below it, a double rule on the boundary when its lines are empty.
+     */
+    public static final String STYLE_CHUNK = "CHUNK";
+
+    /**
+     * A rule on the boundary above {@code startLine}.
+     */
+    public static final String STYLE_LINE = "LINE";
+
+    /**
+     * The wave of a collapsed run of lines, hanging from the top of {@code startLine}.
+     */
+    public static final String STYLE_WAVE = "WAVE";
+
     public GutterBand(String area, int startLine, int endLine, @Nullable String color, @Nullable String borderColor, boolean dotted) {
-        this(area, startLine, endLine, color, borderColor, dotted, -1);
+        this(area, startLine, endLine, color, borderColor, dotted, -1, STYLE_BAND, false, null);
     }
 
     public static GutterBand fill(EditorGutterArea area, int startLine, int endLine, String color) {
         return new GutterBand(area.name(), startLine, endLine, color, null, false);
     }
 
+    public static GutterBand chunk(
+        EditorGutterArea area,
+        int startLine,
+        int endLine,
+        @Nullable String color,
+        @Nullable String borderColor,
+        boolean dotted
+    ) {
+        return new GutterBand(area.name(), startLine, endLine, color, borderColor, dotted, -1, STYLE_CHUNK, false, null);
+    }
+
+    public static GutterBand line(EditorGutterArea area, int line, String color, boolean doubleLine, boolean dotted) {
+        return new GutterBand(area.name(), line, line, null, color, dotted, -1, STYLE_LINE, doubleLine, null);
+    }
+
+    public static GutterBand wave(
+        EditorGutterArea area,
+        int line,
+        String background,
+        @Nullable String topBorderColor,
+        @Nullable String bottomBorderColor
+    ) {
+        return new GutterBand(area.name(), line, line + 1, background, topBorderColor, false, -1, STYLE_WAVE, false, bottomBorderColor);
+    }
+
     public GutterBand withClickId(int clickId) {
-        return new GutterBand(area, startLine, endLine, color, borderColor, dotted, clickId);
+        return new GutterBand(area, startLine, endLine, color, borderColor, dotted, clickId, style, doubleLine, bottomBorderColor);
     }
 }

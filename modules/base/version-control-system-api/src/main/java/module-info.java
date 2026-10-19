@@ -55,6 +55,7 @@ module consulo.version.control.system.api {
         consulo.desktop.awt.editor.impl,
         consulo.desktop.awt.ide.impl,
         consulo.desktop.awt.ui.impl,
+        consulo.desktop.qt.editor.impl,
         consulo.ide.impl,
         consulo.it,
         consulo.local.history.impl,

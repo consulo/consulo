@@ -74,12 +74,12 @@ public class WebScrollingModelImpl extends CodeEditorScrollingModelBase implemen
 
   @Override
   public void scrollToCaret(ScrollType scrollType) {
-
+    scrollTo(myEditor.getCaretModel().getLogicalPosition(), scrollType);
   }
 
   @Override
   public void scrollTo(LogicalPosition pos, ScrollType scrollType) {
-
+    ((WebEditorImpl) myEditor).scrollToLineOnClient(pos.line, scrollType);
   }
 
   @Override
@@ -104,16 +104,19 @@ public class WebScrollingModelImpl extends CodeEditorScrollingModelBase implemen
 
   @Override
   public void scrollVertically(int scrollOffset) {
-
+    scroll(myVisibleArea.x, scrollOffset);
   }
 
   @Override
   public void scrollHorizontally(int scrollOffset) {
-
+    scroll(scrollOffset, myVisibleArea.y);
   }
 
   @Override
   public void scroll(int horizontalOffset, int verticalOffset) {
-
+    int x = Math.max(0, horizontalOffset);
+    int y = Math.max(0, verticalOffset);
+    ((WebEditorImpl) myEditor).scrollToPixelOnClient(x, y);
+    setVisibleAreaFromClient(new Rectangle(x, y, myVisibleArea.width, myVisibleArea.height));
   }
 }

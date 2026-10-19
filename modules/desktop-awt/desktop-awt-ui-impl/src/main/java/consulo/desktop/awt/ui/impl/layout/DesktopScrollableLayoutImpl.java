@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.ui.impl.layout;
 
+import consulo.desktop.awt.ui.impl.components.LeftHandScrollbarLayout;
 import consulo.desktop.awt.ui.impl.facade.FromSwingComponentWrapper;
 import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 import consulo.ui.Component;
@@ -25,6 +26,7 @@ import consulo.ui.ex.awt.ScrollablePanel;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.layout.ScrollableLayout;
 import consulo.ui.layout.ScrollableLayoutOptions;
+import consulo.ui.layout.VerticalScrollBarPosition;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
@@ -79,6 +81,10 @@ public class DesktopScrollableLayoutImpl extends SwingComponentDelegate<JScrollP
 
         pane.setBorder(IdeBorderFactory.createEmptyBorder());
         pane.setViewportBorder(IdeBorderFactory.createEmptyBorder());
+
+        if (myOptions.getVerticalScrollBarPosition() == VerticalScrollBarPosition.LEFT) {
+            pane.setLayout(new LeftHandScrollbarLayout());
+        }
 
         switch (myOptions.getHorizontalScrollPolicy()) {
             case ALWAYS:

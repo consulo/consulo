@@ -5,6 +5,7 @@
 @SuppressWarnings("module")
 module consulo.sand.language.plugin {
     requires java.desktop;
+    requires java.management;
 
 
     requires consulo.ai.api;

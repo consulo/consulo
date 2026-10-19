@@ -16,19 +16,23 @@
 package consulo.versionControlSystem.impl.internal.patch.apply;
 
 import consulo.application.Application;
-import consulo.application.progress.ProgressManager;
+import consulo.application.progress.ProgressBuilderFactory;
 import consulo.localHistory.Label;
 import consulo.localHistory.LocalHistory;
 import consulo.localHistory.LocalHistoryException;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationService;
-import consulo.project.util.WaitForProgressToShow;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.Messages;
+import consulo.ui.MessageBoxes;
+import consulo.ui.UIAccess;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.ContainerUtil;
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.step.CodeExecution;
 import consulo.util.lang.Pair;
+import consulo.util.lang.StringUtil;
+import consulo.util.lang.xml.XmlStringUtil;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.change.*;
@@ -47,6 +51,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -72,6 +77,9 @@ public class PatchApplier<BinaryType extends FilePatch> {
     private final boolean myReverseConflict;
     private final @Nullable String myLeftConflictPanelTitle;
     private final @Nullable String myRightConflictPanelTitle;
+
+    private final List<ApplyPatchAttempt> myPendingMerges = new ArrayList<>();
+    private List<Pair<VirtualFile, ApplyTextFilePatch>> myInternalTextPatches = List.of();
 
     public PatchApplier(
         Project project,
@@ -175,8 +183,8 @@ public class PatchApplier<BinaryType extends FilePatch> {
     }
 
     @RequiredUIAccess
-    public void execute() {
-        execute(true, false);
+    public CompletableFuture<ApplyPatchStatus> execute() {
+        return execute(true, false);
     }
 
     public class ApplyPatchTask {
@@ -192,36 +200,40 @@ public class PatchApplier<BinaryType extends FilePatch> {
         }
 
         @RequiredUIAccess
-        public void run() {
+        public CompletableFuture<ApplyPatchStatus> run() {
+            UIAccess uiAccess = UIAccess.current();
+
             myRemainingPatches.addAll(myPatches);
 
             ApplyPatchStatus patchStatus = nonWriteActionPreCheck();
             Label beforeLabel = LocalHistory.getInstance().putSystemLabel(myProject, LocalizeValue.localizeTODO("Before patch"));
             TriggerAdditionOrDeletion trigger = new TriggerAdditionOrDeletion(myProject);
-            ApplyPatchStatus applyStatus = getApplyPatchStatus(trigger);
-            myStatus = ApplyPatchStatus.SUCCESS.equals(patchStatus) ? applyStatus : ApplyPatchStatus.and(patchStatus, applyStatus);
-            // listeners finished, all 'legal' file additions/deletions with VCS are done
-            trigger.processIt();
-            // insert a label to be visible in local history dialog
-            LocalHistory.getInstance().putSystemLabel(myProject, LocalizeValue.localizeTODO("After patch"));
-            if (myStatus == ApplyPatchStatus.FAILURE) {
-                suggestRollback(myProject, Collections.singletonList(PatchApplier.this), beforeLabel);
-            }
-            else if (myStatus == ApplyPatchStatus.ABORT) {
-                rollbackUnderProgress(myProject, myProject.getBaseDir(), beforeLabel);
-            }
-            if (myShowNotification || !ApplyPatchStatus.SUCCESS.equals(myStatus)) {
-                showApplyStatus(myProject, myStatus);
-            }
-            refreshFiles(trigger.getAffected());
+            return getApplyPatchStatus(trigger, uiAccess).thenApplyAsync(applyStatus -> {
+                myStatus = ApplyPatchStatus.SUCCESS.equals(patchStatus) ? applyStatus : ApplyPatchStatus.and(patchStatus, applyStatus);
+                // listeners finished, all 'legal' file additions/deletions with VCS are done
+                trigger.processIt();
+                // insert a label to be visible in local history dialog
+                LocalHistory.getInstance().putSystemLabel(myProject, LocalizeValue.localizeTODO("After patch"));
+                if (myStatus == ApplyPatchStatus.FAILURE) {
+                    suggestRollback(myProject, Collections.singletonList(PatchApplier.this), beforeLabel);
+                }
+                else if (myStatus == ApplyPatchStatus.ABORT) {
+                    rollbackUnderProgress(myProject, myProject.getBaseDir(), beforeLabel);
+                }
+                if (myShowNotification || !ApplyPatchStatus.SUCCESS.equals(myStatus)) {
+                    showApplyStatus(myProject, myStatus);
+                }
+                refreshFiles(trigger.getAffected());
+                return myStatus;
+            }, uiAccess);
         }
 
-        
         @RequiredUIAccess
-        private ApplyPatchStatus getApplyPatchStatus(TriggerAdditionOrDeletion trigger) {
+        private CompletableFuture<ApplyPatchStatus> getApplyPatchStatus(TriggerAdditionOrDeletion trigger, UIAccess uiAccess) {
             SimpleReference<ApplyPatchStatus> refStatus = SimpleReference.create(null);
+            SimpleReference<ApplyPatchStatus> preparedStatus = SimpleReference.create(null);
+            setConfirmationToDefault();
             try {
-                setConfirmationToDefault();
                 CommandProcessor.getInstance().newCommand()
                     .project(myProject)
                     .name(VcsLocalize.patchApplyCommand())
@@ -232,15 +244,24 @@ public class PatchApplier<BinaryType extends FilePatch> {
                         }
                         addSkippedItems(trigger);
                         trigger.prepare();
-                        refStatus.set(ApplyPatchStatus.and(refStatus.get(), executeWritable()));
+                        preparedStatus.set(prepareWritable());
                     });
             }
-            finally {
+            catch (RuntimeException e) {
                 returnConfirmationBack();
                 VcsFileListenerContextHelper.getInstance(myProject).clearContext();
+                throw e;
             }
-            ApplyPatchStatus status = refStatus.get();
-            return status == null ? ApplyPatchStatus.ALREADY_APPLIED : status;
+
+            return finishWritable(preparedStatus.get(), uiAccess)
+                .whenCompleteAsync((status, error) -> {
+                    returnConfirmationBack();
+                    VcsFileListenerContextHelper.getInstance(myProject).clearContext();
+                }, uiAccess)
+                .thenApply(status -> {
+                    ApplyPatchStatus result = ApplyPatchStatus.and(refStatus.get(), status);
+                    return result == null ? ApplyPatchStatus.ALREADY_APPLIED : result;
+                });
         }
 
         private void returnConfirmationBack() {
@@ -280,15 +301,16 @@ public class PatchApplier<BinaryType extends FilePatch> {
     }
 
     @RequiredUIAccess
-    public void execute(boolean showSuccessNotification, boolean silentAddDelete) {
-        createApplyPart(showSuccessNotification, silentAddDelete).run();
+    public CompletableFuture<ApplyPatchStatus> execute(boolean showSuccessNotification, boolean silentAddDelete) {
+        return createApplyPart(showSuccessNotification, silentAddDelete).run();
     }
 
     @RequiredUIAccess
-    public static ApplyPatchStatus executePatchGroup(Collection<PatchApplier> group, LocalChangeList localChangeList) {
+    public static CompletableFuture<ApplyPatchStatus> executePatchGroup(Collection<PatchApplier> group, LocalChangeList localChangeList) {
         if (group.isEmpty()) {
-            return ApplyPatchStatus.SUCCESS; //?
+            return CompletableFuture.completedFuture(ApplyPatchStatus.SUCCESS); //?
         }
+        UIAccess uiAccess = UIAccess.current();
         Project project = group.iterator().next().myProject;
 
         ApplyPatchStatus result = ApplyPatchStatus.SUCCESS;
@@ -298,6 +320,7 @@ public class PatchApplier<BinaryType extends FilePatch> {
         Label beforeLabel = LocalHistory.getInstance().putSystemLabel(project, LocalizeValue.localizeTODO("Before patch"));
         TriggerAdditionOrDeletion trigger = new TriggerAdditionOrDeletion(project);
         SimpleReference<ApplyPatchStatus> refStatus = new SimpleReference<>(result);
+        List<PatchApplier> prepared = new ArrayList<>();
         try {
             CommandProcessor.getInstance().newCommand()
                 .project(project)
@@ -313,68 +336,97 @@ public class PatchApplier<BinaryType extends FilePatch> {
                         refStatus.set(null);
                     }
                     for (PatchApplier applier : group) {
-                        refStatus.set(ApplyPatchStatus.and(refStatus.get(), applier.executeWritable()));
+                        refStatus.set(ApplyPatchStatus.and(refStatus.get(), applier.prepareWritable()));
+                        prepared.add(applier);
                         if (refStatus.get() == ApplyPatchStatus.ABORT) {
                             break;
                         }
                     }
                 });
         }
-        finally {
+        catch (RuntimeException e) {
             VcsFileListenerContextHelper.getInstance(project).clearContext();
             LocalHistory.getInstance().putSystemLabel(project, LocalizeValue.localizeTODO("After patch"));
+            throw e;
         }
-        result = refStatus.get();
-        result = result == null ? ApplyPatchStatus.FAILURE : result;
 
-        trigger.processIt();
-        Set<FilePath> directlyAffected = new HashSet<>();
-        Set<VirtualFile> indirectlyAffected = new HashSet<>();
-        for (PatchApplier applier : group) {
-            directlyAffected.addAll(applier.getDirectlyAffected());
-            indirectlyAffected.addAll(applier.getIndirectlyAffected());
+        CompletableFuture<@Nullable ApplyPatchStatus> chain = CompletableFuture.completedFuture(refStatus.get());
+        for (PatchApplier applier : prepared) {
+            chain = chain.thenComposeAsync(status -> applier.finishWritable(status, uiAccess), uiAccess);
         }
-        directlyAffected.addAll(trigger.getAffected());
-        Consumer<Collection<FilePath>> mover = localChangeList == null ? null : createMover(project, localChangeList);
-        refreshPassedFilesAndMoveToChangelist(project, directlyAffected, indirectlyAffected, mover);
-        if (result == ApplyPatchStatus.FAILURE) {
-            suggestRollback(project, group, beforeLabel);
-        }
-        else if (result == ApplyPatchStatus.ABORT) {
-            rollbackUnderProgress(project, project.getBaseDir(), beforeLabel);
-        }
-        showApplyStatus(project, result);
-        return result;
+
+        return chain
+            .whenCompleteAsync((status, error) -> {
+                VcsFileListenerContextHelper.getInstance(project).clearContext();
+                LocalHistory.getInstance().putSystemLabel(project, LocalizeValue.localizeTODO("After patch"));
+            }, uiAccess)
+            .thenApplyAsync(status -> {
+                ApplyPatchStatus groupResult = status == null ? ApplyPatchStatus.FAILURE : status;
+
+                trigger.processIt();
+                Set<FilePath> directlyAffected = new HashSet<>();
+                Set<VirtualFile> indirectlyAffected = new HashSet<>();
+                for (PatchApplier applier : group) {
+                    directlyAffected.addAll(applier.getDirectlyAffected());
+                    indirectlyAffected.addAll(applier.getIndirectlyAffected());
+                }
+                directlyAffected.addAll(trigger.getAffected());
+                Consumer<Collection<FilePath>> mover = localChangeList == null ? null : createMover(project, localChangeList);
+                refreshPassedFilesAndMoveToChangelist(project, directlyAffected, indirectlyAffected, mover);
+                if (groupResult == ApplyPatchStatus.FAILURE) {
+                    suggestRollback(project, group, beforeLabel);
+                }
+                else if (groupResult == ApplyPatchStatus.ABORT) {
+                    rollbackUnderProgress(project, project.getBaseDir(), beforeLabel);
+                }
+                showApplyStatus(project, groupResult);
+                return groupResult;
+            }, uiAccess);
     }
 
     @RequiredUIAccess
     private static void suggestRollback(Project project, Collection<PatchApplier> group, Label beforeLabel) {
         Collection<FilePatch> allFailed = ContainerUtil.concat(group, PatchApplier::getFailedPatches);
         boolean shouldInformAboutBinaries = ContainerUtil.exists(group, applier -> !applier.getBinaryPatches().isEmpty());
-        UndoApplyPatchDialog undoApplyPatchDialog = new UndoApplyPatchDialog(
-            project,
-            ContainerUtil.map(
-                allFailed,
-                filePatch -> {
-                    String path = filePatch.getAfterName() == null ? filePatch.getBeforeName() : filePatch.getAfterName();
-                    return VcsUtil.getFilePath(path);
-                }
-            ),
-            shouldInformAboutBinaries
-        );
-        undoApplyPatchDialog.show();
-        if (undoApplyPatchDialog.isOK()) {
-            rollbackUnderProgress(project, project.getBaseDir(), beforeLabel);
+
+        StringBuilder text = new StringBuilder();
+        if (!allFailed.isEmpty()) {
+            text.append(String.format("Failed to apply %s below.<br>", StringUtil.pluralize("file", allFailed.size())));
+            for (FilePatch filePatch : allFailed) {
+                String path = filePatch.getAfterName() == null ? filePatch.getBeforeName() : filePatch.getAfterName();
+                text.append(XmlStringUtil.escapeString(path)).append("<br>");
+            }
         }
+        text.append("Would you like to rollback all applied?");
+        if (shouldInformAboutBinaries) {
+            text.append("<br>Rollback will not affect binaries");
+        }
+
+        UIAccess uiAccess = UIAccess.current();
+        MessageBoxes.yesNo()
+            .asWarning()
+            .title(LocalizeValue.localizeTODO("Patch Applying Partly Failed"))
+            .text(LocalizeValue.localizeTODO(text.toString()))
+            .showAsync(project)
+            .whenCompleteAsync((rollback, error) -> {
+                if (Boolean.TRUE.equals(rollback)) {
+                    rollbackUnderProgress(project, project.getBaseDir(), beforeLabel);
+                }
+            }, uiAccess);
     }
 
+    @RequiredUIAccess
     private static void rollbackUnderProgress(
         Project project,
         VirtualFile virtualFile,
         Label labelToRevert
     ) {
-        ProgressManager.getInstance().runProcessWithProgressSynchronously(
-            () -> {
+        UIAccess uiAccess = UIAccess.current();
+        Application.get().getInstance(ProgressBuilderFactory.class)
+            .newProgressBuilder(project, LocalizeValue.localizeTODO("Rollback Applied Changes..."))
+            .cancelable()
+            .modal()
+            .execute(uiAccess, () -> Coroutine.first(CodeExecution.<Object, Object>apply((input, continuation) -> {
                 NotificationService notificationService = NotificationService.getInstance();
                 try {
                     labelToRevert.revert(project, virtualFile);
@@ -392,11 +444,8 @@ public class PatchApplier<BinaryType extends FilePatch> {
                         )))
                         .notify(project);
                 }
-            },
-            "Rollback Applied Changes...",
-            true,
-            project
-        );
+                return input;
+            })));
     }
 
     protected void addSkippedItems(TriggerAdditionOrDeletion trigger) {
@@ -423,7 +472,8 @@ public class PatchApplier<BinaryType extends FilePatch> {
     }
 
     @RequiredUIAccess
-    protected @Nullable ApplyPatchStatus executeWritable() {
+    protected @Nullable ApplyPatchStatus prepareWritable() {
+        myPendingMerges.clear();
         ReadonlyStatusHandler.OperationStatus readOnlyFilesStatus = getReadOnlyFilesStatus(myVerifier.getWritableFiles());
         if (readOnlyFilesStatus.hasReadonlyFiles()) {
             showError(myProject, readOnlyFilesStatus.getReadonlyFilesMessage(), true);
@@ -431,14 +481,53 @@ public class PatchApplier<BinaryType extends FilePatch> {
         }
         myFailedPatches.addAll(myVerifier.filterBadFileTypePatches());
         ApplyPatchStatus result = myFailedPatches.isEmpty() ? null : ApplyPatchStatus.FAILURE;
-        List<Pair<VirtualFile, ApplyTextFilePatch>> textPatches = myVerifier.getTextPatches();
-        try {
-            markInternalOperation(textPatches, true);
-            return ApplyPatchStatus.and(result, actualApply(textPatches, myVerifier.getBinaryPatches(), myCommitContext));
+        myInternalTextPatches = myVerifier.getTextPatches();
+        markInternalOperation(myInternalTextPatches, true);
+        return ApplyPatchStatus.and(result, actualApply(myInternalTextPatches, myVerifier.getBinaryPatches(), myCommitContext));
+    }
+
+    @RequiredUIAccess
+    protected CompletableFuture<@Nullable ApplyPatchStatus> finishWritable(@Nullable ApplyPatchStatus status, UIAccess uiAccess) {
+        List<ApplyPatchAttempt> merges = new ArrayList<>(myPendingMerges);
+        myPendingMerges.clear();
+
+        CompletableFuture<@Nullable ApplyPatchStatus> chain = CompletableFuture.completedFuture(status);
+        if (status != ApplyPatchStatus.ABORT) {
+            for (ApplyPatchAttempt merge : merges) {
+                chain = chain.thenComposeAsync(current -> {
+                    if (current == ApplyPatchStatus.ABORT) {
+                        return CompletableFuture.completedFuture(current);
+                    }
+                    return merge.runMerge().thenApplyAsync(mergeStatus -> onMerged(merge, current, mergeStatus), uiAccess);
+                }, uiAccess);
+            }
         }
-        finally {
-            markInternalOperation(textPatches, false);
+
+        List<Pair<VirtualFile, ApplyTextFilePatch>> textPatches = myInternalTextPatches;
+        return chain.whenCompleteAsync((result, error) -> markInternalOperation(textPatches, false), uiAccess);
+    }
+
+    @RequiredUIAccess
+    private @Nullable ApplyPatchStatus onMerged(ApplyPatchAttempt merge, @Nullable ApplyPatchStatus status, @Nullable ApplyPatchStatus mergeStatus) {
+        if (mergeStatus == ApplyPatchStatus.ABORT) {
+            return mergeStatus;
         }
+        ApplyPatchStatus result = ApplyPatchStatus.and(status, mergeStatus);
+        if (mergeStatus == ApplyPatchStatus.FAILURE) {
+            myFailedPatches.add(merge.getPatch().getPatch());
+            return result;
+        }
+        if (mergeStatus != ApplyPatchStatus.SKIP) {
+            try {
+                myVerifier.doMoveIfNeeded(merge.getFile());
+            }
+            catch (IOException e) {
+                showError(myProject, e.getMessage(), true);
+                return ApplyPatchStatus.ABORT;
+            }
+            myRemainingPatches.remove(merge.getPatch().getPatch());
+        }
+        return result;
     }
 
     
@@ -568,7 +657,7 @@ public class PatchApplier<BinaryType extends FilePatch> {
         CommitContext commiContext
     ) throws IOException {
         for (Pair<VirtualFile, T> patch : patches) {
-            ApplyPatchStatus patchStatus = ApplyPatchAction.applyOnly(
+            ApplyPatchAttempt attempt = ApplyPatchAction.applyOnly(
                 myProject,
                 patch.getSecond(),
                 context,
@@ -578,7 +667,12 @@ public class PatchApplier<BinaryType extends FilePatch> {
                 myLeftConflictPanelTitle,
                 myRightConflictPanelTitle
             );
+            if (attempt.isMergeNeeded()) {
+                myPendingMerges.add(attempt);
+                continue;
+            }
 
+            ApplyPatchStatus patchStatus = attempt.getStatus();
             if (patchStatus == ApplyPatchStatus.ABORT) {
                 return patchStatus;
             }
@@ -633,16 +727,15 @@ public class PatchApplier<BinaryType extends FilePatch> {
             return;
         }
         LocalizeValue title = VcsLocalize.patchApplyDialogTitle();
-        @RequiredUIAccess
-        Runnable messageShower = () -> {
+        LocalizeValue text = LocalizeValue.ofNullable(message);
+        project.getUIAccess().give(() -> {
             if (error) {
-                Messages.showErrorDialog(project, message, title.get());
+                MessageBoxes.okError(text).title(title).showAsync(project);
             }
             else {
-                Messages.showInfoMessage(project, message, title.get());
+                MessageBoxes.okInfo(text).title(title).showAsync(project);
             }
-        };
-        WaitForProgressToShow.runOrInvokeLaterAboveProgress(messageShower::run, null, project);
+        });
     }
 
     private static class FilesMover implements Consumer<Collection<FilePath>> {

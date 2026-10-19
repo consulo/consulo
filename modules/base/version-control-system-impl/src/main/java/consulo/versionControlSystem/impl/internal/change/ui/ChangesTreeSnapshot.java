@@ -55,7 +55,10 @@ public final class ChangesTreeSnapshot {
     }
 
     public boolean isGroup(ChangesTreeItem item) {
-        return item instanceof ChangeListTreeItem || item instanceof FileGroupTreeItem || item instanceof DirectoryTreeItem;
+        return item instanceof ChangeListTreeItem
+            || item instanceof FileGroupTreeItem
+            || item instanceof ModuleTreeItem
+            || item instanceof DirectoryTreeItem;
     }
 
     public int getFileCount(ChangesTreeItem item) {

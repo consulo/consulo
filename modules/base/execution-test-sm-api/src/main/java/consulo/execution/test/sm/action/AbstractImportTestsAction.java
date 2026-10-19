@@ -36,6 +36,7 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.process.ExecutionException;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -51,6 +52,7 @@ import org.jdom.Element;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * 1. chooses file where test results were saved
@@ -113,14 +115,24 @@ public abstract class AbstractImportTestsAction extends LegacyAnAction {
         e.getPresentation().setEnabledAndVisible(e.hasData(Project.KEY));
     }
 
-    public abstract @Nullable VirtualFile getFile(Project project);
+    @RequiredUIAccess
+    public abstract CompletableFuture<@Nullable VirtualFile> getFile(Project project);
 
     @Override
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
-        VirtualFile file = getFile(project);
-        if (file != null) {
+        UIAccess uiAccess = UIAccess.current();
+        getFile(project).whenCompleteAsync((file, error) -> {
+            if (file != null) {
+                importTests(project, file);
+            }
+        }, uiAccess);
+    }
+
+    @RequiredUIAccess
+    private void importTests(Project project, VirtualFile file) {
+        {
             try {
                 ImportRunProfile profile = new ImportRunProfile(file, project);
                 SMTRunnerConsoleProperties properties = profile.getProperties();

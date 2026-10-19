@@ -22,6 +22,7 @@ import consulo.execution.test.sm.runner.SMTRunnerConsoleProperties;
 import consulo.execution.test.sm.ui.SMTestRunnerResultsForm;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
@@ -32,6 +33,7 @@ import org.jspecify.annotations.Nullable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.CompletableFuture;
 
 public class ImportTestsFromHistoryAction extends AbstractImportTestsAction {
     private String myFileName;
@@ -65,7 +67,10 @@ public class ImportTestsFromHistoryAction extends AbstractImportTestsAction {
     }
 
     @Override
-    public @Nullable VirtualFile getFile(Project project) {
-        return LocalFileSystem.getInstance().findFileByPath(TestStateStorage.getTestHistoryRoot(project).getPath() + "/" + myFileName);
+    @RequiredUIAccess
+    public CompletableFuture<@Nullable VirtualFile> getFile(Project project) {
+        return CompletableFuture.completedFuture(
+            LocalFileSystem.getInstance().findFileByPath(TestStateStorage.getTestHistoryRoot(project).getPath() + "/" + myFileName)
+        );
     }
 }

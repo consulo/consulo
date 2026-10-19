@@ -24,7 +24,8 @@ import consulo.diff.merge.ThreesideMergeRequest;
 import consulo.process.ExecutionException;
 import consulo.component.ProcessCanceledException;
 import consulo.project.Project;
-import consulo.ui.ex.awt.Messages;
+import consulo.localize.LocalizeValue;
+import consulo.ui.MessageBoxes;
 import consulo.logging.Logger;
 
 import java.io.IOException;
@@ -56,7 +57,9 @@ public class ExternalMergeTool {
     }
     catch (Throwable e) {
       LOG.error(e);
-      Messages.showErrorDialog(project, e.getMessage(), "Can't Show Merge In External Tool");
+      MessageBoxes.okError(e)
+        .title(LocalizeValue.localizeTODO("Can't Show Merge In External Tool"))
+        .showAsync();
     }
   }
 

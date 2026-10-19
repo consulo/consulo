@@ -77,7 +77,7 @@ public class DesktopQtCardImpl extends DesktopQtLayoutComponent<LayoutConstraint
             try {
                 painter.setRenderHint(QPainter.RenderHint.Antialiasing, true);
                 painter.setPen(new QPen(border));
-                painter.drawRoundedRect(new QRectF(0.5, 0.5, width() - 1, height() - 1), 6, 6);
+                painter.drawRoundedRect(new QRectF(0.5, 0.5, width() - 1, height() - 1), 10, 10);
             }
             finally {
                 painter.end();
@@ -114,7 +114,7 @@ public class DesktopQtCardImpl extends DesktopQtLayoutComponent<LayoutConstraint
 
         boolean horizontal = myStyles.contains(CardStyle.HORIZONTAL);
         boolean cover = myStyles.contains(CardStyle.COVER_MEDIA);
-        int padding = DesktopQtSpace.toPixels(Space.LARGE);
+        int padding = DesktopQtSpace.toPixels(myStyles.contains(CardStyle.COMPACT) ? Space.MEDIUM : Space.LARGE);
 
         QBoxLayout root = horizontal ? new QHBoxLayout(frame) : new QVBoxLayout(frame);
         root.setContentsMargins(0, 0, 0, 0);

@@ -304,7 +304,7 @@ public class UnifiedCommitChangeListDialog extends DialogDescriptor implements U
         left.top(createHeader(tree, left));
 
         DockLayout treePanel = DockLayout.create();
-        treePanel.center(tree.getComponent());
+        treePanel.center(ScrollableLayout.create(tree.getComponent()));
         treePanel.bottom(DockLayout.create().right(legend.getComponent()));
 
         ActionToolbar messageToolbar = createToolbar(MESSAGE_ACTION_GROUP, left, ActionToolbar.Style.VERTICAL);
@@ -447,7 +447,7 @@ public class UnifiedCommitChangeListDialog extends DialogDescriptor implements U
             myChangeList = changeList;
         }
 
-        ChangesTreeSnapshotBuilder builder = new ChangesTreeSnapshotBuilder(myShowFlatten, myProject.getBasePath())
+        ChangesTreeSnapshotBuilder builder = new ChangesTreeSnapshotBuilder(myProject, myShowFlatten)
             .changeLists(List.of(myChangeList));
         if (VcsConfiguration.getInstance(myProject).SHOW_UNVERSIONED_FILES_WHILE_COMMIT) {
             builder.files(ChangesTreeGroupKind.UNVERSIONED, ChangeListManagerImpl.getInstanceImpl(myProject).getUnversionedFiles());

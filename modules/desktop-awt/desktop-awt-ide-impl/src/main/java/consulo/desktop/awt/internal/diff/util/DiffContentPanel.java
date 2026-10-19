@@ -126,7 +126,7 @@ public class DiffContentPanel extends JPanel {
                 totalHeight += size.height;
 
                 if (component == myTitle && size.height != 0) {
-                    totalHeight += DiffImplUtil.TITLE_GAP.get();
+                    totalHeight += AWTDiffUtil.TITLE_GAP.get();
                 }
             }
 
@@ -148,7 +148,7 @@ public class DiffContentPanel extends JPanel {
             myTitle.setBounds(0, y, width, titleSize.height);
             y += titleSize.height;
             if (titleSize.height != 0) {
-                y += DiffImplUtil.TITLE_GAP.get();
+                y += AWTDiffUtil.TITLE_GAP.get();
             }
 
             myTopBreadcrumbs.setBounds(0, y, width, topSize.height);

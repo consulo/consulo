@@ -42,8 +42,8 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.LegacyDumbAwareAction;
-import consulo.ui.ex.awt.Messages;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.MessageBoxBuilder;
+import consulo.ui.MessageButtonRole;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.ObjectUtil;
@@ -67,6 +67,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -217,9 +218,8 @@ public class ApplyPatchAction extends LegacyDumbAwareAction {
         return sb.toString();
     }
 
-    
     @RequiredUIAccess
-    public static ApplyPatchStatus applyOnly(
+    public static ApplyPatchAttempt applyOnly(
         @Nullable Project project,
         ApplyFilePatchBase patch,
         @Nullable ApplyPatchContext context,
@@ -233,17 +233,17 @@ public class ApplyPatchAction extends LegacyDumbAwareAction {
 
         ApplyPatchStatus status = result.getStatus();
         if (ApplyPatchStatus.ALREADY_APPLIED.equals(status) || ApplyPatchStatus.SUCCESS.equals(status)) {
-            return status;
+            return ApplyPatchAttempt.done(file, patch, status);
         }
 
         ApplyPatchForBaseRevisionTexts mergeData = result.getMergeData();
         if (mergeData == null) {
-            return status;
+            return ApplyPatchAttempt.done(file, patch, status);
         }
 
         Document document = FileDocumentManager.getInstance().getDocument(file);
         if (document == null) {
-            return ApplyPatchStatus.FAILURE;
+            return ApplyPatchAttempt.done(file, patch, ApplyPatchStatus.FAILURE);
         }
 
         String baseContent = toString(mergeData.getBase());
@@ -251,30 +251,62 @@ public class ApplyPatchAction extends LegacyDumbAwareAction {
         String patchedContent = mergeData.getPatched();
 
         if (localContent == null) {
-            return ApplyPatchStatus.FAILURE;
+            return ApplyPatchAttempt.done(file, patch, ApplyPatchStatus.FAILURE);
         }
 
-        SimpleReference<ApplyPatchStatus> applyPatchStatusReference = SimpleReference.create();
-        Consumer<MergeResult> callback = result1 -> {
+        return ApplyPatchAttempt.merge(
+            file,
+            patch,
+            () -> showMerge(
+                project,
+                patch,
+                file,
+                document,
+                baseContent,
+                localContent,
+                patchedContent,
+                reverse,
+                leftPanelTitle,
+                rightPanelTitle
+            )
+        );
+    }
+
+    @RequiredUIAccess
+    private static CompletableFuture<ApplyPatchStatus> showMerge(
+        @Nullable Project project,
+        ApplyFilePatchBase patch,
+        VirtualFile file,
+        Document document,
+        @Nullable String baseContent,
+        String localContent,
+        String patchedContent,
+        boolean reverse,
+        @Nullable String leftPanelTitle,
+        @Nullable String rightPanelTitle
+    ) {
+        CompletableFuture<ApplyPatchStatus> future = new CompletableFuture<>();
+        SimpleReference<ApplyPatchStatus> cancelStatusReference = SimpleReference.create();
+        Consumer<MergeResult> callback = mergeResult -> {
             FileDocumentManager.getInstance().saveDocument(document);
-            applyPatchStatusReference.setIfNull(
-                result1 != MergeResult.CANCEL ? ApplyPatchStatus.SUCCESS : ApplyPatchStatus.FAILURE
-            );
+            ApplyPatchStatus cancelStatus = cancelStatusReference.get();
+            if (cancelStatus != null) {
+                future.complete(cancelStatus);
+            }
+            else {
+                future.complete(mergeResult != MergeResult.CANCEL ? ApplyPatchStatus.SUCCESS : ApplyPatchStatus.FAILURE);
+            }
         };
 
         try {
             MergeRequest request;
             if (baseContent != null) {
                 if (reverse) {
-                    if (leftPanelTitle == null) {
-                        leftPanelTitle = VcsLocalize.patchApplyConflictPatchedVersion().get();
-                    }
-                    if (rightPanelTitle == null) {
-                        rightPanelTitle = VcsLocalize.patchApplyConflictLocalVersion().get();
-                    }
+                    String leftTitle = leftPanelTitle != null ? leftPanelTitle : VcsLocalize.patchApplyConflictPatchedVersion().get();
+                    String rightTitle = rightPanelTitle != null ? rightPanelTitle : VcsLocalize.patchApplyConflictLocalVersion().get();
 
                     List<String> contents = ContainerUtil.list(patchedContent, baseContent, localContent);
-                    List<String> titles = ContainerUtil.list(leftPanelTitle, null, rightPanelTitle);
+                    List<String> titles = ContainerUtil.list(leftTitle, null, rightTitle);
 
                     request = PatchDiffRequestFactory
                         .createMergeRequest(project, document, file, contents, null, titles, callback);
@@ -305,33 +337,31 @@ public class ApplyPatchAction extends LegacyDumbAwareAction {
             );
             request.putUserData(
                 DiffUserDataKeysEx.MERGE_CANCEL_HANDLER,
-                viewer -> {
-                    int result13 = Messages.showYesNoCancelDialog(
-                        viewer.getComponent().getRootPane(),
-                        "Would you like to (A)bort&Rollback applying patch action or (S)kip this file?",
-                        "Close Merge",
-                        "_Abort",
-                        "_Skip",
-                        CommonLocalize.buttonCancel().get(),
-                        UIUtil.getQuestionIcon()
-                    );
-
-                    if (result13 == Messages.YES) {
-                        applyPatchStatusReference.set(ApplyPatchStatus.ABORT);
-                    }
-                    else if (result13 == Messages.NO) {
-                        applyPatchStatusReference.set(ApplyPatchStatus.SKIP);
-                    }
-                    return result13 != Messages.CANCEL;
-                }
+                viewer -> MessageBoxBuilder.<@Nullable ApplyPatchStatus>create()
+                    .asQuestion()
+                    .title(LocalizeValue.localizeTODO("Close Merge"))
+                    .text(LocalizeValue.localizeTODO("Would you like to (A)bort&Rollback applying patch action or (S)kip this file?"))
+                    .button(MessageButtonRole.YES, LocalizeValue.localizeTODO("_Abort"), ApplyPatchStatus.ABORT)
+                    .asDefaultButton()
+                    .button(MessageButtonRole.NO, LocalizeValue.localizeTODO("_Skip"), ApplyPatchStatus.SKIP)
+                    .button(MessageButtonRole.CANCEL, CommonLocalize.buttonCancel(), (ApplyPatchStatus) null)
+                    .asExitButton()
+                    .showAsync(viewer.getComponent())
+                    .thenApply(choice -> {
+                        if (choice == null) {
+                            return Boolean.FALSE;
+                        }
+                        cancelStatusReference.set(choice);
+                        return Boolean.TRUE;
+                    })
             );
             DiffManager.getInstance().showMerge(project, request);
-            return applyPatchStatusReference.get();
         }
         catch (InvalidDiffRequestException e) {
             LOG.warn(e);
-            return ApplyPatchStatus.FAILURE;
+            future.complete(ApplyPatchStatus.FAILURE);
         }
+        return future;
     }
 
     

@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.desktop.awt.editor.impl.internal;
 
+import consulo.desktop.awt.ui.impl.components.LeftHandScrollbarLayout;
 import consulo.application.Application;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.progress.ProgressManager;
@@ -33,6 +34,7 @@ import consulo.colorScheme.internal.FontPreferencesManager;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.desktop.awt.editor.impl.internal.floating.EditorFloatingToolbar;
+import consulo.desktop.awt.editor.impl.internal.inlay.ComponentInlaysContainer;
 import consulo.desktop.awt.editor.impl.internal.stickyLine.StickyLineShadowPainter;
 import consulo.desktop.awt.editor.impl.internal.stickyLine.StickyLinesManager;
 import consulo.desktop.awt.editor.impl.internal.stickyLine.StickyLinesPanel;
@@ -249,7 +251,6 @@ public final class DesktopEditorImpl extends CodeEditorBase
 
     private MyInputMethodHandler myInputMethodRequestsHandler;
     private InputMethodRequests myInputMethodRequestsSwingWrapper;
-    private @Nullable ColorValue myForcedBackground;
     private @Nullable Dimension myPreferredSize;
 
     private final Alarm myMouseSelectionStateAlarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD);
@@ -429,6 +430,10 @@ public final class DesktopEditorImpl extends CodeEditorBase
 
         initComponent(stickyInfo == null ? null : stickyInfo.getSecond());
 
+        if (kind == EditorKind.DIFF) {
+            UIUtil.removeScrollBorder(myPanel);
+        }
+
         myView = new EditorViewImpl(this);
         myView.reinitSettings();
 
@@ -441,6 +446,16 @@ public final class DesktopEditorImpl extends CodeEditorBase
             @Override
             public void onBatchModeFinish(Editor editor) {
                 onInlayBatchModeFinish();
+            }
+        }, myCaretModel);
+
+        // a component inlay hosts its live component in the content, where it keeps the place of the inlay
+        myInlayModel.addListener(new InlayModel.Listener() {
+            @Override
+            public void onAdded(Inlay<?> inlay) {
+                if (inlay.getRenderer() instanceof ComponentInlayRenderer) {
+                    ComponentInlaysContainer.addInlay(inlay);
+                }
             }
         }, myCaretModel);
 
@@ -1679,27 +1694,12 @@ public final class DesktopEditorImpl extends CodeEditorBase
     }
 
     @Override
-    public void setBackgroundColor(ColorValue color) {
+    protected void onBackgroundColorChanged(ColorValue color) {
         myScrollPane.setBackground(TargetAWT.to(color));
-
-        if (getBackgroundIgnoreForced().equals(color)) {
-            myForcedBackground = null;
-            return;
-        }
-        myForcedBackground = color;
     }
 
     ColorValue getForegroundColor() {
         return myScheme.getDefaultForeground();
-    }
-
-    @Override
-    public ColorValue getBackgroundColor() {
-        if (myForcedBackground != null) {
-            return myForcedBackground;
-        }
-
-        return getBackgroundIgnoreForced();
     }
 
     @Override
@@ -1710,15 +1710,6 @@ public final class DesktopEditorImpl extends CodeEditorBase
     ColorValue getBackgroundColor(TextAttributes attributes) {
         ColorValue attrColor = attributes.getBackgroundColor();
         return Comparing.equal(attrColor, myScheme.getDefaultBackground()) ? getBackgroundColor() : attrColor;
-    }
-
-    private ColorValue getBackgroundIgnoreForced() {
-        ColorValue color = myScheme.getDefaultBackground();
-        if (myDocument.isWritable()) {
-            return color;
-        }
-        ColorValue readOnlyColor = myScheme.getColor(EditorColors.READONLY_BACKGROUND_COLOR);
-        return readOnlyColor != null ? readOnlyColor : color;
     }
 
     public @Nullable TextRange getComposedTextRange() {

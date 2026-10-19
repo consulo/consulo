@@ -60,6 +60,7 @@ public class WebToastImpl extends VaadinComponentDelegate<WebToastImpl.Vaadin> i
 
     private @Nullable ToastStyle myStyle;
     private boolean myGlassy;
+    private boolean myLeftLine;
     private boolean myShadow;
     private @Nullable Image myIcon;
     private @Nullable Component myToolbar;
@@ -107,6 +108,11 @@ public class WebToastImpl extends VaadinComponentDelegate<WebToastImpl.Vaadin> i
     public void addStyle(ToastStyle style) {
         if (style == ToastStyle.GLASSY) {
             myGlassy = true;
+        }
+        else if (style == ToastStyle.LEFT_LINE) {
+            myLeftLine = true;
+            getVaadinComponent().addClassName("consulo-toast-left-line");
+            updateIcon();
         }
         else {
             myStyle = style;
@@ -184,6 +190,11 @@ public class WebToastImpl extends VaadinComponentDelegate<WebToastImpl.Vaadin> i
     private void updateColors() {
         Vaadin vaadin = getVaadinComponent();
         String background = WebColors.toStyleCssColor(ToastPresentation.background(myStyle));
+        if (myLeftLine) {
+            vaadin.getStyle().set("background-color", "transparent");
+            vaadin.getStyle().set("--consulo-toast-line-color", WebColors.toStyleCssColor(ToastPresentation.border(myStyle)));
+            return;
+        }
         if (myGlassy && myShadow) {
             int opacity = Math.round(ToastPresentation.GLASSY_OPACITY * 100);
             String blur = "blur(" + ToastPresentation.GLASSY_BLUR + "px)";
@@ -201,7 +212,7 @@ public class WebToastImpl extends VaadinComponentDelegate<WebToastImpl.Vaadin> i
 
     private void updateIcon() {
         myIconHolder.removeAll();
-        Image icon = myIcon != null ? myIcon : ToastPresentation.icon(myStyle);
+        Image icon = myIcon != null ? myIcon : myLeftLine ? null : ToastPresentation.icon(myStyle);
         if (icon != null) {
             myIconHolder.add(WebImageConverter.getImage(icon));
         }

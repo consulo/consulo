@@ -17,7 +17,6 @@
 package consulo.versionControlSystem.impl.internal.change.shelf;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.Application;
 import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
@@ -80,6 +79,9 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
@@ -381,13 +383,18 @@ public class ShelveChangesManagerImpl implements ShelveChangesManager, JDOMExter
                     List<ShelvedBinaryFile> binariesForChangelist =
                         ContainerUtil.newArrayList(ContainerUtil.intersection(changeList.getBinaryFiles(), selectedBinaryChanges));
                     boolean shouldUnshelveAllList = changesForChangelist.isEmpty() && binariesForChangelist.isEmpty();
-                    unshelveChangeList(
-                        changeList,
-                        shouldUnshelveAllList ? null : changesForChangelist,
-                        shouldUnshelveAllList ? null : binariesForChangelist,
-                        forcePredefinedOneChangelist != null ? forcePredefinedOneChangelist : getChangeListUnshelveTo(changeList),
-                        true
-                    );
+                    try {
+                        unshelveChangeList(
+                            changeList,
+                            shouldUnshelveAllList ? null : changesForChangelist,
+                            shouldUnshelveAllList ? null : binariesForChangelist,
+                            forcePredefinedOneChangelist != null ? forcePredefinedOneChangelist : getChangeListUnshelveTo(changeList),
+                            true
+                        ).join();
+                    }
+                    catch (CompletionException | CancellationException e) {
+                        LOG.warn(e);
+                    }
                 }
             }
         });
@@ -594,7 +601,7 @@ public class ShelveChangesManagerImpl implements ShelveChangesManager, JDOMExter
     }
 
     @Override
-    public void unshelveChangeList(
+    public CompletableFuture<?> unshelveChangeList(
         ShelvedChangeList changeList,
         @Nullable List<? extends ShelvedChange> changes,
         @Nullable List<? extends ShelvedBinaryFile> binaryFiles,
@@ -615,12 +622,12 @@ public class ShelveChangesManagerImpl implements ShelveChangesManager, JDOMExter
         catch (IOException e) {
             LOG.info(e);
             PatchApplier.showError(myProject, "Cannot load patch(es): " + e.getMessage(), true);
-            return;
+            return CompletableFuture.completedFuture(null);
         }
         catch (PatchSyntaxException e) {
             PatchApplier.showError(myProject, "Cannot load patch(es): " + e.getMessage(), true);
             LOG.info(e);
-            return;
+            return CompletableFuture.completedFuture(null);
         }
 
         List<FilePatch> patches = new ArrayList<>(textFilePatches);
@@ -632,22 +639,27 @@ public class ShelveChangesManagerImpl implements ShelveChangesManager, JDOMExter
             patches.add(new ShelvedBinaryFilePatch((ShelvedBinaryFileImpl) shelvedBinaryFile));
         }
 
-        myProject.getApplication().invokeAndWait(
-            () -> {
-                BinaryPatchApplier binaryPatchApplier = new BinaryPatchApplier();
-                PatchApplier<ShelvedBinaryFilePatch> patchApplier = new PatchApplier<>(
-                    myProject,
-                    myProject.getBaseDir(),
-                    patches,
-                    targetChangeList,
-                    binaryPatchApplier,
-                    commitContext,
-                    reverse,
-                    leftConflictTitle,
-                    rightConflictTitle
-                );
-                patchApplier.setIsSystemOperation(systemOperation);
-                patchApplier.execute(showSuccessNotification, systemOperation);
+        UIAccess uiAccess = myProject.getUIAccess();
+        CompletableFuture<@Nullable Object> result = new CompletableFuture<>();
+        uiAccess.give(() -> {
+            BinaryPatchApplier binaryPatchApplier = new BinaryPatchApplier();
+            PatchApplier<ShelvedBinaryFilePatch> patchApplier = new PatchApplier<>(
+                myProject,
+                myProject.getBaseDir(),
+                patches,
+                targetChangeList,
+                binaryPatchApplier,
+                commitContext,
+                reverse,
+                leftConflictTitle,
+                rightConflictTitle
+            );
+            patchApplier.setIsSystemOperation(systemOperation);
+            patchApplier.execute(showSuccessNotification, systemOperation).whenCompleteAsync((status, error) -> {
+                if (error != null) {
+                    result.completeExceptionally(error);
+                    return;
+                }
                 if (isRemoveFilesFromShelf() || systemOperation) {
                     remainingPatches.addAll(patchApplier.getRemainingPatches());
                     if (remainingPatches.isEmpty() && remainingBinaries.isEmpty()) {
@@ -657,9 +669,10 @@ public class ShelveChangesManagerImpl implements ShelveChangesManager, JDOMExter
                         saveRemainingPatches((ShelvedChangeListImpl) changeList, remainingPatches, remainingBinaries, commitContext);
                     }
                 }
-            },
-            Application.get().getDefaultModalityState()
-        );
+                result.complete(status);
+            }, uiAccess);
+        });
+        return result;
     }
 
     private static List<TextFilePatch> loadTextPatches(

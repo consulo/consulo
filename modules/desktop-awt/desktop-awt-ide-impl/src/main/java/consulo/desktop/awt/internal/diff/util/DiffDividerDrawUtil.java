@@ -18,7 +18,6 @@ package consulo.desktop.awt.internal.diff.util;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;
 import consulo.colorScheme.EditorColorsScheme;
-import consulo.ide.impl.diff.DiffDrawUtil;
 import consulo.ui.ex.awt.GraphicsConfig;
 import consulo.ui.ex.awt.util.GraphicsUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
@@ -249,10 +248,10 @@ public class DiffDividerDrawUtil {
       Color fillColor = myResolved ? null : TargetAWT.to(myColor);
       Color borderColor = myResolved ? TargetAWT.to(myColor) : null;
       if (curve) {
-        DiffDrawUtil.drawCurveTrapezium(g, 0, width, startY1, endY1, startY2, endY2, fillColor, borderColor);
+        AWTDiffDrawUtil.drawCurveTrapezium(g, 0, width, startY1, endY1, startY2, endY2, fillColor, borderColor);
       }
       else {
-        DiffDrawUtil.drawTrapezium(g, 0, width, startY1, endY1, startY2, endY2, fillColor, borderColor);
+        AWTDiffDrawUtil.drawTrapezium(g, 0, width, startY1, endY1, startY2, endY2, fillColor, borderColor);
       }
 
       g.setStroke(oldStroke);
@@ -284,11 +283,11 @@ public class DiffDividerDrawUtil {
     }
 
     public void paint(Graphics2D g, int width) {
-      DiffDrawUtil.drawConnectorLineSeparator(g, 0, width, myStart1, myEnd1, myStart2, myEnd2, myScheme);
+      AWTDiffDrawUtil.drawConnectorLineSeparator(g, 0, width, myStart1, myEnd1, myStart2, myEnd2, myScheme);
     }
 
     public void paintOnScrollbar(Graphics2D g, int width) {
-      DiffDrawUtil.drawConnectorLineSeparator(g, 0, width, myStart1, myEnd1, myStart1, myEnd1, myScheme);
+      AWTDiffDrawUtil.drawConnectorLineSeparator(g, 0, width, myStart1, myEnd1, myStart1, myEnd1, myScheme);
     }
 
     public String toString() {

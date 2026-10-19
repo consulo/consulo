@@ -180,7 +180,6 @@ open module consulo.ide.impl {
     exports consulo.ide.impl.codeInsight.codeVision;
     exports consulo.ide.impl.command;
     exports consulo.ide.impl.compiler;
-    exports consulo.ide.impl.diff;
     exports consulo.ide.impl.eap;
     exports consulo.ide.impl.execution;
     exports consulo.ide.impl.fileChooser;

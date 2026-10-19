@@ -1,0 +1,772 @@
+/*
+ * Copyright 2000-2015 JetBrains s.r.o.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package consulo.diff.impl.internal.viewer;
+
+import com.uber.nullaway.annotations.Contract;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.application.Application;
+import consulo.application.ReadAction;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorEx;
+import consulo.codeEditor.FoldRegion;
+import consulo.codeEditor.FoldingModelEx;
+import consulo.codeEditor.event.FoldingListener;
+import consulo.codeEditor.internal.bridge.EditorBridgeFoldConnector;
+import consulo.codeEditor.markup.RangeHighlighter;
+import consulo.diff.impl.internal.util.DiffDrawUtil;
+import consulo.diff.util.LineRange;
+import consulo.disposer.Disposable;
+import consulo.document.Document;
+import consulo.document.event.DocumentEvent;
+import consulo.ui.HasFocus;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.dataholder.Key;
+import consulo.util.dataholder.UserDataHolder;
+import consulo.util.lang.StringUtil;
+import org.jspecify.annotations.Nullable;
+
+import java.util.List;
+import java.util.*;
+import java.util.function.BooleanSupplier;
+import java.util.function.Function;
+import java.util.function.IntUnaryOperator;
+
+/*
+ * This class allows to add custom foldings to hide unchanged regions in diff.
+ * EditorSettings#isAutoCodeFoldingEnabled() should be true, to avoid collisions with language-specific foldings
+ *    (as it's impossible to create partially overlapped folding regions)
+ * @See DiffUtil.setFoldingModelSupport()
+ *
+ */
+public class FoldingModelSupport {
+    public static final String PLACEHOLDER = "     ";
+
+    private static final Key<FoldingCache> CACHE_KEY = Key.create("Diff.FoldingUtil.Cache");
+
+    protected final int myCount;
+    
+    protected final EditorEx[] myEditors;
+
+    protected final List<FoldedBlock[]> myFoldings = new ArrayList<>();
+
+    private boolean myDuringSynchronize;
+    private final boolean[] myShouldUpdateLineNumbers;
+
+    public FoldingModelSupport(EditorEx[] editors, Disposable disposable) {
+        myEditors = editors;
+        myCount = myEditors.length;
+        myShouldUpdateLineNumbers = new boolean[myCount];
+
+        if (myCount > 1) {
+            for (int i = 0; i < myCount; i++) {
+                myEditors[i].getFoldingModel().addListener(new MyFoldingListener(i), disposable);
+                myEditors[i].getGutterComponentEx().setLineNumberConvertor(getLineConvertor(i));
+            }
+        }
+    }
+
+    //
+    // Init
+    //
+
+    /*
+     * Iterator returns ranges of changed lines: start1, end1, start2, end2, ...
+     */
+    @RequiredUIAccess
+    protected void install(@Nullable Iterator<int[]> changedLines, UserDataHolder context, Settings settings) {
+        UIAccess.assertIsUIThread();
+
+        if (changedLines == null) {
+            return;
+        }
+        if (settings.range == -1) {
+            return;
+        }
+
+        runBatchOperation(() -> {
+            FoldingBuilder builder = new FoldingBuilder(context, settings);
+            builder.build(changedLines);
+        });
+
+        updateLineNumbers(true);
+    }
+
+    private class FoldingBuilder {
+        private final Settings mySettings;
+        
+        private final ExpandSuggester myExpandSuggester;
+
+        private final int[] myLineCount;
+
+        public FoldingBuilder(UserDataHolder context, Settings settings) {
+            myExpandSuggester = new ExpandSuggester(context.getUserData(CACHE_KEY), settings.defaultExpanded);
+            mySettings = settings;
+
+            myLineCount = new int[myCount];
+            for (int i = 0; i < myCount; i++) {
+                myLineCount[i] = myEditors[i].getDocument().getLineCount();
+            }
+        }
+
+        private void build(Iterator<int[]> changedLines) {
+            int[] starts = new int[myCount];
+            int[] ends = new int[myCount];
+
+            int[] last = new int[myCount];
+            for (int i = 0; i < myCount; i++) {
+                last[i] = Integer.MIN_VALUE;
+            }
+
+            while (changedLines.hasNext()) {
+                int[] offsets = changedLines.next();
+
+                for (int i = 0; i < myCount; i++) {
+                    starts[i] = last[i];
+                    ends[i] = offsets[i * 2];
+                    last[i] = offsets[i * 2 + 1];
+                }
+                addRange(starts, ends);
+            }
+
+            for (int i = 0; i < myCount; i++) {
+                starts[i] = last[i];
+                ends[i] = Integer.MAX_VALUE;
+            }
+            addRange(starts, ends);
+        }
+
+        private void addRange(int[] starts, int[] ends) {
+            List<FoldedBlock> result = new ArrayList<>(3);
+            int[] rangeStarts = new int[myCount];
+            int[] rangeEnds = new int[myCount];
+
+            for (int number = 0; ; number++) {
+                int shift = getRangeShift(mySettings.range, number);
+                if (shift == -1) {
+                    break;
+                }
+
+                for (int i = 0; i < myCount; i++) {
+                    rangeStarts[i] = bound(starts[i] + shift, i);
+                    rangeEnds[i] = bound(ends[i] - shift, i);
+                }
+                ContainerUtil.addAllNotNull(
+                    result,
+                    createRange(rangeStarts, rangeEnds, myExpandSuggester.isExpanded(rangeStarts, rangeEnds))
+                );
+            }
+
+            if (result.size() > 0) {
+                FoldedBlock[] block = result.toArray(new FoldedBlock[result.size()]);
+                for (FoldedBlock folding : block) {
+                    folding.installHighlighter(block);
+                }
+                myFoldings.add(block);
+            }
+        }
+
+        private @Nullable FoldedBlock createRange(int[] starts, int[] ends, boolean expanded) {
+            boolean hasFolding = false;
+            FoldRegion[] regions = new FoldRegion[myCount];
+            boolean hasExpanded = false; // do not desync on runBatchFoldingOperationDoNotCollapseCaret
+
+            for (int i = 0; i < myCount; i++) {
+                if (ends[i] - starts[i] < 2) {
+                    continue;
+                }
+                regions[i] = addFolding(myEditors[i], starts[i], ends[i], expanded);
+                hasFolding |= regions[i] != null;
+                hasExpanded |= regions[i] != null && regions[i].isExpanded();
+            }
+            if (hasExpanded && !expanded) {
+                for (FoldRegion region : regions) {
+                    if (region != null) {
+                        region.setExpanded(true);
+                    }
+                }
+            }
+            return hasFolding ? new FoldedBlock(regions) : null;
+        }
+
+        private int bound(int value, int index) {
+            return Math.min(Math.max(value, 0), myLineCount[index]);
+        }
+    }
+
+    private static @Nullable FoldRegion addFolding(EditorEx editor, int start, int end, boolean expanded) {
+        Document document = editor.getDocument();
+        int startOffset = document.getLineStartOffset(start);
+        int endOffset = document.getLineEndOffset(end - 1);
+
+        FoldRegion value = editor.getFoldingModel().addFoldRegion(startOffset, endOffset, PLACEHOLDER);
+        if (value != null) {
+            value.setExpanded(expanded);
+            value.setInnerHighlightersMuted(true);
+        }
+        return value;
+    }
+
+    private void runBatchOperation(Runnable runnable) {
+        Runnable lastRunnable = runnable;
+
+        for (int i = 0; i < myCount; i++) {
+            Editor editor = myEditors[i];
+            Runnable finalRunnable = lastRunnable;
+            lastRunnable = () -> {
+                Runnable operation = finalRunnable::run;
+                if (HasFocus.hasFocus(editor.getContentUIComponent())) {
+                    editor.getFoldingModel().runBatchFoldingOperationDoNotCollapseCaret(operation);
+                }
+                else {
+                    editor.getFoldingModel().runBatchFoldingOperation(operation);
+                }
+            };
+        }
+
+        myDuringSynchronize = true;
+        try {
+            lastRunnable.run();
+        }
+        finally {
+            myDuringSynchronize = false;
+        }
+    }
+
+    public void destroy() {
+        for (int i = 0; i < myCount; i++) {
+            destroyFoldings(i);
+        }
+
+        for (FoldedBlock folding : getFoldedBlocks()) {
+            folding.destroyHighlighter();
+        }
+        myFoldings.clear();
+    }
+
+    private void destroyFoldings(int index) {
+        FoldingModelEx model = myEditors[index].getFoldingModel();
+        model.runBatchFoldingOperation(() -> {
+            for (FoldedBlock folding : getFoldedBlocks()) {
+                FoldRegion region = folding.getRegion(index);
+                if (region != null) {
+                    model.removeFoldRegion(region);
+                }
+            }
+        });
+    }
+
+    //
+    // Line numbers
+    //
+
+    public void onDocumentChanged(DocumentEvent e) {
+        if (StringUtil.indexOf(e.getOldFragment(), '\n') != -1 ||
+            StringUtil.indexOf(e.getNewFragment(), '\n') != -1) {
+            for (int i = 0; i < myCount; i++) {
+                if (myEditors[i].getDocument() == e.getDocument()) {
+                    myShouldUpdateLineNumbers[i] = true;
+                }
+            }
+        }
+    }
+
+    protected IntUnaryOperator getLineConvertor(int index) {
+        return value -> {
+            updateLineNumbers(false);
+            for (FoldedBlock folding : getFoldedBlocks()) { // TODO: avoid full scan - it could slowdown painting
+                int line = folding.getLine(index);
+                if (line == -1) {
+                    continue;
+                }
+                if (line > value) {
+                    break;
+                }
+                FoldRegion region = folding.getRegion(index);
+                if (line == value && region != null && !region.isExpanded()) {
+                    return -1;
+                }
+            }
+            return value;
+        };
+    }
+
+    @RequiredReadAction
+    private void updateLineNumbers(boolean force) {
+        for (int i = 0; i < myCount; i++) {
+            if (!myShouldUpdateLineNumbers[i] && !force) {
+                continue;
+            }
+            myShouldUpdateLineNumbers[i] = false;
+
+            Application.get().assertReadAccessAllowed();
+            for (FoldedBlock folding : getFoldedBlocks()) {
+                folding.updateLineNumber(i);
+            }
+        }
+    }
+
+    //
+    // Synchronized toggling of ranges
+    //
+
+    @RequiredUIAccess
+    protected void onFoldingChanged() {
+    }
+
+    public void expandAll(boolean expanded) {
+        if (myDuringSynchronize) {
+            return;
+        }
+        myDuringSynchronize = true;
+        try {
+            for (int i = 0; i < myCount; i++) {
+                int index = i;
+                FoldingModelEx model = myEditors[index].getFoldingModel();
+                model.runBatchFoldingOperation(() -> {
+                    for (FoldedBlock folding : getFoldedBlocks()) {
+                        FoldRegion region = folding.getRegion(index);
+                        if (region != null) {
+                            region.setExpanded(expanded);
+                        }
+                    }
+                });
+            }
+        }
+        finally {
+            myDuringSynchronize = false;
+        }
+        onFoldingChanged();
+    }
+
+    private class MyFoldingListener implements FoldingListener {
+        private final int myIndex;
+        
+        Set<FoldRegion> myModifiedRegions = new HashSet<>();
+
+        public MyFoldingListener(int index) {
+            myIndex = index;
+        }
+
+        @Override
+        public void onFoldRegionStateChange(FoldRegion region) {
+            if (myDuringSynchronize) {
+                return;
+            }
+            myModifiedRegions.add(region);
+        }
+
+        @Override
+        public void onFoldProcessingEnd() {
+            if (myModifiedRegions.isEmpty()) {
+                return;
+            }
+            myDuringSynchronize = true;
+            try {
+                for (int i = 0; i < myCount; i++) {
+                    if (i == myIndex) {
+                        continue;
+                    }
+                    int pairedIndex = i;
+                    myEditors[pairedIndex].getFoldingModel().runBatchFoldingOperation(() -> {
+                        for (FoldedBlock folding : getFoldedBlocks()) {
+                            FoldRegion region = folding.getRegion(myIndex);
+                            if (region == null || !region.isValid()) {
+                                continue;
+                            }
+                            if (myModifiedRegions.contains(region)) {
+                                FoldRegion pairedRegion = folding.getRegion(pairedIndex);
+                                if (pairedRegion == null || !pairedRegion.isValid()) {
+                                    continue;
+                                }
+                                pairedRegion.setExpanded(region.isExpanded());
+                            }
+                        }
+                    });
+                }
+
+                myModifiedRegions.clear();
+            }
+            finally {
+                myDuringSynchronize = false;
+            }
+            onFoldingChanged();
+        }
+    }
+
+    //
+    // Highlighting
+    //
+
+    protected class MyPaintable {
+        private final int myLeft;
+        private final int myRight;
+
+        public MyPaintable(int left, int right) {
+            myLeft = left;
+            myRight = right;
+        }
+
+        public List<EditorBridgeFoldConnector> createFoldConnectors() {
+            List<EditorBridgeFoldConnector> result = new ArrayList<>();
+            for (FoldedBlock[] block : myFoldings) {
+                for (FoldedBlock folding : block) {
+                    FoldRegion region1 = folding.getRegion(myLeft);
+                    FoldRegion region2 = folding.getRegion(myRight);
+                    if (region1 == null || !region1.isValid() || region1.isExpanded()) {
+                        continue;
+                    }
+                    if (region2 == null || !region2.isValid() || region2.isExpanded()) {
+                        continue;
+                    }
+                    int line1 = myEditors[myLeft].getDocument().getLineNumber(region1.getStartOffset());
+                    int line2 = myEditors[myRight].getDocument().getLineNumber(region2.getStartOffset());
+                    result.add(new EditorBridgeFoldConnector(line1, line2));
+                    break;
+                }
+            }
+            return result;
+        }
+    }
+
+    //
+    // Cache
+    //
+
+    /*
+     * To Cache:
+     * For each block of foldings (foldings for a single unchanged block in diff) we remember biggest expanded and biggest collapsed range.
+     *
+     * From Cache:
+     * We look into cache while building ranges, trying to find corresponding range in cached state.
+     * "Corresponding range" now is just smallest covering range.
+     *
+     * If document was modified since cache creation, this will lead to strange results. But this is a rare case, and we can't do anything with it.
+     */
+
+    private class ExpandSuggester {
+        private final @Nullable FoldingCache myCache;
+        private final int[] myIndex = new int[myCount];
+        private final boolean myDefault;
+
+        public ExpandSuggester(@Nullable FoldingCache cache, boolean defaultValue) {
+            myCache = cache;
+            myDefault = defaultValue;
+        }
+
+        public boolean isExpanded(int[] starts, int[] ends) {
+            if (myCache == null || myCache.ranges.length != myCount) {
+                return myDefault;
+            }
+            if (myDefault != myCache.expandByDefault) {
+                return myDefault;
+            }
+
+            Boolean state = null;
+            for (int index = 0; index < myCount; index++) {
+                Boolean sideState = getCachedExpanded(starts[index], ends[index], index);
+                if (sideState == null) {
+                    continue;
+                }
+                if (state == null) {
+                    state = sideState;
+                    continue;
+                }
+                if (state != sideState) {
+                    return myDefault;
+                }
+            }
+            return state == null ? myDefault : state;
+        }
+
+        private @Nullable Boolean getCachedExpanded(int start, int end, int index) {
+            if (start == end) {
+                return null;
+            }
+
+            //noinspection ConstantConditions
+            List<FoldedRangeState> ranges = myCache.ranges[index];
+            for (; myIndex[index] < ranges.size(); myIndex[index]++) {
+                FoldedRangeState range = ranges.get(myIndex[index]);
+                LineRange lineRange = range.getLineRange();
+
+                if (lineRange.end() <= start) {
+                    continue;
+                }
+                if (lineRange.contains(start, end)) {
+                    if (range.collapsed != null && range.collapsed.contains(start, end)) {
+                        return false;
+                    }
+                    if (range.expanded != null && range.expanded.contains(start, end)) {
+                        return true;
+                    }
+                    assert false : "Invalid LineRange" + range.expanded + ", " + range.collapsed + ", " + new LineRange(start, end);
+                }
+                if (lineRange.start() >= start) {
+                    return null; // we could need current range for enclosing next-level foldings
+                }
+            }
+            return null;
+        }
+    }
+
+    public void updateContext(UserDataHolder context, Settings settings) {
+        if (myFoldings.isEmpty()) {
+            return; // do not rewrite cache by initial state
+        }
+        context.putUserData(CACHE_KEY, getFoldingCache(settings));
+    }
+
+    private FoldingCache getFoldingCache(Settings settings) {
+        return ReadAction.compute(() -> {
+            List<FoldedRangeState>[] result = new List[myCount];
+            for (int i = 0; i < myCount; i++) {
+                result[i] = getFoldedRanges(i, settings);
+            }
+            return new FoldingCache(result, settings.defaultExpanded);
+        });
+    }
+
+    @RequiredReadAction
+    private List<FoldedRangeState> getFoldedRanges(int index, Settings settings) {
+        Application.get().assertReadAccessAllowed();
+        List<FoldedRangeState> ranges = new ArrayList<>();
+        Document document = myEditors[index].getDocument();
+
+        for (FoldedBlock[] blocks : myFoldings) {
+            LineRange expanded = null;
+            LineRange collapsed = null;
+
+            for (FoldedBlock folding : blocks) {
+                FoldRegion region = folding.getRegion(index);
+                if (region == null || !region.isValid()) {
+                    continue;
+                }
+                if (region.isExpanded()) {
+                    if (expanded == null) {
+                        int line1 = document.getLineNumber(region.getStartOffset());
+                        int line2 = document.getLineNumber(region.getEndOffset()) + 1;
+
+                        expanded = new LineRange(line1, line2);
+                    }
+                }
+                else {
+                    int line1 = document.getLineNumber(region.getStartOffset());
+                    int line2 = document.getLineNumber(region.getEndOffset()) + 1;
+                    collapsed = new LineRange(line1, line2);
+                    break;
+                }
+            }
+
+            if (expanded != null || collapsed != null) {
+                ranges.add(new FoldedRangeState(expanded, collapsed));
+            }
+        }
+        return ranges;
+    }
+
+    private static class FoldingCache {
+        public final boolean expandByDefault;
+        
+        public final List<FoldedRangeState>[] ranges;
+
+        public FoldingCache(List<FoldedRangeState>[] ranges, boolean expandByDefault) {
+            this.ranges = ranges;
+            this.expandByDefault = expandByDefault;
+        }
+    }
+
+    private static class FoldedRangeState {
+        public final @Nullable LineRange expanded;
+        public final @Nullable LineRange collapsed;
+
+        public FoldedRangeState(@Nullable LineRange expanded, @Nullable LineRange collapsed) {
+            assert expanded != null || collapsed != null;
+
+            this.expanded = expanded;
+            this.collapsed = collapsed;
+        }
+
+        
+        public LineRange getLineRange() {
+            //noinspection ConstantConditions
+            return expanded != null ? expanded : collapsed;
+        }
+    }
+
+    //
+    // Impl
+    //
+
+    private Iterable<FoldedBlock> getFoldedBlocks() {
+        return () -> new Iterator<>() {
+            private int myGroupIndex = 0;
+            private int myBlockIndex = 0;
+
+            @Override
+            public boolean hasNext() {
+                return myGroupIndex < myFoldings.size();
+            }
+
+            @Override
+            public FoldedBlock next() {
+                FoldedBlock[] group = myFoldings.get(myGroupIndex);
+                FoldedBlock folding = group[myBlockIndex];
+
+                if (group.length > myBlockIndex + 1) {
+                    myBlockIndex++;
+                }
+                else {
+                    myGroupIndex++;
+                    myBlockIndex = 0;
+                }
+
+                return folding;
+            }
+
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException();
+            }
+        };
+    }
+
+    protected class FoldedBlock {
+        private final FoldRegion[] myRegions;
+        
+        private final int[] myLines;
+        
+        private final List<RangeHighlighter> myHighlighters = new ArrayList<>(myCount);
+
+        public FoldedBlock(FoldRegion[] regions) {
+            assert regions.length == myCount;
+            myRegions = regions;
+            myLines = new int[myCount];
+        }
+
+        public void installHighlighter(FoldedBlock[] block) {
+            assert myHighlighters.isEmpty();
+
+            for (int i = 0; i < myCount; i++) {
+                FoldRegion region = myRegions[i];
+                if (region == null || !region.isValid()) {
+                    continue;
+                }
+                myHighlighters.addAll(DiffDrawUtil.createLineSeparatorHighlighter(
+                    myEditors[i],
+                    region.getStartOffset(), region.getEndOffset(),
+                    getHighlighterCondition(block, i)
+                ));
+            }
+        }
+
+        public void destroyHighlighter() {
+            for (RangeHighlighter highlighter : myHighlighters) {
+                highlighter.dispose();
+            }
+            myHighlighters.clear();
+        }
+
+        public void updateLineNumber(int index) {
+            FoldRegion region = myRegions[index];
+            if (region == null || !region.isValid()) {
+                myLines[index] = -1;
+            }
+            else {
+                myLines[index] = myEditors[index].getDocument().getLineNumber(region.getStartOffset());
+            }
+        }
+
+        public @Nullable FoldRegion getRegion(int index) {
+            return myRegions[index];
+        }
+
+        public int getLine(int index) {
+            return myLines[index];
+        }
+
+        private BooleanSupplier getHighlighterCondition(FoldedBlock[] block, int index) {
+            return () -> {
+                if (!myEditors[index].getFoldingModel().isFoldingEnabled()) {
+                    return false;
+                }
+
+                for (FoldedBlock folding : block) {
+                    FoldRegion region = folding.getRegion(index);
+                    boolean visible = region != null && region.isValid() && !region.isExpanded();
+                    if (folding == FoldedBlock.this) {
+                        return visible;
+                    }
+                    if (visible) {
+                        return false; // do not paint separator, if 'parent' folding is collapsed
+                    }
+                }
+                return false;
+            };
+        }
+    }
+
+    //
+    // Helpers
+    //
+
+    /*
+     * number - depth of folding insertion (from zero)
+     * return: number of context lines. ('-1' - end)
+     */
+    private static int getRangeShift(int range, int number) {
+        return switch (number) {
+            case 0 -> range;
+            case 1 -> range * 2;
+            case 2 -> range * 4;
+            default -> -1;
+        };
+    }
+
+    @Contract("null, _ -> null; !null, _ -> !null")
+    protected static <T, V> @Nullable Iterator<V> map(@Nullable List<T> list, final Function<T, V> mapping) {
+        if (list == null) {
+            return null;
+        }
+        final Iterator<T> it = list.iterator();
+        return new Iterator<>() {
+            @Override
+            public boolean hasNext() {
+                return it.hasNext();
+            }
+
+            @Override
+            public V next() {
+                return mapping.apply(it.next());
+            }
+
+            @Override
+            public void remove() {
+            }
+        };
+    }
+
+    public static class Settings {
+        public final int range;
+        public final boolean defaultExpanded;
+
+        public Settings(int range, boolean defaultExpanded) {
+            this.range = range;
+            this.defaultExpanded = defaultExpanded;
+        }
+    }
+}

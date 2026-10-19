@@ -16,7 +16,7 @@
 package consulo.ui.messageList;
 
 import consulo.localize.LocalizeValue;
-import consulo.ui.Component;
+import consulo.ui.HasComponentStyle;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.internal.UIInternal;
 
@@ -31,7 +31,7 @@ import java.util.List;
  * @author VISTALL
  * @since 2026-10-13
  */
-public interface MessageList extends Component {
+public interface MessageList extends HasComponentStyle<MessageListStyle> {
     static MessageList create() {
         return UIInternal.get()._Components_messageList();
     }

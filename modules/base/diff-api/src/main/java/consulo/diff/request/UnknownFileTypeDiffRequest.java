@@ -17,18 +17,20 @@ package consulo.diff.request;
 
 import consulo.diff.DiffContext;
 import consulo.diff.DiffContextEx;
-import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.LinkMouseListenerBase;
-import consulo.ui.ex.awt.SimpleColoredComponent;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.diff.localize.DiffLocalize;
+import consulo.ui.Component;
+import consulo.ui.Hyperlink;
+import consulo.ui.Label;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.layout.DockLayout;
+import consulo.ui.layout.HorizontalLayout;
+import consulo.ui.style.ComponentColors;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
 
 public class UnknownFileTypeDiffRequest extends ComponentDiffRequest {
   private final @Nullable String myFileName;
@@ -46,22 +48,21 @@ public class UnknownFileTypeDiffRequest extends ComponentDiffRequest {
 
   
   @Override
-  public JComponent getComponent(final DiffContext context) {
-    SimpleColoredComponent label = new SimpleColoredComponent();
-    label.setTextAlign(SwingConstants.CENTER);
-    label.append("Can't show diff for unknown file type. ",
-                 new SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN, UIUtil.getInactiveTextColor()));
+  @RequiredUIAccess
+  public Component getComponent(DiffContext context) {
+    HorizontalLayout row = HorizontalLayout.create();
+    Label label = Label.create(DiffLocalize.diffCanNotShowUnknown());
+    label.setForegroundColor(ComponentColors.DISABLED_TEXT);
+    row.add(label);
     if (myFileName != null) {
-      label.append("Associate", SimpleTextAttributes.LINK_ATTRIBUTES, new Runnable() {
-        @Override
-        public void run() {
-          FileType type = FileTypeRegistry.getInstance().getKnownFileTypeOrAssociate(myFileName);
-          if (type != null) onSuccess(context);
+      row.add(Hyperlink.create(DiffLocalize.diffAssociateFileType(), event -> {
+        FileType type = FileTypeRegistry.getInstance().getKnownFileTypeOrAssociate(myFileName);
+        if (type != null) {
+          onSuccess(context);
         }
-      });
-      LinkMouseListenerBase.installSingleTagOn(label);
+      }));
     }
-    return JBUI.Panels.simplePanel(label).withBorder(JBUI.Borders.empty(5));
+    return DockLayout.create().center(row);
   }
 
   public @Nullable String getFileName() {

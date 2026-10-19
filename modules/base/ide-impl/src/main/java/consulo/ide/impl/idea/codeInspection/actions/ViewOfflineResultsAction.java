@@ -19,8 +19,8 @@ import consulo.annotation.component.ActionImpl;
 import consulo.application.Application;
 import consulo.application.progress.ProgressManager;
 import consulo.component.ProcessCanceledException;
+import consulo.fileChooser.FileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
-import consulo.fileChooser.IdeaFileChooser;
 import consulo.ide.impl.idea.analysis.PerformAnalysisInBackgroundOption;
 import consulo.ide.impl.idea.codeInspection.InspectionApplication;
 import consulo.ide.impl.idea.codeInspection.ex.GlobalInspectionContextImpl;
@@ -46,6 +46,7 @@ import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
@@ -103,62 +104,64 @@ public class ViewOfflineResultsAction extends LegacyDumbAwareAction {
         };
         descriptor.setTitle("Select Path");
         descriptor.setDescription("Select directory which contains exported inspections results");
-        VirtualFile virtualFile = IdeaFileChooser.chooseFile(descriptor, project, null);
-        if (virtualFile == null || !virtualFile.isDirectory()) {
-            return;
-        }
+        UIAccess uiAccess = UIAccess.current();
+        FileChooser.chooseFile(descriptor, project, null).whenCompleteAsync((virtualFile, chooseError) -> {
+            if (virtualFile == null || !virtualFile.isDirectory()) {
+                return;
+            }
 
-        Map<String, Map<String, Set<OfflineProblemDescriptor>>> resMap = new HashMap<>();
-        String[] profileName = new String[1];
-        Runnable process = () -> {
-            List<VirtualFile> files = virtualFile.getRequiredChildren();
-            try {
-                for (final VirtualFile inspectionFile : files) {
-                    if (inspectionFile.isDirectory()) {
-                        continue;
-                    }
-                    String shortName = inspectionFile.getNameWithoutExtension();
-                    String extension = inspectionFile.getExtension();
-                    if (shortName.equals(InspectionApplication.DESCRIPTIONS)) {
-                        profileName[0] = myApplication.runReadAction(
-                            (Supplier<String>) () -> OfflineViewParseUtil.parseProfileName(inspectionFile)
-                        );
-                    }
-                    else if (XML_EXTENSION.equals(extension)) {
-                        resMap.put(shortName, myApplication.runReadAction(new Supplier<>() {
-                            @Override
-                            public Map<String, Set<OfflineProblemDescriptor>> get() {
-                                return OfflineViewParseUtil.parse(inspectionFile);
-                            }
-                        }));
+            Map<String, Map<String, Set<OfflineProblemDescriptor>>> resMap = new HashMap<>();
+            String[] profileName = new String[1];
+            Runnable process = () -> {
+                List<VirtualFile> files = virtualFile.getRequiredChildren();
+                try {
+                    for (final VirtualFile inspectionFile : files) {
+                        if (inspectionFile.isDirectory()) {
+                            continue;
+                        }
+                        String shortName = inspectionFile.getNameWithoutExtension();
+                        String extension = inspectionFile.getExtension();
+                        if (shortName.equals(InspectionApplication.DESCRIPTIONS)) {
+                            profileName[0] = myApplication.runReadAction(
+                                (Supplier<String>) () -> OfflineViewParseUtil.parseProfileName(inspectionFile)
+                            );
+                        }
+                        else if (XML_EXTENSION.equals(extension)) {
+                            resMap.put(shortName, myApplication.runReadAction(new Supplier<>() {
+                                @Override
+                                public Map<String, Set<OfflineProblemDescriptor>> get() {
+                                    return OfflineViewParseUtil.parse(inspectionFile);
+                                }
+                            }));
+                        }
                     }
                 }
-            }
-            catch (Exception e) {  //all parse exceptions
-                SwingUtilities.invokeLater(() -> Messages.showInfoMessage(
-                    e.getMessage(),
-                    InspectionLocalize.offlineViewParseExceptionTitle().get()
-                ));
-                throw new ProcessCanceledException(); //cancel process
-            }
-        };
-        ProgressManager.getInstance().runProcessWithProgressAsynchronously(
-            project,
-            InspectionLocalize.parsingInspectionsDumpProgressTitle().get(),
-            process,
-            () -> SwingUtilities.invokeLater(() -> {
-                String name = profileName[0];
-                showOfflineView(
-                    project,
-                    name,
-                    resMap,
-                    InspectionLocalize.offlineViewTitle() +
-                        " (" + (name != null ? name : InspectionLocalize.offlineViewEditorSettingsTitle().get()) + ")"
-                );
-            }),
-            null,
-            new PerformAnalysisInBackgroundOption(project)
-        );
+                catch (Exception e) {  //all parse exceptions
+                    SwingUtilities.invokeLater(() -> Messages.showInfoMessage(
+                        e.getMessage(),
+                        InspectionLocalize.offlineViewParseExceptionTitle().get()
+                    ));
+                    throw new ProcessCanceledException(); //cancel process
+                }
+            };
+            ProgressManager.getInstance().runProcessWithProgressAsynchronously(
+                project,
+                InspectionLocalize.parsingInspectionsDumpProgressTitle().get(),
+                process,
+                () -> SwingUtilities.invokeLater(() -> {
+                    String name = profileName[0];
+                    showOfflineView(
+                        project,
+                        name,
+                        resMap,
+                        InspectionLocalize.offlineViewTitle() +
+                            " (" + (name != null ? name : InspectionLocalize.offlineViewEditorSettingsTitle().get()) + ")"
+                    );
+                }),
+                null,
+                new PerformAnalysisInBackgroundOption(project)
+            );
+        }, uiAccess);
     }
 
     @RequiredUIAccess

@@ -12,6 +12,7 @@ module consulo.version.control.system.impl {
     requires consulo.project.ui.impl;
     requires consulo.external.service.api;
     requires consulo.find.api;
+    requires consulo.diff.impl;
 
     requires consulo.execution.api;
 
@@ -25,7 +26,8 @@ module consulo.version.control.system.impl {
         consulo.desktop.awt.editor.impl,
         consulo.desktop.awt.ide.impl,
         consulo.desktop.awt.ui.impl,
-        consulo.ide.impl;
+        consulo.ide.impl,
+        consulo.version.control.system.review.impl;
     exports consulo.versionControlSystem.impl.internal.action to consulo.ide.impl;
     exports consulo.versionControlSystem.impl.internal.change to
         consulo.desktop.awt.editor.impl,

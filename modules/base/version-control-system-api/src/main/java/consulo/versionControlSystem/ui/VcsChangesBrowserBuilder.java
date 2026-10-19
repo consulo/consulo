@@ -17,8 +17,13 @@ package consulo.versionControlSystem.ui;
 
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
+import consulo.ui.TextItemPresentation;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
+import consulo.versionControlSystem.change.Change;
+
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 /**
  * @author VISTALL
@@ -33,6 +38,16 @@ public interface VcsChangesBrowserBuilder {
      * Adds the rollback action; rolled back changes leave the list.
      */
     VcsChangesBrowserBuilder withRollback();
+
+    /**
+     * Adds to the row of every change, after the file presentation.
+     */
+    VcsChangesBrowserBuilder changeDecorator(BiConsumer<Change, TextItemPresentation> decorator);
+
+    /**
+     * Replaces the diff opened by a double click or Enter on a change.
+     */
+    VcsChangesBrowserBuilder openHandler(Consumer<Change> handler);
 
     @RequiredUIAccess
     VcsChangesBrowser build(Disposable parentDisposable);

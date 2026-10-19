@@ -29,6 +29,7 @@ import consulo.logging.Logger;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.project.StoreReloadManager;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.Presentation;
@@ -285,65 +286,84 @@ public class MultipleFileMergeDialog extends DialogWrapper {
 
     @RequiredUIAccess
     private void showMergeDialog() {
-        DiffRequestFactory requestFactory = DiffRequestFactory.getInstance();
         Collection<VirtualFile> files = myTable.getSelection();
         if (!beforeResolve(files)) {
             return;
         }
 
-        for (VirtualFile file : files) {
-            MergeData mergeData;
-            try {
-                mergeData = myProvider.loadRevisions(file);
-            }
-            catch (VcsException ex) {
-                Messages.showErrorDialog(myRootPanel, "Error loading revisions to merge: " + ex.getMessage());
-                break;
-            }
+        showNextMergeDialog(new ArrayList<>(files).iterator(), UIAccess.current());
+    }
 
-            if (mergeData.CURRENT == null || mergeData.LAST == null || mergeData.ORIGINAL == null) {
-                Messages.showErrorDialog(myRootPanel, "Error loading revisions to merge");
-                break;
-            }
-
-            String leftTitle = myMergeDialogCustomizer.getLeftPanelTitle(file);
-            String baseTitle = myMergeDialogCustomizer.getCenterPanelTitle(file);
-            String rightTitle = myMergeDialogCustomizer.getRightPanelTitle(file, mergeData.LAST_REVISION_NUMBER);
-            String title = myMergeDialogCustomizer.getMergeWindowTitle(file);
-
-            List<byte[]> byteContents = ContainerUtil.list(mergeData.CURRENT, mergeData.ORIGINAL, mergeData.LAST);
-            List<String> contentTitles = ContainerUtil.list(leftTitle, baseTitle, rightTitle);
-
-            Consumer<MergeResult> callback = result -> {
-                Document document = FileDocumentManager.getInstance().getCachedDocument(file);
-                if (document != null) {
-                    FileDocumentManager.getInstance().saveDocument(document);
-                }
-                checkMarkModifiedProject(file);
-
-                if (result != MergeResult.CANCEL) {
-                    Application.get().runWriteAction(() -> markFileProcessed(file, getSessionResolution(result)));
-                }
-            };
-
-            MergeRequest request;
-            try {
-                if (myProvider.isBinary(file)) { // respect MIME-types in svn
-                    request = requestFactory.createBinaryMergeRequest(myProject, file, byteContents, title, contentTitles, callback);
-                }
-                else {
-                    request = requestFactory.createMergeRequest(myProject, file, byteContents, title, contentTitles, callback);
-                }
-            }
-            catch (InvalidDiffRequestException e) {
-                LOG.error(e);
-                Messages.showErrorDialog(myRootPanel, "Can't show merge dialog");
-                break;
-            }
-
-            DiffManager.getInstance().showMerge(myProject, request);
+    @RequiredUIAccess
+    private void showNextMergeDialog(Iterator<VirtualFile> files, UIAccess uiAccess) {
+        if (!files.hasNext()) {
+            updateModelFromFiles();
+            return;
         }
-        updateModelFromFiles();
+
+        VirtualFile file = files.next();
+
+        MergeData mergeData;
+        try {
+            mergeData = myProvider.loadRevisions(file);
+        }
+        catch (VcsException ex) {
+            Messages.showErrorDialog(myRootPanel, "Error loading revisions to merge: " + ex.getMessage());
+            updateModelFromFiles();
+            return;
+        }
+
+        if (mergeData.CURRENT == null || mergeData.LAST == null || mergeData.ORIGINAL == null) {
+            Messages.showErrorDialog(myRootPanel, "Error loading revisions to merge");
+            updateModelFromFiles();
+            return;
+        }
+
+        String leftTitle = myMergeDialogCustomizer.getLeftPanelTitle(file);
+        String baseTitle = myMergeDialogCustomizer.getCenterPanelTitle(file);
+        String rightTitle = myMergeDialogCustomizer.getRightPanelTitle(file, mergeData.LAST_REVISION_NUMBER);
+        String title = myMergeDialogCustomizer.getMergeWindowTitle(file);
+
+        List<byte[]> byteContents = ContainerUtil.list(mergeData.CURRENT, mergeData.ORIGINAL, mergeData.LAST);
+        List<String> contentTitles = ContainerUtil.list(leftTitle, baseTitle, rightTitle);
+
+        Consumer<MergeResult> callback = result -> {
+            Document document = FileDocumentManager.getInstance().getCachedDocument(file);
+            if (document != null) {
+                FileDocumentManager.getInstance().saveDocument(document);
+            }
+            checkMarkModifiedProject(file);
+
+            if (result != MergeResult.CANCEL) {
+                Application.get().runWriteAction(() -> markFileProcessed(file, getSessionResolution(result)));
+            }
+
+            if (result == MergeResult.CANCEL) {
+                uiAccess.give(this::updateModelFromFiles);
+            }
+            else {
+                uiAccess.give(() -> showNextMergeDialog(files, uiAccess));
+            }
+        };
+
+        DiffRequestFactory requestFactory = DiffRequestFactory.getInstance();
+        MergeRequest request;
+        try {
+            if (myProvider.isBinary(file)) { // respect MIME-types in svn
+                request = requestFactory.createBinaryMergeRequest(myProject, file, byteContents, title, contentTitles, callback);
+            }
+            else {
+                request = requestFactory.createMergeRequest(myProject, file, byteContents, title, contentTitles, callback);
+            }
+        }
+        catch (InvalidDiffRequestException e) {
+            LOG.error(e);
+            Messages.showErrorDialog(myRootPanel, "Can't show merge dialog");
+            updateModelFromFiles();
+            return;
+        }
+
+        DiffManager.getInstance().showMerge(myProject, request);
     }
 
     

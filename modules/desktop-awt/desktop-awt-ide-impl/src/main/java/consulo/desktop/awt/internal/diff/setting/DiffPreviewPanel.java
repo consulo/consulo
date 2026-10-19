@@ -2,6 +2,7 @@
 
 package consulo.desktop.awt.internal.diff.setting;
 
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorColors;
 import consulo.codeEditor.EditorEx;
@@ -11,11 +12,11 @@ import consulo.codeEditor.event.CaretListener;
 import consulo.codeEditor.event.EditorMouseEvent;
 import consulo.codeEditor.event.EditorMouseMotionListener;
 import consulo.colorScheme.EditorColorsScheme;
-import consulo.desktop.awt.internal.diff.simple.SimpleThreesideDiffChange;
-import consulo.desktop.awt.internal.diff.simple.SimpleThreesideDiffViewer;
-import consulo.ide.impl.diff.DiffLineSeparatorRenderer;
+import consulo.diff.impl.internal.viewer.simple.SimpleThreesideDiffChange;
+import consulo.diff.impl.internal.viewer.simple.SimpleThreesideDiffViewer;
 import consulo.diff.DiffContext;
 import consulo.diff.content.DiffContent;
+import consulo.diff.impl.internal.util.DiffLineSeparatorRenderer;
 import consulo.diff.internal.DiffImplUtil;
 import consulo.diff.internal.HighlightPolicy;
 import consulo.diff.internal.IgnorePolicy;
@@ -66,7 +67,7 @@ class DiffPreviewPanel implements PreviewPanel {
       editor.getCaretModel().addCaretListener(clickListener);
     }
 
-    myPanel = JBUI.Panels.simplePanel(myViewer.getComponent());
+    myPanel = JBUI.Panels.simplePanel(TargetAWT.to(myViewer.getComponent()));
   }
 
   @Override
@@ -252,7 +253,7 @@ class DiffPreviewPanel implements PreviewPanel {
     }
 
     public void repaint() {
-      myPanel.repaint();
+      updateBridge();
     }
   }
 }

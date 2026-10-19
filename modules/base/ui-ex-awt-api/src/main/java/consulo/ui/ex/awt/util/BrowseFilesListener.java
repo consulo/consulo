@@ -15,9 +15,10 @@
  */
 package consulo.ui.ex.awt.util;
 
+import consulo.fileChooser.FileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
-import consulo.fileChooser.IdeaFileChooser;
+import consulo.ui.UIAccess;
 import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
@@ -70,6 +71,11 @@ public class BrowseFilesListener implements ActionListener {
     VirtualFile fileToSelect = getFileToSelect();
     myChooserDescriptor.setTitle(myTitle); // important to set title and description here because a shared descriptor instance can be used
     myChooserDescriptor.setDescription(myDescription);
-    IdeaFileChooser.chooseFiles(myChooserDescriptor, null, fileToSelect, files -> doSetText(FileUtil.toSystemDependentName(files.get(0).getPath())));
+    UIAccess uiAccess = UIAccess.current();
+    FileChooser.chooseFiles(myChooserDescriptor, null, fileToSelect).whenCompleteAsync((files, error) -> {
+      if (files != null && files.length > 0) {
+        doSetText(FileUtil.toSystemDependentName(files[0].getPath()));
+      }
+    }, uiAccess);
   }
 }

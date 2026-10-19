@@ -16,6 +16,7 @@
 
 package consulo.localHistory.impl.internal.ui.view;
 
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.diff.DiffManager;
 import consulo.diff.DiffRequestPanel;
 import consulo.disposer.Disposer;
@@ -50,8 +51,8 @@ public class FileHistoryDialog extends HistoryDialog<FileHistoryDialogModel> {
 
   @Override
   protected Pair<JComponent, Dimension> createDiffPanel(JPanel root, ExcludingTraversalPolicy traversalPolicy) {
-    myDiffPanel = DiffManager.getInstance().createRequestPanel(myProject, this, getFrame());
-    return Pair.create((JComponent)myDiffPanel.getComponent(), null);
+    myDiffPanel = DiffManager.getInstance().createRequestPanel(myProject, this, TargetAWT.from(getFrame()));
+    return Pair.create((JComponent) TargetAWT.to(myDiffPanel.getComponent()), null);
   }
 
   @Override

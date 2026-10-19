@@ -26,7 +26,7 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import org.jspecify.annotations.Nullable;
-import java.awt.*;
+import consulo.ui.Window;
 
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class DiffManager {

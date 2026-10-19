@@ -59,6 +59,7 @@ import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.PopupStep;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.PlaceholderLayout;
+import consulo.ui.layout.ScrollableLayout;
 import consulo.ui.layout.SplitLayoutPosition;
 import consulo.ui.layout.TwoComponentSplitLayout;
 import consulo.ui.layout.VerticalLayout;
@@ -316,7 +317,7 @@ public class ApplyPatchDifferentiatedDialog extends ChangeListDialogDescriptor {
         placeholder.center(emptyText);
 
         PlaceholderLayout treeContent = PlaceholderLayout.create();
-        treeContent.setContent(tree.getComponent());
+        treeContent.setContent(ScrollableLayout.create(tree.getComponent()));
         treeContent.setPlaceholder(placeholder);
         treeContent.setPlaceholderVisibility(myPatches::isEmpty);
         myTreeContent = treeContent;
@@ -608,7 +609,7 @@ public class ApplyPatchDifferentiatedDialog extends ChangeListDialogDescriptor {
         List<AbstractFilePatchInProgress.PatchChange> changes = getAllChanges();
         Collection<AbstractFilePatchInProgress.PatchChange> included = getIncluded(doInitCheck, changes);
 
-        ChangesTreeSnapshot snapshot = new ChangesTreeSnapshotBuilder(myShowFlatten, myProject.getBasePath())
+        ChangesTreeSnapshot snapshot = new ChangesTreeSnapshotBuilder(myProject, myShowFlatten)
             .changes(new ArrayList<>(changes))
             .build();
         CompletableFuture<?> refresh = tree.setSnapshot(snapshot);

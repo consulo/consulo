@@ -16,3 +16,19 @@ vaadin-message[theme~="consulo-system"] > [slot="avatar"] {
 vaadin-message[theme~="consulo-anonymous"]::part(name) {
     display: none;
 }
+
+/* a discussion standing among other content - small pictures, little room, the background of what it stands on */
+vaadin-message-list.consulo-compact {
+    padding: 0;
+    background: transparent;
+}
+
+vaadin-message-list.consulo-compact vaadin-message {
+    padding: 3px 0;
+}
+
+vaadin-message-list.consulo-compact vaadin-message > [slot="avatar"] {
+    --vaadin-avatar-size: 24px;
+    width: 24px;
+    height: 24px;
+}

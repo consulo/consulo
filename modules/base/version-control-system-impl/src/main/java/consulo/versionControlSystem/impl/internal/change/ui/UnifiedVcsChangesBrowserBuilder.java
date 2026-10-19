@@ -18,13 +18,18 @@ package consulo.versionControlSystem.impl.internal.change.ui;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.TextItemPresentation;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
+import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.ui.VcsChangesBrowser;
 import consulo.versionControlSystem.ui.VcsChangesBrowserBuilder;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 /**
  * @author VISTALL
@@ -35,6 +40,8 @@ public class UnifiedVcsChangesBrowserBuilder implements VcsChangesBrowserBuilder
     private final List<AnAction> myToolbarActions = new ArrayList<>();
     private LocalizeValue myEmptyText = LocalizeValue.empty();
     private boolean myWithRollback;
+    private @Nullable BiConsumer<Change, TextItemPresentation> myChangeDecorator;
+    private @Nullable Consumer<Change> myOpenHandler;
 
     public UnifiedVcsChangesBrowserBuilder(Project project) {
         myProject = project;
@@ -58,9 +65,27 @@ public class UnifiedVcsChangesBrowserBuilder implements VcsChangesBrowserBuilder
         return this;
     }
 
+    @Override
+    public VcsChangesBrowserBuilder changeDecorator(BiConsumer<Change, TextItemPresentation> decorator) {
+        myChangeDecorator = decorator;
+        return this;
+    }
+
+    @Override
+    public VcsChangesBrowserBuilder openHandler(Consumer<Change> handler) {
+        myOpenHandler = handler;
+        return this;
+    }
+
     @RequiredUIAccess
     @Override
     public VcsChangesBrowser build(Disposable parentDisposable) {
-        return new UnifiedVcsChangesBrowser(myProject, myEmptyText, List.copyOf(myToolbarActions), myWithRollback, parentDisposable);
+        return new UnifiedVcsChangesBrowser(myProject,
+            myEmptyText,
+            List.copyOf(myToolbarActions),
+            myWithRollback,
+            myChangeDecorator,
+            myOpenHandler,
+            parentDisposable);
     }
 }

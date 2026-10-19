@@ -45,6 +45,11 @@ public class FocusOppositePaneAction extends AnAction implements DumbAware {
         registerCustomShortcutSet(getShortcutSet(), component);
     }
 
+    @RequiredUIAccess
+    public void install(consulo.ui.Component component) {
+        registerCustomShortcutSet(getShortcutSet(), component);
+    }
+
     
     private String getActionId() {
         return myScrollToPosition ? "Diff.FocusOppositePaneAndScroll" : "Diff.FocusOppositePane";

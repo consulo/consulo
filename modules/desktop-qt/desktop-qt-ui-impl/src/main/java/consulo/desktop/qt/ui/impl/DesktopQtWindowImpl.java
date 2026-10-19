@@ -50,6 +50,8 @@ import io.qt.widgets.QVBoxLayout;
 import io.qt.widgets.QWidget;
 import org.jspecify.annotations.Nullable;
 
+import java.util.function.Consumer;
+
 /**
  * @author VISTALL
  * @since 2026-08-16
@@ -62,6 +64,13 @@ public class DesktopQtWindowImpl extends QtComponentDelegate<QMainWindow> implem
 
         @Override
         protected void closeEvent(QCloseEvent event) {
+            Consumer<Window> closeHandler = myCloseHandler;
+            if (closeHandler != null && !myClosingByApi && !myDisposed) {
+                event.ignore();
+                closeHandler.accept(DesktopQtWindowImpl.this);
+                return;
+            }
+
             super.closeEvent(event);
 
             closed();
@@ -109,6 +118,8 @@ public class DesktopQtWindowImpl extends QtComponentDelegate<QMainWindow> implem
     private final @Nullable String myDimensionKey;
 
     private boolean myDisposed;
+    private boolean myClosingByApi;
+    private @Nullable Consumer<Window> myCloseHandler;
     private boolean myMainFrame;
 
     /**
@@ -216,7 +227,7 @@ public class DesktopQtWindowImpl extends QtComponentDelegate<QMainWindow> implem
             return;
         }
 
-        myComponent.resize(size.width(), size.height());
+        resizeOnScreen(size.width(), size.height());
 
         applyFixedSize();
     }
@@ -458,7 +469,20 @@ public class DesktopQtWindowImpl extends QtComponentDelegate<QMainWindow> implem
         }
 
         mySize = size;
-        myComponent.resize(size.width(), size.height());
+        resizeOnScreen(size.width(), size.height());
+    }
+
+    private void resizeOnScreen(int width, int height) {
+        QRect available = availableGeometry();
+        if (available == null) {
+            myComponent.resize(width, height);
+            return;
+        }
+
+        myComponent.resize(
+            Math.min(width, available.width() - ourScreenMarginX),
+            Math.min(height, available.height() - ourScreenMarginY)
+        );
     }
 
     private void rememberSize() {
@@ -530,7 +554,19 @@ public class DesktopQtWindowImpl extends QtComponentDelegate<QMainWindow> implem
             return;
         }
 
-        myComponent.close();
+        myClosingByApi = true;
+        try {
+            myComponent.close();
+        }
+        finally {
+            myClosingByApi = false;
+        }
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setCloseHandler(@Nullable Consumer<Window> closeHandler) {
+        myCloseHandler = closeHandler;
     }
 
     /**

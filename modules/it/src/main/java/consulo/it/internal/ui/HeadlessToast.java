@@ -43,7 +43,9 @@ public class HeadlessToast extends HeadlessComponentBase implements ToastInterna
 
     @Override
     public void addStyle(ToastStyle style) {
-        myStyle = style;
+        if (style != ToastStyle.GLASSY && style != ToastStyle.LEFT_LINE) {
+            myStyle = style;
+        }
     }
 
     public @Nullable ToastStyle getStyle() {

@@ -27,6 +27,7 @@ import consulo.versionControlSystem.ui.VcsBalloonProblemNotifier;
 import consulo.util.collection.ContainerUtil;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationType;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.MultiMap;
 import consulo.versionControlSystem.change.CommitContext;
@@ -36,6 +37,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 public class ApplyPatchDefaultExecutor implements ApplyPatchExecutor<AbstractFilePatchInProgress> {
@@ -67,17 +69,18 @@ public class ApplyPatchDefaultExecutor implements ApplyPatchExecutor<AbstractFil
     }
 
     @RequiredUIAccess
-    protected ApplyPatchStatus executeAndApplyAdditionalInfo(
+    protected CompletableFuture<ApplyPatchStatus> executeAndApplyAdditionalInfo(
         @Nullable LocalChangeList localList,
         @Nullable ThrowableComputable<Map<String, Map<String, CharSequence>>, PatchSyntaxException> additionalInfo,
         CommitContext commitContext,
         Collection<PatchApplier> appliers
     ) {
-        ApplyPatchStatus applyPatchStatus = PatchApplier.executePatchGroup(appliers, localList);
-        if (applyPatchStatus != ApplyPatchStatus.ABORT) {
-            applyAdditionalInfo(myProject, additionalInfo, commitContext);
-        }
-        return applyPatchStatus;
+        UIAccess uiAccess = UIAccess.current();
+        return PatchApplier.executePatchGroup(appliers, localList).whenCompleteAsync((applyPatchStatus, error) -> {
+            if (error == null && applyPatchStatus != ApplyPatchStatus.ABORT) {
+                applyAdditionalInfo(myProject, additionalInfo, commitContext);
+            }
+        }, uiAccess);
     }
 
     

@@ -19,7 +19,6 @@ import consulo.diff.chain.DiffRequestChain;
 import consulo.diff.chain.DiffRequestProducer;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.popup.BaseListPopupStep;
@@ -28,8 +27,6 @@ import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.PopupStep;
 import org.jspecify.annotations.Nullable;
 
-import java.awt.event.InputEvent;
-import java.awt.event.MouseEvent;
 import java.util.function.Consumer;
 
 public class GoToChangePopupBuilder {
@@ -63,9 +60,8 @@ public class GoToChangePopupBuilder {
         public void actionPerformed(AnActionEvent e) {
             JBPopup popup = createPopup(e);
 
-            InputEvent event = e.getInputEvent();
-            if (event instanceof MouseEvent me) {
-                popup.show(new RelativePoint(me));
+            if (e.getUIEvent() != null) {
+                popup.showUnderneathOf(e);
             }
             else {
                 popup.showInBestPositionFor(e.getDataContext());

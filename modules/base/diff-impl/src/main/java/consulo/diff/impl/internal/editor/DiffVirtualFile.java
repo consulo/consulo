@@ -16,9 +16,11 @@
 package consulo.diff.impl.internal.editor;
 
 import consulo.diff.DiffContentVirtualFile;
+import consulo.diff.impl.internal.DiffRequestProcessor;
 import consulo.fileEditor.history.SkipFromDocumentHistory;
 import consulo.language.file.light.LightVirtualFile;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.VirtualFileWithoutContent;
 
 // from kotlin
@@ -27,7 +29,8 @@ public abstract class DiffVirtualFile extends LightVirtualFile implements Virtua
     super(name, DiffFileType.INSTANCE, "");
   }
 
-  public abstract Object createProcessor(Project project);
+  @RequiredUIAccess
+  public abstract DiffRequestProcessor createProcessor(Project project);
 
   @Override
   public boolean isWritable() {

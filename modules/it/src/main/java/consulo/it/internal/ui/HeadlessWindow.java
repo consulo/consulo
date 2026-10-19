@@ -20,6 +20,8 @@ import consulo.ui.MenuBar;
 import consulo.ui.Window;
 import org.jspecify.annotations.Nullable;
 
+import java.util.function.Consumer;
+
 /**
  * Dummy-but-creatable headless {@link Window}.
  *
@@ -56,6 +58,10 @@ public class HeadlessWindow extends HeadlessComponentBase implements Window {
 
     @Override
     public void close() {
+    }
+
+    @Override
+    public void setCloseHandler(@Nullable Consumer<Window> closeHandler) {
     }
 
     @Override

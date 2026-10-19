@@ -41,6 +41,7 @@ import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.function.Consumer;
 
 /**
  * @author VISTALL
@@ -50,15 +51,51 @@ public abstract class WindowOverAWTWindow implements Window, ToSwingWindowWrappe
     protected final java.awt.Window myWindow;
     private final UIDataObject myUIDataObject = new UIDataObject();
     private @Nullable DesktopToastStack myToastStack;
+    private @Nullable Consumer<Window> myCloseHandler;
+    private int myDefaultCloseOperation = -1;
 
     public WindowOverAWTWindow(java.awt.Window window) {
         myWindow = window;
         myWindow.addWindowListener(new WindowAdapter() {
             @Override
+            public void windowClosing(WindowEvent e) {
+                Consumer<Window> closeHandler = myCloseHandler;
+                if (closeHandler != null) {
+                    closeHandler.accept(WindowOverAWTWindow.this);
+                }
+            }
+
+            @Override
             public void windowClosed(WindowEvent e) {
                 myUIDataObject.dispose();
             }
         });
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setCloseHandler(@Nullable Consumer<Window> closeHandler) {
+        myCloseHandler = closeHandler;
+
+        if (myWindow instanceof JDialog dialog) {
+            dialog.setDefaultCloseOperation(closeOperation(dialog.getDefaultCloseOperation(), closeHandler));
+        }
+        else if (myWindow instanceof JFrame frame) {
+            frame.setDefaultCloseOperation(closeOperation(frame.getDefaultCloseOperation(), closeHandler));
+        }
+    }
+
+    private int closeOperation(int current, @Nullable Consumer<Window> closeHandler) {
+        if (closeHandler == null) {
+            int restored = myDefaultCloseOperation < 0 ? current : myDefaultCloseOperation;
+            myDefaultCloseOperation = -1;
+            return restored;
+        }
+
+        if (myDefaultCloseOperation < 0) {
+            myDefaultCloseOperation = current;
+        }
+        return WindowConstants.DO_NOTHING_ON_CLOSE;
     }
 
     @Override

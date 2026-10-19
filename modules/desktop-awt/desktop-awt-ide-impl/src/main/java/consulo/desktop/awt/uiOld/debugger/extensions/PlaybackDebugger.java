@@ -18,13 +18,14 @@ package consulo.desktop.awt.uiOld.debugger.extensions;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.fileChooser.IdeaFileChooser;
+import consulo.fileChooser.FileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.node.FileElement;
 import consulo.ide.impl.idea.openapi.fileChooser.ex.FileChooserKeys;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
 import consulo.ide.ServiceManager;
@@ -195,15 +196,18 @@ public class PlaybackDebugger implements UiDebuggerExtension, PlaybackRunner.Sta
         @RequiredUIAccess
         public void actionPerformed(AnActionEvent e) {
             if (pathToFile() == null) {
-                VirtualFile selectedFile = IdeaFileChooser.chooseFile(FILE_DESCRIPTOR, myComponent, e.getData(Project.KEY), null);
-                if (selectedFile != null) {
-                    myState.currentScript = selectedFile.getPresentableUrl();
-                    myCurrentScript.setText(myState.currentScript);
-                }
-                else {
-                    Messages.showErrorDialog("File to save is not selected.", "Cannot save script");
-                    return;
-                }
+                UIAccess uiAccess = UIAccess.current();
+                FileChooser.chooseFile(FILE_DESCRIPTOR, myComponent, e.getData(Project.KEY), null)
+                    .whenCompleteAsync((selectedFile, chooseError) -> {
+                        if (selectedFile == null) {
+                            Messages.showErrorDialog("File to save is not selected.", "Cannot save script");
+                            return;
+                        }
+                        myState.currentScript = selectedFile.getPresentableUrl();
+                        myCurrentScript.setText(myState.currentScript);
+                        Application.get().runWriteAction(PlaybackDebugger.this::save);
+                    }, uiAccess);
+                return;
             }
             Application.get().runWriteAction(PlaybackDebugger.this::save);
         }
@@ -234,12 +238,15 @@ public class PlaybackDebugger implements UiDebuggerExtension, PlaybackRunner.Sta
         @Override
         @RequiredUIAccess
         public void actionPerformed(AnActionEvent e) {
-            VirtualFile selectedFile = IdeaFileChooser.chooseFile(FILE_DESCRIPTOR, myComponent, e.getData(Project.KEY), pathToFile());
-            if (selectedFile != null) {
-                myState.currentScript = selectedFile.getPresentableUrl();
-                loadFrom(selectedFile);
-                myCurrentScript.setText(myState.currentScript);
-            }
+            UIAccess uiAccess = UIAccess.current();
+            FileChooser.chooseFile(FILE_DESCRIPTOR, myComponent, e.getData(Project.KEY), pathToFile())
+                .whenCompleteAsync((selectedFile, chooseError) -> {
+                    if (selectedFile != null) {
+                        myState.currentScript = selectedFile.getPresentableUrl();
+                        loadFrom(selectedFile);
+                        myCurrentScript.setText(myState.currentScript);
+                    }
+                }, uiAccess);
         }
     }
 

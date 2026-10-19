@@ -20,6 +20,7 @@ import consulo.ui.image.Image;
 import consulo.ui.messageList.MessageList;
 import consulo.ui.messageList.MessageListItem;
 import consulo.ui.messageList.MessageListItemStyle;
+import consulo.ui.messageList.MessageListStyle;
 import org.jspecify.annotations.Nullable;
 
 import java.time.Instant;
@@ -139,5 +140,9 @@ public class HeadlessMessageList extends HeadlessComponentBase implements Messag
     @Override
     public boolean isShowOwnAvatar() {
         return myShowOwnAvatar;
+    }
+
+    @Override
+    public void addStyle(MessageListStyle style) {
     }
 }

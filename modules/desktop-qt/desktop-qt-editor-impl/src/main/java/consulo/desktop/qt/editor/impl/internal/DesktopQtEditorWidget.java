@@ -121,14 +121,32 @@ public class DesktopQtEditorWidget extends QAbstractScrollArea implements Deskto
     public void updateSideAreas() {
         int gutterWidth = myGutter.preferredWidth();
 
-        if (viewportMargins().left() != gutterWidth) {
-            setViewportMargins(gutterWidth, 0, 0, 0);
+        boolean mirrored = myEditor.isMirrored();
+        int left = mirrored ? 0 : gutterWidth;
+        int right = mirrored ? gutterWidth : 0;
+        if (viewportMargins().left() != left || viewportMargins().right() != right) {
+            setViewportMargins(left, 0, right, 0);
         }
 
         QRect viewportRect = viewport().geometry();
 
-        myGutter.setGeometry(viewportRect.left() - gutterWidth, viewportRect.top(), gutterWidth, viewportRect.height());
+        int gutterX = mirrored ? viewportRect.right() + 1 : viewportRect.left() - gutterWidth;
+        myGutter.setGeometry(gutterX, viewportRect.top(), gutterWidth, viewportRect.height());
         myGutter.setVisible(gutterWidth > 0);
+        myGutter.update();
+    }
+
+    public void updateMirrored() {
+        setLayoutDirection(myEditor.isMirrored() ? Qt.LayoutDirection.RightToLeft : Qt.LayoutDirection.LeftToRight);
+        viewport().setLayoutDirection(Qt.LayoutDirection.LeftToRight);
+        horizontalScrollBar().setLayoutDirection(Qt.LayoutDirection.LeftToRight);
+        myGutter.setLayoutDirection(Qt.LayoutDirection.LeftToRight);
+        updateSideAreas();
+        myGutter.update();
+        viewport().update();
+    }
+
+    public void updateGutter() {
         myGutter.update();
     }
 
@@ -136,8 +154,9 @@ public class DesktopQtEditorWidget extends QAbstractScrollArea implements Deskto
         Document document = myEditor.getDocument();
 
         int lineHeight = myEditor.getLineHeight();
-        // rows on screen, not lines in the file - a collapsed region takes several of the second and one of the first
-        int documentHeight = myEditor.getVisualLines().getVisualLineCount() * lineHeight;
+        // rows on screen, not lines in the file - a collapsed region takes several of the second and one of the first,
+        // and a component inlay adds the room of its component
+        int documentHeight = myEditor.getRowLayout().getContentHeight();
         int viewportHeight = viewport().height();
 
         verticalScrollBar().setSingleStep(lineHeight);
@@ -163,8 +182,9 @@ public class DesktopQtEditorWidget extends QAbstractScrollArea implements Deskto
         int lineHeight = myEditor.getLineHeight();
         int scrollY = verticalScrollBar().value();
 
-        int y = Math.min(startLine, endLine) * lineHeight - scrollY;
-        int height = (Math.abs(endLine - startLine) + 1) * lineHeight;
+        DesktopQtEditorRowLayout rowLayout = myEditor.getRowLayout();
+        int y = rowLayout.visualLineToY(Math.min(startLine, endLine)) - scrollY;
+        int height = rowLayout.visualLineToY(Math.max(startLine, endLine)) + lineHeight - scrollY - y;
 
         // a caret sits at the very edge of its line and an underline may sit just below it, so the band is
         // stretched by a pixel on each side rather than clipping either away
@@ -238,6 +258,8 @@ public class DesktopQtEditorWidget extends QAbstractScrollArea implements Deskto
     }
 
     private void fireVisibleAreaChanged() {
+        myEditor.getComponentInlays().layout();
+
         if (myEditor.getScrollingModel() instanceof DesktopQtCodeEditorScrollingModelImpl scrollingModel) {
             scrollingModel.fireVisibleAreaChanged();
         }

@@ -24,7 +24,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
 
-import javax.swing.*;
+import consulo.ui.Component;
 import java.util.List;
 
 public interface DiffUserDataKeys {
@@ -59,7 +59,7 @@ public interface DiffUserDataKeys {
   Key<Side> PREFERRED_FOCUS_SIDE = Key.create("Diff.PreferredFocusSide");
   Key<ThreeSide> PREFERRED_FOCUS_THREESIDE = Key.create("Diff.PreferredFocusThreeSide");
 
-  Key<List<JComponent>> NOTIFICATIONS = Key.create("Diff.Notifications");
+  Key<List<Component>> NOTIFICATIONS = Key.create("Diff.Notifications");
   Key<List<AnAction>> CONTEXT_ACTIONS = Key.create("Diff.ContextActions");
   Key<UiDataProvider> DATA_PROVIDER = Key.create("Diff.DataProvider");
   Key<Boolean> GO_TO_SOURCE_DISABLE = Key.create("Diff.GoToSourceDisable");

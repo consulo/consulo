@@ -17,6 +17,7 @@ package consulo.desktop.qt.editor.impl.internal;
 
 import consulo.desktop.qt.ui.impl.QtComponentDelegate;
 import consulo.language.editor.impl.internal.markup.EditorMarkupModel;
+import io.qt.core.Qt;
 import io.qt.widgets.QHBoxLayout;
 import io.qt.widgets.QWidget;
 import org.jspecify.annotations.Nullable;
@@ -81,7 +82,25 @@ public class DesktopQtEditorComponent extends QtComponentDelegate<QWidget> {
         errorStripe.listenToMarkup();
         errorStripe.refresh();
 
+        updateMirrored();
+
         surface.updateSideAreas();
         surface.updateScrollRanges();
+    }
+
+    public void updateMirrored() {
+        DesktopQtEditorWidget surface = mySurface;
+        DesktopQtEditorErrorStripeWidget errorStripe = myErrorStripe;
+        if (surface == null || errorStripe == null) {
+            return;
+        }
+
+        Qt.LayoutDirection direction = myEditor.isMirrored() ? Qt.LayoutDirection.RightToLeft : Qt.LayoutDirection.LeftToRight;
+        QWidget container = surface.parentWidget();
+        if (container != null) {
+            container.setLayoutDirection(direction);
+        }
+        errorStripe.setLayoutDirection(Qt.LayoutDirection.LeftToRight);
+        surface.updateMirrored();
     }
 }

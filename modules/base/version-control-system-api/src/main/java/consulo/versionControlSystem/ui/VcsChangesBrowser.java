@@ -15,12 +15,14 @@
  */
 package consulo.versionControlSystem.ui;
 
+import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.versionControlSystem.change.Change;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -42,4 +44,22 @@ public interface VcsChangesBrowser {
      * Shows the diff of the selected changes; can be registered on another component to diff from there.
      */
     AnAction getDiffAction();
+
+    /**
+     * The changes under the selection - a selected directory contributes every change in it.
+     */
+    List<Change> getSelectedChanges();
+
+    /**
+     * Whether the selection holds a group, such as a directory, rather than changes alone.
+     */
+    boolean isGroupSelected();
+
+    void addSelectionListener(Disposable parentDisposable, Runnable listener);
+
+    @RequiredUIAccess
+    void selectChanges(Collection<Change> changes);
+
+    @RequiredUIAccess
+    void selectFirst();
 }

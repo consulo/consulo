@@ -15,52 +15,33 @@
  */
 package consulo.diff;
 
-import consulo.ui.ex.awt.WindowWrapper;
 
 import org.jspecify.annotations.Nullable;
-import java.awt.*;
-import java.util.function.Consumer;
+import consulo.ui.Component;
 
 public class DiffDialogHints {
- 
   public static final DiffDialogHints DEFAULT = new DiffDialogHints(null);
- 
-  public static final DiffDialogHints FRAME = new DiffDialogHints(WindowWrapper.Mode.FRAME);
- 
-  public static final DiffDialogHints MODAL = new DiffDialogHints(WindowWrapper.Mode.MODAL);
- 
-  public static final DiffDialogHints NON_MODAL = new DiffDialogHints(WindowWrapper.Mode.NON_MODAL);
+  public static final DiffDialogHints FRAME = new DiffDialogHints(DiffWindowMode.FRAME);
+  public static final DiffDialogHints MODAL = new DiffDialogHints(DiffWindowMode.MODAL);
+  public static final DiffDialogHints NON_MODAL = new DiffDialogHints(DiffWindowMode.NON_MODAL);
 
-  private final WindowWrapper.@Nullable Mode myMode;
+  private final @Nullable DiffWindowMode myMode;
   private final @Nullable Component myParent;
-  private final @Nullable Consumer<WindowWrapper> myWindowConsumer;
 
-  public DiffDialogHints(WindowWrapper.@Nullable Mode mode) {
+  public DiffDialogHints(@Nullable DiffWindowMode mode) {
     this(mode, null);
   }
 
-  public DiffDialogHints(WindowWrapper.@Nullable Mode mode, @Nullable Component parent) {
-    this(mode, parent, null);
-  }
-
-  public DiffDialogHints(WindowWrapper.@Nullable Mode mode, @Nullable Component parent, @Nullable Consumer<WindowWrapper> windowConsumer) {
+  public DiffDialogHints(@Nullable DiffWindowMode mode, @Nullable Component parent) {
     myMode = mode;
     myParent = parent;
-    myWindowConsumer = windowConsumer;
   }
 
-  public WindowWrapper.@Nullable Mode getMode() {
+  public @Nullable DiffWindowMode getMode() {
     return myMode;
   }
 
   public @Nullable Component getParent() {
     return myParent;
-  }
-
-  /**
-   * NB: Consumer might not be called at all (ex: for external diff/merge tools, that do not spawn WindowWrapper)
-   */
-  public @Nullable Consumer<WindowWrapper> getWindowConsumer() {
-    return myWindowConsumer;
   }
 }

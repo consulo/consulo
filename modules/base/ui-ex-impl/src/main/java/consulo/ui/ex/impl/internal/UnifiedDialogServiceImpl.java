@@ -135,6 +135,8 @@ public class UnifiedDialogServiceImpl implements DialogService {
 
             myWindow.addAttachListener(event -> followModality());
 
+            myWindow.setCloseHandler(window -> cancelByUser());
+
             if (myDescriptor.isModal()) {
                 enterModal(UIAccess.current());
             }
@@ -316,6 +318,16 @@ public class UnifiedDialogServiceImpl implements DialogService {
             myResult.complete(value);
 
             myWindow.close();
+        }
+
+        @RequiredUIAccess
+        private void cancelByUser() {
+            DialogCancelAction action = new DialogCancelAction();
+            if (myDescriptor.canHandle(action, null, myWindow)) {
+                myDescriptor.onHandleValue(action, null);
+
+                doCancelAction();
+            }
         }
 
         @Override

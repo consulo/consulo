@@ -16,6 +16,7 @@
 package consulo.web.editor.impl.internal;
 
 import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.html.Div;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
 import consulo.codeEditor.*;
@@ -40,6 +41,7 @@ import consulo.document.event.DocumentListener;
 import consulo.ide.impl.idea.codeInsight.navigation.actions.GotoDeclarationAction;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.language.editor.highlight.EditorHighlighterFactory;
+import consulo.language.editor.highlight.EmptyEditorHighlighter;
 import consulo.language.editor.impl.internal.markup.*;
 import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.logging.Logger;
@@ -71,14 +73,16 @@ import consulo.versionControlSystem.internal.LineStatusTrackerManagerI;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.web.editor.impl.internal.floating.WebEditorFloatingToolbar;
 import consulo.web.editor.impl.internal.gutter.GutterBand;
-import consulo.web.editor.impl.internal.gutter.WebLineMarkerPresentationContext;
+import consulo.web.editor.impl.internal.gutter.LineSeparatorBand;
 import consulo.web.editor.impl.internal.gutter.WebLineMarkerPresentationPainter;
+import consulo.web.editor.impl.internal.gutter.WebLineSeparatorPresentationPainter;
 import consulo.web.ui.impl.internal.WebColors;
 import consulo.web.ui.impl.internal.WebLightPopupImpl;
 import consulo.web.ui.impl.internal.action.WebActionContextMenu;
 import consulo.web.ui.impl.internal.base.ComponentHolder;
 import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
 import consulo.web.ui.impl.internal.base.TargetVaadin;
+import consulo.web.ui.impl.internal.vaadin.WebLength;
 import consulo.web.ui.impl.internal.base.VaadinComponentDelegate;
 import consulo.web.ui.impl.internal.base.WebAwtBridgeComponent;
 import consulo.web.ui.impl.internal.image.WebImageElement;
@@ -94,6 +98,7 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author VISTALL
@@ -217,7 +222,17 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
 
     private final Map<Object, Cursor> myCustomCursors = new LinkedHashMap<>();
 
+    private static final AtomicInteger ourComponentInlayIds = new AtomicInteger();
+
+    /**
+     * The hosts of the live components of component inlays, by inlay. The id a host carries is what its placeholder
+     * run names, so the client finds the component a reserved line belongs to.
+     */
+    private final Map<Inlay<?>, Div> myComponentInlayHosts = new HashMap<>();
+
     private @Nullable WebActionContextMenu myPopupMenu;
+
+    private int myVerticalScrollbarOrientation = VERTICAL_SCROLLBAR_RIGHT;
 
     /**
      * the tracker is installed asynchronously, so it is picked up on the first push that finds it
@@ -246,6 +261,8 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
         myView.reset();
 
         Disposer.register(myDisposable, myView);
+
+        setHighlighter(new EmptyEditorHighlighter(new TextAttributes()));
 
         // a provider hangs off a highlighter, and the daemon adds and drops those as the caret moves - the xml tag
         // tree marks the tag under the caret that way. without this the bands only ever refreshed with the whole
@@ -304,6 +321,9 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
         myInlayModel.addListener(new InlayModel.Listener() {
             @Override
             public void onAdded(Inlay<?> inlay) {
+                if (inlay.getRenderer() instanceof ComponentInlayRenderer renderer) {
+                    mountComponentInlay(inlay, renderer);
+                }
                 scheduleUpdate();
             }
 
@@ -314,6 +334,7 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
 
             @Override
             public void onRemoved(Inlay<?> inlay) {
+                unmountComponentInlay(inlay);
                 scheduleUpdate();
             }
 
@@ -367,7 +388,7 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
 
         vaadin.addGutterBandClickListener(event -> performGutterBandClick(event.getId(), event.getDetails()));
 
-        vaadin.addGutterHoverListener(event -> performGutterHover(event.getLine()));
+        vaadin.addGutterHoverListener(event -> performGutterHover(event.getLine(), event.isLineNumbers()));
 
         vaadin.addGutterContextMenuListener(
             event -> performGutterContextMenu(event.getLine(), event.getMarkId(), event.getAnnotationColumn())
@@ -828,12 +849,14 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
     }
 
     /**
-     * The pointer over the line numbers, which is what offers a breakpoint on the line it is over - the promoter of
-     * the debugger listens for it and answers by putting an icon on the gutter component.
+     * The pointer over the gutter. Over the line numbers it offers a breakpoint on the line it is over - the promoter
+     * of the debugger listens for it and answers by putting an icon on the gutter component; over the other columns
+     * it is a line marker move, as the desktop gutters report it, which controls offered on the hovered line follow.
      *
-     * @param line the line the pointer is over, or {@code -1} when it left the column
+     * @param line        the line the pointer is over, or {@code -1} when it left the gutter
+     * @param lineNumbers whether the pointer is over the line numbers
      */
-    private void performGutterHover(int line) {
+    private void performGutterHover(int line, boolean lineNumbers) {
         boolean overGutter = line >= 0 && line < myDocument.getLineCount();
 
         int y = overGutter ? visualLineToY(logicalToVisualPosition(new LogicalPosition(line, 0)).line) : 0;
@@ -846,8 +869,9 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
         );
 
         // off the column the promoter is told about a move somewhere else, which is what makes it drop its icon
+        EditorMouseEventArea area = lineNumbers ? EditorMouseEventArea.LINE_NUMBERS_AREA : EditorMouseEventArea.LINE_MARKERS_AREA;
         EditorMouseEvent event = overGutter
-            ? gutterMouseEvent(line, details)
+            ? gutterMouseEvent(line, details, area)
             : new EditorMouseEvent(this, details, false, EditorMouseEventArea.EDITING_AREA);
 
         for (EditorMouseMotionListener listener : myMouseMotionListeners) {
@@ -856,6 +880,10 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
     }
 
     private EditorMouseEvent gutterMouseEvent(int line, MouseInputDetails details) {
+        return gutterMouseEvent(line, details, EditorMouseEventArea.LINE_NUMBERS_AREA);
+    }
+
+    private EditorMouseEvent gutterMouseEvent(int line, MouseInputDetails details, EditorMouseEventArea area) {
         LogicalPosition logicalPosition = new LogicalPosition(line, 0);
 
         return new EditorMouseEvent(
@@ -863,7 +891,7 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
             fakeEvent,
             details,
             false,
-            EditorMouseEventArea.LINE_NUMBERS_AREA,
+            area,
             myDocument.getLineStartOffset(line),
             logicalPosition,
             logicalToVisualPosition(logicalPosition),
@@ -1074,6 +1102,14 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
      * the one the editor component sits in - a detached editor pushes nothing, its attach listener pushes
      * everything again anyway.
      */
+    void scrollToPixelOnClient(int x, int y) {
+        giveUI(() -> myEditorComponent.toVaadinComponent().scrollToPixel(x, y));
+    }
+
+    void scrollToLineOnClient(int line, ScrollType scrollType) {
+        giveUI(() -> myEditorComponent.toVaadinComponent().scrollToLine(line, scrollType.name()));
+    }
+
     private boolean giveUI(Runnable runnable) {
         // the ui the editor component is attached to - a detached editor has none, and its attach listener pushes
         // everything again anyway
@@ -1169,6 +1205,28 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
      * so the ordering has to be settled here instead.
      */
     @RequiredReadAction
+    private void mountComponentInlay(Inlay<?> inlay, ComponentInlayRenderer renderer) {
+        Div host = new Div();
+        host.addClassName("arquill-component-inlay");
+        host.getElement().setAttribute("data-arquill-component-inlay", "ci" + ourComponentInlayIds.incrementAndGet());
+        host.add(TargetVaadin.to(renderer.getComponent()));
+        Length maxWidth = renderer.getMaxWidth();
+        if (maxWidth != null) {
+            host.getStyle().set("max-width", WebLength.toCss(maxWidth));
+        }
+
+        myComponentInlayHosts.put(inlay, host);
+        myEditorComponent.toVaadinComponent().getComponentInlayLayer().add(host);
+    }
+
+    private void unmountComponentInlay(Inlay<?> inlay) {
+        Div host = myComponentInlayHosts.remove(inlay);
+        if (host != null) {
+            host.removeAll();
+            myEditorComponent.toVaadinComponent().getComponentInlayLayer().remove(host);
+        }
+    }
+
     private void updateInlays() {
         if (isReleased) {
             return;
@@ -1181,6 +1239,26 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
         Map<Integer, InlaySegments> anchors = new TreeMap<>();
 
         for (Inlay<?> inlay : myInlayModel.getBlockElementsInRange(0, textLength)) {
+            Div componentHost = myComponentInlayHosts.get(inlay);
+            if (componentHost != null && inlay.isValid()) {
+                // the line the component stands on is reserved by a run the client sizes to the component
+                String componentId = componentHost.getElement().getAttribute("data-arquill-component-inlay");
+                int componentLine = myDocument.getLineNumber(inlay.getOffset());
+                componentHost.getElement().setAttribute("data-arquill-component-line", String.valueOf(componentLine));
+                if (inlay.getPlacement() == Inlay.Placement.ABOVE_LINE) {
+                    anchors.computeIfAbsent(myDocument.getLineStartOffset(componentLine), it -> new InlaySegments())
+                        .addComponent(componentId, false);
+                }
+                else if (componentLine + 1 < lineCount) {
+                    anchors.computeIfAbsent(myDocument.getLineStartOffset(componentLine + 1), it -> new InlaySegments())
+                        .addComponent(componentId, false);
+                }
+                else {
+                    anchors.computeIfAbsent(textLength, it -> new InlaySegments()).addComponent(componentId, true);
+                }
+                continue;
+            }
+
             InlayContent content = contentOf(inlay);
             if (content == null) {
                 continue;
@@ -1357,6 +1435,10 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
         // than travelling as numbers. the scheme decides the colours, the frontend decides the shape, the same
         // split a gutter band is drawn under
         StringBuilder styleClass = new StringBuilder("arquill-inlay");
+        if (segment.component() != null) {
+            styleClass.append(" arquill-inlay-component");
+            inlays.append(",\"component\":\"").append(escapeJson(segment.component())).append('"');
+        }
         if (segment.boxed()) {
             if (opens) {
                 styleClass.append(" arquill-inlay-start");
@@ -1480,7 +1562,8 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
         boolean boxed,
         @Nullable Image image,
         @Nullable Inlay<?> inlay,
-        int contentIndex
+        int contentIndex,
+        @Nullable String component
     ) {
     }
 
@@ -1507,13 +1590,13 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
             boolean small = content.smallerFont();
 
             if (breakBefore) {
-                myBlock.add(new InlaySegment("", null, true, small, false, false, false, false, null, null, -1));
+                myBlock.add(new InlaySegment("", null, true, small, false, false, false, false, null, null, -1, null));
             }
 
             // the indent stands outside the hint - it is the code the hint lines up with, so it stays plain and is
             // measured in the editor font like the line below it
             if (!indent.isEmpty()) {
-                myBlock.add(new InlaySegment(indent, null, false, false, false, false, false, false, null, null, -1));
+                myBlock.add(new InlaySegment(indent, null, false, false, false, false, false, false, null, null, -1, null));
             }
 
             List<InlayContentSegment> segments = content.segments();
@@ -1531,9 +1614,20 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
                     false,
                     segment.image(),
                     inlay,
-                    i
+                    i,
+                    null
                 ));
             }
+        }
+
+        /**
+         * A component inlay: one character holds the line and the client sizes it to the component standing over it.
+         */
+        private void addComponent(String component, boolean breakBefore) {
+            if (breakBefore) {
+                myBlock.add(new InlaySegment("", null, true, false, false, false, false, false, null, null, -1, null));
+            }
+            myBlock.add(new InlaySegment("\u00a0", null, !breakBefore, false, true, true, true, false, null, null, -1, component));
         }
 
         private void addInline(Inlay<?> inlay, InlayContent content) {
@@ -1551,7 +1645,8 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
                     true,
                     segment.image(),
                     inlay,
-                    i
+                    i,
+                    null
                 ));
             }
         }
@@ -1657,7 +1752,167 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
 
         updateGutterBands();
 
+        updateLineFrames();
+
+        updateLineSeparators();
+
+        updateLineBackgrounds();
+
         updateErrorStripeMarks();
+    }
+
+    /**
+     * The frames around lines - each a document line range and the colour of its line, drawn by the client over the
+     * gutter and the text.
+     */
+    private void updateLineFrames() {
+        if (isReleased) {
+            return;
+        }
+
+        List<RangeHighlighter> highlighters = new ArrayList<>();
+        if (myProject != null && !myProject.isDisposed()) {
+            MarkupModel markupModel = DocumentMarkupModel.forDocument(myDocument, myProject, false);
+            if (markupModel != null) {
+                highlighters.addAll(Arrays.asList(markupModel.getAllHighlighters()));
+            }
+        }
+        highlighters.addAll(Arrays.asList(getMarkupModel().getAllHighlighters()));
+
+        StringBuilder frames = new StringBuilder("[");
+        for (RangeHighlighter highlighter : highlighters) {
+            LineFramePresentation presentation = highlighter.getLineFramePresentation();
+            if (presentation == null || !highlighter.isValid()) {
+                continue;
+            }
+            String color = WebColors.toCssColor(presentation.color());
+            if (color == null) {
+                continue;
+            }
+            if (frames.length() > 1) {
+                frames.append(',');
+            }
+            frames.append("{\"start\":").append(myDocument.getLineNumber(highlighter.getStartOffset()))
+                .append(",\"end\":").append(myDocument.getLineNumber(highlighter.getEndOffset()))
+                .append(",\"color\":\"").append(escapeJson(color)).append("\"}");
+        }
+        frames.append(']');
+
+        myEditorComponent.toVaadinComponent().setLineFrames(frames.toString());
+    }
+
+    @RequiredReadAction
+    private void updateLineBackgrounds() {
+        if (isReleased) {
+            return;
+        }
+
+        List<RangeHighlighter> highlighters = new ArrayList<>();
+        if (myProject != null && !myProject.isDisposed()) {
+            MarkupModel markupModel = DocumentMarkupModel.forDocument(myDocument, myProject, false);
+            if (markupModel != null) {
+                highlighters.addAll(Arrays.asList(markupModel.getAllHighlighters()));
+            }
+        }
+        highlighters.addAll(Arrays.asList(getMarkupModel().getAllHighlighters()));
+
+        Map<Integer, RangeHighlighter> owners = new TreeMap<>();
+        Map<Integer, String> colors = new TreeMap<>();
+        EditorColorsScheme scheme = getColorsScheme();
+        for (RangeHighlighter highlighter : highlighters) {
+            if (!highlighter.isValid() || highlighter.getTargetArea() != HighlighterTargetArea.LINES_IN_RANGE) {
+                continue;
+            }
+
+            TextAttributes attributes = highlighter.getTextAttributes(scheme);
+            String color = attributes == null ? null : WebColors.toCssColor(attributes.getBackgroundColor());
+            if (color == null) {
+                continue;
+            }
+
+            int startLine = myDocument.getLineNumber(highlighter.getStartOffset());
+            int endLine = myDocument.getLineNumber(highlighter.getEndOffset());
+            for (int line = startLine; line <= endLine; line++) {
+                RangeHighlighter owner = owners.get(line);
+                if (owner == null || owner.getLayer() <= highlighter.getLayer()) {
+                    owners.put(line, highlighter);
+                    colors.put(line, color);
+                }
+            }
+        }
+
+        StringBuilder backgrounds = new StringBuilder("{");
+        for (Map.Entry<Integer, String> entry : colors.entrySet()) {
+            if (backgrounds.length() > 1) {
+                backgrounds.append(',');
+            }
+            backgrounds.append('"').append(entry.getKey()).append("\":\"").append(escapeJson(entry.getValue())).append('"');
+        }
+        backgrounds.append('}');
+
+        myEditorComponent.toVaadinComponent().setLineBackgrounds(backgrounds.toString());
+    }
+
+    @RequiredReadAction
+    private void updateLineSeparators() {
+        if (isReleased) {
+            return;
+        }
+
+        List<RangeHighlighter> highlighters = new ArrayList<>();
+        if (myProject != null && !myProject.isDisposed()) {
+            MarkupModel markupModel = DocumentMarkupModel.forDocument(myDocument, myProject, false);
+            if (markupModel != null) {
+                highlighters.addAll(Arrays.asList(markupModel.getAllHighlighters()));
+            }
+        }
+        highlighters.addAll(Arrays.asList(getMarkupModel().getAllHighlighters()));
+
+        StringBuilder separators = new StringBuilder("[");
+        for (RangeHighlighter highlighter : highlighters) {
+            LineSeparatorPresentationProvider provider = highlighter.getLineSeparatorPresentationProvider();
+            if (provider == null || !highlighter.isValid()) {
+                continue;
+            }
+
+            LineSeparatorPresentation presentation = provider.buildPresentation(new EditorLineMarkerPresentationContext(this, highlighter));
+            if (presentation == null) {
+                continue;
+            }
+
+            WebLineSeparatorPresentationPainter<LineSeparatorPresentation> painter = WebLineSeparatorPresentationPainter.findPainter(presentation);
+            if (painter == null) {
+                continue;
+            }
+
+            LineSeparatorBand band = painter.paint(presentation, this);
+            if (band == null) {
+                continue;
+            }
+
+            boolean top = highlighter.getLineSeparatorPlacement() == SeparatorPlacement.TOP;
+            int line = myDocument.getLineNumber(top ? highlighter.getStartOffset() : highlighter.getEndOffset());
+
+            if (separators.length() > 1) {
+                separators.append(',');
+            }
+            separators.append("{\"line\":").append(line)
+                .append(",\"top\":").append(top)
+                .append(",\"style\":\"").append(band.style()).append('"')
+                .append(",\"color\":\"").append(escapeJson(band.color())).append('"')
+                .append(",\"doubleLine\":").append(band.doubleLine())
+                .append(",\"dotted\":").append(band.dotted());
+            if (band.topBorderColor() != null) {
+                separators.append(",\"topBorder\":\"").append(escapeJson(band.topBorderColor())).append('"');
+            }
+            if (band.bottomBorderColor() != null) {
+                separators.append(",\"bottomBorder\":\"").append(escapeJson(band.bottomBorderColor())).append('"');
+            }
+            separators.append('}');
+        }
+        separators.append(']');
+
+        myEditorComponent.toVaadinComponent().setLineSeparators(separators.toString());
     }
 
     /**
@@ -1945,7 +2200,7 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
             return;
         }
 
-        LineMarkerPresentationContext context = new WebLineMarkerPresentationContext(this, highlighter);
+        LineMarkerPresentationContext context = new EditorLineMarkerPresentationContext(this, highlighter);
 
         for (LineMarkerPresentation presentation : provider.buildPresentations(context)) {
             WebLineMarkerPresentationPainter painter = WebLineMarkerPresentationPainter.findPainter(presentation);
@@ -2168,50 +2423,33 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
      */
     @RequiredReadAction
     private void updateGutterMarks() {
-        if (myProject == null) {
-            return;
-        }
-
         myGutterMarks.clear();
         myLineNumberMarkLines.clear();
 
         StringBuilder marks = new StringBuilder("[");
 
-        for (RangeHighlighter highlighter : DocumentMarkupModel.forDocument(myDocument, myProject, true).getAllHighlighters()) {
+        // the marks of the document - breakpoints, line markers - and those of this editor alone, as the desktop
+        // gutters paint both
+        List<RangeHighlighter> highlighters = new ArrayList<>();
+        if (myProject != null) {
+            highlighters.addAll(Arrays.asList(DocumentMarkupModel.forDocument(myDocument, myProject, true).getAllHighlighters()));
+        }
+        highlighters.addAll(Arrays.asList(getMarkupModel().getAllHighlighters()));
+
+        for (RangeHighlighter highlighter : highlighters) {
             GutterMark renderer = highlighter.getGutterIconRenderer();
-            if (renderer == null) {
-                continue;
+            if (renderer != null) {
+                appendGutterMark(marks, renderer, myDocument.getLineNumber(highlighter.getStartOffset()), null);
             }
+        }
 
-            String iconHtml = toIconHtml(renderer.getIcon());
-            if (iconHtml == null) {
-                continue;
+        for (Map.Entry<Inlay<?>, Div> entry : myComponentInlayHosts.entrySet()) {
+            Inlay<?> inlay = entry.getKey();
+            GutterMark renderer = inlay.isValid() ? inlay.getGutterIconRenderer() : null;
+            if (renderer != null) {
+                String componentId = entry.getValue().getElement().getAttribute("data-arquill-component-inlay");
+                appendGutterMark(marks, renderer, myDocument.getLineNumber(inlay.getOffset()), componentId);
             }
-
-            int line = myDocument.getLineNumber(highlighter.getStartOffset());
-
-            if (marks.length() > 1) {
-                marks.append(',');
-            }
-
-            boolean onLineNumbers = renderer instanceof GutterIconRenderer iconRenderer
-                && iconRenderer.getAlignment() == GutterIconRenderer.Alignment.LINE_NUMBERS;
-
-            if (onLineNumbers) {
-                myLineNumberMarkLines.add(line);
-            }
-
-            boolean rightClick = renderer instanceof GutterIconRenderer iconRenderer
-                && iconRenderer.getRightButtonClickAction() != null;
-
-            marks.append("{\"id\":").append(myGutterMarks.size())
-                .append(",\"line\":").append(line)
-                .append(",\"onLineNumbers\":").append(onLineNumbers)
-                .append(",\"rightClick\":").append(rightClick)
-                .append(",\"iconHtml\":\"").append(escapeJson(iconHtml)).append('"')
-                .append(",\"tooltip\":\"").append(escapeJson(toHtmlContent(renderer.getTooltipValue().get()))).append("\"}");
-
-            myGutterMarks.add(renderer);
         }
 
         marks.append(']');
@@ -2219,6 +2457,40 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
         myEditorComponent.toVaadinComponent().setGutterMarks(marks.toString());
 
         updateHoverMark();
+    }
+
+    private void appendGutterMark(StringBuilder marks, GutterMark renderer, int line, @Nullable String inlay) {
+        String iconHtml = toIconHtml(renderer.getIcon());
+        if (iconHtml == null) {
+            return;
+        }
+
+        if (marks.length() > 1) {
+            marks.append(',');
+        }
+
+        boolean onLineNumbers = inlay == null
+            && renderer instanceof GutterIconRenderer iconRenderer
+            && iconRenderer.getAlignment() == GutterIconRenderer.Alignment.LINE_NUMBERS;
+
+        if (onLineNumbers) {
+            myLineNumberMarkLines.add(line);
+        }
+
+        boolean rightClick = renderer instanceof GutterIconRenderer iconRenderer
+            && iconRenderer.getRightButtonClickAction() != null;
+
+        marks.append("{\"id\":").append(myGutterMarks.size())
+            .append(",\"line\":").append(line)
+            .append(",\"onLineNumbers\":").append(onLineNumbers)
+            .append(",\"rightClick\":").append(rightClick);
+        if (inlay != null) {
+            marks.append(",\"inlay\":\"").append(escapeJson(inlay)).append('"');
+        }
+        marks.append(",\"iconHtml\":\"").append(escapeJson(iconHtml)).append('"')
+            .append(",\"tooltip\":\"").append(escapeJson(toHtmlContent(renderer.getTooltipValue().get()))).append("\"}");
+
+        myGutterMarks.add(renderer);
     }
 
     @RequiredReadAction
@@ -2892,12 +3164,23 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
 
     @Override
     public int offsetToVisualLine(int offset, boolean beforeSoftWrap) {
-        return 0;
+        int clamped = Math.max(0, Math.min(offset, myDocument.getTextLength()));
+        return logicalToVisualLine(myDocument.getLineNumber(clamped));
     }
 
     @Override
     public int visualLineStartOffset(int visualLine) {
-        return 0;
+        int lineCount = myDocument.getLineCount();
+        if (lineCount == 0) {
+            return 0;
+        }
+        return myDocument.getLineStartOffset(Math.min(visualToLogicalLine(visualLine), lineCount - 1));
+    }
+
+    @Override
+    public int getVisibleLineCount() {
+        int lineCount = myDocument.getLineCount();
+        return lineCount == 0 ? 1 : logicalToVisualLine(lineCount - 1) + 1;
     }
 
     @Override
@@ -2913,12 +3196,13 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
 
     @Override
     public void setVerticalScrollbarOrientation(@MagicConstant(intValues = {VERTICAL_SCROLLBAR_LEFT, VERTICAL_SCROLLBAR_RIGHT}) int type) {
-
+        myVerticalScrollbarOrientation = type;
+        myEditorComponent.toVaadinComponent().setMirrored(type != VERTICAL_SCROLLBAR_RIGHT);
     }
 
     @Override
     public int getVerticalScrollbarOrientation() {
-        return 0;
+        return myVerticalScrollbarOrientation;
     }
 
     @Override

@@ -15,13 +15,13 @@
  */
 package consulo.diff;
 
+import consulo.ui.Component;
 import consulo.diff.request.DiffRequest;
 import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
 import java.util.List;
 
 public interface FrameDiffTool extends DiffTool {
@@ -34,9 +34,9 @@ public interface FrameDiffTool extends DiffTool {
 
     interface DiffViewer extends Disposable {
         
-        JComponent getComponent();
+        Component getComponent();
 
-        @Nullable JComponent getPreferredFocusedComponent();
+        @Nullable Component getPreferredFocusedComponent();
 
         /**
          * Should be called after adding {@link #getComponent()} to the components hierarchy.
@@ -52,6 +52,6 @@ public interface FrameDiffTool extends DiffTool {
     class ToolbarComponents {
         public @Nullable List<AnAction> toolbarActions;
         public @Nullable List<AnAction> popupActions;
-        public @Nullable JComponent statusPanel;
+        public @Nullable Component statusPanel;
     }
 }

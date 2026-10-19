@@ -33,6 +33,9 @@ module consulo.desktop.qt.editor.impl {
     requires consulo.language.editor.api;
     requires consulo.language.editor.impl;
     requires consulo.execution.debug.api;
+    requires consulo.execution.coverage.api;
+    requires consulo.diff.api;
+    requires consulo.version.control.system.api;
 
     // TargetAWTFacade is typed against java.awt even on a frontend which never draws with it
     requires java.desktop;

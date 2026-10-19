@@ -10,6 +10,24 @@
     line-height: 1.35;
 }
 
+.consulo-toast.consulo-toast-left-line {
+    position: relative;
+    border: none;
+    border-radius: 0;
+    padding: 2px 0 2px 12px;
+}
+
+.consulo-toast.consulo-toast-left-line::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    border-radius: 2px;
+    background: var(--consulo-toast-line-color);
+}
+
 .consulo-toast-shadow {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
 }

@@ -15,11 +15,12 @@
  */
 package consulo.ide.impl.idea.internal;
 
+import consulo.fileChooser.FileChooser;
 import consulo.fileChooser.FileChooserDescriptorFactory;
-import consulo.fileChooser.IdeaFileChooser;
 import consulo.language.editor.internal.intention.IntentionActionMetaData;
 import consulo.language.editor.internal.intention.IntentionManagerSettings;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.LegacyDumbAwareAction;
@@ -48,36 +49,37 @@ public class DumpIntentionsAction extends LegacyDumbAwareAction {
     @Override
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
-        VirtualFile file =
-            IdeaFileChooser.chooseFile(FileChooserDescriptorFactory.createSingleFolderDescriptor(), e.getData(Project.KEY), null);
-        if (file != null) {
-            List<IntentionActionMetaData> list = IntentionManagerSettings.getInstance().getMetaData();
-            File root = VirtualFileUtil.virtualToIoFile(file);
-            Element el = new Element("root");
-            Map<String, Element> categoryMap = new HashMap<>();
-            for (IntentionActionMetaData metaData : list) {
+        UIAccess uiAccess = UIAccess.current();
+        FileChooser.chooseFile(FileChooserDescriptorFactory.createSingleFolderDescriptor(), e.getData(Project.KEY), null).whenCompleteAsync((file, chooseError) -> {
+            if (file != null) {
+                List<IntentionActionMetaData> list = IntentionManagerSettings.getInstance().getMetaData();
+                File root = VirtualFileUtil.virtualToIoFile(file);
+                Element el = new Element("root");
+                Map<String, Element> categoryMap = new HashMap<>();
+                for (IntentionActionMetaData metaData : list) {
+
+                    try {
+                        Element metadataElement = new Element("intention");
+                        metadataElement.setAttribute("text", metaData.getActionText().get());
+                        metadataElement.setAttribute("description", metaData.getDescription().getText());
+
+                        String key = StringUtil.join(metaData.myCategory, ".");
+                        Element element = getCategoryElement(categoryMap, el, metaData, key, metaData.myCategory.length - 1);
+                        element.addContent(metadataElement);
+                    }
+                    catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+                }
 
                 try {
-                    Element metadataElement = new Element("intention");
-                    metadataElement.setAttribute("text", metaData.getActionText().get());
-                    metadataElement.setAttribute("description", metaData.getDescription().getText());
-
-                    String key = StringUtil.join(metaData.myCategory, ".");
-                    Element element = getCategoryElement(categoryMap, el, metaData, key, metaData.myCategory.length - 1);
-                    element.addContent(metadataElement);
+                    JDOMUtil.writeDocument(new Document(el), new File(root, "intentions.xml"), "\n");
                 }
                 catch (IOException e1) {
                     e1.printStackTrace();
                 }
             }
-
-            try {
-                JDOMUtil.writeDocument(new Document(el), new File(root, "intentions.xml"), "\n");
-            }
-            catch (IOException e1) {
-                e1.printStackTrace();
-            }
-        }
+        }, uiAccess);
     }
 
     private static Element getCategoryElement(

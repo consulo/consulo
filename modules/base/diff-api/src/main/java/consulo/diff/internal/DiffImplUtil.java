@@ -47,12 +47,8 @@ import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.ui.ModalityState;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ui.ex.awt.JBValue;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.image.Image;
 import consulo.undoRedo.*;
 import consulo.undoRedo.builder.RunnableCommandBuilder;
@@ -77,7 +73,6 @@ public class DiffImplUtil {
     private static final Logger LOG = Logger.getInstance(DiffImplUtil.class);
 
     public static final String DIFF_CONFIG = "diff.xml";
-    public static final JBValue TITLE_GAP = new JBValue.Float(2);
 
     //
     // Editor
@@ -114,8 +109,6 @@ public class DiffImplUtil {
             editor.getSettings().setFoldingOutlineShown(false);
             editor.getFoldingModel().setFoldingEnabled(false);
         }
-
-        UIUtil.removeScrollBorder(editor.getComponent());
 
         return editor;
     }
@@ -222,7 +215,7 @@ public class DiffImplUtil {
         result.append("<html><body>");
         result.append(text);
         if (appendix != null) {
-            result.append("<br><span style='color:#").append(ColorUtil.toHex(JBColor.gray)).append("'><small>");
+            result.append("<br><span style='color:gray'><small>");
             result.append(appendix);
             result.append("</small></span>");
         }

@@ -16,7 +16,7 @@
 package consulo.desktop.awt.internal.diff;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.desktop.awt.internal.diff.util.DiffViewerBase;
+import consulo.diff.impl.internal.viewer.DiffViewerBase;
 import consulo.desktop.awt.internal.versionControlSystem.AnnotateDiffViewerAction;
 import consulo.diff.DiffContext;
 import consulo.diff.DiffExtension;

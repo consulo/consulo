@@ -60,7 +60,7 @@ public class PatchToolset implements McpToolset {
         Project project = context.getProject();
         String patch = context.getString("patch");
 
-        return McpToolActions.uiAction(project, () -> {
+        return McpToolActions.uiActionAsync(project, () -> {
             List<TextFilePatch> textPatches;
             try {
                 textPatches = new PatchReader(patch).readAllPatches();
@@ -70,19 +70,22 @@ public class PatchToolset implements McpToolset {
             }
 
             if (textPatches.isEmpty()) {
-                return McpToolCallResult.error("The patch contains no file entries.");
+                return CompletableFuture.completedFuture(McpToolCallResult.error("The patch contains no file entries."));
             }
 
             List<FilePatch> patches = new ArrayList<>(textPatches);
             // null target change list means the applied changes land in the active one
-            new PatchApplier<>(project, McpProjectPaths.baseDir(project), patches, (LocalChangeList) null, null, null).execute();
-
-            StringBuilder builder = new StringBuilder("Applied ").append(textPatches.size()).append(" file patch(es):\n");
-            for (TextFilePatch textPatch : textPatches) {
-                builder.append("  ").append(textPatch.getAfterName() == null ? textPatch.getBeforeName() : textPatch.getAfterName())
-                    .append('\n');
-            }
-            return McpToolCallResult.text(builder.toString());
+            return new PatchApplier<>(project, McpProjectPaths.baseDir(project), patches, (LocalChangeList) null, null, null)
+                .execute()
+                .thenApply(status -> {
+                    StringBuilder builder = new StringBuilder("Applied ").append(textPatches.size()).append(" file patch(es):\n");
+                    for (TextFilePatch textPatch : textPatches) {
+                        builder.append("  ")
+                            .append(textPatch.getAfterName() == null ? textPatch.getBeforeName() : textPatch.getAfterName())
+                            .append('\n');
+                    }
+                    return McpToolCallResult.text(builder.toString());
+                });
         });
     }
 }

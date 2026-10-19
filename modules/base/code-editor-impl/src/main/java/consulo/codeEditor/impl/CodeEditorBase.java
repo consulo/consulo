@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.codeEditor.impl;
 
+import consulo.codeEditor.EditorColors;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
@@ -475,6 +476,7 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
 
     
     protected EditorColorsScheme myScheme;
+    private @Nullable ColorValue myForcedBackground;
 
     protected VirtualFile myVirtualFile;
 
@@ -1259,6 +1261,34 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
     
     public EditorColorsScheme getColorsScheme() {
         return myScheme;
+    }
+
+    @Override
+    public void setBackgroundColor(ColorValue color) {
+        myForcedBackground = getBackgroundIgnoreForced().equals(color) ? null : color;
+        onBackgroundColorChanged(color);
+    }
+
+    protected void onBackgroundColorChanged(ColorValue color) {
+    }
+
+    @Override
+    public ColorValue getBackgroundColor() {
+        ColorValue forcedBackground = myForcedBackground;
+        if (forcedBackground != null) {
+            return forcedBackground;
+        }
+
+        return getBackgroundIgnoreForced();
+    }
+
+    protected ColorValue getBackgroundIgnoreForced() {
+        ColorValue color = myScheme.getDefaultBackground();
+        if (myDocument.isWritable()) {
+            return color;
+        }
+        ColorValue readOnlyColor = myScheme.getColor(EditorColors.READONLY_BACKGROUND_COLOR);
+        return readOnlyColor != null ? readOnlyColor : color;
     }
 
     protected void updateGlobalScheme() {

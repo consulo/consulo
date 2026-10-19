@@ -1,0 +1,429 @@
+/*
+ * Copyright 2000-2015 JetBrains s.r.o.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package consulo.diff.impl.internal.viewer.simple;
+
+import consulo.codeEditor.EditorEx;
+import consulo.codeEditor.internal.bridge.EditorBridge;
+import consulo.codeEditor.internal.bridge.EditorBridgeFoldConnector;
+import consulo.codeEditor.internal.bridge.EditorScrollMap;
+import consulo.dataContext.DataSink;
+import consulo.diff.DiffContext;
+import consulo.diff.DiffDataKeys;
+import consulo.diff.PrevNextDifferenceIterable;
+import consulo.diff.fragment.MergeLineFragment;
+import consulo.diff.impl.internal.util.DividerPaintable;
+import consulo.diff.impl.internal.util.PrevNextDifferenceIterableBase;
+import consulo.diff.impl.internal.util.UnifiedDiffUtil;
+import consulo.diff.impl.internal.viewer.FoldingModelSupport;
+import consulo.diff.impl.internal.viewer.StatusPanel;
+import consulo.diff.impl.internal.viewer.TextDiffViewerUtil;
+import consulo.diff.impl.internal.viewer.side.ThreesideTextDiffViewer;
+import consulo.diff.internal.DiffImplUtil;
+import consulo.diff.internal.DiffUserDataKeysEx.ScrollToPolicy;
+import consulo.diff.localize.DiffLocalize;
+import consulo.diff.request.ContentDiffRequest;
+import consulo.diff.util.LineRange;
+import consulo.diff.util.Side;
+import consulo.diff.util.ThreeSide;
+import consulo.disposer.Disposable;
+import consulo.document.event.DocumentEvent;
+import consulo.localize.LocalizeValue;
+import consulo.logging.Logger;
+import consulo.ui.Component;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.dataholder.UserDataHolder;
+import consulo.util.lang.StringUtil;
+import org.jspecify.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.function.Supplier;
+
+public abstract class ThreesideTextDiffViewerEx extends ThreesideTextDiffViewer {
+    public static final Logger LOG = Logger.getInstance(ThreesideTextDiffViewerEx.class);
+
+    protected final PrevNextDifferenceIterable myPrevNextDifferenceIterable;
+    protected final MyStatusPanel myStatusPanel;
+
+    protected final MyFoldingModel myFoldingModel;
+    protected final MyInitialScrollHelper myInitialScrollHelper = new MyInitialScrollHelper();
+
+    private int myChangesCount = -1;
+    private int myConflictsCount = -1;
+
+    @RequiredUIAccess
+    public ThreesideTextDiffViewerEx(DiffContext context, ContentDiffRequest request) {
+        super(context, request);
+
+        myPrevNextDifferenceIterable = new MyPrevNextDifferenceIterable();
+        myStatusPanel = new MyStatusPanel();
+        myFoldingModel = new MyFoldingModel(getEditors().toArray(new EditorEx[3]), this);
+    }
+
+    @Override
+    @RequiredUIAccess
+    protected void onInit() {
+        super.onInit();
+        updateBridge();
+    }
+
+    @Override
+    @RequiredUIAccess
+    protected void onDispose() {
+        destroyChangedBlocks();
+        super.onDispose();
+    }
+
+    @Override
+    @RequiredUIAccess
+    protected void processContextHints() {
+        super.processContextHints();
+        myInitialScrollHelper.processContext(myRequest);
+    }
+
+    @Override
+    @RequiredUIAccess
+    protected void updateContextHints() {
+        super.updateContextHints();
+        myFoldingModel.updateContext(myRequest, getFoldingModelSettings());
+        myInitialScrollHelper.updateContext(myRequest);
+    }
+
+    //
+    // Diff
+    //
+
+    public FoldingModelSupport.Settings getFoldingModelSettings() {
+        return TextDiffViewerUtil.getFoldingModelSettings(myContext);
+    }
+
+    protected Runnable applyNotification(@Nullable Supplier<Component> notification) {
+        return () -> {
+            clearDiffPresentation();
+            if (notification != null) {
+                myPanel.addNotification(notification.get());
+            }
+        };
+    }
+
+    protected void clearDiffPresentation() {
+        myStatusPanel.setBusy(false);
+        myPanel.resetNotifications();
+        destroyChangedBlocks();
+
+        updateBridge();
+        myStatusPanel.update();
+    }
+
+    protected void destroyChangedBlocks() {
+        myFoldingModel.destroy();
+    }
+
+    //
+    // Impl
+    //
+
+    @Override
+    protected void onDocumentChange(DocumentEvent e) {
+        super.onDocumentChange(e);
+        myFoldingModel.onDocumentChanged(e);
+    }
+
+    @RequiredUIAccess
+    protected boolean doScrollToChange(ScrollToPolicy scrollToPolicy) {
+        ThreesideDiffChangeBase targetChange = scrollToPolicy.select(getChanges());
+        if (targetChange == null) {
+            return false;
+        }
+
+        doScrollToChange(targetChange, false);
+        return true;
+    }
+
+    protected void doScrollToChange(ThreesideDiffChangeBase change, boolean animated) {
+        int[] startLines = new int[3];
+        int[] endLines = new int[3];
+
+        for (int i = 0; i < 3; i++) {
+            ThreeSide side = ThreeSide.fromIndex(i);
+            startLines[i] = change.getStartLine(side);
+            endLines[i] = change.getEndLine(side);
+            DiffImplUtil.moveCaret(getEditor(side), startLines[i]);
+        }
+
+        EditorBridge bridge = getBridge();
+        if (bridge != null) {
+            bridge.makeVisible(getCurrentSide().getIndex(), startLines, endLines, animated);
+        }
+        else {
+            for (int i = 0; i < 3; i++) {
+                DiffImplUtil.scrollEditor(getEditor(ThreeSide.fromIndex(i)), startLines[i], animated);
+            }
+        }
+    }
+
+    //
+    // Counters
+    //
+
+    public int getChangesCount() {
+        return myChangesCount;
+    }
+
+    public int getConflictsCount() {
+        return myConflictsCount;
+    }
+
+    protected void resetChangeCounters() {
+        myChangesCount = 0;
+        myConflictsCount = 0;
+    }
+
+    protected void onChangeAdded(ThreesideDiffChangeBase change) {
+        if (change.isConflict()) {
+            myConflictsCount++;
+        }
+        else {
+            myChangesCount++;
+        }
+        myStatusPanel.update();
+    }
+
+    protected void onChangeRemoved(ThreesideDiffChangeBase change) {
+        if (change.isConflict()) {
+            myConflictsCount--;
+        }
+        else {
+            myChangesCount--;
+        }
+        myStatusPanel.update();
+    }
+
+    //
+    // Getters
+    //
+
+    protected abstract DividerPaintable getDividerPaintable(Side side);
+
+    /*
+     * Some changes (ex: applied ones) can be excluded from general processing, but should be painted/used for synchronized scrolling
+     */
+    protected List<? extends ThreesideDiffChangeBase> getAllChanges() {
+        return getChanges();
+    }
+
+    protected abstract List<? extends ThreesideDiffChangeBase> getChanges();
+
+    @Override
+    protected @Nullable EditorScrollMap createScrollMap() {
+        List<int[]> anchors = new ArrayList<>();
+        anchors.add(new int[3]);
+        for (ThreesideDiffChangeBase diffChange : getAllChanges()) {
+            anchors.add(new int[]{
+                diffChange.getStartLine(ThreeSide.LEFT),
+                diffChange.getStartLine(ThreeSide.BASE),
+                diffChange.getStartLine(ThreeSide.RIGHT)
+            });
+            anchors.add(new int[]{
+                diffChange.getEndLine(ThreeSide.LEFT),
+                diffChange.getEndLine(ThreeSide.BASE),
+                diffChange.getEndLine(ThreeSide.RIGHT)
+            });
+        }
+        anchors.add(new int[]{
+            getEditor(ThreeSide.LEFT).getDocument().getLineCount(),
+            getEditor(ThreeSide.BASE).getDocument().getLineCount(),
+            getEditor(ThreeSide.RIGHT).getDocument().getLineCount()
+        });
+        return new EditorScrollMap(anchors);
+    }
+
+    @Override
+    @RequiredUIAccess
+    protected void updateBridge() {
+        EditorBridge bridge = getBridge();
+        if (bridge == null) {
+            return;
+        }
+
+        EditorScrollMap scrollMap = createScrollMap();
+        if (scrollMap != null) {
+            bridge.setScrollMap(scrollMap);
+        }
+        for (Side side : Side.values()) {
+            bridge.setConnectors(
+                side.getIndex(),
+                UnifiedDiffUtil.createConnectors(getDividerPaintable(side)),
+                myFoldingModel.createFoldConnectors(side)
+            );
+        }
+    }
+
+    @Override
+    protected Component getStatusPanel() {
+        return myStatusPanel.getComponent();
+    }
+
+    //
+    // Misc
+    //
+
+    @RequiredUIAccess
+    protected @Nullable ThreesideDiffChangeBase getSelectedChange(ThreeSide side) {
+        int caretLine = getEditor(side).getCaretModel().getLogicalPosition().line;
+
+        for (ThreesideDiffChangeBase change : getChanges()) {
+            int line1 = change.getStartLine(side);
+            int line2 = change.getEndLine(side);
+
+            if (DiffImplUtil.isSelectedByLine(caretLine, line1, line2)) {
+                return change;
+            }
+        }
+        return null;
+    }
+
+    //
+    // Actions
+    //
+
+    protected class MyPrevNextDifferenceIterable extends PrevNextDifferenceIterableBase<ThreesideDiffChangeBase> {
+        @Override
+        protected List<? extends ThreesideDiffChangeBase> getChanges() {
+            return ThreesideTextDiffViewerEx.this.getChanges();
+        }
+
+        @Override
+        protected EditorEx getEditor() {
+            return getCurrentEditor();
+        }
+
+        @Override
+        protected int getStartLine(ThreesideDiffChangeBase change) {
+            return change.getStartLine(getCurrentSide());
+        }
+
+        @Override
+        protected int getEndLine(ThreesideDiffChangeBase change) {
+            return change.getEndLine(getCurrentSide());
+        }
+
+        @Override
+        protected void scrollToChange(ThreesideDiffChangeBase change) {
+            doScrollToChange(change, true);
+        }
+    }
+
+    protected class MyToggleExpandByDefaultAction extends TextDiffViewerUtil.ToggleExpandByDefaultAction {
+        public MyToggleExpandByDefaultAction() {
+            super(getTextSettings());
+        }
+
+        @Override
+        protected void expandAll(boolean expand) {
+            myFoldingModel.expandAll(expand);
+        }
+    }
+
+    //
+    // Helpers
+    //
+
+    @Override
+    public void uiDataSnapshot(DataSink sink) {
+        super.uiDataSnapshot(sink);
+        sink.set(DiffDataKeys.PREV_NEXT_DIFFERENCE_ITERABLE, myPrevNextDifferenceIterable);
+        sink.lazy(DiffDataKeys.CURRENT_CHANGE_RANGE, () -> {
+            ThreesideDiffChangeBase change = getSelectedChange(getCurrentSide());
+            if (change != null) {
+                return new LineRange(change.getStartLine(getCurrentSide()), change.getEndLine(getCurrentSide()));
+            }
+            return null;
+        });
+    }
+
+    protected class MyStatusPanel extends StatusPanel {
+        @Override
+        protected LocalizeValue getMessage() {
+            if (myChangesCount < 0 || myConflictsCount < 0) {
+                return LocalizeValue.empty();
+            }
+            if (myChangesCount == 0 && myConflictsCount == 0) {
+                return DiffLocalize.mergeDialogAllConflictsResolvedMessageText();
+            }
+            return LocalizeValue.localizeTODO(
+                makeCounterWord(myChangesCount, "change") + ". " + makeCounterWord(myConflictsCount, "conflict")
+            );
+        }
+
+        private String makeCounterWord(int number, String word) {
+            if (number == 0) {
+                return "No " + StringUtil.pluralize(word);
+            }
+            return number + " " + StringUtil.pluralize(word, number);
+        }
+    }
+
+    protected class MyFoldingModel extends FoldingModelSupport {
+        private final MyPaintable myPaintable1 = new MyPaintable(0, 1);
+        private final MyPaintable myPaintable2 = new MyPaintable(1, 2);
+
+        public MyFoldingModel(EditorEx[] editors, Disposable disposable) {
+            super(editors, disposable);
+            assert editors.length == 3;
+        }
+
+        public void install(
+            @Nullable List<MergeLineFragment> fragments,
+            UserDataHolder context,
+            FoldingModelSupport.Settings settings
+        ) {
+            Iterator<int[]> it = map(fragments, fragment -> new int[]{
+                fragment.getStartLine(ThreeSide.LEFT),
+                fragment.getEndLine(ThreeSide.LEFT),
+                fragment.getStartLine(ThreeSide.BASE),
+                fragment.getEndLine(ThreeSide.BASE),
+                fragment.getStartLine(ThreeSide.RIGHT),
+                fragment.getEndLine(ThreeSide.RIGHT)});
+            install(it, context, settings);
+        }
+
+        public List<EditorBridgeFoldConnector> createFoldConnectors(Side side) {
+            return side.select(myPaintable1, myPaintable2).createFoldConnectors();
+        }
+
+        @Override
+        @RequiredUIAccess
+        protected void onFoldingChanged() {
+            updateBridge();
+        }
+    }
+
+    protected class MyInitialScrollHelper extends MyInitialScrollPositionHelper {
+        @Override
+        @RequiredUIAccess
+        protected boolean doScrollToChange() {
+            return myScrollToChange != null && ThreesideTextDiffViewerEx.this.doScrollToChange(myScrollToChange);
+        }
+
+        @Override
+        @RequiredUIAccess
+        protected boolean doScrollToFirstChange() {
+            return ThreesideTextDiffViewerEx.this.doScrollToChange(ScrollToPolicy.FIRST_CHANGE);
+        }
+    }
+}

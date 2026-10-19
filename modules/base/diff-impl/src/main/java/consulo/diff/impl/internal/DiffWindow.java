@@ -1,0 +1,56 @@
+/*
+ * Copyright 2000-2015 JetBrains s.r.o.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package consulo.diff.impl.internal;
+
+import consulo.diff.DiffDialogHints;
+import consulo.diff.chain.DiffRequestChain;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import org.jspecify.annotations.Nullable;
+
+public class DiffWindow extends DiffWindowBase {
+    private final DiffRequestChain myRequestChain;
+
+    public DiffWindow(@Nullable Project project, DiffRequestChain requestChain, DiffDialogHints hints) {
+        super(project, hints);
+        myRequestChain = requestChain;
+    }
+
+    @Override
+    @RequiredUIAccess
+    protected DiffRequestProcessor createProcessor() {
+        return new MyCacheDiffRequestChainProcessor(myProject, myRequestChain);
+    }
+
+    private class MyCacheDiffRequestChainProcessor extends CacheDiffRequestChainProcessor {
+        @RequiredUIAccess
+        public MyCacheDiffRequestChainProcessor(@Nullable Project project, DiffRequestChain requestChain) {
+            super(project, requestChain);
+        }
+
+        @Override
+        @RequiredUIAccess
+        protected void setWindowTitle(String title) {
+            DiffWindow.this.setWindowTitle(title);
+        }
+
+        @Override
+        @RequiredUIAccess
+        protected void onAfterNavigate() {
+            DiffWindow.this.onAfterNavigate();
+        }
+    }
+}

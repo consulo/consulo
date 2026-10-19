@@ -32,6 +32,8 @@ import consulo.ui.font.Font;
 import consulo.util.dataholder.Key;
 import org.jspecify.annotations.Nullable;
 
+import java.util.function.Consumer;
+
 /**
  * @author VISTALL
  * @since 06/01/2022
@@ -118,6 +120,12 @@ public class DummyWindow implements Window {
     @RequiredUIAccess
     @Override
     public void close() {
+
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setCloseHandler(@Nullable Consumer<Window> closeHandler) {
 
     }
 

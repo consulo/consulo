@@ -1,6 +1,8 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.util.ui.tree;
 
+import consulo.fileChooser.FileChooser;
+import consulo.ui.UIAccess;
 import consulo.ui.ex.internal.ActionUpdateInvoker;
 import consulo.component.util.Iconable;
 import consulo.configurable.Configurable;
@@ -10,7 +12,6 @@ import consulo.dataContext.DataContext;
 import consulo.disposer.Disposable;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
-import consulo.fileChooser.IdeaFileChooser;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.fileEditor.impl.internal.VfsIconUtil;
@@ -255,6 +256,7 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
         return panel;
     }
 
+    @RequiredUIAccess
     private void doAddAction() {
         TableCellEditor editor = myTable.getCellEditor();
         if (editor != null) {
@@ -265,7 +267,12 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
         Object selectedTarget = row >= 0 ? myModel.data.get(myTable.convertRowIndexToModel(row)).first : null;
         VirtualFile toSelect = myFileToSelect != null ? myFileToSelect : ObjectUtil.tryCast(selectedTarget, VirtualFile.class);
         FileChooserDescriptor descriptor = new FileChooserDescriptor(!isAddOnlyDirectories(), true, true, true, true, true);
-        IdeaFileChooser.chooseFiles(descriptor, myProject, myTable, toSelect, this::doAddFiles);
+        UIAccess uiAccess = UIAccess.current();
+        FileChooser.chooseFiles(descriptor, myProject, myTable, toSelect).whenCompleteAsync((files, error) -> {
+            if (files != null) {
+                doAddFiles(Arrays.asList(files));
+            }
+        }, uiAccess);
     }
 
     private void doAddFiles(List<? extends VirtualFile> files) {

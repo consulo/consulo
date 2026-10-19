@@ -139,7 +139,7 @@ public class UnifiedVcsFileList<T> implements VcsFileList<T> {
     }
 
     private ChangesTreeSnapshot buildSnapshot() {
-        return new ChangesTreeSnapshotBuilder(myShowFlatten, myProject.getBasePath()).paths(myItems.keySet()).build();
+        return new ChangesTreeSnapshotBuilder(myProject, myShowFlatten).paths(myItems.keySet()).build();
     }
 
     @RequiredUIAccess

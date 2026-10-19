@@ -51,6 +51,7 @@ import consulo.ui.ex.content.ContentFactory;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.HorizontalLayout;
+import consulo.ui.layout.ScrollableLayout;
 import consulo.ui.layout.SplitLayoutPosition;
 import consulo.ui.layout.TwoComponentSplitLayout;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
@@ -334,7 +335,7 @@ public class UnifiedChangesViewManager implements ChangesViewManager, Persistent
         myStatusLabel = statusLabel;
 
         root.top(toolbar.getUIComponent());
-        root.center(tree.getComponent());
+        root.center(ScrollableLayout.create(tree.getComponent()));
         root.bottom(HorizontalLayout.create().add(statusLabel));
         return root;
     }
@@ -391,7 +392,7 @@ public class UnifiedChangesViewManager implements ChangesViewManager, Persistent
     private ChangesTreeSnapshot buildSnapshot() {
         ChangeListManagerImpl changeListManager = ChangeListManagerImpl.getInstanceImpl(myProject);
 
-        ChangesTreeSnapshotBuilder builder = new ChangesTreeSnapshotBuilder(myState.myShowFlatten, myProject.getBasePath())
+        ChangesTreeSnapshotBuilder builder = new ChangesTreeSnapshotBuilder(myProject, myState.myShowFlatten)
             .changeLists(changeListManager.getChangeListsCopy())
             .files(ChangesTreeGroupKind.MODIFIED_WITHOUT_EDITING, changeListManager.getModifiedWithoutEditing())
             .locallyDeleted(changeListManager.getDeletedFiles())

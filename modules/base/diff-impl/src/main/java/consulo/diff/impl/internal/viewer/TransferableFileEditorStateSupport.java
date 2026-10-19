@@ -1,0 +1,234 @@
+/*
+ * Copyright 2000-2015 JetBrains s.r.o.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package consulo.diff.impl.internal.viewer;
+
+import consulo.application.dumb.DumbAware;
+import consulo.diff.DiffContext;
+import consulo.diff.internal.DiffSettingsHolder;
+import consulo.diff.request.DiffRequest;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.fileEditor.FileEditor;
+import consulo.fileEditor.FileEditorState;
+import consulo.fileEditor.FileEditorStateLevel;
+import consulo.fileEditor.TransferableFileEditorState;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.ToggleAction;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.dataholder.Key;
+import org.jspecify.annotations.Nullable;
+import kava.beans.PropertyChangeEvent;
+import kava.beans.PropertyChangeListener;
+
+import java.util.*;
+import java.util.function.Predicate;
+
+public class TransferableFileEditorStateSupport {
+    
+    private static final Key<Map<String, Map<String, String>>> TRANSFERABLE_FILE_EDITOR_STATE =
+        Key.create("Diff.TransferableFileEditorState");
+
+    private static final Predicate<BinaryEditorHolder> IS_SUPPORTED = holder -> getEditorState(holder.getEditor()) != null;
+
+    
+    private final DiffSettingsHolder.DiffSettings mySettings;
+    
+    private final List<BinaryEditorHolder> myHolders;
+    private final boolean mySupported;
+
+    public TransferableFileEditorStateSupport(
+        DiffSettingsHolder.DiffSettings settings,
+        List<BinaryEditorHolder> holders,
+        Disposable disposable
+    ) {
+        mySettings = settings;
+        myHolders = holders;
+        mySupported = ContainerUtil.or(myHolders, IS_SUPPORTED);
+        new MySynchronizer(ContainerUtil.filter(myHolders, IS_SUPPORTED)).install(disposable);
+    }
+
+    public boolean isSupported() {
+        return mySupported;
+    }
+
+    public boolean isEnabled() {
+        return mySettings.isSyncBinaryEditorSettings();
+    }
+
+    public void setEnabled(boolean enabled) {
+        mySettings.setSyncBinaryEditorSettings(enabled);
+    }
+
+    public void processContextHints(DiffRequest request, DiffContext context) {
+        if (!isEnabled()) {
+            return;
+        }
+
+        for (BinaryEditorHolder holder : myHolders) {
+            FileEditor editor = holder.getEditor();
+            TransferableFileEditorState state = getEditorState(holder.getEditor());
+            if (state != null) {
+                readContextData(context, editor, state);
+            }
+        }
+    }
+
+    public void updateContextHints(DiffRequest request, DiffContext context) {
+        if (!isEnabled()) {
+            return;
+        }
+
+        Set<String> updated = new HashSet<>();
+
+        for (BinaryEditorHolder holder : myHolders) {
+            TransferableFileEditorState state = getEditorState(holder.getEditor());
+            if (state != null) {
+                boolean processed = !updated.add(state.getEditorId());
+                if (!processed) {
+                    writeContextData(context, state);
+                }
+            }
+        }
+    }
+
+    
+    public AnAction createToggleAction() {
+        return new ToggleSynchronousEditorStatesAction(this);
+    }
+
+    private static void readContextData(
+        DiffContext context,
+        FileEditor editor,
+        TransferableFileEditorState state
+    ) {
+        Map<String, Map<String, String>> map = context.getUserData(TRANSFERABLE_FILE_EDITOR_STATE);
+        Map<String, String> options = map != null ? map.get(state.getEditorId()) : null;
+        if (options == null) {
+            return;
+        }
+
+        state.setTransferableOptions(options);
+        editor.setState(state);
+    }
+
+    private static void writeContextData(DiffContext context, TransferableFileEditorState state) {
+        Map<String, Map<String, String>> map = context.getUserData(TRANSFERABLE_FILE_EDITOR_STATE);
+        if (map == null) {
+            map = new HashMap<>();
+            context.putUserData(TRANSFERABLE_FILE_EDITOR_STATE, map);
+        }
+
+        map.put(state.getEditorId(), state.getTransferableOptions());
+    }
+
+    private static @Nullable TransferableFileEditorState getEditorState(FileEditor editor) {
+        FileEditorState state = editor.getState(FileEditorStateLevel.FULL);
+        return state instanceof TransferableFileEditorState transferableFileEditorState ? transferableFileEditorState : null;
+    }
+
+    private class MySynchronizer implements PropertyChangeListener {
+        
+        private final List<? extends FileEditor> myEditors;
+
+        private boolean myDuringUpdate = false;
+
+        public MySynchronizer(List<BinaryEditorHolder> editors) {
+            myEditors = ContainerUtil.map(editors, BinaryEditorHolder::getEditor);
+        }
+
+        public void install(Disposable disposable) {
+            if (myEditors.size() < 2) {
+                return;
+            }
+
+            for (FileEditor editor : myEditors) {
+                editor.addPropertyChangeListener(this);
+            }
+
+            Disposer.register(disposable, () -> {
+                for (FileEditor editor : myEditors) {
+                    editor.removePropertyChangeListener(MySynchronizer.this);
+                }
+            });
+        }
+
+        @Override
+        public void propertyChange(PropertyChangeEvent evt) {
+            if (myDuringUpdate || !isEnabled()) {
+                return;
+            }
+            if (!(evt.getSource() instanceof FileEditor)) {
+                return;
+            }
+
+            TransferableFileEditorState sourceState = getEditorState(((FileEditor) evt.getSource()));
+            if (sourceState == null) {
+                return;
+            }
+
+            Map<String, String> options = sourceState.getTransferableOptions();
+            String id = sourceState.getEditorId();
+
+            for (FileEditor editor : myEditors) {
+                if (evt.getSource() != editor) {
+                    updateEditor(editor, id, options);
+                }
+            }
+        }
+
+        private void updateEditor(FileEditor editor, String id, Map<String, String> options) {
+            try {
+                myDuringUpdate = true;
+                TransferableFileEditorState state = getEditorState(editor);
+                if (state != null && state.getEditorId().equals(id)) {
+                    state.setTransferableOptions(options);
+                    editor.setState(state);
+                }
+            }
+            finally {
+                myDuringUpdate = false;
+            }
+        }
+    }
+
+    private class ToggleSynchronousEditorStatesAction extends ToggleAction implements DumbAware {
+        private final TransferableFileEditorStateSupport mySupport;
+
+        public ToggleSynchronousEditorStatesAction(TransferableFileEditorStateSupport support) {
+            super(LocalizeValue.localizeTODO("Synchronize Editors Settings"), LocalizeValue.empty(), PlatformIconGroup.actionsSyncpanels());
+            mySupport = support;
+        }
+
+        @Override
+        public void update(AnActionEvent e) {
+            super.update(e);
+            e.getPresentation().setVisible(mySupport.isSupported());
+        }
+
+        @Override
+        public boolean isSelected(AnActionEvent e) {
+            return mySupport.isEnabled();
+        }
+
+        @Override
+        public void setSelected(AnActionEvent e, boolean state) {
+            mySupport.setEnabled(state);
+        }
+    }
+}

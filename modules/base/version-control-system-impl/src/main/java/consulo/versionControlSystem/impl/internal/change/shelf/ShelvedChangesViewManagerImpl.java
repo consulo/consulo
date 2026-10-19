@@ -45,6 +45,7 @@ import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.layout.DockLayout;
+import consulo.ui.layout.ScrollableLayout;
 import consulo.ui.style.ComponentColors;
 import consulo.util.dataholder.Key;
 import consulo.versionControlSystem.VcsDataKeys;
@@ -181,7 +182,7 @@ public class ShelvedChangesViewManagerImpl implements ShelvedChangesViewManager,
 
         DockLayout root = DockLayout.create();
         root.putUserData(UiDataProvider.KEY, this::uiDataSnapshot);
-        root.center(tree);
+        root.center(ScrollableLayout.create(tree));
         myRoot = root;
 
         tree.addContextMenuListener(event -> {

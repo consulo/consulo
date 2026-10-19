@@ -22,6 +22,7 @@ import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.ScrollableLayout;
 import consulo.ui.layout.ScrollableLayoutOptions;
+import consulo.ui.layout.VerticalScrollBarPosition;
 import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
 import consulo.web.ui.impl.internal.base.TargetVaadin;
 import consulo.web.ui.impl.internal.base.VaadinComponentDelegate;
@@ -54,6 +55,11 @@ public class WebScrollLayoutImpl extends VaadinComponentDelegate<WebScrollLayout
         vaadin.getStyle()
             .set("overflow-x", toCssOverflow(options.getHorizontalScrollPolicy()))
             .set("overflow-y", toCssOverflow(options.getVerticalScrollPolicy()));
+
+        if (options.getVerticalScrollBarPosition() == VerticalScrollBarPosition.LEFT) {
+            vaadin.getStyle().set("direction", "rtl");
+            ((com.vaadin.flow.component.Component) content).getElement().getStyle().set("direction", "ltr");
+        }
 
         if (content instanceof Grid<?>) {
             vaadin.getStyle()

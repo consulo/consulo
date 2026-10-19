@@ -543,18 +543,28 @@ public class ArquillEditorElement extends Component implements HasSize {
     @DomEvent("arquill-gutter-hover")
     public static class ArquillGutterHoverEvent extends ComponentEvent<ArquillEditorElement> {
         private final int myLine;
+        private final boolean myLineNumbers;
 
         public ArquillGutterHoverEvent(
             ArquillEditorElement source,
             boolean fromClient,
-            @EventData("event.detail.line") int line
+            @EventData("event.detail.line") int line,
+            @EventData("event.detail.numbers") boolean lineNumbers
         ) {
             super(source, fromClient);
             myLine = line;
+            myLineNumbers = lineNumbers;
         }
 
         public int getLine() {
             return myLine;
+        }
+
+        /**
+         * @return whether the pointer is over the line numbers rather than another column of the gutter
+         */
+        public boolean isLineNumbers() {
+            return myLineNumbers;
         }
     }
 
@@ -664,6 +674,8 @@ public class ArquillEditorElement extends Component implements HasSize {
 
     private boolean myNoFocus;
 
+    private boolean myMirrored;
+
     /**
      * What each decoration channel last sent, keyed by the api call. The platform rebuilds every channel on
      * every pass - a typed character runs the pass from its own document listener and again when the daemon
@@ -673,6 +685,8 @@ public class ArquillEditorElement extends Component implements HasSize {
     private final Map<String, Object> myLastPushed = new HashMap<>();
 
     private final Div myFloatingToolbarLayer = new Div();
+
+    private final Div myComponentInlayLayer = new Div();
 
     private boolean isUnchanged(String channel, Object value) {
         if (Objects.equals(myLastPushed.get(channel), value)) {
@@ -692,6 +706,10 @@ public class ArquillEditorElement extends Component implements HasSize {
 
         myFloatingToolbarLayer.addClassName("arquill-floating-toolbar-layer");
         getElement().appendVirtualChild(myFloatingToolbarLayer.getElement());
+
+        // the live components of component inlays - placed by the client over the lines their inlays reserve
+        myComponentInlayLayer.addClassName("arquill-component-inlays");
+        getElement().appendVirtualChild(myComponentInlayLayer.getElement());
 
         // registering here also installs the dom listener - flow only forwards the event while the server listens
         addListener(ArquillTextChangeEvent.class, event -> applyToCache(event.getStart(), event.getStart() + event.getRemovedCharCount(), event.getText()));
@@ -896,6 +914,10 @@ public class ArquillEditorElement extends Component implements HasSize {
 
     public Div getFloatingToolbarLayer() {
         return myFloatingToolbarLayer;
+    }
+
+    public Div getComponentInlayLayer() {
+        return myComponentInlayLayer;
     }
 
     public Registration addCtrlClickListener(ComponentEventListener<ArquillCtrlClickEvent> listener) {
@@ -1118,6 +1140,43 @@ public class ArquillEditorElement extends Component implements HasSize {
         callApi("setGutterBands(this.gutterBands)");
     }
 
+    public void setLineFrames(String framesJson) {
+        if (isUnchanged("lineFrames", framesJson)) {
+            return;
+        }
+        callApi("setLineFrames($0)", framesJson);
+    }
+
+    public void setMirrored(boolean mirrored) {
+        if (myMirrored == mirrored) {
+            return;
+        }
+        myMirrored = mirrored;
+        callApi("setMirrored($0)", mirrored);
+    }
+
+    public void scrollToPixel(int x, int y) {
+        callApi("scrollToPixel($0, $1)", x, y);
+    }
+
+    public void scrollToLine(int line, String scrollType) {
+        callApi("scrollToLine($0, $1)", line, scrollType);
+    }
+
+    public void setLineBackgrounds(String backgroundsJson) {
+        if (isUnchanged("lineBackgrounds", backgroundsJson)) {
+            return;
+        }
+        callApi("setLineBackgrounds($0)", backgroundsJson);
+    }
+
+    public void setLineSeparators(String separatorsJson) {
+        if (isUnchanged("lineSeparators", separatorsJson)) {
+            return;
+        }
+        callApi("setLineSeparators($0)", separatorsJson);
+    }
+
     @Override
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
@@ -1126,6 +1185,8 @@ public class ArquillEditorElement extends Component implements HasSize {
         myLastPushed.clear();
 
         callApi("setFloatingToolbarLayer($0)", myFloatingToolbarLayer.getElement());
+        callApi("setComponentInlayLayer($0)", myComponentInlayLayer.getElement());
+        callApi("setMirrored($0)", myMirrored);
 
         Rulers rulers = myRulers.get();
 

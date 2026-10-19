@@ -26,6 +26,7 @@ import org.jspecify.annotations.Nullable;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author VISTALL
@@ -49,14 +50,14 @@ public interface ShelveChangesManager {
                                     boolean rollback,
                                     boolean markToBeDeleted) throws IOException, VcsException;
 
-    default void unshelveChangeList(
+    default CompletableFuture<?> unshelveChangeList(
         ShelvedChangeList changeList,
         @Nullable List<? extends ShelvedChange> changes,
         @Nullable List<? extends ShelvedBinaryFile> binaryFiles,
         @Nullable LocalChangeList targetChangeList,
         boolean showSuccessNotification
     ) {
-        unshelveChangeList(
+        return unshelveChangeList(
             changeList,
             changes,
             binaryFiles,
@@ -69,7 +70,7 @@ public interface ShelveChangesManager {
         );
     }
 
-    void unshelveChangeList(
+    CompletableFuture<?> unshelveChangeList(
         ShelvedChangeList changeList,
         @Nullable List<? extends ShelvedChange> changes,
         @Nullable List<? extends ShelvedBinaryFile> binaryFiles,

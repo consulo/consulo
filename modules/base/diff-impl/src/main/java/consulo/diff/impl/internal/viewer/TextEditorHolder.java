@@ -1,0 +1,96 @@
+/*
+ * Copyright 2000-2015 JetBrains s.r.o.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package consulo.diff.impl.internal.viewer;
+
+import consulo.codeEditor.EditorEx;
+import consulo.codeEditor.EditorFactory;
+import consulo.diff.DiffContext;
+import consulo.diff.content.DiffContent;
+import consulo.diff.content.DocumentContent;
+import consulo.diff.internal.DiffLanguageUtil;
+import consulo.diff.internal.DiffImplUtil;
+import consulo.project.Project;
+import consulo.ui.Component;
+import org.jspecify.annotations.Nullable;
+
+
+public class TextEditorHolder extends EditorHolder {
+    protected final EditorEx myEditor;
+
+    public TextEditorHolder(EditorEx editor) {
+        myEditor = editor;
+    }
+
+    public EditorEx getEditor() {
+        return myEditor;
+    }
+
+    @Override
+    public void dispose() {
+        EditorFactory.getInstance().releaseEditor(myEditor);
+    }
+
+    @Override
+    public Component getComponent() {
+        return myEditor.getUIComponent();
+    }
+
+    @Override
+    public void installFocusListener(Runnable onFocusGained) {
+        myEditor.addFocusListener(editor -> onFocusGained.run());
+    }
+
+    @Override
+    public @Nullable Component getPreferredFocusedComponent() {
+        return myEditor.getContentUIComponent();
+    }
+
+    //
+    // Build
+    //
+
+    public static TextEditorHolder create(@Nullable Project project, DocumentContent content) {
+        EditorEx editor = DiffImplUtil.createEditor(content.getDocument(), project, false, true);
+        DiffLanguageUtil.configureEditor(editor, content, project);
+        return new TextEditorHolder(editor);
+    }
+
+    public static class TextEditorHolderFactory extends EditorHolderFactory<TextEditorHolder> {
+        public static TextEditorHolderFactory INSTANCE = new TextEditorHolderFactory();
+
+        @Override
+        
+        public TextEditorHolder create(DiffContent content, DiffContext context) {
+            return TextEditorHolder.create(context.getProject(), (DocumentContent) content);
+        }
+
+        @Override
+        public boolean canShowContent(DiffContent content, DiffContext context) {
+            if (content instanceof DocumentContent) {
+                return true;
+            }
+            return false;
+        }
+
+        @Override
+        public boolean wantShowContent(DiffContent content, DiffContext context) {
+            if (content instanceof DocumentContent) {
+                return true;
+            }
+            return false;
+        }
+    }
+}

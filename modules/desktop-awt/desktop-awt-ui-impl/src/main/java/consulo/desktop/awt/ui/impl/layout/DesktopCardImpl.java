@@ -26,6 +26,7 @@ import consulo.ui.Space;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.JBLabel;
+import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.VerticalLayout;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
@@ -256,7 +257,7 @@ public class DesktopCardImpl extends SwingComponentDelegate<JPanel> implements C
             myBodyPanel.add(myFooterPanel);
         }
 
-        int padding = DesktopSpace.toPixels(Space.LARGE);
+        int padding = DesktopSpace.toPixels(myStyles.contains(CardStyle.COMPACT) ? Space.MEDIUM : Space.LARGE);
         myBodyPanel.setBorder(BorderFactory.createEmptyBorder(padding, padding, padding, padding));
 
         JComponent media = null;
@@ -271,7 +272,8 @@ public class DesktopCardImpl extends SwingComponentDelegate<JPanel> implements C
         }
         panel.add(myBodyPanel, BorderLayout.CENTER);
 
-        panel.setBorder(IdeBorderFactory.createRoundedBorder());
+        // the corners of a card are as round on every frontend - a radius of 10, the arc being its diameter
+        panel.setBorder(IdeBorderFactory.createRoundedBorder(JBUI.scale(20)));
 
         panel.revalidate();
         panel.repaint();

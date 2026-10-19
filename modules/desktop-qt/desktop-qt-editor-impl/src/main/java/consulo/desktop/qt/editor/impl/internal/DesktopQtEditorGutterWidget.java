@@ -19,7 +19,16 @@ import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorGutter;
 import consulo.codeEditor.EditorGutterComponentEx;
+import consulo.codeEditor.Inlay;
 import consulo.codeEditor.markup.GutterIconRenderer;
+import consulo.desktop.qt.editor.impl.internal.gutter.QtLineMarkerPresentationPainter;
+import consulo.codeEditor.markup.RangeHighlighter;
+import consulo.codeEditor.markup.LineMarkerPresentationProvider;
+import consulo.codeEditor.markup.LineMarkerPresentationContext;
+import consulo.codeEditor.markup.LineMarkerPresentation;
+import consulo.codeEditor.markup.LineFramePresentation;
+import consulo.codeEditor.markup.EditorGutterArea;
+import consulo.codeEditor.impl.EditorLineMarkerPresentationContext;
 import consulo.codeEditor.markup.GutterMark;
 import consulo.execution.debug.internal.breakpoint.BreakpointEditorUtil;
 import consulo.codeEditor.EditorColors;
@@ -49,9 +58,11 @@ import consulo.application.util.registry.Registry;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.Component;
+import consulo.ui.Point2D;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ComponentEvent;
+import consulo.ui.event.details.ModifiedInputDetails;
 import consulo.ui.event.details.MouseInputDetails;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -81,8 +92,12 @@ import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
+import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.Comparator;
+import java.util.ArrayList;
 import java.util.concurrent.CompletableFuture;
 import java.util.Set;
 import java.util.function.BiConsumer;
@@ -112,6 +127,8 @@ public class DesktopQtEditorGutterWidget extends QWidget {
     private static final int SEPARATOR_AREA_WIDTH = 3;
 
     private static final int MARKER_AREA_PADDING = 2;
+
+    private static final int RIGHT_FREE_PAINTERS_WIDTH = 4;
 
     /**
      * Smallest icon column, so a gutter which has no icons yet does not jump wider the moment it gets one - the
@@ -243,7 +260,7 @@ public class DesktopQtEditorGutterWidget extends QWidget {
 
     @Override
     protected void mouseMoveEvent(QMouseEvent event) {
-        int x = event.pos().x();
+        int x = logicalX(event.pos().x());
         int visualLine = visualLineAt(event.pos().y());
 
         FoldRegion region = x >= markerAreaOffset() ? foldRegionAt(visualLine) : null;
@@ -293,7 +310,14 @@ public class DesktopQtEditorGutterWidget extends QWidget {
     }
 
     private int visualLineAt(int y) {
-        return (y + mySurface.verticalScrollBar().value()) / myEditor.getLineHeight();
+        return myEditor.getRowLayout().yToVisualLine(y + mySurface.verticalScrollBar().value());
+    }
+
+    /**
+     * The top of the text of a row - rows below a component inlay stand lower by the room it takes.
+     */
+    private int rowY(int visualLine) {
+        return myEditor.getRowLayout().visualLineToY(visualLine);
     }
 
     @Override
@@ -301,6 +325,15 @@ public class DesktopQtEditorGutterWidget extends QWidget {
         myHovered = false;
         setCursor(new QCursor(Qt.CursorShape.ArrowCursor));
         update();
+
+        // controls offered on the hovered line go away once the pointer leaves the gutter, as on the awt gutter
+        MouseInputDetails details = new MouseInputDetails(
+            new Point2D(0, 0),
+            new Point2D(0, 0),
+            EnumSet.noneOf(ModifiedInputDetails.Modifier.class),
+            MouseInputDetails.MouseButton.LEFT
+        );
+        myEditor.fireMouseExited(new EditorMouseEvent(myEditor, details, false, EditorMouseEventArea.LINE_MARKERS_AREA));
     }
 
     /**
@@ -312,7 +345,109 @@ public class DesktopQtEditorGutterWidget extends QWidget {
             return 0;
         }
 
-        return lineNumberAreaWidth() + iconsAreaWidth() + markerAreaWidth() + SEPARATOR_AREA_WIDTH;
+        return lineNumberAreaWidth() + iconsAreaWidth() + rightFreePaintersWidth() + markerAreaWidth() + SEPARATOR_AREA_WIDTH;
+    }
+
+    /**
+     * The strip between the icons and the fold anchors, where the version control and a review mark changed lines -
+     * taken only while a presentation is drawn in it, as the awt gutter does.
+     */
+    private int rightFreePaintersWidth() {
+        boolean[] used = {false};
+        processPresentationHighlighters(highlighter -> {
+            LineMarkerPresentationProvider provider = highlighter.getLineMarkerPresentationProvider();
+            if (provider != null && provider.getUsedAreas().contains(EditorGutterArea.RIGHT_FREE_PAINTERS)) {
+                used[0] = true;
+            }
+        });
+        return used[0] ? RIGHT_FREE_PAINTERS_WIDTH : 0;
+    }
+
+    private void processPresentationHighlighters(Consumer<RangeHighlighter> consumer) {
+        for (RangeHighlighter highlighter : myEditor.getFilteredDocumentMarkupModel().getAllHighlighters()) {
+            consumer.accept(highlighter);
+        }
+        for (RangeHighlighter highlighter : myEditor.getMarkupModel().getAllHighlighters()) {
+            consumer.accept(highlighter);
+        }
+    }
+
+    /**
+     * Where an area of the gutter is across. The strip has no annotations column, so the annotation areas meet at the
+     * right edge of the line numbers; the whitespace separator is the middle of the fold anchors, as in the awt gutter.
+     */
+    private int[] areaColumn(EditorGutterArea area) {
+        int annotationsOffset = lineNumberAreaWidth();
+        int whitespaceSeparator = markerAreaOffset() + markerAreaWidth() / 2;
+        return switch (area) {
+            case RIGHT_FREE_PAINTERS -> new int[]{markerAreaOffset() - RIGHT_FREE_PAINTERS_WIDTH, RIGHT_FREE_PAINTERS_WIDTH};
+            case LEFT_FREE_PAINTERS -> new int[]{annotationsOffset, RIGHT_FREE_PAINTERS_WIDTH};
+            case ICONS -> new int[]{annotationsOffset, iconsAreaWidth()};
+            case ANNOTATIONS -> new int[]{annotationsOffset, 0};
+            case BEFORE_ANNOTATIONS -> new int[]{0, annotationsOffset};
+            case AFTER_ANNOTATIONS -> new int[]{annotationsOffset, width() - annotationsOffset};
+            case AFTER_ANNOTATIONS_TO_SEPARATOR -> new int[]{annotationsOffset, Math.max(0, whitespaceSeparator - annotationsOffset)};
+            case BEFORE_WHITESPACE_SEPARATOR -> new int[]{0, whitespaceSeparator};
+            case FROM_WHITESPACE_SEPARATOR -> new int[]{whitespaceSeparator, Math.max(0, width() - whitespaceSeparator)};
+            case WHOLE_GUTTER -> new int[]{0, width()};
+        };
+    }
+
+    /**
+     * The top of a logical line, or the bottom of everything for a line past the document end.
+     */
+    private int logicalLineY(int logicalLine) {
+        if (logicalLine >= myEditor.getDocument().getLineCount()) {
+            return myEditor.getRowLayout().getContentHeight();
+        }
+        return rowY(myEditor.getVisualLines().logicalToVisualLine(Math.max(0, logicalLine)));
+    }
+
+    private void paintLineMarkerPresentations(QPainter painter, int scrollY) {
+        List<RangeHighlighter> highlighters = new ArrayList<>();
+        processPresentationHighlighters(highlighter -> {
+            if (highlighter.isValid() && highlighter.getLineMarkerPresentationProvider() != null) {
+                highlighters.add(highlighter);
+            }
+        });
+        highlighters.sort(Comparator.comparingInt(RangeHighlighter::getLayer));
+
+        for (RangeHighlighter highlighter : highlighters) {
+            LineMarkerPresentationProvider provider = highlighter.getLineMarkerPresentationProvider();
+            if (provider == null) {
+                continue;
+            }
+            LineMarkerPresentationContext context = new EditorLineMarkerPresentationContext(myEditor, highlighter);
+            for (LineMarkerPresentation presentation : provider.buildPresentations(context)) {
+                QtLineMarkerPresentationPainter<LineMarkerPresentation> presentationPainter = QtLineMarkerPresentationPainter.findPainter(presentation);
+                if (presentationPainter == null) {
+                    continue;
+                }
+                int top = logicalLineY(presentation.startLine()) - scrollY;
+                int bottom = presentation.endLine() == presentation.startLine() ? top : logicalLineY(presentation.endLine()) - scrollY;
+                int[] column = areaColumn(presentation.area());
+                presentationPainter.paint(presentation, myEditor, painter, new QRect(column[0], top, column[1], bottom - top));
+            }
+        }
+    }
+
+    /**
+     * The gutter half of the frames around lines, closed on the left and open towards the text.
+     */
+    private void paintLineFrames(QPainter painter, int scrollY) {
+        int lineHeight = myEditor.getLineHeight();
+        Document document = myEditor.getDocument();
+        processPresentationHighlighters(highlighter -> {
+            LineFramePresentation presentation = highlighter.getLineFramePresentation();
+            if (presentation == null || !highlighter.isValid()) {
+                return;
+            }
+            int startLine = document.getLineNumber(highlighter.getStartOffset());
+            int endLine = document.getLineNumber(highlighter.getEndOffset());
+            int top = logicalLineY(startLine) - scrollY;
+            int bottom = logicalLineY(endLine) + lineHeight - scrollY;
+            DesktopQtLineFramePainter.paint(painter, TargetQt.to(presentation.color()), 2, top, width(), bottom, true);
+        });
     }
 
     private int lineNumberAreaWidth() {
@@ -344,6 +479,14 @@ public class DesktopQtEditorGutterWidget extends QWidget {
             }
 
             widest = Math.max(widest, width + 1);
+        }
+
+        Document document = myEditor.getDocument();
+        for (Inlay<?> inlay : myEditor.getInlayModel().getBlockElementsInRange(0, document.getTextLength())) {
+            GutterIconRenderer renderer = inlay.getGutterIconRenderer();
+            if (renderer != null) {
+                widest = Math.max(widest, scaledIconSize(renderer.getIcon()));
+            }
         }
 
         return widest;
@@ -389,7 +532,7 @@ public class DesktopQtEditorGutterWidget extends QWidget {
      * right aligned packed from its right, and centred ones sharing what is left between them.
      */
     private void paintRowIcons(QPainter painter, int visualLine, int scrollY, int lineHeight) {
-        layoutRowIcons(visualLine, visualLine * lineHeight - scrollY, lineHeight, (mark, bounds) -> paintIcon(painter, mark.getIcon(), bounds));
+        layoutRowIcons(visualLine, rowY(visualLine) - scrollY, lineHeight, (mark, bounds) -> paintIcon(painter, mark.getIcon(), bounds));
     }
 
     private void layoutRowIcons(int visualLine, int y, int lineHeight, BiConsumer<GutterMark, QRect> consumer) {
@@ -447,13 +590,68 @@ public class DesktopQtEditorGutterWidget extends QWidget {
         }
     }
 
+    private void layoutInlayIcons(int visualLine, int scrollY, int lineHeight, BiConsumer<GutterIconRenderer, QRect> consumer) {
+        DesktopQtEditorRowLayout rowLayout = myEditor.getRowLayout();
+        for (Inlay<?> inlay : rowLayout.getInlays(visualLine)) {
+            GutterIconRenderer renderer = inlay.getGutterIconRenderer();
+            Integer y = renderer == null ? null : rowLayout.inlayY(inlay);
+            if (renderer == null || y == null) {
+                continue;
+            }
+
+            int size = scaledIconSize(renderer.getIcon());
+            int height = inlay.getHeightInPixels();
+            if (size > height) {
+                continue;
+            }
+
+            int x = iconAreaOffset() + iconsAreaWidth() - size;
+            int shift = Math.min(iconAlignmentShift(size, lineHeight), height - size);
+            consumer.accept(renderer, new QRect(x, y - scrollY + shift, size, size));
+        }
+    }
+
+    private void paintInlayIcons(QPainter painter, int visualLine, int scrollY, int lineHeight) {
+        layoutInlayIcons(visualLine, scrollY, lineHeight, (renderer, bounds) -> paintIcon(painter, renderer.getIcon(), bounds));
+    }
+
+    private @Nullable GutterIconRenderer inlayRendererAt(int visualLine, QPoint position) {
+        int scrollY = mySurface.verticalScrollBar().value();
+        int y = position.y() + scrollY;
+
+        DesktopQtEditorRowLayout rowLayout = myEditor.getRowLayout();
+        SimpleReference<GutterIconRenderer> found = SimpleReference.create();
+        for (Inlay<?> inlay : rowLayout.getInlays(visualLine)) {
+            Integer top = rowLayout.inlayY(inlay);
+            if (top == null || y < top || y >= top + inlay.getHeightInPixels()) {
+                continue;
+            }
+
+            layoutInlayIcons(visualLine, scrollY, myEditor.getLineHeight(), (renderer, bounds) -> {
+                if (found.get() == null
+                    && renderer == inlay.getGutterIconRenderer()
+                    && position.x() >= bounds.left()
+                    && position.x() <= bounds.right()) {
+                    found.set(renderer);
+                }
+            });
+        }
+        return found.get();
+    }
+
     /**
      * The mark the pointer stands on, if any. Which row it is has already been decided by the y of the point, so
      * only the column of the icon is tested - a click a few pixels above or below the icon still belongs to it,
      * which is the target the row looks like it offers.
      */
-    private @Nullable GutterIconRenderer gutterRendererAt(QPoint position) {
+    private @Nullable GutterIconRenderer gutterRendererAt(QPoint point) {
+        QPoint position = new QPoint(logicalX(point.x()), point.y());
         int visualLine = visualLineAt(position.y());
+
+        int rowTop = rowY(visualLine) - mySurface.verticalScrollBar().value();
+        if (position.y() < rowTop || position.y() >= rowTop + myEditor.getLineHeight()) {
+            return inlayRendererAt(visualLine, position);
+        }
 
         GutterIconRenderer onLineNumbers = lineNumbersRenderer(visualLine);
         if (onLineNumbers != null) {
@@ -544,9 +742,29 @@ public class DesktopQtEditorGutterWidget extends QWidget {
     }
 
     private void paintIcon(QPainter painter, @Nullable Image image, QRect bounds) {
-        if (image != null) {
+        if (image == null) {
+            return;
+        }
+
+        painter.save();
+        try {
+            unmirror(painter, bounds.x(), bounds.width());
             DesktopQtImage.paint(painter, bounds, scaledImage(image));
         }
+        finally {
+            painter.restore();
+        }
+    }
+
+    private void unmirror(QPainter painter, double x, double width) {
+        if (myEditor.isMirrored()) {
+            painter.translate(x * 2 + width, 0);
+            painter.scale(-1, 1);
+        }
+    }
+
+    private int logicalX(int x) {
+        return myEditor.isMirrored() ? width() - x : x;
     }
 
     private Image scaledImage(Image image) {
@@ -570,6 +788,10 @@ public class DesktopQtEditorGutterWidget extends QWidget {
     protected void paintEvent(QPaintEvent event) {
         QPainter painter = new QPainter(this);
         try {
+            if (myEditor.isMirrored()) {
+                painter.translate(width(), 0);
+                painter.scale(-1, 1);
+            }
             paint(painter, event);
         }
         finally {
@@ -604,12 +826,14 @@ public class DesktopQtEditorGutterWidget extends QWidget {
 
         DesktopQtEditorVisualLines visualLines = myEditor.getVisualLines();
 
-        int firstLine = Math.max(0, (event.rect().top() + scrollY) / lineHeight);
-        int lastLine = Math.min(visualLines.getVisualLineCount() - 1, (event.rect().bottom() + scrollY) / lineHeight);
+        int firstLine = Math.max(0, myEditor.getRowLayout().yToVisualLine(event.rect().top() + scrollY));
+        int lastLine = Math.min(visualLines.getVisualLineCount() - 1, myEditor.getRowLayout().yToVisualLine(event.rect().bottom() + scrollY));
 
         if (lastLine < firstLine) {
             return;
         }
+
+        paintLineMarkerPresentations(painter, scrollY);
 
         ColorValue numberColor = scheme.getColor(EditorColors.LINE_NUMBERS_COLOR);
         ColorValue caretRowNumberColor = scheme.getColor(EditorColors.LINE_NUMBER_ON_CARET_ROW_COLOR);
@@ -642,17 +866,24 @@ public class DesktopQtEditorGutterWidget extends QWidget {
             // rows are numbered by the line of the file they show, so a collapsed region makes the numbers jump
             // rather than run on - and the strip counts from one while the editor counts from zero
             String number = String.valueOf(visualLines.visualToLogicalLine(line) + 1);
-            double x = right - metrics.getTextWidth(number);
+            double numberWidth = metrics.getTextWidth(number);
+            double x = right - numberWidth;
 
             painter.setPen(caretRows.contains(line) ? onCaretRow : plain);
-            painter.drawText(new QPointF(x, line * lineHeight - scrollY + baselineOffset), number);
+            painter.save();
+            unmirror(painter, x, numberWidth);
+            painter.drawText(new QPointF(x, rowY(line) - scrollY + baselineOffset), number);
+            painter.restore();
         }
 
         for (int line = firstLine; line <= lastLine; line++) {
             paintRowIcons(painter, line, scrollY, lineHeight);
+            paintInlayIcons(painter, line, scrollY, lineHeight);
         }
 
         paintFoldAnchors(painter, firstLine, lastLine, scrollY, lineHeight);
+
+        paintLineFrames(painter, scrollY);
     }
 
     /**
@@ -750,7 +981,7 @@ public class DesktopQtEditorGutterWidget extends QWidget {
     }
 
     private QRect lineNumberIconBounds(int size, int visualLine, int scrollY, int lineHeight) {
-        int y = visualLine * lineHeight - scrollY + (lineHeight - size) / 2;
+        int y = rowY(visualLine) - scrollY + (lineHeight - size) / 2;
         return new QRect(Math.max(0, lineNumberAreaOffset() + lineNumberAreaWidth() - RIGHT_PADDING - size), y, size, size);
     }
 
@@ -774,8 +1005,8 @@ public class DesktopQtEditorGutterWidget extends QWidget {
     public @Nullable QRect iconBounds(GutterIconRenderer renderer) {
         int lineHeight = myEditor.getLineHeight();
         int scrollY = mySurface.verticalScrollBar().value();
-        int firstLine = Math.max(0, scrollY / lineHeight);
-        int lastLine = (scrollY + height()) / lineHeight;
+        int firstLine = Math.max(0, myEditor.getRowLayout().yToVisualLine(scrollY));
+        int lastLine = myEditor.getRowLayout().yToVisualLine(scrollY + height());
 
         for (int line = firstLine; line <= lastLine; line++) {
             if (renderer.equals(lineNumbersRenderer(line))) {
@@ -783,11 +1014,19 @@ public class DesktopQtEditorGutterWidget extends QWidget {
             }
 
             SimpleReference<QRect> found = SimpleReference.create();
-            layoutRowIcons(line, line * lineHeight - scrollY, lineHeight, (mark, bounds) -> {
+            layoutRowIcons(line, rowY(line) - scrollY, lineHeight, (mark, bounds) -> {
                 if (found.get() == null && renderer.equals(mark)) {
                     found.set(bounds);
                 }
             });
+
+            if (found.get() == null) {
+                layoutInlayIcons(line, scrollY, lineHeight, (mark, bounds) -> {
+                    if (found.get() == null && renderer.equals(mark)) {
+                        found.set(bounds);
+                    }
+                });
+            }
 
             if (found.get() != null) {
                 return found.get();
@@ -820,7 +1059,7 @@ public class DesktopQtEditorGutterWidget extends QWidget {
             int iconHeight = Math.min(iconWidth, lineHeight);
 
             int x = areaOffset + (areaWidth - iconWidth) / 2;
-            int y = line * lineHeight - scrollY + (lineHeight - iconHeight) / 2;
+            int y = rowY(line) - scrollY + (lineHeight - iconHeight) / 2;
 
             paintIcon(painter, image, new QRect(x, y, iconWidth, iconHeight));
         }
@@ -904,7 +1143,7 @@ public class DesktopQtEditorGutterWidget extends QWidget {
      */
     @Override
     protected void mousePressEvent(QMouseEvent event) {
-        int x = event.pos().x();
+        int x = logicalX(event.pos().x());
         int visualLine = visualLineAt(event.pos().y());
 
         // an anchor takes the click for itself, since folding is the gutter's own business
@@ -986,7 +1225,7 @@ public class DesktopQtEditorGutterWidget extends QWidget {
             }
         }
 
-        EditorMouseEvent editorEvent = gutterMouseEvent(event, visualLine, areaAt(event.pos().x()));
+        EditorMouseEvent editorEvent = gutterMouseEvent(event, visualLine, areaAt(logicalX(event.pos().x())));
         if (editorEvent != null) {
             myEditor.fireMouseReleased(editorEvent);
 

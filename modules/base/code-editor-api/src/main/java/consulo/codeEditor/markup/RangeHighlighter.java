@@ -191,6 +191,13 @@ public interface RangeHighlighter extends RangeMarker {
     @Nullable LineSeparatorPresentationProvider getLineSeparatorPresentationProvider();
 
     /**
+     * Returns the frame drawn around the lines of the range highlighter, if any.
+     */
+    default @Nullable LineFramePresentation getLineFramePresentation() {
+        return null;
+    }
+
+    /**
      * Returns the placement of the separator drawn by the range highlighter
      * (above or below the range).
      *
@@ -255,6 +262,12 @@ public interface RangeHighlighter extends RangeMarker {
      * Declarative counterpart of {@link #setLineSeparatorRenderer(LineSeparatorRenderer)}.
      */
     void setLineSeparatorPresentationProvider(@Nullable LineSeparatorPresentationProvider provider);
+
+    /**
+     * Sets the frame drawn around the lines of the range highlighter, through the gutter and the text.
+     */
+    default void setLineFramePresentation(@Nullable LineFramePresentation presentation) {
+    }
 
     @SuppressWarnings("deprecation")
     default boolean isRenderedInGutter() {

@@ -28,6 +28,18 @@ module consulo.code.editor.api {
     exports consulo.codeEditor.util.popup;
     exports consulo.codeEditor.toolbar.floating;
 
+    exports consulo.codeEditor.internal.bridge to
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.qt.editor.impl,
+        consulo.diff.impl,
+        consulo.web.editor.impl,
+        consulo.version.control.system.impl;
+
+    exports consulo.codeEditor.internal.benchmark to
+        consulo.desktop.awt.editor.impl,
+        consulo.desktop.qt.editor.impl,
+        consulo.sand.language.plugin;
+
     exports consulo.codeEditor.internal.stickyLine to
         consulo.code.editor.impl,
         consulo.desktop.awt.editor.impl,

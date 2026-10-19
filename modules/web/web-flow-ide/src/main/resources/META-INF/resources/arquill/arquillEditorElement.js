@@ -54,6 +54,22 @@
         span.appendChild(holder);
     };
 
+    // the run holding the line of a component inlay takes the height of the component standing over it, which is
+    // what makes orion lay that line out taller - it measures every line it renders and keeps the odd ones
+    const decorateComponentInlay = span => {
+        const id = span.getAttribute ? span.getAttribute('data-arquill-inlay-component') : null;
+        if (id === null) {
+            return;
+        }
+
+        const host = span.ownerDocument.querySelector('[data-arquill-component-inlay="' + id + '"]');
+        const height = host && host.$arquillHeight ? host.$arquillHeight : 0;
+
+        span.style.display = 'inline-block';
+        span.style.verticalAlign = 'top';
+        span.style.height = height > 0 ? height + 'px' : '';
+    };
+
     const decorateInlayImagesOnCreate = textView => {
         const line = textView._getLine(0);
         const linePrototype = Object.getPrototypeOf(line);
@@ -68,6 +84,7 @@
         linePrototype._createSpan = function (...args) {
             const span = createSpan.apply(this, args);
             decorateInlayImage(span);
+            decorateComponentInlay(span);
             return span;
         };
     };
@@ -135,9 +152,19 @@
                 return viewModel.getLineCount();
             }
 
-            const offset = toViewOffset(baseModel.getLineStart(documentLine));
+            const lineStart = baseModel.getLineStart(documentLine);
+            const offset = toViewOffset(lineStart);
+            if (offset >= 0) {
+                return viewModel.getLineAtOffset(offset);
+            }
 
-            return offset < 0 ? -1 : viewModel.getLineAtOffset(offset);
+            for (const projection of viewModel._projections || []) {
+                if (projection.start === lineStart && projection.end > projection.start) {
+                    const range = projectionViewRange(projection);
+                    return range ? viewModel.getLineAtOffset(range.start) : -1;
+                }
+            }
+            return -1;
         };
 
         // orion places the rulers and the text against the host, but the overlays are absolutely
@@ -168,7 +195,11 @@
             // the rulers rather than the text: the text is scrolled sideways and carries the inlays, so where it
             // starts on screen is neither the gutter nor the same on two lines
             const leftRuler = element.querySelector('.textviewLeftRuler');
-            if (leftRuler) {
+            if (element.$arquillMirrored) {
+                const area = textView.getClientArea();
+                detail.textX = Math.round(textView.convert({ x: area.x, y: 0 }, 'document', 'page').x - element.getBoundingClientRect().left);
+            }
+            else if (leftRuler) {
                 detail.textX = Math.round(leftRuler.getBoundingClientRect().width);
             }
 
@@ -1029,16 +1060,13 @@
                 return;
             }
 
-            // orion keeps the annotation ruler left of the line numbers - it is added at index 0 among
-            // the left rulers - and that is the only free column, anchoring the overlay anywhere else
-            // draws the icons over the digits
-            const annotationRuler = element.querySelector('.textviewLeftRuler .ruler.annotations');
-            if (!annotationRuler) {
+            const marksRuler = element.querySelector('.textviewLeftRuler .ruler.marks');
+            if (!marksRuler) {
                 return;
             }
 
             const hostRect = element.getBoundingClientRect();
-            const rulerRect = annotationRuler.getBoundingClientRect();
+            const rulerRect = marksRuler.getBoundingClientRect();
 
             const lineHeight = textView.getLineHeight();
 
@@ -1049,9 +1077,9 @@
             const fontHeight = contentDiv ? Math.round(parseFloat(getComputedStyle(contentDiv).fontSize)) : 0;
             const size = fontHeight > 0 ? fontHeight : 12;
 
-            const iconColumnWidth = rulerRect.width - annotationColumnWidth;
+            const iconColumnWidth = rulerRect.width;
 
-            gutter.style.left = (rulerRect.left - hostRect.left + annotationColumnWidth) + 'px';
+            gutter.style.left = (rulerRect.left - hostRect.left) + 'px';
             gutter.style.width = iconColumnWidth + 'px';
             gutter.style.setProperty('--arquill-gutter-icon-size', size + 'px');
 
@@ -1065,7 +1093,7 @@
 
             let widest = 0;
             for (const mark of marks) {
-                if (mark.line >= 0 && mark.line < baseModel.getLineCount()) {
+                if (!mark.inlay && mark.line >= 0 && mark.line < baseModel.getLineCount()) {
                     const count = (countPerLine[mark.line] || 0) + 1;
                     countPerLine[mark.line] = count;
 
@@ -1100,13 +1128,15 @@
                 }
 
                 // the mark carries a document line, the view is laid out over the projected model
-                const viewLine = toViewLine(mark.line);
+                const viewLine = mark.inlay ? componentInlayViewLine(mark.inlay) : toViewLine(mark.line);
                 if (viewLine < 0) {
                     continue;
                 }
 
-                const column = perLine[mark.line] || 0;
-                perLine[mark.line] = column + 1;
+                const groupKey = mark.inlay ? mark.inlay : mark.line;
+                const groupSize = mark.inlay ? 1 : countPerLine[mark.line];
+                const column = perLine[groupKey] || 0;
+                perLine[groupKey] = column + 1;
 
                 // asking orion where the line actually is beats computing line * lineHeight - it stays
                 // correct while scrolling and while the view padding changes
@@ -1142,9 +1172,10 @@
                 icon.style.top = top + 'px';
                 // a group wider than the column keeps to the left edge, half of it would be clipped away. the
                 // gap is inside the slot, so the icon sits at its centre rather than against its neighbour
+                const slotIndex = element.$arquillMirrored ? groupSize - 1 - column : column;
                 icon.style.left = Math.max(
                     MARK_GAP,
-                    (iconColumnWidth - countPerLine[mark.line] * slot) / 2 + column * slot + MARK_GAP
+                    (iconColumnWidth - groupSize * slot) / 2 + slotIndex * slot + MARK_GAP
                 ) + 'px';
                 icon.addEventListener('click', domEvent => {
                     hideTooltip();
@@ -1332,13 +1363,19 @@
         // outside the text, so the offset the pointer is over cannot be asked for directly
         const lineAtPageY = pageY => {
             const point = textView.convert({ x: 0, y: pageY }, 'page', 'document');
-            const viewLine = Math.floor(point.y / textView.getLineHeight());
+            // the view answers for lines of different heights - a component inlay makes the line it reserves taller
+            const viewLine = point.y < 0 ? -1 : textView.getLineIndex(point.y);
 
             if (viewLine < 0 || viewLine >= viewModel.getLineCount()) {
                 return -1;
             }
 
-            const baseOffset = toBaseOffset(viewModel.getLineStart(viewLine));
+            const owner = componentInlayOwnerLine(viewLine);
+            if (owner >= 0) {
+                return owner;
+            }
+
+            const baseOffset = viewLineBaseOffset(viewLine);
 
             return baseOffset < 0 ? -1 : baseModel.getLineAtOffset(baseOffset);
         };
@@ -1373,25 +1410,31 @@
         // the pointer over the line numbers is what offers a breakpoint on the line under it, so the platform is
         // told which line that is - only when it changes, the pointer crosses a row many times on its way down
         let hoveredGutterLine = -1;
+        let hoveredGutterNumbers = false;
 
-        const setHoveredGutterLine = line => {
-            if (hoveredGutterLine === line) {
+        // the whole gutter reports the line under the pointer, as the desktop gutters do - the line numbers for the
+        // breakpoint promoter, the rest of the columns for controls offered on the hovered line
+        const setHoveredGutterLine = (line, numbers) => {
+            if (hoveredGutterLine === line && hoveredGutterNumbers === numbers) {
                 return;
             }
 
             hoveredGutterLine = line;
+            hoveredGutterNumbers = numbers;
 
-            element.dispatchEvent(new CustomEvent('arquill-gutter-hover', { detail: { line: line } }));
+            element.dispatchEvent(new CustomEvent('arquill-gutter-hover', { detail: { line: line, numbers: numbers } }));
         };
 
         element.addEventListener('mousemove', domEvent => {
-            const overLineNumbers = domEvent.target.closest
-                && domEvent.target.closest('.textviewLeftRuler .ruler.lines, .arquill-gutter-line-numbers');
+            const target = domEvent.target;
+            const overLineNumbers = target.closest
+                && target.closest('.textviewLeftRuler .ruler.lines, .arquill-gutter-line-numbers');
+            const overGutter = overLineNumbers || (target.closest && target.closest('.textviewLeftRuler, .arquill-gutter'));
 
-            setHoveredGutterLine(overLineNumbers ? lineAtPageY(domEvent.clientY) : -1);
+            setHoveredGutterLine(overGutter ? lineAtPageY(domEvent.clientY) : -1, !!overLineNumbers);
         }, true);
 
-        element.addEventListener('mouseleave', () => setHoveredGutterLine(-1));
+        element.addEventListener('mouseleave', () => setHoveredGutterLine(-1, false));
 
         // the gutter has a menu of its own, and the whole editor is one component to the browser - so which of the
         // two the right click asked for is decided here and the server is told before it expands the group.
@@ -1434,7 +1477,7 @@
         // the vcs change bars, a strip of its own - the awt gutter paints them in the free painters
         // area right of the icons, so they must not land in the marker column
         // the line marker presentations, one absolutely positioned layer per gutter area. the areas the
-        // browser gutter can tell apart are the strip left of the annotation ruler, the icons column and the
+        // browser gutter can tell apart are the strip at the start of the icons column, the icons column and the
         // strip right of the folding ruler - the wider awt bands all resolve onto the whole gutter
         const gutterBands = document.createElement('div');
         gutterBands.className = 'arquill-gutter-bands';
@@ -1445,21 +1488,36 @@
 
         const bandBounds = (area, hostRect) => {
             const annotationRuler = element.querySelector('.textviewLeftRuler .ruler.annotations');
+            const marksRuler = element.querySelector('.textviewLeftRuler .ruler.marks');
             const foldingRuler = element.querySelector('.textviewLeftRuler .ruler.folding');
-            if (!annotationRuler || !foldingRuler) {
+            if (!annotationRuler || !marksRuler || !foldingRuler) {
                 return null;
             }
 
             const left = annotationRuler.getBoundingClientRect();
+            const marks = marksRuler.getBoundingClientRect();
             const right = foldingRuler.getBoundingClientRect();
+
+            if (element.$arquillMirrored) {
+                switch (area) {
+                    case 'LEFT_FREE_PAINTERS':
+                        return { left: marks.right - hostRect.left - BAND_WIDTH, width: BAND_WIDTH };
+                    case 'RIGHT_FREE_PAINTERS':
+                        return { left: right.left - hostRect.left + 1, width: BAND_WIDTH };
+                    case 'ICONS':
+                        return { left: marks.left - hostRect.left, width: marks.width };
+                    default:
+                        return { left: right.left - hostRect.left, width: left.right - right.left };
+                }
+            }
 
             switch (area) {
                 case 'LEFT_FREE_PAINTERS':
-                    return { left: left.left - hostRect.left, width: BAND_WIDTH };
+                    return { left: marks.left - hostRect.left, width: BAND_WIDTH };
                 case 'RIGHT_FREE_PAINTERS':
                     return { left: right.right - hostRect.left - BAND_WIDTH - 1, width: BAND_WIDTH };
                 case 'ICONS':
-                    return { left: left.left - hostRect.left, width: left.width };
+                    return { left: marks.left - hostRect.left, width: marks.width };
                 default:
                     return { left: left.left - hostRect.left, width: right.right - left.left };
             }
@@ -1495,6 +1553,115 @@
             return hit;
         };
 
+        const colorContext = document.createElement('canvas').getContext('2d');
+
+        const parseColor = color => {
+            colorContext.fillStyle = '#000';
+            colorContext.fillStyle = color;
+            const value = colorContext.fillStyle;
+            if (value.startsWith('#')) {
+                return [parseInt(value.slice(1, 3), 16), parseInt(value.slice(3, 5), 16), parseInt(value.slice(5, 7), 16), 255];
+            }
+            const channels = value.slice(value.indexOf('(') + 1, value.indexOf(')')).split(',').map(part => parseFloat(part));
+            return [channels[0], channels[1], channels[2], channels.length > 3 ? Math.round(channels[3] * 255) : 255];
+        };
+
+        const mixColor = (first, second, balance) => {
+            const ratio = Math.min(1, Math.max(0, balance));
+            const mixed = first.map((channel, index) => Math.trunc((1 - ratio) * channel + second[index] * ratio + 0.5));
+            return 'rgba(' + mixed[0] + ',' + mixed[1] + ',' + mixed[2] + ',' + (mixed[3] / 255) + ')';
+        };
+
+        const drawWave = (parent, left, width, lineTop, lineHeight, originX, background, topBorder, bottomBorder) => {
+            const step = Math.max(Math.trunc(lineHeight / 3), 1);
+            const height = Math.max(Math.trunc(lineHeight / 2), 1);
+            if (width <= 0) {
+                return;
+            }
+
+            const count = Math.trunc(width / step) + 3;
+            const shift = Math.trunc((left - originX) / step);
+            const baseY = Math.trunc((lineHeight - height - step) / 2);
+
+            const points = [];
+            for (let index = 0; index < count; index++) {
+                const absIndex = index + shift;
+                const x = absIndex * step + originX - left;
+                const y = absIndex === 0 ? Math.trunc(step / 2) + baseY : absIndex % 2 === 0 ? baseY : step + baseY;
+                points.push([x, y]);
+            }
+
+            const backgroundRgba = parseColor(background);
+            const topRgba = topBorder ? parseColor(topBorder) : null;
+            const bottomRgba = bottomBorder ? parseColor(bottomBorder) : null;
+
+            const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            svg.setAttribute('class', 'arquill-wave');
+            svg.style.position = 'absolute';
+            svg.style.left = Math.round(left) + 'px';
+            svg.style.top = Math.round(lineTop) + 'px';
+            svg.style.width = Math.max(0, Math.round(width)) + 'px';
+            svg.style.height = lineHeight + 'px';
+            svg.style.overflow = 'hidden';
+            svg.style.pointerEvents = 'none';
+
+            for (let row = 0; row < height; row++) {
+                let color = null;
+                if (topRgba) {
+                    const ratio = row / Math.max(Math.trunc(lineHeight / 4), 1);
+                    if (ratio <= 1) {
+                        color = mixColor(topRgba, backgroundRgba, ratio);
+                    }
+                }
+                if (!color && bottomRgba) {
+                    const ratio = (height - row - 1) / Math.max(Math.trunc(lineHeight / 12), 1);
+                    if (ratio <= 1) {
+                        color = mixColor(bottomRgba, backgroundRgba, ratio);
+                    }
+                }
+                if (!color) {
+                    color = background;
+                }
+
+                const polyline = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+                polyline.setAttribute('points', points.map(point => (point[0] + 0.5) + ',' + (point[1] + row + 0.5)).join(' '));
+                polyline.setAttribute('fill', 'none');
+                polyline.setAttribute('stroke', color);
+                polyline.setAttribute('stroke-width', '1');
+                polyline.setAttribute('shape-rendering', 'crispEdges');
+                svg.appendChild(polyline);
+            }
+
+            parent.appendChild(svg);
+        };
+
+        const gutterLeft = hostRect => {
+            const ruler = element.querySelector('.textviewLeftRuler');
+            return ruler ? ruler.getBoundingClientRect().left - hostRect.left : 0;
+        };
+
+        const boundaryRule = (left, width, y, color, doubleLine, dotted) => {
+            const rule = document.createElement('div');
+            rule.style.position = 'absolute';
+            rule.style.boxSizing = 'border-box';
+            rule.style.left = Math.round(left) + 'px';
+            rule.style.width = Math.max(0, Math.round(width)) + 'px';
+            rule.style.pointerEvents = 'none';
+            if (dotted) {
+                const rows = doubleLine ? 3 : 2;
+                rule.style.top = (y - 1) + 'px';
+                rule.style.height = rows + 'px';
+                rule.style.backgroundImage = 'linear-gradient(to right, ' + color + ' 2px, transparent 2px)';
+                rule.style.backgroundSize = '4px ' + rows + 'px';
+            }
+            else {
+                rule.style.top = y + 'px';
+                rule.style.height = (doubleLine ? 2 : 1) + 'px';
+                rule.style.backgroundColor = color;
+            }
+            return rule;
+        };
+
         const renderGutterBands = () => {
             gutterBands.textContent = '';
 
@@ -1521,6 +1688,29 @@
                 }
 
                 const top = pageY(startLine) - hostRect.top;
+
+                if (band.style === 'LINE') {
+                    if (top >= -2 && top <= element.clientHeight + 2) {
+                        gutterBands.appendChild(boundaryRule(bounds.left, bounds.width, Math.round(top) - 1, band.borderColor, band.doubleLine, band.dotted));
+                    }
+                    continue;
+                }
+
+                if (band.style === 'WAVE') {
+                    const lineHeight = textView.getLineHeight();
+                    if (top + lineHeight >= 0 && top <= element.clientHeight) {
+                        drawWave(gutterBands, bounds.left, bounds.width, Math.round(top), lineHeight, gutterLeft(hostRect),
+                            band.color, band.borderColor, band.bottomBorderColor);
+                    }
+                    continue;
+                }
+
+                if (band.style === 'CHUNK' && boundary) {
+                    if (top >= -2 && top <= element.clientHeight + 2 && band.borderColor) {
+                        gutterBands.appendChild(boundaryRule(bounds.left, bounds.width, Math.round(top) - 1, band.borderColor, true, band.dotted));
+                    }
+                    continue;
+                }
 
                 let height;
                 if (boundary) {
@@ -1552,7 +1742,15 @@
                     bar.style.backgroundColor = band.color;
                 }
                 if (band.borderColor) {
-                    bar.style.border = '1px ' + (band.dotted ? 'dotted ' : 'solid ') + band.borderColor;
+                    const border = '1px ' + (band.dotted ? 'dotted ' : 'solid ') + band.borderColor;
+                    if (band.style === 'CHUNK') {
+                        bar.style.top = (top - 1) + 'px';
+                        bar.style.borderTop = border;
+                        bar.style.borderBottom = border;
+                    }
+                    else {
+                        bar.style.border = border;
+                    }
                 }
 
                 if (band.clickId >= 0) {
@@ -1902,6 +2100,23 @@
             return { start: end - projection._model.getCharCount(), end: end };
         };
 
+        const viewLineBaseOffset = viewLine => {
+            const start = viewModel.getLineStart(viewLine);
+            const base = toBaseOffset(start);
+            if (base >= 0) {
+                return base;
+            }
+
+            const inlays = new Set(Array.from(inlayProjections.values(), held => held.projection));
+            for (const projection of viewModel._projections || []) {
+                const range = projectionViewRange(projection);
+                if (range && start >= range.start && start < range.end) {
+                    return inlays.has(projection) ? -1 : projection.start;
+                }
+            }
+            return -1;
+        };
+
         // projections may not overlap, and a region about to collapse takes in whatever stood inside it. so the
         // inlays step aside before the fold regions are reconciled, and renderInlays puts back the ones that
         // still have somewhere to stand once the collapse has happened
@@ -1923,9 +2138,11 @@
                 const result = rulerAnnotations(startLine, endLine);
 
                 for (let line = startLine; line < endLine; line++) {
-                    if (result[line] && toBaseOffset(viewModel.getLineStart(line)) < 0) {
-                        result[line].html = '';
+                    if (!result[line] || toBaseOffset(viewModel.getLineStart(line)) >= 0) {
+                        continue;
                     }
+                    const base = viewLineBaseOffset(line);
+                    result[line].html = base < 0 ? '' : String(baseModel.getLineAtOffset(base) + 1);
                 }
 
                 return result;
@@ -2010,6 +2227,9 @@
                         }
                         if (segment.tooltip) {
                             attributes['data-arquill-inlay-tooltip'] = segment.tooltip;
+                        }
+                        if (segment.component) {
+                            attributes['data-arquill-inlay-component'] = segment.component;
                         }
 
                         const style = Object.keys(attributes).length === 0
@@ -2151,6 +2371,188 @@
         // one throws the columns away and builds them again several times per frame, which reads as flicker
         let renderPending = false;
 
+        // the view line a component inlay reserved: the run naming the component inside the projection of its anchor
+        const componentInlayLines = () => {
+            const lines = [];
+            for (const held of inlayProjections.values()) {
+                const range = projectionViewRange(held.projection);
+                if (!range) {
+                    continue;
+                }
+
+                let start = range.start;
+                for (const segment of held.segments || []) {
+                    if (segment.component) {
+                        lines.push({ id: segment.component, viewLine: viewModel.getLineAtOffset(start) });
+                    }
+                    start += (segment.text || '').length + (segment.br ? 1 : 0);
+                }
+            }
+            return lines;
+        };
+
+        const componentInlayViewLine = id => {
+            const found = componentInlayLines().find(it => it.id === id);
+            return found ? found.viewLine : -1;
+        };
+
+        const componentInlayOwnerLine = viewLine => {
+            const layer = element.$arquillComponentLayer;
+            const found = layer ? componentInlayLines().find(it => it.viewLine === viewLine) : null;
+            const host = found ? layer.querySelector('[data-arquill-component-inlay="' + found.id + '"]') : null;
+            const owner = host ? parseInt(host.getAttribute('data-arquill-component-line'), 10) : NaN;
+            return isNaN(owner) ? -1 : owner;
+        };
+
+        // every live component stands over the line its inlay reserved, across the visible width of the text
+        const renderComponentInlays = () => {
+            const layer = element.$arquillComponentLayer;
+            if (!layer || layer.childElementCount === 0) {
+                return;
+            }
+
+            const host = element.getBoundingClientRect();
+            const area = textView.getClientArea();
+            const left = textView.convert({ x: area.x, y: 0 }, 'document', 'page').x - host.left;
+
+            for (const child of layer.children) {
+                const viewLine = componentInlayViewLine(child.getAttribute('data-arquill-component-inlay'));
+                if (viewLine < 0) {
+                    child.style.visibility = 'hidden';
+                    continue;
+                }
+
+                child.style.visibility = '';
+                child.style.left = Math.round(left) + 'px';
+                child.style.width = Math.max(0, Math.round(area.width)) + 'px';
+                child.style.top = Math.round(pageY(viewLine) - host.top) + 'px';
+            }
+        };
+
+        const renderLineSeparators = () => {
+            let layer = element.$arquillLineSeparatorLayer;
+            const separators = element.$arquillLineSeparators || [];
+            if (!layer) {
+                if (separators.length === 0) {
+                    return;
+                }
+                layer = document.createElement('div');
+                layer.className = 'arquill-line-separators';
+                layer.style.cssText = 'position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:1';
+                element.appendChild(layer);
+                element.$arquillLineSeparatorLayer = layer;
+            }
+            layer.replaceChildren();
+
+            const host = element.getBoundingClientRect();
+            const area = textView.getClientArea();
+            const left = textView.convert({ x: area.x, y: 0 }, 'document', 'page').x - host.left;
+            const width = area.width;
+            const lineHeight = textView.getLineHeight();
+            const originX = gutterLeft(host);
+
+            for (const separator of separators) {
+                const viewLine = toViewLine(separator.line);
+                if (viewLine < 0) {
+                    continue;
+                }
+
+                const lineTop = Math.round(pageY(viewLine) - host.top);
+                const y = separator.top ? lineTop - 1 : lineTop + lineHeight - 1;
+                if (y < -lineHeight || y > element.clientHeight + lineHeight) {
+                    continue;
+                }
+
+                if (separator.style === 'WAVE') {
+                    drawWave(layer, left, width, y + 1, lineHeight, originX, separator.color, separator.topBorder, separator.bottomBorder);
+                }
+                else {
+                    layer.appendChild(boundaryRule(left, width, separator.top ? y + 1 : y, separator.color, separator.doubleLine, separator.dotted));
+                }
+            }
+        };
+
+        // the frames around lines: the gutter half closed on the left, the text half on the right, open where they meet
+        const renderLineFrames = () => {
+            let layer = element.$arquillLineFrameLayer;
+            const frames = element.$arquillLineFrames || [];
+            if (!layer) {
+                if (frames.length === 0) {
+                    return;
+                }
+                layer = document.createElement('div');
+                layer.className = 'arquill-line-frames';
+                element.appendChild(layer);
+                element.$arquillLineFrameLayer = layer;
+            }
+            layer.replaceChildren();
+
+            const host = element.getBoundingClientRect();
+            const ruler = element.querySelector('.textviewLeftRuler');
+            const rulerRect = ruler ? ruler.getBoundingClientRect() : null;
+            const area = textView.getClientArea();
+            const textLeft = textView.convert({ x: area.x, y: 0 }, 'document', 'page').x - host.left;
+
+            for (const frame of frames) {
+                const startLine = toViewLine(frame.start);
+                const endLine = toViewLine(frame.end);
+                if (startLine < 0 || endLine < 0) {
+                    continue;
+                }
+
+                const top = Math.round(pageY(startLine) - host.top);
+                const bottom = Math.round(pageY(endLine) - host.top + textView.getLineHeight());
+
+                const part = (left, width, gutter) => {
+                    if (width <= 0) {
+                        return;
+                    }
+                    const div = document.createElement('div');
+                    div.className = 'arquill-line-frame ' + (gutter ? 'arquill-line-frame-gutter' : 'arquill-line-frame-text');
+                    div.style.left = Math.round(left) + 'px';
+                    div.style.width = Math.round(width) + 'px';
+                    div.style.top = top + 'px';
+                    div.style.height = Math.max(0, bottom - top) + 'px';
+                    div.style.borderColor = frame.color;
+                    layer.appendChild(div);
+                };
+
+                if (rulerRect) {
+                    part(rulerRect.left - host.left + 2, rulerRect.width - 2, true);
+                }
+                part(textLeft, area.width - 15, false);
+            }
+        };
+
+        // a component changing its height changes the height of the line it reserved, which orion only learns by
+        // laying the lines out again
+        const componentInlayResized = entries => {
+            let changed = false;
+            for (const entry of entries) {
+                const child = entry.target;
+                const height = Math.ceil(child.getBoundingClientRect().height);
+                if (child.$arquillHeight === height) {
+                    continue;
+                }
+
+                child.$arquillHeight = height;
+                changed = true;
+
+                const id = child.getAttribute('data-arquill-component-inlay');
+                for (const span of element.querySelectorAll('[data-arquill-inlay-component="' + id + '"]')) {
+                    decorateComponentInlay(span);
+                }
+            }
+
+            if (changed) {
+                textView._resetLineHeight();
+                textView.redraw();
+                scheduleOverlayRender();
+            }
+        };
+
+        element.$arquillComponentInlayResized = componentInlayResized;
+
         const scheduleOverlayRender = () => {
             if (renderPending) {
                 return;
@@ -2164,6 +2566,9 @@
                 renderGutterMarks();
                 renderGutterBands();
                 renderTextAnnotations();
+                renderComponentInlays();
+                renderLineSeparators();
+                renderLineFrames();
             });
         };
 
@@ -2205,6 +2610,59 @@
                 }
             });
         }
+
+        element.$arquillBridgeView = {
+            lineTop: line => {
+                if (line >= baseModel.getLineCount()) {
+                    const last = viewModel.getLineCount() - 1;
+                    return pageY(last) + textView.getLineHeight(last);
+                }
+                const viewLine = toViewLine(line);
+                return viewLine < 0 ? null : pageY(viewLine);
+            },
+            lineTopInDocument: line => {
+                if (line >= baseModel.getLineCount()) {
+                    const last = viewModel.getLineCount() - 1;
+                    return textView.getLinePixel(last) + textView.getLineHeight(last);
+                }
+                const viewLine = toViewLine(line);
+                return viewLine < 0 ? null : textView.getLinePixel(viewLine);
+            },
+            lineAtY: y => {
+                const viewLine = textView.getLineIndex(y);
+                const offset = toBaseOffset(viewModel.getLineStart(viewLine));
+                return offset < 0 ? null : baseModel.getLineAtOffset(offset);
+            },
+            lineHeight: () => textView.getLineHeight(),
+            clientArea: () => textView.getClientArea(),
+            maxTopPixel: () => {
+                const last = viewModel.getLineCount() - 1;
+                const height = textView.getLinePixel(last) + textView.getLineHeight(last);
+                return Math.max(0, height - textView.getClientArea().height);
+            },
+            scrollTo: (x, y) => {
+                textView.setTopPixel(Math.max(0, Math.round(y)));
+                textView.setHorizontalPixel(Math.max(0, Math.round(x)));
+            },
+            onScroll: listener => textView.addEventListener('Scroll', listener)
+        };
+
+        textView.addEventListener('LineStyle', event => {
+            const backgrounds = element.$arquillLineBackgrounds;
+            if (!backgrounds) {
+                return;
+            }
+            const baseOffset = toBaseOffset(event.lineStart);
+            if (baseOffset < 0) {
+                return;
+            }
+            const color = backgrounds[baseModel.getLineAtOffset(baseOffset)];
+            if (!color) {
+                return;
+            }
+            event.style = event.style || {};
+            event.style.style = Object.assign({}, event.style.style, { backgroundColor: color });
+        });
 
         const onViewChanged = () => {
             scheduleOverlayRender();
@@ -2769,6 +3227,38 @@
                 element.appendChild(layer);
             },
 
+            // the live components of component inlays. they belong to the inlays rather than to the text, so the keys
+            // and clicks typed into them stop here instead of reaching the editor listening on the host
+            setComponentInlayLayer: layer => {
+                element.appendChild(layer);
+
+                if (layer.$arquillInstalled) {
+                    return;
+                }
+                layer.$arquillInstalled = true;
+                element.$arquillComponentLayer = layer;
+
+                for (const type of ['keydown', 'keypress', 'keyup', 'mousedown', 'mouseup', 'mousemove', 'click', 'dblclick',
+                    'contextmenu', 'input', 'paste', 'copy', 'cut', 'compositionstart', 'compositionend']) {
+                    layer.addEventListener(type, domEvent => domEvent.stopPropagation());
+                }
+
+                const resizeObserver = new ResizeObserver(entries => {
+                    if (element.$arquillComponentInlayResized) {
+                        element.$arquillComponentInlayResized(entries);
+                    }
+                });
+                for (const child of layer.children) {
+                    resizeObserver.observe(child);
+                }
+                new MutationObserver(records => {
+                    for (const record of records) {
+                        record.addedNodes.forEach(node => node.nodeType === 1 && resizeObserver.observe(node));
+                        record.removedNodes.forEach(node => node.nodeType === 1 && resizeObserver.unobserve(node));
+                    }
+                }).observe(layer, { childList: true });
+            },
+
             // parsed once here, the lookup runs on every pointer move
             setTooltipRanges: rangesJson => {
                 element.$arquillTooltipRanges = JSON.parse(rangesJson);
@@ -2821,6 +3311,68 @@
                 renderGutterBands();
             },
 
+            setLineFrames: framesJson => {
+                element.$arquillLineFrames = JSON.parse(framesJson);
+                scheduleOverlayRender();
+            },
+
+            setMirrored: mirrored => {
+                element.$arquillMirrored = !!mirrored;
+                element.classList.toggle('arquill-mirrored', !!mirrored);
+                textView.setOptions({ mirrored: !!mirrored });
+                scheduleOverlayRender();
+            },
+
+            scrollToPixel: (x, y) => {
+                textView.setTopPixel(Math.max(0, y));
+                textView.setHorizontalPixel(Math.max(0, x));
+            },
+
+            scrollToLine: (line, scrollType) => {
+                const viewLine = toViewLine(line);
+                if (viewLine < 0) {
+                    return;
+                }
+
+                const area = textView.getClientArea();
+                const lineHeight = textView.getLineHeight();
+                const lineTop = textView.getLinePixel(viewLine);
+
+                let top = area.y;
+                switch (scrollType) {
+                    case 'CENTER':
+                        top = lineTop - (area.height - lineHeight) / 2;
+                        break;
+                    case 'CENTER_UP':
+                        top = lineTop - area.height / 3;
+                        break;
+                    case 'CENTER_DOWN':
+                        top = lineTop - area.height * 2 / 3;
+                        break;
+                    default:
+                        if (lineTop < area.y) {
+                            top = lineTop;
+                        }
+                        else if (lineTop + lineHeight > area.y + area.height) {
+                            top = lineTop + lineHeight - area.height;
+                        }
+                }
+
+                if (Math.round(top) !== Math.round(area.y)) {
+                    textView.setTopPixel(Math.max(0, Math.round(top)));
+                }
+            },
+
+            setLineBackgrounds: backgroundsJson => {
+                element.$arquillLineBackgrounds = JSON.parse(backgroundsJson);
+                textView.redrawLines();
+            },
+
+            setLineSeparators: separatorsJson => {
+                element.$arquillLineSeparators = JSON.parse(separatorsJson);
+                scheduleOverlayRender();
+            },
+
             setErrorStripeMarks: marksJson => {
                 element.$arquillErrorStripeMarks = marksJson;
                 renderErrorStripe();
@@ -2858,4 +3410,325 @@
     };
 
     window.arquillEditorElement = { install: install };
+
+    window.arquillBridge = (() => {
+        const SVG = 'http://www.w3.org/2000/svg';
+        const CTRL_PROXIMITY_X = 0.3;
+        const SYNC_ECHO_MS = 150;
+
+        const editorOf = host => host
+            ? (host.classList && host.classList.contains('arquill-editor') ? host : host.querySelector('.arquill-editor'))
+            : null;
+
+        const viewsOf = state => [editorOf(state.leftHost), editorOf(state.rightHost)].map(editor => editor ? editor.$arquillBridgeView : null);
+
+        const transfer = (anchors, from, to, line) => {
+            let from1 = 0, to1 = 0, from2 = 0, to2 = 0;
+            for (const anchor of anchors) {
+                from1 = from2;
+                to1 = to2;
+                from2 = anchor[from];
+                to2 = anchor[to];
+                if (line <= from2) {
+                    break;
+                }
+            }
+            if (from1 === line) {
+                return to1;
+            }
+            if (from2 === line) {
+                return to2;
+            }
+            if (from2 < line) {
+                return line - from2 + to2;
+            }
+            return Math.min(to1 + (line - from1), to2);
+        };
+
+        const svgElement = (name, attributes) => {
+            const node = document.createElementNS(SVG, name);
+            for (const key in attributes) {
+                node.setAttribute(key, attributes[key]);
+            }
+            return node;
+        };
+
+        const render = divider => {
+            const state = divider.$arquillBridge;
+            if (!state || !state.svg) {
+                return;
+            }
+            const svg = state.svg;
+            svg.replaceChildren();
+
+            const data = state.data;
+            if (!data) {
+                return;
+            }
+            divider.style.background = data.background || '';
+
+            const views = viewsOf(state);
+            if (!views[0] || !views[1]) {
+                return;
+            }
+
+            const rect = divider.getBoundingClientRect();
+            const width = rect.width;
+            const height = rect.height;
+            const y = (view, line) => {
+                const top = view.lineTop(line);
+                return top == null ? null : top - rect.top;
+            };
+
+            for (const connector of data.connectors) {
+                const start1 = y(views[0], connector[0]);
+                const end1 = y(views[0], connector[1]);
+                const start2 = y(views[1], connector[2]);
+                const end2 = y(views[1], connector[3]);
+                if (start1 == null || end1 == null || start2 == null || end2 == null) {
+                    continue;
+                }
+                if (Math.max(end1, end2) < 0 || Math.min(start1, start2) > height) {
+                    continue;
+                }
+
+                const startY1 = start1 - 1;
+                const startY2 = start2 - 1;
+                const endY1 = end1 - 1 - startY1 < 2 ? startY1 + 1 : end1 - 1;
+                const endY2 = end2 - 1 - startY2 < 2 ? startY2 + 1 : end2 - 1;
+                const ctrl1 = width * CTRL_PROXIMITY_X;
+                const ctrl2 = width * (1 - CTRL_PROXIMITY_X);
+                const color = connector[4];
+                const resolved = connector[5];
+
+                const upper = data.curved
+                    ? 'M 0 ' + startY1 + ' C ' + ctrl1 + ' ' + startY1 + ' ' + ctrl2 + ' ' + startY2 + ' ' + width + ' ' + startY2
+                    : 'M 0 ' + startY1 + ' L ' + width + ' ' + startY2;
+
+                if (resolved) {
+                    const lower = data.curved
+                        ? 'M ' + width + ' ' + endY2 + ' C ' + ctrl2 + ' ' + endY2 + ' ' + ctrl1 + ' ' + endY1 + ' 0 ' + endY1
+                        : 'M ' + width + ' ' + endY2 + ' L 0 ' + endY1;
+                    for (const d of [upper, lower]) {
+                        svg.appendChild(svgElement('path', {
+                            d: d, fill: 'none', stroke: color, 'stroke-width': '2.3', 'stroke-dasharray': '2 2'
+                        }));
+                    }
+                }
+                else {
+                    const lower = data.curved
+                        ? ' L ' + width + ' ' + (endY2 + 1) + ' C ' + ctrl2 + ' ' + (endY2 + 1) + ' ' + ctrl1 + ' ' + (endY1 + 1) + ' 0 ' + (endY1 + 1)
+                        : ' L ' + width + ' ' + (endY2 + 1) + ' L 0 ' + (endY1 + 1);
+                    svg.appendChild(svgElement('path', { d: upper + lower + ' Z', fill: color }));
+                }
+            }
+
+            for (const fold of data.folds) {
+                const y1 = y(views[0], fold[0]);
+                const y2 = y(views[1], fold[1]);
+                if (y1 == null || y2 == null) {
+                    continue;
+                }
+                const lineHeight = views[0].lineHeight();
+                const step = Math.max(Math.trunc(lineHeight / 3), 1);
+                const bandHeight = Math.max(Math.trunc(lineHeight / 2), 1);
+                const start1 = y1 + Math.trunc((lineHeight - bandHeight - step) / 2) + Math.trunc(step / 2);
+                const start2 = y2 + Math.trunc((lineHeight - bandHeight - step) / 2) + Math.trunc(step / 2);
+                const end1 = start1 + bandHeight - 1;
+                const end2 = start2 + bandHeight - 1;
+
+                svg.appendChild(svgElement('path', {
+                    d: 'M 0 ' + start1 + ' L ' + width + ' ' + start2 + ' L ' + width + ' ' + end2 + ' L 0 ' + end1 + ' Z',
+                    fill: data.separatorBackground || 'rgb(128,128,128)'
+                }));
+                if (data.separatorTop) {
+                    svg.appendChild(svgElement('path', { d: 'M 0 ' + (start1 + 0.5) + ' L ' + width + ' ' + (start2 + 0.5), stroke: data.separatorTop, fill: 'none' }));
+                }
+                if (data.separatorBottom) {
+                    svg.appendChild(svgElement('path', { d: 'M 0 ' + (end1 + 0.5) + ' L ' + width + ' ' + (end2 + 0.5), stroke: data.separatorBottom, fill: 'none' }));
+                }
+            }
+        };
+
+        const syncScroll = (divider, master) => {
+            const state = divider.$arquillBridge;
+            const data = state.data;
+            const views = viewsOf(state);
+            const masterView = views[master];
+            const slaveView = views[1 - master];
+
+            if (!data || !data.sync || !masterView || !slaveView) {
+                return;
+            }
+            if (performance.now() < state.echoUntil[master]) {
+                return;
+            }
+
+            const area = masterView.clientArea();
+            if (state.pinned) {
+                if (Math.round(area.y) === Math.round(state.pinned[master])) {
+                    return;
+                }
+                state.pinned = null;
+            }
+            const middleY = Math.trunc(area.height / 3);
+            const masterLine = masterView.lineAtY(area.y + middleY);
+            if (masterLine == null) {
+                return;
+            }
+
+            const convertedLine = transfer(data.anchors, master, 1 - master, masterLine);
+            const top = slaveView.lineTopInDocument(convertedLine);
+            if (top == null) {
+                return;
+            }
+
+            const lineHeight = masterView.lineHeight();
+            const correction = (area.y + middleY) % lineHeight;
+            const offset = top - middleY + correction;
+
+            const slaveArea = slaveView.clientArea();
+            if (Math.round(slaveArea.y) === Math.round(Math.max(0, offset)) && Math.round(slaveArea.x) === Math.round(area.x)) {
+                return;
+            }
+
+            state.echoUntil[1 - master] = performance.now() + SYNC_ECHO_MS;
+            slaveView.scrollTo(area.x, offset);
+        };
+
+        const wire = (divider, attempt) => {
+            const state = divider.$arquillBridge;
+            const views = viewsOf(state);
+            let pending = false;
+            views.forEach((view, index) => {
+                if (!view) {
+                    pending = true;
+                    return;
+                }
+                if (state.wired[index] === view) {
+                    return;
+                }
+                state.wired[index] = view;
+                view.onScroll(() => {
+                    syncScroll(divider, index);
+                    render(divider);
+                });
+            });
+            if (pending && attempt < 400) {
+                setTimeout(() => wire(divider, attempt + 1), 50);
+            }
+            render(divider);
+        };
+
+        const install = (divider, leftHost, rightHost) => {
+            let state = divider.$arquillBridge;
+            if (!state) {
+                state = divider.$arquillBridge = { data: null, wired: [null, null], echoUntil: [0, 0] };
+            }
+            state.leftHost = leftHost;
+            state.rightHost = rightHost;
+            state.wired = [null, null];
+
+            if (!state.svg || !state.svg.isConnected) {
+                const svg = svgElement('svg', {});
+                svg.style.position = 'absolute';
+                svg.style.left = '0';
+                svg.style.top = '0';
+                svg.style.width = '100%';
+                svg.style.height = '100%';
+                svg.style.pointerEvents = 'none';
+                divider.appendChild(svg);
+                state.svg = svg;
+                new ResizeObserver(() => render(divider)).observe(divider);
+            }
+
+            wire(divider, 0);
+        };
+
+        const update = (divider, json) => {
+            const state = divider.$arquillBridge;
+            if (!state) {
+                return;
+            }
+            state.data = JSON.parse(json);
+            render(divider);
+        };
+
+        const suspend = divider => {
+            const state = divider.$arquillBridge;
+            if (!state) {
+                return;
+            }
+            const until = performance.now() + SYNC_ECHO_MS;
+            state.echoUntil = [until, until];
+        };
+
+        const targetOffsets = (views, startLines, endLines) => {
+            const count = views.length;
+            const topOffsets = [], rangeHeights = [], gapLines = [], editorHeights = [], maximumOffsets = [], topShifts = [];
+
+            for (let i = 0; i < count; i++) {
+                const view = views[i];
+                topOffsets[i] = view.lineTopInDocument(startLines[i]) || 0;
+                rangeHeights[i] = (view.lineTopInDocument(endLines[i] + 1) || topOffsets[i]) - topOffsets[i];
+                gapLines[i] = 2 * view.lineHeight();
+                editorHeights[i] = view.clientArea().height;
+                maximumOffsets[i] = view.maxTopPixel();
+
+                const canShow = 2 * gapLines[i] + rangeHeights[i] <= editorHeights[i];
+                const shift = Math.trunc(editorHeights[i] / 3);
+                topShifts[i] = canShow ? Math.min(editorHeights[i] - gapLines[i] - rangeHeights[i], shift) : gapLines[i];
+            }
+
+            let topShift = Math.min(...topShifts);
+            topShift = Math.min(topShift, Math.min(...topOffsets));
+
+            const offsets = [];
+            let haveEnoughSpace = true;
+            for (let i = 0; i < count; i++) {
+                offsets[i] = topOffsets[i] - topShift;
+                haveEnoughSpace = haveEnoughSpace && maximumOffsets[i] > offsets[i];
+            }
+            if (haveEnoughSpace) {
+                return offsets;
+            }
+
+            topShift = 0;
+            for (let i = 0; i < count; i++) {
+                topShift = Math.max(topOffsets[i] - maximumOffsets[i], topShift);
+            }
+            for (let i = 0; i < count; i++) {
+                offsets[i] = topOffsets[i] - topShift + Math.max(topShift + rangeHeights[i] + gapLines[i] - editorHeights[i], 0);
+                offsets[i] = Math.min(offsets[i], topOffsets[i] - gapLines[i]);
+            }
+            return offsets;
+        };
+
+        const makeVisibleAll = (dividers, master, startLines, endLines) => {
+            const states = dividers.map(divider => divider.$arquillBridge);
+            if (states.some(state => !state)) {
+                return;
+            }
+            const views = [];
+            states.forEach((state, index) => {
+                const pair = viewsOf(state);
+                if (index === 0) {
+                    views.push(pair[0]);
+                }
+                views.push(pair[1]);
+            });
+            if (views.some(view => !view) || views.length !== startLines.length) {
+                return;
+            }
+            const offsets = targetOffsets(views, startLines, endLines).map((offset, index) => Math.min(Math.max(0, offset), views[index].maxTopPixel()));
+            dividers.forEach((divider, index) => {
+                suspend(divider);
+                divider.$arquillBridge.pinned = [offsets[index], offsets[index + 1]];
+            });
+            views.forEach((view, index) => view.scrollTo(0, offsets[index]));
+            dividers.forEach(divider => render(divider));
+        };
+
+        return { install: install, update: update, suspend: suspend, makeVisibleAll: makeVisibleAll };
+    })();
 })();
