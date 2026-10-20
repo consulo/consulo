@@ -30,12 +30,15 @@ import java.awt.event.HierarchyBoundsAdapter;
 import java.awt.event.HierarchyBoundsListener;
 import java.awt.event.HierarchyEvent;
 import java.util.ArrayList;
+import java.util.IdentityHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The toasts floating over one window: a column in the bottom right corner of its area - the whole layered pane when it
  * has none - the newest at the bottom. Each toast is as wide as {@link #WIDTH} and as tall as its content at that
- * width.
+ * width. A toast sits in a holder which measures the column again whenever the toast changes - its toolbar, for one,
+ * is filled after the toast is shown and takes width from the text.
  *
  * @author VISTALL
  * @since 2026-10-16
@@ -46,6 +49,10 @@ final class DesktopToastStack {
 
     private final JRootPane myRootPane;
     private final List<Toast> myToasts = new ArrayList<>();
+    private final Map<Toast, JPanel> myHolders = new IdentityHashMap<>();
+
+    private boolean myRelayouting;
+    private boolean myRelayoutQueued;
 
     private final ComponentListener myAreaListener = new ComponentAdapter() {
         @Override
@@ -100,40 +107,73 @@ final class DesktopToastStack {
         if (toast instanceof ToastInternal internal) {
             internal.setShadow(true);
         }
+        JPanel holder = new JPanel(new BorderLayout()) {
+            @Override
+            public void invalidate() {
+                super.invalidate();
+                queueRelayout();
+            }
+        };
+        holder.setOpaque(false);
+        holder.add(TargetAWT.to(toast), BorderLayout.CENTER);
         myToasts.add(toast);
-        myRootPane.getLayeredPane().add(TargetAWT.to(toast), JLayeredPane.POPUP_LAYER);
+        myHolders.put(toast, holder);
+        myRootPane.getLayeredPane().add(holder, JLayeredPane.POPUP_LAYER);
         relayout();
     }
 
     void hide(Toast toast) {
-        if (!myToasts.remove(toast)) {
+        JPanel holder = myHolders.remove(toast);
+        if (!myToasts.remove(toast) || holder == null) {
             return;
         }
-        java.awt.Component component = TargetAWT.to(toast);
         JLayeredPane layeredPane = myRootPane.getLayeredPane();
-        layeredPane.remove(component);
-        layeredPane.repaint(component.getBounds());
+        layeredPane.remove(holder);
+        layeredPane.repaint(holder.getBounds());
         relayout();
     }
 
-    private void relayout() {
-        JLayeredPane layeredPane = myRootPane.getLayeredPane();
-        Rectangle area = areaBounds(layeredPane);
-        int width = JBUI.scale(WIDTH);
-        int margin = JBUI.scale(MARGIN);
-        int bottom = area.y + area.height - margin;
-        int x = area.x + area.width - width - margin;
-
-        for (int i = myToasts.size() - 1; i >= 0; i--) {
-            java.awt.Component component = TargetAWT.to(myToasts.get(i));
-            int height = preferredHeight(component, width);
-            int y = bottom - height;
-            component.setBounds(x, y, width, height);
-            component.setVisible(y >= area.y);
-            bottom = y;
+    private void queueRelayout() {
+        if (myRelayouting || myRelayoutQueued) {
+            return;
         }
-        layeredPane.revalidate();
-        layeredPane.repaint();
+        myRelayoutQueued = true;
+        SwingUtilities.invokeLater(() -> {
+            myRelayoutQueued = false;
+            relayout();
+        });
+    }
+
+    private void relayout() {
+        if (myRelayouting) {
+            return;
+        }
+        myRelayouting = true;
+        try {
+            JLayeredPane layeredPane = myRootPane.getLayeredPane();
+            Rectangle area = areaBounds(layeredPane);
+            int width = JBUI.scale(WIDTH);
+            int margin = JBUI.scale(MARGIN);
+            int bottom = area.y + area.height - margin;
+            int x = area.x + area.width - width - margin;
+
+            for (int i = myToasts.size() - 1; i >= 0; i--) {
+                JPanel holder = myHolders.get(myToasts.get(i));
+                if (holder == null) {
+                    continue;
+                }
+                int height = preferredHeight(holder, width);
+                int y = bottom - height;
+                holder.setBounds(x, y, width, height);
+                holder.setVisible(y >= area.y);
+                holder.validate();
+                bottom = y;
+            }
+            layeredPane.repaint();
+        }
+        finally {
+            myRelayouting = false;
+        }
     }
 
     private Rectangle areaBounds(JLayeredPane layeredPane) {

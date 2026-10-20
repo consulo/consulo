@@ -21,6 +21,7 @@ import io.qt.core.QEvent;
 import io.qt.core.QObject;
 import io.qt.core.QPoint;
 import io.qt.core.QRect;
+import io.qt.core.QTimer;
 import io.qt.widgets.QWidget;
 import org.jspecify.annotations.Nullable;
 
@@ -30,7 +31,8 @@ import java.util.List;
 /**
  * The toasts floating over one window: child widgets of its central widget, outside of its layout, in a column in the
  * bottom right corner of its area - the whole central widget when it has none - the newest at the bottom. Children and not top level windows - those cannot be placed on
- * Wayland.
+ * Wayland. The column is measured again whenever a toast asks for a new layout - its toolbar, for one, is filled after
+ * the toast is shown and takes width from the text.
  *
  * @author VISTALL
  * @since 2026-10-16
@@ -44,6 +46,7 @@ final class DesktopQtToastStack extends QObject {
 
     private @Nullable QtComponentDelegate<?> myArea;
     private @Nullable QWidget myAreaWidget;
+    private boolean myRelayoutQueued;
 
     DesktopQtToastStack(QWidget host) {
         super(host);
@@ -60,7 +63,21 @@ final class DesktopQtToastStack extends QObject {
         else if (watched == myAreaWidget && (type == QEvent.Type.Resize || type == QEvent.Type.Move)) {
             relayout();
         }
+        else if (type == QEvent.Type.LayoutRequest && watched != myHost && watched != myAreaWidget) {
+            queueRelayout();
+        }
         return false;
+    }
+
+    private void queueRelayout() {
+        if (myRelayoutQueued) {
+            return;
+        }
+        myRelayoutQueued = true;
+        QTimer.singleShot(0, () -> {
+            myRelayoutQueued = false;
+            relayout();
+        });
     }
 
     void setArea(@Nullable QtComponentDelegate<?> area) {
@@ -79,6 +96,7 @@ final class DesktopQtToastStack extends QObject {
         myToasts.add(toast);
         QWidget widget = delegate.toQtComponent();
         if (widget != null) {
+            widget.installEventFilter(this);
             widget.show();
             widget.raise();
         }
@@ -92,6 +110,7 @@ final class DesktopQtToastStack extends QObject {
         if (toast instanceof QtComponentDelegate<?> delegate) {
             QWidget widget = delegate.toQtComponent();
             if (widget != null && !widget.isDisposed()) {
+                widget.removeEventFilter(this);
                 widget.hide();
             }
             delegate.disposeQt();
