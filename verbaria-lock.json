@@ -3,8 +3,13 @@
   "project" : "consulo",
   "projectVersion" : "master",
   "sourceLocale" : "en-US",
-  "generatedAt" : "2026-10-20T10:01:57.369210023Z",
+  "generatedAt" : "2026-10-20T17:45:13.570697925Z",
   "documents" : {
+    "consulo.accountManagement.AccountManagementLocalize" : {
+      "source" : {
+        "sig" : "4fc32bb024cdb9f7db819edea2c42e3f"
+      }
+    },
     "consulo.ai.AILocalize" : {
       "source" : {
         "sig" : "43f60f39bd5118c3f6e9c3ba870ebdc0"
@@ -92,7 +97,7 @@
     },
     "consulo.externalService.ExternalServiceLocalize" : {
       "source" : {
-        "sig" : "5bce5b151e3de643e965dec3be2b10a2"
+        "sig" : "169ac6734f92091ea176825efbc67e50"
       }
     },
     "consulo.externalService.FeatureStatisticsLocalize" : {
