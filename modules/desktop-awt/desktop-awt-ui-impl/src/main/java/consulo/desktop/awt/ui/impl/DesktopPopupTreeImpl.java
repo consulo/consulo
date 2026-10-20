@@ -19,34 +19,80 @@ import consulo.desktop.awt.ui.impl.event.DesktopAWTInputDetails;
 import consulo.ui.TreeExecutor;
 import consulo.ui.TreeModel;
 import consulo.ui.TreeNode;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.details.InputDetails;
 import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.internal.PopupTree;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreePath;
+import javax.swing.tree.TreeSelectionModel;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 
 /**
  * The tree of a popup: the row under the pointer is selected, a click activates it and separator rows are never
- * selected.
+ * selected. It scrolls itself, the way the popup trees of the other frontends do, since a popup puts it straight
+ * into its content.
  *
  * @author VISTALL
  * @since 2026-10-18
  */
-class DesktopPopupTreeImpl<E> extends DesktopTreeImpl<E> implements PopupTree<E> {
+class DesktopPopupTreeImpl<E> extends DesktopTreeBase<E, JScrollPane> implements PopupTree<E> {
     private boolean mySelectOnHover;
     private Predicate<@Nullable E> mySeparator = value -> false;
     private @Nullable BiConsumer<TreeNode<E>, InputDetails> myActivateListener;
 
     DesktopPopupTreeImpl(TreeModel<E> model) {
         super(null, model, TreeExecutor.uiThread());
+    }
+
+    @Override
+    protected JScrollPane createComponent() {
+        DesktopAWTTree tree = createTree(createAsyncTreeModel());
+        tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+        installTree(tree);
+        return ScrollPaneFactory.createScrollPane(tree, true);
+    }
+
+    @Override
+    protected DesktopAWTTree getTree() {
+        return (DesktopAWTTree) toAWTComponent().getViewport().getView();
+    }
+
+    @Override
+    protected List<java.awt.Component> getInputComponents(JScrollPane component) {
+        return List.of(component.getViewport().getView());
+    }
+
+    @Override
+    public void focus() {
+        getTree().requestFocus();
+    }
+
+    @Override
+    public boolean isFocusable() {
+        return getTree().isFocusable();
+    }
+
+    @Override
+    public void setFocusable(boolean focusable) {
+        getTree().setFocusable(focusable);
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setEnabled(boolean value) {
+        super.setEnabled(value);
+
+        getTree().setEnabled(value);
     }
 
     @Override
