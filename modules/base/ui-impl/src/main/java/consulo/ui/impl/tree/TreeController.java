@@ -807,6 +807,13 @@ public final class TreeController<E> implements Disposable {
         }));
     }
 
+    @RequiredUIAccess
+    public List<TreeNodeImpl<E>> getVisibleNodes(Predicate<@Nullable E> skip) {
+        List<TreeNodeImpl<E>> visible = new ArrayList<>();
+        collectVisible(myRoot, visible, skip);
+        return visible;
+    }
+
     private void collectVisible(TreeNodeImpl<E> node, List<TreeNodeImpl<E>> visible, Predicate<@Nullable E> skip) {
         for (TreeNodeImpl<E> child : node.myChildren) {
             if (child.myRemoved) {

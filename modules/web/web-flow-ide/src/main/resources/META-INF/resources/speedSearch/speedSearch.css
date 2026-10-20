@@ -1,0 +1,32 @@
+.consulo-speed-search-hint {
+    position: fixed;
+    inset: auto;
+    z-index: 2147483647;
+    display: flex;
+    align-items: center;
+    gap: var(--vaadin-gap-xs, 4px);
+    margin: 0;
+    padding: var(--vaadin-space-2xs, 2px) var(--vaadin-space-xs, 4px);
+    border: 1px solid var(--consulo-component-border-color, var(--vaadin-border-color));
+    border-radius: var(--consulo-popup-radius, 4px);
+    background-color: var(--consulo-tool-tip-background, var(--vaadin-background-color));
+    color: var(--consulo-tool-tip-foreground, var(--vaadin-text-color));
+    font: inherit;
+    white-space: pre;
+    overflow: visible;
+    pointer-events: none;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.consulo-speed-search-hint::before {
+    content: '';
+    flex: none;
+    width: 1em;
+    height: 1em;
+    background-color: currentColor;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='6.5' cy='6.5' r='4.5' fill='none' stroke='black' stroke-width='1.6'/%3E%3Cpath d='M10 10l4.5 4.5' stroke='black' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+.consulo-speed-search-hint[mismatch] .consulo-speed-search-hint-text {
+    color: var(--consulo-label-error-foreground, var(--vaadin-error-text-color));
+}

@@ -152,7 +152,7 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableView>
 
     private @Nullable Item myPendingSelection;
 
-    private @Nullable Function<Item, String> mySpeedSearchConverter;
+    private final DesktopQtSpeedSearch<Item> mySpeedSearch;
     private @Nullable Function<Item, Length> myItemHeightGetter;
 
     private @Nullable TableModel myTableModel;
@@ -167,8 +167,43 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableView>
 
     public DesktopQtTableImpl(FlatDataModel<Item> model) {
         myOrder = new TableRowOrder<>(model);
+        mySpeedSearch = new DesktopQtSpeedSearch<>(false, this::rows, this::leadItem, this::selectFound);
 
         model.addListener(this::onModelChanged);
+    }
+
+    private List<Item> rows() {
+        return myOrder.fetch(0, myOrder.size());
+    }
+
+    private @Nullable Item leadItem() {
+        QTableView component = myComponent;
+        if (component == null || component.isDisposed() || component.selectionModel() == null) {
+            return null;
+        }
+
+        QModelIndex current = component.currentIndex();
+        if (current.isValid() && component.selectionModel().isRowSelected(current.row(), current.parent())) {
+            return itemAtRow(current.row());
+        }
+        return getSelectedItem();
+    }
+
+    private void selectFound(Item item) {
+        QTableView component = myComponent;
+        TableModel tableModel = myTableModel;
+        int row = myOrder.rowOf(item);
+        if (component == null || component.isDisposed() || tableModel == null || row < 0) {
+            return;
+        }
+
+        QModelIndex index = tableModel.index(row, 0);
+        component.selectionModel().setCurrentIndex(
+            index,
+            QItemSelectionModel.SelectionFlag.ClearAndSelect,
+            QItemSelectionModel.SelectionFlag.Rows
+        );
+        component.scrollTo(index);
     }
 
     @Override
@@ -202,6 +237,8 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableView>
         });
 
         component.horizontalHeader().sectionClicked.connect(this::sortByColumn);
+
+        mySpeedSearch.install(component);
 
         component.viewport().setMouseTracking(true);
         component.viewport().installEventFilter(new QObject(component) {
@@ -697,12 +734,12 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableView>
 
     @Override
     public void setSpeedSearchConverter(@Nullable Function<Item, String> converter) {
-        mySpeedSearchConverter = converter;
+        mySpeedSearch.setConverter(converter);
     }
 
     @Override
     public @Nullable String getSpeedSearchText() {
-        return null;
+        return mySpeedSearch.getText();
     }
 
     @Override

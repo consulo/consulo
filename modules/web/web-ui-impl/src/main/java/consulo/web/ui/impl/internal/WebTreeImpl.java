@@ -69,6 +69,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -131,7 +132,6 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl<NODE>
 
     private @Nullable TransferHandler<TreeNode<NODE>> myTransferHandler;
     private @Nullable Function<TreeNode<NODE>, Length> myItemHeightGetter;
-    private @Nullable Function<TreeNode<NODE>, String> mySpeedSearchConverter;
 
     /** where the row of the last right click ended up, which is what a popup raised over the tree hangs off */
     private volatile @Nullable Point2D myPopupPosition;
@@ -145,6 +145,10 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl<NODE>
     private final Disposable myDestroyHook = Disposable.newDisposable("Tree");
 
     private final TreeController<NODE> myController;
+
+    private final WebSpeedSearch<TreeNode<NODE>> mySpeedSearch;
+
+    private @Nullable TreeNodeImpl<NODE> myKeyboardAnchor;
 
     @Tag("vaadin-grid-tree-toggle")
     public static class VaadinGridTreeToggle extends com.vaadin.flow.component.Component
@@ -426,6 +430,7 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl<NODE>
 
             leaveEditing(node);
 
+            myKeyboardAnchor = node;
             if (myAllowMultipleSelect) {
                 deselectAll();
             }
@@ -439,6 +444,7 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl<NODE>
                 return;
             }
 
+            myKeyboardAnchor = node;
             boolean selected = getSelectedItems().contains(row);
             if (selected) {
                 deselect(row);
@@ -447,6 +453,24 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl<NODE>
                 select(row);
             }
             myController.onSelectionChanged(selected ? null : node, selectedNodes(getSelectedItems()), ProgrammaticInputDetails.INSTANCE);
+        }
+
+        private void selectRows(TreeNodeImpl<NODE> lead, List<TreeNodeImpl<NODE>> nodes) {
+            leaveEditing(lead);
+
+            Set<WebTreeRow<NODE>> added = new LinkedHashSet<>();
+            for (TreeNodeImpl<NODE> node : nodes) {
+                WebTreeRow<NODE> row = liveRow(node);
+                if (row != null) {
+                    added.add(row);
+                }
+            }
+
+            Set<WebTreeRow<NODE>> removed = new HashSet<>(getSelectedItems());
+            removed.removeAll(added);
+            asMultiSelect().updateSelection(added, removed);
+
+            myController.onSelectionChanged(lead, nodes, ProgrammaticInputDetails.INSTANCE);
         }
 
         private @Nullable WebTreeRow<NODE> liveRow(TreeNodeImpl<NODE> node) {
@@ -705,6 +729,10 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl<NODE>
 
         installSelectionListener();
 
+        mySpeedSearch = new WebSpeedSearch<>(vaadin.getElement(), true, this::navigableNodes, myController::getSelected, this::moveLead);
+
+        WebGridNavigation.install(vaadin, WebGridNavigation.TREE_KEYS, this::navigate);
+
         vaadin.getElement().addEventListener("keydown", event -> {
             TreeNode<NODE> selected = myController.getSelected();
             if (selected != null) {
@@ -918,6 +946,102 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl<NODE>
         vaadin.focus();
     }
 
+    boolean isNavigable(@Nullable NODE value) {
+        return true;
+    }
+
+    private List<TreeNode<NODE>> navigableNodes() {
+        return List.copyOf(myController.getVisibleNodes(value -> !isNavigable(value)));
+    }
+
+    @RequiredUIAccess
+    private void moveLead(TreeNode<NODE> node) {
+        if (!(node instanceof TreeNodeImpl<NODE> impl)) {
+            return;
+        }
+
+        Vaadin vaadin = toVaadinComponent();
+        WebTreeRow<NODE> row = vaadin.liveRow(impl);
+        if (row != null) {
+            vaadin.selectRow(row);
+            reveal(vaadin, row);
+        }
+    }
+
+    private void reveal(Vaadin vaadin, WebTreeRow<NODE> row) {
+        vaadin.scrollToItem(row);
+        WebGridNavigation.focusRow(vaadin, row);
+    }
+
+    @RequiredUIAccess
+    private void navigate(String key, boolean shift, int page) {
+        List<TreeNode<NODE>> nodes = navigableNodes();
+        TreeNodeImpl<NODE> lead = myController.getSelected();
+        int current = lead == null ? -1 : nodes.indexOf(lead);
+
+        if (key.equals("ArrowLeft")) {
+            if (lead != null && !lead.isLeaf() && myController.isExpanded(lead)) {
+                myController.collapse(lead);
+                return;
+            }
+
+            TreeNodeImpl<NODE> parent = lead == null ? null : lead.getParent();
+            if (parent != null && nodes.contains(parent)) {
+                moveLead(parent);
+            }
+            return;
+        }
+
+        if (key.equals("ArrowRight")) {
+            if (lead == null || lead.isLeaf()) {
+                return;
+            }
+
+            if (!myController.isExpanded(lead)) {
+                myController.expand(lead, 1);
+                return;
+            }
+
+            if (current >= 0 && current + 1 < nodes.size() && nodes.get(current + 1) instanceof TreeNodeImpl<NODE> child
+                && child.getParent() == lead) {
+                moveLead(child);
+            }
+            return;
+        }
+
+        int target = WebGridNavigation.targetIndex(key, current, nodes.size(), page);
+        if (target < 0 || !(nodes.get(target) instanceof TreeNodeImpl<NODE> node)) {
+            return;
+        }
+
+        if (!shift || !myAllowMultipleSelect) {
+            moveLead(node);
+            return;
+        }
+
+        TreeNodeImpl<NODE> anchor = myKeyboardAnchor;
+        if (anchor == null || !nodes.contains(anchor) || !myController.getSelection().contains(anchor)) {
+            anchor = lead != null && nodes.contains(lead) ? lead : node;
+            myKeyboardAnchor = anchor;
+        }
+
+        int from = nodes.indexOf(anchor);
+        List<TreeNodeImpl<NODE>> range = new ArrayList<>();
+        for (int i = Math.min(from, target); i <= Math.max(from, target); i++) {
+            if (nodes.get(i) instanceof TreeNodeImpl<NODE> rangeNode) {
+                range.add(rangeNode);
+            }
+        }
+
+        Vaadin vaadin = toVaadinComponent();
+        vaadin.selectRows(node, range);
+
+        WebTreeRow<NODE> row = vaadin.liveRow(node);
+        if (row != null) {
+            reveal(vaadin, row);
+        }
+    }
+
     void scrollTo(@Nullable TreeNode<NODE> node) {
         if (node instanceof TreeNodeImpl<NODE> impl) {
             Vaadin vaadin = toVaadinComponent();
@@ -1096,12 +1220,12 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl<NODE>
 
     @Override
     public void setSpeedSearchConverter(@Nullable Function<TreeNode<NODE>, String> converter) {
-        mySpeedSearchConverter = converter;
+        mySpeedSearch.setConverter(converter);
     }
 
     @Override
     public @Nullable String getSpeedSearchText() {
-        return null;
+        return mySpeedSearch.getText();
     }
 
     @Override

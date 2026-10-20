@@ -32,6 +32,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.event.TableDoubleClickEvent;
 import consulo.ui.event.TableSelectEvent;
+import consulo.ui.impl.SpeedSearchSupport;
 import consulo.ui.impl.table.TableRowOrder;
 import consulo.ui.model.FlatDataModel;
 import consulo.ui.model.FlatDataModelEvent;
@@ -74,9 +75,10 @@ public class WebTableImpl<Item> extends VaadinComponentDelegate<WebTableImpl<Ite
     private final List<WebTableColumnImpl<Item, ?>> myColumns = new ArrayList<>();
 
     private @Nullable Function<Item, Length> myItemHeightGetter;
-    private @Nullable Function<Item, String> mySpeedSearchConverter;
+    private final WebSpeedSearch<Item> mySpeedSearch;
     private boolean myAllowMultipleSelect;
     private @Nullable Item mySelectionAnchor;
+    private @Nullable Item myLead;
 
     public WebTableImpl(FlatDataModel<Item> model) {
         myModel = model;
@@ -101,6 +103,63 @@ public class WebTableImpl<Item> extends VaadinComponentDelegate<WebTableImpl<Ite
         grid.addItemDoubleClickListener(event ->
             getListenerDispatcher(TableDoubleClickEvent.class)
                 .onEvent(new TableDoubleClickEvent(this, event.getItem(), WebInputDetails.details(event))));
+
+        mySpeedSearch = new WebSpeedSearch<>(grid.getElement(), false, this::rows, this::leadItem, this::moveLead);
+
+        WebGridNavigation.install(grid, WebGridNavigation.TABLE_KEYS, this::navigate);
+    }
+
+    private List<Item> rows() {
+        return myOrder.fetch(0, myOrder.size());
+    }
+
+    private @Nullable Item leadItem() {
+        Item lead = myLead;
+        if (lead != null && isSelected(lead)) {
+            return lead;
+        }
+
+        Item anchor = mySelectionAnchor;
+        if (myAllowMultipleSelect && anchor != null && isSelected(anchor)) {
+            return anchor;
+        }
+        return getSelectedItem();
+    }
+
+    @RequiredUIAccess
+    private void moveLead(Item item) {
+        if (myAllowMultipleSelect) {
+            selectClicked(item, false, false);
+        }
+        else {
+            select(item);
+        }
+        reveal(item);
+    }
+
+    @RequiredUIAccess
+    private void reveal(Item item) {
+        myLead = item;
+        scrollTo(item);
+        WebGridNavigation.focusRow(toVaadinComponent(), item);
+    }
+
+    @RequiredUIAccess
+    private void navigate(String key, boolean shift, int page) {
+        List<Item> rows = rows();
+        int target = WebGridNavigation.targetIndex(key, SpeedSearchSupport.indexOf(rows, leadItem()), rows.size(), page);
+        if (target < 0) {
+            return;
+        }
+
+        Item item = rows.get(target);
+        if (shift && myAllowMultipleSelect) {
+            selectClicked(item, false, true);
+            reveal(item);
+        }
+        else {
+            moveLead(item);
+        }
     }
 
     private Stream<Item> fetch(Query<Item, Void> query) {
@@ -127,6 +186,7 @@ public class WebTableImpl<Item> extends VaadinComponentDelegate<WebTableImpl<Ite
     }
 
     private void selectClicked(Item item, boolean toggle, boolean range) {
+        myLead = item;
         MultiSelect<Grid<Item>, Item> selection = toVaadinComponent().asMultiSelect();
         Set<Item> selected = selection.getSelectedItems();
 
@@ -315,12 +375,12 @@ public class WebTableImpl<Item> extends VaadinComponentDelegate<WebTableImpl<Ite
 
     @Override
     public void setSpeedSearchConverter(@Nullable Function<Item, String> converter) {
-        mySpeedSearchConverter = converter;
+        mySpeedSearch.setConverter(converter);
     }
 
     @Override
     public @Nullable String getSpeedSearchText() {
-        return null;
+        return mySpeedSearch.getText();
     }
 
     @Override

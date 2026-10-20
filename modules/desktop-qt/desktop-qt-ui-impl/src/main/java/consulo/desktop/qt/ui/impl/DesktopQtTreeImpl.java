@@ -42,6 +42,7 @@ import consulo.ui.ex.localize.UILocalize;
 import consulo.ui.impl.tree.TreeController;
 import consulo.ui.impl.tree.TreeNodeImpl;
 import consulo.ui.impl.tree.TreeWidget;
+import io.qt.core.QItemSelectionModel;
 import io.qt.core.QPoint;
 import io.qt.core.QRect;
 import io.qt.core.QSize;
@@ -85,7 +86,7 @@ public class DesktopQtTreeImpl<E> extends QtComponentDelegate<QTreeWidget>
     private final DesktopQtDragAndDropSupport<TreeNode<E>> myDragAndDrop = new DesktopQtDragAndDropSupport<>(this, this);
     private @Nullable QTreeWidgetItem myDropExpandItem;
     private int myDropExpandGeneration;
-    private @Nullable Function<TreeNode<E>, String> mySpeedSearchConverter;
+    private final DesktopQtSpeedSearch<TreeNode<E>> mySpeedSearch;
     private @Nullable Function<TreeNode<E>, Length> myItemHeightGetter;
 
     private final Disposable myDestroyHook = Disposable.newDisposable("Tree");
@@ -106,6 +107,8 @@ public class DesktopQtTreeImpl<E> extends QtComponentDelegate<QTreeWidget>
     public DesktopQtTreeImpl(@Nullable E rootValue, TreeModel<E> model, TreeExecutor executor) {
         myController = new TreeController<>(this, rootValue, model, executor, new Binding());
         Disposer.register(myDestroyHook, myController);
+
+        mySpeedSearch = new DesktopQtSpeedSearch<>(true, this::visibleNodes, myController::getSelected, this::selectFound);
     }
 
     @Override
@@ -253,6 +256,7 @@ public class DesktopQtTreeImpl<E> extends QtComponentDelegate<QTreeWidget>
         myDropExpandItem = null;
 
         myDragAndDrop.install(tree);
+        mySpeedSearch.install(tree);
 
         tree.itemSelectionChanged.connect(() -> {
             DesktopQtTreeEditing<E> editing = myEditing;
@@ -298,6 +302,19 @@ public class DesktopQtTreeImpl<E> extends QtComponentDelegate<QTreeWidget>
         });
 
         myController.bind();
+    }
+
+    private List<TreeNode<E>> visibleNodes() {
+        return List.copyOf(myController.getVisibleNodes(value -> false));
+    }
+
+    private void selectFound(TreeNode<E> node) {
+        QTreeWidget tree = myComponent;
+        QTreeWidgetItem item = node instanceof TreeNodeImpl<E> impl ? liveItem(impl) : null;
+        if (tree != null && !tree.isDisposed() && item != null) {
+            tree.setCurrentItem(item, 0, QItemSelectionModel.SelectionFlag.ClearAndSelect);
+            tree.scrollToItem(item);
+        }
     }
 
     private @Nullable TreeNodeImpl<E> selectedNode(QTreeWidget tree) {
@@ -1011,11 +1028,11 @@ public class DesktopQtTreeImpl<E> extends QtComponentDelegate<QTreeWidget>
 
     @Override
     public void setSpeedSearchConverter(@Nullable Function<TreeNode<E>, String> converter) {
-        mySpeedSearchConverter = converter;
+        mySpeedSearch.setConverter(converter);
     }
 
     @Override
     public @Nullable String getSpeedSearchText() {
-        return null;
+        return mySpeedSearch.getText();
     }
 }

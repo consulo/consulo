@@ -22,6 +22,7 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Hr;
 import com.vaadin.flow.component.html.Span;
 import consulo.localize.LocalizeValue;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ListDoubleClickEvent;
 import consulo.ui.event.ClickEvent;
 import consulo.ui.internal.PlainTextPresentation;
@@ -32,6 +33,9 @@ import consulo.web.ui.impl.internal.base.WebInputDetails;
 import consulo.web.ui.impl.internal.vaadin.WebSingleListComponentBase;
 import org.jspecify.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 /**
@@ -47,6 +51,7 @@ public class WebListBoxImpl<E> extends WebSingleListComponentBase<E, WebListBoxI
     private @Nullable TransferHandler<E> myTransferHandler;
     private Predicate<E> mySeparatorPredicate = item -> false;
     private @Nullable ComponentItemRenderer<E> myComponentRenderer;
+    private final WebSpeedSearch<E> mySpeedSearch;
     // served straight from META-INF/resources - the theme goes through the vite bundle, which skips rebuilding
     // on css only changes
     @StyleSheet("/list/webListBox.css")
@@ -65,6 +70,53 @@ public class WebListBoxImpl<E> extends WebSingleListComponentBase<E, WebListBoxI
         setRenderer(TextItemRenderer.defaultRenderer());
 
         myClickInstalled = true;
+
+        mySpeedSearch =
+            new WebSpeedSearch<>(toVaadinComponent().getElement(), false, this::searchableItems, this::getValue, this::selectFound);
+    }
+
+    private List<E> searchableItems() {
+        List<E> items = new ArrayList<>(myModel.getSize());
+        for (int i = 0; i < myModel.getSize(); i++) {
+            E item = myModel.get(i);
+            if (!mySeparatorPredicate.test(item)) {
+                items.add(item);
+            }
+        }
+        return items;
+    }
+
+    @RequiredUIAccess
+    private void selectFound(E item) {
+        setValue(item, true);
+
+        int index = myModel.indexOf(item);
+        if (index >= 0) {
+            toVaadinComponent().getElement().executeJs(
+                """
+                const item = this.items && this.items[$0];
+                if (!item) {
+                    return;
+                }
+                if (this.matches(':focus-within') && typeof this._focus === 'function') {
+                    this._focus($0);
+                }
+                item.scrollIntoView({ block: 'nearest' });
+                """,
+                index
+            );
+        }
+    }
+
+    @Override
+    public void setSpeedSearchConverter(@Nullable Function<E, String> converter) {
+        super.setSpeedSearchConverter(converter);
+        mySpeedSearch.setConverter(converter);
+    }
+
+    @Override
+    public @Nullable String getSpeedSearchText() {
+        return mySpeedSearch.getText();
     }
 
     /**

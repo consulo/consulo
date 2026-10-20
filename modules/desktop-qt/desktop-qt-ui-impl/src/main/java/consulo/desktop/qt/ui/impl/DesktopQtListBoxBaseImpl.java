@@ -30,6 +30,7 @@ import consulo.ui.image.Image;
 import consulo.ui.internal.PlainTextPresentation;
 import consulo.ui.model.FlatDataModel;
 import consulo.ui.model.FlatDataModelEvent;
+import io.qt.core.QItemSelectionModel;
 import io.qt.core.QMargins;
 import io.qt.core.QModelIndex;
 import io.qt.core.QPoint;
@@ -252,7 +253,8 @@ public abstract class DesktopQtListBoxBaseImpl<E> extends QtComponentDelegate<QL
     private LocalizeValue myPlaceholder = LocalizeValue.empty();
     private @Nullable TransferHandler<E> myTransferHandler;
     private final DesktopQtDragAndDropSupport<E> myDragAndDrop = new DesktopQtDragAndDropSupport<>(this, this);
-    private @Nullable Function<E, String> mySpeedSearchConverter;
+    private final DesktopQtSpeedSearch<E> mySpeedSearch =
+        new DesktopQtSpeedSearch<>(false, this::searchableItems, this::currentValue, this::selectFound);
 
     // clearing the widget takes the selection down to nothing on its way, which is not a value the caller chose
     protected boolean myRebuilding;
@@ -292,6 +294,7 @@ public abstract class DesktopQtListBoxBaseImpl<E> extends QtComponentDelegate<QL
         component.setSelectionMode(selectionMode());
         component.setItemDelegate(createItemDelegate(component));
         myDragAndDrop.install(component);
+        mySpeedSearch.install(component);
         component.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff);
 
         // itemEntered is only sent while the viewport is tracking the pointer, and a list does not track by default
@@ -976,6 +979,33 @@ public abstract class DesktopQtListBoxBaseImpl<E> extends QtComponentDelegate<QL
         return mySeparatorPredicate.test(element) ? null : element;
     }
 
+    private List<E> searchableItems() {
+        List<E> items = new ArrayList<>(myModel.getSize());
+        for (int i = 0; i < myModel.getSize(); i++) {
+            E item = myModel.get(i);
+            if (!mySeparatorPredicate.test(item)) {
+                items.add(item);
+            }
+        }
+        return items;
+    }
+
+    private @Nullable E currentValue() {
+        QListWidget component = myComponent;
+        return component == null || component.isDisposed() ? null : valueAt(component.currentRow());
+    }
+
+    private void selectFound(E item) {
+        QListWidget component = myComponent;
+        int row = myModel.indexOf(item);
+        if (component == null || component.isDisposed() || row < 0 || row >= component.count()) {
+            return;
+        }
+
+        component.setCurrentRow(row, QItemSelectionModel.SelectionFlag.ClearAndSelect);
+        component.scrollToItem(component.item(row));
+    }
+
     private void rebuildIfBound() {
         if (myComponent != null) {
             rebuild(myComponent);
@@ -1023,12 +1053,12 @@ public abstract class DesktopQtListBoxBaseImpl<E> extends QtComponentDelegate<QL
 
     @Override
     public void setSpeedSearchConverter(@Nullable Function<E, String> converter) {
-        mySpeedSearchConverter = converter;
+        mySpeedSearch.setConverter(converter);
     }
 
     @Override
     public @Nullable String getSpeedSearchText() {
-        return null;
+        return mySpeedSearch.getText();
     }
 
     @Override

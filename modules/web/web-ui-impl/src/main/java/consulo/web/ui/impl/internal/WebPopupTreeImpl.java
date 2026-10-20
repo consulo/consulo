@@ -77,6 +77,11 @@ class WebPopupTreeImpl<NODE> extends WebTreeImpl<NODE> implements PopupTree<NODE
     }
 
     @Override
+    boolean isNavigable(@Nullable NODE value) {
+        return !mySeparator.test(value);
+    }
+
+    @Override
     public void setSelectOnHover(boolean selectOnHover) {
         mySelectOnHover = selectOnHover;
     }

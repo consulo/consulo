@@ -207,6 +207,12 @@ public final class DesktopQtCustomShortcutFilter {
             }
         }
 
+        int modifiers = keyStroke.getModifiers();
+        boolean commandModifier = (modifiers & (InputEvent.CTRL_DOWN_MASK | InputEvent.ALT_DOWN_MASK | InputEvent.META_DOWN_MASK)) != 0;
+        if (!commandModifier && DesktopQtSpeedSearch.isActive(widget)) {
+            return false;
+        }
+
         if (!isTextInput(widget)) {
             return true;
         }
@@ -215,8 +221,6 @@ public final class DesktopQtCustomShortcutFilter {
             return true;
         }
 
-        int modifiers = keyStroke.getModifiers();
-        boolean commandModifier = (modifiers & (InputEvent.CTRL_DOWN_MASK | InputEvent.ALT_DOWN_MASK | InputEvent.META_DOWN_MASK)) != 0;
         return commandModifier && !isTextEditingKey(event);
     }
 
