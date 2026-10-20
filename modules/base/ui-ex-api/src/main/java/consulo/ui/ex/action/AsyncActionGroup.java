@@ -56,7 +56,7 @@ public abstract class AsyncActionGroup extends ActionGroup {
 
     @Override
     public final AnAction[] getChildren(AnActionEvent e) {
-        throw new UnsupportedOperationException("Must call async version");
+        throw new UnsupportedOperationException("Must call async version: " + getClass());
     }
 
     public abstract Coroutine<?, List<AnAction>> getChildrenAsync(@Nullable AnActionEvent e);
