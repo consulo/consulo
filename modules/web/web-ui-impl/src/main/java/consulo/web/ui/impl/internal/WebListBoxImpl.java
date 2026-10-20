@@ -18,10 +18,13 @@ package consulo.web.ui.impl.internal;
 import consulo.ui.*;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Hr;
+import com.vaadin.flow.component.html.Span;
 import consulo.localize.LocalizeValue;
 import consulo.ui.event.ListDoubleClickEvent;
 import consulo.ui.event.ClickEvent;
+import consulo.ui.internal.PlainTextPresentation;
 import consulo.ui.model.FlatDataModel;
 import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
 import consulo.web.ui.impl.internal.base.ToVaadinComponentWrapper;
@@ -38,6 +41,7 @@ import java.util.function.Predicate;
 @SuppressWarnings("unchecked")
 public class WebListBoxImpl<E> extends WebSingleListComponentBase<E, WebListBoxImpl.Vaadin> implements ListBox<E> {
     private static final String SEPARATOR_CLASS = "web-list-box-separator";
+    private static final String SEPARATOR_CAPTION_CLASS = "web-list-box-separator-caption";
     private static final String HOVER_SELECT_CLASS = "web-list-box-hover-select";
 
     private @Nullable TransferHandler<E> myTransferHandler;
@@ -158,7 +162,7 @@ public class WebListBoxImpl<E> extends WebSingleListComponentBase<E, WebListBoxI
     }
 
     /**
-     * A line, until a separator carries anything of its own to draw.
+     * A line, with the text the renderer gives the separator in front of it as its caption.
      */
     private com.vaadin.flow.component.@Nullable Component separatorOrNull(@Nullable E item) {
         if (item == null || !mySeparatorPredicate.test(item)) {
@@ -167,7 +171,23 @@ public class WebListBoxImpl<E> extends WebSingleListComponentBase<E, WebListBoxI
 
         Hr line = new Hr();
         line.addClassName(SEPARATOR_CLASS);
-        return line;
+
+        String caption = separatorCaption(item);
+        if (caption.isEmpty()) {
+            return line;
+        }
+
+        Div separator = new Div(new Span(caption), line);
+        separator.addClassName(SEPARATOR_CAPTION_CLASS);
+        return separator;
+    }
+
+    private String separatorCaption(E item) {
+        TextItemRenderer<E> renderer = myComponentRenderer == null ? myTextRenderer : null;
+        if (renderer == null) {
+            return "";
+        }
+        return PlainTextPresentation.textOf(presentation -> renderer.render(presentation, RenderItem.of(item, false))).get().trim();
     }
 
     @Override

@@ -27,6 +27,7 @@ import consulo.ui.event.ClickEvent;
 import consulo.ui.event.ListDoubleClickEvent;
 import consulo.ui.event.details.InputDetails;
 import consulo.ui.image.Image;
+import consulo.ui.internal.PlainTextPresentation;
 import consulo.ui.model.FlatDataModel;
 import consulo.ui.model.FlatDataModelEvent;
 import io.qt.core.QMargins;
@@ -39,11 +40,14 @@ import io.qt.gui.QDragEnterEvent;
 import io.qt.gui.QDragLeaveEvent;
 import io.qt.gui.QDragMoveEvent;
 import io.qt.gui.QDropEvent;
+import io.qt.gui.QFont;
 import io.qt.gui.QKeyEvent;
 import io.qt.gui.QMouseEvent;
 import io.qt.gui.QResizeEvent;
 import io.qt.widgets.QAbstractItemView;
 import io.qt.widgets.QFrame;
+import io.qt.widgets.QHBoxLayout;
+import io.qt.widgets.QLabel;
 import io.qt.gui.QPaintEvent;
 import io.qt.gui.QPainter;
 import io.qt.gui.QPalette;
@@ -78,6 +82,10 @@ public abstract class DesktopQtListBoxBaseImpl<E> extends QtComponentDelegate<QL
     private static final int ourMaxWidth = 800;
 
     private static final int ourSeparatorHeight = 7;
+    private static final int ourSeparatorCaptionInset = 6;
+    private static final int ourSeparatorCaptionPadding = 4;
+    private static final double ourSeparatorCaptionScale = 0.9;
+    private static final String SEPARATOR_CAPTION_PROPERTY = "consuloSeparatorCaption";
 
     private static final int ourMaxMeasuredRows = 100;
 
@@ -475,15 +483,18 @@ public abstract class DesktopQtListBoxBaseImpl<E> extends QtComponentDelegate<QL
 
     private void configurePooledItem(QListWidget component, QListWidgetItem item, E element) {
         boolean separator = mySeparatorPredicate.test(element);
-        boolean hasSeparatorLine = component.itemWidget(item) != null;
+        QWidget separatorWidget = component.itemWidget(item);
+        boolean hasSeparatorLine = separatorWidget != null;
 
         if (separator) {
             setItemFlags(item, new Qt.ItemFlags(0));
-            setItemHeight(item, ourSeparatorHeight);
 
-            if (!hasSeparatorLine) {
-                component.setItemWidget(item, createSeparatorLine(component));
+            String caption = separatorCaption(element);
+            if (separatorWidget == null || !caption.equals(separatorWidget.property(SEPARATOR_CAPTION_PROPERTY))) {
+                separatorWidget = createSeparator(component, caption);
+                component.setItemWidget(item, separatorWidget);
             }
+            setItemHeight(item, separatorHeight(separatorWidget));
             return;
         }
 
@@ -773,7 +784,7 @@ public abstract class DesktopQtListBoxBaseImpl<E> extends QtComponentDelegate<QL
             E element = myModel.get(i);
 
             if (mySeparatorPredicate.test(element)) {
-                addSeparatorItem(component);
+                addSeparatorItem(component, element);
                 continue;
             }
 
@@ -786,23 +797,58 @@ public abstract class DesktopQtListBoxBaseImpl<E> extends QtComponentDelegate<QL
         }
     }
 
-    private void addSeparatorItem(QListWidget component) {
+    private void addSeparatorItem(QListWidget component, E element) {
+        QWidget separator = createSeparator(component, separatorCaption(element));
+
         QListWidgetItem item = new QListWidgetItem();
         item.setFlags(Qt.ItemFlag.NoItemFlags);
         // a hint of a negative width is not a valid size and qt drops it whole, height and all
-        item.setSizeHint(new QSize(0, ourSeparatorHeight));
+        item.setSizeHint(new QSize(0, separatorHeight(separator)));
 
         component.addItem(item);
 
         // the row widget only exists once the row does, so it cannot be handed to the item before it is added
-        component.setItemWidget(item, createSeparatorLine(component));
+        component.setItemWidget(item, separator);
     }
 
-    private static QFrame createSeparatorLine(QListWidget component) {
-        QFrame line = new QFrame(component);
+    private String separatorCaption(E element) {
+        if (myComponentRenderer != null) {
+            return "";
+        }
+        return PlainTextPresentation.textOf(presentation -> myRenderer.render(presentation, RenderItem.of(element, false))).get().trim();
+    }
+
+    private static QWidget createSeparator(QListWidget component, String caption) {
+        QFrame line = new QFrame();
         line.setFrameShape(QFrame.Shape.HLine);
         line.setFrameShadow(QFrame.Shadow.Sunken);
-        return line;
+
+        if (caption.isEmpty()) {
+            line.setParent(component);
+            line.setProperty(SEPARATOR_CAPTION_PROPERTY, caption);
+            return line;
+        }
+
+        QLabel label = new QLabel(caption);
+        label.setForegroundRole(QPalette.ColorRole.PlaceholderText);
+        QFont font = label.font();
+        font.setPointSizeF(font.pointSizeF() * ourSeparatorCaptionScale);
+        label.setFont(font);
+
+        QWidget separator = new QWidget(component);
+        separator.setAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents, true);
+        separator.setProperty(SEPARATOR_CAPTION_PROPERTY, caption);
+
+        QHBoxLayout layout = new QHBoxLayout(separator);
+        layout.setContentsMargins(ourSeparatorCaptionInset, ourSeparatorCaptionPadding, ourSeparatorCaptionInset, 0);
+        layout.setSpacing(ourSeparatorCaptionInset);
+        layout.addWidget(label);
+        layout.addWidget(line, 1);
+        return separator;
+    }
+
+    private static int separatorHeight(QWidget separator) {
+        return Math.max(ourSeparatorHeight, separator.sizeHint().height());
     }
 
     /**

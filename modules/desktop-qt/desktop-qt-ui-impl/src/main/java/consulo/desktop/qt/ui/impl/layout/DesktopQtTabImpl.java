@@ -30,7 +30,7 @@ import consulo.ui.TextItemPresentation;
 import consulo.ui.image.Image;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.internal.TabSelectionUtil;
-import consulo.ui.internal.TabTitlePresentation;
+import consulo.ui.internal.PlainTextPresentation;
 import io.qt.core.QEvent;
 import io.qt.core.QObject;
 import io.qt.core.QTimer;
@@ -303,7 +303,7 @@ public class DesktopQtTabImpl implements Tab, DesktopQtAnimationHost, DesktopQtI
 
     @Override
     public LocalizeValue getTitle() {
-        return TabTitlePresentation.titleOf(this, myRenderer);
+        return PlainTextPresentation.textOf(presentation -> myRenderer.accept(this, presentation));
     }
 
     @Override

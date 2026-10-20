@@ -30,6 +30,7 @@ import consulo.ui.event.ComponentEventListener;
 import consulo.ui.event.ContextMenuEvent;
 import consulo.ui.event.ListDoubleClickEvent;
 import consulo.ui.event.ValueComponentEvent;
+import consulo.ui.internal.PlainTextPresentation;
 import consulo.ui.ex.awt.JBList;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.TitledSeparator;
@@ -292,7 +293,7 @@ abstract class DesktopListBoxBaseImpl<E, V> extends SwingComponentDelegate<JBLis
         // with a row, see GroupedItemsListRenderer
         myHitTestRenderer = (list, value, index, selected, focused) -> {
             if (value != null && isSeparatorItem(value)) {
-                TitledSeparator separator = new TitledSeparator();
+                TitledSeparator separator = new TitledSeparator(separatorCaption(value));
                 separator.setBorder(JBUI.Borders.empty());
                 separator.setOpaque(false);
                 return separator;
@@ -301,6 +302,13 @@ abstract class DesktopListBoxBaseImpl<E, V> extends SwingComponentDelegate<JBLis
         };
 
         component.setCellRenderer(myHitTestRenderer);
+    }
+
+    private String separatorCaption(E value) {
+        if (myComponentRenderer != null) {
+            return "";
+        }
+        return PlainTextPresentation.textOf(presentation -> myTextRenderer.render(presentation, RenderItem.of(value, false))).get().trim();
     }
 
     private void applySelectionModel(JBList<E> component) {

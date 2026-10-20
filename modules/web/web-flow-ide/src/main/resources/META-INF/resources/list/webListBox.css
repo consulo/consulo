@@ -136,6 +136,30 @@ consulo-virtual-list.web-list-box > [separator]::before
   border-top: 1px solid var(--consulo-component-border-color);
 }
 
+/* a separator which has a caption shows it, small and muted, with the line filling the rest of the row */
+consulo-virtual-list.web-list-box > [separator][caption]
+{
+  visibility: visible;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  pointer-events: none;
+  font-size: 0.85em;
+  color: var(--vaadin-text-color-secondary, #6b7280);
+}
+
+consulo-virtual-list.web-list-box > [separator][caption]::before
+{
+  content: none;
+}
+
+consulo-virtual-list.web-list-box > [separator][caption]::after
+{
+  content: '';
+  flex: 1 1 auto;
+  border-top: 1px solid var(--consulo-component-border-color);
+}
+
 consulo-virtual-list.web-list-box[placeholder][empty]::before
 {
   content: attr(placeholder);
@@ -158,6 +182,25 @@ consulo-virtual-list.web-list-box[placeholder][empty]::before
 
 /* the row carries a line rather than a label, so it gives up the padding and the height a row of text needs */
 vaadin-item:has(> .web-list-box-separator)
+{
+  min-height: 0;
+  padding: 0;
+}
+
+/* a separator with a caption: the text, small and muted, then the line taking what is left of the row */
+.web-list-box-separator-caption
+{
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  gap: 6px;
+  padding: 4px var(--consulo-list-row-padding-x, 0.5rem) 0;
+  font-size: 0.85em;
+  white-space: nowrap;
+  color: var(--vaadin-text-color-secondary, #6b7280);
+}
+
+vaadin-item:has(> .web-list-box-separator-caption)
 {
   min-height: 0;
   padding: 0;

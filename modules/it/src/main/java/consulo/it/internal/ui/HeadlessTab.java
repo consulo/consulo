@@ -19,7 +19,7 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.Tab;
 import consulo.ui.TextItemPresentation;
-import consulo.ui.internal.TabTitlePresentation;
+import consulo.ui.internal.PlainTextPresentation;
 import org.jspecify.annotations.Nullable;
 
 import java.util.function.BiConsumer;
@@ -49,7 +49,7 @@ public class HeadlessTab implements Tab {
 
     @Override
     public LocalizeValue getTitle() {
-        return TabTitlePresentation.titleOf(this, myRenderer);
+        return PlainTextPresentation.textOf(presentation -> myRenderer.accept(this, presentation));
     }
 
     @Override

@@ -28,6 +28,7 @@ import consulo.ui.TransferHandler;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ListDoubleClickEvent;
 import consulo.ui.event.details.InputDetails;
+import consulo.ui.internal.PlainTextPresentation;
 import consulo.ui.model.FlatDataModel;
 import consulo.ui.model.FlatDataModelEvent;
 import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
@@ -73,6 +74,7 @@ public abstract class WebPooledListBoxBase<E> extends VaadinComponentDelegate<We
     private static final int DEFAULT_LINE_HEIGHT = 20;
 
     private static final String SEPARATOR_ATTRIBUTE = "separator";
+    private static final String CAPTION_ATTRIBUTE = "caption";
     private static final String EMPTY_ATTRIBUTE = "empty";
 
     // served straight from META-INF/resources - the theme goes through the vite bundle, which skips rebuilding
@@ -138,6 +140,7 @@ public abstract class WebPooledListBoxBase<E> extends VaadinComponentDelegate<We
 
     private @Nullable ReusableComponentItemRenderer<E, ?> myReusableRenderer;
     private @Nullable ComponentItemRenderer<E> myRenderer;
+    private @Nullable TextItemRenderer<E> myTextRenderer;
     private @Nullable Function<E, Length> myItemHeightGetter;
     private @Nullable Function<E, String> mySpeedSearchConverter;
     private Predicate<E> mySeparatorPredicate = item -> false;
@@ -271,9 +274,17 @@ public abstract class WebPooledListBoxBase<E> extends VaadinComponentDelegate<We
             element.removeAttribute(SEPARATOR_ATTRIBUTE);
         }
 
+        boolean captioned = separator && !separatorCaption(item).isEmpty();
+        if (captioned) {
+            element.setAttribute(CAPTION_ATTRIBUTE, true);
+        }
+        else {
+            element.removeAttribute(CAPTION_ATTRIBUTE);
+        }
+
         boolean selected = !separator && isSelected(item);
 
-        if (!separator && myReusableRenderer != null) {
+        if ((!separator || captioned) && myReusableRenderer != null) {
             ((ReusableComponentItemRenderer<E, consulo.ui.Component>) myReusableRenderer)
                 .bind(row.myRendered, RenderItem.of(item, selected));
         }
@@ -376,7 +387,7 @@ public abstract class WebPooledListBoxBase<E> extends VaadinComponentDelegate<We
      */
     @Override
     public void setRenderer(TextItemRenderer<E> renderer) {
-        setRenderer(ComponentItemRenderer.<E, TextRow>reusable(
+        applyRenderer(renderer, ComponentItemRenderer.<E, TextRow>reusable(
             TextRow::new,
             (row, item) -> {
                 WebItemPresentationImpl presentation = new WebItemPresentationImpl();
@@ -421,6 +432,19 @@ public abstract class WebPooledListBoxBase<E> extends VaadinComponentDelegate<We
 
     @Override
     public void setRenderer(ComponentItemRenderer<E> renderer) {
+        applyRenderer(null, renderer);
+    }
+
+    private String separatorCaption(E item) {
+        TextItemRenderer<E> renderer = myTextRenderer;
+        if (renderer == null) {
+            return "";
+        }
+        return PlainTextPresentation.textOf(presentation -> renderer.render(presentation, RenderItem.of(item, false))).get().trim();
+    }
+
+    private void applyRenderer(@Nullable TextItemRenderer<E> textRenderer, ComponentItemRenderer<E> renderer) {
+        myTextRenderer = textRenderer;
         myRenderer = renderer;
 
         if (renderer instanceof ReusableComponentItemRenderer<E, ?> reusable) {

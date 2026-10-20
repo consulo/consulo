@@ -27,7 +27,7 @@ import consulo.ui.TextItemPresentation;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.IdeActions;
-import consulo.ui.internal.TabTitlePresentation;
+import consulo.ui.internal.PlainTextPresentation;
 import consulo.web.ui.impl.internal.action.WebActionContextMenu;
 import consulo.web.ui.impl.internal.base.TargetVaadin;
 import org.jspecify.annotations.Nullable;
@@ -63,7 +63,7 @@ class WebTabImpl implements Tab {
 
     @Override
     public LocalizeValue getTitle() {
-        return TabTitlePresentation.titleOf(this, myRenderer);
+        return PlainTextPresentation.textOf(presentation -> myRenderer.accept(this, presentation));
     }
 
     public @Nullable Component getContent() {

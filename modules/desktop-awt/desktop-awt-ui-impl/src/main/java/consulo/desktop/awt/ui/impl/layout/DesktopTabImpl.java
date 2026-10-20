@@ -22,7 +22,7 @@ import consulo.ui.Component;
 import consulo.ui.Tab;
 import consulo.ui.TextItemPresentation;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.internal.TabTitlePresentation;
+import consulo.ui.internal.PlainTextPresentation;
 import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.SimpleColoredComponent;
@@ -110,7 +110,7 @@ public class DesktopTabImpl implements Tab {
 
     @Override
     public LocalizeValue getTitle() {
-        return TabTitlePresentation.titleOf(this, myRenderer);
+        return PlainTextPresentation.textOf(presentation -> myRenderer.accept(this, presentation));
     }
 
     public Component getComponent() {

@@ -45,7 +45,7 @@ public interface ListBoxBase<E>
 
     /**
      * Which items stand between the others rather than being ones of their own. A separator is drawn as a line and
-     * cannot be selected.
+     * cannot be selected; the text the renderer gives it is drawn next to the line as its caption.
      */
     default void isSeparator(Predicate<E> predicate) {
     }
