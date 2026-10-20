@@ -385,6 +385,8 @@ changes.dialog.newchangelist.title:
     text: New Changelist
 changes.error.cannot.find.base.for.path:
     text: Cannot find base for ''{0}''
+changes.ignore.file:
+    text: ignore file
 changes.minutes:
     text: minutes
 changes.new.changelist:
@@ -892,6 +894,22 @@ ignored.edit.radio.mask:
     text: Ignore all files &matching
 ignored.edit.title:
     text: Ignore Unversioned Files
+ignored.file.manage.all.project:
+    text: In All Projects
+ignored.file.manage.message:
+    text: '{0} can automatically add files that are usually ignored to {1}.'
+ignored.file.manage.notmanage:
+    text: Do not Add
+ignored.file.manage.this.project:
+    text: In This Project
+ignored.file.manage.view:
+    text: View
+ignored.file.manage.view.dialog.ignore.action:
+    text: '&Ignore'
+ignored.file.manage.view.dialog.title:
+    text: Add Files to Ignore
+ignored.file.manage.with.files.message:
+    text: '{0} can automatically add files that are usually ignored to {1}.'
 ignored.group.description.default.ide.files:
     text: Default IDE ignored files
 ignoring.files.progress.title:

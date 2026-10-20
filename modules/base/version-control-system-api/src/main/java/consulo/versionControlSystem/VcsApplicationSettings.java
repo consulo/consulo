@@ -42,6 +42,8 @@ public class VcsApplicationSettings implements PersistentStateComponent<VcsAppli
   public boolean CREATE_CHANGELISTS_AUTOMATICALLY = false;
   public CommitModeType COMMIT_MODE = CommitModeType.VERSION_CONTROL_TOOL_WINDOW;
   public boolean COMMIT_TOGGLE_MODE = false;
+  public boolean MANAGE_IGNORE_FILES = false;
+  public boolean DISABLE_MANAGE_IGNORE_FILES = false;
 
   public static VcsApplicationSettings getInstance() {
     return Application.get().getInstance(VcsApplicationSettings.class);
