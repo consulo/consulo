@@ -1,6 +1,7 @@
 // Copyright 2000-2024 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.versionControlSystem.change.ignore.action;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.dumb.DumbAware;
 import consulo.language.ignore.IgnoreFileType;
 import consulo.language.psi.search.FileTypeIndex;
@@ -8,11 +9,14 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.content.scope.ProjectScopes;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.AnActionWithSyncUpdate;
+import consulo.ui.ex.action.AnActionWithAsyncUpdate;
+import consulo.ui.ex.action.AsyncActionGroup;
 import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.step.CodeExecution;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.change.IgnoredFileContentProvider;
@@ -32,7 +36,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-public class IgnoreFileActionGroup extends ActionGroup implements AnActionWithSyncUpdate, DumbAware {
+public class IgnoreFileActionGroup extends AsyncActionGroup implements AnActionWithAsyncUpdate, DumbAware {
     private final IgnoreFileType myIgnoreFileType;
 
     public IgnoreFileActionGroup(IgnoreFileType ignoreFileType) {
@@ -52,6 +56,7 @@ public class IgnoreFileActionGroup extends ActionGroup implements AnActionWithSy
         return List.of();
     }
 
+    @RequiredReadAction
     private List<AnAction> createActionsFor(AnActionEvent e) {
         List<VirtualFile> selectedFiles = IgnoreFileAction.getSelectedFiles(e);
         Project project = e.getData(Project.KEY);
@@ -99,12 +104,13 @@ public class IgnoreFileActionGroup extends ActionGroup implements AnActionWithSy
     }
 
     @Override
-    public void update(AnActionEvent e) {
-        Presentation presentation = e.getPresentation();
-        List<AnAction> actions = createActionsFor(e);
-        presentation.setPopupGroup(actions.size() > 1);
-        presentation.setPerformGroup(actions.size() == 1);
-        presentation.setEnabledAndVisible(!actions.isEmpty());
+    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
+        return ActionSafeReadLock.run(e, presentation -> {
+            List<AnAction> actions = createActionsFor(e);
+            presentation.setPopupGroup(actions.size() > 1);
+            presentation.setPerformGroup(actions.size() == 1);
+            presentation.setEnabledAndVisible(!actions.isEmpty());
+        }).toCoroutine();
     }
 
     @Override
@@ -118,11 +124,11 @@ public class IgnoreFileActionGroup extends ActionGroup implements AnActionWithSy
     }
 
     @Override
-    public AnAction[] getChildren(@Nullable AnActionEvent e) {
+    public Coroutine<?, List<AnAction>> getChildrenAsync(@Nullable AnActionEvent e) {
         if (e == null) {
-            return EMPTY_ARRAY;
+            return Coroutine.first(CodeExecution.<Object, List<AnAction>>supply(() -> List.of()));
         }
-        return createActionsFor(e).toArray(AnAction.EMPTY_ARRAY);
+        return ActionSafeReadLock.<Object, List<AnAction>>apply(e, presentation -> createActionsFor(e)).toCoroutine();
     }
 
     private static List<VirtualFile> filterSelectedFiles(Project project, List<VirtualFile> files) {
@@ -133,6 +139,7 @@ public class IgnoreFileActionGroup extends ActionGroup implements AnActionWithSy
             .toList();
     }
 
+    @RequiredReadAction
     private Collection<VirtualFile> findSuitableIgnoreFiles(Project project, VirtualFile file) {
         VirtualFile fileParent = file.getParent();
         return FileTypeIndex.getFiles(myIgnoreFileType, ProjectScopes.getProjectScope(project))
