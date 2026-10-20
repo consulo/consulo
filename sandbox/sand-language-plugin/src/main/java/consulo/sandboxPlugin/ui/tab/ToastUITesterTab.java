@@ -24,6 +24,11 @@ import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationService;
+import consulo.project.ui.notification.NotificationType;
+import consulo.project.ui.wm.StatusBar;
+import consulo.project.ui.wm.ToolWindowId;
+import consulo.project.ui.wm.ToolWindowManager;
+import consulo.project.ui.wm.WindowManager;
 import consulo.ui.Button;
 import consulo.ui.Component;
 import consulo.ui.Label;
@@ -70,6 +75,36 @@ public class ToastUITesterTab implements UITesterTab {
                 notifyAll(projects.length == 0 ? null : projects[0], status);
             })));
 
+        HorizontalLayout balloons = HorizontalLayout.create();
+        for (NotificationType type : NotificationType.values()) {
+            balloons.add(Button.create(LocalizeValue.of("Project Balloon " + type), event -> {
+                Project project = firstProject();
+                if (project != null) {
+                    ToolWindowManager.getInstance(project).notifyByBalloon(
+                        ToolWindowId.PROJECT_VIEW,
+                        type,
+                        "Project view says <b>" + type + "</b>.\nSecond line with a <a href=\"tw\">link</a>.",
+                        null,
+                        e -> status.setText(LocalizeValue.of("link: " + e.getDescription()))
+                    );
+                }
+            }));
+        }
+        balloons.add(Button.create(LocalizeValue.of("Status Bar Balloon"), event -> {
+            Project project = firstProject();
+            StatusBar statusBar = project == null ? null : WindowManager.getInstance().getStatusBar(project);
+            if (statusBar != null) {
+                statusBar.notifyByBalloon(
+                    StatusBar.PROGRESS_WIDGET_ID,
+                    NotificationType.WARNING,
+                    "Unable to rename certain usages. <a href=\"sb\">Browse</a>",
+                    null,
+                    e -> status.setText(LocalizeValue.of("link: " + e.getDescription()))
+                );
+            }
+        }));
+        layout.add(balloons);
+
         layout.add(toast(layout, status, ToastStyle.SUCCESS, null, "Build finished", "Compilation completed successfully in 4 s.",
             List.of(), List.of()));
         layout.add(toast(layout, status, ToastStyle.INFO, null, "Indexing",
@@ -84,6 +119,11 @@ public class ToastUITesterTab implements UITesterTab {
         layout.add(status);
 
         return ScrollableLayout.create(layout);
+    }
+
+    private static @Nullable Project firstProject() {
+        Project[] projects = ProjectManager.getInstance().getOpenProjects();
+        return projects.length == 0 ? null : projects[0];
     }
 
     private static void notifyAll(@Nullable Project project, Label status) {

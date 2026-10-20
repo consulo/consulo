@@ -167,6 +167,9 @@ public class DesktopQtHtmlViewImpl extends QtComponentDelegate<QTextBrowser> imp
         // inside a scroll pane which owns the frame
         component.setFrameShape(QFrame.Shape.NoFrame);
 
+        // the room around the document belongs to whoever holds the view, as it does on the other frontends
+        component.document().setDocumentMargin(0);
+
         applySizePolicy(component);
 
         // a link is a choice the platform makes, not a page to walk to: the browser must neither navigate nor hand
@@ -219,6 +222,7 @@ public class DesktopQtHtmlViewImpl extends QtComponentDelegate<QTextBrowser> imp
 
     private void setHtml(QTextBrowser component, String html) {
         component.setHtml(html);
+        component.document().setDocumentMargin(0);
 
         if (mySizeToContent) {
             component.updateGeometry();

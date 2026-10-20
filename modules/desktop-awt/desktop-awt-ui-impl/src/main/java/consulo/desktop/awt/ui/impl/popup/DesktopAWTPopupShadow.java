@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.ui.impl.popup;
 
+import consulo.desktop.awt.ui.impl.DesktopGlassyBackdrop;
 import consulo.ui.ex.awt.JBUIScale;
 
 import java.awt.AlphaComposite;
@@ -25,8 +26,6 @@ import java.awt.RenderingHints;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.awt.image.ConvolveOp;
-import java.awt.image.Kernel;
 
 final class DesktopAWTPopupShadow {
     private static final int[] OFFSETS = {3, 1};
@@ -82,24 +81,6 @@ final class DesktopAWTPopupShadow {
         if (blur <= 0) {
             return mask;
         }
-        float[] kernel = gaussian(blur);
-        ConvolveOp horizontal = new ConvolveOp(new Kernel(kernel.length, 1, kernel), ConvolveOp.EDGE_NO_OP, null);
-        ConvolveOp vertical = new ConvolveOp(new Kernel(1, kernel.length, kernel), ConvolveOp.EDGE_NO_OP, null);
-        return vertical.filter(horizontal.filter(mask, null), null);
-    }
-
-    private static float[] gaussian(int radius) {
-        double sigma = radius / 2.0;
-        float[] kernel = new float[radius * 2 + 1];
-        float sum = 0;
-        for (int i = -radius; i <= radius; i++) {
-            float value = (float) Math.exp(-(i * i) / (2 * sigma * sigma));
-            kernel[i + radius] = value;
-            sum += value;
-        }
-        for (int i = 0; i < kernel.length; i++) {
-            kernel[i] /= sum;
-        }
-        return kernel;
+        return DesktopGlassyBackdrop.blur(mask, blur);
     }
 }

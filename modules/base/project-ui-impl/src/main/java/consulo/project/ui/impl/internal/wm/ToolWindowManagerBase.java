@@ -21,18 +21,10 @@ import consulo.component.ProcessCanceledException;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.component.persist.PersistentStateComponentWithAsyncGet;
 import consulo.ui.Component;
-import consulo.ui.HtmlView;
-import consulo.ui.Label;
 import consulo.ui.LightPopup;
-import consulo.ui.NotificationType;
-import consulo.ui.PopupOptions;
 import consulo.ui.PopupPosition;
 import consulo.ui.event.ComponentEventListener;
 import consulo.ui.event.HyperlinkEvent;
-import consulo.ui.layout.DockLayout;
-import consulo.ui.util.ColorValueUtil;
-import consulo.ui.style.ComponentColors;
-import consulo.ui.Space;
 import consulo.ui.UIAction;
 import consulo.ui.util.ShowNotifier;
 import consulo.util.concurrent.coroutine.Coroutine;
@@ -48,11 +40,13 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.event.DumbModeListener;
+import consulo.project.ui.impl.internal.notification.NotificationBalloon;
 import consulo.project.ui.impl.internal.wm.action.ActivateToolWindowAction;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.internal.ToolWindowLayout;
 import consulo.project.ui.internal.ToolWindowManagerEx;
 import consulo.project.ui.internal.WindowInfoImpl;
+import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.wm.ToolWindowFactory;
 import consulo.project.ui.wm.ToolWindowManagerListener;
 import consulo.project.ui.wm.WindowManager;
@@ -72,7 +66,6 @@ import kava.beans.PropertyChangeListener;
 import org.jdom.Element;
 
 import javax.swing.*;
-import java.net.URL;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
@@ -460,16 +453,13 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
             updateStripePresentation(toolWindowId, button);
         }
 
-        LightPopup popup = LightPopup.create(
-            PopupOptions.builder()
-                .position(balloonPosition(getInfo(toolWindowId).getAnchor()))
-                .arrow()
-                .disableRequestFocus()
-                .build()
+        LightPopup popup = NotificationBalloon.create(
+            balloonPosition(getInfo(toolWindowId).getAnchor()),
+            type,
+            text,
+            icon,
+            linkListener
         );
-        ComponentColors background = balloonColor(type);
-        popup.setBackgroundColor(background);
-        popup.setContent(createBalloonContent(popup, background, text, icon, linkListener));
         popup.addCloseListener(event -> {
             myId2Balloon.remove(toolWindowId, popup);
             if (placeholder) {
@@ -516,51 +506,6 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
             return PopupPosition.START;
         }
         return PopupPosition.END;
-    }
-
-    private static ComponentColors balloonColor(NotificationType type) {
-        return switch (type) {
-            case WARNING -> ComponentColors.NOTIFICATION_WARNING_BACKGROUND;
-            case ERROR -> ComponentColors.NOTIFICATION_ERROR_BACKGROUND;
-            default -> ComponentColors.NOTIFICATION_INFO_BACKGROUND;
-        };
-    }
-
-    @RequiredUIAccess
-    private static Component createBalloonContent(
-        LightPopup popup,
-        ComponentColors background,
-        String text,
-        @Nullable Image icon,
-        @Nullable ComponentEventListener<Component, HyperlinkEvent> linkListener
-    ) {
-        HtmlView view = HtmlView.create();
-        view.setSizeToContent(true);
-        view.setBackgroundColor(background);
-        view.render(new HtmlView.RenderData(text.replace("\n", "<br>"), balloonCss(background), new URL[0]))
-            .whenCompleteAsync((result, error) -> popup.pack(), UIAccess.current());
-        view.addHyperlinkListener(event -> {
-            popup.close();
-            if (linkListener != null) {
-                linkListener.onEvent(event);
-            }
-        });
-
-        DockLayout layout = DockLayout.create();
-        layout.paddingBuilder().verticalSet(Space.SMALL).horizontalSet(Space.MEDIUM).apply();
-        if (icon != null) {
-            Label iconLabel = Label.create();
-            iconLabel.setImage(icon);
-            iconLabel.paddingBuilder().rightSet(Space.SMALL).apply();
-            layout.left(iconLabel);
-        }
-        layout.center(view);
-        return layout;
-    }
-
-    private static String balloonCss(ComponentColors background) {
-        return "html, body { margin: 0; padding: 0; background-color: " + ColorValueUtil.toCssColor(background)
-            + "; color: " + ColorValueUtil.toCssColor(ComponentColors.TEXT_FOREGROUND) + "; }";
     }
 
     protected void fireToolWindowRegistered(String id) {

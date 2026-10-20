@@ -34,9 +34,9 @@ import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
+import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.Component;
-import consulo.ui.NotificationType;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ComponentEventListener;
@@ -239,7 +239,7 @@ public class ExportTestResultsAction extends LegacyDumbAwareAction {
                         );
                         showBalloon(
                             project,
-                            NotificationType.INFO,
+                            NotificationType.INFORMATION,
                             ExecutionLocalize.exportTestResultsSucceeded(outputFile.getName()).get(),
                             listener
                         );

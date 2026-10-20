@@ -21,16 +21,18 @@ import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.project.Project;
+import consulo.project.ui.impl.internal.notification.StatusBarBalloonHolder;
 import consulo.project.ui.internal.StatusBarEx;
+import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.wm.CustomStatusBarWidget;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
-import consulo.ui.NotificationType;
 import consulo.ui.Space;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.popup.BalloonHandler;
+import consulo.ui.event.ComponentEventListener;
+import consulo.ui.event.HyperlinkEvent;
 import consulo.ui.image.Image;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.HorizontalLayout;
@@ -38,7 +40,6 @@ import consulo.util.collection.Lists;
 import consulo.util.lang.Pair;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.event.HyperlinkListener;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -84,6 +85,8 @@ public class UnifiedStatusBarImpl implements StatusBarEx {
     private final @Nullable StatusBar myMaster;
 
     private UnifiedToolWindowsSwitcher mySwitcher;
+
+    private final StatusBarBalloonHolder myBalloons = new StatusBarBalloonHolder();
 
     @RequiredUIAccess
     public UnifiedStatusBarImpl(@Nullable StatusBar master) {
@@ -241,14 +244,29 @@ public class UnifiedStatusBarImpl implements StatusBarEx {
     }
 
     @Override
-    public BalloonHandler notifyProgressByBalloon(
+    @RequiredUIAccess
+    public void notifyByBalloon(
+        String widgetId,
         NotificationType type,
         String htmlBody,
         @Nullable Image icon,
-        @Nullable HyperlinkListener listener
+        @Nullable ComponentEventListener<consulo.ui.Component, HyperlinkEvent> linkListener
     ) {
-        return () -> {
-        };
+        consulo.ui.Component target;
+        if (PROGRESS_WIDGET_ID.equals(widgetId)) {
+            UnifiedInfoAndProgressPanel panel = myInfoAndProgressPanel;
+            target = panel == null ? null : panel.getUIComponent();
+        }
+        else {
+            target = getWidgetComponent(widgetId);
+        }
+        myBalloons.show(widgetId, target, type, htmlBody, icon, linkListener);
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void hideWidgetBalloon(String widgetId) {
+        myBalloons.hide(widgetId);
     }
 
     @Override

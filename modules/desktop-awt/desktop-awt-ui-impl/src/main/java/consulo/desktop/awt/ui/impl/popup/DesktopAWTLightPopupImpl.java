@@ -20,11 +20,13 @@ import consulo.ui.Component;
 import consulo.ui.LightPopup;
 import consulo.ui.PopupOptions;
 import consulo.ui.PopupPosition;
+import consulo.ui.PopupStyle;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.event.PopupCloseEvent;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.impl.PopupStyleState;
 import consulo.ui.style.ComponentColors;
 import org.jspecify.annotations.Nullable;
 
@@ -52,6 +54,8 @@ public class DesktopAWTLightPopupImpl extends SwingComponentDelegate<DesktopAWTP
     private final PopupOptions myOptions;
 
     private @Nullable ColorValue myBackground;
+
+    private final PopupStyleState myStyle = new PopupStyleState();
 
     private java.awt.@Nullable Component myTarget;
     private @Nullable Rectangle myPoint;
@@ -139,12 +143,28 @@ public class DesktopAWTLightPopupImpl extends SwingComponentDelegate<DesktopAWTP
         toAWTComponent().repaint();
     }
 
+    @Override
+    @RequiredUIAccess
+    public void addStyle(PopupStyle style) {
+        myStyle.add(style);
+        toAWTComponent().dropShadow();
+        toAWTComponent().repaint();
+    }
+
+    boolean isGlassy() {
+        return myStyle.isGlassy();
+    }
+
     Color fillColor() {
-        ColorValue background = myBackground;
+        ColorValue background = myStyle.background(myBackground);
         return TargetAWT.to(background != null ? background : ComponentColors.LAYOUT);
     }
 
     Color borderColor() {
+        ColorValue styleBorder = myStyle.border();
+        if (styleBorder != null) {
+            return TargetAWT.to(styleBorder);
+        }
         ColorValue background = myBackground;
         if (background == null) {
             return TargetAWT.to(ComponentColors.BORDER);

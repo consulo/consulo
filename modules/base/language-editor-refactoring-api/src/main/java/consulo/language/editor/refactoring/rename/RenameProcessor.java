@@ -35,11 +35,14 @@ import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.WindowManager;
-import consulo.ui.NotificationType;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.ComponentEventListener;
+import consulo.ui.event.HyperlinkEvent;
 import consulo.ui.ex.awt.Messages;
 import consulo.usage.*;
 import consulo.util.collection.MultiMap;
@@ -47,8 +50,6 @@ import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.HyperlinkListener;
 import java.util.*;
 
 public class RenameProcessor extends BaseRefactoringProcessor {
@@ -437,10 +438,7 @@ public class RenameProcessor extends BaseRefactoringProcessor {
                         if (ideFrame != null) {
                             StatusBar statusBar = ideFrame.getStatusBar();
                             @RequiredUIAccess
-                            HyperlinkListener listener = e -> {
-                                if (e.getEventType() != HyperlinkEvent.EventType.ACTIVATED) {
-                                    return;
-                                }
+                            ComponentEventListener<Component, HyperlinkEvent> listener = e -> {
                                 Messages.showMessageDialog(
                                     "<html>Following usages were safely skipped:<br>" +
                                         StringUtil.join(
@@ -453,7 +451,8 @@ public class RenameProcessor extends BaseRefactoringProcessor {
                                     null
                                 );
                             };
-                            statusBar.notifyProgressByBalloon(
+                            statusBar.notifyByBalloon(
+                                StatusBar.PROGRESS_WIDGET_ID,
                                 NotificationType.WARNING,
                                 "<html><body>Unable to rename certain usages. <a href=\"\">Browse</a></body></html>",
                                 null,

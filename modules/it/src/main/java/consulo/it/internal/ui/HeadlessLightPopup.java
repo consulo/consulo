@@ -18,6 +18,7 @@ package consulo.it.internal.ui;
 import consulo.ui.Component;
 import consulo.ui.LightPopup;
 import consulo.ui.PopupOptions;
+import consulo.ui.PopupStyle;
 import consulo.ui.annotation.RequiredUIAccess;
 
 /**
@@ -26,6 +27,10 @@ import consulo.ui.annotation.RequiredUIAccess;
 public class HeadlessLightPopup extends HeadlessPopupBase implements LightPopup {
     public HeadlessLightPopup(PopupOptions options) {
         super(options);
+    }
+
+    @Override
+    public void addStyle(PopupStyle style) {
     }
 
     @Override

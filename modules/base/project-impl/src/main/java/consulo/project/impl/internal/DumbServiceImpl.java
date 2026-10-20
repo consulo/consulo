@@ -46,12 +46,12 @@ import consulo.project.impl.internal.SingleTaskExecutor.AutoclosableProgressive;
 import consulo.project.internal.DumbServiceInternal;
 import consulo.project.internal.UnindexedFilesScannerExecutor;
 import consulo.project.localize.ProjectLocalize;
+import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
-import consulo.ui.NotificationType;
 import consulo.util.collection.Lists;
 import consulo.util.concurrent.ConcurrencyUtil;
 import consulo.util.concurrent.coroutine.Continuation;
@@ -680,7 +680,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
             if (ideFrame != null) {
                 StatusBar statusBar = ideFrame.getStatusBar();
                 if (statusBar != null) {
-                    statusBar.notifyProgressByBalloon(NotificationType.INFO, message.get());
+                    statusBar.notifyByBalloon(StatusBar.PROGRESS_WIDGET_ID, NotificationType.INFORMATION, message.get());
                 }
             }
         });

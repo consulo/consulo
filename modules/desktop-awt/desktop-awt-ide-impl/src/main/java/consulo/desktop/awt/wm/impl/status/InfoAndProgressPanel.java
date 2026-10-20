@@ -15,7 +15,6 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.application.internal.ProgressSuspender;
 import consulo.application.internal.ProgressSuspenderListener;
-import consulo.ide.impl.idea.openapi.ui.MessageType;
 import consulo.project.ui.impl.internal.wm.statusBar.InlineProgressIndicator;
 import consulo.ide.impl.project.ui.impl.StatusWidgetBorders;
 import consulo.localize.LocalizeValue;
@@ -28,32 +27,23 @@ import consulo.ui.LabelStyle;
 import consulo.ui.ProgressBar;
 import consulo.ui.ProgressBarStyle;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.HorizontalLayout;
-import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.MergingUpdateQueue;
 import consulo.ui.ex.awt.util.Update;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ui.ex.popup.Balloon;
-import consulo.ui.ex.popup.BalloonHandler;
-import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.ui.image.Image;
 import consulo.ui.layout.HorizontalLayoutStyle;
 import consulo.ui.layout.LayoutStyle;
 import consulo.util.collection.*;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.ref.SoftReference;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
-import javax.swing.event.HyperlinkListener;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.*;
 
@@ -71,7 +61,6 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
     private boolean myShouldClosePopupAndOnProcessFinish;
 
     private boolean myDisposed;
-    private WeakReference<Balloon> myLastShownBalloon;
 
     private final Set<InlineProgressIndicator> myDirtyIndicators = Sets.newHashSet(HashingStrategy.identity());
     private final Update myUpdateIndicators = new Update("UpdateIndicators", false, 1) {
@@ -383,47 +372,6 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
         repaint();
     }
 
-    public BalloonHandler notifyByBalloon(MessageType type, String htmlBody, @Nullable Image icon, @Nullable HyperlinkListener listener) {
-        Balloon balloon = JBPopupFactory.getInstance()
-            .createHtmlTextBalloonBuilder(
-                htmlBody.replace("\n", "<br>"),
-                icon,
-                type.getPopupBackground(),
-                listener
-            )
-            .createBalloon();
-
-        SwingUtilities.invokeLater(() -> {
-            Balloon oldBalloon = SoftReference.dereference(myLastShownBalloon);
-            if (oldBalloon != null) {
-                balloon.setAnimationEnabled(false);
-                oldBalloon.setAnimationEnabled(false);
-                oldBalloon.hide();
-            }
-            myLastShownBalloon = new WeakReference<>(balloon);
-
-            Component comp = this;
-            if (comp.isShowing()) {
-                int offset = comp.getHeight() / 2;
-                Point point = new Point(comp.getWidth() - offset, comp.getHeight() - offset);
-                balloon.show(new RelativePoint(comp, point), Balloon.Position.above);
-            }
-            else {
-                JRootPane rootPane = SwingUtilities.getRootPane(comp);
-                if (rootPane != null && rootPane.isShowing()) {
-                    Container contentPane = rootPane.getContentPane();
-                    Rectangle bounds = contentPane.getBounds();
-                    Point target = UIUtil.getCenterPoint(bounds, JBUI.size(1, 1));
-                    target.y = bounds.height - 3;
-                    balloon.show(new RelativePoint(contentPane, target), Balloon.Position.above);
-                }
-            }
-        });
-
-        return () -> SwingUtilities.invokeLater(balloon::hide);
-    }
-
-    
     @RequiredUIAccess
     private MyInlineProgressIndicator createInlineDelegate(TaskInfo info, ProgressIndicatorEx original, boolean compact) {
         Collection<MyInlineProgressIndicator> inlines = myOriginal2Inlines.get(original);
@@ -480,7 +428,7 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
     
     @Override
     public String getId() {
-        return "progress";
+        return StatusBar.PROGRESS_WIDGET_ID;
     }
 
     @Override

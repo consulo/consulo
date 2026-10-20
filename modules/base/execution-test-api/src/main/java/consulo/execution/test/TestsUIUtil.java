@@ -192,7 +192,7 @@ public class TestsUIUtil {
         NotificationType type = testResultPresentation.getType();
 
         if (!Comparing.strEqual(toolWindowManager.getActiveToolWindowId(), testRunDebugId)) {
-            toolWindowManager.notifyByBalloon(testRunDebugId, type.toUI(), balloonText);
+            toolWindowManager.notifyByBalloon(testRunDebugId, type, balloonText);
         }
 
         NotificationService.getInstance()

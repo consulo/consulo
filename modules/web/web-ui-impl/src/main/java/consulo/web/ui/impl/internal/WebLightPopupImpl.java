@@ -30,9 +30,13 @@ import consulo.ui.LightPopup;
 import consulo.ui.Popup;
 import consulo.ui.PopupOptions;
 import consulo.ui.PopupPosition;
+import consulo.ui.PopupStyle;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.event.PopupCloseEvent;
+import consulo.ui.impl.PopupStyleState;
+import consulo.ui.impl.ToastPresentation;
+import consulo.ui.style.ComponentColors;
 import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
 import consulo.web.ui.impl.internal.base.TargetVaadin;
 import consulo.web.ui.impl.internal.base.VaadinComponentDelegate;
@@ -61,6 +65,9 @@ public class WebLightPopupImpl extends VaadinComponentDelegate<WebLightPopupImpl
     private static final String MIN_WIDTH_PROPERTY = "--consulo-popup-min-width";
     private static final String ARROW_ANCHOR_CLASS = "consulo-popup-arrow-anchor";
     private static final String BACKGROUND_PROPERTY = "--vaadin-popover-background";
+    private static final String BORDER_COLOR_PROPERTY = "--vaadin-popover-border-color";
+    private static final String GLASSY_CLASS = "consulo-glassy-popup";
+    private static final String GLASSY_BLUR_PROPERTY = "--consulo-popup-glassy-blur";
 
     @StyleSheet("/popup/webLightPopup.css")
     public class Vaadin extends Popover implements FromVaadinComponentWrapper {
@@ -101,6 +108,8 @@ public class WebLightPopupImpl extends VaadinComponentDelegate<WebLightPopupImpl
     private final PopupOptions myOptions;
 
     private @Nullable ColorValue myBackgroundColor;
+
+    private final PopupStyleState myStyle = new PopupStyleState();
 
     private boolean myDisposed;
 
@@ -209,7 +218,31 @@ public class WebLightPopupImpl extends VaadinComponentDelegate<WebLightPopupImpl
     public void setBackgroundColor(@Nullable ColorValue background) {
         myBackgroundColor = background;
 
-        getVaadinComponent().getElement().getStyle().set(BACKGROUND_PROPERTY, WebColors.toCssColor(background));
+        updateColors();
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void addStyle(PopupStyle style) {
+        myStyle.add(style);
+
+        updateColors();
+    }
+
+    private void updateColors() {
+        Element element = getVaadinComponent().getElement();
+        ColorValue background = myStyle.background(myBackgroundColor);
+        if (myStyle.isGlassy()) {
+            String fill = WebColors.toStyleCssColor(background != null ? background : ComponentColors.LAYOUT);
+            int opacity = Math.round(ToastPresentation.GLASSY_OPACITY * 100);
+            element.getStyle().set(BACKGROUND_PROPERTY, "color-mix(in srgb, " + fill + " " + opacity + "%, transparent)");
+            element.getStyle().set(GLASSY_BLUR_PROPERTY, ToastPresentation.GLASSY_BLUR + "px");
+            element.getClassList().add(GLASSY_CLASS);
+        }
+        else {
+            element.getStyle().set(BACKGROUND_PROPERTY, WebColors.toStyleCssColor(background));
+        }
+        element.getStyle().set(BORDER_COLOR_PROPERTY, WebColors.toStyleCssColor(myStyle.border()));
     }
 
     @Override

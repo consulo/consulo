@@ -624,7 +624,7 @@ public class CompileDriverImpl implements CompileDriver {
                         : NotificationType.INFORMATION;
                     if (duration > ONE_MINUTE_MS) {
                         ToolWindowManager.getInstance(myProject)
-                            .notifyByBalloon(BuildContentManager.TOOL_WINDOW_ID, messageType.toUI(), statusMessage.get());
+                            .notifyByBalloon(BuildContentManager.TOOL_WINDOW_ID, messageType, statusMessage.get());
                     }
 
                     NotificationService.getInstance()

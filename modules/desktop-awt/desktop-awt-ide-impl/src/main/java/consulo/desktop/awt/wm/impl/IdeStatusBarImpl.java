@@ -23,20 +23,21 @@ import consulo.dataContext.UiDataProvider;
 import consulo.desktop.awt.wm.impl.status.InfoAndProgressPanel;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.openapi.ui.MessageType;
 import consulo.project.Project;
+import consulo.project.ui.impl.internal.notification.StatusBarBalloonHolder;
 import consulo.project.ui.impl.internal.wm.statusBar.StatusBarCustomWidgetHolder;
 import consulo.project.ui.impl.internal.wm.statusBar.StatusBarWidgetButton;
 import consulo.project.ui.internal.StatusBarEx;
+import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.wm.*;
-import consulo.ui.NotificationType;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.ComponentEventListener;
+import consulo.ui.event.HyperlinkEvent;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.TabsUtil;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ui.ex.popup.BalloonHandler;
 import consulo.ui.image.Image;
 import consulo.util.collection.Lists;
 import consulo.util.dataholder.Key;
@@ -44,7 +45,6 @@ import consulo.util.lang.Pair;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
-import javax.swing.event.HyperlinkListener;
 import java.awt.*;
 import java.util.List;
 import java.util.*;
@@ -65,6 +65,8 @@ public class IdeStatusBarImpl extends JPanel implements StatusBarEx, UiDataProvi
     private static final String uiClassID = "IdeStatusBarUI";
 
     private final Map<String, WidgetBean> myWidgetMap = new LinkedHashMap<>();
+
+    private final StatusBarBalloonHolder myBalloons = new StatusBarBalloonHolder();
 
     private JPanel myLeftPanel;
     private JPanel myRightPanel;
@@ -339,14 +341,22 @@ public class IdeStatusBarImpl extends JPanel implements StatusBarEx, UiDataProvi
     }
 
     @Override
-    public BalloonHandler notifyProgressByBalloon(NotificationType type, String htmlBody, @Nullable Image icon, @Nullable HyperlinkListener listener) {
-        Optional<InfoAndProgressPanel> optional = this.<InfoAndProgressPanel>findWidget(widget -> widget instanceof InfoAndProgressPanel);
-        if (!optional.isPresent()) {
-            return null;
-        }
-        return optional.get().notifyByBalloon(MessageType.from(type), htmlBody, icon, listener);
+    @RequiredUIAccess
+    public void notifyByBalloon(
+        String widgetId,
+        NotificationType type,
+        String htmlBody,
+        @Nullable Image icon,
+        @Nullable ComponentEventListener<consulo.ui.Component, HyperlinkEvent> linkListener
+    ) {
+        myBalloons.show(widgetId, getWidgetComponent(widgetId), type, htmlBody, icon, linkListener);
     }
 
+    @Override
+    @RequiredUIAccess
+    public void hideWidgetBalloon(String widgetId) {
+        myBalloons.hide(widgetId);
+    }
 
     @RequiredUIAccess
     private static WidgetBean wrap(StatusBarWidget widget) {

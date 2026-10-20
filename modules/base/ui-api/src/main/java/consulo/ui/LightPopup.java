@@ -23,11 +23,15 @@ import consulo.ui.internal.UIInternal;
  * and it goes away as soon as it loses interest. What a completion list, a hint or a submenu is shown with.
  * <p/>
  * It always has a target. A popup with nothing to point at is a {@link HeavyPopup}.
+ * <p/>
+ * A {@link PopupStyle} given to it wins over {@link #setBackgroundColor} for the fill - only one of
+ * {@link PopupStyle#INFO}, {@link PopupStyle#SUCCESS}, {@link PopupStyle#WARNING} and {@link PopupStyle#ERROR} is kept,
+ * the last one given.
  *
  * @author VISTALL
  * @since 2026-08-02
  */
-public non-sealed interface LightPopup extends Popup {
+public non-sealed interface LightPopup extends Popup, HasComponentStyle<PopupStyle> {
     static LightPopup create(PopupOptions options) {
         return UIInternal.get()._LightPopup_create(options);
     }

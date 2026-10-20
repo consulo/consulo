@@ -19,6 +19,7 @@ import consulo.ui.Component;
 import consulo.ui.LightPopup;
 import consulo.ui.PopupOptions;
 import consulo.ui.PopupPosition;
+import consulo.ui.PopupStyle;
 import consulo.ui.annotation.RequiredUIAccess;
 import io.qt.core.QPoint;
 import io.qt.widgets.QListWidget;
@@ -35,6 +36,18 @@ import io.qt.widgets.QWidget;
 public class DesktopQtLightPopupImpl extends DesktopQtPopupImpl implements LightPopup {
     public DesktopQtLightPopupImpl(PopupOptions options) {
         super(options);
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void addStyle(PopupStyle style) {
+        myStyle.add(style);
+
+        if (!myOptions.hasArrow()) {
+            updateFrameStyleSheet();
+        }
+
+        myComponent.update();
     }
 
     @Override

@@ -21,11 +21,11 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
 import consulo.component.ProcessCanceledException;
 import consulo.localize.LocalizeValue;
+import consulo.project.ui.notification.NotificationType;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;
-import consulo.ui.NotificationType;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -65,7 +65,7 @@ public class AddTestProcessAction extends AnAction implements DumbAware {
                 "Load up on guns bring your friends it's fun to loose and to pretend " +
                 "Load up on guns bring your friends it's fun to loose and to pretend " +
                 "Load up on guns bring your friends it's fun to loose and to pretend ",
-            NotificationType.INFO,
+            consulo.ui.NotificationType.INFO,
             null
         );
 
@@ -78,7 +78,7 @@ public class AddTestProcessAction extends AnAction implements DumbAware {
         if (p != null) {
             ToolWindowManager.getInstance(p).notifyByBalloon(
                 "TODO",
-                NotificationType.INFO,
+                NotificationType.INFORMATION,
                 "Started. <a href=\"#a\">Click me!</a>",
                 null,
                 System.out::println

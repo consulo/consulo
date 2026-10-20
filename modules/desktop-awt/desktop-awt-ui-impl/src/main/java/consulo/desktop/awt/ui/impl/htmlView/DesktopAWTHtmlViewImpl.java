@@ -22,10 +22,12 @@ import consulo.desktop.awt.ui.impl.event.DesktopAWTInputDetails;
 import consulo.ui.Component;
 import consulo.ui.HtmlView;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.color.ColorValue;
 import consulo.ui.event.HtmlViewDoubleClickEvent;
 import consulo.ui.event.HyperlinkEvent;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.ui.impl.HtmlDocuments;
 import consulo.util.io.CharsetToolkit;
@@ -84,7 +86,14 @@ public class DesktopAWTHtmlViewImpl extends SwingComponentDelegate<DesktopAWTHtm
 
         @Override
         protected HtmlBlockPanel createHtmlBlockPanel(UserAgentContext uContext, HtmlRendererContext rContext) {
-            HtmlBlockPanel blockPanel = new ScrollPreservingHtmlBlockPanel(JBColor.WHITE, true, uContext, rContext, this);
+            ColorValue background = getBackgroundColor();
+            HtmlBlockPanel blockPanel = new ScrollPreservingHtmlBlockPanel(
+                background == null ? JBColor.WHITE : TargetAWT.to(background),
+                isOpaqueBackground(background),
+                uContext,
+                rContext,
+                this
+            );
             blockPanel.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
@@ -112,6 +121,14 @@ public class DesktopAWTHtmlViewImpl extends SwingComponentDelegate<DesktopAWTHtm
             return new Dimension(size.width + scrollBarWidth(), maxHeight);
         }
 
+        void applyBlockBackground(@Nullable ColorValue background, boolean opaque) {
+            HtmlBlockPanel blockPanel = htmlBlockPanel;
+            if (blockPanel != null) {
+                blockPanel.setBackground(background == null ? JBColor.WHITE : TargetAWT.to(background));
+                blockPanel.setOpaque(opaque);
+            }
+        }
+
         private int scrollBarWidth() {
             HtmlBlockPanel blockPanel = htmlBlockPanel;
             return blockPanel != null && blockPanel.getRootRenderable() instanceof RBlock block ? block.getVScrollBarWidth() : 0;
@@ -126,6 +143,28 @@ public class DesktopAWTHtmlViewImpl extends SwingComponentDelegate<DesktopAWTHtm
     @Override
     protected MyHtmlPanel createComponent() {
         return new MyHtmlPanel();
+    }
+
+    /**
+     * A background which is not opaque leaves both panels unpainted, the document is drawn over whatever is behind
+     * the view.
+     */
+    @Override
+    public void setBackgroundColor(@Nullable ColorValue background) {
+        super.setBackgroundColor(background);
+
+        MyHtmlPanel panel = toAWTComponent();
+        boolean opaque = isOpaqueBackground(background);
+        if (!opaque) {
+            panel.setOpaque(false);
+        }
+
+        panel.applyBlockBackground(background, opaque);
+        panel.repaint();
+    }
+
+    private static boolean isOpaqueBackground(@Nullable ColorValue background) {
+        return background == null || background.toRGB().getAlpha() == 255;
     }
 
     @Override

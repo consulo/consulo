@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.ui.impl.popup;
 
+import consulo.desktop.awt.ui.impl.DesktopGlassyBackdrop;
 import consulo.desktop.awt.ui.impl.facade.FromSwingComponentWrapper;
 import consulo.ui.Component;
 import consulo.ui.ex.awt.JBUIScale;
@@ -24,7 +25,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
+import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -229,11 +232,26 @@ class DesktopAWTPopupPanel extends JPanel implements FromSwingComponentWrapper {
         return area;
     }
 
+    void dropShadow() {
+        myShadow = null;
+    }
+
     private BufferedImage shadow() {
         Rectangle key = new Rectangle(getWidth(), getHeight());
         BufferedImage shadow = myShadow;
         if (shadow == null || !key.equals(myShadowKey) || mySide != myShadowSide || myTip != myShadowTip) {
             shadow = DesktopAWTPopupShadow.render(outline(0), getWidth(), getHeight());
+            if (myPopup.isGlassy()) {
+                Graphics2D cut = shadow.createGraphics();
+                try {
+                    cut.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                    cut.setComposite(AlphaComposite.Clear);
+                    cut.fill(outline(1));
+                }
+                finally {
+                    cut.dispose();
+                }
+            }
             myShadow = shadow;
             myShadowKey = key;
             myShadowSide = mySide;
@@ -248,7 +266,12 @@ class DesktopAWTPopupPanel extends JPanel implements FromSwingComponentWrapper {
         try {
             g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             g.drawImage(shadow(), 0, 0, null);
-            g.setColor(myPopup.fillColor());
+            Color fill = myPopup.fillColor();
+            if (myPopup.isGlassy()) {
+                DesktopGlassyBackdrop.paint(this, g, outline(0));
+                fill = DesktopGlassyBackdrop.fill(fill);
+            }
+            g.setColor(fill);
             g.fill(outline(0));
             g.setColor(myPopup.borderColor());
             g.setStroke(new BasicStroke(1));

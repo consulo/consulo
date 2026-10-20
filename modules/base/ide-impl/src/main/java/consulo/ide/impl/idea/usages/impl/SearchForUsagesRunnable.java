@@ -41,10 +41,10 @@ import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
+import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.Component;
-import consulo.ui.NotificationType;
 import consulo.ui.event.ComponentEventListener;
 import consulo.ui.event.HyperlinkEvent;
 import consulo.ui.ex.action.KeyboardShortcut;
@@ -412,7 +412,7 @@ class SearchForUsagesRunnable implements Runnable {
                             if (myProcessPresentation.isShowFindOptionsPrompt()) {
                                 lines.add(createOptionsHtml(mySearchFor));
                             }
-                            NotificationType type = myOutOfScopeUsages.get() == 0 ? NotificationType.INFO : NotificationType.WARNING;
+                            NotificationType type = myOutOfScopeUsages.get() == 0 ? NotificationType.INFORMATION : NotificationType.WARNING;
                             notifyByFindBalloon(createGotToOptionsListener(mySearchFor), type, myProcessPresentation, myProject, lines);
                             findStartedBalloonShown.set(false);
                         }
@@ -462,7 +462,7 @@ class SearchForUsagesRunnable implements Runnable {
                         lines.add(UsageViewManagerImpl.outOfScopeMessage(myOutOfScopeUsages.get(), mySearchScopeToWarnOfFallingOutOf));
                     }
                     lines.add(createOptionsHtml(mySearchFor));
-                    NotificationType type = myOutOfScopeUsages.get() == 0 ? NotificationType.INFO : NotificationType.WARNING;
+                    NotificationType type = myOutOfScopeUsages.get() == 0 ? NotificationType.INFORMATION : NotificationType.WARNING;
                     notifyByFindBalloon(createGotToOptionsListener(mySearchFor), type, myProcessPresentation, myProject, lines);
                 },
                 application.getNoneModalityState(),
@@ -495,7 +495,7 @@ class SearchForUsagesRunnable implements Runnable {
                 || myProcessPresentation.searchIncludingProjectFileUsages() != null) {
                 application.invokeLater(
                     () -> {
-                        NotificationType type = myOutOfScopeUsages.get() == 0 ? NotificationType.INFO : NotificationType.WARNING;
+                        NotificationType type = myOutOfScopeUsages.get() == 0 ? NotificationType.INFORMATION : NotificationType.WARNING;
                         notifyByFindBalloon(hyperlinkListener, type, myProcessPresentation, myProject, lines);
                     },
                     application.getNoneModalityState(),

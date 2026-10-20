@@ -94,3 +94,12 @@ vaadin-popover.consulo-transparent-popup.consulo-hovered-popup::part(overlay)
   cursor: move;
   touch-action: none;
 }
+
+/* a glassy popup lets a blurred view of what is behind it through its fill - the arrow is a box of its own outside
+   of the overlay, so it is frosted the same way */
+vaadin-popover.consulo-glassy-popup::part(overlay),
+vaadin-popover.consulo-glassy-popup::part(arrow)
+{
+  backdrop-filter: blur(var(--consulo-popup-glassy-blur, 3px));
+  -webkit-backdrop-filter: blur(var(--consulo-popup-glassy-blur, 3px));
+}

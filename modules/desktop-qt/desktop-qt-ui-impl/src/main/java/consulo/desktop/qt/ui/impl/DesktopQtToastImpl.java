@@ -44,12 +44,8 @@ import io.qt.gui.QPainter;
 import io.qt.gui.QPainterPath;
 import io.qt.gui.QPalette;
 import io.qt.gui.QPen;
-import io.qt.gui.QPixmap;
 import io.qt.gui.QRegion;
 import io.qt.gui.QResizeEvent;
-import io.qt.widgets.QGraphicsBlurEffect;
-import io.qt.widgets.QGraphicsPixmapItem;
-import io.qt.widgets.QGraphicsScene;
 import io.qt.widgets.QHBoxLayout;
 import io.qt.widgets.QLabel;
 import io.qt.widgets.QSizePolicy;
@@ -193,7 +189,7 @@ public class DesktopQtToastImpl extends QtComponentDelegate<QWidget> implements 
                 snapshotPainter.end();
             }
 
-            QImage blurred = blur(snapshot, 2 * ToastPresentation.GLASSY_BLUR);
+            QImage blurred = DesktopQtBlur.blur(snapshot, 2 * ToastPresentation.GLASSY_BLUR);
             painter.save();
             try {
                 painter.setClipPath(shape);
@@ -531,7 +527,7 @@ public class DesktopQtToastImpl extends QtComponentDelegate<QWidget> implements 
             painter.end();
         }
 
-        QImage blurred = blur(mask, SHADOW_BLUR * 2);
+        QImage blurred = DesktopQtBlur.blur(mask, SHADOW_BLUR * 2);
         if (isGlassy()) {
             QPainter cut = new QPainter(blurred);
             try {
@@ -550,31 +546,5 @@ public class DesktopQtToastImpl extends QtComponentDelegate<QWidget> implements 
             }
         }
         return blurred.copy(pad, pad, width, height);
-    }
-
-    private static QImage blur(QImage image, double radius) {
-        QGraphicsScene scene = new QGraphicsScene();
-        try {
-            QGraphicsPixmapItem item = scene.addPixmap(QPixmap.fromImage(image));
-            QGraphicsBlurEffect effect = new QGraphicsBlurEffect();
-            effect.setBlurHints(QGraphicsBlurEffect.BlurHint.QualityHint);
-            effect.setBlurRadius(radius);
-            item.setGraphicsEffect(effect);
-
-            QImage blurred = new QImage(image.size(), QImage.Format.Format_ARGB32_Premultiplied);
-            blurred.fill(Qt.GlobalColor.transparent);
-            QPainter scenePainter = new QPainter(blurred);
-            try {
-                QRectF bounds = new QRectF(0, 0, blurred.width(), blurred.height());
-                scene.render(scenePainter, bounds, bounds);
-            }
-            finally {
-                scenePainter.end();
-            }
-            return blurred;
-        }
-        finally {
-            scene.dispose();
-        }
     }
 }

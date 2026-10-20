@@ -20,17 +20,17 @@ import consulo.application.progress.TaskInfo;
 import consulo.disposer.Disposable;
 import consulo.project.Project;
 import consulo.project.ui.internal.StatusBarEx;
+import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
-import consulo.ui.NotificationType;
-import consulo.ui.ex.popup.BalloonHandler;
+import consulo.ui.event.ComponentEventListener;
+import consulo.ui.event.HyperlinkEvent;
 import consulo.ui.image.Image;
 import consulo.util.lang.Pair;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
-import javax.swing.event.HyperlinkListener;
 import java.awt.*;
 import java.util.List;
 import java.util.Optional;
@@ -87,13 +87,17 @@ public class HeadlessStatusBar implements StatusBarEx {
     }
 
     @Override
-    public BalloonHandler notifyProgressByBalloon(
+    public void notifyByBalloon(
+        String widgetId,
         NotificationType type,
         String htmlBody,
         @Nullable Image icon,
-        @Nullable HyperlinkListener listener
+        @Nullable ComponentEventListener<consulo.ui.Component, HyperlinkEvent> linkListener
     ) {
-        return null;
+    }
+
+    @Override
+    public void hideWidgetBalloon(String widgetId) {
     }
 
     @Override

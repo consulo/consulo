@@ -176,7 +176,7 @@ public class NotificationToastPresenter implements NotificationServiceListener {
                 .append("</a>");
         }
 
-        toolWindowManager.notifyByBalloon(toolWindowId, notification.getType().toUI(), html.toString(), notification.getIcon(), event -> {
+        toolWindowManager.notifyByBalloon(toolWindowId, notification.getType(), html.toString(), notification.getIcon(), event -> {
             String href = event.getDescription();
             if (href.startsWith(ACTION_HREF_PREFIX)) {
                 int index = Integer.parseInt(href.substring(ACTION_HREF_PREFIX.length()));

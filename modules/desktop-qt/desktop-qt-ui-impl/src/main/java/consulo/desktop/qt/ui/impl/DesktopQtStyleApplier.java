@@ -295,8 +295,19 @@ public final class DesktopQtStyleApplier {
     }
 
     public static String popupFrameStyleSheet(String objectName, int cornerRadius, @Nullable ColorValue backgroundColor) {
+        return popupFrameStyleSheet(objectName, cornerRadius, backgroundColor, null);
+    }
+
+    public static String popupFrameStyleSheet(
+        String objectName,
+        int cornerRadius,
+        @Nullable ColorValue backgroundColor,
+        @Nullable ColorValue borderColor
+    ) {
         Style style = ourStyle;
-        String border = style == null ? "palette(mid)" : css(style, ComponentColors.BORDER);
+        String border = borderColor != null
+            ? css(borderColor.toRGB())
+            : style == null ? "palette(mid)" : css(style, ComponentColors.BORDER);
         String background = backgroundColor != null
             ? css(backgroundColor.toRGB())
             : style == null ? "palette(window)" : css(style, ComponentColors.LAYOUT);

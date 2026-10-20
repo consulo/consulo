@@ -24,9 +24,12 @@ import consulo.ui.PopupPosition;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.event.PopupCloseEvent;
+import consulo.ui.impl.PopupStyleState;
+import consulo.ui.impl.ToastPresentation;
 import consulo.ui.style.ComponentColors;
 import io.qt.core.QCoreApplication;
 import io.qt.core.QEvent;
+import io.qt.core.QMargins;
 import io.qt.core.QMetaObject;
 import io.qt.core.QObject;
 import io.qt.core.QPoint;
@@ -39,6 +42,7 @@ import io.qt.gui.QBrush;
 import io.qt.gui.QCloseEvent;
 import io.qt.gui.QColor;
 import io.qt.gui.QCursor;
+import io.qt.gui.QImage;
 import io.qt.gui.QGuiApplication;
 import io.qt.gui.QKeyEvent;
 import io.qt.gui.QMouseEvent;
@@ -130,6 +134,12 @@ public abstract class DesktopQtPopupImpl extends QtComponentDelegate<QWidget> im
         private DesktopQtPopupSide mySide = DesktopQtPopupSide.NONE;
         private int myArrowPosition;
 
+        private @Nullable QImage myShadow;
+        private @Nullable QSize myShadowSize;
+        private @Nullable DesktopQtPopupSide myShadowSide;
+        private int myShadowArrowPosition;
+        private boolean myShadowGlassy;
+
         QtPopup() {
             super(null, Qt.WindowType.ToolTip, Qt.WindowType.FramelessWindowHint, Qt.WindowType.WindowStaysOnTopHint);
         }
@@ -156,17 +166,32 @@ public abstract class DesktopQtPopupImpl extends QtComponentDelegate<QWidget> im
             }
 
             QPalette palette = palette();
-            ColorValue backgroundColor = DesktopQtPopupImpl.this.getBackgroundColor();
+            ColorValue backgroundColor = myStyle.background(DesktopQtPopupImpl.this.getBackgroundColor());
             QColor background = backgroundColor != null
                 ? TargetQt.to(backgroundColor)
                 : DesktopQtStyleApplier.themeColor(ComponentColors.LAYOUT, palette.color(QPalette.ColorRole.Window));
-            QColor border = DesktopQtStyleApplier.themeColor(ComponentColors.BORDER, palette.color(QPalette.ColorRole.Mid));
+            ColorValue borderColor = myStyle.border();
+            QColor border = borderColor != null
+                ? TargetQt.to(borderColor)
+                : DesktopQtStyleApplier.themeColor(ComponentColors.BORDER, palette.color(QPalette.ColorRole.Mid));
 
             QPainter painter = new QPainter(this);
             try {
                 painter.setRenderHint(QPainter.RenderHint.Antialiasing, true);
 
+                if (!testAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)) {
+                    QImage behind = snapshot(0);
+                    if (behind != null) {
+                        painter.drawImage(behind.offset(), behind);
+                    }
+                }
+                painter.drawImage(0, 0, shadow());
+
                 QPainterPath path = outline(0.5);
+                if (myStyle.isGlassy()) {
+                    paintBackdrop(painter, outline(0));
+                    background.setAlphaF(background.alphaF() * ToastPresentation.GLASSY_OPACITY);
+                }
                 painter.fillPath(path, new QBrush(background));
                 painter.setPen(new QPen(border));
                 painter.drawPath(path);
@@ -176,6 +201,85 @@ public abstract class DesktopQtPopupImpl extends QtComponentDelegate<QWidget> im
             }
         }
 
+        /**
+         * The popup is a window of its own, and without a compositor nothing behind a window shows through it - the
+         * window it hangs under is what lies behind it, so that is rendered and blurred here and the popup stays
+         * opaque. Other popups are left out.
+         */
+        private void paintBackdrop(QPainter painter, QPainterPath shape) {
+            int margin = 2 * ToastPresentation.GLASSY_BLUR;
+            QImage snapshot = snapshot(margin);
+            if (snapshot == null) {
+                return;
+            }
+
+            QImage blurred = DesktopQtBlur.blur(snapshot, 2 * ToastPresentation.GLASSY_BLUR);
+            painter.save();
+            try {
+                painter.setClipPath(shape);
+                painter.drawImage(snapshot.offset(), blurred);
+            }
+            finally {
+                painter.restore();
+            }
+        }
+
+        /**
+         * The window the popup hangs under, rendered where this popup covers it and {@code margin} around - the
+         * offset of the image is where it goes in this popup.
+         */
+        private @Nullable QImage snapshot(int margin) {
+            QWidget window = parentWidget();
+            if (window == null) {
+                return null;
+            }
+
+            QPoint origin = window.mapFromGlobal(mapToGlobal(new QPoint(0, 0)));
+            QRect area = new QRect(origin.x() - margin, origin.y() - margin, width() + 2 * margin, height() + 2 * margin)
+                .intersected(window.rect());
+            if (area.isEmpty()) {
+                return null;
+            }
+
+            QImage snapshot = new QImage(area.width(), area.height(), QImage.Format.Format_ARGB32_Premultiplied);
+            snapshot.fill(palette().color(QPalette.ColorRole.Window));
+            QPainter snapshotPainter = new QPainter(snapshot);
+            try {
+                window.render(snapshotPainter, new QPoint(0, 0), new QRegion(area));
+            }
+            finally {
+                snapshotPainter.end();
+            }
+            snapshot.setOffset(new QPoint(area.x() - origin.x(), area.y() - origin.y()));
+            return snapshot;
+        }
+
+        private QImage shadow() {
+            QSize size = size();
+            QImage shadow = myShadow;
+            if (shadow == null || !size.equals(myShadowSize) || mySide != myShadowSide || myArrowPosition != myShadowArrowPosition
+                || myStyle.isGlassy() != myShadowGlassy) {
+                shadow = DesktopQtPopupShadow.render(outline(0), width(), height());
+                if (myStyle.isGlassy()) {
+                    QPainter cut = new QPainter(shadow);
+                    try {
+                        cut.setRenderHint(QPainter.RenderHint.Antialiasing, true);
+                        cut.setCompositionMode(QPainter.CompositionMode.CompositionMode_Clear);
+                        cut.fillPath(outline(1), new QBrush(new QColor(0, 0, 0)));
+                    }
+                    finally {
+                        cut.end();
+                    }
+                }
+                myShadow = shadow;
+                myShadowSize = size;
+                myShadowSide = mySide;
+                myShadowArrowPosition = myArrowPosition;
+                myShadowGlassy = myStyle.isGlassy();
+            }
+            return shadow;
+        }
+
         void setArrow(boolean shown, boolean atTop) {
             setArrowSide(!shown ? DesktopQtPopupSide.NONE : atTop ? DesktopQtPopupSide.TOP : DesktopQtPopupSide.BOTTOM);
         }
@@ -183,11 +287,12 @@ public abstract class DesktopQtPopupImpl extends QtComponentDelegate<QWidget> im
         void setArrowSide(DesktopQtPopupSide side) {
             mySide = side;
 
+            QMargins shadow = shadowInsets();
             myLayout.setContentsMargins(
-                1 + (side == DesktopQtPopupSide.LEFT ? ourArrowHeight : 0),
-                1 + (side == DesktopQtPopupSide.TOP ? ourArrowHeight : 0),
-                1 + (side == DesktopQtPopupSide.RIGHT ? ourArrowHeight : 0),
-                1 + (side == DesktopQtPopupSide.BOTTOM ? ourArrowHeight : 0)
+                shadow.left() + 1 + (side == DesktopQtPopupSide.LEFT ? ourArrowHeight : 0),
+                shadow.top() + 1 + (side == DesktopQtPopupSide.TOP ? ourArrowHeight : 0),
+                shadow.right() + 1 + (side == DesktopQtPopupSide.RIGHT ? ourArrowHeight : 0),
+                shadow.bottom() + 1 + (side == DesktopQtPopupSide.BOTTOM ? ourArrowHeight : 0)
             );
         }
 
@@ -198,15 +303,24 @@ public abstract class DesktopQtPopupImpl extends QtComponentDelegate<QWidget> im
             update();
         }
 
+        /**
+         * A popup which draws its own shadow keeps the whole window - the shadow is painted over what lies behind
+         * it - unless the mask only takes the input, where the shadow shows through a translucent window anyway.
+         */
         private void updateShape() {
+            if (myOptions.hasArrow() && !isMaskOnlyForInput()) {
+                clearMask();
+                return;
+            }
             setMask(new QRegion(outline(0).toFillPolygon().toPolygon()));
         }
 
         private QPainterPath outline(double inset) {
-            int left = mySide == DesktopQtPopupSide.LEFT ? ourArrowHeight : 0;
-            int top = mySide == DesktopQtPopupSide.TOP ? ourArrowHeight : 0;
-            int right = mySide == DesktopQtPopupSide.RIGHT ? ourArrowHeight : 0;
-            int bottom = mySide == DesktopQtPopupSide.BOTTOM ? ourArrowHeight : 0;
+            QMargins shadow = shadowInsets();
+            int left = shadow.left() + (mySide == DesktopQtPopupSide.LEFT ? ourArrowHeight : 0);
+            int top = shadow.top() + (mySide == DesktopQtPopupSide.TOP ? ourArrowHeight : 0);
+            int right = shadow.right() + (mySide == DesktopQtPopupSide.RIGHT ? ourArrowHeight : 0);
+            int bottom = shadow.bottom() + (mySide == DesktopQtPopupSide.BOTTOM ? ourArrowHeight : 0);
 
             QPainterPath body = new QPainterPath();
             body.addRoundedRect(
@@ -222,17 +336,23 @@ public abstract class DesktopQtPopupImpl extends QtComponentDelegate<QWidget> im
             double halfWidth = ourArrowWidth / 2.0;
             QPainterPath arrow = new QPainterPath();
             if (mySide.isVertical()) {
-                double x = Math.max(ourCornerRadius + halfWidth, Math.min(width() - ourCornerRadius - halfWidth, myArrowPosition));
+                double x = Math.max(
+                    shadow.left() + ourCornerRadius + halfWidth,
+                    Math.min(width() - shadow.right() - ourCornerRadius - halfWidth, myArrowPosition)
+                );
                 double baseY = mySide == DesktopQtPopupSide.TOP ? top + inset + 1 : height() - bottom - inset - 1;
-                double tipY = mySide == DesktopQtPopupSide.TOP ? inset : height() - inset;
+                double tipY = mySide == DesktopQtPopupSide.TOP ? shadow.top() + inset : height() - shadow.bottom() - inset;
                 arrow.moveTo(x - halfWidth, baseY);
                 arrow.lineTo(x, tipY);
                 arrow.lineTo(x + halfWidth, baseY);
             }
             else {
-                double y = Math.max(ourCornerRadius + halfWidth, Math.min(height() - ourCornerRadius - halfWidth, myArrowPosition));
+                double y = Math.max(
+                    shadow.top() + ourCornerRadius + halfWidth,
+                    Math.min(height() - shadow.bottom() - ourCornerRadius - halfWidth, myArrowPosition)
+                );
                 double baseX = mySide == DesktopQtPopupSide.LEFT ? left + inset + 1 : width() - right - inset - 1;
-                double tipX = mySide == DesktopQtPopupSide.LEFT ? inset : width() - inset;
+                double tipX = mySide == DesktopQtPopupSide.LEFT ? shadow.left() + inset : width() - shadow.right() - inset;
                 arrow.moveTo(baseX, y - halfWidth);
                 arrow.lineTo(tipX, y);
                 arrow.lineTo(baseX, y + halfWidth);
@@ -298,6 +418,7 @@ public abstract class DesktopQtPopupImpl extends QtComponentDelegate<QWidget> im
     }
 
     protected final PopupOptions myOptions;
+    protected final PopupStyleState myStyle = new PopupStyleState();
 
     private final QtPopup myPopup;
 
@@ -404,6 +525,15 @@ public abstract class DesktopQtPopupImpl extends QtComponentDelegate<QWidget> im
         label.setText(title);
     }
 
+    protected void updateFrameStyleSheet() {
+        setOwnStyleSheet(DesktopQtStyleApplier.popupFrameStyleSheet(
+            ourObjectName,
+            ourCornerRadius,
+            myStyle.background(getBackgroundColor()),
+            myStyle.border()
+        ));
+    }
+
     @Override
     @RequiredUIAccess
     public void setBackgroundColor(@Nullable ColorValue background) {
@@ -413,7 +543,7 @@ public abstract class DesktopQtPopupImpl extends QtComponentDelegate<QWidget> im
             myComponent.setAutoFillBackground(false);
         }
         else {
-            setOwnStyleSheet(DesktopQtStyleApplier.popupFrameStyleSheet(ourObjectName, ourCornerRadius, background));
+            updateFrameStyleSheet();
         }
 
         myComponent.update();
@@ -503,13 +633,14 @@ public abstract class DesktopQtPopupImpl extends QtComponentDelegate<QWidget> im
             return;
         }
 
-        int left = arrow ? point.x() - ourArrowInset : point.x();
+        QMargins shadow = shadowInsets();
+        int left = arrow ? point.x() - ourArrowInset - shadow.left() : point.x();
 
         if (myOptions.getPosition() == PopupPosition.TOP) {
             myPopup.setArrow(arrow, false);
             fitToContent();
 
-            QPoint above = new QPoint(left, point.y() - myComponent.height());
+            QPoint above = new QPoint(left, point.y() - myComponent.height() + shadow.bottom());
             if (fitsAbove(widget, above)) {
                 showPointingAt(above, point.x());
                 return;
@@ -517,7 +648,7 @@ public abstract class DesktopQtPopupImpl extends QtComponentDelegate<QWidget> im
         }
 
         myPopup.setArrow(arrow, true);
-        showPointingAt(new QPoint(left, point.y() + anchorHeight), point.x());
+        showPointingAt(new QPoint(left, point.y() + anchorHeight - shadow.top()), point.x());
     }
 
     @RequiredUIAccess
@@ -589,12 +720,13 @@ public abstract class DesktopQtPopupImpl extends QtComponentDelegate<QWidget> im
 
         int width = myComponent.width();
         int height = myComponent.height();
+        QMargins shadow = shadowInsets();
         int middleY = target.y() + target.height() / 2 - height / 2;
         return switch (position) {
-            case TOP -> new QPoint(target.x(), target.y() - height);
-            case BOTTOM -> new QPoint(target.x(), target.y() + target.height());
-            case END -> new QPoint(target.x() + target.width(), middleY);
-            case START -> new QPoint(target.x() - width, middleY);
+            case TOP -> new QPoint(target.x() - shadow.left(), target.y() - height + shadow.bottom());
+            case BOTTOM -> new QPoint(target.x() - shadow.left(), target.y() + target.height() - shadow.top());
+            case END -> new QPoint(target.x() + target.width() - shadow.left(), middleY);
+            case START -> new QPoint(target.x() - width + shadow.right(), middleY);
         };
     }
 
@@ -627,6 +759,13 @@ public abstract class DesktopQtPopupImpl extends QtComponentDelegate<QWidget> im
 
     private void fitToContent() {
         myComponent.resize(myComponent.sizeHint().expandedTo(myComponent.minimumSizeHint()));
+    }
+
+    /**
+     * The room a popup with an arrow keeps around its outline for the shadow it draws itself.
+     */
+    private QMargins shadowInsets() {
+        return myOptions.hasArrow() ? DesktopQtPopupShadow.insets() : new QMargins(0, 0, 0, 0);
     }
 
     private static boolean isMaskOnlyForInput() {

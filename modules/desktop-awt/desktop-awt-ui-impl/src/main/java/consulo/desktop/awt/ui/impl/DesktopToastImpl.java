@@ -42,8 +42,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
-import java.awt.image.ConvolveOp;
-import java.awt.image.Kernel;
 
 /**
  * @author VISTALL
@@ -102,22 +100,16 @@ public class DesktopToastImpl extends SwingComponentDelegate<JPanel> implements 
                 }
 
                 int arc = JBUI.scale(ARC);
-                g.translate(shadow, shadow);
-                RoundRectangle2D card = new RoundRectangle2D.Float(0, 0, width, height, arc, arc);
+                RoundRectangle2D card = new RoundRectangle2D.Float(shadow, shadow, width, height, arc, arc);
                 Color background = TargetAWT.to(ToastPresentation.background(myStyle));
                 if (isGlassy()) {
-                    paintBackdrop(g, card, new Rectangle(shadow, shadow, width, height));
-                    background = new Color(
-                        background.getRed(),
-                        background.getGreen(),
-                        background.getBlue(),
-                        Math.round(background.getAlpha() * ToastPresentation.GLASSY_OPACITY)
-                    );
+                    DesktopGlassyBackdrop.paint(this, g, card);
+                    background = DesktopGlassyBackdrop.fill(background);
                 }
                 g.setColor(background);
                 g.fill(card);
                 g.setColor(TargetAWT.to(ToastPresentation.border(myStyle)));
-                g.draw(new RoundRectangle2D.Float(0.5f, 0.5f, width - 1, height - 1, arc, arc));
+                g.draw(new RoundRectangle2D.Float(shadow + 0.5f, shadow + 0.5f, width - 1, height - 1, arc, arc));
             }
             finally {
                 g.dispose();
@@ -126,58 +118,6 @@ public class DesktopToastImpl extends SwingComponentDelegate<JPanel> implements 
 
         void dropShadow() {
             myShadow = null;
-        }
-
-        /**
-         * What lies under the card is the content pane of the frame - the toasts float in its layered pane, outside
-         * of it. {@code print} and not {@code paint}: inside a paint cycle {@code paint} goes through the back buffer
-         * of the repaint manager instead of the given graphics.
-         */
-        private void paintBackdrop(Graphics2D g, Shape card, Rectangle cardBounds) {
-            JRootPane rootPane = SwingUtilities.getRootPane(this);
-            if (rootPane == null || !(rootPane.getContentPane() instanceof JComponent content) || SwingUtilities.isDescendingFrom(this, content)) {
-                return;
-            }
-
-            Rectangle bounds = SwingUtilities.convertRectangle(this, cardBounds, content);
-            int sigma = JBUI.scale(ToastPresentation.GLASSY_BLUR);
-            int margin = 2 * sigma;
-            Rectangle area = new Rectangle(bounds.x - margin, bounds.y - margin, bounds.width + 2 * margin, bounds.height + 2 * margin)
-                .intersection(new Rectangle(0, 0, content.getWidth(), content.getHeight()));
-            if (area.isEmpty()) {
-                return;
-            }
-
-            double scale = g.getTransform().getScaleX();
-            BufferedImage snapshot = new BufferedImage(
-                (int) Math.ceil(area.width * scale),
-                (int) Math.ceil(area.height * scale),
-                BufferedImage.TYPE_INT_ARGB
-            );
-            Graphics2D snapshotGraphics = snapshot.createGraphics();
-            try {
-                snapshotGraphics.scale(scale, scale);
-                snapshotGraphics.translate(-area.x, -area.y);
-                snapshotGraphics.setClip(area.x, area.y, area.width, area.height);
-                content.print(snapshotGraphics);
-            }
-            finally {
-                snapshotGraphics.dispose();
-            }
-
-            float[] kernel = gaussian(2 * Math.max(1, (int) Math.round(sigma * scale)));
-            ConvolveOp horizontal = new ConvolveOp(new Kernel(kernel.length, 1, kernel), ConvolveOp.EDGE_NO_OP, null);
-            ConvolveOp vertical = new ConvolveOp(new Kernel(1, kernel.length, kernel), ConvolveOp.EDGE_NO_OP, null);
-            BufferedImage blurred = vertical.filter(horizontal.filter(snapshot, null), null);
-
-            Graphics2D backdrop = (Graphics2D) g.create();
-            try {
-                backdrop.clip(card);
-                backdrop.drawImage(blurred, area.x - bounds.x, area.y - bounds.y, area.width, area.height, null);
-            }
-            finally {
-                backdrop.dispose();
-            }
         }
     }
 
@@ -476,10 +416,7 @@ public class DesktopToastImpl extends SwingComponentDelegate<JPanel> implements 
             g.dispose();
         }
 
-        float[] kernel = gaussian(blur);
-        ConvolveOp horizontal = new ConvolveOp(new Kernel(kernel.length, 1, kernel), ConvolveOp.EDGE_NO_OP, null);
-        ConvolveOp vertical = new ConvolveOp(new Kernel(1, kernel.length, kernel), ConvolveOp.EDGE_NO_OP, null);
-        BufferedImage blurred = vertical.filter(horizontal.filter(mask, null), null);
+        BufferedImage blurred = DesktopGlassyBackdrop.blur(mask, blur);
 
         if (isGlassy()) {
             Graphics2D cut = blurred.createGraphics();
@@ -493,20 +430,5 @@ public class DesktopToastImpl extends SwingComponentDelegate<JPanel> implements 
             }
         }
         return blurred.getSubimage(pad, pad, width + 2 * shadow, height + 2 * shadow);
-    }
-
-    private static float[] gaussian(int radius) {
-        double sigma = radius / 2.0;
-        float[] kernel = new float[radius * 2 + 1];
-        float sum = 0;
-        for (int i = -radius; i <= radius; i++) {
-            float value = (float) Math.exp(-(i * i) / (2 * sigma * sigma));
-            kernel[i + radius] = value;
-            sum += value;
-        }
-        for (int i = 0; i < kernel.length; i++) {
-            kernel[i] /= sum;
-        }
-        return kernel;
     }
 }

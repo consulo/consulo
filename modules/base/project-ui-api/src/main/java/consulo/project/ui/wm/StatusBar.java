@@ -18,14 +18,15 @@ package consulo.project.ui.wm;
 import consulo.annotation.DeprecationInfo;
 import consulo.disposer.Disposable;
 import consulo.project.Project;
-import consulo.ui.NotificationType;
-import consulo.ui.ex.popup.BalloonHandler;
+import consulo.project.ui.notification.NotificationType;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.ComponentEventListener;
+import consulo.ui.event.HyperlinkEvent;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
-import javax.swing.event.HyperlinkListener;
 import java.awt.*;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -35,6 +36,11 @@ import java.util.function.Predicate;
  */
 public interface StatusBar extends Disposable {
     Key<StatusBar> KEY = Key.create(StatusBar.class);
+
+    /**
+     * The id {@link #notifyByBalloon} takes for the progress area of the bar.
+     */
+    String PROGRESS_WIDGET_ID = "progress";
 
     void updateWidget(String id);
 
@@ -64,14 +70,24 @@ public interface StatusBar extends Disposable {
         throw new AbstractMethodError();
     }
 
-    default BalloonHandler notifyProgressByBalloon(NotificationType type, String htmlBody) {
-        return notifyProgressByBalloon(type, htmlBody, null, null);
+    /**
+     * Shows a balloon pointing at the widget {@code widgetId}, replacing the one shown for it before. Nothing is shown
+     * while the bar carries no such widget.
+     */
+    @RequiredUIAccess
+    default void notifyByBalloon(String widgetId, NotificationType type, String htmlBody) {
+        notifyByBalloon(widgetId, type, htmlBody, null, null);
     }
 
-    BalloonHandler notifyProgressByBalloon(
+    @RequiredUIAccess
+    void notifyByBalloon(
+        String widgetId,
         NotificationType type,
         String htmlBody,
         @Nullable Image icon,
-        @Nullable HyperlinkListener listener
+        @Nullable ComponentEventListener<consulo.ui.Component, HyperlinkEvent> linkListener
     );
+
+    @RequiredUIAccess
+    void hideWidgetBalloon(String widgetId);
 }
