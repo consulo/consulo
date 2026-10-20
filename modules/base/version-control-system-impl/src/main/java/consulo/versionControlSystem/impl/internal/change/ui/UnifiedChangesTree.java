@@ -124,6 +124,10 @@ public final class UnifiedChangesTree {
         Model model = new Model();
         myTree = checkable ? CheckBoxTree.create(model) : Tree.create(model);
         myTree.setAllowMultipleSelect(true);
+        myTree.setSpeedSearchConverter(node -> {
+            ChangesTreeItem item = node.getValue();
+            return item == null ? "" : speedSearchText(item);
+        });
         Disposer.register(parent, myTree.destroyHook());
 
         if (myTree instanceof CheckBoxTree<ChangesTreeItem> checkBoxTree) {
@@ -689,6 +693,19 @@ public final class UnifiedChangesTree {
                 renderFile(snapshot, item, presentation, missing.change().getPath(), FileStatus.DELETED_FROM_FS);
             }
         }
+    }
+
+    private static String speedSearchText(ChangesTreeItem item) {
+        return switch (item) {
+            case ChangeListTreeItem changeList -> changeList.changeList().getName().trim();
+            case FileGroupTreeItem group -> group.kind().getTitle().get();
+            case ModuleTreeItem module -> module.module().getName();
+            case DirectoryTreeItem directory -> directory.label();
+            case ChangeTreeItem change -> ChangesUtil.getFilePath(change.change()).getName();
+            case FileTreeItem file -> file.file().getName();
+            case PathTreeItem pathItem -> pathItem.path().getName();
+            case MissingFileTreeItem missing -> missing.change().getPath().getName();
+        };
     }
 
     private static void renderFile(ChangesTreeSnapshot snapshot,
