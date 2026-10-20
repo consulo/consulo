@@ -42,6 +42,7 @@
                         <phase>generate-sources</phase>
                         <goals>
                             <goal>generate-parser-api</goal>
+                            <goal>generate-localize</goal>
                         </goals>
                     </execution>
                 </executions>

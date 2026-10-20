@@ -894,6 +894,8 @@ ignored.edit.title:
     text: Ignore Unversioned Files
 ignored.group.description.default.ide.files:
     text: Default IDE ignored files
+ignoring.files.progress.title:
+    text: Ignoring Files…
 impl.vcs.initialization:
     text: VCS Initialization
 incoming.changes.empty.message:
@@ -1576,6 +1578,16 @@ update.tree.node.size.statistics:
     text: '{0,choice, 0#no items|1#1 item|2#{0, number} items}'
 user.group.title:
     text: User
+vcs.add.to.ignore.file.action.group.description:
+    text: Add selected files to {0}
+vcs.add.to.ignore.file.action.group.text:
+    text: Add to {0}
+vcs.add.to.ignore.file.create.ignore.file.button:
+    text: Create
+vcs.add.to.ignore.file.create.ignore.file.confirmation.message:
+    text: Create {0} file in {1}?
+vcs.add.to.ignore.file.create.ignore.file.confirmation.title:
+    text: Create {0}
 vcs.command.name.add:
     text: Add
 vcs.command.name.checkin:

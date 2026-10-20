@@ -28,20 +28,17 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.language.ast.ASTNode;
 import consulo.language.ignore.IgnoreLanguage;
 import consulo.language.ignore.Syntax;
-import consulo.language.ignore.psi.*;
+import consulo.language.ignore.psi.IgnoreEntry;
+import consulo.language.ignore.psi.IgnoreNegation;
+import consulo.language.ignore.psi.IgnoreSyntax;
+import consulo.language.ignore.psi.IgnoreTypes;
 import consulo.language.psi.PsiElement;
 import consulo.util.lang.StringUtil;
 
 /**
  * Custom {@link IgnoreElementImpl} implementation.
- *
- * @author Jakub Chrzanowski <jakub@hsz.mobi>
- * @since 0.5
  */
 public abstract class IgnoreEntryExtImpl extends IgnoreElementImpl implements IgnoreEntry {
-    /**
-     * Constructor.
-     */
     public IgnoreEntryExtImpl(ASTNode node) {
         super(node);
     }
@@ -57,36 +54,13 @@ public abstract class IgnoreEntryExtImpl extends IgnoreElementImpl implements Ig
         return getFirstChild() instanceof IgnoreNegation;
     }
 
-    /**
-     * Checks if current entry is a directory - i.e. `dir/`.
-     *
-     * @return is directory
-     */
-    public boolean isDirectory() {
-        return this instanceof IgnoreEntryFile;
-    }
-
-    /**
-     * Checks if current entry is a file - i.e. `file.txt`.
-     *
-     * @return is file
-     */
-    public boolean isFile() {
-        return !isDirectory();
-    }
-
-    /**
-     * Returns element syntax.
-     *
-     * @return syntax
-     */
     @Override
     @RequiredReadAction
     public Syntax getSyntax() {
         PsiElement previous = getPrevSibling();
         while (previous != null) {
             if (previous.getNode().getElementType().equals(IgnoreTypes.SYNTAX)) {
-                Syntax syntax =  Syntax.find(((IgnoreSyntax) previous).getValue().getText());
+                Syntax syntax = Syntax.find(((IgnoreSyntax) previous).getValue().getText());
                 if (syntax != null) {
                     return syntax;
                 }

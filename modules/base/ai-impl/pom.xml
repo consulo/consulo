@@ -75,5 +75,10 @@
             <artifactId>consulo-component-store-api</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-language-ignore-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 </project>

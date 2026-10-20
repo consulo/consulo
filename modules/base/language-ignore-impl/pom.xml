@@ -42,6 +42,7 @@
                         <phase>generate-sources</phase>
                         <goals>
                             <goal>generate-parser-impl</goal>
+                            <goal>generate-lexers</goal>
                         </goals>
                         <configuration>
                             <externalGrammars>
@@ -65,6 +66,16 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>consulo-language-impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-language-editor-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-version-control-system-api</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

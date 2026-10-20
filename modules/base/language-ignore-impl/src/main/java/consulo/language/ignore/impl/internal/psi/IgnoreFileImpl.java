@@ -30,6 +30,8 @@ import consulo.language.ast.IFileElementType;
 import consulo.language.file.FileViewProvider;
 import consulo.language.ignore.IgnoreFileType;
 import consulo.language.ignore.IgnoreLanguage;
+import consulo.language.ignore.psi.IgnoreFile;
+import consulo.language.ignore.psi.IgnoreTypes;
 import consulo.language.impl.psi.PsiFileImpl;
 import consulo.language.parser.ParserDefinition;
 import consulo.language.psi.PsiElementVisitor;
@@ -39,43 +41,31 @@ import java.util.ArrayList;
 import java.util.Set;
 
 /**
- * Base plugin file.
- *
- * @author Jakub Chrzanowski <jakub@hsz.mobi>
- * @since 0.8
+ * Base representation of IgnoreFile for different {@link IgnoreFileType}.
+ * This class does not extend {@link consulo.language.impl.psi.PsiFileBase}
+ * since it support multiple ignore language by leverage the same hierarchy of {@link IgnoreTypes}
+ * and reuse the same {@link consulo.language.ignore.impl.internal.IgnoreParserDefinition}
  */
-public class IgnoreFileImpl extends PsiFileImpl {
-    /**
-     * Current language.
-     */
-    private final Language language;
+public class IgnoreFileImpl extends PsiFileImpl implements IgnoreFile {
+    private final Language myLanguage;
 
-    /**
-     * Current parser definition.
-     */
-    private final ParserDefinition parserDefinition;
+    private final ParserDefinition myParserDefinition;
 
-    /**
-     * Current file type.
-     */
-    private final IgnoreFileType fileType;
+    private final IgnoreFileType myFileType;
 
-    /**
-     * Builds a new instance of {@link IgnoreFileImpl}.
-     */
     public IgnoreFileImpl(FileViewProvider viewProvider, IgnoreFileType fileType) {
         super(viewProvider);
 
-        this.fileType = fileType;
-        this.language = findLanguage(fileType.getLanguage(), viewProvider);
+        myFileType = fileType;
+        myLanguage = findLanguage(fileType.getLanguage(), viewProvider);
 
-        ParserDefinition parserDefinition = ParserDefinition.forLanguage(this.language);
+        ParserDefinition parserDefinition = ParserDefinition.forLanguage(myLanguage);
         if (parserDefinition == null) {
             throw new RuntimeException(
-                "PsiFileBase: language.getParserDefinition() returned null for: " + this.language
+                "IgnoreFile: language.getParserDefinition() returned null for: " + myLanguage
             );
         }
-        this.parserDefinition = parserDefinition;
+        myParserDefinition = parserDefinition;
 
         IFileElementType nodeType = parserDefinition.getFileNodeType();
         init(nodeType, nodeType);
@@ -92,21 +82,13 @@ public class IgnoreFileImpl extends PsiFileImpl {
         Set<Language> languages = viewProvider.getLanguages();
 
         for (Language actualLanguage : languages) {
-            if (actualLanguage.isKindOf(baseLanguage)) {
+            if (actualLanguage.isKindOf(baseLanguage) && actualLanguage instanceof IgnoreLanguage) {
                 return actualLanguage;
             }
         }
 
-        for (Language actualLanguage : languages) {
-            if (actualLanguage instanceof IgnoreLanguage) {
-                return actualLanguage;
-            }
-        }
-
-        throw new AssertionError(
-            "Language " + baseLanguage + " doesn't participate in view provider " +
-                viewProvider + ": " + new ArrayList<>(languages)
-        );
+        throw new AssertionError("Language " + baseLanguage + " doesn't participate in view provider " +
+            viewProvider + ": " + new ArrayList<>(languages));
     }
 
     /**
@@ -127,7 +109,7 @@ public class IgnoreFileImpl extends PsiFileImpl {
     @Override
     @RequiredReadAction
     public final Language getLanguage() {
-        return language;
+        return myLanguage;
     }
 
     /**
@@ -136,7 +118,7 @@ public class IgnoreFileImpl extends PsiFileImpl {
      * @return current {@link ParserDefinition}
      */
     public ParserDefinition getParserDefinition() {
-        return parserDefinition;
+        return myParserDefinition;
     }
 
     /**
@@ -146,6 +128,16 @@ public class IgnoreFileImpl extends PsiFileImpl {
      */
     @Override
     public FileType getFileType() {
-        return fileType;
+        return myFileType;
+    }
+
+    /**
+     * Returns {@link IgnoreFileType} string interpretation.
+     *
+     * @return string interpretation
+     */
+    @Override
+    public String toString() {
+        return myFileType.getId();
     }
 }

@@ -21,20 +21,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 package consulo.language.ignore;
 
 import consulo.language.InjectableLanguage;
 import consulo.language.Language;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.project.Project;
 import consulo.ui.image.Image;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
 /**
  * Gitignore {@link Language} definition.
- *
- * @author Jakub Chrzanowski <jakub@hsz.mobi>
- * @since 0.8
  */
 public class IgnoreLanguage extends Language implements InjectableLanguage {
     /**
@@ -53,35 +53,18 @@ public class IgnoreLanguage extends Language implements InjectableLanguage {
     private final String myExtension;
 
     /**
-     * The Ignore VCS directory name.
-     */
-    private final @Nullable String myDirectory;
-
-    /**
-     * The GitignoreLanguage icon.
-     */
-    private final Image icon;
-
-    /**
      * {@link IgnoreLanguage} is a non-instantiable static class.
      */
     protected IgnoreLanguage() {
-        this("Ignore", "ignore", null, PlatformIconGroup.filetypesIgnored());
+        this("IgnoreLang", "ignore");
     }
 
     /**
      * {@link IgnoreLanguage} is a non-instantiable static class.
      */
-    protected IgnoreLanguage(
-        String name,
-        String extension,
-        @Nullable String vcsDirectory,
-        Image icon
-    ) {
-        super(name);
-        this.myExtension = extension;
-        this.myDirectory = vcsDirectory;
-        this.icon = icon;
+    protected IgnoreLanguage(String name, String extension) {
+        super(INSTANCE, name);
+        myExtension = extension;
     }
 
     /**
@@ -94,15 +77,6 @@ public class IgnoreLanguage extends Language implements InjectableLanguage {
     }
 
     /**
-     * Returns Ignore VCS directory name.
-     *
-     * @return VCS directory name
-     */
-    public @Nullable String getDirectory() {
-        return myDirectory;
-    }
-
-    /**
      * The Gitignore file filename.
      *
      * @return filename.
@@ -111,7 +85,11 @@ public class IgnoreLanguage extends Language implements InjectableLanguage {
         return DOT + getExtension();
     }
 
-    
+    /**
+     * Language name.
+     *
+     * @return language name
+     */
     @Override
     public LocalizeValue getDisplayName() {
         return LocalizeValue.of(getFilename() + " (" + getID() + ")");
@@ -123,7 +101,16 @@ public class IgnoreLanguage extends Language implements InjectableLanguage {
      * @return icon
      */
     public Image getIcon() {
-        return icon;
+        return PlatformIconGroup.filetypesIgnored();
+    }
+
+    /**
+     * Language file type.
+     *
+     * @return {@link IgnoreFileType} instance
+     */
+    public IgnoreFileType getFileType() {
+        return IgnoreFileType.INSTANCE;
     }
 
     /**
@@ -142,5 +129,16 @@ public class IgnoreLanguage extends Language implements InjectableLanguage {
      */
     public Syntax getDefaultSyntax() {
         return Syntax.GLOB;
+    }
+
+    /**
+     * Returns the root directory the entries of the given ignore file are relative to.
+     *
+     * @param project    current project
+     * @param ignoreFile ignore file
+     * @return affected root, or <code>null</code> if it cannot be determined
+     */
+    public @Nullable VirtualFile getAffectedRoot(Project project, VirtualFile ignoreFile) {
+        return ignoreFile.getParent();
     }
 }

@@ -21,6 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 package consulo.language.ignore;
 
 import consulo.language.file.LanguageFileType;
@@ -29,29 +30,16 @@ import consulo.ui.image.Image;
 
 /**
  * Describes Ignore file type.
- *
- * @author Jakub Chrzanowski <jakub@hsz.mobi>
- * @since 0.8
  */
 public class IgnoreFileType extends LanguageFileType {
-    /**
-     * Current file type language.
-     */
-    private final IgnoreLanguage language;
+    public static final IgnoreFileType INSTANCE = new IgnoreFileType();
 
-    /**
-     * Protected constructor to prevent direct object creation.
-     */
-    protected IgnoreFileType() {
+    private IgnoreFileType() {
         this(IgnoreLanguage.INSTANCE);
     }
 
-    /**
-     * Protected constructor to prevent direct object creation.
-     */
     protected IgnoreFileType(IgnoreLanguage language) {
         super(language);
-        this.language = language;
     }
 
     /**
@@ -61,13 +49,12 @@ public class IgnoreFileType extends LanguageFileType {
      */
     @Override
     public String getId() {
-        return language.getID() + ".file";
+        return getLanguage().getID() + " file";
     }
 
-    
     @Override
     public LocalizeValue getDisplayName() {
-        return language.getDisplayName();
+        return getLanguage().getDisplayName();
     }
 
     /**
@@ -77,7 +64,7 @@ public class IgnoreFileType extends LanguageFileType {
      */
     @Override
     public LocalizeValue getDescription() {
-        return language.getDisplayName();
+        return getLanguage().getDisplayName();
     }
 
     /**
@@ -87,7 +74,7 @@ public class IgnoreFileType extends LanguageFileType {
      */
     @Override
     public String getDefaultExtension() {
-        return language.getExtension();
+        return getIgnoreLanguage().getExtension();
     }
 
     /**
@@ -97,16 +84,15 @@ public class IgnoreFileType extends LanguageFileType {
      */
     @Override
     public Image getIcon() {
-        return language.getIcon();
+        return getIgnoreLanguage().getIcon();
     }
 
     /**
-     * Returns hashCode of the current {@link IgnoreLanguage}.
+     * Returns {@see IgnoreLanguage} instance.
      *
-     * @return hashCode
+     * @return associated language.
      */
-    @Override
-    public int hashCode() {
-        return language.hashCode();
+    public IgnoreLanguage getIgnoreLanguage() {
+        return (IgnoreLanguage) getLanguage();
     }
 }

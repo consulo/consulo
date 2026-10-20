@@ -1,0 +1,72 @@
+codeInspection.duplicateEntry:
+    text: Duplicate entry
+codeInspection.duplicateEntry.description:
+    text: Checks if entry is duplicated.
+codeInspection.duplicateEntry.message:
+    text: '<code>#ref</code> entry is defined more than once #loc'
+codeInspection.group:
+    text: Ignore
+codeInspection.incorrectEntry:
+    text: Incorrect entry
+codeInspection.incorrectEntry.description:
+    text: Checks if entry has correct form in specific according to the specific syntax.
+codeInspection.incorrectEntry.message:
+    text: |-
+        <code>#ref</code> has incorrect syntax:
+        {0} #loc
+codeInspection.relativeEntry:
+    text: Relative entry
+codeInspection.relativeEntry.description:
+    text: Checks if entry is a relative path.
+codeInspection.relativeEntry.message:
+    text: <code>#ref</code> entry contains relative path
+codeInspection.syntaxEntry:
+    text: Syntax entry
+codeInspection.syntaxEntry.description:
+    text: Checks if syntax entry has correct value.
+codeInspection.syntaxEntry.message:
+    text: '<code>#ref</code> has invalid value #loc'
+colorSettings.displayName:
+    text: .ignore files
+gutter.name.version.control.ignored.directories:
+    text: Version control ignored directories
+highlighter.brackets:
+    text: Brackets
+highlighter.comment:
+    text: Comment
+highlighter.header:
+    text: Header
+highlighter.negation:
+    text: Negation
+highlighter.section:
+    text: Section
+highlighter.slash:
+    text: Slash
+highlighter.syntax:
+    text: Syntax
+highlighter.value:
+    text: Value
+quick.fix.relative.entry:
+    text: Remove relative part
+quick.fix.remove.entry:
+    text: Remove entry
+quick.fix.syntax.entry:
+    text: Suggest correct value
+token.type.bracket.left:
+    text: <left bracket>
+token.type.bracket.right:
+    text: <right bracket>
+token.type.comment:
+    text: <comment>
+token.type.empty.line:
+    text: <empty line>
+token.type.header:
+    text: <header>
+token.type.section:
+    text: <section>
+token.type.slash:
+    text: <slash>
+token.type.syntax:
+    text: <syntax>
+token.type.value:
+    text: <value>

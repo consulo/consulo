@@ -13,6 +13,7 @@ module consulo.ai.impl {
     requires consulo.ui.ex.api;
     requires consulo.file.chooser.api;
     requires consulo.component.store.api;
+    requires consulo.language.ignore.api;
 
     opens consulo.ai.impl.internal.setting to consulo.util.xml.serializer;
 }

@@ -61,7 +61,7 @@ public abstract class ScheduleForAdditionAction extends LegacyDumbAwareAction {
 
     @Override
     public void update(AnActionEvent e) {
-        boolean enabled = e.hasData(Project.KEY) && !Streams.isEmpty(getUnversionedFiles(e, e.getRequiredData(Project.KEY)));
+        boolean enabled = e.hasData(Project.KEY) && !Streams.isEmpty(collectUnversionedFiles(e, e.getRequiredData(Project.KEY)));
 
         e.getPresentation().setEnabled(enabled);
         if (ALLOWED_PLACES.contains(e.getPlace())) {
@@ -73,7 +73,7 @@ public abstract class ScheduleForAdditionAction extends LegacyDumbAwareAction {
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
-        List<VirtualFile> unversionedFiles = getUnversionedFiles(e, project).collect(Collectors.toList());
+        List<VirtualFile> unversionedFiles = collectUnversionedFiles(e, project).collect(Collectors.toList());
 
         addUnversioned(project, unversionedFiles, this::isStatusForAddition);
     }
@@ -98,7 +98,24 @@ public abstract class ScheduleForAdditionAction extends LegacyDumbAwareAction {
         return result;
     }
 
-    private Stream<VirtualFile> getUnversionedFiles(AnActionEvent e, Project project) {
+    private Stream<VirtualFile> collectUnversionedFiles(AnActionEvent e, Project project) {
+        return getUnversionedFiles(e, project, this::isStatusForAddition, checkVirtualFiles(e));
+    }
+
+    /**
+     * Returns unversioned files of the action context: explicitly selected unversioned files of the changes view,
+     * or the selected files with {@link FileStatus#UNKNOWN} status.
+     */
+    public static Stream<VirtualFile> getUnversionedFiles(AnActionEvent e, Project project) {
+        return getUnversionedFiles(e, project, status -> status == FileStatus.UNKNOWN, ArrayUtil.isEmpty(e.getData(VcsDataKeys.CHANGES)));
+    }
+
+    private static Stream<VirtualFile> getUnversionedFiles(
+        AnActionEvent e,
+        Project project,
+        Predicate<FileStatus> statusForAddition,
+        boolean checkVirtualFiles
+    ) {
         ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance(project);
         FileStatusManager fileStatusManager = FileStatusManager.getInstance(project);
 
@@ -107,20 +124,21 @@ public abstract class ScheduleForAdditionAction extends LegacyDumbAwareAction {
 
         return hasExplicitUnversioned
             ? virtualFiles.stream()
-            : checkVirtualFiles(e)
+            : checkVirtualFiles
             ? Streams.stream(e.getData(VirtualFile.KEY_OF_ARRAY))
-            .filter(file -> isFileUnversioned(file, vcsManager, fileStatusManager))
+            .filter(file -> isFileUnversioned(file, vcsManager, fileStatusManager, statusForAddition))
             : Stream.empty();
     }
 
-    private boolean isFileUnversioned(
+    private static boolean isFileUnversioned(
         VirtualFile file,
         ProjectLevelVcsManager vcsManager,
-        FileStatusManager fileStatusManager
+        FileStatusManager fileStatusManager,
+        Predicate<FileStatus> statusForAddition
     ) {
         AbstractVcs vcs = vcsManager.getVcsFor(file);
         return vcs != null && !vcs.areDirectoriesVersionedItems() && file.isDirectory()
-            || isStatusForAddition(fileStatusManager.getStatus(file));
+            || statusForAddition.test(fileStatusManager.getStatus(file));
     }
 
     protected boolean isStatusForAddition(FileStatus status) {

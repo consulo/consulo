@@ -16,28 +16,27 @@
 package consulo.ui.internal;
 
 import consulo.localize.LocalizeValue;
-import consulo.ui.Tab;
 import consulo.ui.TextAttribute;
 import consulo.ui.TextItemPresentation;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 /**
- * Records what a tab renderer appends, without drawing anything, so that {@link Tab#getTitle()} answers the same on
- * every frontend and for a tab which was never shown.
+ * Records what a renderer appends, without drawing anything - the title of a tab, so that it answers the same on every
+ * frontend and for a tab which was never shown, or the caption of a list separator.
  *
  * @author VISTALL
  * @since 2026-10-10
  */
-public final class TabTitlePresentation implements TextItemPresentation {
+public final class PlainTextPresentation implements TextItemPresentation {
     private final List<LocalizeValue> myTexts = new ArrayList<>();
 
-    public static LocalizeValue titleOf(Tab tab, BiConsumer<Tab, TextItemPresentation> renderer) {
-        TabTitlePresentation presentation = new TabTitlePresentation();
-        renderer.accept(tab, presentation);
-        return presentation.getTitle();
+    public static LocalizeValue textOf(Consumer<TextItemPresentation> renderer) {
+        PlainTextPresentation presentation = new PlainTextPresentation();
+        renderer.accept(presentation);
+        return presentation.getText();
     }
 
     @Override
@@ -52,7 +51,7 @@ public final class TabTitlePresentation implements TextItemPresentation {
         }
     }
 
-    public LocalizeValue getTitle() {
+    public LocalizeValue getText() {
         return switch (myTexts.size()) {
             case 0 -> LocalizeValue.empty();
             case 1 -> myTexts.getFirst();

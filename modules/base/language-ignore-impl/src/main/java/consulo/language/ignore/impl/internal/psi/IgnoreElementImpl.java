@@ -26,18 +26,14 @@ package consulo.language.ignore.impl.internal.psi;
 
 import consulo.language.ast.ASTNode;
 import consulo.language.impl.psi.ASTWrapperPsiElement;
+import consulo.language.psi.ContributedReferenceHost;
 import consulo.language.psi.PsiReference;
 import consulo.language.psi.ReferenceProvidersRegistry;
 
 /**
  * Definition of {@link ASTWrapperPsiElement}.
- *
- * @author Alexander Zolotov <alexander.zolotov@jetbrains.com>
  */
-public class IgnoreElementImpl extends ASTWrapperPsiElement {
-    /**
-     * Build a new instance of {@link IgnoreElementImpl}.
-     */
+public class IgnoreElementImpl extends ASTWrapperPsiElement implements ContributedReferenceHost {
     public IgnoreElementImpl(ASTNode node) {
         super(node);
     }

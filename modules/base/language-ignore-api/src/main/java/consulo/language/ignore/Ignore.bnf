@@ -29,7 +29,7 @@
   implements("ENTRY")       = "consulo.language.ignore.psi.IgnoreEntryBase"
 }
  
-gitignoreFile           ::= item_ *
+ignoreFile              ::= item_ *
 private item_           ::= HEADER | SECTION | COMMENT | SYNTAX | ENTRY_DIRECTORY | ENTRY_FILE | CRLF
 NEGATION                ::= "!"
 SYNTAX                  ::= SYNTAX_KEY CRLF * VALUE

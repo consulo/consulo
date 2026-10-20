@@ -26,19 +26,48 @@ package consulo.language.ignore.psi;
 
 import consulo.language.ast.IElementType;
 import consulo.language.ignore.IgnoreLanguage;
+import consulo.language.ignore.localize.LanguageIgnoreLocalize;
+import consulo.localize.LocalizeValue;
+import org.jspecify.annotations.Nullable;
+
+import java.util.Map;
 
 /**
  * Token type definition.
- *
- * @author Jakub Chrzanowski <jakub@hsz.mobi>
  */
 public class IgnoreTokenType extends IElementType {
+    private static final Map<String, LocalizeValue> LOCALIZED_DEBUG_NAMES = Map.of(
+        "/", LanguageIgnoreLocalize.tokenTypeSlash(),
+        "BRACKET_LEFT", LanguageIgnoreLocalize.tokenTypeBracketLeft(),
+        "BRACKET_RIGHT", LanguageIgnoreLocalize.tokenTypeBracketRight(),
+        "COMMENT", LanguageIgnoreLocalize.tokenTypeComment(),
+        "CRLF", LanguageIgnoreLocalize.tokenTypeEmptyLine(),
+        "HEADER", LanguageIgnoreLocalize.tokenTypeHeader(),
+        "SECTION", LanguageIgnoreLocalize.tokenTypeSection(),
+        "VALUE", LanguageIgnoreLocalize.tokenTypeValue(),
+        "syntax:", LanguageIgnoreLocalize.tokenTypeSyntax()
+    );
+
+    /**
+     * Token debug name.
+     */
+    private final @Nullable LocalizeValue myLocalizedDebugName;
+
+    /**
+     * Builds a new instance of {@link IgnoreTokenType}.
+     */
     public IgnoreTokenType(String debugName) {
         super(debugName, IgnoreLanguage.INSTANCE);
+        myLocalizedDebugName = LOCALIZED_DEBUG_NAMES.get(debugName);
     }
 
+    /**
+     * String interpretation of the token type.
+     *
+     * @return string representation
+     */
     @Override
     public String toString() {
-        return "IgnoreTokenType." + super.toString();
+        return myLocalizedDebugName != null ? myLocalizedDebugName.get() : "IgnoreTokenType." + super.toString();
     }
 }

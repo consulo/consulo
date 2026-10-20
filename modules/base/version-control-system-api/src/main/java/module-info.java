@@ -17,6 +17,7 @@ module consulo.version.control.system.api {
     requires consulo.code.editor.api;
     requires consulo.execution.api;
     requires consulo.language.api;
+    requires transitive consulo.language.ignore.api;
     requires transitive consulo.diff.api;
 
     requires consulo.ui.ex.awt.api;
@@ -31,6 +32,8 @@ module consulo.version.control.system.api {
     exports consulo.versionControlSystem.commit;
     exports consulo.versionControlSystem.change.action;
     exports consulo.versionControlSystem.change.diff;
+    exports consulo.versionControlSystem.change.ignore;
+    exports consulo.versionControlSystem.change.ignore.action;
     exports consulo.versionControlSystem.change.patch;
     exports consulo.versionControlSystem.change.shelf;
     exports consulo.versionControlSystem.base;

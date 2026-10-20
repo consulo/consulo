@@ -18,6 +18,7 @@ package consulo.versionControlSystem.change;
 import consulo.project.Project;
 import consulo.versionControlSystem.change.IgnoreSettingsType;
 import consulo.versionControlSystem.change.IgnoredFileBean;
+import consulo.virtualFileSystem.VirtualFile;
 
 import java.io.File;
 
@@ -33,6 +34,14 @@ public class IgnoredBeanFactory {
   public static IgnoredFileBean ignoreFile(String path, Project p) {
     // todo check??
     return new IgnoredFileBean(path, IgnoreSettingsType.FILE, p);
+  }
+
+  public static IgnoredFileBean ignoreFile(VirtualFile file, Project p) {
+    if (file.isDirectory()) {
+      return ignoreUnderDirectory(file.getPath(), p);
+    }
+
+    return ignoreFile(file.getPath(), p);
   }
 
   public static IgnoredFileBean withMask(String mask) {
