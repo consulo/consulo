@@ -19,6 +19,7 @@ import consulo.application.Application;
 import consulo.application.ReadAction;
 import consulo.application.WriteAction;
 import consulo.application.progress.ProgressManager;
+import consulo.component.ProcessCanceledException;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.it.daemon.ExpectedHighlightingData;
@@ -31,6 +32,7 @@ import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.language.editor.internal.DaemonCodeAnalyzerInternal;
 import consulo.language.editor.internal.DaemonProgressIndicator;
 import consulo.language.editor.rawHighlight.HighlightInfo;
+import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.language.psi.PsiReference;
@@ -212,33 +214,50 @@ public final class CodeInsightTestFixture {
 
     /**
      * Runs the daemon's main passes over the configured file and returns what they produced. Needs no editor and does
-     * not wait for the daemon's restart timer.
+     * not wait for the daemon's restart timer. The passes are run again when they are canceled without a cause - a
+     * pending write action cancels the read action they run in, as it does in the IDE, where the daemon restarts them.
      */
     public List<HighlightInfo> doHighlighting() throws Exception {
         PsiFile file = getFile();
         Document document = getDocument();
         DaemonCodeAnalyzerInternal daemon = DaemonCodeAnalyzerInternal.getInstanceEx(myProject);
 
-        SimpleReference<List<HighlightInfo>> result = SimpleReference.create();
-        SimpleReference<Throwable> failure = SimpleReference.create();
+        Throwable exception = null;
+        int retries = 1000;
+        for (int i = 0; i < retries; i++) {
+            SimpleReference<List<HighlightInfo>> result = SimpleReference.create();
+            SimpleReference<Throwable> failure = SimpleReference.create();
 
-        myApplication.executeOnPooledThread(() -> {
-            DaemonProgressIndicator indicator = new DaemonProgressIndicator();
-            try {
-                ProgressManager.getInstance().runProcess(
-                    () -> result.set(ReadAction.compute(() -> daemon.runMainPasses(file, document, indicator))),
-                    indicator
-                );
-            }
-            catch (Throwable e) {
-                failure.set(e);
-            }
-        }).get();
+            myApplication.executeOnPooledThread(() -> {
+                DaemonProgressIndicator indicator = new DaemonProgressIndicator();
+                try {
+                    ProgressManager.getInstance().runProcess(
+                        () -> result.set(ReadAction.compute(() -> daemon.runMainPasses(file, document, indicator))),
+                        indicator
+                    );
+                }
+                catch (Throwable e) {
+                    failure.set(e);
+                }
+            }).get();
 
-        if (failure.get() != null) {
-            throw new AssertionError("the main passes did not complete", failure.get());
+            Throwable e = failure.get();
+            if (e == null) {
+                return result.get();
+            }
+            if (!(e instanceof ProcessCanceledException)) {
+                throw new AssertionError("the main passes did not complete", e);
+            }
+            Throwable cause = e.getCause();
+            if (cause != null && cause != e && cause.getClass() != Throwable.class) {
+                // canceled because of an exception, no need to repeat the same
+                throw new AssertionError("the main passes did not complete", cause);
+            }
+            exception = e;
+            myProject.getUIAccess().giveAndWait(() -> PsiDocumentManager.getInstance(myProject).commitAllDocuments());
+            HeadlessProjects.awaitIdle(myProject);
         }
-        return result.get();
+        throw new AssertionError("Unable to highlight after " + retries + " retries", exception);
     }
 
     public void checkHighlighting() throws Exception {
