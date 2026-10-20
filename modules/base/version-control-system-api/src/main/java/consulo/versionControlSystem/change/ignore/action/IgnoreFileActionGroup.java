@@ -46,6 +46,7 @@ public class IgnoreFileActionGroup extends AsyncActionGroup implements AnActionW
             ignoreFileType.getIcon()
         );
         myIgnoreFileType = ignoreFileType;
+        setPopup(true);
     }
 
     protected List<AnAction> createAdditionalActions(
@@ -107,7 +108,6 @@ public class IgnoreFileActionGroup extends AsyncActionGroup implements AnActionW
     public Coroutine<?, ?> updateAsync(AnActionEvent e) {
         return ActionSafeReadLock.run(e, presentation -> {
             List<AnAction> actions = createActionsFor(e);
-            presentation.setPopupGroup(actions.size() > 1);
             presentation.setPerformGroup(actions.size() == 1);
             presentation.setEnabledAndVisible(!actions.isEmpty());
         }).toCoroutine();
