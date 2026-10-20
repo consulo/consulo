@@ -14,4 +14,14 @@ import consulo.virtualFileSystem.VirtualFile;
 @ServiceAPI(ComponentScope.PROJECT)
 public interface IgnoredFileGenerator {
     void generateFile(VirtualFile ignoreFileRoot, AbstractVcs vcs, boolean notify);
+
+    /**
+     * @return {@code false} when an ignore file was already generated for the given root
+     */
+    boolean needGenerateInternalIgnoreFile(VirtualFile ignoreFileRoot);
+
+    /**
+     * Remembers that an ignore file was generated for the given root, so it is never generated again.
+     */
+    void markIgnoreFileRootAsGenerated(String ignoreFileRoot);
 }

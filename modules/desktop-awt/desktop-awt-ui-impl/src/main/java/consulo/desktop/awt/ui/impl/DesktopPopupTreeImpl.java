@@ -63,6 +63,16 @@ class DesktopPopupTreeImpl<E> extends DesktopTreeBase<E, JScrollPane> implements
     }
 
     @Override
+    DesktopAWTTree createTree(javax.swing.tree.TreeModel model) {
+        return new DesktopAWTTree(model, this) {
+            @Override
+            public boolean getScrollableTracksViewportWidth() {
+                return true;
+            }
+        };
+    }
+
+    @Override
     protected DesktopAWTTree getTree() {
         return (DesktopAWTTree) toAWTComponent().getViewport().getView();
     }

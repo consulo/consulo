@@ -312,4 +312,9 @@ public abstract class ProjectLevelVcsManager {
         ActionInfo actionInfo,
         boolean canceled
     );
+
+    /**
+     * Execute the task on pooled thread, delayed until core vcs services are initialized.
+     */
+    public abstract void runAfterInitialization(Runnable runnable);
 }

@@ -18,5 +18,5 @@ public interface VcsSharedChecker {
      *
      * @param path The path (e.g., directory) to check
      */
-    boolean isPathSharedInVcs(Project project, Path path);
+    boolean isPathSharedInVcs(Project project, Path path) throws VcsException;
 }

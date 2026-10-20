@@ -38,6 +38,7 @@ import consulo.util.lang.ref.SimpleReference;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.change.VcsIgnoreManager;
 import consulo.versionControlSystem.internal.DiryFilesStateProcessor;
+import consulo.versionControlSystem.internal.IgnoreFilesProcessorInstaller;
 import consulo.versionControlSystem.internal.VcsFileListenerContextHelper;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.LocalFileSystem;
@@ -273,6 +274,8 @@ public abstract class VcsVFSListener implements Disposable {
         busConnection.subscribe(CommandListener.class, new MyCommandAdapter());
 
         VirtualFileManager.getInstance().addAsyncFileListener(new MyAsyncVfsListener(), this);
+
+        project.getInstance(IgnoreFilesProcessorInstaller.class).install(vcs, this);
     }
 
     @Override

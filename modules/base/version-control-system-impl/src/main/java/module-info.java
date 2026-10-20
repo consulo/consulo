@@ -105,6 +105,7 @@ module consulo.version.control.system.impl {
         consulo.util.xml.serializer,
         consulo.ui.ex.awt.api;
     opens consulo.versionControlSystem.impl.internal.change to consulo.util.xml.serializer;
+    opens consulo.versionControlSystem.impl.internal.change.ignore to consulo.util.xml.serializer;
     opens consulo.versionControlSystem.impl.internal.change.ui to consulo.util.xml.serializer;
     opens consulo.versionControlSystem.impl.internal.change.shelf to consulo.util.xml.serializer;
     opens consulo.versionControlSystem.impl.internal.action to consulo.component.impl;

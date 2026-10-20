@@ -894,14 +894,26 @@ ignored.edit.radio.mask:
     text: Ignore all files &matching
 ignored.edit.title:
     text: Ignore Unversioned Files
+ignored.file.general.settings.title:
+    text: General settings
+ignored.file.generate.in.vcs.root.label:
+    text: Generate ignore files (e.g. .gitignore) in VCS roots on project open and repository creation
 ignored.file.manage.all.project:
     text: In All Projects
+ignored.file.manage.all.projects.option:
+    text: Manage for all projects
+ignored.file.manage.always.ask.option:
+    text: Always ask
 ignored.file.manage.message:
     text: '{0} can automatically add files that are usually ignored to {1}.'
 ignored.file.manage.notmanage:
     text: Do not Add
+ignored.file.manage.policy.label:
+    text: 'Ignored files management policy:'
 ignored.file.manage.this.project:
     text: In This Project
+ignored.file.manage.this.project.option:
+    text: Manage for this project only
 ignored.file.manage.view:
     text: View
 ignored.file.manage.view.dialog.ignore.action:
@@ -910,6 +922,12 @@ ignored.file.manage.view.dialog.title:
     text: Add Files to Ignore
 ignored.file.manage.with.files.message:
     text: '{0} can automatically add files that are usually ignored to {1}.'
+ignored.file.not.manage.option:
+    text: Turn off app-wide
+ignored.file.not.manage.this.project.option:
+    text: 'Don''t manage for this project only'
+ignored.file.tab.title:
+    text: Ignored Files
 ignored.group.description.default.ide.files:
     text: Default IDE ignored files
 ignoring.files.progress.title:

@@ -73,6 +73,7 @@ public class VcsManagerConfigurable extends SearchableConfigurable.Parent.Abstra
     }));
     result.add(new VcsCommitConfigurable(myProject));
     result.add(new VcsShelfConfigurable(myProject));
+    result.add(new IgnoredSettingsPanel(myProject));
 
     result.add(new IssueNavigationConfigurationPanel(myProject));
     if (!myProject.isDefault()) {

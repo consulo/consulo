@@ -761,6 +761,11 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
     }
 
     @Override
+    public void runAfterInitialization(Runnable runnable) {
+        addInitializationRequest(VcsInitObject.AFTER_COMMON, runnable);
+    }
+
+    @Override
     public boolean isFileInContent(@Nullable VirtualFile vf) {
         ThrowableComputable<Boolean, RuntimeException> action = () -> vf != null && (
             myExcludedIndex.isInContent(vf) || isFileInBaseDir(vf) || vf.equals(myProject.getBaseDir()) || hasExplicitMapping(vf)
