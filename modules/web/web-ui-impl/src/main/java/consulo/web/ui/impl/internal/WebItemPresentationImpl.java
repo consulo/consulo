@@ -25,6 +25,7 @@ import consulo.ui.TextAttribute;
 import consulo.ui.TextEffect;
 import consulo.ui.color.ColorValue;
 import consulo.ui.font.Font;
+import consulo.ui.font.FontFeature;
 import consulo.ui.TextItemPresentation;
 import consulo.ui.image.Image;
 import consulo.web.ui.impl.internal.image.WebImageConverter;
@@ -194,6 +195,13 @@ public class WebItemPresentationImpl implements TextItemPresentation {
         }
         if ((fontStyle & Font.ITALIC) != 0) {
             style.set("font-style", "italic");
+        }
+        applyFeatures(style, font);
+    }
+
+    static void applyFeatures(Style style, Font font) {
+        if (font.getFeatures().contains(FontFeature.TABULAR_NUMBERS)) {
+            style.set("font-variant-numeric", "tabular-nums");
         }
     }
 

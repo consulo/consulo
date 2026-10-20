@@ -16,9 +16,15 @@
 package consulo.desktop.qt.ui.impl.font;
 
 import consulo.ui.font.Font;
+import consulo.ui.font.FontFeature;
 import io.qt.gui.QFont;
 import io.qt.gui.QRawFont;
 import org.jspecify.annotations.Nullable;
+
+import java.util.Collections;
+import java.util.EnumSet;
+import java.util.Objects;
+import java.util.Set;
 
 /**
  * @author VISTALL
@@ -29,6 +35,7 @@ public class DesktopQtFontImpl implements Font {
     private final String myFontName;
     private final int myFontSize;
     private final int myFontStyle;
+    private final Set<FontFeature> myFeatures;
 
     private volatile @Nullable QRawFont myRawFont;
 
@@ -41,11 +48,32 @@ public class DesktopQtFontImpl implements Font {
     }
 
     public DesktopQtFontImpl(String family, String fontName, int fontSize, int fontStyle, @Nullable QRawFont rawFont) {
+        this(family, fontName, fontSize, fontStyle, rawFont, Set.of());
+    }
+
+    private DesktopQtFontImpl(String family,
+                              String fontName,
+                              int fontSize,
+                              int fontStyle,
+                              @Nullable QRawFont rawFont,
+                              Set<FontFeature> features) {
+        myFeatures = features;
         myFamily = family;
         myFontName = fontName;
         myFontSize = fontSize;
         myFontStyle = fontStyle;
         myRawFont = rawFont;
+    }
+
+    public static DesktopQtFontImpl of(QFont font) {
+        int style = PLAIN;
+        if (font.bold()) {
+            style |= BOLD;
+        }
+        if (font.italic()) {
+            style |= ITALIC;
+        }
+        return new DesktopQtFontImpl(font.family(), font.family(), font.pointSize(), style);
     }
 
     public QFont toQFont() {
@@ -55,6 +83,9 @@ public class DesktopQtFontImpl implements Font {
         }
         font.setBold((myFontStyle & BOLD) != 0);
         font.setItalic((myFontStyle & ITALIC) != 0);
+        for (FontFeature feature : myFeatures) {
+            font.setFeature(feature.getTag(), 1);
+        }
         return font;
     }
 
@@ -85,7 +116,22 @@ public class DesktopQtFontImpl implements Font {
 
     @Override
     public Font buildNewFont(int newSize) {
-        return new DesktopQtFontImpl(myFamily, myFontName, newSize, myFontStyle, myRawFont);
+        return new DesktopQtFontImpl(myFamily, myFontName, newSize, myFontStyle, myRawFont, myFeatures);
+    }
+
+    @Override
+    public Set<FontFeature> getFeatures() {
+        return myFeatures;
+    }
+
+    @Override
+    public Font withFeatures(FontFeature... features) {
+        EnumSet<FontFeature> newFeatures = myFeatures.isEmpty() ? EnumSet.noneOf(FontFeature.class) : EnumSet.copyOf(myFeatures);
+        Collections.addAll(newFeatures, features);
+        if (newFeatures.equals(myFeatures)) {
+            return this;
+        }
+        return new DesktopQtFontImpl(myFamily, myFontName, myFontSize, myFontStyle, myRawFont, Collections.unmodifiableSet(newFeatures));
     }
 
     @Override
@@ -96,5 +142,26 @@ public class DesktopQtFontImpl implements Font {
             myRawFont = rawFont;
         }
         return rawFont.isValid() && rawFont.supportsCharacter(codePoint);
+    }
+
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        DesktopQtFontImpl that = (DesktopQtFontImpl) o;
+        return myFontSize == that.myFontSize
+            && myFontStyle == that.myFontStyle
+            && myFamily.equals(that.myFamily)
+            && myFontName.equals(that.myFontName)
+            && myFeatures.equals(that.myFeatures);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(myFamily, myFontName, myFontSize, myFontStyle, myFeatures);
     }
 }

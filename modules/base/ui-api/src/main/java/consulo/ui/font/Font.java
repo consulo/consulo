@@ -15,6 +15,8 @@
  */
 package consulo.ui.font;
 
+import java.util.Set;
+
 /**
  * Immutable info about font.
  *
@@ -42,4 +44,14 @@ public interface Font {
     Font buildNewFont(int newSize);
 
     boolean canDisplay(int codePoint);
+
+    /**
+     * @return the features this font draws with, empty for a plain font
+     */
+    Set<FontFeature> getFeatures();
+
+    /**
+     * @return new font drawing with {@code features} on top of the ones this font already has
+     */
+    Font withFeatures(FontFeature... features);
 }

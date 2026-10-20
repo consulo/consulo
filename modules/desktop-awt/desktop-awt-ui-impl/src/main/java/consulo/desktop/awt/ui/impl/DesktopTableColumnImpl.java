@@ -22,6 +22,7 @@ import consulo.ui.ex.awt.ColoredTableCellRenderer;
 import consulo.ui.ex.awt.ColumnInfo;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.font.Font;
 import consulo.util.lang.ref.SimpleReference;
 import org.jspecify.annotations.Nullable;
 
@@ -32,6 +33,7 @@ import java.awt.*;
 
 import java.util.Comparator;
 import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 /**
  * The column is its own spec - it answers name, width and comparator from its own fields, so it is
@@ -58,6 +60,10 @@ public class DesktopTableColumnImpl<Item, Value> extends ColumnInfo<Item, Value>
     private int myWidth = -1;
     private boolean myResizable = true;
     private HorizontalAlignment myAlignment = HorizontalAlignment.LEFT;
+
+    private @Nullable UnaryOperator<Font> myFontBuilder;
+    private java.awt.@Nullable Font myBaseFont;
+    private java.awt.@Nullable Font myBuiltFont;
 
     private @Nullable Runnable myChangeListener;
 
@@ -137,6 +143,27 @@ public class DesktopTableColumnImpl<Item, Value> extends ColumnInfo<Item, Value>
     }
 
     @Override
+    public TableColumn<Item, Value> setFontBuilder(@Nullable UnaryOperator<Font> builder) {
+        myFontBuilder = builder;
+        myBaseFont = null;
+        myBuiltFont = null;
+        fireChanged();
+        return this;
+    }
+
+    private java.awt.@Nullable Font builtFont(java.awt.@Nullable Font baseFont) {
+        UnaryOperator<Font> builder = myFontBuilder;
+        if (builder == null || baseFont == null) {
+            return null;
+        }
+        if (!baseFont.equals(myBaseFont)) {
+            myBuiltFont = TargetAWT.to(builder.apply(new DesktopFontImpl(baseFont)));
+            myBaseFont = baseFont;
+        }
+        return myBuiltFont;
+    }
+
+    @Override
     public TableColumn<Item, Value> setSortable(@Nullable Comparator<Value> comparator) {
         myComparator = comparator;
         fireChanged();
@@ -185,6 +212,11 @@ public class DesktopTableColumnImpl<Item, Value> extends ColumnInfo<Item, Value>
             @Override
             protected void customizeCellRenderer(JTable table, @Nullable Object value, boolean selected, boolean hasFocus, int row, int column) {
                 setTextAlign(toSwingAlignment(myAlignment));
+
+                java.awt.Font font = builtFont(table.getFont());
+                if (font != null) {
+                    setFont(font);
+                }
 
                 // the band belongs to the row, so it is painted under every column - a selected row keeps the
                 // selection fill, which is the one the user is actually looking for

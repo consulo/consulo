@@ -47,6 +47,7 @@ import consulo.ui.ex.action.ActionPopupMenu;
 import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.action.ActionToolbarFactory;
 import consulo.ui.ex.action.AnAction;
+import consulo.ui.font.FontFeature;
 import consulo.ui.image.Image;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.ScrollableLayout;
@@ -187,6 +188,7 @@ public class UnifiedVcsLogUi extends AbstractVcsLogUi {
             .setRenderer((presentation, item) -> renderAuthor(presentation, item.getValue(), item.isSelected()));
         myTable.addColumn(VersionControlSystemLogLocalize.columnDate(), row -> row)
             .setWidth(150)
+            .setFontBuilder(font -> font.withFeatures(FontFeature.TABULAR_NUMBERS))
             .setRenderer((presentation, item) -> renderDate(presentation, item.getValue(), item.isSelected()));
         myTable.addSelectListener(event -> onSelectionChanged());
         myTable.addContextMenuListener(this::showContextMenu);

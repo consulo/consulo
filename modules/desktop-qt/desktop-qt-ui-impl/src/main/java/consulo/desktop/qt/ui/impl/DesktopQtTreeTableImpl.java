@@ -15,6 +15,7 @@
  */
 package consulo.desktop.qt.ui.impl;
 
+import consulo.desktop.qt.ui.impl.font.DesktopQtFontImpl;
 import consulo.desktop.qt.ui.impl.image.DesktopQtImage;
 import consulo.localize.LocalizeValue;
 import consulo.ui.HorizontalAlignment;
@@ -30,6 +31,7 @@ import consulo.ui.impl.tree.TreeNodeImpl;
 import consulo.ui.impl.tree.TreeTableColumns;
 import io.qt.core.QTimer;
 import io.qt.core.Qt;
+import io.qt.gui.QFont;
 import io.qt.widgets.QHeaderView;
 import io.qt.widgets.QTreeWidget;
 import io.qt.widgets.QTreeWidgetItem;
@@ -182,9 +184,21 @@ public class DesktopQtTreeTableImpl<E> extends DesktopQtTreeImpl<E> implements T
             item.setIcon(section, DesktopQtImage.toQIcon(presentation.getImage()));
             item.setBackground(section, DesktopQtTextItemDelegate.toBrush(presentation.getBackgroundColor()));
             item.setTextAlignment(section, DesktopQtColumnSupport.toAlignment(myColumns.get(index).getAlignment()));
+            applyColumnFont(item, section, myColumns.get(index));
         }
 
         requestFit();
+    }
+
+    private void applyColumnFont(QTreeWidgetItem item, int section, TableColumnImpl<E, ?> column) {
+        QTreeWidget tree = boundTree();
+        if (tree == null || !column.hasFontBuilder()) {
+            return;
+        }
+        QFont font = DesktopQtTextItemDelegate.toQFont(column.getFont(DesktopQtFontImpl.of(tree.font())));
+        if (font != null) {
+            item.setFont(section, font);
+        }
     }
 
     private <V> boolean applyEditor(TreeNodeImpl<E> node, QTreeWidgetItem item, TableColumnImpl<E, V> column, boolean computed) {

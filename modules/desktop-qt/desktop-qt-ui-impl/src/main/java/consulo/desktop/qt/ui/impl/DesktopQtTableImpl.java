@@ -15,6 +15,7 @@
  */
 package consulo.desktop.qt.ui.impl;
 
+import consulo.desktop.qt.ui.impl.font.DesktopQtFontImpl;
 import consulo.desktop.qt.ui.impl.image.DesktopQtCellImage;
 import consulo.desktop.qt.ui.impl.image.DesktopQtIconOwner;
 import consulo.desktop.qt.ui.impl.image.DesktopQtImage;
@@ -45,6 +46,7 @@ import io.qt.core.QRect;
 import io.qt.core.QSize;
 import io.qt.core.Qt;
 import io.qt.gui.QBrush;
+import io.qt.gui.QFont;
 import io.qt.gui.QMouseEvent;
 import io.qt.widgets.QAbstractItemView;
 import io.qt.widgets.QTableView;
@@ -92,6 +94,7 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableView>
                 case Qt.ItemDataRole.DecorationRole -> DesktopQtImage.toQIcon(presentation(row, column).getImage());
                 case Qt.ItemDataRole.TextAlignmentRole -> DesktopQtColumnSupport.toAlignment(column.getAlignment()).value();
                 case Qt.ItemDataRole.BackgroundRole -> background(row, column);
+                case Qt.ItemDataRole.FontRole -> columnFont(column);
                 default -> null;
             };
         }
@@ -356,6 +359,14 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableView>
         myCachedColumn = column.getIndex();
         myCachedPresentation = presentation;
         return presentation;
+    }
+
+    private @Nullable QFont columnFont(TableColumnImpl<Item, ?> column) {
+        QTableView view = toQtComponent();
+        if (view == null || !column.hasFontBuilder()) {
+            return null;
+        }
+        return DesktopQtTextItemDelegate.toQFont(column.getFont(DesktopQtFontImpl.of(view.font())));
     }
 
     private void dropCachedPresentation() {

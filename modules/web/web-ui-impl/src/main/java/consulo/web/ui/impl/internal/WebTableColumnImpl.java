@@ -27,10 +27,12 @@ import consulo.ui.TableItemEditor;
 import consulo.ui.TableItemRenderer;
 import consulo.ui.TextItemRenderer;
 import consulo.ui.color.ColorValue;
+import consulo.ui.font.Font;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Comparator;
 import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 /**
  * @author VISTALL
@@ -48,6 +50,7 @@ public class WebTableColumnImpl<Item, Value> extends WebGridColumnBase<Item, Ite
     private @Nullable ComponentItemRenderer<Value> myComponentRenderer;
     private @Nullable TableItemEditor<Item, Value> myEditor;
     private HorizontalAlignment myAlignment = HorizontalAlignment.LEFT;
+    private @Nullable Font myFont;
 
     public WebTableColumnImpl(WebTableImpl<Item> table, Function<Item, Value> valueProvider) {
         super(table.toVaadinComponent());
@@ -102,6 +105,7 @@ public class WebTableColumnImpl<Item, Value> extends WebGridColumnBase<Item, Ite
         Element element = cell.getElement();
         Style style = element.getStyle();
         style.set("justify-content", justifyContent(myAlignment));
+        applyFont(style, myFont);
 
         element.getClassList().set(FILLED_CELL_CLASS, background != null);
         if (background != null) {
@@ -156,6 +160,39 @@ public class WebTableColumnImpl<Item, Value> extends WebGridColumnBase<Item, Ite
         applyAlignment(alignment);
         myTable.toVaadinComponent().getDataProvider().refreshAll();
         return this;
+    }
+
+    @Override
+    public TableColumn<Item, Value> setFontBuilder(@Nullable UnaryOperator<Font> builder) {
+        myFont = builder == null ? null : builder.apply(WebFontImpl.INHERITED);
+        myTable.toVaadinComponent().getDataProvider().refreshAll();
+        return this;
+    }
+
+    private static void applyFont(Style style, @Nullable Font font) {
+        style.remove("font-family");
+        style.remove("font-size");
+        style.remove("font-weight");
+        style.remove("font-style");
+        style.remove("font-variant-numeric");
+        if (font == null) {
+            return;
+        }
+
+        Font base = WebFontImpl.INHERITED;
+        if (!font.getFamily().equals(base.getFamily())) {
+            style.set("font-family", "\"" + font.getFamily() + "\"");
+        }
+        if (font.getFontSize() != base.getFontSize()) {
+            style.set("font-size", font.getFontSize() + "px");
+        }
+        if ((font.getFontStyle() & Font.BOLD) != 0) {
+            style.set("font-weight", "bold");
+        }
+        if ((font.getFontStyle() & Font.ITALIC) != 0) {
+            style.set("font-style", "italic");
+        }
+        WebItemPresentationImpl.applyFeatures(style, font);
     }
 
     @Override

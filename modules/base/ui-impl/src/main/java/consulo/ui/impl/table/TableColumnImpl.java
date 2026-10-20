@@ -17,10 +17,12 @@ package consulo.ui.impl.table;
 
 import consulo.localize.LocalizeValue;
 import consulo.ui.*;
+import consulo.ui.font.Font;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Comparator;
 import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 /**
  * @author VISTALL
@@ -40,6 +42,10 @@ public class TableColumnImpl<Item, Value> implements TableColumn<Item, Value> {
     private volatile int myWidth = -1;
     private volatile boolean myResizable = true;
     private volatile HorizontalAlignment myAlignment = HorizontalAlignment.LEFT;
+
+    private volatile @Nullable UnaryOperator<Font> myFontBuilder;
+    private @Nullable Font myBaseFont;
+    private @Nullable Font myBuiltFont;
 
     public TableColumnImpl(TableColumnOwner owner, int index, LocalizeValue header, Function<Item, Value> valueProvider) {
         myOwner = owner;
@@ -100,6 +106,28 @@ public class TableColumnImpl<Item, Value> implements TableColumn<Item, Value> {
         return myAlignment;
     }
 
+    /**
+     * The font of the cells of this column, built from {@code baseFont} - the font the table draws with. Built
+     * once and kept until the table font changes.
+     *
+     * @return {@code null} when the column has no font builder
+     */
+    public @Nullable Font getFont(Font baseFont) {
+        UnaryOperator<Font> builder = myFontBuilder;
+        if (builder == null) {
+            return null;
+        }
+        if (!baseFont.equals(myBaseFont)) {
+            myBuiltFont = builder.apply(baseFont);
+            myBaseFont = baseFont;
+        }
+        return myBuiltFont;
+    }
+
+    public boolean hasFontBuilder() {
+        return myFontBuilder != null;
+    }
+
     @Override
     public TableColumn<Item, Value> setHeader(LocalizeValue header) {
         myHeader = header;
@@ -147,6 +175,15 @@ public class TableColumnImpl<Item, Value> implements TableColumn<Item, Value> {
     @Override
     public TableColumn<Item, Value> setHorizontalAlignment(HorizontalAlignment alignment) {
         myAlignment = alignment;
+        myOwner.rendererChanged();
+        return this;
+    }
+
+    @Override
+    public TableColumn<Item, Value> setFontBuilder(@Nullable UnaryOperator<Font> builder) {
+        myFontBuilder = builder;
+        myBaseFont = null;
+        myBuiltFont = null;
         myOwner.rendererChanged();
         return this;
     }

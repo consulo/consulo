@@ -16,6 +16,11 @@
 package consulo.it.internal.ui;
 
 import consulo.ui.font.Font;
+import consulo.ui.font.FontFeature;
+
+import java.util.Collections;
+import java.util.EnumSet;
+import java.util.Set;
 
 /**
  * Dummy-but-creatable headless {@link Font}.
@@ -26,8 +31,14 @@ public class HeadlessFont implements Font {
     private final String myName;
     private final int mySize;
     private final int myStyle;
+    private final Set<FontFeature> myFeatures;
 
     public HeadlessFont(String name, int size, int style) {
+        this(name, size, style, Set.of());
+    }
+
+    private HeadlessFont(String name, int size, int style, Set<FontFeature> features) {
+        myFeatures = features;
         myName = name;
         mySize = size;
         myStyle = style;
@@ -60,7 +71,19 @@ public class HeadlessFont implements Font {
 
     @Override
     public Font buildNewFont(int newSize) {
-        return new HeadlessFont(myName, newSize, myStyle);
+        return new HeadlessFont(myName, newSize, myStyle, myFeatures);
+    }
+
+    @Override
+    public Set<FontFeature> getFeatures() {
+        return myFeatures;
+    }
+
+    @Override
+    public Font withFeatures(FontFeature... features) {
+        EnumSet<FontFeature> newFeatures = myFeatures.isEmpty() ? EnumSet.noneOf(FontFeature.class) : EnumSet.copyOf(myFeatures);
+        Collections.addAll(newFeatures, features);
+        return new HeadlessFont(myName, mySize, myStyle, Collections.unmodifiableSet(newFeatures));
     }
 
     @Override

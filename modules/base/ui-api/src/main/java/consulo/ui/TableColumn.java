@@ -16,9 +16,11 @@
 package consulo.ui;
 
 import consulo.localize.LocalizeValue;
+import consulo.ui.font.Font;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Comparator;
+import java.util.function.UnaryOperator;
 
 /**
  * @author VISTALL
@@ -42,6 +44,15 @@ public interface TableColumn<Item, Value> {
     TableColumn<Item, Value> setResizable(boolean resizable);
 
     TableColumn<Item, Value> setHorizontalAlignment(HorizontalAlignment alignment);
+
+    /**
+     * Derives the font of the cells of this column from the font the table draws with - tabular numbers for a
+     * column of dates, for instance. The result is kept and the builder asked again only once the table font
+     * changes, on a theme or scale switch. A font set by the renderer itself still wins.
+     *
+     * @param builder {@code null} (the default) leaves the cells on the table font
+     */
+    TableColumn<Item, Value> setFontBuilder(@Nullable UnaryOperator<Font> builder);
 
     /**
      * @param comparator over the column value, {@code null} makes the column unsortable

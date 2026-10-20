@@ -15,20 +15,31 @@
  */
 package consulo.desktop.awt.ui.impl;
 
+import com.jetbrains.FontExtensions;
+import com.jetbrains.JBR;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.font.Font;
+import consulo.ui.font.FontFeature;
 import consulo.util.lang.BitUtil;
+import consulo.util.lang.lazy.LazyValue;
 import org.jspecify.annotations.Nullable;
 
+import java.util.Collections;
+import java.util.EnumSet;
 import java.util.Objects;
+import java.util.Set;
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
  * @since 2020-06-04
  */
 public final class DesktopFontImpl implements Font {
+    private static final Supplier<@Nullable FontExtensions> FONT_EXTENSIONS = LazyValue.nullable(() -> JBR.getFontExtensions());
+
     private final java.awt.Font myFont;
     private final int myFontStyle;
+    private final Set<FontFeature> myFeatures;
 
     public DesktopFontImpl(String fontName, int fontSize, int fontStyle) {
         myFontStyle = fontStyle;
@@ -39,10 +50,16 @@ public final class DesktopFontImpl implements Font {
         style = BitUtil.set(style, java.awt.Font.ITALIC, BitUtil.isSet(fontStyle, Font.ITALIC));
 
         myFont = new java.awt.Font(fontName, style, JBUI.scaleFontSize(fontSize));
+        myFeatures = Set.of();
     }
 
     public DesktopFontImpl(java.awt.Font font) {
+        this(font, Set.of());
+    }
+
+    private DesktopFontImpl(java.awt.Font font, Set<FontFeature> features) {
         myFont = font;
+        myFeatures = features;
 
         int result = 0;
         result = BitUtil.set(result, Font.PLAIN, BitUtil.isSet(font.getStyle(), java.awt.Font.PLAIN));
@@ -84,7 +101,33 @@ public final class DesktopFontImpl implements Font {
     @Override
     public Font buildNewFont(int newSize) {
         java.awt.Font newFont = myFont.deriveFont((float) newSize);
-        return new DesktopFontImpl(newFont);
+        return new DesktopFontImpl(applyFeatures(newFont, myFeatures), myFeatures);
+    }
+
+    @Override
+    public Set<FontFeature> getFeatures() {
+        return myFeatures;
+    }
+
+    @Override
+    public Font withFeatures(FontFeature... features) {
+        EnumSet<FontFeature> newFeatures = myFeatures.isEmpty() ? EnumSet.noneOf(FontFeature.class) : EnumSet.copyOf(myFeatures);
+        Collections.addAll(newFeatures, features);
+        if (newFeatures.equals(myFeatures)) {
+            return this;
+        }
+        return new DesktopFontImpl(applyFeatures(myFont, newFeatures), Collections.unmodifiableSet(newFeatures));
+    }
+
+    private static java.awt.Font applyFeatures(java.awt.Font font, Set<FontFeature> features) {
+        if (features.isEmpty()) {
+            return font;
+        }
+        FontExtensions fontExtensions = FONT_EXTENSIONS.get();
+        if (fontExtensions == null) {
+            return font;
+        }
+        return fontExtensions.deriveFontWithFeatures(font, features.stream().map(FontFeature::getTag).toArray(String[]::new));
     }
 
     @Override
@@ -101,12 +144,12 @@ public final class DesktopFontImpl implements Font {
             return false;
         }
         DesktopFontImpl that = (DesktopFontImpl) o;
-        return Objects.equals(myFont, that.myFont);
+        return Objects.equals(myFont, that.myFont) && myFeatures.equals(that.myFeatures);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(myFont);
+        return Objects.hash(myFont, myFeatures);
     }
 
     @Override

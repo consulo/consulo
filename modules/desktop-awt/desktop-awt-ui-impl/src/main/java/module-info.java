@@ -43,6 +43,7 @@ open module consulo.desktop.awt.ui.impl {
     requires miglayout;
     requires com.google.common;
     requires com.github.weisj.jsvg;
+    requires jetbrains.runtime.api;
 
     requires jdk.xml.dom;
     requires cobra.core;
