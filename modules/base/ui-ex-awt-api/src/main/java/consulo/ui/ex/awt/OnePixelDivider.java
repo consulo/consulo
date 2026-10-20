@@ -24,6 +24,8 @@ import consulo.ui.ex.JBColor;
 import consulo.ui.ex.Splittable;
 import consulo.ui.ex.awt.util.IdeGlassPaneUtil;
 
+import org.jspecify.annotations.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -103,8 +105,20 @@ public class OnePixelDivider extends Divider {
     }
   }
   private class MyMouseAdapter extends MouseAdapter implements Weighted {
+    private boolean skipEventProcessing() {
+      if (isBothComponentsVisibleAndOneOfComponentsShowing()) {
+        return false;
+      }
+      setDragging(false);
+      myGlassPane.setCursor(null, this);
+      return true;
+    }
+
     @Override
     public void mousePressed(MouseEvent e) {
+      if (skipEventProcessing()) {
+        return;
+      }
       setDragging(isInDragZone(e));
       _processMouseEvent(e);
       if (myDragging) {
@@ -114,6 +128,7 @@ public class OnePixelDivider extends Divider {
 
     boolean isInDragZone(MouseEvent e) {
       MouseEvent event = getTargetEvent(e);
+      if (event == null) return false;
       Point p = event.getPoint();
       boolean vertical = isVertical();
       OnePixelDivider d = OnePixelDivider.this;
@@ -124,12 +139,21 @@ public class OnePixelDivider extends Divider {
 
     @Override
     public void mouseReleased(MouseEvent e) {
+      if (skipEventProcessing()) {
+        return;
+      }
       _processMouseEvent(e);
+      if (myDragging) {
+        e.consume();
+      }
       setDragging(false);
     }
 
     @Override
     public void mouseMoved(MouseEvent e) {
+      if (skipEventProcessing() || getTargetEvent(e) == null) {
+        return;
+      }
       OnePixelDivider divider = OnePixelDivider.this;
       if (isInDragZone(e)) {
         myGlassPane.setCursor(divider.getCursor(), divider);
@@ -141,12 +165,17 @@ public class OnePixelDivider extends Divider {
 
     @Override
     public void mouseDragged(MouseEvent e) {
+      if (skipEventProcessing()) {
+        return;
+      }
       _processMouseMotionEvent(e);
     }
+
     @Override
     public double getWeight() {
       return 1;
     }
+
     private void _processMouseMotionEvent(MouseEvent e) {
       MouseEvent event = getTargetEvent(e);
       if (event == null) {
@@ -174,8 +203,31 @@ public class OnePixelDivider extends Divider {
     }
   }
 
-  private MouseEvent getTargetEvent(MouseEvent e) {
-    return SwingUtilities.convertMouseEvent(e.getComponent(), e, this);
+  private boolean isBothComponentsVisibleAndOneOfComponentsShowing() {
+    if (isShowing()) return true;
+
+    if (mySplitter instanceof Splitter splitter) {
+      JComponent first = splitter.getFirstComponent();
+      JComponent second = splitter.getSecondComponent();
+      if (first == null || second == null || !first.isVisible() || !second.isVisible()) return false;
+      if (first.isShowing()) return true;
+      if (second.isShowing()) return true;
+    }
+    return false;
+  }
+
+  private @Nullable MouseEvent getTargetEvent(MouseEvent e) {
+    Component eventComponent = e.getComponent();
+    if (eventComponent == null) return null;
+    Component deepestComponentAt = UIUtil.getDeepestComponentAt(eventComponent, e.getX(), e.getY());
+    if (noDeepestComponent(e, deepestComponentAt)) {
+      return null;
+    }
+    return SwingUtilities.convertMouseEvent(eventComponent, e, this);
+  }
+
+  protected boolean noDeepestComponent(MouseEvent e, @Nullable Component deepestComponentAt) {
+    return deepestComponentAt == null || !SwingUtilities.isDescendingFrom(deepestComponentAt, getParent());
   }
 
   private void init() {
