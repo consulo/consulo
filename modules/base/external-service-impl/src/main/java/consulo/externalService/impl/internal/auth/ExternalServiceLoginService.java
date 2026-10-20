@@ -47,7 +47,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ExternalServiceLoginService {
     private final BuiltInServerManager myBuiltInServerManager;
 
-    private final Map<String, CompletableFuture<String>> myPending = new ConcurrentHashMap<>();
+    private final Map<String, CompletableFuture<HubCredentials>> myPending = new ConcurrentHashMap<>();
 
     @Inject
     public ExternalServiceLoginService(BuiltInServerManager builtInServerManager) {
@@ -60,12 +60,12 @@ public class ExternalServiceLoginService {
      * @return completes with the name of the user once the browser came back, or fails when the login did - cancelling it
      * forgets the request
      */
-    public CompletableFuture<String> login() {
+    public CompletableFuture<HubCredentials> login() {
         String token = RandomStringUtils.secure().nextAlphabetic(48);
 
-        CompletableFuture<String> future = new CompletableFuture<>();
+        CompletableFuture<HubCredentials> future = new CompletableFuture<>();
         myPending.put(token, future);
-        future.whenComplete((userName, error) -> myPending.remove(token));
+        future.whenComplete((credentials, error) -> myPending.remove(token));
 
         String redirectUrl = "http://localhost:" + myBuiltInServerManager.getPort() + "/redirectAuth";
 
@@ -81,17 +81,17 @@ public class ExternalServiceLoginService {
     /**
      * @return whether a login was waiting for this token
      */
-    public boolean complete(String token, @Nullable String userName, @Nullable Throwable error) {
-        CompletableFuture<String> future = myPending.get(token);
+    public boolean complete(String token, @Nullable HubCredentials credentials, @Nullable Throwable error) {
+        CompletableFuture<HubCredentials> future = myPending.get(token);
         if (future == null) {
             return false;
         }
 
-        if (error != null || userName == null) {
+        if (error != null || credentials == null) {
             future.completeExceptionally(error != null ? error : new IllegalStateException("No user"));
         }
         else {
-            future.complete(userName);
+            future.complete(credentials);
         }
         return true;
     }

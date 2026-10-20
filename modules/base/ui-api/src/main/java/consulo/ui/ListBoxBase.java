@@ -16,10 +16,12 @@
 package consulo.ui;
 
 import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
 import consulo.ui.event.ComponentEventListener;
 import consulo.ui.event.ListDoubleClickEvent;
 import consulo.ui.model.FlatDataModel;
 
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 /**
@@ -48,5 +50,12 @@ public interface ListBoxBase<E>
      * cannot be selected; the text the renderer gives it is drawn next to the line as its caption.
      */
     default void isSeparator(Predicate<E> predicate) {
+    }
+
+    /**
+     * The caption of a separator, for a list whose rows are components - by default the caption is the text the
+     * text renderer gives the separator, and a component renderer gives none.
+     */
+    default void setSeparatorCaption(Function<E, LocalizeValue> caption) {
     }
 }

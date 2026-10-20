@@ -80,7 +80,7 @@ public class PasswordSafeConfigurable implements SearchableConfigurable, Project
 
     @Override
     public @Nullable String getParentId() {
-        return StandardConfigurableIds.GENERAL_GROUP;
+        return StandardConfigurableIds.ACCOUNTS_AND_PASSWORDS_GROUP;
     }
 
     private PasswordSafeConfigurableUi createUi() {

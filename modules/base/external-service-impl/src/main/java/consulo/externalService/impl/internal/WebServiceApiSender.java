@@ -16,20 +16,22 @@
 package consulo.externalService.impl.internal;
 
 import com.google.gson.Gson;
+import consulo.accountManagement.AccountConnection;
+import consulo.accountManagement.AccountRequestDecorator;
 import consulo.application.Application;
 import consulo.externalService.ExternalService;
 import consulo.externalService.ExternalServiceConfiguration;
+import consulo.externalService.impl.internal.auth.HubAccounts;
 import consulo.externalService.impl.internal.repository.AuthorizationFailedException;
 import consulo.externalService.impl.internal.repository.NoContentException;
 import consulo.externalService.impl.internal.repository.NotFoundException;
 import consulo.externalService.impl.internal.repository.NotModifiedException;
 import consulo.externalService.localize.ExternalServiceLocalize;
 import consulo.http.adapter.httpclient4.HttpClient4Factory;
-import consulo.util.lang.ObjectUtil;
-import consulo.util.lang.ThreeState;
 import org.jspecify.annotations.Nullable;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
@@ -79,17 +81,13 @@ public class WebServiceApiSender {
                 throw new RuntimeException(e1);
             }
 
-            String oAuthKey = findOAuthKey(serviceApi);
-
-            if (oAuthKey != null) {
-                request.addHeader("Authorization", "Bearer " + oAuthKey);
-            }
+            authorize(serviceApi, request);
 
             return httpClient.execute(request, response -> {
                 int statusCode = response.getStatusLine().getStatusCode();
                 return switch (statusCode) {
                     case HttpURLConnection.HTTP_OK -> EntityUtils.toByteArray(response.getEntity());
-                    case HttpURLConnection.HTTP_UNAUTHORIZED -> throw new AuthorizationFailedException();
+                    case HttpURLConnection.HTTP_UNAUTHORIZED -> throw authorizationFailed();
                     case HttpURLConnection.HTTP_NOT_MODIFIED -> throw new NotModifiedException();
                     case HttpURLConnection.HTTP_NOT_FOUND -> throw new NotFoundException();
                     case HttpURLConnection.HTTP_NO_CONTENT -> throw new NoContentException();
@@ -106,11 +104,7 @@ public class WebServiceApiSender {
             request.setHeader("Content-Type", "application/json");
             request.setEntity(new StringEntity(new Gson().toJson(bean), ContentType.APPLICATION_JSON));
 
-            String oAuthKey = findOAuthKey(serviceApi);
-
-            if (oAuthKey != null) {
-                request.addHeader("Authorization", "Bearer " + oAuthKey);
-            }
+            authorize(serviceApi, request);
 
             return httpClient.execute(request, response -> {
                 int statusCode = response.getStatusLine().getStatusCode();
@@ -120,7 +114,7 @@ public class WebServiceApiSender {
                         return ourGson.fromJson(json, resultType);
                     case 302:
                     case HttpURLConnection.HTTP_UNAUTHORIZED:
-                        throw new AuthorizationFailedException();
+                        throw authorizationFailed();
                     default:
                         throw new WebServiceException(ExternalServiceLocalize.errorHttpResultCode(statusCode).get(), statusCode);
                 }
@@ -128,20 +122,39 @@ public class WebServiceApiSender {
         }
     }
 
-    private static String findOAuthKey(WebServiceApi api) {
+    private static void authorize(WebServiceApi api, HttpRequestBase request) {
         ExternalService service = map(api);
         if (service == null) {
-            return null;
+            return;
         }
 
-        ExternalServiceConfigurationImpl externalServiceConfiguration =
-            (ExternalServiceConfigurationImpl) Application.get().getInstance(ExternalServiceConfiguration.class);
-
-        return switch (externalServiceConfiguration.getState(service)) {
+        ExternalServiceConfiguration configuration = Application.get().getInstance(ExternalServiceConfiguration.class);
+        switch (configuration.getState(service)) {
             case NO -> throw new UnsupportedOperationException("Can't send any data for api: " + api);
-            case YES -> ObjectUtil.notNull(externalServiceConfiguration.getOAuthKey(), "bad-key");
-            default -> null;
-        };
+            case YES -> {
+                AccountConnection connection = Application.get().getInstance(HubAccounts.class).connect();
+                if (connection == null) {
+                    throw new AuthorizationFailedException();
+                }
+                connection.decorate(new AccountRequestDecorator() {
+                    @Override
+                    public void header(String name, String value) {
+                        request.addHeader(name, value);
+                    }
+
+                    @Override
+                    public void queryParameter(String name, String value) {
+                    }
+                });
+            }
+            default -> {
+            }
+        }
+    }
+
+    private static AuthorizationFailedException authorizationFailed() {
+        Application.get().getInstance(HubAccounts.class).markAuthFailed();
+        return new AuthorizationFailedException();
     }
 
     private static @Nullable ExternalService map(WebServiceApi api) {

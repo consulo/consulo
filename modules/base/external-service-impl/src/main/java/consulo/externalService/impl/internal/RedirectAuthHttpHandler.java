@@ -22,15 +22,15 @@ import consulo.application.progress.Task;
 import consulo.builtinWebServer.http.HttpRequest;
 import consulo.builtinWebServer.http.HttpRequestHandler;
 import consulo.builtinWebServer.http.HttpResponse;
-import consulo.externalService.ExternalServiceConfiguration;
 import consulo.externalService.impl.internal.auth.ExternalServiceLoginService;
+import consulo.externalService.impl.internal.auth.HubAccounts;
+import consulo.externalService.impl.internal.auth.HubCredentials;
+import consulo.externalService.impl.internal.auth.HubNotifications;
 import consulo.externalService.impl.internal.repository.api.UserAccount;
 import consulo.externalService.localize.ExternalServiceLocalize;
 import consulo.http.HttpMethod;
 import consulo.http.HttpRequests;
 import consulo.logging.Logger;
-import consulo.ui.MessageBoxes;
-import consulo.ui.UIAccess;
 import consulo.util.io.StreamUtil;
 
 import java.io.IOException;
@@ -74,7 +74,6 @@ public class RedirectAuthHttpHandler extends HttpRequestHandler {
             null,
             ExternalServiceLocalize.taskRequestingOauthToken(),
             indicator -> {
-                UIAccess uiAccess = Application.get().getLastUIAccess();
                 ExternalServiceLoginService loginService = Application.get().getInstance(ExternalServiceLoginService.class);
 
                 try {
@@ -83,24 +82,19 @@ public class RedirectAuthHttpHandler extends HttpRequestHandler {
 
                     OAuthRequestResult requestResult = new Gson().fromJson(json, OAuthRequestResult.class);
 
-                    ExternalServiceConfiguration externalServiceConfiguration =
-                        Application.get().getInstance(ExternalServiceConfiguration.class);
+                    HubCredentials credentials = new HubCredentials(requestResult.userAccount.username, requestResult.token);
 
-                    String username = requestResult.userAccount.username;
-
-                    ((ExternalServiceConfigurationImpl) externalServiceConfiguration).authorize(username, requestResult.token);
-
-                    externalServiceConfiguration.updateIcon();
-
-                    if (!loginService.complete(sharedToken, username, null)) {
-                        uiAccess.give(() -> MessageBoxes.okInfo(ExternalServiceLocalize.messageSuccessfullyLoggedInAs0(username)).showAsync());
+                    if (!loginService.complete(sharedToken, credentials, null)) {
+                        Application.get().getInstance(HubAccounts.class)
+                            .importLegacy(credentials.userName(), credentials.token())
+                            .whenComplete(HubNotifications::loggedIn);
                     }
                 }
                 catch (IOException e) {
                     LOG.warn("Exception while receiving OAuth token", e);
 
                     if (!loginService.complete(sharedToken, null, e)) {
-                        uiAccess.give(() -> MessageBoxes.okError(ExternalServiceLocalize.messageFailedToReceiveOauthToken()).showAsync());
+                        HubNotifications.loggedIn(null, e);
                     }
                 }
             }

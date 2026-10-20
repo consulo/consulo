@@ -248,6 +248,7 @@ public abstract class DesktopQtListBoxBaseImpl<E> extends QtComponentDelegate<QL
     private @Nullable ComponentItemRenderer<E> myComponentRenderer;
 
     private Predicate<E> mySeparatorPredicate = item -> false;
+    private @Nullable Function<E, LocalizeValue> mySeparatorCaption;
 
     private @Nullable Function<E, Length> myItemHeightGetter;
     private LocalizeValue myPlaceholder = LocalizeValue.empty();
@@ -815,6 +816,10 @@ public abstract class DesktopQtListBoxBaseImpl<E> extends QtComponentDelegate<QL
     }
 
     private String separatorCaption(E element) {
+        Function<E, LocalizeValue> caption = mySeparatorCaption;
+        if (caption != null) {
+            return caption.apply(element).get();
+        }
         if (myComponentRenderer != null) {
             return "";
         }
@@ -1037,6 +1042,13 @@ public abstract class DesktopQtListBoxBaseImpl<E> extends QtComponentDelegate<QL
     @Override
     public void isSeparator(Predicate<E> predicate) {
         mySeparatorPredicate = predicate;
+
+        rebuildIfBound();
+    }
+
+    @Override
+    public void setSeparatorCaption(Function<E, LocalizeValue> caption) {
+        mySeparatorCaption = caption;
 
         rebuildIfBound();
     }

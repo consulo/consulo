@@ -468,6 +468,16 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-account-management-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-account-management-impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>consulo-version-control-system-review-api</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -905,6 +915,10 @@
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-avatar-flow</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-badge-flow</artifactId>
         </dependency>
         <dependency>
             <groupId>com.vaadin</groupId>

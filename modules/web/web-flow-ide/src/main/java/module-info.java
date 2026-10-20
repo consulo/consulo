@@ -69,6 +69,7 @@ module consulo.web.ide {
     requires vaadin.aura.theme;
     requires vaadin.breadcrumbs.flow;
     requires vaadin.button.flow;
+    requires vaadin.badge.flow;
     requires vaadin.card.flow;
     requires vaadin.messages.flow;
     requires vaadin.notification.flow;

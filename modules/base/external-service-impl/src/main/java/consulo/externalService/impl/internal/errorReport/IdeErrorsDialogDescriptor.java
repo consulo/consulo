@@ -28,7 +28,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.externalService.ExternalService;
 import consulo.externalService.ExternalServiceConfiguration;
-import consulo.externalService.impl.internal.auth.ExternalServiceLoginService;
+import consulo.externalService.impl.internal.auth.HubAccounts;
 import consulo.externalService.localize.ExternalServiceLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
@@ -591,7 +591,7 @@ public final class IdeErrorsDialogDescriptor extends DialogDescriptor implements
             return;
         }
 
-        String email = getConfiguration().getEmail();
+        String email = Application.get().getInstance(HubAccounts.class).getUserName();
         LocalizeValue text = email == null
             ? ExternalServiceLocalize.diagnosticErrorReportSubmitErrorAnonymously()
             : ExternalServiceLocalize.diagnosticErrorReportSubmitReportAs(XmlStringUtil.escapeText(email));
@@ -600,12 +600,13 @@ public final class IdeErrorsDialogDescriptor extends DialogDescriptor implements
 
     @RequiredUIAccess
     private void login() {
-        if (getConfiguration().getEmail() != null) {
+        HubAccounts hubAccounts = Application.get().getInstance(HubAccounts.class);
+        if (hubAccounts.getActiveAccount() != null) {
             return;
         }
 
         UIAccess uiAccess = UIAccess.current();
-        Application.get().getInstance(ExternalServiceLoginService.class).login().whenCompleteAsync((userName, error) -> {
+        hubAccounts.login().whenCompleteAsync((account, error) -> {
             if (!myClosed) {
                 updateCredentials(getSelectedMessage());
             }

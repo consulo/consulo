@@ -18,15 +18,15 @@ package consulo.externalService.impl.internal;
 import com.dslplatform.json.CompiledJson;
 import consulo.externalService.ExternalService;
 import consulo.util.lang.ThreeState;
+import org.jspecify.annotations.Nullable;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 @CompiledJson
 public class ExternalServiceConfigurationState {
-    public String email;
-    public String oauthKey;
-    public String iconBytes;
+    public @Nullable String email;
+    public @Nullable String oauthKey;
 
     public Map<ExternalService, ThreeState> states = new LinkedHashMap<>();
 }

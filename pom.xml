@@ -222,6 +222,8 @@
     <module>modules/base/remote-server-agent-impl</module>
     <module>modules/base/credential-storage-api</module>
     <module>modules/base/credential-storage-impl</module>
+    <module>modules/base/account-management-api</module>
+    <module>modules/base/account-management-impl</module>
     <module>modules/base/tips-of-day-impl</module>
     <module>modules/base/search-everywhere-api</module>
     <module>modules/base/language-editor-problem-view-api</module>

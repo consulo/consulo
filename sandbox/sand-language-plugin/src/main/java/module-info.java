@@ -8,6 +8,7 @@ module consulo.sand.language.plugin {
     requires java.management;
 
 
+    requires consulo.account.management.api;
     requires consulo.ai.api;
     requires consulo.builtin.web.server.api;
     requires consulo.color.scheme.api;

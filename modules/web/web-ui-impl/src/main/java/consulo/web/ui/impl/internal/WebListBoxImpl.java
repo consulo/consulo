@@ -50,6 +50,7 @@ public class WebListBoxImpl<E> extends WebSingleListComponentBase<E, WebListBoxI
 
     private @Nullable TransferHandler<E> myTransferHandler;
     private Predicate<E> mySeparatorPredicate = item -> false;
+    private @Nullable Function<E, LocalizeValue> mySeparatorCaption;
     private @Nullable ComponentItemRenderer<E> myComponentRenderer;
     private final WebSpeedSearch<E> mySpeedSearch;
     // served straight from META-INF/resources - the theme goes through the vite bundle, which skips rebuilding
@@ -204,6 +205,13 @@ public class WebListBoxImpl<E> extends WebSingleListComponentBase<E, WebListBoxI
         applyRenderer();
     }
 
+    @Override
+    public void setSeparatorCaption(Function<E, LocalizeValue> caption) {
+        mySeparatorCaption = caption;
+
+        applyRenderer();
+    }
+
     protected void applyRenderer() {
         if (myComponentRenderer != null) {
             setRenderer(myComponentRenderer);
@@ -235,6 +243,10 @@ public class WebListBoxImpl<E> extends WebSingleListComponentBase<E, WebListBoxI
     }
 
     private String separatorCaption(E item) {
+        Function<E, LocalizeValue> caption = mySeparatorCaption;
+        if (caption != null) {
+            return caption.apply(item).get();
+        }
         TextItemRenderer<E> renderer = myComponentRenderer == null ? myTextRenderer : null;
         if (renderer == null) {
             return "";

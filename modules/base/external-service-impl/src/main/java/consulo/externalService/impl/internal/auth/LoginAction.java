@@ -15,81 +15,69 @@
  */
 package consulo.externalService.impl.internal.auth;
 
-import consulo.application.Application;
-import consulo.externalService.ExternalServiceConfiguration;
-import consulo.externalService.impl.internal.ExternalServiceConfigurationImpl;
-import consulo.localize.LocalizeValue;
+import consulo.accountManagement.Account;
+import consulo.accountManagement.AccountManager;
 import consulo.externalService.localize.ExternalServiceLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.MessageBoxes;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.LegacyDumbAwareAction;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
+import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.RightAlignedToolbarAction;
 import consulo.ui.image.Image;
-import consulo.util.lang.ObjectUtil;
+import consulo.ui.image.ImageEffects;
 import jakarta.inject.Provider;
 
 /**
  * @author VISTALL
  * @since 2017-03-01
  */
-public class LoginAction extends LegacyDumbAwareAction implements RightAlignedToolbarAction {
-  private final Provider<ExternalServiceConfiguration> myExternalServiceConfigurationProvider;
+public class LoginAction extends DumbAwareAction implements RightAlignedToolbarAction, AnActionWithSyncUpdate {
+    private final Provider<HubAccounts> myHubAccounts;
+    private final Provider<AccountManager> myAccountManager;
 
-  public LoginAction(Provider<ExternalServiceConfiguration> externalServiceConfigurationProvider) {
-    super(LocalizeValue.localizeTODO("Login"), LocalizeValue.empty(), PlatformIconGroup.actionsLoginavatar());
-    myExternalServiceConfigurationProvider = externalServiceConfigurationProvider;
-  }
-
-  @Override
-  public void update(AnActionEvent e) {
-    ExternalServiceConfiguration configuration = myExternalServiceConfigurationProvider.get();
-
-    Presentation presentation = e.getPresentation();
-
-    String email = configuration.getEmail();
-    if (email == null) {
-      presentation.setText("Not authorized…");
-      presentation.setIcon(PlatformIconGroup.actionsLoginavatar());
+    public LoginAction(Provider<HubAccounts> hubAccounts, Provider<AccountManager> accountManager) {
+        super(ExternalServiceLocalize.hubActionLogIn(), LocalizeValue.empty(), PlatformIconGroup.actionsLoginavatar());
+        myHubAccounts = hubAccounts;
+        myAccountManager = accountManager;
     }
-    else {
-      presentation.setText(LocalizeValue.of(email));
 
-      Image userIcon = configuration.getUserIcon();
-      presentation.setIcon(ObjectUtil.notNull(userIcon, PlatformIconGroup.actionsLoginavatar()));
+    @Override
+    public void update(AnActionEvent e) {
+        Presentation presentation = e.getPresentation();
+        Account account = myHubAccounts.get().getActiveAccount();
+        if (account == null) {
+            presentation.setText(ExternalServiceLocalize.hubActionLogIn());
+            presentation.setIcon(PlatformIconGroup.actionsLoginavatar());
+            return;
+        }
+        presentation.setText(LocalizeValue.of(account.getName()));
+        Image avatar = myAccountManager.get().getAvatar(account).get();
+        presentation.setIcon(avatar != null ? ImageEffects.resize(avatar, Image.DEFAULT_ICON_SIZE) : PlatformIconGroup.actionsLoginavatar());
     }
-  }
 
-  @RequiredUIAccess
-  @Override
-  public void actionPerformed(AnActionEvent e) {
-    ExternalServiceConfiguration configuration = myExternalServiceConfigurationProvider.get();
-
-    if(configuration.getEmail() != null) {
-      MessageBoxes.yesNo().asWarning().text(LocalizeValue.localizeTODO("Do logout?")).showAsync().whenComplete((value, error) -> {
-          if (error != null) {
-              return;
-          }
-
-        if(value) {
-          // call internal implementation
-          ((ExternalServiceConfigurationImpl) configuration).reset();
+    @RequiredUIAccess
+    @Override
+    public void actionPerformed(AnActionEvent e) {
+        HubAccounts hubAccounts = myHubAccounts.get();
+        Account account = hubAccounts.getActiveAccount();
+        if (account != null) {
+            String userName = account.getName();
+            MessageBoxes.yesNo()
+                .asWarning()
+                .text(ExternalServiceLocalize.hubLogOutQuestion(userName))
+                .showAsync()
+                .whenComplete((value, error) -> {
+                    if (error == null && Boolean.TRUE.equals(value)) {
+                        hubAccounts.logout().whenComplete((ignored, logoutError) -> HubNotifications.loggedOut(userName));
+                    }
+                });
+            return;
         }
-      });
-    } else {
-      UIAccess uiAccess = UIAccess.current();
-
-      Application.get().getInstance(ExternalServiceLoginService.class).login().whenCompleteAsync((userName, error) -> {
-        if (error != null) {
-          MessageBoxes.okError(ExternalServiceLocalize.messageFailedToReceiveOauthToken()).showAsync();
-        }
-        else {
-          MessageBoxes.okInfo(ExternalServiceLocalize.messageSuccessfullyLoggedInAs0(userName)).showAsync();
-        }
-      }, uiAccess);
+        hubAccounts.login().whenCompleteAsync(HubNotifications::loggedIn, UIAccess.current());
     }
-  }
 }

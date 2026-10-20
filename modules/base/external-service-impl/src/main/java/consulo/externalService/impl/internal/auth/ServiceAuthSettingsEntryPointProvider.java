@@ -16,7 +16,7 @@
 package consulo.externalService.impl.internal.auth;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.externalService.ExternalServiceConfiguration;
+import consulo.accountManagement.AccountManager;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnSeparator;
@@ -32,18 +32,19 @@ import jakarta.inject.Provider;
 public class ServiceAuthSettingsEntryPointProvider implements SettingsEntryPointActionProvider {
     private LoginAction myLoginAction;
 
-    private final Provider<ExternalServiceConfiguration> myExternalServiceConfigurationProvider;
+    private final Provider<HubAccounts> myHubAccounts;
+    private final Provider<AccountManager> myAccountManager;
 
     @Inject
-    public ServiceAuthSettingsEntryPointProvider(Provider<ExternalServiceConfiguration> externalServiceConfigurationProvider) {
-        myExternalServiceConfigurationProvider = externalServiceConfigurationProvider;
+    public ServiceAuthSettingsEntryPointProvider(Provider<HubAccounts> hubAccounts, Provider<AccountManager> accountManager) {
+        myHubAccounts = hubAccounts;
+        myAccountManager = accountManager;
     }
-
     
     @Override
     public AnAction getUpdateActionOrGroup() {
         if (myLoginAction == null) {
-            myLoginAction = new LoginAction(myExternalServiceConfigurationProvider);
+            myLoginAction = new LoginAction(myHubAccounts, myAccountManager);
         }
         return ActionGroup.of(myLoginAction, AnSeparator.create());
     }

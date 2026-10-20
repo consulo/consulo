@@ -392,6 +392,11 @@ public class WebUIInternalImpl extends UIInternal implements UIInternalEx {
     }
 
     @Override
+    public Badge _Components_badge(LocalizeValue text) {
+        return new WebBadgeImpl(text);
+    }
+
+    @Override
     public Avatar _Components_avatar(LocalizeValue name, @Nullable Image image) {
         return new WebAvatarImpl(name, image);
     }

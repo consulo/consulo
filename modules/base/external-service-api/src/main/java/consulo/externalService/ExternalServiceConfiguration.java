@@ -17,10 +17,8 @@ package consulo.externalService;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import consulo.ui.image.Image;
 import consulo.util.lang.ThreeState;
 
-import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -28,14 +26,6 @@ import org.jspecify.annotations.Nullable;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface ExternalServiceConfiguration {
-  @Nullable String getEmail();
-
-  boolean isAuthorized();
-
-  @Nullable Image getUserIcon();
-
-  void updateIcon();
-
   /**
    * @see ThreeState documentation
    * @return state or default state

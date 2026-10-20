@@ -24,6 +24,7 @@ import consulo.disposer.Disposable;
 import consulo.externalService.ExternalService;
 import consulo.externalService.ExternalServiceConfiguration;
 import consulo.externalService.ExternalServiceConfigurationListener;
+import consulo.externalService.impl.internal.auth.HubAccounts;
 import consulo.externalService.impl.internal.statistic.SendPeriod;
 import consulo.externalService.impl.internal.statistic.UsageStatisticsPersistenceComponent;
 import consulo.localize.LocalizeValue;
@@ -98,12 +99,13 @@ public class ExternalServiceConfigurable extends SimpleConfigurableByProperties 
         ExternalServiceConfiguration extService = myExternalServiceConfigurationProvider.get();
         UsageStatisticsPersistenceComponent statistics = myUsageStatisticsPersistenceComponentProvider.get();
 
-        boolean authorized = extService.isAuthorized();
+        String userName = Application.get().getInstance(HubAccounts.class).getUserName();
+        boolean authorized = userName != null;
 
         VerticalLayout layout = VerticalLayout.create();
         layout.add(DockLayout.create()
             .left(Label.create(LocalizeValue.localizeTODO("Account: ")))
-            .right(Label.create(authorized ? LocalizeValue.of(extService.getEmail()) : LocalizeValue.localizeTODO("<none>"))));
+            .right(Label.create(userName != null ? LocalizeValue.of(userName) : LocalizeValue.localizeTODO("<none>"))));
 
         VerticalLayout servicesLayout = VerticalLayout.create();
 

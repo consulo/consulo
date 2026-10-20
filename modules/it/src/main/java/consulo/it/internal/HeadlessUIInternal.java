@@ -542,6 +542,11 @@ public class HeadlessUIInternal extends UIInternal implements UIInternalEx {
     }
 
     @Override
+    public Badge _Components_badge(LocalizeValue text) {
+        return new HeadlessBadge(text);
+    }
+
+    @Override
     public Avatar _Components_avatar(LocalizeValue name, @Nullable Image image) {
         return new HeadlessAvatar(name, image);
     }

@@ -19,8 +19,7 @@ import consulo.application.Application;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.container.plugin.PluginId;
 import consulo.disposer.Disposable;
-import consulo.externalService.ExternalServiceConfiguration;
-import consulo.externalService.impl.internal.auth.ExternalServiceLoginService;
+import consulo.externalService.impl.internal.auth.HubAccounts;
 import consulo.externalService.impl.internal.storage.ExternalStoragePluginManager;
 import consulo.externalService.impl.internal.storage.StoragePlugin;
 import consulo.externalService.impl.internal.storage.StoragePluginState;
@@ -117,13 +116,14 @@ public class LoginStartupCustomizeStep implements StartupCustomizeStep {
         UIAccess uiAccess = UIAccess.current();
         Application application = Application.get();
 
+        HubAccounts hubAccounts = application.getInstance(HubAccounts.class);
         CompletableFuture<?> login;
-        if (application.getInstance(ExternalServiceConfiguration.class).getEmail() != null) {
+        if (hubAccounts.getActiveAccount() != null) {
             login = CompletableFuture.completedFuture(null);
         }
         else {
             setStatus(ExternalServiceLocalize.startupCustomizeLoginWaiting());
-            login = application.getInstance(ExternalServiceLoginService.class).login();
+            login = hubAccounts.login();
         }
 
         return login

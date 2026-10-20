@@ -17,8 +17,6 @@ package consulo.externalService.impl.internal;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
-import consulo.http.HttpRequests;
-import consulo.ui.ex.awt.JBUI;
 import consulo.util.xml.serializer.XmlSerializerUtil;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.RoamingType;
@@ -27,17 +25,13 @@ import consulo.component.persist.Storage;
 import consulo.externalService.ExternalService;
 import consulo.externalService.ExternalServiceConfiguration;
 import consulo.externalService.ExternalServiceConfigurationListener;
+import consulo.externalService.impl.internal.auth.HubAccounts;
 import consulo.logging.Logger;
-import consulo.ui.image.Image;
 import consulo.util.lang.ThreeState;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import org.apache.commons.codec.digest.DigestUtils;
 
-import org.jspecify.annotations.Nullable;
 
-import java.io.IOException;
-import java.util.Base64;
 
 /**
  * @author VISTALL
@@ -51,58 +45,12 @@ public class ExternalServiceConfigurationImpl
     private static final Logger LOG = Logger.getInstance(ExternalServiceConfigurationImpl.class);
 
     private final ExternalServiceConfigurationState myState = new ExternalServiceConfigurationState();
-    private Image myUserIcon;
 
     private final Application myApplication;
 
     @Inject
     public ExternalServiceConfigurationImpl(Application application) {
         myApplication = application;
-    }
-
-    @Override
-    public void updateIcon() {
-        myUserIcon = null;
-
-        String email = myState.email;
-        if (email == null) {
-            myState.iconBytes = null;
-            return;
-        }
-
-        // get node size
-        int size = (int) Math.ceil(Image.DEFAULT_ICON_SIZE * JBUI.sysScale());
-        myApplication.executeOnPooledThread(() -> {
-            String emailHash = DigestUtils.md5Hex(email.toLowerCase().trim());
-
-            try {
-                byte[] bytes = HttpRequests.request("https://www.gravatar.com/avatar/" + emailHash + ".png?s=" + size + "&d=identicon")
-                    .readBytes(null);
-
-                myState.iconBytes = Base64.getEncoder().encodeToString(bytes);
-            }
-            catch (IOException e) {
-                LOG.error(e);
-            }
-        });
-    }
-
-    @Override
-    public @Nullable Image getUserIcon() {
-        if (myUserIcon != null) {
-            return myUserIcon;
-        }
-
-        String iconBytes = myState.iconBytes;
-        if (iconBytes != null) {
-            byte[] bytes = Base64.getDecoder().decode(iconBytes);
-            try {
-                myUserIcon = Image.fromBytes(Image.ImageType.PNG, bytes, Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE);
-            }
-            catch (IOException ignored) {
-            }
-        }
-        return myUserIcon;
     }
 
     @Override
@@ -117,14 +65,30 @@ public class ExternalServiceConfigurationImpl
 
     @Override
     public void afterLoad(boolean first) {
+        migrateLegacyLogin();
+
         myApplication.getMessageBus().syncPublisher(ExternalServiceConfigurationListener.class).configurationChanged(this);
     }
 
-    
+    private void migrateLegacyLogin() {
+        String email = myState.email;
+        String token = myState.oauthKey;
+        if (email == null || token == null) {
+            return;
+        }
+        myState.email = null;
+        myState.oauthKey = null;
+        myApplication.getInstance(HubAccounts.class).importLegacy(email, token).whenComplete((account, error) -> {
+            if (error != null) {
+                LOG.warn("Failed to move the Consulo Hub login of " + email + " to accounts", error);
+            }
+        });
+    }
+
     @Override
     public ThreeState getState(ExternalService externalService) {
         ThreeState state = myState.states.getOrDefault(externalService, externalService.getDefaultState());
-        if (state == ThreeState.YES && !isAuthorized()) {
+        if (state == ThreeState.YES && !myApplication.getInstance(HubAccounts.class).isAuthorized()) {
             return ThreeState.NO;
         }
         return state;
@@ -138,30 +102,5 @@ public class ExternalServiceConfigurationImpl
         else {
             myState.states.put(externalService, state);
         }
-    }
-
-    @Override
-    public @Nullable String getEmail() {
-        return myState.email;
-    }
-
-    public @Nullable String getOAuthKey() {
-        return myState.oauthKey;
-    }
-
-    public void authorize(String email, String token) {
-        myState.email = email;
-        myState.oauthKey = token;
-    }
-
-    @Override
-    public boolean isAuthorized() {
-        return getEmail() != null;
-    }
-
-    public void reset() {
-        myState.email = null;
-        myState.iconBytes = null;
-        myState.oauthKey = null;
     }
 }

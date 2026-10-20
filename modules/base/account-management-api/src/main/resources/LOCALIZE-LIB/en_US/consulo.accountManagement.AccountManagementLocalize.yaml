@@ -1,0 +1,94 @@
+action.add.account:
+    text: Add Account…
+action.allow:
+    text: Allow
+action.generate.token:
+    text: Generate token…
+action.more.info:
+    text: More info
+action.log.out:
+    text: Log Out
+action.relogin:
+    text: Re-login…
+action.set.active:
+    text: Set as Active
+authorize.type.anonymous:
+    text: Anonymous
+authorize.type.api.key:
+    text: API Key
+authorize.type.basic:
+    text: Login and Password
+authorize.type.token:
+    text: Token
+button.log.in:
+    text: Log In
+configurable.display.name:
+    text: Accounts
+configurable.group.display.name:
+    text: Accounts & Passwords
+credential.source.none:
+    text: Nothing stored
+credential.source.password.safe:
+    text: Password storage
+dialog.authorize.title:
+    text: Authorize {0}
+dialog.login.title:
+    text: Log In to {0}
+error.login.failed:
+    text: 'Login failed: {0}'
+error.login.required:
+    text: Login is required
+error.secret.required:
+    text: A value is required
+error.server.required:
+    text: Server is required
+label.api.key:
+    text: 'API key:'
+label.available.integrations:
+    text: Available integrations
+label.authorize.type:
+    text: 'Authorized with:'
+label.credential.source:
+    text: 'Stored in:'
+label.currently.active:
+    text: Currently active
+label.empty.selection:
+    text: Select an account to see its details
+label.features:
+    text: Features
+label.level:
+    text: 'Level:'
+label.logging.in:
+    text: Logging in…
+label.login:
+    text: 'Login:'
+label.no.account:
+    text: No account
+label.no.credentials.needed:
+    text: No credentials are needed.
+label.password:
+    text: 'Password:'
+label.relogin.needed:
+    text: Re-login needed
+label.requested.scopes:
+    text: 'Requested scopes: {0}'
+label.scopes:
+    text: 'Scopes: {0}'
+label.server:
+    text: 'Server:'
+label.token:
+    text: 'Token:'
+level.application:
+    text: Application
+level.project:
+    text: Project
+state.auth.failed:
+    text: Re-login needed
+state.allowed:
+    text: Allowed
+state.authorized:
+    text: Authorized
+state.missing.scopes:
+    text: 'Missing: {0}'
+state.unknown:
+    text: Unknown

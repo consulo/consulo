@@ -79,7 +79,7 @@
 
         <compiler.apt.version>4.1</compiler.apt.version>
 
-        <dsl.json.version>3.0.5</dsl.json.version>
+        <dsl.json.version>3.0.7</dsl.json.version>
 
         <checkstyle.skip>true</checkstyle.skip>
     </properties>
@@ -695,6 +695,11 @@
             <dependency>
                 <groupId>com.vaadin</groupId>
                 <artifactId>vaadin-avatar-flow</artifactId>
+                <version>${vaadin.flow.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.vaadin</groupId>
+                <artifactId>vaadin-badge-flow</artifactId>
                 <version>${vaadin.flow.version}</version>
             </dependency>
             <dependency>

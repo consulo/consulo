@@ -62,6 +62,12 @@
         </dependency>
         <dependency>
             <groupId>consulo</groupId>
+            <artifactId>consulo-account-management-api</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>consulo</groupId>
             <artifactId>consulo-version-control-system-review-api</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>

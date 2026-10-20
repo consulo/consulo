@@ -16,6 +16,7 @@
 package consulo.externalService.impl.internal;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.externalService.impl.internal.auth.HubNotifications;
 import consulo.externalService.impl.internal.update.PlatformOrPluginUpdateChecker;
 import consulo.project.ui.notification.NotificationDisplayType;
 import consulo.project.ui.notification.NotificationGroup;
@@ -39,5 +40,6 @@ public class PlatformOrPluginsNotificationGroupContributor implements Notificati
     public void contribute(Consumer<NotificationGroup> registrator) {
         registrator.accept(ourPluginsLifecycleGroup);
         registrator.accept(PlatformOrPluginUpdateChecker.NOTIFICATION_GROUP);
+        registrator.accept(HubNotifications.GROUP);
     }
 }

@@ -205,6 +205,7 @@ abstract class DesktopListBoxBaseImpl<E, V> extends SwingComponentDelegate<JBLis
     private @Nullable Function<E, String> mySpeedSearchConverter;
     private @Nullable Function<E, Length> myItemHeightGetter;
     private Predicate<E> mySeparatorPredicate = item -> false;
+    private @Nullable Function<E, LocalizeValue> mySeparatorCaption;
 
     protected DesktopListBoxBaseImpl(FlatDataModel<E> model) {
         myModel = model;
@@ -305,6 +306,10 @@ abstract class DesktopListBoxBaseImpl<E, V> extends SwingComponentDelegate<JBLis
     }
 
     private String separatorCaption(E value) {
+        Function<E, LocalizeValue> caption = mySeparatorCaption;
+        if (caption != null) {
+            return caption.apply(value).get();
+        }
         if (myComponentRenderer != null) {
             return "";
         }
@@ -321,6 +326,14 @@ abstract class DesktopListBoxBaseImpl<E, V> extends SwingComponentDelegate<JBLis
         if (isInitialized()) {
             applyRenderer(toAWTComponent());
             applySelectionModel(toAWTComponent());
+        }
+    }
+
+    @Override
+    public void setSeparatorCaption(Function<E, LocalizeValue> caption) {
+        mySeparatorCaption = caption;
+        if (isInitialized()) {
+            applyRenderer(toAWTComponent());
         }
     }
 

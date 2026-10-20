@@ -428,3 +428,25 @@ whatsnew.no.changes.text:
     text: No changes
 whatsnew.platform.text:
     text: Platform
+hub.account.type.name:
+    text: Consulo Hub
+hub.action.log.in:
+    text: Log In to Consulo Hub…
+hub.authorize.hint:
+    text: Consulo Hub opens in your browser. Sign in there and come back.
+hub.authorize.type.browser:
+    text: Browser
+hub.feature.configure:
+    text: Configure…
+hub.feature.developer.list.description:
+    text: Shows the developers an error report can be assigned to
+hub.feature.error.reporting.description:
+    text: Sends error reports under your account, so you can follow them up
+hub.feature.statistics.description:
+    text: Sends anonymous usage statistics under your account
+hub.feature.storage.description:
+    text: Synchronizes your settings and plugins between installations
+hub.log.out.question:
+    text: Log out of Consulo Hub as {0}?
+hub.logged.out:
+    text: Logged out of Consulo Hub as {0}

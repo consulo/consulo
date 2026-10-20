@@ -29,6 +29,7 @@ import com.vaadin.flow.component.dependency.Uses;
 import com.flowingcode.vaadin.addons.xterm.ConsuloPtyTerm;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.details.Details;
+import com.vaadin.flow.component.badge.Badge;
 import com.vaadin.flow.component.card.Card;
 import com.vaadin.flow.component.messages.MessageInput;
 import com.vaadin.flow.component.messages.MessageList;
@@ -98,6 +99,7 @@ import org.vaadin.stefan.table.Table;
 @Uses(Dialog.class)
 @Uses(Notification.class)
 @Uses(Card.class)
+@Uses(Badge.class)
 @Uses(MessageList.class)
 @Uses(MessageInput.class)
 @Uses(Carousel.class)

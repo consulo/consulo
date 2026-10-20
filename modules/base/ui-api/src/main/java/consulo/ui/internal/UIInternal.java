@@ -226,6 +226,10 @@ public abstract class UIInternal {
         throw new UnsupportedOperationException();
     }
 
+    public Badge _Components_badge(LocalizeValue text) {
+        throw new UnsupportedOperationException();
+    }
+
     public Toast _Components_toast() {
         throw new UnsupportedOperationException();
     }
