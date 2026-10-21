@@ -15,6 +15,7 @@
  */
 package consulo.configurable.internal;
 
+import consulo.component.ProcessCanceledException;
 import consulo.configurable.Configurable;
 import consulo.configurable.OptionalConfigurable;
 import consulo.logging.Logger;
@@ -50,6 +51,9 @@ public class ConfigurableExtensionPointUtil {
             try {
                 ConfigurableWrapper wrapped = ConfigurableWrapper.wrapConfigurable(configurable);
                 idToConfigurable.put(configurable.getId(), wrapped);
+            }
+            catch (ProcessCanceledException e) {
+                throw e;
             }
             catch (Throwable t) {
                 LOG.error("Failed to build: " + configurable.getId(), t);

@@ -20,14 +20,16 @@ import consulo.annotation.component.ActionImpl;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.ui.internal.ToolWindowManagerEx;
 import consulo.project.Project;
-import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.LegacyDumbAwareAction;
+import consulo.ui.UIAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithAsyncUpdate;
+import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.Presentation;
+import consulo.util.concurrent.coroutine.Coroutine;
 
 @ActionImpl(id = "JumpToLastWindow")
-public class JumpToLastWindowAction extends LegacyDumbAwareAction {
+public class JumpToLastWindowAction extends DumbAwareAction implements AnActionWithAsyncUpdate {
     public JumpToLastWindowAction() {
         super(ActionLocalize.actionJumptolastwindowText(), ActionLocalize.actionJumptolastwindowDescription());
     }
@@ -45,15 +47,18 @@ public class JumpToLastWindowAction extends LegacyDumbAwareAction {
     }
 
     @Override
-    public void update(AnActionEvent event) {
-        Presentation presentation = event.getPresentation();
-        Project project = event.getData(Project.KEY);
-        if (project == null) {
-            presentation.setEnabled(false);
-            return;
-        }
-        ToolWindowManagerEx manager = (ToolWindowManagerEx) ToolWindowManager.getInstance(project);
-        String id = manager.getLastActiveToolWindowId();
-        presentation.setEnabled(id != null && manager.getToolWindow(id).isAvailable());
+    public Coroutine<?, ?> updateAsync(AnActionEvent event) {
+        return Coroutine.first(UIAction.apply(o -> {
+            Presentation presentation = event.getPresentation();
+            Project project = event.getData(Project.KEY);
+            if (project == null) {
+                presentation.setEnabled(false);
+                return null;
+            }
+            ToolWindowManagerEx manager = ToolWindowManagerEx.getInstanceEx(project);
+            String id = manager.getLastActiveToolWindowId();
+            presentation.setEnabled(id != null && manager.getToolWindow(id).isAvailable());
+            return null;
+        }));
     }
 }

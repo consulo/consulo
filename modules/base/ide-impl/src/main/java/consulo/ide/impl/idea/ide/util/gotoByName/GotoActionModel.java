@@ -6,16 +6,14 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.application.impl.internal.IdeaModalityState;
+import consulo.application.internal.ProgressIndicatorUtils;
 import consulo.application.progress.ProgressIndicator;
-import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.application.ui.UISettings;
 import consulo.application.util.NotNullLazyValue;
-import consulo.application.util.Semaphore;
 import consulo.application.util.VolatileNotNullLazyValue;
 import consulo.application.util.matcher.MatcherTextRange;
 import consulo.application.util.matcher.WordPrefixMatcher;
 import consulo.codeEditor.Editor;
-import consulo.component.ProcessCanceledException;
 import consulo.component.util.localize.BundleBase;
 import consulo.configurable.Configurable;
 import consulo.configurable.SearchableConfigurable;
@@ -46,9 +44,9 @@ import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.ui.style.StyleManager;
 import consulo.util.collection.ArrayUtil;
+import consulo.util.concurrent.coroutine.CoroutineScope;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Comparing;
-import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
@@ -57,6 +55,7 @@ import javax.swing.border.Border;
 import java.awt.*;
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -75,10 +74,11 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
     private final Component myContextComponent;
     private final @Nullable Editor myEditor;
     private @Nullable DataContext myDataContext;
+    private final DataContext myComponentDataContext;
 
     protected final ActionManager myActionManager = ActionManager.getInstance();
 
-    private final Map<AnAction, GroupMapping> myActionGroups = new HashMap<>();
+    private final CompletableFuture<Map<AnAction, GroupMapping>> myActionGroups;
 
     private final NotNullLazyValue<Map<String, String>> myConfigurablesNames = VolatileNotNullLazyValue.createValue(() -> {
         if (SwingUtilities.isEventDispatchThread()) {
@@ -110,15 +110,34 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
         myContextComponent = component;
         myEditor = editor;
         myModality = modalityState;
+        DataManager dataManager = DataManager.getInstance();
+        DataContext componentDataContext = dataManager.getDataContext(component);
+        myComponentDataContext = UIAccess.isUIThread() ? dataManager.createAsyncDataContext(componentDataContext) : componentDataContext;
         ActionGroup mainMenu = (ActionGroup)myActionManager.getActionOrStub(IdeActions.GROUP_MAIN_MENU);
         ActionGroup keymapOthers = (ActionGroup)myActionManager.getActionOrStub("Other.KeymapGroup");
         assert mainMenu != null && keymapOthers != null;
-        collectActions(myActionGroups, mainMenu, emptyList(), false);
 
+        CoroutineScope scope = CoroutineScope.of(Application.get().coroutineContext());
+        if (UIAccess.isUIThread()) {
+            scope.putCopyableUserData(UIAccess.KEY, UIAccess.current());
+        }
+
+        Map<AnAction, GroupMapping> menuActionGroups = new HashMap<>();
         Map<AnAction, GroupMapping> keymapActionGroups = new HashMap<>();
-        collectActions(keymapActionGroups, keymapOthers, emptyList(), true);
-        // Let menu groups have priority over keymap (and do not introduce ambiguity)
-        keymapActionGroups.forEach(myActionGroups::putIfAbsent);
+        myActionGroups = collectActions(scope, menuActionGroups, mainMenu, emptyList(), false)
+            .thenCompose(ignored -> collectActions(scope, keymapActionGroups, keymapOthers, emptyList(), true))
+            .thenApply(ignored -> {
+                // Let menu groups have priority over keymap (and do not introduce ambiguity)
+                keymapActionGroups.forEach(menuActionGroups::putIfAbsent);
+                return menuActionGroups;
+            });
+    }
+
+    private Map<AnAction, GroupMapping> getActionGroups() {
+        if (UIAccess.isUIThread()) {
+            return myActionGroups.getNow(Map.of());
+        }
+        return ProgressIndicatorUtils.awaitWithCheckCanceled(myActionGroups);
     }
 
     @RequiredReadAction
@@ -316,12 +335,11 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
         return ((MatchedValue)o1).compareWeights((MatchedValue)o2);
     }
 
-    public static AnActionEvent updateActionBeforeShow(AnAction anAction, DataContext dataContext) {
+    public static CompletableFuture<Presentation> updateActionBeforeShowAsync(AnAction anAction, DataContext dataContext) {
         Presentation presentation = new Presentation();
         presentation.copyFrom(anAction.getTemplatePresentation());
         AnActionEvent event = AnActionEvent.createFromDataContext(ActionPlaces.ACTION_SEARCH, presentation, dataContext);
-        ActionImplUtil.performDumbAwareUpdate(anAction, event);
-        return event;
+        return ActionImplUtil.performDumbAwareUpdateAsync(anAction, event).thenApply(ignored -> event.getPresentation());
     }
 
     /**
@@ -367,37 +385,53 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
         return myConfigurablesNames.getValue();
     }
 
-    private void collectActions(
+    private CompletableFuture<?> collectActions(
+        CoroutineScope scope,
         Map<AnAction, GroupMapping> actionGroups,
         ActionGroup group,
         List<ActionGroup> path,
         boolean showNonPopupGroups
     ) {
-        AnAction[] actions = group.getChildren(null);
+        return getChildrenAsync(scope, group).thenCompose(actions -> {
+            boolean hasMeaningfulChildren = ContainerUtil.exists(actions, action -> myActionManager.getId(action) != null);
+            if (!hasMeaningfulChildren) {
+                GroupMapping mapping = actionGroups.computeIfAbsent(group, (key) -> new GroupMapping(showNonPopupGroups));
+                mapping.addPath(path);
+            }
 
-        boolean hasMeaningfulChildren = ContainerUtil.exists(actions, action -> myActionManager.getId(action) != null);
-        if (!hasMeaningfulChildren) {
-            GroupMapping mapping = actionGroups.computeIfAbsent(group, (key) -> new GroupMapping(showNonPopupGroups));
-            mapping.addPath(path);
-        }
+            List<ActionGroup> newPath = ContainerUtil.concat(path, Arrays.asList(group));
+            CompletableFuture<?> chain = CompletableFuture.completedFuture(null);
+            for (AnAction action : actions) {
+                if (action == null || action instanceof AnSeparator) {
+                    continue;
+                }
+                if (action instanceof ActionGroup actionGroup) {
+                    chain = chain.thenCompose(ignored -> collectActions(scope, actionGroups, actionGroup, newPath, showNonPopupGroups));
+                }
+                else {
+                    chain = chain.thenRun(() -> {
+                        GroupMapping mapping = actionGroups.computeIfAbsent(action, (key) -> new GroupMapping(showNonPopupGroups));
+                        mapping.addPath(newPath);
+                    });
+                }
+            }
+            return chain;
+        });
+    }
 
-        List<ActionGroup> newPath = ContainerUtil.concat(path, Arrays.asList(group));
-        for (AnAction action : actions) {
-            if (action == null || action instanceof AnSeparator) {
-                continue;
-            }
-            if (action instanceof ActionGroup actionGroup) {
-                collectActions(actionGroups, actionGroup, newPath, showNonPopupGroups);
-            }
-            else {
-                GroupMapping mapping = actionGroups.computeIfAbsent(action, (key) -> new GroupMapping(showNonPopupGroups));
-                mapping.addPath(newPath);
-            }
-        }
+    private static CompletableFuture<List<AnAction>> getChildrenAsync(CoroutineScope scope, ActionGroup group) {
+        return group.getChildrenAsync(null)
+            .runAsync(scope, null)
+            .toFuture()
+            .<List<AnAction>>thenApply(children -> children == null ? List.of() : children)
+            .exceptionally(e -> {
+                LOG.error("Failed to collect children of " + group.getClass().getName(), e);
+                return List.of();
+            });
     }
 
     @Nullable GroupMapping getGroupMapping(AnAction action) {
-        return myActionGroups.get(action);
+        return getActionGroups().get(action);
     }
 
     @Override
@@ -435,7 +469,7 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
             return MatchMode.NONE;
         }
 
-        GroupMapping groupMapping = myActionGroups.get(anAction);
+        GroupMapping groupMapping = getActionGroups().get(anAction);
         if (groupMapping != null) {
             for (String groupName : groupMapping.getAllGroupNames()) {
                 if (matcher.matches(groupName + " " + text)) {
@@ -469,37 +503,13 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
 
     public DataContext getDataContext() {
         DataContext dataContext = myDataContext;
-        return dataContext != null ? dataContext : DataManager.getInstance().getDataContext(myContextComponent);
+        return dataContext != null ? dataContext : myComponentDataContext;
     }
 
     public SortedSet<Object> sortItems(Set<Object> elements) {
         TreeSet<Object> objects = new TreeSet<>(this);
         objects.addAll(elements);
         return objects;
-    }
-
-    private void updateOnEdt(Runnable update) {
-        Semaphore semaphore = new Semaphore(1);
-        ProgressIndicator indicator = ProgressIndicatorProvider.getGlobalProgressIndicator();
-        Application.get().invokeLater(
-            () -> {
-                try {
-                    update.run();
-                }
-                finally {
-                    semaphore.up();
-                }
-            },
-            myModality,
-            () -> indicator != null && indicator.isCanceled()
-        );
-
-        while (!semaphore.waitFor(10)) {
-            if (indicator != null && indicator.isCanceled()) {
-                // don't use `checkCanceled` because some smart devs might suppress PCE and end up with a deadlock like IDEA-177788
-                throw new ProcessCanceledException();
-            }
-        }
     }
 
     public enum MatchMode {
@@ -563,19 +573,22 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
             return path != null ? getPathName(path) : null;
         }
 
-        private void updateBeforeShow(DataContext context) {
+        private CompletableFuture<?> updateBeforeShowAsync(DataContext context) {
             if (myBestNameComputed) {
-                return;
+                return CompletableFuture.completedFuture(null);
             }
-            myBestNameComputed = true;
+            return findActualPathName(context, 0).thenAccept(name -> {
+                myBestGroupName = name;
+                myBestNameComputed = true;
+            });
+        }
 
-            for (List<ActionGroup> path : myPaths) {
-                String name = getActualPathName(path, context);
-                if (name != null) {
-                    myBestGroupName = name;
-                    return;
-                }
+        private CompletableFuture<@Nullable String> findActualPathName(DataContext context, int index) {
+            if (index >= myPaths.size()) {
+                return CompletableFuture.completedFuture(null);
             }
+            return getActualPathNameAsync(myPaths.get(index), context, 0, "").thenCompose(name ->
+                name != null ? CompletableFuture.completedFuture(name) : findActualPathName(context, index + 1));
         }
 
         public List<String> getAllGroupNames() {
@@ -590,16 +603,22 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
             return StringUtil.nullize(name);
         }
 
-        private @Nullable String getActualPathName(List<? extends ActionGroup> path, DataContext context) {
-            String name = "";
-            for (ActionGroup group : path) {
-                Presentation presentation = updateActionBeforeShow(group, context).getPresentation();
-                if (!presentation.isVisible()) {
-                    return null;
-                }
-                name = appendGroupName(name, group, presentation);
+        private CompletableFuture<@Nullable String> getActualPathNameAsync(
+            List<? extends ActionGroup> path,
+            DataContext context,
+            int index,
+            String name
+        ) {
+            if (index >= path.size()) {
+                return CompletableFuture.completedFuture(StringUtil.nullize(name));
             }
-            return StringUtil.nullize(name);
+            ActionGroup group = path.get(index);
+            return updateActionBeforeShowAsync(group, context).thenCompose(presentation -> {
+                if (!presentation.isVisible()) {
+                    return CompletableFuture.completedFuture(null);
+                }
+                return getActualPathNameAsync(path, context, index + 1, appendGroupName(name, group, presentation));
+            });
         }
 
         
@@ -635,7 +654,8 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
         private final @Nullable GroupMapping myGroupMapping;
         private final DataContext myDataContext;
         private final GotoActionModel myModel;
-        private volatile Presentation myPresentation;
+        private volatile @Nullable Presentation myPresentation;
+        private @Nullable CompletableFuture<Presentation> myPresentationFuture;
 
         public ActionWrapper(
             AnAction action,
@@ -700,23 +720,39 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
         }
 
         public Presentation getPresentation() {
-            if (myPresentation != null) {
-                return myPresentation;
-            }
-            Runnable r = () -> {
-                myPresentation = updateActionBeforeShow(myAction, myDataContext).getPresentation();
-                if (myGroupMapping != null) {
-                    myGroupMapping.updateBeforeShow(myDataContext);
-                }
-            };
-            if (UIAccess.isUIThread()) {
-                r.run();
-            }
-            else {
-                myModel.updateOnEdt(r);
+            Presentation presentation = myPresentation;
+            if (presentation != null) {
+                return presentation;
             }
 
-            return ObjectUtil.notNull(myPresentation, myAction.getTemplatePresentation());
+            CompletableFuture<Presentation> future = updatePresentationAsync();
+            if (UIAccess.isUIThread()) {
+                return future.getNow(myAction.getTemplatePresentation());
+            }
+            return ProgressIndicatorUtils.awaitWithCheckCanceled(future);
+        }
+
+        private synchronized CompletableFuture<Presentation> updatePresentationAsync() {
+            CompletableFuture<Presentation> future = myPresentationFuture;
+            if (future == null) {
+                future = updateActionBeforeShowAsync(myAction, myDataContext)
+                    .thenCompose(presentation -> {
+                        CompletableFuture<?> groupUpdate = myGroupMapping == null
+                            ? CompletableFuture.completedFuture(null)
+                            : myGroupMapping.updateBeforeShowAsync(myDataContext);
+                        return groupUpdate.thenApply(ignored -> presentation);
+                    })
+                    .exceptionally(e -> {
+                        LOG.error("Failed to update " + myAction.getClass().getName(), e);
+                        return myAction.getTemplatePresentation();
+                    })
+                    .thenApply(presentation -> {
+                        myPresentation = presentation;
+                        return presentation;
+                    });
+                myPresentationFuture = future;
+            }
+            return future;
         }
 
         private boolean hasPresentation() {

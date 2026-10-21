@@ -22,13 +22,16 @@ import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.LegacyDumbAwareAction;
+import consulo.ui.UIAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithAsyncUpdate;
+import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.Presentation;
 import consulo.undoRedo.CommandProcessor;
+import consulo.util.concurrent.coroutine.Coroutine;
 
 @ActionImpl(id = "NextSplitter")
-public class NextSplitAction extends LegacyDumbAwareAction {
+public class NextSplitAction extends DumbAwareAction implements AnActionWithAsyncUpdate {
     public NextSplitAction() {
         super(ActionLocalize.actionNextsplitterText(), ActionLocalize.actionNextsplitterDescription());
     }
@@ -47,17 +50,20 @@ public class NextSplitAction extends LegacyDumbAwareAction {
     }
 
     @Override
-    public void update(AnActionEvent event) {
-        Project project = event.getData(Project.KEY);
-        Presentation presentation = event.getPresentation();
-        if (project == null) {
-            presentation.setEnabled(false);
-            return;
-        }
-        FileEditorManagerEx manager = FileEditorManagerEx.getInstanceEx(project);
-        ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
-        presentation.setEnabled(
-            toolWindowManager.isEditorComponentActive() && manager.isInSplitter() && manager.getCurrentWindow() != null
-        );
+    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
+        return Coroutine.first(UIAction.apply(o -> {
+            Project project = e.getData(Project.KEY);
+            Presentation presentation = e.getPresentation();
+            if (project == null) {
+                presentation.setEnabled(false);
+                return null;
+            }
+            FileEditorManagerEx manager = FileEditorManagerEx.getInstanceEx(project);
+            ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
+            presentation.setEnabled(
+                toolWindowManager.isEditorComponentActive() && manager.isInSplitter() && manager.getCurrentWindow() != null
+            );
+            return null;
+        }));
     }
 }

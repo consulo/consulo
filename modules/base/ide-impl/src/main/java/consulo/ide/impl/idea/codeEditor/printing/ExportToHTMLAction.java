@@ -24,9 +24,9 @@ import consulo.platform.base.localize.ActionLocalize;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.AnActionWithAsyncUpdate;
-import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
 import consulo.util.concurrent.coroutine.Coroutine;
@@ -35,7 +35,7 @@ import javax.swing.*;
 import java.io.FileNotFoundException;
 
 @ActionImpl(id = "ExportToHTML")
-public class ExportToHTMLAction extends LegacyAnAction implements AnActionWithAsyncUpdate {
+public class ExportToHTMLAction extends AnAction implements AnActionWithAsyncUpdate {
     public ExportToHTMLAction() {
         super(ActionLocalize.actionExporttohtmlText(), ActionLocalize.actionExporttohtmlDescription());
     }
@@ -58,17 +58,6 @@ public class ExportToHTMLAction extends LegacyAnAction implements AnActionWithAs
                 JOptionPane.ERROR_MESSAGE
             );
         }
-    }
-
-    @Override
-    public void update(AnActionEvent e) {
-        Presentation presentation = e.getPresentation();
-        if (e.getData(PsiElement.KEY) instanceof PsiDirectory) {
-            presentation.setEnabled(true);
-            return;
-        }
-        PsiFile psiFile = e.getData(PsiFile.KEY);
-        presentation.setEnabled(psiFile != null && psiFile.getContainingDirectory() != null);
     }
 
     @Override

@@ -369,6 +369,9 @@ class ShortcutPresenter implements Disposable {
     }
 
     private void fillParentNames(ActionGroup group, LocalizeValue parentName) {
+        if (group instanceof AsyncActionGroup) {
+            return;
+        }
         ActionManager actionManager = ActionManager.getInstance();
         for (AnAction item : group.getChildren(null)) {
             if (item instanceof ActionGroup actionGroup) {

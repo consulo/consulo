@@ -20,13 +20,16 @@ import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.ui.internal.ToolWindowManagerEx;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.LegacyDumbAwareAction;
+import consulo.ui.UIAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithAsyncUpdate;
+import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.internal.ToolWindowEx;
+import consulo.util.concurrent.coroutine.Coroutine;
 
 @ActionImpl(id = "HideSideWindows")
-public class HideSideWindowsAction extends LegacyDumbAwareAction {
+public class HideSideWindowsAction extends DumbAwareAction implements AnActionWithAsyncUpdate {
     public HideSideWindowsAction() {
         super(ActionLocalize.actionHidesidewindowsText(), ActionLocalize.actionHidesidewindowsDescription());
     }
@@ -44,28 +47,31 @@ public class HideSideWindowsAction extends LegacyDumbAwareAction {
     }
 
     @Override
-    public void update(AnActionEvent event) {
-        Presentation presentation = event.getPresentation();
-        Project project = event.getData(Project.KEY);
-        if (project == null) {
-            presentation.setEnabled(false);
-            return;
-        }
+    public Coroutine<?, ?> updateAsync(AnActionEvent event) {
+        return Coroutine.first(UIAction.apply(o -> {
+            Presentation presentation = event.getPresentation();
+            Project project = event.getData(Project.KEY);
+            if (project == null) {
+                presentation.setEnabled(false);
+                return null;
+            }
 
-        ToolWindowManagerEx toolWindowManager = ToolWindowManagerEx.getInstanceEx(project);
-        String id = toolWindowManager.getActiveToolWindowId();
-        if (id != null) {
-            presentation.setEnabled(true);
-            return;
-        }
+            ToolWindowManagerEx toolWindowManager = ToolWindowManagerEx.getInstanceEx(project);
+            String id = toolWindowManager.getActiveToolWindowId();
+            if (id != null) {
+                presentation.setEnabled(true);
+                return null;
+            }
 
-        id = toolWindowManager.getLastActiveToolWindowId();
-        if (id == null) {
-            presentation.setEnabled(false);
-            return;
-        }
+            id = toolWindowManager.getLastActiveToolWindowId();
+            if (id == null) {
+                presentation.setEnabled(false);
+                return null;
+            }
 
-        ToolWindowEx toolWindow = (ToolWindowEx)toolWindowManager.getToolWindow(id);
-        presentation.setEnabled(toolWindow.isVisible());
+            ToolWindowEx toolWindow = (ToolWindowEx)toolWindowManager.getToolWindow(id);
+            presentation.setEnabled(toolWindow.isVisible());
+            return null;
+        }));
     }
 }

@@ -33,9 +33,9 @@ import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.project.ProjectPropertiesComponent;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.AnActionWithAsyncUpdate;
-import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
 import consulo.ui.image.Image;
 import consulo.util.concurrent.coroutine.Coroutine;
@@ -48,7 +48,7 @@ import java.util.Map;
 /**
  * @author Eugene.Kudelevsky
  */
-public abstract class CreateFromTemplateAction<T extends PsiElement> extends LegacyAnAction implements AnActionWithAsyncUpdate {
+public abstract class CreateFromTemplateAction<T extends PsiElement> extends AnAction implements AnActionWithAsyncUpdate {
     protected static final Logger LOG = Logger.getInstance(CreateFromTemplateAction.class);
 
     @Deprecated
@@ -126,11 +126,6 @@ public abstract class CreateFromTemplateAction<T extends PsiElement> extends Leg
 
     protected @Nullable String getDefaultTemplateProperty() {
         return null;
-    }
-
-    @Override
-    public final void update(AnActionEvent e) {
-        throw new AbstractMethodError();
     }
 
     @Override
