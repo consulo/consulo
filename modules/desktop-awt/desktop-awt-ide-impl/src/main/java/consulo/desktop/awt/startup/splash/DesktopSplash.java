@@ -19,7 +19,6 @@ import consulo.application.ApplicationProperties;
 import consulo.application.internal.StartupProgress;
 import consulo.desktop.awt.ui.impl.window.JDialogAsUIWindow;
 import consulo.platform.Platform;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.JBDimension;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
@@ -29,12 +28,16 @@ import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.plaf.RootPaneUI;
 import java.awt.*;
+import java.awt.geom.RoundRectangle2D;
 
 /**
  * @author Konstantin Bulenkov
  */
 public class DesktopSplash extends JDialogAsUIWindow implements StartupProgress {
     public static @Nullable Rectangle BOUNDS;
+
+    private static final int CORNER_RADIUS = 24;
+    private static final String WINDOW_CORNER_RADIUS = "apple.awt.windowCornerRadius";
 
     private final AnimatedLogoLabel myLabel;
 
@@ -60,16 +63,50 @@ public class DesktopSplash extends JDialogAsUIWindow implements StartupProgress 
         Color foreground = ApplicationProperties.isInSandbox() ? Color.WHITE : Color.BLACK;
         myLabel = new AnimatedLogoLabel(14, foreground, true, unstableScaling);
 
-        Container contentPane = getContentPane();
-        contentPane.setBackground(Color.LIGHT_GRAY);
         JBDimension dimension = JBUI.size(602, 294);
+        JPanel contentPane = new JPanel(new BorderLayout()) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                if (isOpaque()) {
+                    super.paintComponent(g);
+                    return;
+                }
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setComposite(AlphaComposite.Clear);
+                g2.fillRect(0, 0, getWidth(), getHeight());
+                g2.setComposite(AlphaComposite.SrcOver);
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setColor(getBackground());
+                int arc = JBUI.scale(CORNER_RADIUS) * 2;
+                g2.fill(new RoundRectangle2D.Float(0, 0, getWidth(), getHeight(), arc, arc));
+                g2.dispose();
+            }
+        };
+        contentPane.setBackground(Color.LIGHT_GRAY);
         contentPane.setPreferredSize(dimension);
-        contentPane.setLayout(new BorderLayout());
         contentPane.add(myLabel, BorderLayout.SOUTH);
+        setContentPane(contentPane);
+        roundCorners(contentPane);
         Dimension size = getPreferredSize();
         setSize(size);
         pack();
         setLocationInTheCenterOfScreen(dimension);
+    }
+
+    private void roundCorners(JPanel contentPane) {
+        if ("sun.awt.wl.WLToolkit".equals(Toolkit.getDefaultToolkit().getClass().getName())) {
+            getRootPane().putClientProperty(WINDOW_CORNER_RADIUS, "full");
+            return;
+        }
+        if (Platform.current().os().isMac()) {
+            getRootPane().putClientProperty(WINDOW_CORNER_RADIUS, (float) CORNER_RADIUS);
+            return;
+        }
+        GraphicsDevice device = getGraphicsConfiguration().getDevice();
+        if (device.isWindowTranslucencySupported(GraphicsDevice.WindowTranslucency.PERPIXEL_TRANSLUCENT)) {
+            setBackground(new Color(0, 0, 0, 0));
+            contentPane.setOpaque(false);
+        }
     }
 
     private void setLocationInTheCenterOfScreen(Dimension size) {
@@ -91,23 +128,9 @@ public class DesktopSplash extends JDialogAsUIWindow implements StartupProgress 
     @Override
     @SuppressWarnings("deprecation")
     public void show() {
-        myLabel.start();
-
         super.show();
         toFront();
         BOUNDS = getBounds();
-    }
-
-    @Override
-    @RequiredUIAccess
-    public void dispose() {
-        stopAnimation();
-        myLabel.dispose();
-        super.dispose();
-    }
-
-    public void stopAnimation() {
-        myLabel.stop();
     }
 
     @Override

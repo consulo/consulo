@@ -67,7 +67,6 @@ public class ShowSplashAction extends DumbAwareAction {
 
     private void close() {
       if (mySplash.isVisible()) {
-        mySplash.stopAnimation();
         myTask.cancel(false);
         mySplash.setVisible(false);
       }
