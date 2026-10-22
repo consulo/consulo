@@ -33,16 +33,6 @@ import java.util.Map;
  */
 public class Main {
     public static void main(String[] args) {
-        ShowError.INSTANCE = new ShowError() {
-            @Override
-            public void showErrorDialogImpl(String title, String message, Throwable t) {
-                System.err.println(title + ": " + message);
-                if (t != null) {
-                    t.printStackTrace();
-                }
-            }
-        };
-
         String javaRuntimeError = ExitCodes.validateJavaRuntime();
         if (javaRuntimeError != null) {
             ShowErrorCaller.showErrorDialog("Unsupported Java Version", javaRuntimeError, null);

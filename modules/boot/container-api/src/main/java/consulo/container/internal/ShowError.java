@@ -23,7 +23,6 @@ public abstract class ShowError {
   public static ShowError INSTANCE = new ShowError() {
     @Override
     public void showErrorDialogImpl(String title, String message, Throwable t) {
-
     }
   };
 

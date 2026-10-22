@@ -113,7 +113,6 @@ public final class DesktopImportantFolderLocker implements ImportantFolderLocker
     }
 
     @Override
-    
     public ActivateStatus lock(String[] args) throws Exception {
         log("enter: lock(config=%s system=%s)", myConfigPath, mySystemPath);
 

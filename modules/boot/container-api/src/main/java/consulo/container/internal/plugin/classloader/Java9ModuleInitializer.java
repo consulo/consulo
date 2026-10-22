@@ -93,6 +93,7 @@ public class Java9ModuleInitializer {
         containerApi.addExports("consulo.container", proxy);
 
         containerApi.addExports("consulo.container.internal", applicationApi);
+        containerApi.addExports("consulo.container.internal", applicationImpl);
         containerApi.addExports("consulo.container.internal", externalServiceImpl);
         
         containerApi.addExports("consulo.container.internal.plugin", applicationApi);
