@@ -636,6 +636,10 @@ run.configuration.exit.action.name:
     text: Exit
 run.configuration.folder.name.label:
     text: 'Folder &name:'
+run.configuration.fragment.compound.configurations:
+    text: Configurations to run
+run.configuration.fragment.module:
+    text: Module
 run.configuration.java.vm.parameters.label:
     text: '&VM options:'
 run.configuration.new.folder.name:
@@ -917,3 +921,45 @@ warning.common.title:
     text: Warning
 label.run.on:
     text: 'Run on:'
+run.configuration.add.group.options:
+    text: Add {0} Options
+run.configuration.modify.options:
+    text: Modify options
+run.configuration.fragment.program.parameters:
+    text: Program arguments
+run.configuration.fragment.working.directory:
+    text: Working directory
+run.configuration.fragment.environment:
+    text: Environment variables
+run.configuration.fragment.logs:
+    text: Logs
+run.configuration.fragment.allow.multiple.instances:
+    text: Allow multiple instances
+run.configuration.fragment.group.operating.system:
+    text: Operating System
+run.configuration.fragment.group.run:
+    text: Run
+run.configuration.fragment.remove:
+    text: Remove
+run.configuration.fragment.run.on:
+    text: Run on
+run.configuration.fragment.edit.before.run:
+    text: Show the run configuration settings before start
+run.configuration.fragment.group.before.launch:
+    text: Before Launch
+run.configuration.before.run.configure.task:
+    text: Configure...
+run.configuration.before.run.add.task.with:
+    text: Add {0}
+run.configuration.fragment.logs.files:
+    text: Specify logs to be shown in the console
+run.configuration.fragment.logs.save.output:
+    text: Save console output to file
+run.configuration.fragment.logs.settings:
+    text: Logs settings
+run.configuration.fragment.logs.stderr:
+    text: Show console when a message is printed to stderr
+run.configuration.fragment.logs.stdout:
+    text: Show console when a message is printed to stdout
+run.configuration.modify:
+    text: Modify

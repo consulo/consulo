@@ -17,6 +17,8 @@ package consulo.execution.configuration;
 
 import consulo.content.platform.PlatformTarget;
 import consulo.content.platform.PlatformTargetManager;
+import consulo.execution.configuration.fragment.FragmentStateHolder;
+import consulo.execution.configuration.fragment.PlatformTargetFragmentState;
 import consulo.platform.Platform;
 import consulo.process.ExecutionException;
 import consulo.project.localize.ProjectLocalize;
@@ -26,10 +28,14 @@ import org.jspecify.annotations.Nullable;
  * A run profile which can run on another machine. The chosen machine is a {@link PlatformTarget} id, stored with the
  * profile; null runs it locally.
  */
-public interface PlatformAwareRunProfile extends RunProfile {
-    @Nullable String getPlatformTargetId();
+public interface PlatformAwareRunProfile extends RunProfile, FragmentStateHolder {
+    default @Nullable String getPlatformTargetId() {
+        return getFragmentState(PlatformTargetFragmentState.class).getTargetId();
+    }
 
-    void setPlatformTargetId(@Nullable String targetId);
+    default void setPlatformTargetId(@Nullable String targetId) {
+        getFragmentState(PlatformTargetFragmentState.class).setTargetId(targetId);
+    }
 
     /**
      * The platform to run on. The execution manager connects the target before a run starts; a target that is still

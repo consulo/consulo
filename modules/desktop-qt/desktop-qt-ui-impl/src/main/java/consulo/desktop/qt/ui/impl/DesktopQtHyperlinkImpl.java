@@ -28,6 +28,8 @@ import consulo.util.lang.xml.XmlStringUtil;
 import io.qt.core.QEvent;
 import io.qt.core.QObject;
 import io.qt.core.Qt;
+import consulo.platform.base.icon.PlatformIconGroup;
+import io.qt.gui.QCursor;
 import io.qt.widgets.QHBoxLayout;
 import io.qt.widgets.QLabel;
 import io.qt.widgets.QWidget;
@@ -44,9 +46,11 @@ public class DesktopQtHyperlinkImpl extends QtComponentDelegate<QWidget> impleme
     private @Nullable String mySearchHighlight;
     private boolean myUnderline;
     private boolean myHovered;
+    private boolean myDropDown;
 
     private @Nullable DesktopQtImageWidget myIconLabel;
     private @Nullable QLabel myTextLabel;
+    private @Nullable DesktopQtImageWidget myDropDownLabel;
 
     public DesktopQtHyperlinkImpl(LocalizeValue text) {
         myText = text;
@@ -93,6 +97,23 @@ public class DesktopQtHyperlinkImpl extends QtComponentDelegate<QWidget> impleme
                 .onEvent(new HyperlinkEvent(DesktopQtHyperlinkImpl.this, "", DesktopQtCurrentInput.current(myTextLabel)))
         );
 
+        myDropDownLabel = new DesktopQtImageWidget(component);
+        myDropDownLabel.setImage(PlatformIconGroup.generalLinkdroptriangle());
+        myDropDownLabel.setVisible(myDropDown);
+        myDropDownLabel.setCursor(new QCursor(Qt.CursorShape.PointingHandCursor));
+        myDropDownLabel.installEventFilter(new QObject(myDropDownLabel) {
+            @Override
+            public boolean eventFilter(@Nullable QObject watched, @Nullable QEvent event) {
+                if (event != null && event.type() == QEvent.Type.MouseButtonRelease) {
+                    getListenerDispatcher(HyperlinkEvent.class)
+                        .onEvent(new HyperlinkEvent(DesktopQtHyperlinkImpl.this, "", DesktopQtCurrentInput.current(myDropDownLabel)));
+                    return true;
+                }
+                return false;
+            }
+        });
+        layout.addWidget(myDropDownLabel);
+
         updateIcon();
     }
 
@@ -124,6 +145,13 @@ public class DesktopQtHyperlinkImpl extends QtComponentDelegate<QWidget> impleme
             case UNDERLINE -> {
                 myUnderline = true;
                 updateHtml();
+            }
+            case DROP_DOWN -> {
+                myDropDown = true;
+                DesktopQtImageWidget dropDownLabel = myDropDownLabel;
+                if (dropDownLabel != null && !dropDownLabel.isDisposed()) {
+                    dropDownLabel.setVisible(true);
+                }
             }
         }
     }
@@ -180,6 +208,10 @@ public class DesktopQtHyperlinkImpl extends QtComponentDelegate<QWidget> impleme
         if (myIcon != null) {
             updateIcon();
         }
+        DesktopQtImageWidget dropDownLabel = myDropDownLabel;
+        if (dropDownLabel != null && !dropDownLabel.isDisposed()) {
+            dropDownLabel.setImage(PlatformIconGroup.generalLinkdroptriangle());
+        }
     }
 
     @Override
@@ -191,6 +223,7 @@ public class DesktopQtHyperlinkImpl extends QtComponentDelegate<QWidget> impleme
     public void disposeQt() {
         myIconLabel = null;
         myTextLabel = null;
+        myDropDownLabel = null;
 
         super.disposeQt();
     }

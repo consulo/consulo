@@ -20,7 +20,6 @@ import consulo.execution.RunManager;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.image.Image;
-import consulo.util.dataholder.Key;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Comparator;
@@ -114,10 +113,9 @@ public abstract class ConfigurationFactory {
     /**
      * In this method you can configure defaults for the task, which are preferable to be used for your particular configuration type
      *
-     * @param providerID
-     * @param task
+     * @param task a new task; its class tells which {@link consulo.execution.BeforeRunFragment} created it
      */
-    public void configureBeforeRunTaskDefaults(Key<? extends BeforeRunTask> providerID, BeforeRunTask task) {
+    public void configureBeforeRunTaskDefaults(BeforeRunTask task) {
     }
 
     public boolean isConfigurationSingletonByDefault() {

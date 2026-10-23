@@ -23,7 +23,6 @@ import consulo.execution.configuration.ConfigurationType;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.project.Project;
 import consulo.ui.image.Image;
-import consulo.util.dataholder.Key;
 
 import org.jspecify.annotations.Nullable;
 import java.util.Collection;
@@ -69,10 +68,10 @@ public abstract class RunManagerEx extends RunManager {
   public abstract void setBeforeRunTasks(RunConfiguration runConfiguration, List<BeforeRunTask> tasks, boolean addEnabledTemplateTasksIfAbsent);
 
   
-  public abstract <T extends BeforeRunTask> List<T> getBeforeRunTasks(RunConfiguration settings, Key<T> taskProviderID);
+  public abstract <T extends BeforeRunTask> List<T> getBeforeRunTasks(RunConfiguration settings, Class<T> taskClass);
 
   
-  public abstract <T extends BeforeRunTask> List<T> getBeforeRunTasks(Key<T> taskProviderID);
+  public abstract <T extends BeforeRunTask> List<T> getBeforeRunTasks(Class<T> taskClass);
 
   public abstract RunnerAndConfigurationSettings findConfigurationByName(@Nullable String name);
 

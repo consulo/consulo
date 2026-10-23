@@ -17,6 +17,7 @@ package consulo.externalSystem.service.execution;
 
 import consulo.configurable.ConfigurationException;
 import consulo.externalSystem.ExternalSystemManager;
+import consulo.execution.configuration.fragment.RunConfigurationFragmentLayout;
 import consulo.externalSystem.localize.ExternalSystemLocalize;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.model.execution.ExternalSystemTaskExecutionSettings;
@@ -93,6 +94,45 @@ public class ExternalSystemTaskSettingsControl {
             return component;
         }
 
+        createFields();
+
+        VerticalLayout layout = VerticalLayout.create();
+        layout.add(LabeledBuilder.filled(
+            ExternalSystemLocalize.runConfigurationSettingsLabelProject(myExternalSystemId.getDisplayName()),
+            myProjectPathField.getComponent()
+        ));
+        layout.add(LabeledBuilder.filled(ExternalSystemLocalize.runConfigurationSettingsLabelTasks(), myTasksBox));
+        layout.add(LabeledBuilder.filled(ExternalSystemLocalize.runConfigurationSettingsLabelVmoptions(), myVmOptionsBox));
+        layout.add(LabeledBuilder.filled(
+            ExternalSystemLocalize.runConfigurationSettingsLabelScriptParameters(),
+            myScriptParametersBox
+        ));
+
+        myComponent = layout;
+        return layout;
+    }
+
+    /**
+     * Adds the fields as rows of a run configuration page.
+     */
+    @RequiredUIAccess
+    public void addRows(RunConfigurationFragmentLayout layout) {
+        createFields();
+        layout.addLabeled(
+            ExternalSystemLocalize.runConfigurationSettingsLabelProject(myExternalSystemId.getDisplayName()),
+            myProjectPathField.getComponent()
+        );
+        layout.addLabeled(ExternalSystemLocalize.runConfigurationSettingsLabelTasks(), myTasksBox);
+        layout.addLabeled(ExternalSystemLocalize.runConfigurationSettingsLabelVmoptions(), myVmOptionsBox);
+        layout.addLabeled(ExternalSystemLocalize.runConfigurationSettingsLabelScriptParameters(), myScriptParametersBox);
+    }
+
+    @RequiredUIAccess
+    private void createFields() {
+        if (myProjectPathField != null) {
+            return;
+        }
+
         ExternalSystemManager<?, ?, ?, ?, ?> manager = ExternalSystemApiUtil.getManager(myExternalSystemId);
         FileChooserDescriptor projectPathChooserDescriptor = null;
         if (manager instanceof ExternalSystemUiAware extSysUiAware) {
@@ -121,21 +161,6 @@ public class ExternalSystemTaskSettingsControl {
             ParametersListUtil.DEFAULT_LINE_PARSER,
             ParametersListUtil.DEFAULT_LINE_JOINER
         );
-
-        VerticalLayout layout = VerticalLayout.create();
-        layout.add(LabeledBuilder.filled(
-            ExternalSystemLocalize.runConfigurationSettingsLabelProject(myExternalSystemId.getDisplayName()),
-            myProjectPathField.getComponent()
-        ));
-        layout.add(LabeledBuilder.filled(ExternalSystemLocalize.runConfigurationSettingsLabelTasks(), myTasksBox));
-        layout.add(LabeledBuilder.filled(ExternalSystemLocalize.runConfigurationSettingsLabelVmoptions(), myVmOptionsBox));
-        layout.add(LabeledBuilder.filled(
-            ExternalSystemLocalize.runConfigurationSettingsLabelScriptParameters(),
-            myScriptParametersBox
-        ));
-
-        myComponent = layout;
-        return layout;
     }
 
     @RequiredUIAccess

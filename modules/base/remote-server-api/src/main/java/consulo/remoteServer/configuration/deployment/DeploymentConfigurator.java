@@ -15,7 +15,7 @@
  */
 package consulo.remoteServer.configuration.deployment;
 
-import consulo.execution.configuration.ui.SettingsEditor;
+import consulo.execution.configuration.fragment.RunConfigurationFragmentEditor;
 import consulo.remoteServer.configuration.RemoteServer;
 import consulo.remoteServer.configuration.ServerConfiguration;
 import org.jspecify.annotations.Nullable;
@@ -29,7 +29,11 @@ public abstract class DeploymentConfigurator<D extends DeploymentConfiguration, 
     
     public abstract D createDefaultConfiguration(DeploymentSource source);
 
-    public abstract @Nullable SettingsEditor<D> createEditor(DeploymentSource source, @Nullable RemoteServer<S> server);
+    /**
+     * Rows editing the deployment configuration of the given source, placed on the run configuration page; {@code null} when there is
+     * nothing to edit.
+     */
+    public abstract @Nullable RunConfigurationFragmentEditor<D> createEditor(DeploymentSource source, @Nullable RemoteServer<S> server);
 
     /**
      * @see LocatableConfiguration#isGeneratedName()

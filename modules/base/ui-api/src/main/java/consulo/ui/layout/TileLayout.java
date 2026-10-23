@@ -16,6 +16,7 @@
 package consulo.ui.layout;
 
 import consulo.ui.Component;
+import consulo.ui.HasTransferHandler;
 import consulo.ui.Length;
 import consulo.ui.PseudoComponent;
 import consulo.ui.Space;
@@ -34,7 +35,15 @@ import consulo.ui.internal.UIInternal;
  * @author VISTALL
  * @since 2026-10-11
  */
-public interface TileLayout extends Layout<LayoutConstraint> {
+/**
+ * Lays out its children in equal-width tiles, wrapping into rows.
+ * <p>
+ * Given a {@link consulo.ui.DragAndDropTransferHandler}, its children can be dragged. A drag carries the dragged child as
+ * its only item, and a drop lands before ({@link consulo.ui.DragAndDropTransferHandler.DropPosition#ABOVE}) or after
+ * ({@link consulo.ui.DragAndDropTransferHandler.DropPosition#BELOW}) the child it is made on; a drop past the last child
+ * lands after it.
+ */
+public interface TileLayout extends Layout<LayoutConstraint>, HasTransferHandler<Component> {
     static TileLayout create(Length minTileWidth) {
         return create(minTileWidth, Space.MEDIUM);
     }

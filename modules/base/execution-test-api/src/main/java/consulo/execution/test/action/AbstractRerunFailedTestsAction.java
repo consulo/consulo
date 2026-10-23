@@ -20,7 +20,6 @@ import consulo.execution.RuntimeConfigurationException;
 import consulo.execution.configuration.*;
 import consulo.execution.configuration.log.LogFileOptions;
 import consulo.execution.configuration.log.PredefinedLogFile;
-import consulo.execution.configuration.ui.SettingsEditor;
 import consulo.execution.debug.DefaultDebugExecutor;
 import consulo.execution.executor.DefaultRunExecutor;
 import consulo.execution.executor.Executor;
@@ -279,12 +278,6 @@ public class AbstractRerunFailedTestsAction extends LegacyAnAction {
 
         @Override
         
-        public SettingsEditor<? extends RunConfiguration> getConfigurationEditor() {
-            return myConfiguration.getConfigurationEditor();
-        }
-
-        @Override
-        
         public ConfigurationType getType() {
             return myConfiguration.getType();
         }
@@ -292,11 +285,6 @@ public class AbstractRerunFailedTestsAction extends LegacyAnAction {
         @Override
         public ConfigurationPerRunnerSettings createRunnerSettings(ConfigurationInfoProvider provider) {
             return myConfiguration.createRunnerSettings(provider);
-        }
-
-        @Override
-        public SettingsEditor<ConfigurationPerRunnerSettings> getRunnerSettingsEditor(ProgramRunner runner) {
-            return myConfiguration.getRunnerSettingsEditor(runner);
         }
 
         @Override

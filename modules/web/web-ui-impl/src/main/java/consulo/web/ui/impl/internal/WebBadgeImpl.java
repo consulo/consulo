@@ -16,6 +16,7 @@
 package consulo.web.ui.impl.internal;
 
 import com.vaadin.flow.component.badge.BadgeVariant;
+import com.vaadin.flow.component.html.Span;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Badge;
 import consulo.ui.BadgeStyle;
@@ -24,6 +25,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.impl.BadgePresentation;
 import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
+import consulo.web.ui.impl.internal.base.TargetVaadin;
 import consulo.web.ui.impl.internal.base.VaadinComponentDelegate;
 import consulo.web.ui.impl.internal.image.WebImageConverter;
 import org.jspecify.annotations.Nullable;
@@ -46,11 +48,36 @@ public class WebBadgeImpl extends VaadinComponentDelegate<WebBadgeImpl.Vaadin> i
     private final Set<BadgeStyle> myStyles = EnumSet.noneOf(BadgeStyle.class);
     private LocalizeValue myText;
     private @Nullable Image myIcon;
+    private @Nullable Component myPrefixComponent;
+    private @Nullable Component mySuffixComponent;
 
     public WebBadgeImpl(LocalizeValue text) {
         myText = text;
-        toVaadinComponent().setText(text.get());
+        updateContent();
         updateFontSize();
+    }
+
+    private void updateContent() {
+        Vaadin badge = toVaadinComponent();
+        badge.setContent(null);
+        if (myPrefixComponent == null && mySuffixComponent == null) {
+            badge.setText(myText.get());
+            return;
+        }
+
+        badge.setText("");
+        Span container = new Span();
+        container.getStyle().set("display", "inline-flex").set("align-items", "center").set("gap", "0.25em");
+        Component prefix = myPrefixComponent;
+        if (prefix != null) {
+            container.add(TargetVaadin.to(prefix));
+        }
+        container.add(new Span(myText.get()));
+        Component suffix = mySuffixComponent;
+        if (suffix != null) {
+            container.add(TargetVaadin.to(suffix));
+        }
+        badge.setContent(container);
     }
 
     private void updateFontSize() {
@@ -68,6 +95,7 @@ public class WebBadgeImpl extends VaadinComponentDelegate<WebBadgeImpl.Vaadin> i
         Vaadin component = toVaadinComponent();
         if (style != BadgeStyle.FILLED && style != BadgeStyle.SMALL) {
             component.removeThemeVariants(BadgeVariant.SUCCESS, BadgeVariant.WARNING, BadgeVariant.ERROR, BadgeVariant.CONTRAST);
+            component.getStyle().remove("--vaadin-badge-background").remove("--vaadin-badge-border-color");
             myStyles.removeIf(each -> each != BadgeStyle.FILLED && each != BadgeStyle.SMALL);
         }
         myStyles.add(style);
@@ -76,6 +104,9 @@ public class WebBadgeImpl extends VaadinComponentDelegate<WebBadgeImpl.Vaadin> i
             case WARNING -> component.addThemeVariants(BadgeVariant.WARNING);
             case ERROR -> component.addThemeVariants(BadgeVariant.ERROR);
             case CONTRAST -> component.addThemeVariants(BadgeVariant.CONTRAST);
+            case NEUTRAL -> component.getStyle()
+                .set("--vaadin-badge-background", "var(--vaadin-background-container)")
+                .set("--vaadin-badge-border-color", "var(--vaadin-border-color)");
             case FILLED -> component.addThemeVariants(BadgeVariant.FILLED);
             case SMALL -> updateFontSize();
         }
@@ -90,7 +121,7 @@ public class WebBadgeImpl extends VaadinComponentDelegate<WebBadgeImpl.Vaadin> i
     @Override
     public void setText(LocalizeValue text) {
         myText = text;
-        toVaadinComponent().setText(text.get());
+        updateContent();
     }
 
     @Override
@@ -103,5 +134,27 @@ public class WebBadgeImpl extends VaadinComponentDelegate<WebBadgeImpl.Vaadin> i
     public void setIcon(@Nullable Image icon) {
         myIcon = icon;
         toVaadinComponent().setIcon(icon == null ? null : WebImageConverter.getImage(icon));
+    }
+
+    @Override
+    public void setPrefixComponent(@Nullable Component prefixComponent) {
+        myPrefixComponent = prefixComponent;
+        updateContent();
+    }
+
+    @Override
+    public @Nullable Component getPrefixComponent() {
+        return myPrefixComponent;
+    }
+
+    @Override
+    public void setSuffixComponent(@Nullable Component suffixComponent) {
+        mySuffixComponent = suffixComponent;
+        updateContent();
+    }
+
+    @Override
+    public @Nullable Component getSuffixComponent() {
+        return mySuffixComponent;
     }
 }

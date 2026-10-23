@@ -79,9 +79,9 @@ public class RunConfigurationsNode extends ExternalSystemNode<Object> {
 
         for (RunnerAndConfigurationSettings settings : runManager.getAllSettings()) {
             if (settings.getConfiguration() instanceof ExternalSystemRunConfiguration runConfig) {
-                String configPath = runConfig.getSettings().getExternalProjectPath();
+                String configPath = runConfig.getSettingsCopy().getExternalProjectPath();
                 if (projectPath.equals(configPath) &&
-                    getExternalProjectsView().getSystemId().getId().equals(runConfig.getSettings().getExternalSystemIdString())) {
+                    getExternalProjectsView().getSystemId().getId().equals(runConfig.getSettingsCopy().getExternalSystemIdString())) {
                     result.add(new RunConfigurationNode(getExternalProjectsView(), this, settings));
                 }
             }

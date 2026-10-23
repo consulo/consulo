@@ -19,31 +19,33 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.externalTool.impl.internal.localize.ExternalToolLocalize;
 import consulo.localize.LocalizeValue;
-import consulo.util.dataholder.Key;
+
+import java.util.List;
 
 @ExtensionImpl
 public class ToolBeforeRunTaskProvider extends AbstractToolBeforeRunTaskProvider<ToolBeforeRunTask> {
-  static final Key<ToolBeforeRunTask> ID = Key.create("ToolBeforeRunTask");
+    @Override
+    public String getId() {
+        return "ToolBeforeRunTask";
+    }
 
-  
-  @Override
-  public Key<ToolBeforeRunTask> getId() {
-    return ID;
-  }
+    @Override
+    public LocalizeValue getName() {
+        return ExternalToolLocalize.toolsBeforeRunProviderName();
+    }
 
-  
-  @Override
-  public LocalizeValue getName() {
-    return ExternalToolLocalize.toolsBeforeRunProviderName();
-  }
+    @Override
+    public Class<ToolBeforeRunTask> getStateClass() {
+        return ToolBeforeRunTask.class;
+    }
 
-  @Override
-  public ToolBeforeRunTask createTask(RunConfiguration runConfiguration) {
-    return new ToolBeforeRunTask();
-  }
+    @Override
+    public ToolBeforeRunTask createTask(RunConfiguration runConfiguration) {
+        return new ToolBeforeRunTask();
+    }
 
-  @Override
-  protected ToolsPanel createToolsPanel() {
-    return new ToolsPanel();
-  }
+    @Override
+    protected List<Tool> getTools() {
+        return ToolManager.getInstance().getTools();
+    }
 }

@@ -32,6 +32,7 @@ module consulo.execution.api {
     exports consulo.execution.attach;
     exports consulo.execution.attach.osHandler;
     exports consulo.execution.configuration;
+    exports consulo.execution.configuration.fragment;
     exports consulo.execution.configuration.log;
     exports consulo.execution.configuration.log.ui;
     exports consulo.execution.configuration.ui;
@@ -87,4 +88,5 @@ module consulo.execution.api {
         consulo.ide.impl;
 
     opens consulo.execution.internal.action to consulo.component.impl;
+    opens consulo.execution.configuration.fragment to consulo.util.xml.serializer;
 }

@@ -20,7 +20,6 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.execution.RuntimeConfigurationException;
 import consulo.execution.configuration.*;
-import consulo.execution.configuration.ui.SettingsEditor;
 import consulo.execution.executor.Executor;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.process.ExecutionException;
@@ -71,10 +70,6 @@ public interface ProgramRunner<Settings extends RunnerSettings> {
     }
 
     default void checkConfiguration(RunnerSettings settings, @Nullable ConfigurationPerRunnerSettings configurationPerRunnerSettings) throws RuntimeConfigurationException {
-    }
-
-    default @Nullable SettingsEditor<Settings> getSettingsEditor(Executor executor, RunConfiguration configuration) {
-        return null;
     }
 
     @RequiredUIAccess

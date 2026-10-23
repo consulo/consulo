@@ -22,6 +22,7 @@ import consulo.application.AccessRule;
 import consulo.component.persist.*;
 import consulo.execution.RunManager;
 import consulo.execution.RunnerAndConfigurationSettings;
+import consulo.execution.configuration.ConfigurationFactory;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.SmartList;
@@ -29,7 +30,10 @@ import consulo.util.lang.Pair;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
+import org.jspecify.annotations.Nullable;
 
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -77,7 +81,7 @@ public class ProjectRunConfigurationManager implements PersistentStateComponent<
     Set<String> existing = new HashSet<>();
     for (Iterator<Element> iterator = state.getChildren().iterator(); iterator.hasNext(); ) {
       Element child = iterator.next();
-      RunnerAndConfigurationSettings configuration = myManager.loadConfiguration(child, true);
+      RunnerAndConfigurationSettings configuration = isUnloadableJson(child) ? null : myManager.loadConfiguration(child, true);
       if (configuration != null) {
         existing.add(configuration.getUniqueID());
       }
@@ -107,10 +111,40 @@ public class ProjectRunConfigurationManager implements PersistentStateComponent<
     myManager.getSortedConfigurations();
   }
 
+  private boolean isUnloadableJson(Element element) {
+    if (element.getAttributeValue(RunConfigurationJsonConverter.JSON_ATTR) == null) {
+      return false;
+    }
+
+    ConfigurationFactory factory = myManager.getFactory(element.getAttributeValue(RunnerAndConfigurationSettingsImpl.CONFIGURATION_TYPE_ATTRIBUTE),
+      element.getAttributeValue(RunnerAndConfigurationSettingsImpl.FACTORY_NAME_ATTRIBUTE));
+    return factory != null && !(factory.getType() instanceof UnknownConfigurationType);
+  }
+
   static class RunConfigurationStateSplitter extends StateSplitterEx {
     @Override
     public List<Pair<Element, String>> splitState(Element state) {
       return splitState(state, RunManagerImpl.NAME_ATTR);
+    }
+
+    @Override
+    public byte @Nullable [] writeJson(Object component, Element subState, StateJsonSerializer serializer) {
+      try {
+        return new RunConfigurationJsonConverter(((ProjectRunConfigurationManager)component).myManager, serializer).toJson(subState);
+      }
+      catch (IOException e) {
+        throw new UncheckedIOException(e);
+      }
+    }
+
+    @Override
+    public @Nullable Element readJson(Object component, byte[] content, StateJsonSerializer serializer) {
+      try {
+        return new RunConfigurationJsonConverter(((ProjectRunConfigurationManager)component).myManager, serializer).fromJson(content);
+      }
+      catch (IOException e) {
+        throw new UncheckedIOException(e);
+      }
     }
   }
 }

@@ -23,5 +23,9 @@ public enum HyperlinkStyle implements ComponentStyle {
     /**
      * The text stays underlined, not only while the pointer is over it.
      */
-    UNDERLINE
+    UNDERLINE,
+    /**
+     * A drop-down arrow after the text, for a link that opens a popup.
+     */
+    DROP_DOWN
 }

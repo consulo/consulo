@@ -29,12 +29,13 @@ import java.util.Set;
  */
 public final class BadgePresentation {
     public static final int ARC = 10;
-    public static final int HORIZONTAL_PADDING = 6;
-    public static final int VERTICAL_PADDING = 1;
+    public static final int HORIZONTAL_PADDING = 8;
+    public static final int VERTICAL_PADDING = 3;
 
     public static @Nullable BadgeStyle tone(Set<BadgeStyle> styles) {
         for (BadgeStyle style : styles) {
-            if (style == BadgeStyle.SUCCESS || style == BadgeStyle.WARNING || style == BadgeStyle.ERROR || style == BadgeStyle.CONTRAST) {
+            if (style == BadgeStyle.SUCCESS || style == BadgeStyle.WARNING || style == BadgeStyle.ERROR || style == BadgeStyle.CONTRAST
+                || style == BadgeStyle.NEUTRAL) {
                 return style;
             }
         }
@@ -50,6 +51,7 @@ public final class BadgePresentation {
             case SUCCESS -> ComponentColors.SUCCESS_BORDER;
             case WARNING -> ComponentColors.WARNING_BORDER;
             case ERROR -> ComponentColors.ERROR_BORDER;
+            case NEUTRAL -> ComponentColors.BORDER;
             default -> ComponentColors.TEXT_FOREGROUND;
         };
     }
@@ -66,6 +68,7 @@ public final class BadgePresentation {
             case SUCCESS -> ComponentColors.TOAST_SUCCESS_BACKGROUND;
             case WARNING -> ComponentColors.TOAST_WARNING_BACKGROUND;
             case ERROR -> ComponentColors.TOAST_ERROR_BACKGROUND;
+            case NEUTRAL -> ComponentColors.SELECTION_INACTIVE_BACKGROUND;
             default -> ComponentColors.TEXT_FOREGROUND;
         };
     }

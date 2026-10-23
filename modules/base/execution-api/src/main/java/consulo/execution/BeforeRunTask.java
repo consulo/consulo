@@ -1,94 +1,50 @@
-/*
- * Copyright 2000-2009 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package consulo.execution;
 
-import consulo.util.dataholder.Key;
+import consulo.util.jdom.JDOMUtil;
+import consulo.util.xml.serializer.SkipDefaultsSerializationFilter;
+import consulo.util.xml.serializer.XmlSerializer;
+import consulo.util.xml.serializer.annotation.Attribute;
+import consulo.util.xml.serializer.annotation.Transient;
 import org.jdom.Element;
-import org.jspecify.annotations.Nullable;
+
+import java.util.Objects;
 
 /**
- * @author Eugene Zhuravlev
- * @since 2009-05-18
+ * The state of one task run before a configuration launches. Subclasses are state POJOs (XmlSerializer beans, JSON-ready);
+ * the {@link BeforeRunFragment} owning a task is found by the task's class.
  */
-public abstract class BeforeRunTask<T extends BeforeRunTask> implements Cloneable {
-    protected final Key<T> myProviderId;
-    private boolean myIsEnabled;
+public abstract class BeforeRunTask {
+    private boolean myEnabled;
 
-    protected BeforeRunTask(Key<T> providerId) {
-        myProviderId = providerId;
-    }
-
-    public final Key<T> getProviderId() {
-        return myProviderId;
-    }
-
+    @Attribute("enabled")
     public boolean isEnabled() {
-        return myIsEnabled;
+        return myEnabled;
     }
 
-    public void setEnabled(boolean isEnabled) {
-        myIsEnabled = isEnabled;
+    public void setEnabled(boolean enabled) {
+        myEnabled = enabled;
     }
 
-    public void writeExternal(Element element) {
-        element.setAttribute("enabled", String.valueOf(myIsEnabled));
-    }
-
-    public void readExternal(Element element) {
-        String attrValue = element.getAttributeValue("enabled");
-        if (attrValue == null) {
-            attrValue = element.getAttributeValue("value"); // maintain compatibility with old format
-        }
-        if (attrValue == null) {
-            attrValue = "true";
-        }
-        myIsEnabled = Boolean.valueOf(attrValue);
-    }
-
-    //Task may aggregate several items or targets to do (e.g. BuildArtifactsBeforeRunTask)
+    /**
+     * How many items the task aggregates (e.g. artifacts to build).
+     */
+    @Transient
     public int getItemsCount() {
         return 1;
     }
 
-    @Override
-    public BeforeRunTask clone() {
-        try {
-            return (BeforeRunTask) super.clone();
-        }
-        catch (CloneNotSupportedException ignored) {
-            return null;
-        }
+    public Element writeState(String elementName) {
+        Element element = new Element(elementName);
+        XmlSerializer.serializeInto(this, element, new SkipDefaultsSerializationFilter());
+        return element;
     }
 
-    @Override
-    public boolean equals(@Nullable Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        BeforeRunTask that = (BeforeRunTask) o;
-        return myProviderId == that.myProviderId
-            && myIsEnabled == that.myIsEnabled;
+    @SuppressWarnings("unchecked")
+    public <T extends BeforeRunTask> T copy() {
+        return (T) Objects.requireNonNull(XmlSerializer.deserialize(writeState("task"), getClass()));
     }
 
-    @Override
-    public int hashCode() {
-        return 31 * myProviderId.hashCode() + (myIsEnabled ? 1 : 0);
+    public boolean isSameState(BeforeRunTask other) {
+        return getClass() == other.getClass() && JDOMUtil.areElementsEqual(writeState("task"), other.writeState("task"));
     }
 }

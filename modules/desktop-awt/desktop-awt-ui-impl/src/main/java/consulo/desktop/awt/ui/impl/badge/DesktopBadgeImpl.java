@@ -30,6 +30,7 @@ import consulo.ui.image.Image;
 import consulo.ui.impl.BadgePresentation;
 import org.jspecify.annotations.Nullable;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.RoundRectangle2D;
 import java.util.EnumSet;
@@ -39,8 +40,17 @@ import java.util.Set;
  * @author VISTALL
  * @since 2026-10-20
  */
-public class DesktopBadgeImpl extends SwingComponentDelegate<DesktopBadgeImpl.BadgeLabel> implements Badge {
-    public class BadgeLabel extends JBLabel implements FromSwingComponentWrapper {
+public class DesktopBadgeImpl extends SwingComponentDelegate<DesktopBadgeImpl.BadgePanel> implements Badge {
+    public class BadgePanel extends JPanel implements FromSwingComponentWrapper {
+        private final JBLabel myLabel = new JBLabel();
+
+        public BadgePanel() {
+            super(new BorderLayout(JBUI.scale(BadgePresentation.HORIZONTAL_PADDING) / 2, 0));
+            setOpaque(false);
+            myLabel.setOpaque(false);
+            add(myLabel, BorderLayout.CENTER);
+        }
+
         @Override
         public Component toUIComponent() {
             return DesktopBadgeImpl.this;
@@ -49,7 +59,7 @@ public class DesktopBadgeImpl extends SwingComponentDelegate<DesktopBadgeImpl.Ba
         @Override
         public void updateUI() {
             super.updateUI();
-            if (myStyles != null) {
+            if (myStyles != null && myLabel != null) {
                 applyLook(this);
             }
         }
@@ -76,30 +86,31 @@ public class DesktopBadgeImpl extends SwingComponentDelegate<DesktopBadgeImpl.Ba
     private final Set<BadgeStyle> myStyles = EnumSet.noneOf(BadgeStyle.class);
     private LocalizeValue myText;
     private @Nullable Image myIcon;
+    private @Nullable Component myPrefixComponent;
+    private @Nullable Component mySuffixComponent;
 
     public DesktopBadgeImpl(LocalizeValue text) {
         myText = text;
-        BadgeLabel label = toAWTComponent();
-        label.setOpaque(false);
-        label.setText(text.get());
+        toAWTComponent().myLabel.setText(text.get());
         updateLook();
     }
 
     @Override
-    protected BadgeLabel createComponent() {
-        return new BadgeLabel();
+    protected BadgePanel createComponent() {
+        return new BadgePanel();
     }
 
     private void updateLook() {
         applyLook(toAWTComponent());
     }
 
-    private void applyLook(BadgeLabel label) {
+    private void applyLook(BadgePanel panel) {
+        JBLabel label = panel.myLabel;
         label.setForeground(TargetAWT.to(BadgePresentation.foreground(myStyles)));
         Font base = UIUtil.getLabelFont();
         label.setFont(base.deriveFont(base.getSize2D() + JBUI.scale((float) BadgePresentation.fontPointDelta(myStyles))));
-        label.setBorder(JBUI.Borders.empty(BadgePresentation.VERTICAL_PADDING, BadgePresentation.HORIZONTAL_PADDING));
-        label.repaint();
+        panel.setBorder(JBUI.Borders.empty(BadgePresentation.VERTICAL_PADDING, BadgePresentation.HORIZONTAL_PADDING));
+        panel.repaint();
     }
 
     @Override
@@ -120,7 +131,7 @@ public class DesktopBadgeImpl extends SwingComponentDelegate<DesktopBadgeImpl.Ba
     @Override
     public void setText(LocalizeValue text) {
         myText = text;
-        toAWTComponent().setText(text.get());
+        toAWTComponent().myLabel.setText(text.get());
     }
 
     @Override
@@ -132,6 +143,44 @@ public class DesktopBadgeImpl extends SwingComponentDelegate<DesktopBadgeImpl.Ba
     @Override
     public void setIcon(@Nullable Image icon) {
         myIcon = icon;
-        toAWTComponent().setIcon(TargetAWT.to(icon));
+        toAWTComponent().myLabel.setIcon(TargetAWT.to(icon));
+    }
+
+    @Override
+    public void setPrefixComponent(@Nullable Component prefixComponent) {
+        replaceSide(myPrefixComponent, prefixComponent, BorderLayout.WEST);
+        myPrefixComponent = prefixComponent;
+    }
+
+    @Override
+    public @Nullable Component getPrefixComponent() {
+        return myPrefixComponent;
+    }
+
+    @Override
+    public void setSuffixComponent(@Nullable Component suffixComponent) {
+        replaceSide(mySuffixComponent, suffixComponent, BorderLayout.EAST);
+        mySuffixComponent = suffixComponent;
+    }
+
+    @Override
+    public @Nullable Component getSuffixComponent() {
+        return mySuffixComponent;
+    }
+
+    private void replaceSide(@Nullable Component oldComponent, @Nullable Component newComponent, String position) {
+        BadgePanel panel = toAWTComponent();
+        if (oldComponent != null) {
+            panel.remove(TargetAWT.to(oldComponent));
+        }
+        if (newComponent != null) {
+            java.awt.Component awtComponent = TargetAWT.to(newComponent);
+            if (awtComponent instanceof JComponent jComponent) {
+                jComponent.setOpaque(false);
+            }
+            panel.add(awtComponent, position);
+        }
+        panel.revalidate();
+        panel.repaint();
     }
 }

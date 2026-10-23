@@ -1,0 +1,10 @@
+{
+  "VcsDirectoryMappings": {
+    "mappings": [
+      {
+        "directory": "$PROJECT_DIR$",
+        "vcs": "Git"
+      }
+    ]
+  }
+}

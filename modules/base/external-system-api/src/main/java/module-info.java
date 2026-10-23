@@ -61,5 +61,6 @@ module consulo.external.system.api {
         consulo.ide.impl;
 
     opens consulo.externalSystem.model.execution to consulo.util.xml.serializer;
+    opens consulo.externalSystem.service.execution to consulo.util.xml.serializer, consulo.execution.api;
     opens consulo.externalSystem.setting to consulo.util.xml.serializer;
 }

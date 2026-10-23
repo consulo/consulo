@@ -31,5 +31,5 @@ public abstract class ConfigurationSettingsEditorWrapper extends SettingsEditor<
 
     public abstract List<BeforeRunTask> getStepsBeforeLaunch();
 
-    public abstract void addBeforeLaunchStep(BeforeRunTask<?> task);
+    public abstract void addBeforeLaunchStep(BeforeRunTask task);
 }

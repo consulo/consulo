@@ -158,6 +158,27 @@ public final class StateJsonBinder {
         return result;
     }
 
+    public static @Nullable Object readTree(byte[] content) throws IOException {
+        for (byte b : content) {
+            if (b == '{') {
+                return ourEnvelopeBinder.deserialize(Map.class, content, content.length);
+            }
+            if (b == '[') {
+                return ourEnvelopeBinder.deserialize(List.class, content, content.length);
+            }
+            if (!Character.isWhitespace(b)) {
+                break;
+            }
+        }
+        throw new IOException("Json object or array expected");
+    }
+
+    public static byte[] writeTree(@Nullable Object tree) throws IOException {
+        UnsyncByteArrayOutputStream out = new UnsyncByteArrayOutputStream();
+        ourEnvelopeBinder.serialize(tree, out);
+        return out.toByteArray();
+    }
+
     public static @Nullable <T> T deserialize(Class<T> stateClass, byte[] content) throws IOException {
         return binderFor(stateClass).deserialize(stateClass, content, content.length);
     }

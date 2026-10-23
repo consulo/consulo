@@ -15,15 +15,13 @@
  */
 package consulo.externalTool.impl.internal;
 
+import consulo.dataContext.DataContext;
 import consulo.execution.BeforeRunTask;
 import consulo.process.event.ProcessAdapter;
 import consulo.process.event.ProcessEvent;
-import consulo.dataContext.DataContext;
-import consulo.logging.Logger;
 import consulo.ui.UIAccess;
-import consulo.util.dataholder.Key;
-import org.jdom.Element;
-
+import consulo.util.xml.serializer.annotation.Attribute;
+import consulo.util.xml.serializer.annotation.Transient;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
@@ -33,43 +31,19 @@ import java.util.concurrent.CompletableFuture;
 /**
  * @author traff
  */
-public abstract class AbstractToolBeforeRunTask<ToolBeforeRunTask extends AbstractToolBeforeRunTask, T extends Tool>
-    extends BeforeRunTask<ToolBeforeRunTask> {
-    private final static String ACTION_ID_ATTRIBUTE = "actionId";
-    private static final Logger LOG = Logger.getInstance(AbstractToolBeforeRunTask.class);
-    protected String myToolActionId;
+public abstract class AbstractToolBeforeRunTask<T extends Tool> extends BeforeRunTask {
+    private @Nullable String myToolActionId;
 
-    public AbstractToolBeforeRunTask(Key<ToolBeforeRunTask> providerId) {
-        super(providerId);
-    }
-
+    @Attribute("actionId")
     public @Nullable String getToolActionId() {
         return myToolActionId;
     }
 
-    @Override
-    public void writeExternal(Element element) {
-        super.writeExternal(element);
-        if (myToolActionId != null) {
-            element.setAttribute(ACTION_ID_ATTRIBUTE, myToolActionId);
-        }
-    }
-
-    @Override
-    public void readExternal(Element element) {
-        super.readExternal(element);
-        myToolActionId = element.getAttributeValue(ACTION_ID_ATTRIBUTE);
-    }
-
-    @Override
-    public ToolBeforeRunTask clone() {
-        return (ToolBeforeRunTask) super.clone();
-    }
-
-    public void setToolActionId(String toolActionId) {
+    public void setToolActionId(@Nullable String toolActionId) {
         myToolActionId = toolActionId;
     }
 
+    @Transient
     public boolean isExecutable() {
         return myToolActionId != null;
     }
@@ -110,8 +84,7 @@ public abstract class AbstractToolBeforeRunTask<ToolBeforeRunTask extends Abstra
         if (myToolActionId == null) {
             return null;
         }
-        List<T> tools = getTools();
-        for (T tool : tools) {
+        for (T tool : availableTools()) {
             if (myToolActionId.equals(tool.getActionId())) {
                 return tool;
             }
@@ -119,5 +92,5 @@ public abstract class AbstractToolBeforeRunTask<ToolBeforeRunTask extends Abstra
         return null;
     }
 
-    protected abstract List<T> getTools();
+    protected abstract List<T> availableTools();
 }

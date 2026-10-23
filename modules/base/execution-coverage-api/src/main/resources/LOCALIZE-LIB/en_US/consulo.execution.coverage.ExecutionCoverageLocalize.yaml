@@ -186,6 +186,10 @@ popup.title.tests.covering.line:
     text: Tests Covering Line {0}:{1}
 remote.suites.node:
     text: Remote
+run.configuration.fragment.coverage:
+    text: Coverage settings
+run.configuration.fragment.group.code.coverage:
+    text: Code Coverage
 run.selected.configuration.with.coverage.enabled:
     text: Run selected configuration with coverage enabled
 run.with.coverage:

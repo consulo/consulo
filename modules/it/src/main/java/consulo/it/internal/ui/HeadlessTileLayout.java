@@ -15,10 +15,13 @@
  */
 package consulo.it.internal.ui;
 
+import consulo.ui.Component;
 import consulo.ui.Length;
 import consulo.ui.Space;
+import consulo.ui.TransferHandler;
 import consulo.ui.layout.LayoutConstraint;
 import consulo.ui.layout.TileLayout;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Headless {@link TileLayout}: the tiles are kept in order, there is no width to wrap them at.
@@ -28,6 +31,7 @@ import consulo.ui.layout.TileLayout;
 public class HeadlessTileLayout extends HeadlessLayoutBase<LayoutConstraint> implements TileLayout {
     private final Length myMinTileWidth;
     private final Space myGap;
+    private @Nullable TransferHandler<Component> myTransferHandler;
 
     public HeadlessTileLayout(Length minTileWidth, Space gap) {
         myMinTileWidth = minTileWidth;
@@ -40,5 +44,15 @@ public class HeadlessTileLayout extends HeadlessLayoutBase<LayoutConstraint> imp
 
     public Space getGap() {
         return myGap;
+    }
+
+    @Override
+    public void setTransferHandler(@Nullable TransferHandler<Component> handler) {
+        myTransferHandler = handler;
+    }
+
+    @Override
+    public @Nullable TransferHandler<Component> getTransferHandler() {
+        return myTransferHandler;
     }
 }

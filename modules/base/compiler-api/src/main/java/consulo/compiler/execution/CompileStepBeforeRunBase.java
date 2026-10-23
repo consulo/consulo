@@ -18,37 +18,23 @@ package consulo.compiler.execution;
 import consulo.compiler.CompilerRunner;
 import consulo.component.extension.ExtensionPoint;
 import consulo.dataContext.DataContext;
+import consulo.execution.BeforeRunFragment;
 import consulo.execution.BeforeRunTask;
-import consulo.execution.BeforeRunTaskProvider;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 
-import java.util.concurrent.CancellationException;
-import java.util.concurrent.CompletableFuture;
 
 /**
  * @author VISTALL
  * @since 2026-02-24
  */
-public abstract class CompileStepBeforeRunBase<T extends BeforeRunTask<T>> extends BeforeRunTaskProvider<T> {
+public abstract class CompileStepBeforeRunBase<T extends BeforeRunTask> implements BeforeRunFragment<T> {
     protected final Project myProject;
 
     protected CompileStepBeforeRunBase(Project project) {
         myProject = project;
-    }
-
-    @RequiredUIAccess
-    @Override
-    public CompletableFuture<Void> configureTask(RunConfiguration runConfiguration, T task) {
-        return CompletableFuture.failedFuture(new CancellationException());
-    }
-
-    @Override
-    public boolean isConfigurable() {
-        return false;
     }
 
     @Override

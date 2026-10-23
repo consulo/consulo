@@ -96,6 +96,7 @@ public class DesktopTextBoxImpl extends DocumentSwingValidator<String, DesktopTe
     @Override
     protected MyJBTextField createComponent() {
         MyJBTextField field = new MyJBTextField();
+        field.setColumns(DEFAULT_COLUMNS);
         field.setText(myText);
 
         TextFieldPlaceholderFunction.install(field);

@@ -18,7 +18,7 @@ package consulo.sandboxPlugin.ide.remoteServer;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.configurable.ConfigurationException;
 import consulo.disposer.Disposable;
-import consulo.execution.configuration.ui.SettingsEditor;
+import consulo.execution.configuration.fragment.RunConfigurationFragmentEditor;
 import consulo.localize.LocalizeValue;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
@@ -105,7 +105,7 @@ public class SandServerType extends ServerType<SandServerConfiguration> {
             }
 
             @Override
-            public @Nullable SettingsEditor<DeploymentConfiguration> createEditor(DeploymentSource source, @Nullable RemoteServer<SandServerConfiguration> server) {
+            public @Nullable RunConfigurationFragmentEditor<DeploymentConfiguration> createEditor(DeploymentSource source, @Nullable RemoteServer<SandServerConfiguration> server) {
                 return null;
             }
         };

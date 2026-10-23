@@ -24,6 +24,10 @@ public enum BadgeStyle implements ComponentStyle {
     WARNING,
     ERROR,
     CONTRAST,
+    /**
+     * Plain grey, without a tone.
+     */
+    NEUTRAL,
     FILLED,
     SMALL
 }

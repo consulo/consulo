@@ -27,6 +27,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.HyperlinkEvent;
 import consulo.ui.ex.internal.LocalizeValueWithMnemonic;
 import consulo.ui.image.Image;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.internal.SearchHighlightUtil;
 import consulo.ui.style.ComponentColors;
 import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
@@ -135,6 +136,8 @@ public class WebHyperlinkImpl extends VaadinComponentDelegate<WebHyperlinkImpl.V
     public void addStyle(HyperlinkStyle style) {
         switch (style) {
             case UNDERLINE -> getVaadinComponent().addClassName("consulo-hyperlink-underline");
+            case DROP_DOWN -> getVaadinComponent().getElement()
+                .appendChild(WebImageConverter.getImage(PlatformIconGroup.generalLinkdroptriangle()).getElement());
         }
     }
 }

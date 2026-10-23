@@ -76,6 +76,7 @@ public class DesktopTextBoxWithExpandAction {
         @Override
         protected ExpandableTextField createComponent() {
             ExpandableTextField field = new MyExpandableTextField(myParser, myJoiner, myLookAndFeel);
+            field.setColumns(DEFAULT_COLUMNS);
             TextFieldPlaceholderFunction.install(field);
             addDocumentListenerForValidator(field.getDocument());
 

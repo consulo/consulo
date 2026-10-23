@@ -22,7 +22,6 @@ import consulo.compiler.Compiler;
 import consulo.compiler.CompilerManager;
 import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ArtifactAwareCompiler;
-import consulo.compiler.artifact.ArtifactPointer;
 import consulo.compiler.impl.internal.artifact.ArtifactCompileScope;
 import consulo.compiler.impl.internal.artifact.ArtifactsCompiler;
 import consulo.compiler.localize.CompilerLocalize;
@@ -35,9 +34,8 @@ import consulo.execution.runner.ExecutionEnvironment;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
-import consulo.util.collection.ContainerUtil;
-import consulo.util.dataholder.Key;
 import jakarta.inject.Inject;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,19 +50,28 @@ import java.util.function.Predicate;
 @ExtensionImpl(order = "after compileBeforeRunNoErrorCheck")
 public class BuildArtifactsBeforeRunTaskProvider extends AbstractArtifactsBeforeRunTaskProvider<BuildArtifactsBeforeRunTask> {
     public static final String BUILD_ARTIFACTS_ID = "BuildArtifacts";
-    public static final Key<BuildArtifactsBeforeRunTask> ID = Key.create(BUILD_ARTIFACTS_ID);
 
     @Inject
     public BuildArtifactsBeforeRunTaskProvider(Project project) {
-        super(project, ID);
+        super(project);
     }
 
     @Override
-    public BuildArtifactsBeforeRunTask createTask(RunConfiguration runConfiguration) {
+    public String getId() {
+        return BUILD_ARTIFACTS_ID;
+    }
+
+    @Override
+    public Class<BuildArtifactsBeforeRunTask> getStateClass() {
+        return BuildArtifactsBeforeRunTask.class;
+    }
+
+    @Override
+    public @Nullable BuildArtifactsBeforeRunTask createTask(RunConfiguration runConfiguration) {
         if (myProject.isDefault()) {
             return null;
         }
-        return new BuildArtifactsBeforeRunTask(myProject);
+        return new BuildArtifactsBeforeRunTask();
     }
 
     @Override
@@ -74,18 +81,18 @@ public class BuildArtifactsBeforeRunTaskProvider extends AbstractArtifactsBefore
 
     @Override
     public LocalizeValue getDescription(BuildArtifactsBeforeRunTask task) {
-        List<ArtifactPointer> pointers = task.getArtifactPointers();
-        if (pointers.isEmpty()) {
+        List<String> names = task.getArtifactNames();
+        if (names.isEmpty()) {
             return CompilerLocalize.buildArtifactsBeforeRunDescriptionEmpty();
         }
-        if (pointers.size() == 1) {
-            return CompilerLocalize.buildArtifactsBeforeRunDescriptionSingle(pointers.get(0).getName());
+        if (names.size() == 1) {
+            return CompilerLocalize.buildArtifactsBeforeRunDescriptionSingle(names.get(0));
         }
-        return CompilerLocalize.buildArtifactsBeforeRunDescriptionMultiple(pointers.size());
+        return CompilerLocalize.buildArtifactsBeforeRunDescriptionMultiple(names.size());
     }
 
     @Override
-    public CompletableFuture<Void> executeTaskAsync(
+    public CompletableFuture<Void> executeAsync(
         UIAccess uiAccess,
         DataContext context,
         RunConfiguration configuration,
@@ -94,12 +101,7 @@ public class BuildArtifactsBeforeRunTaskProvider extends AbstractArtifactsBefore
     ) {
         CompletableFuture<Void> result = new CompletableFuture<>();
 
-        List<Artifact> artifacts = new ArrayList<>();
-        AccessRule.read(() -> {
-            for (ArtifactPointer pointer : task.getArtifactPointers()) {
-                ContainerUtil.addIfNotNull(artifacts, pointer.get());
-            }
-        });
+        List<Artifact> artifacts = AccessRule.read(() -> resolve(task));
 
         CompileStatusNotification callback = (aborted, errors, warnings, compileContext) -> {
             if (!aborted && errors == 0) {
@@ -135,7 +137,7 @@ public class BuildArtifactsBeforeRunTaskProvider extends AbstractArtifactsBefore
                 }
             }
             if (enable && myTasks.isEmpty()) {
-                AbstractArtifactsBeforeRunTask task = new BuildArtifactsBeforeRunTask(project);
+                AbstractArtifactsBeforeRunTask task = new BuildArtifactsBeforeRunTask();
                 task.addArtifact(artifact);
                 task.setEnabled(true);
                 editor.addBeforeLaunchStep(task);
@@ -148,7 +150,7 @@ public class BuildArtifactsBeforeRunTaskProvider extends AbstractArtifactsBefore
                     }
                     else {
                         task.removeArtifact(artifact);
-                        if (task.getArtifactPointers().isEmpty()) {
+                        if (task.getArtifactNames().isEmpty()) {
                             task.setEnabled(false);
                         }
                     }
@@ -159,9 +161,9 @@ public class BuildArtifactsBeforeRunTaskProvider extends AbstractArtifactsBefore
 
     public static void setBuildArtifactBeforeRun(Project project, RunConfiguration configuration, Artifact artifact) {
         RunManager runManager = RunManager.getInstance(project);
-        List<BuildArtifactsBeforeRunTask> buildArtifactsTasks = runManager.getBeforeRunTasks(configuration, ID);
+        List<BuildArtifactsBeforeRunTask> buildArtifactsTasks = runManager.getBeforeRunTasks(configuration, BuildArtifactsBeforeRunTask.class);
         if (buildArtifactsTasks.isEmpty()) { //Add new task if absent
-            BuildArtifactsBeforeRunTask task = new BuildArtifactsBeforeRunTask(project);
+            BuildArtifactsBeforeRunTask task = new BuildArtifactsBeforeRunTask();
             buildArtifactsTasks.add(task);
             List<BeforeRunTask> tasks = runManager.getBeforeRunTasks(configuration);
             tasks.add(task);

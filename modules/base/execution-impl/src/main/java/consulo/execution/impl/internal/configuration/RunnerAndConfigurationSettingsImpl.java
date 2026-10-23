@@ -59,14 +59,14 @@ public class RunnerAndConfigurationSettingsImpl implements JDOMExternalizable, C
         }
     };
 
-    private static final String CONFIGURATION_TYPE_ATTRIBUTE = "type";
-    private static final String FACTORY_NAME_ATTRIBUTE = "factoryName";
-    private static final String FOLDER_NAME = "folderName";
-    private static final String TEMPLATE_FLAG_ATTRIBUTE = "default";
+    static final String CONFIGURATION_TYPE_ATTRIBUTE = "type";
+    static final String FACTORY_NAME_ATTRIBUTE = "factoryName";
+    static final String FOLDER_NAME = "folderName";
+    static final String TEMPLATE_FLAG_ATTRIBUTE = "default";
     public static final String NAME_ATTR = "name";
     protected static final String DUMMY_ELEMENT_NAME = "dummy";
-    private static final String TEMPORARY_ATTRIBUTE = "temporary";
-    private static final String EDIT_BEFORE_RUN = "editBeforeRun";
+    static final String TEMPORARY_ATTRIBUTE = "temporary";
+    static final String EDIT_BEFORE_RUN = "editBeforeRun";
     public static final String SINGLETON = "singleton";
 
     /**
@@ -81,7 +81,6 @@ public class RunnerAndConfigurationSettingsImpl implements JDOMExternalizable, C
     private final Map<ProgramRunner, RunnerSettings> myRunnerSettings = new HashMap<>();
     private List<Element> myUnloadedRunnerSettings;
     // to avoid changed files
-    private final Set<String> myLoadedRunnerSettings = new HashSet<>();
 
     private final Map<ProgramRunner, ConfigurationPerRunnerSettings> myConfigurationPerRunnerSettings = new HashMap<>();
     private List<Element> myUnloadedConfigurationPerRunnerSettings;
@@ -237,19 +236,17 @@ public class RunnerAndConfigurationSettingsImpl implements JDOMExternalizable, C
         if (myUnloadedRunnerSettings != null) {
             myUnloadedRunnerSettings.clear();
         }
-        myLoadedRunnerSettings.clear();
         for (Element runnerElement : element.getChildren(RUNNER_ELEMENT)) {
             String id = runnerElement.getAttributeValue(RUNNER_ID);
             ProgramRunner runner = RunnerRegistry.getInstance().findRunnerById(id);
             if (runner != null) {
-                myLoadedRunnerSettings.add(id);
                 RunnerSettings settings = createRunnerSettings(runner);
                 if (settings != null) {
                     settings.readExternal(runnerElement);
                 }
                 myRunnerSettings.put(runner, settings);
             }
-            else {
+            else if (hasRunnerData(runnerElement)) {
                 if (myUnloadedRunnerSettings == null) {
                     myUnloadedRunnerSettings = new SmartList<>();
                 }
@@ -268,7 +265,7 @@ public class RunnerAndConfigurationSettingsImpl implements JDOMExternalizable, C
                 }
                 myConfigurationPerRunnerSettings.put(runner, settings);
             }
-            else {
+            else if (hasRunnerData(configurationElement)) {
                 if (myUnloadedConfigurationPerRunnerSettings == null) {
                     myUnloadedConfigurationPerRunnerSettings = new SmartList<>();
                 }
@@ -277,6 +274,10 @@ public class RunnerAndConfigurationSettingsImpl implements JDOMExternalizable, C
                 myUnloadedConfigurationPerRunnerSettings.add(configurationElement);
             }
         }
+    }
+
+    private static boolean hasRunnerData(Element runnerElement) {
+        return runnerElement.getContentSize() > 0 || runnerElement.getAttributes().size() > 1;
     }
 
     @Override
@@ -322,6 +323,9 @@ public class RunnerAndConfigurationSettingsImpl implements JDOMExternalizable, C
             if (settings != null) {
                 settings.writeExternal(runnerElement);
             }
+            if (JDOMUtil.isEmpty(runnerElement)) {
+                continue;
+            }
             runnerElement.setAttribute(RUNNER_ID, runner.getRunnerId());
             configurationPerRunnerSettings.add(runnerElement);
         }
@@ -340,16 +344,13 @@ public class RunnerAndConfigurationSettingsImpl implements JDOMExternalizable, C
         List<Element> runnerSettings = new SmartList<>();
         for (ProgramRunner runner : myRunnerSettings.keySet()) {
             RunnerSettings settings = myRunnerSettings.get(runner);
-            boolean wasLoaded = myLoadedRunnerSettings.contains(runner.getRunnerId());
-            if (settings == null && !wasLoaded) {
+            if (settings == null) {
                 continue;
             }
 
             Element runnerElement = new Element(RUNNER_ELEMENT);
-            if (settings != null) {
-                settings.writeExternal(runnerElement);
-            }
-            if (wasLoaded || !JDOMUtil.isEmpty(runnerElement)) {
+            settings.writeExternal(runnerElement);
+            if (!JDOMUtil.isEmpty(runnerElement)) {
                 runnerElement.setAttribute(RUNNER_ID, runner.getRunnerId());
                 runnerSettings.add(runnerElement);
             }

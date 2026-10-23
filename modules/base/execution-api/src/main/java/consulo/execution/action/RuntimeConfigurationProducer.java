@@ -23,7 +23,6 @@ import consulo.execution.RunManager;
 import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.execution.RuntimeConfigurationException;
 import consulo.execution.configuration.*;
-import consulo.execution.configuration.ui.SettingsEditor;
 import consulo.execution.executor.Executor;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.language.psi.PsiElement;
@@ -199,12 +198,6 @@ public abstract class RuntimeConfigurationProducer implements Comparable<Runtime
         public DelegatingRuntimeConfiguration(T config) {
             super(config.getProject(), config.getFactory(), config.getName());
             myConfig = config;
-        }
-
-        
-        @Override
-        public SettingsEditor<? extends RunConfiguration> getConfigurationEditor() {
-            return myConfig.getConfigurationEditor();
         }
 
         @SuppressWarnings({"CloneDoesntCallSuperClone"})

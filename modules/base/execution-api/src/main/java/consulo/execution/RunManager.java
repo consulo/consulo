@@ -25,7 +25,6 @@ import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.runner.RunnerRegistry;
 import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
-import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 
@@ -283,10 +282,10 @@ public abstract class RunManager {
                                          boolean addEnabledTemplateTasksIfAbsent);
 
   
-  public abstract <T extends BeforeRunTask> List<T> getBeforeRunTasks(RunConfiguration settings, Key<T> taskProviderID);
+  public abstract <T extends BeforeRunTask> List<T> getBeforeRunTasks(RunConfiguration settings, Class<T> taskClass);
 
   
-  public abstract <T extends BeforeRunTask> List<T> getBeforeRunTasks(Key<T> taskProviderID);
+  public abstract <T extends BeforeRunTask> List<T> getBeforeRunTasks(Class<T> taskClass);
 
   public abstract RunnerAndConfigurationSettings findConfigurationByName(@Nullable String name);
 
@@ -310,9 +309,9 @@ public abstract class RunManager {
   }
 
   @SafeVarargs
-  public final void disableTasks(RunConfiguration settings, Key<? extends BeforeRunTask>... keys) {
-    for (Key<? extends BeforeRunTask> key : keys) {
-      List<? extends BeforeRunTask> tasks = getBeforeRunTasks(settings, key);
+  public final void disableTasks(RunConfiguration settings, Class<? extends BeforeRunTask>... taskClasses) {
+    for (Class<? extends BeforeRunTask> taskClass : taskClasses) {
+      List<? extends BeforeRunTask> tasks = getBeforeRunTasks(settings, taskClass);
       for (BeforeRunTask task : tasks) {
         task.setEnabled(false);
       }
@@ -320,7 +319,7 @@ public abstract class RunManager {
   }
 
   @SafeVarargs
-  public final int getTasksCount(RunConfiguration settings, Key<? extends BeforeRunTask>... keys) {
-    return Arrays.stream(keys).mapToInt(key -> getBeforeRunTasks(settings, key).size()).sum();
+  public final int getTasksCount(RunConfiguration settings, Class<? extends BeforeRunTask>... taskClasses) {
+    return Arrays.stream(taskClasses).mapToInt(taskClass -> getBeforeRunTasks(settings, taskClass).size()).sum();
   }
 }

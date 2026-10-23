@@ -29,8 +29,9 @@ import consulo.execution.configuration.*;
 import consulo.execution.event.RunManagerListener;
 import consulo.execution.event.RunManagerListenerEvent;
 import consulo.execution.executor.Executor;
-import consulo.execution.impl.internal.RunConfigurationBeforeRunProvider;
-import consulo.execution.impl.internal.UnknownBeforeRunTaskProvider;
+import consulo.execution.impl.internal.BeforeRunFragments;
+import consulo.execution.impl.internal.RunConfigurableBeforeRunTask;
+import consulo.execution.impl.internal.UnknownBeforeRunTask;
 import consulo.execution.internal.RunManagerConfig;
 import consulo.execution.internal.RunManagerEx;
 import consulo.execution.runner.ExecutionEnvironment;
@@ -46,11 +47,12 @@ import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Lists;
 import consulo.util.collection.SmartList;
-import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.JDOMExternalizableStringList;
+import consulo.util.xml.serializer.SkipDefaultsSerializationFilter;
 import consulo.util.xml.serializer.WriteExternalException;
+import consulo.util.xml.serializer.XmlSerializer;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -70,7 +72,11 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
     protected static final String RECENT = "recent_temporary";
     protected static final String NAME_ATTR = "name";
     protected static final String SELECTED_ATTR = "selected";
-    private static final String METHOD = "method";
+    static final String METHOD = "method";
+    static final String METHOD_VERSION_ATTR = "v";
+    static final String METHOD_VERSION = "3";
+    static final String TASK_ELEMENT = "task";
+    static final String TASK_ID_ATTR = "id";
     private static final String OPTION = "option";
 
     private final Project myProject;
@@ -341,7 +347,10 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
         if (mySelectedConfigurationId != null && mySelectedConfigurationId.equals(existingId)) {
             setSelectedConfigurationId(newId);
         }
-        myConfigurations.put(newId, settings);
+        RunnerAndConfigurationSettings replacedSettings = myConfigurations.put(newId, settings);
+        if (replacedSettings != null && replacedSettings != settings && replacedSettings != existingSettings) {
+            fireRunConfigurationsRemoved(List.of(replacedSettings));
+        }
 
         RunConfiguration configuration = settings.getConfiguration();
         if (existingId == null) {
@@ -451,8 +460,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
         for (Map.Entry<RunConfiguration, List<BeforeRunTask>> entry : myConfigurationToBeforeTasksMap.entrySet()) {
             for (Iterator<BeforeRunTask> iterator = entry.getValue().iterator(); iterator.hasNext(); ) {
                 BeforeRunTask task = iterator.next();
-                if (task instanceof RunConfigurationBeforeRunProvider.RunConfigurableBeforeRunTask runConfigurableBeforeRunTask
-                    && settings.equals(runConfigurableBeforeRunTask.getSettings())) {
+                if (task instanceof RunConfigurableBeforeRunTask runConfigurableBeforeRunTask && runConfigurableBeforeRunTask.isFor(settings)) {
                     iterator.remove();
                     RunnerAndConfigurationSettings changedSettings = getSettings(entry.getKey());
                     if (changedSettings != null) {
@@ -665,48 +673,45 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
         }
 
         List<BeforeRunTask> tasks = new ArrayList<>(getBeforeRunTasks(settings.getConfiguration()));
-        Map<Key<BeforeRunTask>, BeforeRunTask> templateTasks = new HashMap<>();
+        Map<Object, BeforeRunTask> templateTasks = new LinkedHashMap<>();
         List<BeforeRunTask> beforeRunTasks = settings.isTemplate()
             ? getHardcodedBeforeRunTasks(settings.getConfiguration())
             : getBeforeRunTasks(getConfigurationTemplate(settings.getFactory()).getConfiguration());
         for (BeforeRunTask templateTask : beforeRunTasks) {
-            templateTasks.put(templateTask.getProviderId(), templateTask);
+            Object identity = BeforeRunFragments.identity(templateTask);
+            templateTasks.put(identity, templateTask);
             if (templateTask.isEnabled()) {
                 boolean found = false;
                 for (BeforeRunTask realTask : tasks) {
-                    if (realTask.getProviderId() == templateTask.getProviderId()) {
+                    if (BeforeRunFragments.identity(realTask).equals(identity)) {
                         found = true;
                         break;
                     }
                 }
                 if (!found) {
-                    BeforeRunTask clone = templateTask.clone();
-                    clone.setEnabled(false);
-                    tasks.add(0, clone);
+                    BeforeRunTask copy = templateTask.copy();
+                    copy.setEnabled(false);
+                    tasks.add(0, copy);
                 }
             }
         }
 
         Element methodsElement = new Element(METHOD);
+        methodsElement.setAttribute(METHOD_VERSION_ATTR, METHOD_VERSION);
+        List<Object> templateIdentities = new ArrayList<>(templateTasks.keySet());
         for (int i = 0, size = tasks.size(); i < size; i++) {
             BeforeRunTask task = tasks.get(i);
-            int j = 0;
-            BeforeRunTask templateTask = null;
-            for (Map.Entry<Key<BeforeRunTask>, BeforeRunTask> entry : templateTasks.entrySet()) {
-                if (entry.getKey() == task.getProviderId()) {
-                    templateTask = entry.getValue();
-                    break;
-                }
-                j++;
-            }
-            if (task.equals(templateTask) && i == j) {
+            Object identity = BeforeRunFragments.identity(task);
+            BeforeRunTask templateTask = templateTasks.get(identity);
+            if (templateTask != null && task.isSameState(templateTask) && i == templateIdentities.indexOf(identity)) {
                 // not necessary saving if the task is the same as template and on the same place
                 continue;
             }
-            Element child = new Element(OPTION);
-            child.setAttribute(NAME_ATTR, task.getProviderId().toString());
-            task.writeExternal(child);
-            methodsElement.addContent(child);
+
+            Element child = writeTaskElement(task);
+            if (child != null) {
+                methodsElement.addContent(child);
+            }
         }
         configurationElement.addContent(methodsElement);
     }
@@ -894,21 +899,59 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
 
     
     private List<BeforeRunTask> readStepsBeforeRun(@Nullable Element child, RunnerAndConfigurationSettings settings) {
-        List<BeforeRunTask> result = null;
-        if (child != null) {
-            for (Element methodElement : child.getChildren(OPTION)) {
-                Key<? extends BeforeRunTask> id = getProviderKey(methodElement.getAttributeValue(NAME_ATTR));
-                BeforeRunTask beforeRunTask = getProvider(id).createTask(settings.getConfiguration());
-                if (beforeRunTask != null) {
-                    beforeRunTask.readExternal(methodElement);
-                    if (result == null) {
-                        result = new SmartList<>();
-                    }
-                    result.add(beforeRunTask);
-                }
-            }
+        List<BeforeRunTask> result = new SmartList<>();
+        if (child == null) {
+            return result;
         }
-        return Lists.notNullize(result);
+
+        RunConfiguration configuration = settings.getConfiguration();
+        for (Element taskElement : child.getChildren()) {
+            boolean legacy = OPTION.equals(taskElement.getName());
+            String id = taskElement.getAttributeValue(legacy ? NAME_ATTR : TASK_ID_ATTR);
+            if (id == null) {
+                continue;
+            }
+
+            @SuppressWarnings("unchecked")
+            BeforeRunFragment<BeforeRunTask> fragment = (BeforeRunFragment<BeforeRunTask>) BeforeRunFragment.find(myProject, id);
+            if (fragment == null) {
+                result.add(new UnknownBeforeRunTask(id, taskElement));
+                continue;
+            }
+
+            BeforeRunTask task = fragment.createTask(configuration);
+            if (task == null) {
+                task = XmlSerializer.deserialize(new Element(TASK_ELEMENT), fragment.getStateClass());
+            }
+            if (task == null) {
+                continue;
+            }
+
+            if (legacy) {
+                fragment.readLegacy(taskElement, task);
+            }
+            else {
+                XmlSerializer.deserializeInto(task, taskElement);
+            }
+            result.add(task);
+        }
+        return result;
+    }
+
+    private @Nullable Element writeTaskElement(BeforeRunTask task) {
+        if (task instanceof UnknownBeforeRunTask unknown) {
+            return unknown.getElement();
+        }
+
+        BeforeRunFragment<?> fragment = BeforeRunFragment.find(myProject, task);
+        if (fragment == null) {
+            LOG.error("No before run fragment for " + task.getClass().getName());
+            return null;
+        }
+
+        Element element = new Element(TASK_ELEMENT).setAttribute(TASK_ID_ATTR, fragment.getId());
+        XmlSerializer.serializeInto(task, element, new SkipDefaultsSerializationFilter());
+        return element;
     }
 
     public @Nullable ConfigurationFactory getFactory(String typeName, String factoryName) {
@@ -1024,14 +1067,14 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
     
     @Override
     @SuppressWarnings("unchecked")
-    public <T extends BeforeRunTask> List<T> getBeforeRunTasks(Key<T> taskProviderID) {
+    public <T extends BeforeRunTask> List<T> getBeforeRunTasks(Class<T> taskClass) {
         List<T> tasks = new ArrayList<>();
         List<RunnerAndConfigurationSettings> checkedTemplates = new ArrayList<>();
         List<RunnerAndConfigurationSettings> settingsList = new ArrayList<>(myConfigurations.values());
         for (RunnerAndConfigurationSettings settings : settingsList) {
             List<BeforeRunTask> runTasks = getBeforeRunTasks(settings.getConfiguration());
             for (BeforeRunTask task : runTasks) {
-                if (task != null && task.isEnabled() && task.getProviderId() == taskProviderID) {
+                if (task != null && task.isEnabled() && task.getClass() == taskClass) {
                     tasks.add((T)task);
                 }
                 else {
@@ -1040,7 +1083,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
                         checkedTemplates.add(template);
                         List<BeforeRunTask> templateTasks = getBeforeRunTasks(template.getConfiguration());
                         for (BeforeRunTask templateTask : templateTasks) {
-                            if (templateTask != null && templateTask.isEnabled() && templateTask.getProviderId() == taskProviderID) {
+                            if (templateTask != null && templateTask.isEnabled() && templateTask.getClass() == taskClass) {
                                 tasks.add((T)templateTask);
                             }
                         }
@@ -1126,9 +1169,9 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
 
     
     @Override
-    public <T extends BeforeRunTask> List<T> getBeforeRunTasks(RunConfiguration settings, Key<T> taskProviderID) {
+    public <T extends BeforeRunTask> List<T> getBeforeRunTasks(RunConfiguration settings, Class<T> taskClass) {
         if (settings instanceof WrappingRunConfiguration wrappingRunConfiguration) {
-            return getBeforeRunTasks(wrappingRunConfiguration.getPeer(), taskProviderID);
+            return getBeforeRunTasks(wrappingRunConfiguration.getPeer(), taskClass);
         }
         List<BeforeRunTask> tasks = myConfigurationToBeforeTasksMap.get(settings);
         if (tasks == null) {
@@ -1137,9 +1180,8 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
         }
         List<T> result = new SmartList<>();
         for (BeforeRunTask task : tasks) {
-            if (task.getProviderId() == taskProviderID) {
-                //noinspection unchecked
-                result.add((T)task);
+            if (task.getClass() == taskClass) {
+                result.add(taskClass.cast(task));
             }
         }
         return result;
@@ -1165,12 +1207,10 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
     
     private List<BeforeRunTask> getHardcodedBeforeRunTasks(RunConfiguration settings) {
         List<BeforeRunTask> _tasks = new SmartList<>();
-        myProject.getExtensionPoint(BeforeRunTaskProvider.class).forEach(provider -> {
-            BeforeRunTask task = provider.createTask(settings);
+        myProject.getExtensionPoint(BeforeRunFragment.class).forEach(fragment -> {
+            BeforeRunTask task = fragment.createTask(settings);
             if (task != null && task.isEnabled()) {
-                @SuppressWarnings("unchecked")
-                Key<? extends BeforeRunTask> providerID = provider.getId();
-                settings.getFactory().configureBeforeRunTaskDefaults(providerID, task);
+                settings.getFactory().configureBeforeRunTaskDefaults(task);
                 if (task.isEnabled()) {
                     _tasks.add(task);
                 }
@@ -1184,7 +1224,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
         List<BeforeRunTask> result = new SmartList<>();
         for (BeforeRunTask task : original) {
             if (task.isEnabled()) {
-                result.add(task.clone());
+                result.add(task.copy());
             }
         }
         return result;
@@ -1210,13 +1250,13 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
         List<BeforeRunTask> result = new SmartList<>(tasks);
         if (addEnabledTemplateTasksIfAbsent) {
             List<BeforeRunTask> templates = getTemplateBeforeRunTasks(runConfiguration);
-            Set<Key<BeforeRunTask>> idsToSet = new HashSet<>();
+            Set<Object> idsToSet = new HashSet<>();
             for (BeforeRunTask task : tasks) {
-                idsToSet.add(task.getProviderId());
+                idsToSet.add(BeforeRunFragments.identity(task));
             }
             int i = 0;
             for (BeforeRunTask template : templates) {
-                if (!idsToSet.contains(template.getProviderId())) {
+                if (!idsToSet.contains(BeforeRunFragments.identity(template))) {
                     result.add(i, template);
                     i++;
                 }
@@ -1237,6 +1277,10 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
     }
 
     private static final ThreadLocal<RunManagerImpl> ourLocalRunManager = ThreadLocal.withInitial(() -> null);
+
+    Project getProject() {
+        return myProject;
+    }
 
     public static RunManagerImpl getInstanceImpl(Project project) {
         RunManagerImpl runManager = ourLocalRunManager.get();
@@ -1292,18 +1336,6 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
         getEventPublisher().endUpdate();
     }
 
-    private Map<Key<? extends BeforeRunTask>, BeforeRunTaskProvider> myBeforeStepsMap;
-    private Map<String, Key<? extends BeforeRunTask>> myProviderKeysMap;
-
-    
-    private synchronized BeforeRunTaskProvider getProvider(Key<? extends BeforeRunTask> providerId) {
-        if (myBeforeStepsMap == null) {
-            initProviderMaps();
-        }
-        return myBeforeStepsMap.get(providerId);
-    }
-
-    
     public Map<ConfigurationType, Map<String, List<RunnerAndConfigurationSettings>>> getConfigurationsGroupedByTypeAndFolder(boolean isIncludeUnknown) {
         Map<ConfigurationType, Map<String, List<RunnerAndConfigurationSettings>>> result = new LinkedHashMap<>();
 
@@ -1320,32 +1352,6 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
             groupAndSettings.computeIfAbsent(settings.getFolderName(), s -> new SmartList<>()).add(settings);
         }
         return result;
-    }
-
-    
-    private synchronized Key<? extends BeforeRunTask> getProviderKey(String keyString) {
-        if (myProviderKeysMap == null) {
-            initProviderMaps();
-        }
-        Key<? extends BeforeRunTask> id = myProviderKeysMap.get(keyString);
-        if (id == null) {
-            UnknownBeforeRunTaskProvider provider = new UnknownBeforeRunTaskProvider(keyString);
-            id = provider.getId();
-            myProviderKeysMap.put(keyString, id);
-            myBeforeStepsMap.put(id, provider);
-        }
-        return id;
-    }
-
-    private void initProviderMaps() {
-        myBeforeStepsMap = new LinkedHashMap<>();
-        myProviderKeysMap = new LinkedHashMap<>();
-        myProject.getExtensionPoint(BeforeRunTaskProvider.class).forEach(provider -> {
-            @SuppressWarnings("unchecked")
-            Key<? extends BeforeRunTask> id = provider.getId();
-            myBeforeStepsMap.put(id, provider);
-            myProviderKeysMap.put(id.toString(), id);
-        });
     }
 
     

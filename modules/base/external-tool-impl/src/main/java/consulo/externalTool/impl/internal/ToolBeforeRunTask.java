@@ -15,16 +15,14 @@
  */
 package consulo.externalTool.impl.internal;
 
+import com.dslplatform.json.CompiledJson;
+
 import java.util.List;
 
-public class ToolBeforeRunTask extends AbstractToolBeforeRunTask<ToolBeforeRunTask, Tool> {
-
-  protected ToolBeforeRunTask() {
-    super(ToolBeforeRunTaskProvider.ID);
-  }
-
-  @Override
-  protected List<Tool> getTools() {
-    return ToolManager.getInstance().getTools();
-  }
+@CompiledJson
+public class ToolBeforeRunTask extends AbstractToolBeforeRunTask<Tool> {
+    @Override
+    protected List<Tool> availableTools() {
+        return ToolManager.getInstance().getTools();
+    }
 }

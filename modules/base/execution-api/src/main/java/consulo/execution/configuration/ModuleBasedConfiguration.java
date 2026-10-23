@@ -17,6 +17,8 @@
 package consulo.execution.configuration;
 
 import consulo.application.AccessRule;
+import consulo.application.ReadAction;
+import consulo.execution.configuration.fragment.ModuleFragmentState;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.logging.Logger;
 import consulo.module.Module;
@@ -66,18 +68,40 @@ public abstract class ModuleBasedConfiguration<ConfigurationModule extends RunCo
     getConfigurationModule().setModuleName(moduleName);
   }
 
+  /**
+   * The old {@code <module name>} element becomes the "module" fragment state; subclasses call it from their own conversion.
+   */
+  @Override
+  protected void convertLegacyState(LegacyRunConfigurationConverter converter) {
+    converter.addFragment(new ModuleFragmentState(converter.readModule()));
+  }
+
   @Override
   public void readExternal(Element element) throws InvalidDataException {
     super.readExternal(element);
 
-    myModule.readExternal(element);
+    if (getOptionsClass() != null) {
+      String moduleName = getFragmentState(ModuleFragmentState.class).getName();
+      if (moduleName != null) {
+        ReadAction.run(() -> myModule.setModuleName(moduleName));
+      }
+    }
+    else {
+      myModule.readExternal(element);
+    }
   }
 
   @Override
   public void writeExternal(Element element) throws WriteExternalException {
-    super.writeExternal(element);
-
-    myModule.writeExternal(element);
+    if (getOptionsClass() != null) {
+      String moduleName = myModule.getModuleName();
+      getFragmentState(ModuleFragmentState.class).setName(moduleName);
+      super.writeExternal(element);
+    }
+    else {
+      super.writeExternal(element);
+      myModule.writeExternal(element);
+    }
   }
 
   @Deprecated

@@ -6,15 +6,12 @@ import consulo.document.FileDocumentManager;
 import consulo.execution.DefaultExecutionResult;
 import consulo.execution.ExecutionResult;
 import consulo.execution.configuration.ConfigurationFactory;
+import consulo.execution.configuration.LegacyRunConfigurationConverter;
 import consulo.execution.configuration.LocatableConfigurationBase;
-import consulo.execution.configuration.RunConfiguration;
+import consulo.execution.configuration.fragment.RunConfigurationFragment;
 import consulo.execution.configuration.RunProfileState;
-import consulo.execution.configuration.log.ui.LogConfigurationPanel;
-import consulo.execution.configuration.ui.SettingsEditor;
-import consulo.execution.configuration.ui.SettingsEditorGroup;
 import consulo.execution.debug.DefaultDebugExecutor;
 import consulo.execution.executor.Executor;
-import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.runner.ProgramRunner;
 import consulo.execution.ui.console.ConsoleView;
@@ -40,8 +37,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.io.NetUtil;
 import consulo.util.lang.ExceptionUtil;
 import consulo.util.lang.StringUtil;
-import consulo.util.xml.serializer.InvalidDataException;
-import consulo.util.xml.serializer.WriteExternalException;
 import consulo.util.xml.serializer.XmlSerializer;
 import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
@@ -62,61 +57,63 @@ public class ExternalSystemRunConfiguration extends LocatableConfigurationBase {
   
   private final ProjectSystemId myExternalSystemId;
 
-  private ExternalSystemTaskExecutionSettings mySettings = new ExternalSystemTaskExecutionSettings();
 
   public ExternalSystemRunConfiguration(ProjectSystemId externalSystemId, Project project, ConfigurationFactory factory, String name) {
     super(project, factory, name);
     myExternalSystemId = externalSystemId;
-    mySettings.setExternalSystemIdString(externalSystemId.getId());
+  }
+
+  @Override
+  protected Class<ExternalSystemRunConfigurationOptions> getOptionsClass() {
+    return ExternalSystemRunConfigurationOptions.class;
+  }
+
+  @Override
+  public ExternalSystemRunConfigurationOptions getOptions() {
+    return (ExternalSystemRunConfigurationOptions)super.getOptions();
+  }
+
+  @Override
+  protected void convertLegacyState(LegacyRunConfigurationConverter converter) {
+    ExternalSystemRunConfigurationOptions options = new ExternalSystemRunConfigurationOptions();
+    Element settings = converter.getElement().getChild(ExternalSystemTaskExecutionSettings.TAG_NAME);
+    if (settings != null) {
+      options.copyFrom(XmlSerializer.deserialize(settings, ExternalSystemTaskExecutionSettings.class));
+    }
+    converter.setOptions(options);
+  }
+
+  @Override
+  public List<RunConfigurationFragment<?>> createFragments() {
+    return List.of(new ExternalSystemTaskRunConfigurationFragment(myExternalSystemId));
+  }
+
+  public ProjectSystemId getExternalSystemId() {
+    return myExternalSystemId;
   }
 
   @Override
   public String suggestedName() {
-    return AbstractExternalSystemTaskConfigurationType.generateName(getProject(), mySettings);
+    return AbstractExternalSystemTaskConfigurationType.generateName(getProject(), getSettingsCopy());
   }
 
-  @Override
-  public RunConfiguration clone() {
-    ExternalSystemRunConfiguration result = (ExternalSystemRunConfiguration)super.clone();
-    result.mySettings = mySettings.clone();
-    return result;
+  /**
+   * A copy of the task settings; changes are stored back by {@link #setSettings}.
+   */
+  public ExternalSystemTaskExecutionSettings getSettingsCopy() {
+    ExternalSystemTaskExecutionSettings settings = new ExternalSystemTaskExecutionSettings();
+    settings.setExternalSystemIdString(myExternalSystemId.getId());
+    getOptions().copyTo(settings);
+    return settings;
   }
 
-  @Override
-  public void readExternal(Element element) throws InvalidDataException {
-    super.readExternal(element);
-    Element e = element.getChild(ExternalSystemTaskExecutionSettings.TAG_NAME);
-    if (e != null) {
-      mySettings = XmlSerializer.deserialize(e, ExternalSystemTaskExecutionSettings.class);
-    }
-  }
-
-  @Override
-  public void writeExternal(Element element) throws WriteExternalException {
-    super.writeExternal(element);
-    element.addContent(XmlSerializer.serialize(mySettings));
-  }
-
-  
-  public ExternalSystemTaskExecutionSettings getSettings() {
-    return mySettings;
-  }
-
-  
-  @Override
-  public SettingsEditor<? extends RunConfiguration> getConfigurationEditor() {
-    SettingsEditorGroup<ExternalSystemRunConfiguration> group = new SettingsEditorGroup<>();
-    group.addEditor(
-      ExecutionLocalize.runConfigurationConfigurationTabTitle(),
-      new ExternalSystemRunConfigurationEditor(getProject(), myExternalSystemId)
-    );
-    group.addEditor(ExecutionLocalize.logsTabTitle(), new LogConfigurationPanel<>());
-    return group;
+  public void setSettings(ExternalSystemTaskExecutionSettings settings) {
+    getOptions().copyFrom(settings);
   }
 
   @Override
   public @Nullable RunProfileState getState(Executor executor, ExecutionEnvironment env) throws ExecutionException {
-    return new MyRunnableState(myExternalSystemId, mySettings, getProject(), DefaultDebugExecutor.EXECUTOR_ID.equals(executor.getId()));
+    return new MyRunnableState(myExternalSystemId, getSettingsCopy(), getProject(), DefaultDebugExecutor.EXECUTOR_ID.equals(executor.getId()));
   }
 
   public static class MyRunnableState implements RunProfileState {

@@ -15,6 +15,7 @@
  */
 package consulo.compiler.execution;
 
+import com.dslplatform.json.CompiledJson;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.dataContext.DataContext;
 import consulo.execution.BeforeRunTask;
@@ -25,8 +26,6 @@ import consulo.execution.runner.ExecutionEnvironment;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.util.dataholder.Key;
 import jakarta.inject.Inject;
 
 import java.util.concurrent.CompletableFuture;
@@ -36,13 +35,11 @@ import java.util.concurrent.CompletableFuture;
  */
 @ExtensionImpl(id = "compileBeforeRunNoErrorCheck", order = "after compileBeforeRun")
 public class CompileStepBeforeRunNoErrorCheck extends CompileStepBeforeRunBase<CompileStepBeforeRunNoErrorCheck.MakeBeforeRunTaskNoErrorCheck> {
-    public static class MakeBeforeRunTaskNoErrorCheck extends BeforeRunTask<MakeBeforeRunTaskNoErrorCheck> {
-        private MakeBeforeRunTaskNoErrorCheck() {
-            super(ID);
-        }
+    @CompiledJson
+    public static class MakeBeforeRunTaskNoErrorCheck extends BeforeRunTask {
     }
 
-    public static final Key<MakeBeforeRunTaskNoErrorCheck> ID = Key.create("MakeNoErrorCheck");
+    public static final String ID = "MakeNoErrorCheck";
 
     @Inject
     public CompileStepBeforeRunNoErrorCheck(Project project) {
@@ -51,8 +48,13 @@ public class CompileStepBeforeRunNoErrorCheck extends CompileStepBeforeRunBase<C
 
     
     @Override
-    public Key<MakeBeforeRunTaskNoErrorCheck> getId() {
+    public String getId() {
         return ID;
+    }
+
+    @Override
+    public Class<MakeBeforeRunTaskNoErrorCheck> getStateClass() {
+        return MakeBeforeRunTaskNoErrorCheck.class;
     }
 
     
@@ -74,7 +76,7 @@ public class CompileStepBeforeRunNoErrorCheck extends CompileStepBeforeRunBase<C
 
     
     @Override
-    public CompletableFuture<Void> executeTaskAsync(
+    public CompletableFuture<Void> executeAsync(
         UIAccess uiAccess,
         DataContext context,
         RunConfiguration configuration,

@@ -39,6 +39,8 @@ module consulo.sand.language.plugin {
     requires consulo.virtual.file.watcher.api;
 
     opens consulo.sandboxPlugin.colorScheme to consulo.ide.impl;
+    opens consulo.sandboxPlugin.ide.coverage to consulo.util.xml.serializer, consulo.execution.api;
     opens consulo.sandboxPlugin.ide.profiler to consulo.util.xml.serializer;
+    opens consulo.sandboxPlugin.ide.run to consulo.util.xml.serializer, consulo.execution.api;
     opens consulo.sandboxPlugin.lang.inspection to consulo.util.xml.serializer;
 }

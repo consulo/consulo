@@ -65,4 +65,5 @@ module consulo.execution.impl {
     opens consulo.execution.impl.internal.console to consulo.util.xml.serializer, consulo.component.impl;
 
     opens consulo.execution.impl.internal to consulo.util.xml.serializer;
+    opens consulo.execution.impl.internal.compound to consulo.util.xml.serializer, consulo.execution.api;
 }

@@ -76,7 +76,6 @@ public final class SingleConfigurationConfigurable<Config extends RunConfigurati
     private final boolean myBrokenConfiguration;
 
     private boolean myStoreProjectConfiguration;
-    private boolean mySingleton;
     private @Nullable String myFolderName;
 
     private final List<Runnable> myPresentationListeners = new CopyOnWriteArrayList<>();
@@ -88,7 +87,6 @@ public final class SingleConfigurationConfigurable<Config extends RunConfigurati
     private @Nullable Component myComponent;
     private @Nullable TextBox myNameBox;
     private @Nullable CheckBox myShareBox;
-    private @Nullable CheckBox mySingletonBox;
     private @Nullable Label myValidationLabel;
     private @Nullable Hyperlink myFixLink;
     private @Nullable HorizontalLayout myValidationPanel;
@@ -186,7 +184,6 @@ public final class SingleConfigurationConfigurable<Config extends RunConfigurati
         RunManagerImpl runManager = RunManagerImpl.getInstanceImpl(settings.getConfiguration().getProject());
         runManager.shareConfiguration(settings, myStoreProjectConfiguration);
         settings.setName(getNameText());
-        settings.setSingleton(mySingleton);
         settings.setFolderName(myFolderName);
         ConfigurationSettingsEditorWrapperImpl editor = myEditor;
         if (editor != null) {
@@ -209,16 +206,10 @@ public final class SingleConfigurationConfigurable<Config extends RunConfigurati
 
         RunManagerImpl runManager = RunManagerImpl.getInstanceImpl(settings.getConfiguration().getProject());
         myStoreProjectConfiguration = runManager.isConfigurationShared(settings);
-        mySingleton = settings.isSingleton();
 
         CheckBox shareBox = myShareBox;
         if (shareBox != null) {
             shareBox.setValue(myStoreProjectConfiguration, false);
-        }
-
-        CheckBox singletonBox = mySingletonBox;
-        if (singletonBox != null) {
-            singletonBox.setValue(mySingleton, false);
         }
     }
 
@@ -265,20 +256,12 @@ public final class SingleConfigurationConfigurable<Config extends RunConfigurati
         });
         myShareBox = shareBox;
 
-        CheckBox singletonBox = CheckBox.create(ExecutionLocalize.runConfigurationSingleton());
-        singletonBox.setValue(mySingleton, false);
-        singletonBox.setEnabled(!isBrokenConfiguration());
-        ConfigurationFactory factory = settings.getFactory();
-        singletonBox.setVisible(factory != null && factory.canConfigurationBeSingleton());
-        singletonBox.addValueListener(event -> {
-            mySingleton = Boolean.TRUE.equals(event.getValue());
-            setModified(true);
-        });
-        mySingletonBox = singletonBox;
-
         HorizontalLayout options = HorizontalLayout.create();
         options.add(shareBox);
-        options.add(singletonBox);
+        ConfigurationSettingsEditorWrapperImpl pageEditor = myEditor;
+        if (pageEditor != null) {
+            options.add(pageEditor.createModifyOptionsLink());
+        }
 
         DockLayout header = DockLayout.create();
         header.center(LabeledBuilder.filled(ExecutionLocalize.editRunConfigurationRunConfigurationNameLabel(), nameBox));
@@ -523,7 +506,6 @@ public final class SingleConfigurationConfigurable<Config extends RunConfigurati
         myComponent = null;
         myNameBox = null;
         myShareBox = null;
-        mySingletonBox = null;
         myValidationLabel = null;
         myFixLink = null;
         myValidationPanel = null;
@@ -535,10 +517,6 @@ public final class SingleConfigurationConfigurable<Config extends RunConfigurati
 
     public boolean isStoreProjectConfiguration() {
         return myStoreProjectConfiguration;
-    }
-
-    public boolean isSingleton() {
-        return mySingleton;
     }
 
     public void setFolderName(@Nullable String folderName) {

@@ -92,6 +92,7 @@ public class DesktopTextBoxWithExtensions {
         @Override
         protected MyExtendableTextField createComponent() {
             MyExtendableTextField field = new MyExtendableTextField(myInitText);
+            field.setColumns(DEFAULT_COLUMNS);
 
             TextFieldPlaceholderFunction.install(field);
 

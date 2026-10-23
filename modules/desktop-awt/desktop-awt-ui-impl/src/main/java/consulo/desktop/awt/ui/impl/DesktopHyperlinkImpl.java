@@ -29,9 +29,11 @@ import consulo.ui.ex.awt.LocalizeAction;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.ui.internal.SearchHighlightUtil;
+import consulo.platform.base.icon.PlatformIconGroup;
 import org.jdesktop.swingx.JXHyperlink;
 import org.jspecify.annotations.Nullable;
 
+import javax.swing.SwingConstants;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.font.TextAttribute;
@@ -135,6 +137,11 @@ public class DesktopHyperlinkImpl extends SwingComponentDelegate<DesktopHyperlin
             case UNDERLINE -> {
                 myUnderline = true;
                 underline(toAWTComponent());
+            }
+            case DROP_DOWN -> {
+                MyLinkLabel label = toAWTComponent();
+                label.setIcon(TargetAWT.to(PlatformIconGroup.generalLinkdroptriangle()));
+                label.setHorizontalTextPosition(SwingConstants.LEADING);
             }
         }
     }

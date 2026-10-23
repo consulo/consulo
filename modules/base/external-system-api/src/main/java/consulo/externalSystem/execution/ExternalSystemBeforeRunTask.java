@@ -16,67 +16,89 @@
 package consulo.externalSystem.execution;
 
 import consulo.execution.BeforeRunTask;
-import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.model.execution.ExternalSystemTaskExecutionSettings;
-import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
-import org.jdom.Element;
+import consulo.util.xml.serializer.annotation.Attribute;
+import consulo.util.xml.serializer.annotation.Transient;
 import org.jspecify.annotations.Nullable;
 
 /**
+ * Before-run task of an external system. Each system subclasses it, so the owning
+ * {@link ExternalSystemBeforeRunTaskProvider} is found by the task's class.
+ *
  * @author Vladislav.Soroka
  * @since 2014-05-30
  */
-public class ExternalSystemBeforeRunTask extends BeforeRunTask<ExternalSystemBeforeRunTask> {
-    private final ExternalSystemTaskExecutionSettings myTaskExecutionSettings;
+public abstract class ExternalSystemBeforeRunTask extends BeforeRunTask {
+    private @Nullable String mySystemId;
+    private @Nullable String myTasks;
+    private @Nullable String myExternalProjectPath;
+    private @Nullable String myVmOptions;
+    private @Nullable String myScriptParameters;
 
-    public ExternalSystemBeforeRunTask(Key<ExternalSystemBeforeRunTask> providerId, ProjectSystemId systemId) {
-        super(providerId);
-        myTaskExecutionSettings = new ExternalSystemTaskExecutionSettings();
-        myTaskExecutionSettings.setExternalSystemIdString(systemId.getId());
+    @Attribute("systemId")
+    public @Nullable String getSystemId() {
+        return mySystemId;
     }
 
+    public void setSystemId(@Nullable String systemId) {
+        mySystemId = systemId;
+    }
+
+    @Attribute("tasks")
+    public @Nullable String getTasks() {
+        return myTasks;
+    }
+
+    public void setTasks(@Nullable String tasks) {
+        myTasks = StringUtil.nullize(tasks, true);
+    }
+
+    @Attribute("externalProjectPath")
+    public @Nullable String getExternalProjectPath() {
+        return myExternalProjectPath;
+    }
+
+    public void setExternalProjectPath(@Nullable String externalProjectPath) {
+        myExternalProjectPath = externalProjectPath;
+    }
+
+    @Attribute("vmOptions")
+    public @Nullable String getVmOptions() {
+        return myVmOptions;
+    }
+
+    public void setVmOptions(@Nullable String vmOptions) {
+        myVmOptions = vmOptions;
+    }
+
+    @Attribute("scriptParameters")
+    public @Nullable String getScriptParameters() {
+        return myScriptParameters;
+    }
+
+    public void setScriptParameters(@Nullable String scriptParameters) {
+        myScriptParameters = scriptParameters;
+    }
+
+    /**
+     * A new settings object with this task's values.
+     */
+    @Transient
     public ExternalSystemTaskExecutionSettings getTaskExecutionSettings() {
-        return myTaskExecutionSettings;
+        ExternalSystemTaskExecutionSettings settings = new ExternalSystemTaskExecutionSettings();
+        settings.setExternalSystemIdString(StringUtil.notNullize(mySystemId));
+        settings.setTaskNames(StringUtil.split(StringUtil.notNullize(myTasks), " "));
+        settings.setExternalProjectPath(myExternalProjectPath);
+        settings.setVmOptions(myVmOptions);
+        settings.setScriptParameters(myScriptParameters);
+        return settings;
     }
 
-    @Override
-    public void writeExternal(Element element) {
-        super.writeExternal(element);
-
-        element.setAttribute("tasks", StringUtil.join(myTaskExecutionSettings.getTaskNames(), " "));
-        if (myTaskExecutionSettings.getExternalProjectPath() != null) {
-            element.setAttribute("externalProjectPath", myTaskExecutionSettings.getExternalProjectPath());
-        }
-        if (myTaskExecutionSettings.getVmOptions() != null) {
-            element.setAttribute("vmOptions", myTaskExecutionSettings.getVmOptions());
-        }
-        if (myTaskExecutionSettings.getScriptParameters() != null) {
-            element.setAttribute("scriptParameters", myTaskExecutionSettings.getScriptParameters());
-        }
-    }
-
-    @Override
-    public void readExternal(Element element) {
-        super.readExternal(element);
-        myTaskExecutionSettings.setTaskNames(StringUtil.split(StringUtil.notNullize(element.getAttributeValue("tasks")), " "));
-        myTaskExecutionSettings.setExternalProjectPath(element.getAttributeValue("externalProjectPath"));
-        myTaskExecutionSettings.setVmOptions(element.getAttributeValue("vmOptions"));
-        myTaskExecutionSettings.setScriptParameters(element.getAttributeValue("scriptParameters"));
-    }
-
-    @Override
-    public boolean equals(@Nullable Object o) {
-        if (this == o) {
-            return true;
-        }
-        return o instanceof ExternalSystemBeforeRunTask that
-            && super.equals(o)
-            && myTaskExecutionSettings.equals(that.myTaskExecutionSettings);
-    }
-
-    @Override
-    public int hashCode() {
-        return 31 * super.hashCode() + myTaskExecutionSettings.hashCode();
+    public void setTaskExecutionSettings(ExternalSystemTaskExecutionSettings settings) {
+        setTasks(StringUtil.join(settings.getTaskNames(), " "));
+        setExternalProjectPath(settings.getExternalProjectPath());
+        setVmOptions(settings.getVmOptions());
+        setScriptParameters(settings.getScriptParameters());
     }
 }

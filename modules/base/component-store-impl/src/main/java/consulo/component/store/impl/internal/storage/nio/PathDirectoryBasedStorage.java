@@ -19,6 +19,8 @@ import consulo.application.Application;
 import consulo.component.persist.StateSplitterEx;
 import consulo.component.persist.Storage;
 import consulo.component.store.impl.internal.DefaultStateSerializer;
+import consulo.component.store.impl.internal.json.StateJsonBinder;
+import consulo.component.store.impl.internal.json.StateJsonSerializerImpl;
 import consulo.component.store.impl.internal.storage.*;
 import consulo.component.store.internal.PathMacrosService;
 import consulo.component.store.internal.StateStorageException;
@@ -36,7 +38,9 @@ import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.RefreshQueue;
 import consulo.virtualFileSystem.SavingRequestor;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.util.io.FileAttributes;
 import consulo.virtualFileSystem.event.VFileContentChangeEvent;
+import consulo.virtualFileSystem.event.VFileCreateEvent;
 import consulo.virtualFileSystem.event.VFileDeleteEvent;
 import consulo.virtualFileSystem.event.VFileEvent;
 import consulo.virtualFileSystem.event.VirtualFileEvent;
@@ -52,7 +56,10 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -101,7 +108,7 @@ public class PathDirectoryBasedStorage extends StateStorageBase<DirectoryStorage
                 private void notifyIfNeed(VirtualFileEvent event) {
                     VirtualFile file = event.getFile();
                     // storage directory will be removed if the only child was removed
-                    if (file.isDirectory() || StringUtil.endsWithIgnoreCase(file.getName(), DirectoryStorageData.DEFAULT_EXT)) {
+                    if (file.isDirectory() || isStorageFileName(file.getName())) {
                         listener.storageFileChanged(event, PathDirectoryBasedStorage.this);
                     }
                 }
@@ -134,6 +141,52 @@ public class PathDirectoryBasedStorage extends StateStorageBase<DirectoryStorage
             result.addAll(oldData.getComponentNames());
             result.addAll(newData.getComponentNames());
         }
+
+        String jsonComponentName = newData.getJsonComponentName();
+        if (jsonComponentName != null && !newData.getUnresolvedJson().isEmpty()) {
+            result.add(jsonComponentName);
+        }
+    }
+
+    @Override
+    public @Nullable <S> S getState(Object component, String componentName, Class<S> stateClass) throws StateStorageException {
+        resolveJson(getStorageData(), component, componentName);
+        return super.getState(component, componentName, stateClass);
+    }
+
+    private void resolveJson(DirectoryStorageData data, Object component, String componentName) {
+        Map<String, byte[]> unresolvedJson = data.getUnresolvedJson();
+        if (unresolvedJson.isEmpty() || data.getJsonComponentName() != null && !componentName.equals(data.getJsonComponentName())) {
+            return;
+        }
+
+        data.setJsonComponentName(componentName);
+        Interner<String> interner = Interner.createStringInterner();
+        for (Iterator<Map.Entry<String, byte[]>> iterator = unresolvedJson.entrySet().iterator(); iterator.hasNext(); ) {
+            Map.Entry<String, byte[]> entry = iterator.next();
+            Element state;
+            try {
+                state = mySplitter.readJson(component, entry.getValue(), StateJsonSerializerImpl.INSTANCE);
+            }
+            catch (Throwable e) {
+                LOG.error("Unable to read " + myDir.resolve(entry.getKey()), e);
+                continue;
+            }
+
+            if (state == null) {
+                LOG.warn("Unable to read " + myDir.resolve(entry.getKey()) + ", left as is");
+                continue;
+            }
+
+            JDOMInterner.internStringsInElement(state, interner);
+            if (myPathMacroSubstitutor != null) {
+                myPathMacroSubstitutor.expandPaths(state);
+                myPathMacroSubstitutor.addUnknownMacros(componentName, myPathMacrosService.getMacroNames(state));
+            }
+
+            data.setState(componentName, entry.getKey(), state);
+            iterator.remove();
+        }
     }
 
     @Override
@@ -144,6 +197,10 @@ public class PathDirectoryBasedStorage extends StateStorageBase<DirectoryStorage
     
     private DirectoryStorageData loadState() {
         DirectoryStorageData storageData = new DirectoryStorageData();
+        DirectoryStorageData oldData = myStorageData;
+        if (oldData != null) {
+            storageData.setJsonComponentName(oldData.getJsonComponentName());
+        }
         loadFrom(storageData, myDir, myPathMacroSubstitutor);
         return storageData;
     }
@@ -156,6 +213,17 @@ public class PathDirectoryBasedStorage extends StateStorageBase<DirectoryStorage
         Interner<String> interner = Interner.createStringInterner();
         try {
             Files.walk(dir, 1).filter(PathDirectoryBasedStorage::isStorageFile).forEach(path -> {
+                String fileName = path.getFileName().toString();
+                if (StringUtil.endsWithIgnoreCase(fileName, StorageFormat.JSON_EXTENSION)) {
+                    try {
+                        data.addUnresolvedJson(fileName, Files.readAllBytes(path));
+                    }
+                    catch (IOException e) {
+                        LOG.info("Unable to load state", e);
+                    }
+                    return;
+                }
+
                 try (BufferedReader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
                     Element element = JDOMUtil.loadDocument(reader).getRootElement();
                     String name = StorageData.getComponentNameIfValid(element);
@@ -193,9 +261,13 @@ public class PathDirectoryBasedStorage extends StateStorageBase<DirectoryStorage
     }
 
     public static boolean isStorageFile(Path path) {
-        String fileName = path.getFileName().toString();
-        // ignore system files like .DS_Store on Mac
-        return StringUtil.endsWithIgnoreCase(fileName, DirectoryStorageData.DEFAULT_EXT);
+        return isStorageFileName(path.getFileName().toString());
+    }
+
+    // ignore system files like .DS_Store on Mac
+    private static boolean isStorageFileName(String fileName) {
+        return StringUtil.endsWithIgnoreCase(fileName, DirectoryStorageData.DEFAULT_EXT) ||
+            StringUtil.endsWithIgnoreCase(fileName, StorageFormat.JSON_EXTENSION);
     }
 
     @Override
@@ -221,6 +293,7 @@ public class PathDirectoryBasedStorage extends StateStorageBase<DirectoryStorage
 
         private final Set<String> dirtyFileNames = new SmartHashSet<>();
         private final Set<String> removedFileNames = new SmartHashSet<>();
+        private final Map<String, byte[]> jsonContents = new HashMap<>();
 
         private MySaveSession(PathDirectoryBasedStorage storage, DirectoryStorageData storageData) {
             this.storage = storage;
@@ -242,14 +315,29 @@ public class PathDirectoryBasedStorage extends StateStorageBase<DirectoryStorage
                 return;
             }
 
-            removedFileNames.addAll(originalStorageData.getFileNames(componentName));
+            Set<String> originalFileNames = originalStorageData.getFileNames(componentName);
+            removedFileNames.addAll(originalFileNames);
             if (JDOMUtil.isEmpty(compositeState)) {
                 doSetState(componentName, null, null);
             }
             else {
                 for (Pair<Element, String> pair : storage.mySplitter.splitState(compositeState)) {
-                    removedFileNames.remove(pair.second);
-                    doSetState(componentName, pair.second, pair.first);
+                    String fileName = pair.second;
+                    String jsonFileName = StringUtil.endsWithIgnoreCase(fileName, DirectoryStorageData.DEFAULT_EXT)
+                        ? fileName.substring(0, fileName.length() - DirectoryStorageData.DEFAULT_EXT.length()) + StorageFormat.JSON_EXTENSION
+                        : null;
+                    byte[] json = jsonFileName == null ? null : writeJson(component, componentName, pair.first);
+                    if (json != null) {
+                        fileName = jsonFileName;
+                        jsonContents.put(fileName, json);
+                    }
+                    else if (jsonFileName != null && originalFileNames.contains(jsonFileName)) {
+                        LOG.error(storage.myDir.resolve(jsonFileName) + " cannot be written as json, left unchanged");
+                        removedFileNames.remove(jsonFileName);
+                        continue;
+                    }
+                    removedFileNames.remove(fileName);
+                    doSetState(componentName, fileName, pair.first);
                 }
 
                 if (!removedFileNames.isEmpty()) {
@@ -257,6 +345,22 @@ public class PathDirectoryBasedStorage extends StateStorageBase<DirectoryStorage
                         doSetState(componentName, fileName, null);
                     }
                 }
+            }
+        }
+
+        private byte @Nullable [] writeJson(Object component, String componentName, Element subState) {
+            Element collapsed = subState.clone();
+            if (storage.myPathMacroSubstitutor != null) {
+                storage.myPathMacroSubstitutor.collapsePaths(collapsed);
+            }
+
+            try {
+                byte[] json = storage.mySplitter.writeJson(component, collapsed, StateJsonSerializerImpl.INSTANCE);
+                return json == null ? null : StateJsonBinder.prettyPrint(json);
+            }
+            catch (Throwable e) {
+                LOG.error("Unable to write " + componentName + " state as json", e);
+                return null;
             }
         }
 
@@ -322,12 +426,17 @@ public class PathDirectoryBasedStorage extends StateStorageBase<DirectoryStorage
         // Keep the VFS in sync via explicit save-tagged events per changed/removed child (same as the file storage)
         private void collectVfsEvents(@Nullable List<VFileEvent> events) {
             LocalFileSystem lfs = LocalFileSystem.getInstance();
+            VirtualFile dir = lfs.findFileByNioFile(storage.myDir);
             for (String fileName : dirtyFileNames) {
                 Path childPath = storage.myDir.resolve(fileName);
                 VirtualFile file = lfs.findFileByNioFile(childPath);
+                File io = childPath.toFile();
                 if (file != null && file.isValid()) {
-                    File io = childPath.toFile();
                     collect(events, new VFileContentChangeEvent(this, file, file.getModificationStamp(), -1, file.getTimeStamp(), io.lastModified(), file.getLength(), io.length(), false));
+                }
+                else if (dir != null && dir.isValid() && io.exists()) {
+                    FileAttributes attributes = new FileAttributes(false, false, false, false, io.length(), io.lastModified(), true);
+                    collect(events, new VFileCreateEvent(this, dir, fileName, false, attributes, null, false, null));
                 }
             }
             for (String fileName : removedFileNames) {
@@ -345,6 +454,18 @@ public class PathDirectoryBasedStorage extends StateStorageBase<DirectoryStorage
             for (String componentName : copiedStorageData.getComponentNames()) {
                 copiedStorageData.processComponent(componentName, (fileName, state) -> {
                     if (!dirtyFileNames.contains(fileName)) {
+                        return;
+                    }
+
+                    byte[] json = jsonContents.get(fileName);
+                    if (json != null) {
+                        try {
+                            Files.createDirectories(dir);
+                            PathStorageUtil.writeFile(dir.resolve(fileName), json, null);
+                        }
+                        catch (IOException e) {
+                            LOG.error(e);
+                        }
                         return;
                     }
 

@@ -15,104 +15,48 @@
  */
 package consulo.compiler.impl.internal.exection;
 
-import consulo.execution.BeforeRunTask;
-import consulo.project.Project;
-import consulo.util.dataholder.Key;
 import consulo.compiler.artifact.Artifact;
-import consulo.compiler.artifact.ArtifactPointer;
-import consulo.compiler.artifact.ArtifactPointerManager;
-import consulo.compiler.artifact.ArtifactPointerUtil;
-import org.jdom.Element;
-import org.jspecify.annotations.Nullable;
+import consulo.execution.BeforeRunTask;
+import consulo.util.xml.serializer.annotation.AbstractCollection;
+import consulo.util.xml.serializer.annotation.Property;
+import consulo.util.xml.serializer.annotation.Transient;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
  * @author nik
  */
-public class AbstractArtifactsBeforeRunTask<T extends AbstractArtifactsBeforeRunTask> extends BeforeRunTask<T> {
-  public static final String NAME_ATTRIBUTE = "name";
-  public static final String ARTIFACT_ELEMENT = "artifact";
-  private List<ArtifactPointer> myArtifactPointers = new ArrayList<ArtifactPointer>();
-  private final Project myProject;
+public abstract class AbstractArtifactsBeforeRunTask extends BeforeRunTask {
+    private List<String> myArtifactNames = new ArrayList<>();
 
-  public AbstractArtifactsBeforeRunTask(Project project, Key<T> id) {
-    super(id);
-    myProject = project;
-  }
-
-  @Override
-  public void readExternal(Element element) {
-    super.readExternal(element);
-    List<Element> children = element.getChildren(ARTIFACT_ELEMENT);
-    ArtifactPointerManager pointerManager = ArtifactPointerUtil.getPointerManager(myProject);
-    for (Element child : children) {
-      myArtifactPointers.add(pointerManager.create(child.getAttributeValue(NAME_ATTRIBUTE)));
+    @Property(surroundWithTag = false)
+    @AbstractCollection(surroundWithTag = false, elementTag = "artifact", elementValueAttribute = "name")
+    public List<String> getArtifactNames() {
+        return myArtifactNames;
     }
-  }
 
-  @Override
-  public void writeExternal(Element element) {
-    super.writeExternal(element);
-    for (ArtifactPointer pointer : myArtifactPointers) {
-      element.addContent(new Element(ARTIFACT_ELEMENT).setAttribute(NAME_ATTRIBUTE, pointer.getName()));
+    public void setArtifactNames(List<String> artifactNames) {
+        myArtifactNames = new ArrayList<>(artifactNames);
     }
-  }
 
-  @Override
-  public BeforeRunTask clone() {
-    AbstractArtifactsBeforeRunTask task = (AbstractArtifactsBeforeRunTask)super.clone();
-    task.myArtifactPointers = new ArrayList<>(myArtifactPointers);
-    return task;
-  }
-
-  @Override
-  public int getItemsCount() {
-    return myArtifactPointers.size();
-  }
-
-  public List<ArtifactPointer> getArtifactPointers() {
-    return Collections.unmodifiableList(myArtifactPointers);
-  }
-
-  public void setArtifactPointers(List<ArtifactPointer> artifactPointers) {
-    myArtifactPointers = new ArrayList<>(artifactPointers);
-  }
-
-  public void addArtifact(Artifact artifact) {
-    ArtifactPointer pointer = ArtifactPointerUtil.getPointerManager(myProject).create(artifact);
-    if (!myArtifactPointers.contains(pointer)) {
-      myArtifactPointers.add(pointer);
+    @Transient
+    @Override
+    public int getItemsCount() {
+        return myArtifactNames.size();
     }
-  }
 
-  public void removeArtifact(Artifact artifact) {
-    removeArtifact(ArtifactPointerUtil.getPointerManager(myProject).create(artifact));
-  }
+    public void addArtifact(Artifact artifact) {
+        if (!myArtifactNames.contains(artifact.getName())) {
+            myArtifactNames.add(artifact.getName());
+        }
+    }
 
-  public void removeArtifact(ArtifactPointer pointer) {
-    myArtifactPointers.remove(pointer);
-  }
+    public void removeArtifact(Artifact artifact) {
+        removeArtifact(artifact.getName());
+    }
 
-  @Override
-  public boolean equals(@Nullable Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    if (!super.equals(o)) return false;
-
-    AbstractArtifactsBeforeRunTask that = (AbstractArtifactsBeforeRunTask) o;
-
-    return myArtifactPointers.equals(that.myArtifactPointers)
-      && myProject.equals(that.myProject);
-  }
-
-  @Override
-  public int hashCode() {
-    int result = super.hashCode();
-    result = 31 * result + myArtifactPointers.hashCode();
-    result = 31 * result + myProject.hashCode();
-    return result;
-  }
+    public void removeArtifact(String artifactName) {
+        myArtifactNames.remove(artifactName);
+    }
 }

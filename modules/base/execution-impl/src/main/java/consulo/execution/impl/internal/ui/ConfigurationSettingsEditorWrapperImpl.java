@@ -15,21 +15,15 @@
  */
 package consulo.execution.impl.internal.ui;
 
-import consulo.application.Application;
 import consulo.configurable.ConfigurationException;
-import consulo.content.platform.PlatformTargetComboBox;
-import consulo.content.platform.PlatformTargetManager;
 import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposer;
 import consulo.execution.BeforeRunTask;
 import consulo.execution.RunnerAndConfigurationSettings;
-import consulo.execution.configuration.PlatformAwareRunProfile;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.impl.internal.configuration.RunManagerImpl;
 import consulo.execution.internal.ConfigurationSettingsEditorWrapper;
-import consulo.execution.localize.ExecutionLocalize;
 import consulo.ui.Component;
-import consulo.ui.Label;
 import consulo.ui.Space;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.DockLayout;
@@ -46,107 +40,88 @@ import java.util.List;
  * @since 2006-03-27
  */
 public class ConfigurationSettingsEditorWrapperImpl extends ConfigurationSettingsEditorWrapper {
-    private final ConfigurationSettingsEditor myEditor;
-    private final BeforeRunStepsPanel myBeforeRunStepsPanel;
-    private final @Nullable PlatformTargetComboBox myPlatformTargetBox;
+    private final RunnerAndConfigurationSettings mySettings;
+    private final RunConfigurationFragmentPage myFragmentPage;
+    private final BeforeRunTaskRow myBeforeRunRow;
 
     private @Nullable Element myBaselineElement;
 
     @RequiredUIAccess
     public ConfigurationSettingsEditorWrapperImpl(RunnerAndConfigurationSettings settings) {
-        myEditor = new ConfigurationSettingsEditor(settings);
-        Disposer.register(this, myEditor);
-        myEditor.addSettingsEditorListener(editor -> fireEditorStateChanged());
-        myBeforeRunStepsPanel = new BeforeRunStepsPanel(settings, this::fireEditorStateChanged);
+        mySettings = settings;
+        myFragmentPage = new RunConfigurationFragmentPage(settings, this::createFragmentSnapshot, this::fireEditorStateChanged);
+        Disposer.register(this, myFragmentPage);
+        myBeforeRunRow = new BeforeRunTaskRow(settings, this::fireEditorStateChanged);
+        myFragmentPage.setBeforeRunActions(myBeforeRunRow::createAddActions);
+    }
 
-        if (settings.getConfiguration() instanceof PlatformAwareRunProfile) {
-            PlatformTargetComboBox box = new PlatformTargetComboBox(Application.get().getInstance(PlatformTargetManager.class));
-            box.addListener(id -> fireEditorStateChanged());
-            myPlatformTargetBox = box;
-        }
-        else {
-            myPlatformTargetBox = null;
-        }
+    @RequiredUIAccess
+    public Component createModifyOptionsLink() {
+        return myFragmentPage.createModifyOptionsLink();
     }
 
     @RequiredUIAccess
     @Override
     protected Component createUIComponent() {
         DockLayout layout = DockLayout.create();
-        PlatformTargetComboBox platformTargetBox = myPlatformTargetBox;
-        if (platformTargetBox != null) {
-            DockLayout runOn = DockLayout.create(Space.SMALL);
-            runOn.left(Label.create(ExecutionLocalize.labelRunOn()));
-            runOn.center(platformTargetBox.getComponent());
-            runOn.paddingBuilder().bottomSet(Space.MEDIUM).apply();
-
-            VerticalLayout top = VerticalLayout.create();
-            top.add(runOn);
-            top.add(myEditor.getUIComponent());
-            layout.top(top);
-        }
-        else {
-            layout.top(myEditor.getUIComponent());
-        }
-        layout.center(myBeforeRunStepsPanel.createComponent());
         layout.putUserData(UiDataProvider.KEY, sink -> sink.set(CONFIGURATION_EDITOR_KEY, this));
+
+        VerticalLayout content = VerticalLayout.create(Space.MEDIUM);
+        content.add(myBeforeRunRow.createComponent());
+        content.add(myFragmentPage.getComponent());
+        layout.top(content);
         return layout;
     }
 
     @RequiredUIAccess
     @Override
     public void resetEditorFrom(RunnerAndConfigurationSettings settings) {
-        myEditor.resetFrom(settings);
-        myBeforeRunStepsPanel.reset(settings);
-        PlatformTargetComboBox platformTargetBox = myPlatformTargetBox;
-        if (platformTargetBox != null && settings.getConfiguration() instanceof PlatformAwareRunProfile profile) {
-            platformTargetBox.setTargetId(profile.getPlatformTargetId());
-        }
+        myFragmentPage.reset(settings);
+        myBeforeRunRow.reset(settings);
         myBaselineElement = writeSnapshotElement();
     }
 
     @Override
     public void applyEditorTo(RunnerAndConfigurationSettings settings) throws ConfigurationException {
-        myEditor.applyTo(settings);
-        doApply(settings);
-        myBaselineElement = writeElement(settings.getConfiguration());
+        myFragmentPage.apply(settings);
+        applyBeforeRun(settings);
+        myBaselineElement = writeElement(settings);
     }
 
     @Override
     public RunnerAndConfigurationSettings getSnapshot() throws ConfigurationException {
-        RunnerAndConfigurationSettings result = myEditor.getSnapshot();
-        doApply(result);
+        RunnerAndConfigurationSettings result = createContentSnapshot();
+        applyBeforeRun(result);
         return result;
     }
 
-    private void applyPlatformTarget(RunConfiguration configuration) {
-        PlatformTargetComboBox platformTargetBox = myPlatformTargetBox;
-        if (platformTargetBox != null && configuration instanceof PlatformAwareRunProfile profile) {
-            profile.setPlatformTargetId(platformTargetBox.getTargetId());
+    private RunnerAndConfigurationSettings createContentSnapshot() throws ConfigurationException {
+        RunnerAndConfigurationSettings snapshot = mySettings.createFactory().get();
+        snapshot.setName(mySettings.getConfiguration().getName());
+        myFragmentPage.apply(snapshot);
+        return snapshot;
+    }
+
+    private RunnerAndConfigurationSettings createFragmentSnapshot() {
+        try {
+            return createContentSnapshot();
+        }
+        catch (ConfigurationException e) {
+            return mySettings;
         }
     }
 
-    private void doApply(RunnerAndConfigurationSettings settings) {
+    private void applyBeforeRun(RunnerAndConfigurationSettings settings) {
         RunConfiguration runConfiguration = settings.getConfiguration();
-        applyPlatformTarget(runConfiguration);
-        RunManagerImpl runManager = RunManagerImpl.getInstanceImpl(runConfiguration.getProject());
-        runManager.setBeforeRunTasks(runConfiguration, myBeforeRunStepsPanel.getTasks(true), false);
-        RunnerAndConfigurationSettings runManagerSettings = runManager.getSettings(runConfiguration);
-        if (runManagerSettings != null) {
-            runManagerSettings.setEditBeforeRun(myBeforeRunStepsPanel.needEditBeforeRun());
-        }
-        else {
-            settings.setEditBeforeRun(myBeforeRunStepsPanel.needEditBeforeRun());
-        }
+        RunManagerImpl.getInstanceImpl(runConfiguration.getProject()).setBeforeRunTasks(runConfiguration, myBeforeRunRow.getTasks(true), false);
     }
 
     @RequiredUIAccess
     boolean isModified(RunnerAndConfigurationSettings settings) {
         try {
-            RunnerAndConfigurationSettings snapshot = myEditor.getSnapshot();
-            applyPlatformTarget(snapshot.getConfiguration());
-            Element baselineElement = myBaselineElement != null ? myBaselineElement : writeElement(settings.getConfiguration());
-            Element snapshotElement = writeElement(snapshot.getConfiguration());
+            RunnerAndConfigurationSettings snapshot = createContentSnapshot();
+            Element baselineElement = myBaselineElement != null ? myBaselineElement : writeElement(settings);
+            Element snapshotElement = writeElement(snapshot);
             return baselineElement == null || snapshotElement == null || !JDOMUtil.areElementsEqual(baselineElement, snapshotElement);
         }
         catch (ConfigurationException e) {
@@ -156,13 +131,19 @@ public class ConfigurationSettingsEditorWrapperImpl extends ConfigurationSetting
 
     private @Nullable Element writeSnapshotElement() {
         try {
-            RunConfiguration configuration = myEditor.getSnapshot().getConfiguration();
-            applyPlatformTarget(configuration);
-            return writeElement(configuration);
+            return writeElement(createContentSnapshot());
         }
         catch (ConfigurationException e) {
             return null;
         }
+    }
+
+    private static @Nullable Element writeElement(RunnerAndConfigurationSettings settings) {
+        Element element = writeElement(settings.getConfiguration());
+        if (element != null) {
+            element.setAttribute("singleton", String.valueOf(settings.isSingleton()));
+        }
+        return element;
     }
 
     static @Nullable Element writeElement(RunConfiguration configuration) {
@@ -178,12 +159,12 @@ public class ConfigurationSettingsEditorWrapperImpl extends ConfigurationSetting
 
     @RequiredUIAccess
     @Override
-    public void addBeforeLaunchStep(BeforeRunTask<?> task) {
-        myBeforeRunStepsPanel.addTask(task);
+    public void addBeforeLaunchStep(BeforeRunTask task) {
+        myBeforeRunRow.addTask(task);
     }
 
     @Override
     public List<BeforeRunTask> getStepsBeforeLaunch() {
-        return myBeforeRunStepsPanel.getTasks(true);
+        return myBeforeRunRow.getTasks(true);
     }
 }

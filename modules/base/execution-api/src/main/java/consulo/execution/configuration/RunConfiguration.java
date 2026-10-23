@@ -15,14 +15,17 @@
  */
 package consulo.execution.configuration;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.execution.RuntimeConfigurationException;
-import consulo.execution.configuration.ui.SettingsEditor;
+import consulo.execution.configuration.fragment.RunConfigurationFragment;
 import consulo.execution.runner.ProgramRunner;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.util.xml.serializer.JDOMExternalizable;
 
 import org.jspecify.annotations.Nullable;
+
+import java.util.List;
 
 /**
  * Interface for run configurations which can be managed by a user and displayed in the UI.
@@ -58,14 +61,12 @@ public interface RunConfiguration extends RunProfile, JDOMExternalizable, Clonea
   void setName(String name);
 
   /**
-   * Returns the UI control for editing the run configuration settings. If additional control over validation is required, the object
-   * returned from this method may also implement {@link consulo.ide.impl.idea.execution.impl.CheckableRunConfigurationEditor}. The returned object
-   * can also implement {@link consulo.ide.impl.idea.openapi.options.SettingsEditorGroup} if the settings it provides need to be displayed in
-   * multiple tabs.
-   *
-   * @return the settings editor component.
+   * The fragments of this configuration type shown in the run configuration editor, in page order. Shared fragments
+   * (program arguments, working directory, environment, ...) are added by the platform.
    */
-  SettingsEditor<? extends RunConfiguration> getConfigurationEditor();
+  default List<RunConfigurationFragment<?>> createFragments() {
+    return List.of();
+  }
 
   /**
    * Returns the project in which the run configuration exists.
@@ -82,15 +83,6 @@ public interface RunConfiguration extends RunProfile, JDOMExternalizable, Clonea
    * @return the per-runner settings.
    */
   @Nullable ConfigurationPerRunnerSettings createRunnerSettings(ConfigurationInfoProvider provider);
-
-  /**
-   * Creates a UI control for editing the settings for a specific {@link ProgramRunner}. Can return null if the configuration has no
-   * settings specific to a program runner.
-   *
-   * @param runner the runner the settings for which need to be edited.
-   * @return the editor for the per-runner settings.
-   */
-  @Nullable SettingsEditor<ConfigurationPerRunnerSettings> getRunnerSettingsEditor(ProgramRunner runner);
 
   /**
    * Clones the run configuration.

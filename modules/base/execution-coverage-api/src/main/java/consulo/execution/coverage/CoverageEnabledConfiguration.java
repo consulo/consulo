@@ -1,5 +1,6 @@
 package consulo.execution.coverage;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.application.Application;
 import consulo.container.boot.ContainerPathManager;
 import consulo.execution.configuration.RunConfigurationBase;
@@ -7,11 +8,7 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.util.io.FileUtil;
-import consulo.util.xml.serializer.InvalidDataException;
-import consulo.util.xml.serializer.JDOMExternalizable;
-import consulo.util.xml.serializer.WriteExternalException;
 import org.jspecify.annotations.Nullable;
-import org.jdom.Element;
 
 import java.io.File;
 
@@ -20,26 +17,19 @@ import java.io.File;
  *
  * @author ven
  */
-public abstract class CoverageEnabledConfiguration implements JDOMExternalizable {
+public abstract class CoverageEnabledConfiguration {
     private static final Logger LOG = Logger.getInstance(CoverageEnabledConfiguration.class);
 
     public static final Key<CoverageEnabledConfiguration> COVERAGE_KEY = Key.create("consulo.ide.impl.idea.coverage");
 
-    protected static final String COVERAGE_ENABLED_ATTRIBUTE_NAME = "enabled";
-    protected static final String COVERAGE_RUNNER = "runner";
-    protected static final String TRACK_PER_TEST_COVERAGE_ATTRIBUTE_NAME = "per_test_coverage_enabled";
-    protected static final String SAMPLING_COVERAGE_ATTRIBUTE_NAME = "sample_coverage";
-    protected static final String TRACK_TEST_FOLDERS = "track_test_folders";
-
     private final Project myProject;
     private final RunConfigurationBase myConfiguration;
 
-    private boolean myIsCoverageEnabled = false;
-    private String myRunnerId;
-    private CoverageRunner myCoverageRunner;
-    private boolean myTrackPerTestCoverage = true;
+    private boolean myIsCoverageEnabled;
+    private @Nullable String myRunnerId;
+    private boolean myTrackPerTestCoverage;
     private boolean mySampling = true;
-    private boolean myTrackTestFolders = false;
+    private boolean myTrackTestFolders;
 
     protected String myCoverageFilePath;
     private CoverageSuite myCurrentCoverageSuite;
@@ -53,42 +43,24 @@ public abstract class CoverageEnabledConfiguration implements JDOMExternalizable
         return myConfiguration;
     }
 
-    public boolean isCoverageEnabled() {
-        return myIsCoverageEnabled;
-    }
-
-    public void setCoverageEnabled(boolean isCoverageEnabled) {
-        myIsCoverageEnabled = isCoverageEnabled;
-    }
-
-    public boolean isSampling() {
-        return mySampling;
-    }
-
-    public void setSampling(boolean sampling) {
-        mySampling = sampling;
-    }
-
-    public String getRunnerId() {
+    public @Nullable String getRunnerId() {
         return myRunnerId;
     }
 
     public @Nullable CoverageRunner getCoverageRunner() {
-        return myCoverageRunner;
+        String runnerId = myRunnerId;
+        if (runnerId == null) {
+            return null;
+        }
+        return Application.get().getExtensionPoint(CoverageRunner.class).findFirstSafe(runner -> runnerId.equals(runner.getId()));
     }
 
+    /**
+     * The coverage engine sets the runner from its project coverage settings when only one runner fits.
+     */
     public void setCoverageRunner(@Nullable CoverageRunner coverageRunner) {
-        myCoverageRunner = coverageRunner;
         myRunnerId = coverageRunner != null ? coverageRunner.getId() : null;
         myCoverageFilePath = null;
-    }
-
-    public boolean isTrackPerTestCoverage() {
-        return myTrackPerTestCoverage;
-    }
-
-    public void setTrackPerTestCoverage(boolean collectLineInfo) {
-        myTrackPerTestCoverage = collectLineInfo;
     }
 
     public boolean isTrackTestFolders() {
@@ -97,6 +69,42 @@ public abstract class CoverageEnabledConfiguration implements JDOMExternalizable
 
     public void setTrackTestFolders(boolean trackTestFolders) {
         myTrackTestFolders = trackTestFolders;
+    }
+
+    @Deprecated
+    @DeprecationInfo("Moved to coverage settings")
+    public boolean isCoverageEnabled() {
+        return myIsCoverageEnabled;
+    }
+
+    @Deprecated
+    @DeprecationInfo("Moved to coverage settings")
+    public void setCoverageEnabled(boolean isCoverageEnabled) {
+        myIsCoverageEnabled = isCoverageEnabled;
+    }
+
+    @Deprecated
+    @DeprecationInfo("Moved to coverage settings")
+    public boolean isSampling() {
+        return mySampling;
+    }
+
+    @Deprecated
+    @DeprecationInfo("Moved to coverage settings")
+    public void setSampling(boolean sampling) {
+        mySampling = sampling;
+    }
+
+    @Deprecated
+    @DeprecationInfo("Moved to coverage settings")
+    public boolean isTrackPerTestCoverage() {
+        return myTrackPerTestCoverage;
+    }
+
+    @Deprecated
+    @DeprecationInfo("Moved to coverage settings")
+    public void setTrackPerTestCoverage(boolean trackPerTestCoverage) {
+        myTrackPerTestCoverage = trackPerTestCoverage;
     }
 
     public CoverageSuite getCurrentCoverageSuite() {
@@ -153,64 +161,8 @@ public abstract class CoverageEnabledConfiguration implements JDOMExternalizable
         return myCoverageFilePath;
     }
 
-    @Override
-    public void readExternal(Element element) throws InvalidDataException {
-        // is enabled
-        String coverageEnabledValueStr = element.getAttributeValue(COVERAGE_ENABLED_ATTRIBUTE_NAME);
-        myIsCoverageEnabled = Boolean.valueOf(coverageEnabledValueStr);
-
-        // track per test coverage
-        String collectLineInfoAttribute = element.getAttributeValue(TRACK_PER_TEST_COVERAGE_ATTRIBUTE_NAME);
-        myTrackPerTestCoverage = collectLineInfoAttribute == null || Boolean.valueOf(collectLineInfoAttribute);
-
-        // sampling
-        String sampling = element.getAttributeValue(SAMPLING_COVERAGE_ATTRIBUTE_NAME);
-        mySampling = sampling != null && Boolean.valueOf(sampling);
-
-        // track test folders
-        String trackTestFolders = element.getAttributeValue(TRACK_TEST_FOLDERS);
-        myTrackTestFolders = trackTestFolders != null && Boolean.valueOf(trackTestFolders);
-
-        // coverage runner
-        String runnerId = element.getAttributeValue(COVERAGE_RUNNER);
-        if (runnerId != null) {
-            myRunnerId = runnerId;
-            myCoverageRunner = Application.get().getExtensionPoint(CoverageRunner.class)
-                .findFirstSafe(coverageRunner -> myRunnerId.equals(coverageRunner.getId()));
-        }
-    }
-
-    @Override
-    public void writeExternal(Element element) throws WriteExternalException {
-        // enabled
-        element.setAttribute(COVERAGE_ENABLED_ATTRIBUTE_NAME, String.valueOf(myIsCoverageEnabled));
-
-        // per test
-        if (!myTrackPerTestCoverage) {
-            element.setAttribute(TRACK_PER_TEST_COVERAGE_ATTRIBUTE_NAME, String.valueOf(myTrackPerTestCoverage));
-        }
-
-        // sampling
-        if (mySampling) {
-            element.setAttribute(SAMPLING_COVERAGE_ATTRIBUTE_NAME, String.valueOf(mySampling));
-        }
-
-        // test folders
-        if (myTrackTestFolders) {
-            element.setAttribute(TRACK_TEST_FOLDERS, String.valueOf(myTrackTestFolders));
-        }
-
-        // runner
-        if (myCoverageRunner != null) {
-            element.setAttribute(COVERAGE_RUNNER, myCoverageRunner.getId());
-        }
-        else if (myRunnerId != null) {
-            element.setAttribute(COVERAGE_RUNNER, myRunnerId);
-        }
-    }
-
     protected @Nullable String createCoverageFile() {
-        if (myCoverageRunner == null) {
+        if (getCoverageRunner() == null) {
             return null;
         }
 

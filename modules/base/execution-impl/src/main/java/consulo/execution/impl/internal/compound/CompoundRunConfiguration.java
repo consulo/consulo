@@ -18,20 +18,18 @@ package consulo.execution.impl.internal.compound;
 import consulo.execution.impl.internal.configuration.RunManagerImpl;
 import consulo.execution.impl.internal.configuration.RunnerAndConfigurationSettingsImpl;
 import consulo.execution.*;
+import consulo.execution.configuration.LegacyRunConfigurationConverter;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.configuration.RunConfigurationBase;
 import consulo.execution.configuration.RunProfileState;
+import consulo.execution.configuration.fragment.RunConfigurationFragment;
 import consulo.execution.executor.Executor;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.runner.ExecutionEnvironmentBuilder;
 import consulo.execution.runner.ProgramRunner;
 import consulo.application.ApplicationManager;
-import consulo.execution.configuration.ui.SettingsEditor;
 import consulo.process.ExecutionException;
 import consulo.project.Project;
-import consulo.util.lang.Pair;
-import consulo.util.xml.serializer.InvalidDataException;
-import consulo.util.xml.serializer.WriteExternalException;
 import org.jdom.Element;
 import org.jspecify.annotations.Nullable;
 
@@ -42,45 +40,76 @@ public class CompoundRunConfiguration extends RunConfigurationBase implements Wi
     int i = o1.getType().getDisplayName().compareTo(o2.getType().getDisplayName());
     return (i != 0) ? i : o1.getName().compareTo(o2.getName());
   };
-  private Set<Pair<String, String>> myPairs = new HashSet<>();
-  private Set<RunConfiguration> mySetToRun = new TreeSet<>(COMPARATOR);
-  private boolean myInitialized = false;
 
   public CompoundRunConfiguration(Project project, CompoundRunConfigurationType type, String name) {
     super(project, type.getConfigurationFactories()[0], name);
   }
 
-  public Set<RunConfiguration> getSetToRun() {
-    initIfNeed();
-    return mySetToRun;
+  @Override
+  protected Class<CompoundRunConfigurationOptions> getOptionsClass() {
+    return CompoundRunConfigurationOptions.class;
   }
 
-  private void initIfNeed() {
-    if (myInitialized) return;
-    mySetToRun.clear();
-    RunManagerImpl manager = RunManagerImpl.getInstanceImpl(getProject());
-    for (Pair<String, String> pair : myPairs) {
-      RunnerAndConfigurationSettings settings = manager.findConfigurationByTypeAndName(pair.first, pair.second);
-      if (settings != null && settings.getConfiguration() != this) {
-        mySetToRun.add(settings.getConfiguration());
+  @Override
+  public CompoundRunConfigurationOptions getOptions() {
+    return (CompoundRunConfigurationOptions)super.getOptions();
+  }
+
+  @Override
+  protected void convertLegacyState(LegacyRunConfigurationConverter converter) {
+    CompoundRunConfigurationOptions options = new CompoundRunConfigurationOptions();
+    List<CompoundRunConfigurationTarget> targets = new ArrayList<>();
+    for (Element child : converter.getElement().getChildren("toRun")) {
+      String type = child.getAttributeValue("type");
+      String name = child.getAttributeValue("name");
+      if (type != null && name != null) {
+        targets.add(new CompoundRunConfigurationTarget(type, name));
       }
     }
-    myInitialized = true;
+    options.setTargets(targets);
+    converter.setOptions(options);
   }
 
-  
+  @Override
+  public List<RunConfigurationFragment<?>> createFragments() {
+    return List.of(new CompoundRunConfigurationFragment());
+  }
+
+  /**
+   * The configurations to run, resolved by type and name; missing ones are left out.
+   */
+  public Set<RunConfiguration> getSetToRun() {
+    Set<RunConfiguration> result = new TreeSet<>(COMPARATOR);
+    RunManagerImpl manager = RunManagerImpl.getInstanceImpl(getProject());
+    for (CompoundRunConfigurationTarget target : getOptions().getTargets()) {
+      String type = target.getType();
+      String name = target.getName();
+      if (type == null || name == null) {
+        continue;
+      }
+      RunnerAndConfigurationSettings settings = manager.findConfigurationByTypeAndName(type, name);
+      if (settings != null && settings.getConfiguration() != this) {
+        result.add(settings.getConfiguration());
+      }
+    }
+    return result;
+  }
+
+  public void setSetToRun(Collection<RunConfiguration> configurations) {
+    List<RunConfiguration> sorted = new ArrayList<>(configurations);
+    sorted.sort(COMPARATOR);
+    List<CompoundRunConfigurationTarget> targets = new ArrayList<>();
+    for (RunConfiguration configuration : sorted) {
+      targets.add(new CompoundRunConfigurationTarget(configuration.getType().getId(), configuration.getName()));
+    }
+    getOptions().setTargets(targets);
+  }
+
   public Map<RunConfiguration, ExecutionTarget> getConfigurationsWithTargets(RunManager manager) {
-    initIfNeed();
     Map<RunConfiguration, ExecutionTarget> map = new LinkedHashMap<>();
     // TODO [VISTAL] for now we not support configurations with executiontarget (idea like)
     getSetToRun().forEach(configuration -> map.put(configuration, null));
     return map;
-  }
-
-  
-  @Override
-  public SettingsEditor<? extends RunConfiguration> getConfigurationEditor() {
-    return new CompoundRunConfigurationSettingsEditor(getProject());
   }
 
   @Override
@@ -113,40 +142,5 @@ public class CompoundRunConfiguration extends RunConfigurationBase implements Wi
         return null;
       }
     };
-  }
-
-  @Override
-  public void readExternal(Element element) throws InvalidDataException {
-    super.readExternal(element);
-    myPairs.clear();
-    List<Element> children = element.getChildren("toRun");
-    for (Element child : children) {
-      String type = child.getAttributeValue("type");
-      String name = child.getAttributeValue("name");
-      if (type != null && name != null) {
-        myPairs.add(Pair.create(type, name));
-      }
-    }
-  }
-
-  @Override
-  public void writeExternal(Element element) throws WriteExternalException {
-    super.writeExternal(element);
-    for (RunConfiguration configuration : getSetToRun()) {
-      Element child = new Element("toRun");
-      child.setAttribute("type", configuration.getType().getId());
-      child.setAttribute("name", configuration.getName());
-      element.addContent(child);
-    }
-  }
-
-  @Override
-  public RunConfiguration clone() {
-    CompoundRunConfiguration clone = (CompoundRunConfiguration)super.clone();
-    clone.myPairs = new HashSet<>();
-    clone.myPairs.addAll(myPairs);
-    clone.mySetToRun = new TreeSet<>(COMPARATOR);
-    clone.mySetToRun.addAll(getSetToRun());
-    return clone;
   }
 }

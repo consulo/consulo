@@ -23,6 +23,7 @@ import consulo.desktop.qt.ui.impl.image.DesktopQtIconOwner;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Badge;
 import consulo.ui.BadgeStyle;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.impl.BadgePresentation;
@@ -34,6 +35,7 @@ import io.qt.gui.QPainter;
 import io.qt.gui.QPainterPath;
 import io.qt.gui.QPalette;
 import io.qt.gui.QPen;
+import io.qt.widgets.QBoxLayout;
 import io.qt.widgets.QLayout;
 import io.qt.widgets.QSizePolicy;
 import io.qt.widgets.QWidget;
@@ -77,6 +79,8 @@ public class DesktopQtBadgeImpl extends QtComponentDelegate<DesktopQtBadgeImpl.B
     private final Set<BadgeStyle> myStyles = EnumSet.noneOf(BadgeStyle.class);
     private LocalizeValue myText;
     private @Nullable Image myIcon;
+    private @Nullable Component myPrefixComponent;
+    private @Nullable Component mySuffixComponent;
 
     public DesktopQtBadgeImpl(LocalizeValue text) {
         myText = text;
@@ -101,7 +105,41 @@ public class DesktopQtBadgeImpl extends QtComponentDelegate<DesktopQtBadgeImpl.B
             );
         }
         component.setSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Fixed);
+        attachSide(component, myPrefixComponent, true);
+        attachSide(component, mySuffixComponent, false);
         updateLook(component);
+    }
+
+    private void attachSide(BadgeFrame frame, @Nullable Component side, boolean prefix) {
+        if (!(side instanceof QtComponentDelegate<?> delegate) || !(frame.layout() instanceof QBoxLayout layout)) {
+            return;
+        }
+
+        delegate.setParent(this);
+        delegate.bind(frame, null);
+        QWidget widget = delegate.toQtComponent();
+        if (widget == null) {
+            return;
+        }
+
+        if (prefix) {
+            layout.insertWidget(0, widget);
+        }
+        else {
+            layout.addWidget(widget);
+        }
+        widget.show();
+    }
+
+    private void replaceSide(@Nullable Component oldSide, @Nullable Component newSide, boolean prefix) {
+        if (oldSide instanceof QtComponentDelegate<?> delegate) {
+            delegate.setParent(null);
+        }
+
+        BadgeFrame component = myComponent;
+        if (component != null && !component.isDisposed()) {
+            attachSide(component, newSide, prefix);
+        }
     }
 
     private void updateLook(BadgeFrame component) {
@@ -159,5 +197,29 @@ public class DesktopQtBadgeImpl extends QtComponentDelegate<DesktopQtBadgeImpl.B
     public void setIcon(@Nullable Image icon) {
         myIcon = icon;
         refreshIcons();
+    }
+
+    @Override
+    public void setPrefixComponent(@Nullable Component prefixComponent) {
+        Component old = myPrefixComponent;
+        myPrefixComponent = prefixComponent;
+        replaceSide(old, prefixComponent, true);
+    }
+
+    @Override
+    public @Nullable Component getPrefixComponent() {
+        return myPrefixComponent;
+    }
+
+    @Override
+    public void setSuffixComponent(@Nullable Component suffixComponent) {
+        Component old = mySuffixComponent;
+        mySuffixComponent = suffixComponent;
+        replaceSide(old, suffixComponent, false);
+    }
+
+    @Override
+    public @Nullable Component getSuffixComponent() {
+        return mySuffixComponent;
     }
 }

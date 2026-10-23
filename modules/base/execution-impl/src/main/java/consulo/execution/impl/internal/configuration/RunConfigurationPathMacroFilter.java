@@ -21,11 +21,15 @@ import consulo.util.xml.serializer.Constants;
 import org.jdom.Attribute;
 import org.jdom.Element;
 
+import java.util.Set;
+
 /**
  * @author yole
  */
 @ExtensionImpl
 public class RunConfigurationPathMacroFilter extends PathMacroFilter {
+  private static final Set<String> VALUE_ELEMENTS = Set.of(Constants.OPTION, "fragment", "options");
+
   @Override
   public boolean skipPathMacros(Attribute attribute) {
     return attribute.getName().equals(Constants.NAME) && attribute.getParent().getName().equals("configuration");
@@ -34,7 +38,7 @@ public class RunConfigurationPathMacroFilter extends PathMacroFilter {
   @Override
   public boolean recursePathMacros(Attribute attribute) {
     Element parent = attribute.getParent();
-    if (parent != null && Constants.OPTION.equals(parent.getName())) {
+    if (parent != null && VALUE_ELEMENTS.contains(parent.getName())) {
       Element grandParent = parent.getParentElement();
       return grandParent != null && "configuration".equals(grandParent.getName());
     }

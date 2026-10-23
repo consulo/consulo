@@ -35,7 +35,6 @@ public abstract class SettingsEditor<Settings> implements Disposable {
     private final List<SettingsEditorListener<Settings>> myListeners = Lists.newLockFreeCopyOnWriteList();
     private boolean myIsInUpdate = false;
     private final Supplier<Settings> mySettingsFactory;
-    private CompositeSettingsEditor<Settings> myOwner;
     private @Nullable Component myUIComponent;
 
     protected abstract void resetEditorFrom(Settings s);
@@ -68,21 +67,9 @@ public abstract class SettingsEditor<Settings> implements Disposable {
     }
 
     public Settings getSnapshot() throws ConfigurationException {
-        if (myOwner != null) {
-            return myOwner.getSnapshot();
-        }
-
         Settings settings = mySettingsFactory.get();
         applyTo(settings);
         return settings;
-    }
-
-    final void setOwner(CompositeSettingsEditor<Settings> owner) {
-        myOwner = owner;
-    }
-
-    public final CompositeSettingsEditor<Settings> getOwner() {
-        return myOwner;
     }
 
     public Supplier<Settings> getFactory() {

@@ -9,8 +9,6 @@ import consulo.execution.configuration.ConfigurationFactory;
 import consulo.execution.configuration.LocatableConfiguration;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.configuration.RunProfileState;
-import consulo.execution.configuration.ui.SettingsEditor;
-import consulo.execution.configuration.ui.SettingsEditorGroup;
 import consulo.execution.executor.Executor;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.logging.Logger;
@@ -35,8 +33,10 @@ import consulo.util.xml.serializer.XmlSerializer;
 import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.util.xml.serializer.annotation.Tag;
 import org.jspecify.annotations.Nullable;
+import consulo.execution.configuration.fragment.RunConfigurationFragment;
 import org.jdom.Element;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DeployToServerRunConfiguration<S extends ServerConfiguration, D extends DeploymentConfiguration>
@@ -45,11 +45,13 @@ public class DeployToServerRunConfiguration<S extends ServerConfiguration, D ext
     private static final Logger LOG = Logger.getInstance(DeployToServerRunConfiguration.class);
     private static final String DEPLOYMENT_SOURCE_TYPE_ATTRIBUTE = "type";
     public static final String SETTINGS_ELEMENT = "settings";
+    private static final String EXTENSION_ELEMENT = "EXTENSION";
     private static final SkipDefaultValuesSerializationFilters SERIALIZATION_FILTERS = new SkipDefaultValuesSerializationFilters();
     private final String myServerTypeId;
     private final DeploymentConfigurator<D, S> myDeploymentConfigurator;
     private String myServerName;
     private boolean myDeploymentSourceIsLocked;
+    private List<Element> myExtensionElements = new ArrayList<>();
     private DeploymentSource myDeploymentSource;
     private D myDeploymentConfiguration;
 
@@ -84,19 +86,12 @@ public class DeployToServerRunConfiguration<S extends ServerConfiguration, D ext
     }
 
     @Override
-    public SettingsEditor<DeployToServerRunConfiguration> getConfigurationEditor() {
-        ServerType<S> serverType = getServerType();
-        //noinspection unchecked
-        SettingsEditor<DeployToServerRunConfiguration> commonEditor =
-            myDeploymentSourceIsLocked ? new DeployToServerSettingsEditor.LockedSource(serverType, myDeploymentConfigurator, getProject(), myDeploymentSource)
-                : new DeployToServerSettingsEditor.AnySource(serverType, myDeploymentConfigurator, getProject());
-
-        SettingsEditorGroup<DeployToServerRunConfiguration> group = new SettingsEditorGroup<>();
-        group.addEditor(RemoteServerLocalize.deploytoserverrunconfigurationTabTitleDeployment(), commonEditor);
-        DeployToServerRunConfigurationExtensionsManager.getInstance().appendEditors(this, group);
-        commonEditor.addSettingsEditorListener(e -> group.bulkUpdate(() -> {
-        }));
-        return group;
+    public List<RunConfigurationFragment<?>> createFragments() {
+        return List.of(new DeployToServerRunConfigurationFragment<>(
+            getServerType(),
+            myDeploymentConfigurator,
+            myDeploymentSourceIsLocked ? myDeploymentSource : null
+        ));
     }
 
     @Override
@@ -207,7 +202,10 @@ public class DeployToServerRunConfiguration<S extends ServerConfiguration, D ext
             }
         }
 
-        DeployToServerRunConfigurationExtensionsManager.getInstance().readExternal(this, element);
+        myExtensionElements.clear();
+        for (Element extension : element.getChildren(EXTENSION_ELEMENT)) {
+            myExtensionElements.add(extension.clone());
+        }
     }
 
     private static @Nullable DeploymentSourceType<?> findDeploymentSourceType(@Nullable String id) {
@@ -241,7 +239,9 @@ public class DeployToServerRunConfiguration<S extends ServerConfiguration, D ext
         XmlSerializer.serializeInto(state, element, SERIALIZATION_FILTERS);
         super.writeExternal(element);
 
-        DeployToServerRunConfigurationExtensionsManager.getInstance().writeExternal(this, element);
+        for (Element extension : myExtensionElements) {
+            element.addContent(extension.clone());
+        }
     }
 
     @Override
@@ -255,6 +255,7 @@ public class DeployToServerRunConfiguration<S extends ServerConfiguration, D ext
         }
 
         DeployToServerRunConfiguration result = (DeployToServerRunConfiguration) super.clone();
+        result.myExtensionElements = new ArrayList<>();
         if (myDeploymentSourceIsLocked) {
             result.lockDeploymentSource((SingletonDeploymentSourceType) myDeploymentSource.getType());
         }

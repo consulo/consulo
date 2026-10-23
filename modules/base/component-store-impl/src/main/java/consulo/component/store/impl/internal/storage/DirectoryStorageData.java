@@ -23,6 +23,7 @@ import org.jdom.Element;
 import org.jspecify.annotations.Nullable;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.BiConsumer;
@@ -36,12 +37,41 @@ public class DirectoryStorageData extends StorageDataBase {
 
   private final Map<String, StateMap> myStates;
 
+  private final Map<String, byte[]> myUnresolvedJson;
+
+  private @Nullable String myJsonComponentName;
+
   public DirectoryStorageData() {
-    this(new HashMap<>());
+    this(new HashMap<>(), new LinkedHashMap<>(), null);
   }
 
-  private DirectoryStorageData(Map<String, StateMap> states) {
+  private DirectoryStorageData(Map<String, StateMap> states, Map<String, byte[]> unresolvedJson, @Nullable String jsonComponentName) {
     myStates = states;
+    myUnresolvedJson = unresolvedJson;
+    myJsonComponentName = jsonComponentName;
+  }
+
+  /**
+   * Content of a {@code .json} file, kept until the component reading this storage converts it to its sub state.
+   */
+  public void addUnresolvedJson(String fileName, byte[] content) {
+    myUnresolvedJson.put(fileName, content);
+  }
+
+  public Map<String, byte[]> getUnresolvedJson() {
+    return myUnresolvedJson;
+  }
+
+  public @Nullable String getJsonComponentName() {
+    return myJsonComponentName;
+  }
+
+  public void setJsonComponentName(@Nullable String jsonComponentName) {
+    myJsonComponentName = jsonComponentName;
+  }
+
+  private boolean hasUnresolvedJson(String componentName) {
+    return !myUnresolvedJson.isEmpty() && (myJsonComponentName == null || myJsonComponentName.equals(componentName));
   }
 
   @Override
@@ -51,7 +81,7 @@ public class DirectoryStorageData extends StorageDataBase {
   }
 
   public boolean isEmpty() {
-    return myStates.isEmpty();
+    return myStates.isEmpty() && myUnresolvedJson.isEmpty();
   }
 
   public static @Nullable DirectoryStorageData setStateAndCloneIfNeed(String componentName,
@@ -169,17 +199,18 @@ public class DirectoryStorageData extends StorageDataBase {
 
   @Override
   protected DirectoryStorageData clone() {
-    return new DirectoryStorageData(new HashMap<>(myStates));
+    return new DirectoryStorageData(new HashMap<>(myStates), new LinkedHashMap<>(myUnresolvedJson), myJsonComponentName);
   }
 
   public void clear() {
     myStates.clear();
+    myUnresolvedJson.clear();
   }
 
   @Override
   public boolean hasState(String componentName) {
     StateMap fileToState = myStates.get(componentName);
-    return fileToState != null && fileToState.hasStates();
+    return fileToState != null && fileToState.hasStates() || hasUnresolvedJson(componentName);
   }
 
   public @Nullable Element getCompositeStateAndArchive(String componentName, StateSplitterEx splitter) {

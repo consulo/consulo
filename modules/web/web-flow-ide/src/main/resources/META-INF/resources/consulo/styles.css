@@ -463,6 +463,16 @@ vaadin-button[theme~="pressed"]
   box-sizing: border-box;
 }
 
+.web-tile-layout > [consulo-drop-before]
+{
+  box-shadow: -2px 0 0 var(--aura-accent-color, var(--vaadin-focus-ring-color, #3574f0));
+}
+
+.web-tile-layout > [consulo-drop-after]
+{
+  box-shadow: 2px 0 0 var(--aura-accent-color, var(--vaadin-focus-ring-color, #3574f0));
+}
+
 .web-tile-layout > *
 {
   min-width: 0;

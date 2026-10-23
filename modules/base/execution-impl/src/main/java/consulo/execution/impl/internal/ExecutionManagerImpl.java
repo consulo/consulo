@@ -247,7 +247,6 @@ public class ExecutionManagerImpl implements ExecutionManager, Disposable {
         }, uiAccess);
     }
 
-    @SuppressWarnings("unchecked")
     private void runBeforeTask(List<BeforeRunTask> beforeRunTasks,
                                int index,
                                ExecutionEnvironment environment,
@@ -266,15 +265,15 @@ public class ExecutionManagerImpl implements ExecutionManager, Disposable {
 
         BeforeRunTask task = beforeRunTasks.get(index);
 
-        BeforeRunTaskProvider<BeforeRunTask> provider = BeforeRunTaskProvider.getProvider(myProject, task.getProviderId());
-        if (provider == null) {
-            LOG.warn("Cannot find BeforeRunTaskProvider for id='" + task.getProviderId() + "'");
+        BeforeRunFragment<BeforeRunTask> fragment = BeforeRunFragments.find(myProject, task);
+        if (fragment == null) {
+            LOG.warn("Cannot find BeforeRunFragment for " + task.getClass().getName());
             runBeforeTask(beforeRunTasks, index + 1, environment, uiAccess, dataContext, runConfiguration, finishResult);
             return;
         }
 
         myApplication.executeOnPooledThread(
-            () -> provider.executeTaskAsync(uiAccess, dataContext, runConfiguration, environment, task)
+            () -> fragment.executeAsync(uiAccess, dataContext, runConfiguration, environment, task)
                 .whenComplete((value, error) -> {
                     if (error == null) {
                         runBeforeTask(beforeRunTasks, index + 1, environment, uiAccess, dataContext, runConfiguration, finishResult);

@@ -16,69 +16,27 @@
 package consulo.execution.configuration;
 
 import consulo.execution.action.Location;
-import consulo.execution.configuration.ui.SettingsEditor;
 import consulo.execution.runner.ProgramRunner;
-import consulo.localize.LocalizeValue;
 import consulo.process.ExecutionException;
 import consulo.process.ProcessHandler;
 import consulo.process.cmd.GeneralCommandLine;
-import consulo.util.xml.serializer.WriteExternalException;
-import org.jdom.Element;
 
 import org.jspecify.annotations.Nullable;
 
-import java.util.Map;
 
 /**
- * Allows a plugin to extend a run configuration created by another plugin.
+ * Run-time behaviour a plugin adds to run configurations of another plugin. Its settings and their editor are a contributed
+ * {@link consulo.execution.configuration.fragment.RunConfigurationFragment} with its own state, read here through
+ * {@link RunConfigurationBase#getFragmentState(Class)}; old {@code <extension>} elements are converted by that fragment's
+ * {@link consulo.execution.configuration.fragment.RunConfigurationFragment#convertLegacyState}.
  *
  * @author traff
  */
 public abstract class RunConfigurationExtensionBase<T extends RunConfigurationBase> {
   /**
-   * Returns the ID used to serialize the settings.
-   *
-   * @return the serialization ID (must be unique across all run configuration extensions).
-   */
-  protected String getSerializationId() {
-    return getClass().getCanonicalName();
-  }
-
-  /**
-   * Loads the settings of this extension from the run configuration XML element. In memory, the settings can be placed into the
-   * userdata of the run configuration.
-   *
-   * @param runConfiguration the run configuration being deserialized.
-   * @param element          the element with persisted settings.
-   */
-  protected void readExternal(T runConfiguration, Element element) {
-  }
-
-  /**
-   * Saves the settings of this extension to the run configuration XML element.
-   *
-   * @param runConfiguration the run configuration being serialized.
-   * @param element          the element into which the settings should be persisted,
-   */
-  protected void writeExternal(T runConfiguration, Element element) {
-    throw new WriteExternalException();
-  }
-
-  /**
-   * Creates an editor for the settings of this extension. The editor is displayed as an additional tab of the run configuration options
-   * in the Run/Debug Configurations dialog.
-   *
-   * @param configuration the configuration being edited.
-   * @return pair of the editor component (and title), or null if this extension doesn't provide any UI for editing the settings.
-   */
-  protected <P extends T> Map.@Nullable Entry<LocalizeValue, SettingsEditor<P>> createEditor(P configuration) {
-    return null;
-  }
-
-  /**
    * @param configuration Run configuration
-   * @return True if extension in general applicable to given run configuration - just to attach settings tab, etc. But extension may be
-   *         turned off in its settings. E.g. RCov in general available for given run configuration, but may be turned off.
+   * @return True if extension in general applicable to given run configuration. But extension may be turned off in its settings.
+   *         E.g. RCov in general available for given run configuration, but may be turned off.
    */
   protected abstract boolean isApplicableFor(T configuration);
 
@@ -114,7 +72,6 @@ public abstract class RunConfigurationExtensionBase<T extends RunConfigurationBa
   protected void attachToProcess(T configuration,
                                  ProcessHandler handler,
                                  @Nullable RunnerSettings runnerSettings) {
-
   }
 
   /**
@@ -136,7 +93,6 @@ public abstract class RunConfigurationExtensionBase<T extends RunConfigurationBa
    */
   protected void extendCreatedConfiguration(T configuration,
                                             Location location) {
-
   }
 
   protected void extendTemplateConfiguration(T configuration) {

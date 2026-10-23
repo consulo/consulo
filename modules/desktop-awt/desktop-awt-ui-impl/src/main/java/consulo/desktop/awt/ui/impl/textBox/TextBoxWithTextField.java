@@ -24,6 +24,11 @@ import javax.swing.*;
  * @since 2020-05-30
  */
 public interface TextBoxWithTextField extends TextBox {
+  /**
+   * Preferred width of a text box in characters, independent of its text, so a long value never widens the layout.
+   */
+  int DEFAULT_COLUMNS = 20;
+
   
   JTextField getTextField();
 }

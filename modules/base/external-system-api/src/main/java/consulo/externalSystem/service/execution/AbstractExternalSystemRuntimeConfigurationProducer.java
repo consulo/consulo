@@ -58,10 +58,11 @@ public abstract class AbstractExternalSystemRuntimeConfigurationProducer extends
     RunManager runManager = RunManager.getInstance(taskLocation.getProject());
     RunnerAndConfigurationSettings settings = runManager.createRunConfiguration("", getConfigurationFactory());
     ExternalSystemRunConfiguration configuration = (ExternalSystemRunConfiguration)settings.getConfiguration();
-    ExternalSystemTaskExecutionSettings taskExecutionSettings = configuration.getSettings();
+    ExternalSystemTaskExecutionSettings taskExecutionSettings = configuration.getSettingsCopy();
     ExternalTaskExecutionInfo task = taskLocation.getTaskInfo();
     taskExecutionSettings.setExternalProjectPath(task.getSettings().getExternalProjectPath());
     taskExecutionSettings.setTaskNames(task.getSettings().getTaskNames());
+    configuration.setSettings(taskExecutionSettings);
     configuration.setName(AbstractExternalSystemTaskConfigurationType.generateName(location.getProject(), taskExecutionSettings));
     return settings;
   }
@@ -80,7 +81,7 @@ public abstract class AbstractExternalSystemRuntimeConfigurationProducer extends
       if (!(runConfiguration instanceof ExternalSystemRunConfiguration)) {
         continue;
       }
-      if (match(taskInfo, ((ExternalSystemRunConfiguration)runConfiguration).getSettings())) {
+      if (match(taskInfo, ((ExternalSystemRunConfiguration)runConfiguration).getSettingsCopy())) {
         return settings;
       }
     }

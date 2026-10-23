@@ -19,7 +19,7 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.credentialStorage.PasswordSafe;
 import consulo.remoteServer.agent.impl.icon.RemoteAgentIconGroup;
-import consulo.execution.configuration.ui.SettingsEditor;
+import consulo.execution.configuration.fragment.RunConfigurationFragmentEditor;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.remoteServer.RemoteServerConfigurable;
@@ -96,9 +96,8 @@ public class RemoteAgentServerType extends PlatformAwareServerType<RemoteAgentSe
             };
         }
 
-        @Nullable
         @Override
-        public SettingsEditor<DeploymentConfigurationBase> createEditor(
+        public @Nullable RunConfigurationFragmentEditor<DeploymentConfigurationBase> createEditor(
             DeploymentSource source,
             @Nullable RemoteServer<RemoteAgentServerConfiguration> server) {
             return null;

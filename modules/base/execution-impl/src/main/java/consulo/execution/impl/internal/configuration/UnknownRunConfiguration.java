@@ -19,21 +19,14 @@ package consulo.execution.impl.internal.configuration;
 import consulo.execution.RuntimeConfigurationException;
 import consulo.execution.WithoutOwnBeforeRunSteps;
 import consulo.execution.configuration.*;
+import consulo.execution.configuration.fragment.RunConfigurationFragment;
 import consulo.process.ExecutionException;
 import consulo.execution.executor.Executor;
 import consulo.execution.runner.ExecutionEnvironment;
-import consulo.execution.runner.ProgramRunner;
-import consulo.configurable.ConfigurationException;
-import consulo.execution.configuration.ui.SettingsEditor;
-import consulo.execution.localize.ExecutionLocalize;
 import consulo.project.Project;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
-import consulo.ui.Component;
-import consulo.ui.Label;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
-import consulo.ui.style.ComponentColors;
 import org.jdom.Attribute;
 import org.jdom.Element;
 
@@ -83,8 +76,8 @@ public class UnknownRunConfiguration implements RunConfiguration, WithoutOwnBefo
 
   
   @Override
-  public SettingsEditor<? extends RunConfiguration> getConfigurationEditor() {
-    return new UnknownSettingsEditor();
+  public List<RunConfigurationFragment<?>> createFragments() {
+    return List.of(new UnknownRunConfigurationFragment());
   }
 
   @Override
@@ -100,11 +93,6 @@ public class UnknownRunConfiguration implements RunConfiguration, WithoutOwnBefo
 
   @Override
   public ConfigurationPerRunnerSettings createRunnerSettings(ConfigurationInfoProvider provider) {
-    return null;
-  }
-
-  @Override
-  public SettingsEditor<ConfigurationPerRunnerSettings> getRunnerSettingsEditor(ProgramRunner runner) {
     return null;
   }
 
@@ -165,24 +153,6 @@ public class UnknownRunConfiguration implements RunConfiguration, WithoutOwnBefo
         Element c = (Element) child;
         element.addContent((Element) c.clone());
       }
-    }
-  }
-
-  private static class UnknownSettingsEditor extends SettingsEditor<UnknownRunConfiguration> {
-    @Override
-    protected void resetEditorFrom(UnknownRunConfiguration s) {
-    }
-
-    @Override
-    protected void applyEditorTo(UnknownRunConfiguration s) throws ConfigurationException {
-    }
-
-    @RequiredUIAccess
-    @Override
-    protected Component createUIComponent() {
-      Label label = Label.create(ExecutionLocalize.runConfigurationEditorNotSupported());
-      label.setForegroundColor(ComponentColors.DISABLED_TEXT);
-      return label;
     }
   }
 }

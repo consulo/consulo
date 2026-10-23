@@ -15,6 +15,7 @@
  */
 package consulo.compiler.execution;
 
+import com.dslplatform.json.CompiledJson;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.ReadAction;
 import consulo.application.dumb.IndexNotReadyException;
@@ -34,7 +35,6 @@ import consulo.module.Module;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
-import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
 import jakarta.inject.Inject;
 
@@ -53,7 +53,7 @@ public class CompileStepBeforeRun extends CompileStepBeforeRunBase<CompileStepBe
     }
 
     private static final Logger LOG = Logger.getInstance(CompileStepBeforeRun.class);
-    public static final Key<MakeBeforeRunTask> ID = Key.create("Make");
+    public static final String ID = "Make";
 
     protected static final String MAKE_PROJECT_ON_RUN_KEY = "makeProjectOnRun";
 
@@ -63,8 +63,13 @@ public class CompileStepBeforeRun extends CompileStepBeforeRunBase<CompileStepBe
     }
 
     @Override
-    public Key<MakeBeforeRunTask> getId() {
+    public String getId() {
         return ID;
+    }
+
+    @Override
+    public Class<MakeBeforeRunTask> getStateClass() {
+        return MakeBeforeRunTask.class;
     }
 
     @Override
@@ -91,7 +96,7 @@ public class CompileStepBeforeRun extends CompileStepBeforeRunBase<CompileStepBe
     }
 
     @Override
-    public CompletableFuture<Void> executeTaskAsync(
+    public CompletableFuture<Void> executeAsync(
         UIAccess uiAccess,
         DataContext context,
         RunConfiguration configuration,
@@ -175,9 +180,9 @@ public class CompileStepBeforeRun extends CompileStepBeforeRunBase<CompileStepBe
         return result;
     }
 
-    public static class MakeBeforeRunTask extends BeforeRunTask<MakeBeforeRunTask> {
-        private MakeBeforeRunTask() {
-            super(ID);
+    @CompiledJson
+    public static class MakeBeforeRunTask extends BeforeRunTask {
+        public MakeBeforeRunTask() {
             setEnabled(true);
         }
     }

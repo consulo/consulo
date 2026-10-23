@@ -18,6 +18,7 @@ package consulo.it.internal.ui;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Badge;
 import consulo.ui.BadgeStyle;
+import consulo.ui.Component;
 import consulo.ui.image.Image;
 import org.jspecify.annotations.Nullable;
 
@@ -32,6 +33,8 @@ public class HeadlessBadge extends HeadlessComponentBase implements Badge {
     private final Set<BadgeStyle> myStyles = EnumSet.noneOf(BadgeStyle.class);
     private LocalizeValue myText;
     private @Nullable Image myIcon;
+    private @Nullable Component myPrefixComponent;
+    private @Nullable Component mySuffixComponent;
 
     public HeadlessBadge(LocalizeValue text) {
         myText = text;
@@ -64,5 +67,25 @@ public class HeadlessBadge extends HeadlessComponentBase implements Badge {
     @Override
     public void setIcon(@Nullable Image icon) {
         myIcon = icon;
+    }
+
+    @Override
+    public void setPrefixComponent(@Nullable Component prefixComponent) {
+        myPrefixComponent = prefixComponent;
+    }
+
+    @Override
+    public @Nullable Component getPrefixComponent() {
+        return myPrefixComponent;
+    }
+
+    @Override
+    public void setSuffixComponent(@Nullable Component suffixComponent) {
+        mySuffixComponent = suffixComponent;
+    }
+
+    @Override
+    public @Nullable Component getSuffixComponent() {
+        return mySuffixComponent;
     }
 }

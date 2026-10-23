@@ -16,11 +16,15 @@
 package consulo.desktop.qt.ui.impl.layout;
 
 import consulo.desktop.qt.ui.impl.DesktopQtSpace;
+import consulo.ui.Component;
+import consulo.ui.DragAndDropTransferHandler;
 import consulo.ui.Length;
 import consulo.ui.Space;
+import consulo.ui.TransferHandler;
 import consulo.ui.layout.LayoutConstraint;
 import consulo.ui.layout.TileLayout;
 import io.qt.widgets.QLayout;
+import io.qt.widgets.QWidget;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -30,6 +34,8 @@ import org.jspecify.annotations.Nullable;
 public class DesktopQtTileLayoutImpl extends DesktopQtLayoutComponent<LayoutConstraint, Object> implements TileLayout {
     private final Length myMinTileWidth;
     private final Space myGap;
+    private final DesktopQtTileDragAndDrop myDragAndDrop = new DesktopQtTileDragAndDrop(this);
+    private @Nullable TransferHandler<Component> myTransferHandler;
 
     public DesktopQtTileLayoutImpl(Length minTileWidth, Space gap) {
         myMinTileWidth = minTileWidth;
@@ -39,5 +45,26 @@ public class DesktopQtTileLayoutImpl extends DesktopQtLayoutComponent<LayoutCons
     @Override
     protected @Nullable QLayout createLayout() {
         return new DesktopQtTileLayout(myMinTileWidth, DesktopQtSpace.toPixels(myGap));
+    }
+
+    @Override
+    protected void initialize(QWidget component) {
+        super.initialize(component);
+        myDragAndDrop.install(component);
+    }
+
+    @Override
+    public void setTransferHandler(@Nullable TransferHandler<Component> handler) {
+        myTransferHandler = handler;
+    }
+
+    @Override
+    public @Nullable TransferHandler<Component> getTransferHandler() {
+        return myTransferHandler;
+    }
+
+    @Nullable
+    DragAndDropTransferHandler<Component> getDragAndDropHandler() {
+        return myTransferHandler instanceof DragAndDropTransferHandler<Component> handler ? handler : null;
     }
 }

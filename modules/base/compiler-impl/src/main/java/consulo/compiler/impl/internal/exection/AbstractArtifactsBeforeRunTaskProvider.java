@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2009 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,54 +17,50 @@ package consulo.compiler.impl.internal.exection;
 
 import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ArtifactManager;
-import consulo.compiler.artifact.ArtifactPointer;
-import consulo.compiler.artifact.ArtifactPointerManager;
 import consulo.compiler.artifact.event.ArtifactListener;
-import consulo.compiler.localize.CompilerLocalize;
-import consulo.execution.BeforeRunTaskProvider;
+import consulo.disposer.Disposable;
+import consulo.execution.BeforeRunFragment;
 import consulo.execution.RunManager;
 import consulo.execution.configuration.RunConfiguration;
+import consulo.execution.configuration.fragment.RunConfigurationFragmentEditor;
+import consulo.execution.configuration.fragment.RunConfigurationFragmentLayout;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
+import consulo.ui.CheckBox;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.DialogBuilder;
 import consulo.ui.image.Image;
-import consulo.util.dataholder.Key;
+import consulo.ui.layout.ScrollableLayout;
+import consulo.ui.layout.VerticalLayout;
+import org.jspecify.annotations.Nullable;
 
-import java.awt.*;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Set;
-import java.util.concurrent.CompletableFuture;
+import java.util.Map;
 
 /**
  * @author nik
  */
-public abstract class AbstractArtifactsBeforeRunTaskProvider<T extends AbstractArtifactsBeforeRunTask<T>> extends BeforeRunTaskProvider<T> {
+public abstract class AbstractArtifactsBeforeRunTaskProvider<T extends AbstractArtifactsBeforeRunTask> implements BeforeRunFragment<T> {
     protected final Project myProject;
-    private final Key<T> myId;
 
-    public AbstractArtifactsBeforeRunTaskProvider(Project project, Key<T> id) {
+    public AbstractArtifactsBeforeRunTaskProvider(Project project) {
         myProject = project;
-        myId = id;
         project.getMessageBus().connect().subscribe(
             ArtifactListener.class,
             new ArtifactListener() {
                 @Override
                 public void artifactRemoved(Artifact artifact) {
+                    String artifactName = artifact.getName();
+                    if (ArtifactManager.getInstance(myProject).findArtifact(artifactName) != null) {
+                        return;
+                    }
+
                     RunManager runManager = RunManager.getInstance(myProject);
                     for (RunConfiguration configuration : runManager.getAllConfigurationsList()) {
-                        List<T> tasks = runManager.getBeforeRunTasks(configuration, getId());
-                        for (AbstractArtifactsBeforeRunTask task : tasks) {
-                            String artifactName = artifact.getName();
-                            List<ArtifactPointer> pointersList = task.getArtifactPointers();
-                            for (ArtifactPointer pointer : pointersList.toArray(new ArtifactPointer[pointersList.size()])) {
-                                if (pointer.getName().equals(artifactName)
-                                    && ArtifactManager.getInstance(myProject).findArtifact(artifactName) == null) {
-                                    task.removeArtifact(pointer);
-                                }
-                            }
+                        for (T task : runManager.getBeforeRunTasks(configuration, getStateClass())) {
+                            task.removeArtifact(artifactName);
                         }
                     }
                 }
@@ -72,10 +68,16 @@ public abstract class AbstractArtifactsBeforeRunTaskProvider<T extends AbstractA
         );
     }
 
-
-    @Override
-    public Key<T> getId() {
-        return myId;
+    protected List<Artifact> resolve(T task) {
+        ArtifactManager manager = ArtifactManager.getInstance(myProject);
+        List<Artifact> result = new ArrayList<>();
+        for (String name : task.getArtifactNames()) {
+            Artifact artifact = manager.findArtifact(name);
+            if (artifact != null) {
+                result.add(artifact);
+            }
+        }
+        return result;
     }
 
     @Override
@@ -84,16 +86,9 @@ public abstract class AbstractArtifactsBeforeRunTaskProvider<T extends AbstractA
     }
 
     @Override
-    public Image getTaskIcon(RunConfiguration configuration, AbstractArtifactsBeforeRunTask task) {
-        List<ArtifactPointer> pointers = task.getArtifactPointers();
-        if (pointers == null || pointers.isEmpty()) {
-            return getIcon(configuration);
-        }
-        Artifact artifact = pointers.get(0).get();
-        if (artifact == null) {
-            return getIcon(configuration);
-        }
-        return artifact.getArtifactType().getIcon();
+    public @Nullable Image getTaskIcon(RunConfiguration configuration, T task) {
+        List<Artifact> artifacts = resolve(task);
+        return artifacts.isEmpty() ? getIcon(configuration) : artifacts.get(0).getArtifactType().getIcon();
     }
 
     @Override
@@ -102,39 +97,50 @@ public abstract class AbstractArtifactsBeforeRunTaskProvider<T extends AbstractA
     }
 
     @RequiredUIAccess
-
     @Override
-    public CompletableFuture<Void> configureTask(RunConfiguration runConfiguration, T task) {
-        Artifact[] artifacts = ArtifactManager.getInstance(myProject).getArtifacts();
-        Set<ArtifactPointer> pointers = new HashSet<>();
-        for (Artifact artifact : artifacts) {
-            pointers.add(ArtifactPointerManager.getInstance(myProject).create(artifact));
+    public RunConfigurationFragmentEditor<T> createEditor(RunConfiguration configuration, Disposable parent) {
+        Map<String, CheckBox> boxes = new LinkedHashMap<>();
+        VerticalLayout list = VerticalLayout.create();
+        for (Artifact artifact : ArtifactManager.getInstance(myProject).getArtifacts()) {
+            CheckBox box = CheckBox.create(LocalizeValue.of(artifact.getName()));
+            boxes.put(artifact.getName(), box);
+            list.add(box);
         }
-        pointers.addAll(task.getArtifactPointers());
-        ArtifactChooser chooser = new ArtifactChooser(new ArrayList<>(pointers));
-        chooser.markElements(task.getArtifactPointers());
-        chooser.setPreferredSize(new Dimension(400, 300));
 
-        DialogBuilder builder = new DialogBuilder(myProject);
-        builder.setTitle(CompilerLocalize.buildArtifactsBeforeRunSelectorTitle());
-        builder.setDimensionServiceKey("#BuildArtifactsBeforeRunChooser");
-        builder.addOkAction();
-        builder.addCancelAction();
-        builder.setCenterPanel(chooser);
-        builder.setPreferredFocusComponent(chooser);
+        return new RunConfigurationFragmentEditor<>() {
+            @RequiredUIAccess
+            @Override
+            public void addRows(RunConfigurationFragmentLayout layout) {
+                layout.addBottom(ScrollableLayout.create(list));
+            }
 
-        return builder.showAsync()
-            .toCompletableFuture()
-            .thenRun(() -> task.setArtifactPointers(chooser.getMarkedElements()));
+            @RequiredUIAccess
+            @Override
+            public void reset(T task) {
+                boxes.forEach((name, box) -> box.setValue(task.getArtifactNames().contains(name)));
+            }
+
+            @RequiredUIAccess
+            @Override
+            public void apply(T task) {
+                List<String> names = new ArrayList<>();
+                for (String name : task.getArtifactNames()) {
+                    if (!boxes.containsKey(name)) {
+                        names.add(name);
+                    }
+                }
+                boxes.forEach((name, box) -> {
+                    if (box.getValueOrError()) {
+                        names.add(name);
+                    }
+                });
+                task.setArtifactNames(names);
+            }
+        };
     }
 
     @Override
     public boolean canExecuteTask(RunConfiguration configuration, T task) {
-        for (ArtifactPointer pointer : task.getArtifactPointers()) {
-            if (pointer.get() != null) {
-                return true;
-            }
-        }
-        return false;
+        return !resolve(task).isEmpty();
     }
 }

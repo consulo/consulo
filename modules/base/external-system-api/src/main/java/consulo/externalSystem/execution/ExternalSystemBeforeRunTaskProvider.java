@@ -16,10 +16,13 @@
 package consulo.externalSystem.execution;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.configurable.ConfigurationException;
 import consulo.dataContext.DataContext;
 import consulo.disposer.Disposable;
-import consulo.execution.BeforeRunTaskProvider;
+import consulo.execution.BeforeRunFragment;
 import consulo.execution.configuration.RunConfiguration;
+import consulo.execution.configuration.fragment.RunConfigurationFragmentEditor;
+import consulo.execution.configuration.fragment.RunConfigurationFragmentLayout;
 import consulo.execution.event.ExecutionListener;
 import consulo.execution.executor.DefaultRunExecutor;
 import consulo.execution.executor.Executor;
@@ -29,6 +32,7 @@ import consulo.externalSystem.localize.ExternalSystemLocalize;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.model.execution.ExternalSystemTaskExecutionSettings;
 import consulo.externalSystem.model.execution.ExternalTaskPojo;
+import consulo.externalSystem.service.execution.ExternalSystemTaskSettingsControl;
 import consulo.externalSystem.service.module.extension.ExternalSystemModuleExtension;
 import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.externalSystem.util.ExternalSystemConstants;
@@ -41,10 +45,9 @@ import consulo.process.ProcessHandler;
 import consulo.process.event.ProcessEvent;
 import consulo.process.event.ProcessListener;
 import consulo.project.Project;
-import consulo.ui.ex.dialog.DialogService;
+import consulo.ui.Component;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 
@@ -57,7 +60,7 @@ import java.util.concurrent.CompletableFuture;
  * @author Vladislav.Soroka
  * @since 2014-05-30
  */
-public abstract class ExternalSystemBeforeRunTaskProvider extends BeforeRunTaskProvider<ExternalSystemBeforeRunTask> {
+public abstract class ExternalSystemBeforeRunTaskProvider<T extends ExternalSystemBeforeRunTask> implements BeforeRunFragment<T> {
 
     private static final Logger LOG = Logger.getInstance(ExternalSystemBeforeRunTaskProvider.class);
 
@@ -66,20 +69,21 @@ public abstract class ExternalSystemBeforeRunTaskProvider extends BeforeRunTaskP
     
     private final Project myProject;
     
-    private final Key<ExternalSystemBeforeRunTask> myId;
+    private final String myId;
 
-    public ExternalSystemBeforeRunTaskProvider(ProjectSystemId systemId,
-                                               Project project,
-                                               Key<ExternalSystemBeforeRunTask> id) {
+    public ExternalSystemBeforeRunTaskProvider(ProjectSystemId systemId, Project project, String id) {
         mySystemId = systemId;
         myProject = project;
         myId = id;
     }
 
     @Override
-    
-    public Key<ExternalSystemBeforeRunTask> getId() {
+    public String getId() {
         return myId;
+    }
+
+    protected ProjectSystemId getSystemId() {
+        return mySystemId;
     }
 
     
@@ -93,21 +97,38 @@ public abstract class ExternalSystemBeforeRunTaskProvider extends BeforeRunTaskP
         return true;
     }
 
-    
     @Override
     @RequiredUIAccess
-    public CompletableFuture<?> configureTask(RunConfiguration runConfiguration, ExternalSystemBeforeRunTask task) {
-        ExternalSystemEditTaskDialogDescriptor descriptor = new ExternalSystemEditTaskDialogDescriptor(
-            ExternalSystemLocalize.tasksSelectTaskTitle(mySystemId.getDisplayName()),
-            myProject,
-            task.getTaskExecutionSettings(),
-            mySystemId
-        );
-        return myProject.getApplication().getInstance(DialogService.class).build(myProject, descriptor).showAsync();
+    public RunConfigurationFragmentEditor<T> createEditor(RunConfiguration configuration, Disposable parent) {
+        ExternalSystemTaskSettingsControl control = new ExternalSystemTaskSettingsControl(myProject, mySystemId);
+        Component component = control.createUIComponent();
+
+        return new RunConfigurationFragmentEditor<>() {
+            @RequiredUIAccess
+            @Override
+            public void addRows(RunConfigurationFragmentLayout layout) {
+                layout.addBottom(component);
+            }
+
+            @RequiredUIAccess
+            @Override
+            public void reset(T task) {
+                control.setOriginalSettings(task.getTaskExecutionSettings());
+                control.reset();
+            }
+
+            @RequiredUIAccess
+            @Override
+            public void apply(T task) throws ConfigurationException {
+                ExternalSystemTaskExecutionSettings settings = task.getTaskExecutionSettings();
+                control.apply(settings);
+                task.setTaskExecutionSettings(settings);
+            }
+        };
     }
 
     @Override
-    public boolean canExecuteTask(RunConfiguration configuration, ExternalSystemBeforeRunTask beforeRunTask) {
+    public boolean canExecuteTask(RunConfiguration configuration, T beforeRunTask) {
         ExternalSystemTaskExecutionSettings executionSettings = beforeRunTask.getTaskExecutionSettings();
 
         List<ExternalTaskPojo> tasks = new ArrayList<>();
@@ -133,11 +154,11 @@ public abstract class ExternalSystemBeforeRunTaskProvider extends BeforeRunTaskP
 
     
     @Override
-    public CompletableFuture<Void> executeTaskAsync(UIAccess uiAccess,
+    public CompletableFuture<Void> executeAsync(UIAccess uiAccess,
                                                     DataContext context,
                                                     RunConfiguration configuration,
                                                     ExecutionEnvironment env,
-                                                    ExternalSystemBeforeRunTask beforeRunTask) {
+                                                    T beforeRunTask) {
         ExternalSystemTaskExecutionSettings executionSettings = beforeRunTask.getTaskExecutionSettings();
 
         List<ExternalTaskPojo> tasks = new ArrayList<>();
@@ -220,7 +241,7 @@ public abstract class ExternalSystemBeforeRunTaskProvider extends BeforeRunTaskP
     @Override
     @RequiredReadAction
     @SuppressWarnings("unchecked")
-    public LocalizeValue getDescription(ExternalSystemBeforeRunTask task) {
+    public LocalizeValue getDescription(T task) {
         String externalProjectPath = task.getTaskExecutionSettings().getExternalProjectPath();
 
         if (task.getTaskExecutionSettings().getTaskNames().isEmpty()) {

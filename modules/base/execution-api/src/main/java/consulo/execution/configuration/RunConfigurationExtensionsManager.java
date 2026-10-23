@@ -18,112 +18,23 @@ package consulo.execution.configuration;
 import consulo.application.Application;
 import consulo.component.extension.ExtensionPoint;
 import consulo.execution.action.Location;
-import consulo.execution.configuration.ui.SettingsEditor;
-import consulo.execution.configuration.ui.SettingsEditorGroup;
-import consulo.localize.LocalizeValue;
 import consulo.process.ExecutionException;
 import consulo.process.ProcessHandler;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.util.collection.SmartList;
-import consulo.util.dataholder.Key;
-import consulo.util.jdom.interner.JDOMInterner;
-import consulo.util.xml.serializer.InvalidDataException;
-import consulo.util.xml.serializer.WriteExternalException;
-import org.jdom.Element;
 
 import org.jspecify.annotations.Nullable;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 /**
  * @author traff
  */
 public class RunConfigurationExtensionsManager<U extends RunConfigurationBase, T extends RunConfigurationExtensionBase<U>> {
-  private static final Key<List<Element>> RUN_EXTENSIONS = Key.create("run.extension.elements");
-  private static final String EXT_ID_ATTR = "ID";
-  private static final String EXTENSION_ROOT_ATTR = "EXTENSION";
-
   private final Class<T> myExtensionClass;
 
   public RunConfigurationExtensionsManager(Class<T> extensionClass) {
     myExtensionClass = extensionClass;
-  }
-
-  public void readExternal(U configuration, Element parentNode) throws InvalidDataException {
-    Map<String, T> extensions = new HashMap<>();
-    for (T extension : getApplicableExtensions(configuration)) {
-      extensions.put(extension.getSerializationId(), extension);
-    }
-
-    List<Element> children = parentNode.getChildren(getExtensionRootAttr());
-    // if some of extensions settings weren't found we should just keep it because some plugin with extension
-    // may be turned off
-    boolean hasUnknownExtension = false;
-    for (Element element : children) {
-      T extension = extensions.remove(element.getAttributeValue(getIdAttrName()));
-      if (extension == null) {
-        hasUnknownExtension = true;
-      }
-      else {
-        extension.readExternal(configuration, element);
-      }
-    }
-    if (hasUnknownExtension) {
-      List<Element> copy = children.stream().map(JDOMInterner::internElement).collect(Collectors.toList());
-      configuration.putCopyableUserData(RUN_EXTENSIONS, copy);
-    }
-  }
-
-  
-  protected String getIdAttrName() {
-    return EXT_ID_ATTR;
-  }
-
-  
-  protected String getExtensionRootAttr() {
-    return EXTENSION_ROOT_ATTR;
-  }
-
-  public void writeExternal(U configuration, Element parentNode) {
-    Map<String, Element> map = new TreeMap<>();
-    List<Element> elements = configuration.getCopyableUserData(RUN_EXTENSIONS);
-    if (elements != null) {
-      for (Element element : elements) {
-        map.put(element.getAttributeValue(getIdAttrName()), element.clone());
-      }
-    }
-
-    for (T extension : getApplicableExtensions(configuration)) {
-      Element element = new Element(getExtensionRootAttr());
-      element.setAttribute(getIdAttrName(), extension.getSerializationId());
-      try {
-        extension.writeExternal(configuration, element);
-      }
-      catch (WriteExternalException ignored) {
-        continue;
-      }
-
-      if (!element.getContent().isEmpty() || element.getAttributes().size() > 1) {
-        map.put(extension.getSerializationId(), element);
-      }
-    }
-
-    for (Element values : map.values()) {
-      parentNode.addContent(values);
-    }
-  }
-
-  public <V extends U> void appendEditors(U configuration, SettingsEditorGroup<V> group) {
-    for (T extension : getApplicableExtensions(configuration)) {
-      @SuppressWarnings("unchecked") Map.Entry<LocalizeValue, SettingsEditor<V>> editorPair = extension.createEditor((V)configuration);
-      if (editorPair != null) {
-        group.addEditor(editorPair.getKey(), editorPair.getValue());
-      }
-    }
   }
 
   public void validateConfiguration(U configuration, boolean isExecution) throws Exception {

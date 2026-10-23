@@ -20,6 +20,7 @@ import consulo.util.io.FileUtil;
 import consulo.util.lang.Pair;
 import org.jdom.Attribute;
 import org.jdom.Element;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -31,6 +32,22 @@ public abstract class StateSplitterEx {
 
   public void mergeStateInto(Element target, Element subState) {
     target.addContent(subState);
+  }
+
+  /**
+   * JSON content of a split sub state, with path macros already collapsed, or {@code null} to keep the sub state as XML.
+   * A JSON sub state is saved in a {@code .json} file instead of the {@code .xml} one of the same name.
+   */
+  public byte @Nullable [] writeJson(Object component, Element subState, StateJsonSerializer serializer) {
+    return null;
+  }
+
+  /**
+   * Sub state for the content of a {@code .json} file written by {@link #writeJson}, paths still collapsed, or {@code null} when
+   * the content cannot be read (the file is then left as is).
+   */
+  public @Nullable Element readJson(Object component, byte[] content, StateJsonSerializer serializer) {
+    return null;
   }
 
   

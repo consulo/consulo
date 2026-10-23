@@ -15,28 +15,12 @@
  */
 package consulo.execution;
 
+import consulo.execution.configuration.EnvironmentAware;
+import consulo.execution.configuration.ProgramParametersAware;
+import consulo.execution.configuration.WorkingDirectoryAware;
 import consulo.project.Project;
 import org.jspecify.annotations.Nullable;
 
-import java.util.Map;
-
-public interface CommonProgramRunConfigurationParameters {
+public interface CommonProgramRunConfigurationParameters extends ProgramParametersAware, WorkingDirectoryAware, EnvironmentAware {
   @Nullable Project getProject();
-
-  void setProgramParameters(@Nullable String value);
-
-  @Nullable String getProgramParameters();
-
-  void setWorkingDirectory(@Nullable String value);
-
-  @Nullable String getWorkingDirectory();
-
-  void setEnvs(Map<String, String> envs);
-
-  
-  Map<String, String> getEnvs();
-
-  void setPassParentEnvs(boolean passParentEnvs);
-
-  boolean isPassParentEnvs();
 }

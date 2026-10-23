@@ -25,7 +25,7 @@ import org.jspecify.annotations.Nullable;
  * @author VISTALL
  * @since 2026-10-20
  */
-public interface Badge extends Component, HasComponentStyle<BadgeStyle> {
+public interface Badge extends Component, HasComponentStyle<BadgeStyle>, HasPrefixComponent, HasSuffixComponent {
     static Badge create(LocalizeValue text) {
         return UIInternal.get()._Components_badge(text);
     }

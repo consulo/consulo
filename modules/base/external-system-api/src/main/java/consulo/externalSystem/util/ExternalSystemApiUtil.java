@@ -326,12 +326,7 @@ public class ExternalSystemApiUtil {
         RunnerAndConfigurationSettings settings =
             RunManager.getInstance(project).createRunConfiguration(name, configurationType.getFactory());
         ExternalSystemRunConfiguration runConfiguration = (ExternalSystemRunConfiguration) settings.getConfiguration();
-        runConfiguration.getSettings().setExternalProjectPath(taskSettings.getExternalProjectPath());
-        runConfiguration.getSettings().setTaskNames(new ArrayList<>(taskSettings.getTaskNames()));
-        runConfiguration.getSettings().setTaskDescriptions(new ArrayList<>(taskSettings.getTaskDescriptions()));
-        runConfiguration.getSettings().setVmOptions(taskSettings.getVmOptions());
-        runConfiguration.getSettings().setScriptParameters(taskSettings.getScriptParameters());
-        runConfiguration.getSettings().setExecutionName(taskSettings.getExecutionName());
+        runConfiguration.setSettings(taskSettings);
 
         return Pair.create(runner, new ExecutionEnvironment(executor, runner, settings, project));
     }

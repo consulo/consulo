@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2000-2009 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,14 +15,12 @@
  */
 package consulo.compiler.impl.internal.exection;
 
-import consulo.project.Project;
+import com.dslplatform.json.CompiledJson;
 
 /**
  * @author VISTALL
  * @since 15:09/14.06.13
  */
-public class BuildArtifactsBeforeRunTask extends AbstractArtifactsBeforeRunTask<BuildArtifactsBeforeRunTask> {
-  public BuildArtifactsBeforeRunTask(Project project) {
-    super(project, BuildArtifactsBeforeRunTaskProvider.ID);
-  }
+@CompiledJson
+public class BuildArtifactsBeforeRunTask extends AbstractArtifactsBeforeRunTask {
 }
