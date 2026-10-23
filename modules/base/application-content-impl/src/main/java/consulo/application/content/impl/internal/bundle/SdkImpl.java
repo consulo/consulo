@@ -4,16 +4,11 @@ package consulo.application.content.impl.internal.bundle;
 import consulo.annotation.DeprecationInfo;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.content.impl.internal.RootsAsVirtualFilePointers;
-import consulo.content.OrderRootType;
 import consulo.content.RootProvider;
 import consulo.content.RootProviderBase;
 import consulo.content.bundle.*;
 import consulo.content.platform.PlatformTarget;
 import consulo.content.platform.PlatformTargetManager;
-import consulo.content.internal.GlobalLibraryRootListenerProvider;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.project.localize.ProjectLocalize;
@@ -22,22 +17,21 @@ import consulo.util.lang.StringUtil;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.virtualFileSystem.StandardFileSystems;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.pointer.VirtualFilePointerListener;
-import consulo.virtualFileSystem.pointer.VirtualFilePointerManager;
+import consulo.virtualFileSystem.url.VirtualFileUrlManager;
 import org.jdom.Element;
 import org.jspecify.annotations.Nullable;
 
 import java.nio.file.Path;
 import java.util.Objects;
 
-public class SdkImpl extends UserDataHolderBase implements Sdk, SdkModificator, Disposable {
+public class SdkImpl extends UserDataHolderBase implements Sdk, SdkModificator {
     private static final Logger LOG = Logger.getInstance(SdkImpl.class);
 
     private String myName;
     private String myVersionString;
     private boolean myVersionDefined;
     private String myHomePath = "";
-    private final RootsAsVirtualFilePointers myRoots;
+    private final SdkRoots myRoots;
     private SdkImpl myOrigin;
     private SdkAdditionalData myAdditionalData;
     private final SdkTable mySdkTable;
@@ -61,13 +55,7 @@ public class SdkImpl extends UserDataHolderBase implements Sdk, SdkModificator, 
         mySdkTable = sdkTable;
         mySdkType = sdkType;
         myName = name;
-
-        VirtualFilePointerListener listener = Application.get().getInstance(GlobalLibraryRootListenerProvider.class).getListener();
-
-        myRoots = new RootsAsVirtualFilePointers(true, listener, this);
-
-        // register on VirtualFilePointerManager because we want our virtual pointers to be disposed before VFPM to avoid "pointer leaked" diagnostics fired
-        Disposer.register((Disposable) VirtualFilePointerManager.getInstance(), this);
+        myRoots = new SdkRoots(Application.get().getInstance(VirtualFileUrlManager.class));
     }
 
     public SdkImpl(SdkTable sdkTable, SdkTypeId sdkType, Path homePath, String name) {
@@ -75,21 +63,13 @@ public class SdkImpl extends UserDataHolderBase implements Sdk, SdkModificator, 
         mySdkType = sdkType;
         myName = name;
         myHomePath = homePath.toAbsolutePath().toString();
-        VirtualFilePointerListener listener = Application.get().getInstance(GlobalLibraryRootListenerProvider.class).getListener();
-        myRoots = new RootsAsVirtualFilePointers(true, listener, this);
-
-        // register on VirtualFilePointerManager because we want our virtual pointers to be disposed before VFPM to avoid "pointer leaked" diagnostics fired
-        Disposer.register((Disposable) VirtualFilePointerManager.getInstance(), this);
+        myRoots = new SdkRoots(Application.get().getInstance(VirtualFileUrlManager.class));
     }
 
     public SdkImpl(SdkTable sdkTable, String name, SdkTypeId sdkType, String homePath, String version) {
         this(sdkTable, name, sdkType);
         myHomePath = homePath;
         myVersionString = version;
-    }
-
-    @Override
-    public void dispose() {
     }
 
     @Override
@@ -389,7 +369,6 @@ public class SdkImpl extends UserDataHolderBase implements Sdk, SdkModificator, 
 
         copyTo(myOrigin);
         myOrigin = null;
-        Disposer.dispose(this);
     }
 
     @Override

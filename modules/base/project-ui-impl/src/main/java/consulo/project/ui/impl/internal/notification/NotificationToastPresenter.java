@@ -17,6 +17,8 @@ package consulo.project.ui.impl.internal.notification;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicImpl;
+import consulo.component.ProviderAsync;
+import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.startup.StartupManager;
 import consulo.project.ui.internal.IdeFrameEx;
@@ -33,10 +35,10 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.xml.XmlStringUtil;
 import jakarta.inject.Inject;
-import jakarta.inject.Provider;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Floats every new notification over the frames which show it, each in its own ui: the frame of its project, or -
@@ -48,13 +50,15 @@ import java.util.List;
  */
 @TopicImpl(ComponentScope.APPLICATION)
 public class NotificationToastPresenter implements NotificationServiceListener {
+    private static final Logger LOG = Logger.getInstance(NotificationToastPresenter.class);
+
     private static final String ACTION_HREF_PREFIX = "notification-action:";
 
     private final NotificationsConfiguration myConfiguration;
-    private final Provider<NotificationToastService> myToastService;
+    private final ProviderAsync<NotificationToastService> myToastService;
 
     @Inject
-    public NotificationToastPresenter(NotificationsConfiguration configuration, Provider<NotificationToastService> toastService) {
+    public NotificationToastPresenter(NotificationsConfiguration configuration, ProviderAsync<NotificationToastService> toastService) {
         myConfiguration = configuration;
         myToastService = toastService;
     }
@@ -74,7 +78,7 @@ public class NotificationToastPresenter implements NotificationServiceListener {
         if (project == null) {
             List<UIAccess> uiAccesses = UIAccess.listAll();
             if (uiAccesses.isEmpty()) {
-                myToastService.get().showLater(notification);
+                withToastService(service -> service.showLater(notification));
             }
             for (UIAccess uiAccess : uiAccesses) {
                 uiAccess.give(() -> showInUI(uiAccess, notification));
@@ -105,12 +109,12 @@ public class NotificationToastPresenter implements NotificationServiceListener {
 
     @Override
     public void notificationExpired(Notification notification, @Nullable Project project) {
-        myToastService.get().hideEverywhere(notification);
+        withToastService(service -> service.hideEverywhere(notification));
     }
 
     @Override
     public void notificationRemoved(Notification notification, @Nullable Project project) {
-        myToastService.get().hideEverywhere(notification);
+        withToastService(service -> service.hideEverywhere(notification));
     }
 
     @RequiredUIAccess
@@ -122,8 +126,19 @@ public class NotificationToastPresenter implements NotificationServiceListener {
             frame.showNotification(notification);
         }
         else {
-            myToastService.get().showLater(notification);
+            withToastService(service -> service.showLater(notification));
         }
+    }
+
+    private void withToastService(Consumer<NotificationToastService> action) {
+        myToastService.getAsync().whenComplete((service, error) -> {
+            if (error != null) {
+                LOG.error(error);
+            }
+            else {
+                action.accept(service);
+            }
+        });
     }
 
     @RequiredUIAccess

@@ -61,7 +61,7 @@ public class MergingUpdateQueue implements Runnable, Disposable, Activatable {
   private JComponent myModalityStateComponent;
   private final boolean myExecuteInDispatchThread;
   private boolean myPassThrough;
-  private boolean myDisposed;
+  private volatile boolean myDisposed;
 
   private UiNotifyConnector myUiNotifyConnector;
   private boolean myRestartOnAdd;
@@ -124,7 +124,7 @@ public class MergingUpdateQueue implements Runnable, Disposable, Activatable {
       Disposer.register(parent, this);
     }
 
-    myWaiterForMerge = createAlarm(thread, myExecuteInDispatchThread ? null : this);
+    myWaiterForMerge = new Alarm(thread);
 
     if (isActive) {
       showNotify();
@@ -133,10 +133,6 @@ public class MergingUpdateQueue implements Runnable, Disposable, Activatable {
     if (activationComponent != null) {
       setActivationComponent(activationComponent);
     }
-  }
-
-  private static Alarm createAlarm(Alarm.ThreadToUse thread, @Nullable Disposable parent) {
-    return parent == null ? new Alarm(thread) : new Alarm(thread, parent);
   }
 
   public void setMergingTimeSpan(int timeSpan) {
@@ -208,7 +204,7 @@ public class MergingUpdateQueue implements Runnable, Disposable, Activatable {
 
   @Override
   public void showNotify() {
-    if (myActive) {
+    if (myActive || myDisposed) {
       return;
     }
 
@@ -419,7 +415,7 @@ public class MergingUpdateQueue implements Runnable, Disposable, Activatable {
     myDisposed = true;
     myActive = false;
     finishActivity();
-    clearWaiter();
+    Disposer.dispose(myWaiterForMerge);
   }
 
   private void clearWaiter() {

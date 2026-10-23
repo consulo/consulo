@@ -17,6 +17,7 @@ package consulo.it.component;
 
 import consulo.application.Application;
 import consulo.component.ProviderAsync;
+import consulo.component.bind.ParameterizedTypeImpl;
 import consulo.component.internal.inject.InjectingContainer;
 import consulo.component.internal.inject.InjectingContainerBuilder;
 import consulo.component.persist.PersistentStateComponentAsync;
@@ -31,6 +32,7 @@ import jakarta.inject.Provider;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+import java.lang.reflect.Type;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
@@ -58,6 +60,25 @@ public class AsyncStateComponentTest {
         assertThat(service).isNotNull();
         assertThat(AsyncService.ourCreated).hasValue(1);
         assertThat(service.myCreatedOnUiThread).isFalse();
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void bindingConstructorReceivesProviderAsync(Application application) throws Exception {
+        AsyncService.ourCreated.set(0);
+        InjectingContainerBuilder builder = application.getInjectingContainer().childBuilder();
+        builder.bind(AsyncService.class).forceSingleton();
+        builder.bind(NeedsAsyncService.class)
+            .forceSingleton()
+            .constructorParameterTypes(new Type[]{new ParameterizedTypeImpl(ProviderAsync.class, AsyncService.class)})
+            .constructorFactory(args -> new NeedsAsyncService((ProviderAsync<AsyncService>) args[0]));
+        InjectingContainer container = builder.build();
+
+        NeedsAsyncService holder = container.getInstance(NeedsAsyncService.class);
+
+        assertThat(holder.myProvider).isNotNull();
+        assertThat(holder.myProvider.getAsync().get(30, TimeUnit.SECONDS)).isNotNull();
+        assertThat(AsyncService.ourCreated).hasValue(1);
     }
 
     @Test

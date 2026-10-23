@@ -27,6 +27,7 @@ module consulo.virtual.file.system.api {
     exports consulo.virtualFileSystem.pointer;
     exports consulo.virtualFileSystem.light;
     exports consulo.virtualFileSystem.util;
+    exports consulo.virtualFileSystem.url;
     exports consulo.virtualFileSystem.localize;
 
     exports consulo.virtualFileSystem.internal.core.local to

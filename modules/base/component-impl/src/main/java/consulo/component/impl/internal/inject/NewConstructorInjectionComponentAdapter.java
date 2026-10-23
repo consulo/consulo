@@ -15,8 +15,6 @@
  */
 package consulo.component.impl.internal.inject;
 
-import consulo.util.lang.reflect.ReflectionUtil;
-import jakarta.inject.Provider;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -63,33 +61,7 @@ class NewConstructorInjectionComponentAdapter<T> extends ConstructorInjectionCom
     return result;
   }
 
-  @SuppressWarnings("unchecked")
   private Parameter[] createParameters() {
-    Parameter[] parameters = new Parameter[myConstructorParameterTypes.length];
-    for (int i = 0; i < myConstructorParameterTypes.length; i++) {
-      Type genericParameterType = myConstructorParameterTypes[i];
-
-      if (genericParameterType instanceof ParameterizedType) {
-        Class<?> rawType = ReflectionUtil.getRawType(genericParameterType);
-
-        if (rawType == Provider.class) {
-          Type type = ((ParameterizedType)genericParameterType).getActualTypeArguments()[0];
-
-          if (!(type instanceof Class)) {
-            throw new UnsupportedOperationException("Unknown type " + genericParameterType);
-          }
-
-          parameters[i] = new ProviderParameter((Class<?>)type);
-        }
-        else {
-          parameters[i] = DefaultComponentParameter.DEFAULT;
-        }
-      }
-      else {
-        parameters[i] = DefaultComponentParameter.DEFAULT;
-      }
-    }
-
-    return parameters;
+    return createParameters(myConstructorParameterTypes);
   }
 }
