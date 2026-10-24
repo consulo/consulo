@@ -29,10 +29,6 @@
     <version>3-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <properties>
-        <grpc.version>1.75.0</grpc.version>
-    </properties>
-
     <build>
         <plugins>
             <plugin>
@@ -52,12 +48,14 @@
                 <groupId>io.github.ascopes</groupId>
                 <artifactId>protobuf-maven-plugin</artifactId>
                 <configuration>
+                    <!-- full messages: the grpc stubs use io.grpc.protobuf (grpc-protobuf), which needs com.google.protobuf.Message -->
+                    <liteOnly>false</liteOnly>
                     <plugins>
                         <plugin kind="binary-maven">
                             <groupId>io.grpc</groupId>
                             <artifactId>protoc-gen-grpc-java</artifactId>
                             <version>${grpc.version}</version>
-                            <options>@generated=omit,lite</options>
+                            <options>@generated=omit</options>
                         </plugin>
                     </plugins>
                 </configuration>
@@ -92,17 +90,14 @@
         <dependency>
             <groupId>io.grpc</groupId>
             <artifactId>grpc-netty</artifactId>
-            <version>${grpc.version}</version>
         </dependency>
         <dependency>
             <groupId>io.grpc</groupId>
-            <artifactId>grpc-protobuf-lite</artifactId>
-            <version>${grpc.version}</version>
+            <artifactId>grpc-protobuf</artifactId>
         </dependency>
         <dependency>
             <groupId>io.grpc</groupId>
             <artifactId>grpc-stub</artifactId>
-            <version>${grpc.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.protobuf</groupId>

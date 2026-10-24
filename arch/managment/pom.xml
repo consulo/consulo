@@ -48,6 +48,7 @@
         <qtjambi.version>6.11.1</qtjambi.version>
         <flatlaf.version>3.7.2.3</flatlaf.version>
         <protobuf.version>4.33.4</protobuf.version>
+        <grpc.version>1.75.0</grpc.version>
 
         <vaadin.flow.version>25.2.4</vaadin.flow.version>
 
@@ -1090,6 +1091,44 @@
                 <groupId>com.google.protobuf</groupId>
                 <artifactId>protobuf-java</artifactId>
                 <version>${protobuf.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.grpc</groupId>
+                <artifactId>grpc-api</artifactId>
+                <version>${grpc.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.grpc</groupId>
+                <artifactId>grpc-stub</artifactId>
+                <version>${grpc.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.grpc</groupId>
+                <artifactId>grpc-protobuf</artifactId>
+                <version>${grpc.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.grpc</groupId>
+                <artifactId>grpc-protobuf-lite</artifactId>
+                <version>${grpc.version}</version>
+                <exclusions>
+                    <!-- protobuf-javalite 3.x (no com.google.protobuf.Generated) would shadow protobuf-java:
+                         both are the automatic module com.google.protobuf -->
+                    <exclusion>
+                        <groupId>com.google.protobuf</groupId>
+                        <artifactId>protobuf-javalite</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>io.grpc</groupId>
+                <artifactId>grpc-netty</artifactId>
+                <version>${grpc.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.api.grpc</groupId>
+                <artifactId>proto-google-common-protos</artifactId>
+                <version>2.59.2</version>
             </dependency>
             <dependency>
                 <groupId>consulo.internal.com.dslplatform</groupId>

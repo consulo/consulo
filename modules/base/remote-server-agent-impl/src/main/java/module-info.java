@@ -11,7 +11,7 @@ module consulo.remote.server.agent.impl {
     requires com.google.protobuf;
     requires io.grpc;
     requires io.grpc.netty;
-    requires io.grpc.protobuf.lite;
+    requires io.grpc.protobuf;
     requires io.grpc.stub;
     requires io.netty.handler;
 

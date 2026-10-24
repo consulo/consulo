@@ -308,7 +308,9 @@
                 <include>io.grpc:grpc-context</include>
                 <include>io.grpc:grpc-core</include>
                 <include>io.grpc:grpc-netty</include>
+                <include>io.grpc:grpc-protobuf</include>
                 <include>io.grpc:grpc-protobuf-lite</include>
+                <include>com.google.api.grpc:proto-google-common-protos</include>
                 <include>io.grpc:grpc-stub</include>
                 <include>io.grpc:grpc-util</include>
                 <include>io.perfmark:perfmark-api</include>
