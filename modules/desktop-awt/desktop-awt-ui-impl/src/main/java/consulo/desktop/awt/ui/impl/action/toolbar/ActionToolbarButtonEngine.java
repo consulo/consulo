@@ -27,6 +27,7 @@ import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ComponentEvent;
+import consulo.ui.event.details.InputDetails;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.ui.ex.awt.action.CustomComponentAction;
@@ -42,6 +43,7 @@ import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.util.function.Supplier;
 
@@ -160,8 +162,8 @@ public class ActionToolbarButtonEngine {
     }
 
     @RequiredUIAccess
-    private void performAction(MouseEvent e) {
-        ComponentEvent<?> uiEvent = new ComponentEvent<>(TargetAWT.wrap(myButton), DesktopAWTInputDetails.convert(myButton, e));
+    private void performAction(MouseEvent e, InputDetails inputDetails) {
+        ComponentEvent<?> uiEvent = new ComponentEvent<>(TargetAWT.wrap(myButton), inputDetails);
         DataContext context = DataContext.builder()
             .parent(myGetDataContext.get())
             .add(UIExAWTDataKey.CONTEXT_COMPONENT, myButton)
@@ -217,7 +219,14 @@ public class ActionToolbarButtonEngine {
     }
 
     public void click() {
-        performAction(new MouseEvent(myButton, MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(), 0, 0, 0, 1, false));
+        MouseEvent mouseEvent = new MouseEvent(myButton, MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(), 0, 0, 0, 1, false);
+        performAction(mouseEvent, DesktopAWTInputDetails.convert(myButton, mouseEvent));
+    }
+
+    public void click(ActionEvent actionEvent) {
+        MouseEvent mouseEvent =
+            new MouseEvent(myButton, MouseEvent.MOUSE_CLICKED, actionEvent.getWhen(), actionEvent.getModifiers(), 0, 0, 1, false);
+        performAction(mouseEvent, DesktopAWTInputDetails.convert(myButton, actionEvent));
     }
 
     @RequiredUIAccess

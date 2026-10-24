@@ -29,6 +29,7 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.details.ModifiedInputDetails;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.AnActionWithAsyncUpdate;
@@ -54,7 +55,6 @@ import consulo.webBrowser.localize.WebBrowserLocalize;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -177,7 +177,8 @@ public abstract class BaseOpenInBrowserAction extends DumbAwareAction implements
 
     @RequiredUIAccess
     public static void open(AnActionEvent event, @Nullable WebBrowser browser) {
-        open(createRequest(event.getDataContext()), (event.getModifiers() & Event.SHIFT_MASK) != 0, browser);
+        boolean preferLocalUrl = event.getInputDetails() instanceof ModifiedInputDetails details && details.withShift();
+        open(createRequest(event.getDataContext()), preferLocalUrl, browser);
     }
 
     @RequiredUIAccess

@@ -48,7 +48,7 @@ public class ActionToggleToolbarButtonImpl extends JToggleButton implements Acti
 
         myEngine.updateTextAndMnemonic(presentation.getTextValue());
 
-        addActionListener(e -> myEngine.click());
+        addActionListener(myEngine::click);
 
         myEngine.updateEnabled();
     }
