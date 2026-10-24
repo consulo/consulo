@@ -15,29 +15,29 @@
  */
 package consulo.externalService.impl.internal.update;
 
+import consulo.application.Application;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginManager;
+import consulo.disposer.Disposable;
 import consulo.externalService.impl.internal.plugin.ui.PluginSorter;
 import consulo.externalService.impl.internal.plugin.ui.unified.UnifiedPluginRowRenderer;
 import consulo.externalService.internal.PlatformOrPluginUpdateResultType;
 import consulo.externalService.localize.ExternalServiceLocalize;
 import consulo.localize.LocalizeValue;
-import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
-import consulo.ui.MessageBoxes;
-import consulo.ui.Button;
 import consulo.ui.Component;
 import consulo.ui.Label;
 import consulo.ui.ListBox;
+import consulo.ui.MessageBoxes;
 import consulo.ui.RenderItem;
-import consulo.ui.Size2D;
-import consulo.ui.Space;
-import consulo.ui.Window;
-import consulo.ui.WindowOptions;
+import consulo.ui.UIAccess;
+import consulo.ui.WidthAndHeight;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.dialog.Dialog;
+import consulo.ui.ex.dialog.DialogDescriptor;
+import consulo.ui.ex.dialog.DialogService;
 import consulo.ui.layout.DockLayout;
-import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.layout.ScrollableLayout;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Lists;
@@ -60,7 +60,7 @@ import java.util.function.Predicate;
  * @author VISTALL
  * @since 2026-08-13
  */
-public class UnifiedPlatformOrPluginDialog {
+public class UnifiedPlatformOrPluginDialog extends DialogDescriptor {
     private final @Nullable Project myProject;
     private final List<PlatformOrPluginNode> myNodes;
     private final PlatformOrPluginUpdateResultType myType;
@@ -68,9 +68,9 @@ public class UnifiedPlatformOrPluginDialog {
     private final Predicate<PluginId> myGreenStrategy;
     private final boolean myModalProgress;
 
-    private @Nullable String myPlatformVersion;
+    private final List<PluginDescriptor> myToShowPluginList;
 
-    private final Window myWindow;
+    private @Nullable String myPlatformVersion;
 
     @RequiredUIAccess
     public UnifiedPlatformOrPluginDialog(
@@ -80,6 +80,11 @@ public class UnifiedPlatformOrPluginDialog {
         @Nullable Consumer<Collection<PluginDescriptor>> afterCallback,
         boolean modalProgress
     ) {
+        super(
+            updateResult.getType() == PlatformOrPluginUpdateResultType.PLUGIN_INSTALL
+                ? ExternalServiceLocalize.pluginInstallDialogTitle()
+                : ExternalServiceLocalize.updateAvailableGroup()
+        );
         myProject = project;
         myAfterCallback = afterCallback;
         myModalProgress = modalProgress;
@@ -131,37 +136,25 @@ public class UnifiedPlatformOrPluginDialog {
             return 0;
         });
 
-        ListBox<PluginDescriptor> list = ListBox.create(toShowPluginList);
+        myToShowPluginList = toShowPluginList;
+    }
+
+    @Override
+    public @Nullable WidthAndHeight getInitialSize() {
+        return WidthAndHeight.ofPixel(600, 300);
+    }
+
+    @Override
+    @RequiredUIAccess
+    public Component createCenterComponent(Disposable uiDisposable) {
+        ListBox<PluginDescriptor> list = ListBox.create(myToShowPluginList);
         list.setRenderer(this::renderRow);
         list.setItemHeightGetter(item -> UnifiedPluginRowRenderer.ROW_HEIGHT);
 
-        Button okButton = Button.create(CommonLocalize.buttonOk(), event -> {
-            close();
-            onOk();
-        });
-        Button cancelButton = Button.create(CommonLocalize.buttonCancel(), event -> close());
-
-        HorizontalLayout buttons = HorizontalLayout.create();
-        buttons.add(okButton);
-        buttons.add(cancelButton);
-
-        DockLayout south = DockLayout.create(Space.NONE);
-        south.left(Label.create(ExternalServiceLocalize.pluginFollowingWillBeDownloadedLabel()));
-        south.right(buttons);
-        south.paddingBuilder().allSet(Space.LARGE).apply();
-
-        DockLayout root = DockLayout.create(Space.NONE);
+        DockLayout root = DockLayout.create();
+        root.top(Label.create(ExternalServiceLocalize.pluginFollowingWillBeDownloadedLabel()));
         root.center(ScrollableLayout.create(list));
-        root.bottom(south);
-
-        myWindow = Window.create(
-            (myType == PlatformOrPluginUpdateResultType.PLUGIN_INSTALL
-                ? ExternalServiceLocalize.pluginInstallDialogTitle()
-                : ExternalServiceLocalize.updateAvailableGroup()).get(),
-            WindowOptions.builder().build()
-        );
-        myWindow.setSize(new Size2D(600, 300));
-        myWindow.setContent(root);
+        return root;
     }
 
     @RequiredUIAccess
@@ -192,12 +185,14 @@ public class UnifiedPlatformOrPluginDialog {
 
     @RequiredUIAccess
     public void show() {
-        myWindow.show();
-    }
+        DialogService dialogService = Application.get().getInstance(DialogService.class);
+        Dialog dialog = myProject != null ? dialogService.build(myProject, this) : dialogService.build(this);
 
-    @RequiredUIAccess
-    private void close() {
-        myWindow.close();
+        dialog.showAsync().whenCompleteAsync((value, error) -> {
+            if (error == null) {
+                onOk();
+            }
+        }, UIAccess.current());
     }
 
     /**
