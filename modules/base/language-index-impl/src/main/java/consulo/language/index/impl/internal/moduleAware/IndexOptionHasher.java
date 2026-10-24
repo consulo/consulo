@@ -29,7 +29,7 @@ import java.util.Arrays;
  * Stable content hash for {@link IndexOptionImpl.SharablePerOption} payloads. Hash is the
  * 32-bit {@link Arrays#hashCode(byte[])} of the serialized form produced by the payload's
  * own {@link DataExternalizer}. Stable across JVMs and processes as long as the plugin
- * satisfies the determinism contract (see {@code MODULE_AWARE_INDEX.md}).
+ * satisfies the determinism contract.
  *
  * <p>32-bit today — a collision (1-in-4B) produces at most one false cache hit, no
  * correctness issue since the stored blob is still validated by revalidation. Upgrade to

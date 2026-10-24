@@ -30,8 +30,6 @@ import consulo.localize.LocalizeValue;
  *       project/module with matching payload hash.</li>
  *   <li>{@link #uniqueToModule} — output tied to module identity; not shared across modules.</li>
  * </ul>
- *
- * See {@code MODULE_AWARE_INDEX.md} for the full design.
  */
 public sealed interface IndexOption permits IndexOptionImpl {
 

@@ -32,8 +32,6 @@ import java.util.List;
 /**
  * Composes {@link IndexOption}s returned by multiple providers into one effective option
  * for storage. Tier precedence: {@code UniqueToModule > SharablePerOption > FullySharable}.
- *
- * <p>See the composition rules section of {@code MODULE_AWARE_INDEX.md}.</p>
  */
 public final class IndexOptionComposer {
     private IndexOptionComposer() {

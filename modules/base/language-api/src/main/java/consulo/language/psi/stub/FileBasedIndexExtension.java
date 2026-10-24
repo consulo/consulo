@@ -80,7 +80,6 @@ public abstract class FileBasedIndexExtension<K, V> extends IndexExtension<K, V,
    * Platform queries every applicable provider per indexed file and composes their
    * {@link IndexOption}s with "most restrictive tier wins" semantics. Hash drift, provider
    * version bump, provider add/remove/swap, and variant tier change all trigger reindex
-   * for this index — see {@code MODULE_AWARE_INDEX.md}.</p>
    */
   public List<String> getOptionProviderIds() {
     return List.of();
