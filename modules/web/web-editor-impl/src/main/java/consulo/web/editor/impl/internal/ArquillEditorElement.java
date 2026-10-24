@@ -1183,6 +1183,13 @@ public class ArquillEditorElement extends Component implements HasSize {
         callApi("setGutterBands(this.gutterBands)");
     }
 
+    public void setLineNumbers(@Nullable String numbersJson) {
+        if (isUnchanged("lineNumbers", numbersJson)) {
+            return;
+        }
+        callApi("setLineNumbers($0)", numbersJson);
+    }
+
     public void setLineFrames(String framesJson) {
         if (isUnchanged("lineFrames", framesJson)) {
             return;
