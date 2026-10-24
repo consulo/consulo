@@ -19,7 +19,6 @@ import consulo.execution.BeforeRunTask;
 import consulo.externalSystem.model.execution.ExternalSystemTaskExecutionSettings;
 import consulo.util.lang.StringUtil;
 import consulo.util.xml.serializer.annotation.Attribute;
-import consulo.util.xml.serializer.annotation.Transient;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -84,8 +83,7 @@ public abstract class ExternalSystemBeforeRunTask extends BeforeRunTask {
     /**
      * A new settings object with this task's values.
      */
-    @Transient
-    public ExternalSystemTaskExecutionSettings getTaskExecutionSettings() {
+    public ExternalSystemTaskExecutionSettings createTaskExecutionSettings() {
         ExternalSystemTaskExecutionSettings settings = new ExternalSystemTaskExecutionSettings();
         settings.setExternalSystemIdString(StringUtil.notNullize(mySystemId));
         settings.setTaskNames(StringUtil.split(StringUtil.notNullize(myTasks), " "));
@@ -95,7 +93,7 @@ public abstract class ExternalSystemBeforeRunTask extends BeforeRunTask {
         return settings;
     }
 
-    public void setTaskExecutionSettings(ExternalSystemTaskExecutionSettings settings) {
+    public void applyTaskExecutionSettings(ExternalSystemTaskExecutionSettings settings) {
         setTasks(StringUtil.join(settings.getTaskNames(), " "));
         setExternalProjectPath(settings.getExternalProjectPath());
         setVmOptions(settings.getVmOptions());

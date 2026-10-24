@@ -62,6 +62,9 @@ public class DesktopQtEditorGutterComponentImpl implements EditorGutterComponent
 
     private @Nullable Map<Integer, List<GutterMark>> myRenderersByLine;
 
+    private LineNumberConverter myLineNumberConverter = LineNumberConverter.DEFAULT;
+    private @Nullable LineNumberConverter myAdditionalLineNumberConverter;
+
     public DesktopQtEditorGutterComponentImpl(DesktopQtEditorImpl editor) {
         myEditor = editor;
     }
@@ -217,6 +220,21 @@ public class DesktopQtEditorGutterComponentImpl implements EditorGutterComponent
 
     @Override
     public void setLineNumberConverter(LineNumberConverter primaryConverter, @Nullable LineNumberConverter additionalConverter) {
+        myLineNumberConverter = primaryConverter;
+        myAdditionalLineNumberConverter = additionalConverter;
+
+        DesktopQtEditorWidget surface = myEditor.getSurface();
+        if (surface != null) {
+            surface.updateSideAreas();
+        }
+    }
+
+    public LineNumberConverter getLineNumberConverter() {
+        return myLineNumberConverter;
+    }
+
+    public @Nullable LineNumberConverter getAdditionalLineNumberConverter() {
+        return myAdditionalLineNumberConverter;
     }
 
     @Override

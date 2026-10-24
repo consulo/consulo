@@ -36,6 +36,7 @@ import consulo.codeEditor.EditorColors;
 import consulo.codeEditor.FoldRegion;
 import consulo.codeEditor.FoldingGroup;
 import consulo.codeEditor.FoldingModelEx;
+import consulo.codeEditor.LineNumberConverter;
 import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.event.EditorMouseEvent;
 import consulo.codeEditor.event.EditorMouseEventArea;
@@ -119,6 +120,8 @@ public class DesktopQtEditorGutterWidget extends QWidget {
 
     private static final int LEFT_PADDING = 6;
     private static final int RIGHT_PADDING = 8;
+
+    private static final int GAP_BETWEEN_NUMBER_COLUMNS = 5;
 
     /**
      * The strip between the numbers and the text. It carries the separator rule and is painted in the editor
@@ -466,10 +469,29 @@ public class DesktopQtEditorGutterWidget extends QWidget {
     }
 
     private int lineNumberAreaWidth() {
-        int lastLine = Math.max(1, myEditor.getDocument().getLineCount());
-        String widest = "0".repeat(String.valueOf(lastLine).length());
+        return LEFT_PADDING + primaryNumbersWidth() + widthWithGap(additionalNumbersWidth()) + RIGHT_PADDING;
+    }
 
-        return LEFT_PADDING + (int) Math.ceil(myEditor.getFontMetrics().getTextWidth(widest)) + RIGHT_PADDING;
+    private int primaryNumbersWidth() {
+        return numbersWidth(gutterComponent().getLineNumberConverter());
+    }
+
+    private int additionalNumbersWidth() {
+        LineNumberConverter converter = gutterComponent().getAdditionalLineNumberConverter();
+        return converter == null ? 0 : numbersWidth(converter);
+    }
+
+    private int numbersWidth(LineNumberConverter converter) {
+        String widest = converter.getMaxLineNumberString(myEditor);
+        return widest == null ? 0 : (int) Math.ceil(myEditor.getFontMetrics().getTextWidth(widest));
+    }
+
+    private static int widthWithGap(int width) {
+        return width > 0 ? width + GAP_BETWEEN_NUMBER_COLUMNS : 0;
+    }
+
+    private DesktopQtEditorGutterComponentImpl gutterComponent() {
+        return (DesktopQtEditorGutterComponentImpl) myEditor.getGutterComponentEx();
     }
 
     /**
@@ -771,6 +793,20 @@ public class DesktopQtEditorGutterWidget extends QWidget {
         }
     }
 
+    private void paintNumber(QPainter painter, DesktopQtEditorFontMetrics metrics, @Nullable String number, int right, double y) {
+        if (number == null) {
+            return;
+        }
+
+        double numberWidth = metrics.getTextWidth(number);
+        double x = right - numberWidth;
+
+        painter.save();
+        unmirror(painter, x, numberWidth);
+        painter.drawText(new QPointF(x, y), number);
+        painter.restore();
+    }
+
     private void unmirror(QPainter painter, double x, double width) {
         if (myEditor.isMirrored()) {
             painter.translate(x * 2 + width, 0);
@@ -860,7 +896,12 @@ public class DesktopQtEditorGutterWidget extends QWidget {
 
         painter.setFont(metrics.getFont(Font.PLAIN));
 
-        int right = lineNumberAreaOffset() + lineNumberAreaWidth() - RIGHT_PADDING;
+        DesktopQtEditorGutterComponentImpl gutter = gutterComponent();
+        LineNumberConverter converter = gutter.getLineNumberConverter();
+        LineNumberConverter additionalConverter = gutter.getAdditionalLineNumberConverter();
+
+        int right = lineNumberAreaOffset() + LEFT_PADDING + primaryNumbersWidth();
+        int additionalRight = right + widthWithGap(additionalNumbersWidth());
         int baselineOffset = metrics.getAscent();
 
         int hoverLine = hoverMarkLine();
@@ -880,15 +921,14 @@ public class DesktopQtEditorGutterWidget extends QWidget {
 
             // rows are numbered by the line of the file they show, so a collapsed region makes the numbers jump
             // rather than run on - and the strip counts from one while the editor counts from zero
-            String number = String.valueOf(visualLines.visualToLogicalLine(line) + 1);
-            double numberWidth = metrics.getTextWidth(number);
-            double x = right - numberWidth;
+            int lineNumber = visualLines.visualToLogicalLine(line) + 1;
+            double y = rowY(line) - scrollY + baselineOffset;
 
             painter.setPen(caretRows.contains(line) ? onCaretRow : plain);
-            painter.save();
-            unmirror(painter, x, numberWidth);
-            painter.drawText(new QPointF(x, rowY(line) - scrollY + baselineOffset), number);
-            painter.restore();
+            paintNumber(painter, metrics, converter.convertLineNumberToString(myEditor, lineNumber), right, y);
+            if (additionalConverter != null) {
+                paintNumber(painter, metrics, additionalConverter.convertLineNumberToString(myEditor, lineNumber), additionalRight, y);
+            }
         }
 
         for (int line = firstLine; line <= lastLine; line++) {

@@ -13,11 +13,13 @@ module consulo.version.control.system.review.api {
 
     exports consulo.versionControlSystem.review;
     exports consulo.versionControlSystem.review.changes;
+    exports consulo.versionControlSystem.review.commit;
     exports consulo.versionControlSystem.review.comment;
     exports consulo.versionControlSystem.review.details;
     exports consulo.versionControlSystem.review.details.model;
     exports consulo.versionControlSystem.review.diff;
     exports consulo.versionControlSystem.review.editor;
+    exports consulo.versionControlSystem.review.issue;
     exports consulo.versionControlSystem.review.diff.model;
     exports consulo.versionControlSystem.review.timeline;
     exports consulo.versionControlSystem.review.util;

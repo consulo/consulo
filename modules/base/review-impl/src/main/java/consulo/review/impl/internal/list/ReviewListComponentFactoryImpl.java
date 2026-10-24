@@ -22,15 +22,17 @@ import consulo.localize.LocalizeValue;
 import consulo.review.impl.internal.ReviewUIUtil;
 import consulo.review.list.CodeReviewListItemsViewModel;
 import consulo.review.list.ReviewListComponentFactory;
+import consulo.review.list.error.ErrorStatusPanelFactory;
+import consulo.review.list.error.ErrorStatusPresenter;
 import consulo.review.localize.ReviewLocalize;
 import consulo.ui.Component;
 import consulo.ui.HorizontalAlignment;
-import consulo.ui.Hyperlink;
 import consulo.ui.Label;
-import consulo.ui.LabelStyle;
 import consulo.ui.ListBox;
 import consulo.ui.Space;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.event.details.KeyCode;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.ScrollableLayout;
@@ -38,9 +40,8 @@ import consulo.ui.layout.VerticalLayout;
 import consulo.ui.model.FlatDataModel;
 import consulo.ui.model.MutableFlatDataModel;
 import consulo.ui.style.ComponentColors;
-import consulo.ui.style.StandardColors;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,6 +53,12 @@ import java.util.function.Consumer;
 @Singleton
 @ServiceImpl
 public class ReviewListComponentFactoryImpl implements ReviewListComponentFactory {
+    private final ErrorStatusPanelFactory myErrorStatusPanelFactory;
+
+    @Inject
+    public ReviewListComponentFactoryImpl(ErrorStatusPanelFactory errorStatusPanelFactory) {
+        myErrorStatusPanelFactory = errorStatusPanelFactory;
+    }
 
     @RequiredUIAccess
     @Override
@@ -109,26 +116,13 @@ public class ReviewListComponentFactoryImpl implements ReviewListComponentFactor
     }
 
     @RequiredUIAccess
-    private static Component createError(Throwable error, @RequiredUIAccess Runnable retry) {
-        Label title = Label.create(ReviewLocalize.reviewListErrorTitle());
-        title.addStyle(LabelStyle.FONT_BOLD);
-        title.setForegroundColor(StandardColors.RED);
-
-        VerticalLayout layout = VerticalLayout.create(Space.SMALL, HorizontalAlignment.CENTER);
-        layout.add(title);
-        String message = describe(error);
-        if (message != null) {
-            Label description = Label.create(LocalizeValue.of(message));
-            description.setForegroundColor(StandardColors.RED);
-            layout.add(description);
-        }
-        layout.add(Hyperlink.create(ReviewLocalize.reviewListErrorRetry(), event -> retry.run()));
+    private Component createError(Throwable error, @RequiredUIAccess Runnable retry) {
+        AnAction retryAction = DumbAwareAction.create(ReviewLocalize.reviewListErrorRetry(), e -> retry.run());
+        ErrorStatusPresenter<Throwable> presenter = ErrorStatusPresenter.simple(ReviewLocalize.reviewListErrorTitle(), null, e -> retryAction);
+        Component panel = myErrorStatusPanelFactory.create(error, presenter);
+        VerticalLayout layout = VerticalLayout.create(Space.NONE, HorizontalAlignment.CENTER);
+        layout.add(panel);
         layout.paddingBuilder().allSet(Space.X_LARGE).apply();
         return layout;
-    }
-
-    private static @Nullable String describe(Throwable error) {
-        String message = error.getLocalizedMessage();
-        return message == null || message.isBlank() ? null : message;
     }
 }

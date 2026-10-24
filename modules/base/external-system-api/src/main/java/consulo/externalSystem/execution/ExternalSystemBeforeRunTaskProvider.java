@@ -113,23 +113,23 @@ public abstract class ExternalSystemBeforeRunTaskProvider<T extends ExternalSyst
             @RequiredUIAccess
             @Override
             public void reset(T task) {
-                control.setOriginalSettings(task.getTaskExecutionSettings());
+                control.setOriginalSettings(task.createTaskExecutionSettings());
                 control.reset();
             }
 
             @RequiredUIAccess
             @Override
             public void apply(T task) throws ConfigurationException {
-                ExternalSystemTaskExecutionSettings settings = task.getTaskExecutionSettings();
+                ExternalSystemTaskExecutionSettings settings = task.createTaskExecutionSettings();
                 control.apply(settings);
-                task.setTaskExecutionSettings(settings);
+                task.applyTaskExecutionSettings(settings);
             }
         };
     }
 
     @Override
     public boolean canExecuteTask(RunConfiguration configuration, T beforeRunTask) {
-        ExternalSystemTaskExecutionSettings executionSettings = beforeRunTask.getTaskExecutionSettings();
+        ExternalSystemTaskExecutionSettings executionSettings = beforeRunTask.createTaskExecutionSettings();
 
         List<ExternalTaskPojo> tasks = new ArrayList<>();
         for (String taskName : executionSettings.getTaskNames()) {
@@ -159,7 +159,7 @@ public abstract class ExternalSystemBeforeRunTaskProvider<T extends ExternalSyst
                                                     RunConfiguration configuration,
                                                     ExecutionEnvironment env,
                                                     T beforeRunTask) {
-        ExternalSystemTaskExecutionSettings executionSettings = beforeRunTask.getTaskExecutionSettings();
+        ExternalSystemTaskExecutionSettings executionSettings = beforeRunTask.createTaskExecutionSettings();
 
         List<ExternalTaskPojo> tasks = new ArrayList<>();
         for (String taskName : executionSettings.getTaskNames()) {
@@ -242,13 +242,13 @@ public abstract class ExternalSystemBeforeRunTaskProvider<T extends ExternalSyst
     @RequiredReadAction
     @SuppressWarnings("unchecked")
     public LocalizeValue getDescription(T task) {
-        String externalProjectPath = task.getTaskExecutionSettings().getExternalProjectPath();
+        String externalProjectPath = task.createTaskExecutionSettings().getExternalProjectPath();
 
-        if (task.getTaskExecutionSettings().getTaskNames().isEmpty()) {
+        if (task.createTaskExecutionSettings().getTaskNames().isEmpty()) {
             return ExternalSystemLocalize.tasksBeforeRunEmpty(mySystemId.getDisplayName());
         }
 
-        String desc = StringUtil.join(task.getTaskExecutionSettings().getTaskNames(), " ");
+        String desc = StringUtil.join(task.createTaskExecutionSettings().getTaskNames(), " ");
         for (Module module : ModuleManager.getInstance(myProject).getModules()) {
             ExternalSystemModuleExtension extension = module.getExtension(ExternalSystemModuleExtension.class);
             if (extension == null) {

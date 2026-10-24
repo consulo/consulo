@@ -33,8 +33,8 @@ import consulo.ui.Hyperlink;
 import consulo.ui.Label;
 import consulo.ui.Space;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.HorizontalLayout;
+import consulo.ui.layout.HorizontalLayoutStyle;
 import consulo.ui.layout.VerticalLayout;
 import consulo.ui.style.ComponentColors;
 import consulo.util.concurrent.coroutine.ObservableValue;
@@ -216,14 +216,14 @@ public class TimelineDiffComponentFactoryImpl implements TimelineDiffComponentFa
         card.addStyle(CardStyle.OUTLINED);
         card.addStyle(CardStyle.COMPACT);
         card.setBackgroundColor(CodeReviewColorUtil.EDITOR_BACKGROUND);
-        card.setHeader(createFileNameComponent(parentDisposable, filePath, expandCollapseButton, fileNameClickListener));
+        card.setHeader(createFileNameComponent(parentDisposable, filePath, fileNameClickListener));
+        card.setHeaderSuffix(expandCollapseButton);
         return card;
     }
 
     @RequiredUIAccess
     private static Component createFileNameComponent(Disposable parentDisposable,
                                                      String filePath,
-                                                     @Nullable Component expandCollapseButton,
                                                      ObservableValue<@Nullable Runnable> nameClickListener) {
         String name = PathUtil.getFileName(filePath);
         String path = PathUtil.getParentPath(filePath);
@@ -238,18 +238,13 @@ public class TimelineDiffComponentFactoryImpl implements TimelineDiffComponentFa
         nameLabel.setIcon(fileType.getIcon());
         ReviewUIUtil.bind(parentDisposable, nameClickListener, listener -> nameLabel.setEnabled(listener != null));
 
-        HorizontalLayout left = HorizontalLayout.create(Space.SMALL);
-        left.add(nameLabel);
+        HorizontalLayout header = HorizontalLayout.create(Space.SMALL);
+        header.addStyle(HorizontalLayoutStyle.TRANSPARENT_BACKGROUND);
+        header.add(nameLabel);
         if (!path.isBlank()) {
             Label pathLabel = Label.create(LocalizeValue.of(path));
             pathLabel.setForegroundColor(ComponentColors.DISABLED_TEXT);
-            left.add(pathLabel);
-        }
-
-        DockLayout header = DockLayout.create(Space.NONE);
-        header.left(left);
-        if (expandCollapseButton != null) {
-            header.right(expandCollapseButton);
+            header.add(pathLabel);
         }
         return header;
     }

@@ -2140,6 +2140,27 @@
         // a block inlay takes a view line of its own, and the bundle numbers that line by mapping its start back
         // to the document - which answers nothing for a line that is only projected text, so it numbered them
         // "0". they carry no number at all, the way a line an inlay owns has none in the awt editor either
+        const escapeText = text => String(text).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+
+        const lineNumberColumn = (column, documentLine, additional) => {
+            const text = column.lines[documentLine];
+            const width = column.max ? column.max.length : 0;
+            return '<span class="arquill-line-number' + (additional ? ' arquill-line-number-additional' : '')
+                + '" style="min-width:' + width + 'ch">' + (text == null ? '' : escapeText(text)) + '</span>';
+        };
+
+        const lineNumberHtml = documentLine => {
+            const numbers = element.$arquillLineNumbers;
+            if (!numbers) {
+                return String(documentLine + 1);
+            }
+            let html = lineNumberColumn(numbers.primary, documentLine, false);
+            if (numbers.additional && numbers.additional.max) {
+                html += lineNumberColumn(numbers.additional, documentLine, true);
+            }
+            return html;
+        };
+
         const lineNumberRuler = element.$arquillEditor.getLineNumberRuler();
         if (lineNumberRuler) {
             const rulerAnnotations = lineNumberRuler.getAnnotations.bind(lineNumberRuler);
@@ -2148,11 +2169,12 @@
                 const result = rulerAnnotations(startLine, endLine);
 
                 for (let line = startLine; line < endLine; line++) {
-                    if (!result[line] || toBaseOffset(viewModel.getLineStart(line)) >= 0) {
+                    if (!result[line]) {
                         continue;
                     }
-                    const base = viewLineBaseOffset(line);
-                    result[line].html = base < 0 ? '' : String(baseModel.getLineAtOffset(base) + 1);
+                    const start = toBaseOffset(viewModel.getLineStart(line));
+                    const base = start >= 0 ? start : viewLineBaseOffset(line);
+                    result[line].html = base < 0 ? '' : lineNumberHtml(baseModel.getLineAtOffset(base));
                 }
 
                 return result;
@@ -2536,8 +2558,6 @@
 
         const FRAME_EDGE_OUTSIDE = 3;
         const FRAME_EDGE_LINE_FRACTION = 0.3;
-
-        const escapeText = text => String(text).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
 
         const frameEdgeAt = domEvent => {
             const frames = element.$arquillLineFrames || [];
@@ -3418,6 +3438,11 @@
             setGutterBands: bands => {
                 element.$arquillGutterBands = bands;
                 renderGutterBands();
+            },
+
+            setLineNumbers: numbersJson => {
+                element.$arquillLineNumbers = numbersJson ? JSON.parse(numbersJson) : null;
+                textView.redrawRulers(0, textView.getModel().getLineCount());
             },
 
             setLineFrames: framesJson => {

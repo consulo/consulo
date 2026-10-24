@@ -736,3 +736,12 @@ body.arquill-frame-resizing
   font-size: var(--arquill-editor-font-size);
   line-height: var(--arquill-editor-line-height);
 }
+
+.arquill-line-number {
+    display: inline-block;
+    text-align: right;
+}
+
+.arquill-line-number-additional {
+    margin-left: 5px;
+}

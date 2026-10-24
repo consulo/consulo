@@ -42,6 +42,7 @@ public class URLUtil {
     public static final String FILE_PROTOCOL = "file";
     public static final String FILE_PROTOCOL_PREFIX = FILE_PROTOCOL + URLUtil.SCHEME_SEPARATOR;
     public static final String HTTP_PROTOCOL = "http";
+    public static final String HTTPS_PROTOCOL = "https";
     @Deprecated
     public static final String JAR_PROTOCOL = "jar";
     public static final String ARCHIVE_SEPARATOR = "!/";
@@ -348,5 +349,9 @@ public class URLUtil {
             .replace("%28", "(")
             .replace("%29", ")")
             .replace("%7E", "~");
+    }
+
+    public static String addSchemaIfMissing(String url) {
+        return url.contains(SCHEME_SEPARATOR) ? url : HTTPS_PROTOCOL + SCHEME_SEPARATOR + url;
     }
 }

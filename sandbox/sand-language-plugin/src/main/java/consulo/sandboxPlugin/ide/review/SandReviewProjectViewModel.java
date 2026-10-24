@@ -18,13 +18,11 @@ package consulo.sandboxPlugin.ide.review;
 import consulo.localize.LocalizeValue;
 import consulo.review.toolwindow.ReviewToolwindowProjectViewModel;
 import consulo.review.toolwindow.ReviewToolwindowTabs;
-import consulo.util.concurrent.coroutine.MutableObservableValue;
+import consulo.review.toolwindow.ReviewToolwindowTabsStateHolder;
 import consulo.util.concurrent.coroutine.ObservableValue;
 import org.jspecify.annotations.Nullable;
 
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.function.Supplier;
 
@@ -34,8 +32,7 @@ import java.util.function.Supplier;
  */
 public class SandReviewProjectViewModel implements ReviewToolwindowProjectViewModel<SandReviewTab, SandReviewTabViewModel> {
     private final SandReviewListViewModel myListVm;
-    private final MutableObservableValue<ReviewToolwindowTabs<SandReviewTab, SandReviewTabViewModel>> myTabs =
-        MutableObservableValue.of(new ReviewToolwindowTabs<>(Map.of(), null));
+    private final ReviewToolwindowTabsStateHolder<SandReviewTab, SandReviewTabViewModel> myTabs = new ReviewToolwindowTabsStateHolder<>();
 
     public SandReviewProjectViewModel(ScheduledExecutorService scheduler, Supplier<List<SandReviewViewModel>> loader) {
         myListVm = new SandReviewListViewModel(scheduler, loader, this::openReview);
@@ -53,29 +50,20 @@ public class SandReviewProjectViewModel implements ReviewToolwindowProjectViewMo
 
     @Override
     public ObservableValue<ReviewToolwindowTabs<SandReviewTab, SandReviewTabViewModel>> getTabs() {
-        return myTabs;
+        return myTabs.getTabs();
     }
 
     public void openReview(SandReviewViewModel review) {
-        SandReviewTab tab = new SandReviewTab(review.getNumber());
-        myTabs.update(tabs -> {
-            Map<SandReviewTab, SandReviewTabViewModel> result = new LinkedHashMap<>(tabs.tabs());
-            result.putIfAbsent(tab, new SandReviewTabViewModel(review));
-            return new ReviewToolwindowTabs<>(result, tab);
-        });
+        myTabs.showTab(new SandReviewTab(review.getNumber()), SandReviewTabViewModel.class, tab -> new SandReviewTabViewModel(review));
     }
 
     @Override
     public void selectTab(@Nullable SandReviewTab tab) {
-        myTabs.update(tabs -> new ReviewToolwindowTabs<>(tabs.tabs(), tab != null && tabs.tabs().containsKey(tab) ? tab : null));
+        myTabs.select(tab != null && myTabs.getTabs().get().tabs().containsKey(tab) ? tab : null);
     }
 
     @Override
     public void closeTab(SandReviewTab tab) {
-        myTabs.update(tabs -> {
-            Map<SandReviewTab, SandReviewTabViewModel> result = new LinkedHashMap<>(tabs.tabs());
-            result.remove(tab);
-            return new ReviewToolwindowTabs<>(result, tab.equals(tabs.selectedTab()) ? null : tabs.selectedTab());
-        });
+        myTabs.close(tab);
     }
 }

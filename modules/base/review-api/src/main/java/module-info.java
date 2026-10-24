@@ -10,6 +10,7 @@ module consulo.review.api {
     requires transitive consulo.ui.api;
     requires transitive consulo.code.editor.api;
 
+    exports consulo.review.async;
     exports consulo.review.comment;
     exports consulo.review.create;
     exports consulo.review.details;
@@ -20,6 +21,7 @@ module consulo.review.api {
     exports consulo.review.editor;
     exports consulo.review.icon;
     exports consulo.review.list;
+    exports consulo.review.list.error;
     exports consulo.review.list.search;
     exports consulo.review.localize;
     exports consulo.review.reactions;

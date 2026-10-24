@@ -24,6 +24,7 @@ import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.util.SimpleModificationTracker;
 import consulo.document.util.TextRange;
+import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.xml.serializer.XmlSerializerUtil;
 import jakarta.inject.Singleton;
@@ -32,6 +33,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -43,6 +46,8 @@ import java.util.regex.Pattern;
 @ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
 public class IssueNavigationConfiguration extends SimpleModificationTracker implements PersistentStateComponent<IssueNavigationConfiguration> {
+  private static final Logger LOG = Logger.getInstance(IssueNavigationConfiguration.class);
+
   private static final Pattern ourHtmlPattern =
     Pattern.compile("(http:|https:)\\/\\/([^\\s()](?!&(gt|lt|nbsp)+;))+[^\\p{Pe}\\p{Pc}\\p{Pd}\\p{Ps}\\p{Po}\\s]/?");
 
@@ -110,6 +115,25 @@ public class IssueNavigationConfiguration extends SimpleModificationTracker impl
     }
     Collections.sort(result);
     return result;
+  }
+
+  public static void processTextWithLinks(String text,
+                                          List<? extends LinkMatch> matches,
+                                          Consumer<? super String> textConsumer,
+                                          BiConsumer<? super String, ? super String> linkWithTargetConsumer) {
+    int pos = 0;
+    for (LinkMatch match : matches) {
+      TextRange textRange = match.getRange();
+      LOG.assertTrue(pos <= textRange.getStartOffset());
+      if (textRange.getStartOffset() > pos) {
+        textConsumer.accept(text.substring(pos, textRange.getStartOffset()));
+      }
+      linkWithTargetConsumer.accept(textRange.substring(text), match.getTargetUrl());
+      pos = textRange.getEndOffset();
+    }
+    if (pos < text.length()) {
+      textConsumer.accept(text.substring(pos));
+    }
   }
 
   private static void addMatch(List<LinkMatch> result, TextRange range, String replacement) {

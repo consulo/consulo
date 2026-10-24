@@ -80,3 +80,9 @@ proxy.test.button:
     text: Check Connection
 proxy.tunneling.disabled.warning:
     text: <html>Basic proxy authentication is currently disabled for HTTPS connections. HTTPS connections may fail if proxy requires authentication. To allow basic proxy authentication, add <tt>-Djdk.http.auth.tunneling.disabledSchemes=""</tt> to your VM options file and restart.</html>
+http.status.error:
+    text: 'HTTP Request {0} failed with status code {1} and response body: {2}'
+graphql.errors:
+    text: 'GraphQL error: {0}'
+login.server.invalid:
+    text: Server address is not valid

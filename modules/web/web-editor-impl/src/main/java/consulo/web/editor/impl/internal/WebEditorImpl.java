@@ -976,7 +976,7 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
     /**
      * the daemon adds its highlighters one by one, a single push per batch is enough
      */
-    private void scheduleUpdate() {
+    void scheduleUpdate() {
         if (myUpdateScheduled.compareAndSet(false, true)) {
             boolean scheduled = giveUI(() -> {
                 myUpdateScheduled.set(false);
@@ -1195,8 +1195,61 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
 
             updateInlays();
 
+            updateLineNumbers();
+
             updateStyleRanges();
         });
+    }
+
+    private void updateLineNumbers() {
+        if (isReleased) {
+            return;
+        }
+
+        LineNumberConverter converter = myGutterComponent.getLineNumberConverter();
+        LineNumberConverter additionalConverter = myGutterComponent.getAdditionalLineNumberConverter();
+
+        ArquillEditorElement vaadin = myEditorComponent.toVaadinComponent();
+        if (converter == LineNumberConverter.DEFAULT && additionalConverter == null) {
+            vaadin.setLineNumbers(null);
+            return;
+        }
+
+        StringBuilder numbers = new StringBuilder("{\"primary\":");
+        appendLineNumbers(numbers, converter);
+        numbers.append(",\"additional\":");
+        if (additionalConverter == null) {
+            numbers.append("null");
+        }
+        else {
+            appendLineNumbers(numbers, additionalConverter);
+        }
+        numbers.append('}');
+
+        vaadin.setLineNumbers(numbers.toString());
+    }
+
+    private void appendLineNumbers(StringBuilder numbers, LineNumberConverter converter) {
+        numbers.append("{\"max\":");
+        appendJsonString(numbers, converter.getMaxLineNumberString(this));
+        numbers.append(",\"lines\":[");
+        int lineCount = myDocument.getLineCount();
+        for (int line = 0; line < lineCount; line++) {
+            if (line > 0) {
+                numbers.append(',');
+            }
+            appendJsonString(numbers, converter.convertLineNumberToString(this, line + 1));
+        }
+        numbers.append("]}");
+    }
+
+    private static void appendJsonString(StringBuilder json, @Nullable String value) {
+        if (value == null) {
+            json.append("null");
+        }
+        else {
+            json.append('"').append(escapeJson(value)).append('"');
+        }
     }
 
     /**

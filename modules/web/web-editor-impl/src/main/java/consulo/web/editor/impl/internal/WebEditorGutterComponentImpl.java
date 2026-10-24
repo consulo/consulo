@@ -45,6 +45,9 @@ public class WebEditorGutterComponentImpl implements EditorGutterComponentEx {
   private final List<TextAnnotationGutterProvider> myTextAnnotationGutters = new ArrayList<>();
   private final Map<TextAnnotationGutterProvider, EditorGutterAction> myProviderToListener = new HashMap<>();
 
+  private LineNumberConverter myLineNumberConverter = LineNumberConverter.DEFAULT;
+  private @Nullable LineNumberConverter myAdditionalLineNumberConverter;
+
   public WebEditorGutterComponentImpl(WebEditorImpl editor) {
     myEditor = editor;
   }
@@ -132,7 +135,17 @@ public class WebEditorGutterComponentImpl implements EditorGutterComponentEx {
 
   @Override
   public void setLineNumberConverter(LineNumberConverter primaryConverter, @Nullable LineNumberConverter additionalConverter) {
+    myLineNumberConverter = primaryConverter;
+    myAdditionalLineNumberConverter = additionalConverter;
+    myEditor.scheduleUpdate();
+  }
 
+  public LineNumberConverter getLineNumberConverter() {
+    return myLineNumberConverter;
+  }
+
+  public @Nullable LineNumberConverter getAdditionalLineNumberConverter() {
+    return myAdditionalLineNumberConverter;
   }
 
   @Override
