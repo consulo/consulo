@@ -89,12 +89,17 @@ public class ShowDiffAction extends DumbAwareAction implements AnActionWithSyncU
         if (project == null || !canShowDiff(project, changes)) {
             return;
         }
+
+        showDiff(project, changes, e.getData(VcsDataKeys.CHANGES_IN_LIST_KEY));
+    }
+
+    @RequiredUIAccess
+    public static void showDiff(Project project, Change[] changes, @Nullable List<Change> changesInList) {
         if (ChangeListManager.getInstance(project).isFreezedWithNotification(null)) {
             return;
         }
 
         boolean needsConversion = checkIfThereAreFakeRevisions(project, changes);
-        List<Change> changesInList = e.getData(VcsDataKeys.CHANGES_IN_LIST_KEY);
 
         // this trick is essential since we are under some conditions to refresh changes;
         // but we can only rely on callback after refresh
@@ -117,10 +122,15 @@ public class ShowDiffAction extends DumbAwareAction implements AnActionWithSyncU
 
             if (convertedChanges.length == 1) {
                 selectedChane = convertedChanges[0];
-                ChangeList changeList =
-                    ((ChangeListManagerEx) ChangeListManager.getInstance(project)).getIdentityChangeList(selectedChane);
-                if (changeList != null) {
-                    result = changesInList != null ? changesInList : new ArrayList<>(changeList.getChanges());
+                if (changesInList != null && changesInList.contains(selectedChane)) {
+                    result = changesInList;
+                }
+                else {
+                    ChangeList changeList =
+                        ((ChangeListManagerEx) ChangeListManager.getInstance(project)).getIdentityChangeList(selectedChane);
+                    if (changeList != null) {
+                        result = new ArrayList<>(changeList.getChanges());
+                    }
                 }
             }
             if (result == null) {
@@ -128,8 +138,11 @@ public class ShowDiffAction extends DumbAwareAction implements AnActionWithSyncU
             }
 
             //ContainerUtil.sort(result, ChangesComparator.getInstance(false));
-            int index = selectedChane == null ? 0
-                : Math.max(0, Lists.indexOfIdentity(result, selectedChane));
+            int index = 0;
+            if (selectedChane != null) {
+                int identityIndex = Lists.indexOfIdentity(result, selectedChane);
+                index = Math.max(0, identityIndex >= 0 ? identityIndex : result.indexOf(selectedChane));
+            }
 
             showDiffForChange(project, result, index);
         };

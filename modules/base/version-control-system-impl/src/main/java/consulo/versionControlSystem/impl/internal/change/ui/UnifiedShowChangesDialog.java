@@ -69,7 +69,7 @@ public class UnifiedShowChangesDialog extends DialogDescriptor {
         UnifiedChangesTree tree = new UnifiedChangesTree(myProject, false, uiDisposable);
         tree.setDoubleClickHandler(item -> {
             if (item instanceof ChangeTreeItem changeItem) {
-                ShowDiffAction.showDiffForChange(myProject, myChanges, Math.max(0, myChanges.indexOf(changeItem.change())));
+                ShowDiffAction.showDiff(myProject, new Change[]{changeItem.change()}, tree.getAllChanges());
             }
         });
         tree.setSnapshot(buildSnapshot());

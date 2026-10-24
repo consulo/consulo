@@ -42,6 +42,14 @@ public class VcsApplicationSettings implements PersistentStateComponent<VcsAppli
   public boolean CREATE_CHANGELISTS_AUTOMATICALLY = false;
   public CommitModeType COMMIT_MODE = CommitModeType.VERSION_CONTROL_TOOL_WINDOW;
   public boolean COMMIT_TOGGLE_MODE = false;
+  /**
+   * Option to show editor diff preview in non-modal commit interface with Commit toolwindow.
+   */
+  public boolean SHOW_EDITOR_PREVIEW_ON_DOUBLE_CLICK = true;
+  /**
+   * Option to show diff in commit interfaces without Commit toolwindow (modal, or commit panel inside Version Control toolwindow).
+   */
+  public boolean SHOW_DIFF_ON_DOUBLE_CLICK = true;
   public boolean MANAGE_IGNORE_FILES = false;
   public boolean DISABLE_MANAGE_IGNORE_FILES = false;
   public boolean GENERATE_IGNORE_FILES_IN_VCS_ROOTS = false;

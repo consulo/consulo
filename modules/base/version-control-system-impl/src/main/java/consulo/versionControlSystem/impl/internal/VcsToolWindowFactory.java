@@ -17,19 +17,20 @@ package consulo.versionControlSystem.impl.internal;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.dumb.DumbAware;
-import consulo.ui.ex.action.ActionManager;
-import consulo.versionControlSystem.impl.internal.action.ChangesViewTabActionGroup;
-import consulo.versionControlSystem.impl.internal.change.ui.UnifiedChangesViewContentManager;
-import consulo.versionControlSystem.internal.ChangesViewContentI;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowFactory;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.ui.image.Image;
 import consulo.versionControlSystem.VcsToolWindow;
+import consulo.versionControlSystem.impl.internal.action.ChangesViewTabActionGroup;
+import consulo.versionControlSystem.impl.internal.change.action.ChangesViewGearActionGroup;
+import consulo.versionControlSystem.impl.internal.change.ui.UnifiedChangesViewContentManager;
+import consulo.versionControlSystem.internal.ChangesViewContentI;
 
 
 /**
@@ -49,6 +50,7 @@ public class VcsToolWindowFactory implements ToolWindowFactory, DumbAware {
     public void createToolWindowContent(Project project, ToolWindow toolWindow) {
         UnifiedChangesViewContentManager.getInstanceImpl(project).attachToolWindow(toolWindow);
         toolWindow.setTabActions(ActionManager.getInstance().getAction(ChangesViewTabActionGroup.class));
+        toolWindow.setAdditionalGearActions(ActionManager.getInstance().getAction(ChangesViewGearActionGroup.class));
     }
 
     @Override

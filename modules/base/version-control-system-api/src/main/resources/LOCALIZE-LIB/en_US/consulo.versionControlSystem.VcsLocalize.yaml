@@ -343,6 +343,8 @@ changes.action.setdefaultchangelist.description:
     text: Set changelist to which new changes are placed by default
 changes.action.setdefaultchangelist.text:
     text: Set Active Changelist
+changes.action.select.opened.file.text:
+    text: Select Opened File in Changes View
 changes.action.show.directories.description:
     text: Group changes by directories and modules
 changes.action.show.directories.text:
@@ -351,6 +353,16 @@ changes.action.show.ignored.description:
     text: Show ignored files
 changes.action.show.ignored.text:
     text: Show Ignored Files
+changes.action.show.on.double.click.diff.description:
+    text: Show diff on double-click
+changes.action.show.on.double.click.diff.text:
+    text: Diff
+changes.action.show.on.double.click.source.description:
+    text: Show source on double-click
+changes.action.show.on.double.click.source.text:
+    text: Source
+changes.action.show.on.double.click.text:
+    text: Show on Double-Click
 changes.action.toggle.commit.panel.description:
     text: Show or hide the commit panel
 changes.action.toggle.commit.panel.text:

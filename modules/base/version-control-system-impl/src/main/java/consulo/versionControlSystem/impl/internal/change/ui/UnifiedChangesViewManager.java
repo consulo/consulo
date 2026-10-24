@@ -26,6 +26,7 @@ import consulo.component.persist.StoragePathMacros;
 import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.fileEditor.FileEditorManager;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
@@ -43,8 +44,10 @@ import consulo.ui.ex.action.ActionPopupMenu;
 import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.action.ActionToolbarFactory;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
 import consulo.ui.ex.action.CommonActionsManager;
 import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.DumbAwareToggleAction;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;
@@ -65,7 +68,9 @@ import consulo.versionControlSystem.commit.CommitMode;
 import consulo.versionControlSystem.commit.CommitModeListener;
 import consulo.versionControlSystem.commit.CommitModeManager;
 import consulo.versionControlSystem.commit.NonModalCommitMode;
+import consulo.versionControlSystem.impl.internal.action.ShowDiffAction;
 import consulo.versionControlSystem.impl.internal.change.ChangeListManagerImpl;
+import consulo.versionControlSystem.impl.internal.change.action.ShowOnDoubleClickToggleAction;
 import consulo.versionControlSystem.impl.internal.commit.UnifiedCommitPanel;
 import consulo.versionControlSystem.internal.ChangesViewContentI;
 import consulo.versionControlSystem.internal.RemoteRevisionChangeListener;
@@ -204,6 +209,14 @@ public class UnifiedChangesViewManager implements ChangesViewManager, Persistent
 
         UnifiedChangesTree oldTree = myTree;
         UnifiedChangesTree tree = new UnifiedChangesTree(myProject, panelMode, contentDisposable);
+        tree.setDoubleClickHandler(item -> {
+            if (item instanceof ChangeTreeItem changeItem && ShowOnDoubleClickToggleAction.isShowDiffOnDoubleClick(myProject)) {
+                ShowDiffAction.showDiff(myProject, new Change[]{changeItem.change()}, tree.getChangesInList());
+            }
+            else {
+                tree.navigate(item, true);
+            }
+        });
         if (oldTree != null) {
             tree.takeOver(oldTree);
         }
@@ -309,6 +322,7 @@ public class UnifiedChangesViewManager implements ChangesViewManager, Persistent
 
         TreeExpander expander = TreeExpander.of(tree.getComponent());
         CommonActionsManager commonActionsManager = CommonActionsManager.getInstance();
+        toolbarGroup.add(new SelectOpenedFileAction());
         toolbarGroup.add(commonActionsManager.createExpandAllAction(expander));
         toolbarGroup.add(commonActionsManager.createCollapseAllAction(expander));
         toolbarGroup.add(new ToggleCommitPanelAction());
@@ -535,6 +549,39 @@ public class UnifiedChangesViewManager implements ChangesViewManager, Persistent
             else {
                 deactivateCommitPanel();
             }
+        }
+    }
+
+    private class SelectOpenedFileAction extends DumbAwareAction implements AnActionWithSyncUpdate {
+        private SelectOpenedFileAction() {
+            super(VcsLocalize.changesActionSelectOpenedFileText(), LocalizeValue.empty(), PlatformIconGroup.generalLocate());
+        }
+
+        @Override
+        public void update(AnActionEvent e) {
+            VirtualFile file = getOpenedFile();
+            UnifiedChangesTree tree = myTree;
+            e.getPresentation().setEnabled(file != null && tree != null && findPath(tree.getSnapshot(), null, file, new ArrayList<>()) != null);
+        }
+
+        @RequiredUIAccess
+        @Override
+        public void actionPerformed(AnActionEvent e) {
+            VirtualFile file = getOpenedFile();
+            UnifiedChangesTree tree = myTree;
+            if (file == null || tree == null) {
+                return;
+            }
+
+            List<ChangesTreeItem> path = findPath(tree.getSnapshot(), null, file, new ArrayList<>());
+            if (path != null) {
+                tree.selectPath(path);
+            }
+        }
+
+        private @Nullable VirtualFile getOpenedFile() {
+            VirtualFile[] files = FileEditorManager.getInstance(myProject).getSelectedFiles();
+            return files.length == 0 ? null : files[0];
         }
     }
 

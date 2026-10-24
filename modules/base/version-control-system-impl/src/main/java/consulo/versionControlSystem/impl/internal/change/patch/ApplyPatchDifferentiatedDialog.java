@@ -869,7 +869,17 @@ public class ApplyPatchDifferentiatedDialog extends ChangeListDialogDescriptor {
             return;
         }
         List<AbstractFilePatchInProgress.PatchChange> changes = getAllChanges();
-        changes.sort(this::compareChanges);
+        UnifiedChangesTree tree = myChangesTree;
+        if (tree != null) {
+            Map<Change, Integer> treeOrder = new HashMap<>();
+            for (Change change : tree.getAllChanges()) {
+                treeOrder.putIfAbsent(change, treeOrder.size());
+            }
+            changes.sort(Comparator.comparingInt(change -> treeOrder.getOrDefault(change, Integer.MAX_VALUE)));
+        }
+        else {
+            changes.sort(this::compareChanges);
+        }
         List<AbstractFilePatchInProgress.PatchChange> selectedChanges = getSelectedChanges();
         if (selectedChanges.isEmpty()) {
             selectedChanges = changes;

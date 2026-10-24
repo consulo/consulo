@@ -95,7 +95,7 @@ public class UnifiedVcsChangesBrowser implements VcsChangesBrowser {
                     openHandler.accept(changeItem.change());
                 }
                 else {
-                    ShowDiffAction.showDiffForChange(myProject, myChanges, Math.max(0, myChanges.indexOf(changeItem.change())));
+                    ShowDiffAction.showDiff(myProject, new Change[]{changeItem.change()}, myTree.getAllChanges());
                 }
             }
         });
