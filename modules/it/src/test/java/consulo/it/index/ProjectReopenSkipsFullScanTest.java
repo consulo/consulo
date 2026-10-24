@@ -27,6 +27,8 @@ import consulo.module.ModuleManager;
 import consulo.project.Project;
 import consulo.language.index.impl.internal.FileBasedIndexImpl;
 import consulo.language.psi.stub.FileBasedIndex;
+import consulo.project.DumbService;
+import consulo.project.internal.UnindexedFilesScannerExecutor;
 import consulo.virtualFileSystem.VirtualFileWithId;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
@@ -218,6 +220,15 @@ public class ProjectReopenSkipsFullScanTest {
                         + " orphanDirtyIds=" + index.getAllDirtyFiles(null);
                 }
             );
+
+            UnindexedFilesScannerExecutor probeExecutor = UnindexedFilesScannerExecutor.getInstance(second);
+            FileBasedIndexImpl probeIndex = (FileBasedIndexImpl) FileBasedIndex.getInstance();
+            System.out.println("PROBE-AT-ASSERT dumb=" + DumbService.getInstance(second).isDumb()
+                + " queuedScans=" + probeExecutor.hasQueuedTasks()
+                + " scanRunning=" + probeExecutor.isRunning().get()
+                + " projectDirty=" + probeIndex.getAllDirtyFiles(second)
+                + " orphanDirty=" + probeIndex.getAllDirtyFiles(null)
+                + " before4=" + findClasses(second, "Before4").size());
 
             assertThat(findClasses(second, "Before4"))
                 .as("files which did not change must keep their indexes")
