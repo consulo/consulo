@@ -368,7 +368,6 @@ public class UnifiedCommitPanel implements UnifiedCommitWorkflowUi {
     public void deactivate(boolean committed) {
         myStatus.hide();
         if (committed) {
-            myTree.excludeAll();
             setCommitMessage("");
             resetCommitOptions();
         }

@@ -276,13 +276,6 @@ public final class UnifiedChangesTree {
         fireInclusionChanged();
     }
 
-    @RequiredUIAccess
-    public void excludeAll() {
-        myIncludedKeys.clear();
-        syncChecks();
-        fireInclusionChanged();
-    }
-
     public List<Change> getIncludedChanges() {
         List<Change> result = new ArrayList<>();
         for (ChangesTreeItem root : mySnapshot.getRoots()) {
