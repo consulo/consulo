@@ -24,7 +24,7 @@ import consulo.ui.ex.action.Presentation;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.log.impl.internal.VcsLogContentProvider;
 import consulo.versionControlSystem.log.impl.internal.VcsLogManager;
-import consulo.versionControlSystem.log.impl.internal.VcsProjectLog;
+import consulo.versionControlSystem.log.impl.internal.VcsProjectLogImpl;
 import consulo.versionControlSystem.log.impl.internal.data.VcsLogDataImpl;
 import consulo.versionControlSystem.log.impl.internal.data.VcsLogStructureFilterImpl;
 import consulo.versionControlSystem.log.localize.VersionControlSystemLogLocalize;
@@ -47,7 +47,7 @@ public class ShowGraphHistoryAction extends LegacyDumbAwareAction {
     public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
         VirtualFile file = e.getRequiredData(VirtualFile.KEY);
-        VcsLogManager logManager = VcsProjectLog.getInstance(project).getLogManager();
+        VcsLogManager logManager = VcsProjectLogImpl.getInstance(project).getLogManager();
         assert logManager != null;
         VcsLogStructureFilterImpl fileFilter = new VcsLogStructureFilterImpl(Collections.singleton(VcsUtil.getFilePath(file)));
         VcsLogContentProvider.openLogTab(logManager, project, file.getName(), fileFilter);
@@ -67,7 +67,7 @@ public class ShowGraphHistoryAction extends LegacyDumbAwareAction {
             }
             else {
                 VirtualFile root = ProjectLevelVcsManager.getInstance(project).getVcsRootFor(file);
-                VcsLogDataImpl dataManager = VcsProjectLog.getInstance(project).getDataManager();
+                VcsLogDataImpl dataManager = VcsProjectLogImpl.getInstance(project).getDataManager();
                 if (root == null || dataManager == null) {
                     presentation.setEnabledAndVisible(false);
                 }

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.versionControlSystem.impl.internal.patch;
+package consulo.versionControlSystem.change.patch;
 
 import consulo.application.util.LineTokenizer;
 import consulo.application.util.function.ThrowableComputable;
@@ -21,7 +21,6 @@ import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.SmartList;
 import consulo.util.lang.StringEscapeUtil;
-import consulo.versionControlSystem.change.patch.*;
 import org.jspecify.annotations.Nullable;
 
 import java.util.*;
@@ -33,6 +32,8 @@ import java.util.regex.Pattern;
  * @since 2006-11-15
  */
 public class PatchReader {
+    public static final String BASE_REVISION_TEXT_PATCH_EP = "consulo.versionControlSystem.impl.internal.patch.BaseRevisionTextPatchEP";
+
     public static final String NO_NEWLINE_SIGNATURE = UnifiedDiffWriter.NO_NEWLINE_SIGNATURE;
     private final List<String> myLines;
     private final PatchReader.PatchContentParser myPatchContentParser;
@@ -81,10 +82,7 @@ public class PatchReader {
         if (!map.isEmpty()) {
             Map<String, CharSequence> inner = map.get(relativeFilePath);
             if (inner != null) {
-                BaseRevisionTextPatchEP baseRevisionTextPatchEP = PatchEP.EP_NAME.findExtension(project, BaseRevisionTextPatchEP.class);
-                if (baseRevisionTextPatchEP != null) {
-                    return inner.get(baseRevisionTextPatchEP.getName());
-                }
+                return inner.get(BASE_REVISION_TEXT_PATCH_EP);
             }
         }
         return null;

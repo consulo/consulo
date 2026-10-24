@@ -17,6 +17,7 @@ package consulo.desktop.qt.ui.impl.avatar;
 
 import consulo.desktop.qt.ui.impl.DesktopQtStyleApplier;
 import consulo.desktop.qt.ui.impl.image.DesktopQtImage;
+import consulo.ui.AvatarStyle;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.ui.impl.avatar.AvatarPresentation;
@@ -29,6 +30,7 @@ import io.qt.gui.QFont;
 import io.qt.gui.QPainter;
 import io.qt.gui.QPainterPath;
 import io.qt.gui.QPalette;
+import io.qt.gui.QPen;
 import io.qt.gui.QPixmap;
 import org.jspecify.annotations.Nullable;
 
@@ -41,7 +43,20 @@ public final class DesktopQtAvatarPainter {
     }
 
     public static QPixmap paint(String name, @Nullable Image avatarImage, int size, double ratio, QPalette palette) {
+        return paint(name, avatarImage, size, null, ratio, palette);
+    }
+
+    /**
+     * @param outline an outline style, whose colour the border of the avatar is drawn in
+     */
+    public static QPixmap paint(String name,
+                                @Nullable Image avatarImage,
+                                int size,
+                                @Nullable AvatarStyle outline,
+                                double ratio,
+                                QPalette palette) {
         Image image = AvatarPresentation.imageOf(name, avatarImage);
+        ComponentColors outlineColor = AvatarPresentation.outlineColorOf(outline);
         int pixels = (int) Math.ceil(size * ratio);
         QPixmap pixmap = new QPixmap(pixels, pixels);
         pixmap.setDevicePixelRatio(ratio);
@@ -60,6 +75,7 @@ public final class DesktopQtAvatarPainter {
         try {
             painter.setRenderHint(QPainter.RenderHint.Antialiasing, true);
             painter.setRenderHint(QPainter.RenderHint.SmoothPixmapTransform, true);
+
             QRectF rect = new QRectF(0.5, 0.5, size - 1, size - 1);
             painter.setPen(Qt.PenStyle.NoPen);
             painter.setBrush(background);
@@ -82,9 +98,18 @@ public final class DesktopQtAvatarPainter {
                 painter.drawText(rect, Qt.AlignmentFlag.AlignCenter.value(), AvatarPresentation.initialsOf(name));
             }
 
-            painter.setPen(border);
             painter.setBrush(Qt.BrushStyle.NoBrush);
-            painter.drawEllipse(rect);
+            if (outlineColor != null) {
+                double width = AvatarPresentation.OUTLINE_WIDTH;
+                QPen outlinePen = new QPen(DesktopQtStyleApplier.themeColor(outlineColor, border));
+                outlinePen.setWidthF(width);
+                painter.setPen(outlinePen);
+                painter.drawEllipse(new QRectF(width / 2, width / 2, size - width, size - width));
+            }
+            else {
+                painter.setPen(border);
+                painter.drawEllipse(rect);
+            }
         }
         finally {
             painter.end();

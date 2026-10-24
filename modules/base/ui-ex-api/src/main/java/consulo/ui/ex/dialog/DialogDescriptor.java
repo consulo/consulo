@@ -36,6 +36,8 @@ public abstract class DialogDescriptor {
 
     private Runnable myOkButtonStateUpdater = () -> {
     };
+    private Runnable mySizeUpdater = () -> {
+    };
 
     public DialogDescriptor(LocalizeValue title) {
         myTitle = title;
@@ -99,6 +101,15 @@ public abstract class DialogDescriptor {
     @RequiredUIAccess
     public void updateOkButtonState() {
         myOkButtonStateUpdater.run();
+    }
+
+    public void setSizeUpdater(Runnable sizeUpdater) {
+        mySizeUpdater = sizeUpdater;
+    }
+
+    @RequiredUIAccess
+    public void updateSize() {
+        mySizeUpdater.run();
     }
 
     

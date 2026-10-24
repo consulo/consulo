@@ -19,7 +19,7 @@ import consulo.application.util.function.ThrowableComputable;
 import consulo.util.collection.MultiMap;
 import consulo.versionControlSystem.change.LocalChangeList;
 import consulo.versionControlSystem.change.patch.FilePatch;
-import consulo.versionControlSystem.impl.internal.patch.PatchSyntaxException;
+import consulo.versionControlSystem.change.patch.PatchSyntaxException;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 

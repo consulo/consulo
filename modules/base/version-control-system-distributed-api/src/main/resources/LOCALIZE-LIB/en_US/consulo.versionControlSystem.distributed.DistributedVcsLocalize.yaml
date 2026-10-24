@@ -112,6 +112,14 @@ multi.message.line.prefix.form:
     text: '{0}: {1}'
 multi.message.line.suffix.form:
     text: '{1} in {0}'
+new.branch.dialog.branch.name:
+    text: 'Branch Name:'
+new.branch.dialog.branch.root.all.name:
+    text: All
+new.branch.dialog.branch.root.name:
+    text: 'Root:'
+new.branch.dialog.operation.create.name:
+    text: Create
 notification.synched.branches.content:
     text: You have several {0} roots in the project and they all are checked out at the same branch. We've enabled synchronous branch control for the project.<br/>If you wish to control branches in different roots separately, you may <a href='settings'>disable</a> the setting.
 notification.synched.branches.title:

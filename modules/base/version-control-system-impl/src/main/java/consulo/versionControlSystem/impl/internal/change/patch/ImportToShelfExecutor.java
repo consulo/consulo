@@ -34,7 +34,7 @@ import consulo.versionControlSystem.change.patch.TextFilePatch;
 import consulo.versionControlSystem.change.shelf.ShelvedChangesViewManager;
 import consulo.versionControlSystem.impl.internal.change.shelf.ShelveChangesManagerImpl;
 import consulo.versionControlSystem.impl.internal.change.shelf.ShelvedChangeListImpl;
-import consulo.versionControlSystem.impl.internal.patch.PatchSyntaxException;
+import consulo.versionControlSystem.change.patch.PatchSyntaxException;
 import consulo.versionControlSystem.impl.internal.util.VcsCatchingRunnable;
 import consulo.versionControlSystem.ui.VcsBalloonProblemNotifier;
 import consulo.virtualFileSystem.VirtualFile;

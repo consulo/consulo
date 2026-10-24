@@ -545,6 +545,11 @@ public class DesktopUIInternalImpl extends UIInternal implements UIInternalEx {
     }
 
     @Override
+    public ToggleButton _Components_toggleButton(LocalizeValue text) {
+        return new DesktopToggleButtonImpl(text);
+    }
+
+    @Override
     public OptionButton _Components_optionButton(LocalizeValue text) {
         return new DesktopOptionButtonImpl(text);
     }

@@ -22,7 +22,7 @@ import consulo.review.comment.CodeReviewCommentBodyBlock;
 import consulo.review.comment.CodeReviewComponentCommentBodyBlock;
 import consulo.review.comment.CodeReviewMarkdownCommentBodyBlock;
 import consulo.review.comment.CodeReviewTextEditingViewModel;
-import consulo.review.impl.internal.ReviewUIUtil;
+import consulo.review.util.ReviewUIUtil;
 import consulo.review.impl.internal.comment.CodeReviewCommentTextFieldFactory;
 import consulo.review.impl.internal.comment.CodeReviewCommentUIUtil;
 import consulo.review.list.UserPresentation;

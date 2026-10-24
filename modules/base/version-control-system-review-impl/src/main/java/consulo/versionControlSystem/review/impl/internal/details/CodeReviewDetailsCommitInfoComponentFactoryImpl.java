@@ -21,7 +21,7 @@ import consulo.application.util.DateFormatUtil;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.review.details.CommitPresentation;
-import consulo.review.impl.internal.ReviewUIUtil;
+import consulo.review.util.ReviewUIUtil;
 import consulo.review.localize.ReviewLocalize;
 import consulo.ui.Component;
 import consulo.ui.HtmlLabel;

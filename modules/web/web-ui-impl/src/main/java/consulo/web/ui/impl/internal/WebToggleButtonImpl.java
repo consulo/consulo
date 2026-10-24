@@ -140,6 +140,9 @@ public class WebToggleButtonImpl extends VaadinComponentDelegate<WebToggleButton
             case TOOLBAR:
                 WebButtonImpl.applyToolbarStyle(toVaadinComponent());
                 break;
+            case PILL:
+                WebButtonImpl.applyPillStyle(toVaadinComponent());
+                break;
         }
     }
 

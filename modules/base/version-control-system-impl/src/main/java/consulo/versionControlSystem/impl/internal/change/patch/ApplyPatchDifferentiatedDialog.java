@@ -87,8 +87,8 @@ import consulo.versionControlSystem.impl.internal.change.ui.GroupByDirectoryTogg
 import consulo.versionControlSystem.impl.internal.change.ui.UnifiedChangesTree;
 import consulo.versionControlSystem.impl.internal.diff.ChangeGoToChangePopupAction;
 import consulo.versionControlSystem.impl.internal.patch.PatchFileType;
-import consulo.versionControlSystem.impl.internal.patch.PatchReader;
-import consulo.versionControlSystem.impl.internal.patch.PatchSyntaxException;
+import consulo.versionControlSystem.change.patch.PatchReader;
+import consulo.versionControlSystem.change.patch.PatchSyntaxException;
 import consulo.versionControlSystem.impl.internal.patch.PatchVirtualFileReader;
 import consulo.versionControlSystem.impl.internal.util.ZipperUpdater;
 import consulo.versionControlSystem.localize.VcsLocalize;

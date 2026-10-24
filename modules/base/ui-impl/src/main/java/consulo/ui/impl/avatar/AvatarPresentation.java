@@ -18,6 +18,7 @@ package consulo.ui.impl.avatar;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.AvatarStyle;
 import consulo.ui.image.Image;
+import consulo.ui.style.ComponentColors;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Locale;
@@ -35,6 +36,11 @@ public final class AvatarPresentation {
      */
     public static final int COLOR_COUNT = 7;
 
+    /**
+     * The width in pixels of the border an outline style draws in place of the plain one.
+     */
+    public static final int OUTLINE_WIDTH = 2;
+
     private AvatarPresentation() {
     }
 
@@ -50,6 +56,26 @@ public final class AvatarPresentation {
             case SMALL -> 28;
             case LARGE -> 34;
             case X_LARGE -> 40;
+            case OUTLINE_SUCCESS, OUTLINE_WARNING, OUTLINE_NEUTRAL -> 32;
+        };
+    }
+
+    public static boolean isOutline(AvatarStyle style) {
+        return outlineColorOf(style) != null;
+    }
+
+    /**
+     * The colour of the border an outline style draws instead of the plain one, {@code null} for a size style.
+     */
+    public static @Nullable ComponentColors outlineColorOf(@Nullable AvatarStyle style) {
+        if (style == null) {
+            return null;
+        }
+        return switch (style) {
+            case OUTLINE_SUCCESS -> ComponentColors.AVATAR_OUTLINE_SUCCESS;
+            case OUTLINE_WARNING -> ComponentColors.AVATAR_OUTLINE_WARNING;
+            case OUTLINE_NEUTRAL -> ComponentColors.AVATAR_OUTLINE_NEUTRAL;
+            case X_SMALL, SMALL, LARGE, X_LARGE -> null;
         };
     }
 

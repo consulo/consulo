@@ -7,6 +7,8 @@ import consulo.versionControlSystem.log.VcsFullCommitDetails;
 import consulo.versionControlSystem.log.*;
 import consulo.versionControlSystem.log.base.*;
 import consulo.versionControlSystem.log.impl.internal.data.VcsLogBranchFilterImpl;
+import consulo.versionControlSystem.log.impl.internal.data.VcsLogRangeFilterImpl;
+import consulo.versionControlSystem.log.impl.internal.ui.VcsLogRootFilterImpl;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -107,5 +109,24 @@ public class VcsLogObjectsFactoryImpl implements VcsLogObjectsFactory {
   @Override
   public VcsLogBranchFilter createBranchFilter(Collection<String> branchNames) {
     return VcsLogBranchFilterImpl.fromBranches(branchNames);
+  }
+
+  @Override
+  public VcsLogRangeFilter createRangeFilter(List<VcsLogRangeFilter.RefRange> ranges) {
+    return new VcsLogRangeFilterImpl(ranges);
+  }
+
+  @Override
+  public VcsLogRootFilter createRootFilter(Collection<VirtualFile> roots) {
+    return new VcsLogRootFilterImpl(roots);
+  }
+
+  @Override
+  public VcsLogFilterCollection createFilterCollection(Collection<? extends VcsLogFilter> filters) {
+    VcsLogFilterCollectionImpl.VcsLogFilterCollectionBuilder builder = new VcsLogFilterCollectionImpl.VcsLogFilterCollectionBuilder();
+    for (VcsLogFilter filter : filters) {
+      builder.with(filter);
+    }
+    return builder.build();
   }
 }

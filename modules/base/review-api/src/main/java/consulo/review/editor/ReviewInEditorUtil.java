@@ -16,10 +16,17 @@
  */
 package consulo.review.editor;
 
+import consulo.codeEditor.Editor;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.document.Document;
+import consulo.localize.LocalizeValue;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnAction;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 public final class ReviewInEditorUtil {
     private ReviewInEditorUtil() {
@@ -39,5 +46,44 @@ public final class ReviewInEditorUtil {
 
     public static boolean isLastBlankLine(Document document, int lineIdx) {
         return CodeReviewEditorDocumentUtil.isLastBlankLine(document, lineIdx);
+    }
+
+    /**
+     * Sets up an inspection widget action group for review in editor, until {@code parentDisposable} is disposed
+     */
+    @RequiredUIAccess
+    public static void showReviewToolbar(Disposable parentDisposable, CodeReviewInEditorViewModel vm, Editor editor) {
+        showReviewToolbarWithActions(parentDisposable, vm, editor);
+    }
+
+    @RequiredUIAccess
+    public static void showReviewToolbarWithActions(Disposable parentDisposable,
+                                                    CodeReviewInEditorViewModel vm,
+                                                    Editor editor,
+                                                    AnAction... additionalActions) {
+        showInspectionWidgetAction(parentDisposable, editor, new CodeReviewInEditorToolbarModel(vm, List.of(additionalActions), null));
+    }
+
+    /**
+     * This is a very special case for GitLab plugin to show on a file with an empty diff
+     */
+    @RequiredUIAccess
+    public static void showReviewToolbarWithWarning(Disposable parentDisposable,
+                                                    CodeReviewInEditorViewModel vm,
+                                                    Editor editor,
+                                                    Supplier<LocalizeValue> warningSupplier,
+                                                    AnAction... additionalActions) {
+        showInspectionWidgetAction(parentDisposable, editor,
+            new CodeReviewInEditorToolbarModel(vm, List.of(additionalActions), warningSupplier));
+    }
+
+    @RequiredUIAccess
+    private static void showInspectionWidgetAction(Disposable parentDisposable, Editor editor, CodeReviewInEditorToolbarModel model) {
+        editor.putUserData(CodeReviewInEditorToolbarModel.KEY, model);
+        Disposer.register(parentDisposable, () -> {
+            if (editor.getUserData(CodeReviewInEditorToolbarModel.KEY) == model) {
+                editor.putUserData(CodeReviewInEditorToolbarModel.KEY, null);
+            }
+        });
     }
 }

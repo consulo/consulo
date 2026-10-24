@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,21 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.versionControlSystem.impl.internal.patch;
+package consulo.review.list.search;
+
+import consulo.localize.LocalizeValue;
 
 /**
- * @author yole
- * @since 2006-11-15
+ * The row at the end of a chooser telling that its items are still loading, or why they could not be loaded.
+ *
+ * @author VISTALL
+ * @since 2026-10-24
  */
-public class PatchSyntaxException extends Exception {
-  private final int myLine;
-
-  public PatchSyntaxException(int line, String message) {
-    super(message);
-    myLine = line;
-  }
-
-  public int getLine() {
-    return myLine;
-  }
+record ChooserStatusRow(LocalizeValue text, boolean error) {
 }

@@ -162,5 +162,21 @@ public enum ComponentColors implements StyleColorValue {
      * The text of the number of commits a branch has to pull from its remote, and of the number it has to push to it.
      */
     VCS_INCOMING_FOREGROUND,
-    VCS_OUTGOING_FOREGROUND
+    VCS_OUTGOING_FOREGROUND,
+
+    /**
+     * The fill of a reaction pill in its normal, hovered and pressed states, and the border of a selected one.
+     */
+    REACTION_BACKGROUND,
+    REACTION_HOVERED_BACKGROUND,
+    REACTION_PRESSED_BACKGROUND,
+    REACTION_SELECTED_BORDER,
+
+    /**
+     * The ring of an avatar with an {@link consulo.ui.AvatarStyle#OUTLINE_SUCCESS}, {@link consulo.ui.AvatarStyle#OUTLINE_WARNING}
+     * or {@link consulo.ui.AvatarStyle#OUTLINE_NEUTRAL} style.
+     */
+    AVATAR_OUTLINE_SUCCESS,
+    AVATAR_OUTLINE_WARNING,
+    AVATAR_OUTLINE_NEUTRAL
 }

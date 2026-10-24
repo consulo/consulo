@@ -57,6 +57,6 @@ public class VcsLogContentFactory implements ChangesViewContentFactory {
   
   @Override
   public ChangesViewContentProvider create() {
-    return new VcsLogContentProvider(myProject, VcsProjectLog.getInstance(myProject));
+    return new VcsLogContentProvider(myProject, VcsProjectLogImpl.getInstance(myProject));
   }
 }

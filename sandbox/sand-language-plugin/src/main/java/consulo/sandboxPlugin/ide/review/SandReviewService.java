@@ -25,6 +25,7 @@ import consulo.project.Project;
 import consulo.review.details.data.CodeReviewCIJob;
 import consulo.review.details.data.CodeReviewCIJobState;
 import consulo.review.details.data.ReviewRequestState;
+import consulo.review.details.data.ReviewState;
 import consulo.util.concurrent.coroutine.MutableObservableValue;
 import consulo.util.concurrent.coroutine.ObservableValue;
 import jakarta.inject.Inject;
@@ -35,6 +36,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ScheduledExecutorService;
 
 /**
@@ -69,7 +71,7 @@ public class SandReviewService {
 
         mySuggestedChangeSupport = new SandReviewSuggestedChangeSupport(project, this);
         myReviews = createReviews(project, myDisposable, myScheduler, mySuggestedChangeSupport);
-        myToolwindowVm = new SandReviewToolwindowViewModel(new SandReviewProjectViewModel(myScheduler, () -> myReviews));
+        myToolwindowVm = new SandReviewToolwindowViewModel(new SandReviewProjectViewModel(myDisposable, myScheduler, () -> myReviews));
     }
 
     public SandReviewToolwindowViewModel getToolwindowVm() {
@@ -156,6 +158,7 @@ public class SandReviewService {
                 new CodeReviewCIJob("build", CodeReviewCIJobState.SUCCESS, true, "https://ci.consulo.io/build/42"),
                 new CodeReviewCIJob("tests", CodeReviewCIJobState.PENDING, true, "https://ci.consulo.io/tests/42")
             ),
+            Map.of(REVIEWER, ReviewState.WAIT_FOR_UPDATES),
             List.of(
                 new SandReviewThreadViewModel(project, disposable, "42-1", DEMO_FILE_NAME, 2, 4, scheduler, support, List.of(
                     new SandReviewComment(REVIEWER, "Should `map` keep a listener on the source forever?",
@@ -188,6 +191,7 @@ public class SandReviewService {
             Date.from(now.minus(Duration.ofDays(5))),
             null,
             List.of(new CodeReviewCIJob("build", CodeReviewCIJobState.FAILED, true, null)),
+            Map.of(CURRENT_USER, ReviewState.ACCEPTED),
             List.of(
                 new SandReviewThreadViewModel(project, disposable, "41-1", "UnifiedCommitPanel.java", 119, 119, scheduler, support, List.of(
                     new SandReviewComment(CURRENT_USER, "Looks good on every frontend.", now.minus(Duration.ofDays(4)))
@@ -206,6 +210,7 @@ public class SandReviewService {
             Date.from(now.minus(Duration.ofDays(7))),
             true,
             List.of(),
+            Map.of(),
             List.of()
         );
         third.setSeen(false);

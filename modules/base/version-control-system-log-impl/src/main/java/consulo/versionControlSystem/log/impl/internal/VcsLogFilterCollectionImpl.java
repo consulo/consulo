@@ -36,6 +36,7 @@ public class VcsLogFilterCollectionImpl implements VcsLogFilterCollection {
   private final @Nullable VcsLogTextFilter myTextFilter;
   private final @Nullable VcsLogStructureFilter myStructureFilter;
   private final @Nullable VcsLogRootFilter myRootFilter;
+  private final @Nullable VcsLogRangeFilter myRangeFilter;
 
   public VcsLogFilterCollectionImpl(@Nullable VcsLogBranchFilter branchFilter,
                                     @Nullable VcsLogUserFilter userFilter,
@@ -43,7 +44,8 @@ public class VcsLogFilterCollectionImpl implements VcsLogFilterCollection {
                                     @Nullable VcsLogDateFilter dateFilter,
                                     @Nullable VcsLogTextFilter textFilter,
                                     @Nullable VcsLogStructureFilter structureFilter,
-                                    @Nullable VcsLogRootFilter rootFilter) {
+                                    @Nullable VcsLogRootFilter rootFilter,
+                                    @Nullable VcsLogRangeFilter rangeFilter) {
     myBranchFilter = branchFilter;
     myUserFilter = userFilter;
     myHashFilter = hashFilter;
@@ -51,6 +53,7 @@ public class VcsLogFilterCollectionImpl implements VcsLogFilterCollection {
     myTextFilter = textFilter;
     myStructureFilter = structureFilter;
     myRootFilter = rootFilter;
+    myRangeFilter = rangeFilter;
   }
 
   @Override
@@ -89,8 +92,13 @@ public class VcsLogFilterCollectionImpl implements VcsLogFilterCollection {
   }
 
   @Override
+  public @Nullable VcsLogRangeFilter getRangeFilter() {
+    return myRangeFilter;
+  }
+
+  @Override
   public boolean isEmpty() {
-    return myBranchFilter == null && getDetailsFilters().isEmpty();
+    return myBranchFilter == null && myRangeFilter == null && getDetailsFilters().isEmpty();
   }
 
   
@@ -106,6 +114,7 @@ public class VcsLogFilterCollectionImpl implements VcsLogFilterCollection {
     }
     List<VcsLogFilter> filters = ContainerUtil.skipNulls(Arrays.asList(
       collection.getBranchFilter(),
+      collection.getRangeFilter(),
       collection.getUserFilter(),
       collection.getDateFilter(),
       collection.getTextFilter(),
@@ -125,7 +134,7 @@ public class VcsLogFilterCollectionImpl implements VcsLogFilterCollection {
     if (filter instanceof VcsLogDateFilter dateFilter) {
       return VcsLogDateFilterImpl.getDisplayTextWithPrefix(dateFilter);
     }
-    if (filter instanceof VcsLogBranchFilter) {
+    if (filter instanceof VcsLogBranchFilter || filter instanceof VcsLogRangeFilter) {
       return VersionControlSystemLogLocalize.filterPresentationBranchWithPrefix(filter.getDisplayText()).get();
     }
     if (filter instanceof VcsLogRootFilter) {
@@ -146,7 +155,8 @@ public class VcsLogFilterCollectionImpl implements VcsLogFilterCollection {
            (myDateFilter != null ? myDateFilter + ", " : "") +
            (myTextFilter != null ? myTextFilter + ", " : "") +
            (myStructureFilter != null ? myStructureFilter + ", " : "") +
-           (myRootFilter != null ? myRootFilter : "") + ")";
+           (myRootFilter != null ? myRootFilter + ", " : "") +
+           (myRangeFilter != null ? myRangeFilter : "") + ")";
   }
 
   public static class VcsLogFilterCollectionBuilder {
@@ -157,6 +167,7 @@ public class VcsLogFilterCollectionImpl implements VcsLogFilterCollection {
     private @Nullable VcsLogTextFilter myTextFilter;
     private @Nullable VcsLogStructureFilter myStructureFilter;
     private @Nullable VcsLogRootFilter myRootFilter;
+    private @Nullable VcsLogRangeFilter myRangeFilter;
 
     public VcsLogFilterCollectionBuilder() {
     }
@@ -169,6 +180,7 @@ public class VcsLogFilterCollectionImpl implements VcsLogFilterCollection {
       myTextFilter = filterCollection.getTextFilter();
       myStructureFilter = filterCollection.getStructureFilter();
       myRootFilter = filterCollection.getRootFilter();
+      myRangeFilter = filterCollection.getRangeFilter();
     }
 
     
@@ -214,9 +226,45 @@ public class VcsLogFilterCollectionImpl implements VcsLogFilterCollection {
     }
 
     
+    public VcsLogFilterCollectionBuilder with(@Nullable VcsLogRangeFilter filter) {
+      myRangeFilter = filter;
+      return this;
+    }
+
+    public VcsLogFilterCollectionBuilder with(@Nullable VcsLogFilter filter) {
+      if (filter == null) {
+        return this;
+      }
+      if (filter instanceof VcsLogBranchFilter branchFilter) {
+        return with(branchFilter);
+      }
+      if (filter instanceof VcsLogUserFilter userFilter) {
+        return with(userFilter);
+      }
+      if (filter instanceof VcsLogHashFilter hashFilter) {
+        return with(hashFilter);
+      }
+      if (filter instanceof VcsLogDateFilter dateFilter) {
+        return with(dateFilter);
+      }
+      if (filter instanceof VcsLogTextFilter textFilter) {
+        return with(textFilter);
+      }
+      if (filter instanceof VcsLogStructureFilter structureFilter) {
+        return with(structureFilter);
+      }
+      if (filter instanceof VcsLogRootFilter rootFilter) {
+        return with(rootFilter);
+      }
+      if (filter instanceof VcsLogRangeFilter rangeFilter) {
+        return with(rangeFilter);
+      }
+      throw new IllegalArgumentException("Unknown filter " + filter);
+    }
+
     public VcsLogFilterCollection build() {
       return new VcsLogFilterCollectionImpl(myBranchFilter, myUserFilter, myHashFilter, myDateFilter, myTextFilter, myStructureFilter,
-                                            myRootFilter);
+                                            myRootFilter, myRangeFilter);
     }
   }
 }

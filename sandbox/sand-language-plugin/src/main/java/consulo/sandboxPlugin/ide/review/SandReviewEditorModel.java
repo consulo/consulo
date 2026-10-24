@@ -23,6 +23,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
+import consulo.review.diff.DiscussionsViewOption;
 import consulo.review.editor.CodeReviewChangedRange;
 import consulo.review.editor.CodeReviewEditorGutterActionableChangesModel;
 import consulo.review.editor.CodeReviewEditorGutterControlsState;
@@ -59,6 +60,7 @@ public class SandReviewEditorModel implements CodeReviewEditorModel<CodeReviewIn
     private final Editor myEditor;
     private final String myFileName;
     private final Disposable myDisposable;
+    private final SandReviewInEditorViewModel myInEditorVm;
 
     private final Map<Object, SandReviewThreadInlayModel> myThreadInlays = new LinkedHashMap<>();
     private final List<SandReviewNewCommentInlayModel> myNewComments = new ArrayList<>();
@@ -71,11 +73,19 @@ public class SandReviewEditorModel implements CodeReviewEditorModel<CodeReviewIn
     private final MutableObservableValue<@Nullable CodeReviewEditorGutterControlsState> myGutterControlsState =
         MutableObservableValue.of(null);
 
-    public SandReviewEditorModel(SandReviewService service, Editor editor, String fileName, Disposable parentDisposable) {
+    public SandReviewEditorModel(SandReviewService service,
+                                 Editor editor,
+                                 String fileName,
+                                 SandReviewInEditorViewModel inEditorVm,
+                                 Disposable parentDisposable) {
         myService = service;
         myEditor = editor;
         myFileName = fileName;
+        myInEditorVm = inEditorVm;
         myDisposable = parentDisposable;
+
+        Runnable viewOptionUnsubscribe = inEditorVm.getDiscussionsViewOption().addListener(option -> publish());
+        Disposer.register(parentDisposable, viewOptionUnsubscribe::run);
 
         Runnable unsubscribe = service.getThreadsModificationCount().addListener(count -> reloadThreads());
         Disposer.register(parentDisposable, unsubscribe::run);
@@ -114,7 +124,14 @@ public class SandReviewEditorModel implements CodeReviewEditorModel<CodeReviewIn
     }
 
     private synchronized void publish() {
-        List<CodeReviewInlayModel> inlays = new ArrayList<>(myThreadInlays.values());
+        DiscussionsViewOption viewOption = myInEditorVm.getDiscussionsViewOption().get();
+        List<CodeReviewInlayModel> inlays = new ArrayList<>();
+        for (SandReviewThreadInlayModel inlay : myThreadInlays.values()) {
+            if (viewOption == DiscussionsViewOption.ALL
+                || viewOption == DiscussionsViewOption.UNRESOLVED_ONLY && !((SandReviewThreadViewModel) inlay.getThread()).isResolved().get()) {
+                inlays.add(inlay);
+            }
+        }
         inlays.addAll(myNewComments);
         myInlays.set(List.copyOf(inlays));
 

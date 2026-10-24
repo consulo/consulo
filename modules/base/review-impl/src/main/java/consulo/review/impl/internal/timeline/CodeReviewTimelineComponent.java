@@ -20,7 +20,7 @@ import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;
 import consulo.review.comment.CodeReviewNewCommentViewModel;
 import consulo.review.details.model.CodeReviewDetailsTabViewModel;
-import consulo.review.impl.internal.ReviewUIUtil;
+import consulo.review.util.ReviewUIUtil;
 import consulo.review.impl.internal.comment.CodeReviewCommentTextFieldFactory;
 import consulo.review.impl.internal.details.CodeReviewDetailsTitleComponentFactory;
 import consulo.review.localize.ReviewLocalize;

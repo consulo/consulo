@@ -15,8 +15,6 @@
  */
 package consulo.versionControlSystem.log.impl.internal;
 
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
 import consulo.application.CachesInvalidator;
@@ -30,6 +28,7 @@ import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.VcsInitObject;
 import consulo.versionControlSystem.internal.ProjectLevelVcsManagerEx;
 import consulo.versionControlSystem.log.VcsLogFilterCollection;
+import consulo.versionControlSystem.log.VcsProjectLog;
 import consulo.versionControlSystem.log.impl.internal.data.VcsLogDataImpl;
 import consulo.versionControlSystem.log.impl.internal.data.VcsLogTabsProperties;
 import consulo.versionControlSystem.log.impl.internal.ui.AbstractVcsLogUi;
@@ -43,9 +42,8 @@ import java.util.Collection;
 import java.util.function.Consumer;
 
 @Singleton
-@ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
-public class VcsProjectLog {
+public class VcsProjectLogImpl implements VcsProjectLog {
     
     private final Project myProject;
     
@@ -59,7 +57,7 @@ public class VcsProjectLog {
     private @Nullable VcsLogTabsManager myTabsManager;
 
     @Inject
-    public VcsProjectLog(Project project, VcsLogTabsProperties uiProperties) {
+    public VcsProjectLogImpl(Project project, VcsLogTabsProperties uiProperties) {
         myProject = project;
         myMessageBus = project.getMessageBus();
         myUiProperties = uiProperties;
@@ -165,6 +163,12 @@ public class VcsProjectLog {
     }
 
     @RequiredUIAccess
+    @Override
+    public @Nullable AbstractVcsLogUi openLogTab(VcsLogFilterCollection filters) {
+        return openLogTab(filters, VcsLogTabLocation.TOOL_WINDOW);
+    }
+
+    @RequiredUIAccess
     public @Nullable AbstractVcsLogUi openLogTab(VcsLogFilterCollection filters, VcsLogTabLocation location) {
         myLogManager.getValue();
         VcsLogTabsManager tabsManager = myTabsManager;
@@ -187,8 +191,8 @@ public class VcsProjectLog {
         return !VcsLogManager.findLogProviders(getVcsRoots(), myProject).isEmpty();
     }
 
-    public static VcsProjectLog getInstance(Project project) {
-        return project.getInstance(VcsProjectLog.class);
+    public static VcsProjectLogImpl getInstance(Project project) {
+        return (VcsProjectLogImpl) project.getInstance(VcsProjectLog.class);
     }
 
     private class LazyVcsLogManager {
@@ -211,7 +215,7 @@ public class VcsProjectLog {
         
         @RequiredUIAccess
         protected synchronized VcsLogManager compute() {
-            return new VcsLogManager(myProject, myUiProperties, getVcsRoots(), false, VcsProjectLog.this::recreateLog);
+            return new VcsLogManager(myProject, myUiProperties, getVcsRoots(), false, VcsProjectLogImpl.this::recreateLog);
         }
 
         @RequiredUIAccess

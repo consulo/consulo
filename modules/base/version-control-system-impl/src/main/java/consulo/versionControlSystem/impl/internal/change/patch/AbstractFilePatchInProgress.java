@@ -25,7 +25,7 @@ import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ContentRevision;
 import consulo.versionControlSystem.change.CurrentContentRevision;
 import consulo.versionControlSystem.change.patch.FilePatch;
-import consulo.versionControlSystem.impl.internal.patch.PatchReader;
+import consulo.versionControlSystem.change.patch.PatchReader;
 import consulo.versionControlSystem.impl.internal.patch.PathMerger;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;

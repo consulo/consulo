@@ -103,6 +103,8 @@ public abstract class VaadinLabelComponentBase extends SimpleComponent implement
         if (!text.isEmpty()) {
             WebSearchHighlight.appendText(getElement(), text, mySearchHighlight);
         }
+
+        getElement().getClassList().set("web-label-with-image", myImage != null && !text.isEmpty());
     }
 
     public void setHorizontalAlignment(HorizontalAlignment horizontalAlignment) {

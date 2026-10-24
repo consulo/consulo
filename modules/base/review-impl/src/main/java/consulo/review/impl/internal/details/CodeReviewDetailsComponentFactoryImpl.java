@@ -18,6 +18,7 @@ package consulo.review.impl.internal.details;
 import consulo.annotation.component.ServiceImpl;
 import consulo.disposer.Disposable;
 import consulo.review.details.CodeReviewDetailsComponentFactory;
+import consulo.review.details.CodeReviewDetailsStatusComponentFactory;
 import consulo.review.details.model.CodeReviewDetailsTabViewModel;
 import consulo.review.details.model.CodeReviewDetailsViewModel;
 import consulo.review.details.model.CodeReviewStatusViewModel;
@@ -26,6 +27,7 @@ import consulo.ui.Space;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.ScrollableLayout;
 import consulo.ui.layout.VerticalLayout;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jspecify.annotations.Nullable;
 
@@ -36,6 +38,13 @@ import org.jspecify.annotations.Nullable;
 @Singleton
 @ServiceImpl
 public class CodeReviewDetailsComponentFactoryImpl implements CodeReviewDetailsComponentFactory {
+    private final CodeReviewDetailsStatusComponentFactory myStatusComponentFactory;
+
+    @Inject
+    public CodeReviewDetailsComponentFactoryImpl(CodeReviewDetailsStatusComponentFactory statusComponentFactory) {
+        myStatusComponentFactory = statusComponentFactory;
+    }
+
     @RequiredUIAccess
     @Override
     public Component create(Disposable parentDisposable,
@@ -52,8 +61,8 @@ public class CodeReviewDetailsComponentFactoryImpl implements CodeReviewDetailsC
         CodeReviewStatusViewModel statusVm = tabVm.getStatusVm();
         if (statusVm != null) {
             VerticalLayout statuses = VerticalLayout.create(Space.NONE);
-            statuses.add(createCiComponent(parentDisposable, statusVm));
-            statuses.add(createConflictsComponent(parentDisposable, statusVm));
+            statuses.add(myStatusComponentFactory.createCiComponent(parentDisposable, statusVm));
+            statuses.add(myStatusComponentFactory.createConflictsComponent(parentDisposable, statusVm.getHasConflicts()));
             statuses.paddingBuilder().topSet(Space.MEDIUM).bottomSet(Space.LARGE).horizontalSet(Space.X_LARGE).apply();
             root.add(statuses);
         }
@@ -72,17 +81,5 @@ public class CodeReviewDetailsComponentFactoryImpl implements CodeReviewDetailsC
                                        CodeReviewDetailsViewModel detailsVm,
                                        @Nullable @RequiredUIAccess Runnable showTimelineAction) {
         return CodeReviewDetailsDescriptionComponentFactory.create(parentDisposable, detailsVm, showTimelineAction);
-    }
-
-    @RequiredUIAccess
-    @Override
-    public Component createCiComponent(Disposable parentDisposable, CodeReviewStatusViewModel statusVm) {
-        return CodeReviewDetailsStatusComponentFactory.createCiComponent(parentDisposable, statusVm);
-    }
-
-    @RequiredUIAccess
-    @Override
-    public Component createConflictsComponent(Disposable parentDisposable, CodeReviewStatusViewModel statusVm) {
-        return CodeReviewDetailsStatusComponentFactory.createConflictsComponent(parentDisposable, statusVm);
     }
 }

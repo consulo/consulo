@@ -53,6 +53,14 @@ public interface VcsLogStorage {
     @Nullable CommitId findCommitId(Predicate<CommitId> condition);
 
     /**
+     * Checks whether the storage contains the commit.
+     *
+     * @param id commit to check
+     * @return true if storage contains the commit, false otherwise
+     */
+    boolean containsCommit(CommitId id);
+
+    /**
      * Returns an integer index that is a unique identifier for a reference.
      *
      * @param ref reference

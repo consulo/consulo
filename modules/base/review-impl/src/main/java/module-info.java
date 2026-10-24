@@ -11,6 +11,8 @@ module consulo.review.impl {
     requires consulo.ui.ex.api;
     requires consulo.code.editor.api;
     requires consulo.file.editor.api;
+    requires consulo.language.editor.ui.api;
+    requires consulo.diff.api;
 
     exports consulo.review.impl.internal to consulo.version.control.system.review.impl;
     exports consulo.review.impl.internal.editor to consulo.version.control.system.review.impl;

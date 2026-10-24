@@ -50,7 +50,7 @@ import consulo.versionControlSystem.change.shelf.ShelvedBinaryFile;
 import consulo.versionControlSystem.impl.internal.diff.ChangeGoToChangePopupAction;
 import consulo.versionControlSystem.impl.internal.patch.BaseRevisionTextPatchEP;
 import consulo.versionControlSystem.impl.internal.patch.PatchDiffRequestFactory;
-import consulo.versionControlSystem.impl.internal.patch.PatchSyntaxException;
+import consulo.versionControlSystem.change.patch.PatchSyntaxException;
 import consulo.versionControlSystem.impl.internal.patch.apply.ApplyFilePatchBase;
 import consulo.versionControlSystem.impl.internal.patch.apply.ApplyPatchContext;
 import consulo.versionControlSystem.impl.internal.patch.apply.ApplyPatchForBaseRevisionTexts;

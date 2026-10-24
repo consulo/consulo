@@ -76,6 +76,16 @@ public class WebHyperlinkImpl extends VaadinComponentDelegate<WebHyperlinkImpl.V
     }
 
     @Override
+    @RequiredUIAccess
+    public void setEnabled(boolean value) {
+        super.setEnabled(value);
+
+        Vaadin vaadin = getVaadinComponent();
+        vaadin.getElement().setAttribute("disabled", !value);
+        vaadin.getStyle().set("color", WebColors.toCssColor(value ? ComponentColors.LINK_FOREGROUND : ComponentColors.DISABLED_TEXT));
+    }
+
+    @Override
     public LocalizeValue getText() {
         return myText;
     }

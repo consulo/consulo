@@ -1312,4 +1312,7 @@
   <action id="ExternalSystem.ProjectRefreshAction">
     <keyboard-shortcut first-keystroke="control shift O"/>
   </action>
+  <action id="Code.Review.Editor.New.Comment">
+    <keyboard-shortcut first-keystroke="control shift X"/>
+  </action>
 </keymap>

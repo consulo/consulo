@@ -251,6 +251,13 @@ public class DesktopQtButtonImpl extends QtComponentDelegate<QPushButton> implem
         QPushButton:pressed { background: rgba(128, 128, 128, 80); }
         """;
 
+    private static final String PILL_STYLE_SHEET = """
+        QPushButton { border: 1px solid %1$s; border-radius: 12px; background: %1$s; padding: 1px 6px; min-width: 0px; min-height: 22px; }
+        QPushButton:hover { background: %2$s; }
+        QPushButton:pressed { background: %3$s; }
+        QPushButton:checked { border-color: %4$s; }
+        """;
+
     private LocalizeValue myText = LocalizeValue.empty();
 
     private @Nullable String mySearchHighlight;
@@ -401,6 +408,13 @@ public class DesktopQtButtonImpl extends QtComponentDelegate<QPushButton> implem
 
                 updateStyleSheet();
             }
+            case PILL -> {
+                myComponent.setAutoDefault(false);
+                myComponent.setFocusPolicy(Qt.FocusPolicy.NoFocus);
+                myComponent.setAttribute(Qt.WidgetAttribute.WA_Hover, true);
+
+                updateStyleSheet();
+            }
             case VERTICAL -> {
                 myComponent.setAutoDefault(false);
                 myComponent.setFocusPolicy(Qt.FocusPolicy.NoFocus);
@@ -514,7 +528,11 @@ public class DesktopQtButtonImpl extends QtComponentDelegate<QPushButton> implem
     }
 
     private static String helpBorderColor() {
-        RGBColor rgb = ComponentColors.BORDER.toRGB();
+        return rgba(ComponentColors.BORDER);
+    }
+
+    private static String rgba(ComponentColors color) {
+        RGBColor rgb = color.toRGB();
         return "rgba(%d, %d, %d, %d)".formatted(rgb.getRed(), rgb.getGreen(), rgb.getBlue(), rgb.getAlpha());
     }
 
@@ -528,6 +546,14 @@ public class DesktopQtButtonImpl extends QtComponentDelegate<QPushButton> implem
 
         if (isVertical()) {
             setOwnStyleSheet(VERTICAL_STYLE_SHEET);
+        }
+        else if (myStyles.contains(ButtonStyle.PILL)) {
+            setOwnStyleSheet(PILL_STYLE_SHEET.formatted(
+                rgba(ComponentColors.REACTION_BACKGROUND),
+                rgba(ComponentColors.REACTION_HOVERED_BACKGROUND),
+                rgba(ComponentColors.REACTION_PRESSED_BACKGROUND),
+                rgba(ComponentColors.REACTION_SELECTED_BORDER)
+            ));
         }
         else if (myStyles.contains(ButtonStyle.HELP) && iconOnly) {
             setOwnStyleSheet(HELP_STYLE_SHEET.formatted(helpBorderColor()));

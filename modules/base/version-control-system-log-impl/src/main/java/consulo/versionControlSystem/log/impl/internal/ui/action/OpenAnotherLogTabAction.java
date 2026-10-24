@@ -28,7 +28,7 @@ import consulo.versionControlSystem.log.VcsLogUi;
 import consulo.versionControlSystem.log.impl.internal.VcsLogFilterCollectionImpl;
 import consulo.versionControlSystem.log.impl.internal.VcsLogManager;
 import consulo.versionControlSystem.log.impl.internal.VcsLogTabLocation;
-import consulo.versionControlSystem.log.impl.internal.VcsProjectLog;
+import consulo.versionControlSystem.log.impl.internal.VcsProjectLogImpl;
 import consulo.versionControlSystem.log.impl.internal.ui.VcsLogInternalDataKeys;
 import consulo.versionControlSystem.log.localize.VersionControlSystemLogLocalize;
 import consulo.versionControlSystem.log.util.VcsLogUtil;
@@ -65,7 +65,7 @@ public abstract class OpenAnotherLogTabAction extends LegacyDumbAwareAction {
         if (project == null) {
             return null;
         }
-        VcsLogManager mainLogManager = VcsProjectLog.getInstance(project).getLogManager();
+        VcsLogManager mainLogManager = VcsProjectLogImpl.getInstance(project).getLogManager();
         if (mainLogManager == null) {
             return null;
         }
@@ -103,7 +103,7 @@ public abstract class OpenAnotherLogTabAction extends LegacyDumbAwareAction {
         else {
             filters = VcsLogFilterCollectionImpl.EMPTY;
         }
-        VcsProjectLog.getInstance(project).openLogTab(filters, getLocation(e));
+        VcsProjectLogImpl.getInstance(project).openLogTab(filters, getLocation(e));
     }
 
     protected VcsLogFilterCollection getFilters(Project project, AnActionEvent e) {

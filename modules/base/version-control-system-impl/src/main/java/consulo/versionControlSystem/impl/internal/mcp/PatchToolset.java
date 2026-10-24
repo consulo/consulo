@@ -28,8 +28,8 @@ import consulo.project.Project;
 import consulo.versionControlSystem.change.LocalChangeList;
 import consulo.versionControlSystem.change.patch.FilePatch;
 import consulo.versionControlSystem.change.patch.TextFilePatch;
-import consulo.versionControlSystem.impl.internal.patch.PatchReader;
-import consulo.versionControlSystem.impl.internal.patch.PatchSyntaxException;
+import consulo.versionControlSystem.change.patch.PatchReader;
+import consulo.versionControlSystem.change.patch.PatchSyntaxException;
 import consulo.versionControlSystem.impl.internal.patch.apply.PatchApplier;
 import jakarta.inject.Singleton;
 

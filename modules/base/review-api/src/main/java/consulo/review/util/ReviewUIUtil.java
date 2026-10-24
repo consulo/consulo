@@ -13,12 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.review.impl.internal;
+package consulo.review.util;
 
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.ui.Button;
+import consulo.ui.Component;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
+import kava.beans.PropertyChangeListener;
 import consulo.util.concurrent.coroutine.ObservableValue;
 import org.jspecify.annotations.Nullable;
 
@@ -76,5 +85,46 @@ public final class ReviewUIUtil {
             firstUnsubscribe.run();
             secondUnsubscribe.run();
         });
+    }
+
+    /**
+     * Performs the action in the data context of {@code source}.
+     */
+    @RequiredUIAccess
+    public static void performAction(AnAction action, Component source, String place) {
+        DataContext context = DataManager.getInstance().getDataContext(source);
+        AnActionEvent event = AnActionEvent.createFromAnAction(action, null, place, context);
+        ActionManager.getInstance().performActionDumbAware(action, event);
+    }
+
+    /**
+     * A button following the text, the description and the enabled state of the template presentation of the action,
+     * which performs the action when clicked.
+     */
+    @RequiredUIAccess
+    public static Button createActionButton(Disposable parentDisposable, AnAction action, String place) {
+        Presentation presentation = action.getTemplatePresentation();
+        Button button = Button.create(presentation.getTextValue());
+        button.setToolTipText(presentation.getDescription());
+        button.setEnabled(presentation.isEnabled());
+
+        UIAccess uiAccess = UIAccess.current();
+        AtomicBoolean disposed = new AtomicBoolean();
+        PropertyChangeListener listener = event -> uiAccess.give(() -> {
+            if (disposed.get()) {
+                return;
+            }
+            button.setText(presentation.getTextValue());
+            button.setToolTipText(presentation.getDescription());
+            button.setEnabled(presentation.isEnabled());
+        });
+        presentation.addPropertyChangeListener(listener);
+        Disposer.register(parentDisposable, () -> {
+            disposed.set(true);
+            presentation.removePropertyChangeListener(listener);
+        });
+
+        button.addClickListener(event -> performAction(action, button, place));
+        return button;
     }
 }

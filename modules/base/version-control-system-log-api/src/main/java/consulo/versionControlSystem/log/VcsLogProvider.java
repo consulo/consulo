@@ -105,6 +105,26 @@ public interface VcsLogProvider {
   List<TimedVcsCommit> getCommitsMatchingFilter(VirtualFile root, VcsLogFilterCollection filterCollection, int maxCount) throws VcsException;
 
   /**
+   * Returns true if {@code hash} has the full commit hash format in the given root.
+   * Can be used to say if we have to do a lookup by hash prefix.
+   * <p>
+   * E.g., Git repositories may have both 40 and 64 length hex hashes.
+   */
+  default boolean isFullHash(VirtualFile root, String hash) {
+    // SHA-1 is assumed by default
+    if (hash.length() != 40) {
+      return false;
+    }
+    for (int i = 0; i < hash.length(); i++) {
+      char c = hash.charAt(i);
+      if (!(c >= '0' && c <= '9' || c >= 'a' && c <= 'f' || c >= 'A' && c <= 'F')) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /**
    * Returns the name of current user as specified for the given root,
    * or null if user didn't configure his name in the VCS settings.
    */

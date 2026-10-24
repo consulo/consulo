@@ -9,7 +9,7 @@ import consulo.language.editor.ui.EditorBoxBuilderFactory;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.CommonLocalize;
-import consulo.review.impl.internal.ReviewUIUtil;
+import consulo.review.util.ReviewUIUtil;
 import consulo.review.localize.ReviewLocalize;
 import consulo.ui.Button;
 import consulo.ui.ButtonStyle;

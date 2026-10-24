@@ -288,6 +288,7 @@ public class UnifiedDialogServiceImpl implements DialogService {
             toolbar.setDataContextProvider(() -> DataContext.builder().add(Dialog.KEY, this).build());
 
             myDescriptor.setOkButtonStateUpdater(toolbar::updateActionsAsync);
+            myDescriptor.setSizeUpdater(myWindow::pack);
 
             toolbar.updateActionsAsync();
 

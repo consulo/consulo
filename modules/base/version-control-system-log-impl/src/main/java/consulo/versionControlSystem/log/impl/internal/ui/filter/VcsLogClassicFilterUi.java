@@ -153,7 +153,7 @@ public class VcsLogClassicFilterUi implements VcsLogFilterUi {
     @RequiredUIAccess
     public void setFilters(VcsLogFilterCollection collection) {
         UIAccess.assertIsUIThread();
-        myBranchFilterModel.setFilter(collection.getBranchFilter());
+        myBranchFilterModel.setFilters(collection.getBranchFilter(), collection.getRangeFilter());
         myUserFilterModel.setFilter(collection.getUserFilter());
         myDateFilterModel.setFilter(collection.getDateFilter());
 
@@ -184,6 +184,7 @@ public class VcsLogClassicFilterUi implements VcsLogFilterUi {
         );
         return new VcsLogFilterCollectionImpl.VcsLogFilterCollectionBuilder()
             .with(myBranchFilterModel.getFilter())
+            .with(myBranchFilterModel.getRangeFilter())
             .with(myUserFilterModel.getFilter())
             .with(filtersFromText.second)
             .with(myDateFilterModel.getFilter())
@@ -246,6 +247,7 @@ public class VcsLogClassicFilterUi implements VcsLogFilterUi {
 
     public static class BranchFilterModel extends FilterModel<VcsLogBranchFilter> {
         private @Nullable Collection<VirtualFile> myVisibleRoots;
+        private @Nullable VcsLogRangeFilter myRangeFilter;
 
         BranchFilterModel(Supplier<VcsLogDataPack> provider, MainVcsLogUiProperties properties) {
             super("branch", provider, properties);
@@ -262,6 +264,20 @@ public class VcsLogClassicFilterUi implements VcsLogFilterUi {
 
         public @Nullable Collection<VirtualFile> getVisibleRoots() {
             return myVisibleRoots;
+        }
+
+        @Override
+        void setFilter(@Nullable VcsLogBranchFilter filter) {
+            setFilters(filter, null);
+        }
+
+        void setFilters(@Nullable VcsLogBranchFilter branchFilter, @Nullable VcsLogRangeFilter rangeFilter) {
+            myRangeFilter = rangeFilter;
+            super.setFilter(branchFilter);
+        }
+
+        public @Nullable VcsLogRangeFilter getRangeFilter() {
+            return myRangeFilter;
         }
 
         

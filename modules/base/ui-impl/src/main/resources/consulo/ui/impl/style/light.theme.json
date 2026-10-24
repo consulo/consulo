@@ -91,6 +91,23 @@
       "allocatedBackground": "#d7d7d7",
       "usedBackground": "#b9b9b9"
     },
+    "Review": {
+      "Avatar": {
+        "Border": {
+          "Status": {
+            "Accepted": "#5fb865",
+            "WaitForUpdates": "#ec8f4c",
+            "NeedReview": "#818594"
+          }
+        }
+      },
+      "Reaction": {
+        "background": "#ebecf0",
+        "hoveredBackground": "#dfe1e5",
+        "pressedBackground": "#edf3ff",
+        "selectedBorder": "#3574f0"
+      }
+    },
     "Vcs": {
       "incomingForeground": "#3574f0",
       "outgoingForeground": "#369650"

@@ -56,6 +56,8 @@ class DesktopButtonImpl extends SwingComponentDelegate<DesktopButtonImpl.MyButto
 
         private boolean myVertical;
 
+        private boolean myPill;
+
         private java.awt.@Nullable Component mySuffix;
 
         private int myAlignmentWithoutSuffix = SwingConstants.CENTER;
@@ -81,6 +83,9 @@ class DesktopButtonImpl extends SwingComponentDelegate<DesktopButtonImpl.MyButto
             if (myVertical) {
                 setUI(new VerticalButtonUI());
             }
+            else if (myPill) {
+                setUI(new PillButtonUI());
+            }
             else {
                 super.updateUI();
             }
@@ -93,6 +98,14 @@ class DesktopButtonImpl extends SwingComponentDelegate<DesktopButtonImpl.MyButto
 
         String getPlainText() {
             return TextWithMnemonic.parse(myTextValue.get()).getText();
+        }
+
+        void setPill() {
+            myPill = true;
+            updateUI();
+            setFocusable(false);
+            revalidate();
+            repaint();
         }
 
         void setVertical() {
@@ -252,6 +265,9 @@ class DesktopButtonImpl extends SwingComponentDelegate<DesktopButtonImpl.MyButto
                 break;
             case VERTICAL:
                 toAWTComponent().setVertical();
+                break;
+            case PILL:
+                toAWTComponent().setPill();
                 break;
         }
     }

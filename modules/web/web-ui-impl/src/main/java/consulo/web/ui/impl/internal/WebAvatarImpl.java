@@ -23,6 +23,7 @@ import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.impl.avatar.AvatarPresentation;
+import consulo.ui.style.ComponentColors;
 import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
 import consulo.web.ui.impl.internal.base.VaadinComponentDelegate;
 import consulo.web.ui.impl.internal.image.WebImageUrl;
@@ -62,14 +63,24 @@ public class WebAvatarImpl extends VaadinComponentDelegate<WebAvatarImpl.Vaadin>
     @Override
     public void addStyle(AvatarStyle style) {
         Vaadin component = toVaadinComponent();
+        ComponentColors outlineColor = AvatarPresentation.outlineColorOf(style);
+        if (outlineColor != null) {
+            component.getStyle().set("border-color", WebColors.toStyleCssColor(outlineColor));
+            return;
+        }
+
         component.getElement().getThemeList().remove("medium");
         component.removeThemeVariants(AvatarVariant.XSMALL, AvatarVariant.SMALL, AvatarVariant.LARGE, AvatarVariant.XLARGE);
-        component.addThemeVariants(switch (style) {
+        AvatarVariant variant = switch (style) {
             case X_SMALL -> AvatarVariant.XSMALL;
             case SMALL -> AvatarVariant.SMALL;
             case LARGE -> AvatarVariant.LARGE;
             case X_LARGE -> AvatarVariant.XLARGE;
-        });
+            case OUTLINE_SUCCESS, OUTLINE_WARNING, OUTLINE_NEUTRAL -> null;
+        };
+        if (variant != null) {
+            component.addThemeVariants(variant);
+        }
     }
 
     @Override

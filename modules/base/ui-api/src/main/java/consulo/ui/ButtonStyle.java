@@ -28,5 +28,10 @@ public enum ButtonStyle implements ComponentStyle {
      * The button that opens help for the surrounding window, drawn the way the platform draws help buttons.
      */
     HELP,
-    VERTICAL
+    VERTICAL,
+    /**
+     * A compact button with fully rounded ends and a filled background, as used for reactions. A selected
+     * {@link ToggleButton} with this style draws {@link consulo.ui.style.ComponentColors#REACTION_SELECTED_BORDER}.
+     */
+    PILL
 }

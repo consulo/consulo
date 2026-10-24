@@ -25,7 +25,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.DockLayout;
 import consulo.versionControlSystem.log.VcsLogFilterCollection;
 import consulo.versionControlSystem.log.impl.internal.VcsLogTabsUtil;
-import consulo.versionControlSystem.log.impl.internal.VcsProjectLog;
+import consulo.versionControlSystem.log.impl.internal.VcsProjectLogImpl;
 import consulo.versionControlSystem.log.impl.internal.ui.AbstractVcsLogUi;
 import consulo.versionControlSystem.log.localize.VersionControlSystemLogLocalize;
 import consulo.virtualFileSystem.VirtualFileSystem;
@@ -70,7 +70,7 @@ public class DefaultVcsLogFile extends VcsLogFile {
         DockLayout panel = DockLayout.create();
         panel.center(Label.create(VersionControlSystemLogLocalize.logIsLoading()));
 
-        VcsProjectLog.getInstance(project).runWhenLogIsReady(logManager -> {
+        VcsProjectLogImpl.getInstance(project).runWhenLogIsReady(logManager -> {
             if (logManager.hasLogUi(myTabId)) {
                 panel.center(Label.create(VersionControlSystemLogLocalize.duplicatedTabIdError()));
                 return;

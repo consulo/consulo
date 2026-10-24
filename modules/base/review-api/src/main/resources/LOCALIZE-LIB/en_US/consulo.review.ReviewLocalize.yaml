@@ -20,6 +20,18 @@ review.list.error.title:
     text: Cannot load reviews
 review.list.error.retry:
     text: Retry
+review.list.filter.quick.title:
+    text: Quick Filters
+review.list.filter.quick.clear:
+    text: Clear {0} Filters
+review.list.filter.clear:
+    text: Clear Filter
+review.list.search.history.tooltip:
+    text: Search History {0}
+popup.data.loading.error:
+    text: Something went wrong
+review.popup.data.loading:
+    text: Loading…
 review.details.branch.cannot.checkout.as.branch:
     text: Remote branches are not available for private forks
 review.details.branch.checkout.remote:
@@ -84,6 +96,50 @@ review.details.status.conflicts:
     text: Branch has conflicts that must be resolved
 review.details.status.conflicts.pending:
     text: Checking branch for conflicts
+review.details.status.conflicts.resolve:
+    text: Resolve
+review.details.status.conversations:
+    text: Review has conversations that must be resolved
+review.details.status.not.authorized.to.merge:
+    text: You are not authorized to merge request into this branch
+review.details.status.reviewer.approved:
+    text: '{0} approved review'
+review.details.status.reviewer.missing:
+    text: Missing reviewer
+review.details.status.reviewer.need.review:
+    text: Waiting for review from {0}
+review.details.status.reviewer.required:
+    text: At least {0} approving review is required by reviewers with write access
+review.details.status.reviewer.wait.for.updates:
+    text: '{0} is waiting for updates'
+review.details.action.merge.group:
+    text: Merge Review…
+review.details.action.merge:
+    text: Merge…
+review.details.action.rebase:
+    text: Rebase
+review.details.action.squash.and.merge:
+    text: Squash and Merge…
+review.details.action.remove.reviewer:
+    text: Remove {0} from reviewers
+review.details.action.request:
+    text: Request Review…
+review.details.action.rerequest:
+    text: Re-request Review…
+review.details.action.set.myself.as.reviewer:
+    text: Set Myself as Reviewer
+review.submit.action:
+    text: Submit
+review.submit.failed:
+    text: Failed to submit review
+review.start.submit.action:
+    text: Submit Review…
+review.start.submit.action.with.comments:
+    text: Submit Review ({0})…
+review.submit.review.title:
+    text: Submit Review
+review.pending.comments.count:
+    text: '{0} pending {0, choice, 1#comment|2#comments}'
 review.details.view.timeline.action:
     text: View Timeline
 review.timeline.editor.name:
@@ -124,8 +180,30 @@ review.comments.post.now.action:
     text: Post now
 review.comments.reaction.add.tooltip:
     text: Add reaction
+review.comments.reaction.tooltip:
+    text: '{0} reacted with ''''{1}'''' emoji'
 review.editor.action.add.comment.text:
     text: Add Review Comment
+review.editor.action.add.comment.description:
+    text: Create a new code review comment on the line under the caret
+review.editor.action.add.comment.multiline.text:
+    text: Add Multiline Review Comment
+review.editor.action.add.comment.multiline.description:
+    text: Create a new code review comment on the selected lines
+review.editor.mode.title:
+    text: Review Mode
+review.editor.mode.description.title:
+    text: Configure review mode
+review.editor.mode.description:
+    text: In Review Mode, you can see review comments and proposed changes right in the editor
+review.editor.action.disable.text:
+    text: Disable Review Mode
+review.editor.action.show.unresolved.text:
+    text: Show Unresolved Comments Only
+review.editor.action.show.all.text:
+    text: Show All Comments
+review.editor.action.update.text:
+    text: Update Branch to Enable Review Mode…
 review.editor.action.show.comments.text:
     text: Show Review Comments
 action.code.review.next.comment.text:
@@ -166,3 +244,9 @@ review.comments.code.outline.tooltip.commit.review.disabling:
     text: Comment range cannot be adjusted while reviewing a single commit
 review.comments.code.outline.tooltip.version.not.supported.disabling:
     text: Comment range adjustment requires a newer server version
+review.color.descriptor.review.changed.lines:
+    text: Editor Gutter//Lines changed in code review
+review.color.collaboration:
+    text: Code Review
+notification.group.vcs.hosting.integrations:
+    text: VCS hosting integrations

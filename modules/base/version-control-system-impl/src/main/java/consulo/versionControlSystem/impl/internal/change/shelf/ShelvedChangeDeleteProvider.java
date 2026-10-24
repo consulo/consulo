@@ -29,7 +29,7 @@ import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.change.CommitContext;
 import consulo.versionControlSystem.change.patch.FilePatch;
 import consulo.versionControlSystem.change.shelf.ShelvedBinaryFile;
-import consulo.versionControlSystem.impl.internal.patch.PatchSyntaxException;
+import consulo.versionControlSystem.change.patch.PatchSyntaxException;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import org.jspecify.annotations.Nullable;
 

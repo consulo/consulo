@@ -30,7 +30,7 @@ import consulo.versionControlSystem.change.SimpleContentRevision;
 import consulo.versionControlSystem.change.patch.FilePatch;
 import consulo.versionControlSystem.change.patch.TextFilePatch;
 import consulo.versionControlSystem.impl.internal.patch.PatchDiffRequestFactory;
-import consulo.versionControlSystem.impl.internal.patch.PatchReader;
+import consulo.versionControlSystem.change.patch.PatchReader;
 import consulo.versionControlSystem.impl.internal.patch.apply.ApplyPatchForBaseRevisionTexts;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;

@@ -29,7 +29,7 @@ import consulo.versionControlSystem.log.VcsLogUi;
 import consulo.versionControlSystem.log.impl.internal.VcsLogContentProvider;
 import consulo.versionControlSystem.log.impl.internal.VcsLogFilterCollectionImpl;
 import consulo.versionControlSystem.log.impl.internal.VcsLogTabLocation;
-import consulo.versionControlSystem.log.impl.internal.VcsProjectLog;
+import consulo.versionControlSystem.log.impl.internal.VcsProjectLogImpl;
 import org.jspecify.annotations.Nullable;
 
 @ActionImpl(id = "Vcs.Log.OpenAnotherTab")
@@ -59,7 +59,7 @@ public class OpenAnotherLogTabInToolWindowAction extends OpenAnotherLogTabAction
             return logUi;
         }
         if (VcsLogContentProvider.TAB_NAME.equals(content.getUserData(ChangesViewContentI.CONTENT_ID_KEY))) {
-            return VcsProjectLog.getInstance(project).getMainLogUi();
+            return VcsProjectLogImpl.getInstance(project).getMainLogUi();
         }
         return null;
     }

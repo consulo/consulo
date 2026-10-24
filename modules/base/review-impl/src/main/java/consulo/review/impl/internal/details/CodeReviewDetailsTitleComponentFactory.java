@@ -19,11 +19,11 @@ package consulo.review.impl.internal.details;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
+import consulo.review.details.ReviewDetailsUIUtil;
 import consulo.review.details.data.ReviewRequestState;
 import consulo.review.details.model.CodeReviewDetailsViewModel;
-import consulo.review.impl.internal.ReviewUIUtil;
+import consulo.review.util.ReviewUIUtil;
 import consulo.review.impl.internal.list.ReviewListCellRenderer;
-import consulo.review.localize.ReviewLocalize;
 import consulo.ui.Component;
 import consulo.ui.Hyperlink;
 import consulo.ui.Label;
@@ -54,7 +54,7 @@ public final class CodeReviewDetailsTitleComponentFactory {
 
         Label stateLabel = ReviewListCellRenderer.createTagLabel();
         ReviewUIUtil.bind(parentDisposable, detailsVm.getReviewRequestState(), state -> {
-            stateLabel.setText(getRequestStateText(state));
+            stateLabel.setText(ReviewDetailsUIUtil.getRequestStateText(state));
             stateLabel.setVisible(state != ReviewRequestState.OPENED);
         });
 
@@ -62,14 +62,5 @@ public final class CodeReviewDetailsTitleComponentFactory {
         panel.center(HorizontalLayout.create(Space.SMALL).add(titleLabel).add(numberLink));
         panel.right(VerticalLayout.create(Space.NONE).add(stateLabel));
         return panel;
-    }
-
-    public static LocalizeValue getRequestStateText(ReviewRequestState state) {
-        return switch (state) {
-            case OPENED -> LocalizeValue.empty();
-            case MERGED -> ReviewLocalize.reviewDetailsReviewStateMerged();
-            case CLOSED -> ReviewLocalize.reviewDetailsReviewStateClosed();
-            case DRAFT -> ReviewLocalize.reviewDetailsReviewStateDraft();
-        };
     }
 }

@@ -40,6 +40,8 @@ public interface VcsLogFilterCollection {
 
   @Nullable VcsLogRootFilter getRootFilter();
 
+  @Nullable VcsLogRangeFilter getRangeFilter();
+
   /**
    * Returns true if there are no filters in this collection.
    */

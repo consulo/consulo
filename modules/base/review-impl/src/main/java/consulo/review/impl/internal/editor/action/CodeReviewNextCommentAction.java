@@ -29,7 +29,9 @@ public class CodeReviewNextCommentAction extends CodeReviewNextPreviousCommentAc
             ReviewLocalize.actionCodeReviewNextCommentText(),
             ReviewLocalize.actionCodeReviewNextCommentDescription(),
             PlatformIconGroup.actionsNextoccurence(),
+            (model, threadId) -> model.canGotoNextComment(threadId),
             (model, line) -> model.canGotoNextComment(line),
+            (model, threadId) -> model.gotoNextComment(threadId),
             (model, line) -> model.gotoNextComment(line)
         );
     }

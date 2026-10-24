@@ -24,8 +24,10 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.FileDocumentManager;
 import consulo.project.Project;
+import consulo.review.editor.CodeReviewCommentableEditorModel;
 import consulo.review.editor.CodeReviewEditorRenderer;
 import consulo.review.editor.CodeReviewNavigableEditorViewModel;
+import consulo.review.editor.ReviewInEditorUtil;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
@@ -64,9 +66,12 @@ public class SandReviewEditorFactoryListener implements EditorFactoryListener {
         editor.putUserData(REVIEW_DISPOSABLE, disposable);
 
         SandReviewService service = project.getInstance(SandReviewService.class);
-        SandReviewEditorModel model = new SandReviewEditorModel(service, editor, file.getName(), disposable);
+        SandReviewInEditorViewModel inEditorVm = new SandReviewInEditorViewModel();
+        SandReviewEditorModel model = new SandReviewEditorModel(service, editor, file.getName(), inEditorVm, disposable);
+        editor.putUserData(CodeReviewCommentableEditorModel.KEY, model);
         editor.putUserData(CodeReviewNavigableEditorViewModel.KEY, model);
         myRenderer.setupIn(disposable, editor, model);
+        ReviewInEditorUtil.showReviewToolbar(disposable, inEditorVm, editor);
     }
 
     @Override
@@ -75,6 +80,7 @@ public class SandReviewEditorFactoryListener implements EditorFactoryListener {
         Disposable disposable = editor.getUserData(REVIEW_DISPOSABLE);
         if (disposable != null) {
             editor.putUserData(REVIEW_DISPOSABLE, null);
+            editor.putUserData(CodeReviewCommentableEditorModel.KEY, null);
             editor.putUserData(CodeReviewNavigableEditorViewModel.KEY, null);
             Disposer.dispose(disposable);
         }

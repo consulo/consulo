@@ -120,6 +120,14 @@ public final class StyleColorKeys {
 
         ourKeys.put(ComponentColors.VCS_INCOMING_FOREGROUND, "Vcs.incomingForeground");
         ourKeys.put(ComponentColors.VCS_OUTGOING_FOREGROUND, "Vcs.outgoingForeground");
+
+        ourKeys.put(ComponentColors.REACTION_BACKGROUND, "Review.Reaction.background");
+        ourKeys.put(ComponentColors.REACTION_HOVERED_BACKGROUND, "Review.Reaction.hoveredBackground");
+        ourKeys.put(ComponentColors.REACTION_PRESSED_BACKGROUND, "Review.Reaction.pressedBackground");
+        ourKeys.put(ComponentColors.REACTION_SELECTED_BORDER, "Review.Reaction.selectedBorder");
+        ourKeys.put(ComponentColors.AVATAR_OUTLINE_SUCCESS, "Review.Avatar.Border.Status.Accepted");
+        ourKeys.put(ComponentColors.AVATAR_OUTLINE_WARNING, "Review.Avatar.Border.Status.WaitForUpdates");
+        ourKeys.put(ComponentColors.AVATAR_OUTLINE_NEUTRAL, "Review.Avatar.Border.Status.NeedReview");
     }
 
     public static @Nullable String getKey(StyleColorValue colorValue) {

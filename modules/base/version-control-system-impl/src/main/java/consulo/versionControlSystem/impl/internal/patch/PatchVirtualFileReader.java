@@ -15,6 +15,7 @@
  */
 package consulo.versionControlSystem.impl.internal.patch;
 
+import consulo.versionControlSystem.change.patch.PatchReader;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.internal.LoadTextUtil;
 

@@ -16,6 +16,7 @@
 package consulo.desktop.awt.ui.impl.avatar;
 
 import consulo.ui.AvatarStyle;
+import consulo.ui.color.ColorValue;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
@@ -40,6 +41,7 @@ public class AvatarComponent extends JComponent {
     private String myName = "";
     private @Nullable Image myImage;
     private int mySize;
+    private @Nullable AvatarStyle myOutline;
 
     public AvatarComponent(@Nullable AvatarStyle style) {
         mySize = AvatarPresentation.sizeOf(style);
@@ -57,7 +59,12 @@ public class AvatarComponent extends JComponent {
     }
 
     public void setStyle(@Nullable AvatarStyle style) {
-        mySize = AvatarPresentation.sizeOf(style);
+        if (style != null && AvatarPresentation.isOutline(style)) {
+            myOutline = style;
+        }
+        else {
+            mySize = AvatarPresentation.sizeOf(style);
+        }
         revalidate();
         repaint();
     }
@@ -80,11 +87,13 @@ public class AvatarComponent extends JComponent {
     @Override
     protected void paintComponent(Graphics g) {
         int size = JBUI.scale(mySize);
+        ColorValue outlineColor = AvatarPresentation.outlineColorOf(myOutline);
+
         Graphics2D g2 = (Graphics2D) g.create();
         try {
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-            float stroke = JBUI.scale(1f);
+            float stroke = JBUI.scale(outlineColor == null ? 1f : (float) AvatarPresentation.OUTLINE_WIDTH);
             Ellipse2D circle = new Ellipse2D.Float(stroke / 2, stroke / 2, size - stroke, size - stroke);
             g2.setColor(TargetAWT.to(ComponentColors.COMPONENT_BACKGROUND));
             g2.fill(circle);
@@ -109,7 +118,7 @@ public class AvatarComponent extends JComponent {
                 g2.drawString(initials, (size - metrics.stringWidth(initials)) / 2f, (size - metrics.getHeight()) / 2f + metrics.getAscent());
             }
 
-            g2.setColor(TargetAWT.to(ComponentColors.BORDER));
+            g2.setColor(TargetAWT.to(outlineColor == null ? ComponentColors.BORDER : outlineColor));
             g2.setStroke(new BasicStroke(stroke));
             g2.draw(circle);
         }

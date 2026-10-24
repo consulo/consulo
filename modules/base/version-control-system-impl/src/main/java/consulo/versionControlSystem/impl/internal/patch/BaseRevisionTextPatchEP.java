@@ -15,6 +15,7 @@
  */
 package consulo.versionControlSystem.impl.internal.patch;
 
+import consulo.versionControlSystem.change.patch.PatchReader;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
@@ -58,7 +59,7 @@ public class BaseRevisionTextPatchEP implements PatchEP {
   
   @Override
   public String getName() {
-    return "consulo.versionControlSystem.impl.internal.patch.BaseRevisionTextPatchEP";
+    return PatchReader.BASE_REVISION_TEXT_PATCH_EP;
   }
 
   @Override
