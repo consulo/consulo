@@ -15,13 +15,21 @@
  */
 package consulo.versionControlSystem.distributed.ui.branch.popup;
 
+import consulo.localize.LocalizeValue;
 import consulo.ui.TextAttribute;
 import consulo.ui.TextItemPresentation;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
+import consulo.versionControlSystem.FilePath;
+import consulo.versionControlSystem.distributed.branch.DvcsInOutCountersInProject;
+import consulo.versionControlSystem.distributed.branch.DvcsInOutCountersInRepo;
+import consulo.versionControlSystem.distributed.ui.DvcsIncomingOutgoingUi;
 import org.jspecify.annotations.Nullable;
 
+import java.time.Instant;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
 /**
@@ -46,11 +54,44 @@ public final class DvcsBranchesTreeNodePresentation {
     public void render(@Nullable Object node, TextItemPresentation presentation) {
         presentation.withIcon(getIcon(node, false, false));
         presentation.append(StringUtil.notNullize(getText(node)), getTextAttribute(node));
+        renderInOut(node, presentation);
 
         String secondaryText = getSecondaryText(node);
         if (secondaryText != null) {
             presentation.append("  " + secondaryText, TextAttribute.GRAYED);
         }
+    }
+
+    public void renderInOut(@Nullable Object node, TextItemPresentation presentation) {
+        DvcsInOutCountersInProject counters = getInOutCounters(node);
+        if (counters.isEmpty()) {
+            return;
+        }
+        DvcsIncomingOutgoingUi.appendCounters(presentation, counters);
+        LocalizeValue tooltip = counters.calcTooltip(getLastFetchTime());
+        if (tooltip != LocalizeValue.empty()) {
+            presentation.withTooltip(tooltip);
+        }
+    }
+
+    public DvcsInOutCountersInProject getInOutCounters(@Nullable Object node) {
+        if (node instanceof DvcsBranchesTreeModel.RefUnderRepository refUnderRepository) {
+            return getInOutCounters(refUnderRepository.ref(), List.of(refUnderRepository.repository()));
+        }
+        if (node instanceof DvcsRef ref) {
+            return getInOutCounters(ref, myAffectedRepositories);
+        }
+        return DvcsInOutCountersInProject.EMPTY;
+    }
+
+    private @Nullable Instant getLastFetchTime() {
+        for (DvcsRepositoryModel repository : myRepositories) {
+            Instant lastFetchTime = repository.getLastFetchTime();
+            if (lastFetchTime != null) {
+                return lastFetchTime;
+            }
+        }
+        return null;
     }
 
     public @Nullable String getText(@Nullable Object node) {
@@ -134,6 +175,17 @@ public final class DvcsBranchesTreeNodePresentation {
         boolean current = allCurrent(ref, repositories);
         boolean favorite = allFavorite(ref, repositories);
         return DvcsBranchesTreeIconProvider.forRef(ref, current, favorite, selected, favoriteToggleOnClick);
+    }
+
+    private static DvcsInOutCountersInProject getInOutCounters(DvcsRef ref, List<DvcsRepositoryModel> repositories) {
+        Map<FilePath, DvcsInOutCountersInRepo> reposState = new LinkedHashMap<>();
+        for (DvcsRepositoryModel repository : repositories) {
+            DvcsInOutCountersInRepo counters = repository.getInOutCounters(ref);
+            if (counters != null && (counters.hasIncoming() || counters.hasOutgoing())) {
+                reposState.put(repository.getRoot(), counters);
+            }
+        }
+        return reposState.isEmpty() ? DvcsInOutCountersInProject.EMPTY : new DvcsInOutCountersInProject(reposState);
     }
 
     private static @Nullable String getCommonTrackedBranchName(DvcsRef ref, List<DvcsRepositoryModel> repositories) {

@@ -263,4 +263,24 @@ public class DesktopMessageInputImpl extends SwingComponentDelegate<JPanel> impl
         }
         mySendButton.getAccessibleContext().setAccessibleName(text);
     }
+
+    @Override
+    public boolean hasFocus() {
+        return myTextArea.hasFocus();
+    }
+
+    @Override
+    public void focus() {
+        myTextArea.requestFocus();
+    }
+
+    @Override
+    public void setFocusable(boolean focusable) {
+        myTextArea.setFocusable(focusable);
+    }
+
+    @Override
+    public boolean isFocusable() {
+        return myTextArea.isFocusable();
+    }
 }

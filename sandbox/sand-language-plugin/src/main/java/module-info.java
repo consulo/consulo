@@ -9,6 +9,7 @@ module consulo.sand.language.plugin {
 
 
     requires consulo.account.management.api;
+    requires consulo.external.process.auth.helper;
     requires consulo.ai.api;
     requires consulo.builtin.web.server.api;
     requires consulo.color.scheme.api;

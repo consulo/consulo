@@ -16,8 +16,10 @@
 package consulo.sandboxPlugin.ide.review;
 
 import consulo.review.comment.CodeReviewCommentBodyBlock;
+import consulo.review.comment.CodeReviewTextEditingViewModel;
 import consulo.review.list.UserPresentation;
 import consulo.review.timeline.CodeReviewCommentViewModel;
+import consulo.util.concurrent.coroutine.MutableObservableValue;
 import consulo.util.concurrent.coroutine.ObservableValue;
 import consulo.versionControlSystem.review.comment.CodeReviewCommentBodyViewModel;
 import org.jspecify.annotations.Nullable;
@@ -35,10 +37,13 @@ public class SandReviewThreadCommentViewModel implements CodeReviewCommentViewMo
     private final SandReviewComment myComment;
     private final SandReviewThreadViewModel myThread;
     private @Nullable CodeReviewCommentBodyViewModel myBodyVm;
+    private final MutableObservableValue<String> myBody;
+    private final MutableObservableValue<@Nullable CodeReviewTextEditingViewModel> myEditVm = MutableObservableValue.of(null);
 
     public SandReviewThreadCommentViewModel(SandReviewComment comment, SandReviewThreadViewModel thread) {
         myComment = comment;
         myThread = thread;
+        myBody = MutableObservableValue.of(comment.text());
     }
 
     @Override
@@ -58,7 +63,7 @@ public class SandReviewThreadCommentViewModel implements CodeReviewCommentViewMo
 
     @Override
     public ObservableValue<String> getBody() {
-        return myComment.getBody();
+        return myBody;
     }
 
     @Override
@@ -74,5 +79,43 @@ public class SandReviewThreadCommentViewModel implements CodeReviewCommentViewMo
     @Override
     public boolean isOwn() {
         return myComment.isOwn();
+    }
+
+    @Override
+    public boolean canEdit() {
+        return isOwn();
+    }
+
+    @Override
+    public ObservableValue<@Nullable CodeReviewTextEditingViewModel> getEditVm() {
+        return myEditVm;
+    }
+
+    @Override
+    public void editBody() {
+        if (myEditVm.get() != null) {
+            return;
+        }
+        myEditVm.set(new SandReviewEditCommentViewModel(
+            myThread.getProject(),
+            myThread.getParentDisposable(),
+            myThread.getScheduler(),
+            myBody.get(),
+            text -> {
+                myBody.set(text);
+                myThread.updateComment(getId(), text);
+            },
+            () -> myEditVm.set(null)
+        ));
+    }
+
+    @Override
+    public boolean canDelete() {
+        return isOwn();
+    }
+
+    @Override
+    public void delete() {
+        myThread.removeComment(getId());
     }
 }

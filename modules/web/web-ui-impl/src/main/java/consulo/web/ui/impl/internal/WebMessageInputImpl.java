@@ -174,4 +174,9 @@ public class WebMessageInputImpl extends VaadinComponentDelegate<WebMessageInput
             vaadin.setTooltipText(null);
         }
     }
+
+    @Override
+    public void focus() {
+        toVaadinComponent().getElement().executeJs("const field = this.querySelector('textarea, vaadin-message-input-text-area, vaadin-text-area'); (field || this).focus();");
+    }
 }

@@ -29,7 +29,7 @@ import org.jspecify.annotations.Nullable;
  * @author VISTALL
  * @since 2017-09-13
  */
-public interface Button extends Component, HasComponentStyle<ButtonStyle>, HasFocus, HasSearchHighlight {
+public interface Button extends Component, HasComponentStyle<ButtonStyle>, HasFocus, HasSearchHighlight, HasSuffixComponent {
     @Deprecated
     @DeprecationInfo("Use #create(LocalizeValue)")
     static Button create(String text) {
@@ -64,4 +64,18 @@ public interface Button extends Component, HasComponentStyle<ButtonStyle>, HasFo
     void setIcon(@Nullable Image image);
 
     void invoke(InputDetails inputDetails);
+
+    /**
+     * A component shown after the text, inside the button - a state of what the button shows, such as commits waiting
+     * to be pulled or pushed. It does not take clicks of its own: they go to the button.
+     */
+    @Override
+    default void setSuffixComponent(@Nullable Component suffixComponent) {
+        // unwarranted action
+    }
+
+    @Override
+    default @Nullable Component getSuffixComponent() {
+        return null;
+    }
 }

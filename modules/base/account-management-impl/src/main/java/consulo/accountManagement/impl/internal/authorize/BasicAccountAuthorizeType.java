@@ -16,6 +16,7 @@
 package consulo.accountManagement.impl.internal.authorize;
 
 import consulo.accountManagement.AccountAuthorizeConfig;
+import consulo.accountManagement.AccountBasicCredentials;
 import consulo.accountManagement.AccountAuthorizeContext;
 import consulo.accountManagement.AccountAuthorizeForm;
 import consulo.accountManagement.AccountAuthorizeType;
@@ -114,5 +115,10 @@ public class BasicAccountAuthorizeType implements AccountAuthorizeType<BasicCred
     public void decorate(BasicCredentials credentials, AccountAuthorizeConfig config, AccountRequestDecorator decorator) {
         String pair = credentials.userName() + ":" + credentials.password();
         decorator.header("Authorization", "Basic " + Base64.getEncoder().encodeToString(pair.getBytes(StandardCharsets.UTF_8)));
+    }
+
+    @Override
+    public AccountBasicCredentials getBasicCredentials(BasicCredentials credentials, AccountAuthorizeConfig config) {
+        return new AccountBasicCredentials(credentials.userName(), credentials.password());
     }
 }

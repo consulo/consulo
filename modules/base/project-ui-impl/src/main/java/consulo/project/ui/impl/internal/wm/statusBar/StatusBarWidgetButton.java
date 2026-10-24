@@ -21,6 +21,7 @@ import consulo.project.ui.wm.StatusBarWidget;
 import consulo.ui.Button;
 import consulo.ui.ButtonStyle;
 import consulo.ui.Component;
+import consulo.ui.ImageBox;
 import consulo.ui.PopupPosition;
 import consulo.ui.PseudoComponent;
 import consulo.ui.ToolTip;
@@ -35,6 +36,8 @@ import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
+import java.util.Objects;
+
 /**
  * @author VISTALL
  * @since 2026-10-17
@@ -45,6 +48,7 @@ public final class StatusBarWidgetButton implements PseudoComponent {
     private final StatusBarWidget myWidget;
     private final StatusBarWidget.WidgetPresentation myPresentation;
     private final Button myButton;
+    private @Nullable Image mySuffixIcon;
 
     private @Nullable JBPopup myPopup;
     private long myPopupClosedAt;
@@ -83,11 +87,25 @@ public final class StatusBarWidgetButton implements PseudoComponent {
             default -> null;
         };
 
+        Image secondaryIcon = myPresentation instanceof StatusBarWidget.MultipleTextValuesPresentation presentation
+            ? presentation.getSecondaryIcon()
+            : null;
+
         myButton.setText(LocalizeValue.of(text));
         myButton.setIcon(icon);
+        updateSuffix(secondaryIcon);
         myButton.setToolTip(createToolTip());
         myButton.setEnabled(myPresentation.isEnabled());
         myButton.setVisible(icon != null || !text.isEmpty());
+    }
+
+    @RequiredUIAccess
+    private void updateSuffix(@Nullable Image secondaryIcon) {
+        if (Objects.equals(mySuffixIcon, secondaryIcon)) {
+            return;
+        }
+        mySuffixIcon = secondaryIcon;
+        myButton.setSuffixComponent(secondaryIcon == null ? null : ImageBox.create(secondaryIcon));
     }
 
     private @Nullable ToolTip createToolTip() {

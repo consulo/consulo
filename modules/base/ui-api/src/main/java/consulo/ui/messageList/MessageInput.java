@@ -19,6 +19,7 @@ import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.HasComponentStyle;
+import consulo.ui.HasFocus;
 import consulo.ui.HasSuffixComponent;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ComponentEventListener;
@@ -34,7 +35,7 @@ import org.jspecify.annotations.Nullable;
  * @author VISTALL
  * @since 2026-10-13
  */
-public interface MessageInput extends HasSuffixComponent, HasComponentStyle<MessageInputStyle> {
+public interface MessageInput extends HasSuffixComponent, HasComponentStyle<MessageInputStyle>, HasFocus {
     static MessageInput create() {
         return UIInternal.get()._Components_messageInput();
     }

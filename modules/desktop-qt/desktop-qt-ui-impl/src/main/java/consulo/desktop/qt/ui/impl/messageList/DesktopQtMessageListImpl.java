@@ -35,6 +35,7 @@ import consulo.ui.messageList.MessageListItemStyle;
 import consulo.ui.messageList.MessageListStyle;
 import consulo.ui.style.ComponentColors;
 import io.qt.core.QSize;
+import io.qt.core.QTimer;
 import io.qt.core.Qt;
 import io.qt.gui.QColor;
 import io.qt.gui.QPalette;
@@ -70,6 +71,8 @@ public class DesktopQtMessageListImpl extends QtComponentDelegate<QScrollArea> i
         private @Nullable QWidget myRow;
         private @Nullable QLabel myAvatar;
         private @Nullable QLabel myHeader;
+        private @Nullable QHBoxLayout myHeaderLayout;
+        private @Nullable Component myActionsComponent;
         private @Nullable QLabel myBody;
         private @Nullable QWidget myPartsWidget;
         private @Nullable QVBoxLayout myPartsLayout;
@@ -96,9 +99,15 @@ public class DesktopQtMessageListImpl extends QtComponentDelegate<QScrollArea> i
             contentLayout.setContentsMargins(0, 0, 0, 0);
             contentLayout.setSpacing(DesktopQtSpace.toPixels(Space.X_SMALL));
 
-            QLabel header = new QLabel(content);
+            QWidget headerRow = new QWidget(content);
+            QHBoxLayout headerLayout = new QHBoxLayout(headerRow);
+            headerLayout.setContentsMargins(0, 0, 0, 0);
+            headerLayout.setSpacing(DesktopQtSpace.toPixels(Space.MEDIUM));
+
+            QLabel header = new QLabel(headerRow);
             header.setTextFormat(Qt.TextFormat.RichText);
-            contentLayout.addWidget(header);
+            headerLayout.addWidget(header, 1);
+            contentLayout.addWidget(headerRow);
 
             QLabel body = createBodyLabel(content);
             contentLayout.addWidget(body);
@@ -114,14 +123,43 @@ public class DesktopQtMessageListImpl extends QtComponentDelegate<QScrollArea> i
             myRow = row;
             myAvatar = avatar;
             myHeader = header;
+            myHeaderLayout = headerLayout;
             myBody = body;
             myPartsWidget = parts;
             myPartsLayout = partsLayout;
 
             updateAvatar();
             updateHeader();
+            attachActions();
             rebuildParts();
             updateBody();
+        }
+
+        private void attachActions() {
+            QHBoxLayout layout = myHeaderLayout;
+            QWidget parent = layout == null ? null : layout.parentWidget();
+            if (parent == null || parent.isDisposed() || !(myActionsComponent instanceof QtComponentDelegate<?> delegate)) {
+                return;
+            }
+            delegate.setParent(DesktopQtMessageListImpl.this);
+            delegate.bind(parent, null);
+            QWidget widget = delegate.toQtComponent();
+            if (widget != null) {
+                layout.addWidget(widget, 0, Qt.AlignmentFlag.AlignVCenter);
+            }
+            contentChanged();
+        }
+
+        private void detachActions() {
+            QHBoxLayout layout = myHeaderLayout;
+            if (!(myActionsComponent instanceof QtComponentDelegate<?> delegate)) {
+                return;
+            }
+            QWidget widget = delegate.toQtComponent();
+            if (layout != null && widget != null && !widget.isDisposed()) {
+                layout.removeWidget(widget);
+            }
+            delegate.disposeQt();
         }
 
         private QLabel createBodyLabel(QWidget parent) {
@@ -220,6 +258,7 @@ public class DesktopQtMessageListImpl extends QtComponentDelegate<QScrollArea> i
             if (parts != null && !parts.isDisposed()) {
                 parts.setVisible(!myParts.isEmpty());
             }
+            contentChanged();
         }
 
         private void fillLabel(QLabel label, String text) {
@@ -318,6 +357,22 @@ public class DesktopQtMessageListImpl extends QtComponentDelegate<QScrollArea> i
             myStyle = style;
             updateBody();
         }
+
+        @Override
+        public @Nullable Component getActionsComponent() {
+            return myActionsComponent;
+        }
+
+        @RequiredUIAccess
+        @Override
+        public void setActionsComponent(@Nullable Component component) {
+            if (myActionsComponent == component) {
+                return;
+            }
+            detachActions();
+            myActionsComponent = component;
+            attachActions();
+        }
     }
 
     private final List<Item> myItems = new ArrayList<>();
@@ -339,6 +394,7 @@ public class DesktopQtMessageListImpl extends QtComponentDelegate<QScrollArea> i
     private boolean myShowOwnAvatar;
     private boolean myCompact;
     private boolean myPinned = true;
+    private boolean myGeometryUpdatePending;
 
     private @Nullable QWidget myContainer;
     private @Nullable QVBoxLayout myContainerLayout;
@@ -435,6 +491,26 @@ public class DesktopQtMessageListImpl extends QtComponentDelegate<QScrollArea> i
         }
         item.build(container);
         layout.insertWidget(layout.count() - 1, item.myRow);
+        contentChanged();
+    }
+
+    private void contentChanged() {
+        QVBoxLayout layout = myContainerLayout;
+        if (layout != null) {
+            layout.invalidate();
+        }
+        if (myGeometryUpdatePending) {
+            return;
+        }
+        myGeometryUpdatePending = true;
+        QTimer.singleShot(0, () -> {
+            myGeometryUpdatePending = false;
+            QWidget widget = myComponent;
+            while (widget != null && !widget.isDisposed()) {
+                widget.updateGeometry();
+                widget = widget.parentWidget();
+            }
+        });
     }
 
     private static String escape(String text) {
@@ -457,6 +533,10 @@ public class DesktopQtMessageListImpl extends QtComponentDelegate<QScrollArea> i
         if (item instanceof Item own && myItems.remove(own)) {
             QWidget row = own.myRow;
             if (row != null && !row.isDisposed()) {
+                QVBoxLayout layout = myContainerLayout;
+                if (layout != null) {
+                    layout.removeWidget(row);
+                }
                 row.hide();
                 row.disposeLater();
             }
@@ -471,6 +551,7 @@ public class DesktopQtMessageListImpl extends QtComponentDelegate<QScrollArea> i
             own.myBody = null;
             own.myPartsWidget = null;
             own.myPartsLayout = null;
+            contentChanged();
         }
     }
 

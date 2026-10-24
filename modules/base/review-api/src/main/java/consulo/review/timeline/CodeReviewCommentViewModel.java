@@ -16,6 +16,7 @@
 package consulo.review.timeline;
 
 import consulo.review.comment.CodeReviewCommentBodyBlock;
+import consulo.review.comment.CodeReviewTextEditingViewModel;
 import consulo.review.list.UserPresentation;
 import consulo.util.concurrent.coroutine.ObservableValue;
 import org.jspecify.annotations.Nullable;
@@ -52,5 +53,30 @@ public interface CodeReviewCommentViewModel extends CodeReviewTimelineItem {
      */
     default boolean isOwn() {
         return false;
+    }
+
+    default boolean canEdit() {
+        return false;
+    }
+
+    /**
+     * @return the editing state of the body - {@code null} while the comment is not edited - or {@code null} if the
+     * comment cannot be edited
+     */
+    default @Nullable ObservableValue<@Nullable CodeReviewTextEditingViewModel> getEditVm() {
+        return null;
+    }
+
+    /**
+     * Starts editing the body, see {@link #getEditVm()}.
+     */
+    default void editBody() {
+    }
+
+    default boolean canDelete() {
+        return false;
+    }
+
+    default void delete() {
     }
 }

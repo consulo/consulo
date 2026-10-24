@@ -29,4 +29,12 @@ public interface AccountConnection {
     String getUserName();
 
     void decorate(AccountRequestDecorator decorator);
+
+    /**
+     * @return the credentials as a user name and password pair - for git over HTTP - or {@code null} if the account
+     * cannot authenticate that way
+     */
+    default @Nullable AccountBasicCredentials getBasicCredentials() {
+        return null;
+    }
 }

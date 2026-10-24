@@ -81,6 +81,12 @@ class DesktopTreeNodePresentation implements TextItemPresentation {
         myPresentation.addText(text, DesktopAWTTargetAWTImpl.from(textAttribute));
     }
 
+    @Override
+    public TextItemPresentation appendIcon(Image icon) {
+        myPresentation.addIcon(icon);
+        return this;
+    }
+
     DesktopTreeRowDecoration toDecoration() {
         if (myFont == null && mySuffixText.isEmpty() && mySuffixIcon == null) {
             return DesktopTreeRowDecoration.EMPTY;

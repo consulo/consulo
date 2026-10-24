@@ -17,6 +17,17 @@ package consulo.desktop.qt.ui.impl;
 
 import consulo.localize.LocalizeValue;
 import consulo.ui.TextAttribute;
+import consulo.ui.image.Image;
+import org.jspecify.annotations.Nullable;
 
-public record DesktopQtTextFragment(LocalizeValue text, TextAttribute attribute) {
+public record DesktopQtTextFragment(LocalizeValue text, TextAttribute attribute, @Nullable Image icon) {
+    public static final int ICON_GAP = 1;
+
+    public DesktopQtTextFragment(LocalizeValue text, TextAttribute attribute) {
+        this(text, attribute, null);
+    }
+
+    public static DesktopQtTextFragment icon(Image icon) {
+        return new DesktopQtTextFragment(LocalizeValue.empty(), TextAttribute.REGULAR, icon);
+    }
 }

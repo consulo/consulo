@@ -112,6 +112,18 @@ review.comment.hint:
     text: '{0} to comment'
 review.comment.cancel:
     text: Cancel
+review.comment.save:
+    text: Save Changes
+review.comment.save.hint:
+    text: '{0} to save changes'
+review.comments.delete.confirmation.title:
+    text: Delete Comment
+review.comments.delete.confirmation:
+    text: Are you sure you want to delete this comment?
+review.comments.post.now.action:
+    text: Post now
+review.comments.reaction.add.tooltip:
+    text: Add reaction
 review.editor.action.add.comment.text:
     text: Add Review Comment
 review.editor.action.show.comments.text:

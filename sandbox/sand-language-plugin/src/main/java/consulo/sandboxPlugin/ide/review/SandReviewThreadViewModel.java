@@ -282,6 +282,39 @@ public class SandReviewThreadViewModel implements CodeReviewThreadViewModel, Col
         return myCommentsView;
     }
 
+    Project getProject() {
+        return myProject;
+    }
+
+    Disposable getParentDisposable() {
+        return myParentDisposable;
+    }
+
+    ScheduledExecutorService getScheduler() {
+        return myScheduler;
+    }
+
+    void updateComment(String id, String text) {
+        myComments.update(comments -> {
+            List<SandReviewComment> result = new ArrayList<>(comments.size());
+            for (SandReviewComment comment : comments) {
+                result.add(comment.id().equals(id) ? new SandReviewComment(id, comment.author(), text, comment.time()) : comment);
+            }
+            return List.copyOf(result);
+        });
+    }
+
+    void removeComment(String id) {
+        synchronized (this) {
+            myCommentViewModels.remove(id);
+        }
+        myComments.update(comments -> {
+            List<SandReviewComment> result = new ArrayList<>(comments);
+            result.removeIf(comment -> comment.id().equals(id));
+            return List.copyOf(result);
+        });
+    }
+
     public void addComment(SandReviewComment comment) {
         myComments.update(comments -> {
             List<SandReviewComment> result = new ArrayList<>(comments);

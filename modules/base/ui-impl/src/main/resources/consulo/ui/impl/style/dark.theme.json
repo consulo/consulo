@@ -91,6 +91,10 @@
       "allocatedBackground": "#5a5a5a",
       "usedBackground": "#6e6e6e"
     },
+    "Vcs": {
+      "incomingForeground": "#548af7",
+      "outgoingForeground": "#57965c"
+    },
     "Notification": {
       "ToolWindow": {
         "informativeBackground": "#33412e",

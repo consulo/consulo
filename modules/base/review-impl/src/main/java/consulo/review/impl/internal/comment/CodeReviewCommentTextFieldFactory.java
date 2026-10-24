@@ -18,6 +18,7 @@ package consulo.review.impl.internal.comment;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.review.comment.CodeReviewNewCommentViewModel;
+import consulo.review.comment.CodeReviewTextEditingViewModel;
 import consulo.review.impl.internal.ReviewUIUtil;
 import consulo.review.util.ComputedResult;
 import consulo.review.localize.ReviewLocalize;
@@ -70,6 +71,38 @@ public final class CodeReviewCommentTextFieldFactory {
             vm.getText().set(event.getValue());
             vm.submit();
         });
+        vm.addFocusRequestListener(parentDisposable, input::focus);
+
+        Label error = Label.create();
+        error.addStyle(LabelStyle.FONT_SMALL);
+        error.setForegroundColor(StandardColors.RED);
+        error.setVisible(false);
+
+        ReviewUIUtil.bind(parentDisposable, vm.getState(), state -> {
+            input.setEnabled(state == null || !state.isInProgress());
+            String message = errorOf(state);
+            error.setText(message == null ? LocalizeValue.empty() : LocalizeValue.of(message));
+            error.setVisible(message != null);
+        });
+
+        DockLayout panel = DockLayout.create(Space.X_SMALL);
+        panel.center(input);
+        panel.bottom(error);
+        return panel;
+    }
+
+    @RequiredUIAccess
+    public static Component createEdit(Disposable parentDisposable, CodeReviewTextEditingViewModel vm) {
+        MessageInput input = MessageInput.create();
+        input.setSendText(ReviewLocalize.reviewCommentSave());
+        input.insertText(vm.getText().get());
+        input.setSuffixComponent(Hyperlink.create(ReviewLocalize.reviewCommentCancel(), event -> vm.stopEditing()));
+        input.addTextChangeListener(event -> vm.getText().set(event.getValue()));
+        input.addSubmitListener(event -> {
+            vm.getText().set(event.getValue());
+            vm.save();
+        });
+        vm.addFocusRequestListener(parentDisposable, input::focus);
 
         Label error = Label.create();
         error.addStyle(LabelStyle.FONT_SMALL);

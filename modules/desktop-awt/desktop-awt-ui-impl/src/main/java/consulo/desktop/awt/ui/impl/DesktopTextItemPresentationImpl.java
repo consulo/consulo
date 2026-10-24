@@ -84,6 +84,12 @@ public class DesktopTextItemPresentationImpl implements TextItemPresentation {
         mySimpleColoredComponent.append(text, DesktopAWTTargetAWTImpl.from(textAttribute));
     }
 
+    @Override
+    public TextItemPresentation appendIcon(Image icon) {
+        mySimpleColoredComponent.appendIcon(icon);
+        return this;
+    }
+
     public LocalizeValue getSuffixText() {
         return mySuffixText;
     }

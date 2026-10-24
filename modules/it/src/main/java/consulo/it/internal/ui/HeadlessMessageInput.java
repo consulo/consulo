@@ -30,6 +30,9 @@ import org.jspecify.annotations.Nullable;
  * @author VISTALL
  */
 public class HeadlessMessageInput extends HeadlessComponentBase implements MessageInput {
+    private boolean myFocused;
+    private boolean myFocusable = true;
+
     private LocalizeValue myPlaceholder = LocalizeValue.empty();
     private LocalizeValue mySendText = LocalizeValue.empty();
     private @Nullable Image mySendIcon;
@@ -95,5 +98,25 @@ public class HeadlessMessageInput extends HeadlessComponentBase implements Messa
             return;
         }
         getListenerDispatcher(MessageInputSubmitEvent.class).onEvent(new MessageInputSubmitEvent(this, text));
+    }
+
+    @Override
+    public boolean hasFocus() {
+        return myFocused;
+    }
+
+    @Override
+    public void focus() {
+        myFocused = true;
+    }
+
+    @Override
+    public void setFocusable(boolean focusable) {
+        myFocusable = focusable;
+    }
+
+    @Override
+    public boolean isFocusable() {
+        return myFocusable;
     }
 }

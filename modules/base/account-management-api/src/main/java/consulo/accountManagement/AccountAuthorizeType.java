@@ -54,6 +54,14 @@ public interface AccountAuthorizeType<C extends AccountCredentials> {
 
     void decorate(C credentials, AccountAuthorizeConfig config, AccountRequestDecorator decorator);
 
+    /**
+     * @return the credentials as a user name and password pair for transports which cannot take request headers, or
+     * {@code null} if these credentials cannot be used as a password
+     */
+    default @Nullable AccountBasicCredentials getBasicCredentials(C credentials, AccountAuthorizeConfig config) {
+        return null;
+    }
+
     default boolean isExpired(C credentials) {
         return false;
     }

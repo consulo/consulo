@@ -28,6 +28,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ClickEvent;
 import consulo.ui.event.ComponentEventListener;
 import consulo.ui.event.details.InputDetails;
+import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.ui.internal.SearchHighlightUtil;
@@ -35,12 +36,17 @@ import consulo.ui.util.TextWithMnemonic;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
+import java.awt.Dimension;
+import java.awt.Insets;
+import java.awt.Rectangle;
 
 /**
  * @author VISTALL
  * @since 13-Sep-17
  */
 class DesktopButtonImpl extends SwingComponentDelegate<DesktopButtonImpl.MyButton> implements Button {
+    private static final int SUFFIX_GAP = 4;
+
     class MyButton extends JButton implements FromSwingComponentWrapper {
         private LocalizeValue myTextValue = LocalizeValue.empty();
 
@@ -49,6 +55,10 @@ class DesktopButtonImpl extends SwingComponentDelegate<DesktopButtonImpl.MyButto
         private @Nullable String mySearchHighlight;
 
         private boolean myVertical;
+
+        private java.awt.@Nullable Component mySuffix;
+
+        private int myAlignmentWithoutSuffix = SwingConstants.CENTER;
 
         MyButton(LocalizeValue textValue) {
             super("");
@@ -98,6 +108,95 @@ class DesktopButtonImpl extends SwingComponentDelegate<DesktopButtonImpl.MyButto
             return DesktopButtonImpl.this;
         }
 
+        void setSuffix(java.awt.@Nullable Component suffix) {
+            java.awt.Component oldSuffix = mySuffix;
+            if (oldSuffix != null) {
+                remove(oldSuffix);
+            }
+            if (oldSuffix == null && suffix != null) {
+                myAlignmentWithoutSuffix = getHorizontalAlignment();
+                setHorizontalAlignment(SwingConstants.LEADING);
+            }
+            else if (oldSuffix != null && suffix == null) {
+                setHorizontalAlignment(myAlignmentWithoutSuffix);
+            }
+            mySuffix = suffix;
+            if (suffix != null) {
+                add(suffix);
+            }
+            revalidate();
+            repaint();
+        }
+
+        private int suffixWidth() {
+            java.awt.Component suffix = mySuffix;
+            return suffix == null || myVertical ? 0 : suffix.getPreferredSize().width + JBUI.scale(SUFFIX_GAP);
+        }
+
+        private Dimension withSuffix() {
+            String text = getText();
+            Rectangle iconRect = new Rectangle();
+            Rectangle textRect = new Rectangle();
+            Rectangle viewRect = new Rectangle(Short.MAX_VALUE, Short.MAX_VALUE);
+            SwingUtilities.layoutCompoundLabel(
+                this,
+                getFontMetrics(getFont()),
+                text,
+                getIcon(),
+                getVerticalAlignment(),
+                getHorizontalAlignment(),
+                getVerticalTextPosition(),
+                getHorizontalTextPosition(),
+                viewRect,
+                iconRect,
+                textRect,
+                text == null || text.isEmpty() ? 0 : getIconTextGap()
+            );
+            Rectangle content = iconRect.union(textRect);
+            Insets insets = getInsets();
+
+            java.awt.Component suffix = mySuffix;
+            int suffixHeight = suffix == null ? 0 : suffix.getPreferredSize().height;
+            int height = Math.max(content.height, suffixHeight) + insets.top + insets.bottom;
+            return new Dimension(content.width + insets.left + insets.right + suffixWidth(), height);
+        }
+
+        @Override
+        public Dimension getPreferredSize() {
+            if (mySuffix == null || myVertical || isPreferredSizeSet()) {
+                return super.getPreferredSize();
+            }
+            return withSuffix();
+        }
+
+        @Override
+        public Dimension getMinimumSize() {
+            if (mySuffix == null || myVertical || isMinimumSizeSet()) {
+                return super.getMinimumSize();
+            }
+            return withSuffix();
+        }
+
+        @Override
+        public Dimension getMaximumSize() {
+            if (mySuffix == null || myVertical || isMaximumSizeSet()) {
+                return super.getMaximumSize();
+            }
+            return withSuffix();
+        }
+
+        @Override
+        public void doLayout() {
+            super.doLayout();
+
+            java.awt.Component suffix = mySuffix;
+            if (suffix != null) {
+                Dimension size = suffix.getPreferredSize();
+                Insets insets = getInsets();
+                suffix.setBounds(getWidth() - insets.right - size.width, (getHeight() - size.height) / 2, size.width, size.height);
+            }
+        }
+
         public void setSearchHighlight(@Nullable String query) {
             mySearchHighlight = query;
             updateText();
@@ -109,6 +208,8 @@ class DesktopButtonImpl extends SwingComponentDelegate<DesktopButtonImpl.MyButto
     }
 
     private final LocalizeValue myInitText;
+
+    private @Nullable Component mySuffixComponent;
 
     public DesktopButtonImpl(LocalizeValue text) {
         myInitText = text;
@@ -187,6 +288,18 @@ class DesktopButtonImpl extends SwingComponentDelegate<DesktopButtonImpl.MyButto
     @Override
     public void setIcon(@Nullable Image image) {
         toAWTComponent().setIcon(TargetAWT.to(image));
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setSuffixComponent(@Nullable Component suffixComponent) {
+        mySuffixComponent = suffixComponent;
+        toAWTComponent().setSuffix(suffixComponent == null ? null : TargetAWT.to(suffixComponent));
+    }
+
+    @Override
+    public @Nullable Component getSuffixComponent() {
+        return mySuffixComponent;
     }
 
     @RequiredUIAccess

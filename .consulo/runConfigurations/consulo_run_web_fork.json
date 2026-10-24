@@ -1,0 +1,24 @@
+{
+  "name": "consulo:run-web-fork",
+  "type": "MavenRunConfiguration",
+  "factoryName": "Maven",
+  "options": {
+    "goals": [
+      "consulo:run-web-fork",
+      "-pl",
+      ":consulo-sandbox-web"
+    ],
+    "workingDirectory": "$PROJECT_DIR$",
+    "resolveToWorkspace": true
+  },
+  "beforeRun": [
+    {
+      "id": "Maven.BeforeRunTask",
+      "state": {
+        "enabled": true,
+        "projectPath": "$PROJECT_DIR$/pom.xml",
+        "goal": "-T 1C package -am -pl consulo:consulo-sandbox-web"
+      }
+    }
+  ]
+}

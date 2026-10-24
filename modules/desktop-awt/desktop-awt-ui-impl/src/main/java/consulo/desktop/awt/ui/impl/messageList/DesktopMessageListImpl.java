@@ -125,6 +125,8 @@ public class DesktopMessageListImpl extends SwingComponentDelegate<JBScrollPane>
         private final AvatarComponent myAvatar = new AvatarComponent(myCompact ? AvatarStyle.X_SMALL : AvatarStyle.SMALL);
         private final JPanel myAvatarBox = new JPanel(new BorderLayout());
         private final JBLabel myHeader = new JBLabel();
+        private final JPanel myHeaderRow = new JPanel(new BorderLayout(DesktopSpace.toPixels(Space.MEDIUM), 0));
+        private @Nullable Component myActionsComponent;
         private final MessageBody myBody = new MessageBody();
         private final JPanel myPartsPanel = new JPanel(new VerticalLayout(DesktopSpace.toPixels(Space.SMALL)));
 
@@ -147,7 +149,9 @@ public class DesktopMessageListImpl extends SwingComponentDelegate<JBScrollPane>
 
             JPanel content = new JPanel(new VerticalLayout(DesktopSpace.toPixels(Space.X_SMALL)));
             content.setOpaque(false);
-            content.add(myHeader);
+            myHeaderRow.setOpaque(false);
+            myHeaderRow.add(myHeader, BorderLayout.CENTER);
+            content.add(myHeaderRow);
             content.add(myBody);
             myPartsPanel.setOpaque(false);
             content.add(myPartsPanel);
@@ -269,6 +273,24 @@ public class DesktopMessageListImpl extends SwingComponentDelegate<JBScrollPane>
         public void setStyle(MessageListItemStyle style) {
             myStyle = style;
             updateBody();
+        }
+
+        @Override
+        public @Nullable Component getActionsComponent() {
+            return myActionsComponent;
+        }
+
+        @RequiredUIAccess
+        @Override
+        public void setActionsComponent(@Nullable Component component) {
+            if (myActionsComponent != null) {
+                myHeaderRow.remove(TargetAWT.to(myActionsComponent));
+            }
+            myActionsComponent = component;
+            if (component != null) {
+                myHeaderRow.add(TargetAWT.to(component), BorderLayout.EAST);
+            }
+            relayout();
         }
     }
 

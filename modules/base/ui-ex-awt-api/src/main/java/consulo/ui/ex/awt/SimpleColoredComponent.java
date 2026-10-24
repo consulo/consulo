@@ -48,8 +48,10 @@ import java.text.AttributedCharacterIterator;
 import java.text.AttributedString;
 import java.text.CharacterIterator;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * This is high performance Swing component which represents an icon
@@ -66,9 +68,12 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
     public static final Color STYLE_SEARCH_MATCH_BACKGROUND = SHADOW_COLOR; //api compatibility
     public static final int FRAGMENT_ICON = -2;
 
+    private static final int INLINE_ICON_GAP = 1;
+
     private final List<String> myFragments;
     private final List<SimpleTextAttributes> myAttributes;
     private List<Object> myFragmentTags = null;
+    private @Nullable Map<Integer, Image> myFragmentIcons;
     private IntIntMap myFragmentAlignment;
 
     /**
@@ -262,6 +267,34 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
     }
 
     /**
+     * Appends an icon drawn in the flow of the text, between the fragments appended before and after it.
+     */
+    public void appendIcon(Image icon) {
+        _appendIcon(icon);
+        revalidateAndRepaint();
+    }
+
+    private synchronized void _appendIcon(Image icon) {
+        _append("", SimpleTextAttributes.REGULAR_ATTRIBUTES, false);
+        if (myFragmentIcons == null) {
+            myFragmentIcons = new HashMap<>();
+        }
+        myFragmentIcons.put(myFragments.size() - 1, icon);
+    }
+
+    private @Nullable Image getFragmentIcon(int index) {
+        return myFragmentIcons == null ? null : myFragmentIcons.get(index);
+    }
+
+    private int computeFragmentWidth(int index, Font font) {
+        Image icon = getFragmentIcon(index);
+        if (icon != null) {
+            return icon.getWidth() + JBUI.scale(INLINE_ICON_GAP);
+        }
+        return computeStringWidth(myFragments.get(index), font);
+    }
+
+    /**
      * fragment width isn't a right name, it is actually a padding
      * @deprecated remove in IDEA 16
      */
@@ -305,6 +338,7 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
         myFragments.clear();
         myAttributes.clear();
         myFragmentTags = null;
+        myFragmentIcons = null;
         myMainTextLastIndex = -1;
         myFragmentPadding.clear();
     }
@@ -483,7 +517,7 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
             }
             wasSmaller = isSmaller;
 
-            result += computeStringWidth(myFragments.get(i), font);
+            result += computeFragmentWidth(i, font);
 
             int fixedWidth = myFragmentPadding.getInt(i);
             if (fixedWidth > 0 && result < fixedWidth) {
@@ -585,7 +619,7 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
             }
             wasSmaller = isSmaller;
 
-            int curWidth = computeStringWidth(myFragments.get(i), font);
+            int curWidth = computeFragmentWidth(i, font);
             if (x >= curX && x < curX + curWidth) {
                 return i;
             }
@@ -769,6 +803,12 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
             FontMetrics metrics = g.getFontMetrics(font);
 
             String fragment = myFragments.get(i);
+            Image fragmentIcon = getFragmentIcon(i);
+            if (fragmentIcon != null) {
+                paintIcon(g, fragmentIcon, offset);
+                offset += fragmentIcon.getWidth() + JBUI.scale(INLINE_ICON_GAP);
+                continue;
+            }
             int fragmentWidth = computeStringWidth(fragment, font);
 
             int fragmentPadding = myFragmentPadding.getInt(i);

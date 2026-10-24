@@ -183,6 +183,7 @@ public abstract class DvcsBranchesTreePopupStepBase implements PopupStep<Object>
     public void renderNode(@Nullable Object node, TextItemPresentation presentation) {
         presentation.withIcon(getNodeIcon(node, false, false));
         presentation.append(StringUtil.notNullize(getNodeText(node)), getNodeTextAttribute(node));
+        myPresentation.renderInOut(node, presentation);
 
         String secondaryText = getNodeSecondaryText(node);
         Image arrow = hasSubstep(node) ? PlatformIconGroup.ideMenuarrow() : null;

@@ -17,6 +17,7 @@ package consulo.accountManagement.impl.internal;
 
 import consulo.accountManagement.AccountAuthorizeConfig;
 import consulo.accountManagement.AccountAuthorizeType;
+import consulo.accountManagement.AccountBasicCredentials;
 import consulo.accountManagement.AccountConnection;
 import consulo.accountManagement.AccountCredentials;
 import consulo.accountManagement.AccountRequestDecorator;
@@ -64,5 +65,10 @@ public final class AccountConnectionImpl<C extends AccountCredentials> implement
     @Override
     public void decorate(AccountRequestDecorator decorator) {
         myAuthorizeType.decorate(myCredentials, myConfig, decorator);
+    }
+
+    @Override
+    public @Nullable AccountBasicCredentials getBasicCredentials() {
+        return myAuthorizeType.getBasicCredentials(myCredentials, myConfig);
     }
 }

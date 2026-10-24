@@ -58,6 +58,8 @@ public class WebButtonImpl extends VaadinComponentDelegate<WebButtonImpl.Vaadin>
 
     private @Nullable Image myImage;
 
+    private @Nullable Component mySuffixComponent;
+
     private @Nullable String mySearchHighlight;
 
     public WebButtonImpl(LocalizeValue text) {
@@ -168,6 +170,19 @@ public class WebButtonImpl extends VaadinComponentDelegate<WebButtonImpl.Vaadin>
         myImage = image;
 
         toVaadinComponent().setIcon(image == null ? null : WebImageConverter.getImage(image));
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void setSuffixComponent(@Nullable Component suffixComponent) {
+        mySuffixComponent = suffixComponent;
+
+        toVaadinComponent().setSuffixComponent(WebTextBoxImpl.toVaadinOrNull(suffixComponent));
+    }
+
+    @Override
+    public @Nullable Component getSuffixComponent() {
+        return mySuffixComponent;
     }
 
     @Override

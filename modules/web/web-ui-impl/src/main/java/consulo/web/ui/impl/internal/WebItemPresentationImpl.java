@@ -94,7 +94,10 @@ public class WebItemPresentationImpl implements TextItemPresentation {
      * What each run says and how it is drawn, kept beside the span built from it - a consumer which owns its spans
      * already can bind these onto the ones it has rather than take new ones.
      */
-    public record Fragment(String text, @Nullable TextAttribute attribute) {
+    public record Fragment(String text, @Nullable TextAttribute attribute, @Nullable Image icon) {
+        public Fragment(String text, @Nullable TextAttribute attribute) {
+            this(text, attribute, null);
+        }
     }
 
     private final List<Fragment> myFragmentModels = new ArrayList<>();
@@ -118,6 +121,14 @@ public class WebItemPresentationImpl implements TextItemPresentation {
         myFragmentModels.add(new Fragment(text.get(), textAttribute));
 
         after();
+    }
+
+    @Override
+    public TextItemPresentation appendIcon(Image icon) {
+        myFragmentModels.add(new Fragment("", null, icon));
+
+        after();
+        return this;
     }
 
     /**
@@ -272,6 +283,16 @@ public class WebItemPresentationImpl implements TextItemPresentation {
 
         boolean hasSuffix = mySuffixText.isNotEmpty() || mySuffixIcon != null;
         for (Fragment fragment : myFragmentModels) {
+            Image fragmentIcon = fragment.icon();
+            if (fragmentIcon != null) {
+                Component image = WebImageConverter.getImage(fragmentIcon);
+                image.getElement().getStyle()
+                    .set("vertical-align", "middle")
+                    .set("margin-right", "1px")
+                    .set("flex", "none");
+                span.add(image);
+                continue;
+            }
             Span text = new Span();
             applyRun(text, fragment.text(), fragment.attribute());
             if (hasSuffix) {

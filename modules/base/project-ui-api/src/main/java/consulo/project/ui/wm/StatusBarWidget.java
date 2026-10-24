@@ -94,5 +94,12 @@ public interface StatusBarWidget extends Disposable {
         default @Nullable Image getIcon() {
             return null;
         }
+
+        /**
+         * An icon drawn after the selected value - a state of the value, such as commits waiting to be pulled or pushed.
+         */
+        default @Nullable Image getSecondaryIcon() {
+            return null;
+        }
     }
 }

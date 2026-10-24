@@ -130,6 +130,7 @@ public class DesktopQtMessageInputImpl extends QtComponentDelegate<QFrame> imple
     private @Nullable QHBoxLayout myLayout;
 
     private @Nullable QPlainTextEdit myEdit;
+    private final StringBuilder myPendingText = new StringBuilder();
     private @Nullable QPushButton mySendButton;
 
     @Override
@@ -163,6 +164,11 @@ public class DesktopQtMessageInputImpl extends QtComponentDelegate<QFrame> imple
         mySendButton = send;
         myLayout = layout;
         attachSuffix(frame);
+
+        if (!myPendingText.isEmpty()) {
+            edit.insertPlainText(myPendingText.toString());
+            myPendingText.setLength(0);
+        }
 
         edit.textChanged.connect(this::onTextChanged);
         applyTexts();
@@ -236,6 +242,7 @@ public class DesktopQtMessageInputImpl extends QtComponentDelegate<QFrame> imple
     public void insertText(String text) {
         QPlainTextEdit edit = myEdit;
         if (edit == null || edit.isDisposed()) {
+            myPendingText.append(text);
             return;
         }
         edit.insertPlainText(text);
@@ -316,5 +323,15 @@ public class DesktopQtMessageInputImpl extends QtComponentDelegate<QFrame> imple
     public void setSendIcon(@Nullable Image icon) {
         mySendIcon = icon;
         applyTexts();
+    }
+
+    @Override
+    public void focus() {
+        QPlainTextEdit edit = myEdit;
+        if (edit != null && !edit.isDisposed()) {
+            edit.setFocus();
+            return;
+        }
+        super.focus();
     }
 }

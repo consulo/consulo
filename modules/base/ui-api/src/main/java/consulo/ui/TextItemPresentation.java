@@ -81,4 +81,13 @@ public interface TextItemPresentation {
     }
 
     void append(LocalizeValue text, TextAttribute textAttribute);
+
+    /**
+     * An icon drawn in the flow of the text, between the runs appended before and after it - a marker which belongs
+     * to the words around it rather than to the item as a whole.
+     */
+    default TextItemPresentation appendIcon(Image icon) {
+        // unwarranted action
+        return this;
+    }
 }

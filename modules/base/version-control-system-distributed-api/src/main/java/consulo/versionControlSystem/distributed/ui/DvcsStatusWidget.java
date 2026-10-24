@@ -22,6 +22,8 @@ import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.distributed.DvcsUtil;
 import consulo.versionControlSystem.distributed.branch.DvcsBranchUtil;
+import consulo.versionControlSystem.distributed.branch.DvcsInOutCountersInProject;
+import consulo.versionControlSystem.distributed.branch.DvcsIncomingOutgoingListener;
 import consulo.versionControlSystem.distributed.localize.DistributedVcsLocalize;
 import consulo.versionControlSystem.distributed.repository.Repository;
 import consulo.versionControlSystem.distributed.repository.VcsRepositoryMappingListener;
@@ -42,6 +44,7 @@ public abstract class DvcsStatusWidget<T extends Repository> extends EditorBased
 
     private volatile LocalizeValue myTooltip = LocalizeValue.empty();
     private volatile @Nullable Image myIcon;
+    private volatile @Nullable Image mySecondaryIcon;
     private volatile @Nullable T myRepository;
     private @Nullable Future<?> myUpdateBackgroundFuture;
 
@@ -53,6 +56,7 @@ public abstract class DvcsStatusWidget<T extends Repository> extends EditorBased
             LOG.debug("repository mappings changed");
             updateLater();
         });
+        project.getMessageBus().connect(this).subscribe(DvcsIncomingOutgoingListener.class, this::updateLater);
     }
 
     /**
@@ -67,6 +71,13 @@ public abstract class DvcsStatusWidget<T extends Repository> extends EditorBased
             return PlatformIconGroup.generalWarning();
         }
         return VersionControlSystemIconGroup.branch();
+    }
+
+    /**
+     * @return incoming and outgoing commit counters of the current branch of the repository
+     */
+    protected DvcsInOutCountersInProject getInOutCounters(T repository) {
+        return DvcsInOutCountersInProject.EMPTY;
     }
 
     protected abstract boolean isMultiRoot(Project project);
@@ -129,6 +140,11 @@ public abstract class DvcsStatusWidget<T extends Repository> extends EditorBased
     }
 
     @Override
+    public @Nullable Image getSecondaryIcon() {
+        return mySecondaryIcon;
+    }
+
+    @Override
     @RequiredUIAccess
     public @Nullable ListPopup getPopupStep(DataContext dataContext) {
         if (isDisposed()) {
@@ -147,6 +163,7 @@ public abstract class DvcsStatusWidget<T extends Repository> extends EditorBased
         myText = null;
         myTooltip = LocalizeValue.empty();
         myIcon = null;
+        mySecondaryIcon = null;
         myRepository = null;
     }
 
@@ -215,6 +232,9 @@ public abstract class DvcsStatusWidget<T extends Repository> extends EditorBased
         myText = DvcsBranchUtil.shortenBranchName(getFullBranchName(repository));
         myTooltip = getToolTip(repository);
         myIcon = getIcon(repository);
+        mySecondaryIcon = repository.getState() == Repository.State.NORMAL
+            ? DvcsIncomingOutgoingUi.getInAndOutIcons(getInOutCounters(repository))
+            : null;
         myRepository = repository;
 
         if (myStatusBar != null) {
@@ -235,6 +255,10 @@ public abstract class DvcsStatusWidget<T extends Repository> extends EditorBased
                 LocalizeValue.of("\n"),
                 DistributedVcsLocalize.tooltipBranchWidgetRootNameText(repository.getRoot().getName())
             );
+        }
+        LocalizeValue inOutTooltip = getInOutCounters(repository).calcTooltip();
+        if (inOutTooltip != LocalizeValue.empty()) {
+            message = LocalizeValue.join(message, LocalizeValue.of("\n"), inOutTooltip);
         }
         return message;
     }

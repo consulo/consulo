@@ -80,6 +80,10 @@ public class NodeRenderer extends ColoredTreeCellRenderer {
         boolean first = true;
         boolean isMain = true;
         for (PresentableNodeDescriptor.ColoredFragment each : coloredText) {
+          if (each.getIcon() != null) {
+            appendIcon(each.getIcon());
+            continue;
+          }
           SimpleTextAttributes simpleTextAttributes = each.getAttributes();
           if (each.getAttributes().getFgColor() == null && forcedForeground != null) {
             simpleTextAttributes = addColorToSimpleTextAttributes(each.getAttributes(), forcedForeground);

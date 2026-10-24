@@ -16,6 +16,7 @@
 package consulo.it.internal.ui;
 
 import consulo.localize.LocalizeValue;
+import consulo.ui.Component;
 import consulo.ui.image.Image;
 import consulo.ui.messageList.MessageList;
 import consulo.ui.messageList.MessageListItem;
@@ -41,6 +42,7 @@ public class HeadlessMessageList extends HeadlessComponentBase implements Messag
         private @Nullable Instant myTime;
         private @Nullable Image myAuthorImage;
         private MessageListItemStyle myStyle = MessageListItemStyle.OTHER;
+        private @Nullable Component myActionsComponent;
 
         Item(LocalizeValue author, String text) {
             myAuthor = author;
@@ -106,6 +108,16 @@ public class HeadlessMessageList extends HeadlessComponentBase implements Messag
         @Override
         public void setStyle(MessageListItemStyle style) {
             myStyle = style;
+        }
+
+        @Override
+        public @Nullable Component getActionsComponent() {
+            return myActionsComponent;
+        }
+
+        @Override
+        public void setActionsComponent(@Nullable Component component) {
+            myActionsComponent = component;
         }
     }
 

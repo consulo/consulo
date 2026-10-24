@@ -258,6 +258,10 @@ public class PresentationData implements ColoredItemPresentation, ComparableObje
         myColoredText.add(new PresentableNodeDescriptor.ColoredFragment(text, LocalizeValue.empty(), attributes));
     }
 
+    public void addIcon(Image icon) {
+        myColoredText.add(new PresentableNodeDescriptor.ColoredFragment(LocalizeValue.empty(), LocalizeValue.empty(), SimpleTextAttributes.REGULAR_ATTRIBUTES, icon));
+    }
+
     public void clearText() {
         myColoredText.clear();
     }

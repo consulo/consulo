@@ -16,6 +16,7 @@
 package consulo.accountManagement.impl.internal.authorize;
 
 import consulo.accountManagement.AccountAuthorizeConfig;
+import consulo.accountManagement.AccountBasicCredentials;
 import consulo.accountManagement.AccountAuthorizeContext;
 import consulo.accountManagement.AccountAuthorizeForm;
 import consulo.accountManagement.AccountAuthorizeType;
@@ -67,5 +68,10 @@ public class TokenAccountAuthorizeType implements AccountAuthorizeType<SecretCre
     public void decorate(SecretCredentials credentials, AccountAuthorizeConfig config, AccountRequestDecorator decorator) {
         TokenAuthorizeConfig tokenConfig = (TokenAuthorizeConfig) config;
         decorator.header(tokenConfig.getHeaderName(), tokenConfig.getHeaderValuePrefix() + credentials.secret());
+    }
+
+    @Override
+    public AccountBasicCredentials getBasicCredentials(SecretCredentials credentials, AccountAuthorizeConfig config) {
+        return new AccountBasicCredentials(null, credentials.secret());
     }
 }

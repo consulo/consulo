@@ -16,6 +16,7 @@
 package consulo.ui.messageList;
 
 import consulo.localize.LocalizeValue;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import org.jspecify.annotations.Nullable;
@@ -72,4 +73,13 @@ public interface MessageListItem {
 
     @RequiredUIAccess
     void setStyle(MessageListItemStyle style);
+
+    @Nullable Component getActionsComponent();
+
+    /**
+     * A component shown on the header line of the message, after the author and the time - the actions which work on
+     * this message, such as edit or delete.
+     */
+    @RequiredUIAccess
+    void setActionsComponent(@Nullable Component component);
 }

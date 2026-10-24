@@ -114,6 +114,12 @@ public class DesktopQtTextItemPresentation implements TextItemPresentation {
     }
 
     @Override
+    public TextItemPresentation appendIcon(Image icon) {
+        myFragments.add(DesktopQtTextFragment.icon(icon));
+        return this;
+    }
+
+    @Override
     public String toString() {
         return StringUtil.join(myFragments, fragment -> fragment.text().get(), "");
     }

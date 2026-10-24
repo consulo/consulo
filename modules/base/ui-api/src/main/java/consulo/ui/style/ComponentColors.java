@@ -156,5 +156,11 @@ public enum ComponentColors implements StyleColorValue {
      * The fill of the allocated and of the used part of a memory gauge.
      */
     MEMORY_INDICATOR_ALLOCATED_BACKGROUND,
-    MEMORY_INDICATOR_USED_BACKGROUND
+    MEMORY_INDICATOR_USED_BACKGROUND,
+
+    /**
+     * The text of the number of commits a branch has to pull from its remote, and of the number it has to push to it.
+     */
+    VCS_INCOMING_FOREGROUND,
+    VCS_OUTGOING_FOREGROUND
 }

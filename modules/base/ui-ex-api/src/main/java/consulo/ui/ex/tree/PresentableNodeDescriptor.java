@@ -20,6 +20,7 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.image.Image;
 
 import org.jspecify.annotations.Nullable;
 
@@ -175,15 +176,28 @@ public abstract class PresentableNodeDescriptor<E> extends NodeDescriptor<E> {
     private final LocalizeValue myText;
     private final LocalizeValue myToolTip;
     private final SimpleTextAttributes myAttributes;
+    private final @Nullable Image myIcon;
 
     public ColoredFragment(LocalizeValue aText, SimpleTextAttributes aAttributes) {
       this(aText, LocalizeValue.empty(), aAttributes);
     }
 
     public ColoredFragment(LocalizeValue aText, LocalizeValue toolTip, SimpleTextAttributes aAttributes) {
+      this(aText, toolTip, aAttributes, null);
+    }
+
+    public ColoredFragment(LocalizeValue aText, LocalizeValue toolTip, SimpleTextAttributes aAttributes, @Nullable Image icon) {
       myText = aText;
       myAttributes = aAttributes;
       myToolTip = toolTip;
+      myIcon = icon;
+    }
+
+    /**
+     * @return the icon drawn in place of the text, in the flow of the fragments around it
+     */
+    public @Nullable Image getIcon() {
+      return myIcon;
     }
 
     
@@ -209,6 +223,7 @@ public abstract class PresentableNodeDescriptor<E> extends NodeDescriptor<E> {
       if (myAttributes != null ? !myAttributes.equals(that.myAttributes) : that.myAttributes != null) return false;
       if (myText != null ? !myText.equals(that.myText) : that.myText != null) return false;
       if (myToolTip != null ? !myToolTip.equals(that.myToolTip) : that.myToolTip != null) return false;
+      if (myIcon != null ? !myIcon.equals(that.myIcon) : that.myIcon != null) return false;
 
       return true;
     }
@@ -218,6 +233,7 @@ public abstract class PresentableNodeDescriptor<E> extends NodeDescriptor<E> {
       result = (myText != null ? myText.hashCode() : 0);
       result = 31 * result + (myToolTip != null ? myToolTip.hashCode() : 0);
       result = 31 * result + (myAttributes != null ? myAttributes.hashCode() : 0);
+      result = 31 * result + (myIcon != null ? myIcon.hashCode() : 0);
       return result;
     }
   }

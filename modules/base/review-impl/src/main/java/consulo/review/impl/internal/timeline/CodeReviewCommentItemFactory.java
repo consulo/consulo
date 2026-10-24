@@ -21,15 +21,22 @@ import consulo.localize.LocalizeValue;
 import consulo.review.comment.CodeReviewCommentBodyBlock;
 import consulo.review.comment.CodeReviewComponentCommentBodyBlock;
 import consulo.review.comment.CodeReviewMarkdownCommentBodyBlock;
+import consulo.review.comment.CodeReviewTextEditingViewModel;
 import consulo.review.impl.internal.ReviewUIUtil;
+import consulo.review.impl.internal.comment.CodeReviewCommentTextFieldFactory;
+import consulo.review.impl.internal.comment.CodeReviewCommentUIUtil;
 import consulo.review.list.UserPresentation;
 import consulo.review.timeline.CodeReviewCommentViewModel;
+import consulo.ui.Component;
+import consulo.ui.Space;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.messageList.MessageList;
 import consulo.ui.messageList.MessageListItem;
 import consulo.ui.messageList.MessageListItemPart;
 import consulo.ui.messageList.MessageListItemStyle;
 import consulo.util.concurrent.coroutine.ObservableValue;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,24 +67,74 @@ public final class CodeReviewCommentItemFactory {
         item.setTime(comment.getCreatedAt().toInstant());
         item.setAuthorImage(author.getAvatarIcon());
         item.setStyle(comment.isOwn() ? MessageListItemStyle.OWN : MessageListItemStyle.OTHER);
+
+        boolean[] editing = {false};
+        Disposable[] bodyDisposable = {Disposable.newDisposable()};
+        Disposer.register(parentDisposable, () -> Disposer.dispose(bodyDisposable[0]));
+
         ObservableValue<List<CodeReviewCommentBodyBlock>> blocks = comment.getBodyBlocks();
-        if (blocks == null) {
-            ReviewUIUtil.bind(parentDisposable, comment.getBody(), body -> {
-                if (!body.equals(item.getText())) {
-                    item.setText(body);
+        Runnable showBody = () -> {
+            Disposer.dispose(bodyDisposable[0]);
+            bodyDisposable[0] = Disposable.newDisposable();
+            List<CodeReviewCommentBodyBlock> value = blocks == null ? List.of() : blocks.get();
+            if (value.isEmpty()) {
+                item.setText(comment.getBody().get());
+            }
+            else {
+                item.setParts(toParts(bodyDisposable[0], value));
+            }
+        };
+
+        ReviewUIUtil.bind(parentDisposable, comment.getBody(), body -> {
+            if (!editing[0]) {
+                showBody.run();
+            }
+        });
+        if (blocks != null) {
+            ReviewUIUtil.bind(parentDisposable, blocks, value -> {
+                if (!editing[0]) {
+                    showBody.run();
                 }
             });
         }
-        else {
-            Disposable[] blocksDisposable = {Disposable.newDisposable()};
-            Disposer.register(parentDisposable, () -> Disposer.dispose(blocksDisposable[0]));
-            ReviewUIUtil.bind(parentDisposable, blocks, value -> {
-                Disposer.dispose(blocksDisposable[0]);
-                blocksDisposable[0] = Disposable.newDisposable();
-                item.setParts(toParts(blocksDisposable[0], value));
+
+        ObservableValue<@Nullable CodeReviewTextEditingViewModel> editVm = comment.getEditVm();
+        if (editVm != null) {
+            ReviewUIUtil.bind(parentDisposable, editVm, vm -> {
+                if (vm != null) {
+                    editing[0] = true;
+                    Disposer.dispose(bodyDisposable[0]);
+                    bodyDisposable[0] = Disposable.newDisposable();
+                    item.setParts(List.of(MessageListItemPart.component(CodeReviewCommentTextFieldFactory.createEdit(bodyDisposable[0], vm))));
+                    vm.requestFocus();
+                }
+                else if (editing[0]) {
+                    editing[0] = false;
+                    showBody.run();
+                }
             });
         }
+
+        Component actions = createActions(comment);
+        if (actions != null) {
+            item.setActionsComponent(actions);
+        }
         return item;
+    }
+
+    @RequiredUIAccess
+    private static @Nullable Component createActions(CodeReviewCommentViewModel comment) {
+        if (!comment.canEdit() && !comment.canDelete()) {
+            return null;
+        }
+        HorizontalLayout actions = HorizontalLayout.create(Space.SMALL);
+        if (comment.canEdit()) {
+            actions.add(CodeReviewCommentUIUtil.createEditButton(comment::editBody));
+        }
+        if (comment.canDelete()) {
+            actions.add(CodeReviewCommentUIUtil.createDeleteCommentIconButton(comment::delete));
+        }
+        return actions;
     }
 
     @RequiredUIAccess

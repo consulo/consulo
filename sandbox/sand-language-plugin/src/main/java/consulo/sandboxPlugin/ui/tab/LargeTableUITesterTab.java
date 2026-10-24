@@ -28,6 +28,7 @@ import consulo.ui.color.ColorValue;
 import consulo.ui.ex.tester.UITesterTab;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.HorizontalLayout;
+import consulo.ui.layout.ScrollableLayout;
 import consulo.ui.model.FlatDataModel;
 import consulo.ui.model.MutableFlatDataModel;
 import consulo.ui.style.StandardColors;
@@ -97,7 +98,7 @@ public class LargeTableUITesterTab implements UITesterTab {
         bottom.add(status);
 
         DockLayout layout = DockLayout.create();
-        layout.center(table);
+        layout.center(ScrollableLayout.create(table));
         layout.bottom(bottom);
         return layout;
     }

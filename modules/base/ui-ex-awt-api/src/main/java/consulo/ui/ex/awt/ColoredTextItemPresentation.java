@@ -70,4 +70,10 @@ public class ColoredTextItemPresentation implements TextItemPresentation {
     public void append(LocalizeValue text, TextAttribute textAttribute) {
         myComponent.append(text, toSimpleTextAttributes(textAttribute));
     }
+
+    @Override
+    public TextItemPresentation appendIcon(Image icon) {
+        myComponent.appendIcon(icon);
+        return this;
+    }
 }

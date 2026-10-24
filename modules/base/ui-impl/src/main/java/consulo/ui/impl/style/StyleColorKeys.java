@@ -117,6 +117,9 @@ public final class StyleColorKeys {
 
         ourKeys.put(ComponentColors.MEMORY_INDICATOR_ALLOCATED_BACKGROUND, "MemoryIndicator.allocatedBackground");
         ourKeys.put(ComponentColors.MEMORY_INDICATOR_USED_BACKGROUND, "MemoryIndicator.usedBackground");
+
+        ourKeys.put(ComponentColors.VCS_INCOMING_FOREGROUND, "Vcs.incomingForeground");
+        ourKeys.put(ComponentColors.VCS_OUTGOING_FOREGROUND, "Vcs.outgoingForeground");
     }
 
     public static @Nullable String getKey(StyleColorValue colorValue) {

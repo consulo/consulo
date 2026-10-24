@@ -20,16 +20,22 @@ import consulo.application.util.DateFormatUtil;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.CommonLocalize;
+import consulo.review.icon.ReviewIconGroup;
 import consulo.review.impl.internal.ReviewUIUtil;
 import consulo.review.list.UserPresentation;
 import consulo.review.localize.ReviewLocalize;
 import consulo.review.timeline.thread.CodeReviewFoldableThreadViewModel;
 import consulo.review.timeline.thread.CodeReviewResolvableItemViewModel;
 import consulo.review.user.CodeReviewUser;
+import consulo.ui.Button;
+import consulo.ui.ButtonStyle;
 import consulo.ui.Component;
 import consulo.ui.Hyperlink;
 import consulo.ui.Label;
+import consulo.ui.MessageBoxes;
 import consulo.ui.Space;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
@@ -52,6 +58,52 @@ public final class CodeReviewCommentUIUtil {
     private static final Space VERTICAL_PADDING = Space.LARGE;
 
     private CodeReviewCommentUIUtil() {
+    }
+
+    @RequiredUIAccess
+    public static Component createPostNowButton(Runnable action) {
+        return Hyperlink.create(ReviewLocalize.reviewCommentsPostNowAction(), event -> action.run());
+    }
+
+    @RequiredUIAccess
+    public static Component createDeleteCommentIconButton(Runnable action) {
+        Button button = createIconButton(PlatformIconGroup.actionsGc(), CommonLocalize.buttonDelete());
+        button.addClickListener(event -> {
+            UIAccess uiAccess = UIAccess.current();
+            MessageBoxes.yesNo()
+                .title(ReviewLocalize.reviewCommentsDeleteConfirmationTitle())
+                .text(ReviewLocalize.reviewCommentsDeleteConfirmation())
+                .showAsync(button)
+                .whenCompleteAsync((yes, error) -> {
+                    if (Boolean.TRUE.equals(yes)) {
+                        action.run();
+                    }
+                }, uiAccess);
+        });
+        return button;
+    }
+
+    @RequiredUIAccess
+    public static Component createEditButton(Runnable action) {
+        Button button = createIconButton(PlatformIconGroup.actionsEdit(), CommonLocalize.buttonEdit());
+        button.addClickListener(event -> action.run());
+        return button;
+    }
+
+    @RequiredUIAccess
+    public static Component createAddReactionButton(Runnable action) {
+        Button button = createIconButton(ReviewIconGroup.addemoji(), ReviewLocalize.reviewCommentsReactionAddTooltip());
+        button.addClickListener(event -> action.run());
+        return button;
+    }
+
+    @RequiredUIAccess
+    private static Button createIconButton(Image icon, LocalizeValue tooltip) {
+        Button button = Button.create(LocalizeValue.empty());
+        button.setIcon(icon);
+        button.addStyle(ButtonStyle.TOOLBAR);
+        button.setToolTipText(tooltip);
+        return button;
     }
 
     @RequiredUIAccess

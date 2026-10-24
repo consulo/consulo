@@ -18,8 +18,11 @@ package consulo.versionControlSystem.distributed.ui.branch.popup;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.FilePath;
+import consulo.versionControlSystem.distributed.branch.DvcsInOutCountersInRepo;
 import consulo.versionControlSystem.distributed.ui.branch.popup.DvcsRef;
 import org.jspecify.annotations.Nullable;
+
+import java.time.Instant;
 
 /**
  * Lightweight view of a repository used by the branches tree popup.
@@ -60,6 +63,21 @@ public interface DvcsRepositoryModel extends Comparable<DvcsRepositoryModel> {
      */
     @Nullable
     Image getIcon();
+
+    /**
+     * @return incoming and outgoing commit counters of the given local branch reference, or {@code null} if the
+     * version control system does not know them
+     */
+    default @Nullable DvcsInOutCountersInRepo getInOutCounters(DvcsRef ref) {
+        return null;
+    }
+
+    /**
+     * @return the time of the last successful fetch, or {@code null} if it is unknown
+     */
+    default @Nullable Instant getLastFetchTime() {
+        return null;
+    }
 
     @Override
     default int compareTo(DvcsRepositoryModel other) {

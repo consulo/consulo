@@ -41,6 +41,7 @@ import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.ScrollableLayout;
 import consulo.util.dataholder.Key;
 import consulo.versionControlSystem.distributed.branch.DvcsBranchDataKeys;
+import consulo.versionControlSystem.distributed.branch.DvcsIncomingOutgoingListener;
 import consulo.versionControlSystem.distributed.localize.DistributedVcsLocalize;
 import consulo.versionControlSystem.distributed.ui.branch.popup.DvcsBranchesTreeModel;
 import consulo.versionControlSystem.distributed.ui.branch.popup.DvcsBranchesTreeNodePresentation;
@@ -145,6 +146,11 @@ final class DvcsBranchesLogSidePanel {
         };
         logUi.addLogListener(logListener);
         Disposer.register(parentDisposable, () -> logUi.removeLogListener(logListener));
+
+        project.getMessageBus().connect(parentDisposable).subscribe(
+            DvcsIncomingOutgoingListener.class,
+            () -> project.getUIAccess().give(this::refresh)
+        );
 
         refresh();
     }

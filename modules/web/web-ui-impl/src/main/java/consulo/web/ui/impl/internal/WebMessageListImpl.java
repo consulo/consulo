@@ -68,6 +68,8 @@ public class WebMessageListImpl extends VaadinComponentDelegate<WebMessageListIm
         private @Nullable Instant myTime;
         private @Nullable Image myAuthorImage;
         private MessageListItemStyle myStyle = MessageListItemStyle.OTHER;
+        private @Nullable Component myActionsComponent;
+        private @Nullable Element myActionsElement;
 
         Item(LocalizeValue author, String text) {
             myAuthor = author;
@@ -235,6 +237,35 @@ public class WebMessageListImpl extends VaadinComponentDelegate<WebMessageListIm
             myMessage.getThemeList().remove(themeName(myStyle));
             myStyle = style;
             myMessage.getThemeList().add(themeName(style));
+        }
+
+        @Override
+        public @Nullable Component getActionsComponent() {
+            return myActionsComponent;
+        }
+
+        @RequiredUIAccess
+        @Override
+        public void setActionsComponent(@Nullable Component component) {
+            if (myActionsElement != null) {
+                myActionsElement.removeFromParent();
+                myActionsElement = null;
+            }
+            myActionsComponent = component;
+            if (component == null) {
+                myMessage.getStyle().remove("position");
+                return;
+            }
+
+            Element element = TargetVaadin.to(component).getElement();
+            element.getStyle()
+                .set("position", "absolute")
+                .set("width", "auto")
+                .set("top", "0")
+                .set("right", "4px");
+            myMessage.getStyle().set("position", "relative");
+            myMessage.appendChild(element);
+            myActionsElement = element;
         }
     }
 

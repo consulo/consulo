@@ -42,6 +42,7 @@ import io.qt.gui.QIcon;
 import io.qt.gui.QPaintEvent;
 import io.qt.gui.QPainter;
 import io.qt.gui.QPalette;
+import io.qt.gui.QResizeEvent;
 import io.qt.widgets.QLineEdit;
 import io.qt.widgets.QPushButton;
 import io.qt.widgets.QSizePolicy;
@@ -107,6 +108,13 @@ public class DesktopQtButtonImpl extends QtComponentDelegate<QPushButton> implem
             initStyleOption(option);
 
             DesktopQtSearchHighlight.paintPushButton(this, option, text, query);
+        }
+
+        @Override
+        protected void resizeEvent(QResizeEvent event) {
+            super.resizeEvent(event);
+
+            layoutSuffix();
         }
 
         @Override
@@ -202,6 +210,8 @@ public class DesktopQtButtonImpl extends QtComponentDelegate<QPushButton> implem
      * for - so a padding written the same on both axes draws an icon only button four pixels wider than it is
      * tall. Two pixels are taken off each side to land on the square the awt frontend draws.
      */
+    private static final int SUFFIX_GAP = 4;
+
     private static final String ICON_PADDING = "3px 1px";
 
     /**
@@ -248,6 +258,8 @@ public class DesktopQtButtonImpl extends QtComponentDelegate<QPushButton> implem
 
     private boolean myFlat;
 
+    private @Nullable Component mySuffixComponent;
+
     private final Set<ButtonStyle> myStyles = EnumSet.noneOf(ButtonStyle.class);
 
     public DesktopQtButtonImpl(LocalizeValue text) {
@@ -268,6 +280,8 @@ public class DesktopQtButtonImpl extends QtComponentDelegate<QPushButton> implem
         for (ButtonStyle style : myStyles) {
             applyStyle(style);
         }
+
+        attachSuffix();
 
         updateStyleSheet();
 
@@ -413,6 +427,92 @@ public class DesktopQtButtonImpl extends QtComponentDelegate<QPushButton> implem
         updateStyleSheet();
     }
 
+    @RequiredUIAccess
+    @Override
+    public void setSuffixComponent(@Nullable Component suffixComponent) {
+        Component oldSuffix = mySuffixComponent;
+        if (oldSuffix == suffixComponent) {
+            return;
+        }
+
+        if (oldSuffix instanceof QtComponentDelegate<?> delegate) {
+            delegate.setParent(null);
+        }
+
+        mySuffixComponent = suffixComponent;
+
+        if (myComponent != null) {
+            attachSuffix();
+            updateStyleSheet();
+        }
+    }
+
+    @Override
+    public @Nullable Component getSuffixComponent() {
+        return mySuffixComponent;
+    }
+
+    private void attachSuffix() {
+        QPushButton host = myComponent;
+        if (host == null || !(mySuffixComponent instanceof QtComponentDelegate<?> delegate)) {
+            return;
+        }
+
+        delegate.setParent(this);
+        delegate.bind(host, null);
+
+        QWidget widget = delegate.toQtComponent();
+        if (widget != null) {
+            widget.setAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents, true);
+            widget.show();
+        }
+
+        layoutSuffix();
+    }
+
+    private @Nullable QWidget suffixWidget() {
+        QPushButton host = myComponent;
+        QWidget widget = mySuffixComponent instanceof QtComponentDelegate<?> delegate ? delegate.toQtComponent() : null;
+        return host != null && widget != null && !widget.isDisposed() && widget.parentWidget() == host && !isVertical() ? widget : null;
+    }
+
+    private void layoutSuffix() {
+        QPushButton host = myComponent;
+        QWidget suffix = suffixWidget();
+        if (host == null || suffix == null) {
+            return;
+        }
+
+        QSize hint = suffix.sizeHint();
+        int right = host.width() - rightPadding(currentPadding());
+        suffix.setGeometry(right - hint.width(), (host.height() - hint.height()) / 2, hint.width(), hint.height());
+    }
+
+    private String currentPadding() {
+        boolean iconOnly = myIcon != null && myText.isEmpty();
+        return iconOnly ? ICON_PADDING : textPadding();
+    }
+
+    private static int rightPadding(String padding) {
+        String[] parts = padding.trim().split("\\s+");
+        String right = parts.length >= 2 ? parts[1] : parts[0];
+        try {
+            return Integer.parseInt(right.replace("px", ""));
+        }
+        catch (NumberFormatException e) {
+            return 0;
+        }
+    }
+
+    private String withSuffixPadding(String styleSheet) {
+        QWidget suffix = suffixWidget();
+        if (suffix == null) {
+            return styleSheet;
+        }
+        int padding = rightPadding(currentPadding()) + suffix.sizeHint().width() + SUFFIX_GAP;
+        return styleSheet + "\nQPushButton { padding-right: " + padding + "px; }";
+    }
+
     private static String helpBorderColor() {
         RGBColor rgb = ComponentColors.BORDER.toRGB();
         return "rgba(%d, %d, %d, %d)".formatted(rgb.getRed(), rgb.getGreen(), rgb.getBlue(), rgb.getAlpha());
@@ -433,13 +533,13 @@ public class DesktopQtButtonImpl extends QtComponentDelegate<QPushButton> implem
             setOwnStyleSheet(HELP_STYLE_SHEET.formatted(helpBorderColor()));
         }
         else if (myFlat) {
-            setOwnStyleSheet(FLAT_STYLE_SHEET.formatted(iconOnly ? ICON_PADDING : textPadding()));
+            setOwnStyleSheet(withSuffixPadding(FLAT_STYLE_SHEET.formatted(iconOnly ? ICON_PADDING : textPadding())));
         }
         else if (iconOnly) {
-            setOwnStyleSheet(DEFAULT_ICON_STYLE_SHEET);
+            setOwnStyleSheet(withSuffixPadding(DEFAULT_ICON_STYLE_SHEET));
         }
         else {
-            setOwnStyleSheet(DEFAULT_STYLE_SHEET.formatted(textPadding()));
+            setOwnStyleSheet(withSuffixPadding(DEFAULT_STYLE_SHEET.formatted(textPadding())));
 
             fieldHeight = true;
         }

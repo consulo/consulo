@@ -284,6 +284,9 @@ public class DesktopQtTextItemDelegate extends QStyledItemDelegate {
         }
 
         for (DesktopQtTextFragment fragment : presentation.getFragments()) {
+            if (fragment.icon() != null) {
+                return true;
+            }
             TextAttribute attribute = fragment.attribute();
             if (attribute.getForegroundColor() != null
                 || attribute.getBackgroundColor() != null
@@ -338,6 +341,17 @@ public class DesktopQtTextItemDelegate extends QStyledItemDelegate {
             int available = fragmentsRight - x + 1;
             if (available <= 0) {
                 break;
+            }
+
+            Image icon = fragment.icon();
+            if (icon != null) {
+                if (icon.getWidth() > available) {
+                    break;
+                }
+                int iconTop = top + (height - icon.getHeight()) / 2;
+                DesktopQtImage.paint(painter, new QRect(x, iconTop, icon.getWidth(), icon.getHeight()), icon);
+                x += icon.getWidth() + DesktopQtTextFragment.ICON_GAP;
+                continue;
             }
 
             String text = fragment.text().get();
@@ -416,6 +430,11 @@ public class DesktopQtTextItemDelegate extends QStyledItemDelegate {
     private static int fragmentsWidth(QFont font, DesktopQtTextItemPresentation presentation) {
         int width = 0;
         for (DesktopQtTextFragment fragment : presentation.getFragments()) {
+            Image icon = fragment.icon();
+            if (icon != null) {
+                width += icon.getWidth() + DesktopQtTextFragment.ICON_GAP;
+                continue;
+            }
             width += new QFontMetrics(fragmentFont(font, fragment.attribute())).horizontalAdvance(fragment.text().get());
         }
         return width;

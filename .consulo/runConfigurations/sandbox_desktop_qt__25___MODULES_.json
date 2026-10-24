@@ -1,0 +1,34 @@
+{
+  "name": "sandbox-desktop-qt [25] [MODULES]",
+  "type": "#org.jetbrains.idea.devkit.run.PluginConfigurationType",
+  "factoryName": "Consulo In Sandbox",
+  "options": {
+    "javaSdk": "25",
+    "vmParameters": "-Dconsulo.maven.console.log=true -Dconsulo.log4j2.enabled=true -Dconsulo.enable.byte.buddy.proxy=true -ea --add-opens=java.desktop/sun.awt=consulo.container.api --add-opens=java.desktop/sun.swing=consulo.container.api --add-opens=java.desktop/sun.awt.image=consulo.container.api --add-opens=java.desktop/sun.java2d=consulo.container.api --add-opens=java.desktop/sun.font=consulo.container.api --add-opens=java.desktop/java.awt=consulo.container.api --add-opens=java.desktop/javax.swing=consulo.container.api --add-opens=java.desktop/javax.swing.plaf.basic=consulo.container.api --add-opens=java.base/java.lang=consulo.container.api --add-opens=java.desktop/javax.swing.text.html=consulo.container.api --add-opens=java.desktop/java.awt.peer=consulo.container.api --add-opens=java.desktop/java.awt.event=consulo.container.api -Dconsulo.synchronize.api=http://localhost:8080/api/storage/ -Dconsulo.statistics.api=http://localhost:8080/api/statistics/ -Dconsulo.module.path.boot=true",
+    "pluginsHomePath": "$PROJECT_DIR$/sandbox/desktop-qt/target/consulo-sandbox-desktop-qt-3-SNAPSHOT-main/Consulo/platform/buildSNAPSHOT/plugins",
+    "java9Modules": true,
+    "consuloSdkPath": "$PROJECT_DIR$/sandbox/desktop-qt/target/consulo-sandbox-desktop-qt-3-SNAPSHOT-main/Consulo"
+  },
+  "predefinedLogFiles": [
+    {
+      "id": "CONSULO_LOG",
+      "enabled": "true"
+    }
+  ],
+  "beforeRun": [
+    {
+      "id": "Make",
+      "state": {
+        "enabled": false
+      }
+    },
+    {
+      "id": "Maven.BeforeRunTask",
+      "state": {
+        "enabled": true,
+        "projectPath": "$PROJECT_DIR$/pom.xml",
+        "goal": "-T 1C -Dmaven.test.skip=true package -pl :consulo-sandbox-desktop-qt -am"
+      }
+    }
+  ]
+}
