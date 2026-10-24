@@ -15,81 +15,17 @@
  */
 package consulo.desktop.awt.ui.impl.layout;
 
-import consulo.desktop.awt.ui.impl.DesktopLength;
-import consulo.desktop.awt.ui.impl.clipboard.DesktopAWTTransferHandlerAdapter;
-import consulo.desktop.awt.ui.impl.clipboard.DesktopAWTTransferTarget;
-import consulo.desktop.awt.ui.impl.facade.FromSwingComponentWrapper;
-import consulo.ui.Component;
-import consulo.ui.DragAndDropTransferHandler;
 import consulo.ui.Length;
 import consulo.ui.Space;
-import consulo.ui.TransferHandler;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ui.layout.LayoutConstraint;
 import consulo.ui.layout.TileLayout;
-import org.jspecify.annotations.Nullable;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.dnd.DnDConstants;
-import java.awt.dnd.DragSource;
-import java.awt.event.InputEvent;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author VISTALL
  * @since 2026-10-11
  */
-public class DesktopTileLayoutImpl extends DesktopLayoutBase<JPanel, LayoutConstraint> implements TileLayout, DesktopAWTTransferTarget<Component> {
-    private static final int VISIBLE_ROW_COUNT = 2;
-
-    private class MyTilePanel extends JPanel implements Scrollable, FromSwingComponentWrapper {
-        private final DesktopTileLayoutManager myLayoutManager;
-
-        MyTilePanel(DesktopTileLayoutManager layoutManager) {
-            super(layoutManager);
-            myLayoutManager = layoutManager;
-            setOpaque(false);
-        }
-
-        @Override
-        public Dimension getPreferredScrollableViewportSize() {
-            return myLayoutManager.preferredViewportSize(this, VISIBLE_ROW_COUNT);
-        }
-
-        @Override
-        public int getScrollableUnitIncrement(Rectangle visibleRect, int orientation, int direction) {
-            return DesktopLength.lineHeight(this);
-        }
-
-        @Override
-        public int getScrollableBlockIncrement(Rectangle visibleRect, int orientation, int direction) {
-            return orientation == SwingConstants.VERTICAL ? visibleRect.height : visibleRect.width;
-        }
-
-        @Override
-        public boolean getScrollableTracksViewportWidth() {
-            return true;
-        }
-
-        @Override
-        public boolean getScrollableTracksViewportHeight() {
-            return getParent() instanceof JViewport viewport && viewport.getHeight() > getPreferredSize().height;
-        }
-
-        @Override
-        public Component toUIComponent() {
-            return DesktopTileLayoutImpl.this;
-        }
-    }
-
+public class DesktopTileLayoutImpl extends DesktopTileLayoutBase implements TileLayout {
     private final Length myMinTileWidth;
     private final Space myGap;
-
-    private @Nullable TransferHandler<Component> myTransferHandler;
-    private @Nullable Component myDraggedChild;
-    private boolean myDragGestureInstalled;
 
     public DesktopTileLayoutImpl(Length minTileWidth, Space gap) {
         myMinTileWidth = minTileWidth;
@@ -97,95 +33,7 @@ public class DesktopTileLayoutImpl extends DesktopLayoutBase<JPanel, LayoutConst
     }
 
     @Override
-    protected JPanel createComponent() {
-        return new MyTilePanel(new DesktopTileLayoutManager(myMinTileWidth, myGap));
-    }
-
-    @Override
-    public void remove(Component component) {
-        JPanel panel = toAWTComponent();
-        java.awt.Component awtComponent = TargetAWT.to(component);
-        if (awtComponent.getParent() == panel) {
-            panel.remove(awtComponent);
-            panel.revalidate();
-            panel.repaint();
-        }
-    }
-
-    @Override
-    public void setTransferHandler(@Nullable TransferHandler<Component> handler) {
-        myTransferHandler = handler;
-
-        JPanel panel = toAWTComponent();
-        panel.setTransferHandler(handler == null ? null : new DesktopAWTTransferHandlerAdapter<>(this, handler, this));
-
-        if (handler != null && !myDragGestureInstalled) {
-            myDragGestureInstalled = true;
-            DragSource.getDefaultDragSource().createDefaultDragGestureRecognizer(panel, DnDConstants.ACTION_COPY_OR_MOVE, event -> {
-                if (!(panel.getTransferHandler() instanceof DesktopAWTTransferHandlerAdapter<?> adapter) || !adapter.isDragAndDropSupported()) {
-                    return;
-                }
-
-                Component child = childAt(event.getDragOrigin());
-                if (child == null) {
-                    return;
-                }
-
-                InputEvent trigger = event.getTriggerEvent();
-                int action = event.getDragAction() == DnDConstants.ACTION_COPY ? javax.swing.TransferHandler.COPY : javax.swing.TransferHandler.MOVE;
-                myDraggedChild = child;
-                try {
-                    adapter.exportAsDrag(panel, trigger, action);
-                }
-                finally {
-                    myDraggedChild = null;
-                }
-            });
-        }
-    }
-
-    @Override
-    public @Nullable TransferHandler<Component> getTransferHandler() {
-        return myTransferHandler;
-    }
-
-    @Override
-    public List<Component> getTransferItems() {
-        Component child = myDraggedChild;
-        return child == null ? List.of() : List.of(child);
-    }
-
-    @Override
-    public @Nullable Drop<Component> resolveDrop(javax.swing.TransferHandler.TransferSupport support) {
-        List<Component> children = children();
-        if (children.isEmpty()) {
-            return null;
-        }
-
-        Point point = support.getDropLocation().getDropPoint();
-        Component child = childAt(point);
-        if (child == null) {
-            return new Drop<>(children.get(children.size() - 1), DragAndDropTransferHandler.DropPosition.BELOW);
-        }
-
-        java.awt.Component awtChild = TargetAWT.to(child);
-        boolean before = point.x < awtChild.getX() + awtChild.getWidth() / 2;
-        return new Drop<>(child, before ? DragAndDropTransferHandler.DropPosition.ABOVE : DragAndDropTransferHandler.DropPosition.BELOW);
-    }
-
-    private List<Component> children() {
-        List<Component> children = new ArrayList<>();
-        forEachChild(children::add);
-        return children;
-    }
-
-    private @Nullable Component childAt(Point point) {
-        for (Component child : children()) {
-            java.awt.Component awtChild = TargetAWT.to(child);
-            if (awtChild.isVisible() && awtChild.getBounds().contains(point)) {
-                return child;
-            }
-        }
-        return null;
+    protected DesktopViewportLayoutManager createLayoutManager() {
+        return new DesktopTileLayoutManager(myMinTileWidth, myGap);
     }
 }

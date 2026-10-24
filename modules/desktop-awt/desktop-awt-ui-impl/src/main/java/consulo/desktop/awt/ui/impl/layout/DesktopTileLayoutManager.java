@@ -29,7 +29,7 @@ import java.util.List;
  * @author VISTALL
  * @since 2026-10-11
  */
-class DesktopTileLayoutManager implements LayoutManager {
+class DesktopTileLayoutManager implements DesktopViewportLayoutManager {
     private final Length myMinTileWidth;
     private final Space myGap;
 
@@ -63,7 +63,8 @@ class DesktopTileLayoutManager implements LayoutManager {
         }
     }
 
-    Dimension preferredViewportSize(Container parent, int rows) {
+    @Override
+    public Dimension preferredViewportSize(Container parent, int rows) {
         synchronized (parent.getTreeLock()) {
             Insets insets = parent.getInsets();
             List<Component> tiles = visibleTiles(parent);

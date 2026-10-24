@@ -138,7 +138,7 @@ public abstract class CoverageEnabledConfiguration {
     
     public static CoverageEnabledConfiguration getOrCreate(RunConfigurationBase runConfiguration) {
         CoverageEnabledConfiguration configuration = runConfiguration.getCopyableUserData(COVERAGE_KEY);
-        if (configuration == null) {
+        if (configuration == null || configuration.getConfiguration() != runConfiguration) {
             configuration = Application.get().getExtensionPoint(CoverageEngine.class).computeSafeIfAny(
                 engine -> engine.isApplicableTo(runConfiguration)
                     ? engine.createCoverageEnabledConfiguration(runConfiguration)

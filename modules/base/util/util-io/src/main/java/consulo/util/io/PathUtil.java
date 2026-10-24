@@ -60,7 +60,7 @@ public class PathUtil {
 
     int end = getEnd(path);
     int start = getLastIndexOfPathSeparator(path, end);
-    if (isWindowsUNCRoot(path, start)) {
+    if (isWindowsUNCRootLegacy(path, start)) {
       start = -1;
     }
     return path.substring(start + 1, end);
@@ -80,7 +80,7 @@ public class PathUtil {
     if (end == -1 || end == 0) {
       return "";
     }
-    if (isWindowsUNCRoot(path, end)) {
+    if (isWindowsUNCRootLegacy(path, end)) {
       return "";
     }
     // parent of '//host' is root
@@ -95,7 +95,45 @@ public class PathUtil {
     return Math.max(path.lastIndexOf('/', end - 1), path.lastIndexOf('\\', end - 1));
   }
 
-  private static boolean isWindowsUNCRoot(String path, int lastPathSeparatorPosition) {
+  public static boolean isWindowsUNCRoot(CharSequence path, int lastPathSeparatorPosition) {
+    return Target.CURRENT == Target.WINDOWS &&
+           startsWithSeparatorSeparator(path) && lastPathSeparatorPosition >= 1
+           && !hasFileSeparatorsOrNavigatableDots(path, 2, lastPathSeparatorPosition);
+  }
+
+  private static boolean hasFileSeparatorsOrNavigatableDots(CharSequence path, int start, int end) {
+    for (int i = end - 1; i >= start; i--) {
+      char c = path.charAt(i);
+      if (isSeparator(c)) {
+        return true;
+      }
+      // contains '.' or '..' surrounded by slashes
+      if (c == '.' && (i == 2 || i == 3 && path.charAt(2) == '.')) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public static boolean startsWithSeparatorSeparator(CharSequence path) {
+    return path.length() > 1 && isSeparator(path.charAt(0)) && path.charAt(1) == path.charAt(0);
+  }
+
+  public static boolean isSeparator(char c) {
+    return c == '/' || c == '\\';
+  }
+
+  public static int lastSeparatorIndex(CharSequence s, int endInclusive) {
+    for (int i = endInclusive; i >= 0; i--) {
+      if (isSeparator(s.charAt(i))) {
+        return i;
+      }
+    }
+    return -1;
+  }
+
+  // consulo: older UNC check kept for getFileName()/getParentPath(), which are not yet synced with JB PathUtilRt
+  private static boolean isWindowsUNCRootLegacy(String path, int lastPathSeparatorPosition) {
     return Target.CURRENT == Target.WINDOWS && (path.startsWith("//") || path.startsWith("\\\\")) && getLastIndexOfPathSeparator(path, lastPathSeparatorPosition) == 1;
   }
 

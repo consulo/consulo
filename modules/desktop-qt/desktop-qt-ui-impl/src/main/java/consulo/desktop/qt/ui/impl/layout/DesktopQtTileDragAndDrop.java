@@ -43,12 +43,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Drag and drop of the children of a {@link DesktopQtTileLayoutImpl}.
+ * Drag and drop of the children of a {@link DesktopQtTileLayoutBase}.
  */
 final class DesktopQtTileDragAndDrop {
     private static final int INDICATOR_WIDTH = 2;
 
-    private final DesktopQtTileLayoutImpl myLayout;
+    private final DesktopQtTileLayoutBase myLayout;
 
     private @Nullable QPoint myPressPosition;
     private @Nullable Component myPressChild;
@@ -58,7 +58,7 @@ final class DesktopQtTileDragAndDrop {
 
     private @Nullable QWidget myIndicator;
 
-    DesktopQtTileDragAndDrop(DesktopQtTileLayoutImpl layout) {
+    DesktopQtTileDragAndDrop(DesktopQtTileLayoutBase layout) {
         myLayout = layout;
     }
 

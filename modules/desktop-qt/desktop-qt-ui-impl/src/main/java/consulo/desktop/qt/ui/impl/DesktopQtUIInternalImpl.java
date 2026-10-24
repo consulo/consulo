@@ -233,6 +233,11 @@ public class DesktopQtUIInternalImpl extends UIInternal implements UIInternalEx 
     }
 
     @Override
+    public FlowLayout _Layouts_flow(Space gap) {
+        return new DesktopQtFlowLayoutImpl(gap);
+    }
+
+    @Override
     public ScrollableLayout _ScrollLayout_create(Component component, ScrollableLayoutOptions options) {
         return new DesktopQtScrollableLayoutImpl(component, options);
     }

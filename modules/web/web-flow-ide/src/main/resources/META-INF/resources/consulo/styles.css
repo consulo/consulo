@@ -463,12 +463,28 @@ vaadin-button[theme~="pressed"]
   box-sizing: border-box;
 }
 
-.web-tile-layout > [consulo-drop-before]
+.web-flow-layout
+{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  box-sizing: border-box;
+}
+
+.web-flow-layout > *
+{
+  flex: 0 0 auto;
+  max-width: 100%;
+}
+
+.web-tile-layout > [consulo-drop-before],
+.web-flow-layout > [consulo-drop-before]
 {
   box-shadow: -2px 0 0 var(--aura-accent-color, var(--vaadin-focus-ring-color, #3574f0));
 }
 
-.web-tile-layout > [consulo-drop-after]
+.web-tile-layout > [consulo-drop-after],
+.web-flow-layout > [consulo-drop-after]
 {
   box-shadow: 2px 0 0 var(--aura-accent-color, var(--vaadin-focus-ring-color, #3574f0));
 }

@@ -537,6 +537,11 @@ public class HeadlessUIInternal extends UIInternal implements UIInternalEx {
     }
 
     @Override
+    public FlowLayout _Layouts_flow(Space gap) {
+        return new HeadlessFlowLayout(gap);
+    }
+
+    @Override
     public Card _Components_card() {
         return new HeadlessCard();
     }

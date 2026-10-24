@@ -464,6 +464,11 @@ public class DesktopUIInternalImpl extends UIInternal implements UIInternalEx {
     }
 
     @Override
+    public consulo.ui.layout.FlowLayout _Layouts_flow(Space gap) {
+        return new DesktopFlowLayoutImpl(gap);
+    }
+
+    @Override
     public ScrollableLayout _ScrollLayout_create(Component component, ScrollableLayoutOptions options) {
         return new DesktopScrollableLayoutImpl(component, options);
     }

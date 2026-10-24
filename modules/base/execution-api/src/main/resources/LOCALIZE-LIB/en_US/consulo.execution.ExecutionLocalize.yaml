@@ -640,6 +640,8 @@ run.configuration.fragment.compound.configurations:
     text: Configurations to run
 run.configuration.fragment.module:
     text: Module
+run.configuration.fragment.module.none:
+    text: <no module>
 run.configuration.java.vm.parameters.label:
     text: '&VM options:'
 run.configuration.new.folder.name:

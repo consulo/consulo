@@ -18,7 +18,6 @@ import consulo.ui.Component;
 import consulo.ui.DragAndDropTransferHandler;
 import consulo.ui.Hyperlink;
 import consulo.ui.Label;
-import consulo.ui.Length;
 import consulo.ui.MessageBoxes;
 import consulo.ui.Space;
 import consulo.ui.UIAccess;
@@ -28,7 +27,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.HorizontalLayout;
-import consulo.ui.layout.TileLayout;
+import consulo.ui.layout.FlowLayout;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -40,7 +39,7 @@ import java.util.Set;
 
 /**
  * Before launch of the fragment page: one chip per task ({@link Badge} with configure/remove), reordered by dragging in a
- * {@link TileLayout}, hidden while there are no tasks; "Add ..." actions for "Modify options"; task settings are edited in
+ * {@link FlowLayout}, hidden while there are no tasks; "Add ..." actions for "Modify options"; task settings are edited in
  * {@link BeforeRunTaskDialog}.
  */
 final class BeforeRunTaskRow {
@@ -51,7 +50,7 @@ final class BeforeRunTaskRow {
     private RunConfiguration myRunConfiguration;
 
     private @Nullable DockLayout myComponent;
-    private @Nullable TileLayout myTiles;
+    private @Nullable FlowLayout myTiles;
 
     @RequiredUIAccess
     BeforeRunTaskRow(RunnerAndConfigurationSettings settings, Runnable changeListener) {
@@ -67,7 +66,7 @@ final class BeforeRunTaskRow {
             return component;
         }
 
-        TileLayout tiles = TileLayout.create(Length.ofFont(12), Space.MEDIUM);
+        FlowLayout tiles = FlowLayout.create(Space.MEDIUM);
         tiles.setTransferHandler(new ChipDragAndDropHandler());
         myTiles = tiles;
 
@@ -113,7 +112,7 @@ final class BeforeRunTaskRow {
 
     @RequiredUIAccess
     private void rebuild() {
-        TileLayout tiles = myTiles;
+        FlowLayout tiles = myTiles;
         if (tiles == null) {
             return;
         }

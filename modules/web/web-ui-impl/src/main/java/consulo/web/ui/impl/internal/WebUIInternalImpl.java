@@ -187,6 +187,11 @@ public class WebUIInternalImpl extends UIInternal implements UIInternalEx {
     }
 
     @Override
+    public FlowLayout _Layouts_flow(Space gap) {
+        return new WebFlowLayoutImpl(gap);
+    }
+
+    @Override
     public <L extends Layout> LoadingLayout<L> _Layouts_LoadingLayout(L innerLayout, Disposable parent) {
         return new WebLoadingLayoutImpl<>(innerLayout, parent);
     }

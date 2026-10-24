@@ -120,6 +120,10 @@ public abstract class UIInternal {
         throw new UnsupportedOperationException();
     }
 
+    public FlowLayout _Layouts_flow(Space gap) {
+        throw new UnsupportedOperationException();
+    }
+
     public ScrollableLayout _ScrollLayout_create(Component component, ScrollableLayoutOptions options) {
         throw new UnsupportedOperationException();
     }

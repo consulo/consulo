@@ -71,6 +71,9 @@ public class ModuleRunConfigurationFragment implements RunConfigurationFragment<
                 presentation.withIcon(PlatformIconGroup.nodesModule());
                 presentation.append(module.getName());
             }
+            else {
+                presentation.append(ExecutionLocalize.runConfigurationFragmentModuleNone());
+            }
         });
 
         return new RunConfigurationFragmentEditor<>() {
@@ -87,6 +90,7 @@ public class ModuleRunConfigurationFragment implements RunConfigurationFragment<
                 Collection<Module> validModules = AccessRule.read(configuration::getValidModules);
                 List<Module> modules = new ArrayList<>(validModules == null ? List.of() : validModules);
                 modules.sort(Comparator.comparing(Module::getName, String.CASE_INSENSITIVE_ORDER));
+                modules.add(0, null);
                 model.replaceAll(modules);
                 box.setValue(configuration.getConfigurationModule().getModule());
             }

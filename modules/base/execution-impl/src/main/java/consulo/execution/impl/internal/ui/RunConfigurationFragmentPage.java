@@ -32,7 +32,7 @@ import consulo.ui.ex.action.ToggleAction;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.layout.DockLayout;
-import consulo.ui.layout.HorizontalLayout;
+import consulo.ui.layout.FlowLayout;
 import consulo.ui.layout.LabeledLayout;
 import consulo.ui.layout.VerticalLayout;
 import org.jspecify.annotations.Nullable;
@@ -340,7 +340,7 @@ final class RunConfigurationFragmentPage implements Disposable {
     @RequiredUIAccess
     private void addSection(VerticalLayout target, List<Entry> entries) {
         RunConfigurationFragmentTable table = new RunConfigurationFragmentTable();
-        HorizontalLayout tags = HorizontalLayout.create(Space.MEDIUM);
+        FlowLayout tags = FlowLayout.create(Space.MEDIUM);
         List<Component> afterTable = new ArrayList<>();
         for (Entry entry : entries) {
             if (entry.isGroup() || !entry.myVisible) {
