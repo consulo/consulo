@@ -21,6 +21,8 @@ import consulo.content.scope.SearchScope;
 import consulo.execution.DefaultExecutionResult;
 import consulo.execution.ExecutionResult;
 import consulo.execution.ExecutionTarget;
+import consulo.execution.configuration.fragment.CommandLineFragmentPatcher;
+import consulo.execution.configuration.fragment.RunConfigurationFragment;
 import consulo.execution.executor.DefaultRunExecutor;
 import consulo.execution.executor.Executor;
 import consulo.execution.localize.ExecutionLocalize;
@@ -41,6 +43,9 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.ToggleAction;
 import org.jspecify.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Base implementation of {@link RunProfileState}. Takes care of putting together a process and a console and wrapping them into an
@@ -103,6 +108,34 @@ public abstract class CommandLineState implements RunProfileState {
      * @see GeneralCommandLine
      */
     protected abstract ProcessHandler startProcess() throws ExecutionException;
+
+    /**
+     * Applies the {@link CommandLineFragmentPatcher} fragments of the run configuration (shared and own ones) to a command line this
+     * state starts; call it from {@link #startProcess()} before the process is created.
+     */
+    protected final void applyCommandLinePatchers(GeneralCommandLine commandLine) throws ExecutionException {
+        if (myEnvironment == null || !(myEnvironment.getRunProfile() instanceof RunConfiguration configuration)) {
+            return;
+        }
+
+        List<CommandLineFragmentPatcher<?>> patchers = new ArrayList<>();
+        Application.get().getExtensionPoint(RunConfigurationFragment.class).forEach(fragment -> {
+            if (fragment instanceof CommandLineFragmentPatcher<?> patcher && fragment.isApplicable(configuration)) {
+                patchers.add(patcher);
+            }
+        });
+        for (RunConfigurationFragment<?> fragment : configuration.createFragments()) {
+            if (fragment instanceof CommandLineFragmentPatcher<?> patcher) {
+                patchers.add(patcher);
+            }
+        }
+
+        for (CommandLineFragmentPatcher<?> patcher : patchers) {
+            @SuppressWarnings("unchecked")
+            CommandLineFragmentPatcher<Object> objectPatcher = (CommandLineFragmentPatcher<Object>) patcher;
+            objectPatcher.patchCommandLine(configuration, commandLine);
+        }
+    }
 
     protected AnAction[] createActions(ConsoleView console, ProcessHandler processHandler) {
         return createActions(console, processHandler, null);
