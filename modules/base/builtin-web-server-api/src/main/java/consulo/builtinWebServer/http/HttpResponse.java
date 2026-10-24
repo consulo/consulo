@@ -20,6 +20,7 @@ import org.jspecify.annotations.Nullable;
 import java.net.HttpURLConnection;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author VISTALL
@@ -44,7 +45,7 @@ public final class HttpResponse {
     }
 
     public static HttpResponse create(int code, @Nullable String contentType, byte @Nullable [] content) {
-        return new HttpResponse(code, contentType, content, null, null, Map.of());
+        return new HttpResponse(code, contentType, content, null, null, null, Map.of());
     }
 
     /**
@@ -55,11 +56,15 @@ public final class HttpResponse {
     }
 
     public static HttpResponse streaming(int code, String contentType, HttpStreamingBody body) {
-        return new HttpResponse(code, contentType, null, body, null, Map.of());
+        return new HttpResponse(code, contentType, null, body, null, null, Map.of());
     }
 
     public static HttpResponse file(int code, @Nullable String contentType, HttpFileRegion region) {
-        return new HttpResponse(code, contentType, null, null, region, Map.of());
+        return new HttpResponse(code, contentType, null, null, region, null, Map.of());
+    }
+
+    public static HttpResponse deferred(CompletableFuture<HttpResponse> response) {
+        return new HttpResponse(HttpURLConnection.HTTP_OK, null, null, null, null, response, Map.of());
     }
 
     private final int myCode;
@@ -67,6 +72,7 @@ public final class HttpResponse {
     private final byte @Nullable [] myContent;
     private final @Nullable HttpStreamingBody myStreamingBody;
     private final @Nullable HttpFileRegion myFileRegion;
+    private final @Nullable CompletableFuture<HttpResponse> myDeferred;
     private final Map<String, String> myHeaders;
 
     private HttpResponse(int code,
@@ -74,19 +80,21 @@ public final class HttpResponse {
                          byte @Nullable [] content,
                          @Nullable HttpStreamingBody streamingBody,
                          @Nullable HttpFileRegion fileRegion,
+                         @Nullable CompletableFuture<HttpResponse> deferred,
                          Map<String, String> headers) {
         myCode = code;
         myContentType = contentType;
         myContent = content;
         myStreamingBody = streamingBody;
         myFileRegion = fileRegion;
+        myDeferred = deferred;
         myHeaders = headers;
     }
 
     public HttpResponse withHeader(String name, String value) {
         Map<String, String> headers = new LinkedHashMap<>(myHeaders);
         headers.put(name, value);
-        return new HttpResponse(myCode, myContentType, myContent, myStreamingBody, myFileRegion, Map.copyOf(headers));
+        return new HttpResponse(myCode, myContentType, myContent, myStreamingBody, myFileRegion, myDeferred, Map.copyOf(headers));
     }
 
     public int getCode() {
@@ -107,6 +115,10 @@ public final class HttpResponse {
 
     public @Nullable HttpFileRegion getFileRegion() {
         return myFileRegion;
+    }
+
+    public @Nullable CompletableFuture<HttpResponse> getDeferred() {
+        return myDeferred;
     }
 
     public Map<String, String> getHeaders() {

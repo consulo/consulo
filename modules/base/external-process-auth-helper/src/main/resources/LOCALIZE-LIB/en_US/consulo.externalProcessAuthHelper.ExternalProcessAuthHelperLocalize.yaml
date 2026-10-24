@@ -1,0 +1,22 @@
+label.credential.store.key.ssh.passphrase:
+    text: SSH Key Passphrase
+label.credential.store.key.ssh.password:
+    text: SSH Password
+label.credential.store.key.ssh.pin:
+    text: SSH PIN
+ssh.ask.passphrase.message:
+    text: 'Password for the SSH key "{0}":'
+ssh.ask.passphrase.title:
+    text: SSH Key Passphrase
+ssh.ask.pin.message:
+    text: 'PIN for "{0}":'
+ssh.ask.pin.title:
+    text: SSH Pin Passphrase
+ssh.keyboard.interactive.title:
+    text: SSH Keyboard Interactive
+ssh.password.message:
+    text: 'Password for user {0}:'
+ssh.password.title:
+    text: SSH Password Login
+title.ssh.confirmation:
+    text: SSH Confirmation

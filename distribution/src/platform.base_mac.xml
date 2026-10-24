@@ -188,6 +188,8 @@
                 <include>consulo:consulo-review-impl</include>
                 <include>consulo:consulo-account-management-api</include>
                 <include>consulo:consulo-account-management-impl</include>
+                <include>consulo:consulo-external-process-auth-helper-rt</include>
+                <include>consulo:consulo-external-process-auth-helper</include>
                 <include>consulo:consulo-version-control-system-review-api</include>
                 <include>consulo:consulo-version-control-system-review-impl</include>
                 <include>consulo:consulo-language-spellchecker-api</include>

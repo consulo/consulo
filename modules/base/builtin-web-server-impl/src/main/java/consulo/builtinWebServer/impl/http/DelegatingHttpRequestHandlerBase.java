@@ -19,6 +19,7 @@ import consulo.builtinWebServer.http.HttpResponse;
 import consulo.logging.Logger;
 import consulo.util.netty.SimpleChannelInboundHandlerAdapter;
 import io.netty.buffer.Unpooled;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.FullHttpResponse;
@@ -27,7 +28,10 @@ import io.netty.handler.codec.http.QueryStringDecoder;
 
 import org.jspecify.annotations.Nullable;
 
+import java.io.IOException;
 import java.util.Map;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author VISTALL
@@ -38,9 +42,15 @@ import java.util.Map;
 public abstract class DelegatingHttpRequestHandlerBase extends SimpleChannelInboundHandlerAdapter<FullHttpRequest> {
     @Override
     public void messageReceived(ChannelHandlerContext context, FullHttpRequest request) throws Exception {
-        HttpResponse httpResponse = process(context, request, new QueryStringDecoder(request.uri()));
+        send(context, request, process(context, request, new QueryStringDecoder(request.uri())));
+    }
+
+    private void send(ChannelHandlerContext context, FullHttpRequest request, @Nullable HttpResponse httpResponse) throws IOException {
         if (httpResponse == null) {
             Responses.send(HttpResponseStatus.NOT_FOUND, context.channel(), request);
+        }
+        else if (httpResponse.getDeferred() != null) {
+            sendDeferred(context, request, httpResponse.getDeferred());
         }
         else if (httpResponse.getStreamingBody() != null) {
             StreamingResponses.send(context.channel(), httpResponse);
@@ -61,6 +71,35 @@ public abstract class DelegatingHttpRequestHandlerBase extends SimpleChannelInbo
             }
             Responses.send(response, context.channel(), request);
         }
+    }
+
+    private void sendDeferred(ChannelHandlerContext context, FullHttpRequest request, CompletableFuture<HttpResponse> deferred) {
+        Channel channel = context.channel();
+        FullHttpRequest retained = request.retainedDuplicate();
+        channel.closeFuture().addListener(future -> deferred.cancel(false));
+        deferred.whenComplete((response, error) -> channel.eventLoop().execute(() -> {
+            try {
+                if (!channel.isActive()) {
+                    return;
+                }
+                if (error == null) {
+                    send(context, retained, response);
+                }
+                else if (error instanceof CancellationException || error.getCause() instanceof CancellationException) {
+                    channel.close();
+                }
+                else {
+                    Logger.getInstance(BuiltInServer.class).warn(error);
+                    Responses.send(HttpResponseStatus.INTERNAL_SERVER_ERROR, channel, retained);
+                }
+            }
+            catch (Throwable e) {
+                NettyUtil.logAndClose(e, Logger.getInstance(BuiltInServer.class), channel);
+            }
+            finally {
+                retained.release();
+            }
+        }));
     }
 
     protected abstract @Nullable HttpResponse process(
