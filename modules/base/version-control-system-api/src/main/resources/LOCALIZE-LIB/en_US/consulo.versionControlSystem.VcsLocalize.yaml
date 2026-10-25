@@ -1692,3 +1692,7 @@ vcs.commit.notification.share.project.on:
     text: Share Project on {0}
 vcs.commit.notification.share.project.or.on:
     text: On {0}
+clone.dialog.unable.create.destination.error:
+    text: Unable to create destination directory
+clone.dialog.clone.failed.error:
+    text: Clone failed
