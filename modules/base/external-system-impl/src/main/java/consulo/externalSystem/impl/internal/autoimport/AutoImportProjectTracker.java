@@ -18,8 +18,8 @@ import consulo.externalSystem.autoimport.ExternalSystemProjectListener;
 import consulo.externalSystem.autoimport.ExternalSystemProjectNotificationAware;
 import consulo.externalSystem.autoimport.ExternalSystemProjectReloadContext;
 import consulo.externalSystem.autoimport.ExternalSystemProjectTracker;
-import consulo.externalSystem.autoimport.ExternalSystemProjectTrackerSettings;
 import consulo.externalSystem.autoimport.ExternalSystemProjectTrackerSettings.AutoReloadType;
+import consulo.externalSystem.autoimport.ExternalSystemProjectTrackerSettings;
 import consulo.externalSystem.autoimport.ExternalSystemRefreshStatus;
 import consulo.externalSystem.autoimport.ExternalSystemSettingsFilesReloadContext;
 import consulo.externalSystem.autoimport.Stamp;
@@ -31,6 +31,7 @@ import consulo.project.Project;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awt.util.MergingUpdateQueue;
 import consulo.util.lang.Pair;
+import consulo.util.lang.ThreeState;
 import consulo.virtualFileSystem.event.BatchFileChangeListener;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -234,6 +235,9 @@ public class AutoImportProjectTracker implements ExternalSystemProjectTracker, D
     private void schedule(int priority, int dispatchIterations, Runnable action) {
         syncDispatcherOptions();
         myDispatcher.queue(PriorityEatUpdate.create(priority, () -> {
+            if (myProject.getDisposeState().get() != ThreeState.NO) {
+                return;
+            }
             if (dispatchIterations - 1 > 0) {
                 schedule(priority, dispatchIterations - 1, action);
             }
