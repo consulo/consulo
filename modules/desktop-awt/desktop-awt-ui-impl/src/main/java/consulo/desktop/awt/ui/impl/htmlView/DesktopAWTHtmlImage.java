@@ -77,7 +77,7 @@ final class DesktopAWTHtmlImage extends java.awt.Image {
             raster = new BufferedImage(Math.max(1, myImage.getWidth()), Math.max(1, myImage.getHeight()), BufferedImage.TYPE_INT_ARGB);
             Graphics2D graphics = raster.createGraphics();
             try {
-                paint(graphics, 0, 0, myImage.getWidth(), myImage.getHeight());
+                paint(null, graphics, 0, 0, myImage.getWidth(), myImage.getHeight());
             }
             finally {
                 graphics.dispose();
