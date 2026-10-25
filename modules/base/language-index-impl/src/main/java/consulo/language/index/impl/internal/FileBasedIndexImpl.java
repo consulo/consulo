@@ -50,6 +50,7 @@ import consulo.language.index.impl.internal.dependencies.IsFileChangedResult;
 import consulo.language.index.impl.internal.dependencies.ProjectIndexingDependenciesService;
 import consulo.language.index.impl.internal.localize.IndexingLocalize;
 import consulo.language.index.impl.internal.moduleAware.ModuleAwareIndexMetaRecorder;
+import consulo.language.index.impl.internal.moduleAware.ModuleAwareIndexKnownVariants;
 import consulo.language.index.impl.internal.moduleAware.ModuleAwareIndexMetaStorage;
 import consulo.language.index.impl.internal.moduleAware.ModuleAwareIndexOptionValueStorage;
 import consulo.language.index.impl.internal.projectFilter.IncrementalProjectIndexableFilesFilterHolder;
@@ -774,9 +775,17 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
         removeTransientFileDataFromIndices(affectedIndices, inputId, file);
 
         Throwable unexpectedError = null;
+        ModuleAwareIndexMetaStorage metaStorage = Application.get().getInstanceIfCreated(ModuleAwareIndexMetaStorage.class);
         for (ID<?, ?> indexId : affectedIndices) {
             try {
                 removeSingleIndexValue(indexId, inputId);
+                // the options the removed data was built under go with it: a file whose data was removed while it
+                // belonged to no project - the last one closing - is then stale for the next project reaching it,
+                // instead of current with nothing indexed
+                if (metaStorage != null && getIndex(indexId).getExtension() instanceof FileBasedIndexExtension<?, ?> extension
+                    && !extension.getOptionProviderIds().isEmpty()) {
+                    metaStorage.delete(indexId, inputId);
+                }
             }
             catch (ProcessCanceledException pce) {
                 LOG.error(pce);
@@ -831,6 +840,10 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
         ModuleAwareIndexOptionValueStorage valueStorage = Application.get().getInstanceIfCreated(ModuleAwareIndexOptionValueStorage.class);
         if (valueStorage != null) {
             valueStorage.flush();
+        }
+        ModuleAwareIndexKnownVariants knownVariants = Application.get().getInstanceIfCreated(ModuleAwareIndexKnownVariants.class);
+        if (knownVariants != null) {
+            knownVariants.flush();
         }
         IndexConfiguration state = getState();
         for (ID<?, ?> indexId : new ArrayList<>(state.getIndexIDs())) {

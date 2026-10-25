@@ -18,6 +18,7 @@ package consulo.versionControlSystem.impl.internal;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.ReadAction;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.disposer.Disposable;
 import consulo.document.Document;
@@ -198,7 +199,11 @@ public class VcsFileStatusProvider implements FileStatusFacade, Disposable {
     }
 
     private void processModifiedDocument(VirtualFile virtualFile, boolean modified) {
-        AbstractVcs vcs = myVcsManager.get().getVcsFor(virtualFile);
+        // cancelling the future on dispose does not stop a run that already started; the project is disposed under a
+        // write action, so a read action sees it either whole or going, never with its indexes half gone
+        AbstractVcs vcs = ReadAction.compute(
+            () -> myProject.getDisposeState().get() != ThreeState.NO ? null : myVcsManager.get().getVcsFor(virtualFile)
+        );
         if (vcs == null) {
             return;
         }

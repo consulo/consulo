@@ -17,6 +17,8 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
@@ -91,13 +93,27 @@ public record IdeFingerprint(long value) {
         URL location = codeSource == null ? null : codeSource.getLocation();
         if (location != null) {
             try {
-                return Files.getLastModifiedTime(Path.of(location.toURI())).to(TimeUnit.SECONDS);
+                return Files.getLastModifiedTime(codeSourcePath(location)).to(TimeUnit.SECONDS);
             }
             catch (Exception e) {
                 LOG.warn("Cannot read the platform timestamp from " + location + ", falling back to the build date");
             }
         }
         return appInfo.getBuildDate().getTimeInMillis() / 1000L;
+    }
+
+    /**
+     * The file a code source location names. On the module path it is a {@code jar:file:/.../x.jar!/} URL, which
+     * {@link Path#of(URI)} rejects - and the fallback, the build date, is the start time of a SNAPSHOT build, so every
+     * restart of one changed the fingerprint and invalidated every indexing flag.
+     */
+    public static Path codeSourcePath(URL location) throws URISyntaxException {
+        String url = location.toString();
+        if (url.startsWith("jar:")) {
+            int separator = url.indexOf("!/");
+            url = url.substring("jar:".length(), separator < 0 ? url.length() : separator);
+        }
+        return Path.of(new URI(url));
     }
 
     private static IdeFingerprint computeIdeFingerprint(int debugHelperToken) {

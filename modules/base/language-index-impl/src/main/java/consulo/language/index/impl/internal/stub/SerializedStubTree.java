@@ -33,6 +33,7 @@ import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.io.UncheckedIOException;
 import java.util.ArrayList;
@@ -329,7 +330,15 @@ public class SerializedStubTree {
       LOG.error(e);
       deserialized = "error while stub deserialization: " + e.getMessage();
     }
-    return deserialized + "\n bytes: " + toHexString(myTreeBytes, myTreeByteLength);
+    StringBuilder dump = new StringBuilder(deserialized).append("\n bytes: ").append(toHexString(myTreeBytes, myTreeByteLength));
+    if (myDescriptor != null) {
+      dump.append("\n primary variant: ").append(myDescriptor.key());
+    }
+    for (StubVariant variant : myVariants) {
+      dump.append("\n variant ").append(variant.descriptor().key()).append(" bytes: ")
+        .append(toHexString(variant.tree().myTreeBytes, variant.tree().myTreeByteLength));
+    }
+    return dump.toString();
   }
 
   static Map<StubIndexKey, Map<Object, StubIdList>> indexTree(Stub root) {
@@ -352,13 +361,33 @@ public class SerializedStubTree {
   private byte[] myTreeHash;
 
   
+  /**
+   * Covers what {@link #equals} compares - the primary tree, its descriptor and every variant - so that trees which
+   * differ only in a module-aware variant do not hash alike and get reported as a collision.
+   */
   synchronized byte[] getTreeHash() {
     if (myTreeHash == null) {
       MessageDigest digest = HASHER.getValue();
       digest.update(myTreeBytes, 0, myTreeByteLength);
+      updateDigest(digest, myDescriptor);
+      for (StubVariant variant : myVariants) {
+        updateDigest(digest, variant.descriptor());
+        digest.update(variant.tree().myTreeBytes, 0, variant.tree().myTreeByteLength);
+      }
       myTreeHash = digest.digest();
     }
     return myTreeHash;
+  }
+
+  private static void updateDigest(MessageDigest digest, @Nullable VariantDescriptor descriptor) {
+    if (descriptor == null) {
+      return;
+    }
+    for (VariantDescriptor.ProviderOption option : descriptor.options()) {
+      digest.update(option.providerId().getBytes(StandardCharsets.UTF_8));
+      digest.update((byte)option.tag().ordinal());
+      digest.update(option.payload());
+    }
   }
 
   static void reportStubTreeHashCollision(SerializedStubTree newTree, SerializedStubTree existingTree) {

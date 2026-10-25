@@ -143,7 +143,7 @@ public class StubUpdatingIndex extends SingleEntryFileBasedIndexExtension<Serial
                     VirtualFile file = inputData.getFile();
                     try {
                         Project project = inputData instanceof FileContentImpl impl ? impl.getProject() : null;
-                        List<VariantDescriptor> descriptors = project == null ? List.of() : ModuleAwareIndexVariants.descriptorsFor(project, file);
+                        List<VariantDescriptor> descriptors = project == null ? List.of() : ModuleAwareIndexVariants.descriptorsToIndex(project, file);
                         if (descriptors.isEmpty()) {
                             Stub rootStub = StubTreeBuilder.buildStubTree(inputData);
                             if (rootStub != null) {
@@ -176,6 +176,7 @@ public class StubUpdatingIndex extends SingleEntryFileBasedIndexExtension<Serial
                             }
                             if (primary != null) {
                                 serializedStubTree = primary.withVariants(descriptors.get(0), variants);
+                                ModuleAwareIndexVariants.rememberIndexed(project, file, descriptors);
                             }
                         }
                     }

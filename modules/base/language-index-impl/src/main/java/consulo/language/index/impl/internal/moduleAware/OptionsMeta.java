@@ -43,14 +43,18 @@ public record OptionsMeta(int indexVersion, List<Map<String, PerProviderMeta>> v
     }
 
     /**
-     * @return whether the same variants are recorded: the same primary, and the same set of secondaries
+     * @return whether the same set of variants is recorded, whichever comes first: the primary is the indexing project's
+     * own, and a file reached by several projects keeps the variants of all of them
      */
     public boolean sameVariants(OptionsMeta other) {
-        if (variants.size() != other.variants.size() || !primary().equals(other.primary())) {
-            return false;
-        }
-        Set<Map<String, PerProviderMeta>> mine = new HashSet<>(variants.subList(1, variants.size()));
-        Set<Map<String, PerProviderMeta>> theirs = new HashSet<>(other.variants.subList(1, other.variants.size()));
-        return mine.equals(theirs);
+        return variants.size() == other.variants.size() && new HashSet<>(variants).equals(new HashSet<>(other.variants));
+    }
+
+    /**
+     * @return whether every variant of {@code own} - a project's own variants of the file - is among the recorded ones
+     */
+    public boolean containsVariants(OptionsMeta own) {
+        Set<Map<String, PerProviderMeta>> recorded = new HashSet<>(variants);
+        return recorded.containsAll(own.variants);
     }
 }

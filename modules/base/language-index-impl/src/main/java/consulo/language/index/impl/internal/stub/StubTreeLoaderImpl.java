@@ -30,6 +30,7 @@ import consulo.language.impl.internal.psi.stub.FileContentImpl;
 import consulo.language.impl.psi.PsiFileImpl;
 import consulo.language.index.impl.internal.FileBasedIndexImpl;
 import consulo.language.index.impl.internal.moduleAware.ModuleAwareIndexMetaRecorder;
+import consulo.language.index.impl.internal.moduleAware.ModuleAwareIndexVariants;
 import consulo.language.psi.*;
 import consulo.language.psi.stub.*;
 import consulo.logging.Logger;
@@ -152,9 +153,13 @@ public class StubTreeLoaderImpl extends StubTreeLoader {
         return null;
       }
 
+      // the variant this project reads - the stored primary is the one of the project which indexed the file last
+      int variant = ModuleAwareIndexVariants.currentVariant(stubTree, vFile, project);
+      SerializedStubTree variantTree = stubTree.getVariantTree(variant);
+
       Stub stub;
       try {
-        stub = stubTree.getStub(false);
+        stub = variantTree.getStub(false);
       }
       catch (SerializerNotFoundException e) {
         return processError(vFile, "No stub serializer: " + vFile.getPresentableUrl() + ": " + e.getMessage(), e);

@@ -399,7 +399,7 @@ public final class StubIndexImpl extends StubIndex implements PersistentStateCom
                 if (tree == null) {
                     continue;
                 }
-                int current = ModuleAwareIndexVariants.currentVariant(tree, file);
+                int current = ModuleAwareIndexVariants.currentVariant(tree, file, project);
                 int variantCount = tree.getVariantCount();
                 int[] variants;
                 if (selector == IndexOptionSelector.ALL_VARIANTS && variantCount > 1) {
@@ -409,7 +409,7 @@ public final class StubIndexImpl extends StubIndex implements PersistentStateCom
                     }
                 }
                 else {
-                    variants = new int[]{ModuleAwareIndexVariants.selectVariant(tree, file, selector)};
+                    variants = new int[]{ModuleAwareIndexVariants.selectVariant(tree, file, selector, project)};
                 }
                 boolean found = false;
                 for (int variant : variants) {

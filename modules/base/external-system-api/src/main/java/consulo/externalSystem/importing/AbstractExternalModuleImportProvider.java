@@ -171,19 +171,22 @@ public abstract class AbstractExternalModuleImportProvider implements ModuleImpo
                             if (project.isDisposed()) {
                                 return;
                             }
-                            ExternalSystemResolveProjectTask task = taskFactory.createResolveProjectTask(
-                                myExternalSystemId,
-                                project,
-                                projectSettings.getExternalProjectPath(),
-                                false
-                            );
-                            task.execute(indicator, ExternalSystemTaskNotificationListener.EP_NAME.getExtensions());
-                            DataNode<ProjectData> projectWithResolvedLibraries = task.getExternalProject();
-                            if (projectWithResolvedLibraries == null) {
-                                return;
+                            try {
+                                ExternalSystemResolveProjectTask task = taskFactory.createResolveProjectTask(
+                                    myExternalSystemId,
+                                    project,
+                                    projectSettings.getExternalProjectPath(),
+                                    false
+                                );
+                                task.execute(indicator, ExternalSystemTaskNotificationListener.EP_NAME.getExtensions());
+                                DataNode<ProjectData> projectWithResolvedLibraries = task.getExternalProject();
+                                if (projectWithResolvedLibraries != null) {
+                                    setupLibraries(projectWithResolvedLibraries, project);
+                                }
                             }
-
-                            setupLibraries(projectWithResolvedLibraries, project);
+                            finally {
+                                saveImportedProject(project);
+                            }
                         }
                     });
                 };
@@ -354,7 +357,8 @@ public abstract class AbstractExternalModuleImportProvider implements ModuleImpo
      *                                     dependencies information available at the given gradle project
      */
     private void setupLibraries(DataNode<ProjectData> projectWithResolvedLibraries, Project project) {
-        ExternalSystemApiUtil.executeProjectChangeAction(new DisposeAwareProjectChange(project) {
+        // synchronous: the import is saved right after, and must be committed by then
+        ExternalSystemApiUtil.executeProjectChangeAction(true, new DisposeAwareProjectChange(project) {
             @Override
             @RequiredUIAccess
             public void execute() {
@@ -385,6 +389,19 @@ public abstract class AbstractExternalModuleImportProvider implements ModuleImpo
                 });
             }
         });
+    }
+
+    /**
+     * An import is the whole content of a new project - its modules, its link to the external project, its run
+     * configurations - so the import ends with saving it, and waits for the save: a process ending before a later
+     * periodic save would leave the project empty and import it again on the next open. Called off the UI thread, from
+     * the import's own background task, which therefore finishes only once the project is on disk.
+     */
+    private static void saveImportedProject(Project project) {
+        if (project.isDisposed()) {
+            return;
+        }
+        project.getApplication().saveAllWithProgress(project.getUIAccess()).join();
     }
 
     /**

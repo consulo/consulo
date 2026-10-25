@@ -28,6 +28,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -56,6 +57,90 @@ public final class ModuleAwareIndexVariants {
             return List.of();
         }
         return descriptorsFor(providers, contexts, file, withId.getId());
+    }
+
+    /**
+     * The variants to index {@code file} under in {@code project}: its own, primary first, and for a file of a library -
+     * which other projects may reach too - the variants other projects indexed it under before, after them, so
+     * that indexing it here does not throw theirs away. Capped at {@link ModuleAwareIndexContexts#MAX_VARIANTS}.
+     */
+    public static List<VariantDescriptor> descriptorsToIndex(Project project, VirtualFile file) {
+        if (!(file instanceof VirtualFileWithId withId)) {
+            return List.of();
+        }
+        List<ModuleAwareIndexOptionProvider> providers = ModuleAwareIndexOptionRegistry.getApplicableProviders(file.getFileType());
+        if (providers.isEmpty()) {
+            return List.of();
+        }
+        List<ModuleAwareIndexContexts.Context> contexts = ModuleAwareIndexContexts.contextsOf(project, file);
+        if (contexts.isEmpty()) {
+            return List.of();
+        }
+        List<VariantDescriptor> own = descriptorsFor(providers, contexts, file, withId.getId());
+        if (own.isEmpty() || !isShared(contexts)) {
+            return own;
+        }
+
+        Set<String> providerIds = new HashSet<>();
+        for (ModuleAwareIndexOptionProvider provider : providers) {
+            providerIds.add(provider.getId());
+        }
+        List<VariantDescriptor> result = new ArrayList<>(own);
+        for (VariantDescriptor known : ModuleAwareIndexKnownVariants.getInstance().get(withId.getId())) {
+            if (result.size() >= ModuleAwareIndexContexts.MAX_VARIANTS) {
+                break;
+            }
+            // a variant of providers which are no longer the file's - a plugin was removed - cannot be built again
+            if (providerIdsOf(known).equals(providerIds) && !containsOptions(result, known)) {
+                result.add(known);
+            }
+        }
+        return List.copyOf(result);
+    }
+
+    /**
+     * Remembers the variants {@code file} was indexed under, so that the next project indexing it keeps them.
+     */
+    public static void rememberIndexed(Project project, VirtualFile file, List<VariantDescriptor> descriptors) {
+        if (!(file instanceof VirtualFileWithId withId) || descriptors.isEmpty()) {
+            return;
+        }
+        if (isShared(ModuleAwareIndexContexts.contextsOf(project, file))) {
+            ModuleAwareIndexKnownVariants.getInstance().put(withId.getId(), descriptors);
+        }
+    }
+
+    /**
+     * @return the variants remembered for {@code fileId} - what it was last indexed under when it is shared
+     */
+    public static List<VariantDescriptor> remembered(int fileId) {
+        return ModuleAwareIndexKnownVariants.getInstance().get(fileId);
+    }
+
+    /**
+     * Only a file which no module owns - one of a library or an SDK - is reached by other projects too; a project's own
+     * files keep only their own variants, so editing a header, which moves its includers' options, leaves no stale
+     * variant behind.
+     */
+    private static boolean isShared(List<ModuleAwareIndexContexts.Context> contexts) {
+        return !contexts.isEmpty() && contexts.get(0).orderEntry() != null;
+    }
+
+    private static Set<String> providerIdsOf(VariantDescriptor descriptor) {
+        Set<String> ids = new HashSet<>();
+        for (VariantDescriptor.ProviderOption option : descriptor.options()) {
+            ids.add(option.providerId());
+        }
+        return ids;
+    }
+
+    private static boolean containsOptions(List<VariantDescriptor> descriptors, VariantDescriptor wanted) {
+        for (VariantDescriptor descriptor : descriptors) {
+            if (descriptor.options().equals(wanted.options())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static List<VariantDescriptor> descriptorsFor(List<ModuleAwareIndexOptionProvider> providers,
@@ -136,11 +221,37 @@ public final class ModuleAwareIndexVariants {
      * The variant a file is currently viewed under: the one its view options name, else the primary.
      */
     public static int currentVariant(SerializedStubTree tree, VirtualFile file) {
+        return currentVariant(tree, file, null);
+    }
+
+    /**
+     * The variant a file is currently viewed under in {@code project}: the one its view options name, else the one of
+     * the project's own primary context. The stored primary is the variant of the project which indexed the file last,
+     * which for a file shared by several projects need not be this one.
+     */
+    public static int currentVariant(SerializedStubTree tree, VirtualFile file, @Nullable Project project) {
         Map<String, byte[]> view = ModuleAwareIndexOptions.getViewOptions(file);
         if (view != null) {
             int index = tree.findVariant(view);
             if (index >= 0) {
                 return index;
+            }
+        }
+        if (project == null || project.isDisposed() || tree.getVariantCount() <= 1) {
+            return 0;
+        }
+        Map<String, OptionsMeta.PerProviderMeta> own = ModuleAwareIndexMetaRecorder.ownPrimaryState(project, file);
+        if (own == null || own.isEmpty()) {
+            return 0;
+        }
+        Map<String, Integer> versions = new HashMap<>();
+        for (ModuleAwareIndexOptionProvider provider : ModuleAwareIndexOptionRegistry.getApplicableProviders(file.getFileType())) {
+            versions.put(provider.getId(), provider.getVersion());
+        }
+        for (int i = 0; i < tree.getVariantCount(); i++) {
+            VariantDescriptor descriptor = tree.getDescriptor(i);
+            if (descriptor != null && own.equals(descriptor.toMeta(versions))) {
+                return i;
             }
         }
         return 0;
@@ -151,7 +262,14 @@ public final class ModuleAwareIndexVariants {
      * current variant's options stand in for providers it does not name), else the current variant.
      */
     public static int selectVariant(SerializedStubTree tree, VirtualFile file, @Nullable IndexOptionSelector selector) {
-        int current = currentVariant(tree, file);
+        return selectVariant(tree, file, selector, null);
+    }
+
+    public static int selectVariant(SerializedStubTree tree,
+                                    VirtualFile file,
+                                    @Nullable IndexOptionSelector selector,
+                                    @Nullable Project project) {
+        int current = currentVariant(tree, file, project);
         if (selector == null || selector == IndexOptionSelector.ALL_VARIANTS || tree.getVariantCount() <= 1) {
             return current;
         }

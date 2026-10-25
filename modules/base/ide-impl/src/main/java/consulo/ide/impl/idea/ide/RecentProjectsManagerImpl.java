@@ -480,6 +480,9 @@ public class RecentProjectsManagerImpl implements RecentProjectsManager, Persist
             if (path != null) {
                 markPathRecent(path, project);
             }
+            // the open projects are state too: kept current as they change, not only when the application exits, so a
+            // save at any point - and a restart after a killed process - reopens what was open
+            updateLastProjectPath();
             SystemDock.getInstance().updateMenu();
 
             project.getMessageBus().connect().subscribe(ModuleRootListener.class, new ModuleRootListener() {
@@ -518,6 +521,7 @@ public class RecentProjectsManagerImpl implements RecentProjectsManager, Persist
                     markPathRecent(path, null);
                 }
             }
+            updateLastProjectPath();
             SystemDock.getInstance().updateMenu();
         }
     }

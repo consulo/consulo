@@ -65,6 +65,10 @@ public final class ModuleAwareIndexOptions {
      * no payload. Safe to call while indexing or parsing the file.
      */
     public static <T extends Record> @Nullable T getOptions(Project project, VirtualFile file, String providerId, DataExternalizer<T> externalizer) {
+        if (file instanceof LightVirtualFileBase) {
+            // a light file is never indexed, and in a light application there is no index at all
+            return null;
+        }
         ModuleAwareIndexOptionsRescanner service = Application.get().getInstance(ModuleAwareIndexOptionsRescanner.class);
         byte[] payload = service.getRecordedOptionPayload(file, providerId);
         if (payload != null) {
@@ -230,7 +234,8 @@ public final class ModuleAwareIndexOptions {
                 file = attached;
             }
         }
-        return file;
+        // a light file behind nothing physical has no options
+        return file instanceof LightVirtualFileBase ? null : file;
     }
 
     /**
