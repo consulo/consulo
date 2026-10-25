@@ -15,18 +15,18 @@ import consulo.util.lang.ref.SimpleReference;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.change.Change;
-import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesBrowser;
 import consulo.versionControlSystem.change.ContentRevision;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
+import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesBrowser;
 import consulo.versionControlSystem.impl.internal.ui.awt.InternalChangesBrowser;
 import consulo.virtualFileSystem.status.FileStatus;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
+import javax.swing.*;
 
 public abstract class ChangeGoToChangePopupAction<Chain extends DiffRequestChain>
     extends GoToChangePopupBuilder.BaseGoToChangePopupAction<Chain> {

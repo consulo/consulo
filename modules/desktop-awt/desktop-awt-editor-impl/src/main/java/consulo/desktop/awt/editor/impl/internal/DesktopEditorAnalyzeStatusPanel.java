@@ -25,7 +25,7 @@ import consulo.codeEditor.EditorBundle;
 import consulo.codeEditor.VisualPosition;
 import consulo.codeEditor.impl.EditorSettingsExternalizable;
 import consulo.codeEditor.localize.CodeEditorLocalize;
-import consulo.codeEditor.markup.InspectionWidgetActionProvider;
+import consulo.codeEditor.impl.internal.inspection.InspectionWidgetActions;
 import consulo.colorScheme.EditorColorKey;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.component.messagebus.MessageBusConnection;
@@ -785,12 +785,9 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
 
         AnAction statusAction = new StatusAction();
         DefaultActionGroup actions = new DefaultActionGroup();
-        Application.get().getExtensionPoint(InspectionWidgetActionProvider.class).forEach(provider -> {
-            AnAction action = provider.createAction(myEditor);
-            if (action != null) {
-                actions.add(action);
-            }
-        });
+        for (AnAction action : InspectionWidgetActions.create(myEditor, this)) {
+            actions.add(action);
+        }
         actions.add(statusAction);
         actions.add(navigateGroup);
         statusToolbar = new EditorInspectionsActionToolbar(actions);

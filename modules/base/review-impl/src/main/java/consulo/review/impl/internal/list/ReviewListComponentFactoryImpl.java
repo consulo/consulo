@@ -19,7 +19,7 @@ package consulo.review.impl.internal.list;
 import consulo.annotation.component.ServiceImpl;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
-import consulo.review.impl.internal.ReviewUIUtil;
+import consulo.review.util.ReviewUIUtil;
 import consulo.review.list.CodeReviewListItemsViewModel;
 import consulo.review.list.ReviewListComponentFactory;
 import consulo.review.list.error.ErrorStatusPanelFactory;

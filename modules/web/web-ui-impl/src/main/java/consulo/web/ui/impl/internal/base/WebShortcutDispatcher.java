@@ -28,6 +28,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.action.KeyboardShortcut;
 import consulo.ui.ex.action.Shortcut;
+import consulo.ui.ex.internal.ActionPromoterUtil;
 import consulo.web.ui.impl.internal.clipboard.WebClipboardImpl;
 import consulo.ui.ex.impl.internal.action.MenuItemPresentationFactory;
 import consulo.ui.ex.keymap.Keymap;
@@ -142,7 +143,8 @@ public final class WebShortcutDispatcher {
         // does, the same way IdeKeyEventDispatcher sorts before it offers the stroke to anything
         actions.sort(Comparator.comparing(AnAction::getExecuteWeight).reversed());
 
-        return performFirstEnabled(actions, 0, root, new MenuItemPresentationFactory());
+        List<AnAction> rearranged = ActionPromoterUtil.rearrangeByPromoters(actions, WebFocusTracker.createDataContext(root));
+        return performFirstEnabled(rearranged, 0, root, new MenuItemPresentationFactory());
     }
 
     /**

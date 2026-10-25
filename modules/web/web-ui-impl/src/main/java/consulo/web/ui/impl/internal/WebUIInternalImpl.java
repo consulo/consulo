@@ -93,6 +93,7 @@ import java.net.URL;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -458,6 +459,11 @@ public class WebUIInternalImpl extends UIInternal implements UIInternalEx {
     @Override
     public Image _Image_lazy(Supplier<Image> imageSupplier) {
         return new WebLazyImageImpl(imageSupplier);
+    }
+
+    @Override
+    public Image _Image_async(Image base, Supplier<? extends CompletableFuture<? extends @Nullable Image>> loader) {
+        return new WebAsyncImageImpl(base, loader);
     }
 
     @Override

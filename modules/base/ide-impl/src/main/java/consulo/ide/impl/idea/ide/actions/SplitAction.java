@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.FileEditorWindow;
 import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.localize.LocalizeValue;
@@ -24,6 +25,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.image.Image;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.swing.*;
 
@@ -69,6 +71,13 @@ public abstract class SplitAction extends LegacyDumbAwareAction {
             return;
         }
         FileEditorManagerEx fileEditorManager = FileEditorManagerEx.getInstanceEx(project);
-        presentation.setEnabled(fileEditorManager.hasOpenedFile());
+        FileEditorWindow window = event.getData(FileEditorWindow.DATA_KEY);
+        if (window == null) {
+            window = fileEditorManager.getSplitters().getCurrentWindow();
+        }
+        VirtualFile selectedFile = window == null ? null : window.getSelectedFile();
+        presentation.setEnabled(
+            fileEditorManager.hasOpenedFile() && (selectedFile == null || !FileEditorManager.forbidSplitFor(selectedFile))
+        );
     }
 }

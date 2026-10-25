@@ -67,6 +67,10 @@ public interface Window extends Component, Disposable, HasSize {
 
     boolean isActive();
 
+    @RequiredUIAccess
+    default void pack() {
+    }
+
     /**
      * Takes over the close the user asks for, through the close button of the window: the handler runs instead and
      * decides whether to call {@link #close()}. Without a handler such a request closes the window.

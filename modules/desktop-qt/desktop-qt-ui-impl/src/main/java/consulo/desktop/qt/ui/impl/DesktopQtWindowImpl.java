@@ -495,6 +495,25 @@ public class DesktopQtWindowImpl extends QtComponentDelegate<QMainWindow> implem
         DimensionService.getInstance().setSize(dimensionKey, new Size2D(size.width(), size.height()));
     }
 
+    @RequiredUIAccess
+    @Override
+    public void pack() {
+        if (myMainFrame) {
+            return;
+        }
+        DesktopQtGeometry.invalidateHierarchy(myComponent);
+
+        QRect available = availableGeometry();
+        myComponent.adjustSize();
+        if (available != null) {
+            QSize packed = myComponent.size();
+            myComponent.resize(
+                Math.min(packed.width(), available.width() - ourScreenMarginX),
+                Math.min(packed.height(), available.height() - ourScreenMarginY)
+            );
+        }
+    }
+
     private void applyDefaultSize() {
         if (mySize != null || myComponent.testAttribute(Qt.WidgetAttribute.WA_Resized)) {
             return;

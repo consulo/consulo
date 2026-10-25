@@ -18,6 +18,12 @@
     white-space: pre-wrap;
 }
 
+.consulo-message-list vaadin-markdown img {
+    max-width: 100%;
+    max-height: 500px;
+    object-fit: contain;
+}
+
 /* a component between the text parts is as wide as the text, and does not inherit the pre-wrap the message keeps its
    text lines with - its own template whitespace would turn into blank lines */
 .consulo-message-list vaadin-message > :not([slot="avatar"], span, vaadin-markdown) {

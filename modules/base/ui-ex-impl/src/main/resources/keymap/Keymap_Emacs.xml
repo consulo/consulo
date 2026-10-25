@@ -336,4 +336,7 @@
   <action id="MoveStatementDown"/>
   <action id="ToggleRenderedDocPresentation"/>
   <action id="EditorAddCaretPerSelectedLine"/>
+  <action id="Code.Review.Editor.New.Comment">
+    <keyboard-shortcut first-keystroke="control shift X" remove="true"/>
+  </action>
 </keymap>

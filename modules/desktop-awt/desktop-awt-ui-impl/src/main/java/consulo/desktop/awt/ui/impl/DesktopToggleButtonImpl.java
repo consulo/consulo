@@ -1,0 +1,68 @@
+/*
+ * Copyright 2013-2026 consulo.io
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package consulo.desktop.awt.ui.impl;
+
+import consulo.localize.LocalizeValue;
+import consulo.ui.ToggleButton;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.ValueComponentEvent;
+import consulo.ui.event.details.InputDetails;
+import consulo.ui.event.details.ProgrammaticInputDetails;
+import org.jspecify.annotations.Nullable;
+
+/**
+ * @author VISTALL
+ * @since 2026-10-24
+ */
+class DesktopToggleButtonImpl extends DesktopButtonImpl implements ToggleButton {
+    private boolean mySelected;
+
+    DesktopToggleButtonImpl(LocalizeValue text) {
+        super(text);
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void invoke(InputDetails inputDetails) {
+        setSelected(!mySelected, true, inputDetails);
+
+        super.invoke(inputDetails);
+    }
+
+    @Override
+    public Boolean getValue() {
+        return mySelected;
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setValue(@Nullable Boolean value, boolean fireListeners) {
+        setSelected(value != null && value, fireListeners, ProgrammaticInputDetails.INSTANCE);
+    }
+
+    private void setSelected(boolean selected, boolean fireListeners, InputDetails inputDetails) {
+        if (mySelected == selected) {
+            return;
+        }
+        mySelected = selected;
+        toAWTComponent().getModel().setSelected(selected);
+        toAWTComponent().repaint();
+
+        if (fireListeners) {
+            getListenerDispatcher(ValueComponentEvent.class).onEvent(new ValueComponentEvent(this, mySelected, inputDetails));
+        }
+    }
+}

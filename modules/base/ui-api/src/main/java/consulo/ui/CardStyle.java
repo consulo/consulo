@@ -44,5 +44,9 @@ public enum CardStyle implements ComponentStyle {
      * Little room between the edge and the content - a card standing among other content, such as a discussion
      * inside the editor.
      */
-    COMPACT
+    COMPACT,
+    /**
+     * Marked as the current one among cards standing together - its outline takes the selection color.
+     */
+    SELECTED
 }

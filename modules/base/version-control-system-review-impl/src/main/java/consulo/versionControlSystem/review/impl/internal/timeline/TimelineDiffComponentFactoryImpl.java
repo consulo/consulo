@@ -22,7 +22,7 @@ import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.review.impl.internal.CodeReviewColorUtil;
-import consulo.review.impl.internal.ReviewUIUtil;
+import consulo.review.util.ReviewUIUtil;
 import consulo.review.timeline.CollapsibleTimelineItemViewModel;
 import consulo.ui.Button;
 import consulo.ui.ButtonStyle;

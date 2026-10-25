@@ -32,7 +32,7 @@ import consulo.review.editor.CodeReviewNewCommentInlayModel;
 import consulo.review.editor.CodeReviewRangedInlayModel;
 import consulo.review.editor.CodeReviewThreadInlayModel;
 import consulo.review.impl.internal.CodeReviewColorUtil;
-import consulo.review.impl.internal.ReviewUIUtil;
+import consulo.review.util.ReviewUIUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
 

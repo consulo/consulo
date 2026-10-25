@@ -1,0 +1,14 @@
+// Copyright 2000-2024 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
+package consulo.versionControlSystem.distributed.hosting;
+
+import consulo.localize.LocalizeValue;
+
+/**
+ * Represents a remote service that hosts VCS repositories, e.g GitHub, BitBucket
+ */
+public interface RepositoryHostingService {
+    /**
+     * @return service name that will be used in UI actions
+     */
+    LocalizeValue getServiceDisplayName();
+}

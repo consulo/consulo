@@ -50,6 +50,11 @@ public class VcsLogContentFactory implements ChangesViewContentFactory {
   }
 
   @Override
+  public int getOrderWeight() {
+    return 50;
+  }
+
+  @Override
   public boolean isAvailable() {
     return !VcsLogManager.findLogProviders(Arrays.asList(ProjectLevelVcsManager.getInstance(myProject).getAllVcsRoots()), myProject).isEmpty();
   }
@@ -57,6 +62,6 @@ public class VcsLogContentFactory implements ChangesViewContentFactory {
   
   @Override
   public ChangesViewContentProvider create() {
-    return new VcsLogContentProvider(myProject, VcsProjectLog.getInstance(myProject));
+    return new VcsLogContentProvider(myProject, VcsProjectLogImpl.getInstance(myProject));
   }
 }

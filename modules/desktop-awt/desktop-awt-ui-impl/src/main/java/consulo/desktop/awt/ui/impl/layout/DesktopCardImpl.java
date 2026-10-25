@@ -25,8 +25,10 @@ import consulo.ui.Component;
 import consulo.ui.Space;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.IdeBorderFactory;
+import consulo.ui.ex.awt.JBCurrentTheme;
 import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.RoundedLineBorder;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.VerticalLayout;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
@@ -34,13 +36,13 @@ import consulo.ui.layout.Layout;
 import consulo.ui.layout.LayoutConstraint;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
+import javax.swing.*;
 
 /**
  * @author VISTALL
@@ -120,7 +122,33 @@ public class DesktopCardImpl extends SwingComponentDelegate<JPanel> implements C
     @Override
     public void addStyle(CardStyle style) {
         myStyles.add(style);
-        rebuild(toAWTComponent());
+        updateStyle(style);
+    }
+
+    @Override
+    public void removeStyle(CardStyle style) {
+        if (myStyles.remove(style)) {
+            updateStyle(style);
+        }
+    }
+
+    private void updateStyle(CardStyle style) {
+        JPanel panel = toAWTComponent();
+        if (style == CardStyle.SELECTED) {
+            if (panel != null) {
+                updateBorder(panel);
+                panel.repaint();
+            }
+            return;
+        }
+        rebuild(panel);
+    }
+
+    private void updateBorder(JPanel panel) {
+        // the corners of a card are as round on every frontend - a radius of 10, the arc being its diameter
+        panel.setBorder(myStyles.contains(CardStyle.SELECTED)
+            ? new RoundedLineBorder(JBCurrentTheme.Focus.focusColor(), JBUI.scale(20))
+            : IdeBorderFactory.createRoundedBorder(JBUI.scale(20)));
     }
 
     @RequiredUIAccess
@@ -272,8 +300,7 @@ public class DesktopCardImpl extends SwingComponentDelegate<JPanel> implements C
         }
         panel.add(myBodyPanel, BorderLayout.CENTER);
 
-        // the corners of a card are as round on every frontend - a radius of 10, the arc being its diameter
-        panel.setBorder(IdeBorderFactory.createRoundedBorder(JBUI.scale(20)));
+        updateBorder(panel);
 
         panel.revalidate();
         panel.repaint();

@@ -20,6 +20,8 @@ import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author VISTALL
@@ -42,6 +44,8 @@ public interface HttpRequest {
     @Nullable String getHeaderValue(String headerName);
 
     @Nullable String getParameterValue(String parameter);
+
+    Map<String, List<String>> getParameters();
 
     /**
      * Port this request arrived on. The built-in server can be bound to several ports at once, so a

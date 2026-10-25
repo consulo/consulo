@@ -27,15 +27,17 @@ import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.versionControlSystem.localize.VcsLocalize;
 
+import java.util.List;
+
 /**
  * @author VISTALL
  * @since 2026-10-19
  */
 public class ChangesBrowserViewOptionsAction extends DumbAwareAction {
     private final ActionGroup myOptions;
-    private final AnAction myGroupBy;
+    private final List<? extends AnAction> myGroupBy;
 
-    public ChangesBrowserViewOptionsAction(ActionGroup options, AnAction groupBy) {
+    public ChangesBrowserViewOptionsAction(ActionGroup options, List<? extends AnAction> groupBy) {
         super(
             options.getTemplatePresentation().getTextValue(),
             options.getTemplatePresentation().getDescription(),
@@ -50,7 +52,7 @@ public class ChangesBrowserViewOptionsAction extends DumbAwareAction {
     public void actionPerformed(AnActionEvent e) {
         DefaultActionGroup group = new DefaultActionGroup();
         group.add(AnSeparator.create(VcsLocalize.changesActionGroupBySeparator()));
-        group.add(myGroupBy);
+        group.addAll(myGroupBy);
         group.addAll(myOptions);
 
         ListPopup popup = JBPopupFactory.getInstance().createActionGroupPopup(

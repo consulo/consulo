@@ -27,7 +27,6 @@ import consulo.ui.event.PopupCloseEvent;
 import consulo.ui.impl.PopupStyleState;
 import consulo.ui.impl.ToastPresentation;
 import consulo.ui.style.ComponentColors;
-import io.qt.core.QCoreApplication;
 import io.qt.core.QEvent;
 import io.qt.core.QMargins;
 import io.qt.core.QMetaObject;
@@ -959,7 +958,7 @@ public abstract class DesktopQtPopupImpl extends QtComponentDelegate<QWidget> im
             return;
         }
 
-        QCoreApplication.sendPostedEvents(null, QEvent.Type.LayoutRequest);
+        DesktopQtGeometry.invalidateHierarchy(myComponent);
         myLayout.invalidate();
         myLayout.activate();
 

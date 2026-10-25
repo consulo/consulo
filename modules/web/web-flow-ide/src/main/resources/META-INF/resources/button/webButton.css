@@ -121,3 +121,29 @@ vaadin-button.consulo-vertical-button::part(label) {
     align-items: center;
     line-height: 1;
 }
+
+vaadin-button.consulo-pill-button {
+    --vaadin-button-height: 24px;
+    height: 24px !important;
+    block-size: 24px !important;
+    min-block-size: 0;
+    min-width: 0;
+    margin: 0;
+    padding: 1px 6px;
+    border-radius: 12px !important;
+    border: 1px solid var(--consulo-pill-background) !important;
+    background: var(--consulo-pill-background) !important;
+    color: inherit;
+}
+
+vaadin-button.consulo-pill-button:hover {
+    background: var(--consulo-pill-hovered-background) !important;
+}
+
+vaadin-button.consulo-pill-button[active] {
+    background: var(--consulo-pill-pressed-background) !important;
+}
+
+vaadin-button.consulo-pill-button[theme~="pressed"] {
+    border-color: var(--consulo-pill-selected-border) !important;
+}

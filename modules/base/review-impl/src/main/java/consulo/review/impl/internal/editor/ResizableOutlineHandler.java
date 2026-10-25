@@ -33,7 +33,7 @@ import consulo.review.editor.CodeReviewInlayAdjustmentDisabledReason;
 import consulo.review.editor.CodeReviewLineRange;
 import consulo.review.editor.ReviewInEditorUtil;
 import consulo.review.impl.internal.CodeReviewColorUtil;
-import consulo.review.impl.internal.ReviewUIUtil;
+import consulo.review.util.ReviewUIUtil;
 import consulo.review.localize.ReviewLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;

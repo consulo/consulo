@@ -43,6 +43,7 @@ import java.util.function.IntSupplier;
  */
 public class SandReviewChangesViewModel implements CodeReviewChangesViewModel<SandReviewCommit> {
     private static final String BASE_SHA = "6f2a1c0e9b7d4a31";
+    private static final String CLEANUP_SHA = "c3d4e5f60718293a";
 
     private final List<SandReviewCommit> myCommits;
     private final MutableObservableValue<List<SandReviewCommit>> myReviewCommits;
@@ -50,13 +51,13 @@ public class SandReviewChangesViewModel implements CodeReviewChangesViewModel<Sa
     private final ObservableValue<@Nullable SandReviewCommit> mySelectedCommit;
     private final ObservableValue<Integer> mySelectedCommitIndex;
 
-    public SandReviewChangesViewModel(Project project, Disposable parentDisposable, IntSupplier demoDiscussions) {
+    public SandReviewChangesViewModel(Project project, Disposable parentDisposable, String reviewNumber, IntSupplier demoDiscussions) {
         long now = System.currentTimeMillis();
         SandReviewCommit addNotes = new SandReviewCommit("a1b2c3d4e5f60718", "Add the notes file",
             "The notes collect what the demo should show.", "Valery Semenchuk", new Date(now - 3 * 3600_000L));
         SandReviewCommit explain = new SandReviewCommit("b2c3d4e5f6071829", "Explain review threads in the demo",
             "Describes how threads anchor to lines and how ranges are commented.", "Valery Semenchuk", new Date(now - 2 * 3600_000L));
-        SandReviewCommit cleanup = new SandReviewCommit("c3d4e5f60718293a", "Remove the obsolete file",
+        SandReviewCommit cleanup = new SandReviewCommit(CLEANUP_SHA, "Remove the obsolete file",
             "<b>Obsolete.txt</b> is not used by the demo anymore.", "Sand Reviewer", new Date(now - 3600_000L));
         myCommits = List.of(addNotes, explain, cleanup);
         myReviewCommits = MutableObservableValue.of(myCommits);
@@ -71,11 +72,7 @@ public class SandReviewChangesViewModel implements CodeReviewChangesViewModel<Sa
         changesByCommits.put(explain.sha(), List.of(change(addNotes.sha(), demo, explain.sha(), demo)));
         changesByCommits.put(cleanup.sha(), List.of(change(explain.sha(), obsolete, cleanup.sha(), null), change(explain.sha(), demo, cleanup.sha(), demo)));
 
-        List<RefComparisonChange> summary = List.of(
-            change(BASE_SHA, null, cleanup.sha(), notes),
-            change(BASE_SHA, demo, cleanup.sha(), demo),
-            change(BASE_SHA, obsolete, cleanup.sha(), null)
-        );
+        List<RefComparisonChange> summary = summaryChanges(project);
 
         List<String> commitShas = new ArrayList<>();
         for (SandReviewCommit commit : myCommits) {
@@ -91,7 +88,7 @@ public class SandReviewChangesViewModel implements CodeReviewChangesViewModel<Sa
                     boolean isDemo = demo.equals(change.filePathAfter());
                     details.put(change, new CodeReviewChangeDetails(!isDemo && change.filePathBefore() == null, isDemo ? demoDiscussions.getAsInt() : 0));
                 }
-                return new SandReviewChangeListViewModel(project, cs, changeList, details);
+                return new SandReviewChangeListViewModel(project, cs, reviewNumber, changeList, details);
             });
 
         mySelectedCommit = myDelegate.getSelectedCommit().<@Nullable SandReviewCommit>map(sha -> {
@@ -103,6 +100,18 @@ public class SandReviewChangesViewModel implements CodeReviewChangesViewModel<Sa
             return null;
         });
         mySelectedCommitIndex = mySelectedCommit.map(commit -> commit == null ? -1 : myCommits.indexOf(commit));
+    }
+
+    public static List<RefComparisonChange> summaryChanges(Project project) {
+        String basePath = project.getBasePath();
+        FilePath notes = VcsUtil.getFilePath(basePath + "/a.txt", false);
+        FilePath demo = VcsUtil.getFilePath(basePath + "/" + SandReviewService.DEMO_FILE_NAME, false);
+        FilePath obsolete = VcsUtil.getFilePath(basePath + "/Obsolete.txt", false);
+        return List.of(
+            change(BASE_SHA, null, CLEANUP_SHA, notes),
+            change(BASE_SHA, demo, CLEANUP_SHA, demo),
+            change(BASE_SHA, obsolete, CLEANUP_SHA, null)
+        );
     }
 
     private static RefComparisonChange change(String beforeSha, @Nullable FilePath before, String afterSha, @Nullable FilePath after) {

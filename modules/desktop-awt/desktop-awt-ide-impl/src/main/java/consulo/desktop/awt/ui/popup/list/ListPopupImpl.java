@@ -228,6 +228,9 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
     @Override
     protected void afterShow() {
         tryToAutoSelect(false);
+        if (myMinimumWidth > 0) {
+            updatePopupSize();
+        }
     }
 
     private boolean tryToAutoSelect(boolean handleFinalChoices) {
@@ -354,6 +357,9 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
             Disposer.register(this, stepModel.addListener(event -> {
                 myListModel.syncModel();
                 myList.setVisibleRowCount(Math.min(myMaxRowCount, myListModel.getSize()));
+                if (isVisible()) {
+                    updatePopupSize();
+                }
             }));
         }
 
@@ -714,6 +720,14 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
         }
         finally {
             insideOnChosen.set(false);
+        }
+
+        if (nextStep == PopupStep.FINAL_CHOICE &&
+            onlyItem != null &&
+            !(onlyItem instanceof ActionPopupItem) &&
+            ActionImplUtil.isKeepPopupOpen(listStep.getKeepPopupOnPerform(onlyItem), e)) {
+            myList.repaint();
+            return false;
         }
 
         if (nextStep == PopupStep.FINAL_CHOICE &&

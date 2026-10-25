@@ -31,6 +31,7 @@ import consulo.review.timeline.thread.RepliesStateData;
 import consulo.review.user.CodeReviewUser;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.messageList.AsyncHtmlImageLoader;
 import consulo.util.concurrent.coroutine.MutableObservableValue;
 import consulo.util.concurrent.coroutine.ObservableValue;
 import consulo.versionControlSystem.change.patch.PatchHunk;
@@ -389,5 +390,10 @@ public class SandReviewThreadViewModel implements CodeReviewThreadViewModel, Col
         }
         Instant last = comments.get(comments.size() - 1).time();
         return new DefaultRepliesStateData(authors, comments.size() - 1, Date.from(last));
+    }
+
+    @Override
+    public AsyncHtmlImageLoader getHtmlImageLoader() {
+        return SandReviewImages.HTML_IMAGES;
     }
 }

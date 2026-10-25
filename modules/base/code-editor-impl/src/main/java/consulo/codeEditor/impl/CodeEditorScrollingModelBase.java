@@ -15,7 +15,10 @@
  */
 package consulo.codeEditor.impl;
 
+import consulo.codeEditor.LogicalPosition;
+import consulo.codeEditor.ScrollType;
 import consulo.codeEditor.ScrollingModelEx;
+import consulo.codeEditor.event.ScrollRequestListener;
 import consulo.codeEditor.event.VisibleAreaListener;
 import consulo.disposer.Disposable;
 import consulo.disposer.util.DisposableList;
@@ -30,6 +33,8 @@ public abstract class CodeEditorScrollingModelBase implements ScrollingModelEx {
     protected final CodeEditorBase myEditor;
 
     protected final DisposableList<VisibleAreaListener> myVisibleAreaListeners = DisposableList.create();
+
+    private final DisposableList<ScrollRequestListener> myScrollRequestListeners = DisposableList.create();
 
     public CodeEditorScrollingModelBase(CodeEditorBase editor) {
         myEditor = editor;
@@ -52,6 +57,17 @@ public abstract class CodeEditorScrollingModelBase implements ScrollingModelEx {
     public void removeVisibleAreaListener(VisibleAreaListener listener) {
         boolean success = myVisibleAreaListeners.remove(listener);
         LOG.assertTrue(success);
+    }
+
+    @Override
+    public void addScrollRequestListener(ScrollRequestListener listener, Disposable parentDisposable) {
+        myScrollRequestListeners.add(listener, parentDisposable);
+    }
+
+    protected void fireScrollRequested(LogicalPosition targetPosition, ScrollType scrollType) {
+        for (ScrollRequestListener listener : myScrollRequestListeners) {
+            listener.scrollRequested(targetPosition, scrollType);
+        }
     }
 
     public void dispose() {

@@ -30,6 +30,8 @@ public interface Url {
 
   int hashCodeCaseInsensitive();
 
+  Url resolve(String subPath);
+
   /**
    * Creates a new url with added parameters.
    */

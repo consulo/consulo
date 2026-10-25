@@ -61,7 +61,7 @@ import consulo.ide.impl.idea.diagnostic.DefaultIdeaErrorLogger;
 import consulo.logging.internal.FatalErrorReporter;
 import consulo.platform.os.UnixOperationSystem;
 import consulo.project.Project;
-import consulo.project.internal.RecentProjectsManager;
+import consulo.project.RecentProjectsManager;
 import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationService;

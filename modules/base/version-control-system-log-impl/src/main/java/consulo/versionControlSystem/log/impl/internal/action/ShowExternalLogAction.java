@@ -56,7 +56,7 @@ import consulo.versionControlSystem.log.impl.internal.VcsLogContentProvider;
 import consulo.versionControlSystem.log.impl.internal.VcsLogFilterCollectionImpl;
 import consulo.versionControlSystem.log.impl.internal.VcsLogManager;
 import consulo.versionControlSystem.log.impl.internal.VcsLogTabLocation;
-import consulo.versionControlSystem.log.impl.internal.VcsProjectLog;
+import consulo.versionControlSystem.log.impl.internal.VcsProjectLogImpl;
 import consulo.versionControlSystem.log.impl.internal.data.VcsLogTabsProperties;
 import consulo.versionControlSystem.log.impl.internal.ui.AbstractVcsLogUi;
 import consulo.versionControlSystem.log.impl.internal.ui.VcsLogRootFilterImpl;
@@ -301,7 +301,7 @@ public class ShowExternalLogAction extends LegacyDumbAwareAction {
         VcsLogFilterCollection filters = new VcsLogFilterCollectionImpl.VcsLogFilterCollectionBuilder()
             .with(new VcsLogRootFilterImpl(roots))
             .build();
-        return VcsProjectLog.getInstance(project).openLogTab(filters, VcsLogTabLocation.TOOL_WINDOW) != null;
+        return VcsProjectLogImpl.getInstance(project).openLogTab(filters, VcsLogTabLocation.TOOL_WINDOW) != null;
     }
 
     @RequiredUIAccess

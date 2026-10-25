@@ -1,0 +1,107 @@
+/*
+ * Copyright 2000-2016 JetBrains s.r.o.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package consulo.project;
+
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.application.Application;
+import consulo.ui.ex.action.AnAction;
+import consulo.util.lang.BitUtil;
+import org.jspecify.annotations.Nullable;
+import org.intellij.lang.annotations.MagicConstant;
+
+import java.util.List;
+
+@ServiceAPI(ComponentScope.APPLICATION)
+public interface RecentProjectsManager {
+    public static final int RECENT_ACTIONS_USE_GROUPS_WELCOME_MENU = 1 << 2;
+    public static final int RECENT_ACTIONS_USE_GROUPS_CONTEXT_MENU = 1 << 3;
+
+    public static final int DEFAULT_RECENT_PROJECTS_LIMIT = 25;
+
+    
+    public static RecentProjectsManager getInstance() {
+        return Application.get().getInstance(RecentProjectsManager.class);
+    }
+
+    @Nullable String getLastProjectCreationLocation();
+
+    void setLastProjectCreationLocation(@Nullable String lastProjectLocation);
+
+    void updateProjectModuleExtensions(Project project);
+
+    void updateLastProjectPath();
+
+    String getLastProjectPath();
+
+    void removePath(@Nullable String path);
+
+    List<String> getRecentPaths();
+
+    /**
+     * No-op if {@code path} is already present in recent projects
+     */
+    void addRecentPath(String path);
+
+    /**
+     * @return the last known VCS branch for the given project path, or {@code null} if none is stored.
+     */
+    @Nullable
+    default String getBranch(String path) {
+        return null;
+    }
+
+    /**
+     * Stores (or clears, when {@code branch} is {@code null}) the last known VCS branch for the given project path.
+     */
+    default void setBranch(String path, @Nullable String branch) {
+    }
+
+    
+    @Deprecated
+    default AnAction[] getRecentProjectsActions(boolean forMenu) {
+        return getRecentProjectsActions(0);
+    }
+
+    
+    @Deprecated
+    default AnAction[] getRecentProjectsActions(boolean forMenu, boolean useGroups) {
+        int flags = 0;
+        flags = BitUtil.set(flags, RECENT_ACTIONS_USE_GROUPS_WELCOME_MENU, useGroups);
+        return getRecentProjectsActions(flags);
+    }
+
+    
+    default AnAction[] getRecentProjectsActions(@MagicConstant(flags = {
+        RECENT_ACTIONS_USE_GROUPS_WELCOME_MENU,
+        RECENT_ACTIONS_USE_GROUPS_CONTEXT_MENU
+    }) int flags) {
+        return AnAction.EMPTY_ARRAY;
+    }
+
+    
+    List<ProjectGroup> getGroups();
+
+    void addGroup(ProjectGroup group) ;
+
+    void removeGroup(ProjectGroup group);
+    
+    boolean hasRecentPaths();
+
+    int getRecentProjectsLimit();
+
+    void setRecentProjectsLimit(int limit);
+}

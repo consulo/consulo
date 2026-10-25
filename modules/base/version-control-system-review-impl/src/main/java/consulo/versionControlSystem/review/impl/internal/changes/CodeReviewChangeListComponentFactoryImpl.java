@@ -36,6 +36,7 @@ import consulo.versionControlSystem.review.changes.CodeReviewChangeListDataKeys;
 import consulo.versionControlSystem.review.details.model.AllChangesSelectionRequest;
 import consulo.versionControlSystem.review.details.model.CodeReviewChangeListSelectionRequest;
 import consulo.versionControlSystem.review.details.model.CodeReviewChangeListViewModel;
+import consulo.versionControlSystem.review.details.model.CodeReviewGroupingChangeListViewModel;
 import consulo.versionControlSystem.review.details.model.OneChangeSelectionRequest;
 import consulo.versionControlSystem.review.util.ChangesSelection;
 import consulo.versionControlSystem.review.util.FuzzyChangesSelection;
@@ -88,6 +89,9 @@ public class CodeReviewChangeListComponentFactoryImpl implements CodeReviewChang
                 }
                 vm.showDiffPreview();
             });
+        if (vm instanceof CodeReviewGroupingChangeListViewModel groupingVm) {
+            builder.grouping(groupingVm.getGrouping().get(), groupingVm::setGrouping);
+        }
         if (progressModel != null) {
             builder.changeDecorator((change, presentation) -> {
                 RefComparisonChange ref = refByChange.get(change);

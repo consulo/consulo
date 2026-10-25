@@ -22,8 +22,11 @@ import consulo.accountManagement.AccountScope;
 import consulo.accountManagement.AccountType;
 import consulo.accountManagement.authorize.AnonymousAuthorizeConfig;
 import consulo.accountManagement.authorize.BasicAuthorizeConfig;
+import consulo.accountManagement.authorize.OAuthAuthorizeConfig;
 import consulo.accountManagement.authorize.TokenAuthorizeConfig;
+import consulo.accountManagement.oauth.OAuthCredentials;
 import consulo.annotation.component.ExtensionImpl;
+import consulo.application.Application;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
@@ -95,6 +98,12 @@ public class SandHubAccountType implements AccountType<SandHubScope> {
                         ids.add(scope.getId());
                     }
                     return (serverUrl == null ? getDefaultServerUrl() : serverUrl) + "/settings/tokens/new?description=Consulo&scopes=" + String.join(",", ids);
+                }
+            },
+            new OAuthAuthorizeConfig() {
+                @Override
+                public CompletableFuture<? extends OAuthCredentials> authorize(@Nullable String serverUrl, Set<? extends AccountScope> scopes) {
+                    return Application.get().getInstance(SandHubOAuthService.class).authorize();
                 }
             },
             new BasicAuthorizeConfig() {

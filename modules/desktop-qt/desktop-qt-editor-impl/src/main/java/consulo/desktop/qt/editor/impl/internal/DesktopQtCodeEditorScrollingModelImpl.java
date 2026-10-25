@@ -113,6 +113,7 @@ public class DesktopQtCodeEditorScrollingModelImpl extends CodeEditorScrollingMo
 
     @Override
     public void scrollTo(LogicalPosition pos, ScrollType scrollType) {
+        fireScrollRequested(pos, scrollType);
         DesktopQtEditorWidget surface = getSurface();
         if (surface == null) {
             return;

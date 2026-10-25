@@ -2735,6 +2735,14 @@ public final class DesktopEditorImpl extends CodeEditorBase
     }
 
     @Override
+    public void setFitContentHeight(boolean fit) {
+        myFitContentHeight = fit;
+        if (fit) {
+            myScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+        }
+    }
+
+    @Override
     public void setHorizontalScrollbarVisible(boolean b) {
         myScrollPane.setHorizontalScrollBarPolicy(
             b ? ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED : ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
@@ -4241,6 +4249,9 @@ public final class DesktopEditorImpl extends CodeEditorBase
         myInlayModel.validateState();
     }
 
+    private boolean myFitContentHeight;
+    private boolean myHorizontalScrollBarShown;
+
     private class MyScrollPane extends JBScrollPane {
         private MyScrollPane() {
             super(0);
@@ -4262,10 +4273,49 @@ public final class DesktopEditorImpl extends CodeEditorBase
                 myGutterComponent.updateSize(true, true);
             }
             super.layout();
+            if (myFitContentHeight) {
+                boolean shown = getHorizontalScrollBar().isVisible();
+                if (shown != myHorizontalScrollBarShown) {
+                    myHorizontalScrollBarShown = shown;
+                    revalidate();
+                }
+            }
+        }
+
+        @Override
+        public Dimension getPreferredSize() {
+            Dimension size = super.getPreferredSize();
+            if (!myFitContentHeight || isPreferredSizeSet()) {
+                return size;
+            }
+            Insets insets = getInsets();
+            int height = insets.top + insets.bottom + myEditorComponent.getPreferredSize().height;
+            Border viewportBorder = getViewportBorder();
+            if (viewportBorder != null) {
+                Insets borderInsets = viewportBorder.getBorderInsets(this);
+                height += borderInsets.top + borderInsets.bottom;
+            }
+            JViewport columnHeader = getColumnHeader();
+            if (columnHeader != null && columnHeader.isVisible()) {
+                height += columnHeader.getPreferredSize().height;
+            }
+            JScrollBar horizontalScrollBar = getHorizontalScrollBar();
+            if (horizontalScrollBar != null && horizontalScrollBar.isVisible()) {
+                height += horizontalScrollBar.getPreferredSize().height;
+            }
+            return new Dimension(size.width, height);
         }
 
         @Override
         protected void processMouseWheelEvent(MouseWheelEvent e) {
+            if (myFitContentHeight && !e.isShiftDown()) {
+                Container outer = SwingUtilities.getAncestorOfClass(JScrollPane.class, getParent());
+                if (outer != null) {
+                    outer.dispatchEvent(SwingUtilities.convertMouseEvent(this, e, outer));
+                    e.consume();
+                    return;
+                }
+            }
             if (mySettings.isWheelFontChangeEnabled()) {
                 if (AWTEditorUtil.isChangeFontSize(e)) {
                     int size = myScheme.getEditorFontSize() - e.getWheelRotation();

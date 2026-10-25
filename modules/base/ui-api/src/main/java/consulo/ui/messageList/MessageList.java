@@ -19,6 +19,7 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.HasComponentStyle;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.internal.UIInternal;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -66,4 +67,13 @@ public interface MessageList extends HasComponentStyle<MessageListStyle> {
     void setShowOwnAvatar(boolean showOwnAvatar);
 
     boolean isShowOwnAvatar();
+
+    /**
+     * Loads the images the markdown of the messages shows. Without one an image is read from its address as it is.
+     * Images wider than the message are scaled down to its width.
+     */
+    @RequiredUIAccess
+    void setImageLoader(@Nullable AsyncHtmlImageLoader imageLoader);
+
+    @Nullable AsyncHtmlImageLoader getImageLoader();
 }

@@ -15,6 +15,7 @@
  */
 package consulo.ui.ex.popup;
 
+import consulo.ui.ex.action.KeepPopupOnPerform;
 import consulo.ui.image.Image;
 import consulo.ui.model.FlatDataModel;
 import org.jspecify.annotations.Nullable;
@@ -51,6 +52,14 @@ public interface ListPopupStep<T> extends PopupStep<T> {
      * @return true if the value can be selected, false otherwise.
      */
     boolean isSelectable(T value);
+
+    /**
+     * Whether choosing the value leaves the popup open, so that several values can be chosen one after another.
+     * The popup draws its rows again after such a choice, so a row can show what the choice changed.
+     */
+    default KeepPopupOnPerform getKeepPopupOnPerform(T value) {
+        return KeepPopupOnPerform.NEVER;
+    }
 
     /**
      * Returns the icon to display for the specified list item.

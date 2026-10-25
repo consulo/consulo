@@ -22,15 +22,11 @@ import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.internal.ProgressIndicatorUtils;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.application.util.registry.Registry;
-import consulo.desktop.awt.ui.impl.components.PaintingParent;
-import consulo.desktop.awt.ui.impl.tabs.TabLabel;
 import consulo.logging.Logger;
-import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.ScalableIcon;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.util.lang.Comparing;
@@ -44,11 +40,9 @@ import javax.swing.plaf.basic.BasicTreeUI;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.function.Function;
@@ -62,7 +56,7 @@ public class DesktopDeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<Deskt
 
     private static final Logger LOG = Logger.getInstance(DesktopDeferredIconImpl.class);
     private static final int MIN_AUTO_UPDATE_MILLIS = 950;
-    private static final RepaintScheduler ourRepaintScheduler = new RepaintScheduler();
+    private static final DeferredIconRepaintScheduler ourRepaintScheduler = new DeferredIconRepaintScheduler();
     
     private consulo.ui.image.Image myDelegateIcon;
     private volatile consulo.ui.image.Image myScaledDelegateIcon;
@@ -81,17 +75,7 @@ public class DesktopDeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<Deskt
 
     private final IconListener<T> myEvalListener;
 
-    private final Map<Component, PendingRepaint> myPendingRepaints = new LinkedHashMap<>();
-
-    private record PendingRepaint(
-        Component component,
-        int x,
-        int y,
-        @Nullable Component target,
-        @Nullable Component paintingParent,
-        @Nullable Rectangle paintingParentRec
-    ) {
-    }
+    private final Map<Component, RepaintRequest> myPendingRepaints = new LinkedHashMap<>();
 
     private DesktopDeferredIconImpl(DesktopDeferredIconImpl<T> icon) {
         super(icon);
@@ -211,10 +195,8 @@ public class DesktopDeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<Deskt
     }
 
     private void addPendingRepaint(Component c, int x, int y) {
-        Component target = getTarget(c);
-        Component paintingParent = SwingUtilities.getAncestorOfClass(PaintingParent.class, c);
-        Rectangle paintingParentRec = paintingParent == null ? null : ((PaintingParent) paintingParent).getChildRec(c);
-        myPendingRepaints.putIfAbsent(target, new PendingRepaint(c, x, y, target, paintingParent, paintingParentRec));
+        RepaintRequest request = ourRepaintScheduler.createRepaintRequest(c, x, y);
+        myPendingRepaints.putIfAbsent(Objects.requireNonNull(request.target()), request);
     }
 
     @VisibleForTesting
@@ -258,10 +240,10 @@ public class DesktopDeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<Deskt
             SwingUtilities.invokeLater(() -> {
                 setDone(result);
 
-                List<PendingRepaint> pendingRepaints = new ArrayList<>(myPendingRepaints.values());
+                List<RepaintRequest> pendingRepaints = new ArrayList<>(myPendingRepaints.values());
                 myPendingRepaints.clear();
 
-                for (PendingRepaint pendingRepaint : pendingRepaints) {
+                for (RepaintRequest pendingRepaint : pendingRepaints) {
                     repaint(pendingRepaint, shouldRevalidate);
                 }
             });
@@ -269,14 +251,10 @@ public class DesktopDeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<Deskt
     }
 
     @RequiredUIAccess
-    private void repaint(PendingRepaint pendingRepaint, boolean shouldRevalidate) {
-        Component actualTarget = pendingRepaint.target();
-        Window windowAncestor = actualTarget == null ? null : SwingUtilities.getWindowAncestor(actualTarget);
-        if (windowAncestor == null) {
-            actualTarget = pendingRepaint.paintingParent();
-            if (actualTarget == null || SwingUtilities.getWindowAncestor(actualTarget) == null) {
-                return;
-            }
+    private void repaint(RepaintRequest pendingRepaint, boolean shouldRevalidate) {
+        Component actualTarget = pendingRepaint.getActualTarget();
+        if (actualTarget == null) {
+            return;
         }
 
         if (shouldRevalidate) {
@@ -290,45 +268,7 @@ public class DesktopDeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<Deskt
             }
         }
 
-        Component c = pendingRepaint.component();
-        if (c == actualTarget) {
-            c.repaint(pendingRepaint.x(), pendingRepaint.y(), getIconWidth(), getIconHeight());
-        }
-        else {
-            ourRepaintScheduler.pushDirtyComponent(actualTarget, pendingRepaint.paintingParentRec());
-        }
-    }
-
-    private static Component getTarget(Component c) {
-        Component target;
-
-        Container list = SwingUtilities.getAncestorOfClass(JList.class, c);
-        if (list != null) {
-            target = list;
-        }
-        else {
-            Container tree = SwingUtilities.getAncestorOfClass(JTree.class, c);
-            if (tree != null) {
-                target = tree;
-            }
-            else {
-                Container table = SwingUtilities.getAncestorOfClass(JTable.class, c);
-                if (table != null) {
-                    target = table;
-                }
-                else {
-                    Container box = SwingUtilities.getAncestorOfClass(JComboBox.class, c);
-                    if (box != null) {
-                        target = box;
-                    }
-                    else {
-                        Container tabLabel = SwingUtilities.getAncestorOfClass(TabLabel.class, c);
-                        target = tabLabel == null ? c : tabLabel;
-                    }
-                }
-            }
-        }
-        return target;
+        ourRepaintScheduler.scheduleRepaint(pendingRepaint, getIconWidth(), getIconHeight(), false);
     }
 
     void setDone(consulo.ui.image.Image result) {
@@ -405,51 +345,6 @@ public class DesktopDeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<Deskt
             myIsScheduled = false;
         }
         return myDone;
-    }
-
-    private static class RepaintScheduler {
-        private final Alarm myAlarm = new Alarm();
-        private final Set<RepaintRequest> myQueue = new LinkedHashSet<>();
-
-        @RequiredUIAccess
-        private void pushDirtyComponent(Component c, Rectangle rec) {
-            // assert myQueue accessed from EDT only
-            UIAccess.assertIsUIThread();
-            myAlarm.cancelAllRequests();
-            myAlarm.addRequest(() -> {
-                for (RepaintRequest each : myQueue) {
-                    Rectangle r = each.getRectangle();
-                    if (r == null) {
-                        each.getComponent().repaint();
-                    }
-                    else {
-                        each.getComponent().repaint(r.x, r.y, r.width, r.height);
-                    }
-                }
-                myQueue.clear();
-            }, 50);
-
-            myQueue.add(new RepaintRequest(c, rec));
-        }
-    }
-
-    private static class RepaintRequest {
-        private final Component myComponent;
-        private final Rectangle myRectangle;
-
-        private RepaintRequest(Component component, Rectangle rectangle) {
-            myComponent = component;
-            myRectangle = rectangle;
-        }
-
-        
-        public Component getComponent() {
-            return myComponent;
-        }
-
-        public Rectangle getRectangle() {
-            return myRectangle;
-        }
     }
 
     @FunctionalInterface

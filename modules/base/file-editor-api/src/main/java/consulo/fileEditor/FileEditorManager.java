@@ -41,6 +41,18 @@ import java.util.Set;
 public abstract class FileEditorManager {
   public static final Key<Boolean> CLOSING_TO_REOPEN = Key.create("CLOSING_TO_REOPEN");
 
+  /**
+   * Prohibits showing the {@link VirtualFile} in two {@link FileEditor} simultaneously.
+   * The new {@link #openFile} requests will close old editors before opening a new one.
+   * <p>
+   * Works on {@link VirtualFile} objects
+   */
+  public static final Key<Boolean> FORBID_TAB_SPLIT = Key.create("FORBID_TAB_SPLIT");
+
+  public static boolean forbidSplitFor(VirtualFile file) {
+    return file.getUserData(FORBID_TAB_SPLIT) == Boolean.TRUE;
+  }
+
   public static FileEditorManager getInstance(Project project) {
     return project.getComponent(FileEditorManager.class);
   }

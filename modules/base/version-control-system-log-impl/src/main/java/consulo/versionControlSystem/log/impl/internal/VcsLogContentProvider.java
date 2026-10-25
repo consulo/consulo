@@ -44,12 +44,12 @@ public class VcsLogContentProvider implements ChangesViewContentProvider {
     
     private final Project myProject;
     
-    private final VcsProjectLog myProjectLog;
+    private final VcsProjectLogImpl myProjectLog;
     
     private final DockLayout myContainer;
 
     @RequiredUIAccess
-    public VcsLogContentProvider(Project project, VcsProjectLog projectLog) {
+    public VcsLogContentProvider(Project project, VcsProjectLogImpl projectLog) {
         myProject = project;
         myProjectLog = projectLog;
         myContainer = DockLayout.create();

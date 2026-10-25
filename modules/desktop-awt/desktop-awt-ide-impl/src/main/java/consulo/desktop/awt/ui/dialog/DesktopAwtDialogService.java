@@ -303,6 +303,15 @@ public class DesktopAwtDialogService implements DialogService {
             toolbar.setTargetComponent(panel);
 
             myDescriptor.setOkButtonStateUpdater(toolbar::updateActionsAsync);
+            myDescriptor.setSizeUpdater(() -> {
+                java.awt.Window window = getWindow();
+                if (window != null && window.isShowing()) {
+                    Dimension preferred = window.getPreferredSize();
+                    window.setMinimumSize(preferred);
+                    window.setSize(preferred);
+                    window.validate();
+                }
+            });
 
             toolbar.updateActionsAsync();
 

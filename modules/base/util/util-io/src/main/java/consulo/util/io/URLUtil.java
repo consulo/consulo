@@ -250,6 +250,10 @@ public class URLUtil {
         }
     }
 
+    public static String decode(String string) {
+        return URLDecoder.decode(string, StandardCharsets.UTF_8);
+    }
+
     public static String parseHostFromSshUrl(String sshUrl) {
         // [ssh://]git@github.com:user/project.git
         String host = sshUrl;

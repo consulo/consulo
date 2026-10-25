@@ -23,10 +23,13 @@ import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.log.*;
 import consulo.versionControlSystem.log.graph.GraphCommit;
 import consulo.versionControlSystem.log.graph.PermanentGraph;
+import consulo.versionControlSystem.log.graph.PermanentGraphInfo;
 import consulo.versionControlSystem.log.graph.VisibleGraph;
 import consulo.versionControlSystem.log.impl.internal.VcsLogFilterCollectionImpl;
 import consulo.versionControlSystem.log.impl.internal.VcsLogHashFilterImpl;
 import consulo.versionControlSystem.log.impl.internal.data.index.VcsLogIndex;
+import consulo.versionControlSystem.log.impl.internal.graph.ReachableNodes;
+import consulo.versionControlSystem.log.impl.internal.util.UnsignedBitSet;
 import consulo.versionControlSystem.log.util.VcsLogUtil;
 import consulo.versionControlSystem.util.StopWatch;
 import consulo.virtualFileSystem.VirtualFile;
@@ -79,8 +82,24 @@ class VisiblePackBuilder {
 
         Collection<VirtualFile> visibleRoots =
             VcsLogUtil.getAllVisibleRoots(dataPack.getLogProviders().keySet(), filters.getRootFilter(), filters.getStructureFilter());
-        Set<Integer> matchingHeads = getMatchingHeads(dataPack.getRefsModel(), visibleRoots, filters);
-        FilterResult filterResult = filterByDetails(dataPack, filters, commitCount, visibleRoots, matchingHeads);
+        Set<Integer> matchingHeads;
+        Set<Integer> commitCandidates = null;
+        boolean forceFilterByVcs = false;
+
+        VcsLogRangeFilter rangeFilter = filters.getRangeFilter();
+        if (rangeFilter != null) {
+            Pair<@Nullable Set<Integer>, Set<Integer>> commitsAndHeads = filterByRange(dataPack, filters, visibleRoots, rangeFilter);
+
+            commitCandidates = commitsAndHeads.first;
+            matchingHeads = commitsAndHeads.second;
+            forceFilterByVcs = commitCandidates == null;
+        }
+        else {
+            matchingHeads = getMatchingHeads(dataPack.getRefsModel(), visibleRoots, filters);
+        }
+
+        FilterResult filterResult =
+            filterByDetails(dataPack, filters, commitCount, visibleRoots, matchingHeads, commitCandidates, forceFilterByVcs);
 
         VisibleGraph<Integer> visibleGraph;
         if (matchesNothing(matchingHeads) || matchesNothing(filterResult.matchingCommits)) {
@@ -101,19 +120,21 @@ class VisiblePackBuilder {
         VcsLogFilterCollection filters,
         CommitCountStage commitCount,
         Collection<VirtualFile> visibleRoots,
-        @Nullable Set<Integer> matchingHeads
+        @Nullable Set<Integer> matchingHeads,
+        @Nullable Set<Integer> commitCandidates,
+        boolean forceFilterByVcs
     ) {
         List<VcsLogDetailsFilter> detailsFilters = filters.getDetailsFilters();
-        if (detailsFilters.isEmpty()) {
-            return new FilterResult(null, false, commitCount);
+        if (!forceFilterByVcs && detailsFilters.isEmpty()) {
+            return new FilterResult(commitCandidates, false, commitCount);
         }
 
         Set<Integer> filteredWidthIndex = null;
-        if (myIndex.canFilter(detailsFilters)) {
+        if (!forceFilterByVcs && myIndex.canFilter(detailsFilters)) {
             Collection<VirtualFile> notIndexedRoots = ContainerUtil.filter(visibleRoots, root -> !myIndex.isIndexed(root));
 
             if (notIndexedRoots.size() < visibleRoots.size()) {
-                filteredWidthIndex = myIndex.filter(detailsFilters);
+                filteredWidthIndex = intersect(myIndex.filter(detailsFilters), commitCandidates);
                 if (notIndexedRoots.isEmpty()) {
                     return new FilterResult(filteredWidthIndex, false, commitCount);
                 }
@@ -121,7 +142,8 @@ class VisiblePackBuilder {
             }
         }
 
-        FilterResult filteredWithVcs = filterWithVcs(dataPack.getPermanentGraph(), filters, detailsFilters, matchingHeads, commitCount);
+        FilterResult filteredWithVcs =
+            filterWithVcs(dataPack.getPermanentGraph(), filters, detailsFilters, matchingHeads, commitCount, commitCandidates);
 
         Set<Integer> filteredCommits;
         if (filteredWidthIndex == null) {
@@ -142,20 +164,29 @@ class VisiblePackBuilder {
         VcsLogFilterCollection filters,
         List<VcsLogDetailsFilter> detailsFilters,
         @Nullable Set<Integer> matchingHeads,
-        CommitCountStage commitCount
+        CommitCountStage commitCount,
+        @Nullable Set<Integer> commitCandidates
     ) {
         Set<Integer> matchingCommits = null;
         if (commitCount == CommitCountStage.INITIAL) {
-            matchingCommits = getMatchedCommitIndex(filterInMemory(graph, detailsFilters, matchingHeads));
-            if (matchingCommits.size() < commitCount.getCount()) {
+            if (filters.getRangeFilter() == null) { // not filtering in memory by range for simplicity
+                matchingCommits = getMatchedCommitIndex(filterInMemory(graph, detailsFilters, matchingHeads, commitCandidates));
+                if (matchingCommits.size() < commitCount.getCount()) {
+                    commitCount = commitCount.next();
+                    matchingCommits = null;
+                }
+            }
+            else {
                 commitCount = commitCount.next();
-                matchingCommits = null;
             }
         }
 
         if (matchingCommits == null) {
             try {
-                matchingCommits = getMatchedCommitIndex(getFilteredDetailsFromTheVcs(myLogProviders, filters, commitCount.getCount()));
+                matchingCommits = intersect(
+                    getMatchedCommitIndex(getFilteredDetailsFromTheVcs(myLogProviders, filters, commitCount.getCount())),
+                    commitCandidates
+                );
             }
             catch (VcsException e) {
                 //TODO show an error balloon or something else for non-ea guys.
@@ -165,6 +196,68 @@ class VisiblePackBuilder {
         }
 
         return new FilterResult(matchingCommits, matchingCommits.size() >= commitCount.getCount(), commitCount);
+    }
+
+    private Pair<@Nullable Set<Integer>, Set<Integer>> filterByRange(
+        DataPack dataPack,
+        VcsLogFilterCollection filters,
+        Collection<VirtualFile> visibleRoots,
+        VcsLogRangeFilter rangeFilter
+    ) {
+        /*
+          If we have both a range filter and a branch filter (e.g. `183\nmaster..feature`) they should be united: the graph should show both
+          commits contained in the range, and commits reachable from branches.
+
+          But the main filtering logic is opposite: matchingHeads + some other filter => makes the intersection of commits.
+          To overcome this logic for the range filter case, we are not using matchingHeads, but are collecting all commits reachable from
+          matchingHeads, and unite them with commits belonging to the range.
+        */
+        VcsLogBranchFilter branchFilter = filters.getBranchFilter();
+        Set<Integer> commitsReachableFromHeads = new HashSet<>();
+        if (branchFilter != null) {
+            Set<Integer> explicitMatchingHeads = getMatchingHeads(dataPack.getRefsModel(), branchFilter);
+            commitsReachableFromHeads = collectCommitsReachableFromHeads(dataPack, explicitMatchingHeads);
+        }
+
+        RangeFilterResult commitsForRangeFilter = VcsLogRangeFilterUtil.filterByRange(myHashMap, myLogProviders, dataPack, rangeFilter);
+        Set<Integer> commits = null;
+        if (commitsForRangeFilter instanceof RangeFilterResult.Commits rangeCommits) {
+            commits = new HashSet<>(commitsReachableFromHeads);
+            commits.addAll(rangeCommits.commits());
+        }
+
+        /*
+          At the same time, the root filter should intersect with the range filter (and the branch filter),
+          therefore we take matching heads from the root filter, but use reachable commits set for the branch filter.
+        */
+        Set<Integer> heads = getMatchingHeads(dataPack.getRefsModel(), visibleRoots);
+        return Pair.create(commits, heads);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static Set<Integer> collectCommitsReachableFromHeads(DataPack dataPack, Set<Integer> matchingHeads) {
+        Set<Integer> result = new HashSet<>();
+        if (!(dataPack.getPermanentGraph() instanceof PermanentGraphInfo<?> info)) {
+            return result;
+        }
+        PermanentGraphInfo<Integer> permanentGraphInfo = (PermanentGraphInfo<Integer>) info;
+        Set<Integer> headNodes = permanentGraphInfo.getPermanentCommitsInfo().convertToNodeIds(matchingHeads);
+        UnsignedBitSet reachable = ReachableNodes.getReachableNodes(permanentGraphInfo.getLinearGraph(), headNodes);
+        for (int node = 0; node < permanentGraphInfo.getLinearGraph().nodesCount(); node++) {
+            if (reachable.get(node)) {
+                result.add(permanentGraphInfo.getPermanentCommitsInfo().getCommitId(node));
+            }
+        }
+        return result;
+    }
+
+    private static @Nullable Set<Integer> intersect(@Nullable Set<Integer> commits, @Nullable Set<Integer> candidates) {
+        if (commits == null || candidates == null) {
+            return commits == null ? candidates : commits;
+        }
+        Set<Integer> result = new HashSet<>(commits);
+        result.retainAll(candidates);
+        return result;
     }
 
     private static <T> boolean matchesNothing(@Nullable Collection<T> matchingSet) {
@@ -244,10 +337,14 @@ class VisiblePackBuilder {
     private Collection<CommitId> filterInMemory(
         PermanentGraph<Integer> permanentGraph,
         List<VcsLogDetailsFilter> detailsFilters,
-        @Nullable Set<Integer> matchingHeads
+        @Nullable Set<Integer> matchingHeads,
+        @Nullable Set<Integer> commitCandidates
     ) {
         Collection<CommitId> result = new ArrayList<>();
         for (GraphCommit<Integer> commit : permanentGraph.getAllCommits()) {
+            if (commitCandidates != null && !commitCandidates.contains(commit.getId())) {
+                continue;
+            }
             VcsCommitMetadata data = getDetailsFromCache(commit.getId());
             if (data == null) {
                 // no more continuous details in the cache

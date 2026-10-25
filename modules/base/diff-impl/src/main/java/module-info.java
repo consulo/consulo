@@ -18,7 +18,8 @@ module consulo.diff.impl {
         consulo.desktop.awt.ide.impl,
         consulo.desktop.awt.ui.impl,
         consulo.ide.impl,
-        consulo.version.control.system.impl;
+        consulo.version.control.system.impl,
+        consulo.version.control.system.review.impl;
 
     exports consulo.diff.impl.internal.action to
         consulo.desktop.awt.editor.impl,
@@ -36,6 +37,15 @@ module consulo.diff.impl {
         consulo.desktop.awt.editor.impl,
         consulo.desktop.awt.ide.impl,
         consulo.desktop.awt.ui.impl,
+        consulo.ide.impl,
+        consulo.version.control.system.review.impl;
+
+    exports consulo.diff.impl.internal.combined to
+        consulo.ide.impl,
+        consulo.version.control.system.impl,
+        consulo.version.control.system.review.impl;
+
+    exports consulo.diff.impl.internal.combined.search to
         consulo.ide.impl;
 
     exports consulo.diff.impl.internal.dir to
@@ -53,14 +63,17 @@ module consulo.diff.impl {
 
     exports consulo.diff.impl.internal.viewer to
         consulo.desktop.awt.ide.impl,
-        consulo.version.control.system.impl;
+        consulo.version.control.system.impl,
+        consulo.version.control.system.review.impl;
 
     exports consulo.diff.impl.internal.viewer.side to
         consulo.desktop.awt.ide.impl,
-        consulo.version.control.system.impl;
+        consulo.version.control.system.impl,
+        consulo.version.control.system.review.impl;
 
     exports consulo.diff.impl.internal.viewer.simple to
-        consulo.desktop.awt.ide.impl;
+        consulo.desktop.awt.ide.impl,
+        consulo.version.control.system.review.impl;
 
     exports consulo.diff.impl.internal.viewer.binary to
         consulo.desktop.awt.ide.impl;

@@ -19,6 +19,11 @@ public final class LocalFileUrl implements Url {
   }
 
   @Override
+  public Url resolve(String subPath) {
+    return new LocalFileUrl(path.isEmpty() ? subPath : (path + "/" + subPath));
+  }
+
+  @Override
   public Url addParameters(Map<String, String> parameters) {
     throw new UnsupportedOperationException("File URL doesn't support parameters");
   }

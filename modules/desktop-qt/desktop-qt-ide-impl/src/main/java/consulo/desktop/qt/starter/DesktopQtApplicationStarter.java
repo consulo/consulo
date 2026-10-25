@@ -33,7 +33,7 @@ import consulo.ide.impl.idea.openapi.wm.impl.SystemDock;
 import consulo.logging.Logger;
 import consulo.logging.internal.FatalErrorReporter;
 import consulo.project.Project;
-import consulo.project.internal.RecentProjectsManager;
+import consulo.project.RecentProjectsManager;
 import consulo.project.ui.wm.WelcomeFrameManager;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;

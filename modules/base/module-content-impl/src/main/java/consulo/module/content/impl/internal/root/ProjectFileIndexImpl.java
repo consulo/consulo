@@ -75,6 +75,12 @@ public class ProjectFileIndexImpl extends FileIndexBase implements ProjectFileIn
     }
 
     @Override
+    public boolean isInProjectOrExcluded(VirtualFile file) {
+        DirectoryInfo info = getInfoForFileOrDirectory(file);
+        return !info.isIgnored() && (info.isInProject(file) || info.isExcluded(file));
+    }
+
+    @Override
     public boolean isUnderIgnored(VirtualFile file) {
         return getInfoForFileOrDirectory(file).isIgnored();
     }

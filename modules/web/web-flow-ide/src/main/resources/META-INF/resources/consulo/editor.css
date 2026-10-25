@@ -694,6 +694,16 @@ body.arquill-frame-resizing
   gap: 20px;
 }
 
+.arquill-inspection-toolbar
+{
+  border-radius: 6px;
+  background-color: var(--consulo-panel-background, #ededed);
+  font-family: var(--aura-font-family, var(--lumo-font-family, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif));
+  font-size: var(--aura-font-size-m, var(--lumo-font-size-m, 14px));
+  line-height: normal;
+  white-space: normal;
+}
+
 .arquill-floating-toolbar
 {
   border-radius: 6px;

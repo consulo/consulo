@@ -15,14 +15,24 @@
  */
 package consulo.diff.impl.internal.editor;
 
-import consulo.diff.impl.internal.DiffRequestProcessor;
+import consulo.diff.DiffEditorViewer;
+import consulo.diff.DiffViewerVirtualFile;
 import consulo.diff.chain.DiffRequestChain;
+import consulo.diff.combined.CombinedBlockProducer;
+import consulo.diff.combined.CombinedDiffComponentProcessor;
+import consulo.diff.combined.CombinedDiffKeys;
+import consulo.diff.combined.CombinedDiffManager;
+import consulo.diff.combined.CombinedDiffRequestChain;
+import consulo.diff.combined.CombinedDiffToggle;
 import consulo.diff.impl.internal.CacheDiffRequestChainProcessor;
+import consulo.diff.impl.internal.DiffRequestProcessor;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 
+import java.util.List;
+
 // from kotlin
-public class ChainDiffVirtualFile extends DiffVirtualFile {
+public class ChainDiffVirtualFile extends DiffViewerVirtualFile {
   
   private final DiffRequestChain myChain;
 
@@ -33,7 +43,25 @@ public class ChainDiffVirtualFile extends DiffVirtualFile {
 
   @Override
   @RequiredUIAccess
-  public DiffRequestProcessor createProcessor(Project project) {
+  public DiffEditorViewer createViewer(Project project) {
+    if (myChain instanceof CombinedDiffRequestChain combinedChain) {
+      DiffEditorViewer viewer;
+      List<CombinedBlockProducer> blocks = combinedChain.getCombinedBlocks();
+      if (CombinedDiffToggle.DEFAULT.isCombinedDiffEnabled() && blocks.size() > 1) {
+        CombinedDiffComponentProcessor processor = CombinedDiffManager.getInstance(project).createProcessor();
+        int index = combinedChain.getIndex();
+        if (index >= 0 && index < blocks.size()) {
+          processor.getContext().putUserData(CombinedDiffKeys.COMBINED_DIFF_SCROLL_TO_BLOCK, blocks.get(index).getId());
+        }
+        processor.setBlocks(blocks);
+        viewer = processor;
+      }
+      else {
+        viewer = new CacheDiffRequestChainProcessor(project, myChain);
+      }
+      viewer.getContext().putUserData(CombinedDiffKeys.COMBINED_DIFF_TOGGLE, CombinedDiffToggle.DEFAULT);
+      return viewer;
+    }
     return new CacheDiffRequestChainProcessor(project, myChain);
   }
 

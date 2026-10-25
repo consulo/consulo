@@ -17,7 +17,7 @@ package consulo.diff.impl.internal;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
-import consulo.diff.impl.internal.editor.DiffVirtualFile;
+import consulo.diff.DiffViewerVirtualFile;
 import consulo.language.icon.IconDescriptor;
 import consulo.language.icon.IconDescriptorUpdater;
 import consulo.language.psi.PsiBinaryFile;
@@ -33,7 +33,7 @@ public class DiffIconDescriptorUpdater implements IconDescriptorUpdater {
   @RequiredReadAction
   @Override
   public void updateIcon(IconDescriptor iconDescriptor, PsiElement element, int flags) {
-    if (element instanceof PsiBinaryFile binaryFile && binaryFile.getVirtualFile() instanceof DiffVirtualFile) {
+    if (element instanceof PsiBinaryFile binaryFile && binaryFile.getVirtualFile() instanceof DiffViewerVirtualFile) {
       iconDescriptor.setMainIcon(PlatformIconGroup.actionsDiff());
       iconDescriptor.setRightIcon(null);
     }

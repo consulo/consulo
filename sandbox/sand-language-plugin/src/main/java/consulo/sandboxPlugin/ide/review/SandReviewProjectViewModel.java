@@ -15,6 +15,8 @@
  */
 package consulo.sandboxPlugin.ide.review;
 
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;
 import consulo.review.toolwindow.ReviewToolwindowProjectViewModel;
 import consulo.review.toolwindow.ReviewToolwindowTabs;
@@ -32,10 +34,23 @@ import java.util.function.Supplier;
  */
 public class SandReviewProjectViewModel implements ReviewToolwindowProjectViewModel<SandReviewTab, SandReviewTabViewModel> {
     private final SandReviewListViewModel myListVm;
+    private final SandReviewSearchPanelViewModel mySearchVm;
     private final ReviewToolwindowTabsStateHolder<SandReviewTab, SandReviewTabViewModel> myTabs = new ReviewToolwindowTabsStateHolder<>();
 
-    public SandReviewProjectViewModel(ScheduledExecutorService scheduler, Supplier<List<SandReviewViewModel>> loader) {
-        myListVm = new SandReviewListViewModel(scheduler, loader, this::openReview);
+    public SandReviewProjectViewModel(Disposable parentDisposable,
+                                      ScheduledExecutorService scheduler,
+                                      Supplier<List<SandReviewViewModel>> loader) {
+        mySearchVm = new SandReviewSearchPanelViewModel(parentDisposable, scheduler);
+        myListVm = new SandReviewListViewModel(scheduler, () -> {
+            SandReviewSearchValue search = mySearchVm.getSearchState().get();
+            return loader.get().stream().filter(search::matches).toList();
+        }, this::openReview);
+        Runnable unsubscribe = mySearchVm.getSearchState().addListener(search -> myListVm.refresh());
+        Disposer.register(parentDisposable, unsubscribe::run);
+    }
+
+    public SandReviewSearchPanelViewModel getSearchVm() {
+        return mySearchVm;
     }
 
     @Override

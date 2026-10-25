@@ -28,7 +28,7 @@ import consulo.logging.Logger;
 import consulo.review.editor.CodeReviewChangedRange;
 import consulo.review.editor.CodeReviewEditorGutterActionableChangesModel;
 import consulo.review.editor.CodeReviewEditorGutterChangesModel;
-import consulo.review.impl.internal.ReviewUIUtil;
+import consulo.review.util.ReviewUIUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
 

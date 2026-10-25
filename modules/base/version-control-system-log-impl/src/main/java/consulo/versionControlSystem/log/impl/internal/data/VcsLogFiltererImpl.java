@@ -64,7 +64,7 @@ public class VcsLogFiltererImpl implements VcsLogFilterer {
   ) {
     myLogData = logData;
     myVisiblePackBuilder = myLogData.createVisiblePackBuilder();
-    myFilters = new VcsLogFilterCollectionImpl(null, null, null, null, null, null, null);
+    myFilters = new VcsLogFilterCollectionImpl(null, null, null, null, null, null, null, null);
     mySortType = initialSortType;
 
     myTaskController = new SingleTaskController<>(visiblePack -> {

@@ -16,6 +16,7 @@
 
 package consulo.localHistory.impl.internal.revision;
 
+import consulo.localHistory.ActivityId;
 import consulo.localHistory.impl.internal.ChangeSet;
 import consulo.localHistory.impl.internal.LocalHistoryFacade;
 import consulo.localHistory.impl.internal.Paths;
@@ -24,6 +25,7 @@ import consulo.localHistory.impl.internal.tree.Entry;
 import consulo.localHistory.impl.internal.tree.RootEntry;
 import consulo.util.collection.SmartList;
 import consulo.util.lang.Pair;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -39,6 +41,7 @@ public class ChangeRevision extends Revision {
 
   private final long myId;
   private final String myName;
+  private final @Nullable ActivityId myActivityId;
   private final String myLabel;
   private final int myLabelColor;
   private final Pair<List<String>, Integer> myAffectedFiles;
@@ -56,6 +59,7 @@ public class ChangeRevision extends Revision {
     myLabel = changeSet.getLabel();
     myLabelColor = changeSet.getLabelColor();
     myName = changeSet.getName();
+    myActivityId = changeSet.getActivityId();
 
     List<String> allAffectedFiles = changeSet.getAffectedPaths();
     List<String> someAffectedFiles = new SmartList<>();
@@ -98,6 +102,11 @@ public class ChangeRevision extends Revision {
   @Override
   public String getChangeSetName() {
     return myName;
+  }
+
+  @Override
+  public @Nullable ActivityId getChangeSetActivityId() {
+    return myActivityId;
   }
 
   @Override

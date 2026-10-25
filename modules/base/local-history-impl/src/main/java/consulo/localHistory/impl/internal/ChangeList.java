@@ -17,12 +17,14 @@
 package consulo.localHistory.impl.internal;
 
 import consulo.application.ApplicationManager;
+import consulo.localHistory.ActivityId;
 import consulo.localHistory.impl.internal.change.Change;
 import consulo.localHistory.impl.internal.change.ChangeVisitor;
 import consulo.util.collection.primitive.ints.IntSet;
 import consulo.util.collection.primitive.ints.IntSets;
 import consulo.util.lang.Clock;
 import org.jetbrains.annotations.TestOnly;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -70,29 +72,30 @@ public class ChangeList {
 
   public synchronized boolean forceBeginChangeSet() {
     boolean split = myChangeSetDepth > 0;
-    if (split) doEndChangeSet(null);
+    if (split) doEndChangeSet(null, null);
 
     myChangeSetDepth++;
     doBeginChangeSet();
     return split;
   }
 
-  public synchronized boolean endChangeSet(String name) {
+  public synchronized boolean endChangeSet(@Nullable String name, @Nullable ActivityId activityId) {
     LocalHistoryLog.LOG.assertTrue(myChangeSetDepth > 0, "not balanced 'begin/end-change set' calls");
 
     myChangeSetDepth--;
     if (myChangeSetDepth > 0) return false;
 
-    return doEndChangeSet(name);
+    return doEndChangeSet(name, activityId);
   }
 
-  private boolean doEndChangeSet(String name) {
+  private boolean doEndChangeSet(@Nullable String name, @Nullable ActivityId activityId) {
     if (myCurrentChangeSet.isEmpty()) {
       myCurrentChangeSet = null;
       return false;
     }
 
     myCurrentChangeSet.setName(name);
+    myCurrentChangeSet.setActivityId(activityId);
     myCurrentChangeSet.lock();
 
     myStorage.writeNextSet(myCurrentChangeSet);

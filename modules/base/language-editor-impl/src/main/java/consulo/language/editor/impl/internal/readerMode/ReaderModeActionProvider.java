@@ -6,44 +6,33 @@ import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.markup.InspectionWidgetActionProvider;
-import consulo.colorScheme.EditorColorKey;
-import consulo.dataContext.DataManager;
 import consulo.document.FileDocumentManager;
 import consulo.language.editor.readerMode.ReaderModeSettings;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
-import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
+import consulo.ui.Button;
+import consulo.ui.ButtonStyle;
+import consulo.ui.Component;
+import consulo.ui.UIAction;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AsyncToggleAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.AnActionWithAsyncUpdate;
 import consulo.ui.ex.action.AnSeparator;
+import consulo.ui.ex.action.CustomUIComponentAction;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.Presentation;
-import consulo.ui.ex.action.ToggleAction;
+import consulo.ui.ex.action.Toggleable;
 import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.JBUIScale;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awt.action.CustomComponentAction;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ui.image.Image;
 import consulo.util.concurrent.coroutine.Coroutine;
-import consulo.util.lang.ObjectUtil;
+import consulo.util.concurrent.coroutine.CoroutineStep;
+import consulo.util.concurrent.coroutine.step.CodeExecution;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
-
-import kava.beans.PropertyChangeListener;
-
-import javax.swing.*;
-import javax.swing.plaf.FontUIResource;
-import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 @ExtensionImpl
 public class ReaderModeActionProvider implements InspectionWidgetActionProvider {
@@ -81,10 +70,7 @@ public class ReaderModeActionProvider implements InspectionWidgetActionProvider 
         }
     }
 
-    private static class ReaderModeAction extends ToggleAction implements DumbAware, CustomComponentAction {
-        private static final EditorColorKey FOREGROUND =
-            EditorColorKey.createColorKey("ActionButtonImpl.iconTextForeground", TargetAWT.from(UIUtil.getContextHelpForeground()));
-
+    private static class ReaderModeAction extends AsyncToggleAction implements DumbAware, CustomUIComponentAction {
         private final Editor myEditor;
 
         ReaderModeAction(Editor editor) {
@@ -94,96 +80,29 @@ public class ReaderModeActionProvider implements InspectionWidgetActionProvider 
 
         @RequiredUIAccess
         @Override
-        public JComponent createCustomComponent(Presentation presentation, String place) {
-            return new ReaderModeButton(presentation, place);
+        public Component createCustomComponent(Presentation presentation, String place) {
+            Button button = Button.create(presentation.getTextValue(), event -> {
+                Project project = myEditor.getProject();
+                if (project != null) {
+                    toggle(project);
+                }
+            });
+            button.addStyle(ButtonStyle.TOOLBAR);
+            button.setFocusable(false);
+            updateButton(button, presentation);
+            return button;
         }
 
-        private final class ReaderModeButton extends JLabel {
-            private final Presentation myPresentation;
-            private final String myPlace;
-            private final PropertyChangeListener myPresentationListener;
-
-            private boolean myHovered;
-
-            ReaderModeButton(Presentation presentation, String place) {
-                myPresentation = presentation;
-                myPlace = place;
-
-                setIconTextGap(JBUIScale.scale(2));
-                setForeground(new JBColor(() -> ObjectUtil.notNull(
-                    TargetAWT.to(myEditor.getColorsScheme().getColor(FOREGROUND)),
-                    ObjectUtil.notNull(TargetAWT.to(FOREGROUND.getDefaultColorValue()), UIUtil.getInactiveTextColor())
-                )));
-
-                myPresentationListener = event -> updateFromPresentation();
-
-                addMouseListener(new MouseAdapter() {
-                    @Override
-                    public void mouseEntered(MouseEvent e) {
-                        myHovered = true;
-                        updateFromPresentation();
-                    }
-
-                    @Override
-                    public void mouseExited(MouseEvent e) {
-                        myHovered = false;
-                        updateFromPresentation();
-                    }
-
-                    @Override
-                    @RequiredUIAccess
-                    public void mouseClicked(MouseEvent e) {
-                        AnActionEvent actionEvent = AnActionEvent.createFromDataContext(
-                            myPlace,
-                            myPresentation,
-                            DataManager.getInstance().getDataContext(ReaderModeButton.this)
-                        );
-                        actionPerformed(actionEvent);
-                    }
-                });
-
-                updateFromPresentation();
-            }
-
-            @Override
-            public void addNotify() {
-                super.addNotify();
-                myPresentation.addPropertyChangeListener(myPresentationListener);
-                updateFromPresentation();
-            }
-
-            @Override
-            public void removeNotify() {
-                myPresentation.removePropertyChangeListener(myPresentationListener);
-                super.removeNotify();
-            }
-
-            @Override
-            public void updateUI() {
-                super.updateUI();
-                if (!Platform.current().os().isWindows()) {
-                    Font font = getFont();
-                    if (font != null) {
-                        setFont(new FontUIResource(font.deriveFont(font.getStyle(), font.getSize() - JBUIScale.scale(2f))));
-                    }
-                }
-            }
-
-            private void updateFromPresentation() {
-                setText(myPresentation.getText());
-                Image icon = myPresentation.getIcon();
-                Image hoveredIcon = myPresentation.getHoveredIcon();
-                setIcon(TargetAWT.to(myHovered && hoveredIcon != null ? hoveredIcon : icon));
-                setToolTipText(myPresentation.getDescription().get());
-                setBorder(JBUI.Borders.empty(2, 2, 2, icon == PlatformIconGroup.generalReadermode() ? 2 : 7));
-                revalidate();
-                repaint();
-            }
+        @RequiredUIAccess
+        private static void updateButton(Button button, Presentation presentation) {
+            button.setText(presentation.getTextValue());
+            button.setIcon(presentation.getIcon());
+            button.setToolTipText(presentation.getDescription());
         }
 
         @Override
-        public boolean isSelected(AnActionEvent e) {
-            return true;
+        public CoroutineStep<Object, Boolean> isSelectedAsync(AnActionEvent e) {
+            return CodeExecution.apply(in -> true);
         }
 
         @RequiredUIAccess
@@ -193,7 +112,11 @@ public class ReaderModeActionProvider implements InspectionWidgetActionProvider 
             if (project == null) {
                 return;
             }
+            toggle(project);
+        }
 
+        @RequiredUIAccess
+        private static void toggle(Project project) {
             ReaderModeSettings settings = ReaderModeSettings.getInstance(project);
             settings.setEnabled(!settings.isEnabled());
 
@@ -212,27 +135,35 @@ public class ReaderModeActionProvider implements InspectionWidgetActionProvider 
         }
 
         @Override
-        public void update(AnActionEvent e) {
-            super.update(e);
-
-            Project project = e.getData(Project.KEY);
-            if (project == null) {
-                return;
-            }
-
+        public Coroutine<?, ?> updateAsync(AnActionEvent e) {
             Presentation presentation = e.getPresentation();
-            if (ReaderModeSettings.getInstance(project).isEnabled()) {
-                presentation.setText(LocalizeValue.localizeTODO("Reading mode"));
-                presentation.setDescription(LocalizeValue.localizeTODO("Exit reading mode"));
-                presentation.setIcon(Image.empty(Image.DEFAULT_ICON_SIZE));
-                presentation.setHoveredIcon(PlatformIconGroup.actionsClosedarkgrey());
-            }
-            else {
-                presentation.setText(LocalizeValue.empty());
-                presentation.setDescription(LocalizeValue.localizeTODO("Enter reading mode"));
-                presentation.setIcon(PlatformIconGroup.generalReadermode());
-                presentation.setHoveredIcon(null);
-            }
+            return Coroutine
+                .first(CodeExecution.<Object, Object>apply(in -> {
+                    Toggleable.setSelected(presentation, true);
+
+                    Project project = e.getData(Project.KEY);
+                    if (project == null) {
+                        return null;
+                    }
+
+                    if (ReaderModeSettings.getInstance(project).isEnabled()) {
+                        presentation.setText(LocalizeValue.localizeTODO("Reading mode"));
+                        presentation.setDescription(LocalizeValue.localizeTODO("Exit reading mode"));
+                        presentation.setIcon(null);
+                    }
+                    else {
+                        presentation.setText(LocalizeValue.empty());
+                        presentation.setDescription(LocalizeValue.localizeTODO("Enter reading mode"));
+                        presentation.setIcon(PlatformIconGroup.generalReadermode());
+                    }
+                    return null;
+                }))
+                .then(UIAction.apply(in -> {
+                    if (presentation.getClientProperty(COMPONENT_KEY) instanceof Button button) {
+                        updateButton(button, presentation);
+                    }
+                    return null;
+                }));
         }
     }
 }

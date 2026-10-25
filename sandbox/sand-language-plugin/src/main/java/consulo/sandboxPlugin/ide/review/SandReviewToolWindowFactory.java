@@ -20,11 +20,14 @@ import consulo.application.dumb.DumbAware;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowFactory;
+import consulo.review.details.CodeReviewDetailsActionsComponentFactory;
 import consulo.review.details.CodeReviewDetailsComponentFactory;
+import consulo.review.details.CodeReviewDetailsStatusComponentFactory;
 import consulo.review.icon.ReviewIconGroup;
 import consulo.review.list.ReviewListComponentFactory;
 import consulo.review.timeline.CodeReviewTimelineComponentFactory;
 import consulo.review.toolwindow.ReviewToolwindowTabsManager;
+import consulo.review.toolwindow.ToolwindowUtils;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
@@ -49,6 +52,8 @@ public class SandReviewToolWindowFactory implements ToolWindowFactory, DumbAware
     private final CodeReviewDetailsCommitInfoComponentFactory myCommitInfoComponentFactory;
     private final CodeReviewDetailsBranchComponentFactory myBranchComponentFactory;
     private final CodeReviewChangeListComponentFactory myChangeListComponentFactory;
+    private final CodeReviewDetailsStatusComponentFactory myStatusComponentFactory;
+    private final CodeReviewDetailsActionsComponentFactory myActionsComponentFactory;
 
     @Inject
     public SandReviewToolWindowFactory(ReviewToolwindowTabsManager tabsManager,
@@ -58,8 +63,12 @@ public class SandReviewToolWindowFactory implements ToolWindowFactory, DumbAware
                                        CodeReviewDetailsCommitsComponentFactory commitsComponentFactory,
                                        CodeReviewDetailsCommitInfoComponentFactory commitInfoComponentFactory,
                                        CodeReviewDetailsBranchComponentFactory branchComponentFactory,
-                                       CodeReviewChangeListComponentFactory changeListComponentFactory) {
+                                       CodeReviewChangeListComponentFactory changeListComponentFactory,
+                                       CodeReviewDetailsStatusComponentFactory statusComponentFactory,
+                                       CodeReviewDetailsActionsComponentFactory actionsComponentFactory) {
         myTabsManager = tabsManager;
+        myStatusComponentFactory = statusComponentFactory;
+        myActionsComponentFactory = actionsComponentFactory;
         myCommitsComponentFactory = commitsComponentFactory;
         myCommitInfoComponentFactory = commitInfoComponentFactory;
         myBranchComponentFactory = branchComponentFactory;
@@ -82,6 +91,7 @@ public class SandReviewToolWindowFactory implements ToolWindowFactory, DumbAware
     @RequiredUIAccess
     @Override
     public void createToolWindowContent(Project project, ToolWindow toolWindow) {
+        ToolwindowUtils.dontHideOnEmptyContent(toolWindow);
         myTabsManager.manageReviewToolwindowTabs(
             toolWindow.getContentManager(),
             project,
@@ -94,7 +104,9 @@ public class SandReviewToolWindowFactory implements ToolWindowFactory, DumbAware
                 myCommitsComponentFactory,
                 myCommitInfoComponentFactory,
                 myBranchComponentFactory,
-                myChangeListComponentFactory),
+                myChangeListComponentFactory,
+                myStatusComponentFactory,
+                myActionsComponentFactory),
             LocalizeValue.localizeTODO("Sand Review")
         );
     }

@@ -21,7 +21,7 @@ import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManagerListener;
-import consulo.review.impl.internal.ReviewUIUtil;
+import consulo.review.util.ReviewUIUtil;
 import consulo.review.toolwindow.ReviewTab;
 import consulo.review.toolwindow.ReviewTabsComponentFactory;
 import consulo.review.toolwindow.ReviewTabViewModel;

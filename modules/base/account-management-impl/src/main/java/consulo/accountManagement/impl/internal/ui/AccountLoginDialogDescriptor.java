@@ -123,7 +123,8 @@ public final class AccountLoginDialogDescriptor extends DialogDescriptor {
 
     @Override
     protected DialogOkAction createOkAction() {
-        return new DialogOkAction(AccountManagementLocalize.buttonLogIn());
+        LocalizeValue text = myAuthorizeType.getAuthorizeActionText();
+        return new DialogOkAction(text.isEmpty() ? AccountManagementLocalize.buttonLogIn() : text);
     }
 
     @RequiredUIAccess

@@ -23,6 +23,7 @@ import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.versionControlSystem.change.Change;
 
+import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -40,6 +41,12 @@ public interface VcsChangesBrowserBuilder {
      * followed by the group's actions.
      */
     VcsChangesBrowserBuilder viewOptions(ActionGroup group);
+
+    /**
+     * Starts the tree with the given {@link ChangesGroupingSupport} keys and reports every change of them. Keys the tree does
+     * not support are kept as they are.
+     */
+    VcsChangesBrowserBuilder grouping(Set<String> groupingKeys, Consumer<Set<String>> groupingListener);
 
     /**
      * Adds the rollback action; rolled back changes leave the list.

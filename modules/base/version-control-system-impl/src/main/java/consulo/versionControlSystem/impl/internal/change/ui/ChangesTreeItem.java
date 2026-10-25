@@ -19,5 +19,5 @@ package consulo.versionControlSystem.impl.internal.change.ui;
  * @author VISTALL
  * @since 2026-10-17
  */
-public sealed interface ChangesTreeItem permits ChangeListTreeItem, ChangeTreeItem, DirectoryTreeItem, FileGroupTreeItem, FileTreeItem, MissingFileTreeItem, ModuleTreeItem, PathTreeItem {
+public sealed interface ChangesTreeItem permits ChangeListTreeItem, ChangeTreeItem, DirectoryTreeItem, FileGroupTreeItem, FileTreeItem, MissingFileTreeItem, ModuleTreeItem, PathTreeItem, RepositoryTreeItem {
 }

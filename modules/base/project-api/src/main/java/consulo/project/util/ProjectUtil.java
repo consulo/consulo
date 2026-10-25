@@ -18,7 +18,8 @@ package consulo.project.util;
 import consulo.application.util.UserHomeFileUtil;
 import consulo.container.boot.ContainerPathManager;
 import consulo.project.Project;
-import consulo.project.internal.RecentProjectsManager;
+import consulo.project.ProjectManager;
+import consulo.project.RecentProjectsManager;
 import consulo.util.io.FileUtil;
 import consulo.util.io.PathKt;
 import consulo.util.io.PathUtil;
@@ -36,6 +37,15 @@ import java.util.Locale;
  * @since 17-Sep-22
  */
 public class ProjectUtil {
+    public static @Nullable Project findProject(Path file) {
+        for (Project project : ProjectManager.getInstance().getOpenProjects()) {
+            if (isSameProject(file.toString(), project)) {
+                return project;
+            }
+        }
+        return null;
+    }
+
     public static boolean isSameProject(@Nullable String projectFilePath, Project project) {
         if (projectFilePath == null) {
             return false;

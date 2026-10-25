@@ -31,7 +31,7 @@ import consulo.versionControlSystem.VcsMappingListener;
 public class InitLogStartupActivity implements PostStartupActivity, DumbAware {
   @Override
   public void runActivity(Project project, UIAccess uiAccess) {
-    VcsProjectLog projectLog = VcsProjectLog.getInstance(project);
+    VcsProjectLogImpl projectLog = VcsProjectLogImpl.getInstance(project);
 
     MessageBusConnection connection = project.getMessageBus().connect();
     connection.subscribe(VcsMappingListener.class, projectLog::recreateLog);

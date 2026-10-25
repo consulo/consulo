@@ -15,6 +15,7 @@
  */
 package consulo.diff.impl.internal.viewer.side;
 
+import consulo.diff.EditorDiffViewer;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.LogicalPosition;
@@ -53,7 +54,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
-public abstract class ThreesideTextDiffViewer extends ThreesideDiffViewer<TextEditorHolder> {
+public abstract class ThreesideTextDiffViewer extends ThreesideDiffViewer<TextEditorHolder> implements EditorDiffViewer {
     private @Nullable List<? extends EditorEx> myEditors;
     private final List<? extends EditorEx> myEditableEditors;
 
@@ -261,7 +262,7 @@ public abstract class ThreesideTextDiffViewer extends ThreesideDiffViewer<TextEd
     //
 
     @Override
-    protected @Nullable Navigatable getNavigatable() {
+    public @Nullable Navigatable getNavigatable() {
         return getCurrentContent().getNavigatable(LineCol.fromCaret(getCurrentEditor()));
     }
 

@@ -18,6 +18,7 @@ package consulo.diff.impl.internal.fragment;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.diff.impl.internal.viewer.simple.SimpleOnesideDiffViewer;
 import consulo.diff.DiffContext;
+import consulo.diff.DiffToolType;
 import consulo.diff.FrameDiffTool;
 import consulo.diff.localize.DiffLocalize;
 import consulo.diff.request.DiffRequest;
@@ -26,6 +27,11 @@ import consulo.ui.annotation.RequiredUIAccess;
 @ExtensionImpl(id = "unified", order = "after simple")
 public class UnifiedDiffTool implements FrameDiffTool {
     
+    @Override
+    public DiffToolType getToolType() {
+        return DiffToolType.UNIFIED;
+    }
+
     @Override
     @RequiredUIAccess
     public DiffViewer createComponent(DiffContext context, DiffRequest request) {

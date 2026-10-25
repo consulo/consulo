@@ -57,6 +57,15 @@ public interface AccountManager {
     @Nullable
     Account findAccount(String id, @Nullable Project project);
 
+    default @Nullable String getServerUrl(Account account) {
+        String serverUrl = account.getServerUrl();
+        if (serverUrl != null && !serverUrl.isEmpty()) {
+            return serverUrl;
+        }
+        AccountType<?> type = findAccountType(account.getTypeId());
+        return type == null ? null : type.getDefaultServerUrl();
+    }
+
     @Nullable
     Account getActiveAccount(AccountType<?> type, @Nullable Project project);
 

@@ -46,6 +46,11 @@ module consulo.code.editor.impl {
         consulo.language.editor.impl,
         consulo.ide.impl;
 
+    exports consulo.codeEditor.impl.internal.inspection to
+        consulo.desktop.awt.editor.impl,
+        consulo.desktop.qt.editor.impl,
+        consulo.web.editor.impl;
+
     exports consulo.codeEditor.impl.internal.floating to
         consulo.desktop.awt.editor.impl,
         consulo.desktop.qt.editor.impl,

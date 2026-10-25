@@ -69,4 +69,14 @@ public interface VcsLogObjectsFactory {
   VcsRef createRef(Hash commitHash, String name, VcsRefType type, VirtualFile root);
 
   VcsLogBranchFilter createBranchFilter(Collection<String> branchNames);
+
+  VcsLogRangeFilter createRangeFilter(List<VcsLogRangeFilter.RefRange> ranges);
+
+  default VcsLogRangeFilter createRangeFilter(String exclusiveRef, String inclusiveRef) {
+    return createRangeFilter(List.of(new VcsLogRangeFilter.RefRange(exclusiveRef, inclusiveRef)));
+  }
+
+  VcsLogRootFilter createRootFilter(Collection<VirtualFile> roots);
+
+  VcsLogFilterCollection createFilterCollection(Collection<? extends VcsLogFilter> filters);
 }

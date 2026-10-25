@@ -65,11 +65,15 @@ clone.button:
 clone.destination.directory.description:
     text: Select a parent directory destination directory for clone
 clone.destination.directory.error.access:
-    text: Could not create {0}<br/>Check your access rights
+    text: Could not create destination directory<br/>Check your access rights
+clone.destination.directory.error.exists:
+    text: The directory already exists and it is not empty
+clone.destination.directory.error.invalid:
+    text: Invalid directory path
+clone.destination.directory.error.not.directory:
+    text: Destination is not a directory
 clone.destination.directory.title:
     text: Parent Directory
-clone.destination.exists.error:
-    text: The path {0} exists. Repository cannot be cloned to an existing directory.
 clone.dir.name:
     text: 'Directory &Name:'
 clone.invalid.url:
@@ -78,6 +82,8 @@ clone.parent.dir:
     text: '&Parent Directory:'
 clone.parent.missing.error:
     text: The parent path {0} must exist.
+clone.repository.url.error.empty:
+    text: Empty repository URL
 clone.repository.url.test.failed.message:
     text: Repository test failed<br/>{0}
 clone.repository.url:
@@ -112,6 +118,14 @@ multi.message.line.prefix.form:
     text: '{0}: {1}'
 multi.message.line.suffix.form:
     text: '{1} in {0}'
+new.branch.dialog.branch.name:
+    text: 'Branch Name:'
+new.branch.dialog.branch.root.all.name:
+    text: All
+new.branch.dialog.branch.root.name:
+    text: 'Root:'
+new.branch.dialog.operation.create.name:
+    text: Create
 notification.synched.branches.content:
     text: You have several {0} roots in the project and they all are checked out at the same branch. We've enabled synchronous branch control for the project.<br/>If you wish to control branches in different roots separately, you may <a href='settings'>disable</a> the setting.
 notification.synched.branches.title:

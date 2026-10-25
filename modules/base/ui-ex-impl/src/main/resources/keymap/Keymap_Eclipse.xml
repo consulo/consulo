@@ -388,4 +388,7 @@
   </action>
   <action id="GotoBookmark1"/>
   <action id="ExternalSystem.ProjectRefreshAction"/>
+  <action id="Code.Review.Editor.New.Comment">
+    <keyboard-shortcut first-keystroke="control shift X" remove="true"/>
+  </action>
 </keymap>

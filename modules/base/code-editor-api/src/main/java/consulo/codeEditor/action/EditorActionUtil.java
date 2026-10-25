@@ -16,8 +16,10 @@
 package consulo.codeEditor.action;
 
 import consulo.codeEditor.*;
-import consulo.codeEditor.internal.CodeEditorInternalHelper;
 import consulo.codeEditor.RealEditor;
+import consulo.codeEditor.ScrollType;
+import consulo.codeEditor.ScrollingModel;
+import consulo.codeEditor.internal.CodeEditorInternalHelper;
 import consulo.codeEditor.util.EditorModificationUtil;
 import consulo.codeEditor.util.EditorUtil;
 import consulo.document.Document;
@@ -27,8 +29,8 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.CharArrayUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
-
 import org.jspecify.annotations.Nullable;
+
 import java.awt.*;
 import java.util.List;
 
@@ -816,6 +818,29 @@ public class EditorActionUtil {
    * @see EditorUtil#calcCaretLineRange(Editor)
    * @see EditorActionUtil#moveCaretToLineStart(Editor, boolean)
    */
+  public static void moveCaretToTextStart(Editor editor) {
+    editor.getCaretModel().removeSecondaryCarets();
+    editor.getCaretModel().moveToOffset(0);
+    editor.getSelectionModel().removeSelection();
+
+    ScrollingModel scrollingModel = editor.getScrollingModel();
+    scrollingModel.disableAnimation();
+    scrollingModel.scrollToCaret(ScrollType.RELATIVE);
+    scrollingModel.enableAnimation();
+  }
+
+  public static void moveCaretToTextEnd(Editor editor) {
+    editor.getCaretModel().removeSecondaryCarets();
+    int offset = editor.getDocument().getTextLength();
+    editor.getCaretModel().moveToLogicalPosition(editor.offsetToLogicalPosition(offset).leanForward(true));
+    editor.getSelectionModel().removeSelection();
+
+    ScrollingModel scrollingModel = editor.getScrollingModel();
+    scrollingModel.disableAnimation();
+    scrollingModel.scrollToCaret(ScrollType.CENTER);
+    scrollingModel.enableAnimation();
+  }
+
   public static void moveCaretToLineStartIgnoringSoftWraps(Editor editor) {
     editor.getCaretModel().moveToLogicalPosition(EditorUtil.calcCaretLineRange(editor).first);
   }

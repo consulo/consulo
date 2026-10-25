@@ -3,11 +3,11 @@
   "project" : "consulo",
   "projectVersion" : "master",
   "sourceLocale" : "en-US",
-  "generatedAt" : "2026-10-24T16:17:32.787283334Z",
+  "generatedAt" : "2026-10-25T15:13:12.991432140Z",
   "documents" : {
     "consulo.accountManagement.AccountManagementLocalize" : {
       "source" : {
-        "sig" : "4fc32bb024cdb9f7db819edea2c42e3f"
+        "sig" : "06c1b89f982fabc15065c0120a38cc08"
       }
     },
     "consulo.ai.AILocalize" : {
@@ -57,7 +57,7 @@
     },
     "consulo.diff.DiffLocalize" : {
       "source" : {
-        "sig" : "b503e5b9794124e87a4a4d42b9454ca5"
+        "sig" : "61249795f4f4343868b2094bdf0eea64"
       }
     },
     "consulo.document.DocumentLocalize" : {
@@ -312,7 +312,7 @@
     },
     "consulo.review.ReviewLocalize" : {
       "source" : {
-        "sig" : "6e01cb15a51bdb9ad9c0d8d7dfc8848b"
+        "sig" : "7f801706125dfad57ac138a1bf400916"
       }
     },
     "consulo.task.TaskLocalize" : {
@@ -347,12 +347,12 @@
     },
     "consulo.versionControlSystem.VcsLocalize" : {
       "source" : {
-        "sig" : "ab63a055a9238d58774fa012b11a7615"
+        "sig" : "f55e1929accb06f16b36b8743f6cda3e"
       }
     },
     "consulo.versionControlSystem.distributed.DistributedVcsLocalize" : {
       "source" : {
-        "sig" : "07fadb24283f1af291f9458738b8cb02"
+        "sig" : "5bbdec65bebf332e5796280a09e4fd25"
       }
     },
     "consulo.versionControlSystem.log.VersionControlSystemLogLocalize" : {

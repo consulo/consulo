@@ -69,12 +69,12 @@ public class AnonymousAccountAuthorizeType implements AccountAuthorizeType<Anony
     }
 
     @Override
-    public String serialize(AnonymousCredentials credentials) {
+    public String serialize(AnonymousCredentials credentials, AccountAuthorizeConfig config) {
         return "";
     }
 
     @Override
-    public AnonymousCredentials deserialize(String value) {
+    public AnonymousCredentials deserialize(String value, AccountAuthorizeConfig config) {
         return AnonymousCredentials.INSTANCE;
     }
 

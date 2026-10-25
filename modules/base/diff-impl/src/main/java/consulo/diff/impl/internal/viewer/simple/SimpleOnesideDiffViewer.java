@@ -16,9 +16,9 @@
 package consulo.diff.impl.internal.viewer.simple;
 
 import consulo.application.progress.ProgressIndicator;
-import consulo.dataContext.DataSink;
 import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.markup.RangeHighlighter;
+import consulo.dataContext.DataSink;
 import consulo.diff.DiffContext;
 import consulo.diff.DiffDataKeys;
 import consulo.diff.DiffNavigationContext;

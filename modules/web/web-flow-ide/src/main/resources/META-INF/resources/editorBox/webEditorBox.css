@@ -41,7 +41,7 @@ vaadin-input-container.consulo-editor-box-viewer {
 }
 
 vaadin-input-container.consulo-editor-box > [slot="suffix"] {
-    width: auto;
+    width: auto !important;
 }
 
 vaadin-input-container.consulo-editor-box .arquill-editor:not(:focus-within) .arquill-caret {

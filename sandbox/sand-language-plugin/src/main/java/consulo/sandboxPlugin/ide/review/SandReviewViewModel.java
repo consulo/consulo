@@ -23,6 +23,7 @@ import consulo.project.Project;
 import consulo.review.details.data.CodeReviewCIJob;
 import consulo.review.details.data.CodeReviewCIJobState;
 import consulo.review.details.data.ReviewRequestState;
+import consulo.review.details.data.ReviewState;
 import consulo.review.details.model.CodeReviewDetailsViewModel;
 import consulo.review.details.model.CodeReviewStatusViewModel;
 import consulo.review.icon.CIBuildStatusIcons;
@@ -40,6 +41,7 @@ import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.function.Consumer;
@@ -61,6 +63,7 @@ public class SandReviewViewModel implements CodeReviewDetailsViewModel, CodeRevi
     private final SandReviewTimelineViewModel myTimelineVm;
     private final SandReviewChangesViewModel myChangesVm;
     private final SandReviewBranchesViewModel myBranchesVm = new SandReviewBranchesViewModel();
+    private final SandReviewFlowViewModel myFlowVm;
     private volatile @Nullable Boolean mySeen;
     private final List<Consumer<List<CodeReviewCIJob>>> myShowJobsListeners = new CopyOnWriteArrayList<>();
 
@@ -75,6 +78,7 @@ public class SandReviewViewModel implements CodeReviewDetailsViewModel, CodeRevi
                                Date createdDate,
                                @Nullable Boolean hasConflicts,
                                List<CodeReviewCIJob> ciJobs,
+                               Map<SandReviewUser, ReviewState> reviewerReviews,
                                List<SandReviewThreadViewModel> threads) {
         myNumber = number;
         myAuthor = author;
@@ -85,8 +89,9 @@ public class SandReviewViewModel implements CodeReviewDetailsViewModel, CodeRevi
         myHasConflicts = MutableObservableValue.of(hasConflicts);
         myCiJobs = MutableObservableValue.of(ciJobs);
         myThreads = new CopyOnWriteArrayList<>(threads);
+        myFlowVm = new SandReviewFlowViewModel(scheduler, myState, myHasConflicts, reviewerReviews, !threads.isEmpty());
 
-        myChangesVm = new SandReviewChangesViewModel(project, parentDisposable, myThreads::size);
+        myChangesVm = new SandReviewChangesViewModel(project, parentDisposable, number, myThreads::size);
 
         List<CodeReviewTimelineItem> timeline = new ArrayList<>();
         if (!description.isBlank()) {
@@ -107,6 +112,10 @@ public class SandReviewViewModel implements CodeReviewDetailsViewModel, CodeRevi
 
     public SandReviewChangesViewModel getChangesVm() {
         return myChangesVm;
+    }
+
+    public SandReviewFlowViewModel getFlowVm() {
+        return myFlowVm;
     }
 
     public SandReviewBranchesViewModel getBranchesVm() {

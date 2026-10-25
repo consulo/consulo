@@ -155,7 +155,8 @@ public class DesktopQtComponentInlays {
                 if (widgetLayout != null) {
                     widgetLayout.activate();
                 }
-                int height = Math.max(1, widget.hasHeightForWidth() ? widget.heightForWidth(width) : widget.sizeHint().height());
+                int hint = Math.max(1, widget.hasHeightForWidth() ? widget.heightForWidth(width) : widget.sizeHint().height());
+                int height = Math.max(widget.minimumHeight(), Math.min(widget.maximumHeight(), hint));
 
                 if (renderer.calcWidthInPixels(inlay) != width || renderer.calcHeightInPixels(inlay) != height) {
                     renderer.setInlaySize(width, height);

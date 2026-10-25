@@ -25,7 +25,7 @@ import org.jspecify.annotations.Nullable;
  * @author Kirill Likhodedov
  */
 @UsedInPlugin
-public final class AuthData {
+public class AuthData {
     
     private final String myLogin;
     private final @Nullable String myPassword;

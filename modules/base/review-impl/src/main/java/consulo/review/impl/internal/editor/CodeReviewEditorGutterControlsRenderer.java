@@ -41,7 +41,7 @@ import consulo.review.editor.CodeReviewEditorGutterControlsState;
 import consulo.review.editor.CodeReviewLineRange;
 import consulo.review.editor.CodeReviewMultilineCommentableEditorModel;
 import consulo.review.icon.ReviewIconGroup;
-import consulo.review.impl.internal.ReviewUIUtil;
+import consulo.review.util.ReviewUIUtil;
 import consulo.review.localize.ReviewLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;

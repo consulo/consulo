@@ -19,17 +19,28 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.review.details.CodeReviewDetailsActionsComponentFactory;
 import consulo.review.details.CodeReviewDetailsComponentFactory;
+import consulo.review.details.CodeReviewDetailsStatusComponentFactory;
+import consulo.review.details.data.ReviewState;
+import consulo.review.localize.ReviewLocalize;
 import consulo.review.list.ReviewListComponentFactory;
 import consulo.review.timeline.CodeReviewTimelineComponentFactory;
 import consulo.review.toolwindow.ReviewTabsComponentFactory;
 import consulo.review.util.ComputedResult;
+import consulo.review.util.ReviewUIUtil;
+import consulo.ui.Button;
+import consulo.ui.ButtonStyle;
 import consulo.ui.Component;
 import consulo.ui.Label;
 import consulo.ui.Space;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.layout.DockLayout;
+import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.layout.VerticalLayout;
 import consulo.versionControlSystem.review.CodeReviewProgressTreeModelFromDetails;
 import consulo.versionControlSystem.review.changes.CodeReviewChangeListComponentFactory;
@@ -38,6 +49,7 @@ import consulo.versionControlSystem.review.details.CodeReviewDetailsCommitInfoCo
 import consulo.versionControlSystem.review.details.CodeReviewDetailsCommitsComponentFactory;
 import org.jspecify.annotations.Nullable;
 
+import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
@@ -56,6 +68,9 @@ public class SandReviewTabsComponentFactory implements ReviewTabsComponentFactor
     private final CodeReviewDetailsCommitInfoComponentFactory myCommitInfoComponentFactory;
     private final CodeReviewDetailsBranchComponentFactory myBranchComponentFactory;
     private final CodeReviewChangeListComponentFactory myChangeListComponentFactory;
+    private final CodeReviewDetailsStatusComponentFactory myStatusComponentFactory;
+    private final CodeReviewDetailsActionsComponentFactory myActionsComponentFactory;
+    private final SandReviewSubmitPopupHandler mySubmitPopupHandler = new SandReviewSubmitPopupHandler();
 
     public SandReviewTabsComponentFactory(Project project,
                                           ReviewListComponentFactory listComponentFactory,
@@ -64,8 +79,12 @@ public class SandReviewTabsComponentFactory implements ReviewTabsComponentFactor
                                           CodeReviewDetailsCommitsComponentFactory commitsComponentFactory,
                                           CodeReviewDetailsCommitInfoComponentFactory commitInfoComponentFactory,
                                           CodeReviewDetailsBranchComponentFactory branchComponentFactory,
-                                          CodeReviewChangeListComponentFactory changeListComponentFactory) {
+                                          CodeReviewChangeListComponentFactory changeListComponentFactory,
+                                          CodeReviewDetailsStatusComponentFactory statusComponentFactory,
+                                          CodeReviewDetailsActionsComponentFactory actionsComponentFactory) {
         myProject = project;
+        myStatusComponentFactory = statusComponentFactory;
+        myActionsComponentFactory = actionsComponentFactory;
         myCommitsComponentFactory = commitsComponentFactory;
         myCommitInfoComponentFactory = commitInfoComponentFactory;
         myBranchComponentFactory = branchComponentFactory;
@@ -78,6 +97,14 @@ public class SandReviewTabsComponentFactory implements ReviewTabsComponentFactor
     @RequiredUIAccess
     @Override
     public Component createReviewListComponent(Disposable parentDisposable, SandReviewProjectViewModel projectVm) {
+        DockLayout root = DockLayout.create();
+        root.top(new SandReviewSearchPanelFactory(projectVm.getSearchVm()).create(parentDisposable));
+        root.center(createList(parentDisposable, projectVm));
+        return root;
+    }
+
+    @RequiredUIAccess
+    private Component createList(Disposable parentDisposable, SandReviewProjectViewModel projectVm) {
         return myListComponentFactory.create(parentDisposable, projectVm.getProjectName(), projectVm.getListVm(), review -> {
             projectVm.getListVm().open(review);
             SandReviewTabViewModel tabVm = projectVm.getTabs().get().tabs().get(new SandReviewTab(review.getNumber()));
@@ -108,15 +135,36 @@ public class SandReviewTabsComponentFactory implements ReviewTabsComponentFactor
         commitsSection.add(myCommitInfoComponentFactory.create(parentDisposable, changesVm.getSelectedCommit(), SandReviewCommit::toPresentation));
         commitsSection.paddingBuilder().horizontalSet(Space.X_LARGE).apply();
 
+        SandReviewFlowViewModel flowVm = review.getFlowVm();
+
         VerticalLayout statuses = VerticalLayout.create(Space.NONE);
-        statuses.add(myDetailsComponentFactory.createCiComponent(parentDisposable, review));
-        statuses.add(myDetailsComponentFactory.createConflictsComponent(parentDisposable, review));
+        statuses.add(myStatusComponentFactory.createCiComponent(parentDisposable, review));
+        statuses.add(myStatusComponentFactory.createConflictsComponent(parentDisposable,
+            review.getHasConflicts(),
+            flowVm.getResolveConflictsAction(),
+            flowVm.isBusy()));
+        statuses.add(myStatusComponentFactory.createRequiredReviewsComponent(parentDisposable,
+            flowVm.getRequiredApprovingReviewsCount(),
+            flowVm.isDraft()));
+        statuses.add(myStatusComponentFactory.createRequiredResolveConversationsComponent(parentDisposable,
+            flowVm.getHasUnresolvedConversations()));
+        statuses.add(myStatusComponentFactory.createNeedReviewerComponent(parentDisposable, flowVm.getReviewerReviews()));
+        statuses.add(myStatusComponentFactory.createReviewersReviewStateComponent(parentDisposable,
+            flowVm.getReviewerReviews(),
+            SandReviewUser::getPresentableName,
+            reviewer -> null,
+            (reviewer, reviewState) -> new DefaultActionGroup(DumbAwareAction.create(
+                ReviewLocalize.reviewDetailsActionRemoveReviewer(reviewer.getPresentableName()),
+                e -> flowVm.removeReviewer(reviewer)))));
         statuses.paddingBuilder().topSet(Space.MEDIUM).bottomSet(Space.LARGE).horizontalSet(Space.X_LARGE).apply();
+
+        Component actions = createActionsComponent(parentDisposable, review, flowVm);
 
         VerticalLayout header = VerticalLayout.create(Space.NONE);
         header.add(titleSection);
         header.add(commitsSection);
         header.add(statuses);
+        header.add(actions);
 
         DockLayout changesHolder = DockLayout.create();
         AtomicReference<@Nullable Disposable> changesDisposable = new AtomicReference<>();
@@ -158,5 +206,75 @@ public class SandReviewTabsComponentFactory implements ReviewTabsComponentFactor
     @Override
     public Component createEmptyTabContent(Disposable parentDisposable) {
         return Label.create(LocalizeValue.localizeTODO("Not connected to the sand review service"));
+    }
+
+    @RequiredUIAccess
+    private Component createActionsComponent(Disposable parentDisposable, SandReviewViewModel review, SandReviewFlowViewModel flowVm) {
+        AnAction requestReviewAction = DumbAwareAction.create(ReviewLocalize.reviewDetailsActionRequest(), e -> flowVm.requestReview());
+        AnAction reRequestReviewAction = DumbAwareAction.create(ReviewLocalize.reviewDetailsActionRerequest(), e -> flowVm.reRequestReview());
+        AnAction setMyselfAsReviewerAction = DumbAwareAction.create(ReviewLocalize.reviewDetailsActionSetMyselfAsReviewer(),
+            e -> flowVm.setMyselfAsReviewer());
+        AnAction mergeAction = DumbAwareAction.create(ReviewLocalize.reviewDetailsActionMerge(), e -> flowVm.merge());
+        AnAction squashAndMergeAction = DumbAwareAction.create(ReviewLocalize.reviewDetailsActionSquashAndMerge(), e -> flowVm.merge());
+        AnAction rebaseAction = DumbAwareAction.create(ReviewLocalize.reviewDetailsActionRebase(), e -> flowVm.merge());
+        AnAction closeAction = DumbAwareAction.create(LocalizeValue.localizeTODO("Close"), e -> flowVm.close());
+        AnAction reopenAction = DumbAwareAction.create(LocalizeValue.localizeTODO("Reopen"), e -> flowVm.reopen());
+        AnAction postReviewAction = DumbAwareAction.create(LocalizeValue.localizeTODO("Ready for Review"), e -> flowVm.postReview());
+
+        List<AnAction> allActions = List.of(requestReviewAction, reRequestReviewAction, setMyselfAsReviewerAction, mergeAction,
+            squashAndMergeAction, rebaseAction, closeAction, reopenAction, postReviewAction);
+        ReviewUIUtil.bind(parentDisposable, flowVm.isBusy(), busy -> {
+            for (AnAction action : allActions) {
+                action.getTemplatePresentation().setEnabled(!busy);
+            }
+        });
+
+        DefaultActionGroup mergeGroup = new DefaultActionGroup(ReviewLocalize.reviewDetailsActionMergeGroup(), true);
+        mergeGroup.add(mergeAction);
+        mergeGroup.add(squashAndMergeAction);
+        mergeGroup.add(rebaseAction);
+
+        DefaultActionGroup moreActionsGroup = new DefaultActionGroup();
+        ReviewUIUtil.bind(parentDisposable, flowVm.getReviewState(), reviewState -> {
+            moreActionsGroup.removeAll();
+            if (reviewState == ReviewState.ACCEPTED) {
+                moreActionsGroup.add(requestReviewAction);
+            }
+            else {
+                moreActionsGroup.add(setMyselfAsReviewerAction);
+                moreActionsGroup.add(mergeGroup);
+            }
+            moreActionsGroup.add(closeAction);
+        });
+
+        SandReviewSubmitViewModel submitVm = new SandReviewSubmitViewModel(flowVm, review.getThreads().size());
+        Button submitButton = Button.create(ReviewLocalize.reviewStartSubmitActionWithComments(review.getThreads().size()));
+        submitButton.addClickListener(event -> submitVm.setPopupFuture(mySubmitPopupHandler.show(submitVm, submitButton, true)));
+        ReviewUIUtil.bind(parentDisposable, flowVm.isBusy(), busy -> submitButton.setEnabled(!busy));
+
+        Button mergeButton = ReviewUIUtil.createActionButton(parentDisposable, mergeAction, "SandReviewDetails");
+        mergeButton.addStyle(ButtonStyle.PRIMARY);
+        ReviewUIUtil.bind(parentDisposable, flowVm.getReviewState(), reviewState -> mergeButton.setVisible(reviewState == ReviewState.ACCEPTED));
+
+        HorizontalLayout openedStatePanel = HorizontalLayout.create(CodeReviewDetailsActionsComponentFactory.BUTTONS_GAP);
+        openedStatePanel.add(myActionsComponentFactory.createRequestReviewButton(parentDisposable,
+            flowVm.getReviewState(), flowVm.getRequestedReviewers(), requestReviewAction));
+        openedStatePanel.add(myActionsComponentFactory.createReRequestReviewButton(parentDisposable,
+            flowVm.getReviewState(), flowVm.getRequestedReviewers(), reRequestReviewAction));
+        openedStatePanel.add(submitButton);
+        openedStatePanel.add(mergeButton);
+        openedStatePanel.add(myActionsComponentFactory.createMoreButton(moreActionsGroup));
+
+        Component actions = myActionsComponentFactory.createActionsComponent(parentDisposable,
+            review.getReviewRequestState(),
+            openedStatePanel,
+            myActionsComponentFactory.createActionsForMergedReview(),
+            myActionsComponentFactory.createActionsForClosedReview(parentDisposable, reopenAction),
+            myActionsComponentFactory.createActionsForDraftReview(parentDisposable, postReviewAction));
+
+        VerticalLayout panel = VerticalLayout.create(Space.NONE);
+        panel.add(actions);
+        panel.paddingBuilder().bottomSet(Space.X_LARGE).horizontalSet(Space.X_LARGE).apply();
+        return panel;
     }
 }

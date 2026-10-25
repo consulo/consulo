@@ -15,12 +15,9 @@
  */
 package consulo.diff.internal;
 
-import consulo.application.progress.ProgressIndicator;
 import consulo.codeEditor.LogicalPosition;
 import consulo.diff.DiffNavigationContext;
 import consulo.diff.DiffUserDataKeys;
-import consulo.diff.comparison.ComparisonPolicy;
-import consulo.diff.fragment.LineFragment;
 import consulo.diff.merge.MergeResult;
 import consulo.diff.merge.MergeTool;
 import consulo.util.collection.ContainerUtil;
@@ -54,15 +51,6 @@ public interface DiffUserDataKeysEx extends DiffUserDataKeys {
 
   Key<DiffNavigationContext> NAVIGATION_CONTEXT = Key.create("Diff.NavigationContext");
 
-  interface DiffComputer {
-    
-    List<LineFragment> compute(CharSequence text1,
-                               CharSequence text2,
-                               ComparisonPolicy policy,
-                               boolean innerChanges,
-                               ProgressIndicator indicator);
-  }
-  Key<DiffComputer> CUSTOM_DIFF_COMPUTER = Key.create("Diff.CustomDiffComputer");
 
   //
   // DiffContext
@@ -71,6 +59,8 @@ public interface DiffUserDataKeysEx extends DiffUserDataKeys {
   Key<Component> BOTTOM_PANEL = Key.create("Diff.BottomPanel"); // Could implement Disposable
 
   Key<Boolean> SHOW_READ_ONLY_LOCK = Key.create("Diff.ShowReadOnlyLock");
+
+  Key<Boolean> EDITORS_HIDE_TITLE = Key.create("Diff.EditorsHideTitle");
 
   //
   // MergeContext / MergeRequest

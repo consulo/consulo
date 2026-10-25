@@ -137,6 +137,7 @@ public class DesktopScrollingModelImpl extends CodeEditorScrollingModelBase {
         Editor editor = myEditor;
         AsyncEditorLoader.performWhenLoaded(myEditor, () -> {
             VisualPosition visualPosition = editor.getCaretModel().getVisualPosition();
+            fireScrollRequested(editor.visualToLogicalPosition(visualPosition), scrollType);
             scrollTo(visualPosition, scrollType);
         });
     }
@@ -178,7 +179,10 @@ public class DesktopScrollingModelImpl extends CodeEditorScrollingModelBase {
     public void scrollTo(LogicalPosition pos, ScrollType scrollType) {
         assertIsDispatchThread();
 
-        AsyncEditorLoader.performWhenLoaded(myEditor, () -> scrollTo(myEditor.logicalPositionToXY(pos), scrollType));
+        AsyncEditorLoader.performWhenLoaded(myEditor, () -> {
+            fireScrollRequested(pos, scrollType);
+            scrollTo(myEditor.logicalPositionToXY(pos), scrollType);
+        });
     }
 
     @RequiredUIAccess

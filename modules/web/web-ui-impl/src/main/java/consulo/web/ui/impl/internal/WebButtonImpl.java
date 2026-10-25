@@ -22,6 +22,7 @@ import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.Button;
 import consulo.ui.ButtonStyle;
+import consulo.ui.style.ComponentColors;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ClickEvent;
@@ -102,7 +103,18 @@ public class WebButtonImpl extends VaadinComponentDelegate<WebButtonImpl.Vaadin>
                 toVaadinComponent().addThemeVariants(ButtonVariant.TERTIARY);
                 toVaadinComponent().addClassName("consulo-vertical-button");
                 break;
+            case PILL:
+                applyPillStyle(toVaadinComponent());
+                break;
         }
+    }
+
+    static void applyPillStyle(com.vaadin.flow.component.button.Button button) {
+        button.addClassName("consulo-pill-button");
+        button.getStyle().set("--consulo-pill-background", WebColors.toStyleCssColor(ComponentColors.REACTION_BACKGROUND));
+        button.getStyle().set("--consulo-pill-hovered-background", WebColors.toStyleCssColor(ComponentColors.REACTION_HOVERED_BACKGROUND));
+        button.getStyle().set("--consulo-pill-pressed-background", WebColors.toStyleCssColor(ComponentColors.REACTION_PRESSED_BACKGROUND));
+        button.getStyle().set("--consulo-pill-selected-border", WebColors.toStyleCssColor(ComponentColors.REACTION_SELECTED_BORDER));
     }
 
     @RequiredUIAccess

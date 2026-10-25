@@ -35,6 +35,7 @@ public class DesktopQtAvatarImpl extends QtComponentDelegate<QLabel> implements 
     private LocalizeValue myName;
     private @Nullable Image myImage;
     private @Nullable AvatarStyle myStyle;
+    private @Nullable AvatarStyle myOutline;
 
     public DesktopQtAvatarImpl(LocalizeValue name, @Nullable Image image) {
         myName = name;
@@ -61,7 +62,12 @@ public class DesktopQtAvatarImpl extends QtComponentDelegate<QLabel> implements 
 
     @Override
     public void addStyle(AvatarStyle style) {
-        myStyle = style;
+        if (AvatarPresentation.isOutline(style)) {
+            myOutline = style;
+        }
+        else {
+            myStyle = style;
+        }
         refreshIcons();
     }
 
@@ -93,7 +99,8 @@ public class DesktopQtAvatarImpl extends QtComponentDelegate<QLabel> implements 
         int size = AvatarPresentation.sizeOf(myStyle);
         String name = myName.get();
         component.setFixedSize(size, size);
-        component.setPixmap(DesktopQtAvatarPainter.paint(name, myImage, size, component.devicePixelRatioF(), component.palette()));
+        component.setPixmap(DesktopQtAvatarPainter.paint(name, myImage, size, myOutline, component.devicePixelRatioF(), component.palette()));
         component.setToolTip(name);
+        DesktopQtAvatarPainter.repaintWhileLoading(component, myImage, this::refreshIcons);
     }
 }

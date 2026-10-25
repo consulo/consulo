@@ -20,7 +20,7 @@ import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;
 import consulo.review.comment.CodeReviewNewCommentViewModel;
 import consulo.review.impl.internal.CodeReviewColorUtil;
-import consulo.review.impl.internal.ReviewUIUtil;
+import consulo.review.util.ReviewUIUtil;
 import consulo.review.impl.internal.comment.CodeReviewCommentTextFieldFactory;
 import consulo.review.impl.internal.comment.CodeReviewCommentUIUtil;
 import consulo.review.impl.internal.list.ReviewListCellRenderer;
@@ -64,7 +64,7 @@ public final class CodeReviewThreadComponentFactory {
             }
         }
 
-        MessageList messages = CodeReviewCommentItemFactory.createList();
+        MessageList messages = CodeReviewCommentItemFactory.createList(thread.getHtmlImageLoader());
         if (compact) {
             messages.addStyle(MessageListStyle.COMPACT);
         }

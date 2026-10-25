@@ -25,6 +25,7 @@ import consulo.ui.ex.popup.ListPopup;
 import consulo.util.collection.ContainerUtil;
 import consulo.versionControlSystem.log.VcsLogBranchFilter;
 import consulo.versionControlSystem.log.VcsLogDataPack;
+import consulo.versionControlSystem.log.VcsLogRangeFilter;
 import consulo.versionControlSystem.log.VcsRef;
 import consulo.versionControlSystem.log.impl.internal.data.MainVcsLogUiProperties;
 import consulo.versionControlSystem.log.localize.VersionControlSystemLogLocalize;
@@ -41,6 +42,24 @@ public class BranchFilterPopup extends MultipleValueFilterPopup<VcsLogBranchFilt
     public BranchFilterPopup(MainVcsLogUiProperties uiProperties, VcsLogClassicFilterUi.BranchFilterModel filterModel) {
         super(VersionControlSystemLogLocalize.filterBranch(), uiProperties, filterModel);
         myBranchFilterModel = filterModel;
+    }
+
+    @Override
+    public String getCurrentText() {
+        VcsLogRangeFilter rangeFilter = myBranchFilterModel.getRangeFilter();
+        if (rangeFilter != null && myFilterModel.getFilter() == null) {
+            return rangeFilter.getDisplayText();
+        }
+        return super.getCurrentText();
+    }
+
+    @Override
+    public @Nullable String getToolTip() {
+        VcsLogRangeFilter rangeFilter = myBranchFilterModel.getRangeFilter();
+        if (rangeFilter != null && myFilterModel.getFilter() == null) {
+            return String.join(", ", rangeFilter.getTextPresentation());
+        }
+        return super.getToolTip();
     }
 
     @Override

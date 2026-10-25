@@ -91,6 +91,29 @@
       "allocatedBackground": "#5a5a5a",
       "usedBackground": "#6e6e6e"
     },
+    "Review": {
+      "Avatar": {
+        "Border": {
+          "Status": {
+            "Accepted": "#57965c",
+            "WaitForUpdates": "#e08855",
+            "NeedReview": "#6f737a"
+          }
+        }
+      },
+      "Reaction": {
+        "background": "#2b2d30",
+        "hoveredBackground": "#393b40",
+        "pressedBackground": "#25324d",
+        "selectedBorder": "#548af7"
+      }
+    },
+    "VersionControl": {
+      "RefLabel": {
+        "foreground": "#909090",
+        "backgroundBase": "#ffffff"
+      }
+    },
     "Vcs": {
       "incomingForeground": "#548af7",
       "outgoingForeground": "#57965c"

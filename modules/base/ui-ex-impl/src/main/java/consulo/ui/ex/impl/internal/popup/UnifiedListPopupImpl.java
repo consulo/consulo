@@ -16,6 +16,7 @@
 package consulo.ui.ex.impl.internal.popup;
 
 import consulo.component.ComponentManager;
+import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.ui.*;
@@ -89,6 +90,16 @@ public class UnifiedListPopupImpl extends UnifiedPopupImpl implements ListPopup 
             myInlineActions = new PopupInlineActions(step, () -> false);
             myList = buildList(this);
             myPopup = buildPopup(this, nested);
+
+            FlatDataModel<Object> model = step.getModel();
+            if (model != null) {
+                UIAccess uiAccess = UIAccess.current();
+                Disposer.register(UnifiedListPopupImpl.this, model.addListener(event -> uiAccess.give(() -> {
+                    if (!isDisposed()) {
+                        myPopup.pack();
+                    }
+                })));
+            }
         }
     }
 
@@ -535,6 +546,15 @@ public class UnifiedListPopupImpl extends UnifiedPopupImpl implements ListPopup 
                     pushLevel(resolvedListStep);
                 }
             }, uiAccess);
+            return;
+        }
+
+        if (next == PopupStep.FINAL_CHOICE
+            && level != null
+            && myLevels.contains(level)
+            && !(value instanceof ActionPopupItem)
+            && ActionImplUtil.isKeepPopupOpen(step.getKeepPopupOnPerform(value), details)) {
+            level.myList.setRenderer(rendererFor(level.myStep));
             return;
         }
 

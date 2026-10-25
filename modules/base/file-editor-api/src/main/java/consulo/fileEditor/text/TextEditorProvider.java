@@ -187,6 +187,8 @@ public abstract class TextEditorProvider implements FileEditorProvider, DumbAwar
         editor.putUserData(TEXT_EDITOR_KEY, textEditor);
     }
 
+    public abstract void setStateImpl(@Nullable Project project, Editor editor, TextEditorState state);
+
     public TextEditorState getStateImpl(@Nullable Project project, Editor editor, FileEditorStateLevel level) {
         TextEditorState state = new TextEditorState();
         CaretModel caretModel = editor.getCaretModel();

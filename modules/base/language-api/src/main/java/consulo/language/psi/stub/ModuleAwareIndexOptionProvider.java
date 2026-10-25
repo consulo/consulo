@@ -37,8 +37,6 @@ import java.util.Set;
  * precomputed {@code FileType → providers} map keeps lookups O(1). A file may be claimed by
  * several providers contributing independent dimensions (macros, toolchain, target); the
  * index layer composes their returned {@link IndexOption}s.</p>
- *
- * <p>See {@code MODULE_AWARE_INDEX.md} for the full design.</p>
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ModuleAwareIndexOptionProvider {

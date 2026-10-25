@@ -169,7 +169,7 @@ public class EditorSearchSession implements SearchSession, UiDataProvider, Selec
         //FindUtil.triggerUsedOptionsStats(FIND_TYPE, findModel);
     }
 
-    protected AnAction[] createPrimarySearchActions() {
+    public static AnAction[] createPrimarySearchActions() {
         return new AnAction[]{new StatusTextAction(), new PrevOccurrenceAction(), new NextOccurrenceAction(), new FindAllAction(), AnSeparator.create(), new AddOccurrenceAction(),
             new RemoveOccurrenceAction(), new SelectAllAction(), AnSeparator.create()};
     }
@@ -238,7 +238,7 @@ public class EditorSearchSession implements SearchSession, UiDataProvider, Selec
         return myComponent.getProject();
     }
 
-    private static FindModel createDefaultFindModel(Project project, Editor editor) {
+    public static FindModel createDefaultFindModel(Project project, Editor editor) {
         FindModel findModel = new FindModel();
         findModel.copyFrom(FindManager.getInstance(project).getFindInFileModel());
         if (editor.getSelectionModel().hasSelection()) {
@@ -335,8 +335,11 @@ public class EditorSearchSession implements SearchSession, UiDataProvider, Selec
 
     @Override
     public void componentHidden() {
-        myLivePreviewController.off();
-        mySearchResults.removeListener(this);
+        disableLivePreview();
+    }
+
+    public SearchResults getSearchResults() {
+        return mySearchResults;
     }
 
     @Override
@@ -367,22 +370,30 @@ public class EditorSearchSession implements SearchSession, UiDataProvider, Selec
     }
 
     private void updateUIWithFindModel() {
-        myComponent.update(myFindModel.getStringToFind(), myFindModel.getStringToReplace(), myFindModel.isReplaceState(), myFindModel.isMultiline());
-        updateEmptyText();
+        updateUIWithFindModel(myComponent, myFindModel, myEditor);
         myLivePreviewController.setTrackingSelection(!myFindModel.isGlobal());
     }
 
-    private void updateEmptyText() {
-        myComponent.updateEmptyText(() -> getEmptyText().get());
+    public static void updateUIWithFindModel(SearchReplaceComponent component, FindModel findModel, @Nullable Editor editor) {
+        component.update(findModel.getStringToFind(), findModel.getStringToReplace(), findModel.isReplaceState(), findModel.isMultiline());
+        updateEmptyText(component, findModel, editor);
     }
 
-    private LocalizeValue getEmptyText() {
-        if (myFindModel.isGlobal() || !myFindModel.getStringToFind().isEmpty()) {
+    private void updateEmptyText() {
+        updateEmptyText(myComponent, myFindModel, myEditor);
+    }
+
+    public static void updateEmptyText(SearchReplaceComponent component, FindModel findModel, @Nullable Editor editor) {
+        component.updateEmptyText(() -> getEmptyText(findModel, editor).get());
+    }
+
+    public static LocalizeValue getEmptyText(FindModel findModel, @Nullable Editor editor) {
+        if (findModel.isGlobal() || !findModel.getStringToFind().isEmpty()) {
             return LocalizeValue.empty();
         }
-        String text = getEditor().getSelectionModel().getSelectedText();
+        String text = editor == null ? null : editor.getSelectionModel().getSelectedText();
         if (text != null && text.contains("\n")) {
-            boolean replaceState = myFindModel.isReplaceState();
+            boolean replaceState = findModel.isReplaceState();
             AnAction action = ActionManager.getInstance()
                 .getAction(replaceState ? IdeActions.ACTION_REPLACE : IdeActions.ACTION_TOGGLE_FIND_IN_SELECTION_ONLY);
             Shortcut shortcut = ArrayUtil.getFirstElement(action.getShortcutSet().getShortcuts());
@@ -452,7 +463,7 @@ public class EditorSearchSession implements SearchSession, UiDataProvider, Selec
         }
     }
 
-    private void initLivePreview() {
+    public void initLivePreview() {
         if (myEditor.isDisposed()) {
             return;
         }
@@ -464,6 +475,16 @@ public class EditorSearchSession implements SearchSession, UiDataProvider, Selec
         myLivePreviewController.setUserActivityDelay(LivePreviewController.USER_ACTIVITY_TRIGGERING_DELAY);
 
         mySearchResults.addListener(this);
+    }
+
+    public void disableLivePreview() {
+        myLivePreviewController.off();
+        mySearchResults.removeListener(this);
+    }
+
+    protected void disposeLivePreview() {
+        myLivePreviewController.dispose();
+        Disposer.dispose(myDisposable);
     }
 
     private void updateResults(boolean allowedToChangedEditorSelection) {

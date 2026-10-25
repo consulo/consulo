@@ -78,7 +78,9 @@ public class OpenInRightSplitAction extends LegacyDumbAwareAction {
         }
 
         VirtualFile contextFile = e.getData(VirtualFile.KEY);
-        e.getPresentation().setEnabledAndVisible(contextFile != null && !contextFile.isDirectory());
+        e.getPresentation().setEnabledAndVisible(
+            contextFile != null && !contextFile.isDirectory() && !FileEditorManager.forbidSplitFor(contextFile)
+        );
     }
 
     @RequiredUIAccess

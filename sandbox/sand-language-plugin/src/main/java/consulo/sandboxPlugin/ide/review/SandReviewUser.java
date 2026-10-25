@@ -15,7 +15,6 @@
  */
 package consulo.sandboxPlugin.ide.review;
 
-import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.review.list.UserPresentation;
 import consulo.review.user.CodeReviewUser;
 import consulo.ui.image.Image;
@@ -43,6 +42,6 @@ public record SandReviewUser(String username, String fullName) implements CodeRe
 
     @Override
     public Image getAvatarIcon() {
-        return PlatformIconGroup.actionsLoginavatar();
+        return SandReviewAvatars.getAvatar(this);
     }
 }

@@ -78,6 +78,12 @@ public sealed interface WebImageSpec {
     record Blinking(WebImageSpec child) implements WebImageSpec {
     }
 
+    /**
+     * An image loaded in background, answered by the servlet once it is there.
+     */
+    record Async(String id, int width, int height) implements WebImageSpec {
+    }
+
     static WebImageSpec resize(WebImageSpec child, int width, int height) {
         return switch (child) {
             case Busy ignored -> new Busy(width, height);
@@ -107,6 +113,7 @@ public sealed interface WebImageSpec {
             case Text text -> animated(text.child());
             case Busy ignored -> true;
             case Blinking ignored -> true;
+            case Async ignored -> false;
         };
     }
 
@@ -135,6 +142,7 @@ public sealed interface WebImageSpec {
             case Text text -> new Text(freeze(text.child(), busyToo), text.text());
             case Busy busy -> busyToo ? busy.still() : busy;
             case Blinking blinking -> freeze(blinking.child(), busyToo);
+            case Async async -> async;
         };
     }
 
@@ -152,6 +160,7 @@ public sealed interface WebImageSpec {
             case Text text -> width(text.child());
             case Busy busy -> busy.width();
             case Blinking blinking -> width(blinking.child());
+            case Async async -> async.width();
         };
     }
 
@@ -168,6 +177,7 @@ public sealed interface WebImageSpec {
             case Text text -> height(text.child());
             case Busy busy -> busy.height();
             case Blinking blinking -> height(blinking.child());
+            case Async async -> async.height();
         };
     }
 
@@ -244,6 +254,10 @@ public sealed interface WebImageSpec {
                 append(builder, blinking.child());
                 builder.append(')');
             }
+            case Async async -> builder.append("as(")
+                .append(async.id()).append(',')
+                .append(async.width()).append(',')
+                .append(async.height()).append(')');
         }
     }
 
@@ -329,6 +343,9 @@ public sealed interface WebImageSpec {
                 }
                 case "b": {
                     return new Busy(readInt(','), readInt(')'));
+                }
+                case "as": {
+                    return new Async(readUntil(','), readInt(','), readInt(')'));
                 }
                 case "bl": {
                     WebImageSpec child = readSpec();

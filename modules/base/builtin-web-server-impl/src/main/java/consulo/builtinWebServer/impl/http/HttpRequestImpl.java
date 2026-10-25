@@ -27,6 +27,8 @@ import org.jspecify.annotations.Nullable;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.charset.Charset;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author VISTALL
@@ -85,6 +87,11 @@ public class HttpRequestImpl implements HttpRequest {
   @Override
   public @Nullable String getParameterValue(String parameter) {
     return ContainerUtil.getFirstItem(myQueryStringDecoder.parameters().get(parameter));
+  }
+
+  @Override
+  public Map<String, List<String>> getParameters() {
+    return myQueryStringDecoder.parameters();
   }
 
   @Override

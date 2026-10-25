@@ -36,7 +36,7 @@ import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
 import consulo.project.ProjectManager;
 import consulo.project.internal.RecentProjectsChecker;
-import consulo.project.internal.RecentProjectsManager;
+import consulo.project.RecentProjectsManager;
 import consulo.project.localize.ProjectLocalize;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WelcomeFrameManager;

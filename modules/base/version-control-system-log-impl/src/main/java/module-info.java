@@ -17,6 +17,6 @@ module consulo.version.control.system.log.impl {
     requires gnu.trove;
 
     opens consulo.versionControlSystem.log.impl.internal.data to consulo.util.xml.serializer;
-    opens consulo.versionControlSystem.log.impl.internal.ui.editor to consulo.util.xml.serializer;
+    opens consulo.versionControlSystem.log.impl.internal.ui.editor to consulo.util.xml.serializer, com.google.gson;
     opens consulo.versionControlSystem.log.impl.internal.ui.action to consulo.component.impl;
 }

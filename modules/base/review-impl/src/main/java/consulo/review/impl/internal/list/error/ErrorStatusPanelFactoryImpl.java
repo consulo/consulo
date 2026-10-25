@@ -17,12 +17,10 @@
 package consulo.review.impl.internal.list.error;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.dataContext.DataContext;
-import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
-import consulo.review.impl.internal.ReviewUIUtil;
+import consulo.review.util.ReviewUIUtil;
 import consulo.review.list.error.ErrorStatusAlignment;
 import consulo.review.list.error.ErrorStatusPanelFactory;
 import consulo.review.list.error.ErrorStatusPresenter;
@@ -35,13 +33,10 @@ import consulo.ui.HtmlLabel;
 import consulo.ui.Label;
 import consulo.ui.Space;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.layout.VerticalLayout;
 import consulo.ui.style.ComponentColors;
 import consulo.util.concurrent.coroutine.ObservableValue;
-import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jspecify.annotations.Nullable;
 
@@ -49,15 +44,6 @@ import org.jspecify.annotations.Nullable;
 @ServiceImpl
 public class ErrorStatusPanelFactoryImpl implements ErrorStatusPanelFactory {
     private static final String PLACE = "CodeReviewErrorStatus";
-
-    private final ActionManager myActionManager;
-    private final DataManager myDataManager;
-
-    @Inject
-    public ErrorStatusPanelFactoryImpl(ActionManager actionManager, DataManager dataManager) {
-        myActionManager = actionManager;
-        myDataManager = dataManager;
-    }
 
     @RequiredUIAccess
     @Override
@@ -100,7 +86,7 @@ public class ErrorStatusPanelFactoryImpl implements ErrorStatusPanelFactory {
                     Platform.current().openInBrowser(event.getDescription());
                 }
                 else if (errorAction != null) {
-                    perform(errorAction, body);
+                    ReviewUIUtil.performAction(errorAction, body, PLACE);
                 }
             });
             panel.add(body);
@@ -118,16 +104,9 @@ public class ErrorStatusPanelFactoryImpl implements ErrorStatusPanelFactory {
         }
         if (errorAction != null) {
             Button button = Button.create(errorAction.getTemplatePresentation().getTextValue());
-            button.addClickListener(event -> perform(errorAction, button));
+            button.addClickListener(event -> ReviewUIUtil.performAction(errorAction, button, PLACE));
             panel.add(button);
         }
         panel.setVisible(true);
-    }
-
-    @RequiredUIAccess
-    private void perform(AnAction action, Component source) {
-        DataContext context = myDataManager.getDataContext(source);
-        AnActionEvent event = AnActionEvent.createFromAnAction(action, null, PLACE, context);
-        myActionManager.performActionDumbAware(action, event);
     }
 }

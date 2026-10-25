@@ -69,6 +69,7 @@ import consulo.versionControlSystem.log.RefGroup;
 import consulo.versionControlSystem.log.VcsCommitStyleFactory;
 import consulo.versionControlSystem.log.VcsFullCommitDetails;
 import consulo.versionControlSystem.log.VcsLog;
+import consulo.versionControlSystem.log.VcsLogCommitSelection;
 import consulo.versionControlSystem.log.VcsLogDataKeys;
 import consulo.versionControlSystem.log.VcsLogDataProvider;
 import consulo.versionControlSystem.log.VcsLogHighlighter;
@@ -755,6 +756,7 @@ public class UnifiedVcsLogUi extends AbstractVcsLogUi {
 
     private void uiDataSnapshot(DataSink sink) {
         sink.set(VcsLog.KEY, myLog);
+        sink.set(VcsLogCommitSelection.KEY, new VcsLogCommitSelectionImpl(myLog, getSelectedRows(), getCommitModel()));
         sink.set(CopyProvider.KEY, new LogCopyProvider());
         sink.set(VcsLogUi.KEY, this);
         sink.set(VcsLogDataProvider.KEY, myLogData);

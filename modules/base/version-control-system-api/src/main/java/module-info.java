@@ -23,6 +23,7 @@ module consulo.version.control.system.api {
     requires consulo.ui.ex.awt.api;
 
     exports consulo.versionControlSystem;
+    exports consulo.versionControlSystem.editor;
     exports consulo.versionControlSystem.codeVision;
     exports consulo.versionControlSystem.checkin;
     exports consulo.versionControlSystem.checkout;
@@ -53,6 +54,7 @@ module consulo.version.control.system.api {
     exports consulo.versionControlSystem.util;
     exports consulo.versionControlSystem.versionBrowser.ui.awt;
     exports consulo.versionControlSystem.virtualFileSystem;
+    exports consulo.versionControlSystem.workspace;
 
     exports consulo.versionControlSystem.internal to
         consulo.desktop.awt.editor.impl,
@@ -71,6 +73,7 @@ module consulo.version.control.system.api {
         consulo.web.ui.impl;
 
     requires com.google.common;
+    requires com.google.gson;
     requires it.unimi.dsi.fastutil;
 
     opens consulo.versionControlSystem to consulo.util.xml.serializer;

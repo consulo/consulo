@@ -16,6 +16,7 @@
 package consulo.web.ui.impl.internal.image;
 
 import consulo.logging.Logger;
+import consulo.ui.image.Image;
 import consulo.ui.image.ImageKey;
 import consulo.ui.impl.image.ImageReference;
 import org.jspecify.annotations.Nullable;
@@ -62,7 +63,36 @@ public class WebImageRenderer {
             case WebImageSpec.Text text -> withText(text, libraryId);
             case WebImageSpec.Busy busy -> render(busy.still(), libraryId);
             case WebImageSpec.Blinking blinking -> render(blinking.child(), libraryId);
+            case WebImageSpec.Async async -> renderAsync(async, libraryId);
         };
+    }
+
+    private static @Nullable WebRenderedImage renderAsync(WebImageSpec.Async async, @Nullable String libraryId) {
+        WebAsyncImageImpl image = WebAsyncImageImpl.find(async.id());
+        if (image == null) {
+            return render(new WebImageSpec.Empty(async.width(), async.height()), libraryId);
+        }
+
+        Image loaded = image.await();
+        WebRenderedImage rendered = loaded == null ? null : render(loaded, libraryId);
+        return rendered != null ? rendered : render(image.getBase(), libraryId);
+    }
+
+    public static @Nullable WebRenderedImage render(Image original, @Nullable String libraryId) {
+        Image image = WebDelegatingImage.unwrap(original);
+        if (image instanceof WebBytesImageImpl bytes) {
+            return bytes.toRendered();
+        }
+        if (image instanceof WebResizeImageImpl resize) {
+            return render(resize.getOriginal(), libraryId);
+        }
+        if (image instanceof WebCanvasImageImpl canvas) {
+            WebCanvasSvgWriter writer = new WebCanvasSvgWriter(canvas.getWidth(), canvas.getHeight());
+            canvas.getConsumer().accept(writer);
+            return WebRenderedImage.svg(writer.toSVG());
+        }
+        WebImageSpec spec = WebImageUrl.toSpec(image);
+        return spec == null ? null : render(spec, libraryId);
     }
 
     private static @Nullable WebRenderedImage renderKey(WebImageSpec.Key key, @Nullable String libraryId) {

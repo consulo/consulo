@@ -32,6 +32,10 @@ public interface FrameDiffTool extends DiffTool {
     
     DiffViewer createComponent(DiffContext context, DiffRequest request);
 
+    default DiffToolType getToolType() {
+        return DiffToolType.DEFAULT;
+    }
+
     interface DiffViewer extends Disposable {
         
         Component getComponent();

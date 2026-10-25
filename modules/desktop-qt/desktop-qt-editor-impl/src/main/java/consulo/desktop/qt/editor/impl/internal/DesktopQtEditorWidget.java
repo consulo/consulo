@@ -18,15 +18,15 @@ package consulo.desktop.qt.editor.impl.internal;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.EditorSettings;
 import consulo.codeEditor.Inlay;
-import consulo.codeEditor.SelectionModel;
 import consulo.codeEditor.LogicalPosition;
+import consulo.codeEditor.SelectionModel;
 import consulo.codeEditor.event.EditorMouseEvent;
 import consulo.codeEditor.event.EditorMouseEventArea;
 import consulo.desktop.qt.ui.impl.DesktopQtInputDetails;
 import consulo.desktop.qt.ui.impl.DesktopQtKeymapWidget;
 import consulo.desktop.qt.ui.impl.QtComponentDelegate;
-import consulo.document.Document;
 import consulo.document.DocCommandGroupId;
+import consulo.document.Document;
 import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
 import consulo.project.Project;
@@ -51,6 +51,7 @@ import io.qt.gui.QPainter;
 import io.qt.gui.QResizeEvent;
 import io.qt.widgets.QAbstractScrollArea;
 import io.qt.widgets.QApplication;
+import io.qt.widgets.QScrollBar;
 import io.qt.widgets.QSizePolicy;
 import io.qt.widgets.QToolTip;
 import io.qt.widgets.QWidget;
@@ -169,6 +170,28 @@ public class DesktopQtEditorWidget extends QAbstractScrollArea implements Deskto
         horizontalScrollBar().setSingleStep((int) Math.ceil(myEditor.getFontMetrics().getSpaceWidth()));
         horizontalScrollBar().setPageStep(viewportWidth);
         horizontalScrollBar().setRange(0, Math.max(0, documentWidth - viewportWidth));
+
+        applyFitContentHeight();
+    }
+
+    /**
+     * An editor which fits its content is at least as tall as its rows, with the horizontal scroll bar under them while
+     * they are wider than it; the container it stands in scrolls it.
+     */
+    void applyFitContentHeight() {
+        if (!myEditor.isFitContentHeight() || isDisposed()) {
+            return;
+        }
+        setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff);
+
+        int height = myEditor.getRowLayout().getContentHeight() + frameWidth() * 2;
+        QScrollBar bar = horizontalScrollBar();
+        if (bar.maximum() > bar.minimum()) {
+            height += bar.sizeHint().height();
+        }
+        if (minimumHeight() != height) {
+            setMinimumHeight(height);
+        }
     }
 
     /**

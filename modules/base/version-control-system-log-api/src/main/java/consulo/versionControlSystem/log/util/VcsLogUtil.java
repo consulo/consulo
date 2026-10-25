@@ -36,6 +36,7 @@ import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jspecify.annotations.Nullable;
 import java.util.*;
 import java.util.function.Function;
+import java.util.regex.Pattern;
 
 import static consulo.util.lang.ObjectUtil.notNull;
 import static java.util.Collections.singletonList;
@@ -43,6 +44,7 @@ import static java.util.Collections.singletonList;
 public class VcsLogUtil {
   public static final int MAX_SELECTED_COMMITS = 1000;
   public static final int SHORT_HASH_LENGTH = 8;
+  public static final Pattern GIT_HASH_REGEX = Pattern.compile("[a-fA-F0-9]{7,64}");
 
   public static LocalizeValue getVcsDisplayName(Project project, Collection<VcsLogProvider> logProviders) {
     Set<AbstractVcs> vcs = new HashSet<>();
@@ -60,6 +62,15 @@ public class VcsLogUtil {
       return VersionControlSystemLogLocalize.vcs();
     }
     return vcs.iterator().next().getDisplayName();
+  }
+
+  public static @Nullable VcsRef findBranch(VcsLogRefs refs, VirtualFile root, String branchName) {
+    for (VcsRef ref : refs.getBranches()) {
+      if (ref.getRoot().equals(root) && ref.getName().equals(branchName)) {
+        return ref;
+      }
+    }
+    return null;
   }
 
   public static String getShortHash(String hashString) {

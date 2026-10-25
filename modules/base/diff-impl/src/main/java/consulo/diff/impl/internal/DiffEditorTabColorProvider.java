@@ -3,7 +3,7 @@ package consulo.diff.impl.internal;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.dumb.DumbAware;
-import consulo.diff.impl.internal.editor.DiffVirtualFile;
+import consulo.diff.DiffViewerVirtualFile;
 import consulo.fileEditor.EditorTabColorProvider;
 import consulo.language.editor.FileColorManager;
 import consulo.project.Project;
@@ -25,7 +25,7 @@ public class DiffEditorTabColorProvider implements EditorTabColorProvider, DumbA
 
     @Override
     public @Nullable ColorValue getEditorTabColor(Project project, VirtualFile file) {
-        if (file instanceof DiffVirtualFile) {
+        if (file instanceof DiffViewerVirtualFile) {
             FileColorManager fileColorManager = myFileColorManager.get();
             if (file.getName().equals("Shelf")) {
                 return TargetAWT.from(fileColorManager.getColor("Violet"));

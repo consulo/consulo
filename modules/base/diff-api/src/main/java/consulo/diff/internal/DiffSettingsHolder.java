@@ -75,6 +75,14 @@ public class DiffSettingsHolder implements PersistentStateComponent<DiffSettings
             SHARED_SETTINGS.GO_TO_NEXT_FILE_ON_NEXT_DIFFERENCE = value;
         }
 
+        public boolean isCombinedDiffEnabled() {
+            return SHARED_SETTINGS.COMBINED_DIFF_ENABLED;
+        }
+
+        public void setCombinedDiffEnabled(boolean value) {
+            SHARED_SETTINGS.COMBINED_DIFF_ENABLED = value;
+        }
+
         public boolean isSyncBinaryEditorSettings() {
             return PLACE_SETTINGS.SYNC_BINARY_EDITOR_SETTINGS;
         }

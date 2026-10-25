@@ -108,11 +108,14 @@ public class DesktopMessageBoxBuilderImpl<V> extends BaseMessageBoxBuilder<V> {
             Dimension screenSize = pane.getToolkit().getScreenSize();
             Dimension textSize = pane.getPreferredSize();
 
+            int width = Math.min(textSize.width, screenSize.width / 2);
+            pane.setSize(width, Short.MAX_VALUE);
+            int wrappedHeight = pane.getPreferredSize().height;
+
             JScrollPane scroll = ScrollPaneFactory.createScrollPane(pane);
             scroll.setBorder(BorderFactory.createEmptyBorder());
             int scrollSize = (int)new JScrollBar(Adjustable.VERTICAL).getPreferredSize().getWidth();
-            scroll.setPreferredSize(new Dimension(Math.min(textSize.width, screenSize.width / 2) + scrollSize,
-                                                  Math.min(textSize.height, screenSize.height / 3) + scrollSize));
+            scroll.setPreferredSize(new Dimension(width + scrollSize, Math.min(wrappedHeight, screenSize.height / 3) + scrollSize));
             return scroll;
         }
 

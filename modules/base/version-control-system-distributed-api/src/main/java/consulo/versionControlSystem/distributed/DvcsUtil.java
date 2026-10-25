@@ -28,6 +28,10 @@ import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
 import consulo.fileEditor.statusBar.StatusBarUtil;
+import consulo.localHistory.ActivityId;
+import consulo.localHistory.LocalHistory;
+import consulo.localHistory.LocalHistoryAction;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.content.ProjectRootManager;
 import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
@@ -248,10 +252,22 @@ public class DvcsUtil {
     }
 
     public static AccessToken workingTreeChangeStarted(Project project, @Nullable String activityName) {
+        return workingTreeChangeStarted(project, activityName, null);
+    }
+
+    public static AccessToken workingTreeChangeStarted(Project project,
+                                                       @Nullable String activityName,
+                                                       @Nullable ActivityId activityId) {
         BackgroundTaskUtil.syncPublisher(BatchFileChangeListener.class).batchChangeStarted(project, activityName);
+        LocalHistoryAction action = activityId == null
+            ? null
+            : LocalHistory.getInstance().startAction(LocalizeValue.ofNullable(activityName), activityId);
         return new AccessToken() {
             @Override
             public void finish() {
+                if (action != null) {
+                    action.finish();
+                }
                 BackgroundTaskUtil.syncPublisher(BatchFileChangeListener.class).batchChangeCompleted(project);
             }
         };

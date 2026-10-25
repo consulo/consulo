@@ -120,6 +120,9 @@
             if (element.classList.contains('arquill-editor-one-line')) {
                 return;
             }
+            if (element.classList.contains('arquill-editor-fit-content') && !domEvent.shiftKey) {
+                return;
+            }
 
             const lineHeight = textView._getLineHeight();
             const delta = domEvent.deltaY !== undefined ? domEvent.deltaY : -domEvent.wheelDeltaY;
@@ -879,10 +882,17 @@
                 return ranges;
             }
 
+            const background = element.$arquillSelectionBackground;
+            const plainStyle = color || background
+                ? Object.assign({}, color ? { color: color } : {}, background ? { backgroundColor: background } : {})
+                : null;
+
             const underSelection = range => {
                 const keep = range.sel || {};
+                // the plates sit under the lines, and a line with a background of its own - a diff change - hides
+                // them, so the glyphs carry the selection colour too
                 const style = Object.assign({}, range.style && range.style.style, {
-                    backgroundColor: keep.backgroundColor || 'transparent'
+                    backgroundColor: keep.backgroundColor || background || 'transparent'
                 });
 
                 const foreground = keep.color || color;
@@ -904,8 +914,8 @@
                     continue;
                 }
 
-                if (range.start > plain && color) {
-                    out.push({ start: plain, end: range.start, style: { style: { color: color } } });
+                if (range.start > plain && plainStyle) {
+                    out.push({ start: plain, end: range.start, style: { style: plainStyle } });
                 }
 
                 if (range.inlay) {
@@ -929,8 +939,8 @@
             }
 
             // what the styler left plain is still selected, and white on white is what it reads as otherwise
-            if (plain < end && color) {
-                out.push({ start: plain, end: end, style: { style: { color: color } } });
+            if (plain < end && plainStyle) {
+                out.push({ start: plain, end: end, style: { style: plainStyle } });
             }
 
             out.sort((left, right) => left.start - right.start);
@@ -1711,6 +1721,25 @@
                     if (top + lineHeight >= 0 && top <= element.clientHeight) {
                         drawWave(gutterBands, bounds.left, bounds.width, Math.round(top), lineHeight, gutterLeft(hostRect),
                             band.color, band.borderColor, band.bottomBorderColor);
+                    }
+                    continue;
+                }
+
+                // a strip measured by the server against the top of its line - the band of a block inlay, which no
+                // line range covers
+                if (band.style === 'PIXELS') {
+                    const stripTop = top + band.pixelOffset;
+                    if (band.pixelHeight > 0 && stripTop + band.pixelHeight >= 0 && stripTop <= element.clientHeight) {
+                        const strip = document.createElement('div');
+                        strip.className = 'arquill-gutter-band';
+                        strip.style.position = 'absolute';
+                        strip.style.boxSizing = 'border-box';
+                        strip.style.setProperty('--arquill-band-left', bounds.left + 'px');
+                        strip.style.setProperty('--arquill-band-width', bounds.width + 'px');
+                        strip.style.top = stripTop + 'px';
+                        strip.style.height = band.pixelHeight + 'px';
+                        strip.style.backgroundColor = band.color;
+                        gutterBands.appendChild(strip);
                     }
                     continue;
                 }
@@ -2652,6 +2681,9 @@
                 changed = true;
 
                 const id = child.getAttribute('data-arquill-component-inlay');
+                element.dispatchEvent(new CustomEvent('arquill-component-inlay-size', {
+                    detail: { id: id, width: Math.ceil(child.getBoundingClientRect().width), height: height }
+                }));
                 for (const span of element.querySelectorAll('[data-arquill-inlay-component="' + id + '"]')) {
                     decorateComponentInlay(span);
                 }
@@ -3307,6 +3339,7 @@
                 set('--arquill-editor-caret-row-background', caretRowBackground);
 
                 element.$arquillSelectionForeground = selectionForeground || null;
+                element.$arquillSelectionBackground = selectionBackground || null;
                 pushStyleRanges();
             },
 
@@ -3354,6 +3387,15 @@
 
             setFloatingToolbarLayer: layer => {
                 element.appendChild(layer);
+
+                if (layer.$arquillInstalled) {
+                    return;
+                }
+                layer.$arquillInstalled = true;
+
+                for (const type of ['keydown', 'keypress', 'keyup', 'mousedown', 'mouseup', 'click', 'dblclick', 'contextmenu']) {
+                    layer.addEventListener(type, domEvent => domEvent.stopPropagation());
+                }
             },
 
             // the live components of component inlays. they belong to the inlays rather than to the text, so the keys

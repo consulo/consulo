@@ -10,6 +10,7 @@ import consulo.externalSystem.autoimport.ExternalSystemProjectNotificationAwareL
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.util.lang.ThreeState;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -63,7 +64,7 @@ public class AutoImportProjectNotificationAware implements ExternalSystemProject
     }
 
     private void fireNotificationUpdated() {
-        if (myProject.isDisposed()) {
+        if (myProject.getDisposeState().get() != ThreeState.NO) {
             return;
         }
         myProject.getMessageBus().syncPublisher(ExternalSystemProjectNotificationAwareListener.class).onNotificationChanged();

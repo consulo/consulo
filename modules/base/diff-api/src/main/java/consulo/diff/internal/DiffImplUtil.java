@@ -19,6 +19,7 @@ import consulo.application.Application;
 import consulo.application.progress.ProgressIndicator;
 import consulo.codeEditor.*;
 import consulo.dataContext.DataProvider;
+import consulo.diff.DiffComputer;
 import consulo.diff.DiffContext;
 import consulo.diff.DiffTool;
 import consulo.diff.DiffUserDataKeys;
@@ -232,7 +233,7 @@ public class DiffImplUtil {
     ) {
         indicator.checkCanceled();
 
-        DiffUserDataKeysEx.DiffComputer diffComputer = request.getUserData(DiffUserDataKeysEx.CUSTOM_DIFF_COMPUTER);
+        DiffComputer diffComputer = request.getUserData(DiffUserDataKeys.CUSTOM_DIFF_COMPUTER);
 
         List<LineFragment> fragments;
         if (diffComputer != null) {

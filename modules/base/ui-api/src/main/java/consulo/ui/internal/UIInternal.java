@@ -58,7 +58,9 @@ import consulo.ui.event.ComponentEvent;
 import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.concurrent.coroutine.CoroutineContext;
 import consulo.util.concurrent.coroutine.CoroutineScope;
+import consulo.util.lang.lazy.LazyValue;
 import consulo.ui.layout.Layout;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -282,6 +284,19 @@ public abstract class UIInternal {
 
     public Image _Image_deferred(Image base, Supplier<Image> imageSupplier) {
         return _Image_lazy(imageSupplier);
+    }
+
+    public Image _Image_async(Image base, Supplier<? extends CompletableFuture<? extends @Nullable Image>> loader) {
+        LazyValue<CompletableFuture<? extends @Nullable Image>> request = LazyValue.atomicNotNull(loader::get);
+        return _Image_deferred(base, () -> {
+            try {
+                Image image = request.get().join();
+                return image == null ? base : image;
+            }
+            catch (Throwable e) {
+                return base;
+            }
+        });
     }
 
     public abstract Image _ImageEffects_layered(Image[] images);

@@ -23,9 +23,11 @@ import org.jspecify.annotations.NullMarked;
 module consulo.account.management.api {
     requires transitive consulo.project.api;
     requires transitive consulo.ui.api;
+    requires transitive consulo.builtin.web.server.api;
 
     exports consulo.accountManagement;
     exports consulo.accountManagement.authorize;
     exports consulo.accountManagement.localize;
+    exports consulo.accountManagement.oauth;
     exports consulo.accountManagement.ui;
 }

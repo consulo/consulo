@@ -17,6 +17,7 @@ module consulo.diff.api {
 
     exports consulo.diff;
     exports consulo.diff.chain;
+    exports consulo.diff.combined;
     exports consulo.diff.localize;
     exports consulo.diff.merge;
     exports consulo.diff.dir;
@@ -36,6 +37,7 @@ module consulo.diff.api {
         consulo.ide.impl,
         consulo.version.control.system.api,
         consulo.version.control.system.impl,
+        consulo.version.control.system.review.api,
         consulo.version.control.system.review.impl,
         consulo.web.editor.impl;
 

@@ -64,14 +64,25 @@ public class DesktopQtCardImpl extends DesktopQtLayoutComponent<LayoutConstraint
     }
 
     private static class CardFrame extends QFrame {
+        private boolean mySelected;
+
         CardFrame(QWidget parent) {
             super(parent);
+        }
+
+        void setSelected(boolean selected) {
+            if (mySelected != selected) {
+                mySelected = selected;
+                update();
+            }
         }
 
         @Override
         protected void paintEvent(QPaintEvent event) {
             QPalette palette = palette();
-            QColor border = DesktopQtStyleApplier.themeColor(ComponentColors.BORDER, palette.color(QPalette.ColorRole.Mid));
+            QColor border = mySelected
+                ? DesktopQtStyleApplier.themeColor(ComponentColors.FOCUS_COLOR, palette.color(QPalette.ColorRole.Highlight))
+                : DesktopQtStyleApplier.themeColor(ComponentColors.BORDER, palette.color(QPalette.ColorRole.Mid));
 
             QPainter painter = new QPainter(this);
             try {
@@ -111,6 +122,7 @@ public class DesktopQtCardImpl extends DesktopQtLayoutComponent<LayoutConstraint
     @Override
     protected QWidget createQt(QWidget parent) {
         CardFrame frame = new CardFrame(parent);
+        frame.setSelected(myStyles.contains(CardStyle.SELECTED));
 
         boolean horizontal = myStyles.contains(CardStyle.HORIZONTAL);
         boolean cover = myStyles.contains(CardStyle.COVER_MEDIA);
@@ -273,6 +285,19 @@ public class DesktopQtCardImpl extends DesktopQtLayoutComponent<LayoutConstraint
     @Override
     public void addStyle(CardStyle style) {
         myStyles.add(style);
+        updateSelected();
+    }
+
+    @Override
+    public void removeStyle(CardStyle style) {
+        myStyles.remove(style);
+        updateSelected();
+    }
+
+    private void updateSelected() {
+        if (myComponent instanceof CardFrame frame && !frame.isDisposed()) {
+            frame.setSelected(myStyles.contains(CardStyle.SELECTED));
+        }
     }
 
     @RequiredUIAccess

@@ -7,9 +7,11 @@ import org.jspecify.annotations.NullMarked;
 @NullMarked
 module consulo.review.api {
     requires transitive consulo.project.api;
+    requires transitive consulo.project.ui.api;
     requires transitive consulo.ui.api;
     requires transitive consulo.code.editor.api;
 
+    exports consulo.review;
     exports consulo.review.async;
     exports consulo.review.comment;
     exports consulo.review.create;
@@ -17,6 +19,7 @@ module consulo.review.api {
     exports consulo.review.details.data;
     exports consulo.review.details.model;
     exports consulo.review.diff;
+    exports consulo.review.diff.action;
     exports consulo.review.diff.model;
     exports consulo.review.editor;
     exports consulo.review.icon;
@@ -24,6 +27,7 @@ module consulo.review.api {
     exports consulo.review.list.error;
     exports consulo.review.list.search;
     exports consulo.review.localize;
+    exports consulo.review.notification;
     exports consulo.review.reactions;
     exports consulo.review.submit;
     exports consulo.review.timeline;
@@ -31,4 +35,5 @@ module consulo.review.api {
     exports consulo.review.toolwindow;
     exports consulo.review.user;
     exports consulo.review.util;
+    exports consulo.review.util.popup;
 }

@@ -28,6 +28,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.impl.internal.action.ActionRunnerAsync;
 import consulo.ui.ex.impl.internal.action.UnifiedActionMenuExpander;
 import consulo.ui.ex.internal.ActionManagerEx;
+import consulo.ui.ex.internal.ActionPromoterUtil;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
 import io.qt.core.QCoreApplication;
@@ -101,7 +102,8 @@ public class DesktopQtEditorKeyHandler {
 
         // whether an action is enabled is only answerable asynchronously, but the key has to be claimed or dropped
         // now - so a stroke the keymap knows is claimed, and the search for a live action for it continues after
-        performFirstEnabled(actions, 0, keyCode, keyEvent.clone(), myEditor.getDataContext(), UIAccess.current());
+        DataContext dataContext = myEditor.getDataContext();
+        performFirstEnabled(ActionPromoterUtil.rearrangeByPromoters(actions, dataContext), 0, keyCode, keyEvent.clone(), dataContext, UIAccess.current());
         return true;
     }
 

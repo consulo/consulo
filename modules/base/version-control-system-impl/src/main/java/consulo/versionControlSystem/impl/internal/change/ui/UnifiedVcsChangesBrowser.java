@@ -19,6 +19,7 @@ import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.Component;
 import consulo.ui.HorizontalAlignment;
@@ -48,12 +49,15 @@ import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.impl.internal.action.ShowDiffAction;
 import consulo.versionControlSystem.impl.internal.change.action.RollbackDialogAction;
 import consulo.versionControlSystem.localize.VcsLocalize;
+import consulo.versionControlSystem.ui.ChangesGroupingSupport;
 import consulo.versionControlSystem.ui.VcsChangesBrowser;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -71,7 +75,8 @@ public class UnifiedVcsChangesBrowser implements VcsChangesBrowser {
     private final DockLayout myRoot = DockLayout.create();
 
     private List<Change> myChanges = List.of();
-    private boolean myShowFlatten = true;
+    private Set<String> myGroupingKeys = Set.of();
+    private @Nullable Consumer<Set<String>> myGroupingListener;
     private final AnAction myDiffAction;
     private final @Nullable ActionGroup myViewOptions;
 
@@ -172,18 +177,34 @@ public class UnifiedVcsChangesBrowser implements VcsChangesBrowser {
         CommonActionsManager commonActionsManager = CommonActionsManager.getInstance();
         group.add(commonActionsManager.createExpandAllAction(expander));
         group.add(commonActionsManager.createCollapseAllAction(expander));
-        if (myViewOptions == null) {
-            group.add(new GroupByDirectoryToggleAction(() -> !myShowFlatten, this::setGroupedByDirectory));
-        }
-        else {
-            AnAction groupBy = new GroupByDirectoryToggleAction(
-                VcsLocalize.changesActionGroupByDirectoryText(),
-                null,
-                () -> !myShowFlatten,
-                this::setGroupedByDirectory
+        ActionGroup viewOptions = myViewOptions;
+        if (viewOptions == null) {
+            viewOptions = new DefaultActionGroup(
+                VcsLocalize.changesActionGroupBySeparator(),
+                LocalizeValue.empty(),
+                PlatformIconGroup.actionsGroupby()
             );
-            group.add(new ChangesBrowserViewOptionsAction(myViewOptions, groupBy));
         }
+        group.add(new ChangesBrowserViewOptionsAction(viewOptions, List.of(
+            new SetChangesGroupingAction(
+                VcsLocalize.changesActionGroupByDirectoryText(),
+                ChangesGroupingSupport.DIRECTORY_GROUPING,
+                () -> myGroupingKeys,
+                this::setGrouping
+            ),
+            new SetChangesGroupingAction(
+                VcsLocalize.changesActionGroupByModuleText(),
+                ChangesGroupingSupport.MODULE_GROUPING,
+                () -> myGroupingKeys,
+                this::setGrouping
+            ),
+            new SetChangesGroupingAction(
+                VcsLocalize.changesActionGroupByRepositoryText(),
+                ChangesGroupingSupport.REPOSITORY_GROUPING,
+                () -> myGroupingKeys,
+                this::setGrouping
+            )
+        )));
         if (!toolbarActions.isEmpty()) {
             group.addSeparator();
             for (AnAction action : toolbarActions) {
@@ -197,13 +218,35 @@ public class UnifiedVcsChangesBrowser implements VcsChangesBrowser {
     }
 
     @RequiredUIAccess
-    private void setGroupedByDirectory(boolean grouped) {
-        myShowFlatten = !grouped;
+    void setGrouping(Set<String> groupingKeys, Consumer<Set<String>> groupingListener) {
+        myGroupingKeys = Set.copyOf(groupingKeys);
+        myGroupingListener = groupingListener;
         myTree.setSnapshot(buildSnapshot());
     }
 
+    @RequiredUIAccess
+    private void setGrouping(String groupingKey, boolean enabled) {
+        Set<String> keys = new LinkedHashSet<>(myGroupingKeys);
+        if (enabled) {
+            keys.add(groupingKey);
+        }
+        else {
+            keys.remove(groupingKey);
+        }
+        if (keys.equals(myGroupingKeys)) {
+            return;
+        }
+
+        myGroupingKeys = Set.copyOf(keys);
+        myTree.setSnapshot(buildSnapshot());
+        Consumer<Set<String>> listener = myGroupingListener;
+        if (listener != null) {
+            listener.accept(myGroupingKeys);
+        }
+    }
+
     private ChangesTreeSnapshot buildSnapshot() {
-        return new ChangesTreeSnapshotBuilder(myProject, myShowFlatten).changes(myChanges).build();
+        return new ChangesTreeSnapshotBuilder(myProject, myGroupingKeys).changes(myChanges).build();
     }
 
     @Override

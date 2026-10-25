@@ -55,12 +55,12 @@ public class TokenAccountAuthorizeType implements AccountAuthorizeType<SecretCre
     }
 
     @Override
-    public String serialize(SecretCredentials credentials) {
+    public String serialize(SecretCredentials credentials, AccountAuthorizeConfig config) {
         return credentials.secret();
     }
 
     @Override
-    public SecretCredentials deserialize(String value) {
+    public SecretCredentials deserialize(String value, AccountAuthorizeConfig config) {
         return new SecretCredentials(value);
     }
 

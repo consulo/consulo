@@ -24,6 +24,7 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataSink;
 import consulo.dataContext.UiDataProvider;
 import consulo.diff.*;
+import consulo.diff.DiffEditorViewer;
 import consulo.diff.FrameDiffTool.DiffViewer;
 import consulo.diff.impl.internal.action.NextChangeAction;
 import consulo.diff.impl.internal.action.NextDifferenceAction;
@@ -68,7 +69,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 @SuppressWarnings("InnerClassMayBeStatic")
-public abstract class DiffRequestProcessor implements Disposable, UiDataProvider {
+public abstract class DiffRequestProcessor implements DiffEditorViewer, UiDataProvider {
     private static final Logger LOG = Logger.getInstance(DiffRequestProcessor.class);
 
     private boolean myDisposed;
@@ -81,6 +82,7 @@ public abstract class DiffRequestProcessor implements Disposable, UiDataProvider
     private final LinkedList<DiffTool> myToolOrder;
 
     private final OpenInEditorAction myOpenInEditorAction;
+    private final DiffToolChooser myToolChooser;
     private @Nullable DefaultActionGroup myPopupActionGroup;
 
     private final DockLayout myPanel;
@@ -111,6 +113,7 @@ public abstract class DiffRequestProcessor implements Disposable, UiDataProvider
     @RequiredUIAccess
     public DiffRequestProcessor(@Nullable Project project, UserDataHolder context) {
         myProject = project;
+        myToolChooser = new MyDiffToolChooser();
 
         myContext = new MyDiffContext(context);
         myActiveRequest = new LoadingDiffRequest();
@@ -358,17 +361,21 @@ public abstract class DiffRequestProcessor implements Disposable, UiDataProvider
     }
 
     protected List<DiffTool> getToolOrderFromSettings(List<DiffTool> availableTools) {
-        List<DiffTool> result = new ArrayList<>();
-        List<String> savedOrder = getSettings().getDiffToolsOrder();
+        return getToolOrderFromSettings(getSettings(), availableTools);
+    }
+
+    public static <T extends DiffTool> List<T> getToolOrderFromSettings(DiffSettings diffSettings, List<T> availableTools) {
+        List<T> result = new ArrayList<>();
+        List<String> savedOrder = diffSettings.getDiffToolsOrder();
 
         for (String clazz : savedOrder) {
-            DiffTool tool = ContainerUtil.find(availableTools, tool1 -> tool1.getClass().getCanonicalName().equals(clazz));
+            T tool = ContainerUtil.find(availableTools, tool1 -> tool1.getClass().getCanonicalName().equals(clazz));
             if (tool != null) {
                 result.add(tool);
             }
         }
 
-        for (DiffTool tool : availableTools) {
+        for (T tool : availableTools) {
             if (!result.contains(tool)) {
                 result.add(tool);
             }
@@ -424,7 +431,7 @@ public abstract class DiffRequestProcessor implements Disposable, UiDataProvider
         List<AnAction> navigationActions = new ArrayList<>();
         navigationActions.addAll(getNavigationActions());
         navigationActions.add(myOpenInEditorAction);
-        navigationActions.add(new MyChangeDiffToolAction());
+        navigationActions.add(myToolChooser);
         DiffImplUtil.addActionBlock(
             group,
             navigationActions
@@ -455,11 +462,17 @@ public abstract class DiffRequestProcessor implements Disposable, UiDataProvider
             if (tool == myState.getActiveTool()) {
                 continue;
             }
-            selectToolActions.add(new DiffToolToggleAction(tool));
+            selectToolActions.add(myToolChooser.createSelectAction(tool));
         }
         DiffImplUtil.addActionBlock(group, selectToolActions);
 
         DiffImplUtil.addActionBlock(group, viewerActions);
+
+        DiffImplUtil.addActionBlock(
+            group,
+            ActionManager.getInstance().getAction("Vcs.Diff.ToggleDiffAligningMode"),
+            ActionManager.getInstance().getAction("Vcs.Diff.EnableDisableCombinedDiff")
+        );
 
         return group;
     }
@@ -482,7 +495,7 @@ public abstract class DiffRequestProcessor implements Disposable, UiDataProvider
 
     @RequiredUIAccess
     protected void buildActionPopup(@Nullable List<AnAction> viewerActions) {
-        ShowActionGroupPopupAction action = new ShowActionGroupPopupAction();
+        ShowActionGroupPopupAction action = new ShowActionGroupPopupAction(() -> myPopupActionGroup);
         registerAction(action);
 
         myPopupActionGroup = collectPopupActions(viewerActions);
@@ -539,6 +552,7 @@ public abstract class DiffRequestProcessor implements Disposable, UiDataProvider
         return myProject;
     }
 
+    @Override
     public DiffContext getContext() {
         return myContext;
     }
@@ -547,8 +561,25 @@ public abstract class DiffRequestProcessor implements Disposable, UiDataProvider
         return mySettings;
     }
 
+    @Override
     public boolean isDisposed() {
         return myDisposed;
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void fireProcessorActivated() {
+        updateRequest();
+    }
+
+    public @Nullable DiffViewer getActiveViewer() {
+        if (myState instanceof DefaultState defaultState) {
+            return defaultState.myViewer;
+        }
+        if (myState instanceof WrapperState wrapperState) {
+            return wrapperState.myViewer;
+        }
+        return null;
     }
 
     //
@@ -584,88 +615,37 @@ public abstract class DiffRequestProcessor implements Disposable, UiDataProvider
         }
     }
 
-    private class MyChangeDiffToolAction extends ComboBoxAction implements DumbAware {
-        public MyChangeDiffToolAction() {
-            // TODO: add icons for diff tools, show only icon in toolbar - to reduce jumping on change ?
-            setEnabledInModalContext(true);
-        }
-
-        @Override
-        public void update(AnActionEvent e) {
-            Presentation presentation = e.getPresentation();
-
-            DiffTool activeTool = myState.getActiveTool();
-            presentation.setText(activeTool.getName());
-
-            if (activeTool == ErrorDiffTool.INSTANCE) {
-                presentation.setEnabledAndVisible(false);
-            }
-
-            for (DiffTool tool : getAvailableFittedTools()) {
-                if (tool != activeTool) {
-                    presentation.setEnabledAndVisible(true);
-                    return;
-                }
-            }
-
-            presentation.setEnabledAndVisible(false);
-        }
-
-        @Override
-        protected DefaultActionGroup createPopupActionGroup(DataContext context) {
-            DefaultActionGroup group = new DefaultActionGroup();
-            for (DiffTool tool : getAvailableFittedTools()) {
-                group.add(new DiffToolToggleAction(tool));
-            }
-
-            return group;
-        }
-    }
-
-    private class DiffToolToggleAction extends AnAction implements DumbAware {
-        private final DiffTool myDiffTool;
-
-        private DiffToolToggleAction(DiffTool tool) {
-            super(tool.getName());
-            setEnabledInModalContext(true);
-            myDiffTool = tool;
+    private class MyDiffToolChooser extends DiffToolChooser {
+        private MyDiffToolChooser() {
+            super(myProject);
         }
 
         @RequiredUIAccess
         @Override
-        public void actionPerformed(AnActionEvent e) {
-            if (myState.getActiveTool() == myDiffTool) {
+        public void onSelected(@Nullable Project project, DiffTool diffTool) {
+            if (myState.getActiveTool() == diffTool) {
                 return;
             }
 
-            moveToolOnTop(myDiffTool);
+            moveToolOnTop(diffTool);
 
             updateRequest(true);
         }
-    }
 
-    private class ShowActionGroupPopupAction extends DumbAwareAction implements AnActionWithSyncUpdate {
-        public ShowActionGroupPopupAction() {
-            EmptyAction.setupAction(this, "Diff.ShowSettingsPopup", null);
+        @Override
+        public List<? extends DiffTool> getTools() {
+            return getAvailableFittedTools();
         }
 
         @Override
-        public void update(AnActionEvent e) {
-            e.getPresentation().setEnabled(myPopupActionGroup != null && myPopupActionGroup.getChildrenCount() > 0);
+        public DiffTool getActiveTool() {
+            return myState.getActiveTool();
         }
 
         @Override
-        @RequiredUIAccess
-        public void actionPerformed(AnActionEvent e) {
-            assert myPopupActionGroup != null;
-            ListPopup popup = JBPopupFactory.getInstance().createActionGroupPopup(
-                "Diff Actions",
-                myPopupActionGroup,
-                e.getDataContext(),
-                JBPopupFactory.ActionSelectionAid.SPEEDSEARCH,
-                false
-            );
-            popup.showInBestPositionFor(e.getDataContext());
+        public @Nullable DiffTool getForcedDiffTool() {
+            DiffTool activeTool = myState.getActiveTool();
+            return activeTool == ErrorDiffTool.INSTANCE ? activeTool : null;
         }
     }
 

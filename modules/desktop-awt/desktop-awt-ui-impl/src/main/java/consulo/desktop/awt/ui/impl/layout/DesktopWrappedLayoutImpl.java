@@ -101,7 +101,8 @@ public class DesktopWrappedLayoutImpl extends SwingComponentDelegate<JPanel> imp
         if (wrapped != null) {
             component.add(wrapped, BorderLayout.CENTER);
         }
-        component.validate();
+        component.revalidate();
+        component.repaint();
     }
 
     @Override

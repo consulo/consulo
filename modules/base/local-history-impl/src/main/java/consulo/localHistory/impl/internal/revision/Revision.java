@@ -16,6 +16,7 @@
 
 package consulo.localHistory.impl.internal.revision;
 
+import consulo.localHistory.ActivityId;
 import consulo.localHistory.impl.internal.tree.Entry;
 import consulo.util.lang.Pair;
 import org.jspecify.annotations.Nullable;
@@ -39,6 +40,10 @@ public abstract class Revision {
   }
 
   public @Nullable String getChangeSetName() {
+    return null;
+  }
+
+  public @Nullable ActivityId getChangeSetActivityId() {
     return null;
   }
 

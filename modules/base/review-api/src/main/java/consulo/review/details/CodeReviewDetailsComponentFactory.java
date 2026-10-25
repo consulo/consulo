@@ -20,7 +20,6 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.disposer.Disposable;
 import consulo.review.details.model.CodeReviewDetailsTabViewModel;
 import consulo.review.details.model.CodeReviewDetailsViewModel;
-import consulo.review.details.model.CodeReviewStatusViewModel;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
@@ -53,16 +52,4 @@ public interface CodeReviewDetailsComponentFactory {
     Component createDescription(Disposable parentDisposable,
                                 CodeReviewDetailsViewModel detailsVm,
                                 @Nullable @RequiredUIAccess Runnable showTimelineAction);
-
-    /**
-     * The summary of the CI checks, and the link to the list of checks; hidden while there are none.
-     */
-    @RequiredUIAccess
-    Component createCiComponent(Disposable parentDisposable, CodeReviewStatusViewModel statusVm);
-
-    /**
-     * Whether the review has conflicts; shown while that is being checked, hidden when there are none.
-     */
-    @RequiredUIAccess
-    Component createConflictsComponent(Disposable parentDisposable, CodeReviewStatusViewModel statusVm);
 }

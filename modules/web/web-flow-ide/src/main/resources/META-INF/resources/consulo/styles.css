@@ -268,6 +268,12 @@ vaadin-split-layout.web-split-layout-no-divider::part(splitter)
   display: flex;
   align-items: center;
 }
+
+.web-label-with-image > :first-child
+{
+  vertical-align: middle;
+  margin-right: 4px;
+}
 .web-menu-bar
 {
   border-bottom: 1px solid var(--consulo-component-border-color, lightgray);
@@ -499,6 +505,12 @@ vaadin-card.web-card > [slot='header-prefix']
   grid-row: 1;
 }
 
+vaadin-card.consulo-card-selected
+{
+  --vaadin-card-border-color: var(--aura-accent-color, var(--vaadin-focus-ring-color, #3574f0));
+  border-color: var(--aura-accent-color, var(--vaadin-focus-ring-color, #3574f0));
+}
+
 table.web-table-layout > tr:has(> td > *):not(:has(> td > :not([hidden])))
 {
   display: none;
@@ -608,4 +620,21 @@ vaadin-select > .consulo-select-suffix {
     top: 0;
     left: 0;
     height: 100%;
+}
+
+.web-scroll-layout-overlay
+{
+  position: sticky;
+  top: 0;
+  height: 0;
+  z-index: 3;
+  overflow: visible;
+}
+
+.web-scroll-layout-overlay > *
+{
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
 }

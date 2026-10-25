@@ -37,9 +37,9 @@ import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.ui.VcsBalloonProblemNotifier;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
 import java.util.List;
 import java.util.function.Consumer;
+import javax.swing.*;
 
 import static consulo.versionControlSystem.impl.internal.history.FileHistoryPanelImpl.sameHistories;
 

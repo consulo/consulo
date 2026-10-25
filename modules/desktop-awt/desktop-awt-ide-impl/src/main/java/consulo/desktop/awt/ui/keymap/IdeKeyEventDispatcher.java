@@ -56,6 +56,7 @@ import consulo.ui.ex.impl.internal.action.ActionImplUtil;
 import consulo.ui.ex.impl.internal.action.ActionRunnerAsync;
 import consulo.ui.ex.impl.internal.keymap.KeyStrokeAdapter;
 import consulo.ui.ex.internal.ActionManagerEx;
+import consulo.ui.ex.internal.ActionPromoterUtil;
 import consulo.ui.ex.internal.AnActionWithUIUpdate;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
@@ -958,18 +959,9 @@ public final class IdeKeyEventDispatcher implements Disposable {
         myContext.setHasSecondStroke(hasSecondStroke);
         List<AnAction> actions = myContext.getActions();
 
-        if (actions.size() > 1) {
-            List<AnAction> readOnlyActions = Collections.unmodifiableList(actions);
-            Application.get().getExtensionPoint(ActionPromoter.class).forEach(promoter -> {
-                List<AnAction> promoted = promoter.promote(readOnlyActions, myContext.getDataContext());
-                if (promoted == null || promoted.isEmpty()) {
-                    return;
-                }
-
-                actions.removeAll(promoted);
-                actions.addAll(0, promoted);
-            });
-        }
+        List<AnAction> rearranged = ActionPromoterUtil.rearrangeByPromoters(List.copyOf(actions), myContext.getDataContext());
+        actions.clear();
+        actions.addAll(rearranged);
 
         return myContext;
     }

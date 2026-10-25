@@ -17,6 +17,7 @@ package consulo.diff.impl.internal.editor;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.dumb.DumbAware;
+import consulo.diff.DiffViewerVirtualFile;
 import consulo.diff.impl.internal.DiffRequestProcessor;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorProvider;
@@ -29,15 +30,15 @@ import consulo.virtualFileSystem.VirtualFile;
 public class DiffEditorProvider implements FileEditorProvider, DumbAware {
   @Override
   public boolean accept(Project project, VirtualFile file) {
-    return file instanceof DiffVirtualFile;
+    return file instanceof DiffViewerVirtualFile;
   }
 
   @RequiredUIAccess
   
   @Override
   public FileEditor createEditor(Project project, VirtualFile file) {
-    DiffRequestProcessor processor = ((DiffVirtualFile)file).createProcessor(project);
-    return new DiffRequestProcessorEditor((DiffVirtualFile)file, processor);
+    DiffViewerVirtualFile diffFile = (DiffViewerVirtualFile)file;
+    return new DiffRequestProcessorEditor(diffFile, diffFile.createViewer(project));
   }
 
   

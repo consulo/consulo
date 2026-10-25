@@ -81,6 +81,21 @@ public interface ProjectManager {
     Project[] getOpenProjects();
 
     /**
+     * @return the open project whose {@link Project#getLocationHash()} is {@code locationHash}
+     */
+    default @Nullable Project findOpenProjectByHash(@Nullable String locationHash) {
+        if (locationHash == null) {
+            return null;
+        }
+        for (Project project : getOpenProjects()) {
+            if (locationHash.equals(project.getLocationHash())) {
+                return project;
+            }
+        }
+        return null;
+    }
+
+    /**
      * Returns the project which is used as a template for new projects. The template project
      * is always available, even when no other project is open.
      * NB: default project can be lazy loaded

@@ -79,6 +79,7 @@ public class WebScrollingModelImpl extends CodeEditorScrollingModelBase implemen
 
   @Override
   public void scrollTo(LogicalPosition pos, ScrollType scrollType) {
+    fireScrollRequested(pos, scrollType);
     ((WebEditorImpl) myEditor).scrollToLineOnClient(pos.line, scrollType);
   }
 

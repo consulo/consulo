@@ -37,6 +37,24 @@ public interface ChangesViewContentFactory {
     return false;
   }
 
+  /**
+   * Position of the tab among the other tabs of the tool window: tabs with a smaller weight go first.
+   */
+  default int getOrderWeight() {
+    return 100;
+  }
+
+  default boolean isCloseable() {
+    return false;
+  }
+
+  /**
+   * Called when the user closes the tab of a {@link #isCloseable() closeable} content.
+   * It is not called when the tab is removed because {@link #isAvailable()} became {@code false}.
+   */
+  default void contentClosedByUser() {
+  }
+
   
   ChangesViewContentProvider create();
 }

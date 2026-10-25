@@ -22,7 +22,7 @@ import consulo.versionControlSystem.change.patch.BinaryFilePatch;
 import consulo.versionControlSystem.change.patch.FilePatch;
 import consulo.versionControlSystem.change.patch.PatchEP;
 import consulo.versionControlSystem.change.patch.ApplyPatchStatus;
-import consulo.versionControlSystem.impl.internal.patch.PatchSyntaxException;
+import consulo.versionControlSystem.change.patch.PatchSyntaxException;
 import consulo.versionControlSystem.ui.VcsBalloonProblemNotifier;
 import consulo.util.collection.ContainerUtil;
 import consulo.project.Project;

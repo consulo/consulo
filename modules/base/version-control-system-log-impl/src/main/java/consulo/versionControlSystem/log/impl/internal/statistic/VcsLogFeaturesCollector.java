@@ -20,7 +20,7 @@ import consulo.externalService.statistic.*;
 import consulo.project.Project;
 import consulo.versionControlSystem.log.VcsLogHighlighterFactory;
 import consulo.versionControlSystem.log.graph.PermanentGraph;
-import consulo.versionControlSystem.log.impl.internal.VcsProjectLog;
+import consulo.versionControlSystem.log.impl.internal.VcsProjectLogImpl;
 import consulo.versionControlSystem.log.impl.internal.data.MainVcsLogUiProperties;
 import consulo.versionControlSystem.log.impl.internal.ui.AbstractVcsLogUi;
 
@@ -35,7 +35,7 @@ public class VcsLogFeaturesCollector extends AbstractApplicationUsagesCollector 
     
     @Override
     public Set<UsageDescriptor> getProjectUsages(Project project) throws CollectUsagesException {
-        VcsProjectLog projectLog = VcsProjectLog.getInstance(project);
+        VcsProjectLogImpl projectLog = VcsProjectLogImpl.getInstance(project);
         if (projectLog != null) {
             AbstractVcsLogUi ui = projectLog.getMainLogUi();
             if (ui != null) {

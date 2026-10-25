@@ -1,6 +1,9 @@
 package consulo.versionControlSystem.impl.internal.diff;
 
 import consulo.diff.chain.DiffRequestChain;
+import consulo.diff.combined.CombinedBlockProducer;
+import consulo.diff.combined.CombinedDiffRequestChain;
+import consulo.diff.combined.CombinedPathBlockId;
 import consulo.diff.internal.GoToChangePopupBuilder;
 import consulo.ui.ex.action.AnAction;
 import consulo.util.collection.ContainerUtil;
@@ -10,10 +13,11 @@ import consulo.versionControlSystem.change.diff.ChangeDiffRequestProducer;
 import consulo.versionControlSystem.internal.ShowDiffContext;
 import org.jspecify.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class ChangeDiffRequestChain extends UserDataHolderBase implements DiffRequestChain, GoToChangePopupBuilder.Chain {
+public class ChangeDiffRequestChain extends UserDataHolderBase implements CombinedDiffRequestChain, GoToChangePopupBuilder.Chain {
     private final List<ChangeDiffRequestProducer> myRequests;
     private final ShowDiffContext myContext;
     private int myIndex;
@@ -31,6 +35,15 @@ public class ChangeDiffRequestChain extends UserDataHolderBase implements DiffRe
     @Override
     public int getIndex() {
         return myIndex;
+    }
+
+    @Override
+    public List<CombinedBlockProducer> getCombinedBlocks() {
+        List<CombinedBlockProducer> blocks = new ArrayList<>(myRequests.size());
+        for (ChangeDiffRequestProducer producer : myRequests) {
+            blocks.add(new CombinedBlockProducer(new CombinedPathBlockId(producer.getFilePath(), producer.getFileStatus()), producer));
+        }
+        return blocks;
     }
 
     @Override

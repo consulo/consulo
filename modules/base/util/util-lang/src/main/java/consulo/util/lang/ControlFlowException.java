@@ -15,6 +15,8 @@
  */
 package consulo.util.lang;
 
+import java.util.concurrent.CancellationException;
+
 /**
  * A marker interface for exceptions that should never be logged.
  */
@@ -25,5 +27,18 @@ public interface ControlFlowException {
         }
 
         return (RuntimeException) t;
+    }
+
+    /**
+     * Whether {@code throwable} or one of its causes is a {@link ControlFlowException} or a {@link CancellationException},
+     * i.e. normal control flow such as a cancellation, not an error to log.
+     */
+    public static boolean isControlFlow(Throwable throwable) {
+        for (Throwable t = throwable; t != null; t = t.getCause()) {
+            if (t instanceof ControlFlowException || t instanceof CancellationException) {
+                return true;
+            }
+        }
+        return false;
     }
 }

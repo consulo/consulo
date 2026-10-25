@@ -17,6 +17,7 @@ package consulo.diff.impl.internal.editor;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.dumb.DumbAware;
+import consulo.diff.impl.internal.DiffRequestProcessor;
 import consulo.diff.request.DiffRequest;
 import consulo.fileEditor.EditorTabTitleProvider;
 import consulo.fileEditor.FileEditor;
@@ -63,8 +64,9 @@ public class DiffEditorTabTitleProvider implements EditorTabTitleProvider, DumbA
     }
 
     FileEditor editor = FileEditorManager.getInstance(project).getSelectedEditor(file);
-    if (editor instanceof DiffRequestProcessorEditor diffRequestProcessorEditor) {
-      DiffRequest activeRequest = diffRequestProcessorEditor.getProcessor().getActiveRequest();
+    if (editor instanceof DiffRequestProcessorEditor diffRequestProcessorEditor
+      && diffRequestProcessorEditor.getProcessor() instanceof DiffRequestProcessor processor) {
+      DiffRequest activeRequest = processor.getActiveRequest();
       if (activeRequest != null) {
         return activeRequest.getTitle();
       }

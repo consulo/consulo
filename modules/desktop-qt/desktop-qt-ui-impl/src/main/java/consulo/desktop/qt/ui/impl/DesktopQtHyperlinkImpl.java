@@ -21,9 +21,11 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.Hyperlink;
 import consulo.ui.HyperlinkStyle;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.color.RGBColor;
 import consulo.ui.event.HyperlinkEvent;
 import consulo.ui.image.Image;
 import consulo.ui.internal.SearchHighlightUtil;
+import consulo.ui.style.ComponentColors;
 import consulo.util.lang.xml.XmlStringUtil;
 import io.qt.core.QEvent;
 import io.qt.core.QObject;
@@ -120,9 +122,14 @@ public class DesktopQtHyperlinkImpl extends QtComponentDelegate<QWidget> impleme
     private String buildHtml() {
         String text = QtMnemonic.plain(myText);
         String highlighted = DesktopQtSearchHighlight.toRichText(text, mySearchHighlight);
+        String body = highlighted == null ? XmlStringUtil.escapeText(text) : highlighted;
+        if (!isEnabled()) {
+            RGBColor disabled = ComponentColors.DISABLED_TEXT.toRGB();
+            return "<span style=\"color: rgb(%d, %d, %d)\">".formatted(disabled.getRed(), disabled.getGreen(), disabled.getBlue())
+                + body + "</span>";
+        }
         String decoration = myUnderline || myHovered ? "underline" : "none";
-        return "<a href=\"click\" style=\"text-decoration: " + decoration + "\">"
-            + (highlighted == null ? XmlStringUtil.escapeText(text) : highlighted) + "</a>";
+        return "<a href=\"click\" style=\"text-decoration: " + decoration + "\">" + body + "</a>";
     }
 
     private void setHovered(boolean hovered) {
@@ -137,6 +144,13 @@ public class DesktopQtHyperlinkImpl extends QtComponentDelegate<QWidget> impleme
         if (textLabel != null && !textLabel.isDisposed()) {
             textLabel.setText(buildHtml());
         }
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setEnabled(boolean value) {
+        super.setEnabled(value);
+        updateHtml();
     }
 
     @Override

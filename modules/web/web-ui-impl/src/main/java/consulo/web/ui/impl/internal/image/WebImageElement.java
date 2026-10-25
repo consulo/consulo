@@ -70,6 +70,7 @@ public class WebImageElement {
 
         switch (spec) {
             case WebImageSpec.Key key -> element.setAttribute("src", WebImageUrl.toURL(key));
+            case WebImageSpec.Async async -> element.setAttribute("src", WebImageUrl.toURL(async));
             case WebImageSpec.Empty ignored -> {
             }
             case WebImageSpec.Colorize colorize -> {
@@ -156,6 +157,7 @@ public class WebImageElement {
 
         switch (spec) {
             case WebImageSpec.Key key -> html.append(" src=\"").append(escape(WebImageUrl.toURL(key))).append('"');
+            case WebImageSpec.Async async -> html.append(" src=\"").append(escape(WebImageUrl.toURL(async))).append('"');
             case WebImageSpec.Empty ignored -> {
             }
             case WebImageSpec.Colorize colorize -> {
@@ -207,6 +209,7 @@ public class WebImageElement {
             case WebImageSpec.Text ignored -> TEXT;
             case WebImageSpec.Busy ignored -> BUSY;
             case WebImageSpec.Blinking ignored -> BLINKING;
+            case WebImageSpec.Async ignored -> IMAGE;
         };
     }
 

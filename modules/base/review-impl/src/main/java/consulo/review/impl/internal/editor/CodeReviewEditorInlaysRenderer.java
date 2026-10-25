@@ -25,7 +25,7 @@ import consulo.document.Document;
 import consulo.logging.Logger;
 import consulo.review.editor.CodeReviewInlayModel;
 import consulo.review.editor.CodeReviewMultilineCommentableEditorModel;
-import consulo.review.impl.internal.ReviewUIUtil;
+import consulo.review.util.ReviewUIUtil;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.concurrent.coroutine.ObservableValue;

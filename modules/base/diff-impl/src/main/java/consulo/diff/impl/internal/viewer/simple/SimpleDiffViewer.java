@@ -37,12 +37,12 @@ import consulo.diff.fragment.LineFragment;
 import consulo.diff.impl.internal.action.AllLinesIterator;
 import consulo.diff.impl.internal.action.BufferedLineIterator;
 import consulo.diff.impl.internal.util.PrevNextDifferenceIterableBase;
+import consulo.diff.impl.internal.util.UnifiedDiffUtil;
 import consulo.diff.impl.internal.viewer.DiffNotifications;
 import consulo.diff.impl.internal.viewer.FoldingModelSupport;
 import consulo.diff.impl.internal.viewer.StatusPanel;
 import consulo.diff.impl.internal.viewer.TextDiffViewerUtil;
 import consulo.diff.impl.internal.viewer.side.TwosideTextDiffViewer;
-import consulo.diff.impl.internal.util.UnifiedDiffUtil;
 import consulo.diff.internal.DiffImplUtil;
 import consulo.diff.internal.DiffUserDataKeysEx.ScrollToPolicy;
 import consulo.diff.internal.HighlightPolicy;
@@ -52,6 +52,7 @@ import consulo.diff.request.DiffRequest;
 import consulo.diff.util.LineRange;
 import consulo.diff.util.Side;
 import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.event.DocumentEvent;
 import consulo.localize.LocalizeValue;
@@ -89,6 +90,7 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
     private boolean myIsContentsEqual;
 
     private final MyFoldingModel myFoldingModel;
+    private final AlignedDiffModel myAlignedDiffModel;
     private final MyInitialScrollHelper myInitialScrollHelper = new MyInitialScrollHelper();
 
     @RequiredUIAccess
@@ -98,6 +100,7 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
         myPrevNextDifferenceIterable = new MyPrevNextDifferenceIterable();
         myStatusPanel = new MyStatusPanel();
         myFoldingModel = new MyFoldingModel(getEditors(), this);
+        myAlignedDiffModel = new SimpleAlignedDiffModel(this);
 
         UnifiedDiffUtil.registerAction(new ReplaceSelectedChangesAction(Side.LEFT, true), myPanel.getComponent());
         UnifiedDiffUtil.registerAction(new AppendSelectedChangesAction(Side.LEFT, true), myPanel.getComponent());
@@ -117,6 +120,7 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
     protected void onDispose() {
         destroyChangedBlocks();
         myFoldingModel.destroy();
+        Disposer.dispose(myAlignedDiffModel);
         super.onDispose();
     }
 
@@ -189,6 +193,15 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
     // Diff
     //
 
+    @Override
+    public @Nullable PrevNextDifferenceIterable getDifferenceIterable() {
+        return myPrevNextDifferenceIterable;
+    }
+
+    public FoldingModelSupport getFoldingModel() {
+        return myFoldingModel;
+    }
+
     public FoldingModelSupport.Settings getFoldingModelSettings() {
         return TextDiffViewerUtil.getFoldingModelSettings(myContext);
     }
@@ -260,6 +273,10 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
 
             myFoldingModel.install(fragments, myRequest, getFoldingModelSettings());
 
+            if (needAlignChanges()) {
+                myAlignedDiffModel.realignChanges();
+            }
+
             myInitialScrollHelper.onRediff();
 
             updateBridge();
@@ -276,6 +293,7 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
     }
 
     private void clearDiffPresentation() {
+        myAlignedDiffModel.clear();
         myStatusPanel.setBusy(false);
         myPanel.resetNotifications();
         destroyChangedBlocks();
@@ -342,6 +360,11 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
     }
 
     @RequiredUIAccess
+    public boolean scrollToChange(ScrollToPolicy scrollToPolicy) {
+        return doScrollToChange(scrollToPolicy);
+    }
+
+    @RequiredUIAccess
     protected boolean doScrollToChange(ScrollToPolicy scrollToPolicy) {
         SimpleDiffChange targetChange = scrollToPolicy.select(myDiffChanges);
         if (targetChange == null) {
@@ -392,6 +415,10 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
     //
     // Getters
     //
+
+    public boolean needAlignChanges() {
+        return myAlignedDiffModel.needAlignChanges();
+    }
 
     protected List<SimpleDiffChange> getDiffChanges() {
         return myDiffChanges;

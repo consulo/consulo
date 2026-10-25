@@ -21,6 +21,7 @@ import consulo.review.comment.CodeReviewNewCommentViewModel;
 import consulo.review.timeline.CodeReviewTimelineItem;
 import consulo.review.timeline.CodeReviewTimelineViewModel;
 import consulo.review.util.ComputedResult;
+import consulo.ui.messageList.AsyncHtmlImageLoader;
 import consulo.util.concurrent.coroutine.MutableObservableValue;
 import consulo.util.concurrent.coroutine.ObservableValue;
 
@@ -72,5 +73,10 @@ public class SandReviewTimelineViewModel implements CodeReviewTimelineViewModel 
 
     private synchronized void publish() {
         myItems.set(ComputedResult.success(List.copyOf(myLoaded)));
+    }
+
+    @Override
+    public AsyncHtmlImageLoader getHtmlImageLoader() {
+        return SandReviewImages.HTML_IMAGES;
     }
 }

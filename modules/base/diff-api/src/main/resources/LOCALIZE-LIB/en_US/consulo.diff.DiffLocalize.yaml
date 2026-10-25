@@ -278,3 +278,31 @@ unified.viewer:
     text: Unified viewer
 unknown.file.type.error:
     text: 'Unknown file type: {0}'
+diff.actions:
+    text: Diff Actions
+combined.side.by.side.viewer:
+    text: Split
+combined.unified.viewer:
+    text: Unified
+combined.diff.enable.setting:
+    text: Show all files in one diff view
+combined.diff.enable.action:
+    text: Show All Files in One Diff View
+combined.diff.collapse.all.files:
+    text: Collapse All Files
+combined.diff.collapse.file:
+    text: Collapse File
+combined.diff.next.file:
+    text: Next File
+combined.diff.previous.file:
+    text: Previous File
+action.toggle.diff.aligning.mode.text:
+    text: Align Changes In Side-by-Side Diff
+action.toggle.diff.aligning.mode.description:
+    text: Turn on changes alignment for two-sided diff
+diff.files.editors.search.partly.matches:
+    text: '{0, choice, 0#0+ results|1#1+ result|2#{0}+ results} in {1}'
+diff.files.editors.search.matches:
+    text: '{0, choice, 0#0 results|1#1 result|2#{0} results} in {1}'
+diff.files.editors.search.files.count:
+    text: '{0,choice,1#{0} file|2#{0} files}'

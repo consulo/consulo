@@ -42,6 +42,7 @@ abstract class WebEditorBoxBase<V extends com.vaadin.flow.component.Component & 
     private @Nullable Element myEditorElement;
 
     private boolean myFireListeners = true;
+    private boolean myViewerHeightListenerAdded;
 
     private final DocumentListener myViewerHeightListener = new DocumentListener() {
         @Override
@@ -61,7 +62,10 @@ abstract class WebEditorBoxBase<V extends com.vaadin.flow.component.Component & 
         V vaadin = toVaadinComponent();
         vaadin.addAttachListener(event -> attachEditor());
         vaadin.addDetachListener(event -> {
-            mySupport.getDocument().removeDocumentListener(myViewerHeightListener);
+            if (myViewerHeightListenerAdded) {
+                mySupport.getDocument().removeDocumentListener(myViewerHeightListener);
+                myViewerHeightListenerAdded = false;
+            }
             mySupport.releaseEditor();
         });
     }
@@ -95,8 +99,10 @@ abstract class WebEditorBoxBase<V extends com.vaadin.flow.component.Component & 
         if (!mySupport.isOneLine() && mySupport.isViewer()) {
             fitContentHeight(editor);
             Document document = mySupport.getDocument();
-            document.removeDocumentListener(myViewerHeightListener);
-            document.addDocumentListener(myViewerHeightListener);
+            if (!myViewerHeightListenerAdded) {
+                document.addDocumentListener(myViewerHeightListener);
+                myViewerHeightListenerAdded = true;
+            }
         }
     }
 

@@ -31,6 +31,7 @@ import consulo.diff.impl.internal.fragment.MergeLineFragmentImpl;
 import consulo.diff.impl.internal.fragment.MergeWordFragmentImpl;
 import consulo.diff.internal.ComparisonManagerEx;
 import consulo.diff.util.IntPair;
+import consulo.diff.util.LineOffsets;
 import consulo.diff.util.MergeRange;
 import consulo.diff.util.Range;
 import consulo.logging.Logger;
@@ -79,7 +80,93 @@ public class ComparisonManagerImpl implements ComparisonManagerEx {
                                               ComparisonPolicy policy,
                                               ProgressIndicator indicator) throws DiffTooBigException {
     List<LineFragment> lineFragments = compareLines(text1, text2, policy, indicator);
+    return createInnerFragments(lineFragments, text1, text2, policy, indicator);
+  }
 
+  @Override
+  public List<LineFragment> compareLines(Range boundaryRange,
+                                         CharSequence text1,
+                                         CharSequence text2,
+                                         LineOffsets lineOffsets1,
+                                         LineOffsets lineOffsets2,
+                                         ComparisonPolicy policy,
+                                         ProgressIndicator indicator) throws DiffTooBigException {
+    List<CharSequence> lineTexts1 = getLineContents(boundaryRange.start1(), boundaryRange.end1(), text1, lineOffsets1);
+    List<CharSequence> lineTexts2 = getLineContents(boundaryRange.start2(), boundaryRange.end2(), text2, lineOffsets2);
+
+    FairDiffIterable iterable = ByLine.compare(lineTexts1, lineTexts2, policy, indicator);
+    return convertIntoLineFragments(boundaryRange, lineOffsets1, lineOffsets2, iterable);
+  }
+
+  @Override
+  public List<LineFragment> compareLinesInner(Range boundaryRange,
+                                              CharSequence text1,
+                                              CharSequence text2,
+                                              LineOffsets lineOffsets1,
+                                              LineOffsets lineOffsets2,
+                                              ComparisonPolicy policy,
+                                              boolean innerFragments,
+                                              ProgressIndicator indicator) throws DiffTooBigException {
+    List<LineFragment> lineFragments = compareLines(boundaryRange, text1, text2, lineOffsets1, lineOffsets2, policy, indicator);
+    return innerFragments ? createInnerFragments(lineFragments, text1, text2, policy, indicator) : lineFragments;
+  }
+
+  public static List<LineFragment> convertIntoLineFragments(Range boundaryRange,
+                                                            LineOffsets lineOffsets1,
+                                                            LineOffsets lineOffsets2,
+                                                            DiffIterable changes) {
+    List<LineFragment> fragments = new ArrayList<>();
+    for (Range range : changes.iterateChanges()) {
+      int startLine1 = range.start1() + boundaryRange.start1();
+      int startLine2 = range.start2() + boundaryRange.start2();
+      int endLine1 = range.end1() + boundaryRange.start1();
+      int endLine2 = range.end2() + boundaryRange.start2();
+      fragments.add(createLineFragment(startLine1, endLine1, startLine2, endLine2, lineOffsets1, lineOffsets2));
+    }
+    return fragments;
+  }
+
+  public static LineFragment createLineFragment(int startLine1, int endLine1,
+                                                int startLine2, int endLine2,
+                                                LineOffsets lineOffsets1,
+                                                LineOffsets lineOffsets2) {
+    IntPair offsets1 = getOffsets(lineOffsets1, startLine1, endLine1);
+    IntPair offsets2 = getOffsets(lineOffsets2, startLine2, endLine2);
+    return new LineFragmentImpl(startLine1, endLine1, startLine2, endLine2,
+                                offsets1.val1(), offsets1.val2(), offsets2.val1(), offsets2.val2());
+  }
+
+  private static IntPair getOffsets(LineOffsets lineOffsets, int startIndex, int endIndex) {
+    if (startIndex == endIndex) {
+      int offset;
+      if (startIndex < lineOffsets.getLineCount()) {
+        offset = lineOffsets.getLineStart(startIndex);
+      }
+      else {
+        offset = lineOffsets.getLineEnd(lineOffsets.getLineCount() - 1, true);
+      }
+      return new IntPair(offset, offset);
+    }
+    else {
+      int offset1 = lineOffsets.getLineStart(startIndex);
+      int offset2 = lineOffsets.getLineEnd(endIndex - 1, true);
+      return new IntPair(offset1, offset2);
+    }
+  }
+
+  private static List<CharSequence> getLineContents(int start, int end, CharSequence text, LineOffsets lineOffsets) {
+    List<CharSequence> lines = new ArrayList<>(end - start);
+    for (int line = start; line < end; line++) {
+      lines.add(new CharSequenceSubSequence(text, lineOffsets.getLineStart(line), lineOffsets.getLineEnd(line)));
+    }
+    return lines;
+  }
+
+  private List<LineFragment> createInnerFragments(List<LineFragment> lineFragments,
+                                                         CharSequence text1,
+                                                         CharSequence text2,
+                                                         ComparisonPolicy policy,
+                                                         ProgressIndicator indicator) {
     List<LineFragment> fineFragments = new ArrayList<>(lineFragments.size());
     int tooBigChunksCount = 0;
 

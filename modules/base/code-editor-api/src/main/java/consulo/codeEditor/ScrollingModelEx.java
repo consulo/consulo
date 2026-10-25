@@ -15,6 +15,9 @@
  */
 package consulo.codeEditor;
 
+import consulo.codeEditor.event.ScrollRequestListener;
+import consulo.disposer.Disposable;
+
 /**
  * Extends {@link ScrollingModel} with more implementation-specific functionality.
  *
@@ -36,4 +39,6 @@ public interface ScrollingModelEx extends ScrollingModel {
    * Applies remembered viewport location change request to the editor.
    */
   void flushViewportChanges();
+
+  void addScrollRequestListener(ScrollRequestListener listener, Disposable parentDisposable);
 }

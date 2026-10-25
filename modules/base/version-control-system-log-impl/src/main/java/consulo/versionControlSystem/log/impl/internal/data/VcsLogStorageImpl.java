@@ -134,6 +134,18 @@ public class VcsLogStorageImpl implements Disposable, VcsLogStorage {
     }
 
     @Override
+    public boolean containsCommit(CommitId id) {
+        checkDisposed();
+        try {
+            return myCommitIdEnumerator.tryEnumerate(id) != 0;
+        }
+        catch (IOException e) {
+            myExceptionReporter.consume(this, e);
+        }
+        return false;
+    }
+
+    @Override
     public @Nullable CommitId findCommitId(final Predicate<CommitId> condition) {
         checkDisposed();
         try {
@@ -252,6 +264,11 @@ public class VcsLogStorageImpl implements Disposable, VcsLogStorage {
         @Override
         public @Nullable CommitId findCommitId(Predicate<CommitId> string) {
             return null;
+        }
+
+        @Override
+        public boolean containsCommit(CommitId id) {
+            return false;
         }
 
         @Override

@@ -30,7 +30,7 @@ import consulo.versionControlSystem.impl.internal.change.shelf.ShelvedBinaryCont
 import consulo.versionControlSystem.impl.internal.change.shelf.ShelvedBinaryFileImpl;
 import consulo.versionControlSystem.impl.internal.change.shelf.ShelvedBinaryFilePatch;
 import consulo.versionControlSystem.impl.internal.patch.PatchDiffRequestFactory;
-import consulo.versionControlSystem.impl.internal.patch.PatchReader;
+import consulo.versionControlSystem.change.patch.PatchReader;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;

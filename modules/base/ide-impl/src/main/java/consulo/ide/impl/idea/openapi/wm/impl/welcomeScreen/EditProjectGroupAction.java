@@ -19,7 +19,7 @@ import consulo.annotation.component.ActionImpl;
 import consulo.project.Project;
 import consulo.project.ProjectGroup;
 import consulo.ide.impl.idea.ide.PopupProjectGroupActionGroup;
-import consulo.project.internal.RecentProjectsManager;
+import consulo.project.RecentProjectsManager;
 import consulo.project.ui.localize.ProjectUILocalize;
 import consulo.ui.ListBox;
 import consulo.ui.annotation.RequiredUIAccess;

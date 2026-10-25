@@ -23,4 +23,6 @@ public class TextDiffSharedSettings {
     public int CONTEXT_RANGE = 4;
 
     public boolean MERGE_AUTO_APPLY_NON_CONFLICTED_CHANGES = false;
+
+    public boolean ENABLE_ALIGNING_CHANGES_MODE = false;
 }

@@ -110,6 +110,7 @@ import java.net.URL;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -244,6 +245,11 @@ public class DesktopUIInternalImpl extends UIInternal implements UIInternalEx {
     @Override
     public Image _Image_lazy(Supplier<Image> imageSupplier) {
         return new DesktopLazyImageImpl(imageSupplier);
+    }
+
+    @Override
+    public Image _Image_async(Image base, Supplier<? extends CompletableFuture<? extends @Nullable Image>> loader) {
+        return new AsyncImageIcon(base, loader);
     }
 
     @Override
@@ -542,6 +548,11 @@ public class DesktopUIInternalImpl extends UIInternal implements UIInternalEx {
     @Override
     public Button _Components_button(LocalizeValue text) {
         return new DesktopButtonImpl(text);
+    }
+
+    @Override
+    public ToggleButton _Components_toggleButton(LocalizeValue text) {
+        return new DesktopToggleButtonImpl(text);
     }
 
     @Override

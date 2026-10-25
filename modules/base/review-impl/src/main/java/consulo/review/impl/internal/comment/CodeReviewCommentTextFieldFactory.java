@@ -19,7 +19,7 @@ import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.review.comment.CodeReviewNewCommentViewModel;
 import consulo.review.comment.CodeReviewTextEditingViewModel;
-import consulo.review.impl.internal.ReviewUIUtil;
+import consulo.review.util.ReviewUIUtil;
 import consulo.review.util.ComputedResult;
 import consulo.review.localize.ReviewLocalize;
 import consulo.ui.Component;

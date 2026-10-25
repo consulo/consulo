@@ -25,5 +25,13 @@ public enum AvatarStyle implements ComponentStyle {
     X_SMALL,
     SMALL,
     LARGE,
-    X_LARGE
+    X_LARGE,
+
+    /**
+     * The border of the avatar in a colour telling the state of the person - done, waiting for something, nothing yet.
+     * Independent of the size styles.
+     */
+    OUTLINE_SUCCESS,
+    OUTLINE_WARNING,
+    OUTLINE_NEUTRAL
 }

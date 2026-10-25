@@ -23,10 +23,12 @@ import consulo.project.Project;
 import consulo.ui.image.Image;
 import consulo.util.io.FileUtil;
 import consulo.versionControlSystem.FilePath;
+import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangeList;
 import consulo.versionControlSystem.change.ChangesUtil;
 import consulo.versionControlSystem.change.LocallyDeletedChange;
+import consulo.versionControlSystem.ui.ChangesGroupingSupport;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
@@ -39,6 +41,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.TreeMap;
 
 /**
@@ -69,8 +72,12 @@ public final class ChangesTreeSnapshotBuilder {
             .thenComparing(leaf -> leaf.path().getPath());
 
     private final boolean myFlatten;
+    private final boolean myGroupByDirectory;
+    private final boolean myGroupByModule;
+    private final boolean myGroupByRepository;
     private final @Nullable String myBasePath;
     private final @Nullable ProjectFileIndex myFileIndex;
+    private final @Nullable ProjectLevelVcsManager myVcsManager;
 
     private final List<ChangesTreeItem> myRoots = new ArrayList<>();
     private final Map<ChangesTreeItem, List<ChangesTreeItem>> myChildren = new HashMap<>();
@@ -79,10 +86,22 @@ public final class ChangesTreeSnapshotBuilder {
     private final Map<ChangesTreeItem, Image> myIcons = new HashMap<>();
     private final Map<String, Optional<ModuleRoot>> myModuleRoots = new HashMap<>();
 
+    public static Set<String> grouping(boolean flatten) {
+        return flatten ? Set.of() : Set.of(ChangesGroupingSupport.DIRECTORY_GROUPING, ChangesGroupingSupport.MODULE_GROUPING);
+    }
+
     public ChangesTreeSnapshotBuilder(Project project, boolean flatten) {
-        myFlatten = flatten;
+        this(project, grouping(flatten));
+    }
+
+    public ChangesTreeSnapshotBuilder(Project project, Set<String> grouping) {
+        myGroupByDirectory = grouping.contains(ChangesGroupingSupport.DIRECTORY_GROUPING);
+        myGroupByModule = grouping.contains(ChangesGroupingSupport.MODULE_GROUPING);
+        myGroupByRepository = grouping.contains(ChangesGroupingSupport.REPOSITORY_GROUPING);
+        myFlatten = !myGroupByDirectory && !myGroupByModule && !myGroupByRepository;
         myBasePath = project.getBasePath();
         myFileIndex = project.isDefault() ? null : ProjectFileIndex.getInstance(project);
+        myVcsManager = project.isDefault() ? null : ProjectLevelVcsManager.getInstance(project);
     }
 
     public ChangesTreeSnapshotBuilder changeLists(Collection<? extends ChangeList> changeLists) {
@@ -153,7 +172,7 @@ public final class ChangesTreeSnapshotBuilder {
             Map.copyOf(myFileCounts),
             Map.copyOf(myLocations),
             Map.copyOf(myIcons),
-            myFlatten
+            !myGroupByDirectory
         );
     }
 
@@ -177,16 +196,60 @@ public final class ChangesTreeSnapshotBuilder {
     }
 
     private Children groupChildren(@Nullable ChangesTreeItem scope, List<Leaf> leaves) {
+        ProjectLevelVcsManager vcsManager = myVcsManager;
+        if (!myGroupByRepository || vcsManager == null || vcsManager.getAllVcsRoots().length < 2) {
+            return groupModules(scope, leaves);
+        }
+
+        Map<VirtualFile, List<Leaf>> repositories = new TreeMap<>(
+            Comparator.comparing(VirtualFile::getName, String.CASE_INSENSITIVE_ORDER).thenComparing(VirtualFile::getPath)
+        );
+        List<Leaf> outside = new ArrayList<>();
+        for (Leaf leaf : leaves) {
+            VirtualFile root = vcsManager.getVcsRootFor(leaf.path());
+            if (root == null) {
+                outside.add(leaf);
+            }
+            else {
+                repositories.computeIfAbsent(root, key -> new ArrayList<>()).add(leaf);
+            }
+        }
+
+        List<ChangesTreeItem> children = new ArrayList<>();
+        int fileCount = 0;
+        for (Map.Entry<VirtualFile, List<Leaf>> entry : repositories.entrySet()) {
+            VirtualFile root = entry.getKey();
+            RepositoryTreeItem item = new RepositoryTreeItem(scope, root, labelOf(root.getPath()));
+            Children repositoryChildren = groupModules(scope, entry.getValue());
+            myChildren.put(item, repositoryChildren.items());
+            myFileCounts.put(item, repositoryChildren.fileCount());
+            children.add(item);
+            fileCount += repositoryChildren.fileCount();
+        }
+
+        Children rest = groupModules(scope, outside);
+        children.addAll(rest.items());
+        fileCount += rest.fileCount();
+        return new Children(children, fileCount);
+    }
+
+    private Children groupModules(@Nullable ChangesTreeItem scope, List<Leaf> leaves) {
+        if (!myGroupByModule) {
+            return groupDirectories(scope, leaves, myBasePath);
+        }
+
         Map<Module, Map<String, Directory>> modules = new TreeMap<>(
             Comparator.comparing(Module::getName, String.CASE_INSENSITIVE_ORDER).thenComparing(Module::getName)
         );
-        Directory outside = new Directory("", "");
+        Map<Module, List<Leaf>> moduleLeaves = new HashMap<>();
+        List<Leaf> outside = new ArrayList<>();
         for (Leaf leaf : leaves) {
             ModuleRoot moduleRoot = moduleRootOf(leaf.path());
             if (moduleRoot == null) {
-                directoryOf(outside, leaf.path(), myBasePath).myLeaves.add(leaf);
+                outside.add(leaf);
                 continue;
             }
+            moduleLeaves.computeIfAbsent(moduleRoot.module(), module -> new ArrayList<>()).add(leaf);
 
             String rootPath = moduleRoot.rootPath();
             Directory root = modules.computeIfAbsent(moduleRoot.module(), module -> new TreeMap<>(String.CASE_INSENSITIVE_ORDER))
@@ -202,7 +265,12 @@ public final class ChangesTreeSnapshotBuilder {
             Map<String, Directory> roots = entry.getValue();
 
             int count;
-            if (roots.size() == 1) {
+            if (!myGroupByDirectory) {
+                Children flat = flat(moduleLeaves.getOrDefault(entry.getKey(), List.of()));
+                myChildren.put(item, flat.items());
+                count = flat.fileCount();
+            }
+            else if (roots.size() == 1) {
                 count = emit(scope, item, roots.values().iterator().next());
             }
             else {
@@ -223,11 +291,34 @@ public final class ChangesTreeSnapshotBuilder {
             fileCount += count;
         }
 
-        Children rest = emitChildren(scope, outside);
+        Children rest = groupDirectories(scope, outside, myBasePath);
         children.addAll(rest.items());
         fileCount += rest.fileCount();
 
         return new Children(children, fileCount);
+    }
+
+    private Children groupDirectories(@Nullable ChangesTreeItem scope, List<Leaf> leaves, @Nullable String basePath) {
+        if (!myGroupByDirectory) {
+            return flat(leaves);
+        }
+
+        Directory root = new Directory("", "");
+        for (Leaf leaf : leaves) {
+            directoryOf(root, leaf.path(), basePath).myLeaves.add(leaf);
+        }
+        return emitChildren(scope, root);
+    }
+
+    private Children flat(List<Leaf> leaves) {
+        List<Leaf> sorted = new ArrayList<>(leaves);
+        sorted.sort(LEAF_ORDER);
+        List<ChangesTreeItem> items = new ArrayList<>(sorted.size());
+        for (Leaf leaf : sorted) {
+            putLocation(leaf);
+            items.add(leaf.item());
+        }
+        return new Children(items, items.size());
     }
 
     private @Nullable ModuleRoot moduleRootOf(FilePath path) {

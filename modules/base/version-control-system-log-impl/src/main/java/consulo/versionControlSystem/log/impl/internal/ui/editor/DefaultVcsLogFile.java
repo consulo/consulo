@@ -25,9 +25,10 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.DockLayout;
 import consulo.versionControlSystem.log.VcsLogFilterCollection;
 import consulo.versionControlSystem.log.impl.internal.VcsLogTabsUtil;
-import consulo.versionControlSystem.log.impl.internal.VcsProjectLog;
+import consulo.versionControlSystem.log.impl.internal.VcsProjectLogImpl;
 import consulo.versionControlSystem.log.impl.internal.ui.AbstractVcsLogUi;
 import consulo.versionControlSystem.log.localize.VersionControlSystemLogLocalize;
+import consulo.virtualFileSystem.VirtualFilePathWrapper;
 import consulo.virtualFileSystem.VirtualFileSystem;
 import org.jspecify.annotations.Nullable;
 
@@ -36,18 +37,18 @@ import java.util.List;
 /**
  * The file of a log tab opened in an editor.
  */
-public class DefaultVcsLogFile extends VcsLogFile {
+public class DefaultVcsLogFile extends VcsLogFile implements VirtualFilePathWrapper {
     private final VcsLogVirtualFileSystem myFileSystem;
-    private final String myPath;
+    private final VcsLogComplexPath myPathId;
     private final String myTabId;
     private @Nullable VcsLogFilterCollection myFilters;
     private @Nullable AbstractVcsLogUi myUi;
 
-    DefaultVcsLogFile(VcsLogVirtualFileSystem fileSystem, String path, String tabId, @Nullable VcsLogFilterCollection filters) {
-        super(VcsLogTabsUtil.getFullName(tabId));
+    DefaultVcsLogFile(VcsLogVirtualFileSystem fileSystem, VcsLogComplexPath pathId, @Nullable VcsLogFilterCollection filters) {
+        super(VcsLogTabsUtil.getFullName(pathId.logId()));
         myFileSystem = fileSystem;
-        myPath = path;
-        myTabId = tabId;
+        myPathId = pathId;
+        myTabId = pathId.logId();
         myFilters = filters;
     }
 
@@ -70,7 +71,7 @@ public class DefaultVcsLogFile extends VcsLogFile {
         DockLayout panel = DockLayout.create();
         panel.center(Label.create(VersionControlSystemLogLocalize.logIsLoading()));
 
-        VcsProjectLog.getInstance(project).runWhenLogIsReady(logManager -> {
+        VcsProjectLogImpl.getInstance(project).runWhenLogIsReady(logManager -> {
             if (logManager.hasLogUi(myTabId)) {
                 panel.center(Label.create(VersionControlSystemLogLocalize.duplicatedTabIdError()));
                 return;
@@ -125,11 +126,21 @@ public class DefaultVcsLogFile extends VcsLogFile {
 
     @Override
     public String getPath() {
-        return myPath;
+        return myFileSystem.getPath(myPathId);
+    }
+
+    @Override
+    public boolean enforcePresentableName() {
+        return true;
     }
 
     @Override
     public String getPresentableName() {
+        return getTabName();
+    }
+
+    @Override
+    public String getPresentablePath() {
         return getTabName();
     }
 

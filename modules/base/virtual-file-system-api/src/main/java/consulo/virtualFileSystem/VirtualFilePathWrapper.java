@@ -27,4 +27,8 @@ package consulo.virtualFileSystem;
 public interface VirtualFilePathWrapper {
   
   String getPresentablePath();
+
+  default boolean enforcePresentableName() {
+    return false;
+  }
 }

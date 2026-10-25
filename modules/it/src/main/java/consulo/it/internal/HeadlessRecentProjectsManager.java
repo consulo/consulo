@@ -19,7 +19,7 @@ import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
 import consulo.project.Project;
 import consulo.project.ProjectGroup;
-import consulo.project.internal.RecentProjectsManager;
+import consulo.project.RecentProjectsManager;
 import jakarta.inject.Singleton;
 import org.jspecify.annotations.Nullable;
 
@@ -68,6 +68,15 @@ public class HeadlessRecentProjectsManager implements RecentProjectsManager {
 
     @Override
     public void removePath(@Nullable String path) {
+    }
+
+    @Override
+    public List<String> getRecentPaths() {
+        return List.of();
+    }
+
+    @Override
+    public void addRecentPath(String path) {
     }
 
     @Override

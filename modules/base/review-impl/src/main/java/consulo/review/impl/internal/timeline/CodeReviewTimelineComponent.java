@@ -20,7 +20,7 @@ import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;
 import consulo.review.comment.CodeReviewNewCommentViewModel;
 import consulo.review.details.model.CodeReviewDetailsTabViewModel;
-import consulo.review.impl.internal.ReviewUIUtil;
+import consulo.review.util.ReviewUIUtil;
 import consulo.review.impl.internal.comment.CodeReviewCommentTextFieldFactory;
 import consulo.review.impl.internal.details.CodeReviewDetailsTitleComponentFactory;
 import consulo.review.localize.ReviewLocalize;
@@ -35,6 +35,7 @@ import consulo.ui.Space;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.ScrollableLayout;
 import consulo.ui.layout.VerticalLayout;
+import consulo.ui.messageList.AsyncHtmlImageLoader;
 import consulo.ui.messageList.MessageList;
 import consulo.ui.style.ComponentColors;
 import consulo.ui.style.StandardColors;
@@ -77,7 +78,7 @@ public final class CodeReviewTimelineComponent {
             List<CodeReviewTimelineItem> loaded = result.getOrNull();
             Throwable error = result.exceptionOrNull();
             if (loaded != null) {
-                fillItems(itemsDisposable[0], items, loaded);
+                fillItems(itemsDisposable[0], items, loaded, timelineVm.getHtmlImageLoader());
             }
             else if (error != null) {
                 Label errorLabel = Label.create(LocalizeValue.of(String.valueOf(error.getLocalizedMessage())));
@@ -107,7 +108,10 @@ public final class CodeReviewTimelineComponent {
     }
 
     @RequiredUIAccess
-    private static void fillItems(Disposable parentDisposable, VerticalLayout items, List<CodeReviewTimelineItem> loaded) {
+    private static void fillItems(Disposable parentDisposable,
+                                  VerticalLayout items,
+                                  List<CodeReviewTimelineItem> loaded,
+                                  @Nullable AsyncHtmlImageLoader imageLoader) {
         if (loaded.isEmpty()) {
             Label empty = Label.create(ReviewLocalize.reviewTimelineNoDescription());
             empty.setForegroundColor(ComponentColors.DISABLED_TEXT);
@@ -122,7 +126,7 @@ public final class CodeReviewTimelineComponent {
                 items.add(CodeReviewThreadComponentFactory.create(parentDisposable, thread, false));
             }
             else if (item instanceof CodeReviewCommentViewModel comment) {
-                run = appendTo(run, items);
+                run = appendTo(run, items, imageLoader);
                 CodeReviewCommentItemFactory.add(parentDisposable, run, comment);
             }
             else if (item instanceof CodeReviewCommitsTimelineItem commits) {
@@ -133,11 +137,11 @@ public final class CodeReviewTimelineComponent {
     }
 
     @RequiredUIAccess
-    private static MessageList appendTo(@Nullable MessageList run, VerticalLayout items) {
+    private static MessageList appendTo(@Nullable MessageList run, VerticalLayout items, @Nullable AsyncHtmlImageLoader imageLoader) {
         if (run != null) {
             return run;
         }
-        MessageList messages = CodeReviewCommentItemFactory.createList();
+        MessageList messages = CodeReviewCommentItemFactory.createList(imageLoader);
         items.add(messages);
         return messages;
     }

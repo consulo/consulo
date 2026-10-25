@@ -19,10 +19,12 @@ import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.ScrollType;
+import consulo.diff.util.Side;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
+import consulo.review.diff.DiscussionsViewOption;
 import consulo.review.editor.CodeReviewChangedRange;
 import consulo.review.editor.CodeReviewEditorGutterActionableChangesModel;
 import consulo.review.editor.CodeReviewEditorGutterControlsState;
@@ -34,6 +36,8 @@ import consulo.review.editor.CodeReviewNavigableEditorViewModel;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.concurrent.coroutine.MutableObservableValue;
 import consulo.util.concurrent.coroutine.ObservableValue;
+import consulo.versionControlSystem.review.diff.DiffEditorLineMapper;
+import consulo.versionControlSystem.review.diff.DiffLineLocation;
 import consulo.versionControlSystem.review.editor.CodeReviewEditorDocumentTracker;
 import org.jspecify.annotations.Nullable;
 
@@ -59,6 +63,8 @@ public class SandReviewEditorModel implements CodeReviewEditorModel<CodeReviewIn
     private final Editor myEditor;
     private final String myFileName;
     private final Disposable myDisposable;
+    private final SandReviewInEditorViewModel myInEditorVm;
+    private final @Nullable DiffEditorLineMapper myLineMapper;
 
     private final Map<Object, SandReviewThreadInlayModel> myThreadInlays = new LinkedHashMap<>();
     private final List<SandReviewNewCommentInlayModel> myNewComments = new ArrayList<>();
@@ -71,22 +77,42 @@ public class SandReviewEditorModel implements CodeReviewEditorModel<CodeReviewIn
     private final MutableObservableValue<@Nullable CodeReviewEditorGutterControlsState> myGutterControlsState =
         MutableObservableValue.of(null);
 
-    public SandReviewEditorModel(SandReviewService service, Editor editor, String fileName, Disposable parentDisposable) {
+    public SandReviewEditorModel(SandReviewService service,
+                                 Editor editor,
+                                 String fileName,
+                                 SandReviewInEditorViewModel inEditorVm,
+                                 Disposable parentDisposable) {
+        this(service, editor, fileName, inEditorVm, parentDisposable, null);
+    }
+
+    public SandReviewEditorModel(SandReviewService service,
+                                 Editor editor,
+                                 String fileName,
+                                 SandReviewInEditorViewModel inEditorVm,
+                                 Disposable parentDisposable,
+                                 @Nullable DiffEditorLineMapper lineMapper) {
+        myLineMapper = lineMapper;
         myService = service;
         myEditor = editor;
         myFileName = fileName;
+        myInEditorVm = inEditorVm;
         myDisposable = parentDisposable;
+
+        Runnable viewOptionUnsubscribe = inEditorVm.getDiscussionsViewOption().addListener(option -> publish());
+        Disposer.register(parentDisposable, viewOptionUnsubscribe::run);
 
         Runnable unsubscribe = service.getThreadsModificationCount().addListener(count -> reloadThreads());
         Disposer.register(parentDisposable, unsubscribe::run);
         reloadThreads();
 
         myBaseLines = baseLines(editor.getDocument().getText());
-        Application.get().getInstance(CodeReviewEditorDocumentTracker.class)
-            .trackDocumentDiff(parentDisposable, String.join("\n", myBaseLines), editor.getDocument(), ranges -> myReviewRanges.set(List.copyOf(ranges)));
+        if (lineMapper == null) {
+            Application.get().getInstance(CodeReviewEditorDocumentTracker.class)
+                .trackDocumentDiff(parentDisposable, String.join("\n", myBaseLines), editor.getDocument(), ranges -> myReviewRanges.set(List.copyOf(ranges)));
+        }
     }
 
-    private static List<String> baseLines(String text) {
+    static List<String> baseLines(String text) {
         List<String> lines = new ArrayList<>(List.of(text.split("\n", -1)));
         if (lines.size() < 13) {
             return lines;
@@ -104,7 +130,7 @@ public class SandReviewEditorModel implements CodeReviewEditorModel<CodeReviewIn
     private synchronized void reloadThreads() {
         for (SandReviewThreadViewModel thread : myService.getThreads(myFileName)) {
             myThreadInlays.computeIfAbsent(thread.getTrackingId(), key -> {
-                SandReviewThreadInlayModel inlay = new SandReviewThreadInlayModel(thread);
+                SandReviewThreadInlayModel inlay = new SandReviewThreadInlayModel(thread, myLineMapper);
                 Runnable unsubscribe = inlay.isVisible().addListener(visible -> publish());
                 Disposer.register(myDisposable, unsubscribe::run);
                 return inlay;
@@ -114,17 +140,30 @@ public class SandReviewEditorModel implements CodeReviewEditorModel<CodeReviewIn
     }
 
     private synchronized void publish() {
-        List<CodeReviewInlayModel> inlays = new ArrayList<>(myThreadInlays.values());
+        DiscussionsViewOption viewOption = myInEditorVm.getDiscussionsViewOption().get();
+        List<CodeReviewInlayModel> inlays = new ArrayList<>();
+        for (SandReviewThreadInlayModel inlay : myThreadInlays.values()) {
+            if (viewOption == DiscussionsViewOption.ALL
+                || viewOption == DiscussionsViewOption.UNRESOLVED_ONLY && !((SandReviewThreadViewModel) inlay.getThread()).isResolved().get()) {
+                inlays.add(inlay);
+            }
+        }
         inlays.addAll(myNewComments);
         myInlays.set(List.copyOf(inlays));
 
         Set<Integer> linesWithComments = new LinkedHashSet<>();
         for (SandReviewThreadInlayModel inlay : myThreadInlays.values()) {
-            linesWithComments.add(inlay.getLine().get());
+            Integer line = inlay.getLine().get();
+            if (line != null) {
+                linesWithComments.add(line);
+            }
         }
         Set<Integer> linesWithNewComments = new LinkedHashSet<>();
         for (SandReviewNewCommentInlayModel inlay : myNewComments) {
-            linesWithNewComments.add(inlay.getLine().get());
+            Integer line = inlay.getLine().get();
+            if (line != null) {
+                linesWithNewComments.add(line);
+            }
         }
         myGutterControlsState.set(new SandReviewGutterControlsState(Set.copyOf(linesWithComments), Set.copyOf(linesWithNewComments)));
     }
@@ -181,7 +220,8 @@ public class SandReviewEditorModel implements CodeReviewEditorModel<CodeReviewIn
     @Override
     public synchronized void toggleComments(int lineIdx) {
         for (SandReviewThreadInlayModel inlay : myThreadInlays.values()) {
-            if (inlay.getLine().get() == lineIdx) {
+            Integer line = inlay.getLine().get();
+            if (line != null && line == lineIdx) {
                 inlay.toggleVisible();
             }
         }
@@ -196,7 +236,20 @@ public class SandReviewEditorModel implements CodeReviewEditorModel<CodeReviewIn
     @RequiredUIAccess
     @Override
     public boolean canCreateComment(CodeReviewLineRange lineRange) {
-        return true;
+        return toFileRange(lineRange) != null;
+    }
+
+    private @Nullable CodeReviewLineRange toFileRange(CodeReviewLineRange lineRange) {
+        DiffEditorLineMapper lineMapper = myLineMapper;
+        if (lineMapper == null) {
+            return lineRange;
+        }
+        DiffLineLocation start = lineMapper.lineToLocation(lineRange.start());
+        DiffLineLocation end = lineMapper.lineToLocation(lineRange.end());
+        if (start == null || end == null || start.side() != Side.RIGHT || end.side() != Side.RIGHT) {
+            return null;
+        }
+        return new CodeReviewLineRange(start.line(), end.line());
     }
 
     @RequiredUIAccess
@@ -213,8 +266,10 @@ public class SandReviewEditorModel implements CodeReviewEditorModel<CodeReviewIn
             myService.getScheduler(),
             comment -> {
                 removeNewComment(inlay.get());
-                CodeReviewLineRange commented = range.get();
-                myService.createThread(myFileName, commented.start(), commented.end(), comment);
+                CodeReviewLineRange commented = toFileRange(range.get());
+                if (commented != null) {
+                    myService.createThread(myFileName, commented.start(), commented.end(), comment);
+                }
             },
             () -> createSuggestedChange(range.get())
         );
@@ -229,7 +284,8 @@ public class SandReviewEditorModel implements CodeReviewEditorModel<CodeReviewIn
 
     private @Nullable SandReviewNewCommentInlayModel findNewComment(int lineIdx) {
         for (SandReviewNewCommentInlayModel inlay : myNewComments) {
-            if (inlay.getLine().get() == lineIdx) {
+            Integer line = inlay.getLine().get();
+            if (line != null && line == lineIdx) {
                 return inlay;
             }
         }
@@ -326,7 +382,10 @@ public class SandReviewEditorModel implements CodeReviewEditorModel<CodeReviewIn
     private synchronized @Nullable Integer findLine(int line, boolean next) {
         Integer result = null;
         for (SandReviewThreadInlayModel inlay : myThreadInlays.values()) {
-            int threadLine = inlay.getLine().get();
+            Integer threadLine = inlay.getLine().get();
+            if (threadLine == null) {
+                continue;
+            }
             boolean candidate = next ? threadLine > line : threadLine < line;
             boolean closer = result == null || (next ? threadLine < result : threadLine > result);
             if (candidate && closer) {
