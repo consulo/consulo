@@ -16,7 +16,6 @@
 package consulo.desktop.awt.fileChooser.impl;
 
 import consulo.fileChooser.FileSaverDescriptor;
-import consulo.fileChooser.FileSaverDialog;
 import consulo.fileChooser.FileSystemTree;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
@@ -26,19 +25,22 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.ui.ex.localize.UILocalize;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFileWrapper;
+import consulo.virtualFileSystem.LocalFileSystem;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import java.awt.*;
 import java.io.File;
+import java.nio.file.Path;
 import java.util.List;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author Konstantin Bulenkov
  */
-public class FileSaverDialogImpl extends FileChooserDialogImpl implements FileSaverDialog {
+public class FileSaverDialogImpl extends FileChooserDialogImpl {
   protected final JTextField myFileName = new JTextField(20);
   protected final JComboBox myExtensions = new JComboBox();
   protected final FileSaverDescriptor myDescriptor;
@@ -65,9 +67,11 @@ public class FileSaverDialogImpl extends FileChooserDialogImpl implements FileSa
     return descriptor.getTitle().orIfEmpty(UILocalize.fileChooserSaveDialogDefaultTitle());
   }
 
-  public @Nullable VirtualFileWrapper save(@Nullable VirtualFile baseDir, @Nullable String filename) {
+  @RequiredUIAccess
+  public CompletableFuture<Path> saveAsync(@Nullable Path baseDir, @Nullable String filename) {
     init();
-    restoreSelection(baseDir);
+    // the tree browses the virtual file system
+    restoreSelection(baseDir == null ? null : LocalFileSystem.getInstance().findFileByNioFile(baseDir));
     myFileSystemTree.addListener(new FileSystemTree.Listener() {
       public void selectionChanged(List<? extends VirtualFile> selection) {
         updateFileName(selection);
@@ -79,13 +83,17 @@ public class FileSaverDialogImpl extends FileChooserDialogImpl implements FileSa
       myFileName.setText(filename);
     }
 
-    show();
-
-    if (getExitCode() == OK_EXIT_CODE) {
-      File file = getFile();
-      return file == null ? null : new VirtualFileWrapper(file);
-    }
-    return null;
+    CompletableFuture<Path> result = new CompletableFuture<>();
+    showAsync().whenComplete((value, error) -> {
+      File file = error == null && getExitCode() == OK_EXIT_CODE ? getFile() : null;
+      if (file != null) {
+        result.complete(file.toPath());
+      }
+      else {
+        result.completeExceptionally(error != null ? error : new CancellationException());
+      }
+    });
+    return result;
   }
 
   protected @Nullable File getFile() {

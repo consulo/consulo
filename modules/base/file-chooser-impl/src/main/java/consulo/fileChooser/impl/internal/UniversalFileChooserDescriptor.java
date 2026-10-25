@@ -4,6 +4,7 @@ package consulo.fileChooser.impl.internal;
 import consulo.disposer.Disposable;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.internal.UniversalFileChooserContributor;
+import consulo.fileChooser.util.FileChooserUtil;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.Component;
@@ -12,10 +13,10 @@ import consulo.ui.WidthAndHeight;
 import consulo.ui.Window;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.dialog.Dialog;
 import consulo.ui.ex.dialog.DialogDescriptor;
 import consulo.ui.ex.dialog.DialogValue;
 import consulo.ui.ex.tree.ApplicationTreeExecutorFactory;
-import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
 import java.nio.file.Path;
@@ -35,8 +36,8 @@ class UniversalFileChooserDescriptor extends DialogDescriptor {
     private final ApplicationTreeExecutorFactory myTreeExecutorFactory;
 
     private @Nullable UniversalFileChooserPanel myPanel;
-    private Runnable myOkAction = () -> {
-    };
+    private @Nullable Dialog myDialog;
+    private boolean myValidating;
 
     UniversalFileChooserDescriptor(
         FileChooserDescriptor descriptor,
@@ -69,7 +70,7 @@ class UniversalFileChooserDescriptor extends DialogDescriptor {
         UniversalFileChooserPanel panel = new UniversalFileChooserPanel(
             myDescriptor,
             myProject,
-            () -> myOkAction.run(),
+            this::validateAndClose,
             myContributors,
             myPreselectPath,
             this::updateOkButtonState,
@@ -85,32 +86,46 @@ class UniversalFileChooserDescriptor extends DialogDescriptor {
         return myPanel != null && myPanel.isOkEnabled();
     }
 
-    void setOkAction(Runnable okAction) {
-        myOkAction = okAction;
+    void setDialog(Dialog dialog) {
+        myDialog = dialog;
     }
 
+    /**
+     * The validation is async - the dialog is closed by {@link #validateAndClose()} once the chosen paths are accepted.
+     */
     @RequiredUIAccess
     @Override
     public boolean canHandle(AnAction action, @Nullable DialogValue value, Window window) {
         if (value == null) {
             return true;
         }
-        return validateSelectedFiles(window);
+        validateAndClose();
+        return false;
     }
 
     @RequiredUIAccess
-    boolean validateSelectedFiles(@Nullable Window window) {
-        List<VirtualFile> files = UniversalFileChooser.toVirtualFiles(myDescriptor, getSelectedFiles());
-        try {
-            myDescriptor.validateSelectedFiles(files.toArray(VirtualFile.EMPTY_ARRAY));
-            return true;
+    private void validateAndClose() {
+        Dialog dialog = myDialog;
+        if (dialog == null || myValidating) {
+            return;
         }
-        catch (Exception e) {
-            MessageBoxes.okError(LocalizeValue.ofNullable(e.getMessage()))
-                .title(getTitle())
-                .showAsync(window);
-            return false;
-        }
+
+        myValidating = true;
+        FileChooserUtil.validateSelectedPaths(myDescriptor, getSelectedFiles()).whenComplete((message, error) -> {
+            myValidating = false;
+            if (error != null) {
+                return;
+            }
+
+            if (message.isNotEmpty()) {
+                MessageBoxes.okError(message)
+                    .title(getTitle())
+                    .showAsync(dialog.getWindow());
+                return;
+            }
+
+            dialog.doOkAction(getOkValue());
+        });
     }
 
     List<Path> getSelectedFiles() {

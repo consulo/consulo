@@ -31,6 +31,9 @@ import jakarta.inject.Singleton;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URISyntaxException;
+import java.nio.file.FileSystemNotFoundException;
+import java.nio.file.Path;
 
 /**
  * @author Rustam Vishnyakov
@@ -58,16 +61,15 @@ public class CodeStyleSchemesUIConfiguration implements PersistentStateComponent
   }
 
   public static class Util {
-    public static @Nullable VirtualFile getRecentImportFile() {
+    public static @Nullable Path getRecentImportPath() {
       CodeStyleSchemesUIConfiguration configuration = getInstance();
       if (configuration != null) {
         String fileLocation = configuration.RECENT_IMPORT_FILE_LOCATION;
         if (fileLocation == null || fileLocation.trim().isEmpty()) return null;
         try {
-          URL url = new URL(fileLocation);
-          return VirtualFileUtil.findFileByURL(url);
+          return Path.of(new URL(fileLocation).toURI());
         }
-        catch (MalformedURLException e) {
+        catch (MalformedURLException | URISyntaxException | IllegalArgumentException | FileSystemNotFoundException e) {
           // Ignore
         }
       }

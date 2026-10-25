@@ -18,13 +18,15 @@ package consulo.desktop.awt.fileChooser.impl;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.component.ComponentManager;
 import consulo.fileChooser.FileSaverDescriptor;
-import consulo.fileChooser.FileSaverDialog;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.fileChooser.provider.FileOperateDialogProvider;
 import consulo.fileChooser.provider.FileSaveDialogProvider;
 import consulo.project.Project;
 
 import org.jspecify.annotations.Nullable;
 import java.awt.*;
+import java.nio.file.Path;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author VISTALL
@@ -46,10 +48,13 @@ public class DesktopFileSaveDialogProvider implements FileSaveDialogProvider {
 
   
   @Override
-  public FileSaverDialog createSaveFileDialog(FileSaverDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent) {
-    if(parent != null) {
-      return new FileSaverDialogImpl(descriptor, parent);
-    }
-    return new FileSaverDialogImpl(descriptor, (Project)project);
+  @RequiredUIAccess
+  public CompletableFuture<Path> saveAsync(FileSaverDescriptor descriptor,
+                                          @Nullable ComponentManager project,
+                                          @Nullable Component parent,
+                                          @Nullable Path baseDir,
+                                          @Nullable String fileName) {
+    FileSaverDialogImpl dialog = parent != null ? new FileSaverDialogImpl(descriptor, parent) : new FileSaverDialogImpl(descriptor, (Project)project);
+    return dialog.saveAsync(baseDir, fileName);
   }
 }

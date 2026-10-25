@@ -20,11 +20,13 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.component.ComponentManager;
 import consulo.component.extension.ExtensionPointName;
 import consulo.fileChooser.FileSaverDescriptor;
-import consulo.fileChooser.FileSaverDialog;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
+import java.nio.file.Path;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author VISTALL
@@ -34,10 +36,16 @@ import java.awt.*;
 public interface FileSaveDialogProvider extends FileOperateDialogProvider {
     ExtensionPointName<FileSaveDialogProvider> EP_NAME = ExtensionPointName.create(FileSaveDialogProvider.class);
 
-    
-    FileSaverDialog createSaveFileDialog(
+    /**
+     * Shows the dialog and answers the path of the file to save, or completes exceptionally with
+     * {@link java.util.concurrent.CancellationException} when it is cancelled.
+     */
+    @RequiredUIAccess
+    CompletableFuture<Path> saveAsync(
         FileSaverDescriptor descriptor,
         @Nullable ComponentManager project,
-        @Nullable Component parent
+        @Nullable Component parent,
+        @Nullable Path baseDir,
+        @Nullable String fileName
     );
 }

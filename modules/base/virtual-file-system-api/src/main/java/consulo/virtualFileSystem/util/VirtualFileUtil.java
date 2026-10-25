@@ -15,6 +15,7 @@
  */
 package consulo.virtualFileSystem.util;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.WriteAction;
 import consulo.application.progress.ProgressManager;
@@ -69,6 +70,8 @@ public final class VirtualFileUtil {
         return url;
     }
 
+    @Deprecated
+    @DeprecationInfo("Use Path version")
     public static @Nullable VirtualFile getUserHomeDir() {
         Path path = Platform.current().user().homePath();
         return LocalFileSystem.getInstance().findFileByNioFile(path);

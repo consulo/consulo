@@ -61,7 +61,6 @@ public final class MacroManagerImpl implements MacroManager {
     registerMacro(new FileDirRelativeToSourcepathMacro());
     registerMacro(new FilePathRelativeToSourcepathMacro());
     registerMacro(new PromptMacro());
-    registerMacro(new FilePromptMacro());
     registerMacro(new SourcepathEntryMacro());
     registerMacro(new ProjectFileDirMacro());
     registerMacro(new ProjectNameMacro());

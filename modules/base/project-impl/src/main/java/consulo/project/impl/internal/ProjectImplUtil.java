@@ -68,11 +68,26 @@ public class ProjectImplUtil {
                                                  @Nullable Project projectToCloseFinal,
                                                  boolean forceOpenInNewFrame,
                                                  UIAccess uiAccess) {
+        return openAsync(Path.of(path), projectToCloseFinal, forceOpenInNewFrame, uiAccess, new ProjectOpenContext());
+    }
+
+    public static AsyncResult<Project> openAsync(Path path,
+                                                 @Nullable Project projectToCloseFinal,
+                                                 boolean forceOpenInNewFrame,
+                                                 UIAccess uiAccess) {
         return openAsync(path, projectToCloseFinal, forceOpenInNewFrame, uiAccess, new ProjectOpenContext());
     }
 
 
     public static AsyncResult<Project> openAsync(String path,
+                                                 @Nullable Project projectToCloseFinal,
+                                                 boolean forceOpenInNewFrame,
+                                                 UIAccess uiAccess,
+                                                 ProjectOpenContext context) {
+        return openAsync(Path.of(path), projectToCloseFinal, forceOpenInNewFrame, uiAccess, context);
+    }
+
+    public static AsyncResult<Project> openAsync(Path path,
                                                  @Nullable Project projectToCloseFinal,
                                                  boolean forceOpenInNewFrame,
                                                  UIAccess uiAccess,
@@ -88,7 +103,7 @@ public class ProjectImplUtil {
         result.doWhenRejected(() -> WelcomeFrameManager.getInstance().showIfNoProjectOpened());
 
         ProjectOpenService service = Application.get().getInstance(ProjectOpenService.class);
-        service.openProjectAsync(Path.of(path), uiAccess, context).whenComplete((project, throwable) -> {
+        service.openProjectAsync(path, uiAccess, context).whenComplete((project, throwable) -> {
             if (throwable != null) {
                 result.rejectWithThrowable(throwable);
             }

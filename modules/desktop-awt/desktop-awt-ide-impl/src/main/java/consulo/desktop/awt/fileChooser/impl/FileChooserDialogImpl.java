@@ -21,7 +21,6 @@ import consulo.application.SaveAndSyncHandler;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.application.util.registry.Registry;
-import consulo.component.ComponentManager;
 import consulo.component.util.Iconable;
 import consulo.dataContext.DataSink;
 import consulo.dataContext.UiDataProvider;
@@ -50,6 +49,7 @@ import consulo.ui.ex.localize.UILocalize;
 import consulo.ui.image.Image;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.StringUtil;
+import consulo.util.lang.function.ThrowableConsumer;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
@@ -65,20 +65,16 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.io.File;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.*;
-import java.util.concurrent.CancellationException;
-import java.util.concurrent.CompletableFuture;
-import java.util.function.Consumer;
 
-public class FileChooserDialogImpl extends DialogWrapper implements FileChooserDialog, PathChooserDialog, FileLookup {
+public class FileChooserDialogImpl extends DialogWrapper implements FileLookup {
     public static final String FILE_CHOOSER_SHOW_PATH_PROPERTY = "FileChooser.ShowPath";
-    public static final String RECENT_FILES_KEY = "file.chooser.recent.files";
     public static final String DRAG_N_DROP_HINT = "Drag and drop a file into the space above to quickly locate it in the tree";
     private final FileChooserDescriptor myChooserDescriptor;
     protected FileSystemTreeImpl myFileSystemTree;
     private Project myProject;
-    private VirtualFile[] myChosenFiles = VirtualFile.EMPTY_ARRAY;
 
     private JPanel myNorthPanel;
     private TextFieldAction myTextFieldAction;
@@ -110,98 +106,8 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
         return descriptor.getTitle().orIfEmpty(UILocalize.fileChooserDefaultTitle());
     }
 
-    @Override
-    @RequiredUIAccess
-    public VirtualFile[] choose(@Nullable ComponentManager project, VirtualFile... toSelect) {
-        init();
-        if ((myProject == null) && (project != null)) {
-            myProject = (Project)project;
-        }
-        if (toSelect.length == 1) {
-            restoreSelection(toSelect[0]);
-        }
-        else if (toSelect.length == 0) {
-            restoreSelection(null); // select last opened file
-        }
-        else {
-            selectInTree(toSelect, true);
-        }
-
-        show();
-
-        return myChosenFiles;
-    }
-
-    @Override
-    @RequiredUIAccess
-    public void choose(@Nullable VirtualFile toSelect, Consumer<List<VirtualFile>> callback) {
-        init();
-        restoreSelection(toSelect);
-        show();
-        if (myChosenFiles.length > 0) {
-            callback.accept(Arrays.asList(myChosenFiles));
-        }
-        else if (callback instanceof IdeaFileChooser.FileChooserConsumer fileChooserConsumer) {
-            fileChooserConsumer.cancelled();
-        }
-    }
-
-    @Override
-    @RequiredUIAccess
-    public CompletableFuture<VirtualFile[]> chooseAsync(@Nullable ComponentManager project, VirtualFile[] toSelect) {
-        init();
-        if ((myProject == null) && (project != null)) {
-            myProject = (Project)project;
-        }
-        if (toSelect.length == 1) {
-            restoreSelection(toSelect[0]);
-        }
-        else if (toSelect.length == 0) {
-            restoreSelection(null); // select last opened file
-        }
-        else {
-            selectInTree(toSelect, true);
-        }
-
-        CompletableFuture<VirtualFile[]> result = new CompletableFuture<>();
-        showAsync().whenComplete((value, error) -> {
-            if (error != null) {
-                result.completeExceptionally(error);
-            }
-            else if (myChosenFiles.length > 0) {
-                result.complete(myChosenFiles);
-            }
-            else {
-                result.completeExceptionally(new CancellationException());
-            }
-        });
-        return result;
-    }
-
-    @Override
-    @RequiredUIAccess
-    public CompletableFuture<VirtualFile[]> chooseAsync(@Nullable VirtualFile toSelect) {
-        init();
-        restoreSelection(toSelect);
-
-        CompletableFuture<VirtualFile[]> result = new CompletableFuture<>();
-        showAsync().whenComplete((value, error) -> {
-            if (error != null) {
-                result.completeExceptionally(error);
-            }
-            else if (myChosenFiles.length > 0) {
-                result.complete(myChosenFiles);
-            }
-            else {
-                result.completeExceptionally(new CancellationException());
-            }
-        });
-        return result;
-    }
-
     protected void restoreSelection(@Nullable VirtualFile toSelect) {
-        VirtualFile lastOpenedFile = FileChooserUtil.getLastOpenedFile(myProject);
-        VirtualFile file = FileChooserUtil.getFileToSelect(myChooserDescriptor, myProject, toSelect, lastOpenedFile);
+        VirtualFile file = FileChooserUtil.getFileToSelect(myChooserDescriptor, myProject, toSelect);
 
         if (file != null && file.isValid()) {
             myFileSystemTree.select(
@@ -222,27 +128,14 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
     }
 
     protected void storeSelection(@Nullable VirtualFile file) {
-        FileChooserUtil.setLastOpenedFile(myProject, file);
-        if (file != null && file.getFileSystem() instanceof LocalFileSystem) {
-            saveRecent(file.getPath());
+        Path path = file == null ? null : file.getFileSystem().getNioPath(file);
+        if (path != null) {
+            FileChooserUtil.updateRecentPaths(myProject, path);
         }
-    }
-
-    protected void saveRecent(String path) {
-        List<String> files = new ArrayList<>(Arrays.asList(getRecentFiles()));
-        files.remove(path);
-        files.add(0, path);
-        while (files.size() > 30) {
-            files.remove(files.size() - 1);
-        }
-        ApplicationPropertiesComponent.getInstance().setValues(RECENT_FILES_KEY, ArrayUtil.toStringArray(files));
     }
 
     private String[] getRecentFiles() {
-        String[] array = ApplicationPropertiesComponent.getInstance().getValues(RECENT_FILES_KEY);
-        if (array == null) {
-            return ArrayUtil.EMPTY_STRING_ARRAY;
-        }
+        String[] array = ArrayUtil.toStringArray(FileChooserUtil.getRecentPaths());
 
         if (array.length > 0 && myPathTextField != null && myPathTextField.getField().getText().replace('\\', '/').equals(array[0])) {
             return Arrays.copyOfRange(array, 1, array.length);
@@ -417,29 +310,33 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
         List<VirtualFile> selectedFiles = Arrays.asList(getSelectedFilesInt());
         VirtualFile[] files = VirtualFileUtil.toVirtualFileArray(FileChooserUtil.getChosenFiles(myChooserDescriptor, selectedFiles));
         if (files.length == 0) {
-            myChosenFiles = VirtualFile.EMPTY_ARRAY;
             close(CANCEL_EXIT_CODE);
             return;
         }
 
         try {
-            myChooserDescriptor.validateSelectedFiles(files);
+            List<Path> paths = new ArrayList<>(files.length);
+            for (VirtualFile file : files) {
+                Path path = file.getFileSystem().getNioPath(file);
+                if (path != null) {
+                    paths.add(path);
+                }
+            }
+            myChooserDescriptor.validateSelectedPaths(paths);
+
+            ThrowableConsumer<List<VirtualFile>, Exception> validator = myChooserDescriptor.getVirtualFilesValidator();
+            if (validator != null) {
+                validator.consume(List.of(files));
+            }
         }
         catch (Exception e) {
             Messages.showErrorDialog(getContentPane(), e.getMessage(), getTitle());
             return;
         }
 
-        myChosenFiles = files;
         storeSelection(files[files.length - 1]);
 
         super.doOKAction();
-    }
-
-    @Override
-    public final void doCancelAction() {
-        myChosenFiles = VirtualFile.EMPTY_ARRAY;
-        super.doCancelAction();
     }
 
     protected JTree createTree() {

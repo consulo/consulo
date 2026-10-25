@@ -92,7 +92,7 @@ public final class PlatformFileChooserContributor implements UniversalFileChoose
     }
 
     @Override
-    public @Nullable Path getDesktopPath() {
-        return null;
+    public @Nullable Platform getPlatform() {
+        return myReachablePlatform.get();
     }
 }

@@ -64,7 +64,6 @@ import consulo.util.lang.Comparing;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFileWrapper;
 import consulo.virtualFileSystem.archive.ArchiveFileType;
 import consulo.virtualFileSystem.fileType.FileType;
 import org.jspecify.annotations.Nullable;
@@ -339,21 +338,26 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
             @RequiredUIAccess
             public void actionPerformed(AnActionEvent e) {
                 List<BaseInjection> injections = getInjectionList(getSelectedInjections());
-                VirtualFileWrapper wrapper =
-                    FileChooserFactory.getInstance().createSaveFileDialog(new FileSaverDescriptor("Export Selected " + "Injections to File...", "", "xml"), myProject).save(null, null);
-                if (wrapper == null) {
-                    return;
-                }
-                Configuration configuration = new Configuration();
-                configuration.setInjections(injections);
-                Document document = new Document(configuration.getState());
-                try {
-                    JDOMUtil.writeDocument(document, wrapper.getFile(), "\n");
-                }
-                catch (IOException ex) {
-                    String msg = ex.getLocalizedMessage();
-                    Messages.showErrorDialog(myProject, msg != null && msg.length() > 0 ? msg : ex.toString(), "Export Failed");
-                }
+                FileSaverDescriptor descriptor = new FileSaverDescriptor("Export Selected " + "Injections to File...", "", "xml");
+                FileChooserFactory.getInstance()
+                    .newSaverBuilder(descriptor)
+                    .project(myProject)
+                    .showAsync()
+                    .whenComplete((path, error) -> {
+                        if (error != null) {
+                            return;
+                        }
+                        Configuration configuration = new Configuration();
+                        configuration.setInjections(injections);
+                        Document document = new Document(configuration.getState());
+                        try {
+                            JDOMUtil.writeDocument(document, path.toFile(), "\n");
+                        }
+                        catch (IOException ex) {
+                            String msg = ex.getLocalizedMessage();
+                            Messages.showErrorDialog(myProject, msg != null && msg.length() > 0 ? msg : ex.toString(), "Export Failed");
+                        }
+                    });
             }
 
             @Override

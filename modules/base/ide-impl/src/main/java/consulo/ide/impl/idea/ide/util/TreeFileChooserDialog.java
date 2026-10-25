@@ -71,6 +71,8 @@ import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.*;
 import java.util.function.Predicate;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author Anton Katilin
@@ -305,6 +307,22 @@ public final class TreeFileChooserDialog extends DialogWrapper implements TreeFi
             },
             IdeaModalityState.stateForComponent(getWindow())
         );
+    }
+
+    @Override
+    @RequiredUIAccess
+    public CompletableFuture<PsiFile> showDialogAsync() {
+        CompletableFuture<PsiFile> result = new CompletableFuture<>();
+        showAsync().whenComplete((ignored, error) -> {
+            PsiFile selected = error == null && getExitCode() == OK_EXIT_CODE ? getSelectedFile() : null;
+            if (selected != null) {
+                result.complete(selected);
+            }
+            else {
+                result.completeExceptionally(error != null ? error : new CancellationException());
+            }
+        });
+        return result;
     }
 
     @Override

@@ -95,7 +95,15 @@ public class OpenProjectFileChooserDescriptor extends FileChooserDescriptor {
      */
     public static boolean canOpen(VirtualFile file) {
         Path path = toNioPath(file);
-        return path != null && canOpenAsProject(path);
+        return path != null && canOpen(path);
+    }
+
+    /**
+     * Unlike {@link ProjectOpenProcessors#findProcessor} this does not fall back to the processor which turns an
+     * arbitrary directory into a new project, so it answers whether the path already holds one.
+     */
+    public static boolean canOpen(Path path) {
+        return canOpenAsProject(path);
     }
 
     private static boolean canOpenAsProject(Path path) {

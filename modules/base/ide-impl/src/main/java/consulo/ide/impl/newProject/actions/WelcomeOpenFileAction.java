@@ -16,9 +16,12 @@
 package consulo.ide.impl.newProject.actions;
 
 import consulo.annotation.component.ActionImpl;
+import consulo.fileChooser.FileChooserFactory;
 import consulo.ide.impl.idea.ide.actions.OpenFileAction;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
+import consulo.virtualFileSystem.VirtualFileManager;
+import jakarta.inject.Inject;
 
 /**
  * @author VISTALL
@@ -26,8 +29,11 @@ import consulo.platform.base.localize.ActionLocalize;
  */
 @ActionImpl(id = "WelcomeScreen.OpenProject")
 public class WelcomeOpenFileAction extends OpenFileAction {
-    public WelcomeOpenFileAction() {
+    @Inject
+    public WelcomeOpenFileAction(FileChooserFactory fileChooserFactory, VirtualFileManager virtualFileManager) {
         super(
+            fileChooserFactory,
+            virtualFileManager,
             ActionLocalize.actionWelcomescreenOpenprojectText(),
             ActionLocalize.actionWelcomescreenOpenprojectDescription(),
             PlatformIconGroup.welcomeOpenproject()

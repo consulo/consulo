@@ -15,19 +15,17 @@
  */
 package consulo.ui.ex.awt.util;
 
-import consulo.fileChooser.FileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.ui.UIAccess;
-import consulo.util.io.FileUtil;
-import consulo.virtualFileSystem.LocalFileSystem;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.fileChooser.FileChooserFactory;
+import consulo.fileChooser.util.FileChooserUtil;
 
 import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
+import java.nio.file.Path;
 
 /**
  * @author Eugene Zhuravlev
@@ -49,18 +47,8 @@ public class BrowseFilesListener implements ActionListener {
     myChooserDescriptor = chooserDescriptor;
   }
 
-  protected @Nullable VirtualFile getFileToSelect() {
-    String path = myTextField.getText().trim().replace(File.separatorChar, '/');
-    if (path.length() > 0) {
-      File file = new File(path);
-      while (file != null && !file.exists()) {
-        file = file.getParentFile();
-      }
-      if (file != null) {
-        return LocalFileSystem.getInstance().findFileByIoFile(file);
-      }
-    }
-    return null;
+  protected @Nullable Path getFileToSelect() {
+    return FileChooserUtil.findExistingPathOrParent(myTextField.getText());
   }
 
   protected void doSetText(String path) {
@@ -68,14 +56,18 @@ public class BrowseFilesListener implements ActionListener {
   }
 
   public void actionPerformed( ActionEvent e ) {
-    VirtualFile fileToSelect = getFileToSelect();
+    Path fileToSelect = getFileToSelect();
     myChooserDescriptor.setTitle(myTitle); // important to set title and description here because a shared descriptor instance can be used
     myChooserDescriptor.setDescription(myDescription);
     UIAccess uiAccess = UIAccess.current();
-    FileChooser.chooseFiles(myChooserDescriptor, null, fileToSelect).whenCompleteAsync((files, error) -> {
-      if (files != null && files.length > 0) {
-        doSetText(FileUtil.toSystemDependentName(files[0].getPath()));
-      }
-    }, uiAccess);
+    FileChooserFactory.getInstance()
+      .newBuilder(myChooserDescriptor)
+      .toSelect(fileToSelect)
+      .showMultiple()
+      .whenCompleteAsync((paths, error) -> {
+        if (paths != null && !paths.isEmpty()) {
+          doSetText(paths.get(0).toString());
+        }
+      }, uiAccess);
   }
 }

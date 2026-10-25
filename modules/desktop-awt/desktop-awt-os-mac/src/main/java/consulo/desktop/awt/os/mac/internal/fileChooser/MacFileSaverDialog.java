@@ -18,25 +18,25 @@ package consulo.desktop.awt.os.mac.internal.fileChooser;
 import consulo.desktop.awt.ui.OwnerOptional;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileSaverDescriptor;
-import consulo.fileChooser.FileSaverDialog;
+import consulo.fileChooser.util.FileChooserUtil;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.localize.UILocalize;
-import consulo.util.io.FileUtil;
-import consulo.virtualFileSystem.LocalFileSystem;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFileWrapper;
 import org.jspecify.annotations.Nullable;
 
+import javax.swing.*;
 import java.awt.*;
-import java.io.File;
+import java.nio.file.Path;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 /**
  * @author Denis Fokin
  */
-public class MacFileSaverDialog implements FileSaverDialog {
+public class MacFileSaverDialog {
   private FileDialog myFileDialog;
   private FileSaverDescriptor myDescriptor;
 
@@ -58,28 +58,24 @@ public class MacFileSaverDialog implements FileSaverDialog {
     OwnerOptional.fromComponent(parent).ifDialog(dialogConsumer).ifFrame(frameConsumer).ifNull(frameConsumer);
   }
 
-  @Override
-  public @Nullable VirtualFileWrapper save(@Nullable VirtualFile baseDir, @Nullable String filename) {
-    myFileDialog.setDirectory(baseDir == null ? null : baseDir.getCanonicalPath());
+  @RequiredUIAccess
+  public CompletableFuture<Path> saveAsync(@Nullable Path baseDir, @Nullable String filename) {
+    myFileDialog.setDirectory(baseDir == null ? null : baseDir.toString());
     myFileDialog.setFile(filename);
-    myFileDialog.setFilenameFilter((dir, name) -> {
-      File file = new File(dir, name);
-      return myDescriptor.isFileSelectable(fileToVirtualFile(file));
+    myFileDialog.setFilenameFilter((dir, name) -> FileChooserUtil.isPathAccepted(myDescriptor, dir.toPath().resolve(name)));
+
+    CompletableFuture<Path> result = new CompletableFuture<>();
+    SwingUtilities.invokeLater(() -> {
+      myFileDialog.setVisible(true);
+
+      String file = myFileDialog.getFile();
+      if (file == null) {
+        result.completeExceptionally(new CancellationException());
+        return;
+      }
+
+      result.complete(Path.of(myFileDialog.getDirectory(), file));
     });
-
-    myFileDialog.setVisible(true);
-
-    String file = myFileDialog.getFile();
-    if (file == null) {
-      return null;
-    }
-
-    return new VirtualFileWrapper(new File(myFileDialog.getDirectory() + File.separator + file));
-  }
-
-  private static VirtualFile fileToVirtualFile(File file) {
-    LocalFileSystem localFileSystem = LocalFileSystem.getInstance();
-    String vfsPath = FileUtil.toSystemIndependentName(file.getAbsolutePath());
-    return localFileSystem.refreshAndFindFileByPath(vfsPath);
+    return result;
   }
 }

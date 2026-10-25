@@ -18,13 +18,15 @@ package consulo.desktop.awt.fileChooser.impl.system;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.component.ComponentManager;
 import consulo.fileChooser.FileChooserDescriptor;
-import consulo.fileChooser.FileChooserDialog;
-import consulo.fileChooser.PathChooserDialog;
 import consulo.fileChooser.provider.FileChooseDialogProvider;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author VISTALL
@@ -50,14 +52,14 @@ public class NativeFileChooseDialogProvider implements FileChooseDialogProvider 
     }
 
     
+    @RequiredUIAccess
     @Override
-    public FileChooserDialog createFileChooser(FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent) {
-        return new NativeFileChooseDialog(descriptor, parent, (Project) project);
-    }
-
-    
-    @Override
-    public PathChooserDialog createPathChooser(FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent) {
-        return new NativeFileChooseDialog(descriptor, parent, (Project) project);
+    public CompletableFuture<List<Path>> chooseAsync(
+        FileChooserDescriptor descriptor,
+        @Nullable ComponentManager project,
+        @Nullable Component parent,
+        @Nullable Path toSelect
+    ) {
+        return new NativeFileChooseDialog(descriptor, parent, (Project) project).chooseAsync(toSelect);
     }
 }

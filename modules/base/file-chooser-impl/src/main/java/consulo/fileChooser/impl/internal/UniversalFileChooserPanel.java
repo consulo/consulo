@@ -6,7 +6,6 @@ import consulo.disposer.Disposable;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.internal.UniversalFileChooserContributor;
 import consulo.fileChooser.localize.FileChooserLocalize;
-import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.Component;
@@ -25,6 +24,8 @@ import consulo.ui.ex.dialog.DialogService;
 import consulo.ui.ex.tree.ApplicationTreeExecutorFactory;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.TabbedLayout;
+import consulo.ui.UIAccess;
+import consulo.application.util.concurrent.AppExecutorUtil;
 import org.jspecify.annotations.Nullable;
 
 import java.nio.file.Files;
@@ -33,6 +34,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 class UniversalFileChooserPanel {
     private static final String TOOLBAR_PLACE = "UniversalFileChooserTopToolbar";
@@ -136,15 +138,8 @@ class UniversalFileChooserPanel {
 
         @Override
         public void update(AnActionEvent e) {
-            boolean anyDesktop = false;
-            for (FileView fileView : myFileViews) {
-                if (fileView.getContributor().getDesktopPath() != null) {
-                    anyDesktop = true;
-                    break;
-                }
-            }
-            e.getPresentation().setVisible(anyDesktop);
-            e.getPresentation().setEnabled(true);
+            FileView activeFileView = getActiveFileView();
+            e.getPresentation().setEnabled(activeFileView != null && activeFileView.getContributor().getDesktopPath() != null);
         }
 
         @Override
@@ -208,17 +203,7 @@ class UniversalFileChooserPanel {
     private ActionToolbar createTopToolbar() {
         DefaultActionGroup group = new DefaultActionGroup();
 
-        group.add(new DumbAwareAction(
-            FileChooserLocalize.universalFileChooserActionHomeText(),
-            FileChooserLocalize.universalFileChooserActionHomeDescription(),
-            PlatformIconGroup.nodesHomefolder()
-        ) {
-            @Override
-            @RequiredUIAccess
-            public void actionPerformed(AnActionEvent e) {
-                navigateToHome();
-            }
-        });
+        group.add(new HomeAction());
 
         group.add(new DesktopAction());
 
@@ -283,41 +268,78 @@ class UniversalFileChooserPanel {
             .createActionToolbar(TOOLBAR_PLACE, group, ActionToolbar.Style.HORIZONTAL);
     }
 
-    private void navigateToHome() {
-        FileView activeFileView = getActiveFileView();
-        if (activeFileView != null) {
-            activeFileView.navigateToFile(Platform.current().user().homePath());
+    private class HomeAction extends DumbAwareAction implements AnActionWithSyncUpdate {
+        HomeAction() {
+            super(
+                FileChooserLocalize.universalFileChooserActionHomeText(),
+                FileChooserLocalize.universalFileChooserActionHomeDescription(),
+                PlatformIconGroup.nodesHomefolder()
+            );
+        }
+
+        @Override
+        public void update(AnActionEvent e) {
+            FileView activeFileView = getActiveFileView();
+            e.getPresentation().setEnabled(activeFileView != null && activeFileView.getContributor().getHomePath() != null);
+        }
+
+        @Override
+        @RequiredUIAccess
+        public void actionPerformed(AnActionEvent e) {
+            navigateToHome();
         }
     }
 
+    /**
+     * Home of the machine the active tab shows.
+     */
+    @RequiredUIAccess
+    private void navigateToHome() {
+        FileView activeFileView = getActiveFileView();
+        if (activeFileView == null) {
+            return;
+        }
+        Path homePath = activeFileView.getContributor().getHomePath();
+        if (homePath != null) {
+            activeFileView.navigateToFile(homePath);
+        }
+    }
+
+    @RequiredUIAccess
     private void navigateToProject() {
         String basePath = myProject.getBasePath();
         FileView activeFileView = getActiveFileView();
-        if (basePath != null && activeFileView != null) {
-            activeFileView.navigateToFile(Path.of(basePath));
+        if (basePath == null || activeFileView == null) {
+            return;
+        }
+        Path projectPath = Path.of(basePath);
+        // the project is on the local machine - only a tab which shows it navigates there
+        if (activeFileView.getContributor().ownsPath(projectPath)) {
+            activeFileView.navigateToFile(projectPath);
         }
     }
 
+    /**
+     * Desktop of the machine the active tab shows - checked off the UI thread, it may be a remote machine.
+     */
+    @RequiredUIAccess
     private void navigateToDesktop() {
         FileView activeFileView = getActiveFileView();
-        FileView targetView = activeFileView != null && activeFileView.getContributor().getDesktopPath() != null
-            ? activeFileView
-            : null;
-        if (targetView == null) {
-            for (FileView fileView : myFileViews) {
-                if (fileView.getContributor().getDesktopPath() != null) {
-                    targetView = fileView;
-                    break;
-                }
-            }
-        }
-        if (targetView == null) {
+        if (activeFileView == null) {
             return;
         }
-        Path desktopPath = targetView.getContributor().getDesktopPath();
-        if (desktopPath != null) {
-            targetView.navigateToFile(desktopPath);
+        Path desktopPath = activeFileView.getContributor().getDesktopPath();
+        if (desktopPath == null) {
+            return;
         }
+
+        UIAccess uiAccess = UIAccess.current();
+        CompletableFuture.supplyAsync(() -> Files.isDirectory(desktopPath), AppExecutorUtil.getAppExecutorService())
+            .whenCompleteAsync((exists, error) -> {
+                if (Boolean.TRUE.equals(exists) && activeFileView == getActiveFileView()) {
+                    activeFileView.navigateToFile(desktopPath);
+                }
+            }, uiAccess);
     }
 
     @RequiredUIAccess

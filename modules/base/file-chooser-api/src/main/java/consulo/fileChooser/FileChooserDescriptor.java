@@ -28,6 +28,7 @@ import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.util.lang.Pair;
+import consulo.util.lang.function.ThrowableConsumer;
 import consulo.virtualFileSystem.VFileProperty;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
@@ -65,6 +66,7 @@ public class FileChooserDescriptor extends UserDataHolderBase implements Cloneab
   private boolean myShowHiddenFiles = false;
   private @Nullable Predicate<VirtualFile> myFileFilter = null;
   private @Nullable Pair<LocalizeValue, List<String>> myExtensionFilter = null;
+  private @Nullable ThrowableConsumer<List<VirtualFile>, Exception> myVirtualFilesValidator = null;
   private @Nullable String myForceOperateDialogProviderId = null;
   private @Nullable Platform myPlatform = null;
   private boolean myAnyPlatform = false;
@@ -99,6 +101,7 @@ public class FileChooserDescriptor extends UserDataHolderBase implements Cloneab
     withShowHiddenFiles(d.isShowHiddenFiles());
     myPlatform = d.myPlatform;
     myAnyPlatform = d.myAnyPlatform;
+    myVirtualFilesValidator = d.myVirtualFilesValidator;
   }
 
   public boolean isChooseFiles() {
@@ -375,13 +378,29 @@ public class FileChooserDescriptor extends UserDataHolderBase implements Cloneab
   }
 
   /**
-   * the method is called upon pressing Ok in the FileChooserDialog
-   * Override the method in order to customize validation of user input
+   * Called upon <em>OK</em> action before closing the dialog (after closing for native choosers), on the chosen paths -
+   * without the virtual file system. Override to customize the validation of user input.
    *
-   * @param files - selected files to be checked
-   * @throws Exception if the the files cannot be accepted
+   * @param paths chosen paths to be checked
+   * @throws Exception if the chosen paths cannot be accepted, the exception message will be shown in the UI.
    */
-  public void validateSelectedFiles(VirtualFile[] files) throws Exception {
+  public void validateSelectedPaths(List<Path> paths) throws Exception {
+  }
+
+  /**
+   * Sets a validation which needs the virtual file system, e.g. the project model - called upon <em>OK</em> action after
+   * {@link #validateSelectedPaths(List)}, on the UI thread, with the chosen paths resolved into virtual files off it.
+   * Without it the chooser never touches the virtual file system for validation; prefer {@link #validateSelectedPaths(List)}.
+   * <p>
+   * The validator throws if the chosen files cannot be accepted, the exception message will be shown in the UI.
+   */
+  public FileChooserDescriptor withVirtualFilesValidator(@Nullable ThrowableConsumer<List<VirtualFile>, Exception> validator) {
+    myVirtualFilesValidator = validator;
+    return this;
+  }
+
+  public @Nullable ThrowableConsumer<List<VirtualFile>, Exception> getVirtualFilesValidator() {
+    return myVirtualFilesValidator;
   }
 
   private boolean acceptAsGeneralFile(VirtualFile file) {

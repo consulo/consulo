@@ -19,11 +19,13 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.ComponentManager;
 import consulo.fileChooser.FileChooserDescriptor;
-import consulo.fileChooser.FileChooserDialog;
-import consulo.fileChooser.PathChooserDialog;
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author VISTALL
@@ -31,17 +33,15 @@ import java.awt.*;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface FileChooseDialogProvider extends FileOperateDialogProvider {
-    
-    FileChooserDialog createFileChooser(
+    /**
+     * Shows the chooser and answers the chosen paths, or completes exceptionally with
+     * {@link java.util.concurrent.CancellationException} when it is cancelled.
+     */
+    @RequiredUIAccess
+    CompletableFuture<List<Path>> chooseAsync(
         FileChooserDescriptor descriptor,
         @Nullable ComponentManager project,
-        @Nullable Component parent
-    );
-
-    
-    PathChooserDialog createPathChooser(
-        FileChooserDescriptor descriptor,
-        @Nullable ComponentManager project,
-        @Nullable Component parent
+        @Nullable Component parent,
+        @Nullable Path toSelect
     );
 }

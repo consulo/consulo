@@ -1408,8 +1408,6 @@ macro.file.path.relative.to.sourcepath.root:
     text: File path relative to the sourcepath root the file belongs to
 macro.file.path.relative.to.sourcepath.root.fwd.slash:
     text: File path relative to the sourcepath root the file belongs to (with forward slashes)
-macro.fileprompt.preview:
-    text: <filename>
 macro.javadoc.output.directory:
     text: JavaDoc output directory
 macro.line.number:

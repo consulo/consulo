@@ -19,17 +19,15 @@ import consulo.annotation.DeprecationInfo;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.awt.hacking.AWTAccessorHacking;
-import consulo.fileChooser.FileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.*;
 import consulo.util.collection.ArrayUtil;
-import consulo.util.io.FileUtil;
 import consulo.util.lang.CharFilter;
 import consulo.util.lang.StringUtil;
-import consulo.virtualFileSystem.util.VirtualFileUtil;
+import consulo.fileChooser.FileChooserFactory;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
@@ -81,9 +79,9 @@ public class GuiUtils {
       public void actionPerformed(ActionEvent e) {
         FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor().withTitle("Select " + objectName);
         UIAccess uiAccess = UIAccess.current();
-        FileChooser.chooseFile(descriptor, field, null, null).whenCompleteAsync((file, error) -> {
-          if (file != null) {
-            field.setText(FileUtil.toSystemDependentName(file.getPath()));
+        FileChooserFactory.getInstance().newBuilder(descriptor).parent(field).showSingle().whenCompleteAsync((path, error) -> {
+          if (path != null) {
+            field.setText(path.toString());
             field.postActionEvent();
           }
         }, uiAccess);
@@ -97,10 +95,10 @@ public class GuiUtils {
       public void actionPerformed(ActionEvent e) {
         FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFileNoJarsDescriptor().withTitle("Select " + objectName);
         UIAccess uiAccess = UIAccess.current();
-        FileChooser.chooseFile(descriptor, field, null, null).whenCompleteAsync((file, error) -> {
-          if (file != null) {
+        FileChooserFactory.getInstance().newBuilder(descriptor).parent(field).showSingle().whenCompleteAsync((path, error) -> {
+          if (path != null) {
             try {
-              field.setText(VirtualFileUtil.virtualToIoFile(file).toURI().toURL().toString());
+              field.setText(path.toUri().toURL().toString());
             }
             catch (MalformedURLException e1) {
               field.setText("");

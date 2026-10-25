@@ -18,9 +18,8 @@ package consulo.ide.impl.idea.ide.actions;
 import consulo.annotation.component.ActionImpl;
 import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
-import consulo.fileChooser.FileChooser;
+import consulo.fileChooser.FileChooserFactory;
 import consulo.fileChooser.FileChooserDescriptor;
-import consulo.fileChooser.PathChooserDialog;
 import consulo.fileChooser.node.FileElement;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.FileEditorProviderManager;
@@ -30,44 +29,67 @@ import consulo.ide.impl.idea.openapi.fileChooser.impl.FileChooserUtil;
 import consulo.ide.impl.idea.openapi.fileTypes.ex.FileTypeChooser;
 import consulo.ide.localize.IdeLocalize;
 import consulo.localize.LocalizeValue;
+import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.project.impl.internal.ProjectImplUtil;
 import consulo.ui.UIAccess;
+import consulo.ui.UIAction;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.image.Image;
-import consulo.virtualFileSystem.LocalFileSystem;
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.CoroutineScope;
+import consulo.util.concurrent.coroutine.step.CodeExecution;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.archive.ArchiveFileType;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
-import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 
 @ActionImpl(id = "OpenFile")
 public class OpenFileAction extends AnAction implements DumbAware {
+    private final FileChooserFactory myFileChooserFactory;
+    private final VirtualFileManager myVirtualFileManager;
+
     @Inject
-    public OpenFileAction() {
-        this(ActionLocalize.actionOpenfileText(), ActionLocalize.actionOpenfileDescription(), PlatformIconGroup.nodesFolderopened());
+    public OpenFileAction(FileChooserFactory fileChooserFactory, VirtualFileManager virtualFileManager) {
+        this(
+            fileChooserFactory,
+            virtualFileManager,
+            ActionLocalize.actionOpenfileText(),
+            ActionLocalize.actionOpenfileDescription(),
+            PlatformIconGroup.nodesFolderopened()
+        );
     }
 
-    public OpenFileAction(LocalizeValue text, LocalizeValue description, @Nullable Image icon) {
+    protected OpenFileAction(
+        FileChooserFactory fileChooserFactory,
+        VirtualFileManager virtualFileManager,
+        LocalizeValue text,
+        LocalizeValue description,
+        @Nullable Image icon
+    ) {
         super(text, description, icon);
+        myFileChooserFactory = fileChooserFactory;
+        myVirtualFileManager = virtualFileManager;
     }
 
     @Override
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
-        @Nullable Project project = e.getData(Project.KEY);
+        Project project = e.getData(Project.KEY);
         boolean showFiles = project != null;
 
         FileChooserDescriptor descriptor = new OpenProjectFileChooserDescriptor(true) {
@@ -93,78 +115,98 @@ public class OpenFileAction extends AnAction implements DumbAware {
         descriptor.withTitle(
             showFiles ? LocalizeValue.localizeTODO("Open File or Project") : LocalizeValue.localizeTODO("Open Project")
         );
-        // FIXME [VISTALL] we need this? descriptor.setDescription(getFileChooserDescription());
 
-        descriptor.putUserData(PathChooserDialog.PREFER_LAST_OVER_EXPLICIT, Boolean.TRUE);
-
-        FileChooser.chooseFiles(descriptor, project, VirtualFileUtil.getUserHomeDir()).whenComplete((files, error) -> {
-            if (error != null) {
-                return;
-            }
-
-            for (VirtualFile file : files) {
-                if (!descriptor.isFileSelectable(file)) { // on Mac, it could be selected anyway
-                    Messages.showInfoMessage(
-                        project,
-                        file.getPresentableUrl() + " contains no " + Application.get().getName() + " project",
-                        "Cannot Open Project"
-                    );
+        UIAccess uiAccess = UIAccess.current();
+        myFileChooserFactory.newBuilder(descriptor)
+            .project(project)
+            .toSelect(Platform.current().user().homePath())
+            .preferLastOverExplicit()
+            .showMultiple()
+            .whenCompleteAsync((paths, error) -> {
+                if (error != null) {
                     return;
                 }
-            }
-            doOpenFile(project, files);
-        });
+
+                for (Path path : paths) {
+                    if (!descriptor.isPathSelectable(path)) { // on Mac, it could be selected anyway
+                        Messages.showInfoMessage(
+                            project,
+                            path + " contains no " + Application.get().getName() + " project",
+                            "Cannot Open Project"
+                        );
+                        return;
+                    }
+                }
+                doOpenFile(project, paths);
+            }, uiAccess);
     }
 
     @RequiredUIAccess
-    private static void doOpenFile(@Nullable Project project, VirtualFile[] result) {
-        for (VirtualFile file : result) {
-            if (file.isDirectory()) {
-                ProjectImplUtil.openAsync(file.getPath(), project, false, UIAccess.current())
-                    .doWhenDone(openedProject -> FileChooserUtil.setLastOpenedFile(openedProject, file));
+    private void doOpenFile(@Nullable Project project, List<Path> paths) {
+        List<Path> toOpen = new ArrayList<>();
+        for (Path path : paths) {
+            if (Files.isDirectory(path)) {
+                openProject(project, path);
                 return;
             }
 
-            if (OpenProjectFileChooserDescriptor.canOpen(file)) {
+            if (OpenProjectFileChooserDescriptor.canOpen(path)) {
                 int answer = Messages.showYesNoDialog(
                     project,
-                    IdeLocalize.messageOpenFileIsProject(file.getName()).get(),
+                    IdeLocalize.messageOpenFileIsProject(String.valueOf(path.getFileName())).get(),
                     IdeLocalize.titleOpenProject().get(),
                     UIUtil.getQuestionIcon()
                 );
                 if (answer == 0) {
-                    ProjectImplUtil.openAsync(
-                        file.getPath(),
-                        project,
-                        false,
-                        UIAccess.current()
-                    ).doWhenDone(openedProject -> FileChooserUtil.setLastOpenedFile(openedProject, file));
+                    openProject(project, path);
                     return;
                 }
             }
 
-            FileType type = FileTypeChooser.getKnownFileTypeOrAssociate(file, project);
-            if (type == null) {
-                return;
-            }
-
-            if (project != null) {
-                openFile(file, project);
-            }
+            toOpen.add(path);
         }
+
+        if (project != null && !toOpen.isEmpty()) {
+            openFiles(project, toOpen);
+        }
+    }
+
+    @RequiredUIAccess
+    private static void openProject(@Nullable Project project, Path path) {
+        ProjectImplUtil.openAsync(path, project, false, UIAccess.current())
+            .doWhenDone(openedProject -> FileChooserUtil.setLastOpenedFile(openedProject, path));
+    }
+
+    private void openFiles(Project project, List<Path> paths) {
+        CoroutineScope.launchAsync(
+            project.coroutineContext(),
+            () -> Coroutine
+                .first(CodeExecution.<Object, List<VirtualFile>>apply(ignored -> {
+                    List<VirtualFile> files = new ArrayList<>(paths.size());
+                    for (Path path : paths) {
+                        VirtualFile file = myVirtualFileManager.refreshAndFindFileByNioPath(path);
+                        if (file != null && file.isValid()) {
+                            files.add(file);
+                        }
+                    }
+                    return files;
+                }))
+                .then(UIAction.<List<VirtualFile>, List<VirtualFile>>apply(files -> {
+                    for (VirtualFile file : files) {
+                        FileType type = FileTypeChooser.getKnownFileTypeOrAssociate(file, project);
+                        if (type == null) {
+                            break;
+                        }
+                        openFile(file, project);
+                    }
+                    return files;
+                }))
+        );
     }
 
     private static boolean isArchive(Path path) {
         Path fileName = path.getFileName();
         return fileName != null && FileTypeRegistry.getInstance().getFileTypeByFileName(fileName.toString()) instanceof ArchiveFileType;
-    }
-
-    @RequiredUIAccess
-    public static void openFile(String filePath, Project project) {
-        VirtualFile file = LocalFileSystem.getInstance().findFileByPath(filePath);
-        if (file != null && file.isValid()) {
-            openFile(file, project);
-        }
     }
 
     @RequiredUIAccess

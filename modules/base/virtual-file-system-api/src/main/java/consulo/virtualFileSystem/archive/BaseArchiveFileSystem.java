@@ -35,6 +35,7 @@ import org.jspecify.annotations.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Path;
 import java.util.function.Function;
 
 /**
@@ -110,6 +111,26 @@ public abstract class BaseArchiveFileSystem extends NewVirtualFileSystem impleme
      */
     public String composeRootPath(String localPath) {
         return localPath + URLUtil.ARCHIVE_SEPARATOR;
+    }
+
+    /**
+     * Answers an {@link ArchivePath} - an entry of the archive on a read-only NIO file system.
+     */
+    @Override
+    public @Nullable Path getNioPath(VirtualFile file) {
+        if (file.getFileSystem() != this) {
+            return null;
+        }
+
+        String path = file.getPath();
+        String rootPath = extractRootPath(path);
+        ArchivePath root = ArchiveNioFileSystemManager.getInstance().getRoot(Path.of(extractLocalPath(rootPath)));
+        if (root == null) {
+            return null;
+        }
+
+        String entryPath = path.length() > rootPath.length() ? path.substring(rootPath.length()) : "";
+        return entryPath.isEmpty() ? root : root.resolve(entryPath);
     }
 
     @Override

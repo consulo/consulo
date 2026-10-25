@@ -25,10 +25,13 @@ import consulo.platform.Platform;
 import consulo.project.localize.ProjectLocalize;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
+import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -160,14 +163,14 @@ public abstract class SdkType implements SdkTypeId {
     public FileChooserDescriptor getHomeChooserDescriptor() {
         FileChooserDescriptor descriptor = new FileChooserDescriptor(false, true, false, false, false, false) {
             @Override
-            public void validateSelectedFiles(VirtualFile[] files) throws Exception {
-                if (files.length != 0) {
-                    String selectedPath = files[0].getPath();
+            public void validateSelectedPaths(List<Path> paths) throws Exception {
+                if (!paths.isEmpty()) {
+                    String selectedPath = FileUtil.toSystemIndependentName(paths.get(0).toString());
                     boolean valid = isValidSdkHome(selectedPath);
                     if (!valid) {
                         valid = isValidSdkHome(adjustSelectedSdkHome(selectedPath));
                         if (!valid) {
-                            LocalizeValue message = files[0].isDirectory()
+                            LocalizeValue message = Files.isDirectory(paths.get(0))
                                 ? ProjectLocalize.sdkConfigureHomeInvalidError(getDisplayName())
                                 : ProjectLocalize.sdkConfigureHomeFileInvalidError(getDisplayName());
                             throw new Exception(message.get());

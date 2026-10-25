@@ -19,11 +19,12 @@ import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.component.ComponentManager;
 import consulo.fileChooser.FileSaverDescriptor;
-import consulo.fileChooser.FileSaverDialog;
 import consulo.fileChooser.provider.FileSaveDialogProvider;
 
 import org.jspecify.annotations.Nullable;
 import java.awt.*;
+import java.nio.file.Path;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author VISTALL
@@ -33,8 +34,12 @@ import java.awt.*;
 public class UnifiedFileSaveDialogProvider implements FileSaveDialogProvider {
   
   @Override
-  public FileSaverDialog createSaveFileDialog(FileSaverDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent) {
-    throw new UnsupportedOperationException();
+  public CompletableFuture<Path> saveAsync(FileSaverDescriptor descriptor,
+                                          @Nullable ComponentManager project,
+                                          @Nullable Component parent,
+                                          @Nullable Path baseDir,
+                                          @Nullable String fileName) {
+    return CompletableFuture.failedFuture(new UnsupportedOperationException());
   }
 
   @Override

@@ -18,12 +18,14 @@ package consulo.desktop.qt.fileChooser.impl.system;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.component.ComponentManager;
 import consulo.fileChooser.FileChooserDescriptor;
-import consulo.fileChooser.FileChooserDialog;
-import consulo.fileChooser.PathChooserDialog;
 import consulo.fileChooser.provider.FileChooseDialogProvider;
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
 
 import java.awt.Component;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author VISTALL
@@ -41,21 +43,14 @@ public class DesktopQtSystemFileChooseDialogProvider implements FileChooseDialog
         return "system";
     }
 
+    @RequiredUIAccess
     @Override
-    public FileChooserDialog createFileChooser(
+    public CompletableFuture<List<Path>> chooseAsync(
         FileChooserDescriptor descriptor,
         @Nullable ComponentManager project,
-        @Nullable Component parent
+        @Nullable Component parent,
+        @Nullable Path toSelect
     ) {
-        return new DesktopQtFileChooserDialog(descriptor);
-    }
-
-    @Override
-    public PathChooserDialog createPathChooser(
-        FileChooserDescriptor descriptor,
-        @Nullable ComponentManager project,
-        @Nullable Component parent
-    ) {
-        return new DesktopQtFileChooserDialog(descriptor);
+        return new DesktopQtFileChooserDialog(descriptor).chooseAsync(toSelect);
     }
 }

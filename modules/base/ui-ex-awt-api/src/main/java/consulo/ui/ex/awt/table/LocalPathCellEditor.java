@@ -15,7 +15,6 @@
  */
 package consulo.ui.ex.awt.table;
 
-import consulo.fileChooser.FileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.platform.Platform;
@@ -26,14 +25,15 @@ import consulo.ui.ex.awt.CellEditorComponentWithBrowseButton;
 import consulo.ui.ex.awt.TextFieldWithBrowseButton;
 import consulo.util.io.PathUtil;
 import consulo.util.lang.StringUtil;
-import consulo.virtualFileSystem.LocalFileSystem;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.fileChooser.FileChooserFactory;
+import consulo.util.io.NioFiles;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.nio.file.Path;
 
 public class LocalPathCellEditor extends AbstractTableCellEditor {
   private final String myTitle;
@@ -88,13 +88,19 @@ public class LocalPathCellEditor extends AbstractTableCellEditor {
       @Override
       public void actionPerformed(ActionEvent e) {
         String initial = (String)getCellEditorValue();
-        VirtualFile initialFile = StringUtil.isNotEmpty(initial) ? LocalFileSystem.getInstance().findFileByPath(initial) : null;
+        Path initialPath = StringUtil.isNotEmpty(initial) ? NioFiles.toPath(initial) : null;
         UIAccess uiAccess = UIAccess.current();
-        FileChooser.chooseFile(getFileChooserDescriptor(), myProject, table, initialFile).whenCompleteAsync((file, error) -> {
+        FileChooserFactory.getInstance()
+          .newBuilder(getFileChooserDescriptor())
+          .project(myProject)
+          .parent(table)
+          .toSelect(initialPath)
+          .showSingle()
+          .whenCompleteAsync((file, error) -> {
           if (file == null) {
             return;
           }
-          String path = file.getPresentableUrl();
+          String path = file.toString();
           if (Platform.current().os().isWindows() && path.length() == 2 && Character.isLetter(path.charAt(0)) && path.charAt(1) == ':') {
             path += "\\"; // make path absolute
           }

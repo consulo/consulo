@@ -4,8 +4,6 @@ package consulo.fileChooser.impl.internal;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.project.Project;
-import consulo.project.ProjectPropertiesComponent;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.archive.ArchiveFileType;
@@ -22,31 +20,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 final class NioFileChooserUtil {
-    private static final String LAST_OPENED_FILE_PATH = "last_opened_file_path";
-
     private NioFileChooserUtil() {
-    }
-
-    static @Nullable Path getLastOpenedPath(@Nullable Project project) {
-        if (project == null) {
-            return null;
-        }
-        String path = ProjectPropertiesComponent.getInstance(project).getValue(LAST_OPENED_FILE_PATH);
-        if (path == null) {
-            return null;
-        }
-        try {
-            return Path.of(path);
-        }
-        catch (RuntimeException e) {
-            return null;
-        }
-    }
-
-    static void setLastOpenedFile(@Nullable Project project, @Nullable Path path) {
-        if (project != null && !project.isDisposed() && path != null) {
-            ProjectPropertiesComponent.getInstance(project).setValue(LAST_OPENED_FILE_PATH, path.toString());
-        }
     }
 
     static boolean isHidden(Path path) {
@@ -76,12 +50,7 @@ final class NioFileChooserUtil {
     }
 
     static @Nullable Path toNioPathSafe(VirtualFile file) {
-        try {
-            return file.toNioPath();
-        }
-        catch (UnsupportedOperationException e) {
-            return null;
-        }
+        return file.getFileSystem().getNioPath(file);
     }
 
     static List<Path> safeGetChildren(Path directory, boolean showHidden, boolean showFiles, boolean showArchives) {

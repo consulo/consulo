@@ -17,12 +17,14 @@ import consulo.ui.image.ImageEffects;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.archive.ArchiveNioFileSystemManager;
 import consulo.virtualFileSystem.internal.core.local.CoreLocalFileSystem;
 import consulo.virtualFileSystem.internal.core.local.CoreLocalVirtualFile;
 import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
@@ -101,7 +103,7 @@ public class NioFileTreeModel implements TreeModel<NioFileNode> {
                 NioFileNode node = new NioFileNode(root);
                 updateContent(node, null, null);
                 updateSelectable(node, createVirtualFile(root));
-                createNode(nodeFactory, node, isLeaf(root));
+                createNode(nodeFactory, node, isLeaf(root) && !isExpandableArchive(root));
             }
             return;
         }
@@ -113,7 +115,7 @@ public class NioFileTreeModel implements TreeModel<NioFileNode> {
                 updateContent(node, null, null);
                 updateSelectable(node, createVirtualFile(path));
                 applyPresentation(node, root.presentation());
-                createNode(nodeFactory, node, isLeaf(path));
+                createNode(nodeFactory, node, isLeaf(path) && !isExpandableArchive(path));
             }
         }
 
@@ -130,8 +132,16 @@ public class NioFileTreeModel implements TreeModel<NioFileNode> {
             return;
         }
 
-        PreloadedDirectory directory = myVirtualFileRequired ? new PreloadedDirectory(myFileSystem, parentPath) : null;
-        List<ChildEntry> children = getChildrenWithAttributes(parentPath, directory);
+        Path listPath = parentPath;
+        if (isExpandableArchive(parentPath)) {
+            listPath = ArchiveNioFileSystemManager.getInstance().getRoot(parentPath);
+            if (listPath == null) {
+                return;
+            }
+        }
+
+        PreloadedDirectory directory = myVirtualFileRequired ? new PreloadedDirectory(myFileSystem, listPath) : null;
+        List<ChildEntry> children = getChildrenWithAttributes(listPath, directory);
         if (children == null) {
             return;
         }
@@ -148,8 +158,18 @@ public class NioFileTreeModel implements TreeModel<NioFileNode> {
             NioFileNode node = new NioFileNode(entry.path());
             updateContent(node, entry.attrs(), entry.isDirectory());
             updateSelectable(node, entry.file());
-            createNode(nodeFactory, node, !entry.isDirectory());
+            createNode(nodeFactory, node, !entry.isDirectory() && !isExpandableArchive(entry.path()));
         }
+    }
+
+    /**
+     * An archive on the default file system, which the chooser opens as a directory when choosing archive contents.
+     */
+    private boolean isExpandableArchive(Path path) {
+        return myDescriptor.isChooseJarContents()
+            && path.getFileSystem() == FileSystems.getDefault()
+            && NioFileChooserUtil.isArchiveFile(path)
+            && !Files.isDirectory(path);
     }
 
     private TreeNode<NioFileNode> createNode(

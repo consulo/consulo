@@ -16,7 +16,6 @@
 package consulo.ui.ex.awt;
 
 import consulo.application.ApplicationManager;
-import consulo.fileChooser.FileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.logging.Logger;
@@ -25,15 +24,15 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.localize.UILocalize;
 import consulo.util.dataholder.Key;
-import consulo.virtualFileSystem.LocalFileSystem;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.fileChooser.FileChooserFactory;
+import consulo.util.io.NioFiles;
 
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseListener;
-import java.io.File;
+import java.nio.file.Path;
 
 public class InsertPathAction extends AnAction {
   private static final Logger LOG = Logger.getInstance(InsertPathAction.class);
@@ -58,22 +57,22 @@ public class InsertPathAction extends AnAction {
   @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
     String selectedText = myTextField.getSelectedText();
-    VirtualFile virtualFile;
-    if (selectedText != null ) {
-      virtualFile = LocalFileSystem.getInstance().findFileByPath(selectedText.replace(File.separatorChar, '/'));
-    }
-    else {
-      virtualFile = null;
-    }
+    Path toSelect = selectedText == null ? null : NioFiles.toPath(selectedText);
     //TODO use from openapi
     //FeatureUsageTracker.getInstance().triggerFeatureUsed("ui.commandLine.insertPath");
-    FileChooser.chooseFile(myDescriptor, myTextField, e.getData(Project.KEY), virtualFile).whenComplete((f, error) -> {
+    FileChooserFactory.getInstance()
+      .newBuilder(myDescriptor)
+      .project(e.getData(Project.KEY))
+      .parent(myTextField)
+      .toSelect(toSelect)
+      .showSingle()
+      .whenComplete((path, error) -> {
         if (error != null) {
-            return;
+          return;
         }
 
-      myTextField.replaceSelection(f.getPresentableUrl());
-    });
+        myTextField.replaceSelection(path.toString());
+      });
   }
 
   private void uninstall() {

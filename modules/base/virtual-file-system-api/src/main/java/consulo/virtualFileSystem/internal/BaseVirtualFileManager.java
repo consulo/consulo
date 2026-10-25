@@ -24,6 +24,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.platform.PlatformNioFileSystem;
+import consulo.virtualFileSystem.archive.ArchivePath;
 import consulo.proxy.EventDispatcher;
 import consulo.ui.UIAccess;
 import consulo.ui.image.Image;
@@ -363,6 +364,10 @@ public class BaseVirtualFileManager extends VirtualFileManagerEx {
     }
 
     private @Nullable VirtualFile findByNioPath(Path nioPath, boolean refresh) {
+        if (nioPath instanceof ArchivePath archivePath) {
+            String url = archivePath.getVirtualFileUrl();
+            return refresh ? refreshAndFindFileByUrl(url) : findFileByUrl(url);
+        }
         if (nioPath.getFileSystem() instanceof PlatformNioFileSystem) {
             return getFileSystem(StandardFileSystems.PLATFORM_PROTOCOL) instanceof CoreLocalFileSystem platformFileSystem
                 ? platformFileSystem.findFileByNioFile(nioPath)

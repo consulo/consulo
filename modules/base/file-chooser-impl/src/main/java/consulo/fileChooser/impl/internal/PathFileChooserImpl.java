@@ -87,6 +87,6 @@ public class PathFileChooserImpl implements PathFileChooser {
         }
 
         UniversalFileChooser chooser = new UniversalFileChooser(descriptor, targetProject, myTreeExecutorFactory);
-        return chooser.choosePaths(targetProject, preselect, contributors, false);
+        return chooser.choosePaths(targetProject, preselect, contributors);
     }
 }

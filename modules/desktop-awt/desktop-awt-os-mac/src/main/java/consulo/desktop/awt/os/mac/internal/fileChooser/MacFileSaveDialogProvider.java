@@ -18,13 +18,15 @@ package consulo.desktop.awt.os.mac.internal.fileChooser;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.component.ComponentManager;
 import consulo.fileChooser.FileSaverDescriptor;
-import consulo.fileChooser.FileSaverDialog;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.fileChooser.provider.FileSaveDialogProvider;
 import consulo.platform.Platform;
 import consulo.project.Project;
 import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
+import java.nio.file.Path;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author VISTALL
@@ -51,10 +53,13 @@ public class MacFileSaveDialogProvider implements FileSaveDialogProvider {
 
   
   @Override
-  public FileSaverDialog createSaveFileDialog(FileSaverDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent) {
-    if(parent != null) {
-      return new MacFileSaverDialog(descriptor, parent);
-    }
-    return new MacFileSaverDialog(descriptor, (Project)project);
+  @RequiredUIAccess
+  public CompletableFuture<Path> saveAsync(FileSaverDescriptor descriptor,
+                                          @Nullable ComponentManager project,
+                                          @Nullable Component parent,
+                                          @Nullable Path baseDir,
+                                          @Nullable String fileName) {
+    MacFileSaverDialog dialog = parent != null ? new MacFileSaverDialog(descriptor, parent) : new MacFileSaverDialog(descriptor, (Project)project);
+    return dialog.saveAsync(baseDir, fileName);
   }
 }

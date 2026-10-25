@@ -34,12 +34,15 @@ import consulo.versionControlSystem.VcsDescriptor;
 import consulo.versionControlSystem.VcsDirectoryMapping;
 import consulo.versionControlSystem.internal.DefaultVcsRootPolicy;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Map;
+import java.nio.file.Path;
 
 /**
  * @author yole
@@ -184,20 +187,20 @@ public class VcsMappingConfigurationDialog extends DialogWrapper {
         }
 
         @Override
-        protected VirtualFile getInitialFile() {
+        protected @Nullable Path getInitialFile() {
             // suggest project base dir only if nothing is typed in the component.
             String text = getComponentText();
             if (text.length() == 0) {
-                VirtualFile file = myProject.getBaseDir();
-                if (file != null) {
-                    return file;
+                String basePath = myProject.getBasePath();
+                if (basePath != null) {
+                    return Path.of(basePath);
                 }
             }
             return super.getInitialFile();
         }
 
         @Override
-        protected void onFileChosen(final VirtualFile chosenFile) {
+        protected void onFileChosen(Path chosenFile) {
             String oldText = myDirectoryTextField.getText();
             super.onFileChosen(chosenFile);
             VcsDescriptor wrapper = (VcsDescriptor) myVCSComboBox.getSelectedItem();
@@ -207,8 +210,12 @@ public class VcsMappingConfigurationDialog extends DialogWrapper {
 
                     @Override
                     public void run(ProgressIndicator indicator) {
+                        VirtualFile chosenVirtualFile = VirtualFileManager.getInstance().refreshAndFindFileByNioPath(chosenFile);
+                        if (chosenVirtualFile == null) {
+                            return;
+                        }
                         for (VcsDescriptor vcs : myVcses.values()) {
-                            if (vcs.probablyUnderVcs(chosenFile)) {
+                            if (vcs.probablyUnderVcs(chosenVirtualFile)) {
                                 if (probableVcs != null) {
                                     probableVcs = null;
                                     break;

@@ -31,6 +31,7 @@ import consulo.ui.TextBox;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.ObjectUtil;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import org.jspecify.annotations.Nullable;
@@ -48,29 +49,29 @@ import java.util.function.Function;
 @Singleton
 @ServiceImpl(profiles = ComponentProfiles.UNIFIED)
 public class FileChooserFactoryImpl extends FileChooserFactory {
-  
-  @Override
-  public FileChooserDialog createFileChooser(FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent) {
-    return findProvider(descriptor, FileOperateDialogSettings::getFileChooseDialogId, FileChooseDialogProvider.class).createFileChooser(descriptor, project, parent);
+  private final Application myApplication;
+  @Inject
+  public FileChooserFactoryImpl(Application application) {
+    myApplication = application;
   }
 
   
   @Override
-  public PathChooserDialog createPathChooser(FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent) {
-    Component parentComponent = parent == null ? TargetAWT.to(WindowManager.getInstance().suggestParentWindow((Project)project)) : parent;
-    return findProvider(descriptor, FileOperateDialogSettings::getFileChooseDialogId, FileChooseDialogProvider.class).createPathChooser(descriptor, project, parentComponent);
+  public FileChooserBuilder newBuilder(FileChooserDescriptor descriptor) {
+    return new FileChooserBuilderImpl(
+      myApplication,
+      descriptor,
+      it -> findProvider(it, FileOperateDialogSettings::getFileChooseDialogId, FileChooseDialogProvider.class)
+    );
   }
 
   
   @Override
-  public FileSaverDialog createSaveFileDialog(FileSaverDescriptor descriptor, @Nullable ComponentManager project) {
-    return findProvider(descriptor, FileOperateDialogSettings::getFileSaveDialogId, FileSaveDialogProvider.class).createSaveFileDialog(descriptor, project, null);
-  }
-
-  
-  @Override
-  public FileSaverDialog createSaveFileDialog(FileSaverDescriptor descriptor, Component parent) {
-    return findProvider(descriptor, FileOperateDialogSettings::getFileSaveDialogId, FileSaveDialogProvider.class).createSaveFileDialog(descriptor, null, parent);
+  public FileSaverBuilder newSaverBuilder(FileSaverDescriptor descriptor) {
+    return new FileSaverBuilderImpl(
+      descriptor,
+      it -> findProvider(it, FileOperateDialogSettings::getFileSaveDialogId, FileSaveDialogProvider.class)
+    );
   }
 
   @Override

@@ -16,6 +16,7 @@
 
 package consulo.execution.ui.awt;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.project.Project;
 import consulo.ui.ex.awt.ComponentWithBrowseButton;
 import consulo.ui.ex.awt.TextAccessor;
@@ -25,6 +26,8 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+@Deprecated
+@DeprecationInfo("Choose through an async chooser and install it as a browse action of the field")
 public abstract class BrowseModuleValueActionListener<T extends JComponent> implements ActionListener {
   private ComponentWithBrowseButton<T> myField;
   private final Project myProject;

@@ -363,12 +363,9 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
                 ProjectLocalize.modulePathsAddContentActionDescription(),
                 PlatformIconGroup.generalAdd()
             );
-            myDescriptor = new FileChooserDescriptor(false, true, true, false, true, true) {
-                @Override
-                public void validateSelectedFiles(VirtualFile[] files) throws Exception {
-                    validateContentEntriesCandidates(files);
-                }
-            };
+            // compares with the content roots of the project model
+            myDescriptor = new FileChooserDescriptor(false, true, true, false, true, true)
+                .withVirtualFilesValidator(AddContentEntryAction.this::validateContentEntriesCandidates);
             myDescriptor.putUserData(LangDataKeys.MODULE_CONTEXT, getModule());
             myDescriptor.withTitle(ProjectLocalize.modulePathsAddContentTitle());
             myDescriptor.withDescription(ProjectLocalize.modulePathsAddContentPrompt());
@@ -393,7 +390,7 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
             }, uiAccess);
         }
 
-        private void validateContentEntriesCandidates(VirtualFile[] files) throws Exception {
+        private void validateContentEntriesCandidates(List<VirtualFile> files) throws Exception {
             for (VirtualFile file : files) {
                 for (ContentEntry contentEntry : myEntryToEditorMap.keySet()) {
                     VirtualFile contentEntryFile = contentEntry.getFile();

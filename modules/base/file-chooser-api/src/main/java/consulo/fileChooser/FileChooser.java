@@ -15,30 +15,46 @@
  */
 package consulo.fileChooser;
 
-import consulo.application.Application;
 import consulo.component.ComponentManager;
-import consulo.fileChooser.internal.PathFileChooser;
-import consulo.logging.Logger;
-import consulo.platform.Platform;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 /**
+ * Shortcuts over {@link FileChooserFactory#newBuilder(FileChooserDescriptor)}.
+ *
  * @author VISTALL
  * @since 2019-02-11
  */
 public final class FileChooser {
-  private static final Logger LOG = Logger.getInstance(FileChooser.class);
-
   private FileChooser() {
+  }
+
+  private static FileChooserBuilder builder(FileChooserDescriptor descriptor) {
+    return FileChooserFactory.getInstance().newBuilder(descriptor);
+  }
+
+  @RequiredUIAccess
+  public static CompletableFuture<List<Path>> choosePaths(
+    FileChooserDescriptor descriptor,
+    @Nullable ComponentManager project,
+    @Nullable Path toSelect
+  ) {
+    return builder(descriptor).project(project).toSelect(toSelect).showMultiple();
+  }
+
+  @RequiredUIAccess
+  public static CompletableFuture<Path> choosePath(
+    FileChooserDescriptor descriptor,
+    @Nullable ComponentManager project,
+    @Nullable Path toSelect
+  ) {
+    return builder(descriptor).project(project).toSelect(toSelect).showSingle();
   }
 
   @RequiredUIAccess
@@ -57,8 +73,12 @@ public final class FileChooser {
     @Nullable ComponentManager project,
     @Nullable VirtualFile toSelect
   ) {
-    FileChooserDialog chooser = FileChooserFactory.getInstance().createFileChooser(descriptor, project, parent);
-    return chooser.chooseAsync(project, toSelect == null ? VirtualFile.EMPTY_ARRAY : new VirtualFile[]{toSelect});
+    return builder(descriptor)
+      .project(project)
+      .parent(parent)
+      .toSelect(toPath(toSelect))
+      .showMultipleAsVirtualFiles()
+      .thenApply(files -> files.toArray(VirtualFile.EMPTY_ARRAY));
   }
 
   @RequiredUIAccess
@@ -77,19 +97,9 @@ public final class FileChooser {
     @Nullable ComponentManager project,
     @Nullable VirtualFile toSelect
   ) {
-    LOG.assertTrue(!descriptor.isChooseMultiple());
-    return chooseFiles(descriptor, parent, project, toSelect).thenApply(files -> files[0]);
+    return builder(descriptor).project(project).parent(parent).toSelect(toPath(toSelect)).showSingleAsVirtualFile();
   }
 
-  /**
-   * Shows file/folder open dialog, allows user to choose files/folders and then passes result to callback in EDT.
-   * On MacOS Open Dialog will be shown with slide effect if Macish UI is turned on.
-   *
-   * @param descriptor file chooser descriptor
-   * @param project    project
-   * @param parent     parent component
-   * @param toSelect   file to preselect
-   */
   @RequiredUIAccess
   public static CompletableFuture<VirtualFile[]> chooseFiles(
     FileChooserDescriptor descriptor,
@@ -97,19 +107,9 @@ public final class FileChooser {
     @Nullable Component parent,
     @Nullable VirtualFile toSelect
   ) {
-    FileChooserFactory factory = FileChooserFactory.getInstance();
-    PathChooserDialog pathChooser = factory.createPathChooser(descriptor, project, parent);
-    return pathChooser.chooseAsync(toSelect);
+    return chooseFiles(descriptor, parent, project, toSelect);
   }
 
-  /**
-   * Shows file/folder open dialog, allows user to choose file/folder and then passes result to callback in EDT.
-   *
-   * @param descriptor file chooser descriptor
-   * @param project    project
-   * @param parent     parent component
-   * @param toSelect   file to preselect
-   */
   @RequiredUIAccess
   public static CompletableFuture<VirtualFile> chooseFile(
     FileChooserDescriptor descriptor,
@@ -117,32 +117,10 @@ public final class FileChooser {
     @Nullable Component parent,
     @Nullable VirtualFile toSelect
   ) {
-    LOG.assertTrue(!descriptor.isChooseMultiple());
-    return chooseFiles(descriptor, project, parent, toSelect).thenApply(files -> files[0]);
+    return chooseFile(descriptor, parent, project, toSelect);
   }
 
-  /**
-   * Chooses files on the descriptor's {@link FileChooserDescriptor#getPlatform() platform}, or on any machine when it
-   * {@link FileChooserDescriptor#isAnyPlatform() allows that}, and answers their paths - the regular chooser for the
-   * local machine alone.
-   */
-  @RequiredUIAccess
-  public static CompletableFuture<List<Path>> choosePaths(
-    FileChooserDescriptor descriptor,
-    @Nullable ComponentManager project,
-    @Nullable Path toSelect
-  ) {
-    if (descriptor.isAnyPlatform() || !descriptor.getPlatform().equals(Platform.current())) {
-      return Application.get().getInstance(PathFileChooser.class).choose(descriptor, project, toSelect);
-    }
-
-    VirtualFile select = toSelect == null ? null : LocalFileSystem.getInstance().findFileByNioFile(toSelect);
-    return chooseFiles(descriptor, project, select).thenApply(files -> {
-      List<Path> paths = new ArrayList<>(files.length);
-      for (VirtualFile file : files) {
-        paths.add(file.toNioPath());
-      }
-      return paths;
-    });
+  private static @Nullable Path toPath(@Nullable VirtualFile file) {
+    return file == null ? null : file.getFileSystem().getNioPath(file);
   }
 }

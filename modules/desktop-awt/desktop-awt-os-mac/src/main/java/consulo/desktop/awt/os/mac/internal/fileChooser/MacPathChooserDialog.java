@@ -18,13 +18,9 @@ package consulo.desktop.awt.os.mac.internal.fileChooser;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.LaterInvocator;
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.component.ComponentManager;
 import consulo.desktop.awt.ui.OwnerOptional;
 import consulo.fileChooser.FileChooserDescriptor;
-import consulo.fileChooser.FileChooserDialog;
-import consulo.fileChooser.IdeaFileChooser;
-import consulo.fileChooser.PathChooserDialog;
-import consulo.ide.impl.idea.openapi.fileChooser.impl.FileChooserUtil;
+import consulo.fileChooser.util.FileChooserUtil;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -32,40 +28,32 @@ import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.localize.UILocalize;
 import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.internal.CommandProcessorEx;
-import consulo.util.collection.ArrayUtil;
-import consulo.util.io.FileUtil;
-import consulo.virtualFileSystem.LocalFileSystem;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.lang.ref.WeakReference;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
-import java.util.stream.Stream;
 
-/**
- * @author Denis Fokin
- */
-public class MacPathChooserDialog implements PathChooserDialog, FileChooserDialog {
+public class MacPathChooserDialog {
     private FileDialog myFileDialog;
     private final FileChooserDescriptor myFileChooserDescriptor;
     private final WeakReference<Component> myParent;
-    private final Project myProject;
+    private final @Nullable Project myProject;
     private final LocalizeValue myTitle;
-    private VirtualFile[] virtualFiles;
 
-    public MacPathChooserDialog(FileChooserDescriptor descriptor, Component parent, Project project) {
+    public MacPathChooserDialog(FileChooserDescriptor descriptor, @Nullable Component parent, @Nullable Project project) {
         myFileChooserDescriptor = descriptor;
         myParent = new WeakReference<>(parent);
         myProject = project;
-        myTitle = getChooserTitle(descriptor);
+        myTitle = descriptor.getTitle().orIfEmpty(UILocalize.fileChooserDefaultTitle());
 
         Consumer<Dialog> dialogConsumer = owner -> myFileDialog = new FileDialog(owner, myTitle.get(), FileDialog.LOAD);
         Consumer<Frame> frameConsumer = owner -> myFileDialog = new FileDialog(owner, myTitle.get(), FileDialog.LOAD);
@@ -73,150 +61,24 @@ public class MacPathChooserDialog implements PathChooserDialog, FileChooserDialo
         OwnerOptional.fromComponent(parent).ifDialog(dialogConsumer).ifFrame(frameConsumer).ifNull(frameConsumer);
     }
 
-    private static LocalizeValue getChooserTitle(FileChooserDescriptor descriptor) {
-        return descriptor.getTitle().orIfEmpty(UILocalize.fileChooserDefaultTitle());
-    }
-
-    private List<VirtualFile> getChosenFiles(Stream<File> streamOfFiles) {
-        List<VirtualFile> virtualFiles = new ArrayList<>();
-
-        streamOfFiles.forEach(file -> {
-            VirtualFile virtualFile = fileToVirtualFile(file);
-            if (virtualFile != null && virtualFile.isValid()) {
-                virtualFiles.add(virtualFile);
-            }
-        });
-        return FileChooserUtil.getChosenFiles(myFileChooserDescriptor, virtualFiles);
-    }
-
-    private VirtualFile fileToVirtualFile(File file) {
-        LocalFileSystem localFileSystem = LocalFileSystem.getInstance();
-        String vfsPath = FileUtil.toSystemIndependentName(file.getAbsolutePath());
-        return localFileSystem.refreshAndFindFileByPath(vfsPath);
-    }
-
-    @Override
     @RequiredUIAccess
-    public void choose(@Nullable VirtualFile toSelect, Consumer<List<VirtualFile>> callback) {
+    public CompletableFuture<List<Path>> chooseAsync(@Nullable Path toSelect) {
         if (toSelect != null && toSelect.getParent() != null) {
-
-            String directoryName;
-            String fileName = null;
-            if (toSelect.isDirectory()) {
-                directoryName = toSelect.getCanonicalPath();
+            if (Files.isDirectory(toSelect)) {
+                myFileDialog.setDirectory(toSelect.toString());
+                myFileDialog.setFile(null);
             }
             else {
-                directoryName = toSelect.getParent().getCanonicalPath();
-                fileName = toSelect.getPath();
+                myFileDialog.setDirectory(toSelect.getParent().toString());
+                myFileDialog.setFile(toSelect.toString());
             }
-            myFileDialog.setDirectory(directoryName);
-            myFileDialog.setFile(fileName);
         }
 
-        myFileDialog.setFilenameFilter((dir, name) -> {
-            File file = new File(dir, name);
-            return myFileChooserDescriptor.isFileSelectable(fileToVirtualFile(file));
-        });
+        myFileDialog.setFilenameFilter((dir, name) -> FileChooserUtil.isPathAccepted(myFileChooserDescriptor, dir.toPath().resolve(name)));
 
         myFileDialog.setMultipleMode(myFileChooserDescriptor.isChooseMultiple());
 
-        CommandProcessorEx commandProcessor =
-            ApplicationManager.getApplication() != null ? (CommandProcessorEx)CommandProcessor.getInstance() : null;
-        boolean appStarted = commandProcessor != null;
-
-        if (appStarted) {
-            commandProcessor.enterModal();
-            LaterInvocator.enterModal(myFileDialog);
-        }
-
-        Component parent = myParent.get();
-        try {
-            myFileDialog.setVisible(true);
-        }
-        finally {
-            if (appStarted) {
-                commandProcessor.leaveModal();
-                LaterInvocator.leaveModal(myFileDialog);
-                if (parent != null) {
-                    IdeFocusManager globalInstance = IdeFocusManager.getGlobalInstance();
-                    globalInstance.doWhenFocusSettlesDown(() -> globalInstance.requestFocus(parent, true));
-                }
-            }
-        }
-
-        File[] files = myFileDialog.getFiles();
-        List<VirtualFile> virtualFileList = getChosenFiles(Stream.of(files));
-        virtualFiles = virtualFileList.toArray(VirtualFile.EMPTY_ARRAY);
-
-        if (!virtualFileList.isEmpty()) {
-            try {
-                if (virtualFileList.size() == 1) {
-                    myFileChooserDescriptor.isFileSelectable(virtualFileList.get(0));
-                }
-                myFileChooserDescriptor.validateSelectedFiles(virtualFiles);
-            }
-            catch (Exception e) {
-                if (parent == null) {
-                    Messages.showErrorDialog(myProject, e.getMessage(), myTitle.get());
-                }
-                else {
-                    Messages.showErrorDialog(parent, e.getMessage(), myTitle.get());
-                }
-
-                return;
-            }
-
-            if (!ArrayUtil.isEmpty(files)) {
-                callback.accept(virtualFileList);
-                return;
-            }
-        }
-        if (callback instanceof IdeaFileChooser.FileChooserConsumer fileChooserConsumer) {
-            fileChooserConsumer.cancelled();
-        }
-    }
-
-    @Override
-    @RequiredUIAccess
-    public VirtualFile[] choose(@Nullable ComponentManager project, VirtualFile... toSelectFiles) {
-        VirtualFile toSelect = toSelectFiles.length > 0 ? toSelectFiles[0] : null;
-        choose(toSelect, files -> {
-        });
-        return virtualFiles;
-    }
-
-    @Override
-    @RequiredUIAccess
-    public CompletableFuture<VirtualFile[]> chooseAsync(@Nullable ComponentManager project, VirtualFile[] toSelectFiles) {
-        VirtualFile toSelect = toSelectFiles.length > 0 ? toSelectFiles[0] : null;
-        return chooseAsync(toSelect);
-    }
-
-    @Override
-    @RequiredUIAccess
-    public CompletableFuture<VirtualFile[]> chooseAsync(@Nullable VirtualFile toSelect) {
-        if (toSelect != null && toSelect.getParent() != null) {
-            String directoryName;
-            String fileName = null;
-            if (toSelect.isDirectory()) {
-                directoryName = toSelect.getCanonicalPath();
-            }
-            else {
-                directoryName = toSelect.getParent().getCanonicalPath();
-                fileName = toSelect.getPath();
-            }
-            myFileDialog.setDirectory(directoryName);
-            myFileDialog.setFile(fileName);
-        }
-
-        myFileDialog.setFilenameFilter((dir, name) -> {
-            File file = new File(dir, name);
-            return myFileChooserDescriptor.isFileSelectable(fileToVirtualFile(file));
-        });
-
-        myFileDialog.setMultipleMode(myFileChooserDescriptor.isChooseMultiple());
-
-        CompletableFuture<VirtualFile[]> result = new CompletableFuture<>();
+        CompletableFuture<List<Path>> result = new CompletableFuture<>();
         SwingUtilities.invokeLater(() -> {
             CommandProcessorEx commandProcessor =
                 ApplicationManager.getApplication() != null ? (CommandProcessorEx)CommandProcessor.getInstance() : null;
@@ -243,39 +105,36 @@ public class MacPathChooserDialog implements PathChooserDialog, FileChooserDialo
                 }
             }
 
-            File[] files = myFileDialog.getFiles();
-            List<VirtualFile> virtualFileList = getChosenFiles(Stream.of(files));
-            virtualFiles = virtualFileList.toArray(VirtualFile.EMPTY_ARRAY);
+            List<Path> paths = new ArrayList<>();
+            for (File file : myFileDialog.getFiles()) {
+                paths.add(file.toPath().toAbsolutePath());
+            }
 
-            if (!virtualFileList.isEmpty()) {
-                try {
-                    if (virtualFileList.size() == 1) {
-                        myFileChooserDescriptor.isFileSelectable(virtualFileList.get(0));
-                    }
-                    myFileChooserDescriptor.validateSelectedFiles(virtualFiles);
-                }
-                catch (Exception e) {
-                    if (parent == null) {
-                        Messages.showErrorDialog(myProject, e.getMessage(), myTitle.get());
-                    }
-                    else {
-                        Messages.showErrorDialog(parent, e.getMessage(), myTitle.get());
-                    }
+            if (paths.isEmpty()) {
+                result.completeExceptionally(new CancellationException());
+                return;
+            }
 
-                    result.completeExceptionally(e);
+            FileChooserUtil.validateSelectedPaths(myFileChooserDescriptor, paths).whenComplete((message, error) -> {
+                if (error != null) {
+                    result.completeExceptionally(error);
                     return;
                 }
 
-                if (!ArrayUtil.isEmpty(files)) {
-                    result.complete(VirtualFileUtil.toVirtualFileArray(virtualFileList));
+                if (message.isNotEmpty()) {
+                    if (parent == null) {
+                        Messages.showErrorDialog(myProject, message.get(), myTitle.get());
+                    }
+                    else {
+                        Messages.showErrorDialog(parent, message.get(), myTitle.get());
+                    }
+
+                    result.completeExceptionally(new CancellationException(message.get()));
+                    return;
                 }
-                else {
-                    result.completeExceptionally(new CancellationException());
-                }
-            }
-            else {
-                result.completeExceptionally(new CancellationException());
-            }
+
+                result.complete(paths);
+            });
         });
         return result;
     }

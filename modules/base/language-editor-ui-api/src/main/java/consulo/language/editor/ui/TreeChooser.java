@@ -15,7 +15,10 @@
  */
 package consulo.language.editor.ui;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.ui.annotation.RequiredUIAccess;
+
+import java.util.concurrent.CompletableFuture;
 
 public interface TreeChooser<T> {
   @RequiredUIAccess
@@ -24,6 +27,15 @@ public interface TreeChooser<T> {
   @RequiredUIAccess
   void select(T aClass);
 
+  /**
+   * Shows the dialog and answers the chosen element, or completes exceptionally with
+   * {@link java.util.concurrent.CancellationException} when it is cancelled.
+   */
+  @RequiredUIAccess
+  CompletableFuture<T> showDialogAsync();
+
+  @Deprecated
+  @DeprecationInfo("Use #showDialogAsync()")
   @RequiredUIAccess
   void showDialog();
 

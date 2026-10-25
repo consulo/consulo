@@ -62,6 +62,8 @@ import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.*;
 import java.util.function.Predicate;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.CompletableFuture;
 
 public abstract class AbstractTreeClassChooserDialog<T extends PsiNamedElement> extends DialogWrapper implements TreeChooser<T> {
     private Tree myTree;
@@ -350,6 +352,22 @@ public abstract class AbstractTreeClassChooserDialog<T extends PsiNamedElement> 
     @RequiredUIAccess
     public void select(T aClass) {
         selectElementInTree(aClass);
+    }
+
+    @Override
+    @RequiredUIAccess
+    public CompletableFuture<T> showDialogAsync() {
+        CompletableFuture<T> result = new CompletableFuture<>();
+        showAsync().whenComplete((ignored, error) -> {
+            T selected = error == null && getExitCode() == OK_EXIT_CODE ? mySelectedClass : null;
+            if (selected != null) {
+                result.complete(selected);
+            }
+            else {
+                result.completeExceptionally(error != null ? error : new CancellationException());
+            }
+        });
+        return result;
     }
 
     @Override

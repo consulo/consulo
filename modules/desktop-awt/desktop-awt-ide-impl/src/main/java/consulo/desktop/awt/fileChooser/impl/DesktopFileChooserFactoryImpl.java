@@ -15,6 +15,8 @@
  */
 package consulo.desktop.awt.fileChooser.impl;
 
+import consulo.application.Application;
+import jakarta.inject.Inject;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
 import consulo.fileChooser.FileChooserDescriptor;
@@ -31,6 +33,11 @@ import javax.swing.*;
 @Singleton
 @ServiceImpl
 public class DesktopFileChooserFactoryImpl extends FileChooserFactoryImpl {
+  @Inject
+  public DesktopFileChooserFactoryImpl(Application application) {
+    super(application);
+  }
+
  
   @Override
   public FileTextField createFileTextField(FileChooserDescriptor descriptor, boolean showHidden, @Nullable Disposable parent) {

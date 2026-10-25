@@ -25,7 +25,6 @@ import consulo.externalTool.impl.internal.localize.ExternalToolLocalize;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.fileChooser.FileChooserFactory;
-import consulo.fileChooser.PathChooserDialog;
 import consulo.localize.LocalizeValue;
 import consulo.pathMacro.MacroManager;
 import consulo.pathMacro.MacroSelector;
@@ -33,7 +32,6 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.event.DocumentAdapter;
-import consulo.virtualFileSystem.VirtualFile;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -43,6 +41,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.nio.file.Path;
 
 public class ToolEditorDialog extends DialogWrapper {
     private final JTextField myNameField = new JTextField();
@@ -313,34 +312,39 @@ public class ToolEditorDialog extends DialogWrapper {
     ) {
         browseDirectoryButton.addActionListener(e -> {
             FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
-            PathChooserDialog chooser = FileChooserFactory.getInstance().createPathChooser(descriptor, myProject, pane);
-
-            chooser.choose(null, files -> {
-                VirtualFile file = files.size() > 0 ? files.get(0) : null;
-                if (file != null) {
-                    myTfCommandWorkingDirectory.setText(file.getPresentableUrl());
-                }
-            });
+            FileChooserFactory.getInstance()
+                .newBuilder(descriptor)
+                .project(myProject)
+                .parent(pane)
+                .showSingle()
+                .whenComplete((path, error) -> {
+                    if (path != null) {
+                        myTfCommandWorkingDirectory.setText(path.toString());
+                    }
+                });
         });
     }
 
     protected void addCommandBrowseAction(JPanel pane, FixedSizeButton browseCommandButton, JTextField tfCommand) {
         browseCommandButton.addActionListener(e -> {
             FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFileOrExecutableAppDescriptor();
-            PathChooserDialog chooser = FileChooserFactory.getInstance().createPathChooser(descriptor, myProject, pane);
-            chooser.choose(null, files -> {
-                VirtualFile file = files.size() > 0 ? files.get(0) : null;
-                if (file != null) {
-                    myTfCommand.setText(file.getPresentableUrl());
-                    String workingDirectory = myTfCommandWorkingDirectory.getText();
-                    if (workingDirectory == null || workingDirectory.length() == 0) {
-                        VirtualFile parent = file.getParent();
-                        if (parent != null && parent.isDirectory()) {
-                            myTfCommandWorkingDirectory.setText(parent.getPresentableUrl());
+            FileChooserFactory.getInstance()
+                .newBuilder(descriptor)
+                .project(myProject)
+                .parent(pane)
+                .showSingle()
+                .whenComplete((path, error) -> {
+                    if (path != null) {
+                        myTfCommand.setText(path.toString());
+                        String workingDirectory = myTfCommandWorkingDirectory.getText();
+                        if (workingDirectory == null || workingDirectory.length() == 0) {
+                            Path parent = path.getParent();
+                            if (parent != null) {
+                                myTfCommandWorkingDirectory.setText(parent.toString());
+                            }
                         }
                     }
-                }
-            });
+                });
         });
     }
 

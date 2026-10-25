@@ -34,25 +34,16 @@ public abstract class FileChooserFactory {
   }
 
  
-  public abstract FileChooserDialog createFileChooser(FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent);
-
- 
-  public abstract PathChooserDialog createPathChooser(FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent);
+  /**
+   * Creates a builder of a file chooser for the given descriptor.
+   */
+  public abstract FileChooserBuilder newBuilder(FileChooserDescriptor descriptor);
 
   /**
-   * Creates Save File dialog.
-   *
-   * @param descriptor dialog descriptor
-   * @param project    chooser options
-   * @return Save File dialog
-   * @since 9.0
+   * Creates a builder of a save dialog for the given descriptor.
    */
-  public abstract FileSaverDialog createSaveFileDialog(FileSaverDescriptor descriptor, @Nullable ComponentManager project);
+  public abstract FileSaverBuilder newSaverBuilder(FileSaverDescriptor descriptor);
 
- 
-  public abstract FileSaverDialog createSaveFileDialog(FileSaverDescriptor descriptor, Component parent);
-
- 
   @Deprecated
   @DeprecationInfo("See FileChooserTextBoxBuilder")
   public FileTextField createFileTextField(FileChooserDescriptor descriptor, boolean showHidden, @Nullable Disposable parent) {

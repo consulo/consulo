@@ -41,7 +41,6 @@ import consulo.ui.model.FlatDataModel;
 import consulo.ui.model.MutableFlatDataModel;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.lazy.LazyValue;
-import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
 import java.nio.file.Files;
@@ -452,27 +451,22 @@ public class PasswordSafeConfigurableUi {
 
             Project project = e.getData(Project.KEY);
 
-            FileChooserDialog dialog =
-                FileChooserFactory.getInstance().createFileChooser(descriptor, project, e.getData(UIExAWTDataKey.CONTEXT_COMPONENT));
-
             UIAccess uiAccess = UIAccess.current();
 
-            dialog.chooseAsync(project, VirtualFile.EMPTY_ARRAY).whenComplete((v, error) -> {
-                if (error != null) {
-                    return;
-                }
+            FileChooserFactory.getInstance().newBuilder(descriptor)
+                .project(project)
+                .parent(e.getData(UIExAWTDataKey.CONTEXT_COMPONENT))
+                .showSingle()
+                .whenComplete((path, error) -> {
+                    if (error != null) {
+                        return;
+                    }
 
-                if (v == null || v.length == 0) {
-                    return;
-                }
-
-                VirtualFile selectedFile = v[0];
-
-                KeePassFileManager keePassFileManager = createKeePassFileManager();
-                if (keePassFileManager != null) {
-                    keePassFileManager.importDatabase(selectedFile.toNioPath(), e, uiAccess);
-                }
-            });
+                    KeePassFileManager keePassFileManager = createKeePassFileManager();
+                    if (keePassFileManager != null) {
+                        keePassFileManager.importDatabase(path, e, uiAccess);
+                    }
+                });
         }
     }
 

@@ -5,6 +5,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.application.Application;
 import consulo.localize.LocalizeValue;
+import consulo.platform.Platform;
 import consulo.ui.image.Image;
 import org.jspecify.annotations.Nullable;
 
@@ -109,8 +110,25 @@ public interface UniversalFileChooserContributor {
         }
     }
 
-    default @Nullable Path getDesktopPath() {
+    /**
+     * The machine whose files the tab shows - its home and desktop are the tab's Home and Desktop. {@code null} while
+     * the machine is not reachable.
+     */
+    default @Nullable Platform getPlatform() {
         return null;
+    }
+
+    default @Nullable Path getHomePath() {
+        Platform platform = getPlatform();
+        return platform == null ? null : platform.user().homePath();
+    }
+
+    /**
+     * The desktop directory of the tab's machine - it may not exist, the chooser checks it off the UI thread.
+     */
+    default @Nullable Path getDesktopPath() {
+        Path homePath = getHomePath();
+        return homePath == null ? null : homePath.resolve("Desktop");
     }
 
     default LocalizeValue getCustomLoadingText() {

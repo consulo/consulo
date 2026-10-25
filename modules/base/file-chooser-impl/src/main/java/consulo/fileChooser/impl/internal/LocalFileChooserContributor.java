@@ -7,10 +7,8 @@ import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
-import org.jspecify.annotations.Nullable;
 
 import java.nio.file.FileSystems;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -38,8 +36,7 @@ public class LocalFileChooserContributor implements UniversalFileChooserContribu
     }
 
     @Override
-    public @Nullable Path getDesktopPath() {
-        Path path = Platform.current().user().homePath().resolve("Desktop");
-        return Files.isDirectory(path) ? path : null;
+    public Platform getPlatform() {
+        return Platform.current();
     }
 }

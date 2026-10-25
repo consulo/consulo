@@ -17,7 +17,6 @@ package consulo.ide.ui;
 
 import consulo.fileChooser.FileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
-import consulo.fileChooser.FileChooserDialog;
 import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -76,7 +75,6 @@ public class PathEditor {
 
     public PathEditor(FileChooserDescriptor descriptor) {
         myDescriptor = descriptor;
-        myDescriptor.putUserData(FileChooserDialog.PREFER_LAST_OVER_TO_SELECT, Boolean.TRUE);
     }
 
     public void setAddBaseDir(@Nullable VirtualFile addBaseDir) {

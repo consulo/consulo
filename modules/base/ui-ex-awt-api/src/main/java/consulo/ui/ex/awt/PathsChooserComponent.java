@@ -15,18 +15,19 @@
  */
 package consulo.ui.ex.awt;
 
-import consulo.fileChooser.FileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.ui.ex.localize.UILocalize;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.fileChooser.FileChooserFactory;
+import consulo.util.io.FileUtil;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.nio.file.Path;
 
 /**
  * @author oleg
@@ -64,13 +65,13 @@ public class PathsChooserComponent implements ComponentWithEmptyText {
         dirChooser.setHideIgnored(true);
         dirChooser.withTitle(UILocalize.fileChooserDefaultTitle());
         UIAccess uiAccess = UIAccess.current();
-        FileChooser.chooseFiles(dirChooser, myProject, null).whenCompleteAsync((files, error) -> {
-          if (files == null) {
+        FileChooserFactory.getInstance().newBuilder(dirChooser).project(myProject).showMultiple().whenCompleteAsync((paths, error) -> {
+          if (paths == null) {
             return;
           }
-          for (VirtualFile file : files) {
+          for (Path chosen : paths) {
             // adding to the end
-            String path = file.getPath();
+            String path = FileUtil.toSystemIndependentName(chosen.toString());
             if (processor.addPath(myWorkingCollection, path)) {
               myListModel.addElement(path);
             }

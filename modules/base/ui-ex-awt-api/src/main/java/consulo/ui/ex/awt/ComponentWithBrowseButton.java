@@ -20,7 +20,6 @@ import consulo.application.ApplicationManager;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.component.ComponentManager;
 import consulo.disposer.Disposable;
-import consulo.fileChooser.FileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
@@ -38,10 +37,9 @@ import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.ui.ex.localize.UILocalize;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
-import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
-import consulo.virtualFileSystem.LocalFileSystem;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.fileChooser.FileChooserFactory;
+import consulo.fileChooser.util.FileChooserUtil;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
@@ -50,6 +48,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.nio.file.Path;
 
 @Deprecated
 @DeprecationInfo("Prefer prefix & suffix components")
@@ -349,30 +348,25 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
                 }
             }
 
-            FileChooser.chooseFile(fileChooserDescriptor, getProject(), myTextComponent, getInitialFile()).whenComplete((value, error) -> {
-                if (error == null) {
-                    this.onFileChosen(value);
-                }
-            });
+            FileChooserFactory.getInstance()
+                .newBuilder(fileChooserDescriptor)
+                .project(getProject())
+                .parent(myTextComponent)
+                .toSelect(getInitialFile())
+                .showSingle()
+                .whenComplete((value, error) -> {
+                    if (error == null) {
+                        onFileChosen(value);
+                    }
+                });
         }
 
-        protected @Nullable VirtualFile getInitialFile() {
+        protected @Nullable Path getInitialFile() {
             String directoryName = getComponentText();
             if (StringUtil.isEmptyOrSpaces(directoryName)) {
                 return null;
             }
-
-            directoryName = FileUtil.toSystemIndependentName(directoryName);
-            VirtualFile path = LocalFileSystem.getInstance().findFileByPath(expandPath(directoryName));
-            while (path == null && directoryName.length() > 0) {
-                int pos = directoryName.lastIndexOf('/');
-                if (pos <= 0) {
-                    break;
-                }
-                directoryName = directoryName.substring(0, pos);
-                path = LocalFileSystem.getInstance().findFileByPath(directoryName);
-            }
-            return path;
+            return FileChooserUtil.findExistingPathOrParent(expandPath(directoryName));
         }
 
         
@@ -385,11 +379,11 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
         }
 
         
-        protected String chosenFileToResultingText(VirtualFile chosenFile) {
-            return chosenFile.getPresentableUrl();
+        protected String chosenFileToResultingText(Path chosenFile) {
+            return chosenFile.toString();
         }
 
-        protected void onFileChosen(VirtualFile chosenFile) {
+        protected void onFileChosen(Path chosenFile) {
             myAccessor.setText(myTextComponent.getChildComponent(), chosenFileToResultingText(chosenFile));
         }
     }

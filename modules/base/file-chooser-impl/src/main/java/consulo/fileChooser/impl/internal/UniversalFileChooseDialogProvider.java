@@ -18,16 +18,18 @@ package consulo.fileChooser.impl.internal;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.component.ComponentManager;
 import consulo.fileChooser.FileChooserDescriptor;
-import consulo.fileChooser.FileChooserDialog;
-import consulo.fileChooser.PathChooserDialog;
 import consulo.fileChooser.provider.FileChooseDialogProvider;
 import consulo.fileChooser.provider.FileOperateDialogProvider;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.tree.ApplicationTreeExecutorFactory;
 import jakarta.inject.Inject;
 import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @ExtensionImpl(id = FileOperateDialogProvider.APPLICATION_ID, order = "last")
 public class UniversalFileChooseDialogProvider implements FileChooseDialogProvider {
@@ -38,22 +40,15 @@ public class UniversalFileChooseDialogProvider implements FileChooseDialogProvid
         myTreeExecutorFactory = treeExecutorFactory;
     }
 
+    @RequiredUIAccess
     @Override
-    public FileChooserDialog createFileChooser(
+    public CompletableFuture<List<Path>> chooseAsync(
         FileChooserDescriptor descriptor,
         @Nullable ComponentManager project,
-        @Nullable Component parent
+        @Nullable Component parent,
+        @Nullable Path toSelect
     ) {
-        return new UniversalFileChooser(descriptor, (Project) project, myTreeExecutorFactory);
-    }
-
-    @Override
-    public PathChooserDialog createPathChooser(
-        FileChooserDescriptor descriptor,
-        @Nullable ComponentManager project,
-        @Nullable Component parent
-    ) {
-        return new UniversalFileChooser(descriptor, (Project) project, myTreeExecutorFactory);
+        return new UniversalFileChooser(descriptor, (Project) project, myTreeExecutorFactory).chooseAsync(project, toSelect);
     }
 
     @Override

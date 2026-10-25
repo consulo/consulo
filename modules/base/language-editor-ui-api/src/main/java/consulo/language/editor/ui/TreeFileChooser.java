@@ -15,10 +15,13 @@
  */
 package consulo.language.editor.ui;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.language.psi.PsiFile;
 import consulo.virtualFileSystem.fileType.FileType;
 
 import org.jspecify.annotations.Nullable;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
 
 /**
@@ -38,5 +41,14 @@ public interface TreeFileChooser {
    */
   void selectFile(PsiFile file);
 
+  /**
+   * Shows the dialog and answers the chosen file, or completes exceptionally with
+   * {@link java.util.concurrent.CancellationException} when it is cancelled.
+   */
+  @RequiredUIAccess
+  CompletableFuture<PsiFile> showDialogAsync();
+
+  @Deprecated
+  @DeprecationInfo("Use #showDialogAsync()")
   void showDialog();
 }

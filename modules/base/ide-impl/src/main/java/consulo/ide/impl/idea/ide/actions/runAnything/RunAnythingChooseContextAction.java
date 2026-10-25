@@ -22,7 +22,6 @@ import consulo.dataContext.DataContext;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.fileChooser.FileChooserFactory;
-import consulo.fileChooser.PathChooserDialog;
 import consulo.ui.ex.impl.internal.action.ActionImplUtil;
 import consulo.ui.ex.impl.internal.popup.action.ActionPopupItem;
 import consulo.ui.ex.impl.internal.popup.action.ActionPopupStep;
@@ -42,13 +41,14 @@ import consulo.ui.ex.awt.popup.PopupListElementRenderer;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListSeparator;
 import consulo.ui.image.Image;
-import consulo.util.collection.ArrayUtil;
+import consulo.util.io.FileUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.function.Predicates;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
+import java.nio.file.Path;
 import java.util.List;
 
 /**
@@ -120,29 +120,30 @@ public abstract class RunAnythingChooseContextAction extends ActionGroup impleme
                 FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
                 descriptor.setUseApplicationDialog();
 
-                PathChooserDialog chooser = FileChooserFactory.getInstance().createPathChooser(
-                    descriptor,
-                    project,
-                    e.getData(UIExAWTDataKey.CONTEXT_COMPONENT)
-                );
+                String basePath = project.getBasePath();
 
-                chooser.chooseAsync(project.getBaseDir()).whenComplete((virtualFiles, error) -> {
-                    if (error != null) {
-                        return;
-                    }
+                FileChooserFactory.getInstance().newBuilder(descriptor)
+                    .project(project)
+                    .parent(e.getData(UIExAWTDataKey.CONTEXT_COMPONENT))
+                    .toSelect(basePath == null ? null : Path.of(basePath))
+                    .showSingle()
+                    .whenComplete((chosenPath, error) -> {
+                        if (error != null) {
+                            return;
+                        }
 
-                    List<String> recentDirectories = RunAnythingContextRecentDirectoryCacheImpl.getInstance(project).getPaths();
+                        List<String> recentDirectories = RunAnythingContextRecentDirectoryCacheImpl.getInstance(project).getPaths();
 
-                    String path = ArrayUtil.getFirstElement(virtualFiles).getPath();
+                        String path = FileUtil.toSystemIndependentName(chosenPath.toString());
 
-                    if (recentDirectories.size() >= Registry.intValue("run.anything.context.recent.directory.number")) {
-                        recentDirectories.remove(0);
-                    }
+                        if (recentDirectories.size() >= Registry.intValue("run.anything.context.recent.directory.number")) {
+                            recentDirectories.remove(0);
+                        }
 
-                    recentDirectories.add(path);
+                        recentDirectories.add(path);
 
-                    setSelectedContext(new RunAnythingContext.RecentDirectoryContext(path));
-                });
+                        setSelectedContext(new RunAnythingContext.RecentDirectoryContext(path));
+                    });
             });
         }
     }

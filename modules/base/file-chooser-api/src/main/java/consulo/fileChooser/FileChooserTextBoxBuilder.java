@@ -25,16 +25,14 @@ import consulo.ui.TextBox;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.TextComponentAccessor;
 import consulo.ui.ex.action.*;
+import consulo.fileChooser.util.FileChooserUtil;
 import consulo.ui.ex.localize.UILocalize;
-import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
-import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 
 /**
  * Builder for {@link TextBox} with browse button. On click show file chooser dialog
@@ -64,10 +62,14 @@ public final class FileChooserTextBoxBuilder {
 
             String text = myController.myAccessor.getValue(myController.myTextBox);
 
-            FileChooser.chooseFile(fileChooserDescriptor, myController.myProject, myController.mySelectedFileMapper.apply(text))
-                .whenComplete((f, error) -> {
+            FileChooserFactory.getInstance()
+                .newBuilder(fileChooserDescriptor)
+                .project(myController.myProject)
+                .toSelect(FileChooserUtil.findExistingPathOrParent(text))
+                .showSingle()
+                .whenComplete((path, error) -> {
                     if (error == null) {
-                        myController.myAccessor.setValue(myController.myTextBox, f.getPresentableUrl());
+                        myController.myAccessor.setValue(myController.myTextBox, path.toString());
                     }
                 });
         }
@@ -78,7 +80,6 @@ public final class FileChooserTextBoxBuilder {
         private final TextComponentAccessor<TextBox> myAccessor;
         private final @Nullable ComponentManager myProject;
         private final FileChooserDescriptor myFileChooserDescriptor;
-        private final Function<String, @Nullable VirtualFile> mySelectedFileMapper;
         private final LocalizeValue myDialogTitle;
         private final LocalizeValue myDialogDescription;
 
@@ -86,7 +87,6 @@ public final class FileChooserTextBoxBuilder {
             myAccessor = builder.myTextBoxAccessor;
             myProject = builder.myProject;
             myFileChooserDescriptor = builder.myFileChooserDescriptor;
-            mySelectedFileMapper = builder.mySelectedFileMapper;
             myDialogTitle = builder.myDialogTitle;
             myDialogDescription = builder.myDialogDescription;
 
@@ -158,24 +158,6 @@ public final class FileChooserTextBoxBuilder {
         myProject = project;
         myActions.add(STUB);
     }
-
-    private Function<String, @Nullable VirtualFile> mySelectedFileMapper = directoryName -> {
-        if (StringUtil.isEmptyOrSpaces(directoryName)) {
-            return null;
-        }
-
-        directoryName = FileUtil.toSystemIndependentName(directoryName);
-        VirtualFile path = LocalFileSystem.getInstance().findFileByPath(directoryName);
-        while (path == null && directoryName.length() > 0) {
-            int pos = directoryName.lastIndexOf('/');
-            if (pos <= 0) {
-                break;
-            }
-            directoryName = directoryName.substring(0, pos);
-            path = LocalFileSystem.getInstance().findFileByPath(directoryName);
-        }
-        return path;
-    };
 
     public FileChooserTextBoxBuilder dialogTitle(LocalizeValue dialogTitle) {
         myDialogTitle = dialogTitle;

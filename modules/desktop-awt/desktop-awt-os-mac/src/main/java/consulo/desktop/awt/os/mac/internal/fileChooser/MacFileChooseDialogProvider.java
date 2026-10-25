@@ -18,14 +18,16 @@ package consulo.desktop.awt.os.mac.internal.fileChooser;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.component.ComponentManager;
 import consulo.fileChooser.FileChooserDescriptor;
-import consulo.fileChooser.FileChooserDialog;
-import consulo.fileChooser.PathChooserDialog;
 import consulo.fileChooser.provider.FileChooseDialogProvider;
 import consulo.platform.Platform;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author VISTALL
@@ -51,14 +53,12 @@ public class MacFileChooseDialogProvider implements FileChooseDialogProvider {
   }
 
   
+  @RequiredUIAccess
   @Override
-  public FileChooserDialog createFileChooser(FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent) {
-    return new MacPathChooserDialog(descriptor, parent, (Project)project);
-  }
-
-  
-  @Override
-  public PathChooserDialog createPathChooser(FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent) {
-    return new MacPathChooserDialog(descriptor, parent, (Project)project);
+  public CompletableFuture<List<Path>> chooseAsync(FileChooserDescriptor descriptor,
+                                                   @Nullable ComponentManager project,
+                                                   @Nullable Component parent,
+                                                   @Nullable Path toSelect) {
+    return new MacPathChooserDialog(descriptor, parent, (Project)project).chooseAsync(toSelect);
   }
 }

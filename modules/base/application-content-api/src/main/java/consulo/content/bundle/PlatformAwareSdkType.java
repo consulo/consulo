@@ -26,8 +26,10 @@ import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
+import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -69,15 +71,15 @@ public abstract class PlatformAwareSdkType extends SdkType {
     public FileChooserDescriptor getHomeChooserDescriptor(Platform platform) {
         FileChooserDescriptor descriptor = new FileChooserDescriptor(false, true, false, false, false, false) {
             @Override
-            public void validateSelectedFiles(VirtualFile[] files) throws Exception {
-                if (files.length != 0) {
-                    Path selectedPath = files[0].toNioPath();
+            public void validateSelectedPaths(List<Path> paths) throws Exception {
+                if (!paths.isEmpty()) {
+                    Path selectedPath = paths.get(0);
                     Platform selectedPlatform = platformOf(selectedPath, platform);
                     boolean valid = isValidSdkHome(selectedPlatform, selectedPath);
                     if (!valid) {
                         valid = isValidSdkHome(selectedPlatform, adjustSelectedSdkHome(selectedPlatform, selectedPath));
                         if (!valid) {
-                            LocalizeValue message = files[0].isDirectory()
+                            LocalizeValue message = Files.isDirectory(selectedPath)
                                 ? ProjectLocalize.sdkConfigureHomeInvalidError(getDisplayName())
                                 : ProjectLocalize.sdkConfigureHomeFileInvalidError(getDisplayName());
                             throw new Exception(message.get());

@@ -25,7 +25,7 @@ import java.util.List;
  * Defines save dialog behaviour
  *
  * @author Konstantin Bulenkov
- * @see FileSaverDialog
+ * @see FileSaverBuilder
  * @see FileChooserDescriptor
  * @since 9.0
  */
