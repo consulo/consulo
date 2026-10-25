@@ -101,5 +101,6 @@ public class DesktopQtAvatarImpl extends QtComponentDelegate<QLabel> implements 
         component.setFixedSize(size, size);
         component.setPixmap(DesktopQtAvatarPainter.paint(name, myImage, size, myOutline, component.devicePixelRatioF(), component.palette()));
         component.setToolTip(name);
+        DesktopQtAvatarPainter.repaintWhileLoading(component, myImage, this::refreshIcons);
     }
 }

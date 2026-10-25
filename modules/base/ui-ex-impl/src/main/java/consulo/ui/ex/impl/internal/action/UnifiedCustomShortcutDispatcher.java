@@ -20,6 +20,7 @@ import consulo.ui.Component;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.internal.ActionPromoterUtil;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -74,7 +75,7 @@ public final class UnifiedCustomShortcutDispatcher {
 
     @RequiredUIAccess
     public static CompletableFuture<Boolean> performFirstEnabled(List<AnAction> actions, DataContext context) {
-        return performFirstEnabled(actions, 0, context, UIAccess.current());
+        return performFirstEnabled(ActionPromoterUtil.rearrangeByPromoters(actions, context), 0, context, UIAccess.current());
     }
 
     private static CompletableFuture<Boolean> performFirstEnabled(List<AnAction> actions, int index, DataContext context, UIAccess uiAccess) {

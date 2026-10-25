@@ -13,13 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.project.internal;
+package consulo.project;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
-import consulo.project.Project;
-import consulo.project.ProjectGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.util.lang.BitUtil;
 import org.jspecify.annotations.Nullable;
@@ -50,6 +48,13 @@ public interface RecentProjectsManager {
     String getLastProjectPath();
 
     void removePath(@Nullable String path);
+
+    List<String> getRecentPaths();
+
+    /**
+     * No-op if {@code path} is already present in recent projects
+     */
+    void addRecentPath(String path);
 
     /**
      * @return the last known VCS branch for the given project path, or {@code null} if none is stored.

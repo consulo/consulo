@@ -47,6 +47,7 @@ module consulo.web.editor.impl {
 
     requires flow.data;
     requires flow.server;
+    requires tools.jackson.databind;
     requires vaadin.select.flow;
 
     requires jakarta.inject;

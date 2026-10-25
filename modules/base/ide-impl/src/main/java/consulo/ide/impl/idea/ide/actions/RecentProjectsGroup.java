@@ -19,7 +19,7 @@ import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.platform.Platform;
 import consulo.platform.base.localize.ActionLocalize;
-import consulo.project.internal.RecentProjectsManager;
+import consulo.project.RecentProjectsManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;

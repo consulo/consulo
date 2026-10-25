@@ -31,6 +31,8 @@ import consulo.codeEditor.util.EditorUtil;
 import consulo.colorScheme.*;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
@@ -72,6 +74,7 @@ import consulo.versionControlSystem.internal.LineStatusTrackerListener;
 import consulo.versionControlSystem.internal.LineStatusTrackerManagerI;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.web.editor.impl.internal.floating.WebEditorFloatingToolbar;
+import consulo.web.editor.impl.internal.floating.WebEditorInspectionToolbar;
 import consulo.web.editor.impl.internal.gutter.GutterBand;
 import consulo.web.editor.impl.internal.gutter.LineSeparatorBand;
 import consulo.web.editor.impl.internal.gutter.WebLineMarkerPresentationPainter;
@@ -164,6 +167,7 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
     private final WebEditorGutterComponentImpl myGutterComponent;
 
     private boolean myFloatingToolbarInstalled;
+    private boolean myInspectionToolbarInstalled;
 
     private final AtomicBoolean myUpdateScheduled = new AtomicBoolean();
 
@@ -301,6 +305,7 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
         }
 
         myEditorComponent = new EditorComponent();
+        myEditorComponent.putUserData(UiDataProvider.KEY, this::uiDataSnapshot);
 
         Vaadin vaadin = myEditorComponent.toVaadinComponent();
         vaadin.setSizeFull();
@@ -317,6 +322,16 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
         updateFont();
         updateCaretStyle();
         updateColors();
+
+        vaadin.getElement().addEventListener("arquill-component-inlay-size", event -> {
+                String id = event.getEventData().path("event.detail.id").asText("");
+                int width = event.getEventData().path("event.detail.width").asInt(0);
+                int height = event.getEventData().path("event.detail.height").asInt(0);
+                onComponentInlaySized(id, width, height);
+            })
+            .addEventData("event.detail.id")
+            .addEventData("event.detail.width")
+            .addEventData("event.detail.height");
 
         // the awt editor learns of an inlay through a repaint of the region it covers, which here reaches a bridge
         // component and stops there - the model is the only thing left that knows. the pushes coalesce, so the hint
@@ -381,7 +396,10 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
 
         vaadin.addCtrlClickListener(event -> navigateTo(event.getOffset()));
 
-        vaadin.addAttachListener(event -> installFloatingToolbar());
+        vaadin.addAttachListener(event -> {
+            installFloatingToolbar();
+            installInspectionToolbar();
+        });
 
         vaadin.addInlayClickListener(event -> performInlayClick(event.getId(), event.isControlDown(), event.getDetails()));
 
@@ -1274,6 +1292,21 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
 
         myComponentInlayHosts.put(inlay, host);
         myEditorComponent.toVaadinComponent().getComponentInlayLayer().add(host);
+    }
+
+    private void onComponentInlaySized(String id, int width, int height) {
+        for (Map.Entry<Inlay<?>, Div> entry : myComponentInlayHosts.entrySet()) {
+            Inlay<?> inlay = entry.getKey();
+            if (id.equals(entry.getValue().getElement().getAttribute("data-arquill-component-inlay"))
+                && inlay.isValid()
+                && inlay.getRenderer() instanceof ComponentInlayRenderer renderer) {
+                if (renderer.calcWidthInPixels(inlay) != width || renderer.calcHeightInPixels(inlay) != height) {
+                    renderer.setInlaySize(width, height);
+                    inlay.update();
+                }
+                return;
+            }
+        }
     }
 
     private void unmountComponentInlay(Inlay<?> inlay) {
@@ -3155,6 +3188,15 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
     }
 
     @RequiredUIAccess
+    private void installInspectionToolbar() {
+        if (myInspectionToolbarInstalled || isReleased) {
+            return;
+        }
+        myInspectionToolbarInstalled = true;
+        WebEditorInspectionToolbar.install(this, myEditorComponent.toVaadinComponent(), myDisposable);
+    }
+
+    @RequiredUIAccess
     private void installFloatingToolbar() {
         Project project = myProject;
         if (myFloatingToolbarInstalled || isReleased || project == null || !EditorFloatingToolbarInstaller.mayShowToolbar(this)) {
@@ -3168,6 +3210,15 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
     @Override
     public Component getContentUIComponent() {
         return myEditorComponent;
+    }
+
+    private void uiDataSnapshot(DataSink sink) {
+        if (isDisposed() || isRendererMode()) {
+            return;
+        }
+
+        sink.set(Editor.KEY, this);
+        sink.set(Caret.KEY, getCaretModel().getCurrentCaret());
     }
 
     @Override
@@ -3307,6 +3358,11 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
     }
 
     @Override
+    public void setFitContentHeight(boolean fit) {
+        myEditorComponent.toVaadinComponent().setFitContentHeight(fit);
+    }
+
+    @Override
     public void setHorizontalScrollbarVisible(boolean b) {
 
     }
@@ -3369,7 +3425,14 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
 
     @Override
     public void setFontSize(int fontSize) {
+        int oldFontSize = myScheme.getEditorFontSize();
+        myScheme.setEditorFontSize(fontSize);
+        int newFontSize = myScheme.getEditorFontSize();
+        myPropertyChangeSupport.firePropertyChange(PROP_FONT_SIZE, oldFontSize, newFontSize);
 
+        myView.reset();
+        updateFont();
+        update();
     }
 
     @Override
@@ -3426,7 +3489,35 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
 
     @Override
     public int visualLineToY(int visualLine) {
-        return visualLine * myLineHeight;
+        int y = visualLine * myLineHeight;
+        for (Inlay<?> inlay : getInlayModel().getBlockElementsInRange(0, getDocument().getTextLength())) {
+            int inlayLine = inlay.getVisualPosition().line;
+            if (inlayLine < visualLine || inlayLine == visualLine && inlay.getPlacement() == Inlay.Placement.ABOVE_LINE) {
+                y += inlay.getHeightInPixels();
+            }
+        }
+        return y;
+    }
+
+    @Override
+    public int yToVisualLine(int y) {
+        int lastLine = Math.max(0, getVisibleLineCount() - 1);
+        int lastLineY = visualLineToY(lastLine);
+        if (y >= lastLineY) {
+            return lastLine + (y - lastLineY) / myLineHeight;
+        }
+        int low = 0;
+        int high = lastLine;
+        while (low < high) {
+            int middle = (low + high + 1) >>> 1;
+            if (visualLineToY(middle) <= y) {
+                low = middle;
+            }
+            else {
+                high = middle - 1;
+            }
+        }
+        return low;
     }
 
     @Override
@@ -3554,7 +3645,7 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
      */
     @Override
     public VisualPosition xyToVisualPosition(Point p) {
-        return new VisualPosition(Math.max(0, p.y / myLineHeight), Math.max(0, (p.x + myCharWidth / 2) / myCharWidth));
+        return new VisualPosition(Math.max(0, yToVisualLine(p.y)), Math.max(0, (p.x + myCharWidth / 2) / myCharWidth));
     }
 
     /**

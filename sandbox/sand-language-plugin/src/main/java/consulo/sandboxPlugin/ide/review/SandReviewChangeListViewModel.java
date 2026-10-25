@@ -15,7 +15,9 @@
  */
 package consulo.sandboxPlugin.ide.review;
 
+import consulo.application.util.ListSelection;
 import consulo.disposer.Disposable;
+import consulo.fileEditor.FileEditorManager;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.concurrent.coroutine.MutableObservableValue;
@@ -26,6 +28,8 @@ import consulo.versionControlSystem.review.details.model.CodeReviewChangeList;
 import consulo.versionControlSystem.review.details.model.CodeReviewChangeListViewModelBase;
 import consulo.versionControlSystem.review.details.model.CodeReviewViewedStateChangeListViewModel;
 import consulo.versionControlSystem.review.util.ChangesSelection;
+
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.List;
@@ -38,13 +42,16 @@ import java.util.Map;
 public class SandReviewChangeListViewModel extends CodeReviewChangeListViewModelBase implements CodeReviewViewedStateChangeListViewModel {
     private final Project myProject;
     private final MutableObservableValue<Map<RefComparisonChange, CodeReviewChangeDetails>> myDetails;
+    private final String myReviewNumber;
 
     public SandReviewChangeListViewModel(Project project,
                                          Disposable parentCs,
+                                         String reviewNumber,
                                          CodeReviewChangeList changeList,
                                          Map<RefComparisonChange, CodeReviewChangeDetails> details) {
         super(parentCs, changeList);
         myProject = project;
+        myReviewNumber = reviewNumber;
         myDetails = MutableObservableValue.of(Map.copyOf(details));
     }
 
@@ -72,17 +79,19 @@ public class SandReviewChangeListViewModel extends CodeReviewChangeListViewModel
     @RequiredUIAccess
     @Override
     public void showDiffPreview() {
-        ChangesSelection selection = getChangesSelection().get();
-        RefComparisonChange change = selection == null ? null : selection.getSelectedChange();
-        if (change != null && canEdit(change)) {
-            startEditing(change);
-            setViewedState(List.of(change), true);
-        }
+        showDiff();
     }
 
     @RequiredUIAccess
     @Override
     public void showDiff() {
-        showDiffPreview();
+        ChangesSelection selection = getChangesSelection().get();
+        RefComparisonChange selected = selection == null ? null : selection.getSelectedChange();
+        SandReviewService service = myProject.getInstance(SandReviewService.class);
+        service.getDiffVm(myReviewNumber).showChanges(ListSelection.create(changeList.changes(), selected));
+        FileEditorManager.getInstance(myProject).openFile(service.getDiffFile(myReviewNumber), true);
+        if (selected != null) {
+            setViewedState(List.of(selected), true);
+        }
     }
 }

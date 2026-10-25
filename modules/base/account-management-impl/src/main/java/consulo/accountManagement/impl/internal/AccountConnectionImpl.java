@@ -49,7 +49,7 @@ public final class AccountConnectionImpl<C extends AccountCredentials> implement
     }
 
     public String serialize() {
-        return myAuthorizeType.serialize(myCredentials);
+        return myAuthorizeType.serialize(myCredentials, myConfig);
     }
 
     @Override

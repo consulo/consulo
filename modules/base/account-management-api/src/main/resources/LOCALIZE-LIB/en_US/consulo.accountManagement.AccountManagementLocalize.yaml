@@ -6,6 +6,8 @@ action.generate.token:
     text: Generate token…
 action.more.info:
     text: More info
+action.oauth.log.in:
+    text: Log In via Browser
 action.log.out:
     text: Log Out
 action.relogin:
@@ -18,6 +20,8 @@ authorize.type.api.key:
     text: API Key
 authorize.type.basic:
     text: Login and Password
+authorize.type.oauth:
+    text: Browser
 authorize.type.token:
     text: Token
 button.log.in:
@@ -66,6 +70,8 @@ label.no.account:
     text: No account
 label.no.credentials.needed:
     text: No credentials are needed.
+label.oauth.browser:
+    text: Authorization continues in the web browser. Accept it there and come back.
 label.password:
     text: 'Password:'
 label.relogin.needed:

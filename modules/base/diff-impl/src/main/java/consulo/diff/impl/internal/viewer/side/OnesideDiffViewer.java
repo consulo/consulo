@@ -130,7 +130,7 @@ public abstract class OnesideDiffViewer<T extends EditorHolder> extends Listener
   //
 
   @Override
-  protected @Nullable Navigatable getNavigatable() {
+  public @Nullable Navigatable getNavigatable() {
     return getContent().getNavigatable();
   }
 

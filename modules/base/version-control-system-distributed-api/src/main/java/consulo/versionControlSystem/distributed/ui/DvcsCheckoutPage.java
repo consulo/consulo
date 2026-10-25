@@ -16,7 +16,6 @@
 package consulo.versionControlSystem.distributed.ui;
 
 import consulo.annotation.UsedInPlugin;
-import consulo.container.boot.ContainerPathManager;
 import consulo.disposer.Disposable;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.fileChooser.FileChooserTextBoxBuilder;
@@ -35,16 +34,14 @@ import consulo.ui.util.FormBuilder;
 import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.distributed.DvcsRememberedInputs;
 import consulo.versionControlSystem.distributed.localize.DistributedVcsLocalize;
+import consulo.versionControlSystem.distributed.repository.ClonePathProvider;
 import consulo.versionControlSystem.checkout.CheckoutCallback;
 import consulo.versionControlSystem.checkout.CheckoutPage;
 import org.jspecify.annotations.Nullable;
 
 import java.io.File;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.regex.Pattern;
 
 /**
  * @author VISTALL
@@ -52,16 +49,6 @@ import java.util.regex.Pattern;
  */
 @UsedInPlugin
 public abstract class DvcsCheckoutPage implements CheckoutPage {
-    private static final Pattern SSH_URL_PATTERN;
-
-    static {
-        String ch = "[\\p{ASCII}&&[\\p{Graph}]&&[^@:/]]";
-        String host = ch + "+(?:\\." + ch + "+)*";
-        String path = "/?" + ch + "+(?:/" + ch + "+)*/?";
-        String all = "(?:" + ch + "+@)?" + host + ":" + path;
-        SSH_URL_PATTERN = Pattern.compile(all);
-    }
-
     protected final Project myProject;
     protected final Disposable myUiDisposable;
     private final LocalizeValue myVcsName;
@@ -130,7 +117,7 @@ public abstract class DvcsCheckoutPage implements CheckoutPage {
         parentDirectoryBuilder.dialogDescription(DistributedVcsLocalize.cloneDestinationDirectoryDescription());
 
         FileChooserTextBoxBuilder.Controller parentDirectoryController = parentDirectoryBuilder.build();
-        parentDirectoryController.setValue(defaultParentDirectory(rememberedInputs));
+        parentDirectoryController.setValue(ClonePathProvider.defaultParentDirectoryPath(myProject, rememberedInputs));
         myParentDirectoryController = parentDirectoryController;
 
         TextBox directoryNameBox = TextBox.create();
@@ -168,14 +155,6 @@ public abstract class DvcsCheckoutPage implements CheckoutPage {
         validate(context);
 
         return builder.build();
-    }
-
-    private static String defaultParentDirectory(DvcsRememberedInputs rememberedInputs) {
-        String parentDir = rememberedInputs.getCloneParentDir();
-        if (StringUtil.isEmptyOrSpaces(parentDir)) {
-            parentDir = ContainerPathManager.get().getDocumentsDir().getPath();
-        }
-        return parentDir;
     }
 
     @RequiredUIAccess
@@ -256,7 +235,7 @@ public abstract class DvcsCheckoutPage implements CheckoutPage {
             }
         }
         else {
-            LocalizeValue urlError = findUrlError(url);
+            LocalizeValue urlError = CloneDvcsValidationUtils.checkRepositoryURL(url);
             if (urlError.isNotEmpty()) {
                 return urlError;
             }
@@ -269,34 +248,14 @@ public abstract class DvcsCheckoutPage implements CheckoutPage {
         }
 
         File file = new File(parentDirectory, directoryName);
-        if (file.exists()) {
-            return DistributedVcsLocalize.cloneDestinationExistsError(file);
+        LocalizeValue directoryError = CloneDvcsValidationUtils.checkDirectory(file.getPath());
+        if (directoryError.isNotEmpty()) {
+            return directoryError;
         }
         if (!file.getParentFile().exists()) {
             return DistributedVcsLocalize.cloneParentMissingError(file.getParent());
         }
         return LocalizeValue.empty();
-    }
-
-    private static LocalizeValue findUrlError(String url) {
-        try {
-            if (new URI(url).isAbsolute()) {
-                return LocalizeValue.empty();
-            }
-        }
-        catch (URISyntaxException ignored) {
-        }
-
-        if (SSH_URL_PATTERN.matcher(url).matches()) {
-            return LocalizeValue.empty();
-        }
-
-        File file = new File(url);
-        if (file.exists()) {
-            return file.isDirectory() ? LocalizeValue.empty() : DistributedVcsLocalize.cloneUrlIsNotDirectoryError();
-        }
-
-        return DistributedVcsLocalize.cloneInvalidUrl();
     }
 
     @RequiredUIAccess

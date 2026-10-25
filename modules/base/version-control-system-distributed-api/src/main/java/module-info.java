@@ -13,6 +13,7 @@ module consulo.version.control.system.distributed.api {
     exports consulo.versionControlSystem.distributed;
     exports consulo.versionControlSystem.distributed.action;
     exports consulo.versionControlSystem.distributed.branch;
+    exports consulo.versionControlSystem.distributed.hosting;
     exports consulo.versionControlSystem.distributed.icon;
     exports consulo.versionControlSystem.distributed.localize;
     exports consulo.versionControlSystem.distributed.push;

@@ -27,11 +27,11 @@ import io.qt.widgets.QWidget;
  * @author VISTALL
  * @since 2026-10-24
  */
-final class DesktopQtGeometry {
+public final class DesktopQtGeometry {
     private DesktopQtGeometry() {
     }
 
-    static void invalidateHierarchy(QWidget root) {
+    public static void invalidateHierarchy(QWidget root) {
         for (QWidget child : root.findChildren(QWidget.class)) {
             child.updateGeometry();
         }

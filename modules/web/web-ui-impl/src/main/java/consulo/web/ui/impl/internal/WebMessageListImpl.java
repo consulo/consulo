@@ -24,6 +24,8 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.impl.avatar.AvatarPresentation;
 import consulo.ui.impl.messageList.MessageListPresentation;
+import consulo.ui.impl.messageList.MessageListImages;
+import consulo.ui.messageList.AsyncHtmlImageLoader;
 import consulo.ui.messageList.MessageList;
 import consulo.ui.messageList.MessageListItem;
 import consulo.ui.messageList.MessageListItemPart;
@@ -38,8 +40,10 @@ import org.jspecify.annotations.Nullable;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * The messages are {@code vaadin-message} elements of a list of its own rather than a {@code vaadin-message-list}: that
@@ -123,7 +127,7 @@ public class WebMessageListImpl extends VaadinComponentDelegate<WebMessageListIm
         private Element createText(String text) {
             if (myMarkdown) {
                 Element markdown = new Element("vaadin-markdown");
-                markdown.setProperty("content", text);
+                markdown.setProperty("content", resolveImages(text));
                 return markdown;
             }
             Element span = new Element("span");
@@ -148,7 +152,7 @@ public class WebMessageListImpl extends VaadinComponentDelegate<WebMessageListIm
             if (myParts.isEmpty() && myContent.size() == 1 && !text.isEmpty()) {
                 Element element = myContent.get(0);
                 if (myMarkdown) {
-                    element.setProperty("content", text);
+                    element.setProperty("content", resolveImages(text));
                 }
                 else {
                     element.setText(text);
@@ -272,6 +276,8 @@ public class WebMessageListImpl extends VaadinComponentDelegate<WebMessageListIm
     private final List<Item> myItems = new ArrayList<>();
     private final com.vaadin.flow.component.messages.MessageList myMarkdownLoader = new com.vaadin.flow.component.messages.MessageList();
     private boolean myMarkdown;
+    private @Nullable AsyncHtmlImageLoader myImageLoader;
+    private final Map<String, Image> myImages = new HashMap<>();
 
     public WebMessageListImpl() {
         Vaadin vaadin = toVaadinComponent();
@@ -361,6 +367,41 @@ public class WebMessageListImpl extends VaadinComponentDelegate<WebMessageListIm
     @Override
     public boolean isShowOwnAvatar() {
         return toVaadinComponent().hasClassName("consulo-show-own-avatar");
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setImageLoader(@Nullable AsyncHtmlImageLoader imageLoader) {
+        if (myImageLoader == imageLoader) {
+            return;
+        }
+        myImageLoader = imageLoader;
+        myImages.clear();
+        if (myMarkdown) {
+            for (Item item : myItems) {
+                item.updateContent();
+            }
+        }
+    }
+
+    @Override
+    public @Nullable AsyncHtmlImageLoader getImageLoader() {
+        return myImageLoader;
+    }
+
+    private String resolveImages(String markdown) {
+        AsyncHtmlImageLoader loader = myImageLoader;
+        if (loader == null) {
+            return markdown;
+        }
+        return MessageListImages.replaceMarkdownSources(markdown, src -> {
+            if (src.startsWith("data:")) {
+                return src;
+            }
+            Image image = myImages.computeIfAbsent(src, it -> Image.async(Image.empty(0), () -> loader.load(null, it)));
+            String url = WebImageUrl.toURL(image);
+            return url == null ? src : url;
+        });
     }
 
     @Override

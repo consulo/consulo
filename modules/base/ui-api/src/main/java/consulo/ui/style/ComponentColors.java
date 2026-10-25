@@ -165,6 +165,12 @@ public enum ComponentColors implements StyleColorValue {
     VCS_OUTGOING_FOREGROUND,
 
     /**
+     * The text of a branch label, and the colour its background is mixed towards from the background under it.
+     */
+    VCS_REF_LABEL_FOREGROUND,
+    VCS_REF_LABEL_BACKGROUND_BASE,
+
+    /**
      * The fill of a reaction pill in its normal, hovered and pressed states, and the border of a selected one.
      */
     REACTION_BACKGROUND,

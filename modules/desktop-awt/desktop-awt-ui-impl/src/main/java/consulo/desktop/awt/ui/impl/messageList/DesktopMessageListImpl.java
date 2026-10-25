@@ -24,7 +24,6 @@ import consulo.ui.AvatarStyle;
 import consulo.ui.Component;
 import consulo.ui.Space;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.JBHtmlEditorKit;
 import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.JBScrollPane;
 import consulo.ui.ex.awt.JBUI;
@@ -34,6 +33,7 @@ import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.ui.impl.messageList.MessageListPresentation;
+import consulo.ui.messageList.AsyncHtmlImageLoader;
 import consulo.ui.messageList.MessageList;
 import consulo.ui.messageList.MessageListItem;
 import consulo.ui.messageList.MessageListItemPart;
@@ -58,6 +58,11 @@ public class DesktopMessageListImpl extends SwingComponentDelegate<JBScrollPane>
     private class MyScrollPane extends JBScrollPane implements FromSwingComponentWrapper {
         MyScrollPane(java.awt.Component view) {
             super(view);
+        }
+
+        @Override
+        public boolean isValidateRoot() {
+            return false;
         }
 
         @Override
@@ -98,11 +103,18 @@ public class DesktopMessageListImpl extends SwingComponentDelegate<JBScrollPane>
     }
 
     private static class MessageBody extends JEditorPane {
+        private final MessageBodyEditorKit myEditorKit = new MessageBodyEditorKit();
+
         MessageBody() {
             setEditable(false);
             setOpaque(false);
             setBorder(JBUI.Borders.empty());
-            setEditorKit(JBHtmlEditorKit.create(true));
+            setEditorKit(myEditorKit);
+        }
+
+        void setImageLoader(@Nullable AsyncHtmlImageLoader imageLoader) {
+            myEditorKit.setImageLoader(imageLoader);
+            getDocument().putProperty(ResizingHtmlImageView.LOADER_PROPERTY, imageLoader);
         }
 
         @Override
@@ -199,6 +211,7 @@ public class DesktopMessageListImpl extends SwingComponentDelegate<JBScrollPane>
                 case SYSTEM -> UIUtil.getContextHelpForeground();
                 default -> UIUtil.getLabelForeground();
             });
+            body.setImageLoader(myImageLoader);
             body.setText("<html><head><style>" + MessageListMarkdown.styleSheet() + "</style></head><body>"
                 + MessageListMarkdown.toHtml(text, myMarkdown) + "</body></html>");
         }
@@ -298,6 +311,7 @@ public class DesktopMessageListImpl extends SwingComponentDelegate<JBScrollPane>
     private final List<Item> myItems = new ArrayList<>();
     private boolean myMarkdown;
     private boolean myShowOwnAvatar;
+    private @Nullable AsyncHtmlImageLoader myImageLoader;
     private boolean myCompact;
 
     @Override
@@ -414,5 +428,22 @@ public class DesktopMessageListImpl extends SwingComponentDelegate<JBScrollPane>
     @Override
     public boolean isShowOwnAvatar() {
         return myShowOwnAvatar;
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setImageLoader(@Nullable AsyncHtmlImageLoader imageLoader) {
+        if (myImageLoader == imageLoader) {
+            return;
+        }
+        myImageLoader = imageLoader;
+        for (Item item : myItems) {
+            item.updateBody();
+        }
+    }
+
+    @Override
+    public @Nullable AsyncHtmlImageLoader getImageLoader() {
+        return myImageLoader;
     }
 }

@@ -21,4 +21,7 @@ package consulo.ui;
  */
 public interface HasComponentStyle<S extends ComponentStyle> extends Component {
     void addStyle(S style);
+
+    default void removeStyle(S style) {
+    }
 }

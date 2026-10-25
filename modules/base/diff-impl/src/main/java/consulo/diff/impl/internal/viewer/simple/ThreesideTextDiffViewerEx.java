@@ -107,6 +107,15 @@ public abstract class ThreesideTextDiffViewerEx extends ThreesideTextDiffViewer 
     // Diff
     //
 
+    @Override
+    public @Nullable PrevNextDifferenceIterable getDifferenceIterable() {
+        return myPrevNextDifferenceIterable;
+    }
+
+    public FoldingModelSupport getFoldingModel() {
+        return myFoldingModel;
+    }
+
     public FoldingModelSupport.Settings getFoldingModelSettings() {
         return TextDiffViewerUtil.getFoldingModelSettings(myContext);
     }

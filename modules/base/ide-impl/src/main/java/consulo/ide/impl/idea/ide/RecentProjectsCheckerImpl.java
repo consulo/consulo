@@ -38,7 +38,7 @@ import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.platform.Platform;
 import consulo.project.RecentProjectsBranchesProvider;
 import consulo.project.internal.RecentProjectsChecker;
-import consulo.project.internal.RecentProjectsManager;
+import consulo.project.RecentProjectsManager;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.event.ApplicationActivationListener;
 import jakarta.inject.Inject;

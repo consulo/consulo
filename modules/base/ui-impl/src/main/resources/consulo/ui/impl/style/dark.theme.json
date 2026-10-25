@@ -108,6 +108,12 @@
         "selectedBorder": "#548af7"
       }
     },
+    "VersionControl": {
+      "RefLabel": {
+        "foreground": "#909090",
+        "backgroundBase": "#ffffff"
+      }
+    },
     "Vcs": {
       "incomingForeground": "#548af7",
       "outgoingForeground": "#57965c"

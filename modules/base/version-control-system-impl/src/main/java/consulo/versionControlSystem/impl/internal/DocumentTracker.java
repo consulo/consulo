@@ -35,6 +35,7 @@ import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.PeekableIteratorWrapper;
 import consulo.util.lang.StringUtil;
+import consulo.versionControlSystem.util.RangesBuilder;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;

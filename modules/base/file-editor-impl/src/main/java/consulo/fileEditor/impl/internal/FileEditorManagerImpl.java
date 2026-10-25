@@ -674,6 +674,10 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
             wndToOpenIn = splitters.getOrCreateCurrentWindow(file);
         }
 
+        if (forbidSplitFor(file) && !wndToOpenIn.isFileOpen(file)) {
+            closeFile(file);
+        }
+
         UIAccess uiAccess = UIAccess.current();
         openAssociatedFile(uiAccess, file, wndToOpenIn, splitters);
         return openFileImpl2(uiAccess, wndToOpenIn, file, focusEditor);
@@ -714,6 +718,9 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         }
         assertDispatchThread();
 
+        if (forbidSplitFor(file) && !window.isFileOpen(file)) {
+            closeFile(file);
+        }
         return openFileImpl2(UIAccess.get(), window, file, focusEditor);
     }
 

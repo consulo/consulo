@@ -16,8 +16,11 @@
 package consulo.it.internal.ui;
 
 import consulo.ui.Component;
+import consulo.ui.Point2D;
+import consulo.ui.Rectangle2D;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.internal.ScrollableLayoutInternal;
 import consulo.ui.layout.LayoutConstraint;
-import consulo.ui.layout.ScrollableLayout;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -25,10 +28,40 @@ import org.jspecify.annotations.Nullable;
  *
  * @author VISTALL
  */
-public class HeadlessScrollableLayout extends HeadlessLayoutBase<LayoutConstraint> implements ScrollableLayout {
+public class HeadlessScrollableLayout extends HeadlessLayoutBase<LayoutConstraint> implements ScrollableLayoutInternal {
+    private Rectangle2D myViewRect = new Rectangle2D(0, 0);
+
     public HeadlessScrollableLayout(@Nullable Component component) {
         if (component != null) {
             add(component, LayoutConstraint.NONE);
         }
+    }
+
+    @RequiredUIAccess
+    @Override
+    public Rectangle2D getViewRect() {
+        return myViewRect;
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void scrollTo(Point2D position) {
+        myViewRect = new Rectangle2D(position, myViewRect.size());
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setBoundsTracked(Component descendant, boolean tracked) {
+    }
+
+    @RequiredUIAccess
+    @Override
+    public @Nullable Rectangle2D getBounds(Component descendant) {
+        return null;
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setTopOverlay(@Nullable Component overlay) {
     }
 }

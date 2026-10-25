@@ -23,7 +23,7 @@ import consulo.project.Project;
 import consulo.project.ProjectOpenContext;
 import consulo.project.impl.internal.ProjectImplUtil;
 import consulo.project.ProjectManager;
-import consulo.project.internal.RecentProjectsManager;
+import consulo.project.RecentProjectsManager;
 import consulo.project.localize.ProjectLocalize;
 import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.wm.IdeFrame;

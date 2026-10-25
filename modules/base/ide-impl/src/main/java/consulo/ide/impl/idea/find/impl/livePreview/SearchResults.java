@@ -483,7 +483,7 @@ public class SearchResults implements DocumentListener, CaretListener {
         return firstOccurrenceAfterCaret();
     }
 
-    private @Nullable FindResult getOccurrenceAtCaret() {
+    public @Nullable FindResult getOccurrenceAtCaret() {
         int offset = getEditor().getCaretModel().getOffset();
         for (FindResult occurrence : myOccurrences) {
             if (offset <= occurrence.getEndOffset() && offset >= occurrence.getStartOffset()) {
@@ -521,7 +521,7 @@ public class SearchResults implements DocumentListener, CaretListener {
         return visibleArea.contains(point);
     }
 
-    private @Nullable FindResult firstOccurrenceBeforeCaret() {
+    public @Nullable FindResult firstOccurrenceBeforeCaret() {
         int offset = getEditor().getCaretModel().getOffset();
         return firstOccurrenceBeforeOffset(offset);
     }
@@ -535,7 +535,7 @@ public class SearchResults implements DocumentListener, CaretListener {
         return null;
     }
 
-    private @Nullable FindResult firstOccurrenceAfterCaret() {
+    public @Nullable FindResult firstOccurrenceAfterCaret() {
         int caret = myEditor.getCaretModel().getOffset();
         return firstOccurrenceAfterOffset(caret);
     }

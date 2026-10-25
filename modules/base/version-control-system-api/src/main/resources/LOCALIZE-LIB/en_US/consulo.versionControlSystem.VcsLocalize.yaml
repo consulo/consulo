@@ -327,6 +327,10 @@ changelist.details.title:
     text: Changelist Details
 changes.action.group.by.directory.text:
     text: Directory
+changes.action.group.by.module.text:
+    text: Module
+changes.action.group.by.repository.text:
+    text: Repository
 changes.action.group.by.separator:
     text: Group By
 changes.action.rollback.custom.title:
@@ -1678,3 +1682,13 @@ version.control.main.configurable.name:
     text: Version Control
 waiting.changelists.update.for.show.commit.dialog.message:
     text: Commit dialog
+changes.combined.diff:
+    text: Combined Changes Diff
+action.show.combined.diff.text:
+    text: Show Combined Diff
+action.show.combined.diff.description:
+    text: Show diff for all selected changes in one place
+vcs.commit.notification.share.project.on:
+    text: Share Project on {0}
+vcs.commit.notification.share.project.or.on:
+    text: On {0}

@@ -78,12 +78,12 @@ public class HubAuthorizeType implements AccountAuthorizeType<HubCredentials> {
     }
 
     @Override
-    public String serialize(HubCredentials credentials) {
+    public String serialize(HubCredentials credentials, AccountAuthorizeConfig config) {
         return credentials.userName() + SEPARATOR + credentials.token();
     }
 
     @Override
-    public HubCredentials deserialize(String value) {
+    public HubCredentials deserialize(String value, AccountAuthorizeConfig config) {
         int index = value.indexOf(SEPARATOR);
         return index < 0 ? new HubCredentials("", value) : new HubCredentials(value.substring(0, index), value.substring(index + 1));
     }

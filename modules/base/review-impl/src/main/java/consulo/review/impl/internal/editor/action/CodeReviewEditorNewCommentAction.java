@@ -53,9 +53,9 @@ public class CodeReviewEditorNewCommentAction extends DumbAwareAction implements
 
     @Override
     public Coroutine<?, ?> updateAsync(AnActionEvent e) {
-        return Coroutine.first(UIAction.<Object, Object>apply(o -> {
+        return Coroutine.first(UIAction.<Object, Boolean>apply(o -> {
             updateOnUIThread(e);
-            return null;
+            return true;
         }));
     }
 

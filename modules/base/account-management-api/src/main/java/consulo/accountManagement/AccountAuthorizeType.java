@@ -36,6 +36,10 @@ public interface AccountAuthorizeType<C extends AccountCredentials> {
 
     LocalizeValue getName();
 
+    default LocalizeValue getAuthorizeActionText() {
+        return LocalizeValue.empty();
+    }
+
     default String getCredentialSourceId() {
         return PASSWORD_SAFE_SOURCE;
     }
@@ -43,9 +47,9 @@ public interface AccountAuthorizeType<C extends AccountCredentials> {
     @RequiredUIAccess
     AccountAuthorizeForm<C> createForm(AccountAuthorizeContext context);
 
-    String serialize(C credentials);
+    String serialize(C credentials, AccountAuthorizeConfig config);
 
-    C deserialize(String value);
+    C deserialize(String value, AccountAuthorizeConfig config);
 
     @Nullable
     default String getUserName(C credentials) {

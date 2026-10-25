@@ -23,6 +23,7 @@ import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * FIXME need reorganize it
@@ -142,6 +143,10 @@ public class PathKt {
 
   // https://github.com/parshap/node-sanitize-filename/blob/master/index.js
   public static String sanitizeFileName(String name, String replacement, boolean isTruncate) {
+    return sanitizeFileName(name, replacement, isTruncate, null);
+  }
+
+  public static String sanitizeFileName(String name, String replacement, boolean isTruncate, @Nullable Predicate<Character> extraIllegalChars) {
     StringBuilder result = null;
     int last = 0;
     int lenght = name.length();
@@ -149,7 +154,7 @@ public class PathKt {
     for (int i = 0; i < lenght; i++) {
       char c = name.charAt(i);
 
-      if (!illegalChars.contains(c) && !Character.isISOControl(c)) {
+      if (!illegalChars.contains(c) && !Character.isISOControl(c) && (extraIllegalChars == null || !extraIllegalChars.test(c))) {
         continue;
       }
 

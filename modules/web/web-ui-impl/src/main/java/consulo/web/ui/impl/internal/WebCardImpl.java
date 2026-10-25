@@ -74,6 +74,20 @@ public class WebCardImpl extends WebLayoutImpl<WebCardImpl.Vaadin, LayoutConstra
             case COVER_MEDIA -> toVaadinComponent().addThemeVariants(CardVariant.COVER_MEDIA);
             // the room the desktop cards keep when compact - Space.MEDIUM
             case COMPACT -> toVaadinComponent().getStyle().set("--vaadin-card-padding", "6px");
+            case SELECTED -> toVaadinComponent().getElement().getClassList().add("consulo-card-selected");
+        }
+    }
+
+    @Override
+    public void removeStyle(CardStyle style) {
+        switch (style) {
+            case ELEVATED -> toVaadinComponent().removeThemeVariants(CardVariant.ELEVATED);
+            case OUTLINED -> toVaadinComponent().removeThemeVariants(CardVariant.OUTLINED);
+            case HORIZONTAL -> toVaadinComponent().removeThemeVariants(CardVariant.HORIZONTAL);
+            case STRETCH_MEDIA -> toVaadinComponent().removeThemeVariants(CardVariant.STRETCH_MEDIA);
+            case COVER_MEDIA -> toVaadinComponent().removeThemeVariants(CardVariant.COVER_MEDIA);
+            case COMPACT -> toVaadinComponent().getStyle().remove("--vaadin-card-padding");
+            case SELECTED -> toVaadinComponent().getElement().getClassList().remove("consulo-card-selected");
         }
     }
 

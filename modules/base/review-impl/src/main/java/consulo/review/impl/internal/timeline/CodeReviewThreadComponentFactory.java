@@ -64,7 +64,7 @@ public final class CodeReviewThreadComponentFactory {
             }
         }
 
-        MessageList messages = CodeReviewCommentItemFactory.createList();
+        MessageList messages = CodeReviewCommentItemFactory.createList(thread.getHtmlImageLoader());
         if (compact) {
             messages.addStyle(MessageListStyle.COMPACT);
         }

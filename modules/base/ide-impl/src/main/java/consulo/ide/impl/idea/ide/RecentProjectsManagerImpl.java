@@ -42,7 +42,7 @@ import consulo.project.event.ProjectManagerListener;
 import consulo.project.impl.internal.ProjectImplUtil;
 import consulo.project.impl.internal.store.ProjectStoreImpl;
 import consulo.project.internal.RecentProjectsChecker;
-import consulo.project.internal.RecentProjectsManager;
+import consulo.project.RecentProjectsManager;
 import consulo.project.ui.impl.internal.action.SimpleProjectGroupActionGroup;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.IdeFrameState;
@@ -203,6 +203,25 @@ public class RecentProjectsManagerImpl implements RecentProjectsManager, Persist
             for (ProjectGroup group : myState.groups) {
                 group.removeProject(path);
             }
+        }
+    }
+
+    @Override
+    public List<String> getRecentPaths() {
+        synchronized (myStateLock) {
+            return List.copyOf(myState.recentPaths);
+        }
+    }
+
+    @Override
+    public void addRecentPath(String path) {
+        synchronized (myStateLock) {
+            for (String recentPath : myState.recentPaths) {
+                if (Platform.current().fs().isCaseSensitive() ? path.equals(recentPath) : path.equalsIgnoreCase(recentPath)) {
+                    return;
+                }
+            }
+            myState.recentPaths.add(0, path);
         }
     }
 

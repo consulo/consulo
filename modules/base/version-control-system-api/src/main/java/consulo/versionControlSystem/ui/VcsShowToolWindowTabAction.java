@@ -24,8 +24,6 @@ import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.versionControlSystem.internal.ChangesViewContentI;
 import org.jspecify.annotations.Nullable;
 
-import static consulo.util.lang.ObjectUtil.assertNotNull;
-
 public abstract class VcsShowToolWindowTabAction extends LegacyDumbAwareAction {
     protected VcsShowToolWindowTabAction(LocalizeValue text) {
         super(text, text);
@@ -35,17 +33,37 @@ public abstract class VcsShowToolWindowTabAction extends LegacyDumbAwareAction {
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
-        ToolWindow toolWindow = assertNotNull(getToolWindow(project));
-        ChangesViewContentI changesViewContentManager = ChangesViewContentI.getInstance(project);
-        String contentId = getContentId();
+        activateVcsTab(project, getContentId(), true);
+    }
 
-        boolean contentAlreadySelected = changesViewContentManager.isContentSelected(contentId);
-        if (toolWindow.isActive() && contentAlreadySelected) {
-            toolWindow.hide(null);
+    @RequiredUIAccess
+    public static void activateVcsTab(Project project, String contentId, boolean isToggle) {
+        ChangesViewContentI contentManager = ChangesViewContentI.getInstance(project);
+        ToolWindow toolWindow = contentManager.getToolWindowFor(contentId);
+        if (toolWindow == null) {
+            return;
+        }
+
+        boolean isToolWindowActive = toolWindow.isActive();
+        boolean isContentSelected = contentManager.isContentSelected(contentId);
+        Runnable tabSelector = () -> contentManager.selectContent(contentId, true);
+
+        if (isToolWindowActive && isContentSelected) {
+            if (isToggle) {
+                toolWindow.hide(null);
+            }
+            else {
+                tabSelector.run();
+            }
+        }
+        else if (isToolWindowActive) {
+            tabSelector.run();
+        }
+        else if (isContentSelected) {
+            toolWindow.activate(null, true);
         }
         else {
-            Runnable runnable = contentAlreadySelected ? null : () -> changesViewContentManager.selectContent(contentId, true);
-            toolWindow.activate(runnable, true, true);
+            toolWindow.activate(tabSelector, false);
         }
     }
 

@@ -15,6 +15,7 @@
  */
 package consulo.diff.impl.internal.viewer.side;
 
+import consulo.diff.EditorDiffViewer;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.ScrollType;
@@ -50,7 +51,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
-public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditorHolder> {
+public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditorHolder> implements EditorDiffViewer {
     public static final Logger LOG = Logger.getInstance(TwosideTextDiffViewer.class);
 
     private final List<? extends EditorEx> myEditableEditors;
@@ -222,7 +223,7 @@ public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditor
     //
 
     @RequiredUIAccess
-    protected LineCol transferPosition(Side baseSide, LineCol position) {
+    public LineCol transferPosition(Side baseSide, LineCol position) {
         return new LineCol(transferLine(baseSide, position.line()), position.column());
     }
 
@@ -232,7 +233,7 @@ public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditor
     }
 
     @RequiredUIAccess
-    protected void scrollToLine(Side side, int line) {
+    public void scrollToLine(Side side, int line) {
         DiffImplUtil.scrollEditor(getEditor(side), line, false);
         setCurrentSide(side);
     }
@@ -243,7 +244,7 @@ public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditor
 
     @Override
     @RequiredUIAccess
-    protected @Nullable Navigatable getNavigatable() {
+    public @Nullable Navigatable getNavigatable() {
         Side side = getCurrentSide();
 
         LineCol position = LineCol.fromCaret(getEditor(side));

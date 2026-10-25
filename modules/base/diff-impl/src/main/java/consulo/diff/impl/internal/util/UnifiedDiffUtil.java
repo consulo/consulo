@@ -43,6 +43,7 @@ import consulo.diff.content.DocumentContent;
 import consulo.diff.content.EmptyContent;
 import consulo.diff.impl.internal.viewer.TextDiffViewerUtil;
 import consulo.diff.internal.DiffImplUtil;
+import consulo.diff.internal.DiffUserDataKeysEx;
 import consulo.diff.localize.DiffLocalize;
 import consulo.diff.request.ContentDiffRequest;
 import consulo.diff.request.DiffRequest;
@@ -141,9 +142,10 @@ public final class UnifiedDiffUtil {
             return Collections.nCopies(titles.size(), null);
         }
 
+        boolean needCreateTitle = !DiffImplUtil.isUserDataFlagSet(DiffUserDataKeysEx.EDITORS_HIDE_TITLE, request);
         List<@Nullable Component> components = new ArrayList<>(titles.size());
         for (int i = 0; i < contents.size(); i++) {
-            Component title = createTitle(StringUtil.notNullize(titles.get(i)));
+            @Nullable Component title = needCreateTitle ? createTitle(StringUtil.notNullize(titles.get(i))) : null;
             components.add(createTitleWithNotifications(title, contents.get(i)));
         }
 
@@ -162,10 +164,12 @@ public final class UnifiedDiffUtil {
             return Collections.nCopies(titles.size(), null);
         }
 
+        boolean needCreateTitle = !DiffImplUtil.isUserDataFlagSet(DiffUserDataKeysEx.EDITORS_HIDE_TITLE, request);
         List<@Nullable Component> result = new ArrayList<>(contents.size());
         for (int i = 0; i < contents.size(); i++) {
-            Component title =
-                createTitle(StringUtil.notNullize(titles.get(i)), contents.get(i), equalCharsets, equalSeparators, editors.get(i));
+            @Nullable Component title = needCreateTitle
+                ? createTitle(StringUtil.notNullize(titles.get(i)), contents.get(i), equalCharsets, equalSeparators, editors.get(i))
+                : null;
             result.add(createTitleWithNotifications(title, contents.get(i)));
         }
 

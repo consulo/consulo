@@ -18,7 +18,10 @@ package consulo.versionControlSystem.change;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UnprotectedUserDataHolder;
 import consulo.util.dataholder.UserDataHolder;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
+
+import java.util.Set;
 
 /**
  * Contains specific commit data used in the commit flow.
@@ -34,6 +37,7 @@ import org.jspecify.annotations.Nullable;
  */
 public class CommitContext extends UnprotectedUserDataHolder implements UserDataHolder {
     private static final Key<UserDataHolder> COMMIT_EXECUTOR_PROPERTY_MAP = Key.create("Vcs.Commit.ExecutorPropertyMap");
+    private static final Key<Set<VirtualFile>> FRESH_UNHOSTED_ROOTS_KEY = Key.create("Git.Commit.FreshUnhostedRoots");
 
     public CommitContext() {
     }
@@ -55,6 +59,17 @@ public class CommitContext extends UnprotectedUserDataHolder implements UserData
             putUserData(COMMIT_EXECUTOR_PROPERTY_MAP, map);
         }
         map.putUserData(key, value);
+    }
+
+    /**
+     * Roots of repositories without a remote that get their first commit - the commit result offers to share them.
+     */
+    public @Nullable Set<VirtualFile> getFreshUnhostedRoots() {
+        return getUserData(FRESH_UNHOSTED_ROOTS_KEY);
+    }
+
+    public void setFreshUnhostedRoots(@Nullable Set<VirtualFile> roots) {
+        putUserData(FRESH_UNHOSTED_ROOTS_KEY, roots);
     }
 
     public void cleanExecutorProperties() {

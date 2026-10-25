@@ -127,6 +127,14 @@ public class TextDiffSettingsHolder implements PersistentStateComponent<TextDiff
             PLACE_SETTINGS.SHOW_INDENT_LINES = state;
         }
 
+        public boolean isEnableAligningChangesMode() {
+            return SHARED_SETTINGS.ENABLE_ALIGNING_CHANGES_MODE;
+        }
+
+        public void setEnableAligningChangesMode(boolean state) {
+            SHARED_SETTINGS.ENABLE_ALIGNING_CHANGES_MODE = state;
+        }
+
         public boolean isUseSoftWraps() {
             return PLACE_SETTINGS.USE_SOFT_WRAPS;
         }

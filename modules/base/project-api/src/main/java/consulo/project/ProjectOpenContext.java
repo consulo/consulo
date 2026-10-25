@@ -25,4 +25,5 @@ import consulo.util.dataholder.UnprotectedUserDataHolder;
 public class ProjectOpenContext extends UnprotectedUserDataHolder {
     public static final Key<Boolean> FORCE_OPEN_IN_NEW_FRAME = Key.create("ProjectOpenContext#FORCE_OPEN_IN_NEW_FRAME");
     public static final Key<Project> ACTIVE_PROJECT = Key.create("ProjectOpenContext#ACTIVE_PROJECT");
+    public static final Key<Boolean> ASK_OPEN_IN_NEW_FRAME = Key.create("ProjectOpenContext#ASK_OPEN_IN_NEW_FRAME");
 }

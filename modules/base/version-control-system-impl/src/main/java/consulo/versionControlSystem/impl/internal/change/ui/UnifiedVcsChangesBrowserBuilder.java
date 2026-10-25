@@ -29,6 +29,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -44,6 +45,8 @@ public class UnifiedVcsChangesBrowserBuilder implements VcsChangesBrowserBuilder
     private @Nullable BiConsumer<Change, TextItemPresentation> myChangeDecorator;
     private @Nullable Consumer<Change> myOpenHandler;
     private @Nullable ActionGroup myViewOptions;
+    private @Nullable Set<String> myGroupingKeys;
+    private @Nullable Consumer<Set<String>> myGroupingListener;
 
     public UnifiedVcsChangesBrowserBuilder(Project project) {
         myProject = project;
@@ -68,6 +71,13 @@ public class UnifiedVcsChangesBrowserBuilder implements VcsChangesBrowserBuilder
     }
 
     @Override
+    public VcsChangesBrowserBuilder grouping(Set<String> groupingKeys, Consumer<Set<String>> groupingListener) {
+        myGroupingKeys = Set.copyOf(groupingKeys);
+        myGroupingListener = groupingListener;
+        return this;
+    }
+
+    @Override
     public VcsChangesBrowserBuilder withRollback() {
         myWithRollback = true;
         return this;
@@ -88,7 +98,7 @@ public class UnifiedVcsChangesBrowserBuilder implements VcsChangesBrowserBuilder
     @RequiredUIAccess
     @Override
     public VcsChangesBrowser build(Disposable parentDisposable) {
-        return new UnifiedVcsChangesBrowser(myProject,
+        UnifiedVcsChangesBrowser browser = new UnifiedVcsChangesBrowser(myProject,
             myEmptyText,
             List.copyOf(myToolbarActions),
             myViewOptions,
@@ -96,5 +106,9 @@ public class UnifiedVcsChangesBrowserBuilder implements VcsChangesBrowserBuilder
             myChangeDecorator,
             myOpenHandler,
             parentDisposable);
+        if (myGroupingKeys != null && myGroupingListener != null) {
+            browser.setGrouping(myGroupingKeys, myGroupingListener);
+        }
+        return browser;
     }
 }

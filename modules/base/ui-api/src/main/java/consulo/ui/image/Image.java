@@ -19,12 +19,15 @@ import consulo.annotation.DeprecationInfo;
 import consulo.ui.Size2D;
 import consulo.ui.internal.UIInternal;
 
+import org.jspecify.annotations.Nullable;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -136,6 +139,17 @@ public interface Image {
 
     static <S> Image stated(ImageState<S> state, Function<S, Image> funcCall) {
         return UIInternal.get()._Image_stated(state, funcCall);
+    }
+
+    /**
+     * Provide a way to show an image loaded in background.
+     * <p>
+     * The size is taken from {@code base}, which is shown until the loaded image is there; the loader should give an
+     * image of that size. It is asked once, the first time the image is shown, off the UI thread. A failed or
+     * {@code null} answer keeps {@code base}. Every place the image is shown in picks the loaded one up by itself.
+     */
+    static Image async(Image base, Supplier<? extends CompletableFuture<? extends @Nullable Image>> loader) {
+        return UIInternal.get()._Image_async(base, loader);
     }
 
     /**

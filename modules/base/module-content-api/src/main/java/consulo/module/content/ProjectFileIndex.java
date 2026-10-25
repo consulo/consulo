@@ -15,6 +15,7 @@
  */
 package consulo.module.content;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.content.FileIndex;
@@ -192,6 +193,13 @@ public interface ProjectFileIndex extends FileIndex {
    * @return true if <code>file</code> is excluded or ignored, false otherwise.
    */
   boolean isExcluded(VirtualFile file);
+
+  /**
+   * Returns {@code true} if {@code file} is located under project content or library roots, regardless of whether it's marked as excluded or not,
+   * and returns {@code false} if {@code file} is located outside or it or one of its parent directories is ignored.
+   */
+  @RequiredReadAction
+  boolean isInProjectOrExcluded(VirtualFile file);
 
   /**
    * Checks if the specified file or directory is located under project roots but the file itself or one of its parent directories is ignored

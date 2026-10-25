@@ -19,6 +19,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.concurrent.ApplicationConcurrency;
+import consulo.application.util.ListSelection;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.project.Project;
@@ -35,8 +36,10 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ScheduledExecutorService;
 
 /**
@@ -57,6 +60,8 @@ public class SandReviewService {
     private final Project myProject;
     private final Disposable myDisposable;
     private final ScheduledExecutorService myScheduler;
+    private final String mySessionId = UUID.randomUUID().toString();
+    private final Map<String, SandReviewDiffProcessorViewModel> myDiffVms = new HashMap<>();
     private final List<SandReviewViewModel> myReviews;
     private final SandReviewToolwindowViewModel myToolwindowVm;
     private final MutableObservableValue<Integer> myThreadsModificationCount = MutableObservableValue.of(0);
@@ -102,6 +107,22 @@ public class SandReviewService {
                 return;
             }
         }
+    }
+
+    public synchronized SandReviewDiffProcessorViewModel getDiffVm(String reviewNumber) {
+        return myDiffVms.computeIfAbsent(reviewNumber, number -> {
+            SandReviewDiffProcessorViewModel diffVm = new SandReviewDiffProcessorViewModel(myProject, this, myDisposable);
+            diffVm.showChanges(ListSelection.createAt(SandReviewChangesViewModel.summaryChanges(myProject), 0));
+            return diffVm;
+        });
+    }
+
+    public SandReviewDiffVirtualFile getDiffFile(String reviewNumber) {
+        return getDiffFile(reviewNumber, mySessionId);
+    }
+
+    public SandReviewDiffVirtualFile getDiffFile(String reviewNumber, String sessionId) {
+        return new SandReviewDiffVirtualFile(sessionId, myProject, reviewNumber);
     }
 
     public Project getProject() {
@@ -166,7 +187,7 @@ public class SandReviewService {
                     new SandReviewComment(CURRENT_USER, "Yes, same as the mutable value did before.", now.minus(Duration.ofHours(4)))
                 )),
                 new SandReviewThreadViewModel(project, disposable, "42-2", DEMO_FILE_NAME, 8, 8, scheduler, support, List.of(
-                    new SandReviewComment(REVIEWER, "**Nit:** keep the javadoc of the api.",
+                    new SandReviewComment(REVIEWER, "**Nit:** keep the javadoc of the api.\n\n![flow](" + SandReviewImages.DIAGRAM + ")",
                         now.minus(Duration.ofHours(3)))
                 )),
                 new SandReviewThreadViewModel(project, disposable, "42-3", DEMO_FILE_NAME, 13, 13, scheduler, support, List.of(

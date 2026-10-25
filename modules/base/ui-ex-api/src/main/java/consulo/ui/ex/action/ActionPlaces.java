@@ -133,6 +133,7 @@ public abstract class ActionPlaces {
     public static final String PHING_MESSAGES_TOOLBAR = "PhingMessagesToolbar";
 
     public static final String DIFF_TOOLBAR = "DiffPopup";
+    public static final String DIFF_RIGHT_TOOLBAR = "DiffRightToolbar";
     public static final String CHANGES_LOCAL_DIFF_SETTINGS = "CHANGES_LOCAL_DIFF_SETTINGS";
     public static final String INTENTION_MENU = "IntentionMenu";
 

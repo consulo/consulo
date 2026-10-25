@@ -96,12 +96,12 @@ public class BasicAccountAuthorizeType implements AccountAuthorizeType<BasicCred
     }
 
     @Override
-    public String serialize(BasicCredentials credentials) {
+    public String serialize(BasicCredentials credentials, AccountAuthorizeConfig config) {
         return credentials.userName() + SEPARATOR + credentials.password();
     }
 
     @Override
-    public BasicCredentials deserialize(String value) {
+    public BasicCredentials deserialize(String value, AccountAuthorizeConfig config) {
         int index = value.indexOf(SEPARATOR);
         return index < 0 ? new BasicCredentials(value, "") : new BasicCredentials(value.substring(0, index), value.substring(index + 1));
     }

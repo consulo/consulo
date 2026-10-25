@@ -120,6 +120,8 @@ public final class StyleColorKeys {
 
         ourKeys.put(ComponentColors.VCS_INCOMING_FOREGROUND, "Vcs.incomingForeground");
         ourKeys.put(ComponentColors.VCS_OUTGOING_FOREGROUND, "Vcs.outgoingForeground");
+        ourKeys.put(ComponentColors.VCS_REF_LABEL_FOREGROUND, "VersionControl.RefLabel.foreground");
+        ourKeys.put(ComponentColors.VCS_REF_LABEL_BACKGROUND_BASE, "VersionControl.RefLabel.backgroundBase");
 
         ourKeys.put(ComponentColors.REACTION_BACKGROUND, "Review.Reaction.background");
         ourKeys.put(ComponentColors.REACTION_HOVERED_BACKGROUND, "Review.Reaction.hoveredBackground");

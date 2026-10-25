@@ -22,6 +22,8 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.diff.fragment.DiffFragment;
 import consulo.diff.fragment.LineFragment;
 import consulo.diff.fragment.MergeLineFragment;
+import consulo.diff.util.LineOffsets;
+import consulo.diff.util.Range;
 
 import java.util.List;
 
@@ -52,6 +54,30 @@ public interface ComparisonManager {
   List<LineFragment> compareLinesInner(CharSequence text1,
                                        CharSequence text2,
                                        ComparisonPolicy policy,
+                                       ProgressIndicator indicator) throws DiffTooBigException;
+
+  /**
+   * Compare the lines of two texts within {@code boundaryRange} by-line
+   */
+  List<LineFragment> compareLines(Range boundaryRange,
+                                  CharSequence text1,
+                                  CharSequence text2,
+                                  LineOffsets lineOffsets1,
+                                  LineOffsets lineOffsets2,
+                                  ComparisonPolicy policy,
+                                  ProgressIndicator indicator) throws DiffTooBigException;
+
+  /**
+   * Compare the lines of two texts within {@code boundaryRange} by-line and then, if {@code innerFragments}, compare changed
+   * fragments by-word
+   */
+  List<LineFragment> compareLinesInner(Range boundaryRange,
+                                       CharSequence text1,
+                                       CharSequence text2,
+                                       LineOffsets lineOffsets1,
+                                       LineOffsets lineOffsets2,
+                                       ComparisonPolicy policy,
+                                       boolean innerFragments,
                                        ProgressIndicator indicator) throws DiffTooBigException;
 
   

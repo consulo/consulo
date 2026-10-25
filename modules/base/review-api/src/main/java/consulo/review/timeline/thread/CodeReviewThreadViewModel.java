@@ -21,6 +21,7 @@ import consulo.review.timeline.CodeReviewCommentViewModel;
 import consulo.review.timeline.CodeReviewTimelineItem;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.messageList.AsyncHtmlImageLoader;
 import consulo.util.concurrent.coroutine.ObservableValue;
 import org.jspecify.annotations.Nullable;
 
@@ -76,6 +77,13 @@ public interface CodeReviewThreadViewModel extends CodeReviewTimelineItem,
      */
     @RequiredUIAccess
     default @Nullable Component createDiffComponent(Disposable parentDisposable) {
+        return null;
+    }
+
+    /**
+     * Loads the images of the comment bodies, or {@code null} to read them from their addresses as they are.
+     */
+    default @Nullable AsyncHtmlImageLoader getHtmlImageLoader() {
         return null;
     }
 }

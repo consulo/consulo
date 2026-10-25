@@ -159,7 +159,7 @@ public abstract class ThreesideDiffViewer<T extends EditorHolder> extends Listen
   //
 
   @Override
-  protected @Nullable Navigatable getNavigatable() {
+  public @Nullable Navigatable getNavigatable() {
     return getCurrentSide().select(getRequest().getContents()).getNavigatable();
   }
 

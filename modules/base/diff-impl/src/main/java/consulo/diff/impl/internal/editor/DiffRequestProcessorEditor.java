@@ -15,26 +15,37 @@
  */
 package consulo.diff.impl.internal.editor;
 
-import consulo.diff.impl.internal.DiffRequestProcessor;
+import consulo.diff.DiffEditorViewer;
+import consulo.diff.DiffViewerVirtualFile;
 import consulo.diff.localize.DiffLocalize;
 import consulo.disposer.Disposer;
+import consulo.fileEditor.FileEditor;
+import consulo.fileEditor.FileEditorState;
+import consulo.fileEditor.FileEditorStateLevel;
+import consulo.fileEditor.FileEditorManager;
+import consulo.project.Project;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
+
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.function.Predicate;
 
 // from kotlin
 public class DiffRequestProcessorEditor extends FileEditorBase {
-  private final DiffVirtualFile myFile;
-  private final DiffRequestProcessor myProcessor;
+  private final DiffViewerVirtualFile myFile;
+  private final DiffEditorViewer myProcessor;
 
   private boolean myDisposed;
 
-  public DiffRequestProcessorEditor(DiffVirtualFile file, DiffRequestProcessor processor) {
+  public DiffRequestProcessorEditor(DiffViewerVirtualFile file, DiffEditorViewer processor) {
     myFile = file;
     myProcessor = processor;
   }
 
-  public DiffRequestProcessor getProcessor() {
+  public DiffEditorViewer getProcessor() {
     return myProcessor;
   }
 
@@ -55,7 +66,7 @@ public class DiffRequestProcessorEditor extends FileEditorBase {
   @Override
   @RequiredUIAccess
   public void selectNotify() {
-    myProcessor.updateRequest();
+    myProcessor.fireProcessorActivated();
   }
 
   @Override
@@ -64,17 +75,48 @@ public class DiffRequestProcessorEditor extends FileEditorBase {
   }
 
   @Override
+  public FileEditorState getState(FileEditorStateLevel level) {
+    return myProcessor.getState(level);
+  }
+
+  @Override
+  @RequiredUIAccess
+  public void setState(FileEditorState state) {
+    myProcessor.setState(state);
+  }
+
+  @Override
   public @Nullable Component getPreferredFocusedUIComponent() {
     return myProcessor.getPreferredFocusedComponent();
   }
 
   @Override
-  public @Nullable DiffVirtualFile getFile() {
+  public @Nullable DiffViewerVirtualFile getFile() {
     return myFile;
   }
 
   @Override
   public String getName() {
     return DiffLocalize.diffFileEditorName().get();
+  }
+
+  @RequiredUIAccess
+  public static void reloadDiffEditorsForFiles(Project project, Predicate<VirtualFile> condition) {
+    FileEditorManager editorManager = FileEditorManager.getInstance(project);
+    Set<VirtualFile> diffFiles = new LinkedHashSet<>();
+    for (FileEditor editor : editorManager.getAllEditors()) {
+      if (editor instanceof DiffRequestProcessorEditor) {
+        VirtualFile file = editor.getFile();
+        if (file != null && condition.test(file)) {
+          diffFiles.add(file);
+        }
+      }
+    }
+
+    Set<VirtualFile> selected = Set.of(editorManager.getSelectedFiles());
+    for (VirtualFile file : diffFiles) {
+      editorManager.closeFile(file);
+      editorManager.openFile(file, selected.contains(file));
+    }
   }
 }

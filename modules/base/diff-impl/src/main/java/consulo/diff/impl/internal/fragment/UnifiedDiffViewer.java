@@ -15,6 +15,7 @@
  */
 package consulo.diff.impl.internal.fragment;
 
+import consulo.diff.EditorDiffViewer;
 import consulo.ui.Component;
 import com.uber.nullaway.annotations.Contract;
 import consulo.annotation.access.RequiredWriteAction;
@@ -89,7 +90,7 @@ import java.util.function.IntUnaryOperator;
 
 import static consulo.diff.internal.DiffImplUtil.getLinesContent;
 
-public class UnifiedDiffViewer extends ListenerDiffViewerBase {
+public class UnifiedDiffViewer extends ListenerDiffViewerBase implements EditorDiffViewer {
     public static final Logger LOG = Logger.getInstance(UnifiedDiffViewer.class);
 
     protected final EditorEx myEditor;
@@ -551,6 +552,26 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
         return side.isLeft() ? lineConverter.convertApproximateInv1(line) : lineConverter.convertApproximateInv2(line);
     }
 
+    @RequiredUIAccess
+    public void scrollToLine(Side side, int line) {
+        int onesideLine = transferLineToOneside(side, line);
+        DiffImplUtil.scrollEditor(myEditor, onesideLine, 0, false);
+    }
+
+    @RequiredUIAccess
+    public boolean scrollToChange(ScrollToPolicy scrollToChangePolicy) {
+        if (myChangedBlockData == null) {
+            return false;
+        }
+        UnifiedDiffChange targetChange = scrollToChangePolicy.select(myChangedBlockData.getDiffChanges());
+        if (targetChange == null) {
+            return false;
+        }
+
+        DiffImplUtil.scrollEditor(myEditor, targetChange.getLine1(), false);
+        return true;
+    }
+
     /*
      * This converter returns 'good enough' position, even if exact matching is impossible
      */
@@ -888,6 +909,10 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
         return TextDiffViewerUtil.getTextSettings(myContext);
     }
 
+    public FoldingModelSupport getFoldingModel() {
+        return myFoldingModel;
+    }
+
     public FoldingModelSupport.Settings getFoldingModelSettings() {
         return TextDiffViewerUtil.getFoldingModelSettings(myContext);
     }
@@ -924,7 +949,13 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
         return myEditor;
     }
 
-    protected List<? extends EditorEx> getEditors() {
+    @Override
+    public @Nullable PrevNextDifferenceIterable getDifferenceIterable() {
+        return myPrevNextDifferenceIterable;
+    }
+
+    @Override
+    public List<? extends EditorEx> getEditors() {
         return Collections.singletonList(myEditor);
     }
 
@@ -989,7 +1020,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
 
     @Override
     @RequiredUIAccess
-    protected @Nullable Navigatable getNavigatable() {
+    public @Nullable Navigatable getNavigatable() {
         return getNavigatable(myEditor.getCaretModel().getOffset());
     }
 

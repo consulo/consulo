@@ -21,4 +21,5 @@ import com.dslplatform.json.CompiledJson;
 public class DiffSharedSettings {
     public boolean GO_TO_NEXT_FILE_ON_NEXT_DIFFERENCE = true;
     public boolean SHOW_DIFF_IN_EDITOR_SETTING = true;
+    public boolean COMBINED_DIFF_ENABLED = true;
 }

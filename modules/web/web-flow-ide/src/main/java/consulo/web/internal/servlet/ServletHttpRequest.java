@@ -22,6 +22,9 @@ import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author VISTALL
@@ -89,6 +92,13 @@ final class ServletHttpRequest implements HttpRequest {
     @Override
     public @Nullable String getParameterValue(String parameter) {
         return myRequest.getParameter(parameter);
+    }
+
+    @Override
+    public Map<String, List<String>> getParameters() {
+        Map<String, List<String>> parameters = new LinkedHashMap<>();
+        myRequest.getParameterMap().forEach((name, values) -> parameters.put(name, List.of(values)));
+        return parameters;
     }
 
     @Override

@@ -15,6 +15,7 @@
  */
 package consulo.localHistory.impl.internal;
 
+import consulo.localHistory.ActivityId;
 import consulo.localHistory.impl.internal.change.*;
 import consulo.util.collection.Lists;
 import consulo.util.collection.SmartList;
@@ -31,6 +32,7 @@ import java.util.function.Supplier;
 public class ChangeSet {
   private final long myId;
   private @Nullable String myName;
+  private @Nullable ActivityId myActivityId = null;
   private final long myTimestamp;
   private final List<Change> myChanges;
 
@@ -46,6 +48,7 @@ public class ChangeSet {
     myId = in.readLong();
     myName = StreamUtil.readStringOrNull(in);
     myTimestamp = in.readLong();
+    myActivityId = readActivityId(in);
 
     int count = in.readInt();
     List<Change> changes = new ArrayList<>(count);
@@ -60,6 +63,7 @@ public class ChangeSet {
     out.writeLong(myId);
     StreamUtil.writeStringOrNull(out, myName);
     out.writeLong(myTimestamp);
+    writeActivityId(out, myActivityId);
 
     out.writeInt(myChanges.size());
     for (Change c : myChanges) {
@@ -73,6 +77,14 @@ public class ChangeSet {
 
   public @Nullable String getName() {
     return myName;
+  }
+
+  public void setActivityId(@Nullable ActivityId activityId) {
+    myActivityId = activityId;
+  }
+
+  public @Nullable ActivityId getActivityId() {
+    return myActivityId;
   }
 
   public long getTimestamp() {
@@ -237,5 +249,17 @@ public class ChangeSet {
       func.run();
       return null;
     });
+  }
+
+  private static @Nullable ActivityId readActivityId(DataInput in) throws IOException {
+    String kind = StreamUtil.readStringOrNull(in);
+    String provider = StreamUtil.readStringOrNull(in);
+    if (kind == null || provider == null) return null;
+    return new ActivityId(provider, kind);
+  }
+
+  private static void writeActivityId(DataOutput out, @Nullable ActivityId activityId) throws IOException {
+    StreamUtil.writeStringOrNull(out, activityId != null ? activityId.kind() : null);
+    StreamUtil.writeStringOrNull(out, activityId != null ? activityId.providerId() : null);
   }
 }

@@ -33,7 +33,11 @@ public abstract class LocalHistory {
         return Application.get().getInstance(LocalHistory.class);
     }
 
-    public abstract LocalHistoryAction startAction(LocalizeValue name);
+    public LocalHistoryAction startAction(LocalizeValue name) {
+        return startAction(name, null);
+    }
+
+    public abstract LocalHistoryAction startAction(LocalizeValue name, @Nullable ActivityId activityId);
 
     @Deprecated
     @DeprecationInfo("Use variant with LocalizeValue")

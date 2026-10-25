@@ -18,6 +18,7 @@ package consulo.ui.ex.action;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.dataContext.DataContext;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -36,5 +37,19 @@ import java.util.List;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ActionPromoter {
-    List<AnAction> promote(List<AnAction> actions, DataContext context);
+    /**
+     * Override and return the list of actions to promote, the first one wins.
+     * <p>
+     * An action bound to the shortcut that implements this interface is asked too.
+     */
+    default @Nullable List<AnAction> promote(List<AnAction> actions, DataContext context) {
+        return null;
+    }
+
+    /**
+     * Override and return the list of actions to remove from processing.
+     */
+    default @Nullable List<AnAction> suppress(List<AnAction> actions, DataContext context) {
+        return null;
+    }
 }

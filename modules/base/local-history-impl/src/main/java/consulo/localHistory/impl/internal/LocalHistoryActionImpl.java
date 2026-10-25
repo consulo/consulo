@@ -15,15 +15,19 @@
  */
 package consulo.localHistory.impl.internal;
 
+import consulo.localHistory.ActivityId;
 import consulo.localHistory.LocalHistoryAction;
 import consulo.localize.LocalizeValue;
+import org.jspecify.annotations.Nullable;
 
 public class LocalHistoryActionImpl implements LocalHistoryAction {
   private final LocalizeValue myName;
+  private final @Nullable ActivityId myActivityId;
   private final LocalHistoryEventDispatcher myDispatcher;
 
-  public LocalHistoryActionImpl(LocalHistoryEventDispatcher l, LocalizeValue name) {
+  public LocalHistoryActionImpl(LocalHistoryEventDispatcher l, LocalizeValue name, @Nullable ActivityId activityId) {
     myName = name;
+    myActivityId = activityId;
     myDispatcher = l;
   }
 
@@ -32,6 +36,6 @@ public class LocalHistoryActionImpl implements LocalHistoryAction {
   }
 
   public void finish() {
-    myDispatcher.finishAction(myName);
+    myDispatcher.finishAction(myName, myActivityId);
   }
 }

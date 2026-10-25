@@ -33,6 +33,7 @@ import consulo.versionControlSystem.impl.internal.change.ChangeListManagerImpl;
 import consulo.versionControlSystem.internal.LineStatusTrackerI;
 import consulo.versionControlSystem.internal.LineStatusTrackerManagerI;
 import consulo.versionControlSystem.internal.VcsRange;
+import consulo.versionControlSystem.util.RangesBuilder;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;

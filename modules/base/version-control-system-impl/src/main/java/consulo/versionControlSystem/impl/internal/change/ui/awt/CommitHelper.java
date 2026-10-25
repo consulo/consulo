@@ -21,16 +21,19 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
 import consulo.application.util.Semaphore;
+import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.localHistory.LocalHistory;
 import consulo.localHistory.LocalHistoryAction;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationService;
 import consulo.project.ui.notification.NotificationType;
 import consulo.project.util.WaitForProgressToShow;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.util.dataholder.Key;
@@ -44,14 +47,18 @@ import consulo.versionControlSystem.impl.internal.change.action.MoveChangesToAno
 import consulo.versionControlSystem.impl.internal.change.commited.CommittedChangesCache;
 import consulo.versionControlSystem.impl.internal.ui.awt.ConfirmationDialog;
 import consulo.versionControlSystem.localize.VcsLocalize;
+import consulo.versionControlSystem.ui.ShareProjectActionProvider;
 import consulo.versionControlSystem.ui.VcsBalloonProblemNotifier;
 import consulo.versionControlSystem.update.RefreshVFsSynchronously;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
 public class CommitHelper {
@@ -226,11 +233,48 @@ public class CommitHelper {
             content.append(s);
         }
         NotificationType notificationType = resolveNotificationType(processor);
-        NotificationService.getInstance()
+        Notification.Builder builder = NotificationService.getInstance()
             .newOfType(VcsBalloonProblemNotifier.NOTIFICATION_GROUP, notificationType)
-            .content(LocalizeValue.of(content.toString()))
-            .notify(myProject);
+            .content(LocalizeValue.of(content.toString()));
+        if (doesntContainErrors(processor.getVcsExceptions())) {
+            addShareProjectActions(builder);
+        }
+        new CommitNotification(builder).expirePreviousAndNotify(myProject);
         return text;
+    }
+
+    private void addShareProjectActions(Notification.Builder builder) {
+        Set<VirtualFile> freshRoots = myCommitContext.getFreshUnhostedRoots();
+        if (freshRoots == null || freshRoots.size() != 1) {
+            return;
+        }
+        VirtualFile freshRoot = freshRoots.iterator().next();
+
+        AtomicInteger index = new AtomicInteger();
+        myProject.getApplication().getExtensionPoint(ShareProjectActionProvider.class).forEach(provider -> {
+            if (!provider.isApplicableForRoot(myProject, freshRoot)) {
+                return;
+            }
+            LocalizeValue text = index.getAndIncrement() == 0
+                ? VcsLocalize.vcsCommitNotificationShareProjectOn(provider.getHostServiceName())
+                : VcsLocalize.vcsCommitNotificationShareProjectOrOn(provider.getHostServiceName());
+            builder.addAction(text, (AnActionEvent e) -> provider.getAction().actionPerformed(
+                AnActionEvent.createFromDataContext(e.getPlace(), e.getPresentation(), withRoot(e.getDataContext(), freshRoot))
+            ));
+        });
+    }
+
+    private static DataContext withRoot(DataContext parent, VirtualFile root) {
+        return new DataContext() {
+            @Override
+            @SuppressWarnings("unchecked")
+            public <T> @Nullable T getData(Key<T> key) {
+                if (key == VirtualFile.KEY) {
+                    return (T) root;
+                }
+                return parent.getData(key);
+            }
+        };
     }
 
     private static NotificationType resolveNotificationType(GeneralCommitProcessor processor) {

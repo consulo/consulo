@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen;
 
 import consulo.project.ProjectGroup;
-import consulo.project.internal.RecentProjectsManager;
+import consulo.project.RecentProjectsManager;
 import consulo.ide.impl.idea.ide.ReopenProjectAction;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;

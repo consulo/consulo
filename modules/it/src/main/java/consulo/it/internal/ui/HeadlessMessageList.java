@@ -18,6 +18,7 @@ package consulo.it.internal.ui;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.image.Image;
+import consulo.ui.messageList.AsyncHtmlImageLoader;
 import consulo.ui.messageList.MessageList;
 import consulo.ui.messageList.MessageListItem;
 import consulo.ui.messageList.MessageListItemPart;
@@ -124,6 +125,7 @@ public class HeadlessMessageList extends HeadlessComponentBase implements Messag
     private final List<MessageListItem> myItems = new ArrayList<>();
     private boolean myMarkdown;
     private boolean myShowOwnAvatar;
+    private @Nullable AsyncHtmlImageLoader myImageLoader;
 
     @Override
     public MessageListItem add(LocalizeValue author, String text) {
@@ -165,6 +167,16 @@ public class HeadlessMessageList extends HeadlessComponentBase implements Messag
     @Override
     public boolean isShowOwnAvatar() {
         return myShowOwnAvatar;
+    }
+
+    @Override
+    public void setImageLoader(@Nullable AsyncHtmlImageLoader imageLoader) {
+        myImageLoader = imageLoader;
+    }
+
+    @Override
+    public @Nullable AsyncHtmlImageLoader getImageLoader() {
+        return myImageLoader;
     }
 
     @Override

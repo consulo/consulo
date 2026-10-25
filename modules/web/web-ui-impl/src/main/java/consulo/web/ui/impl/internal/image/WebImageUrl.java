@@ -162,6 +162,13 @@ public class WebImageUrl {
                 WebImageSpec child = toSpec(blinking.getOriginal());
                 return child == null ? null : WebImageSpec.blinking(child);
             }
+            case WebAsyncImageImpl async: {
+                Image loaded = async.getLoaded();
+                if (loaded != null) {
+                    return toSpec(loaded);
+                }
+                return new WebImageSpec.Async(async.getId(), async.getWidth(), async.getHeight());
+            }
             default: {
                 return null;
             }
@@ -187,6 +194,11 @@ public class WebImageUrl {
 
         if (image instanceof WebBlinkingImageImpl blinking) {
             return toInlineURL(blinking.getOriginal());
+        }
+
+        if (image instanceof WebAsyncImageImpl async) {
+            Image loaded = async.getLoaded();
+            return loaded == null ? null : toInlineURL(loaded);
         }
 
         if (image instanceof WebCanvasImageImpl canvas) {

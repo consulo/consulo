@@ -15,6 +15,7 @@
  */
 package consulo.diff.impl.internal.viewer.side;
 
+import consulo.diff.EditorDiffViewer;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
 import consulo.dataContext.DataSink;
@@ -45,7 +46,7 @@ import org.jspecify.annotations.Nullable;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class OnesideTextDiffViewer extends OnesideDiffViewer<TextEditorHolder> {
+public abstract class OnesideTextDiffViewer extends OnesideDiffViewer<TextEditorHolder> implements EditorDiffViewer {
     public static final Logger LOG = Logger.getInstance(OnesideTextDiffViewer.class);
 
     private final List<? extends EditorEx> myEditableEditors;
@@ -149,7 +150,7 @@ public abstract class OnesideTextDiffViewer extends OnesideDiffViewer<TextEditor
     //
 
     @RequiredUIAccess
-    protected void scrollToLine(int line) {
+    public void scrollToLine(int line) {
         DiffImplUtil.scrollEditor(getEditor(), line, false);
     }
 
@@ -158,7 +159,7 @@ public abstract class OnesideTextDiffViewer extends OnesideDiffViewer<TextEditor
     //
 
     @Override
-    protected @Nullable Navigatable getNavigatable() {
+    public @Nullable Navigatable getNavigatable() {
         return getContent().getNavigatable(LineCol.fromCaret(getEditor()));
     }
 

@@ -31,9 +31,12 @@ import org.jspecify.annotations.Nullable;
  * @param borderColor outline, or null for a fill only; the top edge of a {@link #STYLE_WAVE} wave
  * @param dotted    draw the outline dotted
  * @param clickId   index of the band in the update it belongs to, or -1 when nothing answers a click on it
- * @param style     how the band is drawn: {@link #STYLE_BAND}, {@link #STYLE_CHUNK}, {@link #STYLE_LINE} or {@link #STYLE_WAVE}
+ * @param style     how the band is drawn: {@link #STYLE_BAND}, {@link #STYLE_CHUNK}, {@link #STYLE_LINE}, {@link #STYLE_WAVE} or
+ *                  {@link #STYLE_PIXELS}
  * @param doubleLine draw the line of a {@link #STYLE_LINE} band two pixels thick
  * @param bottomBorderColor the bottom edge of a {@link #STYLE_WAVE} wave
+ * @param pixelOffset the distance of a {@link #STYLE_PIXELS} strip from the top of {@code startLine}
+ * @param pixelHeight the height of a {@link #STYLE_PIXELS} strip
  *
  * @author VISTALL
  * @since 2026-08-01
@@ -48,7 +51,9 @@ public record GutterBand(
     int clickId,
     String style,
     boolean doubleLine,
-    @Nullable String bottomBorderColor
+    @Nullable String bottomBorderColor,
+    int pixelOffset,
+    int pixelHeight
 ) {
     /**
      * A filled strip with an outline all around, a short bar across the boundary when its lines are empty.
@@ -69,9 +74,13 @@ public record GutterBand(
      * The wave of a collapsed run of lines, hanging from the top of {@code startLine}.
      */
     public static final String STYLE_WAVE = "WAVE";
+    /**
+     * A filled strip of {@code pixelHeight} pixels, {@code pixelOffset} pixels from the top of {@code startLine}.
+     */
+    public static final String STYLE_PIXELS = "PIXELS";
 
     public GutterBand(String area, int startLine, int endLine, @Nullable String color, @Nullable String borderColor, boolean dotted) {
-        this(area, startLine, endLine, color, borderColor, dotted, -1, STYLE_BAND, false, null);
+        this(area, startLine, endLine, color, borderColor, dotted, -1, STYLE_BAND, false, null, 0, 0);
     }
 
     public static GutterBand fill(EditorGutterArea area, int startLine, int endLine, String color) {
@@ -86,11 +95,11 @@ public record GutterBand(
         @Nullable String borderColor,
         boolean dotted
     ) {
-        return new GutterBand(area.name(), startLine, endLine, color, borderColor, dotted, -1, STYLE_CHUNK, false, null);
+        return new GutterBand(area.name(), startLine, endLine, color, borderColor, dotted, -1, STYLE_CHUNK, false, null, 0, 0);
     }
 
     public static GutterBand line(EditorGutterArea area, int line, String color, boolean doubleLine, boolean dotted) {
-        return new GutterBand(area.name(), line, line, null, color, dotted, -1, STYLE_LINE, doubleLine, null);
+        return new GutterBand(area.name(), line, line, null, color, dotted, -1, STYLE_LINE, doubleLine, null, 0, 0);
     }
 
     public static GutterBand wave(
@@ -100,10 +109,27 @@ public record GutterBand(
         @Nullable String topBorderColor,
         @Nullable String bottomBorderColor
     ) {
-        return new GutterBand(area.name(), line, line + 1, background, topBorderColor, false, -1, STYLE_WAVE, false, bottomBorderColor);
+        return new GutterBand(area.name(), line, line + 1, background, topBorderColor, false, -1, STYLE_WAVE, false, bottomBorderColor, 0, 0);
+    }
+
+    public static GutterBand pixels(EditorGutterArea area, int line, int pixelOffset, int pixelHeight, String color) {
+        return new GutterBand(area.name(), line, line, color, null, false, -1, STYLE_PIXELS, false, null, pixelOffset, pixelHeight);
     }
 
     public GutterBand withClickId(int clickId) {
-        return new GutterBand(area, startLine, endLine, color, borderColor, dotted, clickId, style, doubleLine, bottomBorderColor);
+        return new GutterBand(
+            area,
+            startLine,
+            endLine,
+            color,
+            borderColor,
+            dotted,
+            clickId,
+            style,
+            doubleLine,
+            bottomBorderColor,
+            pixelOffset,
+            pixelHeight
+        );
     }
 }

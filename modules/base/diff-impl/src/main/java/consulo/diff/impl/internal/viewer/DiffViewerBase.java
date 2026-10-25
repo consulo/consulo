@@ -26,6 +26,7 @@ import consulo.diff.FrameDiffTool.DiffViewer;
 import consulo.diff.impl.internal.util.DiffTaskQueue;
 import consulo.diff.request.ContentDiffRequest;
 import consulo.logging.Logger;
+import consulo.diff.impl.internal.DiffViewerEx;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
 import consulo.ui.Component;
@@ -44,7 +45,7 @@ import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-public abstract class DiffViewerBase implements DiffViewer, UiDataProvider {
+public abstract class DiffViewerBase implements DiffViewerEx, UiDataProvider {
     protected static final Logger LOG = Logger.getInstance(DiffViewerBase.class);
 
     private static final int REDIFF_POSTPONE_MILLIS = 300;
@@ -57,6 +58,7 @@ public abstract class DiffViewerBase implements DiffViewer, UiDataProvider {
 
     private final DiffTaskQueue myTaskExecutor = new DiffTaskQueue();
     private @Nullable ScheduledFuture<?> myScheduledRediff;
+    private boolean myPendingRediff = true;
     private volatile boolean myDisposed;
 
     public DiffViewerBase(DiffContext context, ContentDiffRequest request) {
@@ -142,6 +144,10 @@ public abstract class DiffViewerBase implements DiffViewer, UiDataProvider {
         fireEvent(EventType.REDIFF_ABORTED);
     }
 
+    public boolean hasPendingRediff() {
+        return myPendingRediff;
+    }
+
     @RequiredUIAccess
     public final void rediff() {
         rediff(false);
@@ -154,6 +160,7 @@ public abstract class DiffViewerBase implements DiffViewer, UiDataProvider {
         }
         abortRediff();
 
+        myPendingRediff = true;
         fireEvent(EventType.BEFORE_REDIFF);
         onBeforeRediff();
 
@@ -165,6 +172,7 @@ public abstract class DiffViewerBase implements DiffViewer, UiDataProvider {
                 Runnable callback = performRediff(indicator);
                 return () -> {
                     callback.run();
+                    myPendingRediff = false;
                     onAfterRediff();
                     fireEvent(EventType.AFTER_REDIFF);
                 };
@@ -252,7 +260,7 @@ public abstract class DiffViewerBase implements DiffViewer, UiDataProvider {
     protected void onDispose() {
     }
 
-    protected @Nullable Navigatable getNavigatable() {
+    public @Nullable Navigatable getNavigatable() {
         return null;
     }
 

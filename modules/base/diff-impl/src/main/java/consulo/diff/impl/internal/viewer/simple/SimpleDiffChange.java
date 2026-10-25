@@ -42,7 +42,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class SimpleDiffChange {
+public class SimpleDiffChange implements AlignableChange {
     
     private final SimpleDiffViewer myViewer;
 
@@ -182,15 +182,17 @@ public class SimpleDiffChange {
     // Getters
     //
 
+    @Override
     public int getStartLine(Side side) {
         return side.getStartLine(myFragment) + side.select(myLineStartShifts);
     }
 
+    @Override
     public int getEndLine(Side side) {
         return side.getEndLine(myFragment) + side.select(myLineEndShifts);
     }
 
-    
+    @Override
     public TextDiffType getDiffType() {
         return DiffImplUtil.getLineDiffType(myFragment);
     }

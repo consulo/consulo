@@ -18,6 +18,7 @@ package consulo.review.impl.internal.editor.action;
 
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorKeys;
+import consulo.dataContext.DataContext;
 import consulo.diff.DiffDataKeys;
 import consulo.localize.LocalizeValue;
 import consulo.review.editor.CodeReviewEditorKeys;
@@ -25,6 +26,8 @@ import consulo.review.editor.CodeReviewNavigableEditorViewModel;
 import consulo.review.timeline.thread.CodeReviewTrackableItemViewModel;
 import consulo.ui.UIAction;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.ActionPromoter;
+import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.AnActionWithAsyncUpdate;
 import consulo.ui.ex.action.DumbAwareAction;
@@ -32,10 +35,12 @@ import consulo.ui.image.Image;
 import consulo.util.concurrent.coroutine.Coroutine;
 import org.jspecify.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 
-public abstract class CodeReviewNextPreviousCommentAction extends DumbAwareAction implements AnActionWithAsyncUpdate {
+public abstract class CodeReviewNextPreviousCommentAction extends DumbAwareAction implements AnActionWithAsyncUpdate, ActionPromoter {
     private record EditorModel(@Nullable Editor editor, @Nullable CodeReviewNavigableEditorViewModel model) {
     }
 
@@ -124,5 +129,15 @@ public abstract class CodeReviewNextPreviousCommentAction extends DumbAwareActio
     private static @Nullable String findFocusedThreadId(AnActionEvent e) {
         CodeReviewTrackableItemViewModel item = e.getData(CodeReviewTrackableItemViewModel.TRACKABLE_ITEM_KEY);
         return item == null ? null : item.getTrackingId();
+    }
+
+    @Override
+    public @Nullable List<AnAction> suppress(List<AnAction> actions, DataContext context) {
+        if (context.getData(CodeReviewTrackableItemViewModel.TRACKABLE_ITEM_KEY) != null) {
+            List<AnAction> others = new ArrayList<>(actions);
+            others.removeIf(action -> action == this);
+            return others;
+        }
+        return null;
     }
 }

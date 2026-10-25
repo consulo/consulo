@@ -29,7 +29,7 @@ import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.project.ProjectOpenContext;
 import consulo.project.internal.ProjectOpenService;
-import consulo.project.internal.RecentProjectsManager;
+import consulo.project.RecentProjectsManager;
 import consulo.ui.MessageBoxes;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;

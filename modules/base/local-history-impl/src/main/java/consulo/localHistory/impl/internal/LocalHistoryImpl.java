@@ -24,6 +24,7 @@ import consulo.component.messagebus.MessageBus;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.container.boot.ContainerPathManager;
 import consulo.disposer.Disposable;
+import consulo.localHistory.ActivityId;
 import consulo.localHistory.*;
 import consulo.localHistory.impl.internal.ui.model.DirectoryHistoryDialogModel;
 import consulo.localHistory.impl.internal.ui.model.EntireFileHistoryDialogModel;
@@ -146,12 +147,12 @@ public class LocalHistoryImpl extends LocalHistory implements Disposable {
     }
 
     @Override
-    public LocalHistoryAction startAction(LocalizeValue name) {
+    public LocalHistoryAction startAction(LocalizeValue name, @Nullable ActivityId activityId) {
         if (!isInitialized()) {
             return LocalHistoryAction.NULL;
         }
 
-        LocalHistoryActionImpl a = new LocalHistoryActionImpl(myEventDispatcher, name);
+        LocalHistoryActionImpl a = new LocalHistoryActionImpl(myEventDispatcher, name, activityId);
         a.start();
         return a;
     }

@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.ide.actions;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.platform.base.localize.ActionLocalize;
-import consulo.project.internal.RecentProjectsManager;
+import consulo.project.RecentProjectsManager;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.ui.wm.WelcomeFrameManager;

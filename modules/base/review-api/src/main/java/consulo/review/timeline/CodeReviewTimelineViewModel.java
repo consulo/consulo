@@ -17,6 +17,7 @@ package consulo.review.timeline;
 
 import consulo.review.comment.CodeReviewNewCommentViewModel;
 import consulo.review.util.ComputedResult;
+import consulo.ui.messageList.AsyncHtmlImageLoader;
 import consulo.util.concurrent.coroutine.ObservableValue;
 import org.jspecify.annotations.Nullable;
 
@@ -36,6 +37,13 @@ public interface CodeReviewTimelineViewModel {
      */
     @Nullable
     default CodeReviewNewCommentViewModel getNewCommentVm() {
+        return null;
+    }
+
+    /**
+     * Loads the images of the comment bodies, or {@code null} to read them from their addresses as they are.
+     */
+    default @Nullable AsyncHtmlImageLoader getHtmlImageLoader() {
         return null;
     }
 }

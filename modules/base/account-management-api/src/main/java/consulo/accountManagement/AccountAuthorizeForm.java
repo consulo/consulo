@@ -43,8 +43,4 @@ public interface AccountAuthorizeForm<C extends AccountCredentials> {
 
     @RequiredUIAccess
     CompletableFuture<C> authorize();
-
-    default LocalizeValue getAuthorizeActionText() {
-        return LocalizeValue.empty();
-    }
 }

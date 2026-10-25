@@ -24,6 +24,7 @@ import consulo.ui.impl.avatar.AvatarPresentation;
 import consulo.ui.style.ComponentColors;
 import consulo.ui.style.StyleManager;
 import io.qt.core.QRectF;
+import io.qt.core.QTimer;
 import io.qt.core.Qt;
 import io.qt.gui.QColor;
 import io.qt.gui.QFont;
@@ -32,6 +33,7 @@ import io.qt.gui.QPainterPath;
 import io.qt.gui.QPalette;
 import io.qt.gui.QPen;
 import io.qt.gui.QPixmap;
+import io.qt.widgets.QWidget;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -39,7 +41,19 @@ import org.jspecify.annotations.Nullable;
  * @since 2026-10-18
  */
 public final class DesktopQtAvatarPainter {
+    private static final int LOADING_POLL_DELAY = 100;
+
     private DesktopQtAvatarPainter() {
+    }
+
+    public static void repaintWhileLoading(QWidget widget, @Nullable Image avatarImage, Runnable repaint) {
+        if (avatarImage != null && DesktopQtImage.isLive(avatarImage)) {
+            QTimer.singleShot(LOADING_POLL_DELAY, widget, () -> {
+                if (!widget.isDisposed()) {
+                    repaint.run();
+                }
+            });
+        }
     }
 
     public static QPixmap paint(String name, @Nullable Image avatarImage, int size, double ratio, QPalette palette) {

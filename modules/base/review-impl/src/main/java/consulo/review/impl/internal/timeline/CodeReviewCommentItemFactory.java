@@ -31,6 +31,7 @@ import consulo.ui.Component;
 import consulo.ui.Space;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.HorizontalLayout;
+import consulo.ui.messageList.AsyncHtmlImageLoader;
 import consulo.ui.messageList.MessageList;
 import consulo.ui.messageList.MessageListItem;
 import consulo.ui.messageList.MessageListItemPart;
@@ -54,9 +55,15 @@ public final class CodeReviewCommentItemFactory {
 
     @RequiredUIAccess
     public static MessageList createList() {
+        return createList(null);
+    }
+
+    @RequiredUIAccess
+    public static MessageList createList(@Nullable AsyncHtmlImageLoader imageLoader) {
         MessageList messages = MessageList.create();
         messages.setMarkdown(true);
         messages.setShowOwnAvatar(true);
+        messages.setImageLoader(imageLoader);
         return messages;
     }
 

@@ -18,6 +18,7 @@ package consulo.localHistory.impl.internal;
 
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.localHistory.ActivityId;
 import consulo.localHistory.ByteContent;
 import consulo.localHistory.impl.internal.change.*;
 import consulo.localHistory.impl.internal.revision.ChangeRevision;
@@ -51,8 +52,8 @@ public class LocalHistoryFacade {
     }
   }
 
-  public void endChangeSet(String name) {
-    if (myChangeList.endChangeSet(name)) {
+  public void endChangeSet(@Nullable String name, @Nullable ActivityId activityId) {
+    if (myChangeList.endChangeSet(name, activityId)) {
       fireChangeSetFinished();
     }
   }
@@ -94,7 +95,7 @@ public class LocalHistoryFacade {
     beginChangeSet();
     myChangeList.addChange(c);
     fireChangeAdded(c);
-    endChangeSet(null);
+    endChangeSet(null, null);
   }
 
   @TestOnly

@@ -11,7 +11,7 @@ import consulo.ide.runAnything.RunAnythingGroup;
 import consulo.ide.runAnything.RunAnythingItem;
 import consulo.ide.runAnything.RunAnythingItemBase;
 import consulo.ide.localize.IdeLocalize;
-import consulo.project.internal.RecentProjectsManager;
+import consulo.project.RecentProjectsManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.image.Image;
 import consulo.util.lang.ObjectUtil;

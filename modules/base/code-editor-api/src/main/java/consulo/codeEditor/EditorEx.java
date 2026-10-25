@@ -191,6 +191,12 @@ public interface EditorEx extends Editor {
         throw new UnsupportedOperationException("Unsupported platform");
     }
 
+    /**
+     * Makes the editor as tall as its content, leaving the vertical scrolling to the container it is placed in.
+     */
+    default void setFitContentHeight(boolean fit) {
+    }
+
     boolean isEmbeddedIntoDialogWrapper();
 
     void setEmbeddedIntoDialogWrapper(boolean b);

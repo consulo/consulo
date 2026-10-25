@@ -15,7 +15,10 @@
  */
 package consulo.localHistory.impl.internal.ui.view;
 
+import consulo.application.Application;
 import consulo.application.util.DateFormatUtil;
+import consulo.localHistory.ActivityId;
+import consulo.localHistory.ActivityPresentationProvider;
 import consulo.localHistory.impl.internal.revision.Revision;
 import consulo.localHistory.impl.internal.ui.model.HistoryDialogModel;
 import consulo.localHistory.impl.internal.ui.model.RevisionItem;
@@ -29,9 +32,12 @@ import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.SeparatorWithText;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.table.JBTable;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.image.Image;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.localize.VcsLocalize;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -306,6 +312,8 @@ public class RevisionsList {
 
       myTitleLabel.setFont(myTitleLabel.getFont().deriveFont(labelsAndColor.isNamed ? Font.BOLD : Font.PLAIN));
       myTitleLabel.setText(ensureString(labelsAndColor.title));
+      Image activityIcon = getActivityIcon(r.revision);
+      myTitleLabel.setIcon(activityIcon == null ? null : TargetAWT.to(activityIcon));
 
       JComponent orig = (JComponent)myTemplate.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
@@ -336,6 +344,16 @@ public class RevisionsList {
       }
 
       return myWrapperPanel;
+    }
+
+    private static @Nullable Image getActivityIcon(Revision revision) {
+      ActivityId activityId = revision.getChangeSetActivityId();
+      if (activityId == null) {
+        return null;
+      }
+      ActivityPresentationProvider provider = Application.get().getExtensionPoint(ActivityPresentationProvider.class)
+        .findFirstSafe(it -> it.getId().equals(activityId.providerId()));
+      return provider == null ? null : provider.getIcon(activityId.kind());
     }
 
     private String ensureString(String s) {

@@ -15,6 +15,15 @@
  */
 package consulo.diff.impl.internal.action;
 
+import org.jspecify.annotations.Nullable;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.project.Project;
+import consulo.fileEditor.FileEditorManager;
+import consulo.fileEditor.FileEditor;
+import consulo.diff.impl.internal.editor.DiffRequestProcessorEditor;
+import consulo.diff.DiffViewerVirtualFile;
+import consulo.diff.DiffContext;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.dataContext.DataSink;
 import consulo.dataContext.DataSnapshot;
@@ -33,6 +42,24 @@ public class DiffUiDataRule implements UiDataRule {
                 return navigatable == null ? null : new Navigatable[]{navigatable};
             }
         );
+        sink.lazyValue(DiffDataKeys.DIFF_CONTEXT, DiffUiDataRule::findDiffContext);
+    }
+
+    @RequiredReadAction
+    private static @Nullable DiffContext findDiffContext(DataSnapshot snapshot) {
+        if (snapshot.get(FileEditor.KEY) instanceof DiffRequestProcessorEditor editor) {
+            return editor.getProcessor().getContext();
+        }
+        Project project = snapshot.get(Project.KEY);
+        if (project == null || !(snapshot.get(VirtualFile.KEY) instanceof DiffViewerVirtualFile file)) {
+            return null;
+        }
+        for (FileEditor fileEditor : FileEditorManager.getInstance(project).getEditors(file)) {
+            if (fileEditor instanceof DiffRequestProcessorEditor editor) {
+                return editor.getProcessor().getContext();
+            }
+        }
+        return null;
     }
 }
 

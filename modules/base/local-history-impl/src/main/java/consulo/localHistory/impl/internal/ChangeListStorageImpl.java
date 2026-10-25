@@ -37,7 +37,7 @@ import java.text.MessageFormat;
 import java.util.function.Consumer;
 
 public class ChangeListStorageImpl implements ChangeListStorage {
-    private static final int VERSION = 5;
+    private static final int VERSION = 6;
     private static final String STORAGE_FILE = "changes";
 
     private final Path myStorageDir;

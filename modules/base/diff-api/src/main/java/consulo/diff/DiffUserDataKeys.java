@@ -71,4 +71,12 @@ public interface DiffUserDataKeys {
    * @see EditorKind#DIFF
    */
   Key<Boolean> MERGE_EDITOR_FLAG = Key.create("Diff.mergeEditor");
+
+  /**
+   * Force aligning changes in side-by-side viewer.
+   * This can be used in viewers, where aligning is critical (e.g. combined diff viewer).
+   */
+  Key<Boolean> ALIGNED_TWO_SIDED_DIFF = Key.create("Diff.AlignTwoSidedDiff");
+
+  Key<DiffComputer> CUSTOM_DIFF_COMPUTER = Key.create("Diff.CustomDiffComputer");
 }

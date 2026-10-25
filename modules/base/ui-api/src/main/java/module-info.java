@@ -51,6 +51,7 @@ module consulo.ui.api {
         consulo.desktop.qt.editor.impl,
         consulo.desktop.qt.ide.impl,
         consulo.desktop.qt.ui.impl,
+        consulo.diff.impl,
         consulo.external.service.impl,
         consulo.ide.impl,
         consulo.it,

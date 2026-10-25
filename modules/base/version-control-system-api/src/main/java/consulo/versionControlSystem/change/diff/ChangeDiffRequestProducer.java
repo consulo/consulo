@@ -45,10 +45,12 @@ import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.change.*;
+import consulo.versionControlSystem.change.PresentableChange;
 import consulo.versionControlSystem.merge.MergeData;
 import consulo.versionControlSystem.merge.MergeDiffUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.status.FileStatus;
 import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
@@ -57,7 +59,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-public class ChangeDiffRequestProducer implements DiffRequestProducer {
+public class ChangeDiffRequestProducer implements DiffRequestProducer, PresentableChange {
     private static final Logger LOG = Logger.getInstance(ChangeDiffRequestProducer.class);
 
     public static Key<Change> CHANGE_KEY = Key.create("DiffRequestPresentable.Change");
@@ -72,6 +74,16 @@ public class ChangeDiffRequestProducer implements DiffRequestProducer {
         myChange = change;
         myProject = project;
         myChangeContext = changeContext;
+    }
+
+    @Override
+    public FilePath getFilePath() {
+        return ChangesUtil.getFilePath(myChange);
+    }
+
+    @Override
+    public FileStatus getFileStatus() {
+        return myChange.getFileStatus();
     }
 
     public Change getChange() {

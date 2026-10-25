@@ -7,6 +7,7 @@ import consulo.document.Document;
 import consulo.document.internal.DocumentFactory;
 import consulo.test.light.LightApplicationBuilder;
 import consulo.versionControlSystem.internal.VcsRange;
+import consulo.versionControlSystem.util.RangesBuilder;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;

@@ -17,10 +17,17 @@ package consulo.desktop.qt.ui.impl.layout;
 
 import consulo.desktop.qt.ui.impl.QtComponentDelegate;
 import consulo.ui.Component;
+import consulo.ui.Point2D;
+import consulo.ui.Rectangle2D;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.internal.ScrollableLayoutInternal;
+import consulo.ui.internal.ScrollableLayoutViewportEvent;
 import consulo.ui.layout.LayoutConstraint;
-import consulo.ui.layout.ScrollableLayout;
 import consulo.ui.layout.ScrollableLayoutOptions;
 import consulo.ui.layout.VerticalScrollBarPosition;
+import io.qt.core.QEvent;
+import io.qt.core.QObject;
+import io.qt.core.QPoint;
 import io.qt.core.QSize;
 import io.qt.core.Qt;
 import io.qt.widgets.QFrame;
@@ -29,11 +36,14 @@ import io.qt.widgets.QScrollArea;
 import io.qt.widgets.QWidget;
 import org.jspecify.annotations.Nullable;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @author VISTALL
  * @since 2026-08-16
  */
-public class DesktopQtScrollableLayoutImpl extends DesktopQtLayoutComponent<LayoutConstraint, Object> implements ScrollableLayout {
+public class DesktopQtScrollableLayoutImpl extends DesktopQtLayoutComponent<LayoutConstraint, Object> implements ScrollableLayoutInternal {
     private static class ClippingScrollArea extends QScrollArea {
         ClippingScrollArea(QWidget parent) {
             super(parent);
@@ -57,6 +67,10 @@ public class DesktopQtScrollableLayoutImpl extends DesktopQtLayoutComponent<Layo
 
     private final ScrollableLayoutOptions myOptions;
 
+    private final Map<Component, @Nullable QWidget> myTracked = new HashMap<>();
+
+    private @Nullable Component myOverlay;
+
     public DesktopQtScrollableLayoutImpl(Component component, ScrollableLayoutOptions options) {
         myOptions = options;
 
@@ -78,7 +92,148 @@ public class DesktopQtScrollableLayoutImpl extends DesktopQtLayoutComponent<Layo
             scrollArea.viewport().setLayoutDirection(Qt.LayoutDirection.LeftToRight);
             scrollArea.horizontalScrollBar().setLayoutDirection(Qt.LayoutDirection.LeftToRight);
         }
+
+        scrollArea.verticalScrollBar().valueChanged.connect(value -> fireViewportChanged());
+        scrollArea.horizontalScrollBar().valueChanged.connect(value -> fireViewportChanged());
+        scrollArea.verticalScrollBar().rangeChanged.connect((min, max) -> fireViewportChanged());
+        scrollArea.horizontalScrollBar().rangeChanged.connect((min, max) -> fireViewportChanged());
+        scrollArea.viewport().installEventFilter(new GeometryFilter(scrollArea.viewport()));
         return scrollArea;
+    }
+
+    private class GeometryFilter extends QObject {
+        GeometryFilter(QObject parent) {
+            super(parent);
+        }
+
+        @Override
+        public boolean eventFilter(QObject watched, QEvent event) {
+            QEvent.Type type = event.type();
+            if (type == QEvent.Type.Resize || type == QEvent.Type.Move) {
+                layoutOverlay();
+                fireViewportChanged();
+            }
+            return false;
+        }
+    }
+
+    private void fireViewportChanged() {
+        if (!(myComponent instanceof QScrollArea)) {
+            return;
+        }
+        getListenerDispatcher(ScrollableLayoutViewportEvent.class).onEvent(new ScrollableLayoutViewportEvent(this, getViewRect()));
+    }
+
+    @RequiredUIAccess
+    @Override
+    public Rectangle2D getViewRect() {
+        if (!(myComponent instanceof QScrollArea scrollArea) || !isAlive(scrollArea)) {
+            return new Rectangle2D(0, 0);
+        }
+
+        QWidget viewport = scrollArea.viewport();
+        return new Rectangle2D(
+            scrollArea.horizontalScrollBar().value(),
+            scrollArea.verticalScrollBar().value(),
+            viewport.width(),
+            viewport.height()
+        );
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void scrollTo(Point2D position) {
+        if (!(myComponent instanceof QScrollArea scrollArea) || !isAlive(scrollArea)) {
+            return;
+        }
+
+        scrollArea.horizontalScrollBar().setValue(position.x());
+        scrollArea.verticalScrollBar().setValue(position.y());
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setBoundsTracked(Component descendant, boolean tracked) {
+        if (tracked) {
+            if (!myTracked.containsKey(descendant)) {
+                myTracked.put(descendant, null);
+            }
+            installGeometryFilter(descendant);
+        }
+        else {
+            myTracked.remove(descendant);
+        }
+    }
+
+    private @Nullable QWidget installGeometryFilter(Component descendant) {
+        if (!(descendant instanceof QtComponentDelegate<?> delegate)) {
+            return null;
+        }
+
+        QWidget widget = delegate.toQtComponent();
+        if (widget == null || !isAlive(widget)) {
+            return null;
+        }
+
+        if (myTracked.get(descendant) != widget) {
+            widget.installEventFilter(new GeometryFilter(widget));
+            myTracked.put(descendant, widget);
+        }
+        return widget;
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setTopOverlay(@Nullable Component overlay) {
+        Component old = myOverlay;
+        if (old instanceof QtComponentDelegate<?> oldDelegate) {
+            QWidget oldWidget = oldDelegate.toQtComponent();
+            if (oldWidget != null && isAlive(oldWidget)) {
+                oldWidget.hide();
+                oldWidget.setParent(null);
+            }
+        }
+        myOverlay = overlay;
+        layoutOverlay();
+    }
+
+    private void layoutOverlay() {
+        if (!(myOverlay instanceof QtComponentDelegate<?> delegate) || !(myComponent instanceof QScrollArea scrollArea) || !isAlive(scrollArea)) {
+            return;
+        }
+        QWidget viewport = scrollArea.viewport();
+        QWidget widget = delegate.toQtComponent();
+        if (widget == null || !isAlive(widget)) {
+            delegate.bind(viewport, null);
+            widget = delegate.toQtComponent();
+            if (widget == null) {
+                return;
+            }
+        }
+        else if (widget.parentWidget() != viewport) {
+            widget.setParent(viewport);
+        }
+        int height = Math.max(widget.sizeHint().height(), widget.minimumSizeHint().height());
+        widget.setGeometry(0, 0, viewport.width(), height);
+        widget.raise();
+        widget.show();
+    }
+
+    @RequiredUIAccess
+    @Override
+    public @Nullable Rectangle2D getBounds(Component descendant) {
+        if (!myTracked.containsKey(descendant) || !(myComponent instanceof QScrollArea scrollArea) || !isAlive(scrollArea)) {
+            return null;
+        }
+
+        QWidget content = scrollArea.widget();
+        QWidget widget = installGeometryFilter(descendant);
+        if (widget == null || content == null || !content.isAncestorOf(widget)) {
+            return null;
+        }
+
+        QPoint location = widget.mapTo(content, new QPoint(0, 0));
+        return new Rectangle2D(location.x(), location.y(), widget.width(), widget.height());
     }
 
     private static Qt.ScrollBarPolicy toQt(ScrollableLayoutOptions.ScrollPolicy policy) {

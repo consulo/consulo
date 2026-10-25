@@ -42,6 +42,7 @@ import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.VcsMappingListener;
 import consulo.versionControlSystem.VcsToolWindow;
 import consulo.versionControlSystem.change.ChangesViewContentFactory;
+import consulo.versionControlSystem.change.ChangesViewContentManagerListener;
 import consulo.versionControlSystem.change.ChangesViewContentProvider;
 import consulo.versionControlSystem.commit.CommitModeListener;
 import consulo.versionControlSystem.commit.CommitModeManager;
@@ -90,6 +91,7 @@ public class UnifiedChangesViewContentManager implements ChangesViewContentI, Di
     private final Map<Content, ChangesViewContentProvider> myProviders = new HashMap<>();
     private final Map<Content, Component> myProviderComponents = new HashMap<>();
     private final Set<Content> myFailedContents = new HashSet<>();
+    private final Set<Content> myInternalRemovals = new HashSet<>();
 
     private @Nullable Content mySelectedAddedContent;
 
@@ -106,6 +108,7 @@ public class UnifiedChangesViewContentManager implements ChangesViewContentI, Di
         project.getMessageBus().connect(this).subscribe(VcsMappingListener.class, this::update);
         project.getMessageBus().connect(this).subscribe(PluginVcsMappingListener.class, this::update);
         project.getMessageBus().connect(this).subscribe(CommitModeListener.class, this::onCommitModeChanged);
+        project.getMessageBus().connect(this).subscribe(ChangesViewContentManagerListener.class, this::update);
     }
 
     public static UnifiedChangesViewContentManager getInstanceImpl(Project project) {
@@ -140,6 +143,17 @@ public class UnifiedChangesViewContentManager implements ChangesViewContentI, Di
             @Override
             public void contentRemoved(ContentManagerEvent event) {
                 updateLocalChangesTitle();
+
+                Content content = event.getContent();
+                ChangesViewContentFactory factory = content.getUserData(FACTORY_KEY);
+                if (factory != null && factory.isCloseable() && !myInternalRemovals.contains(content)) {
+                    try {
+                        factory.contentClosedByUser();
+                    }
+                    catch (RuntimeException e) {
+                        LOG.error(e);
+                    }
+                }
             }
         }, this);
 
@@ -222,7 +236,7 @@ public class UnifiedChangesViewContentManager implements ChangesViewContentI, Di
 
     private Content createExtensionContent(ChangesViewContentFactory factory) {
         Content content = myContentFactory.createUIContent(VerticalLayout.create(), factory.getTabName().get(), false);
-        content.setCloseable(false);
+        content.setCloseable(factory.isCloseable());
         content.putUserData(FACTORY_KEY, factory);
         content.putUserData(CONTENT_ID_KEY, factory.getId());
         if (factory.isInCommitToolWindow()) {
@@ -343,7 +357,13 @@ public class UnifiedChangesViewContentManager implements ChangesViewContentI, Di
             }
         }
         else {
-            contentManager.removeContent(content, dispose);
+            myInternalRemovals.add(content);
+            try {
+                contentManager.removeContent(content, dispose);
+            }
+            finally {
+                myInternalRemovals.remove(content);
+            }
         }
     }
 
@@ -498,7 +518,12 @@ public class UnifiedChangesViewContentManager implements ChangesViewContentI, Di
 
     private static int weightOf(Content content) {
         String contentId = ChangesViewContentI.getContentId(content);
-        return contentId == null ? OTHER_TAB_WEIGHT : TAB_WEIGHTS.getOrDefault(contentId, OTHER_TAB_WEIGHT);
+        Integer weight = contentId == null ? null : TAB_WEIGHTS.get(contentId);
+        if (weight != null) {
+            return weight;
+        }
+        ChangesViewContentFactory factory = content.getUserData(FACTORY_KEY);
+        return factory != null ? factory.getOrderWeight() : OTHER_TAB_WEIGHT;
     }
 
     private static void addIntoCorrectPlace(ContentManager contentManager, Content content) {

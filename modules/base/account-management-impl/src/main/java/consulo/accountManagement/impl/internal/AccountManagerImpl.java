@@ -284,7 +284,7 @@ public class AccountManagerImpl implements AccountManager {
         String value,
         AccountCredentialSource source
     ) {
-        C credentials = authorizeType.deserialize(value);
+        C credentials = authorizeType.deserialize(value, config);
         if (!authorizeType.isExpired(credentials)) {
             return CompletableFuture.completedFuture(new AccountConnectionImpl<>(account.getServerUrl(), authorizeType, config, credentials));
         }

@@ -695,6 +695,10 @@ public final class UnifiedChangesTree {
                 presentation.append(group.kind().getTitle());
                 appendCount(snapshot, item, presentation);
             }
+            case RepositoryTreeItem repository -> {
+                presentation.append(LocalizeValue.of(repository.label()));
+                appendCount(snapshot, item, presentation);
+            }
             case ModuleTreeItem module -> {
                 presentation.withIcon(PlatformIconGroup.nodesModule());
                 presentation.append(module.module().getName());
@@ -729,6 +733,7 @@ public final class UnifiedChangesTree {
         return switch (item) {
             case ChangeListTreeItem changeList -> changeList.changeList().getName().trim();
             case FileGroupTreeItem group -> group.kind().getTitle().get();
+            case RepositoryTreeItem repository -> repository.label();
             case ModuleTreeItem module -> module.module().getName();
             case DirectoryTreeItem directory -> directory.label();
             case ChangeTreeItem change -> ChangesUtil.getFilePath(change.change()).getName();

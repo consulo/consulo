@@ -32,6 +32,7 @@ import consulo.undoRedo.util.UndoConstants;
 import consulo.versionControlSystem.internal.LineStatusTrackerI;
 import consulo.versionControlSystem.internal.LineStatusTrackerListener;
 import consulo.versionControlSystem.internal.VcsRange;
+import consulo.versionControlSystem.util.RangesBuilder;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 

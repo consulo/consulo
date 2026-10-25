@@ -91,7 +91,7 @@ public class SandReviewViewModel implements CodeReviewDetailsViewModel, CodeRevi
         myThreads = new CopyOnWriteArrayList<>(threads);
         myFlowVm = new SandReviewFlowViewModel(scheduler, myState, myHasConflicts, reviewerReviews, !threads.isEmpty());
 
-        myChangesVm = new SandReviewChangesViewModel(project, parentDisposable, myThreads::size);
+        myChangesVm = new SandReviewChangesViewModel(project, parentDisposable, number, myThreads::size);
 
         List<CodeReviewTimelineItem> timeline = new ArrayList<>();
         if (!description.isBlank()) {

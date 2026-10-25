@@ -17,6 +17,7 @@ package consulo.localHistory.impl.internal;
 
 import consulo.disposer.Disposable;
 import consulo.disposer.util.DisposableList;
+import consulo.localHistory.ActivityId;
 import consulo.localHistory.impl.internal.tree.Entry;
 import consulo.localHistory.localize.LocalHistoryLocalize;
 import consulo.localize.LocalizeValue;
@@ -28,6 +29,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.*;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -68,9 +70,9 @@ class LocalHistoryEventDispatcher implements VirtualFileManagerListener, Command
     myVcs.forceBeginChangeSet();
   }
 
-  void finishAction(LocalizeValue name) {
+  void finishAction(LocalizeValue name, @Nullable ActivityId activityId) {
     myGateway.registerUnsavedDocuments(myVcs);
-    endChangeSet(name);
+    myVcs.endChangeSet(name.getNullIfEmpty(), activityId);
   }
 
   private void beginChangeSet() {
@@ -78,7 +80,7 @@ class LocalHistoryEventDispatcher implements VirtualFileManagerListener, Command
   }
 
   private void endChangeSet(LocalizeValue name) {
-    myVcs.endChangeSet(name.getNullIfEmpty());
+    myVcs.endChangeSet(name.getNullIfEmpty(), null);
   }
 
   private void fileCreated(VirtualFile file) {

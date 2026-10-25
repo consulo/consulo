@@ -20,9 +20,14 @@ import consulo.configurable.ApplicationConfigurable;
 import consulo.configurable.Configurable;
 import consulo.configurable.SimpleConfigurableByProperties;
 import consulo.configurable.StandardConfigurableIds;
+import consulo.diff.DiffViewerVirtualFile;
+import consulo.diff.impl.internal.editor.DiffRequestProcessorEditor;
 import consulo.diff.internal.DiffSettingsHolder;
+import consulo.diff.localize.DiffLocalize;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
+import consulo.project.Project;
+import consulo.project.ProjectManager;
 import consulo.ui.CheckBox;
 import consulo.ui.ComboBox;
 import consulo.ui.Component;
@@ -77,6 +82,17 @@ public class DiffSettingsConfigurable extends SimpleConfigurableByProperties imp
         CheckBox showDiffInEditorBox = CheckBox.create(LocalizeValue.localizeTODO("Show diff in editor"));
         diffLayout.add(showDiffInEditorBox);
         propertyBuilder.add(showDiffInEditorBox, diffSettings::isShowDiffInEditor, diffSettings::setShowDiffInEditor);
+
+        CheckBox combinedDiffBox = CheckBox.create(DiffLocalize.combinedDiffEnableSetting());
+        diffLayout.add(combinedDiffBox);
+        propertyBuilder.add(combinedDiffBox, diffSettings::isCombinedDiffEnabled, value -> {
+            if (diffSettings.isCombinedDiffEnabled() != value) {
+                diffSettings.setCombinedDiffEnabled(value);
+                for (Project project : ProjectManager.getInstance().getOpenProjects()) {
+                    DiffRequestProcessorEditor.reloadDiffEditorsForFiles(project, file -> file instanceof DiffViewerVirtualFile);
+                }
+            }
+        });
         return rootLayout;
     }
 

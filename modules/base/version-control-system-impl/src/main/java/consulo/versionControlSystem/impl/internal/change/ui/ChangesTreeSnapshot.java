@@ -73,6 +73,7 @@ public final class ChangesTreeSnapshot {
         return item instanceof ChangeListTreeItem
             || item instanceof FileGroupTreeItem
             || item instanceof ModuleTreeItem
+            || item instanceof RepositoryTreeItem
             || item instanceof DirectoryTreeItem;
     }
 

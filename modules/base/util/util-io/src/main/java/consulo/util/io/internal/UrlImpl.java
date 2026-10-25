@@ -53,6 +53,12 @@ public final class UrlImpl implements Url {
   }
 
   @Override
+  public Url resolve(String subPath) {
+    String newPath = path.isEmpty() && authority == null ? subPath : StringUtil.trimEnd(path, '/') + "/" + subPath;
+    return new UrlImpl(scheme, authority, newPath, parameters);
+  }
+
+  @Override
   public Url addParameters(Map<String, String> parameters) {
     if (parameters.isEmpty()) {
       return this;

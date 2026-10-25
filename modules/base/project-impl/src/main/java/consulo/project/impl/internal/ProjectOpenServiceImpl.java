@@ -37,7 +37,7 @@ import consulo.project.internal.ProjectOpenProcessor;
 import consulo.project.internal.ProjectOpenProcessors;
 import consulo.project.internal.ProjectOpenService;
 import consulo.project.internal.ProjectOpenSetting;
-import consulo.project.internal.RecentProjectsManager;
+import consulo.project.RecentProjectsManager;
 import consulo.project.localize.ProjectLocalize;
 import consulo.project.startup.StartupManager;
 import consulo.project.ui.internal.WindowManagerEx;
@@ -119,6 +119,7 @@ public class ProjectOpenServiceImpl implements ProjectOpenService {
 
         Boolean forceNewFrame = context.getUserData(ProjectOpenContext.FORCE_OPEN_IN_NEW_FRAME);
         Project activeProject = context.getUserData(ProjectOpenContext.ACTIVE_PROJECT);
+        Boolean askNewFrame = context.getUserData(ProjectOpenContext.ASK_OPEN_IN_NEW_FRAME);
 
         CompletableFuture<Project> resultFuture = new CompletableFuture<>();
 
@@ -156,7 +157,7 @@ public class ProjectOpenServiceImpl implements ProjectOpenService {
                             return CompletableFuture.completedFuture(openContext);
                         }
 
-                        return confirmAndCloseProjectAsync(openContext, uiAccess);
+                        return confirmAndCloseProjectAsync(openContext, uiAccess, Boolean.TRUE.equals(askNewFrame));
                     }))
                     // Cancel if dialog was cancelled (null means cancelled)
                     .then(CodeExecution.<OpenContext, OpenContext>apply((openContext, continuation) -> {
@@ -331,10 +332,11 @@ public class ProjectOpenServiceImpl implements ProjectOpenService {
      */
     private CompletableFuture<OpenContext> confirmAndCloseProjectAsync(
         OpenContext openContext,
-        UIAccess uiAccess) {
+        UIAccess uiAccess,
+        boolean ask) {
 
         ProjectOpenSetting settings = ProjectOpenSetting.getInstance();
-        int confirmOpenNewProject = settings.getConfirmOpenNewProject();
+        int confirmOpenNewProject = ask ? ProjectOpenSetting.OPEN_PROJECT_ASK : settings.getConfirmOpenNewProject();
 
         if (confirmOpenNewProject == ProjectOpenSetting.OPEN_PROJECT_NEW_WINDOW) {
             // Always open in new window - no need to close anything

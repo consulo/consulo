@@ -17,64 +17,42 @@ package consulo.versionControlSystem.log.impl.internal.ui.editor;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.project.Project;
-import consulo.project.ProjectManager;
+import consulo.versionControlSystem.editor.ComplexPathVirtualFileSystem;
+import consulo.versionControlSystem.editor.GsonComplexPathSerializer;
 import consulo.versionControlSystem.log.VcsLogFilterCollection;
-import consulo.virtualFileSystem.BaseVirtualFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 
-/**
- * Files of the log tabs opened in editors, addressed by the project and the id of the tab.
- */
 @ExtensionImpl
-public class VcsLogVirtualFileSystem extends BaseVirtualFileSystem {
+public class VcsLogVirtualFileSystem extends ComplexPathVirtualFileSystem<VcsLogComplexPath> {
     public static final String PROTOCOL = "vcs-log";
-
-    private static final char SEPARATOR = '/';
 
     public static VcsLogVirtualFileSystem getInstance() {
         return (VcsLogVirtualFileSystem) Objects.requireNonNull(VirtualFileManager.getInstance().getFileSystem(PROTOCOL));
     }
 
+    public VcsLogVirtualFileSystem() {
+        super(new GsonComplexPathSerializer<>(VcsLogComplexPath.class));
+    }
+
+    @Override
+    protected VirtualFile findOrCreateFile(Project project, VcsLogComplexPath path) {
+        return createVcsLogFile(path, null);
+    }
+
     public VirtualFile createVcsLogFile(Project project, String tabId, @Nullable VcsLogFilterCollection filters) {
-        return new DefaultVcsLogFile(this, project.getLocationHash() + SEPARATOR + tabId, tabId, filters);
+        return createVcsLogFile(new VcsLogComplexPath(project.getLocationHash(), project.getLocationHash(), tabId), filters);
+    }
+
+    private DefaultVcsLogFile createVcsLogFile(VcsLogComplexPath pathId, @Nullable VcsLogFilterCollection filters) {
+        return new DefaultVcsLogFile(this, pathId, filters);
     }
 
     @Override
     public String getProtocol() {
         return PROTOCOL;
-    }
-
-    @Override
-    public @Nullable VirtualFile findFileByPath(String path) {
-        int index = path.indexOf(SEPARATOR);
-        if (index <= 0 || index == path.length() - 1) {
-            return null;
-        }
-
-        String projectHash = path.substring(0, index);
-        for (Project project : ProjectManager.getInstance().getOpenProjects()) {
-            if (projectHash.equals(project.getLocationHash())) {
-                return new DefaultVcsLogFile(this, path, path.substring(index + 1), null);
-            }
-        }
-        return null;
-    }
-
-    @Override
-    public @Nullable VirtualFile refreshAndFindFileByPath(String path) {
-        return findFileByPath(path);
-    }
-
-    @Override
-    public String extractPresentableUrl(String path) {
-        return findFileByPath(path) instanceof DefaultVcsLogFile file ? file.getTabName() : path;
-    }
-
-    @Override
-    public void refresh(boolean asynchronous) {
     }
 }

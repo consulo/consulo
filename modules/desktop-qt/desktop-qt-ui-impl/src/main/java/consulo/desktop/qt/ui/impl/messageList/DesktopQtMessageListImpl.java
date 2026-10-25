@@ -15,6 +15,7 @@
  */
 package consulo.desktop.qt.ui.impl.messageList;
 
+import consulo.desktop.qt.ui.impl.DesktopQtGeometry;
 import consulo.desktop.qt.ui.impl.DesktopQtSpace;
 import consulo.desktop.qt.ui.impl.DesktopQtStyleApplier;
 import consulo.desktop.qt.ui.impl.QtComponentDelegate;
@@ -27,6 +28,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.impl.avatar.AvatarPresentation;
 import consulo.ui.impl.messageList.MessageListPresentation;
+import consulo.ui.messageList.AsyncHtmlImageLoader;
 import consulo.ui.messageList.MessageList;
 import consulo.ui.Component;
 import consulo.ui.messageList.MessageListItem;
@@ -222,6 +224,7 @@ public class DesktopQtMessageListImpl extends QtComponentDelegate<QScrollArea> i
             avatar.setFixedSize(avatarSize(), avatarSize());
             avatar.setPixmap(DesktopQtAvatarPainter.paint(myAuthor.get(), image, avatarSize(), avatar.devicePixelRatioF(), avatar.palette()));
             avatar.setVisible(MessageListPresentation.showsAvatar(myStyle, myShowOwnAvatar));
+            DesktopQtAvatarPainter.repaintWhileLoading(avatar, image, this::updateAvatar);
         }
 
         void updateHeader() {
@@ -267,7 +270,7 @@ public class DesktopQtMessageListImpl extends QtComponentDelegate<QScrollArea> i
             }
             if (myMarkdown) {
                 label.setTextFormat(Qt.TextFormat.RichText);
-                label.setText(markdownToHtml(text));
+                label.setText(myImages.resolveImages(markdownToHtml(text), label.width()));
             }
             else {
                 label.setTextFormat(Qt.TextFormat.PlainText);
@@ -376,6 +379,7 @@ public class DesktopQtMessageListImpl extends QtComponentDelegate<QScrollArea> i
     }
 
     private final List<Item> myItems = new ArrayList<>();
+    private final DesktopQtMessageListImages myImages = new DesktopQtMessageListImages(runnable -> getUIAccess().give(runnable), this::refreshImages);
     private static final int MARKDOWN_UNDERLINE = 0x4000;
 
     private static String markdownToHtml(String text) {
@@ -600,5 +604,33 @@ public class DesktopQtMessageListImpl extends QtComponentDelegate<QScrollArea> i
     @Override
     public boolean isShowOwnAvatar() {
         return myShowOwnAvatar;
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setImageLoader(@Nullable AsyncHtmlImageLoader imageLoader) {
+        if (myImages.getLoader() == imageLoader) {
+            return;
+        }
+        myImages.setLoader(imageLoader);
+        refreshImages();
+    }
+
+    @Override
+    public @Nullable AsyncHtmlImageLoader getImageLoader() {
+        return myImages.getLoader();
+    }
+
+    private void refreshImages() {
+        if (!myMarkdown) {
+            return;
+        }
+        for (Item item : myItems) {
+            item.updateBody();
+        }
+        QWidget container = myContainer;
+        if (container != null && !container.isDisposed()) {
+            DesktopQtGeometry.invalidateHierarchy(container);
+        }
     }
 }

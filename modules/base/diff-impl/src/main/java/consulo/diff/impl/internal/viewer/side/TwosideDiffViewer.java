@@ -157,7 +157,7 @@ public abstract class TwosideDiffViewer<T extends EditorHolder> extends Listener
   //
 
   @Override
-  protected @Nullable Navigatable getNavigatable() {
+  public @Nullable Navigatable getNavigatable() {
     Navigatable navigatable1 = getCurrentSide().select(getRequest().getContents()).getNavigatable();
     if (navigatable1 != null) return navigatable1;
     return getCurrentSide().other().select(getRequest().getContents()).getNavigatable();

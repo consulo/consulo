@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.versionControlSystem.impl.internal;
+package consulo.versionControlSystem.util;
 
 import consulo.application.progress.DumbProgressIndicator;
 import consulo.diff.comparison.ByLine;

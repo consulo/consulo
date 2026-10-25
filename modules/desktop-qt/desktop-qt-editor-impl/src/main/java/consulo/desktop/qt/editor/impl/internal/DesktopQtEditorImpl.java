@@ -15,6 +15,8 @@
  */
 package consulo.desktop.qt.editor.impl.internal;
 
+import consulo.codeEditor.ComponentInlayRenderer;
+import consulo.codeEditor.impl.internal.inspection.InspectionWidgetActions;
 import consulo.language.editor.highlight.EmptyEditorHighlighter;
 import consulo.application.Application;
 import consulo.codeEditor.*;
@@ -27,6 +29,8 @@ import consulo.colorScheme.TextAttributes;
 import consulo.colorScheme.internal.FontPreferencesManager;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.desktop.qt.editor.impl.internal.floating.DesktopQtEditorFloatingToolbar;
 import consulo.desktop.qt.ui.impl.action.DesktopQtActionContextMenu;
 import consulo.desktop.qt.ui.impl.base.DesktopQtAwtBridgeComponent;
@@ -39,6 +43,7 @@ import consulo.document.util.TextRange;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.Component;
+import consulo.ui.ex.action.AnAction;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.Space;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -84,6 +89,7 @@ public class DesktopQtEditorImpl extends CodeEditorBase implements RealEditor, C
     private @Nullable DockLayout myRootLayout;
 
     private @Nullable DesktopQtEditorFloatingToolbar myEditorFloatingToolbar;
+    private @Nullable DesktopQtEditorInspectionToolbar myInspectionToolbar;
 
     private boolean myContextMenuInstalled;
 
@@ -116,7 +122,11 @@ public class DesktopQtEditorImpl extends CodeEditorBase implements RealEditor, C
         super(document, viewer, project, kind);
 
         myComponent = new DesktopQtEditorComponent(this);
-        myComponent.whenBound(widget -> recreateEditorFloatingToolbar());
+        myComponent.putUserData(UiDataProvider.KEY, this::uiDataSnapshot);
+        myComponent.whenBound(widget -> {
+            recreateEditorFloatingToolbar();
+            recreateInspectionToolbar();
+        });
         myComponent.whenBound(widget -> myComponentInlays.bound());
 
         // a component inlay sits at an offset, which an edit or a fold moves to another row
@@ -179,6 +189,9 @@ public class DesktopQtEditorImpl extends CodeEditorBase implements RealEditor, C
             @Override
             public void onUpdated(Inlay<?> inlay, int changeFlags) {
                 myRowLayout.invalidate();
+                if (inlay.getRenderer() instanceof ComponentInlayRenderer) {
+                    myComponentInlays.scheduleLayout();
+                }
                 int offset = inlay.getOffset();
                 repaint(offset, offset, true);
             }
@@ -242,6 +255,33 @@ public class DesktopQtEditorImpl extends CodeEditorBase implements RealEditor, C
         }
 
         return CustomActionsSchema.getCorrectedGroupAsync(groupId);
+    }
+
+    @RequiredUIAccess
+    private void recreateInspectionToolbar() {
+        if (isReleased) {
+            return;
+        }
+
+        DesktopQtEditorInspectionToolbar oldToolbar = myInspectionToolbar;
+        if (oldToolbar != null) {
+            myInspectionToolbar = null;
+            Disposer.dispose(oldToolbar);
+        }
+
+        DesktopQtEditorWidget surface = getSurface();
+        if (surface == null || !InspectionWidgetActions.isShownIn(this)) {
+            return;
+        }
+
+        List<AnAction> actions = InspectionWidgetActions.create(this, getDisposable());
+        if (actions.isEmpty()) {
+            return;
+        }
+
+        DesktopQtEditorInspectionToolbar inspectionToolbar = new DesktopQtEditorInspectionToolbar(this, surface.viewport(), actions);
+        Disposer.register(getDisposable(), inspectionToolbar);
+        myInspectionToolbar = inspectionToolbar;
     }
 
     @RequiredUIAccess
@@ -461,6 +501,15 @@ public class DesktopQtEditorImpl extends CodeEditorBase implements RealEditor, C
         return myComponent;
     }
 
+    private void uiDataSnapshot(DataSink sink) {
+        if (isDisposed() || isRendererMode()) {
+            return;
+        }
+
+        sink.set(Editor.KEY, this);
+        sink.set(Caret.KEY, getCaretModel().getCurrentCaret());
+    }
+
     /**
      * Platform code which has not been migrated off swing - brace highlighting, word selection, parameter info -
      * asks the editor for a {@link JComponent} and throws away every frontend that has none. The bridge is that
@@ -573,6 +622,8 @@ public class DesktopQtEditorImpl extends CodeEditorBase implements RealEditor, C
         myComponent.updateMirrored();
     }
 
+    private boolean myFitContentHeight;
+
     @Override
     public int getVerticalScrollbarOrientation() {
         return myVerticalScrollbarOrientation;
@@ -584,6 +635,19 @@ public class DesktopQtEditorImpl extends CodeEditorBase implements RealEditor, C
 
     @Override
     public void setVerticalScrollbarVisible(boolean b) {
+    }
+
+    @Override
+    public void setFitContentHeight(boolean fit) {
+        myFitContentHeight = fit;
+        DesktopQtEditorWidget surface = getSurface();
+        if (surface != null) {
+            surface.applyFitContentHeight();
+        }
+    }
+
+    public boolean isFitContentHeight() {
+        return myFitContentHeight;
     }
 
     @Override
@@ -692,6 +756,10 @@ public class DesktopQtEditorImpl extends CodeEditorBase implements RealEditor, C
             highlighter.setColorScheme(myScheme);
         }
 
+        updateFontView();
+    }
+
+    private void updateFontView() {
         myFontMetrics.reset();
         myDocumentWidth = -1;
 
@@ -758,7 +826,13 @@ public class DesktopQtEditorImpl extends CodeEditorBase implements RealEditor, C
     }
 
     @Override
+    @RequiredUIAccess
     public void setFontSize(int fontSize) {
+        int oldFontSize = myScheme.getEditorFontSize();
+        myScheme.setEditorFontSize(fontSize);
+        int newFontSize = myScheme.getEditorFontSize();
+        myPropertyChangeSupport.firePropertyChange(PROP_FONT_SIZE, oldFontSize, newFontSize);
+        updateFontView();
     }
 
     @Override

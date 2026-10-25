@@ -20,7 +20,7 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ProjectOpenContext;
 import consulo.project.internal.ProjectOpenService;
-import consulo.project.internal.RecentProjectsManager;
+import consulo.project.RecentProjectsManager;
 import consulo.project.ui.wm.WelcomeFrameManager;
 import consulo.ui.UIAccess;
 import consulo.util.concurrent.AsyncResult;
