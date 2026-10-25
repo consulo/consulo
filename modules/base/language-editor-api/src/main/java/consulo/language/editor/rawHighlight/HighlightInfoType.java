@@ -79,6 +79,8 @@ public interface HighlightInfoType {
         new HighlightInfoTypeImpl(ELEMENT_UNDER_CARET_SEVERITY, EditorColors.IDENTIFIER_UNDER_CARET_ATTRIBUTES);
     HighlightInfoType ELEMENT_UNDER_CARET_WRITE =
         new HighlightInfoTypeImpl(ELEMENT_UNDER_CARET_SEVERITY, EditorColors.WRITE_IDENTIFIER_UNDER_CARET_ATTRIBUTES);
+    HighlightInfoType ELEMENT_UNDER_CARET_STRUCTURAL =
+        new HighlightInfoTypeImpl(ELEMENT_UNDER_CARET_SEVERITY, CodeInsightColors.MATCHED_BRACE_ATTRIBUTES);
 
     HighlightSeverity HIGHLIGHTED_REFERENCE_SEVERITY = new HighlightSeverity("HIGHLIGHTED_REFERENCE", SYMBOL_TYPE_SEVERITY.myVal - 1);
 

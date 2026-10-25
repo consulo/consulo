@@ -16,21 +16,36 @@
 
 package consulo.language.editor.action;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.application.ReadAction;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorHighlighter;
 import consulo.codeEditor.HighlighterIterator;
 import consulo.document.Document;
+import consulo.document.util.TextRange;
 import consulo.language.Language;
 import consulo.language.ast.IElementType;
+import consulo.language.ast.ILazyParseableElementType;
 import consulo.language.editor.highlight.BraceMatcher;
+import consulo.language.editor.highlight.HighlighterIteratorWrapper;
 import consulo.language.editor.highlight.LanguageBraceMatcher;
+import consulo.language.editor.highlight.LexerEditorHighlighter;
+import consulo.language.editor.highlight.SyntaxHighlighter;
+import consulo.language.editor.highlight.SyntaxHighlighterFactory;
 import consulo.language.editor.highlight.VirtualFileBraceMatcher;
 import consulo.language.editor.highlight.XmlAwareBraceMatcher;
 import consulo.language.editor.internal.BraceMatcherInternal;
+import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.file.LanguageFileType;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiUtilCore;
+import consulo.language.psi.SyntaxTraverser;
+import consulo.project.Project;
 import consulo.util.collection.Stack;
 import consulo.util.lang.Comparing;
+import consulo.util.lang.function.Predicates;
 import consulo.virtualFileSystem.fileType.FileType;
 import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
@@ -54,14 +69,136 @@ public class BraceMatchingUtil {
   }
 
   @TestOnly
-  public static int getMatchedBraceOffset(Editor editor, boolean forward, PsiFile file) {
+  @RequiredReadAction
+  public static int getMatchedBraceOffset(Editor editor, boolean forward, PsiFile psiFile) {
     Document document = editor.getDocument();
     int offset = editor.getCaretModel().getOffset();
-    EditorHighlighter editorHighlighter = editor.getHighlighter();
+    EditorHighlighter editorHighlighter = getLazyParsableHighlighterIfAny(psiFile.getProject(), editor, psiFile);
     HighlighterIterator iterator = editorHighlighter.createIterator(offset);
-    boolean matched = matchBrace(document.getCharsSequence(), file.getFileType(), iterator, forward);
-    assert matched;
+    boolean matched = matchBrace(document.getCharsSequence(), psiFile.getFileType(), iterator, forward);
+    if (!matched) throw new AssertionError();
     return iterator.getStart();
+  }
+
+  /**
+   * @see #computeHighlightingAndNavigationContext(Editor, PsiFile, int)
+   */
+  @RequiredReadAction
+  public static @Nullable BraceHighlightingAndNavigationContext computeHighlightingAndNavigationContext(Editor editor,
+                                                                                                        PsiFile psiFile) {
+    return computeHighlightingAndNavigationContext(editor, psiFile, editor.getCaretModel().getOffset());
+  }
+
+  /**
+   * Computes context that should be used to highlight and navigate matching braces
+   *
+   * @param offset offset we are computing for. Some implementations may need to compute this not only for caret position, but for other offsets, e.g. skipping spaces behind or ahead.
+   * @return a context should be used or null if there is no matching braces at offset
+   * @apiNote this method contains a logic for selecting braces in different complicated situations, like {@code (<caret>(} and so on.
+   * It does not look forward/behind skipping spaces, like highlighting does.
+   */
+  @RequiredReadAction
+  public static @Nullable BraceHighlightingAndNavigationContext computeHighlightingAndNavigationContext(Editor editor,
+                                                                                                        PsiFile psiFile,
+                                                                                                        int offset) {
+    EditorHighlighter highlighter = getLazyParsableHighlighterIfAny(psiFile.getProject(), editor, psiFile);
+    CharSequence text = editor.getDocument().getCharsSequence();
+
+    HighlighterIterator iterator = highlighter.createIterator(offset);
+    FileType fileType = iterator.atEnd() ? null : ReadAction.compute(() -> psiFile.isValid() ? getFileType(psiFile, iterator.getStart()) : null);
+
+    boolean isBeforeOrInsideLeftBrace = fileType != null && isLBraceToken(iterator, text, fileType);
+    boolean isBeforeOrInsideRightBrace = fileType != null && !isBeforeOrInsideLeftBrace && isRBraceToken(iterator, text, fileType);
+    boolean isInsideBrace = (isBeforeOrInsideLeftBrace || isBeforeOrInsideRightBrace) && iterator.getStart() < offset;
+
+    HighlighterIterator preOffsetIterator = offset > 0 && !isInsideBrace ? highlighter.createIterator(offset - 1) : null;
+    FileType preOffsetFileType = preOffsetIterator == null || preOffsetIterator.atEnd() ? null :
+                                 ReadAction.compute(() -> psiFile.isValid() ? getFileType(psiFile, preOffsetIterator.getStart()) : null);
+
+    boolean isAfterLeftBrace = preOffsetIterator != null && preOffsetFileType != null &&
+                               isLBraceToken(preOffsetIterator, text, preOffsetFileType);
+    boolean isAfterRightBrace = !isAfterLeftBrace && preOffsetIterator != null && preOffsetFileType != null &&
+                                isRBraceToken(preOffsetIterator, text, preOffsetFileType);
+
+    int offsetTokenStart = iterator.atEnd() ? -1 : iterator.getStart();
+    int preOffsetTokenStart = preOffsetIterator == null || preOffsetIterator.atEnd() ? -1 : preOffsetIterator.getStart();
+
+    if (editor.getSettings().isBlockCursor()) {
+      if (isBeforeOrInsideLeftBrace && matchBrace(text, fileType, iterator, true)) {
+        return new BraceHighlightingAndNavigationContext(offsetTokenStart, iterator.getStart(), isInsideBrace);
+      }
+      else if (isBeforeOrInsideRightBrace && matchBrace(text, fileType, iterator, false)) {
+        return new BraceHighlightingAndNavigationContext(offsetTokenStart, iterator.getStart(), isInsideBrace);
+      }
+      else if (isAfterRightBrace && matchBrace(text, preOffsetFileType, preOffsetIterator, false)) {
+        return new BraceHighlightingAndNavigationContext(preOffsetTokenStart, preOffsetIterator.getStart(), true);
+      }
+      else if (isAfterLeftBrace && matchBrace(text, preOffsetFileType, preOffsetIterator, true)) {
+        return new BraceHighlightingAndNavigationContext(preOffsetTokenStart, preOffsetIterator.getStart(), true);
+      }
+    }
+    else {
+      if (isAfterRightBrace && matchBrace(text, preOffsetFileType, preOffsetIterator, false)) {
+        return new BraceHighlightingAndNavigationContext(preOffsetTokenStart, preOffsetIterator.getStart(), true);
+      }
+      else if (isBeforeOrInsideLeftBrace && matchBrace(text, fileType, iterator, true)) {
+        return new BraceHighlightingAndNavigationContext(offsetTokenStart, iterator.getEnd(), isInsideBrace);
+      }
+      else if (isAfterLeftBrace && matchBrace(text, preOffsetFileType, preOffsetIterator, true)) {
+        return new BraceHighlightingAndNavigationContext(preOffsetTokenStart, preOffsetIterator.getEnd(), true);
+      }
+      else if (isBeforeOrInsideRightBrace && matchBrace(text, fileType, iterator, false)) {
+        return new BraceHighlightingAndNavigationContext(offsetTokenStart, iterator.getStart(), isInsideBrace);
+      }
+    }
+    return null;
+  }
+
+  @RequiredReadAction
+  public static FileType getFileType(PsiFile psiFile, int offset) {
+    return PsiUtilBase.getPsiFileAtOffset(psiFile, offset).getFileType();
+  }
+
+
+  @RequiredReadAction
+  public static EditorHighlighter getLazyParsableHighlighterIfAny(Project project, Editor editor, PsiFile psiFile) {
+    if (!PsiDocumentManager.getInstance(project).isCommitted(editor.getDocument())) {
+      return editor.getHighlighter();
+    }
+    PsiElement elementAt = psiFile.findElementAt(editor.getCaretModel().getOffset());
+    for (PsiElement e : SyntaxTraverser.psiApi().parents(elementAt).takeWhile(Predicates.notEqualTo(psiFile))) {
+      if (!(PsiUtilCore.getElementType(e) instanceof ILazyParseableElementType)) {
+        continue;
+      }
+      Language language = ILazyParseableElementType.LANGUAGE_KEY.get(e.getNode());
+      if (language == null) {
+        continue;
+      }
+      TextRange range = e.getTextRange();
+      int offset = range.getStartOffset();
+      SyntaxHighlighter syntaxHighlighter =
+        SyntaxHighlighterFactory.getSyntaxHighlighter(language, project, psiFile.getVirtualFile());
+      LexerEditorHighlighter highlighter = new LexerEditorHighlighter(syntaxHighlighter, editor.getColorsScheme()) {
+
+        @Override
+        public HighlighterIterator createIterator(int startOffset) {
+          return new HighlighterIteratorWrapper(super.createIterator(Math.max(startOffset - offset, 0))) {
+            @Override
+            public int getStart() {
+              return super.getStart() + offset;
+            }
+
+            @Override
+            public int getEnd() {
+              return super.getEnd() + offset;
+            }
+          };
+        }
+      };
+      highlighter.setText(editor.getDocument().getText(range));
+      return highlighter;
+    }
+    return editor.getHighlighter();
   }
 
   private static class MatchBraceContext {

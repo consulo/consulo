@@ -34,6 +34,7 @@ import consulo.language.Language;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
 import consulo.language.editor.action.BraceMatchingUtil;
+import consulo.language.editor.highlight.CodeBlockSupportHandler;
 import consulo.language.editor.highlight.TextEditorHighlightingPass;
 import consulo.language.parser.ParserDefinition;
 import consulo.language.psi.PsiFile;
@@ -288,7 +289,9 @@ public class IndentsPass extends TextEditorHighlightingPass implements DumbAware
             int lineEnd = myDocument.getLineEndOffset(line);
             int nonWhitespaceOffset = CharArrayUtil.shiftForward(myChars, lineStart, lineEnd, " \t");
             HighlighterIterator iterator = myEditor.getHighlighter().createIterator(nonWhitespaceOffset);
-            if (BraceMatchingUtil.isRBraceToken(iterator, myChars, fileType)) {
+            if (BraceMatchingUtil.isRBraceToken(iterator, myChars, fileType) ||
+                iterator.getTokenType() instanceof IElementType tokenType &&
+                !CodeBlockSupportHandler.findMarkersRanges(myFile, tokenType.getLanguage(), nonWhitespaceOffset).isEmpty()) {
               indent = topIndent;
             }
           }

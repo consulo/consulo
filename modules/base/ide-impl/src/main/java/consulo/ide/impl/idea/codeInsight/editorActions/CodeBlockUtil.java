@@ -23,6 +23,7 @@ import consulo.codeEditor.ScrollType;
 import consulo.language.Language;
 import consulo.codeEditor.EditorEx;
 import consulo.language.editor.action.CodeBlockProvider;
+import consulo.language.editor.highlight.CodeBlockSupportHandler;
 import consulo.codeEditor.HighlighterIterator;
 import consulo.fileEditor.history.IdeDocumentHistory;
 import consulo.document.Document;
@@ -121,7 +122,20 @@ public class CodeBlockUtil {
   }
 
   private static int calcBlockEndOffset(Editor editor, PsiFile file) {
+    int offsetFromBraceMatcher = calcBlockEndOffsetFromBraceMatcher(editor, file);
+    TextRange rangeFromStructuralSupport = CodeBlockSupportHandler.findCodeBlockRange(editor, file);
+    if (rangeFromStructuralSupport.isEmpty()) {
+      return offsetFromBraceMatcher;
+    }
+    else if (offsetFromBraceMatcher == -1) {
+      return rangeFromStructuralSupport.getEndOffset();
+    }
+    else {
+      return Math.min(rangeFromStructuralSupport.getEndOffset(), offsetFromBraceMatcher);
+    }
+  }
 
+  private static int calcBlockEndOffsetFromBraceMatcher(Editor editor, PsiFile file) {
     Document document = editor.getDocument();
     int offset = editor.getCaretModel().getOffset();
     FileType fileType = file.getFileType();
@@ -176,6 +190,20 @@ public class CodeBlockUtil {
   }
 
   private static int calcBlockStartOffset(Editor editor, PsiFile file) {
+    int offsetFromBraceMatcher = calcBlockStartOffsetFromBraceMatcher(editor, file);
+    TextRange rangeFromStructuralSupport = CodeBlockSupportHandler.findCodeBlockRange(editor, file);
+    if (rangeFromStructuralSupport.isEmpty()) {
+      return offsetFromBraceMatcher;
+    }
+    else if (offsetFromBraceMatcher == -1) {
+      return rangeFromStructuralSupport.getStartOffset();
+    }
+    else {
+      return Math.max(rangeFromStructuralSupport.getStartOffset(), offsetFromBraceMatcher);
+    }
+  }
+
+  private static int calcBlockStartOffsetFromBraceMatcher(Editor editor, PsiFile file) {
     int offset = editor.getCaretModel().getOffset() - 1;
     if (offset < 0) return -1;
 

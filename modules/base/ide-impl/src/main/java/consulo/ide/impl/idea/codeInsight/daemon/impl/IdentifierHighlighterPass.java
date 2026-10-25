@@ -29,8 +29,10 @@ import consulo.ide.impl.idea.codeInsight.highlighting.HighlightHandlerBase;
 import consulo.ide.impl.idea.codeInsight.highlighting.HighlightUsagesHandler;
 import consulo.ide.impl.idea.find.findUsages.FindUsagesManager;
 import consulo.ide.impl.idea.find.impl.FindManagerImpl;
+import consulo.language.editor.CodeInsightSettings;
 import consulo.language.editor.TargetElementUtil;
 import consulo.language.editor.TargetElementUtilExtender;
+import consulo.language.editor.highlight.CodeBlockSupportHandler;
 import consulo.language.editor.highlight.ReadWriteAccessDetector;
 import consulo.language.editor.highlight.TextEditorHighlightingPass;
 import consulo.language.editor.highlight.UpdateHighlightersUtil;
@@ -40,6 +42,7 @@ import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
 import consulo.language.editor.inject.InjectedEditorManager;
 import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.editor.rawHighlight.HighlightInfoType;
+import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.*;
 import consulo.language.psi.scope.LocalSearchScope;
 import consulo.language.psi.search.ReferencesSearch;
@@ -62,6 +65,7 @@ public class IdentifierHighlighterPass extends TextEditorHighlightingPass {
     private final Editor myEditor;
     private final Collection<TextRange> myReadAccessRanges = Collections.synchronizedList(new ArrayList<TextRange>());
     private final Collection<TextRange> myWriteAccessRanges = Collections.synchronizedList(new ArrayList<TextRange>());
+    private final Collection<TextRange> myCodeBlockMarkerRanges = Collections.synchronizedList(new ArrayList<TextRange>());
     private final int myCaretOffset;
 
     IdentifierHighlighterPass(Project project, PsiFile file, Editor editor) {
@@ -99,6 +103,8 @@ public class IdentifierHighlighterPass extends TextEditorHighlightingPass {
                 return;
             }
         }
+
+        collectCodeBlockMarkerRanges();
 
         Set<String> flags = new HashSet<>(Arrays.asList(
             TargetElementUtilExtender.ELEMENT_NAME_ACCEPTED,
@@ -143,6 +149,25 @@ public class IdentifierHighlighterPass extends TextEditorHighlightingPass {
                     }
                 }
             }
+        }
+    }
+
+    /**
+     * Collects code block markers ranges to highlight. E.g. if/elsif/else. Collected ranges will be highlighted the same way as braces
+     */
+    @RequiredReadAction
+    private void collectCodeBlockMarkerRanges() {
+        InjectedLanguageManager manager = InjectedLanguageManager.getInstance(myFile.getProject());
+
+        PsiElement contextElement = myFile.findElementAt(
+            TargetElementUtil.adjustOffset(myFile, myEditor.getDocument(), myEditor.getCaretModel().getOffset())
+        );
+        if (contextElement == null) {
+            return;
+        }
+
+        for (TextRange range : CodeBlockSupportHandler.findMarkersRanges(contextElement)) {
+            myCodeBlockMarkerRanges.add(manager.injectedToHost(contextElement, range));
         }
     }
 
@@ -231,7 +256,7 @@ public class IdentifierHighlighterPass extends TextEditorHighlightingPass {
     }
 
     private List<HighlightInfo> getHighlights() {
-        if (myReadAccessRanges.isEmpty() && myWriteAccessRanges.isEmpty()) {
+        if (myReadAccessRanges.isEmpty() && myWriteAccessRanges.isEmpty() && myCodeBlockMarkerRanges.isEmpty()) {
             return Collections.emptyList();
         }
         Set<Pair<Object, TextRange>> existingMarkupTooltips = new HashSet<>();
@@ -242,7 +267,8 @@ public class IdentifierHighlighterPass extends TextEditorHighlightingPass {
             ));
         }
 
-        List<HighlightInfo> result = new ArrayList<>(myReadAccessRanges.size() + myWriteAccessRanges.size());
+        List<HighlightInfo> result =
+            new ArrayList<>(myReadAccessRanges.size() + myWriteAccessRanges.size() + myCodeBlockMarkerRanges.size());
         for (TextRange range : myReadAccessRanges) {
             ContainerUtil.addIfNotNull(
                 result,
@@ -254,6 +280,14 @@ public class IdentifierHighlighterPass extends TextEditorHighlightingPass {
                 result,
                 createHighlightInfo(range, HighlightInfoType.ELEMENT_UNDER_CARET_WRITE, existingMarkupTooltips)
             );
+        }
+        if (CodeInsightSettings.getInstance().HIGHLIGHT_BRACES) {
+            for (TextRange range : myCodeBlockMarkerRanges) {
+                ContainerUtil.addIfNotNull(
+                    result,
+                    createHighlightInfo(range, HighlightInfoType.ELEMENT_UNDER_CARET_STRUCTURAL, existingMarkupTooltips)
+                );
+            }
         }
         return result;
     }
