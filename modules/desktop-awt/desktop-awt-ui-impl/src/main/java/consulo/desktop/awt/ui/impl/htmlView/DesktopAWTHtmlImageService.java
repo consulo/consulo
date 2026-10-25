@@ -47,7 +47,7 @@ public final class DesktopAWTHtmlImageService extends ImageService {
         }
 
         if (image instanceof DesktopAWTHtmlImage htmlImage) {
-            htmlImage.paint(g, x, y, width, height);
+            htmlImage.paint(observer instanceof Component component ? component : null, g, x, y, width, height);
             return;
         }
 

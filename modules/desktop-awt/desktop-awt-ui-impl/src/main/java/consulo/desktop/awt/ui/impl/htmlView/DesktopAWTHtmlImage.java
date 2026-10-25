@@ -41,9 +41,9 @@ final class DesktopAWTHtmlImage extends java.awt.Image {
         myImage = image;
     }
 
-    void paint(Graphics g, int x, int y, int width, int height) {
+    void paint(@Nullable Component component, Graphics g, int x, int y, int width, int height) {
         Icon icon = TargetAWT.to(resize(width, height));
-        icon.paintIcon(null, g, x, y);
+        icon.paintIcon(component, g, x, y);
     }
 
     private Image resize(int width, int height) {

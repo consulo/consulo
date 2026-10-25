@@ -177,7 +177,7 @@ public class DesktopDeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<Deskt
     }
 
     @Override
-    public void paintIcon(Component c, Graphics g, int x, int y) {
+    public void paintIcon(@Nullable Component c, Graphics g, int x, int y) {
         if (!(myScaledDelegateIcon instanceof DesktopDeferredIconImpl && ((DesktopDeferredIconImpl) myScaledDelegateIcon).myScaledDelegateIcon instanceof DesktopDeferredIconImpl)) {
             TargetAWT.to(myScaledDelegateIcon).paintIcon(c, g, x, y); //SOE protection
         }
@@ -194,13 +194,16 @@ public class DesktopDeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<Deskt
         scheduleEvaluation(c, x, y);
     }
 
-    private void addPendingRepaint(Component c, int x, int y) {
+    private void addPendingRepaint(@Nullable Component c, int x, int y) {
         RepaintRequest request = ourRepaintScheduler.createRepaintRequest(c, x, y);
-        myPendingRepaints.putIfAbsent(Objects.requireNonNull(request.target()), request);
+        Component target = request.target();
+        if (target != null) {
+            myPendingRepaints.putIfAbsent(target, request);
+        }
     }
 
     @VisibleForTesting
-    Future<?> scheduleEvaluation(Component c, int x, int y) {
+    Future<?> scheduleEvaluation(@Nullable Component c, int x, int y) {
         myIsScheduled = true;
 
         addPendingRepaint(c, x, y);
