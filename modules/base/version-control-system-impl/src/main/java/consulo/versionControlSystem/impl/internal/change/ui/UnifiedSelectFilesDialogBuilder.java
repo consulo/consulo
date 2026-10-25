@@ -15,9 +15,11 @@
  */
 package consulo.versionControlSystem.impl.internal.change.ui;
 
+import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.DeleteProvider;
 import consulo.ui.ex.dialog.DialogService;
@@ -26,6 +28,7 @@ import consulo.versionControlSystem.VcsShowConfirmationOption;
 import consulo.versionControlSystem.ui.SelectFilesDialogBuilder;
 import org.jspecify.annotations.Nullable;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -52,6 +55,9 @@ public class UnifiedSelectFilesDialogBuilder<T> implements SelectFilesDialogBuil
     private boolean myDeletable;
     private boolean myOkOnly;
     private @Nullable VcsShowConfirmationOption myConfirmationOption;
+    private @Nullable Collection<T> mySelected;
+    private @Nullable Function<Disposable, Component> myBottomComponentFactory;
+    private String myDimensionServiceKey = "UnifiedSelectFilesDialog";
 
     public UnifiedSelectFilesDialogBuilder(Project project,
                                            List<T> items,
@@ -86,6 +92,24 @@ public class UnifiedSelectFilesDialogBuilder<T> implements SelectFilesDialogBuil
     @Override
     public SelectFilesDialogBuilder<T> deletable() {
         myDeletable = true;
+        return this;
+    }
+
+    @Override
+    public SelectFilesDialogBuilder<T> selected(Collection<T> files) {
+        mySelected = List.copyOf(files);
+        return this;
+    }
+
+    @Override
+    public SelectFilesDialogBuilder<T> bottomComponent(Function<Disposable, Component> factory) {
+        myBottomComponentFactory = factory;
+        return this;
+    }
+
+    @Override
+    public SelectFilesDialogBuilder<T> dimensionServiceKey(String key) {
+        myDimensionServiceKey = key;
         return this;
     }
 
@@ -131,7 +155,10 @@ public class UnifiedSelectFilesDialogBuilder<T> implements SelectFilesDialogBuil
             myOkText,
             myCancelText,
             myOkOnly,
-            myConfirmationOption
+            myConfirmationOption,
+            mySelected,
+            myBottomComponentFactory,
+            myDimensionServiceKey
         );
 
         return myProject.getApplication().getInstance(DialogService.class).build(descriptor).showAsync().handle((value, error) -> {

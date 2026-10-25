@@ -244,7 +244,7 @@ public abstract class DvcsStatusWidget<T extends Repository> extends EditorBased
         rememberRecentRoot(repository.getRoot().getPath());
     }
 
-    private LocalizeValue getToolTip(@Nullable T repository) {
+    protected LocalizeValue getToolTip(@Nullable T repository) {
         if (repository == null) {
             return LocalizeValue.empty();
         }

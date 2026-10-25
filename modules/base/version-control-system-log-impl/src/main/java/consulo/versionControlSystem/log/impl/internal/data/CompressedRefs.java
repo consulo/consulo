@@ -24,6 +24,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import it.unimi.dsi.fastutil.ints.*;
 
 import java.util.*;
+import java.util.Objects;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -75,7 +76,8 @@ public class CompressedRefs {
     private Stream<VcsRef> streamTags() {
         return myTags.values().stream()
             .flatMapToInt(IntList::intStream)
-            .mapToObj(myStorage::getVcsRef);
+            .mapToObj(myStorage::getVcsRef)
+            .filter(Objects::nonNull);
     }
 
     public Stream<VcsRef> stream() {

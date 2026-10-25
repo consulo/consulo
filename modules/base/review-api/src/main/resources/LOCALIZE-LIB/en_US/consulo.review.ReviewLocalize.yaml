@@ -332,3 +332,9 @@ review.details.resolve.conflicts.head:
     text: Source
 review.details.resolve.conflicts.base:
     text: Target
+account.choose.link:
+    text: Choose an account
+review.login.note.gear:
+    text: Change repository or account later under the gear icon
+review.login.note.more:
+    text: Change repository or account later under the More icon

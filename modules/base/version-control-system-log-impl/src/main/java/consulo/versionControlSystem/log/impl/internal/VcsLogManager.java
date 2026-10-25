@@ -49,6 +49,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.BiConsumer;
 
 public class VcsLogManager implements Disposable {
   private static final Logger LOG = Logger.getInstance(VcsLogManager.class);
@@ -57,7 +58,7 @@ public class VcsLogManager implements Disposable {
   private final Project myProject;
   
   private final VcsLogTabsProperties myUiProperties;
-  private final @Nullable Runnable myRecreateMainLogHandler;
+  private final @Nullable BiConsumer<@Nullable Object, Throwable> myRecreateMainLogHandler;
 
   
   private final VcsLogDataImpl myLogData;
@@ -80,7 +81,7 @@ public class VcsLogManager implements Disposable {
     VcsLogTabsProperties uiProperties,
     Collection<VcsRoot> roots,
     boolean scheduleRefreshImmediately,
-    @Nullable Runnable recreateHandler
+    @Nullable BiConsumer<@Nullable Object, Throwable> recreateHandler
   ) {
     myProject = project;
     myUiProperties = uiProperties;
@@ -233,7 +234,7 @@ public class VcsLogManager implements Disposable {
           else {
             LOG.error(message, e);
           }
-          myRecreateMainLogHandler.run();
+          myRecreateMainLogHandler.accept(source, e);
         });
       }
       else {

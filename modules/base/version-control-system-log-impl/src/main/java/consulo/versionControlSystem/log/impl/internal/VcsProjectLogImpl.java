@@ -16,10 +16,10 @@
 package consulo.versionControlSystem.log.impl.internal;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.ApplicationManager;
 import consulo.application.CachesInvalidator;
 import consulo.component.messagebus.MessageBus;
 import consulo.disposer.Disposer;
+import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -28,10 +28,14 @@ import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.VcsInitObject;
 import consulo.versionControlSystem.internal.ProjectLevelVcsManagerEx;
 import consulo.versionControlSystem.log.VcsLogFilterCollection;
+import consulo.versionControlSystem.log.VcsLogStorage;
 import consulo.versionControlSystem.log.VcsProjectLog;
 import consulo.versionControlSystem.log.impl.internal.data.VcsLogDataImpl;
+import consulo.versionControlSystem.log.impl.internal.data.VcsLogStorageImpl;
 import consulo.versionControlSystem.log.impl.internal.data.VcsLogTabsProperties;
+import consulo.versionControlSystem.log.impl.internal.data.index.VcsLogIndex;
 import consulo.versionControlSystem.log.impl.internal.ui.AbstractVcsLogUi;
+import consulo.versionControlSystem.log.impl.internal.util.PersistentUtil;
 import consulo.versionControlSystem.root.VcsRoot;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
@@ -39,11 +43,18 @@ import jakarta.inject.Singleton;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
 @Singleton
 @ServiceImpl
 public class VcsProjectLogImpl implements VcsProjectLog {
+    private static final Logger LOG = Logger.getInstance(VcsProjectLogImpl.class);
+
+    private static final int INVALIDATE_CACHES_COUNT = 5;
+
+    private final Map<String, Integer> myErrorCountBySource = new ConcurrentHashMap<>();
     
     private final Project myProject;
     
@@ -97,13 +108,50 @@ public class VcsProjectLogImpl implements VcsProjectLog {
     }
 
     protected void recreateLog() {
-        ApplicationManager.getApplication().invokeLater(() -> {
+        myProject.getApplication().invokeLater(() -> {
             disposeLog();
 
             if (hasDvcsRoots()) {
                 createLog();
             }
-        });
+        }, myProject.getDisposed());
+    }
+
+    protected void recreateOnError(@Nullable Object source, Throwable error) {
+        String errorSource = source instanceof VcsLogStorage ? "Storage" : source instanceof VcsLogIndex ? "Index" : "Other";
+        int count = myErrorCountBySource.merge(errorSource, 1, Integer::sum);
+        boolean invalidateCaches = count % INVALIDATE_CACHES_COUNT == 0;
+        if (invalidateCaches) {
+            LOG.error("Invalidating Vcs Log caches after " + errorSource + " corruption (count=" + count + ").", error);
+        }
+        else {
+            LOG.debug("Recreating Vcs Log after " + errorSource + " corruption (count=" + count + ").", error);
+        }
+
+        myProject.getApplication().invokeLater(() -> {
+            VcsLogManager logManager = myLogManager.getCached();
+            String logId = invalidateCaches && logManager != null
+                ? PersistentUtil.calcLogId(myProject, logManager.getDataManager().getLogProviders())
+                : null;
+
+            disposeLog();
+
+            if (logId == null) {
+                if (hasDvcsRoots()) {
+                    createLog();
+                }
+                return;
+            }
+
+            myProject.getApplication().executeOnPooledThread(() -> {
+                VcsLogStorageImpl.cleanupStorageFiles(logId);
+                myProject.getApplication().invokeLater(() -> {
+                    if (hasDvcsRoots()) {
+                        createLog();
+                    }
+                }, myProject.getDisposed());
+            });
+        }, myProject.getDisposed());
     }
 
     @RequiredUIAccess
@@ -215,7 +263,7 @@ public class VcsProjectLogImpl implements VcsProjectLog {
         
         @RequiredUIAccess
         protected synchronized VcsLogManager compute() {
-            return new VcsLogManager(myProject, myUiProperties, getVcsRoots(), false, VcsProjectLogImpl.this::recreateLog);
+            return new VcsLogManager(myProject, myUiProperties, getVcsRoots(), false, VcsProjectLogImpl.this::recreateOnError);
         }
 
         @RequiredUIAccess

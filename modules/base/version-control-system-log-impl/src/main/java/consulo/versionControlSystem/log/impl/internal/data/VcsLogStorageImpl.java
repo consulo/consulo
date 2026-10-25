@@ -97,6 +97,17 @@ public class VcsLogStorageImpl implements Disposable, VcsLogStorage {
         Disposer.register(parent, this);
     }
 
+    public static void cleanupStorageFiles(String logId) {
+        for (String storageKind : new String[]{HASHES_STORAGE, REFS_STORAGE}) {
+            if (PersistentUtil.cleanupStorageFiles(storageKind, logId)) {
+                LOG.info("Deleted " + storageKind + " storage files of " + logId);
+            }
+            else {
+                LOG.error("Could not clean up " + storageKind + " storage files of " + logId);
+            }
+        }
+    }
+
     private @Nullable CommitId doGetCommitId(int index) throws IOException {
         return myCommitIdEnumerator.valueOf(index);
     }

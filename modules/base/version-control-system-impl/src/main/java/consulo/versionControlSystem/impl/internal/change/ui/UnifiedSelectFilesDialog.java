@@ -31,10 +31,13 @@ import consulo.ui.ex.dialog.DialogValue;
 import consulo.ui.ex.dialog.action.DialogCancelAction;
 import consulo.ui.ex.dialog.action.DialogOkAction;
 import consulo.ui.layout.DockLayout;
+import consulo.ui.layout.SplitLayoutPosition;
+import consulo.ui.layout.TwoComponentSplitLayout;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsShowConfirmationOption;
 import org.jspecify.annotations.Nullable;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -55,6 +58,9 @@ public class UnifiedSelectFilesDialog<T> extends DialogDescriptor {
     private final LocalizeValue myCancelText;
     private final boolean myOkOnly;
     private final @Nullable VcsShowConfirmationOption myConfirmationOption;
+    private final @Nullable Collection<T> mySelected;
+    private final @Nullable Function<Disposable, Component> myBottomComponentFactory;
+    private final String myDimensionServiceKey;
 
     private @Nullable UnifiedVcsFileList<T> myList;
     private @Nullable CheckBox myDoNotAsk;
@@ -71,7 +77,10 @@ public class UnifiedSelectFilesDialog<T> extends DialogDescriptor {
                                     LocalizeValue okText,
                                     LocalizeValue cancelText,
                                     boolean okOnly,
-                                    @Nullable VcsShowConfirmationOption confirmationOption) {
+                                    @Nullable VcsShowConfirmationOption confirmationOption,
+                                    @Nullable Collection<T> selected,
+                                    @Nullable Function<Disposable, Component> bottomComponentFactory,
+                                    String dimensionServiceKey) {
         super(title);
         myProject = project;
         myItems = items;
@@ -84,6 +93,9 @@ public class UnifiedSelectFilesDialog<T> extends DialogDescriptor {
         myCancelText = cancelText;
         myOkOnly = okOnly;
         myConfirmationOption = confirmationOption;
+        mySelected = selected;
+        myBottomComponentFactory = bottomComponentFactory;
+        myDimensionServiceKey = dimensionServiceKey;
     }
 
     public @Nullable List<T> getSelection() {
@@ -96,12 +108,26 @@ public class UnifiedSelectFilesDialog<T> extends DialogDescriptor {
         UnifiedVcsFileList<T> list =
             new UnifiedVcsFileList<>(myProject, myItems, myToPath, myValid, mySelectable, true, myDeleteProvider, null, uiDisposable);
         myList = list;
+        Collection<T> selected = mySelected;
+        if (mySelectable && selected != null) {
+            list.setIncluded(selected);
+        }
 
         DockLayout root = DockLayout.create();
         if (myPrompt.isNotEmpty()) {
             root.top(Label.create(myPrompt));
         }
-        root.center(list.getComponent());
+        Function<Disposable, Component> bottomComponentFactory = myBottomComponentFactory;
+        if (bottomComponentFactory != null) {
+            TwoComponentSplitLayout split = TwoComponentSplitLayout.create(SplitLayoutPosition.VERTICAL);
+            split.setProportion(70);
+            split.setFirstComponent(list.getComponent());
+            split.setSecondComponent(bottomComponentFactory.apply(uiDisposable));
+            root.center(split);
+        }
+        else {
+            root.center(list.getComponent());
+        }
         if (myConfirmationOption != null) {
             CheckBox doNotAsk = CheckBox.create(CommonLocalize.dialogOptionsDoNotAsk());
             myDoNotAsk = doNotAsk;
@@ -150,6 +176,6 @@ public class UnifiedSelectFilesDialog<T> extends DialogDescriptor {
 
     @Override
     public @Nullable String getDimensionServiceKey() {
-        return "UnifiedSelectFilesDialog";
+        return myDimensionServiceKey;
     }
 }

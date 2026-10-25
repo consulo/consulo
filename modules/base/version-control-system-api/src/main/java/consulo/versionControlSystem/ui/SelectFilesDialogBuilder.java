@@ -15,13 +15,17 @@
  */
 package consulo.versionControlSystem.ui;
 
+import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.versionControlSystem.VcsShowConfirmationOption;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Function;
 
 /**
  * A dialog listing files, optionally with checkboxes to pick some of them.
@@ -43,6 +47,18 @@ public interface SelectFilesDialogBuilder<T> {
      * Lets the user delete the selected files from the disk. Applies to lists of virtual files only.
      */
     SelectFilesDialogBuilder<T> deletable();
+
+    /**
+     * Checks only these files at first. Applies to a {@link #selectable()} dialog.
+     */
+    SelectFilesDialogBuilder<T> selected(Collection<T> files);
+
+    /**
+     * Places a component under the file list, split from it vertically.
+     */
+    SelectFilesDialogBuilder<T> bottomComponent(Function<Disposable, Component> factory);
+
+    SelectFilesDialogBuilder<T> dimensionServiceKey(String key);
 
     SelectFilesDialogBuilder<T> okText(LocalizeValue okText);
 
