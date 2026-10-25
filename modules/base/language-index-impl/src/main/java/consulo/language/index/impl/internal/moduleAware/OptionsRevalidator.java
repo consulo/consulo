@@ -59,7 +59,8 @@ public final class OptionsRevalidator {
         if (stored.indexVersion() != currentIndexVersion) {
             return true;
         }
-        return !stored.sameVariants(snapshot(currentIndexVersion, currentIds, currentState));
+        // the recorded variants may also hold other projects' variants of a shared file: only missing own ones count
+        return !stored.containsVariants(snapshot(currentIndexVersion, currentIds, currentState));
     }
 
     public static OptionsMeta snapshot(int currentIndexVersion,

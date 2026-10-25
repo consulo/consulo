@@ -427,6 +427,17 @@ public class PathDirectoryBasedStorage extends StateStorageBase<DirectoryStorage
         private void collectVfsEvents(@Nullable List<VFileEvent> events) {
             LocalFileSystem lfs = LocalFileSystem.getInstance();
             VirtualFile dir = lfs.findFileByNioFile(storage.myDir);
+            if (dir == null || !dir.isValid()) {
+                // this save created the directory: one save-tagged event for it, its files are loaded with it - otherwise
+                // the next refresh finds the directory and reports our own write as an external change
+                VirtualFile parent = lfs.findFileByNioFile(storage.myDir.getParent());
+                File io = storage.myDir.toFile();
+                if (parent != null && parent.isValid() && io.isDirectory()) {
+                    FileAttributes attributes = new FileAttributes(true, false, false, false, 0, io.lastModified(), true);
+                    collect(events, new VFileCreateEvent(this, parent, io.getName(), true, attributes, null, false, null));
+                }
+                return;
+            }
             for (String fileName : dirtyFileNames) {
                 Path childPath = storage.myDir.resolve(fileName);
                 VirtualFile file = lfs.findFileByNioFile(childPath);

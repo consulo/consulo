@@ -170,6 +170,8 @@ public abstract class LibraryTableBase implements PersistentStateComponent<Eleme
     }
 
     myModel = model;
+    // the table has content now: a state loaded later - a reload of the storage - must be diffed against it, not read into it
+    myFirstLoad = false;
     for (Library library : removedLibraries) {
       Disposer.dispose(library);
       fireAfterLibraryRemoved(library);

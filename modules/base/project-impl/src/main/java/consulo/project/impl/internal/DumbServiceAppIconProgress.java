@@ -7,8 +7,10 @@ import consulo.application.internal.ProgressIndicatorEx;
 import consulo.application.progress.TaskInfo;
 import consulo.application.util.registry.Registry;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.ex.AppIcon;
 import consulo.ui.ex.AppIconScheme;
+import org.jspecify.annotations.Nullable;
 
 final class DumbServiceAppIconProgress extends ProgressIndicatorBase {
     private final Project myProject;
@@ -30,15 +32,20 @@ final class DumbServiceAppIconProgress extends ProgressIndicatorBase {
             return;
         }
         myLastFraction = fraction;
-        myProject.getUIAccess().giveIfNeed(
+        UIAccess uiAccess = uiAccess();
+        if (uiAccess == null) {
+            return;
+        }
+        uiAccess.giveIfNeed(
             () -> AppIcon.getInstance().setProgress(myProject, "indexUpdate", AppIconScheme.Progress.INDEXING, fraction, true)
         );
     }
 
     @Override
     public void finish(TaskInfo task) {
-        if (myLastFraction != 0) { // we should call setProgress at least once before
-            myProject.getUIAccess().giveIfNeed(() -> {
+        UIAccess uiAccess = uiAccess();
+        if (myLastFraction != 0 && uiAccess != null) { // we should call setProgress at least once before
+            uiAccess.giveIfNeed(() -> {
                 AppIcon appIcon = AppIcon.getInstance();
                 if (appIcon.hideProgress(myProject, "indexUpdate")) {
                     if (Registry.is("ide.appIcon.requestAttention.after.indexing", false)) {
@@ -48,5 +55,17 @@ final class DumbServiceAppIconProgress extends ProgressIndicatorBase {
                 }
             });
         }
+    }
+
+    /**
+     * The project's UI access, or {@code null} once the project is closing: an indexing task may finish after its
+     * project's frame is gone, and the icon of a closed project has nothing to show.
+     */
+    private @Nullable UIAccess uiAccess() {
+        if (myProject.isDisposed()) {
+            return null;
+        }
+        UIAccess uiAccess = myProject.getUIAccess();
+        return uiAccess.isValid() ? uiAccess : null;
     }
 }

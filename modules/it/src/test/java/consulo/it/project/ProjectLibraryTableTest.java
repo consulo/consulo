@@ -15,7 +15,9 @@
  */
 package consulo.it.project;
 
+import consulo.application.Application;
 import consulo.application.WriteAction;
+import consulo.component.persist.PersistentStateComponent;
 import consulo.content.base.BinariesOrderRootType;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;
@@ -23,7 +25,10 @@ import consulo.project.Project;
 import consulo.project.content.library.ProjectLibraryTable;
 import consulo.it.HeadlessProjectExtension;
 import consulo.it.HeadlessProjects;
+import consulo.util.concurrent.coroutine.CoroutineScope;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
+import org.jdom.Element;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -31,6 +36,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static consulo.it.index.ScanningTestSupport.findFile;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -159,6 +165,64 @@ public class ProjectLibraryTableTest {
             "beforeRemoved:watched-library",
             "afterRemoved:watched-library"
         );
+    }
+
+    /**
+     * A fresh project has no stored library table, so its state is never loaded at open; an importer then creates the
+     * libraries. A reload of the storage afterwards must go through a commit - not read into the committed, read-only
+     * model, which logged an assertion and kept the library twice under one name until the duplicate was removed.
+     */
+    @Test
+    @SuppressWarnings("unchecked")
+    public void reloadingTheStateOfAFreshTableReplacesItsLibraries(Project project) throws Exception {
+        ProjectLibraryTable table = ProjectLibraryTable.getInstance(project);
+        createLibrary(table, "imported-library");
+        Library imported = table.getLibraryByName("imported-library");
+        assertThat(imported).isNotNull();
+
+        PersistentStateComponent<Element> persistent = (PersistentStateComponent<Element>) table;
+        Element stored = persistent.getState();
+        assertThat(stored).isNotNull();
+        WriteAction.run(() -> persistent.loadState(stored));
+
+        assertThat(table.getLibraryByName("imported-library")).isNotNull();
+        assertThat(table.getLibraries()).hasSize(1);
+    }
+
+    /**
+     * Saving the first project library creates the storage directory. The save must tell the VFS about it, otherwise
+     * the next refresh finds the directory and reports the IDE's own write as an external change, which reloads the
+     * library table.
+     */
+    @Test
+    public void theFirstSavedLibraryIsKnownToTheVfsWithoutARefresh(Application application, HeadlessProjects projects) throws Exception {
+        Path directory = Files.createTempDirectory("consulo-it-libtable-save");
+        Project project = projects.open(directory);
+        ProjectLibraryTable table = ProjectLibraryTable.getInstance(project);
+        Path librariesDirectory = directory.resolve(Project.DIRECTORY_STORE_FOLDER).resolve("libraries");
+
+        // the first save writes the config directory; then load its children, so a child appears in the VFS only
+        // through an event, never from disk
+        saveProject(project, application);
+        assertThat(librariesDirectory).doesNotExist();
+        VirtualFile configDirectory = LocalFileSystem.getInstance().refreshAndFindFileByNioFile(librariesDirectory.getParent());
+        assertThat(configDirectory).isNotNull();
+        configDirectory.getChildren();
+
+        createLibrary(table, "first-library");
+        saveProject(project, application);
+
+        assertThat(librariesDirectory).isDirectoryContaining(path -> path.getFileName().toString().endsWith(".xml"));
+        VirtualFile known = LocalFileSystem.getInstance().findFileByNioFile(librariesDirectory);
+        assertThat(known).as("the save must have created the directory in the VFS too").isNotNull();
+        assertThat(known.getChildren()).hasSize(1);
+    }
+
+    private static void saveProject(Project project, Application application) throws Exception {
+        project.saveAsync(application.getLastUIAccess())
+            .runAsync(CoroutineScope.of(project.coroutineContext()), null)
+            .toFuture()
+            .get(30, TimeUnit.SECONDS);
     }
 
     private static void createLibrary(LibraryTable table, String name) throws Exception {

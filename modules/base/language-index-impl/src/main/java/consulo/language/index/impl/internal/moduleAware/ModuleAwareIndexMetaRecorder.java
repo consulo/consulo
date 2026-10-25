@@ -19,7 +19,9 @@ import consulo.index.io.ID;
 import consulo.language.index.impl.internal.IndexingStamp;
 import consulo.application.AccessRule;
 import consulo.language.psi.stub.ModuleAwareIndexOptions;
-import consulo.document.util.FileContentUtilCore;
+import consulo.language.impl.internal.file.FileManager;
+import consulo.language.impl.internal.psi.PsiManagerEx;
+import consulo.project.DumbService;
 import consulo.application.Application;
 import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.language.psi.stub.IndexedFile;
@@ -87,8 +89,6 @@ public final class ModuleAwareIndexMetaRecorder {
         });
     private static final Key<AtomicReference<ProviderStateCache>> PROVIDER_STATE_CACHE = Key.create("module.aware.provider.state.cache");
     private static final Set<Integer> ourReindexRequested = ConcurrentHashMap.newKeySet();
-    private static final Set<VirtualFile> ourPendingReparse = ConcurrentHashMap.newKeySet();
-    private static final AtomicBoolean ourReparseScheduled = new AtomicBoolean();
 
     private ModuleAwareIndexMetaRecorder() {
     }
@@ -165,24 +165,52 @@ public final class ModuleAwareIndexMetaRecorder {
     }
 
     /**
-     * Options steer the parse as well as the index, so a file whose recorded options moved needs its tree rebuilt
-     * once its index has been. Files are batched into one write action per burst of recordings.
+     * Options steer the parse as well as the index, so a file whose recorded options moved needs its tree rebuilt once
+     * its index has been - but only a file whose tree is loaded in this project: any other file is parsed under its
+     * current options the next time its tree is built. The files of a project are batched until it is smart again, so
+     * the reparse - a write action - neither waits for nor stalls the indexing which produced them, and a whole import
+     * which moved every file's options costs one write action for the few files open in editors.
+     * <p>
+     * The tree is dropped through the project's file manager, not with a VFS event: the content did not change, so a
+     * VFS event would only reindex the file again - in every project - and, processed while the last project reaching
+     * the file closes, remove its index data.
      */
-    private static void scheduleReparse(VirtualFile file) {
-        ourPendingReparse.add(file);
-        if (!ourReparseScheduled.compareAndSet(false, true)) {
+    private static void scheduleReparse(Project project, VirtualFile file) {
+        ReparseQueue queue = reparseQueue(project);
+        queue.files().add(file);
+        if (!queue.scheduled().compareAndSet(false, true)) {
             return;
         }
-        Application application = Application.get();
-        application.invokeLater(() -> {
-            ourReparseScheduled.set(false);
-            List<VirtualFile> files = new ArrayList<>(ourPendingReparse);
-            ourPendingReparse.removeAll(files);
-            files.removeIf(each -> !each.isValid());
+        DumbService.getInstance(project).runWhenSmart(() -> {
+            queue.scheduled().set(false);
+            if (project.isDisposed()) {
+                return;
+            }
+            List<VirtualFile> files = new ArrayList<>(queue.files());
+            queue.files().removeAll(files);
+            FileManager fileManager = PsiManagerEx.getInstanceEx(project).getFileManager();
+            files.removeIf(each -> !each.isValid() || fileManager.findCachedViewProvider(each) == null);
             if (!files.isEmpty()) {
-                application.runWriteAction(() -> FileContentUtilCore.reparseFiles(files));
+                Application.get().runWriteAction(() -> {
+                    for (VirtualFile each : files) {
+                        fileManager.forceReload(each);
+                    }
+                });
             }
         });
+    }
+
+    private record ReparseQueue(Set<VirtualFile> files, AtomicBoolean scheduled) {
+    }
+
+    private static final Key<ReparseQueue> REPARSE_QUEUE = Key.create("module.aware.reparse.queue");
+
+    private static ReparseQueue reparseQueue(Project project) {
+        ReparseQueue queue = project.getUserData(REPARSE_QUEUE);
+        if (queue == null) {
+            queue = project.putUserDataIfAbsent(REPARSE_QUEUE, new ReparseQueue(ConcurrentHashMap.newKeySet(), new AtomicBoolean()));
+        }
+        return queue;
     }
 
     /**
@@ -256,17 +284,56 @@ public final class ModuleAwareIndexMetaRecorder {
         List<ModuleAwareIndexOptionProvider> allApplicable = ModuleAwareIndexOptionRegistry.getApplicableProviders(file.getFileType());
         List<Map<String, OptionsMeta.PerProviderMeta>> freshState = OptionsRevalidator.currentState(allApplicable, contexts, file, fileId);
 
-        OptionsMeta snapshot = OptionsRevalidator.snapshot(extension.getVersion(), idsOf(applicable), freshState);
+        // what was indexed: the project's own variants, and for a shared file the other projects' ones kept next to them
+        List<Map<String, OptionsMeta.PerProviderMeta>> indexedState = withRemembered(allApplicable, fileId, freshState);
+        OptionsMeta snapshot = OptionsRevalidator.snapshot(extension.getVersion(), idsOf(applicable), indexedState);
         ModuleAwareIndexMetaStorage storage = ModuleAwareIndexMetaStorage.getInstance();
         OptionsMeta previous = storage.get(indexId, fileId);
         storage.put(indexId, fileId, snapshot);
-        if (previous != null && !previous.equals(snapshot)) {
-            scheduleReparse(file);
+        if (previous != null && !previous.sameVariants(snapshot)) {
+            scheduleReparse(project, file);
         }
 
         cacheHolder(project).byFile().put(fileId, freshState);
         ourReindexRequested.remove(fileId);
         dropStaleViewOptions(project, file);
+    }
+
+    private static List<Map<String, OptionsMeta.PerProviderMeta>> withRemembered(List<ModuleAwareIndexOptionProvider> providers,
+                                                                                 int fileId,
+                                                                                 List<Map<String, OptionsMeta.PerProviderMeta>> own) {
+        List<VariantDescriptor> remembered = ModuleAwareIndexVariants.remembered(fileId);
+        if (remembered.isEmpty()) {
+            return own;
+        }
+        Map<String, Integer> versions = new HashMap<>(providers.size());
+        for (ModuleAwareIndexOptionProvider provider : providers) {
+            versions.put(provider.getId(), provider.getVersion());
+        }
+        List<Map<String, OptionsMeta.PerProviderMeta>> state = new ArrayList<>(own);
+        for (VariantDescriptor descriptor : remembered) {
+            Map<String, OptionsMeta.PerProviderMeta> meta = descriptor.toMeta(versions);
+            if (!state.contains(meta)) {
+                state.add(meta);
+            }
+        }
+        return state;
+    }
+
+    /**
+     * The state of the variant {@code file} has in {@code project}'s primary context - what a reader in this project
+     * reads by default; {@code null} when no module of the project reaches the file. Cached like the staleness check.
+     */
+    public static @Nullable Map<String, OptionsMeta.PerProviderMeta> ownPrimaryState(Project project, VirtualFile file) {
+        if (!(file instanceof VirtualFileWithId withId)) {
+            return null;
+        }
+        List<ModuleAwareIndexContexts.Context> contexts = ModuleAwareIndexContexts.contextsOf(project, file);
+        if (contexts.isEmpty()) {
+            return null;
+        }
+        List<Map<String, OptionsMeta.PerProviderMeta>> state = cachedState(project, withId.getId(), file, contexts);
+        return state.isEmpty() ? null : state.get(0);
     }
 
     /**
@@ -278,13 +345,13 @@ public final class ModuleAwareIndexMetaRecorder {
         if (view == null) {
             return;
         }
-        for (VariantDescriptor descriptor : ModuleAwareIndexVariants.descriptorsFor(project, file)) {
+        for (VariantDescriptor descriptor : ModuleAwareIndexVariants.descriptorsToIndex(project, file)) {
             if (descriptor.matches(view)) {
                 return;
             }
         }
         file.putUserData(ModuleAwareIndexOptions.VIEW_OPTIONS, null);
-        scheduleReparse(file);
+        scheduleReparse(project, file);
     }
 
     /**
