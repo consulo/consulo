@@ -1,5 +1,6 @@
 package consulo.virtualFileSystem.impl.internal.archive;
 
+import consulo.it.HeadlessApplicationExtension;
 import consulo.util.io.FileAttributes;
 import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.archive.ArchivePath;
@@ -8,6 +9,7 @@ import consulo.virtualFileSystem.internal.FileSystemUtil;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
 
 import java.io.IOException;
@@ -23,6 +25,7 @@ import java.util.zip.ZipOutputStream;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+@ExtendWith(HeadlessApplicationExtension.class)
 public class ArchiveNioFileSystemTest {
     @TempDir
     Path myTempDir;
