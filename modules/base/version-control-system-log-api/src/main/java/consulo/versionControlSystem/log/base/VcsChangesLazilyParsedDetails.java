@@ -1,5 +1,6 @@
+// Copyright 2000-2023 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,68 +16,59 @@
  */
 package consulo.versionControlSystem.log.base;
 
-import consulo.application.util.function.ThrowableComputable;
-import consulo.logging.Logger;
-import consulo.util.lang.Couple;
+import consulo.project.Project;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.log.Hash;
 import consulo.versionControlSystem.log.VcsFullCommitDetails;
 import consulo.versionControlSystem.log.VcsUser;
 import consulo.virtualFileSystem.VirtualFile;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Allows to postpone changes parsing, which might take long for a large amount of commits,
- * because {@link Change} holds {@link LocalFilePath} which makes costly refreshes and type detections.
+ * because {@link Change} holds {@code LocalFilePath} which makes costly refreshes and type detections.
  */
 public class VcsChangesLazilyParsedDetails extends VcsCommitMetadataImpl implements VcsFullCommitDetails {
+    protected static final VcsChangesLazilyParsedDetailsChanges EMPTY_CHANGES = new VcsChangesLazilyParsedDetailsEmptyChanges();
 
-  private static final Logger LOG = Logger.getInstance(VcsChangesLazilyParsedDetails.class);
+    private final VcsChangesLazilyParsedDetailsChangesParser myChangesParser;
+    private final AtomicReference<VcsChangesLazilyParsedDetailsChanges> myChanges = new AtomicReference<>();
 
-  
-  protected final ThrowableComputable<Collection<Change>, ? extends Exception> myChangesGetter;
-
-  public VcsChangesLazilyParsedDetails(Hash hash, List<Hash> parents, long commitTime, VirtualFile root,
-                                       String subject, VcsUser author, String message,
-                                       VcsUser committer, long authorTime,
-                                       ThrowableComputable<Collection<Change>, ? extends Exception> changesGetter) {
-    super(hash, parents, commitTime, root, subject, author, message, committer, authorTime);
-    myChangesGetter = changesGetter;
-  }
-
-  
-  @Override
-  public Collection<Change> getChanges() {
-    try {
-      return myChangesGetter.compute();
+    public VcsChangesLazilyParsedDetails(Project project, Hash hash, List<Hash> parents, long commitTime,
+                                         VirtualFile root,
+                                         String subject, VcsUser author, String message,
+                                         VcsUser committer, long authorTime,
+                                         List<List<VcsFileStatusInfo>> reportedChanges,
+                                         VcsChangesLazilyParsedDetailsChangesParser changesParser) {
+        super(hash, parents, commitTime, root, subject, author, message, committer, authorTime);
+        myChangesParser = changesParser;
+        myChanges.set(reportedChanges.isEmpty() ? EMPTY_CHANGES : new VcsChangesLazilyParsedDetailsUnparsedChanges(
+            project,
+            reportedChanges,
+            getParents().size(),
+            (sources, parent) -> myChangesParser.parseStatusInfo(project, this, sources, parent),
+            myChanges
+        ));
     }
-    catch (Exception e) {
-      LOG.error("Error happened when parsing changes", e);
-      return Collections.emptyList();
-    }
-  }
 
-  
-  public Collection<String> getModifiedPaths() {
-    Set<String> changedPaths = new HashSet<>();
-    for (Change change : getChanges()) {
-      if (change.getAfterRevision() != null) changedPaths.add(change.getAfterRevision().getFile().getPath());
-      if (change.getBeforeRevision() != null) changedPaths.add(change.getBeforeRevision().getFile().getPath());
+    @Override
+    public Collection<Change> getChanges() {
+        return myChanges.get().getMergedChanges();
     }
-    return changedPaths;
-  }
 
-  
-  public Collection<Couple<String>> getRenamedPaths() {
-    Set<Couple<String>> renames = new HashSet<>();
-    for (Change change : getChanges()) {
-      if (change.getType().equals(Change.Type.MOVED)) {
-        if (change.getAfterRevision() != null && change.getBeforeRevision() != null) {
-          renames.add(Couple.of(change.getBeforeRevision().getFile().getPath(), change.getAfterRevision().getFile().getPath()));
-        }
-      }
+    @Override
+    public Collection<Change> getChanges(int parent) {
+        return myChanges.get().getChanges(parent);
     }
-    return renames;
-  }
+
+    public int size() {
+        return myChanges.get().size();
+    }
+
+    protected VcsChangesLazilyParsedDetailsChanges getChangesObject() {
+        return myChanges.get();
+    }
 }

@@ -131,6 +131,19 @@ public class GeneralCommandLine implements UserDataHolder {
     return this;
   }
 
+  /**
+   * Makes the command line run {@code command} with {@code args}, followed by the current executable and its parameters.
+   * Case in point &ndash; running a process with lower priority: {@code commandLine.withWrappingCommand("nice", "-n", "10")}.
+   */
+  public GeneralCommandLine withWrappingCommand(String command, String... args) {
+    if (myExecutable == null) {
+      throw new IllegalStateException("Executable is not set yet");
+    }
+    myProgramParams.prepend(myExecutable.toString());
+    myProgramParams.prependAll(args);
+    return withExecutablePath(Path.of(command));
+  }
+
   public void setWorkingDirectory(@Nullable Path path) {
     myWorkingDirectory = path;
   }

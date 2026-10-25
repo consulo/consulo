@@ -30,7 +30,6 @@ import consulo.util.lang.Couple;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.log.VcsFullCommitDetails;
-import consulo.versionControlSystem.log.base.VcsChangesLazilyParsedDetails;
 import consulo.versionControlSystem.log.impl.internal.FatalErrorHandler;
 import consulo.versionControlSystem.log.impl.internal.util.PersistentUtil;
 import consulo.virtualFileSystem.VirtualFile;
@@ -149,21 +148,13 @@ public class VcsLogPathsIndex extends VcsLogFullDetailsIndex<Integer> {
     public Map<Integer, Integer> map(VcsFullCommitDetails inputData) {
       Map<Integer, Integer> result = new HashMap<>();
 
-      Collection<Couple<String>> moves;
-      Collection<String> changedPaths;
-      if (inputData instanceof VcsChangesLazilyParsedDetails vcsChangesLazilyParsedDetails) {
-        changedPaths = vcsChangesLazilyParsedDetails.getModifiedPaths();
-        moves = vcsChangesLazilyParsedDetails.getRenamedPaths();
-      }
-      else {
-        moves = new HashSet<>();
-        changedPaths = new HashSet<>();
-        for (Change change : inputData.getChanges()) {
-          if (change.getAfterRevision() != null) changedPaths.add(change.getAfterRevision().getFile().getPath());
-          if (change.getBeforeRevision() != null) changedPaths.add(change.getBeforeRevision().getFile().getPath());
-          if (change.getType().equals(Change.Type.MOVED)) {
-            moves.add(Couple.of(change.getBeforeRevision().getFile().getPath(), change.getAfterRevision().getFile().getPath()));
-          }
+      Collection<Couple<String>> moves = new HashSet<>();
+      Collection<String> changedPaths = new HashSet<>();
+      for (Change change : inputData.getChanges()) {
+        if (change.getAfterRevision() != null) changedPaths.add(change.getAfterRevision().getFile().getPath());
+        if (change.getBeforeRevision() != null) changedPaths.add(change.getBeforeRevision().getFile().getPath());
+        if (change.getType().equals(Change.Type.MOVED)) {
+          moves.add(Couple.of(change.getBeforeRevision().getFile().getPath(), change.getAfterRevision().getFile().getPath()));
         }
       }
 

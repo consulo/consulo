@@ -1,9 +1,6 @@
 package consulo.versionControlSystem.log.impl.internal;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.util.function.ThrowableComputable;
-import consulo.versionControlSystem.change.Change;
-import consulo.versionControlSystem.log.VcsFullCommitDetails;
 import consulo.versionControlSystem.log.*;
 import consulo.versionControlSystem.log.base.*;
 import consulo.versionControlSystem.log.impl.internal.data.VcsLogBranchFilterImpl;
@@ -75,24 +72,6 @@ public class VcsLogObjectsFactoryImpl implements VcsLogObjectsFactory {
     return new VcsCommitMetadataImpl(hash, parents, commitTime, root, subject, author, message, committer, authorTime);
   }
 
-  
-  @Override
-  public VcsFullCommitDetails createFullDetails(Hash hash,
-                                                List<Hash> parents,
-                                                long commitTime,
-                                                VirtualFile root,
-                                                String subject,
-                                                String authorName,
-                                                String authorEmail,
-                                                String message,
-                                                String committerName,
-                                                String committerEmail,
-                                                long authorTime,
-                                                ThrowableComputable<Collection<Change>, ? extends Exception> changesGetter) {
-    VcsUser author = createUser(authorName, authorEmail);
-    VcsUser committer = createUser(committerName, committerEmail);
-    return new VcsChangesLazilyParsedDetails(hash, parents, commitTime, root, subject, author, message, committer, authorTime, changesGetter);
-  }
 
   
   @Override

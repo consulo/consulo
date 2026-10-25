@@ -25,16 +25,15 @@ import java.util.List;
 /**
  * All metadata + changes.
  * <p/>
- * An instance of this object can be obtained via
- * {@link VcsLogObjectsFactory#createFullDetails(Hash, List, long, VirtualFile, String, String, String, String, String, String, long,
- * ThrowableComputable) VcsLogObjectsFactory#createFullDetails}
- * <p/>
  * It is not recommended to create a custom implementation of this interface, but if you need it, <b>make sure to implement {@code equals()}
  * and {@code hashcode()} so that they consider only the Hash</b>, i.e. two VcsFullCommitDetails are equal if and only if they have equal
  * hash codes. The VCS Log framework heavily relies on this fact.
  */
 public interface VcsFullCommitDetails extends VcsCommitMetadata {
-
-  
+  /**
+   * For a merge commit this method should return combined changes from all parents.
+   */
   Collection<Change> getChanges();
+
+  Collection<Change> getChanges(int parent);
 }

@@ -49,6 +49,11 @@ public class LoadingDetails implements VcsFullCommitDetails {
   }
 
   @Override
+  public Collection<Change> getChanges(int parent) {
+    return List.of();
+  }
+
+  @Override
   public String getFullMessage() {
     return "";
   }
