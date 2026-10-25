@@ -36,6 +36,7 @@ import consulo.util.lang.ref.SimpleReference;
 import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.action.VcsContextFactory;
 import consulo.versionControlSystem.change.Change;
+import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.change.ContentRevision;
 import consulo.versionControlSystem.change.CurrentContentRevision;
 import consulo.versionControlSystem.change.VcsDirtyScopeManager;
@@ -729,4 +730,17 @@ public class VcsUtil {
     public static List<Change> createChangesWithCurrentContentForFile(FilePath filePath, @Nullable ContentRevision beforeContentRevision) {
         return Collections.singletonList(new Change(beforeContentRevision, CurrentContentRevision.create(filePath)));
     }
+
+  public static FilePath getLastCommitPath(Project project, FilePath path) {
+    if (project.isDefault()) {
+      return path;
+    }
+
+    Change change = ChangeListManager.getInstance(project).getChange(path);
+    if (change == null || change.getType() != Change.Type.MOVED || change.getBeforeRevision() == null) {
+      return path;
+    }
+
+    return change.getBeforeRevision().getFile();
+  }
 }
