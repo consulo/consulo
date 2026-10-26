@@ -15,7 +15,6 @@ If you can't describe the issue, you can use our [forum](https://github.com/orgs
 | JVM           | Github Actions|
 | ------------- |-----------------:|
 | Java 25       | ![jdk25](https://github.com/consulo/consulo/workflows/jdk25/badge.svg) |
-| Java 26       | ![jdk25](https://github.com/consulo/consulo/workflows/jdk26/badge.svg) |
 
 First of all, you need these tools:
 
