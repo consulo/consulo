@@ -552,6 +552,11 @@ public class HeadlessUIInternal extends UIInternal implements UIInternalEx {
     }
 
     @Override
+    public <E> Breadcrumbs<E> _Components_breadcrumbs() {
+        return new HeadlessBreadcrumbs<>();
+    }
+
+    @Override
     public Avatar _Components_avatar(LocalizeValue name, @Nullable Image image) {
         return new HeadlessAvatar(name, image);
     }

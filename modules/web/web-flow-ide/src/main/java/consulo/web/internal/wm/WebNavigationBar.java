@@ -16,8 +16,6 @@
 package consulo.web.internal.wm;
 
 import consulo.logging.Logger;
-import com.vaadin.flow.component.breadcrumbs.Breadcrumbs;
-import com.vaadin.flow.component.breadcrumbs.BreadcrumbsItem;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.event.CaretEvent;
@@ -36,6 +34,7 @@ import consulo.navigationBar.model.NavBarItemVm;
 import consulo.navigationBar.model.NavBarVmItem;
 import consulo.navigationBar.model.NavBarVmListener;
 import consulo.project.Project;
+import consulo.ui.Breadcrumbs;
 import consulo.ui.Component;
 import consulo.ui.Space;
 import consulo.ui.UIAccess;
@@ -46,58 +45,24 @@ import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.CustomActionsSchema;
 import consulo.ui.ex.impl.internal.action.UnifiedActionToolbarImpl;
-import consulo.ui.image.Image;
 import consulo.ui.layout.DockLayout;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.web.ui.impl.internal.WebFocusManagerImpl;
-import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
 import consulo.web.ui.impl.internal.base.TargetVaadin;
-import consulo.web.ui.impl.internal.base.VaadinComponentDelegate;
 import consulo.web.ui.impl.internal.base.WebFocusTracker;
-import consulo.web.ui.impl.internal.image.WebImageConverter;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 /**
- * Navigation bar, rendered with the vaadin breadcrumbs component and driven by {@link NavBarVmImpl}, mirroring the
+ * Navigation bar, rendered with the unified {@link Breadcrumbs} component and driven by {@link NavBarVmImpl}, mirroring the
  * awt {@code NavBarUIController} / {@code NewNavBarPanel} pair.
  *
  * @author VISTALL
  */
 public class WebNavigationBar implements Disposable {
     private static final Logger LOG = Logger.getInstance(WebNavigationBar.class);
-
-    public static class Vaadin extends Breadcrumbs implements FromVaadinComponentWrapper {
-        private consulo.ui.Component myComponent;
-
-        public Vaadin() {
-            // the default ROUTER mode rebuilds the crumbs from the vaadin route on every navigation, which wipes
-            // the items pushed from the nav bar model
-            super(Mode.MANUAL);
-
-            addClassName(CRUMBS_CLASS_NAME);
-        }
-
-        @Override
-        public consulo.ui.@Nullable Component toUIComponent() {
-            return myComponent;
-        }
-
-        public void setComponent(consulo.ui.Component component) {
-            myComponent = component;
-        }
-    }
-
-    private static class BarComponent extends VaadinComponentDelegate<Vaadin> {
-        @Override
-        public Vaadin createVaadinComponent() {
-            Vaadin vaadin = new Vaadin();
-            vaadin.setComponent(this);
-            return vaadin;
-        }
-    }
 
     /**
      * Group of the toolbar the awt nav bar carries on its east side, see
@@ -111,7 +76,7 @@ public class WebNavigationBar implements Disposable {
 
     private final Project myProject;
     private final consulo.ui.Component myContextComponent;
-    private final BarComponent myComponent = new BarComponent();
+    private final Breadcrumbs<NavBarItemVm> myCrumbs = Breadcrumbs.create();
 
     // the row is a dock so that the empty center takes the free width and keeps the toolbar flush right
     private final DockLayout myRowLayout = DockLayout.create(Space.NONE);
@@ -128,8 +93,19 @@ public class WebNavigationBar implements Disposable {
         UIAccess uiAccess = UIAccess.current();
 
         TargetVaadin.to(myRowLayout).addClassName(ROW_CLASS_NAME);
+        TargetVaadin.to(myCrumbs).addClassName(CRUMBS_CLASS_NAME);
 
-        myRowLayout.left(myComponent);
+        myCrumbs.setRenderer((presentation, item) -> {
+            NavBarItemVm value = item.getValue();
+            if (value == null) {
+                return;
+            }
+            presentation.withIcon(value.getPresentation().icon());
+            presentation.append(crumbText(value));
+        });
+        myCrumbs.addItemClickListener(event -> event.getItem().activate());
+
+        myRowLayout.left(myCrumbs);
 
         getToolbarGroupAsync().whenComplete((group, throwable) -> {
             if (throwable != null) {
@@ -271,35 +247,17 @@ public class WebNavigationBar implements Disposable {
 
     @RequiredUIAccess
     private void rebuild(List<? extends NavBarItemVm> items) {
-        Vaadin vaadin = myComponent.toVaadinComponent();
+        myCrumbs.setItems(items.stream().filter(item -> crumbText(item) != null).toList());
+    }
 
-        vaadin.removeAll();
+    private static @Nullable String crumbText(NavBarItemVm item) {
+        NavBarItemPresentationData presentation = item.getPresentation();
 
-        for (NavBarItemVm item : items) {
-            NavBarItemPresentationData presentation = item.getPresentation();
-
-            String text = presentation.text();
-            if (text == null || text.isBlank()) {
-                text = presentation.popupText();
-            }
-
-            if (text == null || text.isBlank()) {
-                continue;
-            }
-
-            BreadcrumbsItem crumb = new BreadcrumbsItem(text);
-            crumb.setText(text);
-
-            Image icon = presentation.icon();
-            if (icon != null) {
-                crumb.setPrefixComponent(WebImageConverter.getImage(icon));
-            }
-
-            // BreadcrumbsItem only navigates by route, the item activation has to be wired by hand
-            crumb.getElement().addEventListener("click", event -> item.activate());
-
-            vaadin.add(crumb);
+        String text = presentation.text();
+        if (text == null || text.isBlank()) {
+            text = presentation.popupText();
         }
+        return text == null || text.isBlank() ? null : text;
     }
 
     public Component getComponent() {

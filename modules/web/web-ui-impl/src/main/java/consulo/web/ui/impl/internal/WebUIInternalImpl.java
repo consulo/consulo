@@ -403,6 +403,11 @@ public class WebUIInternalImpl extends UIInternal implements UIInternalEx {
     }
 
     @Override
+    public <E> Breadcrumbs<E> _Components_breadcrumbs() {
+        return new WebBreadcrumbsImpl<>();
+    }
+
+    @Override
     public Avatar _Components_avatar(LocalizeValue name, @Nullable Image image) {
         return new WebAvatarImpl(name, image);
     }

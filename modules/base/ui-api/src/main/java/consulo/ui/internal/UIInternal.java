@@ -236,6 +236,10 @@ public abstract class UIInternal {
         throw new UnsupportedOperationException();
     }
 
+    public <E> Breadcrumbs<E> _Components_breadcrumbs() {
+        throw new UnsupportedOperationException();
+    }
+
     public Toast _Components_toast() {
         throw new UnsupportedOperationException();
     }

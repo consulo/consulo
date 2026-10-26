@@ -20,6 +20,7 @@ import com.github.weisj.jsvg.geometry.size.FloatSize;
 import com.github.weisj.jsvg.parser.SVGLoader;
 import consulo.desktop.awt.ui.impl.avatar.DesktopAvatarImpl;
 import consulo.desktop.awt.ui.impl.badge.DesktopBadgeImpl;
+import consulo.desktop.awt.ui.impl.breadcrumbs.DesktopBreadcrumbsImpl;
 import consulo.desktop.awt.ui.impl.popup.DesktopAWTLightPopupImpl;
 import consulo.ui.RadioGroup;
 import consulo.ui.graph.Graph;
@@ -200,6 +201,11 @@ public class DesktopUIInternalImpl extends UIInternal implements UIInternalEx {
     @Override
     public Badge _Components_badge(LocalizeValue text) {
         return new DesktopBadgeImpl(text);
+    }
+
+    @Override
+    public <E> Breadcrumbs<E> _Components_breadcrumbs() {
+        return new DesktopBreadcrumbsImpl<>();
     }
 
     @Override

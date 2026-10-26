@@ -28,7 +28,6 @@ import consulo.disposer.Disposer;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.event.FileEditorManagerEvent;
 import consulo.fileEditor.event.FileEditorManagerListener;
-import consulo.localize.LocalizeValue;
 import consulo.navigationBar.NavBarService;
 import consulo.navigationBar.impl.internal.NavBarVmImpl;
 import consulo.navigationBar.model.NavBarItemPresentationData;
@@ -38,16 +37,14 @@ import consulo.navigationBar.model.NavBarPopupVm;
 import consulo.navigationBar.model.NavBarVmItem;
 import consulo.navigationBar.model.NavBarVmListener;
 import consulo.project.Project;
-import consulo.ui.Button;
-import consulo.ui.ButtonStyle;
+import consulo.ui.Breadcrumbs;
 import consulo.ui.Component;
 import consulo.ui.FocusManager;
-import consulo.ui.Label;
-import consulo.ui.LabelStyle;
 import consulo.ui.LightPopup;
 import consulo.ui.ListBox;
 import consulo.ui.Popup;
 import consulo.ui.PopupOptions;
+import consulo.ui.Rectangle2D;
 import consulo.ui.Space;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -57,27 +54,19 @@ import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.CustomActionsSchema;
 import consulo.ui.ex.impl.internal.action.UnifiedActionToolbarImpl;
-import consulo.ui.image.Image;
 import consulo.ui.layout.DockLayout;
-import consulo.ui.layout.HorizontalLayout;
-import consulo.ui.layout.ScrollableLayout;
-import consulo.ui.layout.ScrollableLayoutOptions;
 import consulo.virtualFileSystem.VirtualFile;
 import io.qt.core.QCoreApplication;
 import io.qt.core.QEvent;
 import io.qt.widgets.QLayout;
-import io.qt.widgets.QScrollArea;
-import io.qt.widgets.QScrollBar;
-import io.qt.widgets.QWidget;
 import org.jspecify.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Navigation bar, driven by {@link NavBarVmImpl} and mirroring the awt {@code NavBarUIController} /
- * {@code NewNavBarPanel} pair and the web {@code WebNavigationBar}. Qt has no breadcrumbs widget, so the crumbs
- * are a row of borderless buttons.
+ * {@code NewNavBarPanel} pair and the web {@code WebNavigationBar}. The crumbs are the unified {@link Breadcrumbs},
+ * which collapse the middle of a trail too long for the row.
  *
  * @author VISTALL
  * @since 2026-08-16
@@ -91,8 +80,6 @@ public class DesktopQtNavigationBar implements Disposable {
      */
     private static final String TOOLBAR_GROUP_ID = "NavBarToolBar";
 
-    private static final LocalizeValue CRUMB_SEPARATOR = LocalizeValue.of("\u203A");
-
     /**
      * What the awt bar keeps around a crumb, see {@code NavBarUi#navBarItemInsets} - a qt layout is built with no
      * margins at all, so the row sat flush against the frame.
@@ -103,15 +90,8 @@ public class DesktopQtNavigationBar implements Disposable {
     private final Project myProject;
     private final Component myContextComponent;
 
-    private final HorizontalLayout myCrumbsLayout = HorizontalLayout.create(Space.NONE);
-
-    private final ScrollableLayout myCrumbsScroll = ScrollableLayout.create(
-        DockLayout.create(Space.NONE).left(myCrumbsLayout),
-        ScrollableLayoutOptions.builder()
-            .horizontalScrollPolicy(ScrollableLayoutOptions.ScrollPolicy.NEVER)
-            .verticalScrollPolicy(ScrollableLayoutOptions.ScrollPolicy.NEVER)
-            .build()
-    );
+    // collapses the middle of a trail too long for the row, so the file and the element under the caret stay visible
+    private final Breadcrumbs<NavBarItemVm> myCrumbs = Breadcrumbs.create();
 
     // the row is a dock so that the center takes the free width and keeps the toolbar flush right
     private final DockLayout myRowLayout = DockLayout.create(Space.NONE);
@@ -119,10 +99,10 @@ public class DesktopQtNavigationBar implements Disposable {
     private volatile @Nullable UnifiedActionToolbarImpl myToolbar;
 
     /**
-     * The crumb of every item of the model, by the index the item has in it - an item with nothing to show is left
-     * out of the row, and the view model addresses its items by index.
+     * The items of the model, by the index the view model addresses them with - an item with nothing to show is
+     * left out of the trail, but keeps its index here.
      */
-    private final List<@Nullable Button> myCrumbs = new ArrayList<>();
+    private List<? extends NavBarItemVm> myItems = List.of();
 
     private @Nullable NavBarVmImpl myVm;
 
@@ -136,9 +116,24 @@ public class DesktopQtNavigationBar implements Disposable {
         UIAccess uiAccess = UIAccess.current();
 
         applyRowMargin();
-        keepCrumbsTailVisible();
 
-        myRowLayout.center(myCrumbsScroll);
+        myCrumbs.setRenderer((presentation, item) -> {
+            NavBarItemVm value = item.getValue();
+            if (value == null) {
+                return;
+            }
+            presentation.withIcon(value.getPresentation().icon());
+            presentation.append(crumbText(value));
+        });
+        // what the awt bar does with a single click, see NavBarItemComponent - the crumb offers what is under it
+        // rather than navigating to itself, and choosing from that offer is what navigates
+        myCrumbs.addItemClickListener(event -> {
+            NavBarItemVm item = event.getItem();
+            item.select();
+            item.showPopup();
+        });
+
+        myRowLayout.center(myCrumbs);
 
         CustomActionsSchema.getCorrectedGroupAsync(TOOLBAR_GROUP_ID).whenComplete((group, throwable) -> {
             if (throwable != null) {
@@ -287,56 +282,18 @@ public class DesktopQtNavigationBar implements Disposable {
     private void rebuild(List<? extends NavBarItemVm> items) {
         hidePopup();
 
-        myCrumbsLayout.removeAll();
-        myCrumbs.clear();
+        myItems = List.copyOf(items);
+        myCrumbs.setItems(items.stream().filter(item -> crumbText(item) != null).toList());
+    }
 
-        boolean first = true;
+    private static @Nullable String crumbText(NavBarItemVm item) {
+        NavBarItemPresentationData presentation = item.getPresentation();
 
-        for (NavBarItemVm item : items) {
-            NavBarItemPresentationData presentation = item.getPresentation();
-
-            String text = presentation.text();
-            if (text == null || text.isBlank()) {
-                text = presentation.popupText();
-            }
-
-            if (text == null || text.isBlank()) {
-                myCrumbs.add(null);
-                continue;
-            }
-
-            if (!first) {
-                Label separator = Label.create(CRUMB_SEPARATOR);
-                separator.addStyle(LabelStyle.TRANSPARENT_BACKGROUND);
-                myCrumbsLayout.add(separator);
-            }
-            first = false;
-
-            Button crumb = Button.create(LocalizeValue.of(text));
-            crumb.addStyle(ButtonStyle.BORDERLESS);
-
-            Image icon = presentation.icon();
-            if (icon != null) {
-                crumb.setIcon(icon);
-            }
-
-            // what the awt bar does with a single click, see NavBarItemComponent - the crumb offers what is under
-            // it rather than navigating to itself, and choosing from that offer is what navigates
-            crumb.addClickListener(event -> {
-                item.select();
-                item.showPopup();
-            });
-
-            myCrumbs.add(crumb);
-            myCrumbsLayout.add(crumb);
+        String text = presentation.text();
+        if (text == null || text.isBlank()) {
+            text = presentation.popupText();
         }
-
-        if (myCrumbsScroll instanceof QtComponentDelegate<?> delegate) {
-            QWidget widget = delegate.toQtComponent();
-            if (widget != null && !widget.isDisposed()) {
-                widget.updateGeometry();
-            }
-        }
+        return text == null || text.isBlank() ? null : text;
     }
 
     /**
@@ -346,10 +303,10 @@ public class DesktopQtNavigationBar implements Disposable {
      */
     @RequiredUIAccess
     private <T extends NavBarPopupItem> void showPopup(int index, NavBarPopupVm<T> popupVm) {
-        Button crumb = index >= 0 && index < myCrumbs.size() ? myCrumbs.get(index) : null;
+        NavBarItemVm crumbItem = index >= 0 && index < myItems.size() ? myItems.get(index) : null;
 
         List<T> items = popupVm.getItems();
-        if (crumb == null || items.isEmpty()) {
+        if (crumbItem == null || items.isEmpty()) {
             popupVm.cancel();
             return;
         }
@@ -418,7 +375,16 @@ public class DesktopQtNavigationBar implements Disposable {
 
             QCoreApplication.sendPostedEvents(null, QEvent.Type.LayoutRequest);
 
-            popup.showBy(crumb);
+            // the chain answers a choice with a new trail and the popup of its tail at once, so the crumb is only
+            // measured once that trail has been laid out
+            Rectangle2D crumb = myCrumbs.getItemBounds(crumbItem);
+            if (crumb == null) {
+                myPopup = null;
+                popupVm.cancel();
+                return;
+            }
+
+            popup.showAt(myCrumbs, crumb.minX(), crumb.minY(), crumb.size().height());
         });
     }
 
@@ -450,18 +416,6 @@ public class DesktopQtNavigationBar implements Disposable {
             if (layout != null) {
                 layout.setContentsMargins(ROW_MARGIN_X, ROW_MARGIN_Y, ROW_MARGIN_X, ROW_MARGIN_Y);
             }
-        });
-    }
-
-    @RequiredUIAccess
-    private void keepCrumbsTailVisible() {
-        if (!(myCrumbsScroll instanceof QtComponentDelegate<?> delegate)) {
-            return;
-        }
-
-        delegate.whenBound(widget -> {
-            QScrollBar scrollBar = ((QScrollArea) widget).horizontalScrollBar();
-            scrollBar.rangeChanged.connect((minimum, maximum) -> scrollBar.setValue(maximum));
         });
     }
 

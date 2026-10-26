@@ -320,22 +320,26 @@ vaadin-breadcrumbs-item
   overflow: hidden;
 }
 
-/* the crumbs are the only part that gives way when the path does not fit, so the cell holding them has to be
-   allowed to shrink below its content. the basis has to be spelled out as max-content: a scroll container
-   contributes nothing to an auto basis, and the cell would then be narrower than the path even on an empty row */
+/* the crumbs are the only part that gives way when the path does not fit, so the cell holding them takes all the
+   width the toolbar leaves and the breadcrumbs collapse their middle into it. an auto basis does not work here:
+   once the middle is collapsed the content is narrow, the cell shrinks to it and never grows back */
 .web-navigation-bar > .web-dock-layout-center > *:first-child
 {
-  flex: 0 0 auto;
-  max-width: 100%;
+  flex: 1 1 0;
+  min-width: 0;
   overflow: hidden;
 }
 
-/* the crumbs keep their natural width - the row has the whole frame to itself and the dock center takes
-   whatever is left over. a scroller here shrank the cell to a fraction of the path even on an empty row,
-   because the dock cell collapses the moment it is allowed to, and the head of the path was cut off */
+/* the empty dock center would otherwise split the free width with the crumbs */
+.web-navigation-bar > .web-dock-layout-center > *:nth-child(2)
+{
+  flex: 0 0 0;
+}
+
 .web-navigation-bar-crumbs
 {
-  flex: 0 0 auto;
+  flex: 1 1 0;
+  min-width: 0;
 
   /* the crumbs are a flex row of their own and lay their items out on the text baseline, so centering the
      dock row around them is not enough - the toolbar on the other side has no text and came out centered */

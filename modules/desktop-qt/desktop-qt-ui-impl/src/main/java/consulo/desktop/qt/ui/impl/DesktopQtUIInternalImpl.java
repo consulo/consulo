@@ -17,6 +17,7 @@ package consulo.desktop.qt.ui.impl;
 
 import consulo.desktop.qt.ui.impl.avatar.DesktopQtAvatarImpl;
 import consulo.desktop.qt.ui.impl.badge.DesktopQtBadgeImpl;
+import consulo.desktop.qt.ui.impl.breadcrumbs.DesktopQtBreadcrumbsImpl;
 import consulo.desktop.qt.ui.impl.chart.DesktopQtFlameGraphImpl;
 import consulo.desktop.qt.ui.impl.chart.DesktopQtStateChartImpl;
 import consulo.desktop.qt.ui.impl.chart.DesktopQtStopwatchTimer;
@@ -649,6 +650,11 @@ public class DesktopQtUIInternalImpl extends UIInternal implements UIInternalEx 
     @Override
     public Badge _Components_badge(LocalizeValue text) {
         return new DesktopQtBadgeImpl(text);
+    }
+
+    @Override
+    public <E> Breadcrumbs<E> _Components_breadcrumbs() {
+        return new DesktopQtBreadcrumbsImpl<>();
     }
 
     @Override
