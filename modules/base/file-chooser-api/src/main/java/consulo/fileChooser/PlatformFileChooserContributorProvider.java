@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.fileChooser.internal;
+package consulo.fileChooser;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
+import consulo.fileChooser.UniversalFileChooserContributor;
 
 import java.util.List;
 

@@ -2,7 +2,7 @@
 package consulo.fileChooser.impl.internal;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.fileChooser.internal.UniversalFileChooserContributor;
+import consulo.fileChooser.UniversalFileChooserContributor;
 import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;

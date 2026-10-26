@@ -4,7 +4,7 @@ package consulo.fileChooser.impl.internal;
 import consulo.application.Application;
 import consulo.disposer.Disposable;
 import consulo.fileChooser.FileChooserDescriptor;
-import consulo.fileChooser.internal.UniversalFileChooserContributor;
+import consulo.fileChooser.UniversalFileChooserContributor;
 import consulo.fileChooser.localize.FileChooserLocalize;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;

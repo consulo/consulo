@@ -4,7 +4,7 @@ package consulo.fileChooser.impl.internal;
 import consulo.application.Application;
 import consulo.component.ComponentManager;
 import consulo.fileChooser.FileChooserDescriptor;
-import consulo.fileChooser.internal.UniversalFileChooserContributor;
+import consulo.fileChooser.UniversalFileChooserContributor;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.ui.annotation.RequiredUIAccess;

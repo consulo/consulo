@@ -17,8 +17,8 @@ package consulo.remoteServer.impl.internal.platformAware;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.fileChooser.internal.PlatformFileChooserContributor;
-import consulo.fileChooser.internal.PlatformFileChooserContributorProvider;
-import consulo.fileChooser.internal.UniversalFileChooserContributor;
+import consulo.fileChooser.PlatformFileChooserContributorProvider;
+import consulo.fileChooser.UniversalFileChooserContributor;
 import consulo.remoteServer.configuration.RemoteServer;
 import consulo.remoteServer.configuration.RemoteServersManager;
 import consulo.remoteServer.platformAware.PlatformAwareServerType;

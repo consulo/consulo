@@ -16,6 +16,7 @@
 package consulo.fileChooser.internal;
 
 import consulo.application.util.concurrent.AppExecutorUtil;
+import consulo.fileChooser.UniversalFileChooserContributor;
 import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
 import consulo.ui.image.Image;

@@ -3,7 +3,7 @@ package consulo.fileChooser.impl.internal;
 
 import consulo.application.ReadAction;
 import consulo.fileChooser.FileChooserDescriptor;
-import consulo.fileChooser.internal.UniversalFileChooserContributor;
+import consulo.fileChooser.UniversalFileChooserContributor;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
