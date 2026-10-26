@@ -36,8 +36,6 @@ public class InitLogStartupActivity implements PostStartupActivity, DumbAware {
     MessageBusConnection connection = project.getMessageBus().connect();
     connection.subscribe(VcsMappingListener.class, projectLog::recreateLog);
     
-    if (projectLog.hasDvcsRoots()) {
-      uiAccess.give(projectLog::createLog);
-    }
+    projectLog.recreateLog();
   }
 }

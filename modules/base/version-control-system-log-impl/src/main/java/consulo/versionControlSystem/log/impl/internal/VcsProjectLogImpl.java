@@ -45,6 +45,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
 @Singleton
@@ -55,6 +56,7 @@ public class VcsProjectLogImpl implements VcsProjectLog {
     private static final int INVALIDATE_CACHES_COUNT = 5;
 
     private final Map<String, Integer> myErrorCountBySource = new ConcurrentHashMap<>();
+    private final AtomicBoolean myRecreateScheduled = new AtomicBoolean();
     
     private final Project myProject;
     
@@ -108,13 +110,17 @@ public class VcsProjectLogImpl implements VcsProjectLog {
     }
 
     protected void recreateLog() {
-        myProject.getApplication().invokeLater(() -> {
+        if (!myRecreateScheduled.compareAndSet(false, true)) {
+            return;
+        }
+        myProject.getUIAccess().execute(() -> {
+            myRecreateScheduled.set(false);
             disposeLog();
 
             if (hasDvcsRoots()) {
                 createLog();
             }
-        }, myProject.getDisposed());
+        });
     }
 
     protected void recreateOnError(@Nullable Object source, Throwable error) {
