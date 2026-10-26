@@ -21,10 +21,17 @@ import consulo.desktop.awt.ui.impl.progressBar.SpinnerProgress;
 import consulo.ui.Component;
 import consulo.ui.ProgressBar;
 import consulo.ui.ProgressBarStyle;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.impl.ProgressBarPresentation;
+import consulo.ui.style.StyleColorValue;
 
 import javax.swing.*;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Insets;
+import java.util.EnumSet;
+import java.util.Set;
 
 /**
  * @author VISTALL
@@ -44,6 +51,18 @@ class DesktopProgressBarImpl extends SwingComponentDelegate<JProgressBar> implem
         @Override
         public Component toUIComponent() {
             return DesktopProgressBarImpl.this;
+        }
+
+        /** A height style makes the line thicker: the painting below draws the line as tall as this leaves it. */
+        @Override
+        public Dimension getPreferredSize() {
+            Dimension size = super.getPreferredSize();
+            int barHeight = JBUI.scale(ProgressBarPresentation.barHeight(myStyles));
+            if (barHeight <= 0) {
+                return size;
+            }
+            Insets insets = super.getInsets();
+            return new Dimension(size.width, Math.max(size.height, barHeight + insets.top + insets.bottom));
         }
 
         @Override
@@ -95,6 +114,7 @@ class DesktopProgressBarImpl extends SwingComponentDelegate<JProgressBar> implem
 
     private boolean mySpinner;
     private boolean myTransparent;
+    private final Set<ProgressBarStyle> myStyles = EnumSet.noneOf(ProgressBarStyle.class);
 
     @Override
     protected JProgressBar createComponent() {
@@ -107,11 +127,23 @@ class DesktopProgressBarImpl extends SwingComponentDelegate<JProgressBar> implem
         if (myTransparent) {
             component.setOpaque(false);
         }
+        applyTone(component);
         return component;
     }
 
     @Override
     public void addStyle(ProgressBarStyle style) {
+        if (style.isTone() || style.isHeight()) {
+            ProgressBarPresentation.add(myStyles, style);
+            if (isInitialized()) {
+                JProgressBar component = toAWTComponent();
+                applyTone(component);
+                component.revalidate();
+                component.repaint();
+            }
+            return;
+        }
+
         if (isInitialized()) {
             throw new IllegalArgumentException("Can't change after initialized");
         }
@@ -124,6 +156,12 @@ class DesktopProgressBarImpl extends SwingComponentDelegate<JProgressBar> implem
                 myTransparent = true;
                 break;
         }
+    }
+
+    /** The filled part is drawn in the foreground of the bar. */
+    private void applyTone(JProgressBar component) {
+        StyleColorValue color = ProgressBarPresentation.valueColor(myStyles);
+        component.setForeground(color != null ? TargetAWT.to(color) : UIManager.getColor("ProgressBar.foreground"));
     }
 
     @Override

@@ -19,6 +19,13 @@ vaadin-progress-bar
   align-items: center;
 }
 
+/* the host holds no content of its own, so in a column of bars it collapsed to nothing and the bars drew over each
+   other - it keeps at least the height of the bar it centers */
+vaadin-progress-bar:not(.consulo-progress-spinner)
+{
+  min-height: var(--vaadin-progress-bar-height, 0.5lh);
+}
+
 vaadin-progress-bar::part(bar)
 {
   flex: 1 1 auto;
@@ -76,4 +83,11 @@ vaadin-progress-bar.consulo-progress-transparent
   to {
     transform: rotate(360deg);
   }
+}
+
+/* the warning tone, which vaadin has no variant for, colours the filled part - the class is repeated to outweigh the theme */
+vaadin-progress-bar.consulo-progress-toned.consulo-progress-toned::part(value)
+{
+  /* the shorthand, since aura paints the value with a gradient image which a colour alone sits under */
+  background: var(--consulo-progress-value-color);
 }

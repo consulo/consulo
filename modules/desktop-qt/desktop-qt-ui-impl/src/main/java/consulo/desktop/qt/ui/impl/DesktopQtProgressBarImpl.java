@@ -17,6 +17,8 @@ package consulo.desktop.qt.ui.impl;
 
 import consulo.desktop.qt.ui.impl.image.DesktopQtSpinnerPainter;
 import consulo.ui.ProgressBarStyle;
+import consulo.ui.impl.ProgressBarPresentation;
+import consulo.ui.style.StyleColorValue;
 import io.qt.core.QTimer;
 import io.qt.core.Qt;
 import io.qt.gui.QColor;
@@ -104,6 +106,9 @@ public class DesktopQtProgressBarImpl extends QtComponentDelegate<QWidget> imple
         }
     }
 
+    /** Qt's QWIDGETSIZE_MAX: no limit on the height. */
+    private static final int QWIDGETSIZE_MAX = 16777215;
+
     private boolean myIndeterminate;
     private boolean mySpinner;
     private int myMinimum;
@@ -178,6 +183,12 @@ public class DesktopQtProgressBarImpl extends QtComponentDelegate<QWidget> imple
 
     @Override
     public void addStyle(ProgressBarStyle style) {
+        if (style.isTone() || style.isHeight()) {
+            ProgressBarPresentation.add(myStyles, style);
+            applyToneAndHeight();
+            return;
+        }
+
         myStyles.add(style);
 
         if (style == ProgressBarStyle.SPINNER) {
@@ -194,6 +205,39 @@ public class DesktopQtProgressBarImpl extends QtComponentDelegate<QWidget> imple
 
         if (style == ProgressBarStyle.TRANSPARENT_BACKGROUND) {
             bar.setAutoFillBackground(false);
+        }
+        else if (style.isTone() || style.isHeight()) {
+            applyToneAndHeight();
+        }
+    }
+
+    /**
+     * A tone is a style sheet: once the chunk is styled qt draws the whole bar from the sheet, so the groove is given a
+     * look of its own too, taken from the palette. A height fixes the height of the bar.
+     */
+    private void applyToneAndHeight() {
+        if (!(myComponent instanceof QProgressBar bar)) {
+            return;
+        }
+
+        StyleColorValue tone = ProgressBarPresentation.valueColor(myStyles);
+        if (tone != null) {
+            QColor fill = DesktopQtStyleApplier.themeColor(tone, bar.palette().color(QPalette.ColorRole.Highlight));
+            QColor groove = bar.palette().color(QPalette.ColorRole.Mid);
+            bar.setStyleSheet("QProgressBar { border: none; border-radius: 3px; background-color: " + groove.name() + "; }"
+                + " QProgressBar::chunk { border-radius: 3px; background-color: " + fill.name() + "; }");
+        }
+        else {
+            bar.setStyleSheet("");
+        }
+
+        int height = ProgressBarPresentation.barHeight(myStyles);
+        if (height > 0) {
+            bar.setFixedHeight(height);
+        }
+        else {
+            bar.setMinimumHeight(0);
+            bar.setMaximumHeight(QWIDGETSIZE_MAX);
         }
     }
 

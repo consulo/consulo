@@ -35,6 +35,7 @@ import consulo.ui.MultiSelectComboBox;
 import consulo.ui.PasswordBox;
 import consulo.ui.ProgressBar;
 import consulo.ui.ProgressBarStyle;
+import consulo.ui.Space;
 import consulo.ui.TextAttribute;
 import consulo.ui.TextBoxWithExpandAction;
 import consulo.ui.TextBoxWithExtensions;
@@ -47,6 +48,7 @@ import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.layout.VerticalLayout;
 import consulo.ui.style.StandardColors;
 import consulo.util.lang.ThreeState;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Date;
 import java.util.List;
@@ -113,6 +115,16 @@ public class ComponentsUITesterTab implements UITesterTab {
             .add(Label.create(LocalizeValue.of("Spinner Progress")))
             .add(spinnerBar));
 
+        layout.add(Label.create(LocalizeValue.of("Progress tones: default, success, warning, error - then medium and large heights")));
+        VerticalLayout bars = VerticalLayout.create(Space.MEDIUM);
+        bars.add(progressBar(40, null, null));
+        bars.add(progressBar(55, ProgressBarStyle.SUCCESS, null));
+        bars.add(progressBar(80, ProgressBarStyle.WARNING, null));
+        bars.add(progressBar(95, ProgressBarStyle.ERROR, null));
+        bars.add(progressBar(60, ProgressBarStyle.SUCCESS, ProgressBarStyle.HEIGHT_MEDIUM));
+        bars.add(progressBar(90, ProgressBarStyle.ERROR, ProgressBarStyle.HEIGHT_LARGE));
+        layout.add(bars);
+
         IntSlider intSlider = IntSlider.create(3);
         intSlider.addValueListener(event -> MessageBoxes.okInfo(LocalizeValue.of("intSlider " + event.getValue())).showAsync());
         layout.add(HorizontalLayout.create().add(Label.create(LocalizeValue.of("IntSlider"))).add(intSlider));
@@ -177,5 +189,20 @@ public class ComponentsUITesterTab implements UITesterTab {
         component.render(new HtmlView.RenderData("<html><body><b>Some Bold Text</b> Test</body></html>"));
         layout.add(component);
         return layout;
+    }
+
+    @RequiredUIAccess
+    private static ProgressBar progressBar(int value, @Nullable ProgressBarStyle tone, @Nullable ProgressBarStyle height) {
+        ProgressBar bar = ProgressBar.create();
+        bar.setMinimum(0);
+        bar.setMaximum(100);
+        bar.setValue(value);
+        if (tone != null) {
+            bar.addStyle(tone);
+        }
+        if (height != null) {
+            bar.addStyle(height);
+        }
+        return bar;
     }
 }

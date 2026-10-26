@@ -21,5 +21,25 @@ package consulo.ui;
  */
 public enum ProgressBarStyle implements ComponentStyle {
     SPINNER,
-    TRANSPARENT_BACKGROUND
+    TRANSPARENT_BACKGROUND,
+
+    /**
+     * Tones of the filled part - how good the value is, such as how full a disk is. They exclude each other; adding one
+     * replaces the last.
+     */
+    SUCCESS,
+    WARNING,
+    ERROR,
+
+    /** Thicker bars than the default line. They exclude each other; adding one replaces the last. */
+    HEIGHT_MEDIUM,
+    HEIGHT_LARGE;
+
+    public boolean isTone() {
+        return this == SUCCESS || this == WARNING || this == ERROR;
+    }
+
+    public boolean isHeight() {
+        return this == HEIGHT_MEDIUM || this == HEIGHT_LARGE;
+    }
 }
