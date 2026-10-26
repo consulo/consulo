@@ -279,6 +279,8 @@
                 <include>com.github.markusbernhardt:proxy-vole</include>
                 <include>com.google.code.gson:gson</include>
                 <include>tools.jackson.core:jackson-core</include>
+                <include>tools.jackson.core:jackson-databind</include>
+                <include>com.fasterxml.jackson.core:jackson-annotations</include>
                 <include>net.bytebuddy:byte-buddy</include>
                 <include>org.apache.commons:commons-compress</include>
                 <include>org.tukaani:xz</include>

@@ -93,11 +93,9 @@
         <include>org.apache.commons:commons-fileupload2-jakarta</include>
 
         <include>com.fasterxml.jackson.core:jackson-core</include>
-        <include>com.fasterxml.jackson.core:jackson-annotations</include>
         <include>com.fasterxml.jackson.core:jackson-databind</include>
         <include>com.fasterxml.jackson.datatype:jackson-datatype-jsr310</include>
 
-        <include>tools.jackson.core:jackson-databind</include>
       </includes>
     </dependencySet>
 
