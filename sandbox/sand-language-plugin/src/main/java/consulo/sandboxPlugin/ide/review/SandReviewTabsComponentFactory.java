@@ -28,6 +28,7 @@ import consulo.review.list.ReviewListComponentFactory;
 import consulo.review.timeline.CodeReviewTimelineComponentFactory;
 import consulo.review.toolwindow.ReviewTabsComponentFactory;
 import consulo.review.util.ComputedResult;
+import consulo.review.util.ReviewAction;
 import consulo.review.util.ReviewUIUtil;
 import consulo.ui.Button;
 import consulo.ui.ButtonStyle;
@@ -210,22 +211,22 @@ public class SandReviewTabsComponentFactory implements ReviewTabsComponentFactor
 
     @RequiredUIAccess
     private Component createActionsComponent(Disposable parentDisposable, SandReviewViewModel review, SandReviewFlowViewModel flowVm) {
-        AnAction requestReviewAction = DumbAwareAction.create(ReviewLocalize.reviewDetailsActionRequest(), e -> flowVm.requestReview());
-        AnAction reRequestReviewAction = DumbAwareAction.create(ReviewLocalize.reviewDetailsActionRerequest(), e -> flowVm.reRequestReview());
-        AnAction setMyselfAsReviewerAction = DumbAwareAction.create(ReviewLocalize.reviewDetailsActionSetMyselfAsReviewer(),
+        ReviewAction requestReviewAction = ReviewAction.create(ReviewLocalize.reviewDetailsActionRequest(), e -> flowVm.requestReview());
+        ReviewAction reRequestReviewAction = ReviewAction.create(ReviewLocalize.reviewDetailsActionRerequest(), e -> flowVm.reRequestReview());
+        ReviewAction setMyselfAsReviewerAction = ReviewAction.create(ReviewLocalize.reviewDetailsActionSetMyselfAsReviewer(),
             e -> flowVm.setMyselfAsReviewer());
-        AnAction mergeAction = DumbAwareAction.create(ReviewLocalize.reviewDetailsActionMerge(), e -> flowVm.merge());
-        AnAction squashAndMergeAction = DumbAwareAction.create(ReviewLocalize.reviewDetailsActionSquashAndMerge(), e -> flowVm.merge());
-        AnAction rebaseAction = DumbAwareAction.create(ReviewLocalize.reviewDetailsActionRebase(), e -> flowVm.merge());
-        AnAction closeAction = DumbAwareAction.create(LocalizeValue.localizeTODO("Close"), e -> flowVm.close());
-        AnAction reopenAction = DumbAwareAction.create(LocalizeValue.localizeTODO("Reopen"), e -> flowVm.reopen());
-        AnAction postReviewAction = DumbAwareAction.create(LocalizeValue.localizeTODO("Ready for Review"), e -> flowVm.postReview());
+        ReviewAction mergeAction = ReviewAction.create(ReviewLocalize.reviewDetailsActionMerge(), e -> flowVm.merge());
+        ReviewAction squashAndMergeAction = ReviewAction.create(ReviewLocalize.reviewDetailsActionSquashAndMerge(), e -> flowVm.merge());
+        ReviewAction rebaseAction = ReviewAction.create(ReviewLocalize.reviewDetailsActionRebase(), e -> flowVm.merge());
+        ReviewAction closeAction = ReviewAction.create(LocalizeValue.localizeTODO("Close"), e -> flowVm.close());
+        ReviewAction reopenAction = ReviewAction.create(LocalizeValue.localizeTODO("Reopen"), e -> flowVm.reopen());
+        ReviewAction postReviewAction = ReviewAction.create(LocalizeValue.localizeTODO("Ready for Review"), e -> flowVm.postReview());
 
-        List<AnAction> allActions = List.of(requestReviewAction, reRequestReviewAction, setMyselfAsReviewerAction, mergeAction,
+        List<ReviewAction> allActions = List.of(requestReviewAction, reRequestReviewAction, setMyselfAsReviewerAction, mergeAction,
             squashAndMergeAction, rebaseAction, closeAction, reopenAction, postReviewAction);
         ReviewUIUtil.bind(parentDisposable, flowVm.isBusy(), busy -> {
-            for (AnAction action : allActions) {
-                action.getTemplatePresentation().setEnabled(!busy);
+            for (ReviewAction action : allActions) {
+                action.setEnabled(!busy);
             }
         });
 

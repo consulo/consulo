@@ -17,24 +17,12 @@ package consulo.review.impl.internal.timeline;
 
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.review.localize.ReviewLocalize;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.project.Project;
-import consulo.review.details.model.CodeReviewDetailsTabViewModel;
-import consulo.review.list.error.ErrorStatusAlignment;
-import consulo.review.list.error.ErrorStatusPanelFactory;
-import consulo.review.list.error.ErrorStatusPresenter;
-import consulo.review.localize.ReviewLocalize;
-import consulo.review.util.ComputedResult;
 import consulo.ui.Component;
-import consulo.ui.HorizontalAlignment;
-import consulo.ui.Label;
-import consulo.ui.Space;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.image.Image;
-import consulo.ui.layout.DockLayout;
-import consulo.ui.layout.VerticalLayout;
-import consulo.ui.style.ComponentColors;
 import consulo.util.dataholder.UserDataHolderBase;
 import kava.beans.PropertyChangeListener;
 import org.jspecify.annotations.Nullable;
@@ -49,7 +37,7 @@ public class CodeReviewTimelineFileEditor extends UserDataHolderBase implements 
     private final Project myProject;
     private final CodeReviewTimelineVirtualFile myFile;
     private final Disposable myUIDisposable = Disposable.newDisposable("CodeReviewTimelineFileEditor");
-    private @Nullable DockLayout myComponent;
+    private @Nullable Component myComponent;
 
     public CodeReviewTimelineFileEditor(Project project, CodeReviewTimelineVirtualFile file) {
         myProject = project;
@@ -59,72 +47,16 @@ public class CodeReviewTimelineFileEditor extends UserDataHolderBase implements 
     @RequiredUIAccess
     @Override
     public Component getUIComponent() {
-        DockLayout component = myComponent;
+        Component component = myComponent;
         if (component == null) {
-            component = DockLayout.create();
+            component = CodeReviewTimelineLoadingComponent.create(myUIDisposable, myFile.getTabVmState(), myFile::getTimelineVm, () -> {
+                if (!myProject.isDisposed()) {
+                    FileEditorManager.getInstance(myProject).updateFilePresentation(myFile);
+                }
+            });
             myComponent = component;
-            showState(component);
         }
         return component;
-    }
-
-    @RequiredUIAccess
-    private void showState(DockLayout panel) {
-        Disposable stateDisposable = Disposable.newDisposable("CodeReviewTimelineFileEditor state");
-        Disposer.register(myUIDisposable, stateDisposable);
-        boolean[] shown = {false};
-        Runnable listener = myFile.getTabVmState().addListener(result -> myProject.getUIAccess().give(() -> {
-            if (!shown[0] && !Disposer.isDisposed(stateDisposable)) {
-                shown[0] = show(panel, result);
-                if (shown[0]) {
-                    Disposer.dispose(stateDisposable);
-                }
-            }
-        }));
-        Disposer.register(stateDisposable, listener::run);
-        if (show(panel, myFile.getTabVmState().get())) {
-            shown[0] = true;
-            Disposer.dispose(stateDisposable);
-        }
-    }
-
-    /**
-     * @return whether the timeline is shown, so the state is not needed any more
-     */
-    @RequiredUIAccess
-    private boolean show(DockLayout panel, ComputedResult<CodeReviewDetailsTabViewModel> result) {
-        CodeReviewDetailsTabViewModel tabVm = result.getOrNull();
-        Throwable error = result.exceptionOrNull();
-        if (tabVm != null) {
-            panel.center(CodeReviewTimelineComponent.create(myUIDisposable, tabVm, myFile.getTimelineVm()));
-            if (!myProject.isDisposed()) {
-                FileEditorManager.getInstance(myProject).updateFilePresentation(myFile);
-            }
-            return true;
-        }
-
-        if (error != null) {
-            ErrorStatusPanelFactory factory = myProject.getApplication().getInstance(ErrorStatusPanelFactory.class);
-            Component errorPanel = factory.create(error,
-                ErrorStatusPresenter.<Throwable>simple(ReviewLocalize.reviewTimelineDetailsCannotLoad()),
-                ErrorStatusAlignment.CENTER);
-            panel.center(centered(errorPanel));
-        }
-        else {
-            Label loading = Label.create(ReviewLocalize.reviewTimelineLoading());
-            loading.setImage(Image.busy());
-            loading.setForegroundColor(ComponentColors.DISABLED_TEXT);
-            panel.center(centered(loading));
-        }
-        return false;
-    }
-
-    @RequiredUIAccess
-    private static Component centered(Component component) {
-        VerticalLayout layout = VerticalLayout.create(Space.NONE, HorizontalAlignment.CENTER);
-        layout.add(component);
-        layout.paddingBuilder().allSet(Space.X_LARGE).apply();
-        return layout;
     }
 
     @Override

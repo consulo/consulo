@@ -28,9 +28,8 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.action.ActionToolbarFactory;
 import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.layout.DockLayout;
-import consulo.ui.layout.VerticalLayout;
 import consulo.util.concurrent.coroutine.ObservableValue;
 import org.jspecify.annotations.Nullable;
 
@@ -81,11 +80,12 @@ public final class ReviewListSearchFiltersPanelFactory {
             vm.getQuickFilters(),
             quickFilterListener,
             getQuickFilterTitle,
+            createFilters.get(),
             vm::setSearchQuery,
             vm::clearSearchQuery
         );
 
-        return createPanel(parentDisposable, searchField, quickFilterButton, createFilters.get(), vm.getSearchQueryState());
+        return createPanel(parentDisposable, searchField, quickFilterButton, vm.getSearchQueryState());
     }
 
     @RequiredUIAccess
@@ -109,31 +109,23 @@ public final class ReviewListSearchFiltersPanelFactory {
     }
 
     /**
-     * The search field, and under it one toolbar with the quick filters button followed by the filters.
+     * The search field followed by the filter button, whose popup holds the quick filters and the filters.
      */
     @RequiredUIAccess
     static Component createPanel(Disposable parentDisposable,
                                  TextBox searchField,
-                                 AnAction quickFilterButton,
-                                 List<AnAction> filters,
+                                 AnAction filterButton,
                                  ObservableValue<?> searchState) {
-        DefaultActionGroup filtersGroup = new DefaultActionGroup();
-        filtersGroup.add(quickFilterButton);
-        filters.forEach(filtersGroup::add);
-
         ActionToolbar toolbar = ActionToolbarFactory.getInstance()
-            .createActionToolbar(FILTER_TOOLBAR_PLACE, filtersGroup, ActionToolbar.Style.HORIZONTAL);
+            .createActionToolbar(FILTER_TOOLBAR_PLACE, ActionGroup.of(filterButton), ActionToolbar.Style.HORIZONTAL);
 
         DockLayout searchRow = DockLayout.create();
         searchRow.center(searchField);
-
-        VerticalLayout searchPanel = VerticalLayout.create(Space.LARGE);
-        searchPanel.add(searchRow);
-        searchPanel.add(toolbar.getUIComponent());
-        searchPanel.paddingBuilder().topSet(Space.LARGE).horizontalSet(Space.LARGE).apply();
-        toolbar.setTargetUIComponent(searchPanel);
+        searchRow.right(toolbar.getUIComponent());
+        searchRow.paddingBuilder().topSet(Space.LARGE).horizontalSet(Space.LARGE).apply();
+        toolbar.setTargetUIComponent(searchRow);
 
         ReviewUIUtil.bind(parentDisposable, searchState, state -> toolbar.updateActionsAsync());
-        return searchPanel;
+        return searchRow;
     }
 }

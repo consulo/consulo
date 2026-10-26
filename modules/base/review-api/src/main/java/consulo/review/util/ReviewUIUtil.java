@@ -98,15 +98,17 @@ public final class ReviewUIUtil {
     }
 
     /**
-     * A button following the text, the description and the enabled state of the template presentation of the action,
-     * which performs the action when clicked.
+     * A button following the text and the description of the template presentation of the action and the enabled state
+     * of a {@link ReviewAction}, which performs the action when clicked.
      */
     @RequiredUIAccess
     public static Button createActionButton(Disposable parentDisposable, AnAction action, String place) {
         Presentation presentation = action.getTemplatePresentation();
         Button button = Button.create(presentation.getTextValue());
         button.setToolTipText(presentation.getDescription());
-        button.setEnabled(presentation.isEnabled());
+        if (action instanceof ReviewAction reviewAction) {
+            bind(parentDisposable, reviewAction.getEnabled(), button::setEnabled);
+        }
 
         UIAccess uiAccess = UIAccess.current();
         AtomicBoolean disposed = new AtomicBoolean();
@@ -116,7 +118,6 @@ public final class ReviewUIUtil {
             }
             button.setText(presentation.getTextValue());
             button.setToolTipText(presentation.getDescription());
-            button.setEnabled(presentation.isEnabled());
         });
         presentation.addPropertyChangeListener(listener);
         Disposer.register(parentDisposable, () -> {

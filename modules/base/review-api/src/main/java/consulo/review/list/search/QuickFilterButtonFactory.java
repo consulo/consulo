@@ -51,6 +51,7 @@ final class QuickFilterButtonFactory {
         List<Q> quickFilters,
         @Nullable Consumer<Q> filterListener,
         Function<Q, LocalizeValue> quickFilterTitleProvider,
+        List<AnAction> filters,
         Consumer<S> setSearchQuery,
         Runnable clearSearchQuery
     ) {
@@ -59,6 +60,7 @@ final class QuickFilterButtonFactory {
             quickFilters,
             filterListener,
             quickFilterTitleProvider,
+            filters,
             setSearchQuery,
             clearSearchQuery
         );
@@ -87,6 +89,7 @@ final class QuickFilterButtonFactory {
         List<Q> quickFilters,
         @Nullable Consumer<Q> filterListener,
         Function<Q, LocalizeValue> quickFilterTitleProvider,
+        List<AnAction> filters,
         Consumer<S> setSearchQuery,
         Runnable clearSearchQuery
     ) {
@@ -95,6 +98,7 @@ final class QuickFilterButtonFactory {
         for (Q filter : quickFilters) {
             quickFiltersActions.add(new QuickFilterAction<>(searchState, quickFilterTitleProvider.apply(filter), filter, filterListener, setSearchQuery));
         }
+        quickFiltersActions.addAll(filters);
         quickFiltersActions.add(AnSeparator.create());
         quickFiltersActions.add(new ClearFiltersAction<>(searchState, clearSearchQuery));
 
@@ -112,6 +116,7 @@ final class QuickFilterButtonFactory {
         private final List<Q> myQuickFilters;
         private final @Nullable Consumer<Q> myFilterListener;
         private final Function<Q, LocalizeValue> myQuickFilterTitleProvider;
+        private final List<AnAction> myFilters;
         private final Consumer<S> mySetSearchQuery;
         private final Runnable myClearSearchQuery;
 
@@ -119,6 +124,7 @@ final class QuickFilterButtonFactory {
                                       List<Q> quickFilters,
                                       @Nullable Consumer<Q> filterListener,
                                       Function<Q, LocalizeValue> quickFilterTitleProvider,
+                                      List<AnAction> filters,
                                       Consumer<S> setSearchQuery,
                                       Runnable clearSearchQuery) {
             super(ReviewLocalize.reviewListFilterQuickTitle(), LocalizeValue.empty(), PlatformIconGroup.generalFilter());
@@ -126,6 +132,7 @@ final class QuickFilterButtonFactory {
             myQuickFilters = quickFilters;
             myFilterListener = filterListener;
             myQuickFilterTitleProvider = quickFilterTitleProvider;
+            myFilters = filters;
             mySetSearchQuery = setSearchQuery;
             myClearSearchQuery = clearSearchQuery;
         }
@@ -144,6 +151,7 @@ final class QuickFilterButtonFactory {
                 myQuickFilters,
                 myFilterListener,
                 myQuickFilterTitleProvider,
+                myFilters,
                 mySetSearchQuery,
                 myClearSearchQuery
             );

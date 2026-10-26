@@ -65,14 +65,15 @@ public class DropDownComponentFactory<T> {
                            Runnable onSelect,
                            Function<T, String> valuePresenter,
                            Function<T, PopupItemPresentation> popupItemPresenter) {
-        return create(filterName, valuePresenter, () -> {
-            ChooserPopup<@Nullable T> chooser = ChooserPopupUtil.createChooserPopup(items, popupItemPresenter, PopupConfig.DEFAULT);
-            chooser.result().thenAccept(selectedItem -> {
-                if (selectedItem != null) {
-                    onSelect.run();
-                }
-            });
-            return chooser;
-        });
+        return ReviewListSearchFiltersDropDownComponentFactory.<T>create(
+            myState,
+            filterName,
+            items,
+            onSelect,
+            valuePresenter,
+            popupItemPresenter,
+            myState::set,
+            () -> myState.set(null)
+        );
     }
 }

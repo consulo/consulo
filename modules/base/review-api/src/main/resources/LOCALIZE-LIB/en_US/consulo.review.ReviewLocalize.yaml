@@ -28,8 +28,8 @@ review.list.filter.quick.title:
     text: Quick Filters
 review.list.filter.quick.clear:
     text: Clear {0} Filters
-review.list.filter.clear:
-    text: Clear Filter
+review.list.filter.choose:
+    text: Select…
 review.list.search.history.tooltip:
     text: Search History {0}
 popup.data.loading.error:

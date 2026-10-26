@@ -33,6 +33,8 @@ import consulo.ui.messageList.MessageListItem;
 import consulo.util.concurrent.coroutine.ObservableValue;
 import org.jspecify.annotations.Nullable;
 
+import java.util.function.Supplier;
+
 /**
  * The review timeline and the pieces it is made of - comments, threads and comment inputs - for providers composing
  * their own discussion UI.
@@ -87,6 +89,17 @@ public interface CodeReviewTimelineComponentFactory {
      */
     @RequiredUIAccess
     Component create(Disposable parentDisposable, CodeReviewDetailsTabViewModel tabVm, CodeReviewTimelineViewModel timelineVm);
+
+    /**
+     * The whole timeline once {@code tabVm} is loaded - the loading or the failure until then. For providers showing
+     * the timeline in their own editor.
+     *
+     * @param timelineVm asked once {@code tabVm} is loaded
+     */
+    @RequiredUIAccess
+    Component create(Disposable parentDisposable,
+                     ObservableValue<ComputedResult<CodeReviewDetailsTabViewModel>> tabVm,
+                     Supplier<CodeReviewTimelineViewModel> timelineVm);
 
     /**
      * A thread: while folded its first comment and the folded controls, once unfolded every reply and the reply input.

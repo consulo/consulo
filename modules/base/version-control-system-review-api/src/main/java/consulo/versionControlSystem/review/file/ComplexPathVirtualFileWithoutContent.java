@@ -5,7 +5,6 @@ import consulo.versionControlSystem.editor.ComplexPathVirtualFileSystem;
 import consulo.virtualFileSystem.VirtualFilePathWrapper;
 import consulo.virtualFileSystem.VirtualFileWithoutContent;
 import consulo.virtualFileSystem.fileType.FileType;
-import consulo.virtualFileSystem.fileType.UnknownFileType;
 import consulo.virtualFileSystem.light.LightVirtualFileBase;
 import org.jspecify.annotations.Nullable;
 
@@ -23,7 +22,7 @@ public abstract class ComplexPathVirtualFileWithoutContent extends LightVirtualF
     private final String mySessionId;
 
     protected ComplexPathVirtualFileWithoutContent(String sessionId) {
-        super("", UnknownFileType.INSTANCE, 0);
+        super("", ComplexPathFileType.INSTANCE, 0);
         mySessionId = sessionId;
         setWritable(false);
     }
@@ -42,7 +41,7 @@ public abstract class ComplexPathVirtualFileWithoutContent extends LightVirtualF
 
     @Override
     public FileType getFileType() {
-        return UnknownFileType.INSTANCE;
+        return ComplexPathFileType.INSTANCE;
     }
 
     @Override

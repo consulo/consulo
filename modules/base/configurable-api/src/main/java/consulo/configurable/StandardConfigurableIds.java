@@ -21,6 +21,7 @@ package consulo.configurable;
  */
 public interface StandardConfigurableIds {
   String ACCOUNTS_AND_PASSWORDS_GROUP = "accountsAndPasswords";
+  String ACCOUNTS = "accounts";
   String AI_GROUP = "ai";
   String EDITOR_GROUP = "editor";
   String EXECUTION_GROUP = "execution";

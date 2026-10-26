@@ -28,6 +28,8 @@ import consulo.review.localize.ReviewLocalize;
 import consulo.review.timeline.thread.CodeReviewFoldableThreadViewModel;
 import consulo.review.timeline.thread.CodeReviewResolvableItemViewModel;
 import consulo.review.user.CodeReviewUser;
+import consulo.ui.Avatar;
+import consulo.ui.AvatarStyle;
 import consulo.ui.Button;
 import consulo.ui.ButtonStyle;
 import consulo.ui.Component;
@@ -38,12 +40,10 @@ import consulo.ui.Space;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
-import consulo.ui.image.ImageEffects;
 import consulo.ui.layout.HorizontalLayout;
+import consulo.ui.layout.HorizontalLayoutStyle;
 import consulo.ui.style.ComponentColors;
-import org.jspecify.annotations.Nullable;
 
-import java.util.Collection;
 import java.util.Date;
 
 /**
@@ -108,7 +108,8 @@ public final class CodeReviewCommentUIUtil {
 
     @RequiredUIAccess
     public static Component createFoldedThreadControlsIn(Disposable parentDisposable, CodeReviewFoldableThreadViewModel vm) {
-        Label authorsLabel = Label.create();
+        HorizontalLayout authorsPanel = HorizontalLayout.create(Space.NONE);
+        authorsPanel.addStyle(HorizontalLayoutStyle.TRANSPARENT_BACKGROUND);
 
         Hyperlink repliesLink = Hyperlink.create(LocalizeValue.empty(), event -> vm.unfoldReplies());
 
@@ -117,13 +118,16 @@ public final class CodeReviewCommentUIUtil {
 
         HorizontalLayout panel = HorizontalLayout.create(HORIZONTAL_GAP);
         panel.paddingBuilder().verticalSet(VERTICAL_PADDING).apply();
-        panel.add(authorsLabel);
+        panel.add(authorsPanel);
         panel.add(repliesLink);
         panel.add(lastReplyDateLabel);
 
         ReviewUIUtil.bind(parentDisposable, vm.getRepliesState(), vm.getCanCreateReplies(), (data, canReply) -> {
-            authorsLabel.setImage(overlaidAvatars(data.getRepliesAuthors()));
-            authorsLabel.setVisible(data.getRepliesCount() > 0);
+            authorsPanel.removeAll();
+            for (CodeReviewUser author : data.getRepliesAuthors()) {
+                authorsPanel.add(createAvatar(author));
+            }
+            authorsPanel.setVisible(data.getRepliesCount() > 0);
 
             repliesLink.setVisible(data.getRepliesCount() > 0 || canReply);
             repliesLink.setText(data.getRepliesCount() == 0
@@ -146,13 +150,13 @@ public final class CodeReviewCommentUIUtil {
         return panel;
     }
 
-    private static @Nullable Image overlaidAvatars(Collection<CodeReviewUser> authors) {
-        Image result = null;
-        for (CodeReviewUser author : authors) {
-            Image avatar = ImageEffects.resize(avatarOf(author), COMPACT_AVATAR_SIZE);
-            result = result == null ? avatar : ImageEffects.appendRight(result, avatar);
-        }
-        return result;
+    @RequiredUIAccess
+    private static Avatar createAvatar(CodeReviewUser author) {
+        UserPresentation presentation = author instanceof UserPresentation user ? user : null;
+        Avatar avatar = Avatar.create(LocalizeValue.of(presentation == null ? "" : presentation.getPresentableName()),
+            presentation == null ? null : presentation.getAvatarIcon());
+        avatar.addStyle(AvatarStyle.X_SMALL);
+        return avatar;
     }
 
     @RequiredUIAccess

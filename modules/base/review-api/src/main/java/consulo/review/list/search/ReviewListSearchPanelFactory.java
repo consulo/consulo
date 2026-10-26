@@ -57,11 +57,12 @@ public abstract class ReviewListSearchPanelFactory<S extends ReviewListSearchVal
             myVm.getQuickFilters(),
             quickFilterListener,
             this::getQuickFilterTitle,
+            filters,
             newQuery -> myVm.getSearchState().set(newQuery),
             () -> myVm.getSearchState().set(myVm.getEmptySearch())
         );
 
-        return ReviewListSearchFiltersPanelFactory.createPanel(viewDisposable, searchField, quickFilterButton, filters, myVm.getSearchState());
+        return ReviewListSearchFiltersPanelFactory.createPanel(viewDisposable, searchField, quickFilterButton, myVm.getSearchState());
     }
 
     protected abstract LocalizeValue getShortText(S searchValue);

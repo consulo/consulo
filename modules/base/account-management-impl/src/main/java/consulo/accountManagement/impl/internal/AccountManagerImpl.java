@@ -399,7 +399,7 @@ public class AccountManagerImpl implements AccountManager {
             return CompletableFuture.completedFuture(null);
         }
         return AccountLoginDialogDescriptor.show(this, type, chosen, null, null, project, parent)
-            .thenApply(result -> result == null ? null : addAccount(type, result, project));
+            .thenCompose(result -> result == null ? CompletableFuture.<@Nullable Account>completedFuture(null) : addAccount(type, result, project));
     }
 
     @RequiredUIAccess
@@ -436,7 +436,7 @@ public class AccountManagerImpl implements AccountManager {
         for (AccountScope scope : type.getBaseScopes()) {
             scopeIds.add(scope.getId());
         }
-        return completeLogin(type, config, connection, scopeIds).thenApply(result -> addAccount(type, result, null));
+        return completeLogin(type, config, connection, scopeIds).thenCompose(result -> addAccount(type, result, null));
     }
 
     public static <S extends AccountScope> CompletableFuture<AccountLoginResult> completeLogin(
@@ -460,31 +460,34 @@ public class AccountManagerImpl implements AccountManager {
         });
     }
 
-    private Account addAccount(AccountType<?> type, AccountLoginResult result, @Nullable Project project) {
+    private CompletableFuture<Account> addAccount(AccountType<?> type, AccountLoginResult result, @Nullable Project project) {
         AccountEntry entry = new AccountEntry();
         entry.ID = UUID.randomUUID().toString();
         fillEntry(entry, type, result);
 
         AccountImpl account = wrap(entry, AccountLevel.APPLICATION);
         AccountCredentialSource source = findCredentialSource(entry.SOURCE);
-        if (source != null) {
-            source.store(account, result.connection().serialize()).whenComplete((ignored, error) -> {
+        CompletableFuture<?> stored = source == null
+            ? CompletableFuture.completedFuture(null)
+            : source.store(account, result.connection().serialize()).handle((ignored, error) -> {
                 if (error != null) {
                     LOG.error("Failed to store credentials of " + account, error);
                 }
+                return null;
             });
-        }
 
-        boolean first;
-        synchronized (myLock) {
-            first = getAccounts(type, project).isEmpty();
-            appState().accounts().add(entry);
-        }
-        if (first) {
-            setActiveAccount(type, account, null);
-        }
-        fireAccountsChanged();
-        return account;
+        return stored.thenApply(ignored -> {
+            boolean first;
+            synchronized (myLock) {
+                first = getAccounts(type, project).isEmpty();
+                appState().accounts().add(entry);
+            }
+            if (first) {
+                setActiveAccount(type, account, null);
+            }
+            fireAccountsChanged();
+            return account;
+        });
     }
 
     private CompletableFuture<@Nullable Account> updateAccount(AccountImpl account, AccountLoginResult result) {

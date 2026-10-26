@@ -88,7 +88,7 @@ public class AccountConfigurable implements ApplicationConfigurable, Configurabl
 
     @Override
     public String getId() {
-        return "accounts";
+        return StandardConfigurableIds.ACCOUNTS;
     }
 
     @Override

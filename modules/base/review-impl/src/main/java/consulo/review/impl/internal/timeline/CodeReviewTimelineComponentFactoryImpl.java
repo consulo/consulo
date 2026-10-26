@@ -39,6 +39,8 @@ import consulo.util.concurrent.coroutine.ObservableValue;
 import jakarta.inject.Singleton;
 import org.jspecify.annotations.Nullable;
 
+import java.util.function.Supplier;
+
 /**
  * @author VISTALL
  * @since 2026-10-18
@@ -84,6 +86,15 @@ public class CodeReviewTimelineComponentFactoryImpl implements CodeReviewTimelin
     @Override
     public Component create(Disposable parentDisposable, CodeReviewDetailsTabViewModel tabVm, CodeReviewTimelineViewModel timelineVm) {
         return CodeReviewTimelineComponent.create(parentDisposable, tabVm, timelineVm);
+    }
+
+    @RequiredUIAccess
+    @Override
+    public Component create(Disposable parentDisposable,
+                            ObservableValue<ComputedResult<CodeReviewDetailsTabViewModel>> tabVm,
+                            Supplier<CodeReviewTimelineViewModel> timelineVm) {
+        return CodeReviewTimelineLoadingComponent.create(parentDisposable, tabVm, timelineVm, () -> {
+        });
     }
 
     @RequiredUIAccess
