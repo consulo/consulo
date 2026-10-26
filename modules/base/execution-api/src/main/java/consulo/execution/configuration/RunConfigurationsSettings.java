@@ -24,6 +24,5 @@ import consulo.configurable.UnnamedConfigurable;
 public interface RunConfigurationsSettings {
   ExtensionPointName<RunConfigurationsSettings> EXTENSION_POINT = ExtensionPointName.create(RunConfigurationsSettings.class);
 
-  
   UnnamedConfigurable createConfigurable();
 }

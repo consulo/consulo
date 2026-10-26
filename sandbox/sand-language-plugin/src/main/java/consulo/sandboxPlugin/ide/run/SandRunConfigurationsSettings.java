@@ -21,6 +21,7 @@ import consulo.configurable.ConfigurationException;
 import consulo.configurable.UnnamedConfigurable;
 import consulo.disposer.Disposable;
 import consulo.ui.Component;
+import consulo.ui.Label;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 
@@ -40,9 +41,7 @@ public class SandRunConfigurationsSettings implements RunConfigurationsSettings 
     @RequiredUIAccess
     @Override
     public @Nullable Component createUIComponent(Disposable parentDisposable) {
-      JPanel panel = new JPanel();
-      panel.add(new JLabel("test label"));
-      return TargetAWT.wrap(panel);
+      return Label.create("Test Label");
     }
 
     @RequiredUIAccess
@@ -54,7 +53,6 @@ public class SandRunConfigurationsSettings implements RunConfigurationsSettings 
     @RequiredUIAccess
     @Override
     public void apply() throws ConfigurationException {
-
     }
   }
 
