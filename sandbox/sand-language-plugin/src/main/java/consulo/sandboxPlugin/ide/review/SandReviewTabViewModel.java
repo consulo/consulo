@@ -28,7 +28,7 @@ import consulo.review.timeline.CodeReviewTimelineViewModel;
 public record SandReviewTabViewModel(SandReviewViewModel review) implements CodeReviewDetailsTabViewModel {
     @Override
     public LocalizeValue getDisplayName() {
-        return LocalizeValue.of("#" + review.getNumber());
+        return LocalizeValue.of(review.getNumber());
     }
 
     @Override

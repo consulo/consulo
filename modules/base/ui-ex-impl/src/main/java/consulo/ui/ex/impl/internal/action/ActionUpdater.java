@@ -250,7 +250,7 @@ public class ActionUpdater {
                 return CompletableFuture.completedFuture(Collections.singletonList(child));
             }
 
-            boolean isPopup = actionGroup.isPopup(myPlace);
+            boolean isPopup = actionGroup.isPopup(myPlace) || presentation.isPopupGroup();
             return collectChildrenFlags(actionGroup, hideDisabled, isPopup).thenCompose(flags -> {
                 boolean hasEnabled = flags.hasEnabled();
                 boolean hasVisible = flags.hasVisible();
@@ -352,7 +352,7 @@ public class ActionUpdater {
         }
         return updateAsync(oo).thenCompose(presentation -> {
             if (presentation == null || !presentation.isVisible()
-                || oo.isPopup(myPlace) || computeCanBePerformed(oo)) {
+                || oo.isPopup(myPlace) || presentation.isPopupGroup() || computeCanBePerformed(oo)) {
                 return CompletableFuture.completedFuture(null);
             }
             return getGroupChildrenAsync(oo);

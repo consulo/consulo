@@ -18,6 +18,7 @@ package consulo.http.client;
 
 import consulo.http.localize.HttpLocalize;
 import consulo.util.io.URLUtil;
+import org.jspecify.annotations.Nullable;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -92,6 +93,15 @@ public final class URIUtil {
             return uri;
         }
         return URI.create(uri + "?" + searchQuery);
+    }
+
+    public static URI withFragment(URI uri, @Nullable String newFragment) {
+        try {
+            return new URI(uri.getScheme(), uri.getUserInfo(), uri.getHost(), uri.getPort(), uri.getPath(), uri.getQuery(), newFragment);
+        }
+        catch (URISyntaxException e) {
+            throw new IllegalArgumentException(e);
+        }
     }
 
     private static URI withScheme(URI uri, String scheme) {

@@ -355,6 +355,15 @@ public class URLUtil {
             .replace("%7E", "~");
     }
 
+    public static String encodePath(String path) {
+        try {
+            return new URI(null, null, path, null, null).toASCIIString();
+        }
+        catch (URISyntaxException e) {
+            return path;
+        }
+    }
+
     public static String addSchemaIfMissing(String url) {
         return url.contains(SCHEME_SEPARATOR) ? url : HTTPS_PROTOCOL + SCHEME_SEPARATOR + url;
     }

@@ -17,6 +17,8 @@
 package consulo.review.impl.internal.list;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.review.util.ReviewUIUtil;
@@ -31,6 +33,10 @@ import consulo.ui.Label;
 import consulo.ui.ListBox;
 import consulo.ui.Space;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.ActionPlaces;
+import consulo.ui.ex.action.ActionPopupMenu;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.event.details.KeyCode;
@@ -42,9 +48,11 @@ import consulo.ui.model.MutableFlatDataModel;
 import consulo.ui.style.ComponentColors;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 /**
@@ -63,9 +71,11 @@ public class ReviewListComponentFactoryImpl implements ReviewListComponentFactor
     @RequiredUIAccess
     @Override
     public <T> Component create(Disposable parentDisposable,
-                                       LocalizeValue projectName,
-                                       CodeReviewListItemsViewModel<T> listVm,
-                                       @RequiredUIAccess Consumer<T> opener) {
+                                LocalizeValue projectName,
+                                CodeReviewListItemsViewModel<T> listVm,
+                                @RequiredUIAccess Consumer<T> opener,
+                                @Nullable ActionGroup popupGroup,
+                                BiConsumer<DataSink, @Nullable T> selectedItemProvider) {
         MutableFlatDataModel<T> model = FlatDataModel.of(new ArrayList<>());
         ListBox<T> list = ListBox.create(model);
         list.setRenderer(ReviewListCellRenderer.create(listVm::getPresentation));
@@ -82,6 +92,15 @@ public class ReviewListComponentFactoryImpl implements ReviewListComponentFactor
                 opener.accept(value);
             }
         });
+
+        list.putUserData(UiDataProvider.KEY, sink -> selectedItemProvider.accept(sink, list.getValue()));
+        if (popupGroup != null) {
+            list.addContextMenuListener(event -> {
+                ActionPopupMenu menu = ActionManager.getInstance().createActionPopupMenu(ActionPlaces.POPUP, popupGroup);
+                menu.setTargetComponent(list);
+                menu.show(event.getComponent(), event.getInputDetails().getX(), event.getInputDetails().getY());
+            });
+        }
 
         Component listComponent = ScrollableLayout.create(list);
 

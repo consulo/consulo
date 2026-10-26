@@ -47,7 +47,19 @@ public class CodeReviewTimelineComponentFactoryImpl implements CodeReviewTimelin
     @RequiredUIAccess
     @Override
     public void openTimeline(Project project, CodeReviewDetailsTabViewModel tabVm, CodeReviewTimelineViewModel timelineVm) {
-        CodeReviewTimelineVirtualFile.open(project, tabVm, timelineVm);
+        CodeReviewTimelineVirtualFile.open(project, tabVm, timelineVm, null);
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void openTimeline(Project project, CodeReviewDetailsTabViewModel tabVm, CodeReviewTimelineViewModel timelineVm, Disposable owner) {
+        CodeReviewTimelineVirtualFile.open(project, tabVm, timelineVm, owner);
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void closeTimeline(Project project, CodeReviewTimelineViewModel timelineVm) {
+        CodeReviewTimelineVirtualFile.close(project, timelineVm);
     }
 
     @RequiredUIAccess

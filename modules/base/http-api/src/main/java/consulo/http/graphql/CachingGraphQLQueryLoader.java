@@ -54,7 +54,14 @@ public class CachingGraphQLQueryLoader implements GraphQLQueryLoader {
     private final String myFragmentsFileExtension;
 
     public CachingGraphQLQueryLoader(Function<String, @Nullable InputStream> getFileStream) {
-        this(getFileStream, createFragmentCache(), createQueryCache(), List.of("graphql/fragment"), "graphql");
+        this(withSharedFragments(getFileStream), createFragmentCache(), createQueryCache(), List.of("graphql/fragment"), "graphql");
+    }
+
+    private static Function<String, @Nullable InputStream> withSharedFragments(Function<String, @Nullable InputStream> getFileStream) {
+        return path -> {
+            InputStream stream = getFileStream.apply(path);
+            return stream != null ? stream : CachingGraphQLQueryLoader.class.getResourceAsStream("/" + path);
+        };
     }
 
     public CachingGraphQLQueryLoader(Function<String, @Nullable InputStream> getFileStream,

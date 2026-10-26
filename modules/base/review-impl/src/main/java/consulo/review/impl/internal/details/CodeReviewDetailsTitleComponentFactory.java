@@ -48,7 +48,7 @@ public final class CodeReviewDetailsTitleComponentFactory {
         titleLabel.addStyle(LabelStyle.FONT_BOLD);
         ReviewUIUtil.bind(parentDisposable, detailsVm.getTitle(), title -> titleLabel.setText(LocalizeValue.of(title)));
 
-        Hyperlink numberLink = Hyperlink.create(LocalizeValue.of("#" + detailsVm.getNumber()),
+        Hyperlink numberLink = Hyperlink.create(LocalizeValue.of(detailsVm.getNumber()),
             event -> Platform.current().openInBrowser(detailsVm.getUrl()));
         numberLink.setToolTipText(LocalizeValue.of(detailsVm.getUrl()));
 

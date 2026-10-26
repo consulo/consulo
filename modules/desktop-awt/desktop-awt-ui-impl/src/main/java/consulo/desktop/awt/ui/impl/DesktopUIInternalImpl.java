@@ -343,6 +343,11 @@ public class DesktopUIInternalImpl extends UIInternal implements UIInternalEx {
     }
 
     @Override
+    public consulo.ui.PopupMenu _PopupMenu_create(Component target) {
+        return new DesktopPopupMenuImpl(target);
+    }
+
+    @Override
     public MenuSeparator _MenuSeparator_create() {
         return DesktopMenuSeparatorImpl.INSTANCE;
     }

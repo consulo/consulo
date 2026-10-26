@@ -292,6 +292,8 @@ review.toggle.changes.viewed.mark.viewed:
     text: Mark as Viewed
 clone.dialog.button.login:
     text: _Log In
+clone.dialog.directory.to.clone.label.text:
+    text: 'Clone into:'
 clone.dialog.error.load.repositories:
     text: Unable to load repositories
 clone.dialog.insufficient.scopes:
@@ -306,6 +308,12 @@ login.again.action.text:
     text: Log in again…
 login.label.use.token:
     text: Use token…
+error.address.unresolved:
+    text: Address unresolved
+error.connection.error:
+    text: Connection error
+error.unknown:
+    text: Unknown error
 review.comments.discard.new.confirmation:
     text: Are you sure you want to discard the unsaved comment?
 review.comments.discard.new.confirmation.title:
@@ -338,3 +346,39 @@ review.login.note.gear:
     text: Change repository or account later under the gear icon
 review.login.note.more:
     text: Change repository or account later under the More icon
+review.snippet.create.path.mode:
+    text: 'Path handling mode:'
+review.snippet.create.path.mode.unavailable.tooltip:
+    text: This naming scheme causes conflicts
+review.snippet.create.path.mode.tooltip:
+    text: How paths should be included in file names
+review.snippet.create.path.mode.project.relative:
+    text: Project relative
+review.snippet.create.path.mode.project.relative.tooltip:
+    text: Include relative path from project root
+review.snippet.create.path.mode.content.root.relative:
+    text: Content root relative
+review.snippet.create.path.mode.content.root.relative.tooltip:
+    text: Include relative path from content root
+review.snippet.create.path.mode.relative:
+    text: Relative
+review.snippet.create.path.mode.relative.tooltip:
+    text: Include relative path from nearest common parent
+review.snippet.create.path.mode.none:
+    text: No paths
+review.snippet.create.path.mode.none.tooltip:
+    text: Drop all paths, only use file names
+action.CodeReview.ToggleChangesViewed.description:
+    text: Toggle viewed/not viewed state for the selection or file
+action.CodeReview.ToggleChangesViewed.markViewed:
+    text: Mark as Viewed
+action.CodeReview.ToggleChangesViewed.markNotViewed:
+    text: Mark as Not Viewed
+action.CodeReview.ToggleChangesViewed.markFileViewed:
+    text: Mark File as Viewed
+action.CodeReview.ToggleChangesViewed.markFileNotViewed:
+    text: Mark File as Not Viewed
+action.CodeReview.ToggleChangesViewed.markAllViewed:
+    text: Mark All as Viewed
+action.CodeReview.ToggleChangesViewed.markAllNotViewed:
+    text: Mark All as Not Viewed

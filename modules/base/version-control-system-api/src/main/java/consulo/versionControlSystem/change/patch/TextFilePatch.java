@@ -15,6 +15,9 @@
  */
 package consulo.versionControlSystem.change.patch;
 
+import consulo.virtualFileSystem.status.FileStatus;
+import org.jspecify.annotations.Nullable;
+
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,6 +29,7 @@ import java.util.List;
 public class TextFilePatch extends FilePatch {
   private Charset myCharset;
   private final List<PatchHunk> myHunks;
+  private @Nullable FileStatus myFileStatus;
 
   public void addHunk(PatchHunk hunk) {
     myHunks.add(hunk);
@@ -47,6 +51,7 @@ public class TextFilePatch extends FilePatch {
     setBeforeName(patch.getBeforeName());
     setAfterName(patch.getAfterName());
     myHunks = patch.myHunks;
+    setFileStatus(patch.myFileStatus);
   }
 
   public TextFilePatch pathsOnlyCopy() {
@@ -54,7 +59,7 @@ public class TextFilePatch extends FilePatch {
   }
 
   public boolean isNewFile() {
-    return myHunks.size() == 1 && myHunks.get(0).isNewContent();
+    return myFileStatus == FileStatus.ADDED || (myHunks.size() == 1 && myHunks.get(0).isNewContent());
   }
 
   public String getNewFileText() {
@@ -62,7 +67,7 @@ public class TextFilePatch extends FilePatch {
   }
 
   public boolean isDeletedFile() {
-    return myHunks.size() == 1 && myHunks.get(0).isDeletedContent();
+    return myFileStatus == FileStatus.DELETED || (myHunks.size() == 1 && myHunks.get(0).isDeletedContent());
   }
 
   public Charset getCharset() {
@@ -71,5 +76,9 @@ public class TextFilePatch extends FilePatch {
 
   public void setCharset(Charset charset) {
     myCharset = charset;
+  }
+
+  public void setFileStatus(@Nullable FileStatus fileStatus) {
+    myFileStatus = fileStatus;
   }
 }

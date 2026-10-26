@@ -47,6 +47,20 @@ public interface CodeReviewTimelineComponentFactory {
     void openTimeline(Project project, CodeReviewDetailsTabViewModel tabVm, CodeReviewTimelineViewModel timelineVm);
 
     /**
+     * Opens the timeline of a review in an editor tab, or selects the tab already showing it.
+     * {@code owner} is disposed once the tab is closed, or at once when a tab already shows {@code timelineVm} - so view
+     * models acquired for the tab live as long as it does.
+     */
+    @RequiredUIAccess
+    void openTimeline(Project project, CodeReviewDetailsTabViewModel tabVm, CodeReviewTimelineViewModel timelineVm, Disposable owner);
+
+    /**
+     * Closes the editor tabs showing {@code timelineVm}.
+     */
+    @RequiredUIAccess
+    void closeTimeline(Project project, CodeReviewTimelineViewModel timelineVm);
+
+    /**
      * The whole timeline: the review title, every comment and thread in time order, and the new comment input.
      */
     @RequiredUIAccess

@@ -15,6 +15,10 @@
  */
 package consulo.review.comment;
 
+import consulo.util.concurrent.coroutine.ObservableValue;
+
+import java.util.List;
+
 /**
  * A comment input that sends its {@link #getText() text} somewhere - a new timeline comment, a thread reply or a new
  * line comment.
@@ -24,6 +28,14 @@ package consulo.review.comment;
  */
 public interface CodeReviewNewCommentViewModel extends CodeReviewSubmittableTextViewModel {
     void submit();
+
+    /**
+     * The named ways to send the comment: the first one is the send action of the input, the others are offered next to
+     * its suffix. Empty sends with {@link #submit()} under the default name.
+     */
+    default ObservableValue<List<CodeReviewCommentSubmitAction>> getCommentSubmitActions() {
+        return ObservableValue.of(List.of());
+    }
 
     /**
      * Whether the comment is about lines a change can be suggested for - the input then offers to insert a suggestion.

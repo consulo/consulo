@@ -40,6 +40,8 @@ changelist.track.context.checkbox:
     text: _Track context
 changelist.track.context.tooltip:
     text: Reload context (e.g. open editors) when changelist is set active
+checkbox.include.issues.not.assigned.to.me:
+    text: Include issues not assigned to me
 command.name.load.context:
     text: Load Context {0}
 create.new.task.0:
