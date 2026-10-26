@@ -94,8 +94,16 @@ public final class VirtualFileUtil {
     }
 
     public static @Nullable VirtualFile findFileByURL(URL url, VirtualFileManager virtualFileManager) {
-        String vfUrl = convertFromUrl(url);
+        String vfUrl = convertFromUrl(url, virtualFileManager);
         return virtualFileManager.findFileByUrl(vfUrl);
+    }
+
+    public static String convertFromUrl(URL url, VirtualFileManager virtualFileManager) {
+        String vfUrl = convertFromUrl(url);
+        if (url.getProtocol().equals(URLUtil.JAR_PROTOCOL) && virtualFileManager.getFileSystem(StandardFileSystems.JAR_PROTOCOL) == null) {
+            return StandardFileSystems.ZIP_PROTOCOL + vfUrl.substring(URLUtil.JAR_PROTOCOL.length());
+        }
+        return vfUrl;
     }
 
     public static String convertFromUrl(URL url) {
