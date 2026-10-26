@@ -182,7 +182,7 @@ public class CodeReviewDetailsCommitsComponentFactoryImpl implements CodeReviewD
             @SuppressWarnings("unchecked")
             CommitPresentation commit = commitPresentation.apply((T) value);
             presentation.append(LocalizeValue.of(plainText(commit.titleHtml())), TextAttribute.REGULAR);
-            presentation.withSuffix(LocalizeValue.of(commit.author() + ", " + DateFormatUtil.formatPrettyDateTime(commit.committedDate())), null);
+            presentation.withSuffix(LocalizeValue.of(commit.authorAndDate(DateFormatUtil::formatPrettyDateTime)), null);
         });
         popup.showBy(anchor, null, PopupPosition.BOTTOM);
     }

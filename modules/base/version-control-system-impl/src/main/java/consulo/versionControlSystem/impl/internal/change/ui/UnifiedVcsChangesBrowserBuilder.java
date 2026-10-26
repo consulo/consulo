@@ -45,6 +45,7 @@ public class UnifiedVcsChangesBrowserBuilder implements VcsChangesBrowserBuilder
     private @Nullable BiConsumer<Change, TextItemPresentation> myChangeDecorator;
     private @Nullable Consumer<Change> myOpenHandler;
     private @Nullable ActionGroup myViewOptions;
+    private @Nullable ActionGroup myPopupGroup;
     private @Nullable Set<String> myGroupingKeys;
     private @Nullable Consumer<Set<String>> myGroupingListener;
 
@@ -67,6 +68,12 @@ public class UnifiedVcsChangesBrowserBuilder implements VcsChangesBrowserBuilder
     @Override
     public VcsChangesBrowserBuilder viewOptions(ActionGroup group) {
         myViewOptions = group;
+        return this;
+    }
+
+    @Override
+    public VcsChangesBrowserBuilder popupGroup(ActionGroup group) {
+        myPopupGroup = group;
         return this;
     }
 
@@ -102,6 +109,7 @@ public class UnifiedVcsChangesBrowserBuilder implements VcsChangesBrowserBuilder
             myEmptyText,
             List.copyOf(myToolbarActions),
             myViewOptions,
+            myPopupGroup,
             myWithRollback,
             myChangeDecorator,
             myOpenHandler,

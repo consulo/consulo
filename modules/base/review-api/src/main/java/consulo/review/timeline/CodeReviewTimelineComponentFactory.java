@@ -25,10 +25,12 @@ import consulo.review.details.model.CodeReviewDetailsTabViewModel;
 import consulo.review.timeline.thread.CodeReviewFoldableThreadViewModel;
 import consulo.review.timeline.thread.CodeReviewResolvableItemViewModel;
 import consulo.review.timeline.thread.CodeReviewThreadViewModel;
+import consulo.review.util.ComputedResult;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.messageList.MessageList;
 import consulo.ui.messageList.MessageListItem;
+import consulo.util.concurrent.coroutine.ObservableValue;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -53,6 +55,26 @@ public interface CodeReviewTimelineComponentFactory {
      */
     @RequiredUIAccess
     void openTimeline(Project project, CodeReviewDetailsTabViewModel tabVm, CodeReviewTimelineViewModel timelineVm, Disposable owner);
+
+    /**
+     * Opens the timeline of a review in an editor tab at once, or selects the tab already showing it. While
+     * {@code tabVm} loads, the tab is named {@code name} and shows the loading, a failure shows its reason, and the
+     * timeline is shown once the tab view model is loaded.
+     * {@code owner} is disposed once the tab is closed, or at once when a tab already shows {@code timelineVm}.
+     */
+    @RequiredUIAccess
+    void openTimeline(Project project,
+                      LocalizeValue name,
+                      ObservableValue<ComputedResult<CodeReviewDetailsTabViewModel>> tabVm,
+                      CodeReviewTimelineViewModel timelineVm,
+                      Disposable owner);
+
+    /**
+     * Presents the editor tabs showing {@code timelineVm} again - their {@linkplain CodeReviewDetailsTabViewModel#getDisplayName() name}
+     * and {@linkplain CodeReviewDetailsTabViewModel#getIcon() icon}.
+     */
+    @RequiredUIAccess
+    void updateTimelinePresentation(Project project, CodeReviewTimelineViewModel timelineVm);
 
     /**
      * Closes the editor tabs showing {@code timelineVm}.

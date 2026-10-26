@@ -11,6 +11,7 @@ module consulo.review.api {
     requires transitive consulo.ui.api;
     requires transitive consulo.code.editor.api;
     requires consulo.module.content.api;
+    requires transitive consulo.language.editor.api;
 
     exports consulo.review;
     exports consulo.review.async;

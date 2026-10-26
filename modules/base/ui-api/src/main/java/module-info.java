@@ -65,6 +65,7 @@ module consulo.ui.api {
         consulo.project.api,
         consulo.project.ui.api,
         consulo.project.ui.impl,
+        consulo.review.impl,
         consulo.web.ide,
         consulo.web.ui.impl;
 

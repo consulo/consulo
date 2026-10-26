@@ -15,6 +15,7 @@
  */
 package consulo.desktop.qt.ui.impl.messageList;
 
+import consulo.desktop.qt.ui.impl.DesktopQtCurrentInput;
 import consulo.desktop.qt.ui.impl.DesktopQtGeometry;
 import consulo.desktop.qt.ui.impl.DesktopQtSpace;
 import consulo.desktop.qt.ui.impl.DesktopQtStyleApplier;
@@ -22,9 +23,11 @@ import consulo.desktop.qt.ui.impl.QtComponentDelegate;
 import consulo.desktop.qt.ui.impl.avatar.DesktopQtAvatarPainter;
 import consulo.desktop.qt.ui.impl.base.DesktopQtWrappingLabel;
 import consulo.localize.LocalizeValue;
+import consulo.platform.Platform;
 import consulo.ui.AvatarStyle;
 import consulo.ui.Space;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.HyperlinkEvent;
 import consulo.ui.image.Image;
 import consulo.ui.impl.avatar.AvatarPresentation;
 import consulo.ui.impl.messageList.MessageListPresentation;
@@ -167,8 +170,9 @@ public class DesktopQtMessageListImpl extends QtComponentDelegate<QScrollArea> i
         private QLabel createBodyLabel(QWidget parent) {
             DesktopQtWrappingLabel body = new DesktopQtWrappingLabel(parent);
             body.setWordWrap(true);
-            body.setOpenExternalLinks(true);
+            body.setOpenExternalLinks(false);
             body.setTextInteractionFlags(Qt.TextInteractionFlag.TextBrowserInteraction);
+            body.linkActivated.connect(href -> linkActivated(body, href));
             return body;
         }
 
@@ -631,6 +635,19 @@ public class DesktopQtMessageListImpl extends QtComponentDelegate<QScrollArea> i
         QWidget container = myContainer;
         if (container != null && !container.isDisposed()) {
             DesktopQtGeometry.invalidateHierarchy(container);
+        }
+    }
+
+    @RequiredUIAccess
+    private void linkActivated(QLabel body, String href) {
+        if (href.isEmpty()) {
+            return;
+        }
+        if (myDataObject.hasListeners(HyperlinkEvent.class)) {
+            getListenerDispatcher(HyperlinkEvent.class).onEvent(new HyperlinkEvent(this, href, DesktopQtCurrentInput.current(body)));
+        }
+        else if (href.contains("://")) {
+            Platform.current().openInBrowser(href);
         }
     }
 }

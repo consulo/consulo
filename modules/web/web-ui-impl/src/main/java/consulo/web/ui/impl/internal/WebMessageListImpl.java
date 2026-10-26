@@ -17,10 +17,13 @@ package consulo.web.ui.impl.internal;
 
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.dom.DomEvent;
 import com.vaadin.flow.dom.Element;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.HyperlinkEvent;
+import consulo.ui.event.details.InputDetails;
 import consulo.ui.image.Image;
 import consulo.ui.impl.avatar.AvatarPresentation;
 import consulo.ui.impl.messageList.MessageListPresentation;
@@ -35,6 +38,7 @@ import consulo.ui.style.ComponentColors;
 import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
 import consulo.web.ui.impl.internal.base.TargetVaadin;
 import consulo.web.ui.impl.internal.base.VaadinComponentDelegate;
+import consulo.web.ui.impl.internal.base.WebInputDetails;
 import consulo.web.ui.impl.internal.image.WebImageUrl;
 import org.jspecify.annotations.Nullable;
 
@@ -275,6 +279,9 @@ public class WebMessageListImpl extends VaadinComponentDelegate<WebMessageListIm
 
     private final List<Item> myItems = new ArrayList<>();
     private final com.vaadin.flow.component.messages.MessageList myMarkdownLoader = new com.vaadin.flow.component.messages.MessageList();
+    private static final String LINK = "event.composedPath().find(node => node.tagName === 'A' && node.hasAttribute('href'))";
+    private static final String LINK_HREF = LINK + ".getAttribute('href')";
+
     private boolean myMarkdown;
     private @Nullable AsyncHtmlImageLoader myImageLoader;
     private final Map<String, Image> myImages = new HashMap<>();
@@ -288,6 +295,26 @@ public class WebMessageListImpl extends VaadinComponentDelegate<WebMessageListIm
 
         myMarkdownLoader.getStyle().set("display", "none");
         vaadin.add(myMarkdownLoader);
+
+        WebInputDetails.addClickEventListener(vaadin.getElement(), "click", this::onLink)
+            .setFilter(LINK + " != null")
+            .addEventData(LINK_HREF)
+            .preventDefault();
+    }
+
+    @RequiredUIAccess
+    private void onLink(DomEvent event, InputDetails details) {
+        String href = event.getEventData().path(LINK_HREF).asString("");
+        if (href.isEmpty()) {
+            return;
+        }
+
+        if (dataObject().hasListeners(HyperlinkEvent.class)) {
+            getListenerDispatcher(HyperlinkEvent.class).onEvent(new HyperlinkEvent(this, href, details));
+        }
+        else if (href.contains("://")) {
+            getVaadinComponent().getUI().ifPresent(ui -> ui.getPage().open(href, "_blank"));
+        }
     }
 
     @Override

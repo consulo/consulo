@@ -84,6 +84,7 @@ public class Notification {
         private @Nullable NotificationListener myListener = null;
         private @Nullable List<Function<Notification, ? extends AnAction>> myActionAdders = null;
         private @Nullable Runnable myWhenExpired = null;
+        private @Nullable String myDisplayId = null;
 
         Builder(NotificationService service, NotificationGroup group, NotificationType type) {
             myService = service;
@@ -227,6 +228,15 @@ public class Notification {
             return this;
         }
 
+        /**
+         * A stable id of the kind of the notification, for features which tell notifications apart - unlike the
+         * {@link Notification#id}, which differs for every shown notification.
+         */
+        public Builder displayId(String displayId) {
+            myDisplayId = displayId;
+            return this;
+        }
+
         public Builder whenExpired(Runnable whenExpired) {
             if (myWhenExpired != null) {
                 throw new IllegalStateException("Only one expiration listener is allowed");
@@ -246,6 +256,7 @@ public class Notification {
             notification.setContent(myContent);
             notification.mySuggestion = mySuggestion;
             notification.myRemoveWhenExpired = myRemoveWhenExpired;
+            notification.myDisplayId = myDisplayId;
             if (myImportant != null) {
                 notification.setImportant(myImportant);
             }
@@ -295,6 +306,7 @@ public class Notification {
     private @Nullable Boolean myImportant;
     private boolean mySuggestion;
     private boolean myRemoveWhenExpired;
+    private @Nullable String myDisplayId;
     private final long myTimestamp = System.currentTimeMillis();
 
     protected Notification(Builder notificationBuilder) {
@@ -438,6 +450,21 @@ public class Notification {
 
     public NotificationType getType() {
         return myType;
+    }
+
+    /**
+     * @see Builder#displayId(String)
+     */
+    public @Nullable String getDisplayId() {
+        return myDisplayId;
+    }
+
+    /**
+     * @see Builder#displayId(String)
+     */
+    public Notification setDisplayId(String displayId) {
+        myDisplayId = displayId;
+        return this;
     }
 
     public boolean isSuggestion() {

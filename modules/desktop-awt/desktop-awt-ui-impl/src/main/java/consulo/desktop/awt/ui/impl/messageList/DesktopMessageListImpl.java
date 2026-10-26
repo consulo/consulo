@@ -18,12 +18,15 @@ package consulo.desktop.awt.ui.impl.messageList;
 import consulo.desktop.awt.ui.impl.DesktopSpace;
 import consulo.desktop.awt.ui.impl.avatar.AvatarComponent;
 import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
+import consulo.desktop.awt.ui.impl.event.DesktopAWTInputDetails;
 import consulo.desktop.awt.ui.impl.facade.FromSwingComponentWrapper;
 import consulo.localize.LocalizeValue;
+import consulo.platform.Platform;
 import consulo.ui.AvatarStyle;
 import consulo.ui.Component;
 import consulo.ui.Space;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.HyperlinkEvent;
 import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.JBScrollPane;
 import consulo.ui.ex.awt.JBUI;
@@ -44,6 +47,7 @@ import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
+import javax.swing.event.HyperlinkListener;
 import javax.swing.text.View;
 import java.awt.*;
 import java.time.Instant;
@@ -105,11 +109,12 @@ public class DesktopMessageListImpl extends SwingComponentDelegate<JBScrollPane>
     private static class MessageBody extends JEditorPane {
         private final MessageBodyEditorKit myEditorKit = new MessageBodyEditorKit();
 
-        MessageBody() {
+        MessageBody(HyperlinkListener linkListener) {
             setEditable(false);
             setOpaque(false);
             setBorder(JBUI.Borders.empty());
             setEditorKit(myEditorKit);
+            addHyperlinkListener(linkListener);
         }
 
         void setImageLoader(@Nullable AsyncHtmlImageLoader imageLoader) {
@@ -139,7 +144,7 @@ public class DesktopMessageListImpl extends SwingComponentDelegate<JBScrollPane>
         private final JBLabel myHeader = new JBLabel();
         private final JPanel myHeaderRow = new JPanel(new BorderLayout(DesktopSpace.toPixels(Space.MEDIUM), 0));
         private @Nullable Component myActionsComponent;
-        private final MessageBody myBody = new MessageBody();
+        private final MessageBody myBody = new MessageBody(myLinkListener);
         private final JPanel myPartsPanel = new JPanel(new VerticalLayout(DesktopSpace.toPixels(Space.SMALL)));
 
         private String myText;
@@ -193,7 +198,7 @@ public class DesktopMessageListImpl extends SwingComponentDelegate<JBScrollPane>
                 String text = part.getText();
                 Component component = part.getComponent();
                 if (text != null) {
-                    MessageBody body = new MessageBody();
+                    MessageBody body = new MessageBody(myLinkListener);
                     fillBody(body, text);
                     myPartsPanel.add(body);
                 }
@@ -307,6 +312,7 @@ public class DesktopMessageListImpl extends SwingComponentDelegate<JBScrollPane>
         }
     }
 
+    private final HyperlinkListener myLinkListener = this::linkActivated;
     private final ListPanel myListPanel = new ListPanel();
     private final List<Item> myItems = new ArrayList<>();
     private boolean myMarkdown;
@@ -445,5 +451,23 @@ public class DesktopMessageListImpl extends SwingComponentDelegate<JBScrollPane>
     @Override
     public @Nullable AsyncHtmlImageLoader getImageLoader() {
         return myImageLoader;
+    }
+
+    @RequiredUIAccess
+    private void linkActivated(javax.swing.event.HyperlinkEvent event) {
+        if (event.getEventType() != javax.swing.event.HyperlinkEvent.EventType.ACTIVATED) {
+            return;
+        }
+        String href = event.getDescription();
+        if (href == null || href.isEmpty()) {
+            return;
+        }
+        if (hasListeners(HyperlinkEvent.class)) {
+            java.awt.Component source = event.getSource() instanceof java.awt.Component component ? component : toAWTComponent();
+            getListenerDispatcher(HyperlinkEvent.class).onEvent(new HyperlinkEvent(this, href, DesktopAWTInputDetails.currentEvent(source)));
+        }
+        else if (href.contains("://")) {
+            Platform.current().openInBrowser(href);
+        }
     }
 }

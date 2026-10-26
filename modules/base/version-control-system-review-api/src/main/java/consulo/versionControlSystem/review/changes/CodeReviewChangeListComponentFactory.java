@@ -20,6 +20,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
+import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.versionControlSystem.review.CodeReviewProgressTreeModel;
@@ -33,8 +34,23 @@ import org.jspecify.annotations.Nullable;
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface CodeReviewChangeListComponentFactory {
     @RequiredUIAccess
+    default Component createIn(Disposable parentDisposable,
+                               CodeReviewChangeListViewModel vm,
+                               @Nullable CodeReviewProgressTreeModel<?> progressModel,
+                               LocalizeValue emptyTextText) {
+        return createIn(parentDisposable, vm, progressModel, emptyTextText, null);
+    }
+
+    /**
+     * @param popupGroup the context menu of the tree, or {@code null} for none. Its actions read the
+     *                   {@linkplain CodeReviewChangeListDataKeys#SELECTED_CHANGES selected changes} and the
+     *                   {@linkplain CodeReviewChangeListViewModel#DATA_KEY view model} from the data context, along with
+     *                   what any changes tree publishes - the grouping, the tree expander and the navigatables.
+     */
+    @RequiredUIAccess
     Component createIn(Disposable parentDisposable,
                        CodeReviewChangeListViewModel vm,
                        @Nullable CodeReviewProgressTreeModel<?> progressModel,
-                       LocalizeValue emptyTextText);
+                       LocalizeValue emptyTextText,
+                       @Nullable ActionGroup popupGroup);
 }

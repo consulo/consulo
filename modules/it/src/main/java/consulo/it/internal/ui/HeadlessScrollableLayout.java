@@ -18,6 +18,7 @@ package consulo.it.internal.ui;
 import consulo.ui.Component;
 import consulo.ui.Point2D;
 import consulo.ui.Rectangle2D;
+import consulo.ui.Size2D;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.internal.ScrollableLayoutInternal;
 import consulo.ui.layout.LayoutConstraint;
@@ -41,6 +42,12 @@ public class HeadlessScrollableLayout extends HeadlessLayoutBase<LayoutConstrain
     @Override
     public Rectangle2D getViewRect() {
         return myViewRect;
+    }
+
+    @RequiredUIAccess
+    @Override
+    public Size2D getContentSize() {
+        return myViewRect.size();
     }
 
     @RequiredUIAccess

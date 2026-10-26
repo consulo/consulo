@@ -86,7 +86,7 @@ public class CodeReviewDetailsCommitInfoComponentFactoryImpl implements CodeRevi
             CommitPresentation presentation = commitPresentation.apply(value);
             title.setText(LocalizeValue.of(presentation.titleHtml()));
             description.setText(LocalizeValue.of(presentation.descriptionHtml()));
-            info.setText(LocalizeValue.of(presentation.author() + ", " + DateFormatUtil.formatPrettyDateTime(presentation.committedDate())));
+            info.setText(LocalizeValue.of(presentation.authorAndDate(DateFormatUtil::formatPrettyDateTime)));
         });
         return panel;
     }

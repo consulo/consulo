@@ -86,9 +86,7 @@ public final class CodeReviewCommitsItemFactory {
                 .append(XmlStringUtil.escapeText(commit.abbreviatedHash())).append("</a>&nbsp;")
                 .append(presentation.titleHtml())
                 .append("<br>")
-                .append(XmlStringUtil.escapeText(presentation.author()))
-                .append(", ")
-                .append(XmlStringUtil.escapeText(DateFormatUtil.formatPrettyDateTime(presentation.committedDate())))
+                .append(XmlStringUtil.escapeText(presentation.authorAndDate(DateFormatUtil::formatPrettyDateTime)))
                 .append("</p>");
         }
         return html.toString();

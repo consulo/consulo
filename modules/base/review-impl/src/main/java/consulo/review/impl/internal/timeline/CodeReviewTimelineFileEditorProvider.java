@@ -38,7 +38,7 @@ public class CodeReviewTimelineFileEditorProvider implements FileEditorProvider,
     @RequiredUIAccess
     @Override
     public FileEditor createEditor(Project project, VirtualFile file) {
-        return new CodeReviewTimelineFileEditor((CodeReviewTimelineVirtualFile) file);
+        return new CodeReviewTimelineFileEditor(project, (CodeReviewTimelineVirtualFile) file);
     }
 
     @Override

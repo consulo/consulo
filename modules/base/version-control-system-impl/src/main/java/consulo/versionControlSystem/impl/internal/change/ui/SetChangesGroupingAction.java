@@ -1,3 +1,4 @@
+// Copyright 2000-2025 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 /*
  * Copyright 2013-2026 consulo.io
  *
@@ -19,38 +20,39 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareToggleAction;
+import consulo.versionControlSystem.ui.ChangesGroupingSupport;
+import org.jspecify.annotations.Nullable;
 
-import java.util.Set;
-import java.util.function.BiConsumer;
-import java.util.function.Supplier;
-
-/**
- * @author VISTALL
- * @since 2026-10-25
- */
-public class SetChangesGroupingAction extends DumbAwareToggleAction {
-    private final String myGroupingKey;
-    private final Supplier<Set<String>> myGroupingKeys;
-    private final BiConsumer<String, Boolean> mySetGrouping;
-
-    public SetChangesGroupingAction(LocalizeValue text,
-                                    String groupingKey,
-                                    Supplier<Set<String>> groupingKeys,
-                                    BiConsumer<String, Boolean> setGrouping) {
+public abstract class SetChangesGroupingAction extends DumbAwareToggleAction {
+    protected SetChangesGroupingAction(LocalizeValue text) {
         super(text);
-        myGroupingKey = groupingKey;
-        myGroupingKeys = groupingKeys;
-        mySetGrouping = setGrouping;
+    }
+
+    public abstract String getGroupingKey();
+
+    @Override
+    public void update(AnActionEvent e) {
+        super.update(e);
+        ChangesGroupingSupport groupingSupport = getGroupingSupport(e);
+        e.getPresentation().setEnabledAndVisible(groupingSupport != null && groupingSupport.isAvailable(getGroupingKey()));
     }
 
     @Override
     public boolean isSelected(AnActionEvent e) {
-        return myGroupingKeys.get().contains(myGroupingKey);
+        ChangesGroupingSupport groupingSupport = getGroupingSupport(e);
+        return groupingSupport != null && groupingSupport.get(getGroupingKey());
     }
 
     @RequiredUIAccess
     @Override
     public void setSelected(AnActionEvent e, boolean state) {
-        mySetGrouping.accept(myGroupingKey, state);
+        ChangesGroupingSupport groupingSupport = getGroupingSupport(e);
+        if (groupingSupport != null) {
+            groupingSupport.set(getGroupingKey(), state);
+        }
+    }
+
+    static @Nullable ChangesGroupingSupport getGroupingSupport(AnActionEvent e) {
+        return e.getData(ChangesGroupingSupport.KEY);
     }
 }

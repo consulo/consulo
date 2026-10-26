@@ -30,10 +30,12 @@ import consulo.review.timeline.CodeReviewTimelineViewModel;
 import consulo.review.timeline.thread.CodeReviewFoldableThreadViewModel;
 import consulo.review.timeline.thread.CodeReviewResolvableItemViewModel;
 import consulo.review.timeline.thread.CodeReviewThreadViewModel;
+import consulo.review.util.ComputedResult;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.messageList.MessageList;
 import consulo.ui.messageList.MessageListItem;
+import consulo.util.concurrent.coroutine.ObservableValue;
 import jakarta.inject.Singleton;
 import org.jspecify.annotations.Nullable;
 
@@ -47,13 +49,29 @@ public class CodeReviewTimelineComponentFactoryImpl implements CodeReviewTimelin
     @RequiredUIAccess
     @Override
     public void openTimeline(Project project, CodeReviewDetailsTabViewModel tabVm, CodeReviewTimelineViewModel timelineVm) {
-        CodeReviewTimelineVirtualFile.open(project, tabVm, timelineVm, null);
+        CodeReviewTimelineVirtualFile.open(project, tabVm.getDisplayName(), ObservableValue.of(ComputedResult.success(tabVm)), timelineVm, null);
     }
 
     @RequiredUIAccess
     @Override
     public void openTimeline(Project project, CodeReviewDetailsTabViewModel tabVm, CodeReviewTimelineViewModel timelineVm, Disposable owner) {
-        CodeReviewTimelineVirtualFile.open(project, tabVm, timelineVm, owner);
+        CodeReviewTimelineVirtualFile.open(project, tabVm.getDisplayName(), ObservableValue.of(ComputedResult.success(tabVm)), timelineVm, owner);
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void openTimeline(Project project,
+                             LocalizeValue name,
+                             ObservableValue<ComputedResult<CodeReviewDetailsTabViewModel>> tabVm,
+                             CodeReviewTimelineViewModel timelineVm,
+                             Disposable owner) {
+        CodeReviewTimelineVirtualFile.open(project, name, tabVm, timelineVm, owner);
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void updateTimelinePresentation(Project project, CodeReviewTimelineViewModel timelineVm) {
+        CodeReviewTimelineVirtualFile.updatePresentation(project, timelineVm);
     }
 
     @RequiredUIAccess

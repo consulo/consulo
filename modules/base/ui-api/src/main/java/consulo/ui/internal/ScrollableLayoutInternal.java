@@ -19,6 +19,7 @@ import consulo.disposer.Disposable;
 import consulo.ui.Component;
 import consulo.ui.Point2D;
 import consulo.ui.Rectangle2D;
+import consulo.ui.Size2D;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ComponentEventListener;
 import consulo.ui.layout.ScrollableLayout;
@@ -40,6 +41,13 @@ public interface ScrollableLayoutInternal extends ScrollableLayout {
 
     @RequiredUIAccess
     Rectangle2D getViewRect();
+
+    /**
+     * The size of the scrolled content, in the coordinates of {@link #getViewRect()}. A content which scrolls itself,
+     * such as a list, reports what it scrolls.
+     */
+    @RequiredUIAccess
+    Size2D getContentSize();
 
     /**
      * Scrolls so that {@code position} becomes the top left corner of the view rectangle, clamped to the content.

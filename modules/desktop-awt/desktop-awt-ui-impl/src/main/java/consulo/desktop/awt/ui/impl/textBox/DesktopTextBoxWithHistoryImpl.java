@@ -109,6 +109,15 @@ public class DesktopTextBoxWithHistoryImpl extends DocumentSwingValidator<String
         return component;
     }
 
+    /**
+     * Keys are typed into the editor of the combo, and a key or focus listener put on the combo itself never hears of
+     * them - Enter in the box reached no one.
+     */
+    @Override
+    protected List<java.awt.Component> getInputComponents(MyTextFieldWithHistory component) {
+        return List.of(component.getTextEditor());
+    }
+
     @SuppressWarnings("unchecked")
     @RequiredUIAccess
     private void valueChanged() {

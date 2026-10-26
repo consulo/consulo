@@ -19,6 +19,7 @@ import consulo.desktop.qt.ui.impl.QtComponentDelegate;
 import consulo.ui.Component;
 import consulo.ui.Point2D;
 import consulo.ui.Rectangle2D;
+import consulo.ui.Size2D;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.internal.ScrollableLayoutInternal;
 import consulo.ui.internal.ScrollableLayoutViewportEvent;
@@ -32,6 +33,7 @@ import io.qt.core.QSize;
 import io.qt.core.Qt;
 import io.qt.widgets.QFrame;
 import io.qt.widgets.QLayout;
+import io.qt.widgets.QAbstractScrollArea;
 import io.qt.widgets.QScrollArea;
 import io.qt.widgets.QWidget;
 import org.jspecify.annotations.Nullable;
@@ -131,6 +133,17 @@ public class DesktopQtScrollableLayoutImpl extends DesktopQtLayoutComponent<Layo
             return new Rectangle2D(0, 0);
         }
 
+        QAbstractScrollArea inner = findSelfScrollingContent(scrollArea);
+        if (inner != null) {
+            QWidget innerViewport = inner.viewport();
+            return new Rectangle2D(
+                inner.horizontalScrollBar().value(),
+                inner.verticalScrollBar().value(),
+                innerViewport.width(),
+                innerViewport.height()
+            );
+        }
+
         QWidget viewport = scrollArea.viewport();
         return new Rectangle2D(
             scrollArea.horizontalScrollBar().value(),
@@ -138,6 +151,35 @@ public class DesktopQtScrollableLayoutImpl extends DesktopQtLayoutComponent<Layo
             viewport.width(),
             viewport.height()
         );
+    }
+
+    @RequiredUIAccess
+    @Override
+    public Size2D getContentSize() {
+        if (!(myComponent instanceof QScrollArea scrollArea) || !isAlive(scrollArea)) {
+            return new Size2D(0, 0);
+        }
+
+        QAbstractScrollArea inner = findSelfScrollingContent(scrollArea);
+        if (inner != null) {
+            QWidget innerViewport = inner.viewport();
+            return new Size2D(
+                inner.horizontalScrollBar().maximum() + innerViewport.width(),
+                inner.verticalScrollBar().maximum() + innerViewport.height()
+            );
+        }
+
+        QWidget content = scrollArea.widget();
+        return content == null ? new Size2D(0, 0) : new Size2D(content.width(), content.height());
+    }
+
+    /**
+     * A content which scrolls itself - a list - fills the scroll area, so what scrolls is the content rather than the
+     * area around it.
+     */
+    private static @Nullable QAbstractScrollArea findSelfScrollingContent(QScrollArea scrollArea) {
+        QWidget content = scrollArea.widget();
+        return content instanceof QAbstractScrollArea inner && isAlive(inner) ? inner : null;
     }
 
     @RequiredUIAccess
@@ -251,7 +293,12 @@ public class DesktopQtScrollableLayoutImpl extends DesktopQtLayoutComponent<Layo
 
     @Override
     protected void attach(QtComponentDelegate<?> child, @Nullable Object layoutData) {
-        ((QScrollArea) myComponent).setWidget(child.toQtComponent());
+        QWidget widget = child.toQtComponent();
+        ((QScrollArea) myComponent).setWidget(widget);
+        if (widget instanceof QAbstractScrollArea inner) {
+            inner.verticalScrollBar().valueChanged.connect(value -> fireViewportChanged());
+            inner.verticalScrollBar().rangeChanged.connect((min, max) -> fireViewportChanged());
+        }
     }
 
     @Override

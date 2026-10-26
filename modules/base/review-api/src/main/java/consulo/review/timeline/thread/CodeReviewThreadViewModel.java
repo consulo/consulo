@@ -86,4 +86,43 @@ public interface CodeReviewThreadViewModel extends CodeReviewTimelineItem,
     default @Nullable AsyncHtmlImageLoader getHtmlImageLoader() {
         return null;
     }
+
+    /**
+     * Whether the code the thread is about changed since it was written, shown as a tag of the thread.
+     */
+    default ObservableValue<Boolean> isOutdated() {
+        return ObservableValue.of(false);
+    }
+
+    /**
+     * Whether the thread is a part of a review not submitted yet, shown as a tag of the thread.
+     */
+    default ObservableValue<Boolean> isPending() {
+        return ObservableValue.of(false);
+    }
+
+    /**
+     * Whether the reply input of the compact thread is open - until then the thread offers to start a reply. {@code null}
+     * shows the reply input together with the unfolded replies.
+     */
+    default @Nullable ObservableValue<Boolean> isWritingReply() {
+        return null;
+    }
+
+    /**
+     * Opens the reply input of the compact thread, see {@link #isWritingReply()}.
+     */
+    default void startWritingReply() {
+        unfoldReplies();
+    }
+
+    /**
+     * Opens a link of a comment inside the IDE, such as a reference to another review.
+     *
+     * @return {@code false} to open the link outside
+     */
+    @RequiredUIAccess
+    default boolean openLink(String href) {
+        return false;
+    }
 }

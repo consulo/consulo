@@ -25,6 +25,7 @@ import consulo.ui.Component;
 import consulo.ui.TextItemPresentation;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.layout.DockLayout;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.change.Change;
@@ -70,7 +71,8 @@ public class CodeReviewChangeListComponentFactoryImpl implements CodeReviewChang
     public Component createIn(Disposable parentDisposable,
                               CodeReviewChangeListViewModel vm,
                               @Nullable CodeReviewProgressTreeModel<?> progressModel,
-                              LocalizeValue emptyTextText) {
+                              LocalizeValue emptyTextText,
+                              @Nullable ActionGroup popupGroup) {
         Map<Change, RefComparisonChange> refByChange = new LinkedHashMap<>();
         Map<RefComparisonChange, Change> changeByRef = new HashMap<>();
         for (RefComparisonChange ref : vm.getChanges()) {
@@ -89,6 +91,9 @@ public class CodeReviewChangeListComponentFactoryImpl implements CodeReviewChang
                 }
                 vm.showDiffPreview();
             });
+        if (popupGroup != null) {
+            builder.popupGroup(popupGroup);
+        }
         if (vm instanceof CodeReviewGroupingChangeListViewModel groupingVm) {
             builder.grouping(groupingVm.getGrouping().get(), groupingVm::setGrouping);
         }

@@ -19,15 +19,22 @@ package consulo.review.impl.internal.editor;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.Inlay;
 import consulo.codeEditor.InlayProperties;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.logging.Logger;
+import consulo.review.editor.CodeReviewEditorKeys;
 import consulo.review.editor.CodeReviewInlayModel;
 import consulo.review.editor.CodeReviewMultilineCommentableEditorModel;
+import consulo.review.editor.CodeReviewThreadInlayModel;
+import consulo.review.impl.internal.CodeReviewColorUtil;
+import consulo.review.timeline.thread.CodeReviewTrackableItemViewModel;
 import consulo.review.util.ReviewUIUtil;
 import consulo.ui.Component;
+import consulo.ui.Space;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.layout.DockLayout;
 import consulo.util.concurrent.coroutine.ObservableValue;
 import org.jspecify.annotations.Nullable;
 
@@ -113,7 +120,7 @@ public final class CodeReviewEditorInlaysRenderer {
                             Disposer.dispose(rendererDisposable);
                             return;
                         }
-                        renderer = new CodeReviewComponentInlayRenderer(component);
+                        renderer = new CodeReviewComponentInlayRenderer(withNavigationData(component, editor, vm));
                         state.myRenderer = renderer;
                         state.myRendererDisposable = rendererDisposable;
                     }
@@ -124,6 +131,23 @@ public final class CodeReviewEditorInlaysRenderer {
                 state.disposeRenderer();
             }
         });
+    }
+
+    /**
+     * Comment navigation from inside an inlay walks the comments of its editor, from the thread of the inlay.
+     */
+    @RequiredUIAccess
+    private static Component withNavigationData(Component component, Editor editor, CodeReviewInlayModel vm) {
+        DockLayout wrapper = DockLayout.create(Space.NONE);
+        wrapper.center(component);
+        wrapper.setBackgroundColor(CodeReviewColorUtil.EDITOR_BACKGROUND);
+        wrapper.putUserData(UiDataProvider.KEY, sink -> {
+            sink.set(CodeReviewEditorKeys.NAVIGABLE_EDITOR_KEY, editor);
+            if (vm instanceof CodeReviewThreadInlayModel threadInlay) {
+                sink.set(CodeReviewTrackableItemViewModel.TRACKABLE_ITEM_KEY, threadInlay.getThread());
+            }
+        });
+        return wrapper;
     }
 
     @RequiredUIAccess

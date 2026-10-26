@@ -23,6 +23,7 @@ import com.vaadin.flow.dom.Element;
 import consulo.ui.Component;
 import consulo.ui.Point2D;
 import consulo.ui.Rectangle2D;
+import consulo.ui.Size2D;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.internal.ScrollableLayoutInternal;
 import consulo.ui.internal.ScrollableLayoutViewportEvent;
@@ -77,7 +78,8 @@ public class WebScrollLayoutImpl extends VaadinComponentDelegate<WebScrollLayout
             "      });" +
             "      scroller.dispatchEvent(new CustomEvent('consulo-viewport', { detail: {" +
             "        x: Math.round(scroller.scrollLeft), y: Math.round(scroller.scrollTop)," +
-            "        width: scroller.clientWidth, height: scroller.clientHeight, bounds: parts.join(';') } }));" +
+            "        width: scroller.clientWidth, height: scroller.clientHeight," +
+            "        contentWidth: scroller.scrollWidth, contentHeight: scroller.scrollHeight, bounds: parts.join(';') } }));" +
             "    });" +
             "  };" +
             "  const track = () => {" +
@@ -95,6 +97,7 @@ public class WebScrollLayoutImpl extends VaadinComponentDelegate<WebScrollLayout
     private final Map<Component, String> myTracked = new HashMap<>();
     private final Map<String, Rectangle2D> myTrackedBounds = new HashMap<>();
     private Rectangle2D myViewRect = new Rectangle2D(0, 0);
+    private Size2D myContentSize = new Size2D(0, 0);
     private boolean myTrackPending;
     private @Nullable Element myOverlayHolder;
 
@@ -130,13 +133,18 @@ public class WebScrollLayoutImpl extends VaadinComponentDelegate<WebScrollLayout
                 int y = event.getEventData().path("event.detail.y").asInt(0);
                 int width = event.getEventData().path("event.detail.width").asInt(0);
                 int height = event.getEventData().path("event.detail.height").asInt(0);
+                int contentWidth = event.getEventData().path("event.detail.contentWidth").asInt(0);
+                int contentHeight = event.getEventData().path("event.detail.contentHeight").asInt(0);
                 String bounds = event.getEventData().path("event.detail.bounds").asText("");
+                myContentSize = new Size2D(contentWidth, contentHeight);
                 onViewportReported(new Rectangle2D(x, y, width, height), bounds);
             })
             .addEventData("event.detail.x")
             .addEventData("event.detail.y")
             .addEventData("event.detail.width")
             .addEventData("event.detail.height")
+            .addEventData("event.detail.contentWidth")
+            .addEventData("event.detail.contentHeight")
             .addEventData("event.detail.bounds")
             .debounce(VIEWPORT_THROTTLE_MS, DebouncePhase.LEADING, DebouncePhase.INTERMEDIATE, DebouncePhase.TRAILING);
 
@@ -175,6 +183,12 @@ public class WebScrollLayoutImpl extends VaadinComponentDelegate<WebScrollLayout
     @Override
     public Rectangle2D getViewRect() {
         return myViewRect;
+    }
+
+    @RequiredUIAccess
+    @Override
+    public Size2D getContentSize() {
+        return myContentSize;
     }
 
     @RequiredUIAccess

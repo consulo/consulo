@@ -22,11 +22,15 @@ import consulo.ui.Button;
 import consulo.ui.Component;
 import consulo.ui.InputBoxBuilder;
 import consulo.ui.InputValidators;
+import consulo.ui.Label;
+import consulo.ui.TextBoxWithHistory;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.cursor.StandardCursors;
+import consulo.ui.event.details.KeyCode;
 import consulo.ui.ex.tester.UITesterTab;
 import consulo.ui.layout.VerticalLayout;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -94,6 +98,24 @@ public class InputsUITesterTab implements UITesterTab {
                 .showAsync()
                 .whenComplete((answer, error) -> UITesterTabUtil.report("items", answer, error))
         ));
+
+        // Enter has to reach the key listener of a text box with history, whose keys land in the editor of a combo
+        List<String> history = new ArrayList<>();
+        Label entered = Label.create(LocalizeValue.of("Type and press Enter:"));
+        TextBoxWithHistory withHistory = TextBoxWithHistory.create();
+        withHistory.addKeyPressedListener(event -> {
+            KeyCode keyCode = event.getInputDetails().getKeyCode();
+            if (keyCode == null || keyCode.key() != KeyCode.ENTER.key()) {
+                return;
+            }
+            String text = String.valueOf(withHistory.getValue());
+            history.remove(text);
+            history.add(0, text);
+            withHistory.setHistory(history);
+            entered.setText(LocalizeValue.of("Entered: " + text));
+        });
+        layout.add(entered);
+        layout.add(withHistory);
 
         return layout;
     }

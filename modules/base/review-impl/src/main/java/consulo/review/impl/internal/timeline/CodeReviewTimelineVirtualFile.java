@@ -18,10 +18,13 @@ package consulo.review.impl.internal.timeline;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.FileEditorManager;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.review.details.model.CodeReviewDetailsTabViewModel;
 import consulo.review.timeline.CodeReviewTimelineViewModel;
+import consulo.review.util.ComputedResult;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.concurrent.coroutine.ObservableValue;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.light.LightVirtualFileBase;
 import org.jspecify.annotations.Nullable;
@@ -42,7 +45,8 @@ import java.util.concurrent.atomic.AtomicReference;
 public class CodeReviewTimelineVirtualFile extends LightVirtualFileBase {
     @RequiredUIAccess
     public static void open(Project project,
-                            CodeReviewDetailsTabViewModel tabVm,
+                            LocalizeValue name,
+                            ObservableValue<ComputedResult<CodeReviewDetailsTabViewModel>> tabVm,
                             CodeReviewTimelineViewModel timelineVm,
                             @Nullable Disposable owner) {
         FileEditorManager manager = FileEditorManager.getInstance(project);
@@ -55,7 +59,7 @@ public class CodeReviewTimelineVirtualFile extends LightVirtualFileBase {
                 return;
             }
         }
-        manager.openFile(new CodeReviewTimelineVirtualFile(tabVm, timelineVm, owner), true);
+        manager.openFile(new CodeReviewTimelineVirtualFile(name, tabVm, timelineVm, owner), true);
     }
 
     @RequiredUIAccess
@@ -68,15 +72,28 @@ public class CodeReviewTimelineVirtualFile extends LightVirtualFileBase {
         }
     }
 
-    private final CodeReviewDetailsTabViewModel myTabVm;
+    @RequiredUIAccess
+    public static void updatePresentation(Project project, CodeReviewTimelineViewModel timelineVm) {
+        FileEditorManager manager = FileEditorManager.getInstance(project);
+        for (VirtualFile file : manager.getOpenFiles()) {
+            if (file instanceof CodeReviewTimelineVirtualFile timelineFile && timelineFile.getTimelineVm() == timelineVm) {
+                manager.updateFilePresentation(file);
+            }
+        }
+    }
+
+    private final LocalizeValue myName;
+    private final ObservableValue<ComputedResult<CodeReviewDetailsTabViewModel>> myTabVmState;
     private final CodeReviewTimelineViewModel myTimelineVm;
     private final AtomicReference<@Nullable Disposable> myOwner;
 
-    public CodeReviewTimelineVirtualFile(CodeReviewDetailsTabViewModel tabVm,
+    public CodeReviewTimelineVirtualFile(LocalizeValue name,
+                                         ObservableValue<ComputedResult<CodeReviewDetailsTabViewModel>> tabVm,
                                          CodeReviewTimelineViewModel timelineVm,
                                          @Nullable Disposable owner) {
-        super(tabVm.getDisplayName().get(), CodeReviewTimelineFileType.INSTANCE, System.currentTimeMillis());
-        myTabVm = tabVm;
+        super(name.get(), CodeReviewTimelineFileType.INSTANCE, System.currentTimeMillis());
+        myName = name;
+        myTabVmState = tabVm;
         myTimelineVm = timelineVm;
         myOwner = new AtomicReference<>(owner);
         setWritable(false);
@@ -92,8 +109,25 @@ public class CodeReviewTimelineVirtualFile extends LightVirtualFileBase {
         }
     }
 
-    public CodeReviewDetailsTabViewModel getTabVm() {
-        return myTabVm;
+    public ObservableValue<ComputedResult<CodeReviewDetailsTabViewModel>> getTabVmState() {
+        return myTabVmState;
+    }
+
+    /**
+     * @return the tab view model once it is loaded
+     */
+    public @Nullable CodeReviewDetailsTabViewModel getTabVm() {
+        return myTabVmState.get().getOrNull();
+    }
+
+    public LocalizeValue getDisplayName() {
+        CodeReviewDetailsTabViewModel tabVm = getTabVm();
+        return tabVm == null ? myName : tabVm.getDisplayName();
+    }
+
+    public LocalizeValue getDescription() {
+        CodeReviewDetailsTabViewModel tabVm = getTabVm();
+        return tabVm == null ? myName : tabVm.getDescription();
     }
 
     public CodeReviewTimelineViewModel getTimelineVm() {

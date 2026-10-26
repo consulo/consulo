@@ -12,6 +12,10 @@ review.list.empty.state.loading:
     text: Loading…
 review.list.empty.state.nothing:
     text: No reviews in {0}
+review.list.empty.state.no.matches:
+    text: No reviews matching filters
+review.list.filters.clear:
+    text: Clear filters
 review.list.info:
     text: '{0} · created {1}'
 review.list.info.author:
@@ -154,6 +158,10 @@ review.timeline.editor.name:
     text: Review Timeline
 review.timeline.no.description:
     text: No description provided
+review.timeline.cannot.load:
+    text: Can't load timeline items
+review.timeline.details.cannot.load:
+    text: Can't load details
 review.timeline.loading:
     text: Loading timeline…
 review.comments.reply.action:
@@ -330,6 +338,12 @@ review.list.connection.failed.repository.account:
     text: Could not connect to repository {0} with account {1}
 review.thread.diff.not.loaded:
     text: Could not load diff hunk for thread
+review.thread.more.replies:
+    text: '{0} more replies'
+review.thread.expand:
+    text: Expand
+review.thread.collapse:
+    text: Collapse
 review.thread.outdated.tag:
     text: OUTDATED
 review.thread.pending.tag:
@@ -382,3 +396,11 @@ action.CodeReview.ToggleChangesViewed.markAllViewed:
     text: Mark All as Viewed
 action.CodeReview.ToggleChangesViewed.markAllNotViewed:
     text: Mark All as Not Viewed
+action.CodeReview.ShowDiff.text:
+    text: Show Diff
+action.CodeReview.ShowDiff.description:
+    text: Show the diff of the selected changes
+action.CodeReview.ShowStandaloneDiff.text:
+    text: Show Diff in a New Tab or Window
+action.CodeReview.ShowStandaloneDiff.description:
+    text: Open diff for each selection in a new tab or window

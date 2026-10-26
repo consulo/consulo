@@ -15,8 +15,11 @@
  */
 package consulo.review.list;
 
+import consulo.disposer.Disposable;
+import consulo.review.list.search.ReviewListSearchPanelViewModel;
 import consulo.review.util.ComputedResult;
 import consulo.util.concurrent.coroutine.ObservableValue;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -35,4 +38,31 @@ public interface CodeReviewListItemsViewModel<T> extends ReviewListViewModel {
      * Opens the review - usually a details tab of the review tool window.
      */
     void open(T item);
+
+    /**
+     * Loads the next page of the list - called while the list is scrolled close to its end.
+     */
+    default void requestMore() {
+    }
+
+    /**
+     * Whether a page of the list is being loaded, shown as a progress over the top of the list.
+     */
+    default ObservableValue<Boolean> isLoading() {
+        return ObservableValue.of(false);
+    }
+
+    /**
+     * Told when the list should take the focus.
+     */
+    default void addFocusRequestListener(Disposable parentDisposable, Runnable listener) {
+    }
+
+    /**
+     * The search filtering the list, or {@code null} for none. An empty list filtered by it offers to clear the
+     * filters.
+     */
+    default @Nullable ReviewListSearchPanelViewModel<?, ?> getSearchVm() {
+        return null;
+    }
 }

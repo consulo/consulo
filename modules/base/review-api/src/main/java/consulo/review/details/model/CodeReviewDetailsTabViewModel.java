@@ -15,8 +15,12 @@
  */
 package consulo.review.details.model;
 
+import consulo.dataContext.DataSink;
 import consulo.review.timeline.CodeReviewTimelineViewModel;
 import consulo.review.toolwindow.ReviewTabViewModel;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.image.Image;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -35,6 +39,29 @@ public interface CodeReviewDetailsTabViewModel extends ReviewTabViewModel {
 
     @Nullable
     default CodeReviewTimelineViewModel getTimelineVm() {
+        return null;
+    }
+
+    /**
+     * The icon of the editor tab showing the timeline, such as the state of the review, or {@code null} for the default
+     * one. Read again whenever the tab is presented.
+     */
+    default @Nullable Image getIcon() {
+        return null;
+    }
+
+    /**
+     * Fills the data context of the timeline - the actions of its {@linkplain #getPopupActionGroup() context menu}
+     * read the review from it.
+     */
+    @RequiredUIAccess
+    default void uiDataSnapshot(DataSink sink) {
+    }
+
+    /**
+     * The context menu of the timeline, or {@code null} for none.
+     */
+    default @Nullable ActionGroup getPopupActionGroup() {
         return null;
     }
 }

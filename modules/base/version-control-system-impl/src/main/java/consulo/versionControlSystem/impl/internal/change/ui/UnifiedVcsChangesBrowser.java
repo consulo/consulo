@@ -18,6 +18,7 @@ package consulo.versionControlSystem.impl.internal.change.ui;
 import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
@@ -32,6 +33,7 @@ import consulo.ui.ex.TreeExpander;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionPlaces;
+import consulo.ui.ex.action.ActionPopupMenu;
 import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.action.ActionToolbarFactory;
 import consulo.ui.ex.action.AnAction;
@@ -67,6 +69,11 @@ import java.util.function.Consumer;
  */
 public class UnifiedVcsChangesBrowser implements VcsChangesBrowser {
     private static final String SHOW_DIFF_ACTION = "ChangesView.Diff";
+    private static final Set<String> AVAILABLE_GROUPINGS = Set.of(
+        ChangesGroupingSupport.DIRECTORY_GROUPING,
+        ChangesGroupingSupport.MODULE_GROUPING,
+        ChangesGroupingSupport.REPOSITORY_GROUPING
+    );
 
     private final Project myProject;
     private final UnifiedChangesTree myTree;
@@ -79,12 +86,30 @@ public class UnifiedVcsChangesBrowser implements VcsChangesBrowser {
     private @Nullable Consumer<Set<String>> myGroupingListener;
     private final AnAction myDiffAction;
     private final @Nullable ActionGroup myViewOptions;
+    private final ChangesGroupingSupport myGroupingSupport = new ChangesGroupingSupport() {
+        @Override
+        public Set<String> getGroupingKeys() {
+            return myGroupingKeys;
+        }
+
+        @RequiredUIAccess
+        @Override
+        public void set(String groupingKey, boolean state) {
+            setGrouping(groupingKey, state);
+        }
+
+        @Override
+        public boolean isAvailable(String groupingKey) {
+            return AVAILABLE_GROUPINGS.contains(groupingKey);
+        }
+    };
 
     @RequiredUIAccess
     public UnifiedVcsChangesBrowser(Project project,
                                     LocalizeValue emptyText,
                                     List<AnAction> toolbarActions,
                                     @Nullable ActionGroup viewOptions,
+                                    @Nullable ActionGroup popupGroup,
                                     boolean withRollback,
                                     @Nullable BiConsumer<Change, TextItemPresentation> changeDecorator,
                                     @Nullable Consumer<Change> openHandler,
@@ -133,7 +158,19 @@ public class UnifiedVcsChangesBrowser implements VcsChangesBrowser {
             Disposer.register(parentDisposable, () -> changeListManager.removeChangeListListener(listener));
         }
 
-        myRoot.putUserData(UiDataProvider.KEY, myTree::uiDataSnapshot);
+        TreeExpander expander = TreeExpander.of(myTree.getComponent());
+        myRoot.putUserData(UiDataProvider.KEY, sink -> {
+            myTree.uiDataSnapshot(sink);
+            sink.set(ChangesGroupingSupport.KEY, myGroupingSupport);
+            sink.set(PlatformDataKeys.TREE_EXPANDER, expander);
+        });
+        if (popupGroup != null) {
+            myTree.getComponent().addContextMenuListener(event -> {
+                ActionPopupMenu menu = ActionManager.getInstance().createActionPopupMenu(ActionPlaces.POPUP, popupGroup);
+                menu.setTargetComponent(myRoot);
+                menu.show(event.getComponent(), event.getInputDetails().getX(), event.getInputDetails().getY());
+            });
+        }
         myRoot.top(createToolbar(actions).getUIComponent());
         myRoot.center(myContent);
 
@@ -186,24 +223,9 @@ public class UnifiedVcsChangesBrowser implements VcsChangesBrowser {
             );
         }
         group.add(new ChangesBrowserViewOptionsAction(viewOptions, List.of(
-            new SetChangesGroupingAction(
-                VcsLocalize.changesActionGroupByDirectoryText(),
-                ChangesGroupingSupport.DIRECTORY_GROUPING,
-                () -> myGroupingKeys,
-                this::setGrouping
-            ),
-            new SetChangesGroupingAction(
-                VcsLocalize.changesActionGroupByModuleText(),
-                ChangesGroupingSupport.MODULE_GROUPING,
-                () -> myGroupingKeys,
-                this::setGrouping
-            ),
-            new SetChangesGroupingAction(
-                VcsLocalize.changesActionGroupByRepositoryText(),
-                ChangesGroupingSupport.REPOSITORY_GROUPING,
-                () -> myGroupingKeys,
-                this::setGrouping
-            )
+            new SetDirectoryChangesGroupingAction(),
+            new SetModuleChangesGroupingAction(),
+            new SetRepositoryChangesGroupingAction()
         )));
         if (!toolbarActions.isEmpty()) {
             group.addSeparator();

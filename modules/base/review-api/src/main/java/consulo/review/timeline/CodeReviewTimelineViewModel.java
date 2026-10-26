@@ -17,6 +17,7 @@ package consulo.review.timeline;
 
 import consulo.review.comment.CodeReviewNewCommentViewModel;
 import consulo.review.util.ComputedResult;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.messageList.AsyncHtmlImageLoader;
 import consulo.util.concurrent.coroutine.ObservableValue;
 import org.jspecify.annotations.Nullable;
@@ -45,5 +46,41 @@ public interface CodeReviewTimelineViewModel {
      */
     default @Nullable AsyncHtmlImageLoader getHtmlImageLoader() {
         return null;
+    }
+
+    /**
+     * Checks the timeline for changes - called when its tab is selected.
+     */
+    default void update() {
+    }
+
+    /**
+     * Loads the next part of the timeline - called while it is scrolled close to its end.
+     */
+    default void requestMore() {
+    }
+
+    /**
+     * Whether a part of the timeline is being loaded, shown under the loaded items.
+     */
+    default ObservableValue<Boolean> isLoading() {
+        return ObservableValue.of(false);
+    }
+
+    /**
+     * Why the last part of the timeline failed to load, shown under the loaded items, or {@code null}.
+     */
+    default ObservableValue<@Nullable Throwable> getLoadingError() {
+        return ObservableValue.of(null);
+    }
+
+    /**
+     * Opens a link of a comment inside the IDE, such as a reference to another review.
+     *
+     * @return {@code false} to open the link outside
+     */
+    @RequiredUIAccess
+    default boolean openLink(String href) {
+        return false;
     }
 }

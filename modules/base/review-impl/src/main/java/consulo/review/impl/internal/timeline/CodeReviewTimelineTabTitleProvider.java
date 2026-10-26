@@ -31,13 +31,13 @@ import org.jspecify.annotations.Nullable;
 public class CodeReviewTimelineTabTitleProvider implements EditorTabTitleProvider, DumbAware {
     @Override
     public @Nullable String getEditorTabTitle(Project project, VirtualFile file) {
-        return file instanceof CodeReviewTimelineVirtualFile timelineFile ? timelineFile.getTabVm().getDisplayName().get() : null;
+        return file instanceof CodeReviewTimelineVirtualFile timelineFile ? timelineFile.getDisplayName().get() : null;
     }
 
     @Override
     public @Nullable String getEditorTabTooltipText(Project project, VirtualFile file) {
         if (file instanceof CodeReviewTimelineVirtualFile timelineFile) {
-            return ReviewLocalize.reviewTimelineEditorName().get() + ": " + timelineFile.getTabVm().getDescription().get();
+            return ReviewLocalize.reviewTimelineEditorName().get() + ": " + timelineFile.getDescription().get();
         }
         return null;
     }

@@ -18,6 +18,7 @@ package consulo.review.impl.internal.timeline;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;
+import consulo.platform.Platform;
 import consulo.review.comment.CodeReviewCommentBodyBlock;
 import consulo.review.comment.CodeReviewComponentCommentBodyBlock;
 import consulo.review.comment.CodeReviewMarkdownCommentBodyBlock;
@@ -40,7 +41,9 @@ import consulo.util.concurrent.coroutine.ObservableValue;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * Review comments are chat items of a {@link MessageList}: the author with the avatar, the time, and the markdown body
@@ -67,11 +70,32 @@ public final class CodeReviewCommentItemFactory {
         return messages;
     }
 
+    /**
+     * Opens a link of a comment with {@code linkOpener}, or outside when it does not take the link.
+     */
+    @RequiredUIAccess
+    public static void installLinkHandler(MessageList messages, @RequiredUIAccess Predicate<String> linkOpener) {
+        messages.addHyperlinkListener(event -> openLink(event.getDescription(), linkOpener));
+    }
+
+    @RequiredUIAccess
+    public static void openLink(String href, @RequiredUIAccess Predicate<String> linkOpener) {
+        if (linkOpener.test(href)) {
+            return;
+        }
+        if (href.contains("://")) {
+            Platform.current().openInBrowser(href);
+        }
+    }
+
     @RequiredUIAccess
     public static MessageListItem add(Disposable parentDisposable, MessageList messages, CodeReviewCommentViewModel comment) {
         UserPresentation author = comment.getAuthor();
         MessageListItem item = messages.add(LocalizeValue.of(author.getPresentableName()), comment.getBody().get());
-        item.setTime(comment.getCreatedAt().toInstant());
+        Date createdAt = comment.getCreatedAt();
+        if (createdAt != null) {
+            item.setTime(createdAt.toInstant());
+        }
         item.setAuthorImage(author.getAvatarIcon());
         item.setStyle(comment.isOwn() ? MessageListItemStyle.OWN : MessageListItemStyle.OTHER);
 

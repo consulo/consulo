@@ -15,6 +15,7 @@
  */
 package consulo.review.impl.internal.timeline;
 
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;
@@ -23,6 +24,7 @@ import consulo.review.details.model.CodeReviewDetailsTabViewModel;
 import consulo.review.util.ReviewUIUtil;
 import consulo.review.impl.internal.comment.CodeReviewCommentTextFieldFactory;
 import consulo.review.impl.internal.details.CodeReviewDetailsTitleComponentFactory;
+import consulo.review.impl.internal.list.ReviewListComponentFactoryImpl;
 import consulo.review.localize.ReviewLocalize;
 import consulo.review.timeline.CodeReviewCommentViewModel;
 import consulo.review.timeline.CodeReviewCommitsTimelineItem;
@@ -30,12 +32,17 @@ import consulo.review.timeline.CodeReviewTimelineItem;
 import consulo.review.timeline.CodeReviewTimelineViewModel;
 import consulo.review.timeline.thread.CodeReviewThreadViewModel;
 import consulo.ui.Component;
+import consulo.ui.HorizontalAlignment;
 import consulo.ui.Label;
 import consulo.ui.Space;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.ActionPlaces;
+import consulo.ui.ex.action.ActionPopupMenu;
+import consulo.ui.image.Image;
 import consulo.ui.layout.ScrollableLayout;
 import consulo.ui.layout.VerticalLayout;
-import consulo.ui.messageList.AsyncHtmlImageLoader;
 import consulo.ui.messageList.MessageList;
 import consulo.ui.style.ComponentColors;
 import consulo.ui.style.StandardColors;
@@ -78,7 +85,7 @@ public final class CodeReviewTimelineComponent {
             List<CodeReviewTimelineItem> loaded = result.getOrNull();
             Throwable error = result.exceptionOrNull();
             if (loaded != null) {
-                fillItems(itemsDisposable[0], items, loaded, timelineVm.getHtmlImageLoader());
+                fillItems(itemsDisposable[0], items, loaded, timelineVm);
             }
             else if (error != null) {
                 Label errorLabel = Label.create(LocalizeValue.of(String.valueOf(error.getLocalizedMessage())));
@@ -92,26 +99,71 @@ public final class CodeReviewTimelineComponent {
             }
         });
 
+        content.add(createProgressAndError(parentDisposable, timelineVm));
+
         CodeReviewNewCommentViewModel newCommentVm = timelineVm.getNewCommentVm();
         if (newCommentVm != null) {
             Component input = CodeReviewCommentTextFieldFactory.create(parentDisposable,
                 newCommentVm,
                 ReviewLocalize.reviewCommentPlaceholder(),
                 ReviewLocalize.reviewCommentSubmit(),
-                null);
+                null,
+                CodeReviewCommentTextFieldFactory.HintKind.COMMENT);
             VerticalLayout inputPanel = VerticalLayout.create(Space.NONE).add(input);
             inputPanel.paddingBuilder().topSet(Space.LARGE).horizontalSet(Space.X_LARGE).apply();
             content.add(inputPanel);
         }
 
-        return ScrollableLayout.create(content);
+        ScrollableLayout scroll = ReviewListComponentFactoryImpl.wrapWithLazyVerticalScroll(content, timelineVm::requestMore);
+        scroll.putUserData(UiDataProvider.KEY, tabVm::uiDataSnapshot);
+        ActionGroup popupGroup = tabVm.getPopupActionGroup();
+        if (popupGroup != null) {
+            scroll.addContextMenuListener(event -> {
+                ActionPopupMenu menu = ActionManager.getInstance().createActionPopupMenu(ActionPlaces.POPUP, popupGroup);
+                menu.setTargetComponent(scroll);
+                menu.show(event.getComponent(), event.getInputDetails().getX(), event.getInputDetails().getY());
+            });
+        }
+        return scroll;
+    }
+
+    /**
+     * The loading of the next part of the timeline, or why it failed.
+     */
+    @RequiredUIAccess
+    private static Component createProgressAndError(Disposable parentDisposable, CodeReviewTimelineViewModel timelineVm) {
+        Label loading = Label.create(ReviewLocalize.reviewTimelineLoading());
+        loading.setImage(Image.busy());
+        loading.setForegroundColor(ComponentColors.DISABLED_TEXT);
+        loading.setVisible(false);
+        ReviewUIUtil.bind(parentDisposable, timelineVm.isLoading(), loading::setVisible);
+
+        Label error = Label.create();
+        error.setForegroundColor(StandardColors.RED);
+        error.setVisible(false);
+        ReviewUIUtil.bind(parentDisposable, timelineVm.getLoadingError(), loadingError -> {
+            if (loadingError == null) {
+                error.setVisible(false);
+                return;
+            }
+            String message = loadingError.getLocalizedMessage();
+            LocalizeValue title = ReviewLocalize.reviewTimelineCannotLoad();
+            error.setText(message == null || message.isBlank() ? title : LocalizeValue.join(title, LocalizeValue.of(": " + message)));
+            error.setVisible(true);
+        });
+
+        VerticalLayout panel = VerticalLayout.create(Space.SMALL, HorizontalAlignment.CENTER);
+        panel.add(loading);
+        panel.add(error);
+        panel.paddingBuilder().verticalSet(Space.MEDIUM).horizontalSet(Space.X_LARGE).apply();
+        return panel;
     }
 
     @RequiredUIAccess
     private static void fillItems(Disposable parentDisposable,
                                   VerticalLayout items,
                                   List<CodeReviewTimelineItem> loaded,
-                                  @Nullable AsyncHtmlImageLoader imageLoader) {
+                                  CodeReviewTimelineViewModel timelineVm) {
         if (loaded.isEmpty()) {
             Label empty = Label.create(ReviewLocalize.reviewTimelineNoDescription());
             empty.setForegroundColor(ComponentColors.DISABLED_TEXT);
@@ -126,7 +178,7 @@ public final class CodeReviewTimelineComponent {
                 items.add(CodeReviewThreadComponentFactory.create(parentDisposable, thread, false));
             }
             else if (item instanceof CodeReviewCommentViewModel comment) {
-                run = appendTo(run, items, imageLoader);
+                run = appendTo(run, items, timelineVm);
                 CodeReviewCommentItemFactory.add(parentDisposable, run, comment);
             }
             else if (item instanceof CodeReviewCommitsTimelineItem commits) {
@@ -137,11 +189,12 @@ public final class CodeReviewTimelineComponent {
     }
 
     @RequiredUIAccess
-    private static MessageList appendTo(@Nullable MessageList run, VerticalLayout items, @Nullable AsyncHtmlImageLoader imageLoader) {
+    private static MessageList appendTo(@Nullable MessageList run, VerticalLayout items, CodeReviewTimelineViewModel timelineVm) {
         if (run != null) {
             return run;
         }
-        MessageList messages = CodeReviewCommentItemFactory.createList(imageLoader);
+        MessageList messages = CodeReviewCommentItemFactory.createList(timelineVm.getHtmlImageLoader());
+        CodeReviewCommentItemFactory.installLinkHandler(messages, timelineVm::openLink);
         items.add(messages);
         return messages;
     }

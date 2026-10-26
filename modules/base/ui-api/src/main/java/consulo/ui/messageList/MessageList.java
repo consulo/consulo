@@ -15,9 +15,13 @@
  */
 package consulo.ui.messageList;
 
+import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
+import consulo.ui.Component;
 import consulo.ui.HasComponentStyle;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.ComponentEventListener;
+import consulo.ui.event.HyperlinkEvent;
 import consulo.ui.internal.UIInternal;
 import org.jspecify.annotations.Nullable;
 
@@ -76,4 +80,12 @@ public interface MessageList extends HasComponentStyle<MessageListStyle> {
     void setImageLoader(@Nullable AsyncHtmlImageLoader imageLoader);
 
     @Nullable AsyncHtmlImageLoader getImageLoader();
+
+    /**
+     * Reports a click on a link of a message with the {@code href} exactly as the text wrote it, which may be something
+     * no browser could open. While nobody listens, the list opens an absolute url outside.
+     */
+    default Disposable addHyperlinkListener(ComponentEventListener<Component, HyperlinkEvent> hyperlinkListener) {
+        return addListener(HyperlinkEvent.class, hyperlinkListener);
+    }
 }

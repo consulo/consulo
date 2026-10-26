@@ -33,7 +33,10 @@ public interface CodeReviewCommentViewModel extends CodeReviewTimelineItem {
 
     UserPresentation getAuthor();
 
-    Date getCreatedAt();
+    /**
+     * {@code null} when the platform tells no date.
+     */
+    @Nullable Date getCreatedAt();
 
     /**
      * Markdown.

@@ -21,6 +21,7 @@ import consulo.desktop.awt.ui.impl.facade.FromSwingComponentWrapper;
 import consulo.ui.Component;
 import consulo.ui.Point2D;
 import consulo.ui.Rectangle2D;
+import consulo.ui.Size2D;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.JBScrollPane;
@@ -174,6 +175,13 @@ public class DesktopScrollableLayoutImpl extends SwingComponentDelegate<JScrollP
     public Rectangle2D getViewRect() {
         Rectangle rect = toAWTComponent().getViewport().getViewRect();
         return new Rectangle2D(rect.x, rect.y, rect.width, rect.height);
+    }
+
+    @RequiredUIAccess
+    @Override
+    public Size2D getContentSize() {
+        java.awt.Component view = toAWTComponent().getViewport().getView();
+        return view == null ? new Size2D(0, 0) : new Size2D(view.getWidth(), view.getHeight());
     }
 
     @RequiredUIAccess

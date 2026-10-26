@@ -24,13 +24,19 @@ import consulo.localize.LocalizeValue;
 import consulo.review.util.ReviewUIUtil;
 import consulo.review.list.CodeReviewListItemsViewModel;
 import consulo.review.list.ReviewListComponentFactory;
+import consulo.review.list.search.ReviewListSearchPanelViewModel;
+import consulo.review.list.search.ReviewListSearchValue;
 import consulo.review.list.error.ErrorStatusPanelFactory;
 import consulo.review.list.error.ErrorStatusPresenter;
 import consulo.review.localize.ReviewLocalize;
 import consulo.ui.Component;
+import consulo.ui.HasFocus;
 import consulo.ui.HorizontalAlignment;
+import consulo.ui.Hyperlink;
 import consulo.ui.Label;
 import consulo.ui.ListBox;
+import consulo.ui.ProgressBar;
+import consulo.ui.Rectangle2D;
 import consulo.ui.Space;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
@@ -40,8 +46,10 @@ import consulo.ui.ex.action.ActionPopupMenu;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.event.details.KeyCode;
+import consulo.ui.internal.ScrollableLayoutInternal;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.ScrollableLayout;
+import consulo.ui.layout.ScrollableLayoutOptions;
 import consulo.ui.layout.VerticalLayout;
 import consulo.ui.model.FlatDataModel;
 import consulo.ui.model.MutableFlatDataModel;
@@ -61,6 +69,8 @@ import java.util.function.Consumer;
 @Singleton
 @ServiceImpl
 public class ReviewListComponentFactoryImpl implements ReviewListComponentFactory {
+    private static final float LAZY_SCROLL_THRESHOLD = 0.7f;
+
     private final ErrorStatusPanelFactory myErrorStatusPanelFactory;
 
     @Inject
@@ -102,7 +112,19 @@ public class ReviewListComponentFactoryImpl implements ReviewListComponentFactor
             });
         }
 
-        Component listComponent = ScrollableLayout.create(list);
+        listVm.addFocusRequestListener(parentDisposable, () -> {
+            if (list instanceof HasFocus focusable) {
+                focusable.focus();
+            }
+        });
+
+        ScrollableLayout listComponent = wrapWithLazyVerticalScroll(list, listVm::requestMore);
+
+        ProgressBar progressStripe = ProgressBar.create();
+        progressStripe.setIndeterminate(true);
+        progressStripe.setVisible(false);
+        ScrollableLayoutInternal.of(listComponent).setTopOverlay(progressStripe);
+        ReviewUIUtil.bind(parentDisposable, listVm.isLoading(), progressStripe::setVisible);
 
         DockLayout root = DockLayout.create();
         root.center(listComponent);
@@ -112,7 +134,7 @@ public class ReviewListComponentFactoryImpl implements ReviewListComponentFactor
             Throwable error = result.exceptionOrNull();
             if (items != null) {
                 model.replaceAll(items);
-                root.center(items.isEmpty() ? createStatus(ReviewLocalize.reviewListEmptyStateNothing(projectName)) : listComponent);
+                root.center(items.isEmpty() ? createEmptyStatus(projectName, listVm) : listComponent);
             }
             else if (error != null) {
                 root.center(createError(error, listVm::reload));
@@ -122,6 +144,50 @@ public class ReviewListComponentFactoryImpl implements ReviewListComponentFactor
             }
         });
         return root;
+    }
+
+    /**
+     * Scrolls the content and asks for more of it while the end of the content is close.
+     */
+    @RequiredUIAccess
+    public static ScrollableLayout wrapWithLazyVerticalScroll(Component content, @RequiredUIAccess Runnable requestor) {
+        ScrollableLayoutOptions options = ScrollableLayoutOptions.builder()
+            .horizontalScrollPolicy(ScrollableLayoutOptions.ScrollPolicy.NEVER)
+            .verticalScrollPolicy(ScrollableLayoutOptions.ScrollPolicy.IF_NEEDED)
+            .build();
+        ScrollableLayoutInternal scroll = ScrollableLayoutInternal.of(ScrollableLayout.create(content, options));
+        scroll.addViewportListener(event -> {
+            Rectangle2D viewRect = event.getViewRect();
+            int contentHeight = scroll.getContentSize().height();
+            if (viewRect.height() <= 0) {
+                return;
+            }
+            if (viewRect.maxY() >= contentHeight * LAZY_SCROLL_THRESHOLD) {
+                requestor.run();
+            }
+        });
+        return scroll;
+    }
+
+    @RequiredUIAccess
+    private static <T> Component createEmptyStatus(LocalizeValue projectName, CodeReviewListItemsViewModel<T> listVm) {
+        ReviewListSearchPanelViewModel<?, ?> searchVm = listVm.getSearchVm();
+        if (searchVm == null || searchVm.getSearchState().get().getFilterCount() == 0) {
+            return createStatus(ReviewLocalize.reviewListEmptyStateNothing(projectName));
+        }
+
+        Label label = Label.create(ReviewLocalize.reviewListEmptyStateNoMatches());
+        label.setForegroundColor(ComponentColors.DISABLED_TEXT);
+        Hyperlink clear = Hyperlink.create(ReviewLocalize.reviewListFiltersClear(), event -> clearFilters(searchVm));
+        VerticalLayout layout = VerticalLayout.create(Space.SMALL, HorizontalAlignment.CENTER);
+        layout.add(label);
+        layout.add(clear);
+        layout.paddingBuilder().allSet(Space.X_LARGE).apply();
+        return layout;
+    }
+
+    private static <S extends ReviewListSearchValue> void clearFilters(ReviewListSearchPanelViewModel<S, ?> searchVm) {
+        searchVm.getSearchState().set(searchVm.getEmptySearch());
     }
 
     @RequiredUIAccess

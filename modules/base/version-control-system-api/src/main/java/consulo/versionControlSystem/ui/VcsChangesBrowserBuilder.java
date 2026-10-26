@@ -43,6 +43,12 @@ public interface VcsChangesBrowserBuilder {
     VcsChangesBrowserBuilder viewOptions(ActionGroup group);
 
     /**
+     * The context menu of the tree. Its actions read the selected changes from the data context, the
+     * {@link ChangesGroupingSupport#KEY grouping} and the tree expander.
+     */
+    VcsChangesBrowserBuilder popupGroup(ActionGroup group);
+
+    /**
      * Starts the tree with the given {@link ChangesGroupingSupport} keys and reports every change of them. Keys the tree does
      * not support are kept as they are.
      */
