@@ -20,12 +20,13 @@ import consulo.externalService.impl.internal.plugin.ui.PluginFilterHost;
 import consulo.externalService.impl.internal.plugin.ui.PluginSorter;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.BadgeIconSupplier;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.AnActionWithSyncUpdate;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.image.Image;
-import consulo.ui.image.ImageEffects;
+import consulo.ui.style.ComponentColors;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
@@ -67,7 +68,7 @@ public class PluginSortFilterGroup extends DefaultActionGroup implements DumbAwa
 
         Presentation presentation = e.getPresentation();
         if (host.getSorter() != PluginSorter.DEFAULT_SORTER || host.getTagFilter() != null) {
-            presentation.setIcon(ImageEffects.layered(getTemplateIcon(), PlatformIconGroup.greenbadge()));
+            presentation.setIcon(BadgeIconSupplier.withIconBadge(getTemplateIcon(), ComponentColors.ICON_BADGE_SUCCESS));
         } else {
             presentation.setIcon(getTemplateIcon());
         }

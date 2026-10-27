@@ -81,6 +81,12 @@
         "borderColor": "#8be5c4"
       }
     },
+    "IconBadge": {
+      "errorBackground": "#e55765",
+      "warningBackground": "#ffaf0f",
+      "infoBackground": "#588cf3",
+      "successBackground": "#55a76a"
+    },
     "Toast": {
       "infoBackground": "#d8e8fa",
       "successBackground": "#baeeba",

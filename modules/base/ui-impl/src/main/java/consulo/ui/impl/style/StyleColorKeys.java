@@ -65,6 +65,11 @@ public final class StyleColorKeys {
         ourKeys.put(ComponentColors.WARNING_BORDER, "Component.warning.borderColor");
         ourKeys.put(ComponentColors.SUCCESS_BORDER, "Component.success.borderColor");
 
+        ourKeys.put(ComponentColors.ICON_BADGE_ERROR, "IconBadge.errorBackground");
+        ourKeys.put(ComponentColors.ICON_BADGE_WARNING, "IconBadge.warningBackground");
+        ourKeys.put(ComponentColors.ICON_BADGE_INFO, "IconBadge.infoBackground");
+        ourKeys.put(ComponentColors.ICON_BADGE_SUCCESS, "IconBadge.successBackground");
+
         ourKeys.put(ComponentColors.TOOLTIP_BACKGROUND, "ToolTip.background");
         ourKeys.put(ComponentColors.TOOLTIP_FOREGROUND, "ToolTip.foreground");
 

@@ -26,7 +26,6 @@ import consulo.execution.runner.ExecutionEnvironmentBuilder;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
-import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.process.ExecutionException;
 import consulo.process.ProcessHandler;
 import consulo.process.ProcessNotCreatedException;
@@ -35,11 +34,12 @@ import consulo.project.ProjectPropertiesComponent;
 import consulo.project.ui.notification.NotificationService;
 import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.ex.BadgeIconSupplier;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.content.Content;
 import consulo.ui.image.Image;
-import consulo.ui.image.ImageEffects;
+import consulo.ui.style.ComponentColors;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
@@ -193,9 +193,6 @@ public class ExecutionUtil {
     }
 
     public static Image getIconWithLiveIndicator(@Nullable Image base) {
-        if (base == null) {
-            return PlatformIconGroup.greenbadge();
-        }
-        return ImageEffects.layered(base, PlatformIconGroup.greenbadge());
+        return BadgeIconSupplier.withIconBadge(base == null ? Image.empty(Image.DEFAULT_ICON_SIZE) : base, ComponentColors.ICON_BADGE_SUCCESS);
     }
 }

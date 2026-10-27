@@ -53,6 +53,10 @@ public class DesktopStyleImpl extends StyleImpl {
     private static final Color MEMORY_INDICATOR_ALLOCATED_BACKGROUND =
         JBColor.namedColor("MemoryIndicator.allocatedBackground", new JBColor(Gray._215, Gray._90));
 
+    private static final Color ICON_BADGE_ERROR = JBColor.namedColor("IconBadge.errorBackground", 0xE55765, 0xDB5C5C);
+    private static final Color ICON_BADGE_WARNING = JBColor.namedColor("IconBadge.warningBackground", 0xFFAF0F, 0xF2C55C);
+    private static final Color ICON_BADGE_INFO = JBColor.namedColor("IconBadge.infoBackground", 0x588CF3, 0x548AF7);
+    private static final Color ICON_BADGE_SUCCESS = JBColor.namedColor("IconBadge.successBackground", 0x55A76A, 0x5FAD65);
     private static final Color MEMORY_INDICATOR_USED_BACKGROUND =
         JBColor.namedColor("MemoryIndicator.usedBackground", new JBColor(Gray._185, Gray._110));
 
@@ -157,6 +161,18 @@ public class DesktopStyleImpl extends StyleImpl {
         }
         else if (colorValue == StandardColors.CYAN) {
             return TargetAWT.from(JBColor.CYAN);
+        }
+        else if (colorValue == ComponentColors.ICON_BADGE_ERROR) {
+            return TargetAWT.from(ICON_BADGE_ERROR);
+        }
+        else if (colorValue == ComponentColors.ICON_BADGE_WARNING) {
+            return TargetAWT.from(ICON_BADGE_WARNING);
+        }
+        else if (colorValue == ComponentColors.ICON_BADGE_INFO) {
+            return TargetAWT.from(ICON_BADGE_INFO);
+        }
+        else if (colorValue == ComponentColors.ICON_BADGE_SUCCESS) {
+            return TargetAWT.from(ICON_BADGE_SUCCESS);
         }
         else if (colorValue == ComponentColors.MEMORY_INDICATOR_ALLOCATED_BACKGROUND) {
             return TargetAWT.from(MEMORY_INDICATOR_ALLOCATED_BACKGROUND);

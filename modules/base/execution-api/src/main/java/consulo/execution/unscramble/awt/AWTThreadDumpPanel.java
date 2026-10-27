@@ -28,6 +28,7 @@ import consulo.project.Project;
 import consulo.project.ui.notification.NotificationService;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.BadgeIconSupplier;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.*;
@@ -35,7 +36,7 @@ import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.speedSearch.ListSpeedSearch;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchComparator;
 import consulo.ui.image.Image;
-import consulo.ui.image.ImageEffects;
+import consulo.ui.style.ComponentColors;
 
 import javax.swing.*;
 import java.awt.*;
@@ -95,7 +96,7 @@ public class AWTThreadDumpPanel extends JPanel implements ThreadDumpPanel {
         if (!daemon) {
             return icon;
         }
-        return ImageEffects.layered(icon, PlatformIconGroup.redbadge());
+        return BadgeIconSupplier.withIconBadge(icon, ComponentColors.ICON_BADGE_ERROR);
     }
 
     private static Image getThreadIcon(ThreadState threadState) {

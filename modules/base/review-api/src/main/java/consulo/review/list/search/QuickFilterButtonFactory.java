@@ -21,6 +21,7 @@ import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.review.localize.ReviewLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.BadgeIconSupplier;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -29,9 +30,6 @@ import consulo.ui.ex.action.AnSeparator;
 import consulo.ui.ex.action.Toggleable;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
-import consulo.ui.image.Image;
-import consulo.ui.image.ImageEffects;
-import consulo.ui.style.ComponentColors;
 import consulo.util.concurrent.coroutine.ObservableValue;
 import org.jspecify.annotations.Nullable;
 
@@ -41,7 +39,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 final class QuickFilterButtonFactory {
-    private static final int BADGE_RADIUS = 3;
+    private static final BadgeIconSupplier FILTER_ICON = new BadgeIconSupplier(PlatformIconGroup.generalFilter());
 
     private QuickFilterButtonFactory() {
     }
@@ -66,21 +64,6 @@ final class QuickFilterButtonFactory {
         );
     }
 
-    private static Image getLiveIndicatorIcon(boolean alive) {
-        Image filter = PlatformIconGroup.generalFilter();
-        if (!alive) {
-            return filter;
-        }
-        int width = filter.getWidth();
-        int height = filter.getHeight();
-        return ImageEffects.canvas(width, height, canvas -> {
-            canvas.drawImage(filter, 0, 0);
-            canvas.setFillStyle(ComponentColors.SUCCESS_BORDER);
-            canvas.beginPath();
-            canvas.arc(width - BADGE_RADIUS, BADGE_RADIUS, BADGE_RADIUS, 0, 2 * Math.PI);
-            canvas.fill();
-        });
-    }
 
     @RequiredUIAccess
     private static <S extends ReviewListSearchValue, Q extends ReviewListQuickFilter<S>> void showQuickFiltersPopup(
@@ -139,7 +122,7 @@ final class QuickFilterButtonFactory {
 
         @Override
         public void update(AnActionEvent e) {
-            e.getPresentation().setIcon(getLiveIndicatorIcon(mySearchState.get().getFilterCount() != 0));
+            e.getPresentation().setIcon(FILTER_ICON.getLiveIndicatorIcon(mySearchState.get().getFilterCount() != 0));
         }
 
         @RequiredUIAccess

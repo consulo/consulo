@@ -19,9 +19,10 @@ import consulo.application.dumb.DumbAware;
 import consulo.find.FindSearchContext;
 import consulo.find.localize.FindLocalize;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.ex.BadgeIconSupplier;
 import consulo.ui.ex.action.*;
 import consulo.ui.image.Image;
-import consulo.ui.image.ImageEffects;
+import consulo.ui.style.ComponentColors;
 
 /**
  * @author VISTALL
@@ -45,7 +46,7 @@ public class ContextFilterActionGroup extends DefaultActionGroup implements Dumb
     public void update(AnActionEvent e) {
         SearchSession search = e.getData(SearchSession.KEY);
         if (search != null && search.getFindModel().getSearchContext() != FindSearchContext.ANY) {
-            e.getPresentation().setIcon(ImageEffects.layered(myPrimaryImage, PlatformIconGroup.greenbadge()));
+            e.getPresentation().setIcon(BadgeIconSupplier.withIconBadge(myPrimaryImage, ComponentColors.ICON_BADGE_SUCCESS));
         } else {
             e.getPresentation().setIcon(myPrimaryImage);
         }

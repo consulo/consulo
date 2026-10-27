@@ -51,13 +51,13 @@ import consulo.project.Project;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
+import consulo.ui.ex.BadgeIconSupplier;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.ex.localize.UILocalize;
 import consulo.ui.font.Font;
 import consulo.ui.image.Image;
-import consulo.ui.image.ImageEffects;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.layout.SplitLayoutPosition;
@@ -1568,7 +1568,7 @@ public class UnifiedFindPopupPanel implements FindUI {
         @Override
         public void update(AnActionEvent e) {
             if (!FindSearchContext.ANY.equals(mySelectedContext)) {
-                e.getPresentation().setIcon(ImageEffects.layered(myPrimaryImage, PlatformIconGroup.greenbadge()));
+                e.getPresentation().setIcon(BadgeIconSupplier.withIconBadge(myPrimaryImage, ComponentColors.ICON_BADGE_SUCCESS));
             }
             else {
                 e.getPresentation().setIcon(myPrimaryImage);

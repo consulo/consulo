@@ -57,6 +57,7 @@ import consulo.ui.Label;
 import consulo.ui.Space;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.*;
+import consulo.ui.ex.BadgeIconSupplier;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.touchBar.TouchBarController;
 import consulo.ui.ex.awt.*;
@@ -73,7 +74,6 @@ import consulo.ui.ex.localize.UILocalize;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.image.Image;
-import consulo.ui.image.ImageEffects;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.style.ComponentColors;
@@ -1782,7 +1782,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
         @Override
         public void update(AnActionEvent e) {
             if (!FindSearchContext.ANY.equals(mySelectedContext)) {
-                e.getPresentation().setIcon(ImageEffects.layered(myPrimaryImage, PlatformIconGroup.greenbadge()));
+                e.getPresentation().setIcon(BadgeIconSupplier.withIconBadge(myPrimaryImage, ComponentColors.ICON_BADGE_SUCCESS));
             }
             else {
                 e.getPresentation().setIcon(myPrimaryImage);

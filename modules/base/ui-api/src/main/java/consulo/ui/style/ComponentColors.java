@@ -61,6 +61,23 @@ public enum ComponentColors implements StyleColorValue {
     WARNING_BORDER,
     SUCCESS_BORDER,
 
+    /**
+     * The dot drawn over an icon to mark an error.
+     */
+    ICON_BADGE_ERROR,
+    /**
+     * The dot drawn over an icon to mark a warning.
+     */
+    ICON_BADGE_WARNING,
+    /**
+     * The dot drawn over an icon to mark something to look at.
+     */
+    ICON_BADGE_INFO,
+    /**
+     * The dot drawn over an icon to mark success or something running.
+     */
+    ICON_BADGE_SUCCESS,
+
     TOOLTIP_BACKGROUND,
     TOOLTIP_FOREGROUND,
 

@@ -18,10 +18,10 @@ package consulo.execution.executor;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.localize.LocalizeValue;
-import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
+import consulo.ui.ex.BadgeIconSupplier;
 import consulo.ui.image.Image;
-import consulo.ui.image.ImageEffects;
+import consulo.ui.style.ComponentColors;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -38,7 +38,7 @@ public abstract class Executor {
     public abstract Image getToolWindowIcon();
 
     public Image getToolWindowIconIfRunning() {
-        return ImageEffects.layered(getToolWindowIcon(), PlatformIconGroup.greenbadge());
+        return BadgeIconSupplier.withIconBadge(getToolWindowIcon(), ComponentColors.ICON_BADGE_SUCCESS);
     }
 
     public abstract Image getIcon();
