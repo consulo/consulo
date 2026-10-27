@@ -106,9 +106,9 @@ public class ApplyPatchFromClipboardAction extends DumbAwareAction implements An
         @RequiredUIAccess
         protected @Nullable Component createDoNotAskCheckbox() {
             CheckBox removeOptionCheckBox = CheckBox.create(VcsLocalize.patchApplyAnalyzeFromClipboardOnTheFlyCheckbox());
-            removeOptionCheckBox.setValue(VcsApplicationSettings.getInstance().DETECT_PATCH_ON_THE_FLY);
+            removeOptionCheckBox.setValue(VcsApplicationSettings.getInstance().getState().DETECT_PATCH_ON_THE_FLY);
             removeOptionCheckBox.addValueListener(
-                event -> VcsApplicationSettings.getInstance().DETECT_PATCH_ON_THE_FLY = removeOptionCheckBox.getValueOrError()
+                event -> VcsApplicationSettings.getInstance().getState().DETECT_PATCH_ON_THE_FLY = removeOptionCheckBox.getValueOrError()
             );
             return removeOptionCheckBox;
         }

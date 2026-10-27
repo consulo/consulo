@@ -125,17 +125,17 @@ public class VcsCommitConfigurable extends SimpleConfigurableByProperties implem
             CommitModeType.VERSION_CONTROL_TOOL_WINDOW
         ));
         modeLayout.add(modeGroup.newButton(VcsLocalize.settingsCommitModeDialog(), CommitModeType.DIALOG));
-        propertyBuilder.add(modeGroup, () -> settings.COMMIT_MODE, value -> {
-            settings.COMMIT_MODE = value;
+        propertyBuilder.add(modeGroup, () -> settings.getState().COMMIT_MODE, value -> {
+            settings.getState().COMMIT_MODE = value;
             fireCommitModeSettingsChanged();
         });
 
         CheckBox toggleModeBox = CheckBox.create(VcsLocalize.settingsCommitModeToggle());
-        propertyBuilder.add(toggleModeBox, () -> settings.COMMIT_TOGGLE_MODE, value -> {
-            settings.COMMIT_TOGGLE_MODE = value;
+        propertyBuilder.add(toggleModeBox, () -> settings.getState().COMMIT_TOGGLE_MODE, value -> {
+            settings.getState().COMMIT_TOGGLE_MODE = value;
             fireCommitModeSettingsChanged();
         });
-        toggleModeBox.setEnabled(isPanelMode(settings.COMMIT_MODE));
+        toggleModeBox.setEnabled(isPanelMode(settings.getState().COMMIT_MODE));
         modeGroup.addValueListener(value -> toggleModeBox.setEnabled(isPanelMode(value)));
         modeLayout.add(toggleModeBox);
 

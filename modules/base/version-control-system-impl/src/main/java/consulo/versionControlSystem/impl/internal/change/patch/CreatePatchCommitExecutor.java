@@ -106,7 +106,7 @@ public class CreatePatchCommitExecutor extends LocalCommitExecutor {
             String patchPath = ProjectPropertiesComponent.getInstance(myProject).getValue(VCS_PATCH_PATH_KEY);
             if (StringUtil.isEmptyOrSpaces(patchPath)) {
                 VcsApplicationSettings settings = VcsApplicationSettings.getInstance();
-                patchPath = settings.PATCH_STORAGE_LOCATION;
+                patchPath = settings.getState().PATCH_STORAGE_LOCATION;
                 if (patchPath == null) {
                     patchPath = myProject.getBaseDir() == null ? ContainerPathManager.get().getHomePath() : myProject.getBaseDir()
                         .getPresentableUrl();
@@ -171,7 +171,7 @@ public class CreatePatchCommitExecutor extends LocalCommitExecutor {
                 file.getParentFile().mkdirs();
                 VcsConfiguration.getInstance(myProject).acceptLastCreatedPatchName(file.getName());
                 String patchPath = file.getParent();
-                VcsApplicationSettings.getInstance().PATCH_STORAGE_LOCATION = patchPath;
+                VcsApplicationSettings.getInstance().getState().PATCH_STORAGE_LOCATION = patchPath;
                 ProjectPropertiesComponent.getInstance(myProject).setValue(VCS_PATCH_PATH_KEY, patchPath);
                 boolean reversePatch = panel.isReversePatch();
 

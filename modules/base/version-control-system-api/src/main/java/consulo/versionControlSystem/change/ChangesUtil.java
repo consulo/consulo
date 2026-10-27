@@ -420,7 +420,7 @@ public class ChangesUtil {
             return false;
         }
 
-        if (VcsApplicationSettings.getInstance().CREATE_CHANGELISTS_AUTOMATICALLY) {
+        if (VcsApplicationSettings.getInstance().getState().CREATE_CHANGELISTS_AUTOMATICALLY) {
             return true;
         }
 

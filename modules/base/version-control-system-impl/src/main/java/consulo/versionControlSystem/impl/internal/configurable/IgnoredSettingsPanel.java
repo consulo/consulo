@@ -43,11 +43,11 @@ public class IgnoredSettingsPanel extends SimpleConfigurableByProperties impleme
         general.add(LabeledBuilder.sided(VcsLocalize.ignoredFileManagePolicyLabel(), policyBox));
 
         CheckBox generateInVcsRootBox =
-            CheckBox.create(VcsLocalize.ignoredFileGenerateInVcsRootLabel(), settings.GENERATE_IGNORE_FILES_IN_VCS_ROOTS);
+            CheckBox.create(VcsLocalize.ignoredFileGenerateInVcsRootLabel(), settings.getState().GENERATE_IGNORE_FILES_IN_VCS_ROOTS);
         propertyBuilder.add(
             generateInVcsRootBox,
-            () -> settings.GENERATE_IGNORE_FILES_IN_VCS_ROOTS,
-            value -> settings.GENERATE_IGNORE_FILES_IN_VCS_ROOTS = value
+            () -> settings.getState().GENERATE_IGNORE_FILES_IN_VCS_ROOTS,
+            value -> settings.getState().GENERATE_IGNORE_FILES_IN_VCS_ROOTS = value
         );
         general.add(generateInVcsRootBox);
 
@@ -63,32 +63,32 @@ public class IgnoredSettingsPanel extends SimpleConfigurableByProperties impleme
             case DoNotManageForAllProject -> {
                 propertiesComponent.setValue(MANAGE_IGNORE_FILES_PROPERTY, false);
                 propertiesComponent.setValue(ASKED_MANAGE_IGNORE_FILES_PROPERTY, true);
-                applicationSettings.MANAGE_IGNORE_FILES = false;
-                applicationSettings.DISABLE_MANAGE_IGNORE_FILES = true;
+                applicationSettings.getState().MANAGE_IGNORE_FILES = false;
+                applicationSettings.getState().DISABLE_MANAGE_IGNORE_FILES = true;
             }
             case AllProjectsManage -> {
                 propertiesComponent.setValue(MANAGE_IGNORE_FILES_PROPERTY, true);
                 propertiesComponent.setValue(ASKED_MANAGE_IGNORE_FILES_PROPERTY, true);
-                applicationSettings.MANAGE_IGNORE_FILES = true;
-                applicationSettings.DISABLE_MANAGE_IGNORE_FILES = false;
+                applicationSettings.getState().MANAGE_IGNORE_FILES = true;
+                applicationSettings.getState().DISABLE_MANAGE_IGNORE_FILES = false;
             }
             case CurrentProjectManage -> {
                 propertiesComponent.setValue(MANAGE_IGNORE_FILES_PROPERTY, true);
                 propertiesComponent.setValue(ASKED_MANAGE_IGNORE_FILES_PROPERTY, true);
-                applicationSettings.MANAGE_IGNORE_FILES = false;
-                applicationSettings.DISABLE_MANAGE_IGNORE_FILES = false;
+                applicationSettings.getState().MANAGE_IGNORE_FILES = false;
+                applicationSettings.getState().DISABLE_MANAGE_IGNORE_FILES = false;
             }
             case DoNotManageForCurrentProject -> {
                 propertiesComponent.setValue(MANAGE_IGNORE_FILES_PROPERTY, false);
                 propertiesComponent.setValue(ASKED_MANAGE_IGNORE_FILES_PROPERTY, true);
-                applicationSettings.MANAGE_IGNORE_FILES = false;
-                applicationSettings.DISABLE_MANAGE_IGNORE_FILES = false;
+                applicationSettings.getState().MANAGE_IGNORE_FILES = false;
+                applicationSettings.getState().DISABLE_MANAGE_IGNORE_FILES = false;
             }
             case AlwaysAsk -> {
                 propertiesComponent.setValue(MANAGE_IGNORE_FILES_PROPERTY, false);
                 propertiesComponent.setValue(ASKED_MANAGE_IGNORE_FILES_PROPERTY, false);
-                applicationSettings.MANAGE_IGNORE_FILES = false;
-                applicationSettings.DISABLE_MANAGE_IGNORE_FILES = false;
+                applicationSettings.getState().MANAGE_IGNORE_FILES = false;
+                applicationSettings.getState().DISABLE_MANAGE_IGNORE_FILES = false;
             }
         }
     }
@@ -96,10 +96,10 @@ public class IgnoredSettingsPanel extends SimpleConfigurableByProperties impleme
     private ManageIgnoredOption getIgnoredOption() {
         VcsApplicationSettings applicationSettings = VcsApplicationSettings.getInstance();
         ProjectPropertiesComponent propertiesComponent = ProjectPropertiesComponent.getInstance(myProject);
-        if (applicationSettings.DISABLE_MANAGE_IGNORE_FILES) {
+        if (applicationSettings.getState().DISABLE_MANAGE_IGNORE_FILES) {
             return ManageIgnoredOption.DoNotManageForAllProject;
         }
-        if (applicationSettings.MANAGE_IGNORE_FILES) {
+        if (applicationSettings.getState().MANAGE_IGNORE_FILES) {
             return ManageIgnoredOption.AllProjectsManage;
         }
         if (propertiesComponent.getBoolean(MANAGE_IGNORE_FILES_PROPERTY, false)) {

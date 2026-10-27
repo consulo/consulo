@@ -15,10 +15,13 @@
  */
 package consulo.versionControlSystem.commit;
 
+import com.dslplatform.json.CompiledJson;
+
 /**
  * @author VISTALL
  * @since 2026-10-17
  */
+@CompiledJson
 public enum CommitModeType {
     TOOL_WINDOW,
     DIALOG,

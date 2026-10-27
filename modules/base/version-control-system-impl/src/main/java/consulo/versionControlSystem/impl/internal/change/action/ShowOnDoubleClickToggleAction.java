@@ -19,10 +19,10 @@ public abstract class ShowOnDoubleClickToggleAction extends DumbAwareToggleActio
     public static boolean isShowDiffOnDoubleClick(Project project) {
         VcsApplicationSettings settings = VcsApplicationSettings.getInstance();
         if (CommitModeManager.getInstance(project).isCommitToolWindowEnabled()) {
-            return settings.SHOW_EDITOR_PREVIEW_ON_DOUBLE_CLICK;
+            return settings.getState().SHOW_EDITOR_PREVIEW_ON_DOUBLE_CLICK;
         }
         else {
-            return settings.SHOW_DIFF_ON_DOUBLE_CLICK;
+            return settings.getState().SHOW_DIFF_ON_DOUBLE_CLICK;
         }
     }
 
@@ -52,10 +52,10 @@ public abstract class ShowOnDoubleClickToggleAction extends DumbAwareToggleActio
 
         VcsApplicationSettings settings = VcsApplicationSettings.getInstance();
         if (CommitModeManager.getInstance(project).isCommitToolWindowEnabled()) {
-            settings.SHOW_EDITOR_PREVIEW_ON_DOUBLE_CLICK = newState;
+            settings.getState().SHOW_EDITOR_PREVIEW_ON_DOUBLE_CLICK = newState;
         }
         else {
-            settings.SHOW_DIFF_ON_DOUBLE_CLICK = newState;
+            settings.getState().SHOW_DIFF_ON_DOUBLE_CLICK = newState;
         }
     }
 }

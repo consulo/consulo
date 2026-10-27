@@ -68,7 +68,7 @@ public abstract class LineStatusMarkerPopupBase implements LineStatusMarkerPopup
     }
 
     protected boolean isShowInnerDifferences() {
-        return VcsApplicationSettings.getInstance().SHOW_LST_WORD_DIFFERENCES;
+        return VcsApplicationSettings.getInstance().getState().SHOW_LST_WORD_DIFFERENCES;
     }
 
     @Override
@@ -181,12 +181,12 @@ public abstract class LineStatusMarkerPopupBase implements LineStatusMarkerPopup
 
         @Override
         public boolean isSelected(AnActionEvent e) {
-            return VcsApplicationSettings.getInstance().SHOW_LST_WORD_DIFFERENCES;
+            return VcsApplicationSettings.getInstance().getState().SHOW_LST_WORD_DIFFERENCES;
         }
 
         @Override
         public void setSelected(AnActionEvent e, boolean state) {
-            VcsApplicationSettings.getInstance().SHOW_LST_WORD_DIFFERENCES = state;
+            VcsApplicationSettings.getInstance().getState().SHOW_LST_WORD_DIFFERENCES = state;
             LineStatusMarkerPopupFactory.getInstance().create(myTracker, myEditor, myRange).showHintAt(myDetails);
         }
     }

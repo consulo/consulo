@@ -195,7 +195,7 @@ public class IgnoredFileGeneratorImpl implements IgnoredFileGenerator {
                 })
                 .addClosingAction(VcsLocalize.ignoredFileManageAllProject(), () -> {
                     writeToIgnoreFile.run();
-                    applicationSettings.MANAGE_IGNORE_FILES = true;
+                    applicationSettings.getState().MANAGE_IGNORE_FILES = true;
                     propertiesComponent.setValue(ASKED_MANAGE_IGNORE_FILES_PROPERTY, true);
                     synchronized (myNotificationLock) {
                         myIgnoreFileRootNotificationShowFor = null;
@@ -231,7 +231,7 @@ public class IgnoredFileGeneratorImpl implements IgnoredFileGenerator {
 
     private static boolean needGenerateIgnoreFile(Project project, VirtualFile ignoreFileRoot) {
         VcsApplicationSettings vcsApplicationSettings = VcsApplicationSettings.getInstance();
-        if (vcsApplicationSettings.DISABLE_MANAGE_IGNORE_FILES) {
+        if (vcsApplicationSettings.getState().DISABLE_MANAGE_IGNORE_FILES) {
             return false;
         }
 
@@ -241,7 +241,7 @@ public class IgnoredFileGeneratorImpl implements IgnoredFileGenerator {
             return false;
         }
 
-        if (!vcsApplicationSettings.GENERATE_IGNORE_FILES_IN_VCS_ROOTS) {
+        if (!vcsApplicationSettings.getState().GENERATE_IGNORE_FILES_IN_VCS_ROOTS) {
             return false;
         }
 
@@ -251,7 +251,7 @@ public class IgnoredFileGeneratorImpl implements IgnoredFileGenerator {
     }
 
     private static boolean isManageIgnoreTurnOn(Project project) {
-        boolean globalManageIgnores = VcsApplicationSettings.getInstance().MANAGE_IGNORE_FILES;
+        boolean globalManageIgnores = VcsApplicationSettings.getInstance().getState().MANAGE_IGNORE_FILES;
         ProjectPropertiesComponent propertiesComponent = ProjectPropertiesComponent.getInstance(project);
         boolean manageIgnoresInProject = propertiesComponent.getBoolean(MANAGE_IGNORE_FILES_PROPERTY, false);
         return globalManageIgnores || manageIgnoresInProject;

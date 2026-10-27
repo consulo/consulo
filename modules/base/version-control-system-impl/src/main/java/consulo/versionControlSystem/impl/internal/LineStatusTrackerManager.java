@@ -295,10 +295,10 @@ public class LineStatusTrackerManager implements LineStatusTrackerManagerI, Disp
     
     private static LineStatusTracker.Mode getMode() {
         VcsApplicationSettings vcsApplicationSettings = VcsApplicationSettings.getInstance();
-        if (!vcsApplicationSettings.SHOW_LST_GUTTER_MARKERS) {
+        if (!vcsApplicationSettings.getState().SHOW_LST_GUTTER_MARKERS) {
             return LineStatusTracker.Mode.SILENT;
         }
-        return vcsApplicationSettings.SHOW_WHITESPACES_IN_LST ? LineStatusTracker.Mode.SMART : LineStatusTracker.Mode.DEFAULT;
+        return vcsApplicationSettings.getState().SHOW_WHITESPACES_IN_LST ? LineStatusTracker.Mode.SMART : LineStatusTracker.Mode.DEFAULT;
     }
 
     private void startAlarm(Document document, VirtualFile virtualFile) {

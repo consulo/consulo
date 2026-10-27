@@ -327,7 +327,7 @@ public class IgnoreFilesProcessorImpl extends FilesProcessorWithNotificationImpl
     @Override
     protected void rememberForAllProjects() {
         VcsApplicationSettings applicationSettings = VcsApplicationSettings.getInstance();
-        applicationSettings.MANAGE_IGNORE_FILES = true;
+        applicationSettings.getState().MANAGE_IGNORE_FILES = true;
     }
 
     @Override
@@ -387,7 +387,7 @@ public class IgnoreFilesProcessorImpl extends FilesProcessorWithNotificationImpl
     @Override
     protected boolean needDoForCurrentProject() {
         VcsApplicationSettings appSettings = VcsApplicationSettings.getInstance();
-        return !appSettings.DISABLE_MANAGE_IGNORE_FILES && (appSettings.MANAGE_IGNORE_FILES || super.needDoForCurrentProject());
+        return !appSettings.getState().DISABLE_MANAGE_IGNORE_FILES && (appSettings.getState().MANAGE_IGNORE_FILES || super.needDoForCurrentProject());
     }
 
     private static @Nullable FilePath getAffectedFilePath(VFileEvent event) {
@@ -408,7 +408,7 @@ public class IgnoreFilesProcessorImpl extends FilesProcessorWithNotificationImpl
     }
 
     private static boolean needProcessIgnoredFiles() {
-        return VcsApplicationSettings.getInstance().GENERATE_IGNORE_FILES_IN_VCS_ROOTS;
+        return VcsApplicationSettings.getInstance().getState().GENERATE_IGNORE_FILES_IN_VCS_ROOTS;
     }
 
     private static RecursiveFilePathSet newPathSet() {

@@ -134,9 +134,9 @@ public class ApplyPatchAction extends LegacyDumbAwareAction {
         else {
             FileChooserDescriptor descriptor = ApplyPatchDifferentiatedDialog.createSelectPatchDescriptor();
             VcsApplicationSettings settings = VcsApplicationSettings.getInstance();
-            VirtualFile toSelect = settings.PATCH_STORAGE_LOCATION == null
+            VirtualFile toSelect = settings.getState().PATCH_STORAGE_LOCATION == null
                 ? null
-                : LocalFileSystem.getInstance().refreshAndFindFileByIoFile(new File(settings.PATCH_STORAGE_LOCATION));
+                : LocalFileSystem.getInstance().refreshAndFindFileByIoFile(new File(settings.getState().PATCH_STORAGE_LOCATION));
 
             FileChooser.chooseFile(descriptor, project, toSelect).whenComplete((file, error) -> {
                 if (error != null) {
@@ -145,7 +145,7 @@ public class ApplyPatchAction extends LegacyDumbAwareAction {
 
                 VirtualFile parent = file.getParent();
                 if (parent != null) {
-                    settings.PATCH_STORAGE_LOCATION = FileUtil.toSystemDependentName(parent.getPath());
+                    settings.getState().PATCH_STORAGE_LOCATION = FileUtil.toSystemDependentName(parent.getPath());
                 }
                 showApplyPatch(project, file);
             });

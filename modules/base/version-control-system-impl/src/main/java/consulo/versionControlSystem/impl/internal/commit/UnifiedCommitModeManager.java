@@ -124,13 +124,13 @@ public class UnifiedCommitModeManager implements CommitModeManager, Disposable {
     }
 
     private CommitMode fromSettings(AbstractVcs[] activeVcses) {
-        CommitModeType type = mySettings.COMMIT_MODE;
+        CommitModeType type = mySettings.getState().COMMIT_MODE;
 
         if (type == CommitModeType.DIALOG || !canSetNonModal(activeVcses)) {
             return ModalCommitMode.INSTANCE;
         }
 
-        return new NonModalCommitMode(type == CommitModeType.TOOL_WINDOW, mySettings.COMMIT_TOGGLE_MODE);
+        return new NonModalCommitMode(type == CommitModeType.TOOL_WINDOW, mySettings.getState().COMMIT_TOGGLE_MODE);
     }
 
     private static boolean canSetNonModal(AbstractVcs[] activeVcses) {

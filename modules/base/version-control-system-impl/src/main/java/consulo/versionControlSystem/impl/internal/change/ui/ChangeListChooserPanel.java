@@ -133,7 +133,7 @@ public final class ChangeListChooserPanel {
         if (changelistByName != null) {
             myExistingListsCombo.setSelectedItem(changelistByName.getName());
         }
-        else if (forceCreate || VcsApplicationSettings.getInstance().CREATE_CHANGELISTS_AUTOMATICALLY) {
+        else if (forceCreate || VcsApplicationSettings.getInstance().getState().CREATE_CHANGELISTS_AUTOMATICALLY) {
             myNewNameSuggested = true;
             List<String> items = new ArrayList<>(myExistingListsCombo.getItems());
             items.add(0, name);
