@@ -15,6 +15,7 @@
  */
 package consulo.versionControlSystem.distributed;
 
+import consulo.component.persist.PersistentStateComponent;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -23,72 +24,63 @@ import java.util.List;
 /**
  * @author Kirill Likhodedov
  */
-public class DvcsRememberedInputs {
+public class DvcsRememberedInputs implements PersistentStateComponent<DvcsRememberedInputsState> {
 
-  private State myState = new State();
+    private DvcsRememberedInputsState myState = new DvcsRememberedInputsState();
 
-  public static class State {
-    public List<UrlAndUserName> visitedUrls = new ArrayList<>();
-    public String cloneParentDir = "";
-  }
+    @Override
+    public DvcsRememberedInputsState getState() {
+        return myState;
+    }
 
-  public static class UrlAndUserName {
-    public String url;
-    public String userName;
-  }
+    @Override
+    public void loadState(DvcsRememberedInputsState state) {
+        myState = state;
+    }
 
-  
-  public State getState() {
-    return myState;
-  }
+    public void addUrl(String url) {
+        addUrl(url, "");
+    }
 
-  public void loadState(State state) {
-    myState = state;
-  }
-
-  public void addUrl(String url) {
-    addUrl(url, "");
-  }
-
-  public void addUrl(String url, String userName) {
-    for (UrlAndUserName visitedUrl : myState.visitedUrls) {
-      if (visitedUrl.url.equalsIgnoreCase(url)) {  // don't add multiple entries for a single url
-        if (!userName.isEmpty()) {                 // rewrite username, unless no username is specified
-          visitedUrl.userName = userName;
+    public void addUrl(String url, String userName) {
+        for (DvcsRememberedInputUrlAndUserName visitedUrl : myState.visitedUrls) {
+            if (visitedUrl.url.equalsIgnoreCase(url)) {  // don't add multiple entries for a single url
+                if (!userName.isEmpty()) {                 // rewrite username, unless no username is specified
+                    visitedUrl.userName = userName;
+                }
+                return;
+            }
         }
-        return;
-      }
+
+        DvcsRememberedInputUrlAndUserName urlAndUserName = new DvcsRememberedInputUrlAndUserName();
+        urlAndUserName.url = url;
+        urlAndUserName.userName = userName;
+        myState.visitedUrls.add(urlAndUserName);
     }
 
-    UrlAndUserName urlAndUserName = new UrlAndUserName();
-    urlAndUserName.url = url;
-    urlAndUserName.userName = userName;
-    myState.visitedUrls.add(urlAndUserName);
-  }
-
-  public @Nullable String getUserNameForUrl(String url) {
-    for (UrlAndUserName urlAndUserName : myState.visitedUrls) {
-      if (urlAndUserName.url.equalsIgnoreCase(url)) {
-        return urlAndUserName.userName;
-      }
+    public @Nullable String getUserNameForUrl(String url) {
+        for (DvcsRememberedInputUrlAndUserName urlAndUserName : myState.visitedUrls) {
+            if (urlAndUserName.url.equalsIgnoreCase(url)) {
+                return urlAndUserName.userName;
+            }
+        }
+        return null;
     }
-    return null;
-  }
 
-  
-  public List<String> getVisitedUrls() {
-    List<String> urls = new ArrayList<>(myState.visitedUrls.size());
-    for (UrlAndUserName urlAndUserName : myState.visitedUrls) {
-      urls.add(urlAndUserName.url);
+
+    public List<String> getVisitedUrls() {
+        List<String> urls = new ArrayList<>(myState.visitedUrls.size());
+        for (DvcsRememberedInputUrlAndUserName urlAndUserName : myState.visitedUrls) {
+            urls.add(urlAndUserName.url);
+        }
+        return urls;
     }
-    return urls;
-  }
 
-  public String getCloneParentDir() {
-    return myState.cloneParentDir;
-  }
+    public String getCloneParentDir() {
+        return myState.cloneParentDir;
+    }
 
-  public void setCloneParentDir(String cloneParentDir) {
-    myState.cloneParentDir = cloneParentDir;
-  }
+    public void setCloneParentDir(String cloneParentDir) {
+        myState.cloneParentDir = cloneParentDir;
+    }
 }
