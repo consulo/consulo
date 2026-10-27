@@ -76,8 +76,10 @@ import consulo.versionControlSystem.checkin.BeforeCheckinDialogHandler;
 import consulo.versionControlSystem.checkin.CheckinEnvironment;
 import consulo.versionControlSystem.checkin.CheckinHandler;
 import consulo.versionControlSystem.checkin.CommitProblem;
+import consulo.versionControlSystem.impl.internal.action.ShowDiffAction;
 import consulo.versionControlSystem.impl.internal.change.ChangeListManagerImpl;
 import consulo.versionControlSystem.impl.internal.change.action.RollbackDialogAction;
+import consulo.versionControlSystem.impl.internal.change.action.ShowOnDoubleClickToggleAction;
 import consulo.versionControlSystem.impl.internal.change.ui.ChangeTreeItem;
 import consulo.versionControlSystem.impl.internal.change.ui.ChangesTreeGroupKind;
 import consulo.versionControlSystem.impl.internal.change.ui.ChangesLegend;
@@ -266,6 +268,14 @@ public class UnifiedCommitChangeListDialog extends DialogDescriptor implements U
         myLegend = legend;
 
         UnifiedChangesTree tree = new UnifiedChangesTree(myProject, true, uiDisposable);
+        tree.setDoubleClickHandler(item -> {
+            if (item instanceof ChangeTreeItem changeItem) {
+                ShowDiffAction.showDiff(myProject, new Change[]{changeItem.change()}, tree.getChangesInList());
+            }
+            else {
+                tree.navigate(item, true);
+            }
+        });
         tree.setAutoIncludeDefaultList(false);
         tree.addInclusionListener(this::updateLegend);
         myTree = tree;
