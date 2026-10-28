@@ -618,8 +618,6 @@ progress.indexing.paused:
     text: Analyzing paused
 progress.indexing.scanning:
     text: Scanning files to index...
-progress.indexing.title:
-    text: Analyzing Project to Enable Smart Features
 progress.indexing.updating:
     text: Indexing...
 progress.performing.indexing.tasks:

@@ -831,7 +831,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
             try {
                 LOG.info("Processing dumb queue under modal progress (start)");
                 LOG.debug("Processing dumb queue under modal progress (start)", startTrace);
-                String title = ProjectLocalize.progressIndexingTitle().get();
+                String title = ProjectLocalize.progressIndexing().get();
                 ((ApplicationEx) myApplication).executeSuspendingWriteAction(myProject, title, () -> {
                     ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
                     try (processTask) {
