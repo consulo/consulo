@@ -22,4 +22,5 @@ package consulo.platform;
 public enum PlatformFeature {
     OPEN_FILE_IN_FILE_MANAGER,
     OPEN_DIRECTORY_IN_FILE_MANAGER,
+    MOVE_TO_TRASH
 }

@@ -55,6 +55,10 @@ public interface Platform extends UserDataHolder {
         return false;
     }
 
+    default boolean moveToTrash(Path path) {
+        return false;
+    }
+
     @SuppressWarnings("deprecation")
     default void openInBrowser(String url) {
         try {

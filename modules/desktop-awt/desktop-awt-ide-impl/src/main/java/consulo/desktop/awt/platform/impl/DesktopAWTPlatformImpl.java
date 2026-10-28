@@ -24,8 +24,10 @@ import consulo.platform.impl.UnixOperationSystemImpl;
 import consulo.ui.UIAccess;
 import consulo.webBrowser.BrowserUtil;
 
+import java.awt.*;
 import java.io.File;
 import java.net.URL;
+import java.nio.file.Path;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -53,7 +55,13 @@ class DesktopAWTPlatformImpl extends PlatformBase {
     public boolean supportsFeature(PlatformFeature feature) {
         return switch (feature) {
             case OPEN_DIRECTORY_IN_FILE_MANAGER, OPEN_FILE_IN_FILE_MANAGER -> FileManagerProxy.isSupported();
+            case MOVE_TO_TRASH -> Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.MOVE_TO_TRASH);
         };
+    }
+
+    @Override
+    public boolean moveToTrash(Path path) {
+        return Desktop.getDesktop().moveToTrash(path.toFile());
     }
 
     @Override
