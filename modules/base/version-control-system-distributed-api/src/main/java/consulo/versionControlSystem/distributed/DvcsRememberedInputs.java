@@ -22,28 +22,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * In implmentation of plugins must impl {@link PersistentStateComponent}
+ *
  * @author Kirill Likhodedov
  */
-public class DvcsRememberedInputs implements PersistentStateComponent<DvcsRememberedInputsState> {
+public abstract class DvcsRememberedInputs<State extends DvcsRememberedInputsState> {
 
-    private DvcsRememberedInputsState myState = new DvcsRememberedInputsState();
-
-    @Override
-    public DvcsRememberedInputsState getState() {
-        return myState;
-    }
-
-    @Override
-    public void loadState(DvcsRememberedInputsState state) {
-        myState = state;
-    }
+    public abstract State getState();
 
     public void addUrl(String url) {
         addUrl(url, "");
     }
 
     public void addUrl(String url, String userName) {
-        for (DvcsRememberedInputUrlAndUserName visitedUrl : myState.visitedUrls) {
+        for (DvcsRememberedInputUrlAndUserName visitedUrl : getState().visitedUrls) {
             if (visitedUrl.url.equalsIgnoreCase(url)) {  // don't add multiple entries for a single url
                 if (!userName.isEmpty()) {                 // rewrite username, unless no username is specified
                     visitedUrl.userName = userName;
@@ -55,11 +47,11 @@ public class DvcsRememberedInputs implements PersistentStateComponent<DvcsRememb
         DvcsRememberedInputUrlAndUserName urlAndUserName = new DvcsRememberedInputUrlAndUserName();
         urlAndUserName.url = url;
         urlAndUserName.userName = userName;
-        myState.visitedUrls.add(urlAndUserName);
+        getState().visitedUrls.add(urlAndUserName);
     }
 
     public @Nullable String getUserNameForUrl(String url) {
-        for (DvcsRememberedInputUrlAndUserName urlAndUserName : myState.visitedUrls) {
+        for (DvcsRememberedInputUrlAndUserName urlAndUserName : getState().visitedUrls) {
             if (urlAndUserName.url.equalsIgnoreCase(url)) {
                 return urlAndUserName.userName;
             }
@@ -69,18 +61,18 @@ public class DvcsRememberedInputs implements PersistentStateComponent<DvcsRememb
 
 
     public List<String> getVisitedUrls() {
-        List<String> urls = new ArrayList<>(myState.visitedUrls.size());
-        for (DvcsRememberedInputUrlAndUserName urlAndUserName : myState.visitedUrls) {
+        List<String> urls = new ArrayList<>(getState().visitedUrls.size());
+        for (DvcsRememberedInputUrlAndUserName urlAndUserName : getState().visitedUrls) {
             urls.add(urlAndUserName.url);
         }
         return urls;
     }
 
     public String getCloneParentDir() {
-        return myState.cloneParentDir;
+        return getState().cloneParentDir;
     }
 
     public void setCloneParentDir(String cloneParentDir) {
-        myState.cloneParentDir = cloneParentDir;
+        getState().cloneParentDir = cloneParentDir;
     }
 }
