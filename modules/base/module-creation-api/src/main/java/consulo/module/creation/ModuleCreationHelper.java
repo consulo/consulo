@@ -27,6 +27,7 @@ import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
+import java.nio.file.Path;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -47,7 +48,7 @@ public interface ModuleCreationHelper {
     @UsedInPlugin
     <C extends ModuleImportContext> void showImportChooser(
         @Nullable Project project,
-        VirtualFile file,
+        Path file,
         CompletableFuture<Pair<C, ModuleImportProvider<C>>> result
     );
 
@@ -55,7 +56,7 @@ public interface ModuleCreationHelper {
     @UsedInPlugin
     <C extends ModuleImportContext> void showImportChooser(
         @Nullable Project project,
-        VirtualFile file,
+        Path file,
         List<ModuleImportProvider> providers,
         CompletableFuture<Pair<C, ModuleImportProvider<C>>> result
     );

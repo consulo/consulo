@@ -62,6 +62,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.concurrent.CompletableFuture;
 import java.util.Collection;
 import java.util.Collections;
@@ -427,7 +428,6 @@ public abstract class AbstractExternalModuleImportProvider implements ModuleImpo
     ) {
         consumer.accept(new SelectExternalProjectStep());
     }
-
     
     @Override
     public ExternalModuleImportContext createContext(@Nullable Project project) {
@@ -435,7 +435,7 @@ public abstract class AbstractExternalModuleImportProvider implements ModuleImpo
     }
 
     @Override
-    public String getPathToBeImported(VirtualFile file) {
-        return file.getPath();
+    public String getPathToBeImported(Path file) {
+        return file.toString();
     }
 }

@@ -16,12 +16,14 @@
 package consulo.ide.impl.project;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
 import consulo.ide.impl.module.importing.ImportProjectOpenProcessor;
 import consulo.project.impl.internal.DefaultProjectOpenProcessor;
 import consulo.project.impl.internal.FolderProjectOpenProcessor;
 import consulo.project.internal.ProjectOpenProcessor;
 import consulo.project.internal.ProjectOpenProcessors;
 import consulo.util.lang.lazy.LazyValue;
+import jakarta.inject.Inject;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
@@ -36,17 +38,16 @@ import java.util.List;
 @Singleton
 @ServiceImpl
 public class ProjectOpenProcessorsImpl implements ProjectOpenProcessors {
-    private LazyValue<List<ProjectOpenProcessor>> myDefaultProcessors = LazyValue.notNull(() -> {
-        List<ProjectOpenProcessor> processors = new ArrayList<>(2);
-        processors.add(DefaultProjectOpenProcessor.getInstance());
-        processors.add(new ImportProjectOpenProcessor());
-        return processors;
-    });
+    private List<ProjectOpenProcessor> myProcessors;
 
-    
+    @Inject
+    public ProjectOpenProcessorsImpl(Application application) {
+        myProcessors = List.of(DefaultProjectOpenProcessor.getInstance(), new ImportProjectOpenProcessor(application));
+    }
+
     @Override
     public List<ProjectOpenProcessor> getProcessors() {
-        return myDefaultProcessors.get();
+        return myProcessors;
     }
 
     @Override

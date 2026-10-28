@@ -18,13 +18,13 @@ package consulo.sandboxPlugin.lang.moduleImport;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.application.WriteAction;
-import consulo.module.creation.importing.ModuleImportContext;
-import consulo.module.creation.importing.ModuleImportProvider;
 import consulo.localize.LocalizeValue;
 import consulo.module.ModifiableModuleModel;
 import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.layer.ModifiableRootModel;
+import consulo.module.creation.importing.ModuleImportContext;
+import consulo.module.creation.importing.ModuleImportProvider;
 import consulo.project.Project;
 import consulo.ui.image.Image;
 import consulo.util.concurrent.coroutine.Coroutine;
@@ -32,6 +32,8 @@ import consulo.util.concurrent.coroutine.step.CodeExecution;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.function.Consumer;
 
 /**
@@ -40,41 +42,41 @@ import java.util.function.Consumer;
  */
 @ExtensionImpl
 public class SandModuleImportProvider implements ModuleImportProvider<ModuleImportContext> {
-  
-  @Override
-  public LocalizeValue getName() {
-    return LocalizeValue.localizeTODO("sand");
-  }
 
-  
-  @Override
-  public Image getIcon() {
-    return AllIcons.Nodes.Static;
-  }
+    @Override
+    public LocalizeValue getName() {
+        return LocalizeValue.localizeTODO("sand");
+    }
 
-  @Override
-  public boolean canImport(File fileOrDirectory) {
-    return new File(fileOrDirectory, "sand.txt").exists();
-  }
 
-  @Override
-  public boolean isOnlyForNewImport() {
-    return false;
-  }
+    @Override
+    public Image getIcon() {
+        return AllIcons.Nodes.Static;
+    }
 
-  @Override
-  public Coroutine<Object, Object> process(ModuleImportContext context, Project project, ModifiableModuleModel model, Consumer<Module> newModuleConsumer) {
-    String path = context.getPath();
+    @Override
+    public boolean canImport(Path fileOrDirectory) {
+        return Files.exists(fileOrDirectory.resolve("sand.txt"));
+    }
 
-    return Coroutine.<Object, Object>first(CodeExecution.<Object, Object>apply(input -> {
-      Module module = model.newModule(context.getName(), path);
+    @Override
+    public boolean isOnlyForNewImport() {
+        return false;
+    }
 
-      ModifiableRootModel modifiableModel = ModuleRootManager.getInstance(module).getModifiableModel();
-      modifiableModel.addContentEntry(VirtualFileUtil.pathToUrl(path));
-      WriteAction.runAndWait(modifiableModel::commit);
+    @Override
+    public Coroutine<Object, Object> process(ModuleImportContext context, Project project, ModifiableModuleModel model, Consumer<Module> newModuleConsumer) {
+        String path = context.getPath();
 
-      newModuleConsumer.accept(module);
-      return input;
-    }));
-  }
+        return Coroutine.<Object, Object>first(CodeExecution.<Object, Object>apply(input -> {
+            Module module = model.newModule(context.getName(), path);
+
+            ModifiableRootModel modifiableModel = ModuleRootManager.getInstance(module).getModifiableModel();
+            modifiableModel.addContentEntry(VirtualFileUtil.pathToUrl(path));
+            WriteAction.runAndWait(modifiableModel::commit);
+
+            newModuleConsumer.accept(module);
+            return input;
+        }));
+    }
 }

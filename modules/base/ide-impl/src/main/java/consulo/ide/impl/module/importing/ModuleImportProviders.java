@@ -26,7 +26,7 @@ import java.util.List;
  * @since 2017-01-30
  */
 public class ModuleImportProviders {
-    
+    @Deprecated
     public static List<ModuleImportProvider> getExtensions(boolean forImportAction) {
         List<ModuleImportProvider> list = new ArrayList<>();
         Application.get().getExtensionPoint(ModuleImportProvider.class).forEachExtensionSafe(provider -> {

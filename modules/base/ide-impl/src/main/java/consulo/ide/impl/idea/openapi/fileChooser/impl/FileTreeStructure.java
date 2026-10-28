@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.openapi.fileChooser.impl;
 
+import consulo.component.util.Iconable;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.node.FileElement;
 import consulo.fileChooser.node.FileNodeDescriptor;
@@ -28,6 +29,7 @@ import consulo.ui.image.Image;
 import consulo.util.collection.ArrayUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 import consulo.virtualFileSystem.archive.ArchiveFileType;
 import org.jspecify.annotations.Nullable;
@@ -187,7 +189,7 @@ public class FileTreeStructure extends AbstractTreeStructure {
     public NodeDescriptor createDescriptor(Object element, @Nullable NodeDescriptor parentDescriptor) {
         LOG.assertTrue(element instanceof FileElement, element.getClass().getName());
         VirtualFile file = ((FileElement) element).getFile();
-        Image icon = file == null ? null : myChooserDescriptor.getIcon(file);
+        Image icon = file == null ? null : VirtualFileManager.getInstance().getFileIcon(file, null, Iconable.ICON_FLAG_READ_STATUS);
         String name = file == null ? null : myChooserDescriptor.getName(file);
         String comment = file == null ? null : myChooserDescriptor.getComment(file);
 

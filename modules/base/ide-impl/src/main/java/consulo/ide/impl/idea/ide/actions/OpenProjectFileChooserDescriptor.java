@@ -15,10 +15,9 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.application.Application;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.node.FileElement;
-import consulo.project.Project;
+import consulo.project.impl.internal.DefaultProjectOpenProcessor;
 import consulo.project.internal.ProjectOpenProcessor;
 import consulo.project.internal.ProjectOpenProcessors;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -61,22 +60,10 @@ public class OpenProjectFileChooserDescriptor extends FileChooserDescriptor {
     }
 
     @Override
-    public Image getIcon(VirtualFile file) {
-        if (isProjectDirectory(file)) {
-            return dressIcon(file, Application.get().getIcon());
-        }
-        Image icon = getProcessorIcon(file);
-        return icon != null ? dressIcon(file, icon) : super.getIcon(file);
-    }
-
-    private @Nullable Image getProcessorIcon(VirtualFile virtualFile) {
-        Path path = toNioPath(virtualFile);
-        if (path == null) {
-            return null;
-        }
-        ProjectOpenProcessor provider = ProjectOpenProcessors.getInstance().findProcessor(path);
+    public Image getIcon(Path file) {
+        ProjectOpenProcessor provider = ProjectOpenProcessors.getInstance().findProcessor(file);
         if (provider != null) {
-            return provider.getIcon(path);
+            return provider.getIcon(file);
         }
         return null;
     }
@@ -129,7 +116,7 @@ public class OpenProjectFileChooserDescriptor extends FileChooserDescriptor {
         if (path.getParent() == null) {
             return false;
         }
-        return Files.isDirectory(path) && Files.exists(path.resolve(Project.DIRECTORY_STORE_FOLDER));
+        return Files.isDirectory(path) && DefaultProjectOpenProcessor.getInstance().canOpenProject(path);
     }
 
     private static boolean isProjectDirectory(VirtualFile virtualFile) {
@@ -138,6 +125,8 @@ public class OpenProjectFileChooserDescriptor extends FileChooserDescriptor {
             return false;
         }
         // NOTE: For performance reasons, it's very important not to iterate through all of the children here.
-        return virtualFile.isDirectory() && virtualFile.isValid() && virtualFile.findChild(Project.DIRECTORY_STORE_FOLDER) != null;
+        return virtualFile.isDirectory()
+            && virtualFile.isValid()
+            && DefaultProjectOpenProcessor.getInstance().canOpenProject(virtualFile.toNioPath());
     }
 }

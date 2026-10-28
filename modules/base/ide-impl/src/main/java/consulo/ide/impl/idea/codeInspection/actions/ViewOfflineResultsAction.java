@@ -60,6 +60,8 @@ import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
 import javax.swing.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.function.Supplier;
 
@@ -95,8 +97,8 @@ public class ViewOfflineResultsAction extends LegacyDumbAwareAction {
 
         FileChooserDescriptor descriptor = new FileChooserDescriptor(false, true, false, false, false, false) {
             @Override
-            public Image getIcon(VirtualFile file) {
-                if (file.isDirectory() && file.findChild(InspectionApplication.DESCRIPTIONS + ".xml") != null) {
+            public Image getIcon(Path file) {
+                if (Files.isDirectory(file) && Files.exists(file.resolve(InspectionApplication.DESCRIPTIONS + ".xml"))) {
                     return PlatformIconGroup.nodesInspectionresults();
                 }
                 return super.getIcon(file);

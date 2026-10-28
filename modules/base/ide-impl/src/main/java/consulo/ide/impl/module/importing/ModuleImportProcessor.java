@@ -24,6 +24,7 @@ import consulo.module.creation.importing.ModuleImportContext;
 import consulo.module.creation.importing.ModuleImportProvider;
 import consulo.project.Project;
 import consulo.ui.MessageBoxes;
+import consulo.ui.UIAccess;
 import consulo.ui.ex.dialog.DialogService;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
@@ -37,6 +38,7 @@ import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jspecify.annotations.Nullable;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
@@ -63,24 +65,26 @@ public class ModuleImportProcessor {
 
         FileChooserDescriptor descriptor = ObjectUtil.notNull(chooserDescriptor, createAllImportDescriptor(isModuleImport));
 
-        VirtualFile toSelect = null;
+        Path toSelect = null;
         String lastLocation = ApplicationPropertiesComponent.getInstance().getValue(LAST_IMPORTED_LOCATION);
         if (lastLocation != null) {
-            toSelect = LocalFileSystem.getInstance().refreshAndFindFileByPath(lastLocation);
+            toSelect = Path.of(lastLocation);
         }
 
         CompletableFuture<Pair<C, ModuleImportProvider<C>>> result = new CompletableFuture<>();
 
-        FileChooser.chooseFile(descriptor, project, toSelect).whenComplete((f, error) -> {
+        UIAccess uiAccess = UIAccess.current();
+
+        FileChooser.choosePath(descriptor, project, toSelect).whenCompleteAsync((f, error) -> {
             if (error != null) {
                 result.completeExceptionally(error);
                 return;
             }
 
-            ApplicationPropertiesComponent.getInstance().setValue(LAST_IMPORTED_LOCATION, f.getPath());
+            ApplicationPropertiesComponent.getInstance().setValue(LAST_IMPORTED_LOCATION, f.toString());
 
             showImportChooser(project, f, result);
-        });
+        }, uiAccess);
 
         return result;
     }
@@ -88,9 +92,9 @@ public class ModuleImportProcessor {
     private static FileChooserDescriptor createAllImportDescriptor(boolean isModuleImport) {
         FileChooserDescriptor descriptor = new FileChooserDescriptor(true, true, true, true, false, false) {
             @Override
-            public Image getIcon(VirtualFile file) {
+            public Image getIcon(Path file) {
                 for (ModuleImportProvider importProvider : ModuleImportProviders.getExtensions(isModuleImport)) {
-                    if (importProvider.canImport(VirtualFileUtil.virtualToIoFile(file))) {
+                    if (importProvider.canImport(file)) {
                         return importProvider.getIcon();
                     }
                 }
@@ -105,31 +109,30 @@ public class ModuleImportProcessor {
     @RequiredUIAccess
     public static <C extends ModuleImportContext> void showImportChooser(
         @Nullable Project project,
-        VirtualFile file,
+        Path fileOrDir,
         CompletableFuture<Pair<C, ModuleImportProvider<C>>> result
     ) {
         boolean isModuleImport = project != null;
 
         List<ModuleImportProvider> providers = ModuleImportProviders.getExtensions(isModuleImport);
 
-        File ioFile = VirtualFileUtil.virtualToIoFile(file);
-        List<ModuleImportProvider> availableProviders = ContainerUtil.filter(providers, provider -> provider.canImport(ioFile));
+        List<ModuleImportProvider> availableProviders = ContainerUtil.filter(providers, provider -> provider.canImport(fileOrDir));
         if (availableProviders.isEmpty()) {
             MessageBoxes.okError(
-                LocalizeValue.localizeTODO("Cannot import anything from '" + FileUtil.toSystemDependentName(file.getPath()) + "'")
+                LocalizeValue.localizeTODO("Cannot import anything from '" + FileUtil.toSystemDependentName(fileOrDir.toString()) + "'")
             ).showAsync();
             result.completeExceptionally(new CancellationException());
             return;
         }
 
-        showImportChooser(project, file, providers, result);
+        showImportChooser(project, fileOrDir, providers, result);
     }
 
     @RequiredUIAccess
     @SuppressWarnings("unchecked")
     public static <C extends ModuleImportContext> void showImportChooser(
         @Nullable Project project,
-        VirtualFile file,
+        Path file,
         List<ModuleImportProvider> providers,
         CompletableFuture<Pair<C, ModuleImportProvider<C>>> result
     ) {
@@ -161,7 +164,7 @@ public class ModuleImportProcessor {
     @RequiredUIAccess
     private static <C extends ModuleImportContext> void showImportWizard(
         @Nullable Project project,
-        VirtualFile targetFile,
+        Path targetFile,
         ModuleImportProvider<C> moduleImportProvider,
         CompletableFuture<Pair<C, ModuleImportProvider<C>>> result
     ) {

@@ -15,8 +15,7 @@
  */
 package consulo.ide.impl.module.importing;
 
-import consulo.application.concurrent.coroutine.WriteLock;
-import consulo.disposer.Disposer;
+import consulo.application.Application;
 import consulo.ide.localize.IdeLocalize;
 import consulo.module.creation.NewOrImportModuleUtil;
 import consulo.module.creation.importing.ModuleImportContext;
@@ -26,10 +25,10 @@ import consulo.project.ProjectOpenContext;
 import consulo.project.impl.internal.DefaultProjectOpenProcessor;
 import consulo.project.internal.ProjectOpenProcessor;
 import consulo.ui.MessageBoxBuilder;
+import consulo.ui.MessageButtonRole;
 import consulo.ui.UIAccess;
 import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
-import consulo.util.concurrent.coroutine.Continuation;
 import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.concurrent.coroutine.CoroutineStep;
 import consulo.util.concurrent.coroutine.step.CallSubroutine;
@@ -49,226 +48,193 @@ import java.io.File;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import consulo.ui.MessageButtonRole;
 
 /**
  * @author VISTALL
  * @since 31-Jan-17
  */
 public class ImportProjectOpenProcessor extends ProjectOpenProcessor {
-  private static final Key<ImportTarget> IMPORT_TARGET = Key.create("ImportProjectOpenProcessor.target");
+    private static final Key<ImportTarget> IMPORT_TARGET = Key.create("ImportProjectOpenProcessor.target");
 
-  private final List<ModuleImportProvider> myProviders;
+    private final Application myApplication;
 
-  public ImportProjectOpenProcessor() {
-    myProviders = ModuleImportProviders.getExtensions(false);
-  }
-
-  @Override
-  public @Nullable Image getIcon(Path file) {
-    File ioFile = toIoFile(file);
-    if (ioFile == null) {
-      return null;
-    }
-    for (ModuleImportProvider provider : myProviders) {
-      if (provider.canImport(ioFile)) {
-        return provider.getIcon();
-      }
-    }
-    return null;
-  }
-
-  @Override
-  public boolean canOpenProject(Path file) {
-    File ioFile = toIoFile(file);
-    if (ioFile == null) {
-      return false;
-    }
-    for (ModuleImportProvider provider : myProviders) {
-      if (provider.canImport(ioFile)) {
-        return true;
-      }
+    public ImportProjectOpenProcessor(Application application) {
+        myApplication = application;
     }
 
-    return false;
-  }
-
-  private static @Nullable File toIoFile(Path path) {
-    try {
-      return path.toFile();
-    }
-    catch (UnsupportedOperationException e) {
-      return null;
-    }
-  }
-
-  @Override
-  public <I> Coroutine<I, VirtualFile> prepareSteps(UIAccess uiAccess,
-                                                    ProjectOpenContext openContext,
-                                                    Coroutine<I, VirtualFile> in) {
-    return in
-      // Build import request (available providers + expected project path)
-      .then(CodeExecution.<VirtualFile, ImportRequest>apply(this::createRequest))
-      // Ask "open existing or reimport?" when an existing project is present
-      .then(askOpenOrReimport(uiAccess))
-      // Reimport -> run import wizard; open existing -> reuse resolved directory
-      .then(Condition.doIfElse(
-        ImportRequest::needsImport,
-        runImport(uiAccess),
-        CodeExecution.<ImportRequest, VirtualFile>apply(request -> request.openExistingDir)))
-      // Cancel check (null means user cancelled)
-      .then(CodeExecution.<VirtualFile, VirtualFile>apply((virtualFile, continuation) -> {
-        if (virtualFile == null) {
-          continuation.cancel();
-          return null;
-        }
-        return virtualFile;
-      }));
-  }
-
-  private ImportRequest createRequest(VirtualFile virtualFile) {
-    File ioPath = VirtualFileUtil.virtualToIoFile(virtualFile);
-
-    List<ModuleImportProvider> targetProviders =
-      ContainerUtil.filter(myProviders, moduleImportProvider -> moduleImportProvider.canImport(ioPath));
-
-    if (targetProviders.isEmpty()) {
-      throw new IllegalArgumentException("must be not empty");
+    @Override
+    public @Nullable Image getIcon(Path file) {
+        return myApplication.getExtensionPoint(ModuleImportProvider.class).computeSafeIfAny((p) -> p.canImport(file) ? p.getIcon() : null);
     }
 
-    String expectedProjectPath = ModuleImportProvider.getDefaultPath(virtualFile);
-    return new ImportRequest(virtualFile, targetProviders, expectedProjectPath);
-  }
+    @Override
+    public boolean canOpenProject(Path file) {
+        return myApplication.getExtensionPoint(ModuleImportProvider.class).findFirstSafe((p) -> p.canImport(file)) != null;
+    }
 
-  private CoroutineStep<ImportRequest, ImportRequest> askOpenOrReimport(UIAccess uiAccess) {
-    return CompletableFutureStep.await(request -> {
+    @Override
+    public <I> Coroutine<I, VirtualFile> prepareSteps(UIAccess uiAccess,
+                                                      ProjectOpenContext openContext,
+                                                      Coroutine<I, VirtualFile> in) {
+        return in
+            // Build import request (available providers + expected project path)
+            .then(CodeExecution.<VirtualFile, ImportRequest>apply(o -> createRequest(o.toNioPath())))
+            // Ask "open existing or reimport?" when an existing project is present
+            .then(askOpenOrReimport(uiAccess))
+            // Reimport -> run import wizard; open existing -> reuse resolved directory
+            .then(Condition.doIfElse(
+                ImportRequest::needsImport,
+                runImport(uiAccess),
+                CodeExecution.<ImportRequest, VirtualFile>apply(request -> request.openExistingDir)))
+            // Cancel check (null means user cancelled)
+            .then(CodeExecution.<VirtualFile, VirtualFile>apply((virtualFile, continuation) -> {
+                if (virtualFile == null) {
+                    continuation.cancel();
+                    return null;
+                }
+                return virtualFile;
+            }));
+    }
 
-      if (!DefaultProjectOpenProcessor.getInstance().canOpenProject(Path.of(request.expectedProjectPath))) {
-        return CompletableFuture.completedFuture(request);
-      }
+    private ImportRequest createRequest(Path fileOrDir) {
+        List<ModuleImportProvider> providers =
+            myApplication.getExtensionPoint(ModuleImportProvider.class).collectFiltered(p -> p.canImport(fileOrDir));
 
-      CompletableFuture<ImportRequest> future = new CompletableFuture<>();
-      uiAccess.give(() -> createReimportAlert(request).showAsync().whenComplete((threeState, error) -> {
-        if (error != null) {
-          return;
+        if (providers.isEmpty()) {
+            throw new IllegalArgumentException("must be not empty");
         }
 
-        switch (threeState) {
-          case YES:
-            // Open existing project — resolve VirtualFile for the project directory
-            request.openExistingDir = LocalFileSystem.getInstance().refreshAndFindFileByPath(request.expectedProjectPath);
-            break;
-          case NO:
-            // Reimport — leave openExistingDir null so needsImport() is true
-            break;
-          case UNSURE:
-            request.cancelled = true;
-            break;
-        }
-        future.complete(request);
-      }));
-      return future;
-    });
-  }
-
-  private MessageBoxBuilder<ThreeState> createReimportAlert(ImportRequest request) {
-    File ioPath = VirtualFileUtil.virtualToIoFile(request.file);
-
-    MessageBoxBuilder<ThreeState> alert = MessageBoxBuilder.create();
-    alert.title(IdeLocalize.titleOpenProject());
-    alert.text(IdeLocalize.projectImportOpenExisting(
-      "an existing project",
-      FileUtil.toSystemDependentName(ioPath.getPath()),
-      request.file.getName()
-    ));
-    alert.asQuestion();
-
-    alert.button(MessageButtonRole.YES, IdeLocalize.projectImportOpenExistingOpenexisting(), ThreeState.YES);
-    alert.asDefaultButton();
-
-    alert.button(MessageButtonRole.NO, IdeLocalize.projectImportOpenExistingReimport(), ThreeState.NO);
-
-    alert.button(MessageButtonRole.CANCEL, ThreeState.UNSURE);
-    alert.asExitButton();
-    return alert;
-  }
-
-  private CoroutineStep<ImportRequest, VirtualFile> runImport(UIAccess uiAccess) {
-    return CallSubroutine.<ImportRequest, VirtualFile>call(continuation -> importCoroutine(uiAccess));
-  }
-
-  private Coroutine<ImportRequest, VirtualFile> importCoroutine(UIAccess uiAccess) {
-    return Coroutine.<ImportRequest, ImportTarget>first(
-        CompletableFutureStep.await(request -> showImportChooser(request, uiAccess)))
-      // Stash the chosen target for the import subroutine
-      .then(CodeExecution.<ImportTarget, ImportTarget>apply((target, continuation) -> {
-        if (target != null) {
-          continuation.putCopyableUserData(IMPORT_TARGET, target);
-        }
-        return target;
-      }))
-      // A target was chosen -> import; otherwise cancelled -> null
-      .then(Condition.doIfElse(
-        target -> target != null,
-        importProjectStep(uiAccess),
-        CodeExecution.<ImportTarget, VirtualFile>apply(target -> null)));
-  }
-
-  private CompletableFuture<ImportTarget> showImportChooser(ImportRequest request, UIAccess uiAccess) {
-    CompletableFuture<ImportTarget> future = new CompletableFuture<>();
-    uiAccess.give(() -> {
-      CompletableFuture<Pair<ModuleImportContext, ModuleImportProvider<ModuleImportContext>>> result = new CompletableFuture<>();
-      ModuleImportProcessor.showImportChooser(null, request.file, request.providers, result);
-
-      result.whenComplete((pair, error) -> {
-        if (error != null) {
-          future.complete(null);
-        }
-        else {
-          future.complete(new ImportTarget(pair.getFirst(), pair.getSecond()));
-        }
-      });
-    });
-    return future;
-  }
-
-  private CoroutineStep<ImportTarget, VirtualFile> importProjectStep(UIAccess uiAccess) {
-    return CallSubroutine.<ImportTarget, VirtualFile>call(continuation -> importProjectSubroutine(uiAccess));
-  }
-
-  private Coroutine<ImportTarget, VirtualFile> importProjectSubroutine(UIAccess uiAccess) {
-    return Coroutine.<ImportTarget, Void>first(CodeExecution.<ImportTarget, Void>apply(target -> null))
-      // Create the temp project + module via the import provider
-      .then(CallSubroutine.<Void, Project>call(continuation -> {
-        ImportTarget target = continuation.getCopyableUserData(IMPORT_TARGET);
-        return NewOrImportModuleUtil.importProject(target.context(), target.provider(), uiAccess);
-      }))
-      .then(CodeExecution.<Project, VirtualFile>apply((project, continuation) -> {
-        // set file as context var - so we can try to reopen it
-        continuation.putCopyableUserData(Project.KEY, project);
-        return project.getBaseDir();
-      }));
-  }
-
-  private record ImportTarget(ModuleImportContext context, ModuleImportProvider<ModuleImportContext> provider) {
-  }
-
-  private static class ImportRequest {
-    private final VirtualFile file;
-    private final List<ModuleImportProvider> providers;
-    private final String expectedProjectPath;
-
-    private @Nullable VirtualFile openExistingDir;
-    private boolean cancelled;
-
-    ImportRequest(VirtualFile file, List<ModuleImportProvider> providers, String expectedProjectPath) {
-      this.file = file;
-      this.providers = providers;
-      this.expectedProjectPath = expectedProjectPath;
+        String expectedProjectPath = ModuleImportProvider.getDefaultPath(fileOrDir);
+        return new ImportRequest(fileOrDir, providers, expectedProjectPath);
     }
 
-    boolean needsImport() {
-      return !cancelled && openExistingDir == null;
+    private CoroutineStep<ImportRequest, ImportRequest> askOpenOrReimport(UIAccess uiAccess) {
+        return CompletableFutureStep.await(request -> {
+
+            if (!DefaultProjectOpenProcessor.getInstance().canOpenProject(Path.of(request.expectedProjectPath))) {
+                return CompletableFuture.completedFuture(request);
+            }
+
+            CompletableFuture<ImportRequest> future = new CompletableFuture<>();
+            uiAccess.give(() -> createReimportAlert(request).showAsync().whenComplete((threeState, error) -> {
+                if (error != null) {
+                    return;
+                }
+
+                switch (threeState) {
+                    case YES:
+                        // Open existing project — resolve VirtualFile for the project directory
+                        request.openExistingDir = LocalFileSystem.getInstance().refreshAndFindFileByPath(request.expectedProjectPath);
+                        break;
+                    case NO:
+                        // Reimport — leave openExistingDir null so needsImport() is true
+                        break;
+                    case UNSURE:
+                        request.cancelled = true;
+                        break;
+                }
+                future.complete(request);
+            }));
+            return future;
+        });
     }
-  }
+
+    private MessageBoxBuilder<ThreeState> createReimportAlert(ImportRequest request) {
+        MessageBoxBuilder<ThreeState> alert = MessageBoxBuilder.create();
+        alert.title(IdeLocalize.titleOpenProject());
+        alert.text(IdeLocalize.projectImportOpenExisting(
+            "an existing project",
+            FileUtil.toSystemDependentName(request.file.toString()),
+            request.file.getFileName().toString()
+        ));
+        alert.asQuestion();
+
+        alert.button(MessageButtonRole.YES, IdeLocalize.projectImportOpenExistingOpenexisting(), ThreeState.YES);
+        alert.asDefaultButton();
+
+        alert.button(MessageButtonRole.NO, IdeLocalize.projectImportOpenExistingReimport(), ThreeState.NO);
+
+        alert.button(MessageButtonRole.CANCEL, ThreeState.UNSURE);
+        alert.asExitButton();
+        return alert;
+    }
+
+    private CoroutineStep<ImportRequest, VirtualFile> runImport(UIAccess uiAccess) {
+        return CallSubroutine.<ImportRequest, VirtualFile>call(continuation -> importCoroutine(uiAccess));
+    }
+
+    private Coroutine<ImportRequest, VirtualFile> importCoroutine(UIAccess uiAccess) {
+        return Coroutine.<ImportRequest, ImportTarget>first(
+                CompletableFutureStep.await(request -> showImportChooser(request, uiAccess)))
+            // Stash the chosen target for the import subroutine
+            .then(CodeExecution.<ImportTarget, ImportTarget>apply((target, continuation) -> {
+                if (target != null) {
+                    continuation.putCopyableUserData(IMPORT_TARGET, target);
+                }
+                return target;
+            }))
+            // A target was chosen -> import; otherwise cancelled -> null
+            .then(Condition.doIfElse(
+                target -> target != null,
+                importProjectStep(uiAccess),
+                CodeExecution.<ImportTarget, VirtualFile>apply(target -> null)));
+    }
+
+    private CompletableFuture<ImportTarget> showImportChooser(ImportRequest request, UIAccess uiAccess) {
+        CompletableFuture<ImportTarget> future = new CompletableFuture<>();
+        uiAccess.give(() -> {
+            CompletableFuture<Pair<ModuleImportContext, ModuleImportProvider<ModuleImportContext>>> result = new CompletableFuture<>();
+            ModuleImportProcessor.showImportChooser(null, request.file, request.providers, result);
+
+            result.whenComplete((pair, error) -> {
+                if (error != null) {
+                    future.complete(null);
+                }
+                else {
+                    future.complete(new ImportTarget(pair.getFirst(), pair.getSecond()));
+                }
+            });
+        });
+        return future;
+    }
+
+    private CoroutineStep<ImportTarget, VirtualFile> importProjectStep(UIAccess uiAccess) {
+        return CallSubroutine.<ImportTarget, VirtualFile>call(continuation -> importProjectSubroutine(uiAccess));
+    }
+
+    private Coroutine<ImportTarget, VirtualFile> importProjectSubroutine(UIAccess uiAccess) {
+        return Coroutine.<ImportTarget, Void>first(CodeExecution.<ImportTarget, Void>apply(target -> null))
+            // Create the temp project + module via the import provider
+            .then(CallSubroutine.<Void, Project>call(continuation -> {
+                ImportTarget target = continuation.getCopyableUserData(IMPORT_TARGET);
+                return NewOrImportModuleUtil.importProject(target.context(), target.provider(), uiAccess);
+            }))
+            .then(CodeExecution.<Project, VirtualFile>apply((project, continuation) -> {
+                // set file as context var - so we can try to reopen it
+                continuation.putCopyableUserData(Project.KEY, project);
+                return project.getBaseDir();
+            }));
+    }
+
+    private record ImportTarget(ModuleImportContext context, ModuleImportProvider<ModuleImportContext> provider) {
+    }
+
+    private static class ImportRequest {
+        private final Path file;
+        private final List<ModuleImportProvider> providers;
+        private final String expectedProjectPath;
+
+        private @Nullable VirtualFile openExistingDir;
+        private boolean cancelled;
+
+        ImportRequest(Path file, List<ModuleImportProvider> providers, String expectedProjectPath) {
+            this.file = file;
+            this.providers = providers;
+            this.expectedProjectPath = expectedProjectPath;
+        }
+
+        boolean needsImport() {
+            return !cancelled && openExistingDir == null;
+        }
+    }
 }

@@ -27,6 +27,7 @@ import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Singleton;
 
+import java.nio.file.Path;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -47,7 +48,7 @@ public class ModuleCreationHelperImpl implements ModuleCreationHelper {
     @RequiredUIAccess
     @Override
     public <C extends ModuleImportContext> void showImportChooser(Project project,
-                                                                  VirtualFile file,
+                                                                  Path file,
                                                                   CompletableFuture<Pair<C, ModuleImportProvider<C>>> result) {
         ModuleImportProcessor.showImportChooser(project, file, result);
     }
@@ -55,7 +56,7 @@ public class ModuleCreationHelperImpl implements ModuleCreationHelper {
     @RequiredUIAccess
     @Override
     public <C extends ModuleImportContext> void showImportChooser(Project project,
-                                                                  VirtualFile file,
+                                                                  Path file,
                                                                   List<ModuleImportProvider> providers,
                                                                   CompletableFuture<Pair<C, ModuleImportProvider<C>>> result) {
         ModuleImportProcessor.showImportChooser(project, file, providers, result);

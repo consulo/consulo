@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.openapi.fileChooser.tree;
 
 import consulo.application.Application;
+import consulo.component.util.Iconable;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.node.FileElement;
 import consulo.ide.impl.idea.ui.tree.MapBasedTree;
@@ -34,6 +35,7 @@ import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VFileProperty;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
 import consulo.virtualFileSystem.event.*;
 import consulo.virtualFileSystem.internal.InternalNewVirtualFile;
@@ -416,7 +418,7 @@ public final class FileTreeModel extends AbstractTreeModel implements Identifiab
                 return updateName(state.descriptor.getTitle().getNullIfEmpty());
             }
 
-            Image icon = state.descriptor.getIcon(file);
+            Image icon = VirtualFileManager.getInstance().getFileIcon(file, null, Iconable.ICON_FLAG_READ_STATUS);
             String name = state.descriptor.getName(file);
             String comment = state.descriptor.getComment(file);
             if (name == null || comment == null) {

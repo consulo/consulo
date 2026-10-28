@@ -17,27 +17,28 @@ package consulo.sandboxPlugin.lang.moduleImport;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
+import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
 import consulo.module.ModifiableModuleModel;
 import consulo.module.Module;
-import consulo.project.Project;
-import consulo.disposer.Disposable;
-import consulo.util.concurrent.coroutine.Coroutine;
-import consulo.localize.LocalizeValue;
 import consulo.module.creation.importing.ModuleImportContext;
 import consulo.module.creation.importing.ModuleImportProvider;
 import consulo.module.creation.ui.UnifiedProjectOrModuleNameStep;
+import consulo.project.Project;
 import consulo.ui.ColorBox;
 import consulo.ui.Component;
 import consulo.ui.ListBox;
 import consulo.ui.TextBox;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.wizard.WizardStep;
 import consulo.ui.image.Image;
 import consulo.ui.layout.LabeledLayout;
 import consulo.ui.style.StandardColors;
 import consulo.ui.util.FormBuilder;
-import consulo.ui.ex.wizard.WizardStep;
+import consulo.util.concurrent.coroutine.Coroutine;
 
-import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.function.Consumer;
 
 /**
@@ -46,52 +47,52 @@ import java.util.function.Consumer;
  */
 @ExtensionImpl
 public class Sand2ModuleImportProvider implements ModuleImportProvider<ModuleImportContext> {
-  
-  @Override
-  public LocalizeValue getName() {
-    return LocalizeValue.localizeTODO("sand2");
-  }
 
-  
-  @Override
-  public Image getIcon() {
-    return AllIcons.Nodes.ClassInitializer;
-  }
+    @Override
+    public LocalizeValue getName() {
+        return LocalizeValue.localizeTODO("sand2");
+    }
 
-  @Override
-  public boolean canImport(File fileOrDirectory) {
-    return new File(fileOrDirectory, "sand2.txt").exists();
-  }
 
-  @Override
-  public boolean isOnlyForNewImport() {
-    return false;
-  }
+    @Override
+    public Image getIcon() {
+        return AllIcons.Nodes.ClassInitializer;
+    }
 
-  @Override
-  public void buildSteps(Consumer<WizardStep<ModuleImportContext>> consumer, ModuleImportContext context) {
-    consumer.accept(new UnifiedProjectOrModuleNameStep<ModuleImportContext>(context) {
-      @RequiredUIAccess
-      @Override
-      protected void extend(FormBuilder builder, Disposable uiDisposable) {
-        builder.addLabeled(LocalizeValue.localizeTODO("Test"), ColorBox.create(StandardColors.RED));
+    @Override
+    public boolean canImport(Path fileOrDirectory) {
+        return Files.exists(fileOrDirectory.resolve("sand2.txt"));
+    }
 
-        builder.addBottom(ListBox.create("Test1", "Test2"));
-      }
-    });
+    @Override
+    public boolean isOnlyForNewImport() {
+        return false;
+    }
 
-    consumer.accept(new WizardStep<ModuleImportContext>() {
-      @RequiredUIAccess
-      
-      @Override
-      public Component getComponent(ModuleImportContext context, Disposable uiDisposable) {
-        return LabeledLayout.create(LocalizeValue.localizeTODO("Some Text"), TextBox.create("Test Value"));
-      }
-    });
-  }
+    @Override
+    public void buildSteps(Consumer<WizardStep<ModuleImportContext>> consumer, ModuleImportContext context) {
+        consumer.accept(new UnifiedProjectOrModuleNameStep<ModuleImportContext>(context) {
+            @RequiredUIAccess
+            @Override
+            protected void extend(FormBuilder builder, Disposable uiDisposable) {
+                builder.addLabeled(LocalizeValue.localizeTODO("Test"), ColorBox.create(StandardColors.RED));
 
-  @Override
-  public Coroutine<Object, Object> process(ModuleImportContext context, Project project, ModifiableModuleModel model, Consumer<Module> newModuleConsumer) {
-    return Coroutine.empty();
-  }
+                builder.addBottom(ListBox.create("Test1", "Test2"));
+            }
+        });
+
+        consumer.accept(new WizardStep<ModuleImportContext>() {
+            @RequiredUIAccess
+
+            @Override
+            public Component getComponent(ModuleImportContext context, Disposable uiDisposable) {
+                return LabeledLayout.create(LocalizeValue.localizeTODO("Some Text"), TextBox.create("Test Value"));
+            }
+        });
+    }
+
+    @Override
+    public Coroutine<Object, Object> process(ModuleImportContext context, Project project, ModifiableModuleModel model, Consumer<Module> newModuleConsumer) {
+        return Coroutine.empty();
+    }
 }

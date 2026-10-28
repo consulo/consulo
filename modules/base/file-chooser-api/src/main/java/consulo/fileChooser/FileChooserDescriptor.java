@@ -37,444 +37,440 @@ import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import org.jspecify.annotations.Nullable;
 
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 import java.util.function.Predicate;
 
 /**
  * @see FileChooserDescriptorFactory
  */
 public class FileChooserDescriptor extends UserDataHolderBase implements Cloneable {
-  private final boolean myChooseFiles;
-  private final boolean myChooseFolders;
-  private final boolean myChooseJars;
-  private final boolean myChooseJarsAsFiles;
-  private final boolean myChooseJarContents;
-  private final boolean myChooseMultiple;
+    private final boolean myChooseFiles;
+    private final boolean myChooseFolders;
+    private final boolean myChooseJars;
+    private final boolean myChooseJarsAsFiles;
+    private final boolean myChooseJarContents;
+    private final boolean myChooseMultiple;
 
-  private LocalizeValue myTitle = FileChooserLocalize.fileChooserDefaultTitle();
-  
-  private LocalizeValue myDescription = LocalizeValue.empty();
+    private LocalizeValue myTitle = FileChooserLocalize.fileChooserDefaultTitle();
 
-  private boolean myHideIgnored = true;
-  private final List<VirtualFile> myRoots = new ArrayList<>();
-  private boolean myShowFileSystemRoots = true;
-  private boolean myTreeRootVisible = false;
-  private boolean myShowHiddenFiles = false;
-  private @Nullable Predicate<VirtualFile> myFileFilter = null;
-  private @Nullable Pair<LocalizeValue, List<String>> myExtensionFilter = null;
-  private @Nullable ThrowableConsumer<List<VirtualFile>, Exception> myVirtualFilesValidator = null;
-  private @Nullable String myForceOperateDialogProviderId = null;
-  private @Nullable Platform myPlatform = null;
-  private boolean myAnyPlatform = false;
+    private LocalizeValue myDescription = LocalizeValue.empty();
 
-  /**
-   * Creates new instance. Use methods from {@link FileChooserDescriptorFactory} for most used descriptors.
-   *
-   * @param chooseFiles       controls whether files can be chosen
-   * @param chooseFolders     controls whether folders can be chosen
-   * @param chooseJars        controls whether .jar files can be chosen
-   * @param chooseJarsAsFiles controls whether .jar files will be returned as files or as folders
-   * @param chooseJarContents controls whether .jar file contents can be chosen
-   * @param chooseMultiple    controls how many files can be chosen
-   */
-  public FileChooserDescriptor(boolean chooseFiles, boolean chooseFolders, boolean chooseJars, boolean chooseJarsAsFiles, boolean chooseJarContents, boolean chooseMultiple) {
-    myChooseFiles = chooseFiles;
-    myChooseFolders = chooseFolders;
-    myChooseJars = chooseJars;
-    myChooseJarsAsFiles = chooseJarsAsFiles;
-    myChooseJarContents = chooseJarContents;
-    myChooseMultiple = chooseMultiple;
-  }
+    private boolean myHideIgnored = true;
+    private final List<VirtualFile> myRoots = new ArrayList<>();
+    private boolean myShowFileSystemRoots = true;
+    private boolean myTreeRootVisible = false;
+    private boolean myShowHiddenFiles = false;
+    private @Nullable Predicate<VirtualFile> myFileFilter = null;
+    private @Nullable Pair<LocalizeValue, List<String>> myExtensionFilter = null;
+    private @Nullable ThrowableConsumer<List<VirtualFile>, Exception> myVirtualFilesValidator = null;
+    private @Nullable String myForceOperateDialogProviderId = null;
+    private @Nullable Platform myPlatform = null;
+    private boolean myAnyPlatform = false;
 
-  public FileChooserDescriptor(FileChooserDescriptor d) {
-    this(d.isChooseFiles(), d.isChooseFolders(), d.isChooseJars(), d.isChooseJarsAsFiles(), d.isChooseJarContents(), d.isChooseMultiple());
-    withTitle(d.getTitle());
-    withDescription(d.getDescription());
-    withHideIgnored(d.isHideIgnored());
-    withRoots(d.getRoots());
-    withShowFileSystemRoots(d.isShowFileSystemRoots());
-    withTreeRootVisible(d.isTreeRootVisible());
-    withShowHiddenFiles(d.isShowHiddenFiles());
-    myPlatform = d.myPlatform;
-    myAnyPlatform = d.myAnyPlatform;
-    myVirtualFilesValidator = d.myVirtualFilesValidator;
-  }
-
-  public boolean isChooseFiles() {
-    return myChooseFiles;
-  }
-
-  public boolean isChooseFolders() {
-    return myChooseFolders;
-  }
-
-  public boolean isChooseJars() {
-    return myChooseJars;
-  }
-
-  public boolean isChooseJarsAsFiles() {
-    return myChooseJarsAsFiles;
-  }
-
-  public boolean isChooseJarContents() {
-    return myChooseJarContents;
-  }
-
-  public boolean isChooseMultiple() {
-    return myChooseMultiple;
-  }
-
-  /**
-   * @deprecated use {@link #isChooseMultiple()} (to be removed in IDEA 15)
-   */
-  @SuppressWarnings("UnusedDeclaration")
-  public boolean getChooseMultiple() {
-    return isChooseMultiple();
-  }
-
-  public LocalizeValue getTitle() {
-    return myTitle;
-  }
-
-  @Deprecated
-  @DeprecationInfo("Use #withTitle(LocalizeValue)")
-  @SuppressWarnings("deprecation")
-  public void setTitle(String title) {
-    withTitle(title);
-  }
-
-  public FileChooserDescriptor withTitle(LocalizeValue title) {
-    myTitle = title;
-    return this;
-  }
-
-  @Deprecated
-  @DeprecationInfo("Use #withTitle(LocalizeValue)")
-  public FileChooserDescriptor withTitle(@Nullable String title) {
-    return withTitle(LocalizeValue.ofNullable(title));
-  }
-
-  @Deprecated
-  @DeprecationInfo("Use #withDescription(LocalizeValue)")
-  @SuppressWarnings("deprecation")
-  public void setDescription(String description) {
-    withDescription(description);
-  }
-
-  public FileChooserDescriptor withDescription(LocalizeValue description) {
-    myDescription = description;
-    return this;
-  }
-
-  @Deprecated
-  @DeprecationInfo("Use #withDescription(LocalizeValue)")
-  public FileChooserDescriptor withDescription(@Nullable String description) {
-    myDescription = LocalizeValue.ofNullable(description);
-    return this;
-  }
-
-  public LocalizeValue getDescription() {
-    return myDescription;
-  }
-
-  public boolean isHideIgnored() {
-    return myHideIgnored;
-  }
-
-  public void setHideIgnored(boolean hideIgnored) {
-    withHideIgnored(hideIgnored);
-  }
-
-  public FileChooserDescriptor withHideIgnored(boolean hideIgnored) {
-    myHideIgnored = hideIgnored;
-    return this;
-  }
-
-  public List<VirtualFile> getRoots() {
-    return Collections.unmodifiableList(myRoots);
-  }
-
-  public void setRoots(VirtualFile... roots) {
-    withRoots(roots);
-  }
-
-  public void setRoots(List<VirtualFile> roots) {
-    withRoots(roots);
-  }
-
-  public FileChooserDescriptor withRoots(VirtualFile... roots) {
-    return withRoots(Arrays.asList(roots));
-  }
-
-  public FileChooserDescriptor withRoots(List<VirtualFile> roots) {
-    myRoots.clear();
-    myRoots.addAll(roots);
-    return this;
-  }
-
-  public boolean isShowFileSystemRoots() {
-    return myShowFileSystemRoots;
-  }
-
-  public void setShowFileSystemRoots(boolean showFileSystemRoots) {
-    withShowFileSystemRoots(showFileSystemRoots);
-  }
-
-  public FileChooserDescriptor withShowFileSystemRoots(boolean showFileSystemRoots) {
-    myShowFileSystemRoots = showFileSystemRoots;
-    return this;
-  }
-
-  public boolean isTreeRootVisible() {
-    return myTreeRootVisible;
-  }
-
-  public FileChooserDescriptor withTreeRootVisible(boolean isTreeRootVisible) {
-    myTreeRootVisible = isTreeRootVisible;
-    return this;
-  }
-
-  /**
-   * @deprecated use {@link #withTreeRootVisible(boolean)} (to be removed in IDEA 15)
-   */
-  @SuppressWarnings("UnusedDeclaration")
-  public FileChooserDescriptor setIsTreeRootVisible(boolean treeRootVisible) {
-    return withTreeRootVisible(treeRootVisible);
-  }
-
-  public boolean isShowHiddenFiles() {
-    return myShowHiddenFiles;
-  }
-
-  public FileChooserDescriptor withShowHiddenFiles(boolean showHiddenFiles) {
-    myShowHiddenFiles = showHiddenFiles;
-    return this;
-  }
-
-  /**
-   * Defines whether file can be chosen or not
-   */
-  @RequiredUIAccess
-  public boolean isFileSelectable(VirtualFile file) {
-    if (file == null) return false;
-
-    if (file.is(VFileProperty.SYMLINK) && file.getCanonicalPath() == null) {
-      return false;
-    }
-    if (file.isDirectory() && myChooseFolders) {
-      return true;
+    /**
+     * Creates new instance. Use methods from {@link FileChooserDescriptorFactory} for most used descriptors.
+     *
+     * @param chooseFiles       controls whether files can be chosen
+     * @param chooseFolders     controls whether folders can be chosen
+     * @param chooseJars        controls whether .jar files can be chosen
+     * @param chooseJarsAsFiles controls whether .jar files will be returned as files or as folders
+     * @param chooseJarContents controls whether .jar file contents can be chosen
+     * @param chooseMultiple    controls how many files can be chosen
+     */
+    public FileChooserDescriptor(boolean chooseFiles, boolean chooseFolders, boolean chooseJars, boolean chooseJarsAsFiles, boolean chooseJarContents, boolean chooseMultiple) {
+        myChooseFiles = chooseFiles;
+        myChooseFolders = chooseFolders;
+        myChooseJars = chooseJars;
+        myChooseJarsAsFiles = chooseJarsAsFiles;
+        myChooseJarContents = chooseJarContents;
+        myChooseMultiple = chooseMultiple;
     }
 
-    if (myFileFilter != null && !file.isDirectory()) {
-      return myFileFilter.test(file);
+    public FileChooserDescriptor(FileChooserDescriptor d) {
+        this(d.isChooseFiles(), d.isChooseFolders(), d.isChooseJars(), d.isChooseJarsAsFiles(), d.isChooseJarContents(), d.isChooseMultiple());
+        withTitle(d.getTitle());
+        withDescription(d.getDescription());
+        withHideIgnored(d.isHideIgnored());
+        withRoots(d.getRoots());
+        withShowFileSystemRoots(d.isShowFileSystemRoots());
+        withTreeRootVisible(d.isTreeRootVisible());
+        withShowHiddenFiles(d.isShowHiddenFiles());
+        myPlatform = d.myPlatform;
+        myAnyPlatform = d.myAnyPlatform;
+        myVirtualFilesValidator = d.myVirtualFilesValidator;
     }
 
-    return acceptAsJarFile(file) || acceptAsGeneralFile(file);
-  }
-
-  /**
-   * Defines whether a file can be chosen or not, for the choosers which browse the file system through {@link Path}
-   * and never bring it into the Virtual File System - a descriptor which restricts the selection has to answer
-   * from the path alone there.
-   */
-  public boolean isPathSelectable(Path path) {
-    return true;
-  }
-
-  /**
-   * Sets simple boolean condition for use in {@link #isFileVisible(VirtualFile, boolean)} and {@link #isFileSelectable(VirtualFile)}.
-   */
-  public FileChooserDescriptor withFileFilter(@Nullable Predicate<VirtualFile> filter) {
-    myFileFilter = filter;
-    return this;
-  }
-
-  public @Nullable Predicate<VirtualFile> getFileFilter() {
-    return myFileFilter;
-  }
-
-  /**
-   * @see #withExtensionFilter(LocalizeValue, String...)
-   */
-  public FileChooserDescriptor withExtensionFilter(String extension) {
-    return withExtensionFilter(FileChooserLocalize.fileChooserFilesLabel(extension.toUpperCase(Locale.ROOT)), extension);
-  }
-
-  /**
-   * Adds a simple filter based on file extensions that is compatible with native (OS) file chooser dialogs.
-   * The behavior is platform-dependent (some dialogs make non-matching files non-selectable, others hide them completely).
-   * The {@code label} parameter is used in a combobox to switch between showing only matching or all files
-   * in dialogs supporting this feature.
-   */
-  public FileChooserDescriptor withExtensionFilter(LocalizeValue label, String... extensions) {
-    if (extensions.length == 0) {
-      throw new IllegalArgumentException("The list must not be empty");
-    }
-    myExtensionFilter = Pair.create(label, List.of(extensions));
-    return this;
-  }
-
-  public FileChooserDescriptor withoutExtensionFilter() {
-    myExtensionFilter = null;
-    return this;
-  }
-
-  public @Nullable Pair<LocalizeValue, List<String>> getExtensionFilter() {
-    return myExtensionFilter;
-  }
-
-  /**
-   * Defines whether file is visible in the tree
-   */
-  public boolean isFileVisible(VirtualFile file, boolean showHiddenFiles) {
-    if (file.is(VFileProperty.SYMLINK) && file.getCanonicalPath() == null) {
-      return false;
+    public boolean isChooseFiles() {
+        return myChooseFiles;
     }
 
-    if (!file.isDirectory()) {
-      if (FileChooserUtil.isArchive(file)) {
-        if (!myChooseJars && !myChooseJarContents) {
-          return false;
+    public boolean isChooseFolders() {
+        return myChooseFolders;
+    }
+
+    public boolean isChooseJars() {
+        return myChooseJars;
+    }
+
+    public boolean isChooseJarsAsFiles() {
+        return myChooseJarsAsFiles;
+    }
+
+    public boolean isChooseJarContents() {
+        return myChooseJarContents;
+    }
+
+    public boolean isChooseMultiple() {
+        return myChooseMultiple;
+    }
+
+    /**
+     * @deprecated use {@link #isChooseMultiple()} (to be removed in IDEA 15)
+     */
+    @SuppressWarnings("UnusedDeclaration")
+    public boolean getChooseMultiple() {
+        return isChooseMultiple();
+    }
+
+    public LocalizeValue getTitle() {
+        return myTitle;
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use #withTitle(LocalizeValue)")
+    @SuppressWarnings("deprecation")
+    public void setTitle(String title) {
+        withTitle(title);
+    }
+
+    public FileChooserDescriptor withTitle(LocalizeValue title) {
+        myTitle = title;
+        return this;
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use #withTitle(LocalizeValue)")
+    public FileChooserDescriptor withTitle(@Nullable String title) {
+        return withTitle(LocalizeValue.ofNullable(title));
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use #withDescription(LocalizeValue)")
+    @SuppressWarnings("deprecation")
+    public void setDescription(String description) {
+        withDescription(description);
+    }
+
+    public FileChooserDescriptor withDescription(LocalizeValue description) {
+        myDescription = description;
+        return this;
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use #withDescription(LocalizeValue)")
+    public FileChooserDescriptor withDescription(@Nullable String description) {
+        myDescription = LocalizeValue.ofNullable(description);
+        return this;
+    }
+
+    public LocalizeValue getDescription() {
+        return myDescription;
+    }
+
+    public boolean isHideIgnored() {
+        return myHideIgnored;
+    }
+
+    public void setHideIgnored(boolean hideIgnored) {
+        withHideIgnored(hideIgnored);
+    }
+
+    public FileChooserDescriptor withHideIgnored(boolean hideIgnored) {
+        myHideIgnored = hideIgnored;
+        return this;
+    }
+
+    public List<VirtualFile> getRoots() {
+        return Collections.unmodifiableList(myRoots);
+    }
+
+    public void setRoots(VirtualFile... roots) {
+        withRoots(roots);
+    }
+
+    public void setRoots(List<VirtualFile> roots) {
+        withRoots(roots);
+    }
+
+    public FileChooserDescriptor withRoots(VirtualFile... roots) {
+        return withRoots(Arrays.asList(roots));
+    }
+
+    public FileChooserDescriptor withRoots(List<VirtualFile> roots) {
+        myRoots.clear();
+        myRoots.addAll(roots);
+        return this;
+    }
+
+    public boolean isShowFileSystemRoots() {
+        return myShowFileSystemRoots;
+    }
+
+    public void setShowFileSystemRoots(boolean showFileSystemRoots) {
+        withShowFileSystemRoots(showFileSystemRoots);
+    }
+
+    public FileChooserDescriptor withShowFileSystemRoots(boolean showFileSystemRoots) {
+        myShowFileSystemRoots = showFileSystemRoots;
+        return this;
+    }
+
+    public boolean isTreeRootVisible() {
+        return myTreeRootVisible;
+    }
+
+    public FileChooserDescriptor withTreeRootVisible(boolean isTreeRootVisible) {
+        myTreeRootVisible = isTreeRootVisible;
+        return this;
+    }
+
+    /**
+     * @deprecated use {@link #withTreeRootVisible(boolean)} (to be removed in IDEA 15)
+     */
+    @SuppressWarnings("UnusedDeclaration")
+    public FileChooserDescriptor setIsTreeRootVisible(boolean treeRootVisible) {
+        return withTreeRootVisible(treeRootVisible);
+    }
+
+    public boolean isShowHiddenFiles() {
+        return myShowHiddenFiles;
+    }
+
+    public FileChooserDescriptor withShowHiddenFiles(boolean showHiddenFiles) {
+        myShowHiddenFiles = showHiddenFiles;
+        return this;
+    }
+
+    /**
+     * Defines whether file can be chosen or not
+     */
+    @RequiredUIAccess
+    public boolean isFileSelectable(VirtualFile file) {
+        if (file == null) {
+            return false;
         }
-      }
-      else if (!myChooseFiles) {
-        return false;
-      }
 
-      if (myFileFilter != null && !myFileFilter.test(file)) {
-        return false;
-      }
+        if (file.is(VFileProperty.SYMLINK) && file.getCanonicalPath() == null) {
+            return false;
+        }
+        if (file.isDirectory() && myChooseFolders) {
+            return true;
+        }
+
+        if (myFileFilter != null && !file.isDirectory()) {
+            return myFileFilter.test(file);
+        }
+
+        return acceptAsJarFile(file) || acceptAsGeneralFile(file);
     }
 
-    if (isHideIgnored() && FileTypeRegistry.getInstance().isFileIgnored(file)) {
-      return false;
+    /**
+     * Defines whether a file can be chosen or not, for the choosers which browse the file system through {@link Path}
+     * and never bring it into the Virtual File System - a descriptor which restricts the selection has to answer
+     * from the path alone there.
+     */
+    public boolean isPathSelectable(Path path) {
+        return true;
     }
 
-    if (!showHiddenFiles && FileChooserUtil.isFileHidden(file)) {
-      return false;
+    /**
+     * Sets simple boolean condition for use in {@link #isFileVisible(VirtualFile, boolean)} and {@link #isFileSelectable(VirtualFile)}.
+     */
+    public FileChooserDescriptor withFileFilter(@Nullable Predicate<VirtualFile> filter) {
+        myFileFilter = filter;
+        return this;
     }
 
-    return true;
-  }
-
-  public @Nullable Image getIcon(VirtualFile file) {
-    return VirtualFileManager.getInstance().getFileIcon(file, null, Iconable.ICON_FLAG_READ_STATUS);
-  }
-
-  protected static Image dressIcon(VirtualFile file, Image baseIcon) {
-    return file.isValid() && file.is(VFileProperty.SYMLINK) ? ImageEffects.layered(baseIcon, PlatformIconGroup.nodesSymlink()) : baseIcon;
-  }
-
-  public String getName(VirtualFile file) {
-    return file.getPath();
-  }
-
-  public @Nullable String getComment(VirtualFile file) {
-    return null;
-  }
-
-  /**
-   * Called upon <em>OK</em> action before closing the dialog (after closing for native choosers), on the chosen paths -
-   * without the virtual file system. Override to customize the validation of user input.
-   *
-   * @param paths chosen paths to be checked
-   * @throws Exception if the chosen paths cannot be accepted, the exception message will be shown in the UI.
-   */
-  public void validateSelectedPaths(List<Path> paths) throws Exception {
-  }
-
-  /**
-   * Sets a validation which needs the virtual file system, e.g. the project model - called upon <em>OK</em> action after
-   * {@link #validateSelectedPaths(List)}, on the UI thread, with the chosen paths resolved into virtual files off it.
-   * Without it the chooser never touches the virtual file system for validation; prefer {@link #validateSelectedPaths(List)}.
-   * <p>
-   * The validator throws if the chosen files cannot be accepted, the exception message will be shown in the UI.
-   */
-  public FileChooserDescriptor withVirtualFilesValidator(@Nullable ThrowableConsumer<List<VirtualFile>, Exception> validator) {
-    myVirtualFilesValidator = validator;
-    return this;
-  }
-
-  public @Nullable ThrowableConsumer<List<VirtualFile>, Exception> getVirtualFilesValidator() {
-    return myVirtualFilesValidator;
-  }
-
-  private boolean acceptAsGeneralFile(VirtualFile file) {
-    if (FileChooserUtil.isArchive(file)) return false; // should be handle by acceptsAsJarFile
-    return !file.isDirectory() && myChooseFiles;
-  }
-
-  /**
-   * The machine whose files are chosen, the local one unless set.
-   */
-  public FileChooserDescriptor withPlatform(Platform platform) {
-    myPlatform = platform;
-    return this;
-  }
-
-  public Platform getPlatform() {
-    return myPlatform == null ? Platform.current() : myPlatform;
-  }
-
-  /**
-   * Lets the user choose on any machine - the local one and every remote one, each as its own place to browse.
-   * Only {@link FileChooser#choosePaths} honours it, since a remote file has no virtual file.
-   */
-  public FileChooserDescriptor withAnyPlatform() {
-    myAnyPlatform = true;
-    return this;
-  }
-
-  public boolean isAnyPlatform() {
-    return myAnyPlatform;
-  }
-
-  public @Nullable String getForceOperateDialogProviderId() {
-    return myForceOperateDialogProviderId;
-  }
-
-  public void setForceOperateDialogProviderId(@Nullable String forceOperateDialogProviderId) {
-    myForceOperateDialogProviderId = forceOperateDialogProviderId;
-  }
-
-  public void setUseApplicationDialog() {
-    myForceOperateDialogProviderId = FileOperateDialogProvider.APPLICATION_ID;
-  }
-
-  private boolean acceptAsJarFile(VirtualFile file) {
-    return myChooseJars && FileChooserUtil.isArchive(file);
-  }
-
-  @RequiredUIAccess
-  public final @Nullable VirtualFile getFileToSelect(VirtualFile file) {
-    if (file.isDirectory() && (myChooseFolders || isFileSelectable(file))) {
-      return file;
+    public @Nullable Predicate<VirtualFile> getFileFilter() {
+        return myFileFilter;
     }
-    boolean isJar = file.getFileType() instanceof ArchiveFileType;
-    if (!isJar) {
-      return acceptAsGeneralFile(file) ? file : null;
-    }
-    if (myChooseJarsAsFiles) {
-      return file;
-    }
-    if (!acceptAsJarFile(file)) {
-      return null;
-    }
-    String path = file.getPath();
-    return ((ArchiveFileType)file.getFileType()).getFileSystem().findLocalVirtualFileByPath(path);
-  }
 
-  @Override
-  public final Object clone() {
-    return super.clone();
-  }
+    /**
+     * @see #withExtensionFilter(LocalizeValue, String...)
+     */
+    public FileChooserDescriptor withExtensionFilter(String extension) {
+        return withExtensionFilter(FileChooserLocalize.fileChooserFilesLabel(extension.toUpperCase(Locale.ROOT)), extension);
+    }
 
-  @Override
-  public String toString() {
-    return "FileChooserDescriptor [" + myTitle + "]";
-  }
+    /**
+     * Adds a simple filter based on file extensions that is compatible with native (OS) file chooser dialogs.
+     * The behavior is platform-dependent (some dialogs make non-matching files non-selectable, others hide them completely).
+     * The {@code label} parameter is used in a combobox to switch between showing only matching or all files
+     * in dialogs supporting this feature.
+     */
+    public FileChooserDescriptor withExtensionFilter(LocalizeValue label, String... extensions) {
+        if (extensions.length == 0) {
+            throw new IllegalArgumentException("The list must not be empty");
+        }
+        myExtensionFilter = Pair.create(label, List.of(extensions));
+        return this;
+    }
+
+    public FileChooserDescriptor withoutExtensionFilter() {
+        myExtensionFilter = null;
+        return this;
+    }
+
+    public @Nullable Pair<LocalizeValue, List<String>> getExtensionFilter() {
+        return myExtensionFilter;
+    }
+
+    /**
+     * Defines whether file is visible in the tree
+     */
+    public boolean isFileVisible(VirtualFile file, boolean showHiddenFiles) {
+        if (file.is(VFileProperty.SYMLINK) && file.getCanonicalPath() == null) {
+            return false;
+        }
+
+        if (!file.isDirectory()) {
+            if (FileChooserUtil.isArchive(file)) {
+                if (!myChooseJars && !myChooseJarContents) {
+                    return false;
+                }
+            }
+            else if (!myChooseFiles) {
+                return false;
+            }
+
+            if (myFileFilter != null && !myFileFilter.test(file)) {
+                return false;
+            }
+        }
+
+        if (isHideIgnored() && FileTypeRegistry.getInstance().isFileIgnored(file)) {
+            return false;
+        }
+
+        if (!showHiddenFiles && FileChooserUtil.isFileHidden(file)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public @Nullable Image getIcon(Path path) {
+        return null;
+    }
+
+    public String getName(VirtualFile file) {
+        return file.getPath();
+    }
+
+    public @Nullable String getComment(VirtualFile file) {
+        return null;
+    }
+
+    /**
+     * Called upon <em>OK</em> action before closing the dialog (after closing for native choosers), on the chosen paths -
+     * without the virtual file system. Override to customize the validation of user input.
+     *
+     * @param paths chosen paths to be checked
+     * @throws Exception if the chosen paths cannot be accepted, the exception message will be shown in the UI.
+     */
+    public void validateSelectedPaths(List<Path> paths) throws Exception {
+    }
+
+    /**
+     * Sets a validation which needs the virtual file system, e.g. the project model - called upon <em>OK</em> action after
+     * {@link #validateSelectedPaths(List)}, on the UI thread, with the chosen paths resolved into virtual files off it.
+     * Without it the chooser never touches the virtual file system for validation; prefer {@link #validateSelectedPaths(List)}.
+     * <p>
+     * The validator throws if the chosen files cannot be accepted, the exception message will be shown in the UI.
+     */
+    public FileChooserDescriptor withVirtualFilesValidator(@Nullable ThrowableConsumer<List<VirtualFile>, Exception> validator) {
+        myVirtualFilesValidator = validator;
+        return this;
+    }
+
+    public @Nullable ThrowableConsumer<List<VirtualFile>, Exception> getVirtualFilesValidator() {
+        return myVirtualFilesValidator;
+    }
+
+    private boolean acceptAsGeneralFile(VirtualFile file) {
+        if (FileChooserUtil.isArchive(file)) {
+            return false; // should be handle by acceptsAsJarFile
+        }
+        return !file.isDirectory() && myChooseFiles;
+    }
+
+    /**
+     * The machine whose files are chosen, the local one unless set.
+     */
+    public FileChooserDescriptor withPlatform(Platform platform) {
+        myPlatform = platform;
+        return this;
+    }
+
+    public Platform getPlatform() {
+        return myPlatform == null ? Platform.current() : myPlatform;
+    }
+
+    /**
+     * Lets the user choose on any machine - the local one and every remote one, each as its own place to browse.
+     * Only {@link FileChooser#choosePaths} honours it, since a remote file has no virtual file.
+     */
+    public FileChooserDescriptor withAnyPlatform() {
+        myAnyPlatform = true;
+        return this;
+    }
+
+    public boolean isAnyPlatform() {
+        return myAnyPlatform;
+    }
+
+    public @Nullable String getForceOperateDialogProviderId() {
+        return myForceOperateDialogProviderId;
+    }
+
+    public void setForceOperateDialogProviderId(@Nullable String forceOperateDialogProviderId) {
+        myForceOperateDialogProviderId = forceOperateDialogProviderId;
+    }
+
+    public void setUseApplicationDialog() {
+        myForceOperateDialogProviderId = FileOperateDialogProvider.APPLICATION_ID;
+    }
+
+    private boolean acceptAsJarFile(VirtualFile file) {
+        return myChooseJars && FileChooserUtil.isArchive(file);
+    }
+
+    @RequiredUIAccess
+    public final @Nullable VirtualFile getFileToSelect(VirtualFile file) {
+        if (file.isDirectory() && (myChooseFolders || isFileSelectable(file))) {
+            return file;
+        }
+        boolean isJar = file.getFileType() instanceof ArchiveFileType;
+        if (!isJar) {
+            return acceptAsGeneralFile(file) ? file : null;
+        }
+        if (myChooseJarsAsFiles) {
+            return file;
+        }
+        if (!acceptAsJarFile(file)) {
+            return null;
+        }
+        String path = file.getPath();
+        return ((ArchiveFileType) file.getFileType()).getFileSystem().findLocalVirtualFileByPath(path);
+    }
+
+    @Override
+    public final Object clone() {
+        return super.clone();
+    }
+
+    @Override
+    public String toString() {
+        return "FileChooserDescriptor [" + myTitle + "]";
+    }
 }

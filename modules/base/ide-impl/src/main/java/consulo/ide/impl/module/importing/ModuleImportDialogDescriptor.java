@@ -43,6 +43,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletionException;
@@ -64,7 +65,7 @@ public class ModuleImportDialogDescriptor<C extends ModuleImportContext> extends
     @RequiredUIAccess
     public ModuleImportDialogDescriptor(
         @Nullable Project project,
-        VirtualFile targetFile,
+        Path targetFile,
         ModuleImportProvider<C> moduleImportProvider
     ) {
         super(LocalizeValue.localizeTODO("Import from " + moduleImportProvider.getName()));
@@ -74,7 +75,7 @@ public class ModuleImportDialogDescriptor<C extends ModuleImportContext> extends
         String pathToImport = moduleImportProvider.getPathToBeImported(targetFile);
         myContext.setPath(pathToImport);
         myContext.setName(new File(pathToImport).getName());
-        myContext.setFileToImport(targetFile.getPath());
+        myContext.setFileToImport(targetFile.toString());
 
         List<WizardStep<C>> steps = new ArrayList<>();
         moduleImportProvider.buildSteps(steps::add, myContext);

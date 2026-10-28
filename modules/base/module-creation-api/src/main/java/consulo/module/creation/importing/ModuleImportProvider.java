@@ -30,6 +30,8 @@ import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.function.Consumer;
 
 /**
@@ -55,7 +57,7 @@ public interface ModuleImportProvider<C extends ModuleImportContext> {
 
     abstract Image getIcon();
 
-    boolean canImport(File fileOrDirectory);
+    boolean canImport(Path fileOrDirectory);
 
     Coroutine<Object, Object> process(
         C context,
@@ -64,12 +66,12 @@ public interface ModuleImportProvider<C extends ModuleImportContext> {
         Consumer<Module> newModuleConsumer
     );
 
-    default String getPathToBeImported(VirtualFile file) {
+    default String getPathToBeImported(Path file) {
         return getDefaultPath(file);
     }
 
-    static String getDefaultPath(VirtualFile file) {
-        return file.isDirectory() ? file.getPath() : file.getParent().getPath();
+    static String getDefaultPath(Path fileOrDir) {
+        return Files.isDirectory(fileOrDir) ? fileOrDir.toString() : fileOrDir.getParent().toString();
     }
 
     default void buildSteps(Consumer<WizardStep<C>> consumer, C context) {
