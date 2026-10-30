@@ -35,7 +35,7 @@ import java.util.function.Function;
  * @author VISTALL
  * @since 2020-09-15
  */
-public interface Table<Item> extends Component, HasSpeedSearch<Item>, HasItemSize<Item> {
+public interface Table<Item> extends Component, HasFocus, HasSpeedSearch<Item>, HasItemSize<Item> {
     static <Item> Table<Item> create(FlatDataModel<Item> model) {
         return UIInternal.get()._Table_create(model);
     }

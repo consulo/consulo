@@ -51,6 +51,7 @@ import org.jspecify.annotations.Nullable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import consulo.ui.image.ImageEffects;
 
 /**
  * @author VISTALL
@@ -185,8 +186,14 @@ public class LayoutsUITesterTab implements UITesterTab {
         checkable.setSubtitle(LocalizeValue.of("Click anywhere on the card"));
         checkable.addClickListener(event -> checkBox.setValue(!checkBox.getValue()));
 
+        Card centered = Card.create();
+        centered.addStyle(CardStyle.OUTLINED);
+        centered.addStyle(CardStyle.CENTERED);
+        centered.setMedia(ImageBox.create(ImageEffects.resize(PlatformIconGroup.nodesFolder(), 48)));
+        centered.setTitle(LocalizeValue.of("a_very_long_file_name_without_spaces.txt"));
+
         TileLayout variants = TileLayout.create(Length.ofFont(12));
-        variants.add(plain).add(outlined).add(elevated).add(horizontal).add(checkable);
+        variants.add(plain).add(outlined).add(elevated).add(horizontal).add(checkable).add(centered);
 
         VerticalLayout layout = VerticalLayout.create(Space.LARGE);
         layout.add(themes);

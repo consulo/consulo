@@ -75,6 +75,7 @@ public class WebCardImpl extends WebLayoutImpl<WebCardImpl.Vaadin, LayoutConstra
             // the room the desktop cards keep when compact - Space.MEDIUM
             case COMPACT -> toVaadinComponent().getStyle().set("--vaadin-card-padding", "6px");
             case SELECTED -> toVaadinComponent().getElement().getClassList().add("consulo-card-selected");
+            case CENTERED -> toVaadinComponent().getElement().getClassList().add("consulo-card-centered");
         }
     }
 
@@ -88,6 +89,7 @@ public class WebCardImpl extends WebLayoutImpl<WebCardImpl.Vaadin, LayoutConstra
             case COVER_MEDIA -> toVaadinComponent().removeThemeVariants(CardVariant.COVER_MEDIA);
             case COMPACT -> toVaadinComponent().getStyle().remove("--vaadin-card-padding");
             case SELECTED -> toVaadinComponent().getElement().getClassList().remove("consulo-card-selected");
+            case CENTERED -> toVaadinComponent().getElement().getClassList().remove("consulo-card-centered");
         }
     }
 

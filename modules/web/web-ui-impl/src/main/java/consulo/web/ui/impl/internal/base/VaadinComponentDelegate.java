@@ -435,8 +435,9 @@ public abstract class VaadinComponentDelegate<T extends com.vaadin.flow.componen
         }
     }
 
+    /** Where the browser focus is, as the page last reported it - a focus moved in this very request is seen next time. */
     public boolean hasFocus() {
-        return true;
+        return WebFocusTracker.isFocusWithin(myVaadinComponent.getElement());
     }
 
     public void focus() {

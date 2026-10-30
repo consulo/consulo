@@ -179,6 +179,7 @@ public class DesktopQtCardImpl extends DesktopQtLayoutComponent<LayoutConstraint
         myTitleBox = titleBox;
         myTitleLabel = title;
         mySubtitleLabel = subtitle;
+        updateCentered();
 
         QVBoxLayout suffixLayout = new QVBoxLayout();
         suffixLayout.setContentsMargins(0, 0, 0, 0);
@@ -298,6 +299,7 @@ public class DesktopQtCardImpl extends DesktopQtLayoutComponent<LayoutConstraint
         if (myComponent instanceof CardFrame frame && !frame.isDisposed()) {
             frame.setSelected(myStyles.contains(CardStyle.SELECTED));
         }
+        updateCentered();
     }
 
     @RequiredUIAccess
@@ -373,6 +375,17 @@ public class DesktopQtCardImpl extends DesktopQtLayoutComponent<LayoutConstraint
             addImpl(component, new Slot(kind, ++myOrder));
         }
         return component;
+    }
+
+    /** The media is centered always; CENTERED centers the title too, and lets a long one wrap inside the card. */
+    private void updateCentered() {
+        boolean centered = myStyles.contains(CardStyle.CENTERED);
+        for (QLabel label : new QLabel[]{myTitleLabel, mySubtitleLabel}) {
+            if (label != null && !label.isDisposed()) {
+                label.setAlignment(centered ? Qt.AlignmentFlag.AlignHCenter : Qt.AlignmentFlag.AlignLeft);
+                label.setWordWrap(centered);
+            }
+        }
     }
 
     private void updateTexts() {

@@ -170,4 +170,22 @@ public class HeadlessTree<E> extends HeadlessComponentBase implements Tree<E> {
     public @Nullable TransferHandler<TreeNode<E>> getTransferHandler() {
         return myTransferHandler;
     }
+
+    @Override
+    public boolean hasFocus() {
+        return false;
+    }
+
+    @Override
+    public void focus() {
+    }
+
+    @Override
+    public void setFocusable(boolean focusable) {
+    }
+
+    @Override
+    public boolean isFocusable() {
+        return false;
+    }
 }

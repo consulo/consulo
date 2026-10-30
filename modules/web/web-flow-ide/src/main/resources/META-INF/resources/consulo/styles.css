@@ -313,6 +313,13 @@ vaadin-breadcrumbs-item
   align-items: center;
 }
 
+/* the list lines the crumbs up on their baselines too, and a crumb with an icon has its baseline lower than a plain
+   one - the current crumb, which has none, sat a few pixels below the root crumb next to it */
+vaadin-breadcrumbs::part(list)
+{
+  align-items: center;
+}
+
 /* the free space between the crumbs and the toolbar is a scrollable dock center, and the row rounds up two
    pixels wider than it is - enough for a horizontal scrollbar to appear across the whole navigation bar */
 .web-navigation-bar > .web-dock-layout-center
@@ -507,6 +514,28 @@ vaadin-button[theme~="pressed"]
 vaadin-card.web-card > [slot='header-prefix']
 {
   grid-row: 1;
+}
+
+/* CardStyle.CENTERED - the media and the header in the middle; a title without a place to break, such as a long file
+   name, breaks anywhere rather than running out of the card */
+vaadin-card.consulo-card-centered::part(media)
+{
+  display: flex;
+  justify-content: center;
+}
+
+vaadin-card.consulo-card-centered::part(header)
+{
+  justify-content: center;
+  justify-items: center;
+  text-align: center;
+}
+
+vaadin-card.consulo-card-centered > [slot=title],
+vaadin-card.consulo-card-centered > [slot=subtitle]
+{
+  overflow-wrap: anywhere;
+  min-width: 0;
 }
 
 vaadin-card.consulo-card-selected

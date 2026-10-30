@@ -19,6 +19,8 @@ import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.dom.DebouncePhase;
 import com.vaadin.flow.dom.Element;
+import com.vaadin.flow.dom.Node;
+import com.vaadin.flow.dom.ShadowRoot;
 import consulo.application.impl.internal.performance.ActivityTracker;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
@@ -62,6 +64,12 @@ public final class WebFocusTracker {
      * of them says nothing about the others.
      */
     private static final String FOCUSED_KEY = "consulo-focus-scope-focused";
+
+    /**
+     * The element the browser focus is in, per vaadin ui - the closest one the server knows, so a cell of a grid or the
+     * input of a text field reports the component itself. What {@link VaadinComponentDelegate#hasFocus()} answers from.
+     */
+    private static final String FOCUSED_ELEMENT_KEY = "consulo-focused-element";
 
     private static final Map<String, Component> ourScopes = new ConcurrentHashMap<>();
 
@@ -123,6 +131,13 @@ public final class WebFocusTracker {
      * below the frame root.
      */
     public static void installRoot(Element element) {
+        // not debounced: a focus change is one event, and a query right after it must already see where the focus went
+        element.addEventListener("focusin", event -> setFocusedElement(event.getEventTarget().orElse(null)))
+            .mapEventTargetElement();
+        // focus moving to another element of the page arrives as the focusin above; only leaving the page clears it
+        element.addEventListener("focusout", event -> setFocusedElement(null))
+            .setFilter("event.relatedTarget == null");
+
         for (String eventType : ACTIVITY_EVENTS) {
             element.addEventListener(eventType, event -> {
                 ActivityTracker.getInstance().inc();
@@ -174,6 +189,29 @@ public final class WebFocusTracker {
         Component component = getFocusedComponent();
 
         return DataManager.getInstance().getDataContext(component == null ? fallback : component);
+    }
+
+    private static void setFocusedElement(@Nullable Element element) {
+        UI ui = UI.getCurrent();
+        if (ui != null) {
+            ComponentUtil.setData(ui, FOCUSED_ELEMENT_KEY, element);
+        }
+    }
+
+    /** Whether the browser focus is in {@code element} or anywhere below it, shadow roots included. */
+    public static boolean isFocusWithin(Element element) {
+        UI ui = element.getComponent().flatMap(com.vaadin.flow.component.Component::getUI).orElse(null);
+        if (ui == null) {
+            return false;
+        }
+        Element focused = (Element) ComponentUtil.getData(ui, FOCUSED_ELEMENT_KEY);
+        for (Node<?> node = focused; node != null; ) {
+            if (node.equals(element)) {
+                return true;
+            }
+            node = node instanceof ShadowRoot shadowRoot ? shadowRoot.getHost() : node.getParentNode();
+        }
+        return false;
     }
 
     public static @Nullable Component getFocusedComponent() {

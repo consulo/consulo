@@ -46,6 +46,11 @@ public enum CardStyle implements ComponentStyle {
      */
     COMPACT,
     /**
+     * The media and the header stand in the middle, and a title too long for the card breaks onto the next line - a
+     * card that is a tile among others, such as a file in a grid of thumbnails.
+     */
+    CENTERED,
+    /**
      * Marked as the current one among cards standing together - its outline takes the selection color.
      */
     SELECTED

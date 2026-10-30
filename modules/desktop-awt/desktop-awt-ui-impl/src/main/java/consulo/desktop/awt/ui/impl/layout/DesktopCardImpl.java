@@ -266,6 +266,13 @@ public class DesktopCardImpl extends SwingComponentDelegate<JPanel> implements C
         return panel;
     }
 
+    private static JComponent wrapCentered(java.awt.Component component) {
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
+        panel.setOpaque(false);
+        panel.add(component);
+        return panel;
+    }
+
     private void rebuild(@Nullable JPanel panel) {
         if (panel == null) {
             return;
@@ -276,6 +283,12 @@ public class DesktopCardImpl extends SwingComponentDelegate<JPanel> implements C
 
         boolean horizontal = myStyles.contains(CardStyle.HORIZONTAL);
         boolean cover = myStyles.contains(CardStyle.COVER_MEDIA);
+        boolean centered = myStyles.contains(CardStyle.CENTERED);
+
+        // the title panel stretches its labels over the width, so centering the text centers the title
+        int textAlignment = centered ? SwingConstants.CENTER : SwingConstants.LEADING;
+        myTitleLabel.setHorizontalAlignment(textAlignment);
+        mySubtitleLabel.setHorizontalAlignment(textAlignment);
 
         myBodyPanel.add(myHeaderPanel);
         if (!myContent.isEmpty()) {
@@ -290,7 +303,7 @@ public class DesktopCardImpl extends SwingComponentDelegate<JPanel> implements C
 
         JComponent media = null;
         if (myMedia != null) {
-            media = wrap(DesktopLayoutChildren.toAWT(myMedia));
+            media = centered ? wrapCentered(DesktopLayoutChildren.toAWT(myMedia)) : wrap(DesktopLayoutChildren.toAWT(myMedia));
             int mediaPadding = cover ? 0 : padding;
             media.setBorder(BorderFactory.createEmptyBorder(mediaPadding, mediaPadding, horizontal ? mediaPadding : 0, horizontal ? 0 : mediaPadding));
         }
