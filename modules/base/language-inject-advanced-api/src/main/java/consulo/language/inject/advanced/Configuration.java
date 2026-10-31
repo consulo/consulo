@@ -258,6 +258,14 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
         }
     }
 
+    /**
+     * Imports the default injections ({@link InjectionConfigProvider}s), like {@link #loadState}: for a component
+     * without a stored state ({@link #afterLoad}).
+     */
+    protected final void importDefaultInjections() {
+        importPlaces(getDefaultInjections());
+    }
+
     private int importPlaces(List<BaseInjection> injections) {
         Map<String, Set<BaseInjection>> map = ContainerUtil.classify(injections.iterator(), BaseInjection::getSupportId);
         ArrayList<BaseInjection> originalInjections = new ArrayList<>();

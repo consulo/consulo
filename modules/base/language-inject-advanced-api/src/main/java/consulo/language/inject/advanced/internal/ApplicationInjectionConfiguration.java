@@ -40,6 +40,7 @@ import java.util.List;
 public class ApplicationInjectionConfiguration extends Configuration {
   private final List<BaseInjection> myDefaultInjections;
   private final AdvancedConfiguration myAdvancedConfiguration;
+  private volatile boolean myStateLoaded;
 
   @Inject
   public ApplicationInjectionConfiguration() {
@@ -59,8 +60,17 @@ public class ApplicationInjectionConfiguration extends Configuration {
 
   @Override
   public void loadState(Element element) {
+    myStateLoaded = true;
     myAdvancedConfiguration.loadState(element);
     super.loadState(element);
+  }
+
+  @Override
+  public void afterLoad(boolean first) {
+    // loadState imports the default injections, without a stored state it isn't called (a new installation)
+    if (first && !myStateLoaded) {
+      importDefaultInjections();
+    }
   }
 
   @Override
