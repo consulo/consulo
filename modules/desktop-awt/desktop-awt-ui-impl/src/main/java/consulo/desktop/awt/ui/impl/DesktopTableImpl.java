@@ -140,7 +140,31 @@ class DesktopTableImpl<Item> extends SwingComponentDelegate<TableView<Item>> imp
         tableView.addMouseListener(cellImageMouse);
         tableView.addMouseMotionListener(cellImageMouse);
 
+        // like the trees: the row under a popup trigger becomes the selection before the context menu event, which is
+        // what a ContextMenuEvent listener reads its row from - added before that dispatch, so it runs first
+        tableView.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                selectRowUnderPopupTrigger(tableView, e);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                selectRowUnderPopupTrigger(tableView, e);
+            }
+        });
+
         return tableView;
+    }
+
+    private static void selectRowUnderPopupTrigger(JTable table, MouseEvent e) {
+        if (!e.isPopupTrigger()) {
+            return;
+        }
+        int row = table.rowAtPoint(e.getPoint());
+        if (row >= 0 && !table.isRowSelected(row)) {
+            table.setRowSelectionInterval(row, row);
+        }
     }
 
     @RequiredUIAccess

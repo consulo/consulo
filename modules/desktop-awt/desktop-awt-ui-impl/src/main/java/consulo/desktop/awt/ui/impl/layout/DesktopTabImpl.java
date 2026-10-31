@@ -34,6 +34,9 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.function.BiConsumer;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.ActionPopupMenu;
 
 /**
  * @author VISTALL
@@ -52,6 +55,9 @@ public class DesktopTabImpl implements Tab {
     private Component myComponent;
 
     private boolean myEnabled = true;
+
+    private @Nullable String myPopupGroupId;
+    private @Nullable String myPopupPlace;
 
     private final JPanel myTrailingPanel;
     private @Nullable Component mySuffixComponent;
@@ -83,6 +89,50 @@ public class DesktopTabImpl implements Tab {
         myTabComponent.setOpaque(false);
         myTabComponent.add(myLabel, BorderLayout.CENTER);
         myTabComponent.add(myTrailingPanel, BorderLayout.EAST);
+
+        // the tab component takes the mouse events of the tab header, so the popup is asked for here; the trigger is
+        // a press on some platforms and a release on others
+        MouseAdapter popupListener = new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent event) {
+                if (event.isPopupTrigger()) {
+                    showPopup(event);
+                }
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent event) {
+                if (event.isPopupTrigger()) {
+                    showPopup(event);
+                }
+            }
+        };
+        myTabComponent.addMouseListener(popupListener);
+        myLabel.addMouseListener(popupListener);
+    }
+
+    @Override
+    public void setPopupGroup(String groupId, String place) {
+        myPopupGroupId = groupId;
+        myPopupPlace = place;
+    }
+
+    /** The data of the group comes from the content of the tab, which is what the tab stands for. */
+    private void showPopup(MouseEvent event) {
+        String groupId = myPopupGroupId;
+        String place = myPopupPlace;
+        if (groupId == null || place == null) {
+            return;
+        }
+        ActionManager actionManager = ActionManager.getInstance();
+        if (!(actionManager.getAction(groupId) instanceof ActionGroup group)) {
+            return;
+        }
+        ActionPopupMenu popupMenu = actionManager.createActionPopupMenu(place, group);
+        if (myComponent != null) {
+            popupMenu.setTargetComponent(myComponent);
+        }
+        popupMenu.show(TargetAWT.wrap(event.getComponent()), event.getX(), event.getY());
     }
 
     public void setComponent(Component component) {

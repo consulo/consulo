@@ -107,10 +107,43 @@ public class WebTableImpl<Item> extends VaadinComponentDelegate<WebTableImpl<Ite
         mySpeedSearch = new WebSpeedSearch<>(grid.getElement(), false, this::rows, this::leadItem, this::moveLead);
 
         WebGridNavigation.install(grid, WebGridNavigation.TABLE_KEYS, this::navigate);
+
+        installSelectOnRightClick(grid);
+    }
+
+    /**
+     * Like the trees: the row under a right click becomes the selection before the context menu event, which is what a
+     * {@link consulo.ui.event.ContextMenuEvent} listener reads its row from. The vaadin grid selects on the left button
+     * only; a right click on a row already selected keeps a multiple selection as it is.
+     */
+    private void installSelectOnRightClick(Vaadin grid) {
+        // the rows live in the shadow dom of the grid, the cell contents are slotted light dom - only the composed path
+        // crosses that boundary
+        String rowIndex = "(event.composedPath().find(node => node.localName === 'tr') || {}).index";
+
+        grid.getElement()
+            .addEventListener("mousedown", event -> {
+                int index = event.getEventData().path(rowIndex).asInt(-1);
+                if (index < 0 || index >= myOrder.size()) {
+                    return;
+                }
+                Item item = myOrder.fetch(index, 1).get(0);
+                if (!isSelected(item)) {
+                    select(item);
+                }
+            })
+            .addEventData(rowIndex)
+            .setFilter("event.button === 2");
     }
 
     private List<Item> rows() {
         return myOrder.fetch(0, myOrder.size());
+    }
+
+    /** The cursor row takes the focus, or the first one - the grid itself takes none. */
+    @Override
+    public void focus() {
+        WebGridNavigation.focusGrid(toVaadinComponent(), leadItem());
     }
 
     private @Nullable Item leadItem() {

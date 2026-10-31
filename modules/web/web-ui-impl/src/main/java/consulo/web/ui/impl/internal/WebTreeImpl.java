@@ -946,7 +946,15 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl<NODE>
         vaadin.focus();
     }
 
-    boolean isNavigable(@Nullable NODE value) {
+    /** The selected row takes the focus, or the first one - the grid itself takes none. */
+    @Override
+    public void focus() {
+        Vaadin vaadin = toVaadinComponent();
+        TreeNodeImpl<NODE> lead = myController.getSelected();
+        WebGridNavigation.focusGrid(vaadin, lead == null ? null : vaadin.liveRow(lead));
+    }
+
+        boolean isNavigable(@Nullable NODE value) {
         return true;
     }
 

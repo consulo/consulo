@@ -17,6 +17,7 @@ package consulo.web.ui.impl.internal;
 
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.dom.Element;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -124,6 +125,34 @@ public final class WebGridNavigation {
         requestAnimationFrame(run);
         """;
 
+    /**
+     * Gives the grid the focus, on the cell of the row of {@code $0} or else of the first row. The host of a grid takes
+     * no focus itself - its cells do. Waits for the grid to be shown: one just put on screen, a tab just selected, has no
+     * rows rendered yet in the response that shows it.
+     */
+    private static final String FOCUS_GRID = """
+        const grid = this;
+        const key = $0;
+        let tries = 0;
+        const run = () => {
+            const rows = grid.isConnected && grid.getClientRects().length > 0 && grid.$ && grid.$.items
+                ? [...grid.$.items.children].filter(child => child._item && !child.hidden)
+                : [];
+            if (rows.length === 0) {
+                if (tries++ < 60) {
+                    requestAnimationFrame(run);
+                }
+                return;
+            }
+            const row = (key && rows.find(child => child._item.key === key)) || rows[0];
+            const cell = [...row.children].find(child => !child.hidden);
+            if (cell) {
+                cell.focus({ preventScroll: true });
+            }
+        };
+        run();
+        """;
+
     private WebGridNavigation() {
     }
 
@@ -167,6 +196,11 @@ public final class WebGridNavigation {
             case "End" -> last;
             default -> -1;
         };
+    }
+
+    /** Focuses the grid on the row of {@code item}, or on its first row when there is no such row. */
+    public static <T> void focusGrid(Grid<T> grid, @Nullable T item) {
+        grid.getElement().executeJs(FOCUS_GRID, item == null ? null : grid.getDataCommunicator().getKeyMapper().key(item));
     }
 
     public static <T> void focusRow(Grid<T> grid, T item) {
