@@ -57,6 +57,17 @@ public abstract class DocumentationProviderEx implements DocumentationProvider {
     return null;
   }
 
+  /**
+   * @param targetOffset the offset the documentation is asked for: the mouse position for documentation on hover, otherwise the
+   *                     caret offset
+   */
+  public @Nullable PsiElement getCustomDocumentationElement(Editor editor,
+                                                           PsiFile file,
+                                                           @Nullable PsiElement contextElement,
+                                                           int targetOffset) {
+    return getCustomDocumentationElement(editor, file, contextElement);
+  }
+
   public @Nullable Image getLocalImageForElement(PsiElement element, String imageSpec) {
     return null;
   }

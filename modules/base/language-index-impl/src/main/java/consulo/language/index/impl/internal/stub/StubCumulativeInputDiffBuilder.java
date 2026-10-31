@@ -40,6 +40,7 @@ class StubCumulativeInputDiffBuilder extends InputDataDiffBuilder<Integer, Seria
       removeProcessor.process(myInputId, myInputId);
       updateStubIndices(null);
     }
+    ((StubIndexImpl)StubIndex.getInstance()).stubTreeChanged(myInputId);
     return true;
   }
 

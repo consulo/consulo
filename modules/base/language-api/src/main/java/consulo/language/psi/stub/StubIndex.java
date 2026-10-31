@@ -5,7 +5,9 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.application.util.function.Processors;
+import consulo.component.util.ModificationTracker;
 import consulo.index.io.IdIterator;
+import consulo.language.ast.IFileElementType;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 import consulo.project.content.scope.ProjectAwareSearchScope;
@@ -125,4 +127,10 @@ public abstract class StubIndex {
   public abstract <Key> IdIterator getContainingIds(StubIndexKey<Key, ?> indexKey, Key dataKey, Project project, ProjectAwareSearchScope scope);
 
   public abstract void forceRebuild(Throwable e);
+
+  /**
+   * Changes when the stubs of a file with the given file element type change, for example of a PHP file; a cache over the stubs of
+   * one language can depend on it instead of on every PSI change of that language
+   */
+  public abstract ModificationTracker getPerFileElementTypeModificationTracker(IFileElementType fileElementType);
 }

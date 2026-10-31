@@ -17,6 +17,13 @@ import consulo.component.persist.RoamingType;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.util.ModificationTracker;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ConcurrentHashMap;
+import consulo.virtualFileSystem.VirtualFileManager;
+import consulo.language.parser.ParserDefinition;
+import consulo.language.file.LanguageFileType;
+import consulo.language.ast.IFileElementType;
+import consulo.component.util.SimpleModificationTracker;
 import consulo.index.io.*;
 import consulo.index.io.data.DataExternalizer;
 import consulo.index.io.data.DataInputOutputUtil;
@@ -82,6 +89,9 @@ public final class StubIndexImpl extends StubIndex implements PersistentStateCom
         },
         ContainerUtil::newConcurrentMap
     );
+
+    // created on demand: the type of a changed file is only looked up while someone tracks a type
+    private final ConcurrentMap<IFileElementType, SimpleModificationTracker> myPerFileElementTypeTrackers = new ConcurrentHashMap<>();
 
     private final StubProcessingHelper myStubProcessingHelper;
     private final IndexAccessValidator myAccessValidator = new IndexAccessValidator();
@@ -717,6 +727,35 @@ public final class StubIndexImpl extends StubIndex implements PersistentStateCom
     @Override
     public void loadState(StubIndexState state) {
         myPreviouslyRegistered = state;
+    }
+
+    @Override
+    public ModificationTracker getPerFileElementTypeModificationTracker(IFileElementType fileElementType) {
+        return myPerFileElementTypeTrackers.computeIfAbsent(fileElementType, type -> new SimpleModificationTracker());
+    }
+
+    /**
+     * The stub tree of a file has changed: the tracker of its file element type changes
+     */
+    void stubTreeChanged(int fileId) {
+        if (myPerFileElementTypeTrackers.isEmpty()) {
+            return;
+        }
+
+        VirtualFile file = VirtualFileManager.getInstance().findFileById(fileId);
+        if (file == null || !(file.getFileType() instanceof LanguageFileType languageFileType)) {
+            return;
+        }
+
+        ParserDefinition parserDefinition = ParserDefinition.forLanguage(languageFileType.getLanguage());
+        if (parserDefinition == null) {
+            return;
+        }
+
+        SimpleModificationTracker tracker = myPerFileElementTypeTrackers.get(parserDefinition.getFileNodeType());
+        if (tracker != null) {
+            tracker.incModificationCount();
+        }
     }
 
     public <K> void updateIndex(

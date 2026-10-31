@@ -283,6 +283,22 @@ public class CompositeDocumentationProvider extends DocumentationProviderEx impl
   }
 
   @Override
+  public @Nullable PsiElement getCustomDocumentationElement(Editor editor,
+                                                  PsiFile file,
+                                                  @Nullable PsiElement contextElement,
+                                                  int targetOffset) {
+    for (DocumentationProvider provider : getAllProviders()) {
+      if (provider instanceof DocumentationProviderEx) {
+        PsiElement element = ((DocumentationProviderEx)provider).getCustomDocumentationElement(editor, file, contextElement, targetOffset);
+        if (element != null) {
+          return element;
+        }
+      }
+    }
+    return null;
+  }
+
+  @Override
   public String toString() {
     return getProviders().toString();
   }

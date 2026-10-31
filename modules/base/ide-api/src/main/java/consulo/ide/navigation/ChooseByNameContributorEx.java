@@ -18,6 +18,15 @@ public interface ChooseByNameContributorEx extends ChooseByNameContributor {
 
   void processNames(Processor<String> processor, SearchScope scope, @Nullable IdFilter filter);
 
+  /**
+   * The names for a search, which also knows the pattern the user typed ({@link FindSymbolParameters#getLocalPatternName()}): a
+   * contributor can offer names built from the pattern itself, like a URL path matched against route patterns. By default the
+   * names of the search scope
+   */
+  default void processNames(Processor<String> processor, FindSymbolParameters parameters) {
+    processNames(processor, parameters.getSearchScope(), parameters.getIdFilter());
+  }
+
   void processElementsWithName(String name, Processor<NavigationItem> processor, FindSymbolParameters parameters);
 
   /**

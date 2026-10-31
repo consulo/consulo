@@ -125,8 +125,7 @@ public abstract class ContributorsBasedGotoByModel implements ChooseByNameModelE
                     }
                     return true;
                 },
-                parameters.getSearchScope(),
-                parameters.getIdFilter()
+                parameters
             );
         }
         else {

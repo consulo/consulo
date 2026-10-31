@@ -118,7 +118,7 @@ public final class DocumentationTargetFinder {
         if (file != null) {
             DocumentationProvider provider = DocumentationManagerHelper.getProviderFromElement(file);
             if (provider instanceof DocumentationProviderEx providerEx) {
-                element = sameProject(project, providerEx.getCustomDocumentationElement(editor, file, contextElement));
+                element = sameProject(project, providerEx.getCustomDocumentationElement(editor, file, contextElement, offset));
             }
         }
 
