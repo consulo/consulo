@@ -31,6 +31,8 @@ import consulo.ui.ex.awt.tab.TabInfo;
 import consulo.ui.ex.awt.util.ColorUtil;
 
 import javax.swing.*;
+import javax.swing.plaf.ColorUIResource;
+import javax.swing.plaf.UIResource;
 import java.awt.*;
 import java.util.Iterator;
 import java.util.List;
@@ -64,7 +66,10 @@ public class IntelliJEditorTabsUI extends JBEditorTabsUI {
         super.installUI(c);
 
         JBTabsImpl tabs = (JBTabsImpl) c;
-        tabs.setBackground(UIUtil.getPanelBackground());
+        Color background = tabs.getBackground();
+        if (background == null || background instanceof UIResource) {
+            tabs.setBackground(new ColorUIResource(UIUtil.getPanelBackground()));
+        }
         tabs.setForeground(UIUtil.getLabelForeground());
     }
 
@@ -286,7 +291,7 @@ public class IntelliJEditorTabsUI extends JBEditorTabsUI {
             rectangle = new Rectangle(maxOffset, y, rect.width - maxOffset - insets.left - insets.right, height);
         }
 
-        doPaintBackground(g2d, rectangle);
+        doPaintBackground(g2d, rectangle, tabs.getBackground());
 
         doPaintAdditionalBackgroundIfFirstOffsetSet(tabs, g2d, clip);
 
@@ -335,14 +340,14 @@ public class IntelliJEditorTabsUI extends JBEditorTabsUI {
                 break;
             }
 
-            g2d.setPaint(UIUtil.getPanelBackground());
+            g2d.setPaint(tabs.getBackground());
 
             g2d.fillRect(clip.x, clip.y, clip.x + JBUI.scale(firstTabOffset - 1), clip.y + maxLength);
         }
     }
 
-    public void doPaintBackground(Graphics2D g, Rectangle rectangle) {
-        g.setPaint(UIUtil.getPanelBackground());
+    public void doPaintBackground(Graphics2D g, Rectangle rectangle, Color background) {
+        g.setPaint(background);
         g.fillRect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
     }
 

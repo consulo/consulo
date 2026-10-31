@@ -26,6 +26,8 @@ import java.awt.*;
  * @author Vladimir Kondratyev
  */
 public final class BasicStripeButtonUI extends BasicToggleButtonUI {
+    public static final int HIGHLIGHT_INSET = 5;
+
     public static final Color BACKGROUND_COLOR = JBColor.namedColor("ToolWindow.Button.hoverBackground", new JBColor(Gray.x55.withAlpha(40), Gray.x0F.withAlpha(40)));
 
     public static final Color SELECTED_BACKGROUND_COLOR = JBColor.namedColor("ToolWindow.Button.selectedBackground", new JBColor(Gray.x55.withAlpha(85), Gray.x0F.withAlpha(85)));
@@ -180,7 +182,7 @@ public final class BasicStripeButtonUI extends BasicToggleButtonUI {
                     color = BACKGROUND_COLOR;
                 }
 
-                TabPainter.paintTab(g2, 0, 0, button.getWidth(), button.getHeight(), color, new Insets(5, 5, 5, 5), true);
+                TabPainter.paintTab(g2, 0, 0, button.getWidth(), button.getHeight(), color, new Insets(HIGHLIGHT_INSET, HIGHLIGHT_INSET, HIGHLIGHT_INSET, HIGHLIGHT_INSET), true);
 
                 if (anchor == ToolWindowAnchor.LEFT) {
                     g2.translate(off, 0);

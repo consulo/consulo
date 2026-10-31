@@ -25,6 +25,7 @@ import consulo.dataContext.DataSink;
 import consulo.dataContext.UiDataProvider;
 import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.desktop.awt.ui.impl.tabs.JBEditorTabs;
+import consulo.desktop.awt.wm.impl.IslandsUI;
 import consulo.desktop.awt.ui.impl.tabs.JBTabsImpl;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -111,6 +112,9 @@ public final class DesktopAWTEditorTabbedContainer implements FileEditorTabbedCo
                 return ToolWindowManager.getInstance(project).isEditorComponentActive();
             }
         };
+        if (IslandsUI.isEnabled()) {
+            myTabs.setBackground(new JBColor(() -> TargetAWT.to(EditorColorsManager.getInstance().getGlobalScheme().getDefaultBackground())));
+        }
         AnAction entryPointGroup = actionManager.getAction("EditorTabsEntryPoint");
         if (entryPointGroup instanceof ActionGroup actionGroup) {
             myTabs.setEntryPointActionGroup(actionGroup);

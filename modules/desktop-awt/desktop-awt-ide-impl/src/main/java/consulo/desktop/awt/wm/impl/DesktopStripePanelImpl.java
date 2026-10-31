@@ -18,6 +18,7 @@ package consulo.desktop.awt.wm.impl;
 import consulo.application.ui.UISettings;
 import consulo.application.ui.event.UISettingsListener;
 import consulo.application.util.registry.Registry;
+import consulo.desktop.awt.ui.impl.plaf2.BasicStripeButtonUI;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ui.ex.internal.KeymapManagerEx;
@@ -67,12 +68,12 @@ final class DesktopStripePanelImpl extends JPanel {
 
     DesktopStripePanelImpl(int anchor, ToolWindowManagerBase manager) {
         super(new GridBagLayout());
-        setOpaque(true);
+        setOpaque(!IslandsUI.isEnabled());
         myManager = manager;
         myAnchor = anchor;
         myWeakKeymapManagerListener = new MyKeymapManagerListener();
         myUISettingsListener = new MyUISettingsListener();
-        if (anchor == SwingConstants.BOTTOM) {
+        if (anchor == SwingConstants.BOTTOM || IslandsUI.isEnabled()) {
             setBorder(JBUI.Borders.empty());
         }
         else {
@@ -202,6 +203,23 @@ final class DesktopStripePanelImpl extends JPanel {
         super.invalidate();
     }
 
+    int getIslandOverlap() {
+        int buttonsStart = Integer.MAX_VALUE;
+        int buttonsEnd = 0;
+        for (DesktopStripeButton button : myButtons) {
+            if (isConsideredInLayout(button) && button.getWidth() > 0) {
+                buttonsStart = Math.min(buttonsStart, button.getX());
+                buttonsEnd = Math.max(buttonsEnd, button.getX() + button.getWidth());
+            }
+        }
+        if (buttonsEnd == 0) {
+            return IslandsUI.getIslandGap();
+        }
+        int width = getPreferredSize().width;
+        int spare = myAnchor == SwingConstants.LEFT ? width - buttonsEnd : buttonsStart;
+        return Math.max(0, spare) + IslandsUI.getIslandGap();
+    }
+
     @Override
     public void doLayout() {
         if (!myFinishingDrop) {
@@ -231,7 +249,9 @@ final class DesktopStripePanelImpl extends JPanel {
         }
         else {
             data.eachX = 0;
-            data.eachY = JBUI.scale(3);
+            data.eachY = IslandsUI.isEnabled()
+                ? IslandsUI.getIslandGap() - JBUI.scale(BasicStripeButtonUI.HIGHLIGHT_INSET)
+                : JBUI.scale(3);
             data.size.height = data.eachY;
         }
 

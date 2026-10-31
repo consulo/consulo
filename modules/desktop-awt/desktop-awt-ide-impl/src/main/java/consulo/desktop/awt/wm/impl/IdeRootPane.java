@@ -114,6 +114,12 @@ public class IdeRootPane extends JRootPane implements Disposable, UISettingsList
         }
         myIdeMenuBar.install(this);
 
+        if (IslandsUI.isEnabled()) {
+            myContentPane.setBackground(IslandsUI.getMainBackground());
+            myStatusBar.putClientProperty("StatusBar.topBorderWidth", 0);
+            myStatusBar.setBorder(JBUI.Borders.empty(0, 0, 0, 6));
+        }
+
         IdeGlassPaneImpl glassPane = new IdeGlassPaneImpl(this);
         setGlassPane(glassPane);
         myGlassPaneInitialized = true;
@@ -189,7 +195,19 @@ public class IdeRootPane extends JRootPane implements Disposable, UISettingsList
 
     @Override
     protected final Container createContentPane() {
-        return myContentPane = new IdePanePanel(new BorderLayout());
+        return myContentPane = new IdePanePanel(new BorderLayout() {
+            @Override
+            public void layoutContainer(Container target) {
+                super.layoutContainer(target);
+
+                if (IslandsUI.isEnabled() && myStatusBar != null && myStatusBar.isVisible()) {
+                    Component center = getLayoutComponent(BorderLayout.CENTER);
+                    if (center != null) {
+                        center.setSize(center.getWidth(), center.getHeight() + IslandsUI.getIslandGap());
+                    }
+                }
+            }
+        });
     }
 
     public void updateToolbar() {

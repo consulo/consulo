@@ -177,10 +177,15 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
             }
         });
 
-        Border topBorder = JBUI.Borders.customLine(UIUtil.getBorderColor(), 1, 0, 0, 0);
-        Border bottomBorder = JBUI.Borders.customLine(MorphColor.of(UIUtil::getPanelBackground), 0, 0, 1, 0);
+        if (IslandsUI.isEnabled()) {
+            setBorder(JBUI.Borders.empty(1, 4));
+        }
+        else {
+            Border topBorder = JBUI.Borders.customLine(UIUtil.getBorderColor(), 1, 0, 0, 0);
+            Border bottomBorder = JBUI.Borders.customLine(MorphColor.of(UIUtil::getPanelBackground), 0, 0, 1, 0);
 
-        setBorder(JBUI.Borders.merge(topBorder, bottomBorder, false));
+            setBorder(JBUI.Borders.merge(topBorder, bottomBorder, false));
+        }
 
         new DoubleClickListener() {
             @Override

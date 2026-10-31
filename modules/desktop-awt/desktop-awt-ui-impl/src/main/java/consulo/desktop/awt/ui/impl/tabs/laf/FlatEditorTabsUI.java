@@ -19,7 +19,6 @@ import consulo.desktop.awt.ui.impl.tabs.laf.IntelliJEditorTabsUI;
 import consulo.desktop.awt.ui.impl.tabs.JBTabsImpl;
 import consulo.desktop.awt.ui.impl.tabs.TabLabel;
 import consulo.desktop.awt.ui.impl.tabs.laf.JBEditorTabsUI;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.desktop.awt.ui.impl.tabs.TabPainter;
 
 import javax.swing.*;
@@ -36,7 +35,7 @@ public class FlatEditorTabsUI extends IntelliJEditorTabsUI {
 
     @Override
     protected void fillInactiveTab(JBTabsImpl tabs, Graphics2D g2d, TabLabel label, ShapeInfo shape) {
-        g2d.setColor(UIUtil.getPanelBackground());
+        g2d.setColor(tabs.getBackground());
 
         g2d.fill(shape.fillPath.getShape());
 
@@ -55,7 +54,7 @@ public class FlatEditorTabsUI extends IntelliJEditorTabsUI {
     protected void fillActiveTabWithColor(TabLabel label, JBTabsImpl tabs, Graphics2D g2d) {
         ShapeInfo shape = computeLabelShape(tabs, label);
 
-        g2d.setColor(UIUtil.getPanelBackground());
+        g2d.setColor(tabs.getBackground());
 
         g2d.fill(shape.fillPath.getShape());
     }

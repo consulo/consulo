@@ -19,7 +19,10 @@ import consulo.desktop.awt.ui.impl.tabs.laf.FlatEditorTabsUI;
 import consulo.desktop.awt.ui.impl.plaf2.BasicStripeButtonUI;
 
 import com.formdev.flatlaf.FlatDefaultsAddon;
+import consulo.desktop.awt.ui.impl.plaf.BasicIdePanePanelUI;
 import consulo.desktop.awt.ui.impl.plaf.BasicStatusBarUI;
+import consulo.desktop.awt.ui.impl.plaf.IslandIdePanePanelUI;
+import consulo.desktop.awt.ui.impl.plaf.IslandPainter;
 import consulo.desktop.awt.ui.impl.components.OnOffButton;
 
 import javax.swing.*;
@@ -42,6 +45,7 @@ public class ConsuloFlatDefaultsAddon extends FlatDefaultsAddon {
 
         uiDefaults.put("JBEditorTabsUI", FlatEditorTabsUI.class.getName());
         uiDefaults.put("IdeStatusBarUI", BasicStatusBarUI.class.getName());
+        uiDefaults.put(BasicIdePanePanelUI.UI_CLASS_ID, IslandPainter.isEnabled() ? IslandIdePanePanelUI.class.getName() : BasicIdePanePanelUI.class.getName());
         uiDefaults.put("EditorTextFieldUI", FlatEditorTextFieldUI.class.getName());
         uiDefaults.put("OnOffButtonUI", OnOffButton.OnOffButtonUI.class.getName());
 

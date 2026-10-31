@@ -177,10 +177,12 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
                 myLayeredPane.setBounds(0, 0, size.width, size.height);
             }
             else {
+                int leftOverlap = IslandsUI.isEnabled() ? myLeftStripe.getIslandOverlap() : 0;
+                int rightOverlap = IslandsUI.isEnabled() ? myRightStripe.getIslandOverlap() : 0;
                 myLayeredPane.setBounds(
-                    leftSize.width,
+                    leftSize.width - leftOverlap,
                     topSize.height,
-                    size.width - leftSize.width - rightSize.width,
+                    size.width - leftSize.width - rightSize.width + leftOverlap + rightOverlap,
                     size.height - topSize.height
                 );
             }

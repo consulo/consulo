@@ -48,6 +48,7 @@ import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.JBUIScale;
 import consulo.ui.ex.awt.NonOpaquePanel;
+import consulo.desktop.awt.ui.impl.plaf.BasicIdePanePanelUI;
 import consulo.ui.ex.awt.Splitter;
 import consulo.ui.ex.awt.event.HoverStateListener;
 import consulo.ui.ex.awt.paint.LinePainter2D;
@@ -72,7 +73,7 @@ import java.util.Map;
  * @author Eugene Belyaev
  * @author Vladimir Kondratyev
  */
-public final class DesktopInternalDecorator extends JPanel implements Queryable, UiDataProvider, ToolWindowInternalDecorator {
+public final class DesktopInternalDecorator extends IdePanePanel implements Queryable, UiDataProvider, ToolWindowInternalDecorator {
     private static final HoverStateListener HOVER_STATE_LISTENER = new HoverStateListener() {
         @Override
         @RequiredUIAccess
@@ -108,7 +109,7 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
     private Disposable myDisposable;
 
     DesktopInternalDecorator(Project project, WindowInfoImpl info, final DesktopToolWindowImpl toolWindow, boolean dumbAware) {
-        super(new BorderLayout());
+        super(new BorderLayout(), false);
         myProject = project;
         myToolWindow = toolWindow;
         myToolWindow.setDecorator(this);
@@ -159,7 +160,13 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
 
         apply(info);
 
-        setBorder(new InnerPanelBorder(myToolWindow));
+        if (IslandsUI.isEnabled()) {
+            IslandsUI.installToolWindowBackgroundListener();
+            IslandsUI.setToolWindowBackgroundRecursively(this);
+        }
+        else {
+            setBorder(new InnerPanelBorder(myToolWindow));
+        }
     }
 
     @Override
@@ -184,6 +191,8 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
             return;
         }
         myInfo = (WindowInfoImpl) info;
+
+        setIslandRole(IslandsUI.isIsland(myInfo.getType()) ? BasicIdePanePanelUI.TOOL_WINDOW_ROLE : null);
 
         // Anchor
         ToolWindowAnchor anchor = myInfo.getAnchor();

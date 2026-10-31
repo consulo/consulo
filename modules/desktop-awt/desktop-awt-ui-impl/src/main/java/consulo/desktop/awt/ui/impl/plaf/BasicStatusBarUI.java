@@ -17,7 +17,6 @@ package consulo.desktop.awt.ui.impl.plaf;
 
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.JBValue;
 import consulo.ui.ex.awt.UIUtil;
 
 import javax.swing.*;
@@ -32,7 +31,7 @@ public class BasicStatusBarUI extends ComponentUI {
     return new BasicStatusBarUI();
   }
 
-  private static final JBValue BW = new JBValue.Float(1);
+  public static final String TOP_BORDER_WIDTH = "StatusBar.topBorderWidth";
 
   @Override
   public void paint(Graphics g, JComponent c) {
@@ -42,8 +41,11 @@ public class BasicStatusBarUI extends ComponentUI {
       g2d.setColor(UIUtil.getPanelBackground());
       g2d.fill(r);
 
-      g2d.setColor(JBColor.border());
-      g2d.fill(new Rectangle(r.x, r.y, r.width, BW.get()));
+      int borderWidth = JBUI.scale(c.getClientProperty(TOP_BORDER_WIDTH) instanceof Integer width ? width : JBUI.getInt(TOP_BORDER_WIDTH, 1));
+      if (borderWidth > 0) {
+        g2d.setColor(JBColor.border());
+        g2d.fill(new Rectangle(r.x, r.y, r.width, borderWidth));
+      }
     }
     finally {
       g2d.dispose();

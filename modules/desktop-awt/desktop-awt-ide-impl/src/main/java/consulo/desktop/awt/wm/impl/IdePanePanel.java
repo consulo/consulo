@@ -15,16 +15,55 @@
  */
 package consulo.desktop.awt.wm.impl;
 
+import consulo.desktop.awt.ui.impl.plaf.BasicIdePanePanelUI;
 import consulo.ui.ex.awt.JBPanel;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.style.ComponentColors;
 
+import org.jspecify.annotations.Nullable;
+
 import java.awt.*;
+import java.util.Objects;
 
 public class IdePanePanel extends JBPanel {
   public IdePanePanel(LayoutManager layout) {
+    this(layout, true);
+  }
+
+  protected IdePanePanel(LayoutManager layout, boolean editorAreaBackground) {
     super(layout);
 
-    setBackground(TargetAWT.to(ComponentColors.EDITOR_AREA_BACKGROUND));
+    if (editorAreaBackground) {
+      setBackground(TargetAWT.to(ComponentColors.EDITOR_AREA_BACKGROUND));
+    }
+  }
+
+  public void setIslandRole(@Nullable String role) {
+    if (Objects.equals(getClientProperty(BasicIdePanePanelUI.ISLAND_ROLE), role)) {
+      return;
+    }
+    putClientProperty(BasicIdePanePanelUI.ISLAND_ROLE, role);
+    updateUI();
+    revalidate();
+    repaint();
+  }
+
+  @Override
+  public String getUIClassID() {
+    return BasicIdePanePanelUI.UI_CLASS_ID;
+  }
+
+  @Override
+  protected void paintChildren(Graphics g) {
+    super.paintChildren(g);
+
+    if (ui instanceof BasicIdePanePanelUI paneUI) {
+      paneUI.paintAfterChildren(this, g);
+    }
+  }
+
+  @Override
+  public boolean isPaintingOrigin() {
+    return ui instanceof BasicIdePanePanelUI paneUI && paneUI.isPaintingOrigin(this);
   }
 }

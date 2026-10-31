@@ -19,6 +19,7 @@ import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.dataContext.DataManager;
 import consulo.desktop.awt.ui.impl.facade.AWTComponentProviderUtil;
 import consulo.desktop.awt.wm.impl.IdePanePanel;
+import consulo.desktop.awt.ui.impl.plaf.BasicIdePanePanelUI;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.impl.internal.FileEditorManagerImpl;
 import consulo.fileEditor.impl.internal.FileEditorsSplittersBase;
@@ -60,6 +61,9 @@ public class DesktopFileEditorsSplitters extends FileEditorsSplittersBase<Deskto
         super(applicationConcurrency, project, manager);
 
         myComponent = new IdePanePanel(new BorderLayout());
+        if (createOwnDockableContainer) {
+            myComponent.setIslandRole(BasicIdePanePanelUI.EDITOR_ROLE);
+        }
         myComponent.setFocusTraversalPolicy(new MyFocusTraversalPolicy());
         myComponent.setTransferHandler(new MyTransferHandler());
         DataManager.registerUiDataProvider(myComponent, sink -> {

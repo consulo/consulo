@@ -29,6 +29,8 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;
 import consulo.ui.ex.content.ContentManager;
+import consulo.ui.ex.content.event.ContentManagerEvent;
+import consulo.ui.ex.content.event.ContentManagerListener;
 import consulo.ui.ex.update.Activatable;
 import consulo.util.concurrent.AsyncResult;
 import org.jspecify.annotations.Nullable;
@@ -68,6 +70,15 @@ public final class DesktopToolWindowImpl extends ToolWindowBase {
         ContentFactory contentFactory = ContentFactory.getInstance();
         myContentUI = new DesktopToolWindowContentUi(this);
         ContentManager contentManager = myContentManager = contentFactory.createContentManager(myContentUI, canCloseContent, myToolWindowManager.getProject());
+
+        if (IslandsUI.isEnabled()) {
+            contentManager.addContentManagerListener(new ContentManagerListener() {
+                @Override
+                public void contentAdded(ContentManagerEvent event) {
+                    IslandsUI.setToolWindowBackgroundRecursively(event.getContent().getComponent());
+                }
+            });
+        }
 
         if (component != null) {
             Content content = contentFactory.createContent((JComponent) component, "", false);

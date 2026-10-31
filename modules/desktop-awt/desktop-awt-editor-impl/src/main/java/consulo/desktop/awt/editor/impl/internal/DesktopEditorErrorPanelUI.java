@@ -18,6 +18,7 @@ package consulo.desktop.awt.editor.impl.internal;
 import consulo.codeEditor.markup.MarkupModelEx;
 import consulo.codeEditor.markup.RangeHighlighterEx;
 import consulo.colorScheme.EditorColorsScheme;
+import consulo.desktop.awt.ui.impl.plaf.IslandPainter;
 import consulo.document.MarkupIterator;
 import consulo.document.util.ProperTextRange;
 import consulo.language.editor.impl.internal.markup.ErrorStripeRenderer;
@@ -312,6 +313,12 @@ public class DesktopEditorErrorPanelUI extends ComponentUI {
   }
 
   private void paintBackground(Graphics g, Rectangle bounds) {
+    if (IslandPainter.isEnabled()) {
+      g.setColor(TargetAWT.to(myPanel.getEditor().getBackgroundColor()));
+      g.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
+      return;
+    }
+
     g.setColor(UIUtil.getPanelBackground());
     g.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
 
