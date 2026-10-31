@@ -7,6 +7,8 @@ import org.cobraparser.html.FormInput;
 import org.cobraparser.html.domimpl.HTMLDocumentImpl;
 import org.cobraparser.html.gui.HtmlPanel;
 import org.cobraparser.ua.UserAgentContext;
+import org.jspecify.annotations.Nullable;
+import org.w3c.dom.Node;
 import org.w3c.dom.html.HTMLCollection;
 import org.w3c.dom.html.HTMLElement;
 
@@ -36,16 +38,29 @@ class ConsuloHtmlRendererContext extends AbstractHtmlRendererContext {
 
     @Override
     public boolean onMouseClick(HTMLElement element, MouseEvent event) {
-        if (!"A".equalsIgnoreCase(element.getTagName())) {
+        HTMLElement link = findLink(element);
+        if (link == null) {
             return true;
         }
 
-        String href = element.getAttribute("href");
+        String href = link.getAttribute("href");
         if (href == null || href.isEmpty()) {
             return true;
         }
 
         return !myLinkHandler.test(href, event);
+    }
+
+    /**
+     * The link around the clicked element, as a click on an image of a link reports the image
+     */
+    private static @Nullable HTMLElement findLink(HTMLElement element) {
+        for (Node node = element; node != null; node = node.getParentNode()) {
+            if (node instanceof HTMLElement html && "A".equalsIgnoreCase(html.getTagName())) {
+                return html;
+            }
+        }
+        return null;
     }
 
     @Override

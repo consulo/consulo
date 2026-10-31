@@ -24,9 +24,13 @@ import consulo.ui.Component;
 import consulo.ui.HtmlView;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.clipboard.DataTransfer;
+import consulo.ui.clipboard.DataTransferType;
+import consulo.ui.event.HtmlViewCopyEvent;
 import consulo.ui.event.HtmlViewDoubleClickEvent;
 import consulo.ui.event.HyperlinkEvent;
 import consulo.ui.event.details.InputDetails;
+import consulo.ui.impl.HtmlCopyButtons;
 import consulo.ui.impl.HtmlDocuments;
 import consulo.web.ui.impl.internal.WebColors;
 import consulo.ui.style.StyleManager;
@@ -40,11 +44,14 @@ import consulo.web.ui.impl.internal.image.WebImageElement;
 import consulo.web.ui.impl.internal.image.WebImageSpec;
 import consulo.web.ui.impl.internal.image.WebImageUrl;
 import org.jspecify.annotations.Nullable;
+import tools.jackson.databind.node.JsonNodeFactory;
+import tools.jackson.databind.node.ObjectNode;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import java.util.regex.Matcher;
@@ -72,13 +79,56 @@ public class WebHtmlViewImpl extends VaadinComponentDelegate<WebHtmlViewImpl.Vaa
                     return;
                 }
                 event.preventDefault();
+                const href = link.getAttribute('href');
+                if (href.startsWith($1)) {
+                    // written right here, inside the click: a browser refuses a write which comes after a round trip
+                    const targetId = href.substring($1.length);
+                    const value = root.consuloCopyTargets[targetId];
+                    if (!value) {
+                        return;
+                    }
+                    let written;
+                    if (value.html !== null && typeof ClipboardItem !== 'undefined' && navigator.clipboard.write) {
+                        const entries = {'text/html': new Blob([value.html], {type: 'text/html'})};
+                        if (value.text !== null) {
+                            entries['text/plain'] = new Blob([value.text], {type: 'text/plain'});
+                        }
+                        written = navigator.clipboard.write([new ClipboardItem(entries)]);
+                    }
+                    else {
+                        written = navigator.clipboard.writeText(value.text !== null ? value.text : value.html);
+                    }
+                    written.then(() => {
+                        const copyEvent = new MouseEvent('consulo-copy', event);
+                        copyEvent.consuloCopyTarget = targetId;
+                        this.dispatchEvent(copyEvent);
+                    }, error => console.warn('Cannot copy ' + targetId, error));
+                    return;
+                }
                 const linkEvent = new MouseEvent('consulo-link', event);
-                linkEvent.consuloHref = link.getAttribute('href');
+                linkEvent.consuloHref = href;
                 this.dispatchEvent(linkEvent);
             });
         }
         root.innerHTML = $0;
+        root.consuloCopyTargets = $2;
+        for (const targetId of Object.keys($2)) {
+            const target = root.getElementById(targetId);
+            if (!target) {
+                continue;
+            }
+            target.style.position = 'relative';
+            const button = document.createElement('a');
+            button.setAttribute('href', $1 + targetId);
+            button.title = $4;
+            button.innerHTML = $3;
+            button.style.cssText = 'position: absolute; top: ' + $5 + 'px; right: ' + $5 + 'px; line-height: 0; cursor: pointer;';
+            target.insertBefore(button, target.firstChild);
+        }
         """;
+
+    private static final String COPY_EVENT = "consulo-copy";
+    private static final String COPY_TARGET = "event.consuloCopyTarget";
 
     private static final String LINK_EVENT = "consulo-link";
     private static final String LINK_HREF = "event.consuloHref";
@@ -157,6 +207,13 @@ public class WebHtmlViewImpl extends VaadinComponentDelegate<WebHtmlViewImpl.Vaa
         );
 
         WebInputDetails.addClickEventListener(getVaadinComponent().getElement(), LINK_EVENT, this::onLink).addEventData(LINK_HREF);
+
+        getVaadinComponent().getElement().addEventListener(COPY_EVENT, event -> {
+            String targetId = event.getEventData().path(COPY_TARGET).asString("");
+            if (!targetId.isEmpty()) {
+                getListenerDispatcher(HtmlViewCopyEvent.class).onEvent(new HtmlViewCopyEvent(this, targetId));
+            }
+        }).addEventData(COPY_TARGET);
     }
 
     @RequiredUIAccess
@@ -282,14 +339,33 @@ public class WebHtmlViewImpl extends VaadinComponentDelegate<WebHtmlViewImpl.Vaa
     @Override
     public CompletableFuture<?> render(RenderData renderData) {
         String document = resolveImages(buildDocument(renderData));
+        ObjectNode copyTargets = toJson(renderData.copyTargets());
+        Object[] parameters = {
+            document,
+            HtmlCopyButtons.HREF_PREFIX,
+            copyTargets,
+            toImageHtml(HtmlCopyButtons.getImage()),
+            HtmlCopyButtons.getTooltip().get(),
+            HtmlCopyButtons.INSET
+        };
 
         UIAccess uiAccess = getUIAccess();
         if (uiAccess == null) {
-            getVaadinComponent().getElement().executeJs(RENDER_SCRIPT, document);
+            getVaadinComponent().getElement().executeJs(RENDER_SCRIPT, parameters);
             return CompletableFuture.completedFuture(null);
         }
 
-        return uiAccess.giveAsync(() -> getVaadinComponent().getElement().executeJs(RENDER_SCRIPT, document));
+        return uiAccess.giveAsync(() -> getVaadinComponent().getElement().executeJs(RENDER_SCRIPT, parameters));
+    }
+
+    private static ObjectNode toJson(Map<String, DataTransfer> copyTargets) {
+        ObjectNode result = JsonNodeFactory.instance.objectNode();
+        copyTargets.forEach((targetId, value) -> {
+            ObjectNode item = result.putObject(targetId);
+            item.put("text", value.get(DataTransferType.TEXT));
+            item.put("html", value.get(DataTransferType.HTML));
+        });
+        return result;
     }
 
     @Override

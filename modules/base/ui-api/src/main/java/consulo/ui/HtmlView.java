@@ -17,7 +17,9 @@ package consulo.ui;
 
 import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.clipboard.DataTransfer;
 import consulo.ui.event.ComponentEventListener;
+import consulo.ui.event.HtmlViewCopyEvent;
 import consulo.ui.event.HtmlViewDoubleClickEvent;
 import consulo.ui.event.HyperlinkEvent;
 import consulo.ui.image.Image;
@@ -25,6 +27,7 @@ import consulo.ui.internal.UIInternal;
 import org.jspecify.annotations.Nullable;
 
 import java.net.URL;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
@@ -44,7 +47,17 @@ public interface HtmlView extends Component {
      */
     String IMAGE_SRC_PREFIX = "consulo-image/";
 
-    record RenderData(String html, String inlineCss, URL[] externalCsses) {
+    /**
+     * @param copyTargets an element of the document whose {@code id} is a key gets a copy button over its top right corner, which
+     *                    puts the value on the clipboard - a block of code above all. The view draws the button itself, so the
+     *                    document carries no markup for it.
+     * @see #addCopyListener(ComponentEventListener)
+     */
+    record RenderData(String html, String inlineCss, URL[] externalCsses, Map<String, DataTransfer> copyTargets) {
+        public RenderData(String html, String inlineCss, URL[] externalCsses) {
+            this(html, inlineCss, externalCsses, Map.of());
+        }
+
         public RenderData(String html) {
             this(html, "", new URL[0]);
         }
@@ -97,6 +110,13 @@ public interface HtmlView extends Component {
      */
     default Disposable addHyperlinkListener(ComponentEventListener<Component, HyperlinkEvent> hyperlinkListener) {
         return addListener(HyperlinkEvent.class, hyperlinkListener);
+    }
+
+    /**
+     * Reports a click on a copy button of {@link RenderData#copyTargets()} once its value is on the clipboard
+     */
+    default Disposable addCopyListener(ComponentEventListener<HtmlView, HtmlViewCopyEvent> listener) {
+        return addListener(HtmlViewCopyEvent.class, listener);
     }
 
     default Disposable addDoubleClickListener(ComponentEventListener<HtmlView, HtmlViewDoubleClickEvent> listener) {

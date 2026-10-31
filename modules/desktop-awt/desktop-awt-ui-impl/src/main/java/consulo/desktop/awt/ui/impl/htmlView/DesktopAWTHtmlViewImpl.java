@@ -20,15 +20,20 @@ import consulo.desktop.awt.ui.impl.facade.FromSwingComponentWrapper;
 import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 import consulo.desktop.awt.ui.impl.event.DesktopAWTInputDetails;
 import consulo.ui.Component;
+import consulo.logging.Logger;
 import consulo.ui.HtmlView;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.clipboard.DataTransfer;
 import consulo.ui.color.ColorValue;
+import consulo.ui.event.HtmlViewCopyEvent;
 import consulo.ui.event.HtmlViewDoubleClickEvent;
 import consulo.ui.event.HyperlinkEvent;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
+import consulo.ui.impl.HtmlCopyButtons;
 import consulo.ui.impl.HtmlDocuments;
 import consulo.util.io.CharsetToolkit;
 import consulo.util.io.StreamUtil;
@@ -61,8 +66,12 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.net.URL;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author VISTALL
@@ -73,7 +82,11 @@ public class DesktopAWTHtmlViewImpl extends SwingComponentDelegate<DesktopAWTHtm
     private static final int CONTENT_WIDTH = 500;
     private static final int CONTENT_HEIGHT = 500;
 
+    private static final Logger LOG = Logger.getInstance(DesktopAWTHtmlViewImpl.class);
+
     private volatile @Nullable Function<String, Image> myImageResolver;
+
+    private volatile Map<String, DataTransfer> myCopyTargets = Map.of();
 
     private boolean mySizeToContent;
 
@@ -188,7 +201,8 @@ public class DesktopAWTHtmlViewImpl extends SwingComponentDelegate<DesktopAWTHtm
             }
         }
 
-        String htmlToRender = HtmlDocuments.withHead(html, getCssLines(inlineCss));
+        Map<String, DataTransfer> copyTargets = renderData.copyTargets();
+        String htmlToRender = HtmlDocuments.withHead(addCopyButtons(html, copyTargets.keySet()), getCssLines(inlineCss));
 
         Application.get().executeOnPooledThread(() -> {
             try {
@@ -200,6 +214,8 @@ public class DesktopAWTHtmlViewImpl extends SwingComponentDelegate<DesktopAWTHtm
                     HTMLDocumentImpl document = (HTMLDocumentImpl) builder.parse(is);
 
                     document.finishModifications();
+
+                    myCopyTargets = copyTargets;
 
                     panel.setDocument(document, context);
 
@@ -213,6 +229,11 @@ public class DesktopAWTHtmlViewImpl extends SwingComponentDelegate<DesktopAWTHtm
             catch (IOException | SAXException ioe) {
                 future.completeExceptionally(ioe);
                 throw new IllegalStateException("Unexpected condition.", ioe);
+            }
+            catch (RuntimeException e) {
+                // the pooled thread drops what it throws, so the document would stay old without a word
+                LOG.error("Cannot render an html view", e);
+                future.completeExceptionally(e);
             }
         });
 
@@ -263,7 +284,57 @@ public class DesktopAWTHtmlViewImpl extends SwingComponentDelegate<DesktopAWTHtm
         return "A".equalsIgnoreCase(element.getTagName()) && fragment.equals(element.getAttribute("name"));
     }
 
+    /**
+     * A button goes in as markup right after the opening tag of its target, the way a document would write it: an absolutely
+     * placed link in an empty box, which pins it to the top right corner of the content of the target
+     */
+    private static String addCopyButtons(String html, Set<String> targetIds) {
+        if (targetIds.isEmpty()) {
+            return html;
+        }
+
+        String tooltip = StringUtil.escapeXmlEntities(HtmlCopyButtons.getTooltip().get());
+        String result = html;
+        for (String targetId : targetIds) {
+            Pattern openingTag = Pattern.compile("<[a-zA-Z][\\w-]*\\b[^>]*\\bid\\s*=\\s*\"" + Pattern.quote(targetId) + "\"[^>]*>");
+            Matcher matcher = openingTag.matcher(result);
+            if (!matcher.find()) {
+                continue;
+            }
+
+            String button = "<div style=\"position:relative;height:0;\">"
+                + "<div style=\"position:absolute;top:" + HtmlCopyButtons.INSET + "px;right:" + HtmlCopyButtons.INSET + "px;\">"
+                + "<a href=\"" + HtmlCopyButtons.HREF_PREFIX + targetId + "\" title=\"" + tooltip + "\">"
+                + "<img src=\"" + IMAGE_SRC_PREFIX + HtmlCopyButtons.IMAGE_ID + "\" style=\"border:0;\"></a></div></div>";
+            result = result.substring(0, matcher.end()) + button + result.substring(matcher.end());
+        }
+        return result;
+    }
+
+    @RequiredUIAccess
+    private void copy(String targetId) {
+        DataTransfer value = myCopyTargets.get(targetId);
+        if (value == null) {
+            return;
+        }
+
+        UIAccess uiAccess = UIAccess.current();
+        uiAccess.getClipboard().setContents(value).whenCompleteAsync((result, error) -> {
+            if (error != null) {
+                LOG.warn("Cannot copy " + targetId + " of an html view", error);
+                return;
+            }
+            getListenerDispatcher(HtmlViewCopyEvent.class).onEvent(new HtmlViewCopyEvent(this, targetId));
+        }, uiAccess);
+    }
+
     private boolean onLink(String href, MouseEvent event) {
+        String copyTargetId = HtmlCopyButtons.getTargetId(href);
+        if (copyTargetId != null) {
+            copy(copyTargetId);
+            return true;
+        }
+
         if (hasListeners(HyperlinkEvent.class)) {
             getListenerDispatcher(HyperlinkEvent.class).onEvent(
                 new HyperlinkEvent(this, href, DesktopAWTInputDetails.convert(toAWTComponent(), event))
@@ -279,6 +350,10 @@ public class DesktopAWTHtmlViewImpl extends SwingComponentDelegate<DesktopAWTHtm
     }
 
     private @Nullable Image resolveImage(String id) {
+        if (HtmlCopyButtons.IMAGE_ID.equals(id)) {
+            return HtmlCopyButtons.getImage();
+        }
+
         Function<String, Image> resolver = myImageResolver;
         return resolver == null ? null : resolver.apply(id);
     }

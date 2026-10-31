@@ -24,25 +24,35 @@ import consulo.logging.Logger;
 import consulo.ui.HtmlView;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.clipboard.DataTransfer;
+import consulo.ui.event.HtmlViewCopyEvent;
 import consulo.ui.event.HtmlViewDoubleClickEvent;
 import consulo.ui.event.HyperlinkEvent;
 import consulo.ui.image.Image;
 import consulo.ui.style.ComponentColors;
+import consulo.ui.impl.HtmlCopyButtons;
 import consulo.ui.impl.HtmlDocuments;
 import consulo.util.io.StreamUtil;
+import io.qt.core.QRectF;
 import io.qt.core.QSize;
 import io.qt.core.QUrl;
 import io.qt.core.Qt;
+import io.qt.gui.QAbstractTextDocumentLayout;
 import io.qt.gui.QColor;
+import io.qt.gui.QCursor;
 import io.qt.gui.QDesktopServices;
 import io.qt.gui.QMouseEvent;
 import io.qt.gui.QPalette;
 import io.qt.gui.QPixmap;
+import io.qt.gui.QResizeEvent;
+import io.qt.gui.QTextBlock;
+import io.qt.gui.QTextBlockFormat;
 import io.qt.gui.QTextDocument;
 import io.qt.widgets.QFrame;
 import io.qt.widgets.QStyle;
 import io.qt.widgets.QSizePolicy;
 import io.qt.widgets.QTextBrowser;
+import io.qt.widgets.QToolButton;
 import io.qt.widgets.QWidget;
 import org.jspecify.annotations.Nullable;
 
@@ -50,6 +60,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
@@ -83,6 +98,18 @@ public class DesktopQtHtmlViewImpl extends QtComponentDelegate<QTextBrowser> imp
             }
 
             return super.loadResource(type, name);
+        }
+
+        @Override
+        protected void resizeEvent(QResizeEvent event) {
+            super.resizeEvent(event);
+            positionCopyButtons(this);
+        }
+
+        @Override
+        protected void scrollContentsBy(int dx, int dy) {
+            super.scrollContentsBy(dx, dy);
+            positionCopyButtons(this);
         }
 
         @Override
@@ -149,6 +176,17 @@ public class DesktopQtHtmlViewImpl extends QtComponentDelegate<QTextBrowser> imp
     private volatile @Nullable Function<String, Image> myImageResolver;
 
     private volatile @Nullable String myHtml;
+
+    private volatile Map<String, DataTransfer> myCopyTargets = Map.of();
+
+    /**
+     * The rich text engine places nothing over its text, so a copy button is a widget of its own on the viewport, kept at the top
+     * right corner of the first block of its target
+     */
+    private record CopyButton(QToolButton button, int position) {
+    }
+
+    private final List<CopyButton> myCopyButtons = new ArrayList<>();
 
     private @Nullable String myClickedAnchor;
 
@@ -224,9 +262,93 @@ public class DesktopQtHtmlViewImpl extends QtComponentDelegate<QTextBrowser> imp
         component.setHtml(html);
         component.document().setDocumentMargin(0);
 
+        rebuildCopyButtons(component);
+
         if (mySizeToContent) {
             component.updateGeometry();
         }
+    }
+
+    @RequiredUIAccess
+    private void rebuildCopyButtons(QTextBrowser component) {
+        for (CopyButton copyButton : myCopyButtons) {
+            copyButton.button().dispose();
+        }
+        myCopyButtons.clear();
+
+        Map<String, DataTransfer> copyTargets = myCopyTargets;
+        if (copyTargets.isEmpty()) {
+            return;
+        }
+
+        String tooltip = HtmlCopyButtons.getTooltip().get();
+        findAnchors(component.document(), copyTargets.keySet()).forEach((targetId, position) -> {
+            QToolButton button = new QToolButton(component.viewport());
+            button.setAutoRaise(true);
+            button.setIcon(toHostQIcon(HtmlCopyButtons.getImage()));
+            button.setToolTip(tooltip);
+            button.setCursor(new QCursor(Qt.CursorShape.PointingHandCursor));
+            button.clicked.connect(() -> copy(targetId));
+            button.adjustSize();
+            button.show();
+            myCopyButtons.add(new CopyButton(button, position));
+        });
+
+        positionCopyButtons(component);
+    }
+
+    /**
+     * An {@code id} of an element stays in the document only as an anchor of its first character
+     */
+    private static Map<String, Integer> findAnchors(QTextDocument document, Set<String> ids) {
+        Map<String, Integer> result = new HashMap<>();
+        for (QTextBlock block = document.begin(); block.isValid(); block = block.next()) {
+            for (QTextBlock.iterator it = block.begin(); !it.atEnd(); it.next()) {
+                for (String name : it.fragment().charFormat().anchorNames()) {
+                    if (ids.contains(name)) {
+                        result.putIfAbsent(name, it.fragment().position());
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    private void positionCopyButtons(QTextBrowser component) {
+        if (myCopyButtons.isEmpty()) {
+            return;
+        }
+
+        QTextDocument document = component.document();
+        QAbstractTextDocumentLayout layout = document.documentLayout();
+        int scrollX = component.horizontalScrollBar().value();
+        int scrollY = component.verticalScrollBar().value();
+        for (CopyButton copyButton : myCopyButtons) {
+            QTextBlock block = document.findBlock(copyButton.position());
+            QRectF rect = layout.blockBoundingRect(block);
+            QTextBlockFormat format = block.blockFormat();
+            QToolButton button = copyButton.button();
+            int x = (int) (rect.right() - format.rightMargin()) - button.width() - HtmlCopyButtons.INSET - scrollX;
+            int y = (int) (rect.top() + format.topMargin()) + HtmlCopyButtons.INSET - scrollY;
+            button.move(x, y);
+        }
+    }
+
+    @RequiredUIAccess
+    private void copy(String targetId) {
+        DataTransfer value = myCopyTargets.get(targetId);
+        if (value == null) {
+            return;
+        }
+
+        UIAccess uiAccess = getUIAccess();
+        uiAccess.getClipboard().setContents(value).whenCompleteAsync((result, error) -> {
+            if (error != null) {
+                LOG.warn("Cannot copy " + targetId + " of an html view", error);
+                return;
+            }
+            getListenerDispatcher(HtmlViewCopyEvent.class).onEvent(new HtmlViewCopyEvent(this, targetId));
+        }, uiAccess);
     }
 
     @Override
@@ -288,6 +410,7 @@ public class DesktopQtHtmlViewImpl extends QtComponentDelegate<QTextBrowser> imp
         String document = buildDocument(renderData);
 
         myHtml = document;
+        myCopyTargets = renderData.copyTargets();
 
         QTextBrowser component = myComponent;
         if (component == null) {
