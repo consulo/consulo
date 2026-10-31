@@ -38,6 +38,33 @@ public final class ImageEffects {
         return UIInternal.get()._ImageEffects_layered(images);
     }
 
+    /**
+     * The base image with the overlay drawn over it at a corner or the center, like a badge; the result has the size of the base
+     * image, an overlay larger than it is cut
+     */
+    public static Image overlay(Image base, Image overlay, OverlayPosition position) {
+        Objects.requireNonNull(base);
+        Objects.requireNonNull(overlay);
+        Objects.requireNonNull(position);
+
+        int width = base.getWidth();
+        int height = base.getHeight();
+        int x = switch (position) {
+            case TOP_LEFT, BOTTOM_LEFT -> 0;
+            case TOP_RIGHT, BOTTOM_RIGHT -> width - overlay.getWidth();
+            case CENTER -> (width - overlay.getWidth()) / 2;
+        };
+        int y = switch (position) {
+            case TOP_LEFT, TOP_RIGHT -> 0;
+            case BOTTOM_LEFT, BOTTOM_RIGHT -> height - overlay.getHeight();
+            case CENTER -> (height - overlay.getHeight()) / 2;
+        };
+        return canvas(width, height, canvas -> {
+            canvas.drawImage(base, 0, 0);
+            canvas.drawImage(overlay, x, y);
+        });
+    }
+
     public static Image resize(Image original, int widthWithHeight) {
         return resize(original, widthWithHeight, widthWithHeight);
     }

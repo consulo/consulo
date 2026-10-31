@@ -18,6 +18,7 @@ package consulo.ui.ex;
 
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
+import consulo.ui.image.OverlayPosition;
 import consulo.ui.style.ComponentColors;
 import consulo.ui.style.StyleColorValue;
 import consulo.util.lang.lazy.LazyValue;
@@ -96,14 +97,12 @@ public final class BadgeIconSupplier {
      * {@code icon} with a dot of {@code color} in its top right corner.
      */
     public static Image withIconBadge(Image icon, StyleColorValue color) {
-        int width = icon.getWidth();
-        int height = icon.getHeight();
-        return ImageEffects.canvas(width, height, canvas -> {
-            canvas.drawImage(icon, 0, 0);
+        Image dot = ImageEffects.canvas(BADGE_RADIUS * 2, BADGE_RADIUS * 2, canvas -> {
             canvas.setFillStyle(color);
             canvas.beginPath();
-            canvas.arc(width - BADGE_RADIUS, BADGE_RADIUS, BADGE_RADIUS, 0, 2 * Math.PI);
+            canvas.arc(BADGE_RADIUS, BADGE_RADIUS, BADGE_RADIUS, 0, 2 * Math.PI);
             canvas.fill();
         });
+        return ImageEffects.overlay(icon, dot, OverlayPosition.TOP_RIGHT);
     }
 }
