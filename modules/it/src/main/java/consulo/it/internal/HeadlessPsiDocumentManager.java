@@ -20,6 +20,9 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.language.impl.internal.psi.DocumentCommitProcessor;
 import consulo.language.impl.internal.psi.PsiDocumentManagerBase;
 import consulo.codeEditor.EditorFactory;
+import consulo.language.editor.internal.EditorEventMulticasterImpl;
+import consulo.language.inject.InjectedLanguageManager;
+import consulo.document.DocumentWindow;
 import consulo.project.Project;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -38,6 +41,10 @@ public class HeadlessPsiDocumentManager extends PsiDocumentManagerBase {
         // hears document changes - documents stay "committed" forever, commitDocument no-ops,
         // trees go stale and unsaved-document indexing indexes the old text
         EditorFactory.getInstance().getEventMulticaster().addDocumentListener(this, this);
+        // records the document events since the last commit; without them updating the smart pointers
+        // of a modified file (any PSI change of a file with problem descriptors) fails in MarkerCache
+        ((EditorEventMulticasterImpl) EditorFactory.getInstance().getEventMulticaster())
+            .addPrioritizedDocumentListener(new PriorityEventCollector(), this);
     }
 
     /**
@@ -47,5 +54,14 @@ public class HeadlessPsiDocumentManager extends PsiDocumentManagerBase {
      */
     @Override
     protected void assertCommitThread() {
+    }
+
+    /**
+     * Same as the production manager: the injected documents of the last committed host document (any injection,
+     * e.g. language injection into XML, needs it).
+     */
+    @Override
+    protected DocumentWindow freezeWindow(DocumentWindow document) {
+        return InjectedLanguageManager.getInstance(myProject).freezeWindow(document);
     }
 }

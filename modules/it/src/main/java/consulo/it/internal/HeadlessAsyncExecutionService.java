@@ -258,6 +258,18 @@ public class HeadlessAsyncExecutionService extends AsyncExecutionService {
             }
         }
 
+        /**
+         * Like the production NonBlockingReadAction, re-checks expiration once the read lock is taken: a write action
+         * that ran while waiting for it may have expired the computation (e.g. a document commit task after a
+         * synchronous commit of the same document).
+         */
+        private T computeInReadAction() throws Exception {
+            if (isExpired()) {
+                throw new ProcessCanceledException();
+            }
+            return myComputation.call();
+        }
+
         @Override
         public T executeSynchronously() throws ProcessCanceledException {
             if (isExpired()) {
@@ -280,14 +292,14 @@ public class HeadlessAsyncExecutionService extends AsyncExecutionService {
         private T compute() throws Exception {
             ProgressIndicator indicator = myProgressIndicator;
             if (indicator == null) {
-                return ReadAction.compute(myComputation::call);
+                return ReadAction.compute(this::computeInReadAction);
             }
 
             List<T> result = new ArrayList<>(1);
             List<Exception> failure = new ArrayList<>(1);
             ProgressManager.getInstance().runProcess(() -> {
                 try {
-                    result.add(ReadAction.compute(myComputation::call));
+                    result.add(ReadAction.compute(this::computeInReadAction));
                 }
                 catch (Exception e) {
                     failure.add(e);
