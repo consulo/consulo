@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.openapi.paths;
+package consulo.language.impl.psi.path;
 
 import consulo.document.util.TextRange;
 import consulo.util.io.URLUtil;
@@ -25,7 +25,6 @@ import consulo.language.psi.PsiReference;
 import consulo.language.psi.PsiReferenceBase;
 import consulo.language.psi.path.PathReference;
 import consulo.language.psi.path.PathReferenceProvider;
-import consulo.language.impl.psi.path.WebReference;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;

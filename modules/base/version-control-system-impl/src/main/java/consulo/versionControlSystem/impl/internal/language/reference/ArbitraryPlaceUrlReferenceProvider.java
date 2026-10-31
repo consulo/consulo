@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.psi.impl.source.resolve.reference;
+package consulo.versionControlSystem.impl.internal.language.reference;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.util.*;
-import consulo.ide.impl.idea.openapi.paths.GlobalPathReferenceProvider;
+import consulo.language.impl.psi.path.GlobalPathReferenceProvider;
 import consulo.versionControlSystem.IssueNavigationConfiguration;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;

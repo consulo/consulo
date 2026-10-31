@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.openapi.paths;
 
+import consulo.language.impl.psi.path.GlobalPathReferenceProvider;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.document.util.TextRange;

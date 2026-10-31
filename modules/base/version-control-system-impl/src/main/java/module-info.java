@@ -19,6 +19,7 @@ module consulo.version.control.system.impl {
     // TODO we need it?
     requires consulo.language.editor.api;
     requires consulo.language.editor.impl;
+    requires consulo.language.impl;
     requires consulo.language.editor.ui.api;
     requires consulo.ui.ex.impl;
 

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.psi.impl.source.resolve.reference;
+package consulo.versionControlSystem.impl.internal.language.reference;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.psi.ReferenceProviderType;
@@ -21,6 +21,7 @@ import consulo.language.Language;
 import consulo.language.pattern.PlatformPatterns;
 import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiReferenceContributor;
+import consulo.language.psi.PsiReferenceProviderByType;
 import consulo.language.psi.PsiReferenceRegistrar;
 
 @ExtensionImpl
@@ -32,15 +33,13 @@ public class CommentsReferenceContributor extends PsiReferenceContributor {
    * Also you can register your own reference provider as 'comment reference provider' and it will be
    * applied to all PsiComment and other elements that uses this provider type for retrieving references.
    */
-  /**
-   * @deprecated use {@link ReferenceProviderType#COMMENTS}
-   */
-  @Deprecated
-  public static final ReferenceProviderType COMMENTS_REFERENCE_PROVIDER_TYPE = ReferenceProviderType.COMMENTS;
-
   @Override
   public void registerReferenceProviders(PsiReferenceRegistrar registrar) {
-    registrar.registerReferenceProvider(PlatformPatterns.psiElement(PsiComment.class), ReferenceProviderType.COMMENTS.getProvider());
+    // the provider of the type may be missing (no provider registered for it in this distribution)
+    PsiReferenceProviderByType provider = PsiReferenceProviderByType.forType(ReferenceProviderType.COMMENTS);
+    if (provider != null) {
+      registrar.registerReferenceProvider(PlatformPatterns.psiElement(PsiComment.class), provider);
+    }
   }
 
   

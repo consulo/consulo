@@ -472,7 +472,6 @@ open module consulo.ide.impl {
     exports consulo.ide.impl.psi.impl.cache.impl.id;
     exports consulo.ide.impl.psi.impl.search;
     exports consulo.ide.impl.psi.impl.source.codeStyle;
-    exports consulo.ide.impl.psi.impl.source.resolve.reference;
     exports consulo.ide.impl.psi.impl.source.resolve.reference.impl.providers;
     exports consulo.ide.impl.psi.search;
     exports consulo.ide.impl.psi.search.scope;
