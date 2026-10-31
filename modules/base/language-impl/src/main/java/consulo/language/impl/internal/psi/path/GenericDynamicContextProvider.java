@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.openapi.paths;
+package consulo.language.impl.internal.psi.path;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.psi.OuterLanguageElement;
