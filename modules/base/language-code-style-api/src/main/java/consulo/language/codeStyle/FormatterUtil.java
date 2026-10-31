@@ -132,6 +132,33 @@ public class FormatterUtil {
         return getPreviousNonWhitespaceLeaf(treeParent);
     }
 
+    public static @Nullable ASTNode getNextNonWhitespaceLeaf(@Nullable ASTNode node) {
+        if (node == null) {
+            return null;
+        }
+        ASTNode treeNext = node.getTreeNext();
+        if (treeNext != null) {
+            ASTNode candidate = firstLeaf(treeNext);
+            if (!isWhitespaceOrEmpty(candidate)) {
+                return candidate;
+            }
+            return getNextNonWhitespaceLeaf(candidate);
+        }
+        ASTNode treeParent = node.getTreeParent();
+        if (treeParent == null || treeParent.getTreeParent() == null) {
+            return null;
+        }
+        return getNextNonWhitespaceLeaf(treeParent);
+    }
+
+    private static ASTNode firstLeaf(ASTNode node) {
+        ASTNode leaf = node;
+        while (leaf.getFirstChildNode() != null) {
+            leaf = leaf.getFirstChildNode();
+        }
+        return leaf;
+    }
+
     private static ASTNode lastLeaf(ASTNode node) {
         ASTNode leaf = node;
         while (leaf.getLastChildNode() != null) {
