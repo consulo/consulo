@@ -48,6 +48,10 @@ public final class IslandsUI {
         Toolkit.getDefaultToolkit().addAWTEventListener(event -> {
             if (event.getID() == ContainerEvent.COMPONENT_ADDED && event instanceof ContainerEvent containerEvent) {
                 Component child = containerEvent.getChild();
+                if (containerEvent.getContainer() instanceof CellRendererPane
+                    || SwingUtilities.getAncestorOfClass(CellRendererPane.class, child) != null) {
+                    return;
+                }
                 if (SwingUtilities.getAncestorOfClass(DesktopInternalDecorator.class, child) instanceof DesktopInternalDecorator decorator
                     && isIsland(decorator.getToolWindow().getType())) {
                     setToolWindowBackgroundRecursively(child);
@@ -65,6 +69,9 @@ public final class IslandsUI {
     }
 
     private static void setBackgroundFor(Component component, Color background) {
+        if (component instanceof CellRendererPane) {
+            return;
+        }
         if (updateBackgroundFor(component)) {
             component.setBackground(background);
         }
@@ -84,12 +91,13 @@ public final class IslandsUI {
         }
         Border border = tree.getBorder();
         if (border == null || border instanceof UIResource) {
-            tree.setBorder(new BorderUIResource.EmptyBorderUIResource(JBUI.insets(4, 0)));
+            tree.setBorder(new BorderUIResource.EmptyBorderUIResource(JBUI.insets(4, 12)));
         }
     }
 
     private static boolean updateBackgroundFor(Component component) {
         if (component instanceof ActionButtonComponent
+            || component instanceof AbstractButton
             || component instanceof Divider
             || component instanceof JTextComponent
             || component instanceof JComboBox<?>

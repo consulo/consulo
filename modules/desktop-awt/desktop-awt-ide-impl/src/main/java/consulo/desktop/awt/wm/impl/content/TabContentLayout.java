@@ -9,7 +9,6 @@ import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.RelativeRectangle;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.dnd.DnDSupport;
 import consulo.ui.ex.awt.dnd.DnDTarget;
 import consulo.ui.ex.content.Content;
@@ -276,10 +275,6 @@ class TabContentLayout extends ContentLayout {
                 Rectangle r = each.getBounds();
                 Graphics2D g2d = (Graphics2D) g.create();
                 g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-                g2d.setColor(UIUtil.getPanelBackground());
-
-                g2d.fillRect(isIdVisible() ? r.x : r.x, r.y, r.width, r.height);
 
                 if (each.isSelected()) {
                     TabPainter.paintTabSelection(g2d, r.x, r.y, r.width, r.height, myUi.myWindow.isActive());
