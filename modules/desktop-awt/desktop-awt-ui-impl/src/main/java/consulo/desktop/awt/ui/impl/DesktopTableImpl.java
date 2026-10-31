@@ -15,6 +15,8 @@
  */
 package consulo.desktop.awt.ui.impl;
 
+import consulo.desktop.awt.ui.impl.clipboard.DesktopAWTTransferHandlerAdapter;
+import consulo.desktop.awt.ui.impl.clipboard.DesktopAWTTransferTarget;
 import consulo.desktop.awt.ui.impl.event.DesktopAWTInputDetails;
 import consulo.desktop.awt.ui.impl.image.DesktopAWTCellImage;
 import consulo.desktop.awt.ui.impl.facade.FromSwingComponentWrapper;
@@ -22,8 +24,10 @@ import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Length;
 import consulo.ui.Component;
+import consulo.ui.DragAndDropTransferHandler;
 import consulo.ui.Table;
 import consulo.ui.TableColumn;
+import consulo.ui.TransferHandler;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.TableDoubleClickEvent;
 import consulo.ui.event.TableSelectEvent;
@@ -51,7 +55,7 @@ import java.util.function.Function;
  * @author VISTALL
  * @since 2020-09-15
  */
-class DesktopTableImpl<Item> extends SwingComponentDelegate<TableView<Item>> implements Table<Item> {
+class DesktopTableImpl<Item> extends SwingComponentDelegate<TableView<Item>> implements Table<Item>, DesktopAWTTransferTarget<Item> {
     class MyTableView extends TableView<Item> implements FromSwingComponentWrapper {
         MyTableView(DesktopTableModel<Item> model) {
             super(model);
@@ -75,6 +79,7 @@ class DesktopTableImpl<Item> extends SwingComponentDelegate<TableView<Item>> imp
     private @Nullable Function<Item, String> mySpeedSearchConverter;
     private @Nullable Function<Item, Length> myItemHeightGetter;
     private @Nullable Function<Item, ColorValue> myRowBackgroundGetter;
+    private @Nullable TransferHandler<Item> myTransferHandler;
     private @Nullable DesktopAWTCellImage myHoveredCellImage;
     private long myHoveredCellKey = -1;
 
@@ -93,6 +98,7 @@ class DesktopTableImpl<Item> extends SwingComponentDelegate<TableView<Item>> imp
         applyHeader(tableView);
         applySpeedSearch(tableView);
         applyItemHeight(tableView);
+        applyTransferHandler(tableView);
         if (myModel instanceof LazyFlatDataModel) {
             tableView.setMaxItemsForSizeCalculation(MAX_ITEMS_FOR_SIZE_CALCULATION);
         }
@@ -268,6 +274,67 @@ class DesktopTableImpl<Item> extends SwingComponentDelegate<TableView<Item>> imp
         for (int row = 0; row < tableView.getRowCount(); row++) {
             tableView.setRowHeight(row, DesktopLength.toPixels(tableView, myItemHeightGetter.apply(tableView.getRow(row))));
         }
+    }
+
+    private void applyTransferHandler(TableView<Item> tableView) {
+        TransferHandler<Item> handler = myTransferHandler;
+        if (handler == null) {
+            tableView.setTransferHandler(null);
+            tableView.setDragEnabled(false);
+            return;
+        }
+
+        DesktopAWTTransferHandlerAdapter<Item> adapter = new DesktopAWTTransferHandlerAdapter<>(this, handler, this);
+        tableView.setTransferHandler(adapter);
+        tableView.setDragEnabled(adapter.isDragAndDropSupported());
+        if (adapter.isDragAndDropSupported()) {
+            tableView.setDropMode(DropMode.ON_OR_INSERT_ROWS);
+        }
+    }
+
+    @Override
+    public void setTransferHandler(@Nullable TransferHandler<Item> handler) {
+        myTransferHandler = handler;
+        if (isInitialized()) {
+            applyTransferHandler(toAWTComponent());
+        }
+    }
+
+    @Override
+    public @Nullable TransferHandler<Item> getTransferHandler() {
+        return myTransferHandler;
+    }
+
+    @Override
+    public List<Item> getTransferItems() {
+        return toAWTComponent().getSelectedObjects();
+    }
+
+    /**
+     * The toolkit states a drop between rows as the index it would be inserted at, so an insertion is turned back into the
+     * row it lands next to - past the last row, below that row.
+     */
+    @Override
+    public @Nullable Drop<Item> resolveDrop(javax.swing.TransferHandler.TransferSupport support) {
+        if (!(support.getDropLocation() instanceof JTable.DropLocation location)) {
+            return null;
+        }
+
+        TableView<Item> tableView = toAWTComponent();
+        int rowCount = tableView.getRowCount();
+        int row = location.getRow();
+        if (rowCount == 0 || row < 0) {
+            return null;
+        }
+
+        if (!location.isInsertRow()) {
+            return row < rowCount ? new Drop<>(tableView.getRow(row), DragAndDropTransferHandler.DropPosition.INTO) : null;
+        }
+
+        if (row < rowCount) {
+            return new Drop<>(tableView.getRow(row), DragAndDropTransferHandler.DropPosition.ABOVE);
+        }
+        return new Drop<>(tableView.getRow(rowCount - 1), DragAndDropTransferHandler.DropPosition.BELOW);
     }
 
     @Override

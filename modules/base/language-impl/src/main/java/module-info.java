@@ -71,6 +71,7 @@ module consulo.language.impl {
     exports consulo.language.impl.internal.template to consulo.ide.impl;
     exports consulo.language.impl.internal.psi.search to
         consulo.ide.impl,
+        consulo.it,
         consulo.test.impl;
     exports consulo.language.impl.internal.content.scope to
         consulo.ide.impl,

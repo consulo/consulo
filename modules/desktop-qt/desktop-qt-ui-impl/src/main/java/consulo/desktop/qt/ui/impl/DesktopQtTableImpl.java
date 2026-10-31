@@ -15,17 +15,22 @@
  */
 package consulo.desktop.qt.ui.impl;
 
+import consulo.desktop.qt.ui.impl.clipboard.DesktopQtDragAndDropSupport;
+import consulo.desktop.qt.ui.impl.clipboard.DesktopQtDrop;
+import consulo.desktop.qt.ui.impl.clipboard.DesktopQtTransferTarget;
 import consulo.desktop.qt.ui.impl.font.DesktopQtFontImpl;
 import consulo.desktop.qt.ui.impl.image.DesktopQtCellImage;
 import consulo.desktop.qt.ui.impl.image.DesktopQtIconOwner;
 import consulo.desktop.qt.ui.impl.image.DesktopQtImage;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ComponentItemRenderer;
+import consulo.ui.DragAndDropTransferHandler;
 import consulo.ui.Length;
 import consulo.ui.RenderItem;
 import consulo.ui.Table;
 import consulo.ui.TableColumn;
 import consulo.ui.TableItemEditor;
+import consulo.ui.TransferHandler;
 import consulo.ui.ValueComponent;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
@@ -46,8 +51,13 @@ import io.qt.core.QRect;
 import io.qt.core.QSize;
 import io.qt.core.Qt;
 import io.qt.gui.QBrush;
+import io.qt.gui.QDragEnterEvent;
+import io.qt.gui.QDragLeaveEvent;
+import io.qt.gui.QDragMoveEvent;
+import io.qt.gui.QDropEvent;
 import io.qt.gui.QFont;
 import io.qt.gui.QMouseEvent;
+import io.qt.gui.QPaintEvent;
 import io.qt.widgets.QAbstractItemView;
 import io.qt.widgets.QTableView;
 import io.qt.widgets.QWidget;
@@ -64,7 +74,58 @@ import java.util.function.Function;
  */
 @SuppressWarnings({"unchecked", "rawtypes"})
 public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableView>
-    implements Table<Item>, DesktopQtIconOwner, TableColumnOwner {
+    implements Table<Item>, DesktopQtIconOwner, TableColumnOwner, DesktopQtTransferTarget<Item> {
+    private static final class QtTable extends QTableView {
+        private final DesktopQtDragAndDropSupport<?> myDragAndDrop;
+
+        private QtTable(QWidget parent, DesktopQtDragAndDropSupport<?> dragAndDrop) {
+            super(parent);
+            myDragAndDrop = dragAndDrop;
+        }
+
+        @Override
+        protected void startDrag(Qt.DropActions supportedActions) {
+            myDragAndDrop.startDrag(this);
+        }
+
+        @Override
+        protected void dragEnterEvent(QDragEnterEvent event) {
+            myDragAndDrop.dragEnter(this, event);
+        }
+
+        @Override
+        protected void dragMoveEvent(QDragMoveEvent event) {
+            myDragAndDrop.dragMove(this, event);
+            if (myDragAndDrop.shouldAutoScroll(this, event.position().toPoint())) {
+                startAutoScroll();
+            }
+        }
+
+        @Override
+        protected void dragLeaveEvent(QDragLeaveEvent event) {
+            stopAutoScroll();
+            myDragAndDrop.dragLeave(this);
+        }
+
+        @Override
+        protected void dropEvent(QDropEvent event) {
+            stopAutoScroll();
+            myDragAndDrop.drop(this, event);
+        }
+
+        @Override
+        protected void paintEvent(QPaintEvent event) {
+            super.paintEvent(event);
+            myDragAndDrop.paintIndicator(this);
+        }
+
+        @Override
+        protected void scrollContentsBy(int dx, int dy) {
+            super.scrollContentsBy(dx, dy);
+            myDragAndDrop.contentsScrolled(this);
+        }
+    }
+
     private final class TableModel extends QAbstractTableModel {
         TableModel(QObject parent) {
             super(parent);
@@ -101,6 +162,10 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableView>
 
         @Override
         public Qt.ItemFlags flags(QModelIndex index) {
+            // a view starts a drag only from a row its model calls draggable
+            if (myTransferHandler instanceof DragAndDropTransferHandler) {
+                return new Qt.ItemFlags(Qt.ItemFlag.ItemIsEnabled, Qt.ItemFlag.ItemIsSelectable, Qt.ItemFlag.ItemIsDragEnabled);
+            }
             return new Qt.ItemFlags(Qt.ItemFlag.ItemIsEnabled, Qt.ItemFlag.ItemIsSelectable);
         }
 
@@ -149,6 +214,9 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableView>
     private @Nullable Function<Item, ColorValue> myRowBackgroundGetter;
 
     private final List<TableColumnImpl<Item, ?>> myColumns = new ArrayList<>();
+
+    private @Nullable TransferHandler<Item> myTransferHandler;
+    private final DesktopQtDragAndDropSupport<Item> myDragAndDrop = new DesktopQtDragAndDropSupport<>(this, this);
 
     private boolean myAllowMultipleSelect;
     private boolean myShowHeader = true;
@@ -211,7 +279,7 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableView>
 
     @Override
     protected QTableView createQt(QWidget parent) {
-        QTableView table = new QTableView(parent);
+        QTableView table = new QtTable(parent, myDragAndDrop);
         TableModel tableModel = new TableModel(table);
         myTableModel = tableModel;
         table.setModel(tableModel);
@@ -242,6 +310,7 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableView>
         component.horizontalHeader().sectionClicked.connect(this::sortByColumn);
 
         mySpeedSearch.install(component);
+        myDragAndDrop.install(component);
 
         component.viewport().setMouseTracking(true);
         component.viewport().installEventFilter(new QObject(component) {
@@ -758,6 +827,58 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableView>
         myItemHeightGetter = getter;
 
         updateRowHeights();
+    }
+
+    @Override
+    public void setTransferHandler(@Nullable TransferHandler<Item> handler) {
+        myTransferHandler = handler;
+        myDragAndDrop.setHandler(handler, myComponent);
+    }
+
+    @Override
+    public @Nullable TransferHandler<Item> getTransferHandler() {
+        return myTransferHandler;
+    }
+
+    @Override
+    public List<Item> getTransferItems() {
+        return getSelectedItems();
+    }
+
+    @Override
+    public @Nullable DesktopQtDrop<Item> resolveDrop(QPoint position) {
+        QTableView component = myComponent;
+        if (component == null || component.isDisposed() || myOrder.size() == 0) {
+            return null;
+        }
+
+        QModelIndex index = component.indexAt(position);
+        if (!index.isValid()) {
+            // past the last row the drop lands below it, like a list
+            int last = myOrder.size() - 1;
+            return new DesktopQtDrop<>(myOrder.get(last), DragAndDropTransferHandler.DropPosition.BELOW,
+                DesktopQtDragAndDropSupport.lineBelow(rowRect(component, last)));
+        }
+
+        Item item = itemAtRow(index.row());
+        if (item == null) {
+            return null;
+        }
+
+        QRect rect = rowRect(component, index.row());
+        DragAndDropTransferHandler.DropPosition dropPosition = DesktopQtDragAndDropSupport.positionOf(rect, position);
+        return switch (dropPosition) {
+            case ABOVE -> new DesktopQtDrop<>(item, dropPosition, DesktopQtDragAndDropSupport.lineAbove(rect));
+            case BELOW -> new DesktopQtDrop<>(item, dropPosition, DesktopQtDragAndDropSupport.lineBelow(rect));
+            case INTO -> new DesktopQtDrop<>(item, dropPosition, rect);
+        };
+    }
+
+    /**
+     * The whole row in viewport coordinates - a cell rect would draw the indicator under one column only.
+     */
+    private static QRect rowRect(QTableView component, int row) {
+        return new QRect(0, component.rowViewportPosition(row), component.viewport().width(), component.rowHeight(row));
     }
 
     @Override

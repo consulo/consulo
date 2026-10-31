@@ -15,9 +15,12 @@
  */
 package consulo.web.ui.impl.internal;
 
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
+import com.vaadin.flow.component.grid.dnd.GridDropLocation;
+import com.vaadin.flow.component.grid.dnd.GridDropMode;
 import com.vaadin.flow.data.provider.CallbackDataProvider;
 import com.vaadin.flow.data.provider.Query;
 import com.vaadin.flow.data.selection.MultiSelect;
@@ -25,10 +28,13 @@ import com.vaadin.flow.data.selection.MultiSelectionEvent;
 import com.vaadin.flow.data.selection.SelectionEvent;
 import com.vaadin.flow.data.selection.SingleSelectionEvent;
 import consulo.localize.LocalizeValue;
+import consulo.ui.DragAndDropTransferHandler;
 import consulo.ui.Length;
 import consulo.ui.Table;
 import consulo.ui.TableColumn;
+import consulo.ui.TransferHandler;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.clipboard.DataTransfer;
 import consulo.ui.color.ColorValue;
 import consulo.ui.event.TableDoubleClickEvent;
 import consulo.ui.event.TableSelectEvent;
@@ -60,6 +66,63 @@ public class WebTableImpl<Item> extends VaadinComponentDelegate<WebTableImpl<Ite
 
     @StyleSheet("/table/webTable.css")
     public class Vaadin extends Grid<Item> implements FromVaadinComponentWrapper {
+        private List<Item> myDraggedItems = List.of();
+        private DataTransfer myDragTransfer = DataTransfer.EMPTY;
+        private @Nullable DragAndDropTransferHandler<Item> myDragAndDropHandler;
+        private boolean myDragAndDropBound;
+
+        /**
+         * The toolkit tells the browser what may be dropped where, and only reports a drop that got past it, so the check
+         * pass the handler is owed is run here right before the drop itself. The listeners stay once added and read the
+         * current handler, so a handler swapped later is not answered by the old one too.
+         */
+        private void bindDragAndDrop(DragAndDropTransferHandler<Item> handler) {
+            myDragAndDropHandler = handler;
+            if (myDragAndDropBound) {
+                return;
+            }
+            myDragAndDropBound = true;
+
+            addDragStartListener(event -> {
+                DragAndDropTransferHandler<Item> current = myDragAndDropHandler;
+                if (current == null) {
+                    return;
+                }
+                myDraggedItems = List.copyOf(event.getDraggedItems());
+                DataTransfer transfer = current.createDragTransfer(WebTableImpl.this, myDraggedItems, true);
+                myDragTransfer = transfer == null ? DataTransfer.EMPTY : transfer;
+                getUI().ifPresent(ui -> WebDragSession.start(ui, this, myDragTransfer));
+            });
+
+            addDragEndListener(event -> {
+                myDraggedItems = List.of();
+                myDragTransfer = DataTransfer.EMPTY;
+                getUI().ifPresent(ui -> WebDragSession.end(ui, this));
+            });
+
+            addDropListener(event -> {
+                DragAndDropTransferHandler<Item> current = myDragAndDropHandler;
+                Item target = event.getDropTargetItem().orElse(null);
+                DragAndDropTransferHandler.DropPosition position = positionOf(event.getDropLocation());
+                if (current == null || target == null || position == null) {
+                    return;
+                }
+
+                DataTransfer transfer = myDraggedItems.isEmpty() ? foreignDragTransfer() : myDragTransfer;
+                WebDropContext<Item> context = new WebDropContext<>(target, position, transfer, myDraggedItems, true);
+                if (!current.drop(WebTableImpl.this, context)) {
+                    return;
+                }
+
+                current.drop(WebTableImpl.this, context.toPerforming());
+            });
+        }
+
+        private DataTransfer foreignDragTransfer() {
+            UI ui = getUI().orElse(null);
+            return ui == null || WebDragSession.getSource(ui) == this ? DataTransfer.EMPTY : WebDragSession.getTransfer(ui);
+        }
+
         @Override
         public consulo.ui.@Nullable Component toUIComponent() {
             return WebTableImpl.this;
@@ -79,6 +142,7 @@ public class WebTableImpl<Item> extends VaadinComponentDelegate<WebTableImpl<Ite
     private boolean myAllowMultipleSelect;
     private @Nullable Item mySelectionAnchor;
     private @Nullable Item myLead;
+    private @Nullable TransferHandler<Item> myTransferHandler;
 
     public WebTableImpl(FlatDataModel<Item> model) {
         myModel = model;
@@ -310,6 +374,42 @@ public class WebTableImpl<Item> extends VaadinComponentDelegate<WebTableImpl<Ite
         if (myItemHeightGetter != null && item != null) {
             component.getElement().getStyle().set("height", WebLength.toCss(myItemHeightGetter.apply(item)));
         }
+    }
+
+    /**
+     * The grid itself already turns a drop below the last row into one below that row, and reports an empty location
+     * only for a grid with no rows - which has nothing to name as the target.
+     */
+    private static DragAndDropTransferHandler.@Nullable DropPosition positionOf(GridDropLocation location) {
+        return switch (location) {
+            case ON_TOP -> DragAndDropTransferHandler.DropPosition.INTO;
+            case ABOVE -> DragAndDropTransferHandler.DropPosition.ABOVE;
+            case BELOW -> DragAndDropTransferHandler.DropPosition.BELOW;
+            case EMPTY -> null;
+        };
+    }
+
+    @Override
+    public void setTransferHandler(@Nullable TransferHandler<Item> handler) {
+        myTransferHandler = handler;
+
+        Vaadin grid = toVaadinComponent();
+        if (!(handler instanceof DragAndDropTransferHandler<Item> dragAndDrop)) {
+            grid.myDragAndDropHandler = null;
+            grid.setRowsDraggable(false);
+            grid.setDropMode(null);
+            return;
+        }
+
+        grid.setRowsDraggable(true);
+        grid.setDragDataGenerator(WebDragSession.DRAG_TYPE, row -> "");
+        grid.setDropMode(GridDropMode.ON_TOP_OR_BETWEEN);
+        grid.bindDragAndDrop(dragAndDrop);
+    }
+
+    @Override
+    public @Nullable TransferHandler<Item> getTransferHandler() {
+        return myTransferHandler;
     }
 
     @Override

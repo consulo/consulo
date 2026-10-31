@@ -31,11 +31,16 @@ import java.util.function.Function;
 
 /**
  * Table without scrollable layout parent header cannot be painted.
+ * <p/>
+ * Given a {@link DragAndDropTransferHandler}, its rows can be dragged. A drag carries the selected rows, and a drop lands
+ * above ({@link DragAndDropTransferHandler.DropPosition#ABOVE}), on ({@link DragAndDropTransferHandler.DropPosition#INTO})
+ * or below ({@link DragAndDropTransferHandler.DropPosition#BELOW}) the row it is made on; a drop past the last row lands
+ * below it. An empty table has no row to name as the target, so it refuses drops.
  *
  * @author VISTALL
  * @since 2020-09-15
  */
-public interface Table<Item> extends Component, HasFocus, HasSpeedSearch<Item>, HasItemSize<Item> {
+public interface Table<Item> extends Component, HasFocus, HasSpeedSearch<Item>, HasItemSize<Item>, HasTransferHandler<Item> {
     static <Item> Table<Item> create(FlatDataModel<Item> model) {
         return UIInternal.get()._Table_create(model);
     }
