@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.openapi.roots.ui.configuration;
 
 import consulo.application.Application;
+import consulo.application.progress.ProgressBuilderFactory;
 import consulo.application.WriteAction;
 import consulo.compiler.CompilerConfiguration;
 import consulo.compiler.artifact.Artifact;
@@ -357,6 +358,7 @@ public class ModulesConfiguratorImpl implements ModulesConfigurator, ModuleEdito
         }
 
         if (anImport) {
+            UIAccess uiAccess = UIAccess.current();
             AsyncPromise<List<Module>> asyncPromise = new AsyncPromise<>();
             CompletableFuture<Pair<ModuleImportContext, ModuleImportProvider<ModuleImportContext>>> chooser =
                 ModuleImportProcessor.showFileChooser(myProject, null);
@@ -374,13 +376,22 @@ public class ModulesConfiguratorImpl implements ModulesConfigurator, ModuleEdito
 
                 List<Module> modules = new ArrayList<>();
 
-                importProvider.process(importContext, myProject, myModuleModel, modules::add);
+                // the module model is committed by the configurable, so the import only runs the provider
+                Application.get().getInstance(ProgressBuilderFactory.class)
+                    .newProgressBuilder(myProject, importProvider.getName())
+                    .execute(uiAccess, () -> importProvider.process(importContext, myProject, myModuleModel, modules::add))
+                    .whenCompleteAsync((result, importError) -> {
+                        if (importError != null) {
+                            asyncPromise.setError(importError);
+                            return;
+                        }
 
-                for (Module module : modules) {
-                    getOrCreateModuleEditor(module);
-                }
+                        for (Module module : modules) {
+                            getOrCreateModuleEditor(module);
+                        }
 
-                asyncPromise.setResult(modules);
+                        asyncPromise.setResult(modules);
+                    }, uiAccess);
             });
 
             return asyncPromise;
