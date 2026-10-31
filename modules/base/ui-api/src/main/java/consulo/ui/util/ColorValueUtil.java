@@ -240,6 +240,119 @@ public class ColorValueUtil {
         return new RGBColor(shift(rgb.getRed(), d), shift(rgb.getGreen(), d), shift(rgb.getBlue(), d), rgb.getAlpha());
     }
 
+    /**
+     * Changes how vivid a color is by {@code factor}, {@code howMuch} times: a color gets its saturation multiplied, while a grey,
+     * which has none, is moved in brightness instead - a dark grey gets lighter and a light one darker as the factor goes below one.
+     * A factor of one keeps the color.
+     */
+    public static RGBColor tuneSaturationEspeciallyGrey(ColorValue colorValue, int howMuch, float factor) {
+        RGBColor rgb = colorValue.toRGB();
+        float[] hsb = toHSB(rgb);
+        if (rgb.getRed() == rgb.getGreen() && rgb.getGreen() == rgb.getBlue()) {
+            if (rgb.getGreen() <= 64) {
+                hsb[2] = clamp(hsb[2] + howMuch * (1 - factor) / 1.5f);
+            }
+            else if (rgb.getGreen() >= 192) {
+                hsb[2] = clamp(hsb[2] + howMuch * (factor - 1) / 1.5f);
+            }
+            else {
+                return rgb;
+            }
+        }
+        else {
+            float saturation = hsb[1];
+            for (int i = 0; i < howMuch; i++) {
+                saturation = clamp(factor * saturation);
+                if (saturation == 0 || saturation == 1) {
+                    break;
+                }
+            }
+            hsb[1] = saturation;
+        }
+        return fromHSB(hsb[0], hsb[1], hsb[2], rgb.getAlpha());
+    }
+
+    private static float clamp(float value) {
+        return Math.max(0, Math.min(1, value));
+    }
+
+    private static float[] toHSB(RGBColor rgb) {
+        int r = rgb.getRed();
+        int g = rgb.getGreen();
+        int b = rgb.getBlue();
+        int max = Math.max(r, Math.max(g, b));
+        int min = Math.min(r, Math.min(g, b));
+        float brightness = max / 255f;
+        float saturation = max == 0 ? 0 : (max - min) / (float) max;
+        float hue = 0;
+        if (max != min) {
+            float delta = max - min;
+            if (r == max) {
+                hue = (g - b) / delta;
+            }
+            else if (g == max) {
+                hue = 2 + (b - r) / delta;
+            }
+            else {
+                hue = 4 + (r - g) / delta;
+            }
+            hue /= 6;
+            if (hue < 0) {
+                hue += 1;
+            }
+        }
+        return new float[]{hue, saturation, brightness};
+    }
+
+    private static RGBColor fromHSB(float hue, float saturation, float brightness, int alpha) {
+        if (saturation == 0) {
+            int value = Math.round(brightness * 255);
+            return new RGBColor(value, value, value, alpha);
+        }
+        float sector = (hue - (float) Math.floor(hue)) * 6;
+        int index = (int) Math.floor(sector);
+        float fraction = sector - index;
+        float p = brightness * (1 - saturation);
+        float q = brightness * (1 - saturation * fraction);
+        float t = brightness * (1 - saturation * (1 - fraction));
+        float r;
+        float g;
+        float b;
+        switch (index) {
+            case 0 -> {
+                r = brightness;
+                g = t;
+                b = p;
+            }
+            case 1 -> {
+                r = q;
+                g = brightness;
+                b = p;
+            }
+            case 2 -> {
+                r = p;
+                g = brightness;
+                b = t;
+            }
+            case 3 -> {
+                r = p;
+                g = q;
+                b = brightness;
+            }
+            case 4 -> {
+                r = t;
+                g = p;
+                b = brightness;
+            }
+            default -> {
+                r = brightness;
+                g = p;
+                b = q;
+            }
+        }
+        return new RGBColor(Math.round(r * 255), Math.round(g * 255), Math.round(b * 255), alpha);
+    }
+
     public static ColorValue mix(ColorValue v1, ColorValue v2, double balance) {
         RGBColor c1 = v1.toRGB();
         RGBColor c2 = v2.toRGB();

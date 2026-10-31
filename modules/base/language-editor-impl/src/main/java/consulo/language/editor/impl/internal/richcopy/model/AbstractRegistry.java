@@ -13,26 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.editor.richcopy.model;
+package consulo.language.editor.impl.internal.richcopy.model;
 
-import gnu.trove.TIntObjectHashMap;
-import gnu.trove.TObjectIntHashMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 
-import java.io.Serializable;
 import java.util.Arrays;
 
 /**
  * @author Denis Zhdanov
  * @since 3/23/13 3:17 PM
  */
-public abstract class AbstractRegistry<T> implements Serializable {
+public abstract class AbstractRegistry<T> {
+  private final Int2ObjectOpenHashMap<T> myDataById = new Int2ObjectOpenHashMap<>();
 
-  
-  private final TIntObjectHashMap<T> myDataById = new TIntObjectHashMap<T>();
+  private Object2IntMap<T> myIdsByData = new Object2IntOpenHashMap<>();
 
-  private transient TObjectIntHashMap<T> myIdsByData = new TObjectIntHashMap<T>();
-
-  
   public T dataById(int id) throws IllegalArgumentException {
     T result = myDataById.get(id);
     if (result == null) {
@@ -47,7 +44,7 @@ public abstract class AbstractRegistry<T> implements Serializable {
         "Can't register data '%s'. Reason: the %s registry is already sealed", data, getClass().getName()
       ));
     }
-    int id = myIdsByData.get(data);
+    int id = myIdsByData.getInt(data);
     if (id <= 0) {
       id = myIdsByData.size() + 1;
       myDataById.put(id, data);
@@ -57,7 +54,7 @@ public abstract class AbstractRegistry<T> implements Serializable {
   }
 
   public int[] getAllIds() {
-    int[] result = myDataById.keys();
+    int[] result = myDataById.keySet().toIntArray();
     Arrays.sort(result);
     return result;
   }
@@ -68,6 +65,6 @@ public abstract class AbstractRegistry<T> implements Serializable {
 
   public void seal() {
     myIdsByData = null;
-    myDataById.compact();
+    myDataById.trim();
   }
 }

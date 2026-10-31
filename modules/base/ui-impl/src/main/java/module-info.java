@@ -67,6 +67,7 @@ module consulo.ui.impl {
         consulo.desktop.qt.ui.impl,
         consulo.ide.impl,
         consulo.it,
+        consulo.language.editor.impl,
         consulo.web.editor.impl,
         consulo.web.ide,
         consulo.web.ui.impl;

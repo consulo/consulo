@@ -9,6 +9,7 @@ module consulo.language.editor.impl {
     requires java.desktop;
     requires forms.rt;
     requires gnu.trove;
+    requires it.unimi.dsi.fastutil;
 
     requires transitive consulo.language.editor.api;
     requires transitive consulo.file.template.api;
@@ -20,6 +21,7 @@ module consulo.language.editor.impl {
     requires consulo.language.editor.ui.api;
     requires consulo.color.scheme.ui.api;
     requires consulo.code.editor.impl;
+    requires consulo.ui.impl;
 
     requires consulo.language.impl;
     requires consulo.navigation.api;
@@ -70,6 +72,9 @@ module consulo.language.editor.impl {
     exports consulo.language.editor.impl.internal.template to consulo.ide.impl;
     exports consulo.language.editor.impl.internal.highlight to consulo.ide.impl;
     exports consulo.language.editor.impl.internal.rawHighlight to consulo.ide.impl;
+    exports consulo.language.editor.impl.internal.richcopy to consulo.desktop.awt.ide.impl, consulo.ide.impl;
+    exports consulo.language.editor.impl.internal.richcopy.model to consulo.ide.impl;
+    exports consulo.language.editor.impl.internal.richcopy.view to consulo.ide.impl;
     exports consulo.language.editor.impl.internal.markup to
         consulo.desktop.awt.editor.impl,
         consulo.desktop.awt.ide.impl,

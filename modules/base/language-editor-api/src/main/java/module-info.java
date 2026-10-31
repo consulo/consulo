@@ -36,6 +36,7 @@ module consulo.language.editor.api {
     exports consulo.language.editor.gutter;
     exports consulo.language.editor.folding;
     exports consulo.language.editor.hierarchy;
+    exports consulo.language.editor.codeBlock;
     exports consulo.language.editor.highlight;
     exports consulo.language.editor.hint;
     exports consulo.language.editor.highlight.usage;

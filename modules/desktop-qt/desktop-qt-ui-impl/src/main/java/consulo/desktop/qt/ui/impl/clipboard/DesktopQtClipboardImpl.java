@@ -37,8 +37,19 @@ import java.util.function.Function;
 public class DesktopQtClipboardImpl extends BaseClipboard {
     private static final Set<ClipboardFeature> FEATURES = EnumSet.of(
         ClipboardFeature.AVAILABLE_TYPES,
+        ClipboardFeature.CONTENT_LISTENER,
         ClipboardFeature.UNRESTRICTED_READ
     );
+
+    public DesktopQtClipboardImpl() {
+        DesktopQtUIAccess.INSTANCE.give(() -> QApplication.clipboard().dataChanged.connect(this::onDataChanged));
+    }
+
+    private void onDataChanged() {
+        if (!QApplication.clipboard().ownsClipboard()) {
+            fireForeignChange();
+        }
+    }
 
     @Override
     public boolean isSupported(ClipboardFeature feature) {

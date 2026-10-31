@@ -105,15 +105,38 @@ public class WebClipboardImpl extends BaseClipboard {
         return CompletableFuture.completedFuture(Set.of());
     }
 
+    /**
+     * Html goes as a second representation of the same item, so a rich editor pastes it while a plain one takes the text. A
+     * browser offers no rtf, and one without {@code ClipboardItem} gets the text only.
+     */
     @Override
     protected CompletableFuture<Void> writeNative(DataTransfer transfer) {
         String text = transfer.get(DataTransferType.TEXT);
-        if (text == null) {
+        String html = transfer.get(DataTransferType.HTML);
+        if (text == null && html == null) {
             return CompletableFuture.completedFuture(null);
         }
 
-        return execute("return navigator.clipboard.writeText($0).then(() => true);", Boolean.class, text)
-            .thenApply(written -> null);
+        if (html == null) {
+            return execute("return navigator.clipboard.writeText($0).then(() => true);", Boolean.class, text)
+                .thenApply(written -> null);
+        }
+
+        return execute(
+            """
+                if (typeof ClipboardItem === 'undefined' || !navigator.clipboard.write) {
+                    return navigator.clipboard.writeText($0 !== null ? $0 : $1).then(() => true);
+                }
+                const entries = {'text/html': new Blob([$1], {type: 'text/html'})};
+                if ($0 !== null) {
+                    entries['text/plain'] = new Blob([$0], {type: 'text/plain'});
+                }
+                return navigator.clipboard.write([new ClipboardItem(entries)]).then(() => true);
+                """,
+            Boolean.class,
+            text,
+            html
+        ).thenApply(written -> null);
     }
 
     @Override

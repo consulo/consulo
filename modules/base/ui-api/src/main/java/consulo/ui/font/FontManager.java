@@ -18,6 +18,7 @@ package consulo.ui.font;
 import consulo.disposer.Disposable;
 import consulo.ui.UIAccess;
 import consulo.ui.internal.UIInternal;
+import org.jspecify.annotations.Nullable;
 
 import java.net.URL;
 import java.util.List;
@@ -48,6 +49,13 @@ public interface FontManager {
      * several at once.
      */
     CompletableFuture<List<Typeface>> getAvailableTypefacesAsync(UIAccess uiAccess);
+
+    /**
+     * The family of that name as far as the environment tells without asking the user, from any thread. {@code null}
+     * when it does not know the family, which on a frontend that {@link #isRequiredPermission() asks first} is
+     * anything it does not ship itself.
+     */
+    @Nullable Typeface findTypeface(String familyName);
 
     Font createFont(String fontName, int fontSize, int fontStyles);
 

@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.editor.richcopy.view;
 
-import consulo.ide.impl.idea.openapi.editor.richcopy.model.SyntaxInfo;
+import consulo.language.editor.impl.internal.richcopy.model.SyntaxInfo;
 import consulo.util.io.FileUtil;
 import consulo.ide.impl.idea.util.StringBuilderSpinAllocator;
 import consulo.application.util.registry.Registry;

@@ -16,10 +16,10 @@
 package consulo.ide.impl.idea.openapi.editor.richcopy.view;
 
 import consulo.ide.impl.idea.ide.MacOSApplicationProvider;
-import consulo.ide.impl.idea.openapi.editor.richcopy.model.ColorRegistry;
-import consulo.ide.impl.idea.openapi.editor.richcopy.model.FontNameRegistry;
-import consulo.ide.impl.idea.openapi.editor.richcopy.model.MarkupHandler;
-import consulo.ide.impl.idea.openapi.editor.richcopy.model.SyntaxInfo;
+import consulo.language.editor.impl.internal.richcopy.model.ColorRegistry;
+import consulo.language.editor.impl.internal.richcopy.model.MarkupHandler;
+import consulo.language.editor.impl.internal.richcopy.model.SyntaxInfo;
+import consulo.language.editor.impl.internal.richcopy.model.TypefaceRegistry;
 import consulo.platform.Platform;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
@@ -65,9 +65,9 @@ public class RtfTransferableData extends AbstractSyntaxAwareInputStreamTransfera
     holder.append("}\n");
 
     holder.append("{\\fonttbl");
-    FontNameRegistry fontNameRegistry = mySyntaxInfo.getFontNameRegistry();
-    for (int id : fontNameRegistry.getAllIds()) {
-      String fontName = fontNameRegistry.dataById(id);
+    TypefaceRegistry typefaceRegistry = mySyntaxInfo.getTypefaceRegistry();
+    for (int id : typefaceRegistry.getAllIds()) {
+      String fontName = typefaceRegistry.dataById(id).getName();
       holder.append(String.format("{\\f%d %s;}", id, fontName));
     }
     holder.append("}\n");

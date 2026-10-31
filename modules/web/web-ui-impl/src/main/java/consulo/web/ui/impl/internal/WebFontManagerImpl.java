@@ -203,6 +203,19 @@ public class WebFontManagerImpl implements FontManager {
     }
 
     /**
+     * Only the faces the page ships: about any other the browser answers only after asking the user
+     */
+    @Override
+    public @Nullable Typeface findTypeface(String familyName) {
+        for (Typeface typeface : getBundledTypefaces()) {
+            if (typeface.getName().equalsIgnoreCase(familyName)) {
+                return typeface;
+            }
+        }
+        return null;
+    }
+
+    /**
      * The faces the page ships, which need no permission because it is the page that carries them.
      */
     public static List<Typeface> getBundledTypefaces() {

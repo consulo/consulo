@@ -355,7 +355,6 @@ open module consulo.ide.impl {
     exports consulo.ide.impl.idea.openapi.editor.highlighter;
     exports consulo.ide.impl.idea.openapi.editor.impl;
     exports consulo.ide.impl.idea.openapi.editor.richcopy;
-    exports consulo.ide.impl.idea.openapi.editor.richcopy.model;
     exports consulo.ide.impl.idea.openapi.editor.richcopy.settings;
     exports consulo.ide.impl.idea.openapi.editor.richcopy.view;
     exports consulo.ide.impl.idea.openapi.file.exclude;

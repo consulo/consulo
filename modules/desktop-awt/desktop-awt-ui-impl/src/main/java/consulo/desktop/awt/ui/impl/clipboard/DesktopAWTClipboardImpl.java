@@ -21,14 +21,18 @@ import consulo.ui.clipboard.ClipboardAccessException;
 import consulo.ui.clipboard.ClipboardFeature;
 import consulo.ui.clipboard.DataTransfer;
 import consulo.ui.clipboard.DataTransferType;
-import consulo.desktop.awt.ui.impl.clipboard.DesktopAWTDataTransfers;
 import consulo.ui.impl.clipboard.BaseClipboard;
 import org.jspecify.annotations.Nullable;
 
 import java.awt.Toolkit;
-import java.awt.datatransfer.*;
-import java.io.File;
-import java.util.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.ClipboardOwner;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.util.EnumSet;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.function.Function;
@@ -37,7 +41,7 @@ import java.util.function.Function;
  * @author VISTALL
  * @since 2026-08-07
  */
-public class DesktopAWTClipboardImpl extends BaseClipboard {
+public class DesktopAWTClipboardImpl extends BaseClipboard implements ClipboardOwner {
     private static final Logger LOG = Logger.getInstance(DesktopAWTClipboardImpl.class);
 
     private static final Set<ClipboardFeature> FEATURES = EnumSet.of(
@@ -49,11 +53,23 @@ public class DesktopAWTClipboardImpl extends BaseClipboard {
     // the owning application answers at its own pace, keep it off any ui thread
     private final Executor myExecutor = AppExecutorUtil.createBoundedApplicationPoolExecutor("Clipboard", 1);
 
+    private volatile boolean myOwnContent;
+
     public DesktopAWTClipboardImpl() {
         Clipboard clipboard = getClipboard();
         if (clipboard != null) {
-            clipboard.addFlavorListener(event -> fireForeignChange());
+            clipboard.addFlavorListener(event -> {
+                if (!myOwnContent) {
+                    fireForeignChange();
+                }
+            });
         }
+    }
+
+    @Override
+    public void lostOwnership(Clipboard clipboard, Transferable contents) {
+        myOwnContent = false;
+        fireForeignChange();
     }
 
     @Override
@@ -85,7 +101,14 @@ public class DesktopAWTClipboardImpl extends BaseClipboard {
     @Override
     protected CompletableFuture<Void> writeNative(DataTransfer transfer) {
         return onClipboard(clipboard -> {
-            clipboard.setContents(DesktopAWTDataTransfers.toTransferable(transfer), null);
+            myOwnContent = true;
+            try {
+                clipboard.setContents(DesktopAWTDataTransfers.toTransferable(transfer), this);
+            }
+            catch (RuntimeException e) {
+                myOwnContent = false;
+                throw e;
+            }
             return null;
         });
     }
@@ -122,5 +145,4 @@ public class DesktopAWTClipboardImpl extends BaseClipboard {
             return null;
         }
     }
-
 }

@@ -45,7 +45,6 @@ import consulo.language.util.IncorrectOperationException;
 import consulo.logging.Logger;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.clipboard.DataTransfer;
 import consulo.ui.clipboard.DataTransferType;
@@ -61,7 +60,10 @@ import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
+import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.io.IOException;
 import java.util.*;
 import java.util.function.Supplier;
 
@@ -95,32 +97,36 @@ public class PasteHandler extends EditorActionHandler implements EditorTextInser
     @Override
     @RequiredUIAccess
     public void execute(Editor editor, DataContext dataContext, @Nullable Supplier<Transferable> producer) {
-        UIAccess uiAccess = UIAccess.current();
-
-        Supplier<DataTransfer> transferProducer = producer == null
-            ? null
-            : () -> DataTransfer.builder().put(EditorImplUtil.TRANSFERABLE, producer.get()).build();
-
-        EditorImplUtil.getContentsToPasteToEditor(transferProducer).whenCompleteAsync((transfer, throwable) -> {
-            if (throwable != null) {
-                LOG.warn("Failed to read the clipboard for a paste", throwable);
-                return;
+        Supplier<DataTransfer> transferProducer = producer == null ? null : () -> {
+            Transferable transferable = producer.get();
+            if (transferable == null) {
+                return DataTransfer.EMPTY;
             }
-            if (transfer != null) {
-                CommandProcessor.getInstance()
-                    .newCommand()
-                    .project(editor.getProject())
-                    .document(editor.getDocument())
-                    .name(CodeEditorLocalize.actionPasteText())
-                    .groupId(getCommandGroupId(editor))
-                    .run(() -> executePinned(editor, dataContext, producer, transfer));
-            }
-        }, uiAccess).exceptionally(throwable -> {
-            // the future of a continuation is dropped, so without this a paste which threw would leave no trace
-            // at all - no insert and nothing in the log
-            LOG.error("Paste failed", throwable);
+            return DataTransfer.builder()
+                .put(DataTransferType.TEXT, getStringContent(transferable))
+                .put(EditorImplUtil.TRANSFERABLE, transferable)
+                .build();
+        };
+
+        EditorImplUtil.whenContentsToPaste(
+            EditorImplUtil.getContentsToPasteToEditor(transferProducer),
+            transfer -> CommandProcessor.getInstance()
+                .newCommand()
+                .project(editor.getProject())
+                .document(editor.getDocument())
+                .name(CodeEditorLocalize.actionPasteText())
+                .groupId(getCommandGroupId(editor))
+                .run(() -> executePinned(editor, dataContext, transfer))
+        );
+    }
+
+    private static @Nullable String getStringContent(Transferable transferable) {
+        try {
+            return (String) transferable.getTransferData(DataFlavor.stringFlavor);
+        }
+        catch (UnsupportedFlavorException | IOException e) {
             return null;
-        });
+        }
     }
 
     /**
@@ -133,15 +139,8 @@ public class PasteHandler extends EditorActionHandler implements EditorTextInser
     }
 
     @RequiredUIAccess
-    private void executePinned(
-        Editor editor,
-        DataContext dataContext,
-        @Nullable Supplier<Transferable> producer,
-        DataTransfer transfer
-    ) {
-        // the rich half only exists in a payload this process wrote; a foreign one carries text and nothing else
+    private void executePinned(Editor editor, DataContext dataContext, DataTransfer transfer) {
         Transferable transferable = transfer.get(EditorImplUtil.TRANSFERABLE);
-        DataTransfer pinnedTransfer = producer == null ? transfer : null;
 
         if (!CodeInsightUtilBase.prepareEditorForWrite(editor)) {
             return;
@@ -155,8 +154,8 @@ public class PasteHandler extends EditorActionHandler implements EditorTextInser
         DataContext context = new DataContext() {
             @Override
             public Object getData(Key dataId) {
-                if (PasteAction.DATA_TRANSFER_PROVIDER == dataId && pinnedTransfer != null) {
-                    return (Supplier<DataTransfer>) () -> pinnedTransfer;
+                if (PasteAction.DATA_TRANSFER_PROVIDER == dataId) {
+                    return (Supplier<DataTransfer>) () -> transfer;
                 }
                 return dataContext.getData(dataId);
             }

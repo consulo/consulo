@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,11 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.editor.richcopy.model;
+package consulo.language.editor.impl.internal.richcopy.model;
 
 /**
- * @author Denis Zhdanov
- * @since 3/23/13 3:21 PM
+ * Packs the serialized markup of a {@link SyntaxInfo}. Only a syntax info which outlives its building needs it - the clipboard keeps
+ * one for every copied text of its history, while one which is read right after it is built stays unpacked.
  */
-public class FontNameRegistry extends AbstractRegistry<String> {
+public interface SyntaxInfoCompressor {
+    byte[] compress(byte[] data, int offset, int length);
+
+    byte[] decompress(byte[] data);
 }

@@ -26,6 +26,7 @@ import io.qt.core.QByteArray;
 import io.qt.gui.QFontDatabase;
 import io.qt.gui.QRawFont;
 import io.qt.widgets.QApplication;
+import org.jspecify.annotations.Nullable;
 
 import java.io.InputStream;
 import java.net.URL;
@@ -91,6 +92,14 @@ public class DesktopQtFontManagerImpl implements FontManager {
         String fontName = style.isBlank() || style.equalsIgnoreCase("Regular") ? family : family + " " + style;
 
         return new DesktopQtFontImpl(family, fontName, QApplication.font().pointSize(), Font.PLAIN, rawFont.isValid() ? rawFont : null);
+    }
+
+    @Override
+    public @Nullable Typeface findTypeface(String familyName) {
+        if (!QFontDatabase.families().contains(familyName)) {
+            return null;
+        }
+        return new TypefaceImpl(familyName, QFontDatabase.isFixedPitch(familyName));
     }
 
     private static List<Typeface> readTypefaces() {

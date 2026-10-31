@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.editor.richcopy.model;
+package consulo.language.editor.impl.internal.richcopy.model;
 
-import consulo.ui.color.ColorValue;
-
-/**
- * @author Denis Zhdanov
- * @since 3/23/13 3:13 PM
- */
-public class ColorRegistry extends AbstractRegistry<ColorValue> {
+public interface MarkupHandler {
+  void handleText(int startOffset, int endOffset) throws Exception;
+  void handleForeground(int foregroundId)  throws Exception;
+  void handleBackground(int backgroundId)  throws Exception;
+  void handleFont(int fontNameId)  throws Exception;
+  void handleStyle(int style)  throws Exception;
+  boolean canHandleMore();
 }

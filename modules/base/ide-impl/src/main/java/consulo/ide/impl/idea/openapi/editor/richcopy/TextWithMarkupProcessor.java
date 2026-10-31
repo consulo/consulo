@@ -2,6 +2,7 @@
 package consulo.ide.impl.idea.openapi.editor.richcopy;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.application.Application;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.DocumentMarkupModel;
@@ -12,26 +13,30 @@ import consulo.codeEditor.util.EditorUtil;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.document.Document;
 import consulo.ide.impl.idea.codeInsight.editorActions.CopyPastePostProcessor;
-import consulo.ide.impl.idea.openapi.editor.richcopy.SyntaxInfoBuilder.Context;
-import consulo.ide.impl.idea.openapi.editor.richcopy.SyntaxInfoBuilder.MyMarkupIterator;
-import consulo.ide.impl.idea.openapi.editor.richcopy.model.SyntaxInfo;
 import consulo.ide.impl.idea.openapi.editor.richcopy.settings.RichCopySettings;
 import consulo.ide.impl.idea.openapi.editor.richcopy.view.HtmlTransferableData;
 import consulo.ide.impl.idea.openapi.editor.richcopy.view.RawTextWithMarkup;
 import consulo.ide.impl.idea.openapi.editor.richcopy.view.RtfTransferableData;
 import consulo.language.editor.highlight.HighlighterFactory;
+import consulo.language.editor.impl.internal.richcopy.FontSegmentIteratorFactory;
+import consulo.language.editor.impl.internal.richcopy.SyntaxInfoBuilder.Context;
+import consulo.language.editor.impl.internal.richcopy.SyntaxInfoBuilder.MyMarkupIterator;
+import consulo.language.editor.impl.internal.richcopy.model.SyntaxInfo;
 import consulo.language.psi.PsiFile;
 import consulo.logging.Logger;
 import consulo.logging.attachment.AttachmentFactory;
 import consulo.logging.attachment.RuntimeExceptionWithAttachments;
+import consulo.platform.Platform;
+import consulo.ui.ex.awt.util.UISettingsUtil;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
+import jakarta.inject.Inject;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static consulo.ide.impl.idea.openapi.editor.richcopy.SyntaxInfoBuilder.createMarkupIterator;
+import static consulo.language.editor.impl.internal.richcopy.SyntaxInfoBuilder.createMarkupIterator;
 
 /**
  * Generates text with markup (in RTF and HTML formats) for interaction via clipboard with third-party applications.
@@ -43,7 +48,14 @@ import static consulo.ide.impl.idea.openapi.editor.richcopy.SyntaxInfoBuilder.cr
 public class TextWithMarkupProcessor extends CopyPastePostProcessor<RawTextWithMarkup> {
   private static final Logger LOG = Logger.getInstance(TextWithMarkupProcessor.class);
 
+  private final FontSegmentIteratorFactory myFontSegmentIteratorFactory;
+
   private List<RawTextWithMarkup> myResult;
+
+  @Inject
+  public TextWithMarkupProcessor(FontSegmentIteratorFactory fontSegmentIteratorFactory) {
+    myFontSegmentIteratorFactory = fontSegmentIteratorFactory;
+  }
 
   
   @Override
@@ -75,7 +87,7 @@ public class TextWithMarkupProcessor extends CopyPastePostProcessor<RawTextWithM
       highlighter = HighlighterFactory.createHighlighter(file.getViewProvider().getVirtualFile(), schemeToUse, file.getProject());
       highlighter.setText(text);
       MarkupModel markupModel = DocumentMarkupModel.forDocument(editor.getDocument(), file.getProject(), false);
-      Context context = new Context(text, schemeToUse, indentSymbolsToStrip);
+      Context context = new Context(text, schemeToUse, indentSymbolsToStrip, getFontSize(schemeToUse), Lz4SyntaxInfoCompressor.INSTANCE);
       int endOffset = 0;
       Caret prevCaret = null;
 
@@ -102,7 +114,8 @@ public class TextWithMarkupProcessor extends CopyPastePostProcessor<RawTextWithM
         if (endOffset <= startOffsetToUse) {
           continue;
         }
-        MyMarkupIterator markupIterator = createMarkupIterator(highlighter, text, schemeToUse, markupModel, startOffsetToUse, endOffset);
+        MyMarkupIterator markupIterator = createMarkupIterator(highlighter, text, schemeToUse, markupModel, startOffsetToUse, endOffset,
+                                                               myFontSegmentIteratorFactory.create(schemeToUse));
         try {
           context.iterate(markupIterator, endOffset);
         }
@@ -122,6 +135,14 @@ public class TextWithMarkupProcessor extends CopyPastePostProcessor<RawTextWithM
                                                     AttachmentFactory.get().create("highlighter.txt", String.valueOf(highlighter))));
     }
     return Collections.emptyList();
+  }
+
+  private static float getFontSize(EditorColorsScheme scheme) {
+    int javaFontSize = scheme.getEditorFontSize();
+    // matching font size in external apps
+    return Platform.current().os().isMac() || Application.get().isHeadlessEnvironment()
+           ? javaFontSize
+           : javaFontSize * 0.75f / UISettingsUtil.getDefFontScale();
   }
 
   void createResult(SyntaxInfo syntaxInfo, Editor editor) {

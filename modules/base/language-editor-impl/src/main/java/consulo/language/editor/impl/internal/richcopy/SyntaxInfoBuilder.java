@@ -1,7 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.openapi.editor.richcopy;
+package consulo.language.editor.impl.internal.richcopy;
 
-import consulo.application.Application;
 import consulo.codeEditor.EditorHighlighter;
 import consulo.codeEditor.HighlighterIterator;
 import consulo.codeEditor.markup.HighlighterLayer;
@@ -9,22 +8,20 @@ import consulo.codeEditor.markup.MarkupModel;
 import consulo.codeEditor.markup.MarkupModelEx;
 import consulo.codeEditor.markup.RangeHighlighterEx;
 import consulo.colorScheme.EditorColorsScheme;
-import consulo.colorScheme.internal.FontPreferences;
 import consulo.colorScheme.TextAttributes;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.document.MarkupIterator;
-import consulo.ide.impl.idea.openapi.editor.impl.FontFallbackIterator;
-import consulo.ide.impl.idea.openapi.editor.richcopy.model.SyntaxInfo;
 import consulo.language.ast.TokenType;
 import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
+import consulo.language.editor.impl.internal.richcopy.model.SyntaxInfo;
+import consulo.language.editor.impl.internal.richcopy.model.SyntaxInfoCompressor;
 import consulo.language.editor.rawHighlight.HighlightInfoType;
-import consulo.platform.Platform;
 import consulo.ui.color.ColorValue;
-import consulo.ui.ex.awt.util.UISettingsUtil;
+import consulo.ui.font.Font;
+import consulo.ui.font.Typeface;
 import consulo.util.lang.CharArrayUtil;
 import org.jspecify.annotations.Nullable;
 
-import java.awt.*;
 import java.util.Arrays;
 import java.util.Comparator;
 
@@ -32,14 +29,14 @@ public final class SyntaxInfoBuilder {
     private SyntaxInfoBuilder() {
     }
 
-    
-    static MyMarkupIterator createMarkupIterator(
+    public static MyMarkupIterator createMarkupIterator(
         EditorHighlighter highlighter,
         CharSequence text,
         EditorColorsScheme schemeToUse,
         MarkupModel markupModel,
         int startOffsetToUse,
-        int endOffset
+        int endOffset,
+        FontSegmentIterator fontSegmentIterator
     ) {
 
         CompositeRangeIterator iterator =
@@ -47,7 +44,7 @@ public final class SyntaxInfoBuilder {
                 new MarkupModelRangeIterator(markupModel, schemeToUse, startOffsetToUse, endOffset)
             );
 
-        return new MyMarkupIterator(text, iterator, schemeToUse);
+        return new MyMarkupIterator(text, iterator, fontSegmentIterator);
     }
 
     public interface RangeIterator {
@@ -64,20 +61,16 @@ public final class SyntaxInfoBuilder {
         void dispose();
     }
 
-    static class MyMarkupIterator {
+    public static class MyMarkupIterator {
         private final SegmentIterator mySegmentIterator;
         private final RangeIterator myRangeIterator;
         private int myCurrentFontStyle;
         private ColorValue myCurrentForegroundColor;
         private ColorValue myCurrentBackgroundColor;
 
-        MyMarkupIterator(
-            CharSequence charSequence,
-            RangeIterator rangeIterator,
-            EditorColorsScheme colorsScheme
-        ) {
+        public MyMarkupIterator(CharSequence charSequence, RangeIterator rangeIterator, FontSegmentIterator fontSegmentIterator) {
             myRangeIterator = rangeIterator;
-            mySegmentIterator = new SegmentIterator(charSequence, colorsScheme.getFontPreferences());
+            mySegmentIterator = new SegmentIterator(charSequence, fontSegmentIterator);
         }
 
         public boolean atEnd() {
@@ -108,9 +101,8 @@ public final class SyntaxInfoBuilder {
             return myCurrentFontStyle;
         }
 
-        
-        public String getFontFamilyName() {
-            return mySegmentIterator.getCurrentFontFamilyName();
+        public @Nullable Typeface getTypeface() {
+            return mySegmentIterator.getCurrentTypeface();
         }
 
         public @Nullable ColorValue getForegroundColor() {
@@ -126,7 +118,7 @@ public final class SyntaxInfoBuilder {
         }
     }
 
-    static class CompositeRangeIterator implements RangeIterator {
+    public static class CompositeRangeIterator implements RangeIterator {
         
         private final ColorValue myDefaultForeground;
         
@@ -138,7 +130,7 @@ public final class SyntaxInfoBuilder {
         private int myCurrentEnd;
 
         // iterators have priority corresponding to their order in the parameter list - rightmost having the largest priority
-        CompositeRangeIterator(EditorColorsScheme colorsScheme, RangeIterator... iterators) {
+        public CompositeRangeIterator(EditorColorsScheme colorsScheme, RangeIterator... iterators) {
             myDefaultForeground = colorsScheme.getDefaultForeground();
             myDefaultBackground = colorsScheme.getDefaultBackground();
             myIterators = new IteratorWrapper[iterators.length];
@@ -410,7 +402,7 @@ public final class SyntaxInfoBuilder {
         }
     }
 
-    static class HighlighterRangeIterator implements RangeIterator {
+    public static class HighlighterRangeIterator implements RangeIterator {
         private static final TextAttributes EMPTY_ATTRIBUTES = new TextAttributes();
 
         private final HighlighterIterator myIterator;
@@ -421,7 +413,7 @@ public final class SyntaxInfoBuilder {
         private int myCurrentEnd;
         private TextAttributes myCurrentAttributes;
 
-        HighlighterRangeIterator(EditorHighlighter highlighter, int startOffset, int endOffset) {
+        public HighlighterRangeIterator(EditorHighlighter highlighter, int startOffset, int endOffset) {
             myStartOffset = startOffset;
             myEndOffset = endOffset;
             myIterator = highlighter.createIterator(startOffset);
@@ -469,19 +461,18 @@ public final class SyntaxInfoBuilder {
     }
 
     private static class SegmentIterator {
-        private final FontFallbackIterator myIterator = new FontFallbackIterator();
+        private final FontSegmentIterator myIterator;
         private final CharSequence myCharSequence;
         private int myEndOffset;
         private boolean myAdvanceCalled;
 
-        private SegmentIterator(CharSequence charSequence, FontPreferences fontPreferences) {
+        private SegmentIterator(CharSequence charSequence, FontSegmentIterator iterator) {
             myCharSequence = charSequence;
-            myIterator.setPreferredFonts(fontPreferences);
+            myIterator = iterator;
         }
 
         public void reset(int startOffset, int endOffset, int fontStyle) {
-            myIterator.setFontStyle(fontStyle);
-            myIterator.start(myCharSequence, startOffset, endOffset);
+            myIterator.start(myCharSequence, startOffset, endOffset, fontStyle);
             myEndOffset = endOffset;
             myAdvanceCalled = false;
         }
@@ -506,12 +497,12 @@ public final class SyntaxInfoBuilder {
             return myIterator.getEnd();
         }
 
-        public String getCurrentFontFamilyName() {
-            return myIterator.getFont().getFamily();
+        public @Nullable Typeface getCurrentTypeface() {
+            return myIterator.getTypeface();
         }
     }
 
-    static class Context {
+    public static class Context {
 
         private final SyntaxInfo.Builder builder;
 
@@ -524,7 +515,7 @@ public final class SyntaxInfoBuilder {
 
         private @Nullable ColorValue myBackground;
         private @Nullable ColorValue myForeground;
-        private @Nullable String myFontFamilyName;
+        private @Nullable Typeface myTypeface;
 
         private final int myIndentSymbolsToStrip;
 
@@ -534,17 +525,21 @@ public final class SyntaxInfoBuilder {
 
         private int myIndentSymbolsToStripAtCurrentLine;
 
-        Context(CharSequence charSequence, EditorColorsScheme scheme, int indentSymbolsToStrip) {
+        /**
+         * @param fontSize   the font size the markup declares
+         * @param compressor packs a markup which is kept for long, see {@link SyntaxInfo.Builder}
+         */
+        public Context(
+            CharSequence charSequence,
+            EditorColorsScheme scheme,
+            int indentSymbolsToStrip,
+            float fontSize,
+            @Nullable SyntaxInfoCompressor compressor
+        ) {
             myText = charSequence;
             myDefaultForeground = scheme.getDefaultForeground();
             myDefaultBackground = scheme.getDefaultBackground();
-
-            int javaFontSize = scheme.getEditorFontSize();
-            float fontSize = Platform.current().os().isMac() || Application.get().isHeadlessEnvironment()
-                ? javaFontSize
-                : javaFontSize * 0.75f / UISettingsUtil.getDefFontScale(); // matching font size in external apps
-
-            builder = new SyntaxInfo.Builder(myDefaultForeground, myDefaultBackground, fontSize);
+            builder = new SyntaxInfo.Builder(myDefaultForeground, myDefaultBackground, fontSize, compressor);
             myIndentSymbolsToStrip = indentSymbolsToStrip;
         }
 
@@ -570,7 +565,7 @@ public final class SyntaxInfoBuilder {
                 processBackground(startOffset, iterator.getBackgroundColor());
                 if (!whiteSpacesOnly) {
                     processForeground(startOffset, iterator.getForegroundColor());
-                    processFontFamilyName(startOffset, iterator.getFontFamilyName());
+                    processTypeface(startOffset, iterator.getTypeface());
                     processFontStyle(startOffset, iterator.getFontStyle());
                 }
             }
@@ -585,12 +580,11 @@ public final class SyntaxInfoBuilder {
             }
         }
 
-        private void processFontFamilyName(int startOffset, String fontName) {
-            String fontFamilyName = FontMapper.getPhysicalFontName(fontName);
-            if (!fontFamilyName.equals(myFontFamilyName)) {
+        private void processTypeface(int startOffset, @Nullable Typeface typeface) {
+            if (typeface != null && !typeface.equals(myTypeface)) {
                 addTextIfPossible(startOffset);
-                builder.addFontFamilyName(fontFamilyName);
-                myFontFamilyName = fontFamilyName;
+                builder.addTypeface(typeface);
+                myTypeface = typeface;
             }
         }
 
@@ -669,7 +663,7 @@ public final class SyntaxInfoBuilder {
             }
         }
 
-        void addCharacter(int position) {
+        public void addCharacter(int position) {
             builder.addText(position + myOffsetShift, position + myOffsetShift + 1);
         }
 

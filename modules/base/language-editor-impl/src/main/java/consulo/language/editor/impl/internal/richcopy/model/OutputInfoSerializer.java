@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.editor.richcopy.model;
+package consulo.language.editor.impl.internal.richcopy.model;
 
-import consulo.ide.impl.idea.util.io.CompactDataInput;
-import consulo.ide.impl.idea.util.io.CompactDataOutput;
-import net.jpountz.lz4.LZ4BlockInputStream;
-import net.jpountz.lz4.LZ4BlockOutputStream;
+import consulo.index.io.data.CompactDataInput;
+import consulo.index.io.data.CompactDataOutput;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 /**
@@ -34,16 +33,10 @@ public class OutputInfoSerializer {
 
   public static class OutputStream implements MarkupHandler {
     private final CompactDataOutput myOutputStream;
-    private final java.io.OutputStream myUnderlyingOutputStream;
     private int myCurrentOffset;
 
-    public OutputStream(java.io.OutputStream stream) throws IOException {
-      myUnderlyingOutputStream = new LZ4BlockOutputStream(stream);
-      myOutputStream = new CompactDataOutput(myUnderlyingOutputStream);
-    }
-
-    public void close() throws IOException {
-      myUnderlyingOutputStream.close();
+    public OutputStream(java.io.OutputStream stream) {
+      myOutputStream = new CompactDataOutput(stream);
     }
 
     @Override
@@ -86,12 +79,10 @@ public class OutputInfoSerializer {
 
   public static class InputStream {
     private final CompactDataInput myInputStream;
-    private final java.io.InputStream myUnderlyingInputStream;
     private int myCurrentOffset;
 
-    public InputStream(java.io.InputStream stream) throws IOException {
-      myUnderlyingInputStream = new LZ4BlockInputStream(stream);
-      myInputStream = new CompactDataInput(myUnderlyingInputStream);
+    public InputStream(byte[] stream) {
+      myInputStream = new CompactDataInput(new ByteArrayInputStream(stream));
     }
 
     public void read(MarkupHandler handler) throws Exception {
@@ -119,10 +110,6 @@ public class OutputInfoSerializer {
         default:
           throw new IllegalStateException("Unknown tag id: " + id);
       }
-    }
-
-    public void close() throws IOException {
-      myUnderlyingInputStream.close();
     }
   }
 }

@@ -23,6 +23,7 @@ import consulo.ui.font.Font;
 import consulo.ui.font.FontManager;
 import consulo.ui.font.Typeface;
 import consulo.ui.impl.font.TypefaceImpl;
+import org.jspecify.annotations.Nullable;
 
 import java.io.InputStream;
 import java.net.URL;
@@ -68,6 +69,12 @@ public class DesktopFontManagerImpl implements FontManager {
         });
 
         return result;
+    }
+
+    @Override
+    public @Nullable Typeface findTypeface(String familyName) {
+        FontInfo fontInfo = FontInfo.get(familyName);
+        return fontInfo == null ? null : new TypefaceImpl(fontInfo.toString(), fontInfo.isMonospaced());
     }
 
     @Override

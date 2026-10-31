@@ -13,16 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.editor.richcopy.view;
+package consulo.language.editor.impl.internal.richcopy.view;
 
-import consulo.ide.impl.idea.openapi.editor.richcopy.model.SyntaxInfo;
-import consulo.util.io.FileUtil;
-import consulo.ide.impl.idea.util.StringBuilderSpinAllocator;
 import consulo.application.util.registry.Registry;
+import consulo.language.editor.impl.internal.richcopy.model.SyntaxInfo;
 import consulo.logging.Logger;
-
+import consulo.util.io.FileUtil;
 import org.jspecify.annotations.Nullable;
-import java.awt.datatransfer.DataFlavor;
+
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
@@ -31,42 +29,16 @@ import java.io.StringReader;
  * @author Denis Zhdanov
  * @since 3/28/13 7:09 PM
  */
-public abstract class AbstractSyntaxAwareReaderTransferableData extends Reader implements RawTextWithMarkup
-{
-
-  private static final Logger LOG = Logger.getInstance(AbstractSyntaxAwareReaderTransferableData.class);
+public abstract class AbstractSyntaxAwareReader extends Reader {
+  private static final Logger LOG = Logger.getInstance(AbstractSyntaxAwareReader.class);
 
   protected String myRawText;
-  
   protected final SyntaxInfo mySyntaxInfo;
-  
-  private final DataFlavor myDataFlavor;
 
   private transient @Nullable Reader myDelegate;
 
-  public AbstractSyntaxAwareReaderTransferableData(SyntaxInfo syntaxInfo, DataFlavor dataFlavor) {
+  public AbstractSyntaxAwareReader(SyntaxInfo syntaxInfo) {
     mySyntaxInfo = syntaxInfo;
-    myDataFlavor = dataFlavor;
-  }
-
-  @Override
-  public DataFlavor getFlavor() {
-    return myDataFlavor;
-  }
-
-  @Override
-  public int getOffsetCount() {
-    return 0;
-  }
-
-  @Override
-  public int getOffsets(int[] offsets, int index) {
-    return index;
-  }
-
-  @Override
-  public int setOffsets(int[] offsets, int index) {
-    return index;
   }
 
   @Override
@@ -84,36 +56,31 @@ public abstract class AbstractSyntaxAwareReaderTransferableData extends Reader i
     myDelegate = null;
   }
 
-  @Override
   public void setRawText(String rawText) {
     myRawText = rawText;
   }
 
-  
   private Reader getDelegate() {
     if (myDelegate != null) {
       return myDelegate;
     }
 
-    int maxLength = Registry.intValue("editor.richcopy.max.size.megabytes") * FileUtil.MEGABYTE;
-    StringBuilder buffer = StringBuilderSpinAllocator.alloc();
+    myDelegate = new StringReader(getBuffer().toString());
+    return myDelegate;
+  }
+
+  public final CharSequence getBuffer() {
+    StringBuilder buffer = new StringBuilder();
     try {
-      try {
-        build(buffer, maxLength);
-      }
-      catch (Exception e) {
-        LOG.error(e);
-      }
-      String s = buffer.toString();
-      if (LOG.isDebugEnabled()) {
-        LOG.debug("Resulting text: \n" + s);
-      }
-      myDelegate = new StringReader(s);
-      return myDelegate;
+      build(buffer, Registry.intValue("editor.richcopy.max.size.megabytes") * FileUtil.MEGABYTE);
     }
-    finally {
-      StringBuilderSpinAllocator.dispose(buffer);
+    catch (Exception e) {
+      LOG.error(e);
     }
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("Resulting text: \n" + buffer);
+    }
+    return buffer;
   }
 
   protected abstract void build(StringBuilder holder, int maxLength);

@@ -39,8 +39,7 @@ public enum ClipboardFeature {
      * A listener also hears changes made by other applications, so nothing has to poll. A listener
      * always hears changes made through this api, so registering one is never pointless.
      * <p>
-     * AWT, Android. Not Qt, which does not subscribe to the clipboard change signal, and not web, where a page is never
-     * told about the clipboard.
+     * AWT, Qt, Android. Not web, where a page is never told about the clipboard.
      */
     CONTENT_LISTENER,
 

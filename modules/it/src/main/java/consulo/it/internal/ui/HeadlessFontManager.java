@@ -20,6 +20,7 @@ import consulo.ui.UIAccess;
 import consulo.ui.font.Font;
 import consulo.ui.font.FontManager;
 import consulo.ui.font.Typeface;
+import org.jspecify.annotations.Nullable;
 
 import java.net.URL;
 import java.util.List;
@@ -39,6 +40,11 @@ public class HeadlessFontManager implements FontManager {
     @Override
     public CompletableFuture<List<Typeface>> getAvailableTypefacesAsync(UIAccess uiAccess) {
         return CompletableFuture.completedFuture(List.of());
+    }
+
+    @Override
+    public @Nullable Typeface findTypeface(String familyName) {
+        return null;
     }
 
     @Override

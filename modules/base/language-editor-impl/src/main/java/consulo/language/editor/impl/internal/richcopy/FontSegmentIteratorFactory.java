@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,13 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.editor.richcopy.model;
+package consulo.language.editor.impl.internal.richcopy;
 
-public interface MarkupHandler {
-  void handleText(int startOffset, int endOffset) throws Exception;
-  void handleForeground(int foregroundId)  throws Exception;
-  void handleBackground(int backgroundId)  throws Exception;
-  void handleFont(int fontNameId)  throws Exception;
-  void handleStyle(int style)  throws Exception;
-  boolean canHandleMore();
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.colorScheme.EditorColorsScheme;
+
+/**
+ * Splits copied text by the fonts which display it, as the frontend which draws the editor knows them
+ */
+@ServiceAPI(ComponentScope.APPLICATION)
+public interface FontSegmentIteratorFactory {
+    FontSegmentIterator create(EditorColorsScheme scheme);
 }

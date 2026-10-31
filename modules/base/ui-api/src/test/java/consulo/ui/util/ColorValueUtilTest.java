@@ -215,4 +215,23 @@ public class ColorValueUtilTest {
         RGBColor mixedClamped1 = (RGBColor) ColorValueUtil.mix(c1, c2, 2);
         assertThat(mixedClamped1).isEqualTo(mixed1);
     }
+
+    @Test
+    void tuneSaturationEspeciallyGrey() {
+        RGBColor teal = new RGBColor(0, 128, 128, 255);
+        assertThat(ColorValueUtil.tuneSaturationEspeciallyGrey(teal, 1, 1)).isEqualTo(teal);
+
+        assertThat(ColorValueUtil.tuneSaturationEspeciallyGrey(new RGBColor(255, 0, 0, 255), 1, 0.5f))
+            .isEqualTo(new RGBColor(255, 128, 128, 255));
+
+        RGBColor middleGrey = new RGBColor(128, 128, 128, 255);
+        assertThat(ColorValueUtil.tuneSaturationEspeciallyGrey(middleGrey, 1, 0.5f)).isEqualTo(middleGrey);
+
+        RGBColor darkGrey = ColorValueUtil.tuneSaturationEspeciallyGrey(new RGBColor(32, 32, 32, 255), 1, 0.5f);
+        assertThat(darkGrey.getRed()).isGreaterThan(32).isEqualTo(darkGrey.getGreen()).isEqualTo(darkGrey.getBlue());
+
+        RGBColor lightGrey = ColorValueUtil.tuneSaturationEspeciallyGrey(new RGBColor(224, 224, 224, 128), 1, 0.5f);
+        assertThat(lightGrey.getRed()).isLessThan(224).isEqualTo(lightGrey.getGreen()).isEqualTo(lightGrey.getBlue());
+        assertThat(lightGrey.getAlpha()).isEqualTo(128);
+    }
 }
