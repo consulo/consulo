@@ -59,6 +59,9 @@ public class DesktopTwoComponentSplitLayoutImpl extends SwingComponentDelegate<S
     @Override
     protected Splitter createComponent() {
         MySplitter splitter = new MySplitter(myPosition == SplitLayoutPosition.VERTICAL);
+        // the divider stays where the proportion puts it, as on the other frontends: honoring minimum sizes moved it
+        // whenever a side's content changed - a longer path, a wider status line - while the user dragged it nowhere
+        splitter.setHonorComponentsMinimumSize(false);
         splitter.addPropertyChangeListener(Splitter.PROP_PROPORTION, event -> {
             int percent = Math.round(((Float) event.getNewValue()) * 100f);
             getListenerDispatcher(SplitProportionChangedEvent.class)

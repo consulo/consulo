@@ -15,7 +15,6 @@
  */
 package consulo.web.ui.impl.internal;
 
-import com.vaadin.flow.component.html.Span;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.fileEditor.FileEditorWindow;
@@ -33,6 +32,9 @@ import consulo.web.ui.impl.internal.base.TargetVaadin;
 import org.jspecify.annotations.Nullable;
 
 import java.util.function.BiConsumer;
+import consulo.ui.Button;
+import consulo.ui.ButtonStyle;
+import consulo.platform.base.icon.PlatformIconGroup;
 
 /**
  * @author VISTALL
@@ -137,8 +139,12 @@ class WebTabImpl implements Tab {
 
         BiConsumer<Tab, Component> closeHandler = myCloseHandler;
         if (closeHandler != null) {
-            Span close = new Span("\u00d7");
-            close.addClassName("web-tab-close");
+            // the small cross of the editor tabs on an inplace button, which takes no more room than its icon
+            Button closeButton = Button.create(LocalizeValue.empty());
+            closeButton.setIcon(PlatformIconGroup.actionsClose());
+            closeButton.addStyle(ButtonStyle.INPLACE);
+            com.vaadin.flow.component.Component close = TargetVaadin.to(closeButton);
+            close.getElement().getClassList().add("web-tab-close");
             close.getElement()
                 .addEventListener("click", event -> closeHandler.accept(this, myContent))
                 // otherwise the click selects the tab that is about to go away

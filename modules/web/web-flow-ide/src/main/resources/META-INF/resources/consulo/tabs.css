@@ -118,14 +118,12 @@ vaadin-tab:has(> :is(.web-tab-close, .web-tab-suffix))
 
 .web-tab-close
 {
-  margin-inline-start: 6px;
-  padding: 0 2px;
+  margin-inline-start: 4px;
 
-  /* the cross must not grow the tab when it appears, the glyph is narrower than the box it hovers in */
+  /* the cross must not grow the tab when it appears */
   flex: 0 0 auto;
-  line-height: 1;
 
-  opacity: 0.5;
+  opacity: 0.6;
   cursor: pointer;
 }
 
@@ -139,7 +137,6 @@ vaadin-tab:has(> :is(.web-tab-close, .web-tab-suffix))
 .web-tab-close:hover
 {
   opacity: 1;
-  background-color: var(--consulo-button-hover-background, gainsboro);
 }
 
 /* the position of the strip is given when the layout is created and carried as a theme name on the sheet. the host

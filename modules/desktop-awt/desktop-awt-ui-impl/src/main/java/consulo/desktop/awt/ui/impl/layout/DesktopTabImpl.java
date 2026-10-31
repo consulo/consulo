@@ -68,7 +68,8 @@ public class DesktopTabImpl implements Tab {
         myLabel = new SimpleColoredComponent();
         myLabel.setOpaque(false);
 
-        myCloseButton = new JBLabel(PlatformIconGroup.actionsCancel());
+        // the small cross of the editor tabs - the cancel icon is a full sized button glyph
+        myCloseButton = new JBLabel(PlatformIconGroup.actionsClose());
         myCloseButton.setBorder(JBUI.Borders.emptyLeft(4));
         myCloseButton.setVisible(false);
         myCloseButton.addMouseListener(new MouseAdapter() {
