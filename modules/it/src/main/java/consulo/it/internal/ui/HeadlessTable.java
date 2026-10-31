@@ -19,6 +19,7 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.Length;
 import consulo.ui.Table;
 import consulo.ui.TableColumn;
+import consulo.ui.TransferHandler;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.event.TableDoubleClickEvent;
@@ -48,6 +49,7 @@ public class HeadlessTable<Item> extends HeadlessComponentBase implements Table<
     private @Nullable Function<Item, String> mySpeedSearchConverter;
     private @Nullable Function<Item, Length> myItemHeightGetter;
     private int myVisibleRowCount;
+    private @Nullable TransferHandler<Item> myTransferHandler;
 
     public HeadlessTable(FlatDataModel<Item> model) {
         myModel = model;
@@ -239,5 +241,15 @@ public class HeadlessTable<Item> extends HeadlessComponentBase implements Table<
     @Override
     public boolean isFocusable() {
         return false;
+    }
+
+    @Override
+    public void setTransferHandler(@Nullable TransferHandler<Item> handler) {
+        myTransferHandler = handler;
+    }
+
+    @Override
+    public @Nullable TransferHandler<Item> getTransferHandler() {
+        return myTransferHandler;
     }
 }
