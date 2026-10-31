@@ -114,7 +114,30 @@ public class FormatterUtil {
     }
 
     public static @Nullable ASTNode getPreviousNonWhitespaceLeaf(@Nullable ASTNode node) {
-        return CodeStyleInternalHelper.getInstance().getPreviousNonWhitespaceLeaf(node);
+        if (node == null) {
+            return null;
+        }
+        ASTNode treePrev = node.getTreePrev();
+        if (treePrev != null) {
+            ASTNode candidate = lastLeaf(treePrev);
+            if (!isWhitespaceOrEmpty(candidate)) {
+                return candidate;
+            }
+            return getPreviousNonWhitespaceLeaf(candidate);
+        }
+        ASTNode treeParent = node.getTreeParent();
+        if (treeParent == null || treeParent.getTreeParent() == null) {
+            return null;
+        }
+        return getPreviousNonWhitespaceLeaf(treeParent);
+    }
+
+    private static ASTNode lastLeaf(ASTNode node) {
+        ASTNode leaf = node;
+        while (leaf.getLastChildNode() != null) {
+            leaf = leaf.getLastChildNode();
+        }
+        return leaf;
     }
 
     public static @Nullable ASTNode getPreviousNonWhitespaceSibling(@Nullable ASTNode node) {
