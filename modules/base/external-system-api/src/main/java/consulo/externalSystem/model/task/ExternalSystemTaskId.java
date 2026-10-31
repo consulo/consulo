@@ -65,6 +65,9 @@ public class ExternalSystemTaskId implements Serializable {
     for (Project project : projectManager.getOpenProjects()) {
       if (myProjectId.equals(getProjectId(project))) return project;
     }
+    // the import of a new project resolves it by the default project
+    Project defaultProject = projectManager.getDefaultProject();
+    if (myProjectId.equals(getProjectId(defaultProject))) return defaultProject;
     return null;
   }
 
