@@ -4,7 +4,7 @@ package consulo.ide.impl.idea.ide.actions.runAnything.activity;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingCacheImpl;
-import consulo.ide.internal.RunAnythingCache;
+import consulo.execution.internal.runAnything.RunAnythingCache;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;

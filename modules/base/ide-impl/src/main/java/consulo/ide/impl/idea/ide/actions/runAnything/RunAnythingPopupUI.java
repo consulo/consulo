@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions.runAnything;
 
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.application.Application;
 import consulo.application.internal.ProgressIndicatorBase;
 import consulo.application.progress.ProgressIndicator;
@@ -15,18 +16,17 @@ import consulo.fileEditor.FileEditorManager;
 import consulo.ide.impl.idea.ide.actions.BigPopupUI;
 import consulo.ide.impl.idea.ide.actions.bigPopup.ShowFilterAction;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.runAnything.RunAnythingCompletionGroup;
-import consulo.ide.runAnything.RunAnythingGeneralGroup;
+import consulo.execution.runAnything.RunAnythingCompletionGroup;
+import consulo.execution.runAnything.RunAnythingGeneralGroup;
 import consulo.ide.impl.idea.ide.actions.runAnything.groups.RunAnythingRecentGroup;
 import consulo.ide.impl.idea.ide.actions.runAnything.ui.RunAnythingScrollingUtil;
 import consulo.ui.ex.impl.internal.action.ActionImplUtil;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
-import consulo.ide.internal.RunAnythingCache;
-import consulo.ide.localize.IdeLocalize;
-import consulo.ide.runAnything.RunAnythingContext;
-import consulo.ide.runAnything.RunAnythingGroup;
-import consulo.ide.runAnything.RunAnythingItem;
-import consulo.ide.runAnything.RunAnythingProvider;
+import consulo.execution.internal.runAnything.RunAnythingCache;
+import consulo.execution.runAnything.RunAnythingContext;
+import consulo.execution.runAnything.RunAnythingGroup;
+import consulo.execution.runAnything.RunAnythingItem;
+import consulo.execution.runAnything.RunAnythingProvider;
 import consulo.language.util.ModuleUtilCore;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
@@ -145,7 +145,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
                     mySearchField,
                     field -> true,
                     "",
-                    IdeLocalize.runAnythingHelpListEmptySecondaryText().get()
+                    ExecutionLocalize.runAnythingHelpListEmptySecondaryText().get()
                 );
             }
         });
@@ -181,8 +181,8 @@ public class RunAnythingPopupUI extends BigPopupUI {
         adjustEmptyText(
             editor,
             field -> field.getText().isEmpty(),
-            IdeLocalize.runAnythingMainListEmptyPrimaryText().get(),
-            IdeLocalize.runAnythingMainListEmptySecondaryText().get()
+            ExecutionLocalize.runAnythingMainListEmptyPrimaryText().get(),
+            ExecutionLocalize.runAnythingMainListEmptySecondaryText().get()
         );
     }
 
@@ -386,7 +386,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
     @Override
     
     public JPanel createTopLeftPanel() {
-        myTextFieldTitle = new JLabel(IdeLocalize.runAnythingRunAnythingTitle().get());
+        myTextFieldTitle = new JLabel(ExecutionLocalize.runAnythingRunAnythingTitle().get());
         JPanel topPanel = new NonOpaquePanel(new BorderLayout());
         Color foregroundColor = UIUtil.getLabelForeground();
 
@@ -430,16 +430,16 @@ public class RunAnythingPopupUI extends BigPopupUI {
 
         LocalizeValue message;
         if (inputDetails.withShift() && inputDetails.withAlt()) {
-            message = IdeLocalize.runAnythingRunInContextDebugTitle();
+            message = ExecutionLocalize.runAnythingRunInContextDebugTitle();
         }
         else if (inputDetails.withShift()) {
-            message = IdeLocalize.runAnythingRunDebugTitle();
+            message = ExecutionLocalize.runAnythingRunDebugTitle();
         }
         else if (inputDetails.withAlt()) {
-            message = IdeLocalize.runAnythingRunInContextTitle();
+            message = ExecutionLocalize.runAnythingRunInContextTitle();
         }
         else {
-            message = IdeLocalize.runAnythingRunAnythingTitle();
+            message = ExecutionLocalize.runAnythingRunAnythingTitle();
         }
         myTextFieldTitle.setText(message.get());
         updateMatchedRunConfigurationStuff(inputDetails.withAlt());
@@ -626,7 +626,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
                         myAlarm.cancelAllRequests();
                         myAlarm.addRequest(() -> {
                             if (DumbService.getInstance(myProject).isDumb()) {
-                                myResultsList.setEmptyText(IdeLocalize.runAnythingIndexingModeNotSupported().get());
+                                myResultsList.setEmptyText(ExecutionLocalize.runAnythingIndexingModeNotSupported().get());
                                 return;
                             }
 
@@ -664,7 +664,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
             finally {
                 if (!isCanceled()) {
                     Application.get().invokeLater(
-                        () -> myResultsList.getEmptyText().setText(IdeLocalize.runAnythingCommandEmptyListTitle())
+                        () -> myResultsList.getEmptyText().setText(ExecutionLocalize.runAnythingCommandEmptyListTitle())
                     );
                 }
                 if (!myDone.isProcessed()) {
@@ -984,7 +984,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
 
     @Override
     protected String getInitialHint() {
-        return IdeLocalize.runAnythingHintInitialText(
+        return ExecutionLocalize.runAnythingHintInitialText(
             KeymapUtil.getKeystrokeText(UP_KEYSTROKE),
             KeymapUtil.getKeystrokeText(DOWN_KEYSTROKE)
         ).get();

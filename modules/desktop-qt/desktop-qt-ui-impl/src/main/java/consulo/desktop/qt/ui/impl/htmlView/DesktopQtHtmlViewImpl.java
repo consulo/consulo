@@ -26,13 +26,16 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.clipboard.DataTransfer;
 import consulo.ui.event.HtmlViewCopyEvent;
+import consulo.ui.event.HtmlViewGutterActionEvent;
 import consulo.ui.event.HtmlViewDoubleClickEvent;
 import consulo.ui.event.HyperlinkEvent;
 import consulo.ui.image.Image;
 import consulo.ui.style.ComponentColors;
 import consulo.ui.impl.HtmlCopyButtons;
+import consulo.ui.impl.HtmlGutterActions;
 import consulo.ui.impl.HtmlDocuments;
 import consulo.util.io.StreamUtil;
+import io.qt.core.QRect;
 import io.qt.core.QRectF;
 import io.qt.core.QSize;
 import io.qt.core.QUrl;
@@ -47,6 +50,7 @@ import io.qt.gui.QPixmap;
 import io.qt.gui.QResizeEvent;
 import io.qt.gui.QTextBlock;
 import io.qt.gui.QTextBlockFormat;
+import io.qt.gui.QTextCursor;
 import io.qt.gui.QTextDocument;
 import io.qt.widgets.QFrame;
 import io.qt.widgets.QStyle;
@@ -62,6 +66,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -103,13 +108,13 @@ public class DesktopQtHtmlViewImpl extends QtComponentDelegate<QTextBrowser> imp
         @Override
         protected void resizeEvent(QResizeEvent event) {
             super.resizeEvent(event);
-            positionCopyButtons(this);
+            positionButtons(this);
         }
 
         @Override
         protected void scrollContentsBy(int dx, int dy) {
             super.scrollContentsBy(dx, dy);
-            positionCopyButtons(this);
+            positionButtons(this);
         }
 
         @Override
@@ -188,6 +193,16 @@ public class DesktopQtHtmlViewImpl extends QtComponentDelegate<QTextBrowser> imp
 
     private final List<CopyButton> myCopyButtons = new ArrayList<>();
 
+    private volatile Map<String, GutterAction> myGutterActions = Map.of();
+
+    /**
+     * A button of a gutter action, kept left of the line which holds the first character of its target
+     */
+    private record GutterButton(QToolButton button, int position) {
+    }
+
+    private final List<GutterButton> myGutterButtons = new ArrayList<>();
+
     private @Nullable String myClickedAnchor;
 
     private boolean mySizeToContent;
@@ -262,6 +277,8 @@ public class DesktopQtHtmlViewImpl extends QtComponentDelegate<QTextBrowser> imp
         component.setHtml(html);
         component.document().setDocumentMargin(0);
 
+        // the gutter first: the room it makes moves the lines the copy buttons are placed by
+        rebuildGutterButtons(component);
         rebuildCopyButtons(component);
 
         if (mySizeToContent) {
@@ -312,6 +329,89 @@ public class DesktopQtHtmlViewImpl extends QtComponentDelegate<QTextBrowser> imp
             }
         }
         return result;
+    }
+
+    private void positionButtons(QTextBrowser component) {
+        positionGutterButtons(component);
+        positionCopyButtons(component);
+    }
+
+    @RequiredUIAccess
+    private void rebuildGutterButtons(QTextBrowser component) {
+        for (GutterButton gutterButton : myGutterButtons) {
+            gutterButton.button().dispose();
+        }
+        myGutterButtons.clear();
+
+        Map<String, GutterAction> gutterActions = myGutterActions;
+        if (gutterActions.isEmpty()) {
+            return;
+        }
+
+        findAnchors(component.document(), gutterActions.keySet()).forEach((targetId, position) -> {
+            GutterAction action = gutterActions.get(targetId);
+
+            QToolButton button = new QToolButton(component.viewport());
+            button.setAutoRaise(true);
+            button.setIcon(toHostQIcon(action.icon()));
+            button.setToolTip(action.tooltip().get());
+            button.setCursor(new QCursor(Qt.CursorShape.PointingHandCursor));
+            button.clicked.connect(() -> getListenerDispatcher(HtmlViewGutterActionEvent.class).onEvent(
+                new HtmlViewGutterActionEvent(this, targetId, DesktopQtInputDetails.mouseAtCursor(button))
+            ));
+            button.adjustSize();
+            button.show();
+            myGutterButtons.add(new GutterButton(button, position));
+        });
+
+        if (!myGutterButtons.isEmpty()) {
+            makeGutterRoom(component.document(), myGutterButtons.getFirst().button().width() + HtmlGutterActions.GAP);
+        }
+        positionGutterButtons(component);
+    }
+
+    /**
+     * The rich text engine lays out no padding of a {@code pre}, its lines start where the text does, so every line of a block
+     * holding a target is moved right to leave room for the buttons
+     */
+    private void makeGutterRoom(QTextDocument document, int width) {
+        Set<Integer> indented = new HashSet<>();
+        for (GutterButton gutterButton : myGutterButtons) {
+            QTextBlock block = document.findBlock(gutterButton.position());
+            if (!block.blockFormat().nonBreakableLines()) {
+                indent(block, width, indented);
+                continue;
+            }
+
+            QTextBlock first = block;
+            while (first.previous().isValid() && first.previous().blockFormat().nonBreakableLines()) {
+                first = first.previous();
+            }
+            for (QTextBlock line = first; line.isValid() && line.blockFormat().nonBreakableLines(); line = line.next()) {
+                indent(line, width, indented);
+            }
+        }
+    }
+
+    private static void indent(QTextBlock block, int width, Set<Integer> indented) {
+        if (!indented.add(block.blockNumber())) {
+            return;
+        }
+        QTextBlockFormat format = block.blockFormat();
+        format.setLeftMargin(format.leftMargin() + width);
+        new QTextCursor(block).setBlockFormat(format);
+    }
+
+    private void positionGutterButtons(QTextBrowser component) {
+        for (GutterButton gutterButton : myGutterButtons) {
+            QTextCursor cursor = new QTextCursor(component.document());
+            cursor.setPosition(gutterButton.position());
+            QRect line = component.cursorRect(cursor);
+            QToolButton button = gutterButton.button();
+            int x = line.left() - button.width() - HtmlGutterActions.GAP;
+            int y = line.top() + (line.height() - button.height()) / 2;
+            button.move(x, y);
+        }
     }
 
     private void positionCopyButtons(QTextBrowser component) {
@@ -411,6 +511,7 @@ public class DesktopQtHtmlViewImpl extends QtComponentDelegate<QTextBrowser> imp
 
         myHtml = document;
         myCopyTargets = renderData.copyTargets();
+        myGutterActions = renderData.gutterActions();
 
         QTextBrowser component = myComponent;
         if (component == null) {

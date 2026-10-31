@@ -27,6 +27,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.clipboard.DataTransfer;
 import consulo.ui.color.ColorValue;
 import consulo.ui.event.HtmlViewCopyEvent;
+import consulo.ui.event.HtmlViewGutterActionEvent;
 import consulo.ui.event.HtmlViewDoubleClickEvent;
 import consulo.ui.event.HyperlinkEvent;
 import consulo.ui.ex.JBColor;
@@ -34,6 +35,7 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.ui.impl.HtmlCopyButtons;
+import consulo.ui.impl.HtmlGutterActions;
 import consulo.ui.impl.HtmlDocuments;
 import consulo.util.io.CharsetToolkit;
 import consulo.util.io.StreamUtil;
@@ -87,6 +89,8 @@ public class DesktopAWTHtmlViewImpl extends SwingComponentDelegate<DesktopAWTHtm
     private volatile @Nullable Function<String, Image> myImageResolver;
 
     private volatile Map<String, DataTransfer> myCopyTargets = Map.of();
+
+    private volatile Map<String, GutterAction> myGutterActions = Map.of();
 
     private boolean mySizeToContent;
 
@@ -202,7 +206,11 @@ public class DesktopAWTHtmlViewImpl extends SwingComponentDelegate<DesktopAWTHtm
         }
 
         Map<String, DataTransfer> copyTargets = renderData.copyTargets();
-        String htmlToRender = HtmlDocuments.withHead(addCopyButtons(html, copyTargets.keySet()), getCssLines(inlineCss));
+        Map<String, GutterAction> gutterActions = renderData.gutterActions();
+        // the icons are fetched while the document is parsed
+        myGutterActions = gutterActions;
+        String withButtons = addGutterButtons(addCopyButtons(html, copyTargets.keySet()), gutterActions);
+        String htmlToRender = HtmlDocuments.withHead(withButtons, getCssLines(inlineCss));
 
         Application.get().executeOnPooledThread(() -> {
             try {
@@ -289,26 +297,43 @@ public class DesktopAWTHtmlViewImpl extends SwingComponentDelegate<DesktopAWTHtm
      * placed link in an empty box, which pins it to the top right corner of the content of the target
      */
     private static String addCopyButtons(String html, Set<String> targetIds) {
-        if (targetIds.isEmpty()) {
-            return html;
-        }
-
         String tooltip = StringUtil.escapeXmlEntities(HtmlCopyButtons.getTooltip().get());
         String result = html;
         for (String targetId : targetIds) {
-            Pattern openingTag = Pattern.compile("<[a-zA-Z][\\w-]*\\b[^>]*\\bid\\s*=\\s*\"" + Pattern.quote(targetId) + "\"[^>]*>");
-            Matcher matcher = openingTag.matcher(result);
-            if (!matcher.find()) {
-                continue;
-            }
-
-            String button = "<div style=\"position:relative;height:0;\">"
+            result = insertIntoElement(result, targetId, "<div style=\"position:relative;height:0;\">"
                 + "<div style=\"position:absolute;top:" + HtmlCopyButtons.INSET + "px;right:" + HtmlCopyButtons.INSET + "px;\">"
                 + "<a href=\"" + HtmlCopyButtons.HREF_PREFIX + targetId + "\" title=\"" + tooltip + "\">"
-                + "<img src=\"" + IMAGE_SRC_PREFIX + HtmlCopyButtons.IMAGE_ID + "\" style=\"border:0;\"></a></div></div>";
-            result = result.substring(0, matcher.end()) + button + result.substring(matcher.end());
+                + "<img src=\"" + IMAGE_SRC_PREFIX + HtmlCopyButtons.IMAGE_ID + "\" style=\"border:0;\"></a></div></div>");
         }
         return result;
+    }
+
+    /**
+     * An absolutely placed link with no offsets stays where it would have been, at the start of the first line of the target, and is
+     * moved into the margin left of it. Without a positioned box around it, it belongs to the whole document, so a click in the
+     * padding of a block of code still reaches it.
+     */
+    private static String addGutterButtons(String html, Map<String, GutterAction> gutterActions) {
+        String result = html;
+        for (Map.Entry<String, GutterAction> entry : gutterActions.entrySet()) {
+            String targetId = entry.getKey();
+            GutterAction action = entry.getValue();
+            int left = action.icon().getWidth() + HtmlGutterActions.GAP;
+            result = insertIntoElement(result, targetId, "<span style=\"position:absolute;margin-left:-" + left + "px;\">"
+                + "<a href=\"" + HtmlGutterActions.HREF_PREFIX + targetId + "\" title=\""
+                + StringUtil.escapeXmlEntities(action.tooltip().get()) + "\">"
+                + "<img src=\"" + IMAGE_SRC_PREFIX + HtmlGutterActions.IMAGE_ID_PREFIX + targetId + "\" style=\"border:0;\"></a></span>");
+        }
+        return result;
+    }
+
+    private static String insertIntoElement(String html, String elementId, String markup) {
+        Pattern openingTag = Pattern.compile("<[a-zA-Z][\\w-]*\\b[^>]*\\bid\\s*=\\s*\"" + Pattern.quote(elementId) + "\"[^>]*>");
+        Matcher matcher = openingTag.matcher(html);
+        if (!matcher.find()) {
+            return html;
+        }
+        return html.substring(0, matcher.end()) + markup + html.substring(matcher.end());
     }
 
     @RequiredUIAccess
@@ -335,6 +360,14 @@ public class DesktopAWTHtmlViewImpl extends SwingComponentDelegate<DesktopAWTHtm
             return true;
         }
 
+        String gutterTargetId = HtmlGutterActions.getTargetId(href);
+        if (gutterTargetId != null) {
+            getListenerDispatcher(HtmlViewGutterActionEvent.class).onEvent(
+                new HtmlViewGutterActionEvent(this, gutterTargetId, DesktopAWTInputDetails.convert(toAWTComponent(), event))
+            );
+            return true;
+        }
+
         if (hasListeners(HyperlinkEvent.class)) {
             getListenerDispatcher(HyperlinkEvent.class).onEvent(
                 new HyperlinkEvent(this, href, DesktopAWTInputDetails.convert(toAWTComponent(), event))
@@ -352,6 +385,12 @@ public class DesktopAWTHtmlViewImpl extends SwingComponentDelegate<DesktopAWTHtm
     private @Nullable Image resolveImage(String id) {
         if (HtmlCopyButtons.IMAGE_ID.equals(id)) {
             return HtmlCopyButtons.getImage();
+        }
+
+        String gutterTargetId = HtmlGutterActions.getImageTargetId(id);
+        if (gutterTargetId != null) {
+            GutterAction action = myGutterActions.get(gutterTargetId);
+            return action == null ? null : action.icon();
         }
 
         Function<String, Image> resolver = myImageResolver;

@@ -43,6 +43,9 @@ module consulo.execution.api {
     exports consulo.execution.executor;
     exports consulo.execution.lineMarker;
     exports consulo.execution.runner;
+    exports consulo.execution.runAnything;
+    exports consulo.execution.runAnything.codeBlock;
+    exports consulo.execution.internal.runAnything to consulo.ide.impl;
     exports consulo.execution.localize;
     exports consulo.execution.icon;
     exports consulo.execution.process;

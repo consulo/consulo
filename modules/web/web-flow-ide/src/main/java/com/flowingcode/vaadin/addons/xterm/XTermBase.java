@@ -35,7 +35,6 @@ import com.vaadin.flow.server.Command;
 import com.vaadin.flow.shared.Registration;
 import java.io.Serializable;
 import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Proxy;
@@ -146,30 +145,17 @@ public abstract class XTermBase extends Component
     }
   }
 
-  private static final Class<?> optionsProxyClass;
-
-  static {
-    optionsProxyClass =
-        Proxy.getProxyClass(
-            XTermBase.class.getClassLoader(), ITerminal.class, ITerminalOptions.class);
-  }
-
   /** Constructs a new instance of {@code XTerm} */
   public XTermBase() {
-    // initialize delegate proxies
-    try {
-      Object proxy =
-          optionsProxyClass
-              .getConstructor(InvocationHandler.class)
-              .newInstance(new ProxyInvocationHandler());
-      terminalProxy = (ITerminal) proxy;
-      terminalOptionsProxy = (ITerminalOptions) proxy;
-    } catch (InstantiationException
-        | IllegalAccessException
-        | InvocationTargetException
-        | NoSuchMethodException e) {
-      throw new RuntimeException(e);
-    }
+    // initialize delegate proxies - created by the proxy factory itself, as the proxy class lives in a module of its own which
+    // this one may not reach by reflection
+    Object proxy =
+        Proxy.newProxyInstance(
+            XTermBase.class.getClassLoader(),
+            new Class<?>[] {ITerminal.class, ITerminalOptions.class},
+            new ProxyInvocationHandler());
+    terminalProxy = (ITerminal) proxy;
+    terminalOptionsProxy = (ITerminalOptions) proxy;
 
     // the inner <div> must be in the light DOM
     Element div = new Element("div");

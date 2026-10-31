@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.internal;
+package consulo.execution.internal.runAnything;
 
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.localize.IdeLocalize;
 import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationGroupContributor;
 
@@ -29,7 +29,7 @@ import java.util.function.Consumer;
 @ExtensionImpl
 public class RunAnythingNotificationGroupContributor implements NotificationGroupContributor {
     public static final NotificationGroup GROUP =
-        NotificationGroup.balloonGroup("runAnything", IdeLocalize.runAnythingRunAnythingTitle());
+        NotificationGroup.balloonGroup("runAnything", ExecutionLocalize.runAnythingRunAnythingTitle());
 
     @Override
     public void contribute(Consumer<NotificationGroup> registrator) {

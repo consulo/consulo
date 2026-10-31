@@ -26,7 +26,6 @@ module consulo.ide.api {
     exports consulo.ide.localize;
     exports consulo.ide.navigation;
     exports consulo.ide.navigationToolbar;
-    exports consulo.ide.runAnything;
     exports consulo.ide.setting;
     exports consulo.ide.setting.bundle;
     exports consulo.ide.setting.module;

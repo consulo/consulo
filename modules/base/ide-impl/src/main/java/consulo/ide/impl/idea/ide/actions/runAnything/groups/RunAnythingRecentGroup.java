@@ -1,14 +1,14 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions.runAnything.groups;
 
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.component.extension.ExtensionPoint;
 import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingCacheImpl;
-import consulo.ide.internal.RunAnythingCache;
-import consulo.ide.localize.IdeLocalize;
-import consulo.ide.runAnything.RunAnythingGroupBase;
-import consulo.ide.runAnything.RunAnythingItem;
-import consulo.ide.runAnything.RunAnythingProvider;
+import consulo.execution.internal.runAnything.RunAnythingCache;
+import consulo.execution.runAnything.RunAnythingGroupBase;
+import consulo.execution.runAnything.RunAnythingItem;
+import consulo.execution.runAnything.RunAnythingProvider;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 
@@ -24,7 +24,7 @@ public class RunAnythingRecentGroup extends RunAnythingGroupBase {
     
     @Override
     public LocalizeValue getTitle() {
-        return IdeLocalize.runAnythingRecentGroupTitle();
+        return ExecutionLocalize.runAnythingRecentGroupTitle();
     }
 
     

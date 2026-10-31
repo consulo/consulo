@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.actions.runAnything;
 
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.application.util.registry.Registry;
@@ -25,9 +26,8 @@ import consulo.fileChooser.FileChooserFactory;
 import consulo.ui.ex.impl.internal.action.ActionImplUtil;
 import consulo.ui.ex.impl.internal.popup.action.ActionPopupItem;
 import consulo.ui.ex.impl.internal.popup.action.ActionPopupStep;
-import consulo.ide.localize.IdeLocalize;
 import consulo.localize.LocalizeValue;
-import consulo.ide.runAnything.RunAnythingContext;
+import consulo.execution.runAnything.RunAnythingContext;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
@@ -197,7 +197,7 @@ public abstract class RunAnythingChooseContextAction extends ActionGroup impleme
         ) {
             super(
                 actions,
-                IdeLocalize.runAnythingContextTitleWorkingDirectory().get(),
+                ExecutionLocalize.runAnythingContextTitleWorkingDirectory().get(),
                 () -> dataContext,
                 null,
                 true,
@@ -213,11 +213,11 @@ public abstract class RunAnythingChooseContextAction extends ActionGroup impleme
         public ListSeparator getSeparatorAbove(ActionPopupItem value) {
             AnAction action = value.getAction();
             if (action instanceof BrowseDirectoryItem) {
-                return new ListSeparator(IdeLocalize.runAnythingContextSeparatorDirectories().get());
+                return new ListSeparator(ExecutionLocalize.runAnythingContextSeparatorDirectories().get());
             }
             else if (action instanceof ModuleItem
                 && action == ContainerUtil.filter(myActions, it -> it.getAction() instanceof ModuleItem).get(0).getAction()) {
-                return new ListSeparator(IdeLocalize.runAnythingContextSeparatorModules().get());
+                return new ListSeparator(ExecutionLocalize.runAnythingContextSeparatorModules().get());
             }
             return super.getSeparatorAbove(value);
         }
@@ -251,7 +251,7 @@ public abstract class RunAnythingChooseContextAction extends ActionGroup impleme
     @Override
     public void update(AnActionEvent e) {
         Presentation presentation = e.getPresentation();
-        presentation.setDescription(IdeLocalize.runAnythingContextTooltip());
+        presentation.setDescription(ExecutionLocalize.runAnythingContextTooltip());
 
         if (getAvailableContexts().isEmpty()) {
             presentation.setEnabledAndVisible(false);

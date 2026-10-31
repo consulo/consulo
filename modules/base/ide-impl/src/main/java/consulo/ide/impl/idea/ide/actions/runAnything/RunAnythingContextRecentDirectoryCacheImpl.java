@@ -20,7 +20,7 @@ import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
-import consulo.ide.internal.RunAnythingContextRecentDirectoryCache;
+import consulo.execution.internal.runAnything.RunAnythingContextRecentDirectoryCache;
 import consulo.project.Project;
 import consulo.util.xml.serializer.XmlSerializerUtil;
 import jakarta.inject.Singleton;

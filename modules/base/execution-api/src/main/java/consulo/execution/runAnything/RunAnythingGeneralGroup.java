@@ -1,9 +1,9 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.runAnything;
+package consulo.execution.runAnything;
 
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.application.Application;
 import consulo.dataContext.DataContext;
-import consulo.ide.localize.IdeLocalize;
 import consulo.localize.LocalizeValue;
 
 import java.util.ArrayList;
@@ -18,7 +18,7 @@ public class RunAnythingGeneralGroup extends RunAnythingGroupBase {
     
     @Override
     public LocalizeValue getTitle() {
-        return IdeLocalize.runAnythingGeneralGroupTitle();
+        return ExecutionLocalize.runAnythingGeneralGroupTitle();
     }
 
     

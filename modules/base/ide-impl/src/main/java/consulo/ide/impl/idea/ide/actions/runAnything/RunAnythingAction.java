@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions.runAnything;
 
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.annotation.component.ActionImpl;
 import consulo.application.Application;
 import consulo.execution.executor.Executor;
@@ -8,8 +9,7 @@ import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.ide.impl.idea.ide.actions.GotoActionBase;
 import consulo.ui.event.details.ModifiedInputDetails.Modifier;
 import consulo.ui.ex.keymap.internal.ModifierKeyDoubleClickHandler;
-import consulo.ide.localize.IdeLocalize;
-import consulo.ide.runAnything.RunAnythingProvider;
+import consulo.execution.runAnything.RunAnythingProvider;
 import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -88,7 +88,7 @@ public class RunAnythingAction extends LegacyDumbAwareAction {
             CustomShortcutBuilder.KEY,
             () -> {
                 if (myIsDoubleCtrlRegistered) {
-                    return IdeLocalize.runAnythingDoubleCtrlShortcut(
+                    return ExecutionLocalize.runAnythingDoubleCtrlShortcut(
                         Platform.current().os().isMac() ? FontUtil.thinSpace() + MacKeymapUtil.CONTROL : "Ctrl"
                     );
                 }

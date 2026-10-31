@@ -1,9 +1,9 @@
 // Copyright 2000-2022 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
-package consulo.ide.runAnything;
+package consulo.execution.runAnything;
 
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.dataContext.DataContext;
-import consulo.ide.internal.RunAnythingNotificationGroupContributor;
-import consulo.ide.localize.IdeLocalize;
+import consulo.execution.internal.runAnything.RunAnythingNotificationGroupContributor;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
@@ -135,8 +135,8 @@ public abstract class RunAnythingNotifiableProvider<V> extends RunAnythingProvid
             builder -> {
                 // getCommand(builder.value) must be defined in RunAnythingProviderBase.
                 builder.myBuilder
-                    .title(IdeLocalize.runAnythingNotificationWarningTitle())
-                    .content(IdeLocalize.runAnythingNotificationWarningContent(getCommand(builder.myValue)));
+                    .title(ExecutionLocalize.runAnythingNotificationWarningTitle())
+                    .content(ExecutionLocalize.runAnythingNotificationWarningContent(getCommand(builder.myValue)));
             }
         );
     }

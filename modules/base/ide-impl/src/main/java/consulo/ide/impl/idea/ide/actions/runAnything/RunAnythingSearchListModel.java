@@ -2,10 +2,10 @@
 package consulo.ide.impl.idea.ide.actions.runAnything;
 
 import consulo.application.Application;
-import consulo.ide.runAnything.RunAnythingProvider;
-import consulo.ide.runAnything.RunAnythingCompletionGroup;
-import consulo.ide.runAnything.RunAnythingGroup;
-import consulo.ide.runAnything.RunAnythingHelpGroup;
+import consulo.execution.runAnything.RunAnythingProvider;
+import consulo.execution.runAnything.RunAnythingCompletionGroup;
+import consulo.execution.runAnything.RunAnythingGroup;
+import consulo.execution.runAnything.RunAnythingHelpGroup;
 import consulo.ide.impl.idea.ide.actions.runAnything.groups.RunAnythingRecentGroup;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ex.awt.CollectionListModel;

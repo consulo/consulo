@@ -1,16 +1,16 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions.runAnything.activity;
 
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.executor.Executor;
 import consulo.execution.RunManager;
 import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.execution.impl.internal.action.ChooseRunConfigurationPopup;
 import consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingRunConfigurationItem;
 import consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingUtil;
-import consulo.ide.runAnything.RunAnythingItem;
+import consulo.execution.runAnything.RunAnythingItem;
 import consulo.dataContext.DataContext;
-import consulo.ide.localize.IdeLocalize;
-import consulo.ide.runAnything.RunAnythingProviderBase;
+import consulo.execution.runAnything.RunAnythingProviderBase;
 import consulo.ui.image.Image;
 
 import org.jspecify.annotations.Nullable;
@@ -45,8 +45,8 @@ public abstract class RunAnythingRunConfigurationProvider extends RunAnythingPro
 
     @Override
     public @Nullable String getAdText() {
-        return IdeLocalize.runAnythingAdRunInContext(RunAnythingUtil.PRESSED_ALT) + ", " +
-            IdeLocalize.runAnythingAdRunWithDebug(RunAnythingUtil.SHIFT_SHORTCUT_TEXT);
+        return ExecutionLocalize.runAnythingAdRunInContext(RunAnythingUtil.PRESSED_ALT) + ", " +
+            ExecutionLocalize.runAnythingAdRunWithDebug(RunAnythingUtil.SHIFT_SHORTCUT_TEXT);
     }
 
     

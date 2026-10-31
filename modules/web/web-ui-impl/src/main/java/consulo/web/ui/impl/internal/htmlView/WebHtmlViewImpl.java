@@ -27,10 +27,12 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.clipboard.DataTransfer;
 import consulo.ui.clipboard.DataTransferType;
 import consulo.ui.event.HtmlViewCopyEvent;
+import consulo.ui.event.HtmlViewGutterActionEvent;
 import consulo.ui.event.HtmlViewDoubleClickEvent;
 import consulo.ui.event.HyperlinkEvent;
 import consulo.ui.event.details.InputDetails;
 import consulo.ui.impl.HtmlCopyButtons;
+import consulo.ui.impl.HtmlGutterActions;
 import consulo.ui.impl.HtmlDocuments;
 import consulo.web.ui.impl.internal.WebColors;
 import consulo.ui.style.StyleManager;
@@ -105,6 +107,12 @@ public class WebHtmlViewImpl extends VaadinComponentDelegate<WebHtmlViewImpl.Vaa
                     }, error => console.warn('Cannot copy ' + targetId, error));
                     return;
                 }
+                if (href.startsWith($6)) {
+                    const gutterEvent = new MouseEvent('consulo-gutter', event);
+                    gutterEvent.consuloGutterTarget = href.substring($6.length);
+                    this.dispatchEvent(gutterEvent);
+                    return;
+                }
                 const linkEvent = new MouseEvent('consulo-link', event);
                 linkEvent.consuloHref = href;
                 this.dispatchEvent(linkEvent);
@@ -125,7 +133,26 @@ public class WebHtmlViewImpl extends VaadinComponentDelegate<WebHtmlViewImpl.Vaa
             button.style.cssText = 'position: absolute; top: ' + $5 + 'px; right: ' + $5 + 'px; line-height: 0; cursor: pointer;';
             target.insertBefore(button, target.firstChild);
         }
+        for (const targetId of Object.keys($7)) {
+            const target = root.getElementById(targetId);
+            if (!target) {
+                continue;
+            }
+            const box = document.createElement('div');
+            box.style.cssText = 'position: relative; height: 0;';
+            const button = document.createElement('a');
+            button.setAttribute('href', $6 + targetId);
+            button.title = $7[targetId].tooltip;
+            button.innerHTML = $7[targetId].icon;
+            // placed by its right edge alone it would be given no width, so it takes the width of its icon
+            button.style.cssText = 'position: absolute; top: 0; right: 100%; width: max-content; margin-right: ' + $8 + 'px; line-height: 0; cursor: pointer;';
+            box.appendChild(button);
+            target.insertBefore(box, target.firstChild);
+        }
         """;
+
+    private static final String GUTTER_EVENT = "consulo-gutter";
+    private static final String GUTTER_TARGET = "event.consuloGutterTarget";
 
     private static final String COPY_EVENT = "consulo-copy";
     private static final String COPY_TARGET = "event.consuloCopyTarget";
@@ -214,6 +241,13 @@ public class WebHtmlViewImpl extends VaadinComponentDelegate<WebHtmlViewImpl.Vaa
                 getListenerDispatcher(HtmlViewCopyEvent.class).onEvent(new HtmlViewCopyEvent(this, targetId));
             }
         }).addEventData(COPY_TARGET);
+
+        WebInputDetails.addClickEventListener(getVaadinComponent().getElement(), GUTTER_EVENT, (event, details) -> {
+            String targetId = event.getEventData().path(GUTTER_TARGET).asString("");
+            if (!targetId.isEmpty()) {
+                getListenerDispatcher(HtmlViewGutterActionEvent.class).onEvent(new HtmlViewGutterActionEvent(this, targetId, details));
+            }
+        }).addEventData(GUTTER_TARGET);
     }
 
     @RequiredUIAccess
@@ -339,14 +373,17 @@ public class WebHtmlViewImpl extends VaadinComponentDelegate<WebHtmlViewImpl.Vaa
     @Override
     public CompletableFuture<?> render(RenderData renderData) {
         String document = resolveImages(buildDocument(renderData));
-        ObjectNode copyTargets = toJson(renderData.copyTargets());
+        ObjectNode copyTargets = toCopyJson(renderData.copyTargets());
         Object[] parameters = {
             document,
             HtmlCopyButtons.HREF_PREFIX,
             copyTargets,
             toImageHtml(HtmlCopyButtons.getImage()),
             HtmlCopyButtons.getTooltip().get(),
-            HtmlCopyButtons.INSET
+            HtmlCopyButtons.INSET,
+            HtmlGutterActions.HREF_PREFIX,
+            toGutterJson(renderData.gutterActions()),
+            HtmlGutterActions.GAP
         };
 
         UIAccess uiAccess = getUIAccess();
@@ -358,7 +395,17 @@ public class WebHtmlViewImpl extends VaadinComponentDelegate<WebHtmlViewImpl.Vaa
         return uiAccess.giveAsync(() -> getVaadinComponent().getElement().executeJs(RENDER_SCRIPT, parameters));
     }
 
-    private static ObjectNode toJson(Map<String, DataTransfer> copyTargets) {
+    private static ObjectNode toGutterJson(Map<String, GutterAction> gutterActions) {
+        ObjectNode result = JsonNodeFactory.instance.objectNode();
+        gutterActions.forEach((targetId, action) -> {
+            ObjectNode item = result.putObject(targetId);
+            item.put("icon", toImageHtml(action.icon()));
+            item.put("tooltip", action.tooltip().get());
+        });
+        return result;
+    }
+
+    private static ObjectNode toCopyJson(Map<String, DataTransfer> copyTargets) {
         ObjectNode result = JsonNodeFactory.instance.objectNode();
         copyTargets.forEach((targetId, value) -> {
             ObjectNode item = result.putObject(targetId);

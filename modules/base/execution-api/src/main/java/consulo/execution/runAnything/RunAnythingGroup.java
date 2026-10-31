@@ -1,10 +1,10 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.runAnything;
+package consulo.execution.runAnything;
 
 import consulo.application.Application;
 import consulo.application.util.matcher.NameUtil;
 import consulo.dataContext.DataContext;
-import consulo.ide.internal.RunAnythingCache;
+import consulo.execution.internal.runAnything.RunAnythingCache;
 import consulo.localize.LocalizeKey;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;

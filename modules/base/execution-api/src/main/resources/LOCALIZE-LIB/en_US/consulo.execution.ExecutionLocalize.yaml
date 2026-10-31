@@ -594,6 +594,88 @@ rerun.singleton.confirmation.message:
         Are you sure you want to stop {1, choice, 1#the running one|2#{1, number} running instances}?
 restart.error.message.title:
     text: Restart Error
+run.anything.action.tooltip.text:
+    text: Run Anything
+run.anything.actions.undefined:
+    text: Undefined
+run.anything.ad.command.delete:
+    text: '{0} to delete recent command'
+run.anything.ad.run.action.with.default.settings:
+    text: Press {0} to run with default settings
+run.anything.ad.run.in.context:
+    text: Press {0} to run in the current file context
+run.anything.ad.run.with.debug:
+    text: '{0} to debug'
+run.anything.command.empty.list.title:
+    text: Press ENTER to execute input command
+run.anything.console.error.title:
+    text: Cannot Run Command
+run.anything.console.process.finished:
+    text: |4-
+
+        Process finished with exit code {0}.
+run.anything.console.title:
+    text: Run anything command
+run.anything.context.browse.directory:
+    text: Browse Directory...
+run.anything.context.project:
+    text: Project
+run.anything.context.separator.directories:
+    text: Directories
+run.anything.context.separator.modules:
+    text: Modules
+run.anything.context.title.working.directory:
+    text: Working Directory
+run.anything.context.tooltip:
+    text: Choose context the current command will be executed in
+run.anything.custom.activity.notification.group.id:
+    text: Run Anything
+run.anything.custom.activity.rollback.action:
+    text: Rollback
+run.anything.double.ctrl.shortcut:
+    text: Double {0}
+run.anything.general.group.title:
+    text: General
+run.anything.group.settings.title:
+    text: Show ''{0}''
+run.anything.group.title.commands:
+    text: Recent commands
+run.anything.group.title.permanent:
+    text: Permanent configurations
+run.anything.group.title.temporary:
+    text: Temporary configurations
+run.anything.help.list.empty.secondary.text:
+    text: Select command
+run.anything.hint.initial.text:
+    text: Press {0} or {1} to navigate through the suggestion list
+run.anything.indexing.mode.not.supported:
+    text: Run anything is not available while indices are updating
+run.anything.main.list.empty.primary.text:
+    text: Run command or configuration
+run.anything.main.list.empty.secondary.text:
+    text: Type "?" to see all commands
+run.anything.notification.warning.content:
+    text: Command ''{0}'' failed to execute.
+run.anything.notification.warning.title:
+    text: Failed Command Execution
+run.anything.recent.group.title:
+    text: Recent
+run.anything.recent.project.command.placeholder:
+    text: open <project name>
+run.anything.recent.project.completion.group.title:
+    text: Recent projects
+run.anything.recent.project.help.group.title:
+    text: Recent projects
+run.anything.run.anything.title:
+    text: Run Anything
+run.anything.run.configurations.group.title:
+    text: Run configurations
+run.anything.run.debug.title:
+    text: 'Debug:'
+run.anything.run.in.context.debug.title:
+    text: 'Run in Context with Debug:'
+run.anything.run.in.context.title:
+    text: 'Run in Context:'
 run.button.on.toolbar.tooltip.current.file.no.focused.editor:
     text: 'Cannot run the current file: the editor is not in focus'
 run.button.on.toolbar.tooltip.current.file.not.runnable:

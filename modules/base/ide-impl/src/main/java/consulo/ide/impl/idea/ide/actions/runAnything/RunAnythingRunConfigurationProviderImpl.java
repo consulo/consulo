@@ -1,15 +1,15 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions.runAnything;
 
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.dataContext.DataContext;
 import consulo.execution.impl.internal.action.ChooseRunConfigurationPopup;
 import consulo.ide.impl.idea.ide.actions.runAnything.activity.RunAnythingRunConfigurationProvider;
-import consulo.ide.runAnything.RunAnythingCompletionGroup;
-import consulo.ide.runAnything.RunAnythingContext;
-import consulo.ide.runAnything.RunAnythingGroup;
-import consulo.ide.localize.IdeLocalize;
+import consulo.execution.runAnything.RunAnythingCompletionGroup;
+import consulo.execution.runAnything.RunAnythingContext;
+import consulo.execution.runAnything.RunAnythingGroup;
 import consulo.project.Project;
 import org.jspecify.annotations.Nullable;
 
@@ -35,7 +35,7 @@ public class RunAnythingRunConfigurationProviderImpl extends RunAnythingRunConfi
     @Override
     @SuppressWarnings("unchecked")
     public RunAnythingGroup getCompletionGroup() {
-        return new RunAnythingCompletionGroup(this, IdeLocalize.runAnythingRunConfigurationsGroupTitle());
+        return new RunAnythingCompletionGroup(this, ExecutionLocalize.runAnythingRunConfigurationsGroupTitle());
     }
 
     

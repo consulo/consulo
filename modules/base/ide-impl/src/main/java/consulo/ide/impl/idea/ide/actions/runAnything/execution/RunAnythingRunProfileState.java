@@ -1,11 +1,11 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions.runAnything.execution;
 
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.configuration.CommandLineState;
 import consulo.execution.configuration.RunProfile;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.ide.impl.idea.ide.actions.runAnything.handlers.RunAnythingCommandHandler;
-import consulo.ide.localize.IdeLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.process.*;
 import consulo.process.cmd.GeneralCommandLine;
@@ -51,7 +51,7 @@ public class RunAnythingRunProfileState extends CommandLineState {
             @Override
             public void processWillTerminate(ProcessEvent event, boolean willBeDestroyed) {
                 int exitCode = event.getExitCode();
-                print(IdeLocalize.runAnythingConsoleProcessFinished(exitCode), ProcessOutputTypes.STDOUT);
+                print(ExecutionLocalize.runAnythingConsoleProcessFinished(exitCode), ProcessOutputTypes.STDOUT);
                 printCustomCommandOutput();
             }
 

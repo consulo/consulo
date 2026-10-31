@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.runAnything;
+package consulo.execution.runAnything;
 
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.util.UserHomeFileUtil;
-import consulo.ide.internal.RunAnythingContextRecentDirectoryCache;
-import consulo.ide.localize.IdeLocalize;
+import consulo.execution.internal.runAnything.RunAnythingContextRecentDirectoryCache;
 import consulo.localize.LocalizeValue;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
@@ -43,7 +43,7 @@ public class RunAnythingContext {
         private Project myProject;
 
         public ProjectContext(Project project) {
-            super(IdeLocalize.runAnythingContextProject(), LocalizeValue.ofNullable(project.getBasePath()));
+            super(ExecutionLocalize.runAnythingContextProject(), LocalizeValue.ofNullable(project.getBasePath()));
             myProject = project;
         }
 
@@ -78,7 +78,7 @@ public class RunAnythingContext {
         public static final BrowseRecentDirectoryContext INSTANCE = new BrowseRecentDirectoryContext();
 
         public BrowseRecentDirectoryContext() {
-            super(IdeLocalize.runAnythingContextBrowseDirectory(), LocalizeValue.empty(), PlatformIconGroup.nodesFolder());
+            super(ExecutionLocalize.runAnythingContextBrowseDirectory(), LocalizeValue.empty(), PlatformIconGroup.nodesFolder());
         }
     }
 

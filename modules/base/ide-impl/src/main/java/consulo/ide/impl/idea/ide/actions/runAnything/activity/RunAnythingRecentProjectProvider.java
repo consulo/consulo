@@ -1,16 +1,16 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions.runAnything.activity;
 
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.ide.ReopenProjectAction;
-import consulo.ide.runAnything.RunAnythingContext;
-import consulo.ide.runAnything.RunAnythingCompletionGroup;
-import consulo.ide.runAnything.RunAnythingGroup;
-import consulo.ide.runAnything.RunAnythingItem;
-import consulo.ide.runAnything.RunAnythingItemBase;
-import consulo.ide.localize.IdeLocalize;
+import consulo.execution.runAnything.RunAnythingContext;
+import consulo.execution.runAnything.RunAnythingCompletionGroup;
+import consulo.execution.runAnything.RunAnythingGroup;
+import consulo.execution.runAnything.RunAnythingItem;
+import consulo.execution.runAnything.RunAnythingItemBase;
 import consulo.project.RecentProjectsManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.image.Image;
@@ -47,13 +47,13 @@ public class RunAnythingRecentProjectProvider extends RunAnythingAnActionProvide
     @Override
     @SuppressWarnings("unchecked")
     public RunAnythingGroup getCompletionGroup() {
-        return new RunAnythingCompletionGroup(this, IdeLocalize.runAnythingRecentProjectCompletionGroupTitle());
+        return new RunAnythingCompletionGroup(this, ExecutionLocalize.runAnythingRecentProjectCompletionGroupTitle());
     }
 
     
     @Override
     public String getHelpCommandPlaceholder() {
-        return IdeLocalize.runAnythingRecentProjectCommandPlaceholder().get();
+        return ExecutionLocalize.runAnythingRecentProjectCommandPlaceholder().get();
     }
 
     
@@ -64,7 +64,7 @@ public class RunAnythingRecentProjectProvider extends RunAnythingAnActionProvide
 
     @Override
     public @Nullable String getHelpGroupTitle() {
-        return IdeLocalize.runAnythingRecentProjectHelpGroupTitle().get();
+        return ExecutionLocalize.runAnythingRecentProjectHelpGroupTitle().get();
     }
 
     
@@ -72,7 +72,7 @@ public class RunAnythingRecentProjectProvider extends RunAnythingAnActionProvide
     public String getCommand(AnAction value) {
         return getHelpCommand() + " " + ObjectUtil.notNull(
             value.getTemplatePresentation().getText(),
-            IdeLocalize.runAnythingActionsUndefined().get()
+            ExecutionLocalize.runAnythingActionsUndefined().get()
         );
     }
 

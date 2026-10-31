@@ -29,6 +29,7 @@ module consulo.module.content.api {
     exports consulo.module.content.internal to
         consulo.compiler.artifact.impl,
         consulo.compiler.impl,
+        consulo.execution.api,
         consulo.external.system.api,
         consulo.external.system.impl,
         consulo.it,

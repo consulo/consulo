@@ -1,6 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions.runAnything.activity;
 
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.dataContext.DataContext;
 import consulo.execution.executor.Executor;
 import consulo.execution.runner.ExecutionEnvironmentBuilder;
@@ -8,9 +9,8 @@ import consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingAction;
 import consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingCacheImpl;
 import consulo.ide.impl.idea.ide.actions.runAnything.commands.RunAnythingCommandCustomizer;
 import consulo.ide.impl.idea.ide.actions.runAnything.execution.RunAnythingRunProfile;
-import consulo.ide.internal.RunAnythingCache;
-import consulo.ide.localize.IdeLocalize;
-import consulo.ide.runAnything.RunAnythingProviderBase;
+import consulo.execution.internal.runAnything.RunAnythingCache;
+import consulo.execution.runAnything.RunAnythingProviderBase;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
@@ -65,15 +65,15 @@ public abstract class RunAnythingCommandProvider extends RunAnythingProviderBase
         }
         catch (ExecutionException e) {
             LOG.warn(e);
-            Messages.showInfoMessage(project, e.getMessage(), IdeLocalize.runAnythingConsoleErrorTitle().get());
+            Messages.showInfoMessage(project, e.getMessage(), ExecutionLocalize.runAnythingConsoleErrorTitle().get());
         }
     }
 
     @Override
     public @Nullable String getAdText() {
-        return IdeLocalize.runAnythingAdRunInContext(PRESSED_ALT) + ", " +
-            IdeLocalize.runAnythingAdRunWithDebug(SHIFT_SHORTCUT_TEXT) + ", " +
-            IdeLocalize.runAnythingAdCommandDelete(SHIFT_BACK_SPACE);
+        return ExecutionLocalize.runAnythingAdRunInContext(PRESSED_ALT) + ", " +
+            ExecutionLocalize.runAnythingAdRunWithDebug(SHIFT_SHORTCUT_TEXT) + ", " +
+            ExecutionLocalize.runAnythingAdCommandDelete(SHIFT_BACK_SPACE);
     }
 
     

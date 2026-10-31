@@ -16,11 +16,13 @@
 package consulo.ui;
 
 import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.clipboard.DataTransfer;
 import consulo.ui.event.ComponentEventListener;
 import consulo.ui.event.HtmlViewCopyEvent;
 import consulo.ui.event.HtmlViewDoubleClickEvent;
+import consulo.ui.event.HtmlViewGutterActionEvent;
 import consulo.ui.event.HyperlinkEvent;
 import consulo.ui.image.Image;
 import consulo.ui.internal.UIInternal;
@@ -51,9 +53,23 @@ public interface HtmlView extends Component {
      * @param copyTargets an element of the document whose {@code id} is a key gets a copy button over its top right corner, which
      *                    puts the value on the clipboard - a block of code above all. The view draws the button itself, so the
      *                    document carries no markup for it.
+     * @param gutterActions an element of the document whose {@code id} is a key gets a button in the margin left of its first
+     *                      line - a block of code or one line of it, which can be run. The view draws the button itself and
+     *                      only reports a click on it.
      * @see #addCopyListener(ComponentEventListener)
+     * @see #addGutterActionListener(ComponentEventListener)
      */
-    record RenderData(String html, String inlineCss, URL[] externalCsses, Map<String, DataTransfer> copyTargets) {
+    record RenderData(
+        String html,
+        String inlineCss,
+        URL[] externalCsses,
+        Map<String, DataTransfer> copyTargets,
+        Map<String, GutterAction> gutterActions
+    ) {
+        public RenderData(String html, String inlineCss, URL[] externalCsses, Map<String, DataTransfer> copyTargets) {
+            this(html, inlineCss, externalCsses, copyTargets, Map.of());
+        }
+
         public RenderData(String html, String inlineCss, URL[] externalCsses) {
             this(html, inlineCss, externalCsses, Map.of());
         }
@@ -61,6 +77,12 @@ public interface HtmlView extends Component {
         public RenderData(String html) {
             this(html, "", new URL[0]);
         }
+    }
+
+    /**
+     * A button of {@link RenderData#gutterActions()}
+     */
+    record GutterAction(Image icon, LocalizeValue tooltip) {
     }
 
     static HtmlView create() {
@@ -115,6 +137,13 @@ public interface HtmlView extends Component {
     /**
      * Reports a click on a copy button of {@link RenderData#copyTargets()} once its value is on the clipboard
      */
+    /**
+     * Reports a click on a button of {@link RenderData#gutterActions()}, with where it was, to show a choice there
+     */
+    default Disposable addGutterActionListener(ComponentEventListener<HtmlView, HtmlViewGutterActionEvent> listener) {
+        return addListener(HtmlViewGutterActionEvent.class, listener);
+    }
+
     default Disposable addCopyListener(ComponentEventListener<HtmlView, HtmlViewCopyEvent> listener) {
         return addListener(HtmlViewCopyEvent.class, listener);
     }
