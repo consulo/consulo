@@ -134,6 +134,7 @@ public class RecentProjectsManagerImpl implements RecentProjectsManager, Persist
     
     private final Object myStateLock = new Object();
     private State myState = new State();
+    private volatile boolean myAppClosing;
 
     private Set<String> myDuplicatesCache = null;
     private boolean isDuplicatesCacheUpdating = false;
@@ -495,6 +496,8 @@ public class RecentProjectsManagerImpl implements RecentProjectsManager, Persist
         @Override
         @RequiredReadAction
         public void projectOpened(final Project project, UIAccess uiAccess) {
+            myAppClosing = false;
+
             String path = getProjectPath(project);
             if (path != null) {
                 markPathRecent(path, project);
@@ -533,6 +536,10 @@ public class RecentProjectsManagerImpl implements RecentProjectsManager, Persist
         @Override
         @RequiredReadAction
         public void projectClosed(Project project, UIAccess uiAccess) {
+            if (myAppClosing) {
+                return;
+            }
+
             Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
             if (openProjects.length > 0) {
                 String path = getProjectPath(openProjects[openProjects.length - 1]);
@@ -635,6 +642,7 @@ public class RecentProjectsManagerImpl implements RecentProjectsManager, Persist
         @Override
         public void appClosing() {
             updateLastProjectPath();
+            myAppClosing = true;
         }
     }
 

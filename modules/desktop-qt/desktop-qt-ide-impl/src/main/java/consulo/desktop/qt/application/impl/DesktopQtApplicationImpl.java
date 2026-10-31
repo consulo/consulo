@@ -34,6 +34,7 @@ import consulo.util.concurrent.coroutine.CoroutineContext;
 import consulo.util.concurrent.coroutine.CoroutineScope;
 import consulo.util.concurrent.coroutine.step.CallSubroutine;
 import consulo.util.concurrent.coroutine.step.CodeExecution;
+import consulo.util.lang.ShutDownTracker;
 import consulo.util.lang.ref.SimpleReference;
 
 import java.io.IOException;
@@ -48,6 +49,7 @@ public class DesktopQtApplicationImpl extends UnifiedApplication {
 
     /** An exit already under way is not started a second time - a close asked for twice would tear down twice. */
     private volatile boolean myExiting;
+    private volatile boolean myDisposeInProgress;
 
     public DesktopQtApplicationImpl(ComponentBinding componentBinding, SimpleReference<? extends StartupProgress> splashRef) {
         super(componentBinding, splashRef);
@@ -101,8 +103,10 @@ public class DesktopQtApplicationImpl extends UnifiedApplication {
     @RequiredUIAccess
     private void doExit(boolean allowListenersToCancel, boolean restart) {
         getMessageBus().syncPublisher(AppLifecycleListener.class).appClosing();
+        myDisposeInProgress = true;
 
         if (allowListenersToCancel && !canExit()) {
+            myDisposeInProgress = false;
             myExiting = false;
             return;
         }
@@ -113,6 +117,7 @@ public class DesktopQtApplicationImpl extends UnifiedApplication {
         // closes them in
         disposeAllProjectsAsync(allowListenersToCancel, uiAccess).whenComplete((allClosed, throwable) -> {
             if (throwable != null || !Boolean.TRUE.equals(allClosed) || isUnitTestMode()) {
+                myDisposeInProgress = false;
                 myExiting = false;
                 return;
             }
@@ -132,6 +137,11 @@ public class DesktopQtApplicationImpl extends UnifiedApplication {
                 }))
                 .runAsync(CoroutineScope.of(context), null);
         });
+    }
+
+    @Override
+    public boolean isDisposeInProgress() {
+        return myDisposeInProgress || ShutDownTracker.isShutdownHookRunning();
     }
 
     private static int exitCode(boolean restart) {
