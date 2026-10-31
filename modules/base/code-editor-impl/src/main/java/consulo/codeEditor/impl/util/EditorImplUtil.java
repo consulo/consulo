@@ -34,6 +34,7 @@ import consulo.document.impl.TextRangeInterval;
 import consulo.document.util.DocumentUtil;
 import consulo.logging.Logger;
 import consulo.logging.attachment.AttachmentFactory;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.clipboard.DataTransfer;
 import consulo.ui.clipboard.DataTransferType;
@@ -49,7 +50,10 @@ import java.awt.*;
 import java.awt.datatransfer.Transferable;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import static consulo.codeEditor.util.EditorUtil.getTabSize;
@@ -413,7 +417,8 @@ public class EditorImplUtil {
     @RequiredUIAccess
     public static CompletableFuture<@Nullable DataTransfer> getContentsToPasteToEditor(@Nullable Supplier<DataTransfer> producer) {
         if (producer != null) {
-            return CompletableFuture.completedFuture(producer.get());
+            DataTransfer transfer = producer.get();
+            return CompletableFuture.completedFuture(transfer == null || transfer.isEmpty() ? null : transfer);
         }
 
         CopyPasteManager manager = CopyPasteManager.getInstance();
@@ -425,6 +430,40 @@ public class EditorImplUtil {
         // whatever another application left there. it is handed on as the platform payload rather than wrapped
         // into an awt transferable, which is what lets a frontend without a toolkit paste at all
         return manager.getContents().thenApply(transfer -> transfer.isEmpty() ? null : transfer);
+    }
+
+    @RequiredUIAccess
+    public static void whenContentsToPaste(CompletableFuture<@Nullable DataTransfer> contents, Consumer<DataTransfer> paste) {
+        if (contents.isDone()) {
+            DataTransfer transfer = readyContentsToPaste(contents);
+            if (transfer != null) {
+                paste.accept(transfer);
+            }
+            return;
+        }
+
+        UIAccess uiAccess = UIAccess.current();
+        contents.whenCompleteAsync((transfer, throwable) -> {
+            if (throwable != null) {
+                LOG.warn("Failed to read the clipboard for a paste", throwable);
+            }
+            else if (transfer != null) {
+                paste.accept(transfer);
+            }
+        }, uiAccess).exceptionally(throwable -> {
+            LOG.error("Paste failed", throwable);
+            return null;
+        });
+    }
+
+    private static @Nullable DataTransfer readyContentsToPaste(CompletableFuture<@Nullable DataTransfer> contents) {
+        try {
+            return contents.join();
+        }
+        catch (CompletionException | CancellationException e) {
+            LOG.warn("Failed to read the clipboard for a paste", e);
+            return null;
+        }
     }
 
     /**

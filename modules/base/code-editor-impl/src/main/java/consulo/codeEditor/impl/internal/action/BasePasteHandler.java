@@ -23,8 +23,6 @@ import consulo.codeEditor.action.EditorWriteActionHandler;
 import consulo.codeEditor.impl.util.EditorImplUtil;
 import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.dataContext.DataContext;
-import consulo.logging.Logger;
-import consulo.ui.UIAccess;
 import consulo.ui.clipboard.DataTransfer;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.CommandProcessor;
@@ -34,8 +32,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 
 public class BasePasteHandler extends EditorWriteActionHandler {
-    private static final Logger LOG = Logger.getInstance(BasePasteHandler.class);
-
     protected DataTransfer myTransfer;
 
     @Override
@@ -51,19 +47,7 @@ public class BasePasteHandler extends EditorWriteActionHandler {
     @Override
     @RequiredUIAccess
     public void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
-        UIAccess uiAccess = UIAccess.current();
-
-        getContentsToPaste(editor, dataContext).whenCompleteAsync((transfer, throwable) -> {
-            if (throwable != null) {
-                LOG.warn("Failed to read the clipboard for a paste", throwable);
-                return;
-            }
-            if (transfer == null) {
-                return;
-            }
-
-            // captured for the whole paste, so a clipboard operation running while the file is unlocked for
-            // writing cannot change what is inserted
+        EditorImplUtil.whenContentsToPaste(getContentsToPaste(editor, dataContext), transfer -> {
             myTransfer = transfer;
             try {
                 CommandProcessor.getInstance()
@@ -77,10 +61,6 @@ public class BasePasteHandler extends EditorWriteActionHandler {
             finally {
                 myTransfer = null;
             }
-        }, uiAccess).exceptionally(throwable -> {
-            // the future of a continuation is dropped, so without this a paste which threw would leave no trace
-            LOG.error("Paste failed", throwable);
-            return null;
         });
     }
 
