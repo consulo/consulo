@@ -32,11 +32,15 @@ public class CommentsReferenceContributor extends PsiReferenceContributor {
    * Also you can register your own reference provider as 'comment reference provider' and it will be
    * applied to all PsiComment and other elements that uses this provider type for retrieving references.
    */
-  public static final ReferenceProviderType COMMENTS_REFERENCE_PROVIDER_TYPE = new ReferenceProviderType("commentsReferenceProvider");
+  /**
+   * @deprecated use {@link ReferenceProviderType#COMMENTS}
+   */
+  @Deprecated
+  public static final ReferenceProviderType COMMENTS_REFERENCE_PROVIDER_TYPE = ReferenceProviderType.COMMENTS;
 
   @Override
   public void registerReferenceProviders(PsiReferenceRegistrar registrar) {
-    registrar.registerReferenceProvider(PlatformPatterns.psiElement(PsiComment.class), COMMENTS_REFERENCE_PROVIDER_TYPE.getProvider());
+    registrar.registerReferenceProvider(PlatformPatterns.psiElement(PsiComment.class), ReferenceProviderType.COMMENTS.getProvider());
   }
 
   

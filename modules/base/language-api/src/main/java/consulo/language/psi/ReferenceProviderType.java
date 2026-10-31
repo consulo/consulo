@@ -21,6 +21,12 @@ import java.util.Objects;
  * @author peter
  */
 public final class ReferenceProviderType {
+  /**
+   * The references of comments: an element which is no comment but should have the same references - like a doc token
+   * or an XML attribute value - takes them through this type, and a provider registered with it is applied to all comments
+   */
+  public static final ReferenceProviderType COMMENTS = new ReferenceProviderType("commentsReferenceProvider");
+
   private final String myId;
 
   public ReferenceProviderType(String id) {

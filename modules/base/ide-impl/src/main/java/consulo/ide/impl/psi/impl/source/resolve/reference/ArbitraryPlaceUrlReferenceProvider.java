@@ -72,6 +72,6 @@ public class ArbitraryPlaceUrlReferenceProvider extends PsiReferenceProviderByTy
   
   @Override
   public ReferenceProviderType getReferenceProviderType() {
-    return CommentsReferenceContributor.COMMENTS_REFERENCE_PROVIDER_TYPE;
+    return ReferenceProviderType.COMMENTS;
   }
 }
