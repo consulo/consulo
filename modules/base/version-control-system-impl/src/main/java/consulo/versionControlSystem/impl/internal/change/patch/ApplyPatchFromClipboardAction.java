@@ -4,6 +4,7 @@ package consulo.versionControlSystem.impl.internal.change.patch;
 import consulo.annotation.component.ActionImpl;
 import consulo.document.FileDocumentManager;
 import consulo.language.file.light.LightVirtualFile;
+import consulo.logging.Logger;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.CheckBox;
@@ -11,6 +12,8 @@ import consulo.ui.Component;
 import consulo.ui.UIAccess;
 import consulo.ui.UIAction;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.clipboard.ClipboardAccessException;
+import consulo.ui.clipboard.ClipboardFeature;
 import consulo.ui.clipboard.DataTransferType;
 import consulo.ui.ex.CopyPasteManager;
 import consulo.ui.ex.action.AnActionEvent;
@@ -27,10 +30,13 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 import java.util.function.Function;
 
 @ActionImpl(id = "ChangesView.ApplyPatchFromClipboard")
 public class ApplyPatchFromClipboardAction extends DumbAwareAction implements AnActionWithAsyncUpdate {
+    private static final Logger LOG = Logger.getInstance(ApplyPatchFromClipboardAction.class);
+
     public ApplyPatchFromClipboardAction() {
         super(
             ActionLocalize.actionChangesviewApplypatchfromclipboardText(),
@@ -52,15 +58,32 @@ public class ApplyPatchFromClipboardAction extends DumbAwareAction implements An
             return Coroutine.first(CodeExecution.apply(input -> null));
         }
 
-        return UIAction.apply((i) -> getTextInClipboard())
+        return UIAction.apply((i) -> hasTextInClipboard())
             .toCoroutine()
             .then(CompletableFutureStep.await(Function.identity()))
-            // allow to apply from clipboard even if we do not detect it as a patch, because during applying we
-            // parse content more precisely
-            .then(CodeExecution.<String, Void>apply(text -> {
-                presentation.setEnabled(text != null);
+            .then(CodeExecution.<Boolean, Void>apply(enabled -> {
+                presentation.setEnabled(enabled);
                 return null;
             }));
+    }
+
+    @RequiredUIAccess
+    private static CompletableFuture<Boolean> hasTextInClipboard() {
+        if (!UIAccess.current().getClipboard().isSupported(ClipboardFeature.UNRESTRICTED_READ)) {
+            return CompletableFuture.completedFuture(true);
+        }
+
+        return getTextInClipboard().handle((text, throwable) -> {
+            if (throwable == null) {
+                // allow to apply from clipboard even if we do not detect it as a patch, because during applying we
+                // parse content more precisely
+                return text != null;
+            }
+            if (isAccessRefused(throwable)) {
+                return false;
+            }
+            throw new CompletionException(throwable);
+        });
     }
 
     @Override
@@ -74,10 +97,22 @@ public class ApplyPatchFromClipboardAction extends DumbAwareAction implements An
 
         UIAccess uiAccess = UIAccess.current();
         getTextInClipboard().whenCompleteAsync((clipboardText, throwable) -> {
-            if (throwable == null && clipboardText != null) {
+            if (throwable != null) {
+                if (!isAccessRefused(throwable)) {
+                    LOG.error(throwable);
+                }
+                return;
+            }
+
+            if (clipboardText != null) {
                 new MyApplyPatchFromClipboardDialog(project, clipboardText).showAsync();
             }
         }, uiAccess);
+    }
+
+    private static boolean isAccessRefused(Throwable throwable) {
+        Throwable cause = throwable instanceof CompletionException && throwable.getCause() != null ? throwable.getCause() : throwable;
+        return cause instanceof ClipboardAccessException;
     }
 
     private static CompletableFuture<@Nullable String> getTextInClipboard() {
