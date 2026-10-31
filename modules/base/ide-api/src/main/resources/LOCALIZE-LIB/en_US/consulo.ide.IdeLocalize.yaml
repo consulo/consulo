@@ -1588,8 +1588,6 @@ node.projectview.library:
     text: '{0} library'
 node.structureview.invalid:
     text: <invalid>
-open.url.in.browser.tooltip:
-    text: Open in browser
 option.hide.tool.window.bars:
     text: Hide Tool Window Bars
 options.locale.auto.locale:

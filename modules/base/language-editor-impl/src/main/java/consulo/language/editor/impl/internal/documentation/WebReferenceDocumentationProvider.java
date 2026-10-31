@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.paths;
+package consulo.language.editor.impl.internal.documentation;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.documentation.UnrestrictedDocumentationProvider;
+import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.impl.psi.path.WebReference;
 import consulo.language.psi.PsiElement;
 
@@ -29,7 +29,7 @@ public class WebReferenceDocumentationProvider implements UnrestrictedDocumentat
     @Override
     public String getQuickNavigateInfo(PsiElement element, PsiElement originalElement) {
         if (element instanceof WebReference.MyFakePsiElement) {
-            return IdeLocalize.openUrlInBrowserTooltip().get();
+            return CodeInsightLocalize.openUrlInBrowserTooltip().get();
         }
         return null;
     }

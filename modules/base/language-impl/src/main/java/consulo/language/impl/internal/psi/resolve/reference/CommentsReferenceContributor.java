@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.versionControlSystem.impl.internal.language.reference;
+package consulo.language.impl.internal.psi.resolve.reference;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.psi.ReferenceProviderType;
