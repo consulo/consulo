@@ -189,6 +189,12 @@ public interface ModuleRootLayer {
 
   <T extends ModuleExtension> @Nullable T getExtension(String key);
 
+  /**
+   * Returns all enabled extensions of the given type, in provider order. Several providers may implement one
+   * extension interface, and a module may have more than one of them enabled at once.
+   */
+  <T extends ModuleExtension> List<T> getExtensions(Class<T> clazz);
+
   <T extends ModuleExtension> @Nullable T getExtensionWithoutCheck(Class<T> clazz);
 
   <T extends ModuleExtension> @Nullable T getExtensionWithoutCheck(String key);

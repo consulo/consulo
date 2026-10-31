@@ -370,7 +370,7 @@ public class ExtensionEditor extends ModuleElementsEditor {
         }
 
         for (ModuleExtensionProvider candidate : getProviders().values()) {
-            if (candidate.getParentId() == null && rootModel.getExtension(candidate.getId()) != null) {
+            if (candidate.getParentId() == null && !candidate.isAllowMixin() && rootModel.getExtension(candidate.getId()) != null) {
                 return false;
             }
         }

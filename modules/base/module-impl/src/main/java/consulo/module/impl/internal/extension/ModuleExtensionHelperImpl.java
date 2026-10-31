@@ -27,13 +27,15 @@ import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.ModuleExtensionHelper;
 import consulo.project.Project;
 import consulo.ui.image.Image;
-import consulo.util.collection.MultiMap;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author VISTALL
@@ -42,9 +44,12 @@ import java.util.Map;
 @Singleton
 @ServiceImpl
 public class ModuleExtensionHelperImpl implements ModuleExtensionHelper, Disposable {
+    private record Snapshot(List<ModuleExtension> extensions, Map<Class<?>, List<ModuleExtension>> byType) {
+    }
+
     private final Project myProject;
 
-    private volatile MultiMap<Class<? extends ModuleExtension>, ModuleExtension> myExtensions;
+    private volatile @Nullable Snapshot mySnapshot;
 
     @Inject
     public ModuleExtensionHelperImpl(Project project) {
@@ -53,39 +58,25 @@ public class ModuleExtensionHelperImpl implements ModuleExtensionHelper, Disposa
         project.getMessageBus().connect(this).subscribe(ModuleRootListener.class, new ModuleRootListener() {
             @Override
             public void beforeRootsChange(ModuleRootEvent event) {
-                myExtensions = null;
+                mySnapshot = null;
+            }
+
+            @Override
+            public void rootsChanged(ModuleRootEvent event) {
+                mySnapshot = null;
             }
         });
     }
 
     @Override
     public boolean hasModuleExtension(Class<? extends ModuleExtension> clazz) {
-        checkInit();
-
-        assert myExtensions != null;
-
-        return !getModuleExtensions(clazz).isEmpty();
+        return !getExtensionsOfType(clazz).isEmpty();
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public <T extends ModuleExtension<T>> Collection<T> getModuleExtensions(Class<T> clazz) {
-        checkInit();
-
-        assert myExtensions != null;
-
-        Collection<ModuleExtension> moduleExtensions = myExtensions.get(clazz);
-        if (moduleExtensions.isEmpty()) {
-            for (Map.Entry<Class<? extends ModuleExtension>, Collection<ModuleExtension>> entry : myExtensions.entrySet()) {
-                Class<? extends ModuleExtension> targetCheck = entry.getKey();
-
-                if (clazz.isAssignableFrom(targetCheck)) {
-                    myExtensions.put(clazz, moduleExtensions = entry.getValue());
-                    break;
-                }
-            }
-        }
-        return (Collection) moduleExtensions;
+        return (Collection) getExtensionsOfType(clazz);
     }
 
     @Override
@@ -101,20 +92,34 @@ public class ModuleExtensionHelperImpl implements ModuleExtensionHelper, Disposa
         return provider == null ? null : provider.getIcon();
     }
 
-    private void checkInit() {
-        if (myExtensions == null) {
-            MultiMap<Class<? extends ModuleExtension>, ModuleExtension> map = MultiMap.createConcurrentSet();
-            for (Module o : ModuleManager.getInstance(myProject).getModules()) {
-                for (ModuleExtension moduleExtension : ModuleRootManager.getInstance(o).getExtensions()) {
-                    map.putValue(moduleExtension.getClass(), moduleExtension);
+    private List<ModuleExtension> getExtensionsOfType(Class<?> clazz) {
+        Snapshot snapshot = getSnapshot();
+        return snapshot.byType().computeIfAbsent(clazz, type -> {
+            List<ModuleExtension> result = new ArrayList<>();
+            for (ModuleExtension extension : snapshot.extensions()) {
+                if (type.isInstance(extension)) {
+                    result.add(extension);
                 }
             }
-            myExtensions = map;
+            return result.isEmpty() ? List.of() : List.copyOf(result);
+        });
+    }
+
+    private Snapshot getSnapshot() {
+        Snapshot snapshot = mySnapshot;
+        if (snapshot == null) {
+            List<ModuleExtension> extensions = new ArrayList<>();
+            for (Module module : ModuleManager.getInstance(myProject).getModules()) {
+                extensions.addAll(ModuleRootManager.getInstance(module).getExtensions());
+            }
+            snapshot = new Snapshot(extensions, new ConcurrentHashMap<>());
+            mySnapshot = snapshot;
         }
+        return snapshot;
     }
 
     @Override
     public void dispose() {
-        myExtensions = null;
+        mySnapshot = null;
     }
 }

@@ -33,6 +33,8 @@ import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerManager;
 import org.jspecify.annotations.Nullable;
 
+import java.util.List;
+
 /**
  * @author max
  */
@@ -119,6 +121,12 @@ public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx
     public <T extends ModuleExtension<T>> @Nullable T getExtension(Class<T> clazz) {
         ModuleRootManagerImpl manager = (ModuleRootManagerImpl) ModuleRootManager.getInstance(this);
         return manager.getExtension(clazz);
+    }
+
+    @Override
+    public <T extends ModuleExtension<T>> List<T> getExtensions(Class<T> clazz) {
+        ModuleRootManagerImpl manager = (ModuleRootManagerImpl) ModuleRootManager.getInstance(this);
+        return manager.getExtensions(clazz);
     }
 
     @Override

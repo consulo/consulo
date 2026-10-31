@@ -156,6 +156,11 @@ public abstract class RootModelBase implements ModuleRootModel {
   }
 
   @Override
+  public <T extends ModuleExtension> List<T> getExtensions(Class<T> clazz) {
+    return getCurrentLayer().getExtensions(clazz);
+  }
+
+  @Override
   public <T extends ModuleExtension> @Nullable T getExtensionWithoutCheck(Class<T> clazz) {
     return getCurrentLayer().getExtensionWithoutCheck(clazz);
   }

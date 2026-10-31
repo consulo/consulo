@@ -223,6 +223,11 @@ public class ModuleRootManagerImpl implements ModuleRootManagerInternal, Disposa
   }
 
   @Override
+  public <T extends ModuleExtension> List<T> getExtensions(Class<T> clazz) {
+    return myRootModel.getExtensions(clazz);
+  }
+
+  @Override
   public <T extends ModuleExtension> @Nullable T getExtensionWithoutCheck(Class<T> clazz) {
     return myRootModel.getExtensionWithoutCheck(clazz);
   }

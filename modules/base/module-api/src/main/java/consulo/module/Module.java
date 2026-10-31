@@ -26,6 +26,8 @@ import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
+import java.util.List;
+
 /**
  * Represents a module in an Consulo project.
  *
@@ -91,4 +93,10 @@ public interface Module extends ComponentManager, Disposable, Named {
   <T extends ModuleExtension<T>> @Nullable T getExtension(Class<T> clazz);
 
   <T extends ModuleExtension<T>> @Nullable T getExtension(String key);
+
+  /**
+   * Returns all enabled extensions of the given type, in provider order. Several providers may implement one
+   * extension interface, and a module may have more than one of them enabled at once.
+   */
+  <T extends ModuleExtension<T>> List<T> getExtensions(Class<T> clazz);
 }

@@ -183,7 +183,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
     private final List<OrderEntry> myOrderEntries = new Order();
     // cleared by myOrderEntries modification, see Order
     private @Nullable OrderEntry[] myCachedOrderEntries;
-    private Map<String, ModuleExtension> myExtensions = new HashMap<>();
+    private Map<String, ModuleExtension> myExtensions = new LinkedHashMap<>();
     private final List<Element> myUnknownModuleExtensions = new SmartList<>();
     private RootModelImpl myRootModel;
     
@@ -695,6 +695,24 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
             }
         }
         return null;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T extends ModuleExtension> List<T> getExtensions(Class<T> clazz) {
+        checkDisposed();
+
+        if (myExtensions.isEmpty()) {
+            return List.of();
+        }
+
+        List<T> list = new ArrayList<>();
+        for (ModuleExtension extension : myExtensions.values()) {
+            if (extension.isEnabled() && clazz.isInstance(extension)) {
+                list.add((T) extension);
+            }
+        }
+        return list;
     }
 
     @Override
