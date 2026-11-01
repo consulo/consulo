@@ -62,6 +62,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class SchemeManagerImpl<T, E extends ExternalizableScheme> extends AbstractSchemeManager<T, E> implements SavingRequestor {
   private static final Logger LOG = Logger.getInstance(SchemeManagerImpl.class);
@@ -78,6 +79,8 @@ public class SchemeManagerImpl<T, E extends ExternalizableScheme> extends Abstra
   private boolean myUpdateExtension;
 
   private final Set<String> myFilesToDelete = new HashSet<>();
+
+  private final AtomicBoolean myLoadingSchemes = new AtomicBoolean();
 
   public SchemeManagerImpl(String fileSpec,
                            VirtualFileTracker virtualFileTracker,
@@ -189,28 +192,37 @@ public class SchemeManagerImpl<T, E extends ExternalizableScheme> extends Abstra
 
   @Override
   public Collection<E> loadSchemes() {
-    Map<String, E> result = new LinkedHashMap<>();
-    if (myProvider != null && myProvider.isEnabled()) {
-      readSchemesFromProviders(result);
+    if (!myLoadingSchemes.compareAndSet(false, true)) {
+      throw new IllegalStateException("loadSchemes is already called");
     }
-    else {
-      File[] files = myIoDir.listFiles();
-      if (files != null) {
-        for (File file : files) {
-          E scheme = readSchemeFromFile(file, false, true);
-          if (scheme != null) {
-            result.put(scheme.getName(), scheme);
+
+    try {
+      Map<String, E> result = new LinkedHashMap<>();
+      if (myProvider != null && myProvider.isEnabled()) {
+        readSchemesFromProviders(result);
+      }
+      else {
+        File[] files = myIoDir.listFiles();
+        if (files != null) {
+          for (File file : files) {
+            E scheme = readSchemeFromFile(file, false, true);
+            if (scheme != null) {
+              result.put(scheme.getName(), scheme);
+            }
           }
         }
       }
-    }
 
-    Collection<E> list = result.values();
-    for (E scheme : list) {
-      myProcessor.initScheme(scheme);
-      checkCurrentScheme((T)scheme);
+      Collection<E> list = result.values();
+      for (E scheme : list) {
+        myProcessor.initScheme(scheme);
+        checkCurrentScheme((T)scheme);
+      }
+      return list;
     }
-    return list;
+    finally {
+      myLoadingSchemes.set(false);
+    }
   }
 
   private E findSchemeFor(String ioFileName) {
@@ -420,6 +432,11 @@ public class SchemeManagerImpl<T, E extends ExternalizableScheme> extends Abstra
 
   @Override
   public void save() {
+    if (myLoadingSchemes.get()) {
+      LOG.warn("Skip save - schemes are loading");
+      return;
+    }
+
     boolean hasSchemes = false;
     UniqueNameGenerator nameGenerator = new UniqueNameGenerator();
     List<E> schemesToSave = new SmartList<>();

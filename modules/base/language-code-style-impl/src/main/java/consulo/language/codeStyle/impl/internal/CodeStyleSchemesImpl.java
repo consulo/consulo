@@ -45,7 +45,7 @@ public abstract class CodeStyleSchemesImpl extends CodeStyleSchemes {
       
       @Override
       public CodeStyleSchemeImpl readScheme(Element element) {
-        return CodeStyleSchemeImpl.readScheme(element);
+        return CodeStyleSchemeImpl.readScheme(element, CodeStyleSchemesImpl.this);
       }
 
       @Override
@@ -60,7 +60,7 @@ public abstract class CodeStyleSchemesImpl extends CodeStyleSchemes {
 
       @Override
       public void initScheme(CodeStyleSchemeImpl scheme) {
-        scheme.init(CodeStyleSchemesImpl.this);
+        scheme.init();
       }
 
       

@@ -34,61 +34,88 @@ public class CodeStyleSchemeImpl implements JDOMExternalizable, CodeStyleScheme,
   private static final String PARENT = "parent";
 
   private String myName;
-  private Element myRootElement;
-  private String myParentSchemeName;
   private final boolean myIsDefault;
-  private volatile CodeStyleSettings myCodeStyleSettings;
+  private final Object myLock = new Object();
+  private @Nullable CodeStyleSchemes mySchemes;
+  private @Nullable Element myRootElement;
+  private @Nullable String myParentSchemeName;
+  private volatile @Nullable CodeStyleSettings myCodeStyleSettings;
   private final ExternalInfo myExternalInfo = new ExternalInfo();
 
-  public CodeStyleSchemeImpl(String name, String parentSchemeName, Element rootElement) {
+  public CodeStyleSchemeImpl(String name, @Nullable String parentSchemeName, Element rootElement, CodeStyleSchemes schemes) {
     myName = name;
     myRootElement = rootElement;
     myIsDefault = false;
     myParentSchemeName = parentSchemeName;
+    mySchemes = schemes;
   }
 
-  public CodeStyleSchemeImpl(String name, boolean isDefault, CodeStyleScheme parentScheme){
+  public CodeStyleSchemeImpl(String name, boolean isDefault, @Nullable CodeStyleScheme parentScheme){
     myName = name;
     myIsDefault = isDefault;
-    init(parentScheme, null);
+    myCodeStyleSettings = createSettings(parentScheme, null);
   }
 
-  public void init(CodeStyleSchemes schemesManager) {
-    LOG.assertTrue(myCodeStyleSettings == null, "Already initialized");
-    init(myParentSchemeName == null ? null : schemesManager.findSchemeByName(myParentSchemeName), myRootElement);
-    myParentSchemeName = null;
-    myRootElement = null;
+  public void init() {
+    getCodeStyleSettings();
   }
 
-  private void init(@Nullable CodeStyleScheme parentScheme, Element root) {
+  private static CodeStyleSettings createSettings(@Nullable CodeStyleScheme parentScheme, @Nullable Element root) {
+    CodeStyleSettings settings;
     if (parentScheme == null) {
-      myCodeStyleSettings = new CodeStyleSettings();
+      settings = new CodeStyleSettings();
     }
     else {
       CodeStyleSettings parentSettings = parentScheme.getCodeStyleSettings();
-      myCodeStyleSettings = parentSettings.clone();
+      settings = parentSettings.clone();
       while (parentSettings.getParentSettings() != null) {
         parentSettings = parentSettings.getParentSettings();
       }
-      myCodeStyleSettings.setParentSettings(parentSettings);
+      settings.setParentSettings(parentSettings);
     }
     if (root != null) {
       try {
-        readExternal(root);
+        settings.readExternal(root);
       }
       catch (InvalidDataException e) {
         LOG.error(e);
       }
     }
+    return settings;
   }
 
   @Override
   public CodeStyleSettings getCodeStyleSettings(){
-    return myCodeStyleSettings;
+    CodeStyleSettings settings = myCodeStyleSettings;
+    if (settings != null) {
+      return settings;
+    }
+
+    synchronized (myLock) {
+      settings = myCodeStyleSettings;
+      if (settings != null) {
+        return settings;
+      }
+
+      String parentSchemeName = myParentSchemeName;
+      CodeStyleSchemes schemes = mySchemes;
+      myParentSchemeName = null;
+      CodeStyleScheme parentScheme = parentSchemeName == null || schemes == null ? null : schemes.findSchemeByName(parentSchemeName);
+      settings = createSettings(parentScheme, myRootElement);
+      myCodeStyleSettings = settings;
+      myRootElement = null;
+      mySchemes = null;
+      return settings;
+    }
   }
 
   public void setCodeStyleSettings(CodeStyleSettings codeStyleSettings){
-    myCodeStyleSettings = codeStyleSettings;
+    synchronized (myLock) {
+      myCodeStyleSettings = codeStyleSettings;
+      myRootElement = null;
+      myParentSchemeName = null;
+      mySchemes = null;
+    }
   }
 
   @Override
@@ -108,17 +135,17 @@ public class CodeStyleSchemeImpl implements JDOMExternalizable, CodeStyleScheme,
 
   @Override
   public void writeExternal(Element element) throws WriteExternalException{
-    myCodeStyleSettings.writeExternal(element);
+    getCodeStyleSettings().writeExternal(element);
   }
 
   @Override
   public void readExternal(Element element) throws InvalidDataException{
-    myCodeStyleSettings.readExternal(element);
+    getCodeStyleSettings().readExternal(element);
   }
 
   
-  public static CodeStyleSchemeImpl readScheme(Element element) {
-    return new CodeStyleSchemeImpl(element.getAttributeValue(NAME), element.getAttributeValue(PARENT), element);
+  public static CodeStyleSchemeImpl readScheme(Element element, CodeStyleSchemes schemes) {
+    return new CodeStyleSchemeImpl(element.getAttributeValue(NAME), element.getAttributeValue(PARENT), element, schemes);
   }
 
   public Element saveToDocument() throws WriteExternalException {
