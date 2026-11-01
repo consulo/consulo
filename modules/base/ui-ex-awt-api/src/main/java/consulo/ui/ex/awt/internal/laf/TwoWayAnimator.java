@@ -4,7 +4,7 @@ package consulo.ui.ex.awt.internal.laf;
 import consulo.ui.ex.awt.Animator;
 import consulo.ui.ex.awt.util.Alarm;
 
-abstract class TwoWayAnimator {
+public abstract class TwoWayAnimator {
   private final Alarm myAlarm = new Alarm();
   private final MyAnimator myForwardAnimator;
   private final MyAnimator myBackwardAnimator;
@@ -13,9 +13,9 @@ abstract class TwoWayAnimator {
   private int myFrame;
   public float myValue;
 
-  abstract void onValueUpdate();
+  protected abstract void onValueUpdate();
 
-  TwoWayAnimator(String name, int totalFrames, int pauseForward, int durationForward, int pauseBackward, int durationBackward) {
+  public TwoWayAnimator(String name, int totalFrames, int pauseForward, int durationForward, int pauseBackward, int durationBackward) {
     myMaxFrame = totalFrames - 1;
     myForwardAnimator = new MyAnimator(name + "ForwardAnimator", totalFrames, durationForward, pauseForward, true);
     myBackwardAnimator = new MyAnimator(name + "BackwardAnimator", totalFrames, durationBackward, pauseBackward, false);
@@ -44,10 +44,14 @@ abstract class TwoWayAnimator {
     }
   }
 
-  void stop() {
+  public void stop() {
     myAlarm.cancelAllRequests();
     myForwardAnimator.suspend();
     myBackwardAnimator.suspend();
+  }
+
+  public float getValue() {
+    return myValue;
   }
 
   void setFrame(int frame) {

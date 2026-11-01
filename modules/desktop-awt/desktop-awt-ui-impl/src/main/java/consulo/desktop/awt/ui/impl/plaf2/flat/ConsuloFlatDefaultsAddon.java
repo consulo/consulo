@@ -63,6 +63,8 @@ public class ConsuloFlatDefaultsAddon extends FlatDefaultsAddon {
         uiDefaults.put("TabbedPaneUI", FlatTabbedPaneUI2.class.getName());
 
         uiDefaults.put("TreeUI", FlatTreeUIWidePatch.class.getName());
+
+        uiDefaults.put("ScrollBarUI", ConsuloFlatScrollBarUI.class.getName());
         uiDefaults.put("Tree.wideCellRenderer", true);
 
         uiDefaults.put("Menu.selectedArrowIcon", new FlatSelectedMenuArrowIcon());

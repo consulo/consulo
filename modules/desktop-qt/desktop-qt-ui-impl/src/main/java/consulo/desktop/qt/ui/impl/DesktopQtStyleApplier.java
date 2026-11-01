@@ -140,7 +140,29 @@ public final class DesktopQtStyleApplier {
 
     private static String buildStyleSheet(Style style) {
         return buildTitleBarStyleSheet(style) + buildTabStyleSheet(style) + buildItemViewStyleSheet(style) + buildMenulessWindowStyleSheet()
-            + buildIslandAreaStyleSheet();
+            + buildIslandAreaStyleSheet() + buildScrollBarStyleSheet(style);
+    }
+
+    /**
+     * The track of a scroll bar takes the background of what it scrolls and only shows on hover, the thumb is a
+     * rounded bar. The colours are translucent so that they read on any background.
+     */
+    private static String buildScrollBarStyleSheet(Style style) {
+        String tone = style.isDark() ? "255, 255, 255" : "0, 0, 0";
+        return """
+
+            QScrollBar { background: transparent; border: none; margin: 0px; }
+            QScrollBar:vertical { width: 10px; }
+            QScrollBar:horizontal { height: 10px; }
+            QScrollBar:hover { background: rgba(%1$s, 26); }
+            QScrollBar::handle { background: rgba(%1$s, 80); border-radius: 3px; margin: 2px; }
+            QScrollBar::handle:hover { background: rgba(%1$s, 120); }
+            QScrollBar::handle:pressed { background: rgba(%1$s, 150); }
+            QScrollBar::handle:vertical { min-height: 18px; }
+            QScrollBar::handle:horizontal { min-width: 18px; }
+            QScrollBar::add-line, QScrollBar::sub-line { width: 0px; height: 0px; border: none; background: none; }
+            QScrollBar::add-page, QScrollBar::sub-page { background: none; }
+            """.formatted(tone);
     }
 
     private static String buildIslandAreaStyleSheet() {
