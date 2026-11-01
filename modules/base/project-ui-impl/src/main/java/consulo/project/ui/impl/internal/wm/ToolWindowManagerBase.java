@@ -1060,6 +1060,10 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     @RequiredUIAccess
     public void initToolWindow(ToolWindowFactory factory) {
         WindowInfoImpl before = myLayout.getInfo(factory.getId(), false);
+        if (before != null && factory.isDoNotActivateOnStart()) {
+            before.setActive(false);
+            before.setVisible(false);
+        }
         boolean visible = before != null && before.isVisible();
         Object label = createInitializingLabel();
         ToolWindowAnchor toolWindowAnchor = factory.getAnchor();

@@ -15,8 +15,6 @@
  */
 package consulo.project.ui.internal;
 
-import consulo.application.Application;
-import consulo.project.ui.wm.ToolWindowFactory;
 import consulo.ui.Rectangle2D;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.ui.ex.toolWindow.ToolWindowContentUiType;
@@ -273,7 +271,7 @@ public final class WindowInfoImpl implements Cloneable, WindowInfo {
         myId = element.getAttributeValue(ID_ATTR);
         myWasRead = true;
         try {
-            myActive = Boolean.valueOf(element.getAttributeValue(ACTIVE_ATTR)) && canActivateOnStart(myId);
+            myActive = Boolean.valueOf(element.getAttributeValue(ACTIVE_ATTR));
         }
         catch (NumberFormatException ignored) {
         }
@@ -293,7 +291,7 @@ public final class WindowInfoImpl implements Cloneable, WindowInfo {
         }
         catch (IllegalArgumentException ignored) {
         }
-        myVisible = Boolean.valueOf(element.getAttributeValue(VISIBLE_ATTR)) && canActivateOnStart(myId);
+        myVisible = Boolean.valueOf(element.getAttributeValue(VISIBLE_ATTR));
         if (element.getAttributeValue(SHOW_STRIPE_BUTTON) != null) {
             myShowStripeButton = Boolean.valueOf(element.getAttributeValue(SHOW_STRIPE_BUTTON));
         }
@@ -349,11 +347,6 @@ public final class WindowInfoImpl implements Cloneable, WindowInfo {
             element.setAttribute(WIDTH_ATTR, Integer.toString(myFloatingBounds.width()));
             element.setAttribute(HEIGHT_ATTR, Integer.toString(myFloatingBounds.height()));
         }
-    }
-
-    private static boolean canActivateOnStart(String id) {
-        return Application.get().getExtensionPoint(ToolWindowFactory.class)
-            .noneMatchSafe(factory -> id.equals(factory.getId()) && factory.isDoNotActivateOnStart());
     }
 
     /**
