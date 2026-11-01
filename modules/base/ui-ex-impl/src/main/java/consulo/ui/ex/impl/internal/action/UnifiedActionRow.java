@@ -480,7 +480,8 @@ public class UnifiedActionRow {
 
         comboBox.addStyle(ComboBoxStyle.TOOLBAR);
         comboBox.setRenderer((itemPresentation, item) -> {
-            itemPresentation.append(presentation.getTextValue().map(Presentation.NO_MNEMONIC));
+            LocalizeValue text = presentation.getTextValue();
+            itemPresentation.append(presentation.isDisabledMnemonic() ? text : text.map(Presentation.NO_MNEMONIC));
             itemPresentation.withIcon(presentation.getIcon());
         });
 
@@ -494,6 +495,7 @@ public class UnifiedActionRow {
             String propertyName = event.getPropertyName();
 
             if (Presentation.PROP_TEXT.equals(propertyName)
+                || Presentation.PROP_DISABLED_MNEMONIC.equals(propertyName)
                 || Presentation.PROP_ICON.equals(propertyName)
                 || Presentation.PROP_ENABLED.equals(propertyName)
                 || Presentation.PROP_DESCRIPTION.equals(propertyName)) {
