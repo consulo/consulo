@@ -392,6 +392,9 @@ public final class Presentation implements Cloneable {
         fireBooleanPropertyChange(PROP_ENABLED, oldEnabled, isEnabled());
         fireBooleanPropertyChange(PROP_VISIBLE, oldVisible, isVisible());
 
+        if (!allFlags) {
+            setDisabledMnemonic(presentation.isDisabledMnemonic());
+        }
         setText(presentation.getTextValue());
         setDescription(presentation.getDescription());
 

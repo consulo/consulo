@@ -175,7 +175,7 @@ public final class ComboBoxButtonImpl extends JComboBox<Object> implements Combo
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
             String propertyName = evt.getPropertyName();
-            if (Presentation.PROP_TEXT.equals(propertyName)) {
+            if (Presentation.PROP_TEXT.equals(propertyName) || Presentation.PROP_DISABLED_MNEMONIC.equals(propertyName)) {
                 updateSize();
             }
             else if (Presentation.PROP_DESCRIPTION.equals(propertyName)) {
