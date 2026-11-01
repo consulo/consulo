@@ -136,8 +136,15 @@ public final class DesktopQtStyleApplier {
      * everything of it looks - whether it is rounded among the rest - and the theme reaches it through the palette
      * instead.
      */
+    public static final String ISLAND_AREA_NAME = "consuloIslandArea";
+
     private static String buildStyleSheet(Style style) {
-        return buildTitleBarStyleSheet(style) + buildTabStyleSheet(style) + buildItemViewStyleSheet(style) + buildMenulessWindowStyleSheet();
+        return buildTitleBarStyleSheet(style) + buildTabStyleSheet(style) + buildItemViewStyleSheet(style) + buildMenulessWindowStyleSheet()
+            + buildIslandAreaStyleSheet();
+    }
+
+    private static String buildIslandAreaStyleSheet() {
+        return "\n#" + ISLAND_AREA_NAME + " QSplitter::handle { background: transparent; }\n";
     }
 
     private static String buildMenulessWindowStyleSheet() {

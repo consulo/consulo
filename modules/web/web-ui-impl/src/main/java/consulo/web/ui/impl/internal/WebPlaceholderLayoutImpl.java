@@ -19,6 +19,7 @@ import com.vaadin.flow.component.html.Div;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.Layout;
+import consulo.ui.layout.LayoutStyle;
 import consulo.ui.layout.PlaceholderLayout;
 import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
 import consulo.web.ui.impl.internal.base.TargetVaadin;
@@ -33,6 +34,8 @@ import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 
 public class WebPlaceholderLayoutImpl extends VaadinComponentDelegate<WebPlaceholderLayoutImpl.Vaadin> implements PlaceholderLayout {
+    private static final String ISLAND_CLASS = "consulo-island";
+
     public class Vaadin extends Div implements FromVaadinComponentWrapper {
         @Override
         public @Nullable Component toUIComponent() {
@@ -118,5 +121,21 @@ public class WebPlaceholderLayoutImpl extends VaadinComponentDelegate<WebPlaceho
     private void showCurrentSlot() {
         mySlots.get(Layer.PLACEHOLDER).setVisible(myPlaceholderVisible);
         mySlots.get(Layer.CONTENT).setVisible(!myPlaceholderVisible);
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void addStyle(LayoutStyle style) {
+        if (style == LayoutStyle.ISLAND) {
+            toVaadinComponent().addClassName(ISLAND_CLASS);
+        }
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void removeStyle(LayoutStyle style) {
+        if (style == LayoutStyle.ISLAND) {
+            toVaadinComponent().removeClassName(ISLAND_CLASS);
+        }
     }
 }

@@ -19,6 +19,7 @@ import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.layout.Layout;
+import consulo.ui.layout.LayoutStyle;
 import consulo.ui.layout.PlaceholderLayout;
 
 import javax.swing.*;
@@ -125,5 +126,9 @@ public class DesktopPlaceholderLayoutImpl extends DesktopLayoutBase<JPanel, Plac
     private Iterable<JPanel> slots() {
         toAWTComponent();
         return mySlots.values();
+    }
+
+    @Override
+    public void addStyle(LayoutStyle style) {
     }
 }

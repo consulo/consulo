@@ -136,6 +136,34 @@ body
   min-width: 0;
 }
 
+/* an island is a raised rounded panel; the gap around it is a border in the frame colour, so the panel keeps
+   the size of the slot it was given */
+.consulo-island
+{
+  box-sizing: border-box;
+  border: 3px solid var(--consulo-panel-background);
+  border-radius: 13px;
+  overflow: hidden;
+}
+
+/* in an islands frame the gaps separate the areas, so the frame draws no lines of its own */
+.consulo-islands .web-tool-window-panel,
+.consulo-islands .web-tool-window-stripe-top,
+.consulo-islands .web-tool-window-stripe-bottom,
+.consulo-islands .web-tool-window-stripe-left,
+.consulo-islands .web-tool-window-stripe-right,
+.consulo-islands .web-menu-bar
+{
+  border: none;
+}
+
+/* islands are separated by their gap, the one pixel divider between them is not painted */
+vaadin-split-layout:has(> .consulo-island)::part(splitter),
+vaadin-split-layout:has(> * > .consulo-island)::part(splitter)
+{
+  background-image: none;
+}
+
 /* the desktop ide draws a one pixel divider, vaadin ships a fat draggable one by default.
    the part stays 5px so it can still be grabbed - like the awt divider mouse zone - but only the
    middle pixel is painted, and it lies over its neighbours so the layout gives it that one pixel only */

@@ -3,10 +3,10 @@
  */
 package consulo.desktop.awt.ui.impl.plaf;
 
-import consulo.application.util.registry.Registry;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.impl.style.IslandsState;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,7 +17,7 @@ public final class IslandPainter {
     }
 
     public static boolean isEnabled() {
-        return Registry.is("ide.islands.ui", true);
+        return IslandsState.isEnabled();
     }
 
     public static Color getMainBackground() {

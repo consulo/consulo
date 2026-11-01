@@ -15,6 +15,7 @@
  */
 package consulo.ui.layout;
 
+import consulo.ui.HasComponentStyle;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.internal.UIInternal;
@@ -25,7 +26,7 @@ import java.util.function.BooleanSupplier;
  * @author VISTALL
  * @since 2026-10-08
  */
-public interface PlaceholderLayout extends Layout<PlaceholderLayout.Layer> {
+public interface PlaceholderLayout extends Layout<PlaceholderLayout.Layer>, HasComponentStyle<LayoutStyle> {
     enum Layer implements LayoutConstraint {
         PLACEHOLDER,
         CONTENT

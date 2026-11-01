@@ -61,10 +61,17 @@ public class EditorEmptyTextPanel {
 
     @RequiredUIAccess
     public EditorEmptyTextPanel(Project project, Disposable parentDisposable, BooleanSupplier visible) {
+        this(project, parentDisposable, visible, true);
+    }
+
+    @RequiredUIAccess
+    public EditorEmptyTextPanel(Project project, Disposable parentDisposable, BooleanSupplier visible, boolean topBorder) {
         myProject = project;
 
         myRoot = VerticalLayout.create(Space.NONE, HorizontalAlignment.CENTER, VerticalAlignment.CENTER);
-        myRoot.borderBuilder().topSet().apply();
+        if (topBorder) {
+            myRoot.borderBuilder().topSet().apply();
+        }
         myRoot.setBackgroundColor(ComponentColors.EDITOR_AREA_BACKGROUND);
 
         project.getMessageBus().connect(parentDisposable).subscribe(ToolWindowManagerListener.class, new ToolWindowManagerListener() {

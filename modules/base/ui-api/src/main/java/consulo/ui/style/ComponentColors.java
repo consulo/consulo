@@ -89,6 +89,10 @@ public enum ComponentColors implements StyleColorValue {
      * The text drawn on {@link #EDITOR_AREA_BACKGROUND} while no editor is open.
      */
     EDITOR_AREA_FOREGROUND,
+    /**
+     * The fill of tool window panels when they are shown as islands.
+     */
+    TOOL_WINDOW_BACKGROUND,
 
     TOOL_WINDOW_BUTTON_HOVER_BACKGROUND,
     TOOL_WINDOW_BUTTON_SELECTED_BACKGROUND,

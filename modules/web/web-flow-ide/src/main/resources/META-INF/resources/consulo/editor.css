@@ -302,6 +302,12 @@
   background-color: var(--consulo-panel-background, #fff);
 }
 
+/* inside an island the stripe takes the editor background, like the awt error panel does there */
+.consulo-island .textviewRightRuler .ruler.overview
+{
+  background-color: transparent;
+}
+
 /* orion draws a mark as a rounded 8px pill left aligned in the column, the awt panel paints a dash over the
    whole width of it. the height is orion's own, it counts the lines the highlighter spans */
 .annotationOverview.arquillStripe

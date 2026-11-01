@@ -96,6 +96,8 @@ public class HeadlessEditor extends CodeEditorBase {
         LogicalPositionCache logicalPositionCache = new LogicalPositionCache(this, () -> EditorUtil.getTabSize(this));
         Disposer.register(myDisposable, logicalPositionCache);
         myLogicalPositionCache = logicalPositionCache;
+        // the settings were initialized by the super constructor, before the cache existed: it has no lines yet
+        logicalPositionCache.reset(true);
     }
 
     @Override

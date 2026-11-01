@@ -156,6 +156,9 @@ public class DesktopStyleImpl extends StyleImpl {
         else if (colorValue == ComponentColors.EDITOR_AREA_FOREGROUND) {
             return TargetAWT.from(EDITOR_AREA_FOREGROUND);
         }
+        else if (colorValue == ComponentColors.TOOL_WINDOW_BACKGROUND) {
+            return TargetAWT.from(JBColor.namedColor("ToolWindow.background", UIUtil.getPanelBackground()));
+        }
         else if (colorValue == StandardColors.LIGHT_RED || colorValue == ComponentColors.ERROR_BACKGROUND) {
             return TargetAWT.from(LightColors.RED);
         }

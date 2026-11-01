@@ -87,12 +87,20 @@ public abstract class QtComponentDelegate<T extends QWidget> implements Componen
 
     private String myOwnStyleSheet = "";
     private static final int HAIRLINE = 1;
+
+    private static final int ISLAND_GAP = 3;
+
+    private static final int ISLAND_INSET = 3;
+
+    private static final int ISLAND_RADIUS = 10;
     private static final int ARC = 4;
 
     private final Map<BorderPosition, Integer> myExtraPadding = new EnumMap<>(BorderPosition.class);
 
 
     private String myBorderStyleSheet = "";
+
+    private boolean myIsland;
 
     protected UIDataObject myDataObject = new UIDataObject();
 
@@ -173,6 +181,10 @@ public abstract class QtComponentDelegate<T extends QWidget> implements Componen
         }
 
         initialize(myComponent);
+
+        if (myIsland) {
+            myComponent.setAttribute(Qt.WidgetAttribute.WA_StyledBackground, true);
+        }
 
         applyColors();
 
@@ -329,6 +341,26 @@ public abstract class QtComponentDelegate<T extends QWidget> implements Componen
 
 
     /**
+     * Shows the component as a raised panel: its background is drawn with rounded corners and a gap around it,
+     * and its children are kept clear of the corners.
+     */
+    @RequiredUIAccess
+    protected void setIsland(boolean island) {
+        if (myIsland == island) {
+            return;
+        }
+
+        myIsland = island;
+
+        if (myComponent != null) {
+            myComponent.setAttribute(Qt.WidgetAttribute.WA_StyledBackground, island);
+        }
+
+        applyColors();
+        applyBorders();
+    }
+
+    /**
      * The style sheet a component writes for itself - a flat button dropping its frame. It is kept apart from the
      * block the borders own so that neither of the two takes the other back out.
      */
@@ -400,6 +432,17 @@ public abstract class QtComponentDelegate<T extends QWidget> implements Componen
             rules.append("border-radius: ").append(ARC).append("px; ");
         }
 
+        if (myIsland) {
+            ourColorOwners.register(this);
+
+            for (BorderPosition position : BorderPosition.values()) {
+                space[position.ordinal()] += ISLAND_GAP + ISLAND_INSET;
+            }
+
+            rules.append("margin: ").append(ISLAND_GAP).append("px; ");
+            rules.append("border-radius: ").append(ISLAND_RADIUS).append("px; ");
+        }
+
 
         // a widget keeps drawing the frame of its style until the style sheet drops it, and a single edge on its
         // own is not enough to make it do so
@@ -418,6 +461,9 @@ public abstract class QtComponentDelegate<T extends QWidget> implements Componen
         }
 
         String rule = rules.isEmpty() ? "" : "#" + borderObjectName() + " { " + rules + "}";
+        if (myIsland) {
+            rule += " #" + borderObjectName() + " QAbstractItemView { background: transparent; }";
+        }
 
         if (!myBorderStyleSheet.equals(rule)) {
             myBorderStyleSheet = rule;
@@ -464,7 +510,7 @@ public abstract class QtComponentDelegate<T extends QWidget> implements Componen
         };
     }
 
-    private static String toCssColor(@Nullable ColorValue colorValue) {
+    protected static String toCssColor(@Nullable ColorValue colorValue) {
         if (colorValue == null) {
             return "palette(mid)";
         }
@@ -864,6 +910,11 @@ public abstract class QtComponentDelegate<T extends QWidget> implements Componen
         myBackgroundColor = background;
 
         applyColors();
+
+        // an island and a bordered component draw their background from the style sheet, not from the palette
+        if (myIsland || !myDataObject.getBorders().isEmpty()) {
+            applyBorders();
+        }
     }
 
     @RequiredUIAccess
@@ -922,8 +973,9 @@ public abstract class QtComponentDelegate<T extends QWidget> implements Componen
             palette.setColor(QPalette.ColorRole.Window, TargetQt.to(myBackgroundColor));
             palette.setColor(QPalette.ColorRole.Base, TargetQt.to(myBackgroundColor));
 
-            // a widget only paints its Window role when it is told to fill its own background
-            myComponent.setAutoFillBackground(true);
+            // a widget only paints its Window role when it is told to fill its own background; an island draws its
+            // rounded background from the style sheet instead
+            myComponent.setAutoFillBackground(!myIsland);
         }
         else {
             myComponent.setAutoFillBackground(myNaturalAutoFillBackground);

@@ -34,6 +34,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ComponentEventListener;
 import consulo.ui.event.HyperlinkEvent;
 import consulo.ui.image.Image;
+import consulo.ui.impl.style.IslandsState;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.HorizontalLayout;
 import consulo.util.collection.Lists;
@@ -104,7 +105,9 @@ public class UnifiedStatusBarImpl implements StatusBarEx {
 
         StatusBarWidgetContextMenu.install(myComponent, null);
 
-        myComponent.borderBuilder().topSet().apply();
+        if (!IslandsState.isEnabled()) {
+            myComponent.borderBuilder().topSet().apply();
+        }
     }
 
     /**

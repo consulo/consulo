@@ -17,6 +17,7 @@ package consulo.it.internal.ui;
 
 import consulo.ui.Component;
 import consulo.ui.layout.Layout;
+import consulo.ui.layout.LayoutStyle;
 import consulo.ui.layout.PlaceholderLayout;
 
 import java.util.EnumMap;
@@ -64,5 +65,9 @@ public class HeadlessPlaceholderLayout extends HeadlessLayoutBase<PlaceholderLay
     @Override
     public boolean testPlaceholder() {
         return myPlaceholderVisibility.getAsBoolean();
+    }
+
+    @Override
+    public void addStyle(LayoutStyle style) {
     }
 }

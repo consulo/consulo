@@ -20,6 +20,7 @@ import consulo.ui.StaticPosition;
 import consulo.ui.internal.LayoutVisualOrder;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.Layout;
+import consulo.ui.layout.LayoutStyle;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -68,5 +69,9 @@ public class HeadlessDockLayout extends HeadlessLayoutBase<StaticPosition> imple
                 consumer.accept(component);
             }
         }
+    }
+
+    @Override
+    public void addStyle(LayoutStyle style) {
     }
 }

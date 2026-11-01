@@ -28,10 +28,12 @@ import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.impl.internal.action.MenuItemPresentationFactory;
+import consulo.ui.impl.style.IslandsState;
 import consulo.web.ui.impl.internal.action.WebActionMenuExpander;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.web.ui.impl.internal.WebRootPaneImpl;
+import consulo.web.ui.impl.internal.base.TargetVaadin;
 import consulo.web.ui.impl.internal.base.WebFocusTracker;
 import consulo.web.ui.impl.internal.base.WebKeyTracker;
 import consulo.web.ui.impl.internal.base.WebShortcutDispatcher;
@@ -61,6 +63,10 @@ public class WebIdeRootView {
                 sink.set(Project.KEY, myProject);
             }
         });
+
+        if (IslandsState.isEnabled()) {
+            TargetVaadin.to(myRootPanel.getComponent()).addClassName("consulo-islands");
+        }
 
         WebFocusTracker.installRoot(myRootPanel.getComponent());
         WebKeyTracker.installRoot(myRootPanel.getComponent());

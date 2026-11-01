@@ -23,6 +23,7 @@ import consulo.ui.StaticPosition;
 import consulo.ui.Tab;
 import consulo.ui.TransferHandler;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.color.ColorValue;
 import consulo.ui.event.TabSelectEvent;
 import consulo.ui.layout.TabbedLayout;
 import consulo.ui.layout.TabbedLayoutStyle;
@@ -184,6 +185,8 @@ public class DesktopQtTabbedLayoutImpl extends QtComponentDelegate<QTabWidget> i
     @Override
     protected void initialize(QTabWidget component) {
         super.initialize(component);
+
+        applyTabBackground();
 
         myRestoringTabs = true;
         try {
@@ -470,5 +473,20 @@ public class DesktopQtTabbedLayoutImpl extends QtComponentDelegate<QTabWidget> i
                 consumer.accept(tab, component);
             }
         }
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setBackgroundColor(@Nullable ColorValue background) {
+        super.setBackgroundColor(background);
+
+        applyTabBackground();
+    }
+
+    // the tab bar and the pane are drawn by the application style sheet, which a palette does not reach; a widget
+    // made later starts without a style sheet of its own, so this runs again when it binds
+    private void applyTabBackground() {
+        ColorValue background = getBackgroundColor();
+        setOwnStyleSheet(background == null ? "" : "QTabWidget::pane, QTabBar { background: " + toCssColor(background) + "; }");
     }
 }

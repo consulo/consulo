@@ -19,8 +19,10 @@ import consulo.desktop.qt.ui.impl.DesktopQtSpace;
 import consulo.desktop.qt.ui.impl.QtComponentDelegate;
 import consulo.ui.Space;
 import consulo.ui.StaticPosition;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.internal.LayoutVisualOrder;
 import consulo.ui.layout.DockLayout;
+import consulo.ui.layout.LayoutStyle;
 import io.qt.widgets.QGridLayout;
 import io.qt.widgets.QLayout;
 import io.qt.widgets.QWidget;
@@ -103,5 +105,21 @@ public class DesktopQtDockLayoutImpl extends DesktopQtLayoutComponent<StaticPosi
     @Override
     public StaticPosition convertConstraintsToLayoutData(StaticPosition constraint) {
         return constraint;
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void addStyle(LayoutStyle style) {
+        if (style == LayoutStyle.ISLAND) {
+            setIsland(true);
+        }
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void removeStyle(LayoutStyle style) {
+        if (style == LayoutStyle.ISLAND) {
+            setIsland(false);
+        }
     }
 }

@@ -15,6 +15,7 @@
  */
 package consulo.ui.layout;
 
+import consulo.ui.HasComponentStyle;
 import consulo.ui.Component;
 import consulo.ui.PseudoComponent;
 import consulo.ui.Space;
@@ -26,7 +27,7 @@ import consulo.ui.internal.UIInternal;
  * @author VISTALL
  * @since 2016-06-09
  */
-public interface DockLayout extends Layout<StaticPosition> {
+public interface DockLayout extends Layout<StaticPosition>, HasComponentStyle<LayoutStyle> {
     static DockLayout create() {
         return create(Space.MEDIUM);
     }

@@ -22,6 +22,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.internal.LayoutVisualOrder;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.Layout;
+import consulo.ui.layout.LayoutStyle;
 import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
 import consulo.web.ui.impl.internal.base.TargetVaadin;
 import consulo.web.ui.impl.internal.vaadin.BorderLayoutEx;
@@ -36,6 +37,8 @@ import java.util.function.Consumer;
  * @since 2023-05-27
  */
 public class WebDockLayoutImpl extends WebLayoutImpl<WebDockLayoutImpl.Vaadin, StaticPosition> implements DockLayout {
+    private static final String ISLAND_CLASS = "consulo-island";
+
     public WebDockLayoutImpl(Space gap) {
         if (gap != Space.NONE) {
             toVaadinComponent().setGapClass(WebSpace.toGapClass(gap));
@@ -94,5 +97,21 @@ public class WebDockLayoutImpl extends WebLayoutImpl<WebDockLayoutImpl.Vaadin, S
         }
 
         return this;
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void addStyle(LayoutStyle style) {
+        if (style == LayoutStyle.ISLAND) {
+            toVaadinComponent().addClassName(ISLAND_CLASS);
+        }
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void removeStyle(LayoutStyle style) {
+        if (style == LayoutStyle.ISLAND) {
+            toVaadinComponent().removeClassName(ISLAND_CLASS);
+        }
     }
 }

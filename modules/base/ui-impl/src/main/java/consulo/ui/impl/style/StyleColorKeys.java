@@ -61,6 +61,7 @@ public final class StyleColorKeys {
 
         ourKeys.put(ComponentColors.EDITOR_AREA_BACKGROUND, "EditorArea.background");
         ourKeys.put(ComponentColors.EDITOR_AREA_FOREGROUND, "EditorArea.foreground");
+        ourKeys.put(ComponentColors.TOOL_WINDOW_BACKGROUND, "ToolWindow.background");
         ourKeys.put(ComponentColors.ERROR_BORDER, "Component.error.borderColor");
         ourKeys.put(ComponentColors.WARNING_BORDER, "Component.warning.borderColor");
         ourKeys.put(ComponentColors.SUCCESS_BORDER, "Component.success.borderColor");

@@ -5,6 +5,7 @@
 @SuppressWarnings("module")
 module consulo.project.ui.impl {
     requires transitive consulo.project.ui.api;
+    requires consulo.ui.impl;
     
     requires consulo.undo.redo.api;
     requires consulo.ide.api;

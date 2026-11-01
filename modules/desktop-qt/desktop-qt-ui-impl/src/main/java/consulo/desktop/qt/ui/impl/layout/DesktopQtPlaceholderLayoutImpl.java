@@ -17,6 +17,7 @@ package consulo.desktop.qt.ui.impl.layout;
 
 import consulo.desktop.qt.ui.impl.QtComponentDelegate;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.layout.LayoutStyle;
 import consulo.ui.layout.PlaceholderLayout;
 import io.qt.widgets.QLayout;
 import io.qt.widgets.QStackedLayout;
@@ -133,5 +134,21 @@ public class DesktopQtPlaceholderLayoutImpl extends DesktopQtLayoutComponent<Pla
         }
 
         stackedLayout.setCurrentWidget(slot);
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void addStyle(LayoutStyle style) {
+        if (style == LayoutStyle.ISLAND) {
+            setIsland(true);
+        }
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void removeStyle(LayoutStyle style) {
+        if (style == LayoutStyle.ISLAND) {
+            setIsland(false);
+        }
     }
 }

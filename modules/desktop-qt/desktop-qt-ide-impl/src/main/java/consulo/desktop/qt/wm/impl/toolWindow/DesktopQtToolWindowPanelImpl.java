@@ -15,6 +15,8 @@
  */
 package consulo.desktop.qt.wm.impl.toolWindow;
 
+import consulo.desktop.qt.ui.impl.DesktopQtStyleApplier;
+import consulo.desktop.qt.ui.impl.QtComponentDelegate;
 import consulo.desktop.qt.ui.impl.layout.DesktopQtThreeComponentSplitLayoutImpl;
 import consulo.ide.impl.wm.impl.ToolWindowAnchorUtil;
 import consulo.ide.impl.wm.impl.UnifiedToolWindowSplitters;
@@ -31,6 +33,7 @@ import consulo.ui.ex.toolWindow.ToolWindowInternalDecorator;
 import consulo.ui.ex.toolWindow.ToolWindowPanel;
 import consulo.ui.ex.toolWindow.ToolWindowStripeButton;
 import consulo.ui.ex.toolWindow.WindowInfo;
+import consulo.ui.impl.style.IslandsState;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.SplitLayoutPosition;
 import consulo.ui.layout.ThreeComponentSplitLayout;
@@ -179,7 +182,12 @@ public class DesktopQtToolWindowPanelImpl implements ToolWindowPanel, PseudoComp
         myContent.center(mySplitters.getRootSplitter());
         myRoot.center(myContent);
         myRoot.right(myRightStripe);
-        myRoot.borderBuilder().topSet().apply();
+        if (IslandsState.isEnabled()) {
+            ((QtComponentDelegate<?>) myContent).whenBound(widget -> widget.setObjectName(DesktopQtStyleApplier.ISLAND_AREA_NAME));
+        }
+        else {
+            myRoot.borderBuilder().topSet().apply();
+        }
     }
 
     @RequiredUIAccess

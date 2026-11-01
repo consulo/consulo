@@ -16,6 +16,7 @@
 package consulo.fileEditor.impl.internal.unified;
 
 import consulo.application.concurrent.ApplicationConcurrency;
+import consulo.colorScheme.EditorColorsManager;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.impl.internal.FileDropManager;
 import consulo.fileEditor.impl.internal.FileEditorManagerImpl;
@@ -24,7 +25,11 @@ import consulo.project.Project;
 import consulo.project.ui.wm.dock.DockManager;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.color.ColorValue;
+import consulo.ui.impl.style.IslandsState;
+import consulo.ui.layout.LayoutStyle;
 import consulo.ui.layout.PlaceholderLayout;
+import consulo.ui.style.ComponentColors;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
@@ -37,6 +42,8 @@ public class UnifiedFileEditorsSplitters extends FileEditorsSplittersBase<Unifie
     private final EditorEmptyTextPanel myEmptyTextPanel;
 
     @RequiredUIAccess
+    private final boolean myIsland;
+
     public UnifiedFileEditorsSplitters(ApplicationConcurrency applicationConcurrency,
                                        Project project,
                                        FileEditorManagerImpl editorManager,
@@ -44,7 +51,9 @@ public class UnifiedFileEditorsSplitters extends FileEditorsSplittersBase<Unifie
                                        boolean createOwnDockableContainer) {
         super(applicationConcurrency, project, editorManager);
 
-        myEmptyTextPanel = new EditorEmptyTextPanel(project, this, this::showEmptyText);
+        myIsland = createOwnDockableContainer && IslandsState.isEnabled();
+
+        myEmptyTextPanel = new EditorEmptyTextPanel(project, this, this::showEmptyText, !myIsland);
 
         myRoot = PlaceholderLayout.create();
         myRoot.setContent(getSplitComponent());
@@ -53,6 +62,11 @@ public class UnifiedFileEditorsSplitters extends FileEditorsSplittersBase<Unifie
         myRoot.setDropHandler(
             (component, transfer, checkOnly) -> FileDropManager.getInstance(myProject).drop(transfer, getCurrentWindow(), checkOnly)
         );
+
+        if (myIsland) {
+            updateIslandBackground();
+            myRoot.addStyle(LayoutStyle.ISLAND);
+        }
 
         if (createOwnDockableContainer) {
             UnifiedDockableEditorTabbedContainer dockable = new UnifiedDockableEditorTabbedContainer(myManager.getProject(), this, false);
@@ -66,6 +80,14 @@ public class UnifiedFileEditorsSplitters extends FileEditorsSplittersBase<Unifie
         return new UnifiedFileEditorWindow[size];
     }
 
+    public boolean isIsland() {
+        return myIsland;
+    }
+
+    public static ColorValue getEditorBackground() {
+        return ColorValue.lazy(() -> EditorColorsManager.getInstance().getGlobalScheme().getDefaultBackground());
+    }
+
     @Override
     public Component getUIComponent() {
         return myRoot;
@@ -77,6 +99,14 @@ public class UnifiedFileEditorsSplitters extends FileEditorsSplittersBase<Unifie
             myEmptyTextPanel.refresh();
         }
         myRoot.testPlaceholder();
+        updateIslandBackground();
+    }
+
+    @RequiredUIAccess
+    private void updateIslandBackground() {
+        if (myIsland) {
+            myRoot.setBackgroundColor(showEmptyText() ? ComponentColors.EDITOR_AREA_BACKGROUND : getEditorBackground());
+        }
     }
 
     @RequiredUIAccess

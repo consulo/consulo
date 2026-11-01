@@ -22,5 +22,10 @@ import consulo.ui.ComponentStyle;
  * @since 2025-02-25
  */
 public enum LayoutStyle implements ComponentStyle {
-    TRANSPARENT_BACKGROUND
+    TRANSPARENT_BACKGROUND,
+    /**
+     * Shows the layout as a raised panel with rounded corners, separated from its surroundings by a small gap.
+     * Used for the main areas of a project frame, such as tool windows and the editor area.
+     */
+    ISLAND
 }

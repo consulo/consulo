@@ -197,6 +197,9 @@ public class UnifiedFileEditorWindow extends FileEditorWindowBase implements Fil
         myOwner = owner;
 
         myTabbedLayout.addStyle(TabbedLayoutStyle.NO_PADDING);
+        if (owner instanceof UnifiedFileEditorsSplitters splitters && splitters.isIsland()) {
+            myTabbedLayout.setBackgroundColor(UnifiedFileEditorsSplitters.getEditorBackground());
+        }
 
         myTabbedLayout.putUserData(UiDataProvider.KEY, sink -> {
             sink.set(Project.KEY, myProject);

@@ -25,6 +25,7 @@
       "hoverThumbColor": "#a9a9a9"
     },
     "ToolWindow": {
+      "background": "#ffffff",
       "Button": {
         "hoverBackground": "#bbc0cb",
         "selectedBackground": "#c9cdd6"

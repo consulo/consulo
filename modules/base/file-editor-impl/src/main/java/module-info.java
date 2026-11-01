@@ -15,6 +15,7 @@ module consulo.file.editor.impl {
     requires consulo.ide.api;
     requires consulo.project.ui.impl;
     requires consulo.ui.ex.impl;
+    requires consulo.ui.impl;
 
     requires static consulo.task.api;
 

@@ -21,6 +21,7 @@ import consulo.ui.PseudoComponent;
 import consulo.ui.Space;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.toolWindow.ToolWindowStripeButton;
+import consulo.ui.impl.style.IslandsState;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.layout.Layout;
@@ -110,7 +111,7 @@ public class DesktopQtToolWindowStripeImpl implements PseudoComponent {
 
     @RequiredUIAccess
     private void updateBorder() {
-        boolean bordered = !myButtons.isEmpty();
+        boolean bordered = !myButtons.isEmpty() && !IslandsState.isEnabled();
         if (bordered == myBordered) {
             return;
         }

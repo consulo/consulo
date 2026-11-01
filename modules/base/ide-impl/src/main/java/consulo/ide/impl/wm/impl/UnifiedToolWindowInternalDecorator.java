@@ -33,7 +33,10 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.localize.UILocalize;
 import consulo.ui.ex.toolWindow.*;
+import consulo.ui.impl.style.IslandsState;
 import consulo.ui.layout.DockLayout;
+import consulo.ui.layout.LayoutStyle;
+import consulo.ui.style.ComponentColors;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
@@ -80,6 +83,22 @@ public class UnifiedToolWindowInternalDecorator implements ToolWindowInternalDec
 
         myLayout.top(myHeader.getComponent());
         myLayout.center(toolWindow.getUIComponent());
+
+        if (IslandsState.isEnabled()) {
+            myLayout.setBackgroundColor(ComponentColors.TOOL_WINDOW_BACKGROUND);
+        }
+        updateIslandStyle();
+    }
+
+    @RequiredUIAccess
+    private void updateIslandStyle() {
+        ToolWindowType type = myInfo.getType();
+        if (IslandsState.isEnabled() && (type == ToolWindowType.DOCKED || type == ToolWindowType.SLIDING)) {
+            myLayout.addStyle(LayoutStyle.ISLAND);
+        }
+        else {
+            myLayout.removeStyle(LayoutStyle.ISLAND);
+        }
     }
 
     public Component getComponent() {
@@ -103,6 +122,8 @@ public class UnifiedToolWindowInternalDecorator implements ToolWindowInternalDec
         }
 
         myInfo = (WindowInfoImpl) windowInfo;
+
+        updateIslandStyle();
 
         myHeader.updateContentUiType();
 

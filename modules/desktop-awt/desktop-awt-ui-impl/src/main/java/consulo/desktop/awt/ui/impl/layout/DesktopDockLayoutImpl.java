@@ -23,6 +23,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.internal.LayoutVisualOrder;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.Layout;
+import consulo.ui.layout.LayoutStyle;
 
 import javax.swing.*;
 import java.awt.*;
@@ -76,5 +77,9 @@ public class DesktopDockLayoutImpl extends DesktopLayoutBase<JPanel, StaticPosit
         panel.add(DesktopLayoutChildren.toAWT(component), constraints);
         panel.revalidate();
         panel.repaint();
+    }
+
+    @Override
+    public void addStyle(LayoutStyle style) {
     }
 }
