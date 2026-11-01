@@ -78,6 +78,7 @@ import consulo.versionControlSystem.checkin.CommitProblem;
 import consulo.versionControlSystem.impl.internal.action.ShowDiffAction;
 import consulo.versionControlSystem.impl.internal.change.ChangeListManagerImpl;
 import consulo.versionControlSystem.impl.internal.change.action.RollbackDialogAction;
+import consulo.versionControlSystem.rollback.RollbackEnvironment;
 import consulo.versionControlSystem.impl.internal.change.action.ShowOnDoubleClickToggleAction;
 import consulo.versionControlSystem.impl.internal.change.ui.ChangeTreeItem;
 import consulo.versionControlSystem.impl.internal.change.ui.ChangesTreeGroupKind;
@@ -355,6 +356,30 @@ public class UnifiedCommitChangeListDialog extends DialogDescriptor implements U
         return root;
     }
 
+    /**
+     * The Rollback action, or a popup group of it and the VCS-specific rollback actions of the active VCSes.
+     */
+    private AnAction createRollbackAction() {
+        RollbackDialogAction rollback = new RollbackDialogAction();
+        List<AnAction> customActions = new ArrayList<>();
+        for (AbstractVcs vcs : ProjectLevelVcsManager.getInstance(myProject).getAllActiveVcss()) {
+            RollbackEnvironment rollbackEnvironment = vcs.getRollbackEnvironment();
+            if (rollbackEnvironment != null) {
+                customActions.addAll(rollbackEnvironment.createCustomRollbackActions());
+            }
+        }
+        if (customActions.isEmpty()) {
+            return rollback;
+        }
+
+        DefaultActionGroup group = new DefaultActionGroup();
+        group.copyFrom(rollback);
+        group.setPopup(true);
+        group.add(rollback);
+        group.addAll(customActions);
+        return group;
+    }
+
     @RequiredUIAccess
     private Component createHeader(UnifiedChangesTree tree, Component target) {
         DefaultActionGroup group = new DefaultActionGroup();
@@ -363,7 +388,7 @@ public class UnifiedCommitChangeListDialog extends DialogDescriptor implements U
             group.add(showDiff);
         }
         group.add(new RefreshChangesAction());
-        group.add(new RollbackDialogAction());
+        group.add(createRollbackAction());
         if (actionManager.getAction(MOVE_ACTION) instanceof AnAction move) {
             group.add(move);
         }

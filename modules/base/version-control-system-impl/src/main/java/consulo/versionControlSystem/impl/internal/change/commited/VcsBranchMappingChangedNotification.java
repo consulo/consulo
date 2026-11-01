@@ -16,11 +16,11 @@
 package consulo.versionControlSystem.impl.internal.change.commited;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.ExtensionAPI;
+import consulo.annotation.component.TopicAPI;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-@ExtensionAPI(ComponentScope.PROJECT)
+@TopicAPI(ComponentScope.PROJECT)
 public interface VcsBranchMappingChangedNotification {
   void execute(Project project, VirtualFile vcsRoot);
 }

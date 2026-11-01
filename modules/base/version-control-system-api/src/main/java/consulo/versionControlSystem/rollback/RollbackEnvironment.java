@@ -16,12 +16,14 @@
 
 package consulo.versionControlSystem.rollback;
 
+import consulo.ui.ex.action.AnAction;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.VcsProviderMarker;
 import consulo.versionControlSystem.change.Change;
 import consulo.virtualFileSystem.VirtualFile;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -82,4 +84,11 @@ public interface RollbackEnvironment extends VcsProviderMarker {
    * @param file the file to rollback.
    */
   void rollbackIfUnchanged(VirtualFile file);
+
+  /**
+   * @return VCS-specific rollback-flavoured actions, shown next to the Rollback action of the commit dialog
+   */
+  default Collection<? extends AnAction> createCustomRollbackActions() {
+    return List.of();
+  }
 }

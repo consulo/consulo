@@ -71,6 +71,7 @@ public final class ChangesTreeSnapshot {
 
     public boolean isGroup(ChangesTreeItem item) {
         return item instanceof ChangeListTreeItem
+            || item instanceof ChangesGroupTreeItem
             || item instanceof FileGroupTreeItem
             || item instanceof ModuleTreeItem
             || item instanceof RepositoryTreeItem
@@ -102,7 +103,10 @@ public final class ChangesTreeSnapshot {
         }
 
         for (ChangesTreeItem child : getChildren(item)) {
-            collectLeaves(child, result);
+            // groups added by ChangesViewModifier are not part of their change list
+            if (!(child instanceof ChangesGroupTreeItem)) {
+                collectLeaves(child, result);
+            }
         }
     }
 }

@@ -389,7 +389,7 @@ public class VcsDirectoryConfigurationPanel {
         String vcs = mapping.getVcs();
         VcsRootChecker checker = myCheckers.get(vcs);
         return checker == null
-            || (mapping.isDefaultMapping() ? checker.isRoot(myProject.getBasePath()) : checker.isRoot(mapping.getDirectory()));
+            || (mapping.isDefaultMapping() ? checker.validateRoot(myProject.getBasePath()) : checker.validateRoot(mapping.getDirectory()));
     }
 
     private List<MapInfo> currentItems() {

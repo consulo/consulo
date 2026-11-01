@@ -16,14 +16,14 @@
 package consulo.versionControlSystem.change.commited;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.ExtensionAPI;
+import consulo.annotation.component.TopicAPI;
 import consulo.project.Project;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import consulo.virtualFileSystem.VirtualFile;
 
 import java.util.List;
 
-@ExtensionAPI(ComponentScope.PROJECT)
+@TopicAPI(ComponentScope.PROJECT)
 public interface VcsBranchMappingChangedDetailedNotification {
     void execute(Project project, VirtualFile vcsRoot, List<CommittedChangeList> cachedList);
 }

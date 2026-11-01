@@ -16,6 +16,7 @@
 package consulo.versionControlSystem.impl.internal.change.ui;
 
 import consulo.application.util.UserHomeFileUtil;
+import consulo.localize.LocalizeValue;
 import consulo.module.Module;
 import consulo.module.content.ProjectFileIndex;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -27,6 +28,7 @@ import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangeList;
 import consulo.versionControlSystem.change.ChangesUtil;
+import consulo.versionControlSystem.change.ChangesViewModelBuilder;
 import consulo.versionControlSystem.change.LocallyDeletedChange;
 import consulo.versionControlSystem.ui.ChangesGroupingSupport;
 import consulo.versionControlSystem.util.VcsUtil;
@@ -48,7 +50,7 @@ import java.util.TreeMap;
  * @author VISTALL
  * @since 2026-10-17
  */
-public final class ChangesTreeSnapshotBuilder {
+public final class ChangesTreeSnapshotBuilder implements ChangesViewModelBuilder {
     private record Leaf(ChangesTreeItem item, FilePath path) {
     }
 
@@ -149,6 +151,34 @@ public final class ChangesTreeSnapshotBuilder {
         }
         addRootLeaves(leaves);
         return this;
+    }
+
+    @Override
+    public void insertChangesGroup(ChangeList changeList, LocalizeValue title, Collection<? extends Change> changes) {
+        ChangeListTreeItem listItem = new ChangeListTreeItem(changeList);
+        if (changes.isEmpty() || !myRoots.contains(listItem)) {
+            return;
+        }
+
+        ChangesGroupTreeItem group = new ChangesGroupTreeItem(listItem, title);
+        List<Leaf> leaves = new ArrayList<>();
+        for (Change change : changes) {
+            leaves.add(leaf(new ChangeTreeItem(change), ChangesUtil.getFilePath(change)));
+        }
+        if (myFlatten) {
+            List<Leaf> sorted = new ArrayList<>(leaves);
+            sorted.sort(LEAF_ORDER);
+            sorted.forEach(this::putLocation);
+            myChildren.put(group, sorted.stream().map(Leaf::item).toList());
+        }
+        else {
+            myChildren.put(group, groupChildren(group, leaves).items());
+        }
+        myFileCounts.put(group, leaves.size());
+
+        List<ChangesTreeItem> listChildren = new ArrayList<>(myChildren.getOrDefault(listItem, List.of()));
+        listChildren.add(group);
+        myChildren.put(listItem, listChildren);
     }
 
     private void addRootLeaves(List<Leaf> leaves) {

@@ -475,6 +475,10 @@ public class UnifiedChangesViewContentManager implements ChangesViewContentI, Di
         myToolWindowState = state;
 
         ToolWindow toolWindow = myToolWindows.get(VcsToolWindow.ID);
+        if (toolWindow == null) {
+            // not attached yet: an unavailable tool window is never initialized, so make it available through the manager
+            toolWindow = ToolWindowManager.getInstance(myProject).getToolWindow(VcsToolWindow.ID);
+        }
         if (toolWindow != null) {
             applyToolWindowState(toolWindow, state);
         }

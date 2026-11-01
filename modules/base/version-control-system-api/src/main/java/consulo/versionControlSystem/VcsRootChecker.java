@@ -41,6 +41,18 @@ public abstract class VcsRootChecker {
   }
 
   /**
+   * Checks if a registered mapping can be used to perform VCS operations. Unlike {@link #isRoot(String)}, it should
+   * return {@code true} when unsure: a VCS whose roots are not marked on disk (e.g. Perforce workspaces) accepts any
+   * mapped directory here.
+   *
+   * @param path path of the mapped directory
+   * @return false if the mapping is certainly invalid
+   */
+  public boolean validateRoot(String path) {
+    return isRoot(path);
+  }
+
+  /**
    * @return - return vcs for current checker
    */
   public abstract VcsKey getSupportedVcs();

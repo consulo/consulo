@@ -64,6 +64,7 @@ import consulo.versionControlSystem.change.ChangeListListener;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.change.ChangesUtil;
 import consulo.versionControlSystem.change.ChangesViewManager;
+import consulo.versionControlSystem.change.ChangesViewModifier;
 import consulo.versionControlSystem.commit.CommitMode;
 import consulo.versionControlSystem.commit.CommitModeListener;
 import consulo.versionControlSystem.commit.CommitModeManager;
@@ -415,6 +416,7 @@ public class UnifiedChangesViewManager implements ChangesViewManager, Persistent
         if (myState.myShowIgnored) {
             builder.files(ChangesTreeGroupKind.IGNORED, changeListManager.getIgnoredFiles());
         }
+        myProject.getExtensionPoint(ChangesViewModifier.class).forEach(modifier -> modifier.modifyTreeModelBuilder(builder));
         return builder.build();
     }
 
