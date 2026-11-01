@@ -18,17 +18,12 @@ package consulo.execution.lineMarker;
 import consulo.application.Application;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
-import consulo.execution.RunManager;
-import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.execution.action.ConfigurationContext;
 import consulo.execution.action.ConfigurationFromContext;
-import consulo.execution.action.RunConfigurationProducer;
 import consulo.execution.configuration.LocatableConfiguration;
-import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.executor.Executor;
 import consulo.execution.internal.ConfigurationFromContextImpl;
 import consulo.execution.internal.ExecutionActionValue;
-import consulo.execution.internal.RunManagerEx;
 import consulo.execution.internal.action.BaseRunConfigurationAction;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -176,8 +171,17 @@ public class ExecutorAction extends ActionGroup implements ActionWithDelegate<An
         if (context.getLocation() == null) {
             return Collections.emptyList();
         }
-        return context.getProject().getApplication().getExtensionPoint(RunConfigurationProducer.class)
-            .collectMapped(producer -> createConfiguration(producer, context));
+        List<ConfigurationFromContext> fromContext = context.getConfigurationsFromContext();
+        if (fromContext == null) {
+            return Collections.emptyList();
+        }
+        List<ConfigurationFromContext> result = new ArrayList<>(fromContext.size());
+        for (ConfigurationFromContext configuration : fromContext) {
+            if (configuration instanceof ConfigurationFromContextImpl) {
+                result.add(configuration);
+            }
+        }
+        return result;
     }
 
     private LocalizeValue getActionText(DataContext dataContext, Executor executor) {
@@ -188,19 +192,6 @@ public class ExecutorAction extends ActionGroup implements ActionWithDelegate<An
         ConfigurationFromContext configuration = list.get(myOrder < list.size() ? myOrder : 0);
         String actionName = BaseRunConfigurationAction.suggestRunActionName((LocatableConfiguration) configuration.getConfiguration());
         return ExecutionActionValue.buildWithConfiguration(executor::getStartActiveText, actionName);
-    }
-
-    private static @Nullable ConfigurationFromContext createConfiguration(
-        RunConfigurationProducer<?> producer,
-        ConfigurationContext context
-    ) {
-        RunConfiguration configuration = producer.createLightConfiguration(context);
-        if (configuration == null) {
-            return null;
-        }
-        RunManagerEx runManager = (RunManagerEx) RunManager.getInstance(context.getProject());
-        RunnerAndConfigurationSettings settings = runManager.createConfiguration(configuration, false);
-        return new ConfigurationFromContextImpl(producer, settings, context.getPsiLocation());
     }
 
     @Override
