@@ -32,9 +32,11 @@ import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.IdeFrameUtil;
 import consulo.project.ui.wm.WindowManager;
+import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.JBInsets;
 import consulo.ui.ex.awt.JBLayeredPane;
+import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.internal.DialogWrapperDialog;
 import consulo.ui.ex.awt.internal.DialogWrapperPeer;
@@ -48,6 +50,8 @@ import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.geom.RoundRectangle2D;
+import java.awt.image.BufferedImage;
 import java.lang.ref.WeakReference;
 import java.util.concurrent.CompletableFuture;
 
@@ -378,12 +382,15 @@ public class GlassPaneDialogWrapperPeer extends DialogWrapperPeer {
     }
 
     private static class MyDialog extends JPanel implements Disposable, DialogWrapperDialog, UiDataProvider {
+        private static final int SHADOW_ALPHA = 14;
+
         private final WeakReference<DialogWrapper> myDialogWrapper;
         private final IdeGlassPaneImpl myPane;
         private JComponent myContentPane;
         private MyRootPane myRootPane;
-        private int shadowWidth;
-        private int shadowHeight;
+        private @Nullable BufferedImage myShadow;
+        private int myShadowWidth;
+        private int myShadowHeight;
         private final JLayeredPane myTransparentPane;
         private JButton myDefaultButton;
         private final Container myWrapperPane;
@@ -393,6 +400,9 @@ public class GlassPaneDialogWrapperPeer extends DialogWrapperPeer {
         private MyDialog(IdeGlassPaneImpl pane, DialogWrapper wrapper, Project project) {
             setLayout(new BorderLayout());
             setOpaque(false);
+
+            Insets insets = getShadowInsets();
+            setBorder(BorderFactory.createEmptyBorder(insets.top, insets.left, insets.bottom, insets.right));
 
             myPane = pane;
             myDialogWrapper = new WeakReference<>(wrapper);
@@ -549,6 +559,92 @@ public class GlassPaneDialogWrapperPeer extends DialogWrapperPeer {
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
+
+            if (myShadow == null || myShadowWidth != getWidth() || myShadowHeight != getHeight()) {
+                myShadow = createShadow(getWidth(), getHeight(), getInsets());
+                myShadowWidth = getWidth();
+                myShadowHeight = getHeight();
+            }
+            UIUtil.drawImage(g, myShadow, 0, 0, null);
+        }
+
+        @Override
+        protected void paintChildren(Graphics g) {
+            Shape shape = createRoundedShape();
+            Graphics2D g2 = (Graphics2D) g.create();
+            try {
+                g2.clip(shape);
+                super.paintChildren(g2);
+            }
+            finally {
+                g2.dispose();
+            }
+
+            Graphics2D border = (Graphics2D) g.create();
+            try {
+                border.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                border.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
+                border.setColor(JBColor.border());
+                float arc = getCornerArc();
+                Rectangle content = getContentBounds();
+                border.draw(new RoundRectangle2D.Float(content.x + 0.5f, content.y + 0.5f, content.width - 1, content.height - 1, arc, arc));
+            }
+            finally {
+                border.dispose();
+            }
+        }
+
+        @Override
+        protected boolean isPaintingOrigin() {
+            return true;
+        }
+
+        private static BufferedImage createShadow(int width, int height, Insets insets) {
+            BufferedImage image = UIUtil.createImage(width, height, BufferedImage.TYPE_INT_ARGB);
+            Graphics2D g = image.createGraphics();
+            try {
+                g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                float arc = getCornerArc();
+                int size = Math.max(insets.left, Math.max(insets.right, insets.bottom));
+                int contentWidth = width - insets.left - insets.right;
+                int contentHeight = height - insets.top - insets.bottom;
+                for (int i = size; i > 0; i--) {
+                    float ratio = 1f - (float) i / (size + 1);
+                    g.setColor(new Color(0, 0, 0, Math.round(SHADOW_ALPHA * ratio * ratio)));
+                    g.fill(new RoundRectangle2D.Float(
+                        insets.left - i,
+                        insets.top - i + (insets.bottom - insets.top) / 2f,
+                        contentWidth + i * 2,
+                        contentHeight + i * 2,
+                        arc + i * 2,
+                        arc + i * 2
+                    ));
+                }
+            }
+            finally {
+                g.dispose();
+            }
+            return image;
+        }
+
+        private static Insets getShadowInsets() {
+            return JBUI.insets("Ide.Shadow.borderInsets", JBUI.insets(8, 12, 16, 12));
+        }
+
+        private Rectangle getContentBounds() {
+            Rectangle bounds = new Rectangle(getWidth(), getHeight());
+            JBInsets.removeFrom(bounds, getInsets());
+            return bounds;
+        }
+
+        private Shape createRoundedShape() {
+            float arc = getCornerArc();
+            Rectangle content = getContentBounds();
+            return new RoundRectangle2D.Float(content.x, content.y, content.width, content.height, arc, arc);
+        }
+
+        private static float getCornerArc() {
+            return JBUI.scale(JBUI.getInt("Popup.borderCornerRadius", 8)) * 2f;
         }
 
         @Override
