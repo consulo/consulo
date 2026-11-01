@@ -33,6 +33,5 @@ public interface SpellcheckingEditorCustomizationProvider {
     return Application.get().getInstance(SpellcheckingEditorCustomizationProvider.class);
   }
 
-  
   Optional<Consumer<EditorEx>> getCustomizationOpt(boolean enabled);
 }

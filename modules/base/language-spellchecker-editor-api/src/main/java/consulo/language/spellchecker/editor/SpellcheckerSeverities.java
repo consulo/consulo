@@ -23,4 +23,14 @@ import consulo.language.editor.annotation.HighlightSeverity;
  */
 public final class SpellcheckerSeverities {
     public static final HighlightSeverity TYPO = new HighlightSeverity("TYPO", HighlightSeverity.INFORMATION.myVal + 5);
+
+    /**
+     * Grammar problem of natural text, slightly more severe than {@link #TYPO}.
+     */
+    public static final HighlightSeverity GRAMMAR_ERROR = new HighlightSeverity("GRAMMAR_ERROR", TYPO.myVal + 1);
+
+    /**
+     * Writing style suggestion for natural text, slightly less severe than {@link #TYPO}.
+     */
+    public static final HighlightSeverity STYLE_SUGGESTION = new HighlightSeverity("STYLE_SUGGESTION", TYPO.myVal - 1);
 }

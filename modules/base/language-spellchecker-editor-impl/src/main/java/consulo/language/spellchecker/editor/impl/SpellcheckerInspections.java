@@ -15,33 +15,14 @@
  */
 package consulo.language.spellchecker.editor.impl;
 
-import consulo.application.Application;
-import consulo.component.extension.ExtensionPointCacheKey;
-import consulo.language.editor.inspection.InspectionTool;
-import consulo.language.spellchecker.editor.inspection.SpellcheckerInspection;
-import consulo.util.collection.MultiMap;
+import consulo.language.spellchecker.editor.SpellcheckingUtil;
 
 /**
  * @author VISTALL
  * @since 2023-03-26
  */
 public class SpellcheckerInspections {
-    public static final ExtensionPointCacheKey<InspectionTool, MultiMap<String, String>> MAPPING = ExtensionPointCacheKey.create(
-        "TOOLS_MAPPING",
-        walker -> {
-            MultiMap<String, String> multiMap = new MultiMap<>();
-
-            walker.walk(tool -> {
-                if (tool instanceof SpellcheckerInspection spellcheckerInspection) {
-                    multiMap.putValue(spellcheckerInspection.getSpellcheckerEngineId(), spellcheckerInspection.getShortName());
-                }
-            });
-            return multiMap;
-        }
-    );
-
-    public static boolean isOwneedSpellcheckerInspection(String spellcheckerEngineId, String toolId) {
-        MultiMap<String, String> map = Application.get().getExtensionPoint(InspectionTool.class).getOrBuildCache(MAPPING);
-        return map.get(spellcheckerEngineId).contains(toolId);
+    public static boolean isSpellcheckerInspection(String toolId) {
+        return SpellcheckingUtil.SPELL_CHECKING_INSPECTION_TOOL_NAME.equals(toolId);
     }
 }

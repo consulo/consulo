@@ -17,33 +17,72 @@ package consulo.language.spellchecker.editor;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
+import consulo.configurable.UnnamedConfigurable;
+import consulo.language.spellcheker.text.TextContent;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import org.jspecify.annotations.Nullable;
 
+import java.util.EnumSet;
 import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 
 /**
+ * Validates words for the platform spellchecking.
+ * <p>
+ * The platform owns everything around validation: tokenizing, the inspection, quick fixes,
+ * user/project dictionaries and the bundled word lists of {@link consulo.language.spellchecker.editor.dictionary.BundledDictionaryProvider}.
+ * Words accepted by those are never passed to the engine.
+ * <p>
+ * Only the engine selected in <em>Settings | Editor | Spellchecking</em> is called. With automatic selection the engine with
+ * the most {@link #getFeatures() features}, then the most {@link #getLocales() locales} is used.
+ * An engine must not load its dictionaries or models until it is called for the first time,
+ * so an installed but unused engine costs nothing.
+ *
  * @author VISTALL
  * @since 2023-03-26
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface SpellcheckerEngine {
-    
     String getId();
 
-    
     LocalizeValue getDisplayName();
 
-    
-    List<String> getSuggestions(Project project, String text);
+    /**
+     * @return kinds of problems the engine reports
+     */
+    default Set<SpellcheckerFeature> getFeatures() {
+        return EnumSet.of(SpellcheckerFeature.SPELLING);
+    }
+
+    /**
+     * @return languages the engine can check. Must be cheap: it is called for automatic engine selection, also while the engine is
+     * not active, so dictionaries must not be loaded here
+     */
+    Set<Locale> getLocales();
 
     boolean hasProblem(Project project, String word);
 
-    default boolean canSaveUserWords(Project project) {
-        return false;
+    /**
+     * @return suggestions for the word, best first. The platform keeps this order
+     */
+    List<String> getSuggestions(Project project, String word);
+
+    /**
+     * Checks grammar and style of a natural language text (a comment, a doc comment, a string literal, plain text).
+     * Called only when {@link #getFeatures()} contains {@link SpellcheckerFeature#GRAMMAR} or {@link SpellcheckerFeature#STYLE}.
+     *
+     * @return problems with ranges in {@code text}
+     */
+    default List<SpellcheckerTextProblem> checkText(Project project, TextContent text) {
+        return List.of();
     }
 
-    default void acceptWordAsCorrect(Project project, String word) {
-        throw new UnsupportedOperationException();
+    /**
+     * @return engine options, shown in <em>Settings | Editor | Spellchecking</em> below the engine selector while this engine is selected
+     */
+    default @Nullable UnnamedConfigurable createConfigurable() {
+        return null;
     }
 }

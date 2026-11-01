@@ -40,12 +40,10 @@ import java.util.function.Function;
  * @since 2010-08-20
  */
 public class SpellCheckingEditorCustomization implements Consumer<EditorEx> {
-    private final String mySpellcheckerEngineId;
     private final boolean myEnabled;
 
-    public SpellCheckingEditorCustomization(boolean enabled, String spellcheckerEngineId) {
+    public SpellCheckingEditorCustomization(boolean enabled) {
         myEnabled = enabled;
-        mySpellcheckerEngineId = spellcheckerEngineId;
     }
 
     @Override
@@ -64,7 +62,7 @@ public class SpellCheckingEditorCustomization implements Consumer<EditorEx> {
 
         Function<InspectionProfile, InspectionProfileWrapper> strategy = file.getUserData(InspectionProfileWrapper.CUSTOMIZATION_KEY);
         if (strategy == null) {
-            strategy = new MyInspectionProfileStrategy(mySpellcheckerEngineId);
+            strategy = new MyInspectionProfileStrategy();
             file.putUserData(InspectionProfileWrapper.CUSTOMIZATION_KEY, strategy);
         }
 
@@ -84,19 +82,14 @@ public class SpellCheckingEditorCustomization implements Consumer<EditorEx> {
     }
 
     private static class MyInspectionProfileStrategy implements Function<InspectionProfile, InspectionProfileWrapper> {
-        private final String mySpellcheckerEngineId;
         private final Map<InspectionProfile, MyInspectionProfileWrapper> myWrappers = Maps.newWeakHashMap();
         private boolean myUseSpellCheck;
-
-        public MyInspectionProfileStrategy(String spellcheckerEngineId) {
-            mySpellcheckerEngineId = spellcheckerEngineId;
-        }
 
         @Override
         public InspectionProfileWrapper apply(InspectionProfile delegate) {
             MyInspectionProfileWrapper wrapper = myWrappers.get(delegate);
             if (wrapper == null) {
-                myWrappers.put(delegate, wrapper = new MyInspectionProfileWrapper(delegate, mySpellcheckerEngineId));
+                myWrappers.put(delegate, wrapper = new MyInspectionProfileWrapper(delegate));
             }
             wrapper.setUseSpellCheck(myUseSpellCheck);
             return wrapper;
@@ -109,16 +102,14 @@ public class SpellCheckingEditorCustomization implements Consumer<EditorEx> {
 
     private static class MyInspectionProfileWrapper extends InspectionProfileWrapper {
         private boolean myUseSpellCheck;
-        private final String mySpellcheckerEngineId;
 
-        MyInspectionProfileWrapper(InspectionProfile delegate, String spellcheckerEngineId) {
+        MyInspectionProfileWrapper(InspectionProfile delegate) {
             super(delegate);
-            mySpellcheckerEngineId = spellcheckerEngineId;
         }
 
         @Override
         public boolean isToolEnabled(HighlightDisplayKey key, PsiElement element) {
-            return myUseSpellCheck && SpellcheckerInspections.isOwneedSpellcheckerInspection(mySpellcheckerEngineId, key.getID());
+            return myUseSpellCheck && SpellcheckerInspections.isSpellcheckerInspection(key.getID());
         }
 
         public void setUseSpellCheck(boolean useSpellCheck) {

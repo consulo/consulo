@@ -27,7 +27,6 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 /**
- * TODO impl handling different engines
  *
  * @author nik
  */
@@ -49,7 +48,7 @@ public class SpellcheckingEditorCustomizationProviderImpl implements Spellchecki
             return Optional.empty();
         }
 
-        SpellCheckingEditorCustomization customization = new SpellCheckingEditorCustomization(enabled, activeEngine.getId());
+        SpellCheckingEditorCustomization customization = new SpellCheckingEditorCustomization(enabled);
         return Optional.of(customization);
     }
 }

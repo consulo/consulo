@@ -27,6 +27,7 @@ import consulo.language.Language;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.FileASTNode;
 import consulo.language.ast.IElementType;
+import consulo.language.ast.TokenSet;
 import consulo.language.content.FileIndexFacade;
 import consulo.language.file.FileViewProvider;
 import consulo.language.file.light.LightVirtualFile;
@@ -38,6 +39,7 @@ import consulo.language.psi.resolve.ResolveState;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.util.IncorrectOperationException;
+import consulo.util.lang.StringUtil;
 import consulo.language.version.LanguageVersion;
 import consulo.logging.Logger;
 import consulo.logging.attachment.AttachmentFactory;
@@ -52,8 +54,10 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 /**
@@ -780,5 +784,70 @@ public class PsiUtilCore {
         }
         PsiManager psiManager = PsiManager.getInstance(project);
         return file.isDirectory() ? psiManager.findDirectory(file) : psiManager.findFile(file);
+    }
+
+    /**
+     * Get all siblings of {@code element} that are accepted by {@code checkSibling}
+     * which are separated by whitespace ({@link PsiWhiteSpace} or anything in {@code whitespaceTokens}) containing at most one line break.
+     * A sibling accepted by {@code isBarrier} stops the search and is not included; {@code element} itself is excluded when it is a barrier.
+     * <p>
+     */
+    @RequiredReadAction
+    public static List<PsiElement> getNotSoDistantSimilarSiblings(
+        PsiElement element,
+        TokenSet whitespaceTokens,
+        Predicate<PsiElement> checkSibling,
+        Predicate<PsiElement> isBarrier
+    ) {
+        if (!checkSibling.test(element)) {
+            throw new IllegalArgumentException("Element is not accepted by checkSibling: " + element);
+        }
+
+        List<PsiElement> previous = processNotSoDistantSiblings(element, false, whitespaceTokens, checkSibling, isBarrier);
+        Collections.reverse(previous);
+
+        List<PsiElement> result = new ArrayList<>(previous);
+        if (!isBarrier.test(element)) {
+            result.add(element);
+        }
+        result.addAll(processNotSoDistantSiblings(element, true, whitespaceTokens, checkSibling, isBarrier));
+        return result;
+    }
+
+    @RequiredReadAction
+    private static List<PsiElement> processNotSoDistantSiblings(
+        PsiElement element,
+        boolean next,
+        TokenSet whitespaceTokens,
+        Predicate<PsiElement> checkSibling,
+        Predicate<PsiElement> isBarrier
+    ) {
+        List<PsiElement> result = new ArrayList<>();
+        int newLinesBetweenSiblingsCount = 0;
+
+        PsiElement sibling = element;
+        while (true) {
+            sibling = next ? sibling.getNextSibling() : sibling.getPrevSibling();
+            if (sibling == null) {
+                break;
+            }
+            if (checkSibling.test(sibling)) {
+                if (isBarrier.test(sibling)) {
+                    break;
+                }
+                newLinesBetweenSiblingsCount = 0;
+                result.add(sibling);
+            }
+            else if (sibling instanceof PsiWhiteSpace || whitespaceTokens.contains(getElementType(sibling))) {
+                newLinesBetweenSiblingsCount += StringUtil.countChars(sibling.getText(), '\n');
+                if (newLinesBetweenSiblingsCount > 1) {
+                    break;
+                }
+            }
+            else {
+                break;
+            }
+        }
+        return result;
     }
 }

@@ -1,0 +1,74 @@
+accepted.words:
+    text: 'Accepted words:'
+add.0.to.dictionary:
+    text: 'Typo: Save ''''{0}'''' to dictionary'
+add.new.word:
+    text: Add New Word
+add.to.dictionary:
+    text: Save to dictionary
+bundled.dictionaries:
+    text: 'Bundled dictionaries:'
+change.to:
+    text: 'Typo: Change to...'
+custom.dictionaries.folders:
+    text: 'Custom dictionaries folders:'
+dictionary.name.application.level:
+    text: Application-level
+dictionary.name.project.level:
+    text: Project-level
+engine.auto:
+    text: <auto>
+engine.label:
+    text: 'Spellchecker:'
+enter.simple.word:
+    text: 'Enter word:'
+no.dictionaries:
+    text: No dictionaries found
+process.code:
+    text: Process code
+process.comments:
+    text: Process comments
+process.literals:
+    text: Process literals
+rename.to:
+    text: 'Typo: Rename to...'
+save.0.to.dictionary.action:
+    text: Save ''{0}'' to dictionary
+save.0.to.dictionary.fix:
+    text: Save ''{0}'' to dictionary
+save.to.dictionary.fix:
+    text: Save to dictionary
+select.dictionary.title:
+    text: Save to Dictionary
+spellchecking:
+    text: Spellchecking
+spellchecking.inspection.name:
+    text: Typo
+spelling:
+    text: Spelling
+typo.in.word.ref:
+    text: 'Typo: In word ''#ref'''
+spellchecking.inspection.description:
+    text: Spellchecker inspection helps locate typos and misspelling in your code, comments and literals, and fix them in one click.
+feature.spelling:
+    text: Spelling
+feature.grammar:
+    text: Grammar
+feature.style:
+    text: Style
+engine.auto.resolved:
+    text: <auto> ({0})
+engine.info:
+    text: 'Features: {0}. Languages: {1}'
+engine.info.no.languages:
+    text: none
+grammar.inspection.name:
+    text: Grammar
+grammar.inspection.description:
+    text: Reports grammar problems in comments, documentation, literals and plain text, found by the spellchecker engine.
+style.inspection.name:
+    text: Style
+style.inspection.description:
+    text: Reports writing style suggestions in comments, documentation, literals and plain text, found by the spellchecker engine.
+replace.with:
+    text: Replace with ''{0}''

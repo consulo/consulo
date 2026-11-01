@@ -1507,6 +1507,18 @@
                 <option name="EFFECT_TYPE" value="2"/>
             </value>
         </option>
+        <option name="GRAMMAR_ERROR">
+            <value>
+                <option name="EFFECT_COLOR" value="713D40"/>
+                <option name="EFFECT_TYPE" value="2"/>
+            </value>
+        </option>
+        <option name="TEXT_STYLE_SUGGESTION">
+            <value>
+                <option name="EFFECT_COLOR" value="3592C4"/>
+                <option name="EFFECT_TYPE" value="5"/>
+            </value>
+        </option>
         <option name="Type parameter">
             <value>
                 <option name="FOREGROUND" value="247877"/>
@@ -1785,6 +1797,18 @@
             <value>
                 <option name="EFFECT_COLOR" value="659C6B"/>
                 <option name="EFFECT_TYPE" value="2"/>
+            </value>
+        </option>
+        <option name="GRAMMAR_ERROR">
+            <value>
+                <option name="EFFECT_COLOR" value="713D40"/>
+                <option name="EFFECT_TYPE" value="2"/>
+            </value>
+        </option>
+        <option name="TEXT_STYLE_SUGGESTION">
+            <value>
+                <option name="EFFECT_COLOR" value="3592C4"/>
+                <option name="EFFECT_TYPE" value="5"/>
             </value>
         </option>
         <option name="INLAY_DEFAULT">

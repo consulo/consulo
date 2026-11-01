@@ -8,6 +8,8 @@ module consulo.language.spellchecker.api {
 
     exports consulo.language.spellcheker;
     exports consulo.language.spellcheker.tokenizer;
+    exports consulo.language.spellcheker.text;
+    exports consulo.language.spellcheker.text.util;
     exports consulo.language.spellcheker.tokenizer.splitter;
 
     exports consulo.language.spellcheker.internal to consulo.language.spellchecker.impl;

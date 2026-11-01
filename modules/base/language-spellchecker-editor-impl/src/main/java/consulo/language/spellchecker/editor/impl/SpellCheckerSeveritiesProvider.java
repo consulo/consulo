@@ -36,6 +36,22 @@ import java.util.List;
 @ExtensionImpl
 public class SpellCheckerSeveritiesProvider extends SeveritiesProvider {
     private static final TextAttributesKey TYPO_KEY = TextAttributesKey.of("TYPO");
+    private static final TextAttributesKey GRAMMAR_ERROR_KEY = TextAttributesKey.of("GRAMMAR_ERROR");
+    private static final TextAttributesKey STYLE_SUGGESTION_KEY = TextAttributesKey.of("TEXT_STYLE_SUGGESTION");
+
+    private static class TextHighlightInfoType extends HighlightInfoTypeImpl implements HighlightInfoType.Iconable {
+        private final Image myIcon;
+
+        TextHighlightInfoType(HighlightSeverity severity, TextAttributesKey attributesKey, Image icon) {
+            super(severity, attributesKey);
+            myIcon = icon;
+        }
+
+        @Override
+        public Image getIcon() {
+            return myIcon;
+        }
+    }
 
     static class TYPO extends HighlightInfoTypeImpl implements HighlightInfoType.Iconable {
         public TYPO() {
@@ -52,7 +68,11 @@ public class SpellCheckerSeveritiesProvider extends SeveritiesProvider {
     
     @Override
     public List<HighlightInfoType> getSeveritiesHighlightInfoTypes() {
-        return List.of(new TYPO());
+        return List.of(
+            new TYPO(),
+            new TextHighlightInfoType(SpellcheckerSeverities.GRAMMAR_ERROR, GRAMMAR_ERROR_KEY, PlatformIconGroup.generalInspectionsgrammar()),
+            new TextHighlightInfoType(SpellcheckerSeverities.STYLE_SUGGESTION, STYLE_SUGGESTION_KEY, PlatformIconGroup.generalInspectionsstyle())
+        );
     }
 
     @Override
@@ -62,6 +82,8 @@ public class SpellCheckerSeveritiesProvider extends SeveritiesProvider {
 
     @Override
     public boolean isGotoBySeverityEnabled(HighlightSeverity minSeverity) {
-        return SpellcheckerSeverities.TYPO != minSeverity;
+        return SpellcheckerSeverities.TYPO != minSeverity
+            && SpellcheckerSeverities.GRAMMAR_ERROR != minSeverity
+            && SpellcheckerSeverities.STYLE_SUGGESTION != minSeverity;
     }
 }

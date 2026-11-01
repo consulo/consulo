@@ -17,11 +17,7 @@ package consulo.language.spellchecker.editor;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import consulo.project.Project;
-
 import org.jspecify.annotations.Nullable;
-
-import java.util.List;
 
 /**
  * @author VISTALL
@@ -29,35 +25,20 @@ import java.util.List;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface SpellcheckerEngineManager {
+    /**
+     * @return id of the engine chosen by the user, or {@code null} for automatic selection
+     */
+    @Nullable String getSelectedEngineId();
+
+    void setSelectedEngineId(@Nullable String engineId);
+
+    /**
+     * @return the selected engine, or {@link #getAutoSelectedEngine()} when the selection is automatic or the selected engine is not installed
+     */
     @Nullable SpellcheckerEngine getActiveEngine();
 
-    
-    default List<String> getSuggestions(Project project, String text) {
-        SpellcheckerEngine engine = getActiveEngine();
-        if (engine == null) {
-            return List.of();
-        }
-        return engine.getSuggestions(project, text);
-    }
-
-    default boolean hasProblem(Project project, String word) {
-        SpellcheckerEngine engine = getActiveEngine();
-        return engine != null && engine.hasProblem(project, word);
-    }
-
-    default boolean canSaveUserWords(Project project) {
-        SpellcheckerEngine engine = getActiveEngine();
-        return engine != null && engine.canSaveUserWords(project);
-    }
-
-    default void acceptWordAsCorrect(Project project, String word) {
-        if (!canSaveUserWords(project)) {
-            throw new IllegalArgumentException("#canSaveUserWords(Project) return false");
-        }
-
-        SpellcheckerEngine engine = getActiveEngine();
-        if (engine != null) {
-            engine.acceptWordAsCorrect(project, word);
-        }
-    }
+    /**
+     * @return the engine with the most features, then the most locales; on a tie the first registered one
+     */
+    @Nullable SpellcheckerEngine getAutoSelectedEngine();
 }
