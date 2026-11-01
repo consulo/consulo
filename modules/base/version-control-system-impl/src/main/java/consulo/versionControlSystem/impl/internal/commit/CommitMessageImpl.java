@@ -21,6 +21,7 @@ import consulo.dataContext.DataManager;
 import consulo.dataContext.UiDataProvider;
 import consulo.language.editor.ui.AdditionalPageAtBottomEditorCustomization;
 import consulo.language.editor.ui.EditorBox;
+import consulo.language.editor.ui.EditorBoxBuilder;
 import consulo.language.editor.ui.EditorBoxBuilderFactory;
 import consulo.language.editor.ui.RightMarginEditorCustomization;
 import consulo.language.editor.ui.SoftWrapsEditorCustomization;
@@ -61,7 +62,7 @@ public class CommitMessageImpl implements CommitMessageComponent {
 
     @RequiredUIAccess
     public CommitMessageImpl(Project project, boolean withSeparator) {
-        myEditorBox = createCommitTextEditor(project, false);
+        myEditorBox = createCommitTextEditor(project, false).build();
 
         DockLayout content = DockLayout.create();
         content.center(myEditorBox);
@@ -101,15 +102,15 @@ public class CommitMessageImpl implements CommitMessageComponent {
     }
 
     /**
-     * Creates a text editor appropriate for creating commit messages.
+     * Creates a builder of a text editor appropriate for creating commit messages.
      *
      * @param project           project this commit message editor is intended for
      * @param forceSpellCheckOn if false, {@link VcsConfiguration#CHECK_COMMIT_MESSAGE_SPELLING} will control
      *                          whether or not the editor has spell check enabled
-     * @return a commit message editor
+     * @return a builder of the commit message editor
      */
     @RequiredUIAccess
-    public static EditorBox createCommitTextEditor(Project project, boolean forceSpellCheckOn) {
+    public static EditorBoxBuilder createCommitTextEditor(Project project, boolean forceSpellCheckOn) {
         List<Consumer<EditorEx>> features = new ArrayList<>();
 
         VcsConfiguration configuration = VcsConfiguration.getInstance(project);
@@ -124,8 +125,7 @@ public class CommitMessageImpl implements CommitMessageComponent {
         return project.getApplication().getInstance(EditorBoxBuilderFactory.class)
             .create(project)
             .multiline()
-            .customize(editor -> features.forEach(feature -> feature.accept(editor)))
-            .build();
+            .customize(editor -> features.forEach(feature -> feature.accept(editor)));
     }
 
     public static @Nullable ActionGroup getToolbarActions() {

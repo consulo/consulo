@@ -20,7 +20,6 @@ import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.language.editor.ui.EditorBox;
-import consulo.language.editor.ui.EditorBoxBuilderFactory;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -109,9 +108,7 @@ public class UnifiedCommitPanel implements UnifiedCommitWorkflowUi {
         myRefreshChanges = refreshChanges;
         myDeactivateListener = deactivateListener;
 
-        myMessageBox = project.getApplication().getInstance(EditorBoxBuilderFactory.class)
-            .create(project)
-            .multiline()
+        myMessageBox = CommitMessageImpl.createCommitTextEditor(project, false)
             .placeholder(VcsLocalize.commitPanelMessagePlaceholder())
             .build();
 

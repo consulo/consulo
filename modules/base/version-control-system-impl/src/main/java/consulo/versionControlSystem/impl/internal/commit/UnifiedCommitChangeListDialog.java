@@ -21,7 +21,6 @@ import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.language.editor.ui.EditorBox;
-import consulo.language.editor.ui.EditorBoxBuilderFactory;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -294,9 +293,7 @@ public class UnifiedCommitChangeListDialog extends DialogDescriptor implements U
         UnifiedCommitWorkflowHandler handler = new UnifiedCommitWorkflowHandler(workflow, this, myCommitActionName);
         myHandler = handler;
 
-        EditorBox messageBox = myProject.getApplication().getInstance(EditorBoxBuilderFactory.class)
-            .create(myProject)
-            .multiline()
+        EditorBox messageBox = CommitMessageImpl.createCommitTextEditor(myProject, false)
             .placeholder(VcsLocalize.commitPanelMessagePlaceholder())
             .build();
         myMessageBox = messageBox;
