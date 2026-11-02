@@ -21,6 +21,7 @@ import consulo.application.internal.ApplicationInfo;
 import consulo.container.boot.ContainerPathManager;
 import consulo.mcp.tool.McpToolCallResult;
 import consulo.mcpServer.McpToolCallContext;
+import consulo.mcpServer.McpToolGroup;
 import consulo.mcpServer.McpToolRegistrar;
 import consulo.mcpServer.McpToolset;
 import consulo.platform.Platform;
@@ -35,6 +36,11 @@ import java.util.concurrent.CompletableFuture;
 @ExtensionImpl
 @Singleton
 public class DiagnosticsToolset implements McpToolset {
+    @Override
+    public McpToolGroup getGroup() {
+        return McpToolGroup.IDE;
+    }
+
     @Override
     public void registerTools(McpToolRegistrar registrar) {
         registrar.tool("get_ide_diagnostics")

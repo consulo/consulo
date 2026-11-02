@@ -11,4 +11,5 @@ module consulo.mcp.server.api {
     requires consulo.ui.api;
 
     exports consulo.mcpServer;
+    exports consulo.mcpServer.localize;
 }

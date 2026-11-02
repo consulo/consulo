@@ -23,6 +23,7 @@ import consulo.mcp.tool.McpToolCallResult;
 import consulo.mcpServer.McpProjectPaths;
 import consulo.mcpServer.McpToolActions;
 import consulo.mcpServer.McpToolCallContext;
+import consulo.mcpServer.McpToolGroup;
 import consulo.mcpServer.McpToolRegistrar;
 import consulo.mcpServer.McpToolset;
 import consulo.navigation.NavigationItem;
@@ -42,6 +43,11 @@ import java.util.concurrent.CompletableFuture;
 @Singleton
 public class SymbolSearchToolset implements McpToolset {
     private static final int DEFAULT_LIMIT = 50;
+
+    @Override
+    public McpToolGroup getGroup() {
+        return McpToolGroup.SEARCH;
+    }
 
     @Override
     public void registerTools(McpToolRegistrar registrar) {

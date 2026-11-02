@@ -63,6 +63,7 @@ public class McpToolRegistry {
             McpToolCollector collector = new McpToolCollector();
             myApplication.getExtensionPoint(McpToolset.class).forEach(toolset -> {
                 try {
+                    collector.setDefaultGroup(toolset.getGroup());
                     toolset.registerTools(collector);
                 }
                 catch (Throwable e) {

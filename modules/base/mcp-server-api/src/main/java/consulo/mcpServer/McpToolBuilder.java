@@ -48,6 +48,8 @@ public interface McpToolBuilder {
 
     McpToolBuilder param(McpParameter parameter);
 
+    McpToolBuilder group(McpToolGroup group);
+
     /**
      * Terminal call — registers the tool.
      */

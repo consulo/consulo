@@ -15,6 +15,11 @@
  */
 package consulo.mcpServer.impl.internal;
 
+import org.jspecify.annotations.Nullable;
+
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+
 /**
  * @author VISTALL
  * @since 2026-08-03
@@ -22,10 +27,26 @@ package consulo.mcpServer.impl.internal;
 public final class McpSession {
     private final String myId;
     private final String myProtocolVersion;
+    private final McpPrincipal myPrincipal;
+    private final String myClientName;
+    private final String myClientVersion;
+    private final @Nullable String myProjectPath;
+    private final Set<String> myApprovedTools = ConcurrentHashMap.newKeySet();
 
-    McpSession(String id, String protocolVersion) {
+    private volatile long myLastAccess = System.currentTimeMillis();
+
+    McpSession(String id,
+               String protocolVersion,
+               McpPrincipal principal,
+               String clientName,
+               String clientVersion,
+               @Nullable String projectPath) {
         myId = id;
         myProtocolVersion = protocolVersion;
+        myPrincipal = principal;
+        myClientName = clientName;
+        myClientVersion = clientVersion;
+        myProjectPath = projectPath;
     }
 
     public String getId() {
@@ -34,5 +55,41 @@ public final class McpSession {
 
     public String getProtocolVersion() {
         return myProtocolVersion;
+    }
+
+    public McpPrincipal getPrincipal() {
+        return myPrincipal;
+    }
+
+    public boolean belongsTo(McpPrincipal principal) {
+        return myPrincipal.id().equals(principal.id());
+    }
+
+    public String getClientName() {
+        return myClientName;
+    }
+
+    public String getClientVersion() {
+        return myClientVersion;
+    }
+
+    public @Nullable String getProjectPath() {
+        return myProjectPath;
+    }
+
+    public boolean isToolApproved(String toolName) {
+        return myApprovedTools.contains(toolName);
+    }
+
+    public void approveTool(String toolName) {
+        myApprovedTools.add(toolName);
+    }
+
+    long getLastAccess() {
+        return myLastAccess;
+    }
+
+    void touch() {
+        myLastAccess = System.currentTimeMillis();
     }
 }

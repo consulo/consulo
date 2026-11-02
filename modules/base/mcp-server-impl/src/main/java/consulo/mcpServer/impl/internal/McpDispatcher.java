@@ -31,9 +31,12 @@ import consulo.mcp.protocol.model.*;
 import consulo.mcp.tool.McpToolCallResult;
 import consulo.mcp.tool.McpToolException;
 import consulo.mcp.tool.McpToolSchema;
-import consulo.project.Project;
+import consulo.mcpServer.impl.internal.activity.McpToolApprovalService;
+import consulo.mcpServer.impl.internal.activity.McpToolCallLog;
+import consulo.mcpServer.impl.internal.activity.McpToolCallRecord;
+import consulo.mcpServer.impl.internal.activity.McpToolCallStatus;
 import consulo.mcpServer.impl.internal.setting.McpServerSettings;
-import consulo.project.ProjectManager;
+import consulo.project.Project;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jspecify.annotations.Nullable;
@@ -54,27 +57,37 @@ import java.util.concurrent.CompletableFuture;
 @ServiceImpl
 public class McpDispatcher {
     private static final Logger LOG = Logger.getInstance(McpDispatcher.class);
+    private static final String UNKNOWN_CLIENT = "unknown client";
+    private static final String DENIED_MESSAGE = "The user denied this tool call.";
 
     private final Application myApplication;
     private final McpToolRegistry myToolRegistry;
     private final McpSessionManager mySessionManager;
-    private final ProjectManager myProjectManager;
+    private final McpProjectResolver myProjectResolver;
     private final McpServerSettings mySettings;
+    private final McpToolCallLog myCallLog;
+    private final McpToolApprovalService myApprovalService;
 
     @Inject
     public McpDispatcher(Application application,
                          McpToolRegistry toolRegistry,
                          McpSessionManager sessionManager,
-                         ProjectManager projectManager,
-                         McpServerSettings settings) {
+                         McpProjectResolver projectResolver,
+                         McpServerSettings settings,
+                         McpToolCallLog callLog,
+                         McpToolApprovalService approvalService) {
         myApplication = application;
         myToolRegistry = toolRegistry;
         mySessionManager = sessionManager;
-        myProjectManager = projectManager;
+        myProjectResolver = projectResolver;
         mySettings = settings;
+        myCallLog = callLog;
+        myApprovalService = approvalService;
     }
 
-    public CompletableFuture<@Nullable JsonRpcResponse> dispatch(JsonRpcRequest request, @Nullable McpSession session) {
+    public CompletableFuture<@Nullable JsonRpcResponse> dispatch(JsonRpcRequest request,
+                                                                 @Nullable McpSession session,
+                                                                 @Nullable String callProjectPath) {
         String method = request.method;
         if (method == null) {
             return CompletableFuture.completedFuture(
@@ -90,7 +103,7 @@ public class McpDispatcher {
                 case McpProtocol.METHOD_INITIALIZE -> completed(request, initialize(request));
                 case McpProtocol.METHOD_PING -> completed(request, new JsonObject());
                 case McpProtocol.METHOD_TOOLS_LIST -> completed(request, listTools());
-                case McpProtocol.METHOD_TOOLS_CALL -> callTool(request, session);
+                case McpProtocol.METHOD_TOOLS_CALL -> callTool(request, session, callProjectPath);
                 default -> CompletableFuture.completedFuture(
                     JsonRpcResponse.error(request.id, JsonRpcErrorCodes.METHOD_NOT_FOUND, "Unknown method: " + method));
             };
@@ -106,12 +119,12 @@ public class McpDispatcher {
         }
     }
 
-    /**
-     * Called before dispatch, because the session id has to be on the response headers that are
-     * flushed ahead of the asynchronously produced body.
-     */
-    public McpSession openSession(JsonRpcRequest request) {
-        return mySessionManager.create(negotiate(request));
+    public McpSession openSession(JsonRpcRequest request, McpPrincipal principal, @Nullable String projectPath) {
+        InitializeParams params = decode(request.params, InitializeParams.class);
+        ImplementationInfo clientInfo = params == null ? null : params.clientInfo;
+        String clientName = clientInfo == null || clientInfo.name == null ? "unknown" : clientInfo.name;
+        String clientVersion = clientInfo == null || clientInfo.version == null ? "" : clientInfo.version;
+        return mySessionManager.create(negotiate(request), principal, clientName, clientVersion, projectPath);
     }
 
     private static String negotiate(JsonRpcRequest request) {
@@ -124,7 +137,7 @@ public class McpDispatcher {
         String negotiated = negotiate(request);
 
         ServerCapabilities capabilities = new ServerCapabilities();
-        capabilities.tools = new ServerCapabilities.Tools(true);
+        capabilities.tools = new ServerCapabilities.Tools(false);
 
         ImplementationInfo serverInfo = new ImplementationInfo(myApplication.getName().get(),
                                                               ApplicationInfo.getInstance().getFullVersion());
@@ -162,7 +175,9 @@ public class McpDispatcher {
         return definition;
     }
 
-    private CompletableFuture<@Nullable JsonRpcResponse> callTool(JsonRpcRequest request, @Nullable McpSession session) {
+    private CompletableFuture<@Nullable JsonRpcResponse> callTool(JsonRpcRequest request,
+                                                                  @Nullable McpSession session,
+                                                                  @Nullable String callProjectPath) {
         ToolsCallParams params = decode(request.params, ToolsCallParams.class);
         if (params == null || params.name == null) {
             return CompletableFuture.completedFuture(
@@ -182,7 +197,11 @@ public class McpDispatcher {
         Project project = null;
         if (registration.isRequiresProject()) {
             try {
-                project = resolveProject();
+                JsonElement projectPathArgument = arguments.get(McpProjectResolver.PROJECT_PATH_ARGUMENT);
+                String argumentPath = projectPathArgument != null && projectPathArgument.isJsonPrimitive()
+                    ? projectPathArgument.getAsString()
+                    : null;
+                project = myProjectResolver.resolve(argumentPath, callProjectPath, session == null ? null : session.getProjectPath());
             }
             catch (McpToolException e) {
                 return CompletableFuture.completedFuture(
@@ -192,40 +211,67 @@ public class McpDispatcher {
 
         McpToolCallContextImpl context = new McpToolCallContextImpl(registration.getDescriptor(), arguments, project);
 
+        String clientName = session == null ? UNKNOWN_CLIENT : session.getPrincipal().displayName();
+        String argumentsText = arguments.toString();
+        Project callProject = project;
+        McpToolCallRecord record = myCallLog.start(clientName, callProject == null ? null : callProject.getName(), name, argumentsText);
+
+        CompletableFuture<Boolean> approval;
+        if (myApprovalService.requiresApproval(registration.getDescriptor()) && !myApprovalService.isPreApproved(session, name)) {
+            myCallLog.changeStatus(record, McpToolCallStatus.WAITING_FOR_APPROVAL);
+            approval = myApprovalService.askApproval(session, callProject, clientName, name, argumentsText)
+                .exceptionally(throwable -> {
+                    LOG.error("MCP tool approval has failed", throwable);
+                    return Boolean.FALSE;
+                });
+        }
+        else {
+            approval = CompletableFuture.completedFuture(Boolean.TRUE);
+        }
+
+        return approval.thenCompose(allowed -> {
+            if (!Boolean.TRUE.equals(allowed)) {
+                myCallLog.finish(record, McpToolCallStatus.DENIED, DENIED_MESSAGE);
+                return CompletableFuture.completedFuture(JsonRpcResponse.success(request.id, toolFailure(DENIED_MESSAGE)));
+            }
+            myCallLog.changeStatus(record, McpToolCallStatus.RUNNING);
+            return runTool(request, registration, context, record);
+        });
+    }
+
+    private CompletableFuture<@Nullable JsonRpcResponse> runTool(JsonRpcRequest request,
+                                                                 McpToolRegistration registration,
+                                                                 McpToolCallContextImpl context,
+                                                                 McpToolCallRecord record) {
+        String name = registration.getDescriptor().getName();
         CompletableFuture<McpToolCallResult> call;
         try {
             call = registration.getHandler().call(context);
         }
         catch (Throwable e) {
-            return CompletableFuture.completedFuture(JsonRpcResponse.success(request.id, toolFailure(describe(name, e))));
+            String failure = describe(name, e);
+            myCallLog.finish(record, McpToolCallStatus.FAILED, failure);
+            return CompletableFuture.completedFuture(JsonRpcResponse.success(request.id, toolFailure(failure)));
         }
 
         return call.handle((result, throwable) -> {
             if (throwable != null) {
-                return JsonRpcResponse.success(request.id, toolFailure(describe(name, throwable)));
+                String failure = describe(name, throwable);
+                myCallLog.finish(record, McpToolCallStatus.FAILED, failure);
+                return JsonRpcResponse.success(request.id, toolFailure(failure));
+            }
+            if (result == null) {
+                LOG.error("MCP tool '" + name + "' completed without a result");
+                myCallLog.finish(record, McpToolCallStatus.FAILED, "Tool returned no result");
+                return JsonRpcResponse.success(request.id, toolFailure("Tool returned no result"));
             }
             List<ContentBlock> content = new ArrayList<>();
             for (String text : result.getContent()) {
                 content.add(ContentBlock.text(text));
             }
+            myCallLog.finish(record, result.isError() ? McpToolCallStatus.FAILED : McpToolCallStatus.SUCCEEDED, String.join("\n", result.getContent()));
             return JsonRpcResponse.success(request.id, new ToolsCallResult(content, result.isError()));
         });
-    }
-
-    private Project resolveProject() {
-        Project[] projects = myProjectManager.getOpenProjects();
-        if (projects.length == 1) {
-            return projects[0];
-        }
-        if (projects.length == 0) {
-            throw new McpToolException("No project is open in the IDE.");
-        }
-
-        StringBuilder message = new StringBuilder("Several projects are open, cannot pick one:");
-        for (Project project : projects) {
-            message.append("\n - ").append(project.getName());
-        }
-        throw new McpToolException(message.toString());
     }
 
     private static String describe(String toolName, Throwable throwable) {

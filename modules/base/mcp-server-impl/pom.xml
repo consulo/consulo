@@ -31,24 +31,6 @@
 
     <packaging>jar</packaging>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>consulo.maven</groupId>
-                <artifactId>maven-consulo-plugin</artifactId>
-                <extensions>true</extensions>
-                <executions>
-                    <execution>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>generate-localize</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
-
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -78,6 +60,21 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>consulo-builtin-web-server-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-credential-storage-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-module-content-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-project-ui-api</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

@@ -28,11 +28,20 @@ import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.language.editor.inspection.scheme.LocalInspectionToolWrapper;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressManager;
+import consulo.application.util.concurrent.AppExecutorUtil;
+import consulo.language.editor.inspection.ProblemDescriptorUtil;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.mcp.tool.McpToolException;
+import consulo.project.DumbService;
+import consulo.util.lang.StringUtil;
 import consulo.mcp.tool.McpParameter;
 import consulo.mcp.tool.McpToolCallResult;
 import consulo.mcpServer.McpProjectPaths;
 import consulo.mcpServer.McpToolActions;
 import consulo.mcpServer.McpToolCallContext;
+import consulo.mcpServer.McpToolGroup;
 import consulo.mcpServer.McpToolRegistrar;
 import consulo.mcpServer.McpToolset;
 import consulo.project.Project;
@@ -53,6 +62,11 @@ public class LintToolset implements McpToolset {
     private static final int DEFAULT_LIMIT = 100;
 
     @Override
+    public McpToolGroup getGroup() {
+        return McpToolGroup.CODE_ANALYSIS;
+    }
+
+    @Override
     public void registerTools(McpToolRegistrar registrar) {
         registrar.tool("lint_files")
             .description("Runs the project's enabled code inspections over the given files and reports what they find, as "
@@ -71,22 +85,38 @@ public class LintToolset implements McpToolset {
         List<String> paths = context.getStringList("paths");
         int limit = context.getInt("limit");
 
-        return McpToolActions.readAction(project, () -> {
-            if (paths.isEmpty()) {
-                return McpToolCallResult.error("No paths given.");
-            }
+        if (paths.isEmpty()) {
+            return CompletableFuture.completedFuture(McpToolCallResult.error("No paths given."));
+        }
 
+        return McpToolActions.uiActionAsync(project, () -> {
+            PsiDocumentManager.getInstance(project).commitAllDocuments();
+            return CompletableFuture.supplyAsync(() -> lint(project, paths, limit), AppExecutorUtil.getAppExecutorService());
+        });
+    }
+
+    private static McpToolCallResult lint(Project project, List<String> paths, int limit) {
+        ProgressIndicator indicator = new EmptyProgressIndicator();
+        StringBuilder notes = new StringBuilder();
+        StringBuilder problemsText = new StringBuilder();
+        int[] found = {0};
+
+        ProgressManager.getInstance().runProcess(() -> DumbService.getInstance(project).runReadActionInSmartMode(() -> {
             InspectionManager inspectionManager = InspectionManager.getInstance(project);
             InspectionProfile profile = InspectionProjectProfileManager.getInstance(project).getCurrentProfile();
 
-            StringBuilder builder = new StringBuilder();
-            int found = 0;
-
             for (String path : paths) {
-                VirtualFile file = McpProjectPaths.resolve(project, path);
+                VirtualFile file;
+                try {
+                    file = McpProjectPaths.resolve(project, path);
+                }
+                catch (McpToolException e) {
+                    notes.append(path).append(": ").append(e.getMessage()).append('\n');
+                    continue;
+                }
                 PsiFile psiFile = PsiManager.getInstance(project).findFile(file);
                 if (psiFile == null) {
-                    builder.append(path).append(": not backed by a PSI tree, skipped\n");
+                    notes.append(path).append(": not backed by a PSI tree, skipped\n");
                     continue;
                 }
 
@@ -95,29 +125,30 @@ public class LintToolset implements McpToolset {
                                                                             inspectionManager,
                                                                             false,
                                                                             false,
-                                                                            new EmptyProgressIndicator());
+                                                                            indicator);
 
                 Document document = FileDocumentManager.getInstance().getDocument(file);
                 for (ProblemDescriptor problem : problems) {
-                    if (found >= limit) {
-                        builder.append("... truncated at ").append(limit).append(" problems\n");
-                        return McpToolCallResult.text(builder.toString());
+                    if (found[0] >= limit) {
+                        notes.append("... truncated at ").append(limit).append(" problems\n");
+                        return;
                     }
-                    builder.append(path)
+                    String message = StringUtil.stripHtml(ProblemDescriptorUtil.renderDescriptionMessage(problem).get(), false).trim();
+                    problemsText.append(path)
                         .append(':')
                         .append(lineOf(document, problem))
                         .append(' ')
-                        .append(problem.getDescriptionTemplate())
+                        .append(problem.getHighlightType().name())
+                        .append(": ")
+                        .append(message)
                         .append('\n');
-                    found++;
+                    found[0]++;
                 }
             }
+        }), indicator);
 
-            if (found == 0) {
-                return McpToolCallResult.text("No problems found.");
-            }
-            return McpToolCallResult.text(builder.toString());
-        });
+        String text = (found[0] == 0 ? "No problems found.\n" : problemsText.toString()) + notes;
+        return McpToolCallResult.text(text);
     }
 
     /**

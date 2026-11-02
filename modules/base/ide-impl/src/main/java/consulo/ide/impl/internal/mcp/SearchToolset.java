@@ -22,6 +22,7 @@ import consulo.mcp.tool.McpToolException;
 import consulo.mcpServer.McpProjectPaths;
 import consulo.mcpServer.McpToolCallContext;
 import consulo.mcpServer.McpToolActions;
+import consulo.mcpServer.McpToolGroup;
 import consulo.mcpServer.McpToolRegistrar;
 import consulo.mcpServer.McpToolset;
 import consulo.module.content.ProjectFileIndex;
@@ -45,6 +46,11 @@ import java.util.regex.PatternSyntaxException;
 public class SearchToolset implements McpToolset {
     private static final int DEFAULT_LIMIT = 100;
     private static final int MAX_FILE_LENGTH = 1024 * 1024;
+
+    @Override
+    public McpToolGroup getGroup() {
+        return McpToolGroup.SEARCH;
+    }
 
     @Override
     public void registerTools(McpToolRegistrar registrar) {

@@ -23,6 +23,7 @@ import consulo.mcp.protocol.JsonRpcRequest;
 import consulo.mcp.protocol.JsonRpcResponse;
 import consulo.mcp.protocol.model.*;
 import consulo.mcpServer.impl.internal.McpDispatcher;
+import consulo.mcpServer.impl.internal.McpPrincipal;
 import consulo.mcpServer.impl.internal.McpSession;
 import consulo.mcpServer.impl.internal.setting.McpServerSettings;
 import consulo.project.Project;
@@ -51,7 +52,7 @@ public class McpDispatcherTest {
         assertThat(result).isNotNull();
         assertThat(result.protocolVersion).isEqualTo("2025-03-26");
         assertThat(result.capabilities.tools).isNotNull();
-        assertThat(result.capabilities.tools.listChanged).isTrue();
+        assertThat(result.capabilities.tools.listChanged).isFalse();
         assertThat(result.serverInfo.name).isNotEmpty();
     }
 
@@ -74,7 +75,7 @@ public class McpDispatcherTest {
         notification.jsonrpc = "2.0";
         notification.method = McpProtocol.METHOD_INITIALIZED;
 
-        assertThat(dispatcher.dispatch(notification, null).get(30, TimeUnit.SECONDS)).isNull();
+        assertThat(dispatcher.dispatch(notification, null, null).get(30, TimeUnit.SECONDS)).isNull();
     }
 
     @Test
@@ -222,8 +223,8 @@ public class McpDispatcherTest {
     }
 
     private static JsonRpcResponse call(McpDispatcher dispatcher, JsonRpcRequest request) throws Exception {
-        McpSession session = McpProtocol.METHOD_INITIALIZE.equals(request.method) ? dispatcher.openSession(request) : null;
-        JsonRpcResponse response = dispatcher.dispatch(request, session).get(30, TimeUnit.SECONDS);
+        McpSession session = McpProtocol.METHOD_INITIALIZE.equals(request.method) ? dispatcher.openSession(request, McpPrincipal.STATIC_TOKEN, null) : null;
+        JsonRpcResponse response = dispatcher.dispatch(request, session, null).get(30, TimeUnit.SECONDS);
         assertThat(response).isNotNull();
         return response;
     }

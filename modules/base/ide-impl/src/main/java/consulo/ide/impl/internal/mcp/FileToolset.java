@@ -23,6 +23,7 @@ import consulo.mcp.tool.McpToolException;
 import consulo.mcpServer.McpProjectPaths;
 import consulo.mcpServer.McpToolCallContext;
 import consulo.mcpServer.McpToolActions;
+import consulo.mcpServer.McpToolGroup;
 import consulo.mcpServer.McpToolRegistrar;
 import consulo.mcpServer.McpToolset;
 import consulo.project.Project;
@@ -43,6 +44,11 @@ public class FileToolset implements McpToolset {
     private static final int MAX_ENTRIES = 1000;
 
     @Override
+    public McpToolGroup getGroup() {
+        return McpToolGroup.PROJECT_AND_FILES;
+    }
+
+    @Override
     public void registerTools(McpToolRegistrar registrar) {
         registrar.tool("list_directory_tree")
             .description("Lists the file tree under a project-relative directory path, reading the IDE's virtual file system so unsaved "
@@ -58,12 +64,15 @@ public class FileToolset implements McpToolset {
         registrar.tool("create_new_file")
             .description("Creates a file at a project-relative path, together with any missing parent directories. Runs as an IDE write "
                 + "action, so the file appears immediately in the editor and in version control. Fails if the file already exists.")
+            .destructive()
+            .requiresProject()
             .param(McpParameter.string("path", "Project-relative path of the file to create."))
             .param(McpParameter.string("text", "Content to write into the new file.").defaultValue(""))
             .handler(FileToolset::createNewFile);
 
         registrar.tool("open_file_in_editor")
             .description("Opens a project file in the editor and brings it to the front. Affects the IDE window the user is looking at.")
+            .requiresProject()
             .param(McpParameter.string("path", "Project-relative path of the file to open."))
             .handler(FileToolset::openFileInEditor);
 

@@ -21,10 +21,11 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
-import consulo.util.xml.serializer.XmlSerializerUtil;
 import jakarta.inject.Singleton;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -34,59 +35,120 @@ import java.util.Set;
 @Singleton
 @ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
-@State(name = "McpServerSettings", storages = @Storage("mcp.server.xml"))
-public class McpServerSettings implements PersistentStateComponent<McpServerSettings> {
+@State(name = "McpServerSettings", storages = @Storage("mcp.server"))
+public class McpServerSettings implements PersistentStateComponent<McpServerSettingsState> {
     public static final int DEFAULT_PORT = 64342;
 
-    /**
-     * Exposing the IDE to local agents is opt-in.
-     */
-    public boolean ENABLED = false;
+    private volatile McpServerSettingsState myState = new McpServerSettingsState();
 
-    public int PORT = DEFAULT_PORT;
+    @Override
+    public McpServerSettingsState getState() {
+        return myState;
+    }
 
-    /**
-     * Names of tools the user has switched off. Stored as the exceptions rather than the allowed set,
-     * so tools added by a later release are exposed by default.
-     */
-    public Set<String> DISABLED_TOOLS = new HashSet<>();
+    @Override
+    public void loadState(McpServerSettingsState state) {
+        myState = state;
+    }
 
     public boolean isEnabled() {
-        return ENABLED;
+        return myState.ENABLED;
     }
 
     public void setEnabled(boolean enabled) {
-        ENABLED = enabled;
-    }
-
-    public boolean isToolEnabled(String toolName) {
-        return !DISABLED_TOOLS.contains(toolName);
-    }
-
-    public void setToolEnabled(String toolName, boolean enabled) {
-        if (enabled) {
-            DISABLED_TOOLS.remove(toolName);
-        }
-        else {
-            DISABLED_TOOLS.add(toolName);
-        }
+        myState.ENABLED = enabled;
     }
 
     public int getPort() {
-        return PORT;
+        return myState.PORT;
     }
 
     public void setPort(int port) {
-        PORT = port;
+        myState.PORT = port;
     }
 
-    @Override
-    public McpServerSettings getState() {
-        return this;
+    public boolean isRequireApproval() {
+        return myState.REQUIRE_APPROVAL;
     }
 
-    @Override
-    public void loadState(McpServerSettings state) {
-        XmlSerializerUtil.copyBean(state, this);
+    public void setRequireApproval(boolean requireApproval) {
+        myState.REQUIRE_APPROVAL = requireApproval;
+    }
+
+    public boolean isStaticTokenEnabled() {
+        return myState.STATIC_TOKEN_ENABLED;
+    }
+
+    public void setStaticTokenEnabled(boolean staticTokenEnabled) {
+        myState.STATIC_TOKEN_ENABLED = staticTokenEnabled;
+    }
+
+    public synchronized boolean isToolEnabled(String toolName) {
+        return !disabledTools().contains(toolName);
+    }
+
+    public synchronized void setToolEnabled(String toolName, boolean enabled) {
+        if (enabled) {
+            disabledTools().remove(toolName);
+        }
+        else {
+            disabledTools().add(toolName);
+        }
+    }
+
+    public synchronized Set<String> copyDisabledTools() {
+        return new HashSet<>(disabledTools());
+    }
+
+    public synchronized void replaceDisabledTools(Set<String> disabledTools) {
+        myState.DISABLED_TOOLS = new HashSet<>(disabledTools);
+    }
+
+    public synchronized boolean isAlwaysAllowed(String principalId, String toolName) {
+        return alwaysAllowedTools().contains(grantKey(principalId, toolName));
+    }
+
+    public synchronized void allowAlways(String principalId, String toolName) {
+        alwaysAllowedTools().add(grantKey(principalId, toolName));
+    }
+
+    public synchronized void forgetApprovals() {
+        alwaysAllowedTools().clear();
+    }
+
+    public synchronized void forgetApprovals(String principalId) {
+        String prefix = principalId + "\t";
+        alwaysAllowedTools().removeIf(key -> key.startsWith(prefix));
+    }
+
+    public List<McpOAuthClientState> oauthClients() {
+        List<McpOAuthClientState> clients = myState.OAUTH_CLIENTS;
+        if (clients == null) {
+            clients = new ArrayList<>();
+            myState.OAUTH_CLIENTS = clients;
+        }
+        return clients;
+    }
+
+    private Set<String> disabledTools() {
+        Set<String> tools = myState.DISABLED_TOOLS;
+        if (tools == null) {
+            tools = new HashSet<>();
+            myState.DISABLED_TOOLS = tools;
+        }
+        return tools;
+    }
+
+    private Set<String> alwaysAllowedTools() {
+        Set<String> tools = myState.ALWAYS_ALLOWED_TOOLS;
+        if (tools == null) {
+            tools = new HashSet<>();
+            myState.ALWAYS_ALLOWED_TOOLS = tools;
+        }
+        return tools;
+    }
+
+    private static String grantKey(String principalId, String toolName) {
+        return principalId + "\t" + toolName;
     }
 }

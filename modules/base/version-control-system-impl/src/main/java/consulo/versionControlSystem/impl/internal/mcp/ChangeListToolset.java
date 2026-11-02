@@ -21,6 +21,7 @@ import consulo.mcp.tool.McpToolCallResult;
 import consulo.mcpServer.McpProjectPaths;
 import consulo.mcpServer.McpToolActions;
 import consulo.mcpServer.McpToolCallContext;
+import consulo.mcpServer.McpToolGroup;
 import consulo.mcpServer.McpToolRegistrar;
 import consulo.mcpServer.McpToolset;
 import consulo.project.Project;
@@ -45,6 +46,11 @@ import java.util.concurrent.CompletableFuture;
 @Singleton
 public class ChangeListToolset implements McpToolset {
     private static final int DEFAULT_LIMIT = 1000;
+
+    @Override
+    public McpToolGroup getGroup() {
+        return McpToolGroup.VERSION_CONTROL;
+    }
 
     @Override
     public void registerTools(McpToolRegistrar registrar) {

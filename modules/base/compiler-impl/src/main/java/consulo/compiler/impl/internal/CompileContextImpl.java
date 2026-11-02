@@ -53,6 +53,7 @@ import java.util.*;
  * @since 2003-01-21
  */
 public class CompileContextImpl extends UserDataHolderBase implements CompileContextEx {
+    private static final int MAX_KEPT_PROBLEMS = 500;
     private class MyMessageBuilder extends AbstractCompileMessageBuilder {
         private MyMessageBuilder(CompilerMessageCategory category, LocalizeValue message) {
             super(category, message);
@@ -107,6 +108,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
     private final ProjectFileIndex myProjectFileIndex; // cached for performance reasons
     private final long myStartCompilationStamp;
     private final UUID mySessionId = UUID.randomUUID();
+    private final List<CompilerMessage> myProblems = new ArrayList<>();
 
     @RequiredReadAction
     public CompileContextImpl(
@@ -226,7 +228,20 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
 
     @Override
     public void addMessage(CompilerMessage msg) {
+        if (msg.getCategory() == CompilerMessageCategory.ERROR || msg.getCategory() == CompilerMessageCategory.WARNING) {
+            synchronized (myProblems) {
+                if (myProblems.size() < MAX_KEPT_PROBLEMS) {
+                    myProblems.add(msg);
+                }
+            }
+        }
         myTask.addMessage(msg);
+    }
+
+    public List<CompilerMessage> getProblems() {
+        synchronized (myProblems) {
+            return new ArrayList<>(myProblems);
+        }
     }
 
     @Override

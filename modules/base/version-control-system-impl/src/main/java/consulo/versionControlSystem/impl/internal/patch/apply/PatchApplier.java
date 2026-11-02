@@ -74,6 +74,7 @@ public class PatchApplier<BinaryType extends FilePatch> {
     private final List<FilePatch> myFailedPatches;
     private final PathsVerifier<BinaryType> myVerifier;
     private boolean mySystemOperation;
+    private boolean myUnattended;
 
     private final boolean myReverseConflict;
     private final @Nullable String myLeftConflictPanelTitle;
@@ -145,6 +146,14 @@ public class PatchApplier<BinaryType extends FilePatch> {
         myVerifier.setIgnoreContentRootsCheck(true);
     }
 
+    public void setRequireVcsRoot(boolean requireVcsRoot) {
+        myVerifier.setRequireVcsRoot(requireVcsRoot);
+    }
+
+    public void setUnattended(boolean unattended) {
+        myUnattended = unattended;
+    }
+
     public PatchApplier(
         Project project,
         VirtualFile baseDirectory,
@@ -174,7 +183,7 @@ public class PatchApplier<BinaryType extends FilePatch> {
     }
 
     
-    private Collection<FilePatch> getFailedPatches() {
+    public Collection<FilePatch> getFailedPatches() {
         return myFailedPatches;
     }
 
@@ -215,7 +224,10 @@ public class PatchApplier<BinaryType extends FilePatch> {
                 trigger.processIt();
                 // insert a label to be visible in local history dialog
                 LocalHistory.getInstance().putSystemLabel(myProject, LocalizeValue.localizeTODO("After patch"));
-                if (myStatus == ApplyPatchStatus.FAILURE) {
+                if (myStatus == ApplyPatchStatus.FAILURE && myUnattended) {
+                    rollbackUnderProgress(myProject, myProject.getBaseDir(), beforeLabel);
+                }
+                else if (myStatus == ApplyPatchStatus.FAILURE) {
                     suggestRollback(myProject, Collections.singletonList(PatchApplier.this), beforeLabel);
                 }
                 else if (myStatus == ApplyPatchStatus.ABORT) {
@@ -491,6 +503,15 @@ public class PatchApplier<BinaryType extends FilePatch> {
     protected CompletableFuture<@Nullable ApplyPatchStatus> finishWritable(@Nullable ApplyPatchStatus status, UIAccess uiAccess) {
         List<ApplyPatchAttempt> merges = new ArrayList<>(myPendingMerges);
         myPendingMerges.clear();
+
+        if (myUnattended && !merges.isEmpty()) {
+            for (ApplyPatchAttempt merge : merges) {
+                myFailedPatches.add(merge.getPatch().getPatch());
+            }
+            List<Pair<VirtualFile, ApplyTextFilePatch>> textPatches = myInternalTextPatches;
+            markInternalOperation(textPatches, false);
+            return CompletableFuture.completedFuture(ApplyPatchStatus.and(status, ApplyPatchStatus.FAILURE));
+        }
 
         CompletableFuture<@Nullable ApplyPatchStatus> chain = CompletableFuture.completedFuture(status);
         if (status != ApplyPatchStatus.ABORT) {

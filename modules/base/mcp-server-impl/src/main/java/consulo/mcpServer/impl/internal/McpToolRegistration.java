@@ -16,6 +16,7 @@
 package consulo.mcpServer.impl.internal;
 
 import consulo.mcp.tool.McpToolDescriptor;
+import consulo.mcpServer.McpToolGroup;
 import consulo.mcpServer.McpToolHandler;
 
 /**
@@ -26,11 +27,17 @@ public final class McpToolRegistration {
     private final McpToolDescriptor myDescriptor;
     private final McpToolHandler myHandler;
     private final boolean myRequiresProject;
+    private final McpToolGroup myGroup;
 
-    McpToolRegistration(McpToolDescriptor descriptor, McpToolHandler handler, boolean requiresProject) {
+    McpToolRegistration(McpToolDescriptor descriptor, McpToolHandler handler, boolean requiresProject, McpToolGroup group) {
         myDescriptor = descriptor;
         myHandler = handler;
         myRequiresProject = requiresProject;
+        myGroup = group;
+    }
+
+    public McpToolGroup getGroup() {
+        return myGroup;
     }
 
     public McpToolDescriptor getDescriptor() {

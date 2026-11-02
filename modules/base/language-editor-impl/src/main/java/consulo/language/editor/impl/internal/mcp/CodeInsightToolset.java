@@ -22,12 +22,11 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.language.psi.PsiNamedElement;
-import consulo.language.psi.PsiReference;
 import consulo.mcp.tool.McpParameter;
 import consulo.mcp.tool.McpToolCallResult;
 import consulo.mcpServer.McpProjectPaths;
-import consulo.mcpServer.McpToolActions;
 import consulo.mcpServer.McpToolCallContext;
+import consulo.mcpServer.McpToolGroup;
 import consulo.mcpServer.McpToolRegistrar;
 import consulo.mcpServer.McpToolset;
 import consulo.project.Project;
@@ -45,6 +44,11 @@ import java.util.concurrent.CompletableFuture;
 @Singleton
 public class CodeInsightToolset implements McpToolset {
     private static final int MAX_DECLARATION_LENGTH = 2000;
+
+    @Override
+    public McpToolGroup getGroup() {
+        return McpToolGroup.CODE_ANALYSIS;
+    }
 
     @Override
     public void registerTools(McpToolRegistrar registrar) {
@@ -67,7 +71,7 @@ public class CodeInsightToolset implements McpToolset {
         int line = context.getInt("line");
         int column = context.getInt("column");
 
-        return McpToolActions.readAction(project, () -> {
+        return McpCodeElements.committedReadAction(project, () -> {
             VirtualFile file = McpProjectPaths.resolve(project, path);
 
             Document document = FileDocumentManager.getInstance().getDocument(file);
@@ -81,29 +85,13 @@ public class CodeInsightToolset implements McpToolset {
                 return McpToolCallResult.error("Position is outside the file: " + line + ":" + column);
             }
 
-            PsiElement target = resolve(psiFile, offset);
+            PsiElement target = McpCodeElements.findTarget(psiFile, offset);
             if (target == null) {
                 return McpToolCallResult.error("No symbol found at " + path + ":" + line + ":" + column);
             }
 
             return McpToolCallResult.text(describe(project, target));
         });
-    }
-
-    /**
-     * A position on a usage should describe the declaration it points at, not the usage itself.
-     */
-    private static PsiElement resolve(PsiFile psiFile, int offset) {
-        PsiReference reference = psiFile.findReferenceAt(offset);
-        if (reference != null) {
-            PsiElement resolved = reference.resolve();
-            if (resolved != null) {
-                return resolved;
-            }
-        }
-
-        PsiElement element = psiFile.findElementAt(offset);
-        return element == null ? null : element.getParent();
     }
 
     private static String describe(Project project, PsiElement target) {

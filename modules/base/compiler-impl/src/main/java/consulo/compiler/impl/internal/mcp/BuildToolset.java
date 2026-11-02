@@ -17,10 +17,14 @@ package consulo.compiler.impl.internal.mcp;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.compiler.CompilerManager;
+import consulo.compiler.CompilerMessage;
+import consulo.compiler.CompilerMessageCategory;
+import consulo.compiler.impl.internal.CompileContextImpl;
 import consulo.mcp.tool.McpParameter;
 import consulo.mcp.tool.McpToolCallResult;
 import consulo.mcpServer.McpToolActions;
 import consulo.mcpServer.McpToolCallContext;
+import consulo.mcpServer.McpToolGroup;
 import consulo.mcpServer.McpToolRegistrar;
 import consulo.mcpServer.McpToolset;
 import consulo.module.Module;
@@ -30,7 +34,10 @@ import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.project.Project;
 import jakarta.inject.Singleton;
 
+import java.nio.file.Path;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author VISTALL
@@ -39,9 +46,18 @@ import java.util.concurrent.CompletableFuture;
 @ExtensionImpl
 @Singleton
 public class BuildToolset implements McpToolset {
+    private static final int MAX_PROBLEMS = 200;
+    private static final long BUILD_TIMEOUT_MINUTES = 60;
+
+    @Override
+    public McpToolGroup getGroup() {
+        return McpToolGroup.BUILD_AND_RUN;
+    }
+
     @Override
     public void registerTools(McpToolRegistrar registrar) {
         registrar.tool("get_project_modules")
+            .group(McpToolGroup.PROJECT_AND_FILES)
             .description("Lists the names of all modules of the currently open project, as configured in the project model.")
             .readOnly()
             .idempotent()
@@ -49,6 +65,7 @@ public class BuildToolset implements McpToolset {
             .handler(BuildToolset::getProjectModules);
 
         registrar.tool("get_project_dependencies")
+            .group(McpToolGroup.PROJECT_AND_FILES)
             .description("Lists the dependencies of every project module, or of one named module. Reports the module's configured order "
                 + "entries - other modules, libraries and the SDK - in classpath order, not a resolved transitive graph.")
             .readOnly()
@@ -60,8 +77,8 @@ public class BuildToolset implements McpToolset {
 
         registrar.tool("build_project")
             .description("Compiles the project with the IDE's incremental Make, so only what changed since the last build is recompiled. "
-                + "Waits for the build to finish and reports the error and warning counts; individual messages are not available, use "
-                + "get_file_problems for those.")
+                + "Waits for the build to finish and reports the error and warning counts followed by each message as "
+                + "'path:line:column SEVERITY message' (at most " + MAX_PROBLEMS + "). The call fails when the build has errors.")
             .requiresProject()
             .handler(BuildToolset::buildProject);
     }
@@ -106,17 +123,18 @@ public class BuildToolset implements McpToolset {
     private static CompletableFuture<McpToolCallResult> buildProject(McpToolCallContext context) {
         Project project = context.getProject();
 
-        // the compiler reports through a callback rather than a future, so the result is completed from there
         CompletableFuture<McpToolCallResult> result = new CompletableFuture<>();
 
         McpToolActions.uiAction(project, () -> {
             CompilerManager.getInstance(project).make((aborted, errors, warnings, compileContext) -> {
                 if (aborted) {
-                    result.complete(McpToolCallResult.error("Build was aborted."));
+                    result.complete(McpToolCallResult.error("Build was aborted. When the IDE reported a configuration problem "
+                        + "(missing SDK, output path), it has to be fixed in the IDE first."));
+                    return;
                 }
-                else {
-                    result.complete(McpToolCallResult.text("errors: " + errors + "\nwarnings: " + warnings));
-                }
+                List<CompilerMessage> problems = compileContext instanceof CompileContextImpl impl ? impl.getProblems() : List.of();
+                String text = "errors: " + errors + "\nwarnings: " + warnings + "\n" + describe(project, problems);
+                result.complete(errors > 0 ? McpToolCallResult.error(text) : McpToolCallResult.text(text));
             });
             return McpToolCallResult.success();
         }).exceptionally(throwable -> {
@@ -124,6 +142,35 @@ public class BuildToolset implements McpToolset {
             return null;
         });
 
-        return result;
+        return result.orTimeout(BUILD_TIMEOUT_MINUTES, TimeUnit.MINUTES);
+    }
+
+    private static String describe(Project project, List<CompilerMessage> problems) {
+        String basePath = project.getBasePath();
+        Path base = basePath == null ? null : Path.of(basePath);
+
+        StringBuilder builder = new StringBuilder();
+        int count = 0;
+        for (CompilerMessage problem : problems) {
+            if (count++ >= MAX_PROBLEMS) {
+                builder.append("... ").append(problems.size() - MAX_PROBLEMS).append(" more\n");
+                break;
+            }
+            Path file = problem.getFile();
+            if (file != null) {
+                builder.append(base != null && file.startsWith(base) ? base.relativize(file).toString().replace('\\', '/') : file.toString());
+                if (problem.getLine() > 0) {
+                    builder.append(':').append(problem.getLine());
+                    if (problem.getColumn() > 0) {
+                        builder.append(':').append(problem.getColumn());
+                    }
+                }
+                builder.append(' ');
+            }
+            builder.append(problem.getCategory() == CompilerMessageCategory.ERROR ? "ERROR " : "WARNING ")
+                .append(problem.getMessage().get())
+                .append('\n');
+        }
+        return builder.toString();
     }
 }

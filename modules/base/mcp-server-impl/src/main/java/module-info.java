@@ -13,6 +13,9 @@ module consulo.mcp.server.impl {
     requires consulo.configurable.api;
     requires consulo.component.store.api;
     requires consulo.ui.api;
+    requires consulo.credential.storage.api;
+    requires consulo.module.content.api;
+    requires consulo.project.ui.api;
 
     exports consulo.mcpServer.impl.internal to consulo.it;
     exports consulo.mcpServer.impl.internal.setting to consulo.it;

@@ -43,4 +43,8 @@ import consulo.annotation.component.ExtensionAPI;
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface McpToolset {
     void registerTools(McpToolRegistrar registrar);
+
+    default McpToolGroup getGroup() {
+        return McpToolGroup.OTHER;
+    }
 }

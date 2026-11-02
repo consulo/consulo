@@ -16,9 +16,11 @@
 package consulo.mcpServer.impl.internal;
 
 import consulo.localize.LocalizeValue;
+import consulo.logging.Logger;
 import consulo.mcp.tool.McpParameter;
 import consulo.mcp.tool.McpToolDescriptor;
 import consulo.mcpServer.McpToolBuilder;
+import consulo.mcpServer.McpToolGroup;
 import consulo.mcpServer.McpToolHandler;
 import consulo.mcpServer.McpToolRegistrar;
 import org.jspecify.annotations.Nullable;
@@ -33,11 +35,24 @@ import java.util.Map;
  * @since 2026-08-03
  */
 final class McpToolCollector implements McpToolRegistrar {
+    private static final Logger LOG = Logger.getInstance(McpToolCollector.class);
+
+    private static final McpParameter PROJECT_PATH_PARAMETER = McpParameter.string(
+        McpProjectResolver.PROJECT_PATH_ARGUMENT,
+        "Absolute path of the project to act on. Always pass it when known; the agent's working directory is fine. "
+            + "Required when several projects are open."
+    ).optional();
+
     private final Map<String, McpToolRegistration> myTools = new LinkedHashMap<>();
+    private McpToolGroup myDefaultGroup = McpToolGroup.OTHER;
 
     @Override
     public McpToolBuilder tool(String name) {
         return new BuilderImpl(name);
+    }
+
+    void setDefaultGroup(McpToolGroup group) {
+        myDefaultGroup = group;
     }
 
     Map<String, McpToolRegistration> getTools() {
@@ -51,6 +66,7 @@ final class McpToolCollector implements McpToolRegistrar {
         private LocalizeValue myTitle = LocalizeValue.empty();
         private String myDescription = "";
         private boolean myRequiresProject;
+        private McpToolGroup myGroup = myDefaultGroup;
         private @Nullable Boolean myReadOnlyHint;
         private @Nullable Boolean myDestructiveHint;
         private @Nullable Boolean myIdempotentHint;
@@ -103,6 +119,12 @@ final class McpToolCollector implements McpToolRegistrar {
         }
 
         @Override
+        public McpToolBuilder group(McpToolGroup group) {
+            myGroup = group;
+            return this;
+        }
+
+        @Override
         public McpToolBuilder param(McpParameter parameter) {
             myParameters.add(parameter);
             return this;
@@ -110,15 +132,22 @@ final class McpToolCollector implements McpToolRegistrar {
 
         @Override
         public void handler(McpToolHandler handler) {
+            List<McpParameter> parameters = new ArrayList<>(myParameters);
+            if (myRequiresProject && parameters.stream().noneMatch(it -> it.getName().equals(PROJECT_PATH_PARAMETER.getName()))) {
+                parameters.add(PROJECT_PATH_PARAMETER);
+            }
+
             McpToolDescriptor descriptor = new McpToolDescriptor(myName,
                                                                  myTitle,
                                                                  myDescription,
-                                                                 myParameters,
+                                                                 parameters,
                                                                  myReadOnlyHint,
                                                                  myDestructiveHint,
                                                                  myIdempotentHint,
                                                                  myOpenWorldHint);
-            myTools.put(myName, new McpToolRegistration(descriptor, handler, myRequiresProject));
+            if (myTools.putIfAbsent(myName, new McpToolRegistration(descriptor, handler, myRequiresProject, myGroup)) != null) {
+                LOG.error("MCP tool '" + myName + "' is already registered, the duplicate from " + handler.getClass().getName() + " is ignored");
+            }
         }
     }
 }

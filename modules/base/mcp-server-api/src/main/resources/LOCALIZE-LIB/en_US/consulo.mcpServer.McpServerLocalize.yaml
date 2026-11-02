@@ -1,0 +1,104 @@
+configurable.display.name:
+    text: MCP Server
+checkbox.enable.mcp.server:
+    text: Enable MCP server
+label.port:
+    text: Port
+column.enabled:
+    text: Enabled
+column.tool:
+    text: Tool
+column.description:
+    text: Description
+label.client.configuration:
+    text: 'Static token client configuration (keep it private: the token grants access to the IDE)'
+button.copy.client.configuration:
+    text: Copy
+button.regenerate.token:
+    text: Regenerate Token
+label.authorized.clients:
+    text: 'Authorized clients (approved through the MCP sign-in flow)'
+column.client:
+    text: Client
+column.last.used:
+    text: Last Used
+button.revoke.client:
+    text: Revoke
+oauth.consent.title:
+    text: MCP Client Authorization
+oauth.consent.text:
+    text: '{0} wants to use {1} through MCP'
+oauth.consent.detail:
+    text: 'The client will be able to call every enabled MCP tool, including tools that change files or run commands. Allow it only if you started this client yourself. Redirect: {0}'
+oauth.consent.allow:
+    text: Allow
+oauth.consent.deny:
+    text: Deny
+checkbox.require.approval:
+    text: Ask before running tools that change files or run commands
+button.forget.approvals:
+    text: Forget Remembered Approvals
+approval.title:
+    text: MCP Tool Approval
+approval.text:
+    text: '{0} wants to run {1}'
+approval.detail:
+    text: 'Arguments: {0}'
+approval.allow.once:
+    text: Allow Once
+approval.allow.session:
+    text: Allow for This Session
+approval.allow.always:
+    text: Always Allow
+approval.deny:
+    text: Deny
+toolwindow.display.name:
+    text: MCP
+column.time:
+    text: Time
+column.project:
+    text: Project
+column.status:
+    text: Status
+column.duration:
+    text: Duration
+status.waiting.for.approval:
+    text: Waiting for approval
+status.running:
+    text: Running
+status.succeeded:
+    text: Succeeded
+status.failed:
+    text: Failed
+status.denied:
+    text: Denied
+label.server.url:
+    text: Server URL
+button.copy:
+    text: Copy
+label.sign.in.hint:
+    text: 'Add the URL to your MCP client, for example: claude mcp add --transport http consulo {0}. The client signs in through your browser and you approve it here in the IDE.'
+checkbox.static.token:
+    text: Allow a static access token (for clients without the OAuth sign-in)
+configurable.clients.display.name:
+    text: Clients
+configurable.tools.display.name:
+    text: Tools
+column.approved:
+    text: Approved
+group.project.and.files:
+    text: Project & Files
+group.search:
+    text: Search
+group.code.analysis:
+    text: Code Analysis
+group.editing:
+    text: Editing & Refactoring
+group.build.and.run:
+    text: Build & Run
+group.version.control:
+    text: Version Control
+group.ide:
+    text: IDE
+group.other:
+    text: Other

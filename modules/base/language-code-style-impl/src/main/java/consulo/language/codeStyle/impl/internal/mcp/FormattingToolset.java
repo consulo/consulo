@@ -17,13 +17,17 @@ package consulo.language.codeStyle.impl.internal.mcp;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.codeStyle.CodeStyleManager;
+import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
+import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.mcp.tool.McpParameter;
+import consulo.undoRedo.CommandProcessor;
 import consulo.mcp.tool.McpToolCallResult;
 import consulo.mcpServer.McpProjectPaths;
 import consulo.mcpServer.McpToolActions;
 import consulo.mcpServer.McpToolCallContext;
+import consulo.mcpServer.McpToolGroup;
 import consulo.mcpServer.McpToolRegistrar;
 import consulo.mcpServer.McpToolset;
 import consulo.project.Project;
@@ -40,6 +44,11 @@ import java.util.concurrent.CompletableFuture;
 @Singleton
 public class FormattingToolset implements McpToolset {
     @Override
+    public McpToolGroup getGroup() {
+        return McpToolGroup.EDITING;
+    }
+
+    @Override
     public void registerTools(McpToolRegistrar registrar) {
         registrar.tool("reformat_file")
             .description("Reformats a project file with the code style settings of the project, exactly as Reformat Code does. Modifies "
@@ -54,18 +63,27 @@ public class FormattingToolset implements McpToolset {
         Project project = context.getProject();
         String path = context.getString("path");
 
-        return McpToolActions.writeAction(project, () -> {
+        return McpToolActions.uiAction(project, () -> {
             VirtualFile file = McpProjectPaths.resolve(project, path);
             if (file.isDirectory()) {
                 return McpToolCallResult.error("Not a file: " + path);
             }
+            if (!file.isWritable()) {
+                return McpToolCallResult.error("File is read-only: " + path);
+            }
 
+            PsiDocumentManager.getInstance(project).commitAllDocuments();
             PsiFile psiFile = PsiManager.getInstance(project).findFile(file);
             if (psiFile == null) {
                 return McpToolCallResult.error("File is not backed by a PSI tree: " + path);
             }
 
-            CodeStyleManager.getInstance(project).reformat(psiFile);
+            CommandProcessor.getInstance()
+                .newCommand()
+                .project(project)
+                .name(CodeInsightLocalize.processReformatCode())
+                .inWriteAction()
+                .run(() -> CodeStyleManager.getInstance(project).reformat(psiFile));
             return McpToolCallResult.success();
         });
     }

@@ -23,11 +23,21 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.language.psi.PsiReference;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiNamedElement;
+import consulo.language.psi.PsiNameIdentifierOwner;
+import consulo.language.psi.PsiCompiledElement;
+import consulo.language.psi.SmartPointerManager;
+import consulo.language.psi.SmartPsiElementPointer;
+import consulo.project.DumbService;
+import consulo.module.content.ProjectFileIndex;
+import consulo.language.editor.refactoring.rename.RenameUtil;
 import consulo.mcp.tool.McpParameter;
 import consulo.mcp.tool.McpToolCallResult;
 import consulo.mcpServer.McpProjectPaths;
 import consulo.mcpServer.McpToolActions;
 import consulo.mcpServer.McpToolCallContext;
+import consulo.mcpServer.McpToolGroup;
 import consulo.mcpServer.McpToolRegistrar;
 import consulo.mcpServer.McpToolset;
 import consulo.project.Project;
@@ -45,11 +55,17 @@ import java.util.concurrent.CompletableFuture;
 @Singleton
 public class RefactoringToolset implements McpToolset {
     @Override
+    public McpToolGroup getGroup() {
+        return McpToolGroup.EDITING;
+    }
+
+    @Override
     public void registerTools(McpToolRegistrar registrar) {
         registrar.tool("rename_refactoring")
             .description("Renames the symbol at the given 1-based line and column and updates every reference to it across the project. If "
                 + "the position sits on a usage, the declaration it resolves to is renamed. Comments and string literals are left alone. "
                 + "This edits many files at once and is undoable by the user.")
+            .destructive()
             .requiresProject()
             .param(McpParameter.string("path", "Project-relative path of the file holding the symbol."))
             .param(McpParameter.integer("line", "1-based line number of the symbol."))
@@ -65,19 +81,54 @@ public class RefactoringToolset implements McpToolset {
         int column = context.getInt("column");
         String newName = context.getString("newName");
 
-        // the rename processor drives dialogs and document changes, so it has to run on the UI thread
         return McpToolActions.uiAction(project, () -> {
-            PsiElement target = findTarget(project, path, line, column);
-            if (target == null) {
-                return McpToolCallResult.error("No symbol found at " + path + ":" + line + ":" + column);
+            PsiDocumentManager.getInstance(project).commitAllDocuments();
+            if (DumbService.isDumb(project)) {
+                return McpToolCallResult.error("The IDE is building its indexes, retry when indexing has finished.");
             }
 
+            PsiNamedElement target = findTarget(project, path, line, column);
+            if (target == null) {
+                return McpToolCallResult.error("No renamable symbol at " + path + ":" + line + ":" + column
+                    + ". Point at the symbol's name or at a reference to it.");
+            }
+            String error = checkRenamable(project, target, newName);
+            if (error != null) {
+                return McpToolCallResult.error(error);
+            }
+
+            String oldName = target.getName();
+            SmartPsiElementPointer<PsiNamedElement> pointer = SmartPointerManager.createPointer(target);
             new RenameProcessor(project, target, newName, false, false).run();
-            return McpToolCallResult.success();
+
+            PsiNamedElement renamed = pointer.getElement();
+            if (renamed == null || !newName.equals(renamed.getName())) {
+                return McpToolCallResult.error("The rename of '" + oldName + "' did not complete: it was cancelled, blocked by conflicts "
+                    + "or read-only files, or the IDE started indexing.");
+            }
+            return McpToolCallResult.text("Renamed '" + oldName + "' to '" + newName + "'.");
         });
     }
 
-    static @Nullable PsiElement findTarget(Project project, String path, int line, int column) {
+    private static @Nullable String checkRenamable(Project project, PsiNamedElement target, String newName) {
+        if (target instanceof PsiCompiledElement || !target.isWritable()) {
+            return "'" + target.getName() + "' is read-only or compiled and cannot be renamed.";
+        }
+        PsiFile containingFile = target.getContainingFile();
+        VirtualFile virtualFile = containingFile == null ? null : containingFile.getVirtualFile();
+        if (virtualFile == null || !ProjectFileIndex.getInstance(project).isInContent(virtualFile)) {
+            return "'" + target.getName() + "' is declared outside the project and cannot be renamed.";
+        }
+        if (newName.equals(target.getName())) {
+            return "The symbol is already called '" + newName + "'.";
+        }
+        if (!RenameUtil.isValidName(project, target, newName)) {
+            return "'" + newName + "' is not a valid name for " + target.getName() + ".";
+        }
+        return null;
+    }
+
+    static @Nullable PsiNamedElement findTarget(Project project, String path, int line, int column) {
         VirtualFile file = McpProjectPaths.resolve(project, path);
 
         Document document = FileDocumentManager.getInstance().getDocument(file);
@@ -91,17 +142,20 @@ public class RefactoringToolset implements McpToolset {
             return null;
         }
 
-        // a caret on a usage should rename the declaration, so resolve the reference when there is one
         PsiReference reference = psiFile.findReferenceAt(offset);
         if (reference != null) {
             PsiElement resolved = reference.resolve();
-            if (resolved != null) {
-                return resolved;
+            if (resolved instanceof PsiNamedElement named) {
+                return named;
             }
         }
 
-        PsiElement element = psiFile.findElementAt(offset);
-        return element == null ? null : element.getParent();
+        PsiElement leaf = psiFile.findElementAt(offset);
+        PsiElement parent = leaf == null ? null : leaf.getParent();
+        if (parent instanceof PsiNameIdentifierOwner owner && owner.getNameIdentifier() == leaf) {
+            return owner;
+        }
+        return null;
     }
 
     private static int offsetOf(Document document, int line, int column) {

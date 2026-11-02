@@ -23,6 +23,7 @@ import consulo.mcp.tool.McpToolException;
 import consulo.mcpServer.McpProjectPaths;
 import consulo.mcpServer.McpToolActions;
 import consulo.mcpServer.McpToolCallContext;
+import consulo.mcpServer.McpToolGroup;
 import consulo.mcpServer.McpToolRegistrar;
 import consulo.mcpServer.McpToolset;
 import consulo.process.ExecutionException;
@@ -54,6 +55,11 @@ public class CommandToolset implements McpToolset {
     private static final int MAX_OUTPUT_LENGTH = 100_000;
 
     @Override
+    public McpToolGroup getGroup() {
+        return McpToolGroup.BUILD_AND_RUN;
+    }
+
+    @Override
     public void registerTools(McpToolRegistrar registrar) {
         registrar.tool("execute_command")
             .description("Runs a command as a process in the project directory and returns its exit code and output. The "
@@ -61,6 +67,7 @@ public class CommandToolset implements McpToolset {
                 + "through a shell, so pipes, redirects and shell built-ins do not work - pass the executable and its "
                 + "arguments separately.")
             .openWorld()
+            .destructive()
             .requiresProject()
             .param(McpParameter.string("command", "Executable to run."))
             .param(McpParameter.stringArray("arguments", "Arguments passed to the executable.").optional())
