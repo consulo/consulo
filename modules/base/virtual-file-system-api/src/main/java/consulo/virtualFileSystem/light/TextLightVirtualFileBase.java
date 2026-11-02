@@ -18,6 +18,7 @@ package consulo.virtualFileSystem.light;
 import consulo.util.lang.LocalTimeCounter;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
+import org.jspecify.annotations.Nullable;
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -30,7 +31,7 @@ public abstract class TextLightVirtualFileBase extends LightVirtualFileBase {
   protected CharSequence myContent = "";
   protected boolean myReadOnly;
 
-  public TextLightVirtualFileBase(String name, FileType fileType, long modificationStamp) {
+  public TextLightVirtualFileBase(String name, @Nullable FileType fileType, long modificationStamp) {
     super(name, fileType, modificationStamp);
   }
 

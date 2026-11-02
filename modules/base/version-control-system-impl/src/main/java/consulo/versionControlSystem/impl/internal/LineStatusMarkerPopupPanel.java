@@ -116,7 +116,6 @@ public final class LineStatusMarkerPopupPanel {
                                           Editor mainEditor,
                                           CharSequence vcsContent,
                                           FileType fileType,
-                                          String fileName,
                                           @Nullable List<DiffFragment> wordDiff,
                                           Disposable disposable) {
         EditorFactory editorFactory = EditorFactory.getInstance();
@@ -144,7 +143,7 @@ public final class LineStatusMarkerPopupPanel {
 
         DiffLanguageUtil.setEditorCodeStyle(project, viewer, fileType);
 
-        viewer.setHighlighter(EditorHighlighterFactory.getInstance().createEditorHighlighter(project, fileName));
+        viewer.setHighlighter(EditorHighlighterFactory.getInstance().createEditorHighlighter(project, fileType));
 
         if (wordDiff != null) {
             DiffInternal diffInternal = Application.get().getInstance(DiffInternal.class);

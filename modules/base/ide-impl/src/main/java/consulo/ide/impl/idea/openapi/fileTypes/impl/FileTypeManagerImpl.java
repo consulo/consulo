@@ -24,7 +24,6 @@ import consulo.ide.impl.idea.openapi.fileTypes.ex.FileTypeChooser;
 import consulo.language.internal.FileTypeManagerEx;
 import consulo.language.Language;
 import consulo.language.file.LanguageFileType;
-import consulo.language.file.light.LightVirtualFile;
 import consulo.language.internal.custom.SyntaxTable;
 import consulo.language.plain.PlainTextFileType;
 import consulo.logging.Logger;
@@ -43,6 +42,7 @@ import consulo.virtualFileSystem.event.VFileEvent;
 import consulo.virtualFileSystem.fileType.*;
 import consulo.virtualFileSystem.impl.internal.fileType.FileTypeDetectionService;
 import consulo.virtualFileSystem.internal.FileTypeAssocTable;
+import consulo.virtualFileSystem.internal.VirtualFileWithAssignedFileType;
 import consulo.virtualFileSystem.internal.matcher.ExactFileNameMatcherImpl;
 import consulo.virtualFileSystem.internal.matcher.ExtensionFileNameMatcherImpl;
 import org.jspecify.annotations.Nullable;
@@ -403,8 +403,8 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
             return fileType;
         }
 
-        if (file instanceof LightVirtualFile lightVirtualFile) {
-            FileType fileType = lightVirtualFile.getAssignedFileType();
+        if (file instanceof VirtualFileWithAssignedFileType fileWithAssignedFileType) {
+            FileType fileType = fileWithAssignedFileType.getAssignedFileType();
             if (fileType != null) {
                 return fileType;
             }
@@ -464,8 +464,8 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
             return file.getFileType().equals(type);
         }
 
-        if (file instanceof LightVirtualFile lightVirtualFile) {
-            FileType assignedFileType = lightVirtualFile.getAssignedFileType();
+        if (file instanceof VirtualFileWithAssignedFileType fileWithAssignedFileType) {
+            FileType assignedFileType = fileWithAssignedFileType.getAssignedFileType();
             if (assignedFileType != null) {
                 return type.equals(assignedFileType);
             }

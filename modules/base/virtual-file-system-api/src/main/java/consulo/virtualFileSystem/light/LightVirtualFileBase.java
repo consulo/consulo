@@ -20,6 +20,7 @@ import consulo.util.lang.LocalTimeCounter;
 import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.internal.FakeVirtualFile;
+import consulo.virtualFileSystem.internal.VirtualFileWithAssignedFileType;
 import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
@@ -27,27 +28,22 @@ import java.io.IOException;
 /**
  * In-memory implementation of {@link VirtualFile}.
  */
-public abstract class LightVirtualFileBase extends BaseVirtualFile {
-    private FileType myFileType;
+public abstract class LightVirtualFileBase extends BaseVirtualFile implements VirtualFileWithAssignedFileType {
+    private @Nullable FileType myFileType;
     private String myName = "";
     private long myModStamp = LocalTimeCounter.currentTime();
     private boolean myIsWritable = true;
     private boolean myValid = true;
     private @Nullable VirtualFile myOriginalFile = null;
 
-    public LightVirtualFileBase(String name, FileType fileType, long modificationStamp) {
+    public LightVirtualFileBase(String name, @Nullable FileType fileType, long modificationStamp) {
         myName = name;
         myFileType = fileType;
         myModStamp = modificationStamp;
     }
 
-    public void setFileType(FileType fileType) {
+    public void setFileType(@Nullable FileType fileType) {
         myFileType = fileType;
-    }
-
-    @Override
-    public FileType getFileType() {
-        return myFileType;
     }
 
     public @Nullable VirtualFile getOriginalFile() {
@@ -125,6 +121,7 @@ public abstract class LightVirtualFileBase extends BaseVirtualFile {
         return ourFileSystem;
     }
 
+    @Override
     public @Nullable FileType getAssignedFileType() {
         return myFileType;
     }

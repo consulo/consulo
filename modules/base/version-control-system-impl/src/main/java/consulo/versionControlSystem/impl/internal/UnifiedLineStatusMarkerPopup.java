@@ -19,8 +19,6 @@ import consulo.codeEditor.Editor;
 import consulo.diff.fragment.DiffFragment;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.document.Document;
-import consulo.document.FileDocumentManager;
 import consulo.ui.Component;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -30,7 +28,6 @@ import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.ActionToolbar;
 import consulo.versionControlSystem.internal.VcsRange;
-import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
@@ -86,13 +83,7 @@ public class UnifiedLineStatusMarkerPopup extends LineStatusMarkerPopupBase {
             myEditor,
             myTracker.getVcsContent(myRange),
             getFileType(),
-            getFileName(myTracker.getDocument()),
             wordDiff,
             disposable);
-    }
-
-    private static String getFileName(Document document) {
-        VirtualFile file = FileDocumentManager.getInstance().getFile(document);
-        return file == null ? "" : file.getName();
     }
 }

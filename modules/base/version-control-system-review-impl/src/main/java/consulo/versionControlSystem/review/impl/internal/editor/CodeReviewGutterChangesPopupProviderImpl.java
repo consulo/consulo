@@ -97,7 +97,6 @@ public class CodeReviewGutterChangesPopupProviderImpl implements CodeReviewGutte
                 editor,
                 vcsContent,
                 fileType,
-                file == null ? "" : file.getName(),
                 wordDiff,
                 disposable);
         }

@@ -20,7 +20,6 @@ import consulo.util.lang.LocalTimeCounter;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
-import consulo.virtualFileSystem.fileType.UnknownFileType;
 import consulo.virtualFileSystem.light.TextLightVirtualFileBase;
 import org.jspecify.annotations.Nullable;
 
@@ -41,10 +40,10 @@ public class LightVirtualFile extends TextLightVirtualFileBase {
   }
 
   public LightVirtualFile(String name, CharSequence content) {
-    this(name, UnknownFileType.INSTANCE, content, LocalTimeCounter.currentTime());
+    this(name, null, content, LocalTimeCounter.currentTime());
   }
 
-  public LightVirtualFile(String name, FileType fileType, CharSequence text) {
+  public LightVirtualFile(String name, @Nullable FileType fileType, CharSequence text) {
     this(name, fileType, text, LocalTimeCounter.currentTime());
   }
 
@@ -53,18 +52,18 @@ public class LightVirtualFile extends TextLightVirtualFileBase {
     setCharset(original.getCharset());
   }
 
-  public LightVirtualFile(String name, FileType fileType, CharSequence text, long modificationStamp) {
-    this(name, fileType, text, fileType.extractCharsetFromFileContent(null, null, text), modificationStamp);
+  public LightVirtualFile(String name, @Nullable FileType fileType, CharSequence text, long modificationStamp) {
+    this(name, fileType, text, fileType == null ? null : fileType.extractCharsetFromFileContent(null, null, text), modificationStamp);
   }
 
-  public LightVirtualFile(String name, FileType fileType, CharSequence text, @Nullable Charset charset, long modificationStamp) {
+  public LightVirtualFile(String name, @Nullable FileType fileType, CharSequence text, @Nullable Charset charset, long modificationStamp) {
     super(name, fileType, modificationStamp);
     setContent(text);
     setCharset(charset);
   }
 
   public LightVirtualFile(String name, Language language, CharSequence text) {
-    super(name, UnknownFileType.INSTANCE, LocalTimeCounter.currentTime());
+    super(name, null, LocalTimeCounter.currentTime());
     setContent(text);
     setLanguage(language);
   }
