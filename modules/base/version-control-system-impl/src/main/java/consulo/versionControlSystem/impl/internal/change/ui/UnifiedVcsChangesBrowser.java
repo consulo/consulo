@@ -44,6 +44,7 @@ import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.PlaceholderLayout;
+import consulo.ui.layout.ScrollableLayout;
 import consulo.ui.style.ComponentColors;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangeListListener;
@@ -137,7 +138,7 @@ public class UnifiedVcsChangesBrowser implements VcsChangesBrowser {
         DockLayout placeholder = DockLayout.create();
         placeholder.center(myEmptyText);
 
-        myContent.setContent(myTree.getComponent());
+        myContent.setContent(ScrollableLayout.create(myTree.getComponent()));
         myContent.setPlaceholder(placeholder);
         myContent.setPlaceholderVisibility(() -> myChanges.isEmpty());
 
