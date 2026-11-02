@@ -24,6 +24,10 @@ import consulo.versionControlSystem.distributed.repository.Repository;
 import consulo.versionControlSystem.distributed.repository.RepositoryManager;
 import org.jspecify.annotations.Nullable;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+
 /**
  * Base class to provide vcs-specific info
  */
@@ -87,6 +91,24 @@ public abstract class PushSupport<Repo extends Repository, Source extends PushSo
     }
 
     public abstract void saveSilentForcePushTarget(Target target);
+
+    /**
+     * @return force push types, which will be shown as separate actions in push dialog (empty list - no force push actions).
+     * Used only when repositories of single vcs are selected, otherwise {@link ForcePushType#DEFAULT} is used
+     */
+    public List<ForcePushType> getForcePushTypes() {
+        return List.of(ForcePushType.DEFAULT);
+    }
+
+    /**
+     * Called after force push confirmation, before push started. Can ask additional info from user.
+     *
+     * @return future with false if push must be cancelled
+     */
+    @RequiredUIAccess
+    public CompletableFuture<Boolean> beforeForcePush(ForcePushType type, Collection<PushInfo> pushInfos) {
+        return CompletableFuture.completedFuture(Boolean.TRUE);
+    }
 
     public boolean mayChangeTargetsSync() {
         return false;

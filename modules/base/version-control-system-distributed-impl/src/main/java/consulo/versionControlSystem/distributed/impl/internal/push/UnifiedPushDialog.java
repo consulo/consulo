@@ -56,6 +56,7 @@ import consulo.util.concurrent.coroutine.step.CodeExecution;
 import consulo.util.dataholder.Key;
 import consulo.versionControlSystem.distributed.DvcsUtil;
 import consulo.versionControlSystem.distributed.localize.DistributedVcsLocalize;
+import consulo.versionControlSystem.distributed.push.ForcePushType;
 import consulo.versionControlSystem.distributed.push.PrePushHandler;
 import consulo.versionControlSystem.distributed.push.PushActionBase;
 import consulo.versionControlSystem.distributed.push.PushDialogActionsProvider;
@@ -76,6 +77,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
@@ -99,6 +101,7 @@ public class UnifiedPushDialog extends DialogDescriptor implements VcsPushUi {
     private final @Nullable PushSource myPushSource;
     private final @Nullable PushTarget myPushTarget;
     private final List<PushActionBase> myPushActions;
+    private final Map<ForcePushType, ForcePushAction> myForcePushActions = new HashMap<>();
 
     private @Nullable PushController myController;
     private Map<PushSupport<?, ?, ?>, VcsPushOptionsPanel> myAdditionalPanels = Map.of();
@@ -326,7 +329,7 @@ public class UnifiedPushDialog extends DialogDescriptor implements VcsPushUi {
 
     @RequiredUIAccess
     @Override
-    public void push(boolean forcePush) {
+    public void push(@Nullable ForcePushType forceType) {
         PushController controller = myController;
         if (controller == null) {
             return;
@@ -342,7 +345,7 @@ public class UnifiedPushDialog extends DialogDescriptor implements VcsPushUi {
             .newProgressBuilder(myProject, DistributedVcsLocalize.pushProcessPushing())
             .cancelable()
             .execute(UIAccess.current(), () -> Coroutine.first(CodeExecution.<Object, Object>apply((input, continuation) -> {
-                controller.push(forcePush, options, customParams);
+                controller.push(forceType, options, customParams);
                 return null;
             }))));
     }
@@ -475,6 +478,39 @@ public class UnifiedPushDialog extends DialogDescriptor implements VcsPushUi {
         };
     }
 
+    /**
+     * Replaces registered {@link ForcePushAction} with one action per force push type of selected vcs
+     */
+    @RequiredUIAccess
+    private List<PushActionBase> expandForcePushActions() {
+        List<ForcePushType> types = getForcePushTypes();
+        List<PushActionBase> actions = new ArrayList<>(myPushActions.size() + types.size());
+        for (PushActionBase action : myPushActions) {
+            if (action instanceof ForcePushAction forcePushAction) {
+                for (ForcePushType type : types) {
+                    if (type == forcePushAction.getType()) {
+                        actions.add(forcePushAction);
+                    }
+                    else {
+                        actions.add(myForcePushActions.computeIfAbsent(type, ForcePushAction::new));
+                    }
+                }
+            }
+            else {
+                actions.add(action);
+            }
+        }
+        return actions;
+    }
+
+    private List<ForcePushType> getForcePushTypes() {
+        Set<PushSupport<Repository, PushSource, PushTarget>> supports = getSelectedPushSpecs().keySet();
+        if (supports.size() == 1) {
+            return supports.iterator().next().getForcePushTypes();
+        }
+        return List.of(ForcePushType.DEFAULT);
+    }
+
     @RequiredUIAccess
     private Presentation buildActionPresentation(PushActionBase action) {
         Presentation presentation = action.getTemplatePresentation().clone();
@@ -527,15 +563,16 @@ public class UnifiedPushDialog extends DialogDescriptor implements VcsPushUi {
 
         @RequiredUIAccess
         private void updateOnUI(AnActionEvent e) {
-            if (myPushActions.isEmpty()) {
+            List<PushActionBase> pushActions = expandForcePushActions();
+            if (pushActions.isEmpty()) {
                 e.getPresentation().setEnabled(false);
                 return;
             }
 
-            List<Presentation> presentations = new ArrayList<>(myPushActions.size());
+            List<Presentation> presentations = new ArrayList<>(pushActions.size());
             int firstEnabled = -1;
-            for (int i = 0; i < myPushActions.size(); i++) {
-                Presentation presentation = buildActionPresentation(myPushActions.get(i));
+            for (int i = 0; i < pushActions.size(); i++) {
+                Presentation presentation = buildActionPresentation(pushActions.get(i));
                 presentations.add(presentation);
                 if (firstEnabled < 0 && presentation.isEnabled()) {
                     firstEnabled = i;
@@ -543,15 +580,15 @@ public class UnifiedPushDialog extends DialogDescriptor implements VcsPushUi {
             }
 
             int defaultIndex = Math.max(firstEnabled, 0);
-            myDefaultAction = myPushActions.get(defaultIndex);
+            myDefaultAction = pushActions.get(defaultIndex);
 
             List<Object> signature = new ArrayList<>();
             List<OptionButtonItem> options = new ArrayList<>();
-            for (int i = 0; i < myPushActions.size(); i++) {
+            for (int i = 0; i < pushActions.size(); i++) {
                 if (i == defaultIndex) {
                     continue;
                 }
-                PushActionBase action = myPushActions.get(i);
+                PushActionBase action = pushActions.get(i);
                 Presentation presentation = presentations.get(i);
                 signature.add(presentation.getTextValue().get());
                 signature.add(presentation.isEnabled());

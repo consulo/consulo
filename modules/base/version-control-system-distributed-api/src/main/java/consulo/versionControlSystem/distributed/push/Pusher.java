@@ -40,4 +40,15 @@ public abstract class Pusher<Repo extends Repository, Source extends PushSource,
                      Map<String, VcsPushOptionValue> customParams) {
         push(pushSpecs, additionalOption, force);
     }
+
+    /**
+     * @param forceType type of force push, selected by user, or null if it's not force push.
+     *                  One of {@link PushSupport#getForcePushTypes()} or {@link ForcePushType#DEFAULT}
+     */
+    public void push(Map<Repo, PushSpec<Source, Target>> pushSpecs,
+                     @Nullable VcsPushOptionValue additionalOption,
+                     @Nullable ForcePushType forceType,
+                     Map<String, VcsPushOptionValue> customParams) {
+        push(pushSpecs, additionalOption, forceType != null, customParams);
+    }
 }

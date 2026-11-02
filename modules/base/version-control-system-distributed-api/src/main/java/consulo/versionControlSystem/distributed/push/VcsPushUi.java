@@ -38,9 +38,16 @@ public interface VcsPushUi {
     /**
      * Runs {@link PrePushHandler pre-push handlers} under a modal progress,
      * and after that starts push in a background task.
+     *
+     * @param forceType type of force push, or null for usual push
      */
     @RequiredUIAccess
-    void push(boolean forcePush);
+    void push(@Nullable ForcePushType forceType);
+
+    @RequiredUIAccess
+    default void push(boolean forcePush) {
+        push(forcePush ? ForcePushType.DEFAULT : null);
+    }
 
     /**
      * Returns push specifications (what is being pushed, where from and where to) collected from the push dialog,

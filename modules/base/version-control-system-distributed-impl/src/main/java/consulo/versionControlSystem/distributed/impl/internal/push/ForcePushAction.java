@@ -17,13 +17,16 @@ package consulo.versionControlSystem.distributed.impl.internal.push;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.localize.LocalizeValue;
+import consulo.logging.Logger;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.ui.MessageBoxBuilder;
 import consulo.ui.MessageBoxRemember;
 import consulo.ui.MessageButtonRole;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.versionControlSystem.distributed.localize.DistributedVcsLocalize;
+import consulo.versionControlSystem.distributed.push.ForcePushType;
 import consulo.versionControlSystem.distributed.push.PushActionBase;
 import consulo.versionControlSystem.distributed.push.PushInfo;
 import consulo.versionControlSystem.distributed.push.PushSource;
@@ -43,14 +46,33 @@ import java.util.Set;
 
 @ActionImpl(id = "Vcs.Push.Force")
 public final class ForcePushAction extends PushActionBase {
+    private static final Logger LOG = Logger.getInstance(ForcePushAction.class);
+
+    private final ForcePushType myType;
+
     public ForcePushAction() {
-        super(DistributedVcsLocalize.actionForcePush());
+        this(ForcePushType.DEFAULT);
+    }
+
+    ForcePushAction(ForcePushType type) {
+        super(type.getActionText());
+        myType = type;
+    }
+
+    public ForcePushType getType() {
+        return myType;
     }
 
     @RequiredUIAccess
     @Override
     protected void actionPerformed(Project project, VcsPushUi ui) {
         confirmForcePush(ui);
+    }
+
+    @RequiredUIAccess
+    @Override
+    protected LocalizeValue getText(VcsPushUi ui, boolean enabled) {
+        return myType.getActionText();
     }
 
     @RequiredUIAccess
@@ -78,7 +100,7 @@ public final class ForcePushAction extends PushActionBase {
     }
 
     @RequiredUIAccess
-    private static void confirmForcePush(VcsPushUi ui) {
+    private void confirmForcePush(VcsPushUi ui) {
         Map<PushSupport<Repository, PushSource, PushTarget>, List<PushInfo>> silentForcePushIsNotAllowed = new LinkedHashMap<>();
         for (Map.Entry<PushSupport<Repository, PushSource, PushTarget>, Collection<PushInfo>> entry : ui.getSelectedPushSpecs().entrySet()) {
             List<PushInfo> infos = new ArrayList<>();
@@ -93,7 +115,7 @@ public final class ForcePushAction extends PushActionBase {
         }
 
         if (silentForcePushIsNotAllowed.isEmpty()) {
-            ui.push(true);
+            pushAfterPreparation(ui);
             return;
         }
 
@@ -116,7 +138,7 @@ public final class ForcePushAction extends PushActionBase {
             .asWarning()
             .title(DistributedVcsLocalize.forcePushDialogTitle())
             .text(message)
-            .button(MessageButtonRole.YES, DistributedVcsLocalize.actionForcePush(), Boolean.TRUE)
+            .button(MessageButtonRole.YES, myType.getActionText(), Boolean.TRUE)
             .asDefaultButton()
             .button(MessageButtonRole.CANCEL, CommonLocalize.buttonCancel(), Boolean.FALSE)
             .asExitButton();
@@ -126,7 +148,29 @@ public final class ForcePushAction extends PushActionBase {
 
         builder.showAsync().whenComplete((confirmed, error) -> {
             if (Boolean.TRUE.equals(confirmed)) {
-                ui.push(true);
+                pushAfterPreparation(ui);
+            }
+        });
+    }
+
+    @RequiredUIAccess
+    private void pushAfterPreparation(VcsPushUi ui) {
+        Map<PushSupport<Repository, PushSource, PushTarget>, Collection<PushInfo>> specs = ui.getSelectedPushSpecs();
+        // own force push types offered only for single vcs - see PushSupport#getForcePushTypes()
+        if (specs.size() != 1) {
+            ui.push(myType);
+            return;
+        }
+
+        Map.Entry<PushSupport<Repository, PushSource, PushTarget>, Collection<PushInfo>> entry = specs.entrySet().iterator().next();
+
+        UIAccess uiAccess = UIAccess.current();
+        entry.getKey().beforeForcePush(myType, entry.getValue()).whenComplete((accepted, error) -> {
+            if (error != null) {
+                LOG.error(error);
+            }
+            else if (Boolean.TRUE.equals(accepted)) {
+                uiAccess.give(() -> ui.push(myType));
             }
         });
     }

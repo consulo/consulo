@@ -29,6 +29,7 @@ import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.distributed.DvcsUtil;
 import consulo.versionControlSystem.distributed.push.CommitLoader;
 import consulo.versionControlSystem.distributed.push.CustomPushOptionsPanelFactory;
+import consulo.versionControlSystem.distributed.push.ForcePushType;
 import consulo.versionControlSystem.distributed.push.OutgoingCommitsProvider;
 import consulo.versionControlSystem.distributed.push.OutgoingResult;
 import consulo.versionControlSystem.distributed.push.PrePushHandler;
@@ -474,20 +475,22 @@ public final class PushController implements Disposable {
         return PrePushHandler.Result.OK;
     }
 
-    public void push(boolean force, Map<PushSupport<?, ?, ?>, @Nullable VcsPushOptionValue> options, Map<String, VcsPushOptionValue> customParams) {
+    public void push(@Nullable ForcePushType forceType,
+                     Map<PushSupport<?, ?, ?>, @Nullable VcsPushOptionValue> options,
+                     Map<String, VcsPushOptionValue> customParams) {
         for (PushSupport<Repository, PushSource, PushTarget> support : myPushSupports) {
-            doPushSynchronously(support, force, options.get(support), customParams);
+            doPushSynchronously(support, forceType, options.get(support), customParams);
         }
     }
 
     private <R extends Repository, S extends PushSource, T extends PushTarget> void doPushSynchronously(PushSupport<R, S, T> support,
-                                                                                                        boolean force,
+                                                                                                        @Nullable ForcePushType forceType,
                                                                                                         @Nullable VcsPushOptionValue options,
                                                                                                         Map<String, VcsPushOptionValue> customParams) {
         Pusher<R, S, T> pusher = support.getPusher();
         Map<R, PushSpec<S, T>> specs = collectPushSpecsForVcs(support);
         if (!specs.isEmpty()) {
-            pusher.push(specs, options, force, customParams);
+            pusher.push(specs, options, forceType, customParams);
         }
     }
 
