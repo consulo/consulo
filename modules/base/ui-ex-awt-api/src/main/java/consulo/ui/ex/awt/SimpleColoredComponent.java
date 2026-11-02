@@ -742,7 +742,7 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
         doPaintTextBackground(g, offset);
         offset = doPaintText(g, offset, myFocusBorderAroundIcon || icon == null);
         if (icon != null && myIconOnTheRight) {
-            doPaintIcon(g, icon, offset);
+            doPaintIcon(g, icon, offset + myIconTextGap - myIpad.left);
         }
     }
 
