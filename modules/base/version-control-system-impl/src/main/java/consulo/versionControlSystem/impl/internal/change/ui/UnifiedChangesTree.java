@@ -28,11 +28,13 @@ import consulo.ui.CheckBoxTreePolicy;
 import consulo.ui.TextAttribute;
 import consulo.ui.TextItemPresentation;
 import consulo.ui.Tree;
+import consulo.ui.TreeExecutor;
 import consulo.ui.TreeModel;
 import consulo.ui.TreeNode;
 import consulo.ui.TriStateCheckBoxTree;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.tree.ApplicationTreeExecutorFactory;
 import consulo.util.lang.ThreeState;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsDataKeys;
@@ -102,13 +104,14 @@ public final class UnifiedChangesTree {
     private final Tree<ChangesTreeItem> myTree;
     private final boolean myCheckable;
 
-    private ChangesTreeSnapshot mySnapshot = ChangesTreeSnapshot.EMPTY;
+    private volatile ChangesTreeSnapshot mySnapshot = ChangesTreeSnapshot.EMPTY;
     private boolean myExpandedDefault;
 
     private final Set<FilePath> myIncludedKeys = new LinkedHashSet<>();
     private final Set<FilePath> myKnownKeys = new HashSet<>();
     private final List<Runnable> myInclusionListeners = new ArrayList<>();
     private boolean mySyncingChecks;
+    private volatile boolean mySyncChecksRequested;
     private boolean myAutoIncludeDefaultList = true;
     private @Nullable Consumer<ChangesTreeItem> myDoubleClickHandler;
     private @Nullable BiConsumer<Change, TextItemPresentation> myChangeDecorator;
@@ -120,7 +123,8 @@ public final class UnifiedChangesTree {
         myCheckable = checkable;
 
         Model model = new Model();
-        myTree = checkable ? TriStateCheckBoxTree.create(model) : Tree.create(model);
+        TreeExecutor executor = project.getApplication().getInstance(ApplicationTreeExecutorFactory.class).forBackgroundThreadWithoutReadAction(parent);
+        myTree = checkable ? TriStateCheckBoxTree.create(model, executor) : Tree.create(model, executor);
         myTree.setAllowMultipleSelect(true);
         myTree.setSpeedSearchConverter(node -> {
             ChangesTreeItem item = node.getValue();
@@ -136,7 +140,7 @@ public final class UnifiedChangesTree {
                     setIncluded(event.getValue(), event.isChecked());
                 }
             });
-            myTree.addExpandListener(event -> syncChecks());
+            myTree.addExpandListener(event -> requestSyncChecks(UIAccess.current()));
         }
     }
 
@@ -184,12 +188,13 @@ public final class UnifiedChangesTree {
         myInclusionListeners.add(listener);
     }
 
-    private static @Nullable FilePath inclusionKey(ChangesTreeItem item) {
+    private @Nullable FilePath inclusionKey(ChangesTreeItem item) {
         if (item instanceof ChangeTreeItem changeItem) {
             return ChangesUtil.getFilePath(changeItem.change());
         }
         if (item instanceof FileTreeItem fileItem && fileItem.kind() == ChangesTreeGroupKind.UNVERSIONED) {
-            return VcsUtil.getFilePath(fileItem.file());
+            FilePath path = mySnapshot.getPath(fileItem);
+            return path != null ? path : VcsUtil.getFilePath(fileItem.file());
         }
         if (item instanceof PathTreeItem pathItem) {
             return pathItem.path();
@@ -215,51 +220,33 @@ public final class UnifiedChangesTree {
     }
 
     private boolean isCheckable(ChangesTreeItem item) {
-        if (includableKey(item) != null) {
-            return true;
+        return isCheckable(mySnapshot, item);
+    }
+
+    private boolean isCheckable(ChangesTreeSnapshot snapshot, ChangesTreeItem item) {
+        if (!snapshot.isGroup(item)) {
+            return includableKey(item) != null;
         }
-        for (ChangesTreeItem leaf : mySnapshot.collectLeaves(item)) {
-            if (includableKey(leaf) != null) {
+        for (ChangesTreeItem child : snapshot.getChildren(item)) {
+            if (!(child instanceof ChangesGroupTreeItem) && isCheckable(snapshot, child)) {
                 return true;
             }
         }
         return false;
     }
 
-    private ThreeState inclusionState(ChangesTreeItem item) {
-        boolean anyIncluded = false;
-        boolean anyExcluded = false;
-        for (ChangesTreeItem leaf : mySnapshot.collectLeaves(item)) {
-            FilePath key = includableKey(leaf);
-            if (key == null) {
-                continue;
-            }
-            if (myIncludedKeys.contains(key)) {
-                anyIncluded = true;
-            }
-            else {
-                anyExcluded = true;
-            }
-        }
-        if (anyIncluded && anyExcluded) {
-            return ThreeState.UNSURE;
-        }
-        return anyIncluded ? ThreeState.YES : ThreeState.NO;
-    }
-
     @RequiredUIAccess
     private void setIncluded(ChangesTreeItem item, boolean included) {
+        boolean changed = false;
         for (ChangesTreeItem leaf : mySnapshot.collectLeaves(item)) {
             FilePath key = includableKey(leaf);
             if (key == null) {
                 continue;
             }
-            if (included) {
-                myIncludedKeys.add(key);
-            }
-            else {
-                myIncludedKeys.remove(key);
-            }
+            changed |= included ? myIncludedKeys.add(key) : myIncludedKeys.remove(key);
+        }
+        if (!changed) {
+            return;
         }
         syncChecks();
         fireInclusionChanged();
@@ -340,6 +327,17 @@ public final class UnifiedChangesTree {
         myKnownKeys.addAll(present);
     }
 
+    private void requestSyncChecks(UIAccess uiAccess) {
+        if (mySyncChecksRequested) {
+            return;
+        }
+        mySyncChecksRequested = true;
+        uiAccess.give(() -> {
+            mySyncChecksRequested = false;
+            syncChecks();
+        });
+    }
+
     @RequiredUIAccess
     private void syncChecks() {
         if (!(myTree instanceof TriStateCheckBoxTree<ChangesTreeItem> checkBoxTree)) {
@@ -355,19 +353,33 @@ public final class UnifiedChangesTree {
         }
     }
 
+    /**
+     * Pushes the inclusion state of every item below the parent into the tree in one pass, and returns the
+     * combined state of the leaves which count for the parent - {@code null} when none of them is includable.
+     */
     @RequiredUIAccess
-    private void syncChecks(TriStateCheckBoxTree<ChangesTreeItem> tree, @Nullable ChangesTreeItem parent) {
-        for (ChangesTreeItem child : mySnapshot.getChildren(parent)) {
-            if (isCheckable(child)) {
-                ThreeState state = inclusionState(child);
-                if (tree.getOwnCheckState(child) != state) {
-                    tree.setCheckState(child, state);
-                }
+    private @Nullable ThreeState syncChecks(TriStateCheckBoxTree<ChangesTreeItem> tree, @Nullable ChangesTreeItem parent) {
+        ChangesTreeSnapshot snapshot = mySnapshot;
+        ThreeState combined = null;
+        for (ChangesTreeItem child : snapshot.getChildren(parent)) {
+            ThreeState state;
+            if (snapshot.isGroup(child)) {
+                state = syncChecks(tree, child);
             }
-            if (mySnapshot.isGroup(child)) {
-                syncChecks(tree, child);
+            else {
+                FilePath key = includableKey(child);
+                state = key == null ? null : myIncludedKeys.contains(key) ? ThreeState.YES : ThreeState.NO;
+            }
+
+            if (state != null && tree.getOwnCheckState(child) != state) {
+                tree.setCheckState(child, state);
+            }
+
+            if (state != null && !(child instanceof ChangesGroupTreeItem)) {
+                combined = combined == null || combined == state ? state : ThreeState.UNSURE;
             }
         }
+        return combined;
     }
 
     public Tree<ChangesTreeItem> getComponent() {
@@ -466,7 +478,7 @@ public final class UnifiedChangesTree {
                         myTree.select(child);
                     }
                     else {
-                        myTree.expand(child).whenComplete((o, e) -> uiAccess.give(this::syncChecks));
+                        myTree.expand(child).whenComplete((o, e) -> requestSyncChecks(uiAccess));
                     }
                     return;
                 }
@@ -517,9 +529,13 @@ public final class UnifiedChangesTree {
     }
 
     public List<Change> getSelectedChanges() {
+        return selectedChanges(mySnapshot, getSelectedItems());
+    }
+
+    private static List<Change> selectedChanges(ChangesTreeSnapshot snapshot, List<ChangesTreeItem> selectedItems) {
         Set<Change> result = new LinkedHashSet<>();
-        for (ChangesTreeItem item : getSelectedItems()) {
-            for (ChangesTreeItem leaf : mySnapshot.collectLeaves(item)) {
+        for (ChangesTreeItem item : selectedItems) {
+            for (ChangesTreeItem leaf : snapshot.collectLeaves(item)) {
                 if (leaf instanceof ChangeTreeItem changeItem) {
                     result.add(changeItem.change());
                 }
@@ -529,25 +545,32 @@ public final class UnifiedChangesTree {
     }
 
     public List<Change> getAllChanges() {
+        return allChanges(mySnapshot);
+    }
+
+    private static List<Change> allChanges(ChangesTreeSnapshot snapshot) {
         List<Change> result = new ArrayList<>();
-        for (ChangesTreeItem root : mySnapshot.getRoots()) {
-            collectChanges(root, result);
+        for (ChangesTreeItem root : snapshot.getRoots()) {
+            collectChanges(snapshot, root, result);
         }
         return result;
     }
 
     public List<Change> getChangesInList() {
-        List<ChangesTreeItem> selectedPath = valuesOf(myTree.getSelectedPath());
-        if (!selectedPath.isEmpty() && selectedPath.get(0) instanceof ChangeListTreeItem changeList) {
-            List<Change> result = new ArrayList<>();
-            collectChanges(changeList, result);
-            return result;
-        }
-        return getAllChanges();
+        return changesInList(mySnapshot, valuesOf(myTree.getSelectedPath()));
     }
 
-    private void collectChanges(ChangesTreeItem item, List<Change> result) {
-        for (ChangesTreeItem leaf : mySnapshot.collectLeaves(item)) {
+    private static List<Change> changesInList(ChangesTreeSnapshot snapshot, List<ChangesTreeItem> selectedPath) {
+        if (!selectedPath.isEmpty() && selectedPath.get(0) instanceof ChangeListTreeItem changeList) {
+            List<Change> result = new ArrayList<>();
+            collectChanges(snapshot, changeList, result);
+            return result;
+        }
+        return allChanges(snapshot);
+    }
+
+    private static void collectChanges(ChangesTreeSnapshot snapshot, ChangesTreeItem item, List<Change> result) {
+        for (ChangesTreeItem leaf : snapshot.collectLeaves(item)) {
             if (leaf instanceof ChangeTreeItem changeItem) {
                 result.add(changeItem.change());
             }
@@ -575,9 +598,13 @@ public final class UnifiedChangesTree {
     }
 
     public List<VirtualFile> getSelectedFiles(ChangesTreeGroupKind kind) {
+        return selectedFiles(mySnapshot, getSelectedItems(), kind);
+    }
+
+    private static List<VirtualFile> selectedFiles(ChangesTreeSnapshot snapshot, List<ChangesTreeItem> selectedItems, ChangesTreeGroupKind kind) {
         Set<VirtualFile> result = new LinkedHashSet<>();
-        for (ChangesTreeItem item : getSelectedItems()) {
-            for (ChangesTreeItem leaf : mySnapshot.collectLeaves(item)) {
+        for (ChangesTreeItem item : selectedItems) {
+            for (ChangesTreeItem leaf : snapshot.collectLeaves(item)) {
                 if (leaf instanceof FileTreeItem fileItem && fileItem.kind() == kind) {
                     result.add(fileItem.file());
                 }
@@ -587,9 +614,13 @@ public final class UnifiedChangesTree {
     }
 
     public List<LocallyDeletedChange> getSelectedLocallyDeleted() {
+        return selectedLocallyDeleted(mySnapshot, getSelectedItems());
+    }
+
+    private static List<LocallyDeletedChange> selectedLocallyDeleted(ChangesTreeSnapshot snapshot, List<ChangesTreeItem> selectedItems) {
         Set<LocallyDeletedChange> result = new LinkedHashSet<>();
-        for (ChangesTreeItem item : getSelectedItems()) {
-            for (ChangesTreeItem leaf : mySnapshot.collectLeaves(item)) {
+        for (ChangesTreeItem item : selectedItems) {
+            for (ChangesTreeItem leaf : snapshot.collectLeaves(item)) {
                 if (leaf instanceof MissingFileTreeItem missing) {
                     result.add(missing.change());
                 }
@@ -599,9 +630,13 @@ public final class UnifiedChangesTree {
     }
 
     public List<VirtualFile> getSelectedVirtualFiles() {
+        return selectedVirtualFiles(mySnapshot, getSelectedItems());
+    }
+
+    private static List<VirtualFile> selectedVirtualFiles(ChangesTreeSnapshot snapshot, List<ChangesTreeItem> selectedItems) {
         Set<VirtualFile> result = new LinkedHashSet<>();
-        for (ChangesTreeItem item : getSelectedItems()) {
-            for (ChangesTreeItem leaf : mySnapshot.collectLeaves(item)) {
+        for (ChangesTreeItem item : selectedItems) {
+            for (ChangesTreeItem leaf : snapshot.collectLeaves(item)) {
                 VirtualFile file = virtualFileOf(leaf);
                 if (file != null && file.isValid()) {
                     result.add(file);
@@ -640,42 +675,51 @@ public final class UnifiedChangesTree {
     }
 
     public void uiDataSnapshot(DataSink sink) {
-        List<Change> selectedChanges = getSelectedChanges();
-        sink.set(VcsDataKeys.CHANGES, selectedChanges.toArray(Change[]::new));
+        ChangesTreeSnapshot snapshot = mySnapshot;
+        List<ChangesTreeItem> selectedItems = getSelectedItems();
+
+        sink.lazy(VcsDataKeys.CHANGES, () -> selectedChanges(snapshot, selectedItems).toArray(Change[]::new));
         sink.set(VcsDataKeys.CHANGE_LEAD_SELECTION, getLeadSelectionChanges().toArray(Change[]::new));
         sink.set(VcsDataKeys.CHANGE_LISTS, getSelectedChangeLists().toArray(ChangeList[]::new));
-        sink.set(VcsDataKeys.HAVE_SELECTED_CHANGES, !selectedChanges.isEmpty());
+        sink.lazy(VcsDataKeys.HAVE_SELECTED_CHANGES, () -> anyLeaf(snapshot, selectedItems, ChangeTreeItem.class::isInstance));
 
-        List<VirtualFile> selectedFiles = getSelectedVirtualFiles();
-        sink.set(VirtualFile.KEY_OF_ARRAY, selectedFiles.toArray(VirtualFile[]::new));
+        sink.lazy(VirtualFile.KEY_OF_ARRAY, () -> selectedVirtualFiles(snapshot, selectedItems).toArray(VirtualFile[]::new));
 
-        List<ChangesTreeItem> selectedItems = getSelectedItems();
         if (selectedItems.size() == 1) {
             Navigatable navigatable = navigatableOf(selectedItems.get(0));
             if (navigatable != null) {
                 sink.set(Navigatable.KEY, navigatable);
             }
         }
-        sink.lazy(Navigatable.KEY_OF_ARRAY, () -> ChangesUtil.getNavigatableArray(myProject, selectedFiles.stream()));
+        sink.lazy(Navigatable.KEY_OF_ARRAY, () -> ChangesUtil.getNavigatableArray(myProject, selectedVirtualFiles(snapshot, selectedItems).stream()));
 
-        sink.set(ChangesListView.UNVERSIONED_FILES_DATA_KEY, getSelectedFiles(ChangesTreeGroupKind.UNVERSIONED));
-        sink.set(ChangesListView.IGNORED_FILES_DATA_KEY, getSelectedFiles(ChangesTreeGroupKind.IGNORED));
+        sink.lazy(ChangesListView.UNVERSIONED_FILES_DATA_KEY, () -> selectedFiles(snapshot, selectedItems, ChangesTreeGroupKind.UNVERSIONED));
+        sink.lazy(ChangesListView.IGNORED_FILES_DATA_KEY, () -> selectedFiles(snapshot, selectedItems, ChangesTreeGroupKind.IGNORED));
+        sink.lazy(VcsDataKeys.MODIFIED_WITHOUT_EDITING_DATA_KEY,
+            () -> selectedFiles(snapshot, selectedItems, ChangesTreeGroupKind.MODIFIED_WITHOUT_EDITING));
+        sink.lazy(VcsDataKeys.HAVE_MODIFIED_WITHOUT_EDITING, () -> anyLeaf(snapshot, selectedItems,
+            leaf -> leaf instanceof FileTreeItem file && file.kind() == ChangesTreeGroupKind.MODIFIED_WITHOUT_EDITING));
 
-        List<VirtualFile> modifiedWithoutEditing = getSelectedFiles(ChangesTreeGroupKind.MODIFIED_WITHOUT_EDITING);
-        sink.set(VcsDataKeys.MODIFIED_WITHOUT_EDITING_DATA_KEY, modifiedWithoutEditing);
-        sink.set(VcsDataKeys.HAVE_MODIFIED_WITHOUT_EDITING, !modifiedWithoutEditing.isEmpty());
-
-        List<LocallyDeletedChange> locallyDeleted = getSelectedLocallyDeleted();
-        sink.set(ChangesListView.LOCALLY_DELETED_CHANGES, locallyDeleted);
-        List<FilePath> missingFiles = locallyDeleted.stream().map(LocallyDeletedChange::getPath).toList();
-        sink.set(ChangesListView.MISSING_FILES_DATA_KEY, missingFiles);
-        sink.set(VcsDataKeys.HAVE_LOCALLY_DELETED, !missingFiles.isEmpty());
+        sink.lazy(ChangesListView.LOCALLY_DELETED_CHANGES, () -> selectedLocallyDeleted(snapshot, selectedItems));
+        sink.lazy(ChangesListView.MISSING_FILES_DATA_KEY,
+            () -> selectedLocallyDeleted(snapshot, selectedItems).stream().map(LocallyDeletedChange::getPath).toList());
+        sink.lazy(VcsDataKeys.HAVE_LOCALLY_DELETED, () -> anyLeaf(snapshot, selectedItems, MissingFileTreeItem.class::isInstance));
 
         sink.set(HelpManager.HELP_ID, ChangesListView.HELP_ID);
 
         if (!selectedItems.isEmpty()) {
-            sink.set(VcsDataKeys.CHANGES_IN_LIST_KEY, getChangesInList());
+            List<ChangesTreeItem> selectedPath = valuesOf(myTree.getSelectedPath());
+            sink.lazy(VcsDataKeys.CHANGES_IN_LIST_KEY, () -> changesInList(snapshot, selectedPath));
         }
+    }
+
+    private static boolean anyLeaf(ChangesTreeSnapshot snapshot, List<ChangesTreeItem> items, Predicate<ChangesTreeItem> predicate) {
+        for (ChangesTreeItem item : items) {
+            if (snapshot.anyLeaf(item, predicate)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void render(ChangesTreeSnapshot snapshot, ChangesTreeItem item, TextItemPresentation presentation) {

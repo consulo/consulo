@@ -70,7 +70,11 @@ public class DesktopTreeImpl<E> extends DesktopTreeBase<E, DesktopAWTTree> {
         tree.setCellEditor(editor == null ? null : new DesktopTreeNodeCellEditor<>(this, editor));
         tree.setEditable(editor != null);
         if (editor != null) {
+            resetUniformRowHeight(tree);
             tree.setRowHeight(0);
+        }
+        else {
+            scheduleUniformRowHeight(tree);
         }
     }
 

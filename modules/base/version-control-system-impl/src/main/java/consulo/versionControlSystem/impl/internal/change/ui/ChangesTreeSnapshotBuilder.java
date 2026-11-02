@@ -86,6 +86,7 @@ public final class ChangesTreeSnapshotBuilder implements ChangesViewModelBuilder
     private final Map<ChangesTreeItem, Integer> myFileCounts = new HashMap<>();
     private final Map<ChangesTreeItem, String> myLocations = new HashMap<>();
     private final Map<ChangesTreeItem, Image> myIcons = new HashMap<>();
+    private final Map<ChangesTreeItem, FilePath> myPaths = new HashMap<>();
     private final Map<String, Optional<ModuleRoot>> myModuleRoots = new HashMap<>();
 
     public static Set<String> grouping(boolean flatten) {
@@ -202,6 +203,7 @@ public final class ChangesTreeSnapshotBuilder implements ChangesViewModelBuilder
             Map.copyOf(myFileCounts),
             Map.copyOf(myLocations),
             Map.copyOf(myIcons),
+            Map.copyOf(myPaths),
             !myGroupByDirectory
         );
     }
@@ -383,6 +385,9 @@ public final class ChangesTreeSnapshotBuilder implements ChangesViewModelBuilder
         Image icon = iconOf(item, path);
         if (icon != null) {
             myIcons.put(item, icon);
+        }
+        if (item instanceof FileTreeItem) {
+            myPaths.put(item, path);
         }
         return new Leaf(item, path);
     }

@@ -37,6 +37,7 @@ import static java.util.Collections.singletonList;
 public final class DesktopAsyncTreeModel extends AbstractTreeModel
   implements Identifiable, Searchable, Navigatable, TreeVisitor.Acceptor, Disposable.Parent {
   private static final Logger LOG = Logger.getInstance(DesktopAsyncTreeModel.class);
+  private static final int BULK_INSERT_THRESHOLD = 1000;
   private final Processor processor;
   private final Tree tree = new Tree();
   private final TreeModel model;
@@ -357,6 +358,14 @@ public final class DesktopAsyncTreeModel extends AbstractTreeModel
     }
   }
 
+  private void treeStructureChanged(Node node) {
+    if (!listeners.isEmpty()) {
+      for (TreePath path : node.paths) {
+        treeStructureChanged(path, null, null);
+      }
+    }
+  }
+
   private void treeNodesRemoved(Node node, Map<Object, Integer> map) {
     if (!listeners.isEmpty()) {
       for (TreePath path : node.paths) {
@@ -650,7 +659,12 @@ public final class DesktopAsyncTreeModel extends AbstractTreeModel
       if (oldChildren.isEmpty()) {
         newChildren.forEach(child -> child.insertMapping(node));
         node.setChildren(newChildren);
-        treeNodesInserted(node, inserted);
+        if (inserted.size() > BULK_INSERT_THRESHOLD) {
+          treeStructureChanged(node);
+        }
+        else {
+          treeNodesInserted(node, inserted);
+        }
         LOG.debug("children inserted: ", node.object);
         node.queue.done(this, node);
         return;

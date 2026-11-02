@@ -82,6 +82,7 @@ final class DesktopTreeCheckBoxes<E> {
     }
 
     void childrenBuilt() {
+        myState.invalidateNodeIndex();
         SwingUtilities.invokeLater(() -> {
             if (!Disposer.isDisposed(myOwner.destroyHook())) {
                 myState.structureChanged();

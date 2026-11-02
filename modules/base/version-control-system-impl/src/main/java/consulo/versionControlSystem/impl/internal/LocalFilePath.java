@@ -36,6 +36,7 @@ public class LocalFilePath implements FilePath {
   
   private final String myPath;
   private final boolean myIsDirectory;
+  private int myHash;
 
   public LocalFilePath(String path, boolean isDirectory) {
     myPath = FileUtil.toCanonicalPath(path);
@@ -50,6 +51,7 @@ public class LocalFilePath implements FilePath {
     LocalFilePath path = (LocalFilePath)o;
 
     if (myIsDirectory != path.myIsDirectory) return false;
+    if (hashCode() != path.hashCode()) return false;
     if (!FileUtil.PATH_HASHING_STRATEGY.equals(myPath, path.myPath)) return false;
 
     return true;
@@ -57,8 +59,12 @@ public class LocalFilePath implements FilePath {
 
   @Override
   public int hashCode() {
-    int result = FileUtil.PATH_HASHING_STRATEGY.hashCode(myPath);
-    result = 31 * result + (myIsDirectory ? 1 : 0);
+    int result = myHash;
+    if (result == 0) {
+      result = FileUtil.PATH_HASHING_STRATEGY.hashCode(myPath);
+      result = 31 * result + (myIsDirectory ? 1 : 0);
+      myHash = result;
+    }
     return result;
   }
 

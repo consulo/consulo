@@ -101,6 +101,7 @@ public class DesktopQtTreeImpl<E> extends QtComponentDelegate<QTreeWidget>
     private boolean myAllowMultipleSelect;
 
     private @Nullable TreeNodeEditor<E> myNodeEditor;
+    private boolean myUnstableHeight;
     private @Nullable DesktopQtTreeEditing<E> myEditing;
     private @Nullable QTreeWidgetItem myEditOnRelease;
 
@@ -109,6 +110,12 @@ public class DesktopQtTreeImpl<E> extends QtComponentDelegate<QTreeWidget>
         Disposer.register(myDestroyHook, myController);
 
         mySpeedSearch = new DesktopQtSpeedSearch<>(true, this::visibleNodes, myController::getSelected, this::selectFound);
+        updateUniformRowHeights();
+    }
+
+    private void updateUniformRowHeights() {
+        boolean uniform = !myUnstableHeight && myItemHeightGetter == null && myNodeEditor == null;
+        whenBound(widget -> ((QTreeWidget) widget).setUniformRowHeights(uniform));
     }
 
     @Override
@@ -582,6 +589,7 @@ public class DesktopQtTreeImpl<E> extends QtComponentDelegate<QTreeWidget>
     public void setNodeEditor(@Nullable TreeNodeEditor<E> editor) {
         cancelEditing();
         myNodeEditor = editor;
+        updateUniformRowHeights();
     }
 
     @Override
@@ -910,6 +918,7 @@ public class DesktopQtTreeImpl<E> extends QtComponentDelegate<QTreeWidget>
     @Override
     public void setItemHeightGetter(@Nullable Function<TreeNode<E>, Length> getter) {
         myItemHeightGetter = getter;
+        updateUniformRowHeights();
     }
 
     private void applyItemHeight(QTreeWidgetItem item, TreeNode<E> node) {
@@ -930,6 +939,10 @@ public class DesktopQtTreeImpl<E> extends QtComponentDelegate<QTreeWidget>
                 widget.setAutoFillBackground(false);
                 ((QTreeWidget) widget).viewport().setAutoFillBackground(false);
             });
+            case UNSTABLE_HEIGHT -> {
+                myUnstableHeight = true;
+                updateUniformRowHeights();
+            }
             default -> applyFontSize(style.getFontPointDelta());
         }
     }

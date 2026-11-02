@@ -50,7 +50,7 @@ public class FileUtil {
     private static final int MAX_FILE_IO_ATTEMPTS = 10;
     private static final boolean USE_FILE_CHANNELS = "true".equalsIgnoreCase(System.getProperty("consulo.fs.useChannels"));
     public static final HashingStrategy<String> PATH_HASHING_STRATEGY =
-        OSInfo.isFileSystemCaseSensitive ? HashingStrategy.caseInsensitive() : HashingStrategy.canonical();
+        OSInfo.isFileSystemCaseSensitive ? HashingStrategy.canonical() : HashingStrategy.caseInsensitive();
 
     public static final HashingStrategy<File> FILE_HASHING_STRATEGY =
         OSInfo.isFileSystemCaseSensitive ? HashingStrategy.canonical() : new HashingStrategy<>() {

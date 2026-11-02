@@ -43,6 +43,7 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.event.DoubleClickListener;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
 import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
+import consulo.ui.ex.awt.tree.TreeModelAdapter;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.awt.tree.TreeVisitor;
 import consulo.util.concurrent.Promise;
@@ -57,6 +58,7 @@ import javax.swing.ToolTipManager;
 import javax.swing.UIManager;
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeExpansionListener;
+import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
@@ -91,6 +93,8 @@ public abstract class DesktopTreeBase<E, T extends java.awt.Component> extends S
 
     private @Nullable TransferHandler<TreeNode<E>> myTransferHandler;
     private @Nullable Function<TreeNode<E>, Length> myItemHeightGetter;
+    private boolean myUnstableHeight;
+    private @Nullable TreeModelListener myUniformItemHeightListener;
     private @Nullable Function<TreeNode<E>, String> mySpeedSearchConverter;
     private boolean myAllowMultipleSelect;
 
@@ -186,6 +190,7 @@ public abstract class DesktopTreeBase<E, T extends java.awt.Component> extends S
         if (myItemHeightGetter != null && isItemHeightSupported()) {
             tree.setRowHeight(0);
         }
+        scheduleUniformRowHeight(tree);
         applySpeedSearch(tree);
 
         tree.addMouseListener(new MouseAdapter() {
@@ -581,7 +586,10 @@ public abstract class DesktopTreeBase<E, T extends java.awt.Component> extends S
         myItemHeightGetter = getter;
 
         if (isInitialized() && isItemHeightSupported()) {
-            getTree().setRowHeight(getter == null ? UIManager.getInt("Tree.rowHeight") : 0);
+            DesktopAWTTree tree = getTree();
+            resetUniformRowHeight(tree);
+            tree.setRowHeight(getter == null ? UIManager.getInt("Tree.rowHeight") : 0);
+            scheduleUniformRowHeight(tree);
         }
     }
 
@@ -617,10 +625,81 @@ public abstract class DesktopTreeBase<E, T extends java.awt.Component> extends S
 
     @Override
     public void addStyle(TreeStyle style) {
-        applyStyle(getTree(), style);
+        DesktopAWTTree tree = getTree();
+        if (style == TreeStyle.UNSTABLE_HEIGHT) {
+            myUnstableHeight = true;
+            resetUniformRowHeight(tree);
+            return;
+        }
+
+        applyStyle(tree, style);
+        if (style != TreeStyle.TRANSPARENT_BACKGROUND) {
+            resetUniformRowHeight(tree);
+            scheduleUniformRowHeight(tree);
+        }
+    }
+
+    void resetUniformRowHeight(DesktopAWTTree tree) {
+        removeUniformItemHeightListener(tree);
+        if (tree.isLargeModel()) {
+            tree.setLargeModel(false);
+            tree.setRowHeight(myItemHeightGetter == null ? UIManager.getInt("Tree.rowHeight") : 0);
+        }
+    }
+
+    /**
+     * Swing measures every row through the renderer while the row height is zero, which takes seconds for a
+     * level of a hundred thousand rows. A uniform tree takes the height of its first row as the fixed height of
+     * all of them, and the large model then lays rows out by arithmetic instead of keeping one per node.
+     */
+    void scheduleUniformRowHeight(DesktopAWTTree tree) {
+        if (applyUniformRowHeight(tree) || myUniformItemHeightListener != null || !isUniformRowHeightPossible(tree)) {
+            return;
+        }
+
+        TreeModelListener listener = TreeModelAdapter.create((event, type) -> SwingUtilities.invokeLater(() -> {
+            if (applyUniformRowHeight(tree)) {
+                removeUniformItemHeightListener(tree);
+            }
+        }));
+        myUniformItemHeightListener = listener;
+        tree.getModel().addTreeModelListener(listener);
+    }
+
+    private void removeUniformItemHeightListener(DesktopAWTTree tree) {
+        TreeModelListener listener = myUniformItemHeightListener;
+        if (listener != null) {
+            myUniformItemHeightListener = null;
+            tree.getModel().removeTreeModelListener(listener);
+        }
+    }
+
+    private boolean isUniformRowHeightPossible(DesktopAWTTree tree) {
+        return !myUnstableHeight && myItemHeightGetter == null && !tree.isEditable();
+    }
+
+    private boolean applyUniformRowHeight(DesktopAWTTree tree) {
+        if (!isUniformRowHeightPossible(tree)) {
+            return false;
+        }
+        if (tree.isLargeModel() && tree.getRowHeight() > 0) {
+            return true;
+        }
+
+        Rectangle bounds = tree.getRowCount() > 0 ? tree.getRowBounds(0) : null;
+        if (bounds == null || bounds.height <= 0) {
+            return false;
+        }
+
+        tree.setRowHeight(bounds.height);
+        tree.setLargeModel(true);
+        return true;
     }
 
     static void applyStyle(JComponent component, TreeStyle style) {
+        if (style == TreeStyle.UNSTABLE_HEIGHT) {
+            return;
+        }
         if (style == TreeStyle.TRANSPARENT_BACKGROUND) {
             component.setOpaque(false);
             component.setBackground(MorphColor.of(UIUtil::getPanelBackground));

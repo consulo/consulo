@@ -24,6 +24,12 @@ import consulo.ui.internal.FontSizeStyle;
 public enum TreeStyle implements ComponentStyle, FontSizeStyle {
     TRANSPARENT_BACKGROUND(0),
 
+    /**
+     * Rows may differ in height. Without it every row has the height of the first one, so the tree does not
+     * measure each row - which is what keeps a level of a very large number of rows fast.
+     */
+    UNSTABLE_HEIGHT(0),
+
     FONT_XX_SMALL(-3),
     FONT_X_SMALL(-2),
     FONT_SMALL(-1),

@@ -16,24 +16,27 @@
 package consulo.versionControlSystem.impl.internal.change.ui;
 
 import consulo.ui.image.Image;
+import consulo.versionControlSystem.FilePath;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 
 /**
  * @author VISTALL
  * @since 2026-10-17
  */
 public final class ChangesTreeSnapshot {
-    public static final ChangesTreeSnapshot EMPTY = new ChangesTreeSnapshot(List.of(), Map.of(), Map.of(), Map.of(), Map.of(), false);
+    public static final ChangesTreeSnapshot EMPTY = new ChangesTreeSnapshot(List.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), false);
 
     private final List<ChangesTreeItem> myRoots;
     private final Map<ChangesTreeItem, List<ChangesTreeItem>> myChildren;
     private final Map<ChangesTreeItem, Integer> myFileCounts;
     private final Map<ChangesTreeItem, String> myLocations;
     private final Map<ChangesTreeItem, Image> myIcons;
+    private final Map<ChangesTreeItem, FilePath> myPaths;
     private final boolean myFlatten;
 
     ChangesTreeSnapshot(List<ChangesTreeItem> roots,
@@ -41,17 +44,23 @@ public final class ChangesTreeSnapshot {
                         Map<ChangesTreeItem, Integer> fileCounts,
                         Map<ChangesTreeItem, String> locations,
                         Map<ChangesTreeItem, Image> icons,
+                        Map<ChangesTreeItem, FilePath> paths,
                         boolean flatten) {
         myRoots = roots;
         myChildren = children;
         myFileCounts = fileCounts;
         myLocations = locations;
         myIcons = icons;
+        myPaths = paths;
         myFlatten = flatten;
     }
 
     public @Nullable Image getIcon(ChangesTreeItem item) {
         return myIcons.get(item);
+    }
+
+    public @Nullable FilePath getPath(ChangesTreeItem item) {
+        return myPaths.get(item);
     }
 
     public @Nullable String getLocation(ChangesTreeItem item) {
@@ -94,6 +103,19 @@ public final class ChangesTreeSnapshot {
         List<ChangesTreeItem> result = new ArrayList<>();
         collectLeaves(item, result);
         return result;
+    }
+
+    public boolean anyLeaf(ChangesTreeItem item, Predicate<ChangesTreeItem> predicate) {
+        if (!isGroup(item)) {
+            return predicate.test(item);
+        }
+
+        for (ChangesTreeItem child : getChildren(item)) {
+            if (!(child instanceof ChangesGroupTreeItem) && anyLeaf(child, predicate)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void collectLeaves(ChangesTreeItem item, List<ChangesTreeItem> result) {

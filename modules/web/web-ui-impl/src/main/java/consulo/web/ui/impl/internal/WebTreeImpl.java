@@ -1246,6 +1246,10 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl<NODE>
             return;
         }
 
+        if (style == TreeStyle.UNSTABLE_HEIGHT) {
+            return;
+        }
+
         int pointDelta = style.getFontPointDelta();
         vaadinStyle.set("font-size", pointDelta == 0 ? "1em" : "calc(1em " + (pointDelta < 0 ? "- " : "+ ") + Math.abs(pointDelta) + "pt)");
     }

@@ -27,6 +27,7 @@ import consulo.util.lang.ThreeState;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.LinkedHashMap;
@@ -60,6 +61,7 @@ public final class CheckBoxTreeState<E> {
 
     private Set<E> myKnown = new HashSet<>();
     private @Nullable Map<TreeNode<E>, @Nullable ThreeState> myShownStates;
+    private volatile @Nullable Map<E, TreeNode<E>> myNodeIndex;
 
     public CheckBoxTreeState(CheckableTree<E> tree,
                              TreeNode<E> root,
@@ -307,8 +309,14 @@ public final class CheckBoxTreeState<E> {
         spread(node, checked, changes);
     }
 
+    public void invalidateNodeIndex() {
+        myNodeIndex = null;
+    }
+
     @RequiredUIAccess
     public void structureChanged() {
+        myNodeIndex = null;
+
         Map<E, ThreeState> changes = new LinkedHashMap<>();
         Set<E> present = new HashSet<>();
         inherit(myRoot, false, myPolicy.checkChildrenWithCheckedParent(), present, changes);
@@ -432,18 +440,26 @@ public final class CheckBoxTreeState<E> {
         }
     }
 
-    private @Nullable TreeNode<E> find(TreeNode<E> node, E value) {
-        for (TreeNode<E> child : node.getLoadedChildren()) {
-            if (Objects.equals(child.getValue(), value)) {
-                return child;
-            }
-
-            TreeNode<E> found = find(child, value);
-            if (found != null) {
-                return found;
-            }
+    private @Nullable TreeNode<E> find(TreeNode<E> root, E value) {
+        Map<E, TreeNode<E>> index = myNodeIndex;
+        if (index == null) {
+            index = new HashMap<>();
+            indexNodes(root, index);
+            myNodeIndex = index;
         }
-        return null;
+
+        TreeNode<E> node = index.get(value);
+        return node != null && Objects.equals(node.getValue(), value) ? node : null;
+    }
+
+    private void indexNodes(TreeNode<E> node, Map<E, TreeNode<E>> index) {
+        for (TreeNode<E> child : node.getLoadedChildren()) {
+            E value = child.getValue();
+            if (value != null) {
+                index.putIfAbsent(value, child);
+            }
+            indexNodes(child, index);
+        }
     }
 
     private List<E> checkedSnapshot() {
