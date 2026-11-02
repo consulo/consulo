@@ -32,7 +32,6 @@ import consulo.ui.Component;
 
 import org.jspecify.annotations.Nullable;
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
@@ -79,11 +78,6 @@ class LazyEditor extends UserDataHolderBase implements Editor {
   
   public JComponent getContentComponent() {
     return getEditor().getContentComponent();
-  }
-
-  @Override
-  public void setBorder(@Nullable Border border) {
-    getEditor().setBorder(border);
   }
 
   @Override

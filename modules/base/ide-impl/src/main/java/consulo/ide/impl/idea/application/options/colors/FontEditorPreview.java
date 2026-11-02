@@ -24,7 +24,6 @@ import consulo.document.Document;
 import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.language.editor.impl.internal.markup.EditorMarkupModel;
 import consulo.language.editor.impl.internal.markup.ErrorStripeRenderer;
-import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 
@@ -114,7 +113,6 @@ public class FontEditorPreview implements PreviewPanel{
         editorDocument.getLineEndOffset(selectedLine)
       );
     }
-    editor.setBorder(JBUI.Borders.empty());
 
     return editor;
   }

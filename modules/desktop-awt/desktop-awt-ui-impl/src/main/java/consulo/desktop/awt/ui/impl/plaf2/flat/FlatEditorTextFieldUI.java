@@ -121,8 +121,7 @@ public class FlatEditorTextFieldUI extends BasicEditorTextFieldUI {
     protected void setBorder(JComponent c) {
         Border border = c.getBorder();
         if (border == null || border instanceof UIResource) {
-            Border textBorder = UIManager.getBorder("TextField.border");
-            c.setBorder(textBorder);
+            c.setBorder(new FlatEditorTextFieldBorder());
         }
     }
 

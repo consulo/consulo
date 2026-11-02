@@ -125,7 +125,6 @@ public class UsagePreviewPanel extends UsageContextPanelBase implements UiDataPr
       myEditor = createEditor(psiFile, document);
       if (myEditor == null) return;
       myLineHeight = myEditor.getLineHeight();
-      myEditor.setBorder(null);
       add(myEditor.getComponent(), BorderLayout.CENTER);
 
       invalidate();

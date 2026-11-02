@@ -31,7 +31,6 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.ui.ex.JBColor;
-import consulo.ui.ex.awt.JBUI;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.fileType.FileType;
 
@@ -77,7 +76,6 @@ public class InlaySettingUtil {
             });
 
             editor.setBackgroundColor(EditorFragmentComponent.getBackgroundColor(editor, false));
-            editor.setBorder(JBUI.Borders.empty());
 
             PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
             if (psiFile != null) {

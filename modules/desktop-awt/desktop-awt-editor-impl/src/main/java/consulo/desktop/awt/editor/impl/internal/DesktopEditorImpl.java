@@ -1855,11 +1855,6 @@ public final class DesktopEditorImpl extends CodeEditorBase
     }
 
     @Override
-    public void setBorder(Border border) {
-        myScrollPane.setBorder(border);
-    }
-
-    @Override
     public Insets getInsets() {
         return myScrollPane.getInsets();
     }
@@ -4343,17 +4338,11 @@ public final class DesktopEditorImpl extends CodeEditorBase
 
         @Override
         public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
-            if (c instanceof JComponent component) {
-                Insets insets = component.getInsets();
-                if (insets.left > 0) {
-                    super.paintBorder(c, g, x, y, width, height);
-                }
-                else {
-                    g.setColor(UIUtil.getPanelBackground());
-                    g.fillRect(x, y, width, 1);
-                    g.setColor(Gray._50.withAlpha(90));
-                    g.fillRect(x, y, width, 1);
-                }
+            if (c instanceof JComponent component && component.getInsets().top > 0) {
+                g.setColor(UIUtil.getPanelBackground());
+                g.fillRect(x, y, width, 1);
+                g.setColor(Gray._50.withAlpha(90));
+                g.fillRect(x, y, width, 1);
             }
         }
 
@@ -4372,7 +4361,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
                 && header == null
                 && tabPlacement != SwingConstants.TOP
                 && tabPlacement != UISettings.PLACEMENT_EDITOR_TAB_NONE;
-            return splitters == null ? super.getBorderInsets(c) : JBUI.insetsTop(paintTop ? 1 : 0);
+            return splitters == null ? JBUI.emptyInsets() : JBUI.insetsTop(paintTop ? 1 : 0);
         }
 
         private boolean toolWindowIsNotEmpty() {

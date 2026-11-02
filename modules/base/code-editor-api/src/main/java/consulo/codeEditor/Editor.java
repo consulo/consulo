@@ -37,7 +37,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
@@ -113,10 +112,6 @@ public interface Editor extends UserDataHolder {
      * @return the component instance.
      */
     default Component getContentUIComponent() {
-        throw new UnsupportedOperationException("Unsupported platform");
-    }
-
-    default void setBorder(@Nullable Border border) {
         throw new UnsupportedOperationException("Unsupported platform");
     }
 

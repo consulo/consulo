@@ -482,7 +482,6 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
             editor.getContentComponent().setFocusCycleRoot(false);
             editor.setHorizontalScrollbarVisible(true);
             editor.setVerticalScrollbarVisible(true);
-            editor.setBorder(null);
 
             EditorSettings editorSettings = editor.getSettings();
             editorSettings.setAdditionalLinesCount(1);

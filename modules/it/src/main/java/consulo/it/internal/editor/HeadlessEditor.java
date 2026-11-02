@@ -47,7 +47,6 @@ import org.jspecify.annotations.Nullable;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
-import javax.swing.border.Border;
 import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.Point;
@@ -290,10 +289,6 @@ public class HeadlessEditor extends CodeEditorBase {
             myUIComponent = uiComponent;
         }
         return uiComponent;
-    }
-
-    @Override
-    public void setBorder(@Nullable Border border) {
     }
 
     @Override

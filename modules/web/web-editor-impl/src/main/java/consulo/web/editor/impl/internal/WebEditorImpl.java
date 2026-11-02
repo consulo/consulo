@@ -93,7 +93,6 @@ import org.intellij.lang.annotations.MagicConstant;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.*;
@@ -1104,10 +1103,6 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
 
     // due EditorMouseEvent use awt Event, we need set fake event, until migrate to own event system
     private static final MouseEvent fakeEvent = new MouseEvent(new JLabel("fake"), 0, 0, 0, 0, 0, 1, false);
-
-    @Override
-    public void setBorder(@Nullable Border border) {
-    }
 
     @Override
     public JComponent getComponent() {

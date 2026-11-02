@@ -127,7 +127,6 @@ public final class LineStatusMarkerPopupPanel {
 
         viewer.setColorsScheme(mainEditor.getColorsScheme());
         viewer.setCaretVisible(false);
-        viewer.setBorder(null);
 
         EditorSettings settings = viewer.getSettings();
         settings.setLineNumbersShown(false);

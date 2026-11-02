@@ -144,7 +144,6 @@ public class DetailViewImpl implements DetailView, UserDataHolder {
         myEditorState = editorState;
         if (document != null) {
             Editor editor = createEditor(myProject, document, file);
-            editor.setBorder(null);
             myEditor = editor;
 
             DockLayout editorWrapper = DockLayout.create(Space.NONE);

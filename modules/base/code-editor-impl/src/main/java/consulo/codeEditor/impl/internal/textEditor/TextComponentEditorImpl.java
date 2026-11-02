@@ -35,7 +35,6 @@ import consulo.ui.Component;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -96,10 +95,6 @@ public class TextComponentEditorImpl extends UserDataHolderBase implements TextC
 
     public JComponent getContentComponent() {
         return myTextComponent;
-    }
-
-    @Override
-    public void setBorder(@Nullable Border border) {
     }
 
     @Override

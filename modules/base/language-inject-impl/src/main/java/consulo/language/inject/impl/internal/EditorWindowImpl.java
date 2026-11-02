@@ -39,7 +39,6 @@ import kava.beans.PropertyChangeListener;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -599,11 +598,6 @@ class EditorWindowImpl extends UserDataHolderBase implements EditorWindow, Edito
   @Override
   public JScrollPane getScrollPane() {
     return myDelegate.getScrollPane();
-  }
-
-  @Override
-  public void setBorder(Border border) {
-    myDelegate.setBorder(border);
   }
 
   @Override

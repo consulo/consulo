@@ -117,7 +117,7 @@ class RecentLocationsRenderer extends ColoredListCellRenderer<RecentLocationItem
         }
 
         editor.setBackgroundColor(getBackgroundColor(colorsScheme, selected));
-        editor.setBorder(JBUI.Borders.empty(0, 4, 6, 0));
+        editor.getScrollPane().setBorder(JBUI.Borders.empty(0, 4, 6, 0));
 
         String emptyFileText = IdeLocalize.recentLocationsPopupEmptyFileText().get();
         if (emptyFileText.equals(editor.getDocument().getText())) {

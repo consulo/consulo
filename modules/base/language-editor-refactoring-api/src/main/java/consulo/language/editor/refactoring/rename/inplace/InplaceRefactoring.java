@@ -544,7 +544,9 @@ public abstract class InplaceRefactoring {
 
         ColorValue bg = previewEditor.getColorsScheme().getColor(EditorColors.CARET_ROW_COLOR);
         previewEditor.setBackgroundColor(bg);
-        previewEditor.setBorder(BorderFactory.createCompoundBorder(new DottedBorder(Color.gray), new LineBorder(TargetAWT.to(bg), 2)));
+        if (previewEditor.isScrollPaneAvailable()) {
+            previewEditor.getScrollPane().setBorder(BorderFactory.createCompoundBorder(new DottedBorder(Color.gray), new LineBorder(TargetAWT.to(bg), 2)));
+        }
 
         return previewEditor;
     }

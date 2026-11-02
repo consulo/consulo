@@ -62,7 +62,6 @@ import org.intellij.lang.annotations.MagicConstant;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
@@ -945,13 +944,9 @@ public class DesktopQtEditorImpl extends CodeEditorBase implements RealEditor, C
 
     /**
      * The rest of the swing shaped surface of the editor. Nothing here can be honoured by a qt widget, but the
-     * defaults throw, and a caller reaching for a border or a header should get a quiet answer rather than take
+     * defaults throw, and a caller reaching for insets or a header should get a quiet answer rather than take
      * the whole action down with it.
      */
-    @Override
-    public void setBorder(@Nullable Border border) {
-    }
-
     @Override
     public Insets getInsets() {
         return new Insets(0, 0, 0, 0);
