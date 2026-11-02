@@ -62,6 +62,8 @@ import consulo.externalSystem.setting.AbstractExternalSystemLocalSettings;
 import consulo.externalSystem.setting.AbstractExternalSystemSettings;
 import consulo.logging.Logger;
 import consulo.module.Module;
+import consulo.module.content.ModuleRootManager;
+import consulo.module.extension.ModuleExtension;
 import consulo.process.ExecutionException;
 import consulo.process.ProcessHandler;
 import consulo.process.event.ProcessAdapter;
@@ -867,35 +869,70 @@ public class ExternalSystemApiUtil {
         return (S) manager.getExecutionSettingsProvider().apply(Pair.create(project, linkedProjectPath));
     }
 
+    /**
+     * The extension of {@code systemId} of a module, by the system's id: the extensions of all the external systems share
+     * one class, so one of a module linked to two systems is not found by its class.
+     */
+    @Contract("_, null -> null")
+    public static @Nullable ExternalSystemModuleExtension<?> getExtension(ProjectSystemId systemId, @Nullable Module module) {
+        return getExtension(systemId.getId(), module);
+    }
+
+    @Contract("_, null -> null")
+    public static @Nullable ExternalSystemModuleExtension<?> getExtension(String systemId, @Nullable Module module) {
+        if (module == null) {
+            return null;
+        }
+        return module.getExtension(systemId) instanceof ExternalSystemModuleExtension<?> extension ? extension : null;
+    }
+
+    @Contract("_, null, _ -> null")
+    public static @Nullable String getExtensionSystemOption(ProjectSystemId systemId, @Nullable Module module, String key) {
+        ExternalSystemModuleExtension<?> extension = getExtension(systemId, module);
+        return extension == null ? null : extension.getOption(key);
+    }
+
+    /**
+     * An option of the external system a module is linked to, whichever it is - the first one when it is linked to
+     * several; when the system is known, {@link #getExtensionSystemOption(ProjectSystemId, Module, String)}.
+     */
     @Contract("null, _ -> null")
     public static @Nullable String getExtensionSystemOption(@Nullable Module module, String key) {
         if (module == null) {
             return null;
         }
-        ExternalSystemModuleExtension extension = module.getExtension(ExternalSystemModuleExtension.class);
-        if (extension == null) {
-            return null;
+        for (ModuleExtension<?> extension : ModuleRootManager.getInstance(module).getExtensions()) {
+            if (extension instanceof ExternalSystemModuleExtension<?> externalSystemExtension) {
+                return externalSystemExtension.getOption(key);
+            }
         }
-        return extension.getOption(key);
+        return null;
     }
 
     @Contract("_, null -> false")
     public static boolean isExternalSystemAwareModule(ProjectSystemId systemId, @Nullable Module module) {
-        String extensionSystemOption = getExtensionSystemOption(module, ExternalSystemConstants.EXTERNAL_SYSTEM_ID_KEY);
-        return extensionSystemOption != null && systemId.getId().equals(extensionSystemOption);
+        return getExtension(systemId, module) != null;
     }
 
     @Contract("_, null -> false")
     public static boolean isExternalSystemAwareModule(String systemId, @Nullable Module module) {
-        return module != null && systemId.equals(getExtensionSystemOption(module, ExternalSystemConstants.EXTERNAL_SYSTEM_ID_KEY));
+        return getExtension(systemId, module) != null;
     }
 
     public static @Nullable String getExternalProjectPath(@Nullable Module module) {
         return getExtensionSystemOption(module, ExternalSystemConstants.LINKED_PROJECT_PATH_KEY);
     }
 
+    public static @Nullable String getExternalProjectPath(ProjectSystemId systemId, @Nullable Module module) {
+        return getExtensionSystemOption(systemId, module, ExternalSystemConstants.LINKED_PROJECT_PATH_KEY);
+    }
+
     public static @Nullable String getExternalProjectId(@Nullable Module module) {
         return getExtensionSystemOption(module, ExternalSystemConstants.LINKED_PROJECT_ID_KEY);
+    }
+
+    public static @Nullable String getExternalProjectId(ProjectSystemId systemId, @Nullable Module module) {
+        return getExtensionSystemOption(systemId, module, ExternalSystemConstants.LINKED_PROJECT_ID_KEY);
     }
 
     @RequiredUIAccess

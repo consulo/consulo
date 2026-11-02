@@ -23,7 +23,6 @@ import consulo.externalSystem.model.execution.ExternalTaskPojo;
 import consulo.externalSystem.model.project.ExternalProjectBuildClasspathPojo;
 import consulo.externalSystem.model.project.ExternalProjectPojo;
 import consulo.externalSystem.util.ExternalSystemApiUtil;
-import consulo.externalSystem.util.ExternalSystemConstants;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.project.Project;
@@ -207,11 +206,10 @@ public abstract class AbstractExternalSystemLocalSettings {
       pathsToForget.remove(projectSettings.getExternalProjectPath());
     }
     for (Module module : ModuleManager.getInstance(myProject).getModules()) {
-      String id = ExternalSystemApiUtil.getExtensionSystemOption(module, ExternalSystemConstants.EXTERNAL_SYSTEM_ID_KEY);
-      if (!myExternalSystemId.toString().equals(id)) {
-        continue;
+      String path = ExternalSystemApiUtil.getExternalProjectPath(myExternalSystemId, module);
+      if (path != null) {
+        pathsToForget.remove(path);
       }
-      pathsToForget.remove(ExternalSystemApiUtil.getExtensionSystemOption(module, ExternalSystemConstants.LINKED_PROJECT_PATH_KEY));
     }
 
     if (!pathsToForget.isEmpty()) {

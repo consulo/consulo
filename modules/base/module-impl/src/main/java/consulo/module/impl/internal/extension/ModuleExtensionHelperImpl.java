@@ -44,7 +44,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Singleton
 @ServiceImpl
 public class ModuleExtensionHelperImpl implements ModuleExtensionHelper, Disposable {
-    private record Snapshot(List<ModuleExtension> extensions, Map<Class<?>, List<ModuleExtension>> byType) {
+    private record Snapshot(List<ModuleExtension> extensions, Map<Class<?>, List<ModuleExtension>> byType, Map<String, List<ModuleExtension<?>>> byId) {
     }
 
     private final Project myProject;
@@ -80,6 +80,25 @@ public class ModuleExtensionHelperImpl implements ModuleExtensionHelper, Disposa
     }
 
     @Override
+    public boolean hasModuleExtension(String extensionId) {
+        return !getModuleExtensions(extensionId).isEmpty();
+    }
+
+    @Override
+    public Collection<ModuleExtension<?>> getModuleExtensions(String extensionId) {
+        Snapshot snapshot = getSnapshot();
+        return snapshot.byId().computeIfAbsent(extensionId, id -> {
+            List<ModuleExtension<?>> result = new ArrayList<>();
+            for (ModuleExtension<?> extension : snapshot.extensions()) {
+                if (id.equals(extension.getId())) {
+                    result.add(extension);
+                }
+            }
+            return result.isEmpty() ? List.of() : List.copyOf(result);
+        });
+    }
+
+    @Override
     public String getModuleExtensionName(ModuleExtension<?> moduleExtension) {
         ModuleExtensionProvider provider = ModuleExtensionProvider.findProvider(moduleExtension.getId());
         assert provider != null;
@@ -112,7 +131,7 @@ public class ModuleExtensionHelperImpl implements ModuleExtensionHelper, Disposa
             for (Module module : ModuleManager.getInstance(myProject).getModules()) {
                 extensions.addAll(ModuleRootManager.getInstance(module).getExtensions());
             }
-            snapshot = new Snapshot(extensions, new ConcurrentHashMap<>());
+            snapshot = new Snapshot(extensions, new ConcurrentHashMap<>(), new ConcurrentHashMap<>());
             mySnapshot = snapshot;
         }
         return snapshot;

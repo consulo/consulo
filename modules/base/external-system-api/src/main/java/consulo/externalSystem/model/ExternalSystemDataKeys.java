@@ -39,6 +39,12 @@ public interface ExternalSystemDataKeys {
 
   Key<Boolean> NEWLY_IMPORTED_PROJECT = Key.create("external.system.newly.imported");
 
+  /**
+   * The external system a newly imported project was imported by - set with {@link #NEWLY_IMPORTED_PROJECT}, so what
+   * applies to a new import, as showing the tool window, applies to that system only.
+   */
+  Key<ProjectSystemId> NEWLY_IMPORTED_SYSTEM_ID = Key.create("external.system.newly.imported.system.id");
+
   // Keys for ExternalProjectsView-based tool window
   Key<ExternalProjectsView> VIEW = Key.create("external.system.view");
   @SuppressWarnings("rawtypes")

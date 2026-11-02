@@ -25,6 +25,7 @@ import consulo.externalSystem.setting.AbstractExternalSystemSettings;
 import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.externalSystem.view.ExternalProjectsViewImpl;
 import consulo.localize.LocalizeValue;
+import consulo.module.extension.ModuleExtensionHelper;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowFactory;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -78,9 +79,25 @@ public abstract class AbstractExternalSystemToolWindowFactory implements ToolWin
         });
     }
 
+    /**
+     * Available for a project this system has just imported, for one with a module of this system - its extension,
+     * looked up by the system's id: the extensions of all the external systems share one class - or with a linked
+     * project of it.
+     */
     @Override
     public boolean validate(Project project) {
-        if (Objects.equals(project.getUserData(ExternalSystemDataKeys.NEWLY_IMPORTED_PROJECT), Boolean.TRUE)) {
+        ProjectSystemId importedBy = project.getUserData(ExternalSystemDataKeys.NEWLY_IMPORTED_SYSTEM_ID);
+        if (importedBy != null) {
+            if (importedBy.equals(myExternalSystemId)) {
+                return true;
+            }
+        }
+        else if (Objects.equals(project.getUserData(ExternalSystemDataKeys.NEWLY_IMPORTED_PROJECT), Boolean.TRUE)) {
+            // imported without telling by which system: every system's tool window, as before
+            return true;
+        }
+
+        if (ModuleExtensionHelper.getInstance(project).hasModuleExtension(myExternalSystemId.getId())) {
             return true;
         }
 

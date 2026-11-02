@@ -124,6 +124,7 @@ public abstract class AbstractExternalModuleImportProvider implements ModuleImpo
     ) {
         return Coroutine.<Object, Object>first(ReadLock.apply(input -> {
         project.putUserData(ExternalSystemDataKeys.NEWLY_IMPORTED_PROJECT, Boolean.TRUE);
+        project.putUserData(ExternalSystemDataKeys.NEWLY_IMPORTED_SYSTEM_ID, myExternalSystemId);
         DataNode<ProjectData> externalProjectNode = context.getExternalProjectNode();
         if (externalProjectNode != null) {
             beforeCommit(externalProjectNode, project);

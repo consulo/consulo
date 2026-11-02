@@ -36,6 +36,17 @@ public interface ModuleExtensionHelper {
 
   public boolean hasModuleExtension(Class<? extends ModuleExtension> clazz);
 
+  /**
+   * Whether a module of the project has the extension of this id enabled - by id, not by class: the extensions of
+   * different providers may share one class, as those of the external systems do.
+   */
+  public boolean hasModuleExtension(String extensionId);
+
+  /**
+   * The enabled extensions of this id, one per module having it.
+   */
+  public Collection<ModuleExtension<?>> getModuleExtensions(String extensionId);
+
   
   public <T extends ModuleExtension<T>> Collection<T> getModuleExtensions(Class<T> clazz);
 
