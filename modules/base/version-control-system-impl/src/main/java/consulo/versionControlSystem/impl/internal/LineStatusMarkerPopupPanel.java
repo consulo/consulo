@@ -40,6 +40,7 @@ import consulo.ui.Component;
 import consulo.ui.HasSize;
 import consulo.ui.LightPopup;
 import consulo.ui.PopupOptions;
+import consulo.ui.Space;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.details.InputDetails;
 import consulo.ui.event.details.MouseInputDetails;
@@ -81,10 +82,10 @@ public final class LineStatusMarkerPopupPanel {
 
         LightPopup popup = LightPopup.create(PopupOptions.builder().disableRequestFocus().build());
 
-        DockLayout content = DockLayout.create();
+        DockLayout content = DockLayout.create(Space.NONE);
         content.top(toolbar.getUIComponent());
         if (preview != null) {
-            content.bottom(preview);
+            content.center(preview);
         }
 
         popup.setContent(content);
@@ -126,6 +127,7 @@ public final class LineStatusMarkerPopupPanel {
 
         viewer.setColorsScheme(mainEditor.getColorsScheme());
         viewer.setCaretVisible(false);
+        viewer.setBorder(null);
 
         EditorSettings settings = viewer.getSettings();
         settings.setLineNumbersShown(false);

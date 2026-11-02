@@ -111,6 +111,8 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
 
     private DesktopEditorAnalyzeStatusPanel myStatusPanel;
 
+    private boolean myErrorStripeVisible;
+
     DesktopEditorMarkupModelImpl(DesktopEditorImpl editor) {
         super(editor.getDocument());
         myEditor = editor;
@@ -370,6 +372,8 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
 
     @Override
     public void setErrorStripeVisible(boolean val) {
+        myErrorStripeVisible = val;
+
         myErrorPanel.setPopupHandler(null);
 
         myStatusPanel.setTrafficLightIconVisible(val);
@@ -378,11 +382,12 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
     }
 
     public void updateErrorStripePanel() {
+        myEditor.getPanel().remove(myErrorPanel);
+
         if (!isErrorStripeVisible()) {
+            myEditor.getPanel().revalidate();
             return;
         }
-
-        myEditor.getPanel().remove(myErrorPanel);
 
         myEditor.getPanel()
             .add(
@@ -488,7 +493,7 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
 
     @Override
     public boolean isErrorStripeVisible() {
-        return getErrorPanel() != null;
+        return myErrorStripeVisible;
     }
 
     private static class BasicTooltipRendererProvider implements ErrorStripTooltipRendererProvider {
