@@ -77,5 +77,6 @@ module consulo.ui.ex.impl {
         consulo.desktop.awt.ui.impl;
 
     opens consulo.ui.ex.impl.internal.keymap to consulo.util.xml.serializer;
+    opens consulo.ui.ex.impl.internal.hint to consulo.util.xml.serializer;
     opens consulo.ui.ex.impl.internal.animation to com.sun.jna;
 }

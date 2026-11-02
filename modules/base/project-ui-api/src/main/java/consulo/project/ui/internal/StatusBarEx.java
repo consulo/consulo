@@ -21,6 +21,7 @@ import consulo.disposer.Disposable;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
 import consulo.ui.Component;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.Pair;
 import org.jspecify.annotations.Nullable;
 
@@ -44,6 +45,15 @@ public interface StatusBarEx extends StatusBar, Disposable {
     boolean isProcessWindowOpen();
 
     void setProcessWindowOpen(boolean open);
+
+    /**
+     * Places the banners of the project over the list of running tasks.
+     *
+     * @param reveal opens the list, without taking the focus, so the banners are seen
+     */
+    @RequiredUIAccess
+    default void setProcessBanners(List<Component> banners, boolean reveal) {
+    }
 
     Dimension getSize();
 

@@ -17,14 +17,11 @@ package consulo.externalService.impl.internal.update;
 
 import consulo.application.AccessToken;
 import consulo.application.Application;
-import consulo.application.internal.ApplicationInfo;
 import consulo.application.plugin.PluginActionListener;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
-import consulo.container.plugin.PluginIds;
-import consulo.container.plugin.PluginManager;
 import consulo.externalService.impl.internal.plugin.InstalledPluginsState;
 import consulo.externalService.impl.internal.plugin.PluginNode;
 import consulo.externalService.impl.internal.pluginHistory.UpdateHistory;
@@ -38,7 +35,6 @@ import consulo.ui.MessageBoxBuilder;
 import consulo.ui.MessageBoxes;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
@@ -149,21 +145,6 @@ public final class PlatformOrPluginInstallProcess {
                     .toArray(PluginId[]::new)
             );
 
-            Map<String, String> pluginHistory = new HashMap<>();
-            for (PluginDescriptor descriptor : PluginManager.getPlugins()) {
-                if (PluginIds.isPlatformPlugin(descriptor.getPluginId())) {
-                    continue;
-                }
-
-                pluginHistory.put(descriptor.getPluginId().getIdString(), StringUtil.notNullize(descriptor.getVersion()));
-            }
-
-            pluginHistory.put(
-                PlatformOrPluginUpdateChecker.getPlatformPluginId().getIdString(),
-                ApplicationInfo.getInstance().getBuild().toString()
-            );
-
-            updateHistory.replaceHistory(pluginHistory);
 
             if (afterCallback != null) {
                 afterCallback.accept(installed);

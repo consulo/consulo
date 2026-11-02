@@ -140,9 +140,28 @@ class DesktopAWTPopupPanel extends JPanel implements FromSwingComponentWrapper {
         if (myContent != null) {
             Dimension content = myContent.getPreferredSize();
             width = Math.max(width, content.width);
-            height += content.height;
+            height += heightAt(myContent, width, content.height);
         }
         return new Dimension(width + 2, height + 2);
+    }
+
+    private static int heightAt(java.awt.Component content, int width, int preferredHeight) {
+        if (content.getWidth() == width) {
+            return preferredHeight;
+        }
+        content.setSize(width, Math.max(preferredHeight, content.getHeight()));
+        content.validate();
+        invalidateTree(content);
+        return content.getPreferredSize().height;
+    }
+
+    private static void invalidateTree(java.awt.Component component) {
+        component.invalidate();
+        if (component instanceof java.awt.Container container) {
+            for (java.awt.Component child : container.getComponents()) {
+                invalidateTree(child);
+            }
+        }
     }
 
     Dimension sizeFor(DesktopAWTPopupSide side) {

@@ -46,10 +46,7 @@ import consulo.project.impl.internal.SingleTaskExecutor.AutoclosableProgressive;
 import consulo.project.internal.DumbServiceInternal;
 import consulo.project.internal.UnindexedFilesScannerExecutor;
 import consulo.project.localize.ProjectLocalize;
-import consulo.project.ui.notification.NotificationType;
-import consulo.project.ui.wm.IdeFrame;
-import consulo.project.ui.wm.StatusBar;
-import consulo.project.ui.wm.WindowManager;
+import consulo.project.ui.internal.ProjectBannerManager;
 import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
 import consulo.util.collection.Lists;
@@ -675,15 +672,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
 
     @Override
     public void showDumbModeNotification(LocalizeValue message) {
-        myProject.getUIAccess().giveIfNeed(() -> {
-            IdeFrame ideFrame = WindowManager.getInstance().getIdeFrame(myProject);
-            if (ideFrame != null) {
-                StatusBar statusBar = ideFrame.getStatusBar();
-                if (statusBar != null) {
-                    statusBar.notifyByBalloon(StatusBar.PROGRESS_WIDGET_ID, NotificationType.INFORMATION, message.get());
-                }
-            }
-        });
+        ProjectBannerManager.getInstance(myProject).reveal(DumbModeBannerProvider.ID, message);
     }
 
     @Override

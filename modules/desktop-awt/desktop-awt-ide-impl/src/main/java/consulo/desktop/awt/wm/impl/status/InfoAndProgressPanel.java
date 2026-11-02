@@ -1,431 +1,84 @@
-// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+/*
+ * Copyright 2013-2026 consulo.io
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package consulo.desktop.awt.wm.impl.status;
 
-import consulo.application.Application;
-import consulo.application.PowerSaveMode;
-import consulo.application.PowerSaveModeListener;
-import consulo.application.internal.AbstractProgressIndicatorExBase;
-import consulo.application.internal.ProgressIndicatorEx;
-import consulo.application.localize.ApplicationLocalize;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.TaskInfo;
-import consulo.application.util.registry.Registry;
-import consulo.component.messagebus.MessageBusConnection;
-import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.application.internal.ProgressSuspender;
-import consulo.application.internal.ProgressSuspenderListener;
-import consulo.project.ui.impl.internal.wm.statusBar.InlineProgressIndicator;
-import consulo.ide.impl.project.ui.impl.StatusWidgetBorders;
-import consulo.localize.LocalizeValue;
-import consulo.logging.Logger;
-import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.project.Project;
+import consulo.project.ui.impl.internal.wm.statusBar.UnifiedInfoAndProgressPanel;
 import consulo.project.ui.wm.CustomStatusBarWidget;
 import consulo.project.ui.wm.StatusBar;
-import consulo.ui.Label;
-import consulo.ui.LabelStyle;
-import consulo.ui.ProgressBar;
-import consulo.ui.ProgressBarStyle;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.*;
-import consulo.ui.ex.awt.HorizontalLayout;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awt.util.MergingUpdateQueue;
-import consulo.ui.ex.awt.util.Update;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ui.layout.HorizontalLayoutStyle;
-import consulo.ui.layout.LayoutStyle;
-import consulo.util.collection.*;
 import consulo.util.lang.Pair;
-import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.List;
-import java.util.*;
 
-public class InfoAndProgressPanel extends JPanel implements Disposable, CustomStatusBarWidget {
-    private static final Logger LOG = Logger.getInstance(InfoAndProgressPanel.class);
-    private final ProcessPopup myPopup;
-
-    private final List<ProgressIndicatorEx> myOriginals = new ArrayList<>();
-    private final List<TaskInfo> myInfos = new ArrayList<>();
-    private final Map<InlineProgressIndicator, ProgressIndicatorEx> myInline2Original = new HashMap<>();
-    private final MultiValuesMap<ProgressIndicatorEx, MyInlineProgressIndicator> myOriginal2Inlines = new MultiValuesMap<>();
-
-    private final MergingUpdateQueue myUpdateQueue;
-
-    private boolean myShouldClosePopupAndOnProcessFinish;
-
-    private boolean myDisposed;
-
-    private final Set<InlineProgressIndicator> myDirtyIndicators = Sets.newHashSet(HashingStrategy.identity());
-    private final Update myUpdateIndicators = new Update("UpdateIndicators", false, 1) {
-        @Override
-        @RequiredUIAccess
-        public void run() {
-            List<InlineProgressIndicator> indicators;
-            synchronized (myDirtyIndicators) {
-                indicators = new ArrayList<>(myDirtyIndicators);
-                myDirtyIndicators.clear();
-            }
-            for (InlineProgressIndicator indicator : indicators) {
-                indicator.updateAndRepaint();
-            }
-        }
-    };
-
-    private final JComponent myLayoutComponent;
-    private final Label myMultiProcessLink;
-
-    private consulo.ui.@Nullable Component myRoot;
+/**
+ * The progress widget of the awt status bar - the unified panel every other frontend shows in its status bar, placed
+ * among the widgets.
+ *
+ * @author VISTALL
+ * @since 2026-11-02
+ */
+public class InfoAndProgressPanel implements CustomStatusBarWidget {
+    private final Project myProject;
+    private final UnifiedInfoAndProgressPanel myPanel;
 
     @RequiredUIAccess
-    public InfoAndProgressPanel() {
-        super(new HorizontalLayout(0, SwingConstants.CENTER));
-        setOpaque(false);
-        setBorder(StatusWidgetBorders.DEFAULT_BORDER);
-        setEnabled(false);
-
-        myUpdateQueue = new MergingUpdateQueue("Progress indicator", 50, true, MergingUpdateQueue.ANY_COMPONENT);
-        myPopup = new ProcessPopup(this);
-
-        ProgressBar progressBar = ProgressBar.create();
-        progressBar.addStyle(ProgressBarStyle.SPINNER);
-        progressBar.addStyle(ProgressBarStyle.TRANSPARENT_BACKGROUND);
-        progressBar.setIndeterminate(true);
-
-        consulo.ui.layout.HorizontalLayout layout = consulo.ui.layout.HorizontalLayout.create();
-        layout.addStyle(HorizontalLayoutStyle.TRANSPARENT_BACKGROUND);
-
-        layout.add(progressBar);
-        layout.add(myMultiProcessLink = Label.create());
-
-        myMultiProcessLink.addStyle(LabelStyle.TRANSPARENT_BACKGROUND);
-        myLayoutComponent = (JComponent) TargetAWT.to(layout);
-
-        addClickListener(myLayoutComponent);
+    public InfoAndProgressPanel(Project project) {
+        myProject = project;
+        myPanel = new UnifiedInfoAndProgressPanel(project::getUIAccess);
+        Disposer.register(this, myPanel);
     }
 
-    private void runOnProgressRelatedChange(Runnable runnable, Disposable parentDisposable) {
-        synchronized (myOriginals) {
-            if (!myDisposed) {
-                MessageBusConnection connection = Application.get().getMessageBus().connect(parentDisposable);
-                connection.subscribe(PowerSaveModeListener.class, () -> UIUtil.invokeLaterIfNeeded(runnable));
-                connection.subscribe(ProgressSuspenderListener.class, new ProgressSuspenderListener() {
-                    @Override
-                    public void suspendableProgressAppeared(ProgressSuspender suspender) {
-                        UIUtil.invokeLaterIfNeeded(runnable);
-                    }
-
-                    @Override
-                    public void suspendedStatusChanged(ProgressSuspender suspender) {
-                        UIUtil.invokeLaterIfNeeded(runnable);
-                    }
-                });
-            }
-        }
-    }
-
-    @RequiredUIAccess
-    private void handle(MouseEvent e) {
-        if (UIUtil.isActionClick(e, MouseEvent.MOUSE_PRESSED)) {
-            if (!myPopup.isShowing()) {
-                openProcessPopup(true);
-            }
-            else {
-                hideProcessPopup();
-            }
-        }
-        else if (e.isPopupTrigger()) {
-            ActionGroup group = (ActionGroup) ActionManager.getInstance().getAction("BackgroundTasks");
-            ActionManager.getInstance()
-                .createActionPopupMenu(ActionPlaces.UNKNOWN, group)
-                .getComponent()
-                .show(e.getComponent(), e.getX(), e.getY());
-        }
-    }
-
-    @Override
-    public void dispose() {
-        synchronized (myOriginals) {
-            for (InlineProgressIndicator indicator : myInline2Original.keySet()) {
-                Disposer.dispose(indicator);
-            }
-            myInline2Original.clear();
-            myOriginal2Inlines.clear();
-
-            myDisposed = true;
-        }
-    }
-
-    @Override
-    @RequiredUIAccess
-    public consulo.ui.Component getUIComponent() {
-        consulo.ui.Component root = myRoot;
-        if (root == null) {
-            root = TargetAWT.wrap(this);
-            myRoot = root;
-        }
-        return root;
+    /**
+     * A task announces itself from whatever thread starts it, and the panel it goes into is built of components.
+     */
+    public void addProgress(ProgressIndicator original, TaskInfo info) {
+        myProject.getUIAccess().giveIfNeed(() -> myPanel.addProgress(original, info));
     }
 
     public List<Pair<TaskInfo, ProgressIndicator>> getBackgroundProcesses() {
-        synchronized (myOriginals) {
-            if (myOriginals.isEmpty()) {
-                return Collections.emptyList();
-            }
-
-            List<Pair<TaskInfo, ProgressIndicator>> result = new ArrayList<>(myOriginals.size());
-            for (int i = 0; i < myOriginals.size(); i++) {
-                result.add(Pair.create(myInfos.get(i), myOriginals.get(i)));
-            }
-
-            return Collections.unmodifiableList(result);
-        }
+        return myPanel.getBackgroundProcesses();
     }
 
     @RequiredUIAccess
-    public void addProgress(ProgressIndicator original, TaskInfo info) {
-        synchronized (myOriginals) {
-            boolean veryFirst = !hasProgressIndicators();
-
-            myOriginals.add((ProgressIndicatorEx) original);
-            myInfos.add(info);
-
-            MyInlineProgressIndicator expanded = createInlineDelegate(info, (ProgressIndicatorEx) original, false);
-            MyInlineProgressIndicator compact = createInlineDelegate(info, (ProgressIndicatorEx) original, true);
-
-            myPopup.addIndicator(expanded);
-
-            if (veryFirst && !myPopup.isShowing()) {
-                buildInInlineIndicator(compact);
-            }
-            else {
-                buildInProcessCount();
-                if (myInfos.size() > 1 && Registry.is("ide.windowSystem.autoShowProcessPopup")) {
-                    openProcessPopup(false);
-                }
-            }
-
-            runQuery();
-
-            setEnabled(true);
-        }
-    }
-
-    private boolean hasProgressIndicators() {
-        synchronized (myOriginals) {
-            return !myOriginals.isEmpty();
-        }
-    }
-
-    @RequiredUIAccess
-    private void removeProgress(MyInlineProgressIndicator progress) {
-        synchronized (myOriginals) {
-            if (!myInline2Original.containsKey(progress)) {
-                return; // already disposed
-            }
-
-            boolean last = myOriginals.size() == 1;
-            boolean beforeLast = myOriginals.size() == 2;
-
-            myPopup.removeIndicator(progress);
-
-            ProgressIndicatorEx original = removeFromMaps(progress);
-            if (myOriginals.contains(original)) {
-                Disposer.dispose(progress);
-                return;
-            }
-
-            if (last) {
-                removeAll();
-                revalidate();
-                repaint();
-
-                if (myShouldClosePopupAndOnProcessFinish) {
-                    hideProcessPopup();
-                }
-            }
-            else if (myPopup.isShowing() || myOriginals.size() > 1) {
-                buildInProcessCount();
-            }
-            else if (beforeLast) {
-                buildInInlineIndicator(createInlineDelegate(myInfos.get(0), myOriginals.get(0), true));
-            }
-
-            runQuery();
-
-            setEnabled(!myInfos.isEmpty());
-        }
-        Disposer.dispose(progress);
-    }
-
-    private ProgressIndicatorEx removeFromMaps(MyInlineProgressIndicator progress) {
-        ProgressIndicatorEx original = myInline2Original.get(progress);
-
-        myInline2Original.remove(progress);
-        synchronized (myDirtyIndicators) {
-            myDirtyIndicators.remove(progress);
-        }
-
-        myOriginal2Inlines.remove(original, progress);
-        if (myOriginal2Inlines.get(original) == null) {
-            int originalIndex = myOriginals.indexOf(original);
-            myOriginals.remove(originalIndex);
-            myInfos.remove(originalIndex);
-        }
-
-        return original;
-    }
-
-    @RequiredUIAccess
-    private void openProcessPopup(boolean requestFocus) {
-        synchronized (myOriginals) {
-            if (myPopup.isShowing()) {
-                return;
-            }
-            myPopup.show(requestFocus);
-            if (hasProgressIndicators()) {
-                myShouldClosePopupAndOnProcessFinish = true;
-                buildInProcessCount();
-            }
-            else {
-                myShouldClosePopupAndOnProcessFinish = false;
-            }
-        }
-    }
-
-    @RequiredUIAccess
-    void hideProcessPopup() {
-        synchronized (myOriginals) {
-            if (!myPopup.isShowing()) {
-                return;
-            }
-            myPopup.hide();
-
-            if (myOriginals.size() == 1) {
-                buildInInlineIndicator(createInlineDelegate(myInfos.get(0), myOriginals.get(0), true));
-            }
-            else if (!hasProgressIndicators()) {
-                removeAll();
-                revalidate();
-                repaint();
-            }
-            else {
-                buildInProcessCount();
-            }
-        }
-    }
-
-    @RequiredUIAccess
-    private void buildInProcessCount() {
-        removeAll();
-
-        myMultiProcessLink.setText(LocalizeValue.localizeTODO(getMultiProgressLinkText()));
-
-        add(myLayoutComponent);
-
-        revalidate();
-
-        repaint();
-    }
-
-    
-    private String getMultiProgressLinkText() {
-        ProgressIndicatorEx latest = getLatestProgress();
-        String latestText = latest == null ? null : latest.getText().getNullIfEmpty();
-        if (StringUtil.isEmptyOrSpaces(latestText) || myPopup.isShowing()) {
-            return myOriginals.size() + pluralizeProcess(myOriginals.size()) + " running…";
-        }
-        int others = myOriginals.size() - 1;
-        String trimmed = StringUtil.truncateWithEllipsis(latestText, 50);
-        return trimmed + " (" + others + " more" + pluralizeProcess(others) + ")";
-    }
-
-    private static String pluralizeProcess(int count) {
-        return count == 1 ? " process" : " processes";
-    }
-
-    private ProgressIndicatorEx getLatestProgress() {
-        return ContainerUtil.getLastItem(myOriginals);
-    }
-
-    @RequiredUIAccess
-    private void buildInInlineIndicator(MyInlineProgressIndicator inline) {
-        removeAll();
-
-        JRootPane pane = getRootPane();
-        if (pane == null) {
-            return; // e.g. project frame is closed
-        }
-
-        inline.updateProgressNow();
-
-        add(inline.getComponent());
-
-        revalidate();
-
-        repaint();
-    }
-
-    @RequiredUIAccess
-    private MyInlineProgressIndicator createInlineDelegate(TaskInfo info, ProgressIndicatorEx original, boolean compact) {
-        Collection<MyInlineProgressIndicator> inlines = myOriginal2Inlines.get(original);
-        if (inlines != null) {
-            for (MyInlineProgressIndicator eachInline : inlines) {
-                if (eachInline.isCompact() == compact) {
-                    return eachInline;
-                }
-            }
-        }
-
-        MyInlineProgressIndicator inline = new MyInlineProgressIndicator(compact, info, original);
-
-        myInline2Original.put(inline, original);
-        myOriginal2Inlines.put(original, inline);
-
-        if (compact) {
-            addClickListener(inline.getComponent());
-        }
-
-        return inline;
-    }
-
-    private void addClickListener(JComponent component) {
-        component.addMouseListener(new MouseAdapter() {
-            @Override
-            @RequiredUIAccess
-            public void mousePressed(MouseEvent e) {
-                handle(e);
-            }
-
-            @Override
-            @RequiredUIAccess
-            public void mouseReleased(MouseEvent e) {
-                handle(e);
-            }
-        });
-    }
-
     public boolean isProcessWindowOpen() {
-        return myPopup.isShowing();
+        return myPanel.isProcessWindowOpen();
+    }
+
+    @RequiredUIAccess
+    public void setBanners(List<Component> banners, boolean reveal) {
+        myPanel.setBanners(banners, reveal);
     }
 
     @RequiredUIAccess
     public void setProcessWindowOpen(boolean open) {
-        if (open) {
-            openProcessPopup(true);
-        }
-        else {
-            hideProcessPopup();
-        }
+        myPanel.setProcessWindowOpen(open);
     }
 
-    
+    @Override
+    @RequiredUIAccess
+    public Component getUIComponent() {
+        return myPanel.getUIComponent();
+    }
+
     @Override
     public String getId() {
         return StatusBar.PROGRESS_WIDGET_ID;
@@ -440,163 +93,7 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
     public void install(StatusBar statusBar) {
     }
 
-    private class MyInlineProgressIndicator extends InlineProgressIndicator {
-        private class SuspendAction extends LegacyDumbAwareAction {
-            public SuspendAction() {
-                super(LocalizeValue.empty(), LocalizeValue.empty(), PlatformIconGroup.generalInspectionspause());
-            }
-
-            @Override
-            @RequiredUIAccess
-            public void actionPerformed(AnActionEvent e) {
-                ProgressSuspender suspender = getSuspender();
-                if (suspender == null) {
-                    LOG.assertTrue(myOriginal == null, "The process is expected to be finished at this point");
-                    return;
-                }
-
-                if (suspender.isSuspended()) {
-                    suspender.resumeProcess();
-                }
-                else {
-                    suspender.suspendProcess(LocalizeValue.empty());
-                }
-                //UIEventLogger.logUIEvent(suspender.isSuspended() ? UIEventId.ProgressPaused : UIEventId.ProgressResumed);
-            }
-
-            @Override
-            public void update(AnActionEvent e) {
-                Presentation presentation = e.getPresentation();
-
-                ProgressSuspender suspender = getSuspender();
-                presentation.setEnabledAndVisible(suspender != null);
-                if (suspender != null) {
-                    presentation.setIcon(suspender.isSuspended() ? PlatformIconGroup.actionsResume() : PlatformIconGroup.actionsPause());
-                    presentation.setText(
-                        suspender.isSuspended()
-                            ? ApplicationLocalize.actionResumeText()
-                            : ApplicationLocalize.actionPauseText()
-                    );
-                }
-            }
-        }
-
-        private ProgressIndicatorEx myOriginal;
-
-        @RequiredUIAccess
-        MyInlineProgressIndicator(boolean compact, TaskInfo task, ProgressIndicatorEx original) {
-            super(compact, task);
-            myOriginal = original;
-            original.addStateDelegate(this);
-            addStateDelegate(new AbstractProgressIndicatorExBase() {
-                @Override
-                @RequiredUIAccess
-                public void cancel() {
-                    super.cancel();
-                    updateProgress();
-                }
-            });
-            runOnProgressRelatedChange(this::queueProgressUpdate, this);
-        }
-
-        
-        @Override
-        public LocalizeValue getText() {
-            LocalizeValue textValue = super.getText();
-            ProgressSuspender suspender = getSuspender();
-            return suspender != null && suspender.isSuspended() ? suspender.getSuspendedText() : textValue;
-        }
-
-        @Override
-        public List<AnAction> createEastButtons() {
-            return Lists.append(super.createEastButtons(), new SuspendAction());
-        }
-
-        private @Nullable ProgressSuspender getSuspender() {
-            ProgressIndicatorEx original = myOriginal;
-            return original == null ? null : ProgressSuspender.getSuspender(original);
-        }
-
-        @Override
-        @RequiredUIAccess
-        public void stop() {
-            super.stop();
-            updateProgress();
-        }
-
-        @Override
-        protected boolean isFinished() {
-            TaskInfo info = getInfo();
-            return info == null || isFinished(info);
-        }
-
-        @Override
-        public void finish(TaskInfo task) {
-            super.finish(task);
-            queueRunningUpdate(() -> removeProgress(this));
-        }
-
-        @Override
-        public void dispose() {
-            super.dispose();
-            myOriginal = null;
-        }
-
-        @Override
-        protected void cancelRequest() {
-            myOriginal.cancel();
-        }
-
-        @Override
-        @RequiredUIAccess
-        protected void queueProgressUpdate() {
-            synchronized (myDirtyIndicators) {
-                myDirtyIndicators.add(this);
-            }
-            myUpdateQueue.queue(myUpdateIndicators);
-        }
-
-        @Override
-        protected void queueRunningUpdate(@RequiredUIAccess final Runnable update) {
-            myUpdateQueue.queue(new Update(new Object(), false, 0) {
-                @Override
-                public void run() {
-                    Application.get().invokeLater(update);
-                }
-            });
-        }
-
-        @Override
-        @RequiredUIAccess
-        public void updateProgressNow() {
-            myProgress.setVisible(!PowerSaveMode.isEnabled() || !isPaintingIndeterminate());
-            super.updateProgressNow();
-            if (myOriginal == getLatestProgress()) {
-                myMultiProcessLink.setText(LocalizeValue.localizeTODO(getMultiProgressLinkText()));
-            }
-        }
-    }
-
-    @RequiredUIAccess
-    private void runQuery() {
-        if (getRootPane() == null) {
-            return;
-        }
-
-        Set<InlineProgressIndicator> indicators = getCurrentInlineIndicators();
-        if (indicators.isEmpty()) {
-            return;
-        }
-
-        for (InlineProgressIndicator each : indicators) {
-            each.updateProgress();
-        }
-    }
-
-    
-    private Set<InlineProgressIndicator> getCurrentInlineIndicators() {
-        synchronized (myOriginals) {
-            return myInline2Original.keySet();
-        }
+    @Override
+    public void dispose() {
     }
 }

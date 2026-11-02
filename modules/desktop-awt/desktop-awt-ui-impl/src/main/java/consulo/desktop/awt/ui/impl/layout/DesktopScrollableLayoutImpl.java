@@ -37,7 +37,9 @@ import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 import javax.swing.*;
@@ -72,6 +74,25 @@ public class DesktopScrollableLayoutImpl extends SwingComponentDelegate<JScrollP
         }
 
         @Override
+        public Dimension getPreferredSize() {
+            Dimension size = super.getPreferredSize();
+            if (myVisibleRowCount <= 0 || isPreferredSizeSet() || !(TargetAWT.to(myComponent) instanceof Container content)) {
+                return size;
+            }
+
+            int rowsHeight = visibleRowsHeight(content, myVisibleRowCount);
+            if (rowsHeight < 0) {
+                return size;
+            }
+
+            int chrome = size.height - content.getPreferredSize().height;
+            int scrollBarWidth = getVerticalScrollBarPolicy() == ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED
+                ? getVerticalScrollBar().getPreferredSize().width
+                : 0;
+            return new Dimension(size.width + scrollBarWidth, rowsHeight + chrome);
+        }
+
+        @Override
         public boolean isOptimizedDrawingEnabled() {
             return myOverlay == null && super.isOptimizedDrawingEnabled();
         }
@@ -102,6 +123,8 @@ public class DesktopScrollableLayoutImpl extends SwingComponentDelegate<JScrollP
 
     private final @Nullable Component myComponent;
     private final ScrollableLayoutOptions myOptions;
+
+    private int myVisibleRowCount;
 
     private final Set<java.awt.Component> myTracked = new HashSet<>();
     private final ComponentListener myTrackedListener = new ComponentAdapter() {
@@ -164,6 +187,44 @@ public class DesktopScrollableLayoutImpl extends SwingComponentDelegate<JScrollP
         pane.getViewport().addChangeListener(e -> fireViewportChanged());
 
         return pane;
+    }
+
+    private static int visibleRowsHeight(Container content, int count) {
+        List<java.awt.Component> rows = new ArrayList<>();
+        for (java.awt.Component child : content.getComponents()) {
+            if (child.isVisible()) {
+                rows.add(child);
+            }
+        }
+
+        if (rows.size() <= count) {
+            return -1;
+        }
+
+        int contentHeight = content.getPreferredSize().height;
+        Insets insets = content.getInsets();
+
+        int rowsHeight = 0;
+        int hiddenHeight = 0;
+        for (int i = 0; i < rows.size(); i++) {
+            int height = rows.get(i).getPreferredSize().height;
+            rowsHeight += height;
+            if (i >= count) {
+                hiddenHeight += height;
+            }
+        }
+
+        int gap = (contentHeight - insets.top - insets.bottom - rowsHeight) / (rows.size() - 1);
+        return contentHeight - hiddenHeight - gap * (rows.size() - count);
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setVisibleRowCount(int count) {
+        myVisibleRowCount = count;
+        JScrollPane pane = toAWTComponent();
+        pane.revalidate();
+        pane.repaint();
     }
 
     private void fireViewportChanged() {

@@ -15,16 +15,30 @@ import consulo.ui.ProgressBarStyle;
 import consulo.ui.Space;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.layout.DockLayout;
+import consulo.ui.layout.LayoutStyle;
 import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.layout.HorizontalLayoutStyle;
 import consulo.ui.style.ComponentColors;
+import consulo.util.lang.StringUtil;
 
-import javax.swing.JComponent;
 import java.util.List;
 
 public class InlineProgressIndicator extends ProgressIndicatorBase implements Disposable {
+    /**
+     * Where the indicator is shown, which decides how much of the task it tells.
+     */
+    public enum Mode {
+        /**
+         * A spinner, the text and a cancel button in one line - the status bar, where there is no room for a bar
+         */
+        STATUS_BAR,
+        /**
+         * The title with the buttons, a bar and one line of detail - a row of the list of running tasks
+         */
+        CARD
+    }
+
     private final ActionToolbar myToolbar;
 
     private class CancelAction extends DumbAwareAction implements AnActionWithSyncUpdate {
@@ -46,44 +60,41 @@ public class InlineProgressIndicator extends ProgressIndicatorBase implements Di
     }
 
     protected final Label myText = Label.create();
-    private final Label myText2 = Label.create();
 
     protected ProgressBar myProgress;
 
     private Component myComponent;
 
-    private final boolean myCompact;
+    private final Mode myMode;
     private volatile TaskInfo myInfo;
 
     private final Label myProcessName = Label.create();
     private boolean myDisposed;
 
     @RequiredUIAccess
-    public InlineProgressIndicator(boolean compact, TaskInfo processInfo) {
-        myCompact = compact;
+    public InlineProgressIndicator(Mode mode, TaskInfo processInfo) {
+        myMode = mode;
         myInfo = processInfo;
 
         List<AnAction> actions = createEastButtons();
 
         ActionGroup group = ActionGroup.newImmutableBuilder().addAll(actions).build();
 
-        ActionToolbar.Style style = myCompact ? ActionToolbar.Style.INPLACE : ActionToolbar.Style.HORIZONTAL;
-
-        myToolbar = ActionToolbarFactory.getInstance().createActionToolbar("InlineProgressBar", group, style);
+        myToolbar = ActionToolbarFactory.getInstance().createActionToolbar("InlineProgressBar", group, ActionToolbar.Style.INPLACE);
         myToolbar.setTargetUIComponent(null);
         myToolbar.updateActionsAsync();
 
         Component toolbar = myToolbar.getUIComponent();
 
         myText.addStyle(LabelStyle.TRANSPARENT_BACKGROUND);
-        myText2.addStyle(LabelStyle.TRANSPARENT_BACKGROUND);
         myProcessName.addStyle(LabelStyle.TRANSPARENT_BACKGROUND);
 
         myProgress = ProgressBar.create();
         myProgress.addStyle(ProgressBarStyle.TRANSPARENT_BACKGROUND);
 
-        if (myCompact) {
+        if (myMode == Mode.STATUS_BAR) {
             myProgress.addStyle(ProgressBarStyle.SPINNER);
+            myProgress.setIndeterminate(true);
 
             HorizontalLayout layout = HorizontalLayout.create();
             layout.addStyle(HorizontalLayoutStyle.TRANSPARENT_BACKGROUND);
@@ -102,17 +113,20 @@ public class InlineProgressIndicator extends ProgressIndicatorBase implements Di
         else {
             myProcessName.setText(LocalizeValue.of(processInfo.getTitle()));
 
-            DockLayout content = DockLayout.create();
-            content.top(myText);
-            content.center(myProgress);
-            content.bottom(myText2);
-            content.right(toolbar);
-            content.paddingBuilder().allSet(Space.X_SMALL).apply();
+            myText.addStyle(LabelStyle.FONT_SMALL);
+            myText.setForegroundColor(ComponentColors.INFO_FOREGROUND);
+
+            DockLayout header = DockLayout.create();
+            header.addStyle(LayoutStyle.TRANSPARENT_BACKGROUND);
+            header.center(myProcessName);
+            header.right(toolbar);
 
             DockLayout root = DockLayout.create();
-            root.top(myProcessName);
-            root.center(content);
-            root.borderBuilder().allSet().apply();
+            root.addStyle(LayoutStyle.TRANSPARENT_BACKGROUND);
+            root.top(header);
+            root.center(myProgress);
+            root.bottom(myText);
+            root.paddingBuilder().verticalSet(Space.SMALL).leftSet(Space.MEDIUM).rightSet(Space.SMALL).apply();
 
             myComponent = root;
         }
@@ -142,44 +156,49 @@ public class InlineProgressIndicator extends ProgressIndicatorBase implements Di
 
     @RequiredUIAccess
     public void updateProgressNow() {
-        if (isPaintingIndeterminate()) {
-            myProgress.setIndeterminate(true);
-        }
-        else {
-            myProgress.setIndeterminate(false);
-            myProgress.setMinimum(0);
-            myProgress.setMaximum(100);
-        }
-        if (getFraction() > 0) {
-            myProgress.setValue((int) (getFraction() * 99 + 1));
+        if (myMode == Mode.CARD) {
+            if (isPaintingIndeterminate()) {
+                myProgress.setIndeterminate(true);
+            }
+            else {
+                myProgress.setIndeterminate(false);
+                myProgress.setMinimum(0);
+                myProgress.setMaximum(100);
+            }
+            if (getFraction() > 0) {
+                myProgress.setValue((int) (getFraction() * 99 + 1));
+            }
         }
 
         LocalizeValue text = getText();
-        myText.setText(text);
-        myText2.setText(getText2());
-
-        if (myCompact && text.isEmpty()) {
-            myText.setText(LocalizeValue.of(myInfo.getTitle()));
-        }
-
-        if (isStopping()) {
-            if (myCompact) {
-                myText.setText(IdeLocalize.progressTextStopping(text));
-            }
-            else {
-                myProcessName.setText(IdeLocalize.progressTextStopping(LocalizeValue.of(myInfo.getTitle())));
-                myText.setEnabled(false);
-                myText2.setEnabled(false);
-            }
-            myProgress.setEnabled(false);
+        boolean stopping = isStopping();
+        if (myMode == Mode.STATUS_BAR) {
+            LocalizeValue shown = text.isEmpty() ? LocalizeValue.of(myInfo.getTitle()) : text;
+            myText.setText(stopping ? IdeLocalize.progressTextStopping(shown) : shown);
         }
         else {
-            myText.setEnabled(true);
-            myText2.setEnabled(true);
-            myProgress.setEnabled(true);
+            myText.setText(detailText(text, getText2()));
+
+            LocalizeValue title = LocalizeValue.of(myInfo.getTitle());
+            myProcessName.setText(stopping ? IdeLocalize.progressTextStopping(title) : title);
         }
 
+        myText.setEnabled(!stopping);
+        myProgress.setEnabled(!stopping);
+
         myToolbar.updateActionsAsync();
+    }
+
+    private static LocalizeValue detailText(LocalizeValue text, LocalizeValue text2) {
+        String first = text.get();
+        String second = text2.get();
+        if (StringUtil.isEmptyOrSpaces(second)) {
+            return text;
+        }
+        if (StringUtil.isEmptyOrSpaces(first)) {
+            return text2;
+        }
+        return LocalizeValue.of(first + " \u00B7 " + second);
     }
 
     protected boolean isPaintingIndeterminate() {
@@ -213,12 +232,8 @@ public class InlineProgressIndicator extends ProgressIndicatorBase implements Di
         return myComponent;
     }
 
-    public JComponent getComponent() {
-        return (JComponent) TargetAWT.to(myComponent);
-    }
-
-    public boolean isCompact() {
-        return myCompact;
+    public Mode getMode() {
+        return myMode;
     }
 
     public TaskInfo getInfo() {

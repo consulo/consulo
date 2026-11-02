@@ -16,15 +16,21 @@
 package consulo.externalService.impl.internal.whatsNew;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.configuration.editor.ConfigurationFileEditorManager;
+import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginIds;
+import consulo.container.plugin.PluginManager;
 import consulo.externalService.impl.internal.pluginHistory.UpdateHistory;
+import consulo.externalService.impl.internal.update.PlatformOrPluginUpdateChecker;
 import consulo.project.Project;
 import consulo.project.startup.PostStartupActivity;
 import consulo.ui.UIAccess;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -53,13 +59,30 @@ public class WhatsNewStartupActivity implements PostStartupActivity, DumbAware {
         if (myAlreadyShow.compareAndSet(false, true)) {
             UpdateHistory updateHistory = myUpdateHistoryProvider.get();
 
-            if (updateHistory.isShowChangeLog()) {
-                updateHistory.setShowChangeLog(false);
-
+            if (updateHistory.advanceSeenVersions(runningVersions())) {
                 ConfigurationFileEditorManager manager = myConfigurationFileEditorManagerProvider.get();
 
                 uiAccess.give(() -> manager.open(project, WhatsNewConfigurationFileEditorProvider.class, Map.of()));
             }
         }
+    }
+
+    private static Map<String, String> runningVersions() {
+        Map<String, String> versions = new HashMap<>();
+        versions.put(PlatformOrPluginUpdateChecker.getPlatformPluginId().getIdString(), Application.get().getBuildNumber().asString());
+
+        for (PluginDescriptor plugin : PluginManager.getPlugins()) {
+            if (PluginIds.isPlatformPlugin(plugin.getPluginId())) {
+                continue;
+            }
+
+            String version = plugin.getVersion();
+            if (version == null || "SNAPSHOT".equals(version)) {
+                continue;
+            }
+
+            versions.put(plugin.getPluginId().getIdString(), version);
+        }
+        return versions;
     }
 }

@@ -327,6 +327,14 @@ public class IdeStatusBarImpl extends JPanel implements StatusBarEx, UiDataProvi
     }
 
     @Override
+    @RequiredUIAccess
+    public void setProcessBanners(List<consulo.ui.Component> banners, boolean reveal) {
+        this.<InfoAndProgressPanel>findWidget(widget -> widget instanceof InfoAndProgressPanel).ifPresent(widget -> {
+            widget.setBanners(banners, reveal);
+        });
+    }
+
+    @Override
     public boolean isProcessWindowOpen() {
         Optional<InfoAndProgressPanel> optional = this.<InfoAndProgressPanel>findWidget(widget -> widget instanceof InfoAndProgressPanel);
         return optional.isPresent() && optional.get().isProcessWindowOpen();

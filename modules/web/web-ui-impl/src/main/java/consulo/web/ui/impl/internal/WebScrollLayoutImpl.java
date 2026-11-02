@@ -94,12 +94,39 @@ public class WebScrollLayoutImpl extends VaadinComponentDelegate<WebScrollLayout
             "}" +
             "scroller.__consuloViewport.track();";
 
+    private static final String ROWS_SCRIPT =
+        "const scroller = this;" +
+            "scroller.__consuloRows = $0;" +
+            "if (!scroller.__consuloRowLimit) {" +
+            "  const apply = () => {" +
+            "    const count = scroller.__consuloRows;" +
+            "    const content = scroller.lastElementChild;" +
+            "    const rows = content ? Array.from(content.children).filter(e => getComputedStyle(e).display !== 'none') : [];" +
+            "    if (count <= 0 || rows.length <= count) { scroller.style.maxHeight = ''; return; }" +
+            "    const top = content.getBoundingClientRect().top;" +
+            "    const bottom = rows[count - 1].getBoundingClientRect().bottom;" +
+            "    const padding = parseFloat(getComputedStyle(content).paddingBottom) || 0;" +
+            "    scroller.style.maxHeight = Math.ceil(bottom - top + padding) + 'px';" +
+            "  };" +
+            "  const resize = new ResizeObserver(apply);" +
+            "  const observe = () => {" +
+            "    resize.disconnect();" +
+            "    const content = scroller.lastElementChild;" +
+            "    if (content) { resize.observe(content); Array.from(content.children).forEach(e => resize.observe(e)); }" +
+            "    apply();" +
+            "  };" +
+            "  new MutationObserver(observe).observe(scroller, { childList: true, subtree: true });" +
+            "  scroller.__consuloRowLimit = { observe: observe };" +
+            "}" +
+            "scroller.__consuloRowLimit.observe();";
+
     private final Map<Component, String> myTracked = new HashMap<>();
     private final Map<String, Rectangle2D> myTrackedBounds = new HashMap<>();
     private Rectangle2D myViewRect = new Rectangle2D(0, 0);
     private Size2D myContentSize = new Size2D(0, 0);
     private boolean myTrackPending;
     private @Nullable Element myOverlayHolder;
+    private int myVisibleRowCount;
 
     public WebScrollLayoutImpl(Component component, ScrollableLayoutOptions options) {
         HasSize content = (HasSize) TargetVaadin.to(component);
@@ -148,8 +175,24 @@ public class WebScrollLayoutImpl extends VaadinComponentDelegate<WebScrollLayout
             .addEventData("event.detail.bounds")
             .debounce(VIEWPORT_THROTTLE_MS, DebouncePhase.LEADING, DebouncePhase.INTERMEDIATE, DebouncePhase.TRAILING);
 
-        vaadin.getElement().addAttachListener(event -> installViewportScript());
+        vaadin.getElement().addAttachListener(event -> {
+            installViewportScript();
+            if (myVisibleRowCount > 0) {
+                installRowsScript();
+            }
+        });
         installViewportScript();
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setVisibleRowCount(int count) {
+        myVisibleRowCount = count;
+        installRowsScript();
+    }
+
+    private void installRowsScript() {
+        getVaadinComponent().getElement().executeJs(ROWS_SCRIPT, myVisibleRowCount);
     }
 
     private void installViewportScript() {

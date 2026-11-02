@@ -424,6 +424,8 @@ public abstract class DesktopQtPopupImpl extends QtComponentDelegate<QWidget> im
     private final QVBoxLayout myLayout;
 
     private final DismissWatcher myDismissWatcher = new DismissWatcher();
+    private final TargetWatcher myTargetWatcher = new TargetWatcher();
+    private @Nullable QWidget myPointedWidget;
 
     private @Nullable QSizeGrip mySizeGrip;
 
@@ -672,6 +674,41 @@ public abstract class DesktopQtPopupImpl extends QtComponentDelegate<QWidget> im
     protected void showPointingAtWidget(QWidget widget) {
         QPoint origin = widget.mapToGlobal(new QPoint(0, 0));
         showPointingAtRect(widget, new QRect(origin.x(), origin.y(), widget.width(), widget.height()));
+
+        unwatchTarget();
+        myPointedWidget = widget;
+        widget.installEventFilter(myTargetWatcher);
+    }
+
+    private class TargetWatcher extends QObject {
+        @Override
+        public boolean eventFilter(QObject watched, QEvent event) {
+            QEvent.Type type = event.type();
+            QWidget widget = myPointedWidget;
+            if (widget != null && watched == widget && (type == QEvent.Type.Resize || type == QEvent.Type.Move) && isVisible()) {
+                QPoint origin = widget.mapToGlobal(new QPoint(0, 0));
+                repointAt(new QRect(origin.x(), origin.y(), widget.width(), widget.height()));
+            }
+            return false;
+        }
+    }
+
+    private void unwatchTarget() {
+        QWidget widget = myPointedWidget;
+        myPointedWidget = null;
+        if (widget != null && !widget.isDisposed() && !myTargetWatcher.isDisposed()) {
+            widget.removeEventFilter(myTargetWatcher);
+        }
+    }
+
+    private void repointAt(QRect target) {
+        PopupPosition position = myOptions.getPosition();
+        QPoint placed = clampToScreen(placeBeside(position, target));
+        boolean vertical = position == PopupPosition.TOP || position == PopupPosition.BOTTOM;
+        myPopup.pointArrowAt(vertical
+            ? target.x() + target.width() / 2 - placed.x()
+            : target.y() + target.height() / 2 - placed.y());
+        myComponent.move(placed);
     }
 
     @RequiredUIAccess
@@ -721,9 +758,12 @@ public abstract class DesktopQtPopupImpl extends QtComponentDelegate<QWidget> im
         int height = myComponent.height();
         QMargins shadow = shadowInsets();
         int middleY = target.y() + target.height() / 2 - height / 2;
+        int startX = target.width() > 0
+            ? target.x() + target.width() / 2 - (width - shadow.left() - shadow.right()) / 2 - shadow.left()
+            : target.x() - shadow.left();
         return switch (position) {
-            case TOP -> new QPoint(target.x() - shadow.left(), target.y() - height + shadow.bottom());
-            case BOTTOM -> new QPoint(target.x() - shadow.left(), target.y() + target.height() - shadow.top());
+            case TOP -> new QPoint(startX, target.y() - height + shadow.bottom());
+            case BOTTOM -> new QPoint(startX, target.y() + target.height() - shadow.top());
             case END -> new QPoint(target.x() + target.width() - shadow.left(), middleY);
             case START -> new QPoint(target.x() - width + shadow.right(), middleY);
         };
@@ -991,6 +1031,7 @@ public abstract class DesktopQtPopupImpl extends QtComponentDelegate<QWidget> im
         myDisposed = true;
 
         QApplication.instance().removeEventFilter(myDismissWatcher);
+        unwatchTarget();
 
         uninstallFocusWatcher();
 
@@ -1013,10 +1054,15 @@ public abstract class DesktopQtPopupImpl extends QtComponentDelegate<QWidget> im
 
         QApplication.instance().removeEventFilter(myDismissWatcher);
 
+        unwatchTarget();
+
         disposeQt();
 
         if (!myDismissWatcher.isDisposed()) {
             myDismissWatcher.dispose();
+        }
+        if (!myTargetWatcher.isDisposed()) {
+            myTargetWatcher.dispose();
         }
     }
 }

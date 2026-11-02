@@ -76,7 +76,6 @@ public class UnifiedStatusBarImpl implements StatusBarEx {
 
     private @Nullable HorizontalLayout myLeftPanel;
     private @Nullable HorizontalLayout myRightPanel;
-    private @Nullable HorizontalLayout myCenterPanel;
 
 
     private final DockLayout myComponent = DockLayout.create();
@@ -96,7 +95,7 @@ public class UnifiedStatusBarImpl implements StatusBarEx {
         myInfoAndProgressPanel = new UnifiedInfoAndProgressPanel(this::uiAccess);
         Disposer.register(this, myInfoAndProgressPanel);
 
-        centerPanel().add(myInfoAndProgressPanel.getUIComponent());
+        myComponent.center(myInfoAndProgressPanel.getUIComponent());
 
         myComponent.putUserData(UiDataProvider.KEY, sink -> {
             sink.set(Project.KEY, getProject());
@@ -202,15 +201,6 @@ public class UnifiedStatusBarImpl implements StatusBarEx {
             myComponent.left(myLeftPanel);
         }
         return myLeftPanel;
-    }
-
-    @RequiredUIAccess
-    private HorizontalLayout centerPanel() {
-        if (myCenterPanel == null) {
-            myCenterPanel = HorizontalLayout.create();
-            myComponent.center(myCenterPanel);
-        }
-        return myCenterPanel;
     }
 
     @Override
@@ -387,6 +377,15 @@ public class UnifiedStatusBarImpl implements StatusBarEx {
             .stream()
             .filter(it -> widgetPredicate.test(it.getValue().widget()))
             .forEach(it -> updateWidget(it.getKey()));
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void setProcessBanners(List<consulo.ui.Component> banners, boolean reveal) {
+        UnifiedInfoAndProgressPanel panel = myInfoAndProgressPanel;
+        if (panel != null) {
+            panel.setBanners(banners, reveal);
+        }
     }
 
     @Override

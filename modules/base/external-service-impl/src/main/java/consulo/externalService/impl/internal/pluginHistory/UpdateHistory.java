@@ -19,10 +19,10 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.PersistentStateComponent;
-import consulo.component.persist.RoamingType;
-import consulo.component.persist.State;
 import consulo.component.persist.Storage;
+import consulo.component.persist.State;
 import consulo.container.plugin.PluginId;
+import consulo.util.lang.VersionComparatorUtil;
 import jakarta.inject.Singleton;
 
 import org.jspecify.annotations.Nullable;
@@ -37,30 +37,57 @@ import java.util.TreeMap;
 @Singleton
 @ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
-@State(name = "UpdateHistory", storages = @Storage(value = "updateHistory.xml", roamingType = RoamingType.DISABLED))
+@State(name = "UpdateHistory", storages = @Storage("updateHistory"))
 public class UpdateHistory implements PersistentStateComponent<UpdateHistory.State> {
+    /**
+     * Kept with the settings of the user, so a changelog read on one machine is not shown again on another.
+     */
     public static class State {
-        public Map<String, String> pluginVersions = new TreeMap<>();
+        /**
+         * Plugin id to the last version whose changelog the user was shown.
+         */
+        public Map<String, String> seenVersions = new TreeMap<>();
 
-        public boolean showChangeLog;
+        /**
+         * Plugin id to the version the last shown changelog started from.
+         */
+        public Map<String, String> changeLogFrom = new TreeMap<>();
 
         public boolean showExperimentalWarning = true;
     }
 
     private State myState = new State();
 
-    public void replaceHistory(Map<String, String> history) {
-        myState.pluginVersions.putAll(history);
+    /**
+     * Moves what the user has seen up to the versions running now.
+     *
+     * @return {@code true} if anything running is newer than what was seen - the changelog of that is worth showing.
+     * A version seen for the first time - a fresh install, a plugin just added - is only taken note of.
+     */
+    public boolean advanceSeenVersions(Map<String, String> running) {
+        Map<String, String> seen = myState.seenVersions;
 
-        myState.showChangeLog = true;
-    }
+        boolean newer = false;
+        Map<String, String> from = new TreeMap<>();
+        for (Map.Entry<String, String> entry : running.entrySet()) {
+            String seenVersion = seen.get(entry.getKey());
+            from.put(entry.getKey(), seenVersion == null ? entry.getValue() : seenVersion);
+            if (seenVersion != null && VersionComparatorUtil.compare(entry.getValue(), seenVersion) > 0) {
+                newer = true;
+            }
+        }
 
-    public void setShowChangeLog(boolean value) {
-        myState.showChangeLog = value;
-    }
+        for (Map.Entry<String, String> entry : running.entrySet()) {
+            String seenVersion = seen.get(entry.getKey());
+            if (seenVersion == null || VersionComparatorUtil.compare(entry.getValue(), seenVersion) > 0) {
+                seen.put(entry.getKey(), entry.getValue());
+            }
+        }
 
-    public boolean isShowChangeLog() {
-        return myState.showChangeLog;
+        if (newer) {
+            myState.changeLogFrom = from;
+        }
+        return newer;
     }
 
     public void setShowExperimentalWarning(boolean value) {
@@ -71,9 +98,11 @@ public class UpdateHistory implements PersistentStateComponent<UpdateHistory.Sta
         return myState.showExperimentalWarning;
     }
 
-    
+    /**
+     * The version the changelog of the plugin starts from - the one seen before the last changelog was shown.
+     */
     public String getHistoryVersion(PluginId pluginId, String defaultVersion) {
-        return myState.pluginVersions.getOrDefault(pluginId.getIdString(), defaultVersion);
+        return myState.changeLogFrom.getOrDefault(pluginId.getIdString(), defaultVersion);
     }
 
     @Override

@@ -41,7 +41,7 @@ public class ProgressStatusBarWidgetFactory implements StatusBarWidgetFactory {
     
     @Override
     public StatusBarWidget createWidget(Project project) {
-        return new InfoAndProgressPanel();
+        return new InfoAndProgressPanel(project);
     }
 
     @Override

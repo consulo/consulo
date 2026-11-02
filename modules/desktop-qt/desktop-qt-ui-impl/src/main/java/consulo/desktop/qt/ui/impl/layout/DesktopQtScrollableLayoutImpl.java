@@ -27,18 +27,22 @@ import consulo.ui.layout.LayoutConstraint;
 import consulo.ui.layout.ScrollableLayoutOptions;
 import consulo.ui.layout.VerticalScrollBarPosition;
 import io.qt.core.QEvent;
+import io.qt.core.QMargins;
 import io.qt.core.QObject;
 import io.qt.core.QPoint;
 import io.qt.core.QSize;
 import io.qt.core.Qt;
 import io.qt.widgets.QFrame;
 import io.qt.widgets.QLayout;
+import io.qt.widgets.QLayoutItem;
 import io.qt.widgets.QAbstractScrollArea;
 import io.qt.widgets.QScrollArea;
 import io.qt.widgets.QWidget;
 import org.jspecify.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -46,24 +50,98 @@ import java.util.Map;
  * @since 2026-08-16
  */
 public class DesktopQtScrollableLayoutImpl extends DesktopQtLayoutComponent<LayoutConstraint, Object> implements ScrollableLayoutInternal {
-    private static class ClippingScrollArea extends QScrollArea {
-        ClippingScrollArea(QWidget parent) {
+    private static class SizedScrollArea extends QScrollArea {
+        private static final int QWIDGETSIZE_MAX = (1 << 24) - 1;
+
+        private final boolean myClipping;
+        private int myVisibleRowCount;
+
+        SizedScrollArea(QWidget parent, boolean clipping) {
             super(parent);
+            myClipping = clipping;
+        }
+
+        void setVisibleRowCount(int count) {
+            myVisibleRowCount = count;
+            applyRowLimit();
+        }
+
+        void applyRowLimit() {
+            QWidget content = widget();
+            int rowsHeight = content == null ? -1 : visibleRowsHeight(content, myVisibleRowCount);
+            setMaximumHeight(rowsHeight >= 0 ? rowsHeight + frameWidth() * 2 : QWIDGETSIZE_MAX);
+            updateGeometry();
+        }
+
+        @Override
+        public boolean eventFilter(QObject watched, QEvent event) {
+            if (myVisibleRowCount > 0 && watched == widget() && event.type() == QEvent.Type.LayoutRequest) {
+                applyRowLimit();
+            }
+            return super.eventFilter(watched, event);
         }
 
         @Override
         public QSize sizeHint() {
             QWidget content = widget();
-            QSize size = content == null ? new QSize(0, 0) : content.sizeHint();
             int frame = frameWidth() * 2;
+            int rowsHeight = content == null ? -1 : visibleRowsHeight(content, myVisibleRowCount);
+            if (rowsHeight >= 0) {
+                int scrollBarWidth = verticalScrollBarPolicy() == Qt.ScrollBarPolicy.ScrollBarAlwaysOff
+                    ? 0
+                    : verticalScrollBar().sizeHint().width();
+                return new QSize(content.sizeHint().width() + scrollBarWidth + frame, rowsHeight + frame);
+            }
+
+            if (!myClipping) {
+                return super.sizeHint();
+            }
+
+            QSize size = content == null ? new QSize(0, 0) : content.sizeHint();
             return new QSize(size.width() + frame, size.height() + frame);
         }
 
         @Override
         public QSize minimumSizeHint() {
+            if (!myClipping) {
+                return super.minimumSizeHint();
+            }
+
             QWidget content = widget();
             int frame = frameWidth() * 2;
             return new QSize(frame, (content == null ? 0 : content.minimumSizeHint().height()) + frame);
+        }
+
+        private static int visibleRowsHeight(QWidget content, int count) {
+            QLayout layout = content.layout();
+            if (count <= 0 || layout == null) {
+                return -1;
+            }
+
+            List<QWidget> rows = new ArrayList<>();
+            for (int i = 0; i < layout.count(); i++) {
+                QLayoutItem item = layout.itemAt(i);
+                QWidget row = item == null ? null : item.widget();
+                if (row != null && !(row.isHidden() && row.testAttribute(Qt.WidgetAttribute.WA_WState_ExplicitShowHide))) {
+                    rows.add(row);
+                }
+            }
+
+            if (rows.size() <= count) {
+                return -1;
+            }
+
+            QMargins margins = layout.contentsMargins();
+            QWidget last = rows.get(count - 1);
+            if (last.height() > 0 && content.height() > 0) {
+                return last.y() + last.height() + margins.bottom();
+            }
+
+            int height = margins.top() + margins.bottom() + Math.max(0, layout.widgetSpacing()) * (count - 1);
+            for (int i = 0; i < count; i++) {
+                height += rows.get(i).sizeHint().height();
+            }
+            return height;
         }
     }
 
@@ -72,6 +150,8 @@ public class DesktopQtScrollableLayoutImpl extends DesktopQtLayoutComponent<Layo
     private final Map<Component, @Nullable QWidget> myTracked = new HashMap<>();
 
     private @Nullable Component myOverlay;
+
+    private int myVisibleRowCount;
 
     public DesktopQtScrollableLayoutImpl(Component component, ScrollableLayoutOptions options) {
         myOptions = options;
@@ -84,7 +164,8 @@ public class DesktopQtScrollableLayoutImpl extends DesktopQtLayoutComponent<Layo
         boolean clipping = myOptions.getHorizontalScrollPolicy() == ScrollableLayoutOptions.ScrollPolicy.NEVER
             && myOptions.getVerticalScrollPolicy() == ScrollableLayoutOptions.ScrollPolicy.NEVER;
 
-        QScrollArea scrollArea = clipping ? new ClippingScrollArea(parent) : new QScrollArea(parent);
+        SizedScrollArea scrollArea = new SizedScrollArea(parent, clipping);
+        scrollArea.setVisibleRowCount(myVisibleRowCount);
         scrollArea.setWidgetResizable(true);
         scrollArea.setFrameShape(QFrame.Shape.NoFrame);
         scrollArea.setHorizontalScrollBarPolicy(toQt(myOptions.getHorizontalScrollPolicy()));
@@ -116,6 +197,15 @@ public class DesktopQtScrollableLayoutImpl extends DesktopQtLayoutComponent<Layo
                 fireViewportChanged();
             }
             return false;
+        }
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setVisibleRowCount(int count) {
+        myVisibleRowCount = count;
+        if (myComponent instanceof SizedScrollArea scrollArea && isAlive(scrollArea)) {
+            scrollArea.setVisibleRowCount(count);
         }
     }
 
@@ -295,6 +385,10 @@ public class DesktopQtScrollableLayoutImpl extends DesktopQtLayoutComponent<Layo
     protected void attach(QtComponentDelegate<?> child, @Nullable Object layoutData) {
         QWidget widget = child.toQtComponent();
         ((QScrollArea) myComponent).setWidget(widget);
+        if (myComponent instanceof SizedScrollArea sized && widget != null) {
+            widget.installEventFilter(sized);
+            sized.applyRowLimit();
+        }
         if (widget instanceof QAbstractScrollArea inner) {
             inner.verticalScrollBar().valueChanged.connect(value -> fireViewportChanged());
             inner.verticalScrollBar().rangeChanged.connect((min, max) -> fireViewportChanged());

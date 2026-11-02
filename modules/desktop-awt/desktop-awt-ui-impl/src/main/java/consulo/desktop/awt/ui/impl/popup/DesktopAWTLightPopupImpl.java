@@ -83,6 +83,18 @@ public class DesktopAWTLightPopupImpl extends SwingComponentDelegate<DesktopAWTP
         }
     };
 
+    private final ComponentListener myTargetListener = new ComponentAdapter() {
+        @Override
+        public void componentResized(ComponentEvent e) {
+            relayout();
+        }
+
+        @Override
+        public void componentMoved(ComponentEvent e) {
+            relayout();
+        }
+    };
+
     private final HierarchyListener myTargetHierarchyListener = e -> {
         if ((e.getChangeFlags() & HierarchyEvent.SHOWING_CHANGED) != 0) {
             java.awt.Component target = myTarget;
@@ -207,6 +219,7 @@ public class DesktopAWTLightPopupImpl extends SwingComponentDelegate<DesktopAWTP
         layeredPane.add(panel, JLayeredPane.POPUP_LAYER, 0);
         layeredPane.addComponentListener(myLayeredPaneListener);
         target.addHierarchyBoundsListener(myTargetBoundsListener);
+        target.addComponentListener(myTargetListener);
         target.addHierarchyListener(myTargetHierarchyListener);
         Toolkit.getDefaultToolkit().addAWTEventListener(myDismissListener, AWTEvent.MOUSE_EVENT_MASK | AWTEvent.KEY_EVENT_MASK);
         myOpen = true;
@@ -282,12 +295,19 @@ public class DesktopAWTLightPopupImpl extends SwingComponentDelegate<DesktopAWTP
 
     private static Rectangle place(PopupPosition position, DesktopAWTPopupSide side, Rectangle anchor, Dimension size, boolean point) {
         Insets shadow = DesktopAWTPopupShadow.insets();
-        int startX = point && side != DesktopAWTPopupSide.NONE
-            ? anchor.x - DesktopAWTPopupPanel.arc() / 2 - DesktopAWTPopupPanel.arrowWidth() / 2
-            : anchor.x;
+        int startX;
+        if (side == DesktopAWTPopupSide.NONE) {
+            startX = anchor.x - shadow.left;
+        }
+        else if (point) {
+            startX = anchor.x - DesktopAWTPopupPanel.arc() / 2 - DesktopAWTPopupPanel.arrowWidth() / 2 - shadow.left;
+        }
+        else {
+            startX = anchor.x + anchor.width / 2 - (size.width - shadow.left - shadow.right) / 2 - shadow.left;
+        }
         return switch (position) {
-            case BOTTOM -> new Rectangle(startX - shadow.left, anchor.y + anchor.height - shadow.top, size.width, size.height);
-            case TOP -> new Rectangle(startX - shadow.left, anchor.y - size.height + shadow.bottom, size.width, size.height);
+            case BOTTOM -> new Rectangle(startX, anchor.y + anchor.height - shadow.top, size.width, size.height);
+            case TOP -> new Rectangle(startX, anchor.y - size.height + shadow.bottom, size.width, size.height);
             case END -> new Rectangle(
                 anchor.x + anchor.width - shadow.left,
                 verticalStart(anchor, side, size, shadow),
@@ -385,6 +405,7 @@ public class DesktopAWTLightPopupImpl extends SwingComponentDelegate<DesktopAWTP
         java.awt.Component target = myTarget;
         if (target != null) {
             target.removeHierarchyBoundsListener(myTargetBoundsListener);
+            target.removeComponentListener(myTargetListener);
             target.removeHierarchyListener(myTargetHierarchyListener);
         }
         JLayeredPane layeredPane = myLayeredPane;

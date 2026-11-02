@@ -191,6 +191,10 @@ display.name.artifacts:
     text: Artifacts
 drag.n.drop.text.0.packaging.elements:
     text: '{0} elements'
+dumb.mode.banner.text:
+    text: Code insight, navigation and search are limited until indexing finishes
+dumb.mode.banner.title:
+    text: Indexing…
 dumb.service.indexing.paused.due.to:
     text: Indexing paused due to {0}
 element.kind.name.facet:

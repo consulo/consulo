@@ -16,6 +16,7 @@
 package consulo.ui.layout;
 
 import consulo.ui.Component;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.internal.UIInternal;
 
 /**
@@ -29,5 +30,16 @@ public interface ScrollableLayout extends Layout<LayoutConstraint> {
 
     static ScrollableLayout create(Component component, ScrollableLayoutOptions options) {
         return UIInternal.get()._ScrollLayout_create(component, options);
+    }
+
+    /**
+     * How many children of a {@link VerticalLayout} content are on screen at once. The rest are still there, a scroll
+     * away - this bounds how much room the layout asks for, not how much it holds. A content with fewer children asks
+     * for all of them.
+     *
+     * @param count {@code 0} or less restores the default sizing, where the layout asks for the whole content
+     */
+    @RequiredUIAccess
+    default void setVisibleRowCount(int count) {
     }
 }
