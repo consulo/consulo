@@ -3,7 +3,7 @@
   "project" : "consulo",
   "projectVersion" : "master",
   "sourceLocale" : "en-US",
-  "generatedAt" : "2026-10-26T15:54:55.060965310Z",
+  "generatedAt" : "2026-11-02T21:17:55.237044052Z",
   "documents" : {
     "consulo.accountManagement.AccountManagementLocalize" : {
       "source" : {
@@ -72,7 +72,7 @@
     },
     "consulo.execution.ExecutionLocalize" : {
       "source" : {
-        "sig" : "89d37642f55c1c2a5a6a107a6e85348d"
+        "sig" : "bf649d00f9e1a72abf9d8c9b59a2d681"
       }
     },
     "consulo.execution.coverage.ExecutionCoverageLocalize" : {
@@ -147,7 +147,7 @@
     },
     "consulo.ide.IdeLocalize" : {
       "source" : {
-        "sig" : "79632b947e03740cb8a83c8f9c4537a9"
+        "sig" : "dfddf73fe60add1e19464ed4566f8594"
       }
     },
     "consulo.ide.tipOfDay.impl.TipOfDayLocalize" : {
@@ -235,6 +235,11 @@
         "sig" : "0f027ac7b0e54624b78bc97d60b01d3e"
       }
     },
+    "consulo.language.spellchecker.editor.SpellCheckerLocalize" : {
+      "source" : {
+        "sig" : "3ccdf17421a692a626097f153bba815a"
+      }
+    },
     "consulo.localHistory.LocalHistoryLocalize" : {
       "source" : {
         "sig" : "f6ab5d2dda6bf3d3f7841787b1a01554"
@@ -247,7 +252,7 @@
     },
     "consulo.mcpServer.McpServerLocalize" : {
       "source" : {
-        "sig" : "77667e65f6b552cb6827232d227f60d6"
+        "sig" : "88b8d1df657c2c82ea5e2357d3aa99f1"
       }
     },
     "consulo.module.ModuleLocalize" : {
@@ -292,7 +297,7 @@
     },
     "consulo.project.ProjectLocalize" : {
       "source" : {
-        "sig" : "d16f30c2fa961aa0ca8a31bf90e48e36"
+        "sig" : "9f2c9379b01d83d3f28aea64d9e55dea"
       }
     },
     "consulo.project.ui.ProjectUILocalize" : {
@@ -312,7 +317,7 @@
     },
     "consulo.review.ReviewLocalize" : {
       "source" : {
-        "sig" : "3885a220454264583bf42e70390906d2"
+        "sig" : "4d64f246fdc974b760d0de007cdd3a1a"
       }
     },
     "consulo.task.TaskLocalize" : {
