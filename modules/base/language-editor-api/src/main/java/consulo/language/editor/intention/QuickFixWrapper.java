@@ -18,6 +18,7 @@ package consulo.language.editor.intention;
 import consulo.codeEditor.Editor;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.inspection.LocalQuickFix;
+import consulo.language.editor.inspection.PriorityAction;
 import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.language.editor.inspection.QuickFix;
 import consulo.language.editor.util.LanguageUndoUtil;
@@ -31,7 +32,7 @@ import consulo.project.Project;
 /**
  * @author max
  */
-public class QuickFixWrapper implements IntentionAction, SyntheticIntentionAction {
+public class QuickFixWrapper implements IntentionAction, SyntheticIntentionAction, PriorityAction {
   private static final Logger LOG = Logger.getInstance(QuickFixWrapper.class);
 
   private final ProblemDescriptor myDescriptor;
@@ -93,5 +94,11 @@ public class QuickFixWrapper implements IntentionAction, SyntheticIntentionActio
   @Override
   public String toString() {
     return getText().get();
+  }
+
+  @Override
+  public Priority getPriority() {
+    QuickFix fix = myDescriptor.getFixes()[myFixNumber];
+    return fix instanceof PriorityAction priorityAction ? priorityAction.getPriority() : Priority.NORMAL;
   }
 }
