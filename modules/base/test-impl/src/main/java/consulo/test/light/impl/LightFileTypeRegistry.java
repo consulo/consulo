@@ -23,6 +23,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
+import consulo.virtualFileSystem.internal.VirtualFileWithAssignedFileType;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
@@ -67,6 +68,13 @@ public class LightFileTypeRegistry extends FileTypeRegistry {
     
     @Override
     public FileType getFileTypeByFile(VirtualFile file) {
+        // LightVirtualFile with an explicit type - as FileTypeManagerImpl#getByFile
+        if (file instanceof VirtualFileWithAssignedFileType fileWithAssignedFileType) {
+            FileType fileType = fileWithAssignedFileType.getAssignedFileType();
+            if (fileType != null) {
+                return fileType;
+            }
+        }
         return getFileTypeByFileName(file.getName());
     }
 
