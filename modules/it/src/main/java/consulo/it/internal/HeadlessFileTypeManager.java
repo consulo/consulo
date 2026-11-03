@@ -35,6 +35,7 @@ import consulo.virtualFileSystem.fileType.FileTypeFactory;
 import consulo.virtualFileSystem.fileType.FileTypeListener;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
 import consulo.virtualFileSystem.impl.internal.fileType.FileTypeDetectionService;
+import consulo.virtualFileSystem.internal.VirtualFileWithAssignedFileType;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jspecify.annotations.Nullable;
@@ -184,6 +185,12 @@ public class HeadlessFileTypeManager extends FileTypeManagerEx implements Dispos
 
     @Override
     public boolean isFileOfType(VirtualFile file, FileType type) {
+        if (file instanceof VirtualFileWithAssignedFileType fileWithAssignedFileType) {
+            FileType assignedFileType = fileWithAssignedFileType.getAssignedFileType();
+            if (assignedFileType != null) {
+                return type.equals(assignedFileType);
+            }
+        }
         if (FileTypeDetectionService.mightBeReplacedByDetectedFileType(type) || type.equals(UnknownFileType.INSTANCE)) {
             return file.getFileType().equals(type);
         }
@@ -220,6 +227,13 @@ public class HeadlessFileTypeManager extends FileTypeManagerEx implements Dispos
 
     @Override
     public FileType getFileTypeByFile(VirtualFile file, byte @Nullable [] content) {
+        // light files with a file type (an injected fragment is named after its host file), as FileTypeManagerImpl
+        if (file instanceof VirtualFileWithAssignedFileType fileWithAssignedFileType) {
+            FileType assignedFileType = fileWithAssignedFileType.getAssignedFileType();
+            if (assignedFileType != null) {
+                return assignedFileType;
+            }
+        }
         FileType fileType = getFileTypeByFileName(file.getName());
         if (file instanceof StubVirtualFile) {
             return fileType;
