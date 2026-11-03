@@ -34,6 +34,7 @@ import consulo.versionControlSystem.distributed.push.PushSupport;
 import consulo.versionControlSystem.distributed.push.PushTarget;
 import consulo.versionControlSystem.distributed.push.VcsPushUi;
 import consulo.versionControlSystem.distributed.repository.Repository;
+import jakarta.inject.Inject;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -50,6 +51,7 @@ public final class ForcePushAction extends PushActionBase {
 
     private final ForcePushType myType;
 
+    @Inject
     public ForcePushAction() {
         this(ForcePushType.DEFAULT);
     }
@@ -165,12 +167,12 @@ public final class ForcePushAction extends PushActionBase {
         Map.Entry<PushSupport<Repository, PushSource, PushTarget>, Collection<PushInfo>> entry = specs.entrySet().iterator().next();
 
         UIAccess uiAccess = UIAccess.current();
-        entry.getKey().beforeForcePush(myType, entry.getValue()).whenComplete((accepted, error) -> {
+        entry.getKey().beforeForcePush(myType, entry.getValue()).whenComplete((forceType, error) -> {
             if (error != null) {
                 LOG.error(error);
             }
-            else if (Boolean.TRUE.equals(accepted)) {
-                uiAccess.give(() -> ui.push(myType));
+            else if (forceType != null) {
+                uiAccess.give(() -> ui.push(forceType));
             }
         });
     }

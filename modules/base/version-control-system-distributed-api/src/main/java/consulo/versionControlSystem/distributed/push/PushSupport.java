@@ -103,11 +103,12 @@ public abstract class PushSupport<Repo extends Repository, Source extends PushSo
     /**
      * Called after force push confirmation, before push started. Can ask additional info from user.
      *
-     * @return future with false if push must be cancelled
+     * @return future with type which will be passed to {@link Pusher} (can be same as {@code type}, or type with additional info),
+     * or with null if push must be cancelled
      */
     @RequiredUIAccess
-    public CompletableFuture<Boolean> beforeForcePush(ForcePushType type, Collection<PushInfo> pushInfos) {
-        return CompletableFuture.completedFuture(Boolean.TRUE);
+    public CompletableFuture<@Nullable ForcePushType> beforeForcePush(ForcePushType type, Collection<PushInfo> pushInfos) {
+        return CompletableFuture.completedFuture(type);
     }
 
     public boolean mayChangeTargetsSync() {
