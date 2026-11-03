@@ -19,6 +19,7 @@ import consulo.application.Application;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.externalSystem.ExternalSystemManager;
+import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.lang.lazy.LazyValue;
 import org.jspecify.annotations.Nullable;
@@ -54,6 +55,12 @@ public abstract class AbstractExternalSystemSettings<SS extends AbstractExternal
     myChangesTopic = topic;
     myProject = project;
     Disposer.register(project, this);
+
+    if (((Class) myChangesTopic) == ExternalSystemSettingsListener.class) {
+      Logger.getInstance(AbstractExternalSystemSettings.class).error(
+          "Please use implementation from ExternalSystemSettingsListener, not ExternalSystemSettingsListener"
+      );
+    }
   }
 
   @Override

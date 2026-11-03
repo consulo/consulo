@@ -30,7 +30,6 @@ import java.util.Set;
  * @author Denis Zhdanov
  * @since 4/3/13 4:13 PM
  */
-@TopicAPI(ComponentScope.PROJECT)
 public interface ExternalSystemSettingsListener<S extends ExternalProjectSettings> {
     /**
      * This method is present here only because an IJ platform doesn't have corresponding messaging set up for "project rename" event.
