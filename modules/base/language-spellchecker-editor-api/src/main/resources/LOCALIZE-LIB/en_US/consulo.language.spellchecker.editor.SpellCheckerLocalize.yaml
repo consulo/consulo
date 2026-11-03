@@ -72,3 +72,5 @@ style.inspection.description:
     text: Reports writing style suggestions in comments, documentation, literals and plain text, found by the spellchecker engine.
 replace.with:
     text: Replace with ''{0}''
+disable.rule:
+    text: Disable rule ''{0}''

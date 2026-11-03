@@ -53,7 +53,7 @@ import java.util.Set;
 public abstract class TextProblemInspection extends LocalInspectionTool {
     private static final int MAX_FIXES = 3;
 
-    private record CachedProblems(SpellcheckerEngine engine, List<SpellcheckerTextProblem> problems) {
+    private record CachedProblems(SpellcheckerEngine engine, long modificationCount, List<SpellcheckerTextProblem> problems) {
     }
 
     // shared by all text problem inspections: the engine checks each text once
@@ -103,7 +103,7 @@ public abstract class TextProblemInspection extends LocalInspectionTool {
                     }
                     for (SpellcheckerTextProblem problem : getProblems(engine, content)) {
                         if (problem.kind() == myFeature && !content.hasUnknownFragmentsIn(problem.range())) {
-                            register(holder, content, problem);
+                            register(holder, engine, content, problem);
                         }
                     }
                 }
@@ -128,16 +128,17 @@ public abstract class TextProblemInspection extends LocalInspectionTool {
 
     private static List<SpellcheckerTextProblem> getProblems(SpellcheckerEngine engine, TextContent content) {
         CachedProblems cached = content.getUserData(PROBLEMS);
-        if (cached != null && cached.engine() == engine) {
+        long modificationCount = engine.getModificationCount();
+        if (cached != null && cached.engine() == engine && cached.modificationCount() == modificationCount) {
             return cached.problems();
         }
         List<SpellcheckerTextProblem> problems = engine.checkText(content.getContainingFile().getProject(), content);
-        content.putUserData(PROBLEMS, new CachedProblems(engine, problems));
+        content.putUserData(PROBLEMS, new CachedProblems(engine, modificationCount, problems));
         return problems;
     }
 
     @RequiredReadAction
-    private static void register(ProblemsHolder holder, TextContent content, SpellcheckerTextProblem problem) {
+    private static void register(ProblemsHolder holder, SpellcheckerEngine engine, TextContent content, SpellcheckerTextProblem problem) {
         TextRange fileRange = content.textRangeToFile(problem.range());
         PsiElement parent = content.getCommonParent();
         TextRange rangeInParent = fileRange.shiftLeft(parent.getTextRange().getStartOffset());
@@ -148,6 +149,11 @@ public abstract class TextProblemInspection extends LocalInspectionTool {
                 break;
             }
             fixes.add(new ReplaceTextFix(fileRange, suggestion));
+        }
+
+        LocalizeValue ruleName = engine.getRuleDisplayName(problem.ruleId());
+        if (!ruleName.isEmpty()) {
+            fixes.add(new DisableRuleFix(engine, problem.ruleId(), ruleName));
         }
 
         holder.newProblem(problem.message())

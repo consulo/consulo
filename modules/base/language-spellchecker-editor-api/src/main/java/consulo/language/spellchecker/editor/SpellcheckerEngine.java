@@ -80,6 +80,27 @@ public interface SpellcheckerEngine {
     }
 
     /**
+     * @param ruleId {@link SpellcheckerTextProblem#ruleId()} of a problem reported by {@link #checkText}
+     * @return the name of the rule, shown by the quick fix which disables it; empty when the engine cannot disable the rule
+     */
+    default LocalizeValue getRuleDisplayName(String ruleId) {
+        return LocalizeValue.empty();
+    }
+
+    /**
+     * Turns off the rule which reported a text problem. Called only for rules with a {@link #getRuleDisplayName display name}.
+     */
+    default void disableRule(String ruleId) {
+    }
+
+    /**
+     * @return a counter which changes whenever the engine options change the results of {@link #checkText}, e.g. a rule is disabled
+     */
+    default long getModificationCount() {
+        return 0;
+    }
+
+    /**
      * @return engine options, shown in <em>Settings | Editor | Spellchecking</em> below the engine selector while this engine is selected
      */
     default @Nullable UnnamedConfigurable createConfigurable() {
