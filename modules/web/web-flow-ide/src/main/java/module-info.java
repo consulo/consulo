@@ -97,6 +97,7 @@ module consulo.web.ide {
     requires vaadin.tabs.flow;
     requires vaadin.text.field.flow;
     requires vaadin.virtual.list.flow;
+    requires vaadin.avatar.flow;
     requires html.table;
     requires colorpicker;
     requires vaadin.custom.field.flow;

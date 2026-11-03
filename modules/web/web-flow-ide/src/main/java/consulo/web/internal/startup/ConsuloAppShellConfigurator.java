@@ -16,6 +16,7 @@
 package consulo.web.internal.startup;
 
 import com.vaadin.flow.component.accordion.Accordion;
+import com.vaadin.flow.component.avatar.Avatar;
 import com.vaadin.flow.component.breadcrumbs.Breadcrumbs;
 import com.vaadin.flow.component.breadcrumbs.BreadcrumbsItem;
 import com.vaadin.flow.component.button.Button;
@@ -141,6 +142,7 @@ import org.vaadin.stefan.table.Table;
 @Uses(DatePicker.class)
 @Uses(IntegerSlider.class)
 @Uses(ToggleButton.class)
+@Uses(Avatar.class)
 public class ConsuloAppShellConfigurator implements AppShellConfigurator {
   @Override
   public void configurePage(AppShellSettings settings) {
