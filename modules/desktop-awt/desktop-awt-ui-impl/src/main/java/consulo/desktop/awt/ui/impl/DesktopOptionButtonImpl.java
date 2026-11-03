@@ -118,6 +118,7 @@ class DesktopOptionButtonImpl extends DesktopButtonImpl implements OptionButton 
             updateTextForButton(item, option.text());
             item.setIcon(TargetAWT.to(option.icon()));
             item.setEnabled(option.enabled());
+            item.setToolTipText(option.description().isEmpty() ? null : option.description().get());
             item.addActionListener(e -> option.clickListener()
                 .onEvent(new ClickEvent(DesktopOptionButtonImpl.this, DesktopAWTInputDetails.convert(button, e))));
             popup.add(item);

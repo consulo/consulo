@@ -592,7 +592,14 @@ public class UnifiedPushDialog extends DialogDescriptor implements VcsPushUi {
                 Presentation presentation = presentations.get(i);
                 signature.add(presentation.getTextValue().get());
                 signature.add(presentation.isEnabled());
-                options.add(new OptionButtonItem(presentation.getTextValue(), null, presentation.isEnabled(), event -> perform(action)));
+                signature.add(presentation.getDescription().get());
+                options.add(new OptionButtonItem(
+                    presentation.getTextValue(),
+                    null,
+                    presentation.isEnabled(),
+                    presentation.getDescription(),
+                    event -> perform(action)
+                ));
             }
             if (!signature.equals(myOptionsSignature)) {
                 myOptionsSignature = signature;

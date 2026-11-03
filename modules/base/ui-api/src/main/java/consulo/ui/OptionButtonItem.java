@@ -28,7 +28,15 @@ import org.jspecify.annotations.Nullable;
 public record OptionButtonItem(LocalizeValue text,
                                @Nullable Image icon,
                                boolean enabled,
+                               LocalizeValue description,
                                ComponentEventListener<Component, ClickEvent> clickListener) {
+    public OptionButtonItem(LocalizeValue text,
+                            @Nullable Image icon,
+                            boolean enabled,
+                            ComponentEventListener<Component, ClickEvent> clickListener) {
+        this(text, icon, enabled, LocalizeValue.empty(), clickListener);
+    }
+
     public static OptionButtonItem of(LocalizeValue text, ComponentEventListener<Component, ClickEvent> clickListener) {
         return new OptionButtonItem(text, null, true, clickListener);
     }

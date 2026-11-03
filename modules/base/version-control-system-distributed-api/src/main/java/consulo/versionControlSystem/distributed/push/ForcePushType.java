@@ -30,4 +30,11 @@ public interface ForcePushType {
     ForcePushType DEFAULT = DistributedVcsLocalize::actionForcePush;
 
     LocalizeValue getActionText();
+
+    /**
+     * @return additional info, shown as tooltip of force push action. For example which options will be used
+     */
+    default LocalizeValue getDescription() {
+        return LocalizeValue.empty();
+    }
 }

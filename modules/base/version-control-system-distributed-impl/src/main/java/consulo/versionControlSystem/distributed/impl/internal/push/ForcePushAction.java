@@ -95,10 +95,12 @@ public final class ForcePushAction extends PushActionBase {
             }
             return message;
         }
+        LocalizeValue typeDescription = myType.getDescription();
         if (configurablePath.isNotEmpty()) {
-            return DistributedVcsLocalize.actionForcePushIsProhibitedSettingsLink(configurablePath);
+            LocalizeValue settingsLink = DistributedVcsLocalize.actionForcePushIsProhibitedSettingsLink(configurablePath);
+            return typeDescription.isEmpty() ? settingsLink : LocalizeValue.join(typeDescription, LocalizeValue.of("\n"), settingsLink);
         }
-        return LocalizeValue.empty();
+        return typeDescription;
     }
 
     @RequiredUIAccess

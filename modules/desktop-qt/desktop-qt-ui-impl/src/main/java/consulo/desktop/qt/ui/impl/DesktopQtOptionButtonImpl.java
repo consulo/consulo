@@ -180,6 +180,9 @@ public class DesktopQtOptionButtonImpl extends DesktopQtButtonImpl implements Op
             MenuItem item = MenuItem.create(option.text());
             item.setIcon(option.icon());
             item.setEnabled(option.enabled());
+            if (option.description().isNotEmpty()) {
+                item.setToolTipText(option.description());
+            }
             item.addClickListener(event -> option.clickListener().onEvent(new ClickEvent(this, event.getInputDetails())));
             menu.add(item);
         }
