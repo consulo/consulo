@@ -579,6 +579,9 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
 
         ApplicationManager.getApplication().invokeLater(() -> {
             JComponent content = getContent();
+            if (content == null) {
+                return;
+            }
 
             // a size set here is the one handed back next time, so the content is asked what it wants before
             // anything is forced on it
