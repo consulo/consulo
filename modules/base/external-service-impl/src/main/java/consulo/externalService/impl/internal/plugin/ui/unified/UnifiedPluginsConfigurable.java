@@ -16,6 +16,7 @@
 package consulo.externalService.impl.internal.plugin.ui.unified;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.application.Application;
 import consulo.configurable.ApplicationConfigurable;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
@@ -44,10 +45,12 @@ public class UnifiedPluginsConfigurable implements SearchableConfigurable,
     ApplicationConfigurable,
     PluginsConfigurable {
 
+    private final Application myApplication;
     private UnifiedPluginsPanel myPanel;
 
     @Inject
-    public UnifiedPluginsConfigurable() {
+    public UnifiedPluginsConfigurable(Application application) {
+        myApplication = application;
     }
 
     @Override
@@ -55,7 +58,7 @@ public class UnifiedPluginsConfigurable implements SearchableConfigurable,
     public @Nullable Component createUIComponent(Disposable parentDisposable) {
         // built anew per dialog - the settings dialog does not promise disposeUIResources on every close, and a
         // kept panel would come back with the filter and the selection of the previous session
-        UnifiedPluginsPanel panel = new UnifiedPluginsPanel();
+        UnifiedPluginsPanel panel = new UnifiedPluginsPanel(myApplication);
         myPanel = panel;
 
         Disposer.register(parentDisposable, panel);

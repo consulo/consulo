@@ -18,7 +18,7 @@ package consulo.desktop.awt.os.mac.internal.fileChooser;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.LaterInvocator;
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.desktop.awt.ui.OwnerOptional;
+import consulo.desktop.awt.ui.impl.util.OwnerOptional;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.util.FileChooserUtil;
 import consulo.localize.LocalizeValue;

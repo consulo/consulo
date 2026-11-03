@@ -26,13 +26,7 @@ import consulo.externalService.internal.PlatformOrPluginUpdateResultType;
 import consulo.externalService.localize.ExternalServiceLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import consulo.ui.Component;
-import consulo.ui.Label;
-import consulo.ui.ListBox;
-import consulo.ui.MessageBoxes;
-import consulo.ui.RenderItem;
-import consulo.ui.UIAccess;
-import consulo.ui.WidthAndHeight;
+import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.dialog.Dialog;
 import consulo.ui.ex.dialog.DialogDescriptor;
@@ -45,12 +39,7 @@ import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.status.FileStatus;
 import org.jspecify.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -61,6 +50,7 @@ import java.util.function.Predicate;
  * @since 2026-08-13
  */
 public class UnifiedPlatformOrPluginDialog extends DialogDescriptor {
+    private final Application myApplication;
     private final @Nullable Project myProject;
     private final List<PlatformOrPluginNode> myNodes;
     private final PlatformOrPluginUpdateResultType myType;
@@ -72,8 +62,11 @@ public class UnifiedPlatformOrPluginDialog extends DialogDescriptor {
 
     private @Nullable String myPlatformVersion;
 
+    private @Nullable Component myComponent;
+
     @RequiredUIAccess
     public UnifiedPlatformOrPluginDialog(
+        Application application,
         @Nullable Project project,
         PlatformOrPluginUpdateResult updateResult,
         @Nullable Predicate<PluginId> greenStrategy,
@@ -85,6 +78,7 @@ public class UnifiedPlatformOrPluginDialog extends DialogDescriptor {
                 ? ExternalServiceLocalize.pluginInstallDialogTitle()
                 : ExternalServiceLocalize.updateAvailableGroup()
         );
+        myApplication = application;
         myProject = project;
         myAfterCallback = afterCallback;
         myModalProgress = modalProgress;
@@ -154,7 +148,7 @@ public class UnifiedPlatformOrPluginDialog extends DialogDescriptor {
         DockLayout root = DockLayout.create();
         root.top(Label.create(ExternalServiceLocalize.pluginFollowingWillBeDownloadedLabel()));
         root.center(ScrollableLayout.create(list));
-        return root;
+        return myComponent = root;
     }
 
     @RequiredUIAccess
@@ -185,12 +179,12 @@ public class UnifiedPlatformOrPluginDialog extends DialogDescriptor {
 
     @RequiredUIAccess
     public void show() {
-        DialogService dialogService = Application.get().getInstance(DialogService.class);
+        DialogService dialogService = myApplication.getInstance(DialogService.class);
         Dialog dialog = myProject != null ? dialogService.build(myProject, this) : dialogService.build(this);
 
         dialog.showAsync().whenCompleteAsync((value, error) -> {
             if (error == null) {
-                onOk();
+                onOk(myComponent);
             }
         }, UIAccess.current());
     }
@@ -199,12 +193,12 @@ public class UnifiedPlatformOrPluginDialog extends DialogDescriptor {
      * Runs the confirmed set without showing the window - what an install with no extra dependencies asks for.
      */
     @RequiredUIAccess
-    public void doOKAction() {
-        onOk();
+    public void doFastOK(@Nullable Component component) {
+        onOk(component);
     }
 
     @RequiredUIAccess
-    private void onOk() {
+    private void onOk(@Nullable Component component) {
         PlatformOrPluginNode brokenPlugin = myNodes.stream()
             .filter(c -> c.getFutureDescriptor() == null)
             .findFirst()
@@ -214,20 +208,28 @@ public class UnifiedPlatformOrPluginDialog extends DialogDescriptor {
             MessageBoxes.okCancel()
                 .asWarning()
                 .text(ExternalServiceLocalize.messageIdeaFewPluginsWillBeNotUpdated())
-                .showAsync()
-                .whenComplete((confirmed, error) -> {
+                .showAsync(component)
+                .whenCompleteAsync((confirmed, error) -> {
                     if (Boolean.TRUE.equals(confirmed)) {
-                        runProcess();
+                        runProcess(component);
                     }
-                });
+                }, UIAccess.current());
             return;
         }
 
-        runProcess();
+        runProcess(component);
     }
 
     @RequiredUIAccess
-    private void runProcess() {
-        PlatformOrPluginInstallProcess.run(myProject, myNodes, myType, myPlatformVersion, myAfterCallback, myModalProgress);
+    private void runProcess(@Nullable Component component) {
+        PlatformOrPluginInstallProcess.run(myApplication,
+            myProject,
+            myNodes,
+            myType,
+            myPlatformVersion,
+            component,
+            myAfterCallback,
+            myModalProgress
+        );
     }
 }

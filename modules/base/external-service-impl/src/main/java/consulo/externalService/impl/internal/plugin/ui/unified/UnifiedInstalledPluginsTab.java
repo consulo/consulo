@@ -15,6 +15,7 @@
  */
 package consulo.externalService.impl.internal.plugin.ui.unified;
 
+import consulo.application.Application;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginManager;
@@ -31,8 +32,8 @@ import java.util.List;
  */
 public class UnifiedInstalledPluginsTab extends UnifiedPluginTab {
     @RequiredUIAccess
-    public UnifiedInstalledPluginsTab() {
-        super(true);
+    public UnifiedInstalledPluginsTab(Application application) {
+        super(application, true);
         reload();
     }
 

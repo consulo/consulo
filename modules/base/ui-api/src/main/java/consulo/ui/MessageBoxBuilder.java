@@ -15,6 +15,7 @@
  */
 package consulo.ui;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
@@ -128,6 +129,8 @@ public interface MessageBoxBuilder<V extends @Nullable Object> {
     CompletableFuture<V> showAsync(@Nullable Window owner);
 
     @RequiredUIAccess
+    @Deprecated
+    @DeprecationInfo("Prefer WindowOwer or Component or Window")
     default CompletableFuture<V> showAsync() {
         return showAsync((Window)null);
     }

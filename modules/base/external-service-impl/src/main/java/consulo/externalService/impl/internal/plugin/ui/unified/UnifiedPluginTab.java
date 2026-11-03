@@ -15,6 +15,7 @@
  */
 package consulo.externalService.impl.internal.plugin.ui.unified;
 
+import consulo.application.Application;
 import consulo.configurable.SearchableOptionsRegistrar;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
@@ -68,7 +69,7 @@ public abstract class UnifiedPluginTab implements Disposable, PluginFilterHost {
     private @Nullable String myTagFilter;
 
     @RequiredUIAccess
-    protected UnifiedPluginTab(boolean installedTab) {
+    protected UnifiedPluginTab(Application application, boolean installedTab) {
         myContent = DockLayout.create(Space.NONE);
         myContent.putUserData(UiDataProvider.KEY, sink -> sink.set(PluginFilterHost.KEY, this));
 
@@ -76,7 +77,7 @@ public abstract class UnifiedPluginTab implements Disposable, PluginFilterHost {
         myList.setRenderer(UnifiedPluginRowRenderer.reusable());
         myList.setItemHeightGetter(item -> UnifiedPluginRowRenderer.ROW_HEIGHT);
 
-        myDescriptionPanel = new UnifiedPluginDescriptionPanel(installedTab, this::select, this::getPlugins);
+        myDescriptionPanel = new UnifiedPluginDescriptionPanel(application, installedTab, this::select, this::getPlugins);
 
         myList.addValueListener(event -> myDescriptionPanel.update(event.getValue(), myPlugins));
 

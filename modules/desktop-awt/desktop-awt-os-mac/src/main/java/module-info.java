@@ -6,6 +6,7 @@ module consulo.desktop.awt.os.mac {
     requires consulo.ide.api;
     requires consulo.ide.impl;
     requires consulo.desktop.awt.ide.impl;
+    requires consulo.desktop.awt.ui.impl;
 
     requires consulo.desktop.awt.hacking;
     requires consulo.application.api;

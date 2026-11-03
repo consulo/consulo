@@ -15,6 +15,7 @@
  */
 package consulo.externalService.impl.internal.pluginAdvertiser;
 
+import consulo.application.Application;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.externalService.impl.internal.plugin.ui.unified.UnifiedPluginDescriptionPanel;
@@ -47,6 +48,7 @@ import java.util.function.Supplier;
  * @since 2026-08-13
  */
 public class UnifiedPluginsAdvertiserDialog {
+    private final Application myApplication;
     private final Supplier<PluginAdvertiserHelper.PluginsInfo> myLoader;
 
     private final Window myWindow;
@@ -56,7 +58,8 @@ public class UnifiedPluginsAdvertiserDialog {
     private ListBox<PluginDescriptor> myList;
 
     @RequiredUIAccess
-    public UnifiedPluginsAdvertiserDialog(Supplier<PluginAdvertiserHelper.PluginsInfo> loader) {
+    public UnifiedPluginsAdvertiserDialog(Application application, Supplier<PluginAdvertiserHelper.PluginsInfo> loader) {
+        myApplication = application;
         myLoader = loader;
 
         myWindow = Window.create(LocalizeValue.localizeTODO("Choose Plugins to Install").get(), WindowOptions.builder().build());
@@ -83,7 +86,7 @@ public class UnifiedPluginsAdvertiserDialog {
         myList.setRenderer(UnifiedPluginRowRenderer::render);
         myList.setItemHeightGetter(item -> UnifiedPluginRowRenderer.ROW_HEIGHT);
 
-        UnifiedPluginDescriptionPanel descriptionPanel = new UnifiedPluginDescriptionPanel(false, this::select, () -> myAllPlugins);
+        UnifiedPluginDescriptionPanel descriptionPanel = new UnifiedPluginDescriptionPanel(myApplication, false, this::select, () -> myAllPlugins);
 
         myList.addValueListener(event -> descriptionPanel.update(event.getValue(), myAllPlugins));
 

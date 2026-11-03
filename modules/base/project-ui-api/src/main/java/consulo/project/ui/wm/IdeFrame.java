@@ -29,7 +29,6 @@ public interface IdeFrame extends FocusableFrame {
         IdeFrame getParentFrame();
     }
 
-    
     default IdeFrameState getFrameState() {
         return IdeFrameState.EMPTY;
     }

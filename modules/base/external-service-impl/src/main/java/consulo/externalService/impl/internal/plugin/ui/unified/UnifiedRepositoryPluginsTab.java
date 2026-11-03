@@ -43,8 +43,8 @@ public class UnifiedRepositoryPluginsTab extends UnifiedPluginTab {
     private final LoadingLayout<DockLayout> myLoadingLayout;
 
     @RequiredUIAccess
-    public UnifiedRepositoryPluginsTab(Disposable parentDisposable) {
-        super(false);
+    public UnifiedRepositoryPluginsTab(Application application, Disposable parentDisposable) {
+        super(application, false);
         myLoadingLayout = LoadingLayout.create(DockLayout.create(Space.NONE), parentDisposable);
     }
 

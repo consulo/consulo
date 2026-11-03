@@ -31,16 +31,13 @@ import consulo.externalService.localize.ExternalServiceLocalize;
 import consulo.externalService.update.UpdateSettings;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.ui.MessageBoxBuilder;
-import consulo.ui.MessageBoxes;
-import consulo.ui.UIAccess;
+import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.*;
 import java.util.function.Consumer;
-import consulo.ui.MessageButtonRole;
 
 /**
  * The download and install work behind the update and install dialogs, shared by the frontends - a dialog only
@@ -54,10 +51,12 @@ public final class PlatformOrPluginInstallProcess {
 
     @RequiredUIAccess
     public static void run(
+        Application application,
         @Nullable Project project,
         List<PlatformOrPluginNode> nodes,
         PlatformOrPluginUpdateResultType type,
         @Nullable String platformVersion,
+        @Nullable Component component,
         @Nullable Consumer<Collection<PluginDescriptor>> afterCallback,
         boolean modalProgress
     ) {
@@ -65,7 +64,6 @@ public final class PlatformOrPluginInstallProcess {
             return;
         }
 
-        Application application = Application.get();
         UIAccess uiAccess = UIAccess.current();
 
         Consumer<ProgressIndicator> processor = indicator -> {
@@ -155,7 +153,7 @@ public final class PlatformOrPluginInstallProcess {
                     UpdateSettingsEx updateSettings = (UpdateSettingsEx) UpdateSettings.getInstance();
                     updateSettings.setLastCheckResult(PlatformOrPluginUpdateResultType.RESTART_REQUIRED);
 
-                    askRestart();
+                    askRestart(application, component);
                 });
             }
         };
@@ -191,9 +189,7 @@ public final class PlatformOrPluginInstallProcess {
      * or exits depending on what the platform is capable of.
      */
     @RequiredUIAccess
-    public static void askRestart() {
-        Application application = Application.get();
-
+    public static void askRestart(Application application, Component component) {
         boolean restartCapable = application.isRestartCapable();
 
         MessageBoxBuilder<Boolean> alert = MessageBoxBuilder.create();
@@ -215,7 +211,7 @@ public final class PlatformOrPluginInstallProcess {
         alert.button(MessageButtonRole.NO, ExternalServiceLocalize.actionPostponeText(), Boolean.FALSE);
         alert.asExitButton();
 
-        alert.showAsync().whenComplete((agreed, error) -> {
+        alert.showAsync(component).whenComplete((agreed, error) -> {
             if (Boolean.TRUE.equals(agreed)) {
                 application.restart(true);
             }

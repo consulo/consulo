@@ -16,10 +16,12 @@
 package consulo.externalService.impl.internal.update;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jspecify.annotations.Nullable;
 
@@ -34,6 +36,13 @@ import java.util.function.Predicate;
 @Singleton
 @ServiceImpl
 public class UnifiedPlatformOrPluginDialogFactory implements PlatformOrPluginDialogFactory {
+    private final Application myApplication;
+
+    @Inject
+    public UnifiedPlatformOrPluginDialogFactory(Application application) {
+        myApplication = application;
+    }
+
     @Override
     @RequiredUIAccess
     public void showAsync(
@@ -43,6 +52,6 @@ public class UnifiedPlatformOrPluginDialogFactory implements PlatformOrPluginDia
         @Nullable Consumer<Collection<PluginDescriptor>> afterCallback,
         boolean modalProgress
     ) {
-        new UnifiedPlatformOrPluginDialog(project, updateResult, greenStrategy, afterCallback, modalProgress).show();
+        new UnifiedPlatformOrPluginDialog(myApplication, project, updateResult, greenStrategy, afterCallback, modalProgress).show();
     }
 }

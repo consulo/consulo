@@ -16,25 +16,18 @@
 package consulo.desktop.awt.ui.impl.messagebox;
 
 import consulo.desktop.awt.ui.impl.DesktopCheckBoxImpl;
-import consulo.localize.LocalizeValue;
+import consulo.desktop.awt.ui.impl.util.OwnerOptional;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.ui.MessageTextFormat;
 import consulo.ui.UIAccess;
 import consulo.ui.Window;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.BrowserHyperlinkListener;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.awt.IdeBorderFactory;
-import consulo.ui.ex.awt.JBLabel;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.ScrollPaneFactory;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.util.DialogUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.ui.impl.BaseMessageBoxBuilder;
 import consulo.ui.impl.MessagePresentation;
-
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
@@ -67,7 +60,7 @@ public class DesktopMessageBoxBuilderImpl<V> extends BaseMessageBoxBuilder<V> {
             init();
         }
 
-        DialogImpl(java.awt.Component parent) {
+        DialogImpl(Component parent) {
             super(parent, false);
             setTitle(MessagePresentation.title(myTitle));
             init();
@@ -265,9 +258,22 @@ public class DesktopMessageBoxBuilderImpl<V> extends BaseMessageBoxBuilder<V> {
         }
     }
 
+    @RequiredUIAccess
+    @Override
+    public CompletableFuture<V> showAsync(consulo.ui.Component component) {
+        OwnerOptional ownerOptional = OwnerOptional.fromComponent(TargetAWT.to(component));
+        return showBy(ownerOptional.get());
+    }
+
     @Override
     @RequiredUIAccess
     public CompletableFuture<V> showAsync(@Nullable Window owner) {
+        java.awt.Window awtOwner = owner != null ? TargetAWT.to(owner) : null;
+        return showBy(awtOwner);
+    }
+
+    @RequiredUIAccess
+    private CompletableFuture<V> showBy(java.awt.Window awtOwner) {
         prepare();
 
         V remembered = rememberedValue();
@@ -275,7 +281,6 @@ public class DesktopMessageBoxBuilderImpl<V> extends BaseMessageBoxBuilder<V> {
             return CompletableFuture.completedFuture(remembered);
         }
 
-        java.awt.Window awtOwner = owner != null ? TargetAWT.to(owner) : null;
         DialogImpl dialog = awtOwner != null ? new DialogImpl(awtOwner) : new DialogImpl();
 
         CompletableFuture<V> result = dialog.result();

@@ -137,13 +137,15 @@ public class PluginAdvertiserEditorNotificationProvider implements EditorNotific
             builder.withAction(
                 ExternalServiceLocalize.pluginAdvestiserNotificationInstallPluginLink(item.getName()),
                 (i) -> InstallPluginAction.downloadAndInstallPlugins(
+                    myProject.getApplication(),
                     myProject,
+                    i.getComponent(),
                     List.of(item),
                     allPlugins,
                     false,
                     p -> myProject.getUIAccess().give(() -> {
                         if (PluginInstallUtil.showRestartDialog() == Messages.YES) {
-                            Application.get().restart(true);
+                            myProject.getApplication().restart(true);
                         }
                     })
                 )

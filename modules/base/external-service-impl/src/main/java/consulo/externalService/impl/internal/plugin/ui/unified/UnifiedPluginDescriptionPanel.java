@@ -21,7 +21,6 @@ import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginManager;
-import consulo.externalService.internal.PluginIconHolder;
 import consulo.externalService.impl.internal.plugin.InstalledPluginsState;
 import consulo.externalService.impl.internal.plugin.PluginInstallUtil;
 import consulo.externalService.impl.internal.plugin.PluginNode;
@@ -29,18 +28,12 @@ import consulo.externalService.impl.internal.plugin.ui.PluginDescriptionMarkup;
 import consulo.externalService.impl.internal.plugin.ui.action.InstallPluginAction;
 import consulo.externalService.impl.internal.plugin.ui.action.UninstallPluginAction;
 import consulo.externalService.impl.internal.update.PlatformOrPluginInstallProcess;
+import consulo.externalService.internal.PluginIconHolder;
 import consulo.externalService.localize.ExternalServiceLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.ui.MessageBoxes;
-import consulo.ui.Button;
-import consulo.ui.Component;
-import consulo.ui.HtmlView;
-import consulo.ui.Label;
-import consulo.ui.LabelStyle;
-import consulo.ui.Space;
-import consulo.ui.UIAccess;
+import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.layout.DockLayout;
@@ -83,12 +76,16 @@ public class UnifiedPluginDescriptionPanel {
     private @Nullable PluginDescriptor myPlugin;
     private @Nullable Runnable myButtonAction;
 
+    private final Application myApplication;
+
     @RequiredUIAccess
     public UnifiedPluginDescriptionPanel(
+        Application application,
         boolean installedTab,
-        Consumer<PluginId> pluginSelector,
+        @RequiredUIAccess Consumer<PluginId> pluginSelector,
         Supplier<List<PluginDescriptor>> allPluginsGetter
     ) {
+        myApplication = application;
         myInstalledTab = installedTab;
         myAllPluginsGetter = allPluginsGetter;
 
@@ -195,21 +192,23 @@ public class UnifiedPluginDescriptionPanel {
             || plugin.isDeleted();
 
         if (touchedInSession) {
-            LocalizeValue text = Application.get().isRestartCapable()
+            LocalizeValue text = myApplication.isRestartCapable()
                 ? ExternalServiceLocalize.actionRestartText()
                 : ExternalServiceLocalize.actionShutdownText();
-            showButton(text, PlatformIconGroup.actionsRestart(), PlatformOrPluginInstallProcess::askRestart);
+            showButton(text, PlatformIconGroup.actionsRestart(), () -> {
+                PlatformOrPluginInstallProcess.askRestart(myApplication, myRoot);
+            });
         }
         else if (myInstalledTab) {
             if (PluginIds.isPlatformPlugin(pluginId)) {
                 myActionButton.setVisible(false);
             }
             else {
-                showButton(ExternalServiceLocalize.actionUninstallPlugin(), PlatformIconGroup.actionsCancel(), () -> uninstall(plugin));
+                showButton(ExternalServiceLocalize.actionUninstallPlugin(), PlatformIconGroup.actionsCancel(), () -> uninstall(myApplication, myRoot, plugin));
             }
         }
         else if (PluginManager.findPlugin(pluginId) == null) {
-            showButton(LocalizeValue.localizeTODO("Install"), PlatformIconGroup.actionsInstall(), () -> install(plugin));
+            showButton(LocalizeValue.localizeTODO("Install"), PlatformIconGroup.actionsInstall(), () -> install(myApplication, myRoot, plugin));
         }
         else {
             myActionButton.setVisible(false);
@@ -217,7 +216,7 @@ public class UnifiedPluginDescriptionPanel {
     }
 
     @RequiredUIAccess
-    private void showButton(LocalizeValue text, Image icon, Runnable action) {
+    private void showButton(LocalizeValue text, Image icon, @RequiredUIAccess Runnable action) {
         myActionButton.setText(text);
         myActionButton.setIcon(icon);
         myButtonAction = action;
@@ -226,10 +225,10 @@ public class UnifiedPluginDescriptionPanel {
     }
 
     @RequiredUIAccess
-    private void install(PluginDescriptor plugin) {
+    private void install(Application application, Component component, PluginDescriptor plugin) {
         UIAccess uiAccess = UIAccess.current();
 
-        InstallPluginAction.install(null, plugin, myAllPluginsGetter.get(), false, installed -> {
+        InstallPluginAction.install(application, null, component, plugin, myAllPluginsGetter.get(), false, installed -> {
             if (installed.isEmpty()) {
                 return;
             }
@@ -241,27 +240,27 @@ public class UnifiedPluginDescriptionPanel {
                     updateButton(plugin);
                 }
 
-                PlatformOrPluginInstallProcess.askRestart();
+                PlatformOrPluginInstallProcess.askRestart(application, component);
             });
         });
     }
 
     @RequiredUIAccess
-    private void uninstall(PluginDescriptor plugin) {
+    private void uninstall(Application application, Component component, PluginDescriptor plugin) {
         MessageBoxes.yesNo()
             .asQuestion()
             .title(ExternalServiceLocalize.titlePluginUninstall())
             .text(ExternalServiceLocalize.promptUninstallPlugin(plugin.getName()))
-            .showAsync()
-            .whenComplete((agreed, error) -> {
+            .showAsync(component)
+            .whenCompleteAsync((agreed, error) -> {
                 if (Boolean.TRUE.equals(agreed)) {
-                    checkDependentAndUninstall(plugin);
+                    checkDependentAndUninstall(application, component, plugin);
                 }
-            });
+            }, UIAccess.current());
     }
 
     @RequiredUIAccess
-    private void checkDependentAndUninstall(PluginDescriptor plugin) {
+    private void checkDependentAndUninstall(Application application, Component component, PluginDescriptor plugin) {
         List<PluginDescriptor> dependent = ContainerUtil.filter(
             myAllPluginsGetter.get(),
             descriptor -> !descriptor.isDeleted()
@@ -274,25 +273,25 @@ public class UnifiedPluginDescriptionPanel {
                 .asQuestion()
                 .title(ExternalServiceLocalize.titlePluginUninstall())
                 .text(ExternalServiceLocalize.severalPluginsDependOn0ContinueToRemove(plugin.getName()))
-                .showAsync()
-                .whenComplete((agreed, error) -> {
+                .showAsync(component)
+                .whenCompleteAsync((agreed, error) -> {
                     if (Boolean.TRUE.equals(agreed)) {
-                        doUninstall(plugin);
+                        doUninstall(application, component, plugin);
                     }
-                });
+                }, UIAccess.current());
             return;
         }
 
-        doUninstall(plugin);
+        doUninstall(application, component, plugin);
     }
 
     @RequiredUIAccess
-    private void doUninstall(PluginDescriptor plugin) {
+    private void doUninstall(Application application, Component component, PluginDescriptor plugin) {
         if (!UninstallPluginAction.uninstallPlugin(plugin)) {
             return;
         }
 
-        Application.get().getMessageBus()
+        application.getMessageBus()
             .syncPublisher(PluginActionListener.class)
             .pluginsUninstalled(new PluginId[]{plugin.getPluginId()});
 
@@ -300,6 +299,6 @@ public class UnifiedPluginDescriptionPanel {
             updateButton(plugin);
         }
 
-        PlatformOrPluginInstallProcess.askRestart();
+        PlatformOrPluginInstallProcess.askRestart(application, component);
     }
 }

@@ -1,10 +1,11 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.desktop.awt.ui;
+package consulo.desktop.awt.ui.impl.util;
 
 import consulo.application.util.SystemInfo;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,7 +32,7 @@ public class OwnerOptional {
   public static OwnerOptional fromComponent(Component parentComponent) {
     Window owner = findOwnerByComponent(parentComponent);
 
-    IdePopupManager manager = IdeEventQueue.getInstance().getPopupManager();
+    IdeEventQueueProxy manager = IdeEventQueueProxy.getInstance();
 
     if (manager.isPopupWindow(owner)) {
       if (!owner.isFocused() || !SystemInfo.isJetBrainsJvm) {

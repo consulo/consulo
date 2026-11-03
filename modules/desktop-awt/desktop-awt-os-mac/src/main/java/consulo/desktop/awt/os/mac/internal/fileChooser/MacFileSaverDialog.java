@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.os.mac.internal.fileChooser;
 
-import consulo.desktop.awt.ui.OwnerOptional;
+import consulo.desktop.awt.ui.impl.util.OwnerOptional;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileSaverDescriptor;
 import consulo.fileChooser.util.FileChooserUtil;

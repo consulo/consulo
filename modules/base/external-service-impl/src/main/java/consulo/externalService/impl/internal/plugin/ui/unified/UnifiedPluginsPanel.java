@@ -15,6 +15,7 @@
  */
 package consulo.externalService.impl.internal.plugin.ui.unified;
 
+import consulo.application.Application;
 import consulo.container.plugin.PluginId;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -46,7 +47,7 @@ public class UnifiedPluginsPanel implements Disposable {
     private final Tab myInstalledTabItem;
 
     @RequiredUIAccess
-    public UnifiedPluginsPanel() {
+    public UnifiedPluginsPanel(Application application) {
         myTabbedLayout = TabbedLayout.create();
         myTabbedLayout.addStyle(TabbedLayoutStyle.NO_PADDING);
 
@@ -54,10 +55,10 @@ public class UnifiedPluginsPanel implements Disposable {
         title.paddingBuilder().horizontalSet(Space.LARGE).apply();
         myTabbedLayout.setPrefixComponent(title);
 
-        myRepositoryTab = new UnifiedRepositoryPluginsTab(this);
+        myRepositoryTab = new UnifiedRepositoryPluginsTab(application, this);
         Disposer.register(this, myRepositoryTab);
 
-        myInstalledTab = new UnifiedInstalledPluginsTab();
+        myInstalledTab = new UnifiedInstalledPluginsTab(application);
         Disposer.register(this, myInstalledTab);
 
         myTabbedLayout.addTab(LocalizeValue.localizeTODO("Repository"), myRepositoryTab.getComponent());

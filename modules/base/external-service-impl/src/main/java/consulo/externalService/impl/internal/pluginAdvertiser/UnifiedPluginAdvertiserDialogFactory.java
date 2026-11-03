@@ -16,11 +16,13 @@
 package consulo.externalService.impl.internal.pluginAdvertiser;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
 import consulo.component.extension.preview.ExtensionPreview;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.externalService.pluginAdvertiser.PluginAdvertiserHelper;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jspecify.annotations.Nullable;
 
@@ -36,19 +38,26 @@ import java.util.concurrent.ExecutionException;
 @Singleton
 @ServiceImpl
 public class UnifiedPluginAdvertiserDialogFactory implements PluginAdvertiserDialogFactory {
+    private final Application myApplication;
+
+    @Inject
+    public UnifiedPluginAdvertiserDialogFactory(Application application) {
+        myApplication = application;
+    }
+
     @Override
     @RequiredUIAccess
     public void showDialog(@Nullable Project project, List<PluginDescriptor> allPlugins, List<PluginDescriptor> toInstallPlugins) {
         PluginAdvertiserHelper.PluginsInfo info =
             new PluginAdvertiserHelper.PluginsInfo(allPlugins, new LinkedHashSet<>(toInstallPlugins));
 
-        new UnifiedPluginsAdvertiserDialog(() -> info).show();
+        new UnifiedPluginsAdvertiserDialog(myApplication, () -> info).show();
     }
 
     @Override
     @RequiredUIAccess
     public void showDialogForExtension(ExtensionPreview preview, PluginAdvertiserHelper helper) {
-        new UnifiedPluginsAdvertiserDialog(() -> {
+        new UnifiedPluginsAdvertiserDialog(myApplication, () -> {
             try {
                 return helper.findPluginsForSuggest(preview).get();
             }
