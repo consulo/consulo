@@ -132,9 +132,8 @@ public abstract class BaseProjectViewImpl implements ProjectViewEx, PersistentSt
 
         project.getMessageBus().connect(this).subscribe(ModuleRootListener.class, new ModuleRootListener() {
             @Override
-            @RequiredUIAccess
             public void rootsChanged(ModuleRootEvent event) {
-                refresh();
+                project.getUIAccess().giveIfNeed(() -> refresh());
             }
         });
     }
