@@ -105,6 +105,16 @@ public class PsiBuilderAdapter implements PsiBuilder {
     }
 
     @Override
+    public void rawAdvanceLexer(int steps) {
+        myDelegate.rawAdvanceLexer(steps);
+    }
+
+    @Override
+    public void advanceToEOF() {
+        myDelegate.advanceToEOF();
+    }
+
+    @Override
     public @Nullable String getTokenText() {
         return myDelegate.getTokenText();
     }

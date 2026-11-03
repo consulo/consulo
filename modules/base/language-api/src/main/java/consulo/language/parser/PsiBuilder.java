@@ -137,6 +137,36 @@ public interface PsiBuilder extends UserDataHolder {
     int rawTokenIndex();
 
     /**
+     * Advances the lexer by the given number of lexemes, including whitespace and comment tokens.
+     * <br/><br/>
+     * The default implementation does not bring any performance benefits over {@link #advanceLexer()} method and should be overridden.
+     *
+     * @param steps a positive integer
+     */
+    default void rawAdvanceLexer(int steps) {
+        if (steps < 0) {
+            throw new IllegalArgumentException("Steps must be a positive integer - lexer can only be advanced. " +
+                "Use Marker.rollbackTo if you want to rollback PSI building.");
+        }
+        if (steps == 0) {
+            return;
+        }
+        int offset = rawTokenTypeStart(steps);
+        while (!eof() && getCurrentOffset() < offset) {
+            advanceLexer();
+        }
+    }
+
+    /**
+     * Advances the lexer to the end of the file.
+     * <p>
+     * The default implementation does not bring any performance benefits over {@link #advanceLexer()} method and should be overridden.
+     */
+    default void advanceToEOF() {
+        rawAdvanceLexer(Integer.MAX_VALUE - rawTokenIndex());
+    }
+
+    /**
      * Returns the text of the current token from the lexer.
      *
      * @return the token text, or null when the token stream is over.
