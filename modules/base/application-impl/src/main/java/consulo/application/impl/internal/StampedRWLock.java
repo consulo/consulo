@@ -16,6 +16,8 @@
 package consulo.application.impl.internal;
 
 import consulo.application.AccessToken;
+import consulo.application.internal.ReadWaitCancellation;
+import consulo.component.ProcessCanceledException;
 import consulo.application.util.ApplicationUtil;
 import consulo.ui.UIAccess;
 
@@ -176,6 +178,72 @@ public final class StampedRWLock implements RWLock {
         long stamp = myLock.readLock();
         myReadStamp.set(stamp);
         return new StampedReadToken(stamp);
+    }
+
+    @Override
+    public ReadToken startRead(ReadWaitCancellation cancellation) throws ProcessCanceledException {
+        if (Thread.currentThread() == myWriteThread) {
+            return null;
+        }
+
+        if (myReadStamp.get() != null) {
+            return null;
+        }
+
+        throwIfImpatient();
+
+        if (UIAccess.isUIThread() && myLock.isWriteLocked()) {
+            throw new IllegalStateException("Can't run ReadAction from UI thread while write lock is active — would freeze UI");
+        }
+
+        long stamp = myLock.tryReadLock();
+        if (stamp == 0) {
+            stamp = waitForReadLock(cancellation);
+        }
+        myReadStamp.set(stamp);
+        return new StampedReadToken(stamp);
+    }
+
+    private long waitForReadLock(ReadWaitCancellation cancellation) throws ProcessCanceledException {
+        boolean foreignInterrupt = Thread.interrupted();
+        if (!cancellation.beginWait(Thread::interrupt)) {
+            restoreInterrupt(foreignInterrupt);
+            throw new ProcessCanceledException();
+        }
+
+        long stamp = 0;
+        try {
+            while (stamp == 0 && !cancellation.isCancelled()) {
+                try {
+                    stamp = myLock.readLockInterruptibly();
+                }
+                catch (InterruptedException e) {
+                    if (!cancellation.isCancelled()) {
+                        foreignInterrupt = true;
+                    }
+                }
+            }
+        }
+        finally {
+            boolean acquired = cancellation.endWait();
+            Thread.interrupted();
+            restoreInterrupt(foreignInterrupt);
+            if (!acquired && stamp != 0) {
+                myLock.unlockRead(stamp);
+                stamp = 0;
+            }
+        }
+
+        if (stamp == 0) {
+            throw new ProcessCanceledException();
+        }
+        return stamp;
+    }
+
+    private static void restoreInterrupt(boolean interrupted) {
+        if (interrupted) {
+            Thread.currentThread().interrupt();
+        }
     }
 
     @Override

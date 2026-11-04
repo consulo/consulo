@@ -18,6 +18,8 @@ package consulo.application.impl.internal;
 import java.util.function.Consumer;
 
 import consulo.application.AccessToken;
+import consulo.application.internal.ReadWaitCancellation;
+import consulo.component.ProcessCanceledException;
 
 /**
  * @author VISTALL
@@ -29,6 +31,8 @@ public interface RWLock {
     }
 
     RWLock.ReadToken startRead();
+
+    RWLock.ReadToken startRead(ReadWaitCancellation cancellation) throws ProcessCanceledException;
 
     RWLock.ReadToken startTryRead();
 

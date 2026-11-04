@@ -28,6 +28,7 @@ import java.util.Deque;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -67,7 +68,7 @@ public class ContinuationImpl<T> extends UserDataHolderBase implements Continuat
 
     private boolean callChainComplete = false;
 
-    private boolean cancelled = false;
+    private volatile boolean cancelled = false;
 
     private boolean finished = false;
 
@@ -80,6 +81,8 @@ public class ContinuationImpl<T> extends UserDataHolderBase implements Continuat
     private @Nullable Consumer<Continuation<T>> runWhenDone = null;
 
     private @Nullable Consumer<Continuation<T>> runOnCancel = null;
+
+    private final List<Runnable> cancelHooks = new CopyOnWriteArrayList<>();
 
     private @Nullable Consumer<Continuation<T>> runOnError = null;
 
@@ -156,6 +159,12 @@ public class ContinuationImpl<T> extends UserDataHolderBase implements Continuat
                 }
             }
         });
+
+        if (cancelled) {
+            for (Runnable hook : cancelHooks) {
+                hook.run();
+            }
+        }
 
         if (currentSuspension != null) {
             currentSuspension.cancel();
@@ -593,6 +602,21 @@ public class ContinuationImpl<T> extends UserDataHolderBase implements Continuat
         });
 
         return this;
+    }
+
+    @Override
+    public Runnable addCancelHook(Runnable hook) {
+        AtomicBoolean ran = new AtomicBoolean();
+        Runnable once = () -> {
+            if (ran.compareAndSet(false, true)) {
+                hook.run();
+            }
+        };
+        cancelHooks.add(once);
+        if (cancelled) {
+            once.run();
+        }
+        return () -> cancelHooks.remove(once);
     }
 
     /**

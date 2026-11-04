@@ -299,6 +299,15 @@ public interface Continuation<T> extends UserDataHolderEx, CopyableUserDataHolde
     Continuation<T> onCancel(Consumer<Continuation<T>> runOnCancel);
 
     /**
+     * Adds a hook that runs when this continuation is cancelled, in addition to the {@link #onCancel(Consumer)} function.
+     * If the continuation is already cancelled the hook runs at once.
+     *
+     * @param hook the hook to run on cancellation
+     * @return an action that removes the hook again
+     */
+    Runnable addCancelHook(Runnable hook);
+
+    /**
      * Sets a function to be run if the execution of this instance fails.
      *
      * @param runOnError A function to be run on cancellation

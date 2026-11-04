@@ -27,11 +27,15 @@ import consulo.util.concurrent.coroutine.CoroutineScopeException;
 import consulo.util.concurrent.coroutine.Suspension;
 import org.jspecify.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.SequencedSet;
+import java.util.Set;
 import java.util.concurrent.CancellationException;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -74,6 +78,8 @@ public class CoroutineScopeImpl extends CoroutineEnvironmentImpl implements Coro
     private final CoroutineContext context;
 
     private final AtomicLong runningCoroutines = new AtomicLong();
+
+    private final Set<Continuation<?>> runningContinuations = ConcurrentHashMap.newKeySet();
 
     private final RunLock scopeLock = new RunLock();
 
@@ -217,6 +223,7 @@ public class CoroutineScopeImpl extends CoroutineEnvironmentImpl implements Coro
      */
     @Override
     public void cancel() {
+        List<Continuation<?>> running = new ArrayList<>();
         scopeLock.runLocked(() -> {
             if (!isFinished()) {
                 cancelled = true;
@@ -225,8 +232,14 @@ public class CoroutineScopeImpl extends CoroutineEnvironmentImpl implements Coro
                     rSuspension.cancel();
                 }
                 suspensions.clear();
+
+                running.addAll(runningContinuations);
             }
         });
+
+        for (Continuation<?> continuation : running) {
+            continuation.cancel();
+        }
     }
 
     /**
@@ -412,7 +425,7 @@ public class CoroutineScopeImpl extends CoroutineEnvironmentImpl implements Coro
      * @param continuation The continuation of the execution
      */
     void coroutineFinished(Continuation<?> continuation) {
-        if (runningCoroutines.decrementAndGet() == 0) {
+        if (runningContinuations.remove(continuation) && runningCoroutines.decrementAndGet() == 0) {
             finishSignal.countDown();
         }
     }
@@ -423,7 +436,7 @@ public class CoroutineScopeImpl extends CoroutineEnvironmentImpl implements Coro
      * @param continuation The continuation of the execution
      */
     void coroutineStarted(Continuation<?> continuation) {
-        if (runningCoroutines.incrementAndGet() == 1 && finishSignal.getCount() == 0) {
+        if (runningContinuations.add(continuation) && runningCoroutines.incrementAndGet() == 1 && finishSignal.getCount() == 0) {
             finishSignal = new CountDownLatch(1);
         }
     }

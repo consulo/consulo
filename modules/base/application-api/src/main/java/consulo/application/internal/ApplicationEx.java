@@ -25,6 +25,7 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
 import consulo.application.util.ApplicationUtil;
 import consulo.component.ComponentManager;
+import consulo.component.ProcessCanceledException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import consulo.localize.LocalizeValue;
 import consulo.util.concurrent.coroutine.Coroutine;
@@ -34,6 +35,7 @@ import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.io.IOException;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * @author max
@@ -219,6 +221,13 @@ public interface ApplicationEx extends Application {
      */
     @Override
     boolean tryRunReadAction(Runnable action);
+
+    /**
+     * Runs the computation in a read action whose wait for the read lock stops when the cancellation is cancelled.
+     *
+     * @throws ProcessCanceledException when the cancellation was cancelled before the read lock was acquired
+     */
+    <T> T runReadAction(Supplier<T> computation, ReadWaitCancellation cancellation) throws ProcessCanceledException;
 
     boolean isInImpatientReader();
 

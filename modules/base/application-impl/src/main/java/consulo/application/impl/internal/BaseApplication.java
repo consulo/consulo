@@ -33,6 +33,7 @@ import consulo.application.impl.internal.progress.ProgressWindow;
 import consulo.application.internal.StartupProgress;
 import consulo.application.impl.internal.store.IApplicationStore;
 import consulo.application.internal.ApplicationEx;
+import consulo.application.internal.ReadWaitCancellation;
 import consulo.application.internal.ApplicationInfo;
 import consulo.application.internal.ApplicationWithIntentWriteLock;
 import consulo.application.progress.*;
@@ -616,6 +617,23 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
         }
 
         RWLock.ReadToken status = myLock.startRead();
+        try {
+            return computation.get();
+        }
+        finally {
+            if (status != null) {
+                myLock.endRead(status);
+            }
+        }
+    }
+
+    @Override
+    public <T> T runReadAction(Supplier<T> computation, ReadWaitCancellation cancellation) throws ProcessCanceledException {
+        if (isReadAccessAllowed() && !isWriteAccessAllowed()) {
+            return computation.get();
+        }
+
+        RWLock.ReadToken status = myLock.startRead(cancellation);
         try {
             return computation.get();
         }

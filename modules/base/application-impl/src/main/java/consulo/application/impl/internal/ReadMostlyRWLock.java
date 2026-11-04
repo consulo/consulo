@@ -5,6 +5,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AccessToken;
 import consulo.application.impl.internal.progress.CoreProgressManager;
 import consulo.application.internal.ProgressIndicatorUtils;
+import consulo.application.internal.ReadWaitCancellation;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.ApplicationUtil;
@@ -133,6 +134,44 @@ public final class ReadMostlyRWLock implements RWLock {
                     throw new ProcessCanceledException();
                 }
                 waitABit(status, iter);
+            }
+        }
+        return status;
+    }
+
+    @Override
+    public Reader startRead(ReadWaitCancellation cancellation) throws ProcessCanceledException {
+        if (Thread.currentThread() == writeThread) {
+            return null;
+        }
+        Reader status = R.get();
+        throwIfImpatient(status);
+        if (status.readRequested) {
+            return null;
+        }
+
+        if (!tryReadLock(status)) {
+            if (!cancellation.beginWait(LockSupport::unpark)) {
+                throw new ProcessCanceledException();
+            }
+            boolean acquired = false;
+            try {
+                for (int iter = 0; !cancellation.isCancelled(); iter++) {
+                    if (tryReadLock(status)) {
+                        acquired = true;
+                        break;
+                    }
+                    waitABit(status, iter);
+                }
+            }
+            finally {
+                if (!cancellation.endWait() && acquired) {
+                    endRead(status);
+                    acquired = false;
+                }
+            }
+            if (!acquired) {
+                throw new ProcessCanceledException();
             }
         }
         return status;

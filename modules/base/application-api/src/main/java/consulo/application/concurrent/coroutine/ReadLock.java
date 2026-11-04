@@ -17,6 +17,9 @@ package consulo.application.concurrent.coroutine;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
+import consulo.application.internal.ApplicationEx;
+import consulo.application.internal.ReadWaitCancellation;
+import consulo.component.ProcessCanceledException;
 import consulo.util.concurrent.coroutine.Continuation;
 import consulo.util.concurrent.coroutine.CoroutineStep;
 import org.jspecify.annotations.Nullable;
@@ -51,6 +54,23 @@ public final class ReadLock<I extends @Nullable Object, O extends @Nullable Obje
         Application application = Objects.requireNonNull(continuation.getConfiguration(Application.KEY), "Application required");
         // NullAway problem: input and output are nullable by method contract but in actual usage input can be null only if I is nullable
         // We cannot explain this to the static validator, so suppressing NullAway validation
-        return application.runReadAction((Supplier<O>) () -> myFunction.apply(input, continuation));
+        Supplier<O> computation = () -> {
+            if (continuation.isCancelled() || continuation.scope().isCancelled()) {
+                throw new ProcessCanceledException();
+            }
+            return myFunction.apply(input, continuation);
+        };
+        if (!(application instanceof ApplicationEx applicationEx)) {
+            return application.runReadAction(computation);
+        }
+
+        ReadWaitCancellation cancellation = new ReadWaitCancellation();
+        Runnable removeHook = continuation.addCancelHook(cancellation::cancel);
+        try {
+            return applicationEx.runReadAction(computation, cancellation);
+        }
+        finally {
+            removeHook.run();
+        }
     }
 }
