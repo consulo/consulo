@@ -492,6 +492,10 @@ class InjectionRegistrarImpl implements MultiHostRegistrar {
 
     for (int i = injected.size() - 1; i >= 0; i--) {
       DocumentWindowImpl oldDocument = (DocumentWindowImpl)injected.get(i);
+      // Template languages register several PSI roots over the same injected document.
+      if (oldDocument == newDocumentWindow) {
+        return newInjectedPsi;
+      }
       PsiFileImpl oldFile = (PsiFileImpl)documentManager.getCachedPsiFile(oldDocument);
       FileViewProvider viewProvider;
       if (oldFile == null || !oldFile.isValid() || !((viewProvider = oldFile.getViewProvider()) instanceof InjectedFileViewProvider) || ((InjectedFileViewProvider)viewProvider).isDisposed()) {
@@ -501,9 +505,13 @@ class InjectionRegistrarImpl implements MultiHostRegistrar {
       }
 
       ASTNode newInjectedNode = newInjectedPsi.getNode();
-      ASTNode oldFileNode = oldFile.getNode();
       assert newInjectedNode != null : "New node is null";
       if (oldDocument.areRangesEqual(newDocumentWindow)) {
+        PsiFile matchingRoot = viewProvider.getPsi(newInjectedPsi.getLanguage());
+        if (matchingRoot instanceof PsiFileImpl matchingFile) {
+          oldFile = matchingFile;
+        }
+        ASTNode oldFileNode = oldFile.getNode();
         if (oldFile.getFileType() != newInjectedPsi.getFileType() || oldFile.getLanguage() != newInjectedPsi.getLanguage()) {
           injected.remove(i);
           Disposer.dispose(oldDocument);

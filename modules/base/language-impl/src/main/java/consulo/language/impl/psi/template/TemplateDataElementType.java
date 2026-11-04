@@ -24,7 +24,7 @@ import consulo.language.template.ITemplateDataElementType;
 import consulo.language.template.TemplateLanguageFileViewProvider;
 import consulo.language.util.CharTable;
 import consulo.language.version.LanguageVersion;
-import consulo.language.version.LanguageVersionResolver;
+import consulo.language.version.LanguageVersionUtil;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 import consulo.util.lang.LocalTimeCounter;
@@ -56,7 +56,8 @@ public class TemplateDataElementType extends IFileElementType implements ITempla
   
   protected Lexer createBaseLexer(PsiFile file, TemplateLanguageFileViewProvider viewProvider) {
     Language baseLanguage = viewProvider.getBaseLanguage();
-    LanguageVersion languageVersion = LanguageVersionResolver.forLanguage(baseLanguage).getLanguageVersion(baseLanguage, file);
+    // Injected files carry an explicit version before their PSI is registered and valid.
+    LanguageVersion languageVersion = LanguageVersionUtil.findLanguageVersion(baseLanguage, file.getProject(), file.getVirtualFile());
     return ParserDefinition.forLanguage(viewProvider.getBaseLanguage()).createLexer(languageVersion);
   }
 

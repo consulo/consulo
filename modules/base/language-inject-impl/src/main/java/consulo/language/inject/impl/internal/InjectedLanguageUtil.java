@@ -319,7 +319,8 @@ public class InjectedLanguageUtil {
     InjectionResult result = null;
     PsiElement current;
 
-    for (current = element; current != null && current != hostPsiFile && !(current instanceof PsiDirectory); ) {
+    // A file can be the common injection context for hosts in separate top-level siblings.
+    for (current = element; current != null && !(current instanceof PsiDirectory); ) {
       ProgressManager.checkCanceled();
       if ("EL".equals(current.getLanguage().getID())) break;
       result = SoftReference.deref(current.getUserData(INJECTED_PSI));
@@ -327,7 +328,7 @@ public class InjectedLanguageUtil {
         result = injectedManager.processInPlaceInjectorsFor(hostPsiFile, current);
       }
 
-      current = current.getParent();
+      current = current == hostPsiFile ? null : current.getParent();
 
       if (result != null) {
         if (result.files != null) {

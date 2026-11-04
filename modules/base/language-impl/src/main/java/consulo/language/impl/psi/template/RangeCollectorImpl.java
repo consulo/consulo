@@ -177,7 +177,8 @@ public class RangeCollectorImpl extends TemplateDataElementType.RangeCollector {
       else {
         if (currentLeafOrLazyParseable instanceof LeafElement && currentLeafOffset < rangeStartOffset) {
           int splitOffset = rangeStartOffset - currentLeafOffset;
-          currentLeafOrLazyParseable = templateTreePatcher.split((LeafElement)currentLeafOrLazyParseable, splitOffset, charTable);
+          // split returns the left part; insert before the right part at rangeStartOffset.
+          currentLeafOrLazyParseable = templateTreePatcher.split((LeafElement)currentLeafOrLazyParseable, splitOffset, charTable).getTreeNext();
           currentLeafOffset = rangeStartOffset;
         }
         if (currentLeafOrLazyParseable == null) {
