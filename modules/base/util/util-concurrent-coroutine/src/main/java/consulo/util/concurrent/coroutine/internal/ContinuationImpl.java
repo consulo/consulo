@@ -47,6 +47,8 @@ public class ContinuationImpl<T> extends UserDataHolderBase implements Continuat
 
     private static final AtomicLong aNextId = new AtomicLong(1);
 
+    private static final ThreadLocal<@Nullable Continuation<?>> CURRENT = new ThreadLocal<>();
+
     private final CoroutineScopeImpl scope;
 
     private final long id = aNextId.getAndIncrement();
@@ -314,7 +316,25 @@ public class ContinuationImpl<T> extends UserDataHolderBase implements Continuat
      */
     @Override
     public void execute(Runnable command) {
-        context().getExecutor().execute(command);
+        context().getExecutor().execute(() -> {
+            Continuation<?> previous = CURRENT.get();
+            CURRENT.set(this);
+            try {
+                command.run();
+            }
+            finally {
+                if (previous == null) {
+                    CURRENT.remove();
+                }
+                else {
+                    CURRENT.set(previous);
+                }
+            }
+        });
+    }
+
+    public static @Nullable Continuation<?> current() {
+        return CURRENT.get();
     }
 
     /**

@@ -16,6 +16,7 @@
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 package consulo.util.concurrent.coroutine;
 
+import consulo.util.concurrent.coroutine.internal.ContinuationImpl;
 import consulo.util.dataholder.CopyableUserDataHolder;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderEx;
@@ -37,6 +38,14 @@ import java.util.function.Function;
  * @author eso
  */
 public interface Continuation<T> extends UserDataHolderEx, CopyableUserDataHolder, Executor {
+    /**
+     * Returns the continuation whose step is running on the current thread.
+     *
+     * @return the continuation, or null when the current thread does not execute a coroutine step
+     */
+    static @Nullable Continuation<?> current() {
+        return ContinuationImpl.current();
+    }
 
     /**
      * Awaits the completion of the coroutine execution. Other than

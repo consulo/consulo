@@ -317,7 +317,7 @@ public class UsageInfo2UsageAdapter implements UsageInModule, UsageInfoAdapter, 
     }
 
     @RequiredReadAction
-    private Segment getNavigationRange() {
+    public @Nullable Segment getNavigationRange() {
         Document document = getDocument();
         if (document == null) {
             return null;

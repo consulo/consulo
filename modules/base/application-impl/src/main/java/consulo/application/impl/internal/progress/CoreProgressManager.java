@@ -494,6 +494,11 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
                     throw new ProcessCanceledException(e);
                 }
                 catch (CoroutineException e) {
+                    for (Throwable cause = e; cause != null; cause = cause.getCause()) {
+                        if (cause instanceof ProcessCanceledException pce) {
+                            throw pce;
+                        }
+                    }
                     throw new RuntimeException(e);
                 }
             };
@@ -711,7 +716,12 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
 
     @Override
     public @Nullable ProgressIndicator getProgressIndicator() {
-        return getCurrentIndicator(Thread.currentThread());
+        ProgressIndicator indicator = getCurrentIndicator(Thread.currentThread());
+        if (indicator != null) {
+            return indicator;
+        }
+        Continuation<?> continuation = Continuation.current();
+        return continuation == null ? null : continuation.scope().getCopyableUserData(ProgressIndicator.KEY);
     }
 
     @Override
@@ -722,7 +732,7 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
 
         try {
             ProgressIndicator oldIndicator = null;
-            boolean set = progress != null && progress != (oldIndicator = getProgressIndicator());
+            boolean set = progress != null && progress != (oldIndicator = getCurrentIndicator(Thread.currentThread()));
             if (set) {
                 Thread currentThread = Thread.currentThread();
                 long threadId = currentThread.threadId();

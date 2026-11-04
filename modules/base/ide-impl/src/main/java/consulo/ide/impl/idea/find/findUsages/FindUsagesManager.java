@@ -20,6 +20,7 @@ import consulo.application.ReadAction;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.internal.ProgressIndicatorBase;
 import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressBuilderFactory;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
 import consulo.application.util.function.CommonProcessors;
@@ -30,8 +31,8 @@ import consulo.content.scope.SearchScope;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.document.Document;
+import consulo.document.util.Segment;
 import consulo.fileEditor.FileEditor;
-import consulo.fileEditor.FileEditorLocation;
 import consulo.fileEditor.TextEditor;
 import consulo.find.FindSettings;
 import consulo.find.FindUsagesHandler;
@@ -76,14 +77,17 @@ import consulo.ui.ex.dialog.DialogService;
 import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.usage.*;
 import consulo.util.collection.ArrayUtil;
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.step.CodeExecution;
 import consulo.util.dataholder.Key;
-import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.CompletionException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Predicate;
@@ -645,27 +649,49 @@ public class FindUsagesManager {
     ) {
         initLastSearchElement(findUsagesOptions, primaryElements, secondaryElements);
 
-        FileEditorLocation currentLocation = fileEditor.getCurrentLocation();
-
         PsiElement2UsageTargetAdapter[] primaryTargets = PsiElement2UsageTargetAdapter.convert(primaryElements);
         PsiElement2UsageTargetAdapter[] secondaryTargets = PsiElement2UsageTargetAdapter.convert(primaryElements);
         UsageSearcher usageSearcher = createUsageSearcher(primaryTargets, secondaryTargets, handler, findUsagesOptions, scopeFile);
         AtomicBoolean usagesWereFound = new AtomicBoolean();
 
-        Usage fUsage = findSiblingUsage(usageSearcher, direction, currentLocation, usagesWereFound, fileEditor);
+        int startOffset = fileEditor instanceof TextEditor textEditor ? textEditor.getEditor().getCaretModel().getOffset() : 0;
 
-        if (fUsage != null) {
-            fUsage.navigate(true);
-            fUsage.selectInEditor();
-        }
-        else if (!usagesWereFound.get()) {
-            LocalizeValue message = LocalizeValue.localizeTODO(getNoUsagesFoundMessage(primaryElements[0]) + " in " + scopeFile.getName());
-            showHintOrStatusBarMessage(message, fileEditor);
-        }
-        else {
-            fileEditor.putUserData(KEY_START_USAGE_AGAIN, VALUE_START_USAGE_AGAIN);
-            showHintOrStatusBarMessage(getSearchAgainMessage(primaryElements[0], direction), fileEditor);
-        }
+        UIAccess uiAccess = UIAccess.current();
+
+        Application.get().getInstance(ProgressBuilderFactory.class)
+            .newProgressBuilder(myProject, FindLocalize.findProgressSearchingMessage("editor"))
+            .cancelable()
+            .execute(uiAccess, () -> Coroutine.first(CodeExecution.<Object, Usage>supply(
+                () -> findSiblingUsage(usageSearcher, direction, startOffset, usagesWereFound, fileEditor)
+            )))
+            .whenCompleteAsync(
+                (usage, throwable) -> {
+                    if (throwable != null) {
+                        Throwable cause = throwable instanceof CompletionException && throwable.getCause() != null ? throwable.getCause() : throwable;
+                        if (!(cause instanceof ProcessCanceledException) && !(cause instanceof CancellationException)) {
+                            LOG.error(cause);
+                        }
+                        return;
+                    }
+                    if (myProject.isDisposed() || !fileEditor.isValid()) {
+                        return;
+                    }
+                    if (usage != null) {
+                        usage.navigate(true);
+                        usage.selectInEditor();
+                    }
+                    else if (!usagesWereFound.get()) {
+                        LocalizeValue message =
+                            LocalizeValue.localizeTODO(getNoUsagesFoundMessage(primaryElements[0]) + " in " + scopeFile.getName());
+                        showHintOrStatusBarMessage(message, fileEditor);
+                    }
+                    else {
+                        fileEditor.putUserData(KEY_START_USAGE_AGAIN, VALUE_START_USAGE_AGAIN);
+                        showHintOrStatusBarMessage(getSearchAgainMessage(primaryElements[0], direction), fileEditor);
+                    }
+                },
+                uiAccess
+            );
     }
 
     
@@ -710,7 +736,7 @@ public class FindUsagesManager {
     private static Usage findSiblingUsage(
         UsageSearcher usageSearcher,
         FileSearchScope dir,
-        FileEditorLocation currentLocation,
+        int startOffset,
         AtomicBoolean usagesWereFound,
         FileEditor fileEditor
     ) {
@@ -723,6 +749,7 @@ public class FindUsagesManager {
         AtomicReference<Usage> foundUsage = new AtomicReference<>();
         usageSearcher.generate(usage -> {
             usagesWereFound.set(true);
+            int usageOffset = getUsageOffset(usage);
             if (direction == FileSearchScope.FROM_START) {
                 foundUsage.compareAndSet(null, usage);
                 return false;
@@ -731,13 +758,13 @@ public class FindUsagesManager {
                 foundUsage.set(usage);
             }
             else if (direction == FileSearchScope.AFTER_CARET) {
-                if (Comparing.compare(usage.getLocation(), currentLocation) > 0) {
+                if (usageOffset > startOffset) {
                     foundUsage.set(usage);
                     return false;
                 }
             }
             else if (direction == FileSearchScope.BEFORE_CARET) {
-                if (Comparing.compare(usage.getLocation(), currentLocation) >= 0) {
+                if (usageOffset >= startOffset) {
                     return false;
                 }
                 while (true) {
@@ -747,7 +774,7 @@ public class FindUsagesManager {
                             break;
                         }
                     }
-                    else if (Comparing.compare(found.getLocation(), usage.getLocation()) < 0 && foundUsage.compareAndSet(found, usage)) {
+                    else if (getUsageOffset(found) < usageOffset && foundUsage.compareAndSet(found, usage)) {
                         break;
                     }
                 }
@@ -759,6 +786,16 @@ public class FindUsagesManager {
         fileEditor.putUserData(KEY_START_USAGE_AGAIN, null);
 
         return foundUsage.get();
+    }
+
+    private static int getUsageOffset(Usage usage) {
+        if (!(usage instanceof UsageInfo2UsageAdapter adapter)) {
+            return 0;
+        }
+        return ReadAction.compute(() -> {
+            Segment range = adapter.getNavigationRange();
+            return range == null ? 0 : range.getStartOffset();
+        });
     }
 
     private static PsiElement2UsageTargetAdapter convertToUsageTarget(
