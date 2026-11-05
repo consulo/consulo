@@ -1309,13 +1309,13 @@ radio.after.creation.add.silently:
 radio.after.creation.do.not.add:
     text: '&Do not add'
 radio.after.creation.show.options:
-    text: <html>Show options before adding<br>to version control</html>
+    text: Show options before adding to version control
 radio.after.deletion.do.not.remove:
     text: Do &not remove
 radio.after.deletion.remove.silently:
     text: Re&move silently
 radio.after.deletion.show.options:
-    text: <html>Show &options before removing<br>from version control</html>
+    text: Show &options before removing from version control
 refresh.failed.message:
     text: 'Refresh failed: {0}'
 remove.confirmation.label.text:
