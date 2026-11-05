@@ -22,6 +22,7 @@ import consulo.desktop.awt.ui.impl.event.DesktopAWTInputDetails;
 import consulo.desktop.awt.ui.impl.tree.DesktopAsyncTreeModel;
 import consulo.desktop.awt.ui.impl.tree.DesktopStructureTreeModel;
 import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.ui.DragAndDropTransferHandler;
 import consulo.ui.Length;
 import consulo.ui.Point2D;
@@ -191,6 +192,7 @@ public abstract class DesktopTreeBase<E, T extends java.awt.Component> extends S
             tree.setRowHeight(0);
         }
         scheduleUniformRowHeight(tree);
+        Disposer.register(myDestroyHook, () -> resetUniformRowHeight(tree));
         applySpeedSearch(tree);
 
         tree.addMouseListener(new MouseAdapter() {
@@ -462,6 +464,10 @@ public abstract class DesktopTreeBase<E, T extends java.awt.Component> extends S
     }
 
     CompletableFuture<?> rebuildKeepingState(Supplier<? extends Promise<?>> action) {
+        if (Disposer.isDisposed(myDestroyHook)) {
+            return CompletableFuture.completedFuture(null);
+        }
+
         DesktopAWTTree tree = getTree();
 
         List<TreeNode<E>> expanded = expandedNodes(tree);
@@ -473,6 +479,10 @@ public abstract class DesktopTreeBase<E, T extends java.awt.Component> extends S
     }
 
     CompletableFuture<?> refreshLevelsKeepingState(Set<DesktopTreeNodeImpl<E>> levels) {
+        if (Disposer.isDisposed(myDestroyHook)) {
+            return CompletableFuture.completedFuture(null);
+        }
+
         DesktopAWTTree tree = getTree();
 
         List<TreeNode<E>> expanded = new ArrayList<>();
@@ -675,7 +685,7 @@ public abstract class DesktopTreeBase<E, T extends java.awt.Component> extends S
     }
 
     private boolean isUniformRowHeightPossible(DesktopAWTTree tree) {
-        return !myUnstableHeight && myItemHeightGetter == null && !tree.isEditable();
+        return !myUnstableHeight && myItemHeightGetter == null && !tree.isEditable() && !Disposer.isDisposed(myDestroyHook);
     }
 
     private boolean applyUniformRowHeight(DesktopAWTTree tree) {
