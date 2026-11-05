@@ -21,6 +21,7 @@ import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
 import consulo.language.ast.TokenType;
 import consulo.language.codeStyle.internal.CodeStyleInternalHelper;
+import consulo.language.codeStyle.internal.LanguageCodeStyleInternalHelper;
 import consulo.localize.LocalizeValue;
 import consulo.undoRedo.CommandProcessor;
 
@@ -256,7 +257,7 @@ public class FormatterUtil {
     }
 
     public static boolean containsWhiteSpacesOnly(@Nullable ASTNode node) {
-        return CodeStyleInternalHelper.getInstance().containsWhiteSpacesOnly(node);
+        return LanguageCodeStyleInternalHelper.getInstance().containsWhiteSpacesOnly(node);
     }
 
     /**
@@ -277,7 +278,7 @@ public class FormatterUtil {
         ASTNode holder,
         TextRange whiteSpaceRange
     ) {
-        CodeStyleInternalHelper.getInstance().replaceInnerWhiteSpace(newWhiteSpaceText, holder, whiteSpaceRange);
+        LanguageCodeStyleInternalHelper.getInstance().replaceInnerWhiteSpace(newWhiteSpaceText, holder, whiteSpaceRange);
     }
 
     public static void replaceWhiteSpace(
@@ -286,11 +287,11 @@ public class FormatterUtil {
         IElementType whiteSpaceToken,
         @Nullable TextRange textRange
     ) {
-        CodeStyleInternalHelper.getInstance().replaceWhiteSpace(whiteSpace, leafElement, whiteSpaceToken, textRange);
+        LanguageCodeStyleInternalHelper.getInstance().replaceWhiteSpace(whiteSpace, leafElement, whiteSpaceToken, textRange);
     }
 
     public static void replaceLastWhiteSpace(ASTNode astNode, String whiteSpace, TextRange textRange) {
-        CodeStyleInternalHelper.getInstance().replaceLastWhiteSpace(astNode, whiteSpace, textRange);
+        LanguageCodeStyleInternalHelper.getInstance().replaceLastWhiteSpace(astNode, whiteSpace, textRange);
     }
 
     /**

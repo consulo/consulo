@@ -39,30 +39,6 @@ public interface CodeStyleInternalHelper {
         return Application.get().getInstance(CodeStyleInternalHelper.class);
     }
 
-    void debugTreeToBuffer(Appendable buffer,
-                           ASTNode root,
-                           int indent,
-                           boolean skipWhiteSpaces,
-                           boolean showRanges,
-                           boolean showChildrenRanges,
-                           boolean usePsi);
-
-    void replaceLastWhiteSpace(ASTNode astNode, String whiteSpace, TextRange textRange);
-
-    void replaceWhiteSpace(String whiteSpace, ASTNode leafElement, IElementType whiteSpaceToken, @Nullable TextRange textRange);
-
-    void replaceInnerWhiteSpace(String newWhiteSpaceText, ASTNode holder, TextRange whiteSpaceRange);
-
-    boolean containsWhiteSpacesOnly(@Nullable ASTNode node);
-
-    @Nullable ASTNode getPreviousNonWhitespaceLeaf(@Nullable ASTNode node);
-
-    void allowToMarkNodesForPostponedFormatting(boolean value);
-
-    FormattingDocumentModel createFormattingDocumentModel(PsiFile file);
-
-    FormattingDocumentModel createFormattingDocumentModel(Document document, @Nullable PsiFile file);
-
     int nextTabStop(int x, Object editor, int tabSize);
 
     int nextTabStop(int x, Object editor);

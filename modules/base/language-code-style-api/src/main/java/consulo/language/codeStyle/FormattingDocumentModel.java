@@ -19,6 +19,7 @@ import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.language.ast.ASTNode;
 import consulo.language.codeStyle.internal.CodeStyleInternalHelper;
+import consulo.language.codeStyle.internal.LanguageCodeStyleInternalHelper;
 import consulo.language.psi.PsiFile;
 
 import org.jspecify.annotations.Nullable;
@@ -32,12 +33,11 @@ import org.jspecify.annotations.Nullable;
 public interface FormattingDocumentModel {
     
     static FormattingDocumentModel create(PsiFile file) {
-        return CodeStyleInternalHelper.getInstance().createFormattingDocumentModel(file);
+        return LanguageCodeStyleInternalHelper.getInstance().createFormattingDocumentModel(file);
     }
-
     
     static FormattingDocumentModel create(Document document, @Nullable PsiFile file) {
-        return CodeStyleInternalHelper.getInstance().createFormattingDocumentModel(document, file);
+        return LanguageCodeStyleInternalHelper.getInstance().createFormattingDocumentModel(document, file);
     }
 
     /**
@@ -70,7 +70,6 @@ public interface FormattingDocumentModel {
      * @return the document text length.
      */
     int getTextLength();
-
     
     Document getDocument();
 

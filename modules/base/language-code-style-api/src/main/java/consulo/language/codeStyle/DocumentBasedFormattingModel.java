@@ -20,6 +20,7 @@ import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.language.ast.ASTNode;
 import consulo.language.codeStyle.internal.CodeStyleInternalHelper;
+import consulo.language.codeStyle.internal.LanguageCodeStyleInternalHelper;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
@@ -198,12 +199,12 @@ public class DocumentBasedFormattingModel implements FormattingModelEx {
 
     @Override
     public void commitChanges() {
-        CodeStyleInternalHelper.getInstance().allowToMarkNodesForPostponedFormatting(false);
+        LanguageCodeStyleInternalHelper.getInstance().allowToMarkNodesForPostponedFormatting(false);
         try {
             PsiDocumentManager.getInstance(myProject).commitDocument(myDocument);
         }
         finally {
-            CodeStyleInternalHelper.getInstance().allowToMarkNodesForPostponedFormatting(true);
+            LanguageCodeStyleInternalHelper.getInstance().allowToMarkNodesForPostponedFormatting(true);
         }
     }
 

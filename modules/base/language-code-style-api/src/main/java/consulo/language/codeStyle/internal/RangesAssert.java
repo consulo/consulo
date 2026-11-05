@@ -38,7 +38,7 @@ public class RangesAssert {
     List<PsiFile> roots = file.getViewProvider().getAllFiles();
     for (PsiFile root : roots) {
       buffer.append("Root ");
-      CodeStyleInternalHelper.getInstance().debugTreeToBuffer(buffer, root.getNode(), 0, false, true, true, true);
+      LanguageCodeStyleInternalHelper.getInstance().debugTreeToBuffer(buffer, root.getNode(), 0, false, true, true, true);
     }
     buffer.append('\n');
 
