@@ -41,7 +41,7 @@ public class DesktopComponentItemRenderingAdapter<E> extends DesktopComponentIte
     @Override
     public Component getListCellRendererComponent(JList<? extends E> list, E value, int index, boolean isSelected, boolean cellHasFocus) {
         return render(
-            RenderItem.of(value, isSelected, index == myHoveredIndex.getAsInt()),
+            RenderItem.of(value, isSelected, index == myHoveredIndex.getAsInt(), index),
             background(list, index, isSelected),
             foreground(list, isSelected)
         );

@@ -33,12 +33,21 @@ public interface RenderItem<E> {
     }
 
     static <E> RenderItem<E> of(@Nullable E value, boolean selected, boolean hovered) {
+        return of(value, selected, hovered, -1);
+    }
+
+    static <E> RenderItem<E> of(@Nullable E value, boolean selected, boolean hovered, int index) {
         return new RenderItem<>() {
             private boolean myMouseEventsAllowed;
 
             @Override
             public @Nullable E getValue() {
                 return value;
+            }
+
+            @Override
+            public int getValueIndex() {
+                return index;
             }
 
             @Override
@@ -65,6 +74,8 @@ public interface RenderItem<E> {
 
     @Nullable
     E getValue();
+
+    int getValueIndex();
 
     boolean isSelected();
 
