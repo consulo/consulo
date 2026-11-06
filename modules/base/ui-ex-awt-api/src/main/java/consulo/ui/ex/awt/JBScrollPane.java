@@ -80,6 +80,16 @@ public class JBScrollPane extends JScrollPane {
     }
 
     @Override
+    public JScrollBar createVerticalScrollBar() {
+        return new JBScrollBar(Adjustable.VERTICAL);
+    }
+
+    @Override
+    public JScrollBar createHorizontalScrollBar() {
+        return new JBScrollBar(Adjustable.HORIZONTAL);
+    }
+
+    @Override
     protected JViewport createViewport() {
         return new JBViewport();
     }

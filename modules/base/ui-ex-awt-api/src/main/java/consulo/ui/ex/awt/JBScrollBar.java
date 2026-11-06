@@ -42,6 +42,9 @@ public class JBScrollBar extends JScrollBar implements TopComponent {
      */
     public static final String TRAILING = "JB_SCROLL_BAR_TRAILING_COMPONENT";
 
+    private boolean isUnitIncrementSet;
+    private boolean isBlockIncrementSet;
+
     public JBScrollBar() {
         this(VERTICAL);
     }
@@ -69,6 +72,68 @@ public class JBScrollBar extends JScrollBar implements TopComponent {
     }
 
     /**
+     * Computes the unit increment for scrolling if the viewport's view.
+     * Otherwise returns {@code super.getUnitIncrement}.
+     *
+     * @param direction less than zero to scroll up/left, greater than zero for down/right
+     * @return an integer, in pixels, containing the unit increment
+     * @see Scrollable#getScrollableUnitIncrement
+     */
+    @Override
+    public int getUnitIncrement(int direction) {
+        JViewport viewport = getViewport();
+        if (viewport != null) {
+            Scrollable scrollable = getScrollableViewToCalculateIncrement(viewport.getView());
+            if (scrollable != null) {
+                return scrollable.getScrollableUnitIncrement(viewport.getViewRect(), orientation, direction);
+            }
+            if (!isUnitIncrementSet) {
+                Font font = getViewFont(viewport);
+                if (font != null) {
+                    return font.getSize();
+                }
+            }
+        }
+        return super.getUnitIncrement(direction);
+    }
+
+    @Override
+    public void setUnitIncrement(int increment) {
+        isUnitIncrementSet = true;
+        super.setUnitIncrement(increment);
+    }
+
+    /**
+     * Computes the block increment for scrolling if the viewport's view.
+     * Otherwise returns {@code super.getBlockIncrement}.
+     *
+     * @param direction less than zero to scroll up/left, greater than zero for down/right
+     * @return an integer, in pixels, containing the block increment
+     * @see Scrollable#getScrollableBlockIncrement
+     */
+    @Override
+    public int getBlockIncrement(int direction) {
+        JViewport viewport = getViewport();
+        if (viewport != null) {
+            Scrollable scrollable = getScrollableViewToCalculateIncrement(viewport.getView());
+            if (scrollable != null) {
+                return scrollable.getScrollableBlockIncrement(viewport.getViewRect(), orientation, direction);
+            }
+            if (!isBlockIncrementSet) {
+                Dimension size = viewport.getExtentSize();
+                return orientation == HORIZONTAL ? size.width : size.height;
+            }
+        }
+        return super.getBlockIncrement(direction);
+    }
+
+    @Override
+    public void setBlockIncrement(int increment) {
+        isBlockIncrementSet = true;
+        super.setBlockIncrement(increment);
+    }
+
+    /**
      * Notifies glass pane that it should not process mouse event above the scrollbar's thumb.
      *
      * @param event the mouse event
@@ -77,5 +142,25 @@ public class JBScrollBar extends JScrollBar implements TopComponent {
     @Override
     public boolean canBePreprocessed(MouseEvent event) {
         return JBScrollPane.canBePreprocessed(event, this);
+    }
+
+    private JViewport getViewport() {
+        Component parent = getParent();
+        if (parent instanceof JScrollPane pane) {
+            return pane.getViewport();
+        }
+        return null;
+    }
+
+    private static Font getViewFont(JViewport viewport) {
+        if (viewport == null) {
+            return null;
+        }
+        Component view = viewport.getView();
+        return view == null ? null : view.getFont();
+    }
+
+    private Scrollable getScrollableViewToCalculateIncrement(Component view) {
+        return view instanceof JTable || (view instanceof Scrollable && orientation == VERTICAL) ? (Scrollable) view : null;
     }
 }
