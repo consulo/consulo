@@ -15,6 +15,7 @@
  */
 package consulo.project.ui.internal;
 
+import consulo.disposer.Disposable;
 import consulo.project.Project;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.IdeFrameState;
@@ -70,7 +71,10 @@ public abstract class WindowManagerEx extends WindowManager {
     throw new UnsupportedOperationException();
   }
 
-  public AutoCloseable withFrameReuseEnabled() {
+  /**
+   * @return disposing it turns frame reuse back to what it was before
+   */
+  public Disposable withFrameReuseEnabled() {
     return () -> {
     };
   }

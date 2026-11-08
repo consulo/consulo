@@ -23,6 +23,7 @@ import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.internal.VetoActionCloseHandler;
 import consulo.ide.impl.idea.ide.ReopenProjectAction;
 import consulo.project.Project;
+import consulo.project.internal.ProjectOpenSetting;
 import consulo.project.ProjectType;
 import consulo.project.RecentProjectsManager;
 import consulo.project.internal.RecentProjectsChecker;
@@ -45,6 +46,7 @@ public class WelcomeConfigurationFileEditor extends ConfigurationFileEditor impl
     private final RecentProjectsManager myRecentProjectsManager;
     private final DataManager myDataManager;
     private final ActionManager myActionManager;
+    private final ProjectOpenSetting myProjectOpenSetting;
 
     private final Disposable myUIDisposable = Disposable.newDisposable("welcome tab");
     private final Runnable myCheckerCallback = () -> {
@@ -57,13 +59,15 @@ public class WelcomeConfigurationFileEditor extends ConfigurationFileEditor impl
         VirtualFile virtualFile,
         RecentProjectsManager recentProjectsManager,
         DataManager dataManager,
-        ActionManager actionManager
+        ActionManager actionManager,
+        ProjectOpenSetting projectOpenSetting
     ) {
         super(project, virtualFile);
         virtualFile.putUserData(FileEditorManager.FORBID_TAB_SPLIT, Boolean.TRUE);
         myRecentProjectsManager = recentProjectsManager;
         myDataManager = dataManager;
         myActionManager = actionManager;
+        myProjectOpenSetting = projectOpenSetting;
     }
 
     @Override
@@ -89,7 +93,8 @@ public class WelcomeConfigurationFileEditor extends ConfigurationFileEditor impl
             myDataManager,
             myActionManager,
             myRecentProjectsManager,
-            recentProjectsActions
+            recentProjectsActions,
+            myProjectOpenSetting
         );
 
         myComponent = component = panel.getComponent();

@@ -52,6 +52,7 @@ public class GeneralSettings implements PersistentStateComponent<GeneralSettings
     private boolean mySearchInBackground;
     private boolean myConfirmExit = true;
     private int myConfirmOpenNewProject = OPEN_PROJECT_ASK;
+    private boolean myReuseWelcomeFrame = false;
     private ProcessCloseConfirmation myProcessCloseConfirmation = ProcessCloseConfirmation.ASK;
 
     public static GeneralSettings getInstance() {
@@ -200,6 +201,14 @@ public class GeneralSettings implements PersistentStateComponent<GeneralSettings
 
     public void setConfirmOpenNewProject(@OpenNewProjectOption int confirmOpenNewProject) {
         myConfirmOpenNewProject = confirmOpenNewProject;
+    }
+
+    public boolean isReuseWelcomeFrame() {
+        return myReuseWelcomeFrame;
+    }
+
+    public void setReuseWelcomeFrame(boolean reuseWelcomeFrame) {
+        myReuseWelcomeFrame = reuseWelcomeFrame;
     }
 
     @Deprecated

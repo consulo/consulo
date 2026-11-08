@@ -934,3 +934,5 @@ error.platform.target.missing:
     text: The platform {0} no longer exists
 error.platform.target.connecting:
     text: '{0} is not connected. Connecting now - try again once it is connected'
+welcome.reuse.frame:
+    text: Open projects in the welcome window

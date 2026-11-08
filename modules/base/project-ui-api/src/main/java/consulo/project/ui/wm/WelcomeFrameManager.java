@@ -29,6 +29,7 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.internal.UIAccessInternal;
 import consulo.util.dataholder.Key;
+import org.jspecify.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -66,10 +67,6 @@ public abstract class WelcomeFrameManager {
   public void showFrame() {
     UIAccess.assertIsUIThread();
 
-    if (!isWelcomeProjectEnabled()) {
-      return;
-    }
-
     UIAccess uiAccess = UIAccess.current();
 
     // a refresh can ask while the close of this ui's frame is still on its way - what is on screen here is the
@@ -96,30 +93,21 @@ public abstract class WelcomeFrameManager {
    * run with the ui of that project as the current one.
    */
   public void closeFrame(UIAccess uiAccess) {
-    if (isWelcomeProjectEnabled()) {
-      closeWelcomeProject(uiAccess);
-    }
+    closeWelcomeProject(uiAccess);
   }
 
   public void showIfNoProjectOpened() {
     myApplication.invokeLater((DumbAwareRunnable)() -> {
       WindowManagerEx windowManager = (WindowManagerEx)WindowManager.getInstance();
-      windowManager.disposeRootFrame();
 
-      if (UIAccess.supportsMultipleUI()) {
+      // the frame of the closed project is kept for the welcome project to move into
+      if (UIAccess.supportsMultipleUI() || ProjectManager.getInstance().getOpenProjects().length == 0) {
         showFrame();
-        return;
       }
-
-      IdeFrame[] frames = windowManager.getAllProjectFrames();
-      if (frames.length == 0) {
-        showFrame();
+      else {
+        windowManager.disposeRootFrame();
       }
     }, myApplication.getNoneModalityState());
-  }
-
-  protected boolean isWelcomeProjectEnabled() {
-    return true;
   }
 
   @RequiredUIAccess
@@ -141,19 +129,29 @@ public abstract class WelcomeFrameManager {
       return;
     }
 
-    ProjectManager projectManager = ProjectManager.getInstance();
-    for (Project project : projectManager.getOpenProjects()) {
+    Project project = findWelcomeProject(uiAccess);
+    if (project == null) {
+      return;
+    }
+
+    project.putUserData(WELCOME_PROJECT_CLOSING, Boolean.TRUE);
+    uiAccess.giveIfNeed(() -> ProjectManager.getInstance().closeAndDisposeAsync(project, uiAccess, false, false, true));
+  }
+
+  /**
+   * The welcome project shown in the given ui, unless it is already on its way out.
+   */
+  public @Nullable Project findWelcomeProject(UIAccess uiAccess) {
+    for (Project project : ProjectManager.getInstance().getOpenProjects()) {
       if (project.getType() != ProjectType.WELCOME || project.getUserData(WELCOME_PROJECT_CLOSING) != null) {
         continue;
       }
 
       UIAccess shownIn = project.getUserData(UIAccess.KEY);
-      if (shownIn == null || UIAccessInternal.original(shownIn) != UIAccessInternal.original(uiAccess)) {
-        continue;
+      if (shownIn != null && UIAccessInternal.original(shownIn) == UIAccessInternal.original(uiAccess)) {
+        return project;
       }
-
-      project.putUserData(WELCOME_PROJECT_CLOSING, Boolean.TRUE);
-      uiAccess.giveIfNeed(() -> projectManager.closeAndDisposeAsync(project, uiAccess, false, false, true));
     }
+    return null;
   }
 }

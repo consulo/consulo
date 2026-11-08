@@ -639,7 +639,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
     }
 
     @Override
-    public AutoCloseable withFrameReuseEnabled() {
+    public Disposable withFrameReuseEnabled() {
         boolean oldValue = myFrameReuseEnabled;
         myFrameReuseEnabled = true;
         return () -> myFrameReuseEnabled = oldValue;

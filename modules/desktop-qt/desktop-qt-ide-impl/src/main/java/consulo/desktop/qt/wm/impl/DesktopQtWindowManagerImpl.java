@@ -20,6 +20,7 @@ import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.RoamingType;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
+import consulo.disposer.Disposable;
 import consulo.ide.impl.wm.impl.UnifiedWindowManagerImpl;
 import consulo.project.Project;
 import consulo.project.ui.internal.IdeFrameEx;
@@ -59,6 +60,10 @@ import java.util.Map;
 )
 public class DesktopQtWindowManagerImpl extends UnifiedWindowManagerImpl implements PersistentStateComponent<Element> {
     private final Map<Project, DesktopQtIdeFrameImpl> myProject2Frame = new HashMap<>();
+
+    private consulo.ui.@Nullable Window myReusableWindow;
+
+    private boolean myFrameReuseEnabled;
 
     @Override
     public boolean isAlphaModeSupported() {
@@ -145,7 +150,10 @@ public class DesktopQtWindowManagerImpl extends UnifiedWindowManagerImpl impleme
     public IdeFrameEx allocateFrame(Project project, @Nullable IdeFrameState state) {
         UIAccess.assertIsUIThread();
 
-        DesktopQtIdeFrameImpl frame = new DesktopQtIdeFrameImpl(project, state);
+        consulo.ui.Window reusedWindow = myReusableWindow;
+        myReusableWindow = null;
+
+        DesktopQtIdeFrameImpl frame = new DesktopQtIdeFrameImpl(project, state, reusedWindow);
         myProject2Frame.put(project, frame);
 
         return frame;
@@ -156,7 +164,19 @@ public class DesktopQtWindowManagerImpl extends UnifiedWindowManagerImpl impleme
         DesktopQtIdeFrameImpl ideFrame = myProject2Frame.remove(frame.getProject());
         assert ideFrame == frame;
 
+        if (myFrameReuseEnabled && myProject2Frame.isEmpty() && myReusableWindow == null) {
+            myReusableWindow = ideFrame.detachWindow();
+            return;
+        }
+
         ideFrame.close();
+    }
+
+    @Override
+    public Disposable withFrameReuseEnabled() {
+        boolean oldValue = myFrameReuseEnabled;
+        myFrameReuseEnabled = true;
+        return () -> myFrameReuseEnabled = oldValue;
     }
 
     @Override
@@ -230,6 +250,12 @@ public class DesktopQtWindowManagerImpl extends UnifiedWindowManagerImpl impleme
 
     @Override
     public void disposeRootFrame() {
+        consulo.ui.Window window = myReusableWindow;
+        myReusableWindow = null;
+
+        if (window != null) {
+            window.close();
+        }
     }
 
     @Override

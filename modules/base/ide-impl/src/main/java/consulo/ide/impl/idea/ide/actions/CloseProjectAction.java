@@ -16,12 +16,15 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.annotation.component.ActionImpl;
+import consulo.disposer.Disposable;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.RecentProjectsManager;
 import consulo.project.Project;
 import consulo.project.ProjectType;
 import consulo.project.ProjectManager;
+import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.wm.WelcomeFrameManager;
+import consulo.project.ui.wm.WindowManager;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
@@ -30,20 +33,23 @@ import jakarta.inject.Inject;
 
 @ActionImpl(id = "CloseProject")
 public class CloseProjectAction extends LegacyDumbAwareAction {
-    private WelcomeFrameManager myWelcomeFrameManager;
+    private final WelcomeFrameManager myWelcomeFrameManager;
     private final ProjectManager myProjectManager;
     private final RecentProjectsManager myRecentProjectsManager;
+    private final WindowManager myWindowManager;
 
     @Inject
     public CloseProjectAction(
         WelcomeFrameManager welcomeFrameManager,
         ProjectManager projectManager,
-        RecentProjectsManager recentProjectsManager
+        RecentProjectsManager recentProjectsManager,
+        WindowManager windowManager
     ) {
         super(ActionLocalize.actionCloseprojectText(), ActionLocalize.actionCloseprojectDescription());
         myWelcomeFrameManager = welcomeFrameManager;
         myProjectManager = projectManager;
         myRecentProjectsManager = recentProjectsManager;
+        myWindowManager = windowManager;
     }
 
     @Override
@@ -51,7 +57,11 @@ public class CloseProjectAction extends LegacyDumbAwareAction {
     public void actionPerformed(AnActionEvent event) {
         Project project = event.getRequiredData(Project.KEY);
 
+        Disposable frameReuse = ((WindowManagerEx) myWindowManager).withFrameReuseEnabled();
+
         myProjectManager.closeAndDisposeAsync(project, UIAccess.current()).whenComplete((closed, throwable) -> {
+            frameReuse.dispose();
+
             if (throwable == null && Boolean.TRUE.equals(closed)) {
                 myRecentProjectsManager.updateLastProjectPath();
                 myWelcomeFrameManager.showIfNoProjectOpened();

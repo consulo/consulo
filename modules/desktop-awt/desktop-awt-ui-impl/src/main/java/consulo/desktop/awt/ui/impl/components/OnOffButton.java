@@ -31,9 +31,6 @@ import java.awt.*;
  */
 public class OnOffButton extends JToggleButton {
   private static final String uiClassID = "OnOffButtonUI";
-  
-  private String myOnText;
-  private String myOffText;
 
   public OnOffButton() {
     setBorder(JBUI.Borders.empty());
@@ -52,28 +49,11 @@ public class OnOffButton extends JToggleButton {
     setUI(componentUI == null ? OnOffButtonUI.createUI(this) : componentUI);
   }
 
-  public String getOnText() {
-    return myOnText == null ? "ON" : myOnText;
-  }
-
-  public void setOnText(String onText) {
-    myOnText = onText;
-  }
-
-  public String getOffText() {
-    return myOffText == null ? "OFF" : myOffText;
-  }
-
-  public void setOffText(String offText) {
-    myOffText = offText;
-  }
-
-  @Override
-  protected void paintComponent(Graphics g) {
-    super.paintComponent(g);
-  }
-
   public static class OnOffButtonUI extends BasicToggleButtonUI {
+    private static final int WIDTH = 44;
+    private static final int HEIGHT = 22;
+    private static final int MARGIN = 3;
+
     public OnOffButtonUI(OnOffButton checkBox) {
     }
 
@@ -84,61 +64,45 @@ public class OnOffButton extends JToggleButton {
 
     @Override
     public Dimension getPreferredSize(JComponent c) {
-      OnOffButton button = (OnOffButton)c;
-      String text = button.getOffText().length() > button.getOnText().length() ? button.getOffText() : button.getOnText();
-      text = text.toUpperCase();
-      FontMetrics fm = c.getFontMetrics(c.getFont());
-      int w = fm.stringWidth(text);
-      int h = fm.getHeight();
-      h += 2 * 4;
-      w += 3 * h / 2;
-      return new Dimension(w, h);
+      return new Dimension(JBUI.scale(WIDTH), JBUI.scale(HEIGHT));
     }
 
     @Override
     public void paint(Graphics gr, JComponent c) {
       OnOffButton button = (OnOffButton)c;
-      Dimension size = button.getSize();
-      int w = size.width - 8;
-      int h = size.height - 6;
-      if (h % 2 == 1) {
-        h--;
-      }
 
-      int ovalSize = h - JBUI.scale(4);
+      int w = JBUI.scale(WIDTH);
+      int h = JBUI.scale(HEIGHT);
+      int margin = JBUI.scale(MARGIN);
+      int thumbSize = h - 2 * margin;
 
-      Graphics2D g = ((Graphics2D)gr);
-      GraphicsUtil.setupAAPainting(g);
-      g.translate(1, 1);
-      if (button.isSelected()) {
-        Color color = UIManager.getColor("Hyperlink.linkColor");
-        if (color == null) {
-          color = new JBColor(new Color(57, 113, 238), new Color(13, 41, 62));
+      Graphics2D g = (Graphics2D)gr.create();
+      try {
+        GraphicsUtil.setupAAPainting(g);
+        g.translate((button.getWidth() - w) / 2, (button.getHeight() - h) / 2);
+
+        if (button.isSelected()) {
+          Color accent = UIManager.getColor("Component.accentColor");
+          if (accent == null) {
+            accent = new JBColor(new Color(53, 116, 240), new Color(53, 116, 240));
+          }
+          g.setColor(accent);
+          g.fillRoundRect(0, 0, w, h, h, h);
+
+          g.setColor(Color.WHITE);
+          g.fillOval(w - margin - thumbSize, margin, thumbSize, thumbSize);
         }
+        else {
+          g.setColor(UIUtil.getBorderColor());
+          g.fillRoundRect(0, 0, w, h, h, h);
 
-        g.setColor(color);
-        g.fillRoundRect(0, 0, w, h, h, h);
-        g.setColor(UIUtil.getBorderColor());
-        g.drawRoundRect(0, 0, w, h, h, h);
-
-        g.setColor(UIUtil.getListForeground(true));
-        g.drawString(button.getOnText(), h / 2, h - 4);
-        
-        g.setColor(UIUtil.getBorderColor());
-        g.fillOval(w - h + JBUI.scale(1), JBUI.scale(2), ovalSize, ovalSize);
+          g.setColor(UIUtil.getPanelBackground());
+          g.fillOval(margin, margin, thumbSize, thumbSize);
+        }
       }
-      else {
-        g.setColor(UIUtil.getPanelBackground());
-        g.fillRoundRect(0, 0, w, h, h, h);
-        g.setColor(UIUtil.getBorderColor());
-        g.drawRoundRect(0, 0, w, h, h, h);
-        g.setColor(UIUtil.getLabelDisabledForeground());
-        g.drawString(button.getOffText(), h + 4, h - 4);
-        
-        g.setColor(UIUtil.getBorderColor());
-        g.fillOval(JBUI.scale(2), JBUI.scale(2), ovalSize, ovalSize);
+      finally {
+        g.dispose();
       }
-      g.translate(-1, -1);
     }
 
     @Override

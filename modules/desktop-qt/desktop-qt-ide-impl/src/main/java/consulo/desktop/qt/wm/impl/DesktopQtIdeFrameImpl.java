@@ -57,11 +57,18 @@ public class DesktopQtIdeFrameImpl implements IdeFrameEx, Disposable {
 
     private UnifiedStatusBarImpl myStatusBar;
     private @Nullable Window myWindow;
+    private @Nullable Disposable myCloseListener;
+
+    /**
+     * The window a released frame left behind, which this frame moves into instead of opening one of its own.
+     */
+    private @Nullable Window myReusedWindow;
 
     @RequiredUIAccess
-    public DesktopQtIdeFrameImpl(Project project, @Nullable IdeFrameState state) {
+    public DesktopQtIdeFrameImpl(Project project, @Nullable IdeFrameState state, @Nullable Window reusedWindow) {
         myProject = project;
         myState = state;
+        myReusedWindow = reusedWindow;
         myRootView = new DesktopQtRootView(project);
     }
 
@@ -86,19 +93,31 @@ public class DesktopQtIdeFrameImpl implements IdeFrameEx, Disposable {
             return;
         }
 
-        Window window = Window.create(FrameTitleBuilder.getInstance().getProjectTitle(myProject), WindowOptions.builder().build());
+        String title = FrameTitleBuilder.getInstance().getProjectTitle(myProject);
+
+        Window window = myReusedWindow;
+        myReusedWindow = null;
+
+        DesktopQtWindowImpl qtWindow;
+        if (window != null) {
+            window.setTitle(title);
+            qtWindow = (DesktopQtWindowImpl) window;
+        }
+        else {
+            window = Window.create(title, WindowOptions.builder().build());
+
+            qtWindow = (DesktopQtWindowImpl) window;
+            qtWindow.markAsMainFrame();
+
+            // the header of the frame is a strip of its own and holds the room it needs, so nothing the decorator
+            // answers is owed by the content here - what this call is for is the header itself
+            TitlelessDecoratorService.getInstance().of(qtWindow, TitlelessDecorator.MAIN_WINDOW);
+        }
         myWindow = window;
-
-        DesktopQtWindowImpl qtWindow = (DesktopQtWindowImpl) window;
-        qtWindow.markAsMainFrame();
-
-        // the header of the frame is a strip of its own and holds the room it needs, so nothing the decorator
-        // answers is owed by the content here - what this call is for is the header itself
-        TitlelessDecoratorService.getInstance().of(qtWindow, TitlelessDecorator.MAIN_WINDOW);
 
         applyState(qtWindow);
 
-        window.addCloseListener(event -> onCloseRequested());
+        myCloseListener = window.addCloseListener(event -> onCloseRequested());
 
         window.setMenuBar(myRootView.getMenuBar());
         window.setContent(myRootView.getRootPanel().getComponent());
@@ -176,6 +195,25 @@ public class DesktopQtIdeFrameImpl implements IdeFrameEx, Disposable {
     @Override
     public Window getWindow() {
         return myWindow;
+    }
+
+    /**
+     * Leaves the window open for the next frame to move into - see {@link #close()} for the one that goes away.
+     */
+    public @Nullable Window detachWindow() {
+        Window window = myWindow;
+        if (window == null) {
+            return null;
+        }
+
+        myWindow = null;
+
+        Disposable closeListener = myCloseListener;
+        myCloseListener = null;
+        if (closeListener != null) {
+            closeListener.dispose();
+        }
+        return window;
     }
 
     public void close() {

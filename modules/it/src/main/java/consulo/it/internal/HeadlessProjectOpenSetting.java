@@ -32,6 +32,7 @@ import jakarta.inject.Singleton;
 @ServiceImpl(profiles = ComponentProfiles.INTEGRATION_TEST)
 public class HeadlessProjectOpenSetting implements ProjectOpenSetting {
     private volatile int myConfirmOpenNewProject = OPEN_PROJECT_NEW_WINDOW;
+    private volatile boolean myReuseWelcomeFrame;
 
     @Override
     public int getConfirmOpenNewProject() {
@@ -41,5 +42,15 @@ public class HeadlessProjectOpenSetting implements ProjectOpenSetting {
     @Override
     public void setConfirmOpenNewProject(int confirmOpenNewProject) {
         myConfirmOpenNewProject = confirmOpenNewProject;
+    }
+
+    @Override
+    public boolean isReuseWelcomeFrame() {
+        return myReuseWelcomeFrame;
+    }
+
+    @Override
+    public void setReuseWelcomeFrame(boolean reuseWelcomeFrame) {
+        myReuseWelcomeFrame = reuseWelcomeFrame;
     }
 }

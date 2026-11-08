@@ -86,8 +86,8 @@ public class DesktopQtToggleSwitchImpl extends QtComponentDelegate<DesktopQtTogg
             QPalette palette = palette();
             QPalette.ColorGroup group = isEnabled() ? QPalette.ColorGroup.Active : QPalette.ColorGroup.Disabled;
 
-            QColor track = palette.color(group, isChecked() ? QPalette.ColorRole.Highlight : QPalette.ColorRole.Mid);
-            QColor thumb = palette.color(group, isChecked() ? QPalette.ColorRole.HighlightedText : QPalette.ColorRole.Window);
+            QColor track = palette.color(group, isChecked() ? QPalette.ColorRole.Accent : QPalette.ColorRole.Mid);
+            QColor thumb = isChecked() ? new QColor(Qt.GlobalColor.white) : palette.color(group, QPalette.ColorRole.Window);
 
             QPainter painter = new QPainter(this);
             try {

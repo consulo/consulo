@@ -23,6 +23,7 @@ import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.RecentProjectsManager;
+import consulo.project.internal.ProjectOpenSetting;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
@@ -38,16 +39,19 @@ public class WelcomeConfigurationFileEditorProvider implements ConfigurationFile
     private final Provider<RecentProjectsManager> myRecentProjectsManager;
     private final DataManager myDataManager;
     private final ActionManager myActionManager;
+    private final ProjectOpenSetting myProjectOpenSetting;
 
     @Inject
     public WelcomeConfigurationFileEditorProvider(
         Provider<RecentProjectsManager> recentProjectsManager,
         DataManager dataManager,
-        ActionManager actionManager
+        ActionManager actionManager,
+        ProjectOpenSetting projectOpenSetting
     ) {
         myRecentProjectsManager = recentProjectsManager;
         myDataManager = dataManager;
         myActionManager = actionManager;
+        myProjectOpenSetting = projectOpenSetting;
     }
 
     
@@ -71,6 +75,6 @@ public class WelcomeConfigurationFileEditorProvider implements ConfigurationFile
     
     @Override
     public ConfigurationFileEditor createEditor(Project project, VirtualFile file) {
-        return new WelcomeConfigurationFileEditor(project, file, myRecentProjectsManager.get(), myDataManager, myActionManager);
+        return new WelcomeConfigurationFileEditor(project, file, myRecentProjectsManager.get(), myDataManager, myActionManager, myProjectOpenSetting);
     }
 }

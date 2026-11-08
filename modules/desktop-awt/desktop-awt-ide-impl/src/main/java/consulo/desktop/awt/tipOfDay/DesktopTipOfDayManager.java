@@ -17,11 +17,13 @@ package consulo.desktop.awt.tipOfDay;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.util.concurrent.AppExecutorUtil;
+import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.tipOfDay.TipOfDayManager;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.DialogWrapper;
 import jakarta.inject.Singleton;
 
 import java.util.concurrent.Future;
@@ -47,7 +49,7 @@ public class DesktopTipOfDayManager implements TipOfDayManager {
           return;
         }
 
-        uiAccess.give(this::showAsync);
+        uiAccess.give(() -> showForProject(project, uiAccess));
       }, 5, TimeUnit.SECONDS);
 
       Disposer.register(project, () -> {
@@ -64,5 +66,24 @@ public class DesktopTipOfDayManager implements TipOfDayManager {
   @RequiredUIAccess
   public void showAsync() {
     new TipDialog().showAsync();
+  }
+
+  /**
+   * The tip came with the project, so it leaves with it - the frame of a closed project can stay on screen for
+   * the welcome project, and a tip left over in it would outlive what it was shown for.
+   */
+  @RequiredUIAccess
+  private void showForProject(Project project, UIAccess uiAccess) {
+    if (project.isDisposed()) {
+      return;
+    }
+
+    TipDialog dialog = new TipDialog();
+
+    Disposable closeWithProject = () -> uiAccess.give(() -> dialog.close(DialogWrapper.CANCEL_EXIT_CODE));
+    Disposer.register(project, closeWithProject);
+    Disposer.register(dialog.getDisposable(), () -> Disposer.dispose(closeWithProject));
+
+    dialog.showAsync();
   }
 }

@@ -56,13 +56,6 @@ public class RecentProjectItemRenderer implements ComponentItemRenderer<AnAction
 
     public static final Length ROW_HEIGHT = Length.ofFont(2.5f).plusPixel(8);
 
-    /**
-     * The recent projects are the same list on every welcome screen, so how much room it asks for is decided once
-     * here rather than by each frontend picking its own pixel count.
-     */
-    public static final Length LIST_WIDTH = Length.ofFont(18);
-    public static final Length LIST_HEIGHT = Length.ofFont(23);
-
     private final RecentProjectsManager myRecentProjectsManager;
     private final RecentProjectsChecker myRecentProjectsChecker;
     private final BiConsumer<AnAction, ComponentEvent<Component>> myActivateHandler;

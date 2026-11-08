@@ -21,12 +21,16 @@ import consulo.disposer.Disposable;
 import consulo.welcomeScreen.WelcomeScreenSlider;
 import consulo.localize.LocalizeValue;
 import consulo.project.RecentProjectsManager;
+import consulo.project.internal.ProjectOpenSetting;
+import consulo.project.localize.ProjectLocalize;
 import consulo.ui.Button;
 import consulo.ui.ButtonStyle;
 import consulo.ui.Component;
 import consulo.ui.HorizontalAlignment;
+import consulo.ui.Label;
 import consulo.ui.Space;
 import consulo.ui.StaticPosition;
+import consulo.ui.ToggleSwitch;
 import consulo.ui.UIAccess;
 import consulo.ui.VerticalAlignment;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -44,8 +48,10 @@ import consulo.ui.image.Image;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.Layout;
 import consulo.ui.layout.LayoutStyle;
+import consulo.ui.layout.SplitLayoutPosition;
 import consulo.ui.layout.SwipeLayout;
 import consulo.ui.layout.TableLayout;
+import consulo.ui.layout.TwoComponentSplitLayout;
 import consulo.ui.layout.VerticalLayout;
 import consulo.welcomeScreen.impl.internal.icon.WelcomeScreenIconGroup;
 import org.jspecify.annotations.Nullable;
@@ -65,11 +71,14 @@ import java.util.function.Supplier;
 public class WelcomeScreenPanel implements WelcomeScreenSlider {
     private static final String MAIN = "main";
 
+    private static final int RECENT_PROJECTS_PROPORTION = 30;
+
     private final Disposable myParentDisposable;
     private final DataManager myDataManager;
     private final ActionManager myActionManager;
     private final RecentProjectsManager myRecentProjectsManager;
     private final AnAction[] myRecentProjectsActions;
+    private final ProjectOpenSetting myProjectOpenSetting;
 
     private @Nullable SwipeLayout myRoot;
 
@@ -78,13 +87,15 @@ public class WelcomeScreenPanel implements WelcomeScreenSlider {
         DataManager dataManager,
         ActionManager actionManager,
         RecentProjectsManager recentProjectsManager,
-        AnAction[] recentProjectsActions
+        AnAction[] recentProjectsActions,
+        ProjectOpenSetting projectOpenSetting
     ) {
         myParentDisposable = parentDisposable;
         myDataManager = dataManager;
         myActionManager = actionManager;
         myRecentProjectsManager = recentProjectsManager;
         myRecentProjectsActions = recentProjectsActions;
+        myProjectOpenSetting = projectOpenSetting;
     }
 
     @RequiredUIAccess
@@ -100,17 +111,22 @@ public class WelcomeScreenPanel implements WelcomeScreenSlider {
 
     @RequiredUIAccess
     private Layout buildMainLayout() {
-        DockLayout layout = DockLayout.create(Space.NONE);
-        layout.setBackgroundColor(WelcomeBackdrop.baseColor());
-
-        if (myRecentProjectsActions.length > 0) {
-            Component recentProjects = new RecentProjectsList(myRecentProjectsManager, myDataManager, myActionManager)
-                .create(myRecentProjectsActions);
-            recentProjects.borderBuilder().rightSet().apply();
-            layout.left(recentProjects);
+        Component actions = createActions();
+        if (myRecentProjectsActions.length == 0) {
+            DockLayout layout = DockLayout.create(Space.NONE);
+            layout.setBackgroundColor(WelcomeBackdrop.baseColor());
+            layout.center(actions);
+            return layout;
         }
 
-        layout.center(createActions());
+        Component recentProjects = new RecentProjectsList(myRecentProjectsManager, myDataManager, myActionManager)
+            .create(myRecentProjectsActions);
+
+        TwoComponentSplitLayout layout = TwoComponentSplitLayout.create(SplitLayoutPosition.HORIZONTAL);
+        layout.setBackgroundColor(WelcomeBackdrop.baseColor());
+        layout.setFirstComponent(recentProjects);
+        layout.setSecondComponent(actions);
+        layout.setProportion(RECENT_PROJECTS_PROPORTION);
         return layout;
     }
 
@@ -151,7 +167,22 @@ public class WelcomeScreenPanel implements WelcomeScreenSlider {
                     buttons.add(createButton(actions.get(i), presentation), TableLayout.cell(row++, 0).fill());
                 }
             }
+
+            buttons.add(createReuseFrameSwitch(), TableLayout.cell(row, 0).fill());
         }, uiAccess);
+        return layout;
+    }
+
+    @RequiredUIAccess
+    private Component createReuseFrameSwitch() {
+        ToggleSwitch toggleSwitch = ToggleSwitch.create(myProjectOpenSetting.isReuseWelcomeFrame());
+        toggleSwitch.addValueListener(event -> myProjectOpenSetting.setReuseWelcomeFrame(Boolean.TRUE.equals(event.getValue())));
+
+        DockLayout layout = DockLayout.create(Space.MEDIUM);
+        layout.addStyle(LayoutStyle.TRANSPARENT_BACKGROUND);
+        layout.left(toggleSwitch);
+        layout.center(Label.create(ProjectLocalize.welcomeReuseFrame()));
+        layout.paddingBuilder().topSet(Space.LARGE).apply();
         return layout;
     }
 

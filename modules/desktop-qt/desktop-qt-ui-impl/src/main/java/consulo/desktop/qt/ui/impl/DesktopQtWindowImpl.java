@@ -361,7 +361,22 @@ public class DesktopQtWindowImpl extends QtComponentDelegate<QMainWindow> implem
     @RequiredUIAccess
     @Override
     public void setContent(Component content) {
+        QtComponentDelegate<?> previous = myContent;
         myContent = (QtComponentDelegate<?>) content;
+
+        // a window handed on to the next frame drops what the previous one showed
+        if (previous != null && previous != content) {
+            QWidget previousWidget = previous.toQtComponent();
+            if (previousWidget != null) {
+                previousWidget.hide();
+                myCentralWidget.layout().removeWidget(previousWidget);
+                previousWidget.disposeLater();
+            }
+
+            if (myComponent.isVisible()) {
+                show();
+            }
+        }
     }
 
     @RequiredUIAccess

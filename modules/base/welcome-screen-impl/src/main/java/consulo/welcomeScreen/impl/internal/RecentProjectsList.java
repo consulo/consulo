@@ -105,7 +105,6 @@ public class RecentProjectsList {
                 .horizontalScrollPolicy(ScrollableLayoutOptions.ScrollPolicy.NEVER)
                 .build()
         );
-        scroll.setSize(RecentProjectItemRenderer.LIST_WIDTH, null);
 
         if (allActions.isEmpty()) {
             return scroll;
@@ -129,7 +128,6 @@ public class RecentProjectsList {
         layout.addStyle(LayoutStyle.TRANSPARENT_BACKGROUND);
         layout.top(searchPanel);
         layout.center(scroll);
-        layout.setSize(RecentProjectItemRenderer.LIST_WIDTH, null);
         return layout;
     }
 

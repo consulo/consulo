@@ -21,6 +21,7 @@ import consulo.application.concurrent.coroutine.WriteLock;
 import consulo.application.progress.ProgressBuilderFactory;
 import consulo.application.progress.ProgressIndicator;
 import consulo.component.internal.ComponentBinding;
+import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.ModuleManager;
@@ -38,6 +39,7 @@ import consulo.project.internal.ProjectOpenProcessor;
 import consulo.project.internal.ProjectOpenProcessors;
 import consulo.project.internal.ProjectOpenService;
 import consulo.project.internal.ProjectOpenSetting;
+import consulo.project.ui.wm.WelcomeFrameManager;
 import consulo.project.RecentProjectsManager;
 import consulo.project.localize.ProjectLocalize;
 import consulo.project.startup.StartupManager;
@@ -96,6 +98,8 @@ public class ProjectOpenServiceImpl implements ProjectOpenService {
     private final Provider<ProjectManager> myProjectManager;
     private final ProjectFrameAllocator myProjectFrameAllocator;
     private final ProjectOpenProcessors myProjectOpenProcessors;
+    private final Provider<ProjectOpenSetting> myProjectOpenSetting;
+    private final Provider<WelcomeFrameManager> myWelcomeFrameManager;
 
     @Inject
     public ProjectOpenServiceImpl(Application application,
@@ -103,13 +107,17 @@ public class ProjectOpenServiceImpl implements ProjectOpenService {
                                   ComponentBinding componentBinding,
                                   Provider<ProjectManager> projectManager,
                                   ProjectFrameAllocator projectFrameAllocator,
-                                  ProjectOpenProcessors projectOpenProcessors) {
+                                  ProjectOpenProcessors projectOpenProcessors,
+                                  Provider<ProjectOpenSetting> projectOpenSetting,
+                                  Provider<WelcomeFrameManager> welcomeFrameManager) {
         myApplication = application;
         myProgressBuilderFactory = progressBuilderFactory;
         myComponentBinding = componentBinding;
         myProjectManager = projectManager;
         myProjectFrameAllocator = projectFrameAllocator;
         myProjectOpenProcessors = projectOpenProcessors;
+        myProjectOpenSetting = projectOpenSetting;
+        myWelcomeFrameManager = welcomeFrameManager;
     }
 
     @Override
@@ -157,13 +165,22 @@ public class ProjectOpenServiceImpl implements ProjectOpenService {
                                     }
                                 }
                             }
+
+                            if (projectToClose == null && myProjectOpenSetting.get().isReuseWelcomeFrame()) {
+                                projectToClose = myWelcomeFrameManager.get().findWelcomeProject(uiAccess);
+                            }
                         }
                         return new OpenContext(projectToClose, virtualFile);
                     }))
                     // Handle "same window / new window" dialog and close if needed
                     .then(CompletableFutureStep.<OpenContext, OpenContext>await(openContext -> {
-                        if (openContext.projectToClose() == null) {
+                        Project projectToClose = openContext.projectToClose();
+                        if (projectToClose == null) {
                             return CompletableFuture.completedFuture(openContext);
+                        }
+
+                        if (projectToClose.getType() == ProjectType.WELCOME) {
+                            return closeAndProceed(openContext, uiAccess);
                         }
 
                         return confirmAndCloseProjectAsync(openContext, uiAccess, Boolean.TRUE.equals(askNewFrame));
@@ -223,9 +240,11 @@ public class ProjectOpenServiceImpl implements ProjectOpenService {
                     LOG.warn("Failed to open project: " + filePath, throwable);
                 }
 
+                myWelcomeFrameManager.get().showIfNoProjectOpened();
                 resultFuture.completeExceptionally(throwable);
             }
             else if (projectImpl == null) {
+                myWelcomeFrameManager.get().showIfNoProjectOpened();
                 resultFuture.completeExceptionally(new FileNotFoundException("Failed to open project: " + filePath));
             }
             else {
@@ -380,7 +399,7 @@ public class ProjectOpenServiceImpl implements ProjectOpenService {
         UIAccess uiAccess,
         boolean ask) {
 
-        ProjectOpenSetting settings = ProjectOpenSetting.getInstance();
+        ProjectOpenSetting settings = myProjectOpenSetting.get();
         int confirmOpenNewProject = ask ? ProjectOpenSetting.OPEN_PROJECT_ASK : settings.getConfirmOpenNewProject();
 
         if (confirmOpenNewProject == ProjectOpenSetting.OPEN_PROJECT_NEW_WINDOW) {
@@ -476,16 +495,11 @@ public class ProjectOpenServiceImpl implements ProjectOpenService {
             return result;
         }
 
-        AutoCloseable frameReuse = WindowManagerEx.getInstanceEx().withFrameReuseEnabled();
+        Disposable frameReuse = WindowManagerEx.getInstanceEx().withFrameReuseEnabled();
 
         myProjectManager.get().closeAndDisposeAsync(openContext.projectToClose(), uiAccess)
             .whenComplete((closed, error) -> {
-                try {
-                    frameReuse.close();
-                }
-                catch (Exception e) {
-                    LOG.error(e);
-                }
+                frameReuse.dispose();
 
                 if (error != null) {
                     result.completeExceptionally(error);

@@ -21,6 +21,7 @@ import consulo.localize.LocalizeValue;
 import consulo.module.content.layer.ModuleExtensionProvider;
 import consulo.project.Project;
 import consulo.project.ProjectOpenContext;
+import consulo.project.ProjectType;
 import consulo.project.impl.internal.ProjectImplUtil;
 import consulo.project.ProjectManager;
 import consulo.project.RecentProjectsManager;
@@ -109,12 +110,12 @@ public class ReopenProjectAction extends LegacyDumbAwareAction {
         //Force move focus to IdeFrame
         IdeEventQueueProxy.getInstance().closeAllPopups();
 
+        Project project = e.getData(Project.KEY);
+
         int modifiers = e.getModifiers();
         boolean forceOpenInNewFrame = BitUtil.isSet(modifiers, InputEvent.CTRL_MASK)
             || BitUtil.isSet(modifiers, InputEvent.SHIFT_MASK)
-            || ActionPlaces.WELCOME_SCREEN.equals(e.getPlace());
-
-        Project project = e.getData(Project.KEY);
+            || ActionPlaces.WELCOME_SCREEN.equals(e.getPlace()) && (project == null || project.getType() != ProjectType.WELCOME);
 
         Project opened = findOpenedProject();
         if (opened != null) {

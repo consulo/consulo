@@ -51,4 +51,11 @@ public interface ProjectOpenSetting {
     int getConfirmOpenNewProject();
 
     void setConfirmOpenNewProject(@OpenNewProjectOption int confirmOpenNewProject);
+
+    /**
+     * @return true if a project opened from the welcome screen takes over the frame of the welcome project
+     */
+    boolean isReuseWelcomeFrame();
+
+    void setReuseWelcomeFrame(boolean reuseWelcomeFrame);
 }

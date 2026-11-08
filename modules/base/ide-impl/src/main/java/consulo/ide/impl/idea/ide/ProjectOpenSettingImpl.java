@@ -43,4 +43,14 @@ public class ProjectOpenSettingImpl implements ProjectOpenSetting {
     public void setConfirmOpenNewProject(@OpenNewProjectOption int confirmOpenNewProject) {
         myGeneralSettings.setConfirmOpenNewProject(confirmOpenNewProject);
     }
+
+    @Override
+    public boolean isReuseWelcomeFrame() {
+        return myGeneralSettings.isReuseWelcomeFrame();
+    }
+
+    @Override
+    public void setReuseWelcomeFrame(boolean reuseWelcomeFrame) {
+        myGeneralSettings.setReuseWelcomeFrame(reuseWelcomeFrame);
+    }
 }
