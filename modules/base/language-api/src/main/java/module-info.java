@@ -26,6 +26,12 @@ module consulo.language.api {
     exports consulo.language.controlFlow.base;
     exports consulo.language.dataFlow;
     exports consulo.language.dataFlow.map;
+    exports consulo.language.dataFlow.interpreter;
+    exports consulo.language.dataFlow.ir;
+    exports consulo.language.dataFlow.memory;
+    exports consulo.language.dataFlow.rangeSet;
+    exports consulo.language.dataFlow.types;
+    exports consulo.language.dataFlow.value;
     exports consulo.language.extension;
     exports consulo.language.file;
     exports consulo.language.findUsage;

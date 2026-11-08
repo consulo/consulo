@@ -1,0 +1,45 @@
+// Copyright 2000-2023 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
+package consulo.language.dataFlow.types;
+
+
+import java.util.Collections;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+/**
+ * Represents a type that maintains a set of constants that excluded from this type
+ */
+public abstract class DfAntiConstantType<T> implements DfType {
+  protected final Set<T> myNotValues;
+
+  protected DfAntiConstantType(Set<T> notValues) {
+    myNotValues = notValues;
+  }
+
+  /**
+   * @return set of excluded constants
+   */
+  public Set<T> getNotValues() {
+    return Collections.unmodifiableSet(myNotValues);
+  }
+
+  @Override
+  public int hashCode() {
+    return myNotValues.hashCode()+1234;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    return obj == this || obj instanceof DfAntiConstantType && Objects.equals(((DfAntiConstantType<?>)obj).myNotValues, myNotValues);
+  }
+
+  protected String renderValue(T value) {
+    return String.valueOf(value);
+  }
+
+  @Override
+  public String toString() {
+    return "!= " + myNotValues.stream().map(this::renderValue).collect(Collectors.joining(", "));
+  }
+}

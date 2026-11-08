@@ -234,6 +234,22 @@ jsp.taglib.method.reference.error.signature.is.different:
     text: Signature is different
 local.class.preposition:
     text: local
+long.range.set.presentation.any:
+    text: any value
+long.range.set.presentation.divisible.by:
+    text: divisible by {0}
+long.range.set.presentation.empty:
+    text: unknown
+long.range.set.presentation.even:
+    text: even
+long.range.set.presentation.odd:
+    text: odd
+long.range.set.presentation.range:
+    text: in {0}
+long.range.set.presentation.range.with.mod:
+    text: '{0}; {1}'
+long.range.set.presentation.two.values:
+    text: '{0} or {1}'
 method.context.display:
     text: '{0}() in {1}'
 native.visibility.presentation:
