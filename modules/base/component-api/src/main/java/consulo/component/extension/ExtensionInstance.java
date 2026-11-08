@@ -33,14 +33,15 @@ public final class ExtensionInstance {
   @SuppressWarnings("unchecked")
   public static <Api, Impl extends Api> Supplier<Impl> from(Class<Api> clazz) {
 
+    Class<Impl> implClazz = (Class<Impl>)StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).getCallerClass();
+
     // called before extension creating
     ExtensionInstanceRef ref = ExtensionInstanceRef.CURRENT_CREATION.get();
     if (ref == null) {
-      Class<Impl> implClazz = (Class<Impl>)StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).getCallerClass();
       return new LazyExtensionInstance<>(clazz, implClazz);
     }
     else {
-      StableExtensionInstance<Impl> instance = new StableExtensionInstance<>();
+      StableExtensionInstance<Api, Impl> instance = new StableExtensionInstance<>(clazz, implClazz);
       ref.setter = o -> instance.setValue((Impl)o);
       return instance;
     }

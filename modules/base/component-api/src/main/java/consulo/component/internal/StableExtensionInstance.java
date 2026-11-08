@@ -17,17 +17,21 @@ package consulo.component.internal;
 
 import org.jspecify.annotations.Nullable;
 
-import java.util.Objects;
 import java.util.function.Supplier;
 
 /**
+ * The instance of an extension, set by the extension system right after the extension is created. Until then - on another
+ * thread, between the class initialization and the end of the creation - it is looked up like {@link LazyExtensionInstance}.
+ *
  * @author VISTALL
  * @since 2023-01-27
  */
-public class StableExtensionInstance<Impl> implements Supplier<Impl> {
-  private @Nullable Impl myValue = null;
+public class StableExtensionInstance<Api, Impl extends Api> implements Supplier<Impl> {
+  private final Supplier<Impl> myLookup;
+  private volatile @Nullable Impl myValue = null;
 
-  public StableExtensionInstance() {
+  public StableExtensionInstance(Class<Api> apiClass, Class<Impl> implClass) {
+    myLookup = new LazyExtensionInstance<>(apiClass, implClass);
   }
 
   public void setValue(Impl value) {
@@ -36,6 +40,7 @@ public class StableExtensionInstance<Impl> implements Supplier<Impl> {
 
   @Override
   public Impl get() {
-    return Objects.requireNonNull(myValue);
+    Impl value = myValue;
+    return value != null ? value : myLookup.get();
   }
 }
