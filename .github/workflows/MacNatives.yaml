@@ -16,7 +16,7 @@ jobs:
           - { name: macos-x86_64,  target: x86_64-apple-darwin  }
           - { name: macos-aarch64, target: aarch64-apple-darwin }
 
-    runs-on: macos-14
+    runs-on: macos-15
 
     steps:
       - uses: actions/checkout@v4
@@ -56,7 +56,7 @@ jobs:
           if-no-files-found: error
 
   # ===== macOS CMake natives (MacEnvReader + MacFileSystemNotifier + MacScreenMenu) =====
-  # Runs on macos-14 (aarch64). x86_64 is cross-built via Xcode SDK; no universal binary.
+  # Runs on macos-15 (aarch64). x86_64 is cross-built via Xcode SDK; no universal binary.
   cmake:
     strategy:
       fail-fast: false
@@ -73,7 +73,7 @@ jobs:
             fsn_file: fsnotifier-aarch64
             mscm_file: libmacscreenmenu-aarch64.dylib
 
-    runs-on: macos-14
+    runs-on: macos-15
 
     steps:
       - uses: actions/checkout@v4
