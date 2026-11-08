@@ -2,6 +2,7 @@
 
 package consulo.language.dataFlow.memory;
 
+import consulo.application.Application;
 import consulo.language.dataFlow.rangeSet.LongRangeBinOp;
 import consulo.language.dataFlow.rangeSet.LongRangeSet;
 import consulo.language.dataFlow.rangeSet.LongRangeType;
@@ -21,7 +22,6 @@ import consulo.language.dataFlow.value.DfaVariableValue;
 import consulo.language.dataFlow.value.DfaWrappedValue;
 import consulo.language.dataFlow.value.RelationType;
 import consulo.language.dataFlow.value.VariableDescriptor;
-import consulo.application.ApplicationManager;
 import consulo.logging.Logger;
 import consulo.application.progress.ProgressManager;
 import consulo.util.lang.StringUtil;
@@ -135,7 +135,7 @@ public class DfaMemoryStateImpl implements DfaMemoryState {
     return myDistinctClasses;
   }
 
-  private LinkedHashSet<EqClass> myCachedNonTrivialEqClasses;
+  private @Nullable LinkedHashSet<EqClass> myCachedNonTrivialEqClasses;
   protected LinkedHashSet<EqClass> getNonTrivialEqClasses() {
     if (myCachedNonTrivialEqClasses != null) return myCachedNonTrivialEqClasses;
 
@@ -148,7 +148,7 @@ public class DfaMemoryStateImpl implements DfaMemoryState {
     return myCachedNonTrivialEqClasses = result;
   }
 
-  private Integer myCachedHash;
+  private @Nullable Integer myCachedHash;
   @Override
   public int hashCode() {
     if (myCachedHash != null) return myCachedHash;
@@ -276,7 +276,7 @@ public class DfaMemoryStateImpl implements DfaMemoryState {
 
   private DfaValue handleStackValueOnVariableFlush(DfaValue value,
                                                    DfaVariableValue flushed,
-                                                   DfaVariableValue replacement) {
+                                                   @Nullable DfaVariableValue replacement) {
     if (value.dependsOn(flushed)) {
       DfType dfType = getDfType(value);
       if (value instanceof DfaVariableValue var && replacement != null) {
@@ -519,7 +519,7 @@ public class DfaMemoryStateImpl implements DfaMemoryState {
       });
     }
 
-    boolean updateOrdering(DistinctPairSet.DistinctPair pair, RelationType relation, boolean rightDistinct) {
+    boolean updateOrdering(DistinctPairSet.DistinctPair pair, @Nullable RelationType relation, boolean rightDistinct) {
       if (relation != null && (!pair.isOrdered() || relation == RelationType.LT)) return true;
       return update(rightDistinct, !rightDistinct, () -> {
         if (pair.isOrdered() && relation == RelationType.GT) {
@@ -643,7 +643,7 @@ public class DfaMemoryStateImpl implements DfaMemoryState {
     return myIdToEqClassesIndices.getOrDefault(dfaValueId, -1);
   }
 
-  DfaVariableValue getCanonicalVariable(DfaValue val) {
+  @Nullable DfaVariableValue getCanonicalVariable(DfaValue val) {
     EqClass eqClass = getEqClass(val);
     return eqClass == null ? null : eqClass.getCanonicalVariable();
   }
@@ -725,7 +725,7 @@ public class DfaMemoryStateImpl implements DfaMemoryState {
   }
 
   private void checkInvariants() {
-    if (!LOG.isDebugEnabled() && !ApplicationManager.getApplication().isInternal()) return;
+    if (!LOG.isDebugEnabled() && !Application.get().isInternal()) return;
     for (Int2IntMap.Entry entry : myIdToEqClassesIndices.int2IntEntrySet()) {
       EqClassImpl eqClass = myEqClasses.get(entry.getIntValue());
       if (eqClass == null || !eqClass.contains(entry.getIntKey())) {
@@ -969,7 +969,8 @@ public class DfaMemoryStateImpl implements DfaMemoryState {
     if (type != RelationType.LT && type != RelationType.GT && type != RelationType.NE && type != RelationType.EQ) return true;
     if (!(left instanceof DfaBinOpValue binOp)) {
       if (right instanceof DfaBinOpValue) {
-        return applyBinOpRelations(right, type.getFlipped(), left);
+        // LT, GT, NE and EQ have their flipped relations
+        return applyBinOpRelations(right, Objects.requireNonNull(type.getFlipped()), left);
       }
       return true;
     }
@@ -1059,7 +1060,9 @@ public class DfaMemoryStateImpl implements DfaMemoryState {
     boolean overflowPossible = true;
     if (lrType.bytes() < 8) {
       LongRangeSet overflowRange = getSumOverflowValues(summand1, summand2, lrType);
-      overflowPossible = !overflowRange.isEmpty() && (resultRange == null || resultRange.fromRelation(relation).intersects(overflowRange));
+      // an empty result range has no values in relation, which could intersect
+      LongRangeSet relatedRange = resultRange == null ? null : resultRange.fromRelation(relation);
+      overflowPossible = !overflowRange.isEmpty() && (resultRange == null || relatedRange != null && relatedRange.intersects(overflowRange));
     }
     return overflowPossible ? RelationType.NE : relation;
   }
@@ -1387,7 +1390,7 @@ public class DfaMemoryStateImpl implements DfaMemoryState {
     return Objects.requireNonNull(myEqClasses.get(index).getCanonicalVariable());
   }
 
-  private DfType getRecordedType(DfaVariableValue var) {
+  private @Nullable DfType getRecordedType(DfaVariableValue var) {
     DfType type = myVariableTypes.get(var);
     if (type != null) {
       return type;
@@ -1609,7 +1612,7 @@ public class DfaMemoryStateImpl implements DfaMemoryState {
       - Top-of-stack value is the same (otherwise we may prematurely merge true/false on TOS right before jump which is very undesired)
      */
     int size = myStack.size();
-    Object[] key = new Object[size + 1];
+    @Nullable Object[] key = new Object[size + 1];
     for (int i = 0; i < size; i++) {
       DfaValue val = myStack.get(i);
       key[i] = i == size - 1 || val instanceof DfaControlTransferValue || val == myFactory.getSentinel() ? val : null;

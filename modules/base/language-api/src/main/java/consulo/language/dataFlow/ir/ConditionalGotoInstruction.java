@@ -18,7 +18,7 @@ import java.util.ArrayList;
 public class ConditionalGotoInstruction extends Instruction {
   private ControlFlow.ControlFlowOffset myOffset;
   private final DfType myCompareTo;
-  private final PsiElement myAnchor;
+  private final @Nullable PsiElement myAnchor;
 
   /**
    * @param offset target offset to jump to

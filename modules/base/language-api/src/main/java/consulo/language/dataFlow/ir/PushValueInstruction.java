@@ -2,6 +2,8 @@
 
 package consulo.language.dataFlow.ir;
 
+import org.jspecify.annotations.Nullable;
+
 import consulo.language.dataFlow.ir.DfaAnchor;
 import consulo.language.dataFlow.memory.DfaMemoryState;
 import consulo.language.dataFlow.types.DfType;
@@ -14,7 +16,7 @@ import consulo.language.dataFlow.value.DfaValueFactory;
 public class PushValueInstruction extends EvalInstruction {
   private final DfType myValue;
 
-  public PushValueInstruction(DfType value, DfaAnchor place) {
+  public PushValueInstruction(DfType value, @Nullable DfaAnchor place) {
     super(place, 0);
     myValue = value;
   }

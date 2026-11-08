@@ -133,7 +133,7 @@ public abstract sealed class LongRangeSet {
    * @param relation relation to be applied to current set (JavaTokenType.EQEQ/NE/GT/GE/LT/LE)
    * @return new set or null if relation is unsupported
    */
-  public LongRangeSet fromRelation(@Nullable RelationType relation) {
+  public @Nullable LongRangeSet fromRelation(@Nullable RelationType relation) {
     if (isEmpty() || relation == null) return null;
     return switch (relation) {
       case EQ -> this;
@@ -1857,7 +1857,8 @@ public abstract sealed class LongRangeSet {
         BitString newBits = BitString.fromRange(myRanges[i], myRanges[i + 1]);
         result = result == null ? newBits : result.unite(newBits);
       }
-      return result;
+      // a set of ranges has two of them at least
+      return Objects.requireNonNull(result);
     }
 
     @Override

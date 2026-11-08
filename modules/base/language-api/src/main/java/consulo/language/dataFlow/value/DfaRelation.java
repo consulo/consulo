@@ -2,6 +2,8 @@
 
 package consulo.language.dataFlow.value;
 
+import org.jspecify.annotations.Nullable;
+
 
 /**
  * A condition that represents a relation between two DfaValues
@@ -31,7 +33,7 @@ public record DfaRelation(DfaValue leftOperand, DfaValue rightOperand, RelationT
     return leftOperand instanceof DfaTypeValue && rightOperand instanceof DfaTypeValue;
   }
 
-  public static DfaRelation createRelation(DfaValue dfaLeft, RelationType relationType, DfaValue dfaRight) {
+  public static @Nullable DfaRelation createRelation(DfaValue dfaLeft, RelationType relationType, DfaValue dfaRight) {
     if (dfaLeft instanceof DfaVariableValue || dfaLeft instanceof DfaWrappedValue || dfaLeft instanceof DfaBinOpValue
         || dfaRight instanceof DfaVariableValue || dfaRight instanceof DfaWrappedValue || dfaRight instanceof DfaBinOpValue) {
       if (!(dfaLeft instanceof DfaVariableValue || dfaLeft instanceof DfaWrappedValue || dfaLeft instanceof DfaBinOpValue) ||

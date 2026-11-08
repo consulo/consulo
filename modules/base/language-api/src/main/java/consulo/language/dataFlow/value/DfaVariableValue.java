@@ -16,7 +16,7 @@ import java.util.function.BiFunction;
 public final class DfaVariableValue extends DfaValue {
 
   public static class Factory {
-    private final Map<Pair<VariableDescriptor, DfaVariableValue>, DfaVariableValue> myExistingVars = new HashMap<>();
+    private final Map<Pair<VariableDescriptor, @Nullable DfaVariableValue>, DfaVariableValue> myExistingVars = new HashMap<>();
     private final DfaValueFactory myFactory;
 
     Factory(DfaValueFactory factory) {
@@ -37,7 +37,7 @@ public final class DfaVariableValue extends DfaValue {
      * @return existing variable value with given descriptor and qualifier; null if it doesn't exist yet
      */
     public @Nullable DfaVariableValue getVariableValue(VariableDescriptor descriptor, @Nullable DfaVariableValue qualifier) {
-      Pair<VariableDescriptor, DfaVariableValue> key = Pair.create(descriptor, qualifier);
+      Pair<VariableDescriptor, @Nullable DfaVariableValue> key = Pair.create(descriptor, qualifier);
       return myExistingVars.get(key);
     }
 
@@ -45,7 +45,7 @@ public final class DfaVariableValue extends DfaValue {
       VariableDescriptor descriptor,
       @Nullable DfaVariableValue qualifier,
       BiFunction<? super VariableDescriptor, ? super @Nullable DfaVariableValue, ? extends DfType> typeSupplier) {
-      Pair<VariableDescriptor, DfaVariableValue> key = Pair.create(descriptor, qualifier);
+      Pair<VariableDescriptor, @Nullable DfaVariableValue> key = Pair.create(descriptor, qualifier);
       DfaVariableValue var = myExistingVars.get(key);
       if (var == null) {
         var = new DfaVariableValue(descriptor, myFactory, qualifier, typeSupplier.apply(descriptor, qualifier));
@@ -62,7 +62,7 @@ public final class DfaVariableValue extends DfaValue {
   private final VariableDescriptor myDescriptor;
   private final DfType myDfType;
   private final @Nullable DfaVariableValue myQualifier;
-  private DfType myInherentType;
+  private @Nullable DfType myInherentType;
   private final List<DfaVariableValue> myDependents = new SmartList<>();
 
   private DfaVariableValue(VariableDescriptor descriptor,

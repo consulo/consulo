@@ -68,6 +68,9 @@ public interface DataFlowIRProvider extends LanguageExtension {
    */
   static @Nullable ControlFlow forElement(PsiElement psiBlock, DfaValueFactory targetFactory) {
     PsiFile file = psiBlock.getContainingFile();
+    if (file == null) {
+      return null;
+    }
     DataFlowIRProvider provider = forLanguage(file.getLanguage());
     if (provider == null) {
       return null;
@@ -84,7 +87,7 @@ public interface DataFlowIRProvider extends LanguageExtension {
   
   static Collection<TextRange> computeUnreachableSegments(PsiElement startAnchor, Set<PsiElement> unreachableElements) {
     PsiFile file = startAnchor.getContainingFile();
-    DataFlowIRProvider provider = forLanguage(file.getLanguage());
+    DataFlowIRProvider provider = file == null ? null : forLanguage(file.getLanguage());
     if (provider == null) {
       return Collections.emptyList();
     }

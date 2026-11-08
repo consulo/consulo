@@ -2,6 +2,9 @@
 
 package consulo.language.dataFlow.ir;
 
+import java.util.Objects;
+import org.jspecify.annotations.Nullable;
+
 import consulo.language.dataFlow.types.DfType;
 import consulo.language.dataFlow.value.DfaValueFactory;
 import consulo.language.dataFlow.value.DfaVariableValue;
@@ -32,7 +35,7 @@ public final class ControlFlow {
   private final Object2IntMap<PsiElement> myElementToEndOffsetMap;
   private final DfaValueFactory myFactory;
   private final PsiElement myPsiAnchor;
-  private int[] myLoopNumbers;
+  private int @Nullable [] myLoopNumbers;
 
   public ControlFlow(final DfaValueFactory factory, PsiElement psiAnchor) {
     myFactory = factory;
@@ -98,7 +101,8 @@ public final class ControlFlow {
   }
 
   public int[] getLoopNumbers() {
-    return myLoopNumbers;
+    // computed by finish()
+    return Objects.requireNonNull(myLoopNumbers);
   }
 
   /**

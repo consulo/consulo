@@ -17,6 +17,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class DfaValueFactory {
   private final List<DfaValue> myValues = new ArrayList<>();
@@ -128,7 +129,7 @@ public class DfaValueFactory {
   }
 
   public DfaControlTransferValue controlTransfer(TransferTarget kind, FList<Trap> traps) {
-    return myControlTransfers.get(Pair.create(kind, traps));
+    return Objects.requireNonNull(myControlTransfers.get(Pair.create(kind, traps)));
   }
 
   private final Map<Pair<TransferTarget, FList<Trap>>, DfaControlTransferValue> myControlTransfers =

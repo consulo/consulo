@@ -14,7 +14,7 @@ import java.util.Arrays;
  * An instruction to exit the interpretation (but possibly process traps like 'finally' blocks).
  */
 public class ReturnInstruction extends ControlTransferInstruction {
-  private final PsiElement myAnchor;
+  private final @Nullable PsiElement myAnchor;
 
   public ReturnInstruction(DfaValueFactory factory, FList<DfaControlTransferValue.Trap> traps, @Nullable PsiElement anchor) {
     this(factory.controlTransfer(DfaControlTransferValue.RETURN_TRANSFER, traps), anchor, true);

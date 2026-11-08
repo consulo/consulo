@@ -1,6 +1,8 @@
 // Copyright 2000-2023 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.language.dataFlow.ir;
 
+import org.jspecify.annotations.Nullable;
+
 import consulo.language.dataFlow.ir.DfaAnchor;
 import consulo.language.dataFlow.memory.DfaMemoryState;
 import consulo.language.dataFlow.value.DfaValue;
@@ -18,7 +20,7 @@ import java.util.stream.Stream;
 public class PushInstruction extends EvalInstruction {
   private final DfaValue myValue;
 
-  public PushInstruction(DfaValue value, DfaAnchor place) {
+  public PushInstruction(DfaValue value, @Nullable DfaAnchor place) {
     super(place, 0);
     myValue = value;
   }
