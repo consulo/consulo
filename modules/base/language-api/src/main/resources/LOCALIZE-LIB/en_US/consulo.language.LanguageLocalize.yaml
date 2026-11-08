@@ -76,6 +76,12 @@ completion.smart.enter.ad:
     text: 'Use {0} to syntactically correct your code after completing (balance parentheses etc.)    '
 compound.run.configuration.cycle:
     text: '{0} ''''{1}'''' causes dependency cycle and cannot be added'
+dataflow.nullability.non.null:
+    text: non-null
+dataflow.nullability.null:
+    text: null
+dataflow.nullability.nullable:
+    text: nullable
 default.package.presentation:
     text: <default>
 default.path.evaluator.option:
