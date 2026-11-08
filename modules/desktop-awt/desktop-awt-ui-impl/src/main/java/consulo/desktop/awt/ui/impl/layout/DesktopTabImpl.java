@@ -91,13 +91,17 @@ public class DesktopTabImpl implements Tab {
         myTabComponent.add(myLabel, BorderLayout.CENTER);
         myTabComponent.add(myTrailingPanel, BorderLayout.EAST);
 
-        // the tab component takes the mouse events of the tab header, so the popup is asked for here; the trigger is
-        // a press on some platforms and a release on others
+        // the tab component takes the mouse events of the tab header, so the popup is asked for here, and the tab is
+        // selected here too - the pane does not get the press; the popup trigger is a press on some platforms and
+        // a release on others
         MouseAdapter popupListener = new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent event) {
                 if (event.isPopupTrigger()) {
                     showPopup(event);
+                }
+                else if (SwingUtilities.isLeftMouseButton(event) && isEnabled()) {
+                    select();
                 }
             }
 
