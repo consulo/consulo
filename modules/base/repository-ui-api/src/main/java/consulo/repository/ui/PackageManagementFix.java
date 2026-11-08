@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2023 consulo.io
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,18 +15,19 @@
  */
 package consulo.repository.ui;
 
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.ServiceAPI;
+import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import org.jspecify.annotations.Nullable;
-
 /**
- * @author VISTALL
- * @since 07/01/2023
+ * A fix of a {@link PackageManagementProblem} - installing the packaging tools of an interpreter.
  */
-@ServiceAPI(ComponentScope.PROJECT)
-public interface RepositoryDialogFactory {
-  @RequiredUIAccess
-  void showManagePackagesDialogAsync(PackageManagementService service, PackageManagementService.@Nullable Listener listener);
+public interface PackageManagementFix {
+    LocalizeValue getName();
+
+    /**
+     * Runs the fix. Called in the UI thread; needs to take care of spawning a background task itself and to publish
+     * its progress to the listener.
+     */
+    @RequiredUIAccess
+    void run(PackageManagementService.Listener listener);
 }

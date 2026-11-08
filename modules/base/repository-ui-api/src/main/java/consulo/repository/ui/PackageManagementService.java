@@ -1,6 +1,7 @@
 // Copyright 2000-2021 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.repository.ui;
 
+import consulo.localize.LocalizeValue;
 import consulo.util.concurrent.AsyncResult;
 
 import org.jspecify.annotations.Nullable;
@@ -147,6 +148,92 @@ public abstract class PackageManagementService {
   public abstract void installPackage(RepoPackage repoPackage, @Nullable String version, boolean forceUpgrade, @Nullable String extraOptions, Listener listener, boolean installToUser);
 
   public abstract void uninstallPackages(List<InstalledPackage> installedPackages, Listener listener);
+
+  /**
+   * The scopes a package can be installed into, as a project system defines them - the dependencies and the dev dependencies
+   * of a package.json, the user site of a Python interpreter. Empty when the service knows no scopes.
+   * <p>
+   * By default the scopes are made from the "install to user" option of the service.
+   */
+  public List<PackageInstallScope> getInstallScopes() {
+    if (!canInstallToUser()) {
+      return List.of();
+    }
+    return List.of(PackageInstallScope.DEFAULT, new PackageInstallScope(PackageInstallScope.USER_ID, LocalizeValue.of(getInstallToUserText())));
+  }
+
+  /**
+   * The scope preselected for a new package, one of {@link #getInstallScopes()}.
+   */
+  public @Nullable PackageInstallScope getDefaultInstallScope() {
+    List<PackageInstallScope> scopes = getInstallScopes();
+    if (scopes.isEmpty()) {
+      return null;
+    }
+    if (canInstallToUser() && isInstallToUserSelected()) {
+      for (PackageInstallScope scope : scopes) {
+        if (PackageInstallScope.USER_ID.equals(scope.id())) {
+          return scope;
+        }
+      }
+    }
+    return scopes.get(0);
+  }
+
+  /**
+   * Whether the installation accepts additional options typed by the user - for example the options of pip.
+   */
+  public boolean canUseExtraOptions() {
+    return false;
+  }
+
+  /**
+   * Installs the specified package into the scope. Called in the UI thread; needs to take care of spawning a background task itself.
+   * <p>
+   * By default the scope selects the "install to user" option of the service.
+   *
+   * @param version      the version selected by the user, or null for the latest one
+   * @param scope        one of {@link #getInstallScopes()}, or null if the service has no scopes
+   * @param extraOptions additional options entered by the user, only if {@link #canUseExtraOptions()}
+   */
+  public void installPackage(RepoPackage repoPackage,
+                             @Nullable String version,
+                             @Nullable PackageInstallScope scope,
+                             @Nullable String extraOptions,
+                             Listener listener) {
+    boolean installToUser = scope != null && PackageInstallScope.USER_ID.equals(scope.id());
+    installPackage(repoPackage, version, false, extraOptions, listener, installToUser);
+  }
+
+  /**
+   * Whether packages can be installed now - for example, not without the packaging tools of an interpreter. Called in the UI thread.
+   */
+  public boolean canInstall() {
+    return true;
+  }
+
+  /**
+   * Whether the package can be uninstalled - the package manager itself can not. Called in the UI thread.
+   */
+  public boolean canUninstallPackage(InstalledPackage installedPackage) {
+    return canInstall();
+  }
+
+  /**
+   * Whether the package can be updated. Called in the UI thread.
+   */
+  public boolean canUpdatePackage(InstalledPackage installedPackage) {
+    return canInstall();
+  }
+
+  /**
+   * Looks for a problem of the environment which prevents managing packages - a missing package manager, an invalid interpreter.
+   * Called in a background thread.
+   */
+  public @Nullable PackageManagementProblem findProblem() {
+    return null;
+  }
+
 
   
   public abstract AsyncResult<List<String>> fetchPackageVersions(String packageName);

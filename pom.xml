@@ -210,6 +210,7 @@
     <module>modules/base/http-adapter/httpclient4-adapter</module>
     <module>modules/base/http-impl</module>
     <module>modules/base/repository-ui-api</module>
+    <module>modules/base/repository-ui-impl</module>
     <module>modules/base/review-api</module>
     <module>modules/base/review-impl</module>
     <module>modules/base/version-control-system-review-api</module>

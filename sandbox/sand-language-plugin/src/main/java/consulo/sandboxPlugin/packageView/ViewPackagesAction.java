@@ -20,12 +20,11 @@ import consulo.annotation.component.ActionParentRef;
 import consulo.annotation.component.ActionRef;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import consulo.repository.ui.RepositoryDialogFactory;
+import consulo.repository.ui.PackagesEditorManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.IdeActions;
-import jakarta.inject.Inject;
 
 /**
  * @author VISTALL
@@ -33,12 +32,8 @@ import jakarta.inject.Inject;
  */
 @ActionImpl(id = "ViewPackagesAction", parents = @ActionParentRef(@ActionRef(id = IdeActions.TOOLS_MENU)))
 public class ViewPackagesAction extends DumbAwareAction {
-    private final SandPackageManagementService myManagementService;
-
-    @Inject
-    public ViewPackagesAction(SandPackageManagementService managementService) {
+    public ViewPackagesAction() {
         super(LocalizeValue.localizeTODO("View Packages"));
-        myManagementService = managementService;
     }
 
     @RequiredUIAccess
@@ -48,9 +43,6 @@ public class ViewPackagesAction extends DumbAwareAction {
         if (project == null) {
             return;
         }
-
-        RepositoryDialogFactory dialogFactory = project.getInstance(RepositoryDialogFactory.class);
-
-        dialogFactory.showManagePackagesDialogAsync(myManagementService, null);
+        PackagesEditorManager.getInstance(project).open(SandPackageManagementServiceProvider.class, SandPackageManagementServiceProvider.TARGET);
     }
 }

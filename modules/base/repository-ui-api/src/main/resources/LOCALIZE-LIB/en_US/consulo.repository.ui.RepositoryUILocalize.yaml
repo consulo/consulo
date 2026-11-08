@@ -1,0 +1,62 @@
+action.install.text:
+    text: Install
+action.reload.text:
+    text: Reload List of Packages
+action.uninstall.text:
+    text: Uninstall
+action.update.text:
+    text: Update
+action.add.repository.text:
+    text: Add
+action.remove.repository.text:
+    text: Remove
+editor.name:
+    text: Packages
+error.loading.package.list:
+    text: 'Error loading package list: {0}'
+error.details.link:
+    text: Details
+label.installed.version:
+    text: 'Installed: {0}'
+label.latest.version:
+    text: 'Latest: {0}'
+label.options:
+    text: 'Options:'
+label.scope:
+    text: 'Scope:'
+label.version:
+    text: 'Version:'
+loading.packages:
+    text: Loading packages…
+no.information.available:
+    text: No information available
+package.install.failed:
+    text: Error occurred when installing package ''{0}''
+package.installed.successfully:
+    text: Package ''{0}'' installed successfully
+package.uninstall.failed:
+    text: Error occurred when uninstalling package ''{0}''
+package.uninstalled.successfully:
+    text: Package ''{0}'' uninstalled successfully
+package.update.failed:
+    text: Error occurred when updating package ''{0}''
+package.updated.successfully:
+    text: Package ''{0}'' updated successfully
+packages.not.available:
+    text: The packages are not available
+packages.uninstalled.successfully:
+    text: Packages uninstalled successfully
+repository.url.placeholder:
+    text: Repository URL
+scope.default:
+    text: Default
+search.placeholder:
+    text: Search packages
+tab.browse:
+    text: Browse
+tab.installed:
+    text: Installed
+tab.repositories:
+    text: Repositories
+version.latest:
+    text: Latest
