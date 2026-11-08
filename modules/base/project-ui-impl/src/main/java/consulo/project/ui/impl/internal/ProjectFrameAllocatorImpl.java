@@ -17,6 +17,7 @@ package consulo.project.ui.impl.internal;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.project.Project;
+import consulo.project.ProjectType;
 import consulo.project.ProjectOpenContext;
 import consulo.project.internal.ProjectFrameAllocator;
 import consulo.project.ui.impl.internal.wm.ToolWindowManagerBase;
@@ -61,7 +62,9 @@ public class ProjectFrameAllocatorImpl implements ProjectFrameAllocator {
                 continuation.putUserData(IdeFrame.KEY, frame);
 
                 // force close welcome frame after frame allocating, since its project open
-                myWelcomeFrameManager.closeFrame(project.getUIAccess());
+                if (project.getType() != ProjectType.WELCOME) {
+                    myWelcomeFrameManager.closeFrame(project.getUIAccess());
+                }
                 return project;
             }))
             .then(UIAction.apply((project, continuation) -> {

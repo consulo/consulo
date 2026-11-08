@@ -185,6 +185,7 @@
     <module>modules/base/path-macro-impl</module>
     <module>modules/base/module-ui-api</module>
     <module>modules/base/module-creation-api</module>
+    <module>modules/base/module-creation-impl</module>
     <module>modules/base/language-editor-refactoring-api</module>
     <module>modules/base/language-editor-refactoring-impl</module>
     <module>modules/base/language-copyright-api</module>
@@ -239,6 +240,7 @@
     <module>modules/base/version-control-system-log-impl</module>
       
     <module>modules/base/welcome-screen-impl</module>
+    <module>modules/base/welcome-screen-api</module>
 
     <module>modules/base/proxy</module>
     <module>modules/base/ui-api</module>

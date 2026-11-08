@@ -30,6 +30,7 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
+import consulo.project.ProjectType;
 import consulo.project.impl.internal.store.IProjectStore;
 import consulo.project.internal.ProjectEx;
 import consulo.project.internal.ProjectExListener;
@@ -99,7 +100,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
             putUserData(CREATION_TRACE, ExceptionUtil.currentStackTrace());
         }
 
-        if (!isDefault()) {
+        if (getType() == ProjectType.REGULAR) {
             getStateStore().setProjectFilePath(dirPath);
         }
 
@@ -121,7 +122,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
 
     @Override
     public int getProfiles() {
-        return myParent.getProfiles() | (isDefault() ? DEFAULT_PROJECT : REGULAR_PROJECT);
+        return myParent.getProfiles() | (getType() == ProjectType.REGULAR ? REGULAR_PROJECT : DEFAULT_PROJECT);
     }
 
     public @Nullable String getCreationTrace() {
@@ -240,7 +241,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
             str = getName();
         }
 
-        String prefix = !isDefault() ? "" : getName();
+        String prefix = getType() == ProjectType.REGULAR ? "" : getName();
         return prefix + Integer.toHexString(str.hashCode());
     }
 
@@ -282,7 +283,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     }
 
     private void writeProjectNameFile() {
-        if (isDefault()) {
+        if (getType() != ProjectType.REGULAR) {
             return;
         }
         String projectBasePath = getStateStore().getProjectBasePath();
@@ -327,7 +328,8 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
 
     @Override
     public String toString() {
-        return "Project" + (isDisposed() ? " (Disposed)" : isDefault() ? "" : " '" + myDirPath + "'") +
-            (isDefault() ? " (Default)" : "") + " " + myName;
+        ProjectType type = getType();
+        return "Project" + (isDisposed() ? " (Disposed)" : type != ProjectType.REGULAR ? "" : " '" + myDirPath + "'") +
+            (type != ProjectType.REGULAR ? " (" + type + ")" : "") + " " + myName;
     }
 }

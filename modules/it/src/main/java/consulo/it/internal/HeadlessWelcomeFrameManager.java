@@ -17,16 +17,12 @@ package consulo.it.internal;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
-import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WelcomeFrameManager;
-import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 /**
- * Headless {@link WelcomeFrameManager}: the harness never shows a welcome frame, so {@code createFrame}
- * returns a headless frame only to satisfy the contract; {@code closeFrame} short-circuits on a null
- * current frame.
+ * Headless {@link WelcomeFrameManager}: the harness never opens the welcome project.
  *
  * @author VISTALL
  */
@@ -38,9 +34,8 @@ public class HeadlessWelcomeFrameManager extends WelcomeFrameManager {
         super(application);
     }
 
-    @RequiredUIAccess
     @Override
-    protected IdeFrame createFrame() {
-        return new HeadlessIdeFrame(null);
+    protected boolean isWelcomeProjectEnabled() {
+        return false;
     }
 }

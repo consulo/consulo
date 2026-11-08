@@ -15,6 +15,7 @@
  */
 package consulo.fileEditor.impl.internal;
 
+import consulo.fileEditor.internal.VetoActionCloseHandler;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.ui.UISettings;
 import consulo.application.ui.wm.IdeFocusManager;
@@ -207,7 +208,8 @@ public abstract class FileEditorWindowBase extends EditorSplitNode implements Fi
     public void closeAllExcept(VirtualFile selectedFile) {
         VirtualFile[] files = getFiles();
         for (VirtualFile file : files) {
-            if (!Objects.equals(file, selectedFile) && !isFilePinned(file)) {
+            if (!Objects.equals(file, selectedFile) && !isFilePinned(file)
+                && VetoActionCloseHandler.isClosable(this, file, getManager().getProject())) {
                 closeFile(file);
             }
         }

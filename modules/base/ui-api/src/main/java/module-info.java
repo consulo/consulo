@@ -67,7 +67,8 @@ module consulo.ui.api {
         consulo.project.ui.impl,
         consulo.review.impl,
         consulo.web.ide,
-        consulo.web.ui.impl;
+        consulo.web.ui.impl,
+        consulo.welcome.screen.impl;
 
     uses consulo.ui.image.IconLibraryDescriptor;
     uses consulo.ui.internal.UIInternal;

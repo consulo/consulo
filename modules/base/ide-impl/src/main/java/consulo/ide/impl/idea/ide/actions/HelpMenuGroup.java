@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.ide.actions;
 import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionRef;
 import consulo.application.dumb.DumbAware;
+import consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen.DevelopPluginsAction;
 import consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen.OpenYoutubeAction;
 import consulo.ide.impl.wm.impl.welcomeScreen.JoinDiscordChannelAction;
 import consulo.platform.base.localize.ActionLocalize;
@@ -44,6 +45,7 @@ import consulo.ui.ex.action.IdeActions;
         @ActionRef(type = RefCardAction.class),
         @ActionRef(type = OpenYoutubeAction.class),
         @ActionRef(type = JoinDiscordChannelAction.class),
+        @ActionRef(type = DevelopPluginsAction.class),
         @ActionRef(id = "TechnicalSupport"),
         @ActionRef(type = AnSeparator.class),
         @ActionRef(id = IdeActions.ACTION_CHECK_FOR_UPDATE),

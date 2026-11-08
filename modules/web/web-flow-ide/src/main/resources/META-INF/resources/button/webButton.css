@@ -1,3 +1,7 @@
+vaadin-button:not([theme~='primary']) {
+    --vaadin-button-text-color: var(--vaadin-text-color);
+}
+
 /* the aura theme writes the horizontal padding of a tertiary button as a longhand rather than through
    --vaadin-button-padding, so the box of a toolbar button is spelled out here and the selectors carry the theme
    attribute the theme rules are keyed on to outweigh them */

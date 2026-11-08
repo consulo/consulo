@@ -16,6 +16,7 @@
 package consulo.desktop.qt.ui.impl;
 
 import consulo.ui.ListBox;
+import consulo.ui.ListBoxStyle;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ValueComponentEvent;
 import consulo.ui.event.details.ProgrammaticInputDetails;
@@ -38,6 +39,20 @@ public class DesktopQtListBoxImpl<E> extends DesktopQtListBoxBaseImpl<E> impleme
 
     public DesktopQtListBoxImpl(FlatDataModel<E> model) {
         super(model);
+    }
+
+    @Override
+    public void addStyle(ListBoxStyle style) {
+        if (style != ListBoxStyle.TRANSPARENT_BACKGROUND) {
+            return;
+        }
+
+        whenBound(widget -> {
+            QListWidget list = (QListWidget) widget;
+            list.viewport().setAutoFillBackground(false);
+            list.verticalScrollBar().setAutoFillBackground(true);
+            list.horizontalScrollBar().setAutoFillBackground(true);
+        });
     }
 
     @Override

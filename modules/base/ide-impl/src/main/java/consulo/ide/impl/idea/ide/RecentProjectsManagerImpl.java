@@ -35,6 +35,7 @@ import consulo.module.content.layer.event.ModuleRootListener;
 import consulo.module.extension.ModuleExtension;
 import consulo.platform.Platform;
 import consulo.project.Project;
+import consulo.project.ProjectType;
 import consulo.project.ProjectGroup;
 import consulo.project.ProjectManager;
 import consulo.project.ProjectOpenContext;
@@ -278,17 +279,17 @@ public class RecentProjectsManagerImpl implements RecentProjectsManager, Persist
         Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
         synchronized (myStateLock) {
             myState.openPaths.clear();
-            if (openProjects.length == 0) {
-                myState.lastPath = null;
-            }
-            else {
-                myState.lastPath = getProjectPath(openProjects[openProjects.length - 1]);
-                for (Project openProject : openProjects) {
-                    String path = getProjectPath(openProject);
-                    if (path != null) {
-                        myState.openPaths.add(path);
-                        myState.names.put(path, getProjectDisplayName(openProject));
-                    }
+            myState.lastPath = null;
+            for (Project openProject : openProjects) {
+                if (openProject.getType() != ProjectType.REGULAR) {
+                    continue;
+                }
+
+                String path = getProjectPath(openProject);
+                if (path != null) {
+                    myState.lastPath = path;
+                    myState.openPaths.add(path);
+                    myState.names.put(path, getProjectDisplayName(openProject));
                 }
             }
         }
@@ -496,6 +497,10 @@ public class RecentProjectsManagerImpl implements RecentProjectsManager, Persist
         @Override
         @RequiredReadAction
         public void projectOpened(final Project project, UIAccess uiAccess) {
+            if (project.getType() != ProjectType.REGULAR) {
+                return;
+            }
+
             myAppClosing = false;
 
             String path = getProjectPath(project);
@@ -518,6 +523,10 @@ public class RecentProjectsManagerImpl implements RecentProjectsManager, Persist
 
         @Override
         public void projectClosing(Project project) {
+            if (project.getType() != ProjectType.REGULAR) {
+                return;
+            }
+
             synchronized (myStateLock) {
                 String projectPath = getProjectPath(project);
 
@@ -536,7 +545,7 @@ public class RecentProjectsManagerImpl implements RecentProjectsManager, Persist
         @Override
         @RequiredReadAction
         public void projectClosed(Project project, UIAccess uiAccess) {
-            if (myAppClosing) {
+            if (myAppClosing || project.getType() != ProjectType.REGULAR) {
                 return;
             }
 

@@ -6,6 +6,7 @@
 module consulo.version.control.system.impl {
     requires consulo.mcp.server.api;
     requires consulo.version.control.system.api;
+    requires consulo.welcome.screen.api;
     requires consulo.ui.ex.api;
     requires consulo.code.editor.api;
     requires consulo.project.ui.view.api;

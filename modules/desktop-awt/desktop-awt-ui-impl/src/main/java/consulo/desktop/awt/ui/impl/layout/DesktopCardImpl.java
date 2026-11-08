@@ -24,6 +24,7 @@ import consulo.ui.CardStyle;
 import consulo.ui.Component;
 import consulo.ui.Space;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.color.ColorValue;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.JBCurrentTheme;
 import consulo.ui.ex.awt.JBLabel;
@@ -55,6 +56,27 @@ public class DesktopCardImpl extends SwingComponentDelegate<JPanel> implements C
         }
 
         @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+
+            ColorValue fill = myFillColor;
+            if (fill == null) {
+                return;
+            }
+
+            Graphics2D g2 = (Graphics2D) g.create();
+            try {
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setColor(TargetAWT.to(fill));
+                int arc = JBUI.scale(CARD_ARC);
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), arc, arc);
+            }
+            finally {
+                g2.dispose();
+            }
+        }
+
+        @Override
         public Component toUIComponent() {
             return DesktopCardImpl.this;
         }
@@ -78,7 +100,11 @@ public class DesktopCardImpl extends SwingComponentDelegate<JPanel> implements C
         }
     }
 
+    private static final int CARD_ARC = 20;
+
     private final Set<CardStyle> myStyles = EnumSet.noneOf(CardStyle.class);
+
+    private @Nullable ColorValue myFillColor;
 
     private final MyTextLabel myTitleLabel = new MyTextLabel();
     private final MyTextLabel mySubtitleLabel = new MyTextLabel();
@@ -147,8 +173,22 @@ public class DesktopCardImpl extends SwingComponentDelegate<JPanel> implements C
     private void updateBorder(JPanel panel) {
         // the corners of a card are as round on every frontend - a radius of 10, the arc being its diameter
         panel.setBorder(myStyles.contains(CardStyle.SELECTED)
-            ? new RoundedLineBorder(JBCurrentTheme.Focus.focusColor(), JBUI.scale(20))
-            : IdeBorderFactory.createRoundedBorder(JBUI.scale(20)));
+            ? new RoundedLineBorder(JBCurrentTheme.Focus.focusColor(), JBUI.scale(CARD_ARC))
+            : IdeBorderFactory.createRoundedBorder(JBUI.scale(CARD_ARC)));
+    }
+
+    @Override
+    public @Nullable ColorValue getBackgroundColor() {
+        return myFillColor;
+    }
+
+    /**
+     * The card fills its own rounded shape - the panel stays transparent, so its corners do not stick out.
+     */
+    @Override
+    public void setBackgroundColor(@Nullable ColorValue background) {
+        myFillColor = background;
+        toAWTComponent().repaint();
     }
 
     @RequiredUIAccess
@@ -273,6 +313,18 @@ public class DesktopCardImpl extends SwingComponentDelegate<JPanel> implements C
         return panel;
     }
 
+    private static JComponent wrapVerticallyCentered(java.awt.Component component) {
+        JPanel panel = new JPanel(new GridBagLayout());
+        panel.setOpaque(false);
+
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.weightx = 1;
+        constraints.weighty = 1;
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        panel.add(component, constraints);
+        return panel;
+    }
+
     private void rebuild(@Nullable JPanel panel) {
         if (panel == null) {
             return;
@@ -285,8 +337,9 @@ public class DesktopCardImpl extends SwingComponentDelegate<JPanel> implements C
         boolean cover = myStyles.contains(CardStyle.COVER_MEDIA);
         boolean centered = myStyles.contains(CardStyle.CENTERED);
 
-        // the title panel stretches its labels over the width, so centering the text centers the title
-        int textAlignment = centered ? SwingConstants.CENTER : SwingConstants.LEADING;
+        // the title panel stretches its labels over the width, so centering the text centers the title; a horizontal
+        // card centers on the other axis and keeps its text beside the media
+        int textAlignment = centered && !horizontal ? SwingConstants.CENTER : SwingConstants.LEADING;
         myTitleLabel.setHorizontalAlignment(textAlignment);
         mySubtitleLabel.setHorizontalAlignment(textAlignment);
 
@@ -303,7 +356,13 @@ public class DesktopCardImpl extends SwingComponentDelegate<JPanel> implements C
 
         JComponent media = null;
         if (myMedia != null) {
-            media = centered ? wrapCentered(DesktopLayoutChildren.toAWT(myMedia)) : wrap(DesktopLayoutChildren.toAWT(myMedia));
+            java.awt.Component mediaComponent = DesktopLayoutChildren.toAWT(myMedia);
+            if (centered) {
+                media = horizontal ? wrapVerticallyCentered(mediaComponent) : wrapCentered(mediaComponent);
+            }
+            else {
+                media = wrap(mediaComponent);
+            }
             int mediaPadding = cover ? 0 : padding;
             media.setBorder(BorderFactory.createEmptyBorder(mediaPadding, mediaPadding, horizontal ? mediaPadding : 0, horizontal ? 0 : mediaPadding));
         }
@@ -311,7 +370,7 @@ public class DesktopCardImpl extends SwingComponentDelegate<JPanel> implements C
         if (media != null) {
             panel.add(media, horizontal ? BorderLayout.WEST : BorderLayout.NORTH);
         }
-        panel.add(myBodyPanel, BorderLayout.CENTER);
+        panel.add(horizontal && centered ? wrapVerticallyCentered(myBodyPanel) : myBodyPanel, BorderLayout.CENTER);
 
         updateBorder(panel);
 

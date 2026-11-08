@@ -19,7 +19,6 @@ import consulo.application.ui.DimensionService;
 import consulo.desktop.qt.ui.impl.titleless.DesktopQtTitleBarPlacement;
 import consulo.desktop.qt.ui.impl.titleless.DesktopQtWindowFrame;
 import consulo.disposer.Disposer;
-import consulo.project.ui.impl.internal.wm.UnifiedWelcomeIdeFrame;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.ui.Component;
 import consulo.ui.Length;

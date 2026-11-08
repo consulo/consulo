@@ -15,6 +15,7 @@
  */
 package consulo.fileEditor.impl.internal;
 
+import consulo.fileEditor.internal.VetoActionCloseHandler;
 import consulo.application.ui.UISettings;
 import consulo.fileEditor.FileEditorWindow;
 import consulo.fileEditor.internal.FileEditorManagerEx;
@@ -58,6 +59,11 @@ public class CloseTab extends LegacyDumbAwareAction {
         boolean pinned = isPinned();
 
         Presentation presentation = e.getPresentation();
+        if (!VetoActionCloseHandler.isClosable(myEditorWindow, myFile, myProject)) {
+            presentation.setEnabledAndVisible(false);
+            return;
+        }
+
         presentation.setIcon(pinned ? PlatformIconGroup.actionsPintab() : PlatformIconGroup.actionsClose());
         presentation.setVisible(UISettings.getInstance().getShowCloseButton() || pinned);
 
@@ -80,6 +86,10 @@ public class CloseTab extends LegacyDumbAwareAction {
     @RequiredUIAccess
     @Override
     public void actionPerformed(AnActionEvent e) {
+        if (!VetoActionCloseHandler.isClosable(myEditorWindow, myFile, myProject)) {
+            return;
+        }
+
         if (isPinned() && ActionPlaces.EDITOR_TAB.equals(e.getPlace())) {
             myEditorWindow.setFilePinned(myFile, false);
             return;

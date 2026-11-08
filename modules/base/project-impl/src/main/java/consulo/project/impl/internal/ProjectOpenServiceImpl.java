@@ -31,6 +31,7 @@ import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.ProjectOpenContext;
+import consulo.project.ProjectType;
 import consulo.project.event.ProjectManagerListener;
 import consulo.project.internal.ProjectFrameAllocator;
 import consulo.project.internal.ProjectOpenProcessor;
@@ -144,9 +145,17 @@ public class ProjectOpenServiceImpl implements ProjectOpenService {
 
                         Project projectToClose = null;
                         if (!Boolean.TRUE.equals(forceNewFrame)) {
-                            Project[] openProjects = myProjectManager.get().getOpenProjects();
-                            if (openProjects.length > 0) {
-                                projectToClose = activeProject != null ? activeProject : openProjects[openProjects.length - 1];
+                            if (activeProject != null && activeProject.getType() == ProjectType.REGULAR) {
+                                projectToClose = activeProject;
+                            }
+                            else {
+                                Project[] openProjects = myProjectManager.get().getOpenProjects();
+                                for (int i = openProjects.length - 1; i >= 0; i--) {
+                                    if (openProjects[i].getType() == ProjectType.REGULAR) {
+                                        projectToClose = openProjects[i];
+                                        break;
+                                    }
+                                }
                             }
                         }
                         return new OpenContext(projectToClose, virtualFile);
@@ -227,6 +236,40 @@ public class ProjectOpenServiceImpl implements ProjectOpenService {
         return resultFuture;
     }
 
+    @Override
+    public CompletableFuture<Project> openWelcomeProjectAsync(UIAccess uiAccess) {
+        ProjectOpenContext context = new ProjectOpenContext();
+
+        CompletableFuture<Project> resultFuture = new CompletableFuture<>();
+
+        CompletableFuture<ProjectImpl> projectInit = myProgressBuilderFactory
+            .newProgressBuilder(null, ProjectLocalize.projectLoadProgress())
+            .execute(uiAccess, () -> {
+                Coroutine<?, ProjectImpl> chain = Coroutine.first(CodeExecution.<Void, ProjectImpl>apply((input, continuation) -> {
+                    WelcomeProjectImpl project = new WelcomeProjectImpl(myApplication, myProjectManager.get(), myComponentBinding);
+                    project.setUIAccess(uiAccess);
+                    return project;
+                }));
+
+                return myProjectFrameAllocator.allocateFrame(context, chain);
+            });
+
+        projectInit.whenComplete((projectImpl, throwable) -> {
+            if (throwable != null) {
+                if (!isCancellation(throwable)) {
+                    LOG.error("Failed to open welcome project", throwable);
+                }
+
+                resultFuture.completeExceptionally(throwable);
+            }
+            else {
+                doOpenInProject(projectImpl, null, uiAccess, context, resultFuture);
+            }
+        });
+
+        return resultFuture;
+    }
+
     private static boolean isCancellation(Throwable throwable) {
         for (Throwable each = throwable; each != null && each.getCause() != each; each = each.getCause()) {
             if (each instanceof ControlFlowException || each instanceof CancellationException) {
@@ -237,7 +280,7 @@ public class ProjectOpenServiceImpl implements ProjectOpenService {
         return false;
     }
 
-    private void doOpenInProject(ProjectImpl project, Path filePath, UIAccess uiAccess,
+    private void doOpenInProject(ProjectImpl project, @Nullable Path filePath, UIAccess uiAccess,
                                  ProjectOpenContext context, CompletableFuture<Project> future) {
         myProgressBuilderFactory.newProgressBuilder(project, ProjectLocalize.projectLoadProgress())
             .cancelable()
@@ -315,11 +358,13 @@ public class ProjectOpenServiceImpl implements ProjectOpenService {
                 return init;
             }).whenComplete((o, throwable) -> {
                 if (throwable != null) {
-                    LOG.warn("Failed to initialize project: " + filePath, throwable);
+                    LOG.warn("Failed to initialize project: " + project, throwable);
                     future.completeExceptionally(throwable);
                 }
                 else {
-                    updateLastProjectLocation(filePath.toString());
+                    if (filePath != null) {
+                        updateLastProjectLocation(filePath.toString());
+                    }
                     future.complete(project);
                 }
             });

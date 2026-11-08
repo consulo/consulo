@@ -15,6 +15,7 @@
  */
 package consulo.fileEditor.action;
 
+import consulo.fileEditor.internal.VetoActionCloseHandler;
 import consulo.application.dumb.DumbAware;
 import consulo.fileEditor.FileEditorComposite;
 import consulo.fileEditor.FileEditorManager;
@@ -54,7 +55,7 @@ public abstract class CloseEditorsActionBase extends AnAction implements DumbAwa
             FileEditorWindow window = windows[i];
             FileEditorComposite[] editors = window.getEditors();
             for (FileEditorComposite editor : editors) {
-                if (isFileToClose(editor, window)) {
+                if (VetoActionCloseHandler.isClosable(editor, project) && isFileToClose(editor, window)) {
                     res.add(Pair.create(editor, window));
                 }
             }

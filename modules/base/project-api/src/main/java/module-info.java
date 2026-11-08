@@ -45,6 +45,7 @@ module consulo.project.api {
         consulo.module.content.impl,
         consulo.module.impl,
         consulo.project.impl,
+        consulo.project.ui.api,
         consulo.project.ui.impl,
         consulo.sand.language.plugin,
         consulo.ui.ex.impl,
@@ -53,5 +54,6 @@ module consulo.project.api {
         consulo.virtual.file.system.impl,
         consulo.web.editor.impl,
         consulo.web.ide,
-        consulo.web.ui.impl;
+        consulo.web.ui.impl,
+        consulo.welcome.screen.impl;
 }

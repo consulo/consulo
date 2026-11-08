@@ -36,6 +36,7 @@ import consulo.language.psi.PsiManager;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.project.ProjectType;
 import consulo.project.ui.view.ProjectView;
 import consulo.project.ui.view.SelectInTarget;
 import consulo.ui.UIAccess;
@@ -128,6 +129,11 @@ public class ScopeViewPane extends AbstractProjectViewPane {
 
         myDependencyValidationManager.addScopeListener(scopeListener, this);
         myNamedScopeManager.addScopeListener(scopeListener, this);
+    }
+
+    @Override
+    public boolean isInitiallyVisible() {
+        return myProject.getType() != ProjectType.WELCOME;
     }
 
     @Override

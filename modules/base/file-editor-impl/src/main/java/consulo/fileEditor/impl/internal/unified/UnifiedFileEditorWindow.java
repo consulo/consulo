@@ -35,6 +35,7 @@ import consulo.fileEditor.impl.internal.FileEditorManagerImpl;
 import consulo.fileEditor.impl.internal.FileEditorWindowBase;
 import consulo.fileEditor.impl.internal.FileEditorsSplittersBase;
 import consulo.fileEditor.impl.internal.VfsIconUtil;
+import consulo.fileEditor.internal.VetoActionCloseHandler;
 import consulo.project.Project;
 import consulo.ui.Component;
 import consulo.ui.DragAndDropTransferHandler;
@@ -520,7 +521,9 @@ public class UnifiedFileEditorWindow extends FileEditorWindowBase implements Fil
             Component content = editor.getUIComponent();
             content.putUserData(UiDataProvider.KEY, sink -> {
                 sink.set(VirtualFile.KEY, editor.getFile());
-                sink.set(CloseAction.CloseTarget.KEY, () -> closeFile(editor.getFile()));
+                if (VetoActionCloseHandler.isClosable(editor, myProject)) {
+                    sink.set(CloseAction.CloseTarget.KEY, () -> closeFile(editor.getFile()));
+                }
             });
 
             ActionGroup.Builder tabActions = ActionGroup.newImmutableBuilder();

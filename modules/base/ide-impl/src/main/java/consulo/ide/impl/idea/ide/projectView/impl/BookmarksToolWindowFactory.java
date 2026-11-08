@@ -23,6 +23,7 @@ import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesPanel;
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesTreeViewPanel;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.project.ProjectType;
 import consulo.project.ui.wm.ToolWindowFactory;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -37,6 +38,11 @@ import consulo.ui.image.Image;
  */
 @ExtensionImpl
 public class BookmarksToolWindowFactory implements ToolWindowFactory, DumbAware {
+    @Override
+    public boolean shouldBeAvailable(Project project) {
+        return project.getType() != ProjectType.WELCOME;
+    }
+
     
     @Override
     public String getId() {

@@ -19,6 +19,7 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.ide.tipOfDay.TipOfDayManager;
 import consulo.project.Project;
+import consulo.project.ProjectType;
 import consulo.project.startup.PostStartupActivity;
 import consulo.ui.UIAccess;
 import jakarta.inject.Inject;
@@ -36,7 +37,7 @@ public class TipOfTheDayStartupActivity implements PostStartupActivity, DumbAwar
 
   @Override
   public void runActivity(Project project, UIAccess uiAccess) {
-    if (!myGeneralSettings.isShowTipsOnStartup()) {
+    if (project.getType() == ProjectType.WELCOME || !myGeneralSettings.isShowTipsOnStartup()) {
       return;
     }
 

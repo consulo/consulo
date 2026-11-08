@@ -35,6 +35,8 @@ import org.jspecify.annotations.Nullable;
  * @since 2023-05-27
  */
 public class WebVerticalLayoutImpl extends WebLayoutImpl<WebVerticalLayoutImpl.Vaadin, LayoutConstraint> implements VerticalLayout {
+    private boolean myAligned;
+
     public class Vaadin extends com.vaadin.flow.component.orderedlayout.VerticalLayout implements FromVaadinComponentWrapper {
         public Vaadin() {
             // a layout adds nothing on its own, only the gap the caller asked for
@@ -71,6 +73,7 @@ public class WebVerticalLayoutImpl extends WebLayoutImpl<WebVerticalLayoutImpl.V
             toVaadinComponent().addClassName(WebSpace.toGapClass(vGap));
         }
 
+        myAligned = alignment != null;
         if (alignment != null) {
             toVaadinComponent().setAlignItems(switch (alignment) {
                 case LEFT -> Alignment.START;
@@ -82,7 +85,11 @@ public class WebVerticalLayoutImpl extends WebLayoutImpl<WebVerticalLayoutImpl.V
 
     @Override
     public Layout<LayoutConstraint> add(Component component, LayoutConstraint constraint) {
-        toVaadinComponent().add(TargetVaadin.to(component));
+        com.vaadin.flow.component.Component vaadinComponent = TargetVaadin.to(component);
+        if (myAligned) {
+            vaadinComponent.getElement().getStyle().set("max-width", "max-content");
+        }
+        toVaadinComponent().add(vaadinComponent);
         return this;
     }
 

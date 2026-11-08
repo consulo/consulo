@@ -19,6 +19,7 @@ import consulo.annotation.component.ActionImpl;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.RecentProjectsManager;
 import consulo.project.Project;
+import consulo.project.ProjectType;
 import consulo.project.ProjectManager;
 import consulo.project.ui.wm.WelcomeFrameManager;
 import consulo.ui.UIAccess;
@@ -60,6 +61,12 @@ public class CloseProjectAction extends LegacyDumbAwareAction {
 
     @Override
     public void update(AnActionEvent event) {
-        event.getPresentation().setEnabled(event.hasData(Project.KEY));
+        Project project = event.getData(Project.KEY);
+        if (project != null && project.getType() == ProjectType.WELCOME) {
+            event.getPresentation().setEnabledAndVisible(false);
+            return;
+        }
+
+        event.getPresentation().setEnabled(project != null);
     }
 }

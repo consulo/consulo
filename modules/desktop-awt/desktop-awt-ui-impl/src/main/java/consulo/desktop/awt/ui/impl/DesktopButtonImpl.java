@@ -24,6 +24,7 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.Button;
 import consulo.ui.ButtonStyle;
 import consulo.ui.Component;
+import consulo.ui.HorizontalAlignment;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ClickEvent;
 import consulo.ui.event.ComponentEventListener;
@@ -269,6 +270,10 @@ class DesktopButtonImpl extends SwingComponentDelegate<DesktopButtonImpl.MyButto
             case PILL:
                 toAWTComponent().setPill();
                 break;
+            case LARGE:
+                toAWTComponent().setMargin(JBUI.insets(8, 20));
+                toAWTComponent().setIconTextGap(JBUI.scale(8));
+                break;
         }
     }
 
@@ -298,6 +303,16 @@ class DesktopButtonImpl extends SwingComponentDelegate<DesktopButtonImpl.MyButto
     @Override
     public @Nullable Image getIcon() {
         return TargetAWT.from(toAWTComponent().getIcon());
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setHorizontalAlignment(HorizontalAlignment alignment) {
+        toAWTComponent().setHorizontalAlignment(switch (alignment) {
+            case LEFT -> SwingConstants.LEADING;
+            case CENTER -> SwingConstants.CENTER;
+            case RIGHT -> SwingConstants.TRAILING;
+        });
     }
 
     @RequiredUIAccess

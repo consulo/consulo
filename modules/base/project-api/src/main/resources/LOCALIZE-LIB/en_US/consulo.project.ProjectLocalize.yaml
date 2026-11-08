@@ -846,6 +846,10 @@ recent.project.remove.from.list.tooltip:
     text: Remove from Recent Projects
 recent.projects.no.project.open.yet:
     text: No Project Open Yet
+recent.projects.nothing.found:
+    text: No projects found
+recent.projects.search.placeholder:
+    text: Search projects
 rename.message.prefix.module:
     text: Module
 rename.message.prefix.scope:

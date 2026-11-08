@@ -19,6 +19,7 @@ import consulo.desktop.awt.ui.impl.facade.FromSwingComponentWrapper;
 import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.internal.GradientColor;
 import consulo.ui.layout.Layout;
 import consulo.ui.layout.LayoutConstraint;
 import consulo.ui.layout.LayoutStyle;
@@ -41,6 +42,15 @@ abstract class DesktopLayoutBase<T extends JPanel, C extends LayoutConstraint> e
         @Override
         public void updateUI() {
             super.updateUI();
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+
+            if (DesktopLayoutBase.this.getBackgroundColor() instanceof GradientColor gradient) {
+                DesktopAWTGradientPainter.paint((Graphics2D) g, gradient, getWidth(), getHeight());
+            }
         }
 
         @Override

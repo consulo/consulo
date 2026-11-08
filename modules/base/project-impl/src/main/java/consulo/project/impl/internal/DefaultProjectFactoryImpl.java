@@ -55,7 +55,7 @@ public class DefaultProjectFactoryImpl extends DefaultProjectFactory implements 
   public DefaultProjectFactoryImpl(Application application,
                                    ProjectManager projectManager,
                                    ComponentBinding binding) {
-    myDefaultProject = new DefaultProjectImpl(application, projectManager, "", binding);
+    myDefaultProject = new DefaultProjectImpl(application, projectManager, binding);
     myDefaultProject.initNotLazyServices();
     myDefaultProject.setInitialized();
   }

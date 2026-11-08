@@ -16,6 +16,7 @@
 package consulo.desktop.awt.ui.impl;
 
 import consulo.ui.ListBox;
+import consulo.ui.ListBoxStyle;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.JBList;
 import consulo.ui.model.FlatDataModel;
@@ -32,6 +33,13 @@ class DesktopListBoxImpl<E> extends DesktopListBoxBaseImpl<E, E> implements List
 
     public DesktopListBoxImpl(FlatDataModel<E> model) {
         super(model);
+    }
+
+    @Override
+    public void addStyle(ListBoxStyle style) {
+        if (style == ListBoxStyle.TRANSPARENT_BACKGROUND) {
+            toAWTComponent().setOpaque(false);
+        }
     }
 
     @Override

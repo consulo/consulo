@@ -22,6 +22,7 @@ import consulo.language.editor.localize.LanguageEditorLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
+import consulo.project.ProjectType;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.project.ui.wm.ToolWindowFactory;
@@ -35,6 +36,11 @@ import consulo.ui.image.Image;
  */
 @ExtensionImpl
 public class StructureViewToolWindowFactory implements ToolWindowFactory, DumbAware {
+    @Override
+    public boolean shouldBeAvailable(Project project) {
+        return project.getType() != ProjectType.WELCOME;
+    }
+
     
     @Override
     public String getId() {

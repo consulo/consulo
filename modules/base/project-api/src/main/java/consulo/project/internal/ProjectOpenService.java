@@ -31,4 +31,6 @@ public interface ProjectOpenService {
         UIAccess uiAccess,
         ProjectOpenContext context
     );
+
+    CompletableFuture<Project> openWelcomeProjectAsync(UIAccess uiAccess);
 }

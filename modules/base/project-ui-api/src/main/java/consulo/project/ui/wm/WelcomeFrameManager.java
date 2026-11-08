@@ -21,42 +21,29 @@ import consulo.application.Application;
 import consulo.application.dumb.DumbAwareRunnable;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
+import consulo.project.ProjectType;
 import consulo.project.event.ProjectManagerListener;
-import consulo.project.ui.internal.IdeFrameEx;
-import consulo.project.ui.internal.NotificationToastService;
+import consulo.project.internal.ProjectOpenService;
 import consulo.project.ui.internal.WindowManagerEx;
-import consulo.ui.Size2D;
 import consulo.ui.UIAccess;
-import consulo.ui.internal.UIAccessInternal;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.internal.UIAccessInternal;
+import consulo.util.dataholder.Key;
 
-import org.jspecify.annotations.Nullable;
+import java.util.concurrent.CompletableFuture;
 
 /**
- * @author VISTALL
- * @since 23-Sep-17
+ * Shows the welcome project - a temporary project in a regular frame - whenever a ui has no project open.
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class WelcomeFrameManager {
-  
   public static WelcomeFrameManager getInstance() {
     return Application.get().getInstance(WelcomeFrameManager.class);
   }
 
-  public static final String DIMENSION_KEY = "WELCOME_SCREEN";
+  private static final Key<CompletableFuture<Project>> WELCOME_PROJECT_OPENING = Key.create("WelcomeFrameManager.welcomeProjectOpening");
 
-  public static final String APPLICATION_ID_SUFFIX = "welcome";
-
-  
-  public static Size2D getDefaultWindowSize() {
-    return new Size2D(800, 460);
-  }
-
-  public static boolean isFromWelcomeFrame(AnActionEvent e) {
-    return e.getPlace().equals(ActionPlaces.WELCOME_SCREEN);
-  }
+  private static final Key<Boolean> WELCOME_PROJECT_CLOSING = Key.create("WelcomeFrameManager.welcomeProjectClosing");
 
   protected final Application myApplication;
 
@@ -66,37 +53,24 @@ public abstract class WelcomeFrameManager {
     application.getMessageBus().connect().subscribe(ProjectManagerListener.class, new ProjectManagerListener() {
       @Override
       public void projectOpened(Project project, UIAccess uiAccess) {
+        if (project.getType() == ProjectType.WELCOME) {
+          return;
+        }
+
         closeFrame(uiAccess);
-
-        refreshFrames();
-      }
-
-      @Override
-      public void projectClosed(Project project, UIAccess uiAccess) {
-        refreshFrames();
       }
     });
-  }
-
-  @RequiredUIAccess
-  public @Nullable IdeFrame getCurrentFrame() {
-    UIAccess.assertIsUIThread();
-    return UIAccess.current().getUserData(IdeFrame.KEY);
-  }
-
-  @RequiredUIAccess
-  protected void frameClosed() {
-    UIAccess.current().putUserData(IdeFrame.KEY, null);
   }
 
   @RequiredUIAccess
   public void showFrame() {
     UIAccess.assertIsUIThread();
 
-    UIAccess uiAccess = UIAccess.current();
-    if (uiAccess.getUserData(IdeFrame.KEY) != null) {
+    if (!isWelcomeProjectEnabled()) {
       return;
     }
+
+    UIAccess uiAccess = UIAccess.current();
 
     // a refresh can ask while the close of this ui's frame is still on its way - what is on screen here is the
     // project, and a welcome must not be drawn over it
@@ -107,13 +81,7 @@ public abstract class WelcomeFrameManager {
       }
     }
 
-    IdeFrame frame = createFrame();
-    uiAccess.putUserData(IdeFrame.KEY, frame);
-    frame.getWindow().show();
-
-    if (frame instanceof IdeFrameEx frameEx) {
-      myApplication.getInstance(NotificationToastService.class).showLaterOver(frameEx);
-    }
+    openWelcomeProject(uiAccess);
   }
 
   @RequiredUIAccess
@@ -127,31 +95,9 @@ public abstract class WelcomeFrameManager {
    * The ui is named rather than taken from the caller, since a project is opened through steps which do not all
    * run with the ui of that project as the current one.
    */
-  public void closeFrame(@Nullable UIAccess uiAccess) {
-    IdeFrame frame = uiAccess == null ? null : uiAccess.getUserData(IdeFrame.KEY);
-    if (frame == null) {
-      return;
-    }
-
-    uiAccess.giveIfNeed(() -> frame.getWindow().close());
-  }
-
-  /**
-   * A welcome screen lists which projects are open, and that answer changed for every ui but the one which caused
-   * it. Rebuilt rather than repainted - the list is made of actions which read the state when they are created.
-   */
-  public void refreshFrames() {
-    for (UIAccess uiAccess : UIAccess.listAll()) {
-      if (uiAccess.getUserData(IdeFrame.KEY) == null) {
-        continue;
-      }
-
-      // give, not giveIfNeed - that one asks whether the caller is a ui thread, not whether it is this ui, and
-      // showFrame builds the frame for whichever ui it runs on
-      uiAccess.give(() -> {
-        closeFrame(uiAccess);
-        showFrame();
-      });
+  public void closeFrame(UIAccess uiAccess) {
+    if (isWelcomeProjectEnabled()) {
+      closeWelcomeProject(uiAccess);
     }
   }
 
@@ -172,7 +118,42 @@ public abstract class WelcomeFrameManager {
     }, myApplication.getNoneModalityState());
   }
 
-  
+  protected boolean isWelcomeProjectEnabled() {
+    return true;
+  }
+
   @RequiredUIAccess
-  protected abstract IdeFrame createFrame();
+  private void openWelcomeProject(UIAccess uiAccess) {
+    if (uiAccess.getUserData(WELCOME_PROJECT_OPENING) != null) {
+      return;
+    }
+
+    CompletableFuture<Project> opening = myApplication.getInstance(ProjectOpenService.class).openWelcomeProjectAsync(uiAccess);
+    uiAccess.putUserData(WELCOME_PROJECT_OPENING, opening);
+    opening.whenComplete((project, throwable) -> uiAccess.putUserData(WELCOME_PROJECT_OPENING, null));
+  }
+
+  private void closeWelcomeProject(UIAccess uiAccess) {
+    // a welcome project still being set up is closed once it is, not from under its own initialization
+    CompletableFuture<Project> opening = uiAccess.getUserData(WELCOME_PROJECT_OPENING);
+    if (opening != null && !opening.isDone()) {
+      opening.whenComplete((project, throwable) -> uiAccess.give(() -> closeWelcomeProject(uiAccess)));
+      return;
+    }
+
+    ProjectManager projectManager = ProjectManager.getInstance();
+    for (Project project : projectManager.getOpenProjects()) {
+      if (project.getType() != ProjectType.WELCOME || project.getUserData(WELCOME_PROJECT_CLOSING) != null) {
+        continue;
+      }
+
+      UIAccess shownIn = project.getUserData(UIAccess.KEY);
+      if (shownIn == null || UIAccessInternal.original(shownIn) != UIAccessInternal.original(uiAccess)) {
+        continue;
+      }
+
+      project.putUserData(WELCOME_PROJECT_CLOSING, Boolean.TRUE);
+      uiAccess.giveIfNeed(() -> projectManager.closeAndDisposeAsync(project, uiAccess, false, false, true));
+    }
+  }
 }

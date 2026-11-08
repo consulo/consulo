@@ -168,6 +168,7 @@ public class DesktopQtScrollableLayoutImpl extends DesktopQtLayoutComponent<Layo
         scrollArea.setVisibleRowCount(myVisibleRowCount);
         scrollArea.setWidgetResizable(true);
         scrollArea.setFrameShape(QFrame.Shape.NoFrame);
+
         scrollArea.setHorizontalScrollBarPolicy(toQt(myOptions.getHorizontalScrollPolicy()));
         scrollArea.setVerticalScrollBarPolicy(toQt(myOptions.getVerticalScrollPolicy()));
         if (myOptions.getVerticalScrollBarPosition() == VerticalScrollBarPosition.LEFT) {

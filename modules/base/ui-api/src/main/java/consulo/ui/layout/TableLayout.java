@@ -16,6 +16,7 @@
 package consulo.ui.layout;
 
 import consulo.ui.Component;
+import consulo.ui.HasComponentStyle;
 import consulo.ui.PseudoComponent;
 import consulo.ui.StaticPosition;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -25,7 +26,7 @@ import consulo.ui.internal.UIInternal;
  * @author VISTALL
  * @since 2016-06-14
  */
-public interface TableLayout extends Layout<TableLayout.TableCell> {
+public interface TableLayout extends Layout<TableLayout.TableCell>, HasComponentStyle<LayoutStyle> {
     static class TableCell implements LayoutConstraint {
         private int myRow;
         private int myColumn;
@@ -53,6 +54,10 @@ public interface TableLayout extends Layout<TableLayout.TableCell> {
             myFill = true;
             return this;
         }
+    }
+
+    @Override
+    default void addStyle(LayoutStyle style) {
     }
 
     static TableLayout create(StaticPosition fillOption) {

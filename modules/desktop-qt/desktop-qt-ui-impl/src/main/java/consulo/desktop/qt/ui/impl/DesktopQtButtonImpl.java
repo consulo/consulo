@@ -23,6 +23,7 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.Button;
 import consulo.ui.ButtonStyle;
 import consulo.ui.Component;
+import consulo.ui.HorizontalAlignment;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ClickEvent;
 import consulo.ui.event.ComponentEvent;
@@ -42,6 +43,7 @@ import io.qt.gui.QIcon;
 import io.qt.gui.QPaintEvent;
 import io.qt.gui.QPainter;
 import io.qt.gui.QPalette;
+import io.qt.gui.QPixmap;
 import io.qt.gui.QResizeEvent;
 import io.qt.widgets.QLineEdit;
 import io.qt.widgets.QPushButton;
@@ -220,6 +222,10 @@ public class DesktopQtButtonImpl extends QtComponentDelegate<QPushButton> implem
      */
     private static final String TEXT_PADDING = "2px 14px";
 
+    private static final String LARGE_TEXT_PADDING = "8px 20px";
+
+    private static final int LARGE_ICON_TEXT_GAP = 8;
+
     /**
      * A push button is measured by whatever desktop style qt picked up - breeze answers 84x34 for a one word
      * label, where the awt frontend draws the same button 72x23 - so the box it is drawn in is spelled out here,
@@ -264,6 +270,8 @@ public class DesktopQtButtonImpl extends QtComponentDelegate<QPushButton> implem
     private @Nullable Image myIcon;
 
     private boolean myFlat;
+
+    private HorizontalAlignment myAlignment = HorizontalAlignment.CENTER;
 
     private @Nullable Component mySuffixComponent;
 
@@ -321,7 +329,8 @@ public class DesktopQtButtonImpl extends QtComponentDelegate<QPushButton> implem
         if (myComponent != null) {
             myComponent.setText(QtMnemonic.withMnemonic(myText));
 
-            // whether the button carries text is what decides how it is padded
+            // whether the button carries text is what decides how it is padded, and how far its icon stands off
+            updateIcon();
             updateStyleSheet();
         }
     }
@@ -350,12 +359,40 @@ public class DesktopQtButtonImpl extends QtComponentDelegate<QPushButton> implem
 
         Image icon = myIcon;
         if (icon instanceof DesktopQtImage) {
-            myComponent.setIcon(toHostQIcon(icon));
-            myComponent.setIconSize(new QSize(icon.getWidth(), icon.getHeight()));
+            QIcon qIcon = toHostQIcon(icon);
+            int gap = myStyles.contains(ButtonStyle.LARGE) && !myText.isEmpty() ? LARGE_ICON_TEXT_GAP : 0;
+            if (gap > 0) {
+                qIcon = withRightGap(qIcon, icon.getWidth(), icon.getHeight(), gap);
+            }
+
+            myComponent.setIcon(qIcon);
+            myComponent.setIconSize(new QSize(icon.getWidth() + gap, icon.getHeight()));
         }
         else {
             myComponent.setIcon(new QIcon());
         }
+    }
+
+    /**
+     * A push button keeps a fixed few pixels between its icon and its text - a wider gap is a transparent strip drawn
+     * as part of the icon.
+     */
+    private static QIcon withRightGap(QIcon icon, int width, int height, int gap) {
+        QPixmap source = icon.pixmap(width, height);
+        double ratio = source.devicePixelRatio();
+
+        QPixmap padded = new QPixmap((int) Math.round((width + gap) * ratio), (int) Math.round(height * ratio));
+        padded.setDevicePixelRatio(ratio);
+        padded.fill(new QColor(0, 0, 0, 0));
+
+        QPainter painter = new QPainter(padded);
+        try {
+            painter.drawPixmap(0, 0, source);
+        }
+        finally {
+            painter.end();
+        }
+        return new QIcon(padded);
     }
 
     @Override
@@ -423,6 +460,10 @@ public class DesktopQtButtonImpl extends QtComponentDelegate<QPushButton> implem
 
                 updateStyleSheet();
                 myComponent.updateGeometry();
+            }
+            case LARGE -> {
+                updateIcon();
+                updateStyleSheet();
             }
         }
     }
@@ -537,7 +578,24 @@ public class DesktopQtButtonImpl extends QtComponentDelegate<QPushButton> implem
     }
 
     protected String textPadding() {
-        return TEXT_PADDING;
+        return myStyles.contains(ButtonStyle.LARGE) ? LARGE_TEXT_PADDING : TEXT_PADDING;
+    }
+
+    private void setButtonStyleSheet(String styleSheet) {
+        String align = switch (myAlignment) {
+            case LEFT -> "left";
+            case CENTER -> null;
+            case RIGHT -> "right";
+        };
+        setOwnStyleSheet(align == null ? styleSheet : styleSheet + " QPushButton { text-align: " + align + "; }");
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setHorizontalAlignment(HorizontalAlignment alignment) {
+        myAlignment = alignment;
+
+        updateStyleSheet();
     }
 
     protected void updateStyleSheet() {
@@ -545,10 +603,10 @@ public class DesktopQtButtonImpl extends QtComponentDelegate<QPushButton> implem
         boolean fieldHeight = false;
 
         if (isVertical()) {
-            setOwnStyleSheet(VERTICAL_STYLE_SHEET);
+            setButtonStyleSheet(VERTICAL_STYLE_SHEET);
         }
         else if (myStyles.contains(ButtonStyle.PILL)) {
-            setOwnStyleSheet(PILL_STYLE_SHEET.formatted(
+            setButtonStyleSheet(PILL_STYLE_SHEET.formatted(
                 rgba(ComponentColors.REACTION_BACKGROUND),
                 rgba(ComponentColors.REACTION_HOVERED_BACKGROUND),
                 rgba(ComponentColors.REACTION_PRESSED_BACKGROUND),
@@ -556,18 +614,19 @@ public class DesktopQtButtonImpl extends QtComponentDelegate<QPushButton> implem
             ));
         }
         else if (myStyles.contains(ButtonStyle.HELP) && iconOnly) {
-            setOwnStyleSheet(HELP_STYLE_SHEET.formatted(helpBorderColor()));
+            setButtonStyleSheet(HELP_STYLE_SHEET.formatted(helpBorderColor()));
         }
         else if (myFlat) {
-            setOwnStyleSheet(withSuffixPadding(FLAT_STYLE_SHEET.formatted(iconOnly ? ICON_PADDING : textPadding())));
+            setButtonStyleSheet(withSuffixPadding(FLAT_STYLE_SHEET.formatted(iconOnly ? ICON_PADDING : textPadding())));
         }
         else if (iconOnly) {
-            setOwnStyleSheet(withSuffixPadding(DEFAULT_ICON_STYLE_SHEET));
+            setButtonStyleSheet(withSuffixPadding(DEFAULT_ICON_STYLE_SHEET));
         }
         else {
-            setOwnStyleSheet(withSuffixPadding(DEFAULT_STYLE_SHEET.formatted(textPadding())));
+            setButtonStyleSheet(withSuffixPadding(DEFAULT_STYLE_SHEET.formatted(textPadding())));
 
-            fieldHeight = true;
+            // a large button is as tall as its padding makes it, not as a text field
+            fieldHeight = !myStyles.contains(ButtonStyle.LARGE);
         }
 
         if (myComponent instanceof HighlightPushButton button) {

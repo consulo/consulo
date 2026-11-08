@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen;
 import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionRef;
 import consulo.application.dumb.DumbAware;
-import consulo.ide.impl.newProject.actions.WelcomeNewProjectAction;
 import consulo.ide.impl.newProject.actions.WelcomeOpenFileAction;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.DefaultActionGroup;
@@ -30,9 +29,7 @@ import consulo.ui.ex.action.DefaultActionGroup;
 @ActionImpl(
     id = "WelcomeScreen.QuickStart",
     children = {
-        @ActionRef(type = WelcomeNewProjectAction.class),
-        @ActionRef(type = WelcomeOpenFileAction.class),
-        @ActionRef(type = WelcomeGetFromVcsAction.class)
+        @ActionRef(type = WelcomeOpenFileAction.class)
     }
 )
 public class WelcomeQuickStartGroup extends DefaultActionGroup implements DumbAware {

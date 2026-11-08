@@ -40,11 +40,18 @@ public class DesktopComponentItemRenderingAdapter<E> extends DesktopComponentIte
 
     @Override
     public Component getListCellRendererComponent(JList<? extends E> list, E value, int index, boolean isSelected, boolean cellHasFocus) {
-        return render(
-            RenderItem.of(value, isSelected, index == myHoveredIndex.getAsInt(), index),
+        boolean hovered = index >= 0 && index == myHoveredIndex.getAsInt();
+        Component component = render(
+            RenderItem.of(value, isSelected, hovered, index),
             background(list, index, isSelected),
             foreground(list, isSelected)
         );
+
+        // a transparent list shows what is behind it through every row it does not highlight
+        if (!list.isOpaque() && !isSelected && !hovered && component instanceof JComponent jComponent) {
+            jComponent.setOpaque(false);
+        }
+        return component;
     }
 
     /**

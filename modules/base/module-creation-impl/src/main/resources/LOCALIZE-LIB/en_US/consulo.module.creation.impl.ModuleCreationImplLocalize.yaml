@@ -1,0 +1,6 @@
+button.create:
+    text: '&Create'
+title.add.module:
+    text: New Module
+title.new.project:
+    text: New Project

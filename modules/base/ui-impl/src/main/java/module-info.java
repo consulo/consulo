@@ -185,5 +185,6 @@ module consulo.ui.impl {
         consulo.project.ui.impl,
         consulo.web.editor.impl,
         consulo.web.ide,
-        consulo.web.ui.impl;
+        consulo.web.ui.impl,
+        consulo.welcome.screen.impl;
 }

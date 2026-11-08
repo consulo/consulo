@@ -48,7 +48,8 @@ module consulo.file.editor.api {
         consulo.version.control.system.impl,
         consulo.web.editor.impl,
         consulo.web.ide,
-        consulo.web.ui.impl;
+        consulo.web.ui.impl,
+        consulo.welcome.screen.impl;
 
     exports consulo.fileEditor.internal.largeFileEditor to
         consulo.file.editor.impl,

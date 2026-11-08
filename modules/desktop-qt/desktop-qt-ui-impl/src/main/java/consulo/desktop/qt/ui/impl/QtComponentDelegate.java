@@ -44,6 +44,7 @@ import consulo.ui.impl.PaddingBuilderImpl;
 import consulo.ui.impl.UIDataObject;
 import consulo.ui.image.Image;
 import consulo.ui.internal.BorderPosition;
+import consulo.ui.internal.GradientColor;
 import consulo.ui.internal.ToolTipImpl;
 import consulo.util.dataholder.Key;
 import io.qt.core.QEvent;
@@ -128,6 +129,7 @@ public abstract class QtComponentDelegate<T extends QWidget> implements Componen
     private boolean myToolTipRefreshInstalled;
     private @Nullable ColorValue myForegroundColor;
     private @Nullable ColorValue myBackgroundColor;
+    private boolean myGradientPaintInstalled;
     private @Nullable QPalette myNaturalPalette;
     private boolean myNaturalAutoFillBackground;
     private @Nullable Cursor myCursor;
@@ -911,6 +913,19 @@ public abstract class QtComponentDelegate<T extends QWidget> implements Componen
 
         applyColors();
 
+        if (background instanceof GradientColor && !myGradientPaintInstalled) {
+            myGradientPaintInstalled = true;
+            whenBound(widget -> widget.installEventFilter(new QObject(widget) {
+                @Override
+                public boolean eventFilter(QObject watched, QEvent event) {
+                    if (event.type() == QEvent.Type.Resize && myBackgroundColor instanceof GradientColor gradient) {
+                        DesktopQtGradientPainter.apply(widget, gradient);
+                    }
+                    return false;
+                }
+            }));
+        }
+
         // an island and a bordered component draw their background from the style sheet, not from the palette
         if (myIsland || !myDataObject.getBorders().isEmpty()) {
             applyBorders();
@@ -982,6 +997,10 @@ public abstract class QtComponentDelegate<T extends QWidget> implements Componen
         }
 
         myComponent.setPalette(palette);
+
+        if (myBackgroundColor instanceof GradientColor gradient) {
+            DesktopQtGradientPainter.apply(myComponent, gradient);
+        }
 
         if (!myDataObject.getBorders().isEmpty()) {
             applyBorders();

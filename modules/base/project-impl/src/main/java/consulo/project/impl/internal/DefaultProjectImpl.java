@@ -18,32 +18,20 @@ package consulo.project.impl.internal;
 import consulo.application.Application;
 import consulo.component.internal.ComponentBinding;
 import consulo.project.ProjectManager;
-import org.jdom.Element;
-
-import org.jspecify.annotations.Nullable;
+import consulo.project.ProjectType;
 
 /**
  * @author peter
  */
-public class DefaultProjectImpl extends ProjectImpl {
+public class DefaultProjectImpl extends SingleFileProjectImpl {
   private static final String TEMPLATE_PROJECT_NAME = "Default (Template) Project";
 
-  private Element myStateElement;
   private boolean myInitialized;
 
   DefaultProjectImpl(Application application,
                      ProjectManager manager,
-                     String filePath,
                      ComponentBinding componentBinding) {
-    super(application, manager, filePath, TEMPLATE_PROJECT_NAME, true, componentBinding);
-  }
-
-  public @Nullable Element getStateElement() {
-    return myStateElement;
-  }
-
-  public void setStateElement(@Nullable Element stateElement) {
-    myStateElement = stateElement;
+    super(application, manager, TEMPLATE_PROJECT_NAME, componentBinding);
   }
 
   public void setInitialized() {
@@ -56,7 +44,7 @@ public class DefaultProjectImpl extends ProjectImpl {
   }
 
   @Override
-  public boolean isDefault() {
-    return true;
+  public ProjectType getType() {
+    return ProjectType.TEMPLATE;
   }
 }

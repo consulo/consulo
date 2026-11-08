@@ -110,11 +110,16 @@ public class CompilerConfigurationImpl extends CompilerConfiguration implements 
     }
 
     @Override
-    public String getCompilerOutputUrl() {
+    public @Nullable String getCompilerOutputUrl() {
         if (myOutputDirUrl == null) {
+            String basePath = myProject.getBasePath();
+            if (basePath == null) {
+                return null;
+            }
+
             return VirtualFileManager.constructUrl(
                 URLUtil.FILE_PROTOCOL,
-                FileUtil.toSystemIndependentName(myProject.getBasePath()) + "/" + DEFAULT_OUTPUT_URL
+                FileUtil.toSystemIndependentName(basePath) + "/" + DEFAULT_OUTPUT_URL
             );
         }
         return myOutputDirUrl;

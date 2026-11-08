@@ -50,7 +50,12 @@ public class ReadMeOpenActivity implements PostStartupActivity, DumbAware {
             return;
         }
 
-        Path projectPath = Path.of(project.getBasePath());
+        String basePath = project.getBasePath();
+        if (basePath == null) {
+            return;
+        }
+
+        Path projectPath = Path.of(basePath);
 
         VirtualFile targetFile = project.getExtensionPoint(ReadMeFileProvider.class).computeSafeIfAny(readMeFileProvider -> {
             Path readmePath = readMeFileProvider.resolveFile(projectPath);

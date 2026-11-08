@@ -123,8 +123,12 @@ public interface Project extends ComponentManager, WindowOwner, CoroutineContext
         return true;
     }
 
+    default ProjectType getType() {
+        return ProjectType.REGULAR;
+    }
+
     default boolean isDefault() {
-        return false;
+        return getType() == ProjectType.TEMPLATE;
     }
 
     /**

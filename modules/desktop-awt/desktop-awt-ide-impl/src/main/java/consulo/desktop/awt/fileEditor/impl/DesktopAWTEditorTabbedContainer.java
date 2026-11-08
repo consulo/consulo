@@ -37,6 +37,7 @@ import consulo.fileEditor.impl.internal.FileEditorWindowBase;
 import consulo.fileEditor.impl.internal.IdeDocumentHistoryImpl;
 import consulo.fileEditor.impl.internal.text.FileEditorDropHandler;
 import consulo.fileEditor.internal.FileEditorManagerEx;
+import consulo.fileEditor.internal.VetoActionCloseHandler;
 import consulo.ide.impl.idea.ide.GeneralSettings;
 import consulo.ide.impl.idea.ide.actions.ShowFilePathAction;
 import consulo.localize.LocalizeValue;
@@ -498,7 +499,8 @@ public final class DesktopAWTEditorTabbedContainer implements FileEditorTabbedCo
             sink.set(DesktopFileEditorWindow.DATA_KEY, myWindow);
             sink.set(HelpManager.HELP_ID, HELP_ID);
             TabInfo selected = myTabs.getSelectedInfo();
-            if (selected != null) {
+            if (selected != null
+                && VetoActionCloseHandler.isClosable(myWindow, (VirtualFile) selected.getObject(), myProject)) {
                 sink.set(CloseAction.CloseTarget.KEY, DesktopAWTEditorTabbedContainer.this);
             }
         }
@@ -512,6 +514,10 @@ public final class DesktopAWTEditorTabbedContainer implements FileEditorTabbedCo
         }
 
         VirtualFile file = (VirtualFile)selected.getObject();
+        if (!VetoActionCloseHandler.isClosable(myWindow, file, myProject)) {
+            return;
+        }
+
         FileEditorManagerEx mgr = FileEditorManagerEx.getInstanceEx(myProject);
 
         AsyncResult<FileEditorWindow> window = mgr.getActiveWindow();

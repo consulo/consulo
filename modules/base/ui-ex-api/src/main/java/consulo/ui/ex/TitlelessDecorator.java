@@ -23,7 +23,6 @@ import consulo.ui.Component;
  */
 public interface TitlelessDecorator {
     String MAIN_WINDOW = "MainWindow";
-    String WELCOME_WINDOW = "WelcomeWindow";
 
     TitlelessDecorator NOTHING = new TitlelessDecorator() {
         @Override

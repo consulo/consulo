@@ -19,8 +19,11 @@ import consulo.language.psi.*;
 import consulo.language.psi.resolve.PsiElementProcessor;
 import consulo.language.scratch.RootType;
 import consulo.language.scratch.ScratchFileService;
+import consulo.localize.LocalizeValue;
+import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
+import consulo.project.ProjectType;
 import consulo.project.ui.view.ProjectView;
 import consulo.project.ui.view.ProjectViewPane;
 import consulo.project.ui.view.tree.*;
@@ -37,6 +40,9 @@ import consulo.virtualFileSystem.event.*;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;
 
@@ -45,8 +51,14 @@ import java.util.concurrent.ConcurrentMap;
  */
 @ExtensionImpl(id = "scratch", order = "last")
 public class ScratchTreeStructureProvider implements TreeStructureProvider, DumbAware {
+  private static final Logger LOG = Logger.getInstance(ScratchTreeStructureProvider.class);
+
   @Inject
   public ScratchTreeStructureProvider(Project project) {
+    if (project.getType() == ProjectType.WELCOME) {
+      project.getApplication().executeOnPooledThread(() -> createScratchRoot(ScratchRootType.getInstance()));
+    }
+
     registerUpdaters(project, project, new Runnable() {
       ProjectViewPane updateTarget;
 
@@ -151,6 +163,9 @@ public class ScratchTreeStructureProvider implements TreeStructureProvider, Dumb
     Project project = parent instanceof ProjectViewProjectNode ? parent.getProject() : null;
     if (project == null) return children;
     if (project.getApplication().isUnitTestMode()) return children;
+    if (project.getType() == ProjectType.WELCOME) {
+      return createWelcomeChildren(project, settings);
+    }
     if (children.isEmpty()
         && JBIterable.from(RootType.getAllRootTypes()).filterMap(o -> createRootTypeNode(project, o, settings)).isEmpty()) {
       return children;
@@ -159,6 +174,42 @@ public class ScratchTreeStructureProvider implements TreeStructureProvider, Dumb
     list.addAll(children);
     list.add(new MyProjectNode(project, settings));
     return list;
+  }
+
+  private static void createScratchRoot(RootType rootType) {
+    Path path = Path.of(ScratchFileService.getInstance().getRootPath(rootType));
+    try {
+      Files.createDirectories(path);
+    }
+    catch (IOException e) {
+      LOG.error(e);
+      return;
+    }
+    LocalFileSystem.getInstance().refreshAndFindFileByNioFile(path);
+  }
+
+  @RequiredReadAction
+  private static Collection<AbstractTreeNode> createWelcomeChildren(Project project, ViewSettings settings) {
+    RootType rootType = ScratchRootType.getInstance();
+    PsiDirectory directory = getDirectory(project, rootType);
+    if (directory == null) {
+      return List.of();
+    }
+
+    PsiFileSystemItemFilter filter = item -> !rootType.isIgnored(project, item.getVirtualFile());
+    return List.of(new PsiDirectoryNode(project, directory, settings, filter) {
+      @Override
+      public Collection<AbstractTreeNode> getChildrenImpl() {
+        return MyRootNode.getDirectoryChildrenImpl(getProject(), getValue(), getSettings(), getFilter());
+      }
+
+      @Override
+      protected void updateImpl(PresentationData data) {
+        super.updateImpl(data);
+        data.setPresentableText(rootType.getDisplayName());
+        data.setLocationString(LocalizeValue.empty());
+      }
+    });
   }
 
   private static final class MyProjectNode extends ProjectViewNode<String> {

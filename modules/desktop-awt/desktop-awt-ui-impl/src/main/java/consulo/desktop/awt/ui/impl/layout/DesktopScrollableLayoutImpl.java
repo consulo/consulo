@@ -155,6 +155,10 @@ public class DesktopScrollableLayoutImpl extends SwingComponentDelegate<JScrollP
 
         pane.setBorder(IdeBorderFactory.createEmptyBorder());
         pane.setViewportBorder(IdeBorderFactory.createEmptyBorder());
+        if (!myOptions.isBackgroundPaint()) {
+            pane.setOpaque(false);
+            pane.getViewport().setOpaque(false);
+        }
 
         if (myOptions.getVerticalScrollBarPosition() == VerticalScrollBarPosition.LEFT) {
             pane.setLayout(new LeftHandScrollbarLayout());

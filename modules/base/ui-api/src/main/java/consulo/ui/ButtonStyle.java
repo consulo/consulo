@@ -33,5 +33,10 @@ public enum ButtonStyle implements ComponentStyle {
      * A compact button with fully rounded ends and a filled background, as used for reactions. A selected
      * {@link ToggleButton} with this style draws {@link consulo.ui.style.ComponentColors#REACTION_SELECTED_BORDER}.
      */
-    PILL
+    PILL,
+    /**
+     * A taller button with more room around its content, for a few prominent entries such as the actions of the
+     * welcome screen.
+     */
+    LARGE
 }

@@ -29,7 +29,6 @@ import consulo.project.ui.notification.NotificationDisplayType;
 import consulo.project.ui.notification.event.NotificationServiceListener;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.ToolWindowManager;
-import consulo.project.ui.wm.WelcomeFrameManager;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -143,11 +142,6 @@ public class NotificationToastPresenter implements NotificationServiceListener {
 
     @RequiredUIAccess
     private static @Nullable IdeFrame frameOf(UIAccess uiAccess) {
-        IdeFrame welcomeFrame = WelcomeFrameManager.getInstance().getCurrentFrame();
-        if (welcomeFrame != null) {
-            return welcomeFrame;
-        }
-
         WindowManager windowManager = WindowManager.getInstance();
         IdeFrame visibleFrame = windowManager.findVisibleIdeFrame();
         if (visibleFrame != null && belongsTo(visibleFrame, uiAccess)) {

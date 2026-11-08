@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.fileEditor.internal.VetoActionCloseHandler;
 import consulo.annotation.component.ActionImpl;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.FileEditorWindow;
@@ -48,7 +49,7 @@ public class CloseEditorAction extends LegacyDumbAwareAction {
         else {
             file = e.getData(VirtualFile.KEY);
         }
-        if (file != null) {
+        if (file != null && (window == null || VetoActionCloseHandler.isClosable(window, file, project))) {
             editorManager.closeFile(file, window);
         }
     }
@@ -72,6 +73,9 @@ public class CloseEditorAction extends LegacyDumbAwareAction {
         if (window == null) {
             window = getEditorManager(project).getActiveWindow().getResult();
         }
-        presentation.setEnabled(window != null && window.getTabCount() > 0);
+        VirtualFile file = window == null ? null : window.getSelectedFile();
+        presentation.setEnabled(window != null
+            && window.getTabCount() > 0
+            && (file == null || VetoActionCloseHandler.isClosable(window, file, project)));
     }
 }

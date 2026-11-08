@@ -447,6 +447,11 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-module-creation-impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>consulo-path-macro-impl</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -593,6 +598,11 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>consulo-welcome-screen-impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-welcome-screen-api</artifactId>
             <version>${project.version}</version>
         </dependency>
 

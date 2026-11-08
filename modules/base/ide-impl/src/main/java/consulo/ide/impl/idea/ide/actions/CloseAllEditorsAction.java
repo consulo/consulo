@@ -16,9 +16,9 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.FileEditorWindow;
 import consulo.fileEditor.internal.FileEditorManagerEx;
+import consulo.fileEditor.internal.VetoActionCloseHandler;
 import consulo.ide.localize.IdeLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.ActionLocalize;
@@ -49,7 +49,9 @@ public class CloseAllEditorsAction extends LegacyDumbAwareAction {
                 if (window != null) {
                     VirtualFile[] files = window.getFiles();
                     for (VirtualFile file : files) {
-                        window.closeFile(file);
+                        if (VetoActionCloseHandler.isClosable(window, file, project)) {
+                            window.closeFile(file);
+                        }
                     }
                     return;
                 }
@@ -57,7 +59,9 @@ public class CloseAllEditorsAction extends LegacyDumbAwareAction {
                 VirtualFile selectedFile = fileEditorManager.getSelectedFiles()[0];
                 VirtualFile[] openFiles = fileEditorManager.getSiblings(selectedFile);
                 for (VirtualFile openFile : openFiles) {
-                    fileEditorManager.closeFile(openFile);
+                    if (isClosable(fileEditorManager, openFile, project)) {
+                        fileEditorManager.closeFile(openFile);
+                    }
                 }
             });
     }
@@ -75,6 +79,31 @@ public class CloseAllEditorsAction extends LegacyDumbAwareAction {
             presentation.setEnabled(false);
             return;
         }
-        presentation.setEnabled(FileEditorManager.getInstance(project).getSelectedFiles().length > 0);
+        FileEditorManagerEx fileEditorManager = FileEditorManagerEx.getInstanceEx(project);
+        VirtualFile[] selectedFiles = fileEditorManager.getSelectedFiles();
+        if (selectedFiles.length == 0) {
+            presentation.setEnabled(false);
+            return;
+        }
+
+        boolean hasClosable = false;
+        for (VirtualFile file : editorWindow != null ? editorWindow.getFiles() : fileEditorManager.getSiblings(selectedFiles[0])) {
+            if (editorWindow != null
+                ? VetoActionCloseHandler.isClosable(editorWindow, file, project)
+                : isClosable(fileEditorManager, file, project)) {
+                hasClosable = true;
+                break;
+            }
+        }
+        presentation.setEnabled(hasClosable);
+    }
+
+    private static boolean isClosable(FileEditorManagerEx fileEditorManager, VirtualFile file, Project project) {
+        for (FileEditorWindow window : fileEditorManager.getWindows()) {
+            if (!VetoActionCloseHandler.isClosable(window, file, project)) {
+                return false;
+            }
+        }
+        return true;
     }
 }

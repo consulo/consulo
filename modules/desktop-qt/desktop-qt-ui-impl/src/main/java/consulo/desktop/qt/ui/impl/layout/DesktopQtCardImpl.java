@@ -18,16 +18,19 @@ package consulo.desktop.qt.ui.impl.layout;
 import consulo.desktop.qt.ui.impl.DesktopQtSpace;
 import consulo.desktop.qt.ui.impl.DesktopQtStyleApplier;
 import consulo.desktop.qt.ui.impl.QtComponentDelegate;
+import consulo.desktop.qt.ui.impl.TargetQt;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Card;
 import consulo.ui.CardStyle;
 import consulo.ui.Component;
 import consulo.ui.Space;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.color.ColorValue;
 import consulo.ui.layout.LayoutConstraint;
 import consulo.ui.style.ComponentColors;
 import io.qt.core.QRectF;
 import io.qt.core.Qt;
+import io.qt.gui.QBrush;
 import io.qt.gui.QColor;
 import io.qt.gui.QFont;
 import io.qt.gui.QPaintEvent;
@@ -65,9 +68,15 @@ public class DesktopQtCardImpl extends DesktopQtLayoutComponent<LayoutConstraint
 
     private static class CardFrame extends QFrame {
         private boolean mySelected;
+        private @Nullable ColorValue myFill;
 
         CardFrame(QWidget parent) {
             super(parent);
+        }
+
+        void setFill(@Nullable ColorValue fill) {
+            myFill = fill;
+            update();
         }
 
         void setSelected(boolean selected) {
@@ -87,6 +96,10 @@ public class DesktopQtCardImpl extends DesktopQtLayoutComponent<LayoutConstraint
             QPainter painter = new QPainter(this);
             try {
                 painter.setRenderHint(QPainter.RenderHint.Antialiasing, true);
+                ColorValue fill = myFill;
+                if (fill != null) {
+                    painter.setBrush(new QBrush(TargetQt.to(fill)));
+                }
                 painter.setPen(new QPen(border));
                 painter.drawRoundedRect(new QRectF(0.5, 0.5, width() - 1, height() - 1), 10, 10);
             }
@@ -97,6 +110,8 @@ public class DesktopQtCardImpl extends DesktopQtLayoutComponent<LayoutConstraint
     }
 
     private final Set<CardStyle> myStyles = EnumSet.noneOf(CardStyle.class);
+
+    private @Nullable ColorValue myFillColor;
 
     private LocalizeValue myTitle = LocalizeValue.empty();
     private LocalizeValue mySubtitle = LocalizeValue.empty();
@@ -112,6 +127,8 @@ public class DesktopQtCardImpl extends DesktopQtLayoutComponent<LayoutConstraint
     private @Nullable QLabel mySubtitleLabel;
     private @Nullable QWidget myTitleBox;
     private @Nullable QWidget myMediaBox;
+    private @Nullable QWidget myContentBox;
+    private @Nullable QWidget myFooterBox;
     private @Nullable QBoxLayout myMediaLayout;
     private @Nullable QBoxLayout myPrefixLayout;
     private @Nullable QBoxLayout myHeaderLayout;
@@ -123,6 +140,7 @@ public class DesktopQtCardImpl extends DesktopQtLayoutComponent<LayoutConstraint
     protected QWidget createQt(QWidget parent) {
         CardFrame frame = new CardFrame(parent);
         frame.setSelected(myStyles.contains(CardStyle.SELECTED));
+        frame.setFill(myFillColor);
 
         boolean horizontal = myStyles.contains(CardStyle.HORIZONTAL);
         boolean cover = myStyles.contains(CardStyle.COVER_MEDIA);
@@ -146,6 +164,10 @@ public class DesktopQtCardImpl extends DesktopQtLayoutComponent<LayoutConstraint
         bodyLayout.setContentsMargins(padding, padding, padding, padding);
         bodyLayout.setSpacing(DesktopQtSpace.toPixels(Space.MEDIUM));
         root.addWidget(body, 1);
+
+        if (isCenteredBeside()) {
+            bodyLayout.addStretch(1);
+        }
 
         QWidget headerRow = new QWidget(body);
         QHBoxLayout headerRowLayout = new QHBoxLayout(headerRow);
@@ -191,6 +213,8 @@ public class DesktopQtCardImpl extends DesktopQtLayoutComponent<LayoutConstraint
         contentLayout.setContentsMargins(0, 0, 0, 0);
         contentLayout.setSpacing(DesktopQtSpace.toPixels(Space.SMALL));
         bodyLayout.addWidget(contentBox);
+        contentBox.setVisible(false);
+        myContentBox = contentBox;
         myContentLayout = contentLayout;
 
         QWidget footerBox = new QWidget(body);
@@ -200,6 +224,8 @@ public class DesktopQtCardImpl extends DesktopQtLayoutComponent<LayoutConstraint
         footerLayout.addStretch(1);
         bodyLayout.addWidget(footerBox);
         bodyLayout.addStretch(1);
+        footerBox.setVisible(false);
+        myFooterBox = footerBox;
         myFooterLayout = footerLayout;
 
         updateTexts();
@@ -223,7 +249,7 @@ public class DesktopQtCardImpl extends DesktopQtLayoutComponent<LayoutConstraint
                 if (myMediaBox != null) {
                     myMediaBox.setVisible(true);
                 }
-                addTo(myMediaLayout, widget, Qt.AlignmentFlag.AlignHCenter);
+                addTo(myMediaLayout, widget, isCenteredBeside() ? Qt.AlignmentFlag.AlignCenter : Qt.AlignmentFlag.AlignHCenter);
             }
             case PREFIX -> addTo(myPrefixLayout, widget, Qt.AlignmentFlag.AlignTop);
             case HEADER -> {
@@ -233,8 +259,16 @@ public class DesktopQtCardImpl extends DesktopQtLayoutComponent<LayoutConstraint
                 addTo(myHeaderLayout, widget, null);
             }
             case SUFFIX -> addTo(mySuffixLayout, widget, Qt.AlignmentFlag.AlignTop);
-            case CONTENT -> addTo(myContentLayout, widget, null);
+            case CONTENT -> {
+                if (myContentBox != null) {
+                    myContentBox.setVisible(true);
+                }
+                addTo(myContentLayout, widget, null);
+            }
             case FOOTER -> {
+                if (myFooterBox != null) {
+                    myFooterBox.setVisible(true);
+                }
                 QBoxLayout footer = myFooterLayout;
                 if (footer != null && widget != null) {
                     footer.insertWidget(footer.count() - 1, widget);
@@ -266,6 +300,31 @@ public class DesktopQtCardImpl extends DesktopQtLayoutComponent<LayoutConstraint
         if (child == myMedia && myMediaBox != null && !myMediaBox.isDisposed()) {
             myMediaBox.setVisible(false);
         }
+        hideIfEmpty(myContentBox, myContentLayout, 0);
+        // the footer keeps its leading stretch
+        hideIfEmpty(myFooterBox, myFooterLayout, 1);
+    }
+
+    private static void hideIfEmpty(@Nullable QWidget box, @Nullable QBoxLayout layout, int emptyCount) {
+        if (box != null && !box.isDisposed() && layout != null && !layout.isDisposed() && layout.count() <= emptyCount) {
+            box.setVisible(false);
+        }
+    }
+
+    @Override
+    public @Nullable ColorValue getBackgroundColor() {
+        return myFillColor;
+    }
+
+    /**
+     * The card fills its own rounded shape, not the whole widget, so its corners do not stick out.
+     */
+    @Override
+    public void setBackgroundColor(@Nullable ColorValue background) {
+        myFillColor = background;
+        if (toQtComponent() instanceof CardFrame frame && !frame.isDisposed()) {
+            frame.setFill(background);
+        }
     }
 
     @Override
@@ -274,6 +333,8 @@ public class DesktopQtCardImpl extends DesktopQtLayoutComponent<LayoutConstraint
         mySubtitleLabel = null;
         myTitleBox = null;
         myMediaBox = null;
+        myContentBox = null;
+        myFooterBox = null;
         myMediaLayout = null;
         myPrefixLayout = null;
         myHeaderLayout = null;
@@ -377,9 +438,16 @@ public class DesktopQtCardImpl extends DesktopQtLayoutComponent<LayoutConstraint
         return component;
     }
 
+    /**
+     * A horizontal CENTERED card centers the media and the body on the cross axis and keeps the text beside the media.
+     */
+    private boolean isCenteredBeside() {
+        return myStyles.contains(CardStyle.CENTERED) && myStyles.contains(CardStyle.HORIZONTAL);
+    }
+
     /** The media is centered always; CENTERED centers the title too, and lets a long one wrap inside the card. */
     private void updateCentered() {
-        boolean centered = myStyles.contains(CardStyle.CENTERED);
+        boolean centered = myStyles.contains(CardStyle.CENTERED) && !isCenteredBeside();
         for (QLabel label : new QLabel[]{myTitleLabel, mySubtitleLabel}) {
             if (label != null && !label.isDisposed()) {
                 label.setAlignment(centered ? Qt.AlignmentFlag.AlignHCenter : Qt.AlignmentFlag.AlignLeft);

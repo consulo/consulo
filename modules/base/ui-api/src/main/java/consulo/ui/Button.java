@@ -66,6 +66,13 @@ public interface Button extends Component, HasComponentStyle<ButtonStyle>, HasFo
     void invoke(InputDetails inputDetails);
 
     /**
+     * Where the icon and the text stand inside a button wider than they need - in the middle by default.
+     */
+    @RequiredUIAccess
+    default void setHorizontalAlignment(HorizontalAlignment alignment) {
+    }
+
+    /**
      * A component shown after the text, inside the button - a state of what the button shows, such as commits waiting
      * to be pulled or pushed. It does not take clicks of its own: they go to the button.
      */

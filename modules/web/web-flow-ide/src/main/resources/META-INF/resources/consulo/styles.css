@@ -566,6 +566,18 @@ vaadin-card.consulo-card-centered > [slot=subtitle]
   min-width: 0;
 }
 
+vaadin-card[theme~="horizontal"].consulo-card-centered
+{
+  align-items: center;
+}
+
+vaadin-card[theme~="horizontal"].consulo-card-centered::part(header)
+{
+  justify-content: start;
+  justify-items: start;
+  text-align: start;
+}
+
 vaadin-card.consulo-card-selected
 {
   --vaadin-card-border-color: var(--aura-accent-color, var(--vaadin-focus-ring-color, #3574f0));

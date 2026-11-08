@@ -24,6 +24,7 @@ import consulo.ui.Button;
 import consulo.ui.ButtonStyle;
 import consulo.ui.style.ComponentColors;
 import consulo.ui.Component;
+import consulo.ui.HorizontalAlignment;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ClickEvent;
 import consulo.ui.event.details.InputDetails;
@@ -106,6 +107,13 @@ public class WebButtonImpl extends VaadinComponentDelegate<WebButtonImpl.Vaadin>
             case PILL:
                 applyPillStyle(toVaadinComponent());
                 break;
+            case LARGE:
+                toVaadinComponent().getStyle()
+                    .set("height", "auto")
+                    .set("padding", "8px 20px")
+                    .set("--vaadin-button-gap", "8px")
+                    .set("background-color", "var(--vaadin-background-color, white)");
+                break;
         }
     }
 
@@ -174,6 +182,16 @@ public class WebButtonImpl extends VaadinComponentDelegate<WebButtonImpl.Vaadin>
     @Override
     public Vaadin createVaadinComponent() {
         return new Vaadin();
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void setHorizontalAlignment(HorizontalAlignment alignment) {
+        toVaadinComponent().getStyle().set("justify-content", switch (alignment) {
+            case LEFT -> "flex-start";
+            case CENTER -> "center";
+            case RIGHT -> "flex-end";
+        });
     }
 
     @Override

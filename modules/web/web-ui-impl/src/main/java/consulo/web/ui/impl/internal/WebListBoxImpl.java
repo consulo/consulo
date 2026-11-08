@@ -22,6 +22,7 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Hr;
 import com.vaadin.flow.component.html.Span;
 import consulo.localize.LocalizeValue;
+import consulo.ui.ListBoxStyle;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ListDoubleClickEvent;
 import consulo.ui.event.ClickEvent;
@@ -74,6 +75,13 @@ public class WebListBoxImpl<E> extends WebSingleListComponentBase<E, WebListBoxI
 
         mySpeedSearch =
             new WebSpeedSearch<>(toVaadinComponent().getElement(), false, this::searchableItems, this::getValue, this::selectFound);
+    }
+
+    @Override
+    public void addStyle(ListBoxStyle style) {
+        if (style == ListBoxStyle.TRANSPARENT_BACKGROUND) {
+            toVaadinComponent().getStyle().set("background", "transparent");
+        }
     }
 
     private List<E> searchableItems() {

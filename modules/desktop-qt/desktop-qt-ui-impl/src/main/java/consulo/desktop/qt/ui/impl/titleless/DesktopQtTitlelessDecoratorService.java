@@ -56,9 +56,6 @@ public class DesktopQtTitlelessDecoratorService implements TitlelessDecoratorSer
         return switch (windowId) {
             // the frame carries the menu bar of the ide, and the header is where a titleless window shows it
             case TitlelessDecorator.MAIN_WINDOW -> DesktopQtTitleBarPlacement.STRIP;
-            // the welcome screen has no menu bar and no title of its own to show, so a header over it would be an
-            // empty band - the controls float over its content instead, and it is dragged by its background
-            case TitlelessDecorator.WELCOME_WINDOW -> DesktopQtTitleBarPlacement.OVERLAY;
             default -> null;
         };
     }

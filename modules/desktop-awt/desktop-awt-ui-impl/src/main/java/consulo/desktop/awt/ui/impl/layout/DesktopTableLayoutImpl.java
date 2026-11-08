@@ -21,6 +21,7 @@ import consulo.ui.Component;
 import consulo.ui.StaticPosition;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.JBUI;
+import consulo.ui.layout.LayoutStyle;
 import consulo.ui.layout.TableLayout;
 
 import javax.swing.*;
@@ -81,6 +82,14 @@ public class DesktopTableLayoutImpl extends SwingComponentDelegate<JPanel> imple
             }
         }
         return panel;
+    }
+
+    @Override
+    public void addStyle(LayoutStyle style) {
+        if (style == LayoutStyle.TRANSPARENT_BACKGROUND) {
+            toAWTComponent().setOpaque(false);
+            myGridPanel.setOpaque(false);
+        }
     }
 
     @Override

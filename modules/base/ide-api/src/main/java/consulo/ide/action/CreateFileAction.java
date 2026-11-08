@@ -19,6 +19,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ActionImpl;
 import consulo.application.WriteAction;
 import consulo.application.dumb.DumbAware;
+import consulo.dataContext.DataContext;
 import consulo.externalService.statistic.UsageTrigger;
 import consulo.ide.action.ui.NewItemPopupUtil;
 import consulo.ide.action.ui.NewItemSimplePopupPanel;
@@ -32,6 +33,7 @@ import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
+import consulo.project.ProjectType;
 import consulo.ui.HasValidator;
 import consulo.ui.TextBox;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -74,6 +76,15 @@ public class CreateFileAction extends CreateElementActionBase implements DumbAwa
     @Override
     public boolean isDumbAware() {
         return CreateFileAction.class.equals(getClass());
+    }
+
+    @Override
+    protected boolean isAvailable(DataContext dataContext) {
+        Project project = dataContext.getData(Project.KEY);
+        if (project != null && project.getType() == ProjectType.WELCOME && CreateFileAction.class.equals(getClass())) {
+            return false;
+        }
+        return super.isAvailable(dataContext);
     }
 
     @Override

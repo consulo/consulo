@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.ui.impl;
 
+import com.formdev.flatlaf.FlatClientProperties;
 import consulo.desktop.awt.ui.impl.DesktopListRenderInteraction.ClickTarget;
 import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 import consulo.desktop.awt.ui.impl.clipboard.DesktopAWTTransferHandlerAdapter;
@@ -249,6 +250,10 @@ abstract class DesktopListBoxBaseImpl<E, V> extends SwingComponentDelegate<JBLis
     @Override
     protected JBList<E> createComponent() {
         MyJBList component = new MyJBList(new DesktopFlatDataModelWrapper<>(myModel));
+        // the selection stands off the edges of the list, as the other frontends draw it, and a row cut by the list
+        // stays cut - the swing popup over a hovered row which shows it whole is not something the others do
+        component.putClientProperty(FlatClientProperties.STYLE, "selectionInsets: 0,4,0,4");
+        component.setExpandableItemsEnabled(false);
         applyRenderer(component);
         applySpeedSearch(component);
         applySelectionModel(component);

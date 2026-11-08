@@ -363,11 +363,28 @@ public class CustomRoundedFlatListUI
             cw = rowBounds.width;
         }
 
-        // rounded selection or selection insets
-        if (isSelected &&
+        boolean roundedSelection = isSelected &&
             !isFileList && // rounded selection is not supported for file list
-            (selectionArc > 0 ||
-                (selectionInsets != null && !FlatUIUtils.isInsetsEmpty(selectionInsets)))) {
+            (selectionArc > 0 || (selectionInsets != null && !FlatUIUtils.isInsetsEmpty(selectionInsets)));
+
+        // an opaque component renderer (a panel) fills its background with a shape rather than fillRect(), which the
+        // graphics proxy below never sees - the selection is painted here and the component over it without its fill
+        if (roundedSelection && rendererComponent instanceof JPanel panel && panel.isOpaque()) {
+            g.setColor(rendererComponent.getBackground());
+            paintCellSelection(g, row, cx, rowBounds.y, cw, rowBounds.height);
+
+            panel.setOpaque(false);
+            try {
+                rendererPane.paintComponent(g, rendererComponent, list, cx, rowBounds.y, cw, rowBounds.height, true);
+            }
+            finally {
+                panel.setOpaque(true);
+            }
+            return;
+        }
+
+        // rounded selection or selection insets
+        if (roundedSelection) {
             // Because selection painting is done in the cell renderer, it would be
             // necessary to require a FlatLaf specific renderer to implement rounded selection.
             // Using a LaF specific renderer was avoided because often a custom renderer is

@@ -31,12 +31,15 @@ import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.clipboard.DataTransfer;
 import consulo.ui.color.ColorValue;
+import consulo.ui.color.RGBColor;
 import consulo.ui.cursor.Cursor;
 import consulo.ui.event.*;
 import consulo.ui.impl.BorderBuilderImpl;
 import consulo.ui.impl.PaddingBuilderImpl;
 import consulo.ui.impl.UIDataObject;
 import consulo.ui.internal.BorderPosition;
+import consulo.ui.internal.GradientColor;
+import consulo.ui.internal.GradientColorBlob;
 import consulo.ui.layout.Layout;
 import consulo.util.dataholder.Key;
 import consulo.web.ui.impl.internal.WebColors;
@@ -385,6 +388,39 @@ public abstract class VaadinComponentDelegate<T extends com.vaadin.flow.componen
         else {
             style.set("background-color", cssColor);
         }
+
+        if (background instanceof GradientColor gradient) {
+            style.set("background-image", toCssGradient(gradient));
+        }
+        else {
+            style.remove("background-image");
+        }
+    }
+
+    private static String toCssGradient(GradientColor gradient) {
+        StringBuilder builder = new StringBuilder();
+        for (GradientColorBlob blob : gradient.getBlobs()) {
+            if (!builder.isEmpty()) {
+                builder.append(", ");
+            }
+
+            RGBColor rgb = blob.getColor().toRGB();
+            String color = rgb.getRed() + ", " + rgb.getGreen() + ", " + rgb.getBlue();
+            float centerX = blob.getCenterX();
+            float centerY = blob.getCenterY();
+            float farthestSide = Math.max(Math.max(centerX, 1 - centerX), Math.max(centerY, 1 - centerY));
+            float scale = blob.getRadius() / farthestSide;
+            builder.append("radial-gradient(circle farthest-side at ")
+                .append(Math.round(centerX * 100)).append("% ")
+                .append(Math.round(centerY * 100)).append("%");
+            for (float offset : GradientColorBlob.FALLOFF_OFFSETS) {
+                float alpha = rgb.getAlpha() / 255f * GradientColorBlob.falloff(offset);
+                builder.append(", rgba(").append(color).append(", ").append(alpha).append(") ")
+                    .append(Math.round(offset * scale * 100)).append('%');
+            }
+            builder.append(')');
+        }
+        return builder.toString();
     }
 
     @Override

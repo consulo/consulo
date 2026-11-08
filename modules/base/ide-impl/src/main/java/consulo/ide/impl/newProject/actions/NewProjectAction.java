@@ -18,8 +18,8 @@ package consulo.ide.impl.newProject.actions;
 import consulo.annotation.component.ActionImpl;
 import consulo.application.Application;
 import consulo.application.WriteAction;
-import consulo.ide.impl.module.creation.NewProjectDialogDescriptor;
-import consulo.ide.impl.module.creation.NewProjectWizardData;
+import consulo.module.creation.impl.internal.NewProjectDialogDescriptor;
+import consulo.module.creation.impl.internal.NewProjectWizardData;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.creation.NewModuleWizardContext;
@@ -82,7 +82,7 @@ public class NewProjectAction extends DumbAwareAction {
     }
 
     @RequiredUIAccess
-    protected static void generateProject(Project project, NewProjectWizardData projectPanel) {
+    public static void generateProject(Project project, NewProjectWizardData projectPanel) {
         NewModuleWizardContext context = projectPanel.getWizardContext();
         NewModuleBuilderProcessor<NewModuleWizardContext> processor = projectPanel.getProcessor();
         if (processor == null || context == null) {

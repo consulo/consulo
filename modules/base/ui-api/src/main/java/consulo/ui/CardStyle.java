@@ -47,7 +47,8 @@ public enum CardStyle implements ComponentStyle {
     COMPACT,
     /**
      * The media and the header stand in the middle, and a title too long for the card breaks onto the next line - a
-     * card that is a tile among others, such as a file in a grid of thumbnails.
+     * card that is a tile among others, such as a file in a grid of thumbnails. With {@link #HORIZONTAL} the media and
+     * the header stand in the middle of the height, the text beside the media.
      */
     CENTERED,
     /**

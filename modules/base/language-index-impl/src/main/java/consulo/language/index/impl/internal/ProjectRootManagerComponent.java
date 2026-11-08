@@ -41,6 +41,7 @@ import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntryWithTracking;
 import consulo.module.content.scope.ModuleScopeProvider;
 import consulo.project.Project;
+import consulo.project.ProjectType;
 import consulo.project.RootsChangeRescanningInfo;
 import consulo.project.content.WatchedRootsProvider;
 import consulo.util.collection.Sets;
@@ -159,7 +160,7 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
 
     @RequiredReadAction
     private @Nullable Couple<Set<String>> getAllRoots(boolean includeSourceRoots) {
-        if (myProject.isDefault()) {
+        if (myProject.getType() != ProjectType.REGULAR) {
             return null;
         }
 

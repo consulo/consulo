@@ -81,5 +81,8 @@ public class DesktopDockLayoutImpl extends DesktopLayoutBase<JPanel, StaticPosit
 
     @Override
     public void addStyle(LayoutStyle style) {
+        if (style == LayoutStyle.TRANSPARENT_BACKGROUND) {
+            toAWTComponent().setOpaque(false);
+        }
     }
 }

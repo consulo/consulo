@@ -48,6 +48,7 @@ open module consulo.ide.impl {
     requires consulo.module.content.api;
     requires consulo.module.content.impl;
     requires consulo.module.creation.api;
+    requires consulo.module.creation.impl;
     requires consulo.language.api;
     requires consulo.language.impl;
     requires consulo.index.io;
@@ -407,7 +408,6 @@ open module consulo.ide.impl {
     exports consulo.ide.impl.idea.openapi.util;
     exports consulo.ide.impl.idea.openapi.vcs;
     exports consulo.ide.impl.idea.openapi.vcs.changes.issueLinks;
-    exports consulo.ide.impl.idea.openapi.vcs.checkout;
     exports consulo.ide.impl.idea.openapi.vcs.ui;
     exports consulo.ide.impl.idea.openapi.vfs.encoding;
     exports consulo.ide.impl.idea.openapi.vfs.ex.dummy;
@@ -492,7 +492,6 @@ open module consulo.ide.impl {
     exports consulo.ide.impl.ui.docking.impl;
     exports consulo.ide.impl.ui.impl;
     exports consulo.ide.impl.usage;
-    exports consulo.ide.impl.welcomeScreen;
     exports consulo.ide.impl.wm.impl;
     exports consulo.ide.impl.wm.impl.welcomeScreen;
 

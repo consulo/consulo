@@ -48,7 +48,8 @@ module consulo.ui.ex.impl {
         consulo.web.ide,
         consulo.web.ui.impl,
         consulo.project.ui.impl,
-        consulo.version.control.system.impl;
+        consulo.version.control.system.impl,
+        consulo.welcome.screen.impl;
 
     exports consulo.ui.ex.impl.internal.popup to
         consulo.version.control.system.distributed.impl;

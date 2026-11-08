@@ -47,10 +47,6 @@ public class DesktopAWTTitlelessDecoratorService implements TitlelessDecoratorSe
                 return TitlelessDecorator.NOTHING;
             }
 
-            if (TitlelessDecorator.WELCOME_WINDOW.equals(windowId)) {
-                return new AWTTitlelessDecorator.WindowsFameDecorator(rootPane);
-            }
-
             // FIXME for now we not support other titleless - due bug with moving
         }
 

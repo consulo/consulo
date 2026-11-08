@@ -31,6 +31,7 @@ import consulo.ui.ex.impl.internal.action.MenuItemPresentationFactory;
 import consulo.ui.impl.style.IslandsState;
 import consulo.web.ui.impl.internal.action.WebActionMenuExpander;
 import consulo.project.Project;
+import consulo.project.ProjectType;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.web.ui.impl.internal.WebRootPaneImpl;
 import consulo.web.ui.impl.internal.base.TargetVaadin;
@@ -74,7 +75,9 @@ public class WebIdeRootView {
 
         myMenuBar = new WebIdeMenuBar(myRootPanel.getComponent());
         myRootPanel.setMenuBar(myMenuBar.getMenuBar());
-        myRootPanel.setMenuBarRightComponent(createCloseProjectButton());
+        if (project.getType() != ProjectType.WELCOME) {
+            myRootPanel.setMenuBarRightComponent(createCloseProjectButton());
+        }
 
         myNavigationBar = new WebNavigationBar(project, myRootPanel.getComponent());
         // the bar listens on the focus manager, which is one object for the whole application - nothing here is

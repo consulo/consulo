@@ -26,7 +26,7 @@ import java.util.Collection;
  * @author VISTALL
  * @since 2017-09-12
  */
-public interface ListBox<E> extends ValueComponent<E>, ListBoxBase<E> {
+public interface ListBox<E> extends ValueComponent<E>, ListBoxBase<E>, HasComponentStyle<ListBoxStyle> {
     @SafeVarargs
     static <E> ListBox<E> create(E... elements) {
         return UIInternal.get()._Components_listBox(FlatDataModel.of(Arrays.asList(elements)));
@@ -41,6 +41,10 @@ public interface ListBox<E> extends ValueComponent<E>, ListBoxBase<E> {
     }
 
     void setValueByIndex(int index);
+
+    @Override
+    default void addStyle(ListBoxStyle style) {
+    }
 
     /**
      * Moves the selection by {@code delta} items, stopping at the ends. Selecting nothing yet counts as standing

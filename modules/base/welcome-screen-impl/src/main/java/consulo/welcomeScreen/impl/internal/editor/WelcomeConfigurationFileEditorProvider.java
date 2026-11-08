@@ -18,11 +18,16 @@ package consulo.welcomeScreen.impl.internal.editor;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.configuration.editor.ConfigurationFileEditor;
 import consulo.configuration.editor.ConfigurationFileEditorProvider;
+import consulo.dataContext.DataManager;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
+import consulo.project.RecentProjectsManager;
+import consulo.ui.ex.action.ActionManager;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 
 /**
  * @author VISTALL
@@ -30,6 +35,21 @@ import consulo.virtualFileSystem.VirtualFile;
  */
 @ExtensionImpl
 public class WelcomeConfigurationFileEditorProvider implements ConfigurationFileEditorProvider {
+    private final Provider<RecentProjectsManager> myRecentProjectsManager;
+    private final DataManager myDataManager;
+    private final ActionManager myActionManager;
+
+    @Inject
+    public WelcomeConfigurationFileEditorProvider(
+        Provider<RecentProjectsManager> recentProjectsManager,
+        DataManager dataManager,
+        ActionManager actionManager
+    ) {
+        myRecentProjectsManager = recentProjectsManager;
+        myDataManager = dataManager;
+        myActionManager = actionManager;
+    }
+
     
     @Override
     public String getId() {
@@ -51,6 +71,6 @@ public class WelcomeConfigurationFileEditorProvider implements ConfigurationFile
     
     @Override
     public ConfigurationFileEditor createEditor(Project project, VirtualFile file) {
-        return new WelcomeConfigurationFileEditor(project, file);
+        return new WelcomeConfigurationFileEditor(project, file, myRecentProjectsManager.get(), myDataManager, myActionManager);
     }
 }

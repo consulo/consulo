@@ -16,35 +16,94 @@
 package consulo.welcomeScreen.impl.internal.editor;
 
 import consulo.configuration.editor.ConfigurationFileEditor;
+import consulo.dataContext.DataManager;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.fileEditor.FileEditorManager;
+import consulo.fileEditor.internal.VetoActionCloseHandler;
+import consulo.ide.impl.idea.ide.ReopenProjectAction;
 import consulo.project.Project;
+import consulo.project.ProjectType;
+import consulo.project.RecentProjectsManager;
+import consulo.project.internal.RecentProjectsChecker;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.layout.DockLayout;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.AnAction;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.welcomeScreen.impl.internal.WelcomeScreenPanel;
 import org.jspecify.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author VISTALL
  * @since 2025-09-17
  */
-public class WelcomeConfigurationFileEditor extends ConfigurationFileEditor {
-    private @Nullable DockLayout myComponent;
+public class WelcomeConfigurationFileEditor extends ConfigurationFileEditor implements VetoActionCloseHandler {
+    private final RecentProjectsManager myRecentProjectsManager;
+    private final DataManager myDataManager;
+    private final ActionManager myActionManager;
 
-    public WelcomeConfigurationFileEditor(Project project, VirtualFile virtualFile) {
+    private final Disposable myUIDisposable = Disposable.newDisposable("welcome tab");
+    private final Runnable myCheckerCallback = () -> {
+    };
+
+    private @Nullable Component myComponent;
+
+    public WelcomeConfigurationFileEditor(
+        Project project,
+        VirtualFile virtualFile,
+        RecentProjectsManager recentProjectsManager,
+        DataManager dataManager,
+        ActionManager actionManager
+    ) {
         super(project, virtualFile);
+        virtualFile.putUserData(FileEditorManager.FORBID_TAB_SPLIT, Boolean.TRUE);
+        myRecentProjectsManager = recentProjectsManager;
+        myDataManager = dataManager;
+        myActionManager = actionManager;
     }
 
     @Override
     @RequiredUIAccess
     public Component getUIComponent() {
-        if (myComponent == null) {
-            myComponent = DockLayout.create();
+        Component component = myComponent;
+        if (component != null) {
+            return component;
         }
-        return myComponent;
+
+        AnAction[] recentProjectsActions = myRecentProjectsManager.getRecentProjectsActions(false);
+
+        List<String> pathsToCheck = new ArrayList<>();
+        for (AnAction action : recentProjectsActions) {
+            if (action instanceof ReopenProjectAction reopenProjectAction) {
+                pathsToCheck.add(reopenProjectAction.getProjectPath());
+            }
+        }
+        RecentProjectsChecker.getInstance().addCallback(myCheckerCallback, pathsToCheck);
+
+        WelcomeScreenPanel panel = new WelcomeScreenPanel(
+            myUIDisposable,
+            myDataManager,
+            myActionManager,
+            myRecentProjectsManager,
+            recentProjectsActions
+        );
+
+        myComponent = component = panel.getComponent();
+        return component;
+    }
+
+    @Override
+    public boolean isClosable(Project project) {
+        return project.getType() != ProjectType.WELCOME;
     }
 
     @Override
     public void dispose() {
-
+        RecentProjectsChecker.getInstance().removeCallback(myCheckerCallback);
+        Disposer.dispose(myUIDisposable);
     }
 }

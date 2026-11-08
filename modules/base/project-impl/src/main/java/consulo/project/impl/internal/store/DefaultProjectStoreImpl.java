@@ -25,7 +25,7 @@ import consulo.component.store.internal.StateStorage.SaveSession;
 import consulo.component.store.impl.internal.storage.StorageData;
 import consulo.component.store.impl.internal.storage.XmlElementStorage;
 import consulo.project.Project;
-import consulo.project.impl.internal.DefaultProjectImpl;
+import consulo.project.impl.internal.SingleFileProjectImpl;
 import consulo.project.impl.internal.ProjectImpl;
 import consulo.project.macro.ProjectPathMacroManager;
 import consulo.util.collection.ContainerUtil;
@@ -57,11 +57,9 @@ public class DefaultProjectStoreImpl extends ProjectStoreImpl {
   }
 
   @Override
-  
-  protected DefaultProjectImpl getProject() {
-    return (DefaultProjectImpl)super.getProject();
+  protected SingleFileProjectImpl getProject() {
+    return (SingleFileProjectImpl)super.getProject();
   }
-
   
   @Override
   protected StateStorageManager createStateStorageManager() {

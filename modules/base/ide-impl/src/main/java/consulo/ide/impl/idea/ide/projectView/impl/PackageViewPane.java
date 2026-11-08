@@ -34,6 +34,7 @@ import consulo.module.content.ProjectRootManager;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
+import consulo.project.ProjectType;
 import consulo.project.ui.view.ProjectView;
 import consulo.project.ui.view.SelectInTarget;
 import consulo.project.ui.view.tree.AbstractTreeNode;
@@ -70,6 +71,11 @@ public final class PackageViewPane extends AbstractProjectViewPSIPane {
     @Inject
     public PackageViewPane(Project project) {
         super(project);
+    }
+
+    @Override
+    public boolean isInitiallyVisible() {
+        return myProject.getType() != ProjectType.WELCOME;
     }
 
     @Override

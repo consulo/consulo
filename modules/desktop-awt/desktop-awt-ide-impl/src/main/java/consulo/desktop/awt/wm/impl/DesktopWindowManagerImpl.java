@@ -41,7 +41,6 @@ import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.IdeFrameState;
 import consulo.project.ui.wm.StatusBar;
-import consulo.project.ui.wm.WelcomeFrameManager;
 import consulo.project.ui.wm.event.WindowManagerListener;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionManager;
@@ -153,15 +152,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
     @Override
     public @Nullable IdeFrame findVisibleIdeFrame() {
         IdeFrame[] frames = getAllProjectFrames();
-        if (frames.length > 0) {
-            return frames[0];
-        }
-        IdeFrame frame = WelcomeFrameManager.getInstance().getCurrentFrame();
-        if (frame == null) {
-            // will return null at first app start, while customization window
-            return null;
-        }
-        return frame;
+        return frames.length > 0 ? frames[0] : null;
     }
 
     @Override
@@ -444,7 +435,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
     public IdeFrame findFrameFor(@Nullable Project project) {
         IdeFrame frame = null;
         if (project != null) {
-            frame = project.isDefault() ? WelcomeFrameManager.getInstance().getCurrentFrame() : getIdeFrame(project);
+            frame = project.isDefault() ? null : getIdeFrame(project);
             if (frame == null) {
                 frame = myProject2Frame.get(null);
             }
