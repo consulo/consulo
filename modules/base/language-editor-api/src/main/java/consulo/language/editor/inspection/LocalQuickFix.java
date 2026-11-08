@@ -15,6 +15,9 @@
  */
 package consulo.language.editor.inspection;
 
+import org.jspecify.annotations.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 import consulo.component.util.Iconable;
 import consulo.language.psi.SmartPsiElementPointer;
 import consulo.project.Project;
@@ -44,4 +47,24 @@ public interface LocalQuickFix extends QuickFix<ProblemDescriptor>, FileModifier
   LocalQuickFix[] EMPTY_ARRAY = new LocalQuickFix[0];
   
   ArrayFactory<LocalQuickFix> ARRAY_FACTORY = i -> i == 0 ? EMPTY_ARRAY : new LocalQuickFix[i];
+
+  /**
+   * @return an array with a single element {@code fix} or an empty array if the argument is null
+   */
+  static LocalQuickFix[] notNullElements(@Nullable LocalQuickFix fix) {
+    return fix == null ? EMPTY_ARRAY : new LocalQuickFix[]{fix};
+  }
+
+  /**
+   * @return an array containing all not-null elements from {@code fixes}
+   */
+  static LocalQuickFix[] notNullElements(@Nullable LocalQuickFix... fixes) {
+    List<LocalQuickFix> result = new ArrayList<>(fixes.length);
+    for (LocalQuickFix fix : fixes) {
+      if (fix != null) {
+        result.add(fix);
+      }
+    }
+    return result.isEmpty() ? EMPTY_ARRAY : result.toArray(EMPTY_ARRAY);
+  }
 }

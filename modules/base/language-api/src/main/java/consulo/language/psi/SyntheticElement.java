@@ -23,4 +23,11 @@ package consulo.language.psi;
  * @author yole
  */
 public interface SyntheticElement {
+  /**
+   * @param copy copy file to find the same element in
+   * @return same synthetic element inside the copy of the containing file
+   */
+  default PsiElement findSameElementInCopy(PsiFile copy) {
+    throw new UnsupportedOperationException("LightElement " + getClass().getName() + " has no strategy to get its copy");
+  }
 }

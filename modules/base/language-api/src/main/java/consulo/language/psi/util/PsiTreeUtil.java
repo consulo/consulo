@@ -1391,6 +1391,41 @@ public class PsiTreeUtil {
     }
 
     /**
+     * Returns the same element in a copy of its ancestor.
+     *
+     * @param element  an element to find
+     * @param root     an ancestor of {@code element}, or the {@code element} itself
+     * @param rootCopy a copy of {@code root}
+     * @return the element at the same position in {@code rootCopy} as {@code element} in {@code root};
+     * null if {@code root} is not an ancestor of {@code element}, or if {@code rootCopy} has a different structure
+     */
+    @SuppressWarnings("unchecked")
+    public static <T extends PsiElement> @Nullable T findSameElementInCopy(T element, PsiElement root, PsiElement rootCopy) {
+        IntList indices = IntLists.newArrayList();
+        for (PsiElement cur = element; cur != root; cur = cur.getParent()) {
+            if (cur == null) {
+                return null;
+            }
+            int index = 0;
+            for (PsiElement sibling = cur.getPrevSibling(); sibling != null; sibling = sibling.getPrevSibling()) {
+                index++;
+            }
+            indices.add(index);
+        }
+        PsiElement cur = rootCopy;
+        for (int level = indices.size() - 1; level >= 0 && cur != null; level--) {
+            cur = cur.getFirstChild();
+            for (int i = indices.get(level); i > 0 && cur != null; i--) {
+                cur = cur.getNextSibling();
+            }
+        }
+        if (cur == null || !cur.getClass().equals(element.getClass())) {
+            return null;
+        }
+        return (T) cur;
+    }
+
+    /**
      * Returns the same element in the file copy.
      *
      * @param element an element to find
@@ -1405,6 +1440,9 @@ public class PsiTreeUtil {
     public static <T extends PsiElement> @Nullable T findSameElementInCopy(@Nullable T element, PsiFile copy) throws IllegalStateException {
         if (element == null) {
             return null;
+        }
+        if (element instanceof SyntheticElement syntheticElement) {
+            return (T) syntheticElement.findSameElementInCopy(copy);
         }
         IntList offsets = IntLists.newArrayList();
         PsiElement cur = element;
