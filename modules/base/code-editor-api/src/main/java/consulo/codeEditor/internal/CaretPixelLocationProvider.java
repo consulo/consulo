@@ -54,4 +54,12 @@ public interface CaretPixelLocationProvider {
      */
     default void addCaretPixelLocationListener(Runnable listener, Disposable parentDisposable) {
     }
+
+    /**
+     * {@code true} when the editor's ui component is the scrolled one, so a location measured against it stays where it
+     * is while the editor scrolls; {@code false} when the component is the viewport and a location moves with the scroll.
+     */
+    default boolean isLocationScrolledWithComponent() {
+        return false;
+    }
 }

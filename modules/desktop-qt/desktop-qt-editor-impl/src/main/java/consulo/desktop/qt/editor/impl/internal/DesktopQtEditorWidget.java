@@ -81,6 +81,7 @@ public class DesktopQtEditorWidget extends QAbstractScrollArea implements Deskto
 
     private boolean myCaretBlinkOn = true;
     private boolean mySelecting;
+    private boolean myDoubleClicked;
 
     /**
      * Where the current selection is being dragged from. Negative when there is nothing to extend.
@@ -489,6 +490,12 @@ public class DesktopQtEditorWidget extends QAbstractScrollArea implements Deskto
 
         myEditor.fireMouseReleased(editingAreaEvent(event));
 
+        if (event.button() == Qt.MouseButton.LeftButton) {
+            int clickCount = myDoubleClicked ? 2 : 1;
+            myDoubleClicked = false;
+            myEditor.fireSelectionMouseReleased(clickCount);
+        }
+
         super.mouseReleaseEvent(event);
     }
 
@@ -509,6 +516,7 @@ public class DesktopQtEditorWidget extends QAbstractScrollArea implements Deskto
         // than stretching what the first click of the double click anchored
         mySelectionAnchor = -1;
         mySelecting = false;
+        myDoubleClicked = true;
 
         restartCaretBlink();
 

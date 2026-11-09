@@ -18,6 +18,7 @@ package consulo.codeEditor.impl.internal.setting;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
 import consulo.application.localize.ApplicationLocalize;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.application.ui.setting.AdditionalEditorAppearanceSettingProvider;
 import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.EditorSettings;
@@ -161,6 +162,10 @@ public class EditorAppearanceConfigurable extends SimpleConfigurableByProperties
         CheckBox highlightSelectionOccurrences = CheckBox.create(LocalizeValue.localizeTODO("Highlight occurrences of selected text"));
         propertyBuilder.add(highlightSelectionOccurrences, editorSettings::isHighlightSelectionOccurrences, editorSettings::setHighlightSelectionOccurrences);
         root.add(highlightSelectionOccurrences);
+
+        CheckBox showCodeFloatingToolbar = CheckBox.create(CodeEditorLocalize.checkboxShowCodeFloatingToolbar());
+        propertyBuilder.add(showCodeFloatingToolbar, editorSettings::isShowCodeFloatingToolbar, editorSettings::setShowCodeFloatingToolbar);
+        root.add(showCodeFloatingToolbar);
 
         List<AdditionalEditorAppearanceSettingProvider> providers = new ArrayList<>(myApplication.getExtensionList(AdditionalEditorAppearanceSettingProvider.class));
         providers.sort(APPEARANCE_SETTING_PROVIDER_LABEL_NAME_COMPARATOR);

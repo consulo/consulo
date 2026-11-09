@@ -25,6 +25,9 @@ import consulo.codeEditor.event.*;
 import consulo.codeEditor.impl.*;
 import consulo.codeEditor.impl.internal.floating.EditorFloatingToolbarInstaller;
 import consulo.codeEditor.internal.CaretPixelLocationProvider;
+import consulo.codeEditor.internal.EditorSelectionGestureListener;
+import consulo.codeEditor.internal.EditorSelectionGestureSupport;
+import consulo.codeEditor.toolbar.floating.CodeFloatingToolbar;
 import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.codeEditor.markup.*;
 import consulo.codeEditor.util.EditorUtil;
@@ -106,7 +109,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author VISTALL
  * @since 2019-02-18
  */
-public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationProvider {
+public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationProvider, EditorSelectionGestureSupport {
     private static final Logger LOG = Logger.getInstance(WebEditorImpl.class);
 
     private static final String FOCUS_FROM_OUTSIDE = "!(event.relatedTarget && element.contains(event.relatedTarget))";
@@ -186,6 +189,7 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
      */
     private volatile @Nullable CaretPixelLocation myCaretLocation;
     private final List<Runnable> myCaretLocationListeners = new CopyOnWriteArrayList<>();
+    private final List<EditorSelectionGestureListener> mySelectionGestureListeners = new CopyOnWriteArrayList<>();
 
     /**
      * The character cell the browser measured, which every mapping between a position and a point is built on. The
@@ -370,6 +374,24 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
             if (event.getCharWidth() > 0 && event.getLineHeight() > 0) {
                 myCharWidth = event.getCharWidth();
                 myLineHeight = event.getLineHeight();
+            }
+        });
+
+        vaadin.addFloatingEscapeListener(event -> {
+            CodeFloatingToolbar toolbar = CodeFloatingToolbar.getToolbar(this);
+            if (toolbar != null && toolbar.isShown()) {
+                toolbar.scheduleHide();
+            }
+        });
+
+        vaadin.addSelectionGestureListener(event -> {
+            for (EditorSelectionGestureListener listener : mySelectionGestureListeners) {
+                if (event.getOverSelection() >= 0) {
+                    listener.mouseOverSelectionChanged(event.getOverSelection() == 1);
+                }
+                else {
+                    listener.mouseReleased(event.getClickCount());
+                }
             }
         });
 
@@ -660,6 +682,12 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
     public void addCaretPixelLocationListener(Runnable listener, Disposable parentDisposable) {
         myCaretLocationListeners.add(listener);
         Disposer.register(parentDisposable, () -> myCaretLocationListeners.remove(listener));
+    }
+
+    @Override
+    public void addSelectionGestureListener(EditorSelectionGestureListener listener, Disposable parentDisposable) {
+        mySelectionGestureListeners.add(listener);
+        Disposer.register(parentDisposable, () -> mySelectionGestureListeners.remove(listener));
     }
 
     private boolean isEchoOfClientEdit(DocumentEvent event) {

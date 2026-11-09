@@ -4,6 +4,7 @@ package consulo.language.editor.internal.intention;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.toolbar.floating.CodeFloatingToolbar;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -38,12 +39,32 @@ public abstract class IntentionsUI {
 
   }
 
+  /**
+   * Hides the hint when it belongs to {@code editor}.
+   */
+  @RequiredUIAccess
+  public void hideHintOf(Editor editor) {
+    CachedIntentions cachedIntentions = myCachedIntentions.get();
+    if (cachedIntentions != null && cachedIntentions.getEditor() == editor) {
+      hide();
+    }
+  }
+
   public void invalidate() {
     myCachedIntentions.set(null);
     hide();
   }
 
   public abstract void update(CachedIntentions cachedIntentions, boolean actionsChanged);
+
+  /**
+   * The floating code toolbar offers the intentions itself while it is shown, so the hint is left out.
+   */
+  @RequiredUIAccess
+  protected static boolean isHintReplacedByFloatingToolbar(Editor editor) {
+    CodeFloatingToolbar toolbar = CodeFloatingToolbar.getToolbar(editor);
+    return toolbar != null && toolbar.isShown();
+  }
 
   public abstract void hide();
 

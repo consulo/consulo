@@ -522,6 +522,62 @@
             }
         });
 
+        let pointerOverSelection = null;
+
+        const isOverSelection = domEvent => {
+            const selection = textView.getSelection();
+            if (!selection || selection.start === selection.end) {
+                return false;
+            }
+
+            try {
+                const point = textView.convert({ x: domEvent.clientX, y: domEvent.clientY }, 'page', 'document');
+                if (!textView.isValidTextPosition(point.x, point.y)) {
+                    return false;
+                }
+
+                const offset = textView.getOffsetAtLocation(point.x, point.y);
+                return offset >= Math.min(selection.start, selection.end) && offset < Math.max(selection.start, selection.end);
+            }
+            catch (e) {
+                return false;
+            }
+        };
+
+        const fireSelectionGesture = (clickCount, overSelection) => {
+            element.dispatchEvent(new CustomEvent('arquill-selection-gesture', {
+                detail: { clickCount: clickCount, overSelection: overSelection }
+            }));
+        };
+
+        const updatePointerOverSelection = over => {
+            if (over !== pointerOverSelection) {
+                pointerOverSelection = over;
+                fireSelectionGesture(0, over ? 1 : 0);
+            }
+        };
+
+        element.addEventListener('mousemove', domEvent => {
+            if (domEvent.buttons === 0) {
+                updatePointerOverSelection(isOverSelection(domEvent));
+            }
+        });
+
+        element.addEventListener('mouseleave', () => updatePointerOverSelection(false));
+
+        element.addEventListener('mousedown', () => {
+            pointerOverSelection = null;
+        });
+
+        element.addEventListener('mouseup', domEvent => {
+            if (domEvent.button !== 0) {
+                return;
+            }
+
+            const clickCount = domEvent.detail;
+            setTimeout(() => fireSelectionGesture(clickCount, -1), 0);
+        });
+
         const onKeyUp = domEvent => {
             if (domEvent.key === 'Control' || domEvent.key === 'Meta') {
                 // the pointer may not move again, so the link look of the hints has to be dropped from here too

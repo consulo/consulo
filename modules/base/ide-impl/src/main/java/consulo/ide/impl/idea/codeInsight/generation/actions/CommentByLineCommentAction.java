@@ -28,6 +28,7 @@ import consulo.language.Commenter;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.ex.action.IdeActions;
@@ -36,7 +37,11 @@ import consulo.virtualFileSystem.fileType.FileType;
 @ActionImpl(id = IdeActions.ACTION_COMMENT_LINE)
 public class CommentByLineCommentAction extends MultiCaretCodeInsightAction implements DumbAware {
     public CommentByLineCommentAction() {
-        super(ActionLocalize.actionCommentbylinecommentText(), ActionLocalize.actionCommentbylinecommentDescription());
+        super(
+            ActionLocalize.actionCommentbylinecommentText(),
+            ActionLocalize.actionCommentbylinecommentDescription(),
+            PlatformIconGroup.actionsInlayrenameincomments()
+        );
         setEnabledInModalContext(true);
     }
 

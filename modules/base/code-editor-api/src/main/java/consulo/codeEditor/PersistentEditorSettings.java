@@ -292,6 +292,10 @@ public interface PersistentEditorSettings {
 
     void setHighlightSelectionOccurrences(boolean val);
 
+    boolean isShowCodeFloatingToolbar();
+
+    void setShowCodeFloatingToolbar(boolean value);
+
     boolean isStickyLineShown();
 
     void setStickyLinesShown(boolean value);

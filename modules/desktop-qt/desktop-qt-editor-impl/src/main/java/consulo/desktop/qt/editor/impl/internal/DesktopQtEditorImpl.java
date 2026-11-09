@@ -23,7 +23,10 @@ import consulo.codeEditor.*;
 import consulo.codeEditor.event.*;
 import consulo.codeEditor.impl.*;
 import consulo.codeEditor.impl.internal.floating.EditorFloatingToolbarInstaller;
+import consulo.codeEditor.impl.internal.floating.EditorSelectionHoverTracker;
 import consulo.codeEditor.internal.CaretPixelLocationProvider;
+import consulo.codeEditor.internal.EditorSelectionGestureListener;
+import consulo.codeEditor.internal.EditorSelectionGestureSupport;
 import consulo.codeEditor.markup.RangeHighlighterEx;
 import consulo.colorScheme.TextAttributes;
 import consulo.colorScheme.internal.FontPreferencesManager;
@@ -74,7 +77,7 @@ import java.util.function.Consumer;
  * @author VISTALL
  * @since 2026-08-16
  */
-public class DesktopQtEditorImpl extends CodeEditorBase implements RealEditor, CaretPixelLocationProvider {
+public class DesktopQtEditorImpl extends CodeEditorBase implements RealEditor, CaretPixelLocationProvider, EditorSelectionGestureSupport {
     private static final Logger LOG = Logger.getInstance(DesktopQtEditorImpl.class);
 
     private final java.util.Map<Object, Cursor> myCustomCursors = new java.util.LinkedHashMap<>();
@@ -82,6 +85,7 @@ public class DesktopQtEditorImpl extends CodeEditorBase implements RealEditor, C
     private final DesktopQtEditorComponent myComponent;
 
     private final List<Consumer<KeyCode>> myKeyNotConsumedListeners = Lists.newLockFreeCopyOnWriteList();
+    private final List<EditorSelectionGestureListener> mySelectionGestureListeners = Lists.newLockFreeCopyOnWriteList();
 
     private @Nullable EditorHeaderSlot myHeaderSlot;
 
@@ -435,6 +439,20 @@ public class DesktopQtEditorImpl extends CodeEditorBase implements RealEditor, C
     public void fireMouseMoved(EditorMouseEvent event) {
         for (EditorMouseMotionListener listener : myMouseMotionListeners) {
             listener.mouseMoved(event);
+        }
+    }
+
+    @Override
+    public void addSelectionGestureListener(EditorSelectionGestureListener listener, Disposable parentDisposable) {
+        mySelectionGestureListeners.add(listener);
+        Disposer.register(parentDisposable, () -> mySelectionGestureListeners.remove(listener));
+        EditorSelectionHoverTracker.install(this, listener, parentDisposable);
+    }
+
+    @RequiredUIAccess
+    public void fireSelectionMouseReleased(int clickCount) {
+        for (EditorSelectionGestureListener listener : mySelectionGestureListeners) {
+            listener.mouseReleased(clickCount);
         }
     }
 

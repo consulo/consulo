@@ -48,6 +48,7 @@ public abstract class ActionPlaces {
     public static final String COMMANDER_POPUP = "CommanderPopup";
     public static final String COMMANDER_TOOLBAR = "CommanderToolbar";
     public static final String CONTEXT_TOOLBAR = "ContextToolbar";
+    public static final String EDITOR_FLOATING_TOOLBAR = "EditorFloatingToolbar";
     public static final String TOOLWINDOW_TITLE = "ToolwindowTitle";
 
     public static final String PROJECT_VIEW_POPUP = "ProjectViewPopup";
@@ -148,6 +149,7 @@ public abstract class ActionPlaces {
     public static final String EDITOR_INSPECTIONS_TOOLBAR = "EditorInspectionsToolbar";
 
     private static final Set<String> ourToolbarPlaces = Set.of(
+        EDITOR_FLOATING_TOOLBAR,
         EDITOR_TOOLBAR,
         PROJECT_VIEW_TOOLBAR,
         TOOLBAR,

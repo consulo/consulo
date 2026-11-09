@@ -124,3 +124,7 @@ title.hierarchy.subtypes:
     text: Subtypes of {0}
 title.hierarchy.supertypes:
     text: Supertypes of {0}
+group.floating.code.toolbar.extract.text:
+    text: Extract
+group.floating.code.toolbar.surround.text:
+    text: Surround

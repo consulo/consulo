@@ -18,7 +18,11 @@ import consulo.codeEditor.impl.FontInfo;
 import consulo.codeEditor.impl.internal.RealEditorWithEditorView;
 import consulo.codeEditor.impl.internal.floating.EditorFloatingToolbarInstaller;
 import consulo.codeEditor.impl.util.EditorImplUtil;
+import consulo.codeEditor.impl.internal.floating.EditorSelectionHoverTracker;
+import consulo.codeEditor.internal.CaretPixelLocationProvider;
 import consulo.codeEditor.internal.CodeEditorInternalHelper;
+import consulo.codeEditor.internal.EditorSelectionGestureListener;
+import consulo.codeEditor.internal.EditorSelectionGestureSupport;
 import consulo.codeEditor.internal.EditorActionPlan;
 import consulo.codeEditor.internal.EditorInternalUtil;
 import consulo.codeEditor.internal.stickyLine.StickyLinesModel;
@@ -145,7 +149,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
 public final class DesktopEditorImpl extends CodeEditorBase
-    implements RealEditorWithEditorView, DesktopAWTEditor, HighlighterClient, Queryable, Dumpable, CodeStyleSettingsListener {
+    implements RealEditorWithEditorView, DesktopAWTEditor, HighlighterClient, Queryable, Dumpable, CodeStyleSettingsListener,
+    CaretPixelLocationProvider, EditorSelectionGestureSupport {
     public static final int TEXT_ALIGNMENT_LEFT = 0;
     public static final int TEXT_ALIGNMENT_RIGHT = 1;
 
@@ -1178,6 +1183,32 @@ public final class DesktopEditorImpl extends CodeEditorBase
     @Override
     public consulo.ui.Component getContentUIComponent() {
         return myContentUIComponent;
+    }
+
+    @Override
+    public @Nullable CaretPixelLocation getCaretPixelLocation() {
+        VisualPosition position = getCaretModel().getVisualPosition();
+        Point point = visualPositionToXY(position);
+        Point lineStart = visualPositionToXY(new VisualPosition(position.line, 0));
+        return new CaretPixelLocation(point.x, point.y, getLineHeight(), lineStart.x);
+    }
+
+    @Override
+    public boolean isLocationScrolledWithComponent() {
+        return true;
+    }
+
+    @Override
+    public void addSelectionGestureListener(EditorSelectionGestureListener listener, Disposable parentDisposable) {
+        addEditorMouseListener(new EditorMouseListener() {
+            @Override
+            public void mouseReleased(EditorMouseEvent event) {
+                if (event.getArea() == EditorMouseEventArea.EDITING_AREA) {
+                    listener.mouseReleased(event.getMouseEvent().getClickCount());
+                }
+            }
+        }, parentDisposable);
+        EditorSelectionHoverTracker.install(this, listener, parentDisposable);
     }
 
     @Override

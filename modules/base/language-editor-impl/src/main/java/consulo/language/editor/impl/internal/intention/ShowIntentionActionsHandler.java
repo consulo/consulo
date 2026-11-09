@@ -9,6 +9,7 @@ import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
+import consulo.codeEditor.toolbar.floating.CodeFloatingToolbar;
 import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.language.editor.impl.internal.daemon.DaemonCodeAnalyzerImpl;
 import consulo.language.editor.impl.internal.daemon.ShowIntentionsPass;
@@ -38,7 +39,13 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.IdeActions;
+import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.ui.ex.popup.ListPopup;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.lang.Pair;
 import consulo.util.lang.ThreeState;
@@ -104,12 +111,46 @@ public class ShowIntentionActionsHandler implements CodeInsightActionHandler {
         if (!intentions.isEmpty()) {
             editor.getScrollingModel().runActionOnScrollingFinished(() -> {
                 CachedIntentions cachedIntentions = CachedIntentions.createAndUpdateActions(project, file, editor, intentions);
-                IntentionsUI.getInstance(project).showPopup(file, editor, cachedIntentions);
+                CodeFloatingToolbar toolbar = CodeFloatingToolbar.getToolbar(editor);
+                if (toolbar != null && editor.getSelectionModel().hasSelection()) {
+                    showPopupFromToolbar(project, editor, file, cachedIntentions, toolbar);
+                }
+                else {
+                    IntentionsUI.getInstance(project).showPopup(file, editor, cachedIntentions);
+                }
             });
         }
         else if (showFeedbackOnEmptyMenu) {
             HintManager.getInstance().showInformationHint(editor, "No context actions available at this location");
         }
+    }
+
+    @RequiredUIAccess
+    private static void showPopupFromToolbar(
+        Project project,
+        Editor editor,
+        PsiFile file,
+        CachedIntentions cachedIntentions,
+        CodeFloatingToolbar toolbar
+    ) {
+        UIAccess uiAccess = UIAccess.current();
+        toolbar.showAsync().whenCompleteAsync((shown, error) -> {
+            if (editor.isDisposed()) {
+                return;
+            }
+
+            AnAction showIntentions = ActionManager.getInstance().getAction(IdeActions.ACTION_SHOW_INTENTION_ACTIONS);
+            if (Boolean.TRUE.equals(shown) && showIntentions != null) {
+                ListPopup popup = JBPopupFactory.getInstance()
+                    .createListPopup(project, new IntentionListStep(null, editor, file, project, cachedIntentions));
+                if (toolbar.showPopupUnderneath(showIntentions, popup)) {
+                    return;
+                }
+                popup.cancel();
+            }
+
+            IntentionsUI.getInstance(project).showPopup(file, editor, cachedIntentions);
+        }, uiAccess);
     }
 
     @RequiredUIAccess

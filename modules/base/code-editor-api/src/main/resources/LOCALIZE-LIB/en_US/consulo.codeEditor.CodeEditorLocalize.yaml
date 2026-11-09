@@ -96,6 +96,14 @@ action.fill.paragraph.description:
     text: Reformat string literal or comment to fit maximum width (usually 80)
 action.fill.paragraph.text:
     text: Fill Paragraph
+action.floating.code.toolbar.customize.text:
+    text: Customize Toolbar…
+action.floating.code.toolbar.disable.text:
+    text: Hide Floating Toolbar
+action.floating.code.toolbar.goto.next.menu.text:
+    text: Next Floating Toolbar Menu
+action.floating.code.toolbar.goto.previous.menu.text:
+    text: Previous Floating Toolbar Menu
 action.hungry.backspace.description:
     text: Acts as the Backspace except that removes all whitespace symbols before the caret (if any)
 action.hungry.backspace.text:
@@ -276,6 +284,8 @@ attempt.to.modify.read.only.document.error.message:
     text: Attempt to modify read-only document
 checkbox.show.editor.preview.popup:
     text: Show editor preview tooltip
+checkbox.show.code.floating.toolbar:
+    text: Show floating toolbar for selected code
 close.editor.annotations.action.name:
     text: Close Annotations
 customize.highlighting.level.menu.item:
@@ -368,3 +378,5 @@ typing.command.name:
     text: Typing
 typing.in.editor.command.name:
     text: Typing
+group.floating.code.toolbar.text:
+    text: Floating Code Toolbar

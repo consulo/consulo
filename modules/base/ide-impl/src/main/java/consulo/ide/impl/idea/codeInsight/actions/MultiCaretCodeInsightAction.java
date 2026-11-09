@@ -30,9 +30,11 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.AnActionWithAsyncUpdate;
 import consulo.ui.UIAction;
+import consulo.ui.image.Image;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.lang.ref.SimpleReference;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Base class for PSI-aware editor actions that need to support multiple carets.
@@ -47,6 +49,10 @@ import consulo.util.lang.ref.SimpleReference;
 public abstract class MultiCaretCodeInsightAction extends AnAction implements AnActionWithAsyncUpdate {
     protected MultiCaretCodeInsightAction(LocalizeValue text, LocalizeValue description) {
         super(text, description);
+    }
+
+    protected MultiCaretCodeInsightAction(LocalizeValue text, LocalizeValue description, @Nullable Image icon) {
+        super(text, description, icon);
     }
 
     @Override

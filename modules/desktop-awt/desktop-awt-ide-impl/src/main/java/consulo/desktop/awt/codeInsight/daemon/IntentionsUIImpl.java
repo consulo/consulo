@@ -47,7 +47,8 @@ public class IntentionsUIImpl extends IntentionsUI {
         visibleArea.contains(xy) &&
         editor.getSettings().isShowIntentionBulb() &&
         editor.getCaretModel().getCaretCount() == 1 &&
-        cachedIntentions.showBulb()) {
+        cachedIntentions.showBulb() &&
+        !isHintReplacedByFloatingToolbar(editor)) {
       showHint(cachedIntentions.getFile(), editor, cachedIntentions);
     }
   }

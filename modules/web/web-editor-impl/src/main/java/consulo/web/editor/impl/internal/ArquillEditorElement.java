@@ -249,6 +249,31 @@ public class ArquillEditorElement extends Component implements HasSize {
         }
     }
 
+    @DomEvent("arquill-selection-gesture")
+    public static class ArquillSelectionGestureEvent extends ComponentEvent<ArquillEditorElement> {
+        private final int myClickCount;
+        private final int myOverSelection;
+
+        public ArquillSelectionGestureEvent(
+            ArquillEditorElement source,
+            boolean fromClient,
+            @EventData("event.detail.clickCount") int clickCount,
+            @EventData("event.detail.overSelection") int overSelection
+        ) {
+            super(source, fromClient);
+            myClickCount = clickCount;
+            myOverSelection = overSelection;
+        }
+
+        public int getClickCount() {
+            return myClickCount;
+        }
+
+        public int getOverSelection() {
+            return myOverSelection;
+        }
+    }
+
     @DomEvent("arquill-ctrl-hover")
     public static class ArquillCtrlHoverEvent extends ComponentEvent<ArquillEditorElement> {
         private final int myOffset;
@@ -945,6 +970,10 @@ public class ArquillEditorElement extends Component implements HasSize {
 
     public Registration addCtrlHoverListener(ComponentEventListener<ArquillCtrlHoverEvent> listener) {
         return addListener(ArquillCtrlHoverEvent.class, listener);
+    }
+
+    public Registration addSelectionGestureListener(ComponentEventListener<ArquillSelectionGestureEvent> listener) {
+        return addListener(ArquillSelectionGestureEvent.class, listener);
     }
 
     public Registration addFloatingEscapeListener(ComponentEventListener<ArquillFloatingEscapeEvent> listener) {

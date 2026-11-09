@@ -75,6 +75,7 @@ public class EditorSettingsExternalizable implements PersistentStateComponent<Ed
         public boolean SHOW_INSPECTION_WIDGET = true;
         public boolean IS_FOLDING_ENDINGS_SHOWN = false;
         public boolean IS_HIGHLIGHT_SELECTION_OCCURRENCES = true;
+        public boolean SHOW_CODE_FLOATING_TOOLBAR = true;
 
         public boolean SMART_HOME = true;
 
@@ -847,6 +848,16 @@ public class EditorSettingsExternalizable implements PersistentStateComponent<Ed
     @Override
     public void setHighlightSelectionOccurrences(boolean val) {
         myOptions.IS_HIGHLIGHT_SELECTION_OCCURRENCES = val;
+    }
+
+    @Override
+    public boolean isShowCodeFloatingToolbar() {
+        return myOptions.SHOW_CODE_FLOATING_TOOLBAR;
+    }
+
+    @Override
+    public void setShowCodeFloatingToolbar(boolean value) {
+        myOptions.SHOW_CODE_FLOATING_TOOLBAR = value;
     }
 
     @Override

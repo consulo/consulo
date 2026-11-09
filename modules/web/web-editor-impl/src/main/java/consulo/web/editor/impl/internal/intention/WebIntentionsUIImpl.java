@@ -53,7 +53,8 @@ public class WebIntentionsUIImpl extends IntentionsUI {
 
     if (editor.getSettings().isShowIntentionBulb()
       && editor.getCaretModel().getCaretCount() == 1
-      && cachedIntentions.showBulb()) {
+      && cachedIntentions.showBulb()
+      && !isHintReplacedByFloatingToolbar(editor)) {
       showHint(cachedIntentions.getFile(), editor, cachedIntentions);
     }
   }
