@@ -12,18 +12,13 @@ module consulo.http.impl {
 
     requires consulo.project.api;
     requires consulo.credential.storage.api;
+    requires consulo.configurable.api;
+    requires consulo.file.chooser.api;
+    requires consulo.ui.ex.api;
+    requires consulo.base.icon.library;
     requires consulo.util.io;
 
-    // TODO remove in future
-    requires java.desktop;
-    requires consulo.ui.ex.awt.api;
-    requires forms.rt;
-
-    requires org.apache.commons.codec;
     requires proxy.vole;
-    requires org.apache.httpcomponents.httpcore;
-    requires org.apache.httpcomponents.httpclient;
-    requires org.apache.httpcomponents.httpmime;
 
     exports consulo.http.impl.internal.proxy to consulo.ide.impl;
     exports consulo.http.impl.internal.ssl to

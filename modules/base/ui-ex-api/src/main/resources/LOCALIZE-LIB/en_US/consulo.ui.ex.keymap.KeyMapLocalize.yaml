@@ -1,7 +1,11 @@
+action.choose.actions.to.add:
+    text: Choose Actions To Add
 action.column.name:
     text: Action
 action.description.ide.border.factory.title:
     text: Action Description
+action.separator:
+    text: Separator
 actions.tree.external.tools.group:
     text: External Tools
 add.keyboard.shortcut.button:
@@ -18,6 +22,24 @@ assigned.to.info.message:
     text: Assigned to {0}
 based.on.keymap.label:
     text: 'Based on keymap: {0}'
+browse.custom.icon.hint:
+    text: To set custom icon, specify path to SVG or PNG file.
+button.add.separator:
+    text: Add &Separator
+button.edit.action.icon:
+    text: Edit Action &Icon...
+button.move.down:
+    text: Move &Down
+button.move.up:
+    text: Move &Up
+button.remove:
+    text: '&Remove'
+button.restore.all:
+    text: 'Restore A&ll Defaults'
+button.restore.selected.groups:
+    text: Restore Selected Groups
+button.restore.selection:
+    text: 'Restore {0}'
 commender.view.popup.menu.title:
     text: Commander View Popup Menu
 configuration.all.keymaps.should.have.non.empty.names.error.message:
@@ -38,8 +60,32 @@ conflicts.ide.border.factory.title:
     text: Conflicts
 copy.keymap.button:
     text: '&Copy'
+custom.icon.validation.message:
+    text: Icon is too big to appear in menu
 debugger.actions.group.title:
     text: Debugger Actions
+default.icons.add.text:
+    text: Add
+default.icons.edit.text:
+    text: Edit
+default.icons.export.text:
+    text: Export
+default.icons.filter.text:
+    text: Filter
+default.icons.find.text:
+    text: Find
+default.icons.gear.plain.text:
+    text: Gear plain
+default.icons.import.text:
+    text: Import
+default.icons.list.files.text:
+    text: List files
+default.icons.none.text:
+    text: '<None>'
+default.icons.remove.text:
+    text: Remove
+default.icons.unknown.text:
+    text: Default icon
 delete.keymap.button:
     text: De&lete
 delete.keymap.dialog.message:
@@ -74,6 +120,8 @@ enable.double.press.handler:
     text: Enable double modifier key shortcuts (Shift-Shift for Search Everywhere, Ctrl-Ctrl for Run Anything)
 enable.second.keystroke.check.box:
     text: 'Enable:'
+error.file.not.found.message:
+    text: File ''{0}'' not found
 favorites.popup.title:
     text: Favorites View Popup Menu
 filter.clear.action.text:
@@ -90,6 +138,16 @@ filter.shortcut.action.text:
     text: Find Actions by Shortcut
 first.stroke.panel.title:
     text: First Stroke
+group.customizations.add.action.below:
+    text: Add Action Below...
+group.customizations.add.action.button:
+    text: Add...
+group.customizations.add.action.group:
+    text: Add Actions...
+group.customizations.restore.action.group:
+    text: Restore Actions...
+icon.file.filter.label:
+    text: Icon files
 j2ee.view.popup.menu.title:
     text: Java EE View Popup Menu
 key.maps.name:
@@ -106,6 +164,8 @@ keymap.parent.display.name:
     text: Invisible keymap group parent
 keymaps.border.factory.title:
     text: 'Keymaps:'
+label.icon.path:
+    text: '&Icon Path:'
 macros.group.title:
     text: Macros
 main.menu.action.title:
@@ -188,6 +248,12 @@ shortcuts.keymap.label:
     text: Shortc&uts
 shortcuts.keymap.no.shortcuts:
     text: No shortcuts
+title.browse.icon:
+    text: Browse Icon
+title.choose.action.icon:
+    text: Choose Action Icon
+title.customizations:
+    text: Menus and Toolbars
 unnamed.list.display.name:
     text: unnamed
 use.non.english.keyboard.layout.support:

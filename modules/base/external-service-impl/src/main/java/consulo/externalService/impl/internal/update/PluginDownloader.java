@@ -30,6 +30,7 @@ import consulo.http.HttpRequests;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
+import consulo.ui.Component;
 import consulo.util.io.FilePermissionCopier;
 import consulo.util.io.FileUtil;
 import consulo.util.io.NioPathUtil;
@@ -106,7 +107,7 @@ public class PluginDownloader {
         return myPluginDownloadUrlBuilder.buildUrl(myDescriptor, tryIndex);
     }
 
-    public void download(ProgressIndicator pi) throws PluginDownloadFailedException {
+    public void download(ProgressIndicator pi, @Nullable Component uiOwner) throws PluginDownloadFailedException {
         PluginDescriptor descriptor;
         if (PluginManager.findPlugin(myPluginId) != null) {
             //store old plugins file
@@ -129,7 +130,7 @@ public class PluginDownloader {
                 try {
                     pi.checkCanceled();
 
-                    Pair<File, String> info = downloadPlugin(pi, expectedChecksum, i);
+                    Pair<File, String> info = downloadPlugin(pi, expectedChecksum, i, uiOwner);
 
                     if (StringUtil.equal(info.getSecond(), expectedChecksum, true)) {
                         myFile = info.getFirst();
@@ -159,7 +160,7 @@ public class PluginDownloader {
         }
         else {
             try {
-                myFile = downloadPlugin(pi, "<disabled>", -1).getFirst();
+                myFile = downloadPlugin(pi, "<disabled>", -1, uiOwner).getFirst();
             }
             catch (ProcessCanceledException e) {
                 throw e;
@@ -319,7 +320,7 @@ public class PluginDownloader {
         }
     }
 
-    private Pair<File, String> downloadPlugin(ProgressIndicator indicator, String expectedChecksum, int tryIndex)
+    private Pair<File, String> downloadPlugin(ProgressIndicator indicator, String expectedChecksum, int tryIndex, @Nullable Component uiOwner)
         throws IOException {
         File pluginsTemp = new File(ContainerPathManager.get().getPluginTempPath());
         if (!pluginsTemp.exists() && !pluginsTemp.mkdirs()) {
@@ -338,7 +339,7 @@ public class PluginDownloader {
 
         String downloadUrl = buildUrl(tryIndex);
         try {
-            return HttpRequests.request(downloadUrl).gzip(false).connect(request -> {
+            return HttpRequests.request(downloadUrl).uiOwner(uiOwner).gzip(false).connect(request -> {
                 MessageDigest digest;
                 try {
                     digest = MessageDigest.getInstance(CHECKSUM_ALGORITHM);

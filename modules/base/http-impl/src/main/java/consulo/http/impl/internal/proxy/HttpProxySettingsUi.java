@@ -24,9 +24,6 @@ import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.project.Project;
-import consulo.ui.ex.awt.Messages;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.layout.Layout;
@@ -115,7 +112,7 @@ class HttpProxySettingsUi implements Supplier<Layout> {
         Boolean property = Boolean.getBoolean(JavaProxyProperty.USE_SYSTEM_PROXY);
         mySystemProxyDefined.setVisible(Boolean.TRUE.equals(property));
         if (Boolean.TRUE.equals(property)) {
-            mySystemProxyDefined.setImage(UIUtil.getWarningIcon());
+            mySystemProxyDefined.setImage(PlatformIconGroup.generalWarning());
 //            RelativeFont.BOLD.install(mySystemProxyDefined);
         }
 
@@ -126,12 +123,9 @@ class HttpProxySettingsUi implements Supplier<Layout> {
 
         myClearPasswordsButton.addClickListener(e -> {
             settings.clearGenericPasswords();
-            //noinspection DialogTitleCapitalization
-            Messages.showMessageDialog(
-                "Proxy passwords were cleared.",
-                "Auto-detected Proxy",
-                UIUtil.getInformationIcon()
-            );
+            MessageBoxes.okInfo(LocalizeValue.localizeTODO("Proxy passwords were cleared."))
+                .title(LocalizeValue.localizeTODO("Auto-detected Proxy"))
+                .showAsync(myClearPasswordsButton);
         });
 
         configureCheckButton();
@@ -145,56 +139,63 @@ class HttpProxySettingsUi implements Supplier<Layout> {
         }
 
         myCheckButton.addClickListener(e -> {
-            String title = "Check Proxy Settings";
-            String answer = Messages.showInputDialog(
-                (Project) null,
-                "Warning: your settings will be saved.\n\nEnter any URL to check connection to:",
-                title,
-                UIUtil.getQuestionIcon(),
-                "http://",
-                null
-            );
-            if (StringUtil.isEmptyOrSpaces(answer)) {
-                return;
+            LocalizeValue title = LocalizeValue.localizeTODO("Check Proxy Settings");
+            UIAccess uiAccess = UIAccess.current();
+            InputBoxBuilder.text()
+                .title(title)
+                .text(LocalizeValue.localizeTODO("Warning: your settings will be saved. Enter any URL to check connection to:"))
+                .asQuestion()
+                .value("http://")
+                .showAsync(myCheckButton)
+                .whenCompleteAsync((answer, error) -> {
+                    if (!StringUtil.isEmptyOrSpaces(answer)) {
+                        checkConnection(answer, title);
+                    }
+                }, uiAccess);
+        });
+    }
+
+    @RequiredUIAccess
+    private void checkConnection(String url, LocalizeValue title) {
+        HttpProxyManagerImpl settings = HttpProxyManagerImpl.getInstance();
+        apply(settings);
+        UIAccess uiAccess = UIAccess.current();
+        AtomicReference<IOException> exceptionReference = new AtomicReference<>();
+        myCheckButton.setEnabled(false);
+        myCheckButton.setText(LocalizeValue.localizeTODO("Check connection (in progress…)"));
+        myConnectionCheckInProgress = true;
+        Application.get().executeOnPooledThread(() -> {
+            try {
+                HttpRequests.request(url)
+                    .uiOwner(myCheckButton)
+                    .readTimeout(3 * 1000)
+                    .tryConnect();
+            }
+            catch (IOException e1) {
+                exceptionReference.set(e1);
             }
 
-            HttpProxyManagerImpl settings = HttpProxyManagerImpl.getInstance();
-            apply(settings);
-            UIAccess uiAccess = UIAccess.current();
-            AtomicReference<IOException> exceptionReference = new AtomicReference<>();
-            myCheckButton.setEnabled(false);
-            myCheckButton.setText(LocalizeValue.localizeTODO("Check connection (in progress…)"));
-            myConnectionCheckInProgress = true;
-            Application.get().executeOnPooledThread(() -> {
-                try {
-                    //already checked for null above
-                    //noinspection ConstantConditions
-                    HttpRequests.request(answer)
-                        .readTimeout(3 * 1000)
-                        .tryConnect();
-                }
-                catch (IOException e1) {
-                    exceptionReference.set(e1);
-                }
+            uiAccess.give(() -> {
+                myConnectionCheckInProgress = false;
+                reset(settings);  // since password might have been set
+                myCheckButton.setText(HttpLocalize.proxyTestButton());
+                myCheckButton.setEnabled(canEnableConnectionCheck());
 
-                uiAccess.give(() -> {
-                    myConnectionCheckInProgress = false;
-                    reset(settings);  // since password might have been set
-                    myCheckButton.setText(HttpLocalize.proxyTestButton());
-                    myCheckButton.setEnabled(canEnableConnectionCheck());
-
-                    IOException exception = exceptionReference.get();
-                    if (exception == null) {
-                        Messages.showMessageDialog("Connection successful", title, UIUtil.getInformationIcon());
+                IOException exception = exceptionReference.get();
+                if (exception == null) {
+                    MessageBoxes.okInfo(LocalizeValue.localizeTODO("Connection successful"))
+                        .title(title)
+                        .showAsync(myCheckButton);
+                }
+                else {
+                    String message = StringUtil.notNullize(exception.getMessage(), "N/A");
+                    if (settings.getState().USE_HTTP_PROXY) {
+                        settings.getState().LAST_ERROR = message;
                     }
-                    else {
-                        String message = StringUtil.notNullize(exception.getMessage(), "N/A");
-                        if (settings.getState().USE_HTTP_PROXY) {
-                            settings.getState().LAST_ERROR = message;
-                        }
-                        Messages.showErrorDialog(errorText(message).get(), title);
-                    }
-                });
+                    MessageBoxes.okError(errorText(message))
+                        .title(title)
+                        .showAsync(myCheckButton);
+                }
             });
         });
     }
@@ -235,7 +236,7 @@ class HttpProxySettingsUi implements Supplier<Layout> {
         myOtherWarning.setVisible(oldStyleText != null);
         if (oldStyleText != null) {
             myOtherWarning.setText(oldStyleText);
-            myOtherWarning.setImage(UIUtil.getWarningIcon());
+            myOtherWarning.setImage(PlatformIconGroup.generalWarning());
         }
     }
 

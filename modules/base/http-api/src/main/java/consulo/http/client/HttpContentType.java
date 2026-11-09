@@ -19,6 +19,42 @@ package consulo.http.client;
 import org.jspecify.annotations.Nullable;
 
 import java.nio.charset.Charset;
+import java.util.Locale;
 
 record HttpContentType(String mimeType, @Nullable Charset charset) {
+    /**
+     * Parses a {@code Content-Type} header value: {@code type/subtype} followed by {@code ;}-separated parameters.
+     *
+     * @return {@code null} when there is no media type
+     * @throws IllegalArgumentException when the charset parameter names an unknown or illegal charset
+     */
+    static @Nullable HttpContentType parse(String value) {
+        String[] parts = value.split(";");
+        String mimeType = parts[0].trim().toLowerCase(Locale.ROOT);
+        if (mimeType.isEmpty()) {
+            return null;
+        }
+
+        Charset charset = null;
+        for (int i = 1; i < parts.length; i++) {
+            String parameter = parts[i].trim();
+            int eq = parameter.indexOf('=');
+            if (eq <= 0 || !parameter.substring(0, eq).trim().equalsIgnoreCase("charset")) {
+                continue;
+            }
+            String charsetName = unquote(parameter.substring(eq + 1).trim());
+            if (!charsetName.isEmpty()) {
+                charset = Charset.forName(charsetName);
+            }
+            break;
+        }
+        return new HttpContentType(mimeType, charset);
+    }
+
+    private static String unquote(String value) {
+        if (value.length() >= 2 && value.startsWith("\"") && value.endsWith("\"")) {
+            return value.substring(1, value.length() - 1);
+        }
+        return value;
+    }
 }

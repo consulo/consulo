@@ -17,8 +17,11 @@
 package consulo.http.json;
 
 import consulo.application.util.concurrent.AppExecutorUtil;
+import consulo.http.HttpMethod;
+import consulo.http.HttpRequestBuilder;
 import consulo.http.client.EmptyHttpResponseException;
 import consulo.http.client.HttpApiHelper;
+import consulo.http.client.HttpApiResponse;
 import consulo.http.client.HttpBodyReader;
 import consulo.http.client.HttpClientUtil;
 import consulo.logging.Logger;
@@ -26,8 +29,6 @@ import org.jspecify.annotations.Nullable;
 
 import java.io.InputStream;
 import java.net.URI;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -57,54 +58,40 @@ final class JsonHttpApiHelperImpl implements JsonHttpApiHelper, HttpApiHelper {
     }
 
     @Override
-    public CompletableFuture<HttpRequest.Builder> request(URI uri) {
-        return myHttpHelper.request(uri);
+    public CompletableFuture<HttpRequestBuilder> request(String url, HttpMethod method) {
+        return myHttpHelper.request(url, method);
     }
 
     @Override
-    public <T extends @Nullable Object> CompletableFuture<HttpResponse<T>> sendAndAwait(HttpRequest request,
-                                                                                        HttpResponse.BodyHandler<T> bodyHandler) {
-        return myHttpHelper.sendAndAwait(request, bodyHandler);
+    public <T extends @Nullable Object> CompletableFuture<HttpApiResponse<T>> sendAndRead(HttpRequestBuilder request,
+                                                                                          String requestName,
+                                                                                          HttpBodyReader<T> bodyReader) {
+        return myHttpHelper.sendAndRead(request, requestName, bodyReader);
     }
 
     @Override
-    public <T extends @Nullable Object> CompletableFuture<HttpResponse<T>> sendAndAwait(HttpRequest request,
-                                                                                        String requestName,
-                                                                                        HttpResponse.BodyHandler<T> bodyHandler) {
-        return myHttpHelper.sendAndAwait(request, requestName, bodyHandler);
+    public CompletableFuture<HttpRequestBuilder> putJson(URI uri, Object body) {
+        return sendJson(uri, HttpMethod.PUT, body);
     }
 
     @Override
-    public <R extends @Nullable Object> CompletableFuture<R> handleStreamingResponse(String requestName,
-                                                                                     HttpResponse<InputStream> response,
-                                                                                     HttpBodyReader<R> bodyReader) {
-        return myHttpHelper.handleStreamingResponse(requestName, response, bodyReader);
+    public CompletableFuture<HttpRequestBuilder> postJson(URI uri, Object body) {
+        return sendJson(uri, HttpMethod.POST, body);
     }
 
     @Override
-    public CompletableFuture<HttpRequest.Builder> putJson(URI uri, Object body) {
-        return request(uri).thenCombine(jsonBodyPublisher("PUT", uri, body), (builder, publisher) -> withJsonContent(builder.PUT(publisher)));
+    public CompletableFuture<HttpRequestBuilder> sendJson(URI uri, HttpMethod httpMethod, Object body) {
+        return request(uri, httpMethod).thenCombine(jsonBody(httpMethod, uri, body), (builder, bytes) -> withJsonContent(builder.body(bytes)));
     }
 
     @Override
-    public CompletableFuture<HttpRequest.Builder> postJson(URI uri, Object body) {
-        return request(uri).thenCombine(jsonBodyPublisher("POST", uri, body), (builder, publisher) -> withJsonContent(builder.POST(publisher)));
-    }
-
-    @Override
-    public CompletableFuture<HttpRequest.Builder> sendJson(URI uri, String httpMethod, Object body) {
-        return request(uri).thenCombine(jsonBodyPublisher(httpMethod, uri, body),
-            (builder, publisher) -> withJsonContent(builder.method(httpMethod, publisher)));
-    }
-
-    @Override
-    public HttpRequest.Builder withJsonContent(HttpRequest.Builder builder) {
+    public HttpRequestBuilder withJsonContent(HttpRequestBuilder builder) {
         return builder.header(HttpClientUtil.CONTENT_TYPE_HEADER, myDefaultSendContentType);
     }
 
     @Override
-    public CompletableFuture<HttpRequest.BodyPublisher> jsonBodyPublisher(String httpMethod, URI uri, Object body) {
-        String requestName = HttpClientUtil.getRequestName(httpMethod, uri);
+    public CompletableFuture<byte[]> jsonBody(HttpMethod httpMethod, URI uri, Object body) {
+        String requestName = HttpClientUtil.getRequestName(httpMethod.name(), uri.toString());
         return CompletableFuture.supplyAsync(() -> {
             byte[] jsonBytes;
             try {
@@ -117,12 +104,12 @@ final class JsonHttpApiHelperImpl implements JsonHttpApiHelper, HttpApiHelper {
             if (myLogger.isTraceEnabled()) {
                 myLogger.trace(requestName + " : Request body: " + new String(jsonBytes, StandardCharsets.UTF_8));
             }
-            return HttpRequest.BodyPublishers.ofByteArray(jsonBytes);
+            return jsonBytes;
         }, AppExecutorUtil.getAppExecutorService());
     }
 
     @Override
-    public <T> CompletableFuture<HttpResponse<T>> loadJsonValueByClass(HttpRequest request, Class<T> clazz) {
+    public <T> CompletableFuture<HttpApiResponse<T>> loadJsonValueByClass(HttpRequestBuilder request, Class<T> clazz) {
         return sendAndRead(request, (requestName, stream, mimeType, charset) -> {
             checkJsonMimeType(mimeType);
             T value = deserialize(requestName, stream, charset, clazz);
@@ -134,7 +121,7 @@ final class JsonHttpApiHelperImpl implements JsonHttpApiHelper, HttpApiHelper {
     }
 
     @Override
-    public <T> CompletableFuture<HttpResponse<@Nullable T>> loadOptionalJsonValueByClass(HttpRequest request, Class<T> clazz) {
+    public <T> CompletableFuture<HttpApiResponse<@Nullable T>> loadOptionalJsonValueByClass(HttpRequestBuilder request, Class<T> clazz) {
         return sendAndRead(request, (requestName, stream, mimeType, charset) -> {
             if (mimeType == null || !HttpClientUtil.isJsonMimeType(mimeType)) {
                 myLogger.debug(requestName + " : no content type - inferring no content");
@@ -145,7 +132,7 @@ final class JsonHttpApiHelperImpl implements JsonHttpApiHelper, HttpApiHelper {
     }
 
     @Override
-    public <T> CompletableFuture<HttpResponse<List<T>>> loadJsonListByClass(HttpRequest request, Class<T> clazz) {
+    public <T> CompletableFuture<HttpApiResponse<List<T>>> loadJsonListByClass(HttpRequestBuilder request, Class<T> clazz) {
         return sendAndRead(request, (requestName, stream, mimeType, charset) -> {
             checkJsonMimeType(mimeType);
             List<T> value = deserializeList(requestName, stream, charset, clazz);
@@ -157,7 +144,7 @@ final class JsonHttpApiHelperImpl implements JsonHttpApiHelper, HttpApiHelper {
     }
 
     @Override
-    public <T> CompletableFuture<HttpResponse<@Nullable List<T>>> loadOptionalJsonListByClass(HttpRequest request, Class<T> clazz) {
+    public <T> CompletableFuture<HttpApiResponse<@Nullable List<T>>> loadOptionalJsonListByClass(HttpRequestBuilder request, Class<T> clazz) {
         return sendAndRead(request, (requestName, stream, mimeType, charset) -> {
             if (mimeType == null || !HttpClientUtil.isJsonMimeType(mimeType)) {
                 myLogger.debug(requestName + " : no content type - inferring no content");
@@ -167,8 +154,8 @@ final class JsonHttpApiHelperImpl implements JsonHttpApiHelper, HttpApiHelper {
         });
     }
 
-    private <T extends @Nullable Object> CompletableFuture<HttpResponse<T>> sendAndRead(HttpRequest originalRequest, NamedBodyReader<T> bodyReader) {
-        HttpRequest request = HttpClientUtil.ensureAcceptHeader(originalRequest, myDefaultAcceptMimeType);
+    private <T extends @Nullable Object> CompletableFuture<HttpApiResponse<T>> sendAndRead(HttpRequestBuilder originalRequest, NamedBodyReader<T> bodyReader) {
+        HttpRequestBuilder request = HttpClientUtil.ensureAcceptHeader(originalRequest, myDefaultAcceptMimeType);
         String requestName = HttpApiHelper.logName(request);
         return sendAndRead(request, requestName, (stream, mimeType, charset) -> bodyReader.read(requestName, stream, mimeType, charset));
     }

@@ -28,6 +28,7 @@ import consulo.externalService.impl.internal.update.PlatformOrPluginUpdateChecke
 import consulo.externalService.localize.ExternalServiceLocalize;
 import consulo.externalService.update.UpdateChannel;
 import consulo.http.HttpRequests;
+import consulo.ui.Component;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.io.UnsyncByteArrayInputStream;
 import consulo.util.lang.SystemProperties;
@@ -99,10 +100,11 @@ public class RepositoryHelper {
     public static List<PluginDescriptor> loadOnlyPluginsFromRepository(
         @Nullable ProgressIndicator indicator,
         UpdateChannel channel,
-        EarlyAccessProgramManager eapManager
+        EarlyAccessProgramManager eapManager,
+        @Nullable Component uiOwner
     )
         throws Exception {
-        List<PluginDescriptor> ideaPluginDescriptors = loadPluginsFromRepository(indicator, channel);
+        List<PluginDescriptor> ideaPluginDescriptors = loadPluginsFromRepository(indicator, channel, uiOwner);
         return ContainerUtil.filter(ideaPluginDescriptors, it -> isPluginAllowed(it, eapManager));
     }
 
@@ -116,16 +118,18 @@ public class RepositoryHelper {
 
     public static List<PluginDescriptor> loadPluginsFromRepository(
         @Nullable ProgressIndicator indicator,
-        UpdateChannel channel
+        UpdateChannel channel,
+        @Nullable Component uiOwner
     ) throws Exception {
-        return loadPluginsFromRepository(indicator, channel, null, false);
+        return loadPluginsFromRepository(indicator, channel, null, false, uiOwner);
     }
 
     public static List<PluginDescriptor> loadPluginsFromRepository(
         @Nullable ProgressIndicator indicator,
         UpdateChannel channel,
         @Nullable String buildNumber,
-        boolean withObsoletePlatforms
+        boolean withObsoletePlatforms,
+        @Nullable Component uiOwner
     ) throws Exception {
         if (buildNumber == null) {
             ApplicationInfo appInfo = ApplicationInfo.getInstance();
@@ -139,7 +143,7 @@ public class RepositoryHelper {
         }
 
         try {
-            byte[] bytes = HttpRequests.request(url).connect(request -> {
+            byte[] bytes = HttpRequests.request(url).uiOwner(uiOwner).connect(request -> {
                 if (indicator != null) {
                     indicator.setText2(ExternalServiceLocalize.progressDownloadingListOfPlugins());
                 }

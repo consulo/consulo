@@ -8,10 +8,8 @@ import org.jspecify.annotations.NullMarked;
 @SuppressWarnings("module")
 module consulo.http.api {
     requires transitive consulo.application.api;
-    requires transitive java.net.http;
 
     requires com.google.common;
-    requires org.apache.httpcomponents.httpcore;
 
     exports consulo.http;
     exports consulo.http.ssl;

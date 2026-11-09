@@ -17,12 +17,14 @@ package consulo.http;
 
 import consulo.application.progress.ProgressIndicator;
 import consulo.logging.Logger;
+import consulo.ui.Component;
 import org.jspecify.annotations.Nullable;
 
 import javax.net.ssl.HostnameVerifier;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.concurrent.CompletableFuture;
 
 public interface HttpRequestBuilder {
     /**
@@ -44,6 +46,12 @@ public interface HttpRequestBuilder {
 
     HttpRequestBuilder hostNameVerifier(@Nullable HostnameVerifier hostnameVerifier);
 
+    /**
+     * The component the request is sent for. A question the request has to ask the user - whether to trust a
+     * certificate the server sent - is shown in the ui of this component.
+     */
+    HttpRequestBuilder uiOwner(@Nullable Component component);
+
     default HttpRequestBuilder userAgent(@Nullable String userAgent) {
         return header("User-Agent", userAgent);
     }
@@ -60,7 +68,22 @@ public interface HttpRequestBuilder {
 
     HttpRequestBuilder body(@Nullable byte[] bytes);
 
+    String getUrl();
+
+    HttpMethod getMethod();
+
+    @Nullable String getHeader(String headerName);
+
     <T> T connect(HttpRequestProcessor<T> processor) throws IOException;
+
+    /**
+     * Sends the request on the application pool. What the builder was told is taken when this is called, so the builder
+     * may be changed or reused right after.
+     * <p>
+     * The future fails with the {@link IOException} {@link #connect(HttpRequestProcessor)} would throw. Cancelling it cancels the
+     * progress the exchange runs under: a waiting connection gives up and the body stops being read.
+     */
+    <T> CompletableFuture<T> connectAsync(HttpRequestProcessor<T> processor);
 
     int tryConnect() throws IOException;
 

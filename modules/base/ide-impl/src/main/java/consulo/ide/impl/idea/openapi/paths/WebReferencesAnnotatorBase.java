@@ -15,7 +15,11 @@
  */
 package consulo.ide.impl.idea.openapi.paths;
 
+import consulo.application.Application;
 import consulo.document.util.TextRange;
+import consulo.http.HttpMethod;
+import consulo.http.HttpRequestBuilderFactory;
+import consulo.http.HttpStatusException;
 import consulo.language.editor.annotation.Annotation;
 import consulo.language.editor.annotation.AnnotationHolder;
 import consulo.language.editor.annotation.ExternalAnnotator;
@@ -29,25 +33,22 @@ import consulo.language.psi.PsiReference;
 import consulo.language.psi.path.PsiDynaReference;
 import consulo.logging.Logger;
 import org.jspecify.annotations.Nullable;
-import org.apache.http.HttpStatus;
-import org.apache.http.client.config.CookieSpecs;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Eugene.Kudelevsky
  */
 public abstract class WebReferencesAnnotatorBase extends ExternalAnnotator<WebReferencesAnnotatorBase.MyInfo[], WebReferencesAnnotatorBase.MyInfo[]> {
   private static final Logger LOG = Logger.getInstance(WebReferencesAnnotatorBase.class);
+  private static final Set<Integer> NON_EXISTENT_RESOURCE_STATUS_CODES = Set.of(HttpURLConnection.HTTP_NOT_FOUND, HttpURLConnection.HTTP_GONE);
 
   private final Map<String, MyFetchCacheEntry> myFetchCache = new HashMap<String, MyFetchCacheEntry>();
   private final Object myFetchCacheLock = new Object();
@@ -184,30 +185,33 @@ public abstract class WebReferencesAnnotatorBase extends ExternalAnnotator<WebRe
   }
 
   private static MyFetchResult doCheckUrl(String url) {
-    RequestConfig.Builder requestConfigBuilder = RequestConfig.custom();
-    requestConfigBuilder.setConnectTimeout(3000);
-    requestConfigBuilder.setSocketTimeout(3000);
-    requestConfigBuilder.setConnectionRequestTimeout(3000);
-    requestConfigBuilder.setCookieSpec(CookieSpecs.BROWSER_COMPATIBILITY);
+    if (url.startsWith("mailto")) {
+      return MyFetchResult.OK;
+    }
 
-    try (CloseableHttpClient httpClient = HttpClientBuilder.create().setDefaultRequestConfig(requestConfigBuilder.build()).build()) {
-      return httpClient.execute(new HttpGet(url), response -> {
-        int code = response.getStatusLine().getStatusCode();
-        return code == HttpStatus.SC_OK || code == HttpStatus.SC_REQUEST_TIMEOUT ? MyFetchResult.OK : MyFetchResult.NONEXISTENCE;
-      });
+    try {
+      Application.get().getInstance(HttpRequestBuilderFactory.class)
+        .newBuilder(url, HttpMethod.GET)
+        .productNameAsUserAgent()
+        .connectTimeout(3000)
+        .readTimeout(3000)
+        .tryConnect();
     }
     catch (UnknownHostException e) {
       LOG.info(e);
       return MyFetchResult.UNKNOWN_HOST;
     }
+    catch (HttpStatusException e) {
+      LOG.info(e);
+      return NON_EXISTENT_RESOURCE_STATUS_CODES.contains(e.getStatusCode()) ? MyFetchResult.NONEXISTENCE : MyFetchResult.OK;
+    }
     catch (IOException e) {
       LOG.info(e);
-      return MyFetchResult.OK;
     }
     catch (IllegalArgumentException e) {
       LOG.debug(e);
-      return MyFetchResult.OK;
     }
+    return MyFetchResult.OK;
   }
 
   private static class MyFetchCacheEntry {

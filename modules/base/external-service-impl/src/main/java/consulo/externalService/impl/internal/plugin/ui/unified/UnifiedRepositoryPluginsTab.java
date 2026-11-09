@@ -72,7 +72,8 @@ public class UnifiedRepositoryPluginsTab extends UnifiedPluginTab {
                     return RepositoryHelper.loadOnlyPluginsFromRepository(
                         null,
                         UpdateSettings.getInstance().getChannel(),
-                        earlyAccessProgramManager
+                        earlyAccessProgramManager,
+                        myLoadingLayout
                     );
                 }
                 catch (Exception e) {

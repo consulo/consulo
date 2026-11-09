@@ -17,6 +17,7 @@ package consulo.http.impl.internal;
 
 import consulo.http.internal.HttpRequestOptions;
 import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressManager;
 import consulo.application.util.ProgressStreamUtil;
 import consulo.http.HttpRequest;
 import consulo.util.collection.ArrayUtil;
@@ -75,6 +76,10 @@ public abstract class BaseHttpRequestImpl implements HttpRequest, AutoCloseable 
     public InputStream getInputStream() throws IOException {
         if (myInputStream == null) {
             myInputStream = openInputStream();
+            ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
+            if (indicator != null) {
+                myInputStream = new CancellableInputStream(myInputStream, indicator);
+            }
             if (myOptions.gzip() && "gzip".equalsIgnoreCase(getContentEncoding())) {
                 myInputStream = CountingGZIPInputStream.create(myInputStream);
             }

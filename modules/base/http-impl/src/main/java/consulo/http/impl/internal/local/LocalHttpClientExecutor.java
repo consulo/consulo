@@ -23,6 +23,7 @@ import consulo.http.HttpRequestProcessor;
 import consulo.http.HttpStatusException;
 import consulo.http.HttpVersion;
 import consulo.http.impl.internal.HttpRequestExecutor;
+import consulo.http.impl.internal.ssl.HttpCertificateManagerImpl;
 import consulo.http.internal.HttpRequestOptions;
 import consulo.http.localize.HttpLocalize;
 import consulo.logging.Logger;
@@ -124,8 +125,12 @@ public final class LocalHttpClientExecutor implements HttpRequestExecutor {
             return myUrlConnectionExecutor.execute(options, processor);
         }
 
+        Runnable unregisterUiOwner = HttpCertificateManagerImpl.registerUiOwner(myCertificateManager, options);
         try (LocalHttpClientRequest request = new LocalHttpClientRequest(this, options)) {
             return processor.process(request);
+        }
+        finally {
+            unregisterUiOwner.run();
         }
     }
 

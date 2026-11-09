@@ -18,7 +18,9 @@ package consulo.externalService.internal.startup;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.localize.LocalizeValue;
+import consulo.ui.Component;
 import consulo.util.dataholder.UserDataHolder;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Set;
@@ -56,4 +58,9 @@ public interface StartupCustomizeContext extends UserDataHolder {
      * Reports what the finish work could not do - the wizard shows all of it to the user once the work is over.
      */
     void addProblem(LocalizeValue problem);
+
+    /**
+     * The component of the wizard - a question the finish work has to ask is shown in its ui.
+     */
+    @Nullable Component getUiOwner();
 }

@@ -17,21 +17,18 @@
 package consulo.http.client;
 
 import consulo.application.Application;
+import consulo.http.HttpRequestBuilder;
 
-import java.net.http.HttpRequest;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 public class CommonHeadersConfigurer implements HttpRequestConfigurer {
     protected Map<String, String> getCommonHeaders() {
-        return Map.of(
-            HttpClientUtil.ACCEPT_ENCODING_HEADER, HttpClientUtil.CONTENT_ENCODING_GZIP,
-            HttpClientUtil.USER_AGENT_HEADER, Application.get().getName().get()
-        );
+        return Map.of(HttpClientUtil.USER_AGENT_HEADER, Application.get().getName().get());
     }
 
     @Override
-    public final CompletableFuture<HttpRequest.Builder> configureAsync(HttpRequest.Builder builder) {
+    public final CompletableFuture<HttpRequestBuilder> configureAsync(HttpRequestBuilder builder) {
         getCommonHeaders().forEach(builder::header);
         return CompletableFuture.completedFuture(builder);
     }

@@ -20,6 +20,7 @@ import consulo.http.HttpProxyManager;
 import consulo.http.HttpRequestProcessor;
 import consulo.http.HttpStatusException;
 import consulo.http.impl.internal.HttpRequestExecutor;
+import consulo.http.impl.internal.ssl.HttpCertificateManagerImpl;
 import consulo.http.internal.HttpRequestOptions;
 import consulo.http.localize.HttpLocalize;
 import consulo.util.lang.StringUtil;
@@ -56,8 +57,12 @@ public final class LocalUrlConnectionExecutor implements HttpRequestExecutor {
 
     @Override
     public <T> T execute(HttpRequestOptions options, HttpRequestProcessor<T> processor) throws IOException {
+        Runnable unregisterUiOwner = HttpCertificateManagerImpl.registerUiOwner(myCertificateManager, options);
         try (LocalUrlConnectionRequest request = new LocalUrlConnectionRequest(this, options)) {
             return processor.process(request);
+        }
+        finally {
+            unregisterUiOwner.run();
         }
     }
 

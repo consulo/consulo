@@ -16,7 +16,8 @@
  */
 package consulo.http.client;
 
-import java.net.http.HttpRequest;
+import consulo.http.HttpRequestBuilder;
+
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -32,8 +33,8 @@ public class CompoundRequestConfigurer implements HttpRequestConfigurer {
     }
 
     @Override
-    public CompletableFuture<HttpRequest.Builder> configureAsync(HttpRequest.Builder builder) {
-        CompletableFuture<HttpRequest.Builder> result = CompletableFuture.completedFuture(builder);
+    public CompletableFuture<HttpRequestBuilder> configureAsync(HttpRequestBuilder builder) {
+        CompletableFuture<HttpRequestBuilder> result = CompletableFuture.completedFuture(builder);
         for (HttpRequestConfigurer configurer : myConfigurers) {
             result = result.thenCompose(configurer::configureAsync);
         }

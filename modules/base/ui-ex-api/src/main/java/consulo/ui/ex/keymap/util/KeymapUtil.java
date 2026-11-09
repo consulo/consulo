@@ -376,14 +376,14 @@ public class KeymapUtil {
                     );
                 }
                 else if (action instanceof AnSeparator) {
-                    group.addSeparator();
+                    chain = chain.thenRun(group::addSeparator);
                 }
                 else {
                     String id = action instanceof ActionStubBase actionStubBase
                         ? actionStubBase.getId()
                         : actionManager.getId(action);
                     if (id != null && !id.startsWith(TOOL_ACTION_PREFIX) && (filtered == null || filtered.test(action))) {
-                        group.addActionId(id);
+                        chain = chain.thenRun(() -> group.addActionId(id));
                     }
                 }
             }

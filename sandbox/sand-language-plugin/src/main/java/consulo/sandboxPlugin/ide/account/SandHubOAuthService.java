@@ -82,7 +82,7 @@ public class SandHubOAuthService extends OAuthServiceBase<OAuthCredentials> {
         public OAuthCredentialsAcquirer<OAuthCredentials> getCredentialsAcquirer() {
             return code -> OAuthCredentialsAcquirerHttp.requestToken(
                 myServiceUrl.resolve("access_token").addParameters(Map.of("code", code, "code_verifier", myCodeVerifier)),
-                (body, headers) -> new SimpleOAuthCredentials(headers.firstValue("X-OAuth-Token").orElseThrow())
+                response -> new SimpleOAuthCredentials(Objects.requireNonNull(response.header("X-OAuth-Token")))
             );
         }
 

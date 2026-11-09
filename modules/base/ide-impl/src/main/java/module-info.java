@@ -115,9 +115,6 @@ open module consulo.ide.impl {
     // TODO [VISTALL] remove this dependency
     requires gnu.trove;
 
-    requires org.apache.httpcomponents.httpcore;
-    requires org.apache.httpcomponents.httpclient;
-    requires org.apache.httpcomponents.httpmime;
 
     requires org.apache.commons.lang3;
     requires org.apache.commons.codec;

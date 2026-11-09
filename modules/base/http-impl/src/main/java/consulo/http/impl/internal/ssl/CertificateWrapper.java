@@ -1,10 +1,9 @@
 package consulo.http.impl.internal.ssl;
 
-import org.apache.commons.codec.digest.DigestUtils;
 import org.jspecify.annotations.Nullable;
 
 import javax.security.auth.x500.X500Principal;
-import java.security.cert.CertificateEncodingException;
+import java.security.MessageDigest;
 import java.security.cert.X509Certificate;
 import java.util.Collections;
 import java.util.Date;
@@ -49,28 +48,27 @@ public class CertificateWrapper {
     /**
      * Returns SHA-256 fingerprint of the certificate.
      *
-     * @return SHA-256 fingerprint or {@link #NOT_AVAILABLE} in case of any error
+     * @return SHA-256 fingerprint or {@code null} in case of any error
      */
-    public String getSha256Fingerprint() {
-        try {
-            return DigestUtils.sha256Hex(myCertificate.getEncoded());
-        }
-        catch (CertificateEncodingException e) {
-            return NOT_AVAILABLE;
-        }
+    public byte @Nullable [] getSha256Fingerprint() {
+        return digest("SHA-256");
     }
 
     /**
      * Returns SHA-1 fingerprint of the certificate.
      *
-     * @return SHA-1 fingerprint or {@link #NOT_AVAILABLE} in case of any error
+     * @return SHA-1 fingerprint or {@code null} in case of any error
      */
-    public String getSha1Fingerprint() {
+    public byte @Nullable [] getSha1Fingerprint() {
+        return digest("SHA-1");
+    }
+
+    private byte @Nullable [] digest(String algorithm) {
         try {
-            return DigestUtils.sha1Hex(myCertificate.getEncoded());
+            return MessageDigest.getInstance(algorithm).digest(myCertificate.getEncoded());
         }
         catch (Exception e) {
-            return NOT_AVAILABLE;
+            return null;
         }
     }
 

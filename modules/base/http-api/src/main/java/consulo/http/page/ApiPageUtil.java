@@ -16,6 +16,8 @@
  */
 package consulo.http.page;
 
+import consulo.http.client.HttpApiResponse;
+
 import consulo.http.client.URIUtil;
 import consulo.http.graphql.GraphQLRequestPagination;
 import consulo.http.graphql.dto.GraphQLCursorPageInfoDTO;
@@ -23,7 +25,6 @@ import consulo.http.graphql.dto.GraphQLPagedResponseDataDTO;
 import org.jspecify.annotations.Nullable;
 
 import java.net.URI;
-import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -68,8 +69,8 @@ public final class ApiPageUtil {
     }
 
     public static <T> CompletableFuture<?> collectPagesByLinkHeader(URI initialURI,
-                                                                    Function<URI, CompletableFuture<HttpResponse<T>>> request,
-                                                                    Consumer<HttpResponse<T>> consumer) {
+                                                                    Function<URI, CompletableFuture<HttpApiResponse<T>>> request,
+                                                                    Consumer<HttpApiResponse<T>> consumer) {
         CompletableFuture<Object> result = new CompletableFuture<>();
         loadPageByLinkHeader(initialURI, initialURI, request, consumer, result);
         return result;
@@ -82,8 +83,8 @@ public final class ApiPageUtil {
      * <p>
      * Careful: starts pagination at page=1 and increments from there.
      */
-    public static <T> CompletableFuture<?> collectPagesByPagination(IntFunction<CompletableFuture<HttpResponse<List<T>>>> loader,
-                                                                    Consumer<HttpResponse<List<T>>> consumer) {
+    public static <T> CompletableFuture<?> collectPagesByPagination(IntFunction<CompletableFuture<HttpApiResponse<List<T>>>> loader,
+                                                                    Consumer<HttpApiResponse<List<T>>> consumer) {
         CompletableFuture<Object> result = new CompletableFuture<>();
         loadPageByNumber(1, loader, consumer, result);
         return result;
@@ -137,8 +138,8 @@ public final class ApiPageUtil {
 
     private static <T> void loadPageByLinkHeader(URI initialURI,
                                                  URI uri,
-                                                 Function<URI, CompletableFuture<HttpResponse<T>>> request,
-                                                 Consumer<HttpResponse<T>> consumer,
+                                                 Function<URI, CompletableFuture<HttpApiResponse<T>>> request,
+                                                 Consumer<HttpApiResponse<T>> consumer,
                                                  CompletableFuture<Object> result) {
         if (result.isDone()) {
             return;
@@ -153,10 +154,8 @@ public final class ApiPageUtil {
             }
             String nextLink;
             try {
-                nextLink = response.headers().firstValue(LinkHttpHeaderValue.HEADER_NAME)
-                    .map(LinkHttpHeaderValue::parse)
-                    .map(LinkHttpHeaderValue::nextLink)
-                    .orElse(null);
+                String linkHeader = response.header(LinkHttpHeaderValue.HEADER_NAME);
+                nextLink = linkHeader == null ? null : LinkHttpHeaderValue.parse(linkHeader).nextLink();
                 consumer.accept(response);
             }
             catch (Throwable e) {
@@ -173,8 +172,8 @@ public final class ApiPageUtil {
     }
 
     private static <T> void loadPageByNumber(int page,
-                                             IntFunction<CompletableFuture<HttpResponse<List<T>>>> loader,
-                                             Consumer<HttpResponse<List<T>>> consumer,
+                                             IntFunction<CompletableFuture<HttpApiResponse<List<T>>>> loader,
+                                             Consumer<HttpApiResponse<List<T>>> consumer,
                                              CompletableFuture<Object> result) {
         if (result.isDone()) {
             return;

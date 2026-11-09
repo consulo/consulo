@@ -85,7 +85,7 @@ public class InstallPluginRestHandler extends JsonGetRequestHandler {
                 EarlyAccessProgramManager earlyAccessProgramManager = EarlyAccessProgramManager.getInstance();
                 try {
                     List<PluginDescriptor> pluginDescriptors =
-                        RepositoryHelper.loadOnlyPluginsFromRepository(progressIndicator, channel, earlyAccessProgramManager);
+                        RepositoryHelper.loadOnlyPluginsFromRepository(progressIndicator, channel, earlyAccessProgramManager, null);
 
                     PluginId pluginId = PluginId.getId(pluginIdStr);
 

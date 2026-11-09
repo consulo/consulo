@@ -92,7 +92,7 @@ public final class PlatformOrPluginInstallProcess {
 
                     forInstall.add(downloader);
 
-                    downloader.download(new CompositePluginInstallIndicator(indicator, i++, installCount));
+                    downloader.download(new CompositePluginInstallIndicator(indicator, i++, installCount), component);
                 }
                 catch (PluginDownloadFailedException e) {
                     LOG.warn("Download failed", e);

@@ -17,18 +17,17 @@
 package consulo.http.client;
 
 import consulo.http.HttpProxyManager;
+import consulo.http.HttpRequestBuilder;
 
-import java.net.http.HttpRequest;
-import java.time.Duration;
 import java.util.concurrent.CompletableFuture;
 
 public class RequestTimeoutConfigurer implements HttpRequestConfigurer {
-    protected long getReadTimeoutMillis() {
+    protected int getReadTimeoutMillis() {
         return HttpProxyManager.READ_TIMEOUT;
     }
 
     @Override
-    public final CompletableFuture<HttpRequest.Builder> configureAsync(HttpRequest.Builder builder) {
-        return CompletableFuture.completedFuture(builder.timeout(Duration.ofMillis(getReadTimeoutMillis())));
+    public final CompletableFuture<HttpRequestBuilder> configureAsync(HttpRequestBuilder builder) {
+        return CompletableFuture.completedFuture(builder.readTimeout(getReadTimeoutMillis()));
     }
 }

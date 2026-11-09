@@ -115,7 +115,8 @@ public class StartupCustomizeManagerImpl implements StartupCustomizeManager {
             return RepositoryHelper.loadOnlyPluginsFromRepository(
                 null,
                 UpdateSettings.getInstance().getChannel(),
-                EarlyAccessProgramManager.getInstance()
+                EarlyAccessProgramManager.getInstance(),
+                null
             );
         }
         catch (Exception e) {

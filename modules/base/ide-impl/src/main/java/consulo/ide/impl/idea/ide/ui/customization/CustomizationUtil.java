@@ -24,22 +24,27 @@ import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.PopupHandler;
-import consulo.ui.ex.awt.tree.Tree;
-import consulo.ui.ex.awt.tree.TreeUtil;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.TextItemPresentation;
+import consulo.ui.Tree;
+import consulo.ui.TreeNode;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnSeparator;
+import consulo.ui.ex.action.QuickList;
+import consulo.ui.image.Image;
 import consulo.ui.util.TextWithMnemonic;
 import consulo.util.collection.ContainerUtil;
-import consulo.util.lang.Pair;
-
+import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreeNode;
-import javax.swing.tree.TreePath;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * @author anna
@@ -112,45 +117,54 @@ public class CustomizationUtil {
         return reorderedChildren.toArray(new AnAction[reorderedChildren.size()]);
     }
 
-    public static void optimizeSchema(JTree tree, CustomActionsSchemaImpl schema, List<DefaultMutableTreeNode> defaultGroupNodes) {
-        //noinspection HardCodedStringLiteral
-        KeymapGroupImpl rootGroup = new KeymapGroupImpl("root");
-        DefaultMutableTreeNode root = new DefaultMutableTreeNode(rootGroup);
-        for (DefaultMutableTreeNode node : defaultGroupNodes) {
-            root.add(node);
+    public static void optimizeSchema(KeymapGroupImpl root, CustomActionsSchemaImpl schema, List<KeymapGroupImpl> defaultGroups) {
+        KeymapGroupImpl defaultRoot = new KeymapGroupImpl(root.getName());
+        for (KeymapGroupImpl group : defaultGroups) {
+            defaultRoot.addGroup(group.copy());
         }
-        JTree defaultTree = new Tree(new DefaultTreeModel(root));
 
         List<ActionUrl> actions = new ArrayList<>();
-
-        TreeUtil.traverseDepth(
-            (TreeNode)tree.getModel().getRoot(),
-            node -> {
-                DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode)node;
-                if (treeNode.isLeaf()) {
-                    return true;
-                }
-                ActionUrl url = getActionUrl(new TreePath(treeNode.getPath()), 0);
-                url.getGroupPath().add(((KeymapGroupImpl)treeNode.getUserObject()).getName());
-                TreePath treePath = getTreePath(defaultTree, url);
-                if (treePath != null) {
-                    DefaultMutableTreeNode visited = (DefaultMutableTreeNode)treePath.getLastPathComponent();
-                    ActionUrl[] defaultUserObjects = getChildUserObjects(visited, url);
-                    ActionUrl[] currentUserObjects = getChildUserObjects(treeNode, url);
-                    computeDiff(defaultUserObjects, currentUserObjects, actions);
-                }
-                else {
-                    //customizations at the new place
-                    url.getGroupPath().remove(url.getParentGroup());
-                    if (actions.contains(url)) {
-                        url.getGroupPath().add(((KeymapGroupImpl)treeNode.getUserObject()).getName());
-                        actions.addAll(schema.getChildActions(url));
-                    }
-                }
-                return true;
-            }
-        );
+        optimizeGroup(root, defaultRoot, schema, actions);
         schema.setActions(actions);
+    }
+
+    private static void optimizeGroup(KeymapGroupImpl group, KeymapGroupImpl defaultRoot, CustomActionsSchemaImpl schema, List<ActionUrl> actions) {
+        if (group.getSize() == 0) {
+            return;
+        }
+
+        List<String> groupPath = getGroupPath(group);
+        KeymapGroupImpl defaultGroup = findGroup(defaultRoot, groupPath);
+        if (defaultGroup != null) {
+            ActionUrl[] defaultUserObjects = getChildUserObjects(defaultGroup, groupPath);
+            ActionUrl[] currentUserObjects = getChildUserObjects(group, groupPath);
+            computeDiff(defaultUserObjects, currentUserObjects, actions);
+        }
+        else {
+            KeymapGroupImpl parent = group.getParent();
+            List<String> parentPath = new ArrayList<>(groupPath.subList(0, groupPath.size() - 1));
+            int position = parent == null ? 0 : indexOf(parent, group);
+            ActionUrl url = new ActionUrl(parentPath, group, 0, position);
+            if (actions.contains(url)) {
+                actions.addAll(schema.getChildActions(new ActionUrl(new ArrayList<>(groupPath), group, 0, position)));
+            }
+        }
+
+        for (Object child : List.copyOf(group.getChildren())) {
+            if (child instanceof KeymapGroupImpl childGroup) {
+                optimizeGroup(childGroup, defaultRoot, schema, actions);
+            }
+        }
+    }
+
+    private static int indexOf(KeymapGroupImpl parent, Object child) {
+        List<Object> children = parent.getChildren();
+        for (int i = 0; i < children.size(); i++) {
+            if (children.get(i) == child) {
+                return i;
+            }
+        }
+        return 0;
     }
 
     private static void computeDiff(ActionUrl[] defaultUserObjects, ActionUrl[] currentUserObjects, List<ActionUrl> actions) {
@@ -180,88 +194,174 @@ public class CustomizationUtil {
         }
     }
 
-    public static TreePath getPathByUserObjects(JTree tree, TreePath treePath) {
-        List<String> path = new ArrayList<>();
-        for (int i = 0; i < treePath.getPath().length; i++) {
-            Object o = ((DefaultMutableTreeNode)treePath.getPath()[i]).getUserObject();
-            if (o instanceof KeymapGroupImpl keymapGroup) {
-                path.add(keymapGroup.getName());
-            }
+    /**
+     * Names of the groups from the root down to {@code group}, both included - the path an {@link ActionUrl} addresses
+     * the children of {@code group} by.
+     */
+    public static List<String> getGroupPath(KeymapGroupImpl group) {
+        List<String> result = new ArrayList<>();
+        KeymapGroupImpl current = group;
+        while (current != null) {
+            result.add(0, current.getName());
+            current = current.getParent();
         }
-        return getTreePath(0, path, tree.getModel().getRoot(), tree);
+        return result;
     }
 
-    public static ActionUrl getActionUrl(TreePath treePath, int actionType) {
-        ActionUrl url = new ActionUrl();
-        for (int i = 0; i < treePath.getPath().length - 1; i++) {
-            Object o = ((DefaultMutableTreeNode)treePath.getPath()[i]).getUserObject();
-            if (o instanceof KeymapGroupImpl keymapGroup) {
-                url.getGroupPath().add(keymapGroup.getName());
-            }
-        }
-
-        DefaultMutableTreeNode component = ((DefaultMutableTreeNode)treePath.getLastPathComponent());
-        url.setComponent(component.getUserObject());
-        DefaultMutableTreeNode node = component;
-        TreeNode parent = node.getParent();
-        url.setAbsolutePosition(parent != null ? parent.getIndex(node) : 0);
-        url.setActionType(actionType);
-        return url;
+    public static ActionUrl getActionUrl(CustomizationTreeItem item, int actionType) {
+        return new ActionUrl(new ArrayList<>(item.getGroupPath()), item.getComponent(), actionType, item.getIndex());
     }
 
-    public static TreePath getTreePath(JTree tree, ActionUrl url) {
-        return getTreePath(0, url.getGroupPath(), tree.getModel().getRoot(), tree);
+    public static @Nullable KeymapGroupImpl findGroup(KeymapGroupImpl root, List<String> path) {
+        return findGroup(0, path, root);
     }
 
-    private static @Nullable TreePath getTreePath(int positionInPath, List<String> path, Object root, JTree tree) {
-        if (!(root instanceof DefaultMutableTreeNode treeNode)) {
+    private static @Nullable KeymapGroupImpl findGroup(int positionInPath, List<String> path, KeymapGroupImpl group) {
+        if (path.size() <= positionInPath) {
             return null;
         }
 
-        Object userObject = treeNode.getUserObject();
-
-        String pathElement;
-        if (path.size() > positionInPath) {
-            pathElement = path.get(positionInPath);
-        }
-        else {
+        String pathElement = path.get(positionInPath);
+        if (pathElement == null || !pathElement.equals(group.getName())) {
             return null;
         }
-
-        if (!(pathElement != null && userObject instanceof KeymapGroupImpl keymapGroup && pathElement.equals(keymapGroup.getName()))) {
-            return null;
-        }
-
-        TreePath currentPath = new TreePath(treeNode.getPath());
 
         if (positionInPath == path.size() - 1) {
-            return currentPath;
+            return group;
         }
 
-        for (int j = 0; j < treeNode.getChildCount(); j++) {
-            TreeNode child = treeNode.getChildAt(j);
-            currentPath = getTreePath(positionInPath + 1, path, child, tree);
-            if (currentPath != null) {
-                break;
+        for (Object child : group.getChildren()) {
+            if (child instanceof KeymapGroupImpl childGroup) {
+                KeymapGroupImpl found = findGroup(positionInPath + 1, path, childGroup);
+                if (found != null) {
+                    return found;
+                }
             }
         }
-
-        return currentPath;
+        return null;
     }
 
-    private static ActionUrl[] getChildUserObjects(DefaultMutableTreeNode node, ActionUrl parent) {
+    private static ActionUrl[] getChildUserObjects(KeymapGroupImpl group, List<String> groupPath) {
         List<ActionUrl> result = new ArrayList<>();
-        List<String> groupPath = new ArrayList<>();
-        groupPath.addAll(parent.getGroupPath());
-        for (int i = 0; i < node.getChildCount(); i++) {
-            DefaultMutableTreeNode child = (DefaultMutableTreeNode)node.getChildAt(i);
+        List<String> path = new ArrayList<>(groupPath);
+        for (Object child : group.getChildren()) {
             ActionUrl url = new ActionUrl();
-            url.setGroupPath(groupPath);
-            Object userObject = child.getUserObject();
-            url.setComponent(userObject instanceof Pair ? ((Pair)userObject).first : userObject);
+            url.setGroupPath(path);
+            url.setComponent(child);
             result.add(url);
         }
         return result.toArray(new ActionUrl[result.size()]);
+    }
+
+    public static String getText(Object component) {
+        if (component instanceof KeymapGroupImpl group) {
+            String name = group.getName();
+            return StringUtil.isNotEmpty(name) ? name : StringUtil.notNullize(group.getId());
+        }
+        if (component instanceof String actionId) {
+            AnAction action = ActionManager.getInstance().getAction(actionId);
+            String name = action != null ? action.getTemplatePresentation().getText() : null;
+            return !StringUtil.isEmptyOrSpaces(name) ? name : actionId;
+        }
+        if (component instanceof QuickList quickList) {
+            return quickList.getDisplayName();
+        }
+        return "";
+    }
+
+    /**
+     * The first item, depth first, the predicate takes.
+     */
+    public static @Nullable CustomizationTreeItem findItem(KeymapGroupImpl group, Predicate<CustomizationTreeItem> predicate) {
+        for (CustomizationTreeItem item : CustomizationTreeItem.children(group)) {
+            if (predicate.test(item)) {
+                return item;
+            }
+            KeymapGroupImpl childGroup = item.getGroup();
+            if (childGroup != null) {
+                CustomizationTreeItem found = findItem(childGroup, predicate);
+                if (found != null) {
+                    return found;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Opens the groups down to the item and selects it.
+     */
+    @RequiredUIAccess
+    public static CompletableFuture<?> selectItem(Tree<CustomizationTreeItem> tree, CustomizationTreeItem item) {
+        TreeNode<CustomizationTreeItem> rootNode = tree.getRootNode();
+        if (rootNode == null) {
+            return CompletableFuture.completedFuture(null);
+        }
+
+        List<KeymapGroupImpl> groups = new ArrayList<>();
+        KeymapGroupImpl current = item.getParent();
+        while (current != null && current.getParent() != null) {
+            groups.add(0, current);
+            current = current.getParent();
+        }
+
+        CompletableFuture<TreeNode<CustomizationTreeItem>> chain = CompletableFuture.completedFuture(rootNode);
+        for (KeymapGroupImpl group : groups) {
+            chain = chain.thenCompose(node -> node == null
+                ? CompletableFuture.completedFuture(null)
+                : node.findChild(value -> value != null && value.getGroup() == group));
+        }
+
+        UIAccess uiAccess = UIAccess.current();
+        return chain
+            .thenCompose(node -> node == null ? CompletableFuture.completedFuture(null) : node.findChild(item::equals))
+            .whenCompleteAsync((node, error) -> {
+                if (node != null) {
+                    tree.select(node);
+                }
+            }, uiAccess);
+    }
+
+    /**
+     * Text and icon of a customization tree row.
+     *
+     * @param iconOf the icon an action shows, the customized one included
+     */
+    public static void customizePresentation(
+        Object component,
+        TextItemPresentation presentation,
+        boolean showIcon,
+        Function<String, @Nullable Image> iconOf
+    ) {
+        Image icon = null;
+        if (component instanceof KeymapGroupImpl group) {
+            String name = group.getName();
+            presentation.append(StringUtil.isNotEmpty(name) ? name : StringUtil.notNullize(group.getId()));
+            icon = group.getId() != null ? iconOf.apply(group.getId()) : null;
+            if (icon == null) {
+                icon = group.getIcon() != null ? group.getIcon() : PlatformIconGroup.nodesFolder();
+            }
+        }
+        else if (component instanceof String actionId) {
+            AnAction action = ActionManager.getInstance().getAction(actionId);
+            String name = action != null ? action.getTemplatePresentation().getText() : null;
+            presentation.append(!StringUtil.isEmptyOrSpaces(name) ? name : actionId);
+            icon = iconOf.apply(actionId);
+        }
+        else if (component instanceof AnSeparator) {
+            presentation.append("-------------");
+        }
+        else if (component instanceof QuickList quickList) {
+            presentation.append(quickList.getDisplayName());
+            icon = PlatformIconGroup.actionsQuicklist();
+        }
+        else {
+            presentation.append(String.valueOf(component));
+        }
+
+        if (showIcon) {
+            presentation.withIcon(icon != null ? icon : Image.empty(Image.DEFAULT_ICON_SIZE));
+        }
     }
 
     @Deprecated

@@ -53,7 +53,7 @@ public class PluginInstallFinishTask implements StartupCustomizeFinishTask {
 
             try {
                 PluginDownloader downloader = PluginDownloader.createDownloader(descriptor, false);
-                downloader.download(indicator);
+                downloader.download(indicator, context.getUiOwner());
                 downloader.install(indicator, true);
                 installed = true;
             }

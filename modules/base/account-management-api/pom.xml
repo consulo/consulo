@@ -63,5 +63,10 @@
             <artifactId>consulo-builtin-web-server-api</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-http-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 </project>

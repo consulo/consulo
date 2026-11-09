@@ -16,7 +16,8 @@
  */
 package consulo.http.client;
 
-import java.net.http.HttpRequest;
+import consulo.http.HttpRequestBuilder;
+
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -26,7 +27,7 @@ public abstract class AuthorizationConfigurer implements HttpRequestConfigurer {
     protected abstract String getAuthorizationHeaderValue();
 
     @Override
-    public final CompletableFuture<HttpRequest.Builder> configureAsync(HttpRequest.Builder builder) {
+    public final CompletableFuture<HttpRequestBuilder> configureAsync(HttpRequestBuilder builder) {
         return CompletableFuture.completedFuture(builder.header(HttpClientUtil.AUTHORIZATION_HEADER, getAuthorizationHeaderValue()));
     }
 }

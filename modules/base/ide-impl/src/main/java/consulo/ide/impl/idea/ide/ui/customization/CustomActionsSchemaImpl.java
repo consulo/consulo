@@ -20,7 +20,6 @@ import consulo.application.Application;
 import consulo.component.persist.PersistentStateComponentAsync;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
-import consulo.ide.impl.idea.openapi.keymap.impl.ui.ActionsTreeUtil;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.KeymapGroupImpl;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
@@ -31,6 +30,7 @@ import consulo.ui.ex.action.*;
 import consulo.ui.ex.keymap.localize.KeyMapLocalize;
 import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.ui.image.Image;
+import consulo.ui.image.ImageKey;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
@@ -45,7 +45,6 @@ import jakarta.inject.Singleton;
 import org.jdom.Element;
 
 import javax.swing.*;
-import javax.swing.tree.DefaultMutableTreeNode;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -66,7 +65,9 @@ public class CustomActionsSchemaImpl implements CustomActionsSchema, PersistentS
     private static final String ATTRIBUTE_ICON = "icon";
     private static final String GROUP = "group";
 
-    private final Map<String, String> myIconCustomizations = new HashMap<>();
+    private final Map<String, @Nullable String> myIconCustomizations = new HashMap<>();
+
+    private final Map<String, @Nullable Image> myOriginalIcons = new HashMap<>();
 
     private List<ActionUrl> myActions = new ArrayList<>();
 
@@ -248,12 +249,11 @@ public class CustomActionsSchemaImpl implements CustomActionsSchema, PersistentS
     }
 
     /**
-     * Builds the tree nodes of every customizable group. The nodes are returned instead of attached, so
-     * the caller can add them to a live model on the UI thread once the walk finished.
+     * Builds the keymap group of every customizable action group, in a fresh tree nobody else holds.
      */
-    public CompletableFuture<List<DefaultMutableTreeNode>> createActionGroupNodesAsync() {
+    public CompletableFuture<List<KeymapGroupImpl>> createActionGroupsAsync() {
         ActionManager actionManager = ActionManager.getInstance();
-        List<DefaultMutableTreeNode> nodes = new ArrayList<>();
+        List<KeymapGroupImpl> groups = new ArrayList<>();
         CompletableFuture<?> chain = CompletableFuture.completedFuture(null);
         for (Map.Entry<String, LocalizeValue> entry : myIdToNameList.entrySet()) {
             ActionGroup actionGroup = (ActionGroup)actionManager.getAction(entry.getKey());
@@ -262,9 +262,9 @@ public class CustomActionsSchemaImpl implements CustomActionsSchema, PersistentS
             }
             chain = chain.thenCompose(ignored ->
                 KeymapUtil.createGroupAsync(actionGroup, entry.getValue(), null, null, true, null, false)
-                    .thenAccept(group -> nodes.add(ActionsTreeUtil.createNode(group))));
+                    .thenAccept(group -> groups.add((KeymapGroupImpl)group)));
         }
-        return chain.thenApply(ignored -> nodes);
+        return chain.thenApply(ignored -> groups);
     }
 
     public boolean isCorrectActionGroup(ActionGroup group, String defaultGroupName) {
@@ -314,13 +314,82 @@ public class CustomActionsSchemaImpl implements CustomActionsSchema, PersistentS
         myIconCustomizations.remove(actionId);
     }
 
-    public void addIconCustomization(String actionId, String iconPath) {
+    public void addIconCustomization(String actionId, @Nullable String iconPath) {
         myIconCustomizations.put(actionId, iconPath != null ? FileUtil.toSystemIndependentName(iconPath) : null);
     }
 
     public String getIconPath(String actionId) {
         String path = myIconCustomizations.get(actionId);
         return path == null ? "" : path;
+    }
+
+    public boolean hasIconCustomization(String actionId) {
+        return myIconCustomizations.containsKey(actionId);
+    }
+
+    public Map<String, @Nullable String> getIconCustomizations() {
+        return Collections.unmodifiableMap(myIconCustomizations);
+    }
+
+    /**
+     * The icon the action shows with this schema applied.
+     *
+     * @param applicationSchema the schema that knows the icons the actions were registered with
+     */
+    public @Nullable Image getActionIcon(String actionId, CustomActionsSchemaImpl applicationSchema) {
+        if (!myIconCustomizations.containsKey(actionId)) {
+            return applicationSchema.getOriginalIcon(actionId);
+        }
+        String reference = myIconCustomizations.get(actionId);
+        if (reference == null) {
+            return PlatformIconGroup.toolbarUnknown();
+        }
+        Image icon = applicationSchema.loadIcon(reference);
+        return icon != null ? icon : PlatformIconGroup.actionsHelp();
+    }
+
+    /**
+     * The icon the action was registered with. Only the application schema records the icons it replaced, so ask that one.
+     */
+    public @Nullable Image getOriginalIcon(String actionId) {
+        if (myOriginalIcons.containsKey(actionId)) {
+            return myOriginalIcons.get(actionId);
+        }
+        AnAction action = ActionManager.getInstance().getAction(actionId);
+        return action != null ? action.getTemplatePresentation().getIcon() : null;
+    }
+
+    /**
+     * An icon reference is the id of the action to take the icon from, an icon key ({@code groupId@imageId}) or the path
+     * of an icon file.
+     */
+    public @Nullable Image loadIcon(String reference) {
+        if (ActionManager.getInstance().getActionOrStub(reference) != null) {
+            return getOriginalIcon(reference);
+        }
+        ImageKey imageKey = ImageKey.fromString(reference, Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE);
+        if (imageKey != null) {
+            return imageKey;
+        }
+        return loadIconFile(reference);
+    }
+
+    public static String getIconReference(ImageKey imageKey) {
+        return imageKey.getGroupId() + "@" + imageKey.getImageId();
+    }
+
+    public static @Nullable Image loadIconFile(String path) {
+        File file = new File(FileUtil.toSystemDependentName(path));
+        if (!file.isFile()) {
+            return null;
+        }
+        try {
+            return Image.fromUrl(VirtualFileUtil.convertToURL(VirtualFileUtil.pathToUrl(FileUtil.toSystemIndependentName(path))));
+        }
+        catch (IOException e) {
+            LOG.warn(e);
+            return null;
+        }
     }
 
     private void readIcons(Element parent) {
@@ -347,31 +416,30 @@ public class CustomActionsSchemaImpl implements CustomActionsSchema, PersistentS
         }
     }
 
-    private void initActionIcons() {
+    public void initActionIcons() {
         ActionManager actionManager = ActionManager.getInstance();
-        for (String actionId : myIconCustomizations.keySet()) {
-            AnAction anAction = actionManager.getAction(actionId);
-            if (anAction != null) {
-                Image icon;
-                String iconPath = myIconCustomizations.get(actionId);
-                if (iconPath != null && new File(FileUtil.toSystemDependentName(iconPath)).exists()) {
-                    try {
-                        icon = Image.fromUrl(VirtualFileUtil.convertToURL(VirtualFileUtil.pathToUrl(iconPath)));
-                    }
-                    catch (IOException e) {
-                        icon = PlatformIconGroup.actionsHelp();
-
-                        LOG.warn(e);
-                    }
-                }
-                else {
-                    icon = PlatformIconGroup.actionsHelp();
-                }
-                if (anAction.getTemplatePresentation() != null) {
-                    anAction.getTemplatePresentation().setIcon(icon);
-                    anAction.setDefaultIcon(false);
+        for (String actionId : List.copyOf(myOriginalIcons.keySet())) {
+            if (!myIconCustomizations.containsKey(actionId)) {
+                AnAction anAction = actionManager.getAction(actionId);
+                Image original = myOriginalIcons.remove(actionId);
+                if (anAction != null) {
+                    anAction.getTemplatePresentation().setIcon(original);
+                    anAction.setDefaultIcon(true);
                 }
             }
+        }
+
+        for (String actionId : myIconCustomizations.keySet()) {
+            AnAction anAction = actionManager.getAction(actionId);
+            if (anAction == null) {
+                continue;
+            }
+            if (!myOriginalIcons.containsKey(actionId)) {
+                myOriginalIcons.put(actionId, anAction.getTemplatePresentation().getIcon());
+            }
+
+            anAction.getTemplatePresentation().setIcon(getActionIcon(actionId, this));
+            anAction.setDefaultIcon(false);
         }
 
         if (!myInitial) {

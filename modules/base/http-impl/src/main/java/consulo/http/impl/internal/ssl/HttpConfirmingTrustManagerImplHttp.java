@@ -11,12 +11,17 @@ import consulo.util.io.StreamUtil;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
+import javax.net.ssl.SSLEngine;
+import javax.net.ssl.SSLSocket;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.X509ExtendedTrustManager;
 import javax.net.ssl.X509TrustManager;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -35,7 +40,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  *
  * @author Mikhail Golubev
  */
-public class HttpConfirmingTrustManagerImplHttp implements HttpConfirmingTrustManagerHttp {
+public class HttpConfirmingTrustManagerImplHttp extends X509ExtendedTrustManager implements HttpConfirmingTrustManagerHttp {
     private static final Logger LOG = Logger.getInstance(HttpConfirmingTrustManagerImplHttp.class);
     private static final X509Certificate[] NO_CERTIFICATES = new X509Certificate[0];
     private static final X509TrustManager MISSING_TRUST_MANAGER = new HttpClientOnlyTrustManager() {
@@ -89,25 +94,109 @@ public class HttpConfirmingTrustManagerImplHttp implements HttpConfirmingTrustMa
         return null;
     }
 
+    private static class CertificateExtendedCheckException extends CertificateException {
+        private CertificateExtendedCheckException(CertificateException e) {
+            super(e.getMessage(), e);
+        }
+    }
+
+    private static void checkServerTrusted(
+        X509TrustManager trustManager,
+        X509Certificate[] chain,
+        String authType,
+        @Nullable Socket socket,
+        @Nullable SSLEngine engine
+    ) throws CertificateException {
+        if (!(trustManager instanceof X509ExtendedTrustManager extTrustManager) || (socket == null && engine == null)) {
+            trustManager.checkServerTrusted(chain, authType);
+        }
+        else {
+            try {
+                if (engine != null) {
+                    extTrustManager.checkServerTrusted(chain, authType, engine);
+                }
+                else {
+                    extTrustManager.checkServerTrusted(chain, authType, socket);
+                }
+            }
+            catch (CertificateException e) {
+                // X509ExtendedTrustManager validates host name and certificate chain.
+                // In order to check the exception cause we run the minimal certificate
+                // chain check, if no exception is thrown then we know the cause
+                // is the extended checks and not the absence or failure of certification.
+                trustManager.checkServerTrusted(chain, authType);
+                throw new CertificateExtendedCheckException(e);
+            }
+        }
+    }
+
+    private static @Nullable String getPeerHost(Socket socket) {
+        if (socket instanceof SSLSocket sslSocket && sslSocket.getHandshakeSession() != null) {
+            String peerHost = sslSocket.getHandshakeSession().getPeerHost();
+            if (peerHost != null) {
+                return peerHost;
+            }
+        }
+        return socket.getRemoteSocketAddress() instanceof InetSocketAddress address ? address.getHostString() : null;
+    }
+
+    @Override
+    public void checkClientTrusted(X509Certificate[] chain, String authType, Socket socket) throws CertificateException {
+        throw new UnsupportedOperationException("Should not be called by client");
+    }
+
+    @Override
+    public void checkClientTrusted(X509Certificate[] chain, String authType, SSLEngine engine) throws CertificateException {
+        throw new UnsupportedOperationException("Should not be called by client");
+    }
+
     @Override
     public void checkServerTrusted(X509Certificate[] certificates, String s) throws CertificateException {
-        checkServerTrusted(certificates, s, true, true);
+        checkServerTrusted(certificates, s, null, true, true, null, null);
+    }
+
+    @Override
+    public void checkServerTrusted(X509Certificate[] chain, String authType, Socket socket) throws CertificateException {
+        checkServerTrusted(chain, authType, getPeerHost(socket), true, true, socket, null);
+    }
+
+    @Override
+    public void checkServerTrusted(X509Certificate[] chain, String authType, SSLEngine engine) throws CertificateException {
+        checkServerTrusted(chain, authType, engine.getPeerHost(), true, true, null, engine);
     }
 
     @Override
     public void checkServerTrusted(X509Certificate[] certificates, String s, boolean addToKeyStore, boolean askUser)
         throws CertificateException {
+        checkServerTrusted(certificates, s, null, addToKeyStore, askUser, null, null);
+    }
+
+    private void checkServerTrusted(
+        X509Certificate[] certificates,
+        String s,
+        @Nullable String remoteHost,
+        boolean addToKeyStore,
+        boolean askUser,
+        @Nullable Socket socket,
+        @Nullable SSLEngine engine
+    ) throws CertificateException {
         try {
-            mySystemManager.checkServerTrusted(certificates, s);
+            checkServerTrusted(mySystemManager, certificates, s, socket, engine);
+        }
+        catch (CertificateExtendedCheckException e) {
+            throw e;
         }
         catch (CertificateException e) {
             // check-then-act sequence
             synchronized (myCustomManager) {
                 try {
-                    myCustomManager.checkServerTrusted(certificates, s);
+                    myCustomManager.checkServerTrusted(certificates, s, socket, engine);
+                }
+                catch (CertificateExtendedCheckException e2) {
+                    throw e2;
                 }
                 catch (CertificateException e2) {
-                    if (myCustomManager.isBroken() || !confirmAndUpdate(certificates, addToKeyStore, askUser)) {
+                    if (myCustomManager.isBroken() || !confirmAndUpdate(certificates, remoteHost, addToKeyStore, askUser)) {
                         throw e;
                     }
                 }
@@ -115,7 +204,7 @@ public class HttpConfirmingTrustManagerImplHttp implements HttpConfirmingTrustMa
         }
     }
 
-    private boolean confirmAndUpdate(X509Certificate[] chain, boolean addToKeyStore, boolean askUser) {
+    private boolean confirmAndUpdate(X509Certificate[] chain, @Nullable String remoteHost, boolean addToKeyStore, boolean askUser) {
         X509Certificate endPoint = chain[0];
         // IDEA-123467 and IDEA-123335 workaround
         String threadClassName = StringUtil.notNullize(Thread.currentThread().getClass().getCanonicalName());
@@ -123,7 +212,8 @@ public class HttpConfirmingTrustManagerImplHttp implements HttpConfirmingTrustMa
             LOG.debug("Image Fetcher thread is detected. Certificate check will be skipped.");
             return true;
         }
-        HttpCertificateManagerState config = HttpCertificateManagerImpl.getInstance().getState();
+        HttpCertificateManagerImpl manager = HttpCertificateManagerImpl.getInstance();
+        HttpCertificateManagerState config = manager.getState();
         Application app = Application.get();
         if (app.isUnitTestMode() || app.isHeadlessEnvironment() || config.ACCEPT_AUTOMATICALLY) {
             LOG.debug("Certificate will be accepted automatically");
@@ -132,10 +222,13 @@ public class HttpConfirmingTrustManagerImplHttp implements HttpConfirmingTrustMa
             }
             return true;
         }
-        boolean accepted = askUser && HttpCertificateManagerImpl.showAcceptDialog(() -> {
-            // TODO may be another kind of warning, if default trust store is missing
-            return CertificateWarningDialog.createUntrustedCertificateWarning(endPoint);
-        });
+        boolean accepted = askUser && HttpCertificateManagerImpl.showAcceptDialog(
+            () -> {
+                // TODO may be another kind of warning, if default trust store is missing
+                return CertificateWarningDialog.createUntrustedCertificateWarning(endPoint);
+            },
+            manager.findUiOwner(remoteHost)
+        );
         if (accepted) {
             LOG.info("Certificate was accepted by user");
             if (addToKeyStore) {
@@ -164,7 +257,7 @@ public class HttpConfirmingTrustManagerImplHttp implements HttpConfirmingTrustMa
      *
      * @see CertificateListener
      */
-    public static class MutableTrustManagerHttp implements HttpClientOnlyTrustManager {
+    public static class MutableTrustManagerHttp extends X509ExtendedTrustManager implements HttpClientOnlyTrustManager {
         private final String myPath;
         private final String myPassword;
         private final TrustManagerFactory myFactory;
@@ -390,13 +483,38 @@ public class HttpConfirmingTrustManagerImplHttp implements HttpConfirmingTrustMa
         }
 
         @Override
+        public void checkClientTrusted(X509Certificate[] chain, String authType, Socket socket) throws CertificateException {
+            throw new UnsupportedOperationException("Should not be called by client");
+        }
+
+        @Override
+        public void checkClientTrusted(X509Certificate[] chain, String authType, SSLEngine engine) throws CertificateException {
+            throw new UnsupportedOperationException("Should not be called by client");
+        }
+
+        @Override
         public void checkServerTrusted(X509Certificate[] certificates, String s) throws CertificateException {
+            checkServerTrusted(certificates, s, null, null);
+        }
+
+        @Override
+        public void checkServerTrusted(X509Certificate[] certificates, String s, Socket socket) throws CertificateException {
+            checkServerTrusted(certificates, s, socket, null);
+        }
+
+        @Override
+        public void checkServerTrusted(X509Certificate[] certificates, String s, SSLEngine engine) throws CertificateException {
+            checkServerTrusted(certificates, s, null, engine);
+        }
+
+        private void checkServerTrusted(X509Certificate[] certificates, String s, @Nullable Socket socket, @Nullable SSLEngine engine)
+            throws CertificateException {
             myReadLock.lock();
             try {
                 if (keyStoreIsEmpty() || isBroken()) {
                     throw new CertificateException();
                 }
-                myTrustManager.checkServerTrusted(certificates, s);
+                HttpConfirmingTrustManagerImplHttp.checkServerTrusted(myTrustManager, certificates, s, socket, engine);
             }
             finally {
                 myReadLock.unlock();

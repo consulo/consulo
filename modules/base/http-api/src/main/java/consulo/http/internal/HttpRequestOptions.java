@@ -18,6 +18,7 @@ package consulo.http.internal;
 import consulo.http.HttpMethod;
 import consulo.http.HttpRequestBuilder;
 import consulo.http.HttpVersion;
+import consulo.ui.Component;
 import org.jspecify.annotations.Nullable;
 
 import javax.net.ssl.HostnameVerifier;
@@ -29,6 +30,7 @@ import java.util.Map;
  *
  * @param hostnameVerifier checks the host name of the local platform only - it can not be sent to another platform
  * @param useProxy         the proxy settings of the IDE - they apply to the local platform only
+ * @param uiOwner          the component the request is sent for - it asks the user on the local platform only
  * @author VISTALL
  * @since 2026-09-28
  */
@@ -45,6 +47,7 @@ public record HttpRequestOptions(
     boolean forceHttps,
     boolean useProxy,
     @Nullable HostnameVerifier hostnameVerifier,
-    boolean allowErrorCodes
+    boolean allowErrorCodes,
+    @Nullable Component uiOwner
 ) {
 }

@@ -24,6 +24,7 @@ module consulo.account.management.api {
     requires transitive consulo.project.api;
     requires transitive consulo.ui.api;
     requires transitive consulo.builtin.web.server.api;
+    requires transitive consulo.http.api;
 
     exports consulo.accountManagement;
     exports consulo.accountManagement.authorize;

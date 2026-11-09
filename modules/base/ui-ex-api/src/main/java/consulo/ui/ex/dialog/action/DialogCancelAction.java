@@ -29,7 +29,11 @@ import consulo.ui.ex.dialog.DialogDescriptor;
  */
 public class DialogCancelAction extends DumbAwareAction {
     public DialogCancelAction() {
-        super(CommonLocalize.buttonCancel(), LocalizeValue.empty(), null);
+        this(CommonLocalize.buttonCancel());
+    }
+
+    public DialogCancelAction(LocalizeValue actionText) {
+        super(actionText, LocalizeValue.empty(), null);
     }
 
     @RequiredUIAccess

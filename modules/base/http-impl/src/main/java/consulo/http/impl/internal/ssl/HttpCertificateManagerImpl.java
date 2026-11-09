@@ -9,30 +9,38 @@ import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.container.boot.ContainerPathManager;
 import consulo.http.HttpCertificateManager;
+import consulo.http.internal.HttpRequestOptions;
 import consulo.logging.Logger;
-import consulo.ui.ex.awt.DialogWrapper;
+import consulo.ui.Component;
+import consulo.ui.UIAccess;
+import consulo.ui.ex.dialog.DialogDescriptor;
+import consulo.ui.ex.dialog.DialogService;
 import consulo.util.io.FileUtil;
 import consulo.util.io.StreamUtil;
 import consulo.util.xml.serializer.XmlSerializerUtil;
 import jakarta.inject.Singleton;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.jspecify.annotations.Nullable;
 
 import javax.crypto.BadPaddingException;
 import javax.net.ssl.*;
-import java.awt.*;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.security.KeyManagementException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
-import java.util.concurrent.Callable;
+import java.util.Deque;
+import java.util.Locale;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Supplier;
 
 /**
  * {@code CertificateManager is responsible for negotiation SSL connection with server
@@ -71,12 +79,6 @@ public class HttpCertificateManagerImpl implements HttpCertificateManager, Persi
     private static final Logger LOG = Logger.getInstance(HttpCertificateManagerImpl.class);
 
     /**
-     * Special version of hostname verifier, that asks user whether he accepts certificate, which subject's common name
-     * doesn't match requested hostname.
-     */
-    public static final HostnameVerifier HOSTNAME_VERIFIER =
-        new ConfirmingHostnameVerifier(SSLConnectionSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER);
-    /**
      * Used to check whether dialog is visible to prevent possible deadlock, e.g. when some external resource is loaded by
      * {@link MediaTracker}.
      */
@@ -96,6 +98,8 @@ public class HttpCertificateManagerImpl implements HttpCertificateManager, Persi
      * Lazy initialized
      */
     private SSLContext mySslContext;
+
+    private final Map<String, Deque<Component>> myUiOwners = new ConcurrentHashMap<>();
 
     /**
      * Component initialization constructor
@@ -163,11 +167,6 @@ public class HttpCertificateManagerImpl implements HttpCertificateManager, Persi
             mySslContext = context;
         }
         return mySslContext;
-    }
-
-    @Override
-    public HostnameVerifier getHostnameVerifier() {
-        return HOSTNAME_VERIFIER;
     }
 
     @Override
@@ -272,40 +271,97 @@ public class HttpCertificateManagerImpl implements HttpCertificateManager, Persi
         return myTrustManager.getCustomManager();
     }
 
-    public static boolean showAcceptDialog(Callable<? extends DialogWrapper> dialogFactory) {
+    /**
+     * Remembers the component a request is sent for, so a certificate question about its host is asked in the ui of
+     * that component.
+     *
+     * @return removes the component again, once the request is done
+     */
+    public static Runnable registerUiOwner(HttpCertificateManager manager, HttpRequestOptions options) {
+        Component owner = options.uiOwner();
+        String host = hostOf(options.url());
+        if (owner == null || host == null || !(manager instanceof HttpCertificateManagerImpl impl)) {
+            return () -> {
+            };
+        }
+
+        impl.myUiOwners.compute(host, (key, owners) -> {
+            Deque<Component> result = owners == null ? new ConcurrentLinkedDeque<>() : owners;
+            result.addLast(owner);
+            return result;
+        });
+        return () -> impl.myUiOwners.computeIfPresent(host, (key, owners) -> {
+            owners.removeLastOccurrence(owner);
+            return owners.isEmpty() ? null : owners;
+        });
+    }
+
+    public @Nullable Component findUiOwner(@Nullable String host) {
+        if (host == null) {
+            return null;
+        }
+        Deque<Component> owners = myUiOwners.get(host.toLowerCase(Locale.ROOT));
+        return owners == null ? null : owners.peekLast();
+    }
+
+    private static @Nullable String hostOf(String url) {
+        try {
+            String host = new URI(url).getHost();
+            return host == null ? null : host.toLowerCase(Locale.ROOT);
+        }
+        catch (URISyntaxException e) {
+            return null;
+        }
+    }
+
+    /**
+     * Shows the dialog and blocks the calling (network) thread until the user answers. Never called on the UI thread -
+     * the dialog is asynchronous there and the answer could not be waited for, so the certificate is rejected.
+     */
+    @SuppressWarnings("deprecation")
+    public static boolean showAcceptDialog(Supplier<? extends DialogDescriptor> dialogFactory, @Nullable Component owner) {
+        if (UIAccess.isUIThread()) {
+            LOG.warn("Certificate confirmation requested on the UI thread. Rejecting certificate.");
+            return false;
+        }
+
+        UIAccess ownerUIAccess = owner == null ? null : owner.getUIAccess();
+        UIAccess uiAccess = ownerUIAccess != null ? ownerUIAccess : Application.get().getLastUIAccess();
+        if (!uiAccess.isValid()) {
+            LOG.warn("No UI attached. Rejecting certificate.");
+            return false;
+        }
+
         CountDownLatch proceeded = new CountDownLatch(1);
         AtomicBoolean accepted = new AtomicBoolean();
-        AtomicReference<DialogWrapper> dialogRef = new AtomicReference<>();
-        Runnable showDialog = () -> {
+        AtomicBoolean shown = new AtomicBoolean();
+        uiAccess.give(() -> {
             // skip if certificate was already rejected due to timeout or interrupt
             if (proceeded.getCount() == 0) {
                 return;
             }
             try {
-                DialogWrapper dialog = dialogFactory.call();
-                dialogRef.set(dialog);
-                accepted.set(dialog.showAndGet());
+                DialogDescriptor descriptor = dialogFactory.get();
+                DialogService dialogService = Application.get().getInstance(DialogService.class);
+                shown.set(true);
+                (ownerUIAccess != null ? dialogService.build(owner, descriptor) : dialogService.build(descriptor))
+                    .showAsync()
+                    .whenComplete((value, error) -> {
+                        accepted.set(error == null && value != null);
+                        proceeded.countDown();
+                    });
             }
             catch (Exception e) {
                 LOG.error(e);
-            }
-            finally {
                 proceeded.countDown();
             }
-        };
-        Application app = Application.get();
-        if (app.isDispatchThread()) {
-            showDialog.run();
-        }
-        else {
-            app.invokeLater(showDialog, app.getAnyModalityState());
-        }
+        });
+
         try {
             // IDEA-123467 and IDEA-123335 workaround
             boolean inTime = proceeded.await(DIALOG_VISIBILITY_TIMEOUT, TimeUnit.MILLISECONDS);
             if (!inTime) {
-                DialogWrapper dialog = dialogRef.get();
-                if (dialog == null || !dialog.isShowing()) {
+                if (!shown.get()) {
                     LOG.debug(
                         "After " + DIALOG_VISIBILITY_TIMEOUT + " ms dialog was not shown. " +
                             "Rejecting certificate. Current thread: " + Thread.currentThread().getName()

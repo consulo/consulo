@@ -559,14 +559,6 @@
             <artifactId>jna-jpms</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpmime</artifactId>
-        </dependency>
-        <dependency>
             <groupId>consulo.internal</groupId>
             <artifactId>trove4j</artifactId>
         </dependency>

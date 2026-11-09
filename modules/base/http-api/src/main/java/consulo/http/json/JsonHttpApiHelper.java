@@ -16,14 +16,15 @@
  */
 package consulo.http.json;
 
+import consulo.http.HttpMethod;
+import consulo.http.HttpRequestBuilder;
 import consulo.http.client.HttpApiHelper;
+import consulo.http.client.HttpApiResponse;
 import consulo.http.client.HttpClientUtil;
 import consulo.logging.Logger;
 import org.jspecify.annotations.Nullable;
 
 import java.net.URI;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -31,27 +32,30 @@ public interface JsonHttpApiHelper {
     /**
      * Fails with {@link HttpJsonSerializationException} when the body cannot be serialized
      */
-    CompletableFuture<HttpRequest.Builder> putJson(URI uri, Object body);
+    CompletableFuture<HttpRequestBuilder> putJson(URI uri, Object body);
 
-    CompletableFuture<HttpRequest.Builder> postJson(URI uri, Object body);
+    CompletableFuture<HttpRequestBuilder> postJson(URI uri, Object body);
 
-    CompletableFuture<HttpRequest.Builder> sendJson(URI uri, String httpMethod, Object body);
+    CompletableFuture<HttpRequestBuilder> sendJson(URI uri, HttpMethod httpMethod, Object body);
 
-    CompletableFuture<HttpRequest.BodyPublisher> jsonBodyPublisher(String httpMethod, URI uri, Object body);
+    /**
+     * Serializes the body on the application pool
+     */
+    CompletableFuture<byte[]> jsonBody(HttpMethod httpMethod, URI uri, Object body);
 
-    HttpRequest.Builder withJsonContent(HttpRequest.Builder builder);
+    HttpRequestBuilder withJsonContent(HttpRequestBuilder builder);
 
     /**
      * Fails with {@link java.io.IOException}, {@link HttpJsonDeserializationException} or
      * {@link consulo.http.client.EmptyHttpResponseException}
      */
-    <T> CompletableFuture<HttpResponse<T>> loadJsonValueByClass(HttpRequest request, Class<T> clazz);
+    <T> CompletableFuture<HttpApiResponse<T>> loadJsonValueByClass(HttpRequestBuilder request, Class<T> clazz);
 
-    <T> CompletableFuture<HttpResponse<@Nullable T>> loadOptionalJsonValueByClass(HttpRequest request, Class<T> clazz);
+    <T> CompletableFuture<HttpApiResponse<@Nullable T>> loadOptionalJsonValueByClass(HttpRequestBuilder request, Class<T> clazz);
 
-    <T> CompletableFuture<HttpResponse<List<T>>> loadJsonListByClass(HttpRequest request, Class<T> clazz);
+    <T> CompletableFuture<HttpApiResponse<List<T>>> loadJsonListByClass(HttpRequestBuilder request, Class<T> clazz);
 
-    <T> CompletableFuture<HttpResponse<@Nullable List<T>>> loadOptionalJsonListByClass(HttpRequest request, Class<T> clazz);
+    <T> CompletableFuture<HttpApiResponse<@Nullable List<T>>> loadOptionalJsonListByClass(HttpRequestBuilder request, Class<T> clazz);
 
     static JsonHttpApiHelper create(Logger logger, HttpApiHelper httpHelper, JsonDataSerializer serializer, JsonDataDeserializer deserializer) {
         return new JsonHttpApiHelperImpl(logger, httpHelper,

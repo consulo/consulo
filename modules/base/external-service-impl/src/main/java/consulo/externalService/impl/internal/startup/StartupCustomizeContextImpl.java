@@ -20,7 +20,9 @@ import consulo.container.plugin.PluginId;
 import consulo.externalService.internal.startup.StartupCustomizeContext;
 import consulo.externalService.internal.startup.StartupCustomizeFinishTask;
 import consulo.localize.LocalizeValue;
+import consulo.ui.Component;
 import consulo.util.dataholder.UserDataHolderBase;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -39,6 +41,7 @@ public class StartupCustomizeContextImpl extends UserDataHolderBase implements S
     private final Set<PluginId> myPluginsToInstall = new LinkedHashSet<>();
     private final List<StartupCustomizeFinishTask> myFinishTasks = new ArrayList<>();
     private final List<LocalizeValue> myProblems = new CopyOnWriteArrayList<>();
+    private volatile @Nullable Component myUiOwner;
 
     public StartupCustomizeContextImpl(boolean firstShow) {
         myFirstShow = firstShow;
@@ -75,6 +78,15 @@ public class StartupCustomizeContextImpl extends UserDataHolderBase implements S
     @Override
     public void addProblem(LocalizeValue problem) {
         myProblems.add(problem);
+    }
+
+    @Override
+    public @Nullable Component getUiOwner() {
+        return myUiOwner;
+    }
+
+    public void setUiOwner(@Nullable Component uiOwner) {
+        myUiOwner = uiOwner;
     }
 
     public List<LocalizeValue> getProblems() {

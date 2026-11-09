@@ -17,15 +17,22 @@ package consulo.http.impl.internal;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
+import consulo.application.progress.EmptyProgressIndicator;
+import consulo.application.progress.ProgressManager;
+import consulo.application.util.concurrent.AppExecutorUtil;
+import consulo.component.ProcessCanceledException;
 import consulo.http.*;
 import consulo.http.internal.HttpRequestOptions;
 import consulo.logging.Logger;
+import consulo.ui.Component;
 import org.jspecify.annotations.Nullable;
 
 import javax.net.ssl.HostnameVerifier;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author VISTALL
@@ -46,6 +53,7 @@ class HttpRequestBuilderImpl implements HttpRequestBuilder {
     private boolean myForceHttps;
     private boolean myUseProxy = true;
     private @Nullable HostnameVerifier myHostnameVerifier;
+    private @Nullable Component myUiOwner;
     private final Map<String, String> myHeaders = new LinkedHashMap<>();
     private @Nullable HttpVersion myHttpVersion;
     private byte @Nullable [] myBody;
@@ -119,6 +127,12 @@ class HttpRequestBuilderImpl implements HttpRequestBuilder {
     }
 
     @Override
+    public HttpRequestBuilder uiOwner(@Nullable Component component) {
+        myUiOwner = component;
+        return this;
+    }
+
+    @Override
     public HttpRequestBuilder productNameAsUserAgent() {
         return userAgent(myApplication.getName().get() + "/" + myApplication.getBuildNumber().asString());
     }
@@ -143,10 +157,71 @@ class HttpRequestBuilderImpl implements HttpRequestBuilder {
     }
 
     @Override
+    public String getUrl() {
+        return myUrl;
+    }
+
+    @Override
+    public HttpMethod getMethod() {
+        return myHttpMethod;
+    }
+
+    @Override
+    public @Nullable String getHeader(String headerName) {
+        for (Map.Entry<String, String> entry : myHeaders.entrySet()) {
+            if (entry.getKey().equalsIgnoreCase(headerName)) {
+                return entry.getValue();
+            }
+        }
+        return null;
+    }
+
+    @Override
     public <T> T connect(HttpRequestProcessor<T> processor) throws IOException {
         LOG.assertTrue(ApplicationManager.getApplication() == null || !ApplicationManager.getApplication().isReadAccessAllowed(), "Network shouldn't be accessed in EDT or inside read action");
+        return myExecutor.execute(createOptions(), processor);
+    }
 
-        HttpRequestOptions options = new HttpRequestOptions(
+    @Override
+    public <T> CompletableFuture<T> connectAsync(HttpRequestProcessor<T> processor) {
+        HttpRequestOptions options = createOptions();
+        EmptyProgressIndicator indicator = new EmptyProgressIndicator();
+        CompletableFuture<T> result = new CompletableFuture<>();
+        result.whenComplete((value, error) -> {
+            if (result.isCancelled()) {
+                indicator.cancel();
+            }
+        });
+        AppExecutorUtil.getAppExecutorService().execute(() -> {
+            if (result.isDone()) {
+                return;
+            }
+            try {
+                T value = ProgressManager.getInstance().runProcess(() -> {
+                    if (result.isCancelled()) {
+                        throw new ProcessCanceledException();
+                    }
+                    try {
+                        return myExecutor.execute(options, processor);
+                    }
+                    catch (IOException e) {
+                        throw new UncheckedIOException(e);
+                    }
+                }, indicator);
+                result.complete(value);
+            }
+            catch (UncheckedIOException e) {
+                result.completeExceptionally(e.getCause());
+            }
+            catch (Throwable e) {
+                result.completeExceptionally(e);
+            }
+        });
+        return result;
+    }
+
+    private HttpRequestOptions createOptions() {
+        return new HttpRequestOptions(
             myUrl,
             myHttpMethod,
             new LinkedHashMap<>(myHeaders),
@@ -159,8 +234,8 @@ class HttpRequestBuilderImpl implements HttpRequestBuilder {
             myForceHttps,
             myUseProxy,
             myHostnameVerifier,
-            myAllowErrorCodes
+            myAllowErrorCodes,
+            myUiOwner
         );
-        return myExecutor.execute(options, processor);
     }
 }

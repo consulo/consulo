@@ -79,7 +79,8 @@ public class PluginAdvertiserRequester {
                     pluginDescriptors = RepositoryHelper.loadOnlyPluginsFromRepository(
                         null,
                         updateSettings.getChannel(),
-                        EarlyAccessProgramManager.getInstance()
+                        EarlyAccessProgramManager.getInstance(),
+                        null
                     );
                 }
                 catch (Exception ignored) {

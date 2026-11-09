@@ -20,7 +20,6 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.http.ssl.HttpConfirmingTrustManagerHttp;
 
-import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.SSLContext;
 
@@ -75,8 +74,6 @@ public interface HttpCertificateManager {
     SSLContext getSslContext();
 
     SSLContext getSystemSslContext();
-
-    HostnameVerifier getHostnameVerifier();
 
     HttpConfirmingTrustManagerHttp getTrustManager();
 

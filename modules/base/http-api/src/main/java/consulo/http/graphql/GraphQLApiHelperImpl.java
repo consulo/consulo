@@ -17,7 +17,10 @@
 package consulo.http.graphql;
 
 import consulo.application.util.concurrent.AppExecutorUtil;
+import consulo.http.HttpMethod;
+import consulo.http.HttpRequestBuilder;
 import consulo.http.client.HttpApiHelper;
+import consulo.http.client.HttpApiResponse;
 import consulo.http.client.HttpBodyReader;
 import consulo.http.client.HttpClientUtil;
 import consulo.http.graphql.dto.GraphQLErrorDTO;
@@ -29,10 +32,7 @@ import consulo.http.json.JsonDataSerializer;
 import consulo.logging.Logger;
 import org.jspecify.annotations.Nullable;
 
-import java.io.InputStream;
 import java.net.URI;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
@@ -51,33 +51,20 @@ final class GraphQLApiHelperImpl implements GraphQLApiHelper, HttpApiHelper {
     }
 
     @Override
-    public CompletableFuture<HttpRequest.Builder> request(URI uri) {
-        return myHttpHelper.request(uri);
+    public CompletableFuture<HttpRequestBuilder> request(String url, HttpMethod method) {
+        return myHttpHelper.request(url, method);
     }
 
     @Override
-    public <T extends @Nullable Object> CompletableFuture<HttpResponse<T>> sendAndAwait(HttpRequest request,
-                                                                                        HttpResponse.BodyHandler<T> bodyHandler) {
-        return myHttpHelper.sendAndAwait(request, bodyHandler);
+    public <T extends @Nullable Object> CompletableFuture<HttpApiResponse<T>> sendAndRead(HttpRequestBuilder request,
+                                                                                          String requestName,
+                                                                                          HttpBodyReader<T> bodyReader) {
+        return myHttpHelper.sendAndRead(request, requestName, bodyReader);
     }
 
     @Override
-    public <T extends @Nullable Object> CompletableFuture<HttpResponse<T>> sendAndAwait(HttpRequest request,
-                                                                                        String requestName,
-                                                                                        HttpResponse.BodyHandler<T> bodyHandler) {
-        return myHttpHelper.sendAndAwait(request, requestName, bodyHandler);
-    }
-
-    @Override
-    public <R extends @Nullable Object> CompletableFuture<R> handleStreamingResponse(String requestName,
-                                                                                     HttpResponse<InputStream> response,
-                                                                                     HttpBodyReader<R> bodyReader) {
-        return myHttpHelper.handleStreamingResponse(requestName, response, bodyReader);
-    }
-
-    @Override
-    public CompletableFuture<HttpRequest> query(URI uri, Supplier<String> loadQuery, @Nullable Object variablesObject) {
-        String requestName = gqlRequestName(uri);
+    public CompletableFuture<HttpRequestBuilder> query(URI uri, Supplier<String> loadQuery, @Nullable Object variablesObject) {
+        String requestName = gqlRequestName(uri.toString());
         CompletableFuture<byte[]> body = CompletableFuture.supplyAsync(() -> {
             GraphQLRequestDTO request = new GraphQLRequestDTO(loadQuery.get(), variablesObject);
             byte[] jsonBytes;
@@ -93,16 +80,17 @@ final class GraphQLApiHelperImpl implements GraphQLApiHelper, HttpApiHelper {
             }
             return jsonBytes;
         }, AppExecutorUtil.getAppExecutorService());
-        return body.thenCompose(jsonBytes -> myHttpHelper.request(uri).thenApply(builder -> builder
-            .POST(HttpRequest.BodyPublishers.ofByteArray(jsonBytes))
-            .header(HttpClientUtil.CONTENT_TYPE_HEADER, HttpClientUtil.MIME_TYPE_JSON)
-            .build()));
+        return body.thenCompose(jsonBytes -> myHttpHelper.request(uri, HttpMethod.POST).thenApply(builder -> builder
+            .body(jsonBytes)
+            .header(HttpClientUtil.CONTENT_TYPE_HEADER, HttpClientUtil.MIME_TYPE_JSON)));
     }
 
     @Override
-    public <T> CompletableFuture<HttpResponse<@Nullable T>> loadResponseByClass(HttpRequest request, Class<T> clazz, String... pathFromData) {
-        HttpRequest jsonRequest = HttpClientUtil.ensureAcceptHeader(request, HttpClientUtil.MIME_TYPE_JSON);
-        String requestName = gqlRequestName(request.uri());
+    public <T> CompletableFuture<HttpApiResponse<@Nullable T>> loadResponseByClass(HttpRequestBuilder request,
+                                                                                    Class<T> clazz,
+                                                                                    String... pathFromData) {
+        HttpRequestBuilder jsonRequest = HttpClientUtil.ensureAcceptHeader(request, HttpClientUtil.MIME_TYPE_JSON);
+        String requestName = gqlRequestName(request.getUrl());
         return sendAndRead(jsonRequest, requestName, (stream, mimeType, charset) -> {
             GraphQLResponseDTO<@Nullable T, GraphQLErrorDTO> result;
             try {
@@ -116,7 +104,7 @@ final class GraphQLApiHelperImpl implements GraphQLApiHelper, HttpApiHelper {
         });
     }
 
-    private static String gqlRequestName(URI uri) {
-        return "GraphQL request POST " + uri;
+    private static String gqlRequestName(String url) {
+        return "GraphQL request POST " + url;
     }
 }

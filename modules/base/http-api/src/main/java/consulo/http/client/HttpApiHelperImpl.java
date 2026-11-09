@@ -16,60 +16,44 @@
  */
 package consulo.http.client;
 
+import consulo.application.Application;
+import consulo.http.HttpMethod;
+import consulo.http.HttpRequestBuilder;
+import consulo.http.HttpRequestBuilderFactory;
 import consulo.logging.Logger;
 import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionException;
 
 final class HttpApiHelperImpl implements HttpApiHelper {
     private final Logger myLogger;
     private final HttpRequestConfigurer myRequestConfigurer;
-    private final HttpClient myClient;
 
-    HttpApiHelperImpl(Logger logger, HttpClientFactory clientFactory, HttpRequestConfigurer requestConfigurer) {
+    HttpApiHelperImpl(Logger logger, HttpRequestConfigurer requestConfigurer) {
         myLogger = logger;
         myRequestConfigurer = requestConfigurer;
-        myClient = clientFactory.createClient();
     }
 
     @Override
-    public CompletableFuture<HttpRequest.Builder> request(URI uri) {
-        return myRequestConfigurer.configureAsync(HttpRequest.newBuilder(uri));
+    public CompletableFuture<HttpRequestBuilder> request(String url, HttpMethod method) {
+        HttpRequestBuilderFactory factory = Application.get().getInstance(HttpRequestBuilderFactory.class);
+        return myRequestConfigurer.configureAsync(factory.newBuilder(url, method));
     }
 
     @Override
-    public <T extends @Nullable Object> CompletableFuture<HttpResponse<T>> sendAndAwait(HttpRequest request,
-                                                                                        HttpResponse.BodyHandler<T> bodyHandler) {
-        return sendAndAwait(request, HttpApiHelper.logName(request), bodyHandler);
-    }
-
-    @Override
-    public <T extends @Nullable Object> CompletableFuture<HttpResponse<T>> sendAndAwait(HttpRequest request,
-                                                                                        String requestName,
-                                                                                        HttpResponse.BodyHandler<T> bodyHandler) {
+    public <T extends @Nullable Object> CompletableFuture<HttpApiResponse<T>> sendAndRead(HttpRequestBuilder request,
+                                                                                          String requestName,
+                                                                                          HttpBodyReader<T> bodyReader) {
         myLogger.debug(requestName);
-        CompletableFuture<HttpResponse<T>> sent = myClient.sendAsync(request, bodyHandler);
+        CompletableFuture<HttpApiResponse<T>> sent = request.allowErrorCodes(true)
+            .gzip(true)
+            .connectAsync(response -> HttpClientUtil.readResponse(response, myLogger, requestName, bodyReader));
         sent.whenComplete((response, error) -> {
-            Throwable cause = error instanceof CompletionException && error.getCause() != null ? error.getCause() : error;
-            if (cause instanceof IOException) {
-                myLogger.debug(requestName + " : Connection error", cause);
+            if (error instanceof IOException) {
+                myLogger.debug(requestName + " : Connection error", error);
             }
         });
         return sent;
-    }
-
-    @Override
-    public <R extends @Nullable Object> CompletableFuture<R> handleStreamingResponse(String requestName,
-                                                                                     HttpResponse<InputStream> response,
-                                                                                     HttpBodyReader<R> bodyReader) {
-        return HttpClientUtil.checkStatusCodeWithLogging(response, myLogger, requestName)
-            .thenCompose(unused -> HttpClientUtil.readBodyWithLogging(response, myLogger, requestName, bodyReader));
     }
 }

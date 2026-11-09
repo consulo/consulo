@@ -18,12 +18,10 @@ package consulo.ide.impl.idea.ide.ui.customization;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.configurable.*;
 import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
-import consulo.ide.localize.IdeLocalize;
+import consulo.ui.ex.keymap.localize.KeyMapLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -38,15 +36,15 @@ public class CustomizationConfigurable implements SearchableConfigurable, Config
   @Override
   public Component createUIComponent(Disposable parentDisposable) {
     if (myPanel == null) {
-      myPanel = new CustomizableActionsPanel();
+      myPanel = new CustomizableActionsPanel(parentDisposable);
     }
-    return TargetAWT.wrap(myPanel.getPanel());
+    return myPanel.getComponent();
   }
 
   
   @Override
   public LocalizeValue getDisplayName() {
-    return IdeLocalize.titleCustomizations();
+    return KeyMapLocalize.titleCustomizations();
   }
 
   @RequiredUIAccess
@@ -70,10 +68,7 @@ public class CustomizationConfigurable implements SearchableConfigurable, Config
   @RequiredUIAccess
   @Override
   public void disposeUIResources() {
-    if(myPanel != null) {
-      Disposer.dispose(myPanel);
-      myPanel = null;
-    }
+    myPanel = null;
   }
 
   @Override

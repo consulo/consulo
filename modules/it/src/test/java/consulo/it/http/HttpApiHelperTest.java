@@ -22,6 +22,7 @@ import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
+import consulo.http.HttpRequestBuilder;
 import consulo.http.client.HttpApiHelper;
 import consulo.http.client.HttpStatusErrorException;
 import consulo.http.graphql.CachingGraphQLQueryLoader;
@@ -55,9 +56,6 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.net.InetSocketAddress;
 import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -108,8 +106,8 @@ public class HttpApiHelperTest {
             send(exchange, 200, "text/plain; charset=utf-8", gzipped.toByteArray());
         });
 
-        HttpApiHelper helper = HttpApiHelper.create(LOG, HttpClient::newHttpClient);
-        HttpRequest request = await(helper.request(myBase.resolve("/text"))).GET().build();
+        HttpApiHelper helper = HttpApiHelper.create(LOG);
+        HttpRequestBuilder request = await(helper.request(myBase.resolve("/text")));
         String body = await(helper.sendAndReadBody(request, (stream, mimeType, charset) -> new String(stream.readAllBytes(), charset)));
 
         assertEquals("hello", body);
@@ -120,8 +118,8 @@ public class HttpApiHelperTest {
     public void errorStatusCarriesTheBody() throws Exception {
         myServer.createContext("/missing", exchange -> send(exchange, 404, "text/plain", "not here".getBytes(StandardCharsets.UTF_8)));
 
-        HttpApiHelper helper = HttpApiHelper.create(LOG, HttpClient::newHttpClient);
-        HttpRequest request = await(helper.request(myBase.resolve("/missing"))).GET().build();
+        HttpApiHelper helper = HttpApiHelper.create(LOG);
+        HttpRequestBuilder request = await(helper.request(myBase.resolve("/missing")));
         ExecutionException error = assertThrows(ExecutionException.class,
             () -> helper.sendAndReadBody(request, (stream, mimeType, charset) -> "unexpected").get(10, TimeUnit.SECONDS));
 
@@ -135,14 +133,14 @@ public class HttpApiHelperTest {
         myServer.createContext("/user", exchange -> sendJson(exchange, "{\"login\":\"vistall\",\"id\":1}"));
         myServer.createContext("/users", exchange -> sendJson(exchange, "[{\"login\":\"a\",\"id\":1},{\"login\":\"b\",\"id\":2}]"));
 
-        HttpApiHelper http = HttpApiHelper.create(LOG, HttpClient::newHttpClient);
+        HttpApiHelper http = HttpApiHelper.create(LOG);
         JsonHttpApiHelper json = JsonHttpApiHelper.create(LOG, http, new GsonSerializer(), new GsonDeserializer());
 
-        User user = await(json.loadJsonValueByClass(await(http.request(myBase.resolve("/user"))).GET().build(), User.class)).body();
+        User user = await(json.loadJsonValueByClass(await(http.request(myBase.resolve("/user"))), User.class)).body();
         assertEquals("vistall", user.login);
         assertEquals(1, user.id);
 
-        List<User> users = await(json.loadJsonListByClass(await(http.request(myBase.resolve("/users"))).GET().build(), User.class)).body();
+        List<User> users = await(json.loadJsonListByClass(await(http.request(myBase.resolve("/users"))), User.class)).body();
         assertEquals(2, users.size());
         assertEquals("b", users.get(1).login);
     }
@@ -167,9 +165,9 @@ public class HttpApiHelperTest {
             return text == null ? null : new ByteArrayInputStream(text.getBytes(StandardCharsets.UTF_8));
         });
 
-        HttpApiHelper http = HttpApiHelper.create(LOG, HttpClient::newHttpClient);
+        HttpApiHelper http = HttpApiHelper.create(LOG);
         GraphQLApiHelper graphQL = GraphQLApiHelper.create(LOG, http, new GsonSerializer(), new GsonGraphQLDeserializer());
-        HttpRequest request = await(graphQL.query(myBase.resolve("/graphql"), () -> load(loader, "graphql/query/viewer.graphql")));
+        HttpRequestBuilder request = await(graphQL.query(myBase.resolve("/graphql"), () -> load(loader, "graphql/query/viewer.graphql")));
         User viewer = await(graphQL.loadResponseByClass(request, User.class, "viewer")).body();
 
         assertEquals("vistall", viewer.login);
@@ -186,9 +184,9 @@ public class HttpApiHelperTest {
             sendJson(exchange, "{\"errors\":[{\"message\":\"Bad credentials\"}]}");
         });
 
-        HttpApiHelper http = HttpApiHelper.create(LOG, HttpClient::newHttpClient);
+        HttpApiHelper http = HttpApiHelper.create(LOG);
         GraphQLApiHelper graphQL = GraphQLApiHelper.create(LOG, http, new GsonSerializer(), new GsonGraphQLDeserializer());
-        HttpRequest request = await(graphQL.query(myBase.resolve("/graphql"), () -> "query { viewer { login } }"));
+        HttpRequestBuilder request = await(graphQL.query(myBase.resolve("/graphql"), () -> "query { viewer { login } }"));
         ExecutionException error = assertThrows(ExecutionException.class,
             () -> graphQL.loadResponseByClass(request, User.class, "viewer").get(10, TimeUnit.SECONDS));
 
@@ -206,11 +204,11 @@ public class HttpApiHelperTest {
             sendJson(exchange, first ? "[\"a\",\"b\"]" : "[\"c\"]");
         });
 
-        HttpApiHelper http = HttpApiHelper.create(LOG, HttpClient::newHttpClient);
+        HttpApiHelper http = HttpApiHelper.create(LOG);
         JsonHttpApiHelper json = JsonHttpApiHelper.create(LOG, http, new GsonSerializer(), new GsonDeserializer());
         List<String> items = new ArrayList<>();
         await(ApiPageUtil.collectPagesByLinkHeader(myBase.resolve("/items"),
-            uri -> http.request(uri).thenCompose(builder -> json.loadJsonListByClass(builder.GET().build(), String.class)),
+            uri -> http.request(uri).thenCompose(builder -> json.loadJsonListByClass(builder, String.class)),
             response -> items.addAll(response.body())));
 
         assertEquals(List.of("a", "b", "c"), items);

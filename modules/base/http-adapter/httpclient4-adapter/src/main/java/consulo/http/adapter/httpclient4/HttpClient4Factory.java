@@ -42,7 +42,6 @@ public class HttpClient4Factory {
     
     public HttpClientBuilder createBuilder() {
         return HttpClients.custom()
-            .setSSLContext(myHttpCertificateManager.getSslContext())
-            .setSSLHostnameVerifier(myHttpCertificateManager.getHostnameVerifier());
+            .setSSLContext(myHttpCertificateManager.getSslContext());
     }
 }

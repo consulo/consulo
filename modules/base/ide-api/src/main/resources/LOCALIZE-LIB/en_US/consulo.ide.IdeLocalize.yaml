@@ -66,8 +66,6 @@ action.callee.methods.hierarchy:
     text: Callee Methods Hierarchy
 action.caller.methods.hierarchy:
     text: Caller Methods Hierarchy
-action.choose.actions.to.add:
-    text: Choose Actions To Add
 action.clear.list:
     text: _Clear List
 action.close:
@@ -418,8 +416,6 @@ button.add.action.after:
     text: Add A&fter...
 button.add.d:
     text: A&dd...
-button.add.separator:
-    text: Add &Separator
 button.cancel:
     text: '&Cancel'
 button.change.directory:
@@ -440,8 +436,6 @@ button.delete:
     text: Delete
 button.edit:
     text: '&Edit...'
-button.edit.action.icon:
-    text: Edit Action &Icon...
 button.edit.t:
     text: Edi&t...
 button.exclude:
@@ -468,12 +462,8 @@ button.insert:
     text: Insert
 button.mark.all:
     text: '&Mark All'
-button.move.down:
-    text: Move &Down
 button.move.down.d:
     text: Move &Down
-button.move.up:
-    text: Move &Up
 button.move.up.u:
     text: Move &Up
 button.newframe:
@@ -486,8 +476,6 @@ button.reload:
     text: Reload
 button.reload.anyway:
     text: Reload Anyway
-button.remove:
-    text: '&Remove'
 button.remove.action:
     text: Remove Action
 button.remove.all:
@@ -692,8 +680,6 @@ copy.relative.paths:
     text: Cop&y Relative Paths
 create.default.library.type.action.name:
     text: Default
-custom.icon.validation.message:
-    text: Icon is too big to appear in menu
 custom.icon.validation.title:
     text: Icon size is invalid
 description.copy.text.to.clipboard:
@@ -868,8 +854,6 @@ error.file.does.not.exist:
     text: File {0} does not exist.
 error.file.download.failed:
     text: 'Downloading failed: {0}'
-error.file.not.found.message:
-    text: File ''{0}'' not found
 error.files.of.this.type.cannot.be.opened:
     text: Files of this type cannot be opened in {0}
 error.invalid.template.file.name.or.extension:
@@ -1220,8 +1204,6 @@ label.font.name:
     text: 'Name:'
 label.font.size:
     text: 'Size:'
-label.icon.path:
-    text: '&Icon Path:'
 label.inactive.timeout.sec:
     text: sec.
 label.java.source.files.have.been.found:
@@ -2095,8 +2077,6 @@ title.add.new.keyword:
     text: Add New Keyword
 title.appearance:
     text: Appearance
-title.browse.icon:
-    text: Browse Icon
 title.browser.not.found:
     text: Browser Not Found
 title.browser.path.not.found:
@@ -2119,16 +2099,12 @@ title.cannot.save.current.template:
     text: Cannot save current template
 title.cannot.start.browser:
     text: Cannot start browser
-title.choose.action.icon:
-    text: Choose Action Icon
 title.choose.destination.directory:
     text: Choose Destination Directory
 title.connection.error:
     text: Connection Error
 title.custom.actions.schemas:
     text: Menus and toolbars customization
-title.customizations:
-    text: Menus and Toolbars
 title.delete:
     text: Delete
 title.directory.does.not.exist:

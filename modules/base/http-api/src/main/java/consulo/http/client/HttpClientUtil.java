@@ -17,31 +17,20 @@
 package consulo.http.client;
 
 import consulo.application.Application;
-import consulo.application.util.concurrent.AppExecutorUtil;
+import consulo.http.HttpRequest;
+import consulo.http.HttpRequestBuilder;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
-import org.apache.http.entity.ContentType;
 import org.jspecify.annotations.Nullable;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.StringWriter;
-import java.net.URI;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Locale;
-import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionException;
-import java.util.zip.GZIPInputStream;
 
 public final class HttpClientUtil {
     private static final Logger LOG = Logger.getInstance(HttpClientUtil.class);
@@ -75,12 +64,8 @@ public final class HttpClientUtil {
     private HttpClientUtil() {
     }
 
-    public static String getRequestName(String httpMethod, URI uri) {
-        return "Request " + httpMethod + " " + uri;
-    }
-
-    public static String getRequestName(HttpRequest request) {
-        return getRequestName(request.method(), request.uri());
+    public static String getRequestName(String httpMethod, String url) {
+        return "Request " + httpMethod + " " + url;
     }
 
     public static boolean isJsonMimeType(String mimeType) {
@@ -104,38 +89,34 @@ public final class HttpClientUtil {
     }
 
     /**
-     * Override the {@code Accept-Encoding} header to be {@code gzip}
-     */
-    public static HttpRequest forceAcceptGzipEncoding(HttpRequest request) {
-        return HttpRequest.newBuilder(request, (name, value) ->
-                // only allow gzip encoding
-                !name.equalsIgnoreCase(ACCEPT_ENCODING_HEADER) || value.equalsIgnoreCase(CONTENT_ENCODING_GZIP))
-            .header(ACCEPT_ENCODING_HEADER, CONTENT_ENCODING_GZIP)
-            .build();
-    }
-
-    /**
      * Set the {@code Accept} header to be {@code mimeType} if the header is missing
      */
-    public static HttpRequest ensureAcceptHeader(HttpRequest request, String mimeType) {
-        if (request.headers().firstValue(ACCEPT_HEADER).isPresent()) {
-            return request;
+    public static HttpRequestBuilder ensureAcceptHeader(HttpRequestBuilder request, String mimeType) {
+        if (request.getHeader(ACCEPT_HEADER) == null) {
+            request.accept(mimeType);
         }
-        return HttpRequest.newBuilder(request, (name, value) -> true).header(ACCEPT_HEADER, mimeType).build();
+        return request;
     }
 
     /**
-     * A blocking delegate of {@link #checkStatusCodeWithLogging}.
+     * Reads a response inside {@link HttpRequestBuilder#connect}: checks the status code, failing with
+     * {@link HttpStatusErrorException} on an error one (&gt;=400) with the textual (depending on the {@code Content-Type}) response
+     * body in {@link HttpStatusErrorException#getBody()}, then reads the body with {@code reader}.
      * <p>
-     * NB: Can be interrupted. {@link HttpStatusErrorException#getBody()} will be {@code null} in case of interrupt
+     * Logs the request status code, and the textual response body when tracing is enabled in the logger. The request must allow
+     * error codes, or an error status fails earlier without the body.
      */
-    public static void checkStatusCodeWithLoggingBlocking(HttpResponse<? extends InputStream> response, Logger logger, String requestName) {
+    public static <T extends @Nullable Object> HttpApiResponse<T> readResponse(HttpRequest response,
+                                                                               Logger logger,
+                                                                               String requestName,
+                                                                               HttpBodyReader<T> reader) throws IOException {
         int statusCode = response.statusCode();
         logger.debug(requestName + " : Status code " + statusCode);
+        @Nullable HttpContentType contentType = getContentType(response);
         if (statusCode >= 400) {
             String errorBody;
             try {
-                errorBody = readBodyAsText(response);
+                errorBody = readBodyAsText(response, contentType);
             }
             catch (IOException e) {
                 logger.debug(requestName + " : Could not read the error response body", e);
@@ -146,68 +127,33 @@ public final class HttpClientUtil {
             }
             throw new HttpStatusErrorException(requestName, statusCode, errorBody);
         }
-    }
 
-    /**
-     * Checks the status code of the response and fails with {@link HttpStatusErrorException} if status code is not a successful one
-     * (&gt;=400). Reads the textual (depending on the {@code Content-Type}) response body into {@link HttpStatusErrorException#getBody()}
-     * <p>
-     * Logs request status code and also response body if tracing is enabled in logger and the response body is textual
-     * according to content type header
-     */
-    public static CompletableFuture<?> checkStatusCodeWithLogging(HttpResponse<? extends InputStream> response, Logger logger, String requestName) {
-        return supplyIO(() -> {
-            checkStatusCodeWithLoggingBlocking(response, logger, requestName);
-            return null;
-        });
-    }
-
-    /**
-     * A blocking version of {@link #readBodyWithLogging}.
-     */
-    public static <T extends @Nullable Object> T readBodyWithLoggingBlocking(HttpResponse<? extends InputStream> response,
-                                                                             Logger logger,
-                                                                             String requestName,
-                                                                             HttpBodyReader<T> reader) throws IOException {
         logger.debug(requestName + " : Reading response");
-        @Nullable HttpContentType contentType = getContentType(response);
-        T result = readBodyInflating(response, stream -> {
-            if (logger.isTraceEnabled()) {
-                if (contentType != null && isMimeTypeTextual(contentType.mimeType())) {
-                    ByteArrayOutputStream out = new ByteArrayOutputStream();
-                    stream.transferTo(out);
-                    byte[] bytes = out.toByteArray();
-                    Charset charset = contentType.charset() == null ? StandardCharsets.UTF_8 : contentType.charset();
-                    logger.trace(requestName + " : Response body: " + new String(bytes, charset));
-                    try (ByteArrayInputStream copy = new ByteArrayInputStream(bytes)) {
-                        return reader.read(copy, contentType.mimeType(), contentType.charset());
-                    }
-                }
-                logger.trace(requestName + " : Non-textual content");
-            }
-            return reader.read(stream, contentType == null ? null : contentType.mimeType(), contentType == null ? null : contentType.charset());
-        });
+        T body;
+        try (InputStream stream = response.getInputStream()) {
+            body = readBody(stream, contentType, logger, requestName, reader);
+        }
         logger.debug(requestName + " : Response extracted");
-        return result;
+        return new HttpApiResponse<>(response.getURL(), statusCode, response.responseHeaders(), body);
     }
 
-    /**
-     * Reads the response body with {@code reader} taking care of response gzip encoding
-     * <p>
-     * If the logging level for {@code logger} is set to {@code TRACE}, logs the textual response body
-     */
-    public static <T extends @Nullable Object> CompletableFuture<T> readBodyWithLogging(HttpResponse<? extends InputStream> response,
-                                                                                        Logger logger,
-                                                                                        String requestName,
-                                                                                        HttpBodyReader<T> reader) {
-        return supplyIO(() -> readBodyWithLoggingBlocking(response, logger, requestName, reader));
-    }
-
-    /**
-     * Overrides the response body with {@code newBody}
-     */
-    public static <T extends @Nullable Object> HttpResponse<T> withNewBody(HttpResponse<?> response, T newBody) {
-        return new BodyOverrideHttpResponse<>(response, newBody);
+    private static <T extends @Nullable Object> T readBody(InputStream stream,
+                                                           @Nullable HttpContentType contentType,
+                                                           Logger logger,
+                                                           String requestName,
+                                                           HttpBodyReader<T> reader) throws IOException {
+        if (logger.isTraceEnabled()) {
+            if (contentType != null && isMimeTypeTextual(contentType.mimeType())) {
+                byte[] bytes = stream.readAllBytes();
+                Charset charset = contentType.charset() == null ? StandardCharsets.UTF_8 : contentType.charset();
+                logger.trace(requestName + " : Response body: " + new String(bytes, charset));
+                try (ByteArrayInputStream copy = new ByteArrayInputStream(bytes)) {
+                    return reader.read(copy, contentType.mimeType(), contentType.charset());
+                }
+            }
+            logger.trace(requestName + " : Non-textual content");
+        }
+        return reader.read(stream, contentType == null ? null : contentType.mimeType(), contentType == null ? null : contentType.charset());
     }
 
     /**
@@ -222,25 +168,6 @@ public final class HttpClientUtil {
         return result;
     }
 
-    private static <T extends @Nullable Object> CompletableFuture<T> supplyIO(Callable<T> task) {
-        CompletableFuture<T> result = new CompletableFuture<>();
-        AppExecutorUtil.getAppExecutorService().execute(() -> {
-            if (result.isDone()) {
-                return;
-            }
-            try {
-                result.complete(task.call());
-            }
-            catch (CompletionException e) {
-                result.completeExceptionally(e.getCause() == null ? e : e.getCause());
-            }
-            catch (Throwable e) {
-                result.completeExceptionally(e);
-            }
-        });
-        return result;
-    }
-
     private static boolean isMimeTypeTextual(String mimeType) {
         String lc = mimeType.toLowerCase(Locale.ROOT);
         return lc.startsWith(MIME_TYPE_TEXT_PREFIX) && !lc.contains("stream")
@@ -249,57 +176,27 @@ public final class HttpClientUtil {
             || lc.startsWith(MIME_TYPE_APPLICATION_PREFIX) && lc.endsWith(MIME_TYPE_XML_SUFFIX);
     }
 
-    private static @Nullable String readBodyAsText(HttpResponse<? extends InputStream> response) throws IOException {
-        HttpContentType contentType = getContentType(response);
+    private static @Nullable String readBodyAsText(HttpRequest response, @Nullable HttpContentType contentType) throws IOException {
         if (contentType == null || !isMimeTypeTextual(contentType.mimeType())) {
             return null;
         }
         Charset charset = contentType.charset() == null ? StandardCharsets.UTF_8 : contentType.charset();
-        return readBodyInflating(response, stream -> {
-            try (Reader reader = new InputStreamReader(stream, charset)) {
-                StringWriter writer = new StringWriter();
-                reader.transferTo(writer);
-                return writer.toString();
-            }
-        });
+        try (InputStream stream = response.getInputStream()) {
+            return new String(stream.readAllBytes(), charset);
+        }
     }
 
-    private static @Nullable HttpContentType getContentType(HttpResponse<?> response) {
-        Optional<String> header = response.headers().firstValue(CONTENT_TYPE_HEADER);
-        if (header.isEmpty()) {
+    private static @Nullable HttpContentType getContentType(HttpRequest response) throws IOException {
+        String value = response.getContentType();
+        if (value == null) {
             return null;
         }
-        String value = header.get();
-        ContentType contentType;
         try {
-            contentType = ContentType.parse(value);
+            return HttpContentType.parse(value);
         }
         catch (Exception e) {
             LOG.debug("Could not parse " + CONTENT_TYPE_HEADER + " from value " + value, e);
             return null;
-        }
-        String mimeType = contentType.getMimeType();
-        if (mimeType == null) {
-            return null;
-        }
-        return new HttpContentType(mimeType, contentType.getCharset());
-    }
-
-    /**
-     * Reads the response body with a {@code streamReader} taking care of the gzip encoding
-     */
-    private static <T extends @Nullable Object> T readBodyInflating(HttpResponse<? extends InputStream> response,
-                                                                    HttpStreamReader<T> streamReader) throws IOException {
-        Optional<String> encoding = response.headers().firstValue(CONTENT_ENCODING_HEADER);
-        boolean isGzipEncoding = false;
-        if (encoding.isPresent()) {
-            if (!encoding.get().equalsIgnoreCase(CONTENT_ENCODING_GZIP)) {
-                throw new IllegalStateException("Unsupported encoding: " + encoding.get());
-            }
-            isGzipEncoding = true;
-        }
-        try (InputStream bodyStream = isGzipEncoding ? new GZIPInputStream(response.body()) : response.body()) {
-            return streamReader.read(bodyStream);
         }
     }
 }

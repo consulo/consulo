@@ -154,6 +154,7 @@ public class StartupCustomizeDialogDescriptor extends DialogDescriptor {
         root.center(swipeLayout);
         root.addAttachListener(event -> resume());
         myRoot = root;
+        myContext.setUiOwner(root);
 
         CompletableFuture.supplyAsync(myRepositoryLoader, AppExecutorUtil.getAppExecutorService())
             .whenComplete((plugins, error) -> {

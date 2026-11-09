@@ -16,19 +16,10 @@
  */
 package consulo.http.client;
 
-import java.net.http.HttpRequest;
+import consulo.http.HttpRequestBuilder;
+
 import java.util.concurrent.CompletableFuture;
 
 public interface HttpRequestConfigurer {
-    /**
-     * @deprecated use {@link #configureAsync(HttpRequest.Builder)}
-     */
-    @Deprecated
-    default HttpRequest.Builder configure(HttpRequest.Builder builder) {
-        return builder;
-    }
-
-    default CompletableFuture<HttpRequest.Builder> configureAsync(HttpRequest.Builder builder) {
-        return CompletableFuture.completedFuture(configure(builder));
-    }
+    CompletableFuture<HttpRequestBuilder> configureAsync(HttpRequestBuilder builder);
 }

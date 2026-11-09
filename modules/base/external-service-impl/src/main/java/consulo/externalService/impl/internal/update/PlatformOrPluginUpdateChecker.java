@@ -240,7 +240,7 @@ public class PlatformOrPluginUpdateChecker {
         List<PluginDescriptor> remotePlugins;
         UpdateChannel channel = UpdateSettings.getInstance().getChannel();
         try {
-            remotePlugins = RepositoryHelper.loadPluginsFromRepository(indicator, channel, null, true);
+            remotePlugins = RepositoryHelper.loadPluginsFromRepository(indicator, channel, null, true, null);
             Application.get().getInstance(PluginAdvertiserRequester.class).update(remotePlugins);
         }
         catch (ProcessCanceledException e) {
@@ -285,7 +285,7 @@ public class PlatformOrPluginUpdateChecker {
 
             // load new plugins with new app build
             try {
-                remotePlugins = RepositoryHelper.loadPluginsFromRepository(indicator, channel, currentBuildNumber, true);
+                remotePlugins = RepositoryHelper.loadPluginsFromRepository(indicator, channel, currentBuildNumber, true, null);
             }
             catch (ProcessCanceledException e) {
                 return PlatformOrPluginUpdateResult.CANCELED;

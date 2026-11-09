@@ -16,14 +16,14 @@
  */
 package consulo.http.graphql;
 
+import consulo.http.HttpRequestBuilder;
 import consulo.http.client.HttpApiHelper;
+import consulo.http.client.HttpApiResponse;
 import consulo.http.json.JsonDataSerializer;
 import consulo.logging.Logger;
 import org.jspecify.annotations.Nullable;
 
 import java.net.URI;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 
@@ -31,9 +31,9 @@ public interface GraphQLApiHelper {
     /**
      * Fails with {@link consulo.http.json.HttpJsonSerializationException} when the request cannot be serialized
      */
-    CompletableFuture<HttpRequest> query(URI uri, Supplier<String> loadQuery, @Nullable Object variablesObject);
+    CompletableFuture<HttpRequestBuilder> query(URI uri, Supplier<String> loadQuery, @Nullable Object variablesObject);
 
-    default CompletableFuture<HttpRequest> query(URI uri, Supplier<String> loadQuery) {
+    default CompletableFuture<HttpRequestBuilder> query(URI uri, Supplier<String> loadQuery) {
         return query(uri, loadQuery, null);
     }
 
@@ -41,7 +41,7 @@ public interface GraphQLApiHelper {
      * Fails with {@link java.io.IOException}, {@link consulo.http.client.HttpStatusErrorException},
      * {@link consulo.http.json.HttpJsonDeserializationException} or {@link GraphQLErrorException}
      */
-    <T> CompletableFuture<HttpResponse<@Nullable T>> loadResponseByClass(HttpRequest request, Class<T> clazz, String... pathFromData);
+    <T> CompletableFuture<HttpApiResponse<@Nullable T>> loadResponseByClass(HttpRequestBuilder request, Class<T> clazz, String... pathFromData);
 
     static GraphQLApiHelper create(Logger logger, HttpApiHelper httpHelper, JsonDataSerializer serializer, GraphQLDataDeserializer deserializer) {
         return new GraphQLApiHelperImpl(logger, httpHelper, serializer, deserializer);

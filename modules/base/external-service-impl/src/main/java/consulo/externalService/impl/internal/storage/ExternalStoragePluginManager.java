@@ -185,7 +185,8 @@ public class ExternalStoragePluginManager implements PluginActionListener {
                 List<PluginDescriptor> repositoryPlugins = RepositoryHelper.loadOnlyPluginsFromRepository(
                     indicator,
                     UpdateSettings.getInstance().getChannel(),
-                    EarlyAccessProgramManager.getInstance()
+                    EarlyAccessProgramManager.getInstance(),
+                    null
                 );
 
                 Map<PluginId, PluginDescriptor> repo =
@@ -232,7 +233,7 @@ public class ExternalStoragePluginManager implements PluginActionListener {
 
                             PluginDownloader downloader = PluginDownloader.createDownloader(repositoryPlugin, false);
                             indicator.setText(LocalizeValue.localizeTODO("Downloading new plugin '" + repositoryPlugin.getName() + "'…"));
-                            downloader.download(indicator);
+                            downloader.download(indicator, null);
 
                             InstalledPluginsState.getInstance().getInstalledPlugins().add(pluginId);
                             downloader.install(indicator, true);

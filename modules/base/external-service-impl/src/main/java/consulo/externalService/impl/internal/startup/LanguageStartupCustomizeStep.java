@@ -187,7 +187,7 @@ public class LanguageStartupCustomizeStep implements StartupCustomizeStep {
         }
 
         setStatus(ExternalServiceLocalize.startupCustomizeLanguageDownloading());
-        CompletableFuture<?> download = CompletableFuture.supplyAsync(() -> unpack(pack), AppExecutorUtil.getAppExecutorService())
+        CompletableFuture<?> download = CompletableFuture.supplyAsync(() -> unpack(pack, myStatusLabel), AppExecutorUtil.getAppExecutorService())
             .thenAccept(path -> {
                 myUnpackedPath = path;
                 LocalizeManager.get().setLocale(locale, true);
@@ -224,10 +224,10 @@ public class LanguageStartupCustomizeStep implements StartupCustomizeStep {
         }
     }
 
-    private static Path unpack(PluginDescriptor pack) {
+    private static Path unpack(PluginDescriptor pack, @Nullable Component uiOwner) {
         try {
             PluginDownloader downloader = PluginDownloader.createDownloader(pack, false);
-            downloader.download(new EmptyProgressIndicator());
+            downloader.download(new EmptyProgressIndicator(), uiOwner);
 
             Path path = downloader.installNow();
             if (!((LocalizeManagerEx) LocalizeManager.get()).loadPluginIndex(path)) {

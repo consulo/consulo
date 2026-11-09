@@ -228,6 +228,33 @@ public class KeymapGroupImpl implements KeymapGroup {
         myChildren.add(AnSeparator.getInstance());
     }
 
+    public @Nullable KeymapGroupImpl getParent() {
+        return myParent;
+    }
+
+    public void insertChild(int index, Object child) {
+        myChildren.add(index, child);
+        if (child instanceof KeymapGroupImpl group) {
+            group.myParent = this;
+        }
+    }
+
+    public Object removeChild(int index) {
+        Object child = myChildren.remove(index);
+        if (child instanceof KeymapGroupImpl group && group.myParent == this) {
+            group.myParent = null;
+        }
+        return child;
+    }
+
+    public KeymapGroupImpl copy() {
+        KeymapGroupImpl copy = new KeymapGroupImpl(myName, myId, myIcon);
+        for (Object child : myChildren) {
+            copy.insertChild(copy.myChildren.size(), child instanceof KeymapGroupImpl group ? group.copy() : child);
+        }
+        return copy;
+    }
+
     public boolean containsId(String id) {
         return myIds.contains(id);
     }
