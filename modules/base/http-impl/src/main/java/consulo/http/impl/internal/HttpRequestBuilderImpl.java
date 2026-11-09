@@ -33,6 +33,7 @@ import java.io.UncheckedIOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
@@ -185,7 +186,7 @@ class HttpRequestBuilderImpl implements HttpRequestBuilder {
     @Override
     public <T> CompletableFuture<T> connectAsync(HttpRequestProcessor<T> processor) {
         HttpRequestOptions options = createOptions();
-        EmptyProgressIndicator indicator = new EmptyProgressIndicator();
+        EmptyProgressIndicator indicator = new EmptyProgressIndicator(myApplication.getDefaultModalityState());
         CompletableFuture<T> result = new CompletableFuture<>();
         result.whenComplete((value, error) -> {
             if (result.isCancelled()) {
@@ -197,7 +198,7 @@ class HttpRequestBuilderImpl implements HttpRequestBuilder {
                 return;
             }
             try {
-                T value = ProgressManager.getInstance().runProcess(() -> {
+                Supplier<T> exchange = () -> {
                     if (result.isCancelled()) {
                         throw new ProcessCanceledException();
                     }
@@ -207,7 +208,10 @@ class HttpRequestBuilderImpl implements HttpRequestBuilder {
                     catch (IOException e) {
                         throw new UncheckedIOException(e);
                     }
-                }, indicator);
+                };
+                T value = myApplication.getProgressManager() instanceof ProgressManager progressManager
+                    ? progressManager.runProcess(exchange, indicator)
+                    : exchange.get();
                 result.complete(value);
             }
             catch (UncheckedIOException e) {

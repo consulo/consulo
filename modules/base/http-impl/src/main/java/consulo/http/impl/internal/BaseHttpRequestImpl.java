@@ -15,9 +15,11 @@
  */
 package consulo.http.impl.internal;
 
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
 import consulo.http.internal.HttpRequestOptions;
 import consulo.application.progress.ProgressIndicator;
-import consulo.application.progress.ProgressManager;
+import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.application.util.ProgressStreamUtil;
 import consulo.http.HttpRequest;
 import consulo.util.collection.ArrayUtil;
@@ -72,11 +74,17 @@ public abstract class BaseHttpRequestImpl implements HttpRequest, AutoCloseable 
      */
     protected abstract void disconnect();
 
+    private static @Nullable ProgressIndicator getProgressIndicator() {
+        Application application = ApplicationManager.getApplication();
+        ProgressIndicatorProvider provider = application == null ? null : application.getProgressManager();
+        return provider == null ? null : provider.getProgressIndicator();
+    }
+
     @Override
     public InputStream getInputStream() throws IOException {
         if (myInputStream == null) {
             myInputStream = openInputStream();
-            ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
+            ProgressIndicator indicator = getProgressIndicator();
             if (indicator != null) {
                 myInputStream = new CancellableInputStream(myInputStream, indicator);
             }
