@@ -17,7 +17,6 @@ package consulo.task;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import consulo.application.progress.ProgressIndicator;
 import consulo.disposer.Disposable;
 import consulo.project.Project;
 import consulo.task.event.TaskListener;
@@ -30,6 +29,7 @@ import consulo.versionControlSystem.change.LocalChangeList;
 import org.jspecify.annotations.Nullable;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author Dmitry Avdeev
@@ -48,33 +48,16 @@ public abstract class TaskManager {
   }
 
   /**
-   * Queries all configured task repositories.
-   * Operation may be blocked for a while.
+   * Searches all configured task repositories; issues found are also put into the cache.
    *
-   * @param query text search
-   * @return up-to-date issues retrieved from repositories
-   * @see #getCachedIssues()
-   */
-  public abstract List<Task> getIssues(@Nullable String query);
-
-  public abstract List<Task> getIssues(@Nullable String query, boolean forceRequest);
-
-  /**
-   * Most arguments have the same meaning as the ones in {@link TaskRepository#getIssues(String, int, int, boolean, ProgressIndicator)}.
-   *
-   * @param query        optional pattern to filter tasks. One use case is the text entered in "Open Task" dialog.
-   * @param offset       first issue, that should be returned by server. It's safe to use 0, if your server doesn't support pagination.
-   *                     Or you could calculate it as {@code pageSize * (page - 1)} if it does.
-   * @param limit        maximum number of issues returned in one response. You can interpret it as page size.
-   * @param withClosed   whether to include closed issues. Downloaded issues will be filtered by {@link Task#isClosed()} anyway, but
-   *                     filtering on server side can give more useful results in single request.
-   * @param indicator    progress indicator to interrupt long-running requests.
-   * @param forceRequest whether to download issues anew or use already cached ones.
+   * @param query        optional pattern to filter tasks, passed to {@link consulo.task.issue.IssueTracker#search}
+   * @param offset       first issue to return
+   * @param limit        maximum number of issues per repository
+   * @param withClosed   whether to include closed issues
+   * @param forceRequest whether to also ask repositories that failed before (and report their failure)
    * @return tasks collected from all active repositories
    */
-  public List<Task> getIssues(@Nullable String query, int offset, int limit, boolean withClosed, ProgressIndicator indicator, boolean forceRequest) {
-    return Collections.emptyList();
-  }
+  public abstract CompletableFuture<List<Task>> searchIssues(@Nullable String query, int offset, int limit, boolean withClosed, boolean forceRequest);
 
   /**
    * Returns already cached issues.
@@ -85,7 +68,7 @@ public abstract class TaskManager {
 
   public abstract List<Task> getCachedIssues(boolean withClosed);
 
-  public abstract @Nullable Task updateIssue(String id);
+  public abstract CompletableFuture<@Nullable Task> refreshIssue(String id);
 
   public abstract List<LocalTask> getLocalTasks();
 
@@ -129,7 +112,9 @@ public abstract class TaskManager {
 
   public abstract void addRepository(TaskRepository repository);
 
-  public abstract boolean testConnection(TaskRepository repository);
+  public abstract CompletableFuture<?> testConnection(TaskRepository repository);
+
+  public abstract void refreshDetectedRepositories();
 
   public abstract void setTrackContextForNewChangelist(boolean value);
 

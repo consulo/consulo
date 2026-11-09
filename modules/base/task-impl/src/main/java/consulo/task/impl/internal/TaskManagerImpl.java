@@ -15,20 +15,20 @@
  */
 package consulo.task.impl.internal;
 
+import consulo.accountManagement.Account;
+import consulo.accountManagement.AccountListener;
+import consulo.accountManagement.AccountManager;
+import consulo.accountManagement.AccountType;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
-import consulo.application.progress.EmptyProgressIndicator;
-import consulo.application.progress.ProgressIndicator;
-import consulo.application.progress.ProgressManager;
 import consulo.application.util.concurrent.AppExecutorUtil;
-import consulo.component.ProcessCanceledException;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.configurable.internal.ShowConfigurableService;
 import consulo.disposer.Disposable;
-import consulo.http.HttpStatusException;
+import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -40,17 +40,16 @@ import consulo.task.event.TaskListener;
 import consulo.task.impl.internal.action.TaskSearchSupport;
 import consulo.task.impl.internal.context.WorkingContextManager;
 import consulo.task.impl.internal.setting.TaskRepositoriesConfigurable;
-import consulo.task.util.RequestFailedException;
+import consulo.task.issue.IssueCapability;
+import consulo.task.issue.IssueQuery;
+import consulo.task.issue.IssueStateSupport;
+import consulo.task.issue.IssueTracker;
 import consulo.task.util.TaskUtil;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.Messages;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.MultiMap;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
-import consulo.util.xml.serializer.XmlSerializationException;
-import consulo.util.xml.serializer.XmlSerializer;
 import consulo.util.xml.serializer.XmlSerializerUtil;
 import consulo.util.xml.serializer.annotation.AbstractCollection;
 import consulo.util.xml.serializer.annotation.Property;
@@ -68,13 +67,13 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
-import java.net.SocketTimeoutException;
-import java.net.UnknownHostException;
 import java.text.DecimalFormat;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 import java.util.function.Function;
 
 /**
@@ -128,8 +127,12 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
 
     private final NotificationService myNotificationService;
 
-    private final List<TaskRepository> myRepositories = new ArrayList<>();
+    private final AccountManager myAccountManager;
+    private final TaskRepositoryStore myStore = new TaskRepositoryStore();
+    private volatile List<TaskRepositoryEntry> myEntries = List.of();
+    private volatile List<TaskRepository> myRepositories = List.of();
     private final EventDispatcher<TaskListener> myDispatcher = EventDispatcher.create(TaskListener.class);
+    private final List<Runnable> myRepositoriesListeners = new CopyOnWriteArrayList<>();
     private Set<TaskRepository> myBadRepositories = ContainerUtil.newConcurrentSet();
 
     @Inject
@@ -138,9 +141,11 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
         Project project,
         WorkingContextManager contextManager,
         ChangeListManager changeListManager,
-        NotificationService notificationService
+        NotificationService notificationService,
+        AccountManager accountManager
     ) {
         myProject = project;
+        myAccountManager = accountManager;
         myContextManager = contextManager;
         myChangeListManager = changeListManager;
         myNotificationService = notificationService;
@@ -170,43 +175,94 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
 
     @Override
     public TaskRepository[] getAllRepositories() {
-        return myRepositories.toArray(new TaskRepository[myRepositories.size()]);
+        return myRepositories.toArray(new TaskRepository[0]);
     }
 
     @Override
     public void addRepository(TaskRepository repository) {
-        List<TaskRepository> newRepositories = new ArrayList<>(myRepositories.size() + 1);
-        newRepositories.addAll(myRepositories);
-        newRepositories.add(repository);
-        setRepositories(newRepositories);
+        List<TaskRepositoryEntry> configured = myStore.getConfigured();
+        configured.add(new TaskRepositoryEntry(repository.getRepositoryType(), repository.getOptions(), false));
+        setRepositoryEntries(configured, myStore.getHiddenKeys());
     }
 
-    public <T extends TaskRepository> void setRepositories(List<T> repositories) {
+    public List<TaskRepositoryEntry> getRepositoryEntries() {
+        return myEntries;
+    }
 
-        Set<TaskRepository> set = new HashSet<>(myRepositories);
-        set.removeAll(repositories);
-        myBadRepositories.removeAll(set); // remove all changed reps
-        myIssueCache.clear();
+    public Set<String> getHiddenKeys() {
+        return myStore.getHiddenKeys();
+    }
 
-        myRepositories.clear();
-        myRepositories.addAll(repositories);
+    public void setRepositoryEntries(List<TaskRepositoryEntry> configured, Set<String> hiddenKeys) {
+        myStore.set(configured, hiddenKeys);
+        rebuildRepositories();
+        getProjectConfiguration().getState().servers = TaskRepositoryStore.collectSharedServers(myEntries);
+    }
 
-        reps:
-        for (T repository : repositories) {
-            if (repository.isShared() && repository.getUrl() != null) {
-                List<TaskProjectConfiguration.SharedServer> servers = getProjectConfiguration().servers;
-                TaskRepositoryType type = repository.getRepositoryType();
-                for (TaskProjectConfiguration.SharedServer server : servers) {
-                    if (repository.getUrl().equals(server.url) && type.getId().equals(server.type)) {
-                        continue reps;
-                    }
-                }
-                TaskProjectConfiguration.SharedServer server = new TaskProjectConfiguration.SharedServer();
-                server.type = type.getId();
-                server.url = repository.getUrl();
-                servers.add(server);
+    @Override
+    public void refreshDetectedRepositories() {
+        rebuildRepositories();
+    }
+
+    private void rebuildRepositories() {
+        List<TaskRepositoryEntry> entries = myStore.merge(detectRepositories(), getProjectConfiguration().getState().servers, this::findRepositoryType);
+
+        List<TaskRepository> repositories = new ArrayList<>(entries.size());
+        for (TaskRepositoryEntry entry : entries) {
+            try {
+                repositories.add(entry.createRepository(myProject));
+            }
+            catch (Exception e) {
+                LOG.error("Cannot create repository " + entry.getType().getId(), e);
             }
         }
+
+        myEntries = List.copyOf(entries);
+        myRepositories = List.copyOf(repositories);
+        myBadRepositories.clear();
+        myIssueCache.clear();
+
+        for (Runnable listener : myRepositoriesListeners) {
+            listener.run();
+        }
+    }
+
+    public void addRepositoriesListener(Runnable listener, Disposable parentDisposable) {
+        myRepositoriesListeners.add(listener);
+        Disposer.register(parentDisposable, () -> myRepositoriesListeners.remove(listener));
+    }
+
+    private List<TaskRepositoryEntry> detectRepositories() {
+        List<TaskRepositoryEntry> entries = new ArrayList<>();
+        myProject.getApplication().getExtensionPoint(TaskRepositoryType.class).forEach(rawType -> {
+            TaskRepositoryType<?> type = rawType;
+            AccountType<?> accountType = myAccountManager.findAccountType(type.getAccountTypeId());
+            if (accountType == null) {
+                return;
+            }
+            for (Account account : myAccountManager.getAccounts(accountType, myProject)) {
+                try {
+                    List<? extends TaskRepositoryOptions> detected = type.detect(myProject, account);
+                    for (TaskRepositoryOptions options : detected) {
+                        if (options.accountId == null) {
+                            options.accountId = account.getId();
+                        }
+                        if (options.serverUrl.isEmpty()) {
+                            options.serverUrl = StringUtil.notNullize(myAccountManager.getServerUrl(account));
+                        }
+                        entries.add(new TaskRepositoryEntry(type, options, true));
+                    }
+                }
+                catch (Exception e) {
+                    LOG.error("Cannot detect " + type.getId() + " repositories for account " + account.getId(), e);
+                }
+            }
+        });
+        return entries;
+    }
+
+    public @Nullable TaskRepositoryType<?> findRepositoryType(String id) {
+        return myProject.getApplication().getExtensionPoint(TaskRepositoryType.class).findFirstSafe(type -> type.getId().equals(id));
     }
 
     @Override
@@ -238,30 +294,14 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
     }
 
     @Override
-    public List<Task> getIssues(@Nullable String query) {
-        return getIssues(query, true);
-    }
-
-    @Override
-    public List<Task> getIssues(@Nullable String query, boolean forceRequest) {
-        return getIssues(query, 0, 50, true, new EmptyProgressIndicator(), forceRequest);
-    }
-
-    @Override
-    public List<Task> getIssues(
-        @Nullable String query,
-        int offset,
-        int limit,
-        boolean withClosed,
-        ProgressIndicator indicator,
-        boolean forceRequest
-    ) {
-        List<Task> tasks = getIssuesFromRepositories(query, offset, limit, withClosed, forceRequest, indicator);
-        if (tasks == null) {
-            return getCachedIssues(withClosed);
-        }
-        myIssueCache.putAll(ContainerUtil.newMapFromValues(tasks.iterator(), KEY_CONVERTER));
-        return ContainerUtil.filter(tasks, task -> withClosed || !task.isClosed());
+    public CompletableFuture<List<Task>> searchIssues(@Nullable String query, int offset, int limit, boolean withClosed, boolean forceRequest) {
+        return searchRepositories(query, offset, limit, withClosed, forceRequest).thenApply(tasks -> {
+            if (tasks == null) {
+                return getCachedIssues(withClosed);
+            }
+            myIssueCache.putAll(ContainerUtil.newMapFromValues(tasks.iterator(), KEY_CONVERTER));
+            return ContainerUtil.filter(tasks, task -> withClosed || !task.isClosed());
+        });
     }
 
     @Override
@@ -275,28 +315,33 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
     }
 
     @Override
-    public @Nullable Task updateIssue(String id) {
+    public CompletableFuture<@Nullable Task> refreshIssue(String id) {
+        CompletableFuture<@Nullable Task> result = CompletableFuture.completedFuture(null);
         for (TaskRepository repository : getAllRepositories()) {
             if (repository.extractId(id) == null) {
                 continue;
             }
-            try {
-                LOG.info("Searching for task '" + id + "' in " + repository);
-                Task issue = repository.findTask(id);
-                if (issue != null) {
-                    LocalTask localTask = findTask(id);
-                    if (localTask != null) {
-                        localTask.updateFromIssue(issue);
-                        return localTask;
-                    }
-                    return issue;
+            result = result.thenCompose(found -> {
+                if (found != null) {
+                    return CompletableFuture.completedFuture(found);
                 }
-            }
-            catch (Exception e) {
-                LOG.info(e);
-            }
+                return repository.getIssueTracker().findIssue(id).exceptionally(error -> {
+                    LOG.warn("Cannot find task '" + id + "' in " + repository + ": " + error.getMessage());
+                    return null;
+                });
+            });
         }
-        return null;
+        return result.thenApply(issue -> {
+            if (issue == null) {
+                return null;
+            }
+            LocalTask localTask = findTask(id);
+            if (localTask != null) {
+                localTask.updateFromIssue(issue);
+                return localTask;
+            }
+            return issue;
+        });
     }
 
     @Override
@@ -483,14 +528,7 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
         task.setActive(true);
         addTask(task);
         if (task.isIssue()) {
-            StartupManager.getInstance(myProject).runWhenProjectIsInitialized(() -> ProgressManager.getInstance().run(
-                new consulo.application.progress.Task.Backgroundable(myProject, "Updating " + task.getPresentableId()) {
-                    @Override
-                    public void run(ProgressIndicator indicator) {
-                        updateIssue(task.getId());
-                    }
-                }
-            ));
+            StartupManager.getInstance(myProject).runWhenProjectIsInitialized(() -> refreshIssue(task.getId()));
         }
         LocalTask oldActiveTask = myActiveTask;
         boolean isChanged = !task.equals(oldActiveTask);
@@ -507,79 +545,30 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
         myDispatcher.getMulticaster().taskAdded(task);
     }
 
+    public CompletableFuture<?> setTaskState(TaskRepository repository, Task task, CustomTaskState state, boolean open) {
+        IssueStateSupport support = repository.getIssueTracker().getSupport(IssueStateSupport.class);
+        if (support == null) {
+            return CompletableFuture.failedFuture(new UnsupportedOperationException("Setting task state is not supported by " + repository));
+        }
+        return support.setState(task, state).thenAccept(result -> {
+            if (open) {
+                repository.getOptions().preferredOpenTaskState = state;
+            }
+            else {
+                repository.getOptions().preferredCloseTaskState = state;
+            }
+        });
+    }
+
     @Override
-    @RequiredUIAccess
-    public boolean testConnection(final TaskRepository repository) {
-        TestConnectionTask task = new TestConnectionTask("Test connection") {
-            @Override
-            public void run(ProgressIndicator indicator) {
-                indicator.setText("Connecting to " + repository.getUrl() + "…");
-                indicator.setFraction(0);
-                indicator.setIndeterminate(true);
-                try {
-                    myConnection = repository.createCancellableConnection();
-                    if (myConnection != null) {
-                        Future<Exception> future = Application.get().executeOnPooledThread(myConnection);
-                        while (true) {
-                            try {
-                                myException = future.get(100, TimeUnit.MILLISECONDS);
-                                return;
-                            }
-                            catch (TimeoutException ignore) {
-                                try {
-                                    indicator.checkCanceled();
-                                }
-                                catch (ProcessCanceledException e) {
-                                    myException = e;
-                                    myConnection.cancel();
-                                    return;
-                                }
-                            }
-                            catch (Exception e) {
-                                myException = e;
-                                return;
-                            }
-                        }
-                    }
-                    else {
-                        try {
-                            repository.testConnection();
-                        }
-                        catch (Exception e) {
-                            LOG.info(e);
-                            myException = e;
-                        }
-                    }
-                }
-                catch (Exception e) {
-                    myException = e;
-                }
-            }
-        };
-        ProgressManager.getInstance().run(task);
-        Exception e = task.myException;
-        if (e == null) {
-            myBadRepositories.remove(repository);
-            Messages.showMessageDialog(myProject, "Connection is successful", "Connection", UIUtil.getInformationIcon());
-        }
-        else if (!(e instanceof ProcessCanceledException)) {
-            String message = e.getMessage();
-            if (e instanceof UnknownHostException) {
-                message = "Unknown host: " + message;
-            }
-            if (message == null) {
-                LOG.error(e);
-                message = "Unknown error";
-            }
-            Messages.showErrorDialog(myProject, StringUtil.capitalize(message), "Error");
-        }
-        return e == null;
+    public CompletableFuture<?> testConnection(TaskRepository repository) {
+        return repository.getIssueTracker().search(new IssueQuery(null, false), 0, 1).thenAccept(page -> myBadRepositories.remove(repository));
     }
 
     @Override
     public Config getState() {
         myConfig.tasks = ContainerUtil.map(myTasks.values(), LocalTaskImpl::new);
-        myConfig.servers = XmlSerializer.serialize(getAllRepositories());
+        myConfig.servers = myStore.write();
         return myConfig;
     }
 
@@ -591,59 +580,23 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
             addTask(task);
         }
 
-        myRepositories.clear();
-        Element element = config.servers;
-        List<TaskRepository> repositories = loadRepositories(element);
-        myRepositories.addAll(repositories);
-    }
-
-    public static ArrayList<TaskRepository> loadRepositories(Element element) {
-        ArrayList<TaskRepository> repositories = new ArrayList<>();
-        for (TaskRepositoryType repositoryType : TaskRepositoryType.getRepositoryTypes()) {
-            for (Object o : element.getChildren()) {
-                if (((Element) o).getName().equals(repositoryType.getId())) {
-                    try {
-                        @SuppressWarnings({"unchecked"}) TaskRepository repository =
-                            (TaskRepository) XmlSerializer.deserialize((Element) o, repositoryType.getRepositoryClass());
-                        if (repository != null) {
-                            repository.setRepositoryType(repositoryType);
-                            repositories.add(repository);
-                        }
-                    }
-                    catch (XmlSerializationException e) {
-                        LOG.error(e.getMessage(), e);
-                    }
-                }
-            }
-        }
-        return repositories;
+        myStore.read(config.servers, this::findRepositoryType);
+        rebuildRepositories();
     }
 
     public void projectOpened() {
-        TaskProjectConfiguration projectConfiguration = getProjectConfiguration();
+        myAccountManager.addListener(new AccountListener() {
+            @Override
+            public void accountsChanged() {
+                rebuildRepositories();
+            }
 
-        servers:
-        for (TaskProjectConfiguration.SharedServer server : projectConfiguration.servers) {
-            if (server.type == null || server.url == null) {
-                continue;
+            @Override
+            public void accountChanged(Account account) {
+                rebuildRepositories();
             }
-            for (TaskRepositoryType<?> repositoryType : TaskRepositoryType.getRepositoryTypes()) {
-                if (repositoryType.getId().equals(server.type)) {
-                    for (TaskRepository repository : myRepositories) {
-                        if (!repositoryType.equals(repository.getRepositoryType())) {
-                            continue;
-                        }
-                        if (server.url.equals(repository.getUrl())) {
-                            continue servers;
-                        }
-                    }
-                    TaskRepository repository = repositoryType.createRepository();
-                    repository.setUrl(server.url);
-                    repository.setShared(true);
-                    myRepositories.add(repository);
-                }
-            }
-        }
+        }, this);
+        rebuildRepositories();
 
         myContextManager.pack(200, 50);
 
@@ -740,106 +693,82 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
             return;
         }
         myUpdating = true;
-        if (Application.get().isUnitTestMode()) {
-            doUpdate(onComplete);
-        }
-        else {
-            Application.get().executeOnPooledThread(() -> doUpdate(onComplete));
-        }
-    }
-
-    private void doUpdate(@Nullable Runnable onComplete) {
-        try {
-            List<Task> issues = getIssuesFromRepositories(null, 0, myConfig.updateIssuesCount, false, false, new EmptyProgressIndicator());
-            if (issues == null) {
-                return;
-            }
-
-            synchronized (myIssueCache) {
-                myIssueCache.clear();
-                for (Task issue : issues) {
-                    myIssueCache.put(issue.getId(), issue);
+        searchRepositories(null, 0, myConfig.updateIssuesCount, false, false).whenComplete((issues, error) -> {
+            try {
+                if (issues == null) {
+                    return;
                 }
-            }
-            // update local tasks
-            synchronized (myTasks) {
-                for (Map.Entry<String, LocalTask> entry : myTasks.entrySet()) {
-                    Task issue = myIssueCache.get(entry.getKey());
-                    if (issue != null) {
-                        entry.getValue().updateFromIssue(issue);
+                synchronized (myIssueCache) {
+                    myIssueCache.clear();
+                    for (Task issue : issues) {
+                        myIssueCache.put(issue.getId(), issue);
+                    }
+                }
+                synchronized (myTasks) {
+                    for (Map.Entry<String, LocalTask> entry : myTasks.entrySet()) {
+                        Task issue = myIssueCache.get(entry.getKey());
+                        if (issue != null) {
+                            entry.getValue().updateFromIssue(issue);
+                        }
                     }
                 }
             }
-        }
-        finally {
-            if (onComplete != null) {
-                onComplete.run();
+            finally {
+                if (onComplete != null) {
+                    onComplete.run();
+                }
+                myUpdating = false;
             }
-            myUpdating = false;
-        }
+        });
     }
 
-    private @Nullable List<Task> getIssuesFromRepositories(
+    private CompletableFuture<@Nullable List<Task>> searchRepositories(
         @Nullable String request,
         int offset,
         int limit,
         boolean withClosed,
-        boolean forceRequest,
-        ProgressIndicator cancelled
+        boolean forceRequest
     ) {
-        List<Task> issues = null;
+        List<CompletableFuture<@Nullable List<Task>>> futures = new ArrayList<>();
         for (TaskRepository repository : getAllRepositories()) {
             if (!repository.isConfigured() || (!forceRequest && myBadRepositories.contains(repository))) {
                 continue;
             }
-            try {
-                long start = System.currentTimeMillis();
-                Task[] tasks = repository.getIssues(request, offset, limit, withClosed, cancelled);
-                long timeSpent = System.currentTimeMillis() - start;
-                LOG.info(String.format(
-                    "Total %s ms to download %d issues from '%s' (pattern '%s')",
-                    timeSpent,
-                    tasks.length,
-                    repository.getUrl(),
-                    request
-                ));
+            IssueTracker tracker = repository.getIssueTracker();
+            futures.add(tracker.search(new IssueQuery(request, withClosed), offset, limit).handle((page, error) -> {
+                if (error != null) {
+                    Throwable cause = error instanceof CompletionException && error.getCause() != null ? error.getCause() : error;
+                    LOG.warn("Cannot connect to " + repository + ": " + cause.getMessage());
+                    myBadRepositories.add(repository);
+                    if (forceRequest) {
+                        notifyAboutConnectionFailure(repository, StringUtil.notNullize(cause.getMessage()));
+                    }
+                    return null;
+                }
                 myBadRepositories.remove(repository);
-                if (issues == null) {
-                    issues = new ArrayList<>(tasks.length);
+                List<Task> tasks = page.getIssues();
+                if (!tracker.getCapabilities().contains(IssueCapability.NATIVE_SEARCH) && request != null) {
+                    return TaskSearchSupport.filterTasks(request, tasks);
                 }
-                if (!repository.isSupported(TaskRepository.NATIVE_SEARCH) && request != null) {
-                    List<Task> filteredTasks = TaskSearchSupport.filterTasks(request, ContainerUtil.list(tasks));
-                    ContainerUtil.addAll(issues, filteredTasks);
-                }
-                else {
-                    ContainerUtil.addAll(issues, tasks);
-                }
-            }
-            catch (ProcessCanceledException ignored) {
-                // OK
-            }
-            catch (Exception e) {
-                String reason = "";
-                // Fix to IDEA-111810
-                //noinspection InstanceofCatchParameter
-                if (e.getClass() == Exception.class || e instanceof RequestFailedException) {
-                    // probably contains some message meaningful to end-user
-                    reason = e.getMessage();
-                }
-                //noinspection InstanceofCatchParameter
-                if (e instanceof SocketTimeoutException || e instanceof HttpStatusException) {
-                    LOG.warn("Can't connect to " + repository + ": " + e.getMessage());
-                }
-                else {
-                    LOG.warn("Cannot connect to " + repository, e);
-                }
-                myBadRepositories.add(repository);
-                if (forceRequest) {
-                    notifyAboutConnectionFailure(repository, reason);
-                }
-            }
+                return tasks;
+            }));
         }
-        return issues;
+        if (futures.isEmpty()) {
+            return CompletableFuture.completedFuture(null);
+        }
+        return CompletableFuture.allOf(futures.toArray(CompletableFuture[]::new)).thenApply(ignored -> {
+            List<Task> issues = null;
+            for (CompletableFuture<@Nullable List<Task>> future : futures) {
+                List<Task> tasks = future.join();
+                if (tasks != null) {
+                    if (issues == null) {
+                        issues = new ArrayList<>();
+                    }
+                    issues.addAll(tasks);
+                }
+            }
+            return issues;
+        });
     }
 
     private void notifyAboutConnectionFailure(TaskRepository repository, String details) {
@@ -848,7 +777,7 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
             content = "<p>" + details + "</p>" + content;
         }
         myNotificationService.newWarn(TaskManagerNotificationGroupContributor.TASKS_NOTIFICATION_GROUP)
-            .title(LocalizeValue.localizeTODO("Cannot connect to " + repository.getUrl()))
+            .title(LocalizeValue.localizeTODO("Cannot connect to " + repository.getServerUrl()))
             .content(LocalizeValue.localizeTODO(content))
             .hyperlinkListener((notification, event) -> {
                 Application.get().getInstance(ShowConfigurableService.class).showAndSelect(myProject, TaskRepositoriesConfigurable.class);
@@ -961,25 +890,14 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
         return task.isIssue() ? TaskUtil.formatTask(task, myConfig.branchNameFormat) : task.getSummary();
     }
 
-    /**
-     * Reconfigure repository's HTTP clients probably to apply new connection settings.
-     */
-    public void reconfigureRepositoryClients() {
-        for (TaskRepository repository : myRepositories) {
-            if (repository instanceof ReconfigureRepository reconfigureRepository) {
-                reconfigureRepository.reconfigureClient();
-            }
-        }
-    }
-
     @Override
     public boolean isTrackContextForNewChangelist() {
-        return getState().trackContextForNewChangelist;
+        return myConfig.trackContextForNewChangelist;
     }
 
     @Override
     public void setTrackContextForNewChangelist(boolean value) {
-        getState().trackContextForNewChangelist = value;
+        myConfig.trackContextForNewChangelist = value;
     }
 
     public static class Config {
@@ -1014,23 +932,5 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
         public boolean searchClosedTasks = false;
         @Tag("servers")
         public Element servers = new Element("servers");
-    }
-
-    private abstract class TestConnectionTask extends consulo.application.progress.Task.Modal {
-        protected Exception myException;
-
-        protected TaskRepository.@Nullable CancellableConnection myConnection;
-
-        public TestConnectionTask(String title) {
-            super(TaskManagerImpl.this.myProject, title, true);
-        }
-
-        @Override
-        @RequiredUIAccess
-        public void onCancel() {
-            if (myConnection != null) {
-                myConnection.cancel();
-            }
-        }
     }
 }

@@ -86,7 +86,6 @@ open module consulo.ide.impl {
     requires consulo.project.impl;
     requires consulo.project.ui.impl;
     requires consulo.language.code.style.ui.api;
-    requires consulo.http.adapter.httpclient4;
     requires consulo.file.editor.impl;
     requires consulo.execution.impl;
     requires consulo.execution.test.impl;

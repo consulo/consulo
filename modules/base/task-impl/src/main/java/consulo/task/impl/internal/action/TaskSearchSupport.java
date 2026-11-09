@@ -16,9 +16,11 @@
 
 package consulo.task.impl.internal.action;
 
+import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.util.matcher.Matcher;
 import consulo.application.util.matcher.NameUtil;
+import consulo.component.ProcessCanceledException;
 import consulo.task.Task;
 import consulo.task.TaskManager;
 import consulo.task.impl.internal.TaskManagerImpl;
@@ -27,6 +29,10 @@ import consulo.util.collection.ContainerUtil;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * @author Dmitry Avdeev
@@ -62,9 +68,33 @@ public class TaskSearchSupport {
         boolean withClosed,
         ProgressIndicator cancelled
     ) {
-        List<Task> tasks = new ArrayList<>(manager.getIssues(pattern, since, max, withClosed, cancelled, forceRequest));
+        List<Task> tasks = new ArrayList<>(await(manager.searchIssues(pattern, since, max, withClosed, forceRequest), cancelled, List.of()));
         tasks.sort(TaskManagerImpl.TASK_UPDATE_COMPARATOR);
         return tasks;
+    }
+
+    private static <T> T await(CompletableFuture<T> future, ProgressIndicator indicator, T onFailure) {
+        while (true) {
+            try {
+                return future.get(100, TimeUnit.MILLISECONDS);
+            }
+            catch (TimeoutException ignored) {
+                try {
+                    indicator.checkCanceled();
+                }
+                catch (ProcessCanceledException e) {
+                    future.cancel(true);
+                    throw e;
+                }
+            }
+            catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                return onFailure;
+            }
+            catch (ExecutionException e) {
+                return onFailure;
+            }
+        }
     }
 
     public static List<Task> getItems(TaskManager myManager, String pattern, boolean cached, boolean autopopup) {
@@ -85,6 +115,9 @@ public class TaskSearchSupport {
     }
 
     private static List<Task> getTasks(String pattern, boolean cached, boolean autopopup, TaskManager myManager) {
-        return cached ? myManager.getCachedIssues() : myManager.getIssues(pattern, !autopopup);
+        if (cached) {
+            return myManager.getCachedIssues();
+        }
+        return await(myManager.searchIssues(pattern, 0, 50, true, !autopopup), new EmptyProgressIndicator(), myManager.getCachedIssues());
     }
 }

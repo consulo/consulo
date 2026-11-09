@@ -15,32 +15,27 @@
  */
 package consulo.task.ui;
 
-import consulo.ui.ex.awt.ValidationInfo;
-
+import consulo.localize.LocalizeValue;
+import consulo.ui.Component;
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
-import javax.swing.*;
 
 /**
  * @author Dmitry Avdeev
  */
-public abstract class TaskDialogPanel
-{
-	//@NotNull
-	//@Nls(capitalization = Nls.Capitalization.Title)
-	//public abstract String getName();
-	//
-	
-	public abstract JComponent getPanel();
+public abstract class TaskDialogPanel {
+    @RequiredUIAccess
+    public abstract Component getComponent();
 
-	public @Nullable JComponent getPreferredFocusedComponent()
-	{
-		return null;
-	}
+    public @Nullable Component getPreferredFocusedComponent() {
+        return null;
+    }
 
-	public @Nullable ValidationInfo validate()
-	{
-		return null;
-	}
+    @RequiredUIAccess
+    public @Nullable LocalizeValue validate() {
+        return null;
+    }
 
-	public abstract void commit();
+    @RequiredUIAccess
+    public abstract void commit();
 }

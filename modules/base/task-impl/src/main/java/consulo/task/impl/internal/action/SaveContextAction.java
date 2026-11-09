@@ -25,7 +25,7 @@ import consulo.task.impl.internal.context.WorkingContextManager;
 import consulo.task.localize.TaskLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.awt.Messages;
+import consulo.ui.InputBoxBuilder;
 import consulo.util.lang.StringUtil;
 
 /**
@@ -54,15 +54,15 @@ public class SaveContextAction extends BaseTaskAction {
                 initial = file.getName();
             }
         }
-        String comment = Messages.showInputDialog(project,
-            TaskLocalize.taskSaveContextActionMessage().get(),
-            TaskLocalize.taskSaveContextActionName().get(),
-            null,
-            initial,
-            null
-        );
-        if (comment != null) {
-            WorkingContextManager.getInstance(project).saveContext(null, StringUtil.isEmpty(comment) ? null : comment);
-        }
+        InputBoxBuilder.text()
+            .title(TaskLocalize.taskSaveContextActionName())
+            .text(TaskLocalize.taskSaveContextActionMessage())
+            .value(StringUtil.notNullize(initial))
+            .showAsync()
+            .whenComplete((comment, error) -> {
+                if (comment != null) {
+                    WorkingContextManager.getInstance(project).saveContext(null, StringUtil.isEmpty(comment) ? null : comment);
+                }
+            });
     }
 }

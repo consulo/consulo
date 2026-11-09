@@ -42,6 +42,8 @@ changelist.track.context.tooltip:
     text: Reload context (e.g. open editors) when changelist is set active
 checkbox.include.issues.not.assigned.to.me:
     text: Include issues not assigned to me
+close.task.update.state:
+    text: 'Update issue state:'
 command.name.load.context:
     text: Load Context {0}
 create.new.task.0:
@@ -88,6 +90,112 @@ group.tasks.internal.text:
     text: '&Tasks'
 group.working.context.text:
     text: Working Context
+issues.action.assign:
+    text: Change Assignee
+issues.action.attachment.add:
+    text: Add Attachment
+issues.action.attachment.delete:
+    text: Delete Attachment
+issues.action.columns:
+    text: Columns
+issues.action.comment.add:
+    text: Add Comment
+issues.action.comment.delete:
+    text: Delete Comment
+issues.action.comment.edit:
+    text: Edit Comment
+issues.action.include.closed:
+    text: Include Closed
+issues.action.link.add:
+    text: Add Link
+issues.action.link.delete:
+    text: Delete Link
+issues.action.open.in.browser:
+    text: Open in Browser
+issues.action.priority:
+    text: Change Priority
+issues.action.refresh:
+    text: Refresh
+issues.action.start.working:
+    text: Start Working
+issues.action.transition:
+    text: Transition
+issues.action.worklog.add:
+    text: Add Work Log
+issues.action.worklog.delete:
+    text: Delete Work Log
+issues.action.worklog.edit:
+    text: Edit Work Log
+issues.button.load.more:
+    text: Load More
+issues.column.assignee:
+    text: Assignee
+issues.column.created:
+    text: Created
+issues.column.id:
+    text: ID
+issues.column.priority:
+    text: Priority
+issues.column.state:
+    text: State
+issues.column.summary:
+    text: Summary
+issues.column.type:
+    text: Type
+issues.column.updated:
+    text: Updated
+issues.comment.placeholder:
+    text: Add a comment…
+issues.confirm.delete:
+    text: Delete ''{0}''?
+issues.confirm.delete.comment:
+    text: Delete the selected comment?
+issues.confirm.delete.worklog:
+    text: Delete the selected work log?
+issues.details.empty:
+    text: Select an issue
+issues.filter.all:
+    text: All
+issues.filter.status:
+    text: Status
+issues.filter.type:
+    text: Type
+issues.filter.value:
+    text: '{0}: {1}'
+issues.link.label.issue:
+    text: 'Issue:'
+issues.link.label.type:
+    text: 'Link type:'
+issues.preview.description:
+    text: Description
+issues.search.placeholder:
+    text: Search issues
+issues.status.count:
+    text: 'Issues: {0}'
+issues.status.error:
+    text: 'Cannot load issues: {0}'
+issues.status.loading:
+    text: Loading…
+issues.status.not.logged.in:
+    text: Log in to {0} on the Accounts page
+issues.tab.attachments:
+    text: Attachments
+issues.tab.comments:
+    text: Comments
+issues.tab.count:
+    text: '{0} ({1})'
+issues.tab.links:
+    text: Links
+issues.tab.preview:
+    text: Preview
+issues.tab.subtasks:
+    text: Sub-Tasks
+issues.tab.work.log:
+    text: Work Log
+issues.worklog.label.comment:
+    text: 'Comment:'
+issues.worklog.label.time:
+    text: 'Time spent:'
 jira.default.query:
     text: assignee = currentUser() and resolution = Unresolved order by updated
 jira.failure.captcha:
@@ -108,6 +216,10 @@ label.include.closed.tasks:
     text: Include closed tasks
 open.task.action.menu.text:
     text: Open Task…
+open.task.clear.context:
+    text: Clear current context
+open.task.update.state:
+    text: 'Update issue state:'
 popup.advertisement.html.press.shift.to.merge.with.current.context.br.pressing.would.show.task.description.comments.html:
     text: <html>Press SHIFT to merge with current context<br/>Pressing {0} would show task description and comments</html>
 popup.advertisement.press.shift.to.merge.with.current.context:
@@ -118,8 +230,72 @@ popup.title.merge.with.current.context:
     text: Merge with Current Context
 popup.title.switch.to.task:
     text: Switch to Task
+searchers.action.add:
+    text: Add Searcher
+searchers.action.delete:
+    text: Delete Searcher
+searchers.action.edit:
+    text: Edit Searcher
+searchers.action.hide:
+    text: Hide Searchers
+searchers.action.make.personal:
+    text: Make Personal
+searchers.action.share:
+    text: Share with Project
+searchers.all.issues:
+    text: All Issues
+searchers.checkbox.include.closed:
+    text: Include closed issues
+searchers.checkbox.share:
+    text: Share with the project
+searchers.dialog.add.title:
+    text: Add Searcher
+searchers.dialog.edit.title:
+    text: Edit Searcher
+searchers.group.personal:
+    text: Personal
+searchers.group.project:
+    text: Project
+searchers.label.name:
+    text: 'Name:'
+searchers.label.query:
+    text: 'Query:'
+searchers.title:
+    text: Searchers
 separator.recently.closed.tasks:
     text: Recently Closed Tasks
+servers.action.add:
+    text: Add Server
+servers.action.remove:
+    text: Remove Server
+servers.button.test:
+    text: Test
+servers.checkbox.format.commit.message:
+    text: Add commit message
+servers.checkbox.share:
+    text: Share server with the project
+servers.configurable:
+    text: Servers
+servers.detected:
+    text: detected
+servers.empty.selection:
+    text: Select a server or add one with +
+servers.label.account:
+    text: 'Account:'
+servers.label.commit.message.format:
+    text: 'Commit message format:'
+servers.label.placeholders:
+    text: 'Available placeholders: {0}'
+servers.label.server:
+    text: 'Server:'
+servers.missing.account.type:
+    text: Account type ''{0}'' is not installed
+servers.not.logged.in:
+    text: Log in to {0}
+servers.test.failed:
+    text: 'Cannot connect: {0}'
+servers.test.successful:
+    text: Connection is successful
 settings.always.display.task.combo:
     text: Always &display task combo in toolbar
 settings.cache.settings:
@@ -154,5 +330,51 @@ task.save.context.action.message:
     text: 'Enter comment (optional):'
 task.save.context.action.name:
     text: Save Context
+toolwindow.issues.title:
+    text: '{0} Issues'
+toolwindow.local.tasks:
+    text: Local Tasks
+toolwindow.local.tasks.action.auto.mode:
+    text: Auto Mode
+toolwindow.local.tasks.action.from.last.post:
+    text: Show Time Spent from Last Post
+toolwindow.local.tasks.action.post:
+    text: Post Work Item to Tracker
+toolwindow.local.tasks.action.remove:
+    text: Remove Task
+toolwindow.local.tasks.action.show.closed:
+    text: Show Closed Tasks
+toolwindow.local.tasks.action.start:
+    text: Start Timer for Active Task
+toolwindow.local.tasks.action.stop:
+    text: Stop Timer for Active Task
+toolwindow.local.tasks.column.task:
+    text: Task
+toolwindow.local.tasks.column.time:
+    text: Time Spent
+toolwindow.tasks.title:
+    text: Tasks
+vcs.task.branch.empty:
+    text: Branch name should not be empty
+vcs.task.branch.invalid:
+    text: Branch name is not valid; check your VCS branch name restrictions
+vcs.task.branch.spaces:
+    text: Branch name should not contain spaces
+vcs.task.changelist.empty:
+    text: Changelist name should not be empty
+vcs.task.commit.changes:
+    text: Commit changes
+vcs.task.create.branch:
+    text: 'Create branch:'
+vcs.task.create.changelist:
+    text: 'Create changelist:'
+vcs.task.from:
+    text: from
+vcs.task.merge.branch:
+    text: Merge branch
+vcs.task.no.commit:
+    text: Cannot create a branch while no commit exists. Create a commit first.
+vcs.task.use.branch:
+    text: 'Use branch:'
 youtrack.default.query:
     text: 'for: me sort by: updated #Unresolved'

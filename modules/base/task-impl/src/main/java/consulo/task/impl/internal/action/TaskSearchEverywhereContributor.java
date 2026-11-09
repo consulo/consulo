@@ -31,7 +31,6 @@ import consulo.task.internal.CreateNewTaskAction;
 import consulo.task.localize.TaskLocalize;
 import consulo.ui.TextAttribute;
 import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.ui.image.ImageEffects;
 import consulo.util.dataholder.Key;
 import org.jspecify.annotations.Nullable;
@@ -163,9 +162,7 @@ public class TaskSearchEverywhereContributor implements SearchEverywhereContribu
     }
 
     private static void showOpenTaskDialog(Project project, Task task) {
-        IdeEventQueueProxy.getInstance().closeAllPopups();
-
-        project.getApplication().invokeLater(() -> new OpenTaskDialog(project, task).show());
+        project.getApplication().invokeLater(() -> OpenTaskDialog.show(project, task));
     }
 
     

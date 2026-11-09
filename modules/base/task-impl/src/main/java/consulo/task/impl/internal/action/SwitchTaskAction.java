@@ -17,31 +17,28 @@ package consulo.task.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.dataContext.DataContext;
-import consulo.dataContext.DataManager;
+import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.task.ChangeListInfo;
 import consulo.task.LocalTask;
 import consulo.task.TaskManager;
 import consulo.task.impl.internal.TaskManagerImpl;
 import consulo.task.localize.TaskLocalize;
+import consulo.ui.MessageBoxes;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.details.KeyCode;
+import consulo.ui.event.details.KeyboardInputDetails;
 import consulo.ui.ex.action.*;
-import consulo.ui.ex.awt.Messages;
-import consulo.ui.ex.awt.UIExAWTDataKey;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awt.internal.ActionAWTUtil;
-import consulo.ui.ex.awt.popup.AWTListPopup;
 import consulo.ui.ex.popup.*;
+import consulo.ui.ex.popup.event.ListPopupKeyListener;
 import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
+import consulo.util.lang.ThreeState;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.change.LocalChangeList;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -51,6 +48,8 @@ import java.util.List;
  */
 @ActionImpl(id = "tasks.switch")
 public class SwitchTaskAction extends BaseTaskAction {
+    private static final Logger LOG = Logger.getInstance(SwitchTaskAction.class);
+
     public SwitchTaskAction() {
       super(TaskLocalize.actionTasksSwitchText());
     }
@@ -66,21 +65,19 @@ public class SwitchTaskAction extends BaseTaskAction {
     public static ListPopup createPopup(DataContext dataContext, @Nullable Runnable onDispose, boolean withTitle) {
         final Project project = dataContext.getData(Project.KEY);
         final SimpleReference<Boolean> shiftPressed = SimpleReference.create(false);
-        final SimpleReference<JComponent> componentRef = SimpleReference.create();
         List<TaskListItem> items = project == null ? Collections.<TaskListItem>emptyList() :
-            createPopupActionGroup(project, shiftPressed, dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT));
+            createPopupActionGroup(project, shiftPressed, dataContext);
         final String title = withTitle ? TaskLocalize.popupTitleSwitchToTask().get() : null;
         ListPopupStep<TaskListItem> step = new MultiSelectionListPopupStep<>(title, items) {
             @Override
             public PopupStep<?> onChosen(List<TaskListItem> selectedValues, boolean finalChoice) {
                 if (finalChoice) {
-                    selectedValues.get(0).select();
-                    return FINAL_CHOICE;
+                    return doFinalStep(() -> selectedValues.get(0).select());
                 }
                 ActionGroup group = createActionsStep(selectedValues, project, shiftPressed);
                 return JBPopupFactory.getInstance().createActionsStep(
                     group,
-                    DataManager.getInstance().getDataContext(componentRef.get()),
+                    dataContext,
                     null,
                     false,
                     false,
@@ -114,50 +111,39 @@ public class SwitchTaskAction extends BaseTaskAction {
             }
         };
 
-        final AWTListPopup popup = (AWTListPopup) JBPopupFactory.getInstance().createListPopup(step);
-
-        componentRef.set(popup.getComponent());
+        ListPopup popup = JBPopupFactory.getInstance().createListPopup(step);
         if (items.size() <= 2) {
             return popup;
         }
 
         popup.setAdText(TaskLocalize.popupAdvertisementPressShiftToMergeWithCurrentContext().get());
-
-        popup.registerAction(
-            "shiftPressed",
-            KeyStroke.getKeyStroke("shift pressed SHIFT"),
-            new AbstractAction() {
-                @Override
-                @RequiredUIAccess
-                public void actionPerformed(ActionEvent e) {
+        popup.addKeyListener(new ListPopupKeyListener() {
+            @Override
+            @RequiredUIAccess
+            public boolean keyPressed(ListPopup listPopup, KeyboardInputDetails details) {
+                if (KeyCode.SHIFT.equals(details.getKeyCode())) {
                     shiftPressed.set(true);
                     popup.setCaption(TaskLocalize.popupTitleMergeWithCurrentContext().get());
+                    return true;
                 }
+                if (KeyCode.ENTER.equals(details.getKeyCode()) && details.withShift()) {
+                    listPopup.handleSelect(true);
+                    return true;
+                }
+                return false;
             }
-        );
-        popup.registerAction(
-            "shiftReleased",
-            KeyStroke.getKeyStroke("released SHIFT"),
-            new AbstractAction() {
-                @Override
-                @RequiredUIAccess
-                public void actionPerformed(ActionEvent e) {
+
+            @Override
+            @RequiredUIAccess
+            public boolean keyReleased(ListPopup listPopup, KeyboardInputDetails details) {
+                if (KeyCode.SHIFT.equals(details.getKeyCode())) {
                     shiftPressed.set(false);
                     popup.setCaption(TaskLocalize.popupTitleSwitchToTask().get());
+                    return true;
                 }
+                return false;
             }
-        );
-        popup.registerAction(
-            "invoke",
-            KeyStroke.getKeyStroke("shift ENTER"),
-            new AbstractAction() {
-                @Override
-                @RequiredUIAccess
-                public void actionPerformed(ActionEvent e) {
-                    popup.handleSelect(true);
-                }
-            }
-        );
+        });
         return popup;
     }
 
@@ -199,17 +185,17 @@ public class SwitchTaskAction extends BaseTaskAction {
     private static List<TaskListItem> createPopupActionGroup(
         Project project,
         final SimpleReference<Boolean> shiftPressed,
-        final Component contextComponent
+        DataContext dataContext
     ) {
         List<TaskListItem> group = new ArrayList<>();
 
         AnAction action = ActionManager.getInstance().getAction(GotoTaskAction.ID);
         group.add(new TaskListItem(action.getTemplatePresentation().getText(), action.getTemplatePresentation().getIcon()) {
             @Override
+            @RequiredUIAccess
             void select() {
-                ActionManager.getInstance().tryToExecute(action, ActionAWTUtil.getInputEvent(GotoTaskAction.ID),
-                    contextComponent, ActionPlaces.UNKNOWN, false
-                );
+                ActionManager.getInstance()
+                    .performActionDumbAware(action, AnActionEvent.createFromDataContext(ActionPlaces.UNKNOWN, null, dataContext));
             }
         });
 
@@ -252,46 +238,52 @@ public class SwitchTaskAction extends BaseTaskAction {
     @RequiredUIAccess
     public static void removeTask(Project project, LocalTask task, TaskManager manager) {
         if (task.isDefault()) {
-            Messages.showInfoMessage(project, TaskLocalize.dialogMessageDefaultTaskCannotBeRemoved().get(), TaskLocalize.dialogTitleCannotRemove().get());
+            MessageBoxes.okInfo(TaskLocalize.dialogMessageDefaultTaskCannotBeRemoved())
+                .title(TaskLocalize.dialogTitleCannotRemove())
+                .showAsync(project);
+            return;
         }
-        else {
 
-            List<ChangeListInfo> infos = task.getChangeLists();
-            List<LocalChangeList> lists = ContainerUtil.mapNotNull(
-                infos,
-                changeListInfo -> {
-                    LocalChangeList changeList = ChangeListManager.getInstance(project).getChangeList(changeListInfo.id);
-                    return changeList != null && !changeList.isDefault() ? changeList : null;
-                }
-            );
+        List<LocalChangeList> lists = ContainerUtil.mapNotNull(
+            task.getChangeLists(),
+            changeListInfo -> {
+                LocalChangeList changeList = ChangeListManager.getInstance(project).getChangeList(changeListInfo.id);
+                return changeList != null && !changeList.isDefault() ? changeList : null;
+            }
+        );
 
-            boolean removeIt = true;
-            l:
-            for (LocalChangeList list : lists) {
-                if (!list.getChanges().isEmpty()) {
-                    int result = Messages.showYesNoCancelDialog(
-                        project,
-                        TaskLocalize.dialogMessageChangelistAssociatedWithNotEmpty(task.getSummary()).get(),
-                        TaskLocalize.dialogTitleChangelistNotEmpty().get(),
-                        UIUtil.getWarningIcon()
-                    );
-                    switch (result) {
-                        case 0:
-                            break l;
-                        case 1:
-                            removeIt = false;
-                            break;
-                        default:
-                            return;
+        if (ContainerUtil.all(lists, list -> list.getChanges().isEmpty())) {
+            removeTask(project, task, manager, lists, true);
+            return;
+        }
+
+        UIAccess uiAccess = UIAccess.current();
+        MessageBoxes.yesNoCancel()
+            .asWarning()
+            .title(TaskLocalize.dialogTitleChangelistNotEmpty())
+            .text(TaskLocalize.dialogMessageChangelistAssociatedWithNotEmpty(task.getSummary()))
+            .showAsync(project)
+            .thenAcceptAsync(
+                result -> {
+                    if (result != ThreeState.UNSURE && !project.isDisposed()) {
+                        removeTask(project, task, manager, lists, result == ThreeState.YES);
                     }
-                }
+                },
+                uiAccess
+            )
+            .exceptionally(error -> {
+                LOG.error(error);
+                return null;
+            });
+    }
+
+    @RequiredUIAccess
+    private static void removeTask(Project project, LocalTask task, TaskManager manager, List<LocalChangeList> lists, boolean removeChangeLists) {
+        if (removeChangeLists) {
+            for (LocalChangeList list : lists) {
+                ChangeListManager.getInstance(project).removeChangeList(list);
             }
-            if (removeIt) {
-                for (LocalChangeList list : lists) {
-                    ChangeListManager.getInstance(project).removeChangeList(list);
-                }
-            }
-            manager.removeTask(task);
         }
+        manager.removeTask(task);
     }
 }

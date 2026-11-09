@@ -21,75 +21,25 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
-import consulo.component.persist.StoragePathMacros;
-import consulo.task.TaskManager;
-import consulo.task.TaskRepository;
-import consulo.util.xml.serializer.annotation.AbstractCollection;
-import consulo.util.xml.serializer.annotation.Attribute;
-import consulo.util.xml.serializer.annotation.Property;
-import consulo.util.xml.serializer.annotation.Tag;
-import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Dmitry Avdeev
  */
 @Singleton
-@State(name = "TaskProjectConfiguration", storages = @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/misc.xml"))
+@State(name = "TaskProjectConfiguration", storages = @Storage("tasks"))
 @ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
-public class TaskProjectConfiguration implements PersistentStateComponent<TaskProjectConfiguration> {
+public class TaskProjectConfiguration implements PersistentStateComponent<TaskProjectConfigurationState> {
+    private volatile TaskProjectConfigurationState myState = new TaskProjectConfigurationState();
 
-  @Tag("server")
-  public static class SharedServer {
-    @Attribute("type")
-    public String type;
-    @Attribute("url")
-    public String url;
-  }
-
-  @Property(surroundWithTag = false)
-  @AbstractCollection(surroundWithTag = false, elementTag = "server")
-  public List<SharedServer> servers = new ArrayList<SharedServer>();
-
-  private final TaskManager myManager;
-
-  // for serialization
-  public TaskProjectConfiguration() {
-    myManager = null;
-  }
-
-  @Inject
-  public TaskProjectConfiguration(TaskManager manager) {
-    myManager = manager;
-  }
-
-  @Override
-  public TaskProjectConfiguration getState() {
-    servers.clear();
-    for (TaskRepository repository : myManager.getAllRepositories()) {
-      if (repository.isShared()) {
-        SharedServer server = new SharedServer();
-        server.type = repository.getRepositoryType().getId();
-        server.url = repository.getUrl();
-        servers.add(server);
-      }
+    @Override
+    public TaskProjectConfigurationState getState() {
+        return myState;
     }
-    return this;
-  }
 
-  @Override
-  public void loadState(TaskProjectConfiguration state) {
-    servers.clear();
-    for (SharedServer server : state.servers) {
-      if (server.url == null || server.type == null) {
-        continue;
-      }
-      servers.add(server);
+    @Override
+    public void loadState(TaskProjectConfigurationState state) {
+        myState = state;
     }
-  }
-
 }

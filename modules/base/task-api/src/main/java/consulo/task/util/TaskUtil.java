@@ -25,12 +25,12 @@ import consulo.application.util.DateFormatUtil;
 import consulo.logging.Logger;
 import consulo.task.Task;
 import consulo.task.TaskRepository;
+import consulo.task.issue.IssueCapability;
 import consulo.task.TaskState;
 import consulo.util.io.CharsetToolkit;
 import consulo.util.jdom.JDOMUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
-import org.apache.http.HttpResponse;
 import org.jdom.Element;
 
 import org.jspecify.annotations.Nullable;
@@ -68,10 +68,10 @@ public class TaskUtil {
 
   public static @Nullable String getChangeListComment(Task task) {
     TaskRepository repository = task.getRepository();
-    if (repository == null || !repository.isShouldFormatCommitMessage()) {
+    if (repository == null || !repository.getOptions().shouldFormatCommitMessage) {
       return null;
     }
-    return formatTask(task, repository.getCommitMessageFormat());
+    return formatTask(task, repository.getOptions().commitMessageFormat);
   }
 
   public static String getTrimmedSummary(Task task) {
@@ -257,28 +257,6 @@ public class TaskUtil {
     }
   }
 
-  public static void prettyFormatResponseToLog(Logger logger, HttpResponse response) {
-    if (logger.isDebugEnabled()) {
-      try {
-        String content = ResponseUtil.getResponseContentAsString(response);
-        org.apache.http.Header header = response.getEntity().getContentType();
-        String contentType = header == null ? "text/plain" : header.getElements()[0].getName().toLowerCase(Locale.ENGLISH);
-        if (contentType.contains("xml")) {
-          prettyFormatXmlToLog(logger, content);
-        }
-        else if (contentType.contains("json")) {
-          prettyFormatJsonToLog(logger, content);
-        }
-        else {
-          logger.debug(content);
-        }
-      }
-      catch (IOException e) {
-        logger.error(e);
-      }
-    }
-  }
-
   /**
    * Perform standard {@code application/x-www-urlencoded} translation for string {@code s}.
    *
@@ -294,8 +272,13 @@ public class TaskUtil {
   }
 
   @Contract("null, _ -> false")
+  public static boolean hasCapability(@Nullable TaskRepository repository, IssueCapability capability) {
+    return repository != null && repository.getIssueTracker().getCapabilities().contains(capability);
+  }
+
+  @Contract("null, _ -> false")
   public static boolean isStateSupported(@Nullable TaskRepository repository, TaskState state) {
-    if (repository == null || !repository.isSupported(TaskRepository.STATE_UPDATING)) {
+    if (!hasCapability(repository, IssueCapability.STATES)) {
       return false;
     }
     return repository.getRepositoryType().getPossibleTaskStates().contains(state);

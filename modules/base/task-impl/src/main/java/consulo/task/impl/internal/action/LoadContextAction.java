@@ -27,20 +27,21 @@ import consulo.task.impl.internal.context.WorkingContextManager;
 import consulo.task.localize.TaskLocalize;
 import consulo.task.util.TaskUtil;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.details.KeyCode;
+import consulo.ui.event.details.KeyboardInputDetails;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
+import consulo.ui.ex.popup.event.ListPopupKeyListener;
 import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
-import java.awt.event.ActionEvent;
 import java.util.*;
 
 /**
@@ -165,41 +166,33 @@ public class LoadContextAction extends BaseTaskAction {
             MAX_ROW_COUNT
         );
         popup.setAdText(TaskLocalize.popupAdvertisementPressShiftToMergeWithCurrentContext().get());
-        popup.registerAction(
-            "shiftPressed",
-            KeyStroke.getKeyStroke("shift pressed SHIFT"),
-            new AbstractAction() {
-                @Override
-                @RequiredUIAccess
-                public void actionPerformed(ActionEvent e) {
+        popup.addKeyListener(new ListPopupKeyListener() {
+            @Override
+            @RequiredUIAccess
+            public boolean keyPressed(ListPopup listPopup, KeyboardInputDetails details) {
+                if (KeyCode.SHIFT.equals(details.getKeyCode())) {
                     shiftPressed.set(true);
                     popup.setCaption(TaskLocalize.popupTitleMergeWithCurrentContext().get());
+                    return true;
                 }
+                if (KeyCode.ENTER.equals(details.getKeyCode()) && details.withShift()) {
+                    listPopup.handleSelect(true);
+                    return true;
+                }
+                return false;
             }
-        );
-        popup.registerAction(
-            "shiftReleased",
-            KeyStroke.getKeyStroke("released SHIFT"),
-            new AbstractAction() {
-                @Override
-                @RequiredUIAccess
-                public void actionPerformed(ActionEvent e) {
+
+            @Override
+            @RequiredUIAccess
+            public boolean keyReleased(ListPopup listPopup, KeyboardInputDetails details) {
+                if (KeyCode.SHIFT.equals(details.getKeyCode())) {
                     shiftPressed.set(false);
                     popup.setCaption(TaskLocalize.popupTitleLoadContext().get());
+                    return true;
                 }
+                return false;
             }
-        );
-        popup.registerAction(
-            "invoke",
-            KeyStroke.getKeyStroke("shift ENTER"),
-            new AbstractAction() {
-                @Override
-                @RequiredUIAccess
-                public void actionPerformed(ActionEvent e) {
-                    popup.handleSelect(true);
-                }
-            }
-        );
+        });
         popup.showCenteredInCurrentWindow(project);
     }
 

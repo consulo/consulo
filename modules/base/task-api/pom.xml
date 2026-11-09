@@ -76,27 +76,12 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>consulo-http-adapter-httpclient4</artifactId>
+            <artifactId>consulo-account-management-api</artifactId>
             <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpmime</artifactId>
-            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>consulo.internal</groupId>
-            <artifactId>forms_rt</artifactId>
             <optional>true</optional>
         </dependency>
     </dependencies>

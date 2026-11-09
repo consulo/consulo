@@ -17,11 +17,13 @@ package consulo.task.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.execution.unscramble.AnalyzeStacktraceUtil;
+import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.task.Comment;
 import consulo.task.LocalTask;
 import consulo.task.Task;
 import consulo.task.localize.TaskLocalize;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 
@@ -30,6 +32,8 @@ import consulo.ui.ex.action.AnActionEvent;
  */
 @ActionImpl(id = "tasks.analyze.stacktrace")
 public class AnalyzeTaskStacktraceAction extends BaseTaskAction {
+    private static final Logger LOG = Logger.getInstance(AnalyzeTaskStacktraceAction.class);
+
     public AnalyzeTaskStacktraceAction() {
         super(TaskLocalize.actionTasksAnalyzeStacktraceText());
     }
@@ -58,13 +62,19 @@ public class AnalyzeTaskStacktraceAction extends BaseTaskAction {
 
     @RequiredUIAccess
     public static void analyzeStacktrace(Task task, Project project) {
-        ChooseStacktraceDialog stacktraceDialog = new ChooseStacktraceDialog(project, task);
-        stacktraceDialog.show();
-        if (stacktraceDialog.isOK() && stacktraceDialog.getTraces().length > 0) {
-            Comment[] comments = stacktraceDialog.getTraces();
-            for (Comment comment : comments) {
-                AnalyzeStacktraceUtil.addConsole(project, null, task.getId(), comment.getText());
-            }
-        }
+        ChooseStacktraceDialog.show(task).thenAcceptAsync(
+            comments -> {
+                if (project.isDisposed()) {
+                    return;
+                }
+                for (Comment comment : comments) {
+                    AnalyzeStacktraceUtil.addConsole(project, null, task.getId(), comment.getText());
+                }
+            },
+            UIAccess.current()
+        ).exceptionally(error -> {
+            LOG.error(error);
+            return null;
+        });
     }
 }

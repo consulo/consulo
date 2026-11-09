@@ -28,7 +28,6 @@ import consulo.ui.event.details.ModifiedInputDetails.Modifier;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.util.ShortcutLocalizeHolder;
 import consulo.ui.ex.action.util.ShortcutUtil;
-import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.ui.ex.internal.CustomToolTipBuilder;
 import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.ex.keymap.internal.ModifierKeyDoubleClickHandler;
@@ -106,7 +105,6 @@ public class SearchEverywhereAction extends DumbAwareAction implements AnActionW
 
         //FeatureUsageData data = SearchEverywhereUsageTriggerCollector.createData(searchProviderID);
         //SearchEverywhereUsageTriggerCollector.trigger(e.getProject(), SearchEverywhereUsageTriggerCollector.DIALOG_OPEN, data);
-        IdeEventQueueProxy.getInstance().closeAllPopups(false);
         String text = GotoActionBase.getInitialTextForNavigation(e);
         seManager.show(searchProviderID, text, e);
     }

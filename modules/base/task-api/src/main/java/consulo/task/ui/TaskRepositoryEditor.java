@@ -16,21 +16,22 @@
 package consulo.task.ui;
 
 import consulo.disposer.Disposable;
-
+import consulo.ui.Component;
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
-import javax.swing.*;
 
 /**
  * @author Dmitry Avdeev
  */
 public abstract class TaskRepositoryEditor implements Disposable {
+    @RequiredUIAccess
+    public abstract Component createComponent();
 
-  public abstract JComponent createComponent();
+    public @Nullable Component getPreferredFocusedComponent() {
+        return null;
+    }
 
-  public @Nullable JComponent getPreferredFocusedComponent() {
-    return null;
-  }
-
-  @Override
-  public void dispose() {}
+    @Override
+    public void dispose() {
+    }
 }

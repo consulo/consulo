@@ -464,7 +464,9 @@ public abstract class QtComponentDelegate<T extends QWidget> implements Componen
 
         String rule = rules.isEmpty() ? "" : "#" + borderObjectName() + " { " + rules + "}";
         if (myIsland) {
-            rule += " #" + borderObjectName() + " QAbstractItemView { background: transparent; }";
+            // only the viewport takes the island colour: a rule on the view itself also reaches its header, scroll
+            // bars and corner, which then lose their own fill and show black
+            rule += " #" + borderObjectName() + " QAbstractItemView > QWidget#qt_scrollarea_viewport { background: transparent; }";
         }
 
         if (!myBorderStyleSheet.equals(rule)) {

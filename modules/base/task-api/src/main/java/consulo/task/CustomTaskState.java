@@ -1,5 +1,6 @@
 package consulo.task;
 
+import com.dslplatform.json.CompiledJson;
 import consulo.util.xml.serializer.annotation.Attribute;
 
 import org.jspecify.annotations.Nullable;
@@ -7,6 +8,7 @@ import org.jspecify.annotations.Nullable;
 /**
  * @author Mikhail Golubev
  */
+@CompiledJson
 public class CustomTaskState
 {
 	private String myId = "";
@@ -28,9 +30,9 @@ public class CustomTaskState
 
 	/**
 	 * Unique ID (e.g. number or unique name) of this state that can be used later to update state of an issue
-	 * in {@link TaskRepository#setTaskState(Task, CustomTaskState)}.
+	 * in {@link consulo.task.issue.IssueStateSupport#setState(Task, CustomTaskState)}.
 	 *
-	 * @see TaskRepository#setTaskState(Task, CustomTaskState)
+	 * @see consulo.task.issue.IssueStateSupport#setState(Task, CustomTaskState)
 	 */
 	@Attribute("id")
 	
@@ -91,12 +93,12 @@ public class CustomTaskState
 	/**
 	 * Creates custom state for which ID is identical to {@link TaskState#name} of the given predefined state and {@link #isPredefined()}
 	 * returns true. If your repository provides only fixed set of available states, that are one of those described in {@link TaskState},
-	 * you may find this methods useful to implement {@link TaskRepository#getAvailableTaskStates(Task)}.
+	 * you may find this methods useful to implement {@link consulo.task.issue.IssueStateSupport#getAvailableStates(Task)}.
 	 *
 	 * @return custom task state that represents given predefined state
 	 * @see #asPredefined()
 	 * @see #isPredefined()
-	 * @see TaskRepository#getAvailableTaskStates(Task)
+	 * @see consulo.task.issue.IssueStateSupport#getAvailableStates(Task)
 	 */
 	
 	public static CustomTaskState fromPredefined(TaskState state)

@@ -17,14 +17,13 @@ package consulo.task.ui;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 import consulo.task.LocalTask;
 import consulo.task.Task;
-import consulo.util.collection.ContainerUtil;
-
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,17 +31,33 @@ import java.util.List;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class TaskDialogPanelProvider {
-    private final static ExtensionPointName<TaskDialogPanelProvider> EP_NAME = ExtensionPointName.create(TaskDialogPanelProvider.class);
-
+    @RequiredUIAccess
     public static List<TaskDialogPanel> getOpenTaskPanels(Project project, Task task) {
-        return ContainerUtil.mapNotNull(EP_NAME.getExtensionList(), provider -> provider.getOpenTaskPanel(project, task));
+        List<TaskDialogPanel> panels = new ArrayList<>();
+        project.getApplication().getExtensionPoint(TaskDialogPanelProvider.class).forEach(provider -> {
+            TaskDialogPanel panel = provider.getOpenTaskPanel(project, task);
+            if (panel != null) {
+                panels.add(panel);
+            }
+        });
+        return panels;
     }
 
+    @RequiredUIAccess
     public static List<TaskDialogPanel> getCloseTaskPanels(Project project, LocalTask task) {
-        return ContainerUtil.mapNotNull(EP_NAME.getExtensionList(), provider -> provider.getCloseTaskPanel(project, task));
+        List<TaskDialogPanel> panels = new ArrayList<>();
+        project.getApplication().getExtensionPoint(TaskDialogPanelProvider.class).forEach(provider -> {
+            TaskDialogPanel panel = provider.getCloseTaskPanel(project, task);
+            if (panel != null) {
+                panels.add(panel);
+            }
+        });
+        return panels;
     }
 
+    @RequiredUIAccess
     public abstract @Nullable TaskDialogPanel getOpenTaskPanel(Project project, Task task);
 
+    @RequiredUIAccess
     public abstract @Nullable TaskDialogPanel getCloseTaskPanel(Project project, LocalTask task);
 }

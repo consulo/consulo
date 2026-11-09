@@ -12,7 +12,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.IdeActions;
-import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import jakarta.inject.Inject;
 
 /**
@@ -50,7 +49,6 @@ public class GotoTaskAction extends LegacyDumbAwareAction {
             return;
         }
 
-        IdeEventQueueProxy.getInstance().closeAllPopups(false);
 
         seManager.show(TaskSearchEverywhereContributor.ID, "", e);
     }

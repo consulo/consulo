@@ -21,6 +21,7 @@ import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.awt.JBInsets;
 import consulo.ui.ex.awt.SearchTextField;
 import consulo.ui.ex.awt.UIExAWTDataKey;
+import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
@@ -65,6 +66,8 @@ public class SearchEverywhereManagerImpl implements SearchEverywhereManager {
         if (isShown()) {
             throw new IllegalStateException("Method should cannot be called whe popup is shown");
         }
+
+        IdeEventQueueProxy.getInstance().closeAllPopups(false);
 
         Project project = initEvent.getData(Project.KEY);
         Component contextComponent = initEvent.getData(UIExAWTDataKey.CONTEXT_COMPONENT);

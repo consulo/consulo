@@ -98,6 +98,14 @@ public abstract class Task {
     return null;
   }
 
+  public @Nullable String getPriority() {
+    return null;
+  }
+
+  public @Nullable String getAssignee() {
+    return null;
+  }
+
   @Override
   public final String toString() {
     String text;
@@ -131,7 +139,7 @@ public abstract class Task {
    *
    * @return project-wide issue identifier
    * @see #getId()
-   * @see TaskRepository#getCommitMessageFormat()
+   * @see TaskRepositoryOptions#commitMessageFormat
    */
   public String getNumber() {
     return extractNumberFromId(getId());
@@ -150,7 +158,7 @@ public abstract class Task {
    *
    * @return name of the project
    * @see #getId()
-   * @see TaskRepository#getCommitMessageFormat()
+   * @see TaskRepositoryOptions#commitMessageFormat
    */
   public @Nullable String getProject() {
     return extractProjectFromId(getId());

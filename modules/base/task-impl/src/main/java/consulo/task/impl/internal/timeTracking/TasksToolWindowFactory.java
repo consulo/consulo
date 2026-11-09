@@ -7,6 +7,9 @@ import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowFactory;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.task.icon.TaskIconGroup;
+import consulo.task.impl.internal.TasksToolWindowState;
+import consulo.task.impl.internal.issue.IssueTabsSync;
+import consulo.task.localize.TaskLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;
@@ -31,21 +34,21 @@ public class TasksToolWindowFactory implements ToolWindowFactory, DumbAware {
     @Override
     public void createToolWindowContent(Project project, ToolWindow toolWindow) {
         ContentManager contentManager = toolWindow.getContentManager();
-        Content content = ContentFactory.getInstance().createContent(
-            new TasksToolWindowPanel(
-                project,
-                toolWindow.getAnchor() == ToolWindowAnchor.LEFT || toolWindow.getAnchor() == ToolWindowAnchor.RIGHT
-            ),
-            null,
-            false
+        LocalTasksPanel panel = new LocalTasksPanel(
+            project,
+            toolWindow.getAnchor() == ToolWindowAnchor.LEFT || toolWindow.getAnchor() == ToolWindowAnchor.RIGHT
         );
+        Content content = ContentFactory.getInstance().createUIContent(panel.getComponent(), TaskLocalize.toolwindowLocalTasks().get(), false);
+        content.setDisposer(panel);
         contentManager.addContent(content);
+        new IssueTabsSync(project, toolWindow).install(contentManager);
+        TasksToolWindowState.update(project);
     }
 
     
     @Override
     public ToolWindowAnchor getAnchor() {
-        return ToolWindowAnchor.RIGHT;
+        return ToolWindowAnchor.BOTTOM;
     }
 
     
@@ -57,11 +60,11 @@ public class TasksToolWindowFactory implements ToolWindowFactory, DumbAware {
     
     @Override
     public LocalizeValue getDisplayName() {
-        return LocalizeValue.localizeTODO("Time Tracking");
+        return TaskLocalize.toolwindowTasksTitle();
     }
 
     @Override
     public boolean shouldBeAvailable(Project project) {
-        return TimeTrackingManager.getInstance(project).isTimeTrackingToolWindowAvailable();
+        return TasksToolWindowState.isAvailable(project);
     }
 }

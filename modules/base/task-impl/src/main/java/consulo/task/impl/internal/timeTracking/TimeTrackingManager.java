@@ -13,10 +13,10 @@ import consulo.project.Project;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
+import consulo.task.impl.internal.TasksToolWindowState;
 import consulo.task.LocalTask;
 import consulo.task.TaskManager;
 import consulo.task.WorkItem;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
@@ -25,9 +25,6 @@ import consulo.ui.UIAccess;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Date;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
@@ -46,7 +43,8 @@ public class TimeTrackingManager implements PersistentStateComponent<TimeTrackin
   private final Project myProject;
   private final TaskManager myTaskManager;
   private final Config myConfig = new Config();
-  private Timer myTimeTrackingTimer;
+  private Future<?> myTimeTrackingTimer = CompletableFuture.completedFuture(null);
+  private boolean myTimeTrackingTimerReady;
   private Future<?> myIdleFuture = CompletableFuture.completedFuture(null);
   private Runnable myActivityListener;
 
@@ -59,20 +57,14 @@ public class TimeTrackingManager implements PersistentStateComponent<TimeTrackin
   }
 
   public void startTimeTrackingTimer() {
-    if (!myTimeTrackingTimer.isRunning()) {
-      myTimeTrackingTimer.start();
-    }
-
-    myIdleFuture.cancel(false);
     UIAccess uiAccess = myProject.getUIAccess();
     if (!uiAccess.isValid()) {
       return;
     }
-    myIdleFuture = uiAccess.getScheduler().schedule(() -> {
-      if (myTimeTrackingTimer.isRunning()) {
-        myTimeTrackingTimer.stop();
-      }
-    }, getState().suspendDelayInSeconds, TimeUnit.SECONDS);
+    startTimer(uiAccess);
+
+    myIdleFuture.cancel(false);
+    myIdleFuture = uiAccess.getScheduler().schedule(() -> myTimeTrackingTimer.cancel(false), getState().suspendDelayInSeconds, TimeUnit.SECONDS);
   }
 
   public void updateTimeTrackingToolWindow() {
@@ -80,7 +72,7 @@ public class TimeTrackingManager implements PersistentStateComponent<TimeTrackin
     if (isTimeTrackingToolWindowAvailable()) {
       if (toolWindow == null) {
         toolWindow =
-          ToolWindowManager.getInstance(myProject).registerToolWindow(ToolWindowId.TASKS, true, ToolWindowAnchor.RIGHT, myProject, true);
+          ToolWindowManager.getInstance(myProject).registerToolWindow(ToolWindowId.TASKS, true, ToolWindowAnchor.BOTTOM, myProject, true);
         new TasksToolWindowFactory().createToolWindowContent(myProject, toolWindow);
       }
       ToolWindow finalToolWindow = toolWindow;
@@ -91,10 +83,7 @@ public class TimeTrackingManager implements PersistentStateComponent<TimeTrackin
       });
     }
     else {
-      if (toolWindow != null) {
-        ToolWindow finalToolWindow = toolWindow;
-          myProject.getApplication().invokeLater(() -> finalToolWindow.setAvailable(false, null));
-      }
+      myProject.getApplication().invokeLater(() -> TasksToolWindowState.update(myProject), myProject.getDisposed());
     }
   }
 
@@ -108,28 +97,7 @@ public class TimeTrackingManager implements PersistentStateComponent<TimeTrackin
       return;
     }
 
-    myTimeTrackingTimer = UIUtil.createNamedTimer("TaskManager time tracking", TIME_TRACKING_TIME_UNIT, new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        LocalTask activeTask = myTaskManager.getActiveTask();
-        if (myLastActiveTask != activeTask) {
-          activeTask.addWorkItem(new WorkItem(new Date()));
-        }
-        if (getState().autoMode) {
-          WorkItem lastWorkItem = activeTask.getWorkItems().get(activeTask.getWorkItems().size() - 1);
-          lastWorkItem.duration += TIME_TRACKING_TIME_UNIT;
-          getState().totallyTimeSpent += TIME_TRACKING_TIME_UNIT;
-        }
-        else {
-          if (activeTask.isRunning()) {
-            WorkItem lastWorkItem = activeTask.getWorkItems().get(activeTask.getWorkItems().size() - 1);
-            lastWorkItem.duration += TIME_TRACKING_TIME_UNIT;
-            getState().totallyTimeSpent += TIME_TRACKING_TIME_UNIT;
-          }
-        }
-        myLastActiveTask = activeTask;
-      }
-    });
+    myTimeTrackingTimerReady = true;
 
     myActivityListener = new Runnable() {
       @Override
@@ -160,11 +128,36 @@ public class TimeTrackingManager implements PersistentStateComponent<TimeTrackin
       else {
         IdeEventQueueProxy.getInstance().removeActivityListener(myActivityListener);
         myIdleFuture.cancel(false);
-        if (!myTimeTrackingTimer.isRunning()) {
-          myTimeTrackingTimer.start();
+        UIAccess uiAccess = myProject.getUIAccess();
+        if (uiAccess.isValid()) {
+          startTimer(uiAccess);
         }
       }
     }
+  }
+
+  private void startTimer(UIAccess uiAccess) {
+    if (!myTimeTrackingTimerReady || !myTimeTrackingTimer.isDone()) {
+      return;
+    }
+    myTimeTrackingTimer = uiAccess.getScheduler()
+      .scheduleWithFixedDelay(this::trackTime, TIME_TRACKING_TIME_UNIT, TIME_TRACKING_TIME_UNIT, TimeUnit.MILLISECONDS);
+  }
+
+  private void trackTime() {
+    if (myProject.isDisposed()) {
+      return;
+    }
+    LocalTask activeTask = myTaskManager.getActiveTask();
+    if (myLastActiveTask != activeTask) {
+      activeTask.addWorkItem(new WorkItem(new Date()));
+    }
+    if (getState().autoMode || activeTask.isRunning()) {
+      WorkItem lastWorkItem = activeTask.getWorkItems().get(activeTask.getWorkItems().size() - 1);
+      lastWorkItem.duration += TIME_TRACKING_TIME_UNIT;
+      getState().totallyTimeSpent += TIME_TRACKING_TIME_UNIT;
+    }
+    myLastActiveTask = activeTask;
   }
 
   private void addActivityListener() {
@@ -173,9 +166,8 @@ public class TimeTrackingManager implements PersistentStateComponent<TimeTrackin
 
   @Override
   public void dispose() {
-    if (myTimeTrackingTimer != null) {
-      myTimeTrackingTimer.stop();
-    }
+    myTimeTrackingTimerReady = false;
+    myTimeTrackingTimer.cancel(false);
     myIdleFuture.cancel(false);
   }
 

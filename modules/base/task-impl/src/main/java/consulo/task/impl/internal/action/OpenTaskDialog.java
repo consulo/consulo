@@ -15,178 +15,164 @@
  */
 package consulo.task.impl.internal.action;
 
+import consulo.application.Application;
+import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.project.ProjectPropertiesComponent;
-import consulo.task.*;
+import consulo.task.CustomTaskState;
+import consulo.task.Task;
+import consulo.task.TaskManager;
+import consulo.task.TaskRepository;
+import consulo.task.TaskType;
 import consulo.task.impl.internal.TaskManagerImpl;
-import consulo.task.impl.internal.ui.TaskStateCombo;
 import consulo.task.localize.TaskLocalize;
 import consulo.task.ui.TaskDialogPanel;
 import consulo.task.ui.TaskDialogPanelProvider;
 import consulo.task.util.TaskUtil;
+import consulo.ui.CheckBox;
+import consulo.ui.Component;
+import consulo.ui.Label;
+import consulo.ui.MessageBoxes;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.awt.JBCheckBox;
-import consulo.ui.ex.awt.Messages;
-import consulo.ui.ex.awt.ValidationInfo;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.dialog.Dialog;
+import consulo.ui.ex.dialog.DialogDescriptor;
+import consulo.ui.ex.dialog.action.DialogOkAction;
+import consulo.ui.ex.dialog.DialogService;
+import consulo.ui.ex.dialog.DialogValue;
+import consulo.ui.layout.VerticalLayout;
+import consulo.ui.util.FormBuilder;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
-import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author Dmitry Avdeev
  */
-public class OpenTaskDialog extends DialogWrapper {
-    private final static Logger LOG = Logger.getInstance(OpenTaskDialog.class);
+public final class OpenTaskDialog extends DialogDescriptor {
+    private static final Logger LOG = Logger.getInstance(OpenTaskDialog.class);
     private static final String UPDATE_STATE_ENABLED = "tasks.open.task.update.state.enabled";
-
-    private JPanel myPanel;
-    private JCheckBox myClearContext;
-    private JLabel myTaskNameLabel;
-    private JBCheckBox myUpdateState;
-    private TaskStateCombo myTaskStateCombo;
-    private JPanel myAdditionalPanel;
 
     private final Project myProject;
     private final Task myTask;
-    private final List<TaskDialogPanel> myPanels;
+    private @Nullable List<TaskDialogPanel> myPanels;
+    private @Nullable CheckBox myClearContext;
+    private @Nullable TaskStateChooser myStateChooser;
 
-    public OpenTaskDialog(Project project, Task task) {
-        super(project, false);
+    private OpenTaskDialog(Project project, Task task) {
+        super(TaskLocalize.dialogTitleOpenTask());
         myProject = project;
         myTask = task;
-        setTitle(TaskLocalize.dialogTitleOpenTask());
-        myTaskNameLabel.setText(TaskUtil.getTrimmedSummary(task));
-        myTaskNameLabel.setIcon(TargetAWT.to(task.getIcon()));
-
-        TaskManagerImpl taskManager = (TaskManagerImpl) TaskManager.getManager(myProject);
-
-        if (!TaskStateCombo.stateUpdatesSupportedFor(task)) {
-            myUpdateState.setVisible(false);
-            myTaskStateCombo.setVisible(false);
-        }
-        boolean stateUpdatesEnabled = ProjectPropertiesComponent.getInstance(project).getBoolean(UPDATE_STATE_ENABLED, false);
-        myUpdateState.setSelected(stateUpdatesEnabled);
-        myUpdateState.addActionListener(e -> {
-            boolean selected = myUpdateState.isSelected();
-            ProjectPropertiesComponent.getInstance(project).setValue(UPDATE_STATE_ENABLED, String.valueOf(selected));
-            updateFields();
-            if (selected) {
-                myTaskStateCombo.scheduleUpdateOnce();
-            }
-        });
-
-        TaskManagerImpl.Config state = taskManager.getState();
-        myClearContext.setSelected(state.clearContext);
-        // the old binding wrote through on every toggle, so the checkbox keeps doing that itself
-        myClearContext.addActionListener(e -> state.clearContext = myClearContext.isSelected());
-
-        updateFields();
-        if (myUpdateState.isSelected()) {
-            myTaskStateCombo.scheduleUpdateOnce();
-        }
-
-        myAdditionalPanel.setLayout(new BoxLayout(myAdditionalPanel, BoxLayout.Y_AXIS));
-        myPanels = TaskDialogPanelProvider.getOpenTaskPanels(project, task);
-        for (TaskDialogPanel panel : myPanels) {
-            myAdditionalPanel.add(panel.getPanel());
-        }
-        init();
     }
 
-    private void updateFields() {
-        myTaskStateCombo.setEnabled(myUpdateState.isSelected());
+    @RequiredUIAccess
+    public static CompletableFuture<?> show(Project project, Task task) {
+        OpenTaskDialog descriptor = new OpenTaskDialog(project, task);
+        Dialog dialog = Application.get().getInstance(DialogService.class).build(descriptor);
+        return dialog.showAsync();
+    }
+
+    @RequiredUIAccess
+    @Override
+    public Component createCenterComponent(Disposable uiDisposable) {
+        TaskManagerImpl taskManager = (TaskManagerImpl) TaskManager.getManager(myProject);
+
+        Label taskLabel = Label.create(LocalizeValue.of(TaskUtil.getTrimmedSummary(myTask)));
+        taskLabel.setImage(myTask.getIcon());
+
+        TaskManagerImpl.Config state = taskManager.getState();
+        CheckBox clearContext = CheckBox.create(TaskLocalize.openTaskClearContext(), state.clearContext);
+        clearContext.addValueListener(event -> state.clearContext = event.getValue());
+        myClearContext = clearContext;
+
+        TaskStateChooser stateChooser = new TaskStateChooser(
+            myProject,
+            myTask,
+            UPDATE_STATE_ENABLED,
+            TaskLocalize.openTaskUpdateState(),
+            repository -> repository.getOptions().preferredOpenTaskState
+        );
+        myStateChooser = stateChooser;
+
+        FormBuilder builder = FormBuilder.create();
+        stateChooser.addTo(builder);
+        builder.addBottom(clearContext);
+
+        VerticalLayout layout = VerticalLayout.create();
+        layout.add(taskLabel);
+        layout.add(builder.build());
+
+        List<TaskDialogPanel> panels = TaskDialogPanelProvider.getOpenTaskPanels(myProject, myTask);
+        for (TaskDialogPanel panel : panels) {
+            layout.add(panel.getComponent());
+        }
+        myPanels = panels;
+        return layout;
     }
 
     @Override
-    @RequiredUIAccess
-    protected void doOKAction() {
-        createTask();
-        super.doOKAction();
-    }
-
-    @RequiredUIAccess
-    public void createTask() {
-        TaskManagerImpl taskManager = (TaskManagerImpl) TaskManager.getManager(myProject);
-
-        if (myUpdateState.isSelected()) {
-            CustomTaskState taskState = myTaskStateCombo.getSelectedState();
-            TaskRepository repository = myTask.getRepository();
-            if (repository != null && taskState != null) {
-                try {
-                    repository.setTaskState(myTask, taskState);
-                    repository.setPreferredOpenTaskState(taskState);
-                }
-                catch (Exception ex) {
-                    Messages.showErrorDialog(myProject, ex.getMessage(), TaskLocalize.dialogTitleCannotSetStateForIssue().get());
-                    LOG.warn(ex);
+    public @Nullable Component getPreferredFocusedComponent() {
+        List<TaskDialogPanel> panels = myPanels;
+        if (panels != null) {
+            for (TaskDialogPanel panel : panels) {
+                Component component = panel.getPreferredFocusedComponent();
+                if (component != null) {
+                    return component;
                 }
             }
         }
-        taskManager.activateTask(myTask, isClearContext());
+        TaskStateChooser chooser = myStateChooser;
+        return chooser == null ? null : chooser.getPreferredFocusedComponent();
+    }
+
+    @RequiredUIAccess
+    @Override
+    public boolean canHandle(AnAction action, @Nullable DialogValue value) {
+        if (!(action instanceof DialogOkAction)) {
+            return true;
+        }
+        List<TaskDialogPanel> panels = myPanels;
+        if (panels != null) {
+            for (TaskDialogPanel panel : panels) {
+                LocalizeValue error = panel.validate();
+                if (error != null) {
+                    MessageBoxes.okError(error).showAsync();
+                    return false;
+                }
+            }
+        }
+        createTask();
+        return true;
+    }
+
+    @RequiredUIAccess
+    private void createTask() {
+        TaskManagerImpl taskManager = (TaskManagerImpl) TaskManager.getManager(myProject);
+        TaskStateChooser chooser = myStateChooser;
+        CustomTaskState taskState = chooser == null ? null : chooser.getSelectedState();
+        TaskRepository repository = myTask.getRepository();
+        if (repository != null && taskState != null) {
+            taskManager.setTaskState(repository, myTask, taskState, true).whenCompleteAsync((result, error) -> {
+                if (error != null) {
+                    LOG.warn(error);
+                    MessageBoxes.okError(error).title(TaskLocalize.dialogTitleCannotSetStateForIssue()).showAsync();
+                }
+            }, UIAccess.current());
+        }
+
+        CheckBox clearContext = myClearContext;
+        taskManager.activateTask(myTask, clearContext != null && clearContext.getValueOrError());
         if (myTask.getType() == TaskType.EXCEPTION && AnalyzeTaskStacktraceAction.hasTexts(myTask)) {
             AnalyzeTaskStacktraceAction.analyzeStacktrace(myTask, myProject);
         }
-
-        for (TaskDialogPanel panel : myPanels) {
-            panel.commit();
-        }
-    }
-
-    private boolean isClearContext() {
-        return myClearContext.isSelected();
-    }
-
-    @Override
-    protected String getDimensionServiceKey() {
-        return "SimpleOpenTaskDialog";
-    }
-
-    @Override
-    @RequiredUIAccess
-    public JComponent getPreferredFocusedComponent() {
-        for (TaskDialogPanel panel : myPanels) {
-            JComponent component = panel.getPreferredFocusedComponent();
-            if (component != null) {
-                return component;
+        List<TaskDialogPanel> panels = myPanels;
+        if (panels != null) {
+            for (TaskDialogPanel panel : panels) {
+                panel.commit();
             }
         }
-        if (myTaskStateCombo.isVisible() && myTaskStateCombo.isEnabled()) {
-            return myTaskStateCombo.getComboBox();
-        }
-        return null;
-    }
-
-    @Override
-    @RequiredUIAccess
-    protected @Nullable ValidationInfo doValidate() {
-        for (TaskDialogPanel panel : myPanels) {
-            ValidationInfo validate = panel.validate();
-            if (validate != null) {
-                return validate;
-            }
-        }
-        return null;
-    }
-
-    @Override
-    protected JComponent createCenterPanel() {
-        return myPanel;
-    }
-
-    private void createUIComponents() {
-        myTaskStateCombo = new TaskStateCombo(myProject, myTask) {
-            @Override
-            protected @Nullable CustomTaskState getPreferredState(
-                TaskRepository repository,
-                Collection<CustomTaskState> available
-            ) {
-                return repository.getPreferredOpenTaskState();
-            }
-        };
     }
 }

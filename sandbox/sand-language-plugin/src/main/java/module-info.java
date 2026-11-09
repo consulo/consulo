@@ -47,4 +47,5 @@ module consulo.sand.language.plugin {
     opens consulo.sandboxPlugin.ide.profiler to consulo.util.xml.serializer;
     opens consulo.sandboxPlugin.ide.run to consulo.util.xml.serializer, consulo.execution.api;
     opens consulo.sandboxPlugin.lang.inspection to consulo.util.xml.serializer;
+    opens consulo.sandboxPlugin.tasks to consulo.util.xml.serializer;
 }

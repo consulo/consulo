@@ -359,7 +359,7 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableView>
         dropCachedPresentation();
 
         TableModel tableModel = myTableModel;
-        if (tableModel == null) {
+        if (tableModel == null || tableModel.isDisposed()) {
             return;
         }
 

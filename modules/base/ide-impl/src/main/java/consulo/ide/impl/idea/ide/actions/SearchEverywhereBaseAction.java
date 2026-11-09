@@ -11,7 +11,6 @@ import consulo.project.Project;
 import consulo.searchEverywhere.SearchEverywhereManager;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.UIExAWTDataKey;
-import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
 
@@ -94,7 +93,6 @@ public abstract class SearchEverywhereBaseAction extends AnAction implements AnA
             return;
         }
 
-        IdeEventQueueProxy.getInstance().closeAllPopups(false);
         String searchText = StringUtil.nullize(getInitialText(useEditorSelection, event).first);
         seManager.show(searchProviderID, searchText, event);
     }

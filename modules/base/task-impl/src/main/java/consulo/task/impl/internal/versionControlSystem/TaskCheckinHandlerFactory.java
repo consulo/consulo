@@ -29,8 +29,8 @@ import consulo.versionControlSystem.checkin.CheckinHandlerFactory;
 import consulo.versionControlSystem.checkin.CheckinProjectPanel;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
 import java.util.Date;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author Dmitry Avdeev
@@ -48,45 +48,39 @@ public class TaskCheckinHandlerFactory extends CheckinHandlerFactory {
                 Project project = panel.getProject();
                 TaskManagerImpl manager = (TaskManagerImpl) TaskManager.getManager(project);
                 if (manager.getState().saveContextOnCommit) {
-                    Task task = findTaskInRepositories(message, manager);
-                    if (task == null) {
-                        task = manager.createLocalTask(message);
-                    }
-                    LocalTask localTask = manager.addTask(task);
-                    localTask.setUpdated(new Date());
+                    findTaskInRepositories(message, manager).whenComplete((found, error) -> {
+                        Task task = found == null ? manager.createLocalTask(message) : found;
+                        LocalTask localTask = manager.addTask(task);
+                        localTask.setUpdated(new Date());
 
-                    //noinspection SSBasedInspection
-                    SwingUtilities.invokeLater(() -> {
-                        if (!project.isDisposed()) {
-                            WorkingContextManager.getInstance(project).saveContext(localTask);
-                        }
+                        project.getApplication().invokeLater(
+                            () -> WorkingContextManager.getInstance(project).saveContext(localTask),
+                            project.getDisposed()
+                        );
                     });
                 }
             }
         };
     }
 
-    private static @Nullable Task findTaskInRepositories(String message, TaskManager manager) {
-        TaskRepository[] repositories = manager.getAllRepositories();
-        for (TaskRepository repository : repositories) {
+    private static CompletableFuture<@Nullable Task> findTaskInRepositories(String message, TaskManager manager) {
+        CompletableFuture<@Nullable Task> result = CompletableFuture.completedFuture(null);
+        for (TaskRepository repository : manager.getAllRepositories()) {
             String id = repository.extractId(message);
             if (id == null) {
                 continue;
             }
-            LocalTask localTask = manager.findTask(id);
-            if (localTask != null) {
-                return localTask;
-            }
-            try {
-                Task task = repository.findTask(id);
-                if (task != null) {
-                    return task;
+            result = result.thenCompose(found -> {
+                if (found != null) {
+                    return CompletableFuture.completedFuture(found);
                 }
-            }
-            catch (Exception ignore) {
-
-            }
+                LocalTask localTask = manager.findTask(id);
+                if (localTask != null) {
+                    return CompletableFuture.completedFuture(localTask);
+                }
+                return repository.getIssueTracker().findIssue(id).exceptionally(error -> null);
+            });
         }
-        return null;
+        return result;
     }
 }

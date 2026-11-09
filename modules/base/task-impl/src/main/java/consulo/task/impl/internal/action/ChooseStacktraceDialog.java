@@ -15,91 +15,105 @@
  */
 package consulo.task.impl.internal.action;
 
-import consulo.execution.unscramble.AnalyzeStacktraceUtil;
-import consulo.project.Project;
+import consulo.application.Application;
+import consulo.disposer.Disposable;
 import consulo.task.Comment;
 import consulo.task.Task;
 import consulo.task.localize.TaskLocalize;
+import consulo.ui.Component;
+import consulo.ui.MultiSelectListBox;
+import consulo.ui.TextArea;
+import consulo.ui.UIAccess;
+import consulo.ui.WidthAndHeight;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.CollectionListModel;
-import consulo.ui.ex.awt.ColoredListCellRenderer;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.util.collection.ArrayUtil;
+import consulo.ui.ex.dialog.Dialog;
+import consulo.ui.ex.dialog.DialogDescriptor;
+import consulo.ui.ex.dialog.DialogService;
+import consulo.ui.layout.ScrollableLayout;
+import consulo.ui.layout.SplitLayoutPosition;
+import consulo.ui.layout.TwoComponentSplitLayout;
+import consulo.ui.model.FlatDataModel;
 import consulo.util.collection.ContainerUtil;
+import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author Dmitry Avdeev
  */
-public class ChooseStacktraceDialog extends DialogWrapper {
-    private JList<Comment> myList;
-    private JPanel myPanel;
-    private JPanel myEditorPanel;
-    private AnalyzeStacktraceUtil.StacktraceEditorPanel myEditor;
+public class ChooseStacktraceDialog extends DialogDescriptor {
+    private final List<Comment> myComments;
+    private @Nullable MultiSelectListBox<Comment> myList;
 
-    public ChooseStacktraceDialog(Project project, Task issue) {
-        super(project, false);
-
-        setTitle(TaskLocalize.dialogTitleChooseStacktraceToAnalyze());
+    private ChooseStacktraceDialog(Task issue) {
+        super(TaskLocalize.dialogTitleChooseStacktraceToAnalyze());
         Comment[] comments = issue.getComments();
-        List<Comment> list = new ArrayList<>(comments.length + 1);
+        myComments = new ArrayList<>(comments.length + 1);
         String description = issue.getDescription();
         if (description != null) {
-            list.add(new Description(description));
+            myComments.add(new Description(description));
         }
-        ContainerUtil.addAll(list, comments);
+        ContainerUtil.addAll(myComments, comments);
+    }
 
-        myList.setModel(new CollectionListModel<>(list));
-        myList.setCellRenderer(new ColoredListCellRenderer<>() {
-            @Override
-            protected void customizeCellRenderer(
-                JList<? extends Comment> list,
-                Comment value,
-                int index,
-                boolean selected,
-                boolean hasFocus
-            ) {
-                if (value instanceof Description) {
-                    append(TaskLocalize.labelDescription());
-                }
-                else {
-                    append(TaskLocalize.labelCommentedBy(value.getAuthor(), value.getDate()));
-                }
-            }
-        });
-
-        myEditor = AnalyzeStacktraceUtil.createEditorPanel(project, myDisposable);
-        myEditorPanel.add(myEditor, BorderLayout.CENTER);
-        myList.getSelectionModel().addListSelectionListener(e -> {
-            if (myList.getSelectedValue() instanceof Comment comment) {
-                myEditor.setText(comment.getText());
-            }
-            else {
-                myEditor.setText("");
-            }
-        });
-        myList.setSelectedValue(list.get(0), false);
-        init();
+    @RequiredUIAccess
+    public static CompletableFuture<List<Comment>> show(Task issue) {
+        ChooseStacktraceDialog descriptor = new ChooseStacktraceDialog(issue);
+        Dialog dialog = Application.get().getInstance(DialogService.class).build(descriptor);
+        return dialog.showAsync().handleAsync(
+            (value, error) -> error != null || value == null || descriptor.myList == null ? List.of() : descriptor.myList.getValue(),
+            UIAccess.current()
+        );
     }
 
     @Override
+    public @Nullable WidthAndHeight getInitialSize() {
+        return WidthAndHeight.ofFont(60, 25);
+    }
+
     @RequiredUIAccess
-    public JComponent getPreferredFocusedComponent() {
+    @Override
+    public Component createCenterComponent(Disposable uiDisposable) {
+        TextArea text = TextArea.create().withEditable(false);
+
+        MultiSelectListBox<Comment> list = MultiSelectListBox.create(FlatDataModel.of(myComments));
+        list.setRenderer((presentation, item) -> {
+            Comment value = item.getValue();
+            if (value instanceof Description) {
+                presentation.append(TaskLocalize.labelDescription());
+            }
+            else if (value != null) {
+                presentation.append(TaskLocalize.labelCommentedBy(value.getAuthor(), value.getDate()));
+            }
+        });
+        list.addValueListener(event -> {
+            List<Comment> selected = event.getValue();
+            text.setValue(selected == null || selected.isEmpty() ? "" : selected.get(0).getText());
+            updateOkButtonState();
+        });
+        myList = list;
+        if (!myComments.isEmpty()) {
+            list.setValue(List.of(myComments.get(0)));
+            text.setValue(myComments.get(0).getText());
+        }
+
+        return TwoComponentSplitLayout.create(SplitLayoutPosition.VERTICAL)
+            .withProportion(30)
+            .withFirstComponent(ScrollableLayout.create(list))
+            .withSecondComponent(ScrollableLayout.create(text));
+    }
+
+    @Override
+    public @Nullable Component getPreferredFocusedComponent() {
         return myList;
     }
 
     @Override
-    protected JComponent createCenterPanel() {
-        return myPanel;
-    }
-
-    public Comment[] getTraces() {
-        return ArrayUtil.toObjectArray(Comment.class, myList.getSelectedValuesList());
+    public boolean doUpdateOkButtonState() {
+        return myList == null || !myList.getValue().isEmpty();
     }
 
     private static class Description extends Comment {

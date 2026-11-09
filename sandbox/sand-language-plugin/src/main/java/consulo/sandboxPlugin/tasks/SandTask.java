@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2025 consulo.io
+ * Copyright 2013-2021 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,39 +16,83 @@
 package consulo.sandboxPlugin.tasks;
 
 import consulo.task.Comment;
+import consulo.task.SimpleComment;
 import consulo.task.Task;
+import consulo.task.TaskRepository;
+import consulo.task.TaskState;
 import consulo.task.TaskType;
 import consulo.task.icon.TaskIconGroup;
+import consulo.task.issue.IssueAttachment;
+import consulo.task.issue.IssueComment;
+import consulo.task.issue.IssueLink;
+import consulo.task.issue.IssueWorkLog;
 import consulo.ui.image.Image;
 import org.jspecify.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
-/**
- * @author VISTALL
- * @since 2025-08-21
- */
 public class SandTask extends Task {
-    private String myId;
-    private String mySummary;
-    private boolean myClosed;
+    private final String myId;
+    private final String mySummary;
+    private final TaskType myType;
+    private TaskState myState;
+    private final @Nullable String myDescription;
+    private final @Nullable Date myCreated;
+    private final @Nullable Date myUpdated;
+    private String myPriority = "Medium";
+    private @Nullable String myAssignee;
+    private final String myReporter;
+    private @Nullable TaskRepository myRepository;
 
-    public SandTask() {
-    }
+    final List<IssueComment> comments = new ArrayList<>();
+    final List<IssueWorkLog> workLogs = new ArrayList<>();
+    final List<IssueAttachment> attachments = new ArrayList<>();
+    final List<IssueLink> links = new ArrayList<>();
+    final List<SandTask> subtasks = new ArrayList<>();
 
-    public SandTask(String id, String summary, boolean closed) {
+    public SandTask(String id, String summary, TaskType type, TaskState state, @Nullable String description, @Nullable Date updated, String reporter) {
         myId = id;
         mySummary = summary;
-        myClosed = closed;
+        myType = type;
+        myState = state;
+        myDescription = description;
+        myUpdated = updated;
+        myCreated = updated;
+        myReporter = reporter;
     }
 
-    
+    public void setRepository(TaskRepository repository) {
+        myRepository = repository;
+    }
+
+    @Override
+    public @Nullable TaskRepository getRepository() {
+        return myRepository;
+    }
+
+    public void setState(TaskState state) {
+        myState = state;
+    }
+
+    public void setPriority(String priority) {
+        myPriority = priority;
+    }
+
+    public void setAssignee(@Nullable String assignee) {
+        myAssignee = assignee;
+    }
+
+    public String getReporter() {
+        return myReporter;
+    }
+
     @Override
     public String getId() {
         return myId;
     }
 
-    
     @Override
     public String getSummary() {
         return mySummary;
@@ -56,40 +100,57 @@ public class SandTask extends Task {
 
     @Override
     public @Nullable String getDescription() {
-        return null;
+        return myDescription;
     }
 
-    
     @Override
     public Comment[] getComments() {
-        return new Comment[0];
+        Comment[] result = new Comment[comments.size()];
+        for (int i = 0; i < comments.size(); i++) {
+            IssueComment comment = comments.get(i);
+            result[i] = new SimpleComment(comment.getDate(), comment.getAuthor(), comment.getText());
+        }
+        return result;
     }
 
-    
     @Override
     public Image getIcon() {
         return TaskIconGroup.bug();
     }
 
-    
     @Override
     public TaskType getType() {
-        return TaskType.BUG;
+        return myType;
+    }
+
+    @Override
+    public TaskState getState() {
+        return myState;
+    }
+
+    @Override
+    public String getPriority() {
+        return myPriority;
+    }
+
+    @Override
+    public @Nullable String getAssignee() {
+        return myAssignee;
     }
 
     @Override
     public @Nullable Date getUpdated() {
-        return null;
+        return myUpdated;
     }
 
     @Override
     public @Nullable Date getCreated() {
-        return null;
+        return myCreated;
     }
 
     @Override
     public boolean isClosed() {
-        return myClosed;
+        return myState == TaskState.RESOLVED;
     }
 
     @Override
@@ -99,6 +160,6 @@ public class SandTask extends Task {
 
     @Override
     public @Nullable String getIssueUrl() {
-        return null;
+        return "https://tracker.sand.example/issue/" + myId;
     }
 }

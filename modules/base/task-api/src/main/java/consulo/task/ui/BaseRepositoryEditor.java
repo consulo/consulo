@@ -15,255 +15,142 @@
  */
 package consulo.task.ui;
 
-import consulo.application.ApplicationManager;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorFactory;
-import consulo.document.Document;
-import consulo.http.HttpProxyManager;
-import consulo.http.HttpProxySettingService;
-import consulo.language.editor.ui.awt.EditorTextField;
+import consulo.accountManagement.Account;
+import consulo.accountManagement.AccountManager;
+import consulo.accountManagement.AccountType;
+import consulo.accountManagement.ui.AccountChooser;
+import consulo.accountManagement.ui.AccountComponentFactory;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import consulo.task.BaseRepository;
 import consulo.task.TaskManager;
 import consulo.task.TaskRepository;
+import consulo.task.TaskRepositoryOptions;
+import consulo.task.TaskRepositoryType;
+import consulo.task.localize.TaskLocalize;
+import consulo.ui.Button;
+import consulo.ui.CheckBox;
+import consulo.ui.Component;
+import consulo.ui.Label;
+import consulo.ui.MessageBoxes;
+import consulo.ui.TextBox;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.*;
-import consulo.ui.ex.awt.event.DocumentAdapter;
-
+import consulo.ui.util.FormBuilder;
+import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
-import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+
 import java.util.function.Consumer;
 
 /**
  * @author Dmitry Avdeev
  */
-public class BaseRepositoryEditor<T extends BaseRepository> extends TaskRepositoryEditor implements PanelWithAnchor {
+public class BaseRepositoryEditor<O extends TaskRepositoryOptions> extends TaskRepositoryEditor {
+    protected final Project myProject;
+    protected final TaskRepositoryType<O> myType;
+    protected final O myOptions;
+    private final Consumer<O> myChangeListener;
 
-  protected JBLabel myUrlLabel;
-  protected JTextField myURLText;
-  protected JTextField myUserNameText;
-  protected JBLabel myUsernameLabel;
-  protected JCheckBox myShareUrlCheckBox;
-  protected JPasswordField myPasswordText;
-  protected JBLabel myPasswordLabel;
+    private @Nullable Component myPreferredFocusedComponent;
 
-  protected JButton myTestButton;
-  private JPanel myPanel;
-  private JBCheckBox myUseProxy;
-  private JButton myProxySettingsButton;
-  protected JCheckBox myUseHttpAuthenticationCheckBox;
-
-  protected JPanel myCustomPanel;
-  private JBCheckBox myAddCommitMessage;
-  private JBLabel myComment;
-  private JPanel myEditorPanel;
-  protected JBCheckBox myLoginAnonymouslyJBCheckBox;
-  protected JBTabbedPane myTabbedPane;
-  private JTextPane myAdvertiser;
-
-  private boolean myApplying;
-  protected Project myProject;
-  protected final T myRepository;
-  private final Consumer<T> myChangeListener;
-  private final Document myDocument;
-  private final Editor myEditor;
-  private JComponent myAnchor;
-
-  public BaseRepositoryEditor(final Project project, final T repository, Consumer<T> changeListener) {
-    myProject = project;
-    myRepository = repository;
-    myChangeListener = changeListener;
-
-    myTestButton.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        afterTestConnection(TaskManager.getManager(project).testConnection(repository));
-      }
-    });
-
-    myProxySettingsButton.addActionListener(new ActionListener() {
-      @Override
-      @RequiredUIAccess
-      public void actionPerformed(ActionEvent e) {
-        myProject.getApplication().getInstance(HttpProxySettingService.class)
-          .showSettings(myProject).whenComplete((o, throwable) -> enableButtons());
-      }
-    });
-
-    myURLText.setText(repository.getUrl());
-    myUserNameText.setText(repository.getUsername());
-    myPasswordText.setText(repository.getPassword());
-    myShareUrlCheckBox.setSelected(repository.isShared());
-    myUseProxy.setSelected(repository.isUseProxy());
-
-    myUseHttpAuthenticationCheckBox.setSelected(repository.isUseHttpAuthentication());
-    myUseHttpAuthenticationCheckBox.setVisible(repository.isSupported(TaskRepository.BASIC_HTTP_AUTHORIZATION));
-
-    myLoginAnonymouslyJBCheckBox.setVisible(repository.isSupported(TaskRepository.LOGIN_ANONYMOUSLY));
-    myLoginAnonymouslyJBCheckBox.setSelected(repository.isLoginAnonymously());
-    myLoginAnonymouslyJBCheckBox.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        loginAnonymouslyChanged(!myLoginAnonymouslyJBCheckBox.isSelected());
-      }
-    });
-
-    myAddCommitMessage.setSelected(repository.isShouldFormatCommitMessage());
-    myDocument = EditorFactory.getInstance().createDocument(repository.getCommitMessageFormat());
-    myEditor = EditorFactory.getInstance().createEditor(myDocument);
-    myEditorPanel.add(myEditor.getComponent(), BorderLayout.CENTER);
-    myComment.setText("Available placeholders: " + repository.getComment());
-    String advertiser = repository.getRepositoryType().getAdvertiser();
-    if (advertiser != null) {
-      Messages.installHyperlinkSupport(myAdvertiser);
-      myAdvertiser.setText(advertiser);
-    }
-    else {
-      myAdvertiser.setVisible(false);
+    public BaseRepositoryEditor(Project project, TaskRepositoryType<O> type, O options, Consumer<O> changeListener) {
+        myProject = project;
+        myType = type;
+        myOptions = options;
+        myChangeListener = changeListener;
     }
 
-    installListener(myAddCommitMessage);
-    installListener(myDocument);
+    @RequiredUIAccess
+    @Override
+    public Component createComponent() {
+        FormBuilder builder = FormBuilder.create();
 
-    installListener(myURLText);
-    installListener(myUserNameText);
-    installListener(myPasswordText);
+        AccountManager accountManager = myProject.getApplication().getInstance(AccountManager.class);
+        AccountType<?> accountType = accountManager.findAccountType(myType.getAccountTypeId());
+        if (accountType == null) {
+            builder.addLabeled(TaskLocalize.serversLabelAccount(), Label.create(TaskLocalize.serversMissingAccountType(myType.getAccountTypeId())));
+        }
+        else {
+            AccountChooser chooser = myProject.getApplication().getInstance(AccountComponentFactory.class).createChooser(accountType, myProject, this);
+            String accountId = myOptions.accountId;
+            chooser.setValue(accountId == null ? null : accountManager.findAccount(accountId, myProject));
+            chooser.addValueListener(account -> accountChanged(accountManager, account));
+            builder.addLabeled(TaskLocalize.serversLabelAccount(), chooser.getComponent());
+            myPreferredFocusedComponent = chooser.getComponent();
+        }
 
-    installListener(myShareUrlCheckBox);
-    installListener(myUseProxy);
-    installListener(myUseHttpAuthenticationCheckBox);
-    installListener(myLoginAnonymouslyJBCheckBox);
+        addCustomRows(builder);
 
-    enableButtons();
+        TextBox formatBox = TextBox.create(myOptions.commitMessageFormat);
+        formatBox.setEnabled(myOptions.shouldFormatCommitMessage);
+        formatBox.addValueListener(event -> {
+            myOptions.commitMessageFormat = StringUtil.notNullize(event.getValue());
+            fireChanged();
+        });
+        builder.addLabeled(TaskLocalize.serversLabelCommitMessageFormat(), formatBox);
 
-    JComponent customPanel = createCustomPanel();
-    if (customPanel != null) {
-      myCustomPanel.add(customPanel, BorderLayout.CENTER);
+        builder.addBottom(Label.create(TaskLocalize.serversLabelPlaceholders(createRepositoryForTest().getComment())));
+
+        CheckBox formatCheckBox = CheckBox.create(TaskLocalize.serversCheckboxFormatCommitMessage(), myOptions.shouldFormatCommitMessage);
+        formatCheckBox.addValueListener(event -> {
+            myOptions.shouldFormatCommitMessage = event.getValue();
+            formatBox.setEnabled(event.getValue());
+            fireChanged();
+        });
+        builder.addBottom(formatCheckBox);
+
+        CheckBox shareCheckBox = CheckBox.create(TaskLocalize.serversCheckboxShare(), myOptions.shared);
+        shareCheckBox.addValueListener(event -> {
+            myOptions.shared = event.getValue();
+            fireChanged();
+        });
+        builder.addBottom(shareCheckBox);
+
+        String advertiser = myType.getAdvertiser();
+        if (advertiser != null) {
+            builder.addBottom(Label.create(LocalizeValue.of(advertiser)));
+        }
+
+        builder.addBottom(Button.create(TaskLocalize.serversButtonTest(), event -> testConnection(event.getComponent())));
+        return builder.build();
     }
 
-    setAnchor(myUseProxy);
-    loginAnonymouslyChanged(!myLoginAnonymouslyJBCheckBox.isSelected());
-  }
-
-  protected final void updateCustomPanel() {
-    myCustomPanel.removeAll();
-    JComponent customPanel = createCustomPanel();
-    if (customPanel != null) {
-      myCustomPanel.add(customPanel, BorderLayout.CENTER);
+    @Override
+    public @Nullable Component getPreferredFocusedComponent() {
+        return myPreferredFocusedComponent;
     }
-    myCustomPanel.repaint();
-  }
 
-  private void loginAnonymouslyChanged(boolean enabled) {
-    myUsernameLabel.setEnabled(enabled);
-    myUserNameText.setEnabled(enabled);
-    myPasswordLabel.setEnabled(enabled);
-    myPasswordText.setEnabled(enabled);
-    myUseHttpAuthenticationCheckBox.setEnabled(enabled);
-  }
-
-  protected @Nullable JComponent createCustomPanel() {
-    return null;
-  }
-
-  protected void afterTestConnection(boolean connectionSuccessful) {
-  }
-
-  protected void enableButtons() {
-    myUseProxy.setEnabled(HttpProxyManager.getInstance().isHttpProxyEnabled());
-    if (!HttpProxyManager.getInstance().isHttpProxyEnabled()) {
-      myUseProxy.setSelected(false);
+    @RequiredUIAccess
+    protected void addCustomRows(FormBuilder builder) {
     }
-  }
 
-  protected void installListener(JCheckBox checkBox) {
-    checkBox.addActionListener(e -> doApply());
-  }
-
-  protected void installListener(JTextField textField) {
-    textField.getDocument().addDocumentListener(new DocumentAdapter() {
-      @Override
-      protected void textChanged(DocumentEvent e) {
-        ApplicationManager.getApplication().invokeLater(() -> doApply());
-      }
-    });
-  }
-
-  protected void installListener(JComboBox comboBox) {
-    comboBox.addItemListener(e -> doApply());
-  }
-
-  protected void installListener(Document document) {
-    document.addDocumentListener(new consulo.document.event.DocumentAdapter() {
-      @Override
-      public void documentChanged(consulo.document.event.DocumentEvent e) {
-        doApply();
-      }
-    });
-  }
-
-  protected void installListener(EditorTextField editor) {
-    installListener(editor.getDocument());
-  }
-
-  protected void doApply() {
-    if (!myApplying) {
-      try {
-        myApplying = true;
-        apply();
-      }
-      finally {
-        myApplying = false;
-      }
+    protected void accountChanged(AccountManager accountManager, @Nullable Account account) {
+        myOptions.accountId = account == null ? null : account.getId();
+        String serverUrl = account == null ? null : accountManager.getServerUrl(account);
+        if (serverUrl != null) {
+            myOptions.serverUrl = serverUrl;
+        }
+        fireChanged();
     }
-  }
 
-  @Override
-  public JComponent createComponent() {
-    return myPanel;
-  }
+    protected final void fireChanged() {
+        myChangeListener.accept(myOptions);
+    }
 
-  @Override
-  public JComponent getPreferredFocusedComponent() {
-    return myURLText;
-  }
+    protected TaskRepository createRepositoryForTest() {
+        return myType.createRepository(myProject, myType.copyOptions(myOptions));
+    }
 
-  @Override
-  public void dispose() {
-    EditorFactory.getInstance().releaseEditor(myEditor);
-  }
-
-  public void apply() {
-
-    myRepository.setUrl(myURLText.getText().trim());
-    myRepository.setUsername(myUserNameText.getText().trim());
-    //noinspection deprecation
-    myRepository.setPassword(myPasswordText.getText());
-    myRepository.setShared(myShareUrlCheckBox.isSelected());
-    myRepository.setUseProxy(myUseProxy.isSelected());
-    myRepository.setUseHttpAuthentication(myUseHttpAuthenticationCheckBox.isSelected());
-    myRepository.setLoginAnonymously(myLoginAnonymouslyJBCheckBox.isSelected());
-
-    myRepository.setShouldFormatCommitMessage(myAddCommitMessage.isSelected());
-    myRepository.setCommitMessageFormat(myDocument.getText());
-
-    myChangeListener.accept(myRepository);
-  }
-
-  @Override
-  public JComponent getAnchor() {
-    return myAnchor;
-  }
-
-  @Override
-  public void setAnchor(@Nullable JComponent anchor) {
-    myAnchor = anchor;
-    myUrlLabel.setAnchor(anchor);
-    myUsernameLabel.setAnchor(anchor);
-    myPasswordLabel.setAnchor(anchor);
-    myUseProxy.setAnchor(anchor);
-  }
+    @RequiredUIAccess
+    private void testConnection(Component component) {
+        UIAccess uiAccess = UIAccess.current();
+        TaskManager.getManager(myProject).testConnection(createRepositoryForTest()).whenCompleteAsync((result, error) -> {
+            if (error == null) {
+                MessageBoxes.okInfo(TaskLocalize.serversTestSuccessful()).showAsync(component);
+            }
+            else {
+                String message = StringUtil.notNullize(error.getMessage(), error.getClass().getSimpleName());
+                MessageBoxes.okError(TaskLocalize.serversTestFailed(message)).showAsync(component);
+            }
+        }, uiAccess);
+    }
 }

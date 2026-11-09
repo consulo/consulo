@@ -16,89 +16,83 @@
 package consulo.task.impl.internal.versionControlSystem;
 
 import consulo.project.Project;
-import consulo.versionControlSystem.VcsType;
-import consulo.versionControlSystem.change.ChangeListManager;
-import consulo.versionControlSystem.change.LocalChangeList;
 import consulo.task.ChangeListInfo;
 import consulo.task.LocalTask;
 import consulo.task.TaskManager;
 import consulo.task.impl.internal.TaskManagerImpl;
+import consulo.task.localize.TaskLocalize;
 import consulo.task.ui.TaskDialogPanel;
-import consulo.ui.ex.awt.JBCheckBox;
+import consulo.ui.CheckBox;
+import consulo.ui.Component;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.layout.VerticalLayout;
+import consulo.versionControlSystem.VcsType;
+import consulo.versionControlSystem.change.ChangeListManager;
+import consulo.versionControlSystem.change.LocalChangeList;
 
-import javax.swing.*;
 import java.util.ArrayList;
 
 /**
  * @author Dmitry Avdeev
  */
 public class VcsCloseTaskPanel extends TaskDialogPanel {
+    private final Project myProject;
+    private final LocalTask myTask;
+    private final TaskManagerImpl myTaskManager;
+    private final CheckBox myCommitChanges;
+    private final CheckBox myMergeBranches;
+    private final VerticalLayout myComponent;
 
-  private JPanel myPanel;
-  private JPanel myVcsPanel;
-  private JCheckBox myCommitChanges;
-  private JBCheckBox myMergeBranches;
+    @RequiredUIAccess
+    public VcsCloseTaskPanel(Project project, LocalTask task) {
+        myProject = project;
+        myTask = task;
+        myTaskManager = (TaskManagerImpl) TaskManager.getManager(project);
 
-  private final Project myProject;
-  private final LocalTask myTask;
-  private final TaskManagerImpl myTaskManager;
+        boolean hasChanges = !task.getChangeLists().isEmpty();
+        myCommitChanges = CheckBox.create(TaskLocalize.vcsTaskCommitChanges(), hasChanges && myTaskManager.getState().commitChanges);
+        myCommitChanges.setEnabled(hasChanges);
 
-  public VcsCloseTaskPanel(Project project, LocalTask task) {
-    myProject = project;
-    myTask = task;
-
-    myTaskManager = (TaskManagerImpl)TaskManager.getManager(project);
-    
-    boolean hasChanges = !task.getChangeLists().isEmpty();
-    myCommitChanges.setEnabled(hasChanges);
-    myCommitChanges.setSelected(hasChanges && myTaskManager.getState().commitChanges);
-    if (myTaskManager.getActiveVcs().getType() == VcsType.distributed) {
-      boolean enabled = !task.getBranches(true).isEmpty() && !task.getBranches(false).isEmpty();
-      myMergeBranches.setEnabled(enabled);
-      myMergeBranches.setSelected(enabled && myTaskManager.getState().mergeBranch);
-    }
-    else {
-      myMergeBranches.setVisible(false);
-    }
-    
-  }
-
-  
-  @Override
-  public JComponent getPanel() {
-    return myPanel;
-  }
-
-  boolean isCommitChanges() {
-    return myCommitChanges.isSelected();
-  }
-
-  boolean isMergeBranch() {
-    return myMergeBranches.isSelected();
-  }
-  
-  @Override
-  public void commit() {
-
-    if (myCommitChanges.isEnabled()) {
-      myTaskManager.getState().commitChanges = isCommitChanges();
-    }
-    if (myMergeBranches.isEnabled()) {
-      myTaskManager.getState().mergeBranch = isMergeBranch();
-    }
-    
-    if (isCommitChanges()) {
-      ChangeListManager changeListManager = ChangeListManager.getInstance(myProject);
-      for (ChangeListInfo info : myTask.getChangeLists()) {
-        LocalChangeList list = changeListManager.getChangeList(info.id);
-        if (list != null) {
-          changeListManager.commitChanges(list, new ArrayList<>(list.getChanges()));
+        myMergeBranches = CheckBox.create(TaskLocalize.vcsTaskMergeBranch());
+        myComponent = VerticalLayout.create();
+        myComponent.add(myCommitChanges);
+        if (myTaskManager.getActiveVcs() != null && myTaskManager.getActiveVcs().getType() == VcsType.distributed) {
+            boolean enabled = !task.getBranches(true).isEmpty() && !task.getBranches(false).isEmpty();
+            myMergeBranches.setEnabled(enabled);
+            myMergeBranches.setValue(enabled && myTaskManager.getState().mergeBranch);
+            myComponent.add(myMergeBranches);
         }
-      }
-    }
-    if (isMergeBranch()) {
-      myTaskManager.mergeBranch(myTask);
     }
 
-  }
+    @RequiredUIAccess
+    @Override
+    public Component getComponent() {
+        return myComponent;
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void commit() {
+        boolean commitChanges = myCommitChanges.getValueOrError();
+        boolean mergeBranch = myMergeBranches.getValueOrError();
+        if (myCommitChanges.isEnabled()) {
+            myTaskManager.getState().commitChanges = commitChanges;
+        }
+        if (myMergeBranches.isEnabled()) {
+            myTaskManager.getState().mergeBranch = mergeBranch;
+        }
+
+        if (commitChanges) {
+            ChangeListManager changeListManager = ChangeListManager.getInstance(myProject);
+            for (ChangeListInfo info : myTask.getChangeLists()) {
+                LocalChangeList list = changeListManager.getChangeList(info.id);
+                if (list != null) {
+                    changeListManager.commitChanges(list, new ArrayList<>(list.getChanges()));
+                }
+            }
+        }
+        if (mergeBranch) {
+            myTaskManager.mergeBranch(myTask);
+        }
+    }
 }

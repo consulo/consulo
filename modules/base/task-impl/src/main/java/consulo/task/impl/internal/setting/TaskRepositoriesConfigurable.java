@@ -1,197 +1,70 @@
 package consulo.task.impl.internal.setting;
 
+import consulo.accountManagement.Account;
+import consulo.accountManagement.AccountManager;
+import consulo.accountManagement.AccountType;
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.util.ConcurrentFactoryMap;
-import consulo.configurable.*;
-import consulo.dataContext.DataManager;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
+import consulo.configurable.Configurable;
+import consulo.configurable.ConfigurationException;
+import consulo.configurable.MasterDetailsConfigurable;
+import consulo.configurable.NonDefaultProjectConfigurable;
+import consulo.configurable.ProjectConfigurable;
+import consulo.configurable.StandardConfigurableIds;
+import consulo.configurable.UnifiedMasterDetailsComponent;
 import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.task.TaskManager;
-import consulo.task.TaskRepository;
-import consulo.task.TaskRepositorySubtype;
+import consulo.task.TaskRepositoryOptions;
+import consulo.task.TaskRepositoryOptionsUtil;
 import consulo.task.TaskRepositoryType;
-import consulo.task.impl.internal.RecentTaskRepositories;
 import consulo.task.impl.internal.TaskManagerImpl;
-import consulo.task.ui.TaskRepositoryEditor;
-import consulo.ui.Component;
+import consulo.task.impl.internal.TaskRepositoryEntry;
+import consulo.task.localize.TaskLocalize;
+import consulo.ui.TextAttribute;
+import consulo.ui.TextItemPresentation;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.AnSeparator;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
 import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ui.ex.awt.*;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.util.collection.ContainerUtil;
+import consulo.ui.ex.popup.ListPopup;
+import consulo.util.lang.StringUtil;
 import jakarta.inject.Inject;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
-import java.awt.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.function.Consumer;
+import java.util.Set;
 
 /**
  * @author Dmitry Avdeev
  */
 @ExtensionImpl
-public class TaskRepositoriesConfigurable implements Configurable.NoScroll, ProjectConfigurable, NonDefaultProjectConfigurable {
-    private static final String EMPTY_PANEL = "empty.panel";
-    private JPanel myPanel;
-    private JPanel myServersPanel;
-    private final JBList myRepositoriesList;
-    @SuppressWarnings({"UnusedDeclaration"})
-    private JPanel myToolbarPanel;
-    private JPanel myRepositoryEditor;
-    private JBLabel myServersLabel;
-    private Splitter mySplitter;
-    private JPanel myEmptyPanel;
-
-    private final List<TaskRepository> myRepositories = new ArrayList<>();
-    private final List<TaskRepositoryEditor> myEditors = new ArrayList<>();
+public class TaskRepositoriesConfigurable extends UnifiedMasterDetailsComponent
+    implements ProjectConfigurable, NonDefaultProjectConfigurable, Configurable.NoMargin, Configurable.NoScroll {
     private final Project myProject;
-
-    private final Consumer<TaskRepository> myChangeListener;
-    private int count;
-    private final Map<TaskRepository, String> myRepoNames = ConcurrentFactoryMap.createMap(repository -> Integer.toString(count++));
-
-    private final TaskManagerImpl myManager;
+    private final AccountManager myAccountManager;
+    private final List<TaskRepositoryDraft> myDrafts = new ArrayList<>();
+    private final Set<String> myHiddenKeys = new LinkedHashSet<>();
 
     @Inject
-    @SuppressWarnings("unchecked")
-    public TaskRepositoriesConfigurable(Project project) {
-
+    public TaskRepositoriesConfigurable(Project project, AccountManager accountManager) {
         myProject = project;
-        myManager = (TaskManagerImpl) TaskManager.getManager(project);
-
-        myRepositoriesList = new JBList();
-        myRepositoriesList.getEmptyText().setText("No servers");
-
-        myServersLabel.setLabelFor(myRepositoriesList);
-
-        List<TaskRepositoryType> groups = TaskRepositoryType.getRepositoryTypes();
-
-        List<AnAction> createActions = new ArrayList<>();
-        for (final TaskRepositoryType repositoryType : groups) {
-            for (final TaskRepositorySubtype subtype : (List<TaskRepositorySubtype>) repositoryType.getAvailableSubtypes()) {
-                String description = "New " + subtype.getPresentableName() + " server";
-                createActions.add(new AnAction(subtype.getPresentableName().get(), description, subtype.getIcon()) {
-                    @Override
-                    @RequiredUIAccess
-                    public void actionPerformed(AnActionEvent e) {
-                        TaskRepository repository = repositoryType.createRepository(subtype);
-                        addRepository(repository);
-                    }
-                });
-            }
-        }
-
-        ToolbarDecorator toolbarDecorator = ToolbarDecorator.createDecorator(myRepositoriesList).disableUpDownActions();
-
-        toolbarDecorator.setAddAction((b, e) -> {
-            DefaultActionGroup group = new DefaultActionGroup();
-            for (AnAction aMyAdditional : createActions) {
-                group.add(aMyAdditional);
-            }
-            Set<TaskRepository> repositories = RecentTaskRepositories.getInstance().getRepositories();
-            repositories.removeAll(myRepositories);
-            if (!repositories.isEmpty()) {
-                group.add(AnSeparator.getInstance());
-                for (final TaskRepository repository : repositories) {
-                    group.add(new AnAction(repository.getUrl(), repository.getUrl(), repository.getIcon()) {
-                        @Override
-                        @RequiredUIAccess
-                        public void actionPerformed(AnActionEvent e) {
-                            addRepository(repository);
-                        }
-                    });
-                }
-            }
-
-            JBPopupFactory.getInstance()
-                .createActionGroupPopup(
-                    "Add server",
-                    group,
-                    DataManager.getInstance().getDataContext(b.getContextComponent()),
-                    JBPopupFactory.ActionSelectionAid.SPEEDSEARCH,
-                    false
-                )
-                .showUnderneathOf(Objects.requireNonNull(e.getData(UIExAWTDataKey.CONTEXT_COMPONENT)));
-        });
-
-        toolbarDecorator.setRemoveAction(anActionButton -> {
-            TaskRepository repository = getSelectedRepository();
-            if (repository != null) {
-
-                CollectionListModel model = (CollectionListModel) myRepositoriesList.getModel();
-                model.remove(repository);
-                myRepositories.remove(repository);
-
-                if (model.getSize() > 0) {
-                    myRepositoriesList.setSelectedValue(model.getElementAt(0), true);
-                }
-                else {
-                    myRepositoryEditor.removeAll();
-                    myRepositoryEditor.repaint();
-                }
-            }
-        });
-
-        myServersPanel.add(toolbarDecorator.createPanel(), BorderLayout.CENTER);
-
-        myRepositoriesList.getSelectionModel().addListSelectionListener(e -> {
-            TaskRepository repository = getSelectedRepository();
-            if (repository != null) {
-                String name = myRepoNames.get(repository);
-                assert name != null;
-                ((CardLayout) myRepositoryEditor.getLayout()).show(myRepositoryEditor, name);
-                mySplitter.doLayout();
-                mySplitter.repaint();
-            }
-        });
-
-        myRepositoriesList.setCellRenderer(new ColoredListCellRenderer() {
-            @Override
-            protected void customizeCellRenderer(JList list, Object value, int index, boolean selected, boolean hasFocus) {
-                TaskRepository repository = (TaskRepository) value;
-                setIcon(repository.getIcon());
-                append(repository.getPresentableName());
-            }
-        });
-
-        myChangeListener = repository -> ((CollectionListModel) myRepositoriesList.getModel()).contentsChanged(repository);
+        myAccountManager = accountManager;
     }
 
-    private void addRepository(TaskRepository repository) {
-        myRepositories.add(repository);
-        ((CollectionListModel) myRepositoriesList.getModel()).add(repository);
-        addRepositoryEditor(repository, true);
-        myRepositoriesList.setSelectedIndex(myRepositoriesList.getModel().getSize() - 1);
-    }
-
-    private void addRepositoryEditor(TaskRepository repository, boolean requestFocus) {
-        TaskRepositoryEditor editor = repository.getRepositoryType().createEditor(repository, myProject, myChangeListener);
-        myEditors.add(editor);
-        JComponent component = editor.createComponent();
-        String name = myRepoNames.get(repository);
-        myRepositoryEditor.add(component, name);
-        myRepositoryEditor.doLayout();
-        JComponent preferred = editor.getPreferredFocusedComponent();
-        if (preferred != null && requestFocus) {
-            //      IdeFocusManager.getInstance(myProject).requestFocus(preferred, false);
-        }
-    }
-
-    private @Nullable TaskRepository getSelectedRepository() {
-        return (TaskRepository) myRepositoriesList.getSelectedValue();
+    private TaskManagerImpl getManager() {
+        return (TaskManagerImpl) TaskManager.getManager(myProject);
     }
 
     @Override
     public LocalizeValue getDisplayName() {
-        return LocalizeValue.localizeTODO("Servers");
+        return TaskLocalize.serversConfigurable();
     }
 
     @Override
@@ -205,72 +78,240 @@ public class TaskRepositoriesConfigurable implements Configurable.NoScroll, Proj
     }
 
     @Override
-    @RequiredUIAccess
-    public Component createUIComponent(Disposable parentDisposable) {
-        return TargetAWT.wrap(myPanel);
-    }
-
-    @RequiredUIAccess
-    @Override
-    public @Nullable Component getPreferredFocusedUIComponent() {
-        return myRepositoriesList == null ? null : TargetAWT.wrap(myRepositoriesList);
+    protected LocalizeValue getEmptySelectionText() {
+        return TaskLocalize.serversEmptySelection();
     }
 
     @Override
-    @RequiredUIAccess
-    public boolean isModified() {
-        return !myRepositories.equals(getReps());
+    protected boolean isExpandAllByDefault() {
+        return true;
     }
 
     @Override
-    @RequiredUIAccess
-    public void apply() throws ConfigurationException {
-        List<TaskRepository> newRepositories = ContainerUtil.map(myRepositories, TaskRepository::clone);
-        myManager.setRepositories(newRepositories);
-        myManager.updateIssues(null);
-        RecentTaskRepositories.getInstance().addRepositories(myRepositories);
+    protected boolean isRemovedWhenEmpty(Object value) {
+        return value instanceof TaskRepositoryType;
     }
 
     @Override
-    @RequiredUIAccess
-    public void reset() {
-        myRepoNames.clear();
-        myRepositoryEditor.removeAll();
-        myRepositoryEditor.add(myEmptyPanel, EMPTY_PANEL);
-        //    ((CardLayout)myRepositoryEditor.getLayout()).show(myRepositoryEditor, );
-        myRepositories.clear();
+    protected @Nullable Comparator<Object> getValueComparator() {
+        return Comparator.comparing(this::getValueText, String.CASE_INSENSITIVE_ORDER);
+    }
 
-        CollectionListModel listModel = new CollectionListModel(new ArrayList());
-        for (TaskRepository repository : myManager.getAllRepositories()) {
-            TaskRepository clone = repository.clone();
-            assert clone.equals(repository) : repository.getClass().getName();
-            myRepositories.add(clone);
-            listModel.add(clone);
+    @Override
+    protected String getValueText(Object value) {
+        if (value instanceof TaskRepositoryType<?> type) {
+            return type.getPresentableName().get();
         }
-
-        myRepositoriesList.setModel(listModel);
-
-        for (TaskRepository clone : myRepositories) {
-            addRepositoryEditor(clone, false);
+        if (value instanceof TaskRepositoryDraft draft) {
+            return getDraftText(draft);
         }
-
-        if (!myRepositories.isEmpty()) {
-            myRepositoriesList.setSelectedValue(myRepositories.get(0), true);
-        }
+        return String.valueOf(value);
     }
 
-    private List<TaskRepository> getReps() {
-        return Arrays.asList(myManager.getAllRepositories());
+    private String getDraftText(TaskRepositoryDraft draft) {
+        String accountId = draft.options.accountId;
+        Account account = accountId == null ? null : myAccountManager.findAccount(accountId, myProject);
+        String server = StringUtil.isEmpty(draft.options.serverUrl) ? draft.type.getPresentableName().get() : draft.options.serverUrl;
+        return account == null ? server : account.getName() + " @ " + server;
     }
 
     @Override
-    @RequiredUIAccess
-    public void disposeUIResources() {
-        for (TaskRepositoryEditor editor : myEditors) {
-            if (!Disposer.isDisposed(editor)) {
-                editor.disposeWithTree();
+    protected void renderValue(Object value, TextItemPresentation presentation) {
+        if (value instanceof TaskRepositoryType<?> type) {
+            presentation.withIcon(type.getIcon());
+            presentation.append(type.getPresentableName(), TextAttribute.REGULAR_BOLD);
+        }
+        else if (value instanceof TaskRepositoryDraft draft) {
+            presentation.withIcon(draft.type.getIcon());
+            presentation.append(getDraftText(draft));
+            if (draft.options.accountId == null || myAccountManager.findAccount(draft.options.accountId, myProject) == null) {
+                String server = draft.options.serverUrl.isEmpty() ? draft.type.getPresentableName().get() : draft.options.serverUrl;
+                presentation.append(" (" + TaskLocalize.serversNotLoggedIn(server).get() + ")", TextAttribute.GRAYED);
+            }
+            else if (!draft.isConfigured()) {
+                presentation.append(" (" + TaskLocalize.serversDetected().get() + ")", TextAttribute.GRAYED);
             }
         }
-        myEditors.clear();
+    }
+
+    @RequiredUIAccess
+    @Override
+    protected void loadTree() {
+        myDrafts.clear();
+        myHiddenKeys.clear();
+
+        TaskManagerImpl manager = getManager();
+        myHiddenKeys.addAll(manager.getHiddenKeys());
+        for (TaskRepositoryEntry entry : manager.getRepositoryEntries()) {
+            addDraftValue(TaskRepositoryDraft.of(entry));
+        }
+    }
+
+    private void addDraftValue(TaskRepositoryDraft draft) {
+        myDrafts.add(draft);
+        if (!isAttached(draft.type)) {
+            addValue(null, draft.type);
+        }
+        addValue(draft.type, draft);
+    }
+
+    @RequiredUIAccess
+    @Override
+    protected @Nullable MasterDetailsConfigurable<?> createConfigurable(Object value) {
+        if (value instanceof TaskRepositoryDraft draft) {
+            return new TaskRepositoryDraftConfigurable(myProject, draft, this::getDraftText, () -> refreshValue(draft));
+        }
+        return null;
+    }
+
+    @Override
+    protected List<AnAction> createActions() {
+        return List.of(new AddAction(), new RemoveAction());
+    }
+
+    private List<TaskRepositoryEntry> getConfiguredEntries() {
+        List<TaskRepositoryEntry> entries = new ArrayList<>();
+        for (TaskRepositoryDraft draft : myDrafts) {
+            if (draft.isConfigured()) {
+                entries.add(draft.toEntry());
+            }
+        }
+        return entries;
+    }
+
+    private Set<String> getEffectiveHiddenKeys() {
+        Set<String> hidden = new LinkedHashSet<>(myHiddenKeys);
+        for (TaskRepositoryDraft draft : myDrafts) {
+            if (draft.detected && draft.isChanged()) {
+                String key = draft.type.getDetectionKeyUnchecked(draft.options);
+                if (!key.equals(draft.getKey())) {
+                    hidden.add(draft.getKey());
+                }
+            }
+        }
+        return hidden;
+    }
+
+    @RequiredUIAccess
+    @Override
+    public boolean isModified() {
+        if (super.isModified()) {
+            return true;
+        }
+        TaskManagerImpl manager = getManager();
+        if (!manager.getHiddenKeys().equals(getEffectiveHiddenKeys())) {
+            return true;
+        }
+        List<TaskRepositoryEntry> stored = new ArrayList<>();
+        for (TaskRepositoryEntry entry : manager.getRepositoryEntries()) {
+            if (!entry.isDetected()) {
+                stored.add(entry);
+            }
+        }
+        List<TaskRepositoryEntry> current = getConfiguredEntries();
+        if (stored.size() != current.size()) {
+            return true;
+        }
+        for (int i = 0; i < stored.size(); i++) {
+            TaskRepositoryEntry left = stored.get(i);
+            TaskRepositoryEntry right = current.get(i);
+            if (left.getType() != right.getType() || !TaskRepositoryOptionsUtil.isEqual(left.getOptions(), right.getOptions())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void apply() throws ConfigurationException {
+        super.apply();
+        TaskManagerImpl manager = getManager();
+        manager.setRepositoryEntries(getConfiguredEntries(), getEffectiveHiddenKeys());
+        manager.updateIssues(null);
+        reset();
+    }
+
+    @RequiredUIAccess
+    private void addDraft(TaskRepositoryType<?> type) {
+        TaskRepositoryOptions options = type.createOptions();
+        AccountType<?> accountType = myAccountManager.findAccountType(type.getAccountTypeId());
+        Account account = accountType == null ? null : myAccountManager.getActiveAccount(accountType, myProject);
+        if (account != null) {
+            options.accountId = account.getId();
+            options.serverUrl = StringUtil.notNullize(myAccountManager.getServerUrl(account));
+        }
+        TaskRepositoryDraft draft = new TaskRepositoryDraft(type, options, null, false);
+        addDraftValue(draft);
+        refreshTree(draft);
+    }
+
+    private class AddAction extends DumbAwareAction {
+        private AddAction() {
+            super(TaskLocalize.serversActionAdd(), LocalizeValue.empty(), PlatformIconGroup.generalAdd());
+        }
+
+        @RequiredUIAccess
+        @Override
+        public void actionPerformed(AnActionEvent e) {
+            DefaultActionGroup group = new DefaultActionGroup();
+            myProject.getApplication().getExtensionPoint(TaskRepositoryType.class).forEach(type -> group.add(
+                new DumbAwareAction(type.getPresentableName(), LocalizeValue.empty(), type.getIcon()) {
+                    @RequiredUIAccess
+                    @Override
+                    public void actionPerformed(AnActionEvent event) {
+                        addDraft(type);
+                    }
+                }
+            ));
+            ListPopup popup = JBPopupFactory.getInstance().createActionGroupPopup(
+                TaskLocalize.serversActionAdd().get(),
+                group,
+                e.getDataContext(),
+                JBPopupFactory.ActionSelectionAid.SPEEDSEARCH,
+                false
+            );
+            popup.showUnderneathOf(e);
+        }
+    }
+
+    private class RemoveAction extends DumbAwareAction implements AnActionWithSyncUpdate {
+        private RemoveAction() {
+            super(TaskLocalize.serversActionRemove(), LocalizeValue.empty(), PlatformIconGroup.generalRemove());
+        }
+
+        @RequiredUIAccess
+        @Override
+        public void actionPerformed(AnActionEvent e) {
+            List<Object> selected = getSelectedValues();
+            if (!canRemove(selected)) {
+                return;
+            }
+            for (Object value : selected) {
+                TaskRepositoryDraft draft = (TaskRepositoryDraft) value;
+                myDrafts.remove(draft);
+                if (draft.detected) {
+                    myHiddenKeys.add(draft.getKey());
+                }
+            }
+            removeSelected();
+        }
+
+        @Override
+        public void update(AnActionEvent e) {
+            e.getPresentation().setEnabled(canRemove(getSelectedValues()));
+        }
+
+        private boolean canRemove(List<Object> selected) {
+            if (selected.isEmpty()) {
+                return false;
+            }
+            for (Object value : selected) {
+                if (!(value instanceof TaskRepositoryDraft)) {
+                    return false;
+                }
+            }
+            return true;
+        }
     }
 }

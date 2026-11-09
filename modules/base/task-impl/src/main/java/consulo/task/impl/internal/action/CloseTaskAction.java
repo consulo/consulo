@@ -17,15 +17,15 @@ package consulo.task.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.project.Project;
-import consulo.task.CustomTaskState;
 import consulo.task.LocalTask;
 import consulo.task.TaskManager;
 import consulo.task.TaskRepository;
 import consulo.task.impl.internal.TaskManagerImpl;
 import consulo.task.localize.TaskLocalize;
+import consulo.ui.MessageBoxes;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.awt.Messages;
 
 /**
  * @author Dmitry Avdeev
@@ -42,21 +42,18 @@ public class CloseTaskAction extends BaseTaskAction {
         Project project = e.getRequiredData(Project.KEY);
         TaskManagerImpl taskManager = (TaskManagerImpl) TaskManager.getManager(project);
         LocalTask task = taskManager.getActiveTask();
-        CloseTaskDialog dialog = new CloseTaskDialog(project, task);
-        if (dialog.showAndGet()) {
-            CustomTaskState taskState = dialog.getCloseIssueState();
-            if (taskState != null) {
-                try {
-                    TaskRepository repository = task.getRepository();
-                    assert repository != null;
-                    repository.setTaskState(task, taskState);
-                    repository.setPreferredCloseTaskState(taskState);
-                }
-                catch (Exception e1) {
-                    Messages.showErrorDialog(project, e1.getMessage(), TaskLocalize.dialogTitleCannotSetStateForIssue().get());
-                }
+        UIAccess uiAccess = UIAccess.current();
+        CloseTaskDialog.show(project, task).whenCompleteAsync((taskState, dialogError) -> {
+            TaskRepository repository = task.getRepository();
+            if (dialogError != null || taskState == null || repository == null) {
+                return;
             }
-        }
+            taskManager.setTaskState(repository, task, taskState, false).whenCompleteAsync((result, error) -> {
+                if (error != null) {
+                    MessageBoxes.okError(error).title(TaskLocalize.dialogTitleCannotSetStateForIssue()).showAsync();
+                }
+            }, uiAccess);
+        }, uiAccess);
     }
 
     @Override

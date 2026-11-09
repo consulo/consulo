@@ -52,6 +52,7 @@ import consulo.ui.ex.toolWindow.ToolWindowType;
 import consulo.util.lang.Pair;
 import consulo.util.lang.ref.Ref;
 import org.jspecify.annotations.Nullable;
+import consulo.ui.ex.internal.ToolWindowEx;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 
@@ -156,6 +157,12 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
         myContent.setFocusable(false);
 
         myShowContent = new ShowContentAction(myWindow, myContent);
+
+        window.addPropertyChangeListener(event -> {
+            if (ToolWindowEx.PROP_STRIPE_TITLE.equals(event.getPropertyName()) && myType != null) {
+                update();
+            }
+        });
     }
 
     public ContentManager getContentManager() {

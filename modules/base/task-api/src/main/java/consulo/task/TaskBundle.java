@@ -5,7 +5,6 @@ import consulo.annotation.internal.MigratedExtensionsTo;
 import consulo.application.CommonBundle;
 import consulo.task.localize.TaskLocalize;
 import consulo.util.lang.ref.SoftReference;
-import org.apache.http.HttpStatus;
 import org.jetbrains.annotations.PropertyKey;
 
 import java.lang.ref.Reference;
@@ -32,17 +31,6 @@ public class TaskBundle {
 
   public static String message(@PropertyKey(resourceBundle = BUNDLE) String key, Object... params) {
     return CommonBundle.message(getBundle(), key, params);
-  }
-
-  
-  public static String messageForStatusCode(int statusCode) {
-    if (statusCode == HttpStatus.SC_UNAUTHORIZED) {
-      return message("failure.login");
-    }
-    else if (statusCode == HttpStatus.SC_FORBIDDEN) {
-      return message("failure.permissions");
-    }
-    return message("failure.http.error", statusCode, "");
   }
 
   private static ResourceBundle getBundle() {

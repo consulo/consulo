@@ -24,13 +24,12 @@ import consulo.task.TaskManager;
 import consulo.task.TaskSettings;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.ui.ex.action.ComboBoxAction;
 import consulo.ui.ex.action.Presentation;
-import consulo.ui.ex.awt.action.ComboBoxAction;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
-
-import javax.swing.*;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Dmitry Avdeev
@@ -38,7 +37,7 @@ import javax.swing.*;
 public class SwitchTaskCombo extends ComboBoxAction implements DumbAware {
     
     @Override
-    public JBPopup createPopup(JComponent component, DataContext context, Runnable onDispose) {
+    public JBPopup createPopup(DataContext context, @Nullable Runnable onDispose) {
         return SwitchTaskAction.createPopup(context, onDispose, false);
     }
 
@@ -70,7 +69,7 @@ public class SwitchTaskCombo extends ComboBoxAction implements DumbAware {
 
     
     @Override
-    protected DefaultActionGroup createPopupActionGroup(JComponent button) {
+    protected DefaultActionGroup createPopupActionGroup(DataContext context) {
         throw new IllegalArgumentException();
     }
 

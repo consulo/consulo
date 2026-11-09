@@ -38,5 +38,7 @@ public class TaskManagerStartActivity implements PostStartupActivity, DumbAware 
 
     manager.projectOpened();
     manager.startUpdate();
+    manager.addRepositoriesListener(() -> project.getApplication().invokeLater(() -> TasksToolWindowState.update(project), project.getDisposed()), manager);
+    uiAccess.execute(() -> TasksToolWindowState.update(project));
   }
 }

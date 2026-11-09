@@ -15,6 +15,7 @@
  */
 package consulo.task.impl.internal.action;
 
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
 
 import consulo.task.LocalTask;
@@ -61,6 +62,7 @@ abstract class TaskListItem {
         return mySeparator;
     }
 
+    @RequiredUIAccess
     abstract void select();
 
     public @Nullable LocalTask getTask() {

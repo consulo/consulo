@@ -25,7 +25,8 @@ import consulo.task.util.TaskUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
-import consulo.ui.ex.awt.Messages;
+import consulo.ui.InputBoxBuilder;
+import consulo.ui.UIAccess;
 
 /**
  * @author Dmitry Avdeev
@@ -65,16 +66,15 @@ public class CreateChangelistAction extends BaseTaskAction {
         TaskManagerImpl manager = (TaskManagerImpl) getTaskManager(e);
         assert manager != null;
         LocalTask activeTask = manager.getActiveTask();
-        String name = Messages.showInputDialog(
-            e.getData(Project.KEY),
-            TaskLocalize.dialogMessageChangelistName().get(),
-            TaskLocalize.dialogTitleCreateChangelist().get(),
-            null,
-            manager.getChangelistName(activeTask),
-            null
-        );
-        if (name != null) {
-            manager.createChangeList(activeTask, name);
-        }
+        InputBoxBuilder.text()
+            .title(TaskLocalize.dialogTitleCreateChangelist())
+            .text(TaskLocalize.dialogMessageChangelistName())
+            .value(manager.getChangelistName(activeTask))
+            .showAsync()
+            .whenCompleteAsync((name, error) -> {
+                if (name != null) {
+                    manager.createChangeList(activeTask, name);
+                }
+            }, UIAccess.current());
     }
 }

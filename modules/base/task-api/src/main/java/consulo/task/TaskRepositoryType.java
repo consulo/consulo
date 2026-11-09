@@ -15,17 +15,17 @@
  */
 package consulo.task;
 
+import consulo.accountManagement.Account;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.task.ui.BaseRepositoryEditor;
 import consulo.task.ui.TaskRepositoryEditor;
 import consulo.ui.image.Image;
-
+import org.jdom.Element;
 import org.jspecify.annotations.Nullable;
 
-import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.function.Consumer;
@@ -36,50 +36,58 @@ import java.util.function.Consumer;
  * @author Dmitry Avdeev
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
-public abstract class TaskRepositoryType<T extends TaskRepository> implements TaskRepositorySubtype {
-    public static final ExtensionPointName<TaskRepositoryType> EP_NAME = ExtensionPointName.create(TaskRepositoryType.class);
-
-    public static List<TaskRepositoryType> getRepositoryTypes() {
-        return EP_NAME.getExtensionList();
-    }
-
-    
-    @Override
+public abstract class TaskRepositoryType<O extends TaskRepositoryOptions> {
     public abstract String getId();
 
-    
-    @Override
     public abstract LocalizeValue getPresentableName();
 
-    @Override
-    
     public abstract Image getIcon();
 
     public @Nullable String getAdvertiser() {
         return null;
     }
 
-    
-    public abstract TaskRepositoryEditor createEditor(T repository, Project project, Consumer<T> changeListener);
+    public abstract String getAccountTypeId();
 
-    public List<TaskRepositorySubtype> getAvailableSubtypes() {
-        return Arrays.asList((TaskRepositorySubtype)this);
+    public abstract O createOptions();
+
+    public abstract TaskRepository createRepository(Project project, O options);
+
+    public final O copyOptions(TaskRepositoryOptions options) {
+        return TaskRepositoryOptionsUtil.deserializeInto(TaskRepositoryOptionsUtil.serialize(options), createOptions());
     }
 
-    
-    public TaskRepository createRepository(TaskRepositorySubtype subtype) {
-        return subtype.createRepository();
+    public final O readOptions(Element element) {
+        return TaskRepositoryOptionsUtil.deserializeInto(element, createOptions());
     }
 
-    @Override
-    
-    public abstract TaskRepository createRepository();
+    public List<O> detect(Project project, Account account) {
+        return List.of(createOptions());
+    }
 
-    public abstract Class<T> getRepositoryClass();
+    public String getDetectionKey(O options) {
+        return getId() + ":" + options.accountId + ":" + options.serverUrl;
+    }
 
-    /**
-     * @return states that can be set by {@link TaskRepository#setTaskState(Task, TaskState)}
-     */
+    public TaskRepositoryEditor createEditor(O options, Project project, Consumer<O> changeListener) {
+        return new BaseRepositoryEditor<>(project, this, options, changeListener);
+    }
+
+    @SuppressWarnings("unchecked")
+    public final TaskRepository createRepositoryUnchecked(Project project, TaskRepositoryOptions options) {
+        return createRepository(project, (O) options);
+    }
+
+    @SuppressWarnings("unchecked")
+    public final String getDetectionKeyUnchecked(TaskRepositoryOptions options) {
+        return getDetectionKey((O) options);
+    }
+
+    @SuppressWarnings("unchecked")
+    public final TaskRepositoryEditor createEditorUnchecked(TaskRepositoryOptions options, Project project, Consumer<TaskRepositoryOptions> changeListener) {
+        return createEditor((O) options, project, (Consumer<O>) changeListener);
+    }
+
     public EnumSet<TaskState> getPossibleTaskStates() {
         return EnumSet.noneOf(TaskState.class);
     }
