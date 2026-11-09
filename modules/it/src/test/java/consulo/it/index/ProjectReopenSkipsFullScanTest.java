@@ -28,7 +28,6 @@ import consulo.project.Project;
 import consulo.language.index.impl.internal.FileBasedIndexImpl;
 import consulo.language.psi.stub.FileBasedIndex;
 import consulo.project.DumbService;
-import consulo.project.internal.UnindexedFilesScannerExecutor;
 import consulo.virtualFileSystem.VirtualFileWithId;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
@@ -207,32 +206,24 @@ public class ProjectReopenSkipsFullScanTest {
             VirtualFileUtil.markDirtyAndRefresh(false, true, true, srcFile);
 
             waitFor(
-                "the file edited while the project was closed must be re-indexed on reopen",
-                () -> !findClasses(second, "After5").isEmpty() && findClasses(second, "Before5").isEmpty(),
+                "the file edited while the project was closed must be re-indexed on reopen, "
+                    + "and files which did not change must keep their indexes",
+                () -> !findClasses(second, "After5").isEmpty()
+                    && findClasses(second, "Before5").isEmpty()
+                    && !findClasses(second, "Before4").isEmpty(),
                 () -> {
                     VirtualFile edited = findFile(src.resolve("file5.sand"));
                     FileBasedIndexImpl index = (FileBasedIndexImpl) FileBasedIndex.getInstance();
                     return "after5=" + findClasses(second, "After5").size()
                         + " before5=" + findClasses(second, "Before5").size()
+                        + " before4=" + findClasses(second, "Before4").size()
+                        + " dumb=" + DumbService.getInstance(second).isDumb()
                         + " vfsLength=" + edited.getLength()
                         + " editedId=" + ((VirtualFileWithId) edited).getId()
                         + " projectDirtyIds=" + index.getAllDirtyFiles(second)
                         + " orphanDirtyIds=" + index.getAllDirtyFiles(null);
                 }
             );
-
-            UnindexedFilesScannerExecutor probeExecutor = UnindexedFilesScannerExecutor.getInstance(second);
-            FileBasedIndexImpl probeIndex = (FileBasedIndexImpl) FileBasedIndex.getInstance();
-            System.out.println("PROBE-AT-ASSERT dumb=" + DumbService.getInstance(second).isDumb()
-                + " queuedScans=" + probeExecutor.hasQueuedTasks()
-                + " scanRunning=" + probeExecutor.isRunning().get()
-                + " projectDirty=" + probeIndex.getAllDirtyFiles(second)
-                + " orphanDirty=" + probeIndex.getAllDirtyFiles(null)
-                + " before4=" + findClasses(second, "Before4").size());
-
-            assertThat(findClasses(second, "Before4"))
-                .as("files which did not change must keep their indexes")
-                .isNotEmpty();
         }
         finally {
             Disposer.dispose(disposable);
