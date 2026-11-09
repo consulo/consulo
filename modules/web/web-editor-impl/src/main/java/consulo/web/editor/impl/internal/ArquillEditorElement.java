@@ -288,6 +288,38 @@ public class ArquillEditorElement extends Component implements HasSize {
         }
     }
 
+    @DomEvent("arquill-tooltip-request")
+    public static class ArquillTooltipRequestEvent extends ComponentEvent<ArquillEditorElement> {
+        private final int myOffset;
+        private final int myStart;
+        private final int myEnd;
+
+        public ArquillTooltipRequestEvent(
+            ArquillEditorElement source,
+            boolean fromClient,
+            @EventData("event.detail.offset") int offset,
+            @EventData("event.detail.start") int start,
+            @EventData("event.detail.end") int end
+        ) {
+            super(source, fromClient);
+            myOffset = offset;
+            myStart = start;
+            myEnd = end;
+        }
+
+        public int getOffset() {
+            return myOffset;
+        }
+
+        public int getStart() {
+            return myStart;
+        }
+
+        public int getEnd() {
+            return myEnd;
+        }
+    }
+
     /**
      * Fired on ctrl/cmd + left click and on middle click - the two mouse shortcuts bound to go to declaration.
      */
@@ -724,13 +756,17 @@ public class ArquillEditorElement extends Component implements HasSize {
         const stub = window.arquillEditorStub = window.arquillEditorStub || (element => {
             const pending = element.$arquillPending = [];
             return element.$arquillApi = new Proxy({}, {
-                get: (target, name) => (...args) => pending.push([name, args])
+                get: (target, name) => name === 'destroy'
+                    ? () => { pending.length = 0; }
+                    : (...args) => pending.push([name, args])
             });
         });
         const api = this.$arquillApi || stub(this);
         """;
 
     private String myText;
+
+    private boolean myTextInstalled;
 
     private boolean myReadOnly;
 
@@ -744,7 +780,7 @@ public class ArquillEditorElement extends Component implements HasSize {
      * What each decoration channel last sent, keyed by the api call. The platform rebuilds every channel on
      * every pass - a typed character runs the pass from its own document listener and again when the daemon
      * finishes, and most channels come out byte for byte the same. A push that repeats the last one draws
-     * nothing new, so it does not travel. Cleared on attach: a reloaded browser holds none of it.
+     * nothing new, so it does not travel. Cleared on detach: the next dom holds only what is pushed from then on.
      */
     private final Map<String, Object> myLastPushed = new HashMap<>();
 
@@ -821,7 +857,13 @@ public class ArquillEditorElement extends Component implements HasSize {
     }
 
     public void setText(String text) {
+        boolean installed = myTextInstalled && text.equals(myText);
+        myTextInstalled = false;
         myText = text;
+
+        if (installed || !isAttached()) {
+            return;
+        }
 
         callApi("setText($0)", text);
     }
@@ -830,7 +872,12 @@ public class ArquillEditorElement extends Component implements HasSize {
      * Replaces {@code [start, end)} without resending the whole document.
      */
     public void replaceText(int start, int end, String text) {
+        myTextInstalled = false;
         applyToCache(start, end, text);
+
+        if (!isAttached()) {
+            return;
+        }
 
         callApi("replaceText($0, $1, $2)", start, end, text);
     }
@@ -970,6 +1017,10 @@ public class ArquillEditorElement extends Component implements HasSize {
 
     public Registration addCtrlHoverListener(ComponentEventListener<ArquillCtrlHoverEvent> listener) {
         return addListener(ArquillCtrlHoverEvent.class, listener);
+    }
+
+    public Registration addTooltipRequestListener(ComponentEventListener<ArquillTooltipRequestEvent> listener) {
+        return addListener(ArquillTooltipRequestEvent.class, listener);
     }
 
     public Registration addSelectionGestureListener(ComponentEventListener<ArquillSelectionGestureEvent> listener) {
@@ -1121,6 +1172,10 @@ public class ArquillEditorElement extends Component implements HasSize {
     /**
      * @param rangesJson array of {start, end, style} in absolute document offsets, sorted by start
      */
+    public void setTooltipHtml(int start, int end, String html) {
+        callApi("setTooltipHtml($0, $1, $2)", start, end, html);
+    }
+
     public void setStyleRanges(String rangesJson) {
         if (isUnchanged("styleRanges", rangesJson)) {
             return;
@@ -1260,14 +1315,13 @@ public class ArquillEditorElement extends Component implements HasSize {
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
 
-        // a fresh dom holds none of the decoration channels, whatever this instance sent to the previous one
-        myLastPushed.clear();
-
         callApi("setFloatingToolbarLayer($0)", myFloatingToolbarLayer.getElement());
         callApi("setComponentInlayLayer($0)", myComponentInlayLayer.getElement());
         callApi("setMirrored($0)", myMirrored);
 
         Rulers rulers = myRulers.get();
+
+        myTextInstalled = true;
 
         // the bundle measures the parent, so the editor can only be created once the element is in the dom.
         // the scripts are injected by hand - flow drops @JavaScript pointing at a context absolute path
@@ -1301,6 +1355,9 @@ public class ArquillEditorElement extends Component implements HasSize {
     @Override
     protected void onDetach(DetachEvent detachEvent) {
         callApi("destroy()");
+
+        myLastPushed.clear();
+        myTextInstalled = false;
 
         super.onDetach(detachEvent);
     }

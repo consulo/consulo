@@ -104,6 +104,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
@@ -226,6 +227,15 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
     private final List<InlayClickTarget> myInlayClickTargets = new ArrayList<>();
 
     private boolean myLinkHovered;
+
+    private static final int STYLE_WINDOW_FALLBACK_LINES = 200;
+
+    private final AtomicBoolean myStyleWindowUpdateScheduled = new AtomicBoolean();
+
+    private int myStyleWindowFirstLine;
+    private int myStyleWindowLastLine = -1;
+    private int myStyleWindowStart;
+    private int myStyleWindowEnd;
 
     private List<@Nullable LineFrameResize> myLineFrameResizes = List.of();
     private @Nullable LineFrameResize myDraggedLineFrame;
@@ -410,8 +420,19 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
             }
         });
 
-        vaadin.addViewportListener(event -> ((WebScrollingModelImpl) myScrollingModel)
-            .setVisibleAreaFromClient(new Rectangle(event.getX(), event.getY(), event.getWidth(), event.getHeight())));
+        vaadin.addViewportListener(event -> {
+            ((WebScrollingModelImpl) myScrollingModel)
+                .setVisibleAreaFromClient(new Rectangle(event.getX(), event.getY(), event.getWidth(), event.getHeight()));
+
+            if (Application.get().runReadAction((Supplier<Boolean>) this::isVisibleAreaNearStyleWindowEdge)) {
+                scheduleStyleWindowUpdate();
+            }
+        });
+
+        vaadin.addTooltipRequestListener(event -> {
+            String html = Application.get().runReadAction((Supplier<String>) () -> findTooltipHtml(event.getOffset()));
+            vaadin.setTooltipHtml(event.getStart(), event.getEnd(), html == null ? "" : html);
+        });
 
         vaadin.addCtrlHoverListener(event -> fireCtrlHover(event.getOffset()));
 
@@ -1023,7 +1044,7 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
      */
     void scheduleUpdate() {
         if (myUpdateScheduled.compareAndSet(false, true)) {
-            boolean scheduled = giveUI(() -> {
+            boolean scheduled = giveUILater(() -> {
                 myUpdateScheduled.set(false);
 
                 update();
@@ -1164,6 +1185,16 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
         }
 
         uiAccess.giveIfNeed(runnable);
+        return true;
+    }
+
+    private boolean giveUILater(Runnable runnable) {
+        UIAccess uiAccess = myEditorComponent.getUIAccess();
+        if (uiAccess == null || !uiAccess.isValid()) {
+            return false;
+        }
+
+        uiAccess.give(runnable);
         return true;
     }
 
@@ -1774,24 +1805,47 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
 
     @RequiredReadAction
     private void updateStyleRanges() {
-        EditorHighlighter editorHighlighter = getHighlighter();
-        if (editorHighlighter == null) {
+        if (!updateWindowedStyles()) {
             return;
         }
 
+        updateGutterMarks();
+
+        updateAnalyzeStatus();
+
+        updateGutterBands();
+
+        updateLineFrames();
+
+        updateLineSeparators();
+
+        updateLineBackgrounds();
+
+        updateErrorStripeMarks();
+    }
+
+    @RequiredReadAction
+    private boolean updateWindowedStyles() {
+        EditorHighlighter editorHighlighter = getHighlighter();
+        if (editorHighlighter == null) {
+            return false;
+        }
+
         int textLength = myDocument.getTextLength();
+
+        updateStyleWindow(textLength);
 
         StringBuilder ranges = new StringBuilder("[");
 
         // a run that is nothing but a lexer token is pushed as classes named after the attribute keys of the
         // scheme, and the styles of those keys travel once as a stylesheet - the same keyword does not repeat
         // its resolved style through the whole file
-        HighlighterIterator tokenIterator = editorHighlighter.createIterator(0);
+        HighlighterIterator tokenIterator = editorHighlighter.createIterator(myStyleWindowStart);
         Set<TextAttributesKey> schemeKeys = new LinkedHashSet<>();
 
         // iteration state merges the lexer attributes with the markup model by layer, which is how the daemon
         // results - identifier highlighting, inspections - reach the view
-        IterationState state = new IterationState(this, 0, textLength, null, false, false, false, false);
+        IterationState state = new IterationState(this, myStyleWindowStart, myStyleWindowEnd, null, false, false, false, false);
 
         int[] overSelection = collectRangesOverSelection(textLength);
         int overSelectionIndex = 0;
@@ -1859,19 +1913,71 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
 
         updateTooltipRanges();
 
-        updateGutterMarks();
+        return true;
+    }
 
-        updateAnalyzeStatus();
+    @RequiredReadAction
+    private void updateStyleWindow(int textLength) {
+        int lineCount = getVisibleLineCount();
+        Rectangle area = getScrollingModel().getVisibleArea();
 
-        updateGutterBands();
+        int firstLine;
+        int lastLine;
+        if (!isVisibleAreaKnown(area)) {
+            firstLine = 0;
+            lastLine = STYLE_WINDOW_FALLBACK_LINES;
+        }
+        else {
+            int topLine = yToVisualLine(area.y);
+            int bottomLine = yToVisualLine(area.y + area.height);
+            int pageLines = Math.max(1, bottomLine - topLine);
 
-        updateLineFrames();
+            firstLine = Math.max(0, topLine - pageLines);
+            lastLine = bottomLine + pageLines;
+        }
 
-        updateLineSeparators();
+        myStyleWindowFirstLine = firstLine;
+        myStyleWindowLastLine = Math.min(lastLine, lineCount - 1);
+        myStyleWindowStart = visualLineStartOffset(firstLine);
+        myStyleWindowEnd = lastLine + 1 >= lineCount ? textLength : visualLineStartOffset(lastLine + 1);
+    }
 
-        updateLineBackgrounds();
+    @RequiredReadAction
+    private boolean isVisibleAreaNearStyleWindowEdge() {
+        if (myStyleWindowLastLine < 0 || myLineHeight <= 0) {
+            return false;
+        }
 
-        updateErrorStripeMarks();
+        Rectangle area = getScrollingModel().getVisibleArea();
+        if (!isVisibleAreaKnown(area)) {
+            return false;
+        }
+
+        int topLine = yToVisualLine(area.y);
+        int bottomLine = yToVisualLine(area.y + area.height);
+        int halfPage = Math.max(1, (bottomLine - topLine) / 2);
+        int lastLine = getVisibleLineCount() - 1;
+
+        return myStyleWindowFirstLine > 0 && topLine - halfPage < myStyleWindowFirstLine
+            || myStyleWindowLastLine < lastLine && bottomLine + halfPage > myStyleWindowLastLine;
+    }
+
+    private boolean isVisibleAreaKnown(Rectangle area) {
+        return myLineHeight > 0 && area.height > 0 && area.height != Integer.MAX_VALUE;
+    }
+
+    void scheduleStyleWindowUpdate() {
+        if (myStyleWindowUpdateScheduled.compareAndSet(false, true)) {
+            boolean scheduled = giveUILater(() -> {
+                myStyleWindowUpdateScheduled.set(false);
+
+                Application.get().runReadAction((Runnable) this::updateWindowedStyles);
+            });
+
+            if (!scheduled) {
+                myStyleWindowUpdateScheduled.set(false);
+            }
+        }
     }
 
     /**
@@ -2522,12 +2628,11 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
         StringBuilder tooltips = new StringBuilder("[");
 
         for (RangeHighlighter highlighter : DocumentMarkupModel.forDocument(myDocument, myProject, true).getAllHighlighters()) {
-            if (!(highlighter instanceof RangeHighlighterEx highlighterEx)) {
+            if (highlighter.getEndOffset() <= myStyleWindowStart || highlighter.getStartOffset() >= myStyleWindowEnd) {
                 continue;
             }
 
-            String tooltip = toTooltipHtml(highlighterEx.getErrorStripeTooltip());
-            if (tooltip == null) {
+            if (!(highlighter instanceof RangeHighlighterEx highlighterEx) || toTooltipHtml(highlighterEx.getErrorStripeTooltip()) == null) {
                 continue;
             }
 
@@ -2535,14 +2640,38 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
                 tooltips.append(',');
             }
 
-            tooltips.append("{\"start\":").append(highlighter.getStartOffset())
-                .append(",\"end\":").append(highlighter.getEndOffset())
-                .append(",\"html\":\"").append(escapeJson(tooltip)).append("\"}");
+            tooltips.append('[').append(highlighter.getStartOffset()).append(',').append(highlighter.getEndOffset()).append(']');
         }
 
         tooltips.append(']');
 
         myEditorComponent.toVaadinComponent().setTooltipRanges(tooltips.toString());
+    }
+
+    @RequiredReadAction
+    private @Nullable String findTooltipHtml(int offset) {
+        if (myProject == null) {
+            return null;
+        }
+
+        String found = null;
+        int foundLength = Integer.MAX_VALUE;
+        for (RangeHighlighter highlighter : DocumentMarkupModel.forDocument(myDocument, myProject, true).getAllHighlighters()) {
+            int start = highlighter.getStartOffset();
+            int end = highlighter.getEndOffset();
+            if (offset < start || offset >= end || end - start >= foundLength) {
+                continue;
+            }
+
+            if (highlighter instanceof RangeHighlighterEx highlighterEx) {
+                String tooltip = toTooltipHtml(highlighterEx.getErrorStripeTooltip());
+                if (tooltip != null) {
+                    found = tooltip;
+                    foundLength = end - start;
+                }
+            }
+        }
+        return found;
     }
 
     private static @Nullable String toTooltipHtml(@Nullable Object errorStripeTooltip) {

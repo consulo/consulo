@@ -448,21 +448,23 @@
             tooltip.style.display = 'none';
         };
 
-        const showTooltip = (html, x, y) => {
-            clearTimeout(tooltipTimer);
-            tooltipTimer = setTimeout(() => {
-                tooltip.innerHTML = html;
-                tooltip.style.display = 'block';
-                // placed only after it is laid out, its size is unknown while it is hidden
-                const box = tooltip.getBoundingClientRect();
-                const left = Math.min(x, window.innerWidth - box.width - 4);
-                const below = y + 20;
-                tooltip.style.left = Math.max(0, left) + 'px';
-                tooltip.style.top = (below + box.height > window.innerHeight ? y - box.height - 4 : below) + 'px';
-            }, 300);
+        const placeTooltip = (html, x, y) => {
+            tooltip.innerHTML = html;
+            tooltip.style.display = 'block';
+            // placed only after it is laid out, its size is unknown while it is hidden
+            const box = tooltip.getBoundingClientRect();
+            const left = Math.min(x, window.innerWidth - box.width - 4);
+            const below = y + 20;
+            tooltip.style.left = Math.max(0, left) + 'px';
+            tooltip.style.top = (below + box.height > window.innerHeight ? y - box.height - 4 : below) + 'px';
         };
 
-        const tooltipAt = offset => {
+        const showTooltip = (html, x, y) => {
+            clearTimeout(tooltipTimer);
+            tooltipTimer = setTimeout(() => placeTooltip(html, x, y), 300);
+        };
+
+        const tooltipRangeAt = offset => {
             if (offset < 0 || !element.$arquillTooltipRanges) {
                 return null;
             }
@@ -471,13 +473,54 @@
             // message the pointer is actually over
             let found = null;
             for (const range of element.$arquillTooltipRanges) {
-                if (offset >= range.start && offset < range.end
-                    && (found === null || range.end - range.start < found.end - found.start)) {
+                if (offset >= range[0] && offset < range[1]
+                    && (found === null || range[1] - range[0] < found[1] - found[0])) {
                     found = range;
                 }
             }
 
-            return found === null ? null : found.html;
+            return found;
+        };
+
+        const tooltipHtmlCache = new Map();
+        let tooltipRequestTimer = 0;
+        let hoveredTooltipKey = null;
+        let hoveredTooltipX = 0;
+        let hoveredTooltipY = 0;
+
+        const requestTooltip = (offset, range, x, y) => {
+            const key = range[0] + ':' + range[1];
+            hoveredTooltipX = x;
+            hoveredTooltipY = y;
+
+            if (hoveredTooltipKey === key) {
+                return;
+            }
+
+            hoveredTooltipKey = key;
+            clearTimeout(tooltipRequestTimer);
+            tooltipRequestTimer = setTimeout(() => {
+                if (hoveredTooltipKey !== key) {
+                    return;
+                }
+
+                const html = tooltipHtmlCache.get(key);
+                if (html !== undefined) {
+                    if (html) {
+                        placeTooltip(html, hoveredTooltipX, hoveredTooltipY);
+                    }
+                    return;
+                }
+
+                element.dispatchEvent(new CustomEvent('arquill-tooltip-request', {
+                    detail: { offset: offset, start: range[0], end: range[1] }
+                }));
+            }, 250);
+        };
+
+        const forgetHoveredTooltip = () => {
+            clearTimeout(tooltipRequestTimer);
+            hoveredTooltipKey = null;
         };
 
         element.addEventListener('mousemove', domEvent => {
@@ -505,17 +548,28 @@
             const frameEdge = domEvent.buttons === 0 ? frameEdgeAt(domEvent) : null;
             element.classList.toggle('arquill-frame-resize', !!(frameEdge && frameEdge.frame.resize.enabled));
 
-            const html = (frameEdge && escapeText(frameEdge.frame.resize.tooltip)) || inlayTooltipAt(domEvent) || tooltipAt(offset);
+            const html = (frameEdge && escapeText(frameEdge.frame.resize.tooltip)) || inlayTooltipAt(domEvent);
+            const range = html ? null : tooltipRangeAt(offset);
             if (html) {
+                forgetHoveredTooltip();
                 showTooltip(html, domEvent.clientX, domEvent.clientY);
             }
+            else if (range) {
+                const key = range[0] + ':' + range[1];
+                if (hoveredTooltipKey !== key) {
+                    hideTooltip();
+                }
+                requestTooltip(offset, range, domEvent.clientX, domEvent.clientY);
+            }
             else {
+                forgetHoveredTooltip();
                 hideTooltip();
             }
         });
 
         element.addEventListener('mouseleave', () => {
             fireHover(-1);
+            forgetHoveredTooltip();
             hideTooltip();
             if (!frameDrag) {
                 element.classList.remove('arquill-frame-resize');
@@ -2903,9 +2957,13 @@
             placeCaret();
             fireViewport();
         });
+        let resizeViewportTimer = 0;
+
         textView.addEventListener('Resize', () => {
             onViewChanged();
-            fireViewport();
+
+            clearTimeout(resizeViewportTimer);
+            resizeViewportTimer = setTimeout(fireViewport, 100);
         });
 
         // orion measures its metrics while the view is created and lays every line out against what
@@ -3489,6 +3547,17 @@
             // parsed once here, the lookup runs on every pointer move
             setTooltipRanges: rangesJson => {
                 element.$arquillTooltipRanges = JSON.parse(rangesJson);
+                tooltipHtmlCache.clear();
+                forgetHoveredTooltip();
+            },
+
+            setTooltipHtml: (start, end, html) => {
+                const key = start + ':' + end;
+                tooltipHtmlCache.set(key, html);
+
+                if (html && hoveredTooltipKey === key) {
+                    placeTooltip(html, hoveredTooltipX, hoveredTooltipY);
+                }
             },
 
             // kept parsed - folding has to remap every range into view offsets again on each collapse and expand
