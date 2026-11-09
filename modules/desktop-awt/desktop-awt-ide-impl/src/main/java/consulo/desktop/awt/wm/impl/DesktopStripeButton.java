@@ -17,10 +17,10 @@ package consulo.desktop.awt.wm.impl;
 
 import consulo.application.ui.UISettings;
 import consulo.disposer.Disposable;
-import consulo.ui.ex.toolWindow.ButtonDisplay;
 import consulo.ui.ex.toolWindow.ToolWindowSettings;
 import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.ui.ex.awt.internal.SwingToolTip;
+import consulo.project.ui.impl.internal.wm.ToolWindowStripePlacement;
 import consulo.project.ui.impl.internal.wm.action.ActivateToolWindowAction;
 import consulo.ui.ex.awt.AnchoredButton;
 import consulo.desktop.awt.ui.impl.util.MouseDragHelper;
@@ -57,8 +57,6 @@ import java.awt.image.BufferedImage;
  */
 public final class DesktopStripeButton extends AnchoredButton implements ActionListener, Disposable, ToolWindowStripeButton {
     private static final String uiClassID = "StripeButtonUI";
-
-    public static final int LARGE_ICON_SIZE = 24;
 
     /**
      * This is analog of Swing mnemonic. We cannot use the standard ones
@@ -381,10 +379,7 @@ public final class DesktopStripeButton extends AnchoredButton implements ActionL
     public void updatePresentation() {
         updateState();
         updateText();
-        Image image = myDecorator.getToolWindow().getIcon();
-        if (image != null && mySettings.getButtonDisplay() == ButtonDisplay.LARGE_ICON && image.getWidth() != 0) {
-            image = ImageEffects.resize(image, LARGE_ICON_SIZE / (float) image.getWidth());
-        }
+        Image image = ToolWindowStripePlacement.getIcon(mySettings, myDecorator.getToolWindow());
         setIcon(TargetAWT.to(image));
         setDisabledIcon(image == null ? null : TargetAWT.to(ImageEffects.grayed(image)));
     }
@@ -396,17 +391,9 @@ public final class DesktopStripeButton extends AnchoredButton implements ActionL
             return;
         }
 
-        String text = myDecorator.getToolWindow().getDisplayName().get();
-        String toolWindowId = myDecorator.getToolWindow().getId();
-        int mnemonic = mySettings.isShowMnemonic() ? ActivateToolWindowAction.getMnemonicForToolWindow(toolWindowId) : -1;
-        if (mnemonic != -1) {
-            text = (char) mnemonic + ": " + text;
-            setMnemonic2(mnemonic);
-        }
-        else {
-            setMnemonic2(0);
-        }
-        setText(text);
+        int mnemonic = ToolWindowStripePlacement.getMnemonic(mySettings, myDecorator.getToolWindow());
+        setMnemonic2(mnemonic != -1 ? mnemonic : 0);
+        setText(ToolWindowStripePlacement.getText(mySettings, myDecorator.getToolWindow()));
         updateHelpTooltip();
     }
 

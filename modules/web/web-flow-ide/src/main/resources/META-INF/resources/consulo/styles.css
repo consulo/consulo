@@ -111,6 +111,15 @@ body
   border: none;
 }
 
+/* large icons make the side stripes thicker only - the header keeps the ordinary stripe thickness */
+.web-tool-window-panel-large-icons .web-tool-window-stripe-left,
+.web-tool-window-panel-large-icons .web-tool-window-stripe-right
+{
+  --web-tool-window-stripe-button-size: 38px;
+
+  width: calc(var(--web-tool-window-stripe-button-size) + var(--web-tool-window-stripe-button-margin) * 2);
+}
+
 .web-tool-window-stripe-top
 {
   border-bottom: 1px solid var(--consulo-component-border-color, lightgray);
@@ -240,6 +249,25 @@ vaadin-split-layout.web-split-layout-no-divider::part(splitter)
 .web-tool-window-stripe-button-selected
 {
   background-color: var(--consulo-tool-window-button-selected-background, lightgray);
+}
+
+.web-tool-window-stripe-button-active
+{
+  background-color: var(--consulo-tool-window-button-active-background, silver);
+}
+
+/* without a text the button is a square holding its icon, which is never turned with the stripe */
+.web-tool-window-stripe-button-icon-only
+{
+  width: var(--web-tool-window-stripe-button-size);
+  height: var(--web-tool-window-stripe-button-size);
+  align-self: center;
+  padding: 0;
+}
+
+.web-tool-window-stripe-left .web-tool-window-stripe-button-icon-only
+{
+  transform: none;
 }
 
 .web-tool-window-stripe-top .web-tool-window-stripe-button-secondary

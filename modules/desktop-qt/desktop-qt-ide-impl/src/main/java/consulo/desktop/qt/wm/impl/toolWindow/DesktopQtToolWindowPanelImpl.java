@@ -15,14 +15,17 @@
  */
 package consulo.desktop.qt.wm.impl.toolWindow;
 
+import consulo.application.Application;
+import consulo.application.ui.UISettings;
+import consulo.application.ui.event.UISettingsListener;
 import consulo.desktop.qt.ui.impl.DesktopQtStyleApplier;
 import consulo.desktop.qt.ui.impl.QtComponentDelegate;
 import consulo.desktop.qt.ui.impl.layout.DesktopQtThreeComponentSplitLayoutImpl;
 import consulo.ide.impl.wm.impl.ToolWindowAnchorUtil;
 import consulo.ide.impl.wm.impl.UnifiedToolWindowSplitters;
-import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.impl.internal.wm.ToolWindowBase;
+import consulo.project.ui.impl.internal.wm.ToolWindowStripePlacement;
 import consulo.project.ui.internal.WindowInfoImpl;
 import consulo.ui.Component;
 import consulo.ui.PseudoComponent;
@@ -31,6 +34,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.ui.ex.toolWindow.ToolWindowInternalDecorator;
 import consulo.ui.ex.toolWindow.ToolWindowPanel;
+import consulo.ui.ex.toolWindow.ToolWindowSettings;
 import consulo.ui.ex.toolWindow.ToolWindowStripeButton;
 import consulo.ui.ex.toolWindow.WindowInfo;
 import consulo.ui.impl.style.IslandsState;
@@ -50,45 +54,6 @@ import java.util.Map;
  * @since 2026-08-16
  */
 public class DesktopQtToolWindowPanelImpl implements ToolWindowPanel, PseudoComponent {
-    private static final Logger LOG = Logger.getInstance(DesktopQtToolWindowPanelImpl.class);
-
-    private final class AddToolStripeButtonCmd implements Runnable {
-        private final ToolWindowStripeButton myButton;
-        private final WindowInfoImpl myInfo;
-        private final Comparator<ToolWindowStripeButton> myComparator;
-
-        private AddToolStripeButtonCmd(
-            ToolWindowStripeButton button,
-            WindowInfoImpl info,
-            Comparator<ToolWindowStripeButton> comparator
-        ) {
-            myButton = button;
-            myInfo = info;
-            myComparator = comparator;
-        }
-
-        @Override
-        @RequiredUIAccess
-        public void run() {
-            ToolWindowAnchor anchor = myInfo.getAnchor();
-            if (ToolWindowAnchor.TOP == anchor) {
-                myTopStripe.addButton(myButton, myComparator);
-            }
-            else if (ToolWindowAnchor.LEFT == anchor) {
-                myLeftStripe.addButton(myButton, myComparator);
-            }
-            else if (ToolWindowAnchor.BOTTOM == anchor) {
-                myBottomStripe.addButton(myButton, myComparator);
-            }
-            else if (ToolWindowAnchor.RIGHT == anchor) {
-                myRightStripe.addButton(myButton, myComparator);
-            }
-            else {
-                LOG.error("unknown anchor: " + anchor);
-            }
-        }
-    }
-
     private final class AddDockedComponentCmd implements Runnable {
         private final ToolWindowInternalDecorator myDecorator;
         private final WindowInfoImpl myInfo;
@@ -164,9 +129,19 @@ public class DesktopQtToolWindowPanelImpl implements ToolWindowPanel, PseudoComp
 
     private final UnifiedToolWindowSplitters mySplitters;
 
+    private final Project myProject;
+
+    private boolean myLeftHorizontalSplit;
+    private boolean myRightHorizontalSplit;
+
     @RequiredUIAccess
     public DesktopQtToolWindowPanelImpl(Project project) {
+        myProject = project;
         mySplitters = new UnifiedToolWindowSplitters(project, project, this::setRootSplitter);
+
+        ToolWindowSettings settings = getSettings();
+        myLeftHorizontalSplit = settings.isLeftHorizontalSplit();
+        myRightHorizontalSplit = settings.isRightHorizontalSplit();
 
         // tttttttttttttttttttttttttttttttt
         // l                              r
@@ -187,6 +162,91 @@ public class DesktopQtToolWindowPanelImpl implements ToolWindowPanel, PseudoComp
         }
         else {
             myRoot.borderBuilder().topSet().apply();
+        }
+
+        updateStripesVisibility();
+
+        Application.get().getMessageBus().connect(project).subscribe(
+            UISettingsListener.class,
+            (UISettingsListener) this::uiSettingsChanged
+        );
+    }
+
+    private ToolWindowSettings getSettings() {
+        return ToolWindowSettings.getInstance(myProject);
+    }
+
+    private List<DesktopQtToolWindowStripeImpl> getStripes() {
+        return List.of(myTopStripe, myLeftStripe, myBottomStripe, myRightStripe);
+    }
+
+    private DesktopQtToolWindowStripeImpl getStripeFor(WindowInfo info) {
+        ToolWindowAnchor anchor = ToolWindowStripePlacement.getStripeAnchor(getSettings(), info);
+        if (ToolWindowAnchor.TOP == anchor) {
+            return myTopStripe;
+        }
+        if (ToolWindowAnchor.LEFT == anchor) {
+            return myLeftStripe;
+        }
+        if (ToolWindowAnchor.BOTTOM == anchor) {
+            return myBottomStripe;
+        }
+        return myRightStripe;
+    }
+
+    @RequiredUIAccess
+    private void uiSettingsChanged(UISettings uiSettings) {
+        if (myProject.isDisposed()) {
+            return;
+        }
+
+        updateStripesVisibility();
+        updateButtonsPlacement();
+        updateSplitOrientation();
+    }
+
+    @RequiredUIAccess
+    private void updateStripesVisibility() {
+        boolean visible = !getSettings().isHideToolStripes() && !UISettings.getInstance().getPresentationMode();
+        for (DesktopQtToolWindowStripeImpl stripe : getStripes()) {
+            stripe.getComponent().setVisible(visible);
+        }
+    }
+
+    @RequiredUIAccess
+    private void updateButtonsPlacement() {
+        ToolWindowSettings settings = getSettings();
+        for (DesktopQtToolWindowStripeButtonImpl button : myId2Button.values()) {
+            DesktopQtToolWindowStripeImpl target = getStripeFor(button.getWindowInfo());
+            if (target.contains(button)) {
+                continue;
+            }
+
+            for (DesktopQtToolWindowStripeImpl stripe : getStripes()) {
+                stripe.removeButton(button);
+            }
+            target.addButton(button, settings);
+        }
+
+        for (DesktopQtToolWindowStripeImpl stripe : getStripes()) {
+            stripe.relayout(settings);
+        }
+
+        for (DesktopQtToolWindowStripeButtonImpl button : myId2Button.values()) {
+            button.updatePresentation();
+        }
+    }
+
+    @RequiredUIAccess
+    private void updateSplitOrientation() {
+        ToolWindowSettings settings = getSettings();
+        if (myLeftHorizontalSplit != settings.isLeftHorizontalSplit()) {
+            myLeftHorizontalSplit = settings.isLeftHorizontalSplit();
+            updateAnchorComponent(ToolWindowAnchor.LEFT);
+        }
+        if (myRightHorizontalSplit != settings.isRightHorizontalSplit()) {
+            myRightHorizontalSplit = settings.isRightHorizontalSplit();
+            updateAnchorComponent(ToolWindowAnchor.RIGHT);
         }
     }
 
@@ -292,7 +352,7 @@ public class DesktopQtToolWindowPanelImpl implements ToolWindowPanel, PseudoComp
     public void addButton(ToolWindowStripeButton button, WindowInfo info, Comparator<ToolWindowStripeButton> comparator) {
         WindowInfoImpl copiedInfo = ((WindowInfoImpl) info).copy();
         myId2Button.put(copiedInfo.getId(), (DesktopQtToolWindowStripeButtonImpl) button);
-        new AddToolStripeButtonCmd(button, copiedInfo, comparator).run();
+        getStripeFor(copiedInfo).addButton(button, getSettings());
     }
 
     @Override
@@ -303,7 +363,7 @@ public class DesktopQtToolWindowPanelImpl implements ToolWindowPanel, PseudoComp
             return;
         }
 
-        for (DesktopQtToolWindowStripeImpl stripe : List.of(myTopStripe, myLeftStripe, myBottomStripe, myRightStripe)) {
+        for (DesktopQtToolWindowStripeImpl stripe : getStripes()) {
             stripe.removeButton(button);
         }
     }
@@ -358,7 +418,7 @@ public class DesktopQtToolWindowPanelImpl implements ToolWindowPanel, PseudoComp
             return;
         }
 
-        // a qt layout re-arranges itself, so only the presentation of the button is left to refresh here
+        getStripeFor(stripeButton.getWindowInfo()).relayout(getSettings());
         stripeButton.updatePresentation();
     }
 

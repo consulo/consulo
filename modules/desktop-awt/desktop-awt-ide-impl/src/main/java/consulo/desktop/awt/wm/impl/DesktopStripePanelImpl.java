@@ -23,6 +23,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ui.ex.internal.KeymapManagerEx;
 import consulo.project.ui.impl.internal.wm.ToolWindowManagerBase;
+import consulo.project.ui.impl.internal.wm.ToolWindowStripePlacement;
 import consulo.project.ui.internal.WindowInfoImpl;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.Gray;
@@ -35,6 +36,7 @@ import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.event.KeymapManagerListener;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
+import consulo.ui.ex.toolWindow.ToolWindowSettings;
 import consulo.ui.ex.toolWindow.ToolWindowStripeButton;
 import consulo.ui.style.StyleManager;
 
@@ -186,6 +188,12 @@ final class DesktopStripePanelImpl extends JPanel {
         revalidate();
     }
 
+    void sortButtons(Comparator<ToolWindowStripeButton> comparator) {
+        myPrefSize = null;
+        myButtons.sort(comparator);
+        revalidate();
+    }
+
     void removeButton(DesktopStripeButton button) {
         myPrefSize = null;
         myButtons.remove(button);
@@ -301,7 +309,7 @@ final class DesktopStripePanelImpl extends JPanel {
             insertOrder = eachButton.getDecorator().getWindowInfo().getOrder();
             Dimension eachSize = eachButton.getPreferredSize();
 
-            if (!sidesStarted && eachButton.getWindowInfo().isSplit()) {
+            if (!sidesStarted && isAtEnd(eachButton)) {
                 if (processDrop) {
                     tryDroppingOnGap(data, gap, eachButton.getWindowInfo().getOrder());
                 }
@@ -409,7 +417,7 @@ final class DesktopStripePanelImpl extends JPanel {
                 continue;
             }
 
-            if (b.getWindowInfo().isSplit()) {
+            if (isAtEnd(b)) {
                 sideTools.add(b);
             }
             else {
@@ -425,6 +433,14 @@ final class DesktopStripePanelImpl extends JPanel {
 
     public ToolWindowAnchor getAnchor() {
         return ToolWindowAnchor.get(myAnchor);
+    }
+
+    private ToolWindowSettings getSettings() {
+        return ToolWindowSettings.getInstance(myManager.getProject());
+    }
+
+    private boolean isAtEnd(DesktopStripeButton button) {
+        return ToolWindowStripePlacement.isAtStripeEnd(getSettings(), button.getWindowInfo());
     }
 
     private static void layoutButton(LayoutData data, JComponent eachButton, boolean setBounds) {
@@ -560,11 +576,14 @@ final class DesktopStripePanelImpl extends JPanel {
 
         WindowInfoImpl info = myDragButton.getDecorator().getWindowInfo();
         myFinishingDrop = true;
+        ToolWindowSettings settings = getSettings();
+        ToolWindowAnchor anchor = getAnchor();
+        boolean atEnd = myLastLayoutData.dragToSide;
         myManager.setSideToolAndAnchor(
             info.getId(),
-            ToolWindowAnchor.get(myAnchor),
+            ToolWindowStripePlacement.getDropAnchor(settings, anchor, atEnd),
             myLastLayoutData.dragInsertPosition,
-            myLastLayoutData.dragToSide
+            ToolWindowStripePlacement.isDropSplit(settings, anchor, atEnd)
         );
 
         myManager.invokeLater(this::resetDrop);

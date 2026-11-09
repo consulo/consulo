@@ -19,8 +19,8 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Span;
 import consulo.application.ui.UISettings;
 import consulo.project.ui.impl.internal.wm.ToolWindowBase;
+import consulo.project.ui.impl.internal.wm.ToolWindowStripePlacement;
 import consulo.project.ui.impl.internal.wm.action.ActivateToolWindowAction;
-import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.keymap.KeymapManager;
@@ -31,6 +31,7 @@ import consulo.ui.image.Image;
 import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
 import consulo.web.ui.impl.internal.base.VaadinComponentDelegate;
 import consulo.web.ui.impl.internal.image.WebImageConverter;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -43,26 +44,22 @@ public class WebToolWindowStripeButtonImpl extends VaadinComponentDelegate<WebTo
     public Vaadin() {
     }
 
-    public void update(LocalizeValue displayName, boolean isSecondary, Image icon) {
+    public void update(@Nullable String text, boolean isSecondary, @Nullable Image icon, boolean active) {
       removeAll();
 
       if (icon != null) {
         add(WebImageConverter.getImage(icon));
       }
-      
-      add(new Span(displayName.get()));
 
-      String selectedPrefix = getClassNamePrefix() + "-selected";
-      removeClassName(selectedPrefix);
-      if (isSelected()) {
-        addClassName(selectedPrefix);
+      if (text != null) {
+        add(new Span(text));
       }
 
-      String secondaryPrefix = getClassNamePrefix() + "-secondary";
-      removeClassName(secondaryPrefix);
-      if (isSecondary) {
-        addClassName(secondaryPrefix);
-      }
+      String prefix = getClassNamePrefix();
+      setClassName(prefix + "-selected", isSelected());
+      setClassName(prefix + "-active", isSelected() && active);
+      setClassName(prefix + "-secondary", isSecondary);
+      setClassName(prefix + "-icon-only", text == null);
     }
 
     public boolean isSelected() {
@@ -81,6 +78,8 @@ public class WebToolWindowStripeButtonImpl extends VaadinComponentDelegate<WebTo
   }
 
   private WebToolWindowInternalDecorator myDecorator;
+
+  private boolean myActive;
 
   public WebToolWindowStripeButtonImpl(WebToolWindowInternalDecorator decorator, WebToolWindowPanelImpl toolWindowPanel) {
     myDecorator = decorator;
@@ -108,6 +107,7 @@ public class WebToolWindowStripeButtonImpl extends VaadinComponentDelegate<WebTo
   @Override
   public void apply(WindowInfo info) {
     setSelected(info.isVisible() || info.isActive());
+    myActive = info.isActive();
     updateState();
   }
 
@@ -117,8 +117,10 @@ public class WebToolWindowStripeButtonImpl extends VaadinComponentDelegate<WebTo
 
     setSelected(window.isVisible());
 
+    ToolWindowSettings settings = ToolWindowSettings.getInstance(window.getToolWindowManager().getProject());
+
     boolean toShow = window.isAvailable() || window.isPlaceholderMode();
-    if (ToolWindowSettings.getInstance(window.getToolWindowManager().getProject()).isAlwaysShowWindowButtons()) {
+    if (settings.isAlwaysShowWindowButtons()) {
       setVisible(window.isShowStripeButton() || isSelected());
     }
     else {
@@ -126,7 +128,13 @@ public class WebToolWindowStripeButtonImpl extends VaadinComponentDelegate<WebTo
     }
     setEnabled(toShow && !window.isPlaceholderMode());
 
-    toVaadinComponent().update(window.getDisplayName(), getWindowInfo().isSplit(), window.getIcon());
+    WindowInfo info = getWindowInfo();
+    toVaadinComponent().update(
+      settings.isPaintText() ? ToolWindowStripePlacement.getText(settings, window) : null,
+      ToolWindowStripePlacement.isAtStripeEnd(settings, info),
+      settings.isPaintIcon() ? ToolWindowStripePlacement.getIcon(settings, window) : null,
+      myActive && settings.isPaintFocus()
+    );
 
     setToolTip(ActivateToolWindowAction.createToolTip(window));
   }

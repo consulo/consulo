@@ -28,6 +28,7 @@ import consulo.ide.impl.wm.impl.ToolWindowAnchorUtil;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.project.Project;
+import consulo.project.ui.impl.internal.wm.ToolWindowStripePlacement;
 import consulo.project.ui.internal.WindowInfoImpl;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.JBLayeredPane;
@@ -85,8 +86,6 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
     private final DesktopStripePanelImpl myTopStripe;
 
     private final List<DesktopStripePanelImpl> myStripes = new ArrayList<>();
-
-    private Comparator<ToolWindowStripeButton> myButtonComparator;
 
     private final DesktopToolWindowManagerImpl myManager;
 
@@ -224,14 +223,12 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
         updateLayout();
     }
 
-    private boolean isLargeIconsMode() {
-        return ToolWindowSettings.getInstance(getProject()).getButtonDisplay() == ButtonDisplay.LARGE_ICON;
+    private ToolWindowSettings getSettings() {
+        return ToolWindowSettings.getInstance(getProject());
     }
 
-    private DesktopStripePanelImpl getStripeByAnchor(ToolWindowAnchor anchor) {
-        if (ToolWindowAnchor.BOTTOM == anchor && isLargeIconsMode()) {
-            return myLeftStripe;
-        }
+    private DesktopStripePanelImpl getStripeFor(WindowInfo info) {
+        ToolWindowAnchor anchor = ToolWindowStripePlacement.getStripeAnchor(getSettings(), info);
         if (ToolWindowAnchor.TOP == anchor) {
             return myTopStripe;
         }
@@ -247,28 +244,11 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
         throw new IllegalArgumentException("unknown anchor: " + anchor);
     }
 
-    private Comparator<ToolWindowStripeButton> stripeComparator() {
-        Comparator<ToolWindowStripeButton> base = myButtonComparator != null ? myButtonComparator : (o1, o2) -> 0;
-        return (o1, o2) -> {
-            boolean bottom1 = o1.getWindowInfo().getAnchor() == ToolWindowAnchor.BOTTOM;
-            boolean bottom2 = o2.getWindowInfo().getAnchor() == ToolWindowAnchor.BOTTOM;
-            if (bottom1 != bottom2) {
-                return bottom1 ? 1 : -1;
-            }
-            return base.compare(o1, o2);
-        };
-    }
-
     @RequiredUIAccess
     private void updateButtonsPlacement() {
-        for (Map.Entry<DesktopStripeButton, WindowInfoImpl> entry : myButton2Info.entrySet()) {
-            DesktopStripeButton button = entry.getKey();
-            WindowInfoImpl info = entry.getValue();
-            if (info.getAnchor() != ToolWindowAnchor.BOTTOM) {
-                continue;
-            }
-
-            DesktopStripePanelImpl target = getStripeByAnchor(ToolWindowAnchor.BOTTOM);
+        Comparator<ToolWindowStripeButton> comparator = ToolWindowStripePlacement.comparator(getSettings());
+        for (DesktopStripeButton button : myButton2Info.keySet()) {
+            DesktopStripePanelImpl target = getStripeFor(button.getWindowInfo());
             if (button.getParent() == target) {
                 continue;
             }
@@ -276,7 +256,11 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
             for (DesktopStripePanelImpl stripe : myStripes) {
                 stripe.removeButton(button);
             }
-            target.addButton(button, stripeComparator());
+            target.addButton(button, comparator);
+        }
+
+        for (DesktopStripePanelImpl stripe : myStripes) {
+            stripe.sortButtons(comparator);
         }
 
         revalidate();
@@ -302,9 +286,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
         myId2Button.put(copiedInfo.getId(), (DesktopStripeButton) button);
         myButton2Info.put((DesktopStripeButton) button, copiedInfo);
 
-        myButtonComparator = comparator;
-
-        getStripeByAnchor(copiedInfo.getAnchor()).addButton((DesktopStripeButton) button, stripeComparator());
+        getStripeFor(copiedInfo).addButton((DesktopStripeButton) button, ToolWindowStripePlacement.comparator(getSettings()));
 
         validate();
         repaint();
@@ -421,24 +403,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
             return;
         }
 
-        WindowInfoImpl info = stripeButton.getWindowInfo();
-        ToolWindowAnchor anchor = info.getAnchor();
-
-        if (ToolWindowAnchor.TOP == anchor) {
-            myTopStripe.revalidate();
-        }
-        else if (ToolWindowAnchor.LEFT == anchor) {
-            myLeftStripe.revalidate();
-        }
-        else if (ToolWindowAnchor.BOTTOM == anchor) {
-            myBottomStripe.revalidate();
-        }
-        else if (ToolWindowAnchor.RIGHT == anchor) {
-            myRightStripe.revalidate();
-        }
-        else {
-            LOG.error("unknown anchor: " + anchor);
-        }
+        getStripeFor(stripeButton.getWindowInfo()).revalidate();
     }
 
     @Override
@@ -573,21 +538,8 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
             return null;
         }
 
-        ToolWindowAnchor anchor = myManager.getToolWindow(id).getAnchor();
-        if (ToolWindowAnchor.TOP == anchor) {
-            return myTopStripe;
-        }
-        if (ToolWindowAnchor.BOTTOM == anchor) {
-            return myBottomStripe;
-        }
-        if (ToolWindowAnchor.LEFT == anchor) {
-            return myLeftStripe;
-        }
-        if (ToolWindowAnchor.RIGHT == anchor) {
-            return myRightStripe;
-        }
-
-        throw new IllegalArgumentException("Anchor=" + anchor);
+        DesktopStripeButton button = getButtonById(id);
+        return button == null ? null : getStripeFor(button.getWindowInfo());
     }
 
     @Nullable DesktopStripePanelImpl getStripeFor(Rectangle screenRec, DesktopStripePanelImpl preferred) {

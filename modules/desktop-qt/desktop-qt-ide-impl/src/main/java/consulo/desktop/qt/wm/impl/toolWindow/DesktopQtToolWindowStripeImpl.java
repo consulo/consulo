@@ -15,11 +15,13 @@
  */
 package consulo.desktop.qt.wm.impl.toolWindow;
 
+import consulo.project.ui.impl.internal.wm.ToolWindowStripePlacement;
 import consulo.ui.BorderBuilder;
 import consulo.ui.Component;
 import consulo.ui.PseudoComponent;
 import consulo.ui.Space;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.toolWindow.ToolWindowSettings;
 import consulo.ui.ex.toolWindow.ToolWindowStripeButton;
 import consulo.ui.impl.style.IslandsState;
 import consulo.ui.layout.DockLayout;
@@ -28,7 +30,6 @@ import consulo.ui.layout.Layout;
 import consulo.ui.layout.VerticalLayout;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -41,28 +42,28 @@ public class DesktopQtToolWindowStripeImpl implements PseudoComponent {
     private final DesktopQtToolWindowStripePosition myPosition;
 
     private final Component myComponent;
-    private final Layout<?> myPrimaryLayout;
-    private final Layout<?> mySplitLayout;
+    private final Layout<?> myStartLayout;
+    private final Layout<?> myEndLayout;
 
     private boolean myBordered;
 
     @RequiredUIAccess
     public DesktopQtToolWindowStripeImpl(DesktopQtToolWindowStripePosition position) {
         myPosition = position;
-        myPrimaryLayout = createGroupLayout(position);
+        myStartLayout = createGroupLayout(position);
 
         switch (position) {
             case LEFT, RIGHT -> {
-                mySplitLayout = createGroupLayout(position);
-                myComponent = DockLayout.create(Space.NONE).top(myPrimaryLayout).bottom(mySplitLayout);
+                myEndLayout = createGroupLayout(position);
+                myComponent = DockLayout.create(Space.NONE).top(myStartLayout).bottom(myEndLayout);
             }
             case TOP -> {
-                mySplitLayout = createGroupLayout(position);
-                myComponent = DockLayout.create(Space.NONE).left(myPrimaryLayout).right(mySplitLayout);
+                myEndLayout = createGroupLayout(position);
+                myComponent = DockLayout.create(Space.NONE).left(myStartLayout).right(myEndLayout);
             }
             default -> {
-                mySplitLayout = myPrimaryLayout;
-                myComponent = myPrimaryLayout;
+                myEndLayout = myStartLayout;
+                myComponent = myStartLayout;
             }
         }
     }
@@ -80,17 +81,27 @@ public class DesktopQtToolWindowStripeImpl implements PseudoComponent {
         return myComponent;
     }
 
-    @RequiredUIAccess
-    public void addButton(ToolWindowStripeButton button, Comparator<ToolWindowStripeButton> comparator) {
-        myPrimaryLayout.removeAll();
-        mySplitLayout.removeAll();
+    public boolean contains(ToolWindowStripeButton button) {
+        return myButtons.contains(button);
+    }
 
+    @RequiredUIAccess
+    public void addButton(ToolWindowStripeButton button, ToolWindowSettings settings) {
         myButtons.add(button);
 
-        myButtons.sort(comparator);
+        relayout(settings);
+    }
+
+    @RequiredUIAccess
+    public void relayout(ToolWindowSettings settings) {
+        myStartLayout.removeAll();
+        myEndLayout.removeAll();
+
+        myButtons.sort(ToolWindowStripePlacement.comparator(settings));
 
         for (ToolWindowStripeButton stripeButton : myButtons) {
-            addComponent(stripeButton.getWindowInfo().isSplit() ? mySplitLayout : myPrimaryLayout, stripeButton.getComponent());
+            boolean atEnd = ToolWindowStripePlacement.isAtStripeEnd(settings, stripeButton.getWindowInfo());
+            addComponent(atEnd ? myEndLayout : myStartLayout, stripeButton.getComponent());
         }
 
         updateBorder();
@@ -103,8 +114,8 @@ public class DesktopQtToolWindowStripeImpl implements PseudoComponent {
         }
 
         Component component = button.getComponent();
-        myPrimaryLayout.remove(component);
-        mySplitLayout.remove(component);
+        myStartLayout.remove(component);
+        myEndLayout.remove(component);
 
         updateBorder();
     }

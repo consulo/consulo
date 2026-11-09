@@ -20,6 +20,7 @@ import consulo.desktop.qt.ui.impl.QtComponentDelegate;
 import consulo.desktop.qt.ui.impl.image.DesktopQtIconOwner;
 import consulo.desktop.qt.ui.impl.image.DesktopQtImage;
 import consulo.project.ui.impl.internal.wm.ToolWindowBase;
+import consulo.project.ui.impl.internal.wm.ToolWindowStripePlacement;
 import consulo.project.ui.impl.internal.wm.action.ActivateToolWindowAction;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -71,7 +72,10 @@ public class DesktopQtToolWindowStripeButtonImpl extends QtComponentDelegate<QWi
     private final DesktopQtToolWindowInternalDecorator myDecorator;
 
     private boolean mySelected;
+    private boolean myActive;
     private boolean myHovered;
+
+    private @Nullable ToolWindowSettings mySettings;
 
     private String myText = "";
     private @Nullable Image myIcon;
@@ -97,8 +101,17 @@ public class DesktopQtToolWindowStripeButtonImpl extends QtComponentDelegate<QWi
         component.setCursor(Qt.CursorShape.PointingHandCursor);
     }
 
+    @Override
+    public ToolWindowSettings getSettings() {
+        if (mySettings == null) {
+            ToolWindowBase window = (ToolWindowBase) myDecorator.getToolWindow();
+            mySettings = ToolWindowSettings.getInstance(window.getToolWindowManager().getProject());
+        }
+        return mySettings;
+    }
+
     private ToolWindowAnchor getAnchor() {
-        return getWindowInfo().getAnchor();
+        return ToolWindowStripePlacement.getStripeAnchor(getSettings(), getWindowInfo());
     }
 
     private void onClick() {
@@ -129,6 +142,7 @@ public class DesktopQtToolWindowStripeButtonImpl extends QtComponentDelegate<QWi
     @Override
     public void apply(WindowInfo info) {
         setSelected(info.isVisible() || info.isActive());
+        myActive = info.isActive();
         updateState();
     }
 
@@ -138,8 +152,10 @@ public class DesktopQtToolWindowStripeButtonImpl extends QtComponentDelegate<QWi
 
         setSelected(window.isVisible());
 
+        ToolWindowSettings settings = getSettings();
+
         boolean toShow = window.isAvailable() || window.isPlaceholderMode();
-        if (ToolWindowSettings.getInstance(window.getToolWindowManager().getProject()).isAlwaysShowWindowButtons()) {
+        if (settings.isAlwaysShowWindowButtons()) {
             setVisible(window.isShowStripeButton() || isSelected());
         }
         else {
@@ -147,8 +163,8 @@ public class DesktopQtToolWindowStripeButtonImpl extends QtComponentDelegate<QWi
         }
         setEnabled(toShow && !window.isPlaceholderMode());
 
-        myText = window.getDisplayName().get();
-        myIcon = window.getIcon();
+        myText = settings.isPaintText() ? ToolWindowStripePlacement.getText(settings, window) : "";
+        myIcon = settings.isPaintIcon() ? ToolWindowStripePlacement.getIcon(settings, window) : null;
 
         setToolTip(ActivateToolWindowAction.createToolTip(window));
 
@@ -228,6 +244,11 @@ public class DesktopQtToolWindowStripeButtonImpl extends QtComponentDelegate<QWi
         int gap = iconAlong > 0 && textAlong > 0 ? ICON_TEXT_GAP : 0;
         int textOffset = MARGIN + PAD_ALONG + iconAlong + gap;
 
+        if (textAlong == 0) {
+            int size = (MARGIN + PAD_ACROSS) * 2 + Math.max(Math.max(iconAlong, iconAcross), fontMetrics.height());
+            return new ContentMetrics(iconAlong, iconAcross, 0, textOffset, size, size);
+        }
+
         return new ContentMetrics(
             iconAlong,
             iconAcross,
@@ -306,7 +327,7 @@ public class DesktopQtToolWindowStripeButtonImpl extends QtComponentDelegate<QWi
                             highlight.red(),
                             highlight.green(),
                             highlight.blue(),
-                            mySelected ? 110 : 55
+                            !mySelected ? 55 : myActive && getSettings().isPaintFocus() ? 170 : 110
                         ));
                         painter.drawRoundedRect(
                             new QRectF(MARGIN, MARGIN, w - MARGIN * 2, h - MARGIN * 2),
@@ -348,7 +369,7 @@ public class DesktopQtToolWindowStripeButtonImpl extends QtComponentDelegate<QWi
                 Image icon = myIcon;
                 if (icon != null) {
                     int iconAcrossOffset = (acrossSize - iconAcross) / 2;
-                    int iconAlongOffset = MARGIN + PAD_ALONG;
+                    int iconAlongOffset = text.isEmpty() ? (alongSize - iconAlong) / 2 : MARGIN + PAD_ALONG;
 
                     // the icon itself is never rotated, only the text is
                     QRect iconRect;

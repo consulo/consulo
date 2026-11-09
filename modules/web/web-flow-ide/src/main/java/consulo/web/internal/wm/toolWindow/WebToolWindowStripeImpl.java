@@ -16,7 +16,9 @@
 package consulo.web.internal.wm.toolWindow;
 
 import com.vaadin.flow.component.orderedlayout.FlexLayout;
+import consulo.project.ui.impl.internal.wm.ToolWindowStripePlacement;
 import consulo.ui.Component;
+import consulo.ui.ex.toolWindow.ToolWindowSettings;
 import consulo.ui.ex.toolWindow.ToolWindowStripeButton;
 import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
 import consulo.web.ui.impl.internal.base.TargetVaadin;
@@ -24,7 +26,6 @@ import consulo.web.ui.impl.internal.base.VaadinComponentDelegate;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
@@ -53,18 +54,22 @@ public class WebToolWindowStripeImpl extends VaadinComponentDelegate<WebToolWind
     return new Vaadin();
   }
 
-  public void markAsDirtyRecursive() {
-    ///getVaadinComponent().markAsDirtyRecursive();
+  public boolean contains(ToolWindowStripeButton button) {
+    return getVaadinComponent().myButtons.contains(button);
   }
 
-  public void addButton(ToolWindowStripeButton button, Comparator<ToolWindowStripeButton> comparator) {
+  public void addButton(ToolWindowStripeButton button, ToolWindowSettings settings) {
+    getVaadinComponent().myButtons.add(button);
+
+    relayout(settings);
+  }
+
+  public void relayout(ToolWindowSettings settings) {
     Vaadin vaadinComponent = getVaadinComponent();
 
     vaadinComponent.removeAll();
 
-    vaadinComponent.myButtons.add(button);
-
-    vaadinComponent.myButtons.sort(comparator::compare);
+    vaadinComponent.myButtons.sort(ToolWindowStripePlacement.comparator(settings));
 
     for (ToolWindowStripeButton stripeButton : vaadinComponent.myButtons) {
       vaadinComponent.add(TargetVaadin.to(stripeButton.getComponent()));

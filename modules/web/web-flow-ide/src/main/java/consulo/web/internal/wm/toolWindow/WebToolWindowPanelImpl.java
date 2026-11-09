@@ -17,8 +17,10 @@ package consulo.web.internal.wm.toolWindow;
 
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
+import consulo.application.Application;
+import consulo.application.ui.UISettings;
+import consulo.application.ui.event.UISettingsListener;
 import consulo.web.ui.impl.internal.vaadin.AuraUtility;
-import consulo.logging.Logger;
 import consulo.ide.impl.wm.impl.UnifiedToolWindowSplitters;
 import consulo.project.Project;
 import consulo.project.ui.internal.WindowInfoImpl;
@@ -28,6 +30,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.toolWindow.*;
 import consulo.ide.impl.wm.impl.ToolWindowAnchorUtil;
 import consulo.project.ui.impl.internal.wm.ToolWindowBase;
+import consulo.project.ui.impl.internal.wm.ToolWindowStripePlacement;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.SplitLayoutPosition;
 import consulo.ui.layout.ThreeComponentSplitLayout;
@@ -50,8 +53,6 @@ import java.util.Map;
  * @since 2017-09-25
  */
 public class WebToolWindowPanelImpl extends VaadinComponentDelegate<WebToolWindowPanelImpl.Vaadin> implements ToolWindowPanel {
-    private static final Logger LOG = Logger.getInstance(WebToolWindowPanelImpl.class);
-
     public class Vaadin extends Div implements FromVaadinComponentWrapper, InitiableComponent, FlexComponent {
         private Div myTopDiv = new Div();
         private Div myCenterDiv = new Div();
@@ -74,78 +75,6 @@ public class WebToolWindowPanelImpl extends VaadinComponentDelegate<WebToolWindo
         public void init(String classPrefix) {
             myTopDiv.addClassName(classPrefix + "-top");
             myCenterDiv.addClassName(classPrefix + "-center");
-        }
-    }
-
-    private final class AddToolStripeButtonCmd implements Runnable {
-        private final ToolWindowStripeButton myButton;
-        private final WindowInfoImpl myInfo;
-        private final Comparator<ToolWindowStripeButton> myComparator;
-
-        public AddToolStripeButtonCmd(
-            ToolWindowStripeButton button,
-            WindowInfoImpl info,
-            Comparator<ToolWindowStripeButton> comparator
-        ) {
-            myButton = button;
-            myInfo = info;
-            myComparator = comparator;
-        }
-
-        @Override
-        public final void run() {
-            ToolWindowAnchor anchor = myInfo.getAnchor();
-            if (ToolWindowAnchor.TOP == anchor) {
-                myTopStripe.addButton(myButton, myComparator);
-            }
-            else if (ToolWindowAnchor.LEFT == anchor) {
-                myLeftStripe.addButton(myButton, myComparator);
-            }
-            else if (ToolWindowAnchor.BOTTOM == anchor) {
-                myBottomStripe.addButton(myButton, myComparator);
-            }
-            else if (ToolWindowAnchor.RIGHT == anchor) {
-                myRightStripe.addButton(myButton, myComparator);
-            }
-            else {
-                LOG.error("unknown anchor: " + anchor);
-            }
-            //getVaadinComponent().markAsDirtyRecursive();
-        }
-    }
-
-    private final class UpdateButtonPositionCmd implements Runnable {
-        private final String myId;
-
-        private UpdateButtonPositionCmd(String id) {
-            myId = id;
-        }
-
-        @Override
-        public void run() {
-            WebToolWindowStripeButtonImpl stripeButton = getButtonById(myId);
-            if (stripeButton == null) {
-                return;
-            }
-
-            WindowInfo info = stripeButton.getWindowInfo();
-            ToolWindowAnchor anchor = info.getAnchor();
-
-            if (ToolWindowAnchor.TOP == anchor) {
-                myTopStripe.markAsDirtyRecursive();
-            }
-            else if (ToolWindowAnchor.LEFT == anchor) {
-                myLeftStripe.markAsDirtyRecursive();
-            }
-            else if (ToolWindowAnchor.BOTTOM == anchor) {
-                myBottomStripe.markAsDirtyRecursive();
-            }
-            else if (ToolWindowAnchor.RIGHT == anchor) {
-                myRightStripe.markAsDirtyRecursive();
-            }
-            else {
-                LOG.error("unknown anchor: " + anchor);
-            }
         }
     }
 
@@ -225,8 +154,19 @@ public class WebToolWindowPanelImpl extends VaadinComponentDelegate<WebToolWindo
 
     private final UnifiedToolWindowSplitters mySplitters;
 
+    private final Project myProject;
+
+    private boolean myLeftHorizontalSplit;
+    private boolean myRightHorizontalSplit;
+
     @RequiredUIAccess
     public WebToolWindowPanelImpl(Project project) {
+        myProject = project;
+
+        ToolWindowSettings settings = getSettings();
+        myLeftHorizontalSplit = settings.isLeftHorizontalSplit();
+        myRightHorizontalSplit = settings.isRightHorizontalSplit();
+
         Vaadin vaadinComponent = getVaadinComponent();
 
         vaadinComponent.myTopDiv.add(TargetVaadin.to(myTopStripe));
@@ -250,6 +190,94 @@ public class WebToolWindowPanelImpl extends VaadinComponentDelegate<WebToolWindo
         // the bottom stripe is not part of the panel - the tool window manager hands it to the status bar,
         // where it shares one row with the widgets, like the awt frame does
 
+        updateStripes();
+
+        Application.get().getMessageBus().connect(project).subscribe(
+            UISettingsListener.class,
+            (UISettingsListener) this::uiSettingsChanged
+        );
+    }
+
+    private ToolWindowSettings getSettings() {
+        return ToolWindowSettings.getInstance(myProject);
+    }
+
+    private List<WebToolWindowStripeImpl> getStripes() {
+        return List.of(myTopStripe, myLeftStripe, myBottomStripe, myRightStripe);
+    }
+
+    private WebToolWindowStripeImpl getStripeFor(WindowInfo info) {
+        ToolWindowAnchor anchor = ToolWindowStripePlacement.getStripeAnchor(getSettings(), info);
+        if (ToolWindowAnchor.TOP == anchor) {
+            return myTopStripe;
+        }
+        if (ToolWindowAnchor.LEFT == anchor) {
+            return myLeftStripe;
+        }
+        if (ToolWindowAnchor.BOTTOM == anchor) {
+            return myBottomStripe;
+        }
+        return myRightStripe;
+    }
+
+    @RequiredUIAccess
+    private void uiSettingsChanged(UISettings uiSettings) {
+        if (myProject.isDisposed()) {
+            return;
+        }
+
+        updateStripes();
+        updateButtonsPlacement();
+        updateSplitOrientation();
+    }
+
+    @RequiredUIAccess
+    private void updateStripes() {
+        ToolWindowSettings settings = getSettings();
+
+        boolean visible = !settings.isHideToolStripes() && !UISettings.getInstance().getPresentationMode();
+        for (WebToolWindowStripeImpl stripe : getStripes()) {
+            stripe.setVisible(visible);
+        }
+
+        getVaadinComponent().setClassName(getClassNamePrefix() + "-large-icons", ToolWindowStripePlacement.isLargeIcons(settings));
+    }
+
+    @RequiredUIAccess
+    private void updateButtonsPlacement() {
+        ToolWindowSettings settings = getSettings();
+        for (WebToolWindowStripeButtonImpl button : myId2Button.values()) {
+            WebToolWindowStripeImpl target = getStripeFor(button.getWindowInfo());
+            if (target.contains(button)) {
+                continue;
+            }
+
+            for (WebToolWindowStripeImpl stripe : getStripes()) {
+                stripe.removeButton(button);
+            }
+            target.addButton(button, settings);
+        }
+
+        for (WebToolWindowStripeImpl stripe : getStripes()) {
+            stripe.relayout(settings);
+        }
+
+        for (WebToolWindowStripeButtonImpl button : myId2Button.values()) {
+            button.updatePresentation();
+        }
+    }
+
+    @RequiredUIAccess
+    private void updateSplitOrientation() {
+        ToolWindowSettings settings = getSettings();
+        if (myLeftHorizontalSplit != settings.isLeftHorizontalSplit()) {
+            myLeftHorizontalSplit = settings.isLeftHorizontalSplit();
+            updateAnchorComponent(ToolWindowAnchor.LEFT);
+        }
+        if (myRightHorizontalSplit != settings.isRightHorizontalSplit()) {
+            myRightHorizontalSplit = settings.isRightHorizontalSplit();
+            updateAnchorComponent(ToolWindowAnchor.RIGHT);
+        }
     }
 
     @RequiredUIAccess
@@ -355,7 +383,7 @@ public class WebToolWindowPanelImpl extends VaadinComponentDelegate<WebToolWindo
     public void addButton(ToolWindowStripeButton button, WindowInfo info, Comparator<ToolWindowStripeButton> comparator) {
         WindowInfoImpl copiedInfo = ((WindowInfoImpl) info).copy();
         myId2Button.put(copiedInfo.getId(), (WebToolWindowStripeButtonImpl) button);
-        new AddToolStripeButtonCmd(button, copiedInfo, comparator).run();
+        getStripeFor(copiedInfo).addButton(button, getSettings());
     }
 
     @Override
@@ -366,7 +394,7 @@ public class WebToolWindowPanelImpl extends VaadinComponentDelegate<WebToolWindo
             return;
         }
 
-        for (WebToolWindowStripeImpl stripe : List.of(myTopStripe, myLeftStripe, myBottomStripe, myRightStripe)) {
+        for (WebToolWindowStripeImpl stripe : getStripes()) {
             stripe.removeButton(button);
         }
     }
@@ -416,7 +444,13 @@ public class WebToolWindowPanelImpl extends VaadinComponentDelegate<WebToolWindo
     @Override
     @RequiredUIAccess
     public void updateButtonPosition(String id) {
-        new UpdateButtonPositionCmd(id).run();
+        WebToolWindowStripeButtonImpl stripeButton = getButtonById(id);
+        if (stripeButton == null) {
+            return;
+        }
+
+        getStripeFor(stripeButton.getWindowInfo()).relayout(getSettings());
+        stripeButton.updatePresentation();
     }
 
     @Override

@@ -87,4 +87,4 @@ toolwindow.settings.display.large.icon:
 toolwindow.settings.display.text:
     text: Text only
 toolwindow.settings.large.icon.note:
-    text: 'Large icons: bottom tool window buttons are shown on the left side, windows still open at the bottom'
+    text: 'Bottom tool window buttons move to the lower part of the side bars - the left bar, or the right bar for split windows. The windows still open at the bottom.'

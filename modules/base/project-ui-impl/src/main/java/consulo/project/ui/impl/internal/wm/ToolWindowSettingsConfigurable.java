@@ -24,20 +24,13 @@ import consulo.configurable.SimpleConfigurableByProperties;
 import consulo.configurable.StandardConfigurableIds;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
-import consulo.project.Project;
 import consulo.project.ui.localize.ProjectUILocalize;
-import consulo.project.ui.internal.ToolWindowLayout;
-import consulo.project.ui.internal.ToolWindowManagerEx;
-import consulo.project.ui.internal.WindowManagerEx;
-import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.ex.toolWindow.ButtonDisplay;
-import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowSettings;
-import consulo.ui.AdvancedLabel;
 import consulo.ui.CheckBox;
 import consulo.ui.Component;
-import consulo.ui.RadioButton;
-import consulo.ui.TextAttribute;
+import consulo.ui.Toast;
+import consulo.ui.ToastStyle;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.LabeledLayout;
 import consulo.ui.layout.VerticalLayout;
@@ -45,21 +38,16 @@ import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import org.jspecify.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * @author VISTALL
  * @since 2026-08-28
  */
 @ExtensionImpl
 public class ToolWindowSettingsConfigurable extends SimpleConfigurableByProperties implements ProjectConfigurable {
-    private final Project myProject;
     private final Provider<ToolWindowSettings> mySettings;
 
     @Inject
-    public ToolWindowSettingsConfigurable(Project project, Provider<ToolWindowSettings> settings) {
-        myProject = project;
+    public ToolWindowSettingsConfigurable(Provider<ToolWindowSettings> settings) {
         mySettings = settings;
     }
 
@@ -104,12 +92,15 @@ public class ToolWindowSettingsConfigurable extends SimpleConfigurableByProperti
         displayLayout.add(displayGroup.newButton(ProjectUILocalize.toolwindowSettingsDisplayIconAndText(), ButtonDisplay.ICON_AND_TEXT));
         displayLayout.add(displayGroup.newButton(ProjectUILocalize.toolwindowSettingsDisplayIcon(), ButtonDisplay.ICON));
         displayLayout.add(displayGroup.newButton(ProjectUILocalize.toolwindowSettingsDisplayLargeIcon(), ButtonDisplay.LARGE_ICON));
-        AdvancedLabel largeIconNote = AdvancedLabel.create();
-        largeIconNote.updatePresentation(presentation -> presentation.append(
-            ProjectUILocalize.toolwindowSettingsLargeIconNote(),
-            TextAttribute.GRAYED
-        ));
-        displayLayout.add(largeIconNote);
+
+        Toast largeIconToast = Toast.create();
+        largeIconToast.addStyle(ToastStyle.INFO);
+        largeIconToast.addStyle(ToastStyle.LEFT_LINE);
+        largeIconToast.setText(ProjectUILocalize.toolwindowSettingsLargeIconNote());
+        largeIconToast.setVisible(false);
+        displayLayout.add(largeIconToast);
+        displayGroup.addValueListener(display -> largeIconToast.setVisible(display == ButtonDisplay.LARGE_ICON));
+
         displayLayout.add(displayGroup.newButton(ProjectUILocalize.toolwindowSettingsDisplayText(), ButtonDisplay.TEXT));
         root.add(LabeledLayout.create(ProjectUILocalize.toolwindowSettingsButtonsGroup(), displayLayout));
 
@@ -121,39 +112,9 @@ public class ToolWindowSettingsConfigurable extends SimpleConfigurableByProperti
     @Override
     @RequiredUIAccess
     protected void apply(LayoutWrapper component) throws ConfigurationException {
-        ToolWindowSettings settings = mySettings.get();
-        ButtonDisplay oldDisplay = settings.getButtonDisplay();
-
         super.apply(component);
 
-        ButtonDisplay newDisplay = settings.getButtonDisplay();
-        if (oldDisplay != newDisplay && (oldDisplay == ButtonDisplay.LARGE_ICON || newDisplay == ButtonDisplay.LARGE_ICON)) {
-            ToolWindowManager manager = ToolWindowManager.getInstance(myProject);
-            List<String> visibleIds = new ArrayList<>();
-            for (String id : manager.getToolWindowIds()) {
-                ToolWindow toolWindow = manager.getToolWindow(id);
-                if (toolWindow != null && toolWindow.isVisible()) {
-                    visibleIds.add(id);
-                }
-            }
-
-            resetLayout();
-
-            for (String id : visibleIds) {
-                ToolWindow toolWindow = manager.getToolWindow(id);
-                if (toolWindow != null) {
-                    toolWindow.show(null);
-                }
-            }
-        }
-
         UISettings.getInstance().fireUISettingsChanged();
-    }
-
-    @RequiredUIAccess
-    private void resetLayout() {
-        ToolWindowLayout layout = WindowManagerEx.getInstanceEx().getLayout();
-        ToolWindowManagerEx.getInstanceEx(myProject).setLayout(layout);
     }
 
     @Override
