@@ -73,7 +73,6 @@ import java.util.function.Supplier;
 @State(name = "CertificateManagerImpl", storages = @Storage("other"))
 @ServiceImpl
 public class HttpCertificateManagerImpl implements HttpCertificateManager, PersistentStateComponent<HttpCertificateManagerState> {
-    private static final String DEFAULT_PATH = FileUtil.join(ContainerPathManager.get().getSystemPath(), "tasks", "cacerts");
     private static final String DEFAULT_PASSWORD = "changeit";
 
     private static final Logger LOG = Logger.getInstance(HttpCertificateManagerImpl.class);
@@ -105,7 +104,7 @@ public class HttpCertificateManagerImpl implements HttpCertificateManager, Persi
      * Component initialization constructor
      */
     public HttpCertificateManagerImpl() {
-        myCacertsPath = DEFAULT_PATH;
+        myCacertsPath = FileUtil.join(ContainerPathManager.get().getSystemPath(), "tasks", "cacerts");
         myPassword = DEFAULT_PASSWORD;
         myTrustManager = HttpConfirmingTrustManagerImplHttp.createForStorage(myCacertsPath, myPassword);
         initComponent();
