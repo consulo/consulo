@@ -165,13 +165,6 @@ body
   border: none;
 }
 
-/* islands are separated by their gap, the one pixel divider between them is not painted */
-vaadin-split-layout:has(> .consulo-island)::part(splitter),
-vaadin-split-layout:has(> * > .consulo-island)::part(splitter)
-{
-  background-image: none;
-}
-
 /* the desktop ide draws a one pixel divider, vaadin ships a fat draggable one by default.
    the part stays 5px so it can still be grabbed - like the awt divider mouse zone - but only the
    middle pixel is painted, and it lies over its neighbours so the layout gives it that one pixel only */
@@ -199,6 +192,13 @@ vaadin-split-layout[orientation="vertical"]::part(splitter)
     var(--consulo-component-border-color, lightgray) 2px,
     var(--consulo-component-border-color, lightgray) 3px,
     transparent 3px);
+}
+
+/* islands are separated by their gap, the one pixel divider between them is not painted */
+vaadin-split-layout:has(> .consulo-island)::part(splitter),
+vaadin-split-layout:has(> * > .consulo-island)::part(splitter)
+{
+  background-image: none;
 }
 
 vaadin-split-layout::part(handle)
