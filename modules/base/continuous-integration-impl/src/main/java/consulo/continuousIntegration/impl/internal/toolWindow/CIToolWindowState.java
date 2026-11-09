@@ -18,8 +18,8 @@ package consulo.continuousIntegration.impl.internal.toolWindow;
 import consulo.continuousIntegration.CIManager;
 import consulo.continuousIntegration.CIServer;
 import consulo.continuousIntegration.CIServerType;
+import consulo.continuousIntegration.impl.icon.ContinuousIntegrationImplIconGroup;
 import consulo.continuousIntegration.impl.localize.ContinuousIntegrationImplLocalize;
-import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -29,12 +29,17 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
- * Title and icon of the tool window: with a single provider (Jenkins only) the tool window takes its name and icon.
+ * Title, icon and visibility of the tool window: hidden without servers, and with a single provider (Jenkins only)
+ * the tool window takes its name and icon.
  *
  * @since 2026-11-09
  */
 public final class CIToolWindowState {
     private CIToolWindowState() {
+    }
+
+    public static boolean isAvailable(Project project) {
+        return !CIManager.getInstance(project).getServers().isEmpty();
     }
 
     @RequiredUIAccess
@@ -48,9 +53,7 @@ public final class CIToolWindowState {
         for (CIServer server : CIManager.getInstance(project).getServers()) {
             types.add(server.getType());
         }
-        if (types.isEmpty()) {
-            project.getApplication().getExtensionPoint(CIServerType.class).forEach(types::add);
-        }
+        toolWindow.setAvailable(!types.isEmpty());
 
         if (types.size() == 1) {
             CIServerType<?> type = types.iterator().next();
@@ -58,7 +61,7 @@ public final class CIToolWindowState {
             toolWindow.setDisplayName(type.getPresentableName());
         }
         else {
-            toolWindow.setIcon(PlatformIconGroup.webreferencesServer());
+            toolWindow.setIcon(ContinuousIntegrationImplIconGroup.toolwindowci());
             toolWindow.setDisplayName(ContinuousIntegrationImplLocalize.toolwindowTitle());
         }
     }

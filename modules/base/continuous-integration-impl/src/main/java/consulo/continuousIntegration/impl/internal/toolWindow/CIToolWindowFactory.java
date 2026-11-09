@@ -19,10 +19,10 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.continuousIntegration.CIBuildMonitor;
 import consulo.continuousIntegration.CIManager;
+import consulo.continuousIntegration.impl.icon.ContinuousIntegrationImplIconGroup;
 import consulo.continuousIntegration.impl.internal.monitor.CIBuildMonitorImpl;
 import consulo.continuousIntegration.impl.localize.ContinuousIntegrationImplLocalize;
 import consulo.localize.LocalizeValue;
-import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowFactory;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -58,13 +58,18 @@ public class CIToolWindowFactory implements ToolWindowFactory, DumbAware {
     }
 
     @Override
+    public boolean shouldBeAvailable(Project project) {
+        return CIToolWindowState.isAvailable(project);
+    }
+
+    @Override
     public ToolWindowAnchor getAnchor() {
         return ToolWindowAnchor.RIGHT;
     }
 
     @Override
     public Image getIcon() {
-        return PlatformIconGroup.webreferencesServer();
+        return ContinuousIntegrationImplIconGroup.toolwindowci();
     }
 
     @Override
