@@ -331,7 +331,7 @@ task.save.context.action.message:
 task.save.context.action.name:
     text: Save Context
 toolwindow.issues.title:
-    text: '{0} Issues'
+    text: Issues
 toolwindow.local.tasks:
     text: Local Tasks
 toolwindow.local.tasks.action.auto.mode:
@@ -352,8 +352,6 @@ toolwindow.local.tasks.column.task:
     text: Task
 toolwindow.local.tasks.column.time:
     text: Time Spent
-toolwindow.tasks.title:
-    text: Tasks
 vcs.task.branch.empty:
     text: Branch name should not be empty
 vcs.task.branch.invalid:

@@ -43,6 +43,14 @@ public abstract class TaskRepositoryType<O extends TaskRepositoryOptions> {
 
     public abstract Image getIcon();
 
+    /**
+     * Icon of the tool window when trackers of this type are the only ones: monochrome and outlined like other tool
+     * window icons.
+     */
+    public Image getToolWindowIcon() {
+        return getIcon();
+    }
+
     public @Nullable String getAdvertiser() {
         return null;
     }

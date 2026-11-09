@@ -60,7 +60,7 @@ public class TasksToolWindowFactory implements ToolWindowFactory, DumbAware {
     
     @Override
     public LocalizeValue getDisplayName() {
-        return TaskLocalize.toolwindowTasksTitle();
+        return TaskLocalize.toolwindowIssuesTitle();
     }
 
     @Override

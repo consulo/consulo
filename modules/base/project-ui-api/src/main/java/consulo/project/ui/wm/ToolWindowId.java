@@ -35,7 +35,7 @@ public interface ToolWindowId {
   String MODULES_DEPENDENCIES = "Module Dependencies";
   String DUPLICATES = "Duplicates";
   String DOCUMENTATION = "Documentation";
-  String TASKS = "Time Tracking";
+  String TASKS = "Issues";
   @Deprecated
   String PREVIEW = "Preview";
   String SERVICES = "Services";

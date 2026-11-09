@@ -23,7 +23,6 @@ import consulo.task.TaskRepository;
 import consulo.task.TaskRepositoryType;
 import consulo.task.icon.TaskIconGroup;
 import consulo.task.impl.internal.timeTracking.TimeTrackingManager;
-import consulo.task.localize.TaskLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.toolWindow.ToolWindow;
 
@@ -55,15 +54,7 @@ public final class TasksToolWindowState {
             types.add(repository.getRepositoryType());
         }
 
-        if (types.size() == 1) {
-            TaskRepositoryType<?> type = types.iterator().next();
-            toolWindow.setIcon(type.getIcon());
-            toolWindow.setDisplayName(TaskLocalize.toolwindowIssuesTitle(type.getPresentableName().get()));
-        }
-        else {
-            toolWindow.setIcon(TaskIconGroup.clock());
-            toolWindow.setDisplayName(TaskLocalize.toolwindowTasksTitle());
-        }
+        toolWindow.setIcon(types.size() == 1 ? types.iterator().next().getToolWindowIcon() : TaskIconGroup.clock());
         toolWindow.setAvailable(isAvailable(project));
     }
 }
