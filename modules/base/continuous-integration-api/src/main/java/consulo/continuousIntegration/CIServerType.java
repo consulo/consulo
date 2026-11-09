@@ -42,6 +42,13 @@ public abstract class CIServerType<O extends CIServerOptions> {
 
     public abstract Image getIcon();
 
+    /**
+     * Icon of the tool window when this is the only provider: monochrome and outlined like other tool window icons.
+     */
+    public Image getToolWindowIcon() {
+        return getIcon();
+    }
+
     public abstract String getAccountTypeId();
 
     public abstract O createOptions();

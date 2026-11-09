@@ -57,7 +57,7 @@ public final class CIToolWindowState {
 
         if (types.size() == 1) {
             CIServerType<?> type = types.iterator().next();
-            toolWindow.setIcon(type.getIcon());
+            toolWindow.setIcon(type.getToolWindowIcon());
             toolWindow.setDisplayName(type.getPresentableName());
         }
         else {
