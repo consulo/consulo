@@ -28,6 +28,7 @@ module consulo.configurable.api {
         consulo.language.code.style.ui.api,
         consulo.ide.api,
         consulo.task.impl,
+        consulo.continuous.integration.impl,
         consulo.desktop.awt.editor.impl,
         consulo.desktop.awt.ide.impl,
         consulo.desktop.awt.ui.impl,

@@ -1,0 +1,118 @@
+toolwindow.title:
+    text: CI
+toolwindow.empty.text:
+    text: No CI servers are configured
+toolwindow.empty.hint:
+    text: Servers are detected from your accounts or can be added in the settings
+toolwindow.empty.configure:
+    text: Configure CI Servers…
+tree.loading:
+    text: Loading…
+tree.no.jobs:
+    text: No jobs
+tree.no.builds:
+    text: No builds
+tree.error:
+    text: 'Failed to load: {0}'
+tree.job.disabled:
+    text: disabled
+tree.job.queued:
+    text: in queue
+tree.job.last.build:
+    text: '{0}, {1}'
+tree.build.started:
+    text: '{0}, started {1}'
+tree.build.finished:
+    text: '{0}, {1}'
+tree.build.finished.duration:
+    text: '{0}, {1}, took {2}'
+tree.build.branch:
+    text: '({0})'
+action.refresh.text:
+    text: Refresh
+action.refresh.description:
+    text: Reload servers, jobs and builds
+action.run.text:
+    text: Run Build
+action.run.description:
+    text: Start the selected job
+action.stop.text:
+    text: Stop Build
+action.stop.description:
+    text: Stop the selected running build
+action.show.log.text:
+    text: Show Log
+action.show.log.description:
+    text: Show the log of the selected build in the Run tool window
+action.open.in.browser.text:
+    text: Open in Browser
+action.open.in.browser.description:
+    text: Open the selected server, job or build in a web browser
+action.settings.text:
+    text: Configure CI Servers…
+action.settings.description:
+    text: Add, remove and edit CI servers
+run.dialog.title:
+    text: Run {0}
+run.dialog.ref:
+    text: 'Branch or tag:'
+run.dialog.ref.placeholder:
+    text: default branch
+run.dialog.required:
+    text: Parameter ''{0}'' is required
+run.load.parameters.failed:
+    text: 'Cannot load the parameters of {0}: {1}'
+stop.failed:
+    text: 'Cannot stop {0}: {1}'
+monitor.title:
+    text: '{0} {1}'
+monitor.starting:
+    text: Starting {0}…
+monitor.following:
+    text: Following {0} {1}
+monitor.build.page:
+    text: 'Build page: {0}'
+monitor.status:
+    text: '{0} {1}: {2}'
+monitor.start.failed:
+    text: 'Cannot start the build: {0}'
+monitor.poll.failed:
+    text: 'Cannot load the state of the build: {0}'
+monitor.poll.gave.up:
+    text: Stopped following the build after repeated errors
+monitor.log.failed:
+    text: 'Cannot load the log: {0}'
+monitor.stopping:
+    text: Stopping {0}…
+monitor.stop.pending:
+    text: The build will be stopped as soon as the server reports it
+monitor.stop.unsupported:
+    text: The server cannot stop builds, it keeps running
+monitor.stop.failed:
+    text: 'Cannot stop the build: {0}'
+monitor.stop.requested:
+    text: Stop requested
+monitor.finished:
+    text: '{0} {1} finished: {2}'
+notification.group:
+    text: CI builds
+notification.build.finished.title:
+    text: '{0} {1}'
+notification.build.finished.content:
+    text: 'Build finished: {0}'
+notification.action.show.log:
+    text: Show Log
+notification.action.open.in.browser:
+    text: Open in Browser
+configurable.servers:
+    text: CI Servers
+servers.empty.selection:
+    text: Select a server to edit it
+servers.action.add:
+    text: Add Server
+servers.action.remove:
+    text: Remove Server
+servers.detected:
+    text: (detected)
+servers.not.logged.in:
+    text: (not logged in to {0})

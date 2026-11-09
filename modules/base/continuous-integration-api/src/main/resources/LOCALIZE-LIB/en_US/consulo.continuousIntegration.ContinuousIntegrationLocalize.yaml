@@ -1,0 +1,26 @@
+status.success:
+    text: Success
+status.unstable:
+    text: Unstable
+status.failure:
+    text: Failed
+status.aborted:
+    text: Aborted
+status.not.built:
+    text: Not built
+status.running:
+    text: Running
+status.queued:
+    text: Queued
+status.unknown:
+    text: Unknown
+server.label.account:
+    text: 'Account:'
+server.missing.account.type:
+    text: Account type ''{0}'' is not available
+server.button.test:
+    text: Test Connection
+server.test.successful:
+    text: Connection successful
+server.test.failed:
+    text: 'Connection failed: {0}'
