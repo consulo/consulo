@@ -31,6 +31,7 @@ import org.jspecify.annotations.Nullable;
  */
 public class UnifiedToolWindowImpl extends ToolWindowBase {
     private Component myComponent;
+    private UnifiedToolWindowContentUI myContentUI;
 
     @RequiredUIAccess
     public UnifiedToolWindowImpl(ToolWindowManagerBase toolWindowManager, String id, LocalizeValue displayName, boolean canCloseContent, @Nullable Object component, boolean available) {
@@ -46,7 +47,8 @@ public class UnifiedToolWindowImpl extends ToolWindowBase {
     @Override
     protected void init(boolean canCloseContent, @Nullable Object component) {
         ContentFactory contentFactory = ContentFactory.getInstance();
-        ContentManager contentManager = myContentManager = contentFactory.createContentManager(new UnifiedToolWindowContentUI(this), canCloseContent, myToolWindowManager.getProject());
+        myContentUI = new UnifiedToolWindowContentUI(this);
+        ContentManager contentManager = myContentManager = contentFactory.createContentManager(myContentUI, canCloseContent, myToolWindowManager.getProject());
 
         if (component != null) {
             Content content = contentFactory.createUIContent((Component) component, "", false);
@@ -58,6 +60,10 @@ public class UnifiedToolWindowImpl extends ToolWindowBase {
     }
 
     
+    public UnifiedToolWindowContentUI getContentUI() {
+        return myContentUI;
+    }
+
     @Override
     public Component getUIComponent() {
         return myComponent;

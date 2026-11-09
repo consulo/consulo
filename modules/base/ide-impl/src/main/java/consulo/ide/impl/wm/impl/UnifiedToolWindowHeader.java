@@ -20,6 +20,9 @@ import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.ui.impl.internal.wm.ToolWindowBase;
+import consulo.project.ui.impl.internal.wm.UnifiedToolWindowContentUI;
+import consulo.project.ui.impl.internal.wm.UnifiedToolWindowImpl;
+import consulo.project.ui.impl.internal.wm.action.CloseContentTabAction;
 import consulo.project.ui.impl.internal.wm.action.TabbedContentAction;
 import consulo.project.ui.internal.ToolWindowContentUI;
 import consulo.ui.*;
@@ -40,14 +43,22 @@ import consulo.ui.ex.toolWindow.ToolWindowContentUiType;
 import consulo.ui.ex.toolWindow.ToolWindowInternalDecorator;
 import consulo.ui.ex.toolWindow.WindowInfo;
 import consulo.ui.ex.toolWindow.action.ToolWindowActions;
-import consulo.ui.style.ComponentColors;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.HorizontalLayout;
+import consulo.ui.layout.TabbedLayout;
+import consulo.ui.layout.TabbedLayoutStyle;
+import consulo.ui.impl.style.IslandsState;
+import consulo.ui.style.ComponentColors;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.JComponent;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
 /**
@@ -73,6 +84,12 @@ public class UnifiedToolWindowHeader implements Disposable {
     private final HorizontalLayout myTabsLayout = HorizontalLayout.create(Space.X_SMALL);
     private final Label myTitleLabel;
 
+    private final TabbedLayout myTabbedLayout = TabbedLayout.create();
+    private final Label myTabbedTitleLabel;
+    private final Map<Content, Tab> myTabs = new LinkedHashMap<>();
+    private boolean myTabbed;
+    private boolean myUpdatingTabs;
+
     private final DefaultActionGroup myTitleActions = new DefaultActionGroup();
     private final DefaultActionGroup myTabActions = new DefaultActionGroup();
 
@@ -80,12 +97,22 @@ public class UnifiedToolWindowHeader implements Disposable {
 
     private @Nullable ToolWindowContentUiType myRenderedContentUiType;
 
+    private final Map<Content, ActionToolbar> myCloseToolbars = new HashMap<>();
+
     private final PropertyChangeListener myContentPropertyListener = event -> {
         String propertyName = event.getPropertyName();
-        if (Content.PROP_ICON.equals(propertyName) || Content.PROP_DISPLAY_NAME.equals(propertyName)) {
+        if (Content.PROP_ICON.equals(propertyName)
+            || Content.PROP_DISPLAY_NAME.equals(propertyName)
+            || Content.IS_CLOSABLE.equals(propertyName)) {
             UIAccess uiAccess = myLayout.getUIAccess();
             if (uiAccess != null) {
                 uiAccess.giveIfNeed(this::rebuildTabs);
+            }
+        }
+        else if (Content.PROP_PINNED.equals(propertyName) && event.getSource() instanceof Content content) {
+            UIAccess uiAccess = myLayout.getUIAccess();
+            if (uiAccess != null) {
+                uiAccess.giveIfNeed(() -> updateCloseToolbar(content));
             }
         }
     };
@@ -93,10 +120,9 @@ public class UnifiedToolWindowHeader implements Disposable {
     private final PropertyChangeListener myToolWindowPropertyListener = this::toolWindowPropertyChanged;
 
     private final UnifiedActionRow myTabActionRow = createActionRow(() -> myTabActions, this::createTabDataContext);
-    private final UnifiedActionRow myTitleActionRow = createActionRow(
-        () -> ActionGroup.newImmutableBuilder().addAll(myTitleActions, new GearActionGroup(), new HideAction()).build(),
-        this::createTitleDataContext
-    );
+    private final UnifiedActionRow myTitleActionRow = createTitleActionRow();
+    private final UnifiedActionRow myTabbedTabActionRow = createActionRow(() -> myTabActions, this::createTabDataContext);
+    private final UnifiedActionRow myTabbedTitleActionRow = createTitleActionRow();
 
     @RequiredUIAccess
     public UnifiedToolWindowHeader(
@@ -125,6 +151,21 @@ public class UnifiedToolWindowHeader implements Disposable {
 
         myLayout.left(myWestLayout);
         myLayout.right(myTitleActionRow.getComponent());
+
+        myTabbedTitleLabel = Label.create(toolWindow.getDisplayName());
+        myTabbedTitleLabel.paddingBuilder().leftSet(Space.MEDIUM).rightSet(Space.SMALL).apply();
+
+        DockLayout tabbedSuffix = DockLayout.create(Space.NONE);
+        tabbedSuffix.left(myTabbedTabActionRow.getComponent());
+        tabbedSuffix.right(myTabbedTitleActionRow.getComponent());
+
+        myTabbedLayout.addStyle(TabbedLayoutStyle.NO_PADDING);
+        if (IslandsState.isEnabled()) {
+            myTabbedLayout.setBackgroundColor(ComponentColors.TOOL_WINDOW_BACKGROUND);
+        }
+        myTabbedLayout.setPrefixComponent(myTabbedTitleLabel);
+        myTabbedLayout.setSuffixComponent(tabbedSuffix);
+        myTabbedLayout.addSelectListener(event -> tabSelected(event.getTab()));
 
         if (contentManager != null) {
             contentManager.addContentManagerListener(new ContentManagerListener() {
@@ -179,13 +220,13 @@ public class UnifiedToolWindowHeader implements Disposable {
         }
 
         if (UIAccess.isUIThread()) {
-            myTitleLabel.setText(myToolWindow.getDisplayName());
+            updateTitle();
             return;
         }
 
         UIAccess uiAccess = myLayout.getUIAccess();
         if (uiAccess != null) {
-            uiAccess.give(() -> myTitleLabel.setText(myToolWindow.getDisplayName()));
+            uiAccess.give(this::updateTitle);
         }
     }
 
@@ -195,6 +236,7 @@ public class UnifiedToolWindowHeader implements Disposable {
         myTitleActions.addAll(actions);
 
         myTitleActionRow.updateAsync();
+        myTabbedTitleActionRow.updateAsync();
     }
 
     @RequiredUIAccess
@@ -203,12 +245,24 @@ public class UnifiedToolWindowHeader implements Disposable {
         myTabActions.addAll(actions);
 
         myTabActionRow.updateAsync();
+        myTabbedTabActionRow.updateAsync();
     }
 
     @RequiredUIAccess
     public void updateActionsAsync() {
         myTabActionRow.updateAsync();
         myTitleActionRow.updateAsync();
+        myTabbedTabActionRow.updateAsync();
+        myTabbedTitleActionRow.updateAsync();
+    }
+
+    @RequiredUIAccess
+    private void updateTitle() {
+        boolean visible = !Boolean.TRUE.equals(myToolWindow.getUserData(ToolWindow.HIDE_ID_LABEL));
+        for (Label label : List.of(myTitleLabel, myTabbedTitleLabel)) {
+            label.setText(myToolWindow.getDisplayName());
+            label.setVisible(visible);
+        }
     }
 
     @RequiredUIAccess
@@ -217,26 +271,163 @@ public class UnifiedToolWindowHeader implements Disposable {
 
         myRenderedContentUiType = getContentUiType();
 
-        myTitleLabel.setText(myToolWindow.getDisplayName());
-        myTitleLabel.setVisible(!Boolean.TRUE.equals(myToolWindow.getUserData(ToolWindow.HIDE_ID_LABEL)));
+        updateTitle();
 
         ContentManager contentManager = myToolWindow.getContentManagerIfCreated();
-        if (contentManager == null || !hasTabsToShow(contentManager)) {
+        boolean tabsToShow = contentManager != null && hasTabsToShow(contentManager);
+
+        if (tabsToShow && myRenderedContentUiType != ToolWindowContentUiType.COMBO) {
+            enterTabbed();
+            syncTabs(contentManager);
             return;
         }
 
-        Content selected = contentManager.getSelectedContent();
+        leaveTabbed();
 
-        if (myRenderedContentUiType == ToolWindowContentUiType.COMBO) {
-            if (selected != null) {
-                myTabsLayout.add(createCombo(contentManager, selected));
+        Content selected = contentManager == null ? null : contentManager.getSelectedContent();
+        if (tabsToShow && selected != null) {
+            myTabsLayout.add(createCombo(contentManager, selected));
+        }
+    }
+
+    @RequiredUIAccess
+    private void enterTabbed() {
+        if (myTabbed) {
+            return;
+        }
+
+        UnifiedToolWindowContentUI contentUI = getContentUI();
+        if (contentUI == null) {
+            return;
+        }
+
+        myTabbed = true;
+        myLayout.setVisible(false);
+        contentUI.setTabbedLayout(myTabbedLayout);
+    }
+
+    @RequiredUIAccess
+    private void leaveTabbed() {
+        if (!myTabbed) {
+            return;
+        }
+
+        myTabbed = false;
+
+        myUpdatingTabs = true;
+        try {
+            for (Tab tab : myTabs.values()) {
+                myTabbedLayout.removeTab(tab);
             }
+        }
+        finally {
+            myUpdatingTabs = false;
+        }
+        myTabs.clear();
+        myCloseToolbars.clear();
+
+        UnifiedToolWindowContentUI contentUI = getContentUI();
+        if (contentUI != null) {
+            contentUI.setTabbedLayout(null);
+        }
+        myLayout.setVisible(true);
+    }
+
+    @RequiredUIAccess
+    private void syncTabs(ContentManager contentManager) {
+        myUpdatingTabs = true;
+        try {
+            for (Iterator<Map.Entry<Content, Tab>> iterator = myTabs.entrySet().iterator(); iterator.hasNext(); ) {
+                Map.Entry<Content, Tab> entry = iterator.next();
+                if (contentManager.getIndexOfContent(entry.getKey()) < 0) {
+                    myTabbedLayout.removeTab(entry.getValue());
+                    myCloseToolbars.remove(entry.getKey());
+                    iterator.remove();
+                }
+            }
+
+            Content[] contents = contentManager.getContents();
+            for (int i = 0; i < contents.length; i++) {
+                Content content = contents[i];
+                Tab tab = myTabs.get(content);
+                if (tab == null) {
+                    tab = createTab(content);
+                    myTabs.put(content, tab);
+                    myTabbedLayout.addTab(tab, content.getUIComponent(), i);
+                }
+
+                updateCloseToolbar(contentManager, content, tab);
+                tab.update();
+            }
+
+            Content selected = contentManager.getSelectedContent();
+            Tab selectedTab = selected == null ? null : myTabs.get(selected);
+            if (selectedTab != null && myTabbedLayout.getSelectedTab() != selectedTab) {
+                selectedTab.select();
+            }
+        }
+        finally {
+            myUpdatingTabs = false;
+        }
+    }
+
+    private Tab createTab(Content content) {
+        Tab tab = myTabbedLayout.createTab();
+        tab.setRenderer((t, presentation) -> {
+            if (Boolean.TRUE.equals(content.getUserData(ToolWindow.SHOW_CONTENT_ICON))) {
+                presentation.withIcon(content.getIcon());
+            }
+            presentation.append(content.getTabName());
+        });
+        return tab;
+    }
+
+    @RequiredUIAccess
+    private void updateCloseToolbar(ContentManager contentManager, Content content, Tab tab) {
+        boolean closeable = isCloseable(contentManager, content);
+        ActionToolbar toolbar = myCloseToolbars.get(content);
+        if (closeable && toolbar == null) {
+            toolbar = ActionToolbarFactory.getInstance().createActionToolbar(
+                ActionPlaces.TOOLWINDOW_TITLE,
+                ActionGroup.newImmutableBuilder().add(new CloseContentTabAction(contentManager, content)).build(),
+                ActionToolbar.Style.INPLACE
+            );
+            toolbar.setTargetUIComponent(content.getUIComponent());
+            toolbar.updateActionsAsync();
+            myCloseToolbars.put(content, toolbar);
+            tab.setSuffixComponent(toolbar.getUIComponent());
+        }
+        else if (!closeable && toolbar != null) {
+            myCloseToolbars.remove(content);
+            tab.setSuffixComponent(null);
+        }
+    }
+
+    @RequiredUIAccess
+    private void tabSelected(Tab tab) {
+        if (myUpdatingTabs) {
             return;
         }
 
-        for (Content content : contentManager.getContents()) {
-            myTabsLayout.add(createTab(contentManager, content, content == selected));
+        ContentManager contentManager = myToolWindow.getContentManagerIfCreated();
+        if (contentManager == null) {
+            return;
         }
+
+        for (Map.Entry<Content, Tab> entry : myTabs.entrySet()) {
+            if (entry.getValue() == tab) {
+                if (entry.getKey() != contentManager.getSelectedContent()) {
+                    contentManager.setSelectedContent(entry.getKey(), true);
+
+                    myToolWindow.fireActivated();
+                }
+                return;
+            }
+        }
+    }
+
+    private @Nullable UnifiedToolWindowContentUI getContentUI() {
+        return myToolWindow instanceof UnifiedToolWindowImpl toolWindow ? toolWindow.getContentUI() : null;
     }
 
     @RequiredUIAccess
@@ -300,40 +491,18 @@ public class UnifiedToolWindowHeader implements Disposable {
     }
 
     @RequiredUIAccess
-    private Component createTab(ContentManager contentManager, Content content, boolean selected) {
-        Button tab = Button.create(LocalizeValue.of(content.getTabName()));
-        // the icon of a content is shown only where it was asked for, the way the toolkit bound tabs do it
-        tab.setIcon(Boolean.TRUE.equals(content.getUserData(ToolWindow.SHOW_CONTENT_ICON)) ? content.getIcon() : null);
-        // never the primary style - that paints the accent color of the toolkit, which is not a color of the theme.
-        // the borderless text follows the theme already, the foreground of a component is not settable on every
-        // frontend
-        tab.addStyle(ButtonStyle.BORDERLESS);
-        tab.addClickListener(event -> {
-            contentManager.setSelectedContent(content, true);
-
-            myToolWindow.fireActivated();
-        });
-
-        // the label and the cross are one tab, so what marks the selection has to cover both of them rather
-        // than the label alone
-        HorizontalLayout tabLayout = HorizontalLayout.create(Space.NONE);
-        tabLayout.add(tab);
-
-        if (isCloseable(contentManager, content)) {
-            Button close = Button.create(LocalizeValue.of(""));
-            close.setIcon(PlatformIconGroup.actionsClose());
-            // the inplace style is a lumo variant, and a theme which is not lumo leaves it looking like a button
-            close.addStyle(ButtonStyle.BORDERLESS);
-            close.addClickListener(event -> contentManager.removeContent(content, true));
-
-            tabLayout.add(close);
+    private void updateCloseToolbar(Content content) {
+        ActionToolbar toolbar = myCloseToolbars.get(content);
+        if (toolbar != null) {
+            toolbar.updateActionsAsync();
         }
+    }
 
-        if (selected) {
-            tabLayout.setBackgroundColor(ComponentColors.TABBED_LAYOUT_SELECTED_BACKGROUND);
-        }
-
-        return tabLayout;
+    private UnifiedActionRow createTitleActionRow() {
+        return createActionRow(
+            () -> ActionGroup.newImmutableBuilder().addAll(myTitleActions, new GearActionGroup(), new HideAction()).build(),
+            this::createTitleDataContext
+        );
     }
 
     private UnifiedActionRow createActionRow(Supplier<ActionGroup> groupProducer, Supplier<DataContext> contextProducer) {
@@ -360,6 +529,8 @@ public class UnifiedToolWindowHeader implements Disposable {
         myToolWindow.removePropertyChangeListener(myToolWindowPropertyListener);
         myTabActionRow.cancel();
         myTitleActionRow.cancel();
+        myTabbedTabActionRow.cancel();
+        myTabbedTitleActionRow.cancel();
     }
 
     /**

@@ -38,6 +38,7 @@ import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowContentUiType;
 import consulo.ui.ex.toolWindow.action.ToolWindowActions;
 import consulo.ui.layout.DockLayout;
+import consulo.ui.layout.TabbedLayout;
 import consulo.util.lang.Pair;
 import consulo.util.lang.ref.Ref;
 import org.jspecify.annotations.Nullable;
@@ -70,6 +71,8 @@ public class UnifiedToolWindowContentUI implements ToolWindowContentUI, Property
     private UnifiedContentLayout myComboLayout = new UnifiedComboContentLayout(this);
 
     private ToolWindowContentUiType myType = ToolWindowContentUiType.TABBED;
+
+    private @Nullable TabbedLayout myTabbedLayout;
     private boolean myShouldNotShowPopup;
 
     public UnifiedToolWindowContentUI(ToolWindowBase window) {
@@ -167,7 +170,28 @@ public class UnifiedToolWindowContentUI implements ToolWindowContentUI, Property
     }
 
     @RequiredUIAccess
+    public void setTabbedLayout(@Nullable TabbedLayout tabbedLayout) {
+        if (myTabbedLayout == tabbedLayout) {
+            return;
+        }
+
+        myTabbedLayout = tabbedLayout;
+        myContent.removeAll();
+
+        if (tabbedLayout != null) {
+            myContent.center(tabbedLayout);
+        }
+        else {
+            ensureSelectedContentVisible();
+        }
+    }
+
+    @RequiredUIAccess
     private void ensureSelectedContentVisible() {
+        if (myTabbedLayout != null) {
+            return;
+        }
+
         Content selected = myManager.getSelectedContent();
         if (selected == null) {
             myContent.removeAll();

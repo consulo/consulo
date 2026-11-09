@@ -28,6 +28,7 @@ import consulo.ui.StaticPosition;
 import consulo.ui.Tab;
 import consulo.ui.TransferHandler;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.color.ColorValue;
 import consulo.ui.event.TabSelectEvent;
 import consulo.ui.internal.TabSelectionUtil;
 import consulo.ui.layout.TabbedLayout;
@@ -48,6 +49,8 @@ import java.util.function.BiConsumer;
  * @since 2019-02-19
  */
 public class WebTabbedLayoutImpl extends VaadinComponentDelegate<WebTabbedLayoutImpl.Vaadin> implements TabbedLayout {
+    private static final String TABBED_PANE_BACKGROUND = "--consulo-tabbed-pane-background";
+
     public class Vaadin extends TabSheet implements FromVaadinComponentWrapper {
         public Vaadin() {
             // the default border is drawn inside the sheet, so the content no longer fits and scrolls
@@ -425,6 +428,19 @@ public class WebTabbedLayoutImpl extends VaadinComponentDelegate<WebTabbedLayout
         }
 
         vaadinTab.setEnabled(enabled);
+    }
+
+    @Override
+    public void setBackgroundColor(@Nullable ColorValue background) {
+        super.setBackgroundColor(background);
+
+        String cssColor = WebColors.toStyleCssColor(background);
+        if (cssColor == null) {
+            toVaadinComponent().getStyle().remove(TABBED_PANE_BACKGROUND);
+        }
+        else {
+            toVaadinComponent().getStyle().set(TABBED_PANE_BACKGROUND, cssColor);
+        }
     }
 
     @Override

@@ -23,34 +23,24 @@ import consulo.ide.localize.IdeLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
-import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.details.ModifiedInputDetails;
 import consulo.ui.ex.action.*;
-import consulo.ui.ex.awt.action.ShadowAction;
-import consulo.util.lang.BitUtil;
+import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jspecify.annotations.Nullable;
 
-import java.awt.event.InputEvent;
-import javax.swing.*;
 
 public class CloseTab extends LegacyDumbAwareAction {
     private final Project myProject;
     private final VirtualFile myFile;
     private final FileEditorWindow myEditorWindow;
 
-    public CloseTab(JComponent c, Project project, VirtualFile file, FileEditorWindow editorWindow) {
+    public CloseTab(Project project, VirtualFile file, FileEditorWindow editorWindow) {
         myProject = project;
         myFile = file;
         myEditorWindow = editorWindow;
-        new ShadowAction(this, ActionManager.getInstance().getAction(IdeActions.ACTION_CLOSE), c);
-    }
 
-    public CloseTab(@Nullable Component c, Project project, VirtualFile file, FileEditorWindow editorWindow) {
-        myProject = project;
-        myFile = file;
-        myEditorWindow = editorWindow;
-        // TODO [VISTALL] unsupported new ShadowAction(this, ActionManager.getInstance().getAction(IdeActions.ACTION_CLOSE), c);
+        setShortcutSet(() -> KeymapUtil.getActiveKeymapShortcuts(IdeActions.ACTION_CLOSE).getShortcuts());
     }
 
     @RequiredUIAccess
@@ -106,7 +96,7 @@ public class CloseTab extends LegacyDumbAwareAction {
         }
 
         if (window != null) {
-            if (BitUtil.isSet(e.getModifiers(), InputEvent.ALT_DOWN_MASK)) {
+            if (e.getInputDetails() instanceof ModifiedInputDetails details && details.withAlt()) {
                 window.closeAllExcept(file);
             }
             else {

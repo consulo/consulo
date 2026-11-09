@@ -418,7 +418,7 @@ public final class DesktopAWTEditorTabbedContainer implements FileEditorTabbedCo
         tab.setTestableUi(new MyQueryable(tab));
 
         ActionGroup.Builder tabActions = ActionGroup.newImmutableBuilder();
-        tabActions.add(new CloseTab(comp, myProject, file, myWindow));
+        tabActions.add(new CloseTab(myProject, file, myWindow));
 
         tab.setTabLabelActions(tabActions.build(), ActionPlaces.EDITOR_TAB);
         myTabs.addTabSilently(tab, indexToInsert);

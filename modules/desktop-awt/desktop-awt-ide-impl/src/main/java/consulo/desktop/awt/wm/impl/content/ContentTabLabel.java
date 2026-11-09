@@ -10,22 +10,20 @@ import consulo.ui.ex.impl.internal.action.ActionImplUtil;
 import consulo.ui.ex.impl.internal.action.ActionRunnerAsync;
 import consulo.ui.UIAccess;
 import consulo.ide.impl.idea.util.ui.BaseButtonBehavior;
-import consulo.ide.localize.IdeLocalize;
-import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.project.ui.impl.internal.wm.action.CloseContentTabAction;
+import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionPlaces;
+import consulo.ui.ex.action.ActionToolbar;
+import consulo.ui.ex.action.ActionToolbarFactory;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.TimedDeadzone;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.internal.ActionManagerEx;
-import consulo.ui.ex.keymap.KeymapManager;
-import consulo.ui.ex.keymap.util.KeymapUtil;
-import consulo.ui.image.Image;
-import consulo.ui.image.ImageState;
 import consulo.util.collection.SmartList;
 
 import javax.swing.*;
@@ -39,72 +37,17 @@ import java.util.Map;
 import java.util.Optional;
 
 class ContentTabLabel extends BaseLabel {
-    private class CloseContentAction extends AdditionalIcon {
-        private static final String ACTION_NAME = "Close tab";
-
-        public CloseContentAction(Image regularIcon, Image hoveredImage) {
-            super(regularIcon, hoveredImage);
-        }
-
-        @Override
-        public Rectangle getRectangle() {
-            return new Rectangle(getX(), 0, getIconWidth(), getHeight());
-        }
-
-        @Override
-        public boolean isHovered() {
-            return mouseOverIcon(this);
-        }
-
-        @Override
-        public boolean getAvailable() {
-            return canBeClosed();
-        }
-
-        @Override
-        public Runnable getAction() {
-            return () -> {
-                Content content = getContent();
-                if (content.isPinned()) {
-                    content.setPinned(false);
-                    return;
-                }
-
-                contentManager().removeContent(getContent(), true);
-            };
-        }
-
-        @Override
-        public boolean getAfterText() {
-            return UISettings.getShadowInstance().getCloseTabButtonOnTheRight() || !UISettings.getShadowInstance().getShowCloseButton();
-        }
-
-        @Override
-        public String getTooltip() {
-            if (getContent().isPinned()) {
-                return IdeLocalize.actionUnpinTabTooltip().get();
-            }
-
-            String text = KeymapUtil.getShortcutsText(
-                KeymapManager.getInstance().getActiveKeymap().getShortcuts(IdeActions.ACTION_CLOSE_ACTIVE_TAB)
-            );
-
-            return text.isEmpty() || !isSelected() ? ACTION_NAME : ACTION_NAME + " (" + text + ")";
-        }
-    }
-
     private static final int MAX_WIDTH = JBUI.scale(300);
     private static final int DEFAULT_HORIZONTAL_INSET = JBUI.scale(12);
     protected static final int ICONS_GAP = JBUI.scale(3);
-
-    private final ImageState<Boolean> myPinImageState = new ImageState<>(Boolean.FALSE);
-    private final Image myActiveCloseIcon = Image.stated(myPinImageState, p -> p ? PlatformIconGroup.actionsPintab() : PlatformIconGroup.actionsClose());
-    private final Image myRegularCloseIcon = Image.stated(myPinImageState, p -> p ? PlatformIconGroup.actionsPintab() : PlatformIconGroup.actionsClose());
 
     private final Content myContent;
     private final TabContentLayout myLayout;
 
     private final List<AdditionalIcon> myAdditionalIcons = new SmartList<>();
+    private final ActionToolbar myCloseToolbar;
+    private final JComponent myCloseToolbarComponent;
+    private int myCloseToolbarX;
     private String myText = null;
     private int myIconWithInsetsWidth;
 
@@ -178,8 +121,19 @@ class ContentTabLabel extends BaseLabel {
         currentIconTooltip = null;
     }
 
-    private void updateCloseIcon() {
-        myPinImageState.setState(getContent().isPinned());
+    @RequiredUIAccess
+    private void updateCloseToolbar() {
+        myCloseToolbar.updateActionsAsync().whenCompleteAsync((actions, throwable) -> relayoutTabs(), UIAccess.current());
+    }
+
+    private void relayoutTabs() {
+        myLayout.myLastLayout = null;
+
+        Container parent = getParent();
+        if (parent != null) {
+            parent.revalidate();
+            parent.repaint();
+        }
     }
 
     @Override
@@ -226,28 +180,51 @@ class ContentTabLabel extends BaseLabel {
 
         fillIcons(myAdditionalIcons);
 
+        myCloseToolbar = ActionToolbarFactory.getInstance().createActionToolbar(
+            ActionPlaces.TOOLWINDOW_TITLE,
+            ActionGroup.newImmutableBuilder().add(new CloseContentTabAction(contentManager(), content)).build(),
+            ActionToolbar.Style.INPLACE
+        );
+        myCloseToolbar.setTargetComponent(this);
+        myCloseToolbarComponent = myCloseToolbar.getComponent();
+        myCloseToolbarComponent.setOpaque(false);
+        add(myCloseToolbarComponent);
+
         behavior.setActionTrigger(MouseEvent.MOUSE_RELEASED);
         behavior.setMouseDeadzone(TimedDeadzone.NULL);
 
         myContent.addPropertyChangeListener(event -> {
             String property = event.getPropertyName();
-            if (Content.IS_CLOSABLE.equals(property)) {
-                repaint();
-            }
-            if (Content.PROP_PINNED.equals(property)) {
-                updateCloseIcon();
+            if (Content.IS_CLOSABLE.equals(property) || Content.PROP_PINNED.equals(property)) {
+                UIUtil.invokeLaterIfNeeded(this::updateCloseToolbar);
             }
         });
-
-        if (myContent.isPinned()) {
-            SwingUtilities.invokeLater(this::updateCloseIcon);
-        }
 
         setMaximumSize(new Dimension(MAX_WIDTH, getMaximumSize().height));
     }
 
     protected void fillIcons(List<AdditionalIcon> icons) {
-        icons.add(new CloseContentAction(myRegularCloseIcon, myActiveCloseIcon));
+    }
+
+    private boolean isCloseButtonAfterText() {
+        UISettings settings = UISettings.getShadowInstance();
+        return settings.getCloseTabButtonOnTheRight() || !settings.getShowCloseButton();
+    }
+
+    private int getCloseToolbarWidth() {
+        return canBeClosed() ? myCloseToolbarComponent.getPreferredSize().width : 0;
+    }
+
+    @Override
+    public void doLayout() {
+        super.doLayout();
+
+        boolean visible = canBeClosed();
+        myCloseToolbarComponent.setVisible(visible);
+        if (visible) {
+            Dimension size = myCloseToolbarComponent.getPreferredSize();
+            myCloseToolbarComponent.setBounds(myCloseToolbarX, (getHeight() - size.height) / 2, size.width, size.height);
+        }
     }
 
     @Override
@@ -307,13 +284,21 @@ class ContentTabLabel extends BaseLabel {
             }
         }
 
+        int closeWidth = getCloseToolbarWidth();
+        boolean closeAfterText = isCloseButtonAfterText();
+
         int right = DEFAULT_HORIZONTAL_INSET;
         int left = DEFAULT_HORIZONTAL_INSET;
 
-        if (map.get(false) != null) {
+        if (map.get(false) != null || closeWidth > 0 && !closeAfterText) {
             iconWidth = ICONS_GAP;
 
-            for (AdditionalIcon icon : map.get(false)) {
+            if (closeWidth > 0 && !closeAfterText) {
+                myCloseToolbarX = iconWidth;
+                iconWidth += closeWidth + ICONS_GAP;
+            }
+
+            for (AdditionalIcon icon : map.getOrDefault(false, List.of())) {
                 icon.setX(iconWidth);
                 iconWidth += icon.getIconWidth() + ICONS_GAP;
             }
@@ -322,12 +307,17 @@ class ContentTabLabel extends BaseLabel {
             iconWidth = 0;
         }
 
-        if (map.get(true) != null) {
+        if (map.get(true) != null || closeWidth > 0 && closeAfterText) {
             right = ICONS_GAP + JBUI.scale(4);
 
-            for (AdditionalIcon icon : map.get(true)) {
+            for (AdditionalIcon icon : map.getOrDefault(true, List.of())) {
                 icon.setX(iconWidth + size.width + ICONS_GAP - right);
                 iconWidth += icon.getIconWidth() + ICONS_GAP;
+            }
+
+            if (closeWidth > 0 && closeAfterText) {
+                myCloseToolbarX = iconWidth + size.width + ICONS_GAP - right;
+                iconWidth += closeWidth + ICONS_GAP;
             }
         }
 

@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.wm.impl.content;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 
@@ -24,6 +25,8 @@ import java.awt.*;
 /**
  * from kotlin
  */
+@Deprecated
+@DeprecationInfo("Use ActionToolbar with actions")
 public abstract class AdditionalIcon {
   
   private final Image myRegularIcon;

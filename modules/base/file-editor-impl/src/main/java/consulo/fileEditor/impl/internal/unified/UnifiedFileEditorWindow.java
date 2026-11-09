@@ -527,7 +527,7 @@ public class UnifiedFileEditorWindow extends FileEditorWindowBase implements Fil
             });
 
             ActionGroup.Builder tabActions = ActionGroup.newImmutableBuilder();
-            tabActions.add(new CloseTab(content, myProject, editor.getFile(), this));
+            tabActions.add(new CloseTab(myProject, editor.getFile(), this));
 
             ActionToolbar toolbar = ActionToolbarFactory.getInstance()
                 .createActionToolbar(ActionPlaces.EDITOR_TAB, tabActions.build(), ActionToolbar.Style.INPLACE);
