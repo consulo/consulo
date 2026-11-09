@@ -111,7 +111,6 @@ body
   border: none;
 }
 
-/* large icons make the side stripes thicker only - the header keeps the ordinary stripe thickness */
 .web-tool-window-panel-large-icons .web-tool-window-stripe-left,
 .web-tool-window-panel-large-icons .web-tool-window-stripe-right
 {
@@ -256,7 +255,6 @@ vaadin-split-layout.web-split-layout-no-divider::part(splitter)
   background-color: var(--consulo-tool-window-button-active-background, silver);
 }
 
-/* without a text the button is a square holding its icon, which is never turned with the stripe */
 .web-tool-window-stripe-button-icon-only
 {
   width: var(--web-tool-window-stripe-button-size);
@@ -361,6 +359,29 @@ vaadin-menu-bar-item::part(checkmark),
 vaadin-context-menu-item::part(checkmark)
 {
   display: none;
+}
+
+.web-menu-item-slot
+{
+  flex: 0 0 24px;
+  width: 24px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.web-menu-item-icon
+{
+  width: 16px;
+  height: 16px;
+}
+
+.web-menu-item-shortcut
+{
+  margin-inline-start: auto;
+  padding-inline-start: 2em;
+  opacity: 0.6;
 }
 
 /* the breadcrumb aligns the prefix slot on the text baseline, which leaves the icon hanging above the label */

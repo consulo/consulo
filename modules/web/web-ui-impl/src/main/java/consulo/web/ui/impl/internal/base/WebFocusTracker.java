@@ -71,6 +71,8 @@ public final class WebFocusTracker {
      */
     private static final String FOCUSED_ELEMENT_KEY = "consulo-focused-element";
 
+    private static final String FRAME_ROOT_KEY = "consulo-focus-frame-root";
+
     private static final Map<String, Component> ourScopes = new ConcurrentHashMap<>();
 
     private WebFocusTracker() {
@@ -122,6 +124,8 @@ public final class WebFocusTracker {
         if (!(root instanceof ToVaadinComponentWrapper wrapper)) {
             return;
         }
+
+        ComponentUtil.setData(wrapper.toVaadinComponent(), FRAME_ROOT_KEY, Boolean.TRUE);
 
         installRoot(wrapper.toVaadinComponent().getElement());
     }
@@ -187,8 +191,30 @@ public final class WebFocusTracker {
      */
     public static DataContext createDataContext(Component fallback) {
         Component component = getFocusedComponent();
+        if (component != null && isInOtherFrame(component, fallback)) {
+            component = null;
+        }
 
         return DataManager.getInstance().getDataContext(component == null ? fallback : component);
+    }
+
+    private static boolean isInOtherFrame(Component component, Component fallback) {
+        if (!(component instanceof ToVaadinComponentWrapper focused) || !(fallback instanceof ToVaadinComponentWrapper scope)) {
+            return false;
+        }
+
+        com.vaadin.flow.component.@Nullable Component focusedRoot = findFrameRoot(focused.toVaadinComponent());
+        com.vaadin.flow.component.@Nullable Component scopeRoot = findFrameRoot(scope.toVaadinComponent());
+        return focusedRoot != null && scopeRoot != null && focusedRoot != scopeRoot;
+    }
+
+    private static com.vaadin.flow.component.@Nullable Component findFrameRoot(com.vaadin.flow.component.Component component) {
+        for (com.vaadin.flow.component.Component current = component; current != null; current = current.getParent().orElse(null)) {
+            if (Boolean.TRUE.equals(ComponentUtil.getData(current, FRAME_ROOT_KEY))) {
+                return current;
+            }
+        }
+        return null;
     }
 
     private static void setFocusedElement(@Nullable Element element) {

@@ -34,6 +34,8 @@ public class WebMenuImpl extends WebMenuItemImpl implements Menu {
 
     private @Nullable SubMenu myVaadinSubMenu;
 
+    private @Nullable Runnable myOpenListener;
+
     public WebMenuImpl(LocalizeValue text) {
         super(text);
     }
@@ -51,6 +53,20 @@ public class WebMenuImpl extends WebMenuItemImpl implements Menu {
         return this;
     }
 
+    @RequiredUIAccess
+    public void removeAll() {
+        myChildren.clear();
+
+        SubMenu subMenu = myVaadinSubMenu;
+        if (subMenu != null) {
+            subMenu.removeAll();
+        }
+    }
+
+    public void setOpenListener(@Nullable Runnable openListener) {
+        myOpenListener = openListener;
+    }
+
     public List<MenuItem> getChildren() {
         return myChildren;
     }
@@ -61,6 +77,13 @@ public class WebMenuImpl extends WebMenuItemImpl implements Menu {
         SubMenu subMenu = item.getSubMenu();
 
         myVaadinSubMenu = subMenu;
+
+        item.getElement().addEventListener("opensubmenu", event -> {
+            Runnable openListener = myOpenListener;
+            if (openListener != null) {
+                openListener.run();
+            }
+        });
 
         for (MenuItem child : myChildren) {
             if (child instanceof WebMenuItemImpl webMenuItem) {

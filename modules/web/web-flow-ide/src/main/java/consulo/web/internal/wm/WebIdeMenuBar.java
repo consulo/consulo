@@ -24,6 +24,7 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.ui.MenuItem;
 import consulo.ui.MenuSeparator;
 import consulo.ui.UIAccess;
 import consulo.ui.event.ComponentEvent;
@@ -47,6 +48,7 @@ import java.util.List;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
+import java.util.function.Consumer;
 
 /**
  * Web analog of {@code consulo.desktop.awt.wm.impl.DefaultIdeMenuBar}. Builds main menu from {@link IdeActions#GROUP_MAIN_MENU}
@@ -58,30 +60,29 @@ import java.util.concurrent.CompletionException;
 public class WebIdeMenuBar {
     private static final Logger LOG = Logger.getInstance(WebIdeMenuBar.class);
 
-    private static final int MAX_DEPTH = 10;
     private static final String PERFORM_ONLY = "actionGroup.perform.only";
 
-    private static final String RESYNC_OPEN_SUB_MENU = """
+    private static final String RESYNC_OPEN_SUB_MENUS = """
         const bar = this;
         requestAnimationFrame(() => bar.updateComplete.then(() => {
-            const subMenu = bar._subMenu;
-            if (!subMenu || !subMenu.opened) {
-                return;
-            }
+            let items = bar.items;
+            let subMenu = bar._subMenu;
+            while (subMenu && subMenu.opened) {
+                const target = subMenu._positionTarget;
+                const component = target && target.isConnected ? (target.item ? target.item.component : target) : null;
+                const item = component && items ? items.find(candidate => candidate.component === component) : null;
+                const children = item ? item.children : null;
+                if (!children || children.length === 0) {
+                    subMenu.close();
+                    return;
+                }
 
-            const button = subMenu._positionTarget;
-            const children = button && button.isConnected && button.item ? button.item.children : null;
-            if (!children || children.length === 0) {
-                bar.close();
-                return;
-            }
+                subMenu.items = children;
+                subMenu._overlayElement.requestContentUpdate();
 
-            if (subMenu._subMenu && subMenu._subMenu.opened) {
-                subMenu._subMenu.close();
+                items = children;
+                subMenu = subMenu._subMenu;
             }
-
-            subMenu.items = children;
-            subMenu._overlayElement.requestContentUpdate();
         }));
         """;
 
@@ -93,28 +94,32 @@ public class WebIdeMenuBar {
         boolean enabled,
         @Nullable Boolean checked,
         LocalizeValue shortcutText,
-        @Nullable List<MenuNode> children
+        boolean group
     ) {
         static MenuNode separator() {
-            return new MenuNode(null, LocalizeValue.empty(), null, null, true, null, LocalizeValue.empty(), null);
+            return new MenuNode(null, LocalizeValue.empty(), null, null, true, null, LocalizeValue.empty(), false);
         }
 
         boolean isSeparator() {
-            return action == null && children == null;
+            return action == null;
         }
     }
 
-    private record BuiltItem(consulo.ui.MenuItem item, List<BuiltItem> children) {
+    private record BuiltItem(MenuItem item, MenuNode node) {
+    }
+
+    private static final class Level {
+        private String mySignature = "";
+        private String myStructuralSignature = "";
+        private List<BuiltItem> myItems = List.of();
+        private @Nullable ProgressIndicator myIndicator;
     }
 
     private final consulo.ui.Component myContextComponent;
     private final WebMenuBarImpl myMenuBar = new WebMenuBarImpl();
     private final MenuItemPresentationFactory myPresentationFactory = new MenuItemPresentationFactory();
 
-    private String mySignature = "";
-    private String myStructuralSignature = "";
-    private List<BuiltItem> myBuiltItems = List.of();
-    private @Nullable ProgressIndicator myUpdateIndicator;
+    private Level myRootLevel = new Level();
 
     @RequiredUIAccess
     public WebIdeMenuBar(consulo.ui.Component contextComponent) {
@@ -145,64 +150,78 @@ public class WebIdeMenuBar {
      */
     @RequiredUIAccess
     public void reset() {
-        mySignature = "";
-        myStructuralSignature = "";
-        myBuiltItems = List.of();
+        myRootLevel = new Level();
         myMenuBar.clear();
     }
 
     @RequiredUIAccess
     public void updateMenuActions() {
-        UIAccess uiAccess = UIAccess.current();
+        expandAsync(
+            myRootLevel,
+            CustomActionsSchema.getCorrectedGroupAsync(IdeActions.GROUP_MAIN_MENU),
+            UIAccess.current(),
+            nodes -> applyLevel(myRootLevel, nodes.stream().filter(MenuNode::group).toList(), items -> {
+                myMenuBar.clear();
+                items.forEach(myMenuBar::add);
+            })
+        );
+    }
 
-        ProgressIndicator previousIndicator = myUpdateIndicator;
+    @RequiredUIAccess
+    private void openMenu(WebMenuImpl menu, Level level, ActionGroup group) {
+        expandAsync(level, CompletableFuture.completedFuture(group), UIAccess.current(), nodes -> applyLevel(level, nodes, items -> {
+            menu.removeAll();
+            items.forEach(menu::add);
+        }));
+    }
+
+    private void expandAsync(
+        Level level,
+        CompletableFuture<@Nullable ActionGroup> groupFuture,
+        UIAccess uiAccess,
+        Consumer<List<MenuNode>> apply
+    ) {
+        ProgressIndicator previousIndicator = level.myIndicator;
         if (previousIndicator != null) {
             previousIndicator.cancel();
         }
 
         ProgressIndicator indicator = new EmptyProgressIndicator();
-        myUpdateIndicator = indicator;
+        level.myIndicator = indicator;
 
-        expandMainMenuAsync(createDataContext(), uiAccess, indicator).whenCompleteAsync((nodes, throwable) -> {
-            if (myUpdateIndicator != indicator) {
-                return;
-            }
+        DataContext context = createDataContext();
 
-            myUpdateIndicator = null;
-
-            if (throwable != null) {
-                if (!isProcessCanceled(throwable)) {
-                    LOG.warn("Failed to expand main menu", throwable);
+        groupFuture.thenCompose(group -> group == null
+                ? CompletableFuture.completedFuture(List.<MenuNode>of())
+                : expandGroupAsync(group, context, uiAccess, indicator))
+            .whenCompleteAsync((nodes, throwable) -> {
+                if (level.myIndicator != indicator) {
+                    return;
                 }
-                return;
-            }
 
-            applyNodes(nodes);
-        }, uiAccess);
+                level.myIndicator = null;
+
+                if (throwable != null) {
+                    if (!isProcessCanceled(throwable)) {
+                        LOG.warn("Failed to expand main menu", throwable);
+                    }
+                    return;
+                }
+
+                apply.accept(nodes);
+            }, uiAccess);
     }
 
     private DataContext createDataContext() {
         return DataManager.getInstance().createAsyncDataContext(WebFocusTracker.createDataContext(myContextComponent));
     }
 
-    private CompletableFuture<List<MenuNode>> expandMainMenuAsync(DataContext context, UIAccess uiAccess, ProgressIndicator indicator) {
-        return CustomActionsSchema.getCorrectedGroupAsync(IdeActions.GROUP_MAIN_MENU)
-            .thenCompose(mainMenuGroup -> mainMenuGroup == null
-                ? CompletableFuture.completedFuture(List.of())
-                : expandGroupAsync(mainMenuGroup, context, uiAccess, indicator, 0));
-    }
-
     private CompletableFuture<List<MenuNode>> expandGroupAsync(
         ActionGroup group,
         DataContext context,
         UIAccess uiAccess,
-        ProgressIndicator indicator,
-        int depth
+        ProgressIndicator indicator
     ) {
-        if (depth > MAX_DEPTH) {
-            return CompletableFuture.completedFuture(List.of());
-        }
-
         ActionUpdater updater = new ActionUpdater(
             ActionManager.getInstance(),
             myPresentationFactory,
@@ -213,160 +232,115 @@ public class WebIdeMenuBar {
             uiAccess
         );
 
-        return updater.expandActionGroupAsync(group, group instanceof CompactActionGroup, indicator)
-            .thenCompose(children -> buildNodesAsync(children, 0, new ArrayList<>(), context, uiAccess, indicator, depth));
+        return updater.expandActionGroupAsync(group, group instanceof CompactActionGroup, indicator).thenApply(this::buildNodes);
     }
 
-    private CompletableFuture<List<MenuNode>> buildNodesAsync(
-        List<? extends AnAction> children,
-        int startIndex,
-        List<MenuNode> result,
-        DataContext context,
-        UIAccess uiAccess,
-        ProgressIndicator indicator,
-        int depth
-    ) {
-        for (int i = startIndex; i < children.size(); i++) {
-            AnAction action = children.get(i);
-            Presentation presentation = myPresentationFactory.getPresentation(action);
-
+    private List<MenuNode> buildNodes(List<? extends AnAction> children) {
+        List<MenuNode> result = new ArrayList<>(children.size());
+        for (AnAction action : children) {
             if (action instanceof AnSeparator) {
                 result.add(MenuNode.separator());
                 continue;
             }
 
-            if (action instanceof ActionGroup actionGroup && !Boolean.TRUE.equals(presentation.getClientProperty(PERFORM_ONLY))) {
-                int nextIndex = i + 1;
+            Presentation presentation = myPresentationFactory.getPresentation(action);
 
-                return expandGroupAsync(actionGroup, context, uiAccess, indicator, depth + 1).thenCompose(groupChildren -> {
-                    result.add(new MenuNode(
-                        action,
-                        presentation.getTextValue(),
-                        presentation.getIcon(),
-                        presentation.getDisabledIcon(),
-                        presentation.isEnabled(),
-                        null,
-                        LocalizeValue.empty(),
-                        groupChildren
-                    ));
-
-                    return buildNodesAsync(children, nextIndex, result, context, uiAccess, indicator, depth);
-                });
-            }
-
-            result.add(createActionNode(action, presentation));
-        }
-
-        return CompletableFuture.completedFuture(result);
-    }
-
-    private MenuNode createActionNode(AnAction action, Presentation presentation) {
-        Boolean checked = null;
-        if (action instanceof Toggleable) {
-            checked = Toggleable.isSelected(presentation);
-        }
-
-        String shortcutText = KeymapUtil.getFirstKeyboardShortcutText(action);
-
-        return new MenuNode(
-            action,
-            presentation.getTextValue(),
-            presentation.getIcon(),
-            presentation.getDisabledIcon(),
-            presentation.isEnabled(),
-            checked,
-            LocalizeValue.of(shortcutText),
-            null
-        );
-    }
-
-    @RequiredUIAccess
-    private void applyNodes(List<MenuNode> nodes) {
-        StringBuilder builder = new StringBuilder();
-        appendSignature(nodes, builder, true);
-        String signature = builder.toString();
-
-        if (signature.equals(mySignature)) {
-            return;
-        }
-
-        mySignature = signature;
-
-        StringBuilder structuralBuilder = new StringBuilder();
-        appendSignature(nodes, structuralBuilder, false);
-        String structuralSignature = structuralBuilder.toString();
-
-        List<MenuNode> rootNodes = nodes.stream().filter(node -> node.children() != null).toList();
-
-        // a rebuild replaces the items of a menu the user may hold open, and a click on a replaced item is
-        // dropped as inert - when only the enabled state moved, the live items are updated in place instead
-        if (structuralSignature.equals(myStructuralSignature)) {
-            refreshItems(rootNodes, myBuiltItems);
-            return;
-        }
-
-        myStructuralSignature = structuralSignature;
-
-        myMenuBar.clear();
-
-        List<BuiltItem> builtItems = new ArrayList<>();
-        for (MenuNode node : rootNodes) {
-            BuiltItem builtItem = createMenuItem(node);
-            builtItems.add(builtItem);
-            myMenuBar.add(builtItem.item());
-        }
-        myBuiltItems = builtItems;
-
-        resyncOpenSubMenu();
-    }
-
-    @RequiredUIAccess
-    private void resyncOpenSubMenu() {
-        MenuBar menuBar = myMenuBar.toVaadinComponent();
-
-        menuBar.getElement().getNode().runWhenAttached(
-            ui -> ui.beforeClientResponse(menuBar, context -> menuBar.getElement().executeJs(RESYNC_OPEN_SUB_MENU))
-        );
-    }
-
-    @RequiredUIAccess
-    private static void refreshItems(List<MenuNode> nodes, List<BuiltItem> builtItems) {
-        for (int i = 0; i < nodes.size() && i < builtItems.size(); i++) {
-            MenuNode node = nodes.get(i);
-            if (node.isSeparator()) {
+            if (action instanceof ActionGroup && !Boolean.TRUE.equals(presentation.getClientProperty(PERFORM_ONLY))) {
+                result.add(new MenuNode(
+                    action,
+                    presentation.getTextValue(),
+                    presentation.getIcon(),
+                    presentation.getDisabledIcon(),
+                    presentation.isEnabled(),
+                    null,
+                    LocalizeValue.empty(),
+                    true
+                ));
                 continue;
             }
 
-            BuiltItem builtItem = builtItems.get(i);
-            builtItem.item().setEnabled(node.enabled());
+            Boolean checked = action instanceof Toggleable ? Toggleable.isSelected(presentation) : null;
 
-            List<MenuNode> children = node.children();
-            if (children != null) {
-                refreshItems(children, builtItem.children());
+            result.add(new MenuNode(
+                action,
+                presentation.getTextValue(),
+                presentation.getIcon(),
+                presentation.getDisabledIcon(),
+                presentation.isEnabled(),
+                checked,
+                LocalizeValue.of(KeymapUtil.getFirstKeyboardShortcutText(action)),
+                false
+            ));
+        }
+        return result;
+    }
+
+    @RequiredUIAccess
+    private void applyLevel(Level level, List<MenuNode> nodes, Consumer<List<MenuItem>> rebuild) {
+        String signature = signature(nodes, true);
+        if (signature.equals(level.mySignature)) {
+            return;
+        }
+
+        level.mySignature = signature;
+
+        String structuralSignature = signature(nodes, false);
+        if (structuralSignature.equals(level.myStructuralSignature)) {
+            refreshEnabled(nodes, level.myItems);
+            return;
+        }
+
+        level.myStructuralSignature = structuralSignature;
+
+        List<BuiltItem> builtItems = new ArrayList<>(nodes.size());
+        for (MenuNode node : nodes) {
+            builtItems.add(new BuiltItem(createMenuItem(node), node));
+        }
+        level.myItems = builtItems;
+
+        rebuild.accept(builtItems.stream().map(BuiltItem::item).toList());
+
+        resyncOpenSubMenus();
+    }
+
+    @RequiredUIAccess
+    private static void refreshEnabled(List<MenuNode> nodes, List<BuiltItem> builtItems) {
+        for (int i = 0; i < nodes.size() && i < builtItems.size(); i++) {
+            MenuNode node = nodes.get(i);
+            if (!node.isSeparator()) {
+                builtItems.get(i).item().setEnabled(node.enabled());
             }
         }
     }
 
     @RequiredUIAccess
-    private BuiltItem createMenuItem(MenuNode node) {
+    private void resyncOpenSubMenus() {
+        MenuBar menuBar = myMenuBar.toVaadinComponent();
+
+        menuBar.getElement().getNode().runWhenAttached(
+            ui -> ui.beforeClientResponse(menuBar, context -> menuBar.getElement().executeJs(RESYNC_OPEN_SUB_MENUS))
+        );
+    }
+
+    @RequiredUIAccess
+    private MenuItem createMenuItem(MenuNode node) {
         if (node.isSeparator()) {
-            return new BuiltItem(MenuSeparator.create(), List.of());
+            return MenuSeparator.create();
         }
 
-        List<MenuNode> children = node.children();
-        if (children != null) {
+        if (node.group()) {
             WebMenuImpl menu = new WebMenuImpl(node.text());
             menu.setIcon(UnifiedActionMenuExpander.toDisplayIcon(node.icon(), node.disabledIcon(), node.enabled()));
             menu.setEnabled(node.enabled());
 
-            List<BuiltItem> builtChildren = new ArrayList<>();
-            for (MenuNode child : children) {
-                BuiltItem builtChild = createMenuItem(child);
-                builtChildren.add(builtChild);
-                menu.add(builtChild.item());
-            }
+            WebMenuItemImpl placeholder = new WebMenuItemImpl(LocalizeValue.of("\u2026"));
+            placeholder.setEnabled(false);
+            menu.add(placeholder);
 
-            return new BuiltItem(menu, builtChildren);
+            Level level = new Level();
+            ActionGroup group = (ActionGroup) node.action();
+            menu.setOpenListener(() -> openMenu(menu, level, group));
+            return menu;
         }
 
         WebMenuItemImpl item = new WebMenuItemImpl(node.text());
@@ -380,7 +354,7 @@ public class WebIdeMenuBar {
             item.addClickListener(event -> performAction(action, event));
         }
 
-        return new BuiltItem(item, List.of());
+        return item;
     }
 
     @RequiredUIAccess
@@ -411,7 +385,8 @@ public class WebIdeMenuBar {
         }, uiAccess);
     }
 
-    private static void appendSignature(List<MenuNode> nodes, StringBuilder builder, boolean withEnabled) {
+    private static String signature(List<MenuNode> nodes, boolean withEnabled) {
+        StringBuilder builder = new StringBuilder();
         for (MenuNode node : nodes) {
             if (node.isSeparator()) {
                 builder.append("|-");
@@ -419,18 +394,13 @@ public class WebIdeMenuBar {
             }
 
             builder.append('|')
+                .append(node.group() ? '>' : ' ')
                 .append(node.text().get())
                 .append(withEnabled ? node.enabled() ? '+' : '-' : ' ')
                 .append(node.checked() == null ? "" : node.checked() ? "x" : "o")
                 .append(node.shortcutText().get());
-
-            List<MenuNode> children = node.children();
-            if (children != null) {
-                builder.append('{');
-                appendSignature(children, builder, withEnabled);
-                builder.append('}');
-            }
         }
+        return builder.toString();
     }
 
     private static boolean isProcessCanceled(Throwable throwable) {

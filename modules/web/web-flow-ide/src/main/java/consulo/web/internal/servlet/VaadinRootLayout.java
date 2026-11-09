@@ -90,6 +90,12 @@ public class VaadinRootLayout extends HorizontalLayout implements RouterLayout, 
         return content;
     }
 
+    public void removeContent(Component content) {
+        if (content.getParent().orElse(null) == this) {
+            remove(content);
+        }
+    }
+
     public void update(Component newContent) {
         removeAll();
 

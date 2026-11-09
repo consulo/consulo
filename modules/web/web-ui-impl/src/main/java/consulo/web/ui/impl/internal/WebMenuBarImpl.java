@@ -33,9 +33,25 @@ import java.util.List;
 public class WebMenuBarImpl extends VaadinComponentDelegate<WebMenuBarImpl.Vaadin> implements MenuBar {
     public static final String CLASS_NAME = "web-menu-bar";
 
+    private static final String FORWARD_OPEN_SUB_MENU = """
+        const bar = this;
+        if (bar.__consuloForwardOpenSubMenu) {
+            return;
+        }
+        bar.__consuloForwardOpenSubMenu = true;
+        bar.addEventListener('opensubmenu', event => {
+            const component = event.target.item ? event.target.item.component : null;
+            if (component && component !== event.target) {
+                component.dispatchEvent(new CustomEvent('opensubmenu'));
+            }
+        }, true);
+        """;
+
     public class Vaadin extends com.vaadin.flow.component.menubar.MenuBar implements FromVaadinComponentWrapper {
         public Vaadin() {
             addClassName(CLASS_NAME);
+
+            addAttachListener(event -> getElement().executeJs(FORWARD_OPEN_SUB_MENU));
         }
 
         @Override

@@ -63,7 +63,7 @@ public abstract class BaseUIAccessScheduler extends AbstractExecutorService impl
                                                   long initialDelay,
                                                   long period,
                                                   TimeUnit unit) {
-        return myScheduledExecutorService.scheduleAtFixedRate(wrap(command), initialDelay, period, unit);
+        return myScheduledExecutorService.scheduleAtFixedRate(wrapPeriodic(command), initialDelay, period, unit);
     }
 
 
@@ -72,11 +72,21 @@ public abstract class BaseUIAccessScheduler extends AbstractExecutorService impl
                                                      long initialDelay,
                                                      long delay,
                                                      TimeUnit unit) {
-        return myScheduledExecutorService.scheduleWithFixedDelay(wrap(command), initialDelay, delay, unit);
+        return myScheduledExecutorService.scheduleWithFixedDelay(wrapPeriodic(command), initialDelay, delay, unit);
     }
 
     private Runnable wrap(Runnable command) {
         return () -> uiAccess().execute(command);
+    }
+
+    private Runnable wrapPeriodic(Runnable command) {
+        return () -> {
+            UIAccess uiAccess = uiAccess();
+            if (!uiAccess.isValid()) {
+                throw new CancellationException();
+            }
+            uiAccess.execute(command);
+        };
     }
 
     @Override

@@ -30,14 +30,6 @@ import org.jspecify.annotations.Nullable;
 import java.util.Comparator;
 
 /**
- * Which stripe a tool window button sits on, in which of its two groups, and what it shows - one rule for
- * every frontend.
- * <p/>
- * A stripe holds a group at its start and a group at its far end. Ordinarily a stripe holds the buttons of
- * its own anchor, the split windows forming the far group. With large icons the bottom stripe is not used:
- * the bottom windows go to the far group of the left stripe, the split ones to the far group of the right
- * stripe, and the split windows of a side follow its other windows in the start group.
- *
  * @author VISTALL
  * @since 2026-11-09
  */
@@ -66,9 +58,6 @@ public final class ToolWindowStripePlacement {
         return info.isSplit();
     }
 
-    /**
-     * The anchor a button dropped on the stripe of {@code stripeAnchor} takes.
-     */
     public static ToolWindowAnchor getDropAnchor(ToolWindowSettings settings, ToolWindowAnchor stripeAnchor, boolean atEnd) {
         if (atEnd && isLargeIcons(settings) && (stripeAnchor == ToolWindowAnchor.LEFT || stripeAnchor == ToolWindowAnchor.RIGHT)) {
             return ToolWindowAnchor.BOTTOM;
@@ -76,9 +65,6 @@ public final class ToolWindowStripePlacement {
         return stripeAnchor;
     }
 
-    /**
-     * Whether a button dropped on the stripe of {@code stripeAnchor} makes its window split.
-     */
     public static boolean isDropSplit(ToolWindowSettings settings, ToolWindowAnchor stripeAnchor, boolean atEnd) {
         if (isLargeIcons(settings)) {
             return atEnd && stripeAnchor == ToolWindowAnchor.RIGHT;

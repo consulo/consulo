@@ -72,3 +72,9 @@
 {
   color: inherit;
 }
+
+.web-tool-window-header vaadin-select
+{
+  flex: 0 0 auto;
+  width: max-content;
+}

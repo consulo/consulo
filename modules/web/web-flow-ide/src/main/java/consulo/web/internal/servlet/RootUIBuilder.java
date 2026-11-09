@@ -59,29 +59,37 @@ public class RootUIBuilder implements UIBuilder {
 
     UIAccess access = UIAccess.current();
 
-    scheduleWelcomeFrame(access, window, 0);
+    if (!giveWelcomeFrameIfLoaded(access, window)) {
+      scheduleWelcomeFrame(access, window, 0);
+    }
+  }
+
+  private static boolean giveWelcomeFrameIfLoaded(UIAccess access, Window window) {
+    Application application = ApplicationManager.getApplication();
+    if (application == null || !((ApplicationEx)application).isLoaded()) {
+      return false;
+    }
+
+    if (access.isValid()) {
+      access.give(() -> showWelcomeFrame(application, window));
+    }
+    return true;
   }
 
   private void scheduleWelcomeFrame(UIAccess access, Window window, int tryCount) {
     new Thread(() -> {
-      TimeoutUtil.sleep(1000L);
-      
-      Application application = ApplicationManager.getApplication();
-      if (application == null || !((ApplicationEx)application).isLoaded()) {
-        if (access.isValid()) {
-          scheduleWelcomeFrame(access, window, tryCount + 1);
-        }
+      TimeoutUtil.sleep(250L);
+
+      if (giveWelcomeFrameIfLoaded(access, window) || !access.isValid()) {
         return;
       }
 
-      if (access.isValid()) {
-        access.give(() -> showWelcomeFrame(application, window));
-      }
+      scheduleWelcomeFrame(access, window, tryCount + 1);
     }, "UI Starter=" + tryCount).start();
   }
 
   @RequiredUIAccess
-  private void showWelcomeFrame(Application application, Window window) {
+  private static void showWelcomeFrame(Application application, Window window) {
     window.setContent(DockLayout.create());
 
     WelcomeFrameManager welcomeFrameManager = WelcomeFrameManager.getInstance();

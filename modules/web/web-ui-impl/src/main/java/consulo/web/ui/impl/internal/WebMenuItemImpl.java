@@ -44,10 +44,9 @@ public class WebMenuItemImpl extends VaadinComponentDelegate<WebMenuItemImpl.Vaa
         }
     }
 
-    private static final int ICON_SIZE = 16;
-
-    /** the icon column is wider than the icon so the labels sit further from the edge */
-    private static final int SLOT_SIZE = 24;
+    private static final String ICON_CLASS = "web-menu-item-icon";
+    private static final String SLOT_CLASS = "web-menu-item-slot";
+    private static final String SHORTCUT_CLASS = "web-menu-item-shortcut";
 
     private LocalizeValue myText;
     private @Nullable Image myIcon;
@@ -163,9 +162,7 @@ public class WebMenuItemImpl extends VaadinComponentDelegate<WebMenuItemImpl.Vaa
             // a root item of a bar has no icon column - a tool window header shows its gear by the icon alone,
             // so it goes in as a plain child instead
             com.vaadin.flow.component.Component icon = WebImageConverter.getImage(myIcon);
-            icon.getElement().getStyle()
-                .set("width", ICON_SIZE + "px")
-                .set("height", ICON_SIZE + "px");
+            icon.getElement().getClassList().add(ICON_CLASS);
 
             item.addComponentAsFirst(icon);
         }
@@ -175,19 +172,11 @@ public class WebMenuItemImpl extends VaadinComponentDelegate<WebMenuItemImpl.Vaa
             // checkmark slot is hidden by the theme and the checkmark is drawn in this same column, so a toggle
             // item is aligned with an item that carries an icon
             Span slot = new Span();
-            slot.getElement().getStyle()
-                .set("flex", "0 0 " + SLOT_SIZE + "px")
-                .set("width", SLOT_SIZE + "px")
-                .set("height", ICON_SIZE + "px")
-                .set("display", "flex")
-                .set("align-items", "center")
-                .set("justify-content", "center");
+            slot.addClassName(SLOT_CLASS);
 
             if (myIcon != null) {
                 com.vaadin.flow.component.Component icon = WebImageConverter.getImage(myIcon);
-                icon.getElement().getStyle()
-                    .set("width", ICON_SIZE + "px")
-                    .set("height", ICON_SIZE + "px");
+                icon.getElement().getClassList().add(ICON_CLASS);
 
                 slot.add(icon);
             }
@@ -200,10 +189,7 @@ public class WebMenuItemImpl extends VaadinComponentDelegate<WebMenuItemImpl.Vaa
 
         if (myShortcutText.isNotEmpty()) {
             Span shortcut = new Span(myShortcutText.get());
-            shortcut.getStyle()
-                .set("margin-inline-start", "auto")
-                .set("padding-inline-start", "2em")
-                .set("opacity", "0.6");
+            shortcut.addClassName(SHORTCUT_CLASS);
             item.add(shortcut);
         }
 

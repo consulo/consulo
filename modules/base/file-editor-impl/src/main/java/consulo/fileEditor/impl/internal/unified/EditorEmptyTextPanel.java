@@ -59,6 +59,8 @@ public class EditorEmptyTextPanel {
     private final Project myProject;
     private final VerticalLayout myRoot;
 
+    private @Nullable List<Pair<LocalizeValue, @Nullable LocalizeValue>> myLines;
+
     @RequiredUIAccess
     public EditorEmptyTextPanel(Project project, Disposable parentDisposable, BooleanSupplier visible) {
         this(project, parentDisposable, visible, true);
@@ -92,9 +94,14 @@ public class EditorEmptyTextPanel {
 
     @RequiredUIAccess
     public void refresh() {
+        List<Pair<LocalizeValue, @Nullable LocalizeValue>> texts = collectLines();
+        if (texts.equals(myLines)) {
+            return;
+        }
+        myLines = texts;
+
         TableLayout lines = TableLayout.create(StaticPosition.CENTER);
 
-        List<Pair<LocalizeValue, @Nullable LocalizeValue>> texts = collectLines();
         for (int i = 0; i < texts.size(); i++) {
             Pair<LocalizeValue, @Nullable LocalizeValue> line = texts.get(i);
             lines.add(createLabel(line.getFirst()), TableLayout.cell(i, 0));

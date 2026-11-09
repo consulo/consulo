@@ -15,6 +15,7 @@
  */
 package consulo.web.internal.wm;
 
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -79,9 +80,9 @@ public class WebIdeFrameImpl implements IdeFrameEx, Disposable {
 
         ui.getPage().setTitle(projectTitle);
 
-        myRootView.update();
-
         myRootLayout.update(TargetVaadin.to(myRootView.getRootPanel().getComponent()));
+
+        myRootView.update();
     }
 
     /**
@@ -134,9 +135,11 @@ public class WebIdeFrameImpl implements IdeFrameEx, Disposable {
 
         myRootLayout = null;
 
+        Component content = TargetVaadin.to(myRootView.getRootPanel().getComponent());
+
         UIAccess uiAccess = rootLayout.toUIComponent().getUIAccess();
         if (uiAccess != null && uiAccess.isValid()) {
-            uiAccess.giveIfNeed(rootLayout::removeAll);
+            uiAccess.giveIfNeed(() -> rootLayout.removeContent(content));
         }
     }
 
