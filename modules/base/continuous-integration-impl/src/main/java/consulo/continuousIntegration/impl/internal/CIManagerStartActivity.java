@@ -18,6 +18,8 @@ package consulo.continuousIntegration.impl.internal;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.continuousIntegration.CIManager;
+import consulo.continuousIntegration.CIManagerListener;
+import consulo.continuousIntegration.impl.internal.toolWindow.CIToolWindowState;
 import consulo.project.Project;
 import consulo.project.startup.PostStartupActivity;
 import consulo.ui.UIAccess;
@@ -32,6 +34,18 @@ public class CIManagerStartActivity implements PostStartupActivity, DumbAware {
         if (project.isDefault()) {
             return;
         }
-        ((CIManagerImpl) CIManager.getInstance(project)).projectOpened();
+        CIManagerImpl manager = (CIManagerImpl) CIManager.getInstance(project);
+        manager.projectOpened();
+        manager.addListener(new CIManagerListener() {
+            @Override
+            public void serversChanged() {
+                uiAccess.give(() -> {
+                    if (!project.isDisposed()) {
+                        CIToolWindowState.update(project);
+                    }
+                });
+            }
+        }, manager);
+        uiAccess.give(() -> CIToolWindowState.update(project));
     }
 }
