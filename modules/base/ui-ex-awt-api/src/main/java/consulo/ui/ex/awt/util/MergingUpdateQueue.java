@@ -222,7 +222,7 @@ public class MergingUpdateQueue implements Runnable, Disposable, Activatable {
   }
 
   private void restart(int mergingTimeSpanMillis) {
-    if (!myActive) return;
+    if (!myActive || myWaiterForMerge.isDisposed()) return;
 
     clearWaiter();
 
