@@ -927,7 +927,7 @@ public class Switcher extends LegacyDumbAwareAction {
             return shortcutSet != null
                 && shortcutSet.getShortcuts().length != 0
                 && shortcutSet.getShortcuts()[0] instanceof KeyboardShortcut keyboardShortcut
-                ? keyboardShortcut.getFirstKeyStroke().getModifiers()
+                ? TargetAWT.to(keyboardShortcut.getFirstKeyStroke()).getModifiers()
                 : Event.CTRL_MASK;
         }
 

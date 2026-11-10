@@ -103,8 +103,8 @@ public class WebDataGridImpl extends VaadinComponentDelegate<WebDataGridImpl.Vaa
     /**
      * The keys which open the context menu of the lead cell, as the element reports them.
      */
-    private static final KeyCode CONTEXT_MENU_KEY = KeyCode.of(0x20D, "VK_CONTEXT_MENU");
-    private static final KeyCode F10_KEY = KeyCode.of(0x79, "VK_F10");
+    private static final KeyCode CONTEXT_MENU_KEY = KeyCode.CONTEXT_MENU;
+    private static final KeyCode F10_KEY = KeyCode.F10;
 
     /**
      * Rows per request of the client - a page of 1000 rows or an unlimited one is never sent whole.

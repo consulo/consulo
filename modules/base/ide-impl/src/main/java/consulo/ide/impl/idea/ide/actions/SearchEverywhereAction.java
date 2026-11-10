@@ -24,6 +24,7 @@ import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.searchEverywhere.SearchEverywhereManager;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.details.KeyCode;
 import consulo.ui.event.details.ModifiedInputDetails.Modifier;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.util.ShortcutLocalizeHolder;
@@ -33,9 +34,6 @@ import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.ex.keymap.internal.ModifierKeyDoubleClickHandler;
 import consulo.ui.ex.keymap.util.KeymapUtil;
 import jakarta.inject.Inject;
-
-import java.awt.event.KeyEvent;
-
 
 /**
  * @author Konstantin Bulenkov
@@ -70,7 +68,7 @@ public class SearchEverywhereAction extends DumbAwareAction implements AnActionW
         LocalizeValue shortcutText;
         Shortcut[] shortcuts = KeymapManager.getInstance().getActiveKeymap().getShortcuts(IdeActions.ACTION_SEARCH_EVERYWHERE);
         if (shortcuts.length == 0) {
-            LocalizeValue keyText = ShortcutLocalizeHolder.getKeyText(KeyEvent.VK_SHIFT, ShortcutUtil.isUseUnicodeShortcuts());
+            LocalizeValue keyText = ShortcutLocalizeHolder.getKeyText(KeyCode.SHIFT, ShortcutUtil.isUseUnicodeShortcuts());
             shortcutText = LocalizeValue.join(LocalizeValue.localizeTODO("Double "), keyText);
         }
         else {

@@ -38,6 +38,7 @@ import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.details.KeyCode;
+import consulo.ui.event.details.KeyStroke;
 import consulo.ui.event.details.KeyboardInputDetails;
 import consulo.ui.ex.action.CustomShortcutSet;
 import consulo.ui.ex.action.Presentation;
@@ -51,15 +52,13 @@ import consulo.ui.model.FlatDataModel;
 import consulo.ui.model.MutableFlatDataModel;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.KeyStroke;
-import java.awt.event.KeyEvent;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class ChooseRunConfigurationPopup implements ExecutorProvider {
-    private static final KeyCode F4 = KeyCode.of(KeyEvent.VK_F4, "VK_F4");
-    private static final KeyCode DELETE = KeyCode.of(KeyEvent.VK_DELETE, "VK_DELETE");
-    private static final KeyCode BACK_SPACE = KeyCode.of(KeyEvent.VK_BACK_SPACE, "VK_BACK_SPACE");
+    private static final KeyCode F4 = KeyCode.F4;
+    private static final KeyCode DELETE = KeyCode.DELETE;
+    private static final KeyCode BACK_SPACE = KeyCode.BACK_SPACE;
 
     private static final Map<KeyCode, Integer> NUMBER_KEYS = createNumberKeys();
 
@@ -118,17 +117,17 @@ public class ChooseRunConfigurationPopup implements ExecutorProvider {
         if (alternateExecutor != null && !properties.isTrueValue(myAddKey)) {
             return String.format(
                 "Hold %s to %s",
-                ShortcutUtil.getKeystrokeText(KeyStroke.getKeyStroke("SHIFT")),
+                ShortcutUtil.getKeystrokeText(KeyStroke.pressed(KeyCode.SHIFT)),
                 alternateExecutor.getActionName().get()
             );
         }
 
         if (!properties.isTrueValue("run.configuration.edit.ad")) {
-            return String.format("Press %s to Edit", ShortcutUtil.getKeystrokeText(KeyStroke.getKeyStroke("F4")));
+            return String.format("Press %s to Edit", ShortcutUtil.getKeystrokeText(KeyStroke.pressed(F4)));
         }
 
         if (!properties.isTrueValue("run.configuration.delete.ad")) {
-            return String.format("Press %s to Delete configuration", ShortcutUtil.getKeystrokeText(KeyStroke.getKeyStroke("DELETE")));
+            return String.format("Press %s to Delete configuration", ShortcutUtil.getKeystrokeText(KeyStroke.pressed(DELETE)));
         }
 
         return null;
@@ -194,8 +193,8 @@ public class ChooseRunConfigurationPopup implements ExecutorProvider {
     private static Map<KeyCode, Integer> createNumberKeys() {
         Map<KeyCode, Integer> keys = new HashMap<>();
         for (int i = 0; i < 10; i++) {
-            keys.put(KeyCode.of(KeyEvent.VK_0 + i), i);
-            keys.put(KeyCode.of(KeyEvent.VK_NUMPAD0 + i), i);
+            keys.put(KeyCode.of(KeyCode.DIGIT_0.key() + i), i);
+            keys.put(KeyCode.of(KeyCode.NUMPAD0.key() + i), i);
         }
         return keys;
     }
@@ -296,7 +295,7 @@ public class ChooseRunConfigurationPopup implements ExecutorProvider {
 
         @Override
         public @Nullable ShortcutSet getShortcut() {
-            return myMnemonic == -1 ? null : new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_0 + myMnemonic, 0));
+            return myMnemonic == -1 ? null : new CustomShortcutSet(KeyStroke.pressed(KeyCode.of(KeyCode.DIGIT_0.key() + myMnemonic)));
         }
 
         @Override

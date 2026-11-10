@@ -985,8 +985,8 @@ public class RunAnythingPopupUI extends BigPopupUI {
     @Override
     protected String getInitialHint() {
         return ExecutionLocalize.runAnythingHintInitialText(
-            KeymapUtil.getKeystrokeText(UP_KEYSTROKE),
-            KeymapUtil.getKeystrokeText(DOWN_KEYSTROKE)
+            KeymapUtil.getKeystrokeText(TargetAWT.from(UP_KEYSTROKE)),
+            KeymapUtil.getKeystrokeText(TargetAWT.from(DOWN_KEYSTROKE))
         ).get();
     }
 

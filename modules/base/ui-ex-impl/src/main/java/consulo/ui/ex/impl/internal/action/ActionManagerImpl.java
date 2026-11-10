@@ -24,6 +24,7 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.ui.event.details.KeyStroke;
 import consulo.ui.ex.action.AbbreviationManager;
 import consulo.ui.ex.action.DefaultCompactActionGroup;
 import consulo.ui.ex.keymap.util.KeymapUtil;
@@ -981,7 +982,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
             reportActionError(pluginId, "\"first-keystroke\" attribute must be specified for action with id=" + actionId);
             return;
         }
-        KeyStroke firstKeyStroke = getKeyStroke(firstStrokeString);
+        KeyStroke firstKeyStroke = KeyStroke.parse(firstStrokeString);
         if (firstKeyStroke == null) {
             reportActionError(pluginId, "\"first-keystroke\" attribute has invalid value for action with id=" + actionId);
             return;
@@ -990,7 +991,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
         KeyStroke secondKeyStroke = null;
         String secondStrokeString = element.getAttributeValue(SECOND_KEYSTROKE_ATTR_NAME);
         if (secondStrokeString != null) {
-            secondKeyStroke = getKeyStroke(secondStrokeString);
+            secondKeyStroke = KeyStroke.parse(secondStrokeString);
             if (secondKeyStroke == null) {
                 reportActionError(pluginId, "\"second-keystroke\" attribute has invalid value for action with id=" + actionId);
                 return;

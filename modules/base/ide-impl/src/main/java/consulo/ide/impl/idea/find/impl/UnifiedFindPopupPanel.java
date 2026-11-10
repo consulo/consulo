@@ -51,6 +51,9 @@ import consulo.project.Project;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
+import consulo.ui.event.details.KeyCode;
+import consulo.ui.event.details.KeyStroke;
+import consulo.ui.event.details.ModifiedInputDetails.Modifier;
 import consulo.ui.ex.BadgeIconSupplier;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.keymap.Keymap;
@@ -80,9 +83,6 @@ import consulo.util.lang.ref.SoftReference;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.KeyStroke;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 import java.util.*;
@@ -102,11 +102,10 @@ import java.util.regex.PatternSyntaxException;
  * @since 2026-10-02
  */
 public class UnifiedFindPopupPanel implements FindUI {
-    private static final KeyStroke ENTER = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0);
+    private static final KeyStroke ENTER = KeyStroke.pressed(KeyCode.ENTER);
     private static final KeyStroke ENTER_WITH_MODIFIERS =
-        KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, Platform.current().os().isMac() ? InputEvent.META_DOWN_MASK : InputEvent.CTRL_DOWN_MASK);
-    private static final KeyStroke REPLACE_ALL =
-        KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.SHIFT_DOWN_MASK | InputEvent.ALT_DOWN_MASK);
+        KeyStroke.pressed(KeyCode.ENTER, Platform.current().os().isMac() ? Modifier.META : Modifier.CTRL);
+    private static final KeyStroke REPLACE_ALL = KeyStroke.pressed(KeyCode.ENTER, Modifier.SHIFT, Modifier.ALT);
 
     private static final Size2D DEFAULT_SIZE = new Size2D(920, 660);
 
@@ -581,8 +580,8 @@ public class UnifiedFindPopupPanel implements FindUI {
                 .registerCustomShortcutSet(new CustomShortcutSet(navigationShortcuts.toArray(Shortcut.EMPTY_ARRAY)), myRootLayout);
         }
 
-        ShortcutSet up = new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0));
-        ShortcutSet down = new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0));
+        ShortcutSet up = new CustomShortcutSet(KeyStroke.pressed(KeyCode.UP));
+        ShortcutSet down = new CustomShortcutSet(KeyStroke.pressed(KeyCode.DOWN));
         DumbAwareAction previousUsageAction = DumbAwareAction.create(e -> myResultsList.moveSelection(-1));
         DumbAwareAction nextUsageAction = DumbAwareAction.create(e -> myResultsList.moveSelection(1));
         for (Component component : List.of(searchField, replaceField)) {
@@ -842,14 +841,14 @@ public class UnifiedFindPopupPanel implements FindUI {
             {
                 getTemplatePresentation().setHoveredIcon(hoveredIcon);
                 getTemplatePresentation().setSelectedIcon(selectedIcon);
-                int mnemonic = KeyEvent.getExtendedKeyCodeForChar(
-                    TextWithMnemonic.parse(getTemplatePresentation().getTextWithMnemonic()).getMnemonic()
-                );
-                if (mnemonic != KeyEvent.VK_UNDEFINED) {
-                    setShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(
-                        mnemonic,
-                        Platform.current().os().isMac() ? InputEvent.ALT_DOWN_MASK | InputEvent.CTRL_DOWN_MASK : InputEvent.ALT_DOWN_MASK
-                    )));
+                char mnemonicChar = (char) TextWithMnemonic.parse(getTemplatePresentation().getTextWithMnemonic()).getMnemonic();
+                KeyCode mnemonic = KeyCode.byName(String.valueOf(Character.toUpperCase(mnemonicChar)));
+                if (mnemonic != null) {
+                    setShortcutSet(new CustomShortcutSet(
+                        Platform.current().os().isMac()
+                            ? KeyStroke.pressed(mnemonic, Modifier.ALT, Modifier.CTRL)
+                            : KeyStroke.pressed(mnemonic, Modifier.ALT)
+                    ));
                     registerCustomShortcutSet(getShortcutSet(), myRootLayout);
                 }
             }

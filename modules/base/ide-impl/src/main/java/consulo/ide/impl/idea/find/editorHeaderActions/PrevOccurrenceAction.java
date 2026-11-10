@@ -18,6 +18,9 @@ package consulo.ide.impl.idea.find.editorHeaderActions;
 import consulo.fileEditor.impl.internal.search.SearchSession;
 import consulo.fileEditor.impl.internal.search.SearchUtils;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.details.KeyCode;
+import consulo.ui.event.details.KeyStroke;
+import consulo.ui.event.details.ModifiedInputDetails.Modifier;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.action.KeyboardShortcut;
@@ -25,8 +28,6 @@ import consulo.ui.ex.action.Shortcut;
 import consulo.util.collection.ContainerUtil;
 
 import javax.swing.*;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
 import java.util.Arrays;
 import java.util.List;
 
@@ -61,7 +62,7 @@ public class PrevOccurrenceAction extends PrevNextOccurrenceAction {
         if (mySearch) {
             return ContainerUtil.concat(
                 shortcuts,
-                Arrays.asList(new KeyboardShortcut(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.SHIFT_DOWN_MASK), null))
+                Arrays.asList(new KeyboardShortcut(KeyStroke.pressed(KeyCode.ENTER, Modifier.SHIFT), null))
             );
         }
         else {

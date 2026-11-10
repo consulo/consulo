@@ -39,6 +39,7 @@ import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import consulo.ui.ex.awt.tree.*;
 import consulo.ui.ex.awt.tree.action.CollapseAllAction;
 import consulo.ui.ex.awt.tree.action.ExpandAllAction;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.keymap.KeymapManager;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.io.FileUtil;
@@ -122,7 +123,7 @@ public abstract class ChangesTreeListImpl<T> extends Tree implements UiDataProvi
         setCellRenderer(myNodeRenderer);
 
         new MyToggleSelectionAction()
-            .registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0)), this);
+            .registerCustomShortcutSet(new CustomShortcutSet(TargetAWT.from(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0))), this);
         registerKeyboardAction(
             e -> myDoubleClickHandler.run(),
             KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),
@@ -518,10 +519,10 @@ public abstract class ChangesTreeListImpl<T> extends Tree implements UiDataProvi
         };
         AnAction[] actions = new AnAction[]{directoriesAction, expandAllAction, collapseAllAction};
         directoriesAction.registerCustomShortcutSet(
-            new CustomShortcutSet(KeyStroke.getKeyStroke(
+            new CustomShortcutSet(TargetAWT.from(KeyStroke.getKeyStroke(
                 KeyEvent.VK_P,
                 Platform.current().os().isMac() ? InputEvent.META_DOWN_MASK : InputEvent.CTRL_DOWN_MASK
-            )),
+            ))),
             this
         );
         expandAllAction.registerCustomShortcutSet(

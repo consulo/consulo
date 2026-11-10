@@ -207,7 +207,7 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
                     focusOwner.transferFocus();
                 }
             }
-        }.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0)), this);
+        }.registerCustomShortcutSet(new CustomShortcutSet(TargetAWT.from(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0))), this);
         new DumbAwareAction() {
             @RequiredUIAccess
             @Override
@@ -217,7 +217,7 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
                     focusOwner.transferFocusBackward();
                 }
             }
-        }.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, InputEvent.SHIFT_DOWN_MASK)), this);
+        }.registerCustomShortcutSet(new CustomShortcutSet(TargetAWT.from(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, InputEvent.SHIFT_DOWN_MASK))), this);
 
         TouchBarController.getInstance().setActions(this, ActionGroup.of(new PrevOccurrenceAction(), new NextOccurrenceAction()));
 

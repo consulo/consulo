@@ -138,7 +138,7 @@ public class ExtendableTextField extends JBTextField implements ExtendableTextCo
 
     public ExtendableTextField addBrowseExtension(Runnable action, @Nullable Disposable parentDisposable) {
         KeyStroke keyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.SHIFT_DOWN_MASK);
-        String tooltip = UILocalize.componentWithBrowseButtonBrowseButtonTooltipText().get() + " (" + ShortcutUtil.getKeystrokeText(keyStroke) + ")";
+        String tooltip = UILocalize.componentWithBrowseButtonBrowseButtonTooltipText().get() + " (" + ShortcutUtil.getKeystrokeText(TargetAWT.from(keyStroke)) + ")";
 
         ExtendableTextComponent.Extension browseExtension = ExtendableTextComponent.Extension.create(AllIcons.Nodes.TreeOpen, AllIcons.Nodes.TreeOpen, tooltip, action);
 
@@ -147,7 +147,7 @@ public class ExtendableTextField extends JBTextField implements ExtendableTextCo
             public void actionPerformed(AnActionEvent e) {
                 action.run();
             }
-        }.registerCustomShortcutSet(new CustomShortcutSet(keyStroke), this, parentDisposable);
+        }.registerCustomShortcutSet(new CustomShortcutSet(TargetAWT.from(keyStroke)), this, parentDisposable);
         addExtension(browseExtension);
 
         return this;

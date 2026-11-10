@@ -29,6 +29,8 @@ import consulo.language.codeStyle.arrangement.std.*;
 import consulo.language.codeStyle.ui.internal.arrangement.*;
 import consulo.language.codeStyle.ui.setting.CodeStyleAbstractPanel;
 import consulo.localize.LocalizeValue;
+import consulo.ui.event.details.KeyCode;
+import consulo.ui.event.details.KeyStroke;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.GridBag;
 import consulo.util.lang.Comparing;
@@ -36,7 +38,6 @@ import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -99,7 +100,7 @@ public abstract class ArrangementSettingsPanel extends CodeStyleAbstractPanel {
     registerShortcut(ArrangementConstants.MATCHING_RULE_REMOVE, CommonShortcuts.getDelete(), myMatchingRulesPanel);
     registerShortcut(ArrangementConstants.MATCHING_RULE_MOVE_UP, CommonShortcuts.MOVE_UP, myMatchingRulesPanel);
     registerShortcut(ArrangementConstants.MATCHING_RULE_MOVE_DOWN, CommonShortcuts.MOVE_DOWN, myMatchingRulesPanel);
-    CustomShortcutSet edit = new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0));
+    CustomShortcutSet edit = new CustomShortcutSet(KeyStroke.pressed(KeyCode.F2));
     registerShortcut(ArrangementConstants.MATCHING_RULE_EDIT, edit, myMatchingRulesPanel);
 
     registerShortcut(ArrangementConstants.GROUPING_RULE_MOVE_UP, CommonShortcuts.MOVE_UP, myGroupingRulesPanel);

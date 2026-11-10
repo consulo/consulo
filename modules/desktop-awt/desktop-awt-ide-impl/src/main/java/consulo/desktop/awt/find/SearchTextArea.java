@@ -20,6 +20,7 @@ import consulo.ui.ex.awt.JBScrollPane;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.event.DocumentAdapter;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.StringUtil;
 
@@ -64,9 +65,9 @@ public class SearchTextArea extends JPanel implements PropertyChangeListener {
         myTextArea.addPropertyChangeListener("background", this);
         myTextArea.addPropertyChangeListener("font", this);
         DumbAwareAction.create(event -> myTextArea.transferFocus())
-            .registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0)), myTextArea);
+            .registerCustomShortcutSet(new CustomShortcutSet(TargetAWT.from(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0))), myTextArea);
         DumbAwareAction.create(event -> myTextArea.transferFocusBackward())
-            .registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, SHIFT_DOWN_MASK)), myTextArea);
+            .registerCustomShortcutSet(new CustomShortcutSet(TargetAWT.from(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, SHIFT_DOWN_MASK))), myTextArea);
         KeymapUtil.reassignAction(myTextArea, KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), NEW_LINE_KEYSTROKE, WHEN_FOCUSED);
         myTextArea.setDocument(new PlainDocument() {
             @Override
@@ -291,7 +292,7 @@ public class SearchTextArea extends JPanel implements PropertyChangeListener {
     private class NewLineAction extends LegacyDumbAwareAction {
         NewLineAction() {
             super(FindLocalize.findNewLine(), LocalizeValue.empty(), AllIcons.Actions.SearchNewLine);
-            setShortcutSet(new CustomShortcutSet(NEW_LINE_KEYSTROKE));
+            setShortcutSet(new CustomShortcutSet(TargetAWT.from(NEW_LINE_KEYSTROKE)));
             getTemplatePresentation().setHoveredIcon(AllIcons.Actions.SearchNewLineHover);
         }
 

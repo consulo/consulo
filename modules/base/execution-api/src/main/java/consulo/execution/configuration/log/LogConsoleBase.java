@@ -38,6 +38,9 @@ import consulo.process.ProcessHandler;
 import consulo.process.event.ProcessAdapter;
 import consulo.process.event.ProcessEvent;
 import consulo.project.Project;
+import consulo.ui.event.details.KeyCode;
+import consulo.ui.event.details.KeyStroke;
+import consulo.ui.event.details.ModifiedInputDetails.Modifier;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.FilterComponent;
 import consulo.ui.ex.awt.util.Alarm;
@@ -51,7 +54,6 @@ import javax.swing.event.ChangeEvent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -171,7 +173,7 @@ public abstract class LogConsoleBase extends AdditionalTabComponent implements L
         new AnAction() {
             {
                 registerCustomShortcutSet(
-                    new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, KeyEvent.SHIFT_DOWN_MASK)),
+                    new CustomShortcutSet(KeyStroke.pressed(KeyCode.TAB, Modifier.SHIFT)),
                     LogConsoleBase.this
                 );
             }

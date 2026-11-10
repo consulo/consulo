@@ -344,7 +344,7 @@ public final class IdeKeyEventDispatcher implements Disposable {
         }
         KeyStroke keyStroke = getKeyStrokeWithoutMouseModifiers(originalKeyStroke);
 
-        updateCurrentContext(myContext.getFoundComponent(), new KeyboardShortcut(myFirstKeyStroke, keyStroke), myContext.isModalContext());
+        updateCurrentContext(myContext.getFoundComponent(), new KeyboardShortcut(TargetAWT.from(myFirstKeyStroke), TargetAWT.from(keyStroke)), myContext.isModalContext());
 
         // consume the wrong second stroke and keep on waiting
         if (myContext.getActions().isEmpty()) {
@@ -428,7 +428,7 @@ public final class IdeKeyEventDispatcher implements Disposable {
             }
         }
 
-        updateCurrentContext(focusOwner, new KeyboardShortcut(keyStroke, null), isModalContext);
+        updateCurrentContext(focusOwner, new KeyboardShortcut(TargetAWT.from(keyStroke), null), isModalContext);
         if (myContext.getActions().isEmpty()) {
             // there's nothing mapped for this stroke
             return false;
@@ -483,8 +483,8 @@ public final class IdeKeyEventDispatcher implements Disposable {
             for (Shortcut shortcut : shortcuts) {
                 if (shortcut instanceof KeyboardShortcut) {
                     KeyboardShortcut keyShortcut = (KeyboardShortcut)shortcut;
-                    if (keyShortcut.getFirstKeyStroke().equals(myFirstKeyStroke)) {
-                        secondKeyStrokes.add(Pair.create(action, keyShortcut.getSecondKeyStroke()));
+                    if (keyShortcut.getFirstKeyStroke().equals(TargetAWT.from(myFirstKeyStroke))) {
+                        secondKeyStrokes.add(Pair.create(action, TargetAWT.to(keyShortcut.getSecondKeyStroke())));
                     }
                 }
             }
@@ -936,12 +936,12 @@ public final class IdeKeyEventDispatcher implements Disposable {
             // little trick to invoke action which second stroke is a key w/o modifiers, but user still
             // holds the modifier key(s) of the first stroke
 
-            KeyStroke firstKeyStroke = keyboardShortcut.getFirstKeyStroke();
-            KeyStroke secondKeyStroke = keyboardShortcut.getSecondKeyStroke();
+            KeyStroke firstKeyStroke = TargetAWT.to(keyboardShortcut.getFirstKeyStroke());
+            KeyStroke secondKeyStroke = TargetAWT.to(keyboardShortcut.getSecondKeyStroke());
 
             if (secondKeyStroke != null && secondKeyStroke.getModifiers() != 0 && firstKeyStroke.getModifiers() != 0) {
                 KeyboardShortcut altShortCut =
-                    new KeyboardShortcut(firstKeyStroke, KeyStroke.getKeyStroke(secondKeyStroke.getKeyCode(), 0));
+                    new KeyboardShortcut(TargetAWT.from(firstKeyStroke), TargetAWT.from(KeyStroke.getKeyStroke(secondKeyStroke.getKeyCode(), 0)));
                 String[] additionalActions = keymap.getActionIds(altShortCut);
 
                 for (String actionId : additionalActions) {
@@ -1136,7 +1136,7 @@ public final class IdeKeyEventDispatcher implements Disposable {
                 if (value instanceof Pair) {
                     //noinspection unchecked
                     Pair<AnAction, KeyStroke> pair = (Pair<AnAction, KeyStroke>)value;
-                    append(KeymapUtil.getShortcutText(new KeyboardShortcut(pair.getSecond(), null)), SimpleTextAttributes.GRAY_ATTRIBUTES);
+                    append(KeymapUtil.getShortcutText(new KeyboardShortcut(TargetAWT.from(pair.getSecond()), null)), SimpleTextAttributes.GRAY_ATTRIBUTES);
                     appendTextPadding(30);
                     String text = pair.getFirst().getTemplatePresentation().getText();
                     if (text != null) {

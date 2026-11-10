@@ -24,12 +24,13 @@ import consulo.language.codeStyle.arrangement.match.StdArrangementMatchRule;
 import consulo.language.codeStyle.arrangement.std.ArrangementStandardSettingsManager;
 import consulo.language.codeStyle.arrangement.std.StdArrangementRuleAliasToken;
 import consulo.ui.Component;
+import consulo.ui.event.details.KeyCode;
+import consulo.ui.event.details.KeyStroke;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 
 import org.jspecify.annotations.Nullable;
 import javax.swing.*;
-import java.awt.event.KeyEvent;
 import java.util.List;
 
 /**
@@ -50,7 +51,7 @@ public class ArrangementRuleAliasConfigurable implements UnnamedConfigurable {
     registerShortcut(ArrangementConstants.MATCHING_ALIAS_RULE_REMOVE, CommonShortcuts.getDelete(), myTokenRulesPanel);
     registerShortcut(ArrangementConstants.MATCHING_ALIAS_RULE_MOVE_UP, CommonShortcuts.MOVE_UP, myTokenRulesPanel);
     registerShortcut(ArrangementConstants.MATCHING_ALIAS_RULE_MOVE_DOWN, CommonShortcuts.MOVE_DOWN, myTokenRulesPanel);
-    CustomShortcutSet edit = new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0));
+    CustomShortcutSet edit = new CustomShortcutSet(KeyStroke.pressed(KeyCode.F2));
     registerShortcut(ArrangementConstants.MATCHING_ALIAS_RULE_EDIT, edit, myTokenRulesPanel);
   }
 

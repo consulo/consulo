@@ -21,8 +21,12 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.ui.UIAccess;
+import consulo.ui.event.details.KeyCode;
+import consulo.ui.event.details.ModifiedInputDetails.Modifier;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.util.MacKeymapUtil;
+import consulo.ui.ex.action.util.ShortcutLocalizeHolder;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.internal.ActionStubBase;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapGroup;
@@ -36,11 +40,12 @@ import consulo.util.concurrent.coroutine.CoroutineScope;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
-import java.awt.*;
-import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
@@ -77,24 +82,24 @@ public class KeymapUtil {
         }
 
         int button = -1;
-        int modifiers = 0;
+        Set<Modifier> modifiers = EnumSet.noneOf(Modifier.class);
         int clickCount = 1;
         for (StringTokenizer tokenizer = new StringTokenizer(keystrokeString); tokenizer.hasMoreTokens(); ) {
             String token = tokenizer.nextToken();
             if (SHIFT.equals(token)) {
-                modifiers |= InputEvent.SHIFT_DOWN_MASK;
+                modifiers.add(Modifier.SHIFT);
             }
             else if (CONTROL.equals(token) || CTRL.equals(token)) {
-                modifiers |= InputEvent.CTRL_DOWN_MASK;
+                modifiers.add(Modifier.CTRL);
             }
             else if (META.equals(token)) {
-                modifiers |= InputEvent.META_DOWN_MASK;
+                modifiers.add(Modifier.META);
             }
             else if (ALT.equals(token)) {
-                modifiers |= InputEvent.ALT_DOWN_MASK;
+                modifiers.add(Modifier.ALT);
             }
             else if (ALT_GRAPH.equals(token)) {
-                modifiers |= InputEvent.ALT_GRAPH_DOWN_MASK;
+                modifiers.add(Modifier.ALT_GRAPH);
             }
             else if (token.startsWith("button") && token.length() > 6) {
                 try {
@@ -239,35 +244,15 @@ public class KeymapUtil {
      * @param clickCount target clicks count
      * @return string representation of passed mouse shortcut.
      */
-    public static LocalizeValue getMouseShortcutText(int button, int modifiers, int clickCount) {
+    public static LocalizeValue getMouseShortcutText(int button, Set<Modifier> modifiers, int clickCount) {
         if (clickCount < 3) {
             return clickCount == 1
-                ? KeyMapLocalize.mouseClickShortcutText(getModifiersText(mapNewModifiers(modifiers)), button)
-                : KeyMapLocalize.mouseDoubleClickShortcutText(getModifiersText(mapNewModifiers(modifiers)), button);
+                ? KeyMapLocalize.mouseClickShortcutText(getModifiersText(modifiers), button)
+                : KeyMapLocalize.mouseDoubleClickShortcutText(getModifiersText(modifiers), button);
         }
         else {
             throw new IllegalStateException("unknown clickCount: " + clickCount);
         }
-    }
-
-    private static int mapNewModifiers(int modifiers) {
-        if ((modifiers & InputEvent.SHIFT_DOWN_MASK) != 0) {
-            modifiers |= InputEvent.SHIFT_MASK;
-        }
-        if ((modifiers & InputEvent.ALT_DOWN_MASK) != 0) {
-            modifiers |= InputEvent.ALT_MASK;
-        }
-        if ((modifiers & InputEvent.ALT_GRAPH_DOWN_MASK) != 0) {
-            modifiers |= InputEvent.ALT_GRAPH_MASK;
-        }
-        if ((modifiers & InputEvent.CTRL_DOWN_MASK) != 0) {
-            modifiers |= InputEvent.CTRL_MASK;
-        }
-        if ((modifiers & InputEvent.META_DOWN_MASK) != 0) {
-            modifiers |= InputEvent.META_MASK;
-        }
-
-        return modifiers;
     }
 
     public static ShortcutSet getActiveKeymapShortcuts(@Nullable String actionId) {
@@ -281,34 +266,39 @@ public class KeymapUtil {
 
     public static boolean isEventForAction(KeyEvent keyEvent, String actionId) {
         for (KeyboardShortcut shortcut : ContainerUtil.findAll(getActiveKeymapShortcuts(actionId).getShortcuts(), KeyboardShortcut.class)) {
-            if (AWTKeyStroke.getAWTKeyStrokeForEvent(keyEvent) == shortcut.getFirstKeyStroke()) {
+            if (Objects.equals(TargetAWT.from(javax.swing.KeyStroke.getKeyStrokeForEvent(keyEvent)), shortcut.getFirstKeyStroke())) {
                 return true;
             }
         }
         return false;
     }
 
-    private static String getModifiersText(int modifiers) {
+    private static String getModifiersText(Set<Modifier> modifiers) {
         if (Platform.current().os().isMac()) {
             return MacKeymapUtil.getModifiersText(modifiers);
         }
 
-        String keyModifiersText = KeyEvent.getKeyModifiersText(modifiers);
-        if (keyModifiersText.isEmpty()) {
-            return keyModifiersText;
-        }
-        else {
-            return keyModifiersText + "+";
+        List<String> texts = new ArrayList<>();
+        addModifierText(texts, modifiers, Modifier.META, KeyCode.META);
+        addModifierText(texts, modifiers, Modifier.CTRL, KeyCode.CONTROL);
+        addModifierText(texts, modifiers, Modifier.ALT, KeyCode.ALT);
+        addModifierText(texts, modifiers, Modifier.SHIFT, KeyCode.SHIFT);
+        addModifierText(texts, modifiers, Modifier.ALT_GRAPH, KeyCode.ALT_GRAPH);
+        return texts.isEmpty() ? "" : String.join("+", texts) + "+";
+    }
+
+    private static void addModifierText(List<String> texts, Set<Modifier> modifiers, Modifier modifier, KeyCode keyCode) {
+        if (modifiers.contains(modifier)) {
+            texts.add(ShortcutLocalizeHolder.getKeyText(keyCode, false).get());
         }
     }
 
     /**
      * Checks that one of the mouse shortcuts assigned to the provided action has the same modifiers as provided
      */
-    public static boolean matchActionMouseShortcutsModifiers(Keymap activeKeymap, int modifiers, String actionId) {
-        MouseShortcut syntheticShortcut = new MouseShortcut(MouseEvent.BUTTON1, modifiers, 1);
+    public static boolean matchActionMouseShortcutsModifiers(Keymap activeKeymap, Set<Modifier> modifiers, String actionId) {
         for (Shortcut shortcut : activeKeymap.getShortcuts(actionId)) {
-            if (shortcut instanceof MouseShortcut mouseShortcut && mouseShortcut.getModifiers() == syntheticShortcut.getModifiers()) {
+            if (shortcut instanceof MouseShortcut mouseShortcut && mouseShortcut.getModifiers().equals(modifiers)) {
                 return true;
             }
         }

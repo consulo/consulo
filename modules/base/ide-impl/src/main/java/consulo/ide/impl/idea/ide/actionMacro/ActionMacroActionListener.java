@@ -23,6 +23,7 @@ import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.event.AnActionListener;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import jakarta.inject.Inject;
 
 import javax.swing.*;
@@ -57,7 +58,7 @@ public class ActionMacroActionListener implements AnActionListener {
 
             String shortcut = null;
             if (event.getInputEvent() instanceof KeyEvent keyEvent) {
-                shortcut = KeymapUtil.getKeystrokeText(KeyStroke.getKeyStrokeForEvent(keyEvent));
+                shortcut = KeymapUtil.getKeystrokeText(TargetAWT.from(KeyStroke.getKeyStrokeForEvent(keyEvent)));
             }
 
             myActionMacroManager.notifyUser(dataContext, id + (shortcut != null ? " (" + shortcut + ")" : ""), false);

@@ -41,9 +41,9 @@ import java.util.function.Consumer;
  */
 public class SearchTextField extends JPanel {
     public static final KeyStroke SHOW_HISTORY_KEYSTROKE = KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, InputEvent.ALT_DOWN_MASK);
-    public static final CustomShortcutSet SHOW_HISTORY_SHORTCUT = new CustomShortcutSet(SHOW_HISTORY_KEYSTROKE);
+    public static final CustomShortcutSet SHOW_HISTORY_SHORTCUT = new CustomShortcutSet(TargetAWT.from(SHOW_HISTORY_KEYSTROKE));
     public static final KeyStroke ALT_SHOW_HISTORY_KEYSTROKE = KeyStroke.getKeyStroke(KeyEvent.VK_UP, InputEvent.ALT_DOWN_MASK);
-    public static final CustomShortcutSet ALT_SHOW_HISTORY_SHORTCUT = new CustomShortcutSet(ALT_SHOW_HISTORY_KEYSTROKE);
+    public static final CustomShortcutSet ALT_SHOW_HISTORY_SHORTCUT = new CustomShortcutSet(TargetAWT.from(ALT_SHOW_HISTORY_KEYSTROKE));
 
     private int myHistorySize = 5;
     private final MyModel myModel;

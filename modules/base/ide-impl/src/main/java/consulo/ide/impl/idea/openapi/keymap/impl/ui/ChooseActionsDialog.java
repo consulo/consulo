@@ -30,6 +30,7 @@ import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.ui.ex.awt.event.DoubleClickListener;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.awt.util.Alarm;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.localize.KeyMapLocalize;
 import consulo.ui.ex.popup.JBPopup;
@@ -229,7 +230,7 @@ public class ChooseActionsDialog extends DialogWrapper {
                 myTreeExpansionMonitor.freeze();
             }
             myActionsTree.filterTree(
-                new KeyboardShortcut(keyStroke, enable2Shortcut.isSelected() ? secondShortcut.getKeyStroke() : null),
+                new KeyboardShortcut(TargetAWT.from(keyStroke), enable2Shortcut.isSelected() ? TargetAWT.from(secondShortcut.getKeyStroke()) : null),
                 myQuicklists
             );
             JTree tree = myActionsTree.getTree();

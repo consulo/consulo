@@ -127,7 +127,7 @@ public class JBTerminalSystemSettingsProvider extends DefaultSettingsProvider {
         Shortcut[] shortcuts = KeymapManager.getInstance().getActiveKeymap().getShortcuts(actionId);
         for (Shortcut sc : shortcuts) {
             if (sc instanceof KeyboardShortcut ksc) {
-                keyStrokes.add(ksc.getFirstKeyStroke());
+                keyStrokes.add(TargetAWT.to(ksc.getFirstKeyStroke()));
             }
         }
         return keyStrokes;

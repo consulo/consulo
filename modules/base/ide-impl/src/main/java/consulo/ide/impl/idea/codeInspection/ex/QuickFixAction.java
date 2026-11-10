@@ -43,6 +43,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.action.CustomShortcutSet;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.lang.ref.SimpleReference;
@@ -71,7 +72,7 @@ public class QuickFixAction extends LegacyAnAction {
         super(text, text, icon);
         myToolWrapper = toolWrapper;
         if (keyStroke != null) {
-            setShortcutSet(new CustomShortcutSet(keyStroke));
+            setShortcutSet(new CustomShortcutSet(TargetAWT.from(keyStroke)));
         }
     }
 

@@ -240,7 +240,7 @@ public class ActionMenuItemEngine {
     private void setAcceleratorFromShortcuts(Shortcut[] shortcuts) {
         for (Shortcut shortcut : shortcuts) {
             if (shortcut instanceof KeyboardShortcut keyboardShortcut) {
-                KeyStroke firstKeyStroke = keyboardShortcut.getFirstKeyStroke();
+                KeyStroke firstKeyStroke = TargetAWT.to(keyboardShortcut.getFirstKeyStroke());
                 //If action has Enter shortcut, do not add it. Otherwise, user won't be able to chose any ActionMenuItem other than that
                 if (!isEnterKeyStroke(firstKeyStroke)) {
                     ((ActionMenuItem) myButton).setAccelerator(firstKeyStroke);

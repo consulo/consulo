@@ -22,6 +22,7 @@ import consulo.ui.Component;
 import consulo.ui.UIAccess;
 import consulo.ui.event.ComponentEvent;
 import consulo.ui.event.details.KeyCode;
+import consulo.ui.event.details.KeyStroke;
 import consulo.ui.event.details.ModifiedInputDetails.Modifier;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
@@ -33,8 +34,6 @@ import io.qt.gui.QKeyEvent;
 import io.qt.widgets.QApplication;
 import io.qt.widgets.QWidget;
 
-import javax.swing.KeyStroke;
-import java.awt.event.InputEvent;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -42,10 +41,8 @@ import java.util.concurrent.CompletableFuture;
 /**
  * Turns qt key presses into platform actions and typed characters.
  * <p>
- * Keys are described with {@link KeyCode} and {@link Modifier}, the platform's own input vocabulary, rather than
- * with {@code java.awt.event.KeyEvent}. The one place awt still appears is the lookup itself: {@link Keymap} is
- * keyed by {@link KeyStroke} and offers no other way in, so the neutral description is converted to a keystroke at
- * that boundary and nowhere else. That is also why nothing here hard-codes which key does what - the user's keymap
+ * Keys are described with {@link KeyCode} and {@link Modifier}, the platform's own input vocabulary, and looked up
+ * in the {@link Keymap} as a {@link KeyStroke}. Nothing here hard-codes which key does what - the user's keymap
  * decides, exactly as it does for the awt frontend.
  *
  * @author VISTALL
@@ -77,7 +74,7 @@ public class DesktopQtEditorKeyHandler {
     private boolean performKeymapAction(QKeyEvent keyEvent, KeyCode keyCode, EnumSet<Modifier> modifiers) {
         boolean modalContext = QApplication.activeModalWidget() != null;
         List<AnAction> actions =
-            UnifiedCustomShortcutDispatcher.collectKeymapActions(List.of(toKeyStroke(keyCode, modifiers)), modalContext);
+            UnifiedCustomShortcutDispatcher.collectKeymapActions(List.of(KeyStroke.of(keyCode, modifiers, false)), modalContext);
         if (actions.isEmpty()) {
             return false;
         }
@@ -154,24 +151,6 @@ public class DesktopQtEditorKeyHandler {
 
         ((ActionManagerEx) ActionManager.getInstance()).fireBeforeEditorTyping(ch, context);
         EditorActionManager.getInstance().getTypedAction().actionPerformed(myEditor, ch, context);
-    }
-
-    private static KeyStroke toKeyStroke(KeyCode keyCode, EnumSet<Modifier> modifiers) {
-        int awtModifiers = 0;
-        if (modifiers.contains(Modifier.SHIFT)) {
-            awtModifiers |= InputEvent.SHIFT_DOWN_MASK;
-        }
-        if (modifiers.contains(Modifier.CTRL)) {
-            awtModifiers |= InputEvent.CTRL_DOWN_MASK;
-        }
-        if (modifiers.contains(Modifier.ALT)) {
-            awtModifiers |= InputEvent.ALT_DOWN_MASK;
-        }
-        if (modifiers.contains(Modifier.META)) {
-            awtModifiers |= InputEvent.META_DOWN_MASK;
-        }
-
-        return KeyStroke.getKeyStroke(keyCode.key(), awtModifiers);
     }
 
 }

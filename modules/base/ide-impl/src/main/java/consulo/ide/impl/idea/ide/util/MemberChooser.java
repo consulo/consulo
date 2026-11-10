@@ -30,6 +30,9 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.CheckBox;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.details.KeyCode;
+import consulo.ui.event.details.KeyStroke;
+import consulo.ui.event.details.ModifiedInputDetails.Modifier;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.event.DoubleClickListener;
@@ -149,7 +152,7 @@ public class MemberChooser<T extends ClassMember> extends DialogWrapper implemen
         myTree = createTree();
         myOptionControls = optionControls;
         mySortAction = new SortEmAction();
-        mySortAction.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_A, InputEvent.ALT_MASK)), myTree);
+        mySortAction.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.pressed(KeyCode.A, Modifier.ALT)), myTree);
     }
 
     @RequiredUIAccess
@@ -508,7 +511,7 @@ public class MemberChooser<T extends ClassMember> extends DialogWrapper implemen
         if (!supportsNestedContainers()) {
             ShowContainersAction showContainersAction = getShowContainersAction();
             showContainersAction.registerCustomShortcutSet(
-                new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.ALT_MASK)),
+                new CustomShortcutSet(KeyStroke.pressed(KeyCode.C, Modifier.ALT)),
                 myTree
             );
             setShowClasses(PropertiesComponent.getInstance().getBoolean(PROP_SHOWCLASSES, true));

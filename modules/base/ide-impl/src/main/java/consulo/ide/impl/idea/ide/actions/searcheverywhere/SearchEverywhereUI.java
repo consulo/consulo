@@ -815,7 +815,7 @@ public class SearchEverywhereUI extends BigPopupUI implements UiDataProvider, Qu
             Collection<Shortcut> newShortcuts = new ArrayList<>();
             for (KeyboardShortcut shortcut : keyboardShortcuts) {
                 boolean hasSecondStroke = shortcut.getSecondKeyStroke() != null;
-                KeyStroke originalStroke = hasSecondStroke ? shortcut.getSecondKeyStroke() : shortcut.getFirstKeyStroke();
+                KeyStroke originalStroke = TargetAWT.to(hasSecondStroke ? shortcut.getSecondKeyStroke() : shortcut.getFirstKeyStroke());
 
                 if ((originalStroke.getModifiers() & modifiers) != 0) {
                     continue;
@@ -827,8 +827,8 @@ public class SearchEverywhereUI extends BigPopupUI implements UiDataProvider, Qu
                 );
                 newShortcuts.add(
                     hasSecondStroke
-                        ? new KeyboardShortcut(shortcut.getFirstKeyStroke(), newStroke)
-                        : new KeyboardShortcut(newStroke, null)
+                        ? new KeyboardShortcut(shortcut.getFirstKeyStroke(), TargetAWT.from(newStroke))
+                        : new KeyboardShortcut(TargetAWT.from(newStroke), null)
                 );
             }
             if (newShortcuts.isEmpty()) {

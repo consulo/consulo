@@ -31,6 +31,8 @@ import consulo.ui.Space;
 import consulo.ui.StaticPosition;
 import consulo.ui.VerticalAlignment;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.details.KeyCode;
+import consulo.ui.event.details.KeyStroke;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.action.Shortcut;
 import consulo.ui.ex.action.util.ShortcutUtil;
@@ -43,18 +45,16 @@ import consulo.ui.style.ComponentColors;
 import consulo.util.lang.Pair;
 import org.jspecify.annotations.Nullable;
 
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BooleanSupplier;
-import javax.swing.*;
 
 /**
  * @author VISTALL
  * @since 2026-10-12
  */
 public class EditorEmptyTextPanel {
-    private static final KeyStroke SHIFT_DEFAULT = KeyStroke.getKeyStroke(KeyEvent.VK_SHIFT, 0);
+    private static final KeyStroke SHIFT_DEFAULT = KeyStroke.pressed(KeyCode.SHIFT);
 
     private final Project myProject;
     private final VerticalLayout myRoot;

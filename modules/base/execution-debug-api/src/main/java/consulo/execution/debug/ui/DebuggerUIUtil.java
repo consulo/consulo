@@ -24,6 +24,7 @@ import consulo.ui.RelativePoint2D;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.util.ShortcutUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.ComponentPopupBuilder;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
@@ -68,9 +69,9 @@ public class DebuggerUIUtil {
 
     public static void registerExtraHandleShortcuts(final ListPopup popup, String... actionNames) {
         for (String name : actionNames) {
-            KeyStroke stroke = ShortcutUtil.getKeyStroke(ActionManager.getInstance().getAction(name).getShortcutSet());
+            consulo.ui.event.details.KeyStroke stroke = ShortcutUtil.getKeyStroke(ActionManager.getInstance().getAction(name).getShortcutSet());
             if (stroke != null) {
-                popup.registerAction("handleSelection " + stroke, stroke, new AbstractAction() {
+                popup.registerAction("handleSelection " + stroke, TargetAWT.to(stroke), new AbstractAction() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         popup.handleSelect(true);

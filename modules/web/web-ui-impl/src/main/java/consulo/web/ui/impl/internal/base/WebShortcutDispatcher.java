@@ -23,6 +23,7 @@ import consulo.ui.Component;
 import consulo.ui.UIAccess;
 import consulo.ui.event.ComponentEvent;
 import consulo.ui.event.details.KeyCode;
+import consulo.ui.event.details.KeyStroke;
 import consulo.ui.event.details.KeyboardInputDetails;
 import consulo.ui.event.details.ModifiedInputDetails;
 import consulo.ui.ex.impl.internal.action.UnifiedCustomShortcutDispatcher;
@@ -38,9 +39,6 @@ import consulo.ui.ex.internal.KeymapManagerEx;
 import consulo.web.ui.impl.internal.WebLightPopupImpl;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.KeyStroke;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.ArrayList;
@@ -65,7 +63,7 @@ public final class WebShortcutDispatcher {
     /**
      * The shape {@link #toCombo} builds for escape with nothing held down.
      */
-    private static final String ESCAPE_COMBO = String.valueOf(KeyEvent.VK_ESCAPE);
+    private static final String ESCAPE_COMBO = String.valueOf(KeyCode.ESCAPE.key());
 
     private static final String STROKE_QUEUE = "consulo.web.strokeQueue";
 
@@ -186,23 +184,9 @@ public final class WebShortcutDispatcher {
     }
 
     private static KeyboardInputDetails toInputDetails(KeyStroke keyStroke) {
-        int modifiers = keyStroke.getModifiers();
-
-        EnumSet<ModifiedInputDetails.Modifier> result = EnumSet.noneOf(ModifiedInputDetails.Modifier.class);
-        if (isSet(modifiers, InputEvent.ALT_DOWN_MASK, InputEvent.ALT_MASK)) {
-            result.add(ModifiedInputDetails.Modifier.ALT);
-        }
-        if (isSet(modifiers, InputEvent.CTRL_DOWN_MASK, InputEvent.CTRL_MASK)) {
-            result.add(ModifiedInputDetails.Modifier.CTRL);
-        }
-        if (isSet(modifiers, InputEvent.META_DOWN_MASK, InputEvent.META_MASK)) {
-            result.add(ModifiedInputDetails.Modifier.META);
-        }
-        if (isSet(modifiers, InputEvent.SHIFT_DOWN_MASK, InputEvent.SHIFT_MASK)) {
-            result.add(ModifiedInputDetails.Modifier.SHIFT);
-        }
-
-        return new KeyboardInputDetails(new Point2D(0, 0), new Point2D(0, 0), result, KeyCode.of(keyStroke.getKeyCode()));
+        EnumSet<ModifiedInputDetails.Modifier> modifiers = EnumSet.noneOf(ModifiedInputDetails.Modifier.class);
+        modifiers.addAll(keyStroke.getModifiers());
+        return new KeyboardInputDetails(new Point2D(0, 0), new Point2D(0, 0), modifiers, keyStroke.getKeyCode());
     }
 
     private static void pushShortcuts(Element element, String combos) {
@@ -302,20 +286,20 @@ public final class WebShortcutDispatcher {
      * <p>
      * The numbers on the right are the legacy {@code KeyboardEvent.keyCode}, which is what the page reports.
      */
-    private static final Map<Integer, Integer> DOM_KEY_CODES = Map.ofEntries(
-        Map.entry(KeyEvent.VK_ENTER, 13),
-        Map.entry(KeyEvent.VK_DELETE, 46),
-        Map.entry(KeyEvent.VK_INSERT, 45),
+    private static final Map<KeyCode, Integer> DOM_KEY_CODES = Map.ofEntries(
+        Map.entry(KeyCode.ENTER, 13),
+        Map.entry(KeyCode.DELETE, 46),
+        Map.entry(KeyCode.INSERT, 45),
         // the punctuation awt names by character and the browser by position on the keyboard
-        Map.entry(KeyEvent.VK_SEMICOLON, 186),
-        Map.entry(KeyEvent.VK_EQUALS, 187),
-        Map.entry(KeyEvent.VK_COMMA, 188),
-        Map.entry(KeyEvent.VK_MINUS, 189),
-        Map.entry(KeyEvent.VK_PERIOD, 190),
-        Map.entry(KeyEvent.VK_SLASH, 191),
-        Map.entry(KeyEvent.VK_OPEN_BRACKET, 219),
-        Map.entry(KeyEvent.VK_BACK_SLASH, 220),
-        Map.entry(KeyEvent.VK_CLOSE_BRACKET, 221)
+        Map.entry(KeyCode.SEMICOLON, 186),
+        Map.entry(KeyCode.EQUALS, 187),
+        Map.entry(KeyCode.COMMA, 188),
+        Map.entry(KeyCode.MINUS, 189),
+        Map.entry(KeyCode.PERIOD, 190),
+        Map.entry(KeyCode.SLASH, 191),
+        Map.entry(KeyCode.OPEN_BRACKET, 219),
+        Map.entry(KeyCode.BACK_SLASH, 220),
+        Map.entry(KeyCode.CLOSE_BRACKET, 221)
     );
 
     /**
@@ -323,34 +307,26 @@ public final class WebShortcutDispatcher {
      * {@code KeyboardEvent.keyCode} of the browser answers with.
      */
     static @Nullable String toCombo(KeyStroke keyStroke) {
-        int keyCode = keyStroke.getKeyCode();
-        if (keyCode == 0) {
+        if (keyStroke.isTyped()) {
             return null;
         }
 
-        keyCode = DOM_KEY_CODES.getOrDefault(keyCode, keyCode);
-
-        int modifiers = keyStroke.getModifiers();
+        int keyCode = DOM_KEY_CODES.getOrDefault(keyStroke.getKeyCode(), keyStroke.getKeyCode().key());
 
         StringBuilder builder = new StringBuilder();
-        if (isSet(modifiers, InputEvent.ALT_DOWN_MASK, InputEvent.ALT_MASK)) {
+        if (keyStroke.hasModifier(ModifiedInputDetails.Modifier.ALT)) {
             builder.append("ALT+");
         }
-        if (isSet(modifiers, InputEvent.CTRL_DOWN_MASK, InputEvent.CTRL_MASK)) {
+        if (keyStroke.hasModifier(ModifiedInputDetails.Modifier.CTRL)) {
             builder.append("CTRL+");
         }
-        if (isSet(modifiers, InputEvent.META_DOWN_MASK, InputEvent.META_MASK)) {
+        if (keyStroke.hasModifier(ModifiedInputDetails.Modifier.META)) {
             builder.append("META+");
         }
-        if (isSet(modifiers, InputEvent.SHIFT_DOWN_MASK, InputEvent.SHIFT_MASK)) {
+        if (keyStroke.hasModifier(ModifiedInputDetails.Modifier.SHIFT)) {
             builder.append("SHIFT+");
         }
 
         return builder.append(keyCode).toString();
-    }
-
-    @SuppressWarnings("deprecation")
-    private static boolean isSet(int modifiers, int downMask, int legacyMask) {
-        return (modifiers & (downMask | legacyMask)) != 0;
     }
 }

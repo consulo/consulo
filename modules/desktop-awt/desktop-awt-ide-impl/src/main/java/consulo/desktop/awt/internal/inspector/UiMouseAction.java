@@ -24,6 +24,7 @@ import consulo.ui.ex.action.DumbAwareToggleAction;
 import consulo.ui.ex.action.MouseShortcut;
 import consulo.ui.ex.action.Shortcut;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
 import jakarta.annotation.Nonnull;
@@ -85,7 +86,7 @@ public abstract class UiMouseAction extends DumbAwareToggleAction {
                 return false;
             }
 
-            MouseShortcut mouseShortcut = new MouseShortcut(mouseEvent.getButton(), mouseEvent.getModifiersEx(), mouseEvent.getClickCount());
+            MouseShortcut mouseShortcut = new MouseShortcut(mouseEvent.getButton(), TargetAWT.fromModifiers(mouseEvent.getModifiersEx()), mouseEvent.getClickCount());
             if (!hasShortcut(mouseShortcut)) {
                 return false;
             }

@@ -24,6 +24,7 @@ import consulo.ui.ex.awt.popup.ListItemDescriptorAdapter;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.ui.ex.awt.util.MergingUpdateQueue;
 import consulo.ui.ex.awt.util.Update;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.ex.keymap.util.KeymapUtil;
@@ -593,7 +594,7 @@ public abstract class FileTextFieldImpl implements FileLookup, Disposable, FileT
         }
         else {
             Keymap active = KeymapManager.getInstance().getActiveKeymap();
-            for (String id : active.getActionIds(stroke)) {
+            for (String id : active.getActionIds(TargetAWT.from(stroke))) {
                 if (ACTION_CODE_COMPLETION.equals(id)) {
                     suggestCompletion(true, true);
                 }

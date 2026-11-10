@@ -18,6 +18,8 @@ package consulo.ui.ex.impl.internal.keymap;
 import consulo.application.Application;
 import consulo.component.persist.scheme.ExternalInfo;
 import consulo.component.persist.scheme.ExternalizableScheme;
+import consulo.ui.event.details.KeyStroke;
+import consulo.ui.event.details.ModifiedInputDetails.Modifier;
 import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.ui.ex.internal.KeymapManagerEx;
 import consulo.logging.Logger;
@@ -33,8 +35,6 @@ import consulo.util.lang.StringUtil;
 import consulo.util.xml.serializer.InvalidDataException;
 import org.jdom.Element;
 
-import javax.swing.*;
-import java.awt.event.MouseEvent;
 import java.util.*;
 
 /**
@@ -566,12 +566,12 @@ public class KeymapImpl implements Keymap, ExternalizableScheme {
 
                         KeyStroke firstKeyStroke;
                         String firstKeyStrokeStr = shortcutElement.getAttributeValue(FIRST_KEYSTROKE_ATTRIBUTE);
-                        if (skipInserts && firstKeyStrokeStr.contains("INSERT")) {
+                        if (skipInserts && firstKeyStrokeStr != null && firstKeyStrokeStr.contains("INSERT")) {
                             continue;
                         }
 
                         if (firstKeyStrokeStr != null) {
-                            firstKeyStroke = KeyStrokeAdapter.getKeyStroke(firstKeyStrokeStr);
+                            firstKeyStroke = KeyStroke.parse(firstKeyStrokeStr);
                             if (firstKeyStroke == null) {
                                 throw new InvalidDataException(
                                     "Cannot parse first-keystroke: '" + firstKeyStrokeStr + "'; " +
@@ -590,7 +590,7 @@ public class KeymapImpl implements Keymap, ExternalizableScheme {
                         KeyStroke secondKeyStroke = null;
                         String secondKeyStrokeStr = shortcutElement.getAttributeValue(SECOND_KEYSTROKE_ATTRIBUTE);
                         if (secondKeyStrokeStr != null) {
-                            secondKeyStroke = KeyStrokeAdapter.getKeyStroke(secondKeyStrokeStr);
+                            secondKeyStroke = KeyStroke.parse(secondKeyStrokeStr);
                             if (secondKeyStroke == null) {
                                 throw new InvalidDataException(
                                     "Wrong second-keystroke: '" + secondKeyStrokeStr + "'; Action's id=" + id + "; Keymap's name=" + myName);
@@ -603,8 +603,12 @@ public class KeymapImpl implements Keymap, ExternalizableScheme {
                     else if (KEYBOARD_GESTURE_SHORTCUT.equals(shortcutElement.getName())) {
                         KeyStroke stroke = null;
                         String strokeText = shortcutElement.getAttributeValue(KEYBOARD_GESTURE_KEY);
+                        if (strokeText == null) {
+                            // the attribute gestures were written under before
+                            strokeText = shortcutElement.getAttributeValue(KEYBOARD_GESTURE_SHORTCUT);
+                        }
                         if (strokeText != null) {
-                            stroke = KeyStrokeAdapter.getKeyStroke(strokeText);
+                            stroke = KeyStroke.parse(strokeText);
                         }
 
                         String modifierText = shortcutElement.getAttributeValue(KEYBOARD_GESTURE_MODIFIER);
@@ -702,7 +706,7 @@ public class KeymapImpl implements Keymap, ExternalizableScheme {
                 }
                 else if (shortcut instanceof KeyboardModifierGestureShortcut gesture) {
                     Element element = new Element(KEYBOARD_GESTURE_SHORTCUT);
-                    element.setAttribute(KEYBOARD_GESTURE_SHORTCUT, getKeyShortcutString(gesture.getStroke()));
+                    element.setAttribute(KEYBOARD_GESTURE_KEY, getKeyShortcutString(gesture.getStroke()));
                     element.setAttribute(KEYBOARD_GESTURE_MODIFIER, gesture.getType().name());
                     actionElement.addContent(element);
                 }
@@ -737,7 +741,7 @@ public class KeymapImpl implements Keymap, ExternalizableScheme {
      * @return string representation of passed keystroke.
      */
     public static String getKeyShortcutString(KeyStroke keyStroke) {
-        return KeyStrokeAdapter.toString(keyStroke);
+        return keyStroke.toString();
     }
 
     /**
@@ -749,24 +753,24 @@ public class KeymapImpl implements Keymap, ExternalizableScheme {
 
         // modifiers
 
-        int modifiers = shortcut.getModifiers();
-        if ((MouseEvent.SHIFT_DOWN_MASK & modifiers) > 0) {
+        Set<Modifier> modifiers = shortcut.getModifiers();
+        if (modifiers.contains(Modifier.SHIFT)) {
             buffer.append(SHIFT);
             buffer.append(' ');
         }
-        if ((MouseEvent.CTRL_DOWN_MASK & modifiers) > 0) {
+        if (modifiers.contains(Modifier.CTRL)) {
             buffer.append(CONTROL);
             buffer.append(' ');
         }
-        if ((MouseEvent.META_DOWN_MASK & modifiers) > 0) {
+        if (modifiers.contains(Modifier.META)) {
             buffer.append(META);
             buffer.append(' ');
         }
-        if ((MouseEvent.ALT_DOWN_MASK & modifiers) > 0) {
+        if (modifiers.contains(Modifier.ALT)) {
             buffer.append(ALT);
             buffer.append(' ');
         }
-        if ((MouseEvent.ALT_GRAPH_DOWN_MASK & modifiers) > 0) {
+        if (modifiers.contains(Modifier.ALT_GRAPH)) {
             buffer.append(ALT_GRAPH);
             buffer.append(' ');
         }

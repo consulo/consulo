@@ -320,7 +320,7 @@ public class DebuggerUIImplUtil {
     public static String getSelectionShortcutsAdText(String... actionNames) {
         StringBuilder res = new StringBuilder();
         for (String name : actionNames) {
-            KeyStroke stroke = ShortcutUtil.getKeyStroke(ActionManager.getInstance().getAction(name).getShortcutSet());
+            consulo.ui.event.details.KeyStroke stroke = ShortcutUtil.getKeyStroke(ActionManager.getInstance().getAction(name).getShortcutSet());
             if (stroke != null) {
                 if (res.length() > 0) {
                     res.append(", ");

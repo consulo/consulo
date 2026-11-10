@@ -46,6 +46,7 @@ import consulo.project.internal.ProjectExListener;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.util.UndoConstants;
@@ -640,7 +641,7 @@ public class ConsoleHistoryControllerImpl implements ConsoleHistoryController {
         if (action != null) {
             return action.getShortcutSet();
         }
-        return new CustomShortcutSet(KeyStroke.getKeyStroke(isUp ? KeyEvent.VK_UP : KeyEvent.VK_DOWN, 0));
+        return new CustomShortcutSet(TargetAWT.from(KeyStroke.getKeyStroke(isUp ? KeyEvent.VK_UP : KeyEvent.VK_DOWN, 0)));
     }
 
     private static void addShortcuts(AnAction action, ShortcutSet newShortcuts) {
@@ -658,7 +659,7 @@ public class ConsoleHistoryControllerImpl implements ConsoleHistoryController {
         ShortcutSet shortcutSet = getShortcutUpDown(isUp);
         for (Shortcut shortcut : shortcutSet.getShortcuts()) {
             if (shortcut.isKeyboard() && ((KeyboardShortcut)shortcut).getSecondKeyStroke() == null) {
-                result.add(((KeyboardShortcut)shortcut).getFirstKeyStroke());
+                result.add(TargetAWT.to(((KeyboardShortcut)shortcut).getFirstKeyStroke()));
             }
         }
 

@@ -19,6 +19,9 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.details.KeyCode;
+import consulo.ui.event.details.KeyStroke;
+import consulo.ui.event.details.ModifiedInputDetails.Modifier;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.CustomShortcutSet;
 import consulo.usage.RuleAction;
@@ -33,8 +36,6 @@ import consulo.usage.rule.UsageGroupingRule;
 import consulo.usage.rule.UsageGroupingRuleProvider;
 
 import javax.swing.*;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -84,7 +85,7 @@ public class UsageGroupingRuleProviderImpl implements UsageGroupingRuleProvider 
 
         GroupByModuleTypeAction groupByModuleTypeAction = new GroupByModuleTypeAction(impl);
         groupByModuleTypeAction.registerCustomShortcutSet(
-            new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_D, InputEvent.CTRL_DOWN_MASK)),
+            new CustomShortcutSet(KeyStroke.pressed(KeyCode.D, Modifier.CTRL)),
             component,
             impl
         );
@@ -95,7 +96,7 @@ public class UsageGroupingRuleProviderImpl implements UsageGroupingRuleProvider 
 
         GroupByPackageAction groupByPackageAction = new GroupByPackageAction(impl);
         groupByPackageAction.registerCustomShortcutSet(
-            new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_P, InputEvent.CTRL_DOWN_MASK)),
+            new CustomShortcutSet(KeyStroke.pressed(KeyCode.P, Modifier.CTRL)),
             component,
             impl
         );
@@ -103,7 +104,7 @@ public class UsageGroupingRuleProviderImpl implements UsageGroupingRuleProvider 
         if (view.getPresentation().isCodeUsages()) {
             GroupByUsageTypeAction groupByUsageTypeAction = new GroupByUsageTypeAction(impl);
             groupByUsageTypeAction.registerCustomShortcutSet(
-                new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_T, InputEvent.CTRL_DOWN_MASK)),
+                new CustomShortcutSet(KeyStroke.pressed(KeyCode.T, Modifier.CTRL)),
                 component,
                 impl
             );
@@ -129,8 +130,7 @@ public class UsageGroupingRuleProviderImpl implements UsageGroupingRuleProvider 
     public static GroupByFileStructureAction createGroupByFileStructureAction(UsageViewEx impl) {
         JComponent component = impl.getComponent();
         GroupByFileStructureAction groupByFileStructureAction = new GroupByFileStructureAction();
-        groupByFileStructureAction.registerCustomShortcutSet(new CustomShortcutSet(
-            KeyStroke.getKeyStroke(KeyEvent.VK_M, InputEvent.CTRL_DOWN_MASK)),
+        groupByFileStructureAction.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.pressed(KeyCode.M, Modifier.CTRL)),
             component,
             impl
         );

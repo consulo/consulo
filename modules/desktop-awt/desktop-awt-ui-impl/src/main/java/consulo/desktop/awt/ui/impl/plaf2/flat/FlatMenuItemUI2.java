@@ -18,6 +18,7 @@ package consulo.desktop.awt.ui.impl.plaf2.flat;
 import com.formdev.flatlaf.ui.FlatMenuItemRenderer;
 import com.formdev.flatlaf.ui.FlatMenuItemUI;
 import consulo.ui.ex.action.util.ShortcutUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -35,7 +36,7 @@ public class FlatMenuItemUI2 extends FlatMenuItemUI {
 
         @Override
         protected String getTextForAccelerator(KeyStroke accelerator) {
-            return ShortcutUtil.getKeystrokeTextValue(accelerator).get();
+            return ShortcutUtil.getKeystrokeTextValue(TargetAWT.from(accelerator)).get();
         }
     }
 

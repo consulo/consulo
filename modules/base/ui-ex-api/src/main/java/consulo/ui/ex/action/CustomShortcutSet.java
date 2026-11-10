@@ -15,9 +15,10 @@
  */
 package consulo.ui.ex.action;
 
+import consulo.ui.event.details.KeyCode;
+import consulo.ui.event.details.KeyStroke;
 import consulo.util.collection.ContainerUtil;
 
-import javax.swing.*;
 
 /**
  * Default implementation of the {@link ShortcutSet} interface.
@@ -32,8 +33,8 @@ public final class CustomShortcutSet implements ShortcutSet {
    * Creates <code>CustomShortcutSet</code> which contains only one
    * single stroke keyboard shortcut.
    */
-  public CustomShortcutSet(KeyStroke keyStroke){
-    this(new KeyboardShortcut(keyStroke, null));
+  public CustomShortcutSet(KeyStroke... keyStrokes){
+    this(ContainerUtil.map(keyStrokes, keyStroke -> new KeyboardShortcut(keyStroke, null), Shortcut.EMPTY_ARRAY));
   }
 
   /**
@@ -46,8 +47,8 @@ public final class CustomShortcutSet implements ShortcutSet {
     myShortcuts = shortcuts.length == 0 ? Shortcut.EMPTY_ARRAY : shortcuts.clone();
   }
 
-  public CustomShortcutSet(Integer... keyCodes) {
-    myShortcuts = ContainerUtil.map(keyCodes, integer -> new KeyboardShortcut(KeyStroke.getKeyStroke(integer, 0), null), Shortcut.EMPTY_ARRAY);
+  public CustomShortcutSet(KeyCode... keyCodes) {
+    myShortcuts = ContainerUtil.map(keyCodes, keyCode -> new KeyboardShortcut(KeyStroke.pressed(keyCode), null), Shortcut.EMPTY_ARRAY);
   }
 
   @Override

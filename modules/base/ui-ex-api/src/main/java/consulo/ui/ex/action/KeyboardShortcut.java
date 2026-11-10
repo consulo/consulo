@@ -15,8 +15,9 @@
  */
 package consulo.ui.ex.action;
 
+import consulo.ui.event.details.KeyStroke;
+
 import org.jspecify.annotations.Nullable;
-import javax.swing.*;
 import java.util.Objects;
 
 /**
@@ -76,8 +77,10 @@ public final class KeyboardShortcut extends Shortcut {
   }
 
   public static KeyboardShortcut fromString(String s) {
-    KeyStroke keyStroke = KeyStroke.getKeyStroke(s);
-    assert keyStroke != null : "Can't create key stroke for " + s;
+    KeyStroke keyStroke = KeyStroke.parse(s);
+    if (keyStroke == null) {
+      throw new IllegalArgumentException("Can't create key stroke for " + s);
+    }
     return new KeyboardShortcut(keyStroke, null);
   }
 

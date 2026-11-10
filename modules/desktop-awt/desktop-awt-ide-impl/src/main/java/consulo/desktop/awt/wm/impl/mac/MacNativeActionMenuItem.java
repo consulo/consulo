@@ -56,7 +56,7 @@ public final class MacNativeActionMenuItem {
         // wants the text form, which AppKit can't draw, so every item is given a custom item view (with the shortcut
         // text, or empty) for a consistent style; the key equivalent above still triggers the action.
         if (MacScreenMenuFiller.isTextShortcutMode()) {
-            item.setAcceleratorText(accelerator != null ? ShortcutUtil.getKeystrokeText(accelerator, false) : "");
+            item.setAcceleratorText(accelerator != null ? ShortcutUtil.getKeystrokeText(TargetAWT.from(accelerator), false) : "");
         }
         item.setEnabled(presentation.isEnabled());
 
@@ -96,7 +96,7 @@ public final class MacNativeActionMenuItem {
                     if (keyboardShortcut.getSecondKeyStroke() != null) {
                         return null;
                     }
-                    KeyStroke firstKeyStroke = keyboardShortcut.getFirstKeyStroke();
+                    KeyStroke firstKeyStroke = TargetAWT.to(keyboardShortcut.getFirstKeyStroke());
                     // skip a bare Enter, otherwise no other item can be chosen with the keyboard
                     if (firstKeyStroke.getKeyCode() == KeyEvent.VK_ENTER && firstKeyStroke.getModifiers() == 0) {
                         return null;

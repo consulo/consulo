@@ -17,6 +17,7 @@ package consulo.ui.ex.awt;
 
 import consulo.application.ui.UISettings;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.details.KeyCode;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CustomShortcutSet;
@@ -87,7 +88,7 @@ public class TemplateKindCombo extends ComboboxWithBrowseButton {
                     scrollBy(code == KeyEvent.VK_DOWN ? 1 : code == KeyEvent.VK_UP ? -1 : 0);
                 }
             }
-        }.registerCustomShortcutSet(new CustomShortcutSet(KeyEvent.VK_UP, KeyEvent.VK_DOWN), component);
+        }.registerCustomShortcutSet(new CustomShortcutSet(KeyCode.UP, KeyCode.DOWN), component);
     }
 
     private void scrollBy(int delta) {

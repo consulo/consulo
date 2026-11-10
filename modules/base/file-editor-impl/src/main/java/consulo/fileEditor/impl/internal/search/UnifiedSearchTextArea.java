@@ -25,6 +25,9 @@ import consulo.project.Project;
 import consulo.ui.Component;
 import consulo.ui.TextArea;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.details.KeyCode;
+import consulo.ui.event.details.KeyStroke;
+import consulo.ui.event.details.ModifiedInputDetails.Modifier;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.ui.ex.popup.JBPopupFactory;
@@ -36,8 +39,6 @@ import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -196,9 +197,9 @@ public class UnifiedSearchTextArea {
 
             getTemplatePresentation().setHoveredIcon(PlatformIconGroup.actionsSearchnewlinehover());
 
-            int menuModifier = Platform.current().os().isMac() ? InputEvent.META_DOWN_MASK : InputEvent.CTRL_DOWN_MASK;
+            Modifier menuModifier = Platform.current().os().isMac() ? Modifier.META : Modifier.CTRL;
             registerCustomShortcutSet(
-                new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, menuModifier | InputEvent.SHIFT_DOWN_MASK)),
+                new CustomShortcutSet(KeyStroke.pressed(KeyCode.ENTER, menuModifier, Modifier.SHIFT)),
                 myTextArea
             );
         }

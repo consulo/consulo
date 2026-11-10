@@ -52,6 +52,7 @@ import consulo.ui.ex.awt.internal.AWTComboBoxStyle;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awt.util.ListenerUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.util.lang.EmptyRunnable;
 import consulo.util.lang.StringUtil;
@@ -229,7 +230,7 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
             protected void prepareEditor(EditorEx editor) {
                 super.prepareEditor(editor);
                 editor.setPlaceholder(XDebuggerLocalize.debuggerEvaluateExpressionOrAddAWatchHint(
-                    KeymapUtil.getShortcutText(new KeyboardShortcut(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), null)),
+                    KeymapUtil.getShortcutText(new KeyboardShortcut(TargetAWT.from(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0)), null)),
                     KeymapUtil.getShortcutText(new KeyboardShortcut(XDebuggerEvaluationDialog.getAddWatchKeystroke(), null))
                 ).get());
             }

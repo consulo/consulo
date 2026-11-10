@@ -16,25 +16,25 @@
 package consulo.ui.ex.action;
 
 
-import java.awt.event.MouseEvent;
+import java.util.Set;
 
 public class PressureShortcut extends MouseShortcut {
 
   private double myStage;
 
   public PressureShortcut(double stage) {
-    super(MouseEvent.BUTTON1, 0, 1);
+    super(BUTTON_LEFT, Set.of(), 1);
     this.myStage = stage;
   }
 
   @Override
   public int getButton() {
-    return MouseEvent.BUTTON1;
+    return BUTTON_LEFT;
   }
 
   @Override
-  public int getModifiers() {
-    return 0;
+  public Set<consulo.ui.event.details.ModifiedInputDetails.Modifier> getModifiers() {
+    return Set.of();
   }
 
   @Override

@@ -16,11 +16,11 @@
 package consulo.ui.ex.keymap;
 
 import consulo.component.util.pointer.Named;
+import consulo.ui.event.details.KeyStroke;
 import consulo.ui.ex.action.KeyboardShortcut;
 import consulo.ui.ex.action.MouseShortcut;
 import consulo.ui.ex.action.Shortcut;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Map;
 

@@ -42,6 +42,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.internal.ActionManagerEx;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
@@ -353,7 +354,7 @@ public class ActionMacroManager implements Disposable {
 
                 myRecordingMacro.appendShortcut(shortcut);
                 notifyUser(DataManager.getInstance().getDataContext(e.getComponent()),
-                    KeymapUtil.getKeystrokeText(KeyStroke.getKeyStrokeForEvent(e)),
+                    KeymapUtil.getKeystrokeText(TargetAWT.from(KeyStroke.getKeyStrokeForEvent(e))),
                     false);
             }
         }

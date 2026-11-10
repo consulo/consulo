@@ -21,6 +21,9 @@ import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.details.KeyCode;
+import consulo.ui.event.details.KeyStroke;
+import consulo.ui.event.details.ModifiedInputDetails.Modifier;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CustomShortcutSet;
@@ -32,8 +35,6 @@ import consulo.usage.rule.UsageFilteringRuleListener;
 import consulo.usage.rule.UsageFilteringRuleProvider;
 
 import javax.swing.*;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,10 +68,10 @@ public class UsageFilteringRuleProviderImpl implements UsageFilteringRuleProvide
     JComponent component = view.getComponent();
 
     ShowReadAccessUsagesAction read = new ShowReadAccessUsagesAction();
-    read.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_DOWN_MASK)), component, view);
+    read.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.pressed(KeyCode.R, Modifier.CTRL)), component, view);
 
     ShowWriteAccessUsagesAction write = new ShowWriteAccessUsagesAction();
-    write.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_W, InputEvent.CTRL_DOWN_MASK)), component, view);
+    write.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.pressed(KeyCode.W, Modifier.CTRL)), component, view);
     return new AnAction[] {read, write};
   }
 

@@ -31,6 +31,9 @@ import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.details.KeyCode;
+import consulo.ui.event.details.KeyStroke;
+import consulo.ui.event.details.ModifiedInputDetails.Modifier;
 import consulo.ui.ex.InputValidator;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.LegacyAnAction;
@@ -52,7 +55,6 @@ import jakarta.inject.Provider;
 
 import javax.swing.*;
 import javax.swing.tree.TreePath;
-import java.awt.event.KeyEvent;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -173,7 +175,7 @@ public class CopyrightProfilesPanel extends MasterDetailsComponent
         result.add(new MyDeleteAction(forAll(Predicates.alwaysTrue())));
         result.add(new LegacyAnAction(CommonLocalize.buttonCopy(), CommonLocalize.buttonCopy(), PlatformIconGroup.actionsCopy()) {
             {
-                registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_D, KeyEvent.CTRL_MASK)), myTree);
+                registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.pressed(KeyCode.D, Modifier.CTRL)), myTree);
             }
 
             @Override

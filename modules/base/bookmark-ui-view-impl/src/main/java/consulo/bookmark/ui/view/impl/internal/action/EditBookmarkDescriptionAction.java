@@ -26,6 +26,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CustomShortcutSet;
 import consulo.ui.ex.action.LegacyDumbAwareAction;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 
 import javax.swing.*;
 
@@ -38,7 +39,7 @@ public class EditBookmarkDescriptionAction extends LegacyDumbAwareAction {
             PlatformIconGroup.actionsEdit()
         );
 
-        setShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(Platform.current().os().isMac() ? "meta ENTER" : "control ENTER")));
+        setShortcutSet(new CustomShortcutSet(TargetAWT.from(KeyStroke.getKeyStroke(Platform.current().os().isMac() ? "meta ENTER" : "control ENTER"))));
     }
 
     @Override

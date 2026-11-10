@@ -32,6 +32,7 @@ public abstract class ModifiedInputDetails extends InputDetails {
         CTRL,
         SHIFT,
         META,
+        ALT_GRAPH,
         // WINDOWS ? windows eat all combination for it
     }
 

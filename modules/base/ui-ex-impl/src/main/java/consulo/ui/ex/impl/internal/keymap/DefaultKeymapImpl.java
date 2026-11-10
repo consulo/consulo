@@ -23,7 +23,7 @@ import consulo.ui.ex.keymap.KeymapManager;
 import consulo.util.xml.serializer.InvalidDataException;
 import org.jdom.Element;
 
-import java.awt.event.MouseEvent;
+import java.util.Set;
 
 /**
  * @author max
@@ -45,7 +45,7 @@ class DefaultKeymapImpl extends KeymapImpl {
         super.readExternal(keymapElement, existingKeymaps);
 
         if (KeymapManager.DEFAULT_IDEA_KEYMAP.equals(getName()) && !Platform.current().os().isUnix()) {
-            addShortcut(IdeActions.ACTION_GOTO_DECLARATION, new MouseShortcut(MouseEvent.BUTTON2, 0, 1));
+            addShortcut(IdeActions.ACTION_GOTO_DECLARATION, new MouseShortcut(MouseShortcut.BUTTON_MIDDLE, Set.of(), 1));
         }
     }
 }

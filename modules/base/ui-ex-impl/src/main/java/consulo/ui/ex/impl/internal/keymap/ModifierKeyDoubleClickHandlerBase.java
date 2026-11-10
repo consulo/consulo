@@ -54,7 +54,7 @@ public abstract class ModifierKeyDoubleClickHandlerBase implements ModifierKeyDo
 
     private static final Map<Modifier, KeyCode> MODIFIER_KEYS = Map.of(
         Modifier.ALT, KeyCode.ALT,
-        Modifier.CTRL, KeyCode.CTRL,
+        Modifier.CTRL, KeyCode.CONTROL,
         Modifier.META, KeyCode.META,
         Modifier.SHIFT, KeyCode.SHIFT
     );

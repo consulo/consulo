@@ -20,11 +20,12 @@ import consulo.find.FindModel;
 import consulo.ide.impl.idea.find.EditorSearchSession;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.details.KeyCode;
+import consulo.ui.event.details.KeyStroke;
 import consulo.ui.ex.action.*;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
-import java.awt.event.KeyEvent;
 
 /**
  * @author zajac
@@ -51,6 +52,6 @@ public class RestorePreviousSettingsAction extends LegacyDumbAwareAction impleme
 
   @Override
   public @Nullable ShortcutSet getShortcut() {
-    return new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0));
+    return new CustomShortcutSet(KeyStroke.pressed(KeyCode.ENTER));
   }
 }

@@ -23,6 +23,7 @@ import consulo.ui.event.details.ModifiedInputDetails;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.util.ShortcutUtil;
 import consulo.ui.ex.awt.AWTConstants;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
 import consulo.util.collection.ContainerUtil;
@@ -63,7 +64,7 @@ public class KeymapUtil {
      * @return string representation of passed mouse shortcut.
      */
     public static String getMouseShortcutText(int button, @AWTConstants.InputEventMask int modifiers, int clickCount) {
-        return consulo.ui.ex.keymap.util.KeymapUtil.getMouseShortcutText(button, modifiers, clickCount).get();
+        return consulo.ui.ex.keymap.util.KeymapUtil.getMouseShortcutText(button, TargetAWT.fromModifiers(modifiers), clickCount).get();
     }
 
     
@@ -75,7 +76,7 @@ public class KeymapUtil {
      * Creates shortcut corresponding to a single-click event
      */
     public static MouseShortcut createMouseShortcut(MouseEvent e) {
-        int button = MouseShortcut.getButton(e);
+        int button = TargetAWT.toMouseShortcutButton(e);
         int modifiers = e.getModifiersEx();
         if (button == MouseEvent.NOBUTTON && e.getID() == MouseEvent.MOUSE_DRAGGED) {
             // mouse drag events don't have button field set due to some reason
@@ -86,10 +87,10 @@ public class KeymapUtil {
                 button = MouseEvent.BUTTON2;
             }
         }
-        return new MouseShortcut(button, modifiers, 1);
+        return new MouseShortcut(button, TargetAWT.fromModifiers(modifiers), 1);
     }
 
-    public static String getKeystrokeText(KeyStroke accelerator) {
+    public static String getKeystrokeText(consulo.ui.event.details.KeyStroke accelerator) {
         return ShortcutUtil.getKeystrokeText(accelerator);
     }
 
@@ -245,7 +246,7 @@ public class KeymapUtil {
         return false;
     }
 
-    public static @Nullable KeyStroke getKeyStroke(ShortcutSet shortcutSet) {
+    public static consulo.ui.event.details.@Nullable KeyStroke getKeyStroke(ShortcutSet shortcutSet) {
         return ShortcutUtil.getKeyStroke(shortcutSet);
     }
 
@@ -267,43 +268,15 @@ public class KeymapUtil {
         @AWTConstants.InputEventMask int modifiers,
         String actionId
     ) {
-        MouseShortcut syntheticShortcut = new MouseShortcut(MouseEvent.BUTTON1, modifiers, 1);
-        for (Shortcut shortcut : activeKeymap.getShortcuts(actionId)) {
-            if (shortcut instanceof MouseShortcut) {
-                MouseShortcut mouseShortcut = (MouseShortcut) shortcut;
-                if (mouseShortcut.getModifiers() == syntheticShortcut.getModifiers()) {
-                    return true;
-                }
-            }
-        }
-        return false;
+        return matchActionMouseShortcutsModifiers(activeKeymap, TargetAWT.fromModifiers(modifiers), actionId);
     }
 
-    /**
-     * Checks that one of the mouse shortcuts assigned to the provided action has the same modifiers as provided.
-     * {@link MouseShortcut} normalizes the mask, so the extended form built here compares equal to a keymap entry
-     * however it was written.
-     */
     public static boolean matchActionMouseShortcutsModifiers(
         Keymap activeKeymap,
         Set<ModifiedInputDetails.Modifier> modifiers,
         String actionId
     ) {
-        return matchActionMouseShortcutsModifiers(activeKeymap, toInputEventMask(modifiers), actionId);
-    }
-
-    @AWTConstants.InputEventMask
-    private static int toInputEventMask(Set<ModifiedInputDetails.Modifier> modifiers) {
-        int mask = 0;
-        for (ModifiedInputDetails.Modifier modifier : modifiers) {
-            mask |= switch (modifier) {
-                case ALT -> InputEvent.ALT_DOWN_MASK;
-                case CTRL -> InputEvent.CTRL_DOWN_MASK;
-                case SHIFT -> InputEvent.SHIFT_DOWN_MASK;
-                case META -> InputEvent.META_DOWN_MASK;
-            };
-        }
-        return mask;
+        return consulo.ui.ex.keymap.util.KeymapUtil.matchActionMouseShortcutsModifiers(activeKeymap, modifiers, actionId);
     }
 
     /**
@@ -327,7 +300,7 @@ public class KeymapUtil {
                 button = MouseEvent.BUTTON2;
             }
         }
-        String[] actionIds = keymap.getActionIds(new MouseShortcut(button, modifiers, 1));
+        String[] actionIds = keymap.getActionIds(new MouseShortcut(button, TargetAWT.fromModifiers(modifiers), 1));
         if (actionIds == null) {
             return false;
         }

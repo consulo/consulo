@@ -26,6 +26,9 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.details.KeyCode;
+import consulo.ui.event.details.KeyStroke;
+import consulo.ui.event.details.ModifiedInputDetails.Modifier;
 import consulo.ui.ex.InputValidator;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.tree.TreeUtil;
@@ -39,7 +42,6 @@ import jakarta.inject.Provider;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
-import java.awt.event.KeyEvent;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -335,7 +337,7 @@ public abstract class NamedItemsListEditor<T> extends MasterDetailsComponent {
     private class CopyAction extends LegacyDumbAwareAction {
         public CopyAction() {
             super(CommonLocalize.buttonCopy(), CommonLocalize.buttonCopy(), PlatformIconGroup.actionsCopy());
-            registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_D, KeyEvent.CTRL_MASK)), myTree);
+            registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.pressed(KeyCode.D, Modifier.CTRL)), myTree);
         }
 
         @Override

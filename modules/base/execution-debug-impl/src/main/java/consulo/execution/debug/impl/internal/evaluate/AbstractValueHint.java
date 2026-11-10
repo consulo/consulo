@@ -45,6 +45,7 @@ import consulo.ui.ex.awt.hint.HintHint;
 import consulo.ui.ex.awt.hint.HintListener;
 import consulo.ui.ex.awt.hint.LightweightHint;
 import consulo.ui.ex.awt.hint.LightweightHintFactory;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.ex.keymap.util.KeymapUtil;
 import org.jspecify.annotations.Nullable;
@@ -283,7 +284,7 @@ public abstract class AbstractValueHint {
     private static boolean isAltMask(@AWTConstants.InputEventMask int modifiers) {
         return KeymapUtil.matchActionMouseShortcutsModifiers(
             KeymapManager.getInstance().getActiveKeymap(),
-            modifiers,
+            TargetAWT.fromModifiers(modifiers),
             XDebuggerActions.QUICK_EVALUATE_EXPRESSION
         );
     }

@@ -34,6 +34,7 @@ import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.internal.JBHiDPIScaledImage;
 import consulo.ui.ex.awt.util.UISettingsUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 
 import javax.swing.*;
 import java.awt.*;
@@ -138,7 +139,7 @@ public class JBTerminalPanel extends TerminalPanel implements FocusListener, Ter
 
     private static boolean skipAction(KeyEvent e, List<AnAction> actionsToSkip) {
         if (actionsToSkip != null) {
-            KeyboardShortcut eventShortcut = new KeyboardShortcut(KeyStroke.getKeyStrokeForEvent(e), null);
+            KeyboardShortcut eventShortcut = new KeyboardShortcut(TargetAWT.from(KeyStroke.getKeyStrokeForEvent(e)), null);
             for (AnAction action : actionsToSkip) {
                 for (Shortcut sc : action.getShortcutSet().getShortcuts()) {
                     if (sc.isKeyboard() && sc.startsWith(eventShortcut)) {

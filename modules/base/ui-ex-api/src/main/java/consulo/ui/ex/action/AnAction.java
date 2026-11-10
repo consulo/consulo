@@ -25,6 +25,7 @@ import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.internal.UIInternalEx;
 import consulo.ui.image.Image;
 import consulo.util.collection.ArrayFactory;
@@ -34,6 +35,7 @@ import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 /**
@@ -194,7 +196,7 @@ public abstract class AnAction implements PossiblyDumbAware {
     }
 
     public final void registerCustomShortcutSet(int keyCode, int modifiers, @Nullable JComponent component) {
-        registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(keyCode, modifiers)), component);
+        registerCustomShortcutSet(new CustomShortcutSet(new KeyboardShortcut(Objects.requireNonNull(TargetAWT.from(KeyStroke.getKeyStroke(keyCode, modifiers))), null)), component);
     }
 
     public final void registerCustomShortcutSet(

@@ -1,6 +1,9 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.usages.impl;
 
+import consulo.ui.event.details.KeyCode;
+import consulo.ui.event.details.KeyStroke;
+import consulo.ui.event.details.ModifiedInputDetails.Modifier;
 import consulo.ui.ex.action.util.ActionUtil;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
@@ -1062,7 +1065,7 @@ public class UsageViewImpl implements UsageViewInternal {
     private class MergeDupLines extends RuleAction {
         private MergeDupLines() {
             super(UsageViewImpl.this, UsageLocalize.actionMergeSameLine(), PlatformIconGroup.toolbarFilterdups());
-            setShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_F, InputEvent.CTRL_DOWN_MASK)));
+            setShortcutSet(new CustomShortcutSet(KeyStroke.pressed(KeyCode.F, Modifier.CTRL)));
         }
 
         @Override

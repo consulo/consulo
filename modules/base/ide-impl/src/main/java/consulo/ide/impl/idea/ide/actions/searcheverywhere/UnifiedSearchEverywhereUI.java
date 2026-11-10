@@ -40,6 +40,8 @@ import consulo.searchEverywhere.*;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.details.InputDetails;
+import consulo.ui.event.details.KeyCode;
+import consulo.ui.event.details.KeyStroke;
 import consulo.ui.event.details.ModifiedInputDetails;
 import consulo.ui.event.details.MouseInputDetails;
 import consulo.ui.ex.action.*;
@@ -57,9 +59,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.Couple;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.KeyStroke;
 import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ScheduledFuture;
@@ -179,7 +179,7 @@ public class UnifiedSearchEverywhereUI implements Disposable, UiDataProvider {
             if (details instanceof MouseInputDetails mouseDetails) {
                 SearchEverywhereFoundElementInfo info = myResultsList.getValue();
                 if (info != null && !UnifiedSearchListModel.isTitle(info)) {
-                    elementsSelected(info, toModifiers(mouseDetails));
+                    elementsSelected(info, toModifiers(mouseDetails.getModifiers()));
                 }
             }
         });
@@ -602,9 +602,9 @@ public class UnifiedSearchEverywhereUI implements Disposable, UiDataProvider {
         registerSelectItemAction();
 
         DumbAwareAction.create(e -> moveSelection(-1))
-            .registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0)), mySearchField, this);
+            .registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.pressed(KeyCode.UP)), mySearchField, this);
         DumbAwareAction.create(e -> moveSelection(1))
-            .registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0)), mySearchField, this);
+            .registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.pressed(KeyCode.DOWN)), mySearchField, this);
 
         mySearchField.addValueListener(event -> {
             String newSearchString = getSearchPattern();
@@ -649,34 +649,39 @@ public class UnifiedSearchEverywhereUI implements Disposable, UiDataProvider {
     }
 
     private void registerSelectItemAction() {
-        int[] allowedModifiers = new int[]{
-            0,
-            InputEvent.SHIFT_MASK,
-            InputEvent.CTRL_MASK,
-            InputEvent.META_MASK,
-            InputEvent.ALT_MASK
-        };
+        List<Set<ModifiedInputDetails.Modifier>> allowedModifiers = List.of(
+            Set.of(),
+            Set.of(ModifiedInputDetails.Modifier.SHIFT),
+            Set.of(ModifiedInputDetails.Modifier.CTRL),
+            Set.of(ModifiedInputDetails.Modifier.META),
+            Set.of(ModifiedInputDetails.Modifier.ALT)
+        );
 
         AnAction selectItemAction = ActionManager.getInstance().getAction(SearchEverywhereActions.SELECT_ITEM);
         ShortcutSet selectShortcuts = selectItemAction != null
             ? selectItemAction.getShortcutSet()
-            : new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0));
+            : new CustomShortcutSet(KeyStroke.pressed(KeyCode.ENTER));
         List<KeyboardShortcut> keyboardShortcuts = Arrays.stream(selectShortcuts.getShortcuts())
             .filter(shortcut -> shortcut instanceof KeyboardShortcut)
             .map(shortcut -> (KeyboardShortcut) shortcut)
             .toList();
 
-        for (int modifiers : allowedModifiers) {
+        for (Set<ModifiedInputDetails.Modifier> added : allowedModifiers) {
+            int modifiers = toModifiers(added);
             List<Shortcut> newShortcuts = new ArrayList<>();
             for (KeyboardShortcut shortcut : keyboardShortcuts) {
-                boolean hasSecondStroke = shortcut.getSecondKeyStroke() != null;
-                KeyStroke originalStroke = hasSecondStroke ? shortcut.getSecondKeyStroke() : shortcut.getFirstKeyStroke();
+                KeyStroke secondStroke = shortcut.getSecondKeyStroke();
+                boolean hasSecondStroke = secondStroke != null;
+                KeyStroke originalStroke = hasSecondStroke ? secondStroke : shortcut.getFirstKeyStroke();
 
-                if ((originalStroke.getModifiers() & modifiers) != 0) {
+                if (originalStroke.isTyped() || !Collections.disjoint(originalStroke.getModifiers(), added)) {
                     continue;
                 }
 
-                KeyStroke newStroke = KeyStroke.getKeyStroke(originalStroke.getKeyCode(), originalStroke.getModifiers() | modifiers);
+                Set<ModifiedInputDetails.Modifier> newModifiers = EnumSet.noneOf(ModifiedInputDetails.Modifier.class);
+                newModifiers.addAll(originalStroke.getModifiers());
+                newModifiers.addAll(added);
+                KeyStroke newStroke = KeyStroke.of(originalStroke.getKeyCode(), newModifiers, originalStroke.isOnKeyRelease());
                 newShortcuts.add(
                     hasSecondStroke
                         ? new KeyboardShortcut(shortcut.getFirstKeyStroke(), newStroke)
@@ -697,14 +702,15 @@ public class UnifiedSearchEverywhereUI implements Disposable, UiDataProvider {
         }
     }
 
-    private static int toModifiers(ModifiedInputDetails details) {
+    private static int toModifiers(Set<ModifiedInputDetails.Modifier> set) {
         int modifiers = 0;
-        for (ModifiedInputDetails.Modifier modifier : details.getModifiers()) {
+        for (ModifiedInputDetails.Modifier modifier : set) {
             modifiers |= switch (modifier) {
                 case ALT -> InputEvent.ALT_MASK;
                 case CTRL -> InputEvent.CTRL_MASK;
                 case SHIFT -> InputEvent.SHIFT_MASK;
                 case META -> InputEvent.META_MASK;
+                case ALT_GRAPH -> InputEvent.ALT_GRAPH_MASK;
             };
         }
         return modifiers;

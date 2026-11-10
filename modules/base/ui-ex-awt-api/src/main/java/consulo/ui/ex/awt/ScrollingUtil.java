@@ -20,6 +20,7 @@ import consulo.application.ui.UISettings;
 import consulo.logging.Logger;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.lang.Couple;
 import org.jspecify.annotations.Nullable;
 
@@ -651,13 +652,13 @@ public class ScrollingUtil {
             public void actionPerformed(AnActionEvent e) {
                 moveHome(table);
             }
-        }.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0)), table);
+        }.registerCustomShortcutSet(new CustomShortcutSet(TargetAWT.from(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0))), table);
         new MyScrollingAction(table) {
             @Override
             public void actionPerformed(AnActionEvent e) {
                 moveEnd(table);
             }
-        }.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0)), table);
+        }.registerCustomShortcutSet(new CustomShortcutSet(TargetAWT.from(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0))), table);
         if (!(focusParent instanceof JTextComponent)) {
             new MyScrollingAction(table) {
                 @Override

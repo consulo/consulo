@@ -21,6 +21,9 @@ import consulo.project.ui.localize.ProjectUILocalize;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.ToolTip;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.details.KeyCode;
+import consulo.ui.event.details.KeyStroke;
+import consulo.ui.event.details.ModifiedInputDetails.Modifier;
 import consulo.ui.ex.action.*;
 import consulo.ui.UIAction;
 import consulo.ui.ex.action.util.ShortcutUtil;
@@ -31,8 +34,7 @@ import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.util.concurrent.coroutine.Coroutine;
 
 import javax.swing.*;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
+import java.util.Set;
 
 /**
  * Toggles tool window visibility.
@@ -147,16 +149,11 @@ public class ActivateToolWindowAction extends DumbAwareAction implements AnActio
         for (Shortcut shortcut : shortcuts) {
             if (shortcut instanceof KeyboardShortcut keyboardShortcut) {
                 KeyStroke keyStroke = keyboardShortcut.getFirstKeyStroke();
-                int modifiers = keyStroke.getModifiers();
-                if (modifiers == (InputEvent.ALT_DOWN_MASK | InputEvent.ALT_MASK)
-                    || modifiers == InputEvent.ALT_MASK
-                    || modifiers == InputEvent.ALT_DOWN_MASK
-                    || modifiers == (InputEvent.META_DOWN_MASK | InputEvent.META_MASK)
-                    || modifiers == InputEvent.META_MASK
-                    || modifiers == InputEvent.META_DOWN_MASK) {
-                    int keyCode = keyStroke.getKeyCode();
-                    if (KeyEvent.VK_0 <= keyCode && keyCode <= KeyEvent.VK_9) {
-                        char c = (char)('0' + keyCode - KeyEvent.VK_0);
+                Set<Modifier> modifiers = keyStroke.getModifiers();
+                if (modifiers.equals(Set.of(Modifier.ALT)) || modifiers.equals(Set.of(Modifier.META))) {
+                    int keyCode = keyStroke.getKeyCode().key();
+                    if (KeyCode.DIGIT_0.key() <= keyCode && keyCode <= KeyCode.DIGIT_9.key()) {
+                        char c = (char)('0' + keyCode - KeyCode.DIGIT_0.key());
                         return (int)c;
                     }
                 }

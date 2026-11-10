@@ -33,6 +33,9 @@ import consulo.project.Project;
 import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationService;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.details.KeyCode;
+import consulo.ui.event.details.KeyStroke;
+import consulo.ui.event.details.ModifiedInputDetails.Modifier;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.MessageDialogBuilder;
 import consulo.ui.ex.awt.Messages;
@@ -52,8 +55,6 @@ import jakarta.inject.Singleton;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
 import java.util.*;
 import java.util.function.Supplier;
 
@@ -308,7 +309,7 @@ public class ReplaceInProjectManager {
     private void addReplaceActions(final ReplaceContext replaceContext) {
         replaceContext.getUsageView().addButtonToLowerPane(new LegacyDumbAwareAction(FindLocalize.findReplaceAllAction()) {
             {
-                setShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.ALT_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK)));
+                setShortcutSet(new CustomShortcutSet(KeyStroke.pressed(KeyCode.ENTER, Modifier.ALT, Modifier.SHIFT)));
             }
 
             @Override
@@ -338,7 +339,7 @@ public class ReplaceInProjectManager {
 
         replaceContext.getUsageView().addButtonToLowerPane(new LegacyAnAction() {
             {
-                setShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.ALT_DOWN_MASK)));
+                setShortcutSet(new CustomShortcutSet(KeyStroke.pressed(KeyCode.ENTER, Modifier.ALT)));
             }
 
             @Override

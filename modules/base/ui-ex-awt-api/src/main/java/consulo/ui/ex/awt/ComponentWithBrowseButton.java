@@ -261,7 +261,7 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
         }
 
         public void registerShortcut(JComponent textField) {
-            ShortcutSet shiftEnter = new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.SHIFT_DOWN_MASK));
+            ShortcutSet shiftEnter = new CustomShortcutSet(TargetAWT.from(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.SHIFT_DOWN_MASK)));
             registerCustomShortcutSet(shiftEnter, textField);
             myBrowseButton.setToolTipText(KeymapUtil.getShortcutsText(shiftEnter.getShortcuts()));
         }

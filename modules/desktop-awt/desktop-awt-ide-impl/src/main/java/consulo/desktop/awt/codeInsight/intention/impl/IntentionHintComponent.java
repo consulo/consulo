@@ -490,7 +490,7 @@ public class IntentionHintComponent implements Disposable, ScrollAwareHint, Inte
                 if (shortcut instanceof KeyboardShortcut) {
                     KeyboardShortcut keyboardShortcut = (KeyboardShortcut) shortcut;
                     if (keyboardShortcut.getSecondKeyStroke() == null) {
-                        myPopup.registerAction("activateSelectedElement", keyboardShortcut.getFirstKeyStroke(), new AbstractAction() {
+                        myPopup.registerAction("activateSelectedElement", TargetAWT.to(keyboardShortcut.getFirstKeyStroke()), new AbstractAction() {
                             @Override
                             public void actionPerformed(ActionEvent e) {
                                 myPopup.handleSelect(true);

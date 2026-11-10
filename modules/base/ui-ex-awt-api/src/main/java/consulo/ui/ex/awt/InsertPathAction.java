@@ -21,6 +21,9 @@ import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.details.KeyCode;
+import consulo.ui.event.details.KeyStroke;
+import consulo.ui.event.details.ModifiedInputDetails.Modifier;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.localize.UILocalize;
 import consulo.util.dataholder.Key;
@@ -29,15 +32,13 @@ import consulo.util.io.NioFiles;
 
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseListener;
 import java.nio.file.Path;
 
 public class InsertPathAction extends AnAction {
   private static final Logger LOG = Logger.getInstance(InsertPathAction.class);
   protected final JTextComponent myTextField;
-  protected static final CustomShortcutSet CTRL_F = new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_F, InputEvent.CTRL_DOWN_MASK));
+  protected static final CustomShortcutSet CTRL_F = new CustomShortcutSet(KeyStroke.pressed(KeyCode.F, Modifier.CTRL));
   protected final FileChooserDescriptor myDescriptor;
   private MouseListener myPopupHandler;
   protected static final Key INSERT_PATH_ACTION= Key.create("insertPathAction");

@@ -15,13 +15,15 @@
  */
 package consulo.ui.ex.impl.internal.keymap;
 
+import consulo.ui.event.details.KeyStroke;
+import consulo.ui.event.details.ModifiedInputDetails.Modifier;
 import consulo.ui.ex.action.KeyboardShortcut;
 import consulo.ui.ex.action.MouseShortcut;
 import consulo.ui.ex.action.Shortcut;
-import consulo.ui.ex.awt.AWTConstants;
+import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
-import java.awt.event.InputEvent;
+import java.util.EnumSet;
+import java.util.Set;
 
 /**
  * @author max
@@ -57,11 +59,12 @@ public class MacOSDefaultKeymap extends DefaultKeymapImpl {
                                 convertKeyStroke(key.getSecondKeyStroke()));
   }
 
-  private static KeyStroke convertKeyStroke(KeyStroke parentKeyStroke) {
+  private static @Nullable KeyStroke convertKeyStroke(@Nullable KeyStroke parentKeyStroke) {
     if (parentKeyStroke == null) return null;
-    return KeyStroke.getKeyStroke(parentKeyStroke.getKeyCode(),
-                                  mapModifiers(parentKeyStroke.getModifiers()),
-                                  parentKeyStroke.isOnKeyRelease());
+    Set<Modifier> modifiers = mapModifiers(parentKeyStroke.getModifiers());
+    return parentKeyStroke.isTyped()
+      ? KeyStroke.typed(parentKeyStroke.getKeyChar(), modifiers)
+      : KeyStroke.of(parentKeyStroke.getKeyCode(), modifiers, parentKeyStroke.isOnKeyRelease());
   }
 
   private static MouseShortcut convertMouseShortcut(MouseShortcut macShortcut) {
@@ -70,49 +73,18 @@ public class MacOSDefaultKeymap extends DefaultKeymapImpl {
                              macShortcut.getClickCount());
   }
 
-  @AWTConstants.InputEventMask
-  private static int mapModifiers(@AWTConstants.InputEventMask int modifiers) {
-    boolean meta = false;
-
-    if ((modifiers & InputEvent.META_MASK) != 0) {
-      modifiers &= ~InputEvent.META_MASK;
-      meta = true;
+  /**
+   * The keys under Ctrl on other systems are under Command on a Mac, and the other way round.
+   */
+  private static Set<Modifier> mapModifiers(Set<Modifier> modifiers) {
+    Set<Modifier> mapped = EnumSet.noneOf(Modifier.class);
+    for (Modifier modifier : modifiers) {
+      mapped.add(switch (modifier) {
+        case META -> Modifier.CTRL;
+        case CTRL -> Modifier.META;
+        default -> modifier;
+      });
     }
-
-    boolean metaDown = false;
-    if ((modifiers & InputEvent.META_DOWN_MASK) != 0) {
-      modifiers &= ~InputEvent.META_DOWN_MASK;
-      metaDown = true;
-    }
-
-    boolean control = false;
-    if ((modifiers & InputEvent.CTRL_MASK) != 0) {
-      modifiers &= ~InputEvent.CTRL_MASK;
-      control = true;
-    }
-
-    boolean controlDown = false;
-    if ((modifiers & InputEvent.CTRL_DOWN_MASK) != 0) {
-      modifiers &= ~InputEvent.CTRL_DOWN_MASK;
-      controlDown = true;
-    }
-
-    if (meta) {
-      modifiers |= InputEvent.CTRL_MASK;
-    }
-
-    if (metaDown) {
-      modifiers |= InputEvent.CTRL_DOWN_MASK;
-    }
-
-    if (control) {
-      modifiers |= InputEvent.META_MASK;
-    }
-
-    if (controlDown) {
-      modifiers |= InputEvent.META_DOWN_MASK;
-    }
-
-    return modifiers;
+    return mapped;
   }
 }

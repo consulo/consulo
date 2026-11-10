@@ -32,6 +32,7 @@ import consulo.ide.ServiceManager;
 import consulo.ui.ex.awt.Splitter;
 import consulo.ide.impl.idea.openapi.ui.playback.PlaybackContext;
 import consulo.ide.impl.idea.openapi.ui.playback.PlaybackRunner;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.lang.StringUtil;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.*;
@@ -48,7 +49,6 @@ import consulo.desktop.awt.uiOld.debugger.UiDebuggerExtension;
 import consulo.desktop.awt.uiOld.debugger.extensions.UiScriptFileType;
 import consulo.ide.impl.idea.util.WaitFor;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.desktop.awt.wm.impl.DesktopIdeFrameImpl;
 import consulo.logging.Logger;
 import consulo.ui.Window;
@@ -125,13 +125,13 @@ public class PlaybackDebugger implements UiDebuggerExtension, PlaybackRunner.Sta
 
         DefaultActionGroup fsGroup = new DefaultActionGroup();
         SaveAction saveAction = new SaveAction();
-        saveAction.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke("control S")), myComponent);
+        saveAction.registerCustomShortcutSet(new CustomShortcutSet(TargetAWT.from(KeyStroke.getKeyStroke("control S"))), myComponent);
         fsGroup.add(saveAction);
         SetScriptFileAction setScriptFileAction = new SetScriptFileAction();
-        setScriptFileAction.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke("control O")), myComponent);
+        setScriptFileAction.registerCustomShortcutSet(new CustomShortcutSet(TargetAWT.from(KeyStroke.getKeyStroke("control O"))), myComponent);
         fsGroup.add(setScriptFileAction);
         AnAction newScriptAction = new NewScriptAction();
-        newScriptAction.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke("control N")), myComponent);
+        newScriptAction.registerCustomShortcutSet(new CustomShortcutSet(TargetAWT.from(KeyStroke.getKeyStroke("control N"))), myComponent);
         fsGroup.add(newScriptAction);
 
         ActionToolbar tb = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, fsGroup, true);

@@ -389,11 +389,11 @@ public class DocRenderer implements CustomFoldRegionRenderer {
             // the queue can hand back a move/drag event, which MouseShortcut rejects
             return false;
         }
-        int button = MouseShortcut.getButton(mouseEvent);
+        int button = TargetAWT.toMouseShortcutButton(mouseEvent);
         int modifiers = button == MouseShortcut.BUTTON_WHEEL_UP || button == MouseShortcut.BUTTON_WHEEL_DOWN
             ? mouseEvent.getModifiers()
             : mouseEvent.getModifiersEx();
-        MouseShortcut shortcut = new MouseShortcut(button, modifiers, clickCount);
+        MouseShortcut shortcut = new MouseShortcut(button, TargetAWT.fromModifiers(modifiers), clickCount);
         for (String actionId : keymapManager.getActiveKeymap().getActionIds(shortcut)) {
             if (IdeActions.ACTION_GOTO_DECLARATION.equals(actionId)) {
                 return true;

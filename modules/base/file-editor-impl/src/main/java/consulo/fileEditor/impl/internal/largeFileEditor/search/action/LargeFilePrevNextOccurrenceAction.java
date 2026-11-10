@@ -8,12 +8,13 @@ import consulo.fileEditor.impl.internal.search.SearchUtils;
 import consulo.fileEditor.internal.SearchReplaceComponent;
 import consulo.fileEditor.internal.largeFileEditor.LfeSearchManager;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.details.KeyCode;
+import consulo.ui.event.details.KeyStroke;
+import consulo.ui.event.details.ModifiedInputDetails.Modifier;
 import consulo.ui.ex.action.*;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -70,7 +71,7 @@ public final class LargeFilePrevNextOccurrenceAction extends LegacyDumbAwareActi
             list.addAll(SearchUtils.shortcutsOf(IdeActions.ACTION_FIND_PREVIOUS));
             if (isSingleLine) {
                 list.addAll(SearchUtils.shortcutsOf(IdeActions.ACTION_EDITOR_MOVE_CARET_UP));
-                list.add(new KeyboardShortcut(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.SHIFT_DOWN_MASK), null));
+                list.add(new KeyboardShortcut(KeyStroke.pressed(KeyCode.ENTER, Modifier.SHIFT), null));
             }
         }
         return SearchUtils.shortcutSetOf(list);

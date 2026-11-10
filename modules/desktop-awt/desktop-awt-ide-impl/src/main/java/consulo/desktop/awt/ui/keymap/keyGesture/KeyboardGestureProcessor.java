@@ -23,6 +23,7 @@ import consulo.ide.impl.idea.openapi.keymap.impl.KeyState;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.event.AnActionEventVisitor;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.lang.SystemProperties;
 
 import javax.swing.*;
@@ -96,7 +97,7 @@ public class KeyboardGestureProcessor {
   }
 
   private Shortcut getCurrentShortcut() {
-    return KeyboardModifierGestureShortcut.newInstance(myContext.modifierType, myContext.actionShortcut);
+    return KeyboardModifierGestureShortcut.newInstance(myContext.modifierType, TargetAWT.from(myContext.actionShortcut));
   }
 
   void setState(KeyGestureState state) {

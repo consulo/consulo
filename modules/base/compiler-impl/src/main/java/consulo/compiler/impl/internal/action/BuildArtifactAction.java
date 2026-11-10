@@ -39,6 +39,7 @@ import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.util.ShortcutUtil;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.popup.AWTListPopup;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.*;
 import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
@@ -113,11 +114,11 @@ public class BuildArtifactAction extends LegacyDumbAwareAction {
         step.setDefaultOptionIndices(selectedIndices.toArray());
 
         AWTListPopup popup = (AWTListPopup) JBPopupFactory.getInstance().createListPopup(project, step);
-        KeyStroke editKeyStroke = ShortcutUtil.getKeyStroke(CommonShortcuts.getEditSource());
+        consulo.ui.event.details.KeyStroke editKeyStroke = ShortcutUtil.getKeyStroke(CommonShortcuts.getEditSource());
         if (editKeyStroke != null) {
             popup.registerAction(
                 "editArtifact",
-                editKeyStroke,
+                TargetAWT.to(editKeyStroke),
                 new AbstractAction() {
                     @Override
                     @RequiredUIAccess

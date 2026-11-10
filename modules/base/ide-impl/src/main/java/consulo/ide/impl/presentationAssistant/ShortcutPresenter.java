@@ -27,6 +27,7 @@ import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.event.AnActionListener;
 import consulo.ui.ex.action.util.MacKeymapUtil;
 import consulo.ui.ex.awt.AWTConstants;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.BitUtil;
@@ -278,7 +279,7 @@ class ShortcutPresenter implements Disposable {
                 if (shortcut instanceof MouseShortcut mouseShortcut
                     && button == mouseShortcut.getButton()
                     && clickCount == mouseShortcut.getClickCount()
-                    && modifiers == mouseShortcut.getModifiers()) {
+                    && TargetAWT.fromModifiers(modifiers).equals(mouseShortcut.getModifiers())) {
                     return shortcutText(mouseShortcut, keymapKind);
                 }
             }
@@ -295,7 +296,7 @@ class ShortcutPresenter implements Disposable {
 
     
     private String shortcutText(KeyboardShortcut shortcut, Keymaps.KeymapKind kind) {
-        List<KeyStroke> list = Arrays.asList(shortcut.getFirstKeyStroke(), shortcut.getSecondKeyStroke());
+        List<consulo.ui.event.details.KeyStroke> list = Arrays.asList(shortcut.getFirstKeyStroke(), shortcut.getSecondKeyStroke());
         return StringUtil.join(
             ContainerUtil.mapNotNull(
                 list,
@@ -306,11 +307,12 @@ class ShortcutPresenter implements Disposable {
     }
 
     
-    private String shortcutText(KeyStroke keyStroke, Keymaps.KeymapKind keymapKind) {
+    private String shortcutText(consulo.ui.event.details.KeyStroke uiKeyStroke, Keymaps.KeymapKind keymapKind) {
         switch (keymapKind) {
             case MAC:
-                return StringUtil.notNullize(MacKeymapUtil.getKeyStrokeText(keyStroke));
+                return StringUtil.notNullize(MacKeymapUtil.getKeyStrokeText(uiKeyStroke));
             case WIN:
+                KeyStroke keyStroke = TargetAWT.to(uiKeyStroke);
                 int modifiers = keyStroke.getModifiers();
                 List<String> list = Arrays.asList(
                     modifiers > 0 ? WinKeyStrokePresentation.getWinModifiersText(modifiers) : null,
@@ -330,11 +332,11 @@ class ShortcutPresenter implements Disposable {
             return "";
         }
 
-        int modifiers = mapNewModifiers(shortcut.getModifiers());
+        int modifiers = mapNewModifiers(TargetAWT.toModifiers(shortcut.getModifiers()));
         List<String> texts = new ArrayList<>();
         if (modifiers > 0) {
             String winModifiersText = keymapKind == Keymaps.KeymapKind.MAC
-                ? MacKeymapUtil.getModifiersText(modifiers)
+                ? MacKeymapUtil.getModifiersText(shortcut.getModifiers())
                 : WinKeyStrokePresentation.getWinModifiersText(modifiers);
             if (!StringUtil.isEmpty(winModifiersText)) {
                 texts.add(winModifiersText);

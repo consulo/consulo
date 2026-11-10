@@ -34,6 +34,7 @@ import consulo.ui.ex.awt.speedSearch.SpeedSearchUtil;
 import consulo.ui.ex.awt.table.JBTable;
 import consulo.ui.ex.awt.util.MergingUpdateQueue;
 import consulo.ui.ex.awt.util.Update;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.collection.FList;
 import consulo.util.dataholder.Key;
 import org.jspecify.annotations.Nullable;
@@ -223,7 +224,7 @@ public class ClassesTable extends JBTable implements UiDataProvider, Disposable 
             }
         };
 
-        KeyboardShortcut shortcut = new KeyboardShortcut(KeyStroke.getKeyStroke('l', InputEvent.SHIFT_DOWN_MASK), null);
+        KeyboardShortcut shortcut = new KeyboardShortcut(TargetAWT.from(KeyStroke.getKeyStroke('l', InputEvent.SHIFT_DOWN_MASK)), null);
         action.setShortcutSet(new CustomShortcutSet(shortcut));
 
         MyMouseAdapter listener = new MyMouseAdapter() {

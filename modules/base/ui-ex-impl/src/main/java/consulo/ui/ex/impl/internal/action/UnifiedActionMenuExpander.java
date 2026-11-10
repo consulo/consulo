@@ -26,6 +26,8 @@ import consulo.ui.MenuSeparator;
 import consulo.ui.UIAccess;
 import consulo.ui.event.ComponentEvent;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.details.KeyCode;
+import consulo.ui.event.details.KeyStroke;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ui.ex.keymap.util.KeymapUtil;
@@ -33,8 +35,6 @@ import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.KeyStroke;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CancellationException;
@@ -256,7 +256,7 @@ public final class UnifiedActionMenuExpander {
     }
 
     private static boolean isEnterKeyStroke(KeyStroke keyStroke) {
-        return keyStroke.getKeyCode() == KeyEvent.VK_ENTER && keyStroke.getModifiers() == 0;
+        return keyStroke.getKeyCode() == KeyCode.ENTER && keyStroke.getModifiers().isEmpty();
     }
 
     @RequiredUIAccess

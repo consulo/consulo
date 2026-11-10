@@ -20,6 +20,7 @@ import consulo.ui.ex.action.MouseShortcut;
 import consulo.application.util.SystemInfo;
 import consulo.ui.ex.JBColor;
 import consulo.ide.impl.idea.ui.mac.MacGestureSupportForMouseShortcutPanel;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 
 import java.awt.BorderLayout;
 import java.awt.event.MouseAdapter;
@@ -49,11 +50,11 @@ public final class MouseShortcutPanel extends ShortcutPanel<MouseShortcut> {
     }
 
     private MouseShortcut toMouseShortcut(MouseEvent event) {
-      int button = MouseShortcut.getButton(event);
+      int button = TargetAWT.toMouseShortcutButton(event);
       int clickCount = event instanceof MouseWheelEvent ? 1 : event.getClickCount();
       if (0 <= button && clickCount <= myClickCount) {
         int modifiers = event.getModifiersEx();
-        return new MouseShortcut(button, modifiers, clickCount);
+        return new MouseShortcut(button, TargetAWT.fromModifiers(modifiers), clickCount);
       }
       return null;
     }

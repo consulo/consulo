@@ -21,13 +21,13 @@ import consulo.ui.Component;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ComponentEvent;
+import consulo.ui.event.details.KeyStroke;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.internal.ActionPromoterUtil;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;

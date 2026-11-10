@@ -15,9 +15,9 @@
  */
 package consulo.ui.ex.action;
 
+import consulo.ui.event.details.KeyStroke;
 import consulo.ui.ex.action.util.ShortcutUtil;
 
-import javax.swing.*;
 
 public class KeyboardModifierGestureShortcut extends Shortcut {
 
@@ -59,8 +59,7 @@ public class KeyboardModifierGestureShortcut extends Shortcut {
 
     KeyboardModifierGestureShortcut other = (KeyboardModifierGestureShortcut)sc;
     if (myType.equals(other.myType)) {
-      if (myStroke.getModifiers() != other.myStroke.getModifiers()) return false;
-      return other.myStroke.getKeyCode() != -1 || other.myStroke.getKeyCode() == myStroke.getKeyCode();
+      return myStroke.getModifiers().equals(other.myStroke.getModifiers());
     }
 
     return false;

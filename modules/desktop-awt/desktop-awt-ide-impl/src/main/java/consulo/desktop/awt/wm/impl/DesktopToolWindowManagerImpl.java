@@ -377,7 +377,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
         int baseModifiers = 0;
         for (Shortcut each : baseShortcut) {
             if (each instanceof KeyboardShortcut kbShortcut) {
-                KeyStroke keyStroke = kbShortcut.getFirstKeyStroke();
+                KeyStroke keyStroke = TargetAWT.to(kbShortcut.getFirstKeyStroke());
                 baseModifiers = keyStroke.getModifiers();
                 if (baseModifiers > 0) {
                     break;

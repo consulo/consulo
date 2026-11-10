@@ -38,6 +38,9 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.event.details.InputDetails;
+import consulo.ui.event.details.KeyCode;
+import consulo.ui.event.details.KeyStroke;
+import consulo.ui.event.details.ModifiedInputDetails.Modifier;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.ColoredSideBorder;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
@@ -47,8 +50,6 @@ import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.*;
 import java.util.List;
@@ -224,11 +225,11 @@ public class CoverageLineMarkerRenderer implements ActiveGutterRenderer, LineMar
         group.add(nextAction);
 
         prevAction.registerCustomShortcutSet(
-            new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_UP, InputEvent.ALT_MASK | InputEvent.SHIFT_MASK)),
+            new CustomShortcutSet(KeyStroke.pressed(KeyCode.UP, Modifier.ALT, Modifier.SHIFT)),
             editorComponent
         );
         nextAction.registerCustomShortcutSet(
-            new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, InputEvent.ALT_MASK | InputEvent.SHIFT_MASK)),
+            new CustomShortcutSet(KeyStroke.pressed(KeyCode.DOWN, Modifier.ALT, Modifier.SHIFT)),
             editorComponent
         );
 

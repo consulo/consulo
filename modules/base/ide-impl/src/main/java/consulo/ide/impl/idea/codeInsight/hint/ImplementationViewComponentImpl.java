@@ -41,6 +41,8 @@ import consulo.navigation.NavigationItem;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.details.KeyCode;
+import consulo.ui.event.details.KeyStroke;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.util.ScreenUtil;
@@ -59,7 +61,6 @@ import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
 import java.awt.*;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -520,11 +521,11 @@ public class ImplementationViewComponentImpl extends JPanel implements Implement
         DefaultActionGroup group = new DefaultActionGroup();
 
         BackAction back = new BackAction();
-        back.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0)), this);
+        back.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.pressed(KeyCode.LEFT)), this);
         group.add(back);
 
         ForwardAction forward = new ForwardAction();
-        forward.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0)), this);
+        forward.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.pressed(KeyCode.RIGHT)), this);
         group.add(forward);
 
         EditSourceActionBase edit = new EditSourceAction();

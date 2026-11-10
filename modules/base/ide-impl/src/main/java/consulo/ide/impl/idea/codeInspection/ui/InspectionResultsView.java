@@ -66,6 +66,8 @@ import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.details.KeyCode;
+import consulo.ui.event.details.KeyStroke;
 import consulo.ui.ex.OccurenceNavigator;
 import consulo.ui.ex.OpenSourceUtil;
 import consulo.ui.ex.TreeExpander;
@@ -299,7 +301,7 @@ public class InspectionResultsView extends JPanel implements Disposable, Occuren
 
         myExcludeAction = new LegacyAnAction(InspectionLocalize.inspectionsResultViewExcludeActionText()) {
             {
-                registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0)), myTree);
+                registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.pressed(KeyCode.DELETE)), myTree);
             }
 
             @Override

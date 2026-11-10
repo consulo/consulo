@@ -41,6 +41,9 @@ import consulo.ui.Label;
 import consulo.ui.TextBoxWithHistory;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.details.KeyCode;
+import consulo.ui.event.details.KeyStroke;
+import consulo.ui.event.details.ModifiedInputDetails.Modifier;
 import consulo.ui.ex.action.*;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
@@ -48,9 +51,6 @@ import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.KeyStroke;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -138,14 +138,15 @@ class UnifiedFindPopupScopeUI {
     private ActionToolbar createDirectoryToolbar() {
         DumbAwareAction selectPathAction = DumbAwareAction.create("Select Path", PlatformIconGroup.nodesFolder(), e -> chooseDirectory());
         selectPathAction.registerCustomShortcutSet(
-            new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.SHIFT_DOWN_MASK)),
+            new CustomShortcutSet(KeyStroke.pressed(KeyCode.ENTER, Modifier.SHIFT)),
             myDirectoryField
         );
 
-        int mnemonicModifiers = Platform.current().os().isMac() ? InputEvent.ALT_DOWN_MASK | InputEvent.CTRL_DOWN_MASK : InputEvent.ALT_DOWN_MASK;
         MyRecursiveDirectoryAction recursiveDirectoryAction = new MyRecursiveDirectoryAction();
         recursiveDirectoryAction.registerCustomShortcutSet(
-            new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_Y, mnemonicModifiers)),
+            new CustomShortcutSet(Platform.current().os().isMac()
+                ? KeyStroke.pressed(KeyCode.Y, Modifier.ALT, Modifier.CTRL)
+                : KeyStroke.pressed(KeyCode.Y, Modifier.ALT)),
             myPanel.getUIComponent()
         );
 

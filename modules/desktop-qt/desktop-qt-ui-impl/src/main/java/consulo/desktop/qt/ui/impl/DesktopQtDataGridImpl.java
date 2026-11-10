@@ -105,7 +105,7 @@ public class DesktopQtDataGridImpl extends QtComponentDelegate<QWidget> implemen
     /**
      * The key which opens the context menu from the keyboard.
      */
-    private static final KeyCode CONTEXT_MENU_KEY = KeyCode.of(0x20D, "VK_CONTEXT_MENU");
+    private static final KeyCode CONTEXT_MENU_KEY = KeyCode.CONTEXT_MENU;
 
     private final DataGridController myController;
     private final Component myToolbar;

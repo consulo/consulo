@@ -187,10 +187,10 @@ public class WebInputDetails {
             case "Home" -> KeyCode.HOME;
             case "End" -> KeyCode.END;
             case "Shift" -> KeyCode.SHIFT;
-            case "Control" -> KeyCode.CTRL;
+            case "Control" -> KeyCode.CONTROL;
             case "Alt" -> KeyCode.ALT;
             case "Meta" -> KeyCode.META;
-            case "Delete" -> KeyCode.of(0x7F, "VK_DELETE");
+            case "Delete" -> KeyCode.DELETE;
             default -> KeyCode.of(data.path(KEY_CODE).asInt(0));
         };
     }

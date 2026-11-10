@@ -416,7 +416,7 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
             ImageEffects.layered(PlatformIconGroup.actionsEdit(), PlatformIconGroup.generalDropdown())
         ) {
             {
-                registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0)), myActionsTree.getTree());
+                registerCustomShortcutSet(new CustomShortcutSet(TargetAWT.from(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0))), myActionsTree.getTree());
             }
 
             @Override
@@ -592,7 +592,7 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
                 myTreeExpansionMonitor.freeze();
             }
             myActionsTree.filterTree(
-                new KeyboardShortcut(keyStroke, enable2Shortcut.isSelected() ? secondShortcut.getKeyStroke() : null),
+                new KeyboardShortcut(TargetAWT.from(keyStroke), enable2Shortcut.isSelected() ? TargetAWT.from(secondShortcut.getKeyStroke()) : null),
                 getCurrentQuickListIds()
             );
             JTree tree = myActionsTree.getTree();

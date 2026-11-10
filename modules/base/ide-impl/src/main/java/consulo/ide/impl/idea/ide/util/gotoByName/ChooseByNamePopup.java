@@ -21,6 +21,7 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.MergingUpdateQueue;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awt.util.Update;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.ComponentPopupBuilder;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.util.dataholder.Key;
@@ -65,7 +66,7 @@ public class ChooseByNamePopup extends ChooseByNameBase implements ChooseByNameP
       myOldFocusOwner = oldPopup.myPreviouslyFocusedComponent;
     }
     myMayRequestCurrentWindow = mayRequestOpenInCurrentWindow;
-    myAdText = myMayRequestCurrentWindow ? "Press " + KeymapUtil.getKeystrokeText(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.SHIFT_MASK)) + " to open in current window" : null;
+    myAdText = myMayRequestCurrentWindow ? "Press " + KeymapUtil.getKeystrokeText(TargetAWT.from(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.SHIFT_MASK))) + " to open in current window" : null;
   }
 
   public String getEnteredText() {

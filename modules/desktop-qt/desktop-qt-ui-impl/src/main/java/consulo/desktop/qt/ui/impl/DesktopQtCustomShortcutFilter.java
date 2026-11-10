@@ -21,6 +21,7 @@ import consulo.ui.Component;
 import consulo.ui.UIAccess;
 import consulo.ui.event.ComponentEvent;
 import consulo.ui.event.details.KeyCode;
+import consulo.ui.event.details.KeyStroke;
 import consulo.ui.event.details.ModifiedInputDetails;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.impl.internal.action.UnifiedCustomShortcutDispatcher;
@@ -40,8 +41,6 @@ import io.qt.widgets.QTextEdit;
 import io.qt.widgets.QWidget;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
-import java.awt.event.InputEvent;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
@@ -192,8 +191,9 @@ public final class DesktopQtCustomShortcutFilter {
             }
         }
 
-        int modifiers = keyStroke.getModifiers();
-        boolean commandModifier = (modifiers & (InputEvent.CTRL_DOWN_MASK | InputEvent.ALT_DOWN_MASK | InputEvent.META_DOWN_MASK)) != 0;
+        boolean commandModifier = keyStroke.hasModifier(ModifiedInputDetails.Modifier.CTRL)
+            || keyStroke.hasModifier(ModifiedInputDetails.Modifier.ALT)
+            || keyStroke.hasModifier(ModifiedInputDetails.Modifier.META);
         if (!commandModifier && DesktopQtSpeedSearch.isActive(widget)) {
             return false;
         }
@@ -254,19 +254,6 @@ public final class DesktopQtCustomShortcutFilter {
             return null;
         }
 
-        int awtModifiers = 0;
-        if (modifiers.contains(ModifiedInputDetails.Modifier.SHIFT)) {
-            awtModifiers |= InputEvent.SHIFT_DOWN_MASK;
-        }
-        if (modifiers.contains(ModifiedInputDetails.Modifier.CTRL)) {
-            awtModifiers |= InputEvent.CTRL_DOWN_MASK;
-        }
-        if (modifiers.contains(ModifiedInputDetails.Modifier.ALT)) {
-            awtModifiers |= InputEvent.ALT_DOWN_MASK;
-        }
-        if (modifiers.contains(ModifiedInputDetails.Modifier.META)) {
-            awtModifiers |= InputEvent.META_DOWN_MASK;
-        }
-        return KeyStroke.getKeyStroke(keyCode.key(), awtModifiers);
+        return KeyStroke.of(keyCode, modifiers, false);
     }
 }

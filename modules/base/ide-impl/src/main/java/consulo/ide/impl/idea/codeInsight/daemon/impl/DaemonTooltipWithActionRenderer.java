@@ -28,6 +28,9 @@ import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.details.KeyCode;
+import consulo.ui.event.details.KeyStroke;
+import consulo.ui.event.details.ModifiedInputDetails.Modifier;
 import consulo.ui.ex.Html;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
@@ -43,7 +46,6 @@ import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -141,10 +143,7 @@ public class DaemonTooltipWithActionRenderer extends DaemonTooltipRenderer {
         }
     }
 
-    private static final CustomShortcutSet runActionCustomShortcutSet = new CustomShortcutSet(KeyStroke.getKeyStroke(
-        KeyEvent.VK_ENTER,
-        KeyEvent.SHIFT_DOWN_MASK | KeyEvent.ALT_DOWN_MASK
-    ));
+    private static final CustomShortcutSet runActionCustomShortcutSet = new CustomShortcutSet(KeyStroke.pressed(KeyCode.ENTER, Modifier.SHIFT, Modifier.ALT));
 
     private final TooltipAction tooltipAction;
 

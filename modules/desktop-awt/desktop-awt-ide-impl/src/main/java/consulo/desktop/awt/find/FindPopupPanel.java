@@ -581,23 +581,23 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
         myReplaceAllButton.addClickListener(__ -> doOK(false));
         myReplaceSelectedButton.addClickListener(e -> doReplaceSelected());
 
-        new MyEnterAction(false).registerCustomShortcutSet(new CustomShortcutSet(ENTER), this);
-        DumbAwareAction.create(__ -> processCtrlEnter()).registerCustomShortcutSet(new CustomShortcutSet(ENTER_WITH_MODIFIERS), this);
-        DumbAwareAction.create(__ -> doOK(false)).registerCustomShortcutSet(new CustomShortcutSet(REPLACE_ALL), this);
+        new MyEnterAction(false).registerCustomShortcutSet(new CustomShortcutSet(TargetAWT.from(ENTER)), this);
+        DumbAwareAction.create(__ -> processCtrlEnter()).registerCustomShortcutSet(new CustomShortcutSet(TargetAWT.from(ENTER_WITH_MODIFIERS)), this);
+        DumbAwareAction.create(__ -> doOK(false)).registerCustomShortcutSet(new CustomShortcutSet(TargetAWT.from(REPLACE_ALL)), this);
 
-        myReplaceAllButton.setToolTipText(LocalizeValue.localizeTODO(KeymapUtil.getKeystrokeText(REPLACE_ALL)));
+        myReplaceAllButton.setToolTipText(LocalizeValue.localizeTODO(KeymapUtil.getKeystrokeText(TargetAWT.from(REPLACE_ALL))));
 
         List<Shortcut> navigationKeyStrokes = new ArrayList<>();
-        KeyStroke viewSourceKeyStroke = KeymapUtil.getKeyStroke(CommonShortcuts.getViewSource());
+        KeyStroke viewSourceKeyStroke = TargetAWT.to(KeymapUtil.getKeyStroke(CommonShortcuts.getViewSource()));
         if (viewSourceKeyStroke != null
             && !Comparing.equal(viewSourceKeyStroke, ENTER_WITH_MODIFIERS)
             && !Comparing.equal(viewSourceKeyStroke, ENTER)) {
-            navigationKeyStrokes.add(new KeyboardShortcut(viewSourceKeyStroke, null));
+            navigationKeyStrokes.add(new KeyboardShortcut(TargetAWT.from(viewSourceKeyStroke), null));
         }
-        KeyStroke editSourceKeyStroke = KeymapUtil.getKeyStroke(CommonShortcuts.getEditSource());
+        KeyStroke editSourceKeyStroke = TargetAWT.to(KeymapUtil.getKeyStroke(CommonShortcuts.getEditSource()));
         if (editSourceKeyStroke != null && !Comparing.equal(editSourceKeyStroke, ENTER_WITH_MODIFIERS)
             && !Comparing.equal(editSourceKeyStroke, ENTER)) {
-            navigationKeyStrokes.add(new KeyboardShortcut(editSourceKeyStroke, null));
+            navigationKeyStrokes.add(new KeyboardShortcut(TargetAWT.from(editSourceKeyStroke), null));
         }
         if (!navigationKeyStrokes.isEmpty()) {
             DumbAwareAction.create(this::navigateToSelectedUsage)
@@ -1103,10 +1103,10 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
                     TextWithMnemonic.parse(getTemplatePresentation().getTextWithMnemonic()).getMnemonic()
                 );
                 if (mnemonic != KeyEvent.VK_UNDEFINED) {
-                    setShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(
+                    setShortcutSet(new CustomShortcutSet(TargetAWT.from(KeyStroke.getKeyStroke(
                         mnemonic,
                         Platform.current().os().isMac() ? ALT_DOWN_MASK | CTRL_DOWN_MASK : ALT_DOWN_MASK
-                    )));
+                    ))));
                     registerCustomShortcutSet(getShortcutSet(), FindPopupPanel.this);
                 }
             }
@@ -1197,7 +1197,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
         boolean isReplaceState = myHelper.isReplaceState();
         myTitleLabel.setText(myHelper.getTitle());
         myReplaceTextArea.setVisible(isReplaceState);
-        myOKHintLabel.setText(KeymapUtil.getKeystrokeText(ENTER_WITH_MODIFIERS));
+        myOKHintLabel.setText(KeymapUtil.getKeystrokeText(TargetAWT.from(ENTER_WITH_MODIFIERS)));
 
         myOKButton.setText(FindLocalize.findPopupFindButton());
         myReplaceAllButton.setVisible(isReplaceState);

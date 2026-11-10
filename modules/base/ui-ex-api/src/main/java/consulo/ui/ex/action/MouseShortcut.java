@@ -15,47 +15,38 @@
  */
 package consulo.ui.ex.action;
 
-import consulo.ui.event.details.ModifiedInputDetails;
+import consulo.ui.event.details.ModifiedInputDetails.Modifier;
 import consulo.ui.event.details.MouseInputDetails;
-import consulo.util.lang.BitUtil;
 
-import java.awt.event.InputEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseWheelEvent;
+import java.util.Collections;
+import java.util.EnumSet;
+import java.util.Set;
 
 /**
- * A mouse shortcut, which can consist of a specific mouse button, click count and modifier keys
- * (Shift, Ctrl or Alt).
+ * A click of a mouse button with modifiers held down. Buttons are numbered from one: {@link #BUTTON_LEFT},
+ * {@link #BUTTON_MIDDLE}, {@link #BUTTON_RIGHT}, then the extra buttons such as back and forward, and the wheel turned
+ * up or down counts as a button of its own.
  */
 public class MouseShortcut extends Shortcut {
+  public static final int BUTTON_LEFT = 1;
+  public static final int BUTTON_MIDDLE = 2;
+  public static final int BUTTON_RIGHT = 3;
   public static final int BUTTON_WHEEL_UP = 143;
   public static final int BUTTON_WHEEL_DOWN = 142;
+
   private final int myButton;
-  private final int myModifiers;
+  private final Set<Modifier> myModifiers;
   private final int myClickCount;
 
-  public static int getButton(MouseEvent event) {
-    if (event instanceof MouseWheelEvent) {
-      MouseWheelEvent wheel = (MouseWheelEvent)event;
-      return 0 < wheel.getWheelRotation()
-             ? BUTTON_WHEEL_DOWN
-             : BUTTON_WHEEL_UP;
-    }
-    return event.getButton();
-  }
-
   /**
-   * @param button Mouse buttons MouseEvent.BUTTON_LEFT, MouseEvent.BUTTON2, etc...
-   * @param modifiers modifiersEx masks like InputEvent.ALT_DOWN_MASK and so on...
-   * @param clickCount click count from the MouseEvent that caused the MouseShortcut creation
+   * @param clickCount the click count of the click, one or more
    */
-  public MouseShortcut(int button, int modifiers, int clickCount) {
-    myButton = button;
-    // TODO[vova] check modifiers?
-    myModifiers = mapOldModifiers(modifiers);
+  public MouseShortcut(int button, Set<Modifier> modifiers, int clickCount) {
     if (clickCount < 1) {
       throw new IllegalArgumentException("wrong clickCount: " + clickCount);
     }
+    myButton = button;
+    myModifiers = modifiers.isEmpty() ? Collections.emptySet() : Collections.unmodifiableSet(EnumSet.copyOf(modifiers));
     myClickCount = clickCount;
   }
 
@@ -63,7 +54,7 @@ public class MouseShortcut extends Shortcut {
     return myButton;
   }
 
-  public int getModifiers() {
+  public Set<Modifier> getModifiers() {
     return myModifiers;
   }
 
@@ -75,22 +66,16 @@ public class MouseShortcut extends Shortcut {
     if (myClickCount != clickCount) return false;
 
     int button = switch (details.getButton()) {
-      case LEFT -> MouseEvent.BUTTON1;
-      case MIDDLE -> MouseEvent.BUTTON2;
-      case RIGHT -> MouseEvent.BUTTON3;
+      case LEFT -> BUTTON_LEFT;
+      case MIDDLE -> BUTTON_MIDDLE;
+      case RIGHT -> BUTTON_RIGHT;
     };
-    if (myButton != button) return false;
+    if (getButton() != button) return false;
 
-    int modifiers = 0;
-    for (ModifiedInputDetails.Modifier modifier : details.getModifiers()) {
-      modifiers |= switch (modifier) {
-        case ALT -> InputEvent.ALT_DOWN_MASK;
-        case CTRL -> InputEvent.CTRL_DOWN_MASK;
-        case SHIFT -> InputEvent.SHIFT_DOWN_MASK;
-        case META -> InputEvent.META_DOWN_MASK;
-      };
-    }
-    return (myModifiers & ~InputEvent.ALT_GRAPH_DOWN_MASK) == modifiers;
+    Set<Modifier> modifiers = EnumSet.noneOf(Modifier.class);
+    modifiers.addAll(getModifiers());
+    modifiers.remove(Modifier.ALT_GRAPH);
+    return modifiers.equals(details.getModifiers());
   }
 
   public boolean equals(Object obj) {
@@ -100,38 +85,12 @@ public class MouseShortcut extends Shortcut {
     MouseShortcut other = (MouseShortcut) obj;
 
     return myButton == other.myButton
-           && myModifiers == other.myModifiers
+           && myModifiers.equals(other.myModifiers)
            && myClickCount == other.myClickCount;
   }
 
   public int hashCode() {
-    return myButton + myModifiers + myClickCount;
-  }
-
-  private static int mapOldModifiers(int modifiers) {
-    if (BitUtil.isSet(modifiers, InputEvent.SHIFT_MASK)) {
-      modifiers |= InputEvent.SHIFT_DOWN_MASK;
-    }
-    if (BitUtil.isSet(modifiers, InputEvent.ALT_MASK)) {
-      modifiers |= InputEvent.ALT_DOWN_MASK;
-    }
-    if (BitUtil.isSet(modifiers, InputEvent.ALT_GRAPH_MASK)) {
-      modifiers |= InputEvent.ALT_GRAPH_DOWN_MASK;
-    }
-    if (BitUtil.isSet(modifiers, InputEvent.CTRL_MASK)) {
-      modifiers |= InputEvent.CTRL_DOWN_MASK;
-    }
-    if (BitUtil.isSet(modifiers, InputEvent.META_MASK)) {
-      modifiers |= InputEvent.META_DOWN_MASK;
-    }
-
-    modifiers &= InputEvent.SHIFT_DOWN_MASK
-                 | InputEvent.ALT_DOWN_MASK
-                 | InputEvent.ALT_GRAPH_DOWN_MASK
-                 | InputEvent.CTRL_DOWN_MASK
-                 | InputEvent.META_DOWN_MASK;
-
-    return modifiers;
+    return 31 * (31 * myButton + myModifiers.hashCode()) + myClickCount;
   }
 
   @Override

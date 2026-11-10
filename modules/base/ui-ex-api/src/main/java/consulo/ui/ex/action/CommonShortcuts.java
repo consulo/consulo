@@ -18,25 +18,24 @@ package consulo.ui.ex.action;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.platform.Platform;
+import consulo.ui.event.details.KeyCode;
+import consulo.ui.event.details.KeyStroke;
+import consulo.ui.event.details.ModifiedInputDetails.Modifier;
 import consulo.ui.ex.keymap.KeymapManager;
 
-import javax.swing.*;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class CommonShortcuts {
     private CommonShortcuts() {
     }
 
-    public static final ShortcutSet ALT_ENTER = new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.ALT_DOWN_MASK));
-    public static final ShortcutSet ENTER = new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0));
-    public static final ShortcutSet CTRL_ENTER = new CustomShortcutSet(KeyStroke.getKeyStroke(
-        KeyEvent.VK_ENTER,
-        Platform.current().os().isMac() ?
-            InputEvent.META_DOWN_MASK : InputEvent.CTRL_DOWN_MASK
+    public static final ShortcutSet ALT_ENTER = new CustomShortcutSet(KeyStroke.pressed(KeyCode.ENTER, Modifier.ALT));
+    public static final ShortcutSet ENTER = new CustomShortcutSet(KeyStroke.pressed(KeyCode.ENTER));
+    public static final ShortcutSet CTRL_ENTER = new CustomShortcutSet(KeyStroke.pressed(
+        KeyCode.ENTER,
+        Platform.current().os().isMac() ? Modifier.META : Modifier.CTRL
     ));
 
     /**
@@ -48,10 +47,10 @@ public class CommonShortcuts {
     /**
      * @deprecated use getDelete() instead to support keymap-specific and user-configured shortcuts
      */
-    public static final ShortcutSet DELETE = new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
-    public static final ShortcutSet ESCAPE = new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0));
+    public static final ShortcutSet DELETE = new CustomShortcutSet(KeyStroke.pressed(KeyCode.DELETE));
+    public static final ShortcutSet ESCAPE = new CustomShortcutSet(KeyStroke.pressed(KeyCode.ESCAPE));
 
-    public static final ShortcutSet DOUBLE_CLICK_1 = new CustomShortcutSet(new MouseShortcut(MouseEvent.BUTTON1, 0, 2));
+    public static final ShortcutSet DOUBLE_CLICK_1 = new CustomShortcutSet(new MouseShortcut(MouseShortcut.BUTTON_LEFT, Set.of(), 2));
 
     public static final ShortcutSet MOVE_UP = CustomShortcutSet.fromString("alt UP");
     public static final ShortcutSet MOVE_DOWN = CustomShortcutSet.fromString("alt DOWN");
@@ -70,15 +69,15 @@ public class CommonShortcuts {
     private static boolean isCtrlEnter(Shortcut shortcut) {
         if (shortcut instanceof KeyboardShortcut keyboardShortcut) {
             KeyStroke keyStroke = keyboardShortcut.getFirstKeyStroke();
-            return keyStroke.getKeyCode() == KeyEvent.VK_ENTER && (keyStroke.getModifiers() & InputEvent.CTRL_MASK) != 0;
+            return keyStroke.getKeyCode() == KeyCode.ENTER && keyStroke.hasModifier(Modifier.CTRL);
         }
         return false;
     }
 
     public static KeyStroke getInsertKeystroke() {
         return Platform.current().os().isMac()
-            ? KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_DOWN_MASK)
-            : KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, 0);
+            ? KeyStroke.pressed(KeyCode.N, Modifier.CTRL)
+            : KeyStroke.pressed(KeyCode.INSERT);
     }
 
     public static ShortcutSet getCopy() {

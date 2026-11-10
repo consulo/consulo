@@ -32,6 +32,9 @@ import consulo.ui.TextArea;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
+import consulo.ui.event.details.KeyCode;
+import consulo.ui.event.details.KeyStroke;
+import consulo.ui.event.details.ModifiedInputDetails.Modifier;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.ui.layout.DockLayout;
@@ -41,8 +44,6 @@ import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -229,7 +230,7 @@ public class UnifiedSearchReplaceComponentImpl implements SearchReplaceComponent
         closeAction.registerCustomShortcutSet(escape, mySearchField);
         closeAction.registerCustomShortcutSet(escape, myReplaceField);
 
-        int menuModifier = Platform.current().os().isMac() ? InputEvent.META_DOWN_MASK : InputEvent.CTRL_DOWN_MASK;
+        Modifier menuModifier = Platform.current().os().isMac() ? Modifier.META : Modifier.CTRL;
         DumbAwareAction.create(e -> {
             String text = getSearchText();
             if (text.isEmpty()) {
@@ -239,10 +240,10 @@ public class UnifiedSearchReplaceComponentImpl implements SearchReplaceComponent
                 focusTarget();
                 addTextToRecent(text, true);
             }
-        }).registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, menuModifier)), mySearchField);
+        }).registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.pressed(KeyCode.ENTER, menuModifier)), mySearchField);
 
         DumbAwareAction.create(e -> replace())
-            .registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0)), myReplaceField);
+            .registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.pressed(KeyCode.ENTER)), myReplaceField);
     }
 
     @RequiredUIAccess

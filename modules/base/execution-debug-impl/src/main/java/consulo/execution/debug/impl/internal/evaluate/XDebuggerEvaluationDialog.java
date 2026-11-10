@@ -72,7 +72,7 @@ public class XDebuggerEvaluationDialog extends DialogWrapper {
     //can not use new SHIFT_DOWN_MASK etc because in this case ActionEvent modifiers do not match
     private static final int ADD_WATCH_MODIFIERS =
         (Platform.current().os().isMac() ? InputEvent.META_MASK : InputEvent.CTRL_MASK) | InputEvent.SHIFT_MASK;
-    static KeyStroke ADD_WATCH_KEYSTROKE = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, ADD_WATCH_MODIFIERS);
+    static consulo.ui.event.details.KeyStroke ADD_WATCH_KEYSTROKE = TargetAWT.from(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, ADD_WATCH_MODIFIERS));
 
     private final JPanel myMainPanel;
     private final JPanel myResultPanel;
@@ -153,7 +153,7 @@ public class XDebuggerEvaluationDialog extends DialogWrapper {
 
                 focusManager.getInstanceForProject(mySession.getProject()).requestFocus(myTreePanel.getTree(), true);
             }
-        }.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.ALT_DOWN_MASK)), getRootPane(),
+        }.registerCustomShortcutSet(new CustomShortcutSet(TargetAWT.from(KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.ALT_DOWN_MASK))), getRootPane(),
             myDisposable);
 
         Predicate<TreeNode> rootFilter = node -> node.getParent() instanceof EvaluatingExpressionRootNode;
@@ -358,8 +358,8 @@ public class XDebuggerEvaluationDialog extends DialogWrapper {
         return (Platform.current().os().isMac() ? InputEvent.META_MASK : InputEvent.CTRL_MASK) | InputEvent.SHIFT_MASK;
     }
 
-    public static KeyStroke getAddWatchKeystroke() {
-        return KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, getAddWatchModifiers());
+    public static consulo.ui.event.details.KeyStroke getAddWatchKeystroke() {
+        return TargetAWT.from(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, getAddWatchModifiers()));
     }
 
     @RequiredUIAccess

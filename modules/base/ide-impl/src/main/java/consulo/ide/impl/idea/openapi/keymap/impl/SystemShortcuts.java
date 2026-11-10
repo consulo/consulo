@@ -23,6 +23,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.KeyboardShortcut;
 import consulo.ui.ex.action.Shortcut;
 import consulo.ui.ex.awt.UIExAWTDataKey;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.ref.SimpleReference;
@@ -115,7 +116,7 @@ public final class SystemShortcuts {
         }
 
         for (KeyStroke sysKS : myKeyStroke2SysShortcut.keySet()) {
-            String[] actIds = computeOnEdt(() -> keymap.getActionIds(sysKS));
+            String[] actIds = computeOnEdt(() -> keymap.getActionIds(TargetAWT.from(sysKS)));
             if (actIds == null || actIds.length == 0) {
                 continue;
             }
@@ -146,7 +147,7 @@ public final class SystemShortcuts {
                 return false;
             }
             for (KeyStroke ks : myKeyStroke2SysShortcut.keySet()) {
-                if (sc.startsWith(new KeyboardShortcut(ks, null))) {
+                if (sc.startsWith(new KeyboardShortcut(TargetAWT.from(ks), null))) {
                     ConflictItem ci = myKeymapConflicts.get(myKeyStroke2SysShortcut.get(ks));
                     if (ci != null && ci.getUnmutedActionId(myMutedConflicts) != null) {
                         return true;
@@ -222,10 +223,10 @@ public final class SystemShortcuts {
             return;
         }
 
-        KeyStroke ks = ksc.getFirstKeyStroke();
+        KeyStroke ks = TargetAWT.to(ksc.getFirstKeyStroke());
         AWTKeyStroke sysKs = myKeyStroke2SysShortcut.get(ks);
         if (sysKs == null && ksc.getSecondKeyStroke() != null) {
-            sysKs = myKeyStroke2SysShortcut.get(ks = ksc.getSecondKeyStroke());
+            sysKs = myKeyStroke2SysShortcut.get(ks = TargetAWT.to(ksc.getSecondKeyStroke()));
         }
         if (sysKs == null) {
             return;

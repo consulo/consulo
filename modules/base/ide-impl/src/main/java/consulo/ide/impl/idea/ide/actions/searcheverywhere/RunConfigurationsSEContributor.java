@@ -27,6 +27,7 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.JBUIScale;
 import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
@@ -156,8 +157,8 @@ public class RunConfigurationsSEContributor implements SearchEverywhereContribut
         Executor debugExecutor = ExecutorRegistry.getInstance().getExecutorById(ToolWindowId.DEBUG);
         Executor runExecutor = DefaultRunExecutor.getRunExecutorInstance();
 
-        String enter = KeymapUtil.getKeystrokeText(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0));
-        String shiftEnter = KeymapUtil.getKeystrokeText(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.SHIFT_DOWN_MASK));
+        String enter = KeymapUtil.getKeystrokeText(TargetAWT.from(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0)));
+        String shiftEnter = KeymapUtil.getKeystrokeText(TargetAWT.from(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.SHIFT_DOWN_MASK)));
         if (debugExecutor != null) {
             String text = debugExecutor.getId() + "(" + enter + ")";
             if (runExecutor != null) {
@@ -298,15 +299,15 @@ public class RunConfigurationsSEContributor implements SearchEverywhereContribut
             KeyStroke shiftEnterStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.SHIFT_DOWN_MASK);
             if (debugExecutor != null) {
                 executorInfo.append(debugExecutor.getId(), commandAttributes);
-                executorInfo.append("(" + KeymapUtil.getKeystrokeText(enterStroke) + ")", shortcutAttributes);
+                executorInfo.append("(" + KeymapUtil.getKeystrokeText(TargetAWT.from(enterStroke)) + ")", shortcutAttributes);
                 if (runExecutor != null) {
                     executorInfo.append(" / " + runExecutor.getId(), commandAttributes);
-                    executorInfo.append("(" + KeymapUtil.getKeystrokeText(shiftEnterStroke) + ")", shortcutAttributes);
+                    executorInfo.append("(" + KeymapUtil.getKeystrokeText(TargetAWT.from(shiftEnterStroke)) + ")", shortcutAttributes);
                 }
             }
             else if (runExecutor != null) {
                 executorInfo.append(runExecutor.getId(), commandAttributes);
-                executorInfo.append("(" + KeymapUtil.getKeystrokeText(enterStroke) + ")", shortcutAttributes);
+                executorInfo.append("(" + KeymapUtil.getKeystrokeText(TargetAWT.from(enterStroke)) + ")", shortcutAttributes);
             }
         }
 

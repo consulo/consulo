@@ -18,6 +18,10 @@ package consulo.language.inject.advanced.impl.internal;
 
 import consulo.fileChooser.FileChooser;
 import consulo.ui.UIAccess;
+import consulo.ui.event.details.KeyCode;
+import consulo.ui.event.details.KeyStroke;
+import consulo.ui.event.details.ModifiedInputDetails.Modifier;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.internal.ActionUpdateInvoker;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.configurable.Configurable;
@@ -52,7 +56,6 @@ import consulo.ui.ex.awt.speedSearch.TableViewSpeedSearch;
 import consulo.ui.ex.awt.table.ListTableModel;
 import consulo.ui.ex.awt.table.TableView;
 import consulo.ui.ex.awt.util.TableUtil;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.image.Image;
 import consulo.util.collection.ArrayUtil;
@@ -73,8 +76,6 @@ import org.jdom.Document;
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.List;
@@ -250,7 +251,7 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
             public void actionPerformed(AnActionEvent e) {
                 performToggleAction();
             }
-        }.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0)), myInjectionsTable);
+        }.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.pressed(KeyCode.SPACE)), myInjectionsTable);
 
         if (myInfos.length > 1) {
             group.addSeparator();
@@ -313,7 +314,7 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
                     throw new AssertionError();
                 }
             };
-            shareAction.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, InputEvent.SHIFT_DOWN_MASK)), myInjectionsTable);
+            shareAction.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.pressed(KeyCode.SPACE, Modifier.SHIFT)), myInjectionsTable);
             group.add(shareAction);
         }
         group.addSeparator();

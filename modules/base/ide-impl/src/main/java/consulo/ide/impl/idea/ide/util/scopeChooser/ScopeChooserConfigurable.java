@@ -31,6 +31,9 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.localize.ProjectLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.details.KeyCode;
+import consulo.ui.event.details.KeyStroke;
+import consulo.ui.event.details.ModifiedInputDetails.Modifier;
 import consulo.ui.ex.InputValidator;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
@@ -49,8 +52,6 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import java.awt.*;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
 import java.util.List;
 import java.util.*;
 
@@ -509,7 +510,7 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
                 ExecutionLocalize.copyConfigurationActionName(),
                 PlatformIconGroup.actionsCopy()
             );
-            registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_D, InputEvent.CTRL_MASK)), myTree);
+            registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.pressed(KeyCode.D, Modifier.CTRL)), myTree);
         }
 
         @Override

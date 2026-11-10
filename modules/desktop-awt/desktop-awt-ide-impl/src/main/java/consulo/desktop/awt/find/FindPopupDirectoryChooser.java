@@ -38,6 +38,7 @@ import consulo.ui.ex.awt.JBCurrentTheme;
 import consulo.ui.ex.awt.ValidationInfo;
 import consulo.ui.ex.awt.internal.AWTHasSuffixComponent;
 import consulo.ui.ex.awt.internal.AWTComboBoxStyle;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jspecify.annotations.Nullable;
@@ -99,7 +100,7 @@ public class FindPopupDirectoryChooser {
             }, uiAccess);
         });
 
-        selectPathAction.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.SHIFT_DOWN_MASK)),
+        selectPathAction.registerCustomShortcutSet(new CustomShortcutSet(TargetAWT.from(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.SHIFT_DOWN_MASK))),
             myFindPopupPanel);
 
         MyRecursiveDirectoryAction recursiveDirectoryAction = new MyRecursiveDirectoryAction();
@@ -107,7 +108,7 @@ public class FindPopupDirectoryChooser {
             Platform.current().os().isMac() ? InputEvent.ALT_DOWN_MASK | InputEvent.CTRL_DOWN_MASK : InputEvent.ALT_DOWN_MASK;
 
         recursiveDirectoryAction.registerCustomShortcutSet(
-            new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_Y, mnemonicModifiers)),
+            new CustomShortcutSet(TargetAWT.from(KeyStroke.getKeyStroke(KeyEvent.VK_Y, mnemonicModifiers))),
             myFindPopupPanel
         );
 

@@ -18,6 +18,7 @@ package consulo.ui.ex.action.util;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
@@ -92,10 +93,8 @@ public class ActionUtil {
     public static void registerForEveryKeyboardShortcut(JComponent component, ActionListener action, ShortcutSet shortcuts) {
         for (Shortcut shortcut : shortcuts.getShortcuts()) {
             if (shortcut instanceof KeyboardShortcut ks) {
-                KeyStroke first = ks.getFirstKeyStroke();
-                KeyStroke second = ks.getSecondKeyStroke();
-                if (second == null) {
-                    component.registerKeyboardAction(action, first, JComponent.WHEN_IN_FOCUSED_WINDOW);
+                if (ks.getSecondKeyStroke() == null) {
+                    component.registerKeyboardAction(action, TargetAWT.to(ks.getFirstKeyStroke()), JComponent.WHEN_IN_FOCUSED_WINDOW);
                 }
             }
         }

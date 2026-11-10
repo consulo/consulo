@@ -35,6 +35,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Pair;
@@ -259,8 +260,8 @@ public abstract class GotoActionBase extends LegacyAnAction {
 
         if (historyEnabled() && popup.getAdText() == null) {
             popup.setAdText(
-                "Press " + KeymapUtil.getKeystrokeText(KeyStroke.getKeyStroke(KeyEvent.VK_UP, InputEvent.CTRL_MASK)) +
-                    " or " + KeymapUtil.getKeystrokeText(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, InputEvent.CTRL_MASK)) +
+                "Press " + KeymapUtil.getKeystrokeText(TargetAWT.from(KeyStroke.getKeyStroke(KeyEvent.VK_UP, InputEvent.CTRL_MASK))) +
+                    " or " + KeymapUtil.getKeystrokeText(TargetAWT.from(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, InputEvent.CTRL_MASK))) +
                     " to navigate through the history"
             );
         }

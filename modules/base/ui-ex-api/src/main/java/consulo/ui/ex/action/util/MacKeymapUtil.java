@@ -15,10 +15,11 @@
  */
 package consulo.ui.ex.action.util;
 
+import consulo.ui.event.details.KeyCode;
+import consulo.ui.event.details.KeyStroke;
+import consulo.ui.event.details.ModifiedInputDetails.Modifier;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.InputEvent;
+import java.util.Set;
 
 /**
  * Utility class to display action shortcuts in Mac menus
@@ -56,36 +57,33 @@ public class MacKeymapUtil {
     public static final String POWER3 = "\u233D";
     public static final String NUM_PAD = "\u2328";
 
-    public static String getModifiersText(int modifiers) {
+    public static String getModifiersText(Set<Modifier> modifiers) {
         StringBuilder buf = new StringBuilder();
-        if ((modifiers & InputEvent.CTRL_MASK) != 0) {
+        if (modifiers.contains(Modifier.CTRL)) {
             buf.append(CONTROL);
         }
-        if ((modifiers & InputEvent.ALT_MASK) != 0) {
+        if (modifiers.contains(Modifier.ALT)) {
             buf.append(OPTION);
         }
-        if ((modifiers & InputEvent.SHIFT_MASK) != 0) {
+        if (modifiers.contains(Modifier.SHIFT)) {
             buf.append(SHIFT);
         }
-        if ((modifiers & InputEvent.ALT_GRAPH_MASK) != 0) {
-            buf.append(Toolkit.getProperty("AWT.altGraph", "Alt Graph"));
+        if (modifiers.contains(Modifier.ALT_GRAPH)) {
+            buf.append(KeyCode.ALT_GRAPH.getText());
         }
-        if ((modifiers & InputEvent.BUTTON1_MASK) != 0) {
-            buf.append(Toolkit.getProperty("AWT.button1", "Button1"));
-        }
-        if ((modifiers & InputEvent.META_MASK) != 0) {
+        if (modifiers.contains(Modifier.META)) {
             buf.append(COMMAND);
         }
         return buf.toString();
     }
 
-    public static String getKeyText(int code) {
+    public static String getKeyText(KeyCode code) {
         return ShortcutLocalizeHolder.getKeyText(code, true).get();
     }
 
     public static String getKeyStrokeText(KeyStroke keyStroke) {
         String modifiers = getModifiersText(keyStroke.getModifiers());
-        String key = getKeyText(keyStroke.getKeyCode());
+        String key = keyStroke.isTyped() ? String.valueOf(keyStroke.getKeyChar()) : getKeyText(keyStroke.getKeyCode());
         return modifiers + key;
     }
 }

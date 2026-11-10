@@ -19,6 +19,9 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
+import consulo.ui.event.details.KeyCode;
+import consulo.ui.event.details.KeyStroke;
+import consulo.ui.event.details.ModifiedInputDetails.Modifier;
 import consulo.ui.ex.action.KeyboardShortcut;
 import consulo.ui.ex.action.Shortcut;
 import consulo.ui.ex.action.ShortcutSet;
@@ -26,40 +29,34 @@ import consulo.ui.ex.internal.KeyMapSetting;
 import consulo.ui.ex.localize.ShortcutLocalize;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author VISTALL
  * @since 2022-01-30
  */
 public class ShortcutUtil {
-    private static void fillModifiersTexts(int modifiers, List<LocalizeValue> modifierTexts, boolean useUnicodeShortcuts) {
-        if ((modifiers & InputEvent.CTRL_MASK) != 0) {
-            modifierTexts.add(ShortcutLocalizeHolder.getKeyText(KeyEvent.VK_CONTROL, useUnicodeShortcuts));
+    private static void fillModifiersTexts(Set<Modifier> modifiers, List<LocalizeValue> modifierTexts, boolean useUnicodeShortcuts) {
+        if (modifiers.contains(Modifier.CTRL)) {
+            modifierTexts.add(ShortcutLocalizeHolder.getKeyText(KeyCode.CONTROL, useUnicodeShortcuts));
         }
 
-        if ((modifiers & InputEvent.ALT_MASK) != 0) {
-            modifierTexts.add(ShortcutLocalizeHolder.getKeyText(KeyEvent.VK_ALT, useUnicodeShortcuts));
+        if (modifiers.contains(Modifier.ALT)) {
+            modifierTexts.add(ShortcutLocalizeHolder.getKeyText(KeyCode.ALT, useUnicodeShortcuts));
         }
 
-        if ((modifiers & InputEvent.SHIFT_MASK) != 0) {
-            modifierTexts.add(ShortcutLocalizeHolder.getKeyText(KeyEvent.VK_SHIFT, useUnicodeShortcuts));
+        if (modifiers.contains(Modifier.SHIFT)) {
+            modifierTexts.add(ShortcutLocalizeHolder.getKeyText(KeyCode.SHIFT, useUnicodeShortcuts));
         }
 
-        if ((modifiers & InputEvent.ALT_GRAPH_MASK) != 0) {
-            modifierTexts.add(ShortcutLocalizeHolder.getKeyText(KeyEvent.VK_ALT_GRAPH, useUnicodeShortcuts));
+        if (modifiers.contains(Modifier.ALT_GRAPH)) {
+            modifierTexts.add(ShortcutLocalizeHolder.getKeyText(KeyCode.ALT_GRAPH, useUnicodeShortcuts));
         }
 
-        if ((modifiers & InputEvent.BUTTON1_MASK) != 0) {
-            modifierTexts.add(ShortcutLocalize.mouseButton1());
-        }
-
-        if ((modifiers & InputEvent.META_MASK) != 0) {
-            modifierTexts.add(ShortcutLocalizeHolder.getKeyText(KeyEvent.VK_META, useUnicodeShortcuts));
+        if (modifiers.contains(Modifier.META)) {
+            modifierTexts.add(ShortcutLocalizeHolder.getKeyText(KeyCode.META, useUnicodeShortcuts));
         }
     }
 
@@ -86,7 +83,9 @@ public class ShortcutUtil {
 
         fillModifiersTexts(accelerator.getModifiers(), values, useUnicodeCharactersForShortcuts);
 
-        values.add(ShortcutLocalizeHolder.getKeyText(accelerator.getKeyCode(), useUnicodeCharactersForShortcuts));
+        values.add(accelerator.isTyped()
+            ? LocalizeValue.of(String.valueOf(accelerator.getKeyChar()))
+            : ShortcutLocalizeHolder.getKeyText(accelerator.getKeyCode(), useUnicodeCharactersForShortcuts));
 
         if (useUnicodeCharactersForShortcuts) {
             return LocalizeValue.join(values.toArray(LocalizeValue[]::new));

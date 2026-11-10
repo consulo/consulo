@@ -35,6 +35,7 @@ import consulo.ui.event.details.InputDetails;
 import consulo.ui.event.details.MouseInputDetails;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ui.ex.internal.ActionUpdateInvoker;
 import consulo.ui.ex.internal.CustomShortcutBuilder;
@@ -454,11 +455,8 @@ public class ActionImplUtil {
             TextWithMnemonic.parse(action.getTemplatePresentation().getTextValue().get()).getMnemonic()
         );
         if (mnemonic != KeyEvent.VK_UNDEFINED) {
-            KeyboardShortcut ctrlAltShortcut = new KeyboardShortcut(
-                KeyStroke.getKeyStroke(mnemonic, InputEvent.ALT_DOWN_MASK | InputEvent.CTRL_DOWN_MASK),
-                null
-            );
-            KeyboardShortcut altShortcut = new KeyboardShortcut(KeyStroke.getKeyStroke(mnemonic, InputEvent.ALT_DOWN_MASK), null);
+            KeyboardShortcut ctrlAltShortcut = new KeyboardShortcut(TargetAWT.from(KeyStroke.getKeyStroke(mnemonic, InputEvent.ALT_DOWN_MASK | InputEvent.CTRL_DOWN_MASK)), null);
+            KeyboardShortcut altShortcut = new KeyboardShortcut(TargetAWT.from(KeyStroke.getKeyStroke(mnemonic, InputEvent.ALT_DOWN_MASK)), null);
             CustomShortcutSet shortcutSet;
             if (Platform.current().os().isMac()) {
                 if (Registry.is("ide.mac.alt.mnemonic.without.ctrl")) {

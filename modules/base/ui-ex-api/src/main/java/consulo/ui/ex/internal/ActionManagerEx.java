@@ -54,34 +54,6 @@ public abstract class ActionManagerEx extends ActionManager {
      */
     public abstract Comparator<String> getRegistrationOrderComparator();
 
-    /**
-     * Similar to {@link KeyStroke#getKeyStroke(String)} but allows keys in lower case.
-     * <p/>
-     * I.e. "control x" is accepted and interpreted as "control X".
-     *
-     * @return null if string cannot be parsed.
-     */
-    public static @Nullable KeyStroke getKeyStroke(String s) {
-        KeyStroke result = null;
-        try {
-            result = KeyStroke.getKeyStroke(s);
-        }
-        catch (Exception ex) {
-            //ok
-        }
-
-        if (result == null && s != null && s.length() >= 2 && s.charAt(s.length() - 2) == ' ') {
-            try {
-                String s1 = s.substring(0, s.length() - 1) + Character.toUpperCase(s.charAt(s.length() - 1));
-                result = KeyStroke.getKeyStroke(s1);
-            }
-            catch (Exception ex) {
-                // ok
-            }
-        }
-        return result;
-    }
-
     @Override
     public abstract String[] getPluginActions(PluginId pluginId);
 

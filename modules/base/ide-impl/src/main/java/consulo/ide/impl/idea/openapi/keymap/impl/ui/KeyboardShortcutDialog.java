@@ -22,6 +22,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.KeyboardShortcut;
 import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.localize.KeyMapLocalize;
 import consulo.util.collection.ArrayUtil;
@@ -156,10 +157,10 @@ public class KeyboardShortcutDialog extends DialogWrapper {
         myKeymap = keymap;
         myEnableSecondKeystroke.setSelected(false);
         if (shortcut != null) {
-            myFirstStrokePanel.getShortcutTextField().setKeyStroke(shortcut.getFirstKeyStroke());
+            myFirstStrokePanel.getShortcutTextField().setKeyStroke(TargetAWT.to(shortcut.getFirstKeyStroke()));
             if (shortcut.getSecondKeyStroke() != null) {
                 myEnableSecondKeystroke.setSelected(true);
-                mySecondStrokePanel.getShortcutTextField().setKeyStroke(shortcut.getSecondKeyStroke());
+                mySecondStrokePanel.getShortcutTextField().setKeyStroke(TargetAWT.to(shortcut.getSecondKeyStroke()));
             }
         }
         handleSecondKey();
@@ -183,8 +184,8 @@ public class KeyboardShortcutDialog extends DialogWrapper {
             return;
         }
 
-        String strokeText = getTextByKeyStroke(keyboardShortcut.getFirstKeyStroke());
-        String suffixText = getTextByKeyStroke(keyboardShortcut.getSecondKeyStroke());
+        String strokeText = getTextByKeyStroke(TargetAWT.to(keyboardShortcut.getFirstKeyStroke()));
+        String suffixText = getTextByKeyStroke(TargetAWT.to(keyboardShortcut.getSecondKeyStroke()));
         if (suffixText != null && suffixText.length() > 0) {
             strokeText += ',' + suffixText;
         }
@@ -235,14 +236,14 @@ public class KeyboardShortcutDialog extends DialogWrapper {
             return null;
         }
         KeyStroke secondStroke = myEnableSecondKeystroke.isSelected() ? mySecondStrokePanel.getKeyStroke() : null;
-        return new KeyboardShortcut(firstStroke, secondStroke);
+        return new KeyboardShortcut(TargetAWT.from(firstStroke), TargetAWT.from(secondStroke));
     }
 
     static String getTextByKeyStroke(KeyStroke keyStroke) {
         if (keyStroke == null) {
             return "";
         }
-        return KeymapUtil.getKeystrokeText(keyStroke);
+        return KeymapUtil.getKeystrokeText(TargetAWT.from(keyStroke));
     }
 
     @Override

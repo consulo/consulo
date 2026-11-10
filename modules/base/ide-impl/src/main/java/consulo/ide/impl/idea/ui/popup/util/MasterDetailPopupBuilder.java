@@ -24,6 +24,8 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.details.KeyCode;
+import consulo.ui.event.details.KeyStroke;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
@@ -345,7 +347,7 @@ public class MasterDetailPopupBuilder implements MasterController {
             public void actionPerformed(AnActionEvent e) {
                 chooseItemWithEnterOrDoubleClick();
             }
-        }.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0)), list);
+        }.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.pressed(KeyCode.ENTER)), list);
         new AnAction() {
             @RequiredUIAccess
             @Override

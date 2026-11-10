@@ -25,6 +25,9 @@ import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.details.KeyCode;
+import consulo.ui.event.details.KeyStroke;
+import consulo.ui.event.details.ModifiedInputDetails.Modifier;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.tree.Tree;
@@ -33,8 +36,6 @@ import consulo.util.concurrent.ResultConsumer;
 import javax.swing.*;
 import javax.swing.tree.TreePath;
 import java.awt.*;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -91,11 +92,11 @@ abstract class DebuggerTreeWithHistoryContainer<D> {
         group.add(new SetAsRootAction(tree));
 
         AnAction back = new GoBackwardAction();
-        back.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, InputEvent.ALT_MASK)), parent);
+        back.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.pressed(KeyCode.LEFT, Modifier.ALT)), parent);
         group.add(back);
 
         AnAction forward = new GoForwardAction();
-        forward.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, InputEvent.ALT_MASK)), parent);
+        forward.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.pressed(KeyCode.RIGHT, Modifier.ALT)), parent);
         group.add(forward);
 
         ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group, true);

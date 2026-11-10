@@ -175,7 +175,7 @@ public final class IdeMouseEventDispatcher {
         patchClickCount(e);
 
         int clickCount = e.getClickCount();
-        int button = MouseShortcut.getButton(e);
+        int button = TargetAWT.toMouseShortcutButton(e);
         if (button == MouseShortcut.BUTTON_WHEEL_UP || button == MouseShortcut.BUTTON_WHEEL_DOWN) {
             clickCount = 1;
         }
@@ -249,7 +249,7 @@ public final class IdeMouseEventDispatcher {
             return false;
         }
 
-        MouseShortcut shortcut = new MouseShortcut(button, modifiersEx, clickCount);
+        MouseShortcut shortcut = new MouseShortcut(button, TargetAWT.fromModifiers(modifiersEx), clickCount);
         fillActionsList(c, shortcut, IdeKeyEventDispatcher.isModalContext(c));
 
         if (ActionRunnerAsync.ENABLED) {

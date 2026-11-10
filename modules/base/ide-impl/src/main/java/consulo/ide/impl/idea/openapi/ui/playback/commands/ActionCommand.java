@@ -23,6 +23,7 @@ import consulo.ide.impl.idea.openapi.util.TimedOutCallback;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.event.AnActionListener;
 import consulo.ui.ex.awt.internal.ActionAWTUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.keymap.KeymapManager;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.lang.ref.Ref;
@@ -54,8 +55,8 @@ public class ActionCommand extends TypeCommand {
             for (Shortcut each : sc) {
                 if (each instanceof KeyboardShortcut) {
                     KeyboardShortcut ks = (KeyboardShortcut) each;
-                    KeyStroke first = ks.getFirstKeyStroke();
-                    KeyStroke second = ks.getSecondKeyStroke();
+                    KeyStroke first = TargetAWT.to(ks.getFirstKeyStroke());
+                    KeyStroke second = TargetAWT.to(ks.getSecondKeyStroke());
                     if (first != null && second == null) {
                         stroke = KeyStroke.getKeyStroke(first.getKeyCode(), first.getModifiers(), false);
                         break;

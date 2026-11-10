@@ -17,6 +17,7 @@ package consulo.ui.ex.awt.internal;
 
 import consulo.ui.ex.action.KeyboardShortcut;
 import consulo.ui.ex.action.Shortcut;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.keymap.KeymapManager;
 
 import javax.swing.*;
@@ -34,7 +35,7 @@ public class ActionAWTUtil {
         KeyStroke keyStroke = null;
         for (Shortcut each : shortcuts) {
             if (each instanceof KeyboardShortcut) {
-                keyStroke = ((KeyboardShortcut) each).getFirstKeyStroke();
+                keyStroke = TargetAWT.to(((KeyboardShortcut) each).getFirstKeyStroke());
                 break;
             }
         }

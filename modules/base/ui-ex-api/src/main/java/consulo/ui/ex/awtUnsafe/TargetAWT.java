@@ -24,6 +24,8 @@ import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
 import consulo.ui.cursor.Cursor;
 import consulo.ui.event.ComponentEvent;
+import consulo.ui.event.details.KeyCode;
+import consulo.ui.event.details.ModifiedInputDetails;
 import consulo.ui.ex.awtUnsafe.internal.TargetAWTFacade;
 import consulo.ui.font.Font;
 import consulo.ui.image.Image;
@@ -31,7 +33,9 @@ import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.EnumSet;
 import java.util.ServiceLoader;
+import java.util.Set;
 
 /**
  * @author VISTALL
@@ -149,5 +153,92 @@ public final class TargetAWT {
 
     public static java.awt.Image toAWTImage(Image image) {
         return ourFacade.toAWTImage(image);
+    }
+
+    @Contract("null -> null")
+    public static javax.swing.@Nullable KeyStroke to(consulo.ui.event.details.@Nullable KeyStroke keyStroke) {
+        if (keyStroke == null) {
+            return null;
+        }
+        int modifiers = toModifiers(keyStroke.getModifiers());
+        if (keyStroke.isTyped()) {
+            return javax.swing.KeyStroke.getKeyStroke(Character.valueOf(keyStroke.getKeyChar()), modifiers);
+        }
+        return javax.swing.KeyStroke.getKeyStroke(keyStroke.getKeyCode().key(), modifiers, keyStroke.isOnKeyRelease());
+    }
+
+    /**
+     * @return the key stroke, {@code null} for one with neither a key nor a character
+     */
+    @Contract("null -> null")
+    public static consulo.ui.event.details.@Nullable KeyStroke from(javax.swing.@Nullable KeyStroke keyStroke) {
+        if (keyStroke == null) {
+            return null;
+        }
+        Set<ModifiedInputDetails.Modifier> modifiers = fromModifiers(keyStroke.getModifiers());
+
+        int keyCode = keyStroke.getKeyCode();
+        if (keyCode != java.awt.event.KeyEvent.VK_UNDEFINED) {
+            return consulo.ui.event.details.KeyStroke.of(KeyCode.of(keyCode), modifiers, keyStroke.isOnKeyRelease());
+        }
+
+        char keyChar = keyStroke.getKeyChar();
+        if (keyChar != java.awt.event.KeyEvent.CHAR_UNDEFINED) {
+            return consulo.ui.event.details.KeyStroke.typed(keyChar, modifiers);
+        }
+        return null;
+    }
+
+    /**
+     * @return the {@code *_DOWN_MASK} modifiers of an input event
+     */
+    public static int toModifiers(Set<ModifiedInputDetails.Modifier> modifiers) {
+        int mask = 0;
+        for (ModifiedInputDetails.Modifier modifier : modifiers) {
+            mask |= switch (modifier) {
+                case SHIFT -> java.awt.event.InputEvent.SHIFT_DOWN_MASK;
+                case CTRL -> java.awt.event.InputEvent.CTRL_DOWN_MASK;
+                case META -> java.awt.event.InputEvent.META_DOWN_MASK;
+                case ALT -> java.awt.event.InputEvent.ALT_DOWN_MASK;
+                case ALT_GRAPH -> java.awt.event.InputEvent.ALT_GRAPH_DOWN_MASK;
+            };
+        }
+        return mask;
+    }
+
+    /**
+     * @param mask the modifiers of an input event, the old masks and the {@code *_DOWN_MASK} ones alike
+     */
+    public static Set<ModifiedInputDetails.Modifier> fromModifiers(int mask) {
+        Set<ModifiedInputDetails.Modifier> modifiers = EnumSet.noneOf(ModifiedInputDetails.Modifier.class);
+        addIf(modifiers, mask, java.awt.event.InputEvent.SHIFT_DOWN_MASK | java.awt.event.InputEvent.SHIFT_MASK,
+            ModifiedInputDetails.Modifier.SHIFT);
+        addIf(modifiers, mask, java.awt.event.InputEvent.CTRL_DOWN_MASK | java.awt.event.InputEvent.CTRL_MASK,
+            ModifiedInputDetails.Modifier.CTRL);
+        addIf(modifiers, mask, java.awt.event.InputEvent.META_DOWN_MASK | java.awt.event.InputEvent.META_MASK,
+            ModifiedInputDetails.Modifier.META);
+        addIf(modifiers, mask, java.awt.event.InputEvent.ALT_DOWN_MASK | java.awt.event.InputEvent.ALT_MASK,
+            ModifiedInputDetails.Modifier.ALT);
+        addIf(modifiers, mask, java.awt.event.InputEvent.ALT_GRAPH_DOWN_MASK | java.awt.event.InputEvent.ALT_GRAPH_MASK,
+            ModifiedInputDetails.Modifier.ALT_GRAPH);
+        return modifiers;
+    }
+
+    /**
+     * @return the button of a {@link consulo.ui.ex.action.MouseShortcut} the event is a click of, a wheel turn included
+     */
+    public static int toMouseShortcutButton(java.awt.event.MouseEvent event) {
+        if (event instanceof java.awt.event.MouseWheelEvent wheel) {
+            return 0 < wheel.getWheelRotation()
+                ? consulo.ui.ex.action.MouseShortcut.BUTTON_WHEEL_DOWN
+                : consulo.ui.ex.action.MouseShortcut.BUTTON_WHEEL_UP;
+        }
+        return event.getButton();
+    }
+
+    private static void addIf(Set<ModifiedInputDetails.Modifier> set, int mask, int bits, ModifiedInputDetails.Modifier modifier) {
+        if ((mask & bits) != 0) {
+            set.add(modifier);
+        }
     }
 }

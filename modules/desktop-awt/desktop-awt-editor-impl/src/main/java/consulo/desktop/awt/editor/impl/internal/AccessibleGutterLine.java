@@ -20,6 +20,7 @@ import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.CommonShortcuts;
 import consulo.ui.ex.awt.paint.LinePainter2D;
 import consulo.ui.ex.awt.JBUIScale;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.lang.ObjectUtil;
 import consulo.ui.ex.util.SimpleAccessible;
 import consulo.ui.ex.action.CustomShortcutSet;
@@ -52,13 +53,13 @@ class AccessibleGutterLine extends JPanel {
 
     private static class MyShortcuts {
         static final CustomShortcutSet MOVE_RIGHT = new CustomShortcutSet(
-            new KeyboardShortcut(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0), null),
-            new KeyboardShortcut(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0), null)
+            new KeyboardShortcut(TargetAWT.from(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0)), null),
+            new KeyboardShortcut(TargetAWT.from(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0)), null)
         );
 
         static final CustomShortcutSet MOVE_LEFT = new CustomShortcutSet(
-            new KeyboardShortcut(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0), null),
-            new KeyboardShortcut(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, InputEvent.SHIFT_DOWN_MASK), null)
+            new KeyboardShortcut(TargetAWT.from(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0)), null),
+            new KeyboardShortcut(TargetAWT.from(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, InputEvent.SHIFT_DOWN_MASK)), null)
         );
     }
 

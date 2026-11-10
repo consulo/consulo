@@ -707,7 +707,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
         for (Shortcut shortcut : KeymapUtil.getActiveKeymapShortcuts(actionId).getShortcuts()) {
             if (shortcut instanceof KeyboardShortcut) {
                 KeyboardShortcut keyboardShortcut = (KeyboardShortcut) shortcut;
-                result.add(keyboardShortcut.getFirstKeyStroke());
+                result.add(TargetAWT.to(keyboardShortcut.getFirstKeyStroke()));
             }
         }
         return result;
@@ -1156,7 +1156,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
             Shortcut[] shortcuts = KeymapUtil.getActiveKeymapShortcuts(actionCodeCompletion).getShortcuts();
             for (Shortcut shortcut : shortcuts) {
                 if (shortcut instanceof KeyboardShortcut kbShortcut) {
-                    return kbShortcut.getFirstKeyStroke();
+                    return TargetAWT.to(kbShortcut.getFirstKeyStroke());
                 }
             }
             return null;

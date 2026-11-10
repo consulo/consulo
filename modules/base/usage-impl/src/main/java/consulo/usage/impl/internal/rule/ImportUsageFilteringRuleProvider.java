@@ -17,6 +17,9 @@ package consulo.usage.impl.internal.rule;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.event.details.KeyCode;
+import consulo.ui.event.details.KeyStroke;
+import consulo.ui.event.details.ModifiedInputDetails.Modifier;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.CustomShortcutSet;
 import consulo.project.Project;
@@ -28,8 +31,6 @@ import consulo.usage.rule.UsageFilteringRule;
 import consulo.usage.rule.UsageFilteringRuleProvider;
 
 import javax.swing.*;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,10 +56,7 @@ public class ImportUsageFilteringRuleProvider implements UsageFilteringRuleProvi
             JComponent component = view.getComponent();
             ShowImportsAction showImportsAction = new ShowImportsAction(view);
             showImportsAction.registerCustomShortcutSet(
-                new CustomShortcutSet(KeyStroke.getKeyStroke(
-                    KeyEvent.VK_I,
-                    InputEvent.CTRL_DOWN_MASK
-                )),
+                new CustomShortcutSet(KeyStroke.pressed(KeyCode.I, Modifier.CTRL)),
                 component,
                 view
             );

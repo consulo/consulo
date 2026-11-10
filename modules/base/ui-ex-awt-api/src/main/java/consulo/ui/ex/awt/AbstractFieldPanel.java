@@ -16,19 +16,20 @@
 package consulo.ui.ex.awt;
 
 import consulo.application.AllIcons;
+import consulo.ui.event.details.KeyCode;
+import consulo.ui.event.details.KeyStroke;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CustomShortcutSet;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.logging.Logger;
 import consulo.ui.ex.awt.event.DocumentAdapter;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 /**
@@ -265,7 +266,7 @@ public abstract class AbstractFieldPanel extends JPanel {
                 public void actionPerformed(AnActionEvent e) {
                     doOKAction();
                 }
-            }.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0)), myTextArea);
+            }.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.pressed(KeyCode.ENTER)), myTextArea);
 
             return ScrollPaneFactory.createScrollPane(myTextArea);
         }

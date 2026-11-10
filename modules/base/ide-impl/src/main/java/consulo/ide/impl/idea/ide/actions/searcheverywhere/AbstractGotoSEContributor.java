@@ -584,9 +584,9 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
             e.getPresentation().setText(LocalizeValue.of(text));
             e.getPresentation().setIcon(selection.getIcon());
             String shortcutText =
-                KeymapUtil.getKeystrokeText(KeyStroke.getKeyStroke(CHOOSE, MnemonicHelper.getFocusAcceleratorKeyMask(), true));
+                KeymapUtil.getKeystrokeText(TargetAWT.from(KeyStroke.getKeyStroke(CHOOSE, MnemonicHelper.getFocusAcceleratorKeyMask(), true)));
             String shortcutText2 =
-                KeymapUtil.getKeystrokeText(KeyStroke.getKeyStroke(TOGGLE, MnemonicHelper.getFocusAcceleratorKeyMask(), true));
+                KeymapUtil.getKeystrokeText(TargetAWT.from(KeyStroke.getKeyStroke(TOGGLE, MnemonicHelper.getFocusAcceleratorKeyMask(), true)));
             e.getPresentation().setDescription("Choose scope (" + shortcutText + ")\n" + "Toggle scope (" + shortcutText2 + ")");
             JComponent button = e.getPresentation().getClientProperty(CustomComponentAction.COMPONENT_KEY);
             if (button != null) {

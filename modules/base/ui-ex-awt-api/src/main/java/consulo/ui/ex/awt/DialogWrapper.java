@@ -724,7 +724,7 @@ public abstract class DialogWrapper {
             JBOptionButton eachOptionsButton = (JBOptionButton)button;
             eachOptionsButton.setOkToProcessDefaultMnemonics(false);
             eachOptionsButton.setOptionTooltipText(LocalizeValue.localizeTODO(
-                "Press " + ShortcutUtil.getKeystrokeText(SHOW_OPTION_KEYSTROKE) +
+                "Press " + ShortcutUtil.getKeystrokeText(TargetAWT.from(SHOW_OPTION_KEYSTROKE)) +
                     " to expand or use a mnemonic of a contained action"
             ).get());
             myOptionsButtons.add(eachOptionsButton);
@@ -732,9 +732,9 @@ public abstract class DialogWrapper {
             Set<JBOptionButton.OptionInfo> infos = eachOptionsButton.getOptionInfos();
             for (final JBOptionButton.OptionInfo eachInfo : infos) {
                 if (eachInfo.getMnemonic() >= 0) {
-                    CustomShortcutSet sc = new CustomShortcutSet(KeyStroke.getKeyStroke(
+                    CustomShortcutSet sc = new CustomShortcutSet(TargetAWT.from(KeyStroke.getKeyStroke(
                         "alt pressed " + (char)eachInfo.getMnemonic()
-                    ));
+                    )));
 
                     new DumbAwareAction() {
                         @RequiredUIAccess
@@ -1321,7 +1321,7 @@ public abstract class DialogWrapper {
         JPanel root = new JPanel(createRootLayout());
         myPeer.setContentPane(root);
 
-        CustomShortcutSet sc = new CustomShortcutSet(SHOW_OPTION_KEYSTROKE);
+        CustomShortcutSet sc = new CustomShortcutSet(TargetAWT.from(SHOW_OPTION_KEYSTROKE));
         AnAction toggleShowOptions = new DumbAwareAction() {
             @RequiredUIAccess
             @Override
@@ -1937,10 +1937,8 @@ public abstract class DialogWrapper {
     private void registerForEveryKeyboardShortcut(ActionListener action, ShortcutSet shortcuts) {
         for (Shortcut shortcut : shortcuts.getShortcuts()) {
             if (shortcut instanceof KeyboardShortcut ks) {
-                KeyStroke first = ks.getFirstKeyStroke();
-                KeyStroke second = ks.getSecondKeyStroke();
-                if (second == null) {
-                    getRootPane().registerKeyboardAction(action, first, JComponent.WHEN_IN_FOCUSED_WINDOW);
+                if (ks.getSecondKeyStroke() == null) {
+                    getRootPane().registerKeyboardAction(action, TargetAWT.to(ks.getFirstKeyStroke()), JComponent.WHEN_IN_FOCUSED_WINDOW);
                 }
             }
         }

@@ -30,6 +30,7 @@ import consulo.language.psi.PsiManager;
 import consulo.project.Project;
 import consulo.project.ui.wm.dock.DockManager;
 import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
 import consulo.virtualFileSystem.VirtualFile;
@@ -111,7 +112,7 @@ public class DesktopPsiAwareFileEditorManagerImpl extends PsiAwareFileEditorMana
     if (event instanceof KeyEvent) {
       KeyEvent ke = (KeyEvent)event;
       Keymap keymap = KeymapManager.getInstance().getActiveKeymap();
-      String[] ids = keymap.getActionIds(KeyStroke.getKeyStroke(ke.getKeyCode(), ke.getModifiers()));
+      String[] ids = keymap.getActionIds(TargetAWT.from(KeyStroke.getKeyStroke(ke.getKeyCode(), ke.getModifiers())));
       return Arrays.asList(ids).contains("OpenElementInNewWindow");
     }
 

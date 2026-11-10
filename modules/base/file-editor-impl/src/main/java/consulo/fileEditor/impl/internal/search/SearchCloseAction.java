@@ -19,11 +19,10 @@ import consulo.find.localize.FindLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.details.KeyCode;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CustomShortcutSet;
 import consulo.ui.ex.action.DumbAwareAction;
-
-import java.awt.event.KeyEvent;
 
 /**
  * @author VISTALL
@@ -37,7 +36,7 @@ public class SearchCloseAction extends DumbAwareAction {
         super(FindLocalize.tooltipCloseSearchBarEscape(), LocalizeValue.empty(), PlatformIconGroup.actionsCancel());
         myCloseAction = closeAction;
 
-        setShortcutSet(new CustomShortcutSet(KeyEvent.VK_ESCAPE));
+        setShortcutSet(new CustomShortcutSet(KeyCode.ESCAPE));
     }
 
     @RequiredUIAccess
