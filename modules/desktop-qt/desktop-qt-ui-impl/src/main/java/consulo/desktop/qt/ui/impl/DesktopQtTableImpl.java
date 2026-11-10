@@ -38,6 +38,7 @@ import consulo.ui.event.TableDoubleClickEvent;
 import consulo.ui.event.TableSelectEvent;
 import consulo.ui.impl.table.TableColumnImpl;
 import consulo.ui.impl.table.TableColumnOwner;
+import consulo.ui.impl.table.TableDetails;
 import consulo.ui.impl.table.TableRowOrder;
 import consulo.ui.model.FlatDataModel;
 import consulo.ui.model.FlatDataModelEvent;
@@ -65,7 +66,9 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 
 /**
@@ -77,6 +80,7 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableView>
     implements Table<Item>, DesktopQtIconOwner, TableColumnOwner, DesktopQtTransferTarget<Item> {
     private static final class QtTable extends QTableView {
         private final DesktopQtDragAndDropSupport<?> myDragAndDrop;
+        private @Nullable Runnable myGeometryListener;
 
         private QtTable(QWidget parent, DesktopQtDragAndDropSupport<?> dragAndDrop) {
             super(parent);
@@ -123,6 +127,20 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableView>
         protected void scrollContentsBy(int dx, int dy) {
             super.scrollContentsBy(dx, dy);
             myDragAndDrop.contentsScrolled(this);
+            geometryChanged();
+        }
+
+        @Override
+        protected void updateGeometries() {
+            super.updateGeometries();
+            geometryChanged();
+        }
+
+        private void geometryChanged() {
+            Runnable listener = myGeometryListener;
+            if (listener != null) {
+                listener.run();
+            }
         }
     }
 
@@ -133,7 +151,7 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableView>
 
         @Override
         public int rowCount(QModelIndex parent) {
-            return parent.isValid() ? 0 : myOrder.size();
+            return parent.isValid() ? 0 : viewRowCount();
         }
 
         @Override
@@ -143,11 +161,11 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableView>
 
         @Override
         public @Nullable Object data(QModelIndex index, int role) {
-            if (!index.isValid() || index.row() >= myOrder.size() || index.column() >= myColumns.size()) {
+            int row = index.isValid() ? orderRowAt(index.row()) : -1;
+            if (row < 0 || index.column() >= myColumns.size()) {
                 return null;
             }
 
-            int row = index.row();
             TableColumnImpl<Item, ?> column = myColumns.get(index.column());
             return switch (role) {
                 case Qt.ItemDataRole.DisplayRole -> presentation(row, column).toString();
@@ -162,6 +180,10 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableView>
 
         @Override
         public Qt.ItemFlags flags(QModelIndex index) {
+            // a details row is neither selectable nor enabled, so the selection and the cursor keys pass it by
+            if (detailsOrderRowAt(index.row()) >= 0) {
+                return new Qt.ItemFlags(Qt.ItemFlag.NoItemFlags);
+            }
             // a view starts a drag only from a row its model calls draggable
             if (myTransferHandler instanceof DragAndDropTransferHandler) {
                 return new Qt.ItemFlags(Qt.ItemFlag.ItemIsEnabled, Qt.ItemFlag.ItemIsSelectable, Qt.ItemFlag.ItemIsDragEnabled);
@@ -190,6 +212,32 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableView>
         void rowsRemoved(int first, int last) {
             beginRemoveRows(new QModelIndex(), first, last);
             endRemoveRows();
+        }
+
+        void insertRow(int row, Runnable change) {
+            myRowsChanging = true;
+            try {
+                beginInsertRows(new QModelIndex(), row, row);
+                change.run();
+                endInsertRows();
+            }
+            finally {
+                myRowsChanging = false;
+            }
+            runPendingDetailsChanges();
+        }
+
+        void removeRow(int row, Runnable change) {
+            myRowsChanging = true;
+            try {
+                beginRemoveRows(new QModelIndex(), row, row);
+                change.run();
+                endRemoveRows();
+            }
+            finally {
+                myRowsChanging = false;
+            }
+            runPendingDetailsChanges();
         }
 
         void rowsChanged(int first, int last) {
@@ -232,6 +280,13 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableView>
     private long myHoveredCellKey = -1;
     private List<Item> mySelectionSnapshot = List.of();
 
+    private final TableDetails<Item> myDetails = new TableDetails<>();
+    private final Map<consulo.ui.Component, QWidget> myDetailsWidgets = new HashMap<>();
+    private int @Nullable [] myViewRows;
+    private int @Nullable [] myOrderToView;
+    private boolean myRowsChanging;
+    private final List<Runnable> myPendingDetailsChanges = new ArrayList<>();
+
     private int myCachedRow = -1;
     private int myCachedColumn = -1;
     private @Nullable DesktopQtTextItemPresentation myCachedPresentation;
@@ -268,7 +323,7 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableView>
             return;
         }
 
-        QModelIndex index = tableModel.index(row, 0);
+        QModelIndex index = tableModel.index(viewRowOf(row), 0);
         component.selectionModel().setCurrentIndex(
             index,
             QItemSelectionModel.SelectionFlag.ClearAndSelect,
@@ -279,7 +334,8 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableView>
 
     @Override
     protected QTableView createQt(QWidget parent) {
-        QTableView table = new QtTable(parent, myDragAndDrop);
+        QtTable table = new QtTable(parent, myDragAndDrop);
+        table.myGeometryListener = () -> layoutDetails(table);
         TableModel tableModel = new TableModel(table);
         myTableModel = tableModel;
         table.setModel(tableModel);
@@ -346,6 +402,7 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableView>
         updateSelectionMode();
         updateRowHeights();
         updateCellWidgets();
+        updateDetails();
 
         Item pendingSelection = myPendingSelection;
         myPendingSelection = null;
@@ -358,12 +415,19 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableView>
         myOrder.modelChanged();
         dropCachedPresentation();
 
+        boolean mapped = myViewRows != null;
+        for (consulo.ui.Component details : myDetails.retain(item -> myOrder.getModel().indexOf(item) >= 0)) {
+            disposeDetails(details);
+        }
+        rebuildViewRows();
+
         TableModel tableModel = myTableModel;
         if (tableModel == null || tableModel.isDisposed()) {
             return;
         }
 
-        boolean sorted = myOrder.isSorted();
+        // the rows of an event are model rows, which say nothing about where details rows went
+        boolean sorted = myOrder.isSorted() || mapped || myViewRows != null;
         switch (event.getType()) {
             case ADDED -> {
                 if (sorted) {
@@ -383,7 +447,7 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableView>
             }
             case UPDATED -> {
                 if (sorted) {
-                    tableModel.rowsChanged(0, myOrder.size() - 1);
+                    tableModel.rowsChanged(0, viewRowCount() - 1);
                 }
                 else {
                     tableModel.rowsChanged(event.getFromIndex(), event.getToIndex());
@@ -400,6 +464,7 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableView>
 
         updateRowHeights();
         updateCellWidgets();
+        updateDetails();
     }
 
     private void resetKeepingSelection(TableModel tableModel) {
@@ -410,8 +475,74 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableView>
         }
     }
 
-    private @Nullable Item itemAtRow(int row) {
-        return row >= 0 && row < myOrder.size() ? myOrder.get(row) : null;
+    private @Nullable Item itemAtRow(int viewRow) {
+        int row = orderRowAt(viewRow);
+        return row >= 0 ? myOrder.get(row) : null;
+    }
+
+    private void rebuildViewRows() {
+        List<Item> items = myDetails.getItems();
+        if (items.isEmpty()) {
+            myViewRows = null;
+            myOrderToView = null;
+            return;
+        }
+
+        int size = myOrder.size();
+        boolean[] withDetails = new boolean[size];
+        int count = 0;
+        for (Item item : items) {
+            int row = myOrder.rowOf(item);
+            if (row >= 0 && !withDetails[row]) {
+                withDetails[row] = true;
+                count++;
+            }
+        }
+
+        int[] viewRows = new int[size + count];
+        int[] orderToView = new int[size];
+        int viewRow = 0;
+        for (int row = 0; row < size; row++) {
+            orderToView[row] = viewRow;
+            viewRows[viewRow++] = row;
+            if (withDetails[row]) {
+                viewRows[viewRow++] = -(row + 1);
+            }
+        }
+        myViewRows = viewRows;
+        myOrderToView = orderToView;
+    }
+
+    private int viewRowCount() {
+        int[] viewRows = myViewRows;
+        return viewRows == null ? myOrder.size() : viewRows.length;
+    }
+
+    private int orderRowAt(int viewRow) {
+        int[] viewRows = myViewRows;
+        if (viewRow < 0) {
+            return -1;
+        }
+        if (viewRows == null) {
+            return viewRow < myOrder.size() ? viewRow : -1;
+        }
+        return viewRow < viewRows.length && viewRows[viewRow] >= 0 ? viewRows[viewRow] : -1;
+    }
+
+    private int detailsOrderRowAt(int viewRow) {
+        int[] viewRows = myViewRows;
+        return viewRows != null && viewRow >= 0 && viewRow < viewRows.length && viewRows[viewRow] < 0 ? -(viewRows[viewRow] + 1) : -1;
+    }
+
+    private int viewRowOf(int row) {
+        int[] orderToView = myOrderToView;
+        if (row < 0) {
+            return -1;
+        }
+        if (orderToView == null) {
+            return row;
+        }
+        return row < orderToView.length ? orderToView[row] : -1;
     }
 
     private <Value> DesktopQtTextItemPresentation presentation(int row, TableColumnImpl<Item, Value> column) {
@@ -529,7 +660,7 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableView>
 
         TableModel tableModel = myTableModel;
         if (tableModel != null) {
-            tableModel.rowsChanged(0, myOrder.size() - 1);
+            tableModel.rowsChanged(0, viewRowCount() - 1);
         }
     }
 
@@ -570,6 +701,7 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableView>
         Function valueProvider = column.getValueProvider();
         dropCachedPresentation();
         myOrder.sort((left, right) -> comparator.compare(valueProvider.apply(left), valueProvider.apply(right)));
+        rebuildViewRows();
 
         TableModel tableModel = myTableModel;
         if (tableModel != null) {
@@ -577,6 +709,7 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableView>
         }
         updateRowHeights();
         updateCellWidgets();
+        updateDetails();
     }
 
     private void updateRowHeights() {
@@ -587,7 +720,7 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableView>
         }
 
         for (int row = 0; row < myOrder.size(); row++) {
-            component.setRowHeight(row, DesktopQtLength.toPixels(component, itemHeightGetter.apply(myOrder.get(row))));
+            component.setRowHeight(viewRowOf(row), DesktopQtLength.toPixels(component, itemHeightGetter.apply(myOrder.get(row))));
         }
     }
 
@@ -609,7 +742,7 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableView>
             }
 
             for (int row = 0; row < myOrder.size(); row++) {
-                QModelIndex index = tableModel.index(row, column.getIndex());
+                QModelIndex index = tableModel.index(viewRowOf(row), column.getIndex());
                 QWidget widget = createCellWidget(component, row, myOrder.get(row), column);
                 component.setIndexWidget(index, widget);
             }
@@ -705,7 +838,7 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableView>
 
     private boolean isSelected(int row) {
         QTableView component = myComponent;
-        return component != null && component.selectionModel() != null && component.selectionModel().isRowSelected(row);
+        return component != null && component.selectionModel() != null && component.selectionModel().isRowSelected(viewRowOf(row));
     }
 
     @Override
@@ -772,14 +905,15 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableView>
             return;
         }
 
+        int viewRow = viewRowOf(row);
         if (add) {
             component.selectionModel().select(
-                tableModel.index(row, 0),
+                tableModel.index(viewRow, 0),
                 new QItemSelectionModel.SelectionFlags(QItemSelectionModel.SelectionFlag.Select, QItemSelectionModel.SelectionFlag.Rows)
             );
         }
         else {
-            component.selectRow(row);
+            component.selectRow(viewRow);
         }
     }
 
@@ -815,7 +949,178 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableView>
 
         int row = myOrder.rowOf(item);
         if (row >= 0) {
-            component.scrollTo(tableModel.index(row, 0));
+            component.scrollTo(tableModel.index(viewRowOf(row), 0));
+        }
+    }
+
+    @Override
+    public void setDetailsRenderer(@Nullable Function<Item, consulo.ui.Component> renderer) {
+        boolean mapped = myViewRows != null;
+        for (consulo.ui.Component details : myDetails.setRenderer(renderer)) {
+            disposeDetails(details);
+        }
+        rebuildViewRows();
+
+        TableModel tableModel = myTableModel;
+        if (mapped && tableModel != null && !tableModel.isDisposed()) {
+            dropCachedPresentation();
+            resetKeepingSelection(tableModel);
+            updateRowHeights();
+            updateCellWidgets();
+            updateDetails();
+        }
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setDetailsVisible(Item item, boolean visible) {
+        // a row change moves the selection, and a select listener showing details would come back in before the view
+        // has taken the change
+        if (myRowsChanging) {
+            myPendingDetailsChanges.add(() -> setDetailsVisible(item, visible));
+            return;
+        }
+
+        TableModel tableModel = myTableModel;
+        boolean live = tableModel != null && !tableModel.isDisposed();
+        if (visible) {
+            if (myDetails.isShown(item) || myDetails.show(item) == null) {
+                return;
+            }
+
+            int row = myOrder.rowOf(item);
+            if (live && row >= 0) {
+                tableModel.insertRow(viewRowOf(row) + 1, this::rebuildViewRows);
+            }
+            else {
+                rebuildViewRows();
+            }
+        }
+        else {
+            int row = myOrder.rowOf(item);
+            int detailsRow = row >= 0 && myDetails.isShown(item) ? viewRowOf(row) + 1 : -1;
+            consulo.ui.Component details = myDetails.hide(item);
+            if (details == null) {
+                return;
+            }
+
+            disposeDetails(details);
+            if (live && detailsRow >= 0) {
+                tableModel.removeRow(detailsRow, this::rebuildViewRows);
+            }
+            else {
+                rebuildViewRows();
+            }
+        }
+
+        dropCachedPresentation();
+        updateDetails();
+    }
+
+    @Override
+    public boolean isDetailsVisible(Item item) {
+        return myDetails.isShown(item);
+    }
+
+    @RequiredUIAccess
+    private void runPendingDetailsChanges() {
+        while (!myRowsChanging && !myPendingDetailsChanges.isEmpty()) {
+            myPendingDetailsChanges.remove(0).run();
+        }
+    }
+
+    private void disposeDetails(consulo.ui.Component details) {
+        myDetailsWidgets.remove(details);
+        if (details instanceof QtComponentDelegate<?> delegate) {
+            delegate.disposeQt();
+        }
+    }
+
+    /**
+     * A details row spans every column, and its component is a child of the viewport laid over that row rather than
+     * an index widget - the view deletes index widgets whenever its model resets, and the details would lose their
+     * state with them.
+     */
+    private void updateDetails() {
+        QTableView component = myComponent;
+        if (component == null || component.isDisposed()) {
+            return;
+        }
+
+        component.clearSpans();
+        int[] viewRows = myViewRows;
+        if (viewRows == null) {
+            return;
+        }
+
+        int columns = myColumns.size();
+        for (int viewRow = 0; viewRow < viewRows.length; viewRow++) {
+            int row = detailsOrderRowAt(viewRow);
+            if (row < 0) {
+                continue;
+            }
+
+            if (columns > 1) {
+                component.setSpan(viewRow, 0, 1, columns);
+            }
+
+            consulo.ui.Component details = myDetails.get(myOrder.get(row));
+            if (details instanceof QtComponentDelegate<?> delegate) {
+                delegate.setParent(this);
+                delegate.bind(component.viewport(), null);
+                QWidget widget = delegate.toQtComponent();
+                if (widget != null && myDetailsWidgets.get(details) != widget) {
+                    myDetailsWidgets.put(details, widget);
+                    widget.installEventFilter(new QObject(widget) {
+                        @Override
+                        public boolean eventFilter(QObject watched, QEvent event) {
+                            if (event.type() == QEvent.Type.LayoutRequest) {
+                                layoutDetails(component);
+                            }
+                            return false;
+                        }
+                    });
+                }
+                if (widget != null) {
+                    widget.show();
+                }
+            }
+        }
+
+        layoutDetails(component);
+    }
+
+    /**
+     * The heights go in first and the bounds after, since a row grown above moves every row under it.
+     */
+    private void layoutDetails(QTableView component) {
+        int[] viewRows = myViewRows;
+        // between the begin and the end of a row change the rows of the view and the sections of its header disagree
+        if (viewRows == null || myRowsChanging || component.isDisposed()) {
+            return;
+        }
+
+        int width = component.viewport().width();
+        List<Integer> detailsRows = new ArrayList<>();
+        for (int viewRow = 0; viewRow < viewRows.length; viewRow++) {
+            int row = detailsOrderRowAt(viewRow);
+            QWidget widget = row < 0 ? null : myDetailsWidgets.get(myDetails.get(myOrder.get(row)));
+            if (widget == null || widget.isDisposed()) {
+                continue;
+            }
+
+            int height = widget.hasHeightForWidth() ? widget.heightForWidth(width) : widget.sizeHint().height();
+            if (component.rowHeight(viewRow) != height) {
+                component.setRowHeight(viewRow, height);
+            }
+            detailsRows.add(viewRow);
+        }
+
+        for (int viewRow : detailsRows) {
+            QWidget widget = myDetailsWidgets.get(myDetails.get(myOrder.get(detailsOrderRowAt(viewRow))));
+            if (widget != null) {
+                widget.setGeometry(0, component.rowViewportPosition(viewRow), width, component.rowHeight(viewRow));
+            }
         }
     }
 
@@ -864,7 +1169,7 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableView>
             // past the last row the drop lands below it, like a list
             int last = myOrder.size() - 1;
             return new DesktopQtDrop<>(myOrder.get(last), DragAndDropTransferHandler.DropPosition.BELOW,
-                DesktopQtDragAndDropSupport.lineBelow(rowRect(component, last)));
+                DesktopQtDragAndDropSupport.lineBelow(rowRect(component, viewRowOf(last))));
         }
 
         Item item = itemAtRow(index.row());

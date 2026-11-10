@@ -82,6 +82,18 @@ public interface Table<Item> extends Component, HasFocus, HasSpeedSearch<Item>, 
     @RequiredUIAccess
     void scrollTo(Item item);
 
+    /**
+     * Details of an item are a component across the whole width of the table, shown under the row of the item while
+     * they are visible. The renderer runs when the details of an item are shown, and the component it gave is kept
+     * until they are hidden or the item leaves the model. {@code null} hides the details of every item.
+     */
+    void setDetailsRenderer(@Nullable Function<Item, Component> renderer);
+
+    @RequiredUIAccess
+    void setDetailsVisible(Item item, boolean visible);
+
+    boolean isDetailsVisible(Item item);
+
     @SuppressWarnings({"unchecked", "rawtypes"})
     default Disposable addSelectListener(ComponentEventListener<Table<Item>, TableSelectEvent<Item>> listener) {
         return addListener((Class) TableSelectEvent.class, listener);

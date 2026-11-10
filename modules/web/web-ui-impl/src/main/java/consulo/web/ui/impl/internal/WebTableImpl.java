@@ -21,8 +21,10 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.grid.dnd.GridDropLocation;
 import com.vaadin.flow.component.grid.dnd.GridDropMode;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.data.provider.CallbackDataProvider;
 import com.vaadin.flow.data.provider.Query;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.selection.MultiSelect;
 import com.vaadin.flow.data.selection.MultiSelectionEvent;
 import com.vaadin.flow.data.selection.SelectionEvent;
@@ -39,10 +41,12 @@ import consulo.ui.color.ColorValue;
 import consulo.ui.event.TableDoubleClickEvent;
 import consulo.ui.event.TableSelectEvent;
 import consulo.ui.impl.SpeedSearchSupport;
+import consulo.ui.impl.table.TableDetails;
 import consulo.ui.impl.table.TableRowOrder;
 import consulo.ui.model.FlatDataModel;
 import consulo.ui.model.FlatDataModelEvent;
 import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
+import consulo.web.ui.impl.internal.base.TargetVaadin;
 import consulo.web.ui.impl.internal.base.VaadinComponentDelegate;
 import consulo.web.ui.impl.internal.base.WebInputDetails;
 import consulo.web.ui.impl.internal.vaadin.WebLength;
@@ -143,6 +147,7 @@ public class WebTableImpl<Item> extends VaadinComponentDelegate<WebTableImpl<Ite
     private @Nullable Item mySelectionAnchor;
     private @Nullable Item myLead;
     private @Nullable TransferHandler<Item> myTransferHandler;
+    private final TableDetails<Item> myDetails = new TableDetails<>();
 
     public WebTableImpl(FlatDataModel<Item> model) {
         myModel = model;
@@ -152,6 +157,7 @@ public class WebTableImpl<Item> extends VaadinComponentDelegate<WebTableImpl<Ite
         Vaadin grid = toVaadinComponent();
         grid.addThemeVariants(GridVariant.NO_ROW_BORDERS, GridVariant.COLUMN_BORDERS, GridVariant.NO_BORDER);
         grid.setSelectionMode(Grid.SelectionMode.SINGLE);
+        grid.setDetailsVisibleOnClick(false);
         grid.setItems(myDataProvider);
 
         model.addListener(this::onModelChanged);
@@ -270,6 +276,13 @@ public class WebTableImpl<Item> extends VaadinComponentDelegate<WebTableImpl<Ite
 
     private void onModelChanged(FlatDataModelEvent event) {
         myOrder.modelChanged();
+
+        for (Item item : myDetails.getItems()) {
+            if (myModel.indexOf(item) < 0) {
+                myDetails.hide(item);
+                toVaadinComponent().setDetailsVisible(item, false);
+            }
+        }
 
         if (event.getType() == FlatDataModelEvent.Type.UPDATED && !myOrder.isSorted()) {
             int size = myModel.getSize();
@@ -504,6 +517,40 @@ public class WebTableImpl<Item> extends VaadinComponentDelegate<WebTableImpl<Ite
         if (row >= 0) {
             toVaadinComponent().scrollToIndex(row);
         }
+    }
+
+    @Override
+    public void setDetailsRenderer(@Nullable Function<Item, consulo.ui.Component> renderer) {
+        Vaadin grid = toVaadinComponent();
+        for (Item item : myDetails.getItems()) {
+            grid.setDetailsVisible(item, false);
+        }
+        myDetails.setRenderer(renderer);
+        grid.setItemDetailsRenderer(renderer == null ? null : new ComponentRenderer<>(this::renderDetails, (old, item) -> renderDetails(item)));
+    }
+
+    private com.vaadin.flow.component.Component renderDetails(Item item) {
+        consulo.ui.Component details = myDetails.get(item);
+        return details == null ? new Div() : TargetVaadin.to(details);
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setDetailsVisible(Item item, boolean visible) {
+        if (visible) {
+            if (myDetails.show(item) == null) {
+                return;
+            }
+        }
+        else if (myDetails.hide(item) == null) {
+            return;
+        }
+        toVaadinComponent().setDetailsVisible(item, visible);
+    }
+
+    @Override
+    public boolean isDetailsVisible(Item item) {
+        return myDetails.isShown(item);
     }
 
     @Override

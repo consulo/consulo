@@ -16,6 +16,7 @@
 package consulo.it.internal.ui;
 
 import consulo.localize.LocalizeValue;
+import consulo.ui.Component;
 import consulo.ui.Length;
 import consulo.ui.Table;
 import consulo.ui.TableColumn;
@@ -26,6 +27,7 @@ import consulo.ui.event.TableDoubleClickEvent;
 import consulo.ui.event.TableSelectEvent;
 import consulo.ui.impl.table.TableColumnImpl;
 import consulo.ui.impl.table.TableColumnOwner;
+import consulo.ui.impl.table.TableDetails;
 import consulo.ui.model.FlatDataModel;
 import org.jspecify.annotations.Nullable;
 
@@ -50,11 +52,15 @@ public class HeadlessTable<Item> extends HeadlessComponentBase implements Table<
     private @Nullable Function<Item, Length> myItemHeightGetter;
     private int myVisibleRowCount;
     private @Nullable TransferHandler<Item> myTransferHandler;
+    private final TableDetails<Item> myDetails = new TableDetails<>();
 
     public HeadlessTable(FlatDataModel<Item> model) {
         myModel = model;
 
-        model.addListener(event -> dropMissingFromSelection());
+        model.addListener(event -> {
+            dropMissingFromSelection();
+            myDetails.retain(item -> myModel.indexOf(item) >= 0);
+        });
     }
 
     @Override
@@ -181,6 +187,31 @@ public class HeadlessTable<Item> extends HeadlessComponentBase implements Table<
     @Override
     @RequiredUIAccess
     public void scrollTo(Item item) {
+    }
+
+    @Override
+    public void setDetailsRenderer(@Nullable Function<Item, Component> renderer) {
+        myDetails.setRenderer(renderer);
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void setDetailsVisible(Item item, boolean visible) {
+        if (visible) {
+            myDetails.show(item);
+        }
+        else {
+            myDetails.hide(item);
+        }
+    }
+
+    @Override
+    public boolean isDetailsVisible(Item item) {
+        return myDetails.isShown(item);
+    }
+
+    public @Nullable Component getDetails(Item item) {
+        return myDetails.get(item);
     }
 
     @Override

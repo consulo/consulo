@@ -37,6 +37,8 @@ import consulo.ui.ex.awt.event.DoubleClickListener;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
 import consulo.ui.ex.awt.speedSearch.TableViewSpeedSearch;
 import consulo.ui.ex.awt.table.TableView;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.impl.table.TableDetails;
 import consulo.ui.color.ColorValue;
 import consulo.ui.model.FlatDataModel;
 import consulo.ui.model.LazyFlatDataModel;
@@ -48,7 +50,9 @@ import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 
 /**
@@ -67,6 +71,26 @@ class DesktopTableImpl<Item> extends SwingComponentDelegate<TableView<Item>> imp
         public Component toUIComponent() {
             return DesktopTableImpl.this;
         }
+
+        /**
+         * A row with details is as tall as its cells and its details together, and the cells keep the top of it - so
+         * everything that places a cell, painting and editing alike, stays clear of the details under them.
+         */
+        @Override
+        public Rectangle getCellRect(int row, int column, boolean includeSpacing) {
+            Rectangle rect = super.getCellRect(row, column, includeSpacing);
+            int detailsHeight = detailsHeight(this, row);
+            if (detailsHeight > 0) {
+                rect.height = Math.max(0, rect.height - detailsHeight);
+            }
+            return rect;
+        }
+
+        @Override
+        public void doLayout() {
+            super.doLayout();
+            layoutDetails(this);
+        }
     }
 
     private static final int MAX_ITEMS_FOR_SIZE_CALCULATION = 50;
@@ -82,6 +106,8 @@ class DesktopTableImpl<Item> extends SwingComponentDelegate<TableView<Item>> imp
     private @Nullable TransferHandler<Item> myTransferHandler;
     private @Nullable DesktopAWTCellImage myHoveredCellImage;
     private long myHoveredCellKey = -1;
+    private final TableDetails<Item> myDetails = new TableDetails<>();
+    private final Map<Item, Integer> myDetailsHeights = new HashMap<>();
 
     public DesktopTableImpl(FlatDataModel<Item> model) {
         myModel = model;
@@ -102,6 +128,14 @@ class DesktopTableImpl<Item> extends SwingComponentDelegate<TableView<Item>> imp
         if (myModel instanceof LazyFlatDataModel) {
             tableView.setMaxItemsForSizeCalculation(MAX_ITEMS_FOR_SIZE_CALCULATION);
         }
+
+        for (Item item : myDetails.getItems()) {
+            Component details = myDetails.get(item);
+            if (details != null) {
+                tableView.add(TargetAWT.to(details));
+            }
+        }
+        tableModel.addTableModelListener(e -> dropMissingDetails(tableView));
 
         tableView.getSelectionModel().addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {
@@ -425,6 +459,146 @@ class DesktopTableImpl<Item> extends SwingComponentDelegate<TableView<Item>> imp
         }
         int row = tableView.convertRowIndexToView(index);
         tableView.scrollRectToVisible(tableView.getCellRect(row, 0, true));
+    }
+
+    @Override
+    public void setDetailsRenderer(@Nullable Function<Item, Component> renderer) {
+        List<Item> shown = myDetails.getItems();
+        List<Component> dropped = myDetails.setRenderer(renderer);
+        if (isInitialized()) {
+            TableView<Item> tableView = toAWTComponent();
+            for (Component details : dropped) {
+                tableView.remove(TargetAWT.to(details));
+            }
+            for (Item item : shown) {
+                restoreRowHeight(tableView, item);
+            }
+            tableView.revalidate();
+            tableView.repaint();
+        }
+        else {
+            myDetailsHeights.clear();
+        }
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setDetailsVisible(Item item, boolean visible) {
+        if (visible) {
+            if (myDetails.isShown(item)) {
+                return;
+            }
+            Component details = myDetails.show(item);
+            if (details != null && isInitialized()) {
+                TableView<Item> tableView = toAWTComponent();
+                tableView.add(TargetAWT.to(details));
+                tableView.revalidate();
+                tableView.repaint();
+            }
+            return;
+        }
+
+        Component details = myDetails.hide(item);
+        if (details == null) {
+            return;
+        }
+        if (isInitialized()) {
+            TableView<Item> tableView = toAWTComponent();
+            tableView.remove(TargetAWT.to(details));
+            restoreRowHeight(tableView, item);
+            tableView.revalidate();
+            tableView.repaint();
+        }
+        else {
+            myDetailsHeights.remove(item);
+        }
+    }
+
+    @Override
+    public boolean isDetailsVisible(Item item) {
+        return myDetails.isShown(item);
+    }
+
+    private int detailsHeight(TableView<Item> tableView, int row) {
+        if (myDetailsHeights.isEmpty() || row < 0 || row >= tableView.getRowCount()) {
+            return 0;
+        }
+        Integer height = myDetailsHeights.get(tableView.getRow(row));
+        return height == null ? 0 : height;
+    }
+
+    private int baseRowHeight(TableView<Item> tableView, Item item) {
+        Function<Item, Length> itemHeightGetter = myItemHeightGetter;
+        return itemHeightGetter == null ? tableView.getRowHeight() : DesktopLength.toPixels(tableView, itemHeightGetter.apply(item));
+    }
+
+    private int viewRowOf(TableView<Item> tableView, Item item) {
+        int index = myModel.indexOf(item);
+        return index < 0 || index >= tableView.getRowCount() ? -1 : tableView.convertRowIndexToView(index);
+    }
+
+    private void restoreRowHeight(TableView<Item> tableView, Item item) {
+        myDetailsHeights.remove(item);
+        int row = viewRowOf(tableView, item);
+        if (row >= 0) {
+            tableView.setRowHeight(row, baseRowHeight(tableView, item));
+        }
+    }
+
+    private void dropMissingDetails(TableView<Item> tableView) {
+        List<Component> dropped = myDetails.retain(item -> myModel.indexOf(item) >= 0);
+        if (dropped.isEmpty()) {
+            return;
+        }
+        myDetailsHeights.keySet().removeIf(item -> !myDetails.isShown(item));
+        for (Component details : dropped) {
+            tableView.remove(TargetAWT.to(details));
+        }
+    }
+
+    /**
+     * The heights go in first and the bounds after, since a row grown above moves every row under it. Setting a row
+     * height lays the table out again, which settles once every row already has the height it is given.
+     */
+    private void layoutDetails(TableView<Item> tableView) {
+        if (myDetails.isEmpty()) {
+            return;
+        }
+
+        List<Item> items = myDetails.getItems();
+        for (Item item : items) {
+            Component details = myDetails.get(item);
+            int row = viewRowOf(tableView, item);
+            if (details == null || row < 0) {
+                continue;
+            }
+
+            int height = TargetAWT.to(details).getPreferredSize().height;
+            myDetailsHeights.put(item, height);
+            int rowHeight = baseRowHeight(tableView, item) + height;
+            if (tableView.getRowHeight(row) != rowHeight) {
+                tableView.setRowHeight(row, rowHeight);
+            }
+        }
+
+        for (Item item : items) {
+            Component details = myDetails.get(item);
+            if (details == null) {
+                continue;
+            }
+
+            java.awt.Component awtDetails = TargetAWT.to(details);
+            int row = viewRowOf(tableView, item);
+            if (row < 0) {
+                awtDetails.setVisible(false);
+                continue;
+            }
+
+            Rectangle cells = tableView.getCellRect(row, 0, true);
+            int height = myDetailsHeights.getOrDefault(item, 0);
+            awtDetails.setBounds(0, cells.y + tableView.getRowHeight(row) - height, tableView.getWidth(), height);
+            awtDetails.setVisible(true);
+        }
     }
 
     @Override
