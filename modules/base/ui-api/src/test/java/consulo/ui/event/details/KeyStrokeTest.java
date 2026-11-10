@@ -4,6 +4,7 @@ import consulo.ui.event.details.ModifiedInputDetails.Modifier;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Field;
+import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -30,8 +31,7 @@ public class KeyStrokeTest {
 
     @Test
     void testParsesKeyCodes() {
-        KeyStroke stroke = KeyStroke.parse("shift #10b");
-        assertThat(stroke).isNotNull();
+        KeyStroke stroke = Objects.requireNonNull(KeyStroke.parse("shift #10b"));
         assertThat(stroke.getKeyCode().key()).isEqualTo(0x10b);
         assertThat(stroke.toString()).isEqualTo("shift #10b");
         assertThat(KeyStroke.parse("10")).isEqualTo(KeyStroke.pressed(KeyCode.ENTER));
@@ -54,7 +54,7 @@ public class KeyStrokeTest {
             if (!java.lang.reflect.Modifier.isStatic(field.getModifiers()) || field.getType() != KeyCode.class) {
                 continue;
             }
-            KeyCode keyCode = (KeyCode) field.get(null);
+            KeyCode keyCode = (KeyCode) Objects.requireNonNull(field.get(null));
             if (keyCode == KeyCode.UNDEFINED) {
                 continue;
             }
