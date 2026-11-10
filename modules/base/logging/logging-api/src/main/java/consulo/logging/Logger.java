@@ -16,7 +16,9 @@
 package consulo.logging;
 
 import consulo.logging.attachment.Attachment;
+import consulo.logging.attachment.RuntimeExceptionWithAttachments;
 import consulo.logging.internal.LoggerFactoryInitializer;
+import consulo.util.lang.ControlFlowException;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
@@ -101,11 +103,19 @@ public interface Logger {
     }
 
     default void error(String message, Attachment... attachments) {
-        error(message);
+        error(message, (Throwable) null, attachments);
     }
 
+    /**
+     * The attachments travel with the throwable in a {@link RuntimeExceptionWithAttachments}, where the error report finds them.
+     */
     default void error(String message, @Nullable Throwable throwable, Attachment... attachments) {
-        error(message);
+        Throwable t = throwable == null ? new Throwable() : throwable;
+        if (attachments.length == 0 || t instanceof ControlFlowException) {
+            error(message, t, EMPTY_STRING_ARRAY);
+            return;
+        }
+        error(message, new RuntimeExceptionWithAttachments(message, t, attachments), EMPTY_STRING_ARRAY);
     }
 
     default void error(String message, String... details) {
